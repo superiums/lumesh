@@ -30,7 +30,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          overwrite: true
           tag_name: Tag ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           files: artifacts/**/*.tar.gz

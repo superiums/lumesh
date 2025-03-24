@@ -6,7 +6,11 @@ A shell by the beach!
   <a href="https://asciinema.org/a/441120"><img src="./assets/welcome3.png" width="47.5%"/></a>
   <a href="https://asciinema.org/a/441120"><img src="./assets/about.png" width="48%"/></a>
 </p>
+
 ## WIKI
+
+我只是梳理了一下使用方法：
+
 <a href="https://github.com/superiums/dune/wiki"> 入门语法 ： https://github.com/superiums/dune/wiki </a>
   
 ## 原作者

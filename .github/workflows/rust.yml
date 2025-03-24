@@ -57,12 +57,12 @@ jobs:
           - os: ubuntu-latest
             platform: linux
             file_ending: ''
-          # - os: macos-latest
-          #   platform: macos
-          #   file_ending: ''
-          # - os: windows-latest
-          #   platform: windows
-          #   file_ending: '.exe'
+          - os: macos-latest
+            platform: macos
+            file_ending: ''
+          - os: windows-latest
+            platform: windows
+            file_ending: '.exe'
 
     steps:
       - name: Checkout

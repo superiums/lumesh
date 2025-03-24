@@ -6,11 +6,16 @@ name: Build Rust
 # https://mateuscosta.me/rust-releases-with-github-actions
 
 on:
-  push:
-    tags:
-      - 'v[0-9]+.*'
-  release:
-    types: [created]  # 当创建新Release时触发
+  workflow_dispatch:
+    inputs:
+      version:  # 可定义输入参数（可选）
+        description: 'Version to deploy'
+        required: true
+  # push:
+  #   tags:
+  #     - 'v[0-9]+.*'
+  # release:
+  #   types: [created]  # 当创建新Release时触发
 jobs:
   create_release:
     name: Create release

@@ -1,4 +1,4 @@
-name: Build Rust and upload binaries to release
+name: Build Rust
 
 # copied and modified from https://github.com/Aloso/colo/blob/main/.github/workflows/release.yml
 
@@ -52,12 +52,12 @@ jobs:
           - os: ubuntu-latest
             platform: linux
             file_ending: ''
-          - os: macos-latest
-            platform: macos
-            file_ending: ''
-          - os: windows-latest
-            platform: windows
-            file_ending: '.exe'
+          # - os: macos-latest
+          #   platform: macos
+          #   file_ending: ''
+          # - os: windows-latest
+          #   platform: windows
+          #   file_ending: '.exe'
 
     steps:
       - name: Checkout

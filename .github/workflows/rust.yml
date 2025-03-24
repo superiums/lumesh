@@ -6,10 +6,11 @@ name: Build Rust and upload binaries to release
 # https://mateuscosta.me/rust-releases-with-github-actions
 
 on:
-  push:
-    tags:
-      - 'v[0-9]+.*'
-
+  # push:
+  #   tags:
+  #     - 'v[0-9]+.*'
+  release:
+    types: [created]  # 当创建新Release时触发
 jobs:
   create_release:
     name: Create release
@@ -23,12 +24,17 @@ jobs:
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
       - name: Create release
+        uses: softprops/action-gh-release@v1
         id: create_release
-        uses: actions/create-release@v1
+        # uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          overwrite: true
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          files: artifacts/**/*.tar.gz
+          # tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false

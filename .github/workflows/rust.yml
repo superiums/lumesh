@@ -35,14 +35,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.event.inputs.version }}
+          name: Release ${{ github.event.inputs.version }}
           files: artifacts/**/*.tar.gz
           # tag_name: ${{ github.ref }}
           # release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
           body: |
+            Version ${{ github.event.inputs.version }}， released by  via workflow_dispatch.
             This is a new release of dune. [Read the changelog here](https://github.com/adam-mcdaniel/dune/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
 
             If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.

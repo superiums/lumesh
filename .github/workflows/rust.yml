@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: Tag ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           files: artifacts/**/*.tar.gz
           # tag_name: ${{ github.ref }}

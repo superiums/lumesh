@@ -6,9 +6,9 @@ name: Build Rust and upload binaries to release
 # https://mateuscosta.me/rust-releases-with-github-actions
 
 on:
-  # push:
-  #   tags:
-  #     - 'v[0-9]+.*'
+  push:
+    tags:
+      - 'v[0-9]+.*'
   release:
     types: [created]  # 当创建新Release时触发
 jobs:

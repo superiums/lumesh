@@ -12,20 +12,24 @@ use nom::{
 
 use crate::tokens::{Input, Token, TokenKind};
 
+/** 错误类型，用于表示在解析过程中没有找到任何标记的情况。 */
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 struct NotFoundError;
 
+/** 当前错误的常量表示。 */
 const NOT_FOUND: nom::Err<NotFoundError> = nom::Err::Error(NotFoundError);
 
+/** 用于表示解析过程中可能发生的各种问题的枚举类型。 */
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Diagnostic {
-    Valid,
-    InvalidStringEscapes(Box<[StrSlice]>),
-    InvalidNumber(StrSlice),
-    IllegalChar(StrSlice),
-    NotTokenized(StrSlice),
+    Valid,                                 // 解析成功
+    InvalidStringEscapes(Box<[StrSlice]>), // 无效的字符串转义序列
+    InvalidNumber(StrSlice),               // 无效的数字
+    IllegalChar(StrSlice),                 // 非法字符
+    NotTokenized(StrSlice),                // 未解析的字符
 }
 
+/** 实现了 `ParseError` trait，用于处理解析错误。 */
 impl<I> ParseError<I> for NotFoundError {
     fn from_error_kind(_: I, _: nom::error::ErrorKind) -> Self {
         NotFoundError
@@ -36,12 +40,16 @@ impl<I> ParseError<I> for NotFoundError {
     }
 }
 
+/** 定义了解析结果类型，包括输入和可能的错误。 */
 type TokenizationResult<'a, T = StrSlice> = IResult<Input<'a>, T, NotFoundError>;
 
+/** 解析器的核心，它负责解析输入字符串中的单个标记（token） */
 fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
     if input.is_empty() {
         Err(NOT_FOUND)
     } else {
+        // 使用 `alt` 函数（即 `alt!` 宏）尝试匹配各种可能的标记类型。
+        // `alt!` 会按顺序尝试每个子解析器，并返回第一个成功匹配的结果
         Ok(alt((
             map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(any_punctuation, TokenKind::Punctuation),
@@ -55,6 +63,9 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(whitespace, TokenKind::Whitespace),
         ))(input)
         .unwrap_or_else(|_| {
+            //如果上述步骤都没有匹配到任何标记，函数会执行默认处理逻辑。
+            //它会从输入字符串中取下一个字符，并根据这个字符创建一个标记。
+            //如果字符是非法字符，会返回一个 `Diagnostic::IllegalChar`。
             let next = input.chars().next().unwrap();
             let (rest, range) = input.split_at(next.len_utf8());
             let token = Token::new(TokenKind::Symbol, range);
@@ -63,6 +74,7 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
     }
 }
 
+/** Maps a parser to return a token with a specific kind and a valid diagnostic. */
 fn map_valid_token(
     mut parser: impl FnMut(Input<'_>) -> TokenizationResult<'_>,
     kind: TokenKind,
@@ -73,7 +85,10 @@ fn map_valid_token(
     }
 }
 
+/** Parses any valid punctuation character. */
 fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
+    // 使用 `alt` 函数（即 `alt!` 宏）尝试匹配各种可能的标记类型。
+    // `alt!` 会按顺序尝试每个子解析器，并返回第一个成功匹配的结果。
     alt((
         punctuation_tag("("),
         punctuation_tag(")"),
@@ -90,6 +105,7 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 
+/** 解析一个长操作符。 */
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("to"),
@@ -106,6 +122,7 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 
+/** 解析一个短操作符。 */
 fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("<"),
@@ -113,6 +130,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("+"),
         keyword_tag("-"),
         keyword_tag("*"),
+        keyword_tag("/"),
         keyword_tag("%"),
         keyword_tag("|"),
         punctuation_tag("@"),
@@ -187,6 +205,7 @@ fn bool_literal(input: Input<'_>) -> TokenizationResult<'_> {
     alt((keyword_tag("True"), keyword_tag("False")))(input)
 }
 
+/** 解析一个标识符或符号。 */
 fn symbol(input: Input<'_>) -> TokenizationResult<'_> {
     let len = input
         .chars()
@@ -201,6 +220,7 @@ fn symbol(input: Input<'_>) -> TokenizationResult<'_> {
     Ok(input.split_at(len))
 }
 
+/** 解析一个空白字符。 */
 fn whitespace(input: Input<'_>) -> TokenizationResult<'_> {
     let ws_chars = input.chars().take_while(char::is_ascii_whitespace).count();
 
@@ -320,9 +340,7 @@ fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
     }
 }
 
-/// Parses a word that contains characters which can also appear in a symbol.
-///
-/// This parser ensures that the word is *not* immediately followed by symbol characters.
+/** 解析一个关键字或符号。 */
 fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -332,15 +350,12 @@ fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
     }
 }
 
-/// Parses a word that is allowed to be immediately followed by symbol characters.
-///
-/// This is essentially the same as `nom::bytes::complete::tag`, but with different lifetimes:
-/// If the provided string has a 'static lifetime, so does the returned string.
+/** 解析一个标点符号或符号。 */
 fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| input.strip_prefix(punct).ok_or(NOT_FOUND)
 }
 
-/// Checks whether the character is allowed in a symbol.
+/** 检查字符是否允许出现在符号中。 */
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
@@ -368,7 +383,7 @@ fn is_symbol_char(c: char) -> bool {
         ASCII_SYMBOL_CHARS[c as usize]
     } else {
         false
-        // currently only ASCII identifiers are supported :/
+        // 目前只支持ASCII标识符 :/
     }
 }
 

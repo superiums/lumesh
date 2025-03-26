@@ -89,6 +89,7 @@ impl From<Environment> for Expression {
     }
 }
 
+/** 定义一个枚举类型，表示不同的表达式 */
 #[derive(Clone, PartialEq)]
 pub enum Expression {
     Group(Box<Self>),
@@ -364,7 +365,7 @@ impl PartialOrd for Expression {
         }
     }
 }
-
+/** 实现表达式的各种方法 */
 impl Expression {
     pub fn builtin(
         name: impl ToString,
@@ -469,6 +470,9 @@ impl Expression {
         }
     }
 
+    /**  表达式的执行。
+    Implements the `eval` method for the `Expression` enum.
+    */
     pub fn eval(&self, env: &mut Environment) -> Result<Self, Error> {
         self.clone().eval_mut(env, 0)
     }
@@ -498,6 +502,7 @@ impl Expression {
                     return Ok(Self::None);
                 }
 
+                // 执行For语句
                 Self::For(name, list, body) => {
                     if let Expression::List(items) = list.clone().eval_mut(env, depth + 1)? {
                         let mut results = vec![];
@@ -519,7 +524,7 @@ impl Expression {
                         return Err(Error::ForNonList(*list));
                     }
                 }
-
+                // 执行条件语句
                 Self::If(cond, true_expr, false_expr) => {
                     return if cond.eval_mut(env, depth + 1)?.is_truthy() {
                         true_expr
@@ -677,6 +682,7 @@ impl Expression {
     }
 }
 
+/** 实现自定义的加法运算 */
 impl Add for Expression {
     type Output = Self;
     fn add(self, other: Self) -> Self {
@@ -702,6 +708,7 @@ impl Add for Expression {
     }
 }
 
+/** 实现自定义的减法运算 */
 impl Sub for Expression {
     type Output = Self;
     fn sub(self, other: Self) -> Self {
@@ -723,6 +730,7 @@ impl Sub for Expression {
     }
 }
 
+/** 实现自定义的否定运算 */
 impl Neg for Expression {
     type Output = Expression;
     fn neg(self) -> Self::Output {
@@ -735,6 +743,7 @@ impl Neg for Expression {
     }
 }
 
+/** 实现自定义的乘法运算 */
 impl Mul for Expression {
     type Output = Self;
     fn mul(self, other: Self) -> Self {
@@ -761,6 +770,7 @@ impl Mul for Expression {
     }
 }
 
+/** 实现自定义的除法运算 */
 impl Div for Expression {
     type Output = Self;
     fn div(self, other: Self) -> Self {
@@ -777,6 +787,7 @@ impl Div for Expression {
     }
 }
 
+/** 实现取模运算 */
 impl Rem for Expression {
     type Output = Self;
     fn rem(self, other: Self) -> Self {
@@ -787,6 +798,10 @@ impl Rem for Expression {
     }
 }
 
+/** **Indexing**:
+Implements indexing for the `Expression` type,
+allowing accessing values in maps or lists using symbols or strings as indices.
+*/
 impl<T> Index<T> for Expression
 where
     T: Into<Self>,

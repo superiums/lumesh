@@ -1,3 +1,4 @@
+// 这个文件包含表达式的解析逻辑。
 use detached_str::StrSlice;
 use nom::{
     branch::alt,
@@ -123,6 +124,7 @@ fn empty(input: Tokens<'_>) -> IResult<Tokens<'_>, (), SyntaxError> {
     }
 }
 
+/** 解析主入口 */
 pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxError>> {
     let str = input.into();
     let tokenization_input = Input::new(&str);
@@ -135,11 +137,13 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxError>> {
         )));
     }
 
+    // 将输入字符串转换为Token向量和诊断信息
     let tokens = Tokens {
         str: &str,
         slice: token_vec.as_slice(),
     };
 
+    // 检查连续的符号是否需要空格
     for window in tokens.slice.windows(2) {
         let (a, b) = (window[0], window[1]);
         if is_symbol_like(a.kind)
@@ -156,9 +160,11 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxError>> {
         }
     }
 
+    // 移除空格和注释
     // remove whitespace
     token_vec.retain(|t| !matches!(t.kind, TokenKind::Whitespace | TokenKind::Comment));
 
+    // 解析Token向量为表达式
     let (_, expr) = parse_script_tokens(
         Tokens {
             str: &str,
@@ -245,10 +251,11 @@ pub fn no_terminating_punctuation(input: Tokens<'_>) -> IResult<Tokens<'_>, (), 
 }
 
 #[inline]
+// 解析一个简单的符号
 fn parse_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
     map(kind(TokenKind::Symbol), |t| t.to_str(input.str).to_string())(input)
 }
-
+// 解析一个简单的整数
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Int, SyntaxError> {
     let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;
     let num = num.to_str(input.str).parse::<Int>().map_err(|e| {
@@ -256,7 +263,7 @@ fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Int, SyntaxError> {
     })?;
     Ok((input, num))
 }
-
+// 解析一个浮点数
 fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, f64, SyntaxError> {
     let (input, num) = kind(TokenKind::FloatLiteral)(input)?;
     let num = num.to_str(input.str).parse::<f64>().map_err(|e| {
@@ -271,6 +278,7 @@ fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, f64, SyntaxError> {
 }
 
 #[inline]
+// 解析一个布尔值
 fn parse_boolean(input: Tokens<'_>) -> IResult<Tokens<'_>, bool, SyntaxError> {
     map(kind(TokenKind::BooleanLiteral), |s| {
         s.to_str(input.str) == "True"
@@ -309,6 +317,7 @@ fn parse_not(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> 
 }
 
 #[inline]
+// 解析一个简单的字符串
 fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
     let (input, string) = kind(TokenKind::StringLiteral)(input)?;
     Ok((
@@ -316,7 +325,7 @@ fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
         snailquote::unescape(string.to_str(input.str)).unwrap(),
     ))
 }
-
+/**解析一个assign表达式 */
 fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("let")(input)?;
 
@@ -339,7 +348,7 @@ fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
     let (input, expr) = parse_expression(input)?;
     Ok((input, Expression::Assign(symbol, Box::new(expr))))
 }
-
+// 解析一个组表达式
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("(")(input)?;
     let (input, expr) = parse_expression(input)?;
@@ -370,7 +379,7 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError>
 
     Ok((input, Expression::List(expr_list)))
 }
-
+/**解析一个map表达式*/
 fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("{")(input)?;
     let (input, expr_map) = separated_list0(
@@ -405,7 +414,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> 
 
     Ok((input, Expression::Map(expr_map)))
 }
-
+/**解析一个for循环表达式 */
 fn parse_for_loop(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("for")(input)?;
     let (input, symbol) = parse_symbol(input).map_err(|_| {
@@ -486,7 +495,7 @@ fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
 
     Ok((input, result))
 }
-
+/**解析一个callable表达式 */
 fn parse_callable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, arg) = parse_symbol(input)?;
     let (input, fn_type) = alt((text("->"), text("~>")))(input)?;
@@ -508,6 +517,9 @@ fn parse_callable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
     ))
 }
 
+/**
+* 解析一个块表达式
+*/
 fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("{")(input)?;
     let (input, expr) = parse_script_tokens(input, false)?;
@@ -522,14 +534,14 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     })?;
     Ok((input, expr))
 }
-
+/**解析一个apply表达式 */
 fn parse_apply(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, f) = alt((parse_expression_prec_two, parse_operator_as_symbol))(input)?;
     let (input, args) = many1(parse_expression_prec_five)(input)?;
 
     Ok((input, Expression::Apply(Box::new(f), args)))
 }
-
+/**解析一个apply操作符表达式 */
 fn parse_apply_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, f) = parse_operator_as_symbol(input)?;
     let (input, args) = many0(parse_expression_prec_five)(input)?;
@@ -611,7 +623,7 @@ fn parse_expression(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
         ))),
     ))
 }
-
+/** 解析一个表达式，优先级为7 */
 fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
     alt((
@@ -624,7 +636,7 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
         parse_expression_prec_six,
     ))(input)
 }
-
+/** 解析一个表达式，优先级为6 */
 fn parse_expression_prec_six(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
     let expr_parser = parse_expression_prec_five;
@@ -673,7 +685,7 @@ fn parse_range(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
         ),
     ))
 }
-
+/** 解析一个表达式，优先级为5 */
 fn parse_expression_prec_five(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
     let expr_parser = parse_expression_prec_four;
@@ -741,6 +753,7 @@ fn parse_operator_as_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression
     map(parse_operator, Expression::Symbol)(input)
 }
 
+/** 解析一个表达式，优先级为4 */
 fn parse_expression_prec_four(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
     let expr_parser = parse_expression_prec_three;
@@ -766,7 +779,7 @@ fn parse_expression_prec_four(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressi
 
     Ok((input, head))
 }
-
+/** 解析一个表达式，优先级为3 */
 fn parse_expression_prec_three(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
     let expr_parser = parse_expression_prec_two;
@@ -793,7 +806,7 @@ fn parse_expression_prec_three(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
 
     Ok((input, head))
 }
-
+/** 解析一个表达式，优先级为2 */
 fn parse_expression_prec_two(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
 
@@ -815,7 +828,7 @@ fn parse_expression_prec_two(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressio
         Expression::Apply(Box::new(Expression::Symbol("@".to_string())), result),
     ))
 }
-
+/** 解析一个表达式，优先级为1 */
 fn parse_expression_prec_one(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     alt((
         parse_group,

@@ -36,7 +36,8 @@ fn get_history_path() -> Option<PathBuf> {
     let home = dirs::home_dir()?;
     Some(home.join(".dune-history"))
 }
-
+/** 初始化REPL环境并设置提示符
+ */
 fn new_editor(env: &Environment) -> Editor<DuneHelper> {
     let config = Config::builder()
         .history_ignore_dups(true)
@@ -81,6 +82,7 @@ fn strip_ansi_escapes(text: impl ToString) -> String {
     result
 }
 
+/** 读取用户输入 */
 fn readline(prompt: impl ToString, rl: &mut Editor<DuneHelper>) -> String {
     let prompt = prompt.to_string();
     loop {
@@ -180,6 +182,7 @@ impl Completer for DuneHelper {
     }
 }
 
+/** 语法高亮处理 */
 fn syntax_highlight(line: &str) -> String {
     let (tokens, diagnostics) = dune::tokenize(line);
 
@@ -296,6 +299,7 @@ fn syntax_highlight(line: &str) -> String {
     result
 }
 
+/** Hinter实现，提供代码补全 */
 impl Hinter for DuneHelper {
     type Hint = String;
 
@@ -340,6 +344,7 @@ impl Hinter for DuneHelper {
     }
 }
 
+/** Highlighter实现，提供语法高亮 */
 impl Highlighter for DuneHelper {
     fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
         &'s self,
@@ -362,6 +367,7 @@ impl Highlighter for DuneHelper {
     }
 }
 
+/** Validator实现，提供输入验证 */
 impl Validator for DuneHelper {
     fn validate(&self, _: &mut ValidationContext) -> rustyline::Result<ValidationResult> {
         Ok(ValidationResult::Valid(None))
@@ -430,6 +436,7 @@ fn get_os_family(t: &Type) -> String {
     .to_string()
 }
 
+/// 解析脚本
 fn parse(input: &str) -> Result<Expression, Error> {
     match parse_script(input) {
         Ok(result) => Ok(result),
@@ -442,18 +449,20 @@ fn parse(input: &str) -> Result<Expression, Error> {
     }
 }
 
+/// 启动交互式REPL（读取-评估-打印循环）
 fn repl(
-    atomic_rl: Arc<Mutex<Editor<DuneHelper>>>,
-    atomic_env: Arc<Mutex<Environment>>,
+    atomic_rl: Arc<Mutex<Editor<DuneHelper>>>, // 用于线程安全的REPL编辑器
+    atomic_env: Arc<Mutex<Environment>>,       // 用于线程安全的环境
 ) -> Result<(), Error> {
-    let mut lines = vec![];
+    let mut lines = vec![]; // 用于存储输入的多行代码
 
-    let history_path = get_history_path();
+    let history_path = get_history_path(); // 获取历史记录文件路径
     loop {
-        let mut env = atomic_env.lock().unwrap();
-        let mut rl = atomic_rl.lock().unwrap();
-        let cwd = env.get_cwd();
-        // let prompt = format!("{}", Expression::Apply(Box::new(env.get("prompt").unwrap()), vec![env.get_cwd().into()]).eval(&mut env)?);
+        let mut env = atomic_env.lock().unwrap(); // 锁定环境并获取可变引用
+        let mut rl = atomic_rl.lock().unwrap(); // 锁定REPL编辑器并获取可变引用
+        let cwd = env.get_cwd(); // 获取当前工作目录
+                                 // 设置提示符，根据是否有输入行来决定
+                                 // let prompt = format!("{}", Expression::Apply(Box::new(env.get("prompt").unwrap()), vec![env.get_cwd().into()]).eval(&mut env)?);
 
         let prompt = Expression::Apply(
             Box::new(Expression::Symbol(
@@ -464,47 +473,51 @@ fn repl(
                 }
                 .to_string(),
             )),
-            vec![cwd.clone().into()],
+            vec![cwd.clone().into()], // 传递当前工作目录
         )
-        .eval(&mut env)
-        .unwrap_or_else(|_| format!("{}$ ", cwd).into())
+        .eval(&mut env) // 计算提示符表达式
+        .unwrap_or_else(|_| format!("{}$ ", cwd).into()) // 默认提示符格式
         .to_string();
         rl.helper_mut()
             .expect("No helper")
-            .set_prompt(prompt.clone());
-        rl.helper_mut().expect("No helper").update_env(&env);
-        let line = readline(prompt, &mut rl);
-        lines.push(line.clone());
-        let text = lines.join("\n");
+            .set_prompt(prompt.clone()); // 设置REPL的提示符
+        rl.helper_mut().expect("No helper").update_env(&env); // 更新REPL的环境
+        let line = readline(prompt, &mut rl); // 读取用户输入
+        lines.push(line.clone()); // 将输入行添加到lines中
+        let text = lines.join("\n"); // 将多行代码连接成一行
 
+        // 解析输入文本
         match parse(&text) {
             Ok(expr) => {
+                // 将当前输入添加到历史记录
                 rl.add_history_entry(text.as_str());
                 if let Some(path) = &history_path {
+                    // 保存历史记录到文件
                     if rl.save_history(path).is_err() {
                         eprintln!("Failed to save history");
                     }
                 }
-                let val = expr.eval(&mut env);
+                let val = expr.eval(&mut env); // 评估表达式
                 match val.clone() {
                     Ok(Expression::Symbol(name)) => {
                         if let Err(e) =
                             Expression::Apply(Box::new(Expression::Symbol(name)), vec![])
                                 .eval(&mut env)
+                        // 调用符号对应的函数
                         {
-                            eprintln!("{}", e)
+                            eprintln!("{}", e) // 打印错误
                         }
                     }
-                    Ok(Expression::None) => {}
+                    Ok(Expression::None) => {} // 如果评估结果为None，则不做任何处理
                     Ok(Expression::Macro(_, _)) => {
                         let _ = Expression::Apply(
-                            Box::new(Expression::Symbol("report".to_string())),
+                            Box::new(Expression::Symbol("report".to_string())), // 使用"report"符号
                             vec![Expression::Apply(
-                                Box::new(val.unwrap().clone()),
-                                vec![env.get_cwd().into()],
+                                Box::new(val.unwrap().clone()), // 传递评估结果
+                                vec![env.get_cwd().into()],     // 传递当前工作目录
                             )],
                         )
-                        .eval(&mut env);
+                        .eval(&mut env); // 调用"report"符号对应的函数
                     }
                     Ok(val) => {
                         let _ = Expression::Apply(
@@ -514,7 +527,7 @@ fn repl(
                         .eval(&mut env);
                     }
                     Err(e) => {
-                        eprintln!("{}", e)
+                        eprintln!("{}", e) // 打印错误
                     }
                 }
                 lines = vec![];
@@ -522,7 +535,7 @@ fn repl(
 
             Err(e) => {
                 if line.is_empty() {
-                    eprintln!("{}", e);
+                    eprintln!("{}", e); // 打印解析错误
                     lines = vec![];
                 } else {
                     rl.add_history_entry(text.as_str());
@@ -542,18 +555,18 @@ fn run_file(path: PathBuf, env: &mut Environment) -> Result<Expression, Error> {
         Err(e) => Err(Error::CustomError(format!("Failed to read file: {}", e))),
     }
 }
-
+/// 启动主函数
 fn main() -> Result<(), Error> {
     let matches = App::new(
         r#"
-        888                            
-        888                            
-        888                            
-    .d88888 888  888 88888b.   .d88b.  
-   d88" 888 888  888 888 "88b d8P  Y8b 
-   888  888 888  888 888  888 88888888 
-   Y88b 888 Y88b 888 888  888 Y8b.     
-    "Y88888  "Y88888 888  888  "Y8888  
+        888
+        888
+        888
+    .d88888 888  888 88888b.   .d88b.
+   d88" 888 888  888 888 "88b d8P  Y8b
+   888  888 888  888 888  888 88888888
+   Y88b 888 Y88b 888 888  888 Y8b.
+    "Y88888  "Y88888 888  888  "Y8888
    "#,
     )
     .author(crate_authors!())
@@ -565,11 +578,12 @@ fn main() -> Result<(), Error> {
             .multiple_values(true)
             .required(false),
     ])
-    .get_matches();
-    let mut env = Environment::new();
+    .get_matches(); // 获取命令行参数
+    let mut env = Environment::new(); // 创建环境
 
-    binary::init(&mut env);
+    binary::init(&mut env); // 初始化二进制文件
 
+    // 解析并执行"clear"表达式
     parse("let clear = _ ~> console@clear ()")?.eval(&mut env)?;
     parse("let pwd = _ ~> echo CWD")?.eval(&mut env)?;
     parse(
@@ -594,9 +608,12 @@ fn main() -> Result<(), Error> {
     .eval(&mut env)?;
 
     if matches.is_present("FILE") {
+        // 获取文件路径
         let path = PathBuf::from(matches.value_of("FILE").unwrap());
 
         if let Err(e) = run_file(path, &mut env) {
+            // 运行文件
+            // 打印错误
             eprintln!("{}", e)
         }
 
@@ -626,17 +643,18 @@ fn main() -> Result<(), Error> {
         }
 
         if !matches.is_present("interactive") {
-            return Ok(());
+            return Ok(()); // 如果没有交互模式和执行模式，则退出
         }
     }
 
     if let Some(home_dir) = dirs::home_dir() {
+        // 获取预lude文件路径
         let prelude_path = home_dir.join(".dune-prelude");
-        // If file doesn't exist
+        // 如果文件不存在
         if !prelude_path.exists() {
             let prompt = format!("Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ", prelude_path.display());
-            let mut rl = new_editor(&env);
-            let response = readline(prompt, &mut rl);
+            let mut rl = new_editor(&env); // 创建新的REPL编辑器
+            let response = readline(prompt, &mut rl); // 读取用户输入
 
             if response.to_lowercase().trim() == "y" {
                 if let Err(e) = std::fs::write(&prelude_path, DEFAULT_PRELUDE) {
@@ -660,23 +678,25 @@ fn main() -> Result<(), Error> {
         }
     }
 
+    // 创建新的REPL编辑器
     let mut rl = new_editor(&env);
-    let history_path = get_history_path();
+    let history_path = get_history_path(); // 获取历史记录文件路径
     if let Some(path) = history_path {
-        if rl.load_history(&path).is_err() {}
+        if rl.load_history(&path).is_err() {} // 加载历史记录，如果失败则不处理
     }
 
-    let editor_ref = Arc::new(Mutex::new(rl));
-    let editor_ref_copy = editor_ref.clone();
+    let editor_ref = Arc::new(Mutex::new(rl)); // 将REPL编辑器包装成线程安全的引用
+    let editor_ref_copy = editor_ref.clone(); // 复制REPL编辑器引用
 
-    let env_ref = Arc::new(Mutex::new(env));
-    let env_ref_copy = env_ref.clone();
+    let env_ref = Arc::new(Mutex::new(env)); // 将环境包装成线程安全的引用
+    let env_ref_copy = env_ref.clone(); // 复制环境引用
 
     ctrlc::set_handler(move || {
+        // 设置Ctrl-C处理程序
         repl(editor_ref_copy.clone(), env_ref_copy.clone()).expect("Error in REPL");
     })
     .expect("Error setting Ctrl-C handler");
-
+    // 启动REPL
     repl(editor_ref, env_ref)?;
 
     Ok(())

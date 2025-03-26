@@ -1,4 +1,6 @@
 # Changelog
+## [0.1.9-dotindex] - 2022-01-02
+
 changed @ to . to index a map or list.
 so cmds like fs@ls changed to fs.ls
 affect:
@@ -6,20 +8,12 @@ affect:
 `ls "./"`
 - chained index not supported yet:
 `list.a.b` will fail.
+`(list.a).b` or `list.(a.b)` works.
 
 Do you like . or @ to  index a map or list ?
 
 ---
 
-
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
-
-*No unreleased changes yet*
 
 ## [0.1.8] - 2022-01-02
 

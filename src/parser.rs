@@ -329,6 +329,7 @@ fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
 fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("let")(input)?;
 
+    // 解析变量名
     let (input, symbol) = alt((parse_symbol, parse_operator))(input).map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
@@ -345,7 +346,7 @@ fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
             Some("let expressions must use an `=` sign"),
         )
     })?;
-    let (input, expr) = parse_expression(input)?;
+    let (input, expr) = parse_expression(input)?; // 解析右侧表达式
     Ok((input, Expression::Assign(symbol, Box::new(expr))))
 }
 // 解析一个组表达式
@@ -461,6 +462,7 @@ fn parse_for_loop(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
 fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("if")(input)?;
 
+    // 解析条件表达式
     let (input, cond) = parse_expression_prec_six(input).map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
@@ -470,6 +472,7 @@ fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
         )
     })?;
 
+    // 解析 then 分支
     let (input, t) = parse_expression_prec_four(input).map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
@@ -479,6 +482,7 @@ fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
         )
     })?;
 
+    // 可选 else 分支
     let (input, maybe_e) = opt(preceded(
         text("else"),
         alt((parse_if, parse_expression_prec_four)),

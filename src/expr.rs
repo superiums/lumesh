@@ -83,6 +83,7 @@ where
     }
 }
 
+// 环境变量存储为 Map
 impl From<Environment> for Expression {
     fn from(env: Environment) -> Self {
         Self::Map(env.bindings.into_iter().collect::<BTreeMap<String, Self>>())
@@ -112,12 +113,14 @@ pub enum Expression {
     None,
 
     // Assign an expression to a variable
+    // let 语句的表示
     Assign(String, Box<Self>),
 
     // Control flow
     For(String, Box<Self>, Box<Self>),
 
     // Control flow
+    // 条件、then、else 分支
     If(Box<Self>, Box<Self>, Box<Self>),
 
     // Apply a function or macro to an argument

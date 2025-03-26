@@ -195,7 +195,7 @@ fn syntax_highlight(line: &str) -> String {
             }
             (
                 TokenKind::Punctuation,
-                o @ ("@" | "\'" | "=" | "|" | ">>" | "<<" | ">>>" | "->" | "~>"),
+                o @ ("." | "@" | "\'" | "=" | "|" | ">>" | "<<" | ">>>" | "->" | "~>"),
             ) => {
                 result.push_str("\x1b[96m");
                 is_colored = true;
@@ -546,14 +546,14 @@ fn run_file(path: PathBuf, env: &mut Environment) -> Result<Expression, Error> {
 fn main() -> Result<(), Error> {
     let matches = App::new(
         r#"
-        888                            
-        888                            
-        888                            
-    .d88888 888  888 88888b.   .d88b.  
-   d88" 888 888  888 888 "88b d8P  Y8b 
-   888  888 888  888 888  888 88888888 
-   Y88b 888 Y88b 888 888  888 Y8b.     
-    "Y88888  "Y88888 888  888  "Y8888  
+        888
+        888
+        888
+    .d88888 888  888 88888b.   .d88b.
+   d88" 888 888  888 888 "88b d8P  Y8b
+   888  888 888  888 888  888 88888888
+   Y88b 888 Y88b 888 888  888 Y8b.
+    "Y88888  "Y88888 888  888  "Y8888
    "#,
     )
     .author(crate_authors!())
@@ -570,26 +570,26 @@ fn main() -> Result<(), Error> {
 
     binary::init(&mut env);
 
-    parse("let clear = _ ~> console@clear ()")?.eval(&mut env)?;
+    parse("let clear = _ ~> console.clear ()")?.eval(&mut env)?;
     parse("let pwd = _ ~> echo CWD")?.eval(&mut env)?;
     parse(
         "let join = sep -> l -> {
             let sep = str sep;
-            fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
+            fn.reduce (x -> y -> x + sep + (str y)) (str l.0) (list.tail l)
         }",
     )?
     .eval(&mut env)?;
 
     parse(
         "let prompt = cwd -> \
-            fmt@bold ((fmt@dark@blue \"(dune) \") + \
-            (fmt@bold (fmt@dark@green cwd)) + \
-            (fmt@bold (fmt@dark@blue \"$ \")))",
+            fmt.bold ((fmt.dark.blue \"(dune) \") + \
+            (fmt.bold (fmt.dark.green cwd)) + \
+            (fmt.bold (fmt.dark.blue \"$ \")))",
     )?
     .eval(&mut env)?;
     parse(
         r#"let incomplete_prompt = cwd ->
-            ((len cwd) + (len "(dune) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#,
+            ((len cwd) + (len "(dune) ")) * " " + (fmt.bold (fmt.dark.yellow "> "));"#,
     )?
     .eval(&mut env)?;
 

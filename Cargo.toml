@@ -15,6 +15,9 @@ repository = "https://github.com/adam-mcdaniel/dune"
 name = "dunesh"
 path = "src/bin.rs"
 
+[profile.dev]
+incremental = true
+
 [dependencies]
 clap = { version = "3.0", features = [ "cargo" ] }
 json = "0.12.4"

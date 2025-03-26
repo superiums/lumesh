@@ -144,8 +144,9 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxError>> {
         let (a, b) = (window[0], window[1]);
         if is_symbol_like(a.kind)
             && is_symbol_like(b.kind)
-            && a.text(tokens) != "@"
-            && b.text(tokens) != "@"
+            && a.text(tokens) != "." //changed from @ to .
+            && b.text(tokens) != "."
+        //changed from @ to .
         {
             return Err(nom::Err::Failure(SyntaxError::Expected {
                 input: a.range.join(b.range),
@@ -794,12 +795,15 @@ fn parse_expression_prec_three(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
     Ok((input, head))
 }
 
+// TODO
+// affect: path vars must be quoted.
+// now a.b.c can't be parsed,but have to be (a.b).c or a.(b.c)
 fn parse_expression_prec_two(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
 
     let (input, head) = parse_expression_prec_one(input)?;
     let (input, args) = many0(preceded(
-        text("@"),
+        text("."), // use . as index, insdead of @
         alt((parse_expression_prec_one, parse_operator_as_symbol)),
     ))(input)?;
 
@@ -812,7 +816,7 @@ fn parse_expression_prec_two(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressio
 
     Ok((
         input,
-        Expression::Apply(Box::new(Expression::Symbol("@".to_string())), result),
+        Expression::Apply(Box::new(Expression::Symbol(".".to_string())), result),
     ))
 }
 

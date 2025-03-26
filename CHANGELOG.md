@@ -1,4 +1,17 @@
 # Changelog
+changed @ to . to index a map or list.
+so cmds like fs@ls changed to fs.ls
+affect:
+- paths must be doube quoted. eg:
+`ls "./"`
+- chained index not supported yet:
+`list.a.b` will fail.
+
+Do you like . or @ to  index a map or list ?
+
+---
+
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

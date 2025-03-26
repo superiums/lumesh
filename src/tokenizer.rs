@@ -46,11 +46,11 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
+            number_literal, //must before short_operator, to protect 1.2 to be list.index
             map_valid_token(short_operator, TokenKind::Operator),
             map_valid_token(bool_literal, TokenKind::BooleanLiteral),
             map_valid_token(comment, TokenKind::Comment),
             string_literal,
-            number_literal,
             map_valid_token(symbol, TokenKind::Symbol),
             map_valid_token(whitespace, TokenKind::Whitespace),
         ))(input)
@@ -115,7 +115,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("*"),
         keyword_tag("%"),
         keyword_tag("|"),
-        punctuation_tag("@"),
+        punctuation_tag("."), // use . as index, insdead of @
         punctuation_tag("!"),
     ))(input)
 }
@@ -344,9 +344,9 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '+' | '-' | '.' | '~' | '\\' | '/' | '?' |
+            '_' | '+' | '-' | '~' | '\\' | '/' | '?' |
             '&' | '<' | '>' | '$' | '%' | '#' | '^' | ':'
-        };
+        }; //removed '.'
     }
 
     static ASCII_SYMBOL_CHARS: [bool; 128] = {

@@ -249,7 +249,7 @@ pub fn get(env: &mut Environment) -> Expression {
     );
 
     tmp.define_builtin(
-        "@",
+        ".", //changed to . from @
         |args, env| {
             let mut val = args[0].eval(env)?;
             for arg in &args[1..] {
@@ -271,18 +271,18 @@ pub fn get(env: &mut Environment) -> Expression {
 
     tmp.define(
         "<<",
-        crate::parse("fs@read").unwrap().eval(&mut new_tmp).unwrap(),
+        crate::parse("fs.read").unwrap().eval(&mut new_tmp).unwrap(),
     );
     tmp.define(
         ">>",
-        crate::parse("file -> contents -> fs@write file contents")
+        crate::parse("file -> contents -> fs.write file contents")
             .unwrap()
             .eval(&mut new_tmp)
             .unwrap(),
     );
     tmp.define(
         ">>>",
-        crate::parse("file -> contents -> fs@append file contents")
+        crate::parse("file -> contents -> fs.append file contents")
             .unwrap()
             .eval(&mut new_tmp)
             .unwrap(),

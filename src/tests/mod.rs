@@ -151,7 +151,7 @@ let x # test
 #[test]
 fn tokenize_symbols_and_operators() {
     tokenize_test(
-        r#"to == != >= <= && || // < > + - * % | >> @ _+-.~\/?&<>$%^: abcXYZ"#,
+        r#"to == != >= <= && || // < > + - * % | >> . _+-.~\/?&<>$%^: abcXYZ"#,
         r#"[
     Operator(0..2),
     Whitespace(2..3),

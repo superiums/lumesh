@@ -105,6 +105,8 @@ pub enum TokenKind {
     BooleanLiteral,
     Symbol,
     Whitespace,
+    NewLine,          //add newline
+    LineContinuation, //add linecontinue
     Comment,
 }
 

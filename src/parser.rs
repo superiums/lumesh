@@ -182,21 +182,69 @@ fn is_symbol_like(kind: TokenKind) -> bool {
     )
 }
 
+// fn parse_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     let (input, expr) = parse_expression(input)?;
+//     match (&expr, text(";")(input)) {
+//         (Expression::For(_, _, _), Ok((input, _))) => Ok((input, expr)),
+//         (Expression::For(_, _, _), Err(_)) => Ok((input, expr)),
+//         (Expression::If(_, _, _), Ok((input, _))) => Ok((input, expr)),
+//         (Expression::If(_, _, _), Err(_)) => Ok((input, expr)),
+
+//         (_, Ok((input, _))) => Ok((input, expr)),
+//         (_, Err(_)) => Err(SyntaxError::expected(
+//             input.get_str_slice(),
+//             ";",
+//             None,
+//             Some("try adding a semicolon"),
+//         )),
+//     }
+// }
+// parser.rs中调整语句分割逻辑
+// fn parse_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     let (input, expr) = parse_expression(input)?;
+//     // 允许分号或换行符作为结束符
+
+//     // 统一返回Token类型
+//     let terminator = alt((
+//         text(";").map(|t| t),                             // 分号返回Token
+//         kind(TokenKind::NewLine).map(|_| Token::dummy()), // 换行符转为Token
+//     ));
+
+//     // 消费可选分隔符（保留输入位置）
+//     let (input, _) = opt(terminator)(input)?;
+
+//     Ok((input, expr))
+// }
 fn parse_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, expr) = parse_expression(input)?;
-    match (&expr, text(";")(input)) {
-        (Expression::For(_, _, _), Ok((input, _))) => Ok((input, expr)),
-        (Expression::For(_, _, _), Err(_)) => Ok((input, expr)),
-        (Expression::If(_, _, _), Ok((input, _))) => Ok((input, expr)),
-        (Expression::If(_, _, _), Err(_)) => Ok((input, expr)),
 
-        (_, Ok((input, _))) => Ok((input, expr)),
-        (_, Err(_)) => Err(SyntaxError::expected(
-            input.get_str_slice(),
-            ";",
-            None,
-            Some("try adding a semicolon"),
-        )),
+    // 先尝试分号
+    let result = match text(";")(input) {
+        Ok((remaining, _)) => Ok((remaining, expr)),
+        Err(_) => {
+            // 分号不存在时尝试换行符
+            match kind(TokenKind::NewLine)(input) {
+                Ok((remaining, _)) => Ok((remaining, expr)),
+                Err(_) => {
+                    // 两者都不存在时处理控制结构例外
+                    match &expr {
+                        Expression::For(_, _, _) | Expression::If(_, _, _) => Ok((input, expr)),
+                        _ => Err(SyntaxError::expected(
+                            input.get_str_slice(),
+                            "';' or newline",
+                            None,
+                            Some("statement requires terminator"),
+                        )),
+                    }
+                }
+            }
+        }
+    };
+
+    // 统一处理剩余输入
+    match result {
+        Ok((remaining, expr)) => Ok((remaining, expr)),
+        Err(e) => Err(e),
     }
 }
 
@@ -204,6 +252,21 @@ fn parse_script_tokens(
     input: Tokens<'_>,
     require_eof: bool,
 ) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    // 合并续行符连接的表达式
+    let mut merged_exprs = vec![];
+    let mut current_expr = vec![];
+
+    for token in input.slice {
+        if token.kind == TokenKind::LineContinuation {
+            if !current_expr.is_empty() {
+                merged_exprs.push(current_expr);
+                current_expr = vec![];
+            }
+        } else {
+            current_expr.push(token);
+        }
+    }
+
     // println!("hmm {}", input);
     let (input, mut exprs) = many0(parse_statement)(input)?;
 

@@ -43,6 +43,10 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
         Err(NOT_FOUND)
     } else {
         Ok(alt((
+            // 优先处理续航、换行符（新增）
+            map_valid_token(line_continuation, TokenKind::LineContinuation),
+            // triple_quote_string,
+            map_valid_token(newline, TokenKind::NewLine),
             map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
@@ -141,6 +145,59 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
     let token = Token::new(TokenKind::StringLiteral, range);
     Ok((rest, (token, diagnostics)))
 }
+// 新增函数：专门处理三重引号字符串
+// fn triple_quote_string(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+//     // 1. 匹配起始 """
+//     let (rest, _) = input.strip_prefix("\"\"\"").ok_or(NOT_FOUND)?;
+
+//     let mut content = String::new();
+//     let mut errors = Vec::new();
+//     let mut current = rest;
+//     let start_offset = input.get(offset);
+
+//     // 2. 遍历直到找到结束 """ 或输入结束
+//     loop {
+//         // 检测结束标记 """
+//         if let Some(new_rest) = current.strip_prefix("\"\"\"") {
+//             current = new_rest;
+//             break;
+//         }
+
+//         // 处理转义字符（可选，根据需求）
+//         if let Some('\\') = current.chars().next() {
+//             let (r, escaped_char) = parse_escape(current)?;
+//             content.push(escaped_char);
+//             current = r;
+//             continue;
+//         }
+
+//         // 消费普通字符
+//         let next_special = current.find(|c| c == '\\' || c == '"');
+//         let (text_part, remaining) = match next_special {
+//             Some(pos) => current.split_at(pos),
+//             None => current.split_at(current.len()),
+//         };
+
+//         content.push_str(text_part.to_str(current.get(str)));
+//         current = remaining;
+
+//         // 输入耗尽但未找到结束符
+//         if current.is_empty() {
+//             errors.push(input.get(str).get(start_offset..input.len()));
+//             break;
+//         }
+//     }
+
+//     // 3. 生成Token和诊断信息
+//     let (rest, range) = input.split_until(current);
+//     let token = Token::new(TokenKind::StringLiteral, range);
+//     let diag = if errors.is_empty() {
+//         Diagnostic::Valid
+//     } else {
+//         Diagnostic::InvalidStringEscapes(errors.into_boxed_slice())
+//     };
+//     Ok((rest, (token, diag)))
+// }
 
 fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // skip sign
@@ -209,6 +266,36 @@ fn whitespace(input: Input<'_>) -> TokenizationResult<'_> {
     }
 
     Ok(input.split_at(ws_chars))
+}
+// 新增换行符解析函数
+// fn newline(input: Input<'_>) -> TokenizationResult<'_> {
+//     alt((
+//         // 匹配 \r\n 或 \n
+//         |i| input.strip_prefix("\r\n").map(|(r, _)| (r, "\r\n")),
+//         |i| input.strip_prefix("\n").map(|(r, _)| (r, "\n")),
+//     ))(input)
+// }
+fn newline(input: Input<'_>) -> TokenizationResult<'_> {
+    // 检查前一个Token是否在未闭合结构中
+    if input
+        .chars()
+        .rev()
+        .any(|c| matches!(c, '{' | '(' | '[' | '"'))
+    {
+        return Err(NOT_FOUND);
+    }
+
+    let (rest, _) = input.strip_prefix("\n").ok_or(NOT_FOUND)?;
+    // let token = Token {
+    //     kind: TokenKind::NewLine,
+    //     range: input.split_until(rest).1,
+    // };
+    Ok((rest, input.split_empty()))
+}
+// 新增续行符解析函数
+fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
+    let (input, _) = input.strip_prefix("\\\n").ok_or(NOT_FOUND)?;
+    Ok((input, input.split_empty()))
 }
 
 fn comment(input: Input<'_>) -> TokenizationResult<'_> {

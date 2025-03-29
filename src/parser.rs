@@ -182,102 +182,63 @@ fn is_symbol_like(kind: TokenKind) -> bool {
     )
 }
 
-// fn parse_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-//     let (input, expr) = parse_expression(input)?;
-//     match (&expr, text(";")(input)) {
-//         (Expression::For(_, _, _), Ok((input, _))) => Ok((input, expr)),
-//         (Expression::For(_, _, _), Err(_)) => Ok((input, expr)),
-//         (Expression::If(_, _, _), Ok((input, _))) => Ok((input, expr)),
-//         (Expression::If(_, _, _), Err(_)) => Ok((input, expr)),
-
-//         (_, Ok((input, _))) => Ok((input, expr)),
-//         (_, Err(_)) => Err(SyntaxError::expected(
-//             input.get_str_slice(),
-//             ";",
-//             None,
-//             Some("try adding a semicolon"),
-//         )),
-//     }
-// }
-// parser.rs中调整语句分割逻辑
-// fn parse_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-//     let (input, expr) = parse_expression(input)?;
-//     // 允许分号或换行符作为结束符
-
-//     // 统一返回Token类型
-//     let terminator = alt((
-//         text(";").map(|t| t),                             // 分号返回Token
-//         kind(TokenKind::NewLine).map(|_| Token::dummy()), // 换行符转为Token
-//     ));
-
-//     // 消费可选分隔符（保留输入位置）
-//     let (input, _) = opt(terminator)(input)?;
-
-//     Ok((input, expr))
-// }
 fn parse_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
     let (input, expr) = parse_expression(input)?;
+    // dbg!("---[got expression]---", &expr, input.get_str_slice());
 
-    // 先尝试分号
-    let result = match text(";")(input) {
-        Ok((remaining, _)) => Ok((remaining, expr)),
-        Err(_) => {
-            // 分号不存在时尝试换行符
-            match kind(TokenKind::NewLine)(input) {
-                Ok((remaining, _)) => Ok((remaining, expr)),
-                Err(_) => {
-                    // 两者都不存在时处理控制结构例外
-                    match &expr {
-                        Expression::For(_, _, _) | Expression::If(_, _, _) => Ok((input, expr)),
-                        _ => Err(SyntaxError::expected(
-                            input.get_str_slice(),
-                            "';' or newline",
-                            None,
-                            Some("statement requires terminator"),
-                        )),
-                    }
-                }
-            }
+    // 尝试消费终止符（分号或换行符）
+    match &expr {
+        // 控制结构不需要显式终止符
+        Expression::For(_, _, _) | Expression::If(_, _, _) => {
+            // opt(kind(TokenKind::NewLine))(input)?; //消费换行符
+            return Ok((input, expr));
+        }
+        // 普通表达式需要终止符
+        _ => {
+            // 尝试匹配分号或换行符
+            // (input, _) = lineterminator(input)?;
+            // 检查是否存在其他终止符（如分号）
+            // 允许行继续符出现在语句结尾
+            // let (input, _) = alt((
+            //     map(kind(TokenKind::LineContinuation), |_| ()),
+            //     map(kind(TokenKind::LineBreak), |_| ()),
+            // ))(input)?;
+            let (input, _) = kind(TokenKind::LineBreak)(input)?;
+            // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
+            // let (input, _) = opt(text(";"))(input)?;
+
+            // dbg!("---[got expression lineEnd]---");
+            return Ok((input, expr));
         }
     };
-
-    // 统一处理剩余输入
-    match result {
-        Ok((remaining, expr)) => Ok((remaining, expr)),
-        Err(e) => Err(e),
-    }
 }
 
 fn parse_script_tokens(
     input: Tokens<'_>,
     require_eof: bool,
 ) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    // 合并续行符连接的表达式
-    let mut merged_exprs = vec![];
-    let mut current_expr = vec![];
-
-    for token in input.slice {
-        if token.kind == TokenKind::LineContinuation {
-            if !current_expr.is_empty() {
-                merged_exprs.push(current_expr);
-                current_expr = vec![];
-            }
-        } else {
-            current_expr.push(token);
-        }
-    }
-
-    // println!("hmm {}", input);
+    // print!("passing scripot tokens")
+    // dbg!("parse script tokens ------>", input);
     let (input, mut exprs) = many0(parse_statement)(input)?;
+    // dbg!("parse_statement-->", input.get_str_slice(), &exprs);
 
-    let (mut input, last) = opt(terminated(parse_expression, opt(text(";"))))(input)?;
+    // 解析最后一行，可选的;作为终止
+    let (input, last) = opt(terminated(
+        parse_expression,
+        opt(kind(TokenKind::LineBreak)),
+    ))(input)?;
+    // dbg!("after terminated-->", input.get_str_slice(), &last);
 
     if let Some(expr) = last {
         exprs.push(expr);
     }
+    // 新增：清理所有末尾换行符
+    let (input, _) = many0(kind(TokenKind::LineBreak))(input)?;
 
     if require_eof {
-        input = eof(input)
+        // input.is_empty()
+        eof(input)
             .map_err(|_: nom::Err<SyntaxError>| {
                 SyntaxError::expected(input.get_str_slice(), "end of input", None, None)
             })?
@@ -514,7 +475,8 @@ fn parse_for_loop(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
 
 fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("if")(input)?;
-
+    //
+    // dbg!(input);
     let (input, cond) = parse_expression_prec_six(input).map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
@@ -606,10 +568,19 @@ fn parse_apply_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
 
 fn parse_expression(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
+    // 过滤行继续符和后续换行符
+    let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费行继续符
+
+    // let (input, _) = many0(alt((
+    //     // 匹配0次或多次
+    //     kind(TokenKind::LineContinuation), // 消费行继续符
+    //     kind(TokenKind::LineBreak), // 消费换行符
+    // )))(input)?;
 
     let expr_parser = parse_expression_prec_seven;
 
     let (input, head) = expr_parser(input)?;
+    // let (input, _) = opt(kind(TokenKind::LineContinuation))(input)?; // 消费行继续符
 
     let (input, list) = many0(pair(
         alt((text("|"), text(">>>"), text(">>"), text("<<"))),

@@ -175,7 +175,7 @@ fn is_symbol_like(kind: TokenKind) -> bool {
         kind,
         TokenKind::Symbol
             | TokenKind::Keyword
-            | TokenKind::Operator
+            // | TokenKind::Operator  //to allow ++ -- to be overload
             | TokenKind::BooleanLiteral
             | TokenKind::FloatLiteral
             | TokenKind::IntegerLiteral
@@ -377,7 +377,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> 
         text(","),
         separated_pair(
             alt((parse_symbol, parse_operator)),
-            text("="),
+            alt((text("="), text(":"))), //allow :
             parse_expression,
         ),
     )(input)?;

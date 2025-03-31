@@ -774,7 +774,7 @@ fn parse_expression_prec_three(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
     let (input, mut head) = expr_parser(input)?;
 
     let (input, mut list) =
-        many0(pair(alt((text("*"), text("//"), text("%"))), expr_parser))(input)?;
+        many0(pair(alt((text("*"), text("/"), text("%"))), expr_parser))(input)?;
 
     if list.is_empty() {
         return Ok((input, head));

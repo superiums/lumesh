@@ -102,7 +102,6 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("<="),
         keyword_tag("&&"),
         keyword_tag("||"),
-        operator_tag("//"), // to allow a<b insteadof mustbe a < b
         keyword_tag("<<"),
         keyword_tag(">>"),
         keyword_tag(">>>"),
@@ -119,6 +118,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("+"), // to allow a<b insteadof mustbe a < b
         operator_tag("-"), // to allow a<b insteadof mustbe a < b
         operator_tag("*"), // to allow a<b insteadof mustbe a < b
+        operator_tag("/"), // to allow a<b insteadof mustbe a < b
         operator_tag("%"), // to allow a<b insteadof mustbe a < b
         keyword_tag("|"),
         punctuation_tag("@"),

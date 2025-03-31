@@ -87,7 +87,7 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("\'"),
         punctuation_tag(","),
         punctuation_tag(";"),
-        punctuation_tag("="),
+        // punctuation_tag("="),
         punctuation_tag(":"),
         punctuation_tag("->"), // `->foo` is also a valid symbol
         punctuation_tag("~>"), // `~>foo` is also a valid symbol
@@ -121,6 +121,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("*"), // to allow a<b insteadof mustbe a < b
         operator_tag("/"), // to allow a<b insteadof mustbe a < b
         operator_tag("%"), // to allow a<b insteadof mustbe a < b
+        operator_tag("="), // 新增赋值运算符
         keyword_tag("|"),
         punctuation_tag("@"),
         punctuation_tag("!"),

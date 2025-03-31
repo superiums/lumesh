@@ -292,13 +292,13 @@ fn parse_none(input: Tokens<'_>) -> IResult<Tokens<'_>, (), SyntaxError> {
     }
 }
 
-fn parse_quote(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    let (input, _) = text("'")(input)?;
-    map(parse_expression_prec_two, |x| {
-        dbg!(x.clone());
-        Expression::Quote(Box::new(x))
-    })(input)
-}
+// fn parse_quote(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     let (input, _) = text("'")(input)?;
+//     map(parse_expression_prec_two, |x| {
+//         dbg!(x.clone());
+//         Expression::Quote(Box::new(x))
+//     })(input)
+// }
 
 fn parse_not(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("!")(input)?;
@@ -328,8 +328,15 @@ fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
         Expression::Assign(symbol, Box::new(Expression::Quote(Box::new(expr)))),
     ))
 }
+// 新增 parse_assignment 函数
+fn parse_assignment(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, symbol) = parse_symbol(input)?;
+    let (input, _) = text("=")(input)?;
+    let (input, expr) = parse_expression(input)?;
+    Ok((input, Expression::Assign(symbol, Box::new(expr))))
+}
 
-fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("let")(input)?;
 
     let (input, symbol) = alt((parse_symbol, parse_operator))(input).map_err(|_| {
@@ -340,16 +347,16 @@ fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
             Some("try using a valid symbol such as `x` in `let x = 5`"),
         )
     })?;
-    let (input, _) = text("=")(input).map_err(|_| {
-        SyntaxError::unrecoverable(
-            input.get_str_slice(),
-            "`=`",
-            None,
-            Some("let expressions must use an `=` sign"),
-        )
-    })?;
-    let (input, expr) = parse_expression(input)?;
-    Ok((input, Expression::Assign(symbol, Box::new(expr))))
+
+    // 新增：允许等号和表达式可选
+    let (input, expr) = opt(pair(text("="), parse_expression))(input)?;
+
+    let expr = match expr {
+        Some((_, e)) => e,
+        None => Expression::None, // 无初始值
+    };
+
+    Ok((input, Expression::Declare(symbol, Box::new(expr)))) // 新增 Declare 表达式类型
 }
 
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
@@ -630,7 +637,8 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
         parse_for_loop,
         parse_if,
         parse_lazy_assign,
-        parse_assign,
+        parse_declare,
+        parse_assignment,
         parse_callable,
         parse_apply,
         parse_apply_operator,
@@ -832,7 +840,7 @@ fn parse_expression_prec_two(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressio
 fn parse_expression_prec_one(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     alt((
         parse_group,
-        parse_quote,
+        // parse_quote,
         parse_map,
         parse_block,
         parse_list,

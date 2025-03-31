@@ -294,8 +294,8 @@ fn parse_none(input: Tokens<'_>) -> IResult<Tokens<'_>, (), SyntaxError> {
 
 fn parse_quote(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("'")(input)?;
-
     map(parse_expression_prec_two, |x| {
+        dbg!(x.clone());
         Expression::Quote(Box::new(x))
     })(input)
 }
@@ -314,6 +314,18 @@ fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
     Ok((
         input,
         snailquote::unescape(string.to_str(input.str)).unwrap(),
+    ))
+}
+// 新增延迟赋值解析逻辑
+fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, _) = text("let")(input)?;
+    let (input, symbol) = parse_symbol(input)?;
+    let (input, _) = text(":=")(input)?; // 使用:=作为延迟赋值符号
+    let (input, expr) = parse_expression(input)?;
+    dbg!(&expr);
+    Ok((
+        input,
+        Expression::Assign(symbol, Box::new(Expression::Quote(Box::new(expr)))),
     ))
 }
 
@@ -617,6 +629,7 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
     alt((
         parse_for_loop,
         parse_if,
+        parse_lazy_assign,
         parse_assign,
         parse_callable,
         parse_apply,

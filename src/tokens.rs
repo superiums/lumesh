@@ -115,6 +115,7 @@ pub enum TokenKind {
     Operator,
     Keyword,
     StringLiteral,
+    StringRaw,
     IntegerLiteral,
     FloatLiteral,
     BooleanLiteral,

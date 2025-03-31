@@ -309,6 +309,12 @@ fn parse_not(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> 
 }
 
 #[inline]
+fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
+    let (input, string) = kind(TokenKind::StringRaw)(input)?;
+    Ok((input, string.to_str(input.str).to_string()))
+}
+
+#[inline]
 fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
     let (input, string) = kind(TokenKind::StringLiteral)(input)?;
     Ok((
@@ -848,6 +854,7 @@ fn parse_expression_prec_one(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressio
         map(parse_none, |_| Expression::None),
         map(parse_float, Expression::Float),
         map(parse_integer, Expression::Integer),
+        map(parse_string_raw, Expression::String),
         map(parse_string, Expression::String),
         map(parse_symbol, Expression::Symbol),
     ))(input)

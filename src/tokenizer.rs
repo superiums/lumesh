@@ -84,7 +84,7 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("]"),
         punctuation_tag("{"),
         punctuation_tag("}"),
-        punctuation_tag("\'"),
+        // punctuation_tag("\'"),
         punctuation_tag(","),
         punctuation_tag(";"),
         // punctuation_tag("="),
@@ -188,16 +188,99 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     }
     Err(NOT_FOUND)
 }
+// fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+//     // 解析开始引号
+//     let (rest_after_start_quote, start_quote_range) = punctuation_tag("\"")(input)?;
+//     // 解析内容部分
+//     let (rest_after_content, diagnostics) = parse_string_inner(rest_after_start_quote)?;
+//     // 解析结束引号或处理EOF
+//     let (rest_after_end_quote, end_quote_range) = alt((
+//         map(punctuation_tag("\""), |(rest, range)| (rest, range)),
+//         map(eof, |_| (input.split_empty(), input.split_empty())),
+//     ))(rest_after_content)?;
 
+//     // 计算内容的起始和结束位置
+//     let content_start = start_quote_range.end();
+//     let content_end = end_quote_range.start();
+
+//     // 生成内容范围，确保有效性
+//     let content_range = if content_start <= content_end {
+//         // 使用input的方法来分割内容范围
+//         let (_, range) = input.split_at(content_start);
+//         let (_, range) = range.split_at(content_end - content_start);
+//         range
+//     } else {
+//         // 处理未闭合的情况，取到输入末尾
+//         let (_, range) = input.split_at(content_start);
+//         range
+//     };
+
+//     // 创建Token
+//     let token = Token::new(TokenKind::StringLiteral, content_range);
+//     Ok((rest_after_end_quote, (token, diagnostics)))
+// }
 fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
-    let (rest, _) = punctuation_tag("\"")(input)?;
-    let (rest, diagnostics) = parse_string_inner(rest)?;
-    let (rest, _) = alt((punctuation_tag("\""), map(eof, |_| input.split_empty())))(rest)?;
+    // 1. 解析开始引号
+    let (rest_after_start, start_quote_range) =
+        alt((punctuation_tag("\""), punctuation_tag("'")))(input)?;
+    let quote_char = start_quote_range.to_str(input.as_original_str());
 
-    let (rest, range) = input.split_until(rest);
-    let token = Token::new(TokenKind::StringLiteral, range);
-    Ok((rest, (token, diagnostics)))
+    // 2. 解析字符串内容（含转义处理）
+    let is_double = quote_char == "\"";
+    let (rest_after_content, diagnostics) = parse_string_inner(rest_after_start, is_double)?;
+
+    // 3. 解析结束引号（或EOF）
+    let (rest_after_end, _) = alt((
+        punctuation_tag(quote_char),
+        map(eof, |_| input.split_empty()),
+    ))(rest_after_content)?;
+    // 4.split
+    let (_, content_range) = input.split_until(rest_after_end);
+    // 4. 计算内容范围
+    // let content_start = start_quote_range.end();
+    // let content_end = end_quote_range.start();
+    // let (_, content_range) = rest_after_start.split_until(rest_after_content);
+
+    // // 5. 处理未闭合字符串（当end_quote_range为空时）
+    // let content_range = if content_start < content_end {
+    //     content_range
+    // } else {
+    //     // 若未闭合，取到输入末尾
+    //     let (_, full_range) = input.split_until(rest_after_start);
+    //     full_range
+    // };
+
+    // 6. 根据引号类型生成TokenKind
+    let kind = if is_double {
+        TokenKind::StringLiteral
+    } else {
+        TokenKind::StringRaw
+    };
+
+    let token = Token::new(kind, content_range);
+    Ok((rest_after_end, (token, diagnostics)))
 }
+// fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+//     let (rest, quote_range) = alt((punctuation_tag("\""), punctuation_tag("'")))(input)?;
+//     let quote_char = quote_range.to_str(input.as_original_str());
+//     let is_double_quote = quote_char == "\"";
+//     let (rest, diagnostics) = parse_string_inner(rest, is_double_quote)?;
+
+//     let places = rest.chars().take_while(|&c| c != quote_char).count();
+//     let (_, mut range) = input.split_at(1);
+//     if places > 1 {
+//         (_, range) = input.split_at(places - 1);
+//     }
+//     // 根据引号类型生成不同的TokenKind
+//     let kind = if quote_char == "\"" {
+//         TokenKind::StringLiteral
+//     } else {
+//         TokenKind::StringRaw
+//     };
+//     // remove quoter
+//     let token = Token::new(kind, range);
+//     Ok((rest, (token, diagnostics)))
+// }
 
 fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // 检查负号 `-` 是否合法（前面是空格或行首）
@@ -291,21 +374,32 @@ fn comment(input: Input<'_>) -> TokenizationResult<'_> {
     }
 }
 
-fn parse_string_inner(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
+fn parse_string_inner(
+    input: Input<'_>,
+    is_double_quote: bool,
+) -> TokenizationResult<'_, Diagnostic> {
     let mut rest = input;
     let mut errors = Vec::new();
-
-    loop {
-        match rest.chars().next() {
-            Some('"') | None => break,
-            Some('\\') => {
-                let (r, diagnostic) = parse_escape(rest)?;
-                rest = r;
-                if let Diagnostic::InvalidStringEscapes(ranges) = diagnostic {
-                    errors.push(ranges[0]);
+    if is_double_quote {
+        loop {
+            match rest.chars().next() {
+                Some('"') | None => break,
+                Some('\\') => {
+                    let (r, diagnostic) = parse_escape(rest)?;
+                    rest = r;
+                    if let Diagnostic::InvalidStringEscapes(ranges) = diagnostic {
+                        errors.push(ranges[0]);
+                    }
                 }
+                Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
             }
-            Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
+        }
+    } else {
+        loop {
+            match rest.chars().next() {
+                Some('\'') | None => break,
+                Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
+            }
         }
     }
 

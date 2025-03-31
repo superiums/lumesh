@@ -45,6 +45,7 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
         Ok(alt((
             map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(argument_symbol, TokenKind::StringLiteral), //argument first to allow args such as = -
+            map_valid_token(custome_operator, TokenKind::Operator),     //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
             map_valid_token(bool_literal, TokenKind::BooleanLiteral),
@@ -135,6 +136,19 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("if"),
         keyword_tag("in"),
     ))(input)
+}
+// custrom operator for op overload, such as _*+ , must around with space.
+fn custome_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    if input.starts_with("_") {
+        // 检查前一个字符是否为空格或行首
+        if input.previous_char().map_or(true, |c| c.is_whitespace()) {
+            let places = input.chars().take_while(char::is_ascii_punctuation).count();
+            if places > 1 {
+                return Ok(input.split_at(places));
+            }
+        }
+    }
+    Err(NOT_FOUND)
 }
 // parse argument such as ls -l --color=auto ./
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
@@ -403,10 +417,10 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '.' | '~' | '\\' | '?' | '&' | '#' | '^'
+            '_' | '.' | '~' | '\\' | '?' | '&' | '#' | '^' | '$'
         }; // remove + - /  %  > < to allow non space operator such as a+1
            // remove : to use in dict
-           // remove $ to use as var prefix, compatil with bash
+           // $ to use as var prefix, compatil with bash
     }
 
     static ASCII_SYMBOL_CHARS: [bool; 128] = {

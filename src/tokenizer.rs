@@ -77,6 +77,7 @@ fn map_valid_token(
 
 fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
+        keyword_tag(":="),
         punctuation_tag("("),
         punctuation_tag(")"),
         punctuation_tag("["),

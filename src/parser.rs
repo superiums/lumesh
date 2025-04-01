@@ -310,8 +310,24 @@ fn parse_not(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> 
 
 #[inline]
 fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
-    let (input, string) = kind(TokenKind::StringRaw)(input)?;
-    Ok((input, string.to_str(input.str).to_string()))
+    let (input, expr) = kind(TokenKind::StringRaw)(input)?;
+    let raw_str = expr.to_str(input.str);
+
+    // 检查首尾单引号
+    if raw_str.len() >= 2 {
+        // 通过StrSlice直接计算子范围
+        let start = expr.start() + 1;
+        let end = expr.end() - 1;
+        let content = input.str.get(start..end); // 截取中间部分
+        Ok((input, content.to_str(input.str).to_string()))
+    } else {
+        Err(SyntaxError::unrecoverable(
+            expr,
+            "raw string enclosed in single quotes",
+            Some(raw_str.to_string()),
+            Some("raw strings must surround with '"),
+        ))
+    }
 }
 
 #[inline]

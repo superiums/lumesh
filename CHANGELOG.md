@@ -1,4 +1,29 @@
 # Changelog
+
+## [0.2.0-symbol] -2025-4-1
+
+this branch fix symbols:
+
+- allow nonspace operators.
+such as `let a=2+3;` `a>3` `let add=x->x+1`
+
+but space is needed when you need to differ negtive numbers with operator:
+such as `let a=2+ -3`
+
+- allow args in command.
+such as `ls -l --color=auto /tmp`
+  + short args: `-c`
+  + long args: `--chars`
+  + paths: `./dir` or `/dir` or `..`
+
+  but unfortunlately, single `/` is not added currently, as this may be used as operator someday.
+
+  single `.` was ignored and default to cwd.
+
+- allow `:` to define dict.
+`let dict={x:1,y:2}` as well as the old one :
+`let dict={x=1,y=2}`
+
 ### [0.2.0-lineclip] - 2025-3-29
 - use `\n` or `;` to split statement. which means you don't have to type `;` to every lineend.
 - use `\\n` to continue a line.

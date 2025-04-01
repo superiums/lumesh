@@ -249,7 +249,7 @@ pub fn get(env: &mut Environment) -> Expression {
     );
 
     tmp.define_builtin(
-        "~",
+        "~=",
         |args, env| {
             if args.len() != 2 {
                 return Err(Error::CustomError(

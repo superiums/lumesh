@@ -78,7 +78,6 @@ fn map_valid_token(
 fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag(":="),
-        keyword_tag("~~"), //string contains
         punctuation_tag("("),
         punctuation_tag(")"),
         punctuation_tag("["),
@@ -102,6 +101,8 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("!="),
         operator_tag(">="),
         operator_tag("<="),
+        keyword_tag("~~"), //string contains
+        keyword_tag("~="), //regex match
         keyword_tag("&&"),
         keyword_tag("||"),
         keyword_tag("<<"),
@@ -123,7 +124,6 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("/"), // to allow a<b insteadof mustbe a < b
         operator_tag("%"), // to allow a<b insteadof mustbe a < b
         operator_tag("="), // 新增赋值运算符
-        keyword_tag("~"),  //regex match
         keyword_tag("|"),
         punctuation_tag("@"),
         punctuation_tag("!"),

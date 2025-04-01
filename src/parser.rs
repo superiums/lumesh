@@ -771,7 +771,7 @@ fn parse_expression_prec_five(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressi
     let (input, mut list) = many0(pair(
         alt((
             text("~~"),
-            text("~"),
+            text("~="),
             text("=="),
             text("!="),
             text(">="),

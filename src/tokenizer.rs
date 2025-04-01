@@ -78,6 +78,7 @@ fn map_valid_token(
 fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag(":="),
+        keyword_tag("~~"), //string contains
         punctuation_tag("("),
         punctuation_tag(")"),
         punctuation_tag("["),
@@ -122,6 +123,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("/"), // to allow a<b insteadof mustbe a < b
         operator_tag("%"), // to allow a<b insteadof mustbe a < b
         operator_tag("="), // 新增赋值运算符
+        keyword_tag("~"),  //regex match
         keyword_tag("|"),
         punctuation_tag("@"),
         punctuation_tag("!"),
@@ -164,7 +166,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
 
     // followed by letter/num
     let next_char = it.next().ok_or(NOT_FOUND)?;
-    dbg!(first_char, next_char);
+    // dbg!(first_char, next_char);
     let valid = match (first_char, next_char) {
         ('-', '-') => it.next().ok_or(NOT_FOUND)?.is_ascii_alphabetic(),
         ('-', c) => c.is_ascii_alphabetic(),
@@ -183,7 +185,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
                 .map(char::len_utf8)
                 .sum();
 
-            dbg!(len);
+            // dbg!(len);
             return Ok(input.split_at(len));
         }
     }
@@ -559,7 +561,7 @@ pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>
     if !input.is_empty() {
         diagnostics.push(Diagnostic::NotTokenized(input.as_str_slice()))
     }
-    dbg!(input, &tokens);
+    // dbg!(input, &tokens);
     (tokens, diagnostics)
 }
 

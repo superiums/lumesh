@@ -357,28 +357,72 @@ fn parse_assignment(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     let (input, expr) = parse_expression(input)?;
     Ok((input, Expression::Assign(symbol, Box::new(expr))))
 }
-
+// allow muti vars declare
 fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("let")(input)?;
 
-    let (input, symbol) = alt((parse_symbol, parse_operator))(input).map_err(|_| {
+    // 解析逗号分隔的多个符号
+    let (input, symbols) = separated_list0(text(","), alt((parse_symbol, parse_operator)))(input)
+        .map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
-            "symbol",
+            "symbol list",
             None,
-            Some("try using a valid symbol such as `x` in `let x = 5`"),
+            Some("try: `let x, y = 1, 2`"),
         )
     })?;
 
-    // 新增：允许等号和表达式可选
-    let (input, expr) = opt(pair(text("="), parse_expression))(input)?;
+    // 解析等号和多表达式
+    let (input, exprs) = opt(preceded(
+        text("="),
+        separated_list0(text(","), parse_expression),
+    ))(input)?;
 
-    let expr = match expr {
-        Some((_, e)) => e,
-        None => Expression::None, // 无初始值
+    // 构建右侧表达式
+    let assignments = match exprs {
+        Some(e) if e.len() == symbols.len() => (0..symbols.len())
+            .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[i].clone())))
+            .collect(),
+        Some(e) if e.len() == 1 => (0..symbols.len())
+            .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[0].clone())))
+            .collect(),
+        Some(e) => {
+            return Err(SyntaxError::unrecoverable(
+                input.get_str_slice(),
+                "matching values count",
+                Some(format!(
+                    "got {} variables but {} values",
+                    symbols.len(),
+                    e.len()
+                )),
+                Some("ensure each variable has a corresponding value"),
+            ))
+        }
+        None => vec![], // Expression::None, // 单变量允许无初始值
+                        //TODO: must has initialization in strict mode.
+                        // None =>
+                        //     return Err(SyntaxError::unrecoverable(
+                        //         input.get_str_slice(),
+                        //         "initialization value",
+                        //         None,
+                        //         Some("multi-variable declaration requires initialization")
+                        //     ))
     };
+    Ok((input, Expression::Do(assignments)))
 
-    Ok((input, Expression::Declare(symbol, Box::new(expr)))) // 新增 Declare 表达式类型
+    // Ok((input, Expression::Declare(symbols, Box::new(expr))))
+}
+fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, _) = text("del")(input)?;
+    let (input, symbol) = parse_symbol(input).map_err(|_| {
+        SyntaxError::unrecoverable(
+            input.get_str_slice(),
+            "symbol",
+            Some("no symbol".into()),
+            Some("you can only del symbol"),
+        )
+    })?;
+    Ok((input, Expression::Del(symbol)))
 }
 
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
@@ -656,6 +700,7 @@ fn parse_expression(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
     alt((
+        parse_del,
         parse_for_loop,
         parse_if,
         parse_lazy_assign,

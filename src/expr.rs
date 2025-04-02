@@ -117,6 +117,7 @@ pub enum Expression {
 
     // Control flow
     For(String, Box<Self>, Box<Self>),
+    While(Box<Self>, Box<Self>), // (条件, 循环体)
 
     // Control flow
     If(Box<Self>, Box<Self>, Box<Self>),
@@ -181,6 +182,7 @@ impl fmt::Debug for Expression {
                     .collect::<Vec<String>>()
                     .join(", ")
             ),
+            Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
 
             Self::Map(exprs) => write!(
                 f,
@@ -327,6 +329,8 @@ impl fmt::Display for Expression {
             Self::Lambda(param, body, _) => write!(f, "{} -> {:?}", param, body),
             Self::Macro(param, body) => write!(f, "{} ~> {:?}", param, body),
             Self::For(name, list, body) => write!(f, "for {} in {:?} {:?}", name, list, body),
+            Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
+
             Self::Do(exprs) => write!(
                 f,
                 "{{ {} }}",
@@ -438,6 +442,12 @@ impl Expression {
                 result.extend(body.get_used_symbols());
                 result
             }
+            Self::While(cond, body) => {
+                let mut result = vec![];
+                result.extend(cond.get_used_symbols());
+                result.extend(body.get_used_symbols());
+                result
+            }
 
             Self::Do(exprs) | Self::List(exprs) => {
                 let mut result = vec![];
@@ -544,7 +554,13 @@ impl Expression {
                         return Err(Error::ForNonList(*list));
                     }
                 }
-
+                Self::While(cond, body) => {
+                    let mut results = vec![];
+                    while cond.clone().eval_mut(env, depth + 1)?.is_truthy() {
+                        results.push(body.clone().eval_mut(env, depth + 1)?);
+                    }
+                    return Ok(Self::List(results));
+                }
                 Self::If(cond, true_expr, false_expr) => {
                     return if cond.eval_mut(env, depth + 1)?.is_truthy() {
                         true_expr

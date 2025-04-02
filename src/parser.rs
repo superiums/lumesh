@@ -533,7 +533,19 @@ fn parse_for_loop(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
         Expression::For(symbol, Box::new(list), Box::new(body)),
     ))
 }
-
+fn parse_while(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, _) = text("while")(input)?;
+    let (input, cond) = parse_expression_prec_six(input).map_err(|_| {
+        SyntaxError::unrecoverable(
+            input.get_str_slice(),
+            "condition expression",
+            None,
+            Some("try adding a condition expression to your if statement"),
+        )
+    })?;
+    let (input, body) = parse_block(input)?;
+    Ok((input, Expression::While(Box::new(cond), Box::new(body))))
+}
 fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("if")(input)?;
 
@@ -702,6 +714,7 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
     alt((
         parse_del,
         parse_for_loop,
+        parse_while,
         parse_if,
         parse_lazy_assign,
         parse_declare,

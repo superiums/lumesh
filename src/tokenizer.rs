@@ -137,6 +137,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("else"),
         keyword_tag("let"),
         keyword_tag("for"),
+        keyword_tag("while"),
         keyword_tag("if"),
         keyword_tag("in"),
         keyword_tag("del"),

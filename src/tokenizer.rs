@@ -97,6 +97,7 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("to"),
+        keyword_tag("=>"),  //for match
         operator_tag("=="), //to allow a==b
         operator_tag("!="),
         operator_tag(">="),
@@ -141,6 +142,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("if"),
         keyword_tag("in"),
         keyword_tag("del"),
+        keyword_tag("match"),
     ))(input)
 }
 // custrom operator for op overload, such as _*+ , must around with space.

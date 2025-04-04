@@ -20,6 +20,7 @@ pub enum Error {
     CustomError(String),
     Redeclaration(String),
     UndeclaredVariable(String),
+    NoMatchingBranch(String),
 }
 
 impl Error {
@@ -62,6 +63,7 @@ impl Error {
             Self::SyntaxError(..) => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::Redeclaration(..) => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::UndeclaredVariable(..) => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::NoMatchingBranch(..) => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
 }
@@ -89,6 +91,9 @@ impl fmt::Display for Error {
             }
             Self::RecursionDepth(expr) => {
                 write!(f, "recursion depth exceeded while evaluating {:?}", expr)
+            }
+            Self::NoMatchingBranch(expr) => {
+                write!(f, "no matching branch while evaluating {:?}", expr)
             }
             Self::CommandFailed(name, args) => {
                 write!(

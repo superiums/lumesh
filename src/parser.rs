@@ -3,17 +3,16 @@ use nom::{
     branch::alt,
     combinator::{eof, map, opt},
     error::{ErrorKind, ParseError},
-    multi::{many0, many1, separated_list0},
+    multi::{many0, many1, separated_list0, separated_list1},
     sequence::{pair, preceded, separated_pair, terminated},
     IResult,
 };
 
-use std::collections::BTreeMap;
-
 use crate::{
     tokens::{Input, Tokens},
-    Diagnostic, Environment, Expression, Int, Token, TokenKind,
+    Diagnostic, Environment, Expression, Int, Pattern, Token, TokenKind,
 };
+use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SyntaxError {
@@ -540,7 +539,7 @@ fn parse_while(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
             input.get_str_slice(),
             "condition expression",
             None,
-            Some("try adding a condition expression to your if statement"),
+            Some("try adding a condition expression to your while statement"),
         )
     })?;
     let (input, body) = parse_block(input)?;
@@ -548,7 +547,6 @@ fn parse_while(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 }
 fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("if")(input)?;
-
     let (input, cond) = parse_expression_prec_six(input).map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
@@ -582,6 +580,66 @@ fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     );
 
     Ok((input, result))
+}
+
+fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Pattern, SyntaxError> {
+    alt((
+        map(text("_"), |_| Pattern::Bind("_".to_string())), // 将_视为特殊绑定
+        map(parse_symbol, Pattern::Bind),
+        map(
+            alt((
+                map(parse_integer, Expression::Integer), // 将i64转换为Expression::Integer
+                map(parse_float, Expression::Float),     // 将f64转换为Expression::Float
+                map(parse_boolean, Expression::Boolean), // 将bool转换为Expression::Boolean
+                map(parse_string, Expression::String),   // 将String转换为Expression::String
+                map(parse_none, |_| Expression::None),   // 处理None的情况
+            )),
+            |lit| Pattern::Literal(Box::new(lit)),
+        ),
+    ))(input)
+}
+
+fn parse_match(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, _) = text("match")(input)?;
+    let (input, value) = parse_expression_prec_six(input).map_err(|_| {
+        SyntaxError::unrecoverable(
+            input.get_str_slice(),
+            "target expression",
+            None,
+            Some("try adding a target expression to your match statement"),
+        )
+    })?;
+
+    let (input, _) = text("{")(input)?;
+
+    let (input, expr_map) = separated_list1(
+        alt((text(","), text("\n"), text(";"))), //allow Linkebreak
+        separated_pair(parse_pattern, text("=>"), |input| {
+            parse_expression(input).map_err(|_| {
+                SyntaxError::expected(
+                    input.get_str_slice(),
+                    "`expression`",
+                    Some("no expression".into()),
+                    Some("try adding an expression after =>"),
+                )
+            })
+        }),
+    )(input)?;
+
+    let (input, _) = text("}")(input).map_err(|_| {
+        SyntaxError::unrecoverable(
+            input.get_str_slice(),
+            "`}`",
+            Some("no matching `}`".into()),
+            Some("try adding a matching `}` to the end of your match"),
+        )
+    })?;
+
+    let branches = expr_map
+        .into_iter()
+        .map(|(pattern, expr)| (pattern, Box::new(expr)))
+        .collect::<Vec<_>>();
+    Ok((input, Expression::Match(Box::new(value), branches)))
 }
 
 fn parse_callable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
@@ -713,6 +771,7 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
     no_terminating_punctuation(input)?;
     alt((
         parse_del,
+        parse_match,
         parse_for_loop,
         parse_while,
         parse_if,

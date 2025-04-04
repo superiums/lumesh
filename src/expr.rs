@@ -88,6 +88,11 @@ impl From<Environment> for Expression {
         Self::Map(env.bindings.into_iter().collect::<BTreeMap<String, Self>>())
     }
 }
+#[derive(Debug, Clone, PartialEq)]
+pub enum Pattern {
+    Bind(String),             // 变量绑定（含_）
+    Literal(Box<Expression>), // 字面量匹配
+}
 
 #[derive(Clone, PartialEq)]
 pub enum Expression {
@@ -117,7 +122,8 @@ pub enum Expression {
 
     // Control flow
     For(String, Box<Self>, Box<Self>),
-    While(Box<Self>, Box<Self>), // (条件, 循环体)
+    While(Box<Self>, Box<Self>),                 // (条件, 循环体)
+    Match(Box<Self>, Vec<(Pattern, Box<Self>)>), // (匹配对象, 模式分支列表)
 
     // Control flow
     If(Box<Self>, Box<Self>, Box<Self>),
@@ -213,6 +219,13 @@ impl fmt::Debug for Expression {
             Self::Assign(name, expr) => write!(f, "{} = {:?}", name, expr),
             Self::If(cond, true_expr, false_expr) => {
                 write!(f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
+            }
+            Self::Match(value, branches) => {
+                write!(f, "match {:?} {{ ", value)?;
+                for (pat, expr) in branches.iter() {
+                    write!(f, "{:?} => {:?}, ", pat, expr)?;
+                }
+                write!(f, "}}")
             }
             Self::Apply(g, args) => write!(
                 f,
@@ -347,6 +360,13 @@ impl fmt::Display for Expression {
             Self::If(cond, true_expr, false_expr) => {
                 write!(f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
             }
+            Expression::Match(value, branches) => {
+                write!(f, "match {:?} {{ ", value)?;
+                for (pat, expr) in branches.iter() {
+                    write!(f, "{:?} => {:?}, ", pat, expr)?;
+                }
+                write!(f, "}}")
+            }
             Self::Apply(g, args) => write!(
                 f,
                 "{:?} {}",
@@ -374,7 +394,25 @@ impl PartialOrd for Expression {
         }
     }
 }
-
+fn matches_pattern(
+    value: &Expression,
+    pattern: &Pattern,
+    env: &mut Environment,
+) -> Result<bool, Error> {
+    match pattern {
+        Pattern::Bind(name) => {
+            if name == "_" {
+                // _作为通配符，不绑定变量
+                Ok(true)
+            } else {
+                // 正常变量绑定
+                env.define(name, value.clone());
+                Ok(true)
+            }
+        }
+        Pattern::Literal(lit) => Ok(value == lit.as_ref()),
+    }
+}
 impl Expression {
     pub fn builtin(
         name: impl ToString,
@@ -389,6 +427,7 @@ impl Expression {
     }
 
     pub fn new(x: impl Into<Self>) -> Self {
+        dbg!("---- new exp");
         x.into()
     }
 
@@ -477,6 +516,7 @@ impl Expression {
                 result.extend(e.get_used_symbols());
                 result
             }
+            Self::Match(value, _) => value.get_used_symbols(),
             Self::Apply(g, args) => {
                 let mut result = g.get_used_symbols();
                 for expr in args {
@@ -567,9 +607,17 @@ impl Expression {
                     } else {
                         false_expr
                     }
-                    .eval_mut(env, depth + 1)
+                    .eval_mut(env, depth + 1);
                 }
-
+                Self::Match(ref value, ref branches) => {
+                    let evaluated_value = value.clone().eval_mut(env, depth + 1)?;
+                    for (pattern, expr) in branches {
+                        if matches_pattern(&evaluated_value, pattern, env)? {
+                            return expr.clone().eval_mut(env, depth + 1);
+                        }
+                    }
+                    return Err(Error::NoMatchingBranch(value.to_string()));
+                }
                 Self::Apply(ref f, ref args) => match f.clone().eval_mut(env, depth + 1)? {
                     Self::Symbol(name) | Self::String(name) => {
                         let bindings = env

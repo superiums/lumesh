@@ -4,7 +4,7 @@ mod binary;
 
 use dune::{parse_script, Diagnostic, Environment, Error, Expression, SyntaxError, TokenKind};
 
-use clap::{arg, crate_authors, crate_description, App};
+use clap::Parser;
 
 use rustyline::completion::{Completer, FilenameCompleter, Pair as PairComplete};
 use rustyline::config::OutputStreamType;
@@ -547,107 +547,32 @@ fn run_file(path: PathBuf, env: &mut Environment) -> Result<Expression, Error> {
         Err(e) => Err(Error::CustomError(format!("Failed to read file: {}", e))),
     }
 }
-
-fn main() -> Result<(), Error> {
-    let matches = App::new(
-        r#"
-        888
-        888
-        888
-    .d88888 888  888 88888b.   .d88b.
-   d88" 888 888  888 888 "88b d8P  Y8b
-   888  888 888  888 888  888 88888888
-   Y88b 888 Y88b 888 888  888 Y8b.
-    "Y88888  "Y88888 888  888  "Y8888
-   "#,
-    )
-    .author(crate_authors!())
-    .about(crate_description!())
-    .args(&[
-        arg!(-i --interactive "Start an interactive REPL").conflicts_with("FILE"),
-        arg!(-c --cmd <INPUT> ... "Execute a given input string")
-            .conflicts_with("FILE")
-            .multiple_values(true)
-            .required(false),
-        arg!([FILE] "Execute a given input file"),
-        arg!([ARGS] ... "Arguments passed to script")
-            .multiple_values(true)
-            .last(true)
-            .required(false),
-    ])
-    .get_matches();
-    let mut env = Environment::new();
-    // 统一初始化环境（即使无参数也包含空列表）
-
-    let args = matches
-        .values_of("ARGS")
-        .unwrap_or_default()
-        .map(|s| Expression::String(s.to_string()))
-        .collect();
-    env.define("args", Expression::List(args));
-
-    binary::init(&mut env);
-
-    parse("let clear = _ ~> console@clear ()")?.eval(&mut env)?;
-    parse("let pwd = _ ~> echo CWD")?.eval(&mut env)?;
+fn init_cmds(env: &mut Environment) -> Result<(), Error> {
+    parse("let clear = _ ~> console@clear ()")?.eval(env)?;
+    parse("let pwd = _ ~> echo CWD")?.eval(env)?;
     parse(
         "let join = sep -> l -> {
-            let sep = str sep;
-            fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
-        }",
+                let sep = str sep;
+                fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
+            }",
     )?
-    .eval(&mut env)?;
+    .eval(env)?;
 
     parse(
         "let prompt = cwd -> \
-            fmt@bold ((fmt@dark@blue \"(dune) \") + \
-            (fmt@bold (fmt@dark@green cwd)) + \
-            (fmt@bold (fmt@dark@blue \"$ \")))",
+                fmt@bold ((fmt@dark@blue \"(dune) \") + \
+                (fmt@bold (fmt@dark@green cwd)) + \
+                (fmt@bold (fmt@dark@blue \"$ \")))",
     )?
-    .eval(&mut env)?;
+    .eval(env)?;
     parse(
         r#"let incomplete_prompt = cwd ->
-            ((len cwd) + (len "(dune) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#,
+                ((len cwd) + (len "(dune) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#,
     )?
-    .eval(&mut env)?;
-
-    if matches.is_present("FILE") {
-        let path = PathBuf::from(matches.value_of("FILE").unwrap());
-
-        if let Err(e) = run_file(path, &mut env) {
-            eprintln!("{}", e)
-        }
-
-        if !matches.is_present("interactive") && !matches.is_present("cmd") {
-            return Ok(());
-        }
-    }
-
-    if matches.is_present("cmd") {
-        match run_text(
-            &matches
-                .values_of("cmd")
-                .unwrap()
-                .map(String::from)
-                .collect::<Vec<_>>()
-                .join(" "),
-            &mut env,
-        ) {
-            Ok(result) => {
-                Expression::Apply(
-                    Box::new(Expression::Symbol("report".to_string())),
-                    vec![result],
-                )
-                .eval(&mut env)?;
-            }
-            Err(e) => eprintln!("{}", e),
-        }
-
-        if !matches.is_present("interactive") {
-            return Ok(());
-        }
-    }
-
+    .eval(env)?;
+    Ok(())
+}
+fn init_config(env: &mut Environment) -> Result<(), Error> {
     if let Some(home_dir) = dirs::home_dir() {
         let prelude_path = home_dir.join(".dune-prelude");
         // If file doesn't exist
@@ -662,22 +587,24 @@ fn main() -> Result<(), Error> {
                 }
             }
 
-            if let Err(e) = run_text(INTRO_PRELUDE, &mut env) {
+            if let Err(e) = run_text(INTRO_PRELUDE, env) {
                 eprintln!("Error while running introduction prelude: {}", e);
             }
-        } else if let Err(e) = run_file(prelude_path, &mut env) {
+        } else if let Err(e) = run_file(prelude_path, env) {
             let prompt = format!("Error while running custom prelude: {e}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ");
             let mut rl = new_editor(&env);
             let response = readline(prompt, &mut rl);
 
             if response.to_lowercase().trim() == "y" {
-                if let Err(e) = run_text(INTRO_PRELUDE, &mut env) {
+                if let Err(e) = run_text(INTRO_PRELUDE, env) {
                     eprintln!("Error while running introduction prelude: {}", e);
                 }
             }
         }
     }
-
+    Ok(())
+}
+fn run_repl(env: Environment) -> Result<(), Error> {
     let mut rl = new_editor(&env);
     let history_path = get_history_path();
     if let Some(path) = history_path {
@@ -695,7 +622,89 @@ fn main() -> Result<(), Error> {
     })
     .expect("Error setting Ctrl-C handler");
 
-    repl(editor_ref, env_ref)?;
+    repl(editor_ref, env_ref)
+}
 
+#[derive(Parser)]
+#[command(
+    name = "dune",
+    version = env!("CARGO_PKG_VERSION"),
+    // author = crate_authors!(),
+    // about = crate_description!(),
+    // disable_help_flag = true,  // 禁用默认的 --help
+    // disable_version_flag = true // 禁用默认的 --version
+)]
+struct Cli {
+    /// 执行字符串命令
+    #[arg(short = 'c', long, num_args = 1..)]
+    cmd: Option<Vec<String>>,
+
+    /// 严格模式
+    #[arg(short = 's', long)]
+    strict: bool,
+
+    /// 脚本文件路径
+    #[arg(required = false, num_args = 1, index = 1)]
+    file: Option<String>,
+
+    /// 传递给脚本的参数
+    #[arg(
+        last = true,
+        num_args=0..,
+        allow_hyphen_values = true,
+        index = 2
+    )]
+    args: Vec<String>,
+    // 显示帮助信息
+    // #[arg(long, action = clap::ArgAction::Help)]
+    // help: Option<bool>,
+
+    // /// 显示版本信息
+    // #[arg(short = 'V', long)]
+    // version: bool,
+}
+
+fn main() -> Result<(), Error> {
+    let cli = Cli::parse();
+
+    let mut env = Environment::new();
+    env.define(
+        "args",
+        Expression::List(cli.args.into_iter().map(Expression::String).collect()),
+    );
+    binary::init(&mut env);
+
+    // 处理命令行参数优先级
+    // if cli.version {
+    //     println!("Dune {}", env!("CARGO_PKG_VERSION"));
+    //     return;
+    // }
+
+    if let Some(cmd_parts) = cli.cmd {
+        // -c 模式
+        let cmd = cmd_parts.join(" ");
+        match run_text(cmd.as_str(), &mut env) {
+            Ok(result) => {
+                Expression::Apply(
+                    Box::new(Expression::Symbol("report".to_string())),
+                    vec![result],
+                )
+                .eval(&mut env)?;
+            }
+            Err(e) => eprintln!("{}", e),
+        }
+    } else if let Some(file) = cli.file {
+        // 文件执行模式
+        let path = PathBuf::from(file);
+        if let Err(e) = run_file(path, &mut env) {
+            eprintln!("{}", e)
+        }
+    } else {
+        // 自动进入交互模式
+        init_cmds(&mut env)?;
+        // TODO: split config for interactive or global.
+        init_config(&mut env)?;
+        run_repl(env)?;
+    }
     Ok(())
 }

@@ -17,8 +17,6 @@ use rustyline::{error::ReadlineError, Editor};
 use rustyline::{CompletionType, Config, Context, EditMode};
 use rustyline_derive::Helper;
 
-use os_info::Type;
-
 use std::{
     borrow::Cow::{self, Borrowed, Owned},
     path::PathBuf,
@@ -375,64 +373,6 @@ impl Validator for DuneHelper {
     fn validate_while_typing(&self) -> bool {
         self.validator.validate_while_typing()
     }
-}
-
-fn get_os_name(t: &Type) -> String {
-    match t {
-        Type::Alpine => "alpine",
-        Type::Amazon => "amazon",
-        Type::Android => "android",
-        Type::Arch => "arch",
-        Type::CentOS => "centos",
-        Type::Debian => "debian",
-        Type::Macos => "macos",
-        Type::Fedora => "fedora",
-        Type::Linux => "linux",
-        Type::Manjaro => "manjaro",
-        Type::Mint => "mint",
-        Type::openSUSE => "opensuse",
-        Type::EndeavourOS => "endeavouros",
-        Type::OracleLinux => "oraclelinux",
-        Type::Pop => "pop",
-        Type::Redhat => "redhat",
-        Type::RedHatEnterprise => "redhatenterprise",
-        Type::Redox => "redox",
-        Type::Solus => "solus",
-        Type::SUSE => "suse",
-        Type::Ubuntu => "ubuntu",
-        Type::Windows => "windows",
-        Type::Unknown | _ => "unknown",
-    }
-    .to_string()
-}
-
-fn get_os_family(t: &Type) -> String {
-    match t {
-        Type::Amazon | Type::Android => "android",
-        Type::Alpine
-        | Type::Arch
-        | Type::CentOS
-        | Type::Debian
-        | Type::Fedora
-        | Type::Linux
-        | Type::Manjaro
-        | Type::Mint
-        | Type::openSUSE
-        | Type::EndeavourOS
-        | Type::OracleLinux
-        | Type::Pop
-        | Type::Redhat
-        | Type::RedHatEnterprise
-        | Type::SUSE
-        | Type::Ubuntu => "linux",
-
-        Type::Macos | Type::Solus | Type::Redox => "unix",
-
-        Type::Windows => "windows",
-
-        Type::Unknown | _ => "unknown",
-    }
-    .to_string()
 }
 
 fn parse(input: &str) -> Result<Expression, Error> {

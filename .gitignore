@@ -2,4 +2,4 @@
 history.txt
 *.cast
 *.lock
-.*
+/target*

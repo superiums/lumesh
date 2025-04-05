@@ -43,6 +43,10 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
         Err(NOT_FOUND)
     } else {
         Ok(alt((
+            // 优先处理续航、换行符（新增）
+            map_valid_token(line_continuation, TokenKind::Whitespace),
+            // triple_quote_string,
+            map_valid_token(linebreak, TokenKind::LineBreak),
             map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(argument_symbol, TokenKind::StringLiteral), //argument first to allow args such as = -
             map_valid_token(custome_operator, TokenKind::Operator),     //before short_operator
@@ -367,6 +371,86 @@ fn whitespace(input: Input<'_>) -> TokenizationResult<'_> {
     Ok(input.split_at(ws_chars))
 }
 
+fn find_prev_char(original_str: &str, current_offset: usize) -> Option<char> {
+    // let current_offset = original_str.len() - rest.len();
+    let first_c = original_str.get(..current_offset);
+    match first_c {
+        Some(c) => {
+            if !c.is_empty() {
+                return c.chars().last();
+            }
+            // 2. 反向计算前导空白字节长度
+            let ws_len = c
+                .chars()
+                .rev()
+                .take_while(|c| c.is_whitespace() && *c != '\n')
+                .map(|c| c.len_utf8())
+                .sum();
+
+            // 3. 安全切割空白部分
+            let ws_start = current_offset.saturating_sub(ws_len);
+            let before_nl = original_str.get(..ws_start).unwrap_or("");
+
+            // 4. 获取最后一个非空白字符
+            return before_nl.chars().last();
+        }
+        None => return None,
+    }
+}
+
+fn linebreak(input: Input<'_>) -> TokenizationResult<'_> {
+    // dbg!("--->", input.as_str_slice());
+
+    if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
+        // dbg!(nl_slice);
+        let original_str = input.as_original_str();
+
+        // 1. 计算换行符的字节位置
+        let current_offset = original_str.len().saturating_sub(rest.len() + 1);
+
+        match find_prev_char(original_str, current_offset) {
+            Some(c) => {
+                // dbg!(c);
+                if matches!(c, '{' | '(' | '[' | ',' | '>' | '=' | ';' | '\n' | '\\') {
+                    // skip ; and \n because there's already a linebreak parsed.
+                    // > is for ->
+                    // dbg!("=== skip ");
+                    return Err(NOT_FOUND);
+                }
+            }
+            // 读取前面字符失败，跳过
+            None => return Err(NOT_FOUND),
+        }
+        // dbg!("---> LineBreak ");
+
+        Ok((rest, nl_slice))
+    } else if let Some((rest, matched)) = input.strip_prefix(";") {
+        Ok((rest, matched))
+    } else {
+        Err(NOT_FOUND)
+    }
+}
+// 新增续行符解析函数
+fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
+    if let Some((rest, matched)) = input.strip_prefix("\\\n") {
+        // println!("rest={},matched=", rest, matched);
+        // // dbg!(rest, matched);
+        Ok((rest, matched))
+    } else {
+        Err(NOT_FOUND)
+    }
+}
+// 新增行继续符识别逻辑
+// fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
+//     if let Some((rest, _)) = input.strip_prefix("\\") {
+//         // 消费后续所有空白（包括换行符）
+//         let ws = rest.chars().take_while(char::is_ascii_digit).count();
+//         let (rest, _) = rest.split_at(ws);
+//         Ok((rest, input.split_at(1).1))
+//     } else {
+//         Err(NOT_FOUND)
+//     }
+// }
 fn comment(input: Input<'_>) -> TokenizationResult<'_> {
     if input.starts_with('#') {
         let len = input

@@ -1,4 +1,9 @@
 # Changelog
+
+## [0.2.0-lineclip] - merged from feather/linesplit 2025-3-29
+- use `\n` or `;` to split statement. which means you don't have to type `;` to every lineend.
+- use `\\n` to continue a line.
+
 ## [0.2.0-symbol]
 
 this branch fix symbols:
@@ -22,6 +27,7 @@ such as `ls -l --color=auto /tmp`
 - allow `:` to define dict.
 `let dict={x:1,y:2}` as well as the old one :
 `let dict={x=1,y=2}`
+
 
 ## [Unreleased]
 

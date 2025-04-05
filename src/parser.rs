@@ -353,7 +353,10 @@ fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
 fn parse_assignment(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, symbol) = parse_symbol(input)?;
     let (input, _) = text("=")(input)?;
-    let (input, expr) = parse_expression(input)?;
+    let (input, expr) = alt((
+        parse_conditional, // 支持条件表达式作为右值
+        parse_expression,
+    ))(input)?;
     Ok((input, Expression::Assign(symbol, Box::new(expr))))
 }
 // allow muti vars declare
@@ -581,6 +584,25 @@ fn parse_if(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
 
     Ok((input, result))
 }
+// 新增条件表达式解析逻辑
+fn parse_conditional(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, cond) = parse_expression_prec_six(input)?;
+    let (input, _) = text("?")(input)?;
+    let (input, true_expr) = parse_expression(input)?;
+    let (input, _) = text(":")(input).map_err(|_| {
+        SyntaxError::expected(
+            input.get_str_slice(),
+            ":",
+            None,
+            Some("expected ':' in conditional expression"),
+        )
+    })?;
+    let (input, false_expr) = parse_expression(input)?;
+    Ok((
+        input,
+        Expression::If(Box::new(cond), Box::new(true_expr), Box::new(false_expr)),
+    ))
+}
 
 fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Pattern, SyntaxError> {
     alt((
@@ -606,7 +628,7 @@ fn parse_match(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
             input.get_str_slice(),
             "target expression",
             None,
-            Some("try adding a target expression to your match statement"),
+            Some("try adding a target expression after match"),
         )
     })?;
 
@@ -614,16 +636,7 @@ fn parse_match(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 
     let (input, expr_map) = separated_list1(
         alt((text(","), text("\n"), text(";"))), //allow Linkebreak
-        separated_pair(parse_pattern, text("=>"), |input| {
-            parse_expression(input).map_err(|_| {
-                SyntaxError::expected(
-                    input.get_str_slice(),
-                    "`expression`",
-                    Some("no expression".into()),
-                    Some("try adding an expression after =>"),
-                )
-            })
-        }),
+        separated_pair(parse_pattern, text("=>"), parse_expression),
     )(input)?;
 
     let (input, _) = text("}")(input).map_err(|_| {
@@ -775,6 +788,7 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
         parse_for_loop,
         parse_while,
         parse_if,
+        parse_conditional,
         parse_lazy_assign,
         parse_declare,
         parse_assignment,
@@ -842,14 +856,14 @@ fn parse_expression_prec_five(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressi
 
     let (input, mut list) = many0(pair(
         alt((
-            text("~~"),
-            text("~="),
             text("=="),
             text("!="),
             text(">="),
             text("<="),
             text(">"),
             text("<"),
+            text("~~"),
+            text("~="),
         )),
         expr_parser,
     ))(input)?;

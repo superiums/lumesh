@@ -604,7 +604,7 @@ struct Cli {
         requires ="file",
         index = 2
     )]
-    args: Vec<String>,
+    argv: Vec<String>,
     // 显示帮助信息
     // #[arg(long, action = clap::ArgAction::Help)]
     // help: Option<bool>,
@@ -619,8 +619,8 @@ fn main() -> Result<(), Error> {
 
     let mut env = Environment::new();
     env.define(
-        "args",
-        Expression::List(cli.args.into_iter().map(Expression::String).collect()),
+        "argv",
+        Expression::List(cli.argv.into_iter().map(Expression::String).collect()),
     );
     binary::init(&mut env);
 

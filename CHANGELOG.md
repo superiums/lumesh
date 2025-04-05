@@ -1,8 +1,76 @@
 # Changelog
+## [0.2.1] 2025-4-5
+merge former 2 branches.
 
 ## [0.2.0-lineclip] - merged from feather/linesplit 2025-3-29
 - use `\n` or `;` to split statement. which means you don't have to type `;` to every lineend.
 - use `\\n` to continue a line.
+
+## [0.2.0-symbol3]
+- update clap
+- add `argv` env to receive args.
+`dune myscript.dn -- arg1 arg2 ...`
+`echo argv;
+ echo argv@0;
+ echo (len argv)
+`
+- add conditional statement
+`let a = b ? 1: 0`
+
+- add match statement
+`match len a{
+ 1 => echo "only one"
+ "never" => echo "never"
+ _ => echo "default brache" }
+ `
+ you can split your braches via `,` or `;` or `\n`.
+
+ - add whiel statement
+ `while a>0 {
+ echo a
+ a = a + 1
+ }`
+
+## [0.2.0-symbol2]
+- regix module
+used regix_lite
+
+- quick match operators;
+
+`~=` to test match regex
+`~~` to test string contains.
+
+- while statement.
+`while (x<10) {print x;}`
+
+- add var declare and assign
+now let was used to declare a var, with or with an initial value:
+`let a`
+`let a = 1`
+
+also multi declare is supported:
+`let a,b,c`
+`let a,b,c = 1,2,3`
+`let a,b,c = 10`
+
+assign value never need `let` now:
+`let a ;
+ a = 2;
+ a = 3`
+
+- lasy sign (previously Quote) now changes to `:=`
+`let e := ls` instead of ` let e = 'ls`
+
+- del var
+`del a`
+this is useful while a stores big data, such as file content.
+
+- `''`was used to raw string without escape.
+type `'a\tb\nc'` and `"a\tb\nc"` to see the difference.
+
+- change div from `//` to `/`
+- custom operators begin with `_`
+
 
 ## [0.2.0-symbol]
 

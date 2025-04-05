@@ -5,7 +5,7 @@ use nom::{
     error::{ErrorKind, ParseError},
     multi::{many0, many1, separated_list0, separated_list1},
     sequence::{pair, preceded, separated_pair, terminated},
-    IResult,
+    IResult, Parser,
 };
 
 use crate::{
@@ -659,7 +659,10 @@ fn parse_match(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     let (input, _) = text("{")(input)?;
 
     let (input, expr_map) = separated_list1(
-        alt((text(","), text("\n"), text(";"))), //allow Linkebreak
+        alt((
+            text(",").map(|_| ()),
+            kind(TokenKind::LineBreak).map(|_| ()),
+        )), //allow Linkebreak
         separated_pair(parse_pattern, text("=>"), parse_expression),
     )(input)?;
 

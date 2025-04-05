@@ -636,6 +636,9 @@ fn run_repl(env: Environment) -> Result<(), Error> {
 )]
 struct Cli {
     /// 执行字符串命令
+    #[arg(short = 'i', long, num_args = 0..1)]
+    interactive: bool,
+
     #[arg(short = 'c', long, num_args = 1..)]
     cmd: Option<Vec<String>>,
 
@@ -652,6 +655,7 @@ struct Cli {
         last = true,
         num_args=0..,
         allow_hyphen_values = true,
+        requires ="file",
         index = 2
     )]
     args: Vec<String>,
@@ -698,6 +702,11 @@ fn main() -> Result<(), Error> {
         let path = PathBuf::from(file);
         if let Err(e) = run_file(path, &mut env) {
             eprintln!("{}", e)
+        }
+        if cli.interactive {
+            init_cmds(&mut env)?;
+            init_config(&mut env)?;
+            run_repl(env)?;
         }
     } else {
         // 自动进入交互模式

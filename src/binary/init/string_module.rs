@@ -1,6 +1,6 @@
 use super::fn_module::curry_env;
 use common_macros::b_tree_map;
-use dune::{Environment, Error, Expression};
+use lumesh::{Environment, Error, Expression};
 
 fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
     if args.len() != 2 {

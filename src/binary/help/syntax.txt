@@ -1,6 +1,6 @@
-Hello, welcome to Dune's help macro!
+Hello, welcome to lumesh's help macro!
 
-Dune has a very simple syntax.
+lumesh has a very simple syntax.
 To apply functions, macros, or programs to arguments, simply juxtapose them!
 
 $ echo 1 2 + 3
@@ -63,7 +63,7 @@ $ x || y
 $ # logical not
 $ !x
 
-Dune also supports if statements and for loops.
+lumesh also supports if statements and for loops.
 
 $ if True 1 else if False 2 else 3
 $ if x > y {{

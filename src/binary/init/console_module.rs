@@ -1,5 +1,5 @@
 use common_macros::b_tree_map;
-use dune::{Environment, Error, Expression, Int};
+use lumesh::{Environment, Error, Expression, Int};
 use std::io::Write;
 use terminal_size::{terminal_size, Height, Width};
 

@@ -1,6 +1,6 @@
-"Hello, welcome to Dune's help macro!
+"Hello, welcome to lumesh's help macro!
 
-Dune offers the following builtin functions:
+lumesh offers the following builtin functions:
 
 1. `echo`: prints the given arguments to the console with a newline
 2. `println`: identical to `echo`
@@ -22,7 +22,7 @@ Dune offers the following builtin functions:
 18. `index`: returns the item at an index in a list or dictionary.
 19. `chars`: returns a list of characters from a string.
 20. `lines`: returns a list of lines from a string.
-21. `eval`: evaluates a quoted Dune expression.
+21. `eval`: evaluates a quoted lumesh expression.
 22. `cd`: changes the current working directory in the current scope.
 23. `prompt`: returns the prompt as a string given the current working directory.
 24. `incomplete_prompt`: returns the prompt for incomplete expressions as a string given the current working directory.

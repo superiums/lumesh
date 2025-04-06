@@ -2,7 +2,7 @@
 
 mod binary;
 
-use dune::{parse_script, Diagnostic, Environment, Error, Expression, SyntaxError, TokenKind};
+use lumesh::{parse_script, Diagnostic, Environment, Error, Expression, SyntaxError, TokenKind};
 
 use clap::Parser;
 
@@ -25,17 +25,17 @@ use std::{
 };
 
 #[rustfmt::skip]
-const INTRO_PRELUDE: &str = include_str!(".intro-dune-prelude");
+const INTRO_PRELUDE: &str = include_str!(".intro-lumesh-prelude");
 #[rustfmt::skip]
-const DEFAULT_PRELUDE: &str = include_str!(".default-dune-prelude");
+const DEFAULT_PRELUDE: &str = include_str!(".default-lumesh-prelude");
 
-/// Get the path to the stored history of dune commands.
+/// Get the path to the stored history of lumesh commands.
 fn get_history_path() -> Option<PathBuf> {
     let home = dirs::home_dir()?;
-    Some(home.join(".dune-history"))
+    Some(home.join(".lumesh-history"))
 }
 
-fn new_editor(env: &Environment) -> Editor<DuneHelper> {
+fn new_editor(env: &Environment) -> Editor<LumeshHelper> {
     let config = Config::builder()
         .history_ignore_dups(true)
         .history_ignore_space(true)
@@ -47,7 +47,7 @@ fn new_editor(env: &Environment) -> Editor<DuneHelper> {
         .build();
 
     let mut rl = Editor::with_config(config);
-    let h = DuneHelper {
+    let h = LumeshHelper {
         completer: FilenameCompleter::new(),
         hinter: HistoryHinter {},
         validator: MatchingBracketValidator::new(),
@@ -79,7 +79,7 @@ fn strip_ansi_escapes(text: impl ToString) -> String {
     result
 }
 
-fn readline(prompt: impl ToString, rl: &mut Editor<DuneHelper>) -> String {
+fn readline(prompt: impl ToString, rl: &mut Editor<LumeshHelper>) -> String {
     let prompt = prompt.to_string();
     loop {
         // This MUST be called to update the prompt.
@@ -101,7 +101,7 @@ fn readline(prompt: impl ToString, rl: &mut Editor<DuneHelper>) -> String {
 }
 
 #[derive(Helper)]
-struct DuneHelper {
+struct LumeshHelper {
     completer: FilenameCompleter,
     hinter: HistoryHinter,
     colored_prompt: String,
@@ -109,7 +109,7 @@ struct DuneHelper {
     env: Environment,
 }
 
-impl DuneHelper {
+impl LumeshHelper {
     /// This method MUST be called to update the prompt.
     /// If this method is not called, the prompt will not
     /// update.
@@ -122,7 +122,7 @@ impl DuneHelper {
     }
 }
 
-impl Completer for DuneHelper {
+impl Completer for LumeshHelper {
     type Candidate = PairComplete;
 
     fn complete(
@@ -179,7 +179,7 @@ impl Completer for DuneHelper {
 }
 
 fn syntax_highlight(line: &str) -> String {
-    let (tokens, diagnostics) = dune::tokenize(line);
+    let (tokens, diagnostics) = lumesh::tokenize(line);
     // dbg!(tokens);
 
     let mut result = String::new();
@@ -306,7 +306,7 @@ fn syntax_highlight(line: &str) -> String {
     result
 }
 
-impl Hinter for DuneHelper {
+impl Hinter for LumeshHelper {
     type Hint = String;
 
     fn hint(&self, line: &str, pos: usize, ctx: &Context<'_>) -> Option<String> {
@@ -350,7 +350,7 @@ impl Hinter for DuneHelper {
     }
 }
 
-impl Highlighter for DuneHelper {
+impl Highlighter for LumeshHelper {
     fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
         &'s self,
         _prompt: &'p str,
@@ -372,7 +372,7 @@ impl Highlighter for DuneHelper {
     }
 }
 
-impl Validator for DuneHelper {
+impl Validator for LumeshHelper {
     fn validate(&self, _: &mut ValidationContext) -> rustyline::Result<ValidationResult> {
         Ok(ValidationResult::Valid(None))
     }
@@ -395,7 +395,7 @@ fn parse(input: &str) -> Result<Expression, Error> {
 }
 
 fn repl(
-    atomic_rl: Arc<Mutex<Editor<DuneHelper>>>,
+    atomic_rl: Arc<Mutex<Editor<LumeshHelper>>>,
     atomic_env: Arc<Mutex<Environment>>,
 ) -> Result<(), Error> {
     let mut lines = vec![];
@@ -507,21 +507,21 @@ fn init_cmds(env: &mut Environment) -> Result<(), Error> {
 
     parse(
         "let prompt = cwd -> \
-                fmt@bold ((fmt@dark@blue \"(dune) \") + \
+                fmt@bold ((fmt@dark@blue \"(lumesh) \") + \
                 (fmt@bold (fmt@dark@green cwd)) + \
                 (fmt@bold (fmt@dark@blue \"$ \")))",
     )?
     .eval(env)?;
     parse(
         r#"let incomplete_prompt = cwd ->
-                ((len cwd) + (len "(dune) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#,
+                ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#,
     )?
     .eval(env)?;
     Ok(())
 }
 fn init_config(env: &mut Environment) -> Result<(), Error> {
     if let Some(home_dir) = dirs::home_dir() {
-        let prelude_path = home_dir.join(".dune-prelude");
+        let prelude_path = home_dir.join(".lumesh-prelude");
         // If file doesn't exist
         if !prelude_path.exists() {
             let prompt = format!("Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ", prelude_path.display());
@@ -574,7 +574,7 @@ fn run_repl(env: Environment) -> Result<(), Error> {
 
 #[derive(Parser)]
 #[command(
-    name = "dune",
+    name = "lumesh",
     version = env!("CARGO_PKG_VERSION"),
     // author = crate_authors!(),
     // about = crate_description!(),
@@ -627,7 +627,7 @@ fn main() -> Result<(), Error> {
 
     // 处理命令行参数优先级
     // if cli.version {
-    //     println!("Dune {}", env!("CARGO_PKG_VERSION"));
+    //     println!("lumesh {}", env!("CARGO_PKG_VERSION"));
     //     return;
     // }
 

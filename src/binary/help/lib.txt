@@ -1,6 +1,6 @@
-Hello, welcome to Dune's help macro!
+Hello, welcome to lumesh's help macro!
 
-Dune offers the following builtin libraries:
+lumesh offers the following builtin libraries:
 1. `math`: a library with several math helper functions.
 2. `time`: a library with time related functions.
 3. `rand`: a library with random number generation functions.
@@ -10,7 +10,7 @@ Dune offers the following builtin libraries:
 7. `fmt`: a library with color, formatting, and other text functions.
 8. `widget`: a library for creating widgets on the console.
 9. `console`: a library for manipulating the terminal console.
-10. `shell`: a module with information about the Dune shell.
+10. `shell`: a module with information about the lumesh shell.
 11. `parse`: a library with functions for parsing text.
 
 To see all the different functions and constants for each library,

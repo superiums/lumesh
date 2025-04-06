@@ -444,7 +444,7 @@ impl Expression {
     }
 
     pub fn new(x: impl Into<Self>) -> Self {
-        dbg!("---- new exp");
+        // dbg!("---- new exp");
         x.into()
     }
 
@@ -846,10 +846,10 @@ impl Expression {
                 }
                 // 处理return语句
                 Self::Return(expr) => {
-                    dbg!(&env.bindings);
-                    dbg!(env.get("r"));
+                    // dbg!(&env.bindings);
+                    // dbg!(env.get("r"));
                     let value = expr.eval_mut(env, depth + 1)?;
-                    dbg!(&value);
+                    // dbg!(&value);
                     return Err(Error::ReturnValue(Box::new(value)));
                 }
 

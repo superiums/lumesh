@@ -1,4 +1,4 @@
-use dune::{Environment, Error, Expression};
+use lumesh::{Environment, Error, Expression};
 
 pub fn chess_fn(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
     let mut won = false;

@@ -1,5 +1,5 @@
 use common_macros::b_tree_map;
-use dune::{Environment, Error, Expression};
+use lumesh::{Environment, Error, Expression};
 use std::path::PathBuf;
 
 use os_info::Type;
@@ -91,7 +91,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, dune::Error> {
+fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, lumesh::Error> {
     super::check_exact_args_len("cd", &args, 1)?;
 
     match args[0].eval(env)? {
@@ -99,7 +99,7 @@ fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, dune::
             let abs_path = PathBuf::from(env.get_cwd()).join(path);
 
             let new_cwd = dunce::canonicalize(&abs_path).map_err(|e| {
-                dune::Error::CustomError(match format!("{:?}", e.kind()).as_str() {
+                lumesh::Error::CustomError(match format!("{:?}", e.kind()).as_str() {
                     "NotFound" => {
                         format!("the directory {:?} does not exist", abs_path)
                     }
@@ -114,7 +114,7 @@ fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, dune::
             })?;
 
             std::env::set_current_dir(&new_cwd).map_err(|e| {
-                dune::Error::CustomError(match format!("{:?}", e.kind()).as_str() {
+                lumesh::Error::CustomError(match format!("{:?}", e.kind()).as_str() {
                     "PermissionDenied" => {
                         format!("you don't have permission to read directory {:?}", new_cwd)
                     }

@@ -1,5 +1,5 @@
 use super::{curry, reverse_curry};
-use dune::{Environment, Error, Expression};
+use lumesh::{Environment, Error, Expression};
 use regex_lite::Regex;
 use std::{
     io::Write,
@@ -473,11 +473,11 @@ fn pipe_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expressi
             }
         }
     }
-    // Return the accumulated Dune expression.
+    // Return the accumulated lumesh expression.
     Ok(result_of_last_cmd)
 }
 
-/// Interpret a Dune expression as a program to be executed.
+/// Interpret a lumesh expression as a program to be executed.
 /// If the expression can be executed as a program, then it will
 /// be stored in the `cmd` parameter, and the function will return
 /// `Ok(Some(cmd))`.

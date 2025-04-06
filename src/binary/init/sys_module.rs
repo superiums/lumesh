@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use common_macros::b_tree_map;
-use dune::{Error, Expression};
+use lumesh::{Error, Expression};
 
 pub fn get() -> Expression {
     Expression::Map(b_tree_map! {

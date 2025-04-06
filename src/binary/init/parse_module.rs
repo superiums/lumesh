@@ -1,13 +1,13 @@
 use common_macros::b_tree_map;
-use dune::{parse_script, Environment, Error, Expression, SyntaxError};
 use json::JsonValue;
+use lumesh::{parse_script, Environment, Error, Expression, SyntaxError};
 use std::collections::BTreeMap;
 
 pub fn get() -> Expression {
     (b_tree_map! {
-        String::from("toml") => Expression::builtin("toml", parse_toml, "parse a TOML value into a Dune expression"),
-        String::from("json") => Expression::builtin("json", parse_json, "parse a JSON value into a Dune expression"),
-        String::from("expr") => Expression::builtin("expr", parse_expr, "parse a Dune script"),
+        String::from("toml") => Expression::builtin("toml", parse_toml, "parse a TOML value into a lumesh expression"),
+        String::from("json") => Expression::builtin("json", parse_json, "parse a JSON value into a lumesh expression"),
+        String::from("expr") => Expression::builtin("expr", parse_expr, "parse a lumesh script"),
     })
     .into()
 }

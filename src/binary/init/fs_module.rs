@@ -6,7 +6,7 @@ use std::{
 
 use super::Int;
 use common_macros::b_tree_map;
-use dune::{Environment, Error, Expression};
+use lumesh::{Environment, Error, Expression};
 
 fn get_dir_tree(cwd: &Path, max_depth: Option<Int>) -> BTreeMap<String, Expression> {
     let mut dir_tree = b_tree_map! {};

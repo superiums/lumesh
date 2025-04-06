@@ -1,6 +1,6 @@
-Hello, welcome to Dune's help macro!
+Hello, welcome to lumesh's help macro!
 
-Dune has the following types in its typesystem:
+lumesh has the following types in its typesystem:
 1. `Integer`: a signed integer
 2. `Float`: a floating point number
 3. `String`: a string

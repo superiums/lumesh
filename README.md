@@ -1,7 +1,7 @@
 # Lumesh
 
 A shell forked from [lumesh](https://github.com/adam-mcdaniel/lumesh) !
-![lumesh](https://github.com/superiums/lumesh/tree/main/assets/lumesh.png)
+![lumesh](https://raw.githubusercontent.com/superiums/lumesh/main/assets/lumesh.png)
 <p float="left">
   <a href="https://asciinema.org/a/441120"><img src="./assets/welcome3.png" width="47.5%"/></a>
   <a href="https://asciinema.org/a/441120"><img src="./assets/about.png" width="48%"/></a>
@@ -9,6 +9,10 @@ A shell forked from [lumesh](https://github.com/adam-mcdaniel/lumesh) !
 
 ## WIKI
 [wiki](https://github.com/superiums/lumesh/wiki)
+
+## Feathers
+
+see [changeLog](CHANGELOG.md)
 
 ## Install
 - download from the latest [release](https://github.com/superiums/lumesh/releases)

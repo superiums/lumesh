@@ -88,4 +88,10 @@ impl Environment {
     pub fn set_parent(&mut self, parent: Self) {
         self.parent = Some(Box::new(parent));
     }
+    pub fn fork(&self) -> Self {
+        Self {
+            bindings: BTreeMap::new(),
+            parent: Some(Box::new(self.clone())),
+        }
+    }
 }

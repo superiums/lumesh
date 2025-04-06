@@ -1,0 +1,41 @@
+echo allow whitespace be skipped on operator;
+echo
+
+echo 0 testing negtive number ;
+echo -1 ;
+echo 3 + -1 ;
+5 * -1 ;
+
+echo;
+echo 1 testing operator;
+let a=10;
+echo a+1 a-1 a*3 a//2 ;
+let b=a+3-4*5//2 ;
+echo b;
+echo a%2 ;
+
+echo;
+echo 2 tesing lambda;
+let add=x->x+100;
+echo add a;
+
+echo;
+echo 3 testing overload;
+let ++ =x->x+1;
+++ a;
+
+echo;
+echo 4 testing command;
+ls -l --color=auto ;
+ls -l --color=auto /tmp ;
+
+
+echo  "--testing dict with : " ;
+let z = {x:1,y:3} ;
+echo z;
+echo z@x;
+
+let z = {x=11,y=13} ;
+echo z;
+echo z@y;
+echo finished.

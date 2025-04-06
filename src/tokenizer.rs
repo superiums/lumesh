@@ -42,8 +42,6 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
     if input.is_empty() {
         Err(NOT_FOUND)
     } else {
-        // dbg!("------>", input);
-
         Ok(alt((
             // 优先处理续航、换行符（新增）
             map_valid_token(line_continuation, TokenKind::Whitespace),
@@ -94,7 +92,6 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag(","),
         punctuation_tag(";"),
         // punctuation_tag("="),
-        punctuation_tag(":"),
         punctuation_tag("->"), // `->foo` is also a valid symbol
         punctuation_tag("~>"), // `~>foo` is also a valid symbol
     ))(input)
@@ -103,10 +100,13 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("to"),
+        keyword_tag("=>"),  //for match
         operator_tag("=="), //to allow a==b
         operator_tag("!="),
         operator_tag(">="),
         operator_tag("<="),
+        keyword_tag("~~"), //string contains
+        keyword_tag("~="), //regex match
         keyword_tag("&&"),
         keyword_tag("||"),
         keyword_tag("<<"),
@@ -128,6 +128,8 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("/"), // to allow a<b insteadof mustbe a < b
         operator_tag("%"), // to allow a<b insteadof mustbe a < b
         operator_tag("="), // 新增赋值运算符
+        operator_tag("?"), // 新增条件赋值运算符
+        operator_tag(":"), // ?:, {k:v}
         keyword_tag("|"),
         punctuation_tag("@"),
         punctuation_tag("!"),
@@ -137,13 +139,17 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("None"),
+        keyword_alone_tag("fn"),
+        keyword_alone_tag("return"),
         keyword_tag("then"),
         keyword_tag("else"),
         keyword_tag("let"),
         keyword_tag("for"),
+        keyword_tag("while"),
         keyword_tag("if"),
         keyword_tag("in"),
         keyword_tag("del"),
+        keyword_tag("match"),
     ))(input)
 }
 // custrom operator for op overload, such as _*+ , must around with space.
@@ -171,7 +177,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
 
     // followed by letter/num
     let next_char = it.next().ok_or(NOT_FOUND)?;
-    dbg!(first_char, next_char);
+    // dbg!(first_char, next_char);
     let valid = match (first_char, next_char) {
         ('-', '-') => it.next().ok_or(NOT_FOUND)?.is_ascii_alphabetic(),
         ('-', c) => c.is_ascii_alphabetic(),
@@ -190,7 +196,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
                 .map(char::len_utf8)
                 .sum();
 
-            dbg!(len);
+            // dbg!(len);
             return Ok(input.split_at(len));
         }
     }
@@ -558,6 +564,15 @@ fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
             .ok_or(NOT_FOUND)
     }
 }
+/// This parser ensures that the word is *not* immediately followed by whitespace.
+fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| rest.starts_with(char::is_whitespace))
+            .ok_or(NOT_FOUND)
+    }
+}
 /// This parser ensures that the word is *not* immediately followed by punctuation.
 fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
@@ -625,7 +640,7 @@ pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>
     if !input.is_empty() {
         diagnostics.push(Diagnostic::NotTokenized(input.as_str_slice()))
     }
-    dbg!(input, &tokens);
+    // dbg!(input, &tokens);
     (tokens, diagnostics)
 }
 

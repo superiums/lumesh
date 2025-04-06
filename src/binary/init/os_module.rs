@@ -2,13 +2,73 @@ use common_macros::b_tree_map;
 use dune::{Environment, Error, Expression};
 use std::path::PathBuf;
 
+use os_info::Type;
+
+fn get_os_name(t: &Type) -> String {
+    match t {
+        Type::Alpine => "alpine",
+        Type::Amazon => "amazon",
+        Type::Android => "android",
+        Type::Arch => "arch",
+        Type::CentOS => "centos",
+        Type::Debian => "debian",
+        Type::Macos => "macos",
+        Type::Fedora => "fedora",
+        Type::Linux => "linux",
+        Type::Manjaro => "manjaro",
+        Type::Mint => "mint",
+        Type::openSUSE => "opensuse",
+        Type::EndeavourOS => "endeavouros",
+        Type::OracleLinux => "oraclelinux",
+        Type::Pop => "pop",
+        Type::Redhat => "redhat",
+        Type::RedHatEnterprise => "redhatenterprise",
+        Type::Redox => "redox",
+        Type::Solus => "solus",
+        Type::SUSE => "suse",
+        Type::Ubuntu => "ubuntu",
+        Type::Windows => "windows",
+        Type::Unknown | _ => "unknown",
+    }
+    .to_string()
+}
+
+fn get_os_family(t: &Type) -> String {
+    match t {
+        Type::Amazon | Type::Android => "android",
+        Type::Alpine
+        | Type::Arch
+        | Type::CentOS
+        | Type::Debian
+        | Type::Fedora
+        | Type::Linux
+        | Type::Manjaro
+        | Type::Mint
+        | Type::openSUSE
+        | Type::EndeavourOS
+        | Type::OracleLinux
+        | Type::Pop
+        | Type::Redhat
+        | Type::RedHatEnterprise
+        | Type::SUSE
+        | Type::Ubuntu => "linux",
+
+        Type::Macos | Type::Solus | Type::Redox => "unix",
+
+        Type::Windows => "windows",
+
+        Type::Unknown | _ => "unknown",
+    }
+    .to_string()
+}
+
 pub fn get() -> Expression {
     let os = os_info::get();
     let os_type = os.os_type();
 
     (b_tree_map! {
-        String::from("name") => Expression::from(crate::get_os_name(&os_type)),
-        String::from("family") => crate::get_os_family(&os_type).into(),
+        String::from("name") => Expression::from(get_os_name(&os_type)),
+        String::from("family") => get_os_family(&os_type).into(),
         String::from("version") => os.version().to_string().into(),
         String::from("exit") => Expression::builtin(
             "exit",

@@ -88,6 +88,11 @@ impl From<Environment> for Expression {
         Self::Map(env.bindings.into_iter().collect::<BTreeMap<String, Self>>())
     }
 }
+#[derive(Debug, Clone, PartialEq)]
+pub enum Pattern {
+    Bind(String),             // 变量绑定（含_）
+    Literal(Box<Expression>), // 字面量匹配
+}
 
 #[derive(Clone, PartialEq)]
 pub enum Expression {
@@ -117,6 +122,8 @@ pub enum Expression {
 
     // Control flow
     For(String, Box<Self>, Box<Self>),
+    While(Box<Self>, Box<Self>),                 // (条件, 循环体)
+    Match(Box<Self>, Vec<(Pattern, Box<Self>)>), // (匹配对象, 模式分支列表)
 
     // Control flow
     If(Box<Self>, Box<Self>, Box<Self>),
@@ -126,6 +133,14 @@ pub enum Expression {
 
     Lambda(String, Box<Self>, Environment),
     Macro(String, Box<Self>),
+    Function(
+        String,                            // 函数名
+        Vec<(String, Option<Expression>)>, // 参数列表（带默认值）
+        Box<Self>,                         // 函数体
+        Environment,                       // 定义时的环境（用于默认值）
+    ),
+    Return(Box<Self>), // 新增返回语句
+
     Do(Vec<Self>),
     // A builtin function.
     Builtin(Builtin),
@@ -181,6 +196,7 @@ impl fmt::Debug for Expression {
                     .collect::<Vec<String>>()
                     .join(", ")
             ),
+            Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
 
             Self::Map(exprs) => write!(
                 f,
@@ -195,6 +211,10 @@ impl fmt::Debug for Expression {
             Self::None => write!(f, "None"),
             Self::Lambda(param, body, _) => write!(f, "{} -> {:?}", param, body),
             Self::Macro(param, body) => write!(f, "{} ~> {:?}", param, body),
+            Self::Function(name, param, body, _) => {
+                write!(f, "fn {}({:?}) {{ {:?} }}", name, param, body)
+            }
+            Self::Return(body) => write!(f, "return {}", body),
             Self::For(name, list, body) => write!(f, "for {} in {:?} {:?}", name, list, body),
             Self::Do(exprs) => write!(
                 f,
@@ -211,6 +231,13 @@ impl fmt::Debug for Expression {
             Self::Assign(name, expr) => write!(f, "{} = {:?}", name, expr),
             Self::If(cond, true_expr, false_expr) => {
                 write!(f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
+            }
+            Self::Match(value, branches) => {
+                write!(f, "match {:?} {{ ", value)?;
+                for (pat, expr) in branches.iter() {
+                    write!(f, "{:?} => {:?}, ", pat, expr)?;
+                }
+                write!(f, "}}")
             }
             Self::Apply(g, args) => write!(
                 f,
@@ -326,7 +353,14 @@ impl fmt::Display for Expression {
             Self::None => write!(f, "None"),
             Self::Lambda(param, body, _) => write!(f, "{} -> {:?}", param, body),
             Self::Macro(param, body) => write!(f, "{} ~> {:?}", param, body),
+            Self::Function(name, param, body, _) => {
+                write!(f, "fn {}({:?}) {{ {:?} }}", name, param, body)
+            }
+            Self::Return(body) => write!(f, "return {}", body),
+
             Self::For(name, list, body) => write!(f, "for {} in {:?} {:?}", name, list, body),
+            Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
+
             Self::Do(exprs) => write!(
                 f,
                 "{{ {} }}",
@@ -342,6 +376,13 @@ impl fmt::Display for Expression {
             Self::Assign(name, expr) => write!(f, "{} = {:?}", name, expr),
             Self::If(cond, true_expr, false_expr) => {
                 write!(f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
+            }
+            Expression::Match(value, branches) => {
+                write!(f, "match {:?} {{ ", value)?;
+                for (pat, expr) in branches.iter() {
+                    write!(f, "{:?} => {:?}, ", pat, expr)?;
+                }
+                write!(f, "}}")
             }
             Self::Apply(g, args) => write!(
                 f,
@@ -370,7 +411,25 @@ impl PartialOrd for Expression {
         }
     }
 }
-
+fn matches_pattern(
+    value: &Expression,
+    pattern: &Pattern,
+    env: &mut Environment,
+) -> Result<bool, Error> {
+    match pattern {
+        Pattern::Bind(name) => {
+            if name == "_" {
+                // _作为通配符，不绑定变量
+                Ok(true)
+            } else {
+                // 正常变量绑定
+                env.define(name, value.clone());
+                Ok(true)
+            }
+        }
+        Pattern::Literal(lit) => Ok(value == lit.as_ref()),
+    }
+}
 impl Expression {
     pub fn builtin(
         name: impl ToString,
@@ -385,6 +444,7 @@ impl Expression {
     }
 
     pub fn new(x: impl Into<Self>) -> Self {
+        dbg!("---- new exp");
         x.into()
     }
 
@@ -438,6 +498,12 @@ impl Expression {
                 result.extend(body.get_used_symbols());
                 result
             }
+            Self::While(cond, body) => {
+                let mut result = vec![];
+                result.extend(cond.get_used_symbols());
+                result.extend(body.get_used_symbols());
+                result
+            }
 
             Self::Do(exprs) | Self::List(exprs) => {
                 let mut result = vec![];
@@ -457,6 +523,8 @@ impl Expression {
             Self::Group(inner) | Self::Quote(inner) => inner.get_used_symbols(),
             Self::Lambda(_, body, _) => body.get_used_symbols(),
             Self::Macro(_, body) => body.get_used_symbols(),
+            Self::Function(_, _, body, _) => body.get_used_symbols(),
+            Self::Return(expr) => expr.get_used_symbols(),
 
             Self::Declare(_, expr) => expr.get_used_symbols(),
             Self::Assign(_, expr) => expr.get_used_symbols(),
@@ -467,6 +535,7 @@ impl Expression {
                 result.extend(e.get_used_symbols());
                 result
             }
+            Self::Match(value, _) => value.get_used_symbols(),
             Self::Apply(g, args) => {
                 let mut result = g.get_used_symbols();
                 for expr in args {
@@ -524,11 +593,14 @@ impl Expression {
                 }
 
                 Self::For(name, list, body) => {
-                    if let Expression::List(items) = list.clone().eval_mut(env, depth + 1)? {
+                    let mut new_env = env.fork();
+                    if let Expression::List(items) =
+                        list.clone().eval_mut(&mut new_env, depth + 1)?
+                    {
                         let mut results = vec![];
                         for item in items {
-                            env.define(&name, item);
-                            results.push(body.clone().eval_mut(env, depth + 1)?);
+                            new_env.define(&name, item);
+                            results.push(body.clone().eval_mut(&mut new_env, depth + 1)?);
                         }
                         return Ok(Self::List(results));
                         // return Ok(Self::List(
@@ -544,14 +616,32 @@ impl Expression {
                         return Err(Error::ForNonList(*list));
                     }
                 }
-
+                Self::While(cond, body) => {
+                    let mut results = vec![];
+                    let mut new_env = env.fork();
+                    while cond.clone().eval_mut(&mut new_env, depth + 1)?.is_truthy() {
+                        results.push(body.clone().eval_mut(&mut new_env, depth + 1)?);
+                    }
+                    return Ok(Self::List(results));
+                }
                 Self::If(cond, true_expr, false_expr) => {
-                    return if cond.eval_mut(env, depth + 1)?.is_truthy() {
+                    let mut new_env = env.fork();
+                    return if cond.eval_mut(&mut new_env, depth + 1)?.is_truthy() {
                         true_expr
                     } else {
                         false_expr
                     }
-                    .eval_mut(env, depth + 1)
+                    .eval_mut(&mut new_env, depth + 1);
+                }
+                Self::Match(ref value, ref branches) => {
+                    let mut new_env = env.fork();
+                    let evaluated_value = value.clone().eval_mut(&mut new_env, depth + 1)?;
+                    for (pattern, expr) in branches {
+                        if matches_pattern(&evaluated_value, pattern, env)? {
+                            return expr.clone().eval_mut(&mut new_env, depth + 1);
+                        }
+                    }
+                    return Err(Error::NoMatchingBranch(value.to_string()));
                 }
 
                 Self::Apply(ref f, ref args) => match f.clone().eval_mut(env, depth + 1)? {
@@ -640,6 +730,63 @@ impl Expression {
                         );
                     }
 
+                    Self::Function(name, params, body, def_env) => {
+                        // dbg!(&def_env);
+                        // 参数数量校验
+                        if args.len() > params.len() {
+                            return Err(Error::TooManyArguments {
+                                name,
+                                max: params.len(),
+                                received: args.len(),
+                            });
+                        }
+
+                        let mut actual_args = args
+                            .into_iter()
+                            .map(|a| a.clone().eval_mut(env, depth + 1))
+                            .collect::<Result<Vec<_>, _>>()?;
+
+                        // 填充默认值逻辑（新增）
+                        for (i, (_, default)) in params.iter().enumerate() {
+                            if i >= actual_args.len() {
+                                if let Some(def_expr) = default {
+                                    // 仅允许基本类型直接使用
+                                    actual_args.push(def_expr.clone());
+                                } else {
+                                    return Err(Error::ArgumentMismatch {
+                                        name,
+                                        expected: params.len(),
+                                        received: actual_args.len(),
+                                    });
+                                }
+                            }
+                        }
+
+                        // 创建新作用域并执行
+                        let mut new_env = def_env.fork();
+                        for ((param, _), arg) in params.iter().zip(actual_args) {
+                            new_env.define(param, arg);
+                        }
+                        // body env
+                        for symbol in body.get_used_symbols() {
+                            if !def_env.is_defined(&symbol) {
+                                if let Some(val) = env.get(&symbol) {
+                                    new_env.define(&symbol, val)
+                                }
+                            }
+                        }
+                        // dbg!(&new_env);
+                        return match body.eval_mut(&mut new_env, depth + 1) {
+                            Ok(v) => Ok(v),
+                            Err(Error::ReturnValue(v)) => Ok(*v), // 捕获函数体内的return
+                            Err(e) => Err(e),
+                        };
+                    }
+                    // 处理return语句
+                    // Self::Return(expr) => {
+                    //     let value = expr.eval_mut(env, depth + 1)?;
+                    //     return Err(Error::ReturnValue(Box::new(value)));
+                    // }
                     Self::Builtin(Builtin { body, .. }) => {
                         return body(args.clone(), env);
                     }
@@ -661,6 +808,50 @@ impl Expression {
                     }
                     return Ok(Self::Lambda(param.clone(), body, tmp_env));
                 }
+                // 处理函数定义
+                Self::Function(name, params, body, def_env) => {
+                    // dbg!(&def_env);
+                    // 验证默认值类型（新增）
+                    for (p, default) in &params {
+                        if let Some(expr) = default {
+                            match expr {
+                                Expression::String(_)
+                                | Expression::Integer(_)
+                                | Expression::Float(_)
+                                | Expression::Boolean(_) => {}
+                                _ => {
+                                    return Err(Error::InvalidDefaultValue(
+                                        name,
+                                        p.to_string(),
+                                        expr.clone(),
+                                    ))
+                                }
+                            }
+                        }
+                    }
+                    // let new_env = def_env.fork();
+                    // // new_env.define(&param, Expression::None);
+                    // // new_env.set_cwd(env.get_cwd());
+                    // for symbol in body.get_used_symbols() {
+                    //     if !def_env.is_defined(&symbol) {
+                    //         if let Some(val) = env.get(&symbol) {
+                    //             new_env.define(&symbol, val)
+                    //         }
+                    //     }
+                    // }
+                    // dbg!(&new_env);
+                    let func = Self::Function(name.clone(), params, body, def_env);
+                    env.define(&name, func.clone());
+                    return Ok(func);
+                }
+                // 处理return语句
+                Self::Return(expr) => {
+                    dbg!(&env.bindings);
+                    dbg!(env.get("r"));
+                    let value = expr.eval_mut(env, depth + 1)?;
+                    dbg!(&value);
+                    return Err(Error::ReturnValue(Box::new(value)));
+                }
 
                 Self::List(exprs) => {
                     return Ok(Self::List(
@@ -678,15 +869,28 @@ impl Expression {
                             .collect::<Result<BTreeMap<String, Self>, Error>>()?,
                     ))
                 }
-                Self::Do(exprs) => {
-                    if exprs.is_empty() {
-                        return Ok(Self::None);
+                // Self::Do(exprs) => {
+                //     if exprs.is_empty() {
+                //         return Ok(Self::None);
+                //     }
+                //     for expr in &exprs[..exprs.len() - 1] {
+                //         expr.clone().eval_mut(env, depth + 1)?;
+                //     }
+                //     self = exprs[exprs.len() - 1].clone();
+                // }
+                // 修改Do块处理逻辑
+                // expr.rs 修改后的Do处理逻辑
+                Expression::Do(exprs) => {
+                    let mut last = Expression::None;
+                    for expr in exprs {
+                        match expr.eval_mut(env, depth + 1) {
+                            Ok(v) => last = v,
+                            // 直接捕获ReturnValue并返回
+                            Err(Error::ReturnValue(v)) => return Ok(*v),
+                            Err(e) => return Err(e),
+                        }
                     }
-
-                    for expr in &exprs[..exprs.len() - 1] {
-                        expr.clone().eval_mut(env, depth + 1)?;
-                    }
-                    self = exprs[exprs.len() - 1].clone();
+                    return Ok(last);
                 }
                 Self::None
                 | Self::Integer(_)

@@ -21,6 +21,17 @@ pub enum Error {
     Redeclaration(String),
     UndeclaredVariable(String),
     NoMatchingBranch(String),
+    TooManyArguments {
+        name: String,
+        max: usize,
+        received: usize,
+    },
+    ArgumentMismatch {
+        name: String,
+        expected: usize,
+        received: usize,
+    },
+    InvalidDefaultValue(String, String, Expression),
 }
 
 impl Error {
@@ -64,6 +75,9 @@ impl Error {
             Self::Redeclaration(..) => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::UndeclaredVariable(..) => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::NoMatchingBranch(..) => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::TooManyArguments { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::ArgumentMismatch { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::InvalidDefaultValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
 }
@@ -107,6 +121,35 @@ impl fmt::Display for Error {
             }
             Self::CustomError(e) => {
                 write!(f, "{}", e)
+            }
+            Self::TooManyArguments {
+                name,
+                max,
+                received,
+            } => {
+                write!(
+                    f,
+                    "too many args for function {}, max:{}, found:{}",
+                    name, max, received
+                )
+            }
+            Self::ArgumentMismatch {
+                name,
+                expected,
+                received,
+            } => {
+                write!(
+                    f,
+                    "args mismatch for function {}, expected:{}, found:{}",
+                    name, expected, received
+                )
+            }
+            Self::InvalidDefaultValue(name, param, received) => {
+                write!(
+                    f,
+                    "invalid default value {} for arg:{}, in function:{}",
+                    received, param, name
+                )
             }
             Self::SyntaxError(string, err) => fmt_syntax_error(string, err, f),
         }

@@ -139,6 +139,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("None"),
+        keyword_alone_tag("fn"),
         keyword_tag("then"),
         keyword_tag("else"),
         keyword_tag("let"),
@@ -579,6 +580,15 @@ fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
         input
             .strip_prefix(keyword)
             .filter(|(rest, _)| !rest.starts_with(is_symbol_char))
+            .ok_or(NOT_FOUND)
+    }
+}
+/// This parser ensures that the word is *not* immediately followed by whitespace.
+fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| rest.starts_with(char::is_whitespace))
             .ok_or(NOT_FOUND)
     }
 }

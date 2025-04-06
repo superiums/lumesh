@@ -632,16 +632,7 @@ fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Pattern, SyntaxError>
     alt((
         map(text("_"), |_| Pattern::Bind("_".to_string())), // 将_视为特殊绑定
         map(parse_symbol, Pattern::Bind),
-        map(
-            alt((
-                map(parse_integer, Expression::Integer), // 将i64转换为Expression::Integer
-                map(parse_float, Expression::Float),     // 将f64转换为Expression::Float
-                map(parse_boolean, Expression::Boolean), // 将bool转换为Expression::Boolean
-                map(parse_string, Expression::String),   // 将String转换为Expression::String
-                map(parse_none, |_| Expression::None),   // 处理None的情况
-            )),
-            |lit| Pattern::Literal(Box::new(lit)),
-        ),
+        map(parse_literal, |lit| Pattern::Literal(Box::new(lit))),
     ))(input)
 }
 
@@ -701,6 +692,69 @@ fn parse_callable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
             _ => unreachable!(),
         },
     ))
+}
+
+// parser.rs - 新增函数定义解析
+fn parse_fn_definition(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, _) = text("fn")(input)?;
+    let (input, name) = parse_symbol(input)?;
+    let (input, params) = parse_param_list(input)?; // 使用新参数列表
+    let (input, body) = parse_block(input)?;
+
+    Ok((
+        input,
+        Expression::Function(
+            name,
+            params,
+            Box::new(body),
+            Environment::new(), // 捕获当前环境（需在调用时处理）
+        ),
+    ))
+}
+fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    alt((
+        parse_string.map(Expression::String),
+        parse_integer.map(Expression::Integer),
+        parse_float.map(Expression::Float),
+        parse_boolean.map(Expression::Boolean),
+        map(parse_none, |_| Expression::None), // 处理None的情况
+    ))(input)
+}
+// parser.rs - 新增参数解析函数
+fn parse_param(
+    input: Tokens<'_>,
+) -> IResult<Tokens<'_>, (String, Option<Expression>), SyntaxError> {
+    alt((
+        // 带默认值的参数解析分支
+        map(
+            separated_pair(
+                parse_symbol,
+                text("="),
+                // 限制只能解析基本类型表达式
+                parse_literal,
+            ),
+            |(name, expr)| (name, Some(expr)), // 将结果包装为Some
+        ),
+        // 普通参数解析分支
+        map(parse_symbol, |s| (s, None)),
+    ))(input)
+}
+
+// 修改原参数列表解析
+fn parse_param_list(
+    input: Tokens<'_>,
+) -> IResult<Tokens<'_>, Vec<(String, Option<Expression>)>, SyntaxError> {
+    let (input, _) = text("(")(input)?;
+    let (input, params) = separated_list0(text(","), parse_param)(input)?;
+    let (input, _) = text(")")(input).map_err(|_| {
+        SyntaxError::unrecoverable(
+            input.get_str_slice(),
+            "`)`",
+            Some("no matching `)`".into()),
+            Some("try adding a matching `)` to the end of your fn define"),
+        )
+    })?;
+    Ok((input, params))
 }
 
 fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
@@ -820,6 +874,7 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
         parse_lazy_assign,
         parse_declare,
         parse_assignment,
+        parse_fn_definition,
         parse_callable,
         parse_apply,
         parse_apply_operator,

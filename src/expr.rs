@@ -133,6 +133,14 @@ pub enum Expression {
 
     Lambda(String, Box<Self>, Environment),
     Macro(String, Box<Self>),
+    Function(
+        String,                            // 函数名
+        Vec<(String, Option<Expression>)>, // 参数列表（带默认值）
+        Box<Self>,                         // 函数体
+        Environment,                       // 定义时的环境（用于默认值）
+    ),
+    Return(Box<Self>), // 新增返回语句
+
     Do(Vec<Self>),
     // A builtin function.
     Builtin(Builtin),
@@ -203,6 +211,9 @@ impl fmt::Debug for Expression {
             Self::None => write!(f, "None"),
             Self::Lambda(param, body, _) => write!(f, "{} -> {:?}", param, body),
             Self::Macro(param, body) => write!(f, "{} ~> {:?}", param, body),
+            Self::Function(name, param, body, _) => {
+                write!(f, "fn {}({:?}) {{ {:?} }}", name, param, body)
+            }
             Self::For(name, list, body) => write!(f, "for {} in {:?} {:?}", name, list, body),
             Self::Do(exprs) => write!(
                 f,
@@ -341,6 +352,10 @@ impl fmt::Display for Expression {
             Self::None => write!(f, "None"),
             Self::Lambda(param, body, _) => write!(f, "{} -> {:?}", param, body),
             Self::Macro(param, body) => write!(f, "{} ~> {:?}", param, body),
+            Self::Function(name, param, body, _) => {
+                write!(f, "fn {}({:?}) {{ {:?} }}", name, param, body)
+            }
+
             Self::For(name, list, body) => write!(f, "for {} in {:?} {:?}", name, list, body),
             Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
 
@@ -506,6 +521,7 @@ impl Expression {
             Self::Group(inner) | Self::Quote(inner) => inner.get_used_symbols(),
             Self::Lambda(_, body, _) => body.get_used_symbols(),
             Self::Macro(_, body) => body.get_used_symbols(),
+            Self::Function(_, _, body, _) => body.get_used_symbols(),
 
             Self::Declare(_, expr) => expr.get_used_symbols(),
             Self::Assign(_, expr) => expr.get_used_symbols(),
@@ -704,6 +720,45 @@ impl Expression {
                         );
                     }
 
+                    Self::Function(name, params, body, def_env) => {
+                        // 参数数量校验
+                        if args.len() > params.len() {
+                            return Err(Error::TooManyArguments {
+                                name,
+                                max: params.len(),
+                                received: args.len(),
+                            });
+                        }
+
+                        let mut actual_args = args
+                            .into_iter()
+                            .map(|a| a.clone().eval_mut(env, depth + 1))
+                            .collect::<Result<Vec<_>, _>>()?;
+
+                        // 填充默认值逻辑（新增）
+                        for (i, (_, default)) in params.iter().enumerate() {
+                            if i >= actual_args.len() {
+                                if let Some(def_expr) = default {
+                                    // 仅允许基本类型直接使用
+                                    actual_args.push(def_expr.clone());
+                                } else {
+                                    return Err(Error::ArgumentMismatch {
+                                        name,
+                                        expected: params.len(),
+                                        received: actual_args.len(),
+                                    });
+                                }
+                            }
+                        }
+
+                        // 创建新作用域并执行
+                        let mut new_env = def_env.clone();
+                        for ((param, _), arg) in params.iter().zip(actual_args) {
+                            new_env.define(param, arg);
+                        }
+                        return body.eval_mut(&mut new_env, depth + 1);
+                    }
+
                     Self::Builtin(Builtin { body, .. }) => {
                         return body(args.clone(), env);
                     }
@@ -724,6 +779,31 @@ impl Expression {
                         }
                     }
                     return Ok(Self::Lambda(param.clone(), body, tmp_env));
+                }
+                // 处理函数定义
+                Self::Function(name, params, body, _) => {
+                    // 验证默认值类型（新增）
+                    for (p, default) in &params {
+                        if let Some(expr) = default {
+                            match expr {
+                                Expression::String(_)
+                                | Expression::Integer(_)
+                                | Expression::Float(_)
+                                | Expression::Boolean(_) => {}
+                                _ => {
+                                    return Err(Error::InvalidDefaultValue(
+                                        name,
+                                        p.to_string(),
+                                        expr.clone(),
+                                    ))
+                                }
+                            }
+                        }
+                    }
+
+                    let func = Self::Function(name.clone(), params, body, env.clone());
+                    env.define(&name, func.clone());
+                    return Ok(func);
                 }
 
                 Self::List(exprs) => {

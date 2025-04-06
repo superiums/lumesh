@@ -180,6 +180,7 @@ impl Completer for DuneHelper {
 
 fn syntax_highlight(line: &str) -> String {
     let (tokens, diagnostics) = dune::tokenize(line);
+    // dbg!(tokens);
 
     let mut result = String::new();
     let mut is_colored = false;

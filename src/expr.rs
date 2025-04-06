@@ -593,11 +593,14 @@ impl Expression {
                 }
 
                 Self::For(name, list, body) => {
-                    if let Expression::List(items) = list.clone().eval_mut(env, depth + 1)? {
+                    let mut new_env = env.fork();
+                    if let Expression::List(items) =
+                        list.clone().eval_mut(&mut new_env, depth + 1)?
+                    {
                         let mut results = vec![];
                         for item in items {
-                            env.define(&name, item);
-                            results.push(body.clone().eval_mut(env, depth + 1)?);
+                            new_env.define(&name, item);
+                            results.push(body.clone().eval_mut(&mut new_env, depth + 1)?);
                         }
                         return Ok(Self::List(results));
                         // return Ok(Self::List(
@@ -615,24 +618,27 @@ impl Expression {
                 }
                 Self::While(cond, body) => {
                     let mut results = vec![];
-                    while cond.clone().eval_mut(env, depth + 1)?.is_truthy() {
-                        results.push(body.clone().eval_mut(env, depth + 1)?);
+                    let mut new_env = env.fork();
+                    while cond.clone().eval_mut(&mut new_env, depth + 1)?.is_truthy() {
+                        results.push(body.clone().eval_mut(&mut new_env, depth + 1)?);
                     }
                     return Ok(Self::List(results));
                 }
                 Self::If(cond, true_expr, false_expr) => {
-                    return if cond.eval_mut(env, depth + 1)?.is_truthy() {
+                    let mut new_env = env.fork();
+                    return if cond.eval_mut(&mut new_env, depth + 1)?.is_truthy() {
                         true_expr
                     } else {
                         false_expr
                     }
-                    .eval_mut(env, depth + 1);
+                    .eval_mut(&mut new_env, depth + 1);
                 }
                 Self::Match(ref value, ref branches) => {
-                    let evaluated_value = value.clone().eval_mut(env, depth + 1)?;
+                    let mut new_env = env.fork();
+                    let evaluated_value = value.clone().eval_mut(&mut new_env, depth + 1)?;
                     for (pattern, expr) in branches {
                         if matches_pattern(&evaluated_value, pattern, env)? {
-                            return expr.clone().eval_mut(env, depth + 1);
+                            return expr.clone().eval_mut(&mut new_env, depth + 1);
                         }
                     }
                     return Err(Error::NoMatchingBranch(value.to_string()));

@@ -1,18 +1,25 @@
 # Lumesh
 
-A shell forked from [lumesh](https://github.com/adam-mcdaniel/lumesh) !
+A shell forked from [dune](https://github.com/adam-mcdaniel/dune) !
 ![lumesh](https://raw.githubusercontent.com/superiums/lumesh/main/assets/lumesh.png)
-<p float="left">
-  <a href="https://asciinema.org/a/441120"><img src="./assets/welcome3.png" width="47.5%"/></a>
-  <a href="https://asciinema.org/a/441120"><img src="./assets/about.png" width="48%"/></a>
-</p>
 
 ## WIKI
 [wiki](https://github.com/superiums/lumesh/wiki)
 
 ## Feathers
+### feathers from dune
+- fast and efficent
+- highlight
+- operator overlod
+- meta program
 
-see [changeLog](CHANGELOG.md)
+### feathers new
+- simple and userkindly
+- more syntax support
+- more builtin models
+
+discover more feathers from
+[changeLog](CHANGELOG.md)
 
 ## Install
 - download from the latest [release](https://github.com/superiums/lumesh/releases)

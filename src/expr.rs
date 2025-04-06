@@ -214,6 +214,7 @@ impl fmt::Debug for Expression {
             Self::Function(name, param, body, _) => {
                 write!(f, "fn {}({:?}) {{ {:?} }}", name, param, body)
             }
+            Self::Return(body) => write!(f, "return {}", body),
             Self::For(name, list, body) => write!(f, "for {} in {:?} {:?}", name, list, body),
             Self::Do(exprs) => write!(
                 f,
@@ -355,6 +356,7 @@ impl fmt::Display for Expression {
             Self::Function(name, param, body, _) => {
                 write!(f, "fn {}({:?}) {{ {:?} }}", name, param, body)
             }
+            Self::Return(body) => write!(f, "return {}", body),
 
             Self::For(name, list, body) => write!(f, "for {} in {:?} {:?}", name, list, body),
             Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
@@ -522,6 +524,7 @@ impl Expression {
             Self::Lambda(_, body, _) => body.get_used_symbols(),
             Self::Macro(_, body) => body.get_used_symbols(),
             Self::Function(_, _, body, _) => body.get_used_symbols(),
+            Self::Return(expr) => expr.get_used_symbols(),
 
             Self::Declare(_, expr) => expr.get_used_symbols(),
             Self::Assign(_, expr) => expr.get_used_symbols(),
@@ -634,6 +637,7 @@ impl Expression {
                     }
                     return Err(Error::NoMatchingBranch(value.to_string()));
                 }
+
                 Self::Apply(ref f, ref args) => match f.clone().eval_mut(env, depth + 1)? {
                     Self::Symbol(name) | Self::String(name) => {
                         let bindings = env
@@ -721,6 +725,7 @@ impl Expression {
                     }
 
                     Self::Function(name, params, body, def_env) => {
+                        // dbg!(&def_env);
                         // 参数数量校验
                         if args.len() > params.len() {
                             return Err(Error::TooManyArguments {
@@ -752,13 +757,30 @@ impl Expression {
                         }
 
                         // 创建新作用域并执行
-                        let mut new_env = def_env.clone();
+                        let mut new_env = def_env.fork();
                         for ((param, _), arg) in params.iter().zip(actual_args) {
                             new_env.define(param, arg);
                         }
-                        return body.eval_mut(&mut new_env, depth + 1);
+                        // body env
+                        for symbol in body.get_used_symbols() {
+                            if !def_env.is_defined(&symbol) {
+                                if let Some(val) = env.get(&symbol) {
+                                    new_env.define(&symbol, val)
+                                }
+                            }
+                        }
+                        // dbg!(&new_env);
+                        return match body.eval_mut(&mut new_env, depth + 1) {
+                            Ok(v) => Ok(v),
+                            Err(Error::ReturnValue(v)) => Ok(*v), // 捕获函数体内的return
+                            Err(e) => Err(e),
+                        };
                     }
-
+                    // 处理return语句
+                    // Self::Return(expr) => {
+                    //     let value = expr.eval_mut(env, depth + 1)?;
+                    //     return Err(Error::ReturnValue(Box::new(value)));
+                    // }
                     Self::Builtin(Builtin { body, .. }) => {
                         return body(args.clone(), env);
                     }
@@ -781,7 +803,8 @@ impl Expression {
                     return Ok(Self::Lambda(param.clone(), body, tmp_env));
                 }
                 // 处理函数定义
-                Self::Function(name, params, body, _) => {
+                Self::Function(name, params, body, def_env) => {
+                    // dbg!(&def_env);
                     // 验证默认值类型（新增）
                     for (p, default) in &params {
                         if let Some(expr) = default {
@@ -800,10 +823,28 @@ impl Expression {
                             }
                         }
                     }
-
-                    let func = Self::Function(name.clone(), params, body, env.clone());
+                    // let new_env = def_env.fork();
+                    // // new_env.define(&param, Expression::None);
+                    // // new_env.set_cwd(env.get_cwd());
+                    // for symbol in body.get_used_symbols() {
+                    //     if !def_env.is_defined(&symbol) {
+                    //         if let Some(val) = env.get(&symbol) {
+                    //             new_env.define(&symbol, val)
+                    //         }
+                    //     }
+                    // }
+                    // dbg!(&new_env);
+                    let func = Self::Function(name.clone(), params, body, def_env);
                     env.define(&name, func.clone());
                     return Ok(func);
+                }
+                // 处理return语句
+                Self::Return(expr) => {
+                    dbg!(&env.bindings);
+                    dbg!(env.get("r"));
+                    let value = expr.eval_mut(env, depth + 1)?;
+                    dbg!(&value);
+                    return Err(Error::ReturnValue(Box::new(value)));
                 }
 
                 Self::List(exprs) => {
@@ -822,15 +863,28 @@ impl Expression {
                             .collect::<Result<BTreeMap<String, Self>, Error>>()?,
                     ))
                 }
-                Self::Do(exprs) => {
-                    if exprs.is_empty() {
-                        return Ok(Self::None);
+                // Self::Do(exprs) => {
+                //     if exprs.is_empty() {
+                //         return Ok(Self::None);
+                //     }
+                //     for expr in &exprs[..exprs.len() - 1] {
+                //         expr.clone().eval_mut(env, depth + 1)?;
+                //     }
+                //     self = exprs[exprs.len() - 1].clone();
+                // }
+                // 修改Do块处理逻辑
+                // expr.rs 修改后的Do处理逻辑
+                Expression::Do(exprs) => {
+                    let mut last = Expression::None;
+                    for expr in exprs {
+                        match expr.eval_mut(env, depth + 1) {
+                            Ok(v) => last = v,
+                            // 直接捕获ReturnValue并返回
+                            Err(Error::ReturnValue(v)) => return Ok(*v),
+                            Err(e) => return Err(e),
+                        }
                     }
-
-                    for expr in &exprs[..exprs.len() - 1] {
-                        expr.clone().eval_mut(env, depth + 1)?;
-                    }
-                    self = exprs[exprs.len() - 1].clone();
+                    return Ok(last);
                 }
                 Self::None
                 | Self::Integer(_)

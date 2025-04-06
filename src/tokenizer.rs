@@ -140,6 +140,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("None"),
         keyword_alone_tag("fn"),
+        keyword_alone_tag("return"),
         keyword_tag("then"),
         keyword_tag("else"),
         keyword_tag("let"),

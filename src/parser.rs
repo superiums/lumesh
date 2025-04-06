@@ -693,8 +693,16 @@ fn parse_callable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
         },
     ))
 }
-
-// parser.rs - 新增函数定义解析
+// return statement
+fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, _) = text("return")(input)?;
+    let (input, expr) = opt(parse_expression_prec_six)(input)?;
+    Ok((
+        input,
+        Expression::Return(Box::new(expr.unwrap_or(Expression::None))),
+    ))
+}
+// 新增函数定义解析
 fn parse_fn_definition(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("fn")(input)?;
     let (input, name) = parse_symbol(input)?;
@@ -720,7 +728,7 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         map(parse_none, |_| Expression::None), // 处理None的情况
     ))(input)
 }
-// parser.rs - 新增参数解析函数
+// 新增参数解析函数
 fn parse_param(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, (String, Option<Expression>), SyntaxError> {
@@ -865,6 +873,8 @@ fn parse_expression(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
     alt((
+        parse_return,
+        parse_fn_definition,
         parse_del,
         parse_match,
         parse_for_loop,
@@ -874,7 +884,6 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
         parse_lazy_assign,
         parse_declare,
         parse_assignment,
-        parse_fn_definition,
         parse_callable,
         parse_apply,
         parse_apply_operator,

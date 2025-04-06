@@ -32,6 +32,7 @@ pub enum Error {
         received: usize,
     },
     InvalidDefaultValue(String, String, Expression),
+    ReturnValue(Box<Expression>), // 用于传递返回值
 }
 
 impl Error {
@@ -78,6 +79,7 @@ impl Error {
             Self::TooManyArguments { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::ArgumentMismatch { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::InvalidDefaultValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::ReturnValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
 }
@@ -151,6 +153,7 @@ impl fmt::Display for Error {
                     received, param, name
                 )
             }
+            Self::ReturnValue(_) => write!(f, "Illegal return outside function"),
             Self::SyntaxError(string, err) => fmt_syntax_error(string, err, f),
         }
     }

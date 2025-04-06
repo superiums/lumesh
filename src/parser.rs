@@ -406,11 +406,11 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
 
     // 构建右侧表达式
     let assignments = match exprs {
-        Some(e) if e.len() == symbols.len() => (0..symbols.len())
-            .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[i].clone())))
-            .collect(),
         Some(e) if e.len() == 1 => (0..symbols.len())
             .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[0].clone())))
+            .collect(),
+        Some(e) if e.len() == symbols.len() => (0..symbols.len())
+            .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[i].clone())))
             .collect(),
         Some(e) => {
             return Err(SyntaxError::unrecoverable(
@@ -740,15 +740,7 @@ fn parse_expression(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     no_terminating_punctuation(input)?;
     // 过滤行继续符和后续换行符
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费行继续符
-
-    // let (input, _) = many0(alt((
-    //     // 匹配0次或多次
-    //     kind(TokenKind::LineContinuation), // 消费行继续符
-    //     kind(TokenKind::LineBreak), // 消费换行符
-    // )))(input)?;
-
     let expr_parser = parse_expression_prec_seven;
-
     let (input, head) = expr_parser(input)?;
     // let (input, _) = opt(kind(TokenKind::LineContinuation))(input)?; // 消费行继续符
 
@@ -835,13 +827,14 @@ fn parse_expression_prec_seven(input: Tokens<'_>) -> IResult<Tokens<'_>, Express
     ))(input)
 }
 
-fn parse_expression_prec_six(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+fn parse_expression_prec_op<'a>(
+    input: Tokens<'a>,
+    mut op_parser: impl FnMut(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError>,
+    mut expr_parser: impl FnMut(Tokens<'a>) -> IResult<Tokens<'a>, Expression, SyntaxError>,
+) -> IResult<Tokens<'a>, Expression, SyntaxError> {
     no_terminating_punctuation(input)?;
-    let expr_parser = parse_expression_prec_five;
-
     let (input, mut head) = expr_parser(input)?;
-
-    let (input, mut list) = many0(pair(alt((text("&&"), text("||"))), expr_parser))(input)?;
+    let (input, mut list) = many0(pair(&mut op_parser, &mut expr_parser))(input)?;
 
     if list.is_empty() {
         return Ok((input, head));
@@ -851,14 +844,22 @@ fn parse_expression_prec_six(input: Tokens<'_>) -> IResult<Tokens<'_>, Expressio
 
     while let Some((op, item)) = list.pop() {
         let op_fun = Expression::Symbol(op.text(input).to_string());
-
         head = Expression::Group(Box::new(Expression::Apply(
-            Box::new(op_fun.clone()),
+            Box::new(op_fun),
             vec![head, item],
         )));
     }
 
     Ok((input, head))
+}
+fn parse_expression_prec_six(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let expr_parser = parse_expression_prec_five_b;
+    let op_parser = alt((text("&&"), text("||")));
+    parse_expression_prec_op(input, op_parser, expr_parser)
+}
+fn parse_expression_prec_five_b(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    // let (input,r) = parse_expression_prec_five(input)?;
+    alt((parse_range, parse_not, parse_expression_prec_five))(input)
 }
 
 fn parse_range(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
@@ -885,62 +886,18 @@ fn parse_range(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 }
 
 fn parse_expression_prec_five(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    no_terminating_punctuation(input)?;
     let expr_parser = parse_expression_prec_four;
-
-    let (input, mut head) = expr_parser(input)?;
-
-    let (input, mut list) = many0(pair(
-        alt((
-            text("=="),
-            text("!="),
-            text(">="),
-            text("<="),
-            text(">"),
-            text("<"),
-            text("~~"),
-            text("~="),
-        )),
-        expr_parser,
-    ))(input)?;
-
-    if list.is_empty() {
-        if let Ok((input, _)) = text("to")(input) {
-            let (input, to) = parse_expression_prec_four(input).map_err(|_| {
-                SyntaxError::unrecoverable(
-                    input.get_str_slice(),
-                    "a valid range expression",
-                    None,
-                    Some("try writing an expression like `0 to 10`"),
-                )
-            })?;
-
-            return Ok((
-                input,
-                Expression::Apply(
-                    Box::new(Expression::Symbol("to".to_string())),
-                    vec![head, to],
-                ),
-            ));
-        } else if let Ok(result) = parse_not(input) {
-            return Ok(result);
-        } else {
-            return Ok((input, head));
-        }
-    }
-
-    list.reverse();
-
-    while let Some((op, item)) = list.pop() {
-        let op_fun = Expression::Symbol(op.text(input).to_string());
-
-        head = Expression::Group(Box::new(Expression::Apply(
-            Box::new(op_fun.clone()),
-            vec![head, item],
-        )));
-    }
-
-    Ok((input, head))
+    let op_parser = alt((
+        text("=="),
+        text("!="),
+        text(">="),
+        text("<="),
+        text(">"),
+        text("<"),
+        text("~~"),
+        text("~="),
+    ));
+    parse_expression_prec_op(input, op_parser, expr_parser)
 }
 
 fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
@@ -954,56 +911,15 @@ fn parse_operator_as_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression
 }
 
 fn parse_expression_prec_four(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    no_terminating_punctuation(input)?;
     let expr_parser = parse_expression_prec_three;
-
-    let (input, mut head) = expr_parser(input)?;
-
-    let (input, mut list) = many0(pair(alt((text("+"), text("-"))), expr_parser))(input)?;
-
-    if list.is_empty() {
-        return Ok((input, head));
-    }
-
-    list.reverse();
-
-    while let Some((op, item)) = list.pop() {
-        let op_fun = Expression::Symbol(op.text(input).to_string());
-
-        head = Expression::Group(Box::new(Expression::Apply(
-            Box::new(op_fun.clone()),
-            vec![head, item],
-        )));
-    }
-
-    Ok((input, head))
+    let op_parser = alt((text("+"), text("-")));
+    parse_expression_prec_op(input, op_parser, expr_parser)
 }
 
 fn parse_expression_prec_three(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    no_terminating_punctuation(input)?;
     let expr_parser = parse_expression_prec_two;
-
-    let (input, mut head) = expr_parser(input)?;
-
-    let (input, mut list) =
-        many0(pair(alt((text("*"), text("/"), text("%"))), expr_parser))(input)?;
-
-    if list.is_empty() {
-        return Ok((input, head));
-    }
-
-    list.reverse();
-
-    while let Some((op, item)) = list.pop() {
-        let op_fun = Expression::Symbol(op.text(input).to_string());
-
-        head = Expression::Group(Box::new(Expression::Apply(
-            Box::new(op_fun.clone()),
-            vec![head, item],
-        )));
-    }
-
-    Ok((input, head))
+    let op_parser = alt((text("*"), text("/"), text("%")));
+    parse_expression_prec_op(input, op_parser, expr_parser)
 }
 
 fn parse_expression_prec_two(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {

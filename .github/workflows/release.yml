@@ -8,7 +8,7 @@ name: Build and upload binaries to release
 on:
   push:
     tags:
-      - 'v[0-9]+.*'
+      - "v[0-9]+.*"
 
 jobs:
   create_release:
@@ -33,7 +33,7 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            This is a new release of dune. [Read the changelog here](https://github.com/adam-mcdaniel/dune/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            This is a new release of lumesh. [Read the changelog here](https://github.com/adam-mcdaniel/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
 
             If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
 
@@ -46,13 +46,13 @@ jobs:
         include:
           - os: ubuntu-latest
             platform: linux
-            file_ending: ''
+            file_ending: ""
           - os: macos-latest
             platform: macos
-            file_ending: ''
+            file_ending: ""
           - os: windows-latest
             platform: windows
-            file_ending: '.exe'
+            file_ending: ".exe"
 
     steps:
       - name: Checkout
@@ -77,6 +77,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: dune_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/dunesh${{ matrix.file_ending }}
+          asset_name: lumesh_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
+          asset_path: target/release/lumeshsh${{ matrix.file_ending }}
           asset_content_type: application/octet-stream

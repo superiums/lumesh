@@ -1,33 +1,28 @@
-# dune
+# Lumesh
 
-A shell by the beach!
-
+A shell forked from [lumesh](https://github.com/adam-mcdaniel/lumesh) !
+![lumesh](https://github.com/superiums/lumesh/tree/main/assets/lumesh.png)
 <p float="left">
   <a href="https://asciinema.org/a/441120"><img src="./assets/welcome3.png" width="47.5%"/></a>
   <a href="https://asciinema.org/a/441120"><img src="./assets/about.png" width="48%"/></a>
 </p>
 
 ## WIKI
+[wiki](https://github.com/superiums/lumesh/wiki)
 
-我只是梳理了一下使用方法：
-
-<a href="https://github.com/superiums/dune/wiki"> 入门语法 ： https://github.com/superiums/dune/wiki </a>
-  
-## 原作者
-请访问 < a href="https://github.com/adam-mcdaniel/dune" > Forked from adam-mcdaniel 原作者首页 </a>
-
-#### Releases
-To get the current release build, install from [crates.io](https://crates.io/crates/dune).
-
+## Install
+- download from the latest [release](https://github.com/superiums/lumesh/releases)
+- compile from source :
 ```bash
-# Also works for updating dune
-cargo install -f dune
+git clone 'https://github.com/superiums/lumesh.git'
+cargo build -r
 ```
-_Currently, since Dune is in its early stages of development, I would recommend against using releases at the moment. There are a lot of bug fixes and new features added inbetween releases._
+_Currently, since in its early stages of development, I would recommend against using releases at the moment.
+There are a lot of bug fixes and new features added in between releases._
 
 #### After Install
 
 ```bash
-# Just run the dune executable!
-dunesh
+# Just run the lumesh executable!
+lumesh
 ```

@@ -1,18 +1,18 @@
 [package]
-name = "dune"
+name = "lumesh"
 version = "0.2.0-symbol"
-authors = ["Adam McDaniel <adam.mcdaniel17@gmail.com>"]
+authors = ["Adam McDaniel <adam.mcdaniel17@gmail.com>; superiums"]
 edition = "2021"
 license = "Apache-2.0"
 description = "A shell🐚 by the beach🏖️!!"
 readme = "README.md"
-documentation = "https://docs.rs/dune"
-homepage = "https://github.com/adam-mcdaniel/dune"
-repository = "https://github.com/adam-mcdaniel/dune"
+documentation = "https://docs.rs/lumesh"
+homepage = "https://github.com/adam-mcdaniel/lumesh"
+repository = "https://github.com/adam-mcdaniel/lumesh"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [[bin]]
-name = "dunesh"
+name = "lumesh"
 path = "src/bin.rs"
 
 [dependencies]

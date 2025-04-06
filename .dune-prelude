@@ -25,8 +25,8 @@
 #     cal      # Print a calendar
 #
 #   Shrew:
-#     shrewsay "Message to print"        # Makes a wild dune shrew appear!
-#     turnedshrewsay "Message to print"  # Makes a left-facing wild dune shrew appear!
+#     shrewsay "Message to print"        # Makes a wild lumesh shrew appear!
+#     turnedshrewsay "Message to print"  # Makes a left-facing wild lumesh shrew appear!
 #
 # Have fun, scripters!
 
@@ -373,16 +373,16 @@ if os@name == "windows" {
     }
 }
 
-console@title "Dune";
+console@title "lumesh";
 
 let donate = _ ~> {
-        echo "                     ┌──────Wild Dune Shrew──────┐
-                      Hello, how is Dune working
+        echo "                     ┌──────Wild lumesh Shrew──────┐
+                      Hello, how is lumesh working
                       for you so far? If you like
                       it, consider starring our
                       GitHub page and donating!";
         echo "                     " (fmt@italics "(To remove this message,\n                      write your own prelude)\n");
-        echo "                     " (fmt@href "https://github.com/adam-mcdaniel/dune" "Thank You❤️");
+        echo "                     " (fmt@href "https://github.com/adam-mcdaniel/lumesh" "Thank You❤️");
 
         echo "                     └───────────────────────────┘
                      ╱
@@ -436,8 +436,8 @@ let CATS = ["
  (______)__m_m)"
 ];
 
-let prompt = cwd -> fmt@bold ((fmt@dark@blue "(dune) ") + (fmt@bold (fmt@dark@green cwd)) + (fmt@bold (fmt@dark@blue "$ ")));
-let incomplete_prompt = cwd -> ((len cwd) + (len "(dune) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));
+let prompt = cwd -> fmt@bold ((fmt@dark@blue "(lumesh) ") + (fmt@bold (fmt@dark@green cwd)) + (fmt@bold (fmt@dark@blue "$ ")));
+let incomplete_prompt = cwd -> ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));
 
 let shrew = _ ~> {
 "
@@ -460,7 +460,7 @@ let turnedshrew = _ ~> {
 };
 
 let shrewsay = text -> {
-    let title = "Wild Dune Shrew";
+    let title = "Wild lumesh Shrew";
 
     let text = (std@string@to-string text);
     let cols = math@min (math@max ((console@width ()) // 2) (string@get-width text)) (console@width ());
@@ -487,7 +487,7 @@ let shrewsay = text -> {
 };
 
 let turnedshrewsay = text -> {
-    let title = "Wild Dune Shrew";
+    let title = "Wild lumesh Shrew";
     let text = (std@string@to-string text);
 
     let text = (std@string@to-string text);
@@ -519,12 +519,12 @@ let about = _ ~> {
     echo (
     widget@joiny
         (widget@create "About"
-"          Hello, welcome to " + (fmt@yellow "Dune Shell!") + "
-      Written by: http://adam-mcdaniel.net\n\nI wrote Dune to be a nice environment for devs while they work! It's a very cozy shell with high customizability, so you can make it how you'd like." 50 10)
+"          Hello, welcome to " + (fmt@yellow "lumesh Shell!") + "
+      Written by: http://adam-mcdaniel.net\n\nI wrote lumesh to be a nice environment for devs while they work! It's a very cozy shell with high customizability, so you can make it how you'd like." 50 10)
 
             (widget@joinx
             (widget@create "Features"
-"Dune has a wide set of
+"lumesh has a wide set of
 features, it's basically a
 full blown language!
 
@@ -535,7 +535,7 @@ lambdas, macros, quoted
 expressions like Lisp, and
 more!
 
-Dune's libraries are very
+lumesh's libraries are very
 extensive. There are
 libraries for:
 
@@ -731,17 +731,17 @@ let welcome = _ ~> {
     dashboard ();
 };
 
-let DUNE_SECRETS_FILE = HOME + "/.dune-secrets";
+let lumesh_SECRETS_FILE = HOME + "/.lumesh-secrets";
 
 clear ();
-if (fs@exists? DUNE_SECRETS_FILE) {
-    include DUNE_SECRETS_FILE;
+if (fs@exists? lumesh_SECRETS_FILE) {
+    include lumesh_SECRETS_FILE;
 }
 
 let CITY = Knoxville;
 welcome ();
 
 
-if (!(fs@exists? DUNE_SECRETS_FILE)) {
-    shrewsay "Create " + DUNE_SECRETS_FILE + " to store your secrets, tokens, and API keys!";
+if (!(fs@exists? lumesh_SECRETS_FILE)) {
+    shrewsay "Create " + lumesh_SECRETS_FILE + " to store your secrets, tokens, and API keys!";
 }

@@ -1,14 +1,14 @@
 [package]
 name = "lumesh"
-version = "0.2.0-symbol"
+version = "0.2.1"
 authors = ["Adam McDaniel <adam.mcdaniel17@gmail.com>; superiums"]
-edition = "2021"
+edition = "2024"
 license = "Apache-2.0"
-description = "A shell🐚 by the beach🏖️!!"
+description = "A shell🐚 forked from dune!!"
 readme = "README.md"
 documentation = "https://docs.rs/lumesh"
-homepage = "https://github.com/adam-mcdaniel/lumesh"
-repository = "https://github.com/adam-mcdaniel/lumesh"
+homepage = "https://github.com/superiums/lumesh"
+repository = "https://github.com/superiums/lumesh"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 # [[bin]]
@@ -16,8 +16,8 @@ repository = "https://github.com/adam-mcdaniel/lumesh"
 # path = "src/bin.rs"
 
 [features]
-default = ["cli"]            # 默认编译交互版
-cli = ["rustyline", "ctrlc"]
+default = ["cli"]                    # 默认编译交互版
+cli = ["rustyline", "ctrlc", "clap"]
 runner = []
 
 
@@ -35,7 +35,7 @@ required-features = ["runner"]
 rustyline = { version = "9.1", optional = true }
 ctrlc = { version = "3.2", optional = true }
 chess-engine = { version = "0.1.2", optional = true }
-clap = { version = "4.5.35", features = ["derive"] }
+clap = { version = "4.5.35", features = ["derive"], optional = true }
 json = "0.12.4"
 terminal_size = "0.1.17"
 textwrap = "0.14"

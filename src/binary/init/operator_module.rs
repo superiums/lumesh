@@ -300,18 +300,21 @@ pub fn get(env: &mut Environment) -> Expression {
 
     tmp.define(
         "<<",
-        crate::parse("fs@read").unwrap().eval(&mut new_tmp).unwrap(),
+        lumesh::parse("fs@read")
+            .unwrap()
+            .eval(&mut new_tmp)
+            .unwrap(),
     );
     tmp.define(
         ">>",
-        crate::parse("file -> contents -> fs@write file contents")
+        lumesh::parse("file -> contents -> fs@write file contents")
             .unwrap()
             .eval(&mut new_tmp)
             .unwrap(),
     );
     tmp.define(
         ">>>",
-        crate::parse("file -> contents -> fs@append file contents")
+        lumesh::parse("file -> contents -> fs@append file contents")
             .unwrap()
             .eval(&mut new_tmp)
             .unwrap(),

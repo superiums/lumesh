@@ -72,10 +72,10 @@ fn curry_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Express
 
 pub fn get() -> Expression {
     (b_tree_map! {
-        String::from("id") => crate::parse("x -> x").expect("failed to parse id").eval(&mut Environment::default()).expect("failed to eval id"),
-        String::from("const") => crate::parse("x -> y -> x").expect("failed to parse const").eval(&mut Environment::default()).expect("failed to eval const"),
-        String::from("flip") => crate::parse("f -> x -> y -> f y x").expect("failed to parse flip").eval(&mut Environment::default()).expect("failed to eval flip"),
-        String::from("compose") => crate::parse("f -> g -> x -> f (g x)").expect("failed to parse compose").eval(&mut Environment::default()).expect("failed to eval compose"),
+        String::from("id") => lumesh::parse("x -> x").expect("failed to parse id").eval(&mut Environment::default()).expect("failed to eval id"),
+        String::from("const") => lumesh::parse("x -> y -> x").expect("failed to parse const").eval(&mut Environment::default()).expect("failed to eval const"),
+        String::from("flip") => lumesh::parse("f -> x -> y -> f y x").expect("failed to parse flip").eval(&mut Environment::default()).expect("failed to eval flip"),
+        String::from("compose") => lumesh::parse("f -> g -> x -> f (g x)").expect("failed to parse compose").eval(&mut Environment::default()).expect("failed to eval compose"),
 
         String::from("apply") => Expression::builtin("apply", |args, env| {
             if args.len() != 2 {
@@ -136,7 +136,7 @@ fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error
 
     if args.len() == 1 {
         Expression::Apply(
-            Box::new(crate::parse("f -> list -> for item in list {f item}")?),
+            Box::new(lumesh::parse("f -> list -> for item in list {f item}")?),
             args.clone(),
         )
         .eval(env)
@@ -169,7 +169,7 @@ fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
 
     if args.len() == 1 {
         Expression::Apply(
-            Box::new(crate::parse(
+            Box::new(lumesh::parse(
                 r#"f -> list -> {
                     let result = [];
                     for item in list {
@@ -217,7 +217,7 @@ fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
 
     if args.len() < 3 {
         Expression::Apply(
-            Box::new(crate::parse(
+            Box::new(lumesh::parse(
                 "f -> acc -> list -> { \
                         for item in list { let acc = f acc item } acc }",
             )?),

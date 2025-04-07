@@ -11,11 +11,30 @@ homepage = "https://github.com/adam-mcdaniel/lumesh"
 repository = "https://github.com/adam-mcdaniel/lumesh"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# [[bin]]
+# name = "lumesh"
+# path = "src/bin.rs"
+
+[features]
+default = ["cli"]            # 默认编译交互版
+cli = ["rustyline", "ctrlc"]
+runner = []
+
+
+[[bin]]
+name = "lume"
+path = "src/cli.rs"
+required-features = ["cli"]
+
 [[bin]]
 name = "lumesh"
-path = "src/bin.rs"
+path = "src/runner.rs"
+required-features = ["runner"]
 
 [dependencies]
+rustyline = { version = "9.1", optional = true }
+ctrlc = { version = "3.2", optional = true }
+chess-engine = { version = "0.1.2", optional = true }
 clap = { version = "4.5.35", features = ["derive"] }
 json = "0.12.4"
 terminal_size = "0.1.17"
@@ -23,14 +42,13 @@ textwrap = "0.14"
 nom = "7.0"
 detached-str = "0.1"
 rand = "0.8"
-ctrlc = "3.2"
+# ctrlc = "3.2"
 common_macros = "0.1"
 snailquote = "0.3"
-rustyline = "9.1"
+# rustyline = "9.1"
 rustyline-derive = "0.6"
 dirs = "4.0"
 dunce = "1.0"
-chess-engine = { version = "0.1.2", optional = true }
 glob = "0.3"
 rpassword = "7.3"
 crossterm = "0.27"

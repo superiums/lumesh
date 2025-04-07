@@ -21,4 +21,11 @@ pub use tokens::{Token, TokenKind};
 mod tokenizer;
 pub use tokenizer::*;
 
+pub mod repl;
+pub use repl::{new_editor, readline};
+
+pub mod runtime;
+pub use runtime::parse;
+
+// mod binary;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

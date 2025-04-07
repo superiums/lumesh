@@ -164,8 +164,8 @@ pub fn init(env: &mut Environment) {
                     prompt += &format!("{}", x)
                 }
             }
-            let mut rl = crate::new_editor(env);
-            Ok(Expression::String(crate::readline(&prompt, &mut rl)))
+            let mut rl = lumesh::repl::new_editor(env);
+            Ok(Expression::String(lumesh::repl::readline(&prompt, &mut rl)))
         },
         "get user input",
     );

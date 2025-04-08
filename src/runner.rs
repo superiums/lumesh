@@ -1,5 +1,6 @@
 // src/bin/runner.rs
 mod binary;
+use lumesh::STRICT;
 use lumesh::runtime::{run_file, run_text};
 use lumesh::{Environment, Error, Expression};
 use std::path::Path;
@@ -37,7 +38,9 @@ fn main() -> Result<(), Error> {
                     std::process::exit(0);
                 }));
             }
-            // "-s" => { /* 严格模式保留但不实现 */ }
+            "-s" => unsafe {
+                STRICT = true;
+            },
             "-h" => {
                 println!("usage:");
                 println!("      lumesh [file] <args...>");

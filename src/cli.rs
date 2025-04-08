@@ -4,10 +4,10 @@ mod binary;
 use clap::Parser;
 use lumesh::repl; // 新增模块引用
 // use lumesh::binary;
+use lumesh::STRICT;
 use lumesh::runtime::{run_file, run_text};
 use lumesh::{Environment, Error, Expression};
 use std::path::PathBuf;
-
 // #[rustfmt::skip]
 // const INTRO_PRELUDE: &str = include_str!("repl/.intro-lumesh-prelude");
 
@@ -71,6 +71,10 @@ fn main() -> Result<(), Error> {
     let mut env = Environment::new();
 
     // 初始化核心环境
+    unsafe {
+        STRICT = cli.strict;
+    }
+    env.define("STRICT", Expression::Boolean(cli.strict));
     env.define(
         "argv",
         Expression::List(cli.argv.into_iter().map(Expression::String).collect()),
@@ -93,10 +97,13 @@ fn main() -> Result<(), Error> {
     }
     // 文件执行模式
     else if let Some(file) = cli.file {
-        let path = PathBuf::from(file);
+        let path = PathBuf::from(file.to_owned());
         if let Err(e) = run_file(path, &mut env) {
-            eprintln!("{}", e)
+            eprintln!("{}", e);
+            std::process::exit(1)
         }
+        env.define("SCRIPT", Expression::String(file));
+
         if cli.interactive {
             // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
             // repl::init_config(&mut env)?;

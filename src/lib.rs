@@ -29,3 +29,5 @@ pub use runtime::parse;
 
 // mod binary;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+pub static mut STRICT: bool = false;

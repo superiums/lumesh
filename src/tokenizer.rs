@@ -1,14 +1,14 @@
-use std::convert::TryFrom;
-
+use crate::STRICT;
 use detached_str::StrSlice;
 use nom::{
+    IResult,
     branch::alt,
     combinator::{eof, map},
     error::ParseError,
     multi::fold_many_m_n,
     sequence::tuple,
-    IResult,
 };
+use std::convert::TryFrom;
 
 use crate::tokens::{Input, Token, TokenKind};
 
@@ -578,7 +578,13 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
     move |input: Input<'_>| {
         input
             .strip_prefix(keyword)
-            .filter(|(rest, _)| !rest.starts_with(|c: char| c.is_ascii_punctuation()))
+            .filter(|(rest, _)| unsafe {
+                if STRICT {
+                    !rest.starts_with(is_symbol_char)
+                } else {
+                    !rest.starts_with(|c: char| c.is_ascii_punctuation())
+                }
+            })
             .ok_or(NOT_FOUND)
     }
 }

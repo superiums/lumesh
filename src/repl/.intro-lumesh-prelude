@@ -106,17 +106,17 @@ let turnedshrew = _ ~> {
 let shrewsay = text -> {
     let title = "Wild lumesh Shrew";
 
-    let text = (std@string@to-string text);
-    let cols = math@min (math@max ((console@width ()) / 2) (string@get-width text)) (console@width ());
+    let text = (std@string@to_string text);
+    let cols = math@min (math@max ((console@width ()) / 2) (string@get_width text)) (console@width ());
     let text = fmt@wrap text cols;
-    let text-lines = lines text;
-    if (len text-lines) == 1 {
+    let text_lines = lines text;
+    if (len text_lines) == 1 {
         if (len text) < cols {
             let cols = len text;
         }
     }
     let cols = math@max cols (len title);
-    let rows = len text-lines;
+    let rows = len text_lines;
     let spacing = 25;
 
     for line in (lines (widget@create title text cols + 2 rows + 2)) {
@@ -132,19 +132,19 @@ let shrewsay = text -> {
 
 let turnedshrewsay = text -> {
     let title = "Wild lumesh Shrew";
-    let text = (std@string@to-string text);
+    let text = (std@string@to_string text);
 
-    let text = (std@string@to-string text);
-    let cols = math@min (math@max ((console@width ()) / 2) (string@get-width text)) (console@width ());
+    let text = (std@string@to_string text);
+    let cols = math@min (math@max ((console@width ()) / 2) (string@get_width text)) (console@width ());
     let text = fmt@wrap text cols;
-    let text-lines = lines text;
-    if (len text-lines) == 1 {
+    let text_lines = lines text;
+    if (len text_lines) == 1 {
         if (len text) < cols {
             let cols = len text;
         }
     }
     let cols = math@max cols (len title);
-    let rows = len text-lines;
+    let rows = len text_lines;
     let spacing = 20;
 
     for line in (lines (widget@create title text cols + 2 rows + 2)) {
@@ -215,11 +215,11 @@ let welcomebanner = _ ~> {
 
     (_ -> {
         let now = time@now ();
-        let time-emoji = if now@hour <= 6 "🌃"
+        let time_emoji = if now@hour <= 6 "🌃"
             else if now@hour <= 10 "🌅"
             else if now@hour <= 18 "🌤️ "
             else "🌃";
-        let date-emoji = if now@month == 1 "⛄"
+        let date_emoji = if now@month == 1 "⛄"
             else if now@month == 2 "💖"
             else if now@month == 3 "🍀"
             else if now@month == 4 "🌂"
@@ -232,7 +232,7 @@ let welcomebanner = _ ~> {
             else if now@month == 11 "🍂"
             else if now@month == 12 "🌨️"
             else "📅";
-        let zodiac-emoji = if now@month == 1 (if now@day < 20 "🐐" else "🏺")
+        let zodiac_emoji = if now@month == 1 (if now@day < 20 "🐐" else "🏺")
             else if now@month == 2 (if now@day < 19 "🏺" else "🐟")
             else if now@month == 3 (if now@day < 21 "🐟" else "🐏")
             else if now@month == 4 (if now@day < 20 "🐏" else "🐂")
@@ -254,14 +254,14 @@ let welcomebanner = _ ~> {
             }));
         }
         echo "";
-        echo "        The time is " + (fmt@magenta now@time@str) + " " + time-emoji + " on " + (fmt@cyan now@date@str);
+        echo "        The time is " + (fmt@magenta now@time@str) + " " + time_emoji + " on " + (fmt@cyan now@date@str);
         echo "└────────────────────────────────────────────────┘";
     }) ();
 
 };
 
 
-let is-leapyear = year -> {
+let is_leapyear = year -> {
     if year % 4 == 0 && year % 100 != 0 {
         True
     } else if year % 100 == 0 && year % 400 == 0 {
@@ -271,15 +271,15 @@ let is-leapyear = year -> {
     }
 };
 
-let days-in-month = month -> year -> {
+let days_in_month = month -> year -> {
     if month == 2 {
-        28 + (if (is-leapyear year) 1 else 0)
+        28 + (if (is_leapyear year) 1 else 0)
     } else {
         31 - (((month - 1) % 7) % 2)
     }
 };
 
-let day-of-week = m -> d -> y -> {
+let day_of_week = m -> d -> y -> {
     let t = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
 
     if m < 3 {
@@ -314,14 +314,14 @@ let MONTHS = [
 	"December"
 ];
 
-let make-calendar = m -> d -> y -> {
-    let now = {month=m, day=d, year=y};
+let make_calendar = m -> d -> y -> {
+    let now = {month = m, day = d, year = y};
     let result = MONTHS@(now@month - 1) + " " + (str now@day) + ", " + (str now@year) + "\n";
 	let result = " " * ((28 - (len result)) / 2 + 1) + result;
     let result = result + " Su  Mo  Tu  We  Th  Fr  Sa\n";
 
-    let dof = day-of-week now@month 1 now@year;
-    let dim = days-in-month now@month now@year;
+    let dof = day_of_week now@month 1 now@year;
+    let dim = days_in_month now@month now@year;
 
     for i in 0 to dof {
         let result = result + "    ";
@@ -343,7 +343,7 @@ let make-calendar = m -> d -> y -> {
 let cal = _ ~> {
     (_ -> {
         let now = time@now ();
-        make-calendar now@month now@day now@year
+        make_calendar now@month now@day now@year
     }) ();
 };
 
@@ -354,7 +354,7 @@ let welcome = _ ~> {
     (_ -> {
         let now = time@now ();
         echo (widget@joinx
-            (make-calendar now@month now@day now@year)
+            (make_calendar now@month now@day now@year)
             (widget@create "Cat" (rand@choose CATS) 20 10));
     }) ();
 };
@@ -422,36 +422,36 @@ let intro = _ ~> {
     welcome ();
 };
 
-let old-report = report;
+let old_report = report;
 let REPORT_COUNT = 0;
 let report = val ~> {
-    old-report val;
+    old_report val;
     if REPORT_COUNT == 50 {
         donate ();
     }
     let REPORT_COUNT = REPORT_COUNT + 1;
 };
 
-let old-help = help;
+let old_help = help;
 let help = val ~> {
     if val == CWD || val == 'me {
-        old-help me;
+        old_help me;
         echo "\n";
         donate ();
     } else if val == 'builtin {
-        old-help builtin;
+        old_help builtin;
     } else if val == 'lib {
-        old-help lib;
+        old_help lib;
     } else if val == 'syntax {
-        old-help syntax;
+        old_help syntax;
     } else if val == 'types {
-        old-help types;
+        old_help types;
     } else if val == 'scripting {
-        old-help scripting;
+        old_help scripting;
     } else if val == 'prelude {
-        old-help prelude;
+        old_help prelude;
     } else {
-        old-help val;
+        old_help val;
     }
 };
 

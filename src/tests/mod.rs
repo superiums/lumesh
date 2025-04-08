@@ -1,4 +1,4 @@
-use crate::{parse_script, tokenize, Diagnostic, SyntaxError};
+use crate::{Diagnostic, SyntaxError, parse_script, tokenize};
 
 #[track_caller]
 fn tokenize_test(input: &str, expected: &str) {

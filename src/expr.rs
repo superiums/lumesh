@@ -8,11 +8,13 @@ use std::{
     process::Command,
 };
 
-use terminal_size::{terminal_size, Width};
+use terminal_size::{Width, terminal_size};
 
+use crate::STRICT;
 use prettytable::{
+    Cell, Row, Table,
     format::{LinePosition, LineSeparator},
-    row, Cell, Row, Table,
+    row,
 };
 
 /// The maximum number of times that `eval` can recursively call itself
@@ -566,7 +568,7 @@ impl Expression {
                     return Ok(match env.get(&name) {
                         Some(expr) => expr,
                         None => Self::Symbol(name.clone()),
-                    })
+                    });
                 }
                 Self::Del(name) => {
                     env.undefine(&name);
@@ -574,9 +576,12 @@ impl Expression {
                 }
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {
-                    // TODO: redefine is rejected. but why never report err?
-                    if env.is_defined(&name) {
-                        return Err(Error::Redeclaration(name));
+                    unsafe {
+                        if env.is_defined(&name) && STRICT
+                        // && env.get("STRICT") == Some(Expression::Boolean(true))
+                        {
+                            return Err(Error::Redeclaration(name));
+                        }
                     }
                     let value = expr.eval_mut(env, depth + 1)?;
                     env.define(&name, value); // 新增 declare 方法
@@ -693,7 +698,7 @@ impl Expression {
                                         Error::PermissionDenied(self.clone())
                                     }
                                     _ => Error::CommandFailed(name, args.clone()),
-                                })
+                                });
                             }
                         }
                     }
@@ -824,7 +829,7 @@ impl Expression {
                                         name,
                                         p.to_string(),
                                         expr.clone(),
-                                    ))
+                                    ));
                                 }
                             }
                         }
@@ -859,7 +864,7 @@ impl Expression {
                             .into_iter()
                             .map(|x| x.eval_mut(env, depth + 1))
                             .collect::<Result<Vec<Self>, Error>>()?,
-                    ))
+                    ));
                 }
                 Self::Map(exprs) => {
                     return Ok(Self::Map(
@@ -867,7 +872,7 @@ impl Expression {
                             .into_iter()
                             .map(|(n, x)| Ok((n, x.eval_mut(env, depth + 1)?)))
                             .collect::<Result<BTreeMap<String, Self>, Error>>()?,
-                    ))
+                    ));
                 }
                 // Self::Do(exprs) => {
                 //     if exprs.is_empty() {

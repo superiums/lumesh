@@ -1,16 +1,16 @@
 use detached_str::StrSlice;
 use nom::{
+    IResult, Parser,
     branch::alt,
     combinator::{eof, map, opt},
     error::{ErrorKind, ParseError},
     multi::{many0, many1, separated_list0, separated_list1},
     sequence::{pair, preceded, separated_pair, terminated},
-    IResult, Parser,
 };
 
 use crate::{
-    tokens::{Input, Tokens},
     Diagnostic, Environment, Expression, Int, Pattern, Token, TokenKind,
+    tokens::{Input, Tokens},
 };
 use std::collections::BTreeMap;
 
@@ -401,7 +401,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     // 解析等号和多表达式
     let (input, exprs) = opt(preceded(
         text("="),
-        separated_list0(text(","), parse_expression),
+        separated_list0(text(","), parse_expression_prec_seven),
     ))(input)?;
 
     // 构建右侧表达式
@@ -422,7 +422,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
                     e.len()
                 )),
                 Some("ensure each variable has a corresponding value"),
-            ))
+            ));
         }
         None => vec![], // Expression::None, // 单变量允许无初始值
                         //TODO: must has initialization in strict mode.

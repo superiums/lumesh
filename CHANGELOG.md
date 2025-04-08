@@ -1,50 +1,75 @@
 # Changelog
 ## [0.2.2] 2025-4-8
 -  env vars:
+
 use `SCRIPT` var to get the script file path.
+
 use `STRICT` var to know wheather in strict mode.
+
 use `argv` to receive vars parsed in.
 
 -  apply strict mode.
+
 `lume -s` to start in strict mode.
 
 in strict mode, var redeclare will be rejected and warned.
+
 also, operator without space was not allowed.(act same as dune)
 
 in nonstrict mode, they are all allowed.
 
 -  fix let a =6; a=9 report redclaration.
+
 -  add more fs@dirs.
 
 such as `(fs@dirs)@config` is config dir.
+
 also `cache` for cache dir. `data` for data dir.
 
 -  change all builtin `-` to `_` and remove ? after func name.simplify cursor move name.
+
 this is because in nonstrict mode, `-` was recognized as decrease.
+
 so in vars symbol, `_` is better than `-`.
 
 -  help as feather; fix list@head/tail to first/last; drop curry for take/drop.
+
 this is done to reduce the size of binary.
+
 help docs will be published alone.
 
 -  update os-info, chrono. reorganize and add functions for time_model.
-now `time.minute`,`time.stamp`, `time.display`, `time.fmt` .... was avaluable.
+
+now
+
+`time.minute`,`time.stamp`, `time.display`, `time.fmt` ....
+
+was avaluable.
+
 -  remove clap from runner.
+
 -  split repl and runner
+
 a pure edition was added to parse script only.
+
 more efficient.
 
 -  fix env influent in list, if, while, match.
+
 now vars declared in these blocks, was only visible in.
 
 no influent to outer enviroment.
 
 -  add fn define and return statement.
-`fn myfunction(x, y=2) {
+
+```bash
+fn myfunction(x, y=2) {
   let z = 0
   return x + y + z
-}`
--  refactor parse_expression_prec_op. adjust parse_range and parse_not before parse_expression_prec_five.
+}```
+
+-  refactor parse_expression_prec_op.
+- adjust parse_range and parse_not before parse_expression_prec_five.
 
 ## [0.2.1] 2025-4-5
 

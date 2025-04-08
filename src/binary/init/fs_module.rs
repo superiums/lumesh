@@ -54,6 +54,26 @@ pub fn get(env: &mut Environment) -> Expression {
         env.set_cwd(&cwd.into_os_string().into_string().unwrap());
     }
 
+    if let Some(c_dir) = dirs::config_dir() {
+        let desk_dir = c_dir.into_os_string().into_string().unwrap();
+        dir_tree.insert("config".to_string(), desk_dir.clone().into());
+        // env.define("DESK", Expression::String(desk_dir));
+    }
+    if let Some(c_dir) = dirs::cache_dir() {
+        let desk_dir = c_dir.into_os_string().into_string().unwrap();
+        dir_tree.insert("cache".to_string(), desk_dir.clone().into());
+        // env.define("DESK", Expression::String(desk_dir));
+    }
+    if let Some(c_dir) = dirs::data_dir() {
+        let desk_dir = c_dir.into_os_string().into_string().unwrap();
+        dir_tree.insert("data".to_string(), desk_dir.clone().into());
+        // env.define("DESK", Expression::String(desk_dir));
+    }
+    if let Some(c_dir) = dirs::picture_dir() {
+        let desk_dir = c_dir.into_os_string().into_string().unwrap();
+        dir_tree.insert("pic".to_string(), desk_dir.clone().into());
+        // env.define("DESK", Expression::String(desk_dir));
+    }
     if let Some(desk_dir) = dirs::desktop_dir() {
         let desk_dir = desk_dir.into_os_string().into_string().unwrap();
         dir_tree.insert("desk".to_string(), desk_dir.clone().into());

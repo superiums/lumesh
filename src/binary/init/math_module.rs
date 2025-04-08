@@ -11,54 +11,40 @@ pub fn get(env: &mut Environment) -> Expression {
         String::from("max") => lumesh::parse("x -> y -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
         String::from("min") => lumesh::parse("x -> y -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
 
-        String::from("l-rsh") => curry(Expression::builtin("l-rsh", |args, env| {
-            super::check_exact_args_len("l-rsh", &args, 2)?;
+        String::from("l_rsh") => Expression::builtin("l_rsh", |args, env| {
+            super::check_exact_args_len("l_rsh", &args, 2)?;
 
             let a = match args[0].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid l-rsh argument {}", e)))
+                e => return Err(Error::CustomError(format!("invalid l_rsh argument {}", e)))
             };
 
             let b = match args[1].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid l-rsh argument {}", e)))
+                e => return Err(Error::CustomError(format!("invalid l_rsh argument {}", e)))
             };
 
             let a = a as u64;
             let b = b as u64;
 
             Ok(((a >> b) as Int).into())
-        }, "logical right shift"), 2),
+        }, "logical right shift"),
 
-        String::from("a-rsh") => curry(Expression::builtin("a-rsh", |args, env| {
-            super::check_exact_args_len("a-rsh", &args, 2)?;
 
-            let a = match args[0].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid a-rsh argument {}", e)))
-            };
-            let b = match args[1].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid a-rsh argument {}", e)))
-            };
-
-            Ok((a >> b).into())
-        }, "arithmetic right shift"), 2),
-
-        String::from("rsh") => curry(Expression::builtin("a-rsh", |args, env| {
-            super::check_exact_args_len("a-rsh", &args, 2)?;
+        String::from("rsh") => Expression::builtin("rsh", |args, env| {
+            super::check_exact_args_len("rsh", &args, 2)?;
 
             let a = match args[0].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid a-rsh argument {}", e)))
+                e => return Err(Error::CustomError(format!("invalid rsh argument {}", e)))
             };
             let b = match args[1].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid a-rsh argument {}", e)))
+                e => return Err(Error::CustomError(format!("invalid rsh argument {}", e)))
             };
 
             Ok((a >> b).into())
-        }, "arithmetic right shift"), 2),
+        }, "arithmetic right shift"),
 
         String::from("lsh") => Expression::builtin("lsh", |args, env| {
             super::check_exact_args_len("lsh", &args, 2)?;

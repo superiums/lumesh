@@ -232,21 +232,21 @@ pub fn get(env: &mut Environment) -> Expression {
 
             list_directory(&dir, &Path::new(&path))
         }, "get a directory's entries as a list of strings"),
-        String::from("exists?") => Expression::builtin("exists", |args, env| {
+        String::from("exists") => Expression::builtin("exists", |args, env| {
             super::check_exact_args_len("exists", &args, 1)?;
             let path = PathBuf::from(env.get_cwd());
 
             Ok(path.join(args[0].eval(env)?.to_string()).exists().into())
         }, "check if a given file path exists"),
 
-        String::from("is-dir?") => Expression::builtin("isdir", |args, env| {
+        String::from("isdir") => Expression::builtin("isdir", |args, env| {
             super::check_exact_args_len("isdir", &args, 1)?;
             let path = PathBuf::from(env.get_cwd());
 
             Ok(path.join(args[0].eval(env)?.to_string()).is_dir().into())
         }, "check if a given path is a directory"),
 
-        String::from("is-file?") => Expression::builtin("isfile", |args, env| {
+        String::from("isfile") => Expression::builtin("isfile", |args, env| {
             super::check_exact_args_len("isfile", &args, 1)?;
             let path = PathBuf::from(env.get_cwd());
 

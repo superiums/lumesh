@@ -1,5 +1,5 @@
 use super::Int;
-use super::curry;
+// use super::curry;
 use common_macros::b_tree_map;
 use lumesh::{Environment, Error, Expression};
 pub fn get() -> Expression {
@@ -357,7 +357,7 @@ fn drop(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Erro
 fn split_at(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
     if args.len() != 2 {
         return Err(Error::CustomError(
-            "split-at requires exactly two arguments".to_string(),
+            "split_at requires exactly two arguments".to_string(),
         ));
     }
     let n = args[0].eval(env)?;
@@ -372,12 +372,12 @@ fn split_at(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, 
             ]))
         } else {
             Err(Error::CustomError(
-                "split-at requires a list as its second argument".to_string(),
+                "split_at requires a list as its second argument".to_string(),
             ))
         }
     } else {
         Err(Error::CustomError(
-            "split-at requires an integer as its first argument".to_string(),
+            "split_at requires an integer as its first argument".to_string(),
         ))
     }
 }

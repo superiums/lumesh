@@ -85,8 +85,8 @@ pub fn get() -> Expression {
             })
         }, "remove a key-value pair from a map"),
 
-        String::from("has?") => Expression::builtin("has?", |args, env| {
-            super::check_exact_args_len("has?", &args, 2)?;
+        String::from("has") => Expression::builtin("has", |args, env| {
+            super::check_exact_args_len("has", &args, 2)?;
             let expr = args[0].clone().eval(env)?;
             let key = args[1].clone().eval(env)?;
             Ok(match expr {
@@ -107,8 +107,8 @@ pub fn get() -> Expression {
             })
         }, "get the length of a map, list, string, or bytes"),
 
-        String::from("from-items") => Expression::builtin("from-items", |args, env| {
-            super::check_exact_args_len("from-items", &args, 1)?;
+        String::from("from_items") => Expression::builtin("from_items", |args, env| {
+            super::check_exact_args_len("from_items", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
             Ok(match expr {
                 Expression::List(list) => {

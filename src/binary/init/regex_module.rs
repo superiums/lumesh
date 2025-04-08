@@ -14,8 +14,8 @@ pub fn get() -> Expression {
         }, "compile regex pattern (validation only)"),
 
         // 检查是否匹配
-        String::from("is-match") => Expression::builtin("is-match", |args, env| {
-            super::check_exact_args_len("is-match", &args, 2)?;
+        String::from("match") => Expression::builtin("match", |args, env| {
+            super::check_exact_args_len("match", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
@@ -40,8 +40,8 @@ pub fn get() -> Expression {
         }, "find first match with [start, end, text]"),
 
         // 查找所有匹配
-        String::from("find-all") => Expression::builtin("find-all", |args, env| {
-            super::check_exact_args_len("find-all", &args, 2)?;
+        String::from("find_all") => Expression::builtin("find_all", |args, env| {
+            super::check_exact_args_len("find_all", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
@@ -77,8 +77,8 @@ pub fn get() -> Expression {
         }, "get first capture groups as [full, group1, group2, ...]"),
 
         // 获取所有捕获组
-        String::from("captures-all") => Expression::builtin("captures-all", |args, env| {
-            super::check_exact_args_len("captures-all", &args, 2)?;
+        String::from("captures") => Expression::builtin("captures", |args, env| {
+            super::check_exact_args_len("captures", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
@@ -109,8 +109,8 @@ pub fn get() -> Expression {
         }, "split text by pattern"),
 
         // 替换所有匹配
-        String::from("replace-all") => Expression::builtin("replace-all", |args, env| {
-            super::check_exact_args_len("replace-all", &args, 3)?;
+        String::from("replace") => Expression::builtin("replace", |args, env| {
+            super::check_exact_args_len("replace", &args, 3)?;
             let pattern = args[0].eval(env)?.to_string();
             let replacement = args[1].eval(env)?.to_string();
             let text = args[2].eval(env)?.to_string();

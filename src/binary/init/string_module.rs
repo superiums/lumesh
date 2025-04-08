@@ -29,13 +29,13 @@ fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
 
 pub fn get() -> Expression {
     (b_tree_map! {
-        String::from("to-string") => Expression::builtin("to-string", |args, env| {
-            super::check_exact_args_len("to-string", &args, 1)?;
+        String::from("to_string") => Expression::builtin("to_string", |args, env| {
+            super::check_exact_args_len("to_string", &args, 1)?;
             Ok(Expression::String(args[0].clone().eval(env)?.to_string()))
         }, "convert a value to a string"),
 
-        String::from("caesar") => Expression::builtin("caesar-cipher", |args, env| {
-            super::check_args_len("caesar-cipher", &args, 1..=2)?;
+        String::from("caesar") => Expression::builtin("caesar_cipher", |args, env| {
+            super::check_args_len("caesar_cipher", &args, 1..=2)?;
 
             let expr = args[0].clone().eval(env)?;
             let shift = if args.len() > 1 {
@@ -76,8 +76,8 @@ pub fn get() -> Expression {
 
         String::from("len") => Expression::builtin("len", super::len, "get the length of a string"),
 
-        String::from("get-width") => Expression::builtin("get-width", |args, env| {
-            super::check_exact_args_len("get-width", &args, 1)?;
+        String::from("get_width") => Expression::builtin("get_width", |args, env| {
+            super::check_exact_args_len("get_width", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
             Ok(Expression::Integer(match expr {
                 Expression::Symbol(x) | Expression::String(x) => {
@@ -104,7 +104,7 @@ pub fn get() -> Expression {
             }))
         }, "get the width of a string"),
 
-        String::from("is-whitespace?") => Expression::builtin("is-whitespace?", |args, env| {
+        String::from("is_whitespace") => Expression::builtin("is_whitespace", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_whitespace())))
@@ -116,7 +116,7 @@ pub fn get() -> Expression {
             }
         }, "is this string whitespace?"),
 
-        String::from("is-alpha?") => Expression::builtin("is-alpha?", |args, env| {
+        String::from("is_alpha") => Expression::builtin("is_alpha", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_alphabetic())))
@@ -128,7 +128,7 @@ pub fn get() -> Expression {
             }
         }, "is this string alphabetic?"),
 
-        String::from("is-alphanumeric?") => Expression::builtin("is-alphanumeric?", |args, env| {
+        String::from("is_alphanumeric") => Expression::builtin("is_alphanumeric", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_alphanumeric())))
@@ -140,7 +140,7 @@ pub fn get() -> Expression {
             }
         }, "is this string alphanumeric?"),
 
-        String::from("is-numeric?") => Expression::builtin("is-numeric?", |args, env| {
+        String::from("is_numeric") => Expression::builtin("is_numeric", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_numeric())))
@@ -159,7 +159,7 @@ pub fn get() -> Expression {
                 .eval(env)
         }, "split a string on a given character"),
 
-        String::from("to-lower") => Expression::builtin("to-lower", |args, env| {
+        String::from("to_lower") => Expression::builtin("to_lower", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.to_lowercase()))
@@ -171,7 +171,7 @@ pub fn get() -> Expression {
             }
         }, "convert a string to lowercase"),
 
-        String::from("to-upper") => Expression::builtin("to-upper", |args, env| {
+        String::from("to_upper") => Expression::builtin("to_upper", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.to_uppercase()))
@@ -183,7 +183,7 @@ pub fn get() -> Expression {
             }
         }, "convert a string to uppercase"),
 
-        String::from("to-title") => Expression::builtin("to-title", |args, env| {
+        String::from("to_title") => Expression::builtin("to_title", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     let mut title = String::new();
@@ -208,7 +208,7 @@ pub fn get() -> Expression {
             }
         }, "convert a string to title case"),
 
-        String::from("is-lower") => Expression::builtin("is-lower", |args, env| {
+        String::from("is_lower") => Expression::builtin("is_lower", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_lowercase())))
@@ -220,7 +220,7 @@ pub fn get() -> Expression {
             }
         }, "is this string lowercase?"),
 
-        String::from("is-upper") => Expression::builtin("is-upper", |args, env| {
+        String::from("is_upper") => Expression::builtin("is_upper", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_uppercase())))
@@ -232,7 +232,7 @@ pub fn get() -> Expression {
             }
         }, "is this string uppercase?"),
 
-        String::from("is-title") => Expression::builtin("is-title", |args, env| {
+        String::from("is_title") => Expression::builtin("is_title", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     let mut title = String::new();
@@ -341,8 +341,8 @@ pub fn get() -> Expression {
             })
         }, "split a string into paragraphs"),
 
-        String::from("split-at") => Expression::builtin("split-at", |args, env| {
-            super::check_exact_args_len("split-at", &args, 2)?;
+        String::from("split_at") => Expression::builtin("split_at", |args, env| {
+            super::check_exact_args_len("split_at", &args, 2)?;
             let expr = args[0].clone().eval(env)?;
             let index = args[1].clone().eval(env)?;
             Ok(match (expr, index) {
@@ -368,7 +368,7 @@ pub fn get() -> Expression {
             }
         }, "trim whitespace from a string"),
 
-        String::from("trim-start") => Expression::builtin("trim-start", |args, env| {
+        String::from("trim_start") => Expression::builtin("trim_start", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.trim_start().to_string()))
@@ -380,7 +380,7 @@ pub fn get() -> Expression {
             }
         }, "trim whitespace from the start of a string"),
 
-        String::from("trim-end") => Expression::builtin("trim-end", |args, env| {
+        String::from("trim_end") => Expression::builtin("trim_end", |args, env| {
             match args[0].eval(env)? {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.trim_end().to_string()))
@@ -405,8 +405,8 @@ pub fn get() -> Expression {
             })
         }, "replace all instances of a substring in a string with another string"),
 
-        String::from("starts-with?") => Expression::builtin("starts-with?", |args, env| {
-            super::check_exact_args_len("starts-with?", &args, 2)?;
+        String::from("starts_with") => Expression::builtin("starts_with", |args, env| {
+            super::check_exact_args_len("starts_with", &args, 2)?;
             let expr = args[0].clone().eval(env)?;
             let prefix = args[1].clone().eval(env)?;
             Ok(match expr {
@@ -417,8 +417,8 @@ pub fn get() -> Expression {
             })
         }, "check if a string starts with a given substring"),
 
-        String::from("ends-with?") => Expression::builtin("ends-with?", |args, env| {
-            super::check_exact_args_len("ends-with?", &args, 2)?;
+        String::from("ends_with") => Expression::builtin("ends_with", |args, env| {
+            super::check_exact_args_len("ends_with", &args, 2)?;
             let expr = args[0].clone().eval(env)?;
             let suffix = args[1].clone().eval(env)?;
             Ok(match expr {
@@ -429,8 +429,8 @@ pub fn get() -> Expression {
             })
         }, "check if a string ends with a given substring"),
 
-        String::from("contains?") => Expression::builtin("contains?", |args, env| {
-            super::check_exact_args_len("contains?", &args, 2)?;
+        String::from("contains") => Expression::builtin("contains", |args, env| {
+            super::check_exact_args_len("contains", &args, 2)?;
             let expr = args[0].clone().eval(env)?;
             let substring = args[1].clone().eval(env)?;
             Ok(match expr {

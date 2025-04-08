@@ -1,7 +1,7 @@
 use common_macros::b_tree_map;
 use lumesh::{Environment, Error, Expression, Int};
 use std::io::Write;
-use terminal_size::{terminal_size, Height, Width};
+use terminal_size::{Height, Width, terminal_size};
 
 pub fn get() -> Expression {
     (b_tree_map! {
@@ -37,8 +37,8 @@ pub fn get() -> Expression {
             }, "disable alternate screen"),
         }),
         String::from("cursor") => Expression::Map(b_tree_map! {
-            String::from("move-to") => Expression::builtin("move-to", |args, env| {
-                super::check_exact_args_len("move-to", &args, 2)?;
+            String::from("to") => Expression::builtin("to", |args, env| {
+                super::check_exact_args_len("to", &args, 2)?;
                 let x = args[0].clone().eval(env)?;
                 let y = args[1].clone().eval(env)?;
                 match (x, y) {
@@ -50,8 +50,8 @@ pub fn get() -> Expression {
                 Ok(Expression::None)
             }, "move the cursor to a specific position in the console"),
 
-            String::from("move-up") => Expression::builtin("move-up", |args, env| {
-                super::check_exact_args_len("move-up", &args, 1)?;
+            String::from("up") => Expression::builtin("up", |args, env| {
+                super::check_exact_args_len("up", &args, 1)?;
                 let y = args[0].clone().eval(env)?;
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}A", y = y);
@@ -61,8 +61,8 @@ pub fn get() -> Expression {
                 Ok(Expression::None)
             }, "move the cursor up a specific number of lines"),
 
-            String::from("move-down") => Expression::builtin("move-down", |args, env| {
-                super::check_exact_args_len("move-down", &args, 1)?;
+            String::from("down") => Expression::builtin("down", |args, env| {
+                super::check_exact_args_len("down", &args, 1)?;
                 let y = args[0].clone().eval(env)?;
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}B", y = y);
@@ -72,8 +72,8 @@ pub fn get() -> Expression {
                 Ok(Expression::None)
             }, "move the cursor down a specific number of lines"),
 
-            String::from("move-left") => Expression::builtin("move-left", |args, env| {
-                super::check_exact_args_len("move-left", &args, 1)?;
+            String::from("left") => Expression::builtin("left", |args, env| {
+                super::check_exact_args_len("left", &args, 1)?;
                 let x = args[0].clone().eval(env)?;
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}D", x = x);
@@ -83,8 +83,8 @@ pub fn get() -> Expression {
                 Ok(Expression::None)
             }, "move the cursor left a specific number of columns"),
 
-            String::from("move-right") => Expression::builtin("move-right", |args, env| {
-                super::check_exact_args_len("move-right", &args, 1)?;
+            String::from("right") => Expression::builtin("right", |args, env| {
+                super::check_exact_args_len("right", &args, 1)?;
                 let x = args[0].clone().eval(env)?;
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}C", x = x);
@@ -94,12 +94,12 @@ pub fn get() -> Expression {
                 Ok(Expression::None)
             }, "move the cursor right a specific number of columns"),
 
-            String::from("save-position") => Expression::builtin("save-position", |_, _| {
+            String::from("save") => Expression::builtin("save", |_, _| {
                 print!("\x1b[s");
                 Ok(Expression::None)
             }, "save the current cursor position"),
 
-            String::from("restore-position") => Expression::builtin("restore-position", |_, _| {
+            String::from("restore") => Expression::builtin("restore", |_, _| {
                 print!("\x1b[u");
                 Ok(Expression::None)
             }, "restore the last saved cursor position"),
@@ -116,16 +116,16 @@ pub fn get() -> Expression {
         }),
 
         String::from("keyboard") => Expression::Map(b_tree_map! {
-            String::from("read-line") => Expression::builtin("read-line", |_, _| {
+            String::from("read_line") => Expression::builtin("read_line", |_, _| {
                 let mut buffer = String::new();
                 std::io::stdin().read_line(&mut buffer).unwrap();
                 Ok(Expression::String(buffer))
             }, "read a line from the keyboard"),
-            String::from("read-password") => Expression::builtin("read-password", |_, _| {
+            String::from("read_password") => Expression::builtin("read_password", |_, _| {
                 let password = rpassword::read_password().unwrap();
                 Ok(Expression::String(password))
             }, "read a password from the keyboard"),
-            String::from("read-key") => Expression::builtin("read-key", |_, _| {
+            String::from("read_key") => Expression::builtin("read_key", |_, _| {
                 let key = crossterm::event::read().unwrap();
                 // Get the key as a string.
                 let key = match key {
@@ -166,8 +166,8 @@ pub fn get() -> Expression {
                 String::from("down") => Expression::String("\x1b[B".to_string()),
                 String::from("home") => Expression::String("\x1b[H".to_string()),
                 String::from("end") => Expression::String("\x1b[F".to_string()),
-                String::from("page-up") => Expression::String("\x1b[5~".to_string()),
-                String::from("page-down") => Expression::String("\x1b[6~".to_string()),
+                String::from("page_up") => Expression::String("\x1b[5~".to_string()),
+                String::from("page_down") => Expression::String("\x1b[6~".to_string()),
                 String::from("tab") => Expression::String("\t".to_string()),
                 String::from("esc") => Expression::String("\x1b".to_string()),
                 String::from("insert") => Expression::String("\x1b[2~".to_string()),
@@ -184,7 +184,7 @@ pub fn get() -> Expression {
                 String::from("f11") => Expression::String("\x1b[23~".to_string()),
                 String::from("f12") => Expression::String("\x1b[24~".to_string()),
                 String::from("null") => Expression::String("\x00".to_string()),
-                String::from("back-tab") => Expression::String("\x1b[Z".to_string()),
+                String::from("back_tab") => Expression::String("\x1b[Z".to_string()),
             })
         })
     })
@@ -223,7 +223,7 @@ fn write(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
             return Err(Error::CustomError(format!(
                 "expected first two arguments to be integers, but got: `{:?}`, `{:?}`",
                 x, y
-            )))
+            )));
         }
     }
     Ok(Expression::None)

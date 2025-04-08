@@ -108,8 +108,8 @@ pub fn get() -> Expression {
             Ok(Expression::None)
         }, "undefine a variable in the current environment"),
 
-        String::from("defined?") => Expression::builtin("defined?", |args, env| {
-            super::check_exact_args_len("defined?", &args, 1)?;
+        String::from("defined") => Expression::builtin("defined", |args, env| {
+            super::check_exact_args_len("defined", &args, 1)?;
             let name = args[0].to_string();
             Ok(Expression::Boolean(env.is_defined(&name)))
         }, "check if a variable is defined in the current environment"),

@@ -49,15 +49,15 @@ impl Error {
 
     pub fn codes() -> Expression {
         Expression::Map(b_tree_map! {
-            String::from("cannot-apply") => Expression::Integer(Self::ERROR_CODE_CANNOT_APPLY),
-            String::from("symbol-not-defined") => Expression::Integer(Self::ERROR_CODE_SYMBOL_NOT_DEFINED),
-            String::from("command-failed") => Expression::Integer(Self::ERROR_CODE_COMMAND_FAILED),
-            String::from("for-non-list") => Expression::Integer(Self::ERROR_CODE_FOR_NON_LIST),
-            String::from("recursion-depth") => Expression::Integer(Self::ERROR_CODE_RECURSION_DEPTH),
-            String::from("permission-denied") => Expression::Integer(Self::ERROR_CODE_PERMISSION_DENIED),
-            String::from("program-not-found") => Expression::Integer(Self::ERROR_CODE_PROGRAM_NOT_FOUND),
-            String::from("syntax-error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
-            String::from("custom-error") => Expression::Integer(Self::ERROR_CODE_CUSTOM_ERROR),
+            String::from("cannot_apply") => Expression::Integer(Self::ERROR_CODE_CANNOT_APPLY),
+            String::from("symbol_not_defined") => Expression::Integer(Self::ERROR_CODE_SYMBOL_NOT_DEFINED),
+            String::from("command_failed") => Expression::Integer(Self::ERROR_CODE_COMMAND_FAILED),
+            String::from("for_non_list") => Expression::Integer(Self::ERROR_CODE_FOR_NON_LIST),
+            String::from("recursion_depth") => Expression::Integer(Self::ERROR_CODE_RECURSION_DEPTH),
+            String::from("permission_denied") => Expression::Integer(Self::ERROR_CODE_PERMISSION_DENIED),
+            String::from("program_not_found") => Expression::Integer(Self::ERROR_CODE_PROGRAM_NOT_FOUND),
+            String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
+            String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CUSTOM_ERROR),
         })
     }
 

@@ -51,7 +51,7 @@ jobs:
         run: |
           # 假设你的文档生成命令（例如 mkdocs、cargo doc 等）
           mkdir -p doc
-          cp CHANGLOG.md doc
+          cp CHANGELOG.md doc
           cp README.md doc
           cp LICENSE doc
           cp -r src/binary/help doc

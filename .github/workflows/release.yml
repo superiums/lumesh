@@ -9,12 +9,10 @@ on:
   push:
     tags:
       - "v[0-9]+.*"
-
 jobs:
   create_release:
     name: Create release
     runs-on: ubuntu-latest
-    # Note this. We are going to use that in further jobs.
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
@@ -33,13 +31,61 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            This is a new release of lumesh. [Read the changelog here](https://github.com/adam-mcdaniel/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            This is a new release of lumesh. [Read the changelog here](https://github.com/superiums/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            - lume: an edition contains interactive repl and script parser.
+            - lumesh: an swift edition only contains script parser. used to run script swiftly.
+            - doc: help docs.
 
             If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
 
+  # 修改点 1：新增文档构建任务
+  build_docs:
+    name: Build documentation
+    needs: create_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate docs
+        run: |
+          # 假设你的文档生成命令（例如 mkdocs、cargo doc 等）
+          mkdir -p doc
+          cp CHANGLOG.md doc
+          cp README.md doc
+          cp LICENSE doc
+          cp -r src/binary/help doc
+          cp src/repl/.default-lumesh-prelude doc
+          # echo "Sample Documentation" > doc/README.md
+
+      - name: Create compressed files
+        run: |
+          tar -czvf doc.tar.gz -C doc .
+          zip -r doc.zip doc/*
+
+      - name: Upload docs
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: doc.tar.gz
+          asset_path: doc.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload doc.zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: doc.zip
+          asset_path: doc.zip
+          asset_content_type: application/zip
+
   release_assets:
     name: Release assets
-    needs: create_release
+    needs: [create_release] # 修改点 2：保持与 create_release 的依赖
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -68,15 +114,29 @@ jobs:
         id: vars
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
+      # 修改点 3：新增 runner 构建
       - name: Build project
-        run: cargo build --release --locked
+        run: |
+          cargo build --release --locked
+          cargo build --features runner --release  # 新增 runner 构建
 
-      - name: Upload release assets
+      # 修改点 4：上传两个二进制文件
+      - name: Upload main binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
+          asset_path: target/release/lume${{ matrix.file_ending }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload runner binary
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_name: lumesh_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/lumeshsh${{ matrix.file_ending }}
+          asset_path: target/release/lumesh${{ matrix.file_ending }}
           asset_content_type: application/octet-stream

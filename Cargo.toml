@@ -60,12 +60,12 @@ version = "0.5.8"
 default-features = false
 
 [dependencies.chrono]
-version = "0.4"
+version = "0.4.40"
 default-features = false
 features = ["clock", "std"]
 
 [dependencies.os_info]
-version = "3.0"
+version = "3.10"
 default-features = false
 
 [dependencies.prettytable-rs]

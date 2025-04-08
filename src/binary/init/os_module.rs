@@ -4,59 +4,43 @@ use std::path::PathBuf;
 
 use os_info::Type;
 
-fn get_os_name(t: &Type) -> String {
-    match t {
-        Type::Alpine => "alpine",
-        Type::Amazon => "amazon",
-        Type::Android => "android",
-        Type::Arch => "arch",
-        Type::CentOS => "centos",
-        Type::Debian => "debian",
-        Type::Macos => "macos",
-        Type::Fedora => "fedora",
-        Type::Linux => "linux",
-        Type::Manjaro => "manjaro",
-        Type::Mint => "mint",
-        Type::openSUSE => "opensuse",
-        Type::EndeavourOS => "endeavouros",
-        Type::OracleLinux => "oraclelinux",
-        Type::Pop => "pop",
-        Type::Redhat => "redhat",
-        Type::RedHatEnterprise => "redhatenterprise",
-        Type::Redox => "redox",
-        Type::Solus => "solus",
-        Type::SUSE => "suse",
-        Type::Ubuntu => "ubuntu",
-        Type::Windows => "windows",
-        Type::Unknown | _ => "unknown",
-    }
-    .to_string()
-}
-
 fn get_os_family(t: &Type) -> String {
     match t {
         Type::Amazon | Type::Android => "android",
-        Type::Alpine
+        Type::Alpaquita
+        | Type::Alpine
         | Type::Arch
+        | Type::Artix
+        | Type::Bluefin
+        | Type::CachyOS
         | Type::CentOS
         | Type::Debian
+        | Type::EndeavourOS
         | Type::Fedora
+        | Type::Gentoo
         | Type::Linux
         | Type::Manjaro
-        | Type::Mint
+        | Type::Mariner
+        | Type::NixOS
+        | Type::Nobara
+        | Type::Uos
+        | Type::OpenCloudOS
+        | Type::openEuler
         | Type::openSUSE
-        | Type::EndeavourOS
         | Type::OracleLinux
         | Type::Pop
         | Type::Redhat
         | Type::RedHatEnterprise
         | Type::SUSE
-        | Type::Ubuntu => "linux",
+        | Type::Ubuntu
+        | Type::Ultramarine
+        | Type::Void
+        | Type::Mint => "linux",
 
-        Type::Macos | Type::Solus | Type::Redox => "unix",
+        Type::AIX | Type::Macos | Type::Solus | Type::Redox => "unix",
 
         Type::Windows => "windows",
-
+        Type::Emscripten => "WebAssembly",
         Type::Unknown | _ => "unknown",
     }
     .to_string()
@@ -67,7 +51,7 @@ pub fn get() -> Expression {
     let os_type = os.os_type();
 
     (b_tree_map! {
-        String::from("name") => Expression::from(get_os_name(&os_type)),
+        String::from("name") => Expression::String(os_type.to_string()),
         String::from("family") => get_os_family(&os_type).into(),
         String::from("version") => os.version().to_string().into(),
         String::from("exit") => Expression::builtin(

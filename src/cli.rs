@@ -3,7 +3,7 @@
 mod binary;
 use clap::Parser;
 use lumesh::repl; // 新增模块引用
-                  // use lumesh::binary;
+// use lumesh::binary;
 use lumesh::runtime::{run_file, run_text};
 use lumesh::{Environment, Error, Expression};
 use std::path::PathBuf;

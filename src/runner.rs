@@ -65,7 +65,7 @@ fn main() -> Result<(), Error> {
 
     let mut env = Environment::new();
     env.define("LOGIN_SHELL", Expression::Boolean(is_login_shell));
-    env.define("path", Expression::String(path));
+    env.define("SCRIPT", Expression::String(path));
     env.define(
         "argv",
         Expression::List(script_args.into_iter().map(Expression::String).collect()),

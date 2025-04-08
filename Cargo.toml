@@ -19,12 +19,16 @@ repository = "https://github.com/superiums/lumesh"
 default = ["cli"]                    # 默认编译交互版
 cli = ["rustyline", "ctrlc", "clap"]
 runner = []
-
+help = ["help"]
 
 [[bin]]
 name = "lume"
 path = "src/cli.rs"
 required-features = ["cli"]
+[[bin]]
+name = "lumes"
+path = "src/cli.rs"
+required-features = ["cli", "help"]
 
 [[bin]]
 name = "lumesh"

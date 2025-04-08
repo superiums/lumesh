@@ -1,15 +1,15 @@
-use super::curry;
 use super::Int;
+use super::curry;
 use common_macros::b_tree_map;
 use lumesh::{Environment, Error, Expression};
 pub fn get() -> Expression {
     (b_tree_map! {
         String::from("list") => Expression::builtin("list", list,
             "create a list from a variable number of arguments"),
-        String::from("tail") => Expression::builtin("tail", tail,
-            "get the tail of a list"),
-        String::from("head") => Expression::builtin("head", head,
-            "get the head of a list"),
+        String::from("last") => Expression::builtin("last", last,
+            "get the last of a list"),
+        String::from("first") => Expression::builtin("first", first,
+            "get the first of a list"),
         String::from("chunk") => Expression::builtin("chunk", chunk,
             "chunk a list into lists of n elements"),
         String::from("cons") => Expression::builtin("cons", cons,
@@ -30,11 +30,13 @@ pub fn get() -> Expression {
             "zip two lists together"),
         String::from("unzip") => Expression::builtin("unzip", unzip,
             "unzip a list of pairs into a pair of lists"),
-        String::from("take") => curry(Expression::builtin("take", take,
-            "take the first n elements of a list"), 2),
-        String::from("drop") => curry(Expression::builtin("drop", drop,
-            "drop the first n elements of a list"), 2),
-        String::from("split-at") => Expression::builtin("split-at", split_at,
+        // String::from("take") => curry(Expression::builtin("take", take,
+            // "take the first n elements of a list"), 2),
+        String::from("take") => Expression::builtin("take", take,
+            "take the first n elements of a list"),
+        String::from("drop") => Expression::builtin("drop", drop,
+            "drop the first n elements of a list"),
+        String::from("split_at") => Expression::builtin("split_at", split_at,
             "split a list at a given index"),
         String::from("nth") => Expression::builtin("nth", nth,
             "get the nth element of a list"),
@@ -47,38 +49,36 @@ fn list(args: Vec<Expression>, _env: &mut Environment) -> Result<Expression, Err
     Ok(Expression::List(args))
 }
 
-fn tail(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn last(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
     if args.len() != 1 {
         return Err(Error::CustomError(
-            "tail requires exactly one argument".to_string(),
+            "last requires exactly one argument".to_string(),
         ));
     }
     let list = args[0].eval(env)?;
     if let Expression::List(list) = list {
-        Ok(Expression::List(list.into_iter().skip(1).collect()))
+        let f = list.last().clone().unwrap();
+        Ok(f.clone())
     } else {
         Err(Error::CustomError(
-            "tail requires a list as its argument".to_string(),
+            "last requires a list as its argument".to_string(),
         ))
     }
 }
 
-fn head(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn first(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
     if args.len() != 1 {
         return Err(Error::CustomError(
-            "head requires exactly one argument".to_string(),
+            "first requires exactly one argument".to_string(),
         ));
     }
     let list = args[0].eval(env)?;
     if let Expression::List(list) = list {
-        if list.is_empty() {
-            Ok(Expression::List(list))
-        } else {
-            Ok(Expression::None)
-        }
+        let f = list.first().clone().unwrap();
+        Ok(f.clone())
     } else {
         Err(Error::CustomError(
-            "head requires a list as its argument".to_string(),
+            "first requires a list as its argument".to_string(),
         ))
     }
 }

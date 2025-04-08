@@ -52,6 +52,7 @@ pub fn init(env: &mut Environment) {
         "sys" => sys_module::get(),
     };
 
+    #[cfg(feature = "help")]
     env.define_module("std", standard_module.clone());
 
     for (name, module) in standard_module {
@@ -62,6 +63,7 @@ pub fn init(env: &mut Environment) {
     env.define("cd", env.get("os").unwrap()["cd"].clone());
     env.define("quit", env.get("exit").unwrap());
 
+    #[cfg(feature = "help")]
     env.define_builtin(
         "help",
         |args, env| {
@@ -255,7 +257,7 @@ pub fn init(env: &mut Environment) {
                     return Err(Error::CustomError(format!(
                         "cannot insert {:?} into {:?} with index {:?}",
                         val, arr, idx
-                    )))
+                    )));
                 }
             }
 
@@ -412,7 +414,7 @@ pub fn init(env: &mut Environment) {
                     return Err(Error::CustomError(format!(
                         "expected string or symbol, but got {:?}",
                         args[0]
-                    )))
+                    )));
                 }
             }
             Ok(Expression::None)

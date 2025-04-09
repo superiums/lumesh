@@ -1,4 +1,40 @@
 # Changelog
+## [0.2.3]
+- fix `-` in command string.
+
+  only allow non space math operator `-` with nums.
+  > in strict mode:
+  `a + 3` is pretty.
+
+  > in non-strict mode:
+  `a*a` `a+3` `3/2` and all other operator will be recognized as math operate.
+
+  *but* one was in exception:
+
+  `a-a` as *string*;
+
+  others still is operator. such as `a-3`, `8-3`.
+
+- move default cmd after config. only load if no same config.
+
+- change log to logs to avoid conflict with `git log`
+
+- refactor config init.
+
+  now config files moved to `dirs.config`.
+
+  in linux, it's `~/.config/lumesh/config.lsh`
+
+- system env added. unifiy status env.
+
+`PATH`,`HOME` and other enviroment vars are visible in interactive shell.
+
+`IS_LOGIN` implies wheather it was started as LOGIN SHELL.
+
+`IS_INTERACTIVE` implies wheather it was interactive.
+
+`STRICT` implies wheather it was running in STRICT mode.
+
 ## [0.2.2] 2025-4-8
 -  env vars:
 

@@ -120,8 +120,8 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("++"), // for op overload use.
         operator_tag("--"), // for op overload use.
         operator_tag("**"), // for op overload use.
-        keyword_tag("<"),
-        keyword_tag(">"),
+        operator_tag("<"),
+        operator_tag(">"),
         operator_tag("+"), // to allow a<b insteadof mustbe a < b
         operator_tag("-"), // to allow a<b insteadof mustbe a < b
         operator_tag("*"), // to allow a<b insteadof mustbe a < b
@@ -583,7 +583,9 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
                 if STRICT {
                     !rest.starts_with(is_symbol_char)
                 } else {
-                    !rest.starts_with(|c: char| c.is_ascii_punctuation())
+                    keyword.starts_with('-')
+                        && rest.starts_with(|c: char| c.is_whitespace() || c.is_numeric())
+                        || !rest.starts_with(|c: char| c.is_ascii_punctuation())
                 }
             })
             .ok_or(NOT_FOUND)
@@ -602,10 +604,12 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '.' | '~' | '\\' | '?' | '&' | '#' | '^' | '$'
-        }; // remove + - /  %  > < to allow non space operator such as a+1
-           // remove : to use in dict
-           // $ to use as var prefix, compatil with bash
+            '_' | '.' | '~' | '\\' | '?' | '&' | '#' | '^' | '$' | '-'
+        };
+        // add '-' back because it's used so offen in cmd string. "connman-gtk"
+        // remove + - /  %  > < to allow non space operator such as a+1
+        // remove : to use in dict
+        // $ to use as var prefix, compatil with bash
     }
 
     static ASCII_SYMBOL_CHARS: [bool; 128] = {

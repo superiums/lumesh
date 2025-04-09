@@ -1,4 +1,3 @@
-del prompt
 let prompt = cwd -> fmt@bold ((fmt@dark@blue "(lumesh) ") + (fmt@bold (fmt@dark@green cwd)) + (fmt@bold (fmt@dark@blue "$ ")));
 let incomplete_prompt = cwd -> ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));
 

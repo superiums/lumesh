@@ -23,8 +23,8 @@ const INTRO_PRELUDE: &str = include_str!("config.lsh");
 // const DEFAULT_PRELUDE: &str = include_str!(".default-lumesh-prelude");
 
 pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
-    init_cmds(env)?; // 调用 REPL 初始化
     init_config(env)?;
+    init_cmds(env)?; // 调用 REPL 初始化
 
     let mut rl = new_editor(&env);
     let history_path = get_history_path();
@@ -508,33 +508,34 @@ fn init_config(env: &mut Environment) -> Result<(), Error> {
 }
 
 fn init_cmds(env: &mut Environment) -> Result<(), Error> {
-    env.define(
-        "prompt",
-        Expression::String(
-            "cwd -> \
+    if !env.is_defined("prompt") {
+        env.define(
+            "prompt",
+            Expression::String(
+                "cwd -> \
             fmt@bold ((fmt@dark@blue \"(lumesh) \") + \
             (fmt@bold (fmt@dark@green cwd)) + \
             (fmt@bold (fmt@dark@blue \"$ \")))"
-                .to_string(),
-        ),
-    );
-    env.define(
-        "incomplete_prompt",
-        Expression::String(
-            r#"let incomplete_prompt = cwd ->
+                    .to_string(),
+            ),
+        );
+    }
+    if !env.is_defined("incomplete_prompt") {
+        env.define(
+            "incomplete_prompt",
+            Expression::String(
+                r#"let incomplete_prompt = cwd ->
                 ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#
-                .to_string(),
-        ),
-    );
-    parse("let clear = _ ~> console@clear ()")?.eval(env)?;
-    parse("let pwd = _ ~> echo CWD")?.eval(env)?;
-    parse(
-        "let join = sep -> l -> {
-                let sep = str sep;
-                fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
-            }",
-    )?
-    .eval(env)?;
+                    .to_string(),
+            ),
+        );
+    }
+    if !env.is_defined("clear") {
+        parse("let clear = _ ~> console@clear ()")?.eval(env)?;
+    }
+    if !env.is_defined("pwd") {
+        parse("let pwd = _ ~> echo CWD")?.eval(env)?;
+    }
 
     // parse(
     //     "let prompt = cwd -> \

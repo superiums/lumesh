@@ -1,7 +1,7 @@
 # Lumesh
 
 A shell forked from [dune](https://github.com/adam-mcdaniel/dune) !
-![lumesh](https://raw.githubusercontent.com/superiums/lumesh/main/assets/lumesh.png)
+<img src=https://raw.githubusercontent.com/superiums/lumesh/main/assets/lumesh.png width="300px" />
 
 ## WIKI
 [wiki](https://github.com/superiums/lumesh/wiki)

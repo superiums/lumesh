@@ -586,8 +586,7 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
                     // match keyword {
                     //     "-" => rest.starts_with(|c: char| c.is_whitespace() || c.is_numeric()),
                     // _ =>
-                    rest.starts_with(|c: char| c.is_whitespace())
-                        || !rest.starts_with(|c: char| c.is_ascii_punctuation())
+                    rest.starts_with(|c: char| c.is_whitespace() || !c.is_ascii_punctuation())
                     // }
                 }
             })

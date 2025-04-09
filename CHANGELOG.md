@@ -1,19 +1,24 @@
 # Changelog
-## [0.2.3]
+## [0.2.3] 2025-4-9
+- fix test usecase.
 - fix `-` in command string.
+  as there're lots of cmds has `-`, eg :
+  `connman-gtk`
 
-  only allow non space math operator `-` with nums.
   > in strict mode:
   `a + 3` is pretty.
 
   > in non-strict mode:
-  `a*a` `a+3` `3/2` and all other operator will be recognized as math operate.
+  + `-` or `/` :
+    when operate with vars, space around was recomended.
+    for differ with strings. eg:
+    `a-a`, `a-3` was *string*;
 
-  *but* one was in exception:
+    `3-a`, `8-3` was *plus*;
 
-  `a-a` as *string*;
+  + other operaters:
+    `a*a` `a+3` `3-2` and all other operator will be recognized as math operate.
 
-  others still is operator. such as `a-3`, `8-3`.
 
 - move default cmd after config. only load if no same config.
 

@@ -31,7 +31,7 @@ pub fn init(env: &mut Environment) {
     let ops = operator_module::get(env);
     let math = math_module::get(env);
     let standard_module = b_tree_map! {
-        "log" => log_module::get(),
+        "logs" => log_module::get(),    //to avoid conflict with 'git log'.
         "math" => math,
         "dict" => dict_module::get(),
         "shell" => shell_module::get(),

@@ -55,7 +55,7 @@ jobs:
           cp README.md doc
           cp LICENSE doc
           cp -r src/binary/help doc
-          cp src/repl/.default-lumesh-prelude doc
+          cp src/repl/config.lsh doc
           # echo "Sample Documentation" > doc/README.md
 
       - name: Create compressed files

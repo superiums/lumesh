@@ -18,13 +18,13 @@ use std::{
 };
 
 #[rustfmt::skip]
-const INTRO_PRELUDE: &str = include_str!(".intro-lumesh-prelude");
-#[rustfmt::skip]
-const DEFAULT_PRELUDE: &str = include_str!(".default-lumesh-prelude");
+const INTRO_PRELUDE: &str = include_str!("config.lsh");
+// #[rustfmt::skip]
+// const DEFAULT_PRELUDE: &str = include_str!(".default-lumesh-prelude");
 
-pub fn run_repl(env: Environment) -> Result<(), Error> {
-    init_cmds(&env)?; // 调用 REPL 初始化
-    init_config(&env)?;
+pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
+    init_cmds(env)?; // 调用 REPL 初始化
+    init_config(env)?;
 
     let mut rl = new_editor(&env);
     let history_path = get_history_path();
@@ -34,7 +34,7 @@ pub fn run_repl(env: Environment) -> Result<(), Error> {
     let editor_ref = Arc::new(Mutex::new(rl));
     let editor_ref_copy = editor_ref.clone();
 
-    let env_ref = Arc::new(Mutex::new(env));
+    let env_ref = Arc::new(Mutex::new(env.to_owned()));
     let env_ref_copy = env_ref.clone();
 
     ctrlc::set_handler(move || {
@@ -473,61 +473,80 @@ fn repl(
     }
 }
 
-fn init_config(env: &Environment) -> Result<(), Error> {
-    if let Some(home_dir) = dirs::home_dir() {
-        let prelude_path = home_dir.join(".lumesh-prelude");
+fn init_config(env: &mut Environment) -> Result<(), Error> {
+    if let Some(config_dir) = dirs::config_dir() {
+        let config_path = config_dir.join("lumesh");
+        if !config_path.exists() {
+            if let Err(e) = std::fs::create_dir(&config_path) {
+                eprintln!("Error while writing prelude: {}", e);
+            }
+        }
+        let prelude_path = config_path.join("config.lsh");
         // If file doesn't exist
         if !prelude_path.exists() {
-            let prompt = format!("Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ", prelude_path.display());
+            let prompt = format!(
+                "Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ",
+                prelude_path.display()
+            );
             let mut rl = new_editor(&env);
             let response = readline(prompt, &mut rl);
 
             if response.to_lowercase().trim() == "y" {
-                if let Err(e) = std::fs::write(&prelude_path, DEFAULT_PRELUDE) {
+                if let Err(e) = std::fs::write(&prelude_path, INTRO_PRELUDE) {
                     eprintln!("Error while writing prelude: {}", e);
                 }
             }
 
-            if let Err(e) = run_text(INTRO_PRELUDE, &mut env.clone()) {
+            if let Err(e) = run_text(INTRO_PRELUDE, env) {
                 eprintln!("Error while running introduction prelude: {}", e);
             }
-        } else if let Err(e) = run_file(prelude_path, &mut env.clone()) {
-            let prompt = format!("Error while running custom prelude: {e}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ");
-            let mut rl = new_editor(&env);
-            let response = readline(prompt, &mut rl);
-
-            if response.to_lowercase().trim() == "y" {
-                if let Err(e) = run_text(INTRO_PRELUDE, &mut env.clone()) {
-                    eprintln!("Error while running introduction prelude: {}", e);
-                }
-            }
+        } else if let Err(e) = run_file(prelude_path, env) {
+            eprintln!("Error while running introduction prelude: {}", e);
         }
     }
     Ok(())
 }
 
-fn init_cmds(env: &Environment) -> Result<(), Error> {
-    parse("let clear = _ ~> console@clear ()")?.eval(&mut env.clone())?;
-    parse("let pwd = _ ~> echo CWD")?.eval(&mut env.clone())?;
+fn init_cmds(env: &mut Environment) -> Result<(), Error> {
+    env.define(
+        "prompt",
+        Expression::String(
+            "cwd -> \
+            fmt@bold ((fmt@dark@blue \"(lumesh) \") + \
+            (fmt@bold (fmt@dark@green cwd)) + \
+            (fmt@bold (fmt@dark@blue \"$ \")))"
+                .to_string(),
+        ),
+    );
+    env.define(
+        "incomplete_prompt",
+        Expression::String(
+            r#"let incomplete_prompt = cwd ->
+                ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#
+                .to_string(),
+        ),
+    );
+    parse("let clear = _ ~> console@clear ()")?.eval(env)?;
+    parse("let pwd = _ ~> echo CWD")?.eval(env)?;
     parse(
         "let join = sep -> l -> {
                 let sep = str sep;
                 fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
             }",
     )?
-    .eval(&mut env.clone())?;
+    .eval(env)?;
 
-    parse(
-        "let prompt = cwd -> \
-                fmt@bold ((fmt@dark@blue \"(lumesh) \") + \
-                (fmt@bold (fmt@dark@green cwd)) + \
-                (fmt@bold (fmt@dark@blue \"$ \")))",
-    )?
-    .eval(&mut env.clone())?;
-    parse(
-        r#"let incomplete_prompt = cwd ->
-                ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#,
-    )?
-    .eval(&mut env.clone())?;
+    // parse(
+    //     "let prompt = cwd -> \
+    //             fmt@bold ((fmt@dark@blue \"(lumesh) \") + \
+    //             (fmt@bold (fmt@dark@green cwd)) + \
+    //             (fmt@bold (fmt@dark@blue \"$ \")))",
+    // )?
+    // .eval(env)?;
+    // parse(
+    //     r#"let incomplete_prompt = cwd ->
+    //             ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#,
+    // )?
+    // .eval(env)?;
     Ok(())
 }

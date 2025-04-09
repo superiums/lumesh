@@ -51,7 +51,7 @@ struct Cli {
         required = false,
         num_args = 1,
         index = 1,
-        conflict_with = "interactive"
+        conflicts_with = "interactive"
     )]
     file: Option<String>,
 
@@ -127,7 +127,7 @@ fn main() -> Result<(), Error> {
         if cli.interactive {
             // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
             // repl::init_config(&mut env)?;
-            repl::run_repl(env)?;
+            repl::run_repl(&mut env)?;
         }
     }
     // 文件执行模式
@@ -147,7 +147,7 @@ fn main() -> Result<(), Error> {
 
         // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
         // repl::init_config(&mut env)?;
-        repl::run_repl(env)?;
+        repl::run_repl(&mut env)?;
     }
     Ok(())
 }

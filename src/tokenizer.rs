@@ -54,9 +54,9 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(any_keyword, TokenKind::Keyword),
             map_valid_token(bool_literal, TokenKind::BooleanLiteral),
             map_valid_token(comment, TokenKind::Comment),
-            string_literal,
             number_literal,
             map_valid_token(short_operator, TokenKind::Operator), //atfter number to avoid -4.
+            string_literal,
             map_valid_token(symbol, TokenKind::Symbol),
             map_valid_token(whitespace, TokenKind::Whitespace),
         ))(input)
@@ -583,9 +583,12 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
                 if STRICT {
                     !rest.starts_with(is_symbol_char)
                 } else {
-                    keyword.starts_with('-')
-                        && rest.starts_with(|c: char| c.is_whitespace() || c.is_numeric())
+                    // match keyword {
+                    //     "-" => rest.starts_with(|c: char| c.is_whitespace() || c.is_numeric()),
+                    // _ =>
+                    rest.starts_with(|c: char| c.is_whitespace())
                         || !rest.starts_with(|c: char| c.is_ascii_punctuation())
+                    // }
                 }
             })
             .ok_or(NOT_FOUND)
@@ -604,9 +607,9 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '.' | '~' | '\\' | '?' | '&' | '#' | '^' | '$' | '-'
+            '_' | '.' | '~' | '\\' | '?' | '&' | '#' | '^' | '$' | '-' | '/'
         };
-        // add '-' back because it's used so offen in cmd string. "connman-gtk"
+        // add - / back because it's used so offen in cmd string. "connman-gtk"
         // remove + - /  %  > < to allow non space operator such as a+1
         // remove : to use in dict
         // $ to use as var prefix, compatil with bash

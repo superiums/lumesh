@@ -406,9 +406,17 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
 
     // 构建右侧表达式
     let assignments = match exprs {
-        Some(e) if e.len() == 1 => (0..symbols.len())
-            .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[0].clone())))
-            .collect(),
+        Some(e) if e.len() == 1 => {
+            if symbols.len() == 1 {
+                return Ok((
+                    input,
+                    Expression::Declare(symbols[0].clone(), Box::new(e[0].clone())),
+                ));
+            }
+            (0..symbols.len())
+                .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[0].clone())))
+                .collect()
+        }
         Some(e) if e.len() == symbols.len() => (0..symbols.len())
             .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[i].clone())))
             .collect(),

@@ -54,18 +54,18 @@ fn main() -> Result<(), Error> {
                 println!("for interactive, use lume instead.");
                 std::process::exit(0);
             }
-            "-c" => {
-                cmd = Some(args.next().unwrap_or_else(|| {
-                    eprintln!("-c needs command.");
-                    std::process::exit(0);
-                }));
-            }
             "-s" => {
                 // strict mode
                 unsafe {
                     STRICT = true;
                 }
                 env.define("IS_STRICT", Expression::Boolean(true));
+            }
+            "-c" => {
+                cmd = Some(args.next().unwrap_or_else(|| {
+                    eprintln!("-c needs command.");
+                    std::process::exit(0);
+                }));
             }
             _ => {
                 if file.is_none() {

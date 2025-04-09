@@ -143,6 +143,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_alone_tag("return"),
         keyword_tag("then"),
         keyword_tag("else"),
+        keyword_tag("export"), //set global env
         keyword_tag("let"),
         keyword_tag("for"),
         keyword_tag("while"),

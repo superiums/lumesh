@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["Adam McDaniel <adam.mcdaniel17@gmail.com>; superiums"]
 edition = "2024"
 license = "Apache-2.0"

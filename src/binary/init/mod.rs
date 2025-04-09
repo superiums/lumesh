@@ -34,7 +34,7 @@ pub fn init(env: &mut Environment) {
         "logs" => log_module::get(),    //to avoid conflict with 'git log'.
         "math" => math,
         "dict" => dict_module::get(),
-        "shell" => shell_module::get(),
+        "version" => shell_module::get(),
         "err" => err_module::get(),
         "os" => os_module::get(),
         "widget" => widget_module::get(),

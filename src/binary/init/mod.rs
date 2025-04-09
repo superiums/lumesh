@@ -52,9 +52,6 @@ pub fn init(env: &mut Environment) {
         "sys" => sys_module::get(),
     };
 
-    #[cfg(feature = "help")]
-    env.define_module("std", standard_module.clone());
-
     for (name, module) in standard_module {
         env.define(name, module);
     }
@@ -62,6 +59,9 @@ pub fn init(env: &mut Environment) {
     env.define("exit", env.get("os").unwrap()["exit"].clone());
     env.define("cd", env.get("os").unwrap()["cd"].clone());
     env.define("quit", env.get("exit").unwrap());
+
+    #[cfg(feature = "help")]
+    env.define_module("std", standard_module.clone());
 
     #[cfg(feature = "help")]
     env.define_builtin(

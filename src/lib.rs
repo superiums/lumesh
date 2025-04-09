@@ -31,3 +31,4 @@ pub use runtime::parse;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub static mut STRICT: bool = false;
+// pub static mut ENV: Environment = Environment::new();

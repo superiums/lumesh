@@ -4,10 +4,12 @@ mod binary;
 use clap::Parser;
 use lumesh::repl; // 新增模块引用
 // use lumesh::binary;
+// use lumesh::ENV;
 use lumesh::STRICT;
 use lumesh::runtime::{run_file, run_text};
 use lumesh::{Environment, Error, Expression};
-use std::path::PathBuf;
+use std::env;
+use std::path::{Path, PathBuf};
 // #[rustfmt::skip]
 // const INTRO_PRELUDE: &str = include_str!("repl/.intro-lumesh-prelude");
 
@@ -45,7 +47,12 @@ struct Cli {
     strict: bool,
 
     /// 脚本文件路径
-    #[arg(required = false, num_args = 1, index = 1)]
+    #[arg(
+        required = false,
+        num_args = 1,
+        index = 1,
+        conflict_with = "interactive"
+    )]
     file: Option<String>,
 
     /// 传递给脚本的参数
@@ -68,21 +75,43 @@ struct Cli {
 
 fn main() -> Result<(), Error> {
     let cli = Cli::parse();
-    let mut env = Environment::new();
-
     // 初始化核心环境
+    let mut env = Environment::new();
+    // login
+    let is_login_shell = std::env::args()
+        .next()
+        .map(|arg| {
+            Path::new(&arg)
+                .file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or(&arg)
+                .starts_with('-')
+        })
+        .unwrap_or(false);
+    env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
+    // global env
+    if !is_login_shell {
+        for (key, value) in std::env::vars() {
+            env.define(&mut key.to_owned(), Expression::String(value));
+        }
+    }
+    // strict
     unsafe {
         STRICT = cli.strict;
     }
-    env.define("STRICT", Expression::Boolean(cli.strict));
+    env.define("IS_STRICT", Expression::Boolean(cli.strict));
+    // argv
     env.define(
         "argv",
         Expression::List(cli.argv.into_iter().map(Expression::String).collect()),
     );
+    // bultiin
     binary::init(&mut env);
 
     // 命令执行模式
     if let Some(cmd_parts) = cli.cmd {
+        env.define("IS_INTERACTIVE", Expression::Boolean(cli.interactive));
+
         let cmd = cmd_parts.join(" ");
         match run_text(cmd.as_str(), &mut env) {
             Ok(result) => {
@@ -94,15 +123,6 @@ fn main() -> Result<(), Error> {
             }
             Err(e) => eprintln!("{}", e),
         }
-    }
-    // 文件执行模式
-    else if let Some(file) = cli.file {
-        let path = PathBuf::from(file.to_owned());
-        if let Err(e) = run_file(path, &mut env) {
-            eprintln!("{}", e);
-            std::process::exit(1)
-        }
-        env.define("SCRIPT", Expression::String(file));
 
         if cli.interactive {
             // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
@@ -110,8 +130,21 @@ fn main() -> Result<(), Error> {
             repl::run_repl(env)?;
         }
     }
+    // 文件执行模式
+    else if let Some(file) = cli.file {
+        env.define("IS_INTERACTIVE", Expression::Boolean(false));
+
+        let path = PathBuf::from(file.to_owned());
+        if let Err(e) = run_file(path, &mut env) {
+            eprintln!("{}", e);
+            std::process::exit(1)
+        }
+        env.define("SCRIPT", Expression::String(file));
+    }
     // 纯交互模式
     else {
+        env.define("IS_INTERACTIVE", Expression::Boolean(true));
+
         // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
         // repl::init_config(&mut env)?;
         repl::run_repl(env)?;

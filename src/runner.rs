@@ -8,17 +8,6 @@ use std::path::PathBuf;
 // 删除原有的 Cli 结构体定义
 
 fn main() -> Result<(), Error> {
-    let is_login_shell = std::env::args()
-        .next()
-        .map(|arg| {
-            Path::new(&arg)
-                .file_name()
-                .and_then(|n| n.to_str())
-                .unwrap_or(&arg) // 使用文件名或原始参数
-                .starts_with('-')
-        })
-        .unwrap_or(false);
-
     let path = std::env::args().nth(1).unwrap_or_else(|| {
         eprintln!("script file or command is expected.");
         std::process::exit(0);
@@ -29,30 +18,54 @@ fn main() -> Result<(), Error> {
     let mut file = None;
     let mut script_args = Vec::new();
 
+    let mut env = Environment::new();
+    // is login shell
+    let is_login_shell = std::env::args()
+        .next()
+        .map(|arg| {
+            Path::new(&arg)
+                .file_name()
+                .and_then(|n| n.to_str())
+                .unwrap_or(&arg) // 使用文件名或原始参数
+                .starts_with('-')
+        })
+        .unwrap_or(false);
+    env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
+    // global env
+    if !is_login_shell {
+        for (key, value) in std::env::vars() {
+            env.define(&mut key.to_owned(), Expression::String(value));
+        }
+    }
     // 原生参数解析
     while let Some(arg) = args.next() {
         match arg.as_str() {
+            "-h" => {
+                println!("usage:");
+                println!("      lumesh [options] [file] <args...>");
+                println!("      lumesh [options] -c [command]");
+                println!("      lumesh -h");
+                println!("");
+                println!("options:");
+                println!("      -s: for strict mode.");
+                println!("      -h: for help.");
+                println!("");
+                println!("this is a swift script runtime without interactive.");
+                println!("for interactive, use lume instead.");
+                std::process::exit(0);
+            }
             "-c" => {
                 cmd = Some(args.next().unwrap_or_else(|| {
                     eprintln!("-c needs command.");
                     std::process::exit(0);
                 }));
             }
-            "-s" => unsafe {
-                STRICT = true;
-            },
-            "-h" => {
-                println!("usage:");
-                println!("      lumesh [file] <args...>");
-                println!("      lumesh -c [command]");
-                println!("      lumesh -h");
-                println!("");
-                // println!("options:");
-                // println!("      -s: for strict mode.");
-                // println!("      -h: for help.");
-                println!("");
-                println!("this is a swift script runtime without interactive.");
-                println!("for interactive, use lume instead.");
+            "-s" => {
+                // strict mode
+                unsafe {
+                    STRICT = true;
+                }
+                env.define("IS_STRICT", Expression::Boolean(true));
             }
             _ => {
                 if file.is_none() {
@@ -66,8 +79,6 @@ fn main() -> Result<(), Error> {
         }
     }
 
-    let mut env = Environment::new();
-    env.define("LOGIN_SHELL", Expression::Boolean(is_login_shell));
     env.define("SCRIPT", Expression::String(path));
     env.define(
         "argv",

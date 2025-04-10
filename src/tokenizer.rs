@@ -1,7 +1,7 @@
 use crate::STRICT;
 use detached_str::StrSlice;
 use nom::{
-    IResult,
+    AsChar, IResult,
     branch::alt,
     combinator::{eof, map},
     error::ParseError,
@@ -191,14 +191,18 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         // prev_char must be blank
         let prev_char = input.previous_char().ok_or(NOT_FOUND)?;
         if prev_char.is_ascii_whitespace() {
-            let len = input
-                .chars()
-                .take_while(|&c| !c.is_whitespace())
-                .map(char::len_utf8)
-                .sum();
+            // differ `ls --color` and `a + --b`
+            let prev_prev_char = input.previous_n_char(2).ok_or(NOT_FOUND)?;
+            if prev_prev_char.is_alpha() {
+                let len = input
+                    .chars()
+                    .take_while(|&c| !c.is_whitespace())
+                    .map(char::len_utf8)
+                    .sum();
 
-            // dbg!(len);
-            return Ok(input.split_at(len));
+                // dbg!(len);
+                return Ok(input.split_at(len));
+            }
         }
     }
     Err(NOT_FOUND)

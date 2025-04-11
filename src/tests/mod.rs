@@ -1,4 +1,4 @@
-use crate::{Diagnostic, SyntaxError, parse_script, tokenize};
+use crate::{Diagnostic, Expression, SyntaxError, parse_script, tokenize};
 
 #[track_caller]
 fn tokenize_test(input: &str, expected: &str) {
@@ -25,6 +25,88 @@ fn parse_test(input: &str, expected: &str) -> Result<(), nom::Err<SyntaxError>> 
     Ok(())
 }
 
+// #[test]
+// fn test_operator_precedence() {
+//     parse_expr("a + b * c**d").should_parse_as("a + (b * (c**d))");
+//     parse_expr("x = y ?? z").should_fail_with("Expected '??' operator handler");
+// }
+#[test]
+fn test_conditional_operator() {
+    let expr = parse_script("a ? b + c : d * e").unwrap();
+    assert_eq!(
+        expr,
+        Expression::If(
+            Box::new(Expression::Symbol("a".into())),
+            Box::new(Expression::BinaryOp(
+                "+".to_string(),
+                Box::new(Expression::Symbol("b".into())),
+                Box::new(Expression::Symbol("c".into()))
+            )),
+            Box::new(Expression::BinaryOp(
+                "*".to_string(),
+                Box::new(Expression::Symbol("d".into())),
+                Box::new(Expression::Symbol("e".into()))
+            ))
+        )
+    );
+}
+
+#[test]
+fn test_unary_priority() {
+    let expr = parse_script("-a ** 2").unwrap();
+    assert_eq!(
+        expr,
+        Expression::UnaryOp(
+            "-".into(),
+            Box::new(Expression::BinaryOp(
+                "**".to_string(),
+                Box::new(Expression::Symbol("a".into())),
+                Box::new(Expression::Integer(2))
+            )),
+            true
+        )
+    );
+}
+
+#[test]
+fn test_operator_precedence() {
+    assert_eq!(
+        parse_script("2 + 3 * 4 ** 5").unwrap(),
+        Expression::Do(vec![Expression::BinaryOp(
+            "+".into(),
+            Box::new(Expression::Integer(2)),
+            Box::new(Expression::BinaryOp(
+                "*".into(),
+                Box::new(Expression::Integer(3)),
+                Box::new(Expression::BinaryOp(
+                    "**".into(),
+                    Box::new(Expression::Integer(4)),
+                    Box::new(Expression::Integer(5)),
+                ))
+            ))
+        )])
+    );
+}
+
+#[test]
+fn test_multi_char_ops() {
+    assert!(parse_script("a && b || c ** d").is_ok());
+    assert!(parse_script("x = y |> filter()").is_ok());
+}
+// #[test]
+// fn test_nested_control_flow() {
+//     parse_script(
+//         r#"
+//         if a {
+//             for i in [1,2,3] {
+//                 echo $i |> filter
+//             }
+//         } else if b {
+//             while true { ... }
+//         }
+//     "#,
+//     );
+// }
 #[test]
 fn tokenize_function() {
     tokenize_test(

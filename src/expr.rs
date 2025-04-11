@@ -1,4 +1,6 @@
 use super::{Environment, Error, Int};
+// use num_traits::pow;
+use regex_lite::Regex;
 use std::{
     cmp::Ordering,
     collections::BTreeMap,
@@ -7,7 +9,6 @@ use std::{
     ops::{Add, Div, Index, Mul, Neg, Rem, Sub},
     process::Command,
 };
-
 use terminal_size::{Width, terminal_size};
 
 use crate::STRICT;
@@ -90,6 +91,19 @@ impl From<Environment> for Expression {
         Self::Map(env.bindings.into_iter().collect::<BTreeMap<String, Self>>())
     }
 }
+impl Expression {
+    pub fn to_symbol(&self) -> Result<&str, Error> {
+        if let Self::Symbol(s) = self {
+            Ok(s)
+        } else {
+            Err(Error::UndeclaredVariable(format!(
+                "Invalid left symbol: {:?}",
+                self
+            )))
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Pattern {
     Bind(String),             // 变量绑定（含_）
@@ -99,7 +113,8 @@ pub enum Pattern {
 #[derive(Clone, PartialEq)]
 pub enum Expression {
     Group(Box<Self>),
-
+    BinaryOp(String, Box<Self>, Box<Self>), // 新增二元运算
+    UnaryOp(String, Box<Self>, bool),       // 一元运算符
     Symbol(String),
     // An integer literal
     Integer(Int),
@@ -178,6 +193,30 @@ impl PartialEq for Builtin {
     }
 }
 
+impl Expression {
+    /// 获取类型名称用于错误提示
+    pub fn type_name(&self) -> String {
+        match self {
+            Self::List(_) => "list".into(),
+            Self::Map(_) => "map".into(),
+            Self::String(_) => "string".into(),
+            Self::Integer(_) => "integer".into(),
+            Self::Symbol(_) => "symbol".into(),
+            _ => "expression".into(), // ...其他类型...
+        }
+    }
+
+    /// 统一转换为字符串用于字典键
+    pub fn to_string(&self) -> String {
+        match self {
+            Self::Symbol(s) => s.clone(),
+            Self::String(s) => s.clone(),
+            Self::Integer(i) => i.to_string(),
+            _ => format!("{}", self), // 其他类型按显示形式转换
+        }
+    }
+}
+
 impl fmt::Debug for Expression {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -250,6 +289,15 @@ impl fmt::Debug for Expression {
                     .collect::<Vec<String>>()
                     .join(" ")
             ),
+            Self::UnaryOp(op, v, is_prefix) => {
+                if *is_prefix {
+                    write!(f, "({} {})", op, v)
+                } else {
+                    write!(f, "({} {})", v, op)
+                }
+            }
+            Self::BinaryOp(op, l, r) => write!(f, "({:?} {} {:?})", l, op, r),
+
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, f),
         }
     }
@@ -395,6 +443,15 @@ impl fmt::Display for Expression {
                     .collect::<Vec<String>>()
                     .join(" ")
             ),
+            Self::UnaryOp(op, v, is_prefix) => {
+                if *is_prefix {
+                    write!(f, "({} {})", op, v)
+                } else {
+                    write!(f, "({} {})", v, op)
+                }
+            }
+            Self::BinaryOp(op, l, r) => write!(f, "({:?} {} {:?})", l, op, r),
+
             Self::Builtin(builtin) => fmt::Display::fmt(builtin, f),
         }
     }
@@ -530,6 +587,13 @@ impl Expression {
 
             Self::Declare(_, expr) => expr.get_used_symbols(),
             Self::Assign(_, expr) => expr.get_used_symbols(),
+            Self::UnaryOp(_, expr, _) => expr.get_used_symbols(),
+            Self::BinaryOp(_, expr, expr2) => {
+                let mut result = vec![];
+                result.extend(expr.get_used_symbols());
+                result.extend(expr2.get_used_symbols());
+                result
+            }
             Self::If(cond, t, e) => {
                 let mut result = vec![];
                 result.extend(cond.get_used_symbols());
@@ -596,6 +660,127 @@ impl Expression {
                     env.define(&name, x);
                     return Ok(Self::None);
                 }
+                // 处理 ++a 转换为 a = a + 1
+                Self::UnaryOp(op, operand, is_prefix) => {
+                    let operand_eval = operand.eval(env)?;
+                    return match op.as_str() {
+                        "!" => Ok(Expression::Boolean(!operand_eval.is_truthy())),
+                        "++" | "--" => {
+                            // 确保操作数是符号
+                            let var_name = operand.to_symbol()?;
+                            // 获取当前值
+                            let current_val = env
+                                .get(var_name)
+                                .ok_or(Error::UndeclaredVariable(var_name.to_string()))?;
+                            // 确保操作是合法的，例如整数或浮点数
+                            if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
+                            {
+                                return Err(Error::CustomError(format!(
+                                    "Cannot apply {op} to {current_val:?}"
+                                )));
+                            }
+                            // 计算新值
+                            let step = if op == "++" { 1 } else { -1 };
+                            let new_val = current_val.clone() + Expression::Integer(step);
+                            env.define(var_name, new_val.clone());
+                            Ok(if is_prefix {
+                                new_val
+                            } else {
+                                current_val.clone()
+                            })
+                        }
+                        _ => Err(Error::CustomError(format!("Unknown unary operator: {op}"))),
+                    };
+                }
+                // 处理 a++ 转换为 (tmp = a, a = a + 1, tmp)
+                // Expression::PostfixOp { op: "++", operand } => {
+                //     let old_val = operand.eval(env)?;
+                //     let new_val = old_val.clone() + Expression::Integer(1);
+                //     env.define(operand.to_symbol(), new_val);
+                //     Ok(old_val)
+                // }
+                // 处理二元运算
+                Self::BinaryOp(op, lhs, rhs) => {
+                    let l = lhs.eval(env)?;
+                    let r = rhs.eval(env)?;
+                    return match op.as_str() {
+                        "+" => Ok(l + r),
+                        "-" => Ok(l - r),
+                        "*" => Ok(l * r),
+                        "/" => Ok(l / r), //no zero
+                        "%" => Ok(l % r),
+                        // "**" => pow(l, r),
+                        "&&" => Ok(Expression::Boolean(
+                            l.is_truthy() && rhs.eval(env)?.is_truthy(),
+                        )),
+                        "||" => Ok(Expression::Boolean(
+                            l.is_truthy() || rhs.eval(env)?.is_truthy(),
+                        )),
+                        "==" => Ok(Expression::Boolean(l == r)),
+                        "!=" => Ok(Expression::Boolean(l != r)),
+                        ">" => Ok(Expression::Boolean(l > r)),
+                        "<" => Ok(Expression::Boolean(l < r)),
+                        ">=" => Ok(Expression::Boolean(l >= r)),
+                        "<=" => Ok(Expression::Boolean(l <= r)),
+                        "~~" => Ok(Expression::Boolean(l.to_string().contains(&r.to_string()))),
+                        "~=" => {
+                            let regex = Regex::new(&r.to_string())
+                                .map_err(|e| Error::CustomError(e.to_string()))?;
+
+                            Ok(Expression::Boolean(regex.is_match(&l.to_string())))
+                        }
+                        "@" => match l {
+                            // 处理列表索引
+                            Expression::List(list) => {
+                                if let Expression::Integer(index) = r {
+                                    list.get(index as usize).cloned().ok_or_else(|| {
+                                        Error::IndexOutOfBounds {
+                                            index: index as usize,
+                                            len: list.len(),
+                                        }
+                                    })
+                                } else {
+                                    Err(Error::TypeError {
+                                        expected: "integer".into(),
+                                        found: r.type_name(),
+                                    })
+                                }
+                            }
+
+                            // 处理字典键访问
+                            Expression::Map(map) => {
+                                let key = r.to_string(); // 自动转换Symbol/字符串
+                                map.get(&key)
+                                    .cloned()
+                                    .ok_or_else(|| Error::KeyNotFound(key))
+                            }
+
+                            // 处理字符串索引
+                            Expression::String(s) => {
+                                if let Expression::Integer(index) = r {
+                                    s.chars()
+                                        .nth(index as usize)
+                                        .map(|c| Expression::String(c.to_string()))
+                                        .ok_or_else(|| Error::IndexOutOfBounds {
+                                            index: index as usize,
+                                            len: s.len(),
+                                        })
+                                } else {
+                                    Err(Error::TypeError {
+                                        expected: "integer".into(),
+                                        found: r.type_name(),
+                                    })
+                                }
+                            }
+
+                            _ => Err(Error::TypeError {
+                                expected: "indexable type (list/dict/string)".into(),
+                                found: l.type_name(),
+                            }),
+                        },
+                        _ => Err(Error::InvalidOperator(op.clone())),
+                    };
+                }
 
                 Self::For(name, list, body) => {
                     let mut new_env = env.fork();
@@ -627,7 +812,8 @@ impl Expression {
                     while cond.clone().eval_mut(&mut new_env, depth + 1)?.is_truthy() {
                         results.push(body.clone().eval_mut(&mut new_env, depth + 1)?);
                     }
-                    return Ok(Self::List(results));
+                    // return Ok(Self::List(results));
+                    return Ok(Expression::None);
                 }
                 Self::If(cond, true_expr, false_expr) => {
                     let mut new_env = env.fork();

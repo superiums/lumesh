@@ -32,6 +32,16 @@ pub enum Error {
         received: usize,
     },
     InvalidDefaultValue(String, String, Expression),
+    InvalidOperator(String),
+    IndexOutOfBounds {
+        index: usize,
+        len: usize,
+    },
+    KeyNotFound(String),
+    TypeError {
+        expected: String,
+        found: String,
+    },
     ReturnValue(Box<Expression>), // 用于传递返回值
 }
 
@@ -80,6 +90,10 @@ impl Error {
             Self::ArgumentMismatch { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::InvalidDefaultValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::ReturnValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::InvalidOperator(..) => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::IndexOutOfBounds { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::KeyNotFound { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::TypeError { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
 }
@@ -152,6 +166,14 @@ impl fmt::Display for Error {
                     "invalid default value {} for arg:{}, in function:{}",
                     received, param, name
                 )
+            }
+            Self::InvalidOperator(op) => write!(f, "invalid operator {}", op),
+            Error::IndexOutOfBounds { index, len } => {
+                write!(f, "Index {} out of bounds (length {})", index, len)
+            }
+            Error::KeyNotFound(key) => write!(f, "Key '{}' not found in map", key),
+            Error::TypeError { expected, found } => {
+                write!(f, "Type error: expected {}, found {}", expected, found)
             }
             Self::ReturnValue(_) => write!(f, "Illegal return outside function"),
             Self::SyntaxError(string, err) => fmt_syntax_error(string, err, f),

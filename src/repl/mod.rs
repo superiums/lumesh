@@ -524,7 +524,7 @@ fn init_cmds(env: &mut Environment) -> Result<(), Error> {
         env.define(
             "incomplete_prompt",
             Expression::String(
-                r#"let incomplete_prompt = cwd ->
+                r#"cwd ->
                 ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));"#
                     .to_string(),
             ),

@@ -778,6 +778,87 @@ impl Expression {
                                 found: l.type_name(),
                             }),
                         },
+                        // ----------
+                        // TODO 完善
+                        "|" => {
+                            let left_output = l.to_string(); // 执行左侧并捕获输出
+                            let mut new_env = env.fork();
+                            new_env.define("stdin", Expression::String(left_output));
+                            r.eval(&mut new_env)
+                        }
+
+                        "<<" => {
+                            // 从文件读取输入（此处需实现文件读取逻辑）
+                            use std::path::PathBuf;
+                            let mut path = PathBuf::from(env.get_cwd());
+                            path = path.join(r.to_string());
+
+                            match std::fs::read_to_string(&path) {
+                                // First, try to read the contents as a string.
+                                Ok(contents) => Ok(contents.into()),
+                                // If that fails, try to read them as a list of bytes.
+                                Err(_) => match std::fs::read(&path) {
+                                    Ok(contents) => Ok(Expression::Bytes(contents)),
+                                    Err(_) => Err(Error::CustomError(format!(
+                                        "could not read file {}",
+                                        r
+                                    ))),
+                                },
+                            }
+                        }
+                        ">>>" => {
+                            use std::path::PathBuf;
+                            let mut path = PathBuf::from(env.get_cwd());
+                            path = path.join(r.to_string());
+                            match std::fs::OpenOptions::new().append(true).open(&path) {
+                                Ok(mut file) => {
+                                    use std::io::prelude::*;
+
+                                    let result = if let Expression::Bytes(bytes) = l {
+                                        // std::fs::write(path, bytes)
+                                        file.write_all(&bytes)
+                                    } else {
+                                        // Otherwise, convert the contents to a pretty string and write that.
+                                        // std::fs::write(path, contents.to_string())
+                                        file.write_all(l.to_string().as_bytes())
+                                    };
+
+                                    match result {
+                                        Ok(()) => Ok(Expression::None),
+                                        Err(e) => Err(Error::CustomError(format!(
+                                            "could not append to file {}: {:?}",
+                                            r, e
+                                        ))),
+                                    }
+                                }
+                                Err(e) => Err(Error::CustomError(format!(
+                                    "could not open file {}: {:?}",
+                                    r, e
+                                ))),
+                            }
+                        }
+                        ">>" => {
+                            use std::path::PathBuf;
+                            let mut path = PathBuf::from(env.get_cwd());
+                            path = path.join(r.to_string());
+
+                            // If the contents are bytes, write the bytes directly to the file.
+                            let result = if let Expression::Bytes(bytes) = l {
+                                std::fs::write(path, bytes)
+                            } else {
+                                // Otherwise, convert the contents to a pretty string and write that.
+                                std::fs::write(path, l.to_string())
+                            };
+
+                            match result {
+                                Ok(()) => Ok(Expression::None),
+                                Err(e) => Err(Error::CustomError(format!(
+                                    "could not write to file {}: {:?}",
+                                    r, e
+                                ))),
+                            }
+                        }
+
                         _ => Err(Error::InvalidOperator(op.clone())),
                     };
                 }

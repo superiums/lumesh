@@ -22,18 +22,20 @@ use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
 
 // 优先级常量（从代码中提取）
 // const PREC_CONTROL: u8 = 0; // 控制结构（语句级）
-const PREC_ASSIGN: u8 = 0; // 赋值 =
-const PREC_LAMBDA: u8 = 1; // lambda -> ~>
-const PREC_CONDITIONAL: u8 = 2; // 条件运算符 ?:
-const PREC_LOGICAL_OR: u8 = 3; // 逻辑或 ||
-const PREC_LOGICAL_AND: u8 = 4; // 逻辑与 &&
-const PREC_COMPARISON: u8 = 5; // 比较运算
-const PREC_ADD_SUB: u8 = 6; // 加减
-const PREC_MUL_DIV: u8 = 7; // 乘除模
-const PREC_POWER: u8 = 8; // 幂运算 **
-const PREC_UNARY: u8 = 9; // 单目运算符 ! - ++ --
-const PREC_FUNC_CALL: u8 = 10;
-const PREC_INDEX: u8 = 11; // 索引运算符 @
+const PREC_ASSIGN: u8 = 3; // 赋值 =
+const PREC_PIPE: u8 = 4; // 管道
+const PREC_REDIRECT: u8 = 5; // 重定向
+const PREC_LAMBDA: u8 = 6; // lambda -> ~>
+const PREC_CONDITIONAL: u8 = 7; // 条件运算符 ?:
+const PREC_LOGICAL_OR: u8 = 8; // 逻辑或 ||
+const PREC_LOGICAL_AND: u8 = 9; // 逻辑与 &&
+const PREC_COMPARISON: u8 = 10; // 比较运算
+const PREC_ADD_SUB: u8 = 11; // 加减
+const PREC_MUL_DIV: u8 = 12; // 乘除模
+const PREC_POWER: u8 = 13; // 幂运算 **
+const PREC_UNARY: u8 = 14; // 单目运算符 ! - ++ --
+const PREC_FUNC_CALL: u8 = 15;
+const PREC_INDEX: u8 = 16; // 索引运算符 @
 // -- 辅助结构 --
 #[derive(Debug)]
 struct OperatorInfo {
@@ -317,6 +319,32 @@ impl PrattParser {
                 false, // 非结合（仅作为分隔符）
                 OperatorKind::Infix,
             )),
+            // ... 管道操作符 ...
+            "|" => Some(OperatorInfo::new(
+                "|",
+                PREC_PIPE, // 例如设为 4（低于逻辑运算符）
+                false,
+                OperatorKind::Infix,
+            )),
+            // ... 重定向操作符 ...
+            "<<" => Some(OperatorInfo::new(
+                "<<",
+                PREC_REDIRECT, // 与赋值同级
+                false,
+                OperatorKind::Infix,
+            )),
+            ">>" => Some(OperatorInfo::new(
+                ">>",
+                PREC_REDIRECT,
+                false,
+                OperatorKind::Infix,
+            )),
+            ">>>" => Some(OperatorInfo::new(
+                ">>>",
+                PREC_ASSIGN,
+                false,
+                OperatorKind::Infix,
+            )),
             _ => None,
         }
     }
@@ -342,8 +370,26 @@ impl PrattParser {
             "->" => {
                 // 参数处理
                 let name = lhs.to_symbol().expect("Lambda参数必须是符号");
+                // 解析体部分（强制解析为代码块）
+                let body = match rhs {
+                    Expression::Group(boxed_expr) => {
+                        // 如果体是分组表达式，尝试解析为代码块
+                        if let Expression::Do(statements) = *boxed_expr {
+                            statements
+                        } else {
+                            vec![*boxed_expr]
+                        }
+                    }
+                    _ => vec![rhs],
+                };
+                Expression::Lambda(
+                    name.to_string(),
+                    Box::new(Expression::Do(body)),
+                    Environment::new(),
+                )
+
                 // 解析体部分
-                Expression::Lambda(name.to_string(), Box::new(rhs), Environment::new())
+                // Expression::Lambda(name.to_string(), Box::new(rhs), Environment::new())
             }
             "~>" => {
                 // 参数处理
@@ -373,6 +419,47 @@ impl PrattParser {
                     Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
                 Expression::Assign(lhs.to_string(), Box::new(new_rhs))
             }
+            // "|" => Expression::Pipe(Box::new(lhs), Box::new(rhs)),
+            // "|" => Expression::Apply(Box::new("fs@pipe"), Box::new(rhs)),
+            // "|" => Expression::Apply(
+            //     Box::new(Expression::Symbol("|".to_string())),
+            //     vec![lhs, rhs],
+            // ),
+            // "<<" => {
+            //     let content = Expression::Apply(
+            //         Expression::BinaryOp(
+            //             "@".to_string(),
+            //             Box::new(Expression::Symbol("fs".to_string())),
+            //             Box::new(Expression::Symbol("read".to_string())),
+            //         ),
+            //         vec![rhs],
+            //     );
+            //     Expression::Apply(
+            //         Box::new(Expression::Symbol("|".to_string())),
+            //         vec![lhs, rhs],
+            //     )
+            // }
+            "|" => Expression::BinaryOp("|".into(), Box::new(lhs), Box::new(rhs)),
+
+            "<<" => Expression::BinaryOp("<<".into(), Box::new(lhs), Box::new(rhs)),
+
+            ">>" => Expression::BinaryOp(">>".into(), Box::new(lhs), Box::new(rhs)),
+
+            ">>>" => Expression::BinaryOp(">>>".into(), Box::new(lhs), Box::new(rhs)),
+
+            // "<<" | ">>" | ">>>" => {
+            //     let redirect_type = match op.symbol {
+            //         "<<" => RedirectType::Input,
+            //         ">>" => RedirectType::Overwrite,
+            //         ">>>" => RedirectType::Append,
+            //         _ => unreachable!(),
+            //     };
+            //     Expression::Redirect(
+            //         redirect_type,
+            //         Box::new(lhs),
+            //         Box::new(rhs), // rhs 应为文件名表达式
+            //     )
+            // }
             _ => {
                 unreachable!()
             }
@@ -412,6 +499,7 @@ fn parse_prefix(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
         parse_control_flow,  // ✅ 新增：允许if作为表达式
         parse_function_call, // func(a,b)
         parse_apply,         //函数调用 func a b
+        parse_block,         // 优先解析block，从而让lambda 可以识别为do块，而不是字典解析。
         parse_list,
         parse_map,
         map(parse_symbol, Expression::Symbol),

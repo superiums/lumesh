@@ -47,9 +47,9 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(line_continuation, TokenKind::Whitespace),
             // triple_quote_string,
             map_valid_token(linebreak, TokenKind::LineBreak),
-            map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(argument_symbol, TokenKind::StringLiteral), //argument first to allow args such as = -
-            map_valid_token(custome_operator, TokenKind::Operator),     //before short_operator
+            map_valid_token(long_operator, TokenKind::Operator),
+            map_valid_token(custome_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
             map_valid_token(bool_literal, TokenKind::BooleanLiteral),

@@ -72,7 +72,7 @@ impl OperatorInfo {
 fn parse_expr(input: Tokens) -> IResult<Tokens, Expression, SyntaxError> {
     // dbg!("--parse--");
     let (input, got) = PrattParser::parse_expr_with_precedence(input, 0)?;
-    // dbg!(&input.slice, &got);
+    dbg!(&input.slice, &got);
     Ok((input, got))
 }
 
@@ -152,8 +152,8 @@ impl PrattParser {
                     let (new_input, rhs) = Self::parse_expr_with_precedence(input, next_min_prec)?;
                     // dbg!(&new_input, &rhs);
                     // 阶段4：构建AST节点
-                    lhs = Self::build_ast(op, lhs, rhs);
                     input = new_input;
+                    lhs = Self::build_ast(input, op, lhs, rhs)?;
                     // dbg!(&lhs, &input);
                     if input.is_empty() {
                         // dbg!("---break2---");
@@ -366,75 +366,146 @@ impl PrattParser {
         }
     }
 
-    fn build_bin_ast(op: OperatorInfo, lhs: Expression, rhs: Expression) -> Expression {
+    fn build_bin_ast(
+        input: Tokens,
+        op: OperatorInfo,
+        lhs: Expression,
+        rhs: Expression,
+    ) -> Result<Expression, nom::Err<SyntaxError>> {
         match op.symbol {
-            "@" | "+" | "-" | "*" | "/" | "%" | "**" => {
-                Expression::BinaryOp(op.symbol.into(), Box::new(lhs), Box::new(rhs))
-            }
-            "&&" | "||" => Expression::BinaryOp(op.symbol.into(), Box::new(lhs), Box::new(rhs)),
+            "@" | "+" | "-" | "*" | "/" | "%" | "**" => Ok(Expression::BinaryOp(
+                op.symbol.into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
+            "&&" | "||" => Ok(Expression::BinaryOp(
+                op.symbol.into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
             // "|>" => Expression::Pipe(Box::new(lhs), Box::new(rhs)),
             "=" => {
                 // 确保左侧是符号
-                let name = lhs
-                    .to_symbol()
-                    .unwrap_or_else(|_| panic!("Invalid assignment target: {:?}", lhs));
-                Expression::Assign(name.to_string(), Box::new(rhs))
+                match lhs.to_symbol() {
+                    // .unwrap_or_else(|_| panic!("Invalid assignment target: {:?}", lhs));
+                    Ok(name) => Ok(Expression::Assign(name.to_string(), Box::new(rhs))),
+                    _ => {
+                        eprintln!("invalid left-hand-side: {:?}", lhs);
+                        Err(SyntaxError::expected(
+                            input.get_str_slice(),
+                            "symbol",
+                            Some(format!("{:?}", lhs)),
+                            Some("only assign to symbol allowed"),
+                        ))
+                    }
+                }
             }
-            "==" | "!=" | ">" | "<" | ">=" | "<=" | "~~" | "~=" => {
-                Expression::BinaryOp(op.symbol.into(), Box::new(lhs), Box::new(rhs))
-            }
+            "==" | "!=" | ">" | "<" | ">=" | "<=" | "~~" | "~=" => Ok(Expression::BinaryOp(
+                op.symbol.into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
 
             "->" => {
                 // 参数处理
-                let name = lhs.to_symbol().expect("Lambda参数必须是符号");
-                // 解析体部分（强制解析为代码块）
-                let body = match rhs {
-                    Expression::Group(boxed_expr) => {
-                        // 如果体是分组表达式，尝试解析为代码块
-                        if let Expression::Do(statements) = *boxed_expr {
-                            statements
-                        } else {
-                            vec![*boxed_expr]
-                        }
+                match lhs.to_symbol() {
+                    // .expect("Lambda参数必须是符号");
+                    Ok(name) => {
+                        // 解析体部分（强制解析为代码块）
+                        let body = match rhs {
+                            Expression::Group(boxed_expr) => {
+                                // 如果体是分组表达式，尝试解析为代码块
+                                if let Expression::Do(statements) = *boxed_expr {
+                                    statements
+                                } else {
+                                    vec![*boxed_expr]
+                                }
+                            }
+                            _ => vec![rhs],
+                        };
+                        Ok(Expression::Lambda(
+                            name.to_string(),
+                            Box::new(Expression::Do(body)),
+                            Environment::new(),
+                        ))
                     }
-                    _ => vec![rhs],
-                };
-                Expression::Lambda(
-                    name.to_string(),
-                    Box::new(Expression::Do(body)),
-                    Environment::new(),
-                )
+                    _ => {
+                        eprintln!("invalid lambda-param {:?}", lhs);
+
+                        Err(SyntaxError::expected(
+                            input.get_str_slice(),
+                            "symbol",
+                            Some(lhs.to_string()),
+                            "lambda params must be symbol".into(),
+                        ))
+                    }
+                }
 
                 // 解析体部分
                 // Expression::Lambda(name.to_string(), Box::new(rhs), Environment::new())
             }
             "~>" => {
                 // 参数处理
-                let name = lhs.to_symbol().expect("Macro参数必须是符号");
-                // 解析体部分
-                Expression::Macro(name.to_string(), Box::new(rhs))
+                match lhs.to_symbol() {
+                    // 解析体部分
+                    Ok(name) => Ok(Expression::Macro(name.to_string(), Box::new(rhs))),
+                    _ => {
+                        eprintln!("invalid macro-param {:?}", lhs);
+
+                        Err(SyntaxError::expected(
+                            input.get_str_slice(),
+                            "symbol",
+                            Some(lhs.to_string()),
+                            "macro params must be symbol".into(),
+                        ))
+                    }
+                }
             }
             "?" => {
-                let condition = lhs;
                 let (true_expr, false_expr) = match rhs {
                     Expression::BinaryOp(op, t, f) if op == ":" => (t, f),
-                    _ => panic!("Invalid conditional expression"),
+                    _ => {
+                        eprintln!("invalid conditional ?: {:?}", rhs);
+
+                        return Err(SyntaxError::expected(
+                            input.get_str_slice(),
+                            "symbol",
+                            Some(lhs.to_string()),
+                            "Invalid conditional expression".into(),
+                        ));
+                    }
                 };
-                Expression::If(Box::new(condition), true_expr, false_expr)
+                Ok(Expression::If(Box::new(lhs), true_expr, false_expr))
             }
-            ":" => Expression::BinaryOp(":".into(), Box::new(lhs), Box::new(rhs)),
+            ":" => Ok(Expression::BinaryOp(
+                ":".into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
             ":=" => {
                 // 确保左侧是符号
-                let name = lhs
-                    .to_symbol()
-                    .unwrap_or_else(|_| panic!("Invalid assignment target: {:?}", lhs));
-                Expression::Assign(name.to_string(), Box::new(Expression::Quote(Box::new(rhs))))
+                match lhs.to_symbol() {
+                    Ok(name) => Ok(Expression::Assign(
+                        name.to_string(),
+                        Box::new(Expression::Quote(Box::new(rhs))),
+                    )),
+                    _ => {
+                        eprintln!("invalid left-hide-side {:?}", lhs);
+
+                        Err(SyntaxError::expected(
+                            input.get_str_slice(),
+                            "symbol",
+                            Some(lhs.to_string()),
+                            "only assign to symbol allowed".into(),
+                        ))
+                    }
+                }
             }
             "+=" | "-=" | "*=" | "/=" => {
                 let base_op = op.symbol.trim_end_matches('=');
                 let new_rhs =
                     Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
-                Expression::Assign(lhs.to_string(), Box::new(new_rhs))
+                Ok(Expression::Assign(lhs.to_string(), Box::new(new_rhs)))
             }
             // "|" => Expression::Pipe(Box::new(lhs), Box::new(rhs)),
             // "|" => Expression::Apply(Box::new("fs@pipe"), Box::new(rhs)),
@@ -456,13 +527,29 @@ impl PrattParser {
             //         vec![lhs, rhs],
             //     )
             // }
-            "|" => Expression::BinaryOp("|".into(), Box::new(lhs), Box::new(rhs)),
+            "|" => Ok(Expression::BinaryOp(
+                "|".into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
 
-            "<<" => Expression::BinaryOp("<<".into(), Box::new(lhs), Box::new(rhs)),
+            "<<" => Ok(Expression::BinaryOp(
+                "<<".into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
 
-            ">>" => Expression::BinaryOp(">>".into(), Box::new(lhs), Box::new(rhs)),
+            ">>" => Ok(Expression::BinaryOp(
+                ">>".into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
 
-            ">>>" => Expression::BinaryOp(">>>".into(), Box::new(lhs), Box::new(rhs)),
+            ">>>" => Ok(Expression::BinaryOp(
+                ">>>".into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
 
             // "<<" | ">>" | ">>>" => {
             //     let redirect_type = match op.symbol {
@@ -483,17 +570,22 @@ impl PrattParser {
         }
     }
 
-    fn build_ast(op: OperatorInfo, lhs: Expression, rhs: Expression) -> Expression {
+    fn build_ast(
+        input: Tokens,
+        op: OperatorInfo,
+        lhs: Expression,
+        rhs: Expression,
+    ) -> Result<Expression, nom::Err<SyntaxError>> {
         match op.kind {
             // 需要扩展OperatorInfo包含kind字段
             OperatorKind::Prefix => match op.symbol {
-                "++" | "--" | "!" => Expression::UnaryOp(op.symbol.into(), Box::new(rhs), true),
+                "++" | "--" | "!" => Ok(Expression::UnaryOp(op.symbol.into(), Box::new(rhs), true)),
                 _ => unreachable!(),
             },
             // OperatorKind::Postfix => Expression::UnaryOp(op.symbol.into(), Box::new(rhs), false), //differ
             OperatorKind::Infix => match op.symbol {
                 // 原有双目运算符处理...
-                _ => Self::build_bin_ast(op, lhs, rhs),
+                _ => Self::build_bin_ast(input, op, lhs, rhs),
             },
         }
     }
@@ -712,16 +804,22 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxError>> {
     token_vec.retain(|t| !matches!(t.kind, TokenKind::Whitespace | TokenKind::Comment));
 
     // 语法分析
-    let (_, expr) = parse_script_tokens(
+    match parse_script_tokens(
         Tokens {
             str: &str,
             slice: token_vec.as_slice(),
         },
         // true,
-    )?;
+    ) {
+        Ok((_, expr)) => Ok(expr),
+        Err(e) => {
+            eprintln!("parse error");
+            Err(e)
+        }
+    }
     // dbg!(&expr);
 
-    Ok(expr)
+    // Ok(expr)
 }
 
 // -- 其他辅助函数保持与用户提供代码一致 --

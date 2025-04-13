@@ -129,14 +129,14 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("**"), // for op overload use.
         operator_tag("<"),
         operator_tag(">"),
-        operator_tag("+"), // to allow a<b insteadof mustbe a < b
-        operator_tag("-"), // to allow a<b insteadof mustbe a < b
-        operator_tag("*"), // to allow a<b insteadof mustbe a < b
-        operator_tag("/"), // to allow a<b insteadof mustbe a < b
-        operator_tag("%"), // to allow a<b insteadof mustbe a < b
-        operator_tag("="), // 新增赋值运算符
-        operator_tag("?"), // 新增条件赋值运算符
-        operator_tag(":"), // ?:, {k:v}
+        operator_tag("+"),    // to allow a<b insteadof mustbe a < b
+        operator_tag("-"),    // to allow a<b insteadof mustbe a < b
+        operator_tag("*"),    // to allow a<b insteadof mustbe a < b
+        operator_tag("/"),    // to allow a<b insteadof mustbe a < b
+        operator_tag("%"),    // to allow a<b insteadof mustbe a < b
+        operator_tag("="),    // 新增赋值运算符
+        operator_tag("?"),    // 新增条件赋值运算符
+        punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
         keyword_tag("|"),
         punctuation_tag("@"),
         punctuation_tag("!"),
@@ -617,7 +617,7 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '.' | '~' | '\\' | '?' | '&' | '#' | '^' | '$' | '-' | '/'
+            '_' | '.' | '~' | '?' | '&' | '#' | '^' | '$' | '-' | '/'
         };
         // add - / back because it's used so offen in cmd string. "connman-gtk"
         // remove + - /  %  > < to allow non space operator such as a+1

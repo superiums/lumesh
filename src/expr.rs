@@ -109,6 +109,12 @@ pub enum Pattern {
     Bind(String),             // 变量绑定（含_）
     Literal(Box<Expression>), // 字面量匹配
 }
+#[derive(Debug, Clone, PartialEq)]
+pub struct SliceParams {
+    pub start: Option<Box<Expression>>,
+    pub end: Option<Box<Expression>>,
+    pub step: Option<Box<Expression>>,
+}
 
 #[derive(Clone, PartialEq)]
 pub enum Expression {
@@ -130,6 +136,9 @@ pub enum Expression {
     List(Vec<Self>),
     // A map of expressions
     Map(BTreeMap<String, Self>),
+    Index(Box<Self>, Box<Self>),   // 索引表达式 table[key]
+    Slice(Box<Self>, SliceParams), // 切片表达式 list[start:end:step]
+
     None,
 
     Del(String), // 新增删除操作
@@ -297,6 +306,8 @@ impl fmt::Debug for Expression {
                 }
             }
             Self::BinaryOp(op, l, r) => write!(f, "({:?} {} {:?})", l, op, r),
+            Self::Index(l, r) => write!(f, "({}[{}]", l, r),
+            Self::Slice(l, r) => write!(f, "({}[{:?}:{:?}:{:?}])", l, r.start, r.end, r.step),
 
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, f),
         }
@@ -451,6 +462,8 @@ impl fmt::Display for Expression {
                 }
             }
             Self::BinaryOp(op, l, r) => write!(f, "({:?} {} {:?})", l, op, r),
+            Self::Index(l, r) => write!(f, "({}[{}]", l, r),
+            Self::Slice(l, r) => write!(f, "({}[{:?}:{:?}:{:?}])", l, r.start, r.end, r.step),
 
             Self::Builtin(builtin) => fmt::Display::fmt(builtin, f),
         }
@@ -470,25 +483,151 @@ impl PartialOrd for Expression {
         }
     }
 }
-fn matches_pattern(
-    value: &Expression,
-    pattern: &Pattern,
-    env: &mut Environment,
-) -> Result<bool, Error> {
-    match pattern {
-        Pattern::Bind(name) => {
-            if name == "_" {
-                // _作为通配符，不绑定变量
-                Ok(true)
-            } else {
-                // 正常变量绑定
-                env.define(name, value.clone());
-                Ok(true)
+// 在 expr.rs.txt 的 Expression 实现中添加以下方法
+impl Expression {
+    /// 将表达式选项转换为整数选项
+    pub fn eval_to_int_opt(
+        expr_opt: Option<Box<Self>>,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Option<Int>, Error> {
+        match expr_opt {
+            // 无表达式时返回 None
+            None => Ok(None),
+            // 有表达式时进行求值
+            Some(boxed_expr) => {
+                // 递归求值表达式
+                let evaluated = boxed_expr.eval_mut(env, depth)?;
+
+                // 转换为整数
+                match evaluated {
+                    Self::Integer(i) => Ok(Some(i)),
+                    // 处理隐式类型转换
+                    Self::Float(f) if f.fract() == 0.0 => Ok(Some(f as Int)),
+                    // 处理其他类型错误
+                    _ => Err(Error::TypeError {
+                        expected: "integer".into(),
+                        found: evaluated.type_name(),
+                    }),
+                }
             }
         }
-        Pattern::Literal(lit) => Ok(value == lit.as_ref()),
+    }
+
+    // 处理负数索引和越界...
+    pub fn as_list(&self) -> Result<&Vec<Self>, Error> {
+        match self {
+            Self::List(v) => Ok(v),
+            _ => Err(Error::TypeError {
+                expected: "list".into(),
+                found: self.type_name(),
+            }),
+        }
+    }
+
+    pub fn slice(
+        list: Self,
+        start: Option<Int>,
+        end: Option<Int>,
+        step: Int,
+    ) -> Result<Self, Error> {
+        let list = list.as_list()?;
+        let len = list.len() as Int;
+
+        let clamp = |v: Int| if v < 0 { len + v } else { v }.clamp(0, len - 1);
+
+        let (mut start, mut end) = (
+            start.map(clamp).unwrap_or(0),
+            end.map(|v| clamp(v).min(len)).unwrap_or(len),
+        );
+
+        if step < 0 {
+            (start, end) = (end.clamp(0, len), start.clamp(0, len));
+        }
+
+        let mut result = Vec::new();
+        let mut i = start;
+        while (step > 0 && i < end) || (step < 0 && i > end) {
+            if let Some(item) = list.get(i as usize) {
+                result.push(item.clone());
+            }
+            i += step;
+        }
+        Ok(Self::List(result))
+    }
+
+    fn index_slm(l: Expression, r: Expression) -> Result<Expression, Error> {
+        match l {
+            // 处理列表索引
+            Expression::List(list) => {
+                if let Expression::Integer(index) = r {
+                    list.get(index as usize)
+                        .cloned()
+                        .ok_or_else(|| Error::IndexOutOfBounds {
+                            index: index as usize,
+                            len: list.len(),
+                        })
+                } else {
+                    Err(Error::TypeError {
+                        expected: "integer".into(),
+                        found: r.type_name(),
+                    })
+                }
+            }
+
+            // 处理字典键访问
+            Expression::Map(map) => {
+                let key = r.to_string(); // 自动转换Symbol/字符串
+                map.get(&key)
+                    .cloned()
+                    .ok_or_else(|| Error::KeyNotFound(key))
+            }
+
+            // 处理字符串索引
+            Expression::String(s) => {
+                if let Expression::Integer(index) = r {
+                    s.chars()
+                        .nth(index as usize)
+                        .map(|c| Expression::String(c.to_string()))
+                        .ok_or_else(|| Error::IndexOutOfBounds {
+                            index: index as usize,
+                            len: s.len(),
+                        })
+                } else {
+                    Err(Error::TypeError {
+                        expected: "integer".into(),
+                        found: r.type_name(),
+                    })
+                }
+            }
+
+            _ => Err(Error::TypeError {
+                expected: "indexable type (list/dict/string)".into(),
+                found: l.type_name(),
+            }),
+        }
+    }
+    fn matches_pattern(
+        value: &Expression,
+        pattern: &Pattern,
+        env: &mut Environment,
+    ) -> Result<bool, Error> {
+        match pattern {
+            Pattern::Bind(name) => {
+                if name == "_" {
+                    // _作为通配符，不绑定变量
+                    Ok(true)
+                } else {
+                    // 正常变量绑定
+                    env.define(name, value.clone());
+                    Ok(true)
+                }
+            }
+            Pattern::Literal(lit) => Ok(value == lit.as_ref()),
+        }
     }
 }
+
 impl Expression {
     pub fn builtin(
         name: impl ToString,
@@ -593,6 +732,19 @@ impl Expression {
                 result.extend(expr.get_used_symbols());
                 result.extend(expr2.get_used_symbols());
                 result
+            }
+            Self::Index(expr, expr2) => {
+                let mut result = vec![];
+                result.extend(expr.get_used_symbols());
+                result.extend(expr2.get_used_symbols());
+                result
+            }
+            Self::Slice(expr, _) => {
+                expr.get_used_symbols()
+                // let mut result = vec![];
+                // result.extend(expr.get_used_symbols());
+                // result.extend(expr2.get_used_symbols());
+                // result
             }
             Self::If(cond, t, e) => {
                 let mut result = vec![];
@@ -699,6 +851,20 @@ impl Expression {
                 //     env.define(operand.to_symbol(), new_val);
                 //     Ok(old_val)
                 // }
+                Self::Slice(list, slice_params) => {
+                    let listo = list.eval(env)?;
+                    let start_int = Expression::eval_to_int_opt(slice_params.start, env, depth)?;
+                    let end_int = Expression::eval_to_int_opt(slice_params.end, env, depth)?;
+                    let step_int =
+                        Expression::eval_to_int_opt(slice_params.step, env, depth)?.unwrap_or(1); // 默认步长1
+
+                    return Self::slice(listo, start_int, end_int, step_int);
+                }
+                Self::Index(lhs, rhs) => {
+                    let l = lhs.eval(env)?;
+                    let r = rhs.eval(env)?;
+                    return Self::index_slm(l, r);
+                }
                 // 处理二元运算
                 Self::BinaryOp(op, lhs, rhs) => {
                     let l = lhs.eval(env)?;
@@ -729,55 +895,8 @@ impl Expression {
 
                             Ok(Expression::Boolean(regex.is_match(&l.to_string())))
                         }
-                        "@" => match l {
-                            // 处理列表索引
-                            Expression::List(list) => {
-                                if let Expression::Integer(index) = r {
-                                    list.get(index as usize).cloned().ok_or_else(|| {
-                                        Error::IndexOutOfBounds {
-                                            index: index as usize,
-                                            len: list.len(),
-                                        }
-                                    })
-                                } else {
-                                    Err(Error::TypeError {
-                                        expected: "integer".into(),
-                                        found: r.type_name(),
-                                    })
-                                }
-                            }
+                        "@" => Self::index_slm(l, r),
 
-                            // 处理字典键访问
-                            Expression::Map(map) => {
-                                let key = r.to_string(); // 自动转换Symbol/字符串
-                                map.get(&key)
-                                    .cloned()
-                                    .ok_or_else(|| Error::KeyNotFound(key))
-                            }
-
-                            // 处理字符串索引
-                            Expression::String(s) => {
-                                if let Expression::Integer(index) = r {
-                                    s.chars()
-                                        .nth(index as usize)
-                                        .map(|c| Expression::String(c.to_string()))
-                                        .ok_or_else(|| Error::IndexOutOfBounds {
-                                            index: index as usize,
-                                            len: s.len(),
-                                        })
-                                } else {
-                                    Err(Error::TypeError {
-                                        expected: "integer".into(),
-                                        found: r.type_name(),
-                                    })
-                                }
-                            }
-
-                            _ => Err(Error::TypeError {
-                                expected: "indexable type (list/dict/string)".into(),
-                                found: l.type_name(),
-                            }),
-                        },
                         // ----------
                         // TODO 完善
                         "|" => {
@@ -909,7 +1028,7 @@ impl Expression {
                     let mut new_env = env.fork();
                     let evaluated_value = value.clone().eval_mut(&mut new_env, depth + 1)?;
                     for (pattern, expr) in branches {
-                        if matches_pattern(&evaluated_value, pattern, env)? {
+                        if Self::matches_pattern(&evaluated_value, pattern, env)? {
                             return expr.clone().eval_mut(&mut new_env, depth + 1);
                         }
                     }

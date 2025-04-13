@@ -875,7 +875,31 @@ impl Expression {
                         "*" => Ok(l * r),
                         "/" => Ok(l / r), //no zero
                         "%" => Ok(l % r),
-                        // "**" => pow(l, r),
+                        "**" => match (l, r) {
+                            (Expression::Float(base), Expression::Float(exponent)) => {
+                                Ok(base.powf(exponent).into())
+                            }
+                            (Expression::Float(base), Expression::Integer(exponent)) => {
+                                Ok(base.powf(exponent as f64).into())
+                            }
+                            (Expression::Integer(base), Expression::Float(exponent)) => {
+                                Ok((base as f64).powf(exponent).into())
+                            }
+                            (Expression::Integer(base), Expression::Integer(exponent)) => {
+                                match base.checked_pow(exponent as u32) {
+                                    Some(n) => Ok(n.into()),
+                                    None => Err(Error::CustomError(format!(
+                                        "overflow when raising int {} to the power {}",
+                                        base, exponent
+                                    ))),
+                                }
+                            }
+                            (a, b) => Err(Error::CustomError(format!(
+                                "cannot raise {} to the power {}",
+                                a, b
+                            ))),
+                        },
+
                         "&&" => Ok(Expression::Boolean(
                             l.is_truthy() && rhs.eval(env)?.is_truthy(),
                         )),

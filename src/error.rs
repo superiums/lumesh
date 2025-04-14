@@ -42,7 +42,7 @@ pub enum Error {
         expected: String,
         found: String,
     },
-    ReturnValue(Box<Expression>), // 用于传递返回值
+    EarlyReturn(Expression), // 用于传递返回值
 }
 
 impl Error {
@@ -89,7 +89,7 @@ impl Error {
             Self::TooManyArguments { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::ArgumentMismatch { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::InvalidDefaultValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::ReturnValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::EarlyReturn(..) => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::InvalidOperator(..) => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::IndexOutOfBounds { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
             Self::KeyNotFound { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
@@ -175,7 +175,7 @@ impl fmt::Display for Error {
             Error::TypeError { expected, found } => {
                 write!(f, "Type error: expected {}, found {}", expected, found)
             }
-            Self::ReturnValue(_) => write!(f, "Illegal return outside function"),
+            Self::EarlyReturn(_) => write!(f, "Illegal return outside function"),
             Self::SyntaxError(string, err) => fmt_syntax_error(string, err, f),
         }
     }

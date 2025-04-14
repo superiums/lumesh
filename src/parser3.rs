@@ -406,43 +406,98 @@ impl PrattParser {
                 Box::new(rhs),
             )),
 
+            // "->" => {
+            //     // 参数处理
+            //     match lhs.to_symbol() {
+            //         // .expect("Lambda参数必须是符号");
+            //         Ok(name) => {
+            //             // 解析体部分（强制解析为代码块）
+            //             let body = match rhs {
+            //                 Expression::Group(boxed_expr) => {
+            //                     // 如果体是分组表达式，尝试解析为代码块
+            //                     if let Expression::Do(statements) = *boxed_expr {
+            //                         statements
+            //                     } else {
+            //                         vec![*boxed_expr]
+            //                     }
+            //                 }
+            //                 _ => vec![rhs],
+            //             };
+            //             Ok(Expression::Lambda(
+            //                 name.to_string(),
+            //                 Box::new(Expression::Do(body)),
+            //                 Environment::new(),
+            //             ))
+            //         }
+            //         _ => {
+            //             eprintln!("invalid lambda-param {:?}", lhs);
+
+            //             Err(SyntaxError::expected(
+            //                 input.get_str_slice(),
+            //                 "symbol",
+            //                 Some(lhs.to_string()),
+            //                 "lambda params must be symbol".into(),
+            //             ))
+            //         }
+            //     }
+
+            //     // 解析体部分
+            //     // Expression::Lambda(name.to_string(), Box::new(rhs), Environment::new())
+            // }
             "->" => {
-                // 参数处理
-                match lhs.to_symbol() {
-                    // .expect("Lambda参数必须是符号");
-                    Ok(name) => {
-                        // 解析体部分（强制解析为代码块）
-                        let body = match rhs {
-                            Expression::Group(boxed_expr) => {
-                                // 如果体是分组表达式，尝试解析为代码块
-                                if let Expression::Do(statements) = *boxed_expr {
-                                    statements
-                                } else {
-                                    vec![*boxed_expr]
+                // 解析参数列表
+                let params = match lhs {
+                    // 处理括号包裹的参数列表 (x,y,z)
+                    Expression::Group(boxed_expr) => match *boxed_expr {
+                        Expression::List(elements) => elements
+                            .into_iter()
+                            .map(|e| e.to_symbol().map(|s| s.to_string()))
+                            .collect::<Result<Vec<_>, _>>(),
+                        // 处理单个参数 (x)
+                        expr => {
+                            let onep = match expr.to_symbol() {
+                                Ok(s) => s,
+                                _ => {
+                                    return Err(SyntaxError::expected(
+                                        input.get_str_slice(),
+                                        "symbol or parameter list",
+                                        Some(expr.to_string()),
+                                        "Lambda requires valid parameter list".into(),
+                                    ));
                                 }
-                            }
-                            _ => vec![rhs],
-                        };
-                        Ok(Expression::Lambda(
-                            name.to_string(),
-                            Box::new(Expression::Do(body)),
-                            Environment::new(),
-                        ))
-                    }
+                            };
+                            Ok(vec![onep.to_string()])
+                        }
+                    },
+                    // 处理无括号单参数
+                    Expression::Symbol(name) => Ok(vec![name]),
                     _ => {
                         eprintln!("invalid lambda-param {:?}", lhs);
-
-                        Err(SyntaxError::expected(
+                        return Err(SyntaxError::expected(
                             input.get_str_slice(),
-                            "symbol",
+                            "symbol or parameter list",
                             Some(lhs.to_string()),
-                            "lambda params must be symbol".into(),
-                        ))
+                            "Lambda requires valid parameter list".into(),
+                        ));
                     }
-                }
+                };
 
-                // 解析体部分
-                // Expression::Lambda(name.to_string(), Box::new(rhs), Environment::new())
+                // 自动包装body为代码块
+                let body = match rhs {
+                    // 已有代码块保持原样
+                    Expression::Do(_) => rhs,
+                    // 分组表达式展开
+                    Expression::Group(boxed_expr) => *boxed_expr,
+                    // 其他表达式自动包装
+                    _ => Expression::Do(vec![rhs]),
+                };
+
+                // 构建Lambda表达式
+                Ok(Expression::Lambda(
+                    params.unwrap(),
+                    Box::new(body),
+                    Environment::new(),
+                ))
             }
             "~>" => {
                 // 参数处理
@@ -627,6 +682,7 @@ fn parse_prefix_argument(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, S
 fn parse_prefix(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     // dbg!("--parse_prefix--", input.slice);
     let (input, prefix) = alt((
+        parse_param_group, // new, lambda params
         parse_group,
         parse_control_flow,   // ✅ 新增：允许if作为表达式
         parse_index_or_slice, //索引或切片 避免被当作函数调用，应先于函数调用。其中不能包含{}[],否则会影响map,list。
@@ -701,6 +757,21 @@ fn parse_param_list(
     let (input, params) = separated_list0(text(","), parse_param)(input)?;
     let (input, _) = text_close(")")(input)?;
     Ok((input, params))
+}
+// parser3.rs 增强 parse_group
+fn parse_param_group(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, expr) = delimited(
+        text("("),
+        alt((
+            // 参数列表特殊处理
+            map(separated_list1(text(","), parse_symbol), |symbols| {
+                Expression::List(symbols.into_iter().map(|s| Expression::Symbol(s)).collect())
+            }),
+            parse_expr, // 常规表达式
+        )),
+        text(")"),
+    )(input)?;
+    Ok((input, Expression::Group(Box::new(expr))))
 }
 // 函数定义解析
 fn parse_fn_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {

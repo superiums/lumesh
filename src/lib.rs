@@ -3,8 +3,8 @@ mod tests;
 
 pub type Int = i64;
 
-mod expr;
-pub use expr::*;
+mod expr2;
+pub use expr2::*;
 
 mod env;
 pub use env::*;

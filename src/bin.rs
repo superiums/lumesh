@@ -2,7 +2,7 @@
 
 mod binary;
 
-use lumesh::{parse_script, Diagnostic, Environment, Error, Expression, SyntaxError, TokenKind};
+use lumesh::{Diagnostic, Environment, Error, Expression, SyntaxError, TokenKind, parse_script};
 
 use clap::Parser;
 
@@ -13,8 +13,8 @@ use rustyline::hint::{Hinter, HistoryHinter};
 use rustyline::validate::{
     MatchingBracketValidator, ValidationContext, ValidationResult, Validator,
 };
-use rustyline::{error::ReadlineError, Editor};
 use rustyline::{CompletionType, Config, Context, EditMode};
+use rustyline::{Editor, error::ReadlineError};
 use rustyline_derive::Helper;
 
 use std::{
@@ -524,7 +524,10 @@ fn init_config(env: &mut Environment) -> Result<(), Error> {
         let prelude_path = home_dir.join(".lumesh-prelude");
         // If file doesn't exist
         if !prelude_path.exists() {
-            let prompt = format!("Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ", prelude_path.display());
+            let prompt = format!(
+                "Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ",
+                prelude_path.display()
+            );
             let mut rl = new_editor(&env);
             let response = readline(prompt, &mut rl);
 
@@ -538,7 +541,9 @@ fn init_config(env: &mut Environment) -> Result<(), Error> {
                 eprintln!("Error while running introduction prelude: {}", e);
             }
         } else if let Err(e) = run_file(prelude_path, env) {
-            let prompt = format!("Error while running custom prelude: {e}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ");
+            let prompt = format!(
+                "Error while running custom prelude: {e}\nWould you like me to write the default prelude to this location? (y/n)\n>>> "
+            );
             let mut rl = new_editor(&env);
             let response = readline(prompt, &mut rl);
 

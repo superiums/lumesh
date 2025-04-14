@@ -56,6 +56,10 @@ impl Environment {
         }
     }
 
+    pub fn has(&self, name: &str) -> bool {
+        self.bindings.contains_key(name)
+    }
+
     pub fn is_defined(&self, name: &str) -> bool {
         self.bindings.contains_key(name)
             || if let Some(ref parent) = self.parent {
@@ -87,6 +91,12 @@ impl Environment {
 
     pub fn set_parent(&mut self, parent: Self) {
         self.parent = Some(Box::new(parent));
+    }
+    pub fn get_parent(&self) -> Option<Box<Environment>> {
+        self.parent.clone()
+    }
+    pub fn get_parent_mut(&mut self) -> Option<&mut Environment> {
+        self.parent.as_mut().map(|p| p.as_mut())
     }
     pub fn fork(&self) -> Self {
         Self {

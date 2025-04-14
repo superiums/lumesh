@@ -4,51 +4,51 @@ use common_macros::b_tree_map;
 
 #[cfg(feature = "chess-engine")]
 mod chess_module;
-// mod console_module;
-// mod dict_module;
-// mod err_module;
+mod console_module;
+mod dict_module;
+mod err_module;
 mod fmt_module;
-// mod fn_module;
-// use fn_module::{curry, reverse_curry};
-// // mod fs_module;
-// mod list_module;
-// use list_module::*;
-// mod log_module;
-// // mod math_module;
-// // mod operator_module;
+mod fn_module;
+use fn_module::{curry, reverse_curry};
+mod fs_module;
+mod list_module;
+use list_module::*;
+mod log_module;
+mod math_module;
+// mod operator_module;
 mod os_module;
-// mod parse_module;
-// mod rand_module;
-// mod regex_module;
-// mod shell_module;
-// mod string_module;
+mod parse_module;
+mod rand_module;
+mod regex_module;
+mod shell_module;
+mod string_module;
 mod sys_module;
-// mod time_module;
-// mod widget_module;
+mod time_module;
+mod widget_module;
 
 pub fn init(env: &mut Environment) {
-    // let fs = fs_module::get(env);
+    let fs = fs_module::get(env);
     // let ops = operator_module::get(env);
-    // let math = math_module::get(env);
+    let math = math_module::get(env);
     let standard_module = b_tree_map! {
-        // "logs" => log_module::get(),    //to avoid conflict with 'git log'.
-        // // "math" => math,
-        // "dict" => dict_module::get(),
-        // "version" => shell_module::get(),
-        // "err" => err_module::get(),
+        "logs" => log_module::get(),    //to avoid conflict with 'git log'.
+        "math" => math,
+        "dict" => dict_module::get(),
+        "version" => shell_module::get(),
+        "err" => err_module::get(),
         "os" => os_module::get(),
-        // "widget" => widget_module::get(),
-        // "time" => time_module::get(),
-        // "rand" => rand_module::get(),
-        // // "fn" => fn_module::get(),
-        // "console" => console_module::get(),
+        "widget" => widget_module::get(),
+        "time" => time_module::get(),
+        "rand" => rand_module::get(),
+        "fn" => fn_module::get(),
+        "console" => console_module::get(),
         "fmt" => fmt_module::get(),
-        // "parse" => parse_module::get(),
-        // // "fs" => fs,
+        "parse" => parse_module::get(),
+        "fs" => fs,
         // // "ops" => ops,
-        // // "string" => string_module::get(),
-        // "regex" => regex_module::get(),
-        // "list" => list_module::get(),
+        "string" => string_module::get(),
+        "regex" => regex_module::get(),
+        "list" => list_module::get(),
         "sys" => sys_module::get(),
     };
 

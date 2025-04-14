@@ -8,8 +8,8 @@ pub fn get(env: &mut Environment) -> Expression {
         String::from("PI")  => std::f64::consts::PI.into(),
         String::from("TAU") => std::f64::consts::TAU.into(),
 
-        String::from("max") => lumesh::parse("x -> y -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
-        String::from("min") => lumesh::parse("x -> y -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
+        String::from("max") => lumesh::parse("(x , y) -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
+        String::from("min") => lumesh::parse("(x , y) -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
 
         String::from("l_rsh") => Expression::builtin("l_rsh", |args, env| {
             super::check_exact_args_len("l_rsh", &args, 2)?;

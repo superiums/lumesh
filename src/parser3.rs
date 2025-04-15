@@ -454,20 +454,17 @@ impl PrattParser {
                             .map(|e| e.to_symbol().map(|s| s.to_string()))
                             .collect::<Result<Vec<_>, _>>(),
                         // 处理单个参数 (x)
-                        expr => {
-                            let onep = match expr.to_symbol() {
-                                Ok(s) => s,
-                                _ => {
-                                    return Err(SyntaxError::expected(
-                                        input.get_str_slice(),
-                                        "symbol or parameter list",
-                                        Some(expr.to_string()),
-                                        "Lambda requires valid parameter list".into(),
-                                    ));
-                                }
-                            };
-                            Ok(vec![onep.to_string()])
-                        }
+                        // expr => match expr {
+                        // Expression::List(s) => return Ok(Expression::List(s)),
+                        Expression::Symbol(s) => Ok(vec![s]),
+                        _ => {
+                            return Err(SyntaxError::expected(
+                                input.get_str_slice(),
+                                "symbol in parameter list",
+                                Some(boxed_expr.type_name()),
+                                "put only valid symbols in lambda param list".into(),
+                            ));
+                        } // },
                     },
                     // 处理无括号单参数
                     Expression::Symbol(name) => Ok(vec![name]),

@@ -106,15 +106,43 @@ macro_rules! type_error {
 macro_rules! fmt_shared {
     ($self:ident, $f:ident, $debug:expr) => {
         match $self {
-            Self::Quote(inner) => write!($f, "'{:?}", inner),
-            Self::Group(inner) => write!($f, "({:?})", inner),
             Self::Symbol(name) => write!($f, "{}", name),
+
+            Self::String(s) if $debug => write!($f, "{:?}", s),
+            Self::String(s) => write!($f, "{}", s),
+
             Self::Integer(i) => write!($f, "{}", *i),
             Self::Float(n) => write!($f, "{}", *n),
             Self::Bytes(b) => write!($f, "b{:?}", b),
-            Self::String(s) => write!($f, "{:?}", s),
             Self::Boolean(b) => write!($f, "{}", if *b { "True" } else { "False" }),
-            Self::While(cond, body) => write!($f, "while {:?} {:?}", cond, body),
+
+            Self::Declare(name, expr) => write!($f, "let {} = {:?}", name, expr),
+            Self::Assign(name, expr) => write!($f, "{} = {:?}", name, expr),
+
+            // Quote 修改
+            Self::Quote(inner) if $debug => write!($f, "'{:?}", inner),
+            Self::Quote(inner) => write!($f, "'{}", inner),
+
+            // Group 修改
+            Self::Group(inner) if $debug => write!($f, "({:?})", inner),
+            Self::Group(inner) => write!($f, "({})", inner),
+
+            // While 修改
+            Self::While(cond, body) if $debug => write!($f, "while {:?} {:?}", cond, body),
+            Self::While(cond, body) => write!($f, "while {} {}", cond, body),
+
+            // Lambda 修改
+            Self::Lambda(params, body, _) if $debug => write!($f, "{:?} -> {:?}", params, body),
+            Self::Lambda(params, body, _) => write!($f, "({}) -> {}", params.join(", "), body),
+
+            // If 修改
+            Self::If(cond, true_expr, false_expr) => {
+                if $debug {
+                    write!($f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
+                } else {
+                    write!($f, "if {} {} else {}", cond, true_expr, false_expr)
+                }
+            }
 
             // 修正Slice分支的格式化错误
             Self::Slice(l, r) => {
@@ -233,7 +261,6 @@ macro_rules! fmt_shared {
             }
 
             Self::None => write!($f, "None"),
-            Self::Lambda(param, body, _) => write!($f, "{:?} -> {:?}", param, body),
             Self::Macro(param, body) => write!($f, "{:?} ~> {:?}", param, body),
             Self::Function(name, param, body, _) => {
                 write!($f, "fn {}({:?}) {{ {:?} }}", name, param, body)
@@ -251,11 +278,7 @@ macro_rules! fmt_shared {
             ),
 
             Self::Del(name) => write!($f, "del {}", name),
-            Self::Declare(name, expr) => write!($f, "let {} = {:?}", name, expr),
-            Self::Assign(name, expr) => write!($f, "{} = {:?}", name, expr),
-            Self::If(cond, true_expr, false_expr) => {
-                write!($f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
-            }
+
             Self::Match(value, branches) => {
                 write!($f, "match {:?} {{ ", value)?;
                 for (pat, expr) in branches.iter() {
@@ -623,13 +646,20 @@ impl Expression {
 
                 // 符号解析（错误处理优化）
                 Self::Symbol(name) => {
-                    dbg!("symbol----", &name, env.get(&name));
+                    // dbg!("symbol----", &name, env.get(&name));
 
                     let r = Ok(match env.get(&name) {
                         Some(expr) => expr,
                         None => Self::Symbol(name),
+                        // None => unsafe {
+                        //            if STRICT {
+                        //                Err(Error::UndeclaredVariable(name.clone()))
+                        //            } else {
+                        //                Ok(Self::Symbol(name)) // 非严格模式允许未定义符号
+                        //            }
+                        //        }
                     });
-                    dbg!(&r);
+                    // dbg!(&r);
                     break r;
                 }
 
@@ -644,15 +674,14 @@ impl Expression {
                     }
                     let value = expr.eval_mut(env, depth + 1)?;
                     env.define(&name, value); // 新增 declare
-                    dbg!("declare--->", &name, env.get(&name));
+                    // dbg!("declare---->", &name, env.get(&name));
                     return Ok(Self::None);
                 }
 
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
-                    dbg!("assign----", &name);
-
                     let value = expr.eval_mut(env, depth + 1)?;
+                    // dbg!("assign---->", &name, &value);
                     if env.has(&name) {
                         env.define(&name, value);
                     } else {
@@ -910,7 +939,8 @@ impl Expression {
                     let r = rhs.eval_mut(env, depth + 1)?;
                     return Self::index_slm(l, r);
                 }
-
+                // 执行应用
+                Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
                 // 其他表达式处理...
                 _ => break self.eval_complex(env, depth),
             };
@@ -1034,10 +1064,17 @@ impl Expression {
                 return Err(Error::EarlyReturn(expr.eval_mut(env, depth + 1)?));
             }
 
-            // 函数应用
-            Self::Apply(ref func, ref args) => {
-                dbg!("applying-------", func, args);
+            // 默认情况
+            _ => Ok(self), // 基本类型已在 eval_mut 处理
+        }
+    }
 
+    /// 执行
+    pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, Error> {
+        // 函数应用
+        // dbg!("applying-------", func, args);
+        match self {
+            Self::Apply(ref func, ref args) => {
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(env, depth + 1)?;
                 // let args_eval = args
@@ -1048,7 +1085,7 @@ impl Expression {
                 // 分派到具体类型处理
                 return match func_eval {
                     Self::Symbol(name) | Self::String(name) => {
-                        dbg!("applying-------symbol--", &func, &name);
+                        // dbg!("applying-------symbol--", &func, &name);
 
                         let bindings = env
                             .bindings
@@ -1077,7 +1114,7 @@ impl Expression {
                                 }
                             }
                         }
-                        dbg!(&name, &args, &cmd_args);
+                        // dbg!(&name, &args, &cmd_args);
 
                         match Command::new(&name)
                             .current_dir(env.get_cwd())
@@ -1210,9 +1247,7 @@ impl Expression {
                     _ => Err(Error::CannotApply(*func.clone(), args.clone())),
                 };
             }
-
-            // 默认情况
-            _ => Ok(self), // 基本类型已在 eval_mut 处理
+            _ => unreachable!(),
         }
     }
 }

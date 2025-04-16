@@ -1417,7 +1417,7 @@ pub struct Builtin {
 
 impl fmt::Debug for Builtin {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Builtin({})", self.name)
+        write!(f, "Builtin@{}", self.name)
     }
 }
 impl fmt::Display for Builtin {

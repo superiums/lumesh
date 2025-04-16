@@ -139,6 +139,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
         keyword_tag("|"),
         punctuation_tag("@"),
+        punctuation_tag("."),
         punctuation_tag("!"),
     ))(input)
 }
@@ -617,11 +618,12 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '.' | '~' | '?' | '&' | '#' | '^' | '$' | '-' | '/'
+            '_' | '~' | '?' | '&' | '#' | '^' | '$' | '-' | '/'
         };
         // add - / back because it's used so offen in cmd string. "connman-gtk"
         // remove + - /  %  > < to allow non space operator such as a+1
         // remove : to use in dict
+        // remove . for dict use. but filename ?
         // $ to use as var prefix, compatil with bash
     }
 

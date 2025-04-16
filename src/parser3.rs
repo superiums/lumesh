@@ -202,6 +202,12 @@ impl PrattParser {
                 false,
                 OperatorKind::Infix,
             )),
+            "." => Some(OperatorInfo::new(
+                ".",
+                PREC_INDEX,
+                false,
+                OperatorKind::Infix,
+            )),
             // 加减运算符
             "+" => Some(OperatorInfo::new(
                 "+",
@@ -373,7 +379,7 @@ impl PrattParser {
         rhs: Expression,
     ) -> Result<Expression, nom::Err<SyntaxError>> {
         match op.symbol {
-            "@" | "+" | "-" | "*" | "/" | "%" | "**" => Ok(Expression::BinaryOp(
+            "." | "@" | "+" | "-" | "*" | "/" | "%" | "**" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),

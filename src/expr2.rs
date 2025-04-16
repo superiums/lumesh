@@ -820,7 +820,14 @@ impl Expression {
                             Ok(Expression::Boolean(regex.is_match(&l.to_string())))
                         }
                         "@" => Self::index_slm(l, r),
-
+                        "." => match (l, r) {
+                            (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
+                            (Self::Symbol(m), Self::Symbol(n)) => {
+                                Ok(Self::String(format!("{}.{}", m, n)))
+                            }
+                            // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
+                            _ => Err(Error::CustomError("not valid index option".into())),
+                        },
                         // ----------
                         // TODO 完善
                         // "|" => {

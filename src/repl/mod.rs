@@ -46,7 +46,7 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
 }
 
 fn get_history_path() -> Option<PathBuf> {
-    dirs::home_dir().map(|home| home.join(".lumesh-history"))
+    dirs::cache_dir().map(|home| home.join(".lumesh-history"))
 }
 
 pub fn new_editor(env: &Environment) -> Editor<LumeshHelper> {

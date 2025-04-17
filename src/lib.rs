@@ -29,6 +29,10 @@ pub use repl::{new_editor, readline};
 pub mod runtime;
 pub use runtime::parse;
 
+pub mod syntax;
+pub use syntax::highlight;
+
+// pub mod tui;
 // mod binary;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 

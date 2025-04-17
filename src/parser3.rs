@@ -72,7 +72,7 @@ impl OperatorInfo {
 fn parse_expr(input: Tokens) -> IResult<Tokens, Expression, SyntaxError> {
     // dbg!("--parse--");
     let (input, got) = PrattParser::parse_expr_with_precedence(input, 0)?;
-    dbg!(&input.slice, &got);
+    // dbg!(&input.slice, &got);
     Ok((input, got))
 }
 
@@ -771,7 +771,7 @@ fn parse_param_list(
     if !input.is_empty() {
         match input.first() {
             Some(&token) if token.text(input) != ")" => {
-                dbg!(token.text(input));
+                // dbg!(token.text(input));
                 return Err(SyntaxError::expected(
                     input.get_str_slice(),
                     "valid function params declare",

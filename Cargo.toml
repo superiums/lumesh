@@ -16,15 +16,21 @@ repository = "https://github.com/superiums/lumesh"
 # path = "src/bin.rs"
 
 [features]
-default = ["cli"]                    # 默认编译交互版
+default = ["cli", "tui"]             # 默认编译交互版
 cli = ["rustyline", "ctrlc", "clap"]
 runner = []
 help = ["cli"]
+tui = ["ratatui"]
 
 [[bin]]
 name = "lume"
 path = "src/cli.rs"
 required-features = ["cli"]
+
+[[bin]]
+name = "lume-tui"
+path = "src/tui.rs"
+required-features = ["tui"]
 
 [[bin]]
 name = "lumes"
@@ -59,6 +65,10 @@ rpassword = "7.3"
 crossterm = "0.27"
 lazy_static = "1.4"
 regex-lite = "0.1.6"
+ratatui = { version = "0.29.0", features = [
+    "crossterm",
+    "underline-color",
+], optional = true }
 
 [dependencies.toml]
 version = "0.5.8"

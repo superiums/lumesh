@@ -10,19 +10,6 @@ use lumesh::runtime::{run_file, run_text};
 use lumesh::{Environment, Error, Expression};
 use std::env;
 use std::path::{Path, PathBuf};
-// #[rustfmt::skip]
-// const INTRO_PRELUDE: &str = include_str!("repl/.intro-lumesh-prelude");
-
-// 移除以下被移动的代码：
-// - get_history_path()
-// - new_editor()
-// - strip_ansi_escapes()
-// - readline()
-// - LumeshHelper 及其实现
-// - syntax_highlight()
-// - repl()
-// - run_repl()
-// - init_config()
 
 #[derive(Parser)]
 #[command(

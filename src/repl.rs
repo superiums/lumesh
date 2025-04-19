@@ -15,7 +15,28 @@ use std::fs;
 use std::path::Path;
 use std::process::exit;
 
-use crate::{Environment, Error, parse_and_eval};
+use crate::cmdhelper::{
+    AI_CLIENT, PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
+};
+use crate::runtime::check;
+use crate::{Environment, Error, parse_and_eval, syntax_highlight};
+
+use lazy_static::lazy_static;
+use rustyline::history::DefaultHistory;
+use rustyline::validate::ValidationContext;
+use rustyline::{Config, Context};
+use std::collections::HashSet;
+use std::env;
+use std::ffi::{OsStr, OsString};
+use std::sync::Mutex;
+use std::time::{SystemTime, UNIX_EPOCH};
+// use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+
+const HISTORY_FILE: &str = "/tmp/lume-history";
+// ANSI 转义码
+const GREEN_BOLD: &str = "\x1b[1;32m";
+const RED: &str = "\x1b[31m";
+const RESET: &str = "\x1b[0m";
 
 pub struct MyHelper {
     completer: FilenameCompleter,
@@ -46,32 +67,63 @@ impl Completer for MyHelper {
         pos: usize,
         ctx: &rustyline::Context<'_>,
     ) -> Result<(usize, Vec<Self::Candidate>), ReadlineError> {
-        let (start, mut completions) = self.completer.complete(line, pos, ctx)?;
-
-        if line.trim().starts_with("cargo") {
-            completions.extend(vec![
-                Pair {
-                    display: "cargo build".to_string(),
-                    replacement: "cargo build".to_string(),
-                },
-                Pair {
-                    display: "cargo run".to_string(),
-                    replacement: "cargo run".to_string(),
-                },
-            ]);
+        if should_trigger_path_completion(line, pos) {
+            // 路径
+            let (start, completions) = self.completer.complete(line, pos, ctx)?;
+            return Ok((start, completions));
+        } else if should_trigger_cmd_completion(line, pos) {
+            return Ok(generate_cmd_hints(line, pos));
+        } else {
+            // After the first token, use AI completion
+            let tokens: Vec<&str> = line.split_whitespace().collect();
+            if tokens.len() > 1 {
+                let prompt = line.trim();
+                match AI_CLIENT.complete(prompt) {
+                    Ok(suggestion) => {
+                        let pair = Pair {
+                            display: format!("\x1b[34m{}\x1b[0m", suggestion),
+                            replacement: suggestion,
+                        };
+                        return Ok((pos, vec![pair]));
+                    }
+                    Err(_) => return Ok((pos, Vec::new())),
+                }
+            } else {
+                return Ok((pos, Vec::new()));
+            }
         }
-
-        Ok((start, completions))
     }
 
-    // 支持部分补全
     fn update(&self, line: &mut LineBuffer, start: usize, elected: &str, cl: &mut Changeset) {
-        let pos = line.pos();
-        let item = elected.split_whitespace().last().unwrap_or("");
-        line.update(item, pos, cl);
-        // let end = line.pos();
-        // line.replace(start..end, elected, cl);
+        // 直接使用标准替换逻辑
+        let end = line.pos();
+        line.replace(start..end, elected, cl);
     }
+}
+
+fn generate_cmd_hints(line: &str, pos: usize) -> (usize, Vec<Pair>) {
+    // 获取PATH_COMMANDS的锁
+    let path_commands = PATH_COMMANDS.lock().unwrap();
+
+    // 计算起始位置
+    let input = &line[..pos];
+    let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);
+    let prefix = &input[start..];
+
+    // 过滤以prefix开头的命令
+    let mut candidates: Vec<Pair> = path_commands
+        .iter()
+        .filter(|cmd| cmd.starts_with(prefix))
+        .map(|cmd| Pair {
+            display: cmd.clone(),
+            replacement: cmd.clone(),
+        })
+        .collect();
+
+    // 按显示名称的长度升序排序
+    candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+
+    (start, candidates)
 }
 
 impl Validator for MyHelper {
@@ -96,7 +148,7 @@ impl Validator for InputValidator {
         &self,
         ctx: &mut rustyline::validate::ValidationContext<'_>,
     ) -> rustyline::Result<ValidationResult> {
-        if !check_balanced(ctx.input()) {
+        if !check_balanced(ctx.input()) || !check(ctx.input()) {
             return Ok(ValidationResult::Incomplete);
         }
         Ok(ValidationResult::Valid(None))
@@ -104,24 +156,71 @@ impl Validator for InputValidator {
 }
 // 实现历史提示
 // Define a concrete Hint type for HistoryHinter
-pub struct HistoryHint(String);
+// pub struct HistoryHint(String);
 
-impl Hint for HistoryHint {
-    fn display(&self) -> &str {
-        &self.0
-    }
+// impl Hint for HistoryHint {
+//     fn display(&self) -> &str {
+//         &self.0
+//     }
 
-    fn completion(&self) -> Option<&str> {
-        Some(&self.0)
-    }
-}
-
+//     fn completion(&self) -> Option<&str> {
+//         Some(&self.0)
+//     }
+// }
 impl Hinter for MyHelper {
-    type Hint = HistoryHint;
+    type Hint = String;
 
-    fn hint(&self, line: &str, pos: usize, ctx: &rustyline::Context<'_>) -> Option<HistoryHint> {
-        Some(HistoryHint("hinter here".to_string()))
-        // self.hinter.hint(line, pos, ctx)
+    fn hint(&self, line: &str, pos: usize, ctx: &rustyline::Context<'_>) -> Option<String> {
+        // 提取光标前的连续非分隔符片段
+        let mut segment = String::new();
+        if !line.is_empty() {
+            for (i, ch) in line.chars().enumerate() {
+                // 扩展分隔符列表（根据需要调整）
+                if ch.is_whitespace()
+                    || matches!(ch, ';' | '\'' | '(' | ')' | '{' | '}' | '"' | '\\' | '`')
+                {
+                    segment.clear();
+                } else {
+                    segment.push(ch);
+                }
+                if i == pos {
+                    break;
+                }
+            }
+        }
+
+        // 预定义命令列表（带权重排序）
+        let cmds = vec![
+            ("cd", 10),
+            ("ls", 9),
+            ("clear", 8),
+            ("exit 0", 7),
+            ("rm -ri", 6),
+            ("cp -r", 5),
+            ("head", 4),
+            ("tail", 3),
+        ];
+
+        // 仅当有有效片段时进行匹配
+        if !segment.is_empty() {
+            // 按权重排序匹配结果
+            let mut matches: Vec<_> = cmds
+                .iter()
+                .filter(|(cmd, _)| cmd.starts_with(&segment))
+                .collect();
+
+            matches.sort_by(|a, b| b.1.cmp(&a.1)); // 权重降序
+
+            if let Some((matched, _)) = matches.first() {
+                let suffix = &matched[segment.len()..];
+                if !suffix.is_empty() {
+                    return Some(suffix.to_string());
+                }
+            }
+        }
+
+        // 无匹配时回退默认提示
+        self.hinter.hint(line, pos, ctx)
     }
 }
 
@@ -129,11 +228,19 @@ struct SyntaxHighlighter;
 
 impl Highlighter for SyntaxHighlighter {
     fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
-        let mut result = line.to_string();
-        if line.contains("fn ") {
-            result = result.replace("fn ", "\x1b[35mfn\x1b[0m ");
+        // 提取第一个单词作为命令
+        let cmd = line.split_whitespace().next().unwrap_or("");
+
+        if is_valid_command(cmd) {
+            // 有效命令：绿色粗体
+            Cow::Owned(format!("{}{}{}", GREEN_BOLD, line, RESET))
+        } else if !cmd.is_empty() {
+            // 无效命令：红色
+            Cow::Owned(format!("{}{}{}", RED, line, RESET))
+        } else {
+            let result = syntax_highlight(line);
+            Cow::Owned(result)
         }
-        Cow::Owned(result)
     }
 }
 
@@ -163,41 +270,19 @@ fn check_balanced(input: &str) -> bool {
     stack.is_empty()
 }
 
-fn load_completion_files() -> Vec<String> {
-    let mut completions = Vec::new();
-
-    if let Ok(entries) = fs::read_dir("/usr/share/bash-completion/completions") {
-        for entry in entries.flatten() {
-            if let Some(name) = entry.file_name().to_str() {
-                completions.push(name.to_string());
-            }
-        }
-    }
-
-    if let Ok(entries) = fs::read_dir(dirs::home_dir().unwrap().join(".config/fish/completions")) {
-        for entry in entries.flatten() {
-            if let Some(name) = entry.file_name().to_str() {
-                completions.push(name.to_string());
-            }
-        }
-    }
-
-    completions
-}
-
 pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
     println!("Rustyline Enhanced CLI (v15.0.0)");
 
-    let completions = load_completion_files();
-    println!("Loaded {} completion files", completions.len());
-
     let mut rl = new_editor(env);
-    if rl.load_history(".history.txt").is_err() {
+    if rl.load_history(HISTORY_FILE).is_err() {
         println!("No previous history");
     }
 
+    // let mut lines = vec![];
+
     loop {
-        match rl.readline(">> ") {
+        let prompt = get_prompt(env);
+        match rl.readline(prompt.as_str()) {
             Ok(line) => {
                 rl.add_history_entry(&line);
                 println!("Line: {}", line);
@@ -209,6 +294,7 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
                         println!("{}: {}", i + 1, entry);
                     }
                 }
+                dbg!(&line);
 
                 parse_and_eval(&line, env);
             }
@@ -227,7 +313,7 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
         }
     }
 
-    rl.save_history(".history.txt")
+    rl.save_history(HISTORY_FILE)
         .map_err(|_| Error::CustomError("readline err".into()))?;
     Ok(())
 }
@@ -251,7 +337,10 @@ pub fn new_editor(env: &mut Environment) -> Editor<MyHelper, FileHistory> {
     rl.set_helper(Some(helper));
     rl
 }
-
+fn get_prompt(env: &mut Environment) -> String {
+    let cwd = env.get_cwd();
+    return format!("{} >> ", cwd);
+}
 pub fn readline(prompt: impl ToString, rl: &mut Editor<MyHelper, FileHistory>) -> String {
     let prompt = prompt.to_string();
     loop {
@@ -282,4 +371,7 @@ pub fn strip_ansi_escapes(text: impl ToString) -> String {
         }
     }
     result
+}
+fn is_valid_command(cmd: &str) -> bool {
+    PATH_COMMANDS.lock().unwrap().contains(cmd)
 }

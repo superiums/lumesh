@@ -27,12 +27,12 @@ pub mod repl;
 pub use repl::{new_editor, readline};
 
 pub mod runtime;
-pub use runtime::parse;
-pub use runtime::parse_and_eval;
+pub use runtime::{parse, parse_and_eval, syntax_highlight};
 
 pub mod syntax;
 pub use syntax::highlight;
 
+pub mod cmdhelper;
 // mod binary;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 

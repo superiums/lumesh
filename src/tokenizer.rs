@@ -109,9 +109,10 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("~="), //regex match
         keyword_tag("&&"),
         keyword_tag("||"),
+        keyword_tag("|>"), //param pipe
         keyword_tag("<<"),
-        keyword_tag(">>"),
         keyword_tag(">>>"),
+        keyword_tag(">>"),
         operator_tag("**"), //pow
         operator_tag("++"),
         operator_tag("--"),
@@ -137,7 +138,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("="),    // 新增赋值运算符
         operator_tag("?"),    // 新增条件赋值运算符
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
-        keyword_tag("|"),
+        keyword_tag("|"),     //standard io stream pipe
         punctuation_tag("@"),
         punctuation_tag("."),
         punctuation_tag("!"),

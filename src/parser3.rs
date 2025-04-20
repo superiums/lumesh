@@ -349,6 +349,12 @@ impl PrattParser {
                 false,
                 OperatorKind::Infix,
             )),
+            "|>" => Some(OperatorInfo::new(
+                "|>",
+                PREC_PIPE, // 例如设为 4（低于逻辑运算符）
+                false,
+                OperatorKind::Infix,
+            )),
             // ... 重定向操作符 ...
             "<<" => Some(OperatorInfo::new(
                 "<<",
@@ -587,6 +593,11 @@ impl PrattParser {
             // }
             "|" => Ok(Expression::BinaryOp(
                 "|".into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
+            "|>" => Ok(Expression::BinaryOp(
+                "|>".into(),
                 Box::new(lhs),
                 Box::new(rhs),
             )),

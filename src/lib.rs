@@ -33,6 +33,7 @@ pub mod syntax;
 pub use syntax::highlight;
 
 pub mod cmdhelper;
+pub mod prompt;
 // mod binary;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 

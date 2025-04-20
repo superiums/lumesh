@@ -19,7 +19,7 @@ use crate::cmdhelper::{
     AI_CLIENT, PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
 use crate::runtime::check;
-use crate::{Environment, Error, parse_and_eval, syntax_highlight};
+use crate::{Environment, Error, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
 
 use lazy_static::lazy_static;
 use rustyline::history::DefaultHistory;
@@ -228,22 +228,29 @@ struct SyntaxHighlighter;
 
 impl Highlighter for SyntaxHighlighter {
     fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
-        // 提取第一个单词作为命令
-        let cmd = line.split_whitespace().next().unwrap_or("");
+        let mut parts = line.splitn(2, |c: char| c.is_whitespace());
+        let cmd = parts.next().unwrap_or("");
+        let rest = parts.next().unwrap_or("");
 
-        if is_valid_command(cmd) {
-            // 有效命令：绿色粗体
-            Cow::Owned(format!("{}{}{}", GREEN_BOLD, line, RESET))
-        } else if !cmd.is_empty() {
-            // 无效命令：红色
-            Cow::Owned(format!("{}{}{}", RED, line, RESET))
+        let (color, is_valid) = if is_valid_command(cmd) {
+            (GREEN_BOLD, true)
+        // } else if !cmd.is_empty() {
+        //     (RED, false)
         } else {
-            let result = syntax_highlight(line);
-            Cow::Owned(result)
-        }
+            // 无命令，直接返回语法高亮
+            return Cow::Owned(syntax_highlight(line));
+        };
+
+        // 高亮命令部分，剩余部分调用 syntax_highlight
+        let highlighted_rest = syntax_highlight(rest);
+        let colored_line = if is_valid {
+            format!("{}{}{} {}", color, cmd, RESET, highlighted_rest)
+        } else {
+            format!("{}{}{} {}", color, cmd, RESET, highlighted_rest)
+        };
+        Cow::Owned(colored_line)
     }
 }
-
 fn check_balanced(input: &str) -> bool {
     let mut stack = Vec::new();
     for c in input.chars() {
@@ -280,8 +287,14 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
 
     // let mut lines = vec![];
 
+    // 示例：设置自定义模板 (可选)
+    let pe = get_prompt_engine();
+
     loop {
-        let prompt = get_prompt(env);
+        // let prompt = get_prompt(env);
+        // let prompt = prompt_engine.get_prompt();
+        let prompt = pe.get_prompt();
+
         match rl.readline(prompt.as_str()) {
             Ok(line) => {
                 rl.add_history_entry(&line);
@@ -321,7 +334,7 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
 pub fn new_editor(env: &mut Environment) -> Editor<MyHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
-        .completion_type(CompletionType::Circular)
+        .completion_type(CompletionType::List)
         .build();
 
     let mut rl = Editor::with_config(config).unwrap_or(Editor::new().unwrap());
@@ -337,10 +350,7 @@ pub fn new_editor(env: &mut Environment) -> Editor<MyHelper, FileHistory> {
     rl.set_helper(Some(helper));
     rl
 }
-fn get_prompt(env: &mut Environment) -> String {
-    let cwd = env.get_cwd();
-    return format!("{} >> ", cwd);
-}
+
 pub fn readline(prompt: impl ToString, rl: &mut Editor<MyHelper, FileHistory>) -> String {
     let prompt = prompt.to_string();
     loop {

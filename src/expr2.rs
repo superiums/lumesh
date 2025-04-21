@@ -538,6 +538,10 @@ impl Expression {
         }
     }
 
+    pub fn set_status_code(&self, code: Int, env: &mut Environment) {
+        env.define("$?", Expression::Integer(code));
+    }
+
     pub fn is_truthy(&self) -> bool {
         match self {
             Self::Integer(i) => *i != 0,
@@ -1145,6 +1149,7 @@ impl Expression {
                                 .map_err(|e| Error::CustomError(e.to_string()))?;
 
                             // dbg!(&output);
+                            self.set_status_code(output.status.code().unwrap_or(0) as i64, env);
                             Ok(Self::String(
                                 String::from_utf8_lossy(&output.stdout).into_owned(),
                             ))
@@ -1157,6 +1162,10 @@ impl Expression {
                             // dbg!(&output);
                             match cmd.output() {
                                 Ok(output) => {
+                                    self.set_status_code(
+                                        output.status.code().unwrap_or(0) as i64,
+                                        env,
+                                    );
                                     if output.status.success() {
                                         let output_str =
                                             String::from_utf8_lossy(&output.stdout).into_owned();
@@ -1164,12 +1173,14 @@ impl Expression {
                                         Ok(Self::String(output_str))
                                     } else {
                                         Err(Error::CustomError(format!(
-                                            "Command failed with status: {}",
-                                            &output.status
+                                            "Command failed with status: {}\n{}",
+                                            &output.status,
+                                            String::from_utf8_lossy(&output.stderr).into_owned()
                                         )))
                                     }
                                 }
                                 Err(e) => {
+                                    self.set_status_code(1, env);
                                     return Err(match e.kind() {
                                         ErrorKind::NotFound => Error::ProgramNotFound(name),
                                         ErrorKind::PermissionDenied => {
@@ -1248,7 +1259,16 @@ impl Expression {
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
                         dbg!("   3.--->applying Builtin:", &args);
-                        return body(args.clone(), env);
+                        match body(args.clone(), env) {
+                            Ok(result) => {
+                                self.set_status_code(0, env);
+                                Ok(result)
+                            }
+                            Err(e) => {
+                                self.set_status_code(1, env);
+                                Err(e)
+                            }
+                        }
                     }
 
                     // 处理Lambda应用
@@ -1345,9 +1365,19 @@ impl Expression {
                         // }
                         // dbg!(&new_env);
                         return match body.eval_mut(&mut new_env, depth + 1) {
-                            Ok(v) => Ok(v),
-                            Err(Error::EarlyReturn(v)) => Ok(v), // 捕获函数体内的return
-                            Err(e) => Err(e),
+                            Ok(v) => {
+                                self.set_status_code(0, env);
+                                Ok(v)
+                            }
+                            Err(Error::EarlyReturn(v)) => {
+                                self.set_status_code(0, env);
+
+                                Ok(v)
+                            } // 捕获函数体内的return
+                            Err(e) => {
+                                self.set_status_code(1, env);
+                                Err(e)
+                            }
                         };
                     }
                     _ => Err(Error::CannotApply(*func.clone(), args.clone())),

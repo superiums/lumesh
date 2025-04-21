@@ -22,6 +22,7 @@ pub enum SyntaxError {
         cause: Option<Box<SyntaxError>>,
     },
     InternalError,
+    NoExpression,
 }
 
 impl SyntaxError {

@@ -169,36 +169,41 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             //     }
             // }
             let val = expr.eval(env);
-            match val.clone() {
-                Ok(Expression::Symbol(name)) => {
-                    if let Err(e) =
-                        Expression::Apply(Box::new(Expression::Symbol(name)), vec![]).eval(env)
-                    {
-                        eprintln!("{}", e)
-                    }
-                }
-                Ok(Expression::None) => {}
-                Ok(Expression::Macro(_, _)) => {
-                    let _ = Expression::Apply(
-                        Box::new(Expression::Symbol("report".to_string())),
-                        vec![Expression::Apply(
-                            Box::new(val.unwrap().clone()),
-                            vec![env.get_cwd().into()],
-                        )],
-                    )
-                    .eval(env);
-                }
-                Ok(val) => {
-                    let _ = Expression::Apply(
-                        Box::new(Expression::Symbol("report".to_string())),
-                        vec![Expression::Quote(Box::new(val))],
-                    )
-                    .eval(env);
-                }
-                Err(e) => {
-                    eprintln!("{}", e)
-                }
+            // dbg!(env.get("cd"));
+            match val {
+                Ok(result) => println!("{}", result),
+                Err(e) => eprintln!("\x1b[31m[ERROR]\x1b[0m {}", e),
             }
+            // match val.clone() {
+            //     Ok(Expression::Symbol(name)) => {
+            //         if let Err(e) =
+            //             Expression::Apply(Box::new(Expression::Symbol(name)), vec![]).eval(env)
+            //         {
+            //             eprintln!("{}", e)
+            //         }
+            //     }
+            //     Ok(Expression::None) => {}
+            //     Ok(Expression::Macro(_, _)) => {
+            //         let _ = Expression::Apply(
+            //             Box::new(Expression::Symbol("report".to_string())),
+            //             vec![Expression::Apply(
+            //                 Box::new(val.unwrap().clone()),
+            //                 vec![env.get_cwd().into()],
+            //             )],
+            //         )
+            //         .eval(env);
+            //     }
+            //     Ok(val) => {
+            //         let _ = Expression::Apply(
+            //             Box::new(Expression::Symbol("report".to_string())),
+            //             vec![Expression::Quote(Box::new(val))],
+            //         )
+            //         .eval(env);
+            //     }
+            //     Err(e) => {
+            //         eprintln!("{}", e)
+            //     }
+            // }
             // lines = vec![];
             return true;
         }

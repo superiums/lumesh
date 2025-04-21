@@ -56,7 +56,7 @@ jobs:
           cp README.md doc
           cp LICENSE doc
           cp -r src/binary/help doc
-          cp src/repl/config.lsh doc
+          cp src/config/config.lsh doc
           # echo "Sample Documentation" > doc/README.md
 
       - name: Create compressed files

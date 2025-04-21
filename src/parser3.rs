@@ -1140,8 +1140,14 @@ pub fn parse_script_tokens(
     //     //         .0;
     //     // }
     // }
-
-    Ok((input, Expression::Do(statements)))
+    match statements.len() {
+        0 => Err(nom::Err::Error(SyntaxError::NoExpression)),
+        1 => {
+            let s = statements.get(0).unwrap();
+            Ok((input, s.clone()))
+        }
+        _ => Ok((input, Expression::Do(statements))),
+    }
 }
 // 语句解析器（顶层结构）
 fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {

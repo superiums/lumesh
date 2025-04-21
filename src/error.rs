@@ -229,6 +229,9 @@ fn fmt_syntax_error(string: &Str, err: &SyntaxError, f: &mut fmt::Formatter) -> 
         SyntaxError::InternalError => {
             writeln!(f, "{}{}unexpected syntax error{}", RED_START, BOLD, RESET)
         }
+        SyntaxError::NoExpression => {
+            writeln!(f, "{}{}no expression recognized{}", RED_START, BOLD, RESET)
+        }
     }
 }
 

@@ -564,99 +564,6 @@ impl Expression {
         }
         result
     }
-
-    fn get_used_symbols(&self) -> Vec<String> {
-        match self {
-            Self::Symbol(name) => vec![name.clone()],
-            Self::None
-            | Self::Integer(_)
-            | Self::Float(_)
-            | Self::Bytes(_)
-            | Self::String(_)
-            | Self::Boolean(_)
-            | Self::Builtin(_)
-            | Self::Del(_) => vec![],
-
-            Self::For(_, list, body) => {
-                let mut result = vec![];
-                result.extend(list.get_used_symbols());
-                result.extend(body.get_used_symbols());
-                result
-            }
-            Self::While(cond, body) => {
-                let mut result = vec![];
-                result.extend(cond.get_used_symbols());
-                result.extend(body.get_used_symbols());
-                result
-            }
-
-            Self::Do(exprs) => {
-                let mut result = vec![];
-                for expr in exprs {
-                    result.extend(expr.get_used_symbols())
-                }
-                result
-            }
-            Self::List(exprs) => {
-                let mut result = Vec::new();
-                for expr in exprs.iter() {
-                    result.extend(expr.get_used_symbols());
-                }
-                result
-            }
-            Self::Map(exprs) => {
-                let mut result = vec![];
-                for expr in exprs.values() {
-                    result.extend(expr.get_used_symbols())
-                }
-                result
-            }
-
-            Self::Group(inner) | Self::Quote(inner) => inner.get_used_symbols(),
-            Self::Lambda(_, body, _) => body.get_used_symbols(),
-            Self::Macro(_, body) => body.get_used_symbols(),
-            Self::Function(_, _, body, _) => body.get_used_symbols(),
-            Self::Return(expr) => expr.get_used_symbols(),
-
-            Self::Declare(_, expr) => expr.get_used_symbols(),
-            Self::Assign(_, expr) => expr.get_used_symbols(),
-            Self::UnaryOp(_, expr, _) => expr.get_used_symbols(),
-            Self::BinaryOp(_, expr, expr2) => {
-                let mut result = vec![];
-                result.extend(expr.get_used_symbols());
-                result.extend(expr2.get_used_symbols());
-                result
-            }
-            Self::Index(expr, expr2) => {
-                let mut result = vec![];
-                result.extend(expr.get_used_symbols());
-                result.extend(expr2.get_used_symbols());
-                result
-            }
-            Self::Slice(expr, _) => {
-                expr.get_used_symbols()
-                // let mut result = vec![];
-                // result.extend(expr.get_used_symbols());
-                // result.extend(expr2.get_used_symbols());
-                // result
-            }
-            Self::If(cond, t, e) => {
-                let mut result = vec![];
-                result.extend(cond.get_used_symbols());
-                result.extend(t.get_used_symbols());
-                result.extend(e.get_used_symbols());
-                result
-            }
-            Self::Match(value, _) => value.get_used_symbols(),
-            Self::Apply(g, args) => {
-                let mut result = g.get_used_symbols();
-                for expr in args {
-                    result.extend(expr.get_used_symbols())
-                }
-                result
-            }
-        }
-    }
 }
 // Expression求值1
 impl Expression {
@@ -1180,22 +1087,24 @@ impl Expression {
                             .filter(|(_, s)| s.len() <= 1024)
                             .collect::<BTreeMap<String, String>>();
 
-                        let mut cmd_args = vec![];
-                        for arg in args {
-                            for flattened_arg in
-                                Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
-                            {
-                                match flattened_arg {
-                                    Self::String(s) => cmd_args.push(s),
-                                    Self::Bytes(b) => {
-                                        cmd_args.push(String::from_utf8_lossy(&b).to_string())
-                                    }
-                                    Self::None => continue,
-                                    _ => cmd_args.push(format!("{}", flattened_arg)),
-                                }
-                            }
-                        }
-
+                        // let mut cmd_args = vec![];
+                        // for arg in args {
+                        //     for flattened_arg in
+                        //         Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
+                        //     {
+                        //         match flattened_arg {
+                        //             Self::String(s) => cmd_args.push(s),
+                        //             Self::Bytes(b) => {
+                        //                 cmd_args.push(String::from_utf8_lossy(&b).to_string())
+                        //             }
+                        //             Self::None => continue,
+                        //             _ => cmd_args.push(format!("{}", flattened_arg)),
+                        //         }
+                        //     }
+                        // }
+                        // dbg!(&args, &cmd_args);
+                        let cmd_args: Vec<String> =
+                            args.iter().map(|expr| expr.to_string()).collect();
                         let mut cmd = Command::new(&name);
                         cmd.current_dir(env.get_cwd())
                             .args(&cmd_args)

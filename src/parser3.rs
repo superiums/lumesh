@@ -949,7 +949,7 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxError>> {
     ) {
         Ok((_, expr)) => Ok(expr),
         Err(e) => {
-            eprintln!("parse error");
+            // eprintln!("parse error");
             Err(e)
         }
     }

@@ -171,6 +171,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             let val = expr.eval(env);
             // dbg!(env.get("cd"));
             match val {
+                Ok(Expression::None) => {}
                 Ok(result) => println!("{}", result),
                 Err(e) => eprintln!("\x1b[31m[ERROR]\x1b[0m {}", e),
             }

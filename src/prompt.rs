@@ -20,6 +20,7 @@ struct PromptEngine {
 }
 pub trait PromptEngineCommon {
     fn get_prompt(&self) -> String;
+    fn get_incomplete_prompt(&self) -> String;
 }
 struct MyPrompt {}
 
@@ -31,6 +32,9 @@ impl PromptEngineCommon for MyPrompt {
             }
         }
         return ">> ".into();
+    }
+    fn get_incomplete_prompt(&self) -> String {
+        return "... ".into();
     }
 }
 impl PromptEngineCommon for PromptEngine {
@@ -63,6 +67,9 @@ impl PromptEngineCommon for PromptEngine {
         }
 
         prompt
+    }
+    fn get_incomplete_prompt(&self) -> String {
+        return "... ".into();
     }
 }
 impl PromptEngine {

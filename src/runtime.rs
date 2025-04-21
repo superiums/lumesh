@@ -168,7 +168,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             //         eprintln!("Failed to save history");
             //     }
             // }
-            let val = expr.eval(env);
+            let val = expr.eval_cmd(env);
             // dbg!(env.get("cd"));
             match val {
                 Ok(Expression::None) => {}

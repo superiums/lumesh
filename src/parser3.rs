@@ -34,9 +34,10 @@ const PREC_ADD_SUB: u8 = 11; // 加减
 const PREC_MUL_DIV: u8 = 12; // 乘除模
 const PREC_POWER: u8 = 13; // 幂运算 **
 const PREC_UNARY: u8 = 14; // 单目运算符 ! - ++ --
-const PREC_FUNC_ARGS: u8 = 15;
-const PREC_FUNC_NAME: u8 = 16;
-const PREC_INDEX: u8 = 17; // 索引运算符 @
+const PREC_RANGE: u8 = 15;
+const PREC_FUNC_ARGS: u8 = 16;
+const PREC_FUNC_NAME: u8 = 17;
+const PREC_INDEX: u8 = 18; // 索引运算符 @
 // -- 辅助结构 --
 #[derive(Debug)]
 struct OperatorInfo {
@@ -199,6 +200,13 @@ impl PrattParser {
             "@" => Some(OperatorInfo::new(
                 "@",
                 PREC_INDEX,
+                false,
+                OperatorKind::Infix,
+            )),
+            // range
+            ".." => Some(OperatorInfo::new(
+                "..",
+                PREC_RANGE,
                 false,
                 OperatorKind::Infix,
             )),
@@ -385,7 +393,7 @@ impl PrattParser {
         rhs: Expression,
     ) -> Result<Expression, nom::Err<SyntaxError>> {
         match op.symbol {
-            "." | "@" | "+" | "-" | "*" | "/" | "%" | "**" => Ok(Expression::BinaryOp(
+            "." | "@" | "+" | "-" | "*" | "/" | "%" | "**" | ".." => Ok(Expression::BinaryOp(
                 op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),

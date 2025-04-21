@@ -565,9 +565,9 @@ impl Expression {
         result
     }
 }
-// Expression求值1
 impl Expression {
-    pub fn eval(&self, env: &mut Environment) -> Result<Self, Error> {
+    /// 当返回symbol时，作为命令继续执行。
+    pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, Error> {
         let result = self.clone().eval_mut(env, 0);
         return match result {
             // apply symbol cmds
@@ -577,6 +577,10 @@ impl Expression {
             Ok(other) => Ok(other),
             Err(e) => Err(e),
         };
+    }
+    /// 当返回symbol时，作为字面量，直接返回。
+    pub fn eval(&self, env: &mut Environment) -> Result<Self, Error> {
+        self.clone().eval_mut(env, 0)
     }
     /// 求值主逻辑（尾递归优化）
     pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, Error> {
@@ -880,6 +884,15 @@ impl Expression {
                                     }
                                     // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
                                     _ => Err(Error::CustomError("not valid index option".into())),
+                                },
+                                ".." => match (l, r) {
+                                    (Expression::Integer(fr), Expression::Integer(t)) => {
+                                        let v = (fr..t)
+                                            .map(Expression::from) // 将 i64 转换为 Expression
+                                            .collect();
+                                        Ok(Expression::List(v))
+                                    }
+                                    _ => Err(Error::CustomError("not valid range option".into())),
                                 },
                                 // ----------
                                 _ => Err(Error::InvalidOperator(operator.clone())),

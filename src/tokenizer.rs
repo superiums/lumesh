@@ -99,7 +99,8 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("to"),
+        // keyword_tag("to"),
+        operator_tag(".."),
         keyword_tag("=>"),  //for match
         operator_tag("=="), //to allow a==b
         operator_tag("!="),
@@ -131,7 +132,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("<"),
         operator_tag(">"),
         operator_tag("+"),    // to allow a<b insteadof mustbe a < b
-        operator_tag("-"),    // to allow a<b insteadof mustbe a < b
+        keyword_tag("-"),     // to allow a<b insteadof mustbe a < b
         operator_tag("*"),    // to allow a<b insteadof mustbe a < b
         operator_tag("/"),    // to allow a<b insteadof mustbe a < b
         operator_tag("%"),    // to allow a<b insteadof mustbe a < b
@@ -667,7 +668,7 @@ pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>
     if !input.is_empty() {
         diagnostics.push(Diagnostic::NotTokenized(input.as_str_slice()))
     }
-    // dbg!(input, &tokens);
+    dbg!(input, &tokens);
     (tokens, diagnostics)
 }
 

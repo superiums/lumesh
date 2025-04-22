@@ -33,15 +33,16 @@ const PREC_COMPARISON: u8 = 10; // 比较运算
 const PREC_ADD_SUB: u8 = 11; // 加减
 const PREC_MUL_DIV: u8 = 12; // 乘除模
 const PREC_POWER: u8 = 13; // 幂运算 **
-const PREC_UNARY: u8 = 14; // 单目运算符 ! - ++ --
-const PREC_RANGE: u8 = 15;
-const PREC_FUNC_ARGS: u8 = 16;
-const PREC_FUNC_NAME: u8 = 17;
-const PREC_INDEX: u8 = 18; // 索引运算符 @
+const PREC_CUSTOM: u8 = 14; // 幂运算 **
+const PREC_UNARY: u8 = 15; // 单目运算符 ! - ++ --
+const PREC_RANGE: u8 = 16; // custom_op _*
+const PREC_FUNC_ARGS: u8 = 17;
+const PREC_FUNC_NAME: u8 = 18;
+const PREC_INDEX: u8 = 19; // 索引运算符 @
 // -- 辅助结构 --
 #[derive(Debug)]
-struct OperatorInfo {
-    symbol: &'static str,
+struct OperatorInfo<'a> {
+    symbol: &'a str,
     precedence: u8,
     right_associative: bool,
     kind: OperatorKind,
@@ -52,13 +53,8 @@ enum OperatorKind {
     // Postfix,
     Infix,
 }
-impl OperatorInfo {
-    fn new(
-        symbol: &'static str,
-        precedence: u8,
-        right_associative: bool,
-        kind: OperatorKind,
-    ) -> Self {
+impl<'a> OperatorInfo<'a> {
+    fn new(symbol: &'a str, precedence: u8, right_associative: bool, kind: OperatorKind) -> Self {
         Self {
             symbol,
             precedence,
@@ -168,61 +164,25 @@ impl PrattParser {
         Ok((input, lhs))
     }
     // 运算符元数据
-    fn get_operator_info(t: &str) -> Option<OperatorInfo> {
-        match t {
+    fn get_operator_info<'a>(op: &'a str) -> Option<OperatorInfo<'a>> {
+        match op {
             // 赋值运算符（右结合）
-            "=" => Some(OperatorInfo::new(
-                "=",
-                PREC_ASSIGN,
-                true,
-                OperatorKind::Infix,
-            )),
-            ":=" => Some(OperatorInfo::new(
-                ":=",
-                PREC_ASSIGN,
-                true,
-                OperatorKind::Infix,
-            )),
-            "+=" => Some(OperatorInfo::new(
-                "+=",
-                PREC_ASSIGN,
-                true,
-                OperatorKind::Infix,
-            )),
-            "-=" => Some(OperatorInfo::new(
-                "-=",
-                PREC_ASSIGN,
-                true,
-                OperatorKind::Infix,
-            )),
-            "*=" => Some(OperatorInfo::new(
-                "*=",
-                PREC_ASSIGN,
-                true,
-                OperatorKind::Infix,
-            )),
-            "/=" => Some(OperatorInfo::new(
-                "/=",
+            "=" | ":=" | "+=" | "-=" | "*=" | "/=" => Some(OperatorInfo::new(
+                op,
                 PREC_ASSIGN,
                 true,
                 OperatorKind::Infix,
             )),
             // lambda
-            "->" => Some(OperatorInfo::new(
-                "->",
-                PREC_LAMBDA,
-                true,
-                OperatorKind::Infix,
-            )),
-            "~>" => Some(OperatorInfo::new(
-                "~>",
+            "->" | "~>" => Some(OperatorInfo::new(
+                op,
                 PREC_LAMBDA,
                 true,
                 OperatorKind::Infix,
             )),
             // 索引符
-            "@" => Some(OperatorInfo::new(
-                "@",
+            "@" | "." => Some(OperatorInfo::new(
+                op,
                 PREC_INDEX,
                 false,
                 OperatorKind::Infix,
@@ -234,40 +194,17 @@ impl PrattParser {
                 false,
                 OperatorKind::Infix,
             )),
-            "." => Some(OperatorInfo::new(
-                ".",
-                PREC_INDEX,
-                false,
-                OperatorKind::Infix,
-            )),
+
             // 加减运算符
-            "+" => Some(OperatorInfo::new(
-                "+",
-                PREC_ADD_SUB,
-                false,
-                OperatorKind::Infix,
-            )),
-            "-" => Some(OperatorInfo::new(
-                "-",
+            "+" | "-" => Some(OperatorInfo::new(
+                op,
                 PREC_ADD_SUB,
                 false,
                 OperatorKind::Infix,
             )),
             // 乘除模运算符
-            "*" => Some(OperatorInfo::new(
-                "*",
-                PREC_MUL_DIV,
-                false,
-                OperatorKind::Infix,
-            )),
-            "/" => Some(OperatorInfo::new(
-                "/",
-                PREC_MUL_DIV,
-                false,
-                OperatorKind::Infix,
-            )),
-            "%" => Some(OperatorInfo::new(
-                "%",
+            "*" | "/" | "%" => Some(OperatorInfo::new(
+                op,
                 PREC_MUL_DIV,
                 false,
                 OperatorKind::Infix,
@@ -280,20 +217,8 @@ impl PrattParser {
                 OperatorKind::Infix,
             )),
             // 单目前缀运算符
-            "!" => Some(OperatorInfo::new(
-                "!",
-                PREC_POWER,
-                true,
-                OperatorKind::Prefix,
-            )),
-            "++" => Some(OperatorInfo::new(
-                "++",
-                PREC_POWER,
-                false,
-                OperatorKind::Prefix,
-            )),
-            "--" => Some(OperatorInfo::new(
-                "--",
+            "!" | "++" | "--" => Some(OperatorInfo::new(
+                op,
                 PREC_POWER,
                 false,
                 OperatorKind::Prefix,
@@ -312,51 +237,15 @@ impl PrattParser {
                 OperatorKind::Infix,
             )),
             // 比较运算符
-            "==" => Some(OperatorInfo::new(
-                "==",
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
-            "!=" => Some(OperatorInfo::new(
-                "!=",
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
-            ">" => Some(OperatorInfo::new(
-                ">",
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
-            "<" => Some(OperatorInfo::new(
-                "<",
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
-            ">=" => Some(OperatorInfo::new(
-                ">=",
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
-            "<=" => Some(OperatorInfo::new(
-                "<=",
+            "==" | "!=" | ">" | "<" | ">=" | "<=" => Some(OperatorInfo::new(
+                op,
                 PREC_COMPARISON,
                 false,
                 OperatorKind::Infix,
             )),
             // 匹配
-            "~~" => Some(OperatorInfo::new(
-                "~~",
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
-            "~=" => Some(OperatorInfo::new(
-                "~=",
+            "~~" | "~=" => Some(OperatorInfo::new(
+                op,
                 PREC_COMPARISON,
                 false,
                 OperatorKind::Infix,
@@ -375,34 +264,34 @@ impl PrattParser {
                 OperatorKind::Infix,
             )),
             // ... 管道操作符 ...
-            "|" => Some(OperatorInfo::new(
-                "|",
-                PREC_PIPE, // 例如设为 4（低于逻辑运算符）
-                false,
-                OperatorKind::Infix,
-            )),
-            "|>" => Some(OperatorInfo::new(
-                "|>",
+            "|" | "|>" => Some(OperatorInfo::new(
+                op,
                 PREC_PIPE, // 例如设为 4（低于逻辑运算符）
                 false,
                 OperatorKind::Infix,
             )),
             // ... 重定向操作符 ...
-            "<<" => Some(OperatorInfo::new(
-                "<<",
-                PREC_REDIRECT, // 与赋值同级
-                false,
-                OperatorKind::Infix,
-            )),
-            ">>" => Some(OperatorInfo::new(
-                ">>",
+            "<<" | ">>" | ">>>" => Some(OperatorInfo::new(
+                op,
                 PREC_REDIRECT,
                 false,
                 OperatorKind::Infix,
             )),
-            ">>>" => Some(OperatorInfo::new(
-                ">>>",
-                PREC_REDIRECT,
+            opa if opa.starts_with("_+") => Some(OperatorInfo::new(
+                opa,
+                PREC_ADD_SUB,
+                false,
+                OperatorKind::Infix,
+            )),
+            ops if ops.starts_with("_*") => Some(OperatorInfo::new(
+                ops,
+                PREC_MUL_DIV,
+                false,
+                OperatorKind::Infix,
+            )),
+            opo if opo.starts_with("_") => Some(OperatorInfo::new(
+                opo,
+                PREC_CUSTOM,
                 false,
                 OperatorKind::Infix,
             )),
@@ -608,31 +497,19 @@ impl PrattParser {
             //             Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
             //         Ok(Expression::Assign(lhs.to_string(), Box::new(new_rhs)))
             //     }
-            "|" => Ok(Expression::BinaryOp(
-                "|".into(),
-                Box::new(lhs),
-                Box::new(rhs),
-            )),
-            "|>" => Ok(Expression::BinaryOp(
-                "|>".into(),
+            "|" | "|>" => Ok(Expression::BinaryOp(
+                op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),
             )),
 
-            "<<" => Ok(Expression::BinaryOp(
-                "<<".into(),
+            "<<" | ">>" | ">>>" => Ok(Expression::BinaryOp(
+                op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),
             )),
-
-            ">>" => Ok(Expression::BinaryOp(
-                ">>".into(),
-                Box::new(lhs),
-                Box::new(rhs),
-            )),
-
-            ">>>" => Ok(Expression::BinaryOp(
-                ">>>".into(),
+            opx if opx.starts_with("_") => Ok(Expression::BinaryOp(
+                opx.into(),
                 Box::new(lhs),
                 Box::new(rhs),
             )),

@@ -994,6 +994,15 @@ impl Expression {
                                     }
                                     _ => Err(Error::CustomError("not valid range option".into())),
                                 },
+                                op if op.starts_with("_") => {
+                                    if let Some(oper) = env.get(op) {
+                                        let r = Expression::Apply(Box::new(oper), vec![l, r]);
+                                        return r.eval_mut(env, depth + 1);
+                                    }
+                                    Err(Error::CustomError(format!(
+                                        "custom operation {op:?} not defined"
+                                    )))
+                                }
                                 // ----------
                                 _ => Err(Error::InvalidOperator(operator.clone())),
                             };

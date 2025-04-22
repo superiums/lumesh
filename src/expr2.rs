@@ -724,6 +724,15 @@ impl Expression {
                                 current_val.clone()
                             })
                         }
+                        op if op.starts_with("__") => {
+                            if let Some(oper) = env.get(op) {
+                                let rs = Expression::Apply(Box::new(oper), vec![operand_eval]);
+                                return rs.eval_mut(env, depth + 1);
+                            }
+                            Err(Error::CustomError(format!(
+                                "custom operation {op:?} not defined"
+                            )))
+                        }
                         _ => Err(Error::CustomError(format!("Unknown unary operator: {op}"))),
                     };
                 }
@@ -996,8 +1005,8 @@ impl Expression {
                                 },
                                 op if op.starts_with("_") => {
                                     if let Some(oper) = env.get(op) {
-                                        let r = Expression::Apply(Box::new(oper), vec![l, r]);
-                                        return r.eval_mut(env, depth + 1);
+                                        let rs = Expression::Apply(Box::new(oper), vec![l, r]);
+                                        return rs.eval_mut(env, depth + 1);
                                     }
                                     Err(Error::CustomError(format!(
                                         "custom operation {op:?} not defined"

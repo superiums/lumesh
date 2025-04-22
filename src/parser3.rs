@@ -219,7 +219,7 @@ impl PrattParser {
             // 单目前缀运算符
             "!" | "++" | "--" => Some(OperatorInfo::new(
                 op,
-                PREC_POWER,
+                PREC_UNARY,
                 false,
                 OperatorKind::Prefix,
             )),
@@ -276,6 +276,12 @@ impl PrattParser {
                 PREC_REDIRECT,
                 false,
                 OperatorKind::Infix,
+            )),
+            opa if opa.starts_with("__") => Some(OperatorInfo::new(
+                opa,
+                PREC_UNARY,
+                false,
+                OperatorKind::Prefix,
             )),
             opa if opa.starts_with("_+") => Some(OperatorInfo::new(
                 opa,
@@ -529,6 +535,12 @@ impl PrattParser {
             // 需要扩展OperatorInfo包含kind字段
             OperatorKind::Prefix => match op.symbol {
                 "++" | "--" | "!" => Ok(Expression::UnaryOp(op.symbol.into(), Box::new(rhs), true)),
+                opx => Ok(Expression::UnaryOp(
+                    //if opx.starts_with("__")
+                    opx.into(),
+                    Box::new(rhs),
+                    true,
+                )),
                 _ => unreachable!(),
             },
             // OperatorKind::Postfix => Expression::UnaryOp(op.symbol.into(), Box::new(rhs), false), //differ
@@ -854,6 +866,14 @@ fn text<'a>(text: &'a str) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, 
         _ => Err(nom::Err::Error(SyntaxError::InternalError)),
     }
 }
+fn text_starts_with<'a>(
+    text: &'a str,
+) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError> {
+    move |input: Tokens<'a>| match input.first() {
+        Some(&token) if token.text(input).starts_with(text) => Ok((input.skip_n(1), token)),
+        _ => Err(nom::Err::Error(SyntaxError::InternalError)),
+    }
+}
 #[inline]
 fn text_close<'a>(
     text: &'static str,
@@ -989,8 +1009,8 @@ pub fn parse_script_tokens(
     ))(input)?;
 
     if !input.is_empty() {
-        // dbg!("-----==>2", &input.slice, &statements);
-        eprintln!("unrecognized satement");
+        dbg!("-----==>Remaining:", &input.slice, &statements);
+        // eprintln!("unrecognized satement");
     }
     // if !input.is_empty() {
     //     // 阶段2：解析最后可能的表达式（无显式分号的情况）
@@ -1141,8 +1161,8 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 
 // 一元运算符具体实现
 fn parse_unary(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    // 匹配前缀运算符 !、++、-- 等
-    let (input, op) = alt((text("!"), text("++"), text("--"), text("-")))(input)?;
+    // 匹配前缀运算符 !、++、-- 等 text("-"),
+    let (input, op) = alt((text("!"), text("++"), text("--"), text_starts_with("__")))(input)?;
     let (input, expr) = PrattParser::parse_expr_with_precedence(input, PREC_UNARY)?; // 递归解析后续表达式
     Ok((
         input,

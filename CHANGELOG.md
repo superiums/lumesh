@@ -1,4 +1,52 @@
 # Changelog
+## [0.3.0]
+- rewrite parser
+- rewrite expr excutor
+- rewrite interactive repl
+### break changes
+- lambda comes to : `(x,y) -> { x+y }`
+- ranges comes to : `3..9`
+
+
+### other changes
+- allow `.` to be index of maps.
+```bash
+fmt.red logo        # same as fmt@red
+```
+- allow `[]` to be index of list, and slice supported.
+```bash
+let ar = 2 .. 8
+ar[2:5:2]           # [4,6]
+ar[2:5]           # [4,5,6]
+ar[2:]           # [4,5,6,7]
+let i = -1
+ar[i]            # [7]
+```
+- cmd completition supported.
+- error msg becomes more clear.
+- math power support.
+- pipe, redirect works more effient
+- pipe support 2 modes: stream pipe `|` and param pipe `|>`
+- cmds never neeeds None param now
+- allow custom operators:
+```bash
+# all custom operators starts with _
+# unary operators starts with __
+let __+ = x -> x + 1
+__+ 5               # 6
+
+# binary operators with prec level same as + and -
+# starts with _+
+let _+ = (x,y) -> x + y
+2 _+ 3 * 5          # 17
+
+# binary operators with prec level same as * and /
+# starts with _*
+let _* = (x,y) -> x + y
+2 _* 3 + 5          # 11
+
+```
+
 ## [0.2.3] 2025-4-9
 - fix test usecase.
 - fix `-` in command string.

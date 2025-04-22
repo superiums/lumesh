@@ -1,7 +1,7 @@
 use crate::STRICT;
 use detached_str::StrSlice;
 use nom::{
-    AsChar, IResult,
+    IResult,
     branch::alt,
     combinator::{eof, map},
     error::ParseError,
@@ -194,7 +194,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         ('-', c) => c.is_ascii_alphabetic(),
         ('/', c) => c.is_ascii_alphanumeric(),
         ('.', '/') => true,
-        ('.', '.') => true,
+        ('.', '.') => it.next().ok_or(NOT_FOUND)? == '/',
         _ => false,
     };
     if valid {
@@ -295,8 +295,11 @@ fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
     let is_negative = input.starts_with("-");
     if is_negative {
         // 检查前一个字符是否为空格或行首
-        if !input.previous_char().map_or(false, |c| c.is_whitespace()) {
-            return Err(NOT_FOUND); // 前面有非空格字符，不解析为负数
+        if input
+            .previous_char()
+            .map_or(false, |c| !c.is_whitespace() && !c.is_ascii_punctuation())
+        {
+            return Err(NOT_FOUND); // 前面有字符或数字，不解析为负数
         }
     }
 

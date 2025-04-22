@@ -47,9 +47,10 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(line_continuation, TokenKind::Whitespace),
             // triple_quote_string,
             map_valid_token(linebreak, TokenKind::LineBreak),
+            map_valid_token(inword_operator, TokenKind::Operator),
             map_valid_token(argument_symbol, TokenKind::StringLiteral), //argument first to allow args such as = -
             map_valid_token(long_operator, TokenKind::Operator),
-            map_valid_token(custome_operator, TokenKind::Operator), //before short_operator
+            map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
             map_valid_token(bool_literal, TokenKind::BooleanLiteral),
@@ -97,10 +98,16 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 
-fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
+fn inword_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         // keyword_tag("to"),
-        operator_tag(".."),
+        inword_tag(".."),
+        inword_tag("."),
+        inword_tag("@"),
+    ))(input)
+}
+fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
         keyword_tag("=>"),  //for match
         operator_tag("=="), //to allow a==b
         operator_tag("!="),
@@ -140,8 +147,6 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("?"),    // 新增条件赋值运算符
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
         keyword_tag("|"),     //standard io stream pipe
-        punctuation_tag("@"),
-        punctuation_tag("."),
         punctuation_tag("!"),
     ))(input)
 }
@@ -164,7 +169,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     ))(input)
 }
 // custrom operator for op overload, such as _*+ , must around with space.
-fn custome_operator(input: Input<'_>) -> TokenizationResult<'_> {
+fn custom_operator(input: Input<'_>) -> TokenizationResult<'_> {
     if input.starts_with("_") {
         // 检查前一个字符是否为空格或行首
         if input.previous_char().map_or(true, |c| c.is_whitespace()) {
@@ -318,6 +323,13 @@ fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
             }
         })
         .ok_or(NOT_FOUND)?;
+
+    // skip .. only take number
+    if rest.starts_with("..") {
+        let (rest, number) = input.split_until(rest);
+        let token = Token::new(TokenKind::IntegerLiteral, number);
+        return Ok((rest, (token, Diagnostic::Valid)));
+    }
 
     // skip the dot, if present
     let (rest, _) = match rest.strip_prefix(".") {
@@ -610,6 +622,21 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
             .ok_or(NOT_FOUND)
     }
 }
+/// parse a tag between letters/numbers.
+fn inword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input
+            .previous_char()
+            .map_or(true, |c| !c.is_ascii_alphanumeric())
+        {
+            return Err(NOT_FOUND);
+        }
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric()))
+            .ok_or(NOT_FOUND)
+    }
+}
 
 /// Parses a word that is allowed to be immediately followed by symbol characters.
 ///
@@ -623,7 +650,7 @@ fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '~' | '?' | '&' | '#' | '^' | '$' | '-' | '/'
+            '_' | '~' | '?' | '&' | '#' | '^' | '$' | '-' | '/' | '\\'
         };
         // add - / back because it's used so offen in cmd string. "connman-gtk"
         // remove + - /  %  > < to allow non space operator such as a+1
@@ -671,7 +698,7 @@ pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>
     if !input.is_empty() {
         diagnostics.push(Diagnostic::NotTokenized(input.as_str_slice()))
     }
-    //dbg!(input, &tokens);
+    dbg!(input, &tokens);
     (tokens, diagnostics)
 }
 

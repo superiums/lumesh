@@ -540,7 +540,7 @@ impl Expression {
     }
 
     pub fn set_status_code(&self, code: Int, env: &mut Environment) {
-        env.define("$?", Expression::Integer(code));
+        env.define("STATUS", Expression::Integer(code));
     }
 
     pub fn is_truthy(&self) -> bool {

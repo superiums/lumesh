@@ -1,15 +1,20 @@
 use crate::parse_script;
+use crate::repl::read_user_input;
 use crate::{Diagnostic, Environment, Error, Expression, SyntaxError, TokenKind};
 use std::path::PathBuf;
+const INTRO_PRELUDE: &str = include_str!("config/config.lsh");
 
-pub fn run_text(text: &str, env: &mut Environment) -> Result<Expression, Error> {
-    parse(text)?.eval(env)
-}
+// pub fn run_text(text: &str, env: &mut Environment) -> Result<Expression, Error> {
+//     parse(text)?.eval(env)
+// }
 
-pub fn run_file(path: PathBuf, env: &mut Environment) -> Result<Expression, Error> {
+pub fn run_file(path: PathBuf, env: &mut Environment) -> bool {
     match std::fs::read_to_string(path) {
-        Ok(prelude) => run_text(&prelude, env),
-        Err(e) => Err(Error::CustomError(format!("Failed to read file: {}", e))),
+        Ok(prelude) => parse_and_eval(&prelude, env),
+        Err(e) => {
+            eprintln!("\x1b[31m[ERROR]\x1b[0mFailed to read file:\n  {}", e);
+            false
+        }
     }
 }
 
@@ -160,6 +165,9 @@ pub fn check(input: &str) -> bool {
     }
 }
 pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
+    if text.is_empty() {
+        return true;
+    };
     match parse(text) {
         Ok(expr) => {
             // rl.add_history_entry(text.as_str());
@@ -220,4 +228,48 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
         }
     }
     return false;
+}
+
+pub fn init_config(env: &mut Environment) {
+    if let Some(config_dir) = dirs::config_dir() {
+        let config_path = config_dir.join("lumesh");
+        if !config_path.exists() {
+            if let Err(e) = std::fs::create_dir(&config_path) {
+                eprintln!("Error while writing prelude: {}", e);
+            }
+        }
+        let prelude_path = config_path.join("config.lsh");
+        // If file doesn't exist
+        if !prelude_path.exists() {
+            let prompt = format!(
+                "Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ",
+                prelude_path.display()
+            );
+
+            let response = read_user_input(prompt);
+
+            if response.to_lowercase().trim() == "y" {
+                if let Err(e) = std::fs::write(&prelude_path, INTRO_PRELUDE) {
+                    eprintln!("Error while writing prelude: {}", e);
+                }
+            }
+
+            if !parse_and_eval(INTRO_PRELUDE, env) {
+                eprintln!("Error while running introduction prelude");
+            }
+        } else if !run_file(prelude_path, env) {
+            eprintln!("Error while running introduction prelude");
+        }
+    }
+    // cmds
+    init_cmds(env);
+}
+
+fn init_cmds(env: &mut Environment) {
+    if !env.is_defined("clear") {
+        parse_and_eval("let clear = _ ~> console@clear ()", env);
+    }
+    if !env.is_defined("pwd") {
+        parse_and_eval("let pwd = _ ~> echo CWD", env);
+    }
 }

@@ -24,7 +24,6 @@ mod tokenizer;
 pub use tokenizer::*;
 
 pub mod repl;
-pub use repl::{new_editor, readline};
 
 pub mod runtime;
 pub use runtime::{parse, parse_and_eval, syntax_highlight};

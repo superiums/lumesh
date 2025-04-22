@@ -2,11 +2,12 @@
 
 mod binary;
 use clap::Parser;
+use lumesh::parse_and_eval;
 use lumesh::repl; // 新增模块引用
 // use lumesh::binary;
 // use lumesh::ENV;
 use lumesh::STRICT;
-use lumesh::runtime::{run_file, run_text};
+use lumesh::runtime::run_file;
 use lumesh::{Environment, Error, Expression};
 use std::env;
 use std::path::{Path, PathBuf};
@@ -100,16 +101,7 @@ fn main() -> Result<(), Error> {
         env.define("IS_INTERACTIVE", Expression::Boolean(cli.interactive));
 
         let cmd = cmd_parts.join(" ");
-        match run_text(cmd.as_str(), &mut env) {
-            Ok(result) => {
-                Expression::Apply(
-                    Box::new(Expression::Symbol("report".to_string())),
-                    vec![result],
-                )
-                .eval(&mut env)?;
-            }
-            Err(e) => eprintln!("{}", e),
-        }
+        parse_and_eval(cmd.as_str(), &mut env);
 
         if cli.interactive {
             // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
@@ -120,13 +112,10 @@ fn main() -> Result<(), Error> {
     // 文件执行模式
     else if let Some(file) = cli.file {
         env.define("IS_INTERACTIVE", Expression::Boolean(false));
+        env.define("SCRIPT", Expression::String(file.to_owned()));
 
-        let path = PathBuf::from(file.to_owned());
-        if let Err(e) = run_file(path, &mut env) {
-            eprintln!("{}", e);
-            std::process::exit(1)
-        }
-        env.define("SCRIPT", Expression::String(file));
+        let path = PathBuf::from(file);
+        run_file(path, &mut env);
     }
     // 纯交互模式
     else {

@@ -141,7 +141,7 @@ impl PromptEngine {
 
 pub fn get_prompt_engine() -> Box<dyn PromptEngineCommon> {
     let starship = env::var("STARSHIP_SHELL").unwrap_or("".into());
-    dbg!(&starship);
+    //dbg!(&starship);
 
     if starship.is_empty() {
         Box::new(MyPrompt {})

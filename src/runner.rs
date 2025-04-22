@@ -1,8 +1,8 @@
 // src/bin/runner.rs
 mod binary;
-use lumesh::STRICT;
-use lumesh::runtime::{run_file, run_text};
+use lumesh::runtime::run_file;
 use lumesh::{Environment, Error, Expression};
+use lumesh::{STRICT, parse_and_eval};
 use std::path::Path;
 use std::path::PathBuf;
 // 删除原有的 Cli 结构体定义
@@ -88,16 +88,7 @@ fn main() -> Result<(), Error> {
 
     // 执行逻辑保持不变
     if let Some(cmd_str) = cmd {
-        match run_text(&cmd_str, &mut env) {
-            Ok(result) => {
-                Expression::Apply(
-                    Box::new(Expression::Symbol("report".to_string())),
-                    vec![result],
-                )
-                .eval(&mut env)?;
-            }
-            Err(e) => eprintln!("{}", e),
-        }
+        parse_and_eval(&cmd_str, &mut env);
     } else if let Some(file_path) = file {
         let path = PathBuf::from(file_path);
         if let Err(e) = run_file(path, &mut env) {

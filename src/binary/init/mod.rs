@@ -166,8 +166,7 @@ pub fn init(env: &mut Environment) {
                     prompt += &format!("{}", x)
                 }
             }
-            let mut rl = lumesh::repl::new_editor(env);
-            Ok(Expression::String(lumesh::repl::readline(&prompt, &mut rl)))
+            Ok(Expression::String(lumesh::repl::read_user_input(&prompt)))
         },
         "get user input",
     );

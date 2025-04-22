@@ -588,7 +588,7 @@ impl Expression {
     }
     /// 求值主逻辑（尾递归优化）
     pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, Error> {
-        dbg!("1.--->eval_mut:", &self, &self.type_name());
+        //dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(Error::RecursionDepth(self));
@@ -606,13 +606,13 @@ impl Expression {
                 | Self::Bytes(_)
                 | Self::Macro(_, _)
                 | Self::Builtin(_) => {
-                    dbg!("basic type");
+                    //dbg!("basic type");
                     break Ok(self);
                 }
 
                 // 符号解析（错误处理优化）
                 Self::Symbol(name) => {
-                    dbg!("2.--->symbol----", &name);
+                    //dbg!("2.--->symbol----", &name);
 
                     let r = Ok(match env.get(&name) {
                         Some(expr) => expr,
@@ -1048,7 +1048,7 @@ impl Expression {
 
             // 块表达式
             Self::Do(exprs) => {
-                dbg!("2.--->Group:", &exprs);
+                //dbg!("2.--->Group:", &exprs);
                 // 创建子环境继承父作用域
                 // let mut child_env = env.clone();
                 // 顺序求值语句块
@@ -1066,7 +1066,7 @@ impl Expression {
 
             // 默认情况
             _ => {
-                dbg!("2.--->Default:", &self);
+                //dbg!("2.--->Default:", &self);
                 Ok(self)
             } // 基本类型已在 eval_mut 处理
         }
@@ -1077,7 +1077,7 @@ impl Expression {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) => {
-                dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                //dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(env, depth + 1)?;
                 // let args_eval = args
@@ -1090,7 +1090,7 @@ impl Expression {
                 return match func_eval {
                     // | Self::String(name)
                     Self::Symbol(name) | Self::String(name) => {
-                        dbg!("   3.--->applying symbol:", &name);
+                        //dbg!("   3.--->applying symbol:", &name);
 
                         let bindings = env
                             .bindings
@@ -1129,7 +1129,7 @@ impl Expression {
 
                         // 检查是否有stdin输入
                         if let Some(Expression::String(stdin_str)) = env.get("__stdin") {
-                            dbg!("    4.---> --apply symbol with pipe--", &name, &stdin_str);
+                            //dbg!("    4.---> --apply symbol with pipe--", &name, &stdin_str);
                             // dbg!(&name, &stdin_str);
                             cmd.stdin(Stdio::piped());
                             let mut child =
@@ -1154,7 +1154,7 @@ impl Expression {
                                 String::from_utf8_lossy(&output.stdout).into_owned(),
                             ))
                         } else {
-                            dbg!("    4.---> --apply without pipe--", &name);
+                            //dbg!("    4.---> --apply without pipe--", &name);
                             // 如果没有stdin输入，直接执行命令并检查状态
                             // let output = cmd
                             //     .output()
@@ -1258,7 +1258,7 @@ impl Expression {
 
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
-                        dbg!("   3.--->applying Builtin:", &args);
+                        //dbg!("   3.--->applying Builtin:", &args);
                         match body(args.clone(), env) {
                             Ok(result) => {
                                 self.set_status_code(0, env);

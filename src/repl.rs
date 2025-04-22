@@ -19,7 +19,7 @@ use std::process::exit;
 use crate::cmdhelper::{
     AI_CLIENT, PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
-use crate::runtime::check;
+use crate::runtime::{check, init_config};
 use crate::{Environment, Error, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
 
 use lazy_static::lazy_static;
@@ -135,14 +135,11 @@ impl Validator for LumeHelper {
         ctx: &mut rustyline::validate::ValidationContext<'_>,
     ) -> rustyline::Result<ValidationResult> {
         // self.validator.validate(ctx)
-        if !(ctx.input().ends_with("\n\n") || check_balanced(ctx.input()) && check(ctx.input())) {
-            // *self.is_incomplete.borrow_mut() = true;
-            // dbg!(self.is_incomplete.borrow());
-
-            return Ok(ValidationResult::Incomplete);
-        }
-        // *self.is_incomplete.borrow_mut() = false;
-        return Ok(ValidationResult::Valid(None));
+        // check_balanced(ctx.input())
+        if ctx.input().ends_with("\n\n") || check(ctx.input()) {
+            return Ok(ValidationResult::Valid(None));
+        };
+        return Ok(ValidationResult::Incomplete);
     }
 }
 
@@ -293,8 +290,9 @@ fn check_balanced(input: &str) -> bool {
 
 pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
     println!("Rustyline Enhanced CLI (v15.0.0)");
+    init_config(env); // 调用 REPL 初始化
 
-    let mut rl = new_editor(env);
+    let mut rl = new_editor();
     if rl.load_history(HISTORY_FILE).is_err() {
         println!("No previous history");
     }
@@ -321,19 +319,25 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
 
         match rl.readline(prompt.as_str()) {
             Ok(line) => {
-                rl.add_history_entry(&line);
-                println!("Line: {}", line);
-
-                if line.trim() == "exit" {
-                    break;
-                } else if line.trim() == "history" {
-                    for (i, entry) in rl.history().iter().enumerate() {
-                        println!("{}: {}", i + 1, entry);
+                match line.trim() {
+                    "" => {}
+                    // "cd" => {
+                    //     env::set_current_dir(path)?;
+                    // }
+                    "exit" => break,
+                    "history" => {
+                        for (i, entry) in rl.history().iter().enumerate() {
+                            println!("{}: {}", i + 1, entry);
+                        }
+                    }
+                    // main
+                    _ => {
+                        if parse_and_eval(&line, env) {
+                            rl.add_history_entry(&line)
+                                .map_err(|_| Error::CustomError("add history err".into()))?;
+                        };
                     }
                 }
-                dbg!(&line);
-
-                parse_and_eval(&line, env);
             }
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
@@ -351,11 +355,11 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
     }
 
     rl.save_history(HISTORY_FILE)
-        .map_err(|_| Error::CustomError("readline err".into()))?;
+        .map_err(|_| Error::CustomError("save histroy err".into()))?;
     Ok(())
 }
 
-pub fn new_editor(env: &mut Environment) -> Editor<LumeHelper, FileHistory> {
+fn new_editor() -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
         .completion_type(CompletionType::List)
@@ -376,7 +380,7 @@ pub fn new_editor(env: &mut Environment) -> Editor<LumeHelper, FileHistory> {
     rl
 }
 
-pub fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> String {
+fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> String {
     let prompt = prompt.to_string();
     loop {
         // if let Some(helper) = rl.helper_mut() {
@@ -392,6 +396,10 @@ pub fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>)
     }
 }
 
+pub fn read_user_input(prompt: impl ToString) -> String {
+    let mut rl = new_editor();
+    readline(prompt, &mut rl)
+}
 pub fn strip_ansi_escapes(text: impl ToString) -> String {
     let text = text.to_string();
     let mut result = String::new();

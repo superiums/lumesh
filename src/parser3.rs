@@ -1005,7 +1005,7 @@ pub fn parse_script_tokens(
     // let (input, mut statements) = many0(parse_statement)(input)?;
     let (input, statements) = many0(terminated(
         parse_statement,
-        alt((kind(TokenKind::LineBreak), eof_slice)), // 允许换行符作为语句分隔
+        opt(alt((kind(TokenKind::LineBreak), eof_slice))), // 允许换行符作为语句分隔
     ))(input)?;
 
     if !input.is_empty() {

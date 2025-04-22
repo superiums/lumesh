@@ -134,7 +134,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("+"),    // to allow a<b insteadof mustbe a < b
         keyword_tag("-"),     // to allow a<b insteadof mustbe a < b
         operator_tag("*"),    // to allow a<b insteadof mustbe a < b
-        operator_tag("/"),    // to allow a<b insteadof mustbe a < b
+        keyword_tag("/"),     // to allow a<b insteadof mustbe a < b
         operator_tag("%"),    // to allow a<b insteadof mustbe a < b
         operator_tag("="),    // 新增赋值运算符
         operator_tag("?"),    // 新增条件赋值运算符
@@ -202,17 +202,17 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         let prev_char = input.previous_char().ok_or(NOT_FOUND)?;
         if prev_char.is_ascii_whitespace() {
             // differ `ls --color` and `a + --b`
-            let prev_prev_char = input.previous_n_char(2).ok_or(NOT_FOUND)?;
-            if prev_prev_char.is_alpha() {
-                let len = input
-                    .chars()
-                    .take_while(|&c| !c.is_whitespace())
-                    .map(char::len_utf8)
-                    .sum();
+            // let prev_prev_char = input.previous_n_char(2).ok_or(NOT_FOUND)?;
+            // if prev_prev_char.is_alpha() {
+            let len = input
+                .chars()
+                .take_while(|&c| !c.is_whitespace())
+                .map(char::len_utf8)
+                .sum();
 
-                // dbg!(len);
-                return Ok(input.split_at(len));
-            }
+            // dbg!(len);
+            return Ok(input.split_at(len));
+            //     }
         }
     }
     Err(NOT_FOUND)

@@ -31,7 +31,7 @@ use std::{
     collections::BTreeMap,
     fmt,
     io::Write,
-    ops::{Add, Div, Index, Mul, Neg, Rem, Sub},
+    ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Rem, Sub, SubAssign},
     process::{Command, Stdio},
 };
 use terminal_size::{Width, terminal_size};
@@ -43,6 +43,7 @@ use prettytable::{
     row,
 };
 use std::io::ErrorKind;
+use std::path::PathBuf;
 // use textwrap::fill; // 确保textwrap已引入
 
 const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
@@ -534,7 +535,7 @@ impl Expression {
     pub fn ensure_apply(self) -> Expression {
         match self {
             Expression::Symbol(f) => Expression::Apply(Box::new(Expression::Symbol(f)), vec![]),
-            _ => self, //report error?
+            _ => self, //others, like binop,group,pipe...
         }
     }
 
@@ -588,7 +589,7 @@ impl Expression {
     }
     /// 求值主逻辑（尾递归优化）
     pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, Error> {
-        //dbg!("1.--->eval_mut:", &self, &self.type_name());
+        // dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(Error::RecursionDepth(self));
@@ -649,14 +650,14 @@ impl Expression {
                     let value = expr.eval_mut(env, depth + 1)?;
                     // dbg!("assign---->", &name, &value);
                     if env.has(&name) {
-                        env.define(&name, value);
+                        env.define(&name, value.clone());
                     } else {
                         // 向上层环境查找并修改（根据语言设计需求）
                         let mut current_env = env.clone();
                         while let Some(parent) = current_env.get_parent_mut() {
                             if parent.has(&name) {
                                 parent.define(&name, value.clone());
-                                return Ok(Self::None);
+                                return Ok(value);
                             }
                             current_env = parent.clone();
                         }
@@ -670,7 +671,7 @@ impl Expression {
                             }
                         }
                     }
-                    return Ok(Self::None);
+                    return Ok(value);
                 }
 
                 // TODO 是否只能删除当前env的变量，是否报错
@@ -689,7 +690,15 @@ impl Expression {
                     let operand_eval = operand.eval(env)?;
                     return match op.as_str() {
                         "!" => Ok(Expression::Boolean(!operand_eval.is_truthy())),
-                        // "-" => ?
+                        "-" => match operand_eval {
+                            Expression::Integer(i) => Ok(Expression::Integer(-i)),
+                            Expression::Float(i) => Ok(Expression::Float(-i)),
+                            _ => {
+                                return Err(Error::CustomError(format!(
+                                    "Cannot apply Neg to {operand:?}:{operand_eval:?}"
+                                )));
+                            }
+                        },
                         // 处理 ++a 转换为 a = a + 1
                         "++" | "--" => {
                             // 确保操作数是符号
@@ -702,7 +711,7 @@ impl Expression {
                             if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
                             {
                                 return Err(Error::CustomError(format!(
-                                    "Cannot apply {op} to {current_val:?}"
+                                    "Cannot apply {op} to {operand:?}:{current_val:?}"
                                 )));
                             }
                             // 计算新值
@@ -723,6 +732,77 @@ impl Expression {
                 // 二元运算（内存优化）
                 Self::BinaryOp(operator, lhs, rhs) => {
                     break match operator.as_str() {
+                        "+=" => match *lhs {
+                            Expression::Symbol(base) => {
+                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                left += rhs.eval(env)?;
+                                env.define(&base, left.clone());
+                                Ok(left)
+                            }
+                            _ => Err(Error::CustomError(format!(
+                                "cannot apply {} to  {}:{} and {}:{}",
+                                operator,
+                                lhs,
+                                lhs.type_name(),
+                                rhs,
+                                rhs.type_name()
+                            ))),
+                        },
+                        "-=" => match *lhs {
+                            Expression::Symbol(base) => {
+                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                left -= rhs.eval(env)?;
+                                env.define(&base, left.clone());
+                                Ok(left)
+                            }
+                            _ => Err(Error::CustomError(format!(
+                                "cannot apply {} to  {}:{} and {}:{}",
+                                operator,
+                                lhs,
+                                lhs.type_name(),
+                                rhs,
+                                rhs.type_name()
+                            ))),
+                        },
+                        "*=" => match *lhs {
+                            Expression::Symbol(base) => {
+                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                left *= rhs.eval(env)?;
+                                env.define(&base, left.clone());
+                                Ok(left)
+                            }
+                            _ => Err(Error::CustomError(format!(
+                                "cannot apply {} to  {}:{} and {}:{}",
+                                operator,
+                                lhs,
+                                lhs.type_name(),
+                                rhs,
+                                rhs.type_name()
+                            ))),
+                        },
+                        "/=" => match *lhs {
+                            Expression::Symbol(base) => {
+                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                let right = rhs.eval(env)?;
+                                if !right.is_truthy() {
+                                    return Err(Error::CustomError(format!(
+                                        "can't divide {} by zero",
+                                        base
+                                    )));
+                                };
+                                left /= right;
+                                env.define(&base, left.clone());
+                                Ok(left)
+                            }
+                            _ => Err(Error::CustomError(format!(
+                                "cannot apply {} to  {}:{} and {}:{}",
+                                operator,
+                                lhs,
+                                lhs.type_name(),
+                                rhs,
+                                rhs.type_name()
+                            ))),
+                        },
                         "&&" => Ok(Expression::Boolean(
                             lhs.eval_mut(env, depth + 1)?.is_truthy()
                                 && rhs.eval_mut(env, depth + 1)?.is_truthy(),
@@ -733,6 +813,7 @@ impl Expression {
                         )),
                         "|" => {
                             // 管道运算符特殊处理
+                            // dbg!("--pipe--", &lhs, &rhs);
                             // dbg!("--pipe--");
                             let left_func = lhs.ensure_apply();
                             let left_output = left_func.eval_mut(env, depth + 1)?;
@@ -740,7 +821,9 @@ impl Expression {
                             new_env.define("__stdin", left_output);
 
                             let r_func = rhs.ensure_apply();
-                            r_func.eval_mut(&mut new_env, depth + 1)
+                            let pipe_result = r_func.eval_mut(&mut new_env, depth + 1);
+                            // dbg!(&pipe_result);
+                            pipe_result
                         }
                         "|>" => {
                             // 执行左侧表达式
@@ -755,14 +838,14 @@ impl Expression {
                             rhs_eval.append_args(args).eval_mut(env, depth + 1)
                         }
                         ">>>" => {
-                            use std::path::PathBuf;
+                            let left_func = lhs.ensure_apply();
+                            let l = left_func.eval_mut(env, depth + 1)?;
+
                             let mut path = PathBuf::from(env.get_cwd());
                             path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
                             match std::fs::OpenOptions::new().append(true).open(&path) {
                                 Ok(mut file) => {
-                                    use std::io::prelude::*;
-                                    let left_func = lhs.ensure_apply();
-                                    let l = left_func.eval_mut(env, depth + 1)?;
+                                    // use std::io::prelude::*;
                                     let result = if let Expression::Bytes(bytes) = l.clone() {
                                         // std::fs::write(path, bytes)
                                         file.write_all(&bytes)
@@ -788,19 +871,21 @@ impl Expression {
                                             Error::PermissionDenied(*rhs.clone())
                                         }
                                         _ => Error::CustomError(format!(
-                                            "could not append to file {}: {:?}",
-                                            rhs, e
+                                            "could not open file {}: {:?}",
+                                            path.display(),
+                                            e
                                         )),
                                     });
                                 }
                             }
                         }
                         ">>" => {
-                            use std::path::PathBuf;
-                            let mut path = PathBuf::from(env.get_cwd());
-                            path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
+                            // dbg!("-->>--", &lhs);
                             let left_func = lhs.ensure_apply();
                             let l = left_func.eval_mut(env, depth + 1)?;
+                            // dbg!("-->> left=", &l);
+                            let mut path = PathBuf::from(env.get_cwd());
+                            path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
                                 std::fs::write(path, bytes)
@@ -836,7 +921,15 @@ impl Expression {
                                 "+" => Ok(l + r),
                                 "-" => Ok(l - r),
                                 "*" => Ok(l * r),
-                                "/" => Ok(l / r), //no zero
+                                "/" => {
+                                    if !r.is_truthy() {
+                                        return Err(Error::CustomError(format!(
+                                            "can't divide {} by zero",
+                                            l
+                                        )));
+                                    };
+                                    Ok(l / r)
+                                } //no zero
                                 "%" => Ok(l % r),
                                 "**" => match (l, r) {
                                     (Expression::Float(base), Expression::Float(exponent)) => {
@@ -858,8 +951,11 @@ impl Expression {
                                         }
                                     }
                                     (a, b) => Err(Error::CustomError(format!(
-                                        "cannot raise {} to the power {}",
-                                        a, b
+                                        "cannot raise {}:{} to the power {}:{}",
+                                        a,
+                                        a.type_name(),
+                                        b,
+                                        b.type_name()
                                     ))),
                                 },
 
@@ -1090,7 +1186,7 @@ impl Expression {
                 return match func_eval {
                     // | Self::String(name)
                     Self::Symbol(name) | Self::String(name) => {
-                        //dbg!("   3.--->applying symbol:", &name);
+                        // dbg!("   3.--->applying symbol:", &name);
 
                         let bindings = env
                             .bindings
@@ -1129,9 +1225,10 @@ impl Expression {
 
                         // 检查是否有stdin输入
                         if let Some(Expression::String(stdin_str)) = env.get("__stdin") {
-                            //dbg!("    4.---> --apply symbol with pipe--", &name, &stdin_str);
+                            // dbg!("    4.---> --apply symbol with pipe--", &name, &stdin_str);
                             // dbg!(&name, &stdin_str);
                             cmd.stdin(Stdio::piped());
+                            cmd.stdout(Stdio::piped());
                             let mut child =
                                 cmd.spawn().map_err(|e| Error::CustomError(e.to_string()))?;
                             // dbg!(&child);
@@ -1150,11 +1247,12 @@ impl Expression {
 
                             // dbg!(&output);
                             self.set_status_code(output.status.code().unwrap_or(0) as i64, env);
-                            Ok(Self::String(
-                                String::from_utf8_lossy(&output.stdout).into_owned(),
-                            ))
+                            let result_with_pipe =
+                                Self::String(String::from_utf8_lossy(&output.stdout).into_owned());
+                            // dbg!(&result_with_pipe);
+                            Ok(result_with_pipe)
                         } else {
-                            //dbg!("    4.---> --apply without pipe--", &name);
+                            // dbg!("    4.---> --apply without pipe--", &name);
                             // 如果没有stdin输入，直接执行命令并检查状态
                             // let output = cmd
                             //     .output()
@@ -1284,12 +1382,13 @@ impl Expression {
                             0 => body.eval_complex(&mut bound_env, depth + 1),
 
                             // 部分应用：返回新Lambda
-                            _ => Ok(Self::Lambda(
+                            1.. => Ok(Self::Lambda(
                                 remaining_args.iter().map(|_| "_".to_string()).collect(),
                                 body,
                                 bound_env,
                             )),
 
+                            // TODO
                             // 参数过多：构造新Apply
                             _ => Ok(Self::Apply(
                                 Box::new(body.eval_complex(&mut bound_env, depth + 1)?),
@@ -1394,6 +1493,7 @@ impl Add for Expression {
     type Output = Self;
     fn add(self, other: Self) -> Self {
         match (self, other) {
+            // num
             (Self::Integer(m), Self::Integer(n)) => match m.checked_add(n) {
                 Some(i) => Self::Integer(i),
                 None => Self::None,
@@ -1401,7 +1501,14 @@ impl Add for Expression {
             (Self::Integer(m), Self::Float(n)) => Self::Float(m as f64 + n),
             (Self::Float(m), Self::Integer(n)) => Self::Float(m + n as f64),
             (Self::Float(m), Self::Float(n)) => Self::Float(m + n),
+            // string
             (Self::String(m), Self::String(n)) => Self::String(m + &n),
+            // string + num
+            (Self::String(m), Self::Integer(n)) => Self::String(m + &n.to_string()),
+            (Self::String(m), Self::Float(n)) => Self::String(m + &n.to_string()),
+            (Self::Integer(m), Self::String(n)) => Self::String(m.to_string() + &n),
+            (Self::Float(m), Self::String(n)) => Self::String(m.to_string() + &n),
+            // other
             (Self::Bytes(mut a), Self::Bytes(b)) => {
                 a.extend(b);
                 Self::Bytes(a)
@@ -1447,6 +1554,52 @@ impl Neg for Expression {
         }
     }
 }
+impl AddAssign for Expression {
+    fn add_assign(&mut self, other: Self) {
+        *self = match (&self, other) {
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() + n),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 + n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() + n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() + n),
+            _ => Self::None,
+        }
+    }
+}
+impl SubAssign for Expression {
+    fn sub_assign(&mut self, other: Self) {
+        *self = match (&self, other) {
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() - n),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 - n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() - n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() - n),
+            _ => Self::None,
+        }
+    }
+}
+impl MulAssign for Expression {
+    fn mul_assign(&mut self, other: Self) {
+        *self = match (&self, other) {
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() * n),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 * n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() * n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() * n),
+            _ => Self::None,
+        }
+    }
+}
+impl DivAssign for Expression {
+    fn div_assign(&mut self, other: Self) {
+        *self = match (&self, other) {
+            (_, Self::Integer(0)) => Self::None,
+            (_, Self::Float(0.0)) => Self::None,
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() / n),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 / n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() / n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() / n),
+            _ => Self::None,
+        }
+    }
+}
 
 impl Mul for Expression {
     type Output = Self;
@@ -1477,6 +1630,9 @@ impl Mul for Expression {
 impl Div for Expression {
     type Output = Self;
     fn div(self, other: Self) -> Self {
+        if !other.is_truthy() {
+            return Self::None;
+        }
         match (self, other) {
             (Self::Integer(m), Self::Integer(n)) => match m.checked_div(n) {
                 Some(i) => Self::Integer(i),

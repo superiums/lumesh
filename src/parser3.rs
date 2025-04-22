@@ -23,8 +23,8 @@ use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
 // 优先级常量（从代码中提取）
 // const PREC_CONTROL: u8 = 0; // 控制结构（语句级）
 const PREC_ASSIGN: u8 = 3; // 赋值 =
-const PREC_PIPE: u8 = 4; // 管道
-const PREC_REDIRECT: u8 = 5; // 重定向
+const PREC_REDIRECT: u8 = 4; // 重定向
+const PREC_PIPE: u8 = 5; // 管道
 const PREC_LAMBDA: u8 = 6; // lambda -> ~>
 const PREC_CONDITIONAL: u8 = 7; // 条件运算符 ?:
 const PREC_LOGICAL_OR: u8 = 8; // 逻辑或 ||
@@ -179,6 +179,30 @@ impl PrattParser {
             )),
             ":=" => Some(OperatorInfo::new(
                 ":=",
+                PREC_ASSIGN,
+                true,
+                OperatorKind::Infix,
+            )),
+            "+=" => Some(OperatorInfo::new(
+                "+=",
+                PREC_ASSIGN,
+                true,
+                OperatorKind::Infix,
+            )),
+            "-=" => Some(OperatorInfo::new(
+                "-=",
+                PREC_ASSIGN,
+                true,
+                OperatorKind::Infix,
+            )),
+            "*=" => Some(OperatorInfo::new(
+                "*=",
+                PREC_ASSIGN,
+                true,
+                OperatorKind::Infix,
+            )),
+            "/=" => Some(OperatorInfo::new(
+                "/=",
                 PREC_ASSIGN,
                 true,
                 OperatorKind::Infix,
@@ -378,7 +402,7 @@ impl PrattParser {
             )),
             ">>>" => Some(OperatorInfo::new(
                 ">>>",
-                PREC_ASSIGN,
+                PREC_REDIRECT,
                 false,
                 OperatorKind::Infix,
             )),
@@ -403,7 +427,6 @@ impl PrattParser {
                 Box::new(lhs),
                 Box::new(rhs),
             )),
-            // "|>" => Expression::Pipe(Box::new(lhs), Box::new(rhs)),
             "=" => {
                 // 确保左侧是符号
                 match lhs.to_symbol() {
@@ -573,32 +596,18 @@ impl PrattParser {
                     }
                 }
             }
-            "+=" | "-=" | "*=" | "/=" => {
-                let base_op = op.symbol.trim_end_matches('=');
-                let new_rhs =
-                    Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
-                Ok(Expression::Assign(lhs.to_string(), Box::new(new_rhs)))
-            }
-            // "|" => Expression::Pipe(Box::new(lhs), Box::new(rhs)),
-            // "|" => Expression::Apply(Box::new("fs@pipe"), Box::new(rhs)),
-            // "|" => Expression::Apply(
-            //     Box::new(Expression::Symbol("|".to_string())),
-            //     vec![lhs, rhs],
-            // ),
-            // "<<" => {
-            //     let content = Expression::Apply(
-            //         Expression::BinaryOp(
-            //             "@".to_string(),
-            //             Box::new(Expression::Symbol("fs".to_string())),
-            //             Box::new(Expression::Symbol("read".to_string())),
-            //         ),
-            //         vec![rhs],
-            //     );
-            //     Expression::Apply(
-            //         Box::new(Expression::Symbol("|".to_string())),
-            //         vec![lhs, rhs],
-            //     )
-            // }
+            "+=" | "-=" | "*=" | "/=" => Ok(Expression::BinaryOp(
+                op.symbol.into(),
+                Box::new(lhs),
+                Box::new(rhs),
+            )),
+            // {
+
+            //         let base_op = op.symbol.trim_end_matches('=');
+            //         let new_rhs =
+            //             Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
+            //         Ok(Expression::Assign(lhs.to_string(), Box::new(new_rhs)))
+            //     }
             "|" => Ok(Expression::BinaryOp(
                 "|".into(),
                 Box::new(lhs),
@@ -627,20 +636,6 @@ impl PrattParser {
                 Box::new(lhs),
                 Box::new(rhs),
             )),
-
-            // "<<" | ">>" | ">>>" => {
-            //     let redirect_type = match op.symbol {
-            //         "<<" => RedirectType::Input,
-            //         ">>" => RedirectType::Overwrite,
-            //         ">>>" => RedirectType::Append,
-            //         _ => unreachable!(),
-            //     };
-            //     Expression::Redirect(
-            //         redirect_type,
-            //         Box::new(lhs),
-            //         Box::new(rhs), // rhs 应为文件名表达式
-            //     )
-            // }
             _ => {
                 unreachable!()
             }
@@ -1117,7 +1112,7 @@ pub fn parse_script_tokens(
     ))(input)?;
 
     if !input.is_empty() {
-        dbg!("-----==>2", &input.slice, &statements);
+        // dbg!("-----==>2", &input.slice, &statements);
         eprintln!("unrecognized satement");
     }
     // if !input.is_empty() {
@@ -1171,14 +1166,12 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         parse_fn_declare, // 函数声明（仅语句级）
         // parse_import,        // 模块导入（仅语句级）
         parse_control_flow, // 控制流（可嵌套在表达式中）
-        // parse_assign,        // 赋值语句
-
         // func
         // parse_lambda,
         // 声明和赋值
         parse_lazy_assign,
         parse_declare,
-        parse_assign,
+        // parse_assign,  // 赋值语句
         parse_del,
         // call
         // parse_apply,
@@ -1272,7 +1265,7 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 // 一元运算符具体实现
 fn parse_unary(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     // 匹配前缀运算符 !、++、-- 等
-    let (input, op) = alt((text("!"), text("++"), text("--")))(input)?;
+    let (input, op) = alt((text("!"), text("++"), text("--"), text("-")))(input)?;
     let (input, expr) = PrattParser::parse_expr_with_precedence(input, PREC_UNARY)?; // 递归解析后续表达式
     Ok((
         input,

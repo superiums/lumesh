@@ -267,10 +267,32 @@ impl Expression {
                         )),
                         "|" => {
                             let bindings = env.get_bindings_map();
-                            let (pipe_out, expr_out) =
-                                handle_pipes(&*lhs, &*rhs, &bindings, false, None, env, depth)?;
-                            // dbg!(pipe_out, &expr_out);
+                            let always_pipe = env.has("__ALWAYSPIPE");
+                            dbg!(&always_pipe);
+                            // if always_pipe {
+                            //     let left_func = lhs.ensure_apply();
+                            //     let left_output = left_func.eval_mut(env, depth + 1)?;
+                            //     let mut new_env = env.fork();
+                            //     new_env.define("__stdin", left_output);
+
+                            //     let r_func = rhs.ensure_apply();
+                            //     let pipe_result = r_func.eval_mut(&mut new_env, depth + 1);
+                            //     // dbg!(&pipe_result);
+                            //     pipe_result
+                            // } else {
+                            let (_, expr_out) = handle_pipes(
+                                &*lhs,
+                                &*rhs,
+                                &bindings,
+                                false,
+                                None,
+                                env,
+                                depth,
+                                always_pipe,
+                            )?;
+                            dbg!(&expr_out);
                             Ok(expr_out)
+                            // }
                         }
 
                         // {
@@ -300,8 +322,10 @@ impl Expression {
                             rhs_eval.append_args(args).eval_mut(env, depth + 1)
                         }
                         ">>>" => {
+                            env.define("__ALWAYSPIPE", Expression::Boolean(true));
                             let left_func = lhs.ensure_apply();
                             let l = left_func.eval_mut(env, depth + 1)?;
+                            env.undefine("__ALWAYSPIPE");
 
                             let mut path = PathBuf::from(env.get_cwd());
                             path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
@@ -343,8 +367,10 @@ impl Expression {
                         }
                         ">>" => {
                             // dbg!("-->>--", &lhs);
+                            env.define("__ALWAYSPIPE", Expression::Boolean(true));
                             let left_func = lhs.ensure_apply();
                             let l = left_func.eval_mut(env, depth + 1)?;
+                            env.undefine("__ALWAYSPIPE");
                             // dbg!("-->> left=", &l);
                             let mut path = PathBuf::from(env.get_cwd());
                             path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());

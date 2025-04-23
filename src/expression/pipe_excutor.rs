@@ -16,6 +16,7 @@ fn exec_single_cmd(
     bindings: &BTreeMap<String, String>,
     input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
     is_last: bool,        // 是否是最后一条命令？
+    always_pipe: bool,
 ) -> Result<(Vec<u8>, Expression), LmError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(&cmdstr);
@@ -31,9 +32,11 @@ fn exec_single_cmd(
 
     // 设置 stdout（如果是交互式命令，直接接管终端）
     let is_interactive = is_interactive();
-    if is_last && is_interactive {
+    if always_pipe {
+        cmd.stdout(Stdio::piped());
+    } else if is_last && is_interactive {
         cmd.stdout(Stdio::inherit());
-    } else if !is_last {
+    } else {
         cmd.stdout(Stdio::piped());
     }
 
@@ -49,9 +52,10 @@ fn exec_single_cmd(
     }
 
     // 获取输出（如果不是最后一条命令）
-    if !is_last || !is_interactive {
+    if always_pipe || !is_last || !is_interactive {
         let output = child.wait_with_output()?;
-        let expr = Expression::Bytes(output.stdout.clone());
+        let expr = Expression::String(String::from_utf8_lossy(&output.stdout).into_owned());
+        dbg!(cmd.get_program(), &expr);
         Ok((output.stdout, expr))
     } else {
         child.wait()?;
@@ -86,7 +90,7 @@ fn expr_to_command(
                     Ok((name, cmd_args))
                 }
                 _ => {
-                    // dbg!("--else type--", &func);
+                    dbg!("--else type--", &func);
                     Err(LmError::ProgramNotFound(expr.to_string()))
                 }
             };
@@ -104,17 +108,25 @@ pub fn handle_pipes(
     input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
     env: &mut Environment,
     depth: usize,
+    always_pipe: bool,
 ) -> Result<(Vec<u8>, Expression), LmError> {
     {
         // 管道运算符特殊处理
         // dbg!("--pipe--", &lhs, &rhs);
         let result_left = match lhs {
-            Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => {
-                handle_pipes(&*l_arm, &*r_arm, bindings, true, input, env, depth)
-            }
+            Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => handle_pipes(
+                &*l_arm,
+                &*r_arm,
+                bindings,
+                true,
+                input,
+                env,
+                depth,
+                always_pipe,
+            ),
             _ => {
                 let (cmd, args) = expr_to_command(&lhs, env)?;
-                exec_single_cmd(cmd, args, bindings, input, false)
+                exec_single_cmd(cmd, args, bindings, input, false, always_pipe)
             }
         };
         return match result_left {
@@ -128,10 +140,20 @@ pub fn handle_pipes(
                         Some(&pipe_out),
                         env,
                         depth,
+                        always_pipe,
                     ),
                     _ => {
                         let (cmd, args) = expr_to_command(&rhs, env)?;
-                        exec_single_cmd(cmd, args, bindings, Some(&pipe_out), !has_right)
+                        let result_right = exec_single_cmd(
+                            cmd.clone(),
+                            args,
+                            bindings,
+                            Some(&pipe_out),
+                            !has_right,
+                            always_pipe,
+                        );
+                        dbg!(&cmd, &result_right);
+                        result_right
                     }
                 };
             }

@@ -17,7 +17,7 @@ fn exec_single_cmd(
     input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
     is_last: bool,        // 是否是最后一条命令？
 ) -> Result<(Vec<u8>, Expression), LmError> {
-    dbg!("------ exec:------", &cmdstr, &args, &is_last);
+    // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(&cmdstr);
     cmd.args(args)
         .envs(bindings)
@@ -76,7 +76,7 @@ fn expr_to_command(
         }
         Expression::Apply(func, args) => {
             /* 处理函数调用 */
-            dbg!("applying in pipe:", func, args);
+            // dbg!("applying in pipe:", func, args);
 
             // 分派到具体类型处理
             return match *func.clone() {
@@ -86,7 +86,7 @@ fn expr_to_command(
                     Ok((name, cmd_args))
                 }
                 _ => {
-                    dbg!("--else type--", &func);
+                    // dbg!("--else type--", &func);
                     Err(LmError::ProgramNotFound(expr.to_string()))
                 }
             };
@@ -97,8 +97,8 @@ fn expr_to_command(
 
 // 管道
 pub fn handle_pipes(
-    lhs: Box<Expression>,
-    rhs: Box<Expression>,
+    lhs: &Expression,
+    rhs: &Expression,
     bindings: &BTreeMap<String, String>,
     has_right: bool,
     input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
@@ -108,9 +108,9 @@ pub fn handle_pipes(
     {
         // 管道运算符特殊处理
         // dbg!("--pipe--", &lhs, &rhs);
-        let result_left = match *lhs {
+        let result_left = match lhs {
             Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => {
-                handle_pipes(l_arm, r_arm, bindings, true, input, env, depth)
+                handle_pipes(&*l_arm, &*r_arm, bindings, true, input, env, depth)
             }
             _ => {
                 let (cmd, args) = expr_to_command(&lhs, env)?;
@@ -119,10 +119,10 @@ pub fn handle_pipes(
         };
         return match result_left {
             Ok((pipe_out, _)) => {
-                return match *rhs {
+                return match rhs {
                     Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => handle_pipes(
-                        l_arm,
-                        r_arm,
+                        &*l_arm,
+                        &*r_arm,
                         bindings,
                         has_right,
                         Some(&pipe_out),

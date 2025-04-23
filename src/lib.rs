@@ -3,8 +3,12 @@ mod tests;
 
 pub type Int = i64;
 
-mod expr2;
-pub use expr2::*;
+mod expression;
+pub use expression::builtin::Builtin;
+pub use expression::eval;
+pub use expression::{Expression, Pattern, SliceParams};
+// mod expr2;
+// pub use expr2::*;
 
 mod env;
 pub use env::*;
@@ -12,8 +16,8 @@ pub use env::*;
 mod error;
 pub use error::*;
 
-mod parser3;
-pub use parser3::*;
+mod parser;
+pub use parser::*;
 
 mod tokens;
 pub use tokens::{Token, TokenKind};
@@ -33,7 +37,7 @@ pub mod cmdhelper;
 pub mod prompt;
 // mod binary;
 
-pub mod excutor;
+// pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub static mut STRICT: bool = false;

@@ -1,5 +1,5 @@
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression, Int};
+use lumesh::{Environment, Expression, Int, LmError};
 use std::io::Write;
 use terminal_size::{Height, Width, terminal_size};
 
@@ -18,13 +18,13 @@ pub fn get() -> Expression {
             String::from("raw") => Expression::builtin("raw", |_, _| {
                 match crossterm::terminal::enable_raw_mode() {
                     Ok(_) => Ok(Expression::None),
-                    Err(_) => Err(Error::CustomError("could not enable raw mode".to_string()))
+                    Err(_) => Err(LmError::CustomError("could not enable raw mode".to_string()))
                 }
             }, "enable raw mode"),
             String::from("cooked") => Expression::builtin("cooked", |_, _| {
                 match crossterm::terminal::disable_raw_mode() {
                     Ok(_) => Ok(Expression::None),
-                    Err(_) => Err(Error::CustomError("could not disable raw mode".to_string()))
+                    Err(_) => Err(LmError::CustomError("could not disable raw mode".to_string()))
                 }
             }, "disable raw mode"),
             String::from("alternate") => Expression::builtin("alternate", |_, _| {
@@ -45,7 +45,7 @@ pub fn get() -> Expression {
                     (Expression::Integer(x), Expression::Integer(y)) => {
                         print!("\x1b[{row};{column}f", column = x, row = y);
                     }
-                    (x, y) => return Err(Error::CustomError(format!("expected first two arguments to be integers, but got: `{:?}`, `{:?}`", x, y)))
+                    (x, y) => return Err(LmError::CustomError(format!("expected first two arguments to be integers, but got: `{:?}`, `{:?}`", x, y)))
                 }
                 Ok(Expression::None)
             }, "move the cursor to a specific position in the console"),
@@ -56,7 +56,7 @@ pub fn get() -> Expression {
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}A", y = y);
                 } else {
-                    return Err(Error::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", y)));
+                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", y)));
                 }
                 Ok(Expression::None)
             }, "move the cursor up a specific number of lines"),
@@ -67,7 +67,7 @@ pub fn get() -> Expression {
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}B", y = y);
                 } else {
-                    return Err(Error::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", y)));
+                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", y)));
                 }
                 Ok(Expression::None)
             }, "move the cursor down a specific number of lines"),
@@ -78,7 +78,7 @@ pub fn get() -> Expression {
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}D", x = x);
                 } else {
-                    return Err(Error::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", x)));
+                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", x)));
                 }
                 Ok(Expression::None)
             }, "move the cursor left a specific number of columns"),
@@ -89,7 +89,7 @@ pub fn get() -> Expression {
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}C", x = x);
                 } else {
-                    return Err(Error::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", x)));
+                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", x)));
                 }
                 Ok(Expression::None)
             }, "move the cursor right a specific number of columns"),
@@ -191,21 +191,21 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn width(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, Error> {
+fn width(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     Ok(match terminal_size() {
         Some((Width(w), _)) => (w as Int).into(),
         _ => Expression::None,
     })
 }
 
-fn height(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, Error> {
+fn height(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     Ok(match terminal_size() {
         Some((_, Height(h))) => (h as Int).into(),
         _ => Expression::None,
     })
 }
 
-fn write(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn write(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("write", &args, 3)?;
     match (args[0].eval(env)?, args[1].eval(env)?, args[2].eval(env)?) {
         (Expression::Integer(x), Expression::Integer(y), content) => {
@@ -220,7 +220,7 @@ fn write(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
             }
         }
         (x, y, _) => {
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "expected first two arguments to be integers, but got: `{:?}`, `{:?}`",
                 x, y
             )));
@@ -229,13 +229,13 @@ fn write(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
     Ok(Expression::None)
 }
 
-fn title(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn title(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("title", &args, 1)?;
     print!("\x1b]2;{}\x1b[0m", args[0].eval(env)?);
     Ok(Expression::None)
 }
 
-fn clear(args: Vec<Expression>, _env: &mut Environment) -> Result<Expression, Error> {
+fn clear(args: Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("clear", &args, 1)?;
     print!("\x1b[2J\x1b[H");
     Ok(Expression::None)

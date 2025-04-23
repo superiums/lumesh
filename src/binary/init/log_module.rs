@@ -1,7 +1,7 @@
 use super::Int;
 use common_macros::b_tree_map;
 use lazy_static::lazy_static;
-use lumesh::{Error, Expression};
+use lumesh::{LmError, Expression};
 use std::sync::RwLock;
 lazy_static! {
     static ref LOG_LEVEL: RwLock<Int> = RwLock::new(0);
@@ -39,7 +39,7 @@ pub fn get() -> Expression {
                 *LOG_LEVEL.write().unwrap() = level;
                 Ok(Expression::None)
             } else {
-                Err(Error::CustomError(format!("expected an integer, found {}", level)))
+                Err(LmError::CustomError(format!("expected an integer, found {}", level)))
             }
         }, "set the log level"),
 
@@ -60,7 +60,7 @@ pub fn get() -> Expression {
             if let Expression::Integer(level) = level {
                 Ok(Expression::Boolean(is_log_level_enabled(level)))
             } else {
-                Err(Error::CustomError(format!("expected an integer, found {}", level)))
+                Err(LmError::CustomError(format!("expected an integer, found {}", level)))
             }
         }, "check if a log level is enabled"),
 

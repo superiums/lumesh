@@ -6,7 +6,7 @@ use std::{
 
 use super::Int;
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression};
+use lumesh::{Environment, LmError, Expression};
 
 fn get_dir_tree(cwd: &Path, max_depth: Option<Int>) -> BTreeMap<String, Expression> {
     let mut dir_tree = b_tree_map! {};
@@ -137,7 +137,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let path = path.join(file.to_string());
             let n = match args[1].eval(env)? {
                 Expression::Integer(n) => n,
-                _ => return Err(Error::CustomError("second argument to head must be an integer".to_string()))
+                _ => return Err(LmError::CustomError("second argument to head must be an integer".to_string()))
             };
 
             if let Ok(contents) = std::fs::read_to_string(path) {
@@ -153,7 +153,7 @@ pub fn get(env: &mut Environment) -> Expression {
                 }
                 Ok(result.into())
             } else {
-                Err(Error::CustomError(format!("could not read file {}", file)))
+                Err(LmError::CustomError(format!("could not read file {}", file)))
             }
         }, "read a file and get the first N lines"),
         String::from("tail") => Expression::builtin("tail", |args, env| {
@@ -163,7 +163,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let path = path.join(file.to_string());
             let n = match args[1].eval(env)? {
                 Expression::Integer(n) => n,
-                _ => return Err(Error::CustomError("second argument to tail must be an integer".to_string()))
+                _ => return Err(LmError::CustomError("second argument to tail must be an integer".to_string()))
             };
 
             if let Ok(contents) = std::fs::read_to_string(path) {
@@ -179,7 +179,7 @@ pub fn get(env: &mut Environment) -> Expression {
                 }
                 Ok(result.into())
             } else {
-                Err(Error::CustomError(format!("could not read file {}", file)))
+                Err(LmError::CustomError(format!("could not read file {}", file)))
             }
         }, "read a file and get the last N lines"),
         String::from("canon") => Expression::builtin("canon", |args, env| {
@@ -190,7 +190,7 @@ pub fn get(env: &mut Environment) -> Expression {
             if let Ok(canon_path) = dunce::canonicalize(&path) {
                 Ok(canon_path.into_os_string().into_string().unwrap().into())
             } else {
-                Err(Error::CustomError(format!("could not canonicalize path {}", path.display())))
+                Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
             }
         }, "resolve, normalize, and absolutize a relative path"),
         String::from("mkdir") => Expression::builtin("mkdir", |args, env| {
@@ -199,7 +199,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let dir = cwd.join(args[0].eval(env)?.to_string());
 
             if std::fs::create_dir_all(&dir).is_err() {
-                return Err(Error::CustomError(format!("could not create directory {}", dir.display())));
+                return Err(LmError::CustomError(format!("could not create directory {}", dir.display())));
             }
 
             Ok(Expression::None)
@@ -210,7 +210,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let dir = cwd.join(args[0].eval(env)?.to_string());
 
             if std::fs::remove_dir(&dir).is_err() {
-                return Err(Error::CustomError(format!("could not remove directory {}, is it empty?", dir.display())));
+                return Err(LmError::CustomError(format!("could not remove directory {}, is it empty?", dir.display())));
             }
 
             Ok(Expression::None)
@@ -285,7 +285,7 @@ pub fn get(env: &mut Environment) -> Expression {
                 // If that fails, try to read them as a list of bytes.
                 Err(_) => match std::fs::read(&path) {
                     Ok(contents) => Ok(Expression::Bytes(contents)),
-                    Err(_) => Err(Error::CustomError(format!("could not read file {}", file)))
+                    Err(_) => Err(LmError::CustomError(format!("could not read file {}", file)))
                 }
             }
         }, "read a file's contents"),
@@ -308,7 +308,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
             match result {
                 Ok(()) => Ok(Expression::None),
-                Err(e) => Err(Error::CustomError(format!("could not write to file {}: {:?}", file, e)))
+                Err(e) => Err(LmError::CustomError(format!("could not write to file {}: {:?}", file, e)))
             }
         }, "write to a file with some contents"),
 
@@ -334,10 +334,10 @@ pub fn get(env: &mut Environment) -> Expression {
 
                     match result {
                         Ok(()) => Ok(Expression::None),
-                        Err(e) => Err(Error::CustomError(format!("could not append to file {}: {:?}", filename, e)))
+                        Err(e) => Err(LmError::CustomError(format!("could not append to file {}: {:?}", filename, e)))
                     }
                 },
-                Err(e) => Err(Error::CustomError(format!("could not open file {}: {:?}", filename, e)))
+                Err(e) => Err(LmError::CustomError(format!("could not open file {}: {:?}", filename, e)))
             }
 
         }, "append to a file with some contents"),
@@ -358,7 +358,7 @@ pub fn get(env: &mut Environment) -> Expression {
                             result.push(path.display().to_string());
                         }
                     },
-                    Err(e) => return Err(Error::CustomError(format!("could not glob pattern {}: {:?}", pattern, e)))
+                    Err(e) => return Err(LmError::CustomError(format!("could not glob pattern {}: {:?}", pattern, e)))
                 }
             }
 
@@ -371,14 +371,14 @@ pub fn get(env: &mut Environment) -> Expression {
 }
 
 /// Copy one path to another path.
-fn copy_path(src: &Path, dst: &Path) -> Result<(), Error> {
+fn copy_path(src: &Path, dst: &Path) -> Result<(), LmError> {
     if src == dst {
         return Ok(());
     }
 
     // If the destination exists, simply throw an error.
     if dst.exists() {
-        return Err(Error::CustomError(format!(
+        return Err(LmError::CustomError(format!(
             "destination {} already exists",
             dst.display()
         )));
@@ -388,7 +388,7 @@ fn copy_path(src: &Path, dst: &Path) -> Result<(), Error> {
     if src.is_dir() {
         // Create the destination directory and all of its parents.
         if std::fs::create_dir_all(dst).is_err() {
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "could not create directory {}",
                 dst.display()
             )));
@@ -406,7 +406,7 @@ fn copy_path(src: &Path, dst: &Path) -> Result<(), Error> {
                     copy_path(&path, &dst_path)?;
                 } else {
                     // If an entry is not valid, throw an error.
-                    return Err(Error::CustomError(format!(
+                    return Err(LmError::CustomError(format!(
                         "could not read directory {}",
                         src.display()
                     )));
@@ -414,7 +414,7 @@ fn copy_path(src: &Path, dst: &Path) -> Result<(), Error> {
             }
         } else {
             // If we cannot read the entries of the source directory, throw an error.
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "could not create directory {}",
                 dst.display()
             )));
@@ -422,7 +422,7 @@ fn copy_path(src: &Path, dst: &Path) -> Result<(), Error> {
     // If the directory is a file, try to copy it.
     } else if std::fs::copy(src, dst).is_err() {
         // If copying the file fails, throw an error.
-        return Err(Error::CustomError(format!(
+        return Err(LmError::CustomError(format!(
             "could not copy file {} to {}",
             src.display(),
             dst.display()
@@ -432,14 +432,14 @@ fn copy_path(src: &Path, dst: &Path) -> Result<(), Error> {
 }
 
 /// Moves one path to another path.
-fn move_path(src: &Path, dst: &Path) -> Result<(), Error> {
+fn move_path(src: &Path, dst: &Path) -> Result<(), LmError> {
     if src == dst {
         return Ok(());
     }
 
     // If the destination exists, simply throw an error.
     if dst.exists() {
-        return Err(Error::CustomError(format!(
+        return Err(LmError::CustomError(format!(
             "destination {} already exists",
             dst.display()
         )));
@@ -447,7 +447,7 @@ fn move_path(src: &Path, dst: &Path) -> Result<(), Error> {
 
     // Attempt to rename the source to the destination.
     if std::fs::rename(src, dst).is_err() {
-        return Err(Error::CustomError(format!(
+        return Err(LmError::CustomError(format!(
             "could not move {} to {}",
             src.display(),
             dst.display()
@@ -458,16 +458,16 @@ fn move_path(src: &Path, dst: &Path) -> Result<(), Error> {
 }
 
 /// Removes a file or directory from the file system.
-fn remove_path(path: &Path) -> Result<(), Error> {
+fn remove_path(path: &Path) -> Result<(), LmError> {
     if path.is_dir() {
         if std::fs::remove_dir_all(path).is_err() {
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "could not remove directory {}",
                 path.display()
             )));
         }
     } else if std::fs::remove_file(path).is_err() {
-        return Err(Error::CustomError(format!(
+        return Err(LmError::CustomError(format!(
             "could not remove file {}",
             path.display()
         )));
@@ -477,7 +477,7 @@ fn remove_path(path: &Path) -> Result<(), Error> {
 }
 
 /// Returns the paths of entries in a directory as a list of strings.
-fn list_directory(dir: &Path, short: &Path) -> Result<Expression, Error> {
+fn list_directory(dir: &Path, short: &Path) -> Result<Expression, LmError> {
     if dir.is_dir() {
         // The list of paths (as strings) in the directory we will return.
         let mut result = vec![];
@@ -498,7 +498,7 @@ fn list_directory(dir: &Path, short: &Path) -> Result<Expression, Error> {
                     });
                 } else {
                     // If an entry is invalid, throw an error.
-                    return Err(Error::CustomError(format!(
+                    return Err(LmError::CustomError(format!(
                         "could not read entries in {}",
                         dir.display()
                     )));
@@ -506,7 +506,7 @@ fn list_directory(dir: &Path, short: &Path) -> Result<Expression, Error> {
             }
         } else {
             // If we cannot read the directory's entries, throw an error.
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "could not read directory {}",
                 dir.display()
             )));
@@ -519,7 +519,7 @@ fn list_directory(dir: &Path, short: &Path) -> Result<Expression, Error> {
         return Ok(Expression::List(vec![format!("{}", dir.display()).into()]));
     } else {
         // Otherwise, the path is neither a file nor a directory, so throw an error.
-        return Err(Error::CustomError(format!(
+        return Err(LmError::CustomError(format!(
             "{} does not exist",
             dir.display()
         )));

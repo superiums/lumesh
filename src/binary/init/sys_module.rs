@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use common_macros::b_tree_map;
-use lumesh::{Error, Expression};
+use lumesh::{LmError, Expression};
 
 pub fn get() -> Expression {
     Expression::Map(b_tree_map! {
@@ -37,15 +37,15 @@ pub fn get() -> Expression {
 
             if let Ok(canon_path) = dunce::canonicalize(&path) {
                 // Read the file.
-                let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| Error::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
+                let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
                 // Evaluate the file.
                 if let Ok(expr) = lumesh::parse(&contents) {
                     expr.eval(env)
                 } else {
-                    Err(Error::CustomError(format!("could not parse file {}", canon_path.display())))
+                    Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
                 }
             } else {
-                Err(Error::CustomError(format!("could not canonicalize path {}", path.display())))
+                Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
             }
         }, "evaluate a file in the current environment"),
 
@@ -59,7 +59,7 @@ pub fn get() -> Expression {
                 env.set_cwd(canon_path.to_str().unwrap().to_string());
                 Ok(Expression::None)
             } else {
-                Err(Error::CustomError(format!("could not canonicalize path {}", path.display())))
+                Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
             }
         }, "change the current working directory"),
 
@@ -76,16 +76,16 @@ pub fn get() -> Expression {
 
             if let Ok(canon_path) = dunce::canonicalize(&path) {
                 // Read the file.
-                let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| Error::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
+                let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
                 // Evaluate the file.
                 if let Ok(expr) = lumesh::parse(&contents) {
                     let mut new_env = env.clone();
                     expr.eval(&mut new_env)
                 } else {
-                    Err(Error::CustomError(format!("could not parse file {}", canon_path.display())))
+                    Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
                 }
             } else {
-                Err(Error::CustomError(format!("could not canonicalize path {}", path.display())))
+                Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
             }
         }, "import a file (evaluate it in a new environment)"),
 

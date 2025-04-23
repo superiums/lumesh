@@ -1,4 +1,4 @@
-use super::{Environment, Error, Expression};
+use super::{Environment, LmError, Expression};
 use common_macros::b_tree_map;
 use lumesh::parse;
 
@@ -7,7 +7,7 @@ pub(super) fn curry_env(
     f: Expression,
     args: usize,
     env: &mut Environment,
-) -> Result<Expression, Error> {
+) -> Result<Expression, LmError> {
     // 生成参数列表 (arg0, arg1, ...)
     let params: Vec<String> = (0..args).map(|i| format!("arg{}", i)).collect();
 
@@ -37,7 +37,7 @@ pub(super) fn reverse_curry_env(
     f: Expression,
     args: usize,
     env: &mut Environment,
-) -> Result<Expression, Error> {
+) -> Result<Expression, LmError> {
     // 生成反向参数列表
     let params: Vec<String> = (0..args).rev().map(|i| format!("arg{}", i)).collect();
 
@@ -104,7 +104,7 @@ fn build_apply() -> Expression {
         "apply",
         |args, env| {
             if args.len() != 2 {
-                return Err(Error::ArgumentMismatch {
+                return Err(LmError::ArgumentMismatch {
                     name: args[0].to_string(),
                     expected: 2,
                     received: args.len(),
@@ -115,7 +115,7 @@ fn build_apply() -> Expression {
             let args_list = match args[1].eval(env)? {
                 Expression::List(v) => v,
                 _ => {
-                    return Err(Error::TypeError {
+                    return Err(LmError::TypeError {
                         expected: "list".into(),
                         found: args[1].type_name(),
                     });
@@ -134,7 +134,7 @@ fn build_curry() -> Expression {
         "curry",
         |args, env| {
             if args.len() < 2 {
-                return Err(Error::ArgumentMismatch {
+                return Err(LmError::ArgumentMismatch {
                     name: args[0].to_string(),
                     expected: 2,
                     received: args.len(),
@@ -145,7 +145,7 @@ fn build_curry() -> Expression {
             let arg_count = match args[1].eval(env)? {
                 Expression::Integer(n) => n as usize,
                 _ => {
-                    return Err(Error::TypeError {
+                    return Err(LmError::TypeError {
                         expected: "integer".into(),
                         found: args[1].type_name(),
                     });
@@ -170,9 +170,9 @@ pub(super) fn curry(f: Expression, args: usize) -> Expression {
     curry_env(f, args, &mut env).unwrap()
 }
 
-fn curry_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn curry_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() < 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "curry requires at least two arguments".to_string(),
         ));
     }
@@ -184,9 +184,9 @@ fn curry_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Express
     }
 }
 
-fn conditional(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn conditional(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 3 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "conditional requires exactly three arguments".to_string(),
         ));
     }
@@ -198,9 +198,9 @@ fn conditional(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
     }
 }
 
-fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if !(1..=2).contains(&args.len()) {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             if args.len() > 2 {
                 "too many arguments to function map"
             } else {
@@ -224,16 +224,16 @@ fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error
         }
         Ok(result.into())
     } else {
-        Err(Error::CustomError(format!(
+        Err(LmError::CustomError(format!(
             "invalid arguments to map: {}",
             Expression::from(args)
         )))
     }
 }
 
-fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if !(1..=2).contains(&args.len()) {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             if args.len() > 2 {
                 "too many arguments to function filter"
             } else {
@@ -272,16 +272,16 @@ fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
         }
         Ok(result.into())
     } else {
-        Err(Error::CustomError(format!(
+        Err(LmError::CustomError(format!(
             "invalid arguments to filter: {}",
             Expression::from(args)
         )))
     }
 }
 
-fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if !(1..=3).contains(&args.len()) {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             if args.len() > 3 {
                 "too many arguments to function reduce"
             } else {
@@ -308,7 +308,7 @@ fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
         }
         Ok(acc)
     } else {
-        Err(Error::CustomError(format!(
+        Err(LmError::CustomError(format!(
             "invalid arguments to reduce: {}",
             Expression::from(args)
         )))

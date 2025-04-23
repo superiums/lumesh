@@ -1,5 +1,5 @@
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression};
+use lumesh::{Environment, LmError, Expression};
 
 pub fn get() -> Expression {
     (b_tree_map! {
@@ -111,20 +111,20 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn wrap(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn wrap(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("wrap", &args, 2)?;
     match args[1].eval(env)? {
         Expression::Integer(columns) => {
             Ok(textwrap::fill(&args[0].eval(env)?.to_string(), columns as usize).into())
         }
-        otherwise => Err(Error::CustomError(format!(
+        otherwise => Err(LmError::CustomError(format!(
             "expected number of columns in wrap, but got {}",
             otherwise
         ))),
     }
 }
 
-fn href(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn href(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("href", &args, 2)?;
     Ok(format!(
         "\x1b]8;;{url}\x1b\\{text}\x1b]8;;\x1b\\",

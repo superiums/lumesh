@@ -2,7 +2,7 @@ use std::{thread, time::Duration};
 
 use chrono::{Datelike, Timelike};
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression};
+use lumesh::{Environment, LmError, Expression};
 
 pub fn get() -> Expression {
     let now = chrono::Local::now();
@@ -26,14 +26,14 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn sleep(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn sleep(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("sleep", &args, 1)?;
 
     match args[0].eval(env)? {
         Expression::Float(n) => thread::sleep(Duration::from_millis(n as u64)),
         Expression::Integer(n) => thread::sleep(Duration::from_millis(n as u64)),
         otherwise => {
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "expected integer or float, but got {}",
                 otherwise
             )));
@@ -43,18 +43,18 @@ fn sleep(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
     Ok(Expression::None)
 }
 
-fn fmt(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn fmt(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("fmt", &args, 1)?;
     match args[0].eval(env)? {
         Expression::String(f) => Ok(Expression::String(
             chrono::Local::now().format(&f).to_string(),
         )),
         // Expression::Symbol(f) => Ok(f),
-        e => Err(Error::CustomError(format!("invalid abs argument {:?}", e))),
+        e => Err(LmError::CustomError(format!("invalid abs argument {:?}", e))),
     }
 }
 
-fn display(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, Error> {
+fn display(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     let now = chrono::Local::now();
 
     Ok(Expression::Map(b_tree_map! {

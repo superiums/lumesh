@@ -1,6 +1,6 @@
 use common_macros::b_tree_map;
 use json::JsonValue;
-use lumesh::{Environment, Error, Expression, SyntaxError, parse_script};
+use lumesh::{Environment, LmError, Expression, SyntaxError, parse_script};
 use std::collections::BTreeMap;
 
 pub fn get() -> Expression {
@@ -12,7 +12,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn parse_expr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn parse_expr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("json", &args, 1)?;
     let script = args[0].eval(env)?.to_string();
     if script.is_empty() {
@@ -21,16 +21,16 @@ fn parse_expr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression
     match parse_script(&script) {
         Ok(val) => Ok(val),
         Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
-            Err(Error::SyntaxError(script.into(), e))
+            Err(LmError::SyntaxError(script.into(), e))
         }
-        Err(nom::Err::Incomplete(_)) => Err(Error::SyntaxError(
+        Err(nom::Err::Incomplete(_)) => Err(LmError::SyntaxError(
             script.into(),
             SyntaxError::InternalError,
         )),
     }
 }
 
-fn parse_json(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn parse_json(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("json", &args, 1)?;
     let text = args[0].eval(env)?.to_string();
     if text.is_empty() {
@@ -40,7 +40,7 @@ fn parse_json(args: Vec<Expression>, env: &mut Environment) -> Result<Expression
     if let Ok(val) = json::parse(&text) {
         Ok(json_to_expr(val))
     } else {
-        Err(Error::CustomError(format!(
+        Err(LmError::CustomError(format!(
             "could not parse `{}` as JSON",
             text
         )))
@@ -71,13 +71,13 @@ fn json_to_expr(val: JsonValue) -> Expression {
     }
 }
 
-fn parse_toml(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn parse_toml(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("toml", &args, 1)?;
     let text = args[0].eval(env)?.to_string();
     if let Ok(val) = text.parse::<toml::Value>() {
         Ok(toml_to_expr(val))
     } else {
-        Err(Error::CustomError(format!(
+        Err(LmError::CustomError(format!(
             "could not parse `{}` as TOML",
             text
         )))

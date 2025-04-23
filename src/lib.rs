@@ -14,8 +14,6 @@ pub use error::*;
 
 mod parser3;
 pub use parser3::*;
-mod parser_err;
-pub use parser_err::*;
 
 mod tokens;
 pub use tokens::{Token, TokenKind};
@@ -34,6 +32,8 @@ pub use syntax::highlight;
 pub mod cmdhelper;
 pub mod prompt;
 // mod binary;
+
+pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub static mut STRICT: bool = false;

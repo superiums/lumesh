@@ -1,10 +1,10 @@
 use super::fn_module::curry_env;
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression};
+use lumesh::{Environment, LmError, Expression};
 
-fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(format!(
+        return Err(LmError::CustomError(format!(
             "expected 2 arguments, got {}",
             args.len()
         )));
@@ -20,7 +20,7 @@ fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
             }
             Ok(Expression::List(v))
         }
-        (a, b) => Err(Error::CustomError(format!(
+        (a, b) => Err(LmError::CustomError(format!(
             "expected string, got values {} and {}",
             a, b
         ))),
@@ -109,7 +109,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_whitespace())))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -121,7 +121,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_alphabetic())))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -133,7 +133,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_alphanumeric())))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -145,7 +145,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_numeric())))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -164,7 +164,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.to_lowercase()))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -176,7 +176,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.to_uppercase()))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -201,7 +201,7 @@ pub fn get() -> Expression {
                     }
                     Ok(Expression::String(title))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -213,7 +213,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_lowercase())))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -225,7 +225,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::Boolean(x.chars().all(|c| c.is_uppercase())))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -250,7 +250,7 @@ pub fn get() -> Expression {
                     }
                     Ok(Expression::Boolean(x == title))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -308,7 +308,7 @@ pub fn get() -> Expression {
                         .map(|ch| Expression::String(ch.to_string()))
                         .collect::<Vec<Expression>>(),
                 )),
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "cannot get characters of non-string {}",
                     otherwise
                 ))),
@@ -361,7 +361,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.trim().to_string()))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -373,7 +373,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.trim_start().to_string()))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),
@@ -385,7 +385,7 @@ pub fn get() -> Expression {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Ok(Expression::String(x.trim_end().to_string()))
                 }
-                otherwise => Err(Error::CustomError(format!(
+                otherwise => Err(LmError::CustomError(format!(
                     "expected string, got value {}",
                     otherwise
                 ))),

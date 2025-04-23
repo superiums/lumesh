@@ -1,51 +1,100 @@
 use common_macros::b_tree_map;
 use detached_str::{Str, StrSlice};
+use nom::error::{ErrorKind, ParseError};
+use thiserror::Error;
 
 use core::{cmp::max, fmt};
 
-use crate::Diagnostic;
+use crate::{Diagnostic, tokens::Tokens};
 
-use super::{Expression, Int, SyntaxError};
+use super::{Expression, Int};
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum Error {
+#[derive(Debug, Error)]
+pub enum LmError {
+    #[error("cannot apply `{0:?}` to the arguments {1:?}")]
     CannotApply(Expression, Vec<Expression>),
+    #[error("symbol \"{0}\" not defined")]
     SymbolNotDefined(String),
+    #[error("command `{0}` failed with args {1:?}")]
     CommandFailed(String, Vec<Expression>),
+    #[error("command `{0}` failed: {1:?}")]
+    CommandFailed2(String, String),
+    #[error("attempted to iterate over non-list `{0:?}`")]
     ForNonList(Expression),
+    #[error("recursion depth exceeded while evaluating `{0:?}`")]
     RecursionDepth(Expression),
+    #[error("permission denied while evaluating `{0:?}`")]
     PermissionDenied(Expression),
+    #[error("program \"{0}\" not found")]
     ProgramNotFound(String),
-    SyntaxError(Str, SyntaxError),
+    #[error("{1}")]
+    SyntaxError(Str, #[source] SyntaxError),
+    #[error("{0}")]
     CustomError(String),
+    #[error("redeclaration of `{0}`")]
     Redeclaration(String),
+    #[error("undeclared variable: {0}")]
     UndeclaredVariable(String),
+    #[error("no matching branch while evaluating `{0}`")]
     NoMatchingBranch(String),
+    #[error("too many arguments for function `{name}`: max {max}, found {received}")]
     TooManyArguments {
         name: String,
         max: usize,
         received: usize,
     },
+    #[error("arguments mismatch for function `{name}`: expected {expected}, found {received}")]
     ArgumentMismatch {
         name: String,
         expected: usize,
         received: usize,
     },
+    #[error("invalid default value `{2}` for argument `{1}` in function `{0}`")]
     InvalidDefaultValue(String, String, Expression),
+    #[error("invalid operator `{0}`")]
     InvalidOperator(String),
-    IndexOutOfBounds {
-        index: usize,
-        len: usize,
-    },
+    #[error("index {index} out of bounds (length {len})")]
+    IndexOutOfBounds { index: usize, len: usize },
+    #[error("key `{0}` not found in map")]
     KeyNotFound(String),
-    TypeError {
-        expected: String,
-        found: String,
-    },
-    EarlyReturn(Expression), // 用于传递返回值
+    #[error("type error: expected {expected}, found {found}")]
+    TypeError { expected: String, found: String },
+    #[error("illegal return outside function")]
+    EarlyReturn(Expression),
+    #[error(transparent)]
+    IoError(#[from] std::io::Error),
 }
 
-impl Error {
+#[derive(Debug, Error)]
+pub enum SyntaxError {
+    #[error("tokenization errors")]
+    TokenizationErrors(Box<[Diagnostic]>),
+    #[error("syntax error")]
+    Expected {
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    },
+    #[error("expected character `{expected}`")]
+    ExpectedChar {
+        expected: char,
+        at: Option<StrSlice>,
+    },
+    #[error("parse error: `{kind:?}`")]
+    NomError {
+        kind: nom::error::ErrorKind,
+        at: Option<StrSlice>,
+        #[source]
+        cause: Option<Box<SyntaxError>>,
+    },
+    #[error("internal parser error")]
+    InternalError,
+    #[error("no expression recognized")]
+    NoExpression,
+}
+
+impl LmError {
     /// Error code constant integers for error handlers to handle.
     pub const ERROR_CODE_CANNOT_APPLY: Int = 1;
     pub const ERROR_CODE_SYMBOL_NOT_DEFINED: Int = 2;
@@ -77,106 +126,96 @@ impl Error {
             Self::CannotApply(..) => Self::ERROR_CODE_CANNOT_APPLY,
             Self::SymbolNotDefined(..) => Self::ERROR_CODE_SYMBOL_NOT_DEFINED,
             Self::CommandFailed(..) => Self::ERROR_CODE_COMMAND_FAILED,
+            Self::CommandFailed2(..) => Self::ERROR_CODE_COMMAND_FAILED,
             Self::ForNonList(..) => Self::ERROR_CODE_FOR_NON_LIST,
             Self::RecursionDepth(..) => Self::ERROR_CODE_RECURSION_DEPTH,
-            Self::CustomError(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::PermissionDenied(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::ProgramNotFound(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::SyntaxError(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::Redeclaration(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::UndeclaredVariable(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::NoMatchingBranch(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::TooManyArguments { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::ArgumentMismatch { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::InvalidDefaultValue(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::EarlyReturn(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::InvalidOperator(..) => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::IndexOutOfBounds { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::KeyNotFound { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::TypeError { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::PermissionDenied(..) => Self::ERROR_CODE_PERMISSION_DENIED,
+            Self::ProgramNotFound(..) => Self::ERROR_CODE_PROGRAM_NOT_FOUND,
+            Self::SyntaxError(..) => Self::ERROR_CODE_SYNTAX_ERROR,
+            Self::CustomError(..)
+            | Self::Redeclaration(..)
+            | Self::UndeclaredVariable(..)
+            | Self::NoMatchingBranch(..)
+            | Self::TooManyArguments { .. }
+            | Self::ArgumentMismatch { .. }
+            | Self::InvalidDefaultValue(..)
+            | Self::EarlyReturn(..)
+            | Self::InvalidOperator(..)
+            | Self::IndexOutOfBounds { .. }
+            | Self::KeyNotFound(..)
+            | Self::TypeError { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
+            Self::IoError(_) => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
 }
 
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl SyntaxError {
+    pub(crate) fn unrecoverable(
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    ) -> nom::Err<Self> {
+        nom::Err::Failure(Self::Expected {
+            input,
+            expected,
+            found,
+            hint,
+        })
+    }
+
+    pub(crate) fn expected(
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    ) -> nom::Err<Self> {
+        nom::Err::Error(Self::Expected {
+            input,
+            expected,
+            found,
+            hint,
+        })
+    }
+
+    pub fn unclosed_delimiter(start: StrSlice, delim: &'static str) -> Self {
+        Self::Expected {
+            input: start,
+            expected: delim,
+            found: None,
+            hint: Some("检查括号/引号是否匹配"),
+        }
+    }
+}
+
+impl ParseError<Tokens<'_>> for SyntaxError {
+    fn from_error_kind(input: Tokens<'_>, kind: ErrorKind) -> Self {
+        Self::NomError {
+            kind,
+            at: input.first().map(|t| t.range),
+            cause: None,
+        }
+    }
+
+    fn append(input: Tokens<'_>, kind: ErrorKind, other: Self) -> Self {
+        Self::NomError {
+            kind,
+            at: input.first().map(|t| t.range),
+            cause: Some(Box::new(other)),
+        }
+    }
+
+    fn from_char(input: Tokens<'_>, expected: char) -> Self {
+        Self::ExpectedChar {
+            expected,
+            at: input.first().map(|t| t.range),
+        }
+    }
+
+    fn or(self, other: Self) -> Self {
         match self {
-            Self::Redeclaration(name) => {
-                write!(f, "redeclaration of {:?}", name)
-            }
-            Self::UndeclaredVariable(name) => {
-                write!(f, "undeclared var: {:?}", name)
-            }
-            Self::CannotApply(expr, args) => {
-                write!(f, "cannot apply `{:?}` to the arguments {:?}", expr, args)
-            }
-            Self::PermissionDenied(expr) => {
-                write!(f, "permission denied while evaluating {:?}", expr)
-            }
-            Self::ProgramNotFound(name) => {
-                write!(f, "program \"{}\" not found", name)
-            }
-            Self::SymbolNotDefined(name) => {
-                write!(f, "symbol \"{}\" not defined", name)
-            }
-            Self::RecursionDepth(expr) => {
-                write!(f, "recursion depth exceeded while evaluating {:?}", expr)
-            }
-            Self::NoMatchingBranch(expr) => {
-                write!(f, "no matching branch while evaluating {:?}", expr)
-            }
-            Self::CommandFailed(name, args) => {
-                write!(
-                    f,
-                    "command `{:?}` failed",
-                    Expression::Apply(Box::new(Expression::Symbol(name.clone())), args.clone())
-                )
-            }
-            Self::ForNonList(nonlist) => {
-                write!(f, "attempted to iterate over non-list `{:?}`", nonlist)
-            }
-            Self::CustomError(e) => {
-                write!(f, "{}", e)
-            }
-            Self::TooManyArguments {
-                name,
-                max,
-                received,
-            } => {
-                write!(
-                    f,
-                    "too many args for function {}, max:{}, found:{}",
-                    name, max, received
-                )
-            }
-            Self::ArgumentMismatch {
-                name,
-                expected,
-                received,
-            } => {
-                write!(
-                    f,
-                    "args mismatch for function {}, expected:{}, found:{}",
-                    name, expected, received
-                )
-            }
-            Self::InvalidDefaultValue(name, param, received) => {
-                write!(
-                    f,
-                    "invalid default value {} for arg:{}, in function:{}",
-                    received, param, name
-                )
-            }
-            Self::InvalidOperator(op) => write!(f, "invalid operator {}", op),
-            Error::IndexOutOfBounds { index, len } => {
-                write!(f, "Index {} out of bounds (length {})", index, len)
-            }
-            Error::KeyNotFound(key) => write!(f, "Key '{}' not found in map", key),
-            Error::TypeError { expected, found } => {
-                write!(f, "Type error: expected {}, found {}", expected, found)
-            }
-            Self::EarlyReturn(_) => write!(f, "Illegal return outside function"),
-            Self::SyntaxError(string, err) => fmt_syntax_error(string, err, f),
+            Self::InternalError => other,
+            _ => self,
         }
     }
 }

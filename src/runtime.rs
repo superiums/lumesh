@@ -1,6 +1,6 @@
 use crate::parse_script;
 use crate::repl::read_user_input;
-use crate::{Diagnostic, Environment, Error, Expression, SyntaxError, TokenKind};
+use crate::{Diagnostic, Environment, Expression, LmError, SyntaxError, TokenKind};
 use std::path::PathBuf;
 const INTRO_PRELUDE: &str = include_str!("config/config.lsh");
 
@@ -18,15 +18,16 @@ pub fn run_file(path: PathBuf, env: &mut Environment) -> bool {
     }
 }
 
-pub fn parse(input: &str) -> Result<Expression, Error> {
+pub fn parse(input: &str) -> Result<Expression, LmError> {
     match parse_script(input) {
         Ok(result) => Ok(result),
         Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
-            Err(Error::SyntaxError(input.into(), e))
+            Err(LmError::SyntaxError(input.into(), e))
         }
-        Err(nom::Err::Incomplete(_)) => {
-            Err(Error::SyntaxError(input.into(), SyntaxError::InternalError))
-        }
+        Err(nom::Err::Incomplete(_)) => Err(LmError::SyntaxError(
+            input.into(),
+            SyntaxError::InternalError,
+        )),
     }
 }
 

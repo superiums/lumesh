@@ -1,4 +1,4 @@
-use super::{Error, Expression};
+use super::{Expression, LmError};
 use std::collections::BTreeMap;
 
 const CWD_ENV_VAR: &str = "CWD";
@@ -80,7 +80,7 @@ impl Environment {
     pub fn define_builtin(
         &mut self,
         name: impl ToString,
-        builtin: fn(Vec<Expression>, &mut Environment) -> Result<Expression, Error>,
+        builtin: fn(Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
         help: impl ToString,
     ) {
         self.define(
@@ -103,5 +103,18 @@ impl Environment {
             bindings: BTreeMap::new(),
             parent: Some(Box::new(self.clone())),
         }
+    }
+
+    pub fn get_bindings_map(&self) -> BTreeMap<String, String> {
+        self.bindings
+            .clone()
+            .into_iter()
+            .map(|(k, v)| (k, v.to_string()))
+            // This is to prevent environment variables from getting too large.
+            // This causes some strange bugs on Linux: mainly it becomes
+            // impossible to execute any program because `the argument
+            // list is too long`.
+            .filter(|(_, s)| s.len() <= 1024)
+            .collect::<BTreeMap<String, String>>()
     }
 }

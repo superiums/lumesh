@@ -1,20 +1,20 @@
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression, Int};
+use lumesh::{Environment, LmError, Expression, Int};
 
 pub fn get() -> Expression {
     (b_tree_map! {
         String::from("try") => Expression::builtin("try", try_builtin,
             "try an expression or apply an error handler to an error"),
-        String::from("codes") => Error::codes()
+        String::from("codes") => LmError::codes()
     })
     .into()
 }
 
-fn try_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn try_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     // Try to evaluate the first argument, if it fails, apply the second argument to the error
     // message.
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "try requires exactly two arguments: an expression to try to evaluate, and an error handler that takes an error as an argument".to_string(),
         ));
     }

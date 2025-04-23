@@ -15,7 +15,7 @@ fmt.red logo        # same as fmt@red
 ```
 - allow `[]` to be index of list, and slice supported.
 ```bash
-let ar = 2 .. 8
+let ar = 2..8
 ar[2:5:2]           # [4,6]
 ar[2:5]           # [4,5,6]
 ar[2:]           # [4,5,6,7]

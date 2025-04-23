@@ -57,6 +57,7 @@ rpassword = "7.3"
 crossterm = "0.27"
 lazy_static = "1.4"
 regex-lite = "0.1.6"
+thiserror = "2.0.12"
 
 
 [dependencies.toml]

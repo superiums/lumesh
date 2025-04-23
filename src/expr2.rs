@@ -23,7 +23,7 @@
 // 所有错误生成路径统一
 // 复杂表达式处理分离到独立方法
 // 显示实现更简洁的 Debug 输出
-use super::{Environment, Error, Int};
+use super::{Environment, Int, LmError};
 // use num_traits::pow;
 use regex_lite::Regex;
 use std::{
@@ -36,7 +36,7 @@ use std::{
 };
 use terminal_size::{Width, terminal_size};
 
-use crate::STRICT;
+use crate::{STRICT, excutor::handle_pipes};
 use prettytable::{
     Cell, Row, Table,
     format::{LinePosition, LineSeparator},
@@ -97,7 +97,7 @@ pub enum Expression {
 // 错误处理宏（优化点）
 macro_rules! type_error {
     ($expected:expr, $found:expr) => {
-        Err(Error::TypeError {
+        Err(LmError::TypeError {
             expected: $expected.into(),
             found: $found.type_name(),
         })
@@ -366,7 +366,7 @@ impl Expression {
     }
 
     /// 符号转换
-    pub fn to_symbol(&self) -> Result<&str, Error> {
+    pub fn to_symbol(&self) -> Result<&str, LmError> {
         if let Self::Symbol(s) = self {
             Ok(s)
         } else {
@@ -375,19 +375,19 @@ impl Expression {
     }
 
     /// 索引访问
-    fn index_slm(l: Expression, r: Expression) -> Result<Expression, Error> {
+    fn index_slm(l: Expression, r: Expression) -> Result<Expression, LmError> {
         match l {
             // 处理列表索引
             Expression::List(list) => {
                 if let Expression::Integer(index) = r {
                     list.get(index as usize)
                         .cloned()
-                        .ok_or_else(|| Error::IndexOutOfBounds {
+                        .ok_or_else(|| LmError::IndexOutOfBounds {
                             index: index as usize,
                             len: list.len(),
                         })
                 } else {
-                    Err(Error::TypeError {
+                    Err(LmError::TypeError {
                         expected: "integer".into(),
                         found: r.type_name(),
                     })
@@ -399,7 +399,7 @@ impl Expression {
                 let key = r.to_string(); // 自动转换Symbol/字符串
                 map.get(&key)
                     .cloned()
-                    .ok_or_else(|| Error::KeyNotFound(key))
+                    .ok_or_else(|| LmError::KeyNotFound(key))
             }
 
             // 处理字符串索引
@@ -408,29 +408,29 @@ impl Expression {
                     s.chars()
                         .nth(index as usize)
                         .map(|c| Expression::String(c.to_string()))
-                        .ok_or_else(|| Error::IndexOutOfBounds {
+                        .ok_or_else(|| LmError::IndexOutOfBounds {
                             index: index as usize,
                             len: s.len(),
                         })
                 } else {
-                    Err(Error::TypeError {
+                    Err(LmError::TypeError {
                         expected: "integer".into(),
                         found: r.type_name(),
                     })
                 }
             }
 
-            _ => Err(Error::TypeError {
+            _ => Err(LmError::TypeError {
                 expected: "indexable type (list/dict/string)".into(),
                 found: l.type_name(),
             }),
         }
     }
 
-    pub fn as_list(&self) -> Result<&Vec<Self>, Error> {
+    pub fn as_list(&self) -> Result<&Vec<Self>, LmError> {
         match self {
             Self::List(v) => Ok(v),
-            _ => Err(Error::TypeError {
+            _ => Err(LmError::TypeError {
                 expected: "list".into(),
                 found: self.type_name(),
             }),
@@ -444,7 +444,7 @@ impl Expression {
         start: Option<Int>,
         end: Option<Int>,
         step: Int,
-    ) -> Result<Self, Error> {
+    ) -> Result<Self, LmError> {
         let list = list.as_list()?;
         let len = list.len() as Int;
 
@@ -475,7 +475,7 @@ impl Expression {
         expr_opt: Option<Box<Self>>,
         env: &mut Environment,
         depth: usize,
-    ) -> Result<Option<Int>, Error> {
+    ) -> Result<Option<Int>, LmError> {
         match expr_opt {
             // 无表达式时返回 None
             None => Ok(None),
@@ -490,7 +490,7 @@ impl Expression {
                     // 处理隐式类型转换
                     Self::Float(f) if f.fract() == 0.0 => Ok(Some(f as Int)),
                     // 处理其他类型错误
-                    _ => Err(Error::TypeError {
+                    _ => Err(LmError::TypeError {
                         expected: "integer".into(),
                         found: evaluated.type_name(),
                     }),
@@ -504,7 +504,7 @@ impl Expression {
         value: &Expression,
         pattern: &Pattern,
         env: &mut Environment,
-    ) -> Result<bool, Error> {
+    ) -> Result<bool, LmError> {
         match pattern {
             Pattern::Bind(name) => {
                 if name == "_" {
@@ -572,7 +572,7 @@ impl Expression {
 }
 impl Expression {
     /// 当返回symbol时，作为命令继续执行。
-    pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, Error> {
+    pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, LmError> {
         let result = self.clone().eval_mut(env, 0);
         return match result {
             // apply symbol cmds
@@ -584,15 +584,15 @@ impl Expression {
         };
     }
     /// 当返回symbol时，作为字面量，直接返回。
-    pub fn eval(&self, env: &mut Environment) -> Result<Self, Error> {
+    pub fn eval(&self, env: &mut Environment) -> Result<Self, LmError> {
         self.clone().eval_mut(env, 0)
     }
     /// 求值主逻辑（尾递归优化）
-    pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, Error> {
-        // dbg!("1.--->eval_mut:", &self, &self.type_name());
+    pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, LmError> {
+        dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
-                return Err(Error::RecursionDepth(self));
+                return Err(LmError::RecursionDepth(self));
             }
         }
 
@@ -636,7 +636,7 @@ impl Expression {
                         if STRICT && env.has(&name)
                         // && env.get("STRICT") == Some(Expression::Boolean(true))
                         {
-                            return Err(Error::Redeclaration(name.to_string()));
+                            return Err(LmError::Redeclaration(name.to_string()));
                         }
                     }
                     let value = expr.eval_mut(env, depth + 1)?;
@@ -665,7 +665,7 @@ impl Expression {
                             if STRICT
                             // && env.get("STRICT") == Some(Expression::Boolean(true))
                             {
-                                return Err(Error::UndeclaredVariable(name));
+                                return Err(LmError::UndeclaredVariable(name));
                             } else {
                                 env.define(&name, value.clone());
                             }
@@ -682,7 +682,10 @@ impl Expression {
                 }
 
                 // 元表达式处理
-                Self::Group(inner) => return inner.eval_mut(env, depth + 1),
+                Self::Group(inner) => {
+                    dbg!("2.--->group:", &inner);
+                    return inner.eval_mut(env, depth + 1);
+                }
                 Self::Quote(inner) => return Ok(*inner),
 
                 // 一元运算
@@ -694,7 +697,7 @@ impl Expression {
                             Expression::Integer(i) => Ok(Expression::Integer(-i)),
                             Expression::Float(i) => Ok(Expression::Float(-i)),
                             _ => {
-                                return Err(Error::CustomError(format!(
+                                return Err(LmError::CustomError(format!(
                                     "Cannot apply Neg to {operand:?}:{operand_eval:?}"
                                 )));
                             }
@@ -706,11 +709,11 @@ impl Expression {
                             // 获取当前值
                             let current_val = env
                                 .get(var_name)
-                                .ok_or(Error::UndeclaredVariable(var_name.to_string()))?;
+                                .ok_or(LmError::UndeclaredVariable(var_name.to_string()))?;
                             // 确保操作是合法的，例如整数或浮点数
                             if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
                             {
-                                return Err(Error::CustomError(format!(
+                                return Err(LmError::CustomError(format!(
                                     "Cannot apply {op} to {operand:?}:{current_val:?}"
                                 )));
                             }
@@ -729,11 +732,13 @@ impl Expression {
                                 let rs = Expression::Apply(Box::new(oper), vec![operand_eval]);
                                 return rs.eval_mut(env, depth + 1);
                             }
-                            Err(Error::CustomError(format!(
+                            Err(LmError::CustomError(format!(
                                 "custom operation {op:?} not defined"
                             )))
                         }
-                        _ => Err(Error::CustomError(format!("Unknown unary operator: {op}"))),
+                        _ => Err(LmError::CustomError(format!(
+                            "Unknown unary operator: {op}"
+                        ))),
                     };
                 }
                 // 特殊运算符
@@ -748,7 +753,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(Error::CustomError(format!(
+                            _ => Err(LmError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -764,7 +769,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(Error::CustomError(format!(
+                            _ => Err(LmError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -780,7 +785,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(Error::CustomError(format!(
+                            _ => Err(LmError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -794,7 +799,7 @@ impl Expression {
                                 let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
                                 let right = rhs.eval(env)?;
                                 if !right.is_truthy() {
-                                    return Err(Error::CustomError(format!(
+                                    return Err(LmError::CustomError(format!(
                                         "can't divide {} by zero",
                                         base
                                     )));
@@ -803,7 +808,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(Error::CustomError(format!(
+                            _ => Err(LmError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -821,19 +826,27 @@ impl Expression {
                                 || rhs.eval_mut(env, depth + 1)?.is_truthy(),
                         )),
                         "|" => {
-                            // 管道运算符特殊处理
-                            // dbg!("--pipe--", &lhs, &rhs);
-                            // dbg!("--pipe--");
-                            let left_func = lhs.ensure_apply();
-                            let left_output = left_func.eval_mut(env, depth + 1)?;
-                            let mut new_env = env.fork();
-                            new_env.define("__stdin", left_output);
-
-                            let r_func = rhs.ensure_apply();
-                            let pipe_result = r_func.eval_mut(&mut new_env, depth + 1);
-                            // dbg!(&pipe_result);
-                            pipe_result
+                            let bindings = env.get_bindings_map();
+                            let (pipe_out, expr_out) =
+                                handle_pipes(lhs, rhs, &bindings, false, None, env, depth)?;
+                            dbg!(pipe_out, &expr_out);
+                            Ok(expr_out)
                         }
+
+                        // {
+                        //     // 管道运算符特殊处理
+                        //     dbg!("--pipe--", &lhs, &rhs);
+                        //     // dbg!("--pipe--");
+                        //     let left_func = lhs.ensure_apply();
+                        //     let left_output = left_func.eval_mut(env, depth + 1)?;
+                        //     let mut new_env = env.fork();
+                        //     new_env.define("__stdin", left_output);
+
+                        //     let r_func = rhs.ensure_apply();
+                        //     let pipe_result = r_func.eval_mut(&mut new_env, depth + 1);
+                        //     // dbg!(&pipe_result);
+                        //     pipe_result
+                        // }
                         "|>" => {
                             // 执行左侧表达式
                             let left_func = lhs.ensure_apply();
@@ -867,7 +880,7 @@ impl Expression {
                                     match result {
                                         Ok(()) => Ok(l),
                                         Err(e) => {
-                                            return Err(Error::CustomError(format!(
+                                            return Err(LmError::CustomError(format!(
                                                 "could not append to file {}: {:?}",
                                                 rhs, e
                                             )));
@@ -877,9 +890,9 @@ impl Expression {
                                 Err(e) => {
                                     return Err(match e.kind() {
                                         ErrorKind::PermissionDenied => {
-                                            Error::PermissionDenied(*rhs.clone())
+                                            LmError::PermissionDenied(*rhs.clone())
                                         }
-                                        _ => Error::CustomError(format!(
+                                        _ => LmError::CustomError(format!(
                                             "could not open file {}: {:?}",
                                             path.display(),
                                             e
@@ -905,7 +918,7 @@ impl Expression {
 
                             match result {
                                 Ok(()) => Ok(l),
-                                Err(e) => Err(Error::CustomError(format!(
+                                Err(e) => Err(LmError::CustomError(format!(
                                     "could not write to file {}: {:?}",
                                     rhs, e
                                 ))),
@@ -916,7 +929,7 @@ impl Expression {
                             let path = rhs.eval_mut(env, depth + 1)?.to_string();
                             let contents = std::fs::read_to_string(path)
                                 .map(Self::String)
-                                .map_err(|e| Error::CustomError(e.to_string()))?;
+                                .map_err(|e| LmError::CustomError(e.to_string()))?;
                             let mut new_env = env.fork();
                             new_env.define("__stdin", contents);
                             let left_func = lhs.ensure_apply();
@@ -932,7 +945,7 @@ impl Expression {
                                 "*" => Ok(l * r),
                                 "/" => {
                                     if !r.is_truthy() {
-                                        return Err(Error::CustomError(format!(
+                                        return Err(LmError::CustomError(format!(
                                             "can't divide {} by zero",
                                             l
                                         )));
@@ -953,13 +966,13 @@ impl Expression {
                                     (Expression::Integer(base), Expression::Integer(exponent)) => {
                                         match base.checked_pow(exponent as u32) {
                                             Some(n) => Ok(n.into()),
-                                            None => Err(Error::CustomError(format!(
+                                            None => Err(LmError::CustomError(format!(
                                                 "overflow when raising int {} to the power {}",
                                                 base, exponent
                                             ))),
                                         }
                                     }
-                                    (a, b) => Err(Error::CustomError(format!(
+                                    (a, b) => Err(LmError::CustomError(format!(
                                         "cannot raise {}:{} to the power {}:{}",
                                         a,
                                         a.type_name(),
@@ -979,7 +992,7 @@ impl Expression {
                                 }
                                 "~=" => {
                                     let regex = Regex::new(&r.to_string())
-                                        .map_err(|e| Error::CustomError(e.to_string()))?;
+                                        .map_err(|e| LmError::CustomError(e.to_string()))?;
 
                                     Ok(Expression::Boolean(regex.is_match(&l.to_string())))
                                 }
@@ -992,7 +1005,7 @@ impl Expression {
                                         Ok(Self::String(format!("{}.{}", m, n)))
                                     }
                                     // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
-                                    _ => Err(Error::CustomError("not valid index option".into())),
+                                    _ => Err(LmError::CustomError("not valid index option".into())),
                                 },
                                 ".." => match (l, r) {
                                     (Expression::Integer(fr), Expression::Integer(t)) => {
@@ -1001,19 +1014,19 @@ impl Expression {
                                             .collect();
                                         Ok(Expression::List(v))
                                     }
-                                    _ => Err(Error::CustomError("not valid range option".into())),
+                                    _ => Err(LmError::CustomError("not valid range option".into())),
                                 },
                                 op if op.starts_with("_") => {
                                     if let Some(oper) = env.get(op) {
                                         let rs = Expression::Apply(Box::new(oper), vec![l, r]);
                                         return rs.eval_mut(env, depth + 1);
                                     }
-                                    Err(Error::CustomError(format!(
+                                    Err(LmError::CustomError(format!(
                                         "custom operation {op:?} not defined"
                                     )))
                                 }
                                 // ----------
-                                _ => Err(Error::InvalidOperator(operator.clone())),
+                                _ => Err(LmError::InvalidOperator(operator.clone())),
                             };
                         }
                     };
@@ -1064,7 +1077,7 @@ impl Expression {
 // Expression求值2
 impl Expression {
     /// 处理复杂表达式的递归求值
-    fn eval_complex(self, env: &mut Environment, depth: usize) -> Result<Self, Error> {
+    fn eval_complex(self, env: &mut Environment, depth: usize) -> Result<Self, LmError> {
         match self {
             // 控制流表达式
             Self::For(var, list_expr, body) => {
@@ -1104,7 +1117,7 @@ impl Expression {
                         return expr.eval_mut(env, depth + 1);
                     }
                 }
-                Err(Error::NoMatchingBranch(val.to_string()))
+                Err(LmError::NoMatchingBranch(val.to_string()))
             }
 
             // 函数相关表达式
@@ -1131,7 +1144,7 @@ impl Expression {
                             | Expression::Float(_)
                             | Expression::Boolean(_) => {}
                             _ => {
-                                return Err(Error::InvalidDefaultValue(
+                                return Err(LmError::InvalidDefaultValue(
                                     name,
                                     p.to_string(),
                                     expr.clone(),
@@ -1162,7 +1175,7 @@ impl Expression {
 
             // 块表达式
             Self::Do(exprs) => {
-                //dbg!("2.--->Group:", &exprs);
+                dbg!("2.--->DoBlock:", &exprs);
                 // 创建子环境继承父作用域
                 // let mut child_env = env.clone();
                 // 顺序求值语句块
@@ -1175,7 +1188,7 @@ impl Expression {
 
             Self::Return(expr) => {
                 // 提前返回机制
-                Err(Error::EarlyReturn(expr.eval_mut(env, depth + 1)?))
+                Err(LmError::EarlyReturn(expr.eval_mut(env, depth + 1)?))
             }
 
             // 默认情况
@@ -1187,11 +1200,11 @@ impl Expression {
     }
 
     /// 执行
-    pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, Error> {
+    pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, LmError> {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) => {
-                //dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(env, depth + 1)?;
                 // let args_eval = args
@@ -1206,17 +1219,7 @@ impl Expression {
                     Self::Symbol(name) | Self::String(name) => {
                         // dbg!("   3.--->applying symbol:", &name);
 
-                        let bindings = env
-                            .bindings
-                            .clone()
-                            .into_iter()
-                            .map(|(k, v)| (k, v.to_string()))
-                            // This is to prevent environment variables from getting too large.
-                            // This causes some strange bugs on Linux: mainly it becomes
-                            // impossible to execute any program because `the argument
-                            // list is too long`.
-                            .filter(|(_, s)| s.len() <= 1024)
-                            .collect::<BTreeMap<String, String>>();
+                        let bindings = env.get_bindings_map();
 
                         // let mut cmd_args = vec![];
                         // for arg in args {
@@ -1236,88 +1239,99 @@ impl Expression {
                         // dbg!(&args, &cmd_args);
                         let cmd_args: Vec<String> =
                             args.iter().map(|expr| expr.to_string()).collect();
-                        let mut cmd = Command::new(&name);
-                        cmd.current_dir(env.get_cwd())
-                            .args(&cmd_args)
-                            .envs(&bindings);
+                        // let mut cmd = Command::new(&name);
+                        // cmd.current_dir(env.get_cwd())
+                        //     .args(&cmd_args)
+                        //     .envs(&bindings);
 
-                        // 检查是否有stdin输入
-                        if let Some(Expression::String(stdin_str)) = env.get("__stdin") {
-                            // dbg!("    4.---> --apply symbol with pipe--", &name, &stdin_str);
-                            // dbg!(&name, &stdin_str);
-                            cmd.stdin(Stdio::piped());
-                            cmd.stdout(Stdio::piped());
-                            let mut child =
-                                cmd.spawn().map_err(|e| Error::CustomError(e.to_string()))?;
-                            // dbg!(&child);
-                            if let Some(mut stdin) = child.stdin.take() {
-                                // 写入标准输入
-                                stdin
-                                    .write_all(stdin_str.as_bytes())
-                                    .map_err(|e| Error::CustomError(e.to_string()))?;
-                                // 关闭stdin以指示输入结束
-                                drop(stdin);
-                            }
-                            // dbg!(&child);
-                            let output = child
-                                .wait_with_output()
-                                .map_err(|e| Error::CustomError(e.to_string()))?;
+                        // // 检查是否有stdin输入
+                        // if let Some(Expression::String(stdin_str)) = env.get("__stdin") {
+                        //     // dbg!("    4.---> --apply symbol with pipe--", &name, &stdin_str);
+                        //     // dbg!(&name, &stdin_str);
+                        //     cmd.stdin(Stdio::piped());
+                        //     cmd.stdout(Stdio::piped());
+                        //     let mut child = cmd
+                        //         .spawn()
+                        //         .map_err(|e| LmError::CustomError(e.to_string()))?;
+                        //     // dbg!(&child);
+                        //     if let Some(mut stdin) = child.stdin.take() {
+                        //         // 写入标准输入
+                        //         stdin
+                        //             .write_all(stdin_str.as_bytes())
+                        //             .map_err(|e| LmError::CustomError(e.to_string()))?;
+                        //         // 关闭stdin以指示输入结束
+                        //         drop(stdin);
+                        //     }
+                        //     // dbg!(&child);
+                        //     let output = child
+                        //         .wait_with_output()
+                        //         .map_err(|e| LmError::CustomError(e.to_string()))?;
 
-                            // dbg!(&output);
-                            self.set_status_code(output.status.code().unwrap_or(0) as i64, env);
-                            let result_with_pipe =
-                                Self::String(String::from_utf8_lossy(&output.stdout).into_owned());
-                            // dbg!(&result_with_pipe);
-                            Ok(result_with_pipe)
-                        } else {
-                            // dbg!("    4.---> --apply without pipe--", &name);
-                            // 如果没有stdin输入，直接执行命令并检查状态
-                            // let output = cmd
-                            //     .output()
-                            // .map_err(|e| Error::CustomError(e.to_string()))?;
-                            // dbg!(&output);
-                            match cmd.output() {
-                                Ok(output) => {
-                                    self.set_status_code(
-                                        output.status.code().unwrap_or(0) as i64,
-                                        env,
-                                    );
-                                    if output.status.success() {
-                                        let output_str =
-                                            String::from_utf8_lossy(&output.stdout).into_owned();
-                                        // println!("====Command output====\n{}", output_str); // 打印输出内容
-                                        Ok(Self::String(output_str))
-                                    } else {
-                                        Err(Error::CustomError(format!(
-                                            "Command failed with status: {}\n{}",
-                                            &output.status,
-                                            String::from_utf8_lossy(&output.stderr).into_owned()
-                                        )))
-                                    }
+                        //     // dbg!(&output);
+                        //     self.set_status_code(output.status.code().unwrap_or(0) as i64, env);
+                        //     let result_with_pipe =
+                        //         Self::String(String::from_utf8_lossy(&output.stdout).into_owned());
+                        //     // dbg!(&result_with_pipe);
+                        //     Ok(result_with_pipe)
+                        // } else {
+                        //     // dbg!("    4.---> --apply without pipe--", &name);
+                        //     // 如果没有stdin输入，直接执行命令并检查状态
+                        //     // let output = cmd
+                        //     //     .output()
+                        //     // .map_err(|e| Error::CustomError(e.to_string()))?;
+                        //     // dbg!(&output);
+                        //     match cmd.output() {
+                        //         Ok(output) => {
+                        //             self.set_status_code(
+                        //                 output.status.code().unwrap_or(0) as i64,
+                        //                 env,
+                        //             );
+                        //             if output.status.success() {
+                        //                 let output_str =
+                        //                     String::from_utf8_lossy(&output.stdout).into_owned();
+                        //                 // println!("====Command output====\n{}", output_str); // 打印输出内容
+                        //                 Ok(Self::String(output_str))
+                        //             } else {
+                        //                 Err(LmError::CustomError(format!(
+                        //                     "Command failed with status: {}\n{}",
+                        //                     &output.status,
+                        //                     String::from_utf8_lossy(&output.stderr).into_owned()
+                        //                 )))
+                        //             }
+                        //         }
+                        //         Err(e) => {
+                        //             self.set_status_code(1, env);
+                        //             return Err(match e.kind() {
+                        //                 ErrorKind::NotFound => LmError::ProgramNotFound(name),
+                        //                 ErrorKind::PermissionDenied => {
+                        //                     LmError::PermissionDenied(self.clone())
+                        //                 }
+                        //                 _ => LmError::CommandFailed(name, args.clone()),
+                        //             });
+                        //         }
+                        //     }
+                        // }
+
+                        let mut child = Command::new(&name)
+                            .current_dir(env.get_cwd())
+                            .args(cmd_args)
+                            .envs(bindings)
+                            .stdin(Stdio::inherit()) // 继承标准输入
+                            .stdout(Stdio::inherit()) // 继承标准输出
+                            .stderr(Stdio::inherit()) // 继承标准错误
+                            .spawn()
+                            .map_err(|e| match e.kind() {
+                                ErrorKind::NotFound => LmError::ProgramNotFound(name.to_string()),
+                                ErrorKind::PermissionDenied => {
+                                    LmError::PermissionDenied(self.clone())
                                 }
-                                Err(e) => {
-                                    self.set_status_code(1, env);
-                                    return Err(match e.kind() {
-                                        ErrorKind::NotFound => Error::ProgramNotFound(name),
-                                        ErrorKind::PermissionDenied => {
-                                            Error::PermissionDenied(self.clone())
-                                        }
-                                        _ => Error::CommandFailed(name, args.clone()),
-                                    });
-                                }
-                            }
-                        }
+                                _ => LmError::CommandFailed(name.to_string(), args.clone()),
+                            })?;
+                        child.wait().map_err(|e| {
+                            LmError::CommandFailed2(name.to_string(), e.to_string())
+                        })?;
 
-                        // let output = Command::new(&name)
-                        //     .current_dir(env.get_cwd())
-                        //     .args(
-                        //         cmd_args, // Self::flatten(args.clone()).iter()
-                        //                  //     .filter(|&x| x != &Self::None)
-                        //                  //     // .map(|x| Ok(format!("{}", x.clone().eval_mut(env, depth + 1)?)))
-                        //                  //     .collect::<Result<Vec<String>, Error>>()?,
-                        //     )
-                        //     .envs(bindings)
-                        //     .output();
+                        return Ok(Expression::None);
 
                         // match output {
                         //     Ok(result) => {
@@ -1331,7 +1345,7 @@ impl Expression {
                         //             // 如果命令执行失败，打印错误信息
                         //             let stderr = String::from_utf8_lossy(&result.stderr);
                         //             // eprintln!("Command failed with error:\n{}", &stderr);
-                        //             return Err(Error::CustomError(format!(
+                        //             return Err(LmError::CustomError(format!(
                         //                 "{} command failed with error:\n{}",
                         //                 name, stderr,
                         //             )));
@@ -1339,11 +1353,11 @@ impl Expression {
                         //     }
                         //     Err(e) => {
                         //         return Err(match e.kind() {
-                        //             ErrorKind::NotFound => Error::ProgramNotFound(name),
+                        //             ErrorKind::NotFound => LmError::ProgramNotFound(name),
                         //             ErrorKind::PermissionDenied => {
-                        //                 Error::PermissionDenied(self.clone())
+                        //                 LmError::PermissionDenied(self.clone())
                         //             }
-                        //             _ => Error::CommandFailed(name, args.clone()),
+                        //             _ => LmError::CommandFailed(name, args.clone()),
                         //         });
                         //     }
                         // }
@@ -1439,7 +1453,7 @@ impl Expression {
                         // dbg!(&def_env);
                         // 参数数量校验
                         if args.len() > params.len() {
-                            return Err(Error::TooManyArguments {
+                            return Err(LmError::TooManyArguments {
                                 name,
                                 max: params.len(),
                                 received: args.len(),
@@ -1458,7 +1472,7 @@ impl Expression {
                                     // 仅允许基本类型直接使用
                                     actual_args.push(def_expr.clone());
                                 } else {
-                                    return Err(Error::ArgumentMismatch {
+                                    return Err(LmError::ArgumentMismatch {
                                         name,
                                         expected: params.len(),
                                         received: actual_args.len(),
@@ -1486,7 +1500,7 @@ impl Expression {
                                 self.set_status_code(0, env);
                                 Ok(v)
                             }
-                            Err(Error::EarlyReturn(v)) => {
+                            Err(LmError::EarlyReturn(v)) => {
                                 self.set_status_code(0, env);
 
                                 Ok(v)
@@ -1497,7 +1511,7 @@ impl Expression {
                             }
                         };
                     }
-                    _ => Err(Error::CannotApply(*func.clone(), args.clone())),
+                    _ => Err(LmError::CannotApply(*func.clone(), args.clone())),
                 };
             }
             _ => unreachable!(),
@@ -1714,7 +1728,7 @@ impl PartialOrd for Expression {
 #[derive(Clone)]
 pub struct Builtin {
     pub name: String,
-    pub body: fn(Vec<Expression>, &mut Environment) -> Result<Expression, Error>,
+    pub body: fn(Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
     pub help: String,
 }
 
@@ -1809,7 +1823,7 @@ impl From<Environment> for Expression {
 impl Expression {
     pub fn builtin(
         name: impl ToString,
-        body: fn(Vec<Expression>, &mut Environment) -> Result<Expression, Error>,
+        body: fn(Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
         help: impl ToString,
     ) -> Self {
         Self::Builtin(Builtin {
@@ -1832,7 +1846,7 @@ fn bind_arguments(
     env: &mut Environment,
     target_env: &mut Environment,
     depth: usize,
-) -> Result<(Environment, Vec<Expression>), Error> {
+) -> Result<(Environment, Vec<Expression>), LmError> {
     let mut remaining_args = args;
 
     // 逐个绑定参数

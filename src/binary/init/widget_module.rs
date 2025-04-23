@@ -1,5 +1,5 @@
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression};
+use lumesh::{Environment, LmError, Expression};
 
 pub fn get() -> Expression {
     (b_tree_map! {
@@ -10,7 +10,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn create(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn create(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("create", &args, 4)?;
     let title = args[0].eval(env)?.to_string();
     let title_len = title.chars().count();
@@ -18,10 +18,10 @@ fn create(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
     let text_width = match args[2].eval(env)? {
         Expression::Integer(n) if n > 4 => n,
         otherwise => {
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "expected width argument to be integer greater than 4, but got {}",
                 otherwise
-            )))
+            )));
         }
     } as usize
         - 2;
@@ -34,15 +34,15 @@ fn create(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
     let widget_height = match args[3].eval(env)? {
         Expression::Integer(n) if n >= 3 => n,
         otherwise => {
-            return Err(Error::CustomError(format!(
+            return Err(LmError::CustomError(format!(
                 "expected height argument to be an integer greater than 2, but got {}",
                 otherwise
-            )))
+            )));
         }
     } as usize;
 
     if text_width < title_len {
-        Err(Error::CustomError(String::from(
+        Err(LmError::CustomError(String::from(
             "width is less than title length",
         )))
     } else {
@@ -108,7 +108,7 @@ fn create(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
     }
 }
 
-fn joinx(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn joinx(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("joinx", &args, 2..)?;
 
     let mut string_args = vec![];
@@ -122,7 +122,7 @@ fn joinx(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
                 height = string_args[0].len();
 
                 if height != lines.len() {
-                    return Err(Error::CustomError(format!(
+                    return Err(LmError::CustomError(format!(
                         "Heights of horizontally added widgets must be equal, \
                             first widget height={}, {}th widget height={}",
                         height,
@@ -132,10 +132,10 @@ fn joinx(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
                 }
             }
             otherwise => {
-                return Err(Error::CustomError(format!(
+                return Err(LmError::CustomError(format!(
                     "expected string, but got {}",
                     otherwise
-                )))
+                )));
             }
         }
     }
@@ -152,7 +152,7 @@ fn joinx(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
     Ok(result.into())
 }
 
-fn joiny(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn joiny(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("joiny", &args, 2..)?;
 
     let mut string_args = vec![];
@@ -164,7 +164,7 @@ fn joiny(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
                 let width = string_args[0].lines().next().unwrap().chars().count();
                 let this_width = string_args[i].lines().next().unwrap().chars().count();
                 if width != this_width {
-                    return Err(Error::CustomError(format!(
+                    return Err(LmError::CustomError(format!(
                         "Widths of vertically added widgets must be equal, \
                             first widget height={}, {}th widget height={}",
                         width, i, this_width
@@ -172,10 +172,10 @@ fn joiny(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
                 }
             }
             otherwise => {
-                return Err(Error::CustomError(format!(
+                return Err(LmError::CustomError(format!(
                     "expected string, but got {}",
                     otherwise
-                )))
+                )));
             }
         }
     }

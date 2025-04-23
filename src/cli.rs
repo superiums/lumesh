@@ -8,7 +8,7 @@ use lumesh::repl; // 新增模块引用
 // use lumesh::ENV;
 use lumesh::STRICT;
 use lumesh::runtime::run_file;
-use lumesh::{Environment, Error, Expression};
+use lumesh::{Environment, Expression, LmError};
 use std::env;
 use std::path::{Path, PathBuf};
 
@@ -61,7 +61,7 @@ struct Cli {
     // version: bool,
 }
 
-fn main() -> Result<(), Error> {
+fn main() -> Result<(), LmError> {
     let cli = Cli::parse();
     // 初始化核心环境
     let mut env = Environment::new();

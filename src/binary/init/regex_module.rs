@@ -1,5 +1,5 @@
 use common_macros::b_tree_map;
-use lumesh::{Error, Expression};
+use lumesh::{LmError, Expression};
 use regex_lite::Regex;
 
 pub fn get() -> Expression {
@@ -10,7 +10,7 @@ pub fn get() -> Expression {
             let pattern = args[0].eval(env)?.to_string();
             Regex::new(&pattern)
                 .map(|_| Expression::String(pattern)) // 仅验证正则有效性
-                .map_err(|e| Error::CustomError(e.to_string()))
+                .map_err(|e| LmError::CustomError(e.to_string()))
         }, "compile regex pattern (validation only)"),
 
         // 检查是否匹配
@@ -18,7 +18,7 @@ pub fn get() -> Expression {
             super::check_exact_args_len("match", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
-            let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
+            let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
             Ok(Expression::Boolean(regex.is_match(&text)))
         }, "check if text matches pattern"),
 
@@ -27,7 +27,7 @@ pub fn get() -> Expression {
             super::check_exact_args_len("find", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
-            let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
+            let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
 
             regex.find(&text).map_or(
                 Ok(Expression::None),
@@ -44,7 +44,7 @@ pub fn get() -> Expression {
             super::check_exact_args_len("find_all", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
-            let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
+            let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
 
             let matches: Vec<Expression> = regex.find_iter(&text).map(|m| {
                 Expression::List(vec![
@@ -62,7 +62,7 @@ pub fn get() -> Expression {
             super::check_exact_args_len("captures", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
-            let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
+            let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
 
             regex.captures(&text).map_or(
                 Ok(Expression::None),
@@ -81,7 +81,7 @@ pub fn get() -> Expression {
             super::check_exact_args_len("captures", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
-            let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
+            let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
 
             let all_caps: Vec<Expression> = regex.captures_iter(&text).map(|caps| {
                 let groups: Vec<Expression> = (0..caps.len()).map(|i| {
@@ -99,7 +99,7 @@ pub fn get() -> Expression {
             super::check_exact_args_len("split", &args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
-            let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
+            let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
 
             let parts: Vec<Expression> = regex.split(&text)
                 .map(|s| Expression::String(s.to_string()))
@@ -114,7 +114,7 @@ pub fn get() -> Expression {
             let pattern = args[0].eval(env)?.to_string();
             let replacement = args[1].eval(env)?.to_string();
             let text = args[2].eval(env)?.to_string();
-            let regex = Regex::new(&pattern).map_err(|e| Error::CustomError(e.to_string()))?;
+            let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
 
             Ok(Expression::String(
                 regex.replace_all(&text, replacement.as_str()).to_string()

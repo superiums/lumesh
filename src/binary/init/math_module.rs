@@ -1,6 +1,6 @@
 use super::curry;
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression, Int};
+use lumesh::{Environment, LmError, Expression, Int};
 
 pub fn get(env: &mut Environment) -> Expression {
     (b_tree_map! {
@@ -16,12 +16,12 @@ pub fn get(env: &mut Environment) -> Expression {
 
             let a = match args[0].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid l_rsh argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid l_rsh argument {}", e)))
             };
 
             let b = match args[1].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid l_rsh argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid l_rsh argument {}", e)))
             };
 
             let a = a as u64;
@@ -36,11 +36,11 @@ pub fn get(env: &mut Environment) -> Expression {
 
             let a = match args[0].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid rsh argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid rsh argument {}", e)))
             };
             let b = match args[1].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid rsh argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid rsh argument {}", e)))
             };
 
             Ok((a >> b).into())
@@ -51,11 +51,11 @@ pub fn get(env: &mut Environment) -> Expression {
 
             let a = match args[0].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid lsh argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid lsh argument {}", e)))
             };
             let b = match args[1].eval(env)? {
                 Expression::Integer(i) => i,
-                e => return Err(Error::CustomError(format!("invalid lsh argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid lsh argument {}", e)))
             };
 
             Ok((a << b).into())
@@ -74,11 +74,11 @@ pub fn get(env: &mut Environment) -> Expression {
                             match item.eval(env)? {
                                 Expression::Integer(i) => int_sum += i,
                                 Expression::Float(f) => float_sum += f,
-                                e => return Err(Error::CustomError(format!("invalid sum argument {:?}", e)))
+                                e => return Err(LmError::CustomError(format!("invalid sum argument {:?}", e)))
                             }
                         }
                     },
-                    e => return Err(Error::CustomError(format!("invalid sum argument {:?}", e)))
+                    e => return Err(LmError::CustomError(format!("invalid sum argument {:?}", e)))
                 }
             }
 
@@ -102,11 +102,11 @@ pub fn get(env: &mut Environment) -> Expression {
                             match item.eval(env)? {
                                 Expression::Integer(i) => int_product *= i,
                                 Expression::Float(f) => float_product *= f,
-                                e => return Err(Error::CustomError(format!("invalid product argument {:?}", e)))
+                                e => return Err(LmError::CustomError(format!("invalid product argument {:?}", e)))
                             }
                         }
                     },
-                    e => return Err(Error::CustomError(format!("invalid product argument {:?}", e)))
+                    e => return Err(LmError::CustomError(format!("invalid product argument {:?}", e)))
                 }
             }
 
@@ -122,7 +122,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => {
                     if i < 0 {
-                        Err(Error::CustomError("cannot take the factorial of a negative number".to_string()))
+                        Err(LmError::CustomError("cannot take the factorial of a negative number".to_string()))
                     } else {
                         let mut result = 1;
                         for n in 1..=i {
@@ -133,12 +133,12 @@ pub fn get(env: &mut Environment) -> Expression {
                 },
                 Expression::Float(f) => {
                     if f < 0.0 {
-                        Err(Error::CustomError("cannot take the factorial of a negative number".to_string()))
+                        Err(LmError::CustomError("cannot take the factorial of a negative number".to_string()))
                     } else {
                         Ok(f64::round(f64::exp(f64::ln(f) * f64::ln(f)) * f64::sqrt(2.0 * std::f64::consts::PI * f) * (1.0 + 1.0 / (12.0 * f) + 1.0 / (288.0 * f * f) - 139.0 / (51840.0 * f * f * f) - 571.0 / (2488320.0 * f * f * f * f))).into())
                     }
                 },
-                e => Err(Error::CustomError(format!("invalid fact argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid fact argument {:?}", e)))
             }
         }, "get the factorial of a number"),
 
@@ -147,7 +147,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.abs().into()),
                 Expression::Float(f) => Ok(f.abs().into()),
-                e => Err(Error::CustomError(format!("invalid abs argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid abs argument {:?}", e)))
             }
         }, "get the absolute value of a number"),
 
@@ -156,7 +156,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
                 Expression::Float(f) => Ok(f.floor().into()),
-                e => Err(Error::CustomError(format!("invalid floor argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid floor argument {:?}", e)))
             }
         }, "get the floor of a number"),
 
@@ -165,7 +165,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
                 Expression::Float(f) => Ok(f.ceil().into()),
-                e => Err(Error::CustomError(format!("invalid ceil argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid ceil argument {:?}", e)))
             }
         }, "get the ceiling of a number"),
 
@@ -174,7 +174,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
                 Expression::Float(f) => Ok(f.round().into()),
-                e => Err(Error::CustomError(format!("invalid round argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid round argument {:?}", e)))
             }
         }, "round a number to the nearest integer"),
 
@@ -183,7 +183,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
                 Expression::Float(f) => Ok(f.trunc().into()),
-                e => Err(Error::CustomError(format!("invalid trunc argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid trunc argument {:?}", e)))
             }
         }, "truncate a number"),
 
@@ -192,7 +192,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).sinh().into()),
                 Expression::Float(f) => Ok(f.sinh().into()),
-                e => Err(Error::CustomError(format!("invalid sinh argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid sinh argument {:?}", e)))
             }
         }, "get the hyperbolic sine of a number"),
 
@@ -201,7 +201,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).cosh().into()),
                 Expression::Float(f) => Ok(f.cosh().into()),
-                e => Err(Error::CustomError(format!("invalid cosh argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid cosh argument {:?}", e)))
             }
         }, "get the hyperbolic cosine of a number"),
 
@@ -210,7 +210,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).tanh().into()),
                 Expression::Float(f) => Ok(f.tanh().into()),
-                e => Err(Error::CustomError(format!("invalid tanh argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid tanh argument {:?}", e)))
             }
         }, "get the hyperbolic tangent of a number"),
 
@@ -219,7 +219,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).asinh().into()),
                 Expression::Float(f) => Ok(f.asinh().into()),
-                e => Err(Error::CustomError(format!("invalid asinh argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid asinh argument {:?}", e)))
             }
         }, "get the inverse hyperbolic sine of a number"),
 
@@ -228,7 +228,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).acosh().into()),
                 Expression::Float(f) => Ok(f.acosh().into()),
-                e => Err(Error::CustomError(format!("invalid acosh argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid acosh argument {:?}", e)))
             }
         }, "get the inverse hyperbolic cosine of a number"),
 
@@ -237,7 +237,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).atanh().into()),
                 Expression::Float(f) => Ok(f.atanh().into()),
-                e => Err(Error::CustomError(format!("invalid atanh argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid atanh argument {:?}", e)))
             }
         }, "get the inverse hyperbolic tangent of a number"),
 
@@ -246,7 +246,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).sin().into()),
                 Expression::Float(f) => Ok((f * std::f64::consts::PI).sin().into()),
-                e => Err(Error::CustomError(format!("invalid sinpi argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid sinpi argument {:?}", e)))
             }
         }, "get the sine of a number times pi"),
 
@@ -255,7 +255,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).cos().into()),
                 Expression::Float(f) => Ok((f * std::f64::consts::PI).cos().into()),
-                e => Err(Error::CustomError(format!("invalid cospi argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid cospi argument {:?}", e)))
             }
         }, "get the cosine of a number times pi"),
 
@@ -264,7 +264,7 @@ pub fn get(env: &mut Environment) -> Expression {
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).tan().into()),
                 Expression::Float(f) => Ok((f * std::f64::consts::PI).tan().into()),
-                e => Err(Error::CustomError(format!("invalid tanpi argument {:?}", e)))
+                e => Err(LmError::CustomError(format!("invalid tanpi argument {:?}", e)))
             }
         }, "get the tangent of a number times pi"),
 
@@ -273,7 +273,7 @@ pub fn get(env: &mut Environment) -> Expression {
             Ok(match args[0].eval(env)? {
                 Expression::Integer(i) => i % 2 == 1,
                 Expression::Float(f) => (f as Int) % 2 == 1,
-                e => return Err(Error::CustomError(format!("invalid isodd argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid isodd argument {}", e)))
             }.into())
         }, "is a number odd?"),
 
@@ -282,7 +282,7 @@ pub fn get(env: &mut Environment) -> Expression {
             Ok(match args[0].eval(env)? {
                 Expression::Integer(i) => i % 2 == 0,
                 Expression::Float(f) => (f as Int) % 2 == 0,
-                e => return Err(Error::CustomError(format!("invalid iseven argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid iseven argument {}", e)))
             }.into())
         }, "is a number even?"),
 
@@ -294,9 +294,9 @@ pub fn get(env: &mut Environment) -> Expression {
                 (Expression::Integer(base), Expression::Float(exponent)) => Ok((base as f64).powf(exponent).into()),
                 (Expression::Integer(base), Expression::Integer(exponent)) => match base.checked_pow(exponent as u32) {
                     Some(n) => Ok(n.into()),
-                    None => Err(Error::CustomError(format!("overflow when raising int {} to the power {}", base, exponent)))
+                    None => Err(LmError::CustomError(format!("overflow when raising int {} to the power {}", base, exponent)))
                 },
-                (a, b) => Err(Error::CustomError(format!("cannot raise {} to the power {}", a, b)))
+                (a, b) => Err(LmError::CustomError(format!("cannot raise {} to the power {}", a, b)))
             }
         }, "raise a number to a power"),
 
@@ -307,7 +307,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid natural log argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid natural log argument {}", e)))
             };
 
             Ok(x.ln().into())
@@ -320,13 +320,13 @@ pub fn get(env: &mut Environment) -> Expression {
             let base = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid log base {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid log base {}", e)))
             };
 
             let x = match args[1].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid log argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid log argument {}", e)))
             };
 
             Ok(x.log(base).into())
@@ -341,7 +341,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid log2 argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid log2 argument {}", e)))
             };
 
             Ok(x.log(base).into())
@@ -355,7 +355,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid log10 argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid log10 argument {}", e)))
             };
 
             Ok(x.log(base).into())
@@ -367,7 +367,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid sqrt argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid sqrt argument {}", e)))
             };
 
             Ok(x.sqrt().into())
@@ -379,7 +379,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid cbrt argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid cbrt argument {}", e)))
             };
 
             Ok(x.cbrt().into())
@@ -392,7 +392,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid sin argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid sin argument {}", e)))
             };
 
             Ok(x.sin().into())
@@ -404,7 +404,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid cos argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid cos argument {}", e)))
             };
 
             Ok(x.cos().into())
@@ -416,7 +416,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid tan argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid tan argument {}", e)))
             };
 
             Ok(x.tan().into())
@@ -430,7 +430,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid asin argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid asin argument {}", e)))
             };
 
             Ok(x.asin().into())
@@ -442,7 +442,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid acos argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid acos argument {}", e)))
             };
 
             Ok(x.acos().into())
@@ -454,7 +454,7 @@ pub fn get(env: &mut Environment) -> Expression {
             let x = match args[0].eval(env)? {
                 Expression::Float(f) => f,
                 Expression::Integer(i) => i as f64,
-                e => return Err(Error::CustomError(format!("invalid atan argument {}", e)))
+                e => return Err(LmError::CustomError(format!("invalid atan argument {}", e)))
             };
 
             Ok(x.atan().into())

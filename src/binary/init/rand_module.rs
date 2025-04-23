@@ -1,6 +1,6 @@
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression};
-use rand::{distributions::Uniform, prelude::SliceRandom, Rng};
+use lumesh::{Environment, LmError, Expression};
+use rand::{Rng, distributions::Uniform, prelude::SliceRandom};
 
 pub fn get() -> Expression {
     (b_tree_map! {
@@ -11,7 +11,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn int(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn int(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("int", &args, 2)?;
     match (args[0].eval(env)?, args[1].eval(env)?) {
         (Expression::Integer(l), Expression::Integer(h)) => {
@@ -19,14 +19,14 @@ fn int(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error
             let n = Uniform::new(l, h);
             Ok(Expression::Integer(rng.sample(n)))
         }
-        (l, h) => Err(Error::CustomError(format!(
+        (l, h) => Err(LmError::CustomError(format!(
             "expected two integers, but got {} and {}",
             l, h
         ))),
     }
 }
 
-fn choose(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn choose(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("choose", &args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {
@@ -34,14 +34,14 @@ fn choose(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
             let n = Uniform::new(0, list.len());
             Ok(list[rng.sample(n)].clone())
         }
-        otherwise => Err(Error::CustomError(format!(
+        otherwise => Err(LmError::CustomError(format!(
             "expected a list, but got {}",
             otherwise
         ))),
     }
 }
 
-fn shuffle(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn shuffle(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("shuffle", &args, 1)?;
     match args[0].eval(env)? {
         Expression::List(mut list) => {
@@ -49,7 +49,7 @@ fn shuffle(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, E
             list.shuffle(&mut rng);
             Ok(list.into())
         }
-        otherwise => Err(Error::CustomError(format!(
+        otherwise => Err(LmError::CustomError(format!(
             "expected a list, but got {}",
             otherwise
         ))),

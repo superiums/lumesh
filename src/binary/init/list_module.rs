@@ -1,7 +1,7 @@
 use super::Int;
 // use super::curry;
 use common_macros::b_tree_map;
-use lumesh::{Environment, Error, Expression};
+use lumesh::{Environment, LmError, Expression};
 pub fn get() -> Expression {
     (b_tree_map! {
         String::from("list") => Expression::builtin("list", list,
@@ -45,13 +45,13 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn list(args: Vec<Expression>, _env: &mut Environment) -> Result<Expression, Error> {
+fn list(args: Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
     Ok(Expression::List(args))
 }
 
-fn last(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn last(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "last requires exactly one argument".to_string(),
         ));
     }
@@ -60,15 +60,15 @@ fn last(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Erro
         let f = list.last().clone().unwrap();
         Ok(f.clone())
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "last requires a list as its argument".to_string(),
         ))
     }
 }
 
-fn first(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn first(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "first requires exactly one argument".to_string(),
         ));
     }
@@ -77,15 +77,15 @@ fn first(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
         let f = list.first().clone().unwrap();
         Ok(f.clone())
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "first requires a list as its argument".to_string(),
         ))
     }
 }
 
-fn chunk(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn chunk(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "chunk requires exactly two arguments".to_string(),
         ));
     }
@@ -107,20 +107,20 @@ fn chunk(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
             }
             Ok(Expression::List(result))
         } else {
-            Err(Error::CustomError(
+            Err(LmError::CustomError(
                 "chunk requires a list as its second argument".to_string(),
             ))
         }
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "chunk requires an integer as its first argument".to_string(),
         ))
     }
 }
 
-fn cons(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn cons(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "cons requires exactly two arguments".to_string(),
         ));
     }
@@ -129,15 +129,15 @@ fn cons(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Erro
         list.insert(0, args[0].eval(env)?);
         Ok(Expression::List(list))
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "cons requires a list as its second argument".to_string(),
         ))
     }
 }
 
-fn append(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn append(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "append requires exactly two arguments".to_string(),
         ));
     }
@@ -146,15 +146,15 @@ fn append(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Er
         list.push(args[1].eval(env)?);
         Ok(Expression::List(list))
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "append requires a list as its first argument".to_string(),
         ))
     }
 }
 
-pub(super) fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+pub(super) fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "len requires exactly one argument".to_string(),
         ));
     }
@@ -164,15 +164,15 @@ pub(super) fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expres
         Expression::String(string) => Ok(Expression::Integer(string.len() as Int)),
         Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
         Expression::Map(map) => Ok(Expression::Integer(map.len() as Int)),
-        _ => Err(Error::CustomError(
+        _ => Err(LmError::CustomError(
             "len requires a list or string as its argument".to_string(),
         )),
     }
 }
 
-pub(super) fn rev(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+pub(super) fn rev(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "rev requires exactly one argument".to_string(),
         ));
     }
@@ -182,15 +182,15 @@ pub(super) fn rev(args: Vec<Expression>, env: &mut Environment) -> Result<Expres
         Expression::String(string) => Ok(Expression::String(string.chars().rev().collect())),
         Expression::Symbol(string) => Ok(Expression::Symbol(string.chars().rev().collect())),
         Expression::Bytes(bytes) => Ok(Expression::Bytes(bytes.into_iter().rev().collect())),
-        _ => Err(Error::CustomError(
+        _ => Err(LmError::CustomError(
             "rev requires a list or string as its argument".to_string(),
         )),
     }
 }
 
-fn range(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn range(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "range requires exactly two arguments".to_string(),
         ));
     }
@@ -199,15 +199,15 @@ fn range(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
     if let (Expression::Integer(a), Expression::Integer(b)) = (a, b) {
         Ok(Expression::List((a..=b).map(|n| n.into()).collect()))
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "range requires two integers as its arguments".to_string(),
         ))
     }
 }
 
-fn foldl(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn foldl(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 3 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "foldl requires exactly three arguments".to_string(),
         ));
     }
@@ -220,15 +220,15 @@ fn foldl(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
         }
         Ok(acc)
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "foldl requires a list as its third argument".to_string(),
         ))
     }
 }
 
-fn foldr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn foldr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 3 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "foldr requires exactly three arguments".to_string(),
         ));
     }
@@ -241,15 +241,15 @@ fn foldr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
         }
         Ok(acc)
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "foldr requires a list as its third argument".to_string(),
         ))
     }
 }
 
-fn zip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn zip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "zip requires exactly two arguments".to_string(),
         ));
     }
@@ -262,15 +262,15 @@ fn zip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error
         }
         Ok(Expression::List(result))
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "zip requires two lists as its arguments".to_string(),
         ))
     }
 }
 
-fn unzip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn unzip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "unzip requires exactly one argument".to_string(),
         ));
     }
@@ -281,14 +281,14 @@ fn unzip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
         for item in list {
             if let Expression::List(pair) = item {
                 if pair.len() != 2 {
-                    return Err(Error::CustomError(
+                    return Err(LmError::CustomError(
                         "unzip requires a list of pairs as its argument".to_string(),
                     ));
                 }
                 list1.push(pair[0].clone());
                 list2.push(pair[1].clone());
             } else {
-                return Err(Error::CustomError(
+                return Err(LmError::CustomError(
                     "unzip requires a list of pairs as its argument".to_string(),
                 ));
             }
@@ -298,15 +298,15 @@ fn unzip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Err
             Expression::List(list2),
         ]))
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "unzip requires a list of pairs as its argument".to_string(),
         ))
     }
 }
 
-fn take(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn take(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "take requires exactly two arguments".to_string(),
         ));
     }
@@ -318,20 +318,20 @@ fn take(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Erro
                 list.into_iter().take(n as usize).collect(),
             ))
         } else {
-            Err(Error::CustomError(
+            Err(LmError::CustomError(
                 "take requires a list as its second argument".to_string(),
             ))
         }
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "take requires an integer as its first argument".to_string(),
         ))
     }
 }
 
-fn drop(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn drop(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "drop requires exactly two arguments".to_string(),
         ));
     }
@@ -343,20 +343,20 @@ fn drop(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Erro
                 list.into_iter().skip(n as usize).collect(),
             ))
         } else {
-            Err(Error::CustomError(
+            Err(LmError::CustomError(
                 "drop requires a list as its second argument".to_string(),
             ))
         }
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "drop requires an integer as its first argument".to_string(),
         ))
     }
 }
 
-fn split_at(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn split_at(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "split_at requires exactly two arguments".to_string(),
         ));
     }
@@ -371,20 +371,20 @@ fn split_at(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, 
                 Expression::List(dropped),
             ]))
         } else {
-            Err(Error::CustomError(
+            Err(LmError::CustomError(
                 "split_at requires a list as its second argument".to_string(),
             ))
         }
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "split_at requires an integer as its first argument".to_string(),
         ))
     }
 }
 
-fn nth(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
+fn nth(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
-        return Err(Error::CustomError(
+        return Err(LmError::CustomError(
             "nth requires exactly two arguments".to_string(),
         ));
     }
@@ -398,12 +398,12 @@ fn nth(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error
                 Ok(list[n as usize].clone())
             }
         } else {
-            Err(Error::CustomError(
+            Err(LmError::CustomError(
                 "nth requires a list as its second argument".to_string(),
             ))
         }
     } else {
-        Err(Error::CustomError(
+        Err(LmError::CustomError(
             "nth requires an integer as its first argument".to_string(),
         ))
     }

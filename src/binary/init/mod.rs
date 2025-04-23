@@ -1,4 +1,4 @@
-use lumesh::{Environment, Error, Expression, Int};
+use lumesh::{Environment, Expression, Int, LmError};
 
 use common_macros::b_tree_map;
 
@@ -179,12 +179,12 @@ pub fn init(env: &mut Environment) {
                     (Expression::Integer(m), Expression::Integer(n)) => Ok(Expression::List(
                         (m..n).map(Expression::Integer).collect::<Vec<Expression>>(),
                     )),
-                    _ => Err(Error::CustomError(
+                    _ => Err(LmError::CustomError(
                         "Arguments to range must be integers".to_string(),
                     )),
                 }
             } else {
-                Err(Error::CustomError(
+                Err(LmError::CustomError(
                     "Must supply 2 arguments to range".to_string(),
                 ))
             }
@@ -207,13 +207,13 @@ pub fn init(env: &mut Environment) {
                 if let Ok(n) = x.parse::<Int>() {
                     Ok(Expression::Integer(n))
                 } else {
-                    Err(Error::CustomError(format!(
+                    Err(LmError::CustomError(format!(
                         "could not convert {:?} to an integer",
                         x
                     )))
                 }
             }
-            otherwise => Err(Error::CustomError(format!(
+            otherwise => Err(LmError::CustomError(format!(
                 "could not convert {:?} to an integer",
                 otherwise
             ))),
@@ -236,7 +236,7 @@ pub fn init(env: &mut Environment) {
                     if *i as usize <= exprs.len() {
                         exprs.insert(*i as usize, val);
                     } else {
-                        return Err(Error::CustomError(format!(
+                        return Err(LmError::CustomError(format!(
                             "index {} out of bounds for {:?}",
                             idx, arr
                         )));
@@ -246,14 +246,14 @@ pub fn init(env: &mut Environment) {
                     if *i as usize <= s.len() {
                         s.insert_str(*i as usize, &val.to_string());
                     } else {
-                        return Err(Error::CustomError(format!(
+                        return Err(LmError::CustomError(format!(
                             "index {} out of bounds for {:?}",
                             idx, arr
                         )));
                     }
                 }
                 _ => {
-                    return Err(Error::CustomError(format!(
+                    return Err(LmError::CustomError(format!(
                         "cannot insert {:?} into {:?} with index {:?}",
                         val, arr, idx
                     )));
@@ -269,7 +269,7 @@ pub fn init(env: &mut Environment) {
         "keys",
         |args, env| match args[0].eval(env)? {
             Expression::Map(m) => Ok(m.into_keys().collect::<Vec<_>>().into()),
-            otherwise => Err(Error::CustomError(format!(
+            otherwise => Err(LmError::CustomError(format!(
                 "cannot get the keys of {}",
                 otherwise
             ))),
@@ -281,7 +281,7 @@ pub fn init(env: &mut Environment) {
         "vals",
         |args, env| match args[0].eval(env)? {
             Expression::Map(m) => Ok(m.into_values().collect::<Vec<_>>().into()),
-            otherwise => Err(Error::CustomError(format!(
+            otherwise => Err(LmError::CustomError(format!(
                 "cannot get the values of {}",
                 otherwise
             ))),
@@ -303,7 +303,7 @@ pub fn init(env: &mut Environment) {
             Expression::Symbol(x) | Expression::String(x) => {
                 Ok(Expression::Integer(x.chars().count() as Int))
             }
-            otherwise => Err(Error::CustomError(format!(
+            otherwise => Err(LmError::CustomError(format!(
                 "cannot get length of {}",
                 otherwise
             ))),
@@ -380,7 +380,7 @@ pub fn init(env: &mut Environment) {
                     .map(|ch| Expression::String(ch.to_string()))
                     .collect::<Vec<Expression>>(),
             )),
-            otherwise => Err(Error::CustomError(format!(
+            otherwise => Err(LmError::CustomError(format!(
                 "cannot get lines of non-string {}",
                 otherwise
             ))),
@@ -410,7 +410,7 @@ pub fn init(env: &mut Environment) {
             match &args[0] {
                 Expression::Symbol(x) | Expression::String(x) => env.undefine(x),
                 _ => {
-                    return Err(Error::CustomError(format!(
+                    return Err(LmError::CustomError(format!(
                         "expected string or symbol, but got {:?}",
                         args[0]
                     )));
@@ -445,11 +445,11 @@ fn check_args_len(
     name: impl ToString,
     args: &[Expression],
     expected_len: impl std::ops::RangeBounds<usize>,
-) -> Result<(), Error> {
+) -> Result<(), LmError> {
     if expected_len.contains(&args.len()) {
         Ok(())
     } else {
-        Err(Error::CustomError(format!(
+        Err(LmError::CustomError(format!(
             "too few arguments to function {}",
             name.to_string()
         )))
@@ -460,11 +460,11 @@ fn check_exact_args_len(
     name: impl ToString,
     args: &[Expression],
     expected_len: usize,
-) -> Result<(), Error> {
+) -> Result<(), LmError> {
     if args.len() == expected_len {
         Ok(())
     } else {
-        Err(Error::CustomError(if args.len() > expected_len {
+        Err(LmError::CustomError(if args.len() > expected_len {
             format!("too many arguments to function {}", name.to_string())
         } else {
             format!("too few arguments to function {}", name.to_string())

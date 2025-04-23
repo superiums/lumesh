@@ -20,7 +20,7 @@ use crate::cmdhelper::{
     AI_CLIENT, PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
 use crate::runtime::{check, init_config};
-use crate::{Environment, Error, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
+use crate::{Environment, LmError, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
 
 use lazy_static::lazy_static;
 use rustyline::history::DefaultHistory;
@@ -288,7 +288,7 @@ fn check_balanced(input: &str) -> bool {
     stack.is_empty()
 }
 
-pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
+pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
     println!("Rustyline Enhanced CLI (v15.0.0)");
     init_config(env); // 调用 REPL 初始化
 
@@ -332,9 +332,10 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
                     }
                     // main
                     _ => {
+                        dbg!(&line);
                         if parse_and_eval(&line, env) {
                             rl.add_history_entry(&line)
-                                .map_err(|_| Error::CustomError("add history err".into()))?;
+                                .map_err(|_| LmError::CustomError("add history err".into()))?;
                         };
                     }
                 }
@@ -355,7 +356,7 @@ pub fn run_repl(env: &mut Environment) -> Result<(), Error> {
     }
 
     rl.save_history(HISTORY_FILE)
-        .map_err(|_| Error::CustomError("save histroy err".into()))?;
+        .map_err(|_| LmError::CustomError("save histroy err".into()))?;
     Ok(())
 }
 

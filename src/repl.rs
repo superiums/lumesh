@@ -29,9 +29,10 @@ use rustyline::{Config, Context};
 use std::collections::HashSet;
 use std::env;
 use std::ffi::{OsStr, OsString};
-use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
 // use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+
+use std::sync::{Arc, Mutex};
 
 const HISTORY_FILE: &str = "/tmp/lume-history";
 // ANSI 转义码
@@ -39,15 +40,104 @@ const GREEN_BOLD: &str = "\x1b[1;32m";
 const RED: &str = "\x1b[31m";
 const RESET: &str = "\x1b[0m";
 
-pub struct LumeHelper {
-    completer: FilenameCompleter,
-    hinter: HistoryHinter,
-    // validator: InputValidator,
-    highlighter: SyntaxHighlighter,
-    // colored_prompt: String,
-    // env: Environment,
-    // // is_incomplete: bool,
-    // is_incomplete: RefCell<bool>,
+// 使用 Arc<Mutex> 包装编辑器
+pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
+    println!("Rustyline Enhanced CLI (v15.0.0)");
+    init_config(env);
+
+    // 使用 Arc<Mutex> 保护编辑器
+    let rl = Arc::new(Mutex::new(new_editor()));
+
+    if rl.lock().unwrap().load_history(HISTORY_FILE).is_err() {
+        println!("No previous history");
+    }
+
+    let pe = get_prompt_engine();
+    let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
+
+    // 设置信号处理 (Unix 系统)
+    #[cfg(unix)]
+    {
+        let rl_clone = Arc::clone(&rl);
+        let running_clone = Arc::clone(&running);
+        ctrlc::set_handler(move || {
+            running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+            let _ = rl_clone.lock().unwrap().save_history(HISTORY_FILE);
+            std::process::exit(0);
+        })
+        .expect("Error setting Ctrl-C handler");
+    }
+
+    while running.load(std::sync::atomic::Ordering::SeqCst) {
+        let prompt = pe.get_prompt();
+
+        // 在锁的保护下执行 readline
+        let line = match rl.lock().unwrap().readline(prompt.as_str()) {
+            Ok(line) => line,
+            Err(ReadlineError::Interrupted) => {
+                println!("CTRL-C");
+                break;
+            }
+            Err(ReadlineError::Eof) => {
+                println!("CTRL-D");
+                break;
+            }
+            Err(err) => {
+                println!("Error: {:?}", err);
+                break;
+            }
+        };
+
+        match line.trim() {
+            "" => {}
+            "exit" => break,
+            "history" => {
+                for (i, entry) in rl.lock().unwrap().history().iter().enumerate() {
+                    println!("{}: {}", i + 1, entry);
+                }
+            }
+            _ => {
+                if parse_and_eval(&line, env) {
+                    rl.lock()
+                        .unwrap()
+                        .add_history_entry(&line)
+                        .map_err(|_| LmError::CustomError("add history err".into()))?;
+                }
+            }
+        }
+    }
+
+    // 保存历史记录
+    rl.lock()
+        .unwrap()
+        .save_history(HISTORY_FILE)
+        .map_err(|_| LmError::CustomError("save history err".into()))?;
+    Ok(())
+}
+
+// 确保 helper 也是线程安全的
+#[derive(Clone)]
+struct LumeHelper {
+    completer: Arc<FilenameCompleter>,
+    hinter: Arc<HistoryHinter>,
+    highlighter: Arc<SyntaxHighlighter>,
+}
+
+fn new_editor() -> Editor<LumeHelper, FileHistory> {
+    let config = rustyline::Config::builder()
+        .history_ignore_space(true)
+        .completion_type(CompletionType::List)
+        .build();
+
+    let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());
+
+    let helper = LumeHelper {
+        completer: Arc::new(FilenameCompleter::new()),
+        hinter: Arc::new(HistoryHinter::new()),
+        highlighter: Arc::new(SyntaxHighlighter),
+    };
+    rl.set_helper(Some(helper));
+    rl
 }
 
 impl Helper for LumeHelper {}
@@ -288,98 +378,98 @@ fn check_balanced(input: &str) -> bool {
     stack.is_empty()
 }
 
-pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
-    println!("Rustyline Enhanced CLI (v15.0.0)");
-    init_config(env); // 调用 REPL 初始化
+// pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
+//     println!("Rustyline Enhanced CLI (v15.0.0)");
+//     init_config(env); // 调用 REPL 初始化
 
-    let mut rl = new_editor();
-    if rl.load_history(HISTORY_FILE).is_err() {
-        println!("No previous history");
-    }
-    // let mut lines = vec![];
+//     let mut rl = new_editor();
+//     if rl.load_history(HISTORY_FILE).is_err() {
+//         println!("No previous history");
+//     }
+//     // let mut lines = vec![];
 
-    // 示例：设置自定义模板 (可选)
-    let pe = get_prompt_engine();
+//     // 示例：设置自定义模板 (可选)
+//     let pe = get_prompt_engine();
 
-    loop {
-        // let is_incomplete = rl
-        //     .helper()
-        //     .map(|h| *h.is_incomplete.borrow())
-        //     .unwrap_or(false);
-        // dbg!(is_incomplete);
-        // // 动态设置提示符
-        // let prompt = if is_incomplete {
-        //     pe.get_incomplete_prompt()
-        // } else {
-        //     pe.get_prompt()
-        // };
-        // let prompt = get_prompt(env);
-        // let prompt = prompt_engine.get_prompt();
-        let prompt = pe.get_prompt();
+//     loop {
+//         // let is_incomplete = rl
+//         //     .helper()
+//         //     .map(|h| *h.is_incomplete.borrow())
+//         //     .unwrap_or(false);
+//         // dbg!(is_incomplete);
+//         // // 动态设置提示符
+//         // let prompt = if is_incomplete {
+//         //     pe.get_incomplete_prompt()
+//         // } else {
+//         //     pe.get_prompt()
+//         // };
+//         // let prompt = get_prompt(env);
+//         // let prompt = prompt_engine.get_prompt();
+//         let prompt = pe.get_prompt();
 
-        match rl.readline(prompt.as_str()) {
-            Ok(line) => {
-                match line.trim() {
-                    "" => {}
-                    // "cd" => {
-                    //     env::set_current_dir(path)?;
-                    // }
-                    "exit" => break,
-                    "history" => {
-                        for (i, entry) in rl.history().iter().enumerate() {
-                            println!("{}: {}", i + 1, entry);
-                        }
-                    }
-                    // main
-                    _ => {
-                        dbg!(&line);
-                        if parse_and_eval(&line, env) {
-                            rl.add_history_entry(&line)
-                                .map_err(|_| LmError::CustomError("add history err".into()))?;
-                        };
-                    }
-                }
-            }
-            Err(ReadlineError::Interrupted) => {
-                println!("CTRL-C");
-                break;
-            }
-            Err(ReadlineError::Eof) => {
-                println!("CTRL-D");
-                break;
-            }
-            Err(err) => {
-                println!("Error: {:?}", err);
-                break;
-            }
-        }
-    }
+//         match rl.readline(prompt.as_str()) {
+//             Ok(line) => {
+//                 match line.trim() {
+//                     "" => {}
+//                     // "cd" => {
+//                     //     env::set_current_dir(path)?;
+//                     // }
+//                     "exit" => break,
+//                     "history" => {
+//                         for (i, entry) in rl.history().iter().enumerate() {
+//                             println!("{}: {}", i + 1, entry);
+//                         }
+//                     }
+//                     // main
+//                     _ => {
+//                         dbg!(&line);
+//                         if parse_and_eval(&line, env) {
+//                             rl.add_history_entry(&line)
+//                                 .map_err(|_| LmError::CustomError("add history err".into()))?;
+//                         };
+//                     }
+//                 }
+//             }
+//             Err(ReadlineError::Interrupted) => {
+//                 println!("CTRL-C");
+//                 break;
+//             }
+//             Err(ReadlineError::Eof) => {
+//                 println!("CTRL-D");
+//                 break;
+//             }
+//             Err(err) => {
+//                 println!("Error: {:?}", err);
+//                 break;
+//             }
+//         }
+//     }
 
-    rl.save_history(HISTORY_FILE)
-        .map_err(|_| LmError::CustomError("save histroy err".into()))?;
-    Ok(())
-}
+//     rl.save_history(HISTORY_FILE)
+//         .map_err(|_| LmError::CustomError("save histroy err".into()))?;
+//     Ok(())
+// }
 
-fn new_editor() -> Editor<LumeHelper, FileHistory> {
-    let config = rustyline::Config::builder()
-        .history_ignore_space(true)
-        .completion_type(CompletionType::List)
-        .build();
+// fn new_editor() -> Editor<LumeHelper, FileHistory> {
+//     let config = rustyline::Config::builder()
+//         .history_ignore_space(true)
+//         .completion_type(CompletionType::List)
+//         .build();
 
-    let mut rl = Editor::with_config(config).unwrap_or(Editor::new().unwrap());
+//     let mut rl = Editor::with_config(config).unwrap_or(Editor::new().unwrap());
 
-    let helper = LumeHelper {
-        completer: FilenameCompleter::new(),
-        hinter: HistoryHinter::new(),
-        // validator: InputValidator,
-        highlighter: SyntaxHighlighter,
-        // colored_prompt: ">>>".into(),
-        // env: env.clone(),
-        // is_incomplete: RefCell::new(false),
-    };
-    rl.set_helper(Some(helper));
-    rl
-}
+//     let helper = LumeHelper {
+//         completer: FilenameCompleter::new(),
+//         hinter: HistoryHinter::new(),
+//         // validator: InputValidator,
+//         highlighter: SyntaxHighlighter,
+//         // colored_prompt: ">>>".into(),
+//         // env: env.clone(),
+//         // is_incomplete: RefCell::new(false),
+//     };
+//     rl.set_helper(Some(helper));
+//     rl
+// }
 
 fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> String {
     let prompt = prompt.to_string();

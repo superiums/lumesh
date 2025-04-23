@@ -19,7 +19,9 @@ fn exec_single_cmd(
 ) -> Result<(Vec<u8>, Expression), LmError> {
     dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(&cmdstr);
-    cmd.args(args).envs(bindings);
+    cmd.args(args)
+        .envs(bindings)
+        .current_dir(std::env::current_dir()?);
     // 设置 stdin
     if input.is_some() {
         cmd.stdin(Stdio::piped());

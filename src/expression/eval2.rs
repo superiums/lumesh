@@ -151,24 +151,24 @@ impl Expression {
 
                         let bindings = env.get_bindings_map();
 
-                        // let mut cmd_args = vec![];
-                        // for arg in args {
-                        //     for flattened_arg in
-                        //         Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
-                        //     {
-                        //         match flattened_arg {
-                        //             Self::String(s) => cmd_args.push(s),
-                        //             Self::Bytes(b) => {
-                        //                 cmd_args.push(String::from_utf8_lossy(&b).to_string())
-                        //             }
-                        //             Self::None => continue,
-                        //             _ => cmd_args.push(format!("{}", flattened_arg)),
-                        //         }
-                        //     }
-                        // }
+                        let mut cmd_args = vec![];
+                        for arg in args {
+                            for flattened_arg in
+                                Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
+                            {
+                                match flattened_arg {
+                                    Self::String(s) => cmd_args.push(s),
+                                    Self::Bytes(b) => {
+                                        cmd_args.push(String::from_utf8_lossy(&b).to_string())
+                                    }
+                                    Self::None => continue,
+                                    _ => cmd_args.push(format!("{}", flattened_arg)),
+                                }
+                            }
+                        }
                         // dbg!(&args, &cmd_args);
-                        let cmd_args: Vec<String> =
-                            args.iter().map(|expr| expr.to_string()).collect();
+                        // let cmd_args: Vec<String> =
+                        //     args.iter().map(|expr| expr.to_string()).collect();
                         // let mut cmd = Command::new(&name);
                         // cmd.current_dir(env.get_cwd())
                         //     .args(&cmd_args)

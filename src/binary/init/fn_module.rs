@@ -1,4 +1,4 @@
-use super::{Environment, LmError, Expression};
+use super::{Environment, Expression, LmError};
 use common_macros::b_tree_map;
 use lumesh::parse;
 
@@ -21,7 +21,7 @@ pub(super) fn curry_env(
     );
 
     // 递归构建嵌套Lambda
-    for (i, param) in params.iter().enumerate().rev() {
+    for (_, param) in params.iter().enumerate().rev() {
         applied = Expression::Lambda(
             vec![param.clone()], // 单参数形式
             Box::new(applied),
@@ -33,30 +33,30 @@ pub(super) fn curry_env(
 }
 
 // 反向柯里化（适配新参数结构）
-pub(super) fn reverse_curry_env(
-    f: Expression,
-    args: usize,
-    env: &mut Environment,
-) -> Result<Expression, LmError> {
-    // 生成反向参数列表
-    let params: Vec<String> = (0..args).rev().map(|i| format!("arg{}", i)).collect();
+// pub(super) fn reverse_curry_env(
+//     f: Expression,
+//     args: usize,
+//     env: &mut Environment,
+// ) -> Result<Expression, LmError> {
+//     // 生成反向参数列表
+//     let params: Vec<String> = (0..args).rev().map(|i| format!("arg{}", i)).collect();
 
-    // 构建应用表达式
-    let mut applied = Expression::Apply(
-        Box::new(f.clone()),
-        params
-            .iter()
-            .map(|name| Expression::Symbol(name.clone()))
-            .collect(),
-    );
+//     // 构建应用表达式
+//     let mut applied = Expression::Apply(
+//         Box::new(f.clone()),
+//         params
+//             .iter()
+//             .map(|name| Expression::Symbol(name.clone()))
+//             .collect(),
+//     );
 
-    // 反向嵌套Lambda
-    for param in params.iter() {
-        applied = Expression::Lambda(vec![param.clone()], Box::new(applied), env.fork());
-    }
+//     // 反向嵌套Lambda
+//     for param in params.iter() {
+//         applied = Expression::Lambda(vec![param.clone()], Box::new(applied), env.fork());
+//     }
 
-    Ok(applied)
-}
+//     Ok(applied)
+// }
 
 // 核心高阶函数定义
 pub fn get() -> Expression {
@@ -160,29 +160,29 @@ fn build_curry() -> Expression {
 
 // 其他辅助宏和函数保持不变...
 
-pub fn reverse_curry(f: Expression, args: usize) -> Expression {
-    let mut env = Environment::default();
-    reverse_curry_env(f, args, &mut env).unwrap()
-}
+// pub fn reverse_curry(f: Expression, args: usize) -> Expression {
+//     let mut env = Environment::default();
+//     reverse_curry_env(f, args, &mut env).unwrap()
+// }
 
 pub(super) fn curry(f: Expression, args: usize) -> Expression {
     let mut env = Environment::default();
     curry_env(f, args, &mut env).unwrap()
 }
 
-fn curry_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    if args.len() < 2 {
-        return Err(LmError::CustomError(
-            "curry requires at least two arguments".to_string(),
-        ));
-    }
-    let f = args[0].eval(env)?;
-    if let Expression::Integer(arg_count) = args[1].eval(env)? {
-        curry_env(f, arg_count as usize, env)
-    } else {
-        Ok(f)
-    }
-}
+// fn curry_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+//     if args.len() < 2 {
+//         return Err(LmError::CustomError(
+//             "curry requires at least two arguments".to_string(),
+//         ));
+//     }
+//     let f = args[0].eval(env)?;
+//     if let Expression::Integer(arg_count) = args[1].eval(env)? {
+//         curry_env(f, arg_count as usize, env)
+//     } else {
+//         Ok(f)
+//     }
+// }
 
 fn conditional(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 3 {

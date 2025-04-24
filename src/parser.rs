@@ -545,7 +545,7 @@ impl PrattParser {
                     Box::new(rhs),
                     true,
                 )),
-                _ => unreachable!(),
+                // _ => unreachable!(),
             },
             // OperatorKind::Postfix => Expression::UnaryOp(op.symbol.into(), Box::new(rhs), false), //differ
             OperatorKind::Infix => match op.symbol {

@@ -26,7 +26,7 @@ use std::sync::{Arc, Mutex};
 const HISTORY_FILE: &str = "/tmp/lume-history";
 // ANSI 转义码
 const GREEN_BOLD: &str = "\x1b[1;32m";
-const RED: &str = "\x1b[31m";
+// const RED: &str = "\x1b[31m";
 const RESET: &str = "\x1b[0m";
 
 // 使用 Arc<Mutex> 包装编辑器
@@ -341,31 +341,31 @@ impl Highlighter for SyntaxHighlighter {
         Cow::Owned(colored_line)
     }
 }
-fn check_balanced(input: &str) -> bool {
-    let mut stack = Vec::new();
-    for c in input.chars() {
-        match c {
-            '(' | '[' | '{' => stack.push(c),
-            ')' => {
-                if stack.pop() != Some('(') {
-                    return false;
-                }
-            }
-            ']' => {
-                if stack.pop() != Some('[') {
-                    return false;
-                }
-            }
-            '}' => {
-                if stack.pop() != Some('{') {
-                    return false;
-                }
-            }
-            _ => {}
-        }
-    }
-    stack.is_empty()
-}
+// fn check_balanced(input: &str) -> bool {
+//     let mut stack = Vec::new();
+//     for c in input.chars() {
+//         match c {
+//             '(' | '[' | '{' => stack.push(c),
+//             ')' => {
+//                 if stack.pop() != Some('(') {
+//                     return false;
+//                 }
+//             }
+//             ']' => {
+//                 if stack.pop() != Some('[') {
+//                     return false;
+//                 }
+//             }
+//             '}' => {
+//                 if stack.pop() != Some('{') {
+//                     return false;
+//                 }
+//             }
+//             _ => {}
+//         }
+//     }
+//     stack.is_empty()
+// }
 
 // pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
 //     println!("Rustyline Enhanced CLI (v15.0.0)");

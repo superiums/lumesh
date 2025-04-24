@@ -23,6 +23,7 @@ impl Add for Expression {
             // string + num
             (Self::String(m), Self::Integer(n)) => Self::String(m + &n.to_string()),
             (Self::String(m), Self::Float(n)) => Self::String(m + &n.to_string()),
+            // num + string
             (Self::Integer(m), Self::String(n)) => Self::String(m.to_string() + &n),
             (Self::Float(m), Self::String(n)) => Self::String(m.to_string() + &n),
             // other

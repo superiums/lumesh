@@ -1,5 +1,4 @@
 use lazy_static::lazy_static;
-use rustyline::Context;
 use std::collections::HashSet;
 use std::env;
 use std::ffi::OsStr;

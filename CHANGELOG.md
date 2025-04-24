@@ -3,6 +3,8 @@
 - rewrite parser
 - rewrite expr excutor
 - rewrite interactive repl
+- rewrite pipe and redirect
+
 ### break changes
 - lambda comes to : `(x,y) -> { x+y }`
 - ranges comes to : `3..9`
@@ -27,6 +29,9 @@ ar[i]            # [7]
 - math power support.
 - pipe, redirect works more effient
 - pipe support 2 modes: stream pipe `|` and param pipe `|>`
+pipes to interactive programs like vi, less fixed.
+- lambda and macros support particle apply
+
 - cmds never neeeds None param now
 - allow custom operators:
 ```bash

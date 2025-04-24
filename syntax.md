@@ -1,257 +1,255 @@
-Lumesh Shell 语法手册
+**Lumesh Shell Syntax Manual**
+
 ---
 
-## 一、基础语法结构
+## I. Basic Syntax Structure
 
-1. **变量声明与赋值**
-   - **声明变量**：使用 `let` 关键字，支持多变量声明。
+1. **Variable Declaration and Assignment**
+   - **Declare Variables**: Use the `let` keyword, supporting multiple variable declarations.
      ```bash
-     let x = 10                 # 单变量
-     let a, b = 1, "hello"      # 多变量分别赋值（右侧表达式数量必须匹配）
-     let a, b, c = 1            # 多变量统一赋值
+     let x = 10                 # Single variable
+     let a, b = 1, "hello"      # Multiple variables with separate assignments (the number of expressions on the right must match)
+     let a, b, c = 1            # Multiple variables with a unified assignment
+     let a = b = 1              # Multiple variables with a unified assignment
      ```
 
-     利用let，创建别名
+     Using `let`, create an alias:
      ```bash
      let cat = bat
      ```
 
-     利用let，不仅可以定义变量为字符串，函数，宏, 命令，还可以重载操作符
+     With `let`, you can define variables as strings, functions, macros, commands, and even custom operators:
      ```bash
-     let ++ = x -> x + 1;
-     ++ 3
+     let _++ = x -> x + 1;
+     _++ 3
      ```
 
-   - **赋值操作符**：
-     - `=`：普通赋值。
-     - `:=`：延迟赋值（将表达式作为引用存储）。
+   - **Assignment Operators**:
+     - `=`: Standard assignment.
+     - `:=`: Delayed assignment (stores the expression as a reference).
      ```bash
-     x := 2 + 3  # 延迟求值，存储表达式而非结果
-     echo x      # 输出表达式： 2+3
-     eval x      # 输出结果： 5
+     x := 2 + 3  # Delayed evaluation, storing the expression rather than the result
+     echo x      # Outputs the expression: 2+3
+     eval x      # Outputs the result: 5
      ```
-   - **删除变量**：使用 `del`。
+   - **Delete Variable**: Use `del`.
      ```bash
      del x
      ```
-   - **使用变量**：无须$,直接使用 `echo a x`。
+   - **Using Variables**: No need for `$`, simply use `echo a x`.
 
-   **边缘情况**：
-   - 严格模式（`-s`）下，变量必须初始化，否则报错。
-   - 多变量声明时，右侧表达式数量必须与左侧变量数量一致或统一一个值，否则抛出 `SyntaxError`。
+   **Edge Cases**:
+   - In strict mode (`-s`), variables must be initialized; otherwise, an error will occur.
+   - When declaring multiple variables, the number of expressions on the right must match the number of variables on the left or be a unified value; otherwise, a `SyntaxError` will be thrown.
 
-2. **数据类型**
-   - **基本类型**：
-     | 类型       | 示例                     |
-     |-----------|--------------------------|
-     | 整数       | `42`, `-3`               |
-     | 浮点数     | `3.14`, `-0.5`           |
-     | 字符串     | `"Hello\n"`, `'raw'`      |
-     | 布尔值     | `True`, `False`           |
-     | 列表       | `[1, "a", True]`          |
-     | 映射（字典）| `{name: "Alice", age: 30}`|
-     | `None`     | `None`                    |
+2. **Data Types**
+   - **Basic Types**:
+     | Type       | Example                     |
+     |------------|-----------------------------|
+     | Integer    | `42`, `-3`                  |
+     | Float      | `3.14`, `-0.5`              |
+     | String     | `"Hello\n"`, `'raw'`        |
+     | Boolean    | `True`, `False`             |
+     | List       | `[1, "a", True]`            |
+     | Map (Dict) | `{name: "Alice", age: 30}`  |
+     | `None`     | `None`                       |
 
-   - **复杂类型**：
-     | 类型       | 示例                     |
-     |-----------|--------------------------|
-     | 变量     | `x`                    |
-     | 函数     | `fn add(x,y){return x+y}`    |
-     | lambda     | `let add = x -> y -> x + y`  |
-     | bultin     | `math@floor`  |
+   - **Complex Types**:
+     | Type       | Example                     |
+     |------------|-----------------------------|
+     | Variable   | `x`                         |
+     | Function    | `fn add(x,y){return x+y}`  |
+     | Lambda     | `let add = x -> y -> x + y` |
+     | Built-in   | `math@floor`               |
 
-   - **字符串规则**：
-     - 双引号支持转义（如 `\n`），单引号为原始字符串。
+   - **String Rules**:
+     - Double quotes support escape sequences (e.g., `\n`), while single quotes are raw strings.
 
      ```bash
      let str = "Hello\nworld!"
      let str2 = 'Hello world!'
      ```
 
-   **边缘情况**：
-   - 单引号字符串中的 `\` 按字面处理（如 `'Line\n'` 输出 `Line\n`）。
+   **Edge Cases**:
+   - In single-quoted strings, `\` is treated literally (e.g., `'Line\n'` outputs `Line\n`).
 
-3. **作用域规则**
-   - 语句块{},函数 视为子环境
-   - 子环境继承父环境变量，不修改父作用域。
-   ```bash
-   let x = 1
-   if True {
-       x = 2    # 修改 x
-       echo x   # 输出 2
-   }
-   echo x       # 输出 10
-   ```
----
-
-## 二、运算符规则
-> 操作符可通过`ops`命令查看
-
-### 1. 运算符分类与优先级
-
-**优先级从高到低**（数值越小优先级越高）
-
-| 优先级 | 运算符/结构              | 示例/说明                  |
-| --- | ------------------- | ---------------------- |
-| 1   | 括号 `()`             | `(a + b) * c`          |
-| 2   | 函数调用、列表 `[]`        | `func arg`, `[1, 2]`   |
-| 3   | 单目运算符 `!`, `-`      | `!flag`, `-5`          |
-| 4   | 幂运算 `**`            | `2 ** 3`               |
-| 5   | 乘除模 `*`, `/`, `%`   | `a * b % c`            |
-| 6   | 加减 `+`, `-`         | `a + b - c`            |
-| 7   | 比较 `==`, `!=`, `>`等 | `a > b                 |
-| 8   | 逻辑与 `&&`            | `cond1 && cond2`       |
-| 9   | 逻辑或 `||`          |                        |
-| 10  | 条件运算符 `?:`          | `cond ? t : f`         |
-| 11  | 赋值 `=`, `:=`        | `x = 5`, `let y := 10` |
-| 12  | 管道 `|`                | `ls | sort`               |
-| 13  | 重定向 `<<` `>>` `>>>`   | `date >> /tmp/day.txt`      |
-
-### 2. 空格规则
-| 运算符类型         | 是否需要空格                | 示例                    |
-|-------------------|---------------------------|-------------------------|
-| 常规运算符         | 严格模式下，两侧必须空格       | `a + b` `x <= 10`       |
-|                  | 非严格模式，两侧可以不空格      | `a+b` `x<=10` `a=5`      |
-|                  |          `-`和`/`例外       | `b-3`为字符串，`3-b`为减法 |
-| 单字符运算符       | 允许无空格（需上下文明确）     | `++x`  `arr@0`    |
-| 自定义运算符       | 必须用下划线开头且两侧空格     | `x _*+ y` `a _?= b`     |
-
-**边缘情况**：
-- `x++y` 非法， `x + (++y)`合法。
-- 非严格模式下，`b-3`为字符串，`3-b`为减法
+3. **Scope Rules**
+   - Lambda and function definitions are treated as sub-environments.
+   - Sub-environments inherit parent environment variables without modifying the parent scope.
 
 ---
 
+## II. Operator Rules
 
-### 3. 隐式类型转换
+### 1. Operator Classification and Precedence
+
+**Precedence from highest to lowest** (lower numbers indicate higher precedence)
+
+| Precedence | Operator/Structure         | Example/Description         |
+|------------|-----------------------------|------------------------------|
+| 1          | Parentheses `()`            | `(a + b) * c`               |
+| 2          | Function calls, Lists `[]`  | `func arg`, `[1, 2]`        |
+| 3          | Unary operators `!`, `-`, `__..` | `!flag`, `-5`               |
+| 4          | Exponentiation `**`         | `2 ** 3`                    |
+| 5          | Multiplication/Division/Modulus `*`, `/`, `%`, `_*..` | `a * b % c`            |
+| 6          | Addition/Subtraction `+`, `-`, `_+..` | `a + b - c`            |
+| 7          | Comparison `==`, `!=`, `>` etc. | `a > b`                   |
+| 8          | Logical AND `&&`            | `cond1 && cond2`            |
+| 9          | Logical OR `||`             |                              |
+| 10         | Conditional operator `?:`    | `cond ? t : f`              |
+| 11         | Assignment `=`, `:=`        | `x = 5`, `let y := 10`      |
+| 12         | Pipe `|`                    | `ls | sort`                 |
+| 13         | Redirection `<<`, `>>`, `>>>` | `date >> /tmp/day.txt`     |
+
+### 2. Space Rules
+| Operator Type         | Requires Spaces?           | Example                    |
+|-----------------------|---------------------------|----------------------------|
+| Regular Operators      | In strict mode, spaces required on both sides | `a + b`, `x <= 10`       |
+|                       | In non-strict mode, spaces can be omitted | `a+b`, `x<=10`, `a=5`    |
+|                       | `-` and `/` exceptions    | `b-3` is a string, `3-b` is subtraction |
+| Single Character Operators | Spaces allowed (context must be clear) | `++x`, `arr@0`          |
+| Custom Operators       | Must start with an underscore and have spaces on both sides | `x _*+ y`, `a _?= b`    |
+
+**Custom Operators**
+- Custom operators start with `_` and can only contain symbols, not numbers or letters.
+- Custom unary operators start with `__`, e.g., `__+`, with precedence equal to unary operators.
+- Custom binary operators start with `_+`, e.g., `_+%`, with precedence equal to `+` and `-`.
+- Custom multiplication operators start with `_*`, e.g., `_*-`, with precedence equal to `*` and `/`.
+
+**Edge Cases**:
+- `x++y` is illegal, while `x + (++y)` is legal.
+- In non-strict mode, `b-3` is a string, while `3-b` is subtraction.
+
+---
+
+### 3. Implicit Type Conversion
 ```bash
-# 非严格模式
-3 + "5"    # → 8（自动转数字）
+# Non-strict mode
+3 + "5"    # → "35" (automatically converts to string)
 "10" * 2   # → 20
 
-# 严格模式（启动时加 -s）
-3 + "5"    # → TypeError: 无法把字符串和数字相加
+# Strict mode (enabled with -s)
+3 + "5"    # → TypeError: cannot add string and number
 "10" * 2   # → "1010"
 ```
 
-### 4. 特殊运算行为
+### 4. Special Operation Behavior
 ```bash
 "5" + "3"  # → "53"
-"5" * 3    # → "555" (非严格模式)
-5 / 2      # → 2（整数除法）
+"5" * 3    # → "555" (non-strict mode)
+5 / 2      # → 2 (integer division)
 5.0 / 2    # → 2.5
 ```
-_可用*让字符串,列表，重复多次，类似python用法_
+_You can use `*` to repeat strings and lists multiple times, similar to Python usage._
 `echo "+" * 3`
 `[3,5,7] * 3`
 
+**Edge Cases**:
+- Division by zero will throw an error.
 
-**边缘情况**：
-- 除以零会报错。
+### 5. Pipe
+- `|` pipes to standard output.
+- `|>` pipes to the last parameter.
 
-### 5. 管道
-`echo "hello world" | wc -c `
-`"1 + 2" | dunesh`
-
-### 6. 重定向
-- `<<` 读取
-- `>>` 输出
-- `>>>` 追加输出
+### 6. Redirection
+- `<<` for reading.
+- `>>` for output.
+- `>>>` for appending output.
 
 `1 + 2 >> result.txt`
 
 ---
 
-## 三、数组与字典索引
+## III. Array and Dictionary Indexing
 
-### 1. 数组操作
+### 1. Array Operations
 ```bash
 let arr = [10, "a", True]
 
-# 基础索引
+# Basic Indexing
 arr@0
+arr.1
+arr[1]
 
-TODO:
-# arr[0]       # → 10
-# arr[-1]      # → True（支持负数索引）
+arr[0]       # → 10
+arr[-1]      # → True (supports negative indexing)
 
-# # 切片操作
-# arr[1:3]     # → ["a", True]（左闭右开）
-# arr[::2]     # → [10, True]（步长2）
+# Slicing
+arr[1:3]     # → ["a", True] (left-inclusive, right-exclusive)
+arr[::2]     # → [10, True] (step of 2)
 
-# # 修改元素
+# Modify Element
 # arr[2] = 3.14 # → [10, "a", 3.14]
 ```
 
-### 2. 字典操作
+### 2. Dictionary Operations
 ```bash
 let dict = {name: "Alice", age: 30}
 let dict = {name="Alice", age=30}
 
-# 基础访问
+# Basic Access
 dict@name
+dict.name
 # dict["name"]     # → "Alice"
-# dict.name        # → "Alice"（简写形式）
+# dict.name        # → "Alice" (shorthand)
 
-# # 动态键支持
+# Dynamic Key Support
 # let key = "ag" + "e"
 # dict[$key]       # → 30
 
-# # 嵌套访问
+# Nested Access
 # let data = {user: {profile: {id: 100}}}
 # data.user.profile.id # → 100
 ```
 
-**边缘情况**：
-| 场景                          | 行为                           |
-|------------------------------|--------------------------------|
-| 访问不存在的数组索引          | 返回 `None`                    |
-
+**Edge Cases**:
+| Scenario                      | Behavior                       |
+|-------------------------------|--------------------------------|
+| Accessing a non-existent array index | Returns `None`                |
 
 ---
 
-### 3. 链式运算
+### 3. Chained Operations
 ```bash
 let x = 5
 x += 3 * (2 ** 4)  # x = 5 + 48 = 53
 ```
 
-### 4. 动态索引
+### 4. Dynamic Indexing
 ```bash
 ["a", "b", "c"]@((1 + 1) % 3)  # → "c"
 ```
 
-## 四、语句
+## IV. Statements
 
-1. 语句块
-  用 `{}` 表示, 可以隔离变量作用域。
+1. **Statement Blocks**
+   Represented with `{}`, can isolate variable scope.
 
-2. 语句组
-  用括号表示子命令,子命令不新建进程，不隔离变量作用域。
-  `echo (len [5,6])`
+2. **Statement Groups**
+   Represented with parentheses for subcommands; subcommands do not create new processes and do not isolate variable scope.
+   `echo (len [5,6])`
 
-3. 语句
-  用 `;` 或 `enter` 分割
+3. **Statements**
+   Separated by `;` or `enter`.
 
-  - **换行符**： `;`或回车。
+   - **Newline**: `;` or enter.
 
-  - **续行符**：使用 `\` + 换行符跨行书写。
+   - **Continuation**: Use `\` + newline to write across lines.
    ```bash
    let long_str = "Hello \
-                   World"  # 等价于 "Hello World"
+                   World"  # Equivalent to "Hello World"
    ```
 
 ---
 
+## V. Control Structures
 
-## 五、控制结构
-
-1. **条件语句**
-   - **If 条件**
-   支持嵌套：
+1. **Conditional Statements**
+   - **If Condition**
+   Supports nesting:
    `if cond1 { ... } else if cond2 { ... } else { ... }`
 
-   不使用 `then` 关键字，代码块用 `{}` 包裹。
+   Does not use the `then` keyword; code blocks are wrapped in `{}`.
       ```bash
       if True 1 else if False 2 else 3
 
@@ -264,8 +262,8 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
       }
       ```
 
-   - **Match 语句**
-   替代bash的switch语句。
+   - **Match Statement**
+   Replaces the switch statement in bash.
       ```bash
       let x = "a"
       match x {
@@ -273,16 +271,16 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
       _ => echo "is others"}
       ```
 
-2. **循环**
-   - **For 循环**：范围使用 `to`（左闭右开）。
+2. **Loops**
+   - **For Loop**: Range uses `to` (left-inclusive, right-exclusive).
      ```bash
-     for i in 0 to 5 {    # 输出 0,1,2,3,4
+     for i in 0 to 5 {    # Outputs 0,1,2,3,4
          print(i)
      }
 
      for i in [1,5,8] { echo i }
      ```
-   - **While 循环**：
+   - **While Loop**:
      ```bash
      let count = 0
      while count < 3 {
@@ -291,93 +289,97 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
      }
      ```
 
-   **边缘情况**：
-   - `to` 的结束值不包含在迭代范围内。
+   **Edge Cases**:
+   - The end value of `to` is not included in the iteration range.
 
 ---
 
-## 六、函数
+## VI. Functions
 
-1. **函数定义**
-   - 使用 `fn` 定义，支持默认参数，支持 `return`。
+1. **Function Definition**
+   - Defined using `fn`, supports default parameters, and supports `return`.
    ```bash
-   fn add(a, b，c=10) {
+   fn add(a, b, c=10) {
        return a + b + c
    }
-   echo add(2, 3)  # 输出 5
+   echo add(2, 3)  # Outputs 5
    ```
-2. **lambda表达式**
-   - 使用 `->` 定义。不支持默认参数和return语句。
+2. **Lambda Expressions**
+   - Defined using `->`. Does not support default parameters or return statements.
+   Lambda will inherit the current environment and run in an isolated environment, not polluting the current environment.
+
    ```bash
    let add = x -> y -> x + y
    ```
 
-3. **macro 宏**，匿名宏（在当前作用域有效）：
+3. **Macros**, anonymous macros (valid in the current scope):
+   Macros run in the current environment without environment isolation.
+
    ```bash
-    x ~> x + 1
+   x ~> x + 1
    ```
 
-4. **函数调用**
-   - 调用函数 参数并列。
+4. **Function Calls**
+   - Call functions with parameters listed.
    ```bash
    add 3 5
+   add(3,5)
    ```
 
-   **边缘情况**：
-   - 函数名冲突时，新定义会覆盖旧模块。
-   - 调用函数时，参数数量不匹配会报错。
+   **Edge Cases**:
+   - When function names conflict, the new definition will override the old module.
+   - Calling a function with mismatched parameter counts will throw an error.
 
 ---
 
-
-## 七. 参数与环境变量
-1. **命令行参数**：
-   - 脚本参数通过 `argv` 列表访问。
+## VII. Parameters and Environment Variables
+1. **Command Line Parameters**:
+   - Script parameters accessed via the `argv` list.
    ```bash
-   # 运行 lumesh script.lsh Alice tom
-   echo argv  # 输出 "[Alice, tom]"
-   echo argv@0  # 输出 "Alice"
+   # Run lumesh script.lsh Alice tom
+   echo argv  # Outputs "[Alice, tom]"
+   echo argv@0  # Outputs "Alice"
    ```
-2. **环境变量**
+2. **Environment Variables**
    ```bash
-   PATH             #系统环境变量
-   HOME             #系统环境变量
+   PATH             # System environment variable
+   HOME             # System environment variable
 
-   env              #列出所有当前环境变量
-   IS_LOGIN         #是否LOGIN-SHELL
-   IS_INTERACTIVE   #是否交互模式
-   IS_STRICT        #是否严格模式
+   env              # Lists all current environment variables
+   IS_LOGIN         # Is it a LOGIN-SHELL
+   IS_INTERACTIVE   # Is it interactive mode
+   IS_STRICT        # Is it strict mode
    ```
 
-## 六、运行模式
+## VIII. Execution Modes
 
-1. REPL 交互模式
-  用户交互模式，处理用户输入输出，高亮代码。
-   **快捷键与命令**：
-   - `Right`：自动补全（支持路径和历史命令）。
-   - `Ctrl+C`：终止当前操作。
-   - 特殊命令：`cd`, `exit`, `clear`。
+1. **REPL Interactive Mode**
+   User interactive mode, handling user input and output, with syntax highlighting.
+   **Shortcuts and Commands**:
+   - `Right`: Autocomplete (supports paths and history commands).
+   - `Ctrl+C`: Terminate the current operation.
+   - Special commands: `cd`, `exit`, `clear`.
 
-   **历史记录**：保存在 `~/.lumesh-history`。
+   **History**: Saved in `~/.lumesh-history`.
 
-2. 脚本解析模式
-  运行脚本： ```lume ./my.lsh```
+2. **Script Parsing Mode**
+   Run scripts: ```lume ./my.lsh```
 
-3. LOGIN-SHELL模式
-  启动shell，应配置好系统环境变量。类似.bashrc的内容，到config文件。
+3. **LOGIN-SHELL Mode**
+   Start shell, should configure system environment variables. Similar to `.bashrc` content, in a config file.
 
-4. 严格模式
-严格模式下，变量必须申明，不能重复申明。
+4. **Strict Mode**
+   In strict mode, variables must be declared and cannot be redeclared.
 
-非严格模式下，允许操作符周围没有空格。允许隐式转换数据类型。
+   In non-strict mode, spaces around operators are allowed. Implicit type conversion is permitted.
 
 ---
 
-## 七、内置函数
+## IX. Built-in Functions
 
-通过 `help builtin` 命令查看。
+View using the `help builtin` command.
 
-> 控制台操作
+> Console Operations
 + echo
 + print
 + println
@@ -385,27 +387,27 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
 - input
 - cd
 - prompt
-- incomplete_promt
+- incomplete_prompt
 `let x = input "your choice:"`
 
 + help
 + exit
 + quit
 
-> 对表达式的操作
-+ `unbind` 取消变量
-+ `eval` 执行表达式字面量代表的函数
-+ `str` 获取表达式的字面量
-+ `report` 同str
+> Operations on Expressions
++ `unbind` to cancel a variable
++ `eval` to execute the function represented by the literal of the expression
++ `str` to get the literal of the expression
++ `report` same as `str`
 
-> 对列表的操作
-- `len` 返回 列表/字典/字符串 的长度
-- `chars` 字符串转为 单字符列表
-- `lines` 字符串按行分割为列表
-- `insert` 列表插入
+> Operations on Lists
+- `len` returns the length of a list/dictionary/string
+- `chars` converts a string to a list of single characters
+- `lines` splits a string into a list by lines
+- `insert` inserts into a list
 `insert [1,2,4] 2 3`
 
-•经测试下列内置函数无效
+• The following built-in functions have been tested and found ineffective:
 - `neg`
 - `add`
 - `sub`
@@ -425,20 +427,17 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
 - `lte`
 - `gte`
 
-> 帮助文件未列出的
-
+> Help files not listed
 - pwd
 - clear
-- join 列表转字符串
+- join to convert a list to a string
 
+## Built-in Libraries
 
+View using the `help lib` command.
 
-## 内置Lib库
+When using, reference with `lib_name@fn_name`.
 
-通过 `help lib` 命令查看。
+For detailed content, please continue reading: [Built-in Libraries](lib.md)
 
-使用时需要通过 lib_name@fn_name 的方式引用。
-
-详细内容，请继续阅读: [内置Lib库](lib.md)
-
-通过本手册，用户可掌握 Lumesh 的核心语法及边缘情况。建议结合 REPL 实践以加深理解。
+Through this manual, users can master the core syntax and edge cases of Lumesh. It is recommended to practice with REPL to deepen understanding.

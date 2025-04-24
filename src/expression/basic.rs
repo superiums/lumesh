@@ -1,9 +1,9 @@
 use super::Expression;
 use super::builtin::Builtin;
-use super::{Environment, Int, Pattern};
+use super::{Environment, Int};
 use crate::LmError;
 // use num_traits::pow;
-use std::{fmt, io::Write};
+use std::fmt;
 use terminal_size::{Width, terminal_size};
 
 use prettytable::{
@@ -225,7 +225,7 @@ macro_rules! fmt_shared {
             Self::BinaryOp(op, l, r) => write!($f, "({:?} {} {:?})", l, op, r),
             Self::Index(l, r) => write!($f, "({}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
-            _ => write!($f, "Unreachable"), // 作为兜底逻辑
+            // _ => write!($f, "Unreachable"), // 作为兜底逻辑
         }
     };
 }
@@ -279,8 +279,7 @@ impl Expression {
             Self::Builtin(_) => "Builtin".into(),
             Self::Quote(_) => "Quote".into(),
             Self::None => "None".into(),
-
-            _ => format!("{:?}", self).split('(').next().unwrap().into(),
+            // _ => format!("{:?}", self).split('(').next().unwrap().into(),
         }
     }
 

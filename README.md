@@ -17,6 +17,12 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 ## Wiki
 For detailed documentation and guides, visit our [Wiki](https://github.com/superiums/lumesh/wiki).
 
+## Syntax handbook
+
+[syntax-handbook](syntax.md)
+
+[语法手册](syntax-cn.md)
+
 ## Features
 
 ### Improved Features from Dune

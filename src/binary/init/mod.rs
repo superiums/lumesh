@@ -9,7 +9,7 @@ mod dict_module;
 mod err_module;
 mod fmt_module;
 mod fn_module;
-use fn_module::{curry, reverse_curry};
+use fn_module::curry;
 mod fs_module;
 mod list_module;
 use list_module::*;

@@ -86,21 +86,21 @@ impl<'a> Input<'a> {
         }
     }
     // 新增方法：获取当前 offset 的前n个字符
-    pub fn previous_n_char(&self, n: usize) -> Option<char> {
-        let off_d = self.offset - n + 1;
-        if off_d <= 0 || off_d > self.len() {
-            return None; // 已经是字符串开头
-        }
+    // pub fn previous_n_char(&self, n: usize) -> Option<char> {
+    //     let off_d = self.offset - n + 1;
+    //     if off_d <= 0 || off_d > self.len() {
+    //         return None; // 已经是字符串开头
+    //     }
 
-        let s = &self.str[..off_d];
-        let mut iter = s.char_indices().rev();
+    //     let s = &self.str[..off_d];
+    //     let mut iter = s.char_indices().rev();
 
-        // 找到前一个字符的起始位置
-        match iter.next() {
-            Some((idx, _)) => s[idx..].chars().next(),
-            None => None,
-        }
-    }
+    //     // 找到前一个字符的起始位置
+    //     match iter.next() {
+    //         Some((idx, _)) => s[idx..].chars().next(),
+    //         None => None,
+    //     }
+    // }
 }
 
 impl nom::InputLength for Input<'_> {

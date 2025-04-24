@@ -4,6 +4,7 @@ use std::io::Write;
 
 use crate::STRICT;
 
+use super::pipe_excutor::handle_stdin_redirect;
 use super::{Expression, pipe_excutor::handle_pipes};
 use std::io::ErrorKind;
 use std::path::PathBuf;
@@ -311,15 +312,17 @@ impl Expression {
                         // }
                         "|>" => {
                             // 执行左侧表达式
+                            env.define("__ALWAYSPIPE", Expression::Boolean(true));
                             let left_func = lhs.ensure_apply();
                             let left_output = left_func.eval_mut(env, depth + 1)?;
+                            env.undefine("__ALWAYSPIPE");
 
                             // 执行右侧表达式，获取函数或命令
-                            let rhs_eval = rhs.eval_mut(env, depth + 1)?;
+                            // let rhs_eval = rhs.eval_mut(env, depth + 1)?;
 
                             // 将左侧结果作为最后一个参数传递给右侧
                             let args = vec![left_output];
-                            rhs_eval.append_args(args).eval_mut(env, depth + 1)
+                            rhs.append_args(args).eval_mut(env, depth + 1)
                         }
                         ">>>" => {
                             env.define("__ALWAYSPIPE", Expression::Boolean(true));
@@ -392,15 +395,17 @@ impl Expression {
                         }
                         "<<" => {
                             // 输入重定向处理
-                            let path = rhs.eval_mut(env, depth + 1)?.to_string();
-                            let contents = std::fs::read_to_string(path)
-                                .map(Self::String)
-                                .map_err(|e| LmError::CustomError(e.to_string()))?;
-                            let mut new_env = env.fork();
-                            new_env.define("__stdin", contents);
-                            let left_func = lhs.ensure_apply();
-                            let result = left_func.eval_mut(&mut new_env, depth + 1)?;
-                            return Ok(result);
+                            return handle_stdin_redirect(*lhs, *rhs, env, depth, true);
+                            // let path = rhs.eval_mut(env, depth + 1)?.to_string();
+                            // let contents = std::fs::read_to_string(path)
+                            //     .map(Self::String)
+                            //     .map_err(|e| LmError::CustomError(e.to_string()))?;
+
+                            // let mut new_env = env.fork();
+                            // new_env.define("__STDIN", contents);
+                            // let left_func = lhs.ensure_apply();
+                            // let result = left_func.eval_mut(&mut new_env, depth + 1)?;
+                            // return Ok(result);
                         }
                         _ => {
                             let l = lhs.eval_mut(env, depth + 1)?;

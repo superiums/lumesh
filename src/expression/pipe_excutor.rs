@@ -186,3 +186,30 @@ pub fn handle_pipes(
         };
     }
 }
+
+// 输入重定向处理
+pub fn handle_stdin_redirect(
+    lhs: Expression,
+    rhs: Expression,
+    env: &mut Environment,
+    depth: usize,
+    always_pipe: bool,
+) -> Result<Expression, LmError> {
+    // 读取
+    let path = rhs.eval_mut(env, depth + 1)?.to_string();
+    let contents = std::fs::read(path)?;
+    // 左侧
+    let (cmd, args, expr) = expr_to_command(&lhs, env, depth)?;
+    let bindings = env.get_bindings_map();
+    if expr.is_some() {
+        // lambda, fn, builtin may read stdin?
+        Err(LmError::CustomError(format!(
+            "expr {expr:?} can't read stdin"
+        )))
+    } else {
+        // 否则执行外部command
+        let (_, result) =
+            exec_single_cmd(cmd, args, &bindings, Some(&contents), true, always_pipe)?;
+        Ok(result)
+    }
+}

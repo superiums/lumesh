@@ -187,10 +187,9 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     // begin with -+./
     let mut it = input.chars();
     let first_char = it.next().ok_or(NOT_FOUND)?;
-    if !matches!(first_char, '-' | '.' | '/') {
-        return Err(NOT_FOUND);
+    if matches!(first_char, '.' | '/') && input.len() == 1 {
+        return Ok(input.split_at(1));
     }
-
     // followed by letter/num
     let next_char = it.next().ok_or(NOT_FOUND)?;
     // dbg!(first_char, next_char);
@@ -200,6 +199,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         ('/', c) => c.is_ascii_alphanumeric(),
         ('.', '/') => true,
         ('.', '.') => it.next().ok_or(NOT_FOUND)? == '/',
+        ('.', c) => c.is_ascii_whitespace(),
         _ => false,
     };
     if valid {

@@ -5,15 +5,12 @@ use rustyline::{
     config::CompletionType,
     error::ReadlineError,
     highlight::Highlighter,
-    hint::{Hint, Hinter, HistoryHinter},
-    history::{FileHistory, History, SearchDirection},
+    hint::{Hinter, HistoryHinter},
+    history::FileHistory,
     line_buffer::LineBuffer,
     validate::Validator,
 };
 use std::borrow::Cow;
-use std::cell::RefCell;
-use std::fs;
-use std::path::Path;
 use std::process::exit;
 
 use crate::cmdhelper::{
@@ -22,14 +19,6 @@ use crate::cmdhelper::{
 use crate::runtime::{check, init_config};
 use crate::{Environment, LmError, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
 
-use lazy_static::lazy_static;
-use rustyline::history::DefaultHistory;
-use rustyline::validate::ValidationContext;
-use rustyline::{Config, Context};
-use std::collections::HashSet;
-use std::env;
-use std::ffi::{OsStr, OsString};
-use std::time::{SystemTime, UNIX_EPOCH};
 // use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use std::sync::{Arc, Mutex};
@@ -126,7 +115,7 @@ struct LumeHelper {
 fn new_editor() -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
-        .completion_type(CompletionType::List)
+        .completion_type(CompletionType::Circular)
         .build();
 
     let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());

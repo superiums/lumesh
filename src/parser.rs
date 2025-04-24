@@ -623,8 +623,8 @@ fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     delimited(
         text("("),
-        cut(map(parse_expr, |e| Expression::Group(Box::new(e)))),
-        cut(text_close(")")),
+        map(parse_expr, |e| Expression::Group(Box::new(e))),
+        text_close(")"),
     )(input)
 }
 
@@ -1198,18 +1198,18 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 
 // 赋值解析
 // 新增 parse_assign 函数
-fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    let (input, symbol) = parse_symbol(input)?;
-    let (input, _) = text("=")(input)?;
-    // let (input, expr) = alt((
-    //     parse_conditional, // 支持条件表达式作为右值 //TODO del
-    //     parse_expr,
-    // ))(input)?;
-    let (input, expr) = PrattParser::parse_expr_with_precedence(input, PREC_ASSIGN + 1)?;
-    // 验证语句终止符
-    // let (input, _) = cut(alt((kind(TokenKind::LineBreak), eof_slice)))(input)?;
-    Ok((input, Expression::Assign(symbol, Box::new(expr))))
-}
+// fn parse_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     let (input, symbol) = parse_symbol(input)?;
+//     let (input, _) = text("=")(input)?;
+//     // let (input, expr) = alt((
+//     //     parse_conditional, // 支持条件表达式作为右值 //TODO del
+//     //     parse_expr,
+//     // ))(input)?;
+//     let (input, expr) = PrattParser::parse_expr_with_precedence(input, PREC_ASSIGN + 1)?;
+//     // 验证语句终止符
+//     // let (input, _) = cut(alt((kind(TokenKind::LineBreak), eof_slice)))(input)?;
+//     Ok((input, Expression::Assign(symbol, Box::new(expr))))
+// }
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("let")(input)?;

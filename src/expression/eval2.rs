@@ -346,6 +346,7 @@ impl Expression {
                     }
                     // Lambda 应用 - 完全求值的函数应用
                     Self::Lambda(params, body, captured_env) => {
+                        // dbg!("2.--- applying lambda---", &params);
                         let mut current_env = captured_env.fork();
 
                         // 批量参数绑定前先求值所有参数

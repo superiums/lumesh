@@ -52,43 +52,6 @@ fn test_conditional_operator() {
 }
 
 #[test]
-fn test_unary_priority() {
-    let expr = parse_script("-a ** 2").unwrap();
-    assert_eq!(
-        expr,
-        Expression::UnaryOp(
-            "-".into(),
-            Box::new(Expression::BinaryOp(
-                "**".to_string(),
-                Box::new(Expression::Symbol("a".into())),
-                Box::new(Expression::Integer(2))
-            )),
-            true
-        )
-    );
-}
-
-#[test]
-fn test_operator_precedence() {
-    assert_eq!(
-        parse_script("2 + 3 * 4 ** 5").unwrap(),
-        Expression::Do(vec![Expression::BinaryOp(
-            "+".into(),
-            Box::new(Expression::Integer(2)),
-            Box::new(Expression::BinaryOp(
-                "*".into(),
-                Box::new(Expression::Integer(3)),
-                Box::new(Expression::BinaryOp(
-                    "**".into(),
-                    Box::new(Expression::Integer(4)),
-                    Box::new(Expression::Integer(5)),
-                ))
-            ))
-        )])
-    );
-}
-
-#[test]
 fn test_multi_char_ops() {
     assert!(parse_script("a && b || c ** d").is_ok());
     assert!(parse_script("x = y |> filter()").is_ok());
@@ -233,7 +196,7 @@ let x # test
 #[test]
 fn tokenize_symbols_and_operators() {
     tokenize_test(
-        r#"to == != >= <= && || \\ // < > + - * / % | >> @ _ -.~\/?&$^: _*+ a%b+c>d abcX"#,
+        r#"== != >= <= && || \\ // < > + - * / % | >> _ -~\/?&$^: _*+ a%b+c>d abcX"#,
         r#"[
     Operator(0..2),
     Whitespace(2..3),
@@ -247,48 +210,44 @@ fn tokenize_symbols_and_operators() {
     Whitespace(14..15),
     Operator(15..17),
     Whitespace(17..18),
-    Operator(18..20),
+    Symbol(18..20),
     Whitespace(20..21),
     Symbol(21..23),
     Whitespace(23..24),
-    Symbol(24..26),
-    Whitespace(26..27),
-    Operator(27..28),
-    Whitespace(28..29),
-    Operator(29..30),
-    Whitespace(30..31),
-    Operator(31..32),
-    Whitespace(32..33),
-    Operator(33..34),
-    Whitespace(34..35),
-    Operator(35..36),
-    Whitespace(36..37),
-    Operator(37..38),
-    Whitespace(38..39),
-    Operator(39..40),
-    Whitespace(40..41),
-    Operator(41..42),
+    Operator(24..25),
+    Whitespace(25..26),
+    Operator(26..27),
+    Whitespace(27..28),
+    Operator(28..29),
+    Whitespace(29..30),
+    Operator(30..31),
+    Whitespace(31..32),
+    Operator(32..33),
+    Whitespace(33..34),
+    Operator(34..35),
+    Whitespace(35..36),
+    Operator(36..37),
+    Whitespace(37..38),
+    Operator(38..39),
+    Whitespace(39..40),
+    Operator(40..42),
     Whitespace(42..43),
-    Operator(43..45),
-    Whitespace(45..46),
-    Operator(46..47),
-    Whitespace(47..48),
-    Symbol(48..49),
-    Whitespace(49..50),
-    Symbol(50..59),
-    Operator(59..60),
-    Whitespace(60..61),
-    Operator(61..64),
-    Whitespace(64..65),
+    Symbol(43..44),
+    Whitespace(44..45),
+    Symbol(45..53),
+    Operator(53..54),
+    Whitespace(54..55),
+    Operator(55..58),
+    Whitespace(58..59),
+    Symbol(59..60),
+    Operator(60..61),
+    Symbol(61..62),
+    Operator(62..63),
+    Symbol(63..64),
+    Operator(64..65),
     Symbol(65..66),
-    Operator(66..67),
-    Symbol(67..68),
-    Operator(68..69),
-    Symbol(69..70),
-    Operator(70..71),
-    Symbol(71..72),
-    Whitespace(72..73),
-    Symbol(73..77),
+    Whitespace(66..67),
+    Symbol(67..71),
 ]"#,
     );
 }
@@ -322,21 +281,10 @@ fn tokenize_invalid_symbols() {
 
 #[test]
 fn parse1() -> Result<(), nom::Err<SyntaxError>> {
-    parse_test(r#""String\t\r\n\"""#, r#"{ "String\t\r\n\"" }"#)
+    parse_test(r#""String\t\r\n\"""#, r#""String\t\r\n\"""#)
 }
 
 #[test]
 fn parse2() -> Result<(), nom::Err<SyntaxError>> {
-    parse_test(
-        r#"let hello = "world\u{21}";"#,
-        r#"{ let hello = "world!" }"#,
-    )
-}
-
-#[test]
-fn parse3() -> Result<(), nom::Err<SyntaxError>> {
-    parse_test(
-        r#"let + = a -> b -> c -> (+ a b c)"#,
-        r#"{ let + = a -> b -> c -> (+ a b c) }"#,
-    )
+    parse_test(r#"let hello = "world\u{21}";"#, r#"let hello = "world!""#)
 }

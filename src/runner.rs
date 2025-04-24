@@ -91,7 +91,7 @@ fn main() -> Result<(), LmError> {
         parse_and_eval(&cmd_str, &mut env);
     } else if let Some(file_path) = file {
         let path = PathBuf::from(file_path);
-        run_file(path, &mut env)
+        run_file(path, &mut env);
     }
     Ok(())
 }

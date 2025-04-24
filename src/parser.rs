@@ -382,7 +382,7 @@ impl PrattParser {
             //     // 解析体部分
             //     // Expression::Lambda(name.to_string(), Box::new(rhs), Environment::new())
             // }
-            "->" => {
+            "->" | "~>" => {
                 // 解析参数列表
                 let params = match lhs {
                     // 处理括号包裹的参数列表 (x,y,z)
@@ -400,19 +400,19 @@ impl PrattParser {
                                 input.get_str_slice(),
                                 "symbol in parameter list",
                                 Some(boxed_expr.type_name()),
-                                "put only valid symbols in lambda param list".into(),
+                                "put only valid symbols in lambda/macro param list".into(),
                             ));
                         } // },
                     },
                     // 处理无括号单参数
                     Expression::Symbol(name) => Ok(vec![name]),
                     _ => {
-                        eprintln!("invalid lambda-param {:?}", lhs);
+                        eprintln!("invalid lambda/macro param {:?}", lhs);
                         return Err(SyntaxError::expected(
                             input.get_str_slice(),
                             "symbol or parameter list",
                             Some(lhs.to_string()),
-                            "Lambda requires valid parameter list".into(),
+                            "Lambda/Macro requires valid parameter list".into(),
                         ));
                     }
                 };
@@ -428,29 +428,33 @@ impl PrattParser {
                 };
 
                 // 构建Lambda表达式
-                Ok(Expression::Lambda(
-                    params.unwrap(),
-                    Box::new(body),
-                    Environment::new(),
-                ))
-            }
-            "~>" => {
-                // 参数处理
-                match lhs.to_symbol() {
-                    // 解析体部分
-                    Ok(name) => Ok(Expression::Macro(name.to_string(), Box::new(rhs))),
-                    _ => {
-                        eprintln!("invalid macro-param {:?}", lhs);
-
-                        Err(SyntaxError::expected(
-                            input.get_str_slice(),
-                            "symbol",
-                            Some(lhs.to_string()),
-                            "macro params must be symbol".into(),
-                        ))
-                    }
+                match op.symbol {
+                    "->" => Ok(Expression::Lambda(
+                        params.unwrap(),
+                        Box::new(body),
+                        Environment::new(),
+                    )),
+                    "~>" => Ok(Expression::Macro(params.unwrap(), Box::new(body))),
+                    _ => unreachable!(),
                 }
             }
+            // "~>" => {
+            //     // 参数处理
+            //     match lhs.to_symbol() {
+            //         // 解析体部分
+            //         Ok(name) => Ok(Expression::Macro(name.to_string(), Box::new(rhs))),
+            //         _ => {
+            //             eprintln!("invalid macro-param {:?}", lhs);
+
+            //             Err(SyntaxError::expected(
+            //                 input.get_str_slice(),
+            //                 "symbol",
+            //                 Some(lhs.to_string()),
+            //                 "macro params must be symbol".into(),
+            //             ))
+            //         }
+            //     }
+            // }
             "?" => {
                 let (true_expr, false_expr) = match rhs {
                     Expression::BinaryOp(op, t, f) if op == ":" => (t, f),
@@ -588,7 +592,7 @@ fn parse_prefix_argument(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, S
 fn parse_prefix(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     // dbg!("--parse_prefix--", input.slice);
     let (input, prefix) = alt((
-        parse_param_group, // new, lambda params
+        parse_lambda_param, // new, lambda params
         parse_group,
         parse_control_flow,   // ✅ 新增：允许if作为表达式
         parse_index_or_slice, //索引或切片 避免被当作函数调用，应先于函数调用。其中不能包含{}[],否则会影响map,list。
@@ -636,7 +640,7 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError>
     )(input)
 }
 
-// 增参数解析函数
+// 参数解析函数
 fn parse_param(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, (String, Option<Expression>), SyntaxError> {
@@ -689,7 +693,7 @@ fn parse_param_list(
     Ok((input, params))
 }
 // lambda参数
-fn parse_param_group(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, expr) = delimited(
         text("("),
         alt((

@@ -344,51 +344,114 @@ impl Expression {
                             }
                         }
                     }
-
-                    // 处理Lambda应用
+                    // Lambda 应用 - 完全求值的函数应用
                     Self::Lambda(params, body, captured_env) => {
                         let mut current_env = captured_env.fork();
 
-                        // 批量参数绑定
-                        let (mut bound_env, remaining_args) =
-                            bind_arguments(params, args.clone(), env, &mut current_env, depth)?;
+                        // 批量参数绑定前先求值所有参数
+                        let evaluated_args = args
+                            .iter()
+                            .map(|arg| arg.clone().eval_mut(env, depth + 1))
+                            .collect::<Result<Vec<_>, _>>()?;
 
-                        match remaining_args.len() {
-                            // 完全应用：直接求值
-                            0 => body.eval_complex(&mut bound_env, depth + 1),
+                        match bind_arguments(params, evaluated_args, &mut current_env) {
+                            // 完全应用：求值函数体
+                            None => body.eval_mut(&mut current_env, depth + 1),
 
-                            // 部分应用：返回新Lambda
-                            1.. => Ok(Self::Lambda(
-                                remaining_args.iter().map(|_| "_".to_string()).collect(),
-                                body,
-                                bound_env,
-                            )),
-
-                            // TODO
-                            // 参数过多：构造新Apply
-                            _ => Ok(Self::Apply(
-                                Box::new(body.eval_complex(&mut bound_env, depth + 1)?),
-                                remaining_args,
-                            )),
+                            // 部分应用：返回新的柯里化lambda
+                            Some(remain) => Ok(Self::Lambda(remain, body, current_env)),
                         }
                     }
 
-                    Self::Macro(param, body) if args.len() == 1 => {
-                        let x = args[0].clone().eval_mut(env, depth + 1)?;
-                        env.define(&param, x);
-                        let lamb = *body;
-                        return Ok(lamb);
+                    // Macro 应用 - 不自动求值参数的展开
+                    Self::Macro(params, body) => {
+                        match bind_arguments(params, args.to_owned(), env) {
+                            // 完全应用：求值函数体
+                            None => body.eval_mut(env, depth + 1),
+
+                            // 部分应用：返回新的柯里化lambda
+                            Some(remain) => Ok(Self::Macro(remain, body)),
+                        }
+
+                        // 单参数宏 - 直接替换参数并返回
+                        // if params.len() == 1 && args.len() == 1 {
+                        //     env.define(&params[0], args[0].clone());
+                        //     body.eval_mut(env, depth + 1)
+                        // }
+                        // // 多参数宏 - 展开后可能形成新的应用
+                        // else if params.len() <= args.len() {
+                        //     // 绑定参数(不先求值)
+                        //     for (param, arg) in params.iter().zip(args.iter()) {
+                        //         env.define(param, arg.clone());
+                        //     }
+
+                        //     // 剩余参数作为新的应用
+                        //     if args.len() > params.len() {
+                        //         let new_body = body.eval_mut(env, depth + 1)?;
+                        //         Ok(Self::Apply(
+                        //             Box::new(new_body),
+                        //             args[params.len()..].to_vec(),
+                        //         ))
+                        //     } else {
+                        //         body.eval_mut(env, depth + 1)
+                        //     }
+                        // }
+                        // // 参数不足 - 转为部分应用的宏
+                        // else {
+                        //     // 绑定提供的参数
+                        //     for (param, arg) in params.iter().zip(args.iter()) {
+                        //         env.define(param, arg.clone());
+                        //     }
+
+                        //     // 返回新宏接受剩余参数
+                        //     Ok(Self::Macro(params[args.len()..].to_vec(), body))
+                        // }
                     }
 
-                    Self::Macro(param, body) if args.len() > 1 => {
-                        let x = args[0].clone().eval_mut(env, depth + 1)?;
-                        env.define(&param, x);
-                        let lamb = Self::Apply(
-                            Box::new(body.eval_mut(env, depth + 1)?),
-                            args[1..].to_vec(),
-                        );
-                        return Ok(lamb);
-                    }
+                    // 处理Lambda应用
+                    // Self::Lambda(params, body, captured_env) => {
+                    //     let mut current_env = captured_env.fork();
+
+                    //     // 批量参数绑定
+                    //     let (mut bound_env, remaining_args) =
+                    //         bind_arguments(params, args.clone(), env, &mut current_env, depth)?;
+
+                    //     match remaining_args.len() {
+                    //         // 完全应用：直接求值
+                    //         0 => body.eval_complex(&mut bound_env, depth + 1),
+
+                    //         // 部分应用：返回新Lambda
+                    //         1.. => Ok(Self::Lambda(
+                    //             remaining_args.iter().map(|_| "_".to_string()).collect(),
+                    //             body,
+                    //             bound_env,
+                    //         )),
+
+                    //         // TODO
+                    //         // 参数过多：构造新Apply
+                    //         _ => Ok(Self::Apply(
+                    //             Box::new(body.eval_complex(&mut bound_env, depth + 1)?),
+                    //             remaining_args,
+                    //         )),
+                    //     }
+                    // }
+
+                    // Self::Macro(param, body) if args.len() == 1 => {
+                    //     let x = args[0].clone().eval_mut(env, depth + 1)?;
+                    //     env.define(&param, x);
+                    //     let lamb = *body;
+                    //     return Ok(lamb);
+                    // }
+
+                    // Self::Macro(param, body) if args.len() > 1 => {
+                    //     let x = args[0].clone().eval_mut(env, depth + 1)?;
+                    //     env.define(&param, x);
+                    //     let lamb = Self::Apply(
+                    //         Box::new(body.eval_mut(env, depth + 1)?),
+                    //         args[1..].to_vec(),
+                    //     );
+                    //     return Ok(lamb);
+                    // }
                     // Self::Macro(param, body) => {
                     //     env.define(&param, Expression::List(args_eval));
                     //     return body.eval_mut(env, depth + 1);
@@ -463,32 +526,35 @@ impl Expression {
     }
 }
 
-/// 参数绑定辅助函数
+/// 参数绑定辅助函数 - 将参数绑定到环境中
+///
+/// # 参数
+/// - `params`: 形式参数列表
+/// - `args`: 实际参数列表(已求值)
+/// - `target_env`: 目标绑定环境(通常是新创建的lambda环境)
+/// - `depth`: 当前求值深度(用于错误报告)
+///
+/// # 返回值
+/// 返回元组: (剩余未绑定的形式参数)
 pub fn bind_arguments(
     params: Vec<String>,
     args: Vec<Expression>,
-    env: &mut Environment,
     target_env: &mut Environment,
-    depth: usize,
-) -> Result<(Environment, Vec<Expression>), LmError> {
-    let mut remaining_args = args;
-
-    // 逐个绑定参数
-    for (i, param) in params.clone().into_iter().enumerate() {
-        if let Some(arg) = remaining_args.get(i) {
-            let value = arg.clone().eval_complex(env, depth + 1)?;
-            target_env.define(&param, value);
-        } else {
-            break;
-        }
+) -> Option<Vec<String>> {
+    // 计算实际能绑定的参数数量
+    let bound_count = params.len().min(args.len());
+    // 绑定参数到目标环境
+    for (param, arg) in params.iter().zip(args.iter().take(bound_count)) {
+        target_env.define(&param, arg.clone());
     }
-
-    // 分割已绑定和剩余参数
-    let bound_count = params.len().min(remaining_args.len());
-    remaining_args.drain(0..bound_count);
-
-    Ok((target_env.clone(), remaining_args))
+    // 获取剩余参数
+    if bound_count < params.len() {
+        Some(params[bound_count..].to_vec())
+    } else {
+        None
+    }
 }
+
 /// match的比对
 fn matches_pattern(
     value: &Expression,

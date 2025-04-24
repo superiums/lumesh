@@ -53,6 +53,8 @@ macro_rules! fmt_shared {
             // Lambda 修改
             Self::Lambda(params, body, _) if $debug => write!($f, "{:?} -> {:?}", params, body),
             Self::Lambda(params, body, _) => write!($f, "({}) -> {}", params.join(", "), body),
+            Self::Macro(params, body) if $debug => write!($f, "{:?} ~> {:?}", params, body),
+            Self::Macro(params, body) => write!($f, "({}) ~> {}", params.join(", "), body),
 
             // If 修改
             Self::If(cond, true_expr, false_expr) => {
@@ -180,7 +182,6 @@ macro_rules! fmt_shared {
             }
 
             Self::None => write!($f, "None"),
-            Self::Macro(param, body) => write!($f, "{:?} ~> {:?}", param, body),
             Self::Function(name, param, body, _) => {
                 write!($f, "fn {}({:?}) {{ {:?} }}", name, param, body)
             }

@@ -268,7 +268,7 @@ impl Expression {
                         "|" => {
                             let bindings = env.get_bindings_map();
                             let always_pipe = env.has("__ALWAYSPIPE");
-                            dbg!(&always_pipe);
+                            // dgb!(&always_pipe);
                             // if always_pipe {
                             //     let left_func = lhs.ensure_apply();
                             //     let left_output = left_func.eval_mut(env, depth + 1)?;
@@ -290,7 +290,7 @@ impl Expression {
                                 depth,
                                 always_pipe,
                             )?;
-                            dbg!(&expr_out);
+                            // dgb!(&expr_out);
                             Ok(expr_out)
                             // }
                         }

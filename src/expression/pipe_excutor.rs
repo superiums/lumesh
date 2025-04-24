@@ -55,7 +55,7 @@ fn exec_single_cmd(
     if always_pipe || !is_last || !is_interactive {
         let output = child.wait_with_output()?;
         let expr = Expression::String(String::from_utf8_lossy(&output.stdout).into_owned());
-        dbg!(cmd.get_program(), &expr);
+        // dgb!(cmd.get_program(), &expr);
         Ok((output.stdout, expr))
     } else {
         child.wait()?;
@@ -63,35 +63,42 @@ fn exec_single_cmd(
     }
 }
 
+/// 遇到外部命令则返回命令和参数，其他可执行命令返回表达式，否则返回错误
 fn expr_to_command(
     expr: &Expression,
     env: &mut Environment,
-) -> Result<(String, Vec<String>), LmError> {
+    depth: usize,
+) -> Result<(String, Vec<String>, Option<Expression>), LmError> {
     // let bindings = env.get_bindings_map();
 
     match expr {
+        // 无参数的外部命令，如ls
         Expression::Symbol(name) => {
             let cmd_name = match env.get(name) {
                 Some(Expression::Symbol(alias)) => alias,
                 Some(_) => return Err(LmError::ProgramNotFound(name.clone())),
                 None => name.clone(),
             };
-            Ok((cmd_name, vec![]))
+            Ok((cmd_name, vec![], None))
         }
         Expression::Apply(func, args) => {
-            /* 处理函数调用 */
+            /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
+            let func_eval = func.clone().eval_mut(env, depth + 1)?;
 
-            // 分派到具体类型处理
-            return match *func.clone() {
-                // | Self::String(name)
+            // 得到执行后的实际命令
+            return match func_eval {
+                // 是外部命令+参数，
                 Expression::Symbol(name) | Expression::String(name) => {
                     let cmd_args: Vec<String> = args.iter().map(|expr| expr.to_string()).collect();
-                    Ok((name, cmd_args))
+                    Ok((name, cmd_args, None))
                 }
+                // 其他可执行命令，如lambda,Function,Builtin
                 _ => {
-                    dbg!("--else type--", &func);
-                    Err(LmError::ProgramNotFound(expr.to_string()))
+                    // dgb!("--else type--", &func_eval, &func_eval.type_name());
+                    Ok(("".into(), vec![], Some(expr.to_owned())))
+
+                    // Err(LmError::ProgramNotFound(func_eval.to_string()))
                 }
             };
         }
@@ -125,8 +132,16 @@ pub fn handle_pipes(
                 always_pipe,
             ),
             _ => {
-                let (cmd, args) = expr_to_command(&lhs, env)?;
-                exec_single_cmd(cmd, args, bindings, input, false, always_pipe)
+                let (cmd, args, expr) = expr_to_command(&lhs, env, depth)?;
+                if expr.is_some() {
+                    // 有表达式返回则执行表达式
+                    let result_expr = expr.unwrap().eval_apply(env, depth)?;
+                    let result_expr_bytes = result_expr.to_string().as_bytes().to_owned();
+                    Ok((result_expr_bytes, result_expr))
+                } else {
+                    // 否则执行外部command
+                    exec_single_cmd(cmd, args, bindings, input, false, always_pipe)
+                }
             }
         };
         return match result_left {
@@ -143,17 +158,27 @@ pub fn handle_pipes(
                         always_pipe,
                     ),
                     _ => {
-                        let (cmd, args) = expr_to_command(&rhs, env)?;
-                        let result_right = exec_single_cmd(
-                            cmd.clone(),
-                            args,
-                            bindings,
-                            Some(&pipe_out),
-                            !has_right,
-                            always_pipe,
-                        );
-                        dbg!(&cmd, &result_right);
-                        result_right
+                        let (cmd, args, expr) = expr_to_command(&rhs, env, depth)?;
+                        match expr {
+                            Some(ex) => {
+                                let result_expr = ex.eval_apply(env, depth)?;
+                                let result_expr_bytes =
+                                    result_expr.to_string().as_bytes().to_owned();
+                                Ok((result_expr_bytes, result_expr))
+                            }
+                            _ => {
+                                let result_right = exec_single_cmd(
+                                    cmd.clone(),
+                                    args,
+                                    bindings,
+                                    Some(&pipe_out),
+                                    !has_right,
+                                    always_pipe,
+                                );
+                                // dgb!(&cmd, &result_right);
+                                result_right
+                            }
+                        }
                     }
                 };
             }

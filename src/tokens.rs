@@ -138,6 +138,9 @@ pub enum TokenKind {
     Symbol,
     Whitespace,
     LineBreak, //add newline
+    OperatorInfix,
+    OperatorPrefix,
+    OperatorPostfix,
     // LineContinuation, //add linecontinue
     Comment,
 }

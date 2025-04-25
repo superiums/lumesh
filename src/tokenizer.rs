@@ -47,8 +47,10 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(line_continuation, TokenKind::Whitespace),
             // triple_quote_string,
             map_valid_token(linebreak, TokenKind::LineBreak),
-            map_valid_token(inword_operator, TokenKind::Operator),
             map_valid_token(argument_symbol, TokenKind::StringLiteral), //argument first to allow args such as = -
+            map_valid_token(prefix_operator, TokenKind::OperatorPrefix),
+            map_valid_token(infix_operator, TokenKind::OperatorInfix),
+            map_valid_token(postfix_operator, TokenKind::OperatorPostfix),
             map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
@@ -82,28 +84,37 @@ fn map_valid_token(
 
 fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag(":="),
-        punctuation_tag("("),
-        punctuation_tag(")"),
-        punctuation_tag("["),
-        punctuation_tag("]"),
-        punctuation_tag("{"),
-        punctuation_tag("}"),
         // punctuation_tag("\'"),
         punctuation_tag(","),
         punctuation_tag(";"),
         // punctuation_tag("="),
-        punctuation_tag("->"), // `->foo` is also a valid symbol
-        punctuation_tag("~>"), // `~>foo` is also a valid symbol
     ))(input)
 }
 
-fn inword_operator(input: Input<'_>) -> TokenizationResult<'_> {
+fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        infix_tag(".."), //range
+        infix_tag("."),  //index
+        infix_tag("@"),  //index
+    ))(input)
+}
+fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         // keyword_tag("to"),
-        inword_tag(".."),
-        inword_tag("."),
-        inword_tag("@"),
+        prefix_tag("!"),
+        prefix_tag("-"),
+        prefix_tag("++"),
+        prefix_tag("--"),
+        // infix_tag("__"), custom prefix?
+    ))(input)
+}
+fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        // keyword_tag("to"),
+        postfix_tag("("), //func call
+        postfix_tag("["), //array index or slice
+        postfix_tag("++"),
+        postfix_tag("--"),
     ))(input)
 }
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -122,50 +133,59 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag(">>>"),
         keyword_tag(">>"),
         operator_tag("**"), //pow
-        operator_tag("++"),
-        operator_tag("--"),
+        // operator_tag("++"),
+        // operator_tag("--"),
         operator_tag("+="),
         operator_tag("-="),
         operator_tag("*="),
         operator_tag("/="),
+        keyword_tag(":="),
+        punctuation_tag("->"), // `->foo` is also a valid symbol
+        punctuation_tag("~>"), // `~>foo` is also a valid symbol
     ))(input)
 }
 
 fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        operator_tag("++"), // for op overload use.
-        operator_tag("--"), // for op overload use.
-        operator_tag("**"), // for op overload use.
+        // operator_tag("++"),
+        // operator_tag("--"),
+        operator_tag("**"),
         operator_tag("<"),
         operator_tag(">"),
-        operator_tag("+"),    // to allow a<b insteadof mustbe a < b
-        keyword_tag("-"),     // to allow a<b insteadof mustbe a < b
-        operator_tag("*"),    // to allow a<b insteadof mustbe a < b
-        keyword_tag("/"),     // to allow a<b insteadof mustbe a < b
-        operator_tag("%"),    // to allow a<b insteadof mustbe a < b
-        operator_tag("="),    // 新增赋值运算符
-        operator_tag("?"),    // 新增条件赋值运算符
+        operator_tag("+"),
+        keyword_tag("-"),
+        operator_tag("*"),
+        keyword_tag("/"),
+        operator_tag("%"),
+        operator_tag("="),
+        operator_tag("?"),    //TODO drop ?: but use as error deel.
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
         keyword_tag("|"),     //standard io stream pipe
-        punctuation_tag("!"),
+        // punctuation_tag("!"),
+        punctuation_tag("("),
+        punctuation_tag(")"),
+        punctuation_tag("["),
+        punctuation_tag("]"),
+        punctuation_tag("{"),
+        punctuation_tag("}"),
     ))(input)
 }
 
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("None"),
-        keyword_alone_tag("fn"),
-        keyword_alone_tag("return"),
+        keyword_tag("let"),
+        keyword_tag("if"),
         keyword_tag("then"),
         keyword_tag("else"),
-        keyword_tag("export"), //set global env
-        keyword_tag("let"),
-        keyword_tag("for"),
-        keyword_tag("while"),
-        keyword_tag("if"),
-        keyword_tag("in"),
-        keyword_tag("del"),
+        keyword_alone_tag("fn"),
         keyword_tag("match"),
+        keyword_tag("for"),
+        keyword_tag("in"),
+        keyword_tag("while"),
+        keyword_tag("export"), //set global env
+        keyword_alone_tag("return"),
+        keyword_tag("del"),
+        keyword_tag("None"),
     ))(input)
 }
 // custrom operator for op overload, such as _*+ , must around with space.
@@ -594,7 +614,7 @@ fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
             .ok_or(NOT_FOUND)
     }
 }
-/// This parser ensures that the word is *not* immediately followed by whitespace.
+/// This parser ensures that the word is followed by whitespace.
 fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         input
@@ -622,8 +642,23 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
             .ok_or(NOT_FOUND)
     }
 }
+/// parse a tag before letters/numbers.
+fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input
+            .previous_char()
+            .map_or(false, |c| !c.is_ascii_whitespace())
+        {
+            return Err(NOT_FOUND);
+        }
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric()))
+            .ok_or(NOT_FOUND)
+    }
+}
 /// parse a tag between letters/numbers.
-fn inword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input
             .previous_char()
@@ -635,6 +670,18 @@ fn inword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
             .strip_prefix(keyword)
             .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric()))
             .ok_or(NOT_FOUND)
+    }
+}
+/// parse a tag after letters/numbers.
+fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input
+            .previous_char()
+            .map_or(true, |c| !c.is_ascii_alphanumeric())
+        {
+            return Err(NOT_FOUND);
+        }
+        input.strip_prefix(keyword).ok_or(NOT_FOUND)
     }
 }
 

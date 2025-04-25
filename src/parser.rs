@@ -20,7 +20,8 @@ use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
 
 // -- 辅助类型和常量 --
 
-// 优先级常量（从代码中提取）
+// 优先级常量
+// 双目操作符
 // const PREC_CONTROL: u8 = 0; // 控制结构（语句级）
 const PREC_ASSIGN: u8 = 3; // 赋值 =
 const PREC_REDIRECT: u8 = 4; // 重定向
@@ -31,14 +32,29 @@ const PREC_LOGICAL_OR: u8 = 8; // 逻辑或 ||
 const PREC_LOGICAL_AND: u8 = 9; // 逻辑与 &&
 const PREC_COMPARISON: u8 = 10; // 比较运算
 const PREC_ADD_SUB: u8 = 11; // 加减
-const PREC_MUL_DIV: u8 = 12; // 乘除模
+const PREC_MUL_DIV: u8 = 12; // 乘除模 custom_op _*
 const PREC_POWER: u8 = 13; // 幂运算 **
 const PREC_CUSTOM: u8 = 14; // 幂运算 **
-const PREC_UNARY: u8 = 15; // 单目运算符 ! - ++ --
-const PREC_RANGE: u8 = 16; // custom_op _*
 const PREC_FUNC_ARGS: u8 = 17;
 const PREC_FUNC_NAME: u8 = 18;
-const PREC_INDEX: u8 = 19; // 索引运算符 @
+// 其他
+// prefix
+const PREC_UNARY: u8 = 20; // 单目运算符     ! -
+const PREC_PRIFIX: u8 = 21; // 单目运算符     ++ --
+// postfix
+const PREC_POSTFIX: u8 = 22; //             ++ --
+const PREC_CALL: u8 = 24; //                func()
+// arry list
+const PREC_RANGE: u8 = 25; // range         ..
+const PREC_LIST: u8 = 25; // 数组         [1,2]
+const PREC_SLICE: u8 = 25; //               arry[]
+const PREC_INDEX: u8 = 25; // 索引运算符      @ .
+// group
+const PREC_GROUP: u8 = 28; // 分组括号      ()
+// Literal
+const PREC_SYMBOL: u8 = 30; //变量名         x
+const PREC_LITERAL: u8 = 30; //原始字面量     "x"
+
 // -- 辅助结构 --
 #[derive(Debug)]
 struct OperatorInfo<'a> {
@@ -76,16 +92,13 @@ fn parse_expr(input: Tokens) -> IResult<Tokens, Expression, SyntaxError> {
 struct PrattParser;
 /// Pratt解析器增强实现, 基于优先级的表达式解析
 impl PrattParser {
+    // 核心表达式解析
     fn parse_expr_with_precedence(
-        input: Tokens<'_>,
+        mut input: Tokens<'_>,
         min_prec: u8,
     ) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-        // if input.is_empty(){
-        //     return SyntaxError();
-        // }
-        // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
         if input.is_empty() {
-            // dbg!("---break0---");
+            dbg!("---break0---");
             return Err(nom::Err::Error(SyntaxError::Expected {
                 input: input.get_str_slice(),
                 expected: "expression prefix",
@@ -93,76 +106,200 @@ impl PrattParser {
                 hint: Some("EOF while parsing expression"),
             }));
         }
-        // 阶段1：解析前缀元素（基础值/一元运算符）
-        let (mut input, mut lhs) = if min_prec == PREC_FUNC_ARGS {
-            parse_prefix_argument(input)?
-        } else if min_prec >= PREC_FUNC_NAME {
-            parse_prefix_atomic(input)?
-        } else {
-            parse_prefix(input)?
-        };
-        // dbg!("=======prefix=======>", input, &lhs);
-        // 阶段2：循环处理中缀运算符
-        loop {
-            // 获取当前运算符信息
-            let op_info = match input.first() {
-                Some(t) => {
-                    if t.kind == TokenKind::LineBreak {
-                        break;
-                    }
-                    Self::get_operator_info(t.text(input))
-                }
-                None => break, //未找到退出
-            };
-            // dbg!(&op_info);
+        // 1. 解析前缀表达式
+        let (new_input, mut lhs) = Self::parse_prefix(input, min_prec)?;
+        input = new_input;
+        dbg!("=======prefix=======>", input, &lhs, min_prec);
 
-            match op_info {
-                Some(op) => {
-                    if op.precedence < min_prec {
-                        // dbg!("低于当前优先级则退出", op.precedence, min_prec);
+        // 2. 循环处理中缀和后缀
+        loop {
+            // 检查终止条件
+            if input.is_empty()
+                || input
+                    .first()
+                    .map(|t| t.kind == TokenKind::LineBreak)
+                    .unwrap_or(false)
+            {
+                dbg!("---break1---");
+                break;
+            }
+
+            // 获取运算符信息
+            let operator_token = input.first().unwrap();
+            let operator = operator_token.text(input);
+            // let op_info = match Self::lookahead_operator(&input, min_prec) {
+            //     Some(info) => info,
+            //     None => break,
+            // };
+            dbg!(&operator, operator_token.kind);
+
+            // 处理不同类型的运算符
+            match operator_token.kind {
+                TokenKind::OperatorInfix => {
+                    // 中缀运算符 (. .. @)
+                    input = input.skip_n(1);
+                    let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX)?;
+                    input = new_input;
+                    lhs = Expression::BinaryOp(operator.into(), Box::new(lhs), Box::new(rhs));
+                }
+                TokenKind::Operator => {
+                    // 双目运算符 (+ - * / 等)
+                    // 获取当前运算符信息
+                    let op_info = match Self::get_operator_info(operator) {
+                        Some(opi) => opi,
+                        None => break,
+                    };
+                    dbg!(&op_info);
+                    if op_info.precedence < min_prec {
+                        dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
                         break; // 低于当前优先级则退出
                     }
 
-                    // 处理右结合运算符
-                    let next_min_prec = if op.right_associative {
-                        op.precedence
+                    let next_min_prec = if op_info.right_associative {
+                        op_info.precedence
                     } else {
-                        op.precedence + 1
+                        op_info.precedence + 1
                     };
 
-                    // 阶段3：递归解析右侧表达式
                     input = input.skip_n(1);
-                    // 🔴 递归前检查输入是否为空
-                    // if input.is_empty() {
-                    //     return Err(nom::Err::Failure(SyntaxError::Expected {
-                    //         input: input.get_str_slice(),
-                    //         expected: "expression after operator",
-                    //         found: None,
-                    //         hint: None,
-                    //     }));
-                    // }
                     if input.is_empty() {
-                        // dbg!("---break1---");
+                        dbg!("---break2---");
                         break;
                     }
-                    // dbg!(&input);
+                    dbg!("--> trying next loop", input, next_min_prec);
                     let (new_input, rhs) = Self::parse_expr_with_precedence(input, next_min_prec)?;
-                    // dbg!(&new_input, &rhs);
-                    // 阶段4：构建AST节点
+                    dbg!(&rhs);
                     input = new_input;
-                    lhs = Self::build_ast(input, op, lhs, rhs)?;
-                    // dbg!(&lhs, &input);
-                    if input.is_empty() {
-                        // dbg!("---break2---");
-                        break;
-                    }
+                    lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
                 }
-                None => break,
+                TokenKind::OperatorPostfix => {
+                    // 后缀运算符 (函数调用、数组索引等)
+                    (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input)?;
+                }
+                _ => {
+                    dbg!("---break3---");
+                    break;
+                }
             }
         }
 
         Ok((input, lhs))
     }
+
+    // 前缀表达式解析
+    fn parse_prefix(
+        input: Tokens<'_>,
+        min_prec: u8,
+    ) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+        dbg!("---parse_prefix---");
+        if input.is_empty() {
+            dbg!("---break prefix---");
+            return Err(nom::Err::Error(SyntaxError::NoExpression));
+        }
+
+        let first = input.first().unwrap();
+        dbg!(&first);
+        match first.kind {
+            TokenKind::OperatorPrefix => {
+                let op = first.text(input);
+                let prec = match op {
+                    "!" | "-" => PREC_UNARY,
+                    "++" | "--" => PREC_PRIFIX,
+                    _ => {
+                        return Err(nom::Err::Error(SyntaxError::UnknownOperator(
+                            op.to_string(),
+                        )));
+                    }
+                };
+
+                if prec < min_prec {
+                    return Err(nom::Err::Error(SyntaxError::PrecedenceTooLow));
+                }
+
+                let input = input.skip_n(1);
+                let (input, expr) = Self::parse_prefix(input, prec)?;
+                Ok((input, Expression::UnaryOp(op.into(), Box::new(expr), true)))
+            }
+            TokenKind::Symbol => parse_symbol(input),
+            TokenKind::StringLiteral => parse_string(input),
+            TokenKind::StringRaw => parse_string_raw(input),
+            TokenKind::IntegerLiteral => parse_integer(input),
+            TokenKind::FloatLiteral => parse_float(input),
+            TokenKind::BooleanLiteral => parse_boolean(input),
+            TokenKind::Operator => {
+                let op = first.text(input);
+                return match op {
+                    // 分组{表达式 (expr)
+                    "(" => {
+                        // dbg!("----group begin():");
+                        // let exp = delimited(
+                        //     text("("),
+                        //     map(parse_expr, |e| Expression::Group(Box::new(e))),
+                        //     text_close(")"),
+                        // )(input)?;
+                        // dbg!("----group end():", &exp.1);
+                        alt((parse_lambda_param, parse_group))(input)
+                        // Ok(exp)
+                    }
+                    "[" => {
+                        // 数组字面量 [expr, ...]
+                        parse_list(input)
+                    }
+                    "{" => alt((parse_map, parse_block))(input),
+                    // opx if opx.starts_with("_") => parse_operator(input),
+                    _ => Err(nom::Err::Error(SyntaxError::UnknownOperator(
+                        op.to_string(),
+                    ))), //其余的操作符，不在前缀中处理
+                };
+            }
+            TokenKind::Keyword => parse_control_flow(input),
+            _ => Err(nom::Err::Error(SyntaxError::UnknownOperator(
+                first.text(input).to_string(),
+            ))),
+        }
+    }
+    // 后缀表达式构建
+    fn build_postfix_ast(
+        lhs: Expression,
+        op: String,
+        input: Tokens<'_>,
+    ) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+        match op.as_str() {
+            "(" => {
+                // 函数调用
+                // let (input, args) =
+                //     terminated(separated_list0(text(","), parse_expr), text(")"))(input)?;
+                let (input, args) = delimited(
+                    text("("),
+                    cut(separated_list0(text(","), parse_expr)),
+                    cut(text_close(")")),
+                )(input)?;
+                Ok((input, Expression::Apply(Box::new(lhs), args)))
+            }
+            "[" => {
+                // 数组索引或切片
+                let (input, index) = delimited(
+                    text("["),
+                    alt((parse_integer, parse_symbol)),
+                    text_close("]"),
+                )(input)?;
+                return Ok((input, Expression::Index(Box::new(lhs), Box::new(index))));
+
+                // Ok(match is_slice {
+                //     true => Expression::Slice(Box::new(lhs), params),
+                //     false => Expression::Index(Box::new(lhs), params.start.unwrap()),
+                // })
+            }
+            "++" | "--" => {
+                // 后置自增/自减
+                Ok((input, Expression::UnaryOp(op.into(), Box::new(lhs), false)))
+            }
+            _ => Err(nom::Err::Error(SyntaxError::UnknownOperator(
+                op.to_string(),
+            ))),
+        }
+    }
+
     // 运算符元数据
     fn get_operator_info<'a>(op: &'a str) -> Option<OperatorInfo<'a>> {
         match op {
@@ -557,59 +694,61 @@ impl PrattParser {
 }
 
 /// -- 函数名的基础解析 --
-fn parse_prefix_atomic(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    // dbg!("--parse_prefix_atomic--", input.slice);
+// fn parse_prefix_atomic(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     // dbg!("--parse_prefix_atomic--", input.slice);
 
-    alt((
-        map(parse_symbol, Expression::Symbol),
-        //虽然函数名不需要整数，但所有@索引由于优先级最高，都会来到这里
-        map(parse_integer, Expression::Integer),
-        // map(parse_float, Expression::Float),
-        // map(parse_string, Expression::String),
-        // map(parse_boolean, Expression::Boolean),
-    ))(input)
-}
-/// -- 函数参数解析 --
-fn parse_prefix_argument(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    // dbg!("--parse_prefix--", input.slice);
-    let (input, prefix) = alt((
-        parse_group,
-        parse_index_or_slice, //索引或切片 避免被当作函数调用，应先于函数调用。其中不能包含{}[],否则会影响map,list。
-        // parse_func_call,  // func(a,b)
-        // parse_block,          // 优先解析block，从而让lambda 可以识别为do块，而不是字典解析。
-        parse_list,
-        parse_map, // 应后于所有block,func block调用。
-        map(parse_symbol, Expression::Symbol),
-        parse_literal,
-        parse_unary,
-        parse_none, // parse_conditional,
-                    // |inp| Ok((inp, Expression::None)), //for anary operators.
-    ))(input)?;
-    // .expect("NO ANY PREFIX");
-    Ok((input, prefix))
-}
+//     alt((
+//         map(parse_symbol, Expression::Symbol),
+//         //虽然函数名不需要整数，但所有@索引由于优先级最高，都会来到这里
+//         map(parse_integer, Expression::Integer),
+//         // map(parse_float, Expression::Float),
+//         // map(parse_string, Expression::String),
+//         // map(parse_boolean, Expression::Boolean),
+//     ))(input)
+// }
+// /// -- 函数参数解析 --
+// fn parse_prefix_argument(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     // dbg!("--parse_prefix--", input.slice);
+//     let (input, prefix) = alt((
+//         parse_group,
+//         parse_index_or_slice, //索引或切片 避免被当作函数调用，应先于函数调用。其中不能包含{}[],否则会影响map,list。
+//         // parse_func_call,  // func(a,b)
+//         // parse_block,          // 优先解析block，从而让lambda 可以识别为do块，而不是字典解析。
+//         parse_list,
+//         parse_map, // 应后于所有block,func block调用。
+//         map(parse_symbol, Expression::Symbol),
+//         parse_literal,
+//         parse_unary,
+//         parse_none, // parse_conditional,
+//                     // |inp| Ok((inp, Expression::None)), //for anary operators.
+//     ))(input)?;
+//     // .expect("NO ANY PREFIX");
+//     Ok((input, prefix))
+// }
+// /// -- 左侧基础表达式解析 --
+// fn parse_prefix_basic(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     // dbg!("--parse_prefix--", input.slice);
+//     let (input, prefix) = alt((
+//         parse_lambda_param, // new, lambda params
+//         parse_group,
+//         parse_control_flow,   // ✅ 新增：允许if作为表达式
+//         parse_index_or_slice, //索引或切片 避免被当作函数调用，应先于函数调用。其中不能包含{}[],否则会影响map,list。
+//         parse_func_call,      // func(a,b)
+//         parse_func_flat_call, //函数调用 func a b
+//         parse_map,            // 应先于block调用。
+//         parse_block,          // 优先解析block，从而让lambda 可以识别为do块。
+//         parse_list,
+//         map(parse_symbol, Expression::Symbol),
+//         parse_literal,
+//         parse_unary,
+//         parse_none, // parse_conditional,
+//                     // |inp| Ok((inp, Expression::None)), //for anary operators.
+//     ))(input)?;
+//     // .expect("NO ANY PREFIX");
+//     Ok((input, prefix))
+// }
 /// -- 左侧基础表达式解析 --
-fn parse_prefix(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    // dbg!("--parse_prefix--", input.slice);
-    let (input, prefix) = alt((
-        parse_lambda_param, // new, lambda params
-        parse_group,
-        parse_control_flow,   // ✅ 新增：允许if作为表达式
-        parse_index_or_slice, //索引或切片 避免被当作函数调用，应先于函数调用。其中不能包含{}[],否则会影响map,list。
-        parse_func_call,      // func(a,b)
-        parse_func_flat_call, //函数调用 func a b
-        parse_map,            // 应先于block调用。
-        parse_block,          // 优先解析block，从而让lambda 可以识别为do块。
-        parse_list,
-        map(parse_symbol, Expression::Symbol),
-        parse_literal,
-        parse_unary,
-        parse_none, // parse_conditional,
-                    // |inp| Ok((inp, Expression::None)), //for anary operators.
-    ))(input)?;
-    // .expect("NO ANY PREFIX");
-    Ok((input, prefix))
-}
+
 // 统一控制流解析（适用于语句和表达式）
 fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     alt((
@@ -645,7 +784,7 @@ fn parse_param(
         // 带默认值的参数解析分支
         map(
             separated_pair(
-                parse_symbol,
+                parse_symbol_string,
                 text("="),
                 // 限制只能解析基本类型表达式
                 parse_literal,
@@ -653,7 +792,7 @@ fn parse_param(
             |(name, expr)| (name, Some(expr)), // 将结果包装为Some
         ),
         // 普通参数解析分支
-        map(parse_symbol, |s| (s, None)), // , 1+2 also match first symbol, so failed in ) parser.
+        map(parse_symbol_string, |s| (s, None)), // , 1+2 also match first symbol, so failed in ) parser.
     ))(input)
 }
 // 函数参数列表解析
@@ -695,7 +834,7 @@ fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxEr
         text("("),
         alt((
             // 参数列表特殊处理
-            map(separated_list1(text(","), parse_symbol), |symbols| {
+            map(separated_list1(text(","), parse_symbol_string), |symbols| {
                 Expression::List(symbols.into_iter().map(|s| Expression::Symbol(s)).collect())
             }),
             parse_expr, // 常规表达式
@@ -707,7 +846,9 @@ fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxEr
 // 函数定义解析
 fn parse_fn_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("fn")(input)?;
-    let (input, name) = cut(parse_symbol)(input).map_err(|_| {
+    dbg!("---parse_fn_declare");
+
+    let (input, name) = cut(parse_symbol_string)(input).map_err(|_| {
         eprintln!("mising fn name?");
         // why not raise?
         SyntaxError::expected(
@@ -780,16 +921,166 @@ fn parse_func_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxE
 }
 
 fn parse_func_flat_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_FUNC_NAME)?;
+    let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_CALL)?;
     // let (input, ident) = alt((
     //     parse_index_expr,
     //     parse_symbol.map(|s| Expression::Symbol(s)),
     // ))(input)?;
     // let (input, args) = many1(parse_expr)(input)?;
     let (input, args) =
-        many1(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARGS))(input)?;
+        many1(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_CALL))(input)?;
     Ok((input, Expression::Apply(Box::new(ident), args)))
 }
+
+// -- 其他辅助函数保持与用户提供代码一致 --
+#[inline]
+fn kind(kind: TokenKind) -> impl Fn(Tokens<'_>) -> IResult<Tokens<'_>, StrSlice, SyntaxError> {
+    move |input: Tokens<'_>| match input.first() {
+        Some(&token) if token.kind == kind => Ok((input.skip_n(1), token.range)),
+        _ => Err(nom::Err::Error(SyntaxError::InternalError)),
+    }
+}
+
+#[inline]
+fn text<'a>(text: &'a str) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError> {
+    move |input: Tokens<'a>| match input.first() {
+        Some(&token) if token.text(input) == text => Ok((input.skip_n(1), token)),
+        _ => Err(nom::Err::Error(SyntaxError::InternalError)),
+    }
+}
+fn text_starts_with<'a>(
+    text: &'a str,
+) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError> {
+    move |input: Tokens<'a>| match input.first() {
+        Some(&token) if token.text(input).starts_with(text) => Ok((input.skip_n(1), token)),
+        _ => Err(nom::Err::Error(SyntaxError::InternalError)),
+    }
+}
+#[inline]
+fn text_close<'a>(
+    text: &'static str,
+) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError> {
+    move |input: Tokens<'a>| match input.first() {
+        Some(&token) if token.text(input) == text => Ok((input.skip_n(1), token)),
+        _ => Err(nom::Err::Error(SyntaxError::unclosed_delimiter(
+            input.get_str_slice(),
+            text,
+        ))),
+    }
+}
+
+// -- 字面量解析 --
+fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    alt((
+        parse_integer,
+        parse_float,
+        parse_string,
+        parse_string_raw,
+        parse_boolean,
+    ))(input)
+}
+fn parse_none(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    // dbg!("---parsing none---", &input);
+    match text("None")(input) {
+        Ok(_) => Ok((input, Expression::None)),
+        _ => Err(SyntaxError::expected(
+            input.get_str_slice(),
+            "None",
+            None,
+            None,
+        )),
+    }
+    // if let Ok((input, _)) = text("None")(input) {
+    //     Ok((input, Expression::None))
+    // }
+    // SyntaxError::expected(input.get_str_slice(), "None or ()", None, None)
+}
+
+// 映射解析
+fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    // 不能用cut，防止map识别失败时，影响后面的block解析。
+    let (input, _) = text("{")(input)?;
+    let (input, pairs) = separated_list0(
+        text(","),
+        separated_pair(parse_symbol_string, text(":"), parse_literal),
+    )(input)?;
+    let (input, _) = text_close("}")(input)?;
+
+    // Ok((input, Expression::Map(pairs)))
+    Ok((input, Expression::Map(pairs.into_iter().collect())))
+}
+
+#[inline]
+fn parse_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    map(kind(TokenKind::Symbol), |t| {
+        Expression::Symbol(t.to_str(input.str).to_string())
+    })(input)
+}
+fn parse_symbol_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
+    map(kind(TokenKind::Symbol), |t| t.to_str(input.str).to_string())(input)
+}
+
+#[inline]
+fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, string) = kind(TokenKind::StringLiteral)(input)?;
+    Ok((
+        input,
+        Expression::String(snailquote::unescape(string.to_str(input.str)).unwrap()),
+    ))
+}
+#[inline]
+fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, expr) = kind(TokenKind::StringRaw)(input)?;
+    let raw_str = expr.to_str(input.str);
+
+    // 检查首尾单引号
+    if raw_str.len() >= 2 {
+        // 通过StrSlice直接计算子范围
+        let start = expr.start() + 1;
+        let end = expr.end() - 1;
+        let content = input.str.get(start..end); // 截取中间部分
+        Ok((
+            input,
+            Expression::String(content.to_str(input.str).to_string()),
+        ))
+    } else {
+        Err(SyntaxError::unrecoverable(
+            expr,
+            "raw string enclosed in single quotes",
+            Some(raw_str.to_string()),
+            Some("raw strings must surround with '"),
+        ))
+    }
+}
+
+fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;
+    let num = num.to_str(input.str).parse::<Int>().map_err(|e| {
+        SyntaxError::unrecoverable(num, "integer", Some(format!("error: {}", e)), None)
+    })?;
+    Ok((input, Expression::Integer(num)))
+}
+
+fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    let (input, num) = kind(TokenKind::FloatLiteral)(input)?;
+    let num = num.to_str(input.str).parse::<f64>().map_err(|e| {
+        SyntaxError::unrecoverable(
+            num,
+            "float",
+            Some(format!("error: {}", e)),
+            Some("valid floats can be written like 1.0 or 5.23"),
+        )
+    })?;
+    Ok((input, Expression::Float(num)))
+}
+
+#[inline]
+fn parse_boolean(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    map(kind(TokenKind::BooleanLiteral), |s| {
+        Expression::Boolean(s.to_str(input.str) == "True")
+    })(input)
+}
+
 // -- 入口函数与脚本解析 --
 
 // -- 入口函数 --
@@ -850,148 +1141,6 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxError>> {
 
     // Ok(expr)
 }
-
-// -- 其他辅助函数保持与用户提供代码一致 --
-#[inline]
-fn kind(kind: TokenKind) -> impl Fn(Tokens<'_>) -> IResult<Tokens<'_>, StrSlice, SyntaxError> {
-    move |input: Tokens<'_>| match input.first() {
-        Some(&token) if token.kind == kind => Ok((input.skip_n(1), token.range)),
-        _ => Err(nom::Err::Error(SyntaxError::InternalError)),
-    }
-}
-
-#[inline]
-fn text<'a>(text: &'a str) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError> {
-    move |input: Tokens<'a>| match input.first() {
-        Some(&token) if token.text(input) == text => Ok((input.skip_n(1), token)),
-        _ => Err(nom::Err::Error(SyntaxError::InternalError)),
-    }
-}
-fn text_starts_with<'a>(
-    text: &'a str,
-) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError> {
-    move |input: Tokens<'a>| match input.first() {
-        Some(&token) if token.text(input).starts_with(text) => Ok((input.skip_n(1), token)),
-        _ => Err(nom::Err::Error(SyntaxError::InternalError)),
-    }
-}
-#[inline]
-fn text_close<'a>(
-    text: &'static str,
-) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxError> {
-    move |input: Tokens<'a>| match input.first() {
-        Some(&token) if token.text(input) == text => Ok((input.skip_n(1), token)),
-        _ => Err(nom::Err::Error(SyntaxError::unclosed_delimiter(
-            input.get_str_slice(),
-            text,
-        ))),
-    }
-}
-
-// -- 字面量解析 --
-fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    alt((
-        map(parse_integer, Expression::Integer),
-        map(parse_float, Expression::Float),
-        map(parse_string, Expression::String),
-        map(parse_string_raw, Expression::String),
-        map(parse_boolean, Expression::Boolean),
-    ))(input)
-}
-fn parse_none(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    // dbg!("---parsing none---", &input);
-    match text("None")(input) {
-        Ok(_) => Ok((input, Expression::None)),
-        _ => Err(SyntaxError::expected(
-            input.get_str_slice(),
-            "None",
-            None,
-            None,
-        )),
-    }
-    // if let Ok((input, _)) = text("None")(input) {
-    //     Ok((input, Expression::None))
-    // }
-    // SyntaxError::expected(input.get_str_slice(), "None or ()", None, None)
-}
-
-// 映射解析
-fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    // 不能用cut，防止map识别失败时，影响后面的block解析。
-    let (input, _) = text("{")(input)?;
-    let (input, pairs) = separated_list0(
-        text(","),
-        separated_pair(parse_symbol, text(":"), parse_literal),
-    )(input)?;
-    let (input, _) = text_close("}")(input)?;
-
-    // Ok((input, Expression::Map(pairs)))
-    Ok((input, Expression::Map(pairs.into_iter().collect())))
-}
-
-#[inline]
-fn parse_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
-    map(kind(TokenKind::Symbol), |t| t.to_str(input.str).to_string())(input)
-}
-
-#[inline]
-fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
-    let (input, string) = kind(TokenKind::StringLiteral)(input)?;
-    Ok((
-        input,
-        snailquote::unescape(string.to_str(input.str)).unwrap(),
-    ))
-}
-#[inline]
-fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError> {
-    let (input, expr) = kind(TokenKind::StringRaw)(input)?;
-    let raw_str = expr.to_str(input.str);
-
-    // 检查首尾单引号
-    if raw_str.len() >= 2 {
-        // 通过StrSlice直接计算子范围
-        let start = expr.start() + 1;
-        let end = expr.end() - 1;
-        let content = input.str.get(start..end); // 截取中间部分
-        Ok((input, content.to_str(input.str).to_string()))
-    } else {
-        Err(SyntaxError::unrecoverable(
-            expr,
-            "raw string enclosed in single quotes",
-            Some(raw_str.to_string()),
-            Some("raw strings must surround with '"),
-        ))
-    }
-}
-
-fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Int, SyntaxError> {
-    let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;
-    let num = num.to_str(input.str).parse::<Int>().map_err(|e| {
-        SyntaxError::unrecoverable(num, "integer", Some(format!("error: {}", e)), None)
-    })?;
-    Ok((input, num))
-}
-
-fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, f64, SyntaxError> {
-    let (input, num) = kind(TokenKind::FloatLiteral)(input)?;
-    let num = num.to_str(input.str).parse::<f64>().map_err(|e| {
-        SyntaxError::unrecoverable(
-            num,
-            "float",
-            Some(format!("error: {}", e)),
-            Some("valid floats can be written like 1.0 or 5.23"),
-        )
-    })?;
-    Ok((input, num))
-}
-
-#[inline]
-fn parse_boolean(input: Tokens<'_>) -> IResult<Tokens<'_>, bool, SyntaxError> {
-    map(kind(TokenKind::BooleanLiteral), |s| {
-        s.to_str(input.str) == "True"
-    })(input)
-}
-
 // ================== 控制结构解析 ==================
 // 核心解析流程架构
 pub fn parse_script_tokens(
@@ -1001,17 +1150,19 @@ pub fn parse_script_tokens(
     if input.is_empty() {
         return Ok((input, Expression::None));
     }
+    dbg!("---------parse_script_tokens");
+
     // 阶段1：解析语句序列（控制结构在此处理）
     // dbg!("------>1", input);
-    // let (input, mut statements) = many0(parse_statement)(input)?;
-    let (input, statements) = many0(terminated(
-        parse_statement,
+    // let (input, mut functions) = many0(parse_statement)(input)?;
+    let (input, functions) = many0(terminated(
+        parse_functions,
         opt(alt((kind(TokenKind::LineBreak), eof_slice))), // 允许换行符作为语句分隔
     ))(input)?;
 
     if !input.is_empty() {
-        // dbg!("-----==>Remaining:", &input.slice, &statements);
-        // eprintln!("unrecognized satement");
+        dbg!("-----==>Remaining:", &input.slice, &functions);
+        eprintln!("unrecognized satement");
     }
     // if !input.is_empty() {
     //     // 阶段2：解析最后可能的表达式（无显式分号的情况）
@@ -1025,9 +1176,9 @@ pub fn parse_script_tokens(
 
     //     // 阶段3：合并结果
     //     if let Some(expr) = last {
-    //         statements.push(expr);
+    //         functions.push(expr);
     //     }
-    //     // dbg!("-----==>4", &statements);
+    //     // dbg!("-----==>4", &functions);
 
     //     // 新增：清理所有末尾换行符
     //     // let (input, _) = many0(kind(TokenKind::LineBreak))(input)?;
@@ -1041,18 +1192,36 @@ pub fn parse_script_tokens(
     //     //         .0;
     //     // }
     // }
-    match statements.len() {
+    match functions.len() {
         0 => Err(nom::Err::Error(SyntaxError::NoExpression)),
         1 => {
-            let s = statements.get(0).unwrap();
+            let s = functions.get(0).unwrap();
             Ok((input, s.clone()))
         }
-        _ => Ok((input, Expression::Do(statements))),
+        _ => Ok((input, Expression::Do(functions))),
     }
 }
-// 语句解析器（顶层结构）
+/// 函数解析（顶层结构）
+fn parse_functions(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    dbg!("---parse_functions");
+    let (input, statement) = alt((
+        // parse_import,        // 模块导入（仅语句级）
+        terminated(
+            parse_fn_declare,
+            opt(kind(TokenKind::LineBreak)), // 允许换行符作为语句分隔
+        ), // 函数声明（顶级）
+        parse_statement,
+    ))(input)?;
+    // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
+
+    dbg!(&input, &statement);
+    Ok((input, statement))
+}
+// 语句块解析器（顶层结构）
 fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     // dbg!(input);
+    dbg!("---parse_statement");
+
     loop {
         let (input_pure, lbk) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
         if lbk.is_none() {
@@ -1061,34 +1230,38 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         input = input_pure
     }
     let (input, statement) = alt((
-        parse_fn_declare, // 函数声明（仅语句级）
-        // parse_import,        // 模块导入（仅语句级）
-        parse_control_flow, // 控制流（可嵌套在表达式中）
-        // func
-        // parse_lambda,
-        // 声明和赋值
+        // parse_fn_declare, // 函数声明（仅语句级） TODO 是否允许函数嵌套？
+        // 声明语句
         parse_lazy_assign,
         parse_declare,
-        // parse_assign,  // 赋值语句
         parse_del,
-        // call
-        // parse_apply,
-        // 兜底：表达式语句
-        parse_return, //return in func
-        // parse_expr,   // 完整表达式
-        terminated(
-            parse_expr, // 完整表达式
-            opt(alt((
-                // 必须包含语句终止符
-                kind(TokenKind::LineBreak),
-                eof_slice, // 允许文件末尾无终止符
-            ))),
-        ),
+        // 控制流语句
+        parse_control_flow,
+        // 运算语句: !3, 1+2, must before flat_call,
+        // or discard this, only allow `let a=3+2` => parse_declare
+        // or discard this, only allow `a=3+2` => parse_expr
+        // 执行语句: ls -l, add(x)
+        parse_func_call,
+        parse_func_flat_call,
+        // 单语句： 字面量和单独的symbol：[2,3] 4 "5" ls x
+        parse_single_expr,
     ))(input)?;
     // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
-
-    // dbg!(&input, &statement);
+    dbg!(&input, &statement);
     Ok((input, statement))
+}
+
+/// 单独语句 TODO：包装到Expression:Apply
+fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+    dbg!("---parse_single_expr");
+    terminated(
+        parse_expr, // 完整表达式
+        opt(alt((
+            // 必须包含语句终止符
+            kind(TokenKind::LineBreak),
+            eof_slice, // 允许文件末尾无终止符
+        ))),
+    )(input)
 }
 
 // IF语句解析（支持else if链）
@@ -1125,7 +1298,7 @@ fn parse_while_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 // FOR循环解析
 fn parse_for_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("for")(input)?;
-    let (input, pattern) = parse_symbol(input)?; // 或更复杂的模式匹配
+    let (input, pattern) = parse_symbol_string(input)?; // 或更复杂的模式匹配
     let (input, _) = text("in")(input)?;
     let (input, iterable) = parse_expr(input)?;
     let (input, body) = parse_block(input)?;
@@ -1180,6 +1353,7 @@ fn parse_block_or_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
     ))(input)
 }
 // 解析代码块（带花括号）
+// TODO with return?
 fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, block) = delimited(
         text("{"),
@@ -1210,7 +1384,7 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("let")(input)?;
-    let (input, symbol) = parse_symbol(input)?;
+    let (input, symbol) = parse_symbol_string(input)?;
     let (input, _) = text(":=")(input)?; // 使用:=作为延迟赋值符号
     let (input, expr) = parse_expr(input)?;
     // dbg!(&expr);
@@ -1224,8 +1398,10 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     let (input, _) = text("let")(input)?;
 
     // 解析逗号分隔的多个符号, 允许重载操作符
-    let (input, symbols) = separated_list0(text(","), alt((parse_symbol, parse_operator)))(input)
-        .map_err(|_| {
+    let (input, symbols) = separated_list0(text(","), alt((parse_symbol_string, parse_operator)))(
+        input,
+    )
+    .map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
             "symbol list",
@@ -1272,7 +1448,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
 
 fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     let (input, _) = text("del")(input)?;
-    let (input, symbol) = parse_symbol(input).map_err(|_| {
+    let (input, symbol) = parse_symbol_string(input).map_err(|_| {
         SyntaxError::unrecoverable(
             input.get_str_slice(),
             "symbol",
@@ -1292,7 +1468,7 @@ fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxError>
 fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Pattern, SyntaxError> {
     alt((
         map(text("_"), |_| Pattern::Bind("_".to_string())), // 将_视为特殊绑定
-        map(parse_symbol, Pattern::Bind),
+        map(parse_symbol_string, Pattern::Bind),
         map(parse_literal, |lit| Pattern::Literal(Box::new(lit))),
     ))(input)
 }
@@ -1314,10 +1490,7 @@ fn eof_slice(input: Tokens<'_>) -> IResult<Tokens<'_>, StrSlice, SyntaxError> {
 fn parse_slice_params(input: Tokens<'_>) -> IResult<Tokens<'_>, SliceParams, SyntaxError> {
     let (input, parts) = separated_list0(
         text(":"),
-        opt(alt((
-            map(parse_integer, Expression::Integer),
-            map(parse_symbol, Expression::Symbol),
-        ))),
+        opt(alt((parse_integer, parse_symbol))),
         // opt(alt((
         // parse_expr,
         // map(kind(TokenKind::LineContinuation), |_| Expression::None),
@@ -1335,49 +1508,49 @@ fn parse_slice_params(input: Tokens<'_>) -> IResult<Tokens<'_>, SliceParams, Syn
 }
 
 // 新增索引/切片解析
-fn parse_index_or_slice(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
-    let (input, target) = alt((
-        map(parse_symbol, Expression::Symbol),
-        map(parse_string, Expression::String),
-        // parse_list,
-        // parse_map,
-    ))(input)?;
-    let (input, (params, is_slice)) = delimited(
-        text("["),
-        alt((
-            // TODO a[2] was a[2:], changeorder not resolve.
-            map(parse_slice_params, |p| (p, true)), // 切片
-            map(parse_integer, |e| {
-                (
-                    SliceParams {
-                        // 索引转切片
-                        start: Some(Box::new(Expression::Integer(e))),
-                        end: None,
-                        step: None,
-                    },
-                    false,
-                )
-            }),
-            map(parse_symbol, |e| {
-                (
-                    SliceParams {
-                        // 索引转切片
-                        start: Some(Box::new(Expression::Symbol(e))),
-                        end: None,
-                        step: None,
-                    },
-                    false,
-                )
-            }),
-        )),
-        cut(text_close("]")),
-    )(input)?;
+// fn parse_index_or_slice(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
+//     let (input, target) = alt((
+//         map(parse_symbol, Expression::Symbol),
+//         map(parse_string, Expression::String),
+//         // parse_list,
+//         // parse_map,
+//     ))(input)?;
+//     let (input, (params, is_slice)) = delimited(
+//         text("["),
+//         alt((
+//             // TODO a[2] was a[2:], changeorder not resolve.
+//             map(parse_slice_params, |p| (p, true)), // 切片
+//             map(parse_integer, |e| {
+//                 (
+//                     SliceParams {
+//                         // 索引转切片
+//                         start: Some(Box::new(Expression::Integer(e))),
+//                         end: None,
+//                         step: None,
+//                     },
+//                     false,
+//                 )
+//             }),
+//             map(parse_symbol, |e| {
+//                 (
+//                     SliceParams {
+//                         // 索引转切片
+//                         start: Some(Box::new(Expression::Symbol(e))),
+//                         end: None,
+//                         step: None,
+//                     },
+//                     false,
+//                 )
+//             }),
+//         )),
+//         cut(text_close("]")),
+//     )(input)?;
 
-    Ok((
-        input,
-        match is_slice {
-            true => Expression::Slice(Box::new(target), params),
-            false => Expression::Index(Box::new(target), params.start.unwrap()),
-        },
-    ))
-}
+//     Ok((
+//         input,
+//         match is_slice {
+//             true => Expression::Slice(Box::new(target), params),
+//             false => Expression::Index(Box::new(target), params.start.unwrap()),
+//         },
+//     ))
+// }

@@ -70,6 +70,21 @@ pub fn syntax_highlight(line: &str) -> String {
                 is_colored = true;
                 result.push_str(k);
             }
+            (TokenKind::OperatorPrefix, k) => {
+                result.push_str("\x1b[38;5;221m");
+                is_colored = true;
+                result.push_str(k);
+            }
+            (TokenKind::OperatorInfix, k) => {
+                result.push_str("\x1b[38;5;222m");
+                is_colored = true;
+                result.push_str(k);
+            }
+            (TokenKind::OperatorPostfix, k) => {
+                result.push_str("\x1b[38;5;223m");
+                is_colored = true;
+                result.push_str(k);
+            }
             (TokenKind::StringRaw, s) => {
                 result.push_str("\x1b[38;5;203m");
                 is_colored = true;

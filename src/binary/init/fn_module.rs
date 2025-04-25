@@ -66,7 +66,7 @@ pub fn get() -> Expression {
     let id = parse_lambda("(x) -> x", &mut env);
     let const_fn = parse_lambda("(x, y) -> x", &mut env);
     let flip = parse_lambda("(f, x, y) -> f y x", &mut env);
-    let compose = parse_lambda("(f, g, x) -> f (g x)", &mut env);
+    let compose = parse_lambda("(f, g, x) -> f (g, x)", &mut env);
 
     // 内置函数模块
     Expression::Map(b_tree_map! {

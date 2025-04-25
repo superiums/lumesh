@@ -631,12 +631,9 @@ fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError> {
     delimited(
         text("["),
-        cut(map(
-            separated_list0(text(","), parse_expr),
-            Expression::List,
-        )),
+        map(separated_list0(text(","), parse_expr), Expression::List),
         // opt(text(",")), //TODO 允许末尾，
-        cut(text_close("]")),
+        text_close("]"),
     )(input)
 }
 

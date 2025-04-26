@@ -1,13 +1,13 @@
 use super::Builtin;
 use super::{Expression, Pattern};
-use crate::{Environment, LmError};
+use crate::{Environment, RuntimeError};
 use std::io::ErrorKind;
 use std::process::{Command, Stdio};
 
 // Expression求值2
 impl Expression {
     /// 处理复杂表达式的递归求值
-    pub fn eval_complex(self, env: &mut Environment, depth: usize) -> Result<Self, LmError> {
+    pub fn eval_complex(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         match self {
             // 控制流表达式
             Self::For(var, list_expr, body) => {
@@ -47,7 +47,7 @@ impl Expression {
                         return expr.eval_mut(env, depth + 1);
                     }
                 }
-                Err(LmError::NoMatchingBranch(val.to_string()))
+                Err(RuntimeError::NoMatchingBranch(val.to_string()))
             }
 
             // 函数相关表达式
@@ -74,7 +74,7 @@ impl Expression {
                             | Expression::Float(_)
                             | Expression::Boolean(_) => {}
                             _ => {
-                                return Err(LmError::InvalidDefaultValue(
+                                return Err(RuntimeError::InvalidDefaultValue(
                                     name,
                                     p.to_string(),
                                     expr.clone(),
@@ -118,7 +118,7 @@ impl Expression {
 
             Self::Return(expr) => {
                 // 提前返回机制
-                Err(LmError::EarlyReturn(expr.eval_mut(env, depth + 1)?))
+                Err(RuntimeError::EarlyReturn(expr.eval_mut(env, depth + 1)?))
             }
 
             // 默认情况
@@ -130,7 +130,7 @@ impl Expression {
     }
 
     /// 执行
-    pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, LmError> {
+    pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) => {
@@ -182,20 +182,20 @@ impl Expression {
                         //     cmd.stdout(Stdio::piped());
                         //     let mut child = cmd
                         //         .spawn()
-                        //         .map_err(|e| LmError::CustomError(e.to_string()))?;
+                        //         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
                         //     // dbg!(&child);
                         //     if let Some(mut stdin) = child.stdin.take() {
                         //         // 写入标准输入
                         //         stdin
                         //             .write_all(stdin_str.as_bytes())
-                        //             .map_err(|e| LmError::CustomError(e.to_string()))?;
+                        //             .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
                         //         // 关闭stdin以指示输入结束
                         //         drop(stdin);
                         //     }
                         //     // dbg!(&child);
                         //     let output = child
                         //         .wait_with_output()
-                        //         .map_err(|e| LmError::CustomError(e.to_string()))?;
+                        //         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
                         //     // dbg!(&output);
                         //     self.set_status_code(output.status.code().unwrap_or(0) as i64, env);
@@ -222,7 +222,7 @@ impl Expression {
                         //                 // println!("====Command output====\n{}", output_str); // 打印输出内容
                         //                 Ok(Self::String(output_str))
                         //             } else {
-                        //                 Err(LmError::CustomError(format!(
+                        //                 Err(RuntimeError::CustomError(format!(
                         //                     "Command failed with status: {}\n{}",
                         //                     &output.status,
                         //                     String::from_utf8_lossy(&output.stderr).into_owned()
@@ -232,11 +232,11 @@ impl Expression {
                         //         Err(e) => {
                         //             self.set_status_code(1, env);
                         //             return Err(match e.kind() {
-                        //                 ErrorKind::NotFound => LmError::ProgramNotFound(name),
+                        //                 ErrorKind::NotFound => RuntimeError::ProgramNotFound(name),
                         //                 ErrorKind::PermissionDenied => {
-                        //                     LmError::PermissionDenied(self.clone())
+                        //                     RuntimeError::PermissionDenied(self.clone())
                         //                 }
-                        //                 _ => LmError::CommandFailed(name, args.clone()),
+                        //                 _ => RuntimeError::CommandFailed(name, args.clone()),
                         //             });
                         //         }
                         //     }
@@ -266,7 +266,7 @@ impl Expression {
                                         // 如果命令执行失败，打印错误信息
                                         let stderr = String::from_utf8_lossy(&result.stderr);
                                         // eprintln!("Command failed with error:\n{}", &stderr);
-                                        return Err(LmError::CustomError(format!(
+                                        return Err(RuntimeError::CustomError(format!(
                                             "{} command failed with error:\n{}",
                                             name, stderr,
                                         )));
@@ -274,11 +274,11 @@ impl Expression {
                                 }
                                 Err(e) => {
                                     return Err(match e.kind() {
-                                        ErrorKind::NotFound => LmError::ProgramNotFound(name),
+                                        ErrorKind::NotFound => RuntimeError::ProgramNotFound(name),
                                         ErrorKind::PermissionDenied => {
-                                            LmError::PermissionDenied(self.clone())
+                                            RuntimeError::PermissionDenied(self.clone())
                                         }
-                                        _ => LmError::CommandFailed(name, args.clone()),
+                                        _ => RuntimeError::CommandFailed(name, args.clone()),
                                     });
                                 }
                             }
@@ -293,15 +293,17 @@ impl Expression {
                                 .spawn()
                                 .map_err(|e| match e.kind() {
                                     ErrorKind::NotFound => {
-                                        LmError::ProgramNotFound(name.to_string())
+                                        RuntimeError::ProgramNotFound(name.to_string())
                                     }
                                     ErrorKind::PermissionDenied => {
-                                        LmError::PermissionDenied(self.clone())
+                                        RuntimeError::PermissionDenied(self.clone())
                                     }
-                                    _ => LmError::CommandFailed(name.to_string(), args.clone()),
+                                    _ => {
+                                        RuntimeError::CommandFailed(name.to_string(), args.clone())
+                                    }
                                 })?;
                             child.wait().map_err(|e| {
-                                LmError::CommandFailed2(name.to_string(), e.to_string())
+                                RuntimeError::CommandFailed2(name.to_string(), e.to_string())
                             })?;
 
                             return Ok(Expression::None);
@@ -340,7 +342,10 @@ impl Expression {
                             }
                             Err(e) => {
                                 self.set_status_code(1, env);
-                                Err(e)
+                                Err(RuntimeError::CommandFailed2(
+                                    func.to_string(),
+                                    e.to_string(),
+                                ))
                             }
                         }
                     }
@@ -461,7 +466,7 @@ impl Expression {
                         // dbg!(&def_env);
                         // 参数数量校验
                         if args.len() > params.len() {
-                            return Err(LmError::TooManyArguments {
+                            return Err(RuntimeError::TooManyArguments {
                                 name,
                                 max: params.len(),
                                 received: args.len(),
@@ -480,7 +485,7 @@ impl Expression {
                                     // 仅允许基本类型直接使用
                                     actual_args.push(def_expr.clone());
                                 } else {
-                                    return Err(LmError::ArgumentMismatch {
+                                    return Err(RuntimeError::ArgumentMismatch {
                                         name,
                                         expected: params.len(),
                                         received: actual_args.len(),
@@ -508,7 +513,7 @@ impl Expression {
                                 self.set_status_code(0, env);
                                 Ok(v)
                             }
-                            Err(LmError::EarlyReturn(v)) => {
+                            Err(RuntimeError::EarlyReturn(v)) => {
                                 self.set_status_code(0, env);
 
                                 Ok(v)
@@ -519,7 +524,7 @@ impl Expression {
                             }
                         };
                     }
-                    _ => Err(LmError::CannotApply(*func.clone(), args.clone())),
+                    _ => Err(RuntimeError::CannotApply(*func.clone(), args.clone())),
                 };
             }
             _ => unreachable!(),
@@ -561,7 +566,7 @@ fn matches_pattern(
     value: &Expression,
     pattern: &Pattern,
     env: &mut Environment,
-) -> Result<bool, LmError> {
+) -> Result<bool, RuntimeError> {
     match pattern {
         Pattern::Bind(name) => {
             if name == "_" {

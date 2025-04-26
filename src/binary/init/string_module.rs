@@ -1,6 +1,6 @@
 use super::fn_module::curry_env;
 use common_macros::b_tree_map;
-use lumesh::{Environment, LmError, Expression};
+use lumesh::{Environment, Expression, LmError};
 
 fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
@@ -153,10 +153,10 @@ pub fn get() -> Expression {
         }, "is this string numeric?"),
 
         String::from("split") => Expression::builtin("split", |args, env| {
-            curry_env(Expression::builtin("", split, ""), 2, env)?
+            Ok(curry_env(Expression::builtin("", split, ""), 2, env)?
                 .eval(env)?
                 .apply(args)
-                .eval(env)
+                .eval(env)?)
         }, "split a string on a given character"),
 
         String::from("to_lower") => Expression::builtin("to_lower", |args, env| {

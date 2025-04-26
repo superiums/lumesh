@@ -1,7 +1,7 @@
 use super::Expression;
 use super::builtin::Builtin;
 use super::{Environment, Int};
-use crate::LmError;
+use crate::RuntimeError;
 // use num_traits::pow;
 use std::fmt;
 use terminal_size::{Width, terminal_size};
@@ -15,7 +15,7 @@ use prettytable::{
 // 错误处理宏（优化点）
 macro_rules! type_error {
     ($expected:expr, $found:expr) => {
-        Err(LmError::TypeError {
+        Err(RuntimeError::TypeError {
             expected: $expected.into(),
             found: $found.type_name(),
         })
@@ -284,7 +284,7 @@ impl Expression {
     }
 
     /// 符号转换
-    pub fn to_symbol(&self) -> Result<&str, LmError> {
+    pub fn to_symbol(&self) -> Result<&str, RuntimeError> {
         if let Self::Symbol(s) = self {
             Ok(s)
         } else {

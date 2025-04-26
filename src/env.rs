@@ -1,4 +1,4 @@
-use super::{Expression, LmError};
+use crate::{Expression, LmError, RuntimeError};
 use std::collections::BTreeMap;
 
 const CWD_ENV_VAR: &str = "CWD";

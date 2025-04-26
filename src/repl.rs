@@ -30,7 +30,7 @@ const GREEN_BOLD: &str = "\x1b[1;32m";
 const RESET: &str = "\x1b[0m";
 
 // 使用 Arc<Mutex> 包装编辑器
-pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
+pub fn run_repl(env: &mut Environment) {
     println!("Rustyline Enhanced CLI (v15.0.0)");
     init_config(env);
 
@@ -90,7 +90,7 @@ pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
                     rl.lock()
                         .unwrap()
                         .add_history_entry(&line)
-                        .map_err(|_| LmError::CustomError("add history err".into()))?;
+                        .map_err(|_| eprintln!("add history err"));
                 }
             }
         }
@@ -100,8 +100,7 @@ pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
     rl.lock()
         .unwrap()
         .save_history(HISTORY_FILE)
-        .map_err(|_| LmError::CustomError("save history err".into()))?;
-    Ok(())
+        .map_err(|_| eprintln!("save history err"));
 }
 
 // 确保 helper 也是线程安全的

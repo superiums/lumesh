@@ -1,4 +1,4 @@
-use crate::{Diagnostic, Expression, SyntaxError, parse_script, tokenize};
+use crate::{Diagnostic, Expression, SyntaxErrorKind, parse_script, tokenize};
 
 #[track_caller]
 fn tokenize_test(input: &str, expected: &str) {
@@ -18,7 +18,7 @@ fn tokenize_test_err(input: &str) {
 }
 
 #[track_caller]
-fn parse_test(input: &str, expected: &str) -> Result<(), nom::Err<SyntaxError>> {
+fn parse_test(input: &str, expected: &str) -> Result<(), nom::Err<SyntaxErrorKind>> {
     let expr = parse_script(input)?;
     let got = format!("{:#?}", expr);
     assert_eq!(got.as_str(), expected);
@@ -280,11 +280,11 @@ fn tokenize_invalid_symbols() {
 }
 
 #[test]
-fn parse1() -> Result<(), nom::Err<SyntaxError>> {
+fn parse1() -> Result<(), nom::Err<SyntaxErrorKind>> {
     parse_test(r#""String\t\r\n\"""#, r#""String\t\r\n\"""#)
 }
 
 #[test]
-fn parse2() -> Result<(), nom::Err<SyntaxError>> {
+fn parse2() -> Result<(), nom::Err<SyntaxErrorKind>> {
     parse_test(r#"let hello = "world\u{21}";"#, r#"let hello = "world!""#)
 }

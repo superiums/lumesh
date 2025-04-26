@@ -1,5 +1,5 @@
 use common_macros::b_tree_map;
-use lumesh::{Environment, LmError, Expression, Int};
+use lumesh::{Environment, Expression, Int, LmError};
 
 pub fn get() -> Expression {
     (b_tree_map! {
@@ -23,7 +23,7 @@ fn try_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
         Err(err) => {
             let handler = args[1].clone();
 
-            Expression::Apply(
+            Ok(Expression::Apply(
                 Box::new(handler),
                 vec![Expression::Map(b_tree_map! {
                     String::from("message") => Expression::String(err.to_string()),
@@ -31,8 +31,8 @@ fn try_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
                     String::from("expression") => Expression::Quote(Box::new(args[0].clone()))
                 })],
             )
-            .eval(env)
+            .eval(env)?)
         }
-        result => result,
+        result => Ok(result?),
     }
 }

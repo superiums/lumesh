@@ -1,6 +1,6 @@
 use common_macros::b_tree_map;
 use json::JsonValue;
-use lumesh::{Environment, LmError, Expression, SyntaxError, parse_script};
+use lumesh::{Environment, Expression, LmError, SyntaxError, SyntaxErrorKind, parse_script};
 use std::collections::BTreeMap;
 
 pub fn get() -> Expression {
@@ -20,13 +20,14 @@ fn parse_expr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression
     }
     match parse_script(&script) {
         Ok(val) => Ok(val),
-        Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
-            Err(LmError::SyntaxError(script.into(), e))
-        }
-        Err(nom::Err::Incomplete(_)) => Err(LmError::SyntaxError(
-            script.into(),
-            SyntaxError::InternalError,
-        )),
+        Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => Err(SyntaxError {
+            source: script.into(),
+            kind: e,
+        })?,
+        Err(nom::Err::Incomplete(_)) => Err(SyntaxError {
+            source: script.into(),
+            kind: SyntaxErrorKind::InternalError,
+        })?,
     }
 }
 

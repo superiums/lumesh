@@ -1,6 +1,6 @@
 use super::{Environment, Expression, LmError};
 use common_macros::b_tree_map;
-use lumesh::parse;
+use lumesh::{RuntimeError, parse};
 
 // 柯里化函数构建（适配多参数Lambda）
 pub(super) fn curry_env(
@@ -104,21 +104,21 @@ fn build_apply() -> Expression {
         "apply",
         |args, env| {
             if args.len() != 2 {
-                return Err(LmError::ArgumentMismatch {
+                return Err(RuntimeError::ArgumentMismatch {
                     name: args[0].to_string(),
                     expected: 2,
                     received: args.len(),
-                });
+                })?;
             }
 
             let f = args[0].eval(env)?;
             let args_list = match args[1].eval(env)? {
                 Expression::List(v) => v,
                 _ => {
-                    return Err(LmError::TypeError {
+                    return Err(RuntimeError::TypeError {
                         expected: "list".into(),
                         found: args[1].type_name(),
-                    });
+                    })?;
                 }
             };
 
@@ -134,21 +134,21 @@ fn build_curry() -> Expression {
         "curry",
         |args, env| {
             if args.len() < 2 {
-                return Err(LmError::ArgumentMismatch {
+                return Err(RuntimeError::ArgumentMismatch {
                     name: args[0].to_string(),
                     expected: 2,
                     received: args.len(),
-                });
+                })?;
             }
 
             let f = args[0].eval(env)?;
             let arg_count = match args[1].eval(env)? {
                 Expression::Integer(n) => n as usize,
                 _ => {
-                    return Err(LmError::TypeError {
+                    return Err(RuntimeError::TypeError {
                         expected: "integer".into(),
                         found: args[1].type_name(),
-                    });
+                    })?;
                 }
             };
 
@@ -186,36 +186,36 @@ pub(super) fn curry(f: Expression, args: usize) -> Expression {
 
 fn conditional(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 3 {
-        return Err(LmError::CustomError(
+        return Err(RuntimeError::CustomError(
             "conditional requires exactly three arguments".to_string(),
-        ));
+        ))?;
     }
     let condition = args[0].eval(env)?;
     if condition.is_truthy() {
-        args[1].eval(env)
+        Ok(args[1].eval(env)?)
     } else {
-        args[2].eval(env)
+        Ok(args[2].eval(env)?)
     }
 }
 
 fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if !(1..=2).contains(&args.len()) {
-        return Err(LmError::CustomError(
+        return Err(RuntimeError::CustomError(
             if args.len() > 2 {
                 "too many arguments to function map"
             } else {
                 "too few arguments to function map"
             }
             .to_string(),
-        ));
+        ))?;
     }
 
     if args.len() == 1 {
-        Expression::Apply(
+        Ok(Expression::Apply(
             Box::new(lumesh::parse("(f,list) -> for item in list {f item}")?),
             args.clone(),
         )
-        .eval(env)
+        .eval(env)?)
     } else if let Expression::List(list) = args[1].eval(env)? {
         let f = args[0].eval(env)?;
         let mut result = vec![];
@@ -244,7 +244,7 @@ fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     }
 
     if args.len() == 1 {
-        Expression::Apply(
+        Ok(Expression::Apply(
             Box::new(lumesh::parse(
                 r#"(f,list) -> {
                     let result = [];
@@ -258,7 +258,7 @@ fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
             )?),
             args.clone(),
         )
-        .eval(env)
+        .eval(env)?)
     } else if let Expression::List(list) = args[1].eval(env)? {
         let f = args[0].eval(env)?;
         let mut result = vec![];
@@ -292,14 +292,14 @@ fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     }
 
     if args.len() < 3 {
-        Expression::Apply(
+        Ok(Expression::Apply(
             Box::new(lumesh::parse(
                 "(f,acc,list) -> { \
                         for item in list { let acc = f acc item } acc }",
             )?),
             args.clone(),
         )
-        .eval(env)
+        .eval(env)?)
     } else if let Expression::List(list) = args[2].eval(env)? {
         let f = args[0].eval(env)?;
         let mut acc = args[1].eval(env)?;

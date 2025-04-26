@@ -4,10 +4,309 @@ use common_macros::b_tree_map;
 use core::{cmp::max, fmt};
 use detached_str::{Str, StrSlice};
 use nom::error::{ErrorKind, ParseError};
+use std::error::Error as StdError;
 use thiserror::Error;
 
+// ============== 语法错误部分 ==============
+
+#[derive(Debug)]
+pub struct SyntaxError {
+    pub source: Str,
+    pub kind: SyntaxErrorKind,
+}
+
+#[derive(Debug)]
+pub enum SyntaxErrorKind {
+    Expected {
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    },
+    TokenizationErrors(Box<[Diagnostic]>),
+    ExpectedChar {
+        expected: char,
+        at: Option<StrSlice>,
+    },
+    NomError {
+        kind: ErrorKind,
+        at: Option<StrSlice>,
+        cause: Option<Box<SyntaxError>>,
+    },
+    InternalError,
+    UnknownOperator(String),
+    PrecedenceTooLow,
+    NoExpression,
+    ArgumentMismatch {
+        name: String,
+        expected: usize,
+        received: usize,
+    },
+}
+
+// impl StdError for SyntaxError {
+//     fn source(&self) -> Option<&(dyn StdError + 'static)> {
+//         match &self.kind {
+//             SyntaxErrorKind::NomError { cause, .. } => cause.as_deref(),
+//             _ => None,
+//         }
+//     }
+// }
+
+impl StdError for SyntaxError {
+    fn source(&self) -> Option<&(dyn StdError + 'static)> {
+        match &self.kind {
+            SyntaxErrorKind::NomError { cause, .. } => {
+                // Box the cause to convert it to a trait object
+                cause
+                    .as_ref()
+                    .map(|c| c.as_ref() as &(dyn StdError + 'static))
+            }
+            _ => None,
+        }
+    }
+}
+impl SyntaxError {
+    pub fn new(source: Str, kind: SyntaxErrorKind) -> Self {
+        Self { source, kind }
+    }
+
+    pub fn unrecoverable(
+        source: Str,
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    ) -> nom::Err<Self> {
+        nom::Err::Failure(Self::new(
+            source,
+            SyntaxErrorKind::Expected {
+                input,
+                expected,
+                found,
+                hint,
+            },
+        ))
+    }
+
+    pub fn expected(
+        source: Str,
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    ) -> nom::Err<Self> {
+        nom::Err::Error(Self::new(
+            source,
+            SyntaxErrorKind::Expected {
+                input,
+                expected,
+                found,
+                hint,
+            },
+        ))
+    }
+
+    pub fn unclosed_delimiter(source: Str, start: StrSlice, delim: &'static str) -> Self {
+        Self::new(
+            source,
+            SyntaxErrorKind::Expected {
+                input: start,
+                expected: delim,
+                found: None,
+                hint: Some("检查括号/引号是否匹配"),
+            },
+        )
+    }
+}
+impl SyntaxErrorKind {
+    pub fn unrecoverable(
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    ) -> nom::Err<Self> {
+        nom::Err::Error(SyntaxErrorKind::Expected {
+            input,
+            expected,
+            found,
+            hint,
+        })
+    }
+
+    pub fn expected(
+        input: StrSlice,
+        expected: &'static str,
+        found: Option<String>,
+        hint: Option<&'static str>,
+    ) -> nom::Err<Self> {
+        nom::Err::Error(SyntaxErrorKind::Expected {
+            input,
+            expected,
+            found,
+            hint,
+        })
+    }
+
+    pub fn unclosed_delimiter(start: StrSlice, delim: &'static str) -> nom::Err<Self> {
+        nom::Err::Error(SyntaxErrorKind::Expected {
+            input: start,
+            expected: delim,
+            found: None,
+            hint: Some("检查括号/引号是否匹配"),
+        })
+    }
+}
+
+impl ParseError<Tokens<'_>> for SyntaxErrorKind {
+    fn from_error_kind(input: Tokens<'_>, kind: ErrorKind) -> Self {
+        SyntaxErrorKind::NomError {
+            kind,
+            at: input.first().map(|t| t.range),
+            cause: None,
+        }
+    }
+
+    fn append(input: Tokens<'_>, kind: ErrorKind, other: Self) -> Self {
+        SyntaxErrorKind::NomError {
+            kind,
+            at: input.first().map(|t| t.range),
+            cause: None,
+        }
+    }
+
+    fn from_char(input: Tokens<'_>, expected: char) -> Self {
+        SyntaxErrorKind::ExpectedChar {
+            expected,
+            at: input.first().map(|t| t.range),
+        }
+    }
+
+    fn or(self, other: Self) -> Self {
+        match self {
+            SyntaxErrorKind::InternalError => other,
+            _ => self,
+        }
+    }
+}
+impl ParseError<Tokens<'_>> for SyntaxError {
+    fn from_error_kind(input: Tokens<'_>, kind: ErrorKind) -> Self {
+        Self::new(
+            input.str.clone(),
+            SyntaxErrorKind::NomError {
+                kind,
+                at: input.first().map(|t| t.range),
+                cause: None,
+            },
+        )
+    }
+
+    fn append(input: Tokens<'_>, kind: ErrorKind, other: Self) -> Self {
+        Self::new(
+            input.str.clone(),
+            SyntaxErrorKind::NomError {
+                kind,
+                at: input.first().map(|t| t.range),
+                cause: Some(Box::new(other)),
+            },
+        )
+    }
+
+    fn from_char(input: Tokens<'_>, expected: char) -> Self {
+        Self::new(
+            input.str.clone(),
+            SyntaxErrorKind::ExpectedChar {
+                expected,
+                at: input.first().map(|t| t.range),
+            },
+        )
+    }
+
+    fn or(self, other: Self) -> Self {
+        match self.kind {
+            SyntaxErrorKind::InternalError => other,
+            _ => self,
+        }
+    }
+}
+
+impl fmt::Display for SyntaxError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match &self.kind {
+            SyntaxErrorKind::Expected {
+                input,
+                expected,
+                found,
+                hint,
+            } => {
+                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
+                write!(f, "expected {}", expected)?;
+                if let Some(found) = found {
+                    write!(f, ", found {}", found)?;
+                }
+                writeln!(f)?;
+                print_error_lines(&self.source, *input, f, 72)?;
+                if let Some(hint) = hint {
+                    writeln!(f, "    hint: {}", hint)?;
+                }
+                Ok(())
+            }
+            SyntaxErrorKind::TokenizationErrors(errors) => {
+                for err in errors.iter() {
+                    fmt_token_error(&self.source, err, f)?;
+                }
+                Ok(())
+            }
+            SyntaxErrorKind::ExpectedChar { expected, at } => {
+                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
+                writeln!(f, "expected {:?}", expected)?;
+                if let Some(at) = at {
+                    print_error_lines(&self.source, *at, f, 72)?;
+                }
+                Ok(())
+            }
+            SyntaxErrorKind::NomError { kind, at, cause } => {
+                write!(f, "{}{}unexpected syntax error{}: ", RED_START, BOLD, RESET)?;
+                writeln!(f, "`{:?}`", kind)?;
+                if let Some(at) = at {
+                    print_error_lines(&self.source, *at, f, 72)?;
+                }
+                if let Some(cause) = cause {
+                    writeln!(f, "Caused by: {}", cause)?;
+                }
+                Ok(())
+            }
+            SyntaxErrorKind::InternalError => {
+                writeln!(f, "{}{}unexpected syntax error{}", RED_START, BOLD, RESET)
+            }
+            SyntaxErrorKind::NoExpression => {
+                writeln!(f, "{}{}no expression recognized{}", RED_START, BOLD, RESET)
+            }
+            SyntaxErrorKind::UnknownOperator(op) => {
+                writeln!(f, "{}{}unknown operator {op:?}{}", RED_START, BOLD, RESET)
+            }
+            SyntaxErrorKind::PrecedenceTooLow => {
+                writeln!(f, "{}{}precedence too low {}", RED_START, BOLD, RESET)
+            }
+            SyntaxErrorKind::ArgumentMismatch {
+                name,
+                expected,
+                received,
+            } => {
+                writeln!(
+                    f,
+                    "{}{}arguments mismatch for function `{name}`: expected {expected}, found {received} {}",
+                    RED_START, BOLD, RESET
+                )
+            }
+        }
+    }
+}
+
+// ============== 运行时错误部分 ==============
+
 #[derive(Debug, Error)]
-pub enum LmError {
+pub enum RuntimeError {
     #[error("cannot apply `{0:?}` to the arguments {1:?}")]
     CannotApply(Expression, Vec<Expression>),
     #[error("symbol \"{0}\" not defined")]
@@ -24,8 +323,6 @@ pub enum LmError {
     PermissionDenied(Expression),
     #[error("program \"{0}\" not found")]
     ProgramNotFound(String),
-    #[error("syntax error: {1}")]
-    SyntaxError(Str, #[source] SyntaxError),
     #[error("{0}")]
     CustomError(String),
     #[error("redeclaration of `{0}`")]
@@ -59,11 +356,24 @@ pub enum LmError {
     #[error("illegal return outside function")]
     EarlyReturn(Expression),
     #[error(transparent)]
-    IoError(#[from] std::io::Error),
+    Io(#[from] std::io::Error),
 }
 
-impl LmError {
-    /// Error code constant integers for error handlers to handle.
+// ============== 顶级错误类型 ==============
+
+#[derive(Debug, Error)]
+pub enum LmError {
+    #[error(transparent)]
+    Syntax(#[from] SyntaxError),
+    #[error(transparent)]
+    Runtime(#[from] RuntimeError),
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
+    #[error("{0}")]
+    CustomError(String),
+}
+
+impl RuntimeError {
     pub const ERROR_CODE_CANNOT_APPLY: Int = 1;
     pub const ERROR_CODE_SYMBOL_NOT_DEFINED: Int = 2;
     pub const ERROR_CODE_COMMAND_FAILED: Int = 3;
@@ -71,7 +381,7 @@ impl LmError {
     pub const ERROR_CODE_RECURSION_DEPTH: Int = 5;
     pub const ERROR_CODE_PERMISSION_DENIED: Int = 6;
     pub const ERROR_CODE_PROGRAM_NOT_FOUND: Int = 7;
-    pub const ERROR_CODE_SYNTAX_ERROR: Int = 8;
+    // pub const ERROR_CODE_SYNTAX_ERROR: Int = 8;
     pub const ERROR_CODE_CUSTOM_ERROR: Int = 9;
 
     pub fn codes() -> Expression {
@@ -83,216 +393,50 @@ impl LmError {
             String::from("recursion_depth") => Expression::Integer(Self::ERROR_CODE_RECURSION_DEPTH),
             String::from("permission_denied") => Expression::Integer(Self::ERROR_CODE_PERMISSION_DENIED),
             String::from("program_not_found") => Expression::Integer(Self::ERROR_CODE_PROGRAM_NOT_FOUND),
-            String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
+            // String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CUSTOM_ERROR),
         })
     }
 
-    /// Convert the error into a code for an error handler to handle.
     pub fn code(&self) -> Int {
         match self {
-            Self::CannotApply(..) => Self::ERROR_CODE_CANNOT_APPLY,
-            Self::SymbolNotDefined(..) => Self::ERROR_CODE_SYMBOL_NOT_DEFINED,
-            Self::CommandFailed(..) => Self::ERROR_CODE_COMMAND_FAILED,
-            Self::CommandFailed2(..) => Self::ERROR_CODE_COMMAND_FAILED,
-            Self::ForNonList(..) => Self::ERROR_CODE_FOR_NON_LIST,
-            Self::RecursionDepth(..) => Self::ERROR_CODE_RECURSION_DEPTH,
-            Self::PermissionDenied(..) => Self::ERROR_CODE_PERMISSION_DENIED,
-            Self::ProgramNotFound(..) => Self::ERROR_CODE_PROGRAM_NOT_FOUND,
-            Self::SyntaxError(..) => Self::ERROR_CODE_SYNTAX_ERROR,
-            Self::CustomError(..)
-            | Self::Redeclaration(..)
-            | Self::UndeclaredVariable(..)
-            | Self::NoMatchingBranch(..)
-            | Self::TooManyArguments { .. }
-            | Self::ArgumentMismatch { .. }
-            | Self::InvalidDefaultValue(..)
-            | Self::EarlyReturn(..)
-            | Self::InvalidOperator(..)
-            | Self::IndexOutOfBounds { .. }
-            | Self::KeyNotFound(..)
-            | Self::TypeError { .. } => Self::ERROR_CODE_CUSTOM_ERROR,
-            Self::IoError(_) => Self::ERROR_CODE_CUSTOM_ERROR,
+            RuntimeError::CannotApply(..) => Self::ERROR_CODE_CANNOT_APPLY,
+            RuntimeError::SymbolNotDefined(..) => Self::ERROR_CODE_SYMBOL_NOT_DEFINED,
+            RuntimeError::CommandFailed(..) | RuntimeError::CommandFailed2(..) => {
+                Self::ERROR_CODE_COMMAND_FAILED
+            }
+            RuntimeError::ForNonList(..) => Self::ERROR_CODE_FOR_NON_LIST,
+            RuntimeError::RecursionDepth(..) => Self::ERROR_CODE_RECURSION_DEPTH,
+            RuntimeError::PermissionDenied(..) => Self::ERROR_CODE_PERMISSION_DENIED,
+            RuntimeError::ProgramNotFound(..) => Self::ERROR_CODE_PROGRAM_NOT_FOUND,
+            _ => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
 }
-
-#[derive(Debug, Error)]
-pub enum SyntaxError {
-    // #[error("tokenization errors")]
-    TokenizationErrors(Box<[Diagnostic]>),
-    // #[error("syntax error")]
-    Expected {
-        input: StrSlice,
-        expected: &'static str,
-        found: Option<String>,
-        hint: Option<&'static str>,
-    },
-    // #[error("expected character `{expected}`")]
-    ExpectedChar {
-        expected: char,
-        at: Option<StrSlice>,
-    },
-    // #[error("parse error: `{kind:?}`")]
-    NomError {
-        kind: nom::error::ErrorKind,
-        at: Option<StrSlice>,
-        // #[source]
-        cause: Option<Box<SyntaxError>>,
-    },
-    // #[error("internal parser error")]
-    InternalError,
-    // #[error("unkown operator {0}")]
-    UnknownOperator(String),
-    // #[error("precedence too low")]
-    PrecedenceTooLow,
-    // #[error("no expression recognized")]
-    NoExpression,
-}
-
-impl SyntaxError {
-    pub(crate) fn unrecoverable(
-        input: StrSlice,
-        expected: &'static str,
-        found: Option<String>,
-        hint: Option<&'static str>,
-    ) -> nom::Err<Self> {
-        nom::Err::Failure(Self::Expected {
-            input,
-            expected,
-            found,
-            hint,
+impl LmError {
+    pub const ERROR_CODE_SYNTAX_ERROR: Int = 10;
+    pub const ERROR_CODE_RUNTIME_ERROR: Int = 11;
+    pub const ERROR_CODE_IO_ERROR: Int = 12;
+    pub const ERROR_CODE_CS_ERROR: Int = 13;
+    pub fn codes() -> Expression {
+        Expression::Map(b_tree_map! {
+          String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
+            String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
+            String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
+            String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
         })
     }
-
-    pub(crate) fn expected(
-        input: StrSlice,
-        expected: &'static str,
-        found: Option<String>,
-        hint: Option<&'static str>,
-    ) -> nom::Err<Self> {
-        nom::Err::Error(Self::Expected {
-            input,
-            expected,
-            found,
-            hint,
-        })
-    }
-
-    pub fn unclosed_delimiter(start: StrSlice, delim: &'static str) -> Self {
-        Self::Expected {
-            input: start,
-            expected: delim,
-            found: None,
-            hint: Some("检查括号/引号是否匹配"),
-        }
-    }
-}
-
-impl ParseError<Tokens<'_>> for SyntaxError {
-    fn from_error_kind(input: Tokens<'_>, kind: ErrorKind) -> Self {
-        Self::NomError {
-            kind,
-            at: input.first().map(|t| t.range),
-            cause: None,
-        }
-    }
-
-    fn append(input: Tokens<'_>, kind: ErrorKind, other: Self) -> Self {
-        Self::NomError {
-            kind,
-            at: input.first().map(|t| t.range),
-            cause: Some(Box::new(other)),
-        }
-    }
-
-    fn from_char(input: Tokens<'_>, expected: char) -> Self {
-        Self::ExpectedChar {
-            expected,
-            at: input.first().map(|t| t.range),
-        }
-    }
-
-    fn or(self, other: Self) -> Self {
+    pub fn code(&self) -> Int {
         match self {
-            Self::InternalError => other,
-            _ => self,
+            Self::Syntax(_) => Self::ERROR_CODE_SYNTAX_ERROR,
+            Self::Runtime(err) => err.code(),
+            Self::Io(_) => Self::ERROR_CODE_IO_ERROR,
+            Self::CustomError(_) => Self::ERROR_CODE_CS_ERROR,
         }
     }
 }
 
-impl SyntaxError {
-    pub fn with_source(self, source: Str) -> LmError {
-        LmError::SyntaxError(source, self)
-    }
-}
-
-impl fmt::Display for SyntaxError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // 这里需要一个假的 Str 作为占位符，实际显示时用 with_source 提供真正的源
-        fmt_syntax_error(&Str::from(""), self, f)
-    }
-}
-
-fn fmt_syntax_error(string: &Str, err: &SyntaxError, f: &mut fmt::Formatter) -> fmt::Result {
-    match err {
-        SyntaxError::Expected {
-            input,
-            expected,
-            found,
-            hint,
-        } => {
-            write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
-            write!(f, "expected {}", expected)?;
-            if let Some(found) = found {
-                write!(f, ", found {}", found)?;
-            }
-            writeln!(f)?;
-            print_error_lines(string, *input, f, 72)?;
-            if let Some(hint) = *hint {
-                writeln!(f, "    hint: {}", hint)?;
-            }
-            Ok(())
-        }
-        SyntaxError::TokenizationErrors(errors) => {
-            for err in errors.iter() {
-                fmt_token_error(string, err, f)?;
-            }
-            Ok(())
-        }
-        SyntaxError::ExpectedChar { expected, at } => {
-            write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
-            writeln!(f, "expected {:?}", expected)?;
-            if let Some(at) = *at {
-                print_error_lines(string, at, f, 72)?;
-            }
-            Ok(())
-        }
-        SyntaxError::NomError { kind, at, cause } => {
-            write!(f, "{}{}unexpected syntax error{}: ", RED_START, BOLD, RESET)?;
-            writeln!(f, "`{:?}`", kind)?;
-            if let Some(at) = *at {
-                print_error_lines(string, at, f, 72)?;
-            }
-            if let Some(cause) = cause {
-                fmt_syntax_error(string, cause, f)?;
-            }
-            Ok(())
-        }
-        SyntaxError::InternalError => {
-            writeln!(f, "{}{}unexpected syntax error{}", RED_START, BOLD, RESET)
-        }
-        SyntaxError::NoExpression => {
-            writeln!(f, "{}{}no expression recognized{}", RED_START, BOLD, RESET)
-        }
-        SyntaxError::UnknownOperator(op) => {
-            writeln!(f, "{}{}unkown operator {op:?}{}", RED_START, BOLD, RESET)
-        }
-        SyntaxError::PrecedenceTooLow => {
-            writeln!(f, "{}{}precedence too low {}", RED_START, BOLD, RESET)
-        }
-    }
-}
+// ============== 彩色显示辅助函数 ==============
 
 fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fmt::Result {
     match err {

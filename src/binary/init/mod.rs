@@ -1,4 +1,4 @@
-use lumesh::{Environment, Expression, Int, LmError};
+use lumesh::{Environment, Expression, Int, LmError, RuntimeError, SyntaxError};
 
 use common_macros::b_tree_map;
 
@@ -392,14 +392,14 @@ pub fn init(env: &mut Environment) {
         "eval",
         |args, env| {
             let mut new_env = env.clone();
-            args[0].clone().eval(env)?.eval(&mut new_env)
+            Ok(args[0].clone().eval(env)?.eval(&mut new_env)?)
         },
         "evaluate an expression without changing the environment",
     );
 
     env.define_builtin(
         "exec",
-        |args, env| args[0].clone().eval(env)?.eval(env),
+        |args, env| Ok(args[0].clone().eval(env)?.eval(env)?),
         "evaluate an expression in the current environment",
     );
 
@@ -460,14 +460,28 @@ fn check_exact_args_len(
     name: impl ToString,
     args: &[Expression],
     expected_len: usize,
-) -> Result<(), LmError> {
+) -> Result<(), RuntimeError> {
     if args.len() == expected_len {
         Ok(())
     } else {
-        Err(LmError::CustomError(if args.len() > expected_len {
-            format!("too many arguments to function {}", name.to_string())
-        } else {
-            format!("too few arguments to function {}", name.to_string())
-        }))
+        // SyntaxError::new(
+        //     "",
+        //     lumesh::SyntaxErrorKind::ArgumentMismatch {
+        //         name: name,
+        //         expected: expected_len,
+        //         received: args.len(),
+        //     },
+        // )
+        Err(RuntimeError::ArgumentMismatch {
+            name: name.to_string(),
+            expected: expected_len,
+            received: args.len(),
+        })
+
+        // Err(RuntimeError::ArgumentMismatch(if args.len() > expected_len {
+        //     format!("too many arguments to function {}", name.to_string())
+        // } else {
+        //     format!("too few arguments to function {}", name.to_string())
+        // }))
     }
 }

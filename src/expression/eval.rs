@@ -1,4 +1,4 @@
-use crate::{Environment, Int, LmError};
+use crate::{Environment, Int, RuntimeError};
 use regex_lite::Regex;
 use std::io::Write;
 
@@ -13,7 +13,7 @@ const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 
 impl Expression {
     /// 当返回symbol时，作为命令继续执行。
-    pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, LmError> {
+    pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         let result = self.clone().eval_mut(env, 0);
         return match result {
             // apply symbol cmds
@@ -25,15 +25,15 @@ impl Expression {
         };
     }
     /// 当返回symbol时，作为字面量，直接返回。
-    pub fn eval(&self, env: &mut Environment) -> Result<Self, LmError> {
+    pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         self.clone().eval_mut(env, 0)
     }
     /// 求值主逻辑（尾递归优化）
-    pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, LmError> {
+    pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         // dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
-                return Err(LmError::RecursionDepth(self));
+                return Err(RuntimeError::RecursionDepth(self));
             }
         }
 
@@ -77,7 +77,7 @@ impl Expression {
                         if STRICT && env.has(&name)
                         // && env.get("STRICT") == Some(Expression::Boolean(true))
                         {
-                            return Err(LmError::Redeclaration(name.to_string()));
+                            return Err(RuntimeError::Redeclaration(name.to_string()));
                         }
                     }
                     let value = expr.eval_mut(env, depth + 1)?;
@@ -106,7 +106,7 @@ impl Expression {
                             if STRICT
                             // && env.get("STRICT") == Some(Expression::Boolean(true))
                             {
-                                return Err(LmError::UndeclaredVariable(name));
+                                return Err(RuntimeError::UndeclaredVariable(name));
                             } else {
                                 env.define(&name, value.clone());
                             }
@@ -138,7 +138,7 @@ impl Expression {
                             Expression::Integer(i) => Ok(Expression::Integer(-i)),
                             Expression::Float(i) => Ok(Expression::Float(-i)),
                             _ => {
-                                return Err(LmError::CustomError(format!(
+                                return Err(RuntimeError::CustomError(format!(
                                     "Cannot apply Neg to {operand:?}:{operand_eval:?}"
                                 )));
                             }
@@ -150,11 +150,11 @@ impl Expression {
                             // 获取当前值
                             let current_val = env
                                 .get(var_name)
-                                .ok_or(LmError::UndeclaredVariable(var_name.to_string()))?;
+                                .ok_or(RuntimeError::UndeclaredVariable(var_name.to_string()))?;
                             // 确保操作是合法的，例如整数或浮点数
                             if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
                             {
-                                return Err(LmError::CustomError(format!(
+                                return Err(RuntimeError::CustomError(format!(
                                     "Cannot apply {op} to {operand:?}:{current_val:?}"
                                 )));
                             }
@@ -173,11 +173,11 @@ impl Expression {
                                 let rs = Expression::Apply(Box::new(oper), vec![operand_eval]);
                                 return rs.eval_mut(env, depth + 1);
                             }
-                            Err(LmError::CustomError(format!(
+                            Err(RuntimeError::CustomError(format!(
                                 "custom operation {op:?} not defined"
                             )))
                         }
-                        _ => Err(LmError::CustomError(format!(
+                        _ => Err(RuntimeError::CustomError(format!(
                             "Unknown unary operator: {op}"
                         ))),
                     };
@@ -194,7 +194,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(LmError::CustomError(format!(
+                            _ => Err(RuntimeError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -210,7 +210,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(LmError::CustomError(format!(
+                            _ => Err(RuntimeError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -226,7 +226,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(LmError::CustomError(format!(
+                            _ => Err(RuntimeError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -240,7 +240,7 @@ impl Expression {
                                 let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
                                 let right = rhs.eval(env)?;
                                 if !right.is_truthy() {
-                                    return Err(LmError::CustomError(format!(
+                                    return Err(RuntimeError::CustomError(format!(
                                         "can't divide {} by zero",
                                         base
                                     )));
@@ -249,7 +249,7 @@ impl Expression {
                                 env.define(&base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(LmError::CustomError(format!(
+                            _ => Err(RuntimeError::CustomError(format!(
                                 "cannot apply {} to  {}:{} and {}:{}",
                                 operator,
                                 lhs,
@@ -347,7 +347,7 @@ impl Expression {
                                     match result {
                                         Ok(()) => Ok(l),
                                         Err(e) => {
-                                            return Err(LmError::CustomError(format!(
+                                            return Err(RuntimeError::CustomError(format!(
                                                 "could not append to file {}: {:?}",
                                                 rhs, e
                                             )));
@@ -357,9 +357,9 @@ impl Expression {
                                 Err(e) => {
                                     return Err(match e.kind() {
                                         ErrorKind::PermissionDenied => {
-                                            LmError::PermissionDenied(*rhs.clone())
+                                            RuntimeError::PermissionDenied(*rhs.clone())
                                         }
-                                        _ => LmError::CustomError(format!(
+                                        _ => RuntimeError::CustomError(format!(
                                             "could not open file {}: {:?}",
                                             path.display(),
                                             e
@@ -387,7 +387,7 @@ impl Expression {
 
                             match result {
                                 Ok(()) => Ok(l),
-                                Err(e) => Err(LmError::CustomError(format!(
+                                Err(e) => Err(RuntimeError::CustomError(format!(
                                     "could not write to file {}: {:?}",
                                     rhs, e
                                 ))),
@@ -399,7 +399,7 @@ impl Expression {
                             // let path = rhs.eval_mut(env, depth + 1)?.to_string();
                             // let contents = std::fs::read_to_string(path)
                             //     .map(Self::String)
-                            //     .map_err(|e| LmError::CustomError(e.to_string()))?;
+                            //     .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
                             // let mut new_env = env.fork();
                             // new_env.define("__STDIN", contents);
@@ -416,7 +416,7 @@ impl Expression {
                                 "*" => Ok(l * r),
                                 "/" => {
                                     if !r.is_truthy() {
-                                        return Err(LmError::CustomError(format!(
+                                        return Err(RuntimeError::CustomError(format!(
                                             "can't divide {} by zero",
                                             l
                                         )));
@@ -437,13 +437,13 @@ impl Expression {
                                     (Expression::Integer(base), Expression::Integer(exponent)) => {
                                         match base.checked_pow(exponent as u32) {
                                             Some(n) => Ok(n.into()),
-                                            None => Err(LmError::CustomError(format!(
+                                            None => Err(RuntimeError::CustomError(format!(
                                                 "overflow when raising int {} to the power {}",
                                                 base, exponent
                                             ))),
                                         }
                                     }
-                                    (a, b) => Err(LmError::CustomError(format!(
+                                    (a, b) => Err(RuntimeError::CustomError(format!(
                                         "cannot raise {}:{} to the power {}:{}",
                                         a,
                                         a.type_name(),
@@ -463,7 +463,7 @@ impl Expression {
                                 }
                                 "~=" => {
                                     let regex = Regex::new(&r.to_string())
-                                        .map_err(|e| LmError::CustomError(e.to_string()))?;
+                                        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
                                     Ok(Expression::Boolean(regex.is_match(&l.to_string())))
                                 }
@@ -476,7 +476,9 @@ impl Expression {
                                         Ok(Self::String(format!("{}.{}", m, n)))
                                     }
                                     // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
-                                    _ => Err(LmError::CustomError("not valid index option".into())),
+                                    _ => Err(RuntimeError::CustomError(
+                                        "not valid index option".into(),
+                                    )),
                                 },
                                 ".." => match (l, r) {
                                     (Expression::Integer(fr), Expression::Integer(t)) => {
@@ -485,19 +487,21 @@ impl Expression {
                                             .collect();
                                         Ok(Expression::List(v))
                                     }
-                                    _ => Err(LmError::CustomError("not valid range option".into())),
+                                    _ => Err(RuntimeError::CustomError(
+                                        "not valid range option".into(),
+                                    )),
                                 },
                                 op if op.starts_with("_") => {
                                     if let Some(oper) = env.get(op) {
                                         let rs = Expression::Apply(Box::new(oper), vec![l, r]);
                                         return rs.eval_mut(env, depth + 1);
                                     }
-                                    Err(LmError::CustomError(format!(
+                                    Err(RuntimeError::CustomError(format!(
                                         "custom operation {op:?} not defined"
                                     )))
                                 }
                                 // ----------
-                                _ => Err(LmError::InvalidOperator(operator.clone())),
+                                _ => Err(RuntimeError::InvalidOperator(operator.clone())),
                             };
                         }
                     };
@@ -548,19 +552,19 @@ impl Expression {
 
 impl Expression {
     /// 索引访问
-    fn index_slm(l: Expression, r: Expression) -> Result<Expression, LmError> {
+    fn index_slm(l: Expression, r: Expression) -> Result<Expression, RuntimeError> {
         match l {
             // 处理列表索引
             Expression::List(list) => {
                 if let Expression::Integer(index) = r {
-                    list.get(index as usize)
-                        .cloned()
-                        .ok_or_else(|| LmError::IndexOutOfBounds {
+                    list.get(index as usize).cloned().ok_or_else(|| {
+                        RuntimeError::IndexOutOfBounds {
                             index: index as usize,
                             len: list.len(),
-                        })
+                        }
+                    })
                 } else {
-                    Err(LmError::TypeError {
+                    Err(RuntimeError::TypeError {
                         expected: "integer".into(),
                         found: r.type_name(),
                     })
@@ -572,7 +576,7 @@ impl Expression {
                 let key = r.to_string(); // 自动转换Symbol/字符串
                 map.get(&key)
                     .cloned()
-                    .ok_or_else(|| LmError::KeyNotFound(key))
+                    .ok_or_else(|| RuntimeError::KeyNotFound(key))
             }
 
             // 处理字符串索引
@@ -581,29 +585,29 @@ impl Expression {
                     s.chars()
                         .nth(index as usize)
                         .map(|c| Expression::String(c.to_string()))
-                        .ok_or_else(|| LmError::IndexOutOfBounds {
+                        .ok_or_else(|| RuntimeError::IndexOutOfBounds {
                             index: index as usize,
                             len: s.len(),
                         })
                 } else {
-                    Err(LmError::TypeError {
+                    Err(RuntimeError::TypeError {
                         expected: "integer".into(),
                         found: r.type_name(),
                     })
                 }
             }
 
-            _ => Err(LmError::TypeError {
+            _ => Err(RuntimeError::TypeError {
                 expected: "indexable type (list/dict/string)".into(),
                 found: l.type_name(),
             }),
         }
     }
 
-    pub fn as_list(&self) -> Result<&Vec<Self>, LmError> {
+    pub fn as_list(&self) -> Result<&Vec<Self>, RuntimeError> {
         match self {
             Self::List(v) => Ok(v),
-            _ => Err(LmError::TypeError {
+            _ => Err(RuntimeError::TypeError {
                 expected: "list".into(),
                 found: self.type_name(),
             }),
@@ -617,7 +621,7 @@ impl Expression {
         start: Option<Int>,
         end: Option<Int>,
         step: Int,
-    ) -> Result<Self, LmError> {
+    ) -> Result<Self, RuntimeError> {
         let list = list.as_list()?;
         let len = list.len() as Int;
 
@@ -648,7 +652,7 @@ impl Expression {
         expr_opt: Option<Box<Self>>,
         env: &mut Environment,
         depth: usize,
-    ) -> Result<Option<Int>, LmError> {
+    ) -> Result<Option<Int>, RuntimeError> {
         match expr_opt {
             // 无表达式时返回 None
             None => Ok(None),
@@ -663,7 +667,7 @@ impl Expression {
                     // 处理隐式类型转换
                     Self::Float(f) if f.fract() == 0.0 => Ok(Some(f as Int)),
                     // 处理其他类型错误
-                    _ => Err(LmError::TypeError {
+                    _ => Err(RuntimeError::TypeError {
                         expected: "integer".into(),
                         found: evaluated.type_name(),
                     }),

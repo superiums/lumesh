@@ -1,4 +1,4 @@
-use crate::{Environment, Expression, LmError};
+use crate::{Environment, Expression, RuntimeError};
 
 use std::{
     collections::BTreeMap,
@@ -17,7 +17,7 @@ fn exec_single_cmd(
     input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
     is_last: bool,        // 是否是最后一条命令？
     always_pipe: bool,
-) -> Result<(Vec<u8>, Expression), LmError> {
+) -> Result<(Vec<u8>, Expression), RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(&cmdstr);
     cmd.args(args)
@@ -42,8 +42,8 @@ fn exec_single_cmd(
 
     // 执行命令
     let mut child = cmd.spawn().map_err(|e| match &e.kind() {
-        ErrorKind::NotFound => LmError::ProgramNotFound(cmdstr),
-        _ => LmError::CommandFailed2(cmdstr, e.to_string()),
+        ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr),
+        _ => RuntimeError::CommandFailed2(cmdstr, e.to_string()),
     })?;
 
     // 写入输入（如果不是第一条命令）
@@ -68,7 +68,7 @@ fn expr_to_command(
     expr: &Expression,
     env: &mut Environment,
     depth: usize,
-) -> Result<(String, Vec<String>, Option<Expression>), LmError> {
+) -> Result<(String, Vec<String>, Option<Expression>), RuntimeError> {
     // let bindings = env.get_bindings_map();
 
     match expr {
@@ -76,7 +76,7 @@ fn expr_to_command(
         Expression::Symbol(name) => {
             let cmd_name = match env.get(name) {
                 Some(Expression::Symbol(alias)) => alias,
-                Some(_) => return Err(LmError::ProgramNotFound(name.clone())),
+                Some(_) => return Err(RuntimeError::ProgramNotFound(name.clone())),
                 None => name.clone(),
             };
             Ok((cmd_name, vec![], None))
@@ -98,11 +98,11 @@ fn expr_to_command(
                     // dgb!("--else type--", &func_eval, &func_eval.type_name());
                     Ok(("".into(), vec![], Some(expr.to_owned())))
 
-                    // Err(LmError::ProgramNotFound(func_eval.to_string()))
+                    // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
                 }
             };
         }
-        _ => Err(LmError::ProgramNotFound(expr.to_string())),
+        _ => Err(RuntimeError::ProgramNotFound(expr.to_string())),
     }
 }
 
@@ -116,7 +116,7 @@ pub fn handle_pipes(
     env: &mut Environment,
     depth: usize,
     always_pipe: bool,
-) -> Result<(Vec<u8>, Expression), LmError> {
+) -> Result<(Vec<u8>, Expression), RuntimeError> {
     {
         // 管道运算符特殊处理
         // dbg!("--pipe--", &lhs, &rhs);
@@ -194,7 +194,7 @@ pub fn handle_stdin_redirect(
     env: &mut Environment,
     depth: usize,
     always_pipe: bool,
-) -> Result<Expression, LmError> {
+) -> Result<Expression, RuntimeError> {
     // 读取
     let path = rhs.eval_mut(env, depth + 1)?.to_string();
     let contents = std::fs::read(path)?;
@@ -203,7 +203,7 @@ pub fn handle_stdin_redirect(
     let bindings = env.get_bindings_map();
     if expr.is_some() {
         // lambda, fn, builtin may read stdin?
-        Err(LmError::CustomError(format!(
+        Err(RuntimeError::CustomError(format!(
             "expr {expr:?} can't read stdin"
         )))
     } else {

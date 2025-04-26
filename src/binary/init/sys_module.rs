@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
 use common_macros::b_tree_map;
-use lumesh::{LmError, Expression};
+use lumesh::{Expression, LmError};
 
 pub fn get() -> Expression {
     Expression::Map(b_tree_map! {
@@ -21,11 +21,11 @@ pub fn get() -> Expression {
 
         String::from("eval") => Expression::builtin("eval", |args, env| {
             let mut new_env = env.clone();
-            args[0].clone().eval(env)?.eval(&mut new_env)
+            Ok(args[0].clone().eval(env)?.eval(&mut new_env)?)
         }, "evaluate an expression without changing the environment"),
 
         String::from("exec") => Expression::builtin("exec", |args, env| {
-            args[0].clone().eval(env)?.eval(env)
+            Ok(args[0].clone().eval(env)?.eval(env)?)
         }, "evaluate an expression in the current environment"),
 
         // Evaluate a file in the current environment.
@@ -40,7 +40,7 @@ pub fn get() -> Expression {
                 let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
                 // Evaluate the file.
                 if let Ok(expr) = lumesh::parse(&contents) {
-                    expr.eval(env)
+                    Ok(expr.eval(env)?)
                 } else {
                     Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
                 }
@@ -80,7 +80,7 @@ pub fn get() -> Expression {
                 // Evaluate the file.
                 if let Ok(expr) = lumesh::parse(&contents) {
                     let mut new_env = env.clone();
-                    expr.eval(&mut new_env)
+                    Ok(expr.eval(&mut new_env)?)
                 } else {
                     Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
                 }

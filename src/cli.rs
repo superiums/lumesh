@@ -61,7 +61,7 @@ struct Cli {
     // version: bool,
 }
 
-fn main() -> Result<(), LmError> {
+fn main() {
     let cli = Cli::parse();
     // 初始化核心环境
     let mut env = Environment::new();
@@ -106,7 +106,7 @@ fn main() -> Result<(), LmError> {
         if cli.interactive {
             // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
             // repl::init_config(&mut env)?;
-            repl::run_repl(&mut env)?;
+            repl::run_repl(&mut env);
         }
     }
     // 文件执行模式
@@ -123,7 +123,6 @@ fn main() -> Result<(), LmError> {
 
         // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
         // repl::init_config(&mut env)?;
-        repl::run_repl(&mut env)?;
+        repl::run_repl(&mut env);
     }
-    Ok(())
 }

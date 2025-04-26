@@ -559,7 +559,7 @@ impl Expression {
                 if let Expression::Integer(index) = r {
                     list.get(index as usize).cloned().ok_or_else(|| {
                         RuntimeError::IndexOutOfBounds {
-                            index: index as usize,
+                            index: index as Int,
                             len: list.len(),
                         }
                     })
@@ -586,7 +586,7 @@ impl Expression {
                         .nth(index as usize)
                         .map(|c| Expression::String(c.to_string()))
                         .ok_or_else(|| RuntimeError::IndexOutOfBounds {
-                            index: index as usize,
+                            index: index as Int,
                             len: s.len(),
                         })
                 } else {

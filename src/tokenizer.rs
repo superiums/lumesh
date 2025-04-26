@@ -52,7 +52,7 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(infix_operator, TokenKind::OperatorInfix),
             map_valid_token(postfix_operator, TokenKind::OperatorPostfix),
             map_valid_token(long_operator, TokenKind::Operator),
-            map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
+            // map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
             map_valid_token(bool_literal, TokenKind::BooleanLiteral),
@@ -115,6 +115,7 @@ fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
         postfix_tag("["), //array index or slice
         postfix_tag("++"),
         postfix_tag("--"),
+        custom_tag("__"), //__* as custom postfix tag.
     ))(input)
 }
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -168,6 +169,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("]"),
         punctuation_tag("{"),
         punctuation_tag("}"),
+        custom_tag("_"), //_* as custom postfix tag.
     ))(input)
 }
 
@@ -188,20 +190,21 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("None"),
     ))(input)
 }
-// custrom operator for op overload, such as _*+ , must around with space.
-fn custom_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    if input.starts_with("_") {
-        // 检查前一个字符是否为空格或行首
-        if input.previous_char().map_or(true, |c| c.is_whitespace()) {
-            let places = input.chars().take_while(char::is_ascii_punctuation).count();
-            if places > 1 {
-                return Ok(input.split_at(places));
+
+fn custom_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input.starts_with(punct) {
+            // 检查前一个字符是否为空格或行首
+            if input.previous_char().map_or(true, |c| c.is_whitespace()) {
+                let places = input.chars().take_while(char::is_ascii_punctuation).count();
+                if places > 1 {
+                    return Ok(input.split_at(places));
+                }
             }
         }
+        Err(NOT_FOUND)
     }
-    Err(NOT_FOUND)
 }
-
 // parse argument such as ls -l --color=auto ./
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     // begin with -+./
@@ -466,7 +469,7 @@ fn linebreak(input: Input<'_>) -> TokenizationResult<'_> {
 fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
     if let Some((rest, matched)) = input.strip_prefix("\\\n") {
         // println!("rest={},matched=", rest, matched);
-        // // dbg!(rest, matched);
+        // dbg!(rest, matched);
         Ok((rest, matched))
     } else {
         Err(NOT_FOUND)
@@ -672,12 +675,12 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
             .ok_or(NOT_FOUND)
     }
 }
-/// parse a tag after letters/numbers.
+/// parse a tag after letters/numbers/].
 fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .map_or(true, |c| !c.is_ascii_alphanumeric())
+            .map_or(true, |c| !c.is_ascii_alphanumeric() && c != ']')
         {
             return Err(NOT_FOUND);
         }

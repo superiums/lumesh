@@ -71,24 +71,6 @@ impl SyntaxError {
         Self { source, kind }
     }
 
-    pub fn unrecoverable(
-        source: Str,
-        input: StrSlice,
-        expected: &'static str,
-        found: Option<String>,
-        hint: Option<&'static str>,
-    ) -> nom::Err<Self> {
-        nom::Err::Failure(Self::new(
-            source,
-            SyntaxErrorKind::Expected {
-                input,
-                expected,
-                found,
-                hint,
-            },
-        ))
-    }
-
     pub fn expected(
         source: Str,
         input: StrSlice,
@@ -348,7 +330,7 @@ pub enum RuntimeError {
     #[error("invalid operator `{0}`")]
     InvalidOperator(String),
     #[error("index {index} out of bounds (length {len})")]
-    IndexOutOfBounds { index: usize, len: usize },
+    IndexOutOfBounds { index: Int, len: usize },
     #[error("key `{0}` not found in map")]
     KeyNotFound(String),
     #[error("type error: expected {expected}, found {found}")]

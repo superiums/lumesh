@@ -215,6 +215,15 @@ macro_rules! fmt_shared {
                     .collect::<Vec<String>>()
                     .join(" ")
             ),
+            Self::Command(g, args) => write!(
+                $f,
+                "{:?} {}",
+                g,
+                args.iter()
+                    .map(|e| format!("{:?}", e))
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            ),
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
                     write!($f, "({} {})", op, v)
@@ -271,6 +280,7 @@ impl Expression {
             Self::Match(_, _) => "Match".into(),
             Self::If(_, _, _) => "If".into(),
             Self::Apply(_, _) => "Apply".into(),
+            Self::Command(_, _) => "Command".into(),
             Self::Lambda(_, _, _) => "Lambda".into(),
             Self::Macro(_, _) => "Macro".into(),
             Self::Function(_, _, _, _) => "Function".into(),

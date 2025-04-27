@@ -35,6 +35,7 @@ pub enum Expression {
     Match(Box<Self>, Vec<(Pattern, Box<Self>)>),
     If(Box<Self>, Box<Self>, Box<Self>),
     Apply(Box<Self>, Vec<Self>),
+    Command(Box<Self>, Vec<Self>),
     Lambda(Vec<String>, Box<Self>, Environment),
     Macro(Vec<String>, Box<Self>),
     Function(String, Vec<(String, Option<Self>)>, Box<Self>, Environment),

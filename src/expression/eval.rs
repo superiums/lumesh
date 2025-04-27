@@ -4,7 +4,7 @@ use std::io::Write;
 
 use crate::STRICT;
 
-use super::pipe_excutor::handle_stdin_redirect;
+use super::pipe_excutor::{exec_single_cmd, handle_stdin_redirect};
 use super::{Expression, pipe_excutor::handle_pipes};
 use std::io::ErrorKind;
 use std::path::PathBuf;
@@ -17,9 +17,9 @@ impl Expression {
         let result = self.clone().eval_mut(env, 0);
         return match result {
             // apply symbol cmds
-            Ok(Expression::Symbol(sym)) => {
-                Expression::Apply(Box::new(Expression::Symbol(sym)), vec![]).eval(env)
-            }
+            // Ok(Expression::Symbol(sym)) => {
+            //     Expression::Apply(Box::new(Expression::Symbol(sym)), vec![]).eval(env)
+            // }
             Ok(other) => Ok(other),
             Err(e) => Err(e),
         };
@@ -542,6 +542,30 @@ impl Expression {
                 }
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
+                Self::Command(ref cmd, ref args) => {
+                    let bindings = env.get_bindings_map();
+
+                    let mut cmd_args = vec![];
+                    for arg in args {
+                        for flattened_arg in
+                            Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
+                        {
+                            match flattened_arg {
+                                Self::String(s) => cmd_args.push(s),
+                                Self::Bytes(b) => {
+                                    cmd_args.push(String::from_utf8_lossy(&b).to_string())
+                                }
+                                Self::None => continue,
+                                _ => cmd_args.push(format!("{}", flattened_arg)),
+                            }
+                        }
+                    }
+
+                    let (_, result) =
+                        exec_single_cmd(cmd.to_string(), cmd_args, &bindings, None, true, true)?;
+                    return Ok(result);
+                }
+                // break Self::eval_command(self, env, depth),
                 // 其他表达式处理...
                 _ => break self.eval_complex(env, depth),
             };

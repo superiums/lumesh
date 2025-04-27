@@ -10,7 +10,7 @@ fn is_interactive() -> bool {
     return true;
 }
 /// 执行单个命令（支持管道）
-fn exec_single_cmd(
+pub fn exec_single_cmd(
     cmdstr: String,
     args: Vec<String>,
     bindings: &BTreeMap<String, String>,

@@ -88,6 +88,13 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag(","),
         punctuation_tag(";"),
         // punctuation_tag("="),
+        punctuation_tag("("),
+        punctuation_tag(")"),
+        punctuation_tag("["),
+        punctuation_tag("]"),
+        punctuation_tag("{"),
+        punctuation_tag("}"),
+        punctuation_tag("`"), //sub command capture
     ))(input)
 }
 
@@ -163,12 +170,6 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
         keyword_tag("|"),     //standard io stream pipe
         // punctuation_tag("!"),
-        punctuation_tag("("),
-        punctuation_tag(")"),
-        punctuation_tag("["),
-        punctuation_tag("]"),
-        punctuation_tag("{"),
-        punctuation_tag("}"),
         custom_tag("_"), //_* as custom postfix tag.
     ))(input)
 }
@@ -234,7 +235,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
             // if prev_prev_char.is_alpha() {
             let len = input
                 .chars()
-                .take_while(|&c| !c.is_whitespace())
+                .take_while(|&c| !c.is_whitespace() && !(c == '`'))
                 .map(char::len_utf8)
                 .sum();
 

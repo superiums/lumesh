@@ -285,7 +285,7 @@ pub fn init_config(env: &mut Environment) {
 
 fn init_cmds(env: &mut Environment) {
     if !env.is_defined("clear") {
-        parse_and_eval("let clear = _ ~> console@clear ()", env);
+        parse_and_eval("let clear = _ ~> console@clear()", env);
     }
     if !env.is_defined("pwd") {
         parse_and_eval("let pwd = _ ~> echo CWD", env);

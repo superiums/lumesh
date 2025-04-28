@@ -141,7 +141,7 @@ impl Expression {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
-                dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(env, depth + 1)?;
                 // let args_eval = args
@@ -154,7 +154,7 @@ impl Expression {
                 return match func_eval {
                     // | Self::String(name)
                     Self::Symbol(name) | Self::String(name) => {
-                        dbg!("   3.--->applying symbol:", &name);
+                        // dbg!("   3.--->applying symbol:", &name);
 
                         let bindings = env.get_bindings_map();
 
@@ -341,7 +341,7 @@ impl Expression {
 
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
-                        dbg!("   3.--->applying Builtin:", &args);
+                        // dbg!("   3.--->applying Builtin:", &args);
                         match body(args.clone(), env) {
                             Ok(result) => {
                                 self.set_status_code(0, env);
@@ -358,7 +358,7 @@ impl Expression {
                     }
                     // Lambda 应用 - 完全求值的函数应用
                     Self::Lambda(params, body, captured_env) => {
-                        dbg!("2.--- applying lambda---", &params);
+                        // dbg!("2.--- applying lambda---", &params);
                         let mut current_env = captured_env.fork();
 
                         // 批量参数绑定前先求值所有参数
@@ -470,7 +470,7 @@ impl Expression {
                     //     return body.eval_mut(env, depth + 1);
                     // }
                     Self::Function(name, params, body, def_env) => {
-                        dbg!("2.--- applying function---", &name, &params);
+                        // dbg!("2.--- applying function---", &name, &params);
                         // dbg!(&def_env);
                         // 参数数量校验
                         if args.len() > params.len() {

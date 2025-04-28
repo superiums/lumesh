@@ -499,7 +499,7 @@ fn print_error_lines(
     let line_after = after.lines().next().unwrap_or_default();
 
     let first_line_number = max(before.lines().count(), 1);
-    dbg!(&lines, line_before, line_after, first_line_number);
+    // dbg!(&lines, line_before, line_after, first_line_number);
     writeln!(f, "      |")?;
 
     if singleline {

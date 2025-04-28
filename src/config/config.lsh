@@ -1,31 +1,31 @@
-let prompt = cwd -> fmt@bold ((fmt@dark@blue "(lumesh) ") + (fmt@bold (fmt@dark@green cwd)) + (fmt@bold (fmt@dark@blue "$ ")));
-let incomplete_prompt = cwd -> ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));
+# let prompt = cwd -> fmt@bold ((fmt@dark@blue "(lumesh) ") + (fmt@bold (fmt@dark@green cwd)) + (fmt@bold (fmt@dark@blue "$ ")));
+# let incomplete_prompt = cwd -> ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));
 
-let $ = GLOB ~> ((fs@ls .) | (fn@filter (file -> (len (string@split GLOB file)) == 2)));
+# let $ = GLOB ~> ((fs@ls .) | (fn@filter (file -> (len (string@split GLOB file)) == 2)));
 
-let include = file ~> exec (parse@expr (fs@read file));
-let use = file ~> eval (parse@expr (fs@read file));
-let get = key -> table -> table@(key);
-let open = fs@read;
-let concat = x -> y -> (str y) + (str x);
-let join = sep -> l -> {
-                let sep = str sep;
-                fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
-            }
+# let include = file ~> exec (parse@expr (fs@read file));
+# let use = file ~> eval (parse@expr (fs@read file));
+# let get = key -> table -> table@(key);
+# let open = fs@read;
+# let concat = x -> y -> (str y) + (str x);
+# let join = sep -> l -> {
+#                 let sep = str sep;
+#                 fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
+#             }
 
-let ssh = addr -> user -> {
-	ssh -X (str user) + "@" + (str addr);
-};
+# let ssh = addr -> user -> {
+# 	ssh -X (str user) + "@" + (str addr);
+# };
 
-let scp = addr -> user -> src -> dst -> {
-    # Call the actual overshadowed scp program
-    scp -r src (str user) + "@" + (str addr) + ":" + (str dst)
-};
+# let scp = addr -> user -> src -> dst -> {
+#     # Call the actual overshadowed scp program
+#     scp -r src (str user) + "@" + (str addr) + ":" + (str dst)
+# };
 
-let ~ = x -> HOME + "/" + (str x) | fs@canon;
+# let ~ = x -> HOME + "/" + (str x) | fs@canon;
 
-let ++ = x -> x + 1;
-let -- = x -> x - 1;
+# let ++ = x -> x + 1;
+# let -- = x -> x - 1;
 
 # let . = obj -> index -> {
 # 	obj@index
@@ -40,4 +40,4 @@ let logo = "
         ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
 ";
 
-fmt@faint (fmt@red logo)
+fmt@faint(fmt@red(logo))

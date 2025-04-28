@@ -108,7 +108,7 @@ fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         // keyword_tag("to"),
-        prefix_tag("!"),
+        prefix_tag("!"), //bool negtive
         prefix_tag("-"),
         prefix_tag("++"),
         prefix_tag("--"),
@@ -118,6 +118,7 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         // keyword_tag("to"),
+        postfix_tag("!"), //func call as flat as cmd
         postfix_tag("("), //func call
         postfix_tag("["), //array index or slice
         postfix_tag("++"),
@@ -434,30 +435,33 @@ fn find_prev_char(original_str: &str, current_offset: usize) -> Option<char> {
     }
 }
 
-fn linebreak(input: Input<'_>) -> TokenizationResult<'_> {
-    // dbg!("--->", input.as_str_slice());
-
+fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
+    // dbg!("--->", input.as_str_slice(),input.first());
+    let ws_chars = input.chars().take_while(|c| *c == ' ').count();
+    if ws_chars > 0 {
+        (input, _) = input.split_at(ws_chars);
+    }
     if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
         // dbg!(nl_slice);
-        let original_str = input.as_original_str();
+        // let original_str = input.as_original_str();
 
-        // 1. 计算换行符的字节位置
-        let current_offset = original_str.len().saturating_sub(rest.len() + 1);
+        // // 1. 计算换行符的字节位置
+        // let current_offset = original_str.len().saturating_sub(rest.len() + 1);
 
-        match find_prev_char(original_str, current_offset) {
-            Some(c) => {
-                // dbg!(c);
-                if matches!(c, '{' | '(' | '[' | ',' | '>' | '=' | ';' | '\n' | '\\') {
-                    // skip ; and \n because there's already a linebreak parsed.
-                    // > is for ->
-                    // dbg!("=== skip ");
-                    return Err(NOT_FOUND);
-                }
-            }
-            // 读取前面字符失败，跳过
-            None => return Err(NOT_FOUND),
-        }
-        // dbg!("---> LineBreak ");
+        // match find_prev_char(original_str, current_offset) {
+        //     Some(c) => {
+        //         // dbg!(c);
+        //         if matches!(c, '{' | '(' | '[' | ',' | '>' | '=' | ';' | '\n' | '\\') {
+        //             // skip ; and \n because there's already a linebreak parsed.
+        //             // > is for ->
+        //             // dbg!("=== skip ");
+        //             return Err(NOT_FOUND);
+        //         }
+        //     }
+        //     // 读取前面字符失败，跳过
+        //     None => return Err(NOT_FOUND),
+        // }
+        // dbg!("---> LineBreak ", &nl_slice);
 
         Ok((rest, nl_slice))
     } else if let Some((rest, matched)) = input.strip_prefix(";") {

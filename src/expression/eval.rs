@@ -54,7 +54,7 @@ impl Expression {
 
                 // 符号解析（错误处理优化）
                 Self::Symbol(name) => {
-                    //dbg!("2.--->symbol----", &name);
+                    // dbg!("2.--->symbol----", &name);
 
                     let r = Ok(match env.get(&name) {
                         Some(expr) => expr,

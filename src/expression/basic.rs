@@ -43,7 +43,7 @@ macro_rules! fmt_shared {
             Self::Quote(inner) => write!($f, "'{}", inner),
 
             // Group 修改
-            Self::Group(inner) if $debug => write!($f, "({:?})", inner),
+            Self::Group(inner) if $debug => write!($f, "Group({:?})", inner),
             Self::Group(inner) => write!($f, "({})", inner),
 
             // While 修改
@@ -51,7 +51,9 @@ macro_rules! fmt_shared {
             Self::While(cond, body) => write!($f, "while {} {}", cond, body),
 
             // Lambda 修改
-            Self::Lambda(params, body, _) if $debug => write!($f, "{:?} -> {:?}", params, body),
+            Self::Lambda(params, body, _) if $debug => {
+                write!($f, "Lambda{:?} -> {:?}", params, body)
+            }
             Self::Lambda(params, body, _) => write!($f, "({}) -> {}", params.join(", "), body),
             Self::Macro(params, body) if $debug => write!($f, "{:?} ~> {:?}", params, body),
             Self::Macro(params, body) => write!($f, "({}) ~> {}", params.join(", "), body),
@@ -189,7 +191,7 @@ macro_rules! fmt_shared {
             Self::For(name, list, body) => write!($f, "for {} in {:?} {:?}", name, list, body),
             Self::Do(exprs) => write!(
                 $f,
-                "{{ {} }}",
+                "BLOCK{{ {} }}",
                 exprs
                     .iter()
                     .map(|e| format!("{:?}", e))
@@ -208,7 +210,7 @@ macro_rules! fmt_shared {
             }
             Self::Apply(g, args) => write!(
                 $f,
-                "{:?} {}",
+                "APPLY({:?} {})!",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))
@@ -217,7 +219,7 @@ macro_rules! fmt_shared {
             ),
             Self::Command(g, args) => write!(
                 $f,
-                "{:?} {}",
+                "COMMAND({:?} {})!",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))

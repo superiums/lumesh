@@ -116,7 +116,7 @@ impl PrattParser {
         // dbg!("===----prepare to prefix---===>", input, min_prec);
         let (new_input, mut lhs) = Self::parse_prefix(input, min_prec)?;
         input = new_input;
-        // dbg!("=======prefix=======>", input, &lhs, min_prec);
+        dbg!("=======prefix=======>", input, &lhs, min_prec);
         // opt(alt((kind(TokenKind::LineBreak), eof_slice)));
         // 2. 循环处理中缀和后缀
         loop {
@@ -142,11 +142,12 @@ impl PrattParser {
             //     Some(info) => info,
             //     None => break,
             // };
-            // dbg!(&operator, operator_token.kind);
+            let tk_kind = operator_token.kind.clone();
+            dbg!(&operator, operator_token.kind);
 
             // 处理不同类型的运算符
             match operator_token.kind {
-                TokenKind::LineBreak => {
+                TokenKind::LineBreak | TokenKind::Punctuation | TokenKind::OperatorPrefix => {
                     break;
                 }
                 TokenKind::OperatorInfix => {
@@ -163,9 +164,9 @@ impl PrattParser {
                         Some(opi) => opi,
                         None => break,
                     };
-                    // dbg!(&op_info);
+                    dbg!(&op_info);
                     if op_info.precedence < min_prec {
-                        // dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
+                        dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
                         break; // 低于当前优先级则退出
                     }
 
@@ -177,13 +178,13 @@ impl PrattParser {
 
                     input = input.skip_n(1);
                     if input.is_empty() {
-                        // dbg!("---break2---");
+                        dbg!("---break2---");
                         break;
                     }
-                    // dbg!("--> trying next loop", input, next_min_prec);
+                    dbg!("--> trying next loop", input, next_min_prec);
                     let (new_input, rhs) =
                         Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
-                    // dbg!(&rhs);
+                    dbg!(&rhs);
                     input = new_input;
                     lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
                 }
@@ -191,7 +192,7 @@ impl PrattParser {
                     // dbg!(&lhs, operator, input);
                     // 后缀运算符 (函数调用、数组索引等)
                     (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input)?;
-                    // dbg!(&input);
+                    dbg!(&input, &lhs);
                 }
                 // TokenKind::Symbol if min_prec < PREC_CMD_ARG => {
                 //     // 第二个symbol，作为cmd参数解析，包括后面的。
@@ -209,20 +210,42 @@ impl PrattParser {
                 //     lhs = Expression::Symbol(operator.to_string());
                 //     dbg!("A1--->", depth, &lhs);
                 // }
-                tk => {
+                TokenKind::StringLiteral
+                | TokenKind::StringRaw
+                | TokenKind::IntegerLiteral
+                | TokenKind::FloatLiteral
+                | TokenKind::BooleanLiteral => {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
                     //
                     // dbg!("---break3---", tk);
-                    break;
-                    // if input.is_empty() {
-                    //     break;
-                    // } else {
-                    //     let (new_input, rhs) =
-                    //         Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
-                    //     // dbg!(&rhs);
-                    //     input = new_input;
-                    // }
+                    // break;
+                    if input.is_empty() {
+                        break;
+                    } else {
+                        let (new_input, mut rhs) = many0(|input| {
+                            Self::parse_expr_with_precedence(input, PREC_PIPE + 1, depth)
+                        })(input.skip_n(1))?;
+                        // dbg!(&rhs);
+                        input = new_input;
+                        let first_arg = match tk_kind {
+                            TokenKind::Symbol => Expression::Symbol(operator.to_string()),
+                            TokenKind::StringRaw | TokenKind::StringLiteral => {
+                                Expression::String(operator.to_string())
+                            }
+                            // TokenKind::IntegerLiteral => Expression::Integer(operator),
+                            // TokenKind::FloatLiteral => Expression::Float(operator),
+                            // TokenKind::BooleanLiteral => Expression::Boolean(value(val, parser)),
+                            _ => {
+                                dbg!("unkown_type arg", operator, tk_kind);
+                                break;
+                            }
+                        };
+                        rhs.insert(0, first_arg);
+                        dbg!(&rhs);
+                        lhs = Expression::Command(Box::new(lhs), rhs);
+                    }
                 }
+                _ => break,
             }
             if input.is_empty() {
                 // dbg!("---break4---", input);
@@ -336,7 +359,8 @@ impl PrattParser {
                 let (input, args) = delimited(
                     text("("),
                     cut(separated_list0(text(","), |inp| {
-                        PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, 0)
+                        PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, 0)
+                        // PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, 0)
                     })),
                     cut(text_close(")")),
                 )(input)?;
@@ -1002,9 +1026,13 @@ fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
     ))
 }
 // -- 函数调用解析增强 --
+fn parse_direct_fn_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    PrattParser::parse_expr_with_precedence(input, PREC_FUNC_NAME, 0)
+}
 fn parse_func_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // dbg!("---func call---", input);
+    dbg!("---func call---", input);
     let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_FUNC_NAME, 0)?;
+    dbg!(&ident);
     // let (input, ident) = alt((
     //     parse_index_expr,
     //     parse_symbol.map(|s| Expression::Symbol(s)),
@@ -1016,7 +1044,7 @@ fn parse_func_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxE
         })),
         cut(text_close(")")),
     )(input)?;
-    // dbg!(&ident, &args);
+    dbg!(&ident, &args);
 
     Ok((input, Expression::Apply(Box::new(ident), args)))
     // Ok((
@@ -1059,7 +1087,7 @@ fn parse_command_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
 
     //     return Err(nom::Err::Error(SyntaxErrorKind::NoExpression));
     // }
-    // dbg!("--->cmd call---");
+    dbg!("--->cmd call---");
     let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_CMD_NAME, 0)?;
     // dbg!(&ident);
     // let (input, ident) = alt((
@@ -1389,11 +1417,14 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         // 3.运算语句: !3, 1+2, must before flat_call,
         // or discard this, only allow `let a=3+2` => parse_declare
         // or discard this, only allow `a=3+2` => parse_expr
-        parse_math,
+        // parse_direct_print,
+        // parse_math,
         // 4.执行语句: ls -l, add(x)
         // parse_func_call,
+        // parse_direct_fn_call,
         // parse_cmd_or_math,
-        parse_command_call,
+        // parse_command_call,
+        // 便捷控制台打印
         // 5.单语句： 字面量和单独的symbol：[2,3] 4 "5" ls x
         parse_single_expr,
         // 块语句 {}
@@ -1401,12 +1432,20 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
     ))(input)?;
     // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
     // dbg!(&input, &statement, &statement.type_name());
+    dbg!(&statement, &statement.type_name());
     Ok((input, statement))
 }
 ///命令或数学运算。
 ///语句开始，等号后，括号中：应匹配 cmd call，match compute.
 fn parse_cmd_or_math(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     alt((parse_command_call, parse_math))(input)
+}
+
+/// 便捷控制台打印
+fn parse_direct_print(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    dbg!("--direct print--");
+    let (input, _) = text(":")(input)?;
+    parse_func_call(input)
 }
 
 /// 运算语句

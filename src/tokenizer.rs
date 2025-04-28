@@ -157,7 +157,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         // operator_tag("++"),
         // operator_tag("--"),
-        operator_tag("**"),
+        // operator_tag("**"),
         operator_tag("<"),
         operator_tag(">"),
         operator_tag("+"),

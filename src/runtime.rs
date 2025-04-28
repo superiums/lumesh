@@ -23,7 +23,7 @@ pub fn parse(input: &str) -> Result<Expression, SyntaxError> {
     match parse_script(input) {
         Ok(result) => Ok(result),
         Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => Err(SyntaxError {
-            source: input.into(),
+            source: format!("{}   ", input).into(),
             kind: e,
         }),
         Err(nom::Err::Incomplete(_)) => Err(SyntaxError {

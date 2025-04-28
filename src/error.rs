@@ -71,49 +71,73 @@ impl SyntaxError {
         Self { source, kind }
     }
 
-    pub fn expected(
-        source: Str,
-        input: StrSlice,
-        expected: &'static str,
-        found: Option<String>,
-        hint: Option<&'static str>,
-    ) -> nom::Err<Self> {
-        nom::Err::Error(Self::new(
-            source,
-            SyntaxErrorKind::Expected {
-                input,
-                expected,
-                found,
-                hint,
-            },
-        ))
-    }
+    // pub fn expected(
+    //     source: Str,
+    //     input: StrSlice,
+    //     expected: &'static str,
+    //     found: Option<String>,
+    //     hint: Option<&'static str>,
+    // ) -> nom::Err<Self> {
+    //     nom::Err::Error(Self::new(
+    //         source,
+    //         SyntaxErrorKind::Expected {
+    //             input,
+    //             expected,
+    //             found,
+    //             hint,
+    //         },
+    //     ))
+    // }
 
-    pub fn unclosed_delimiter(source: Str, start: StrSlice, delim: &'static str) -> Self {
-        Self::new(
-            source,
-            SyntaxErrorKind::Expected {
-                input: start,
-                expected: delim,
-                found: None,
-                hint: Some("检查括号/引号是否匹配"),
-            },
-        )
-    }
+    // pub fn unclosed_delimiter(source: Str, start: StrSlice, delim: &'static str) -> Self {
+    //     Self::new(
+    //         source,
+    //         SyntaxErrorKind::Expected {
+    //             input: start,
+    //             expected: delim,
+    //             found: None,
+    //             hint: Some("检查括号/引号是否匹配"),
+    //         },
+    //     )
+    // }
 }
 impl SyntaxErrorKind {
-    pub fn unrecoverable(
+    pub fn failure(
         input: StrSlice,
         expected: &'static str,
         found: Option<String>,
         hint: Option<&'static str>,
     ) -> nom::Err<Self> {
-        nom::Err::Error(SyntaxErrorKind::Expected {
+        nom::Err::Failure(SyntaxErrorKind::Expected {
             input,
             expected,
             found,
             hint,
         })
+    }
+    pub fn empty_fail(input: Tokens<'_>) -> Result<(), nom::Err<Self>> {
+        if input.is_empty() {
+            return Err(nom::Err::Failure(SyntaxErrorKind::Expected {
+                input: input.get_str_slice(),
+                expected: "Some Expression",
+                found: Some("Nothing".into()),
+                hint: None,
+            }));
+        } else {
+            return Ok(());
+        }
+    }
+    pub fn empty_back(input: Tokens<'_>) -> Result<(), nom::Err<Self>> {
+        if input.is_empty() {
+            return Err(nom::Err::Error(SyntaxErrorKind::Expected {
+                input: input.get_str_slice(),
+                expected: "Some Expression to parse",
+                found: Some("Nothing".into()),
+                hint: None,
+            }));
+        } else {
+            return Ok(());
+        }
     }
 
     pub fn expected(
@@ -222,9 +246,9 @@ impl fmt::Display for SyntaxError {
                 hint,
             } => {
                 write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
-                write!(f, "expected {}", expected)?;
+                write!(f, "expect {}{}{}", YELLOW_START, expected, RESET)?;
                 if let Some(found) = found {
-                    write!(f, ", found {}", found)?;
+                    write!(f, ", found {}{}{}", RED2_START, found, RESET)?;
                 }
                 writeln!(f)?;
                 print_error_lines(&self.source, *input, f, 72)?;
@@ -241,7 +265,7 @@ impl fmt::Display for SyntaxError {
             }
             SyntaxErrorKind::ExpectedChar { expected, at } => {
                 write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
-                writeln!(f, "expected {:?}", expected)?;
+                writeln!(f, "expect {:?}", expected)?;
                 if let Some(at) = at {
                     print_error_lines(&self.source, *at, f, 72)?;
                 }
@@ -471,10 +495,11 @@ fn print_error_lines(
     let after = &string[at.end()..];
 
     let line_before = before.lines().next_back().unwrap_or_default();
+
     let line_after = after.lines().next().unwrap_or_default();
 
     let first_line_number = max(before.lines().count(), 1);
-
+    dbg!(&lines, line_before, line_after, first_line_number);
     writeln!(f, "      |")?;
 
     if singleline {
@@ -523,6 +548,8 @@ fn print_error_lines(
     Ok(())
 }
 
+const YELLOW_START: &str = "\x1b[38;5;230m";
+const RED2_START: &str = "\x1b[38;5;210m";
 const RED_START: &str = "\x1b[38;5;9m";
 const BOLD: &str = "\x1b[1m";
 const RESET: &str = "\x1b[m\x1b[0m";

@@ -1,5 +1,5 @@
-use super::pipe_excutor::exec_single_cmd;
 use super::Builtin;
+use super::pipe_excutor::exec_single_cmd;
 use super::{Expression, Pattern};
 use crate::{Environment, RuntimeError};
 use std::io::ErrorKind;
@@ -130,12 +130,12 @@ impl Expression {
         }
     }
 
-    pub fn eval_command(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
-        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
-        // self.eval_apply(env, depth)
-        exec_single_cmd(cmd, args, &bindings, Some(&contents), true, always_pipe)?;
-        
-    }
+    // pub fn eval_command(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
+    //     // env.define("__ALWAYSPIPE", Expression::Boolean(true));
+    //     // self.eval_apply(env, depth)
+    //     exec_single_cmd(cmd, args, &bindings, Some(&contents), true, always_pipe)
+
+    // }
     /// 执行
     pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         // 函数应用

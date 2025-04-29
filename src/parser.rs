@@ -203,7 +203,7 @@ impl PrattParser {
                 | TokenKind::StringRaw
                 | TokenKind::IntegerLiteral
                 | TokenKind::FloatLiteral
-                | TokenKind::BooleanLiteral
+                | TokenKind::KeyValue
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
@@ -285,7 +285,7 @@ impl PrattParser {
             TokenKind::StringRaw if PREC_LITERAL >= min_prec => parse_string_raw(input),
             TokenKind::IntegerLiteral if PREC_LITERAL >= min_prec => parse_integer(input),
             TokenKind::FloatLiteral if PREC_LITERAL >= min_prec => parse_float(input),
-            TokenKind::BooleanLiteral if PREC_LITERAL >= min_prec => parse_boolean(input),
+            TokenKind::KeyValue if PREC_LITERAL >= min_prec => parse_value_keyword(input),
             TokenKind::Punctuation if PREC_GROUP >= min_prec => {
                 let op = first.text(input);
                 return match op {
@@ -1013,24 +1013,8 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         parse_float,
         parse_string,
         parse_string_raw,
-        parse_boolean,
+        parse_value_keyword,
     ))(input)
-}
-fn parse_none(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // dbg!("---parsing none---", &input);
-    match text("None")(input) {
-        Ok(_) => Ok((input, Expression::None)),
-        _ => Err(SyntaxErrorKind::expected(
-            input.get_str_slice(),
-            "None",
-            None,
-            None,
-        )),
-    }
-    // if let Ok((input, _)) = text("None")(input) {
-    //     Ok((input, Expression::None))
-    // }
-    // SyntaxErrorKind::expected(input.get_str_slice(), "None or ()", None, None)
 }
 
 // 映射解析
@@ -1112,9 +1096,12 @@ fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 }
 
 #[inline]
-fn parse_boolean(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    map(kind(TokenKind::BooleanLiteral), |s| {
-        Expression::Boolean(s.to_str(input.str) == "True")
+fn parse_value_keyword(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    map(kind(TokenKind::KeyValue), |s| match s.to_str(input.str) {
+        "None" => Expression::None,
+        "True" => Expression::Boolean(true),
+        "False" => Expression::Boolean(false),
+        _ => Expression::None,
     })(input)
 }
 

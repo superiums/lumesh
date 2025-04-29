@@ -42,7 +42,7 @@ pub fn syntax_highlight(line: &str) -> String {
 
     for (token, diagnostic) in tokens.iter().zip(&diagnostics) {
         match (token.kind, token.range.to_str(line)) {
-            (TokenKind::BooleanLiteral, b) => {
+            (TokenKind::KeyValue, b) => {
                 result.push_str("\x1b[95m");
                 is_colored = true;
                 result.push_str(b);

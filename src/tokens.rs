@@ -134,7 +134,7 @@ pub enum TokenKind {
     StringRaw,
     IntegerLiteral,
     FloatLiteral,
-    BooleanLiteral,
+    KeyValue,
     Symbol,
     Whitespace,
     LineBreak, //add newline

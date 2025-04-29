@@ -4,20 +4,7 @@ use crate::{
     tokens::{Input, Tokens},
 };
 use detached_str::StrSlice;
-use nom::{IResult, Needed, branch::alt, combinator::*, multi::*, sequence::*};
-
-// 输入：if x > 5 { y = 1 } else { y = 0 }; a + b * c
-
-// 解析流程：
-// 1. parse_script_tokens 进入语句解析循环
-// 2. parse_statement 识别if关键字，进入parse_if_flow
-//    a. 解析条件表达式 x > 5（调用Pratt解析器）
-//    b. 解析then块 { y = 1 }
-//    c. 解析else块 { y = 0 }
-// 3. 消费分号终止符
-// 4. 解析表达式语句 a + b * c
-//    a. Pratt解析器处理运算符优先级（*优先于+）
-// 5. 生成最终的Do表达式包含两个子节点
+use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
 
 // -- 辅助类型和常量 --
 
@@ -116,7 +103,7 @@ impl PrattParser {
         // dbg!("===----prepare to prefix---===>", input, min_prec);
         let (new_input, mut lhs) = Self::parse_prefix(input, min_prec)?;
         input = new_input;
-        // dbg!("=======prefix=======>", input, &lhs, min_prec);
+        dbg!("=======prefix=======>", input, &lhs, min_prec);
         // opt(alt((kind(TokenKind::LineBreak), eof_slice)));
         // 2. 循环处理中缀和后缀
         loop {
@@ -131,7 +118,7 @@ impl PrattParser {
             //     .map(|t| t.kind == TokenKind::LineBreak)
             //     .unwrap_or(false)
             {
-                // dbg!("---break1---");
+                dbg!("---break1---");
                 break;
             }
 
@@ -143,12 +130,12 @@ impl PrattParser {
             //     None => break,
             // };
             let tk_kind = operator_token.kind.clone();
-            // dbg!(&operator, operator_token.kind);
+            dbg!(&operator, operator_token.kind);
 
             // 处理不同类型的运算符
             match operator_token.kind {
                 TokenKind::LineBreak | TokenKind::Punctuation | TokenKind::OperatorPrefix => {
-                    // dbg!("---break1.1---");
+                    dbg!("---break1.1---");
                     break;
                 }
                 TokenKind::OperatorInfix => {
@@ -165,7 +152,7 @@ impl PrattParser {
                         Some(opi) => opi,
                         None => break,
                     };
-                    // dbg!(&op_info);
+                    dbg!(&op_info);
                     if op_info.precedence < min_prec {
                         // dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
                         break; // 低于当前优先级则退出
@@ -179,13 +166,13 @@ impl PrattParser {
 
                     input = input.skip_n(1);
                     if input.is_empty() {
-                        // dbg!("---break2---");
+                        dbg!("---break2---");
                         break;
                     }
                     // dbg!("--> trying next loop", input, next_min_prec);
                     let (new_input, rhs) =
                         Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
-                    // dbg!(&rhs);
+                    dbg!("--> binop, after next loop", &rhs);
                     input = new_input;
                     lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
                 }
@@ -222,44 +209,25 @@ impl PrattParser {
                 {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
                     //
-                    // dbg!("---break3---", tk);
-                    // break;
-                    if input.is_empty() {
-                        // dbg!("---break3---");
-                        break;
-                    } else {
-                        let (new_input, mut rhs) = many0(|input| {
-                            Self::parse_expr_with_precedence(input, PREC_PIPE + 1, depth)
-                        })(input.skip_n(1))?;
-                        // dbg!(&rhs);
-                        input = new_input;
-                        let first_arg = match tk_kind {
-                            TokenKind::Symbol => Expression::Symbol(operator.to_string()),
-                            TokenKind::StringRaw | TokenKind::StringLiteral => {
-                                Expression::String(operator.to_string())
-                            }
-                            // TokenKind::IntegerLiteral => Expression::Integer(operator),
-                            // TokenKind::FloatLiteral => Expression::Float(operator),
-                            // TokenKind::BooleanLiteral => Expression::Boolean(value(val, parser)),
-                            _ => {
-                                // dbg!("---break unkown_type arg", operator, tk_kind);
-                                break;
-                            }
-                        };
-                        rhs.insert(0, first_arg);
-                        // dbg!(&rhs);
-                        lhs = Expression::Command(Box::new(lhs), rhs);
-                    }
+
+                    let (new_input, rhs) = many0(|input| {
+                        Self::parse_expr_with_precedence(input, PREC_PIPE + 1, depth)
+                    })(input)?;
+                    // dbg!(&rhs);
+                    input = new_input;
+
+                    // dbg!(&rhs);
+                    lhs = Expression::Command(Box::new(lhs), rhs);
                 }
                 _ => {
-                    // dbg!("---break4---");
+                    dbg!("---break3---");
                     break;
                 }
             }
-            if input.is_empty() {
-                // dbg!("---break4---", input);
-                break;
-            }
+            // if input.is_empty() {
+            //     dbg!("---break4---", input);
+            //     break;
+            // }
         }
 
         // dbg!("---returning---", input);

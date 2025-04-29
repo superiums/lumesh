@@ -233,7 +233,7 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
-            Self::BinaryOp(op, l, r) => write!($f, "({:?} {} {:?})", l, op, r),
+            Self::BinaryOp(op, l, r) => write!($f, "BinaryOp<({:?} {} {:?})>", l, op, r),
             Self::Index(l, r) => write!($f, "({}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
             // _ => write!($f, "Unreachable"), // 作为兜底逻辑

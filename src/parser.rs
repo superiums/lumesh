@@ -203,7 +203,7 @@ impl PrattParser {
                 | TokenKind::StringRaw
                 | TokenKind::IntegerLiteral
                 | TokenKind::FloatLiteral
-                | TokenKind::KeyValue
+                | TokenKind::ValueSymbol
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
@@ -285,7 +285,7 @@ impl PrattParser {
             TokenKind::StringRaw if PREC_LITERAL >= min_prec => parse_string_raw(input),
             TokenKind::IntegerLiteral if PREC_LITERAL >= min_prec => parse_integer(input),
             TokenKind::FloatLiteral if PREC_LITERAL >= min_prec => parse_float(input),
-            TokenKind::KeyValue if PREC_LITERAL >= min_prec => parse_value_keyword(input),
+            TokenKind::ValueSymbol if PREC_LITERAL >= min_prec => parse_value_symbol(input),
             TokenKind::Punctuation if PREC_GROUP >= min_prec => {
                 let op = first.text(input);
                 return match op {
@@ -1013,7 +1013,7 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         parse_float,
         parse_string,
         parse_string_raw,
-        parse_value_keyword,
+        parse_value_symbol,
     ))(input)
 }
 
@@ -1096,12 +1096,14 @@ fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 }
 
 #[inline]
-fn parse_value_keyword(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    map(kind(TokenKind::KeyValue), |s| match s.to_str(input.str) {
-        "None" => Expression::None,
-        "True" => Expression::Boolean(true),
-        "False" => Expression::Boolean(false),
-        _ => Expression::None,
+fn parse_value_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    map(kind(TokenKind::ValueSymbol), |s| {
+        match s.to_str(input.str) {
+            "None" => Expression::None,
+            "True" => Expression::Boolean(true),
+            "False" => Expression::Boolean(false),
+            _ => Expression::None,
+        }
     })(input)
 }
 

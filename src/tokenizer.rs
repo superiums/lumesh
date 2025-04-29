@@ -55,7 +55,7 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             // map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
-            map_valid_token(value_keyword, TokenKind::KeyValue),
+            map_valid_token(value_symbol, TokenKind::ValueSymbol),
             map_valid_token(comment, TokenKind::Comment),
             number_literal,
             map_valid_token(short_operator, TokenKind::Operator), //atfter number to avoid -4.
@@ -189,7 +189,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("export"), //set global env
         keyword_alone_tag("return"),
         keyword_tag("del"),
-        keyword_tag("None"),
+        // keyword_tag("None"),
     ))(input)
 }
 
@@ -380,7 +380,7 @@ fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
     Ok((rest, (token, Diagnostic::Valid)))
 }
 
-fn value_keyword(input: Input<'_>) -> TokenizationResult<'_> {
+fn value_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("True"),
         keyword_tag("False"),

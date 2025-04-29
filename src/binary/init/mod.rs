@@ -1,6 +1,8 @@
-use lumesh::{Environment, Expression, Int, LmError, RuntimeError};
+use std::{collections::HashMap, path::PathBuf};
 
-use common_macros::b_tree_map;
+use crate::{Environment, Expression, Int, LmError, RuntimeError};
+
+use common_macros::hash_map;
 
 #[cfg(feature = "chess-engine")]
 mod chess_module;
@@ -26,11 +28,114 @@ mod sys_module;
 mod time_module;
 mod widget_module;
 
+pub fn get_module_map() -> HashMap<String, Expression> {
+    // TODO tick out env
+    let mut env = Environment::new();
+    let fs = fs_module::get(&mut env);
+    // let ops = operator_module::get(env);
+    let math = math_module::get(&mut env);
+    let standard_module = hash_map! {
+      String::from("log") => log_module::get(),
+        String::from("math") => math,
+        String::from("dict") => dict_module::get(),
+        String::from("version") => shell_module::get(),
+        String::from("err") => err_module::get(),
+        String::from("os") => os_module::get(),
+        String::from("widget") => widget_module::get(),
+        String::from("time") => time_module::get(),
+        String::from("rand") => rand_module::get(),
+        String::from("fn") => fn_module::get(),
+        String::from("console") => console_module::get(),
+        String::from("fmt") => fmt_module::get(),
+        String::from("parse") => parse_module::get(),
+        String::from("fs") => fs,
+            String::from("string") => string_module::get(),
+            String::from("regex") => regex_module::get(),
+            String::from("list") => list_module::get(),
+            String::from("sys") => sys_module::get(),
+            String::from("exit") => Expression::builtin(
+                "exit",
+                |args, env| {
+                    if args.is_empty() {
+                        std::process::exit(0);
+                    } else if let Expression::Integer(n) = args[0].clone().eval(env)? {
+                        std::process::exit(n as i32);
+                    } else {
+                        Err(LmError::CustomError(format!(
+                            "expected integer but got `{:?}`",
+                            args[0]
+                        )))
+                    }
+                },
+                "exit the shell",
+            ),
+            String::from("cd") => Expression::builtin("cd", cd, "change directories"),
+    };
+
+    // for (name, module) in standard_module {
+    //     env.define(name, module);
+    // }
+
+    // env.define("exit", env.get("os").unwrap()["exit"].clone());
+    // env.define("cd", env.get("os").unwrap()["cd"].clone());
+    // env.define("quit", env.get("exit").unwrap());
+
+    // unsafe {
+    //     BUITIN = standard_module;
+    // }
+    return standard_module;
+}
+fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("cd", &args, 1)?;
+
+    match args[0].eval(env)? {
+        Expression::Symbol(path) | Expression::String(path) => {
+            // let abs_path = PathBuf::from(env.get_cwd()).join(path);
+
+            // let new_cwd = dunce::canonicalize(&abs_path).map_err(|e| {
+            //     crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
+            //         "NotFound" => {
+            //             format!("the directory {:?} does not exist", abs_path)
+            //         }
+            //         "NotADirectory" => {
+            //             format!("a path segment in {:?} is not a directory", abs_path)
+            //         }
+            //         _ => format!(
+            //             "could not change to directory {:?}\n  reason: {}",
+            //             abs_path, e
+            //         ),
+            //     })
+            // })?;
+
+            std::env::set_current_dir(&path).map_err(|e| {
+                crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
+                    "PermissionDenied" => {
+                        format!("you don't have permission to read directory {:?}", &path)
+                    }
+                    "NotADirectory" => {
+                        format!("{:?} is not a directory", &path)
+                    }
+                    _ => format!("could not change directory to {:?}\n  reason: {}", &path, e),
+                })
+            })?;
+
+            // env.set_cwd(new_cwd.into_os_string().into_string().unwrap());
+            Ok(Expression::None)
+        }
+
+        other => {
+            // Try to convert the argument to a string
+            let path = other.to_string();
+            cd(vec![Expression::String(path)], env)
+        }
+    }
+}
+
 pub fn init(env: &mut Environment) {
     let fs = fs_module::get(env);
     // let ops = operator_module::get(env);
     let math = math_module::get(env);
-    let standard_module = b_tree_map! {
+    let standard_module = hash_map! {
         "log" => log_module::get(),
         "math" => math,
         "dict" => dict_module::get(),
@@ -166,7 +271,7 @@ pub fn init(env: &mut Environment) {
                     prompt += &format!("{}", x)
                 }
             }
-            Ok(Expression::String(lumesh::repl::read_user_input(&prompt)))
+            Ok(Expression::String(crate::repl::read_user_input(&prompt)))
         },
         "get user input",
     );

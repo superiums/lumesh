@@ -1,6 +1,6 @@
-use super::Int;
+use crate::Expression;
+use crate::Int;
 use common_macros::b_tree_map;
-use lumesh::Expression;
 
 pub(crate) fn flatten(expr: Expression) -> Vec<Expression> {
     match expr {

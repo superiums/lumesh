@@ -1,8 +1,8 @@
 use rand::seq::SliceRandom;
 use std::env::current_exe;
 
+use crate::{Expression, VERSION};
 use common_macros::b_tree_map;
-use lumesh::{Expression, VERSION};
 
 pub fn get() -> Expression {
     (b_tree_map! {

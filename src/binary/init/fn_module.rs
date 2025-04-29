@@ -1,6 +1,5 @@
-use super::{Environment, Expression, LmError};
+use crate::{Environment, Expression, LmError, RuntimeError, parse};
 use common_macros::b_tree_map;
-use lumesh::{RuntimeError, parse};
 
 // 柯里化函数构建（适配多参数Lambda）
 pub(super) fn curry_env(
@@ -212,7 +211,7 @@ fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
 
     if args.len() == 1 {
         Ok(Expression::Apply(
-            Box::new(lumesh::parse("(f,list) -> for item in list {f item}")?),
+            Box::new(crate::parse("(f,list) -> for item in list {f item}")?),
             args.clone(),
         )
         .eval(env)?)
@@ -245,7 +244,7 @@ fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
     if args.len() == 1 {
         Ok(Expression::Apply(
-            Box::new(lumesh::parse(
+            Box::new(crate::parse(
                 r#"(f,list) -> {
                     let result = [];
                     for item in list {
@@ -293,7 +292,7 @@ fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
     if args.len() < 3 {
         Ok(Expression::Apply(
-            Box::new(lumesh::parse(
+            Box::new(crate::parse(
                 "(f,acc,list) -> { \
                         for item in list { let acc = f acc item } acc }",
             )?),

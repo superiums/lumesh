@@ -4,9 +4,9 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use super::Int;
+use crate::Int;
+use crate::{Environment, Expression, LmError};
 use common_macros::b_tree_map;
-use lumesh::{Environment, LmError, Expression};
 
 fn get_dir_tree(cwd: &Path, max_depth: Option<Int>) -> BTreeMap<String, Expression> {
     let mut dir_tree = b_tree_map! {};
@@ -366,7 +366,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "glob a pattern into a list of paths"),
     };
 
-    env.define_module("fs", fs_module.clone());
+    // env.define_module("fs", fs_module.clone());
     Expression::Map(fs_module)
 }
 

@@ -4,6 +4,7 @@ mod tests;
 pub type Int = i64;
 
 mod expression;
+
 pub use expression::builtin::Builtin;
 pub use expression::eval;
 pub use expression::{Expression, Pattern, SliceParams};
@@ -35,7 +36,9 @@ pub use syntax::highlight;
 
 pub mod cmdhelper;
 pub mod prompt;
-// mod binary;
+
+mod binary;
+pub use binary::get_builtin;
 
 // pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

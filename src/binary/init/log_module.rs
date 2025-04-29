@@ -1,7 +1,7 @@
 use super::Int;
+use crate::{Expression, LmError};
 use common_macros::b_tree_map;
 use lazy_static::lazy_static;
-use lumesh::{LmError, Expression};
 use std::sync::RwLock;
 lazy_static! {
     static ref LOG_LEVEL: RwLock<Int> = RwLock::new(0);

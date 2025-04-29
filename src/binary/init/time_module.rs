@@ -1,8 +1,8 @@
 use std::{thread, time::Duration};
 
+use crate::{Environment, Expression, LmError};
 use chrono::{Datelike, Timelike};
 use common_macros::b_tree_map;
-use lumesh::{Environment, LmError, Expression};
 
 pub fn get() -> Expression {
     let now = chrono::Local::now();
@@ -50,7 +50,10 @@ fn fmt(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
             chrono::Local::now().format(&f).to_string(),
         )),
         // Expression::Symbol(f) => Ok(f),
-        e => Err(LmError::CustomError(format!("invalid abs argument {:?}", e))),
+        e => Err(LmError::CustomError(format!(
+            "invalid abs argument {:?}",
+            e
+        ))),
     }
 }
 

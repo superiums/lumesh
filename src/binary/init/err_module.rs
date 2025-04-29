@@ -1,5 +1,5 @@
+use crate::{Environment, Expression, Int, LmError};
 use common_macros::b_tree_map;
-use lumesh::{Environment, Expression, Int, LmError};
 
 pub fn get() -> Expression {
     (b_tree_map! {

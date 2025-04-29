@@ -1,6 +1,6 @@
 #![allow(clippy::wildcard_in_or_patterns)]
 
-mod binary;
+// mod binary;
 use clap::Parser;
 use lumesh::parse_and_eval;
 use lumesh::repl; // 新增模块引用
@@ -94,7 +94,7 @@ fn main() {
         Expression::List(cli.argv.into_iter().map(Expression::String).collect()),
     );
     // bultiin
-    binary::init(&mut env);
+    // binary::init(&mut env);
 
     // 命令执行模式
     if let Some(cmd_parts) = cli.cmd {

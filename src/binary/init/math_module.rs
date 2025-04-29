@@ -1,6 +1,6 @@
 use super::curry;
+use crate::{Environment, Expression, Int, LmError};
 use common_macros::b_tree_map;
-use lumesh::{Environment, LmError, Expression, Int};
 
 pub fn get(env: &mut Environment) -> Expression {
     (b_tree_map! {
@@ -8,8 +8,8 @@ pub fn get(env: &mut Environment) -> Expression {
         String::from("PI")  => std::f64::consts::PI.into(),
         String::from("TAU") => std::f64::consts::TAU.into(),
 
-        String::from("max") => lumesh::parse("(x , y) -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
-        String::from("min") => lumesh::parse("(x , y) -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
+        String::from("max") => crate::parse("(x , y) -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
+        String::from("min") => crate::parse("(x , y) -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
 
         String::from("l_rsh") => Expression::builtin("l_rsh", |args, env| {
             super::check_exact_args_len("l_rsh", &args, 2)?;

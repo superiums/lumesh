@@ -1,14 +1,14 @@
 use std::path::PathBuf;
 
+use crate::{Expression, LmError};
 use common_macros::b_tree_map;
-use lumesh::{Expression, LmError};
 
 pub fn get() -> Expression {
     Expression::Map(b_tree_map! {
         String::from("parse") => Expression::builtin("parse", |args, env| {
             super::check_exact_args_len("parse", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
-            Ok(match lumesh::parse(&expr.to_string()) {
+            Ok(match crate::parse(&expr.to_string()) {
                 Ok(expr) => expr,
                 Err(_) => Expression::None
             })
@@ -39,7 +39,7 @@ pub fn get() -> Expression {
                 // Read the file.
                 let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
                 // Evaluate the file.
-                if let Ok(expr) = lumesh::parse(&contents) {
+                if let Ok(expr) = crate::parse(&contents) {
                     Ok(expr.eval(env)?)
                 } else {
                     Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
@@ -78,7 +78,7 @@ pub fn get() -> Expression {
                 // Read the file.
                 let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
                 // Evaluate the file.
-                if let Ok(expr) = lumesh::parse(&contents) {
+                if let Ok(expr) = crate::parse(&contents) {
                     let mut new_env = env.clone();
                     Ok(expr.eval(&mut new_env)?)
                 } else {

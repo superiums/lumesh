@@ -1,5 +1,5 @@
+use crate::{Environment, Expression, LmError};
 use common_macros::b_tree_map;
-use lumesh::{Environment, LmError, Expression};
 use rand::{Rng, distributions::Uniform, prelude::SliceRandom};
 
 pub fn get() -> Expression {

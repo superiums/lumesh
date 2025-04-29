@@ -134,7 +134,7 @@ impl Expression {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
-                //dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(env, depth + 1)?;
                 // let args_eval = args
@@ -239,7 +239,7 @@ impl Expression {
 
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
-                        // dbg!("   3.--->applying Builtin:", &args);
+                        dbg!("   3.--->applying Builtin:", &func, &args);
                         match body(args.clone(), env) {
                             Ok(result) => {
                                 self.set_status_code(0, env);
@@ -433,7 +433,7 @@ impl Expression {
                     _ => Err(RuntimeError::CannotApply(*func.clone(), args.clone())),
                 };
             }
-            _ => unreachable!(),
+            _ => Err(RuntimeError::CustomError(self.to_string())), // unreachable!(),
         }
     }
 }

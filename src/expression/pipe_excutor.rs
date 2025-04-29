@@ -123,9 +123,9 @@ fn expr_to_command(
                 // 其他可执行命令，如lambda,Function,Builtin
                 _ => {
                     // dgb!("--else type--", &func_eval, &func_eval.type_name());
-                    // Ok(("".into(), vec![], Some(expr.to_owned())))
+                    Ok(("".into(), vec![], Some(expr.to_owned())))
 
-                    Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
+                    // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
                 }
             };
         }
@@ -198,7 +198,7 @@ pub fn handle_pipes(
             ),
             _ => {
                 let (cmd, args, expr) = expr_to_command(&lhs, env, depth)?;
-                //dbg!(&cmd, &args, &expr);
+                dbg!(&cmd, &args, &expr);
                 if expr.is_some() {
                     // 有表达式返回则执行表达式, 有apply和binaryOp两种
                     // let result_expr = expr.unwrap().eval_apply(env, depth)?;
@@ -228,7 +228,8 @@ pub fn handle_pipes(
                         let (cmd, args, expr) = expr_to_command(&rhs, env, depth)?;
                         match expr {
                             Some(ex) => {
-                                let result_expr = ex.eval_apply(env, depth)?;
+                                // 有表达式返回则执行表达式, 有apply和binaryOp两种
+                                let result_expr = ex.eval_mut(env, depth)?;
                                 let result_expr_bytes =
                                     result_expr.to_string().as_bytes().to_owned();
                                 Ok((result_expr_bytes, result_expr))

@@ -1,7 +1,7 @@
-use super::Int;
+use crate::Int;
 // use super::curry;
+use crate::{Environment, Expression, LmError};
 use common_macros::b_tree_map;
-use lumesh::{Environment, LmError, Expression};
 pub fn get() -> Expression {
     (b_tree_map! {
         String::from("list") => Expression::builtin("list", list,

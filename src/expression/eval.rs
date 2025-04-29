@@ -1,5 +1,5 @@
 use crate::expression::pipe_excutor::handle_command;
-use crate::{Environment, Int, RuntimeError};
+use crate::{Environment, Int, RuntimeError, binary};
 use regex_lite::Regex;
 use std::io::Write;
 
@@ -31,7 +31,7 @@ impl Expression {
     }
     /// 求值主逻辑（尾递归优化）
     pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
-        //dbg!("1.--->eval_mut:", &self, &self.type_name());
+        dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(RuntimeError::RecursionDepth(self));
@@ -47,29 +47,41 @@ impl Expression {
                 | Self::None
                 | Self::Float(_)
                 | Self::Bytes(_)
-                | Self::Macro(_, _)
-                | Self::Builtin(_) => {
-                    //dbg!("basic type");
+                | Self::Macro(_, _) => {
+                    dbg!("basic type");
+                    break Ok(self);
+                }
+                Self::Builtin(_) => {
+                    dbg!("builtin type");
                     break Ok(self);
                 }
 
                 // 符号解析（错误处理优化）
                 Self::Symbol(name) => {
-                    // dbg!("2.--->symbol----", &name);
-
-                    let r = Ok(match env.get(&name) {
-                        Some(expr) => expr,
-                        None => Self::Symbol(name),
-                        // None => unsafe {
-                        //            if STRICT {
-                        //                Err(Error::UndeclaredVariable(name.clone()))
-                        //            } else {
-                        //                Ok(Self::Symbol(name)) // 非严格模式允许未定义符号
-                        //            }
-                        //        }
-                    });
+                    dbg!("2.--->symbol----", &name);
+                    // bultin
+                    let r = match binary::get_builtin(&name) {
+                        Some(bti) => {
+                            dbg!("found builtin:", &name, bti);
+                            bti.clone()
+                        }
+                        _ => {
+                            // var
+                            match env.get(&name) {
+                                Some(expr) => expr,
+                                None => Self::Symbol(name),
+                                // None => unsafe {
+                                //            if STRICT {
+                                //                Err(Error::UndeclaredVariable(name.clone()))
+                                //            } else {
+                                //                Ok(Self::Symbol(name)) // 非严格模式允许未定义符号
+                                //            }
+                                //        }
+                            }
+                        }
+                    };
                     // dbg!(&r);
-                    break r;
+                    break Ok(r);
                 }
 
                 // 处理变量声明（仅允许未定义变量）
@@ -538,13 +550,20 @@ impl Expression {
                 }
                 Self::Index(lhs, rhs) => {
                     let l = lhs.eval_mut(env, depth + 1)?;
-                    let r = rhs.eval_mut(env, depth + 1)?;
+                    let r = rhs.eval_mut(env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
                     return Self::index_slm(l, r);
                 }
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
                 Self::Command(ref cmd, ref args) => {
-                    break handle_command(cmd.to_string(), args, env, depth);
+                    dbg!(&cmd.type_name());
+                    break match binary::get_builtin(&cmd.to_string()) {
+                        Some(bti) => {
+                            dbg!("branch to builtin:", &cmd, &bti);
+                            bti.clone().apply(args.clone()).eval_apply(env, depth)
+                        }
+                        _ => handle_command(cmd.to_string(), args, env, depth),
+                    };
                 }
                 // break Self::eval_command(self, env, depth),
                 // 其他表达式处理...

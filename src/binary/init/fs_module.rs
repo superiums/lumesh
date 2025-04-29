@@ -45,13 +45,13 @@ pub fn get(env: &mut Environment) -> Expression {
 
     if let Some(home_dir) = dirs::home_dir() {
         let home_dir = home_dir.into_os_string().into_string().unwrap();
-        env.set_cwd(&home_dir);
+        // env.set_cwd(&home_dir);
         dir_tree.insert("home".to_string(), Expression::from(home_dir.clone()));
         env.define("HOME", Expression::String(home_dir));
     }
 
     if let Ok(cwd) = current_dir() {
-        env.set_cwd(&cwd.into_os_string().into_string().unwrap());
+        // env.set_cwd(&cwd.into_os_string().into_string().unwrap());
     }
 
     if let Some(c_dir) = dirs::config_dir() {
@@ -97,7 +97,7 @@ pub fn get(env: &mut Environment) -> Expression {
             super::check_args_len("joinx", &args, 1..=2)?;
             // Return a nested map of the filesystem.
             // Get current working directory
-            let mut cwd = PathBuf::from(env.get_cwd());
+            let mut cwd =std::env::current_dir()?;
             // If the first argument evaluates to an integer, use it as the max depth
             // let max_depth = match args.get(0).unwrap_or(&Expression::None).eval(env)? {
             //     Expression::Integer(n) => Some(n),
@@ -275,7 +275,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
         String::from("read") => Expression::builtin("read", |args, env| {
             super::check_exact_args_len("read", &args, 1)?;
-            let mut path = PathBuf::from(env.get_cwd());
+            let mut path = std::env::current_dir()?;
             let file = args[0].eval(env)?;
             path = path.join(file.to_string());
 
@@ -292,7 +292,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
         String::from("write") => Expression::builtin("write", |args, env| {
             super::check_exact_args_len("write", &args, 2)?;
-            let mut path = PathBuf::from(env.get_cwd());
+            let mut path = std::env::current_dir()?;
             let file = args[0].eval(env)?;
             path = path.join(file.to_string());
 
@@ -314,7 +314,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
         String::from("append") => Expression::builtin("append", |args, env| {
             super::check_exact_args_len("append", &args, 2)?;
-            let mut path = PathBuf::from(env.get_cwd());
+            let mut path = std::env::current_dir()?;
             let filename = args[0].eval(env)?;
 
             path = path.join(filename.to_string());

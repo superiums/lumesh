@@ -32,7 +32,7 @@ pub fn get() -> Expression {
         String::from("include") => Expression::builtin("include", |args, env| {
             super::check_exact_args_len("include", &args, 1)?;
 
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let path = cwd.join(args[0].eval(env)?.to_string());
 
             if let Ok(canon_path) = dunce::canonicalize(&path) {
@@ -52,11 +52,11 @@ pub fn get() -> Expression {
         // Change the current working directory.
         String::from("cd") => Expression::builtin("cd", |args, env| {
             super::check_exact_args_len("cd", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let path = cwd.join(args[0].eval(env)?.to_string());
 
             if let Ok(canon_path) = dunce::canonicalize(&path) {
-                env.set_cwd(canon_path.to_str().unwrap().to_string());
+                // env.set_cwd(canon_path.to_str().unwrap().to_string());
                 Ok(Expression::None)
             } else {
                 Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
@@ -64,14 +64,15 @@ pub fn get() -> Expression {
         }, "change the current working directory"),
 
         // Get the current working directory.
-        String::from("cwd") => Expression::builtin("cwd", |_args, env| {
-            Ok(Expression::String(env.get_cwd().to_string()))
-        }, "get the current working directory"),
+        // String::from("cwd") => Expression::builtin("cwd", |_args, env| {
+        //     let path = std::env::current_dir()?;
+        //     Ok(Expression::String(path.))
+        // }, "get the current working directory"),
 
         // Import a file (evaluate it in a new environment).
         String::from("import") => Expression::builtin("import", |args, env| {
             super::check_exact_args_len("import", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let path = cwd.join(args[0].eval(env)?.to_string());
 
             if let Ok(canon_path) = dunce::canonicalize(&path) {

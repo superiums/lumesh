@@ -8,7 +8,7 @@ use lumesh::repl; // 新增模块引用
 // use lumesh::ENV;
 use lumesh::STRICT;
 use lumesh::runtime::run_file;
-use lumesh::{Environment, Expression, LmError};
+use lumesh::{Environment, Expression};
 use std::env;
 use std::path::{Path, PathBuf};
 

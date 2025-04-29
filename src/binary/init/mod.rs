@@ -1,4 +1,4 @@
-use lumesh::{Environment, Expression, Int, LmError, RuntimeError, SyntaxError};
+use lumesh::{Environment, Expression, Int, LmError, RuntimeError};
 
 use common_macros::b_tree_map;
 

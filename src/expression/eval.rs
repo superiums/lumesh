@@ -5,7 +5,7 @@ use std::io::Write;
 
 use crate::STRICT;
 
-use super::pipe_excutor::{exec_single_cmd, handle_stdin_redirect};
+use super::pipe_excutor::handle_stdin_redirect;
 use super::{Expression, pipe_excutor::handle_pipes};
 use std::io::ErrorKind;
 use std::path::PathBuf;

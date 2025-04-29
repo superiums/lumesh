@@ -1,5 +1,5 @@
 use super::Expression;
-use crate::{Environment, LmError, RuntimeError};
+use crate::{Environment, LmError};
 use std::fmt;
 
 // 内置函数结构（显示优化）

@@ -408,33 +408,6 @@ fn whitespace(input: Input<'_>) -> TokenizationResult<'_> {
     Ok(input.split_at(ws_chars))
 }
 
-fn find_prev_char(original_str: &str, current_offset: usize) -> Option<char> {
-    // let current_offset = original_str.len() - rest.len();
-    let first_c = original_str.get(..current_offset);
-    match first_c {
-        Some(c) => {
-            if !c.is_empty() {
-                return c.chars().last();
-            }
-            // 2. 反向计算前导空白字节长度
-            let ws_len = c
-                .chars()
-                .rev()
-                .take_while(|c| c.is_whitespace() && *c != '\n')
-                .map(|c| c.len_utf8())
-                .sum();
-
-            // 3. 安全切割空白部分
-            let ws_start = current_offset.saturating_sub(ws_len);
-            let before_nl = original_str.get(..ws_start).unwrap_or("");
-
-            // 4. 获取最后一个非空白字符
-            return before_nl.chars().last();
-        }
-        None => return None,
-    }
-}
-
 fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
     // dbg!("--->", input.as_str_slice(),input.first());
     let ws_chars = input.chars().take_while(|c| *c == ' ').count();

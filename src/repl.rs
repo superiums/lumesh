@@ -17,7 +17,7 @@ use crate::cmdhelper::{
     AI_CLIENT, PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
 use crate::runtime::{check, init_config};
-use crate::{Environment, LmError, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
+use crate::{Environment, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
 
 // use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
@@ -87,20 +87,20 @@ pub fn run_repl(env: &mut Environment) {
             }
             _ => {
                 if parse_and_eval(&line, env) {
-                    rl.lock()
-                        .unwrap()
-                        .add_history_entry(&line)
-                        .map_err(|_| eprintln!("add history err"));
+                    match rl.lock().unwrap().add_history_entry(&line) {
+                        Ok(_) => {}
+                        Err(e) => eprintln!("add history err: {}", e),
+                    };
                 }
             }
         }
     }
 
     // 保存历史记录
-    rl.lock()
-        .unwrap()
-        .save_history(HISTORY_FILE)
-        .map_err(|_| eprintln!("save history err"));
+    match rl.lock().unwrap().save_history(HISTORY_FILE) {
+        Ok(_) => {}
+        Err(e) => eprintln!("save history err: {}", e),
+    };
 }
 
 // 确保 helper 也是线程安全的

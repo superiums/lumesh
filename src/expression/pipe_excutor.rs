@@ -82,7 +82,7 @@ fn expr_to_command(
             Ok((cmd_name, vec![], None))
         }
         // TODO only fn,buildin,lambda
-        Expression::Apply(func, args) => {
+        Expression::Apply(func, _) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
             let func_eval = func.clone().eval_mut(env, depth + 1)?;

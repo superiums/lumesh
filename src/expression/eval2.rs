@@ -2,8 +2,6 @@ use super::Builtin;
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, RuntimeError};
-use std::io::ErrorKind;
-use std::process::{Command, Stdio};
 
 // Expression求值2
 impl Expression {

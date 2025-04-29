@@ -1,5 +1,5 @@
 use crate::repl::read_user_input;
-use crate::{Diagnostic, Environment, Expression, LmError, SyntaxError, TokenKind};
+use crate::{Diagnostic, Environment, Expression, SyntaxError, TokenKind};
 use crate::{SyntaxErrorKind, parse_script};
 use std::path::PathBuf;
 const INTRO_PRELUDE: &str = include_str!("config/config.lsh");

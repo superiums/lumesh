@@ -173,7 +173,7 @@ impl ParseError<Tokens<'_>> for SyntaxErrorKind {
         }
     }
 
-    fn append(input: Tokens<'_>, kind: ErrorKind, other: Self) -> Self {
+    fn append(input: Tokens<'_>, kind: ErrorKind, _: Self) -> Self {
         SyntaxErrorKind::NomError {
             kind,
             at: input.first().map(|t| t.range),

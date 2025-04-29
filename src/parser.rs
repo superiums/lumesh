@@ -32,12 +32,12 @@ const PREC_CUSTOM: u8 = 14; // 幂运算 **
 const PREC_UNARY: u8 = 20; // 单目运算符     ! -
 const PREC_PRIFIX: u8 = 21; // 单目运算符     ++ --
 // postfix
-const PREC_POSTFIX: u8 = 22; //             ++ --
-const PREC_CALL: u8 = 24; //                func()
+// const PREC_POSTFIX: u8 = 22; //             ++ --
+// const PREC_CALL: u8 = 24; //                func()
 // arry list
 const PREC_RANGE: u8 = 25; // range         ..
-const PREC_LIST: u8 = 25; // 数组         [1,2]
-const PREC_SLICE: u8 = 25; //               arry[]
+// const PREC_LIST: u8 = 25; // 数组         [1,2]
+// const PREC_SLICE: u8 = 25; //               arry[]
 const PREC_INDEX: u8 = 25; // 索引运算符      @ .
 // group
 const PREC_GROUP: u8 = 28; // 分组括号      ()
@@ -46,10 +46,10 @@ const PREC_GROUP: u8 = 28; // 分组括号      ()
 const PREC_LITERAL: u8 = 29; //原始字面量     "x"
 // cmd
 const PREC_CMD_NAME: u8 = 30;
-const PREC_FUNC_NAME: u8 = 31;
+// const PREC_FUNC_NAME: u8 = 31;
 
 // var
-const PREC_SYMBOL: u8 = 32; //变量名         x
+// const PREC_SYMBOL: u8 = 32; //变量名         x
 
 // -- 辅助结构 --
 #[derive(Debug)]
@@ -57,21 +57,20 @@ struct OperatorInfo<'a> {
     symbol: &'a str,
     precedence: u8,
     right_associative: bool,
-    kind: OperatorKind,
+    // kind: OperatorKind,
 }
-#[derive(Debug)]
-enum OperatorKind {
-    Prefix,
-    // Postfix,
-    Infix,
-}
+// #[derive(Debug)]
+// enum OperatorKind {
+//     Prefix,
+//     // Postfix,
+//     Infix,
+// }
 impl<'a> OperatorInfo<'a> {
-    fn new(symbol: &'a str, precedence: u8, right_associative: bool, kind: OperatorKind) -> Self {
+    fn new(symbol: &'a str, precedence: u8, right_associative: bool) -> Self {
         Self {
             symbol,
             precedence,
             right_associative,
-            kind,
         }
     }
 }
@@ -396,140 +395,65 @@ impl PrattParser {
     fn get_operator_info<'a>(op: &'a str) -> Option<OperatorInfo<'a>> {
         match op {
             // 赋值运算符（右结合）
-            "=" | ":=" | "+=" | "-=" | "*=" | "/=" => Some(OperatorInfo::new(
-                op,
-                PREC_ASSIGN,
-                true,
-                OperatorKind::Infix,
-            )),
+            "=" | ":=" | "+=" | "-=" | "*=" | "/=" => {
+                Some(OperatorInfo::new(op, PREC_ASSIGN, true))
+            }
             // lambda
-            "->" | "~>" => Some(OperatorInfo::new(
-                op,
-                PREC_LAMBDA,
-                true,
-                OperatorKind::Infix,
-            )),
+            "->" | "~>" => Some(OperatorInfo::new(op, PREC_LAMBDA, true)),
             // 索引符
-            "@" | "." => Some(OperatorInfo::new(
-                op,
-                PREC_INDEX,
-                false,
-                OperatorKind::Infix,
-            )),
+            "@" | "." => Some(OperatorInfo::new(op, PREC_INDEX, false)),
             // range
-            ".." => Some(OperatorInfo::new(
-                "..",
-                PREC_RANGE,
-                false,
-                OperatorKind::Infix,
-            )),
+            ".." => Some(OperatorInfo::new("..", PREC_RANGE, false)),
 
             // 加减运算符
-            "+" | "-" => Some(OperatorInfo::new(
-                op,
-                PREC_ADD_SUB,
-                false,
-                OperatorKind::Infix,
-            )),
+            "+" | "-" => Some(OperatorInfo::new(op, PREC_ADD_SUB, false)),
             // 乘除模运算符
-            "*" | "/" | "%" => Some(OperatorInfo::new(
-                op,
-                PREC_MUL_DIV,
-                false,
-                OperatorKind::Infix,
-            )),
+            "*" | "/" | "%" => Some(OperatorInfo::new(op, PREC_MUL_DIV, false)),
             // 幂运算符
-            "**" => Some(OperatorInfo::new(
-                "**",
-                PREC_POWER,
-                true,
-                OperatorKind::Infix,
-            )),
+            "**" => Some(OperatorInfo::new("**", PREC_POWER, true)),
             // 单目前缀运算符
-            "!" | "++" | "--" => Some(OperatorInfo::new(
-                op,
-                PREC_UNARY,
-                false,
-                OperatorKind::Prefix,
-            )),
+            // "!" | "++" | "--" => Some(OperatorInfo::new(
+            //     op,
+            //     PREC_UNARY,
+            //     false,
+            //     OperatorKind::Prefix,
+            // )),
             // 逻辑运算符
-            "&&" => Some(OperatorInfo::new(
-                "&&",
-                PREC_LOGICAL_AND,
-                false,
-                OperatorKind::Infix,
-            )),
-            "||" => Some(OperatorInfo::new(
-                "||",
-                PREC_LOGICAL_OR,
-                false,
-                OperatorKind::Infix,
-            )),
+            "&&" => Some(OperatorInfo::new("&&", PREC_LOGICAL_AND, false)),
+            "||" => Some(OperatorInfo::new("||", PREC_LOGICAL_OR, false)),
             // 比较运算符
-            "==" | "!=" | ">" | "<" | ">=" | "<=" => Some(OperatorInfo::new(
-                op,
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
+            "==" | "!=" | ">" | "<" | ">=" | "<=" => {
+                Some(OperatorInfo::new(op, PREC_COMPARISON, false))
+            }
             // 匹配
-            "~~" | "~=" => Some(OperatorInfo::new(
-                op,
-                PREC_COMPARISON,
-                false,
-                OperatorKind::Infix,
-            )),
+            "~~" | "~=" => Some(OperatorInfo::new(op, PREC_COMPARISON, false)),
             // 三目
             "?" => Some(OperatorInfo::new(
                 "?",
                 PREC_CONDITIONAL, // 优先级设为2
                 true,             // 右结合
-                OperatorKind::Infix,
             )),
             ":" => Some(OperatorInfo::new(
                 ":",
                 PREC_CONDITIONAL,
                 false, // 非结合（仅作为分隔符）
-                OperatorKind::Infix,
             )),
             // ... 管道操作符 ...
             "|" | "|>" => Some(OperatorInfo::new(
-                op,
-                PREC_PIPE, // 例如设为 4（低于逻辑运算符）
+                op, PREC_PIPE, // 例如设为 4（低于逻辑运算符）
                 false,
-                OperatorKind::Infix,
             )),
             // ... 重定向操作符 ...
-            "<<" | ">>" | ">>>" => Some(OperatorInfo::new(
-                op,
-                PREC_REDIRECT,
-                false,
-                OperatorKind::Infix,
-            )),
-            opa if opa.starts_with("__") => Some(OperatorInfo::new(
-                opa,
-                PREC_UNARY,
-                false,
-                OperatorKind::Prefix,
-            )),
-            opa if opa.starts_with("_+") => Some(OperatorInfo::new(
-                opa,
-                PREC_ADD_SUB,
-                false,
-                OperatorKind::Infix,
-            )),
-            ops if ops.starts_with("_*") => Some(OperatorInfo::new(
-                ops,
-                PREC_MUL_DIV,
-                false,
-                OperatorKind::Infix,
-            )),
-            opo if opo.starts_with("_") => Some(OperatorInfo::new(
-                opo,
-                PREC_CUSTOM,
-                false,
-                OperatorKind::Infix,
-            )),
+            "<<" | ">>" | ">>>" => Some(OperatorInfo::new(op, PREC_REDIRECT, false)),
+            // opa if opa.starts_with("__") => Some(OperatorInfo::new(
+            //     opa,
+            //     PREC_UNARY,
+            //     false,
+            //     OperatorKind::Prefix,
+            // )),
+            opa if opa.starts_with("_+") => Some(OperatorInfo::new(opa, PREC_ADD_SUB, false)),
+            ops if ops.starts_with("_*") => Some(OperatorInfo::new(ops, PREC_MUL_DIV, false)),
+            opo if opo.starts_with("_") => Some(OperatorInfo::new(opo, PREC_CUSTOM, false)),
             _ => None,
         }
     }
@@ -763,32 +687,6 @@ impl PrattParser {
             }
         }
     }
-
-    fn build_ast(
-        input: Tokens,
-        op: OperatorInfo,
-        lhs: Expression,
-        rhs: Expression,
-    ) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
-        match op.kind {
-            // 需要扩展OperatorInfo包含kind字段
-            OperatorKind::Prefix => match op.symbol {
-                "++" | "--" | "!" => Ok(Expression::UnaryOp(op.symbol.into(), Box::new(rhs), true)),
-                opx => Ok(Expression::UnaryOp(
-                    //if opx.starts_with("__")
-                    opx.into(),
-                    Box::new(rhs),
-                    true,
-                )),
-                // _ => unreachable!(),
-            },
-            // OperatorKind::Postfix => Expression::UnaryOp(op.symbol.into(), Box::new(rhs), false), //differ
-            OperatorKind::Infix => match op.symbol {
-                // 原有双目运算符处理...
-                _ => Self::build_bin_ast(input, op, lhs, rhs),
-            },
-        }
-    }
 }
 
 /// -- 函数名的基础解析 --
@@ -1017,52 +915,32 @@ fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
     ))
 }
 // -- 函数调用解析增强 --
-fn parse_direct_fn_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    PrattParser::parse_expr_with_precedence(input, PREC_FUNC_NAME, 0)
-}
-fn parse_func_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // dbg!("---func call---", input);
-    let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_FUNC_NAME, 0)?;
-    // dbg!(&ident);
-    // let (input, ident) = alt((
-    //     parse_index_expr,
-    //     parse_symbol.map(|s| Expression::Symbol(s)),
-    // ))(input)?;
-    let (input, args) = delimited(
-        text("("),
-        cut(separated_list0(text(","), |inp| {
-            PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, 0)
-        })),
-        cut(text_close(")")),
-    )(input)?;
-    // dbg!(&ident, &args);
+// fn parse_direct_fn_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     PrattParser::parse_expr_with_precedence(input, PREC_FUNC_NAME, 0)
+// }
+// fn parse_func_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     // dbg!("---func call---", input);
+//     let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_FUNC_NAME, 0)?;
+//     // dbg!(&ident);
+//     // let (input, ident) = alt((
+//     //     parse_index_expr,
+//     //     parse_symbol.map(|s| Expression::Symbol(s)),
+//     // ))(input)?;
+//     let (input, args) = delimited(
+//         text("("),
+//         cut(separated_list0(text(","), |inp| {
+//             PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, 0)
+//         })),
+//         cut(text_close(")")),
+//     )(input)?;
+//     // dbg!(&ident, &args);
 
-    Ok((input, Expression::Apply(Box::new(ident), args)))
-    // Ok((
-    //     input,
-    //     Expression::Apply(Box::new(Expression::Symbol(ident)), args),
-    // ))
-}
-fn parse_func_call_withname(
-    name: String,
-    input: Tokens<'_>,
-) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, args) = delimited(
-        text("("),
-        cut(separated_list0(text(","), parse_expr)),
-        cut(text_close(")")),
-    )(input)?;
-    // dbg!(&ident, &args);
-
-    Ok((
-        input,
-        Expression::Apply(Box::new(Expression::String(name)), args),
-    ))
-    // Ok((
-    //     input,
-    //     Expression::Apply(Box::new(Expression::Symbol(ident)), args),
-    // ))
-}
+//     Ok((input, Expression::Apply(Box::new(ident), args)))
+//     // Ok((
+//     //     input,
+//     //     Expression::Apply(Box::new(Expression::Symbol(ident)), args),
+//     // ))
+// }
 
 fn parse_command_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // 如果第二个token为operator,则不是命令。如 a = 3,
@@ -1107,14 +985,14 @@ fn text<'a>(text: &'a str) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, 
         _ => Err(nom::Err::Error(SyntaxErrorKind::InternalError)),
     }
 }
-fn text_starts_with<'a>(
-    text: &'a str,
-) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxErrorKind> {
-    move |input: Tokens<'a>| match input.first() {
-        Some(&token) if token.text(input).starts_with(text) => Ok((input.skip_n(1), token)),
-        _ => Err(nom::Err::Error(SyntaxErrorKind::InternalError)),
-    }
-}
+// fn text_starts_with<'a>(
+//     text: &'a str,
+// ) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxErrorKind> {
+//     move |input: Tokens<'a>| match input.first() {
+//         Some(&token) if token.text(input).starts_with(text) => Ok((input.skip_n(1), token)),
+//         _ => Err(nom::Err::Error(SyntaxErrorKind::InternalError)),
+//     }
+// }
 #[inline]
 fn text_close<'a>(
     text: &'static str,
@@ -1429,51 +1307,48 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
 }
 ///命令或数学运算。
 ///语句开始，等号后，括号中：应匹配 cmd call，match compute.
-fn parse_cmd_or_math(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    alt((parse_command_call, parse_math))(input)
-}
 
 /// 便捷控制台打印
-fn parse_direct_print(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // dbg!("--direct print--");
-    let (input, _) = text(":")(input)?;
-    parse_func_call(input)
-}
+// fn parse_direct_print(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     // dbg!("--direct print--");
+//     let (input, _) = text(":")(input)?;
+//     parse_func_call(input)
+// }
 
 /// 运算语句
-fn parse_math(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    if input.is_empty() {
-        return Err(nom::Err::Error(SyntaxErrorKind::NoExpression));
-    }
-    // dbg!("--->parse_math---");
-    match input.first().unwrap().kind {
-        TokenKind::IntegerLiteral
-        | TokenKind::FloatLiteral
-        | TokenKind::Operator
-        | TokenKind::StringLiteral
-        | TokenKind::StringRaw
-        | TokenKind::OperatorPrefix => {
-            parse_expr(input) // 完整表达式
-            // terminated(
-            //     opt(alt((
-            //         // 必须包含语句终止符
-            //         kind(TokenKind::LineBreak),
-            //         eof_slice, // 允许文件末尾无终止符
-            //     ))),
-            // )(input)
-        }
-        TokenKind::Symbol
-            if input.len() > 1
-                && input
-                    .skip_n(1)
-                    .first()
-                    .is_some_and(|x| x.kind == TokenKind::Operator) =>
-        {
-            parse_expr(input)
-        }
-        _ => Err(nom::Err::Error(SyntaxErrorKind::NoExpression)),
-    }
-}
+// fn parse_math(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     if input.is_empty() {
+//         return Err(nom::Err::Error(SyntaxErrorKind::NoExpression));
+//     }
+//     // dbg!("--->parse_math---");
+//     match input.first().unwrap().kind {
+//         TokenKind::IntegerLiteral
+//         | TokenKind::FloatLiteral
+//         | TokenKind::Operator
+//         | TokenKind::StringLiteral
+//         | TokenKind::StringRaw
+//         | TokenKind::OperatorPrefix => {
+//             parse_expr(input) // 完整表达式
+//             // terminated(
+//             //     opt(alt((
+//             //         // 必须包含语句终止符
+//             //         kind(TokenKind::LineBreak),
+//             //         eof_slice, // 允许文件末尾无终止符
+//             //     ))),
+//             // )(input)
+//         }
+//         TokenKind::Symbol
+//             if input.len() > 1
+//                 && input
+//                     .skip_n(1)
+//                     .first()
+//                     .is_some_and(|x| x.kind == TokenKind::Operator) =>
+//         {
+//             parse_expr(input)
+//         }
+//         _ => Err(nom::Err::Error(SyntaxErrorKind::NoExpression)),
+//     }
+// }
 /// 单独语句 TODO：包装到Expression:Apply
 fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // dbg!("---parse_single_expr");
@@ -1558,15 +1433,6 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 // 条件运算符处理
 
 // 一元运算符具体实现
-fn parse_unary(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // 匹配前缀运算符 !、++、-- 等 text("-"),
-    let (input, op) = alt((text("!"), text("++"), text("--"), text_starts_with("__")))(input)?;
-    let (input, expr) = PrattParser::parse_expr_with_precedence(input, PREC_UNARY, 0)?; // 递归解析后续表达式
-    Ok((
-        input,
-        Expression::UnaryOp(op.text(input).to_string(), Box::new(expr), true), // true 表示前缀
-    ))
-}
 
 // ================== 辅助函数 ==================
 // 动态识别块或表达式
@@ -1688,11 +1554,11 @@ fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     Ok((input, Expression::Del(symbol)))
 }
 
-fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
-    map(kind(TokenKind::Operator), |t| {
-        t.to_str(input.str).to_string()
-    })(input)
-}
+// fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
+//     map(kind(TokenKind::Operator), |t| {
+//         t.to_str(input.str).to_string()
+//     })(input)
+// }
 fn parse_custom_postfix_operator(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {

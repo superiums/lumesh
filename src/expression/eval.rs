@@ -343,7 +343,7 @@ impl Expression {
                             let l = left_func.eval_mut(env, depth + 1)?;
                             env.undefine("__ALWAYSPIPE");
 
-                            let mut path = PathBuf::from(env.get_cwd());
+                            let mut path = std::env::current_dir()?;
                             path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
                             match std::fs::OpenOptions::new().append(true).open(&path) {
                                 Ok(mut file) => {
@@ -388,7 +388,7 @@ impl Expression {
                             let l = left_func.eval_mut(env, depth + 1)?;
                             env.undefine("__ALWAYSPIPE");
                             // dbg!("-->> left=", &l);
-                            let mut path = PathBuf::from(env.get_cwd());
+                            let mut path = std::env::current_dir()?;
                             path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {

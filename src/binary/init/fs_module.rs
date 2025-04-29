@@ -132,7 +132,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
         String::from("head") => Expression::builtin("head", |args, env| {
             super::check_exact_args_len("head", &args, 2)?;
-            let path = PathBuf::from(env.get_cwd());
+            let path = std::env::current_dir()?;
             let file = args[0].eval(env)?;
             let path = path.join(file.to_string());
             let n = match args[1].eval(env)? {
@@ -158,7 +158,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "read a file and get the first N lines"),
         String::from("tail") => Expression::builtin("tail", |args, env| {
             super::check_exact_args_len("tail", &args, 2)?;
-            let path = PathBuf::from(env.get_cwd());
+            let path = std::env::current_dir()?;
             let file = args[0].eval(env)?;
             let path = path.join(file.to_string());
             let n = match args[1].eval(env)? {
@@ -184,7 +184,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "read a file and get the last N lines"),
         String::from("canon") => Expression::builtin("canon", |args, env| {
             super::check_exact_args_len("canon", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let path = cwd.join(args[0].eval(env)?.to_string());
 
             if let Ok(canon_path) = dunce::canonicalize(&path) {
@@ -195,7 +195,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "resolve, normalize, and absolutize a relative path"),
         String::from("mkdir") => Expression::builtin("mkdir", |args, env| {
             super::check_exact_args_len("mkdir", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let dir = cwd.join(args[0].eval(env)?.to_string());
 
             if std::fs::create_dir_all(&dir).is_err() {
@@ -206,7 +206,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "create a directory and its parent directories"),
         String::from("rmdir") => Expression::builtin("rmdir", |args, env| {
             super::check_exact_args_len("rmdir", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let dir = cwd.join(args[0].eval(env)?.to_string());
 
             if std::fs::remove_dir(&dir).is_err() {
@@ -217,7 +217,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "remove an empty directory"),
         String::from("mv") => Expression::builtin("mv", |args, env| {
             super::check_exact_args_len("mv", &args, 2)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let src = cwd.join(args[0].eval(env)?.to_string());
             let dst = cwd.join(args[1].eval(env)?.to_string());
 
@@ -227,7 +227,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "move a source path to a destination path"),
         String::from("cp") => Expression::builtin("cp", |args, env| {
             super::check_exact_args_len("cp", &args, 2)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let src = cwd.join(args[0].eval(env)?.to_string());
             let dst = cwd.join(args[1].eval(env)?.to_string());
 
@@ -237,7 +237,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "copy a source path to a destination path"),
         String::from("rm") => Expression::builtin("rm", |args, env| {
             super::check_exact_args_len("rm", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let path = cwd.join(args[0].eval(env)?.to_string());
 
             remove_path(&path)?;
@@ -246,7 +246,7 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "remove a file or directory from the filesystem"),
         String::from("ls") => Expression::builtin("ls", |args, env| {
             super::check_exact_args_len("ls", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let path = args[0].eval(env)?.to_string();
             let dir = cwd.join(&path);
 
@@ -254,21 +254,21 @@ pub fn get(env: &mut Environment) -> Expression {
         }, "get a directory's entries as a list of strings"),
         String::from("exists") => Expression::builtin("exists", |args, env| {
             super::check_exact_args_len("exists", &args, 1)?;
-            let path = PathBuf::from(env.get_cwd());
+            let path = std::env::current_dir()?;
 
             Ok(path.join(args[0].eval(env)?.to_string()).exists().into())
         }, "check if a given file path exists"),
 
         String::from("isdir") => Expression::builtin("isdir", |args, env| {
             super::check_exact_args_len("isdir", &args, 1)?;
-            let path = PathBuf::from(env.get_cwd());
+            let path = std::env::current_dir()?;
 
             Ok(path.join(args[0].eval(env)?.to_string()).is_dir().into())
         }, "check if a given path is a directory"),
 
         String::from("isfile") => Expression::builtin("isfile", |args, env| {
             super::check_exact_args_len("isfile", &args, 1)?;
-            let path = PathBuf::from(env.get_cwd());
+            let path = std::env::current_dir()?;
 
             Ok(path.join(args[0].eval(env)?.to_string()).is_file().into())
         }, "check if a given path is a file"),
@@ -344,7 +344,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
         String::from("glob") => Expression::builtin("glob", |args, env| {
             super::check_exact_args_len("glob", &args, 1)?;
-            let cwd = PathBuf::from(env.get_cwd());
+            let cwd = std::env::current_dir()?;
             let pattern = args[0].eval(env)?.to_string();
             let mut result = vec![];
 

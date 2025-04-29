@@ -90,23 +90,6 @@ fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate:
 
     match args[0].eval(env)? {
         Expression::Symbol(path) | Expression::String(path) => {
-            // let abs_path = PathBuf::from(env.get_cwd()).join(path);
-
-            // let new_cwd = dunce::canonicalize(&abs_path).map_err(|e| {
-            //     crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
-            //         "NotFound" => {
-            //             format!("the directory {:?} does not exist", abs_path)
-            //         }
-            //         "NotADirectory" => {
-            //             format!("a path segment in {:?} is not a directory", abs_path)
-            //         }
-            //         _ => format!(
-            //             "could not change to directory {:?}\n  reason: {}",
-            //             abs_path, e
-            //         ),
-            //     })
-            // })?;
-
             std::env::set_current_dir(&path).map_err(|e| {
                 crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
                     "PermissionDenied" => {

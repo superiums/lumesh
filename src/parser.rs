@@ -129,7 +129,7 @@ impl PrattParser {
             //     Some(info) => info,
             //     None => break,
             // };
-            let tk_kind = operator_token.kind.clone();
+            // let tk_kind = operator_token.kind.clone();
             dbg!(&operator, operator_token.kind);
 
             // 处理不同类型的运算符
@@ -154,7 +154,7 @@ impl PrattParser {
                     };
                     dbg!(&op_info);
                     if op_info.precedence < min_prec {
-                        // dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
+                        dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
                         break; // 低于当前优先级则退出
                     }
 
@@ -169,10 +169,10 @@ impl PrattParser {
                         dbg!("---break2---");
                         break;
                     }
-                    // dbg!("--> trying next loop", input, next_min_prec);
+                    dbg!("--> binOp: trying next loop", input, next_min_prec);
                     let (new_input, rhs) =
                         Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
-                    dbg!("--> binop, after next loop", &rhs);
+                    dbg!("--> binOp: after next loop", &rhs);
                     input = new_input;
                     lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
                 }
@@ -205,15 +205,16 @@ impl PrattParser {
                 | TokenKind::IntegerLiteral
                 | TokenKind::FloatLiteral
                 | TokenKind::BooleanLiteral
-                    if min_prec <= PREC_PIPE =>
+                    if min_prec < PREC_CMD_ARG =>
                 {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
                     //
+                    dbg!("--> Args: trying next loop", input, PREC_CMD_ARG);
 
                     let (new_input, rhs) = many0(|input| {
-                        Self::parse_expr_with_precedence(input, PREC_PIPE + 1, depth)
+                        Self::parse_expr_with_precedence(input, PREC_CMD_ARG, depth)
                     })(input)?;
-                    // dbg!(&rhs);
+                    dbg!("--> Args: after next loop", &rhs);
                     input = new_input;
 
                     // dbg!(&rhs);

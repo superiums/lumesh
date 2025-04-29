@@ -1,5 +1,4 @@
 use super::Builtin;
-use super::pipe_excutor::exec_single_cmd;
 use super::{Expression, Pattern};
 use crate::{Environment, RuntimeError};
 use std::io::ErrorKind;
@@ -130,18 +129,13 @@ impl Expression {
         }
     }
 
-    // pub fn eval_command(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
-    //     // env.define("__ALWAYSPIPE", Expression::Boolean(true));
-    //     // self.eval_apply(env, depth)
-    //     exec_single_cmd(cmd, args, &bindings, Some(&contents), true, always_pipe)
-
     // }
     /// 执行
     pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
-                // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(env, depth + 1)?;
                 // let args_eval = args
@@ -154,7 +148,7 @@ impl Expression {
                 return match func_eval {
                     // | Self::String(name)
                     Self::Symbol(name) | Self::String(name) => {
-                        // dbg!("   3.--->applying symbol:", &name);
+                        dbg!("   3.--->applying symbol:", &name);
 
                         let bindings = env.get_bindings_map();
 

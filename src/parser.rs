@@ -12,7 +12,7 @@ use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
 // 双目操作符
 // const PREC_CONTROL: u8 = 0; // 控制结构（语句级）
 const PREC_ASSIGN: u8 = 1; // 赋值 =
-const PREC_REDIRECT: u8 = 2; // 重定向
+const PREC_REDIRECT: u8 = 3; // 重定向
 const PREC_PIPE: u8 = 3; // 管道
 const PREC_LAMBDA: u8 = 4; // lambda -> ~>
 const PREC_CONDITIONAL: u8 = 5; // 条件运算符 ?:

@@ -91,8 +91,12 @@ fn expr_to_command(
             return match func_eval {
                 // 是外部命令+参数，
                 Expression::Symbol(name) | Expression::String(name) => {
-                    let cmd_args: Vec<String> = args.iter().map(|expr| expr.to_string()).collect();
-                    Ok((name, cmd_args, None))
+                    // let cmd_args: Vec<String> = args.iter().map(|expr| expr.to_string()).collect();
+                    // Ok((name, cmd_args, None))
+                    Err(RuntimeError::CustomError(format!(
+                        "cant't apply symbol {}: {} as cmd",
+                        &func, name
+                    )))
                 }
                 // 其他可执行命令，如lambda,Function,Builtin
                 _ => {
@@ -119,14 +123,51 @@ fn expr_to_command(
                 // 其他可执行命令，如lambda,Function,Builtin
                 _ => {
                     // dgb!("--else type--", &func_eval, &func_eval.type_name());
-                    Ok(("".into(), vec![], Some(expr.to_owned())))
+                    // Ok(("".into(), vec![], Some(expr.to_owned())))
 
-                    // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
+                    Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
                 }
             };
         }
+        Expression::BinaryOp(_, _, _) => Ok(("".into(), vec![], Some(expr.to_owned()))),
         _ => Err(RuntimeError::ProgramNotFound(expr.to_string())),
     }
+}
+
+// 管道
+pub fn handle_command(
+    cmd: String,
+    args: &Vec<Expression>,
+    // bindings: &BTreeMap<String, String>,
+    // has_right: bool,
+    // input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
+    env: &mut Environment,
+    depth: usize,
+    // always_pipe: bool,
+) -> Result<Expression, RuntimeError> {
+    let bindings = env.get_bindings_map();
+    let always_pipe = env.has("__ALWAYSPIPE");
+    let mut cmd_args = vec![];
+    for arg in args {
+        for flattened_arg in Expression::flatten(vec![arg.clone().eval_mut(env, depth + 1)?]) {
+            match flattened_arg {
+                Expression::String(s) => cmd_args.push(s),
+                Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
+                Expression::None => continue,
+                _ => cmd_args.push(format!("{}", flattened_arg)),
+            }
+        }
+    }
+
+    let (_, result) = exec_single_cmd(
+        cmd.to_string(),
+        cmd_args,
+        &bindings,
+        None,
+        true,
+        always_pipe,
+    )?;
+    return Ok(result);
 }
 
 // 管道
@@ -144,6 +185,7 @@ pub fn handle_pipes(
         // 管道运算符特殊处理
         dbg!("--pipe--", &lhs, &rhs);
         let result_left = match lhs {
+            // TODO op== "|>" >> >>>
             Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => handle_pipes(
                 &*l_arm,
                 &*r_arm,
@@ -158,8 +200,9 @@ pub fn handle_pipes(
                 let (cmd, args, expr) = expr_to_command(&lhs, env, depth)?;
                 dbg!(&cmd, &args, &expr);
                 if expr.is_some() {
-                    // 有表达式返回则执行表达式
-                    let result_expr = expr.unwrap().eval_apply(env, depth)?;
+                    // 有表达式返回则执行表达式, 有apply和binaryOp两种
+                    // let result_expr = expr.unwrap().eval_apply(env, depth)?;
+                    let result_expr = expr.unwrap().eval_mut(env, depth)?;
                     let result_expr_bytes = result_expr.to_string().as_bytes().to_owned();
                     Ok((result_expr_bytes, result_expr))
                 } else {

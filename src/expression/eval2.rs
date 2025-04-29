@@ -1,5 +1,6 @@
 use super::Builtin;
 use super::{Expression, Pattern};
+use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, RuntimeError};
 use std::io::ErrorKind;
 use std::process::{Command, Stdio};
@@ -148,90 +149,59 @@ impl Expression {
                 return match func_eval {
                     // | Self::String(name)
                     Self::Symbol(name) | Self::String(name) => {
-                        dbg!("   3.--->applying symbol:", &name);
+                        // Apply as Command
+                        dbg!("   3.--->applying symbol as Command:", &name);
+                        handle_command(name, args, env, depth)
+                        // let bindings = env.get_bindings_map();
 
-                        let bindings = env.get_bindings_map();
-
-                        let mut cmd_args = vec![];
-                        for arg in args {
-                            for flattened_arg in
-                                Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
-                            {
-                                match flattened_arg {
-                                    Self::String(s) => cmd_args.push(s),
-                                    Self::Bytes(b) => {
-                                        cmd_args.push(String::from_utf8_lossy(&b).to_string())
-                                    }
-                                    Self::None => continue,
-                                    _ => cmd_args.push(format!("{}", flattened_arg)),
-                                }
-                            }
-                        }
-                        // dbg!(&args, &cmd_args);
-                        // let cmd_args: Vec<String> =
-                        //     args.iter().map(|expr| expr.to_string()).collect();
-                        // let mut cmd = Command::new(&name);
-                        // cmd.current_dir(env.get_cwd())
-                        //     .args(&cmd_args)
-                        //     .envs(&bindings);
-
-                        // // 检查是否有stdin输入
-                        // if let Some(Expression::String(stdin_str)) = env.get("__stdin") {
-                        //     // dbg!("    4.---> --apply symbol with pipe--", &name, &stdin_str);
-                        //     // dbg!(&name, &stdin_str);
-                        //     cmd.stdin(Stdio::piped());
-                        //     cmd.stdout(Stdio::piped());
-                        //     let mut child = cmd
-                        //         .spawn()
-                        //         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
-                        //     // dbg!(&child);
-                        //     if let Some(mut stdin) = child.stdin.take() {
-                        //         // 写入标准输入
-                        //         stdin
-                        //             .write_all(stdin_str.as_bytes())
-                        //             .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
-                        //         // 关闭stdin以指示输入结束
-                        //         drop(stdin);
+                        // let mut cmd_args = vec![];
+                        // for arg in args {
+                        //     for flattened_arg in
+                        //         Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
+                        //     {
+                        //         match flattened_arg {
+                        //             Self::String(s) => cmd_args.push(s),
+                        //             Self::Bytes(b) => {
+                        //                 cmd_args.push(String::from_utf8_lossy(&b).to_string())
+                        //             }
+                        //             Self::None => continue,
+                        //             _ => cmd_args.push(format!("{}", flattened_arg)),
+                        //         }
                         //     }
-                        //     // dbg!(&child);
-                        //     let output = child
-                        //         .wait_with_output()
-                        //         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+                        // }
 
-                        //     // dbg!(&output);
-                        //     self.set_status_code(output.status.code().unwrap_or(0) as i64, env);
-                        //     let result_with_pipe =
-                        //         Self::String(String::from_utf8_lossy(&output.stdout).into_owned());
-                        //     // dbg!(&result_with_pipe);
-                        //     Ok(result_with_pipe)
-                        // } else {
-                        //     // dbg!("    4.---> --apply without pipe--", &name);
-                        //     // 如果没有stdin输入，直接执行命令并检查状态
-                        //     // let output = cmd
-                        //     //     .output()
-                        //     // .map_err(|e| Error::CustomError(e.to_string()))?;
-                        //     // dbg!(&output);
-                        //     match cmd.output() {
-                        //         Ok(output) => {
-                        //             self.set_status_code(
-                        //                 output.status.code().unwrap_or(0) as i64,
-                        //                 env,
-                        //             );
-                        //             if output.status.success() {
-                        //                 let output_str =
-                        //                     String::from_utf8_lossy(&output.stdout).into_owned();
-                        //                 // println!("====Command output====\n{}", output_str); // 打印输出内容
-                        //                 Ok(Self::String(output_str))
+                        // let always_pipe = env.has("__ALWAYSPIPE");
+                        // if always_pipe {
+                        //     let output = Command::new(&name)
+                        //         .current_dir(env.get_cwd())
+                        //         .args(
+                        //             cmd_args, // Self::flatten(args.clone()).iter()
+                        //                      //     .filter(|&x| x != &Self::None)
+                        //                      //     // .map(|x| Ok(format!("{}", x.clone().eval_mut(env, depth + 1)?)))
+                        //                      //     .collect::<Result<Vec<String>, Error>>()?,
+                        //         )
+                        //         .envs(bindings)
+                        //         .output();
+
+                        //     match output {
+                        //         Ok(result) => {
+                        //             // 检查命令是否成功执行
+                        //             if result.status.success() {
+                        //                 // 将标准输出转换为字符串并打印
+                        //                 let stdout = String::from_utf8_lossy(&result.stdout);
+                        //                 // println!("Command output:\n{}", stdout);
+                        //                 return Ok(Expression::String(stdout.into_owned()));
                         //             } else {
-                        //                 Err(RuntimeError::CustomError(format!(
-                        //                     "Command failed with status: {}\n{}",
-                        //                     &output.status,
-                        //                     String::from_utf8_lossy(&output.stderr).into_owned()
-                        //                 )))
+                        //                 // 如果命令执行失败，打印错误信息
+                        //                 let stderr = String::from_utf8_lossy(&result.stderr);
+                        //                 // eprintln!("Command failed with error:\n{}", &stderr);
+                        //                 return Err(RuntimeError::CustomError(format!(
+                        //                     "{} command failed with error:\n{}",
+                        //                     name, stderr,
+                        //                 )));
                         //             }
                         //         }
                         //         Err(e) => {
-                        //             self.set_status_code(1, env);
                         //             return Err(match e.kind() {
                         //                 ErrorKind::NotFound => RuntimeError::ProgramNotFound(name),
                         //                 ErrorKind::PermissionDenied => {
@@ -241,95 +211,31 @@ impl Expression {
                         //             });
                         //         }
                         //     }
-                        // }
-                        let always_pipe = env.has("__ALWAYSPIPE");
-                        if always_pipe {
-                            let output = Command::new(&name)
-                                .current_dir(env.get_cwd())
-                                .args(
-                                    cmd_args, // Self::flatten(args.clone()).iter()
-                                             //     .filter(|&x| x != &Self::None)
-                                             //     // .map(|x| Ok(format!("{}", x.clone().eval_mut(env, depth + 1)?)))
-                                             //     .collect::<Result<Vec<String>, Error>>()?,
-                                )
-                                .envs(bindings)
-                                .output();
-
-                            match output {
-                                Ok(result) => {
-                                    // 检查命令是否成功执行
-                                    if result.status.success() {
-                                        // 将标准输出转换为字符串并打印
-                                        let stdout = String::from_utf8_lossy(&result.stdout);
-                                        // println!("Command output:\n{}", stdout);
-                                        return Ok(Expression::String(stdout.into_owned()));
-                                    } else {
-                                        // 如果命令执行失败，打印错误信息
-                                        let stderr = String::from_utf8_lossy(&result.stderr);
-                                        // eprintln!("Command failed with error:\n{}", &stderr);
-                                        return Err(RuntimeError::CustomError(format!(
-                                            "{} command failed with error:\n{}",
-                                            name, stderr,
-                                        )));
-                                    }
-                                }
-                                Err(e) => {
-                                    return Err(match e.kind() {
-                                        ErrorKind::NotFound => RuntimeError::ProgramNotFound(name),
-                                        ErrorKind::PermissionDenied => {
-                                            RuntimeError::PermissionDenied(self.clone())
-                                        }
-                                        _ => RuntimeError::CommandFailed(name, args.clone()),
-                                    });
-                                }
-                            }
-                        } else {
-                            let mut child = Command::new(&name)
-                                .current_dir(env.get_cwd())
-                                .args(cmd_args)
-                                .envs(bindings)
-                                .stdin(Stdio::inherit()) // 继承标准输入
-                                .stdout(Stdio::inherit()) // 继承标准输出
-                                .stderr(Stdio::inherit()) // 继承标准错误
-                                .spawn()
-                                .map_err(|e| match e.kind() {
-                                    ErrorKind::NotFound => {
-                                        RuntimeError::ProgramNotFound(name.to_string())
-                                    }
-                                    ErrorKind::PermissionDenied => {
-                                        RuntimeError::PermissionDenied(self.clone())
-                                    }
-                                    _ => {
-                                        RuntimeError::CommandFailed(name.to_string(), args.clone())
-                                    }
-                                })?;
-                            child.wait().map_err(|e| {
-                                RuntimeError::CommandFailed2(name.to_string(), e.to_string())
-                            })?;
-
-                            return Ok(Expression::None);
-                        }
-                        // match Command::new(&name)
-                        //     .current_dir(env.get_cwd())
-                        //     .args(
-                        //         cmd_args, // Self::flatten(args.clone()).iter()
-                        //                  //     .filter(|&x| x != &Self::None)
-                        //                  //     // .map(|x| Ok(format!("{}", x.clone().eval_mut(env, depth + 1)?)))
-                        //                  //     .collect::<Result<Vec<String>, Error>>()?,
-                        //     )
-                        //     .envs(bindings)
-                        //     .status()
-                        // {
-                        //     Ok(_) => return Ok(Self::None),
-                        //     Err(e) => {
-                        //         return Err(match e.kind() {
-                        //             ErrorKind::NotFound => Error::ProgramNotFound(name),
-                        //             ErrorKind::PermissionDenied => {
-                        //                 Error::PermissionDenied(self.clone())
+                        // } else {
+                        //     let mut child = Command::new(&name)
+                        //         .current_dir(env.get_cwd())
+                        //         .args(cmd_args)
+                        //         .envs(bindings)
+                        //         .stdin(Stdio::inherit()) // 继承标准输入
+                        //         .stdout(Stdio::inherit()) // 继承标准输出
+                        //         .stderr(Stdio::inherit()) // 继承标准错误
+                        //         .spawn()
+                        //         .map_err(|e| match e.kind() {
+                        //             ErrorKind::NotFound => {
+                        //                 RuntimeError::ProgramNotFound(name.to_string())
                         //             }
-                        //             _ => Error::CommandFailed(name, args.clone()),
-                        //         });
-                        //     }
+                        //             ErrorKind::PermissionDenied => {
+                        //                 RuntimeError::PermissionDenied(self.clone())
+                        //             }
+                        //             _ => {
+                        //                 RuntimeError::CommandFailed(name.to_string(), args.clone())
+                        //             }
+                        //         })?;
+                        //     child.wait().map_err(|e| {
+                        //         RuntimeError::CommandFailed2(name.to_string(), e.to_string())
+                        //     })?;
+
+                        //     return Ok(Expression::None);
                         // }
                     }
 

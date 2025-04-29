@@ -1,3 +1,4 @@
+use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, Int, RuntimeError};
 use regex_lite::Regex;
 use std::io::Write;
@@ -543,27 +544,7 @@ impl Expression {
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
                 Self::Command(ref cmd, ref args) => {
-                    let bindings = env.get_bindings_map();
-
-                    let mut cmd_args = vec![];
-                    for arg in args {
-                        for flattened_arg in
-                            Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
-                        {
-                            match flattened_arg {
-                                Self::String(s) => cmd_args.push(s),
-                                Self::Bytes(b) => {
-                                    cmd_args.push(String::from_utf8_lossy(&b).to_string())
-                                }
-                                Self::None => continue,
-                                _ => cmd_args.push(format!("{}", flattened_arg)),
-                            }
-                        }
-                    }
-
-                    let (_, result) =
-                        exec_single_cmd(cmd.to_string(), cmd_args, &bindings, None, true, true)?;
-                    return Ok(result);
+                    break handle_command(cmd.to_string(), args, env, depth);
                 }
                 // break Self::eval_command(self, env, depth),
                 // 其他表达式处理...

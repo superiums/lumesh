@@ -103,7 +103,7 @@ impl PrattParser {
         // dbg!("===----prepare to prefix---===>", input, min_prec);
         let (new_input, mut lhs) = Self::parse_prefix(input, min_prec)?;
         input = new_input;
-        dbg!("=======prefix=======>", input, &lhs, min_prec);
+        //dbg!("=======prefix=======>", input, &lhs, min_prec);
         // opt(alt((kind(TokenKind::LineBreak), eof_slice)));
         // 2. 循环处理中缀和后缀
         loop {
@@ -118,7 +118,7 @@ impl PrattParser {
             //     .map(|t| t.kind == TokenKind::LineBreak)
             //     .unwrap_or(false)
             {
-                dbg!("---break1---");
+                //dbg!("---break1---");
                 break;
             }
 
@@ -130,12 +130,12 @@ impl PrattParser {
             //     None => break,
             // };
             // let tk_kind = operator_token.kind.clone();
-            dbg!(&operator, operator_token.kind);
+            //dbg!(&operator, operator_token.kind);
 
             // 处理不同类型的运算符
             match operator_token.kind {
                 TokenKind::LineBreak | TokenKind::Punctuation | TokenKind::OperatorPrefix => {
-                    dbg!("---break1.1---");
+                    //dbg!("---break1.1---");
                     break;
                 }
                 TokenKind::OperatorInfix => {
@@ -152,9 +152,9 @@ impl PrattParser {
                         Some(opi) => opi,
                         None => break,
                     };
-                    dbg!(&op_info);
+                    //dbg!(&op_info);
                     if op_info.precedence < min_prec {
-                        dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
+                        //dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
                         break; // 低于当前优先级则退出
                     }
 
@@ -166,13 +166,13 @@ impl PrattParser {
 
                     input = input.skip_n(1);
                     if input.is_empty() {
-                        dbg!("---break2---");
+                        //dbg!("---break2---");
                         break;
                     }
-                    dbg!("--> binOp: trying next loop", input, next_min_prec);
+                    //dbg!("--> binOp: trying next loop", input, next_min_prec);
                     let (new_input, rhs) =
                         Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
-                    dbg!("--> binOp: after next loop", &rhs);
+                    //dbg!("--> binOp: after next loop", &rhs);
                     input = new_input;
                     lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
                 }
@@ -209,19 +209,19 @@ impl PrattParser {
                 {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
                     //
-                    dbg!("--> Args: trying next loop", input, PREC_CMD_ARG);
+                    //dbg!("--> Args: trying next loop", input, PREC_CMD_ARG);
 
                     let (new_input, rhs) = many0(|input| {
                         Self::parse_expr_with_precedence(input, PREC_CMD_ARG, depth)
                     })(input)?;
-                    dbg!("--> Args: after next loop", &rhs);
+                    //dbg!("--> Args: after next loop", &rhs);
                     input = new_input;
 
                     // dbg!(&rhs);
                     lhs = Expression::Command(Box::new(lhs), rhs);
                 }
                 _ => {
-                    dbg!("---break3---");
+                    //dbg!("---break3---");
                     break;
                 }
             }

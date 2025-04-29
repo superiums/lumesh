@@ -183,7 +183,7 @@ pub fn handle_pipes(
 ) -> Result<(Vec<u8>, Expression), RuntimeError> {
     {
         // 管道运算符特殊处理
-        dbg!("--pipe--", &lhs, &rhs);
+        //dbg!("--pipe--", &lhs, &rhs);
         let result_left = match lhs {
             // TODO op== "|>" >> >>>
             Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => handle_pipes(
@@ -198,7 +198,7 @@ pub fn handle_pipes(
             ),
             _ => {
                 let (cmd, args, expr) = expr_to_command(&lhs, env, depth)?;
-                dbg!(&cmd, &args, &expr);
+                //dbg!(&cmd, &args, &expr);
                 if expr.is_some() {
                     // 有表达式返回则执行表达式, 有apply和binaryOp两种
                     // let result_expr = expr.unwrap().eval_apply(env, depth)?;

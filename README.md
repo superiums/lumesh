@@ -4,6 +4,12 @@ Welcome to **Lumesh**, a powerful shell forked from [Dune](https://github.com/ad
 
 Lumesh aims to provide a fast, efficient, and user-friendly command-line experience, enhancing your productivity with a variety of new features.
 
+- write like pythy/js
+- works like bash
+- runs like light
+- stays like air
+- flows like water
+
 <img src="https://raw.githubusercontent.com/superiums/lumesh/main/assets/lumesh.png" alt="lumesh" width="160" />
 
 ## Table of Contents
@@ -83,6 +89,11 @@ or use shebang at the head of your script and run it directly.
 # Start Lumesh
 chsh -s /lume/install/path
 ```
+
+## Test script
+
+syntax test: [syntax test script](tests/test.lsh).
+
 
 ## Contributing
 

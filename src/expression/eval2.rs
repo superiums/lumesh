@@ -136,7 +136,7 @@ impl Expression {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
-                dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                //dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(env, depth + 1)?;
                 // let args_eval = args
@@ -150,7 +150,7 @@ impl Expression {
                     // | Self::String(name)
                     Self::Symbol(name) | Self::String(name) => {
                         // Apply as Command
-                        dbg!("   3.--->applying symbol as Command:", &name);
+                        //dbg!("   3.--->applying symbol as Command:", &name);
                         handle_command(name, args, env, depth)
                         // let bindings = env.get_bindings_map();
 

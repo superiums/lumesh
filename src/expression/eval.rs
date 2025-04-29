@@ -31,7 +31,7 @@ impl Expression {
     }
     /// 求值主逻辑（尾递归优化）
     pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
-        dbg!("1.--->eval_mut:", &self, &self.type_name());
+        //dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(RuntimeError::RecursionDepth(self));
@@ -270,7 +270,7 @@ impl Expression {
                         "|" => {
                             let bindings = env.get_bindings_map();
                             let always_pipe = env.has("__ALWAYSPIPE");
-                            dbg!(&always_pipe, &lhs, &rhs);
+                            //dbg!(&always_pipe, &lhs, &rhs);
                             // if always_pipe {
                             //     let left_func = lhs.ensure_apply();
                             //     let left_output = left_func.eval_mut(env, depth + 1)?;

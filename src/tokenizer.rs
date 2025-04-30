@@ -1,4 +1,5 @@
 use crate::STRICT;
+use core::option::Option::None;
 use detached_str::StrSlice;
 use nom::{
     IResult,
@@ -207,45 +208,84 @@ fn custom_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
         Err(NOT_FOUND)
     }
 }
+fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input.starts_with(punct) {
+            // 检查前一个字符是否为空格或行首
+            if input.previous_char().map_or(true, |c| c.is_whitespace()) {
+                let places = input
+                    .chars()
+                    .take_while(|&c| {
+                        !c.is_whitespace() && !['`', ')', ']', '}', '|', '>'].contains(&c)
+                    })
+                    .count();
+                if places > 1 {
+                    return Ok(input.split_at(places));
+                }
+                // 允许单字符路径，但仅在它们是输入的结尾时input.chars().nth(places-input.len()
+                // let next_char = input.chars().nth(places);
+
+                // 检查 punct 是否是结尾
+                let is_end = places + punct.len() >= input.len();
+
+                if is_end
+                // if (input.len() - punct.len() <= 2 && input.chars().nth(2).is_none())
+                {
+                    return Ok(input.split_at(places));
+                }
+            }
+        }
+        Err(NOT_FOUND)
+    }
+}
 // parse argument such as ls -l --color=auto ./
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
-    // begin with -+./
-    let mut it = input.chars();
-    let first_char = it.next().ok_or(NOT_FOUND)?;
-    if matches!(first_char, '.' | '/') && input.len() == 1 {
-        return Ok(input.split_at(1));
-    }
-    // followed by letter/num
-    let next_char = it.next().ok_or(NOT_FOUND)?;
-    // dbg!(first_char, next_char);
-    let valid = match (first_char, next_char) {
-        ('-', '-') => it.next().ok_or(NOT_FOUND)?.is_ascii_alphabetic(),
-        ('-', c) => c.is_ascii_alphabetic(),
-        ('/', c) => c.is_ascii_alphanumeric(),
-        ('.', '/') => true,
-        ('.', '.') => it.next().ok_or(NOT_FOUND)? == '/',
-        ('.', c) => c.is_ascii_whitespace(),
-        _ => false,
-    };
-    if valid {
-        // prev_char must be blank
-        let prev_char = input.previous_char().ok_or(NOT_FOUND)?;
-        if prev_char.is_ascii_whitespace() {
-            // differ `ls --color` and `a + --b`
-            // let prev_prev_char = input.previous_n_char(2).ok_or(NOT_FOUND)?;
-            // if prev_prev_char.is_alpha() {
-            let len = input
-                .chars()
-                .take_while(|&c| !c.is_whitespace() && !(c == '`'))
-                .map(char::len_utf8)
-                .sum();
+    alt((
+        path_tag("--"),
+        path_tag("-"),
+        path_tag("/"),
+        path_tag("../"),
+        path_tag("./"),
+        path_tag("."),
+    ))(input)
 
-            // dbg!(len);
-            return Ok(input.split_at(len));
-            //     }
-        }
-    }
-    Err(NOT_FOUND)
+    // begin with -+./
+    // let mut it = input.chars();
+    // let first_char = it.next().ok_or(NOT_FOUND)?;
+    // if matches!(first_char, '.' | '/') && input.len() == 1 {
+    //     return Ok(input.split_at(1));
+    // }
+    // // followed by letter/num
+    // let next_char = it.next().ok_or(NOT_FOUND)?;
+    // // dbg!(first_char, next_char);
+    // let valid = match (first_char, next_char) {
+    //     ('-', '-') => it.next().ok_or(NOT_FOUND)?.is_ascii_alphabetic(),
+    //     ('-', c) => c.is_ascii_alphabetic(),
+    //     ('/', c) => c.is_ascii_alphanumeric(),
+    //     ('.', '/') => true,
+    //     ('.', '.') => it.next().ok_or(NOT_FOUND)? == '/',
+    //     ('.', c) => c.is_ascii_whitespace(),
+    //     _ => false,
+    // };
+    // if valid {
+    //     // prev_char must be blank
+    //     let prev_char = input.previous_char().ok_or(NOT_FOUND)?;
+    //     if prev_char.is_ascii_whitespace() {
+    //         // differ `ls --color` and `a + --b`
+    //         // let prev_prev_char = input.previous_n_char(2).ok_or(NOT_FOUND)?;
+    //         // if prev_prev_char.is_alpha() {
+    //         let len = input
+    //             .chars()
+    //             .take_while(|&c| !c.is_whitespace() && !(c == '`'))
+    //             .map(char::len_utf8)
+    //             .sum();
+
+    //         // dbg!(len);
+    //         return Ok(input.split_at(len));
+    //         //     }
+    //     }
+    // }
+    // Err(NOT_FOUND)
 }
 // fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
 //     // 解析开始引号

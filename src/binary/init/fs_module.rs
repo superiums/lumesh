@@ -1,8 +1,5 @@
-use std::{
-    collections::BTreeMap,
-    env::current_dir,
-    path::{Path, PathBuf},
-};
+use std::collections::BTreeMap;
+use std::path::Path;
 
 use crate::Int;
 use crate::{Environment, Expression, LmError};
@@ -50,9 +47,9 @@ pub fn get(env: &mut Environment) -> Expression {
         env.define("HOME", Expression::String(home_dir));
     }
 
-    if let Ok(cwd) = current_dir() {
-        // env.set_cwd(&cwd.into_os_string().into_string().unwrap());
-    }
+    // if let Ok(cwd) = current_dir() {
+    //     // env.set_cwd(&cwd.into_os_string().into_string().unwrap());
+    // }
 
     if let Some(c_dir) = dirs::config_dir() {
         let desk_dir = c_dir.into_os_string().into_string().unwrap();

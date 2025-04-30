@@ -182,15 +182,14 @@ pub fn check(input: &str) -> bool {
             // eprint!("parse ok");
             true
         }
-        Err(e) => {
+        Err(_) => {
             // eprint!("parse failed:{}", e);
             false
-        }
-        _ => {
-            // eprint!("parse failed without err");
+        } // _ => {
+          //     // eprint!("parse failed without err");
 
-            false
-        }
+          //     false
+          // }
     }
 }
 pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {

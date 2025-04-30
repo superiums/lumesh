@@ -1,5 +1,6 @@
 use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, Int, RuntimeError, binary};
+use core::option::Option::None;
 use regex_lite::Regex;
 use std::io::Write;
 
@@ -8,7 +9,6 @@ use crate::STRICT;
 use super::pipe_excutor::handle_stdin_redirect;
 use super::{Expression, pipe_excutor::handle_pipes};
 use std::io::ErrorKind;
-use std::path::PathBuf;
 
 const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 

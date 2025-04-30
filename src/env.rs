@@ -1,7 +1,6 @@
 use crate::{Expression, LmError};
+use core::option::Option::None;
 use std::collections::BTreeMap;
-
-const CWD_ENV_VAR: &str = "CWD";
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
 pub struct Environment {

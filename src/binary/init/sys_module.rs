@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use crate::{Expression, LmError};
 use common_macros::b_tree_map;
 
@@ -50,18 +48,18 @@ pub fn get() -> Expression {
         }, "evaluate a file in the current environment"),
 
         // Change the current working directory.
-        String::from("cd") => Expression::builtin("cd", |args, env| {
-            super::check_exact_args_len("cd", &args, 1)?;
-            let cwd = std::env::current_dir()?;
-            let path = cwd.join(args[0].eval(env)?.to_string());
+        // String::from("cd") => Expression::builtin("cd", |args, env| {
+        //     super::check_exact_args_len("cd", &args, 1)?;
+        //     let cwd = std::env::current_dir()?;
+        //     let path = cwd.join(args[0].eval(env)?.to_string());
 
-            if let Ok(canon_path) = dunce::canonicalize(&path) {
-                // env.set_cwd(canon_path.to_str().unwrap().to_string());
-                Ok(Expression::None)
-            } else {
-                Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
-            }
-        }, "change the current working directory"),
+        //     if let Ok(canon_path) = dunce::canonicalize(&path) {
+        //         // env.set_cwd(canon_path.to_str().unwrap().to_string());
+        //         Ok(Expression::None)
+        //     } else {
+        //         Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
+        //     }
+        // }, "change the current working directory"),
 
         // Get the current working directory.
         // String::from("cwd") => Expression::builtin("cwd", |_args, env| {

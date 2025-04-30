@@ -27,11 +27,6 @@ path = "src/cli.rs"
 required-features = ["cli"]
 
 [[bin]]
-name = "lumes"
-path = "src/cli.rs"
-required-features = ["help"]
-
-[[bin]]
 name = "lumesh"
 path = "src/runner.rs"
 required-features = ["runner"]

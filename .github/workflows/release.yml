@@ -19,7 +19,7 @@ jobs:
       - name: Set variables
         id: vars
         # run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-        run: echo "{tag}=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
 
       - name: Create release
         id: create_release
@@ -114,7 +114,7 @@ jobs:
       - name: Set variables
         id: vars
         # run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-        run: echo "{tag}=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
 
       # 修改点 3：新增 runner 构建
       - name: Build project

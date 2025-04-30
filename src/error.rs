@@ -115,6 +115,7 @@ impl SyntaxErrorKind {
             hint,
         })
     }
+    /// return Fail to stop all parse. use this **carefully**!
     pub fn empty_fail(input: Tokens<'_>) -> Result<(), nom::Err<Self>> {
         if input.is_empty() {
             return Err(nom::Err::Failure(SyntaxErrorKind::Expected {
@@ -127,6 +128,7 @@ impl SyntaxErrorKind {
             return Ok(());
         }
     }
+    /// return an Error to stop process.
     pub fn empty_back(input: Tokens<'_>) -> Result<(), nom::Err<Self>> {
         if input.is_empty() {
             return Err(nom::Err::Error(SyntaxErrorKind::Expected {

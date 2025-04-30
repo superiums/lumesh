@@ -178,8 +178,19 @@ pub fn syntax_highlight(line: &str) -> String {
 
 pub fn check(input: &str) -> bool {
     match parse_script(input) {
-        Ok(_) => true,
-        _ => false,
+        Ok(_) => {
+            // eprint!("parse ok");
+            true
+        }
+        Err(e) => {
+            // eprint!("parse failed:{}", e);
+            false
+        }
+        _ => {
+            // eprint!("parse failed without err");
+
+            false
+        }
     }
 }
 pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {

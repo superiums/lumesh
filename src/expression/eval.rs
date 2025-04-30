@@ -31,7 +31,7 @@ impl Expression {
     }
     /// 求值主逻辑（尾递归优化）
     pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
-        dbg!("1.--->eval_mut:", &self, &self.type_name());
+        // dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(RuntimeError::RecursionDepth(self));
@@ -48,21 +48,21 @@ impl Expression {
                 | Self::Float(_)
                 | Self::Bytes(_)
                 | Self::Macro(_, _) => {
-                    dbg!("basic type");
+                    // dbg!("basic type");
                     break Ok(self);
                 }
                 Self::Builtin(_) => {
-                    dbg!("builtin type");
+                    // dbg!("builtin type");
                     break Ok(self);
                 }
 
                 // 符号解析（错误处理优化）
                 Self::Symbol(name) => {
-                    dbg!("2.--->symbol----", &name);
+                    // dbg!("2.--->symbol----", &name);
                     // bultin
                     let r = match binary::get_builtin(&name) {
                         Some(bti) => {
-                            dbg!("found builtin:", &name, bti);
+                            // dbg!("found builtin:", &name, bti);
                             bti.clone()
                         }
                         _ => {
@@ -556,10 +556,10 @@ impl Expression {
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
                 Self::Command(ref cmd, ref args) => {
-                    dbg!(&cmd.type_name());
+                    // dbg!(&cmd.type_name());
                     break match binary::get_builtin(&cmd.to_string()) {
                         Some(bti) => {
-                            dbg!("branch to builtin:", &cmd, &bti);
+                            // dbg!("branch to builtin:", &cmd, &bti);
                             bti.clone().apply(args.clone()).eval_apply(env, depth)
                         }
                         _ => handle_command(cmd.to_string(), args, env, depth),

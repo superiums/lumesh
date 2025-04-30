@@ -59,7 +59,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
                 "exit the shell",
             ),
             String::from("cd") => Expression::builtin("cd", cd, "change directories"),
-            String::from("print") => Expression::builtin("cd", print,"print the arguments without a newline"),
+            String::from("print") => Expression::builtin("print", print,"print the arguments without a newline"),
             String::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
             String::from("println") => Expression::builtin("println", println, "print the arguments and a newline"),
             String::from("input") => Expression::builtin("input", input, "get user input"),

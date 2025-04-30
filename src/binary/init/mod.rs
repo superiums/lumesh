@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError};
-
 use common_macros::hash_map;
 
 #[cfg(feature = "chess-engine")]

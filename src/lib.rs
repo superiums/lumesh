@@ -37,7 +37,7 @@ pub use syntax::highlight;
 pub mod cmdhelper;
 pub mod prompt;
 
-mod binary;
+pub mod binary;
 pub use binary::get_builtin;
 
 // pub mod excutor;

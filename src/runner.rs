@@ -1,5 +1,5 @@
 // src/bin/runner.rs
-mod binary;
+// mod binary;
 use lumesh::runtime::run_file;
 use lumesh::{Environment, Expression, LmError};
 use lumesh::{STRICT, parse_and_eval};
@@ -84,7 +84,7 @@ fn main() -> Result<(), LmError> {
         "argv",
         Expression::List(script_args.into_iter().map(Expression::String).collect()),
     );
-    binary::init(&mut env);
+    // binary::init(&mut env);
 
     // 执行逻辑保持不变
     if let Some(cmd_str) = cmd {

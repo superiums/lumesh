@@ -3,6 +3,9 @@
 - rewrite parser again
 pratt parser workflow.
 differ inner functions from system cmds.
+- optimize builtin storage in hashmap.
+- fixed other lots.
+
 ```bash
 # system cmds:
 ls -l

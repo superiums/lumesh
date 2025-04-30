@@ -85,7 +85,7 @@ fn expr_to_command(
         Expression::Apply(func, _) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.clone().eval_mut(env, depth + 1)?;
+            let func_eval = func.clone().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
             return match func_eval {
@@ -111,7 +111,7 @@ fn expr_to_command(
         Expression::Command(func, args) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.clone().eval_mut(env, depth + 1)?;
+            let func_eval = func.clone().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
             return match func_eval {
@@ -149,16 +149,16 @@ pub fn handle_command(
     let always_pipe = env.has("__ALWAYSPIPE");
     let mut cmd_args = vec![];
     for arg in args {
-        for flattened_arg in Expression::flatten(vec![arg.clone().eval_mut(env, depth + 1)?]) {
-            match flattened_arg {
-                Expression::String(s) => cmd_args.push(s),
-                Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
-                Expression::None => continue,
-                _ => cmd_args.push(format!("{}", flattened_arg)),
-            }
+        // for flattened_arg in Expression::flatten(vec![arg.clone().eval_mut(env, depth + 1)?]) {
+        let e_arg = arg.clone().eval_mut(false, env, depth)?;
+        match e_arg {
+            Expression::String(s) => cmd_args.push(s),
+            Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
+            Expression::None => continue,
+            _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
-
+    dbg!(args, &cmd_args);
     let (_, result) = exec_single_cmd(
         cmd.to_string(),
         cmd_args,
@@ -202,7 +202,7 @@ pub fn handle_pipes(
                 if expr.is_some() {
                     // 有表达式返回则执行表达式, 有apply和binaryOp两种
                     // let result_expr = expr.unwrap().eval_apply(env, depth)?;
-                    let result_expr = expr.unwrap().eval_mut(env, depth)?;
+                    let result_expr = expr.unwrap().eval_mut(true, env, depth)?;
                     let result_expr_bytes = result_expr.to_string().as_bytes().to_owned();
                     Ok((result_expr_bytes, result_expr))
                 } else {
@@ -229,7 +229,7 @@ pub fn handle_pipes(
                         match expr {
                             Some(ex) => {
                                 // 有表达式返回则执行表达式, 有apply和binaryOp两种
-                                let result_expr = ex.eval_mut(env, depth)?;
+                                let result_expr = ex.eval_mut(true, env, depth)?;
                                 let result_expr_bytes =
                                     result_expr.to_string().as_bytes().to_owned();
                                 Ok((result_expr_bytes, result_expr))
@@ -264,7 +264,7 @@ pub fn handle_stdin_redirect(
     always_pipe: bool,
 ) -> Result<Expression, RuntimeError> {
     // 读取
-    let path = rhs.eval_mut(env, depth + 1)?.to_string();
+    let path = rhs.eval_mut(true, env, depth + 1)?.to_string();
     let contents = std::fs::read(path)?;
     // 左侧
     let (cmd, args, expr) = expr_to_command(&lhs, env, depth)?;

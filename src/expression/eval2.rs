@@ -11,39 +11,39 @@ impl Expression {
             // 控制流表达式
             Self::For(var, list_expr, body) => {
                 // 求值列表表达式
-                let list = list_expr.eval_mut(env, depth + 1)?.as_list()?.clone();
+                let list = list_expr.eval_mut(true, env, depth + 1)?.as_list()?.clone();
                 let mut last = Self::None;
 
                 // 遍历每个元素执行循环体
                 for item in list.iter() {
                     env.define(&var, item.clone());
-                    last = body.clone().eval_mut(env, depth + 1)?;
+                    last = body.clone().eval_mut(true, env, depth + 1)?;
                 }
                 Ok(last)
             }
             Self::While(cond, body) => {
                 // 循环求值直到条件为假
                 let mut last = Self::None;
-                while cond.clone().eval_mut(env, depth + 1)?.is_truthy() {
-                    last = body.clone().eval_mut(env, depth + 1)?;
+                while cond.clone().eval_mut(true, env, depth + 1)?.is_truthy() {
+                    last = body.clone().eval_mut(true, env, depth + 1)?;
                 }
                 Ok(last)
             }
             Self::If(cond, true_expr, false_expr) => {
                 // 条件分支求值
-                return if cond.eval_mut(env, depth + 1)?.is_truthy() {
-                    true_expr.eval_mut(env, depth + 1)
+                return if cond.eval_mut(true, env, depth + 1)?.is_truthy() {
+                    true_expr.eval_mut(true, env, depth + 1)
                 } else {
-                    false_expr.eval_mut(env, depth + 1)
+                    false_expr.eval_mut(true, env, depth + 1)
                 };
             }
 
             Self::Match(value, branches) => {
                 // 模式匹配求值
-                let val = value.eval_mut(env, depth + 1)?;
+                let val = value.eval_mut(true, env, depth + 1)?;
                 for (pat, expr) in branches {
                     if matches_pattern(&val, &pat, env)? {
-                        return expr.eval_mut(env, depth + 1);
+                        return expr.eval_mut(true, env, depth + 1);
                     }
                 }
                 Err(RuntimeError::NoMatchingBranch(val.to_string()))
@@ -110,14 +110,18 @@ impl Expression {
                 // 顺序求值语句块
                 let mut last = Self::None;
                 for expr in exprs {
-                    last = expr.eval_mut(env, depth + 1)?;
+                    last = expr.eval_mut(true, env, depth + 1)?;
                 }
                 Ok(last)
             }
 
             Self::Return(expr) => {
                 // 提前返回机制
-                Err(RuntimeError::EarlyReturn(expr.eval_mut(env, depth + 1)?))
+                Err(RuntimeError::EarlyReturn(expr.eval_mut(
+                    true,
+                    env,
+                    depth + 1,
+                )?))
             }
 
             // 默认情况
@@ -136,10 +140,10 @@ impl Expression {
             Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
                 // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
                 // 递归求值函数和参数
-                let func_eval = func.clone().eval_mut(env, depth + 1)?;
+                let func_eval = func.clone().eval_mut(true, env, depth + 1)?;
                 // let args_eval = args
                 //     .into_iter()
-                //     .map(|a| a.clone().eval_mut(env, depth + 1))
+                //     .map(|a| a.clone().eval_mut(true,env, depth + 1))
                 //     .collect::<Result<Vec<_>, _>>()?;
                 // let func_eval = *func.clone();
 
@@ -262,12 +266,12 @@ impl Expression {
                         // 批量参数绑定前先求值所有参数
                         let evaluated_args = args
                             .iter()
-                            .map(|arg| arg.clone().eval_mut(env, depth + 1))
+                            .map(|arg| arg.clone().eval_mut(true, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
                         match bind_arguments(params, evaluated_args, &mut current_env) {
                             // 完全应用：求值函数体
-                            None => body.eval_mut(&mut current_env, depth + 1),
+                            None => body.eval_mut(true, &mut current_env, depth + 1),
 
                             // 部分应用：返回新的柯里化lambda
                             Some(remain) => Ok(Self::Lambda(remain, body, current_env)),
@@ -278,7 +282,7 @@ impl Expression {
                     Self::Macro(params, body) => {
                         match bind_arguments(params, args.to_owned(), env) {
                             // 完全应用：求值函数体
-                            None => body.eval_mut(env, depth + 1),
+                            None => body.eval_mut(true, env, depth + 1),
 
                             // 部分应用：返回新的柯里化lambda
                             Some(remain) => Ok(Self::Macro(remain, body)),
@@ -381,7 +385,7 @@ impl Expression {
 
                         let mut actual_args = args
                             .into_iter()
-                            .map(|a| a.clone().eval_mut(env, depth + 1))
+                            .map(|a| a.clone().eval_mut(true, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
                         // 填充默认值逻辑（新增）
@@ -414,7 +418,7 @@ impl Expression {
                         //     }
                         // }
                         // dbg!(&new_env);
-                        return match body.eval_mut(&mut new_env, depth + 1) {
+                        return match body.eval_mut(true, &mut new_env, depth + 1) {
                             Ok(v) => {
                                 self.set_status_code(0, env);
                                 Ok(v)

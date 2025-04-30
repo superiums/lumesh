@@ -15,7 +15,7 @@ const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 impl Expression {
     /// 当返回symbol时，作为命令继续执行。
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let result = self.clone().eval_mut(env, 0);
+        let result = self.clone().eval_mut(true, env, 0);
         return match result {
             // apply symbol cmds
             // Ok(Expression::Symbol(sym)) => {
@@ -27,10 +27,15 @@ impl Expression {
     }
     /// 当返回symbol时，作为字面量，直接返回。
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        self.clone().eval_mut(env, 0)
+        self.clone().eval_mut(true, env, 0)
     }
     /// 求值主逻辑（尾递归优化）
-    pub fn eval_mut(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
+    pub fn eval_mut(
+        self,
+        explain_builtin: bool,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Self, RuntimeError> {
         // dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
@@ -60,28 +65,31 @@ impl Expression {
                 Self::Symbol(name) => {
                     // dbg!("2.--->symbol----", &name);
                     // bultin
-                    let r = match binary::get_builtin(&name) {
-                        Some(bti) => {
-                            // dbg!("found builtin:", &name, bti);
-                            bti.clone()
-                        }
-                        _ => {
-                            // var
-                            match env.get(&name) {
-                                Some(expr) => expr,
-                                None => Self::Symbol(name),
-                                // None => unsafe {
-                                //            if STRICT {
-                                //                Err(Error::UndeclaredVariable(name.clone()))
-                                //            } else {
-                                //                Ok(Self::Symbol(name)) // 非严格模式允许未定义符号
-                                //            }
-                                //        }
+                    if explain_builtin {
+                        match binary::get_builtin(&name) {
+                            Some(bti) => {
+                                // dbg!("found builtin:", &name, bti);
+                                return Ok(bti.clone());
                             }
-                        }
+                            _ => {}
+                        };
+                    }
+
+                    // var
+                    let r = match env.get(&name) {
+                        Some(expr) => expr,
+                        None => Self::Symbol(name),
+                        // None => unsafe {
+                        //            if STRICT {
+                        //                Err(Error::UndeclaredVariable(name.clone()))
+                        //            } else {
+                        //                Ok(Self::Symbol(name)) // 非严格模式允许未定义符号
+                        //            }
+                        //        }
                     };
+
                     // dbg!(&r);
-                    break Ok(r);
+                    return Ok(r);
                 }
 
                 // 处理变量声明（仅允许未定义变量）
@@ -93,7 +101,7 @@ impl Expression {
                             return Err(RuntimeError::Redeclaration(name.to_string()));
                         }
                     }
-                    let value = expr.eval_mut(env, depth + 1)?;
+                    let value = expr.eval_mut(false, env, depth + 1)?;
                     env.define(&name, value); // 新增 declare
                     // dbg!("declare---->", &name, env.get(&name));
                     return Ok(Self::None);
@@ -101,7 +109,7 @@ impl Expression {
 
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
-                    let value = expr.eval_mut(env, depth + 1)?;
+                    let value = expr.eval_mut(false, env, depth + 1)?;
                     // dbg!("assign---->", &name, &value);
                     if env.has(&name) {
                         env.define(&name, value.clone());
@@ -138,7 +146,7 @@ impl Expression {
                 // 元表达式处理
                 Self::Group(inner) => {
                     // dbg!("2.--->group:", &inner);
-                    return inner.eval_mut(env, depth + 1);
+                    return inner.eval_mut(true, env, depth + 1);
                 }
                 Self::Quote(inner) => return Ok(*inner),
 
@@ -184,7 +192,7 @@ impl Expression {
                         op if op.starts_with("__") => {
                             if let Some(oper) = env.get(op) {
                                 let rs = Expression::Apply(Box::new(oper), vec![operand_eval]);
-                                return rs.eval_mut(env, depth + 1);
+                                return rs.eval_mut(true, env, depth + 1);
                             }
                             Err(RuntimeError::CustomError(format!(
                                 "custom operation {op:?} not defined"
@@ -272,12 +280,12 @@ impl Expression {
                             ))),
                         },
                         "&&" => Ok(Expression::Boolean(
-                            lhs.eval_mut(env, depth + 1)?.is_truthy()
-                                && rhs.eval_mut(env, depth + 1)?.is_truthy(),
+                            lhs.eval_mut(true, env, depth + 1)?.is_truthy()
+                                && rhs.eval_mut(true, env, depth + 1)?.is_truthy(),
                         )),
                         "||" => Ok(Expression::Boolean(
-                            lhs.eval_mut(env, depth + 1)?.is_truthy()
-                                || rhs.eval_mut(env, depth + 1)?.is_truthy(),
+                            lhs.eval_mut(true, env, depth + 1)?.is_truthy()
+                                || rhs.eval_mut(true, env, depth + 1)?.is_truthy(),
                         )),
                         "|" => {
                             let bindings = env.get_bindings_map();
@@ -285,7 +293,7 @@ impl Expression {
                             //dbg!(&always_pipe, &lhs, &rhs);
                             // if always_pipe {
                             //     let left_func = lhs.ensure_apply();
-                            //     let left_output = left_func.eval_mut(env, depth + 1)?;
+                            //     let left_output = left_func.eval_mut(true,env, depth + 1)?;
                             //     let mut new_env = env.fork();
                             //     new_env.define("__stdin", left_output);
 
@@ -314,7 +322,7 @@ impl Expression {
                         //     dbg!("--pipe--", &lhs, &rhs);
                         //     // dbg!("--pipe--");
                         //     let left_func = lhs.ensure_apply();
-                        //     let left_output = left_func.eval_mut(env, depth + 1)?;
+                        //     let left_output = left_func.eval_mut(true,env, depth + 1)?;
                         //     let mut new_env = env.fork();
                         //     new_env.define("__stdin", left_output);
 
@@ -327,24 +335,25 @@ impl Expression {
                             // 执行左侧表达式
                             env.define("__ALWAYSPIPE", Expression::Boolean(true));
                             let left_func = lhs.ensure_apply();
-                            let left_output = left_func.eval_mut(env, depth + 1)?;
+                            let left_output = left_func.eval_mut(true, env, depth + 1)?;
                             env.undefine("__ALWAYSPIPE");
 
                             // 执行右侧表达式，获取函数或命令
-                            // let rhs_eval = rhs.eval_mut(env, depth + 1)?;
+                            // let rhs_eval = rhs.eval_mut(true,env, depth + 1)?;
 
                             // 将左侧结果作为最后一个参数传递给右侧
                             let args = vec![left_output];
-                            rhs.append_args(args).eval_mut(env, depth + 1)
+                            rhs.append_args(args).eval_mut(true, env, depth + 1)
                         }
                         ">>>" => {
                             env.define("__ALWAYSPIPE", Expression::Boolean(true));
                             let left_func = lhs.ensure_apply();
-                            let l = left_func.eval_mut(env, depth + 1)?;
+                            let l = left_func.eval_mut(true, env, depth + 1)?;
                             env.undefine("__ALWAYSPIPE");
 
                             let mut path = std::env::current_dir()?;
-                            path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
+                            path =
+                                path.join(rhs.clone().eval_mut(true, env, depth + 1)?.to_string());
                             match std::fs::OpenOptions::new().append(true).open(&path) {
                                 Ok(mut file) => {
                                     // use std::io::prelude::*;
@@ -385,11 +394,12 @@ impl Expression {
                             // dbg!("-->>--", &lhs);
                             env.define("__ALWAYSPIPE", Expression::Boolean(true));
                             let left_func = lhs.ensure_apply();
-                            let l = left_func.eval_mut(env, depth + 1)?;
+                            let l = left_func.eval_mut(true, env, depth + 1)?;
                             env.undefine("__ALWAYSPIPE");
                             // dbg!("-->> left=", &l);
                             let mut path = std::env::current_dir()?;
-                            path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
+                            path =
+                                path.join(rhs.clone().eval_mut(true, env, depth + 1)?.to_string());
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
                                 std::fs::write(path, bytes)
@@ -409,7 +419,7 @@ impl Expression {
                         "<<" => {
                             // 输入重定向处理
                             return handle_stdin_redirect(*lhs, *rhs, env, depth, true);
-                            // let path = rhs.eval_mut(env, depth + 1)?.to_string();
+                            // let path = rhs.eval_mut(true,env, depth + 1)?.to_string();
                             // let contents = std::fs::read_to_string(path)
                             //     .map(Self::String)
                             //     .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
@@ -421,8 +431,8 @@ impl Expression {
                             // return Ok(result);
                         }
                         _ => {
-                            let l = lhs.eval_mut(env, depth + 1)?;
-                            let r = rhs.eval_mut(env, depth + 1)?;
+                            let l = lhs.eval_mut(true, env, depth + 1)?;
+                            let r = rhs.eval_mut(true, env, depth + 1)?;
                             break match operator.as_str() {
                                 "+" => Ok(l + r),
                                 "-" => Ok(l - r),
@@ -507,7 +517,7 @@ impl Expression {
                                 op if op.starts_with("_") => {
                                     if let Some(oper) = env.get(op) {
                                         let rs = Expression::Apply(Box::new(oper), vec![l, r]);
-                                        return rs.eval_mut(env, depth + 1);
+                                        return rs.eval_mut(true, env, depth + 1);
                                     }
                                     Err(RuntimeError::CustomError(format!(
                                         "custom operation {op:?} not defined"
@@ -524,7 +534,7 @@ impl Expression {
                 // Self::List(elems) => {
                 //     let evaluated = elems
                 //         .iter()
-                //         .map(|e| e.clone().eval_mut(env, depth + 1))
+                //         .map(|e| e.clone().eval_mut(true,env, depth + 1))
                 //         .collect::<Result<Vec<_>, _>>()?;
                 //     Ok(Expression::List(evaluated))
                 // }
@@ -532,7 +542,7 @@ impl Expression {
                     return Ok(Self::List(
                         items
                             .iter()
-                            .map(|e| e.clone().eval_mut(env, depth + 1))
+                            .map(|e| e.clone().eval_mut(true, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?
                             .into(),
                     ));
@@ -549,8 +559,8 @@ impl Expression {
                     return Self::slice(listo, start_int, end_int, step_int);
                 }
                 Self::Index(lhs, rhs) => {
-                    let l = lhs.eval_mut(env, depth + 1)?;
-                    let r = rhs.eval_mut(env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
+                    let l = lhs.eval_mut(true, env, depth + 1)?;
+                    let r = rhs.eval_mut(true, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
                     return Self::index_slm(l, r);
                 }
                 // 执行应用
@@ -683,7 +693,7 @@ impl Expression {
             // 有表达式时进行求值
             Some(boxed_expr) => {
                 // 递归求值表达式
-                let evaluated = boxed_expr.eval_mut(env, depth)?;
+                let evaluated = boxed_expr.eval_mut(true, env, depth)?;
 
                 // 转换为整数
                 match evaluated {

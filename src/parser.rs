@@ -165,7 +165,7 @@ impl PrattParser {
                     //dbg!("--> binOp: trying next loop", input, next_min_prec);
                     let (new_input, rhs) =
                         Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
-                    //dbg!("--> binOp: after next loop", &rhs);
+                    // dbg!("--> binOp: after next loop", &rhs);
                     input = new_input;
                     lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
                 }
@@ -404,7 +404,7 @@ impl PrattParser {
             ":" => Some(OperatorInfo::new(
                 ":",
                 PREC_CONDITIONAL,
-                false, // 非结合（仅作为分隔符）
+                true, //important
             )),
             // ... 管道操作符 ...
             "|" | "|>" => Some(OperatorInfo::new(
@@ -577,6 +577,7 @@ impl PrattParser {
             //     }
             // }
             "?" => {
+                // dbg!("?---->", &lhs, &rhs);
                 let (true_expr, false_expr) = match rhs {
                     Expression::BinaryOp(op, t, f) if op == ":" => (t, f),
                     _ => {
@@ -592,11 +593,15 @@ impl PrattParser {
                 };
                 Ok(Expression::If(Box::new(lhs), true_expr, false_expr))
             }
-            ":" => Ok(Expression::BinaryOp(
-                ":".into(),
-                Box::new(lhs),
-                Box::new(rhs),
-            )),
+            ":" => {
+                // dbg!(":---->", &lhs, &rhs);
+                Ok(Expression::BinaryOp(
+                    ":".into(),
+                    Box::new(lhs),
+                    Box::new(rhs),
+                ))
+            }
+
             ":=" => {
                 // 确保左侧是符号
                 match lhs.to_symbol() {

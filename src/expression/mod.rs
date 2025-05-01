@@ -43,6 +43,12 @@ pub enum Expression {
     Do(Vec<Self>),
     Builtin(Builtin),
     Quote(Box<Self>),
+    Catch(Box<Self>, CatchType, Option<Box<Self>>),
+    Error {
+        code: Int,
+        msg: String,
+        expr: Box<Self>,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -50,7 +56,14 @@ pub enum Pattern {
     Bind(String),
     Literal(Box<Expression>),
 }
-
+#[derive(Debug, Clone, PartialEq)]
+pub enum CatchType {
+    Ignore,
+    PrintStd,
+    PrintErr,
+    PrintOver,
+    Deel,
+}
 #[derive(Debug, Clone, PartialEq)]
 pub struct SliceParams {
     pub start: Option<Box<Expression>>,

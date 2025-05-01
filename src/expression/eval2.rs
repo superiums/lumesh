@@ -1,4 +1,4 @@
-use super::Builtin;
+use super::{Builtin, CatchType};
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, RuntimeError};
@@ -124,6 +124,41 @@ impl Expression {
                 )?))
             }
 
+            Self::Catch(body, typ, deeling) => {
+                // dbg!(&typ, &deeling);
+                match body.clone().eval_mut(true, env, depth + 1) {
+                    Ok(result) => Ok(result),
+                    Err(e) => {
+                        return match typ {
+                            CatchType::Deel => match deeling {
+                                Some(deel) => {
+                                    // dbg!(&deel.type_name());
+                                    let deeled_result = deel
+                                        .append_args(vec![Expression::Error {
+                                            expr: body,
+                                            code: e.code(),
+                                            msg: e.to_string(),
+                                        }])
+                                        .eval_mut(true, env, depth + 1);
+                                    deeled_result
+                                }
+                                _ => Ok(Expression::None),
+                            },
+                            CatchType::Ignore => Ok(Expression::None),
+                            CatchType::PrintStd => {
+                                println!("[Err->Std] {:?}", e);
+                                Ok(Expression::None)
+                            }
+                            CatchType::PrintErr => {
+                                eprint!("[Err] {:?}", e);
+                                Ok(Expression::None)
+                            }
+                            CatchType::PrintOver => Ok(Expression::String(e.to_string())),
+                        };
+                        // Ok(Expression::None)
+                    }
+                }
+            }
             // 默认情况
             _ => {
                 //dbg!("2.--->Default:", &self);

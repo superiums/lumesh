@@ -130,6 +130,7 @@ fn expr_to_command(
             };
         }
         Expression::BinaryOp(_, _, _) => Ok(("".into(), vec![], Some(expr.to_owned()))),
+        Expression::Catch(_, _, _) => Ok(("".into(), vec![], Some(expr.to_owned()))),
         _ => Err(RuntimeError::ProgramNotFound(expr.to_string())),
     }
 }
@@ -158,7 +159,7 @@ pub fn handle_command(
             _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
-    dbg!(args, &cmd_args);
+    // dbg!(args, &cmd_args);
     let (_, result) = exec_single_cmd(
         cmd.to_string(),
         cmd_args,
@@ -200,7 +201,7 @@ pub fn handle_pipes(
                 let (cmd, args, expr) = expr_to_command(&lhs, env, depth)?;
                 // dbg!(&cmd, &args, &expr);
                 if expr.is_some() {
-                    // 有表达式返回则执行表达式, 有apply和binaryOp两种
+                    // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种
                     // let result_expr = expr.unwrap().eval_apply(env, depth)?;
                     let result_expr = expr.unwrap().eval_mut(true, env, depth)?;
                     let result_expr_bytes = result_expr.to_string().as_bytes().to_owned();
@@ -228,7 +229,7 @@ pub fn handle_pipes(
                         let (cmd, args, expr) = expr_to_command(&rhs, env, depth)?;
                         match expr {
                             Some(ex) => {
-                                // 有表达式返回则执行表达式, 有apply和binaryOp两种
+                                // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种
                                 let result_expr = ex.eval_mut(true, env, depth)?;
                                 let result_expr_bytes =
                                     result_expr.to_string().as_bytes().to_owned();

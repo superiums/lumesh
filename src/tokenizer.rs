@@ -85,10 +85,8 @@ fn map_valid_token(
 
 fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        // punctuation_tag("\'"),
         punctuation_tag(","),
         punctuation_tag(";"),
-        // punctuation_tag("="),
         punctuation_tag("("),
         punctuation_tag(")"),
         punctuation_tag("["),
@@ -108,7 +106,6 @@ fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        // keyword_tag("to"),
         prefix_tag("!"), //bool negtive
         prefix_tag("-"),
         prefix_tag("++"),
@@ -118,7 +115,6 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        // keyword_tag("to"),
         postfix_tag("!"), //func call as flat as cmd
         postfix_tag("("), //func call
         postfix_tag("["), //array index or slice
@@ -142,9 +138,6 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("<<"),
         keyword_tag(">>>"),
         keyword_tag(">>"),
-        operator_tag("**"), //pow
-        // operator_tag("++"),
-        // operator_tag("--"),
         operator_tag("+="),
         operator_tag("-="),
         operator_tag("*="),
@@ -152,14 +145,21 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag(":="),
         punctuation_tag("->"), // `->foo` is also a valid symbol
         punctuation_tag("~>"), // `~>foo` is also a valid symbol
+        catch_operator,
+    ))(input)
+}
+fn catch_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        keyword_tag("?-"),
+        keyword_tag("?."),
+        keyword_tag("??"),
+        keyword_tag("?!"),
+        keyword_tag("?:"),
     ))(input)
 }
 
 fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        // operator_tag("++"),
-        // operator_tag("--"),
-        // operator_tag("**"),
         operator_tag("<"),
         operator_tag(">"),
         operator_tag("+"),
@@ -167,12 +167,12 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("*"),
         keyword_tag("/"),
         operator_tag("%"),
+        operator_tag("^"), //math power
         operator_tag("="),
         operator_tag("?"),    //TODO drop ?: but use as error deel.
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
         keyword_tag("|"),     //standard io stream pipe
-        // punctuation_tag("!"),
-        custom_tag("_"), //_* as custom postfix tag.
+        custom_tag("_"),      //_* as custom postfix tag.
     ))(input)
 }
 

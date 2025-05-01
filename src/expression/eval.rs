@@ -447,7 +447,7 @@ impl Expression {
                                     Ok(l / r)
                                 } //no zero
                                 "%" => Ok(l % r),
-                                "**" => match (l, r) {
+                                "^" => match (l, r) {
                                     (Expression::Float(base), Expression::Float(exponent)) => {
                                         Ok(base.powf(exponent).into())
                                     }

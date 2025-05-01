@@ -236,7 +236,13 @@ macro_rules! fmt_shared {
             Self::BinaryOp(op, l, r) => write!($f, "BinaryOp<({:?} {} {:?})>", l, op, r),
             Self::Index(l, r) => write!($f, "({}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
-            // _ => write!($f, "Unreachable"), // 作为兜底逻辑
+            Self::Catch(body, _, deel) => match deel {
+                Some(deelx) => write!($f, "Catch<({:?} ? {})>", body, deelx),
+                _ => write!($f, "Catch<({:?} ?)>", body),
+            },
+            Self::Error { code, msg, expr } => {
+                write!($f, "Error<(code:{}\nmsg:{}\nexpr:{:?})>", code, msg, expr)
+            } // _ => write!($f, "Unreachable"), // 作为兜底逻辑
         }
     };
 }
@@ -290,6 +296,8 @@ impl Expression {
             Self::Do(_) => "Do".into(),
             Self::Builtin(_) => "Builtin".into(),
             Self::Quote(_) => "Quote".into(),
+            Self::Catch(..) => "Catch".into(),
+            Self::Error { .. } => "Error".into(),
             Self::None => "None".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),
         }

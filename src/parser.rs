@@ -3,6 +3,7 @@ use core::option::Option::None;
 use crate::{
     Diagnostic, Environment, Expression, Int, Pattern, SliceParams, SyntaxErrorKind, Token,
     TokenKind,
+    expression::CatchType,
     tokens::{Input, Tokens},
 };
 use detached_str::StrSlice;
@@ -14,8 +15,10 @@ use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
 // 双目操作符
 // const PREC_CONTROL: u8 = 0; // 控制结构（语句级）
 const PREC_ASSIGN: u8 = 1; // 赋值 =
-const PREC_REDIRECT: u8 = 3; // 重定向
-const PREC_PIPE: u8 = 3; // 管道
+const PREC_REDIRECT: u8 = 2; // 重定向
+const PREC_PIPE: u8 = 2; // 管道
+const PREC_CATCH: u8 = 3;
+
 const PREC_LAMBDA: u8 = 4; // lambda -> ~>
 const PREC_CONDITIONAL: u8 = 5; // 条件运算符 ?:
 const PREC_LOGICAL_OR: u8 = 6; // 逻辑或 ||
@@ -27,8 +30,8 @@ const PREC_FUNC_ARG: u8 = 10;
 
 const PREC_ADD_SUB: u8 = 11; // 加减
 const PREC_MUL_DIV: u8 = 12; // 乘除模 custom_op _*
-const PREC_POWER: u8 = 13; // 幂运算 **
-const PREC_CUSTOM: u8 = 14; // 幂运算 **
+const PREC_POWER: u8 = 13; // 幂运算 ^
+const PREC_CUSTOM: u8 = 14; // 自定义
 // 其他
 // prefix
 const PREC_UNARY: u8 = 20; // 单目运算符     ! -
@@ -158,16 +161,28 @@ impl PrattParser {
                     };
 
                     input = input.skip_n(1);
-                    if input.is_empty() {
-                        //dbg!("---break2---");
-                        break;
+
+                    // dbg!("--> binOp: trying next loop", input, next_min_prec);
+                    // dbg!("--> binOp: trying next loop", &lhs, &operator);
+                    match operator {
+                        "?." | "?-" | "??" | "?!" => {
+                            // dbg!("--->try catch ast:");
+                            lhs = Self::build_catch_ast(op_info, lhs)?
+                        }
+                        _ => {
+                            if input.is_empty() {
+                                //dbg!("---break2---");
+                                break;
+                            }
+                            // dbg!("--->try bin:", &operator, operator == "?.");
+                            // inclue | "?:"
+                            let (new_input, rhs) =
+                                Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
+                            // dbg!("--> binOp: after next loop", &rhs);
+                            input = new_input;
+                            lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
+                        }
                     }
-                    //dbg!("--> binOp: trying next loop", input, next_min_prec);
-                    let (new_input, rhs) =
-                        Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
-                    // dbg!("--> binOp: after next loop", &rhs);
-                    input = new_input;
-                    lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
                 }
                 TokenKind::OperatorPostfix => {
                     // dbg!("--->post fix");
@@ -378,7 +393,7 @@ impl PrattParser {
             // 乘除模运算符
             "*" | "/" | "%" => Some(OperatorInfo::new(op, PREC_MUL_DIV, false)),
             // 幂运算符
-            "**" => Some(OperatorInfo::new("**", PREC_POWER, true)),
+            "^" => Some(OperatorInfo::new("^", PREC_POWER, true)),
             // 单目前缀运算符
             // "!" | "++" | "--" => Some(OperatorInfo::new(
             //     op,
@@ -419,6 +434,8 @@ impl PrattParser {
             //     false,
             //     OperatorKind::Prefix,
             // )),
+            "?." | "?-" | "??" | "?!" | "?:" => Some(OperatorInfo::new(op, PREC_CATCH, false)),
+
             opa if opa.starts_with("_+") => Some(OperatorInfo::new(opa, PREC_ADD_SUB, false)),
             ops if ops.starts_with("_*") => Some(OperatorInfo::new(ops, PREC_MUL_DIV, false)),
             opo if opo.starts_with("_") => Some(OperatorInfo::new(opo, PREC_CUSTOM, false)),
@@ -433,7 +450,7 @@ impl PrattParser {
         rhs: Expression,
     ) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
         match op.symbol {
-            "." | "@" | "+" | "-" | "*" | "/" | "%" | "**" | ".." => Ok(Expression::BinaryOp(
+            "." | "@" | "+" | "-" | "*" | "/" | "%" | "^" | ".." => Ok(Expression::BinaryOp(
                 op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),
@@ -647,13 +664,32 @@ impl PrattParser {
                 Box::new(lhs),
                 Box::new(rhs),
             )),
+            "?:" => Ok(Expression::Catch(
+                Box::new(lhs),
+                CatchType::Deel,
+                Some(Box::new(rhs)),
+            )),
+
             _ => {
                 unreachable!()
             }
         }
     }
-}
 
+    fn build_catch_ast(
+        op: OperatorInfo,
+        lhs: Expression,
+    ) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
+        // dbg!("--->catch ast:", &op);
+        Ok(match op.symbol {
+            "?." => Expression::Catch(Box::new(lhs), CatchType::Ignore, None),
+            "?-" => Expression::Catch(Box::new(lhs), CatchType::PrintStd, None),
+            "??" => Expression::Catch(Box::new(lhs), CatchType::PrintErr, None),
+            "?!" => Expression::Catch(Box::new(lhs), CatchType::PrintOver, None),
+            _ => unreachable!(),
+        })
+    }
+}
 // 统一控制流解析（适用于语句和表达式）
 fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     alt((

@@ -240,9 +240,9 @@ macro_rules! fmt_shared {
                 Some(deelx) => write!($f, "Catch<({:?} ? {})>", body, deelx),
                 _ => write!($f, "Catch<({:?} ?)>", body),
             },
-            Self::Error { code, msg, expr } => {
-                write!($f, "Error<(code:{}\nmsg:{}\nexpr:{:?})>", code, msg, expr)
-            } // _ => write!($f, "Unreachable"), // 作为兜底逻辑
+            // Self::Error { code, msg, expr } => {
+            //     write!($f, "Error<(code:{}\nmsg:{}\nexpr:{:?})>", code, msg, expr)
+            // } // _ => write!($f, "Unreachable"), // 作为兜底逻辑
         }
     };
 }
@@ -297,7 +297,7 @@ impl Expression {
             Self::Builtin(_) => "Builtin".into(),
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),
-            Self::Error { .. } => "Error".into(),
+            // Self::Error { .. } => "Error".into(),
             Self::None => "None".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),
         }

@@ -1,8 +1,8 @@
 use super::{Builtin, CatchType};
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
-use crate::{Environment, RuntimeError};
-
+use crate::{Environment, Int, RuntimeError};
+use common_macros::b_tree_map;
 // Expression求值2
 impl Expression {
     /// 处理复杂表达式的递归求值
@@ -134,11 +134,11 @@ impl Expression {
                                 Some(deel) => {
                                     // dbg!(&deel.type_name());
                                     let deeled_result = deel
-                                        .append_args(vec![Expression::Error {
-                                            expr: body,
-                                            code: e.code(),
-                                            msg: e.to_string(),
-                                        }])
+                                        .append_args(vec![Expression::Map(b_tree_map! {
+                                            String::from("msg") => Expression::String(e.to_string()),
+                                            String::from("code") => Expression::Integer(Int::from(e.code())),
+                                            String::from("expr") => Expression::Quote(body)
+                                        })])
                                         .eval_mut(true, env, depth + 1);
                                     deeled_result
                                 }

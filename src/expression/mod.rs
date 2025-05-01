@@ -44,11 +44,11 @@ pub enum Expression {
     Builtin(Builtin),
     Quote(Box<Self>),
     Catch(Box<Self>, CatchType, Option<Box<Self>>),
-    Error {
-        code: Int,
-        msg: String,
-        expr: Box<Self>,
-    },
+    // Error {
+    //     code: Int,
+    //     msg: String,
+    //     expr: Box<Self>,
+    // },
 }
 
 #[derive(Debug, Clone, PartialEq)]

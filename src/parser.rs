@@ -1151,7 +1151,7 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         parse_declare,
         parse_del,
         // 2.控制流语句
-        parse_control_flow,
+        // parse_control_flow,
         // 3.运算语句: !3, 1+2, must before flat_call,
         // or discard this, only allow `let a=3+2` => parse_declare
         // or discard this, only allow `a=3+2` => parse_expr
@@ -1220,14 +1220,26 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
 /// 单独语句
 fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // dbg!("---parse_single_expr");
-    terminated(
+    let is_single_cmd = input.len() == 1;
+    let (input, expr) = terminated(
         parse_expr, // 完整表达式
         opt(alt((
             // 必须包含语句终止符
             kind(TokenKind::LineBreak),
             eof_slice, // 允许文件末尾无终止符
         ))),
-    )(input)
+    )(input)?;
+    if is_single_cmd && input.is_empty() {
+        return if let Expression::Symbol(s) = expr {
+            Ok((
+                input,
+                Expression::Command(Box::new(Expression::Symbol(s)), vec![]),
+            ))
+        } else {
+            Ok((input, expr))
+        };
+    }
+    Ok((input, expr))
 }
 
 // IF语句解析（支持else if链）

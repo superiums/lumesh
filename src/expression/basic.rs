@@ -266,11 +266,11 @@ impl Expression {
     /// 类型名称
     pub fn type_name(&self) -> String {
         match self {
-            Self::List(_) => "list".into(),
-            Self::Map(_) => "map".into(),
-            Self::String(_) => "string".into(),
-            Self::Integer(_) => "integer".into(),
-            Self::Symbol(_) => "symbol".into(),
+            Self::List(_) => "List".into(),
+            Self::Map(_) => "Map".into(),
+            Self::String(_) => "String".into(),
+            Self::Integer(_) => "Integer".into(),
+            Self::Symbol(_) => "Symbol".into(),
 
             Self::Float(_) => "Float".into(),
             Self::Boolean(_) => "Boolean".into(),

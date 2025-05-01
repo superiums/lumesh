@@ -420,7 +420,11 @@ impl RuntimeError {
             _ => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
+    // pub fn type_name(&self) -> String {
+    //     type_name::<Self>().to_string()
+    // }
 }
+
 impl LmError {
     pub const ERROR_CODE_SYNTAX_ERROR: Int = 10;
     pub const ERROR_CODE_RUNTIME_ERROR: Int = 11;

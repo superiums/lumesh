@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{any::Any, collections::HashMap};
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError};
 use common_macros::hash_map;
@@ -59,9 +59,11 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             ),
             String::from("cd") => Expression::builtin("cd", cd, "change directories"),
             String::from("print") => Expression::builtin("print", print,"print the arguments without a newline"),
-            String::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
             String::from("println") => Expression::builtin("println", println, "print the arguments and a newline"),
+            String::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
             String::from("input") => Expression::builtin("input", input, "get user input"),
+
+            String::from("type") => Expression::builtin("type", get_type, "get type of data"),
             String::from("str") => Expression::builtin("str", str, "format an expression to a string"),
             String::from("int") => Expression::builtin("int", int, "convert a float or string to an int"),
             String::from("insert") => Expression::builtin("insert", insert, "insert an item into a dictionary or list"),
@@ -125,6 +127,11 @@ fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate:
     }
 }
 
+fn get_type(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("type", &args, 1)?;
+    let x = args[0].clone().eval(env)?;
+    Ok(Expression::String(x.type_name()))
+}
 fn print(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     for (i, arg) in args.iter().enumerate() {
         let x = arg.clone().eval(env)?;

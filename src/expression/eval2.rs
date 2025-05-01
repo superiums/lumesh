@@ -135,6 +135,7 @@ impl Expression {
                                     // dbg!(&deel.type_name());
                                     let deeled_result = deel
                                         .append_args(vec![Expression::Map(b_tree_map! {
+                                            // String::from("type") => Expression::String(e.type_name()),
                                             String::from("msg") => Expression::String(e.to_string()),
                                             String::from("code") => Expression::Integer(Int::from(e.code())),
                                             String::from("expr") => Expression::Quote(body)

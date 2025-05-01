@@ -150,7 +150,7 @@ impl Expression {
                                 Ok(Expression::None)
                             }
                             CatchType::PrintErr => {
-                                eprint!("[Err] {:?}", e);
+                                eprintln!("[Err] {:?}", e);
                                 Ok(Expression::None)
                             }
                             CatchType::PrintOver => Ok(Expression::String(e.to_string())),

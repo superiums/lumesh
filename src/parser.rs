@@ -832,13 +832,27 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
         ));
     }
     let (input, body) = parse_block(input)?;
+    // catch
+    let (input, handler_options) = opt(alt((
+        map(text("?."), |_| (CatchType::Ignore, None)),
+        map(text("?-"), |_| (CatchType::PrintStd, None)),
+        map(text("??"), |_| (CatchType::PrintErr, None)),
+        map(text("?!"), |_| (CatchType::PrintOver, None)),
+        map(preceded(text("?:"), parse_expr), |e| {
+            (CatchType::Deel, Some(Box::new(e)))
+        }),
+    )))(input)?;
 
+    let last_body = match handler_options {
+        Some((ctyp, handler)) => Box::new(Expression::Catch(Box::new(body), ctyp, handler)),
+        _ => Box::new(body),
+    };
     Ok((
         input,
         Expression::Function(
             name,
             params,
-            Box::new(body),
+            last_body,
             Environment::new(), // 捕获当前环境（需在调用时处理）
         ),
     ))

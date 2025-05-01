@@ -1,4 +1,26 @@
 # Changelog
+## [0.3.2]
+- add support for error handling.
+handling errs never have been so easy:
+```bash
+
+6 / 0 ?.    # ignore err
+6 / 0 ?-    # print err to stdout
+6 / 0 ??    # print err to stderr
+6 / 0 ?!    # use this err msg as result
+
+let e = x -> echo x.code
+6 /0 ?: e   # deeling the err with a function/lambda
+
+# also funcions could use err handling too.
+fn divide(x,y){
+    x / y
+}?: e
+
+```
+- fix chained conditional expr.
+chained exprs like `a?b:c?d:e` works well now.
+
 ## [0.3.1]
 - rewrite parser again
 pratt parser workflow.

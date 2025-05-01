@@ -1,4 +1,4 @@
-use std::{any::Any, collections::HashMap};
+use std::collections::HashMap;
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError};
 use common_macros::hash_map;
@@ -129,8 +129,13 @@ fn cd(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate:
 
 fn get_type(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("type", &args, 1)?;
-    let x = args[0].clone().eval(env)?;
-    Ok(Expression::String(x.type_name()))
+    let x_type = args[0].type_name();
+    let rs = if &x_type == "Symbol" {
+        args[0].clone().eval(env)?.type_name()
+    } else {
+        x_type
+    };
+    Ok(Expression::String(rs))
 }
 fn print(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     for (i, arg) in args.iter().enumerate() {

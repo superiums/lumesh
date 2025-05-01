@@ -380,17 +380,26 @@ pub enum LmError {
     #[error("{0}")]
     CustomError(String),
 }
-
 impl RuntimeError {
     pub const ERROR_CODE_CANNOT_APPLY: Int = 1;
     pub const ERROR_CODE_SYMBOL_NOT_DEFINED: Int = 2;
     pub const ERROR_CODE_COMMAND_FAILED: Int = 3;
-    pub const ERROR_CODE_FOR_NON_LIST: Int = 4;
-    pub const ERROR_CODE_RECURSION_DEPTH: Int = 5;
-    pub const ERROR_CODE_PERMISSION_DENIED: Int = 6;
-    pub const ERROR_CODE_PROGRAM_NOT_FOUND: Int = 7;
-    // pub const ERROR_CODE_SYNTAX_ERROR: Int = 8;
+    pub const ERROR_CODE_FOR_NON_LIST: Int = 5;
+    pub const ERROR_CODE_RECURSION_DEPTH: Int = 6;
+    pub const ERROR_CODE_PERMISSION_DENIED: Int = 7;
+    pub const ERROR_CODE_PROGRAM_NOT_FOUND: Int = 8;
     pub const ERROR_CODE_CUSTOM_ERROR: Int = 9;
+    pub const ERROR_CODE_REDECLARATION: Int = 10; // Added for Redeclaration
+    pub const ERROR_CODE_UNDECLARED_VARIABLE: Int = 11; // Added for UndeclaredVariable
+    pub const ERROR_CODE_NO_MATCHING_BRANCH: Int = 12; // Added for NoMatchingBranch
+    pub const ERROR_CODE_TOO_MANY_ARGUMENTS: Int = 13; // Added for TooManyArguments
+    pub const ERROR_CODE_ARGUMENT_MISMATCH: Int = 14; // Added for ArgumentMismatch
+    pub const ERROR_CODE_INVALID_DEFAULT_VALUE: Int = 15; // Added for InvalidDefaultValue
+    pub const ERROR_CODE_INVALID_OPERATOR: Int = 16; // Added for InvalidOperator
+    pub const ERROR_CODE_INDEX_OUT_OF_BOUNDS: Int = 17; // Added for IndexOutOfBounds
+    pub const ERROR_CODE_KEY_NOT_FOUND: Int = 18; // Added for KeyNotFound
+    pub const ERROR_CODE_TYPE_ERROR: Int = 19; // Added for TypeError
+    pub const ERROR_CODE_EARLY_RETURN: Int = 20; // Added for EarlyReturn
 
     pub fn codes() -> Expression {
         Expression::Map(b_tree_map! {
@@ -401,8 +410,18 @@ impl RuntimeError {
             String::from("recursion_depth") => Expression::Integer(Self::ERROR_CODE_RECURSION_DEPTH),
             String::from("permission_denied") => Expression::Integer(Self::ERROR_CODE_PERMISSION_DENIED),
             String::from("program_not_found") => Expression::Integer(Self::ERROR_CODE_PROGRAM_NOT_FOUND),
-            // String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CUSTOM_ERROR),
+            String::from("redeclaration") => Expression::Integer(Self::ERROR_CODE_REDECLARATION),
+            String::from("undeclared_variable") => Expression::Integer(Self::ERROR_CODE_UNDECLARED_VARIABLE),
+            String::from("no_matching_branch") => Expression::Integer(Self::ERROR_CODE_NO_MATCHING_BRANCH),
+            String::from("too_many_arguments") => Expression::Integer(Self::ERROR_CODE_TOO_MANY_ARGUMENTS),
+            String::from("argument_mismatch") => Expression::Integer(Self::ERROR_CODE_ARGUMENT_MISMATCH),
+            String::from("invalid_default_value") => Expression::Integer(Self::ERROR_CODE_INVALID_DEFAULT_VALUE),
+            String::from("invalid_operator") => Expression::Integer(Self::ERROR_CODE_INVALID_OPERATOR),
+            String::from("index_out_of_bounds") => Expression::Integer(Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS),
+            String::from("key_not_found") => Expression::Integer(Self::ERROR_CODE_KEY_NOT_FOUND),
+            String::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
+            String::from("early_return") => Expression::Integer(Self::ERROR_CODE_EARLY_RETURN),
         })
     }
 
@@ -417,12 +436,20 @@ impl RuntimeError {
             RuntimeError::RecursionDepth(..) => Self::ERROR_CODE_RECURSION_DEPTH,
             RuntimeError::PermissionDenied(..) => Self::ERROR_CODE_PERMISSION_DENIED,
             RuntimeError::ProgramNotFound(..) => Self::ERROR_CODE_PROGRAM_NOT_FOUND,
+            RuntimeError::Redeclaration(..) => Self::ERROR_CODE_REDECLARATION,
+            RuntimeError::UndeclaredVariable(..) => Self::ERROR_CODE_UNDECLARED_VARIABLE,
+            RuntimeError::NoMatchingBranch(..) => Self::ERROR_CODE_NO_MATCHING_BRANCH,
+            RuntimeError::TooManyArguments { .. } => Self::ERROR_CODE_TOO_MANY_ARGUMENTS,
+            RuntimeError::ArgumentMismatch { .. } => Self::ERROR_CODE_ARGUMENT_MISMATCH,
+            RuntimeError::InvalidDefaultValue(..) => Self::ERROR_CODE_INVALID_DEFAULT_VALUE,
+            RuntimeError::InvalidOperator(..) => Self::ERROR_CODE_INVALID_OPERATOR,
+            RuntimeError::IndexOutOfBounds { .. } => Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS,
+            RuntimeError::KeyNotFound(..) => Self::ERROR_CODE_KEY_NOT_FOUND,
+            RuntimeError::TypeError { .. } => Self::ERROR_CODE_TYPE_ERROR,
+            RuntimeError::EarlyReturn(..) => Self::ERROR_CODE_EARLY_RETURN,
             _ => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }
-    // pub fn type_name(&self) -> String {
-    //     type_name::<Self>().to_string()
-    // }
 }
 
 impl LmError {

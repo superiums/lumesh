@@ -13,7 +13,7 @@ pub fn get() -> Expression {
 }
 
 fn parse_expr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("json", &args, 1)?;
+    super::check_exact_args_len("expr", &args, 1)?;
     let script = args[0].eval(env)?.to_string();
     if script.is_empty() {
         return Ok(Expression::None);

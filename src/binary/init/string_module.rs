@@ -1,4 +1,3 @@
-use super::fn_module::curry_env;
 use crate::{Environment, Expression, LmError};
 use common_macros::b_tree_map;
 
@@ -152,12 +151,8 @@ pub fn get() -> Expression {
             }
         }, "is this string numeric?"),
 
-        String::from("split") => Expression::builtin("split", |args, env| {
-            Ok(curry_env(Expression::builtin("", split, ""), 2, env)?
-                .eval(env)?
-                .apply(args)
-                .eval(env)?)
-        }, "split a string on a given character"),
+        // TODO test, removed curry
+        String::from("split") => Expression::builtin("split", split, "split a string on a given character"),
 
         String::from("to_lower") => Expression::builtin("to_lower", |args, env| {
             match args[0].eval(env)? {

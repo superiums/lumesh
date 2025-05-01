@@ -431,8 +431,9 @@ impl Expression {
                             // return Ok(result);
                         }
                         _ => {
+                            // fmt.red : left is builtin, right never.
                             let l = lhs.eval_mut(true, env, depth + 1)?;
-                            let r = rhs.eval_mut(true, env, depth + 1)?;
+                            let r = rhs.eval_mut(false, env, depth + 1)?;
                             break match operator.as_str() {
                                 "+" => Ok(l + r),
                                 "-" => Ok(l - r),

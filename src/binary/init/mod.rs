@@ -9,8 +9,8 @@ mod console_module;
 mod dict_module;
 mod err_module;
 mod fmt_module;
-mod fn_module;
-use fn_module::curry;
+// mod fn_module;
+// use fn_module::curry;
 mod fs_module;
 mod list_module;
 use list_module::*;
@@ -43,7 +43,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("widget") => widget_module::get(),
         String::from("time") => time_module::get(),
         String::from("rand") => rand_module::get(),
-        String::from("fn") => fn_module::get(),
+        // String::from("fn") => fn_module::get(),
         String::from("console") => console_module::get(),
         String::from("fmt") => fmt_module::get(),
         String::from("parse") => parse_module::get(),
@@ -67,19 +67,55 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             String::from("str") => Expression::builtin("str", str, "format an expression to a string"),
             String::from("int") => Expression::builtin("int", int, "convert a float or string to an int"),
             String::from("insert") => Expression::builtin("insert", insert, "insert an item into a dictionary or list"),
-            String::from("keys") => Expression::builtin("keys", keys, "get the list of keys in a table"),
-            String::from("vals") => Expression::builtin("vals", vals, "get the list of values in a table"),
-            String::from("vars") => Expression::builtin("vars", vars, "get a table of the defined variables"),
             String::from("len") => Expression::builtin("len", len, "get the length of an expression"),
             // String::from("chars") => Expression::builtin("chars", chars, "aaa"),
             // String::from("head") => Expression::builtin("head", head, "aaa"),
             // String::from("tail") => Expression::builtin("tail", tail, "aaa"),
-            String::from("lines") => Expression::builtin("lines", lines, "get the list of lines in a string"),
+            // String::from("lines") => Expression::builtin("lines", lines, "get the list of lines in a string"),
             String::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
             String::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
             // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
             String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
 
+            String::from("include") => Expression::builtin("include", |args, env| {
+                check_exact_args_len("include", &args, 1)?;
+
+                let cwd = std::env::current_dir()?;
+                let path = cwd.join(args[0].eval(env)?.to_string());
+
+                if let Ok(canon_path) = dunce::canonicalize(&path) {
+                    // Read the file.
+                    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
+                    // Evaluate the file.
+                    if let Ok(expr) = crate::parse(&contents) {
+                        Ok(expr.eval(env)?)
+                    } else {
+                        Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
+                    }
+                } else {
+                    Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
+                }
+            }, "evaluate a file in the current environment"),
+
+            String::from("import") => Expression::builtin("import", |args, env| {
+                check_exact_args_len("import", &args, 1)?;
+                let cwd = std::env::current_dir()?;
+                let path = cwd.join(args[0].eval(env)?.to_string());
+
+                if let Ok(canon_path) = dunce::canonicalize(&path) {
+                    // Read the file.
+                    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
+                    // Evaluate the file.
+                    if let Ok(expr) = crate::parse(&contents) {
+                        let mut new_env = env.clone();
+                        Ok(expr.eval(&mut new_env)?)
+                    } else {
+                        Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
+                    }
+                } else {
+                    Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
+                }
+            }, "import a file (evaluate it in a new environment)"),
 
 
     };
@@ -253,37 +289,16 @@ fn insert(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     Ok(arr)
 }
 
-fn keys(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    match args[0].eval(env)? {
-        Expression::Map(m) => Ok(m.into_keys().collect::<Vec<_>>().into()),
-        otherwise => Err(LmError::CustomError(format!(
-            "cannot get the keys of {}",
-            otherwise
-        ))),
-    }
-}
-
-fn vals(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    match args[0].eval(env)? {
-        Expression::Map(m) => Ok(m.into_values().collect::<Vec<_>>().into()),
-        otherwise => Err(LmError::CustomError(format!(
-            "cannot get the values of {}",
-            otherwise
-        ))),
-    }
-}
-
-fn vars(_: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    Ok(env.bindings.clone().into())
-}
-
 fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("len", &args, 1)?;
     match args[0].eval(env)? {
         Expression::Map(m) => Ok(Expression::Integer(m.len() as Int)),
         Expression::List(list) => Ok(Expression::Integer(list.len() as Int)),
         Expression::Symbol(x) | Expression::String(x) => {
             Ok(Expression::Integer(x.chars().count() as Int))
         }
+        Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
+
         otherwise => Err(LmError::CustomError(format!(
             "cannot get length of {}",
             otherwise
@@ -291,19 +306,19 @@ fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate
     }
 }
 
-fn lines(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    match args[0].eval(env)? {
-        Expression::String(x) => Ok(Expression::List(
-            x.lines()
-                .map(|ch| Expression::String(ch.to_string()))
-                .collect::<Vec<Expression>>(),
-        )),
-        otherwise => Err(LmError::CustomError(format!(
-            "cannot get lines of non-string {}",
-            otherwise
-        ))),
-    }
-}
+// fn lines(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+//     match args[0].eval(env)? {
+//         Expression::String(x) => Ok(Expression::List(
+//             x.lines()
+//                 .map(|ch| Expression::String(ch.to_string()))
+//                 .collect::<Vec<Expression>>(),
+//         )),
+//         otherwise => Err(LmError::CustomError(format!(
+//             "cannot get lines of non-string {}",
+//             otherwise
+//         ))),
+//     }
+// }
 
 fn eval(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut new_env = env.clone();

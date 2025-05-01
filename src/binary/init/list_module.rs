@@ -1,4 +1,4 @@
-use crate::Int;
+// use crate::Int;
 // use super::curry;
 use crate::{Environment, Expression, LmError};
 use common_macros::b_tree_map;
@@ -16,8 +16,8 @@ pub fn get() -> Expression {
             "prepend an element to a list"),
         String::from("append") => Expression::builtin("append", append,
             "append an element to a list"),
-        String::from("len") => Expression::builtin("len", len,
-            "get the length of a list"),
+        // String::from("len") => Expression::builtin("len", len,
+            // "get the length of a list"),
         String::from("rev") => Expression::builtin("rev", rev,
             "reverse a list"),
         String::from("range") => Expression::builtin("range", range,
@@ -41,6 +41,12 @@ pub fn get() -> Expression {
         String::from("nth") => Expression::builtin("nth", nth,
             "get the nth element of a list"),
 
+        String::from("map") => Expression::builtin("map", map,
+            "map a function over a list of values"),
+        String::from("filter") => Expression::builtin("filter", filter,
+            "filter a list of values with a condition function"),
+        String::from("reduce") => Expression::builtin("reduce", reduce,
+            "reduce a function over a list of values"),
     })
     .into()
 }
@@ -152,23 +158,23 @@ fn append(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     }
 }
 
-pub(super) fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    if args.len() != 1 {
-        return Err(LmError::CustomError(
-            "len requires exactly one argument".to_string(),
-        ));
-    }
-    let list = args[0].eval(env)?;
-    match list {
-        Expression::List(list) => Ok(Expression::Integer(list.len() as Int)),
-        Expression::String(string) => Ok(Expression::Integer(string.len() as Int)),
-        Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
-        Expression::Map(map) => Ok(Expression::Integer(map.len() as Int)),
-        _ => Err(LmError::CustomError(
-            "len requires a list or string as its argument".to_string(),
-        )),
-    }
-}
+// pub(super) fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+//     if args.len() != 1 {
+//         return Err(LmError::CustomError(
+//             "len requires exactly one argument".to_string(),
+//         ));
+//     }
+//     let list = args[0].eval(env)?;
+//     match list {
+//         Expression::List(list) => Ok(Expression::Integer(list.len() as Int)),
+//         Expression::String(string) => Ok(Expression::Integer(string.len() as Int)),
+//         Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
+//         Expression::Map(map) => Ok(Expression::Integer(map.len() as Int)),
+//         _ => Err(LmError::CustomError(
+//             "len requires a list or string as its argument".to_string(),
+//         )),
+//     }
+// }
 
 pub(super) fn rev(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
@@ -406,5 +412,122 @@ fn nth(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
         Err(LmError::CustomError(
             "nth requires an integer as its first argument".to_string(),
         ))
+    }
+}
+
+fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    if !(1..=2).contains(&args.len()) {
+        return Err(LmError::CustomError(
+            if args.len() > 2 {
+                "too many arguments to function map"
+            } else {
+                "too few arguments to function map"
+            }
+            .to_string(),
+        ))?;
+    }
+
+    if args.len() == 1 {
+        Ok(Expression::Apply(
+            Box::new(crate::parse("(f,list) -> for item in list {f item}")?),
+            args.clone(),
+        )
+        .eval(env)?)
+    } else if let Expression::List(list) = args[1].eval(env)? {
+        let f = args[0].eval(env)?;
+        let mut result = vec![];
+        for item in list {
+            result.push(Expression::Apply(Box::new(f.clone()), vec![item]).eval(env)?)
+        }
+        Ok(result.into())
+    } else {
+        Err(LmError::CustomError(format!(
+            "invalid arguments to map: {}",
+            Expression::from(args)
+        )))
+    }
+}
+
+fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    if !(1..=2).contains(&args.len()) {
+        return Err(LmError::CustomError(
+            if args.len() > 2 {
+                "too many arguments to function filter"
+            } else {
+                "too few arguments to function filter"
+            }
+            .to_string(),
+        ));
+    }
+
+    if args.len() == 1 {
+        Ok(Expression::Apply(
+            Box::new(crate::parse(
+                r#"(f,list) -> {
+                    let result = [];
+                    for item in list {
+                        if (f item) {
+                            let result = result + [item];
+                        }
+                    }
+                    result
+                }"#,
+            )?),
+            args.clone(),
+        )
+        .eval(env)?)
+    } else if let Expression::List(list) = args[1].eval(env)? {
+        let f = args[0].eval(env)?;
+        let mut result = vec![];
+        for item in list {
+            if Expression::Apply(Box::new(f.clone()), vec![item.clone()])
+                .eval(env)?
+                .is_truthy()
+            {
+                result.push(item)
+            }
+        }
+        Ok(result.into())
+    } else {
+        Err(LmError::CustomError(format!(
+            "invalid arguments to filter: {}",
+            Expression::from(args)
+        )))
+    }
+}
+
+fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    if !(1..=3).contains(&args.len()) {
+        return Err(LmError::CustomError(
+            if args.len() > 3 {
+                "too many arguments to function reduce"
+            } else {
+                "too few arguments to function reduce"
+            }
+            .to_string(),
+        ));
+    }
+
+    if args.len() < 3 {
+        Ok(Expression::Apply(
+            Box::new(crate::parse(
+                "(f,acc,list) -> { \
+                        for item in list { let acc = f acc item } acc }",
+            )?),
+            args.clone(),
+        )
+        .eval(env)?)
+    } else if let Expression::List(list) = args[2].eval(env)? {
+        let f = args[0].eval(env)?;
+        let mut acc = args[1].eval(env)?;
+        for item in list {
+            acc = Expression::Apply(Box::new(f.clone()), vec![acc, item]).eval(env)?
+        }
+        Ok(acc)
+    } else {
+        Err(LmError::CustomError(format!(
+            "invalid arguments to reduce: {}",
+            Expression::from(args)
+        )))
     }
 }

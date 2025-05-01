@@ -2,6 +2,8 @@
 # let incomplete_prompt = cwd -> ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));
 
 # let $ = GLOB ~> ((fs@ls .) | (fn@filter (file -> (len (string@split GLOB file)) == 2)));
+let flip = (f, x, y) -> {f y x}
+let compose = (f, g, x) -> f(g, x)
 
 # let include = file ~> exec (parse@expr (fs@read file));
 # let use = file ~> eval (parse@expr (fs@read file));

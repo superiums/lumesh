@@ -1,4 +1,3 @@
-use super::curry;
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::b_tree_map;
 
@@ -313,8 +312,8 @@ pub fn get(env: &mut Environment) -> Expression {
             Ok(x.ln().into())
         }, "get the natural log of a number"),
 
-
-        String::from("log") => curry(Expression::builtin("log", |args, env| {
+// TODO test, removed curry
+        String::from("log") =>Expression::builtin("log", |args, env| {
             super::check_exact_args_len("log", &args, 2)?;
 
             let base = match args[0].eval(env)? {
@@ -330,7 +329,7 @@ pub fn get(env: &mut Environment) -> Expression {
             };
 
             Ok(x.log(base).into())
-        }, "get the log of a number using a given base"), 2),
+        }, "get the log of a number using a given base"),
 
 
         String::from("log2") => Expression::builtin("log2", |args, env| {

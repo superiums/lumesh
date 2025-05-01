@@ -1,4 +1,4 @@
-use crate::{Expression, LmError};
+use crate::{Environment, Expression};
 use common_macros::b_tree_map;
 
 pub fn get() -> Expression {
@@ -17,35 +17,35 @@ pub fn get() -> Expression {
             Ok(Expression::Quote(Box::new(args[0].clone())))
         }, "quote an expression"),
 
-        String::from("eval") => Expression::builtin("eval", |args, env| {
-            let mut new_env = env.clone();
-            Ok(args[0].clone().eval(env)?.eval(&mut new_env)?)
-        }, "evaluate an expression without changing the environment"),
+        // String::from("eval") => Expression::builtin("eval", |args, env| {
+        //     let mut new_env = env.clone();
+        //     Ok(args[0].clone().eval(env)?.eval(&mut new_env)?)
+        // }, "evaluate an expression without changing the environment"),
 
-        String::from("exec") => Expression::builtin("exec", |args, env| {
-            Ok(args[0].clone().eval(env)?.eval(env)?)
-        }, "evaluate an expression in the current environment"),
+        // String::from("exec") => Expression::builtin("exec", |args, env| {
+        //     Ok(args[0].clone().eval(env)?.eval(env)?)
+        // }, "evaluate an expression in the current environment"),
 
         // Evaluate a file in the current environment.
-        String::from("include") => Expression::builtin("include", |args, env| {
-            super::check_exact_args_len("include", &args, 1)?;
+        // String::from("include") => Expression::builtin("include", |args, env| {
+        //     super::check_exact_args_len("include", &args, 1)?;
 
-            let cwd = std::env::current_dir()?;
-            let path = cwd.join(args[0].eval(env)?.to_string());
+        //     let cwd = std::env::current_dir()?;
+        //     let path = cwd.join(args[0].eval(env)?.to_string());
 
-            if let Ok(canon_path) = dunce::canonicalize(&path) {
-                // Read the file.
-                let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
-                // Evaluate the file.
-                if let Ok(expr) = crate::parse(&contents) {
-                    Ok(expr.eval(env)?)
-                } else {
-                    Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
-                }
-            } else {
-                Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
-            }
-        }, "evaluate a file in the current environment"),
+        //     if let Ok(canon_path) = dunce::canonicalize(&path) {
+        //         // Read the file.
+        //         let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
+        //         // Evaluate the file.
+        //         if let Ok(expr) = crate::parse(&contents) {
+        //             Ok(expr.eval(env)?)
+        //         } else {
+        //             Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
+        //         }
+        //     } else {
+        //         Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
+        //     }
+        // }, "evaluate a file in the current environment"),
 
         // Change the current working directory.
         // String::from("cd") => Expression::builtin("cd", |args, env| {
@@ -68,29 +68,30 @@ pub fn get() -> Expression {
         // }, "get the current working directory"),
 
         // Import a file (evaluate it in a new environment).
-        String::from("import") => Expression::builtin("import", |args, env| {
-            super::check_exact_args_len("import", &args, 1)?;
-            let cwd = std::env::current_dir()?;
-            let path = cwd.join(args[0].eval(env)?.to_string());
+        // String::from("import") => Expression::builtin("import", |args, env| {
+        //     super::check_exact_args_len("import", &args, 1)?;
+        //     let cwd = std::env::current_dir()?;
+        //     let path = cwd.join(args[0].eval(env)?.to_string());
 
-            if let Ok(canon_path) = dunce::canonicalize(&path) {
-                // Read the file.
-                let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
-                // Evaluate the file.
-                if let Ok(expr) = crate::parse(&contents) {
-                    let mut new_env = env.clone();
-                    Ok(expr.eval(&mut new_env)?)
-                } else {
-                    Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
-                }
-            } else {
-                Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
-            }
-        }, "import a file (evaluate it in a new environment)"),
+        //     if let Ok(canon_path) = dunce::canonicalize(&path) {
+        //         // Read the file.
+        //         let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
+        //         // Evaluate the file.
+        //         if let Ok(expr) = crate::parse(&contents) {
+        //             let mut new_env = env.clone();
+        //             Ok(expr.eval(&mut new_env)?)
+        //         } else {
+        //             Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
+        //         }
+        //     } else {
+        //         Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
+        //     }
+        // }, "import a file (evaluate it in a new environment)"),
 
         String::from("env") => Expression::builtin("env", |_args, env| {
             Ok(Expression::from(env.clone()))
         }, "get the current environment as a map"),
+        String::from("vars") => Expression::builtin("vars", vars, "get a table of the defined variables"),
 
         String::from("set") => Expression::builtin("set", |args, env| {
             super::check_exact_args_len("set", &args, 2)?;
@@ -113,4 +114,8 @@ pub fn get() -> Expression {
             Ok(Expression::Boolean(env.is_defined(&name)))
         }, "check if a variable is defined in the current environment"),
     })
+}
+
+fn vars(_: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    Ok(env.bindings.clone().into())
 }

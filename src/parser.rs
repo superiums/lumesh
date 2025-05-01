@@ -449,7 +449,7 @@ impl PrattParser {
                     // .unwrap_or_else(|_| panic!("Invalid assignment target: {:?}", lhs));
                     Ok(name) => Ok(Expression::Assign(name.to_string(), Box::new(rhs))),
                     _ => {
-                        eprintln!("invalid left-hand-side: {:?}", lhs);
+                        // eprintln!("invalid left-hand-side: {:?}", lhs);
                         Err(SyntaxErrorKind::failure(
                             input.get_str_slice(),
                             "symbol",
@@ -528,7 +528,7 @@ impl PrattParser {
                     // 处理无括号单参数
                     Expression::Symbol(name) => Ok(vec![name]),
                     _ => {
-                        eprintln!("invalid lambda/macro param {:?}", lhs);
+                        // eprintln!("invalid lambda/macro param {:?}", lhs);
                         return Err(SyntaxErrorKind::failure(
                             input.get_str_slice(),
                             "symbol or parameter list",
@@ -581,13 +581,12 @@ impl PrattParser {
                 let (true_expr, false_expr) = match rhs {
                     Expression::BinaryOp(op, t, f) if op == ":" => (t, f),
                     _ => {
-                        eprintln!("invalid conditional ?: {:?}", rhs);
-
+                        // eprintln!("invalid conditional ?: {:?}", rhs);
                         return Err(SyntaxErrorKind::failure(
                             input.get_str_slice(),
-                            "symbol",
-                            Some(lhs.to_string()),
-                            "Invalid conditional expression".into(),
+                            "a:b",
+                            Some(rhs.to_string()),
+                            "add true_value:false_value after '?'".into(),
                         ));
                     }
                 };
@@ -610,8 +609,7 @@ impl PrattParser {
                         Box::new(Expression::Quote(Box::new(rhs))),
                     )),
                     _ => {
-                        eprintln!("invalid left-hide-side {:?}", lhs);
-
+                        // eprintln!("invalid left-hide-side {:?}", lhs);
                         Err(SyntaxErrorKind::failure(
                             input.get_str_slice(),
                             "symbol",
@@ -771,7 +769,7 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
     // dbg!("---parse_fn_declare");
 
     let (input, name) = parse_symbol_string(input).map_err(|_| {
-        eprintln!("mising fn name?");
+        // eprintln!("mising fn name?");
         // dbg!(input, input.get_str_slice());
         SyntaxErrorKind::failure(
             input.get_str_slice(),
@@ -792,7 +790,7 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
     } {
         return Err(SyntaxErrorKind::failure(
             input.get_str_slice(),
-            "valid function body declare",
+            "function body",
             None,
             Some("add a function body like {...}"),
         ));
@@ -904,7 +902,13 @@ fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     if raw_str.len() >= 2 {
         // 通过StrSlice直接计算子范围
         let start = expr.start() + 1;
-        let end = expr.end() - 1;
+
+        // 如果有右侧引号，则调整结束位置
+        let end = match raw_str.chars().last().unwrap() {
+            '\'' => expr.end() - 1,
+            _ => expr.end(),
+        };
+
         let content = input.str.get(start..end); // 截取中间部分
         Ok((
             input,

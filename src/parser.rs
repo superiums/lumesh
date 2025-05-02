@@ -1408,7 +1408,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         text(","),
         alt((
             parse_symbol_string,
-            // parse_operator,
+            parse_operator,
             parse_custom_postfix_operator,
         )),
     )(input)
@@ -1477,11 +1477,11 @@ fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     Ok((input, Expression::Del(symbol)))
 }
 
-// fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
-//     map(kind(TokenKind::Operator), |t| {
-//         t.to_str(input.str).to_string()
-//     })(input)
-// }
+fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
+    map(kind(TokenKind::Operator), |t| {
+        t.to_str(input.str).to_string()
+    })(input)
+}
 fn parse_custom_postfix_operator(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {

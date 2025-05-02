@@ -54,7 +54,7 @@ Lumesh Shell 语法手册
      |-----------|--------------------------|
      | 变量     | `x`                    |
      | 函数     | `fn add(x,y){return x+y}`    |
-     | lambda     | `let add = x -> y -> x + y`  |
+     | lambda     | `let add = (x,y) -> x + y`  |
      | bultin     | `math@floor`  |
 
    - **字符串规则**：
@@ -67,6 +67,15 @@ Lumesh Shell 语法手册
 
    **边缘情况**：
    - 单引号字符串中的 `\` 按字面处理（如 `'Line\n'` 输出 `Line\n`）。
+   - 未定义的转义序列会报错，如：
+  ```bash
+  echo "Hello\_"
+
+  [PARSE FAILED] syntax error: invalid string escape sequence `\_`
+        |
+      1 | echo "Hello\_"
+        |
+  ```
 
 3. **作用域规则**
    - lambda, function函数 将创建子环境作用域。
@@ -359,6 +368,15 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
 
    echo add(2, 3)  # 输出 5
    ```
+
+   区分函数调用和执行命令的方式，有助于避免同名函数覆盖命令，如：
+   ```bash
+    # 测试用例6：函数与命令同名覆盖
+    fn ls() { echo "My ls" }
+    ls -l  # 执行系统命令ls
+    ls! -l # 使用!后缀时调用函数
+    ```
+
 2. **lambda表达式**
    - 使用 `->` 定义。
    lambda 与 普通函数的区别：
@@ -467,6 +485,10 @@ fn divide(x,y){
 ```bash
 let e = x -> 0
 let result = 6 /0 ?: e
+echo result              # 输出默认值: 0
+
+# 等同于
+let result = 6 /0 ?: 0
 echo result              # 输出默认值: 0
 ```
 

@@ -19,17 +19,18 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 - [Features](#features)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
+- [Benchmark](#benchmark)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Wiki
 For detailed documentation and guides, visit our [Wiki](https://codeberg.com/santo/lumesh/wiki).
 
-## Syntax handbook
+- Syntax handbook
 
-[syntax-handbook](syntax.md)
+[syntax-handbook](wiki/syntax.md)
 
-[语法手册](syntax-cn.md)
+[语法手册](wiki/syntax-cn.md)
 
 ## Features
 
@@ -51,7 +52,7 @@ The script parser, executor, and front end have been completely rewritten since 
 
 Discover more features in our [ChangeLog](CHANGELOG.md).
 
-## benchmark
+## Benchmark
 ```bash
 initial_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
 let start=time.stamp-ms();

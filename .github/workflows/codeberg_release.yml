@@ -1,0 +1,133 @@
+name: Build and upload binaries to release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.*"
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Set variables
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        id: create_release
+        uses: ruben0420/forge-release-action@v1.6.2
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          body: |
+            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            - lume: an edition contains interactive repl and script parser.
+            - lumesh: an swift edition only contains script parser. used to run script swiftly.
+            - doc: help docs.
+
+            If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
+
+  build_docs:
+    name: Build documentation
+    needs: create_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate docs
+        run: |
+          mkdir -p doc
+          cp CHANGELOG.md doc
+          cp README.md doc
+          cp LICENSE doc
+          cp wiki/syntax.md doc
+          cp -r src/binary/help doc
+          cp src/config/config.lsh doc
+
+      - name: Create compressed files
+        run: |
+          tar -czvf doc.tar.gz -C doc .
+          zip -r doc.zip doc/*
+
+      - name: Upload docs
+        uses: ruben0420/forge-release-asset-action@v1
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: doc.tar.gz
+          asset_path: doc.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload doc.zip
+        uses: ruben0420/forge-release-asset-action@v1
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: doc.zip
+          asset_path: doc.zip
+          asset_content_type: application/zip
+
+  release_assets:
+    name: Release assets
+    needs: [create_release]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            file_ending: ""
+          - os: macos-latest
+            platform: macos
+            file_ending: ""
+          - os: windows-latest
+            platform: windows
+            file_ending: ".exe"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Print information
+        run: |
+          rustup show active-toolchain
+          rustc --version
+          cargo tree
+
+      - name: Set variables
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build project
+        run: |
+          cargo build --release --locked
+          cargo build --features runner --release
+
+      - name: Upload main binary
+        uses: ruben0420/forge-release-asset-action@v1
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
+          asset_path: target/release/lume${{ matrix.file_ending }}
+          asset_content_type: application/octet-stream
+
+      - name: Upload runner binary
+        uses: ruben0420/forge-release-asset-action@v1
+        env:
+          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lumesh_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
+          asset_path: target/release/lumesh${{ matrix.file_ending }}
+          asset_content_type: application/octet-stream

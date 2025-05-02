@@ -35,12 +35,15 @@ let sum=0; for i in 0..1000001 {
 let end=time.stamp-ms();
 final_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
 
-echo "从 1 到 1000000 的总和是: $sum"
-echo "初始内存使用: ${initial_memory} kB"
-echo "结束时内存使用: ${final_memory} kB"
-echo "内存使用变化: $((final_memory - initial_memory)) kB"
+echo "从 1 到 1000000 的总和是:" sum
+echo "初始内存使用:" initial_memory kB
+echo "结束时内存使用:" final_memory kB
+echo "内存使用变化:" final_memory - initial_memory kB
 echo "所需时间: " end - start "毫秒";
-
+# 初始内存使用: 6120 kB
+# 结束时内存使用: 6104 kB
+# 内存使用变化: -16 kB
+# 所需时间:  612 毫秒
 
 # --- cpu性能 ---
 let start=time.stamp-ms();

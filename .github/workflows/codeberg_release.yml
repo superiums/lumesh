@@ -1,38 +1,62 @@
-name: Build and upload binaries to release
+name: Build and release
 
 on:
   push:
     tags:
       - "v[0-9]+.*"
+
+env:
+  FORGEJO_API: https://codeberg.org/api/v1
+
 jobs:
+  # 独立验证作业
+  validate:
+    name: Validate prerequisites
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify tag format
+        run: |
+          if ! [[ "${{ github.ref }}" =~ ^refs/tags/v[0-9]+\..* ]]; then
+            echo "::error::Invalid tag format (should be vX.Y.Z)"
+            exit 1
+          fi
+          echo "Tag format is valid"
+
+      - name: Check Rust toolchain
+        run: rustc --version
+
+  # 创建发布
   create_release:
     name: Create release
     runs-on: ubuntu-latest
+    needs: validate
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - name: Set variables
+      - name: Extract tag name
         id: vars
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Create release
         id: create_release
-        uses: ruben0420/forge-release-action@v1.6.2
+        uses: actions/gitea-release@v1
         env:
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          api_url: ${{ env.FORGEJO_API }}
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
           body: |
-            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            ## Lumesh ${{ steps.vars.outputs.tag }}
+            [Changelog](https://codeberg.org/santo/lumesh/src/tag/${{ steps.vars.outputs.tag }}/CHANGELOG.md)
+
+            ### contains
             - lume: an edition contains interactive repl and script parser.
             - lumesh: an swift edition only contains script parser. used to run script swiftly.
             - doc: help docs.
-
-            If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
-
+  # 文档构建
   build_docs:
     name: Build documentation
     needs: create_release
@@ -40,94 +64,75 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Generate docs
-        run: |
-          mkdir -p doc
-          cp CHANGELOG.md doc
-          cp README.md doc
-          cp LICENSE doc
-          cp wiki/syntax.md doc
-          cp -r src/binary/help doc
-          cp src/config/config.lsh doc
-
-      - name: Create compressed files
-        run: |
-          tar -czvf doc.tar.gz -C doc .
-          zip -r doc.zip doc/*
-
-      - name: Upload docs
-        uses: ruben0420/forge-release-asset-action@v1
-        env:
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: doc.tar.gz
-          asset_path: doc.tar.gz
-          asset_content_type: application/gzip
+          fetch-depth: 0
 
-      - name: Upload doc.zip
-        uses: ruben0420/forge-release-asset-action@v1
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Prepare documentation
+        run: |
+          mkdir -p dist/doc
+          cp -r LICENSE README.md CHANGELOG.md src/binary/help src/config/config.lsh dist/doc/
+          tar czvf doc.tar.gz -C dist/doc .
+
+      - name: Upload documentation
+        uses: actions/gitea-upload-release@v1
         env:
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: doc.zip
-          asset_path: doc.zip
-          asset_content_type: application/zip
+          api_url: ${{ env.FORGEJO_API }}
+          release_id: ${{ needs.create_release.outputs.release_id }}
+          file: doc.tar.gz
+          asset_name: lumesh-docs-${{ needs.create_release.outputs.tag }}.tar.gz
 
-  release_assets:
-    name: Release assets
-    needs: [create_release]
+  # 二进制构建
+  build_binaries:
+    name: Build binaries
+    needs: create_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
             platform: linux
-            file_ending: ""
+            ext: ""
           - os: macos-latest
             platform: macos
-            file_ending: ""
+            ext: ""
           - os: windows-latest
             platform: windows
-            file_ending: ".exe"
+            ext: ".exe"
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Print information
-        run: |
-          rustup show active-toolchain
-          rustc --version
-          cargo tree
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
 
-      - name: Set variables
-        id: vars
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Build project
+      - name: Build release binaries
         run: |
           cargo build --release --locked
           cargo build --features runner --release
 
-      - name: Upload main binary
-        uses: ruben0420/forge-release-asset-action@v1
+      - name: Upload lume binary
+        uses: actions/gitea-upload-release@v1
         env:
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: lume_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/lume${{ matrix.file_ending }}
-          asset_content_type: application/octet-stream
+          api_url: ${{ env.FORGEJO_API }}
+          release_id: ${{ needs.create_release.outputs.release_id }}
+          file: target/release/lume${{ matrix.ext }}
+          asset_name: lume-${{ matrix.platform }}-${{ needs.create_release.outputs.tag }}${{ matrix.ext }}
 
-      - name: Upload runner binary
-        uses: ruben0420/forge-release-asset-action@v1
+      - name: Upload lumesh binary
+        uses: actions/gitea-upload-release@v1
         env:
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          FORGEJO_TOKEN: ${{ secrets.FORGEJO_TOKEN }}
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: lumesh_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/lumesh${{ matrix.file_ending }}
-          asset_content_type: application/octet-stream
+          api_url: ${{ env.FORGEJO_API }}
+          release_id: ${{ needs.create_release.outputs.release_id }}
+          file: target/release/lumesh${{ matrix.ext }}
+          asset_name: lumesh-${{ matrix.platform }}-${{ needs.create_release.outputs.tag }}${{ matrix.ext }}

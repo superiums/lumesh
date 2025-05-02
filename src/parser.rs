@@ -50,7 +50,7 @@ const PREC_GROUP: u8 = 28; // 分组括号      ()
 // Literal
 const PREC_LITERAL: u8 = 29; //原始字面量     "x"
 // cmd
-const PREC_CMD_NAME: u8 = 30;
+// const PREC_CMD_NAME: u8 = 30;
 // const PREC_FUNC_NAME: u8 = 31;
 
 // var
@@ -703,7 +703,9 @@ fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
 // -- 子命令 --
 fn parse_subcommand(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // dbg!(input);
-    let (input, sub) = delimited(text("`"), parse_command_call, text_close("`"))(input)?;
+    // let (input, sub) = delimited(text("`"), parse_command_call, text_close("`"))(input)?;
+    // 需要允许 && | 等操作，不能只是单独的命令。
+    let (input, sub) = delimited(text("`"), parse_expr, text_close("`"))(input)?;
     // dbg!(input, &sub);
     Ok((input, sub))
 }
@@ -867,26 +869,26 @@ fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
     ))
 }
 
-fn parse_command_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // 如果第二个token为operator,则不是命令。如 a = 3,
-    // dbg!(input.len());
-    // if input.len() > 1
-    //     && input
-    //         .skip_n(1)
-    //         .first()
-    //         .is_some_and(|x| x.kind == TokenKind::Operator)
-    // // && !["`", "("].contains(&x.text(input)))
-    // {
-    //     // dbg!("--->cmd escape---");
+// fn parse_command_call(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     // 如果第二个token为operator,则不是命令。如 a = 3,
+//     // dbg!(input.len());
+//     // if input.len() > 1
+//     //     && input
+//     //         .skip_n(1)
+//     //         .first()
+//     //         .is_some_and(|x| x.kind == TokenKind::Operator)
+//     // // && !["`", "("].contains(&x.text(input)))
+//     // {
+//     //     // dbg!("--->cmd escape---");
 
-    //     return Err(nom::Err::Error(SyntaxErrorKind::NoExpression));
-    // }
-    // dbg!("--->cmd call---");
-    let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_CMD_NAME, 0)?;
-    let (input, args) =
-        many0(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, 0))(input)?;
-    Ok((input, Expression::Command(Box::new(ident), args)))
-}
+//     //     return Err(nom::Err::Error(SyntaxErrorKind::NoExpression));
+//     // }
+//     // dbg!("--->cmd call---");
+//     let (input, ident) = PrattParser::parse_expr_with_precedence(input, PREC_CMD_NAME, 0)?;
+//     let (input, args) =
+//         many0(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, 0))(input)?;
+//     Ok((input, Expression::Command(Box::new(ident), args)))
+// }
 
 // -- 其他辅助函数保持与用户提供代码一致 --
 #[inline]

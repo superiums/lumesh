@@ -298,7 +298,7 @@ impl PrattParser {
                 return match op {
                     "(" => {
                         // 分组{表达式 (expr)
-                        alt((parse_lambda_param, parse_group))(input)
+                        alt((parse_group, parse_lambda_param))(input)
                     }
                     "`" => {
                         // 数组字面量 [expr, ...]
@@ -474,8 +474,16 @@ impl PrattParser {
             "=" => {
                 // 确保左侧是符号
                 match lhs.to_symbol() {
-                    // .unwrap_or_else(|_| panic!("Invalid assignment target: {:?}", lhs));
-                    Ok(name) => Ok(Expression::Assign(name.to_string(), Box::new(rhs))),
+                    Ok(name) => {
+                        // 如果是单独的symbol，则包装为命令
+                        let last = match rhs {
+                            Expression::Symbol(s) => {
+                                Expression::Command(Box::new(Expression::Symbol(s)), vec![])
+                            }
+                            other => other,
+                        };
+                        Ok(Expression::Assign(name.to_string(), Box::new(last)))
+                    }
                     _ => {
                         // eprintln!("invalid left-hand-side: {:?}", lhs);
                         Err(SyntaxErrorKind::failure(
@@ -632,10 +640,19 @@ impl PrattParser {
             ":=" => {
                 // 确保左侧是符号
                 match lhs.to_symbol() {
-                    Ok(name) => Ok(Expression::Assign(
-                        name.to_string(),
-                        Box::new(Expression::Quote(Box::new(rhs))),
-                    )),
+                    Ok(name) => {
+                        // 如果是单独的symbol，则包装为命令
+                        let last = match rhs {
+                            Expression::Symbol(s) => {
+                                Expression::Command(Box::new(Expression::Symbol(s)), vec![])
+                            }
+                            other => other,
+                        };
+                        Ok(Expression::Assign(
+                            name.to_string(),
+                            Box::new(Expression::Quote(Box::new(last))),
+                        ))
+                    }
                     _ => {
                         // eprintln!("invalid left-hide-side {:?}", lhs);
                         Err(SyntaxErrorKind::failure(
@@ -711,12 +728,30 @@ fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
         parse_return,
     ))(input)
 }
+/// -- expr with cmd
+/// a b c as expr
+/// a as cmd
+/// 如果是单独的symbol，则包装为命令
+fn parse_expr_with_single_cmd(
+    input: Tokens<'_>,
+) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    // dbg!("---parse_single_expr");
+    let (input, expr) = parse_expr(input)?;
+    return if let Expression::Symbol(s) = expr {
+        Ok((
+            input,
+            Expression::Command(Box::new(Expression::Symbol(s)), vec![]),
+        ))
+    } else {
+        Ok((input, expr))
+    };
+}
 // -- 子命令 --
 fn parse_subcommand(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // dbg!(input);
     // let (input, sub) = delimited(text("`"), parse_command_call, text_close("`"))(input)?;
     // 需要允许 && | 等操作，不能只是单独的命令。
-    let (input, sub) = delimited(text("`"), parse_expr, text_close("`"))(input)?;
+    let (input, sub) = delimited(text("`"), parse_expr_with_single_cmd, text_close("`"))(input)?;
     // dbg!(input, &sub);
     Ok((input, sub))
 }
@@ -724,7 +759,9 @@ fn parse_subcommand(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     delimited(
         text("("),
-        map(parse_expr, |e| Expression::Group(Box::new(e))),
+        map(parse_expr_with_single_cmd, |e| {
+            Expression::Group(Box::new(e))
+        }),
         // map(alt((parse_math, parse_command_call)), |e| {
         //     Expression::Group(Box::new(e))
         // }),
@@ -1233,7 +1270,7 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
 /// 单独语句
 fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // dbg!("---parse_single_expr");
-    let is_single_cmd = input.len() == 1;
+    // let is_single_cmd = input.len() == 1;
     let (input, expr) = terminated(
         parse_expr, // 完整表达式
         opt(alt((
@@ -1242,17 +1279,17 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
             eof_slice, // 允许文件末尾无终止符
         ))),
     )(input)?;
-    if is_single_cmd && input.is_empty() {
-        return if let Expression::Symbol(s) = expr {
-            Ok((
-                input,
-                Expression::Command(Box::new(Expression::Symbol(s)), vec![]),
-            ))
-        } else {
-            Ok((input, expr))
-        };
-    }
-    Ok((input, expr))
+    // if is_single_cmd && input.is_empty() {
+    return if let Expression::Symbol(s) = expr {
+        Ok((
+            input,
+            Expression::Command(Box::new(Expression::Symbol(s)), vec![]),
+        ))
+    } else {
+        Ok((input, expr))
+    };
+    // }
+    // Ok((input, expr))
 }
 
 // IF语句解析（支持else if链）
@@ -1355,7 +1392,7 @@ fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     let (input, _) = text("let")(input)?;
     let (input, symbol) = parse_symbol_string(input)?;
     let (input, _) = text(":=")(input)?; // 使用:=作为延迟赋值符号
-    let (input, expr) = parse_expr(input)?;
+    let (input, expr) = parse_expr_with_single_cmd(input)?;
     // dbg!(&expr);
     Ok((
         input,
@@ -1391,9 +1428,16 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     let assignments = match exprs {
         Some(e) if e.len() == 1 => {
             if symbols.len() == 1 {
+                // 如果是单独的symbol，则包装为命令
+                let last = match &e[0] {
+                    Expression::Symbol(s) => {
+                        Expression::Command(Box::new(Expression::Symbol(s.to_owned())), vec![])
+                    }
+                    other => other.clone(),
+                };
                 return Ok((
                     input,
-                    Expression::Declare(symbols[0].clone(), Box::new(e[0].clone())),
+                    Expression::Declare(symbols[0].clone(), Box::new(last)),
                 ));
             }
             (0..symbols.len())

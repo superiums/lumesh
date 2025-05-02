@@ -217,7 +217,7 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
                 let places = input
                     .chars()
                     .take_while(|&c| {
-                        !c.is_whitespace() && !['`', ')', ']', '}', '|', '>'].contains(&c)
+                        !c.is_whitespace() && ![';', '`', ')', ']', '}', '|', '>'].contains(&c)
                     })
                     .count();
                 if places > 1 {

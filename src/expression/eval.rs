@@ -31,7 +31,7 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
-        // dbg!("1.--->eval_mut:", &self, &self.type_name());
+        dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(RuntimeError::RecursionDepth(self));
@@ -89,6 +89,8 @@ impl Expression {
 
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {
+                    dbg!("declare---->", &name, &expr.type_name());
+
                     unsafe {
                         if STRICT && env.has(&name)
                         // && env.get("STRICT") == Some(Expression::Boolean(true))
@@ -97,6 +99,8 @@ impl Expression {
                         }
                     }
                     let value = expr.eval_mut(false, env, depth + 1)?;
+                    dbg!("declare---->", &name, &value.type_name());
+
                     env.define(&name, value); // 新增 declare
                     // dbg!("declare---->", &name, env.get(&name));
                     return Ok(Self::None);
@@ -104,8 +108,9 @@ impl Expression {
 
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
+                    dbg!("assign---->", &name, &expr.type_name());
                     let value = expr.eval_mut(false, env, depth + 1)?;
-                    // dbg!("assign---->", &name, &value);
+                    dbg!("assign---->", &name, &value.type_name());
                     if env.has(&name) {
                         env.define(&name, value.clone());
                     } else {

@@ -12,7 +12,7 @@ jobs:
   # 独立验证作业
   validate:
     name: Validate prerequisites
-    runs-on: ubuntu-latest
+    runs-on: codeberg-tiny
     steps:
       - name: Verify tag format
         run: |
@@ -28,7 +28,7 @@ jobs:
   # 创建发布
   create_release:
     name: Create release
-    runs-on: ubuntu-latest
+    runs-on: codeberg-tiny
     needs: validate
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -60,7 +60,7 @@ jobs:
   build_docs:
     name: Build documentation
     needs: create_release
-    runs-on: ubuntu-latest
+    runs-on: codeberg-tiny
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -93,9 +93,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [codeberg-tiny, macos-latest, windows-latest]
         include:
-          - os: ubuntu-latest
+          - os: codeberg-tiny
             platform: linux
             ext: ""
           - os: macos-latest

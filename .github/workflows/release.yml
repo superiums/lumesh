@@ -32,7 +32,7 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            This is a new release of lumesh. [Read the changelog here](https://github.com/superiums/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
             - lume: an edition contains interactive repl and script parser.
             - lumesh: an swift edition only contains script parser. used to run script swiftly.
             - doc: help docs.

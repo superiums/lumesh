@@ -1,6 +1,10 @@
-# Lumesh
+# Lumesh - a lighting Shell
+
+## Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://codeberg.com/santo/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
 
 Welcome to **Lumesh**, a powerful shell forked from [Dune](https://github.com/adam-mcdaniel/dune)!
+
+<img src="https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png" alt="lumesh" width="200" />
 
 Lumesh aims to provide a fast, efficient, and user-friendly command-line experience, enhancing your productivity with a variety of new features.
 
@@ -9,8 +13,6 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 - runs like **light**
 - stays like **air**
 - flows like **water**
-
-<img src="https://raw.githubusercontent.com/superiums/lumesh/main/assets/lumesh.png" alt="lumesh" width="160" />
 
 ## Table of Contents
 - [Wiki](#wiki)
@@ -21,7 +23,7 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 - [License](#license)
 
 ## Wiki
-For detailed documentation and guides, visit our [Wiki](https://github.com/superiums/lumesh/wiki).
+For detailed documentation and guides, visit our [Wiki](https://codeberg.com/santo/lumesh/wiki).
 
 ## Syntax handbook
 
@@ -34,7 +36,6 @@ For detailed documentation and guides, visit our [Wiki](https://github.com/super
 ### Improved Features from Dune
 - **Fast and Efficient**: Optimized for speed and resource management.
 - **Syntax Highlighting**: Enhanced readability with syntax highlighting for commands.
-- **Operator Overloading**: Greater flexibility in command execution.
 - **Metaprogramming**: Advanced capabilities for dynamic code generation.
 
 ### New Features
@@ -50,14 +51,27 @@ The script parser, executor, and front end have been completely rewritten since 
 
 Discover more features in our [ChangeLog](CHANGELOG.md).
 
+## benchmark
+```bash
+initial_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
+let start=time.stamp-ms();
+let sum=0; for i in 0..1000001 {
+    sum += i
+};
+let end=time.stamp-ms();
+
+echo "takes time: " end - start "ms";
+# takes time:  612 ms
+# bash takes 2224 ms.
+```
 ## Installation
 
 You can install Lumesh in two ways:
 
-1. **Download from the Latest Release**: Get the precompiled binaries from our [releases page](https://github.com/superiums/lumesh/releases).
+1. **Download from the Latest Release**: Get the precompiled binaries from our [releases page](https://codeberg.com/santo/lumesh/releases).
 2. **Compile from Source**:
    ```bash
-   git clone 'https://github.com/superiums/lumesh.git'
+   git clone 'https://codeberg.com/santo/lumesh.git'
    cd lumesh
    cargo build --release
    ```

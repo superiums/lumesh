@@ -7,8 +7,8 @@ use common_macros::b_tree_map;
 pub fn get() -> Expression {
     (b_tree_map! {
         String::from("author") => Expression::String("Adam McDaniel, superiums".to_string()),
-        String::from("git") => Expression::String("https://github.com/superiums/lumesh".to_string()),
-        String::from("homepage") => Expression::String("https://github.com/superiums/lumesh".to_string()),
+        String::from("git") => Expression::String("https://codeberg.com/santo/lumesh".to_string()),
+        String::from("homepage") => Expression::String("https://codeberg.com/santo/lumesh".to_string()),
         String::from("version") => Expression::String(VERSION.to_string()),
         String::from("path") => {
             if let Ok(path) = current_exe() {

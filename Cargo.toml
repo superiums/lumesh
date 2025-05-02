@@ -7,8 +7,8 @@ license = "Apache-2.0"
 description = "A shell🐚 forked from dune!!"
 readme = "README.md"
 documentation = "https://docs.rs/lumesh"
-homepage = "https://github.com/superiums/lumesh"
-repository = "https://github.com/superiums/lumesh"
+homepage = "https://codeberg.com/santo/lumesh"
+repository = "https://codeberg.com/santo/lumesh"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 # [[bin]]

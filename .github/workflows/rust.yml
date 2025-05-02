@@ -43,7 +43,7 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            This is a new release of lumesh. [Read the changelog here](https://github.com/superiums/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
 
             If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
 

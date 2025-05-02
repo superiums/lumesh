@@ -1,0 +1,52 @@
+# --- 循环求和 ---
+let start=time.stamp-ms();
+let sum=0; for i in 0..1000000 {
+    sum += i
+};
+let end=time.stamp-ms();
+echo "从 1 到 10000 的总和是: " sum;
+echo "所需时间: " end - start "毫秒";
+
+# 从 1 到 10000 的总和是:  499999500000
+# 所需时间:  588 毫秒
+
+
+# --- 循环+条件判断 ---
+let start=time.stamp-ms();
+let sum=0; for i in 0..1000000 {
+    if i % 2 == 0 {
+        sum += i
+    }
+};
+let end=time.stamp-ms();
+echo "从 1 到 10000 的偶数和是: " sum;
+echo "所需时间: " end - start "毫秒";
+
+# 从 1 到 10000 的偶数和是:  249999500000
+# 所需时间:  847 毫秒
+
+
+# --- 内存使用情况 ---
+initial_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
+let start=time.stamp-ms();
+let sum=0; for i in 0..1000001 {
+    sum += i
+};
+let end=time.stamp-ms();
+final_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
+
+echo "从 1 到 1000000 的总和是: $sum"
+echo "初始内存使用: ${initial_memory} kB"
+echo "结束时内存使用: ${final_memory} kB"
+echo "内存使用变化: $((final_memory - initial_memory)) kB"
+echo "所需时间: " end - start "毫秒";
+
+
+# --- cpu性能 ---
+let start=time.stamp-ms();
+let j=1; for i in 1..1000000 {
+    i * i
+};
+let end=time.stamp-ms();
+echo "所需时间: " end - start "毫秒";
+# 所需时间:  408 毫秒

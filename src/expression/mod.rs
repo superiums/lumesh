@@ -15,6 +15,7 @@ use builtin::Builtin;
 pub enum Expression {
     Group(Box<Self>),
     BinaryOp(String, Box<Self>, Box<Self>),
+    Pipe(String, Box<Self>, Box<Self>),
     UnaryOp(String, Box<Self>, bool),
     Symbol(String),
     Integer(Int),

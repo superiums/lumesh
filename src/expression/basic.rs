@@ -234,6 +234,7 @@ macro_rules! fmt_shared {
                 }
             }
             Self::BinaryOp(op, l, r) => write!($f, "BinaryOp<({:?} {} {:?})>", l, op, r),
+            Self::Pipe(op, l, r) => write!($f, "Pipe<({:?} {} {:?})>", l, op, r),
             Self::Index(l, r) => write!($f, "({}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
             Self::Catch(body, _, deel) => match deel {
@@ -276,6 +277,7 @@ impl Expression {
             Self::Boolean(_) => "Boolean".into(),
             Self::Group(_) => "Group".into(),
             Self::BinaryOp(_, _, _) => "BinaryOp".into(),
+            Self::Pipe(_, _, _) => "Pipe".into(),
             Self::UnaryOp(..) => "UnaryOp".into(),
             Self::Bytes(_) => "Bytes".into(),
             Self::Index(_, _) => "Index".into(),

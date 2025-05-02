@@ -40,7 +40,7 @@ const PREC_PRIFIX: u8 = 21; // 单目运算符     ++ --
 // const PREC_POSTFIX: u8 = 22; //             ++ --
 // const PREC_CALL: u8 = 24; //                func()
 // arry list
-const PREC_RANGE: u8 = 25; // range         ..
+// const PREC_RANGE: u8 = 25; // range         ..
 // const PREC_LIST: u8 = 25; // 数组         [1,2]
 // const PREC_SLICE: u8 = 25; //               arry[]
 const PREC_INDEX: u8 = 25; // 索引运算符      @ .
@@ -139,7 +139,13 @@ impl PrattParser {
                     input = input.skip_n(1);
                     let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX)?;
                     input = new_input;
-                    lhs = Expression::BinaryOp(operator.into(), Box::new(lhs), Box::new(rhs));
+                    match operator {
+                        "." | "@" => lhs = Expression::Index(Box::new(lhs), Box::new(rhs)),
+                        ".." => {
+                            lhs = Expression::BinaryOp("..".into(), Box::new(lhs), Box::new(rhs))
+                        }
+                        _ => unreachable!(),
+                    }
                 }
                 TokenKind::Operator => {
                     // 双目运算符 (+ - * / 等)
@@ -384,9 +390,9 @@ impl PrattParser {
             // lambda
             "->" | "~>" => Some(OperatorInfo::new(op, PREC_LAMBDA, true)),
             // 索引符
-            "@" | "." => Some(OperatorInfo::new(op, PREC_INDEX, false)),
+            // "@" | "." => Some(OperatorInfo::new(op, PREC_INDEX, false)),
             // range
-            ".." => Some(OperatorInfo::new("..", PREC_RANGE, false)),
+            // ".." => Some(OperatorInfo::new("..", PREC_RANGE, false)),
 
             // 加减运算符
             "+" | "-" => Some(OperatorInfo::new(op, PREC_ADD_SUB, false)),
@@ -450,11 +456,16 @@ impl PrattParser {
         rhs: Expression,
     ) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
         match op.symbol {
-            "." | "@" | "+" | "-" | "*" | "/" | "%" | "^" | ".." => Ok(Expression::BinaryOp(
+            "+" | "-" | "*" | "/" | "%" | "^" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),
             )),
+            // "." | "@" => Ok(Expression::Index(
+            //     // op.symbol.into(),
+            //     Box::new(lhs),
+            //     Box::new(rhs),
+            // )),
             "&&" | "||" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
                 Box::new(lhs),
@@ -648,13 +659,13 @@ impl PrattParser {
             //             Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
             //         Ok(Expression::Assign(lhs.to_string(), Box::new(new_rhs)))
             //     }
-            "|" | "|>" => Ok(Expression::BinaryOp(
+            "|" | "|>" => Ok(Expression::Pipe(
                 op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),
             )),
 
-            "<<" | ">>" | ">>>" => Ok(Expression::BinaryOp(
+            "<<" | ">>" | ">>>" => Ok(Expression::Pipe(
                 op.symbol.into(),
                 Box::new(lhs),
                 Box::new(rhs),

@@ -1,8 +1,12 @@
+use super::pipe_excutor::handle_pipes;
+use super::pipe_excutor::handle_stdin_redirect;
 use super::{Builtin, CatchType};
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, Int, RuntimeError};
 use common_macros::b_tree_map;
+use std::io::ErrorKind;
+use std::io::Write;
 // Expression求值2
 impl Expression {
     /// 处理复杂表达式的递归求值
@@ -124,6 +128,153 @@ impl Expression {
                 )?))
             }
 
+            // 管道
+            Self::Pipe(operator, lhs, rhs) => {
+                return match operator.as_str() {
+                    "|" => {
+                        let bindings = env.get_bindings_map();
+                        let always_pipe = env.has("__ALWAYSPIPE");
+                        //dbg!(&always_pipe, &lhs, &rhs);
+                        // if always_pipe {
+                        //     let left_func = lhs.ensure_apply();
+                        //     let left_output = left_func.eval_mut(true,env, depth + 1)?;
+                        //     let mut new_env = env.fork();
+                        //     new_env.define("__stdin", left_output);
+
+                        //     let r_func = rhs.ensure_apply();
+                        //     let pipe_result = r_func.eval_mut(&mut new_env, depth + 1);
+                        //     // dbg!(&pipe_result);
+                        //     pipe_result
+                        // } else {
+                        let (_, expr_out) = handle_pipes(
+                            &*lhs,
+                            &*rhs,
+                            &bindings,
+                            false,
+                            None,
+                            env,
+                            depth,
+                            always_pipe,
+                        )?;
+                        // dgb!(&expr_out);
+                        Ok(expr_out)
+                        // }
+                    }
+
+                    // {
+                    //     // 管道运算符特殊处理
+                    //     dbg!("--pipe--", &lhs, &rhs);
+                    //     // dbg!("--pipe--");
+                    //     let left_func = lhs.ensure_apply();
+                    //     let left_output = left_func.eval_mut(true,env, depth + 1)?;
+                    //     let mut new_env = env.fork();
+                    //     new_env.define("__stdin", left_output);
+
+                    //     let r_func = rhs.ensure_apply();
+                    //     let pipe_result = r_func.eval_mut(&mut new_env, depth + 1);
+                    //     // dbg!(&pipe_result);
+                    //     pipe_result
+                    // }
+                    "|>" => {
+                        // 执行左侧表达式
+                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        let left_func = lhs.ensure_apply();
+                        let left_output = left_func.eval_mut(true, env, depth + 1)?;
+                        env.undefine("__ALWAYSPIPE");
+
+                        // 执行右侧表达式，获取函数或命令
+                        // let rhs_eval = rhs.eval_mut(true,env, depth + 1)?;
+
+                        // 将左侧结果作为最后一个参数传递给右侧
+                        let args = vec![left_output];
+                        rhs.append_args(args).eval_mut(true, env, depth + 1)
+                    }
+                    ">>>" => {
+                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        let left_func = lhs.ensure_apply();
+                        let l = left_func.eval_mut(true, env, depth + 1)?;
+                        env.undefine("__ALWAYSPIPE");
+
+                        let mut path = std::env::current_dir()?;
+                        path = path.join(rhs.clone().eval_mut(true, env, depth + 1)?.to_string());
+                        match std::fs::OpenOptions::new().append(true).open(&path) {
+                            Ok(mut file) => {
+                                // use std::io::prelude::*;
+                                let result = if let Expression::Bytes(bytes) = l.clone() {
+                                    // std::fs::write(path, bytes)
+                                    file.write_all(&bytes)
+                                } else {
+                                    // Otherwise, convert the contents to a pretty string and write that.
+                                    // std::fs::write(path, contents.to_string())
+                                    file.write_all(l.clone().to_string().as_bytes())
+                                };
+
+                                match result {
+                                    Ok(()) => Ok(l),
+                                    Err(e) => {
+                                        return Err(RuntimeError::CustomError(format!(
+                                            "could not append to file {}: {:?}",
+                                            rhs, e
+                                        )));
+                                    }
+                                }
+                            }
+                            Err(e) => {
+                                return Err(match e.kind() {
+                                    ErrorKind::PermissionDenied => {
+                                        RuntimeError::PermissionDenied(*rhs.clone())
+                                    }
+                                    _ => RuntimeError::CustomError(format!(
+                                        "could not open file {}: {:?}",
+                                        path.display(),
+                                        e
+                                    )),
+                                });
+                            }
+                        }
+                    }
+                    ">>" => {
+                        // dbg!("-->>--", &lhs);
+                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        let left_func = lhs.ensure_apply();
+                        let l = left_func.eval_mut(true, env, depth + 1)?;
+                        env.undefine("__ALWAYSPIPE");
+                        // dbg!("-->> left=", &l);
+                        let mut path = std::env::current_dir()?;
+                        path = path.join(rhs.clone().eval_mut(true, env, depth + 1)?.to_string());
+                        // If the contents are bytes, write the bytes directly to the file.
+                        let result = if let Expression::Bytes(bytes) = l.clone() {
+                            std::fs::write(path, bytes)
+                        } else {
+                            // Otherwise, convert the contents to a pretty string and write that.
+                            std::fs::write(path, l.to_string())
+                        };
+
+                        match result {
+                            Ok(()) => Ok(l),
+                            Err(e) => Err(RuntimeError::CustomError(format!(
+                                "could not write to file {}: {:?}",
+                                rhs, e
+                            ))),
+                        }
+                    }
+                    "<<" => {
+                        // 输入重定向处理
+                        return handle_stdin_redirect(*lhs, *rhs, env, depth, true);
+                        // let path = rhs.eval_mut(true,env, depth + 1)?.to_string();
+                        // let contents = std::fs::read_to_string(path)
+                        //     .map(Self::String)
+                        //     .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+
+                        // let mut new_env = env.fork();
+                        // new_env.define("__STDIN", contents);
+                        // let left_func = lhs.ensure_apply();
+                        // let result = left_func.eval_mut(&mut new_env, depth + 1)?;
+                        // return Ok(result);
+                    }
+                    _ => unreachable!(),
+                };
+            }
             Self::Catch(body, typ, deeling) => {
                 // dbg!(&typ, &deeling);
                 match body.clone().eval_mut(true, env, depth + 1) {

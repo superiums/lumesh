@@ -187,7 +187,7 @@ pub fn handle_pipes(
         //dbg!("--pipe--", &lhs, &rhs);
         let result_left = match lhs {
             // TODO op== "|>" >> >>>
-            Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => handle_pipes(
+            Expression::Pipe(op, l_arm, r_arm) if op == "|" => handle_pipes(
                 &*l_arm,
                 &*r_arm,
                 bindings,
@@ -215,7 +215,7 @@ pub fn handle_pipes(
         return match result_left {
             Ok((pipe_out, _)) => {
                 return match rhs {
-                    Expression::BinaryOp(op, l_arm, r_arm) if op == "|" => handle_pipes(
+                    Expression::Pipe(op, l_arm, r_arm) if op == "|" => handle_pipes(
                         &*l_arm,
                         &*r_arm,
                         bindings,

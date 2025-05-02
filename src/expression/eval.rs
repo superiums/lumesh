@@ -98,10 +98,18 @@ impl Expression {
                             return Err(RuntimeError::Redeclaration(name.to_string()));
                         }
                     }
-                    let value = expr.eval_mut(false, env, depth + 1)?;
-                    dbg!("declare---->", &name, &value.type_name());
+                    if let Expression::Command(..) | Expression::Group(..) = *expr {
+                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        let value = expr.eval_mut(false, env, depth + 1)?;
+                        env.undefine("__ALWAYSPIPE");
+                        env.define(&name, value); // 新增 declare
+                    } else {
+                        let value = expr.eval_mut(false, env, depth + 1)?;
+                        env.define(&name, value); // 新增 declare
+                    }
 
-                    env.define(&name, value); // 新增 declare
+                    // dbg!("declare---->", &name, &value.type_name());
+
                     // dbg!("declare---->", &name, env.get(&name));
                     return Ok(Self::None);
                 }
@@ -109,7 +117,15 @@ impl Expression {
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
                     dbg!("assign---->", &name, &expr.type_name());
+                    let is_cmd = match *expr {
+                        Expression::Command(..) | Expression::Group(..) => true,
+                        _ => false,
+                    };
+                    if is_cmd {
+                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                    }
                     let value = expr.eval_mut(false, env, depth + 1)?;
+
                     dbg!("assign---->", &name, &value.type_name());
                     if env.has(&name) {
                         env.define(&name, value.clone());
@@ -132,6 +148,9 @@ impl Expression {
                                 env.define(&name, value.clone());
                             }
                         }
+                    }
+                    if is_cmd {
+                        env.undefine("__ALWAYSPIPE");
                     }
                     return Ok(value);
                 }

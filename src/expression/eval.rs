@@ -98,7 +98,9 @@ impl Expression {
                             return Err(RuntimeError::Redeclaration(name.to_string()));
                         }
                     }
-                    if let Expression::Command(..) | Expression::Group(..) = *expr {
+                    if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
+                        *expr
+                    {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                         let value = expr.eval_mut(false, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
@@ -118,7 +120,9 @@ impl Expression {
                 Self::Assign(name, expr) => {
                     dbg!("assign---->", &name, &expr.type_name());
                     let is_cmd = match *expr {
-                        Expression::Command(..) | Expression::Group(..) => true,
+                        Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
+                            true
+                        }
                         _ => false,
                     };
                     if is_cmd {

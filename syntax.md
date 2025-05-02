@@ -272,9 +272,9 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
       ```
 
 2. **Loops**
-   - **For Loop**: Range uses `to` (left-inclusive, right-exclusive).
+   - **For Loop**: Range uses `..` (left-inclusive, right-exclusive).
      ```bash
-     for i in 0 to 5 {    # Outputs 0,1,2,3,4
+     for i in 0..5 {    # Outputs 0,1,2,3,4
          print(i)
      }
 
@@ -322,8 +322,8 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
 4. **Function Calls**
    - Call functions with parameters listed.
    ```bash
-   add 3 5
    add(3,5)
+   add! 3 5
    ```
 
    **Edge Cases**:

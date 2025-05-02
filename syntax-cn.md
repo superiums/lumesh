@@ -460,6 +460,10 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
 - `insert` 列表插入
 `insert [1,2,4] 2 3`
 
+> 时间
+- `time.seconds` 当日过去的秒数
+- `time.stamp` Unix时间戳
+
 > 帮助文件未列出的
 
 - pwd

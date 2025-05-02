@@ -1,27 +1,26 @@
 use std::{thread, time::Duration};
 
 use crate::{Environment, Expression, LmError};
-use chrono::{Datelike, Timelike};
+use chrono::{Datelike, Local, Timelike};
 use common_macros::b_tree_map;
 
 pub fn get() -> Expression {
-    let now = chrono::Local::now();
-
     (b_tree_map! {
         String::from("sleep") => Expression::builtin("sleep", sleep,
             "sleep for a given number of milliseconds"),
         String::from("display") => Expression::builtin("display", display,
             "get preformatted datetime"),
-        String::from("year") => Expression::Integer(now.year() as i64),
-        String::from("month") => Expression::Integer(now.month() as i64),
-        String::from("weekday") => Expression::Integer(now.weekday() as i64),
-        String::from("day") => Expression::Integer(now.day() as i64),
-        String::from("hour") => Expression::Integer(now.hour() as i64),
-        String::from("minute") => Expression::Integer(now.minute() as i64),
-        String::from("second") => Expression::Integer(now.second() as i64),
-        String::from("seconds") => Expression::Integer(now.num_seconds_from_midnight() as i64),
-        String::from("stamp") => Expression::Integer(now.timestamp() as i64),
-        String::from("fmt") => Expression::builtin("fmt", fmt, "get formatted datetime"),
+   	    String::from("year") =>Expression::builtin("year",|_,_| Ok(Expression::Integer(Local::now().year() as i64)),"get current year"),
+           String::from("month") =>Expression::builtin("month",|_,_| Ok(Expression::Integer(Local::now().month() as i64)),"get current month"),
+           String::from("weekday") =>Expression::builtin("weekday",|_,_| Ok(Expression::Integer(Local::now().weekday() as i64)),"get current weekday"),
+           String::from("day") =>Expression::builtin("day",|_,_| Ok(Expression::Integer(Local::now().day() as i64)),"get current day"),
+           String::from("hour") =>Expression::builtin("hour",|_,_| Ok(Expression::Integer(Local::now().hour() as i64)),"get current hour"),
+           String::from("minute") =>Expression::builtin("minute",|_,_| Ok(Expression::Integer(Local::now().minute() as i64)),"get current minute"),
+           String::from("second") =>Expression::builtin("second",|_,_| Ok(Expression::Integer(Local::now().second() as i64)),"get current second"),
+           String::from("seconds") =>Expression::builtin("seconds",|_,_| Ok(Expression::Integer(Local::now().num_seconds_from_midnight() as i64)),"get parsed seconds today"),
+           String::from("stamp") =>Expression::builtin("stamp",|_,_| Ok(Expression::Integer(Local::now().timestamp())),"get current unix time stamp seconds"),
+           String::from("stamp-ms") =>Expression::builtin("stamp_ms",|_,_| Ok(Expression::Integer(Local::now().timestamp_millis() as i64)),"get current unix time stamp millis seconds"),
+ String::from("fmt") => Expression::builtin("fmt", fmt, "get formatted datetime"),
     })
     .into()
 }
@@ -46,9 +45,7 @@ fn sleep(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 fn fmt(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("fmt", &args, 1)?;
     match args[0].eval(env)? {
-        Expression::String(f) => Ok(Expression::String(
-            chrono::Local::now().format(&f).to_string(),
-        )),
+        Expression::String(f) => Ok(Expression::String(Local::now().format(&f).to_string())),
         // Expression::Symbol(f) => Ok(f),
         e => Err(LmError::CustomError(format!(
             "invalid abs argument {:?}",
@@ -58,12 +55,10 @@ fn fmt(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn display(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
-    let now = chrono::Local::now();
-
     Ok(Expression::Map(b_tree_map! {
-        String::from("time") => Expression::String(now.time().format("%H:%M:%S").to_string()),
-        String::from("timepm") => Expression::String(now.format("%-I:%M %p").to_string()),
-        String::from("date") => Expression::String(now.format("%D").to_string()),
-        String::from("datetime") =>  Expression::String(now.format("%Y-%m-%d %H:%M:%S").to_string()),
+        String::from("time") => Expression::String(Local::now().time().format("%H:%M:%S").to_string()),
+        String::from("timepm") => Expression::String(Local::now().format("%-I:%M %p").to_string()),
+        String::from("date") => Expression::String(Local::now().format("%D").to_string()),
+        String::from("datetime") =>  Expression::String(Local::now().format("%Y-%m-%d %H:%M:%S").to_string()),
     }))
 }

@@ -686,10 +686,9 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
 /// parse a tag between letters/numbers.
 fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
-        if input
-            .previous_char()
-            .map_or(true, |c| !c.is_ascii_alphanumeric())
-        {
+        if input.previous_char().map_or(true, |c| {
+            !c.is_ascii_alphanumeric() || [')', ']'].contains(&c)
+        }) {
             return Err(NOT_FOUND);
         }
         input

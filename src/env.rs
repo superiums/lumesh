@@ -1,4 +1,4 @@
-use crate::{Expression, LmError};
+use crate::Expression;
 use core::option::Option::None;
 use std::collections::BTreeMap;
 
@@ -53,24 +53,24 @@ impl Environment {
         self.bindings.insert(name.to_string(), expr);
     }
 
-    pub fn define_builtin(
-        &mut self,
-        name: impl ToString,
-        builtin: fn(Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
-        help: impl ToString,
-    ) {
-        self.define(
-            &name.to_string(),
-            Expression::builtin(name.to_string(), builtin, help.to_string()),
-        )
-    }
+    // pub fn define_builtin(
+    //     &mut self,
+    //     name: impl ToString,
+    //     builtin: fn(Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
+    //     help: impl ToString,
+    // ) {
+    //     self.define(
+    //         &name.to_string(),
+    //         Expression::builtin(name.to_string(), builtin, help.to_string()),
+    //     )
+    // }
 
-    pub fn set_parent(&mut self, parent: Self) {
-        self.parent = Some(Box::new(parent));
-    }
-    pub fn get_parent(&self) -> Option<Box<Environment>> {
-        self.parent.clone()
-    }
+    // pub fn set_parent(&mut self, parent: Self) {
+    //     self.parent = Some(Box::new(parent));
+    // }
+    // pub fn get_parent(&self) -> Option<Box<Environment>> {
+    //     self.parent.clone()
+    // }
     pub fn get_parent_mut(&mut self) -> Option<&mut Environment> {
         self.parent.as_mut().map(|p| p.as_mut())
     }

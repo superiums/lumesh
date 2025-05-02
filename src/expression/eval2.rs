@@ -66,7 +66,7 @@ impl Expression {
                 Ok(Self::Lambda(params, body, env.fork()))
             }
             // 处理函数定义
-            Self::Function(name, params, body, def_env) => {
+            Self::Function(name, params, body) => {
                 // dbg!(&def_env);
                 // 验证默认值类型（新增）
                 for (p, default) in &params {
@@ -97,7 +97,7 @@ impl Expression {
                 //     }
                 // }
                 // dbg!(&new_env);
-                let func = Self::Function(name.clone(), params, body, def_env);
+                let func = Self::Function(name.clone(), params, body);
                 env.define(&name, func.clone());
                 Ok(func)
             }
@@ -558,7 +558,7 @@ impl Expression {
                     //     env.define(&param, Expression::List(args_eval));
                     //     return body.eval_mut(env, depth + 1);
                     // }
-                    Self::Function(name, params, body, def_env) => {
+                    Self::Function(name, params, body) => {
                         // dbg!("2.--- applying function---", &name, &params);
                         // dbg!(&def_env);
                         // 参数数量校验
@@ -592,7 +592,7 @@ impl Expression {
                         }
 
                         // 创建新作用域并执行
-                        let mut new_env = def_env.fork();
+                        let mut new_env = env.fork();
                         for ((param, _), arg) in params.iter().zip(actual_args) {
                             new_env.define(param, arg);
                         }

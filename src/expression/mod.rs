@@ -39,7 +39,7 @@ pub enum Expression {
     Command(Box<Self>, Vec<Self>),
     Lambda(Vec<String>, Box<Self>, Environment),
     Macro(Vec<String>, Box<Self>),
-    Function(String, Vec<(String, Option<Self>)>, Box<Self>, Environment),
+    Function(String, Vec<(String, Option<Self>)>, Box<Self>),
     Return(Box<Self>),
     Do(Vec<Self>),
     Builtin(Builtin),

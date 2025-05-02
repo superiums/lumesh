@@ -184,7 +184,7 @@ macro_rules! fmt_shared {
             }
 
             Self::None => write!($f, "None"),
-            Self::Function(name, param, body, _) => {
+            Self::Function(name, param, body) => {
                 write!($f, "fn {}({:?}) {{ {:?} }}", name, param, body)
             }
             Self::Return(body) => write!($f, "return {}", body),
@@ -293,7 +293,7 @@ impl Expression {
             Self::Command(_, _) => "Command".into(),
             Self::Lambda(_, _, _) => "Lambda".into(),
             Self::Macro(_, _) => "Macro".into(),
-            Self::Function(_, _, _, _) => "Function".into(),
+            Self::Function(_, _, _) => "Function".into(),
             Self::Return(_) => "Return".into(),
             Self::Do(_) => "Do".into(),
             Self::Builtin(_) => "Builtin".into(),

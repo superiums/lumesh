@@ -897,15 +897,7 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
         Some((ctyp, handler)) => Box::new(Expression::Catch(Box::new(body), ctyp, handler)),
         _ => Box::new(body),
     };
-    Ok((
-        input,
-        Expression::Function(
-            name,
-            params,
-            last_body,
-            Environment::new(), // 捕获当前环境（需在调用时处理）
-        ),
-    ))
+    Ok((input, Expression::Function(name, params, last_body)))
 }
 // return statement
 fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1195,7 +1187,7 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
     // }
     SyntaxErrorKind::empty_back(input)?;
     let (input, statement) = alt((
-        // parse_fn_declare, // 函数声明（仅语句级） TODO 是否允许函数嵌套？
+        parse_fn_declare, // 函数声明（仅语句级）这里的作用是允许函数嵌套
         // 1.声明语句
         parse_lazy_assign,
         parse_declare,

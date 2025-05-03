@@ -13,8 +13,9 @@ use rustyline::{
 use std::borrow::Cow;
 use std::process::exit;
 
+use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
-    AI_CLIENT, PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
+    PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
 use crate::runtime::{check, init_config};
 use crate::{Environment, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
@@ -109,6 +110,7 @@ struct LumeHelper {
     completer: Arc<FilenameCompleter>,
     hinter: Arc<HistoryHinter>,
     highlighter: Arc<SyntaxHighlighter>,
+    ai_client: Arc<MockAIClient>,
 }
 
 fn new_editor() -> Editor<LumeHelper, FileHistory> {
@@ -123,6 +125,7 @@ fn new_editor() -> Editor<LumeHelper, FileHistory> {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
         highlighter: Arc::new(SyntaxHighlighter),
+        ai_client: Arc::new(init_ai()),
     };
     rl.set_helper(Some(helper));
     rl
@@ -159,7 +162,7 @@ impl Completer for LumeHelper {
             let tokens: Vec<&str> = line.split_whitespace().collect();
             if tokens.len() > 1 {
                 let prompt = line.trim();
-                match AI_CLIENT.complete(prompt) {
+                match self.ai_client.complete(prompt) {
                     Ok(suggestion) => {
                         let pair = Pair {
                             display: format!("\x1b[34m{}\x1b[0m", suggestion),

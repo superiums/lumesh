@@ -5,6 +5,9 @@ use std::ffi::OsStr;
 use std::path::Path;
 use std::path::PathBuf;
 use std::sync::Mutex;
+lazy_static! {
+    pub static ref PATH_COMMANDS: Mutex<HashSet<String>> = Mutex::new(scan_cmds());
+}
 // 平台相关代码参考自
 #[cfg(unix)]
 fn is_executable(path: &Path) -> bool {
@@ -21,12 +24,6 @@ fn is_executable(path: &Path) -> bool {
     })
 }
 
-lazy_static! {
-    // 双重锁设计：外层Mutex防止多线程竞争初始化，内层HashSet只读
-    pub static ref PATH_COMMANDS: Mutex<HashSet<String>> = Mutex::new(scan_cmds());
-   pub static ref AI_CLIENT: Box<dyn AIClient + Sync + Send> = Box::new(MockAIClient);
-
-}
 fn scan_cmds() -> HashSet<String> {
     let path_var = env::var("PATH").unwrap_or_default();
     let path_separator = if cfg!(windows) { ";" } else { ":" };
@@ -140,20 +137,20 @@ fn is_pipe_context(line: &str, pos: usize) -> bool {
 //     candidates
 // }
 
-// AI client trait for abstraction
-pub trait AIClient {
-    fn complete(&self, prompt: &str) -> Result<String, String>;
-    fn chat(&self, prompt: &str) -> Result<String, String>;
-}
+// // AI client trait for abstraction
+// pub trait AIClient {
+//     fn complete(&self, prompt: &str) -> Result<String, String>;
+//     fn chat(&self, prompt: &str) -> Result<String, String>;
+// }
 
-// Mock implementation (replace with actual ollama/llama.cpp integration)
-struct MockAIClient;
-impl AIClient for MockAIClient {
-    fn complete(&self, prompt: &str) -> Result<String, String> {
-        Ok(format!("AI completion for: {}", prompt))
-    }
+// // Mock implementation (replace with actual ollama/llama.cpp integration)
+// struct MockAIClient;
+// impl AIClient for MockAIClient {
+//     fn complete(&self, prompt: &str) -> Result<String, String> {
+//         Ok(format!("AI completion for: {}", prompt))
+//     }
 
-    fn chat(&self, prompt: &str) -> Result<String, String> {
-        Ok(format!("AI response to: {}", prompt))
-    }
-}
+//     fn chat(&self, prompt: &str) -> Result<String, String> {
+//         Ok(format!("AI response to: {}", prompt))
+//     }
+// }

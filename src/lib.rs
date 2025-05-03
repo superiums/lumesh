@@ -34,6 +34,7 @@ pub use runtime::{parse, parse_and_eval, syntax_highlight};
 pub mod syntax;
 pub use syntax::highlight;
 
+pub mod ai;
 pub mod cmdhelper;
 pub mod prompt;
 

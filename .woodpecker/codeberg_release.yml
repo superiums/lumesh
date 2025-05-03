@@ -103,4 +103,4 @@ steps:
     #   tag: ${CI_COMMIT_TAG}
     when:
       event: tag
-    depends_on: [build_binaries]
+    depends_on: [build_linux, build_windows, build_macos]

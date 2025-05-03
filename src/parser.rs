@@ -836,7 +836,7 @@ fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxEr
         text("("),
         // alt((
         // 参数列表特殊处理
-        map(separated_list1(text(","), parse_symbol_string), |symbols| {
+        map(separated_list0(text(","), parse_symbol_string), |symbols| {
             Expression::List(symbols.into_iter().map(|s| Expression::Symbol(s)).collect())
         }),
         //     parse_expr, // 常规表达式

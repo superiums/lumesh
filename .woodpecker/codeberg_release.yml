@@ -1,0 +1,106 @@
+variables:
+  # 全局变量定义
+  PKG_NAME: "lumesh"
+  MAIN_BINARY: "lume"
+  RUNNER_BINARY: "lumesh"
+
+steps:
+  setup:
+    image: alpine
+    commands:
+      - export VERSION=${WOODPECKER_TAG#v}
+      - echo "VERSION=$VERSION" >> .env
+      - echo "REPO_PATH=codeberg.org/youruser/yourrepo" >> .env
+    when:
+      event: tag
+
+  create_release:
+    image: alpine/git
+    commands:
+      - source .env
+      - apk add curl jq
+      - |
+        RELEASE_RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/$REPO_PATH/releases" \
+          -H "Authorization: token $WOODPECKER_REPO_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "tag_name": "'$WOODPECKER_TAG'",
+            "name": "'$PKG_NAME' $VERSION",
+            "body": "Automated release of '$PKG_NAME' version '$VERSION'",
+            "draft": false,
+            "prerelease": false
+          }')
+      - echo "RELEASE_ID=$(echo "$RELEASE_RESPONSE" | jq -r '.id')" >> .env
+      - echo "UPLOAD_URL=$(echo "$RELEASE_RESPONSE" | jq -r '.upload_url' | sed 's/{?name,label}//')" >> .env
+    environment:
+      MY_TOKEN:
+        from_secret: [WOODPECKER_REPO_TOKEN]
+    depends_on: [setup]
+    when:
+      event: tag
+
+  build_linux:
+    image: rust:latest
+    commands:
+      - rustup target add x86_64-unknown-linux-musl
+      - apt-get update && apt-get install -y musl-tools
+      # 标准构建
+      - cargo build --release --locked
+      - cp target/release/$MAIN_BINARY $MAIN_BINARY-linux
+      - cargo build --features runner --release
+      - cp target/release/$RUNNER_BINARY $RUNNER_BINARY-linux
+      # musl静态链接构建
+      - cargo build --release --target x86_64-unknown-linux-musl --locked
+      - cp target/x86_64-unknown-linux-musl/release/$MAIN_BINARY $MAIN_BINARY-linux-musl
+      - cargo build --features runner --release --target x86_64-unknown-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/$RUNNER_BINARY $RUNNER_BINARY-linux-musl
+    depends_on: [create_release]
+    when:
+      event: tag
+
+  build_macos:
+    image: messense/rust-musl-cross:x86_64-apple-darwin
+    commands:
+      - rustup target add x86_64-apple-darwin aarch64-apple-darwin
+      # Intel Mac
+      - cargo build --release --locked --target x86_64-apple-darwin
+      - cp target/x86_64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-x86_64
+      # Apple Silicon Mac
+      - cargo build --release --locked --target aarch64-apple-darwin
+      - cp target/aarch64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-arm64
+      # Runner builds
+      - cargo build --features runner --release --target x86_64-apple-darwin
+      - cp target/x86_64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-x86_64
+      - cargo build --features runner --release --target aarch64-apple-darwin
+      - cp target/aarch64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-arm64
+    depends_on: [create_release]
+    when:
+      event: tag
+
+  build_windows:
+    image: rust:latest
+    commands:
+      - rustup target add x86_64-pc-windows-msvc
+      # 标准构建
+      - cargo build --release --locked --target x86_64-pc-windows-msvc
+      - cp target/x86_64-pc-windows-msvc/release/$MAIN_BINARY.exe $MAIN_BINARY-windows.exe
+      # Runner构建
+      - cargo build --features runner --release --target x86_64-pc-windows-msvc
+      - cp target/x86_64-pc-windows-msvc/release/$RUNNER_BINARY.exe $RUNNER_BINARY-windows.exe
+    depends_on: [create_release]
+    when:
+      event: tag
+
+  upload_binaries:
+    image: codeberg.org/ci/gitea-release
+    environment:
+      MY_TOKEN:
+        from_secret: [WOODPECKER_REPO_TOKEN]
+    # settings:
+    #   api_key: $WOODPECKER_REPO_TOKEN
+    #   base_url: https://codeberg.org
+    #   files: dist/*
+    #   tag: ${CI_COMMIT_TAG}
+    when:
+      event: tag
+    depends_on: [build_binaries]

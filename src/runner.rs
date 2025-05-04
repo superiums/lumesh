@@ -1,8 +1,8 @@
 // src/bin/runner.rs
 // mod binary;
-use lumesh::runtime::run_file;
+use lumesh::parse_and_eval;
+use lumesh::runtime::{init_config, run_file};
 use lumesh::{Environment, Expression, LmError};
-use lumesh::{STRICT, parse_and_eval};
 use std::path::Path;
 use std::path::PathBuf;
 // 删除原有的 Cli 结构体定义
@@ -69,7 +69,9 @@ fn main() -> Result<(), LmError> {
                     eprintln!("-p needs profile path");
                     std::process::exit(0);
                 }));
-                env.define("LUME_PROFILE", Expression::String(profile));
+                if let Some(pro) = profile {
+                    env.define("LUME_PROFILE", Expression::String(pro));
+                }
             }
             "-c" => {
                 cmd = Some(args.next().unwrap_or_else(|| {
@@ -90,7 +92,7 @@ fn main() -> Result<(), LmError> {
     }
 
     // config
-    init_config(env);
+    init_config(&mut env);
 
     env.define("SCRIPT", Expression::String(path));
     env.define(

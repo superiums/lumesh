@@ -1036,12 +1036,14 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
 // 映射解析
 fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // 不能用cut，防止map识别失败时，影响后面的block解析。
-    let (input, _) = text("{")(input)?;
+    let (input, _) = terminated(text("{"), opt(kind(TokenKind::LineBreak)))(input)?;
     let (input, pairs) = separated_list0(
-        text(","),
+        terminated(text(","), opt(kind(TokenKind::LineBreak))),
         separated_pair(parse_symbol_string, text(":"), parse_literal),
     )(input)?;
-    let (input, _) = text_close("}")(input)?;
+    dbg!(&input, &pairs);
+    let (input, _) = opt(terminated(text(","), opt(kind(TokenKind::LineBreak))))(input)?;
+    let (input, _) = preceded(opt(kind(TokenKind::LineBreak)), text_close("}"))(input)?;
 
     // Ok((input, Expression::Map(pairs)))
     Ok((input, Expression::Map(pairs.into_iter().collect())))

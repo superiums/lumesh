@@ -1,6 +1,6 @@
 # Lumesh - a lighting Shell
 
-## Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://codeberg.com/santo/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
+### Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://codeberg.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
 
 Welcome to **Lumesh**, a powerful shell forked from [Dune](https://github.com/adam-mcdaniel/dune)!
 

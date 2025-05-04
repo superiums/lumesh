@@ -259,45 +259,53 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
 }
 
 pub fn init_config(env: &mut Environment) {
-    if let Some(config_dir) = dirs::config_dir() {
-        let config_path = config_dir.join("lumesh");
-        if !config_path.exists() {
-            if let Err(e) = std::fs::create_dir(&config_path) {
+    let profile = match env.get("LUME_PROFILE") {
+        Some(p) => PathBuf::from(p.to_string()),
+        _ => match dirs::config_dir() {
+            Some(config_dir) => {
+                let config_path = config_dir.join("lumesh");
+                if !config_path.exists() {
+                    if let Err(e) = std::fs::create_dir(&config_path) {
+                        eprintln!("Error while writing prelude: {}", e);
+                    }
+                }
+                config_path.join("config.lsh")
+            }
+            _ => PathBuf::from(".lume_config"),
+        },
+    };
+
+    // If file doesn't exist
+    if !profile.exists() {
+        let prompt = format!(
+            "Could not find profile file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ",
+            profile.display()
+        );
+
+        let response = read_user_input(prompt);
+
+        if response.to_lowercase().trim() == "y" {
+            if let Err(e) = std::fs::write(&profile, INTRO_PRELUDE) {
                 eprintln!("Error while writing prelude: {}", e);
             }
         }
-        let prelude_path = config_path.join("config.lsh");
-        // If file doesn't exist
-        if !prelude_path.exists() {
-            let prompt = format!(
-                "Could not find prelude file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ",
-                prelude_path.display()
-            );
 
-            let response = read_user_input(prompt);
-
-            if response.to_lowercase().trim() == "y" {
-                if let Err(e) = std::fs::write(&prelude_path, INTRO_PRELUDE) {
-                    eprintln!("Error while writing prelude: {}", e);
-                }
-            }
-
-            if !parse_and_eval(INTRO_PRELUDE, env) {
-                eprintln!("Error while running introduction prelude");
-            }
-        } else if !run_file(prelude_path, env) {
+        if !parse_and_eval(INTRO_PRELUDE, env) {
             eprintln!("Error while running introduction prelude");
         }
+    } else if !run_file(profile, env) {
+        eprintln!("Error while running introduction prelude");
     }
+
     // cmds
     init_cmds(env);
 }
 
 fn init_cmds(env: &mut Environment) {
     if !env.is_defined("clear") {
-        parse_and_eval("let clear = _ ~> console@clear()", env);
+        parse_and_eval("let clear = () ~> console@clear()", env);
     }
     if !env.is_defined("pwd") {
-        parse_and_eval("let pwd = _ ~> echo CWD", env);
+        parse_and_eval("let pwd = () ~> echo CWD", env);
     }
 }

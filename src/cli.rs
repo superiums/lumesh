@@ -32,9 +32,16 @@ struct Cli {
     #[arg(short = 'c', long, num_args = 1..)]
     cmd: Option<Vec<String>>,
 
+    #[arg(short = 'p', long, num_args = 0..1)]
+    profile: Option<String>,
+
     /// 严格模式
     #[arg(short = 's', long)]
     strict: bool,
+
+    #[arg(short = 'n', long)]
+    nohistory: bool,
+
     /// 关闭ai
     #[arg(short = 'a', long)]
     aioff: bool,
@@ -88,11 +95,7 @@ fn main() {
             env.define(&mut key.to_owned(), Expression::String(value));
         }
     }
-    // strict
-    unsafe {
-        STRICT = cli.strict;
-    }
-    env.define("IS_STRICT", Expression::Boolean(cli.strict));
+
     // argv
     env.define(
         "argv",
@@ -101,19 +104,23 @@ fn main() {
     // bultiin
     // binary::init(&mut env);
 
+    // profile
+    if let Some(profile) = cli.profile {
+        env.define("LUME_PROFILE", Expression::String(profile));
+    }
+    if cli.nohistory {
+        env.define("LUME_NO_HISTORY", Expression::Boolean(true));
+    }
+
     // 命令执行模式
     if let Some(cmd_parts) = cli.cmd {
         env.define("IS_INTERACTIVE", Expression::Boolean(cli.interactive));
+        env_config(&mut env, cli.aioff, cli.strict);
 
         let cmd = cmd_parts.join(" ");
         parse_and_eval(cmd.as_str(), &mut env);
 
         if cli.interactive {
-            // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
-            init_config(&mut env);
-            if cli.aioff {
-                env.undefine("LUME_AI_CONFIG");
-            }
             repl::run_repl(&mut env);
         }
     }
@@ -122,6 +129,7 @@ fn main() {
         env.define("IS_INTERACTIVE", Expression::Boolean(false));
         env.define("SCRIPT", Expression::String(file.to_owned()));
 
+        env_config(&mut env, cli.aioff, cli.strict);
         let path = PathBuf::from(file);
         run_file(path, &mut env);
     }
@@ -129,11 +137,23 @@ fn main() {
     else {
         env.define("IS_INTERACTIVE", Expression::Boolean(true));
 
-        // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
-        init_config(&mut env);
-        if cli.aioff {
-            env.undefine("LUME_AI_CONFIG");
-        }
+        env_config(&mut env, cli.aioff, cli.strict);
         repl::run_repl(&mut env);
+    }
+}
+
+fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
+    init_config(env);
+
+    // strict
+    if strict {
+        env.define("IS_STRICT", Expression::Boolean(strict));
+        unsafe {
+            STRICT = strict;
+        }
+    }
+    // ai off
+    if aioff {
+        env.undefine("LUME_AI_CONFIG");
     }
 }

@@ -16,6 +16,7 @@ fn main() -> Result<(), LmError> {
     let mut args = std::env::args().skip(1); // 跳过二进制名称
     let mut cmd = None;
     let mut file = None;
+    let mut profile = None;
     let mut script_args = Vec::new();
 
     let mut env = Environment::new();
@@ -37,6 +38,7 @@ fn main() -> Result<(), LmError> {
             env.define(&mut key.to_owned(), Expression::String(value));
         }
     }
+
     // 原生参数解析
     while let Some(arg) = args.next() {
         match arg.as_str() {
@@ -47,19 +49,27 @@ fn main() -> Result<(), LmError> {
                 println!("      lumesh -h");
                 println!("");
                 println!("options:");
-                println!("      -s: for strict mode.");
+                // println!("      -s: for strict mode.");
+                println!("      -p: profile.");
                 println!("      -h: for help.");
                 println!("");
                 println!("this is a swift script runtime without interactive.");
                 println!("for interactive, use lume instead.");
                 std::process::exit(0);
             }
-            "-s" => {
-                // strict mode
-                unsafe {
-                    STRICT = true;
-                }
-                env.define("IS_STRICT", Expression::Boolean(true));
+            // "-s" => {
+            //     // strict mode
+            //     unsafe {
+            //         STRICT = true;
+            //     }
+            //     env.define("IS_STRICT", Expression::Boolean(true));
+            // }
+            "-p" => {
+                profile = Some(args.next().unwrap_or_else(|| {
+                    eprintln!("-p needs profile path");
+                    std::process::exit(0);
+                }));
+                env.define("LUME_PROFILE", Expression::String(profile));
             }
             "-c" => {
                 cmd = Some(args.next().unwrap_or_else(|| {
@@ -78,6 +88,9 @@ fn main() -> Result<(), LmError> {
             }
         }
     }
+
+    // config
+    init_config(env);
 
     env.define("SCRIPT", Expression::String(path));
     env.define(

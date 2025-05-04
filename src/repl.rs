@@ -34,7 +34,11 @@ const RESET: &str = "\x1b[0m";
 pub fn run_repl(env: &mut Environment) {
     println!("Rustyline Enhanced CLI (v15.0.0)");
     // init_config(env);
-
+    //
+    let no_history = match env.get("LUME_NO_HISTORY") {
+        Some(Expression::Boolean(t)) => t == true,
+        _ => false,
+    };
     let history_file = match env.get("LUME_HISTORY_FILE") {
         Some(hf) => hf.to_string(),
         _ => {
@@ -72,12 +76,20 @@ pub fn run_repl(env: &mut Environment) {
         let rl_clone = Arc::clone(&rl);
         let running_clone = Arc::clone(&running);
         let hist = history_file.clone();
-        ctrlc::set_handler(move || {
-            running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-            let _ = rl_clone.lock().unwrap().save_history(&hist);
-            std::process::exit(0);
-        })
-        .expect("Error setting Ctrl-C handler");
+        if no_history {
+            ctrlc::set_handler(move || {
+                running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+                std::process::exit(0);
+            })
+            .expect("Error setting Ctrl-C handler");
+        } else {
+            ctrlc::set_handler(move || {
+                running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+                let _ = rl_clone.lock().unwrap().save_history(&hist);
+                std::process::exit(0);
+            })
+            .expect("Error setting Ctrl-C handler");
+        }
     }
 
     while running.load(std::sync::atomic::Ordering::SeqCst) {
@@ -110,20 +122,24 @@ pub fn run_repl(env: &mut Environment) {
             }
             _ => {
                 if parse_and_eval(&line, env) {
-                    match rl.lock().unwrap().add_history_entry(&line) {
-                        Ok(_) => {}
-                        Err(e) => eprintln!("add history err: {}", e),
-                    };
+                    if !no_history {
+                        match rl.lock().unwrap().add_history_entry(&line) {
+                            Ok(_) => {}
+                            Err(e) => eprintln!("add history err: {}", e),
+                        };
+                    }
                 }
             }
         }
     }
 
     // 保存历史记录
-    match rl.lock().unwrap().save_history(&history_file) {
-        Ok(_) => {}
-        Err(e) => eprintln!("save history err: {}", e),
-    };
+    if !no_history {
+        match rl.lock().unwrap().save_history(&history_file) {
+            Ok(_) => {}
+            Err(e) => eprintln!("save history err: {}", e),
+        };
+    }
 }
 
 // 确保 helper 也是线程安全的

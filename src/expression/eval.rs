@@ -166,6 +166,13 @@ impl Expression {
                     return Ok(Self::None);
                 }
 
+                // 处理变量声明（仅允许未定义变量）
+                Self::Alias(name, expr) => {
+                    dbg!("alias---->", &name, &expr.type_name());
+                    env.define(&name, *expr); // 新增 declare
+                    return Ok(Self::None);
+                }
+
                 // 元表达式处理
                 Self::Group(inner) => {
                     // dbg!("2.--->group:", &inner);
@@ -447,7 +454,36 @@ impl Expression {
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
                 Self::Command(ref cmd, ref args) => {
-                    // dbg!(&cmd.type_name());
+                    dbg!(&cmd.type_name());
+
+                    // alias
+                    let real_cmd = env.get(cmd.to_string().as_str());
+                    dbg!(&real_cmd);
+                    match real_cmd {
+                        Some(cmdx) => {
+                            dbg!("   3.--->applying alias:", &cmd, &cmdx);
+                            return match cmdx {
+                                Expression::Command(cmd_name, mut cmd_args) => {
+                                    cmd_args.append(&mut args.clone());
+                                    handle_command(cmd_name.to_string(), &cmd_args, env, depth)
+                                }
+                                Expression::Apply(..) => cmdx
+                                    .clone()
+                                    .append_args(args.clone())
+                                    .eval_mut(true, env, depth),
+                                // Expression::Builtin(cmd_name) => Ok(Self::Apply(
+                                //     Box::new(Expression::Builtin(cmd_name)),
+                                //     args.clone(),
+                                // )),
+                                _ => Err(RuntimeError::TypeError {
+                                    expected: "Command or Builtin".into(),
+                                    found: cmd.type_name(),
+                                }),
+                            };
+                        }
+                        _ => {}
+                    }
+
                     break match binary::get_builtin(&cmd.to_string()) {
                         Some(bti) => {
                             // dbg!("branch to builtin:", &cmd, &bti);

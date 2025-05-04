@@ -1191,6 +1191,7 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         // 1.声明语句
         parse_lazy_assign,
         parse_declare,
+        parse_alias,
         parse_del,
         // 2.控制流语句
         // parse_control_flow,
@@ -1379,6 +1380,15 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     Ok((input, block))
 }
 
+// 别名解析逻辑
+fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("alias")(input)?;
+    let (input, symbol) = parse_symbol_string(input)?;
+    let (input, _) = text("=")(input)?;
+    let (input, expr) = parse_expr_with_single_cmd(input)?;
+    // dbg!(&expr);
+    Ok((input, Expression::Alias(symbol, Box::new(expr))))
+}
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("let")(input)?;

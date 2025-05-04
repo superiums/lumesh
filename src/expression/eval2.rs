@@ -326,6 +326,7 @@ impl Expression {
         match self {
             Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
                 // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+
                 // 递归求值函数和参数
                 let func_eval = func.clone().eval_mut(true, env, depth + 1)?;
                 // let args_eval = args

@@ -226,6 +226,7 @@ macro_rules! fmt_shared {
                     .collect::<Vec<String>>()
                     .join(" ")
             ),
+            Self::Alias(name, cmd) => write!($f, "Alias({} {:?})!", name, cmd),
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
                     write!($f, "({} {})", op, v)
@@ -299,6 +300,7 @@ impl Expression {
             Self::Builtin(_) => "Builtin".into(),
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),
+            Self::Alias(..) => "Alias".into(),
             // Self::Error { .. } => "Error".into(),
             Self::None => "None".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),
@@ -317,7 +319,7 @@ impl Expression {
     pub fn apply(self, args: Vec<Self>) -> Self {
         Self::Apply(Box::new(self), args)
     }
-    // 新增参数合并方法
+    // 参数合并方法
     pub fn append_args(self, args: Vec<Expression>) -> Expression {
         match self {
             Expression::Apply(f, existing_args) => {

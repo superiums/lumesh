@@ -179,6 +179,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("let"),
+        keyword_tag("alias"),
         keyword_tag("if"),
         keyword_tag("then"),
         keyword_tag("else"),

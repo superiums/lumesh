@@ -1043,7 +1043,8 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     )(input)?;
     dbg!(&input, &pairs);
     let (input, _) = opt(terminated(text(","), opt(kind(TokenKind::LineBreak))))(input)?;
-    let (input, _) = preceded(opt(kind(TokenKind::LineBreak)), text_close("}"))(input)?;
+    let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
+    dbg!(&input);
 
     // Ok((input, Expression::Map(pairs)))
     Ok((input, Expression::Map(pairs.into_iter().collect())))
@@ -1298,21 +1299,24 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
 fn parse_if_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("if")(input)?;
     let (input, cond) = parse_expr(input)?;
-    let (input, then_block) = parse_block_or_expr(input)?;
-
+    let (input, then_block) = opt(parse_block_or_expr)(input)?;
     // 解析else分支
     let (input, else_branch) = opt(preceded(
         text("else"),
         alt((
-            parse_if_flow, // else if
-            parse_block,   // else
+            parse_if_flow,       // else if
+            parse_block_or_expr, // else
         )),
     ))(input)?;
 
     let els = else_branch.unwrap_or(Expression::None);
     Ok((
         input,
-        Expression::If(Box::new(cond), Box::new(then_block), Box::new(els)),
+        Expression::If(
+            Box::new(cond),
+            Box::new(then_block.unwrap_or(Expression::None)),
+            Box::new(els),
+        ),
     ))
 }
 
@@ -1377,7 +1381,7 @@ fn parse_block_or_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
 // TODO with return?
 fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, block) = delimited(
-        text("{"),
+        terminated(text("{"), opt(kind(TokenKind::LineBreak))),
         cut(map(
             many0(terminated(parse_statement, opt(kind(TokenKind::LineBreak)))),
             |stmts| Expression::Do(stmts),

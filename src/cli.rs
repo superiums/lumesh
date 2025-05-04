@@ -3,7 +3,9 @@
 // mod binary;
 use clap::Parser;
 use lumesh::parse_and_eval;
-use lumesh::repl; // 新增模块引用
+use lumesh::repl;
+use lumesh::runtime::init_config;
+// 新增模块引用
 // use lumesh::binary;
 // use lumesh::ENV;
 use lumesh::STRICT;
@@ -33,6 +35,9 @@ struct Cli {
     /// 严格模式
     #[arg(short = 's', long)]
     strict: bool,
+    /// 关闭ai
+    #[arg(short = 'a', long)]
+    aioff: bool,
 
     /// 脚本文件路径
     #[arg(
@@ -105,7 +110,10 @@ fn main() {
 
         if cli.interactive {
             // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
-            // repl::init_config(&mut env)?;
+            init_config(&mut env);
+            if cli.aioff {
+                env.undefine("LUME_AI_CONFIG");
+            }
             repl::run_repl(&mut env);
         }
     }
@@ -122,7 +130,10 @@ fn main() {
         env.define("IS_INTERACTIVE", Expression::Boolean(true));
 
         // repl::init_cmds(&mut env)?; // 调用 REPL 初始化
-        // repl::init_config(&mut env)?;
+        init_config(&mut env);
+        if cli.aioff {
+            env.undefine("LUME_AI_CONFIG");
+        }
         repl::run_repl(&mut env);
     }
 }

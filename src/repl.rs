@@ -13,18 +13,18 @@ use rustyline::{
 use std::borrow::Cow;
 use std::process::exit;
 
+use crate::Expression;
 use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
-use crate::runtime::{check, init_config};
+use crate::runtime::check;
 use crate::{Environment, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
 
 // use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use std::sync::{Arc, Mutex};
 
-const HISTORY_FILE: &str = "/tmp/lume-history";
 // ANSI 转义码
 const GREEN_BOLD: &str = "\x1b[1;32m";
 // const RED: &str = "\x1b[31m";
@@ -33,12 +33,33 @@ const RESET: &str = "\x1b[0m";
 // 使用 Arc<Mutex> 包装编辑器
 pub fn run_repl(env: &mut Environment) {
     println!("Rustyline Enhanced CLI (v15.0.0)");
-    init_config(env);
+    // init_config(env);
+
+    let history_file = match env.get("LUME_HISTORY_FILE") {
+        Some(hf) => hf.to_string(),
+        _ => {
+            if let Some(c_dir) = dirs::cache_dir() {
+                c_dir
+                    .join("lume_history")
+                    .into_os_string()
+                    .into_string()
+                    .unwrap()
+            } else {
+                eprintln!("please config LUME_HISTORY_FILE");
+                "lume_history".into()
+            }
+        }
+    };
+    let ai_config = env.get("LUME_AI_CONFIG");
+    // let enable_ai = match env.get("LUME_AI_CONFIG") {
+    //     Some(_) => true,
+    //     _ => false,
+    // };
 
     // 使用 Arc<Mutex> 保护编辑器
-    let rl = Arc::new(Mutex::new(new_editor()));
+    let rl = Arc::new(Mutex::new(new_editor(ai_config)));
 
-    if rl.lock().unwrap().load_history(HISTORY_FILE).is_err() {
+    if rl.lock().unwrap().load_history(&history_file).is_err() {
         println!("No previous history");
     }
 
@@ -50,9 +71,10 @@ pub fn run_repl(env: &mut Environment) {
     {
         let rl_clone = Arc::clone(&rl);
         let running_clone = Arc::clone(&running);
+        let hist = history_file.clone();
         ctrlc::set_handler(move || {
             running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-            let _ = rl_clone.lock().unwrap().save_history(HISTORY_FILE);
+            let _ = rl_clone.lock().unwrap().save_history(&hist);
             std::process::exit(0);
         })
         .expect("Error setting Ctrl-C handler");
@@ -98,7 +120,7 @@ pub fn run_repl(env: &mut Environment) {
     }
 
     // 保存历史记录
-    match rl.lock().unwrap().save_history(HISTORY_FILE) {
+    match rl.lock().unwrap().save_history(&history_file) {
         Ok(_) => {}
         Err(e) => eprintln!("save history err: {}", e),
     };
@@ -110,22 +132,25 @@ struct LumeHelper {
     completer: Arc<FilenameCompleter>,
     hinter: Arc<HistoryHinter>,
     highlighter: Arc<SyntaxHighlighter>,
-    ai_client: Arc<MockAIClient>,
+    ai_client: Option<Arc<MockAIClient>>,
 }
 
-fn new_editor() -> Editor<LumeHelper, FileHistory> {
+fn new_editor(ai_config: Option<Expression>) -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
         .completion_type(CompletionType::Circular)
         .build();
 
     let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());
-
+    let ai = match ai_config {
+        Some(ai_cfg) => Some(Arc::new(init_ai(ai_cfg))),
+        _ => None,
+    };
     let helper = LumeHelper {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
         highlighter: Arc::new(SyntaxHighlighter),
-        ai_client: Arc::new(init_ai()),
+        ai_client: ai,
     };
     rl.set_helper(Some(helper));
     rl
@@ -157,12 +182,12 @@ impl Completer for LumeHelper {
             return Ok((start, completions));
         } else if should_trigger_cmd_completion(line, pos) {
             return Ok(generate_cmd_hints(line, pos));
-        } else {
+        } else if let Some(ai) = &self.ai_client {
             // After the first token, use AI completion
             let tokens: Vec<&str> = line.split_whitespace().collect();
             if tokens.len() > 1 {
                 let prompt = line.trim();
-                match self.ai_client.complete(prompt) {
+                match ai.complete(prompt) {
                     Ok(suggestion) => {
                         let pair = Pair {
                             display: format!("\x1b[34m{}\x1b[0m", suggestion),
@@ -175,6 +200,8 @@ impl Completer for LumeHelper {
             } else {
                 return Ok((pos, Vec::new()));
             }
+        } else {
+            return Ok((pos, Vec::new()));
         }
     }
 
@@ -479,7 +506,7 @@ fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> 
 }
 
 pub fn read_user_input(prompt: impl ToString) -> String {
-    let mut rl = new_editor();
+    let mut rl = new_editor(None);
     readline(prompt, &mut rl)
 }
 pub fn strip_ansi_escapes(text: impl ToString) -> String {

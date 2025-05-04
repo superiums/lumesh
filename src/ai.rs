@@ -4,19 +4,65 @@ use std::io::Error;
 use std::io::{self, BufRead, Write};
 use std::net::TcpStream;
 use std::time::Duration;
+
+use crate::Expression;
 // lazy_static! {
 //     // 双重锁设计：外层Mutex防止多线程竞争初始化，内层HashSet只读
 //    pub static ref AI_CLIENT: Box<dyn AIClient + Sync + Send> = Box::new(MockAIClient);
 // }
 
-pub fn init_ai() -> MockAIClient {
+pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
+    // dbg!(&ai_cfg);
+    return match ai_cfg {
+        Expression::Map(cfg_map) => MockAIClient {
+            host: match cfg_map.get("host") {
+                Some(h) => h.to_string(),
+                _ => "localhost:11434".into(),
+            },
+            complete_url: match cfg_map.get("complete_url") {
+                Some(h) => h.to_string(),
+                _ => "/completion".into(),
+            },
+            chat_url: match cfg_map.get("chat_url") {
+                Some(h) => h.to_string(),
+                _ => "/v1/chat/completions".into(),
+            },
+            complete_max_tokens: match cfg_map.get("complete_max_tokens") {
+                Some(h) => match h {
+                    Expression::Integer(c_token) => *c_token as u8,
+                    _ => 10,
+                },
+                _ => 10,
+            },
+            chat_max_tokens: match cfg_map.get("chat_max_tokens") {
+                Some(h) => match h {
+                    Expression::Integer(c_token) => *c_token as u8,
+                    _ => 100,
+                },
+                _ => 100,
+            },
+
+            model: match cfg_map.get("model") {
+                Some(h) => h.to_string(),
+                _ => "".into(),
+            },
+            system_prompt: match cfg_map.get("system_prompt") {
+                Some(h) => h.to_string(),
+                _ => "you're a lumesh shell helper".into(),
+            },
+        },
+        _ => {
+            eprintln!("invalid config:AI config should be a map.\nloading default.");
+            MockAIClient::new(
+                "localhost:11434".into(),
+                "/completion".into(),
+                "/v1/chat/completions".into(),
+            )
+        }
+    };
     // 调用代码补全模式
     // let ai =
-    MockAIClient::new(
-        "localhost:11000".into(),
-        "/completion".into(),
-        "/v1/chat/completions".into(),
-    )
+
     // let completion_response = ai.complete("fn sum(")?;
     // //
     // println!("Completion Response:\n{}", completion_response);
@@ -43,7 +89,7 @@ pub struct MockAIClient {
     complete_max_tokens: u8,
     chat_max_tokens: u8,
     model: String,
-    system_content: String,
+    system_prompt: String,
 }
 impl MockAIClient {
     pub fn new(host: String, complete_url: String, chat_url: String) -> Self {
@@ -54,7 +100,7 @@ impl MockAIClient {
             complete_max_tokens: 20,
             chat_max_tokens: 100,
             model: "".into(),
-            system_content: "you're a shell helper".into(),
+            system_prompt: "you're a shell helper".into(),
         }
     }
 }
@@ -102,7 +148,7 @@ impl AIClient for MockAIClient {
                     {{ "role": "user", "content": "{}" }}
                 ]
             }}"#,
-            self.model, self.chat_max_tokens, self.system_content, prompt
+            self.model, self.chat_max_tokens, self.system_prompt, prompt
         );
 
         let chat_response = self.send_request(&self.chat_url, &json_string)?;

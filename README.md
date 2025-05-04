@@ -4,7 +4,7 @@
 
 Welcome to **Lumesh**, a powerful shell forked from [Dune](https://github.com/adam-mcdaniel/dune)!
 
-<img src="https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png" alt="lumesh" width="200" />
+<img src="https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png" alt="lumesh"/>
 
 Lumesh aims to provide a fast, efficient, and user-friendly command-line experience, enhancing your productivity with a variety of new features.
 

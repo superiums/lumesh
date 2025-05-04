@@ -1041,10 +1041,10 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
         separated_pair(parse_symbol_string, text(":"), parse_literal),
     )(input)?;
-    dbg!(&input, &pairs);
+    // dbg!(&input, &pairs);
     let (input, _) = opt(terminated(text(","), opt(kind(TokenKind::LineBreak))))(input)?;
     let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
-    dbg!(&input);
+    // dbg!(&input);
 
     // Ok((input, Expression::Map(pairs)))
     Ok((input, Expression::Map(pairs.into_iter().collect())))

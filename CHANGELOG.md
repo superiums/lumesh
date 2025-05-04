@@ -1,4 +1,30 @@
 # Changelog
+## [0.3.3]
+- add local ai auto complete.
+you can config your local ai assistant like this:
+```bash
+let LUME_AI_CONFIG = {
+    host: "localhost:11434",
+    complete_url: "/completion",
+    chat_url: "/v1/chat/completions",
+    complete_max_tokens: 10,
+    chat_max_tokens: 100,
+    model: "",
+    system_prompt: "you're a lumesh shell helper",
+}
+```
+- add alias
+- custom profile, no history mode.
+- read config
+default config in `$config_dir/lumesh/config.lsh`
+or specify your own via `lume -c your/path`
+- allow mutline map, and tailing with `,`
+- parse cmd after = as string/symbol.
+subcmd capture should use `()` or ````
+- allow empty params def in lambda.
+- allow function in circle. fix env for function.
+- fix custom op define.
+
 ## [0.3.2]
 - add support for error handling.
 handling errs never have been so easy:

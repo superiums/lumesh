@@ -31,7 +31,7 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
-        dbg!("1.--->eval_mut:", &self, &self.type_name());
+        // dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(RuntimeError::RecursionDepth(self));
@@ -89,7 +89,7 @@ impl Expression {
 
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {
-                    dbg!("declare---->", &name, &expr.type_name());
+                    // dbg!("declare---->", &name, &expr.type_name());
 
                     unsafe {
                         if STRICT && env.has(&name)
@@ -118,7 +118,7 @@ impl Expression {
 
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
-                    dbg!("assign---->", &name, &expr.type_name());
+                    // dbg!("assign---->", &name, &expr.type_name());
                     let is_cmd = match *expr {
                         Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
                             true
@@ -130,7 +130,7 @@ impl Expression {
                     }
                     let value = expr.eval_mut(false, env, depth + 1)?;
 
-                    dbg!("assign---->", &name, &value.type_name());
+                    // dbg!("assign---->", &name, &value.type_name());
                     if env.has(&name) {
                         env.define(&name, value.clone());
                     } else {
@@ -168,7 +168,7 @@ impl Expression {
 
                 // 处理变量声明（仅允许未定义变量）
                 Self::Alias(name, expr) => {
-                    dbg!("alias---->", &name, &expr.type_name());
+                    // dbg!("alias---->", &name, &expr.type_name());
                     env.define(&name, *expr); // 新增 declare
                     return Ok(Self::None);
                 }
@@ -454,14 +454,14 @@ impl Expression {
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
                 Self::Command(ref cmd, ref args) => {
-                    dbg!(&cmd.type_name());
+                    // dbg!(&cmd.type_name());
 
                     // alias
                     let real_cmd = env.get(cmd.to_string().as_str());
-                    dbg!(&real_cmd);
+                    // dbg!(&real_cmd);
                     match real_cmd {
                         Some(cmdx) => {
-                            dbg!("   3.--->applying alias:", &cmd, &cmdx);
+                            // dbg!("   3.--->applying alias:", &cmd, &cmdx);
                             return match cmdx {
                                 Expression::Command(cmd_name, mut cmd_args) => {
                                     cmd_args.append(&mut args.clone());

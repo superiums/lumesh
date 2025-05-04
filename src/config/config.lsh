@@ -1,37 +1,34 @@
-# let prompt = cwd -> fmt@bold ((fmt@dark@blue "(lumesh) ") + (fmt@bold (fmt@dark@green cwd)) + (fmt@bold (fmt@dark@blue "$ ")));
-# let incomplete_prompt = cwd -> ((len cwd) + (len "(lumesh) ")) * " " + (fmt@bold (fmt@dark@yellow "> "));
+# config for login mode
+if IS_LOGIN {
+    let PATH = "/usr/local/bin:/usr/bin:/bin"
+}
 
-# let $ = GLOB ~> ((fs@ls .) | (fn@filter (file -> (len (string@split GLOB file)) == 2)));
-let flip = (f, x, y) -> {f y x}
-let compose = (f, g, x) -> f(g, x)
+# config for interactive mode
+if IS_INTERACTIVE {
+    let IS_STRICT = true
+    let LUME_AI_CONFIG = {
+        host: "localhost:11434",
+        complete_url: "/completion",
+        chat_url: "/v1/chat/completions",
+        complete_max_tokens: 10,
+        chat_max_tokens: 100,
+        model: "",
+        system_prompt: "you're a lumesh shell helper",
+    }
+}
+# else {
+# config for script mode
 
-# let include = file ~> exec (parse@expr (fs@read file));
-# let use = file ~> eval (parse@expr (fs@read file));
-# let get = key -> table -> table@(key);
-# let open = fs@read;
-# let concat = x -> y -> (str y) + (str x);
-# let join = sep -> l -> {
-#                 let sep = str sep;
-#                 fn@reduce (x -> y -> x + sep + (str y)) (str l@0) (list@tail l)
-#             }
+# }
 
-# let ssh = addr -> user -> {
-# 	ssh -X (str user) + "@" + (str addr);
-# };
+# config for all mode
+let LUME_HISTORY_FILE= "/tmp/lume_histroy"
 
-# let scp = addr -> user -> src -> dst -> {
-#     # Call the actual overshadowed scp program
-#     scp -r src (str user) + "@" + (str addr) + ":" + (str dst)
-# };
+let get = (key, table) -> table[key];
+let open := fs@read();
+let concat = (x, y) -> (str y) + (str x);
 
-# let ~ = x -> HOME + "/" + (str x) | fs@canon;
 
-# let ++ = x -> x + 1;
-# let -- = x -> x - 1;
-
-# let . = obj -> index -> {
-# 	obj@index
-# };
 
 let logo = "
         ██╗     ██╗   ██╗███╗   ███╗███████╗

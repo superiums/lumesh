@@ -475,11 +475,17 @@ impl PrattParser {
                 // 确保左侧是符号
                 match lhs.to_symbol() {
                     Ok(name) => {
-                        // 如果是单独的symbol，则包装为命令
+                        // 如果是命令, 则包装为字符串，命令应当明确用()包裹
                         let last = match rhs {
-                            Expression::Symbol(s) => {
-                                Expression::Command(Box::new(Expression::Symbol(s)), vec![])
-                            }
+                            Expression::Command(s, v) => Expression::Symbol(
+                                s.to_string()
+                                    + " "
+                                    + v.iter()
+                                        .map(|e| e.to_string())
+                                        .collect::<Vec<String>>()
+                                        .join(" ")
+                                        .as_str(),
+                            ),
                             other => other,
                         };
                         Ok(Expression::Assign(name.to_string(), Box::new(last)))
@@ -1431,11 +1437,24 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         Some(e) if e.len() == 1 => {
             if symbols.len() == 1 {
                 // 如果是单独的symbol，则包装为命令
-                let last = match &e[0] {
-                    Expression::Symbol(s) => {
-                        Expression::Command(Box::new(Expression::Symbol(s.to_owned())), vec![])
-                    }
-                    other => other.clone(),
+                // let last = match &e[0] {
+                //     Expression::Symbol(s) => {
+                //         Expression::Command(Box::new(Expression::Symbol(s.to_owned())), vec![])
+                //     }
+                //     other => other.clone(),
+                // };
+                // 如果是命令, 则包装为字符串，命令应当明确用()包裹
+                let last = match e[0].clone() {
+                    Expression::Command(s, v) => Expression::Symbol(
+                        s.to_string()
+                            + " "
+                            + v.iter()
+                                .map(|e| e.to_string())
+                                .collect::<Vec<String>>()
+                                .join(" ")
+                                .as_str(),
+                    ),
+                    other => other,
                 };
                 return Ok((
                     input,

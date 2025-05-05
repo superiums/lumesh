@@ -787,7 +787,7 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
 // 参数解析函数
 fn parse_param(
     input: Tokens<'_>,
-) -> IResult<Tokens<'_>, (String, Option<Expression>), SyntaxErrorKind> {
+) -> IResult<Tokens<'_>, (String, Option<Expression>, bool), SyntaxErrorKind> {
     alt((
         // 带默认值的参数解析分支
         map(
@@ -797,16 +797,20 @@ fn parse_param(
                 // 限制只能解析基本类型表达式
                 parse_literal,
             ),
-            |(name, expr)| (name, Some(expr)), // 将结果包装为Some
+            |(name, expr)| (name, Some(expr), false), // 将结果包装为Some
         ),
+        map(preceded(text("*"), parse_symbol_string), |s| {
+            (s, None, true)
+        }),
         // 普通参数解析分支
-        map(parse_symbol_string, |s| (s, None)), // , 1+2 also match first symbol, so failed in ) parser.
+        map(parse_symbol_string, |s| (s, None, false)), // , 1+2 also match first symbol, so failed in ) parser.
     ))(input)
 }
+
 // 函数参数列表解析
 fn parse_param_list(
     input: Tokens<'_>,
-) -> IResult<Tokens<'_>, Vec<(String, Option<Expression>)>, SyntaxErrorKind> {
+) -> IResult<Tokens<'_>, (Vec<(String, Option<Expression>)>, Option<String>), SyntaxErrorKind> {
     let (input, _) = cut(text("("))(input).map_err(|_| {
         SyntaxErrorKind::failure(
             input.get_str_slice(),
@@ -815,8 +819,21 @@ fn parse_param_list(
             Some("add something like (x,y)"),
         )
     })?;
-    let (input, params) = separated_list0(text(","), parse_param)(input)?;
-    let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; //允许可选回车
+    let (input, x) = separated_list0(text(","), parse_param)(input)?;
+    let mut params = vec![];
+    let mut param_collector: Option<String> = None;
+    for (p, dvalue, is_colllector) in x {
+        if is_colllector {
+            param_collector = Some(p);
+        } else {
+            params.push((p, dvalue));
+        }
+    }
+    // let (input, param_collector) = opt(preceded(
+    //     text(","),
+    //     preceded(text("*"), parse_symbol_string),
+    // ))(input)?;
+    // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; //允许可选回车
     // 如果还有其他字符，应报错
     // dbg!(&input, &params);
     if !input.is_empty() {
@@ -834,7 +851,7 @@ fn parse_param_list(
         }
     }
     let (input, _) = cut(text_close(")"))(input)?;
-    Ok((input, params))
+    Ok((input, (params, param_collector)))
 }
 // lambda参数
 fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -870,7 +887,7 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
             Some("add a name for your function"),
         )
     })?;
-    let (input, params) = parse_param_list(input)?; // 使用新参数列表
+    let (input, (params, param_collector)) = parse_param_list(input)?; // 使用新参数列表
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; //允许可选回车
 
     // 无函数体应报错
@@ -903,7 +920,10 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
         Some((ctyp, handler)) => Box::new(Expression::Catch(Box::new(body), ctyp, handler)),
         _ => Box::new(body),
     };
-    Ok((input, Expression::Function(name, params, last_body)))
+    Ok((
+        input,
+        Expression::Function(name, params, param_collector, last_body),
+    ))
 }
 // return statement
 fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {

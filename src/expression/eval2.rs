@@ -67,7 +67,7 @@ impl Expression {
                 Ok(Self::Lambda(params, body, env.fork()))
             }
             // 处理函数定义
-            Self::Function(name, params, body) => {
+            Self::Function(name, params, pc, body) => {
                 // dbg!(&def_env);
                 // 验证默认值类型（新增）
                 for (p, default) in &params {
@@ -98,7 +98,7 @@ impl Expression {
                 //     }
                 // }
                 // dbg!(&new_env);
-                let func = Self::Function(name.clone(), params, body);
+                let func = Self::Function(name.clone(), params, pc, body);
                 env.define(&name, func.clone());
                 Ok(func)
             }
@@ -537,11 +537,11 @@ impl Expression {
                     //     env.define(&param, Expression::List(args_eval));
                     //     return body.eval_mut(env, depth + 1);
                     // }
-                    Self::Function(name, params, body) => {
+                    Self::Function(name, params, pc, body) => {
                         // dbg!("2.--- applying function---", &name, &params);
                         // dbg!(&def_env);
                         // 参数数量校验
-                        if args.len() > params.len() {
+                        if pc.is_none() && args.len() > params.len() {
                             return Err(RuntimeError::TooManyArguments {
                                 name,
                                 max: params.len(),
@@ -572,6 +572,15 @@ impl Expression {
 
                         // 创建新作用域并执行
                         let mut new_env = env.fork();
+                        match pc {
+                            Some(collector) => {
+                                new_env.define(
+                                    collector.as_str(),
+                                    Expression::List(actual_args.clone()[params.len()..].to_vec()),
+                                );
+                            }
+                            _ => {}
+                        }
                         for ((param, _), arg) in params.iter().zip(actual_args) {
                             new_env.define(param, arg);
                         }

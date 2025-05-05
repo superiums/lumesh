@@ -322,6 +322,7 @@ pub fn handle_pipes(
                                     Some(o) => o,
                                     _ => to_expr(pipe_out),
                                 };
+                                dbg!(&choosed_input);
                                 let result_expr =
                                     ex.clone().append_args(vec![choosed_input]).eval_apply(
                                         // true,
@@ -428,7 +429,7 @@ fn handle_err(
 
 pub fn to_expr(bytes_out: Option<Vec<u8>>) -> Expression {
     match bytes_out {
-        Some(b) => Expression::String(String::from_utf8_lossy(&b).to_string()),
+        Some(b) => Expression::String(String::from_utf8_lossy(&b).trim().to_string()),
         _ => Expression::None,
     }
 }

@@ -1299,7 +1299,7 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
 fn parse_if_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("if")(input)?;
     let (input, cond) = parse_expr(input)?;
-    let (input, then_block) = opt(parse_block_or_expr)(input)?;
+    let (input, then_block) = opt(parse_block)(input)?; //must have block to differ with condition
     // 解析else分支
     let (input, else_branch) = opt(preceded(
         text("else"),

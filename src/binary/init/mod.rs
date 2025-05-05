@@ -187,7 +187,9 @@ fn print(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
         }
         result.push(x)
     }
-
+    if result.len() == 1 {
+        return Ok(result[0].clone());
+    }
     Ok(Expression::List(result))
 }
 
@@ -211,6 +213,9 @@ fn println(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, c
         println!("{}", x);
         result.push(x);
     }
+    if result.len() == 1 {
+        return Ok(result[0].clone());
+    }
     Ok(Expression::List(result))
 }
 
@@ -226,7 +231,9 @@ fn eprint(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
         }
         result.push(x)
     }
-
+    if result.len() == 1 {
+        return Ok(result[0].clone());
+    }
     Ok(Expression::List(result))
 }
 fn eprintln(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
@@ -235,6 +242,9 @@ fn eprintln(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         let x = arg.clone().eval(env)?;
         eprintln!("\x1b[38;5;9m{}\x1b[m\x1b[0m", x);
         result.push(x);
+    }
+    if result.len() == 1 {
+        return Ok(result[0].clone());
     }
     Ok(Expression::List(result))
 }

@@ -16,7 +16,6 @@ fn main() -> Result<(), LmError> {
     let mut args = std::env::args().skip(1); // 跳过二进制名称
     let mut cmd = None;
     let mut file = None;
-    let mut profile = None;
     let mut script_args = Vec::new();
 
     let mut env = Environment::new();
@@ -65,13 +64,11 @@ fn main() -> Result<(), LmError> {
             //     env.define("IS_STRICT", Expression::Boolean(true));
             // }
             "-p" => {
-                profile = Some(args.next().unwrap_or_else(|| {
+                let profile = args.next().unwrap_or_else(|| {
                     eprintln!("-p needs profile path");
                     std::process::exit(0);
-                }));
-                if let Some(pro) = profile {
-                    env.define("LUME_PROFILE", Expression::String(pro));
-                }
+                });
+                env.define("LUME_PROFILE", Expression::String(profile));
             }
             "-c" => {
                 cmd = Some(args.next().unwrap_or_else(|| {

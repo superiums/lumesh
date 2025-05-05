@@ -132,7 +132,7 @@ fn expr_to_command(
                 }
                 // 其他可执行命令，如lambda,Function,Builtin
                 _ => {
-                    dbg!("--else type--", &func_eval, &func_eval.type_name());
+                    // dbg!("--else type--", &func_eval, &func_eval.type_name());
                     Ok(("".into(), vec![], Some(expr.to_owned()), None))
 
                     // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
@@ -208,7 +208,7 @@ pub fn handle_pipes(
 ) -> Result<(Option<Vec<u8>>, Option<Expression>), RuntimeError> {
     {
         // 管道运算符特殊处理
-        dbg!("--pipe--", &lhs, &rhs);
+        // dbg!("--pipe--", &lhs, &rhs);
         let result_left = match lhs {
             // TODO op== "|>" >> >>>
             Expression::Pipe(op, l_arm, r_arm) if op == "|" => handle_pipes(
@@ -225,7 +225,7 @@ pub fn handle_pipes(
 
             _ => {
                 let (cmd, args, expr, deeling) = expr_to_command(&lhs, env, depth + 1)?;
-                dbg!(&cmd, &args, &expr, &deeling);
+                // dbg!(&cmd, &args, &expr, &deeling);
                 // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种,还有从group解开的pipe
                 match expr.clone() {
                     Some(Expression::Pipe(op, l_arm, r_arm)) if op == "|" => {
@@ -293,7 +293,7 @@ pub fn handle_pipes(
                 // }
             }
         };
-        dbg!(&result_left);
+        // dbg!(&result_left);
         return match result_left {
             Ok((pipe_out, expr_out)) => {
                 // return match rhs {
@@ -322,7 +322,7 @@ pub fn handle_pipes(
                                     Some(o) => o,
                                     _ => to_expr(pipe_out),
                                 };
-                                dbg!(&choosed_input);
+                                // dbg!(&choosed_input);
                                 let result_expr =
                                     ex.clone().append_args(vec![choosed_input]).eval_apply(
                                         // true,
@@ -419,7 +419,7 @@ fn handle_err(
 ) -> Result<(Option<Vec<u8>>, Option<Expression>), RuntimeError> {
     match deeling {
         Some((ctyp, handler)) => {
-            dbg!("left err, deeling");
+            // dbg!("left err, deeling");
             let exd = catch_error(e, Box::new(body), ctyp, handler, env)?;
             Ok((None, Some(exd)))
         }
@@ -472,7 +472,7 @@ pub fn handle_stdin_redirect(
             Ok(r) => Ok(to_expr(Some(r))),
             Err(e) => match deeling {
                 Some((ctyp, handler)) => {
-                    dbg!("left err, deeling");
+                    // dbg!("left err, deeling");
                     let exd =
                         catch_error(e, Box::new(Expression::String(cmd)), ctyp, handler, env)?;
                     Ok(exd)

@@ -1,4 +1,14 @@
 # Changelog
+## [0.3.4]
+- enhance pipe to be more clever
+auto pass value or stdin;
+auto suite pipeout to stdout or param out.
+
+- error catch could be used in pipes
+- fix groups in pipes
+- print returns value for pipe use
+
+
 ## [0.3.3]
 - add local ai auto complete.
 you can config your local ai assistant like this:

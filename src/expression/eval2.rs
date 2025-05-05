@@ -408,11 +408,11 @@ impl Expression {
 
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
-                        dbg!("   3.--->applying Builtin:", &func, &args);
+                        // dbg!("   3.--->applying Builtin:", &func, &args);
                         match body(args.clone(), env) {
                             Ok(result) => {
                                 self.set_status_code(0, env);
-                                dbg!(&result);
+                                // dbg!(&result);
                                 Ok(result)
                             }
                             Err(e) => {

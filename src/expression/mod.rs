@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 
 pub mod basic;
 pub mod builtin;
+pub mod catcher;
 pub mod eval;
 pub mod eval2;
 pub mod from;

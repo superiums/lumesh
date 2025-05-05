@@ -1,11 +1,11 @@
+use super::Builtin;
+use super::catcher::catch_error;
 use super::pipe_excutor::handle_pipes;
 use super::pipe_excutor::handle_stdin_redirect;
 use super::pipe_excutor::to_expr;
-use super::{Builtin, CatchType};
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
-use crate::{Environment, Int, RuntimeError};
-use common_macros::b_tree_map;
+use crate::{Environment, RuntimeError};
 use std::io::ErrorKind;
 use std::io::Write;
 // Expression求值2
@@ -282,38 +282,10 @@ impl Expression {
             }
             Self::Catch(body, typ, deeling) => {
                 // dbg!(&typ, &deeling);
-                match body.clone().eval_mut(true, env, depth + 1) {
+                let result = body.clone().eval_mut(true, env, depth + 1);
+                match result {
                     Ok(result) => Ok(result),
-                    Err(e) => {
-                        return match typ {
-                            CatchType::Deel => match deeling {
-                                Some(deel) => {
-                                    // dbg!(&deel.type_name());
-                                    let deeled_result = deel
-                                        .append_args(vec![Expression::Map(b_tree_map! {
-                                            // String::from("type") => Expression::String(e.type_name()),
-                                            String::from("msg") => Expression::String(e.to_string()),
-                                            String::from("code") => Expression::Integer(Int::from(e.code())),
-                                            String::from("expr") => Expression::Quote(body)
-                                        })])
-                                        .eval_mut(true, env, depth + 1);
-                                    deeled_result
-                                }
-                                _ => Ok(Expression::None),
-                            },
-                            CatchType::Ignore => Ok(Expression::None),
-                            CatchType::PrintStd => {
-                                println!("[Err->Std] {:?}", e);
-                                Ok(Expression::None)
-                            }
-                            CatchType::PrintErr => {
-                                eprintln!("[Err] {:?}", e);
-                                Ok(Expression::None)
-                            }
-                            CatchType::PrintOver => Ok(Expression::String(e.to_string())),
-                        };
-                        // Ok(Expression::None)
-                    }
+                    Err(e) => catch_error(e, body, typ, deeling, env),
                 }
             }
             // 默认情况

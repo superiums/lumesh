@@ -1,5 +1,6 @@
 use super::pipe_excutor::handle_pipes;
 use super::pipe_excutor::handle_stdin_redirect;
+use super::pipe_excutor::to_expr;
 use super::{Builtin, CatchType};
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
@@ -146,18 +147,22 @@ impl Expression {
                         //     // dbg!(&pipe_result);
                         //     pipe_result
                         // } else {
-                        let (_, expr_out) = handle_pipes(
+                        let (pipe_out, expr_out) = handle_pipes(
                             &*lhs,
                             &*rhs,
                             &bindings,
                             false,
+                            None,
                             None,
                             env,
                             depth,
                             always_pipe,
                         )?;
                         // dgb!(&expr_out);
-                        Ok(expr_out)
+                        match expr_out {
+                            Some(e) => Ok(e),
+                            _ => Ok(to_expr(pipe_out)),
+                        }
                         // }
                     }
 
@@ -431,10 +436,11 @@ impl Expression {
 
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
-                        // dbg!("   3.--->applying Builtin:", &func, &args);
+                        dbg!("   3.--->applying Builtin:", &func, &args);
                         match body(args.clone(), env) {
                             Ok(result) => {
                                 self.set_status_code(0, env);
+                                dbg!(&result);
                                 Ok(result)
                             }
                             Err(e) => {

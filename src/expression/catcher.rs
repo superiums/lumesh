@@ -14,7 +14,7 @@ pub fn catch_error(
     return match typ {
         CatchType::Deel => match deeling {
             Some(deel) => match *deel {
-                Expression::Lambda(..) | Expression::Function(..) => {
+                Expression::Symbol(..) | Expression::Lambda(..) | Expression::Function(..) => {
                     // dbg!(&deel.type_name());
                     let deeled_result = deel
                         .append_args(vec![Expression::Map(b_tree_map! {

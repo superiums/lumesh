@@ -3,3 +3,4 @@ history.txt
 *.cast
 *.lock
 /target*
+.history*

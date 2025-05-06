@@ -17,14 +17,15 @@ impl Expression {
             Self::For(var, list_expr, body) => {
                 // 求值列表表达式
                 let list = list_expr.eval_mut(true, env, depth + 1)?.as_list()?.clone();
-                let mut last = Self::None;
 
                 // 遍历每个元素执行循环体
+                let mut result = Vec::with_capacity(list.len());
                 for item in list.iter() {
                     env.define(&var, item.clone());
-                    last = body.clone().eval_mut(true, env, depth + 1)?;
+                    let last = body.clone().eval_mut(true, env, depth + 1)?;
+                    result.push(last)
                 }
-                Ok(last)
+                Ok(Expression::List(result))
             }
             Self::While(cond, body) => {
                 // 循环求值直到条件为假

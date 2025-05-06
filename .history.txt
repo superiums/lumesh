@@ -1,9 +1,0 @@
-#V2
-let a=9
-fn x 
-let a=9
-ls
-got
-hi
-8-(\n9+9)
-8-(7\n+9+\n8)+

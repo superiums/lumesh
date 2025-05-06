@@ -1,6 +1,7 @@
 # --- 循环求和 ---
 let start=time.stamp-ms();
-let sum=0; for i in 0..1000000 {
+let sum=0;
+for i in 0..1000000 {
     sum += i
 };
 let end=time.stamp-ms();
@@ -10,6 +11,20 @@ echo "所需时间: " end - start "毫秒";
 # 从 1 到 10000 的总和是:  499999500000
 # 所需时间:  588 毫秒
 
+# --- 循环求和2 ---
+let start=time.stamp-ms();
+let sum=0;
+let i = 1000000;
+while (i>0) {
+    i = i - 1
+    sum += i
+};
+let end=time.stamp-ms();
+echo "从 1 到 10000 的总和是: " sum;
+echo "所需时间: " end - start "毫秒";
+
+# 从 1 到 10000 的总和是:  499999500000
+# 所需时间:  1006 毫秒
 
 # --- 循环+条件判断 ---
 let start=time.stamp-ms();

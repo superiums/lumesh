@@ -139,9 +139,17 @@ fn expr_to_command(
                 }
             };
         }
-        Expression::Pipe(..) | Expression::BinaryOp(..) => {
-            Ok(("".into(), vec![], Some(expr.to_owned()), None))
-        }
+        Expression::Pipe(..)
+        | Expression::BinaryOp(..)
+        | Expression::UnaryOp(..)
+        | Expression::Integer(..)
+        | Expression::Float(..)
+        | Expression::String(..)
+        | Expression::Boolean(..)
+        | Expression::List(..)
+        | Expression::Map(..)
+        | Expression::Index(..)
+        | Expression::Slice(..) => Ok(("".into(), vec![], Some(expr.to_owned()), None)),
         // 是分组则解开后再次解释
         Expression::Group(inner) => expr_to_command(inner, env, depth + 1),
         Expression::Catch(body, typ, deeling) => {
@@ -242,7 +250,7 @@ pub fn handle_pipes(
                         );
                         match result {
                             Ok(r) => Ok(r),
-                            Err(e) => handle_err(e, expr.unwrap(), deeling, env),
+                            Err(e) => handle_err(e, expr.unwrap(), deeling, env, depth),
                         }
                     }
                     Some(ex) => {
@@ -250,7 +258,7 @@ pub fn handle_pipes(
                         let result_expr = ex.clone().eval_mut(true, env, depth + 1);
                         match result_expr {
                             Ok(r) => Ok((None, Some(r))),
-                            Err(e) => handle_err(e, ex, deeling, env),
+                            Err(e) => handle_err(e, ex, deeling, env, depth),
                         }
                     }
                     None => {
@@ -259,7 +267,7 @@ pub fn handle_pipes(
                             exec_single_cmd(cmd.clone(), args, bindings, input, false, always_pipe);
                         match result_pipe {
                             Ok(r) => Ok((Some(r), None)),
-                            Err(e) => handle_err(e, Expression::String(cmd), deeling, env),
+                            Err(e) => handle_err(e, Expression::String(cmd), deeling, env, depth),
                         }
                     }
                 }
@@ -331,7 +339,7 @@ pub fn handle_pipes(
                                     );
                                 match result_expr {
                                     Ok(r) => Ok((None, Some(r))),
-                                    Err(e) => handle_err(e, ex, deeling, env),
+                                    Err(e) => handle_err(e, ex, deeling, env, depth),
                                 }
                             }
                             Expression::Pipe(op, l_arm, r_arm) if op == "|" => {
@@ -353,6 +361,7 @@ pub fn handle_pipes(
                                         Expression::Pipe(op, l_arm, r_arm),
                                         deeling,
                                         env,
+                                        depth,
                                     ),
                                 }
                             }
@@ -361,7 +370,7 @@ pub fn handle_pipes(
                                 let result_expr = ex.clone().eval_mut(true, env, depth + 1);
                                 match result_expr {
                                     Ok(r) => Ok((None, Some(r))),
-                                    Err(e) => handle_err(e, ex, deeling, env),
+                                    Err(e) => handle_err(e, ex, deeling, env, depth),
                                 }
                             }
                         }
@@ -416,11 +425,12 @@ fn handle_err(
     body: Expression,
     deeling: Option<(CatchType, Option<Box<Expression>>)>,
     env: &mut Environment,
+    depth: usize,
 ) -> Result<(Option<Vec<u8>>, Option<Expression>), RuntimeError> {
     match deeling {
         Some((ctyp, handler)) => {
             // dbg!("left err, deeling");
-            let exd = catch_error(e, Box::new(body), ctyp, handler, env)?;
+            let exd = catch_error(e, Box::new(body), ctyp, handler, env, depth + 1)?;
             Ok((None, Some(exd)))
         }
         _ => Err(e),
@@ -473,8 +483,14 @@ pub fn handle_stdin_redirect(
             Err(e) => match deeling {
                 Some((ctyp, handler)) => {
                     // dbg!("left err, deeling");
-                    let exd =
-                        catch_error(e, Box::new(Expression::String(cmd)), ctyp, handler, env)?;
+                    let exd = catch_error(
+                        e,
+                        Box::new(Expression::String(cmd)),
+                        ctyp,
+                        handler,
+                        env,
+                        depth + 1,
+                    )?;
                     Ok(exd)
                 }
                 _ => Err(e),

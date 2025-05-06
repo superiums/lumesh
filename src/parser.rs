@@ -787,7 +787,7 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
 // 参数解析函数
 fn parse_param(
     input: Tokens<'_>,
-) -> IResult<Tokens<'_>, (String, Option<Expression>, bool), SyntaxErrorKind> {
+) -> IResult<Tokens<'_>, (String, Option<Expression>), SyntaxErrorKind> {
     alt((
         // 带默认值的参数解析分支
         map(
@@ -797,13 +797,13 @@ fn parse_param(
                 // 限制只能解析基本类型表达式
                 parse_literal,
             ),
-            |(name, expr)| (name, Some(expr), false), // 将结果包装为Some
+            |(name, expr)| (name, Some(expr)), // 将结果包装为Some
         ),
-        map(preceded(text("*"), parse_symbol_string), |s| {
-            (s, None, true)
-        }),
+        // map(preceded(text("*"), parse_symbol_string), |s| {
+        //     (s, None, true)
+        // }),
         // 普通参数解析分支
-        map(parse_symbol_string, |s| (s, None, false)), // , 1+2 also match first symbol, so failed in ) parser.
+        map(parse_symbol_string, |s| (s, None)), // , 1+2 also match first symbol, so failed in ) parser.
     ))(input)
 }
 
@@ -819,20 +819,20 @@ fn parse_param_list(
             Some("add something like (x,y)"),
         )
     })?;
-    let (input, x) = separated_list0(text(","), parse_param)(input)?;
-    let mut params = vec![];
-    let mut param_collector: Option<String> = None;
-    for (p, dvalue, is_colllector) in x {
-        if is_colllector {
-            param_collector = Some(p);
-        } else {
-            params.push((p, dvalue));
-        }
-    }
-    // let (input, param_collector) = opt(preceded(
-    //     text(","),
-    //     preceded(text("*"), parse_symbol_string),
-    // ))(input)?;
+    let (input, params) = separated_list0(text(","), parse_param)(input)?;
+    // let mut params = vec![];
+    // let mut param_collector: Option<String> = None;
+    // for (p, dvalue, is_colllector) in x {
+    //     if is_colllector {
+    //         param_collector = Some(p);
+    //     } else {
+    //         params.push((p, dvalue));
+    //     }
+    // }
+    let (input, param_collector) = opt(preceded(
+        opt(text(",")),
+        preceded(text("*"), parse_symbol_string),
+    ))(input)?;
     // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; //允许可选回车
     // 如果还有其他字符，应报错
     // dbg!(&input, &params);

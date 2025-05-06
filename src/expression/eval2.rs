@@ -285,7 +285,7 @@ impl Expression {
                 let result = body.clone().eval_mut(true, env, depth + 1);
                 match result {
                     Ok(result) => Ok(result),
-                    Err(e) => catch_error(e, body, typ, deeling, env),
+                    Err(e) => catch_error(e, body, typ, deeling, env, depth + 1),
                 }
             }
             // 默认情况

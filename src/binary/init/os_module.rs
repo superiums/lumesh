@@ -1,4 +1,4 @@
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 use os_info::Type;
 
@@ -50,7 +50,7 @@ pub fn get() -> Expression {
     let os = os_info::get();
     let os_type = os.os_type();
 
-    (b_tree_map! {
+    (hash_map! {
         String::from("name") => Expression::String(os_type.to_string()),
         String::from("family") => get_os_family(&os_type).into(),
         String::from("version") => os.version().to_string().into(),

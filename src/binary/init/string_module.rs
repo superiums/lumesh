@@ -1,5 +1,5 @@
 use crate::{Environment, Expression, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
@@ -27,7 +27,7 @@ fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 }
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("to_string") => Expression::builtin("to_string", |args, env| {
             super::check_exact_args_len("to_string", &args, 1)?;
             Ok(Expression::String(args[0].clone().eval(env)?.to_string()))

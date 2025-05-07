@@ -28,14 +28,9 @@ mod time_module;
 mod widget_module;
 
 pub fn get_module_map() -> HashMap<String, Expression> {
-    // TODO tick out env
-    let mut env = Environment::new();
-    let fs = fs_module::get(&mut env);
-    // let ops = operator_module::get(env);
-    let math = math_module::get(&mut env);
-    let standard_module = hash_map! {
+    hash_map! {
       String::from("log") => log_module::get(),
-        String::from("math") => math,
+        String::from("math") => math_module::get(),
         String::from("dict") => dict_module::get(),
         String::from("version") => shell_module::get(),
         String::from("err") => err_module::get(),
@@ -47,7 +42,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("console") => console_module::get(),
         String::from("fmt") => fmt_module::get(),
         String::from("parse") => parse_module::get(),
-        String::from("fs") => fs,
+        String::from("fs") => fs_module::get(),
             String::from("string") => string_module::get(),
             String::from("regex") => regex_module::get(),
             String::from("list") => list_module::get(),
@@ -79,50 +74,74 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
             String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
 
-            String::from("include") => Expression::builtin("include", |args, env| {
-                check_exact_args_len("include", &args, 1)?;
+            String::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
 
-                let cwd = std::env::current_dir()?;
-                let path = cwd.join(args[0].eval(env)?.to_string());
-
-                if let Ok(canon_path) = dunce::canonicalize(&path) {
-                    // Read the file.
-                    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
-                    // Evaluate the file.
-                    if let Ok(expr) = crate::parse(&contents) {
-                        Ok(expr.eval(env)?)
-                    } else {
-                        Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
-                    }
-                } else {
-                    Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
-                }
-            }, "evaluate a file in the current environment"),
-
-            String::from("import") => Expression::builtin("import", |args, env| {
-                check_exact_args_len("import", &args, 1)?;
-                let cwd = std::env::current_dir()?;
-                let path = cwd.join(args[0].eval(env)?.to_string());
-
-                if let Ok(canon_path) = dunce::canonicalize(&path) {
-                    // Read the file.
-                    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| LmError::CustomError(format!("could not read file {}: {}", canon_path.display(), e)))?;
-                    // Evaluate the file.
-                    if let Ok(expr) = crate::parse(&contents) {
-                        let mut new_env = env.clone();
-                        Ok(expr.eval(&mut new_env)?)
-                    } else {
-                        Err(LmError::CustomError(format!("could not parse file {}", canon_path.display())))
-                    }
-                } else {
-                    Err(LmError::CustomError(format!("could not canonicalize path {}", path.display())))
-                }
-            }, "import a file (evaluate it in a new environment)"),
+            String::from("import") => Expression::builtin("import", import, "import a file (evaluate it in a new environment)"),
 
 
-    };
+    }
+}
+fn import(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("import", &args, 1)?;
+    let cwd = std::env::current_dir()?;
+    let path = cwd.join(args[0].eval(env)?.to_string());
 
-    return standard_module;
+    if let Ok(canon_path) = dunce::canonicalize(&path) {
+        // Read the file.
+        let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
+            LmError::CustomError(format!(
+                "could not read file {}: {}",
+                canon_path.display(),
+                e
+            ))
+        })?;
+        // Evaluate the file.
+        if let Ok(expr) = crate::parse(&contents) {
+            let mut new_env = env.clone();
+            Ok(expr.eval(&mut new_env)?)
+        } else {
+            Err(LmError::CustomError(format!(
+                "could not parse file {}",
+                canon_path.display()
+            )))
+        }
+    } else {
+        Err(LmError::CustomError(format!(
+            "could not canonicalize path {}",
+            path.display()
+        )))
+    }
+}
+fn include(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("include", &args, 1)?;
+
+    let cwd = std::env::current_dir()?;
+    let path = cwd.join(args[0].eval(env)?.to_string());
+
+    if let Ok(canon_path) = dunce::canonicalize(&path) {
+        // Read the file.
+        let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
+            LmError::CustomError(format!(
+                "could not read file {}: {}",
+                canon_path.display(),
+                e
+            ))
+        })?;
+        // Evaluate the file.
+        if let Ok(expr) = crate::parse(&contents) {
+            Ok(expr.eval(env)?)
+        } else {
+            Err(LmError::CustomError(format!(
+                "could not parse file {}",
+                canon_path.display()
+            )))
+        }
+    } else {
+        Err(LmError::CustomError(format!(
+            "could not canonicalize path {}",
+            path.display()
+        )))
+    }
 }
 fn exit(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     if args.is_empty() {

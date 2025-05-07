@@ -1,8 +1,8 @@
 use crate::{Environment, Expression, Int, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("try") => Expression::builtin("try", try_builtin,
             "try an expression or apply an error handler to an error"),
         String::from("codes") => LmError::codes()
@@ -25,7 +25,7 @@ fn try_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
             Ok(Expression::Apply(
                 Box::new(handler),
-                vec![Expression::Map(b_tree_map! {
+                vec![Expression::Map(hash_map! {
                     String::from("message") => Expression::String(err.to_string()),
                     String::from("code") => Expression::Integer(Int::from(err.code())),
                     String::from("expression") => Expression::Quote(Box::new(args[0].clone()))

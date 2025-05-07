@@ -1,5 +1,5 @@
 use crate::{Environment, Int};
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 pub mod basic;
 pub mod builtin;
@@ -25,7 +25,7 @@ pub enum Expression {
     String(String),
     Boolean(bool),
     List(Vec<Self>),
-    Map(BTreeMap<String, Self>),
+    Map(HashMap<String, Self>),
     Index(Box<Self>, Box<Self>),
     Slice(Box<Self>, SliceParams),
     None,
@@ -39,7 +39,7 @@ pub enum Expression {
     Apply(Box<Self>, Vec<Self>),
     Command(Box<Self>, Vec<Self>),
     Alias(String, Box<Self>),
-    Lambda(Vec<String>, Box<Self>, Environment),
+    Lambda(Vec<String>, Box<Self>),
     Macro(Vec<String>, Box<Self>),
     Function(
         String,

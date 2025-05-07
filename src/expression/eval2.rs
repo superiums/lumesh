@@ -63,10 +63,10 @@ impl Expression {
             // }
             // // Apply a function or macro to an argument
             // Lambda定义优化（自动捕获环境）
-            Self::Lambda(params, body, _) => {
-                // 自动捕获当前环境
-                Ok(Self::Lambda(params, body, env.fork()))
-            }
+            // Self::Lambda(params, body, _) => {
+            //     // 自动捕获当前环境
+            //     Ok(Self::Lambda(params, body, env.fork()))
+            // }
             // 处理函数定义
             Self::Function(name, params, pc, body) => {
                 // dbg!(&def_env);
@@ -134,7 +134,7 @@ impl Expression {
             Self::Pipe(operator, lhs, rhs) => {
                 return match operator.as_str() {
                     "|" => {
-                        let bindings = env.get_bindings_map();
+                        // let bindings = env.get_bindings_map();
                         let always_pipe = env.has("__ALWAYSPIPE");
                         //dbg!(&always_pipe, &lhs, &rhs);
                         // if always_pipe {
@@ -151,7 +151,7 @@ impl Expression {
                         let (pipe_out, expr_out) = handle_pipes(
                             &*lhs,
                             &*rhs,
-                            &bindings,
+                            // &bindings,
                             false,
                             None,
                             None,
@@ -426,9 +426,9 @@ impl Expression {
                         }
                     }
                     // Lambda 应用 - 完全求值的函数应用
-                    Self::Lambda(params, body, captured_env) => {
+                    Self::Lambda(params, body) => {
                         // dbg!("2.--- applying lambda---", &params);
-                        let mut current_env = captured_env.fork();
+                        let mut current_env = env.fork();
 
                         // 批量参数绑定前先求值所有参数
                         let evaluated_args = args
@@ -441,7 +441,7 @@ impl Expression {
                             None => body.eval_mut(true, &mut current_env, depth + 1),
 
                             // 部分应用：返回新的柯里化lambda
-                            Some(remain) => Ok(Self::Lambda(remain, body, current_env)),
+                            Some(remain) => Ok(Self::Lambda(remain, body)),
                         }
                     }
 

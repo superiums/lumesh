@@ -2,10 +2,10 @@ use std::{thread, time::Duration};
 
 use crate::{Environment, Expression, LmError};
 use chrono::{Datelike, Local, Timelike};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("sleep") => Expression::builtin("sleep", sleep,
             "sleep for a given number of milliseconds"),
         String::from("display") => Expression::builtin("display", display,
@@ -55,7 +55,7 @@ fn fmt(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn display(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
-    Ok(Expression::Map(b_tree_map! {
+    Ok(Expression::Map(hash_map! {
         String::from("time") => Expression::String(Local::now().time().format("%H:%M:%S").to_string()),
         String::from("timepm") => Expression::String(Local::now().format("%-I:%M %p").to_string()),
         String::from("date") => Expression::String(Local::now().format("%D").to_string()),

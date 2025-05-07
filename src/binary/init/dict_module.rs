@@ -1,6 +1,6 @@
 use crate::Expression;
 use crate::Int;
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 pub(crate) fn flatten(expr: Expression) -> Vec<Expression> {
     match expr {
@@ -23,7 +23,7 @@ pub(crate) fn flatten(expr: Expression) -> Vec<Expression> {
 }
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("flatten") => Expression::builtin("flatten", |args, env| {
             super::check_exact_args_len("flatten", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
@@ -112,7 +112,7 @@ pub fn get() -> Expression {
             let expr = args[0].clone().eval(env)?;
             Ok(match expr {
                 Expression::List(list) => {
-                    let mut map = std::collections::BTreeMap::new();
+                    let mut map = std::collections::HashMap::new();
                     for item in list {
                         if let Expression::List(item) = item {
                             if item.len() == 2 {
@@ -148,7 +148,7 @@ pub fn get() -> Expression {
             let expr2 = args[1].clone().eval(env)?;
             Ok(match (expr1, expr2) {
                 (Expression::Map(map1), Expression::Map(map2)) => {
-                    let mut map = std::collections::BTreeMap::new();
+                    let mut map = std::collections::HashMap::new();
                     for (key, value) in map1 {
                         if map2.contains_key(&key) {
                             map.insert(key, value);

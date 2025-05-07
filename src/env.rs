@@ -1,11 +1,16 @@
 use crate::Expression;
-use core::option::Option::None;
-use std::collections::BTreeMap;
+use rustc_hash::FxHasher;
+use std::collections::HashMap;
+use std::hash::BuildHasherDefault;
+use std::rc::Rc;
 
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+// 定义默认哈希器
+pub type DefaultHasher = BuildHasherDefault<FxHasher>;
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct Environment {
-    pub bindings: BTreeMap<String, Expression>,
-    parent: Option<Box<Self>>,
+    pub bindings: Rc<HashMap<String, Expression, DefaultHasher>>,
+    pub parent: Option<Box<Self>>,
 }
 
 impl Default for Environment {
@@ -17,7 +22,7 @@ impl Default for Environment {
 impl Environment {
     pub fn new() -> Self {
         Self {
-            bindings: BTreeMap::new(),
+            bindings: Rc::new(HashMap::with_hasher(DefaultHasher::default())),
             parent: None,
         }
     }
@@ -25,10 +30,7 @@ impl Environment {
     pub fn get(&self, name: &str) -> Option<Expression> {
         match self.bindings.get(name) {
             Some(expr) => Some(expr.clone()),
-            None => match &self.parent {
-                Some(parent) => parent.get(name),
-                None => None,
-            },
+            None => self.parent.as_ref().and_then(|p| p.get(name)),
         }
     }
 
@@ -38,59 +40,46 @@ impl Environment {
 
     pub fn is_defined(&self, name: &str) -> bool {
         self.bindings.contains_key(name)
-            || if let Some(ref parent) = self.parent {
-                parent.is_defined(name)
-            } else {
-                false
-            }
+            || self.parent.as_ref().map_or(false, |p| p.is_defined(name))
     }
 
     pub fn undefine(&mut self, name: &str) {
-        self.bindings.remove(name);
+        let bindings = Rc::make_mut(&mut self.bindings);
+        bindings.remove(name);
     }
 
     pub fn define(&mut self, name: &str, expr: Expression) {
-        self.bindings.insert(name.to_string(), expr);
+        let bindings = Rc::make_mut(&mut self.bindings);
+        bindings.insert(name.to_string(), expr);
     }
 
-    // pub fn define_builtin(
-    //     &mut self,
-    //     name: impl ToString,
-    //     builtin: fn(Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
-    //     help: impl ToString,
-    // ) {
-    //     self.define(
-    //         &name.to_string(),
-    //         Expression::builtin(name.to_string(), builtin, help.to_string()),
-    //     )
-    // }
-
-    // pub fn set_parent(&mut self, parent: Self) {
-    //     self.parent = Some(Box::new(parent));
-    // }
-    // pub fn get_parent(&self) -> Option<Box<Environment>> {
-    //     self.parent.clone()
-    // }
-    pub fn get_parent_mut(&mut self) -> Option<&mut Environment> {
+    pub fn get_parent_mut(&mut self) -> Option<&mut Self> {
         self.parent.as_mut().map(|p| p.as_mut())
     }
+
     pub fn fork(&self) -> Self {
         Self {
-            bindings: BTreeMap::new(),
+            bindings: Rc::new(HashMap::with_hasher(DefaultHasher::default())),
             parent: Some(Box::new(self.clone())),
         }
     }
 
-    pub fn get_bindings_map(&self) -> BTreeMap<String, String> {
+    pub fn get_bindings_map(&self) -> HashMap<String, String> {
         self.bindings
-            .clone()
-            .into_iter()
-            .map(|(k, v)| (k, v.to_string()))
-            // This is to prevent environment variables from getting too large.
-            // This causes some strange bugs on Linux: mainly it becomes
-            // impossible to execute any program because `the argument
-            // list is too long`.
+            .iter()
+            .map(|(k, v)| (k.clone(), v.to_string()))
+            // 过滤过长的值以避免参数列表溢出
             .filter(|(_, s)| s.len() <= 1024)
-            .collect::<BTreeMap<String, String>>()
+            .collect()
+    }
+
+    pub fn get_bindings_iter(&self) -> impl Iterator<Item = (&String, &Expression)> {
+        self.bindings.iter()
+    }
+    pub fn get_bindings_list(&self) -> HashMap<String, Expression> {
+        self.bindings
+            .iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect()
     }
 }

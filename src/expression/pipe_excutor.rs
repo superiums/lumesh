@@ -1,7 +1,6 @@
 use crate::{Environment, Expression, RuntimeError, expression::catcher::catch_error};
 
 use std::{
-    collections::BTreeMap,
     io::{ErrorKind, Write},
     process::{Command, Stdio},
 };
@@ -15,7 +14,7 @@ fn is_interactive() -> bool {
 pub fn exec_single_cmd(
     cmdstr: String,
     args: Vec<String>,
-    bindings: &BTreeMap<String, String>,
+    env: &mut Environment,
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
     is_last: bool,          // 是否是最后一条命令？
     always_pipe: bool,
@@ -23,7 +22,7 @@ pub fn exec_single_cmd(
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(&cmdstr);
     cmd.args(args)
-        .envs(bindings)
+        .envs(env.get_bindings_map())
         .current_dir(std::env::current_dir()?);
     // 设置 stdin
     if input.is_some() {
@@ -170,14 +169,14 @@ fn expr_to_command(
 pub fn handle_command(
     cmd: String,
     args: &Vec<Expression>,
-    // bindings: &BTreeMap<String, String>,
+    // bindings: &HashMap<String, String>,
     // has_right: bool,
     // input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
     env: &mut Environment,
     depth: usize,
     // always_pipe: bool,
 ) -> Result<Expression, RuntimeError> {
-    let bindings = env.get_bindings_map();
+    // let bindings = env.get_bindings_map();
     let always_pipe = env.has("__ALWAYSPIPE");
     let mut cmd_args = vec![];
     for arg in args {
@@ -191,14 +190,7 @@ pub fn handle_command(
         }
     }
     // dbg!(args, &cmd_args);
-    let result = exec_single_cmd(
-        cmd.to_string(),
-        cmd_args,
-        &bindings,
-        None,
-        true,
-        always_pipe,
-    )?;
+    let result = exec_single_cmd(cmd.to_string(), cmd_args, env, None, true, always_pipe)?;
     return Ok(to_expr(Some(result)));
 }
 
@@ -206,7 +198,7 @@ pub fn handle_command(
 pub fn handle_pipes(
     lhs: &Expression,
     rhs: &Expression,
-    bindings: &BTreeMap<String, String>,
+    // bindings: &HashMap<String, String>,
     has_right: bool,
     input: Option<Vec<u8>>,         // 前一条命令的输出（None 表示第一个命令）
     expr_input: Option<Expression>, // 前一条命令的输出（None 表示第一个命令）
@@ -222,7 +214,7 @@ pub fn handle_pipes(
             Expression::Pipe(op, l_arm, r_arm) if op == "|" => handle_pipes(
                 &*l_arm,
                 &*r_arm,
-                bindings,
+                // bindings,
                 true,
                 input,
                 expr_input,
@@ -240,7 +232,7 @@ pub fn handle_pipes(
                         let result = handle_pipes(
                             &*l_arm,
                             &*r_arm,
-                            bindings,
+                            // bindings,
                             true,
                             input,
                             expr_input,
@@ -264,7 +256,7 @@ pub fn handle_pipes(
                     None => {
                         // 否则执行外部command
                         let result_pipe =
-                            exec_single_cmd(cmd.clone(), args, bindings, input, false, always_pipe);
+                            exec_single_cmd(cmd.clone(), args, env, input, false, always_pipe);
                         match result_pipe {
                             Ok(r) => Ok((Some(r), None)),
                             Err(e) => handle_err(e, Expression::String(cmd), deeling, env, depth),
@@ -346,7 +338,7 @@ pub fn handle_pipes(
                                 let result = handle_pipes(
                                     &*l_arm,
                                     &*r_arm,
-                                    bindings,
+                                    // bindings,
                                     has_right,
                                     pipe_out,
                                     expr_out,
@@ -385,7 +377,7 @@ pub fn handle_pipes(
                         let result_right = exec_single_cmd(
                             cmd.clone(),
                             args,
-                            bindings,
+                            env,
                             Some(choosed_input),
                             !has_right,
                             always_pipe,
@@ -462,7 +454,7 @@ pub fn handle_stdin_redirect(
     let contents = std::fs::read(path)?;
     // 左侧
     let (cmd, args, expr, deeling) = expr_to_command(&lhs, env, depth)?;
-    let bindings = env.get_bindings_map();
+    // let bindings = env.get_bindings_map();
     if expr.is_some() {
         // lambda, fn, builtin may read stdin?
         Err(RuntimeError::CustomError(format!(
@@ -470,14 +462,7 @@ pub fn handle_stdin_redirect(
         )))
     } else {
         // 否则执行外部command
-        let result = exec_single_cmd(
-            cmd.clone(),
-            args,
-            &bindings,
-            Some(contents),
-            true,
-            always_pipe,
-        );
+        let result = exec_single_cmd(cmd.clone(), args, env, Some(contents), true, always_pipe);
         match result {
             Ok(r) => Ok(to_expr(Some(r))),
             Err(e) => match deeling {

@@ -1,9 +1,9 @@
 // use crate::Int;
 // use super::curry;
 use crate::{Environment, Expression, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("list") => Expression::builtin("list", list,
             "create a list from a variable number of arguments"),
         String::from("last") => Expression::builtin("last", last,

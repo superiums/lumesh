@@ -1,6 +1,6 @@
 use super::Int;
 use crate::{Expression, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 use lazy_static::lazy_static;
 use std::sync::RwLock;
 lazy_static! {
@@ -22,8 +22,8 @@ fn is_log_level_enabled(level: Int) -> bool {
 }
 
 pub fn get() -> Expression {
-    (b_tree_map! {
-        String::from("level") => Expression::Map(b_tree_map! {
+    (hash_map! {
+        String::from("level") => Expression::Map(hash_map! {
             String::from("none") => Expression::Integer(NONE),
             String::from("trace") => Expression::Integer(TRACE),
             String::from("debug") => Expression::Integer(DEBUG),

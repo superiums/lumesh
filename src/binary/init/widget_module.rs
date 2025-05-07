@@ -1,8 +1,8 @@
 use crate::{Environment, Expression, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("create") => Expression::builtin("create", create, "create a text widget"),
         String::from("joinx") => Expression::builtin("joinx", joinx, "join two widgets horizontally"),
         String::from("joiny") => Expression::builtin("joiny", joiny, "join two widgets vertically")

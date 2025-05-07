@@ -1,9 +1,9 @@
 use crate::{Expression, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 use regex_lite::Regex;
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         // 编译正则表达式（实际使用时直接传字符串更高效，这里提供兼容接口）
         String::from("new") => Expression::builtin("new", |args, env| {
             super::check_exact_args_len("new", &args, 1)?;

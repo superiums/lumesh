@@ -1,6 +1,6 @@
 use super::{Expression, Int};
 use crate::{Diagnostic, tokens::Tokens};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 use core::{cmp::max, fmt};
 use detached_str::{Str, StrSlice};
 use nom::error::{ErrorKind, ParseError};
@@ -402,7 +402,7 @@ impl RuntimeError {
     pub const ERROR_CODE_EARLY_RETURN: Int = 20; // Added for EarlyReturn
 
     pub fn codes() -> Expression {
-        Expression::Map(b_tree_map! {
+        Expression::Map(hash_map! {
             String::from("cannot_apply") => Expression::Integer(Self::ERROR_CODE_CANNOT_APPLY),
             String::from("symbol_not_defined") => Expression::Integer(Self::ERROR_CODE_SYMBOL_NOT_DEFINED),
             String::from("command_failed") => Expression::Integer(Self::ERROR_CODE_COMMAND_FAILED),
@@ -458,7 +458,7 @@ impl LmError {
     pub const ERROR_CODE_IO_ERROR: Int = 12;
     pub const ERROR_CODE_CS_ERROR: Int = 13;
     pub fn codes() -> Expression {
-        Expression::Map(b_tree_map! {
+        Expression::Map(hash_map! {
           String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
             String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),

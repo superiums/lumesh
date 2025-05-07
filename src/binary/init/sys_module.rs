@@ -1,8 +1,8 @@
 use crate::{Environment, Expression};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 pub fn get() -> Expression {
-    Expression::Map(b_tree_map! {
+    Expression::Map(hash_map! {
         String::from("parse") => Expression::builtin("parse", |args, env| {
             super::check_exact_args_len("parse", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
@@ -117,5 +117,5 @@ pub fn get() -> Expression {
 }
 
 fn vars(_: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    Ok(env.bindings.clone().into())
+    Ok(Expression::Map(env.get_bindings_list()))
 }

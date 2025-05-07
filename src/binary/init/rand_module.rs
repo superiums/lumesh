@@ -1,9 +1,9 @@
 use crate::{Environment, Expression, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 use rand::{Rng, distributions::Uniform, prelude::SliceRandom};
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("int") => Expression::builtin("int", int, "get a random integer between two numbers (exclusive)"),
         String::from("choose") => Expression::builtin("choose", choose, "choose a random item in a list"),
         String::from("shuffle") => Expression::builtin("shuffle", shuffle, "shuffle a list randomly"),

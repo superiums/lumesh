@@ -1,8 +1,8 @@
 use crate::{Environment, Expression, LmError};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("strip") => Expression::builtin("strip", |args, env| {
             super::check_exact_args_len("strip", &args, 1)?;
             Ok(crate::repl::strip_ansi_escapes(args[0].eval(env)?).into())
@@ -74,7 +74,7 @@ pub fn get() -> Expression {
             Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to white on the console"),
 
-        String::from("dark") => b_tree_map! {
+        String::from("dark") => hash_map! {
             String::from("black") => Expression::builtin("black", |args, env| {
                 Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to black on the console"),

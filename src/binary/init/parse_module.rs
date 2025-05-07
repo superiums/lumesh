@@ -1,10 +1,10 @@
 use crate::{Environment, Expression, LmError, SyntaxError, SyntaxErrorKind, parse_script};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 use json::JsonValue;
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("toml") => Expression::builtin("toml", parse_toml, "parse a TOML value into a lumesh expression"),
         String::from("json") => Expression::builtin("json", parse_json, "parse a JSON value into a lumesh expression"),
         String::from("expr") => Expression::builtin("expr", parse_expr, "parse a lumesh script"),
@@ -63,7 +63,7 @@ fn json_to_expr(val: JsonValue) -> Expression {
             Expression::List(v)
         }
         JsonValue::Object(o) => {
-            let mut m = BTreeMap::new();
+            let mut m = HashMap::new();
             for (k, v) in o.iter() {
                 m.insert(k.to_string(), json_to_expr(v.clone()));
             }
@@ -100,7 +100,7 @@ fn toml_to_expr(val: toml::Value) -> Expression {
             Expression::List(v)
         }
         toml::Value::Table(o) => {
-            let mut m = BTreeMap::new();
+            let mut m = HashMap::new();
             for (k, v) in o.iter() {
                 m.insert(k.to_string(), toml_to_expr(v.clone()));
             }

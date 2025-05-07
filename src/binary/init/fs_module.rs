@@ -1,12 +1,12 @@
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::path::Path;
 
 use crate::Int;
-use crate::{Environment, Expression, LmError};
-use common_macros::b_tree_map;
+use crate::{Expression, LmError};
+use common_macros::hash_map;
 
-fn get_dir_tree(cwd: &Path, max_depth: Option<Int>) -> BTreeMap<String, Expression> {
-    let mut dir_tree = b_tree_map! {};
+fn get_dir_tree(cwd: &Path, max_depth: Option<Int>) -> HashMap<String, Expression> {
+    let mut dir_tree = hash_map! {};
 
     dir_tree.insert(".".to_string(), Expression::from(cwd.to_str().unwrap()));
     dir_tree.insert(
@@ -37,61 +37,70 @@ fn get_dir_tree(cwd: &Path, max_depth: Option<Int>) -> BTreeMap<String, Expressi
     dir_tree
 }
 
-pub fn get(env: &mut Environment) -> Expression {
-    let mut dir_tree = b_tree_map! {};
+pub fn get() -> Expression {
+    let fs_module = hash_map! {
 
-    if let Some(home_dir) = dirs::home_dir() {
-        let home_dir = home_dir.into_os_string().into_string().unwrap();
-        // env.set_cwd(&home_dir);
-        dir_tree.insert("home".to_string(), Expression::from(home_dir.clone()));
-        env.define("HOME", Expression::String(home_dir));
-    }
+        String::from("dirs") => Expression::builtin("dirs", |_, _| {
+            let mut dir_tree = hash_map! {};
 
-    // if let Ok(cwd) = current_dir() {
-    //     // env.set_cwd(&cwd.into_os_string().into_string().unwrap());
-    // }
+            if let Some(home_dir) = dirs::home_dir() {
+                let home_dir = home_dir.into_os_string().into_string().unwrap();
+                // env.set_cwd(&home_dir);
+                dir_tree.insert("home".to_string(), home_dir.into());
+                // env.define("HOME", Expression::String(home_dir));
+            }
 
-    if let Some(c_dir) = dirs::config_dir() {
-        let desk_dir = c_dir.into_os_string().into_string().unwrap();
-        dir_tree.insert("config".to_string(), desk_dir.clone().into());
-        // env.define("DESK", Expression::String(desk_dir));
-    }
-    if let Some(c_dir) = dirs::cache_dir() {
-        let desk_dir = c_dir.into_os_string().into_string().unwrap();
-        dir_tree.insert("cache".to_string(), desk_dir.clone().into());
-        // env.define("DESK", Expression::String(desk_dir));
-    }
-    if let Some(c_dir) = dirs::data_dir() {
-        let desk_dir = c_dir.into_os_string().into_string().unwrap();
-        dir_tree.insert("data".to_string(), desk_dir.clone().into());
-        // env.define("DESK", Expression::String(desk_dir));
-    }
-    if let Some(c_dir) = dirs::picture_dir() {
-        let desk_dir = c_dir.into_os_string().into_string().unwrap();
-        dir_tree.insert("pic".to_string(), desk_dir.clone().into());
-        // env.define("DESK", Expression::String(desk_dir));
-    }
-    if let Some(desk_dir) = dirs::desktop_dir() {
-        let desk_dir = desk_dir.into_os_string().into_string().unwrap();
-        dir_tree.insert("desk".to_string(), desk_dir.clone().into());
-        env.define("DESK", Expression::String(desk_dir));
-    }
+            // if let Ok(cwd) = current_dir() {
+            //     // env.set_cwd(&cwd.into_os_string().into_string().unwrap());
+            // }
 
-    if let Some(docs_dir) = dirs::document_dir() {
-        let docs_dir = docs_dir.into_os_string().into_string().unwrap();
-        dir_tree.insert("docs".to_string(), docs_dir.clone().into());
-        env.define("DOCS", Expression::String(docs_dir));
-    }
+            if let Some(c_dir) = dirs::config_dir() {
+                let desk_dir = c_dir.into_os_string().into_string().unwrap();
+                dir_tree.insert("config".to_string(), desk_dir.into());
+                // env.define("DESK", Expression::String(desk_dir));
+            }
+            if let Some(c_dir) = dirs::cache_dir() {
+                let desk_dir = c_dir.into_os_string().into_string().unwrap();
+                dir_tree.insert("cache".to_string(), desk_dir.into());
+                // env.define("DESK", Expression::String(desk_dir));
+            }
+            if let Some(c_dir) = dirs::data_dir() {
+                let desk_dir = c_dir.into_os_string().into_string().unwrap();
+                dir_tree.insert("data".to_string(), desk_dir.into());
+                // env.define("DESK", Expression::String(desk_dir));
+            }
+            if let Some(c_dir) = dirs::picture_dir() {
+                let desk_dir = c_dir.into_os_string().into_string().unwrap();
+                dir_tree.insert("pic".to_string(), desk_dir.into());
+                // env.define("DESK", Expression::String(desk_dir));
+            }
+            if let Some(desk_dir) = dirs::desktop_dir() {
+                let desk_dir = desk_dir.into_os_string().into_string().unwrap();
+                dir_tree.insert("desk".to_string(), desk_dir.into());
+                // env.define("DESK", Expression::String(desk_dir));
+            }
 
-    if let Some(down_dir) = dirs::download_dir() {
-        let down_dir = down_dir.into_os_string().into_string().unwrap();
-        dir_tree.insert("down".to_string(), down_dir.clone().into());
-        env.define("DOWN", Expression::String(down_dir));
-    }
+            if let Some(docs_dir) = dirs::document_dir() {
+                let docs_dir = docs_dir.into_os_string().into_string().unwrap();
+                dir_tree.insert("docs".to_string(), docs_dir.into());
+                // env.define("DOCS", Expression::String(docs_dir));
+            }
 
-    let fs_module = b_tree_map! {
+            if let Some(down_dir) = dirs::download_dir() {
+                let down_dir = down_dir.into_os_string().into_string().unwrap();
+                dir_tree.insert("down".to_string(), down_dir.into());
+                // env.define("DOWN", Expression::String(down_dir));
+            }
+
+            let path = std::env::current_dir()?;
+            let current_dir = path.into_os_string().into_string().unwrap();
+            dir_tree.insert("current".into(),current_dir.into());
+
+            Ok(Expression::Map(dir_tree))
+        },"get sys dirs"),
+
         String::from("tree") => Expression::builtin("tree", |args, env| {
-            super::check_args_len("joinx", &args, 1..=2)?;
+            super::check_args_len("tree", &args, 1..=2)?;
             // Return a nested map of the filesystem.
             // Get current working directory
             let mut cwd =std::env::current_dir()?;
@@ -125,7 +134,6 @@ pub fn get(env: &mut Environment) -> Expression {
             // Return the directory tree
             Ok(dir_tree.into())
         }, "get the directory tree as a nested map, with a max depth and a path"),
-        String::from("dirs") => dir_tree.into(),
 
         String::from("head") => Expression::builtin("head", |args, env| {
             super::check_exact_args_len("head", &args, 2)?;

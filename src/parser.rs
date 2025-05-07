@@ -1,8 +1,7 @@
 use core::option::Option::None;
 
 use crate::{
-    Diagnostic, Environment, Expression, Int, Pattern, SliceParams, SyntaxErrorKind, Token,
-    TokenKind,
+    Diagnostic, Expression, Int, Pattern, SliceParams, SyntaxErrorKind, Token, TokenKind,
     expression::CatchType,
     tokens::{Input, Tokens},
 };
@@ -592,11 +591,7 @@ impl PrattParser {
 
                 // 构建Lambda表达式
                 match op.symbol {
-                    "->" => Ok(Expression::Lambda(
-                        params.unwrap(),
-                        Box::new(body),
-                        Environment::new(),
-                    )),
+                    "->" => Ok(Expression::Lambda(params.unwrap(), Box::new(body))),
                     "~>" => Ok(Expression::Macro(params.unwrap(), Box::new(body))),
                     _ => unreachable!(),
                 }

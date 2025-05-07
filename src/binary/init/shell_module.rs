@@ -2,10 +2,10 @@ use rand::seq::SliceRandom;
 use std::env::current_exe;
 
 use crate::{Expression, VERSION};
-use common_macros::b_tree_map;
+use common_macros::hash_map;
 
 pub fn get() -> Expression {
-    (b_tree_map! {
+    (hash_map! {
         String::from("author") => Expression::String("Adam McDaniel, superiums".to_string()),
         String::from("git") => Expression::String("https://codeberg.com/santo/lumesh".to_string()),
         String::from("homepage") => Expression::String("https://codeberg.com/santo/lumesh".to_string()),

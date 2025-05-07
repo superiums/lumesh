@@ -160,7 +160,6 @@ impl Expression {
                     return Ok(value);
                 }
 
-                // TODO 是否只能删除当前env的变量，是否报错
                 // del
                 Self::Del(name) => {
                     env.undefine(&name);

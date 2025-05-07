@@ -146,12 +146,11 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
     init_config(env);
 
     // strict
-    if strict {
-        env.define("IS_STRICT", Expression::Boolean(strict));
-        unsafe {
-            STRICT = strict;
-        }
+    env.define("IS_STRICT", Expression::Boolean(strict));
+    unsafe {
+        STRICT = strict;
     }
+
     // ai off
     if aioff {
         env.undefine("LUME_AI_CONFIG");

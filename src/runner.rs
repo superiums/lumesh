@@ -1,13 +1,10 @@
-// src/bin/runner.rs
-// mod binary;
 use lumesh::parse_and_eval;
 use lumesh::runtime::{init_config, run_file};
 use lumesh::{Environment, Expression, LmError};
 use std::path::Path;
 use std::path::PathBuf;
-// 删除原有的 Cli 结构体定义
 
-fn main() -> Result<(), LmError> {
+fn main() {
     let path = std::env::args().nth(1).unwrap_or_else(|| {
         eprintln!("script file or command is expected.");
         std::process::exit(0);
@@ -96,14 +93,12 @@ fn main() -> Result<(), LmError> {
         "argv",
         Expression::List(script_args.into_iter().map(Expression::String).collect()),
     );
-    // binary::init(&mut env);
 
-    // 执行逻辑保持不变
+    // run
     if let Some(cmd_str) = cmd {
         parse_and_eval(&cmd_str, &mut env);
     } else if let Some(file_path) = file {
         let path = PathBuf::from(file_path);
         run_file(path, &mut env);
     }
-    Ok(())
 }

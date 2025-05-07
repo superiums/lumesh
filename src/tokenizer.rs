@@ -144,7 +144,7 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         operator_tag("/="),
         keyword_tag(":="),
         punctuation_tag("->"), // `->foo` is also a valid symbol
-        punctuation_tag("~>"), // `~>foo` is also a valid symbol
+        // punctuation_tag("~>"), // `~>foo` is also a valid symbol
         catch_operator,
     ))(input)
 }

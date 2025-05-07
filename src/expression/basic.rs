@@ -55,8 +55,8 @@ macro_rules! fmt_shared {
                 write!($f, "Lambda{:?} -> {:?}", params, body)
             }
             Self::Lambda(params, body) => write!($f, "({}) -> {}", params.join(", "), body),
-            Self::Macro(params, body) if $debug => write!($f, "{:?} ~> {:?}", params, body),
-            Self::Macro(params, body) => write!($f, "({}) ~> {}", params.join(", "), body),
+            // Self::Macro(params, body) if $debug => write!($f, "{:?} ~> {:?}", params, body),
+            // Self::Macro(params, body) => write!($f, "({}) ~> {}", params.join(", "), body),
 
             // If 修改
             Self::If(cond, true_expr, false_expr) => {
@@ -298,7 +298,7 @@ impl Expression {
             Self::Apply(_, _) => "Apply".into(),
             Self::Command(_, _) => "Command".into(),
             Self::Lambda(..) => "Lambda".into(),
-            Self::Macro(_, _) => "Macro".into(),
+            // Self::Macro(_, _) => "Macro".into(),
             Self::Function(..) => "Function".into(),
             Self::Return(_) => "Return".into(),
             Self::Do(_) => "Do".into(),
@@ -354,7 +354,7 @@ impl Expression {
             Self::List(exprs) => !exprs.is_empty(),
             Self::Map(exprs) => !exprs.is_empty(),
             Self::Lambda(..) => true,
-            Self::Macro(_, _) => true,
+            // Self::Macro(_, _) => true,
             Self::Builtin(_) => true,
             _ => false,
         }

@@ -387,7 +387,7 @@ impl PrattParser {
                 Some(OperatorInfo::new(op, PREC_ASSIGN, true))
             }
             // lambda
-            "->" | "~>" => Some(OperatorInfo::new(op, PREC_LAMBDA, true)),
+            "->" => Some(OperatorInfo::new(op, PREC_LAMBDA, true)),
             // 索引符
             // "@" | "." => Some(OperatorInfo::new(op, PREC_INDEX, false)),
             // range
@@ -544,7 +544,7 @@ impl PrattParser {
             //     // 解析体部分
             //     // Expression::Lambda(name.to_string(), Box::new(rhs), Environment::new())
             // }
-            "->" | "~>" => {
+            "->" => {
                 // 解析参数列表
                 let params = match lhs {
                     // 处理括号包裹的参数列表 (x,y,z)
@@ -590,11 +590,12 @@ impl PrattParser {
                 };
 
                 // 构建Lambda表达式
-                match op.symbol {
-                    "->" => Ok(Expression::Lambda(params.unwrap(), Box::new(body))),
-                    "~>" => Ok(Expression::Macro(params.unwrap(), Box::new(body))),
-                    _ => unreachable!(),
-                }
+                // match op.symbol {
+                // "->" =>
+                Ok(Expression::Lambda(params.unwrap(), Box::new(body)))
+                //     "~>" => Ok(Expression::Macro(params.unwrap(), Box::new(body))),
+                //     _ => unreachable!(),
+                // }
             }
             // "~>" => {
             //     // 参数处理

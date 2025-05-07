@@ -47,7 +47,8 @@ impl Expression {
                 | Self::None
                 | Self::Float(_)
                 | Self::Bytes(_)
-                | Self::Macro(_, _) => {
+                // | Self::Macro(_, _)
+                => {
                     // dbg!("basic type");
                     break Ok(self);
                 }

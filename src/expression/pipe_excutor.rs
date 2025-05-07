@@ -90,7 +90,6 @@ fn expr_to_command(
             };
             Ok((cmd_name, vec![], None, None))
         }
-        // TODO only fn,buildin,lambda
         Expression::Apply(func, _) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
@@ -116,7 +115,6 @@ fn expr_to_command(
                 }
             };
         }
-        // TODO only command
         Expression::Command(func, args) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);

@@ -538,7 +538,6 @@ impl Expression {
                                 bound_env,
                             )),
 
-                            // TODO
                             // 参数过多：构造新Apply
                             _ => Ok(Self::Apply(
                                 Box::new(body.eval_complex(&mut bound_env, depth + 1)?),

@@ -160,18 +160,18 @@ fn catch_operator(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        operator_tag("<"),
-        operator_tag(">"),
-        operator_tag("+"),
-        keyword_tag("-"),
-        operator_tag("*"),
+        keyword_tag("-"), // not followed by symbol, allow punct follow.
         keyword_tag("/"),
+        keyword_tag("|"),  //standard io stream pipe
+        operator_tag("<"), // not followed by punct, allow space,symbol like.
+        operator_tag(">"),
+        operator_tag("*"),
         operator_tag("%"),
         operator_tag("^"), //math power
-        operator_tag("="),
-        operator_tag("?"),    //TODO drop ?: but use as error deel.
+        punctuation_tag("+"),
+        punctuation_tag("="), // allow all.
+        operator_tag("?"),
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
-        keyword_tag("|"),     //standard io stream pipe
         custom_tag("_"),      //_* as custom postfix tag.
     ))(input)
 }
@@ -181,7 +181,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("let"),
         keyword_tag("alias"),
         keyword_tag("if"),
-        keyword_tag("then"),
+        // keyword_tag("then"),
         keyword_tag("else"),
         keyword_alone_tag("fn"),
         keyword_tag("match"),
@@ -630,6 +630,14 @@ fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
     }
 }
 
+/// Parses a word.
+///
+/// This is essentially the same as `nom::bytes::complete::tag`, but with different lifetimes:
+/// If the provided string has a 'static lifetime, so does the returned string.
+fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| input.strip_prefix(punct).ok_or(NOT_FOUND)
+}
+
 /// Parses a word that contains characters which can also appear in a symbol.
 ///
 /// This parser ensures that the word is *not* immediately followed by symbol characters.
@@ -709,14 +717,6 @@ fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
         }
         input.strip_prefix(keyword).ok_or(NOT_FOUND)
     }
-}
-
-/// Parses a word that is allowed to be immediately followed by symbol characters.
-///
-/// This is essentially the same as `nom::bytes::complete::tag`, but with different lifetimes:
-/// If the provided string has a 'static lifetime, so does the returned string.
-fn punctuation_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
-    move |input: Input<'_>| input.strip_prefix(punct).ok_or(NOT_FOUND)
 }
 
 /// Checks whether the character is allowed in a symbol.

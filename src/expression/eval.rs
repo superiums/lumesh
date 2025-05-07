@@ -439,15 +439,16 @@ impl Expression {
                     let r = rhs.eval_mut(false, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
 
                     return match (l, r) {
-                        (Expression::List(m), Expression::Integer(n)) => {
-                            Self::index_slm(Expression::List(m), Expression::Integer(n))
-                        }
-                        (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
+                        // (Expression::List(m), Expression::Integer(n)) => {
+                        //     Self::index_slm(Expression::List(m), Expression::Integer(n))
+                        // }
+                        // (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
                         (Self::Symbol(m), Self::Symbol(n)) => {
                             Ok(Self::String(format!("{}.{}", m, n)))
                         }
                         // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
-                        _ => Err(RuntimeError::CustomError("not valid index option".into())),
+                        // _ => Err(RuntimeError::CustomError("not valid index option".into())),
+                        (left, right) => Self::index_slm(left, right),
                     };
                 }
 

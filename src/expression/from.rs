@@ -65,6 +65,6 @@ where
 
 impl From<Environment> for Expression {
     fn from(env: Environment) -> Self {
-        Self::Map(env.get_bindings_list())
+        Self::Map(env.get_bindings_map())
     }
 }

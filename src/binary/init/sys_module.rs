@@ -117,5 +117,5 @@ pub fn get() -> Expression {
 }
 
 fn vars(_: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    Ok(Expression::Map(env.get_bindings_list()))
+    Ok(Expression::Map(env.get_bindings_map()))
 }

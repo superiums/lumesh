@@ -22,7 +22,7 @@ pub fn exec_single_cmd(
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(&cmdstr);
     cmd.args(args)
-        .envs(env.get_bindings_map())
+        .envs(env.get_bindings_string())
         .current_dir(std::env::current_dir()?);
     // 设置 stdin
     if input.is_some() {

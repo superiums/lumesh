@@ -64,19 +64,27 @@ impl Environment {
         }
     }
 
-    pub fn get_bindings_map(&self) -> HashMap<String, String> {
+    pub fn get_bindings_string(&self) -> HashMap<&String, String> {
         self.bindings
             .iter()
-            .map(|(k, v)| (k.clone(), v.to_string()))
+            .filter(|(_, v)| match v {
+                Expression::String(..)
+                | Expression::Symbol(..)
+                | Expression::Integer(..)
+                | Expression::Float(..)
+                | Expression::Boolean(..) => true,
+                _ => false,
+            })
+            .map(|(k, v)| (k, v.to_string()))
             // 过滤过长的值以避免参数列表溢出
             .filter(|(_, s)| s.len() <= 1024)
             .collect()
     }
 
-    pub fn get_bindings_iter(&self) -> impl Iterator<Item = (&String, &Expression)> {
-        self.bindings.iter()
-    }
-    pub fn get_bindings_list(&self) -> HashMap<String, Expression> {
+    // pub fn get_bindings_iter(&self) -> impl Iterator<Item = (&String, &Expression)> {
+    //     self.bindings.iter()
+    // }
+    pub fn get_bindings_map(&self) -> HashMap<String, Expression> {
         self.bindings
             .iter()
             .map(|(k, v)| (k.clone(), v.clone()))

@@ -15,95 +15,118 @@ pub fn get() -> Expression {
             "create a hyperlink on the console"),
 
         String::from("bold") => Expression::builtin("bold", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to bold on the console"),
 
         String::from("faint") => Expression::builtin("faint", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to italics on the console"),
 
         String::from("italics") => Expression::builtin("italics", |args, env| {
+        super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to italics on the console"),
 
         String::from("underline") => Expression::builtin("underline", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "underline text on the console"),
 
         String::from("blink") => Expression::builtin("blink", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "blink text on the console"),
 
         String::from("invert") => Expression::builtin("invert", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "invert text on the console"),
 
         String::from("strike") => Expression::builtin("strike", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "strike out text on the console"),
 
         String::from("black") => Expression::builtin("black", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to black on the console"),
 
         String::from("red") => Expression::builtin("red", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to red on the console"),
 
         String::from("green") => Expression::builtin("green", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to green on the console"),
 
         String::from("yellow") => Expression::builtin("yellow", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to yellow on the console"),
 
         String::from("blue") => Expression::builtin("blue", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to blue on the console"),
 
         String::from("magenta") => Expression::builtin("magenta", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to magenta on the console"),
 
         String::from("cyan") => Expression::builtin("cyan", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to cyan on the console"),
 
         String::from("white") => Expression::builtin("white", |args, env| {
+            super::check_exact_args_len("strip", &args, 1)?;
             Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to white on the console"),
 
         String::from("dark") => hash_map! {
             String::from("black") => Expression::builtin("black", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to black on the console"),
 
             String::from("red") => Expression::builtin("red", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to red on the console"),
 
             String::from("green") => Expression::builtin("green", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to green on the console"),
 
             String::from("yellow") => Expression::builtin("yellow", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to yellow on the console"),
 
             String::from("blue") => Expression::builtin("blue", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to blue on the console"),
 
             String::from("magenta") => Expression::builtin("magenta", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to magenta on the console"),
 
             String::from("cyan") => Expression::builtin("cyan", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to cyan on the console"),
 
             String::from("white") => Expression::builtin("white", |args, env| {
+                super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[37m{}\x1b[m\x6b[0m", args[0].eval(env)?).into())
             }, "convert text to white on the console"),
         }.into()

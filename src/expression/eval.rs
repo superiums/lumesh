@@ -1,3 +1,4 @@
+use crate::expression::alias;
 use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, Expression, Int, RuntimeError, binary};
 use core::option::Option::None;
@@ -31,7 +32,7 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
-        // dbg!("1.--->eval_mut:", &self, &self.type_name());
+        dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(RuntimeError::RecursionDepth(self));
@@ -46,9 +47,7 @@ impl Expression {
                 | Self::Integer(_)
                 | Self::None
                 | Self::Float(_)
-                | Self::Bytes(_)
-                // | Self::Macro(_, _)
-                => {
+                | Self::Bytes(_) => {
                     // dbg!("basic type");
                     break Ok(self);
                 }
@@ -59,12 +58,12 @@ impl Expression {
 
                 // 符号解析（错误处理优化）
                 Self::Symbol(name) => {
-                    // dbg!("2.--->symbol----", &name);
+                    dbg!("2.--->symbol----", &name);
                     // bultin
                     if explain_builtin {
                         match binary::get_builtin(&name) {
                             Some(bti) => {
-                                // dbg!("found builtin:", &name, bti);
+                                dbg!("found builtin:", &name, bti);
                                 return Ok(bti.clone());
                             }
                             _ => {}
@@ -169,7 +168,7 @@ impl Expression {
                 // 处理变量声明（仅允许未定义变量）
                 Self::Alias(name, expr) => {
                     // dbg!("alias---->", &name, &expr.type_name());
-                    env.define(&name, *expr); // 新增 declare
+                    alias::set_alias(name, *expr); // 新增 declare
                     return Ok(Self::None);
                 }
 
@@ -455,43 +454,95 @@ impl Expression {
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
                 Self::Command(ref cmd, ref args) => {
-                    // dbg!(&cmd.type_name());
-
+                    dbg!("2.--->Command:", &self, &cmd, &args);
                     // alias
-                    let real_cmd = env.get(cmd.to_string().as_str());
-                    // dbg!(&real_cmd);
-                    match real_cmd {
-                        Some(cmdx) => {
-                            // dbg!("   3.--->applying alias:", &cmd, &cmdx);
-                            return match cmdx {
-                                Expression::Command(cmd_name, mut cmd_args) => {
-                                    cmd_args.append(&mut args.clone());
-                                    handle_command(cmd_name.to_string(), &cmd_args, env, depth)
+                    // let real_cmd = env.get(cmd.to_string().as_str());
+                    // // dbg!(&real_cmd);
+                    // match real_cmd {
+                    //     Some(cmdx) => {
+                    //         // dbg!("   3.--->applying alias:", &cmd, &cmdx);
+                    //         return match cmdx {
+                    //             Expression::Command(cmd_name, mut cmd_args) => {
+                    //                 cmd_args.append(&mut args.clone());
+                    //                 handle_command(cmd_name.to_string(), &cmd_args, env, depth)
+                    //             }
+                    //             Expression::Apply(..) => cmdx
+                    //                 .clone()
+                    //                 .append_args(args.clone())
+                    //                 .eval_mut(true, env, depth),
+                    //             // Expression::Builtin(cmd_name) => Ok(Self::Apply(
+                    //             //     Box::new(Expression::Builtin(cmd_name)),
+                    //             //     args.clone(),
+                    //             // )),
+                    //             _ => Err(RuntimeError::TypeError {
+                    //                 expected: "Command or Builtin".into(),
+                    //                 found: cmd.type_name(),
+                    //             }),
+                    //         };
+                    //     }
+                    //     _ => {}
+                    // }
+
+                    match *cmd.clone() {
+                        // index类型的内置命令，或其他保存于map的命令
+                        Expression::Index(..) => {
+                            let cmdx = cmd.clone().eval_mut(true, env, depth)?;
+                            dbg!(&cmd, &cmdx);
+                            return cmdx.apply(args.clone()).eval_apply(env, depth);
+                        }
+                        // 符号
+                        Expression::Symbol(cmd_sym) => {
+                            break match alias::get_alias(&cmd_sym) {
+                                // 别名
+                                Some(cmd_alias) => {
+                                    dbg!(&cmd_alias.type_name());
+                                    if args.len() > 0 {
+                                        return match cmd_alias {
+                                            Expression::Command(cmd_name, mut cmd_args) => {
+                                                cmd_args.append(&mut args.clone());
+                                                handle_command(
+                                                    cmd_name.to_string(),
+                                                    &cmd_args,
+                                                    env,
+                                                    depth,
+                                                )
+                                            }
+                                            Expression::Apply(..) => cmd_alias
+                                                .clone()
+                                                .append_args(args.clone())
+                                                .eval_mut(true, env, depth),
+                                            Expression::Index(..) => {
+                                                let cmdx =
+                                                    cmd_alias.clone().eval_mut(true, env, depth)?;
+                                                dbg!(&cmd, &cmdx);
+                                                return cmdx
+                                                    .append_args(args.clone())
+                                                    .eval_apply(env, depth);
+                                            }
+                                            _ => Err(RuntimeError::TypeError {
+                                                expected: "Command or Builtin".into(),
+                                                found: cmd_alias.type_name(),
+                                            }),
+                                        };
+                                    } else {
+                                        cmd_alias.eval_apply(env, depth)
+                                    }
                                 }
-                                Expression::Apply(..) => cmdx
-                                    .clone()
-                                    .append_args(args.clone())
-                                    .eval_mut(true, env, depth),
-                                // Expression::Builtin(cmd_name) => Ok(Self::Apply(
-                                //     Box::new(Expression::Builtin(cmd_name)),
-                                //     args.clone(),
-                                // )),
-                                _ => Err(RuntimeError::TypeError {
-                                    expected: "Command or Builtin".into(),
-                                    found: cmd.type_name(),
-                                }),
+                                _ => {
+                                    break match binary::get_builtin(&cmd_sym) {
+                                        // 顶级内置命令
+                                        Some(bti) => {
+                                            // dbg!("branch to builtin:", &cmd, &bti);
+                                            bti.clone().apply(args.clone()).eval_apply(env, depth)
+                                        }
+                                        // 三方命令
+                                        _ => handle_command(cmd_sym, args, env, depth),
+                                    };
+                                }
                             };
                         }
-                        _ => {}
+                        _ => unreachable!(),
                     }
-
-                    break match binary::get_builtin(&cmd.to_string()) {
-                        Some(bti) => {
-                            // dbg!("branch to builtin:", &cmd, &bti);
-                            bti.clone().apply(args.clone()).eval_apply(env, depth)
-                        }
-                        _ => handle_command(cmd.to_string(), args, env, depth),
-                    };
                 }
                 // break Self::eval_command(self, env, depth),
                 // 其他表达式处理...

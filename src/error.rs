@@ -42,6 +42,10 @@ pub enum SyntaxErrorKind {
         expected: usize,
         received: usize,
     },
+    RecursionDepth {
+        input: StrSlice,
+        depth: u8,
+    },
 }
 
 // impl StdError for SyntaxError {
@@ -306,6 +310,18 @@ impl fmt::Display for SyntaxError {
                     "{}{}arguments mismatch for function `{name}`: expected {expected}, found {received} {}",
                     RED_START, BOLD, RESET
                 )
+            }
+            SyntaxErrorKind::RecursionDepth { input, depth } => {
+                write!(f, "{}{}max recursion reached{}: ", RED_START, BOLD, RESET)?;
+                write!(f, "depth: {}{}{}", YELLOW_START, depth, RESET)?;
+
+                writeln!(f)?;
+                print_error_lines(&self.source, *input, f, 72)?;
+                writeln!(
+                    f,
+                    "    hint: simplify your script, or config LUME_MAX_PARSE_RECURSION larger."
+                )?;
+                Ok(())
             }
         }
     }

@@ -1,6 +1,7 @@
 use crate::{Environment, Int};
 use std::collections::HashMap;
 
+pub mod alias;
 pub mod basic;
 pub mod builtin;
 pub mod catcher;

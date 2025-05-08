@@ -107,7 +107,11 @@ impl PrattParser {
         loop {
             depth += 1;
             if depth > MAX_DEPTH {
-                break;
+                // break;
+                return Err(nom::Err::Error(SyntaxErrorKind::RecursionDepth {
+                    input: input.get_str_slice(),
+                    depth: depth,
+                }));
             }
             // 检查终止条件
             if input.is_empty()

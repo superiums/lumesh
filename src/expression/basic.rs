@@ -26,6 +26,7 @@ macro_rules! fmt_shared {
     ($self:ident, $f:ident, $debug:expr) => {
         match $self {
             Self::Symbol(name) => write!($f, "{}", name),
+            Self::Variable(name) => write!($f, "{}", name),
 
             Self::String(s) if $debug => write!($f, "{:?}", s),
             Self::String(s) => write!($f, "{}", s),
@@ -278,6 +279,7 @@ impl Expression {
             Self::String(_) => "String".into(),
             Self::Integer(_) => "Integer".into(),
             Self::Symbol(_) => "Symbol".into(),
+            Self::Variable(_) => "Variable".into(),
 
             Self::Float(_) => "Float".into(),
             Self::Boolean(_) => "Boolean".into(),

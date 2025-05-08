@@ -86,6 +86,14 @@ impl Expression {
                     // dbg!(&r);
                     return Ok(r);
                 }
+                Self::Variable(ref name) => {
+                    dbg!("2.--->variable----", &name);
+                    // var
+                    return match env.get(&name) {
+                        Some(expr) => Ok(expr),
+                        None => Err(RuntimeError::UndeclaredVariable(name.clone())),
+                    };
+                }
 
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {

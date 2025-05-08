@@ -107,6 +107,7 @@ fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         prefix_tag("!"), //bool negtive
+        prefix_tag("$"), //bool negtive
         prefix_tag("-"),
         prefix_tag("++"),
         prefix_tag("--"),

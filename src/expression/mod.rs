@@ -20,6 +20,7 @@ pub enum Expression {
     Pipe(String, Box<Self>, Box<Self>),
     UnaryOp(String, Box<Self>, bool),
     Symbol(String),
+    Variable(String),
     Integer(Int),
     Float(f64),
     Bytes(Vec<u8>),

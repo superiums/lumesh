@@ -272,6 +272,13 @@ impl PrattParser {
         match first.kind {
             TokenKind::OperatorPrefix => {
                 let op = first.text(input);
+                // vars
+                if op == "$" {
+                    return preceded(text("$"), map(parse_symbol_string, Expression::Variable))(
+                        input,
+                    );
+                }
+                // unary op
                 let prec = match op {
                     "!" | "-" => PREC_UNARY,
                     "++" | "--" => PREC_PRIFIX,
@@ -1405,9 +1412,12 @@ fn parse_block_or_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
 // TODO with return?
 fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, block) = delimited(
-        terminated(text("{"), opt(kind(TokenKind::LineBreak))),
+        terminated(text("{"), opt(many0(kind(TokenKind::LineBreak)))),
         cut(map(
-            many0(terminated(parse_statement, opt(kind(TokenKind::LineBreak)))),
+            many0(terminated(
+                parse_statement,
+                opt(many0(kind(TokenKind::LineBreak))),
+            )),
             |stmts| Expression::Do(stmts),
         )),
         cut(text_close("}")),

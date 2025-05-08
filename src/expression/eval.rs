@@ -71,20 +71,16 @@ impl Expression {
                     }
 
                     // var
-                    let r = match env.get(&name) {
-                        Some(expr) => expr,
-                        None => Self::Symbol(name),
-                        // None => unsafe {
-                        //            if STRICT {
-                        //                Err(Error::UndeclaredVariable(name.clone()))
-                        //            } else {
-                        //                Ok(Self::Symbol(name)) // 非严格模式允许未定义符号
-                        //            }
-                        //        }
-                    };
-
-                    // dbg!(&r);
-                    return Ok(r);
+                    unsafe {
+                        if STRICT {
+                            return Ok(Self::Symbol(name));
+                        } else {
+                            return match env.get(&name) {
+                                Some(expr) => Ok(expr),
+                                None => Ok(Self::Symbol(name)),
+                            };
+                        }
+                    }
                 }
                 Self::Variable(ref name) => {
                     dbg!("2.--->variable----", &name);
@@ -218,7 +214,7 @@ impl Expression {
                             }
                             // 计算新值
                             let step = if op == "++" { 1 } else { -1 };
-                            let new_val = current_val.clone() + Expression::Integer(step);
+                            let new_val = (current_val.clone() + Expression::Integer(step))?;
                             env.define(var_name, new_val.clone());
                             Ok(if is_prefix {
                                 new_val
@@ -329,18 +325,10 @@ impl Expression {
                             let l = lhs.eval_mut(true, env, depth + 1)?;
                             let r = rhs.eval_mut(false, env, depth + 1)?;
                             break match operator.as_str() {
-                                "+" => Ok(l + r),
-                                "-" => Ok(l - r),
-                                "*" => Ok(l * r),
-                                "/" => {
-                                    if !r.is_truthy() {
-                                        return Err(RuntimeError::CustomError(format!(
-                                            "can't divide {} by zero",
-                                            l
-                                        )));
-                                    };
-                                    Ok(l / r)
-                                } //no zero
+                                "+" => l + r,
+                                "-" => l - r,
+                                "*" => l * r,
+                                "/" => l / r, //no zero
                                 "%" => Ok(l % r),
                                 "^" => match (l, r) {
                                     (Expression::Float(base), Expression::Float(exponent)) => {
@@ -353,6 +341,15 @@ impl Expression {
                                         Ok((base as f64).powf(exponent).into())
                                     }
                                     (Expression::Integer(base), Expression::Integer(exponent)) => {
+                                        // 确保 exponent 是非负的
+                                        if exponent < 0 {
+                                            return Err(RuntimeError::CustomError(format!(
+                                                "cannot raise {} to a negative power {}",
+                                                base, exponent
+                                            )));
+                                        }
+
+                                        // 使用 checked_pow 进行幂运算
                                         match base.checked_pow(exponent as u32) {
                                             Some(n) => Ok(n.into()),
                                             None => Err(RuntimeError::CustomError(format!(
@@ -499,7 +496,8 @@ impl Expression {
                             return cmdx.apply(args.clone()).eval_apply(env, depth);
                         }
                         // 符号
-                        Expression::Symbol(cmd_sym) => {
+                        // string like cmd: ./abc
+                        Expression::Symbol(cmd_sym) | Expression::String(cmd_sym) => {
                             break match alias::get_alias(&cmd_sym) {
                                 // 别名
                                 Some(cmd_alias) => {
@@ -549,7 +547,12 @@ impl Expression {
                                 }
                             };
                         }
-                        _ => unreachable!(),
+                        e => {
+                            return Err(RuntimeError::TypeError {
+                                expected: "Symbol".to_string(),
+                                found: e.type_name(),
+                            });
+                        }
                     }
                 }
                 // break Self::eval_command(self, env, depth),

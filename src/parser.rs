@@ -111,7 +111,7 @@ impl PrattParser {
                 // break;
                 return Err(nom::Err::Error(SyntaxErrorKind::RecursionDepth {
                     input: input.get_str_slice(),
-                    depth: depth,
+                    depth,
                 }));
             }
             // 检查终止条件
@@ -304,7 +304,7 @@ impl PrattParser {
             TokenKind::ValueSymbol if PREC_LITERAL >= min_prec => parse_value_symbol(input),
             TokenKind::Punctuation if PREC_GROUP >= min_prec => {
                 let op = first.text(input);
-                return match op {
+                match op {
                     "(" => {
                         // 分组{表达式 (expr)
                         alt((parse_group, parse_lambda_param))(input)
@@ -322,7 +322,7 @@ impl PrattParser {
                     _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                         op.to_string(),
                     ))), //其余的操作符，不在前缀中处理
-                };
+                }
             }
             TokenKind::Keyword => parse_control_flow(input),
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
@@ -372,7 +372,7 @@ impl PrattParser {
                 // 后置自增/自减
                 Ok((
                     input.skip_n(1),
-                    Expression::UnaryOp(op.into(), Rc::new(lhs), false),
+                    Expression::UnaryOp(op, Rc::new(lhs), false),
                 ))
             }
             opx if opx.starts_with("__") => {
@@ -390,7 +390,7 @@ impl PrattParser {
     }
 
     // 运算符元数据
-    fn get_operator_info<'a>(op: &'a str) -> Option<OperatorInfo<'a>> {
+    fn get_operator_info(op: &str) -> Option<OperatorInfo<'_>> {
         match op {
             // 赋值运算符（右结合）
             "=" | ":=" | "+=" | "-=" | "*=" | "/=" => {
@@ -744,14 +744,14 @@ fn parse_expr_with_single_cmd(
 ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // dbg!("---parse_single_expr");
     let (input, expr) = parse_expr(input)?;
-    return if let Expression::Symbol(s) = expr {
+    if let Expression::Symbol(s) = expr {
         Ok((
             input,
             Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
         ))
     } else {
         Ok((input, expr))
-    };
+    }
 }
 // -- 子命令 --
 fn parse_subcommand(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1186,7 +1186,7 @@ pub fn parse_script_tokens(
     match functions.len() {
         0 => Err(nom::Err::Error(SyntaxErrorKind::NoExpression)),
         1 => {
-            let s = functions.get(0).unwrap();
+            let s = functions.first().unwrap();
             Ok((input, s.clone()))
         }
         _ => Ok((input, Expression::Do(Rc::new(functions)))),
@@ -1309,14 +1309,14 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
         ))),
     )(input)?;
     // if is_single_cmd && input.is_empty() {
-    return if let Expression::Symbol(s) = expr {
+    if let Expression::Symbol(s) = expr {
         Ok((
             input,
             Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
         ))
     } else {
         Ok((input, expr))
-    };
+    }
     // }
     // Ok((input, expr))
 }

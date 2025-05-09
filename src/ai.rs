@@ -7,7 +7,7 @@ use tinyjson::JsonValue;
 use crate::Expression;
 
 pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
-    return match ai_cfg {
+    match ai_cfg {
         Expression::Map(cfg_map) => MockAIClient {
             host: match cfg_map.as_ref().get("host") {
                 Some(h) => h.to_string(),
@@ -52,7 +52,7 @@ pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
                 "/v1/chat/completions".into(),
             )
         }
-    };
+    }
 }
 
 pub trait AIClient {

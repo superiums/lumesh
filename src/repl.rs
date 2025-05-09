@@ -36,7 +36,7 @@ pub fn run_repl(env: &mut Environment) {
     // init_config(env);
     //
     let no_history = match env.get("LUME_NO_HISTORY") {
-        Some(Expression::Boolean(t)) => t == true,
+        Some(Expression::Boolean(t)) => t,
         _ => false,
     };
     let history_file = match env.get("LUME_HISTORY_FILE") {
@@ -121,13 +121,11 @@ pub fn run_repl(env: &mut Environment) {
                 }
             }
             _ => {
-                if parse_and_eval(&line, env) {
-                    if !no_history {
-                        match rl.lock().unwrap().add_history_entry(&line) {
-                            Ok(_) => {}
-                            Err(e) => eprintln!("add history err: {}", e),
-                        };
-                    }
+                if parse_and_eval(&line, env) && !no_history {
+                    match rl.lock().unwrap().add_history_entry(&line) {
+                        Ok(_) => {}
+                        Err(e) => eprintln!("add history err: {}", e),
+                    };
                 }
             }
         }
@@ -158,10 +156,7 @@ fn new_editor(ai_config: Option<Expression>) -> Editor<LumeHelper, FileHistory> 
         .build();
 
     let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());
-    let ai = match ai_config {
-        Some(ai_cfg) => Some(Arc::new(init_ai(ai_cfg))),
-        _ => None,
-    };
+    let ai = ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
     let helper = LumeHelper {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
@@ -195,7 +190,7 @@ impl Completer for LumeHelper {
         if should_trigger_path_completion(line, pos) {
             // 路径
             let (start, completions) = self.completer.complete(line, pos, ctx)?;
-            return Ok((start, completions));
+            Ok((start, completions))
         } else if should_trigger_cmd_completion(line, pos) {
             return Ok(generate_cmd_hints(line, pos));
         } else if let Some(ai) = &self.ai_client {
@@ -263,7 +258,7 @@ impl Validator for LumeHelper {
         if ctx.input().ends_with("\n\n") || check(ctx.input()) {
             return Ok(ValidationResult::Valid(None));
         };
-        return Ok(ValidationResult::Incomplete);
+        Ok(ValidationResult::Incomplete)
     }
 }
 
@@ -325,16 +320,14 @@ impl Hinter for LumeHelper {
         }
 
         // 预定义命令列表（带权重排序）
-        let cmds = vec![
-            ("cd", 10),
+        let cmds = [("cd", 10),
             ("ls", 9),
             ("clear", 8),
             ("exit 0", 7),
             ("rm -ri", 6),
             ("cp -r", 5),
             ("head", 4),
-            ("tail", 3),
-        ];
+            ("tail", 3)];
 
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {

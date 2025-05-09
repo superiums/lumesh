@@ -164,7 +164,7 @@ pub struct Tokens<'a> {
     pub slice: &'a [Token],
 }
 
-impl<'a> std::ops::Deref for Tokens<'a> {
+impl std::ops::Deref for Tokens<'_> {
     type Target = [Token];
 
     fn deref(&self) -> &Self::Target {
@@ -192,7 +192,7 @@ impl InputTake for Tokens<'_> {
     }
 }
 
-impl<'a> Tokens<'a> {
+impl Tokens<'_> {
     pub fn skip_n(self, count: usize) -> Self {
         let slice = &self.slice[count..];
         Tokens { slice, ..self }

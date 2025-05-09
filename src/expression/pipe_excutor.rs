@@ -9,7 +9,7 @@ use std::{
 use super::CatchType;
 
 fn is_interactive() -> bool {
-    return true;
+    true
 }
 /// 执行单个命令（支持管道）
 pub fn exec_single_cmd(
@@ -97,7 +97,7 @@ fn expr_to_command(
             let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
-            return match func_eval {
+            match func_eval {
                 // 是外部命令+参数，
                 Expression::Symbol(name) | Expression::String(name) => {
                     // let cmd_args: Vec<String> = args.iter().map(|expr| expr.to_string()).collect();
@@ -114,7 +114,7 @@ fn expr_to_command(
 
                     // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
                 }
-            };
+            }
         }
         Expression::Command(func, args) => {
             /* 处理函数调用，如 3+5 */
@@ -122,7 +122,7 @@ fn expr_to_command(
             let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
-            return match func_eval {
+            match func_eval {
                 // 是外部命令+参数，
                 Expression::Symbol(name) | Expression::String(name) => {
                     let cmd_args: Vec<String> = args.iter().map(|expr| expr.to_string()).collect();
@@ -135,7 +135,7 @@ fn expr_to_command(
 
                     // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
                 }
-            };
+            }
         }
         Expression::Pipe(..)
         | Expression::BinaryOp(..)
@@ -190,7 +190,7 @@ pub fn handle_command(
     }
     // dbg!(args, &cmd_args);
     let result = exec_single_cmd(cmd.to_string(), cmd_args, env, None, true, always_pipe)?;
-    return Ok(to_expr(Some(result)));
+    Ok(to_expr(Some(result)))
 }
 
 // 管道
@@ -211,8 +211,8 @@ pub fn handle_pipes(
         let result_left = match lhs {
             // TODO op== "|>" >> >>>
             Expression::Pipe(op, l_arm, r_arm) if op == "|" => handle_pipes(
-                &*l_arm,
-                &*r_arm,
+                l_arm,
+                r_arm,
                 // bindings,
                 true,
                 input,
@@ -223,14 +223,14 @@ pub fn handle_pipes(
             ),
 
             _ => {
-                let (cmd, args, expr, deeling) = expr_to_command(&lhs, env, depth + 1)?;
+                let (cmd, args, expr, deeling) = expr_to_command(lhs, env, depth + 1)?;
                 // dbg!(&cmd, &args, &expr, &deeling);
                 // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种,还有从group解开的pipe
                 match expr.clone() {
                     Some(Expression::Pipe(op, l_arm, r_arm)) if op == "|" => {
                         let result = handle_pipes(
-                            &*l_arm,
-                            &*r_arm,
+                            &l_arm,
+                            &r_arm,
                             // bindings,
                             true,
                             input,
@@ -293,7 +293,7 @@ pub fn handle_pipes(
             }
         };
         // dbg!(&result_left);
-        return match result_left {
+        match result_left {
             Ok((pipe_out, expr_out)) => {
                 // return match rhs {
                 //     Expression::Pipe(op, l_arm, r_arm) if op == "|" => handle_pipes(
@@ -308,7 +308,7 @@ pub fn handle_pipes(
                 //         always_pipe,
                 //     ),
                 //     _ => {
-                let (cmd, args, expr, deeling) = expr_to_command(&rhs, env, depth + 1)?;
+                let (cmd, args, expr, deeling) = expr_to_command(rhs, env, depth + 1)?;
 
                 match expr.clone() {
                     // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种
@@ -335,8 +335,8 @@ pub fn handle_pipes(
                             }
                             Expression::Pipe(op, l_arm, r_arm) if op == "|" => {
                                 let result = handle_pipes(
-                                    &*l_arm,
-                                    &*r_arm,
+                                    &l_arm,
+                                    &r_arm,
                                     // bindings,
                                     has_right,
                                     pipe_out,
@@ -370,7 +370,7 @@ pub fn handle_pipes(
                         // 右侧是命令，读取左侧的标准输出结果
                         // 如果标准输出结果为空，则从算术运算的结果转换
                         let choosed_input = match pipe_out {
-                            Some(po) => po.into(),
+                            Some(po) => po,
                             _ => to_bytes(expr_out),
                         };
                         let result_right = exec_single_cmd(
@@ -407,7 +407,7 @@ pub fn handle_pipes(
                 // }
             }
             Err(e) => Err(e),
-        };
+        }
     }
 }
 

@@ -59,7 +59,7 @@ pub fn get() -> Expression {
                     other => other.to_string(),
                 };
 
-                groups.entry(key).or_insert_with(Vec::new).push(item.clone());
+                groups.entry(key).or_default().push(item.clone());
             }
 
             let result = groups.into_iter()
@@ -368,7 +368,7 @@ fn append(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     };
 
     let item = args[1].eval(env)?;
-    let mut new_list: Vec<Expression> = list.as_ref().iter().cloned().collect();
+    let mut new_list: Vec<Expression> = list.as_ref().to_vec();
     new_list.push(item);
 
     Ok(Expression::List(Rc::new(new_list)))
@@ -383,7 +383,7 @@ pub fn rev(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
     match args[0].eval(env)? {
         Expression::List(list) => {
-            let mut reversed: Vec<Expression> = list.as_ref().iter().cloned().collect();
+            let mut reversed: Vec<Expression> = list.as_ref().to_vec();
             reversed.reverse();
             Ok(Expression::List(Rc::new(reversed)))
         }

@@ -68,7 +68,7 @@ pub fn get() -> Expression {
             "convert datetime to different timezone (offset in hours)"),
 
         String::from("is_leap_year") => Expression::builtin("is_leap_year", |args, env| {
-            let year = match args.get(0).map(|a| a.eval(env)) {
+            let year = match args.first().map(|a| a.eval(env)) {
                 Some(Ok(Expression::Integer(y))) => y,
                 Some(Ok(_)) => return Err(LmError::CustomError("Year must be an integer".to_string())),
                 Some(Err(e)) => return Err(e.into()),
@@ -128,12 +128,12 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<DateTim
         Expression::Integer(ts) => Ok(Local.timestamp_opt(ts, 0).unwrap()),
         Expression::Map(m) => {
             let map = m.as_ref();
-            let year = get_map_value(&map, "year")?.unwrap_or(Local::now().year() as i64);
-            let month = get_map_value(&map, "month")?.unwrap_or(1) as u32;
-            let day = get_map_value(&map, "day")?.unwrap_or(1) as u32;
-            let hour = get_map_value(&map, "hour")?.unwrap_or(0) as u32;
-            let minute = get_map_value(&map, "minute")?.unwrap_or(0) as u32;
-            let second = get_map_value(&map, "second")?.unwrap_or(0) as u32;
+            let year = get_map_value(map, "year")?.unwrap_or(Local::now().year() as i64);
+            let month = get_map_value(map, "month")?.unwrap_or(1) as u32;
+            let day = get_map_value(map, "day")?.unwrap_or(1) as u32;
+            let hour = get_map_value(map, "hour")?.unwrap_or(0) as u32;
+            let minute = get_map_value(map, "minute")?.unwrap_or(0) as u32;
+            let second = get_map_value(map, "second")?.unwrap_or(0) as u32;
 
             NaiveDate::from_ymd_opt(year as i32, month, day)
                 .and_then(|d| d.and_hms_opt(hour, minute, second))
@@ -326,24 +326,24 @@ fn add_duration(args: Vec<Expression>, env: &mut Environment) -> Result<Expressi
         } else {
             args[0].eval(env)
         } {
-            duration = duration + ChronoDuration::seconds(secs);
+            duration += ChronoDuration::seconds(secs);
         }
 
         if args.len() > 3 {
             if let Ok(Expression::Integer(mins)) = args[2].eval(env) {
-                duration = duration + ChronoDuration::minutes(mins);
+                duration += ChronoDuration::minutes(mins);
             }
         }
 
         if args.len() > 4 {
             if let Ok(Expression::Integer(hours)) = args[3].eval(env) {
-                duration = duration + ChronoDuration::hours(hours);
+                duration += ChronoDuration::hours(hours);
             }
         }
 
         if args.len() > 5 {
             if let Ok(Expression::Integer(days)) = args[4].eval(env) {
-                duration = duration + ChronoDuration::days(days);
+                duration += ChronoDuration::days(days);
             }
         }
 
@@ -439,7 +439,7 @@ fn timezone(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         }
     };
 
-    if offset_hours < -12 || offset_hours > 14 {
+    if !(-12..=14).contains(&offset_hours) {
         return Err(LmError::CustomError(
             "Timezone offset must be between -12 and +14 hours".to_string(),
         ));

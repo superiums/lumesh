@@ -227,7 +227,7 @@ fn debug(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
 
 fn println(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
-    for (_, arg) in args.iter().enumerate() {
+    for arg in args.iter() {
         let x = arg.clone().eval(env)?;
         println!("{}", x);
         result.push(x);
@@ -257,7 +257,7 @@ fn eprint(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
 }
 fn eprintln(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
-    for (_, arg) in args.iter().enumerate() {
+    for arg in args.iter() {
         let x = arg.clone().eval(env)?;
         eprintln!("\x1b[38;5;9m{}\x1b[m\x1b[0m", x);
         result.push(x);
@@ -310,7 +310,7 @@ fn insert(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     let mut arr = args[0].eval(env)?;
     let idx = args[1].eval(env)?;
     let val = args[2].eval(env)?;
-    return match (&mut arr, &idx) {
+    match (&mut arr, &idx) {
         (Expression::Map(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();
             result.insert(key.clone(), val);
@@ -322,10 +322,10 @@ fn insert(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
                 result.insert(*i as usize, val);
                 Ok(Expression::from(result))
             } else {
-                return Err(LmError::CustomError(format!(
+                Err(LmError::CustomError(format!(
                     "index {} out of bounds for {:?}",
                     idx, arr
-                )));
+                )))
             }
         }
         (Expression::String(s), Expression::Integer(i)) => {
@@ -333,19 +333,19 @@ fn insert(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
                 s.insert_str(*i as usize, &val.to_string());
                 Ok(Expression::String(s.clone()))
             } else {
-                return Err(LmError::CustomError(format!(
+                Err(LmError::CustomError(format!(
                     "index {} out of bounds for {:?}",
                     idx, arr
-                )));
+                )))
             }
         }
         _ => {
-            return Err(LmError::CustomError(format!(
+            Err(LmError::CustomError(format!(
                 "cannot insert {:?} into {:?} with index {:?}",
                 val, arr, idx
-            )));
+            )))
         }
-    };
+    }
 
     // Ok(arr)
 }

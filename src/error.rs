@@ -122,27 +122,27 @@ impl SyntaxErrorKind {
     /// return Fail to stop all parse. use this **carefully**!
     pub fn empty_fail(input: Tokens<'_>) -> Result<(), nom::Err<Self>> {
         if input.is_empty() {
-            return Err(nom::Err::Failure(SyntaxErrorKind::Expected {
+            Err(nom::Err::Failure(SyntaxErrorKind::Expected {
                 input: input.get_str_slice(),
                 expected: "Some Expression",
                 found: Some("Nothing".into()),
                 hint: None,
-            }));
+            }))
         } else {
-            return Ok(());
+            Ok(())
         }
     }
     /// return an Error to stop process.
     pub fn empty_back(input: Tokens<'_>) -> Result<(), nom::Err<Self>> {
         if input.is_empty() {
-            return Err(nom::Err::Error(SyntaxErrorKind::Expected {
+            Err(nom::Err::Error(SyntaxErrorKind::Expected {
                 input: input.get_str_slice(),
                 expected: "Some Expression to parse",
                 found: Some("Nothing".into()),
                 hint: None,
-            }));
+            }))
         } else {
-            return Ok(());
+            Ok(())
         }
     }
 

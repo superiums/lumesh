@@ -31,10 +31,10 @@ impl PromptEngineCommon for MyPrompt {
                 return format!("\x1b[1;34m(lumesh)\x1b[0m{} \x1b[32m❯\x1b[0m ", cwd_str);
             }
         }
-        return ">> ".into();
+        ">> ".into()
     }
     fn get_incomplete_prompt(&self) -> String {
-        return "... ".into();
+        "... ".into()
     }
 }
 impl PromptEngineCommon for PromptEngine {
@@ -69,7 +69,7 @@ impl PromptEngineCommon for PromptEngine {
         prompt
     }
     fn get_incomplete_prompt(&self) -> String {
-        return "... ".into();
+        "... ".into()
     }
 }
 impl PromptEngine {

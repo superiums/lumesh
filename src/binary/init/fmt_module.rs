@@ -156,7 +156,7 @@ pub fn get() -> Expression {
                        }
 
                        let pad_len = len - s.len();
-                       let padding: String = std::iter::repeat(pad_ch).take(pad_len).collect();
+                       let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
                        Ok(Expression::String(format!("{}{}", padding, s)))
                    }, "pad string to specified length at start, with optional pad character"),
 
@@ -186,7 +186,7 @@ pub fn get() -> Expression {
                        }
 
                        let pad_len = len - s.len();
-                       let padding: String = std::iter::repeat(pad_ch).take(pad_len).collect();
+                       let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
                        Ok(Expression::String(format!("{}{}", s, padding)))
                    }, "pad string to specified length at end, with optional pad character"),
 
@@ -218,8 +218,8 @@ pub fn get() -> Expression {
                        let left_pad = total_pad / 2;
                        let right_pad = total_pad - left_pad;
 
-                       let left: String = std::iter::repeat(pad_ch).take(left_pad).collect();
-                       let right: String = std::iter::repeat(pad_ch).take(right_pad).collect();
+                       let left: String = std::iter::repeat_n(pad_ch, left_pad).collect();
+                       let right: String = std::iter::repeat_n(pad_ch, right_pad).collect();
                        Ok(Expression::String(format!("{}{}{}", left, s, right)))
                    }, "center string by padding both ends"),
 
@@ -243,7 +243,7 @@ pub fn get() -> Expression {
                                }
 
                                let mut result = template.clone();
-                               for (_, arg) in args.iter().take(placeholders).enumerate() {
+                               for arg in args.iter().take(placeholders) {
                                    let value = arg.eval(env)?;
                                    result = result.replacen("{}", &value.to_string(), 1);
                                }

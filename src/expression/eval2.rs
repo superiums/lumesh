@@ -48,7 +48,7 @@ impl Expression {
             }
             Self::If(cond, true_expr, false_expr) => {
                 // 条件分支求值
-                return if cond
+                if cond
                     .as_ref()
                     .clone()
                     .eval_mut(true, env, depth + 1)?
@@ -57,7 +57,7 @@ impl Expression {
                     true_expr.as_ref().clone().eval_mut(true, env, depth + 1)
                 } else {
                     false_expr.as_ref().clone().eval_mut(true, env, depth + 1)
-                };
+                }
             }
 
             Self::Match(value, branches) => {
@@ -148,7 +148,7 @@ impl Expression {
 
             // 管道
             Self::Pipe(operator, lhs, rhs) => {
-                return match operator.as_str() {
+                match operator.as_str() {
                     "|" => {
                         // let bindings = env.get_bindings_map();
                         let always_pipe = env.has("__ALWAYSPIPE");
@@ -165,8 +165,8 @@ impl Expression {
                         //     pipe_result
                         // } else {
                         let (pipe_out, expr_out) = handle_pipes(
-                            &*lhs,
-                            &*rhs,
+                            &lhs,
+                            &rhs,
                             // &bindings,
                             false,
                             None,
@@ -242,15 +242,15 @@ impl Expression {
                                 match result {
                                     Ok(()) => Ok(l),
                                     Err(e) => {
-                                        return Err(RuntimeError::CustomError(format!(
+                                        Err(RuntimeError::CustomError(format!(
                                             "could not append to file {}: {:?}",
                                             rhs, e
-                                        )));
+                                        )))
                                     }
                                 }
                             }
                             Err(e) => {
-                                return Err(match e.kind() {
+                                Err(match e.kind() {
                                     ErrorKind::PermissionDenied => {
                                         RuntimeError::PermissionDenied(rhs.as_ref().clone())
                                     }
@@ -259,7 +259,7 @@ impl Expression {
                                         path.display(),
                                         e
                                     )),
-                                });
+                                })
                             }
                         }
                     }
@@ -295,13 +295,13 @@ impl Expression {
                     }
                     "<<" => {
                         // 输入重定向处理
-                        return handle_stdin_redirect(
+                        handle_stdin_redirect(
                             lhs.as_ref().clone(),
                             rhs.as_ref().clone(),
                             env,
                             depth,
                             true,
-                        );
+                        )
                         // let path = rhs.eval_mut(true,env, depth + 1)?.to_string();
                         // let contents = std::fs::read_to_string(path)
                         //     .map(Self::String)
@@ -314,7 +314,7 @@ impl Expression {
                         // return Ok(result);
                     }
                     _ => unreachable!(),
-                };
+                }
             }
             Self::Catch(body, typ, deeling) => {
                 // dbg!(&typ, &deeling);
@@ -349,7 +349,7 @@ impl Expression {
                 // let func_eval = *func.clone();
 
                 // 分派到具体类型处理
-                return match func_eval {
+                match func_eval {
                     // | Self::String(name)
                     Self::Symbol(name) | Self::String(name) => {
                         // Apply as Command
@@ -508,7 +508,7 @@ impl Expression {
 
                         let mut actual_args = args
                             .as_ref()
-                            .into_iter()
+                            .iter()
                             .map(|a| a.clone().eval_mut(true, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
@@ -530,14 +530,11 @@ impl Expression {
 
                         // 创建新作用域并执行
                         let mut new_env = env.fork();
-                        match pc {
-                            Some(collector) => {
-                                new_env.define(
-                                    collector.as_str(),
-                                    Expression::from(actual_args.clone()[params.len()..].to_vec()),
-                                );
-                            }
-                            _ => {}
+                        if let Some(collector) = pc {
+                            new_env.define(
+                                collector.as_str(),
+                                Expression::from(actual_args.clone()[params.len()..].to_vec()),
+                            );
                         }
                         for ((param, _), arg) in params.iter().zip(actual_args) {
                             new_env.define(param, arg);
@@ -551,7 +548,7 @@ impl Expression {
                         //     }
                         // }
                         // dbg!(&new_env);
-                        return match body
+                        match body
                             .as_ref()
                             .clone()
                             .eval_mut(true, &mut new_env, depth + 1)
@@ -569,13 +566,13 @@ impl Expression {
                                 self.set_status_code(1, env);
                                 Err(e)
                             }
-                        };
+                        }
                     }
                     _ => Err(RuntimeError::CannotApply(
                         func.as_ref().clone(),
                         args.as_ref().clone(),
                     )),
-                };
+                }
             }
             _ => Err(RuntimeError::CustomError(self.to_string())), // unreachable!(),
         }
@@ -601,7 +598,7 @@ pub fn bind_arguments(
     let bound_count = params.len().min(args.len());
     // 绑定参数到目标环境
     for (param, arg) in params.iter().zip(args.iter().take(bound_count)) {
-        target_env.define(&param, arg.clone());
+        target_env.define(param, arg.clone());
     }
     // 获取剩余参数
     if bound_count < params.len() {

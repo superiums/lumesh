@@ -11,7 +11,7 @@ struct UnsafeStatic<T> {
 unsafe impl<T> Sync for UnsafeStatic<T> {} // 手动标记为 Sync（单线程安全）
 
 static BUILTIN: UnsafeStatic<LazyLock<HashMap<String, Expression>>> = UnsafeStatic {
-    inner: LazyLock::new(|| init::get_module_map()),
+    inner: LazyLock::new(init::get_module_map),
 };
 
 pub fn get_builtin(name: &str) -> Option<&Expression> {

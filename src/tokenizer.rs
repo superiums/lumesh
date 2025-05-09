@@ -201,7 +201,7 @@ fn custom_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
     move |input: Input<'_>| {
         if input.starts_with(punct) {
             // 检查前一个字符是否为空格或行首
-            if input.previous_char().map_or(true, |c| c.is_whitespace()) {
+            if input.previous_char().is_none_or(|c| c.is_whitespace()) {
                 let places = input.chars().take_while(char::is_ascii_punctuation).count();
                 if places > 1 {
                     return Ok(input.split_at(places));
@@ -215,7 +215,7 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.starts_with(punct) {
             // 检查前一个字符是否为空格或行首
-            if input.previous_char().map_or(true, |c| c.is_whitespace()) {
+            if input.previous_char().is_none_or(|c| c.is_whitespace()) {
                 let places = input
                     .chars()
                     .take_while(|&c| {
@@ -370,7 +370,7 @@ fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
         // 检查前一个字符是否为空格或行首
         if input
             .previous_char()
-            .map_or(false, |c| !c.is_whitespace() && !c.is_ascii_punctuation())
+            .is_some_and(|c| !c.is_whitespace() && !c.is_ascii_punctuation())
         {
             return Err(NOT_FOUND); // 前面有字符或数字，不解析为负数
         }
@@ -684,7 +684,7 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .map_or(false, |c| !c.is_ascii_whitespace())
+            .is_some_and(|c| !c.is_ascii_whitespace())
         {
             return Err(NOT_FOUND);
         }
@@ -697,7 +697,7 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
 /// parse a tag between letters/numbers.
 fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
-        if input.previous_char().map_or(true, |c| {
+        if input.previous_char().is_none_or(|c| {
             !c.is_ascii_alphanumeric() || [')', ']'].contains(&c)
         }) {
             return Err(NOT_FOUND);
@@ -713,7 +713,7 @@ fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .map_or(true, |c| !c.is_ascii_alphanumeric() && c != ']')
+            .is_none_or(|c| !c.is_ascii_alphanumeric() && c != ']')
         {
             return Err(NOT_FOUND);
         }

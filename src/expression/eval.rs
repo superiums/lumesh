@@ -15,14 +15,14 @@ impl Expression {
     /// 当返回symbol时，作为命令继续执行。
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         let result = self.clone().eval_mut(true, env, 0);
-        return match result {
+        match result {
             // apply symbol cmds
             // Ok(Expression::Symbol(sym)) => {
             //     Expression::Apply(Box::new(Expression::Symbol(sym)), vec![]).eval(env)
             // }
             Ok(other) => Ok(other),
             Err(e) => Err(e),
-        };
+        }
     }
     /// 当返回symbol时，作为字面量，直接返回。
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
@@ -64,12 +64,9 @@ impl Expression {
                     // dbg!("2.--->symbol----", &name);
                     // bultin
                     if explain_builtin {
-                        match binary::get_builtin(&name) {
-                            Some(bti) => {
-                                // dbg!("found builtin:", &name, bti);
-                                return Ok(bti.clone());
-                            }
-                            _ => {}
+                        if let Some(bti) = binary::get_builtin(&name) {
+                            // dbg!("found builtin:", &name, bti);
+                            return Ok(bti.clone());
                         };
                     }
 
@@ -88,7 +85,7 @@ impl Expression {
                 Self::Variable(ref name) => {
                     // dbg!("2.--->variable----", &name);
                     // var
-                    return match env.get(&name) {
+                    return match env.get(name) {
                         Some(expr) => Ok(expr),
                         None => Err(RuntimeError::UndeclaredVariable(name.clone())),
                     };
@@ -250,9 +247,9 @@ impl Expression {
                     break match operator.as_str() {
                         "+=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
-                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                let mut left = env.get(base).unwrap_or(Expression::Integer(0));
                                 left += rhs.eval(env)?;
-                                env.define(&base, left.clone());
+                                env.define(base, left.clone());
                                 Ok(left)
                             }
                             _ => Err(RuntimeError::CustomError(format!(
@@ -266,9 +263,9 @@ impl Expression {
                         },
                         "-=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
-                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                let mut left = env.get(base).unwrap_or(Expression::Integer(0));
                                 left -= rhs.eval(env)?;
-                                env.define(&base, left.clone());
+                                env.define(base, left.clone());
                                 Ok(left)
                             }
                             _ => Err(RuntimeError::CustomError(format!(
@@ -282,9 +279,9 @@ impl Expression {
                         },
                         "*=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
-                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                let mut left = env.get(base).unwrap_or(Expression::Integer(0));
                                 left *= rhs.eval(env)?;
-                                env.define(&base, left.clone());
+                                env.define(base, left.clone());
                                 Ok(left)
                             }
                             _ => Err(RuntimeError::CustomError(format!(
@@ -298,7 +295,7 @@ impl Expression {
                         },
                         "/=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
-                                let mut left = env.get(&base).unwrap_or(Expression::Integer(0));
+                                let mut left = env.get(base).unwrap_or(Expression::Integer(0));
                                 let right = rhs.eval(env)?;
                                 if !right.is_truthy() {
                                     return Err(RuntimeError::CustomError(format!(
@@ -307,7 +304,7 @@ impl Expression {
                                     )));
                                 };
                                 left /= right;
-                                env.define(&base, left.clone());
+                                env.define(base, left.clone());
                                 Ok(left)
                             }
                             _ => Err(RuntimeError::CustomError(format!(
@@ -523,7 +520,7 @@ impl Expression {
                                 // 别名
                                 Some(cmd_alias) => {
                                     // dbg!(&cmd_alias.type_name());
-                                    if args.len() > 0 {
+                                    if !args.is_empty() {
                                         return match cmd_alias {
                                             Expression::Command(cmd_name, cmd_args) => {
                                                 cmd_args
@@ -615,7 +612,7 @@ impl Expression {
                 map.as_ref()
                     .get(&key)
                     .cloned()
-                    .ok_or_else(|| RuntimeError::KeyNotFound(key))
+                    .ok_or(RuntimeError::KeyNotFound(key))
             }
 
             // 处理字符串索引
@@ -624,7 +621,7 @@ impl Expression {
                     s.chars()
                         .nth(index as usize)
                         .map(|c| Expression::String(c.to_string()))
-                        .ok_or_else(|| RuntimeError::IndexOutOfBounds {
+                        .ok_or(RuntimeError::IndexOutOfBounds {
                             index: index as Int,
                             len: s.len(),
                         })

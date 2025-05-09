@@ -230,8 +230,8 @@ impl Sub for Expression {
                 if Rc::ptr_eq(&a, &b) {
                     Ok(Self::List(Rc::new(Vec::new()))) // Clear the list if they are the same
                 } else {
-                    let mut a_items = a.as_ref().iter().cloned().collect::<Vec<_>>(); // Clone items directly into a new Vec
-                    let b_items = b.as_ref().iter().cloned().collect::<Vec<_>>(); // Use a HashSet for faster lookups
+                    let mut a_items = a.as_ref().to_vec(); // Clone items directly into a new Vec
+                    let b_items = b.as_ref().to_vec(); // Use a HashSet for faster lookups
                     a_items.retain(|x| !b_items.contains(x)); // Remove items in b from a
                     Ok(Self::List(Rc::new(a_items)))
                 }
@@ -242,7 +242,7 @@ impl Sub for Expression {
 
                 if let Some(pos) = pos {
                     // Create a new Vec without the element at the found position
-                    let mut a_items: Vec<_> = a.as_ref().iter().cloned().collect();
+                    let mut a_items: Vec<_> = a.as_ref().to_vec();
                     a_items.remove(pos);
                     Ok(Self::List(Rc::new(a_items)))
                 } else {
@@ -336,7 +336,7 @@ impl Mul for Expression {
                 } else {
                     0
                 };
-                let b_cols = if b.as_ref().len() > 0 {
+                let b_cols = if !b.as_ref().is_empty() {
                     match &b.as_ref()[0] {
                         Self::List(inner) => inner.as_ref().len(),
                         _ => 0,

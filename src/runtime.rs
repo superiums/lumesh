@@ -255,7 +255,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             // }
         }
     }
-    return false;
+    false
 }
 
 pub fn init_config(env: &mut Environment) {

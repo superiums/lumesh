@@ -46,7 +46,7 @@ pub fn get() -> Expression {
             if let Some(home_dir) = dirs::home_dir() {
                 let home_dir = home_dir.into_os_string().into_string().unwrap();
                 // env.set_cwd(&home_dir);
-                dir_tree.insert("home".to_string(), home_dir.into());
+                dir_tree.insert("home".to_string(), home_dir);
                 // env.define("HOME", Expression::String(home_dir));
             }
 
@@ -56,45 +56,45 @@ pub fn get() -> Expression {
 
             if let Some(c_dir) = dirs::config_dir() {
                 let desk_dir = c_dir.into_os_string().into_string().unwrap();
-                dir_tree.insert("config".to_string(), desk_dir.into());
+                dir_tree.insert("config".to_string(), desk_dir);
                 // env.define("DESK", Expression::String(desk_dir));
             }
             if let Some(c_dir) = dirs::cache_dir() {
                 let desk_dir = c_dir.into_os_string().into_string().unwrap();
-                dir_tree.insert("cache".to_string(), desk_dir.into());
+                dir_tree.insert("cache".to_string(), desk_dir);
                 // env.define("DESK", Expression::String(desk_dir));
             }
             if let Some(c_dir) = dirs::data_dir() {
                 let desk_dir = c_dir.into_os_string().into_string().unwrap();
-                dir_tree.insert("data".to_string(), desk_dir.into());
+                dir_tree.insert("data".to_string(), desk_dir);
                 // env.define("DESK", Expression::String(desk_dir));
             }
             if let Some(c_dir) = dirs::picture_dir() {
                 let desk_dir = c_dir.into_os_string().into_string().unwrap();
-                dir_tree.insert("pic".to_string(), desk_dir.into());
+                dir_tree.insert("pic".to_string(), desk_dir);
                 // env.define("DESK", Expression::String(desk_dir));
             }
             if let Some(desk_dir) = dirs::desktop_dir() {
                 let desk_dir = desk_dir.into_os_string().into_string().unwrap();
-                dir_tree.insert("desk".to_string(), desk_dir.into());
+                dir_tree.insert("desk".to_string(), desk_dir);
                 // env.define("DESK", Expression::String(desk_dir));
             }
 
             if let Some(docs_dir) = dirs::document_dir() {
                 let docs_dir = docs_dir.into_os_string().into_string().unwrap();
-                dir_tree.insert("docs".to_string(), docs_dir.into());
+                dir_tree.insert("docs".to_string(), docs_dir);
                 // env.define("DOCS", Expression::String(docs_dir));
             }
 
             if let Some(down_dir) = dirs::download_dir() {
                 let down_dir = down_dir.into_os_string().into_string().unwrap();
-                dir_tree.insert("down".to_string(), down_dir.into());
+                dir_tree.insert("down".to_string(), down_dir);
                 // env.define("DOWN", Expression::String(down_dir));
             }
 
             let path = std::env::current_dir()?;
             let current_dir = path.into_os_string().into_string().unwrap();
-            dir_tree.insert("current".into(),current_dir.into());
+            dir_tree.insert("current".into(),current_dir);
 
             Ok(Expression::from(dir_tree))
         },"get sys dirs"),
@@ -255,7 +255,7 @@ pub fn get() -> Expression {
             let path = args[0].eval(env)?.to_string();
             let dir = cwd.join(&path);
 
-            list_directory(&dir, &Path::new(&path))
+            list_directory(&dir, Path::new(&path))
         }, "get a directory's entries as a list of strings"),
         String::from("exists") => Expression::builtin("exists", |args, env| {
             super::check_exact_args_len("exists", &args, 1)?;

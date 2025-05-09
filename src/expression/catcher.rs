@@ -13,7 +13,7 @@ pub fn catch_error(
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {
-    return match typ {
+    match typ {
         CatchType::Deel => match deeling {
             Some(deel) => match *deel {
                 Expression::Symbol(..) | Expression::Lambda(..) | Expression::Function(..) => {
@@ -44,6 +44,6 @@ pub fn catch_error(
             Ok(Expression::None)
         }
         CatchType::PrintOver => Ok(Expression::String(e.to_string())),
-    };
+    }
     // Ok(Expression::None)
 }

@@ -1,18 +1,12 @@
-use json::parse;
-// use lazy_static::lazy_static;
 use std::io::Error;
 use std::io::{self, BufRead, Write};
 use std::net::TcpStream;
 use std::time::Duration;
+use tinyjson::JsonValue;
 
 use crate::Expression;
-// lazy_static! {
-//     // 双重锁设计：外层Mutex防止多线程竞争初始化，内层HashSet只读
-//    pub static ref AI_CLIENT: Box<dyn AIClient + Sync + Send> = Box::new(MockAIClient);
-// }
 
 pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
-    // dbg!(&ai_cfg);
     return match ai_cfg {
         Expression::Map(cfg_map) => MockAIClient {
             host: match cfg_map.as_ref().get("host") {
@@ -41,7 +35,6 @@ pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
                 },
                 _ => 100,
             },
-
             model: match cfg_map.as_ref().get("model") {
                 Some(h) => h.to_string(),
                 _ => "".into(),
@@ -60,28 +53,14 @@ pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
             )
         }
     };
-    // 调用代码补全模式
-    // let ai =
-
-    // let completion_response = ai.complete("fn sum(")?;
-    // //
-    // println!("Completion Response:\n{}", completion_response);
-
-    // // 调用对话模式
-    // let chat_response = ai.chat("hi")?;
-    // println!("Chat Response:\n{}", chat_response);
-
-    // Ok(())
 }
 
-// AI client trait for abstraction
 pub trait AIClient {
     fn complete(&self, prompt: &str) -> Result<String, Error>;
     fn chat(&self, prompt: &str) -> Result<String, Error>;
     fn send_request(&self, endpoint: &str, request_body: &str) -> io::Result<String>;
 }
 
-// Mock implementation (replace with actual ollama/llama.cpp integration)
 pub struct MockAIClient {
     host: String,
     complete_url: String,
@@ -91,6 +70,7 @@ pub struct MockAIClient {
     model: String,
     system_prompt: String,
 }
+
 impl MockAIClient {
     pub fn new(host: String, complete_url: String, chat_url: String) -> Self {
         Self {
@@ -104,6 +84,7 @@ impl MockAIClient {
         }
     }
 }
+
 impl AIClient for MockAIClient {
     fn complete(&self, prompt: &str) -> Result<String, Error> {
         let json_string = format!(
@@ -113,20 +94,20 @@ impl AIClient for MockAIClient {
 
         let completion_response = self.send_request(&self.complete_url, &json_string)?;
 
-        match parse(&completion_response) {
+        match completion_response.parse::<JsonValue>() {
             Ok(parsed) => {
-                // Different APIs might return the content in different ways
-                if parsed["content"].is_string() {
-                    Ok(parsed["content"].to_string())
-                } else if parsed["choices"].is_array() {
-                    if let Some(choice) = parsed["choices"].members().last() {
-                        Ok(choice["text"].to_string())
-                    } else {
-                        Ok("No suggestion".to_string())
+                if let JsonValue::Object(obj) = parsed {
+                    if let Some(JsonValue::String(content)) = obj.get("content") {
+                        return Ok(content.clone());
+                    } else if let Some(JsonValue::Array(choices)) = obj.get("choices") {
+                        if let Some(JsonValue::Object(choice)) = choices.first() {
+                            if let Some(JsonValue::String(text)) = choice.get("text") {
+                                return Ok(text.clone());
+                            }
+                        }
                     }
-                } else {
-                    Ok("No suggestion".to_string())
                 }
+                Ok("No suggestion".to_string())
             }
             Err(e) => {
                 eprintln!("JSON parse error: {}", e);
@@ -153,23 +134,23 @@ impl AIClient for MockAIClient {
 
         let chat_response = self.send_request(&self.chat_url, &json_string)?;
 
-        match parse(&chat_response) {
+        match chat_response.parse::<JsonValue>() {
             Ok(parsed) => {
-                if parsed["choices"].is_array() {
-                    if let Some(choice) = parsed["choices"].members().last() {
-                        if choice["message"]["content"].is_string() {
-                            Ok(choice["message"]["content"].to_string())
-                        } else {
-                            Ok(choice.to_string())
+                if let JsonValue::Object(obj) = parsed {
+                    if let Some(JsonValue::Array(choices)) = obj.get("choices") {
+                        if let Some(JsonValue::Object(choice)) = choices.first() {
+                            if let Some(JsonValue::Object(message)) = choice.get("message") {
+                                if let Some(JsonValue::String(content)) = message.get("content") {
+                                    return Ok(content.clone());
+                                }
+                            }
+                            return Ok(chat_response);
                         }
-                    } else {
-                        Ok("No message".to_string())
+                    } else if let Some(JsonValue::String(message)) = obj.get("message") {
+                        return Ok(message.clone());
                     }
-                } else if parsed["message"].is_string() {
-                    Ok(parsed["message"].to_string())
-                } else {
-                    Ok("No message".to_string())
                 }
+                Ok("No message".to_string())
             }
             Err(e) => {
                 eprintln!("JSON parse error: {}", e);
@@ -202,9 +183,6 @@ impl AIClient for MockAIClient {
         stream.write_all(request.as_bytes())?;
 
         let reader = io::BufReader::new(stream);
-        // let mut response = String::new();
-
-        // Read until we find the empty line that separates headers from body
         let mut body_started = false;
         let mut json_body = String::new();
 

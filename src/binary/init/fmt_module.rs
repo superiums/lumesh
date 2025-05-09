@@ -129,6 +129,128 @@ pub fn get() -> Expression {
                 super::check_exact_args_len("strip", &args, 1)?;
                 Ok(format!("\x1b[37m{}\x1b[m\x6b[0m", args[0].eval(env)?).into())
             }, "convert text to white on the console"),
+
+            String::from("pad_start") => Expression::builtin("pad_start", |args, env| {
+                       super::check_args_len("pad_start", &args, 2..3)?;
+
+                       let (str_expr, length, pad_char) = match args.len() {
+                           2 => (args[1].clone(), args[0].clone(), " ".to_string()),
+                           3 => (args[2].clone(), args[0].clone(), args[1].clone().to_string()),
+                           _ => unreachable!(),
+                       };
+
+                       let s = match str_expr.eval(env)? {
+                           Expression::Symbol(x) | Expression::String(x) => x,
+                           _ => return Err(LmError::CustomError("pad_start requires a string as last argument".to_string())),
+                       };
+
+                       let len = match length.eval(env)? {
+                           Expression::Integer(n) => n.max(0) as usize,
+                           _ => return Err(LmError::CustomError("pad_start requires an integer as length".to_string())),
+                       };
+
+                       let pad_ch = pad_char.chars().next().unwrap_or(' ');
+
+                       if s.len() >= len {
+                           return Ok(Expression::String(s));
+                       }
+
+                       let pad_len = len - s.len();
+                       let padding: String = std::iter::repeat(pad_ch).take(pad_len).collect();
+                       Ok(Expression::String(format!("{}{}", padding, s)))
+                   }, "pad string to specified length at start, with optional pad character"),
+
+                   String::from("pad_end") => Expression::builtin("pad_end", |args, env| {
+                       super::check_args_len("pad_end", &args, 2..3)?;
+
+                       let (str_expr, length, pad_char) = match args.len() {
+                           2 => (args[1].clone(), args[0].clone(), " ".to_string()),
+                           3 => (args[2].clone(), args[0].clone(), args[1].clone().to_string()),
+                           _ => unreachable!(),
+                       };
+
+                       let s = match str_expr.eval(env)? {
+                           Expression::Symbol(x) | Expression::String(x) => x,
+                           _ => return Err(LmError::CustomError("pad_end requires a string as last argument".to_string())),
+                       };
+
+                       let len = match length.eval(env)? {
+                           Expression::Integer(n) => n.max(0) as usize,
+                           _ => return Err(LmError::CustomError("pad_end requires an integer as length".to_string())),
+                       };
+
+                       let pad_ch = pad_char.chars().next().unwrap_or(' ');
+
+                       if s.len() >= len {
+                           return Ok(Expression::String(s));
+                       }
+
+                       let pad_len = len - s.len();
+                       let padding: String = std::iter::repeat(pad_ch).take(pad_len).collect();
+                       Ok(Expression::String(format!("{}{}", s, padding)))
+                   }, "pad string to specified length at end, with optional pad character"),
+
+                   String::from("center") => Expression::builtin("center", |args, env| {
+                       super::check_args_len("center", &args, 2..3)?;
+
+                       let (str_expr, length, pad_char) = match args.len() {
+                           2 => (args[1].clone(), args[0].clone(), " ".to_string()),
+                           3 => (args[2].clone(), args[0].clone(), args[1].clone().to_string()),
+                           _ => unreachable!(),
+                       };
+
+                       let s = match str_expr.eval(env)? {
+                           Expression::Symbol(x) | Expression::String(x) => x,
+                           _ => return Err(LmError::CustomError("center requires a string as last argument".to_string())),
+                       };
+
+                       let len = match length.eval(env)? {
+                           Expression::Integer(n) => n.max(0) as usize,
+                           _ => return Err(LmError::CustomError("center requires an integer as length".to_string())),
+                       };
+
+                       if s.len() >= len {
+                           return Ok(Expression::String(s));
+                       }
+
+                       let pad_ch = pad_char.chars().next().unwrap_or(' ');
+                       let total_pad = len - s.len();
+                       let left_pad = total_pad / 2;
+                       let right_pad = total_pad - left_pad;
+
+                       let left: String = std::iter::repeat(pad_ch).take(left_pad).collect();
+                       let right: String = std::iter::repeat(pad_ch).take(right_pad).collect();
+                       Ok(Expression::String(format!("{}{}{}", left, s, right)))
+                   }, "center string by padding both ends"),
+
+                   String::from("format") => Expression::builtin("format", |args, env| {
+                               // format template arg1 arg2 ... argN
+                               if args.is_empty() {
+                                   return Err(LmError::CustomError("format requires at least a template string".to_string()));
+                               }
+
+                               let template = match args.last().unwrap().eval(env)? {
+                                   Expression::Symbol(x) | Expression::String(x) => x,
+                                   _ => return Err(LmError::CustomError("format requires string template as last argument".to_string())),
+                               };
+
+                               let placeholders = template.matches("{}").count();
+                               if args.len() - 1 < placeholders {
+                                   return Err(LmError::CustomError(format!(
+                                       "format requires {} arguments for {} placeholders",
+                                       placeholders, placeholders
+                                   )));
+                               }
+
+                               let mut result = template.clone();
+                               for (_, arg) in args.iter().take(placeholders).enumerate() {
+                                   let value = arg.eval(env)?;
+                                   result = result.replacen("{}", &value.to_string(), 1);
+                               }
+
+                               Ok(Expression::String(result))
+                           }, "format string using {} placeholders"),
+
         }.into()
     })
     .into()

@@ -437,6 +437,124 @@ pub fn get() -> Expression {
                 _ => Expression::None,
             })
         }, "check if a string contains a given substring"),
+
+        String::from("repeat") => Expression::builtin("repeat", |args, env| {
+                    super::check_exact_args_len("repeat", &args, 2)?;
+
+                    let s = match args[1].eval(env)? {
+                        Expression::Symbol(x) | Expression::String(x) => x,
+                        _ => return Err(LmError::CustomError("repeat requires a string as last argument".to_string())),
+                    };
+
+                    let count = match args[0].eval(env)? {
+                        Expression::Integer(n) => n.max(0) as usize,
+                        _ => return Err(LmError::CustomError("repeat requires an integer as count".to_string())),
+                    };
+
+                    Ok(Expression::String(s.repeat(count)))
+                }, "repeat string specified number of times"),
+
+                String::from("substring") => Expression::builtin("substring", |args, env| {
+                    super::check_args_len("substring", &args, 2..3)?;
+
+                    let (str_expr, start, end) = match args.len() {
+                        2 => (args[1].clone(), args[0].clone(), None),
+                        3 => (args[2].clone(), args[0].clone(), Some(args[1].clone())),
+                        _ => unreachable!(),
+                    };
+
+                    let s = match str_expr.eval(env)? {
+                        Expression::Symbol(x) | Expression::String(x) => x,
+                        _ => return Err(LmError::CustomError("substring requires a string as last argument".to_string())),
+                    };
+
+                    let start_idx = match start.eval(env)? {
+                        Expression::Integer(n) => {
+                            if n < 0 {
+                                (s.len() as i64 + n).max(0) as usize
+                            } else {
+                                n.min(s.len() as i64) as usize
+                            }
+                        },
+                        _ => return Err(LmError::CustomError("substring requires integer indices".to_string())),
+                    };
+
+                    let end_idx = if let Some(end_expr) = end {
+                        match end_expr.eval(env)? {
+                            Expression::Integer(n) => {
+                                if n < 0 {
+                                    (s.len() as i64 + n).max(0) as usize
+                                } else {
+                                    n.min(s.len() as i64) as usize
+                                }
+                            },
+                            _ => return Err(LmError::CustomError("substring requires integer indices".to_string())),
+                        }
+                    } else {
+                        s.len()
+                    };
+
+                    if start_idx > end_idx || start_idx >= s.len() {
+                        return Ok(Expression::String(String::new()));
+                    }
+
+                    let result = s.chars()
+                        .skip(start_idx)
+                        .take(end_idx - start_idx)
+                        .collect();
+                    Ok(Expression::String(result))
+                }, "get substring from start to end indices"),
+
+                String::from("split_lines") => Expression::builtin("split_lines", |args, env| {
+                    super::check_exact_args_len("split_lines", &args, 1)?;
+
+                    let s = match args[0].eval(env)? {
+                        Expression::Symbol(x) | Expression::String(x) => x,
+                        _ => return Err(LmError::CustomError("split_lines requires a string".to_string())),
+                    };
+
+                    let lines: Vec<Expression> = s.lines()
+                        .map(|line| Expression::String(line.to_string()))
+                        .collect();
+
+                    Ok(Expression::from(lines))
+                }, "split string into lines, removing line endings"),
+
+                String::from("remove_prefix") => Expression::builtin("remove_prefix", |args, env| {
+                    super::check_exact_args_len("remove_prefix", &args, 2)?;
+
+                    let prefix = match args[0].eval(env)? {
+                        Expression::Symbol(x) | Expression::String(x) => x,
+                        _ => return Err(LmError::CustomError("remove_prefix requires string arguments".to_string())),
+                    };
+
+                    let s = match args[1].eval(env)? {
+                        Expression::Symbol(x) | Expression::String(x) => x,
+                        _ => return Err(LmError::CustomError("remove_prefix requires string arguments".to_string())),
+                    };
+
+                    Ok(Expression::String(
+                        s.strip_prefix(&prefix).unwrap_or(&s).to_string()
+                    ))
+                }, "remove prefix if present"),
+
+                String::from("remove_suffix") => Expression::builtin("remove_suffix", |args, env| {
+                    super::check_exact_args_len("remove_suffix", &args, 2)?;
+
+                    let suffix = match args[0].eval(env)? {
+                        Expression::Symbol(x) | Expression::String(x) => x,
+                        _ => return Err(LmError::CustomError("remove_suffix requires string arguments".to_string())),
+                    };
+
+                    let s = match args[1].eval(env)? {
+                        Expression::Symbol(x) | Expression::String(x) => x,
+                        _ => return Err(LmError::CustomError("remove_suffix requires string arguments".to_string())),
+                    };
+
+                    Ok(Expression::String(
+                        s.strip_suffix(&suffix).unwrap_or(&s).to_string()
+                    ))
+                }, "remove suffix if present"),
     })
     .into()
 }

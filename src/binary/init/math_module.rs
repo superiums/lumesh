@@ -69,7 +69,7 @@ pub fn get() -> Expression {
                     Expression::Integer(i) => int_sum += i,
                     Expression::Float(f) => float_sum += f,
                     Expression::List(list) => {
-                        for item in list {
+                        for item in list.as_ref().iter() {
                             match item.eval(env)? {
                                 Expression::Integer(i) => int_sum += i,
                                 Expression::Float(f) => float_sum += f,
@@ -97,7 +97,7 @@ pub fn get() -> Expression {
                     Expression::Integer(i) => int_product *= i,
                     Expression::Float(f) => float_product *= f,
                     Expression::List(list) => {
-                        for item in list {
+                        for item in list.as_ref().iter() {
                             match item.eval(env)? {
                                 Expression::Integer(i) => int_product *= i,
                                 Expression::Float(f) => float_product *= f,

@@ -31,7 +31,7 @@ pub fn get() -> Expression {
 
             regex.find(&text).map_or(
                 Ok(Expression::None),
-                |m| Ok(Expression::List(vec![
+                |m| Ok(Expression::from(vec![
                     Expression::Integer(m.start() as i64),
                     Expression::Integer(m.end() as i64),
                     Expression::String(m.as_str().to_string())
@@ -47,14 +47,14 @@ pub fn get() -> Expression {
             let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
 
             let matches: Vec<Expression> = regex.find_iter(&text).map(|m| {
-                Expression::List(vec![
+                Expression::from(vec![
                     Expression::Integer(m.start() as i64),
                     Expression::Integer(m.end() as i64),
                     Expression::String(m.as_str().to_string())
                 ])
             }).collect();
 
-            Ok(Expression::List(matches))
+            Ok(Expression::from(matches))
         }, "find all matches as [[start, end, text], ...]"),
 
         // 获取第一个捕获组
@@ -71,7 +71,7 @@ pub fn get() -> Expression {
                         caps.get(i).map(|m| Expression::String(m.as_str().to_string()))
                             .unwrap_or(Expression::None)
                     }).collect();
-                    Ok(Expression::List(groups))
+                    Ok(Expression::from(groups))
                 }
             )
         }, "get first capture groups as [full, group1, group2, ...]"),
@@ -88,10 +88,10 @@ pub fn get() -> Expression {
                     caps.get(i).map(|m| Expression::String(m.as_str().to_string()))
                         .unwrap_or(Expression::None)
                 }).collect();
-                Expression::List(groups)
+                Expression::from(groups)
             }).collect();
 
-            Ok(Expression::List(all_caps))
+            Ok(Expression::from(all_caps))
         }, "get all captures as [[full, group1, ...], ...]"),
 
         // 正则分割
@@ -105,7 +105,7 @@ pub fn get() -> Expression {
                 .map(|s| Expression::String(s.to_string()))
                 .collect();
 
-            Ok(Expression::List(parts))
+            Ok(Expression::from(parts))
         }, "split text by pattern"),
 
         // 替换所有匹配

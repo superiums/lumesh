@@ -23,7 +23,7 @@ fn is_log_level_enabled(level: Int) -> bool {
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("level") => Expression::Map(hash_map! {
+        String::from("level") => Expression::from(hash_map! {
             String::from("none") => Expression::Integer(NONE),
             String::from("trace") => Expression::Integer(TRACE),
             String::from("debug") => Expression::Integer(DEBUG),

@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
 
@@ -24,12 +26,12 @@ fn try_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
             let handler = args[1].clone();
 
             Ok(Expression::Apply(
-                Box::new(handler),
-                vec![Expression::Map(hash_map! {
+                Rc::new(handler),
+                Rc::new(vec![Expression::from(hash_map! {
                     String::from("message") => Expression::String(err.to_string()),
                     String::from("code") => Expression::Integer(Int::from(err.code())),
-                    String::from("expression") => Expression::Quote(Box::new(args[0].clone()))
-                })],
+                    String::from("expression") => Expression::Quote(Rc::new(args[0].clone()))
+                })]),
             )
             .eval(env)?)
         }

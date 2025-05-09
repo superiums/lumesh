@@ -1,31 +1,32 @@
 // 运算符重载（内存优化）
 
-use std::cmp::Ordering;
+use std::{cmp::Ordering, collections::HashMap, rc::Rc};
 
 use crate::RuntimeError;
 
 use super::Expression;
 
-use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Rem, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, Sub, SubAssign};
 
 impl Add for Expression {
     type Output = Result<Self, RuntimeError>;
 
     fn add(self, other: Self) -> Result<Self, RuntimeError> {
         match (self, other) {
-            // num
-            (Self::Integer(m), Self::Integer(n)) => match m.checked_add(n) {
-                Some(i) => Ok(Self::Integer(i)),
-                None => Err(RuntimeError::Overflow(format!("{} + {}", m, n))), // 溢出处理
-            },
+            // 数值运算
+            (Self::Integer(m), Self::Integer(n)) => m
+                .checked_add(n)
+                .map(Self::Integer)
+                .ok_or_else(|| RuntimeError::Overflow(format!("{} + {}", m, n))),
             (Self::Integer(m), Self::Float(n)) => Ok(Self::Float(m as f64 + n)),
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m + n as f64)),
             (Self::Float(m), Self::Float(n)) => Ok(Self::Float(m + n)),
 
-            // string
+            // 字符串拼接
             (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
             (Self::String(m), Self::Integer(n)) => Ok(Self::String(m + &n.to_string())),
             (Self::String(m), Self::Float(n)) => Ok(Self::String(m + &n.to_string())),
+
             // to-string
             (Self::Integer(m), Self::String(n)) => {
                 // 尝试将字符串转换为整数
@@ -48,27 +49,21 @@ impl Add for Expression {
                 }
             }
 
-            // list
-            (Self::List(mut a), Self::List(b)) => {
-                a.extend(b);
-                Ok(Self::List(a))
+            // 列表合并
+            // List concatenation
+            (Self::List(a), Self::List(b)) => {
+                // let mut new_list = a.as_ref().clone(); // Clone the list
+                // new_list.extend(b.as_ref().iter().cloned()); // Extend with the second list
+                // Ok(Self::List(Rc::new(new_list)))
+                Self::List(a).list_append(b)
             }
-            (Self::List(mut a), Self::Integer(n)) => {
-                a.push(Self::Integer(n));
-                Ok(Self::List(a))
-            }
-            (Self::List(mut a), Self::String(n)) => {
-                a.push(Self::String(n));
-                Ok(Self::List(a))
-            }
-            (Self::List(mut a), Self::Float(n)) => {
-                a.push(Self::Float(n));
-                Ok(Self::List(a))
-            }
+            (Self::List(a), other) => Self::List(a).list_push(other),
+
             // to-list
             (Self::Integer(m), Self::List(b)) => {
                 // 将列表内部元素求和
                 let sum: i64 = b
+                    .as_ref()
                     .iter()
                     .filter_map(|x| {
                         if let Self::Integer(n) = x {
@@ -83,6 +78,7 @@ impl Add for Expression {
             (Self::Float(m), Self::List(b)) => {
                 // 将列表内部元素求和
                 let sum: f64 = b
+                    .as_ref()
                     .iter()
                     .filter_map(|x| {
                         if let Self::Float(n) = x {
@@ -98,6 +94,7 @@ impl Add for Expression {
             }
             (Self::String(m), Self::List(b)) => {
                 let concatenated: String = b
+                    .as_ref()
                     .iter()
                     .filter_map(|x| {
                         if let Self::String(n) = x {
@@ -128,15 +125,23 @@ impl Add for Expression {
             //     Ok(Self::Bytes(a))
             // }
 
-            // map
-            (Self::Map(mut a), Self::Map(b)) => {
-                a.extend(b);
-                Ok(Self::Map(a))
+            // 映射合并
+
+            // Map merging
+            (Self::Map(a), Self::Map(b)) => {
+                Self::Map(a).map_append(b)
+                // let mut new_map = a.as_ref().clone();
+                // new_map.extend(b.as_ref().iter().map(|(k, v)| (k.clone(), v.clone())));
+
+                // Ok(Self::Map(Rc::new(new_map)))
             }
-            (Self::Map(mut a), Self::Symbol(n) | Self::String(n)) => {
-                a.insert(n.clone(), Self::String(n));
-                Ok(Self::Map(a))
+            (Self::Map(a), other) => {
+                Self::Map(a).map_insert(other.to_string(), other)
+                // let mut new_map = a.as_ref().clone();
+                // new_map.insert(other.to_string(), other); // Insert the other element
+                // Ok(Self::Map(Rc::new(new_map)))
             }
+
             // (Self::Map(mut a), Self::Integer(n)) => {
             //     a.insert(n.to_string(), Self::Integer(n));
             //     Ok(Self::Map(a))
@@ -160,11 +165,11 @@ impl Sub for Expression {
 
     fn sub(self, other: Self) -> Result<Self, RuntimeError> {
         match (self, other) {
-            // num
-            (Self::Integer(m), Self::Integer(n)) => match m.checked_sub(n) {
-                Some(i) => Ok(Self::Integer(i)),
-                None => Err(RuntimeError::Overflow(format!("{} - {}", m, n))), // 溢出处理
-            },
+            // 数值运算
+            (Self::Integer(m), Self::Integer(n)) => m
+                .checked_sub(n)
+                .map(Self::Integer)
+                .ok_or_else(|| RuntimeError::Overflow(format!("{} - {}", m, n))),
             (Self::Integer(m), Self::Float(n)) => Ok(Self::Float(m as f64 - n)),
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m - n as f64)),
             (Self::Float(m), Self::Float(n)) => Ok(Self::Float(m - n)),
@@ -221,58 +226,48 @@ impl Sub for Expression {
                 }
             }
 
-            // list
-            (Self::List(mut a), Self::List(b)) => {
-                // 从列表中移除另一个列表的元素
-                for item in b {
-                    a.retain(|x| x != &item);
-                }
-                Ok(Self::List(a))
-            }
-            (Self::List(mut a), Self::Integer(n)) => {
-                // 从列表中移除指定的整数
-                if let Some(pos) = a
-                    .iter()
-                    .position(|x| matches!(x, Self::Integer(val) if *val == n))
-                {
-                    a.remove(pos);
-                    Ok(Self::List(a))
+            (Self::List(a), Self::List(b)) => {
+                if Rc::ptr_eq(&a, &b) {
+                    Ok(Self::List(Rc::new(Vec::new()))) // Clear the list if they are the same
                 } else {
-                    Ok(Self::List(a))
+                    let mut a_items = a.as_ref().iter().cloned().collect::<Vec<_>>(); // Clone items directly into a new Vec
+                    let b_items = b.as_ref().iter().cloned().collect::<Vec<_>>(); // Use a HashSet for faster lookups
+                    a_items.retain(|x| !b_items.contains(x)); // Remove items in b from a
+                    Ok(Self::List(Rc::new(a_items)))
                 }
             }
-            (Self::List(mut a), Self::String(n)) => {
-                // 从列表中移除指定的字符串
-                if let Some(pos) = a
-                    .iter()
-                    .position(|x| matches!(x, Self::String(val) if val == &n))
-                {
-                    a.remove(pos);
-                    Ok(Self::List(a))
-                } else {
-                    Ok(Self::List(a))
-                }
-            }
-            // to-list
-            // ...non
 
-            // map
-            (Self::Map(mut a), Self::Map(b)) => {
-                // 从映射中移除另一个映射的属性
-                for key in b.keys() {
-                    if a.get(key) == b.get(key) {
-                        a.remove(key);
-                    }
-                }
-                Ok(Self::Map(a))
-            }
-            (Self::Map(mut a), Self::Symbol(key) | Self::String(key)) => {
-                // 从映射中移除指定的属性
-                if a.remove(&key).is_some() {
-                    Ok(Self::Map(a))
+            (Self::List(a), value) => {
+                let pos = a.as_ref().iter().position(|x| *x == value);
+
+                if let Some(pos) = pos {
+                    // Create a new Vec without the element at the found position
+                    let mut a_items: Vec<_> = a.as_ref().iter().cloned().collect();
+                    a_items.remove(pos);
+                    Ok(Self::List(Rc::new(a_items)))
                 } else {
-                    Ok(Self::Map(a))
+                    Ok(Self::List(a))
                 }
+            }
+
+            // Map operations
+            (Self::Map(a), Self::Map(b)) => {
+                // 如果两个 Rc 指向同一个 HashMap，返回一个新的空 HashMap
+                if Rc::ptr_eq(&a, &b) {
+                    return Ok(Self::Map(Rc::new(HashMap::new())));
+                }
+                // 创建一个新的 HashMap，直接从 a 中移除 b 中的键
+                let mut a_map = a.as_ref().clone(); // 只在这里克隆一次
+                for key in b.as_ref().keys() {
+                    a_map.remove(key); // 从 a_map 中移除 b_map 的键
+                }
+                Ok(Self::Map(Rc::new(a_map)))
+            }
+
+            (Self::Map(a), Self::Symbol(key) | Self::String(key)) => {
+                let mut new_map = a.as_ref().clone();
+                new_map.remove(&key);
+                Ok(Self::from(new_map))
             }
 
             // 其他情况
@@ -329,70 +324,35 @@ impl Mul for Expression {
             }
 
             // list
-            (Self::List(a), Self::Integer(n)) => {
-                // 将列表中的每个元素乘以 n
-                let mut new_list = Vec::new();
-                for element in a {
-                    match element {
-                        Self::Integer(val) => new_list.push(Self::Integer(val * n)),
-                        Self::Float(val) => new_list.push(Self::Float(val * n as f64)),
-                        _ => {
-                            return Err(RuntimeError::CommandFailed2(
-                                "*".into(),
-                                format!("Cannot multiply non-numeric element {:?}", element),
-                            ));
-                        }
-                    }
-                }
-                Ok(Self::List(new_list))
-            }
-            (Self::List(a), Self::Float(n)) => {
-                // 将列表中的每个元素乘以 n
-                let mut new_list = Vec::new();
-                for element in a {
-                    match element {
-                        Self::Integer(val) => new_list.push(Self::Float(val as f64 * n)),
-                        Self::Float(val) => new_list.push(Self::Float(val * n)),
-                        _ => {
-                            return Err(RuntimeError::CommandFailed2(
-                                "*".into(),
-                                format!("Cannot multiply non-numeric element {:?}", element),
-                            ));
-                        }
-                    }
-                }
-                Ok(Self::List(new_list))
-            }
-
             (Self::List(a), Self::List(b)) => {
                 // 矩阵乘法
                 // 假设 a 是 m x n 矩阵，b 是 n x p 矩阵
-                let a_rows = a.len();
+                let a_rows = a.as_ref().len();
                 let a_cols = if a_rows > 0 {
-                    match &a[0] {
-                        Self::List(inner) => inner.len(),
+                    match &a.as_ref()[0] {
+                        Self::List(inner) => inner.as_ref().len(),
                         _ => 0,
                     }
                 } else {
                     0
                 };
-                let b_cols = if b.len() > 0 {
-                    match &b[0] {
-                        Self::List(inner) => inner.len(),
+                let b_cols = if b.as_ref().len() > 0 {
+                    match &b.as_ref()[0] {
+                        Self::List(inner) => inner.as_ref().len(),
                         _ => 0,
                     }
                 } else {
                     0
                 };
 
-                if a_cols != b.len() {
+                if a_cols != b.as_ref().len() {
                     return Err(RuntimeError::CommandFailed2(
                         "*".into(),
                         format!(
                             "Matrix dimensions do not match for multiplication: {}x{} and {}x{}",
                             a_rows,
                             a_cols,
-                            b.len(),
+                            b.as_ref().len(),
                             b_cols
                         ),
                     ));
@@ -404,8 +364,8 @@ impl Mul for Expression {
                     for j in 0..b_cols {
                         let mut sum = 0.0; // 使用浮点数进行计算
                         for k in 0..a_cols {
-                            let a_value = match &a[i] {
-                                Self::List(inner) => match inner.get(k) {
+                            let a_value = match &a.as_ref()[i] {
+                                Self::List(inner) => match inner.as_ref().get(k) {
                                     Some(val) => match val {
                                         Self::Integer(v) => *v as f64,
                                         Self::Float(v) => *v,
@@ -415,8 +375,8 @@ impl Mul for Expression {
                                 },
                                 _ => 0.0,
                             };
-                            let b_value = match &b[k] {
-                                Self::List(inner) => match inner.get(j) {
+                            let b_value = match &b.as_ref()[k] {
+                                Self::List(inner) => match inner.as_ref().get(j) {
                                     Some(val) => match val {
                                         Self::Integer(v) => *v as f64,
                                         Self::Float(v) => *v,
@@ -430,9 +390,37 @@ impl Mul for Expression {
                         }
                         row_result.push(Self::Float(sum));
                     }
-                    result.push(Self::List(row_result));
+                    result.push(Self::from(row_result));
                 }
-                Ok(Self::List(result))
+                Ok(Self::from(result))
+            }
+
+            (Self::List(a), value) => {
+                let mut new_list = Vec::new();
+                let n = match value {
+                    Self::Integer(n) => n as f64, // 将整数转换为浮点数
+                    Self::Float(n) => n,
+                    _ => {
+                        return Err(RuntimeError::CommandFailed2(
+                            "*".into(),
+                            format!("Cannot multiply by non-numeric value {:?}", value),
+                        ));
+                    }
+                };
+
+                for element in a.as_ref().iter() {
+                    match element {
+                        Self::Integer(val) => new_list.push(Self::Float(*val as f64 * n)),
+                        Self::Float(val) => new_list.push(Self::Float(val * n)),
+                        _ => {
+                            return Err(RuntimeError::CommandFailed2(
+                                "*".into(),
+                                format!("Cannot multiply non-numeric element {:?}", element),
+                            ));
+                        }
+                    }
+                }
+                Ok(Self::from(new_list))
             }
 
             // 其他情况
@@ -486,33 +474,32 @@ impl Div for Expression {
             }
 
             // 列表类型
-            (Self::List(a), Self::Integer(n)) => {
+            (Self::List(a), value) => {
+                let divisor = match value {
+                    Self::Integer(n) => n as f64,
+                    Self::Float(n) => n,
+                    _ => {
+                        return Err(RuntimeError::CommandFailed2(
+                            "/".into(),
+                            format!("Cannot divide by non-numeric value {:?}", value),
+                        ));
+                    }
+                };
+
                 let new_list: Result<Vec<Self>, RuntimeError> = a
-                    .into_iter()
+                    .as_ref()
+                    .iter()
                     .map(|element| match element {
-                        Self::Integer(val) => Ok(Self::Float(val as f64 / n as f64)),
-                        Self::Float(val) => Ok(Self::Float(val / n as f64)),
+                        Self::Integer(val) => Ok(Self::Float(*val as f64 / divisor)),
+                        Self::Float(val) => Ok(Self::Float(val / divisor)),
                         _ => Err(RuntimeError::CommandFailed2(
                             "/".into(),
                             format!("Cannot divide non-numeric element {:?}", element),
                         )),
                     })
                     .collect();
-                new_list.map(Self::List) // 将 Result<Vec<Self>, RuntimeError> 转换为 Result<Self, RuntimeError>
-            }
-            (Self::List(a), Self::Float(n)) => {
-                let new_list: Result<Vec<Self>, RuntimeError> = a
-                    .into_iter()
-                    .map(|element| match element {
-                        Self::Integer(val) => Ok(Self::Float(val as f64 / n)),
-                        Self::Float(val) => Ok(Self::Float(val / n)),
-                        _ => Err(RuntimeError::CommandFailed2(
-                            "/".into(),
-                            format!("Cannot divide non-numeric element {:?}", element),
-                        )),
-                    })
-                    .collect();
-                new_list.map(Self::List) // 将 Result<Vec<Self>, RuntimeError> 转换为 Result<Self, RuntimeError>
+
+                new_list.map(Self::from) // 将 Result<Vec<Self>, RuntimeError> 转换为 Result<Self, RuntimeError>
             }
 
             // 其他情况
@@ -592,26 +579,34 @@ impl Rem for Expression {
     }
 }
 
-impl<T> Index<T> for Expression
-where
-    T: Into<Self>,
-{
-    type Output = Self;
+// impl<T> Index<T> for Expression
+// where
+//     T: Into<Expression>,
+// {
+//     type Output = Expression;
 
-    fn index(&self, idx: T) -> &Self {
-        match (self, idx.into()) {
-            (Self::Map(m), Self::Symbol(name)) | (Self::Map(m), Self::String(name)) => {
-                match m.get(&name) {
-                    Some(val) => val,
-                    None => &Self::None,
-                }
-            }
+//     fn index(&self, idx: T) -> &Self::Output {
+//         match (self, idx.into()) {
+//             // 处理 Map 索引
+//             (Expression::Map(map), Expression::Symbol(name)) => {
+//                 map.as_ref().get(&name).unwrap_or(&Expression::None)
+//             }
+//             (Expression::Map(map), Expression::String(name)) => {
+//                 map.as_ref().get(&name).unwrap_or(&Expression::None)
+//             }
 
-            (Self::List(list), Self::Integer(n)) if list.len() > n as usize => &list[n as usize],
-            _ => &Self::None,
-        }
-    }
-}
+//             // 处理 List 索引
+//             (Expression::List(list), Expression::Integer(n))
+//                 if n >= 0 && (n as usize) < list.as_ref().len() =>
+//             {
+//                 &list.as_ref()[n as usize]
+//             }
+
+//             // 其他情况返回 None
+//             _ => &Expression::None,
+//         }
+//     }
+// }
 
 /// PartialOrd实现
 impl PartialOrd for Expression {
@@ -622,7 +617,7 @@ impl PartialOrd for Expression {
             (Self::String(a), Self::String(b)) => a.partial_cmp(b),
             (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
             (Self::List(a), Self::List(b)) => a.partial_cmp(b),
-            (Self::Map(a), Self::Map(b)) => a.keys().partial_cmp(b.keys()),
+            (Self::Map(a), Self::Map(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
             _ => None,
         }
     }

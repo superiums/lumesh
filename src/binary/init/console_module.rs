@@ -14,7 +14,7 @@ pub fn get() -> Expression {
             std::io::stdout().flush().unwrap();
             Ok(Expression::None)
         }, "flush the console"),
-        String::from("mode") => Expression::Map(hash_map! {
+        String::from("mode") => Expression::from(hash_map! {
             String::from("raw") => Expression::builtin("raw", |_, _| {
                 match crossterm::terminal::enable_raw_mode() {
                     Ok(_) => Ok(Expression::None),
@@ -36,7 +36,7 @@ pub fn get() -> Expression {
                 Ok(Expression::None)
             }, "disable alternate screen"),
         }),
-        String::from("cursor") => Expression::Map(hash_map! {
+        String::from("cursor") => Expression::from(hash_map! {
             String::from("to") => Expression::builtin("to", |args, env| {
                 super::check_exact_args_len("to", &args, 2)?;
                 let x = args[0].clone().eval(env)?;
@@ -115,7 +115,7 @@ pub fn get() -> Expression {
             }, "show the cursor"),
         }),
 
-        String::from("keyboard") => Expression::Map(hash_map! {
+        String::from("keyboard") => Expression::from(hash_map! {
             String::from("read_line") => Expression::builtin("read_line", |_, _| {
                 let mut buffer = String::new();
                 std::io::stdin().read_line(&mut buffer).unwrap();
@@ -156,7 +156,7 @@ pub fn get() -> Expression {
                     _ => Expression::None
                 })
             }, "read a key from the keyboard"),
-            String::from("keys") => Expression::Map(hash_map! {
+            String::from("keys") => Expression::from(hash_map! {
                 String::from("enter") => Expression::String("\n".to_string()),
                 String::from("backspace") => Expression::String("\x08".to_string()),
                 String::from("delete") => Expression::String("\x7f".to_string()),

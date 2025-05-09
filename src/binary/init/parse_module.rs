@@ -60,14 +60,14 @@ fn json_to_expr(val: JsonValue) -> Expression {
             for e in a {
                 v.push(json_to_expr(e));
             }
-            Expression::List(v)
+            Expression::from(v)
         }
         JsonValue::Object(o) => {
             let mut m = HashMap::new();
             for (k, v) in o.iter() {
                 m.insert(k.to_string(), json_to_expr(v.clone()));
             }
-            Expression::Map(m)
+            Expression::from(m)
         }
     }
 }
@@ -97,14 +97,14 @@ fn toml_to_expr(val: toml::Value) -> Expression {
             for e in a {
                 v.push(toml_to_expr(e));
             }
-            Expression::List(v)
+            Expression::from(v)
         }
         toml::Value::Table(o) => {
             let mut m = HashMap::new();
             for (k, v) in o.iter() {
                 m.insert(k.to_string(), toml_to_expr(v.clone()));
             }
-            Expression::Map(m)
+            Expression::from(m)
         }
     }
 }

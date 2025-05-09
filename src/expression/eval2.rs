@@ -8,6 +8,7 @@ use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, RuntimeError};
 use std::io::ErrorKind;
 use std::io::Write;
+
 // Expression求值2
 impl Expression {
     /// 处理复杂表达式的递归求值
@@ -16,40 +17,55 @@ impl Expression {
             // 控制流表达式
             Self::For(var, list_expr, body) => {
                 // 求值列表表达式
-                let list = list_expr.eval_mut(true, env, depth + 1)?.as_list()?.clone();
+                let list = list_expr
+                    .as_ref()
+                    .clone()
+                    .eval_mut(true, env, depth + 1)?
+                    .as_list()?
+                    .clone();
 
                 // 遍历每个元素执行循环体
                 let mut result = Vec::with_capacity(list.len());
                 for item in list.iter() {
                     env.define(&var, item.clone());
-                    let last = body.clone().eval_mut(true, env, depth + 1)?;
+                    let last = body.as_ref().clone().eval_mut(true, env, depth + 1)?;
                     result.push(last)
                 }
-                Ok(Expression::List(result))
+                Ok(Expression::from(result))
             }
             Self::While(cond, body) => {
                 // 循环求值直到条件为假
                 let mut last = Self::None;
-                while cond.clone().eval_mut(true, env, depth + 1)?.is_truthy() {
-                    last = body.clone().eval_mut(true, env, depth + 1)?;
+                while cond
+                    .as_ref()
+                    .clone()
+                    .eval_mut(true, env, depth + 1)?
+                    .is_truthy()
+                {
+                    last = body.as_ref().clone().eval_mut(true, env, depth + 1)?;
                 }
                 Ok(last)
             }
             Self::If(cond, true_expr, false_expr) => {
                 // 条件分支求值
-                return if cond.eval_mut(true, env, depth + 1)?.is_truthy() {
-                    true_expr.eval_mut(true, env, depth + 1)
+                return if cond
+                    .as_ref()
+                    .clone()
+                    .eval_mut(true, env, depth + 1)?
+                    .is_truthy()
+                {
+                    true_expr.as_ref().clone().eval_mut(true, env, depth + 1)
                 } else {
-                    false_expr.eval_mut(true, env, depth + 1)
+                    false_expr.as_ref().clone().eval_mut(true, env, depth + 1)
                 };
             }
 
             Self::Match(value, branches) => {
                 // 模式匹配求值
-                let val = value.eval_mut(true, env, depth + 1)?;
+                let val = value.as_ref().clone().eval_mut(true, env, depth + 1)?;
                 for (pat, expr) in branches {
                     if matches_pattern(&val, &pat, env)? {
-                        return expr.eval_mut(true, env, depth + 1);
+                        return expr.as_ref().clone().eval_mut(true, env, depth + 1);
                     }
                 }
                 Err(RuntimeError::NoMatchingBranch(val.to_string()))
@@ -115,15 +131,15 @@ impl Expression {
                 // let mut child_env = env.clone();
                 // 顺序求值语句块
                 let mut last = Self::None;
-                for expr in exprs {
-                    last = expr.eval_mut(true, env, depth + 1)?;
+                for expr in exprs.as_ref() {
+                    last = expr.clone().eval_mut(true, env, depth + 1)?;
                 }
                 Ok(last)
             }
 
             Self::Return(expr) => {
                 // 提前返回机制
-                Err(RuntimeError::EarlyReturn(expr.eval_mut(
+                Err(RuntimeError::EarlyReturn(expr.as_ref().clone().eval_mut(
                     true,
                     env,
                     depth + 1,
@@ -184,7 +200,7 @@ impl Expression {
                     "|>" => {
                         // 执行左侧表达式
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let left_func = lhs.ensure_apply();
+                        let left_func = lhs.as_ref().clone().ensure_apply();
                         let left_output = left_func.eval_mut(true, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
 
@@ -193,16 +209,24 @@ impl Expression {
 
                         // 将左侧结果作为最后一个参数传递给右侧
                         let args = vec![left_output];
-                        rhs.append_args(args).eval_mut(true, env, depth + 1)
+                        rhs.as_ref()
+                            .clone()
+                            .append_args(args)
+                            .eval_mut(true, env, depth + 1)
                     }
                     ">>>" => {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let left_func = lhs.ensure_apply();
+                        let left_func = lhs.as_ref().clone().ensure_apply();
                         let l = left_func.eval_mut(true, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
 
                         let mut path = std::env::current_dir()?;
-                        path = path.join(rhs.clone().eval_mut(true, env, depth + 1)?.to_string());
+                        path = path.join(
+                            rhs.as_ref()
+                                .clone()
+                                .eval_mut(true, env, depth + 1)?
+                                .to_string(),
+                        );
                         match std::fs::OpenOptions::new().append(true).open(&path) {
                             Ok(mut file) => {
                                 // use std::io::prelude::*;
@@ -228,7 +252,7 @@ impl Expression {
                             Err(e) => {
                                 return Err(match e.kind() {
                                     ErrorKind::PermissionDenied => {
-                                        RuntimeError::PermissionDenied(*rhs.clone())
+                                        RuntimeError::PermissionDenied(rhs.as_ref().clone())
                                     }
                                     _ => RuntimeError::CustomError(format!(
                                         "could not open file {}: {:?}",
@@ -242,12 +266,17 @@ impl Expression {
                     ">>" => {
                         // dbg!("-->>--", &lhs);
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let left_func = lhs.ensure_apply();
+                        let left_func = lhs.as_ref().clone().ensure_apply();
                         let l = left_func.eval_mut(true, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
                         // dbg!("-->> left=", &l);
                         let mut path = std::env::current_dir()?;
-                        path = path.join(rhs.clone().eval_mut(true, env, depth + 1)?.to_string());
+                        path = path.join(
+                            rhs.as_ref()
+                                .clone()
+                                .eval_mut(true, env, depth + 1)?
+                                .to_string(),
+                        );
                         // If the contents are bytes, write the bytes directly to the file.
                         let result = if let Expression::Bytes(bytes) = l.clone() {
                             std::fs::write(path, bytes)
@@ -266,7 +295,13 @@ impl Expression {
                     }
                     "<<" => {
                         // 输入重定向处理
-                        return handle_stdin_redirect(*lhs, *rhs, env, depth, true);
+                        return handle_stdin_redirect(
+                            lhs.as_ref().clone(),
+                            rhs.as_ref().clone(),
+                            env,
+                            depth,
+                            true,
+                        );
                         // let path = rhs.eval_mut(true,env, depth + 1)?.to_string();
                         // let contents = std::fs::read_to_string(path)
                         //     .map(Self::String)
@@ -283,7 +318,7 @@ impl Expression {
             }
             Self::Catch(body, typ, deeling) => {
                 // dbg!(&typ, &deeling);
-                let result = body.clone().eval_mut(true, env, depth + 1);
+                let result = body.as_ref().clone().eval_mut(true, env, depth + 1);
                 match result {
                     Ok(result) => Ok(result),
                     Err(e) => catch_error(e, body, typ, deeling, env, depth + 1),
@@ -303,10 +338,10 @@ impl Expression {
         // 函数应用
         match self {
             Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
-                dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
 
                 // 递归求值函数和参数
-                let func_eval = func.clone().eval_mut(true, env, depth + 1)?;
+                let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
                 // let args_eval = args
                 //     .into_iter()
                 //     .map(|a| a.clone().eval_mut(true,env, depth + 1))
@@ -410,7 +445,7 @@ impl Expression {
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
                         // dbg!("   3.--->applying Builtin:", &func, &args);
-                        match body(args.clone(), env) {
+                        match body(args.as_ref().clone(), env) {
                             Ok(result) => {
                                 self.set_status_code(0, env);
                                 // dbg!(&result);
@@ -438,7 +473,11 @@ impl Expression {
 
                         match bind_arguments(params, evaluated_args, &mut current_env) {
                             // 完全应用：求值函数体
-                            None => body.eval_mut(true, &mut current_env, depth + 1),
+                            None => {
+                                body.as_ref()
+                                    .clone()
+                                    .eval_mut(true, &mut current_env, depth + 1)
+                            }
 
                             // 部分应用：返回新的柯里化lambda
                             Some(remain) => Ok(Self::Lambda(remain, body)),
@@ -468,6 +507,7 @@ impl Expression {
                         }
 
                         let mut actual_args = args
+                            .as_ref()
                             .into_iter()
                             .map(|a| a.clone().eval_mut(true, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
@@ -494,7 +534,7 @@ impl Expression {
                             Some(collector) => {
                                 new_env.define(
                                     collector.as_str(),
-                                    Expression::List(actual_args.clone()[params.len()..].to_vec()),
+                                    Expression::from(actual_args.clone()[params.len()..].to_vec()),
                                 );
                             }
                             _ => {}
@@ -511,7 +551,11 @@ impl Expression {
                         //     }
                         // }
                         // dbg!(&new_env);
-                        return match body.eval_mut(true, &mut new_env, depth + 1) {
+                        return match body
+                            .as_ref()
+                            .clone()
+                            .eval_mut(true, &mut new_env, depth + 1)
+                        {
                             Ok(v) => {
                                 self.set_status_code(0, env);
                                 Ok(v)
@@ -527,7 +571,10 @@ impl Expression {
                             }
                         };
                     }
-                    _ => Err(RuntimeError::CannotApply(*func.clone(), args.clone())),
+                    _ => Err(RuntimeError::CannotApply(
+                        func.as_ref().clone(),
+                        args.as_ref().clone(),
+                    )),
                 };
             }
             _ => Err(RuntimeError::CustomError(self.to_string())), // unreachable!(),

@@ -146,7 +146,7 @@ fn include(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, c
 fn exit(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     if args.is_empty() {
         std::process::exit(0);
-    } else if let Expression::Integer(n) = args[0].clone().eval(env)? {
+    } else if let Expression::Integer(n) = args[0].eval(env)? {
         std::process::exit(n as i32);
     } else {
         Err(LmError::CustomError(format!(
@@ -188,7 +188,7 @@ fn get_type(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     check_exact_args_len("type", &args, 1)?;
     let x_type = args[0].type_name();
     let rs = if &x_type == "Symbol" {
-        args[0].clone().eval(env)?.type_name()
+        args[0].eval(env)?.type_name()
     } else {
         x_type
     };
@@ -209,7 +209,7 @@ fn print(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
     if result.len() == 1 {
         return Ok(result[0].clone());
     }
-    Ok(Expression::List(result))
+    Ok(Expression::from(result))
 }
 
 fn debug(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
@@ -235,7 +235,7 @@ fn println(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     if result.len() == 1 {
         return Ok(result[0].clone());
     }
-    Ok(Expression::List(result))
+    Ok(Expression::from(result))
 }
 
 fn eprint(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
@@ -253,7 +253,7 @@ fn eprint(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     if result.len() == 1 {
         return Ok(result[0].clone());
     }
-    Ok(Expression::List(result))
+    Ok(Expression::from(result))
 }
 fn eprintln(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
@@ -265,7 +265,7 @@ fn eprintln(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     if result.len() == 1 {
         return Ok(result[0].clone());
     }
-    Ok(Expression::List(result))
+    Ok(Expression::from(result))
 }
 
 fn input(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
@@ -310,13 +310,17 @@ fn insert(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     let mut arr = args[0].eval(env)?;
     let idx = args[1].eval(env)?;
     let val = args[2].eval(env)?;
-    match (&mut arr, &idx) {
+    return match (&mut arr, &idx) {
         (Expression::Map(exprs), Expression::String(key)) => {
-            exprs.insert(key.clone(), val);
+            let mut result = exprs.as_ref().clone();
+            result.insert(key.clone(), val);
+            Ok(Expression::from(result))
         }
         (Expression::List(exprs), Expression::Integer(i)) => {
-            if *i as usize <= exprs.len() {
-                exprs.insert(*i as usize, val);
+            if *i as usize <= exprs.as_ref().len() {
+                let mut result = exprs.as_ref().clone();
+                result.insert(*i as usize, val);
+                Ok(Expression::from(result))
             } else {
                 return Err(LmError::CustomError(format!(
                     "index {} out of bounds for {:?}",
@@ -327,6 +331,7 @@ fn insert(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
         (Expression::String(s), Expression::Integer(i)) => {
             if *i as usize <= s.len() {
                 s.insert_str(*i as usize, &val.to_string());
+                Ok(Expression::String(s.clone()))
             } else {
                 return Err(LmError::CustomError(format!(
                     "index {} out of bounds for {:?}",
@@ -340,16 +345,16 @@ fn insert(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
                 val, arr, idx
             )));
         }
-    }
+    };
 
-    Ok(arr)
+    // Ok(arr)
 }
 
 fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("len", &args, 1)?;
     match args[0].eval(env)? {
-        Expression::Map(m) => Ok(Expression::Integer(m.len() as Int)),
-        Expression::List(list) => Ok(Expression::Integer(list.len() as Int)),
+        Expression::Map(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
+        Expression::List(list) => Ok(Expression::Integer(list.as_ref().len() as Int)),
         Expression::Symbol(x) | Expression::String(x) => {
             Ok(Expression::Integer(x.chars().count() as Int))
         }
@@ -378,11 +383,11 @@ fn len(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate
 
 fn eval(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut new_env = env.clone();
-    Ok(args[0].clone().eval(env)?.eval(&mut new_env)?)
+    Ok(args[0].eval(env)?.eval(&mut new_env)?)
 }
 
 fn exec(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    Ok(args[0].clone().eval(env)?.eval(env)?)
+    Ok(args[0].eval(env)?.eval(env)?)
 }
 
 fn report(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {

@@ -17,7 +17,7 @@ fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
             for s in y.split(&x) {
                 v.push(Expression::String(s.to_string()));
             }
-            Ok(Expression::List(v))
+            Ok(Expression::from(v))
         }
         (a, b) => Err(LmError::CustomError(format!(
             "expected string, got values {} and {}",
@@ -261,7 +261,7 @@ pub fn get() -> Expression {
             Ok(match expr {
                 Expression::List(list) => {
                     let mut joined = String::new();
-                    for (i, item) in list.iter().enumerate() {
+                    for (i, item) in list.as_ref().iter().enumerate() {
                         if i != 0 {
                             joined.push_str(&separator.to_string());
                         }
@@ -277,10 +277,10 @@ pub fn get() -> Expression {
             super::check_exact_args_len("lines", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
             Ok(match expr {
-                Expression::Symbol(x) | Expression::String(x) => Expression::List(
+                Expression::Symbol(x) | Expression::String(x) => Expression::from(
                     x.lines()
                         .map(|line| Expression::String(line.to_string()))
-                        .collect(),
+                        .collect::<Vec<Expression>>(),
                 ),
                 _ => Expression::None,
             })
@@ -298,7 +298,7 @@ pub fn get() -> Expression {
             // })
 
             match args[0].eval(env)? {
-                Expression::Symbol(x) | Expression::String(x) => Ok(Expression::List(
+                Expression::Symbol(x) | Expression::String(x) => Ok(Expression::from(
                     x.chars()
                         .map(|ch| Expression::String(ch.to_string()))
                         .collect::<Vec<Expression>>(),
@@ -314,10 +314,11 @@ pub fn get() -> Expression {
             super::check_exact_args_len("words", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
             Ok(match expr {
-                Expression::Symbol(x) | Expression::String(x) => Expression::List(
+                Expression::Symbol(x) | Expression::String(x) => Expression::from(
                     x.split_whitespace()
                         .map(|word| Expression::String(word.to_string()))
-                        .collect(),
+                        .collect::<Vec<Expression>>(),
+
                 ),
                 _ => Expression::None,
             })
@@ -327,10 +328,11 @@ pub fn get() -> Expression {
             super::check_exact_args_len("paragraphs", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
             Ok(match expr {
-                Expression::Symbol(x) | Expression::String(x) => Expression::List(
+                Expression::Symbol(x) | Expression::String(x) => Expression::from(
                     x.split("\n\n")
                         .map(|paragraph| Expression::String(paragraph.to_string()))
-                        .collect(),
+                        .collect::<Vec<Expression>>(),
+
                 ),
                 _ => Expression::None,
             })
@@ -342,7 +344,7 @@ pub fn get() -> Expression {
             let index = args[1].clone().eval(env)?;
             Ok(match (expr, index) {
                 (Expression::Symbol(x) | Expression::String(x), Expression::Integer(i)) => {
-                    Expression::List(vec![
+                    Expression::from(vec![
                         Expression::String(x[..i as usize].to_string()),
                         Expression::String(x[i as usize..].to_string()),
                     ])

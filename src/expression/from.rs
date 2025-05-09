@@ -1,5 +1,5 @@
 use super::{Environment, Expression, Int};
-use std::collections::HashMap;
+use std::{collections::HashMap, rc::Rc};
 
 impl From<Int> for Expression {
     fn from(x: Int) -> Self {
@@ -42,11 +42,11 @@ where
     T: Into<Self>,
 {
     fn from(map: HashMap<String, T>) -> Self {
-        Self::Map(
+        Self::Map(Rc::new(
             map.into_iter()
                 .map(|(name, item)| (name, item.into()))
                 .collect::<HashMap<String, Self>>(),
-        )
+        ))
     }
 }
 
@@ -55,16 +55,16 @@ where
     T: Into<Self>,
 {
     fn from(list: Vec<T>) -> Self {
-        Self::List(
+        Self::List(Rc::new(
             list.into_iter()
                 .map(|item| item.into())
                 .collect::<Vec<Self>>(),
-        )
+        ))
     }
 }
 
 impl From<Environment> for Expression {
     fn from(env: Environment) -> Self {
-        Self::Map(env.get_bindings_map())
+        Self::from(env.get_bindings_map())
     }
 }

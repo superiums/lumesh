@@ -41,7 +41,7 @@ pub fn get() -> Expression {
     let fs_module = hash_map! {
 
         String::from("dirs") => Expression::builtin("dirs", |_, _| {
-            let mut dir_tree = hash_map! {};
+            let mut dir_tree: HashMap<String,String> = hash_map! {};
 
             if let Some(home_dir) = dirs::home_dir() {
                 let home_dir = home_dir.into_os_string().into_string().unwrap();
@@ -96,7 +96,7 @@ pub fn get() -> Expression {
             let current_dir = path.into_os_string().into_string().unwrap();
             dir_tree.insert("current".into(),current_dir.into());
 
-            Ok(Expression::Map(dir_tree))
+            Ok(Expression::from(dir_tree))
         },"get sys dirs"),
 
         String::from("tree") => Expression::builtin("tree", |args, env| {
@@ -372,7 +372,7 @@ pub fn get() -> Expression {
     };
 
     // env.define_module("fs", fs_module.clone());
-    Expression::Map(fs_module)
+    Expression::from(fs_module)
 }
 
 /// Copy one path to another path.
@@ -521,7 +521,7 @@ fn list_directory(dir: &Path, short: &Path) -> Result<Expression, LmError> {
         Ok(result.into())
     } else if dir.is_file() {
         // If the path is a file, return the file's name as a string in a list.
-        return Ok(Expression::List(vec![format!("{}", dir.display()).into()]));
+        return Ok(Expression::from(vec![format!("{}", dir.display())]));
     } else {
         // Otherwise, the path is neither a file nor a directory, so throw an error.
         return Err(LmError::CustomError(format!(

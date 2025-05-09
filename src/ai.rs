@@ -15,26 +15,26 @@ pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
     // dbg!(&ai_cfg);
     return match ai_cfg {
         Expression::Map(cfg_map) => MockAIClient {
-            host: match cfg_map.get("host") {
+            host: match cfg_map.as_ref().get("host") {
                 Some(h) => h.to_string(),
                 _ => "localhost:11434".into(),
             },
-            complete_url: match cfg_map.get("complete_url") {
+            complete_url: match cfg_map.as_ref().get("complete_url") {
                 Some(h) => h.to_string(),
                 _ => "/completion".into(),
             },
-            chat_url: match cfg_map.get("chat_url") {
+            chat_url: match cfg_map.as_ref().get("chat_url") {
                 Some(h) => h.to_string(),
                 _ => "/v1/chat/completions".into(),
             },
-            complete_max_tokens: match cfg_map.get("complete_max_tokens") {
+            complete_max_tokens: match cfg_map.as_ref().get("complete_max_tokens") {
                 Some(h) => match h {
                     Expression::Integer(c_token) => *c_token as u8,
                     _ => 10,
                 },
                 _ => 10,
             },
-            chat_max_tokens: match cfg_map.get("chat_max_tokens") {
+            chat_max_tokens: match cfg_map.as_ref().get("chat_max_tokens") {
                 Some(h) => match h {
                     Expression::Integer(c_token) => *c_token as u8,
                     _ => 100,
@@ -42,11 +42,11 @@ pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
                 _ => 100,
             },
 
-            model: match cfg_map.get("model") {
+            model: match cfg_map.as_ref().get("model") {
                 Some(h) => h.to_string(),
                 _ => "".into(),
             },
-            system_prompt: match cfg_map.get("system_prompt") {
+            system_prompt: match cfg_map.as_ref().get("system_prompt") {
                 Some(h) => h.to_string(),
                 _ => "you're a lumesh shell helper".into(),
             },

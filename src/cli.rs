@@ -99,7 +99,12 @@ fn main() {
     // argv
     env.define(
         "argv",
-        Expression::List(cli.argv.into_iter().map(Expression::String).collect()),
+        Expression::from(
+            cli.argv
+                .into_iter()
+                .map(Expression::String)
+                .collect::<Vec<Expression>>(),
+        ),
     );
     // bultiin
     // binary::init(&mut env);

@@ -31,8 +31,8 @@ fn choose(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     match args[0].eval(env)? {
         Expression::List(list) => {
             let mut rng = rand::thread_rng();
-            let n = Uniform::new(0, list.len());
-            Ok(list[rng.sample(n)].clone())
+            let n = Uniform::new(0, list.as_ref().len());
+            Ok(list.as_ref()[rng.sample(n)].clone())
         }
         otherwise => Err(LmError::CustomError(format!(
             "expected a list, but got {}",
@@ -44,10 +44,10 @@ fn choose(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 fn shuffle(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("shuffle", &args, 1)?;
     match args[0].eval(env)? {
-        Expression::List(mut list) => {
+        Expression::List(list) => {
             let mut rng = rand::thread_rng();
-            list.shuffle(&mut rng);
-            Ok(list.into())
+            list.as_ref().clone().shuffle(&mut rng);
+            Ok(Expression::List(list))
         }
         otherwise => Err(LmError::CustomError(format!(
             "expected a list, but got {}",

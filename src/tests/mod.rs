@@ -1,4 +1,6 @@
-use crate::{Diagnostic, Expression, SyntaxErrorKind, parse_script, tokenize};
+use std::rc::Rc;
+
+use crate::{Diagnostic, Environment, Expression, SyntaxErrorKind, parse_script, tokenize};
 
 #[track_caller]
 fn tokenize_test(input: &str, expected: &str) {
@@ -31,21 +33,154 @@ fn parse_test(input: &str, expected: &str) -> Result<(), nom::Err<SyntaxErrorKin
 //     parse_expr("x = y ?? z").should_fail_with("Expected '??' operator handler");
 // }
 #[test]
+fn performance_test() {
+    use std::time::Instant;
+
+    // 测试1: 简单表达式的构造和克隆
+    let _ = Instant::now();
+    let expr = Expression::BinaryOp(
+        "+".to_string(),
+        Rc::new(Expression::Integer(1)),
+        Rc::new(Expression::Integer(2)),
+    );
+    let clone_time = Instant::now();
+    let _ = expr.clone();
+    let clone_duration = clone_time.elapsed();
+
+    // 测试2: 深度表达式的求值
+    let mut env = Environment::new();
+    let eval_start = Instant::now();
+    let _ = expr.eval(&mut env);
+    let eval_duration = eval_start.elapsed();
+
+    println!("Clone time: {:?}", clone_duration);
+    println!("Eval time: {:?}", eval_duration);
+    assert_eq!(clone_duration, eval_duration);
+
+    // 对比Box版本的类似测试...
+}
+
+#[test]
+fn performance_test2() {
+    use std::time::Instant;
+
+    // 测试1: 简单表达式的构造和克隆
+    let _ = Instant::now();
+    let expr = Expression::BinaryOp(
+        "..".to_string(),
+        Rc::new(Expression::Integer(1)),
+        Rc::new(Expression::Integer(10000)),
+    );
+    let clone_time = Instant::now();
+    let _ = expr.clone();
+    let clone_duration = clone_time.elapsed();
+
+    // 测试2: 深度表达式的求值
+    let mut env = Environment::new();
+    let eval_start = Instant::now();
+    let _ = expr.eval(&mut env);
+    let eval_duration = eval_start.elapsed();
+
+    println!("Clone time: {:?}", clone_duration);
+    println!("Eval time: {:?}", eval_duration);
+
+    assert_eq!(clone_duration, eval_duration);
+    // 对比Box版本的类似测试...
+}
+#[test]
+fn performance_test3() {
+    use std::time::Instant;
+
+    // 测试1: 简单表达式的构造和克隆
+    let _ = Instant::now();
+    let r = Expression::BinaryOp(
+        "..".to_string(),
+        Rc::new(Expression::Integer(1)),
+        Rc::new(Expression::Integer(1000000)),
+    );
+    let expr = Expression::For(
+        "i".into(),
+        Rc::new(r),
+        Rc::new(Expression::BinaryOp(
+            "+=".to_string(),
+            Rc::new(Expression::Symbol("i".into())),
+            Rc::new(Expression::Integer(1)),
+        )),
+    );
+    let clone_time = Instant::now();
+    let _ = expr.clone();
+    let clone_duration = clone_time.elapsed();
+
+    // 测试2: 深度表达式的求值
+    let mut env = Environment::new();
+    let eval_start = Instant::now();
+    let _ = expr.eval(&mut env);
+    let eval_duration = eval_start.elapsed();
+
+    println!("Clone time: {:?}", clone_duration);
+    println!("Eval time: {:?}", eval_duration);
+
+    assert_eq!(clone_duration, eval_duration);
+    // 对比Box版本的类似测试...
+}
+#[test]
+fn performance_test4() {
+    use std::time::Instant;
+
+    // 测试1: 简单表达式的构造和克隆
+    let _ = Instant::now();
+    let _ = Expression::BinaryOp(
+        "..".to_string(),
+        Rc::new(Expression::Integer(1)),
+        Rc::new(Expression::Integer(1000)),
+    );
+    let r = Expression::BinaryOp(
+        "..".to_string(),
+        Rc::new(Expression::Integer(1)),
+        Rc::new(Expression::Integer(10)),
+    );
+    let expr = Expression::For(
+        "i".into(),
+        Rc::new(r.clone()),
+        Rc::new(Expression::BinaryOp(
+            "+".to_string(),
+            Rc::new(r.clone()),
+            Rc::new(Expression::Symbol("i".into())),
+        )),
+    );
+    let clone_time = Instant::now();
+    let _ = expr.clone();
+    let clone_duration = clone_time.elapsed();
+
+    // 测试2: 深度表达式的求值
+    let mut env = Environment::new();
+    let eval_start = Instant::now();
+    let _ = expr.eval(&mut env);
+    let eval_duration = eval_start.elapsed();
+
+    println!("Clone time: {:?}", clone_duration);
+    println!("Eval time: {:?}", eval_duration);
+
+    assert_eq!(clone_duration, eval_duration);
+    // 对比Box版本的类似测试...
+}
+
+#[test]
 fn test_conditional_operator() {
     let expr = parse_script("a ? b + c : d * e").unwrap();
     assert_eq!(
         expr,
         Expression::If(
-            Box::new(Expression::Symbol("a".into())),
-            Box::new(Expression::BinaryOp(
+            Rc::new(Expression::Symbol("a".into())),
+            Rc::new(Expression::BinaryOp(
                 "+".to_string(),
-                Box::new(Expression::Symbol("b".into())),
-                Box::new(Expression::Symbol("c".into()))
+                Rc::new(Expression::Symbol("b".into())),
+                Rc::new(Expression::Symbol("c".into()))
             )),
-            Box::new(Expression::BinaryOp(
+            Rc::new(Expression::BinaryOp(
                 "*".to_string(),
-                Box::new(Expression::Symbol("d".into())),
-                Box::new(Expression::Symbol("e".into()))
+                Rc::new(Expression::Symbol("d".into())),
+                Rc::new(Expression::Symbol("e".into()))
             ))
         )
     );

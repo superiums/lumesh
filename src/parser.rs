@@ -1,4 +1,5 @@
 use core::option::Option::None;
+use std::{collections::HashMap, rc::Rc};
 
 use crate::{
     Diagnostic, Expression, Int, Pattern, SliceParams, SyntaxErrorKind, Token, TokenKind,
@@ -143,10 +144,8 @@ impl PrattParser {
                     let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX)?;
                     input = new_input;
                     match operator {
-                        "." | "@" => lhs = Expression::Index(Box::new(lhs), Box::new(rhs)),
-                        ".." => {
-                            lhs = Expression::BinaryOp("..".into(), Box::new(lhs), Box::new(rhs))
-                        }
+                        "." | "@" => lhs = Expression::Index(Rc::new(lhs), Rc::new(rhs)),
+                        ".." => lhs = Expression::BinaryOp("..".into(), Rc::new(lhs), Rc::new(rhs)),
                         _ => unreachable!(),
                     }
                 }
@@ -216,7 +215,7 @@ impl PrattParser {
                         let (new_input, rhs) = alt((parse_symbol, parse_literal))(input)?;
                         // dbg!(&rhs);
                         input = new_input;
-                        lhs = Expression::Command(Box::new(lhs), vec![rhs]);
+                        lhs = Expression::Command(Rc::new(lhs), Rc::new(vec![rhs]));
                     } else {
                         // CMD ... 所有参数
                         let (new_input, rhs) = many0(|input| {
@@ -226,7 +225,7 @@ impl PrattParser {
 
                         // dbg!(&rhs);
                         input = new_input;
-                        lhs = Expression::Command(Box::new(lhs), rhs);
+                        lhs = Expression::Command(Rc::new(lhs), Rc::new(rhs));
                     }
                     // dbg!("---break3---", input.len());
 
@@ -295,7 +294,7 @@ impl PrattParser {
 
                 let input = input.skip_n(1);
                 let (input, expr) = Self::parse_prefix(input, prec)?;
-                Ok((input, Expression::UnaryOp(op.into(), Box::new(expr), true)))
+                Ok((input, Expression::UnaryOp(op.into(), Rc::new(expr), true)))
             }
             TokenKind::Symbol => parse_symbol(input),
             TokenKind::StringLiteral if PREC_LITERAL >= min_prec => parse_string(input),
@@ -351,7 +350,7 @@ impl PrattParser {
                     text_close(")"),
                 )(input)?;
                 // dbg!(&lhs, &args);
-                Ok((input, Expression::Apply(Box::new(lhs), args)))
+                Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
             }
             "!" => {
                 // 函数调用
@@ -363,7 +362,7 @@ impl PrattParser {
                         input.skip_n(1),
                     )?;
                 // dbg!(&lhs, &args);
-                Ok((input, Expression::Apply(Box::new(lhs), args)))
+                Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
             }
             "[" => {
                 // 数组索引或切片
@@ -373,7 +372,7 @@ impl PrattParser {
                 // 后置自增/自减
                 Ok((
                     input.skip_n(1),
-                    Expression::UnaryOp(op.into(), Box::new(lhs), false),
+                    Expression::UnaryOp(op.into(), Rc::new(lhs), false),
                 ))
             }
             opx if opx.starts_with("__") => {
@@ -381,7 +380,7 @@ impl PrattParser {
                 // dbg!(&opx, &lhs);
                 Ok((
                     input.skip_n(1),
-                    Expression::UnaryOp(opx.into(), Box::new(lhs), false),
+                    Expression::UnaryOp(opx.into(), Rc::new(lhs), false),
                 ))
             }
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
@@ -468,8 +467,8 @@ impl PrattParser {
         match op.symbol {
             "+" | "-" | "*" | "/" | "%" | "^" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
-                Box::new(lhs),
-                Box::new(rhs),
+                Rc::new(lhs),
+                Rc::new(rhs),
             )),
             // "." | "@" => Ok(Expression::Index(
             //     // op.symbol.into(),
@@ -478,8 +477,8 @@ impl PrattParser {
             // )),
             "&&" | "||" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
-                Box::new(lhs),
-                Box::new(rhs),
+                Rc::new(lhs),
+                Rc::new(rhs),
             )),
             "=" => {
                 // 确保左侧是符号
@@ -498,7 +497,7 @@ impl PrattParser {
                             ),
                             other => other,
                         };
-                        Ok(Expression::Assign(name.to_string(), Box::new(last)))
+                        Ok(Expression::Assign(name.to_string(), Rc::new(last)))
                     }
                     _ => {
                         // eprintln!("invalid left-hand-side: {:?}", lhs);
@@ -513,8 +512,8 @@ impl PrattParser {
             }
             "==" | "!=" | ">" | "<" | ">=" | "<=" | "~~" | "~=" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
-                Box::new(lhs),
-                Box::new(rhs),
+                Rc::new(lhs),
+                Rc::new(rhs),
             )),
 
             // "->" => {
@@ -559,15 +558,16 @@ impl PrattParser {
                 // 解析参数列表
                 let params = match lhs {
                     // 处理括号包裹的参数列表 (x,y,z)
-                    Expression::Group(boxed_expr) => match *boxed_expr {
+                    Expression::Group(boxed_expr) => match boxed_expr.as_ref() {
                         Expression::List(elements) => elements
-                            .into_iter()
+                            .as_ref()
+                            .iter()
                             .map(|e| e.to_symbol().map(|s| s.to_string()))
                             .collect::<Result<Vec<_>, _>>(),
                         // 处理单个参数 (x)
                         // expr => match expr {
                         // Expression::List(s) => return Ok(Expression::List(s)),
-                        Expression::Symbol(s) => Ok(vec![s]),
+                        Expression::Symbol(s) => Ok(vec![s.to_owned()]),
                         _ => {
                             return Err(SyntaxErrorKind::failure(
                                 input.get_str_slice(),
@@ -595,15 +595,15 @@ impl PrattParser {
                     // 已有代码块保持原样
                     Expression::Do(_) => rhs,
                     // 分组表达式展开
-                    Expression::Group(boxed_expr) => *boxed_expr,
+                    Expression::Group(boxed_expr) => boxed_expr.as_ref().clone(),
                     // 其他表达式自动包装
-                    _ => Expression::Do(vec![rhs]),
+                    _ => Expression::Do(Rc::new(vec![rhs])),
                 };
 
                 // 构建Lambda表达式
                 // match op.symbol {
                 // "->" =>
-                Ok(Expression::Lambda(params.unwrap(), Box::new(body)))
+                Ok(Expression::Lambda(params.unwrap(), Rc::new(body)))
                 //     "~>" => Ok(Expression::Macro(params.unwrap(), Box::new(body))),
                 //     _ => unreachable!(),
                 // }
@@ -639,15 +639,11 @@ impl PrattParser {
                         ));
                     }
                 };
-                Ok(Expression::If(Box::new(lhs), true_expr, false_expr))
+                Ok(Expression::If(Rc::new(lhs), true_expr, false_expr))
             }
             ":" => {
                 // dbg!(":---->", &lhs, &rhs);
-                Ok(Expression::BinaryOp(
-                    ":".into(),
-                    Box::new(lhs),
-                    Box::new(rhs),
-                ))
+                Ok(Expression::BinaryOp(":".into(), Rc::new(lhs), Rc::new(rhs)))
             }
 
             ":=" => {
@@ -657,13 +653,13 @@ impl PrattParser {
                         // 如果是单独的symbol，则包装为命令
                         let last = match rhs {
                             Expression::Symbol(s) => {
-                                Expression::Command(Box::new(Expression::Symbol(s)), vec![])
+                                Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![]))
                             }
                             other => other,
                         };
                         Ok(Expression::Assign(
                             name.to_string(),
-                            Box::new(Expression::Quote(Box::new(last))),
+                            Rc::new(Expression::Quote(Rc::new(last))),
                         ))
                     }
                     _ => {
@@ -679,8 +675,8 @@ impl PrattParser {
             }
             "+=" | "-=" | "*=" | "/=" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
-                Box::new(lhs),
-                Box::new(rhs),
+                Rc::new(lhs),
+                Rc::new(rhs),
             )),
             // {
 
@@ -691,24 +687,22 @@ impl PrattParser {
             //     }
             "|" | "|>" => Ok(Expression::Pipe(
                 op.symbol.into(),
-                Box::new(lhs),
-                Box::new(rhs),
+                Rc::new(lhs),
+                Rc::new(rhs),
             )),
 
             "<<" | ">>" | ">>>" => Ok(Expression::Pipe(
                 op.symbol.into(),
-                Box::new(lhs),
-                Box::new(rhs),
+                Rc::new(lhs),
+                Rc::new(rhs),
             )),
-            opx if opx.starts_with("_") => Ok(Expression::BinaryOp(
-                opx.into(),
-                Box::new(lhs),
-                Box::new(rhs),
-            )),
+            opx if opx.starts_with("_") => {
+                Ok(Expression::BinaryOp(opx.into(), Rc::new(lhs), Rc::new(rhs)))
+            }
             "?:" => Ok(Expression::Catch(
-                Box::new(lhs),
+                Rc::new(lhs),
                 CatchType::Deel,
-                Some(Box::new(rhs)),
+                Some(Rc::new(rhs)),
             )),
 
             _ => {
@@ -723,10 +717,10 @@ impl PrattParser {
     ) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
         // dbg!("--->catch ast:", &op);
         Ok(match op.symbol {
-            "?." => Expression::Catch(Box::new(lhs), CatchType::Ignore, None),
-            "?-" => Expression::Catch(Box::new(lhs), CatchType::PrintStd, None),
-            "??" => Expression::Catch(Box::new(lhs), CatchType::PrintErr, None),
-            "?!" => Expression::Catch(Box::new(lhs), CatchType::PrintOver, None),
+            "?." => Expression::Catch(Rc::new(lhs), CatchType::Ignore, None),
+            "?-" => Expression::Catch(Rc::new(lhs), CatchType::PrintStd, None),
+            "??" => Expression::Catch(Rc::new(lhs), CatchType::PrintErr, None),
+            "?!" => Expression::Catch(Rc::new(lhs), CatchType::PrintOver, None),
             _ => unreachable!(),
         })
     }
@@ -753,7 +747,7 @@ fn parse_expr_with_single_cmd(
     return if let Expression::Symbol(s) = expr {
         Ok((
             input,
-            Expression::Command(Box::new(Expression::Symbol(s)), vec![]),
+            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
         ))
     } else {
         Ok((input, expr))
@@ -773,7 +767,7 @@ fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     delimited(
         text("("),
         map(parse_expr_with_single_cmd, |e| {
-            Expression::Group(Box::new(e))
+            Expression::Group(Rc::new(e))
         }),
         // map(alt((parse_math, parse_command_call)), |e| {
         //     Expression::Group(Box::new(e))
@@ -785,7 +779,9 @@ fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     delimited(
         text("["),
-        map(separated_list0(text(","), parse_expr), Expression::List),
+        map(separated_list0(text(","), parse_expr), |s| {
+            Expression::from(s)
+        }),
         // opt(text(",")), //TODO 允许末尾，
         text_close("]"),
     )(input)
@@ -866,14 +862,14 @@ fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxEr
         text("("),
         // alt((
         // 参数列表特殊处理
-        map(separated_list0(text(","), parse_symbol_string), |symbols| {
-            Expression::List(symbols.into_iter().map(|s| Expression::Symbol(s)).collect())
+        map(separated_list0(text(","), parse_symbol), |symbols| {
+            Expression::from(symbols)
         }),
         //     parse_expr, // 常规表达式
         // )),
         text_close(")"),
     )(input)?;
-    Ok((input, Expression::Group(Box::new(expr))))
+    Ok((input, Expression::Group(Rc::new(expr))))
 }
 // 函数定义解析
 fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -919,13 +915,13 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
         map(text("??"), |_| (CatchType::PrintErr, None)),
         map(text("?!"), |_| (CatchType::PrintOver, None)),
         map(preceded(text("?:"), parse_expr), |e| {
-            (CatchType::Deel, Some(Box::new(e)))
+            (CatchType::Deel, Some(Rc::new(e)))
         }),
     )))(input)?;
 
     let last_body = match handler_options {
-        Some((ctyp, handler)) => Box::new(Expression::Catch(Box::new(body), ctyp, handler)),
-        _ => Box::new(body),
+        Some((ctyp, handler)) => Rc::new(Expression::Catch(Rc::new(body), ctyp, handler)),
+        _ => Rc::new(body),
     };
     Ok((
         input,
@@ -938,7 +934,7 @@ fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
     let (input, expr) = opt(parse_expr)(input)?;
     Ok((
         input,
-        Expression::Return(Box::new(expr.unwrap_or(Expression::None))),
+        Expression::Return(Rc::new(expr.unwrap_or(Expression::None))),
     ))
 }
 
@@ -1076,9 +1072,9 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     let (input, _) = opt(terminated(text(","), opt(kind(TokenKind::LineBreak))))(input)?;
     let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
     // dbg!(&input);
-
+    let hashmap: HashMap<String, Expression> = pairs.into_iter().collect();
     // Ok((input, Expression::Map(pairs)))
-    Ok((input, Expression::Map(pairs.into_iter().collect())))
+    Ok((input, Expression::from(hashmap)))
 }
 
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1193,7 +1189,7 @@ pub fn parse_script_tokens(
             let s = functions.get(0).unwrap();
             Ok((input, s.clone()))
         }
-        _ => Ok((input, Expression::Do(functions))),
+        _ => Ok((input, Expression::Do(Rc::new(functions)))),
     }
 }
 /// 函数解析（顶层结构）
@@ -1316,7 +1312,7 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     return if let Expression::Symbol(s) = expr {
         Ok((
             input,
-            Expression::Command(Box::new(Expression::Symbol(s)), vec![]),
+            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
         ))
     } else {
         Ok((input, expr))
@@ -1344,9 +1340,9 @@ fn parse_if_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     Ok((
         input,
         Expression::If(
-            Box::new(cond),
-            Box::new(then_block.unwrap_or(Expression::None)),
-            Box::new(els),
+            Rc::new(cond),
+            Rc::new(then_block.unwrap_or(Expression::None)),
+            Rc::new(els),
         ),
     ))
 }
@@ -1357,7 +1353,7 @@ fn parse_while_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     let (input, cond) = parse_expr(input)?;
     let (input, body) = parse_block(input)?;
 
-    Ok((input, Expression::While(Box::new(cond), Box::new(body))))
+    Ok((input, Expression::While(Rc::new(cond), Rc::new(body))))
 }
 
 // FOR循环解析
@@ -1370,7 +1366,7 @@ fn parse_for_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
 
     Ok((
         input,
-        Expression::For(pattern, Box::new(iterable), Box::new(body)),
+        Expression::For(pattern, Rc::new(iterable), Rc::new(body)),
     ))
 }
 
@@ -1389,9 +1385,9 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     let (input, _) = text_close("}")(input)?;
     let branches = expr_map
         .into_iter()
-        .map(|(pattern, expr)| (pattern, Box::new(expr)))
+        .map(|(pattern, expr)| (pattern, Rc::new(expr)))
         .collect::<Vec<_>>();
-    Ok((input, Expression::Match(Box::new(matched), branches)))
+    Ok((input, Expression::Match(Rc::new(matched), branches)))
 }
 
 // ================== 条件运算符?: ==================
@@ -1418,7 +1414,7 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
                 parse_statement,
                 opt(many0(kind(TokenKind::LineBreak))),
             )),
-            |stmts| Expression::Do(stmts),
+            |stmts| Expression::Do(Rc::new(stmts)),
         )),
         cut(text_close("}")),
     )(input)?;
@@ -1433,7 +1429,7 @@ fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     let (input, _) = text("=")(input)?;
     let (input, expr) = parse_expr_with_single_cmd(input)?;
     // dbg!(&expr);
-    Ok((input, Expression::Alias(symbol, Box::new(expr))))
+    Ok((input, Expression::Alias(symbol, Rc::new(expr))))
 }
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1444,7 +1440,7 @@ fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     // dbg!(&expr);
     Ok((
         input,
-        Expression::Assign(symbol, Box::new(Expression::Quote(Box::new(expr)))),
+        Expression::Assign(symbol, Rc::new(Expression::Quote(Rc::new(expr)))),
     ))
 }
 
@@ -1479,7 +1475,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
                 // 如果是单独的symbol，则包装为命令
                 // let last = match &e[0] {
                 //     Expression::Symbol(s) => {
-                //         Expression::Command(Box::new(Expression::Symbol(s.to_owned())), vec![])
+                //         Expression::Command(Rc::new(Expression::Symbol(s.to_owned())), vec![])
                 //     }
                 //     other => other.clone(),
                 // };
@@ -1498,15 +1494,15 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
                 };
                 return Ok((
                     input,
-                    Expression::Declare(symbols[0].clone(), Box::new(last)),
+                    Expression::Declare(symbols[0].clone(), Rc::new(last)),
                 ));
             }
             (0..symbols.len())
-                .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[0].clone())))
+                .map(|i| Expression::Declare(symbols[i].clone(), Rc::new(e[0].clone())))
                 .collect()
         }
         Some(e) if e.len() == symbols.len() => (0..symbols.len())
-            .map(|i| Expression::Declare(symbols[i].clone(), Box::new(e[i].clone())))
+            .map(|i| Expression::Declare(symbols[i].clone(), Rc::new(e[i].clone())))
             .collect(),
         Some(e) => {
             return Err(SyntaxErrorKind::failure(
@@ -1522,7 +1518,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         }
         None => vec![],
     };
-    Ok((input, Expression::Do(assignments)))
+    Ok((input, Expression::Do(Rc::new(assignments))))
 }
 
 fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1555,7 +1551,7 @@ fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Pattern, SyntaxErrorK
     alt((
         map(text("_"), |_| Pattern::Bind("_".to_string())), // 将_视为特殊绑定
         map(parse_symbol_string, Pattern::Bind),
-        map(parse_literal, |lit| Pattern::Literal(Box::new(lit))),
+        map(parse_literal, |lit| Pattern::Literal(Rc::new(lit))),
     ))(input)
 }
 // 自定义EOF解析器，返回StrSlice类型
@@ -1583,8 +1579,8 @@ fn parse_index_or_slice(
     Ok((
         input,
         match is_slice {
-            true => Expression::Slice(Box::new(target), params),
-            false => Expression::Index(Box::new(target), params.start.unwrap()),
+            true => Expression::Slice(Rc::new(target), params),
+            false => Expression::Index(Rc::new(target), params.start.unwrap()),
         },
     ))
 }
@@ -1619,9 +1615,9 @@ fn parse_slice_params(
         input,
         (
             SliceParams {
-                start: start.map(Box::new),
-                end: end.map(Box::new),
-                step: step.map(Box::new),
+                start: start.map(Rc::new),
+                end: end.map(Rc::new),
+                step: step.map(Rc::new),
             },
             has_first_colon.is_some(),
         ),

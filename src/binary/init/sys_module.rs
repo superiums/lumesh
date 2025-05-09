@@ -1,8 +1,10 @@
+use std::rc::Rc;
+
 use crate::{Environment, Expression};
 use common_macros::hash_map;
 
 pub fn get() -> Expression {
-    Expression::Map(hash_map! {
+    Expression::from(hash_map! {
         String::from("parse") => Expression::builtin("parse", |args, env| {
             super::check_exact_args_len("parse", &args, 1)?;
             let expr = args[0].clone().eval(env)?;
@@ -14,7 +16,7 @@ pub fn get() -> Expression {
 
         String::from("quote") => Expression::builtin("quote", |args, _env| {
             super::check_exact_args_len("quote", &args, 1)?;
-            Ok(Expression::Quote(Box::new(args[0].clone())))
+            Ok(Expression::Quote(Rc::new(args[0].clone())))
         }, "quote an expression"),
 
         // String::from("eval") => Expression::builtin("eval", |args, env| {
@@ -117,5 +119,5 @@ pub fn get() -> Expression {
 }
 
 fn vars(_: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    Ok(Expression::Map(env.get_bindings_map()))
+    Ok(Expression::from(env.get_bindings_map()))
 }

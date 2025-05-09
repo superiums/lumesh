@@ -55,7 +55,7 @@ fn fmt(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn display(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
-    Ok(Expression::Map(hash_map! {
+    Ok(Expression::from(hash_map! {
         String::from("time") => Expression::String(Local::now().time().format("%H:%M:%S").to_string()),
         String::from("timepm") => Expression::String(Local::now().format("%-I:%M %p").to_string()),
         String::from("date") => Expression::String(Local::now().format("%D").to_string()),

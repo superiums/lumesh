@@ -3,6 +3,7 @@ use crate::{Environment, Expression, RuntimeError, expression::catcher::catch_er
 use std::{
     io::{ErrorKind, Write},
     process::{Command, Stdio},
+    rc::Rc,
 };
 
 use super::CatchType;
@@ -74,7 +75,7 @@ fn expr_to_command(
         String,
         Vec<String>,
         Option<Expression>,
-        Option<(CatchType, Option<Box<Expression>>)>,
+        Option<(CatchType, Option<Rc<Expression>>)>,
     ),
     RuntimeError,
 > {
@@ -93,7 +94,7 @@ fn expr_to_command(
         Expression::Apply(func, _) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.clone().eval_mut(true, env, depth + 1)?;
+            let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
             return match func_eval {
@@ -118,7 +119,7 @@ fn expr_to_command(
         Expression::Command(func, args) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.clone().eval_mut(true, env, depth + 1)?;
+            let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
             return match func_eval {
@@ -413,14 +414,14 @@ pub fn handle_pipes(
 fn handle_err(
     e: RuntimeError,
     body: Expression,
-    deeling: Option<(CatchType, Option<Box<Expression>>)>,
+    deeling: Option<(CatchType, Option<Rc<Expression>>)>,
     env: &mut Environment,
     depth: usize,
 ) -> Result<(Option<Vec<u8>>, Option<Expression>), RuntimeError> {
     match deeling {
         Some((ctyp, handler)) => {
             // dbg!("left err, deeling");
-            let exd = catch_error(e, Box::new(body), ctyp, handler, env, depth + 1)?;
+            let exd = catch_error(e, Rc::new(body), ctyp, handler, env, depth + 1)?;
             Ok((None, Some(exd)))
         }
         _ => Err(e),
@@ -468,7 +469,7 @@ pub fn handle_stdin_redirect(
                     // dbg!("left err, deeling");
                     let exd = catch_error(
                         e,
-                        Box::new(Expression::String(cmd)),
+                        Rc::new(Expression::String(cmd)),
                         ctyp,
                         handler,
                         env,

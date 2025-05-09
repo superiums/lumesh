@@ -1,6 +1,6 @@
 use crate::{Environment, Int};
 use std::collections::HashMap;
-
+use std::rc::Rc;
 pub mod alias;
 pub mod basic;
 pub mod builtin;
@@ -12,59 +12,61 @@ pub mod overop;
 pub mod pipe_excutor;
 
 use builtin::Builtin;
-
 #[derive(Clone, PartialEq)]
 pub enum Expression {
-    Group(Box<Self>),
-    BinaryOp(String, Box<Self>, Box<Self>),
-    Pipe(String, Box<Self>, Box<Self>),
-    UnaryOp(String, Box<Self>, bool),
+    // 所有嵌套节点改为Rc包裹
+    Group(Rc<Self>),
+    BinaryOp(String, Rc<Self>, Rc<Self>),
+    Pipe(String, Rc<Self>, Rc<Self>),
+    UnaryOp(String, Rc<Self>, bool),
+
+    // 基础类型保持原样
     Symbol(String),
     Variable(String),
     Integer(Int),
     Float(f64),
-    Bytes(Vec<u8>),
-    String(String),
+    Bytes(Vec<u8>), // 这个保持值类型，因为Rc<Vec>反而增加复杂度
+    String(String), // 同上
     Boolean(bool),
-    List(Vec<Self>),
-    Map(HashMap<String, Self>),
-    Index(Box<Self>, Box<Self>),
-    Slice(Box<Self>, SliceParams),
     None,
+
+    // 集合类型使用Rc
+    List(Rc<Vec<Self>>),
+    Map(Rc<HashMap<String, Self>>),
+
+    // 索引和切片优化
+    Index(Rc<Self>, Rc<Self>),
+    Slice(Rc<Self>, SliceParams),
+
+    // 其他变体保持不变
     Del(String),
-    Declare(String, Box<Self>),
-    Assign(String, Box<Self>),
-    For(String, Box<Self>, Box<Self>),
-    While(Box<Self>, Box<Self>),
-    Match(Box<Self>, Vec<(Pattern, Box<Self>)>),
-    If(Box<Self>, Box<Self>, Box<Self>),
-    Apply(Box<Self>, Vec<Self>),
-    Command(Box<Self>, Vec<Self>),
-    Alias(String, Box<Self>),
-    Lambda(Vec<String>, Box<Self>),
-    // Macro(Vec<String>, Box<Self>),
+    Declare(String, Rc<Self>),
+    Assign(String, Rc<Self>),
+    For(String, Rc<Self>, Rc<Self>),
+    While(Rc<Self>, Rc<Self>),
+    Match(Rc<Self>, Vec<(Pattern, Rc<Self>)>),
+    If(Rc<Self>, Rc<Self>, Rc<Self>),
+    Apply(Rc<Self>, Rc<Vec<Self>>),
+    Command(Rc<Self>, Rc<Vec<Self>>),
+    Alias(String, Rc<Self>),
+    Lambda(Vec<String>, Rc<Self>),
     Function(
         String,
         Vec<(String, Option<Self>)>,
         Option<String>,
-        Box<Self>,
+        Rc<Self>,
     ),
-    Return(Box<Self>),
-    Do(Vec<Self>),
+    Return(Rc<Self>),
+    Do(Rc<Vec<Self>>),
     Builtin(Builtin),
-    Quote(Box<Self>),
-    Catch(Box<Self>, CatchType, Option<Box<Self>>),
-    // Error {
-    //     code: Int,
-    //     msg: String,
-    //     expr: Box<Self>,
-    // },
+    Quote(Rc<Self>),
+    Catch(Rc<Self>, CatchType, Option<Rc<Self>>),
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Pattern {
     Bind(String),
-    Literal(Box<Expression>),
+    Literal(Rc<Expression>),
 }
 #[derive(Debug, Clone, PartialEq)]
 pub enum CatchType {
@@ -76,7 +78,7 @@ pub enum CatchType {
 }
 #[derive(Debug, Clone, PartialEq)]
 pub struct SliceParams {
-    pub start: Option<Box<Expression>>,
-    pub end: Option<Box<Expression>>,
-    pub step: Option<Box<Expression>>,
+    pub start: Option<Rc<Expression>>,
+    pub end: Option<Rc<Expression>>,
+    pub step: Option<Rc<Expression>>,
 }

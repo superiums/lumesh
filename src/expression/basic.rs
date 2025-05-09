@@ -4,6 +4,7 @@ use super::{Environment, Int};
 use crate::RuntimeError;
 // use num_traits::pow;
 use std::fmt;
+use std::rc::Rc;
 use terminal_size::{Width, terminal_size};
 
 use prettytable::{
@@ -83,6 +84,7 @@ macro_rules! fmt_shared {
                     $f,
                     "[{}]",
                     exprs
+                        .as_ref()
                         .iter()
                         .map(|e| format!("{:?}", e))
                         .collect::<Vec<String>>()
@@ -108,7 +110,7 @@ macro_rules! fmt_shared {
 
                 let mut row = vec![];
                 let mut total_len = 1;
-                for expr in exprs.iter() {
+                for expr in exprs.as_ref().iter() {
                     let formatted = match expr {
                         Expression::String(s) => format!("{:?}", s),
                         _ => format!("{}", expr),
@@ -134,6 +136,7 @@ macro_rules! fmt_shared {
                 $f,
                 "{{{}}}",
                 exprs
+                    .as_ref()
                     .iter()
                     .map(|(k, e)| format!("{}: {:?}", k, e))
                     .collect::<Vec<String>>()
@@ -156,7 +159,7 @@ macro_rules! fmt_shared {
                 fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
                 fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
 
-                for (key, val) in exprs {
+                for (key, val) in exprs.as_ref().iter() {
                     match &val {
                         Self::Builtin(Builtin { help, .. }) => {
                             t.add_row(row!(
@@ -324,20 +327,22 @@ impl Expression {
     }
 
     pub fn apply(self, args: Vec<Self>) -> Self {
-        Self::Apply(Box::new(self), args)
+        Self::Apply(Rc::new(self), Rc::new(args))
     }
     // 参数合并方法
     pub fn append_args(self, args: Vec<Expression>) -> Expression {
         match self {
             Expression::Apply(f, existing_args) => {
-                Expression::Apply(f, [existing_args, args].concat())
+                Expression::Apply(f, Rc::new([(*existing_args).clone(), args].concat()))
             }
-            _ => Expression::Apply(Box::new(self), args), //report error?
+            _ => Expression::Apply(Rc::new(self), Rc::new(args)), //report error?
         }
     }
     pub fn ensure_apply(self) -> Expression {
         match self {
-            Expression::Symbol(f) => Expression::Apply(Box::new(Expression::Symbol(f)), vec![]),
+            Expression::Symbol(f) => {
+                Expression::Apply(Rc::new(Expression::Symbol(f)), Rc::new(vec![]))
+            }
             _ => self, //others, like binop,group,pipe...
         }
     }
@@ -353,23 +358,23 @@ impl Expression {
             Self::String(s) => !s.is_empty(),
             Self::Bytes(b) => !b.is_empty(),
             Self::Boolean(b) => *b,
-            Self::List(exprs) => !exprs.is_empty(),
-            Self::Map(exprs) => !exprs.is_empty(),
+            Self::List(exprs) => !exprs.as_ref().is_empty(),
+            Self::Map(exprs) => !exprs.as_ref().is_empty(),
             Self::Lambda(..) => true,
             // Self::Macro(_, _) => true,
             Self::Builtin(_) => true,
             _ => false,
         }
     }
-    pub fn flatten(args: Vec<Self>) -> Vec<Self> {
-        let mut result = vec![];
-        for arg in args {
-            match arg {
-                Self::List(exprs) => result.extend(Self::flatten((*exprs).to_vec())), // 解引用并转换为 Vec
-                Self::Group(expr) => result.extend(Self::flatten(vec![*expr])),
-                _ => result.push(arg),
-            }
-        }
-        result
-    }
+    // pub fn flatten(args: Vec<Self>) -> Vec<Self> {
+    //     let mut result = vec![];
+    //     for arg in args {
+    //         match arg {
+    //             Self::List(exprs) => result.extend(Self::flatten((*exprs).to_vec())), // 解引用并转换为 Vec
+    //             Self::Group(expr) => result.extend(Self::flatten(vec![*expr])),
+    //             _ => result.push(arg),
+    //         }
+    //     }
+    //     result
+    // }
 }

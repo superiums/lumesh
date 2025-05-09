@@ -1,6 +1,6 @@
 use lumesh::parse_and_eval;
 use lumesh::runtime::{init_config, run_file};
-use lumesh::{Environment, Expression, LmError};
+use lumesh::{Environment, Expression};
 use std::path::Path;
 use std::path::PathBuf;
 
@@ -91,7 +91,12 @@ fn main() {
     env.define("SCRIPT", Expression::String(path));
     env.define(
         "argv",
-        Expression::List(script_args.into_iter().map(Expression::String).collect()),
+        Expression::from(
+            script_args
+                .into_iter()
+                .map(Expression::String)
+                .collect::<Vec<Expression>>(),
+        ),
     );
 
     // run

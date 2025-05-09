@@ -1,4 +1,24 @@
 # Changelog
+
+## [0.3.6]
+- refactor expression with Rc.
+this makes expr clone runs 4 times faster than Box.
+- enhanced lib functions.
+
+## [0.3.5]
+- enhance operator overload.
+- allow $var, allow blank line in block.
+- split alias from env, enhance cmd executor. fix fmt arg check. add parse recursdepth err.
+- remove STRICT from operator_tag.
+- remove macro.
+- optimize index; adjust operator tag.
+- filter env map to cmd
+- change expr and env to hashmap; lambda without env capture. tick out env from math/fs module.
+- allow symbol as string in dict.
+- fix symbol catch, fix for result. doc renew.
+- optimize pram collector. fix literal type in pipe and error catch.
+- support args collector
+
 ## [0.3.4]
 - enhance pipe to be more clever
 auto pass value or stdin;

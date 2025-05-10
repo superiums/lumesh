@@ -77,8 +77,28 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             String::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
 
             String::from("import") => Expression::builtin("import", import, "import a file (evaluate it in a new environment)"),
+            String::from("help") => Expression::builtin("help", help, "display lib modules"),
 
-
+    }
+}
+fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {
+    if args.len() > 0 {
+        match super::get_builtin(&args[0].to_string()) {
+            Some(m) => Ok(m.clone()),
+            _ => Err(LmError::CustomError("no lib found".into())),
+        }
+    } else {
+        Ok(Expression::from(
+            super::get_builtin_map()
+                .iter()
+                .map(|item| match item.1 {
+                    Expression::Map(_) => {
+                        (item.0.clone(), Expression::String("Module".to_string()))
+                    }
+                    other => (item.0.clone(), other.clone()),
+                })
+                .collect::<HashMap<String, Expression>>(),
+        ))
     }
 }
 fn import(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {

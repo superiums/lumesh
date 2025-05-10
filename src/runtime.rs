@@ -208,7 +208,10 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             // dbg!(env.get("cd"));
             match val {
                 Ok(Expression::None) => {}
-                Ok(result) => println!("{}", result),
+                Ok(Expression::Builtin(b)) => {
+                    println!("  >> [Builtin] {}\n{}\n", b.name, b.help)
+                }
+                Ok(result) => println!("\n  >> [{}] <<\n{}", result.type_name(), result),
                 Err(e) => eprintln!("\x1b[31m[ERROR]\x1b[0m {}", e),
             }
             // match val.clone() {

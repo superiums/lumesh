@@ -215,7 +215,7 @@ impl Expression {
                             Ok(if is_prefix == &true {
                                 new_val
                             } else {
-                                current_val.clone()
+                                current_val
                             })
                         }
                         op if op.starts_with("__") => {
@@ -310,26 +310,12 @@ impl Expression {
                             ))),
                         },
                         "&&" => Ok(Expression::Boolean(
-                            lhs.as_ref()
-                                .clone()
-                                .eval_mut(true, env, depth + 1)?
-                                .is_truthy()
-                                && rhs
-                                    .as_ref()
-                                    .clone()
-                                    .eval_mut(true, env, depth + 1)?
-                                    .is_truthy(),
+                            lhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy()
+                                && rhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy(),
                         )),
                         "||" => Ok(Expression::Boolean(
-                            lhs.as_ref()
-                                .clone()
-                                .eval_mut(true, env, depth + 1)?
-                                .is_truthy()
-                                || rhs
-                                    .as_ref()
-                                    .clone()
-                                    .eval_mut(true, env, depth + 1)?
-                                    .is_truthy(),
+                            lhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy()
+                                || rhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy(),
                         )),
                         _ => {
                             // fmt.red : left is builtin, right never.
@@ -499,7 +485,7 @@ impl Expression {
                     //     _ => {}
                     // }
 
-                    match cmd.as_ref().clone() {
+                    match cmd.as_ref() {
                         // index类型的内置命令，或其他保存于map的命令
                         Expression::Index(..) => {
                             let cmdx = cmd.as_ref().eval_mut(true, env, depth)?;

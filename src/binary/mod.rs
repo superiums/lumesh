@@ -17,6 +17,9 @@ static BUILTIN: UnsafeStatic<LazyLock<HashMap<String, Expression>>> = UnsafeStat
 pub fn get_builtin(name: &str) -> Option<&Expression> {
     BUILTIN.inner.get(name)
 }
+pub fn get_builtin_map() -> HashMap<String, Expression> {
+    BUILTIN.inner.clone()
+}
 
 // use std::sync::OnceLock;
 

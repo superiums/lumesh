@@ -121,7 +121,9 @@ pub fn run_repl(env: &mut Environment) {
                 }
             }
             _ => {
-                if parse_and_eval(&line, env) && !no_history {
+                if parse_and_eval(&line, env)
+                // && !no_history
+                {
                     match rl.lock().unwrap().add_history_entry(&line) {
                         Ok(_) => {}
                         Err(e) => eprintln!("add history err: {}", e),
@@ -320,14 +322,16 @@ impl Hinter for LumeHelper {
         }
 
         // 预定义命令列表（带权重排序）
-        let cmds = [("cd", 10),
+        let cmds = [
+            ("cd", 10),
             ("ls", 9),
             ("clear", 8),
             ("exit 0", 7),
             ("rm -ri", 6),
             ("cp -r", 5),
             ("head", 4),
-            ("tail", 3)];
+            ("tail", 3),
+        ];
 
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {

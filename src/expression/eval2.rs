@@ -17,12 +17,7 @@ impl Expression {
         match self {
             // 控制流表达式
             Self::If(cond, true_expr, false_expr) => {
-                // 条件分支求值
-                if cond.as_ref().eval_mut(true, env, depth + 1)?.is_truthy() {
-                    true_expr.as_ref().eval_mut(true, env, depth + 1)
-                } else {
-                    false_expr.as_ref().eval_mut(true, env, depth + 1)
-                }
+                handle_if(cond, true_expr, false_expr, env, depth)
             }
 
             Self::Match(value, branches) => {
@@ -577,6 +572,22 @@ fn matches_pattern(
             }
         }
         Pattern::Literal(lit) => Ok(value == lit.as_ref()),
+    }
+}
+
+#[inline]
+fn handle_if(
+    cond: &Rc<Expression>,
+    true_expr: &Rc<Expression>,
+    false_expr: &Rc<Expression>,
+    env: &mut Environment,
+    depth: usize,
+) -> Result<Expression, RuntimeError> {
+    // 条件分支求值
+    if cond.as_ref().eval_mut(true, env, depth + 1)?.is_truthy() {
+        true_expr.as_ref().eval_mut(true, env, depth + 1)
+    } else {
+        false_expr.as_ref().eval_mut(true, env, depth + 1)
     }
 }
 

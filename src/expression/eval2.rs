@@ -8,6 +8,7 @@ use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, RuntimeError};
 use std::io::ErrorKind;
 use std::io::Write;
+use std::rc::Rc;
 
 // Expression求值2
 impl Expression {
@@ -35,23 +36,7 @@ impl Expression {
                 Err(RuntimeError::NoMatchingBranch(val.to_string()))
             }
 
-            Self::For(var, list_expr, body) => {
-                // 求值列表表达式
-                let list_excuted = list_expr.as_ref().eval_mut(true, env, depth + 1)?;
-                // .as_list()?;
-                if let Expression::List(list) = list_excuted {
-                    // 遍历每个元素执行循环体
-                    let mut result = Vec::with_capacity(list.len());
-                    for item in list.iter() {
-                        env.define(var, item.clone());
-                        let last = body.as_ref().eval_mut(true, env, depth + 1)?;
-                        result.push(last)
-                    }
-                    Ok(Expression::from(result))
-                } else {
-                    Err(RuntimeError::ForNonList(list_excuted))
-                }
-            }
+            Self::For(var, list_expr, body) => handle_for(var, list_expr, body, env, depth),
 
             Self::While(cond, body) => {
                 // 循环求值直到条件为假
@@ -592,5 +577,38 @@ fn matches_pattern(
             }
         }
         Pattern::Literal(lit) => Ok(value == lit.as_ref()),
+    }
+}
+
+#[inline]
+fn handle_for(
+    var: &String,
+    list_expr: &Rc<Expression>,
+    body: &Rc<Expression>,
+    env: &mut Environment,
+    depth: usize,
+) -> Result<Expression, RuntimeError> {
+    // 求值列表表达式
+    let list_excuted = list_expr.as_ref().eval_mut(true, env, depth + 1)?;
+    // .as_list()?;
+    if let Expression::List(list) = list_excuted {
+        // 遍历每个元素执行循环体
+        let mut result = Vec::with_capacity(list.len());
+        for item in list.iter() {
+            env.define(var, item.clone());
+            let last = body.as_ref().eval_mut(true, env, depth + 1)?;
+            result.push(last)
+        }
+        Ok(Expression::from(result))
+        // let r: Result<Vec<Expression>, RuntimeError> = list
+        //     .iter()
+        //     .map(|item| {
+        //         env.define(var, item.clone());
+        //         body.as_ref().eval_mut(true, env, depth + 1)
+        //     })
+        //     .collect();
+        // r.map(Expression::from)
+    } else {
+        Err(RuntimeError::ForNonList(list_excuted))
     }
 }

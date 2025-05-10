@@ -1,32 +1,33 @@
-# --- 循环求和 ---
+let count = 1000000
+print "--- 循环求和For ---"
 let start=time.stamp-ms();
 let sum=0;
-for i in 0..1000000 {
+for i in 0..count {
     sum += i
 };
 let end=time.stamp-ms();
-echo "从 1 到 10000 的总和是: " sum;
-echo "所需时间: " end - start "毫秒";
+print "从 1 到 "count" 的总和是: " sum;
+print "所需时间: " end - start "毫秒";
 
-# 从 1 到 10000 的总和是:  499999500000
+# 从 1 到 1000000 的总和是:  499999500000
 # 所需时间:  588 毫秒
 
-# --- 循环求和2 ---
+print "--- 循环求和While ---"
 let start=time.stamp-ms();
 let sum=0;
-let i = 1000000;
+let i = count;
 while (i>0) {
     i = i - 1
     sum += i
 };
 let end=time.stamp-ms();
-echo "从 1 到 10000 的总和是: " sum;
-echo "所需时间: " end - start "毫秒";
+print "从 1 到 "count" 的总和是: " sum;
+print "所需时间: " end - start "毫秒";
 
-# 从 1 到 10000 的总和是:  499999500000
+# 从 1 到 1000000 的总和是:  499999500000
 # 所需时间:  1006 毫秒
 
-# --- 循环+条件判断 ---
+print "--- 循环+条件判断 ---"
 let start=time.stamp-ms();
 let sum=0; for i in 0..1000000 {
     if i % 2 == 0 {
@@ -34,14 +35,14 @@ let sum=0; for i in 0..1000000 {
     }
 };
 let end=time.stamp-ms();
-echo "从 1 到 10000 的偶数和是: " sum;
-echo "所需时间: " end - start "毫秒";
+print "从 1 到 "count" 的偶数和是: " sum;
+print "所需时间: " end - start "毫秒";
 
-# 从 1 到 10000 的偶数和是:  249999500000
+# 从 1 到 1000000 的偶数和是:  249999500000
 # 所需时间:  847 毫秒
 
 
-# --- 内存使用情况 ---
+print "--- 内存使用情况 ---"
 initial_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
 let start=time.stamp-ms();
 let sum=0; for i in 0..1000001 {
@@ -50,37 +51,43 @@ let sum=0; for i in 0..1000001 {
 let end=time.stamp-ms();
 final_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
 
-echo "从 1 到 1000000 的总和是:" sum
-echo "初始内存使用:" initial_memory kB
-echo "结束时内存使用:" final_memory kB
-echo "内存使用变化:" final_memory - initial_memory kB
-echo "所需时间: " end - start "毫秒";
+print "从 1 到 "count" 的总和是:" sum
+print "初始内存使用:" initial_memory kB
+print "结束时内存使用:" final_memory kB
+print "内存使用变化:" final_memory - initial_memory kB
+print "所需时间: " end - start "毫秒";
 # 初始内存使用: 6120 kB
 # 结束时内存使用: 6104 kB
 # 内存使用变化: -16 kB
 # 所需时间:  612 毫秒
 
-# --- cpu性能 ---
+print "--- cpu性能 ---"
 let start=time.stamp-ms();
-let j=1; for i in 1..1000000 {
+let j=1; for i in 1..count {
     i * i
 };
 let end=time.stamp-ms();
-echo "所需时间: " end - start "毫秒";
+print "所需时间: " end - start "毫秒";
 # 所需时间:  408 毫秒
 
 
 #-----v0.3.7重构后----
-# 从 1 到 10000 的总和是:  499999500000
-# 所需时间:  200 毫秒
-# 从 1 到 10000 的总和是:  499999500000
-# 所需时间:  349 毫秒
-# 从 1 到 10000 的偶数和是:  249999500000
-# 所需时间:  305 毫秒
-# 从 1 到 1000000 的总和是: 500000500000
-# 初始内存使用: 6032 kB
-# 结束时内存使用: 6068 kB
-# 内存使用变化: 6068 kB
-# 所需时间:  206 毫秒
-# 所需时间:  196 毫秒
+# 所需时间:  408 毫秒
+--- 循环求和For ---
+从 1 到  1000000  的总和是:  499999500000
+所需时间:  199 毫秒
+--- 循环求和While ---
+从 1 到  1000000  的总和是:  499999500000
+所需时间:  340 毫秒
+--- 循环+条件判断 ---
+从 1 到  1000000  的偶数和是:  249999500000
+所需时间:  292 毫秒
+--- 内存使用情况 ---
+从 1 到  1000000  的总和是: 500000500000
+初始内存使用: 6000 kB
+结束时内存使用: 6092 kB
+内存使用变化: 6092 kB
+所需时间:  195 毫秒
+--- cpu性能 ---
+所需时间:  178 毫秒
 #------------------------

@@ -39,8 +39,7 @@ impl Environment {
     }
 
     pub fn is_defined(&self, name: &str) -> bool {
-        self.bindings.contains_key(name)
-            || self.parent.as_ref().is_some_and(|p| p.is_defined(name))
+        self.bindings.contains_key(name) || self.parent.as_ref().is_some_and(|p| p.is_defined(name))
     }
 
     pub fn undefine(&mut self, name: &str) {

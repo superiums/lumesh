@@ -6,7 +6,7 @@ use std::{
     process::{Command, Stdio},
 };
 fn add_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Error> {
-    let mut result = args[0].clone().eval(env)?;
+    let mut result = args[0].eval(env)?;
     if args.len() == 1 {
         return Expression::Apply(
             Box::new(reverse_curry(
@@ -20,7 +20,7 @@ fn add_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
     for arg in &args[1..] {
         let old_result = result.clone();
-        result = result.eval(env)? + arg.clone().eval(env)?;
+        result = result.eval(env)? + arg.eval(env)?;
 
         if let Expression::None = result {
             return Err(Error::CustomError(format!(
@@ -46,12 +46,12 @@ pub fn get(env: &mut Environment) -> Expression {
         "-",
         |args, env| {
             // If there are two expressions or more, subtract them
-            let mut result = args[0].clone().eval(env)?;
+            let mut result = args[0].eval(env)?;
 
             if args.len() > 1 {
                 for arg in &args[1..] {
                     let old_result = result.clone();
-                    result = result.eval(env)? - arg.clone().eval(env)?;
+                    result = result.eval(env)? - arg.eval(env)?;
                     if let Expression::None = result {
                         return Err(Error::CustomError(format!(
                             "cannot subtract {:?} and {:?}",
@@ -74,10 +74,10 @@ pub fn get(env: &mut Environment) -> Expression {
             Expression::builtin(
                 "*",
                 |args, env| {
-                    let mut result = args[0].clone().eval(env)?;
+                    let mut result = args[0].eval(env)?;
                     for arg in &args[1..] {
                         let old_result = result.clone();
-                        result = result.eval(env)? * arg.clone().eval(env)?;
+                        result = result.eval(env)? * arg.eval(env)?;
 
                         if let Expression::None = result {
                             return Err(Error::CustomError(format!(
@@ -100,10 +100,10 @@ pub fn get(env: &mut Environment) -> Expression {
             Expression::builtin(
                 "/",
                 |args, env| {
-                    let mut result = args[0].clone().eval(env)?;
+                    let mut result = args[0].eval(env)?;
                     for arg in &args[1..] {
                         let old_result = result.clone();
-                        result = result.eval(env)? / arg.clone().eval(env)?;
+                        result = result.eval(env)? / arg.eval(env)?;
 
                         if let Expression::None = result {
                             return Err(Error::CustomError(format!(
@@ -126,10 +126,10 @@ pub fn get(env: &mut Environment) -> Expression {
             Expression::builtin(
                 "%",
                 |args, env| {
-                    let mut result = args[0].clone().eval(env)?;
+                    let mut result = args[0].eval(env)?;
                     for arg in &args[1..] {
                         let old_result = result.clone();
-                        result = result.eval(env)? % arg.clone().eval(env)?;
+                        result = result.eval(env)? % arg.eval(env)?;
 
                         if let Expression::None = result {
                             return Err(Error::CustomError(format!(
@@ -210,11 +210,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
     tmp.define_builtin(
         "<",
-        |args, env| {
-            Ok(Expression::Boolean(
-                args[0].clone().eval(env)? < args[1].clone().eval(env)?,
-            ))
-        },
+        |args, env| Ok(Expression::Boolean(args[0].eval(env)? < args[1].eval(env)?)),
         "determine the order of two values",
     );
 
@@ -222,7 +218,7 @@ pub fn get(env: &mut Environment) -> Expression {
         "<=",
         |args, env| {
             Ok(Expression::Boolean(
-                args[0].clone().eval(env)? <= args[1].clone().eval(env)?,
+                args[0].eval(env)? <= args[1].eval(env)?,
             ))
         },
         "determine the order of two values",
@@ -230,11 +226,7 @@ pub fn get(env: &mut Environment) -> Expression {
 
     tmp.define_builtin(
         ">",
-        |args, env| {
-            Ok(Expression::Boolean(
-                args[0].clone().eval(env)? > args[1].clone().eval(env)?,
-            ))
-        },
+        |args, env| Ok(Expression::Boolean(args[0].eval(env)? > args[1].eval(env)?)),
         "determine the order of two values",
     );
 
@@ -242,7 +234,7 @@ pub fn get(env: &mut Environment) -> Expression {
         ">=",
         |args, env| {
             Ok(Expression::Boolean(
-                args[0].clone().eval(env)? >= args[1].clone().eval(env)?,
+                args[0].eval(env)? >= args[1].eval(env)?,
             ))
         },
         "determine the order of two values",

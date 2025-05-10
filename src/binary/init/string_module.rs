@@ -1,7 +1,7 @@
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
 
-fn split(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(format!(
             "expected 2 arguments, got {}",
@@ -30,15 +30,15 @@ pub fn get() -> Expression {
     (hash_map! {
         String::from("to_string") => Expression::builtin("to_string", |args, env| {
             super::check_exact_args_len("to_string", &args, 1)?;
-            Ok(Expression::String(args[0].clone().eval(env)?.to_string()))
+            Ok(Expression::String(args[0].eval(env)?.to_string()))
         }, "convert a value to a string"),
 
         String::from("caesar") => Expression::builtin("caesar_cipher", |args, env| {
             super::check_args_len("caesar_cipher", &args, 1..=2)?;
 
-            let expr = args[0].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
             let shift = if args.len() > 1 {
-                args[1].clone().eval(env)?
+                args[1].eval(env)?
             } else {
                 Expression::Integer(13)
             };
@@ -77,7 +77,7 @@ pub fn get() -> Expression {
 
         String::from("get_width") => Expression::builtin("get_width", |args, env| {
             super::check_exact_args_len("get_width", &args, 1)?;
-            let expr = args[0].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
             Ok(Expression::Integer(match expr {
                 Expression::Symbol(x) | Expression::String(x) => {
                     let mut width = 0;
@@ -256,8 +256,8 @@ pub fn get() -> Expression {
 
         String::from("join") => Expression::builtin("join", |args, env| {
             super::check_exact_args_len("join", &args, 2)?;
-            let expr = args[0].clone().eval(env)?;
-            let separator = args[1].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
+            let separator = args[1].eval(env)?;
             Ok(match expr {
                 Expression::List(list) => {
                     let mut joined = String::new();
@@ -275,7 +275,7 @@ pub fn get() -> Expression {
 
         String::from("lines") => Expression::builtin("lines", |args, env| {
             super::check_exact_args_len("lines", &args, 1)?;
-            let expr = args[0].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
             Ok(match expr {
                 Expression::Symbol(x) | Expression::String(x) => Expression::from(
                     x.lines()
@@ -312,7 +312,7 @@ pub fn get() -> Expression {
 
         String::from("words") => Expression::builtin("words", |args, env| {
             super::check_exact_args_len("words", &args, 1)?;
-            let expr = args[0].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
             Ok(match expr {
                 Expression::Symbol(x) | Expression::String(x) => Expression::from(
                     x.split_whitespace()
@@ -326,7 +326,7 @@ pub fn get() -> Expression {
 
         String::from("paragraphs") => Expression::builtin("paragraphs", |args, env| {
             super::check_exact_args_len("paragraphs", &args, 1)?;
-            let expr = args[0].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
             Ok(match expr {
                 Expression::Symbol(x) | Expression::String(x) => Expression::from(
                     x.split("\n\n")
@@ -340,8 +340,8 @@ pub fn get() -> Expression {
 
         String::from("split_at") => Expression::builtin("split_at", |args, env| {
             super::check_exact_args_len("split_at", &args, 2)?;
-            let expr = args[0].clone().eval(env)?;
-            let index = args[1].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
+            let index = args[1].eval(env)?;
             Ok(match (expr, index) {
                 (Expression::Symbol(x) | Expression::String(x), Expression::Integer(i)) => {
                     Expression::from(vec![
@@ -391,9 +391,9 @@ pub fn get() -> Expression {
 
         String::from("replace") => Expression::builtin("replace", |args, env| {
             super::check_exact_args_len("replace", &args, 3)?;
-            let expr = args[0].clone().eval(env)?;
-            let old = args[1].clone().eval(env)?;
-            let new = args[2].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
+            let old = args[1].eval(env)?;
+            let new = args[2].eval(env)?;
             Ok(match expr {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Expression::String(x.replace(&old.to_string(), &new.to_string()))
@@ -404,8 +404,8 @@ pub fn get() -> Expression {
 
         String::from("starts_with") => Expression::builtin("starts_with", |args, env| {
             super::check_exact_args_len("starts_with", &args, 2)?;
-            let expr = args[0].clone().eval(env)?;
-            let prefix = args[1].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
+            let prefix = args[1].eval(env)?;
             Ok(match expr {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Expression::Boolean(x.starts_with(&prefix.to_string()))
@@ -416,8 +416,8 @@ pub fn get() -> Expression {
 
         String::from("ends_with") => Expression::builtin("ends_with", |args, env| {
             super::check_exact_args_len("ends_with", &args, 2)?;
-            let expr = args[0].clone().eval(env)?;
-            let suffix = args[1].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
+            let suffix = args[1].eval(env)?;
             Ok(match expr {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Expression::Boolean(x.ends_with(&suffix.to_string()))
@@ -428,8 +428,8 @@ pub fn get() -> Expression {
 
         String::from("contains") => Expression::builtin("contains", |args, env| {
             super::check_exact_args_len("contains", &args, 2)?;
-            let expr = args[0].clone().eval(env)?;
-            let substring = args[1].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
+            let substring = args[1].eval(env)?;
             Ok(match expr {
                 Expression::Symbol(x) | Expression::String(x) => {
                     Expression::Boolean(x.contains(&substring.to_string()))

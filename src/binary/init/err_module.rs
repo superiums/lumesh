@@ -12,7 +12,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn try_builtin(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn try_builtin(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     // Try to evaluate the first argument, if it fails, apply the second argument to the error
     // message.
     if args.len() != 2 {

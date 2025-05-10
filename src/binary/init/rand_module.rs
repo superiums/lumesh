@@ -11,7 +11,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn int(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("int", &args, 2)?;
     match (args[0].eval(env)?, args[1].eval(env)?) {
         (Expression::Integer(l), Expression::Integer(h)) => {
@@ -26,7 +26,7 @@ fn int(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
     }
 }
 
-fn choose(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn choose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("choose", &args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {
@@ -41,7 +41,7 @@ fn choose(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     }
 }
 
-fn shuffle(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn shuffle(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("shuffle", &args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {

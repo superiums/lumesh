@@ -7,7 +7,7 @@ pub fn get() -> Expression {
     Expression::from(hash_map! {
         String::from("parse") => Expression::builtin("parse", |args, env| {
             super::check_exact_args_len("parse", &args, 1)?;
-            let expr = args[0].clone().eval(env)?;
+            let expr = args[0].eval(env)?;
             Ok(match crate::parse(&expr.to_string()) {
                 Ok(expr) => expr,
                 Err(_) => Expression::None
@@ -21,11 +21,11 @@ pub fn get() -> Expression {
 
         // String::from("eval") => Expression::builtin("eval", |args, env| {
         //     let mut new_env = env.clone();
-        //     Ok(args[0].clone().eval(env)?.eval(&mut new_env)?)
+        //     Ok(args[0].eval(env)?.eval(&mut new_env)?)
         // }, "evaluate an expression without changing the environment"),
 
         // String::from("exec") => Expression::builtin("exec", |args, env| {
-        //     Ok(args[0].clone().eval(env)?.eval(env)?)
+        //     Ok(args[0].eval(env)?.eval(env)?)
         // }, "evaluate an expression in the current environment"),
 
         // Evaluate a file in the current environment.
@@ -118,6 +118,6 @@ pub fn get() -> Expression {
     })
 }
 
-fn vars(_: Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn vars(_: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     Ok(Expression::from(env.get_bindings_map()))
 }

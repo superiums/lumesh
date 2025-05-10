@@ -12,9 +12,9 @@ use crate::STRICT;
 const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 
 impl Expression {
-    /// 当返回symbol时，作为命令继续执行。
+    /// 交互命令入口
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let result = self.clone().eval_mut(true, env, 0);
+        let result = self.eval_mut(true, env, 0);
         match result {
             // apply symbol cmds
             // Ok(Expression::Symbol(sym)) => {
@@ -24,13 +24,13 @@ impl Expression {
             Err(e) => Err(e),
         }
     }
-    /// 当返回symbol时，作为字面量，直接返回。
+    /// 脚本计算入口
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        self.clone().eval_mut(true, env, 0)
+        self.eval_mut(true, env, 0)
     }
-    /// 求值主逻辑（尾递归优化）
+    /// 求值主逻辑
     pub fn eval_mut(
-        self,
+        &self,
         explain_builtin: bool,
         env: &mut Environment,
         depth: usize,
@@ -38,7 +38,7 @@ impl Expression {
         // dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
-                return Err(RuntimeError::RecursionDepth(self));
+                return Err(RuntimeError::RecursionDepth(self.clone()));
             }
         }
 
@@ -52,11 +52,11 @@ impl Expression {
                 | Self::Float(_)
                 | Self::Bytes(_) => {
                     // dbg!("basic type");
-                    break Ok(self);
+                    break Ok(self.clone());
                 }
                 Self::Builtin(_) => {
                     // dbg!("builtin type");
-                    break Ok(self);
+                    break Ok(self.clone());
                 }
 
                 // 符号解析（错误处理优化）
@@ -64,25 +64,25 @@ impl Expression {
                     // dbg!("2.--->symbol----", &name);
                     // bultin
                     if explain_builtin {
-                        if let Some(bti) = binary::get_builtin(&name) {
+                        if let Some(b) = binary::get_builtin(name) {
                             // dbg!("found builtin:", &name, bti);
-                            return Ok(bti.clone());
+                            return Ok(b.clone());
                         };
                     }
 
                     // var
                     unsafe {
                         if STRICT {
-                            return Ok(Self::Symbol(name));
+                            return Ok(self.clone());
                         } else {
-                            return match env.get(&name) {
+                            return match env.get(name) {
                                 Some(expr) => Ok(expr),
-                                None => Ok(Self::Symbol(name)),
+                                None => Ok(self.clone()),
                             };
                         }
                     }
                 }
-                Self::Variable(ref name) => {
+                Self::Variable(name) => {
                     // dbg!("2.--->variable----", &name);
                     // var
                     return match env.get(name) {
@@ -94,9 +94,8 @@ impl Expression {
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {
                     // dbg!("declare---->", &name, &expr.type_name());
-
                     unsafe {
-                        if STRICT && env.has(&name)
+                        if STRICT && env.has(name)
                         // && env.get("STRICT") == Some(Expression::Boolean(true))
                         {
                             return Err(RuntimeError::Redeclaration(name.to_string()));
@@ -106,24 +105,21 @@ impl Expression {
                         expr.as_ref()
                     {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let value = expr.as_ref().clone().eval_mut(false, env, depth + 1)?;
+                        let value = expr.as_ref().eval_mut(false, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
-                        env.define(&name, value); // 新增 declare
+                        env.define(name, value); // 新增 declare
                     } else {
-                        let value = expr.as_ref().clone().eval_mut(false, env, depth + 1)?;
-                        env.define(&name, value); // 新增 declare
+                        let value = expr.as_ref().eval_mut(false, env, depth + 1)?;
+                        env.define(name, value); // 新增 declare
                     }
-
                     // dbg!("declare---->", &name, &value.type_name());
-
-                    // dbg!("declare---->", &name, env.get(&name));
                     return Ok(Self::None);
                 }
 
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
                     // dbg!("assign---->", &name, &expr.type_name());
-                    let is_cmd = match *expr {
+                    let is_cmd = match expr.as_ref() {
                         Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
                             true
                         }
@@ -132,17 +128,17 @@ impl Expression {
                     if is_cmd {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                     }
-                    let value = expr.as_ref().clone().eval_mut(false, env, depth + 1)?;
+                    let value = expr.as_ref().eval_mut(false, env, depth + 1)?;
 
                     // dbg!("assign---->", &name, &value.type_name());
-                    if env.has(&name) {
-                        env.define(&name, value.clone());
+                    if env.has(name) {
+                        env.define(name, value.clone());
                     } else {
                         // 向上层环境查找并修改（根据语言设计需求）
                         let mut current_env = env.clone();
                         while let Some(parent) = current_env.get_parent_mut() {
-                            if parent.has(&name) {
-                                parent.define(&name, value.clone());
+                            if parent.has(name) {
+                                parent.define(name, value.clone());
                                 return Ok(value);
                             }
                             current_env = parent.clone();
@@ -151,9 +147,9 @@ impl Expression {
                             if STRICT
                             // && env.get("STRICT") == Some(Expression::Boolean(true))
                             {
-                                return Err(RuntimeError::UndeclaredVariable(name));
+                                return Err(RuntimeError::UndeclaredVariable(name.clone()));
                             } else {
-                                env.define(&name, value.clone());
+                                env.define(name, value.clone());
                             }
                         }
                     }
@@ -165,24 +161,21 @@ impl Expression {
 
                 // del
                 Self::Del(name) => {
-                    env.undefine(&name);
+                    env.undefine(name);
                     return Ok(Self::None);
                 }
 
                 // 处理变量声明（仅允许未定义变量）
                 Self::Alias(name, expr) => {
                     // dbg!("alias---->", &name, &expr.type_name());
-                    alias::set_alias(name, expr.as_ref().clone()); // 新增 declare
+                    alias::set_alias(name.clone(), expr.as_ref().clone()); // 新增 declare
                     return Ok(Self::None);
                 }
 
                 // 元表达式处理
                 Self::Group(inner) => {
                     // dbg!("2.--->group:", &inner);
-                    // self = Rc::try_unwrap(inner)
-                    //     .map_err(|_| RuntimeError::CustomError("unwrap group failed.".into()))?;
-                    // continue;
-                    return inner.as_ref().clone().eval_mut(true, env, depth + 1);
+                    return inner.as_ref().eval_mut(true, env, depth + 1);
                 }
                 Self::Quote(inner) => return Ok(inner.as_ref().clone()),
 
@@ -219,7 +212,7 @@ impl Expression {
                             let step = if op == "++" { 1 } else { -1 };
                             let new_val = (current_val.clone() + Expression::Integer(step))?;
                             env.define(var_name, new_val.clone());
-                            Ok(if is_prefix {
+                            Ok(if is_prefix == &true {
                                 new_val
                             } else {
                                 current_val.clone()
@@ -340,8 +333,8 @@ impl Expression {
                         )),
                         _ => {
                             // fmt.red : left is builtin, right never.
-                            let l = lhs.as_ref().clone().eval_mut(true, env, depth + 1)?;
-                            let r = rhs.as_ref().clone().eval_mut(false, env, depth + 1)?;
+                            let l = lhs.as_ref().eval_mut(true, env, depth + 1)?;
+                            let r = rhs.as_ref().eval_mut(false, env, depth + 1)?;
                             break match operator.as_str() {
                                 "+" => l + r,
                                 "-" => l - r,
@@ -433,7 +426,7 @@ impl Expression {
                 // Self::List(elems) => {
                 //     let evaluated = elems
                 //         .iter()
-                //         .map(|e| e.clone().eval_mut(true,env, depth + 1))
+                //         .map(|e| e.eval_mut(true,env, depth + 1))
                 //         .collect::<Result<Vec<_>, _>>()?;
                 //     Ok(Expression::List(evaluated))
                 // }
@@ -441,7 +434,7 @@ impl Expression {
                     let evaluated = items
                         .as_ref()
                         .iter()
-                        .map(|e| e.clone().eval_mut(true, env, depth + 1))
+                        .map(|e| e.eval_mut(true, env, depth + 1))
                         .collect::<Result<Vec<_>, _>>()?;
                     return Ok(Expression::from(evaluated));
                 }
@@ -449,16 +442,16 @@ impl Expression {
                 // 其他复杂类型
                 Self::Slice(list, slice_params) => {
                     let listo = list.eval(env)?;
-                    let start_int = Expression::eval_to_int_opt(slice_params.start, env, depth)?;
-                    let end_int = Expression::eval_to_int_opt(slice_params.end, env, depth)?;
+                    let start_int = Expression::eval_to_int_opt(&slice_params.start, env, depth)?;
+                    let end_int = Expression::eval_to_int_opt(&slice_params.end, env, depth)?;
                     let step_int =
-                        Expression::eval_to_int_opt(slice_params.step, env, depth)?.unwrap_or(1); // 默认步长1
+                        Expression::eval_to_int_opt(&slice_params.step, env, depth)?.unwrap_or(1); // 默认步长1
 
                     return Self::slice(listo, start_int, end_int, step_int);
                 }
                 Self::Index(lhs, rhs) => {
-                    let l = lhs.as_ref().clone().eval_mut(true, env, depth + 1)?;
-                    let r = rhs.as_ref().clone().eval_mut(false, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
+                    let l = lhs.as_ref().eval_mut(true, env, depth + 1)?;
+                    let r = rhs.as_ref().eval_mut(false, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
 
                     return match (l, r) {
                         // (Expression::List(m), Expression::Integer(n)) => {
@@ -476,7 +469,7 @@ impl Expression {
 
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
-                Self::Command(ref cmd, ref args) => {
+                Self::Command(cmd, args) => {
                     // dbg!("2.--->Command:", &self, &cmd, &args);
                     // alias
                     // let real_cmd = env.get(cmd.to_string().as_str());
@@ -509,7 +502,7 @@ impl Expression {
                     match cmd.as_ref().clone() {
                         // index类型的内置命令，或其他保存于map的命令
                         Expression::Index(..) => {
-                            let cmdx = cmd.as_ref().clone().eval_mut(true, env, depth)?;
+                            let cmdx = cmd.as_ref().eval_mut(true, env, depth)?;
                             // dbg!(&cmd, &cmdx);
                             return cmdx.apply(args.to_vec()).eval_apply(env, depth);
                         }
@@ -528,19 +521,17 @@ impl Expression {
                                                     .clone()
                                                     .append(&mut args.to_vec());
                                                 handle_command(
-                                                    cmd_name.to_string(),
+                                                    &cmd_name.as_ref().to_string(),
                                                     &cmd_args,
                                                     env,
                                                     depth,
                                                 )
                                             }
                                             Expression::Apply(..) => cmd_alias
-                                                .clone()
                                                 .append_args(args.to_vec())
                                                 .eval_mut(true, env, depth),
                                             Expression::Index(..) => {
-                                                let cmdx =
-                                                    cmd_alias.clone().eval_mut(true, env, depth)?;
+                                                let cmdx = cmd_alias.eval_mut(true, env, depth)?;
                                                 // dbg!(&cmd, &cmdx);
                                                 return cmdx
                                                     .append_args(args.to_vec())
@@ -560,10 +551,10 @@ impl Expression {
                                         // 顶级内置命令
                                         Some(bti) => {
                                             // dbg!("branch to builtin:", &cmd, &bti);
-                                            bti.clone().apply(args.to_vec()).eval_apply(env, depth)
+                                            bti.apply(args.to_vec()).eval_apply(env, depth)
                                         }
                                         // 三方命令
-                                        _ => handle_command(cmd_sym, args, env, depth),
+                                        _ => handle_command(&cmd_sym, args, env, depth),
                                     };
                                 }
                             };
@@ -685,7 +676,7 @@ impl Expression {
 
     /// 辅助方法：将表达式求值为整数选项
     pub fn eval_to_int_opt(
-        expr_opt: Option<Rc<Self>>,
+        expr_opt: &Option<Rc<Self>>,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Option<Int>, RuntimeError> {
@@ -695,7 +686,7 @@ impl Expression {
             // 有表达式时进行求值
             Some(boxed_expr) => {
                 // 递归求值表达式
-                let evaluated = boxed_expr.as_ref().clone().eval_mut(true, env, depth)?;
+                let evaluated = boxed_expr.as_ref().eval_mut(true, env, depth)?;
 
                 // 转换为整数
                 match evaluated {
@@ -732,7 +723,7 @@ impl Expression {
     pub fn list_append(&self, other: Rc<Vec<Expression>>) -> Result<Expression, RuntimeError> {
         match self {
             Self::List(items) => {
-                let mut new_vec = Vec::with_capacity(items.len() + 1);
+                let mut new_vec = Vec::with_capacity(items.len() + other.len());
                 new_vec.extend_from_slice(items);
                 new_vec.extend_from_slice(&other);
                 Ok(Self::List(Rc::new(new_vec)))

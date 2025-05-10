@@ -256,7 +256,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn wrap(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn wrap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("wrap", &args, 2)?;
     match args[1].eval(env)? {
         Expression::Integer(columns) => {
@@ -269,7 +269,7 @@ fn wrap(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     }
 }
 
-fn href(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn href(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("href", &args, 2)?;
     Ok(format!(
         "\x1b]8;;{url}\x1b\\{text}\x1b]8;;\x1b\\",

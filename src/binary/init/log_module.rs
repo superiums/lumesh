@@ -34,7 +34,7 @@ pub fn get() -> Expression {
 
         String::from("set_level") => Expression::builtin("set_level", |args, _env| {
             super::check_exact_args_len("set_level", &args, 1)?;
-            let level = args[0].clone().eval(_env)?;
+            let level = args[0].eval(_env)?;
             if let Expression::Integer(level) = level {
                 *LOG_LEVEL.write().unwrap() = level;
                 Ok(Expression::None)
@@ -56,7 +56,7 @@ pub fn get() -> Expression {
 
         String::from("enabled") => Expression::builtin("enabled", |args, env| {
             super::check_exact_args_len("enabled?", &args, 1)?;
-            let level = args[0].clone().eval(env)?;
+            let level = args[0].eval(env)?;
             if let Expression::Integer(level) = level {
                 Ok(Expression::Boolean(is_log_level_enabled(level)))
             } else {
@@ -73,7 +73,7 @@ pub fn get() -> Expression {
             let mut last_was_newline = true;
             let prefix = "\x1b[92m[INFO]\x1b[m ";
             for (i, arg) in args.iter().enumerate() {
-                let x = arg.clone().eval(env)?.to_string();
+                let x = arg.eval(env)?.to_string();
                 // Split into lines and print each line with a green `[INFO]` prefix.
                 let lines = x.split('\n').collect::<Vec<&str>>();
                 if lines.len() > 1 {
@@ -110,7 +110,7 @@ pub fn get() -> Expression {
             let mut last_was_newline = true;
             let prefix = "\x1b[93m[WARN]\x1b[m ";
             for (i, arg) in args.iter().enumerate() {
-                let x = arg.clone().eval(env)?.to_string();
+                let x = arg.eval(env)?.to_string();
                 // Split into lines and print each line with a green `[INFO]` prefix.
                 let lines = x.split('\n').collect::<Vec<&str>>();
                 if lines.len() > 1 {
@@ -148,7 +148,7 @@ pub fn get() -> Expression {
             let mut last_was_newline = true;
             let prefix = "\x1b[94m[DEBUG]\x1b[m ";
             for (i, arg) in args.iter().enumerate() {
-                let x = arg.clone().eval(env)?.to_string();
+                let x = arg.eval(env)?.to_string();
                 // Split into lines and print each line with a green `[INFO]` prefix.
                 let lines = x.split('\n').collect::<Vec<&str>>();
                 if lines.len() > 1 {
@@ -185,7 +185,7 @@ pub fn get() -> Expression {
             let mut last_was_newline = true;
             let prefix = "\x1b[91m[ERROR]\x1b[m ";
             for (i, arg) in args.iter().enumerate() {
-                let x = arg.clone().eval(env)?.to_string();
+                let x = arg.eval(env)?.to_string();
                 // Split into lines and print each line with a green `[INFO]` prefix.
                 let lines = x.split('\n').collect::<Vec<&str>>();
                 if lines.len() > 1 {
@@ -221,7 +221,7 @@ pub fn get() -> Expression {
             let mut last_was_newline = true;
             let prefix = "\x1b[95m[TRACE]\x1b[m ";
             for (i, arg) in args.iter().enumerate() {
-                let x = arg.clone().eval(env)?.to_string();
+                let x = arg.eval(env)?.to_string();
                 // Split into lines and print each line with a green `[INFO]` prefix.
                 let lines = x.split('\n').collect::<Vec<&str>>();
                 if lines.len() > 1 {
@@ -252,7 +252,7 @@ pub fn get() -> Expression {
         String::from("echo") => Expression::builtin("echo", |args, env| {
             // Like `echo`, but with no formatting.
             for (i, arg) in args.iter().enumerate() {
-                let x = arg.clone().eval(env)?.to_string();
+                let x = arg.eval(env)?.to_string();
                 if i < args.len() - 1 {
                     print!("{} ", x)
                 } else {

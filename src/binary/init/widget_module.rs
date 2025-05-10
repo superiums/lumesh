@@ -10,7 +10,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn create(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn create(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("create", &args, 4)?;
     let title = args[0].eval(env)?.to_string();
     let title_len = title.chars().count();
@@ -108,7 +108,7 @@ fn create(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     }
 }
 
-fn joinx(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn joinx(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("joinx", &args, 2..)?;
 
     let mut string_args = vec![];
@@ -152,7 +152,7 @@ fn joinx(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(result.into())
 }
 
-fn joiny(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn joiny(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("joiny", &args, 2..)?;
 
     let mut string_args = vec![];

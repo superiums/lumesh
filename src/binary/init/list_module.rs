@@ -240,10 +240,10 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn list(args: Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
-    Ok(Expression::List(Rc::new(args)))
+fn list(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
+    Ok(Expression::List(Rc::new(args.clone())))
 }
-fn last(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn last(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
         return Err(LmError::CustomError(
             "last requires exactly one argument".to_string(),
@@ -263,7 +263,7 @@ fn last(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     }
 }
 
-fn first(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn first(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
         return Err(LmError::CustomError(
             "first requires exactly one argument".to_string(),
@@ -284,7 +284,7 @@ fn first(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 }
 
 // 列表操作函数实现
-fn chunk(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn chunk(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "chunk requires exactly two arguments".to_string(),
@@ -327,7 +327,7 @@ fn chunk(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(Expression::List(Rc::new(result)))
 }
 
-fn cons(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn cons(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "cons requires exactly two arguments".to_string(),
@@ -351,7 +351,7 @@ fn cons(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     Ok(Expression::List(Rc::new(new_list)))
 }
 
-fn append(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn append(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "append requires exactly two arguments".to_string(),
@@ -374,7 +374,7 @@ fn append(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::List(Rc::new(new_list)))
 }
 
-pub fn rev(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
         return Err(LmError::CustomError(
             "rev requires exactly one argument".to_string(),
@@ -396,7 +396,7 @@ pub fn rev(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     }
 }
 
-fn range(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn range(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "range requires exactly two arguments".to_string(),
@@ -413,7 +413,7 @@ fn range(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     }
 }
 
-fn foldl(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn foldl(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 3 {
         return Err(LmError::CustomError(
             "foldl requires exactly three arguments".to_string(),
@@ -438,7 +438,7 @@ fn foldl(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(acc)
 }
 
-fn foldr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn foldr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 3 {
         return Err(LmError::CustomError(
             "foldr requires exactly three arguments".to_string(),
@@ -463,7 +463,7 @@ fn foldr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(acc)
 }
 
-fn zip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn zip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "zip requires exactly two arguments".to_string(),
@@ -489,7 +489,7 @@ fn zip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
     }
 }
 
-fn unzip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn unzip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 1 {
         return Err(LmError::CustomError(
             "unzip requires exactly one argument".to_string(),
@@ -530,7 +530,7 @@ fn unzip(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     ])))
 }
 
-fn take(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn take(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "take requires exactly two arguments".to_string(),
@@ -560,7 +560,7 @@ fn take(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     Ok(Expression::List(Rc::new(taken)))
 }
 
-fn drop(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn drop(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "drop requires exactly two arguments".to_string(),
@@ -590,7 +590,7 @@ fn drop(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     Ok(Expression::List(Rc::new(dropped)))
 }
 
-fn split_at(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "split_at requires exactly two arguments".to_string(),
@@ -625,7 +625,7 @@ fn split_at(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     ])))
 }
 
-fn nth(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn nth(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() != 2 {
         return Err(LmError::CustomError(
             "nth requires exactly two arguments".to_string(),
@@ -666,7 +666,7 @@ fn nth(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
     }
 }
 
-fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if !(1..=2).contains(&args.len()) {
         return Err(LmError::CustomError(
             if args.len() > 2 {
@@ -707,7 +707,7 @@ fn map(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
     }
 }
 
-fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn filter(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if !(1..=2).contains(&args.len()) {
         return Err(LmError::CustomError(
             if args.len() > 2 {
@@ -761,7 +761,7 @@ fn filter(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     }
 }
 
-fn reduce(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn reduce(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     if !(1..=3).contains(&args.len()) {
         return Err(LmError::CustomError(
             if args.len() > 3 {

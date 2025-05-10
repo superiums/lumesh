@@ -39,8 +39,8 @@ pub fn get() -> Expression {
         String::from("cursor") => Expression::from(hash_map! {
             String::from("to") => Expression::builtin("to", |args, env| {
                 super::check_exact_args_len("to", &args, 2)?;
-                let x = args[0].clone().eval(env)?;
-                let y = args[1].clone().eval(env)?;
+                let x = args[0].eval(env)?;
+                let y = args[1].eval(env)?;
                 match (x, y) {
                     (Expression::Integer(x), Expression::Integer(y)) => {
                         print!("\x1b[{row};{column}f", column = x, row = y);
@@ -52,7 +52,7 @@ pub fn get() -> Expression {
 
             String::from("up") => Expression::builtin("up", |args, env| {
                 super::check_exact_args_len("up", &args, 1)?;
-                let y = args[0].clone().eval(env)?;
+                let y = args[0].eval(env)?;
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}A", y = y);
                 } else {
@@ -63,7 +63,7 @@ pub fn get() -> Expression {
 
             String::from("down") => Expression::builtin("down", |args, env| {
                 super::check_exact_args_len("down", &args, 1)?;
-                let y = args[0].clone().eval(env)?;
+                let y = args[0].eval(env)?;
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}B", y = y);
                 } else {
@@ -74,7 +74,7 @@ pub fn get() -> Expression {
 
             String::from("left") => Expression::builtin("left", |args, env| {
                 super::check_exact_args_len("left", &args, 1)?;
-                let x = args[0].clone().eval(env)?;
+                let x = args[0].eval(env)?;
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}D", x = x);
                 } else {
@@ -85,7 +85,7 @@ pub fn get() -> Expression {
 
             String::from("right") => Expression::builtin("right", |args, env| {
                 super::check_exact_args_len("right", &args, 1)?;
-                let x = args[0].clone().eval(env)?;
+                let x = args[0].eval(env)?;
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}C", x = x);
                 } else {
@@ -191,21 +191,21 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn width(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn width(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     Ok(match terminal_size() {
         Some((Width(w), _)) => (w as Int).into(),
         _ => Expression::None,
     })
 }
 
-fn height(_: Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn height(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     Ok(match terminal_size() {
         Some((_, Height(h))) => (h as Int).into(),
         _ => Expression::None,
     })
 }
 
-fn write(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn write(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("write", &args, 3)?;
     match (args[0].eval(env)?, args[1].eval(env)?, args[2].eval(env)?) {
         (Expression::Integer(x), Expression::Integer(y), content) => {
@@ -229,13 +229,13 @@ fn write(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(Expression::None)
 }
 
-fn title(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("title", &args, 1)?;
     print!("\x1b]2;{}\x1b[0m", args[0].eval(env)?);
     Ok(Expression::None)
 }
 
-fn clear(args: Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
+fn clear(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("clear", &args, 1)?;
     print!("\x1b[2J\x1b[H");
     Ok(Expression::None)

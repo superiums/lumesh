@@ -129,7 +129,7 @@ pub fn handle_binary(
             let l = left_func.eval_mut(env, depth + 1)?;
 
             let mut path = PathBuf::from(env.get_cwd());
-            path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
+            path = path.join(rhs.eval_mut(env, depth + 1)?.to_string());
             match std::fs::OpenOptions::new().append(true).open(&path) {
                 Ok(mut file) => {
                     // use std::io::prelude::*;
@@ -170,7 +170,7 @@ pub fn handle_binary(
             let l = left_func.eval_mut(env, depth + 1)?;
             // dbg!("-->> left=", &l);
             let mut path = PathBuf::from(env.get_cwd());
-            path = path.join(rhs.clone().eval_mut(env, depth + 1)?.to_string());
+            path = path.join(rhs.eval_mut(env, depth + 1)?.to_string());
             // If the contents are bytes, write the bytes directly to the file.
             let result = if let Expression::Bytes(bytes) = l.clone() {
                 std::fs::write(path, bytes)

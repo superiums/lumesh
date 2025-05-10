@@ -13,17 +13,25 @@ fn is_interactive() -> bool {
 }
 /// 执行单个命令（支持管道）
 pub fn exec_single_cmd(
-    cmdstr: String,
-    args: Vec<String>,
+    cmdstr: &String,
+    args: Option<Vec<String>>,
     env: &mut Environment,
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
     is_last: bool,          // 是否是最后一条命令？
     always_pipe: bool,
 ) -> Result<Vec<u8>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
-    let mut cmd = Command::new(&cmdstr);
-    cmd.args(args)
-        .envs(env.get_bindings_string())
+    let mut cmd = Command::new(cmdstr);
+    match args {
+        Some(ar) => cmd
+            .args(ar)
+            .envs(env.get_bindings_string())
+            .current_dir(std::env::current_dir()?),
+        _ => cmd
+            .envs(env.get_bindings_string())
+            .current_dir(std::env::current_dir()?),
+    };
+    cmd.envs(env.get_bindings_string())
         .current_dir(std::env::current_dir()?);
     // 设置 stdin
     if input.is_some() {
@@ -44,8 +52,8 @@ pub fn exec_single_cmd(
 
     // 执行命令
     let mut child = cmd.spawn().map_err(|e| match &e.kind() {
-        ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr),
-        _ => RuntimeError::CommandFailed2(cmdstr, e.to_string()),
+        ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.clone()),
+        _ => RuntimeError::CommandFailed2(cmdstr.clone(), e.to_string()),
     })?;
 
     // 写入输入（如果不是第一条命令）
@@ -66,16 +74,16 @@ pub fn exec_single_cmd(
 }
 
 /// 遇到外部命令则返回命令和参数，其他可执行命令返回表达式，否则返回错误
-fn expr_to_command(
-    expr: &Expression,
+fn expr_to_command<'a>(
+    expr: &'a Expression,
     env: &mut Environment,
     depth: usize,
 ) -> Result<
     (
-        String,
-        Vec<String>,
-        Option<Expression>,
-        Option<(CatchType, Option<Rc<Expression>>)>,
+        Option<String>,
+        Option<Vec<String>>,
+        Option<&'a Expression>,
+        Option<(&'a CatchType, &'a Option<Rc<Expression>>)>,
     ),
     RuntimeError,
 > {
@@ -89,12 +97,12 @@ fn expr_to_command(
                 Some(_) => return Err(RuntimeError::ProgramNotFound(name.clone())),
                 None => name.clone(),
             };
-            Ok((cmd_name, vec![], None, None))
+            Ok((Some(cmd_name), None, None, None))
         }
         Expression::Apply(func, _) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
+            let func_eval = func.as_ref().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
             match func_eval {
@@ -110,7 +118,7 @@ fn expr_to_command(
                 // 其他可执行命令，如lambda,Function,Builtin
                 _ => {
                     // dgb!("--else type--", &func_eval, &func_eval.type_name());
-                    Ok(("".into(), vec![], Some(expr.to_owned()), None))
+                    Ok((None, None, Some(expr), None))
 
                     // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
                 }
@@ -119,19 +127,19 @@ fn expr_to_command(
         Expression::Command(func, args) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
+            let func_eval = func.as_ref().eval_mut(true, env, depth + 1)?;
 
             // 得到执行后的实际命令
             match func_eval {
                 // 是外部命令+参数，
                 Expression::Symbol(name) | Expression::String(name) => {
                     let cmd_args: Vec<String> = args.iter().map(|expr| expr.to_string()).collect();
-                    Ok((name, cmd_args, None, None))
+                    Ok((Some(name), Some(cmd_args), None, None))
                 }
                 // 其他可执行命令，如lambda,Function,Builtin
                 _ => {
                     // dbg!("--else type--", &func_eval, &func_eval.type_name());
-                    Ok(("".into(), vec![], Some(expr.to_owned()), None))
+                    Ok((None, None, Some(expr), None))
 
                     // Err(RuntimeError::ProgramNotFound(func_eval.to_string()))
                 }
@@ -147,18 +155,13 @@ fn expr_to_command(
         | Expression::List(..)
         | Expression::Map(..)
         | Expression::Index(..)
-        | Expression::Slice(..) => Ok(("".into(), vec![], Some(expr.to_owned()), None)),
+        | Expression::Slice(..) => Ok((None, None, Some(expr), None)),
         // 是分组则解开后再次解释
         Expression::Group(inner) => expr_to_command(inner, env, depth + 1),
         Expression::Catch(body, typ, deeling) => {
             // dbg!(&typ, &deeling);
             let (body_name, body_arg, body_expr, _) = expr_to_command(body, env, depth + 1)?;
-            Ok((
-                body_name,
-                body_arg,
-                body_expr,
-                Some((typ.clone(), deeling.clone())),
-            ))
+            Ok((body_name, body_arg, body_expr, Some((typ, deeling))))
         }
         _ => Err(RuntimeError::ProgramNotFound(expr.to_string())),
     }
@@ -166,7 +169,7 @@ fn expr_to_command(
 
 // 管道
 pub fn handle_command(
-    cmd: String,
+    cmd: &String,
     args: &Vec<Expression>,
     // bindings: &HashMap<String, String>,
     // has_right: bool,
@@ -179,8 +182,8 @@ pub fn handle_command(
     let always_pipe = env.has("__ALWAYSPIPE");
     let mut cmd_args = vec![];
     for arg in args {
-        // for flattened_arg in Expression::flatten(vec![arg.clone().eval_mut(env, depth + 1)?]) {
-        let e_arg = arg.clone().eval_mut(false, env, depth)?;
+        // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {
+        let e_arg = arg.eval_mut(false, env, depth)?;
         match e_arg {
             Expression::String(s) => cmd_args.push(s),
             Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
@@ -189,12 +192,12 @@ pub fn handle_command(
         }
     }
     // dbg!(args, &cmd_args);
-    let result = exec_single_cmd(cmd.to_string(), cmd_args, env, None, true, always_pipe)?;
+    let result = exec_single_cmd(cmd, Some(cmd_args), env, None, true, always_pipe)?;
     Ok(to_expr(Some(result)))
 }
 
 // 管道
-pub fn handle_pipes(
+pub fn handle_pipes<'a>(
     lhs: &Expression,
     rhs: &Expression,
     // bindings: &HashMap<String, String>,
@@ -226,7 +229,7 @@ pub fn handle_pipes(
                 let (cmd, args, expr, deeling) = expr_to_command(lhs, env, depth + 1)?;
                 // dbg!(&cmd, &args, &expr, &deeling);
                 // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种,还有从group解开的pipe
-                match expr.clone() {
+                match expr {
                     Some(Expression::Pipe(op, l_arm, r_arm)) if op == "|" => {
                         let result = handle_pipes(
                             &l_arm,
@@ -246,7 +249,7 @@ pub fn handle_pipes(
                     }
                     Some(ex) => {
                         // let result_expr = expr.unwrap().eval_apply(env, depth)?;
-                        let result_expr = ex.clone().eval_mut(true, env, depth + 1);
+                        let result_expr = ex.eval_mut(true, env, depth + 1);
                         match result_expr {
                             Ok(r) => Ok((None, Some(r))),
                             Err(e) => handle_err(e, ex, deeling, env, depth),
@@ -254,11 +257,19 @@ pub fn handle_pipes(
                     }
                     None => {
                         // 否则执行外部command
-                        let result_pipe =
-                            exec_single_cmd(cmd.clone(), args, env, input, false, always_pipe);
-                        match result_pipe {
-                            Ok(r) => Ok((Some(r), None)),
-                            Err(e) => handle_err(e, Expression::String(cmd), deeling, env, depth),
+                        if let Some(cmdx) = cmd {
+                            let result_pipe =
+                                exec_single_cmd(&cmdx, args, env, input, false, always_pipe);
+                            match result_pipe {
+                                Ok(r) => Ok((Some(r), None)),
+                                Err(e) => {
+                                    handle_err(e, &Expression::String(cmdx), deeling, env, depth)
+                                }
+                            }
+                        } else {
+                            Err(RuntimeError::CustomError(
+                                "No Expression or Command found".into(),
+                            ))
                         }
                     }
                 }
@@ -310,7 +321,7 @@ pub fn handle_pipes(
                 //     _ => {
                 let (cmd, args, expr, deeling) = expr_to_command(rhs, env, depth + 1)?;
 
-                match expr.clone() {
+                match expr {
                     // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种
                     Some(ex) => {
                         match ex {
@@ -322,12 +333,11 @@ pub fn handle_pipes(
                                     _ => to_expr(pipe_out),
                                 };
                                 // dbg!(&choosed_input);
-                                let result_expr =
-                                    ex.clone().append_args(vec![choosed_input]).eval_apply(
-                                        // true,
-                                        env,
-                                        depth + 1,
-                                    );
+                                let result_expr = ex.append_args(vec![choosed_input]).eval_apply(
+                                    // true,
+                                    env,
+                                    depth + 1,
+                                );
                                 match result_expr {
                                     Ok(r) => Ok((None, Some(r))),
                                     Err(e) => handle_err(e, ex, deeling, env, depth),
@@ -349,7 +359,7 @@ pub fn handle_pipes(
                                     Ok(r) => Ok(r),
                                     Err(e) => handle_err(
                                         e,
-                                        Expression::Pipe(op, l_arm, r_arm),
+                                        &Expression::Pipe(op.clone(), l_arm.clone(), r_arm.clone()),
                                         deeling,
                                         env,
                                         depth,
@@ -358,7 +368,7 @@ pub fn handle_pipes(
                             }
                             _ => {
                                 // 右侧为binop？报错？不能接收收入!!
-                                let result_expr = ex.clone().eval_mut(true, env, depth + 1);
+                                let result_expr = ex.eval_mut(true, env, depth + 1);
                                 match result_expr {
                                     Ok(r) => Ok((None, Some(r))),
                                     Err(e) => handle_err(e, ex, deeling, env, depth),
@@ -369,20 +379,26 @@ pub fn handle_pipes(
                     _ => {
                         // 右侧是命令，读取左侧的标准输出结果
                         // 如果标准输出结果为空，则从算术运算的结果转换
-                        let choosed_input = match pipe_out {
-                            Some(po) => po,
-                            _ => to_bytes(expr_out),
-                        };
-                        let result_right = exec_single_cmd(
-                            cmd.clone(),
-                            args,
-                            env,
-                            Some(choosed_input),
-                            !has_right,
-                            always_pipe,
-                        )?;
-                        // dgb!(&cmd, &result_right);
-                        Ok((Some(result_right), None))
+                        if let Some(cmdx) = cmd {
+                            let choosed_input = match pipe_out {
+                                Some(po) => po,
+                                _ => to_bytes(expr_out),
+                            };
+                            let result_right = exec_single_cmd(
+                                &cmdx,
+                                args,
+                                env,
+                                Some(choosed_input),
+                                !has_right,
+                                always_pipe,
+                            )?;
+                            // dgb!(&cmd, &result_right);
+                            Ok((Some(result_right), None))
+                        } else {
+                            Err(RuntimeError::CustomError(
+                                "No Expression or Command found".into(),
+                            ))
+                        }
                     }
                 }
                 // match deeling {
@@ -413,15 +429,15 @@ pub fn handle_pipes(
 
 fn handle_err(
     e: RuntimeError,
-    body: Expression,
-    deeling: Option<(CatchType, Option<Rc<Expression>>)>,
+    body: &Expression,
+    deeling: Option<(&CatchType, &Option<Rc<Expression>>)>,
     env: &mut Environment,
     depth: usize,
 ) -> Result<(Option<Vec<u8>>, Option<Expression>), RuntimeError> {
     match deeling {
         Some((ctyp, handler)) => {
             // dbg!("left err, deeling");
-            let exd = catch_error(e, Rc::new(body), ctyp, handler, env, depth + 1)?;
+            let exd = catch_error(e, &Rc::new(body.clone()), ctyp, handler, env, depth + 1)?;
             Ok((None, Some(exd)))
         }
         _ => Err(e),
@@ -442,8 +458,8 @@ fn to_bytes(expr_out: Option<Expression>) -> Vec<u8> {
 }
 // 输入重定向处理
 pub fn handle_stdin_redirect(
-    lhs: Expression,
-    rhs: Expression,
+    lhs: &Expression,
+    rhs: &Expression,
     env: &mut Environment,
     depth: usize,
     always_pipe: bool,
@@ -452,16 +468,17 @@ pub fn handle_stdin_redirect(
     let path = rhs.eval_mut(true, env, depth + 1)?.to_string();
     let contents = std::fs::read(path)?;
     // 左侧
-    let (cmd, args, expr, deeling) = expr_to_command(&lhs, env, depth)?;
+    let (cmd, args, expr, deeling) = expr_to_command(lhs, env, depth)?;
     // let bindings = env.get_bindings_map();
     if expr.is_some() {
         // lambda, fn, builtin may read stdin?
         Err(RuntimeError::CustomError(format!(
             "expr {expr:?} can't read stdin"
         )))
-    } else {
+    } else if let Some(cmdx) = cmd {
         // 否则执行外部command
-        let result = exec_single_cmd(cmd.clone(), args, env, Some(contents), true, always_pipe);
+
+        let result = exec_single_cmd(&cmdx, args, env, Some(contents), true, always_pipe);
         match result {
             Ok(r) => Ok(to_expr(Some(r))),
             Err(e) => match deeling {
@@ -469,7 +486,7 @@ pub fn handle_stdin_redirect(
                     // dbg!("left err, deeling");
                     let exd = catch_error(
                         e,
-                        Rc::new(Expression::String(cmd)),
+                        &Rc::new(Expression::String(cmdx)),
                         ctyp,
                         handler,
                         env,
@@ -480,5 +497,9 @@ pub fn handle_stdin_redirect(
                 _ => Err(e),
             }, // handle_err(e, Expression::String(cmd), deeling, env),
         }
+    } else {
+        Err(RuntimeError::CustomError(
+            "no expression nor cmd found".into(),
+        ))
     }
 }

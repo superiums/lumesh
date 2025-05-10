@@ -326,24 +326,25 @@ impl Expression {
         }
     }
 
-    pub fn apply(self, args: Vec<Self>) -> Self {
-        Self::Apply(Rc::new(self), Rc::new(args))
+    pub fn apply(&self, args: Vec<Self>) -> Self {
+        Self::Apply(Rc::new(self.clone()), Rc::new(args))
     }
     // 参数合并方法
-    pub fn append_args(self, args: Vec<Expression>) -> Expression {
+    pub fn append_args(&self, args: Vec<Expression>) -> Expression {
         match self {
             Expression::Apply(f, existing_args) => {
-                Expression::Apply(f, Rc::new([(*existing_args).clone(), args].concat()))
+                let mut new_vec = Vec::with_capacity(existing_args.len() + args.len());
+                new_vec.extend_from_slice(existing_args);
+                new_vec.extend_from_slice(&args);
+                Expression::Apply(f.clone(), Rc::new(new_vec))
             }
-            _ => Expression::Apply(Rc::new(self), Rc::new(args)), //report error?
+            _ => Expression::Apply(Rc::new(self.clone()), Rc::new(args)), //report error?
         }
     }
-    pub fn ensure_apply(self) -> Expression {
+    pub fn ensure_apply(&self) -> Expression {
         match self {
-            Expression::Symbol(f) => {
-                Expression::Apply(Rc::new(Expression::Symbol(f)), Rc::new(vec![]))
-            }
-            _ => self, //others, like binop,group,pipe...
+            Expression::Symbol(_) => Expression::Apply(Rc::new(self.clone()), Rc::new(vec![])),
+            _ => self.clone(), //others, like binop,group,pipe...
         }
     }
 

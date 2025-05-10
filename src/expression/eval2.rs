@@ -12,65 +12,60 @@ use std::io::Write;
 // Expression求值2
 impl Expression {
     /// 处理复杂表达式的递归求值
-    pub fn eval_complex(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
+    pub fn eval_complex(&self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         match self {
             // 控制流表达式
-            Self::For(var, list_expr, body) => {
-                // 求值列表表达式
-                let list = list_expr
-                    .as_ref()
-                    .clone()
-                    .eval_mut(true, env, depth + 1)?
-                    .as_list()?
-                    .clone();
-
-                // 遍历每个元素执行循环体
-                let mut result = Vec::with_capacity(list.len());
-                for item in list.iter() {
-                    env.define(&var, item.clone());
-                    let last = body.as_ref().clone().eval_mut(true, env, depth + 1)?;
-                    result.push(last)
-                }
-                Ok(Expression::from(result))
-            }
-            Self::While(cond, body) => {
-                // 循环求值直到条件为假
-                let mut last = Self::None;
-                while cond
-                    .as_ref()
-                    .clone()
-                    .eval_mut(true, env, depth + 1)?
-                    .is_truthy()
-                {
-                    last = body.as_ref().clone().eval_mut(true, env, depth + 1)?;
-                }
-                Ok(last)
-            }
             Self::If(cond, true_expr, false_expr) => {
                 // 条件分支求值
-                if cond
-                    .as_ref()
-                    .clone()
-                    .eval_mut(true, env, depth + 1)?
-                    .is_truthy()
-                {
-                    true_expr.as_ref().clone().eval_mut(true, env, depth + 1)
+                if cond.as_ref().eval_mut(true, env, depth + 1)?.is_truthy() {
+                    true_expr.as_ref().eval_mut(true, env, depth + 1)
                 } else {
-                    false_expr.as_ref().clone().eval_mut(true, env, depth + 1)
+                    false_expr.as_ref().eval_mut(true, env, depth + 1)
                 }
             }
 
             Self::Match(value, branches) => {
                 // 模式匹配求值
-                let val = value.as_ref().clone().eval_mut(true, env, depth + 1)?;
+                let val = value.as_ref().eval_mut(true, env, depth + 1)?;
                 for (pat, expr) in branches {
                     if matches_pattern(&val, &pat, env)? {
-                        return expr.as_ref().clone().eval_mut(true, env, depth + 1);
+                        return expr.as_ref().eval_mut(true, env, depth + 1);
                     }
                 }
                 Err(RuntimeError::NoMatchingBranch(val.to_string()))
             }
 
+            Self::For(var, list_expr, body) => {
+                // 求值列表表达式
+                let list_excuted = list_expr.as_ref().eval_mut(true, env, depth + 1)?;
+                // .as_list()?;
+                if let Expression::List(list) = list_excuted {
+                    // 遍历每个元素执行循环体
+                    let mut result = Vec::with_capacity(list.len());
+                    for item in list.iter() {
+                        env.define(var, item.clone());
+                        let last = body.as_ref().eval_mut(true, env, depth + 1)?;
+                        result.push(last)
+                    }
+                    Ok(Expression::from(result))
+                } else {
+                    Err(RuntimeError::ForNonList(list_excuted))
+                }
+            }
+
+            Self::While(cond, body) => {
+                // 循环求值直到条件为假
+                let mut last = Self::None;
+                while cond.as_ref().eval_mut(true, env, depth + 1)?.is_truthy() {
+                    last = body.as_ref().eval_mut(true, env, depth + 1)?;
+                    if let Self::Return(value) = last {
+                        return Ok(value.as_ref().clone()); // 或者返回其他值
+                    }
+                }
+                Ok(last)
+            }
+            // TODO add Loop,break
+            //
             // 函数相关表达式
 
             // Self::Function(name, params, body, def_env) => {
@@ -87,7 +82,7 @@ impl Expression {
             Self::Function(name, params, pc, body) => {
                 // dbg!(&def_env);
                 // 验证默认值类型（新增）
-                for (p, default) in &params {
+                for (p, default) in params {
                     if let Some(expr) = default {
                         match expr {
                             Expression::String(_)
@@ -96,7 +91,7 @@ impl Expression {
                             | Expression::Boolean(_) => {}
                             _ => {
                                 return Err(RuntimeError::InvalidDefaultValue(
-                                    name,
+                                    name.clone(),
                                     p.to_string(),
                                     expr.clone(),
                                 ));
@@ -115,8 +110,8 @@ impl Expression {
                 //     }
                 // }
                 // dbg!(&new_env);
-                let func = Self::Function(name.clone(), params, pc, body);
-                env.define(&name, func.clone());
+                let func = Self::Function(name.clone(), params.clone(), pc.clone(), body.clone());
+                env.define(name, func.clone());
                 Ok(func)
             }
             // Self::Macro(param, body) => {
@@ -132,14 +127,14 @@ impl Expression {
                 // 顺序求值语句块
                 let mut last = Self::None;
                 for expr in exprs.as_ref() {
-                    last = expr.clone().eval_mut(true, env, depth + 1)?;
+                    last = expr.eval_mut(true, env, depth + 1)?;
                 }
                 Ok(last)
             }
 
             Self::Return(expr) => {
                 // 提前返回机制
-                Err(RuntimeError::EarlyReturn(expr.as_ref().clone().eval_mut(
+                Err(RuntimeError::EarlyReturn(expr.as_ref().eval_mut(
                     true,
                     env,
                     depth + 1,
@@ -200,7 +195,7 @@ impl Expression {
                     "|>" => {
                         // 执行左侧表达式
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let left_func = lhs.as_ref().clone().ensure_apply();
+                        let left_func = lhs.as_ref().ensure_apply();
                         let left_output = left_func.eval_mut(true, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
 
@@ -210,23 +205,17 @@ impl Expression {
                         // 将左侧结果作为最后一个参数传递给右侧
                         let args = vec![left_output];
                         rhs.as_ref()
-                            .clone()
                             .append_args(args)
                             .eval_mut(true, env, depth + 1)
                     }
                     ">>>" => {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let left_func = lhs.as_ref().clone().ensure_apply();
+                        let left_func = lhs.as_ref().ensure_apply();
                         let l = left_func.eval_mut(true, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
 
                         let mut path = std::env::current_dir()?;
-                        path = path.join(
-                            rhs.as_ref()
-                                .clone()
-                                .eval_mut(true, env, depth + 1)?
-                                .to_string(),
-                        );
+                        path = path.join(rhs.as_ref().eval_mut(true, env, depth + 1)?.to_string());
                         match std::fs::OpenOptions::new().append(true).open(&path) {
                             Ok(mut file) => {
                                 // use std::io::prelude::*;
@@ -236,47 +225,38 @@ impl Expression {
                                 } else {
                                     // Otherwise, convert the contents to a pretty string and write that.
                                     // std::fs::write(path, contents.to_string())
-                                    file.write_all(l.clone().to_string().as_bytes())
+                                    file.write_all(l.to_string().as_bytes())
                                 };
 
                                 match result {
                                     Ok(()) => Ok(l),
-                                    Err(e) => {
-                                        Err(RuntimeError::CustomError(format!(
-                                            "could not append to file {}: {:?}",
-                                            rhs, e
-                                        )))
-                                    }
+                                    Err(e) => Err(RuntimeError::CustomError(format!(
+                                        "could not append to file {}: {:?}",
+                                        rhs, e
+                                    ))),
                                 }
                             }
-                            Err(e) => {
-                                Err(match e.kind() {
-                                    ErrorKind::PermissionDenied => {
-                                        RuntimeError::PermissionDenied(rhs.as_ref().clone())
-                                    }
-                                    _ => RuntimeError::CustomError(format!(
-                                        "could not open file {}: {:?}",
-                                        path.display(),
-                                        e
-                                    )),
-                                })
-                            }
+                            Err(e) => Err(match e.kind() {
+                                ErrorKind::PermissionDenied => {
+                                    RuntimeError::PermissionDenied(rhs.as_ref().clone())
+                                }
+                                _ => RuntimeError::CustomError(format!(
+                                    "could not open file {}: {:?}",
+                                    path.display(),
+                                    e
+                                )),
+                            }),
                         }
                     }
                     ">>" => {
                         // dbg!("-->>--", &lhs);
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let left_func = lhs.as_ref().clone().ensure_apply();
+                        let left_func = lhs.as_ref().ensure_apply();
                         let l = left_func.eval_mut(true, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
                         // dbg!("-->> left=", &l);
                         let mut path = std::env::current_dir()?;
-                        path = path.join(
-                            rhs.as_ref()
-                                .clone()
-                                .eval_mut(true, env, depth + 1)?
-                                .to_string(),
-                        );
+                        path = path.join(rhs.as_ref().eval_mut(true, env, depth + 1)?.to_string());
                         // If the contents are bytes, write the bytes directly to the file.
                         let result = if let Expression::Bytes(bytes) = l.clone() {
                             std::fs::write(path, bytes)
@@ -295,13 +275,7 @@ impl Expression {
                     }
                     "<<" => {
                         // 输入重定向处理
-                        handle_stdin_redirect(
-                            lhs.as_ref().clone(),
-                            rhs.as_ref().clone(),
-                            env,
-                            depth,
-                            true,
-                        )
+                        handle_stdin_redirect(lhs, rhs, env, depth, true)
                         // let path = rhs.eval_mut(true,env, depth + 1)?.to_string();
                         // let contents = std::fs::read_to_string(path)
                         //     .map(Self::String)
@@ -318,7 +292,7 @@ impl Expression {
             }
             Self::Catch(body, typ, deeling) => {
                 // dbg!(&typ, &deeling);
-                let result = body.as_ref().clone().eval_mut(true, env, depth + 1);
+                let result = body.as_ref().eval_mut(true, env, depth + 1);
                 match result {
                     Ok(result) => Ok(result),
                     Err(e) => catch_error(e, body, typ, deeling, env, depth + 1),
@@ -327,24 +301,24 @@ impl Expression {
             // 默认情况
             _ => {
                 //dbg!("2.--->Default:", &self);
-                Ok(self)
+                Ok(self.clone())
             } // 基本类型已在 eval_mut 处理
         }
     }
 
     // }
     /// 执行
-    pub fn eval_apply(self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
+    pub fn eval_apply(&self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         // 函数应用
         match self {
-            Self::Apply(ref func, ref args) | Self::Command(ref func, ref args) => {
+            Self::Apply(func, args) | Self::Command(func, args) => {
                 // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
 
                 // 递归求值函数和参数
-                let func_eval = func.as_ref().clone().eval_mut(true, env, depth + 1)?;
+                let func_eval = func.as_ref().eval_mut(true, env, depth + 1)?;
                 // let args_eval = args
                 //     .into_iter()
-                //     .map(|a| a.clone().eval_mut(true,env, depth + 1))
+                //     .map(|a| a.eval_mut(true,env, depth + 1))
                 //     .collect::<Result<Vec<_>, _>>()?;
                 // let func_eval = *func.clone();
 
@@ -354,13 +328,13 @@ impl Expression {
                     Self::Symbol(name) | Self::String(name) => {
                         // Apply as Command
                         //dbg!("   3.--->applying symbol as Command:", &name);
-                        handle_command(name, args, env, depth)
+                        handle_command(&name, args, env, depth)
                         // let bindings = env.get_bindings_map();
 
                         // let mut cmd_args = vec![];
                         // for arg in args {
                         //     for flattened_arg in
-                        //         Self::flatten(vec![arg.clone().eval_mut(env, depth + 1)?])
+                        //         Self::flatten(vec![arg.eval_mut(env, depth + 1)?])
                         //     {
                         //         match flattened_arg {
                         //             Self::String(s) => cmd_args.push(s),
@@ -380,7 +354,7 @@ impl Expression {
                         //         .args(
                         //             cmd_args, // Self::flatten(args.clone()).iter()
                         //                      //     .filter(|&x| x != &Self::None)
-                        //                      //     // .map(|x| Ok(format!("{}", x.clone().eval_mut(env, depth + 1)?)))
+                        //                      //     // .map(|x| Ok(format!("{}", x.eval_mut(env, depth + 1)?)))
                         //                      //     .collect::<Result<Vec<String>, Error>>()?,
                         //         )
                         //         .envs(bindings)
@@ -445,7 +419,7 @@ impl Expression {
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
                         // dbg!("   3.--->applying Builtin:", &func, &args);
-                        match body(args.as_ref().clone(), env) {
+                        match body(args.as_ref(), env) {
                             Ok(result) => {
                                 self.set_status_code(0, env);
                                 // dbg!(&result);
@@ -468,16 +442,12 @@ impl Expression {
                         // 批量参数绑定前先求值所有参数
                         let evaluated_args = args
                             .iter()
-                            .map(|arg| arg.clone().eval_mut(true, env, depth + 1))
+                            .map(|arg| arg.eval_mut(true, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
-                        match bind_arguments(params, evaluated_args, &mut current_env) {
+                        match bind_arguments(&params, &evaluated_args, &mut current_env) {
                             // 完全应用：求值函数体
-                            None => {
-                                body.as_ref()
-                                    .clone()
-                                    .eval_mut(true, &mut current_env, depth + 1)
-                            }
+                            None => body.as_ref().eval_mut(true, &mut current_env, depth + 1),
 
                             // 部分应用：返回新的柯里化lambda
                             Some(remain) => Ok(Self::Lambda(remain, body)),
@@ -509,7 +479,7 @@ impl Expression {
                         let mut actual_args = args
                             .as_ref()
                             .iter()
-                            .map(|a| a.clone().eval_mut(true, env, depth + 1))
+                            .map(|a| a.eval_mut(true, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
                         // 填充默认值逻辑（新增）
@@ -533,7 +503,7 @@ impl Expression {
                         if let Some(collector) = pc {
                             new_env.define(
                                 collector.as_str(),
-                                Expression::from(actual_args.clone()[params.len()..].to_vec()),
+                                Expression::from(actual_args[params.len()..].to_vec()),
                             );
                         }
                         for ((param, _), arg) in params.iter().zip(actual_args) {
@@ -548,11 +518,7 @@ impl Expression {
                         //     }
                         // }
                         // dbg!(&new_env);
-                        match body
-                            .as_ref()
-                            .clone()
-                            .eval_mut(true, &mut new_env, depth + 1)
-                        {
+                        match body.as_ref().eval_mut(true, &mut new_env, depth + 1) {
                             Ok(v) => {
                                 self.set_status_code(0, env);
                                 Ok(v)
@@ -590,8 +556,8 @@ impl Expression {
 /// # 返回值
 /// 返回元组: (剩余未绑定的形式参数)
 pub fn bind_arguments(
-    params: Vec<String>,
-    args: Vec<Expression>,
+    params: &Vec<String>,
+    args: &Vec<Expression>,
     target_env: &mut Environment,
 ) -> Option<Vec<String>> {
     // 计算实际能绑定的参数数量

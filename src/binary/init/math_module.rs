@@ -64,7 +64,7 @@ pub fn get() -> Expression {
         String::from("sum") => Expression::builtin("sum", |args, env| {
             let mut int_sum = 0;
             let mut float_sum = 0.0;
-            for arg in &args {
+            for arg in args {
                 match arg.eval(env)? {
                     Expression::Integer(i) => int_sum += i,
                     Expression::Float(f) => float_sum += f,
@@ -92,7 +92,7 @@ pub fn get() -> Expression {
             let mut int_product = 1;
             let mut float_product = 1.0;
 
-            for arg in &args {
+            for arg in args {
                 match arg.eval(env)? {
                     Expression::Integer(i) => int_product *= i,
                     Expression::Float(f) => float_product *= f,

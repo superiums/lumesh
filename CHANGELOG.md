@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.7]
+- refactor expression and builtin, pipes with ref and reduce clone of expr
+
+after rebuild, it becomes 3 times faster than previous!
+Great!
+
 ## [0.3.6]
 - refactor expression with Rc.
 this makes expr clone runs 4 times faster than Box.

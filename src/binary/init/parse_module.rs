@@ -18,7 +18,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn parse_toml(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn parse_toml(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("toml", &args, 1)?;
     let text = args[0].eval(env)?.to_string();
     if let Ok(val) = text.parse::<toml::Value>() {
@@ -55,7 +55,7 @@ fn toml_to_expr(val: toml::Value) -> Expression {
     }
 }
 
-fn parse_expr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn parse_expr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("expr", &args, 1)?;
     let script = args[0].eval(env)?.to_string();
     if script.is_empty() {
@@ -74,7 +74,7 @@ fn parse_expr(args: Vec<Expression>, env: &mut Environment) -> Result<Expression
     }
 }
 
-fn parse_json(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn parse_json(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("json", &args, 1)?;
     let text = args[0].eval(env)?.to_string();
     if text.is_empty() {
@@ -116,7 +116,7 @@ fn json_to_expr(val: JsonValue) -> Expression {
 
 /// 解析命令行输出为结构化数据
 fn parse_command_output(
-    args: Vec<Expression>,
+    args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
     super::check_args_len("parse_cmd", &args, 1..2)?;
@@ -192,7 +192,7 @@ fn parse_command_output(
 }
 
 /// 筛选行 (类似SQL WHERE)
-fn filter_rows(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("where", &args, 2)?;
 
     let data = match args[0].eval(env)? {
@@ -216,7 +216,7 @@ fn filter_rows(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
             }
 
             // 评估条件
-            match condition.clone().eval(&mut row_env)? {
+            match condition.eval(&mut row_env)? {
                 Expression::Boolean(true) => filtered.push(row.clone()),
                 Expression::Boolean(false) => (),
                 _ => {
@@ -232,7 +232,7 @@ fn filter_rows(args: Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 /// 选择列 (类似SQL SELECT)
-fn select_columns(args: Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("select", &args, 1..2)?;
 
     let data = match args[0].eval(env)? {

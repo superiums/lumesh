@@ -173,7 +173,7 @@ impl PrattParser {
                     // dbg!("--> binOp: trying next loop", input, next_min_prec);
                     // dbg!("--> binOp: trying next loop", &lhs, &operator);
                     match operator {
-                        "?." | "?-" | "??" | "?!" => {
+                        "?." | "?+" | "??" | "?!" => {
                             // dbg!("--->try catch ast:");
                             lhs = Self::build_catch_ast(op_info, lhs)?
                         }
@@ -449,7 +449,7 @@ impl PrattParser {
             //     false,
             //     OperatorKind::Prefix,
             // )),
-            "?." | "?-" | "??" | "?!" | "?:" => Some(OperatorInfo::new(op, PREC_CATCH, false)),
+            "?." | "?+" | "??" | "?!" | "?:" => Some(OperatorInfo::new(op, PREC_CATCH, false)),
 
             opa if opa.starts_with("_+") => Some(OperatorInfo::new(opa, PREC_ADD_SUB, false)),
             ops if ops.starts_with("_*") => Some(OperatorInfo::new(ops, PREC_MUL_DIV, false)),
@@ -626,7 +626,7 @@ impl PrattParser {
             //     }
             // }
             "?" => {
-                // dbg!("?---->", &lhs, &rhs);
+                // dbg!("?+--->", &lhs, &rhs);
                 let (true_expr, false_expr) = match rhs {
                     Expression::BinaryOp(op, t, f) if op == ":" => (t, f),
                     _ => {
@@ -718,7 +718,7 @@ impl PrattParser {
         // dbg!("--->catch ast:", &op);
         Ok(match op.symbol {
             "?." => Expression::Catch(Rc::new(lhs), CatchType::Ignore, None),
-            "?-" => Expression::Catch(Rc::new(lhs), CatchType::PrintStd, None),
+            "?+" => Expression::Catch(Rc::new(lhs), CatchType::PrintStd, None),
             "??" => Expression::Catch(Rc::new(lhs), CatchType::PrintErr, None),
             "?!" => Expression::Catch(Rc::new(lhs), CatchType::PrintOver, None),
             _ => unreachable!(),
@@ -913,7 +913,7 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
     // catch
     let (input, handler_options) = opt(alt((
         map(text("?."), |_| (CatchType::Ignore, None)),
-        map(text("?-"), |_| (CatchType::PrintStd, None)),
+        map(text("?+"), |_| (CatchType::PrintStd, None)),
         map(text("??"), |_| (CatchType::PrintErr, None)),
         map(text("?!"), |_| (CatchType::PrintOver, None)),
         map(preceded(text("?:"), parse_expr), |e| {

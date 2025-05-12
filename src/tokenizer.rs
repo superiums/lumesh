@@ -151,7 +151,7 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn catch_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("?-"),
+        keyword_tag("?+"),
         keyword_tag("?."),
         keyword_tag("??"),
         keyword_tag("?!"),

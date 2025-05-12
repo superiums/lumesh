@@ -1,4 +1,8 @@
 # Changelog
+## [0.3.8]
+- add loop and break
+- change `?-` to `?+`, which means to merge errs to stdout.
+`6 / 0 ?-    # print err to stdout`
 
 ## [0.3.7]
 - refactor expression and builtin, pipes with ref and reduce clone of expr

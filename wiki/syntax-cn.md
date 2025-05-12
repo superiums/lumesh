@@ -451,7 +451,7 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
   - 错误忽略： `?.`
   相当于 `?: {}`
 
-  - 错误打印到标准输出： `?-`
+  - 错误打印到标准输出： `?+`
   相当于 `?: e -> echo e.msg`
 
   - 错误打印到错误输出： `??`
@@ -466,7 +466,7 @@ x += 3 * (2 ** 4)  # x = 5 + 48 = 53
 ```bash
 
 6 / 0 ?.    # ignore err
-6 / 0 ?-    # print err to stdout
+6 / 0 ?+    # print err to stdout
 6 / 0 ??    # print err to stderr
 6 / 0 ?!    # use this err msg as result
 

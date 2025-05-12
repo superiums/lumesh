@@ -731,7 +731,9 @@ fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
         parse_if_flow,    // 同时处理if语句和if表达式
         parse_match_flow, // 同时处理match语句和match表达式
         parse_while_flow, // 同时处理while/for循环
+        parse_loop_flow,
         parse_for_flow,
+        parse_break,
         parse_return,
     ))(input)
 }
@@ -935,6 +937,14 @@ fn parse_return(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
     Ok((
         input,
         Expression::Return(Rc::new(expr.unwrap_or(Expression::None))),
+    ))
+}
+fn parse_break(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("break")(input)?;
+    let (input, expr) = opt(parse_expr)(input)?;
+    Ok((
+        input,
+        Expression::Break(Rc::new(expr.unwrap_or(Expression::None))),
     ))
 }
 
@@ -1354,6 +1364,13 @@ fn parse_while_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     let (input, body) = parse_block(input)?;
 
     Ok((input, Expression::While(Rc::new(cond), Rc::new(body))))
+}
+// LOOP循环解析
+fn parse_loop_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("loop")(input)?;
+    let (input, body) = parse_block(input)?;
+
+    Ok((input, Expression::Loop(Rc::new(body))))
 }
 
 // FOR循环解析

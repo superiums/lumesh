@@ -38,11 +38,27 @@ impl Expression {
                 let mut last = Self::None;
                 while cond.as_ref().eval_mut(true, env, depth + 1)?.is_truthy() {
                     last = body.as_ref().eval_mut(true, env, depth + 1)?;
-                    if let Self::Return(value) = last {
+                    if let Self::Break(value) = last {
                         return Ok(value.as_ref().clone()); // 或者返回其他值
                     }
                 }
                 Ok(last)
+            }
+            Self::Loop(body) => {
+                // 循环求值直到条件为假
+                loop {
+                    let last = body.as_ref().eval_mut(true, env, depth + 1);
+                    match last {
+                        Ok(_) => {} //继续
+                        Err(RuntimeError::EarlyBreak(v)) => {
+                            return Ok(v);
+                        } // 捕获函数体内的return
+                        Err(e) => return Err(e),
+                    }
+                    // if let Self::Break(value) = last {
+                    //     return Ok(value.as_ref().clone()); // 或者返回其他值
+                    // }
+                }
             }
             // TODO add Loop,break
             //
@@ -114,11 +130,15 @@ impl Expression {
 
             Self::Return(expr) => {
                 // 提前返回机制
-                Err(RuntimeError::EarlyReturn(expr.as_ref().eval_mut(
-                    true,
-                    env,
-                    depth + 1,
-                )?))
+                let v = expr.as_ref().eval_mut(true, env, depth + 1)?;
+                // Ok(Self::Return(Rc::new(v)))
+                Err(RuntimeError::EarlyReturn(v))
+            }
+            Self::Break(expr) => {
+                // 提前返回机制
+                let v = expr.as_ref().eval_mut(true, env, depth + 1)?;
+                // Ok(Self::Break(Rc::new(v)))
+                Err(RuntimeError::EarlyBreak(v))
             }
 
             // 管道
@@ -427,7 +447,24 @@ impl Expression {
 
                         match bind_arguments(&params, &evaluated_args, &mut current_env) {
                             // 完全应用：求值函数体
-                            None => body.as_ref().eval_mut(true, &mut current_env, depth + 1),
+                            None => {
+                                let result =
+                                    body.as_ref().eval_mut(true, &mut current_env, depth + 1);
+                                match result {
+                                    Ok(v) => {
+                                        self.set_status_code(0, env);
+                                        Ok(v)
+                                    }
+                                    Err(RuntimeError::EarlyReturn(v)) => {
+                                        self.set_status_code(0, env);
+                                        Ok(v)
+                                    } // 捕获函数体内的return
+                                    Err(e) => {
+                                        self.set_status_code(1, env);
+                                        Err(e)
+                                    }
+                                }
+                            }
 
                             // 部分应用：返回新的柯里化lambda
                             Some(remain) => Ok(Self::Lambda(remain, body)),

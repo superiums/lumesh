@@ -51,6 +51,7 @@ macro_rules! fmt_shared {
             // While 修改
             Self::While(cond, body) if $debug => write!($f, "while {:?} {:?}", cond, body),
             Self::While(cond, body) => write!($f, "while {} {}", cond, body),
+            Self::Loop(inner) => write!($f, "(loop {})", inner),
 
             // Lambda 修改
             Self::Lambda(params, body) if $debug => {
@@ -197,6 +198,7 @@ macro_rules! fmt_shared {
                 _ => write!($f, "fn {}({:?}) {{ {:?} }}", name, param, body),
             },
             Self::Return(body) => write!($f, "return {}", body),
+            Self::Break(body) => write!($f, "break {}", body),
             Self::For(name, list, body) => write!($f, "for {} in {:?} {:?}", name, list, body),
             Self::Do(exprs) => write!(
                 $f,
@@ -298,6 +300,7 @@ impl Expression {
             Self::Assign(_, _) => "Assign".into(),
             Self::For(_, _, _) => "For".into(),
             Self::While(_, _) => "While".into(),
+            Self::Loop(_) => "Loop".into(),
             Self::Match(_, _) => "Match".into(),
             Self::If(_, _, _) => "If".into(),
             Self::Apply(_, _) => "Apply".into(),
@@ -306,6 +309,7 @@ impl Expression {
             // Self::Macro(_, _) => "Macro".into(),
             Self::Function(..) => "Function".into(),
             Self::Return(_) => "Return".into(),
+            Self::Break(_) => "Break".into(),
             Self::Do(_) => "Do".into(),
             Self::Builtin(_) => "Builtin".into(),
             Self::Quote(_) => "Quote".into(),

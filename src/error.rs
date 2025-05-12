@@ -379,6 +379,8 @@ pub enum RuntimeError {
     TypeError { expected: String, found: String },
     #[error("illegal return outside function")]
     EarlyReturn(Expression),
+    #[error("illegal break outside loop")]
+    EarlyBreak(Expression),
     #[error("overflowed when: `{0}`")]
     Overflow(String),
     #[error(transparent)]

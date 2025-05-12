@@ -29,6 +29,7 @@ impl Expression {
         self.eval_mut(true, env, 0)
     }
     /// 求值主逻辑
+    #[inline]
     pub fn eval_mut(
         &self,
         explain_builtin: bool,

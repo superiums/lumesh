@@ -38,7 +38,7 @@ pub fn get() -> Expression {
         }),
         String::from("cursor") => Expression::from(hash_map! {
             String::from("to") => Expression::builtin("to", |args, env| {
-                super::check_exact_args_len("to", &args, 2)?;
+                super::check_exact_args_len("to", args, 2)?;
                 let x = args[0].eval(env)?;
                 let y = args[1].eval(env)?;
                 match (x, y) {
@@ -51,7 +51,7 @@ pub fn get() -> Expression {
             }, "move the cursor to a specific position in the console"),
 
             String::from("up") => Expression::builtin("up", |args, env| {
-                super::check_exact_args_len("up", &args, 1)?;
+                super::check_exact_args_len("up", args, 1)?;
                 let y = args[0].eval(env)?;
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}A", y = y);
@@ -62,7 +62,7 @@ pub fn get() -> Expression {
             }, "move the cursor up a specific number of lines"),
 
             String::from("down") => Expression::builtin("down", |args, env| {
-                super::check_exact_args_len("down", &args, 1)?;
+                super::check_exact_args_len("down", args, 1)?;
                 let y = args[0].eval(env)?;
                 if let Expression::Integer(y) = &y {
                     print!("\x1b[{y}B", y = y);
@@ -73,7 +73,7 @@ pub fn get() -> Expression {
             }, "move the cursor down a specific number of lines"),
 
             String::from("left") => Expression::builtin("left", |args, env| {
-                super::check_exact_args_len("left", &args, 1)?;
+                super::check_exact_args_len("left", args, 1)?;
                 let x = args[0].eval(env)?;
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}D", x = x);
@@ -84,7 +84,7 @@ pub fn get() -> Expression {
             }, "move the cursor left a specific number of columns"),
 
             String::from("right") => Expression::builtin("right", |args, env| {
-                super::check_exact_args_len("right", &args, 1)?;
+                super::check_exact_args_len("right", args, 1)?;
                 let x = args[0].eval(env)?;
                 if let Expression::Integer(x) = &x {
                     print!("\x1b[{x}C", x = x);
@@ -206,7 +206,7 @@ fn height(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmErro
 }
 
 fn write(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("write", &args, 3)?;
+    super::check_exact_args_len("write", args, 3)?;
     match (args[0].eval(env)?, args[1].eval(env)?, args[2].eval(env)?) {
         (Expression::Integer(x), Expression::Integer(y), content) => {
             let content = content.to_string();
@@ -230,13 +230,13 @@ fn write(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 }
 
 fn title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("title", &args, 1)?;
+    super::check_exact_args_len("title", args, 1)?;
     print!("\x1b]2;{}\x1b[0m", args[0].eval(env)?);
     Ok(Expression::None)
 }
 
 fn clear(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("clear", &args, 1)?;
+    super::check_exact_args_len("clear", args, 1)?;
     print!("\x1b[2J\x1b[H");
     Ok(Expression::None)
 }

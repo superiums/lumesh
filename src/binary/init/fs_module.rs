@@ -109,7 +109,7 @@ fn build_directory_tree(path: &Path, max_depth: Option<Int>) -> HashMap<String, 
         ".".into(),
         Expression::String(path.to_string_lossy().to_string()),
     );
-    if let Some(_) = path.parent() {
+    if path.parent().is_some() {
         tree.insert(
             "..".into(),
             Expression::String(path.to_string_lossy().to_string()),

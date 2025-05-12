@@ -12,7 +12,7 @@ pub fn get() -> Expression {
 }
 
 fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("int", &args, 2)?;
+    super::check_exact_args_len("int", args, 2)?;
     match (args[0].eval(env)?, args[1].eval(env)?) {
         (Expression::Integer(l), Expression::Integer(h)) => {
             let mut rng = rand::thread_rng();
@@ -27,7 +27,7 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 }
 
 fn choose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("choose", &args, 1)?;
+    super::check_exact_args_len("choose", args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {
             let mut rng = rand::thread_rng();
@@ -42,7 +42,7 @@ fn choose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 }
 
 fn shuffle(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("shuffle", &args, 1)?;
+    super::check_exact_args_len("shuffle", args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {
             let mut rng = rand::thread_rng();

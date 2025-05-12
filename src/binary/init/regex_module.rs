@@ -6,7 +6,7 @@ pub fn get() -> Expression {
     (hash_map! {
         // 编译正则表达式（实际使用时直接传字符串更高效，这里提供兼容接口）
         String::from("new") => Expression::builtin("new", |args, env| {
-            super::check_exact_args_len("new", &args, 1)?;
+            super::check_exact_args_len("new", args, 1)?;
             let pattern = args[0].eval(env)?.to_string();
             Regex::new(&pattern)
                 .map(|_| Expression::String(pattern)) // 仅验证正则有效性
@@ -15,7 +15,7 @@ pub fn get() -> Expression {
 
         // 检查是否匹配
         String::from("match") => Expression::builtin("match", |args, env| {
-            super::check_exact_args_len("match", &args, 2)?;
+            super::check_exact_args_len("match", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
@@ -24,7 +24,7 @@ pub fn get() -> Expression {
 
         // 查找第一个匹配
         String::from("find") => Expression::builtin("find", |args, env| {
-            super::check_exact_args_len("find", &args, 2)?;
+            super::check_exact_args_len("find", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
@@ -41,7 +41,7 @@ pub fn get() -> Expression {
 
         // 查找所有匹配
         String::from("find_all") => Expression::builtin("find_all", |args, env| {
-            super::check_exact_args_len("find_all", &args, 2)?;
+            super::check_exact_args_len("find_all", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
@@ -59,7 +59,7 @@ pub fn get() -> Expression {
 
         // 获取第一个捕获组
         String::from("capture") => Expression::builtin("capture", |args, env| {
-            super::check_exact_args_len("capture", &args, 2)?;
+            super::check_exact_args_len("capture", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
@@ -78,7 +78,7 @@ pub fn get() -> Expression {
 
         // 获取所有捕获组
         String::from("captures") => Expression::builtin("captures", |args, env| {
-            super::check_exact_args_len("captures", &args, 2)?;
+            super::check_exact_args_len("captures", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
@@ -96,7 +96,7 @@ pub fn get() -> Expression {
 
         // 正则分割
         String::from("split") => Expression::builtin("split", |args, env| {
-            super::check_exact_args_len("split", &args, 2)?;
+            super::check_exact_args_len("split", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
             let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
@@ -110,7 +110,7 @@ pub fn get() -> Expression {
 
         // 替换所有匹配
         String::from("replace") => Expression::builtin("replace", |args, env| {
-            super::check_exact_args_len("replace", &args, 3)?;
+            super::check_exact_args_len("replace", args, 3)?;
             let pattern = args[0].eval(env)?.to_string();
             let replacement = args[1].eval(env)?.to_string();
             let text = args[2].eval(env)?.to_string();
@@ -122,7 +122,7 @@ pub fn get() -> Expression {
         }, "replace all matches in text"),
 
         String::from("capture-name") => Expression::builtin("capture-name", |args, env| {
-                    super::check_args_len("capture-name", &args, 2..3)?;
+                    super::check_args_len("capture-name", args, 2..3)?;
 
                     let (pattern, s, group_names) = match args.len() {
                         2 => (args[0].clone(), args[1].clone(), false),
@@ -171,7 +171,7 @@ pub fn get() -> Expression {
                 }, "get regex capture groups, optionally with names"),
 
                 String::from("split") => Expression::builtin("split", |args, env| {
-                    super::check_exact_args_len("split", &args, 2)?;
+                    super::check_exact_args_len("split", args, 2)?;
 
                     let pattern = match args[0].eval(env)? {
                         Expression::Symbol(x) | Expression::String(x) => x,

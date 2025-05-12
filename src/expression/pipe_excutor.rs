@@ -232,8 +232,8 @@ pub fn handle_pipes<'a>(
                 match expr {
                     Some(Expression::Pipe(op, l_arm, r_arm)) if op == "|" => {
                         let result = handle_pipes(
-                            &l_arm,
-                            &r_arm,
+                            l_arm,
+                            r_arm,
                             // bindings,
                             true,
                             input,
@@ -345,8 +345,8 @@ pub fn handle_pipes<'a>(
                             }
                             Expression::Pipe(op, l_arm, r_arm) if op == "|" => {
                                 let result = handle_pipes(
-                                    &l_arm,
-                                    &r_arm,
+                                    l_arm,
+                                    r_arm,
                                     // bindings,
                                     has_right,
                                     pipe_out,

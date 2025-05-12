@@ -92,7 +92,7 @@ fn main() {
     // global env
     if !is_login_shell {
         for (key, value) in std::env::vars() {
-            env.define(&mut key.to_owned(), Expression::String(value));
+            env.define(&key, Expression::String(value));
         }
     }
 

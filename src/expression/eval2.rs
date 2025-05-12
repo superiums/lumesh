@@ -24,7 +24,7 @@ impl Expression {
                 // 模式匹配求值
                 let val = value.as_ref().eval_mut(true, env, depth + 1)?;
                 for (pat, expr) in branches {
-                    if matches_pattern(&val, &pat, env)? {
+                    if matches_pattern(&val, pat, env)? {
                         return expr.as_ref().eval_mut(true, env, depth + 1);
                     }
                 }
@@ -140,8 +140,8 @@ impl Expression {
                         //     pipe_result
                         // } else {
                         let (pipe_out, expr_out) = handle_pipes(
-                            &lhs,
-                            &rhs,
+                            lhs,
+                            rhs,
                             // &bindings,
                             false,
                             None,

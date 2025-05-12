@@ -6,7 +6,7 @@ use common_macros::hash_map;
 pub fn get() -> Expression {
     Expression::from(hash_map! {
         String::from("parse") => Expression::builtin("parse", |args, env| {
-            super::check_exact_args_len("parse", &args, 1)?;
+            super::check_exact_args_len("parse", args, 1)?;
             let expr = args[0].eval(env)?;
             Ok(match crate::parse(&expr.to_string()) {
                 Ok(expr) => expr,
@@ -15,7 +15,7 @@ pub fn get() -> Expression {
         }, "parse an expression"),
 
         String::from("quote") => Expression::builtin("quote", |args, _env| {
-            super::check_exact_args_len("quote", &args, 1)?;
+            super::check_exact_args_len("quote", args, 1)?;
             Ok(Expression::Quote(Rc::new(args[0].clone())))
         }, "quote an expression"),
 
@@ -96,7 +96,7 @@ pub fn get() -> Expression {
         String::from("vars") => Expression::builtin("vars", vars, "get a table of the defined variables"),
 
         String::from("set") => Expression::builtin("set", |args, env| {
-            super::check_exact_args_len("set", &args, 2)?;
+            super::check_exact_args_len("set", args, 2)?;
             let name = args[0].to_string();
             let expr = args[1].clone();
             env.define(&name, expr);
@@ -104,14 +104,14 @@ pub fn get() -> Expression {
         }, "define a variable in the current environment"),
 
         String::from("unset") => Expression::builtin("unset", |args, env| {
-            super::check_exact_args_len("unset", &args, 1)?;
+            super::check_exact_args_len("unset", args, 1)?;
             let name = args[0].to_string();
             env.undefine(&name);
             Ok(Expression::None)
         }, "undefine a variable in the current environment"),
 
         String::from("defined") => Expression::builtin("defined", |args, env| {
-            super::check_exact_args_len("defined", &args, 1)?;
+            super::check_exact_args_len("defined", args, 1)?;
             let name = args[0].to_string();
             Ok(Expression::Boolean(env.is_defined(&name)))
         }, "check if a variable is defined in the current environment"),

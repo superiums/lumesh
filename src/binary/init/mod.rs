@@ -82,7 +82,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
     }
 }
 fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {
-    if args.len() > 0 {
+    if !args.is_empty() {
         match super::get_builtin(&args[0].to_string()) {
             Some(m) => Ok(m.clone()),
             _ => Err(LmError::CustomError("no lib found".into())),
@@ -102,7 +102,7 @@ fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate
     }
 }
 fn import(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("import", &args, 1)?;
+    check_exact_args_len("import", args, 1)?;
     let cwd = std::env::current_dir()?;
     let path = cwd.join(args[0].eval(env)?.to_string());
 
@@ -133,7 +133,7 @@ fn import(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     }
 }
 fn include(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("include", &args, 1)?;
+    check_exact_args_len("include", args, 1)?;
 
     let cwd = std::env::current_dir()?;
     let path = cwd.join(args[0].eval(env)?.to_string());
@@ -176,7 +176,7 @@ fn exit(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
     }
 }
 fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("cd", &args, 1)?;
+    check_exact_args_len("cd", args, 1)?;
 
     match args[0].eval(env)? {
         Expression::Symbol(path) | Expression::String(path) => {
@@ -205,7 +205,7 @@ fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate
 }
 
 fn get_type(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("type", &args, 1)?;
+    check_exact_args_len("type", args, 1)?;
     let x_type = args[0].type_name();
     let rs = if &x_type == "Symbol" {
         args[0].eval(env)?.type_name()
@@ -326,7 +326,7 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     }
 }
 fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("insert", &args, 3)?;
+    check_exact_args_len("insert", args, 3)?;
     let mut arr = args[0].eval(env)?;
     let idx = args[1].eval(env)?;
     let val = args[2].eval(env)?;
@@ -369,7 +369,7 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
 }
 
 fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("len", &args, 1)?;
+    check_exact_args_len("len", args, 1)?;
     match args[0].eval(env)? {
         Expression::Map(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::List(list) => Ok(Expression::Integer(list.as_ref().len() as Int)),

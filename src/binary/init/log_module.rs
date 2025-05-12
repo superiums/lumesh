@@ -33,7 +33,7 @@ pub fn get() -> Expression {
         }),
 
         String::from("set_level") => Expression::builtin("set_level", |args, _env| {
-            super::check_exact_args_len("set_level", &args, 1)?;
+            super::check_exact_args_len("set_level", args, 1)?;
             let level = args[0].eval(_env)?;
             if let Expression::Integer(level) = level {
                 *LOG_LEVEL.write().unwrap() = level;
@@ -44,18 +44,18 @@ pub fn get() -> Expression {
         }, "set the log level"),
 
         String::from("get_level") => Expression::builtin("get_level", |args, _env| {
-            super::check_exact_args_len("get_level", &args, 0)?;
+            super::check_exact_args_len("get_level", args, 0)?;
             return Ok(Expression::Integer(*LOG_LEVEL.read().unwrap()))
         }, "get the log level"),
 
         String::from("disable") => Expression::builtin("disable", |args, _env| {
-            super::check_exact_args_len("disable", &args, 0)?;
+            super::check_exact_args_len("disable", args, 0)?;
             *LOG_LEVEL.write().unwrap() = NONE;
             Ok(Expression::None)
         }, "disable logging"),
 
         String::from("enabled") => Expression::builtin("enabled", |args, env| {
-            super::check_exact_args_len("enabled?", &args, 1)?;
+            super::check_exact_args_len("enabled?", args, 1)?;
             let level = args[0].eval(env)?;
             if let Expression::Integer(level) = level {
                 Ok(Expression::Boolean(is_log_level_enabled(level)))

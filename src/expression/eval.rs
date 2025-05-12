@@ -495,7 +495,7 @@ impl Expression {
                         // 符号
                         // string like cmd: ./abc
                         Expression::Symbol(cmd_sym) | Expression::String(cmd_sym) => {
-                            break match alias::get_alias(&cmd_sym) {
+                            break match alias::get_alias(cmd_sym) {
                                 // 别名
                                 Some(cmd_alias) => {
                                     // dbg!(&cmd_alias.type_name());
@@ -533,14 +533,14 @@ impl Expression {
                                     }
                                 }
                                 _ => {
-                                    break match binary::get_builtin(&cmd_sym) {
+                                    break match binary::get_builtin(cmd_sym) {
                                         // 顶级内置命令
                                         Some(bti) => {
                                             // dbg!("branch to builtin:", &cmd, &bti);
                                             bti.apply(args.to_vec()).eval_apply(env, depth)
                                         }
                                         // 三方命令
-                                        _ => handle_command(&cmd_sym, args, env, depth),
+                                        _ => handle_command(cmd_sym, args, env, depth),
                                     };
                                 }
                             };

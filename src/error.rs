@@ -165,7 +165,7 @@ impl SyntaxErrorKind {
             input: start,
             expected: delim,
             found: None,
-            hint: Some("检查括号/引号是否匹配"),
+            hint: Some("Check if parentheses/quotes are matched"),
         })
     }
 }

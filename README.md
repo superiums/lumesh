@@ -1,8 +1,10 @@
+### [中文说明-点这里](README-cn.md)
 # Lumesh - a lighting Shell
 
 ### Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
 
-Welcome to **Lumesh**, a powerful shell forked from [Dune](https://github.com/adam-mcdaniel/dune)!
+
+Welcome to **Lumesh**, a powerful lighting shell, full rewrite of [Dune](https://github.com/adam-mcdaniel/dune)!
 
 <img src="https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png" alt="lumesh"/>
 
@@ -26,18 +28,13 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 ## Wiki
 For detailed documentation and guides, visit our [Wiki](https://codeberg.com/santo/lumesh/wiki).
 
-- Syntax handbook
-
-[syntax-handbook](wiki/syntax.md)
-
-[语法手册](wiki/syntax-cn.md)
+[中文wiki](https://codeberg.org/santo/lumesh/wiki/HOME-cn.md)
 
 ## Features
 
 ### Improved Features from Dune
 - **Fast and Efficient**: Optimized for speed and resource management.
 - **Syntax Highlighting**: Enhanced readability with syntax highlighting for commands.
-- **Metaprogramming**: Advanced capabilities for dynamic code generation.
 
 ### New Features
 - **User-Friendly**: Designed with simplicity in mind for a better user experience.
@@ -46,6 +43,7 @@ For detailed documentation and guides, visit our [Wiki](https://codeberg.com/san
 - **Environment Variable Management**: Easy handling of environment variables.
 - **Login Shell Support**: Seamless integration as a login shell.
 - **Command Suggestions**: Intelligent suggestions for commands as you type.
+- **Powerful Error Handling**: Powerful and swift error catch and deeling.
 - **Local AI Support**: Leverage AI capabilities for enhanced command execution.
 
 The script parser, executor, and front end have been completely rewritten since version 0.3.0, targeting improved efficiency and flexibility for syntax extension.
@@ -53,18 +51,12 @@ The script parser, executor, and front end have been completely rewritten since 
 Discover more features in our [ChangeLog](CHANGELOG.md).
 
 ## Benchmark
-```bash
-initial_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
-let start=time.stamp-ms();
-let sum=0; for i in 0..1000001 {
-    sum += i
-};
-let end=time.stamp-ms();
 
-echo "takes time: " end - start "ms";
-# takes time:  612 ms
-# bash takes 2224 ms.
-```
+| ![highlight](assets/mem_chart.png) | ![highlight](assets/time_chart.png) |
+|------------------------|------------------------|
+
+_as fish was unable to fishish one million times task, we take the time of its harf task_
+
 ## Installation
 
 You can install Lumesh in two ways:
@@ -81,34 +73,12 @@ You can install Lumesh in two ways:
 
 ## Getting Started
 
-- interactive mode:
 After installation, simply run the Lumesh executable:
 
 ```bash
 # Start Lumesh
-lumesh
+lume
 ```
-
-- shell parser mode:
-
-```bash
-# Start Lumesh
-lumesh /your/script/path/file.lsh
-```
-
-or use shebang at the head of your script and run it directly.
-
-- login shell mode:
-
-```bash
-# Start Lumesh
-chsh -s /lume/install/path
-```
-
-## Test script
-
-syntax test: [syntax test script](tests/test.lsh).
-
 
 ## Contributing
 

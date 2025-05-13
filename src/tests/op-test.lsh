@@ -26,8 +26,8 @@ assert(str(x), "10", "单变量赋值", test_count)
 test_count += 1
 
 # 测试1.2 多变量分别赋值
-let a, b = 1, "hello"
-assert(str(a + b), "1hello", "多变量分别赋值", test_count)
+let a, b = 1, hello
+assert(str(b+a), "hello1", "多变量分别赋值", test_count)
 test_count += 1
 
 # 测试1.3 延迟赋值
@@ -79,7 +79,7 @@ echo! "\n=== 测试组4：流程控制 ==="
 
 # 测试4.1 条件表达式
 let cond = 10
-let res = if cond > 5 { "A" } else { "B" }
+let res = if cond >5 { "A" } else { "B" }
 assert(res, "A", "条件表达式", test_count)
 test_count += 1
 
@@ -114,12 +114,12 @@ echo! "\n=== 测试组6：边缘情况 ==="
 # test_count += 1
 
 # 测试6.2 除零错误
-eval "5 / 0"  | grep "除以零"
+eval "5 / 0" | grep 除以零
 if $? == 0 {
     echo! "[PASS] 除零错误检测"
 } else {
     echo! "[FAIL] 除零错误检测"
 }
-test_count += 1
+    test_count += 1
 
-echo! "\n测试完成，请查看详细报告"
+    echo! "\n测试完成，请查看详细报告"

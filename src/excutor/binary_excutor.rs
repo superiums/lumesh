@@ -124,7 +124,7 @@ pub fn handle_binary(
             let args = vec![left_output];
             rhs_eval.append_args(args).eval_mut(env, depth + 1)
         }
-        ">>>" => {
+        ">>" => {
             let left_func = lhs.ensure_apply();
             let l = left_func.eval_mut(env, depth + 1)?;
 
@@ -164,7 +164,7 @@ pub fn handle_binary(
                 }
             }
         }
-        ">>" => {
+        ">>!" => {
             // dbg!("-->>--", &lhs);
             let left_func = lhs.ensure_apply();
             let l = left_func.eval_mut(env, depth + 1)?;

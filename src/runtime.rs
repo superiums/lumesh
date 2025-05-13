@@ -49,7 +49,7 @@ pub fn syntax_highlight(line: &str) -> String {
             }
             (
                 TokenKind::Punctuation,
-                o @ ("@" | "\'" | "=" | "|" | ">>" | "<<" | ">>>" | "->" | "~>"),
+                o @ ("@" | "\'" | "=" | "|" | ">>" | "<<" | ">>!" | "->" | "~>"),
             ) => {
                 result.push_str("\x1b[96m");
                 is_colored = true;

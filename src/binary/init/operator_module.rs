@@ -298,14 +298,14 @@ pub fn get(env: &mut Environment) -> Expression {
             .unwrap(),
     );
     tmp.define(
-        ">>",
+        ">>!",
         lumesh::parse("file -> contents -> fs@write file contents")
             .unwrap()
             .eval(&mut new_tmp)
             .unwrap(),
     );
     tmp.define(
-        ">>>",
+        ">>",
         lumesh::parse("file -> contents -> fs@append file contents")
             .unwrap()
             .eval(&mut new_tmp)

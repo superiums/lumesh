@@ -442,7 +442,7 @@ impl PrattParser {
                 false,
             )),
             // ... 重定向操作符 ...
-            "<<" | ">>" | ">>>" => Some(OperatorInfo::new(op, PREC_REDIRECT, false)),
+            "<<" | ">>" | ">>!" => Some(OperatorInfo::new(op, PREC_REDIRECT, false)),
             // opa if opa.starts_with("__") => Some(OperatorInfo::new(
             //     opa,
             //     PREC_UNARY,
@@ -691,7 +691,7 @@ impl PrattParser {
                 Rc::new(rhs),
             )),
 
-            "<<" | ">>" | ">>>" => Ok(Expression::Pipe(
+            "<<" | ">>" | ">>!" => Ok(Expression::Pipe(
                 op.symbol.into(),
                 Rc::new(lhs),
                 Rc::new(rhs),

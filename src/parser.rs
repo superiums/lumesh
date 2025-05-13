@@ -99,10 +99,10 @@ impl PrattParser {
         mut depth: u8,
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         // 1. 解析前缀表达式
-        // dbg!("===----prepare to prefix---===>", input, min_prec);
+        dbg!("===----prepare to prefix---===>", input, min_prec);
         let (new_input, mut lhs) = Self::parse_prefix(input, min_prec)?;
         input = new_input;
-        // dbg!("=======prefix=======>", input, &lhs, min_prec);
+        dbg!("=======prefix=======>", input, &lhs, min_prec);
         // opt(alt((kind(TokenKind::LineBreak), eof_slice)));
         // 2. 循环处理中缀和后缀
         loop {
@@ -121,7 +121,7 @@ impl PrattParser {
             //     .map(|t| t.kind == TokenKind::LineBreak)
             //     .unwrap_or(false)
             {
-                // dbg!("---break1---");
+                dbg!("---break1---");
                 break;
             }
 
@@ -135,7 +135,7 @@ impl PrattParser {
             // 处理不同类型的运算符
             match operator_token.kind {
                 TokenKind::LineBreak | TokenKind::Punctuation | TokenKind::OperatorPrefix => {
-                    // dbg!("---break1.1---");
+                    dbg!("---break1.1---");
                     break;
                 }
                 TokenKind::OperatorInfix => {
@@ -156,7 +156,7 @@ impl PrattParser {
                         Some(opi) => opi,
                         None => break,
                     };
-                    //dbg!(&op_info);
+                    dbg!(&op_info);
                     if op_info.precedence < min_prec {
                         //dbg!("低于当前优先级则退出", op_info.precedence, min_prec);
                         break; // 低于当前优先级则退出
@@ -244,7 +244,7 @@ impl PrattParser {
                 //     }
                 // }
                 _ => {
-                    // dbg!("---break4---", input.len());
+                    dbg!("---break4---", input.len());
                     break;
                 }
             }
@@ -1391,15 +1391,19 @@ fn parse_for_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
 fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("match")(input)?;
     let (input, matched) = parse_expr(input)?;
-    let (input, _) = text("{")(input)?;
+    let (input, _) = terminated(text("{"), opt(kind(TokenKind::LineBreak)))(input)?;
 
     // 解析多个匹配分支
     let (input, expr_map) = separated_list1(
-        text(","),
+        terminated(
+            map(opt(text(",")), |_| {}),
+            map(kind(TokenKind::LineBreak), |_| {}),
+        ),
         separated_pair(parse_pattern, text("=>"), parse_expr),
     )(input)?;
-
-    let (input, _) = text_close("}")(input)?;
+    let (input, _) = opt(text(","))(input)?;
+    let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
+    let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
     let branches = expr_map
         .into_iter()
         .map(|(pattern, expr)| (pattern, Rc::new(expr)))

@@ -4,3 +4,4 @@ history.txt
 *.lock
 /target*
 .history*
+/wiki

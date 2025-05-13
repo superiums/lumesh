@@ -208,7 +208,7 @@ impl Expression {
                             .append_args(args)
                             .eval_mut(true, env, depth + 1)
                     }
-                    ">>>" => {
+                    ">>" => {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                         let left_func = lhs.as_ref().ensure_apply();
                         let l = left_func.eval_mut(true, env, depth + 1)?;
@@ -248,7 +248,7 @@ impl Expression {
                             }),
                         }
                     }
-                    ">>" => {
+                    ">>!" => {
                         // dbg!("-->>--", &lhs);
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                         let left_func = lhs.as_ref().ensure_apply();

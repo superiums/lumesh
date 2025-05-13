@@ -3,8 +3,10 @@ use crate::{Expression, LmError};
 use common_macros::hash_map;
 use std::collections::HashMap;
 use std::io::Write;
-use std::os::unix::fs::MetadataExt;
 use std::path::{Path, PathBuf};
+
+#[cfg(unix)]
+use std::os::unix::fs::MetadataExt;
 
 pub fn get() -> Expression {
     let fs_module = hash_map! {
@@ -381,108 +383,206 @@ fn system_time_to_unix_seconds(time: std::time::SystemTime) -> Result<i64, LmErr
         .map_err(|_| LmError::CustomError("Time before UNIX epoch".into()))
 }
 
+/// Windows专用实现
+#[cfg(windows)]
 fn get_file_info(entry: &std::fs::DirEntry) -> Result<FileInfo, LmError> {
     let metadata = entry.metadata()?;
 
-    // 更安全的OsString转换
+    // 文件名处理（支持UTF-16代理对）
+    let name = entry
+        .file_name()
+        .to_str()
+        .map(String::from)
+        .unwrap_or_else(|| {
+            entry
+                .file_name()
+                .to_string_lossy()
+                .chars()
+                .take(255)
+                .collect()
+        });
+
+    // 获取所有可用元数据
+    Ok(FileInfo {
+        name,
+        size: metadata.len(),
+        modified: system_time_to_unix_seconds(metadata.modified()?)?,
+        user: 0, // Windows放弃用户信息
+        is_dir: metadata.is_dir(),
+    })
+}
+
+/// Unix
+#[cfg(unix)]
+fn get_file_info(entry: &std::fs::DirEntry) -> Result<FileInfo, LmError> {
+    use std::os::unix::fs::MetadataExt;
+
+    let metadata = entry.metadata()?;
     let name = entry
         .file_name()
         .to_str()
         .map(String::from)
         .unwrap_or_else(|| String::from("<invalid>"));
 
-    // 平台特定的用户信息处理
-    let (user, is_dir) = {
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::MetadataExt;
-            (metadata.uid(), metadata.is_dir())
-        }
-        #[cfg(not(unix))]
-        {
-            (0u32, metadata.is_dir())
-        }
-    };
-
     Ok(FileInfo {
         name,
         size: metadata.len(),
         modified: system_time_to_unix_seconds(metadata.modified()?)?,
-        user,
-        is_dir,
+        user: metadata.uid(),
+        is_dir: metadata.is_dir(),
     })
 }
 
-fn list_directory_with_details(dir: &Path, short: &Path) -> Result<Expression, LmError> {
-    // 更简洁的路径检查
-    if !dir.exists() {
-        return Err(LmError::CustomError(format!(
-            "Path does not exist: {}",
-            dir.display()
-        )));
+/// 统一目录遍历接口
+// 1. 提取公共逻辑 - 创建表达式对象
+fn create_file_expression(
+    name: impl Into<String>,
+    info: &FileInfo,
+    path: Option<String>,
+) -> Expression {
+    let mut map = hash_map! {
+        "name".into() => Expression::String(name.into()),
+        "size".into() => Expression::Integer(info.size as i64),
+        "modified".into() => Expression::Integer(info.modified),
+        "user".into() => Expression::Integer(info.user as i64),
+        "type".into() => Expression::String(if info.is_dir { "dir" } else { "file" }.into()),
+    };
+
+    if let Some(p) = path {
+        map.insert("path".into(), Expression::String(p));
     }
 
-    // 处理文件情况
-    if dir.is_file() {
-        let metadata = dir.metadata()?;
-        let user = {
+    Expression::from(map)
+}
+// 2. 统一元数据获取 - 重构文件处理
+fn handle_single_file(path: &Path, short: &Path) -> Result<Expression, LmError> {
+    let metadata = path.metadata()?;
+    let info = FileInfo {
+        name: short
+            .file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("<invalid>")
+            .to_string(),
+        size: metadata.len(),
+        modified: system_time_to_unix_seconds(metadata.modified()?)?,
+        user: {
             #[cfg(unix)]
             {
                 metadata.uid()
             }
             #[cfg(not(unix))]
             {
-                0u32
+                0
             }
-        };
+        },
+        is_dir: false,
+    };
 
-        return Ok(Expression::from(hash_map! {
-            "name".into() => Expression::String(
-                short.file_name()
-                    .and_then(|n| n.to_str())
-                    .unwrap_or("<invalid>")
-                    .to_string()
-            ),
-            "size".into() => Expression::Integer(metadata.len() as i64),
-            "modified".into() => Expression::Integer(
-                system_time_to_unix_seconds(metadata.modified()?)?
-            ),
-            "user".into() => Expression::Integer(user as i64),
-            "type".into() => Expression::String("file".into()),
-        }));
-    }
-
-    // 处理目录情况
+    Ok(create_file_expression(&info.name, &info, None))
+}
+// 3. 优化目录遍历逻辑
+fn handle_directory(dir: &Path, short: &Path) -> Result<Expression, LmError> {
     let entries = std::fs::read_dir(dir)?
-        .filter_map(|entry| {
-            let entry = match entry {
-                Ok(e) => e,
-                Err(e) => return Some(Err(e.into())),
-            };
+        .map(|entry| -> Result<Expression, LmError> {
+            let entry = entry?;
+            let info = get_file_info(&entry)?;
 
-            let file_name = entry.file_name()
+            let file_name = entry
+                .file_name()
                 .to_str()
                 .map(String::from)
                 .unwrap_or_else(|| String::from("<invalid>"));
 
-            let path = short.join(&file_name);
+            let path = short.join(&file_name).display().to_string();
 
-            match get_file_info(&entry) {
-                Ok(info) => Some(Ok(Expression::from(hash_map! {
-                    "name".into() => Expression::String(info.name),
-                    "path".into() => Expression::String(path.display().to_string()),
-                    "size".into() => Expression::Integer(info.size as i64),
-                    "modified".into() => Expression::Integer(info.modified),
-                    "user".into() => Expression::Integer(info.user as i64),
-                    "type".into() => Expression::String(if info.is_dir { "dir" } else { "file" }.into()),
-                }))),
-                Err(e) => Some(Err(e)),
-            }
+            Ok(create_file_expression(&info.name, &info, Some(path)))
         })
         .collect::<Result<Vec<_>, _>>()?;
 
     Ok(Expression::from(entries))
 }
+// 4. 最终优化后的主函数
+fn list_directory_with_details(dir: &Path, short: &Path) -> Result<Expression, LmError> {
+    match (dir.exists(), dir.is_file()) {
+        (false, _) => Err(LmError::CustomError(format!(
+            "Path does not exist: {}",
+            dir.display()
+        ))),
+        (true, true) => handle_single_file(dir, short),
+        (true, false) => handle_directory(dir, short),
+    }
+}
+
+// fn list_directory_with_details(dir: &Path, short: &Path) -> Result<Expression, LmError> {
+//     // 更简洁的路径检查
+//     if !dir.exists() {
+//         return Err(LmError::CustomError(format!(
+//             "Path does not exist: {}",
+//             dir.display()
+//         )));
+//     }
+
+//     // 处理文件情况
+//     if dir.is_file() {
+//         let metadata = dir.metadata()?;
+//         let user = {
+//             #[cfg(unix)]
+//             {
+//                 metadata.uid()
+//             }
+//             #[cfg(not(unix))]
+//             {
+//                 0u32
+//             }
+//         };
+
+//         return Ok(Expression::from(hash_map! {
+//             "name".into() => Expression::String(
+//                 short.file_name()
+//                     .and_then(|n| n.to_str())
+//                     .unwrap_or("<invalid>")
+//                     .to_string()
+//             ),
+//             "size".into() => Expression::Integer(metadata.len() as i64),
+//             "modified".into() => Expression::Integer(
+//                 system_time_to_unix_seconds(metadata.modified()?)?
+//             ),
+//             "user".into() => Expression::Integer(user as i64),
+//             "type".into() => Expression::String("file".into()),
+//         }));
+//     }
+
+//     // 处理目录情况
+//     let entries = std::fs::read_dir(dir)?
+//         .filter_map(|entry| {
+//             let entry = match entry {
+//                 Ok(e) => e,
+//                 Err(e) => return Some(Err(e.into())),
+//             };
+
+//             let file_name = entry.file_name()
+//                 .to_str()
+//                 .map(String::from)
+//                 .unwrap_or_else(|| String::from("<invalid>"));
+
+//             let path = short.join(&file_name);
+
+//             match get_file_info(&entry) {
+//                 Ok(info) => Some(Ok(Expression::from(hash_map! {
+//                     "name".into() => Expression::String(info.name),
+//                     "path".into() => Expression::String(path.display().to_string()),
+//                     "size".into() => Expression::Integer(info.size as i64),
+//                     "modified".into() => Expression::Integer(info.modified),
+//                     "user".into() => Expression::Integer(info.user as i64),
+//                     "type".into() => Expression::String(if info.is_dir { "dir" } else { "file" }.into()),
+//                 }))),
+//                 Err(e) => Some(Err(e)),
+//             }
+//         })
+//         .collect::<Result<Vec<_>, _>>()?;
+
+//     Ok(Expression::from(entries))
+// }
 
 // Modified list_directory_wrapper to support both simple and detailed listing
 fn list_directory_wrapper(

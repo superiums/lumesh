@@ -231,9 +231,7 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
                 // let next_char = input.chars().nth(places);
 
                 // 检查 punct 是否是结尾
-                let is_end = places + punct.len() >= input.len();
-
-                if is_end
+                if places + punct.len() >= input.len()
                 // if (input.len() - punct.len() <= 2 && input.chars().nth(2).is_none())
                 {
                     return Ok(input.split_at(places));
@@ -243,7 +241,53 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
         Err(NOT_FOUND)
     }
 }
+
+#[cfg(windows)]
+fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        let mut it = input.chars().into_iter();
+        if input.len() > 1
+            && it.next().map_or(false, |c| c.is_ascii_uppercase())
+            && it.next().map_or(false, |c| c == ':')
+        {
+            let places = input
+                .chars()
+                .take_while(|&c| {
+                    !c.is_whitespace() && ![';', '`', ')', ']', '}', '|', '>'].contains(&c)
+                })
+                .count();
+            if places > 1 {
+                return Ok(input.split_at(places));
+            }
+            // 允许单字符路径，但仅在它们是输入的结尾时input.chars().nth(places-input.len()
+            // let next_char = input.chars().nth(places);
+
+            // 检查 punct 是否是结尾
+            if places >= input.len()
+            // if (input.len() - punct.len() <= 2 && input.chars().nth(2).is_none())
+            {
+                return Ok(input.split_at(places));
+            }
+        }
+        Err(NOT_FOUND)
+    }
+}
+
+// parse argument such as ipconfig /all; C:\
+#[cfg(windows)]
+fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        path_tag("--"),
+        path_tag("-"),
+        path_tag("/"),
+        path_tag("..\\"),
+        path_tag(".\\"),
+        path_tag("."),
+        win_abpath_tag(":"),
+    ))(input)
+}
 // parse argument such as ls -l --color=auto ./
+#[cfg(unix)]
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         path_tag("--"),

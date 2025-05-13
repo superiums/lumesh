@@ -32,7 +32,10 @@ const RESET: &str = "\x1b[0m";
 
 // 使用 Arc<Mutex> 包装编辑器
 pub fn run_repl(env: &mut Environment) {
-    println!("Rustyline Enhanced CLI (v15.0.0)");
+    match env.get("LUME_WELCOME") {
+        Some(wel) => println!("{}", wel.to_string()),
+        _ => println!("Welcome to Lumesh {}", env!("CARGO_PKG_VERSION")),
+    }
     // init_config(env);
     //
     let no_history = match env.get("LUME_NO_HISTORY") {

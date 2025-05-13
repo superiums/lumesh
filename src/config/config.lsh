@@ -6,6 +6,8 @@ if IS_LOGIN {
 # config for interactive mode
 if IS_INTERACTIVE {
     let IS_STRICT = true
+    # let LUME_WELCOME= "Welcome to Lumesh!"
+    # let LUME_PRINT_DIRECT= False
     let LUME_AI_CONFIG = {
         host: "localhost:11434",
         complete_url: "/completion",
@@ -13,7 +15,7 @@ if IS_INTERACTIVE {
         complete_max_tokens: 10,
         chat_max_tokens: 100,
         model: "",
-        system_prompt: "you're a lumesh shell helper",
+        system_prompt: "you're a lumesh shell script helper",
     }
     alias join = string.join()
     alias chars = string.chars
@@ -25,6 +27,7 @@ if IS_INTERACTIVE {
 
 # config for all mode
 let LUME_HISTORY_FILE= "/tmp/lume_histroy"
+
 
 let get = (key, table) -> table[key];
 let open := fs@read();

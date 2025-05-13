@@ -1,5 +1,5 @@
 use crate::repl::read_user_input;
-use crate::{Diagnostic, Environment, Expression, SyntaxError, TokenKind};
+use crate::{Diagnostic, Environment, Expression, PRINT_DIRECT, SyntaxError, TokenKind};
 use crate::{SyntaxErrorKind, parse_script};
 use std::path::PathBuf;
 const INTRO_PRELUDE: &str = include_str!("config/config.lsh");
@@ -211,7 +211,11 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                 Ok(Expression::Builtin(b)) => {
                     println!("  >> [Builtin] {}\n{}\n", b.name, b.help)
                 }
-                Ok(result) => println!("\n  >> [{}] <<\n{}", result.type_name(), result),
+                Ok(result) => unsafe {
+                    if PRINT_DIRECT {
+                        println!("\n  >> [{}] <<\n{}", result.type_name(), result);
+                    }
+                },
                 Err(e) => eprintln!("\x1b[31m[ERROR]\x1b[0m {}", e),
             }
             // match val.clone() {
@@ -300,6 +304,7 @@ pub fn init_config(env: &mut Environment) {
         eprintln!("Error while running introduction prelude");
     }
 
+    unsafe { PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").map_or(true, |p| p.is_truthy()) }
     // cmds
     init_cmds(env);
 }

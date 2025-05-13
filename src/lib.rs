@@ -45,4 +45,5 @@ pub use binary::get_builtin;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub static mut STRICT: bool = false;
+pub static mut PRINT_DIRECT: bool = true;
 // pub static mut ENV: Environment = Environment::new();

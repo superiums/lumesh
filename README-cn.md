@@ -59,6 +59,13 @@ wiki-English [https://codeberg.org/santo/lumesh/wiki/HOME]
 
 由于fish无法完成一百万次的任务，我们记录了其一半任务的时间
 
+*软件包大小（安装后）*
+- lume v0.3.8: 4.3 MB
+- bash v5.2.037: 9.2 MB
+- dash v0.5.12: 153.8 KiB
+- fish v4.0.2: 21.64 MB
+
+
 ## 安装
 
 您可以通过两种方式安装Lumesh：

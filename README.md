@@ -57,6 +57,12 @@ Discover more features in our [ChangeLog](CHANGELOG.md).
 
 _as fish was unable to fishish one million times task, we take the time of its harf task_
 
+*package size (after install)*
+- lume v0.3.8: 4.3 MB
+- bash v5.2.037: 9.2 MB
+- dash v0.5.12: 153.8 KiB
+- fish v4.0.2: 21.64 MB
+
 ## Installation
 
 You can install Lumesh in two ways:

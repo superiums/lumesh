@@ -7,8 +7,9 @@
 - 从现在开始，GitHub上的问题和拉取请求将被忽略。
 
 
-欢迎使用 Lumesh，一个强大的照明Shell，完全重写自 Dune [https://github.com/adam-mcdaniel/dune]!
-lumesh [https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png]
+欢迎使用 Lumesh，一个强大的照明Shell，完全重写自  [Dune](https://github.com/adam-mcdaniel/dune)!
+
+[lumesh](https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png)
 
 Lumesh旨在提供快速、高效和用户友好的命令行体验，通过多种新功能提升您的生产力。
 
@@ -61,15 +62,17 @@ wiki-English [https://codeberg.org/santo/lumesh/wiki/HOME]
 ## 安装
 
 您可以通过两种方式安装Lumesh：
- 1. 从最新版本下载：从我们的 发布页面 [https://codeberg.com/santo/lumesh/releases] 获取预编译的二进制文件。
+ 1. 从最新版本下载：从我们的 发布页面 获取预编译的二进制文件。
+
+- [发布页面1](https://codeberg.com/santo/lumesh/releases).
+- [发布页面2](https://github.com/superiums/lumesh/releases)
+
  2. 从源代码编译：
    ```bash
    git clone 'https://codeberg.com/santo/lumesh.git'
    cd lumesh
    cargo build --release
    ```
-
-*注意*：由于Lumesh仍处于开发的早期阶段，我们建议使用来自仓库的最新代码，而不是发布版本，因为频繁修复错误和添加新功能。
 
 ## 开始
 

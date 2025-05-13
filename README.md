@@ -6,7 +6,7 @@
 
 Welcome to **Lumesh**, a powerful lighting shell, full rewrite of [Dune](https://github.com/adam-mcdaniel/dune)!
 
-<img src="https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png" alt="lumesh"/>
+[lumesh](https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png)
 
 Lumesh aims to provide a fast, efficient, and user-friendly command-line experience, enhancing your productivity with a variety of new features.
 
@@ -61,15 +61,15 @@ _as fish was unable to fishish one million times task, we take the time of its h
 
 You can install Lumesh in two ways:
 
-1. **Download from the Latest Release**: Get the precompiled binaries from our [releases page](https://codeberg.com/santo/lumesh/releases).
+1. **Download from the Latest Release**: Get the precompiled binaries from our
+- [releases page 1](https://codeberg.com/santo/lumesh/releases).
+- [release-page 2](https://github.com/superiums/lumesh/releases)
 2. **Compile from Source**:
    ```bash
    git clone 'https://codeberg.com/santo/lumesh.git'
    cd lumesh
    cargo build --release
    ```
-
-**Note**: As Lumesh is still in its early stages of development, we recommend using the latest code from the repository rather than the releases, as there are frequent bug fixes and new features added.
 
 ## Getting Started
 

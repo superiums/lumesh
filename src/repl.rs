@@ -1,6 +1,6 @@
 use rustyline::validate::ValidationResult;
 use rustyline::{
-    Changeset, Editor, Helper,
+    Changeset, Cmd, Editor, Helper, KeyEvent,
     completion::{Completer, FilenameCompleter, Pair},
     config::CompletionType,
     error::ReadlineError,
@@ -58,6 +58,7 @@ pub fn run_repl(env: &mut Environment) {
         }
     };
     let ai_config = env.get("LUME_AI_CONFIG");
+    let hotkey_config = env.get("LUME_HOT_KEYS");
     // let enable_ai = match env.get("LUME_AI_CONFIG") {
     //     Some(_) => true,
     //     _ => false,
@@ -67,11 +68,20 @@ pub fn run_repl(env: &mut Environment) {
     let rl = Arc::new(Mutex::new(new_editor(ai_config)));
 
     // key-bindings
-    rl.bind_key(KeyPress::Ctrl('s'), |editor| {
-        // 自定义操作，例如保存当前行
-        println!("Saving current line...");
-        Ok(())
-    });
+    match hotkey_config {
+        Some(Expression::Map(keys)) => {
+            let mut rl_unlocked = rl.lock().unwrap();
+            for (k, cmd) in keys.iter() {
+                if let Some(c) = k.chars().next() {
+                    rl_unlocked.bind_sequence(
+                        KeyEvent::alt(c),
+                        Cmd::Insert(1, cmd.to_string()), // |_| println!("Triggered debug mode"),
+                    );
+                }
+            }
+        }
+        _ => {}
+    }
 
     if rl.lock().unwrap().load_history(&history_file).is_err() {
         println!("No previous history");
@@ -110,11 +120,11 @@ pub fn run_repl(env: &mut Environment) {
             Ok(line) => line,
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
-                break;
+                continue;
             }
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
-                break;
+                continue;
             }
             Err(err) => {
                 println!("Error: {:?}", err);
@@ -199,32 +209,11 @@ impl Completer for LumeHelper {
         pos: usize,
         ctx: &rustyline::Context<'_>,
     ) -> Result<(usize, Vec<Self::Candidate>), ReadlineError> {
-        if should_trigger_path_completion(line, pos) {
-            // 路径
-            let (start, completions) = self.completer.complete(line, pos, ctx)?;
-            Ok((start, completions))
-        } else if should_trigger_cmd_completion(line, pos) {
-            return Ok(generate_cmd_hints(line, pos));
-        } else if let Some(ai) = &self.ai_client {
-            // After the first token, use AI completion
-            let tokens: Vec<&str> = line.split_whitespace().collect();
-            if tokens.len() > 1 {
-                let prompt = line.trim();
-                match ai.complete(prompt) {
-                    Ok(suggestion) => {
-                        let pair = Pair {
-                            display: format!("\x1b[34m{}\x1b[0m", suggestion),
-                            replacement: suggestion,
-                        };
-                        return Ok((pos, vec![pair]));
-                    }
-                    Err(_) => return Ok((pos, Vec::new())),
-                }
-            } else {
-                return Ok((pos, Vec::new()));
-            }
-        } else {
-            return Ok((pos, Vec::new()));
+        match self.detect_completion_type(line, pos) {
+            LumeCompletionType::Path => self.path_completion(line, pos, ctx),
+            LumeCompletionType::Command => self.cmd_completion(line, pos),
+            LumeCompletionType::AI => self.ai_completion(line, pos),
+            LumeCompletionType::None => Ok((pos, Vec::new())),
         }
     }
 
@@ -235,29 +224,86 @@ impl Completer for LumeHelper {
     }
 }
 
-fn generate_cmd_hints(line: &str, pos: usize) -> (usize, Vec<Pair>) {
-    // 获取PATH_COMMANDS的锁
-    let path_commands = PATH_COMMANDS.lock().unwrap();
+// 扩展实现
+impl LumeHelper {
+    /// 新增补全类型检测
+    fn detect_completion_type(&self, line: &str, pos: usize) -> LumeCompletionType {
+        if should_trigger_path_completion(line, pos) {
+            LumeCompletionType::Path
+        } else if should_trigger_cmd_completion(line, pos) {
+            LumeCompletionType::Command
+        } else if self.should_trigger_ai(line) {
+            LumeCompletionType::AI
+        } else {
+            LumeCompletionType::None
+        }
+    }
 
-    // 计算起始位置
-    let input = &line[..pos];
-    let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);
-    let prefix = &input[start..];
+    /// 路径补全逻辑
+    fn path_completion(
+        &self,
+        line: &str,
+        pos: usize,
+        ctx: &rustyline::Context<'_>,
+    ) -> Result<(usize, Vec<Pair>), ReadlineError> {
+        self.completer.complete(line, pos, ctx)
+    }
 
-    // 过滤以prefix开头的命令
-    let mut candidates: Vec<Pair> = path_commands
-        .iter()
-        .filter(|cmd| cmd.starts_with(prefix))
-        .map(|cmd| Pair {
-            display: cmd.clone(),
-            replacement: cmd.clone(),
-        })
-        .collect();
+    /// 命令补全逻辑
+    fn cmd_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
+        // 获取PATH_COMMANDS的锁
+        let path_commands = PATH_COMMANDS.lock().unwrap();
 
-    // 按显示名称的长度升序排序
-    candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+        // 计算起始位置
+        let input = &line[..pos];
+        let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);
+        let prefix = &input[start..];
 
-    (start, candidates)
+        // 过滤以prefix开头的命令
+        let mut candidates: Vec<Pair> = path_commands
+            .iter()
+            .filter(|cmd| cmd.starts_with(prefix))
+            .map(|cmd| Pair {
+                display: cmd.clone(),
+                replacement: cmd.clone(),
+            })
+            .collect();
+
+        // 按显示名称的长度升序排序
+        candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+
+        Ok((start, candidates))
+    }
+
+    /// AI 补全逻辑
+    fn ai_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
+        let prompt = line.trim();
+        let suggestion = self
+            .ai_client
+            .as_ref()
+            .and_then(|ai| ai.complete(prompt).ok())
+            .unwrap_or_default();
+
+        let pair = Pair {
+            display: format!("\x1b[34m{}\x1b[0m", suggestion), // 保持ANSI颜色
+            replacement: suggestion,
+        };
+        Ok((pos, vec![pair]))
+    }
+
+    /// AI补全触发条件
+    fn should_trigger_ai(&self, line: &str) -> bool {
+        self.ai_client.is_some() && line.split_whitespace().count() > 1
+    }
+}
+
+// 扩展补全类型枚举
+#[derive(Debug, PartialEq)]
+enum LumeCompletionType {
+    Path,
+    Command,
+    AI,
+    None,
 }
 
 impl Validator for LumeHelper {
@@ -332,6 +378,7 @@ impl Hinter for LumeHelper {
         }
 
         // 预定义命令列表（带权重排序）
+        // TODO add builtin cmds
         let cmds = [
             ("cd", 10),
             ("ls", 9),
@@ -341,6 +388,17 @@ impl Hinter for LumeHelper {
             ("cp -r", 5),
             ("head", 4),
             ("tail", 3),
+            ("let ", 1),
+            ("fn ", 1),
+            ("if ", 1),
+            ("else {", 1),
+            ("match ", 1),
+            ("while (", 1),
+            ("for ", 1),
+            ("loop {\n", 1),
+            ("break", 1),
+            ("return", 1),
+            ("del", 1),
         ];
 
         // 仅当有有效片段时进行匹配
@@ -417,99 +475,6 @@ impl Highlighter for SyntaxHighlighter {
 //         }
 //     }
 //     stack.is_empty()
-// }
-
-// pub fn run_repl(env: &mut Environment) -> Result<(), LmError> {
-//     println!("Rustyline Enhanced CLI (v15.0.0)");
-//     init_config(env); // 调用 REPL 初始化
-
-//     let mut rl = new_editor();
-//     if rl.load_history(HISTORY_FILE).is_err() {
-//         println!("No previous history");
-//     }
-//     // let mut lines = vec![];
-
-//     // 示例：设置自定义模板 (可选)
-//     let pe = get_prompt_engine();
-
-//     loop {
-//         // let is_incomplete = rl
-//         //     .helper()
-//         //     .map(|h| *h.is_incomplete.borrow())
-//         //     .unwrap_or(false);
-//         // dbg!(is_incomplete);
-//         // // 动态设置提示符
-//         // let prompt = if is_incomplete {
-//         //     pe.get_incomplete_prompt()
-//         // } else {
-//         //     pe.get_prompt()
-//         // };
-//         // let prompt = get_prompt(env);
-//         // let prompt = prompt_engine.get_prompt();
-//         let prompt = pe.get_prompt();
-
-//         match rl.readline(prompt.as_str()) {
-//             Ok(line) => {
-//                 match line.trim() {
-//                     "" => {}
-//                     // "cd" => {
-//                     //     env::set_current_dir(path)?;
-//                     // }
-//                     "exit" => break,
-//                     "history" => {
-//                         for (i, entry) in rl.history().iter().enumerate() {
-//                             println!("{}: {}", i + 1, entry);
-//                         }
-//                     }
-//                     // main
-//                     _ => {
-//                         dbg!(&line);
-//                         if parse_and_eval(&line, env) {
-//                             rl.add_history_entry(&line)
-//                                 .map_err(|_| LmError::CustomError("add history err".into()))?;
-//                         };
-//                     }
-//                 }
-//             }
-//             Err(ReadlineError::Interrupted) => {
-//                 println!("CTRL-C");
-//                 break;
-//             }
-//             Err(ReadlineError::Eof) => {
-//                 println!("CTRL-D");
-//                 break;
-//             }
-//             Err(err) => {
-//                 println!("Error: {:?}", err);
-//                 break;
-//             }
-//         }
-//     }
-
-//     rl.save_history(HISTORY_FILE)
-//         .map_err(|_| LmError::CustomError("save histroy err".into()))?;
-//     Ok(())
-// }
-
-// fn new_editor() -> Editor<LumeHelper, FileHistory> {
-//     let config = rustyline::Config::builder()
-//         .history_ignore_space(true)
-//         .completion_type(CompletionType::List)
-//         .build();
-
-//     let mut rl = Editor::with_config(config).unwrap_or(Editor::new().unwrap());
-
-//     let helper = LumeHelper {
-//         completer: FilenameCompleter::new(),
-//         hinter: HistoryHinter::new(),
-//         // validator: InputValidator,
-//         highlighter: SyntaxHighlighter,
-//         // colored_prompt: ">>>".into(),
-//         // env: env.clone(),
-//         // is_incomplete: RefCell::new(false),
-//     };
-//     rl.set_helper(Some(helper));
-//     rl
 // }
 
 fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> String {

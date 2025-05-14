@@ -13,6 +13,7 @@ use std::rc::Rc;
 // Expression求值2
 impl Expression {
     /// 处理复杂表达式的递归求值
+    #[inline]
     pub fn eval_complex(&self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
         match self {
             // 控制流表达式

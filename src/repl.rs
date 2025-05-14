@@ -66,6 +66,13 @@ pub fn run_repl(env: &mut Environment) {
     // 使用 Arc<Mutex> 保护编辑器
     let rl = Arc::new(Mutex::new(new_editor(ai_config)));
 
+    // key-bindings
+    rl.bind_key(KeyPress::Ctrl('s'), |editor| {
+        // 自定义操作，例如保存当前行
+        println!("Saving current line...");
+        Ok(())
+    });
+
     if rl.lock().unwrap().load_history(&history_file).is_err() {
         println!("No previous history");
     }

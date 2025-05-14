@@ -25,7 +25,9 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 | sytax    |     *****     |     **        |     *         |    ****       |
 | size    |     ****      |     ***       |     *****     |    **         |
 | error tips|     *****     |     *         |     *         |    ***        |
-| builtin Lib  |     *****     |               |               |    ****       |
+| error catch|     *****     |     *         |     *         |    *        |
+| builtin Lib  |     *****     |               |               |    *       |
+| structured pipe|     ☑     |               |               |              |
 | AI helper  |     ☑        |               |               |               |
 
 
@@ -76,7 +78,7 @@ _as fish was unable to fishish one million times task, we take the time of its h
 You can install Lumesh in two ways:
 
 1. **Download from the Latest Release**: Get the precompiled binaries from our
-- [release-page 1](https://codeberg.com/santo/lumesh/releases).
+- [release-page 1](https://codeberg.com/santo/lumesh/releases)
 - [release-page 2](https://github.com/superiums/lumesh/releases)
 2. **Compile from Source**:
    ```bash

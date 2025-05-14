@@ -76,7 +76,7 @@ _as fish was unable to fishish one million times task, we take the time of its h
 You can install Lumesh in two ways:
 
 1. **Download from the Latest Release**: Get the precompiled binaries from our
-- [releases page 1](https://codeberg.com/santo/lumesh/releases).
+- [release-page 1](https://codeberg.com/santo/lumesh/releases).
 - [release-page 2](https://github.com/superiums/lumesh/releases)
 2. **Compile from Source**:
    ```bash

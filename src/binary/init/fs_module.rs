@@ -590,6 +590,7 @@ fn list_directory_wrapper(
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
     let (path_str, detailed) = match args.len() {
+        0 => (".".to_string(), false),
         1 => (args[0].eval(env)?.to_string(), false),
         2 => {
             let detailed = match args[0].clone() {

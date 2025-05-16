@@ -26,7 +26,7 @@ macro_rules! fmt_shared {
     ($self:ident, $f:ident, $debug:expr) => {
         match $self {
             Self::Symbol(name) => write!($f, "{}", name),
-            Self::Variable(name) => write!($f, "{}", name),
+            Self::Variable(name) => write!($f, "${}", name),
 
             Self::String(s) if $debug => write!($f, "{:?}", s),
             Self::String(s) => write!($f, "{}", s),
@@ -256,8 +256,8 @@ macro_rules! fmt_shared {
                 }
             }
             Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
-            Self::Pipe(op, l, r) => write!($f, "({:?} {} {:?})", l, op, r),
-            Self::Index(l, r) => write!($f, "({}[{}]", l, r),
+            Self::Pipe(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
+            Self::Index(l, r) => write!($f, "{}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
             Self::Catch(body, ctyp, deel) => match ctyp {
                 CatchType::Ignore => write!($f, "{:?} ?.", body),

@@ -15,12 +15,16 @@ impl Expression {
     /// 交互命令入口
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         let result = self.eval_mut(true, env, 0);
+        // dbg!(&result);
         match result {
             // apply symbol cmds
             // Ok(Expression::Symbol(sym)) => {
             //     Expression::Apply(Box::new(Expression::Symbol(sym)), vec![]).eval(env)
             // }
-            Ok(other) => Ok(other),
+            Ok(other) => {
+                // dbg!(other.type_name());
+                Ok(other)
+            }
             Err(e) => Err(e),
         }
     }

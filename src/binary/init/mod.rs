@@ -53,6 +53,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
                 "exit the shell",
             ),
             String::from("cd") => Expression::builtin("cd", cd, "change directories"),
+            String::from("tap") => Expression::builtin("tap", tap,"print and return result"),
             String::from("print") => Expression::builtin("print", print,"print the arguments without a newline"),
             String::from("println") => Expression::builtin("println", println, "print the arguments and a newline"),
             String::from("eprint") => Expression::builtin("eprintln", eprint, "print to stderr"),
@@ -215,9 +216,21 @@ fn get_type(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     };
     Ok(Expression::String(rs))
 }
-fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    let mut result: Vec<Expression> = Vec::with_capacity(args.len());
 
+fn debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    for (i, arg) in args.iter().enumerate() {
+        let x = arg.eval(env)?;
+        if i < args.len() - 1 {
+            print!("{:?} ", x)
+        } else {
+            println!("{:?}", x)
+        }
+    }
+    Ok(Expression::None)
+}
+
+fn tap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    let mut result: Vec<Expression> = Vec::with_capacity(args.len());
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
@@ -232,31 +245,23 @@ fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     }
     Ok(Expression::from(result))
 }
-
-fn debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
-            print!("{:?} ", x)
+            print!("{} ", x)
         } else {
-            println!("{:?}", x)
+            println!("{}", x)
         }
     }
-
     Ok(Expression::None)
 }
-
 fn println(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    let mut result: Vec<Expression> = Vec::with_capacity(args.len());
     for arg in args.iter() {
         let x = arg.eval(env)?;
         println!("{}", x);
-        result.push(x);
     }
-    if result.len() == 1 {
-        return Ok(result[0].clone());
-    }
-    Ok(Expression::from(result))
+    Ok(Expression::None)
 }
 
 fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
@@ -303,10 +308,12 @@ fn input(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
 }
 
 fn str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("str", args, 1)?;
     Ok(Expression::String(args[0].eval(env)?.to_string()))
 }
 
 fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("int", args, 1)?;
     match args[0].eval(env)? {
         Expression::Integer(x) => Ok(Expression::Integer(x)),
         Expression::Float(x) => Ok(Expression::Integer(x as Int)),
@@ -401,6 +408,7 @@ fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
 // }
 
 fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("evalstr", args, 1)?;
     match &args[0] {
         Expression::String(cmd) => {
             if !cmd.is_empty() {
@@ -415,15 +423,18 @@ fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     }
 }
 fn eval(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("eval", args, 1)?;
     let mut new_env = env.clone();
     Ok(args[0].eval(env)?.eval(&mut new_env)?)
 }
 
 fn exec(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("exec", args, 1)?;
     Ok(args[0].eval(env)?.eval(env)?)
 }
 
 fn report(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("report", args, 1)?;
     let val = args[0].eval(env)?;
     match val {
         Expression::Map(_) => println!("{}", val),

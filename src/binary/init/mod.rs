@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{Environment, Expression, Int, LmError, RuntimeError};
+use crate::{Environment, Expression, Int, LmError, RuntimeError, parse_and_eval};
 use common_macros::hash_map;
 
 #[cfg(feature = "chess-engine")]
@@ -70,6 +70,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             // String::from("tail") => Expression::builtin("tail", tail, "aaa"),
             // String::from("lines") => Expression::builtin("lines", lines, "get the list of lines in a string"),
             String::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
+            String::from("evalstr") => Expression::builtin("evalstr", evalstr, "evaluate a string"),
             String::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
             // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
             String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
@@ -399,6 +400,20 @@ fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
 //     }
 // }
 
+fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    match &args[0] {
+        Expression::String(cmd) => {
+            if !cmd.is_empty() {
+                println!("  >> Evaling: \x1b[38;5;208m\x1b[1m{}\x1b[m\x1b[0m", cmd);
+                parse_and_eval(&cmd, env);
+            }
+            Ok(Expression::None)
+        }
+        _ => Err(LmError::CustomError(
+            "only String acceptable to evalstr".to_owned(),
+        )),
+    }
+}
 fn eval(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut new_env = env.clone();
     Ok(args[0].eval(env)?.eval(&mut new_env)?)

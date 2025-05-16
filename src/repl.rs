@@ -1,6 +1,6 @@
 use rustyline::validate::ValidationResult;
 use rustyline::{
-    Changeset, Cmd, Editor, Helper, KeyEvent,
+    Changeset, Editor, Helper, KeyEvent,
     completion::{Completer, FilenameCompleter, Pair},
     config::CompletionType,
     error::ReadlineError,
@@ -10,7 +10,10 @@ use rustyline::{
     line_buffer::LineBuffer,
     validate::Validator,
 };
+use rustyline::{Cmd, Modifiers};
+
 use std::borrow::Cow;
+use std::collections::HashMap;
 use std::process::exit;
 
 use crate::Expression;
@@ -18,6 +21,8 @@ use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
+use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler};
+
 use crate::runtime::check;
 use crate::{Environment, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
 
@@ -29,8 +34,8 @@ use std::sync::{Arc, Mutex};
 const GREEN_BOLD: &str = "\x1b[1;32m";
 // const RED: &str = "\x1b[31m";
 const RESET: &str = "\x1b[0m";
-
 // 使用 Arc<Mutex> 包装编辑器
+
 pub fn run_repl(env: &mut Environment) {
     match env.get("LUME_WELCOME") {
         Some(wel) => println!("{}", wel.to_string()),
@@ -58,7 +63,6 @@ pub fn run_repl(env: &mut Environment) {
         }
     };
     let ai_config = env.get("LUME_AI_CONFIG");
-    let hotkey_config = env.get("LUME_HOT_KEYS");
     // let enable_ai = match env.get("LUME_AI_CONFIG") {
     //     Some(_) => true,
     //     _ => false,
@@ -66,22 +70,6 @@ pub fn run_repl(env: &mut Environment) {
 
     // 使用 Arc<Mutex> 保护编辑器
     let rl = Arc::new(Mutex::new(new_editor(ai_config)));
-
-    // key-bindings
-    match hotkey_config {
-        Some(Expression::Map(keys)) => {
-            let mut rl_unlocked = rl.lock().unwrap();
-            for (k, cmd) in keys.iter() {
-                if let Some(c) = k.chars().next() {
-                    rl_unlocked.bind_sequence(
-                        KeyEvent::alt(c),
-                        Cmd::Insert(1, cmd.to_string()), // |_| println!("Triggered debug mode"),
-                    );
-                }
-            }
-        }
-        _ => {}
-    }
 
     if rl.lock().unwrap().load_history(&history_file).is_err() {
         println!("No previous history");
@@ -112,6 +100,63 @@ pub fn run_repl(env: &mut Environment) {
         }
     }
 
+    // key binding
+
+    rl.lock()
+        .unwrap()
+        .bind_sequence(KeyEvent::ctrl('j'), Cmd::CompleteHint);
+    // rl.lock()
+    //     .unwrap()
+    //     .bind_sequence(KeyEvent::ctrl('m'), Cmd::CompleteBackward);
+    // rl.lock()
+    //     .unwrap()
+    //     .bind_sequence(KeyEvent::alt('f'), LumeMoveHandler::new());
+    // hotkey
+    let hotkey_modifier = env.get("LUME_HOT_MODIFIER");
+    let modifier: u8 = match hotkey_modifier {
+        Some(Expression::Integer(bits)) => {
+            if (bits as u8 & (Modifiers::CTRL | Modifiers::ALT | Modifiers::SHIFT).bits()) == 0 {
+                eprintln!("invalid LUME_HOT_MODIFIER {}", bits);
+                4
+            } else {
+                bits as u8
+            }
+        }
+        _ => 4,
+    };
+
+    let hotkey_config = env.get("LUME_HOT_KEYS");
+    match hotkey_config {
+        Some(Expression::Map(keys)) => {
+            let mut rl_unlocked = rl.lock().unwrap();
+            for (k, cmd) in keys.iter() {
+                if let Some(c) = k.chars().next() {
+                    rl_unlocked.bind_sequence(
+                        KeyEvent::new(c, Modifiers::from_bits_retain(modifier)),
+                        LumeKeyHandler::new(cmd.to_string()),
+                    );
+                }
+            }
+        }
+        _ => {}
+    }
+    // abbr
+    let abbr = env.get("LUME_ABBREVIATIONS");
+    match abbr {
+        Some(Expression::Map(ab)) => {
+            let abmap = ab
+                .iter()
+                .map(|m| (m.0.to_string(), m.1.to_string()))
+                .collect::<HashMap<String, String>>();
+            rl.lock().unwrap().bind_sequence(
+                KeyEvent::new(' ', Modifiers::NONE),
+                LumeAbbrHandler::new(abmap),
+            );
+        }
+        _ => {}
+    }
+
+    // main loop
     while running.load(std::sync::atomic::Ordering::SeqCst) {
         let prompt = pe.get_prompt();
 

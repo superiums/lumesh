@@ -1079,8 +1079,10 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
         ),
     )(input)?;
     // dbg!(&input, &pairs);
-    let (input, _) = opt(terminated(text(","), opt(kind(TokenKind::LineBreak))))(input)?;
-    let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
+    let (input, _) = opt(text(","))(input)?;
+    let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
+    let (input, _) = text_close("}")(input)?;
+    // let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
     // dbg!(&input);
     let hashmap: HashMap<String, Expression> = pairs.into_iter().collect();
     // Ok((input, Expression::Map(pairs)))

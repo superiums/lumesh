@@ -41,6 +41,8 @@ pub mod prompt;
 pub mod binary;
 pub use binary::get_builtin;
 
+pub mod keyhandler;
+
 // pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 

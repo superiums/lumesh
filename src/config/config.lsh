@@ -1,13 +1,21 @@
-# config for login mode
+# ========== config for login mode ==========
+# only login mode need PATH, other mode will retrieve it from parent shell.
 if IS_LOGIN {
     let PATH = "/usr/local/bin:/usr/bin:/bin"
 }
 
-# config for interactive mode
+# ========== config for interactive mode ==========
 if IS_INTERACTIVE {
+    # ====== default strict mode
     let IS_STRICT = true
+
+    # ====== welcome msg
     # let LUME_WELCOME= "Welcome to Lumesh!"
+
+    # ====== report compute result type and values. default True.
     # let LUME_PRINT_DIRECT= False
+
+    # ====== default AI Helper settings. following is default.
     let LUME_AI_CONFIG = {
         host: "localhost:11434",
         complete_url: "/completion",
@@ -17,17 +25,38 @@ if IS_INTERACTIVE {
         model: "",
         system_prompt: "you're a lumesh shell script helper",
     }
+
+    # ====== key bindings
+    # NONE:0, SHIFT:2, ALT:4, CTRL:8,
+    # ALT_SHIFT:6, CTRL_SHIFT: 10, CTRL_ALT:12, CTRL_ALT_SHIFT:14
+    let LUME_HOT_MODIFIER = 4
+    let LUME_HOT_KEYS = {
+        q: "exit",
+        c: "clear",
+        h: "fs.read /tmp/lume_histroy | fzf --preview '' | evalstr()",
+        z: "fs.read /tmp/bookmark | fzf --preview '' | evalstr()",
+        s: 'let cmd := $CMD_CURRENT; println str(cmd) >> /tmp/bookmark; println "\n" >> /tmp/bookmark; print "COMMAND marked!"',
+    }
+
+    # ====== abbreviations
+    let LUME_ABBREVIATIONS = {
+        xi: 'doas pacman -S',
+        xup: 'doas pacman -Syu',
+        xq: 'pacman -Q',
+        xs: 'pacman -Ss',
+        xr: 'doas pacman -Rs',
+    }
+
+    # ====== alias
     alias join = string.join()
     alias chars = string.chars
 }
 # else {
-# config for script mode
+# ========== config for script mode ==========
 
 # }
 
-# config for all mode
-let LUME_HISTORY_FILE= "/tmp/lume_histroy"
-
+# ========== config for all mode ==========
 
 let get = (key, table) -> table[key];
 let open := fs@read();

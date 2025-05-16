@@ -1,6 +1,5 @@
-use super::Expression;
 use super::builtin::Builtin;
-use super::{Environment, Int};
+use super::{CatchType, Environment, Expression, Int};
 use crate::RuntimeError;
 // use num_traits::pow;
 use std::fmt;
@@ -70,14 +69,7 @@ macro_rules! fmt_shared {
                 }
             }
 
-            // 修正Slice分支的格式化错误
-            Self::Slice(l, r) => {
-                let params = format!(
-                    "[start: {:?}, end: {:?}, step: {:?}]",
-                    r.start, r.end, r.step
-                );
-                write!($f, "({}{})", l, params)
-            }
+            Self::Slice(l, r) => write!($f, "{}[{:?}:{:?}:{:?}]", l, r.start, r.end, r.step),
 
             // 修正List分支中的变量名错误
             Self::List(exprs) if $debug => {
@@ -102,12 +94,12 @@ macro_rules! fmt_shared {
                 let mut t = Table::new();
                 let fmt = t.get_format();
                 fmt.padding(1, 1);
-                fmt.borders('┃');
-                fmt.column_separator('┃');
-                fmt.separator(LinePosition::Top, LineSeparator::new('━', '┳', '┏', '┓'));
-                fmt.separator(LinePosition::Title, LineSeparator::new('━', '╋', '┣', '┫'));
-                fmt.separator(LinePosition::Intern, LineSeparator::new('━', '╋', '┣', '┫'));
-                fmt.separator(LinePosition::Bottom, LineSeparator::new('━', '┻', '┗', '┛'));
+                fmt.borders('│');
+                fmt.column_separator('│');
+                fmt.separator(LinePosition::Top, LineSeparator::new('─', '┬', '┌', '┐'));
+                fmt.separator(LinePosition::Title, LineSeparator::new('─', '┼', '├', '┤'));
+                fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
+                fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
 
                 let mut row = vec![];
                 let mut total_len = 1;
@@ -202,7 +194,7 @@ macro_rules! fmt_shared {
             Self::For(name, list, body) => write!($f, "for {} in {:?} {:?}", name, list, body),
             Self::Do(exprs) => write!(
                 $f,
-                "BLOCK{{ {} }}",
+                "{{ {} }}",
                 exprs
                     .iter()
                     .map(|e| format!("{:?}", e))
@@ -219,9 +211,27 @@ macro_rules! fmt_shared {
                 }
                 write!($f, "}}")
             }
+            Self::Apply(g, args) if $debug => write!(
+                $f,
+                "APPLY ☛{:?} {}☚ ",
+                g,
+                args.iter()
+                    .map(|e| format!("{:?}", e))
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            ),
             Self::Apply(g, args) => write!(
                 $f,
-                "APPLY({:?} {})!",
+                "{:?} {}",
+                g,
+                args.iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            ),
+            Self::Command(g, args) if $debug => write!(
+                $f,
+                "COMMAND ☘{:?} {})☘ ",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))
@@ -230,14 +240,14 @@ macro_rules! fmt_shared {
             ),
             Self::Command(g, args) => write!(
                 $f,
-                "COMMAND({:?} {})!",
+                "{:?} {}",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))
                     .collect::<Vec<String>>()
                     .join(" ")
             ),
-            Self::Alias(name, cmd) => write!($f, "Alias({} {:?})!", name, cmd),
+            Self::Alias(name, cmd) => write!($f, "alias {} {:?}", name, cmd),
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
                     write!($f, "({} {})", op, v)
@@ -245,17 +255,22 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
-            Self::BinaryOp(op, l, r) => write!($f, "BinaryOp<({:?} {} {:?})>", l, op, r),
-            Self::Pipe(op, l, r) => write!($f, "Pipe<({:?} {} {:?})>", l, op, r),
+            Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
+            Self::Pipe(op, l, r) => write!($f, "({:?} {} {:?})", l, op, r),
             Self::Index(l, r) => write!($f, "({}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
-            Self::Catch(body, _, deel) => match deel {
-                Some(deelx) => write!($f, "Catch<({:?} ? {})>", body, deelx),
-                _ => write!($f, "Catch<({:?} ?)>", body),
-            },
-            // Self::Error { code, msg, expr } => {
-            //     write!($f, "Error<(code:{}\nmsg:{}\nexpr:{:?})>", code, msg, expr)
-            // } // _ => write!($f, "Unreachable"), // 作为兜底逻辑
+            Self::Catch(body, ctyp, deel) => match ctyp {
+                CatchType::Ignore => write!($f, "{:?} ?.", body),
+                CatchType::PrintStd => write!($f, "{:?} ?+", body),
+                CatchType::PrintErr => write!($f, "{:?} ??", body),
+                CatchType::PrintOver => write!($f, "{:?} ?!", body),
+                CatchType::Deel => match deel {
+                    Some(deelx) => write!($f, "{:?} ?: {}", body, deelx),
+                    _ => write!($f, "{:?} ?: {{}}", body),
+                },
+            }, // Self::Error { code, msg, expr } => {
+               //     write!($f, "Error<(code:{}\nmsg:{}\nexpr:{:?})>", code, msg, expr)
+               // } // _ => write!($f, "Unreachable"), // 作为兜底逻辑
         }
     };
 }

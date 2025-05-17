@@ -195,7 +195,7 @@ fn detect_file_type(metadata: &std::fs::Metadata) -> &'static str {
     }
 }
 
-#[cfg(not(unix))]
+#[cfg(windows)]
 fn detect_file_type(metadata: &std::fs::Metadata) -> &'static str {
     let file_type = metadata.file_type();
 

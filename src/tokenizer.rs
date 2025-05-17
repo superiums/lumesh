@@ -1,4 +1,5 @@
 // use crate::STRICT;
+use crate::tokens::{Input, Token, TokenKind};
 use core::option::Option::None;
 use detached_str::StrSlice;
 use nom::{
@@ -10,8 +11,6 @@ use nom::{
     sequence::tuple,
 };
 use std::convert::TryFrom;
-
-use crate::tokens::{Input, Token, TokenKind};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 struct NotFoundError;
@@ -522,7 +521,14 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
     if ws_chars > 0 {
         (input, _) = input.split_at(ws_chars);
     }
-    if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
+
+    #[cfg(windows)]
+    let nl_pattern = "\r\n";
+
+    #[cfg(unix)]
+    let nl_pattern = "\n";
+
+    if let Some((rest, nl_slice)) = input.strip_prefix(nl_pattern) {
         // dbg!(nl_slice);
         // let original_str = input.as_original_str();
 
@@ -553,7 +559,13 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
 }
 // 新增续行符解析函数
 fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
-    if let Some((rest, matched)) = input.strip_prefix("\\\n") {
+    #[cfg(windows)]
+    let nl_pattern = "\\\r\n";
+
+    #[cfg(unix)]
+    let nl_pattern = "\\\n";
+
+    if let Some((rest, matched)) = input.strip_prefix(nl_pattern) {
         // println!("rest={},matched=", rest, matched);
         // dbg!(rest, matched);
         Ok((rest, matched))

@@ -429,6 +429,19 @@ impl Expression {
                         .collect::<Result<Vec<_>, _>>()?;
                     return Ok(Expression::from(evaluated));
                 }
+                Self::Map(items) => {
+                    let evaluated = items
+                        .iter()
+                        .map(|(k, e)| Ok((k.clone(), e.eval_mut(true, env, depth + 1)?)))
+                        .collect::<Result<HashMap<_, _>, RuntimeError>>()?;
+                    // let evaluated = items
+                    //     .as_ref()
+                    //     .iter()
+                    //     .map(|(k, e)| (k.clone(), e.eval_mut(true, env, depth + 1)?))
+                    //     .collect::<Result<HashMap<_, _>, _>>()
+                    //     .map(Expression::Map);
+                    return Ok(Expression::from(evaluated));
+                }
 
                 // 其他复杂类型
                 Self::Slice(list, slice_params) => {

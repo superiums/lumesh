@@ -1179,6 +1179,8 @@ pub fn parse_script_tokens(
         parse_functions,
         opt(alt((kind(TokenKind::LineBreak), eof_slice))), // 允许换行符作为语句分隔
     )(input)?;
+    // blank lines on the end
+    let (input, _) = opt(many0(kind(TokenKind::LineBreak)))(input)?;
 
     if !input.is_empty() {
         // dbg!("-----==>Remaining:", &input.slice, &functions);

@@ -154,7 +154,13 @@ impl Add for Expression {
             // 其他情况
             (m, n) => Err(RuntimeError::CommandFailed2(
                 "+".into(),
-                format!("Cannot add {} and {}", m.type_name(), n.type_name()),
+                format!(
+                    "Cannot add {}:{} and {}:{}",
+                    m.to_string(),
+                    m.type_name(),
+                    n.to_string(),
+                    n.type_name()
+                ),
             )),
         }
     }
@@ -271,9 +277,15 @@ impl Sub for Expression {
             }
 
             // 其他情况
-            (m, n) => Err(RuntimeError::CommandFailed2(
+            (n, m) => Err(RuntimeError::CommandFailed2(
                 "-".into(),
-                format!("Cannot subtract {} from {}", n.type_name(), m.type_name()),
+                format!(
+                    "Cannot subtract {}:{} from {}:{}",
+                    m.to_string(),
+                    m.type_name(),
+                    n.to_string(),
+                    n.type_name()
+                ),
             )),
         }
     }
@@ -426,7 +438,13 @@ impl Mul for Expression {
             // 其他情况
             (m, n) => Err(RuntimeError::CommandFailed2(
                 "*".into(),
-                format!("Cannot multiply {} and {}", n.type_name(), m.type_name()),
+                format!(
+                    "Cannot multiply {}:{} and {}:{}",
+                    m.to_string(),
+                    m.type_name(),
+                    n.to_string(),
+                    n.type_name()
+                ),
             )),
         }
     }
@@ -505,7 +523,13 @@ impl Div for Expression {
             // 其他情况
             (m, n) => Err(RuntimeError::CommandFailed2(
                 "/".into(),
-                format!("Cannot divide {} by {}", m.type_name(), n.type_name()),
+                format!(
+                    "Cannot divide {}:{} by {}:{}",
+                    m.to_string(),
+                    m.type_name(),
+                    n.to_string(),
+                    n.type_name()
+                ),
             )),
         }
     }

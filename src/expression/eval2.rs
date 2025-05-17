@@ -217,6 +217,9 @@ impl Expression {
 
                         let mut path = std::env::current_dir()?;
                         path = path.join(rhs.as_ref().eval_mut(true, env, depth + 1)?.to_string());
+                        if !path.exists() {
+                            std::fs::File::create(path.clone())?;
+                        }
                         match std::fs::OpenOptions::new().append(true).open(&path) {
                             Ok(mut file) => {
                                 // use std::io::prelude::*;

@@ -105,7 +105,7 @@ macro_rules! fmt_shared {
                 let mut total_len = 1;
                 for expr in exprs.as_ref().iter() {
                     let formatted = match expr {
-                        Expression::String(s) => format!("{:?}", s),
+                        Expression::String(s) => format!("{}", s),
                         _ => format!("{}", expr),
                     };
                     // Get the length of the first line

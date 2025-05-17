@@ -17,6 +17,7 @@ use list_module::*;
 mod log_module;
 mod math_module;
 // mod operator_module;
+mod fs_ls;
 mod os_module;
 mod parse_module;
 mod rand_module;
@@ -181,7 +182,12 @@ fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate
     check_exact_args_len("cd", args, 1)?;
 
     match args[0].eval(env)? {
-        Expression::Symbol(path) | Expression::String(path) => {
+        Expression::Symbol(mut path) | Expression::String(mut path) => {
+            if path.starts_with("~") {
+                if let Some(home_dir) = dirs::home_dir() {
+                    path = path.replace("~", home_dir.to_string_lossy().as_ref());
+                }
+            }
             std::env::set_current_dir(&path).map_err(|e| {
                 crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
                     "PermissionDenied" => {

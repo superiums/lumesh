@@ -1032,9 +1032,13 @@ fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     // 检查首尾单引号
     if raw_str.len() >= 2 {
         // 通过StrSlice直接计算子范围
-        let start = expr.start() + 1;
+        // let start = expr.start() + 1;
 
         // 如果有右侧引号，则调整结束位置
+        let start = match raw_str.chars().next().unwrap() {
+            '\'' => expr.start() + 1,
+            _ => expr.start(),
+        };
         let end = match raw_str.chars().last().unwrap() {
             '\'' => expr.end() - 1,
             _ => expr.end(),

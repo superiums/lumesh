@@ -500,6 +500,15 @@ impl LmError {
 fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fmt::Result {
     match err {
         Diagnostic::Valid => Ok(()),
+        Diagnostic::InvalidUnicode(ranges) => {
+            for &at in ranges.iter() {
+                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
+                let escape = at.to_str(string).trim();
+                writeln!(f, "invalid unicode sequence `{}`", escape)?;
+                print_error_lines(string, at, f, 72)?;
+            }
+            Ok(())
+        }
         Diagnostic::InvalidStringEscapes(ranges) => {
             for &at in ranges.iter() {
                 write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;

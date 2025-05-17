@@ -21,6 +21,7 @@ const NOT_FOUND: nom::Err<NotFoundError> = nom::Err::Error(NotFoundError);
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Diagnostic {
     Valid,
+    InvalidUnicode(Box<[StrSlice]>),
     InvalidStringEscapes(Box<[StrSlice]>),
     InvalidNumber(StrSlice),
     IllegalChar(StrSlice),
@@ -61,6 +62,7 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             number_literal,
             map_valid_token(short_operator, TokenKind::Operator), //atfter number to avoid -4.
             string_literal,
+            map_valid_token(non_ascii, TokenKind::StringRaw),
             map_valid_token(symbol, TokenKind::Symbol),
             map_valid_token(whitespace, TokenKind::Whitespace),
         ))(input)
@@ -497,8 +499,21 @@ fn whitespace(input: Input<'_>) -> TokenizationResult<'_> {
     if ws_chars == 0 {
         return Err(NOT_FOUND);
     }
-
     Ok(input.split_at(ws_chars))
+}
+
+fn non_ascii(input: Input<'_>) -> TokenizationResult<'_> {
+    // 处理UTF-8连续非ASCII字符
+    let len = input
+        .chars()
+        .take_while(|&c| !c.is_ascii())
+        .map(char::len_utf8)
+        .sum();
+
+    if len == 0 {
+        return Err(NOT_FOUND);
+    }
+    Ok(input.split_at(len))
 }
 
 fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
@@ -577,6 +592,8 @@ fn parse_string_inner(
 ) -> TokenizationResult<'_, Diagnostic> {
     let mut rest = input;
     let mut errors = Vec::new();
+    let mut unicode_errors = Vec::new();
+
     if is_double_quote {
         loop {
             match rest.chars().next() {
@@ -584,25 +601,64 @@ fn parse_string_inner(
                 Some('\\') => {
                     let (r, diagnostic) = parse_escape(rest)?;
                     rest = r;
-                    if let Diagnostic::InvalidStringEscapes(ranges) = diagnostic {
-                        errors.push(ranges[0]);
+                    // if let Diagnostic::InvalidStringEscapes(ranges) = diagnostic {
+                    //     errors.push(ranges[0]);
+                    // }
+                    match diagnostic {
+                        Diagnostic::InvalidStringEscapes(ranges) => {
+                            errors.extend(ranges.into_vec())
+                        }
+                        Diagnostic::InvalidUnicode(ranges) => {
+                            unicode_errors.extend(ranges.into_vec())
+                        }
+                        _ => {}
                     }
                 }
-                Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
+                // Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
+                Some(ch) => {
+                    // UTF-8有效性检查
+                    if ch.len_utf8() == 0 {
+                        let (r, range) = rest.split_saturating(1);
+                        unicode_errors.push(range);
+                        rest = r;
+                    } else {
+                        rest = rest.split_at(ch.len_utf8()).0;
+                    }
+                }
             }
         }
     } else {
         loop {
             match rest.chars().next() {
                 Some('\'') | None => break,
-                Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
+                // Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
+                Some(ch) => {
+                    // UTF-8有效性检查
+                    if ch.len_utf8() == 0 {
+                        let (r, range) = rest.split_saturating(1);
+                        unicode_errors.push(range);
+                        rest = r;
+                    } else {
+                        rest = rest.split_at(ch.len_utf8()).0;
+                    }
+                }
             }
         }
     }
 
-    let diagnostic = match errors.is_empty() {
-        true => Diagnostic::Valid,
-        false => Diagnostic::InvalidStringEscapes(errors.into_boxed_slice()),
+    // let diagnostic = match errors.is_empty() {
+    //     true => Diagnostic::Valid,
+    //     false => Diagnostic::InvalidStringEscapes(errors.into_boxed_slice()),
+    // };
+    let diagnostic = match (errors.is_empty(), unicode_errors.is_empty()) {
+        (true, true) => Diagnostic::Valid,
+        (false, true) => Diagnostic::InvalidStringEscapes(errors.into_boxed_slice()),
+        (true, false) => Diagnostic::InvalidUnicode(unicode_errors.into_boxed_slice()),
+        (false, false) => {
+            let mut all_errors = errors;
+            all_errors.extend(unicode_errors);
+            Diagnostic::InvalidStringEscapes(all_errors.into_boxed_slice())
+        }
     };
 
     Ok((rest, diagnostic))
@@ -648,22 +704,43 @@ fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
         ),
     ));
 
-    let rest = match parser2(rest) {
-        Ok((rest, (_, range))) => {
-            let range = range.unwrap();
+    // let rest = match parser2(rest) {
+    //     Ok((rest, (_, range))) => {
+    //         let range = range.unwrap();
+    //         let hex = range.to_str(input.as_original_str());
+    //         let code_point = u32::from_str_radix(hex, 16).unwrap();
+    //         if char::try_from(code_point).is_ok() {
+    //             rest
+    //         } else {
+    //             let ranges = vec![range].into_boxed_slice();
+    //             return Ok((rest, Diagnostic::InvalidStringEscapes(ranges)));
+    //         }
+    //     }
+    //     Err(_) => {
+    //         let (rest, range) = input.split_saturating(2);
+    //         let ranges = vec![range].into_boxed_slice();
+    //         return Ok((rest, Diagnostic::InvalidStringEscapes(ranges)));
+    //     }
+    // };
+    let (rest, _) = match parser2(rest) {
+        Ok((rest, (_, Some(range)))) => {
             let hex = range.to_str(input.as_original_str());
-            let code_point = u32::from_str_radix(hex, 16).unwrap();
-            if char::try_from(code_point).is_ok() {
-                rest
-            } else {
-                let ranges = vec![range].into_boxed_slice();
-                return Ok((rest, Diagnostic::InvalidStringEscapes(ranges)));
+            match u32::from_str_radix(hex, 16)
+                .ok()
+                .and_then(|cp| char::try_from(cp).ok())
+            {
+                Some(_) => (rest, None),
+                None => {
+                    let ranges = vec![range].into_boxed_slice();
+                    (rest, Some(Diagnostic::InvalidUnicode(ranges)))
+                }
             }
         }
+        Ok((rest, (_, None))) => (rest, None),
         Err(_) => {
             let (rest, range) = input.split_saturating(2);
             let ranges = vec![range].into_boxed_slice();
-            return Ok((rest, Diagnostic::InvalidStringEscapes(ranges)));
+            (rest, Some(Diagnostic::InvalidStringEscapes(ranges)))
         }
     };
 

@@ -3,9 +3,9 @@
 # Assert 函数实现
 fn assert(actual, expected, test_name, test_count=0) {
     if actual != expected {
-        echo! "[FAIL]" test_count test_name "| 实际：" actual "| 预期" expected
+        print "[FAIL]" test_count test_name "| 实际：" actual "| 预期" expected
     } else {
-        echo! "[PASS]" test_count test_name
+        print "[PASS]" test_count test_name
     }
 }
 
@@ -13,12 +13,12 @@ fn assert(actual, expected, test_name, test_count=0) {
 let test_count = 1
 
 # 打印测试头
-echo("Lumesh Shell 功能测试报告\n")
+println("Lumesh Shell 功能测试报告\n")
 
 # --------------------------
 # 测试组1：变量与赋值
 # --------------------------
-echo("=== 测试组1：变量与赋值 ===")
+println("=== 测试组1：变量与赋值 ===")
 
 # 测试1.1 单变量赋值
 let x = 10
@@ -26,100 +26,102 @@ assert(str(x), "10", "单变量赋值", test_count)
 test_count += 1
 
 # 测试1.2 多变量分别赋值
-let a, b = 1, hello
+let a, b = 1, "hello"
 assert(str(b+a), "hello1", "多变量分别赋值", test_count)
 test_count += 1
 
 # 测试1.3 延迟赋值
 x := 2 + 3
-assert(str(x), "2+3", "延迟赋值表达式存储", test_count)
+assert(str(x), "2 + 3", "延迟赋值表达式存储", test_count)
 test_count += 1
-assert(eval(x), "5", "延迟赋值求值", test_count)
+assert(eval(x), 5, "延迟赋值求值", test_count)
 test_count += 1
 
 # --------------------------
 # 测试组2：数据类型
 # --------------------------
-echo! "\n=== 测试组2：数据类型 ==="
+println! "\n=== 测试组2：数据类型 ==="
 
 # 测试2.1 字符串转义
 let s1 = "Line\nNew"
 let s2 = 'Line\nNew'
-assert(len(s1), "8", "双引号转义字符计数", test_count) # \n计为1字符
+assert(len(s1), 8, "双引号转义字符计数", test_count) # \n计为1字符
 test_count += 1
 assert(s2, "Line\\nNew", "单引号原始字符串", test_count)
 test_count += 1
 
 # 测试2.2 列表索引
 let arr = [10, "a", True]
-assert(arr@2, "True", "列表基础索引", test_count)
+assert(arr@2, True, "列表基础索引", test_count)
 test_count += 1
-assert(arr[-1:], "True", "负数索引", test_count)
+assert(arr[-1:], [True], "负数切片", test_count)
 test_count += 1
 
 # --------------------------
 # 测试组3：运算符
 # --------------------------
-echo! "\n=== 测试组3：运算符 ==="
+println! "\n=== 测试组3：运算符 ==="
 
 # 测试3.1 运算符优先级
-assert(2 + 3 * 4, "14", "乘法优先", test_count)
+assert(2 + 3 * 4, 14, "乘法优先", test_count)
 test_count += 1
-assert((2 + 3) * 4, "20", "括号优先", test_count)
+assert((2 + 3) * 4, 20, "括号优先", test_count)
 test_count += 1
 
 # 测试3.2 类型自动转换
-assert(3 + "5", "35", "非严格模式类型转换", test_count)
+assert(3 + "5", 8, "非严格模式类型转换", test_count)
+test_count += 1
+assert("1"+3 + "5", "135" , "非严格模式类型转换", test_count)
 test_count += 1
 
 # --------------------------
 # 测试组4：流程控制
 # --------------------------
-echo! "\n=== 测试组4：流程控制 ==="
+println! "\n=== 测试组4：流程控制 ==="
 
 # 测试4.1 条件表达式
 let cond = 10
-let res = if cond >5 { "A" } else { "B" }
+let res = if cond > 5 { "A" } else { "B" }
 assert(res, "A", "条件表达式", test_count)
 test_count += 1
 
 # 测试4.2 For循环范围
-for i in 0..3 { echo! i } >> /tmp/tmp.txt
-assert(len! lines(fs.read! "tmp.txt"), "3", "to范围左闭右开", test_count) # 应输出0,1,2
+for i in 0..3 { println! i } >> /tmp/tmp.txt
+assert(len! string.lines(fs.read! "/tmp/tmp.txt"), 3, "范围左闭右开", test_count) # 应输出0,1,2
 test_count += 1
 fs.rm! /tmp/tmp.txt
 
 # --------------------------
 # 测试组5：函数
 # --------------------------
-echo! "\n=== 测试组5：函数 ==="
+println! "\n=== 测试组5：函数 ==="
 
 # 测试5.1 函数默认参数
 fn add(a, b=10) { a + b }
-assert(add(5), "15", "默认参数", test_count)
+assert(add(5), 15, "默认参数", test_count)
 test_count += 1
 
 # --------------------------
 # 测试组6：边缘情况
 # --------------------------
-echo! "\n=== 测试组6：边缘情况 ==="
+println! "\n=== 测试组6：错误提示 ==="
 
 # # 测试6.1 严格模式变量检查
-# lumesh -s -c "let y"  | grep "未初始化变量"
-# if $? == 0 {
-#     echo! "[PASS] 严格模式变量检查"
-# } else {
-#     echo! "[FAIL] 严格模式变量检查"
-# }
-# test_count += 1
+let test_assign = ./target/debug/lume -s -c "y=1 ?! | grep 'undeclared var'" 
+if test_assign {
+    println! "[PASS] 严格模式变量检查"
+} else {
+    println! "[FAIL] 严格模式变量检查"
+}
+test_count += 1
 
 # 测试6.2 除零错误
-eval "5 / 0" | grep 除以零
-if $? == 0 {
-    echo! "[PASS] 除零错误检测"
+let test_a = 5 / 0 ?! | grep "by zero"
+if test_a {
+    println! "[PASS] 除零错误检测"
 } else {
-    echo! "[FAIL] 除零错误检测"
+    println! "[FAIL] 除零错误检测"
 }
     test_count += 1
 
-    echo! "\n测试完成，请查看详细报告"
+    println! "\n测试完成，请查看详细报告"

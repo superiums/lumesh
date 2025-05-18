@@ -551,7 +551,7 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
     } else {
         #[cfg(windows)]
         if let Some((rest, nl_slice)) = input.strip_prefix("\r\n") {
-            Ok((rest, nl_slice))
+            return Ok((rest, nl_slice));
         }
         Err(NOT_FOUND)
     }
@@ -563,7 +563,7 @@ fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
     } else {
         #[cfg(windows)]
         if let Some((rest, matched)) = input.strip_prefix("\\\r\n") {
-            Ok((rest, matched))
+            return Ok((rest, matched));
         }
         Err(NOT_FOUND)
     }

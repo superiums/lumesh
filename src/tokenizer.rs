@@ -523,13 +523,7 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
         (input, _) = input.split_at(ws_chars);
     }
 
-    #[cfg(windows)]
-    let nl_pattern = "\r\n";
-
-    #[cfg(unix)]
-    let nl_pattern = "\n";
-
-    if let Some((rest, nl_slice)) = input.strip_prefix(nl_pattern) {
+    if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
         // dbg!(nl_slice);
         // let original_str = input.as_original_str();
 
@@ -555,22 +549,22 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
     } else if let Some((rest, matched)) = input.strip_prefix(";") {
         Ok((rest, matched))
     } else {
+        #[cfg(windows)]
+        if let Some((rest, nl_slice)) = input.strip_prefix("\r\n") {
+            Ok((rest, nl_slice))
+        }
         Err(NOT_FOUND)
     }
 }
 // 新增续行符解析函数
 fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
-    #[cfg(windows)]
-    let nl_pattern = "\\\r\n";
-
-    #[cfg(unix)]
-    let nl_pattern = "\\\n";
-
-    if let Some((rest, matched)) = input.strip_prefix(nl_pattern) {
-        // println!("rest={},matched=", rest, matched);
-        // dbg!(rest, matched);
+    if let Some((rest, matched)) = input.strip_prefix("\\\n") {
         Ok((rest, matched))
     } else {
+        #[cfg(windows)]
+        if let Some((rest, matched)) = input.strip_prefix("\\\r\n") {
+            Ok((rest, matched))
+        }
         Err(NOT_FOUND)
     }
 }

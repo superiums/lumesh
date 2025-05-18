@@ -370,15 +370,16 @@ impl Expression {
                                 },
 
                                 "==" => Ok(Expression::Boolean(l == r)),
+                                "~=" => Ok(Expression::Boolean(l.to_string() == r.to_string())),
                                 "!=" => Ok(Expression::Boolean(l != r)),
                                 ">" => Ok(Expression::Boolean(l > r)),
                                 "<" => Ok(Expression::Boolean(l < r)),
                                 ">=" => Ok(Expression::Boolean(l >= r)),
                                 "<=" => Ok(Expression::Boolean(l <= r)),
-                                "~~" => {
+                                "~:" => {
                                     Ok(Expression::Boolean(l.to_string().contains(&r.to_string())))
                                 }
-                                "~=" => {
+                                "~~" => {
                                     let regex = Regex::new(&r.to_string())
                                         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 

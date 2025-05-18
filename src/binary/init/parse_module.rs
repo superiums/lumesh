@@ -111,7 +111,8 @@ fn parse_command_output(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
-    super::check_args_len("parse_cmd", args, 1..2)?;
+    // dbg!(args);
+    super::check_args_len("parse_cmd", args, 1..=2)?;
 
     let headers = if args.len() > 1 {
         if let Expression::List(list) = args[0].eval(env)? {

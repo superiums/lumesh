@@ -420,11 +420,11 @@ impl PrattParser {
             "&&" => Some(OperatorInfo::new("&&", PREC_LOGICAL_AND, false)),
             "||" => Some(OperatorInfo::new("||", PREC_LOGICAL_OR, false)),
             // 比较运算符
-            "==" | "!=" | ">" | "<" | ">=" | "<=" => {
+            "==" | "~=" | "!=" | ">" | "<" | ">=" | "<=" => {
                 Some(OperatorInfo::new(op, PREC_COMPARISON, false))
             }
             // 匹配
-            "~~" | "~=" => Some(OperatorInfo::new(op, PREC_COMPARISON, false)),
+            "~~" | "~:" => Some(OperatorInfo::new(op, PREC_COMPARISON, false)),
             // 三目
             "?" => Some(OperatorInfo::new(
                 "?",
@@ -510,7 +510,7 @@ impl PrattParser {
                     }
                 }
             }
-            "==" | "!=" | ">" | "<" | ">=" | "<=" | "~~" | "~=" => Ok(Expression::BinaryOp(
+            "==" | "!=" | ">" | "<" | ">=" | "<=" | "~~" | "~=" | "~:" => Ok(Expression::BinaryOp(
                 op.symbol.into(),
                 Rc::new(lhs),
                 Rc::new(rhs),

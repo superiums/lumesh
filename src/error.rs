@@ -473,14 +473,14 @@ impl RuntimeError {
 }
 
 impl LmError {
-    pub const ERROR_CODE_SYNTAX_ERROR: Int = 10;
-    pub const ERROR_CODE_RUNTIME_ERROR: Int = 11;
-    pub const ERROR_CODE_IO_ERROR: Int = 12;
-    pub const ERROR_CODE_CS_ERROR: Int = 13;
+    pub const ERROR_CODE_RUNTIME_ERROR: Int = 100;
+    pub const ERROR_CODE_SYNTAX_ERROR: Int = 101;
+    pub const ERROR_CODE_IO_ERROR: Int = 102;
+    pub const ERROR_CODE_CS_ERROR: Int = 103;
     pub fn codes() -> Expression {
         Expression::Map(Rc::new(hash_map! {
-          String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
+            String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
             String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
         }))

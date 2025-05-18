@@ -1,51 +1,39 @@
-use crate::{Environment, Expression, Int, LmError};
+use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
 use std::collections::HashMap;
 use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("flatten") => Expression::builtin("flatten", flatten_wrapper, "flatten a list"),
+        // check
+        String::from("has") => Expression::builtin("has", has, "check if a map has a key"),
+
+        // get
+        String::from("get_path") => Expression::builtin("get_path", get_path, "get value from nested map using dot notation path"),
         String::from("items") => Expression::builtin("items", items, "get the items of a map or list"),
         String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map"),
         String::from("values") => Expression::builtin("values", values, "get the values of a map"),
+
+        // modify
         String::from("insert") => Expression::builtin("insert", insert, "insert a key-value pair into a map"),
         String::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map"),
-        String::from("has") => Expression::builtin("has", has, "check if a map has a key"),
-        String::from("len") => Expression::builtin("len", len, "get the length of a map, list, string, or bytes"),
+
+        // create
         String::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs"),
+
+        // tranpose
         String::from("union") => Expression::builtin("union", union, "combine two maps"),
         String::from("intersect") => Expression::builtin("intersect", intersect, "get the intersection of two maps"),
         String::from("difference") => Expression::builtin("difference", difference, "get the difference of two maps"),
-        String::from("map_map") => Expression::builtin("map_map", map_map, "transform map keys and values with provided functions"),
         String::from("deep_merge") => Expression::builtin("deep_merge", deep_merge, "recursively merge two or more maps"),
-        String::from("get_path") => Expression::builtin("get_path", get_path, "get value from nested map using dot notation path"),
+
+        // loop
+        String::from("map") => Expression::builtin("map", map_map, "transform map keys and values with provided functions"),
     })
     .into()
 }
 
 // Helper function implementations
-
-pub(crate) fn flatten(expr: Expression) -> Vec<Expression> {
-    match expr {
-        Expression::List(list) => list
-            .as_ref()
-            .iter()
-            .flat_map(|item| flatten(item.clone()))
-            .collect(),
-        Expression::Map(map) => map
-            .as_ref()
-            .values()
-            .flat_map(|item| flatten(item.clone()))
-            .collect(),
-        expr => vec![expr],
-    }
-}
-
-fn flatten_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("flatten", args, 1)?;
-    Ok(Expression::List(Rc::new(flatten(args[0].eval(env)?))))
-}
 
 fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("items", args, 1)?;
@@ -56,16 +44,7 @@ fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
             let items = map
                 .as_ref()
                 .iter()
-                .map(|(k, v)| expr_pair(k.clone().into(), v.clone()))
-                .collect();
-            Expression::List(Rc::new(items))
-        }
-        Expression::List(list) => {
-            let items = list
-                .as_ref()
-                .iter()
-                .enumerate()
-                .map(|(i, v)| expr_pair((i as Int).into(), v.clone()))
+                .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
                 .collect();
             Expression::List(Rc::new(items))
         }
@@ -138,19 +117,6 @@ fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 
     Ok(match expr {
         Expression::Map(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
-        _ => Expression::None,
-    })
-}
-
-fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("len", args, 1)?;
-    let expr = args[0].eval(env)?;
-
-    Ok(match expr {
-        Expression::Map(map) => Expression::Integer(map.as_ref().len() as Int),
-        Expression::List(list) => Expression::Integer(list.as_ref().len() as Int),
-        Expression::String(s) => Expression::Integer(s.len() as Int),
-        Expression::Bytes(b) => Expression::Integer(b.len() as Int),
         _ => Expression::None,
     })
 }
@@ -229,12 +195,12 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("map_map", args, 2..3)?;
+    super::check_args_len("dict.map", args, 2..3)?;
     let map = match args.last().unwrap().eval(env)? {
         Expression::Map(m) => m,
         _ => {
             return Err(LmError::CustomError(
-                "map_map requires a map as last argument".to_string(),
+                "dict.map requires a map as last argument".to_string(),
             ));
         }
     };
@@ -379,9 +345,4 @@ fn get_value_by_path(
     }
 
     Ok(current)
-}
-
-// Helper function to create expression pairs
-fn expr_pair(k: Expression, v: Expression) -> Expression {
-    Expression::List(Rc::new(vec![k, v]))
 }

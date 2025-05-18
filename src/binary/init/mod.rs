@@ -13,7 +13,6 @@ mod fmt_module;
 // use fn_module::curry;
 mod fs_module;
 mod list_module;
-use list_module::*;
 mod log_module;
 mod math_module;
 // mod operator_module;
@@ -30,7 +29,7 @@ mod widget_module;
 
 pub fn get_module_map() -> HashMap<String, Expression> {
     hash_map! {
-      String::from("log") => log_module::get(),
+        String::from("log") => log_module::get(),
         String::from("math") => math_module::get(),
         String::from("dict") => dict_module::get(),
         String::from("version") => shell_module::get(),
@@ -44,10 +43,11 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("fmt") => fmt_module::get(),
         String::from("parse") => parse_module::get(),
         String::from("fs") => fs_module::get(),
-            String::from("string") => string_module::get(),
-            String::from("regex") => regex_module::get(),
-            String::from("list") => list_module::get(),
-            String::from("sys") => sys_module::get(),
+        String::from("string") => string_module::get(),
+        String::from("regex") => regex_module::get(),
+        String::from("list") => list_module::get(),
+        String::from("sys") => sys_module::get(),
+
             String::from("exit") => Expression::builtin(
                 "exit",
                 exit,
@@ -60,26 +60,31 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             String::from("eprint") => Expression::builtin("eprintln", eprint, "print to stderr"),
             String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr"),
             String::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
+            String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
             String::from("input") => Expression::builtin("input", input, "get user input"),
 
             String::from("type") => Expression::builtin("type", get_type, "get type of data"),
             String::from("str") => Expression::builtin("str", str, "format an expression to a string"),
             String::from("int") => Expression::builtin("int", int, "convert a float or string to an int"),
-            String::from("insert") => Expression::builtin("insert", insert, "insert an item into a dictionary or list"),
+
             String::from("len") => Expression::builtin("len", len, "get the length of an expression"),
-            // String::from("chars") => Expression::builtin("chars", chars, "aaa"),
-            // String::from("head") => Expression::builtin("head", head, "aaa"),
-            // String::from("tail") => Expression::builtin("tail", tail, "aaa"),
-            // String::from("lines") => Expression::builtin("lines", lines, "get the list of lines in a string"),
+            String::from("insert") => Expression::builtin("insert", insert, "insert an item into a map or list"),
+            String::from("rev") => Expression::builtin("rev", rev, "reverse a string"),
+            String::from("flatten") => Expression::builtin("flatten", flatten_wrapper, "flatten a list or map"),
+            String::from("where") => Expression::builtin("where", filter_rows,
+                "filter rows in list of maps by condition"),
+            String::from("select") => Expression::builtin("select", select_columns,
+                "select columns from list of maps"),
+
             String::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
             String::from("evalstr") => Expression::builtin("evalstr", evalstr, "evaluate a string"),
             String::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
             // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
-            String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
-
             String::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
-
             String::from("import") => Expression::builtin("import", import, "import a file (evaluate it in a new environment)"),
+
+            String::from("err-codes") =>Expression::builtin("err-codes", |_,_| Ok(RuntimeError::codes()), "display runtime error codes"),
+
             String::from("help") => Expression::builtin("help", help, "display lib modules"),
 
     }
@@ -339,6 +344,7 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
         ))),
     }
 }
+
 fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("insert", args, 3)?;
     let mut arr = args[0].eval(env)?;
@@ -393,25 +399,29 @@ fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
         Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
 
         otherwise => Err(LmError::CustomError(format!(
-            "cannot get length of {}",
-            otherwise
+            "cannot get length of {}:{}",
+            otherwise,
+            otherwise.type_name()
         ))),
     }
 }
 
-// fn lines(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-//     match args[0].eval(env)? {
-//         Expression::String(x) => Ok(Expression::List(
-//             x.lines()
-//                 .map(|ch| Expression::String(ch.to_string()))
-//                 .collect::<Vec<Expression>>(),
-//         )),
-//         otherwise => Err(LmError::CustomError(format!(
-//             "cannot get lines of non-string {}",
-//             otherwise
-//         ))),
-//     }
-// }
+fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    check_exact_args_len("rev", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::List(list) => {
+            let mut reversed = list.as_ref().to_vec();
+            reversed.reverse();
+            Ok(Expression::from(reversed))
+        }
+        Expression::String(s) => Ok(Expression::String(s.chars().rev().collect())),
+        Expression::Symbol(s) => Ok(Expression::Symbol(s.chars().rev().collect())),
+        Expression::Bytes(b) => Ok(Expression::Bytes(b.into_iter().rev().collect())),
+        _ => Err(LmError::CustomError(
+            "rev requires list or string as argument".to_string(),
+        )),
+    }
+}
 
 fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("evalstr", args, 1)?;
@@ -451,6 +461,106 @@ fn report(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
 
     Ok(Expression::None)
 }
+
+fn flatten(expr: Expression) -> Vec<Expression> {
+    match expr {
+        Expression::List(list) => list
+            .as_ref()
+            .iter()
+            .flat_map(|item| flatten(item.clone()))
+            .collect(),
+        Expression::Map(map) => map
+            .as_ref()
+            .values()
+            .flat_map(|item| flatten(item.clone()))
+            .collect(),
+        expr => vec![expr],
+    }
+}
+
+fn flatten_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    check_exact_args_len("flatten", args, 1)?;
+    Ok(Expression::from(flatten(args[0].eval(env)?)))
+}
+
+fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    // dbg!(&args);
+    check_exact_args_len("where", args, 2)?;
+
+    let data = if let Expression::List(list) = args[1].eval(env)? {
+        list
+    } else {
+        return Err(LmError::CustomError(
+            "Expected list of maps for filtering".into(),
+        ));
+    };
+
+    let condition = args[0].clone();
+    let mut filtered = Vec::new();
+
+    for row in data.as_ref() {
+        if let Expression::Map(row_map) = row {
+            let mut row_env = env.fork();
+            for (k, v) in row_map.as_ref() {
+                row_env.define(k, v.clone());
+            }
+
+            if let Expression::Boolean(true) = condition.eval(&mut row_env)? {
+                filtered.push(row.clone());
+            }
+        }
+    }
+
+    Ok(Expression::from(filtered))
+}
+
+fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    check_exact_args_len("select", args, 2)?;
+
+    let data = if let Expression::List(list) = args[1].eval(env)? {
+        list
+    } else {
+        return Err(LmError::CustomError(
+            "Expected list of maps for column selection".into(),
+        ));
+    };
+
+    let columns = match args[0].clone() {
+        Expression::List(list) => list.as_ref().iter().map(|e| e.to_string()).collect(),
+        Expression::String(s) | Expression::Symbol(s) => vec![s],
+        _ => {
+            return Err(LmError::CustomError(
+                "Columns must be a list or string".into(),
+            ));
+        }
+    };
+
+    let result = data
+        .as_ref()
+        .iter()
+        .filter_map(|row| {
+            if let Expression::Map(row_map) = row {
+                let selected = columns
+                    .iter()
+                    .filter_map(|col| {
+                        row_map
+                            .as_ref()
+                            .get(col)
+                            .map(|val| (col.clone(), val.clone()))
+                    })
+                    .collect::<HashMap<_, _>>();
+
+                Some(Expression::from(selected))
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>();
+
+    Ok(Expression::from(result))
+}
+
+// Helper functions
 
 fn check_args_len(
     name: impl ToString,
@@ -494,5 +604,41 @@ fn check_exact_args_len(
         // } else {
         //     format!("too few arguments to function {}", name.to_string())
         // }))
+    }
+}
+
+// pub fn get_list_arg(expr: Expression) -> Result<Rc<Vec<Expression>>, LmError> {
+//     match expr {
+//         Expression::List(s) => Ok(s),
+//         _ => Err(LmError::CustomError("expected string".to_string())),
+//     }
+// }
+
+// pub fn get_list_args(
+//     args: &[Expression],
+//     env: &mut Environment,
+// ) -> Result<Vec<Rc<Vec<Expression>>>, LmError> {
+//     args.iter()
+//         .map(|arg| get_list_arg(arg.eval(env)?))
+//         .collect()
+// }
+
+pub fn get_string_arg(expr: Expression) -> Result<String, LmError> {
+    match expr {
+        Expression::Symbol(s) | Expression::String(s) => Ok(s),
+        _ => Err(LmError::CustomError("expected string".to_string())),
+    }
+}
+
+pub fn get_string_args(args: &[Expression], env: &mut Environment) -> Result<Vec<String>, LmError> {
+    args.iter()
+        .map(|arg| get_string_arg(arg.eval(env)?))
+        .collect()
+}
+
+pub fn get_integer_arg(expr: Expression) -> Result<i64, LmError> {
+    match expr {
+        Expression::Integer(i) => Ok(i),
+        _ => Err(LmError::CustomError("expected integer".to_string())),
     }
 }

@@ -28,6 +28,7 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 | error catch|     *****     |     *         |     *         |    *        |
 | builtin Lib  |     *****     |               |               |    *       |
 | structured pipe|     ☑     |               |               |              |
+| key-bindings|     ☑     |               |               |              |
 | AI helper  |     ☑        |               |               |               |
 
 

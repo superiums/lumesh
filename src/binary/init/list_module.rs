@@ -5,37 +5,50 @@ use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("list") => Expression::builtin("list", list, "create a list from a variable number of arguments"),
-        String::from("last") => Expression::builtin("last", last, "get the last of a list"),
+        // read
         String::from("first") => Expression::builtin("first", first, "get the first of a list"),
-        String::from("chunk") => Expression::builtin("chunk", chunk, "chunk a list into lists of n elements"),
-        String::from("cons") => Expression::builtin("cons", cons, "prepend an element to a list"),
+        String::from("last") => Expression::builtin("last", last, "get the last of a list"),
+        String::from("nth") => Expression::builtin("nth", nth, "get the nth element of a list"),
+        String::from("take") => Expression::builtin("take", take, "take the first n elements of a list"),
+        String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list"),
+
+        // modify
         String::from("append") => Expression::builtin("append", append, "append an element to a list"),
-        String::from("rev") => Expression::builtin("rev", rev, "reverse a list"),
+        String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list"),
+        String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
+        String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order"),
+        String::from("split-at") => Expression::builtin("split-at", split_at, "split a list at a given index"),
+
+        // create
+        String::from("concat") => Expression::builtin("concat", concat, "create a list from a variable number of arguments"),
         String::from("range") => Expression::builtin("range", range, "create a list of integers from a to b"),
+
+        // loop, walk on
+        String::from("emulate") => Expression::builtin("emulate", emulate, "emulate over a list of index and values"),
+        String::from("map") => Expression::builtin("map", map, "map a function over a list of values"),
+        String::from("filter") => Expression::builtin("filter", filter, "filter a list of values with a condition function"),
+        String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map list elements in one pass, skipping None values"),
+        String::from("reduce") => Expression::builtin("reduce", reduce, "reduce a function over a list of values"),
+        String::from("find") => Expression::builtin("find", find, "find the index of an element in a list, returns None if not found"),
+
+        // transfer to
+        String::from("join") => Expression::builtin("join", join, "join a list of strings with a separator"),
+        String::from("to-map") => Expression::builtin("to-map", to_map, "convert list to map using a key function (default: use items themselves as keys)"),
+
+        // flatten
+        // transpose
+        String::from("transpose") => Expression::builtin("transpose", transpose, "transpose a matrix (list of lists) by switching rows and columns"),
+        String::from("group-by") => Expression::builtin("group-by", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
+        String::from("chunk") => Expression::builtin("chunk", chunk, "chunk a list into lists of n elements"),
         String::from("foldl") => Expression::builtin("foldl", foldl, "fold a list from the left"),
         String::from("foldr") => Expression::builtin("foldr", foldr, "fold a list from the right"),
         String::from("zip") => Expression::builtin("zip", zip, "zip two lists together"),
         String::from("unzip") => Expression::builtin("unzip", unzip, "unzip a list of pairs into a pair of lists"),
-        String::from("take") => Expression::builtin("take", take, "take the first n elements of a list"),
-        String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list"),
-        String::from("split_at") => Expression::builtin("split_at", split_at, "split a list at a given index"),
-        String::from("nth") => Expression::builtin("nth", nth, "get the nth element of a list"),
-        String::from("map") => Expression::builtin("map", map, "map a function over a list of values"),
-        String::from("filter") => Expression::builtin("filter", filter, "filter a list of values with a condition function"),
-        String::from("reduce") => Expression::builtin("reduce", reduce, "reduce a function over a list of values"),
-        String::from("find") => Expression::builtin("find", find, "find the index of an element in a list, returns None if not found"),
-        String::from("group_by") => Expression::builtin("group_by", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
-        String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map list elements in one pass, skipping None values"),
-        String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
-        String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order"),
-        String::from("list_to_map") => Expression::builtin("list_to_map", list_to_map, "convert list to map using a key function (default: use items themselves as keys)"),
-        String::from("transpose") => Expression::builtin("transpose", transpose, "transpose a matrix (list of lists) by switching rows and columns"),
     })
     .into()
 }
 
-fn list(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
+fn concat(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
     Ok(Expression::List(Rc::new(args.clone())))
 }
 
@@ -108,7 +121,7 @@ fn chunk(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::List(Rc::new(result)))
 }
 
-fn cons(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn prepend(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cons", args, 2)?;
     let head = args[0].eval(env)?;
     let list = match args[1].eval(env)? {
@@ -128,36 +141,19 @@ fn cons(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 
 fn append(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("append", args, 2)?;
-    let list = match args[0].eval(env)? {
+    let list = match args[1].eval(env)? {
         Expression::List(l) => l,
         _ => {
             return Err(LmError::CustomError(
-                "append requires list as first argument".to_string(),
+                "append requires list as last argument".to_string(),
             ));
         }
     };
 
-    let item = args[1].eval(env)?;
+    let item = args[0].eval(env)?;
     let mut new_list = list.as_ref().to_vec();
     new_list.push(item);
     Ok(Expression::List(Rc::new(new_list)))
-}
-
-pub fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("rev", args, 1)?;
-    match args[0].eval(env)? {
-        Expression::List(list) => {
-            let mut reversed = list.as_ref().to_vec();
-            reversed.reverse();
-            Ok(Expression::List(Rc::new(reversed)))
-        }
-        Expression::String(s) => Ok(Expression::String(s.chars().rev().collect())),
-        Expression::Symbol(s) => Ok(Expression::Symbol(s.chars().rev().collect())),
-        Expression::Bytes(b) => Ok(Expression::Bytes(b.into_iter().rev().collect())),
-        _ => Err(LmError::CustomError(
-            "rev requires list or string as argument".to_string(),
-        )),
-    }
 }
 
 fn range(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
@@ -551,14 +547,16 @@ fn sort(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     super::check_args_len("sort", args, 1..2)?;
     let list = match args.last().unwrap().eval(env)? {
         Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "sort requires list as last argument".to_string(),
-            ));
+        s => {
+            return Err(LmError::CustomError(format!(
+                "sort requires list as last argument, found {}",
+                s.type_name()
+            )));
         }
     };
-
+    // dbg!(&list);
     let mut sorted = list.as_ref().clone();
+    // dbg!(&sorted);
 
     if args.len() == 2 {
         let key_func = args[0].eval(env)?;
@@ -601,13 +599,13 @@ fn unique(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     Ok(Expression::List(Rc::new(result)))
 }
 
-fn list_to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("list_to_map", args, 1..2)?;
+fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("to-map", args, 1..2)?;
     let list = match args.last().unwrap().eval(env)? {
         Expression::List(l) => l,
         _ => {
             return Err(LmError::CustomError(
-                "list_to_map requires list as last argument".to_string(),
+                "to-map requires list as last argument".to_string(),
             ));
         }
     };
@@ -682,4 +680,48 @@ fn transpose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
         transposed.push(Expression::List(Rc::new(new_row)));
     }
     Ok(Expression::List(Rc::new(transposed)))
+}
+
+fn join(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("join", args, 2)?;
+    let separator = get_string_arg(args[0].eval(env)?)?;
+
+    match args[1].eval(env)? {
+        Expression::List(list) => {
+            let mut joined = String::new();
+            for (i, item) in list.as_ref().iter().enumerate() {
+                if i != 0 {
+                    joined.push_str(&separator);
+                }
+                joined.push_str(&item.to_string());
+            }
+            Ok(Expression::String(joined))
+        }
+        _ => Ok(Expression::None),
+    }
+}
+
+fn emulate(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("emulate", args, 1)?;
+    let expr = args[0].eval(env)?;
+
+    Ok(match expr {
+        Expression::List(list) => {
+            let items = list
+                .as_ref()
+                .iter()
+                .enumerate()
+                .map(|(i, v)| Expression::from(vec![(i as Int).into(), v.clone()]))
+                .collect();
+            Expression::List(Rc::new(items))
+        }
+        _ => Expression::None,
+    })
+}
+
+fn get_string_arg(expr: Expression) -> Result<String, LmError> {
+    match expr {
+        Expression::Symbol(s) | Expression::String(s) => Ok(s),
+        _ => Err(LmError::CustomError("expected string".to_string())),
+    }
 }

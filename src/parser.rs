@@ -26,7 +26,7 @@ const PREC_LOGICAL_AND: u8 = 7; // 逻辑与 &&
 const PREC_COMPARISON: u8 = 8; // 比较运算
 
 const PREC_CMD_ARG: u8 = 9;
-const PREC_FUNC_ARG: u8 = 10;
+const PREC_FUNC_ARG: u8 = 3;
 
 const PREC_ADD_SUB: u8 = 11; // 加减
 const PREC_MUL_DIV: u8 = 12; // 乘除模 custom_op _*

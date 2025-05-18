@@ -127,11 +127,11 @@ fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("=>"),  //for match
-        operator_tag("=="), //to allow a==b
-        operator_tag("!="),
-        operator_tag(">="),
-        operator_tag("<="),
+        keyword_tag("=>"),     //for match
+        punctuation_tag("=="), //to allow a==b
+        punctuation_tag("!="),
+        punctuation_tag(">="),
+        punctuation_tag("<="),
         keyword_tag("~~"), //string contains
         keyword_tag("~="), //regex match
         keyword_tag("&&"),

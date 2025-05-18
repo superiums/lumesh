@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.3.8"
+version = "0.3.9"
 authors = ["Adam McDaniel; superiums"]
 edition = "2024"
 license = "MIT"

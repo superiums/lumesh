@@ -36,7 +36,7 @@ macro_rules! fmt_shared {
             Self::Symbol(name) => write!($f, "{}", name),
             Self::Variable(name) => write!($f, "${}", name),
 
-            Self::String(s) if $debug => write!($f, "{:?}", s),
+            // Self::String(s) if $debug => write!($f, "{:?}", s),
             Self::String(s) => write!($f, "{}", s),
 
             Self::Integer(i) => write!($f, "{}", *i),
@@ -48,50 +48,29 @@ macro_rules! fmt_shared {
             Self::Assign(name, expr) => write!($f, "{} = {:?}", name, expr),
 
             // Quote 修改
-            Self::Quote(inner) if $debug => write!($f, "'{:?}", inner),
             Self::Quote(inner) => write!($f, "'{}", inner),
 
             // Group 修改
-            Self::Group(inner) if $debug => write!($f, "Group({:?})", inner),
             Self::Group(inner) => write!($f, "({})", inner),
 
             // While 修改
-            Self::While(cond, body) if $debug => write!($f, "while {:?} {:?}", cond, body),
             Self::While(cond, body) => write!($f, "while {} {}", cond, body),
             Self::Loop(inner) => write!($f, "(loop {})", inner),
 
             // Lambda 修改
-            Self::Lambda(params, body) if $debug => {
-                write!($f, "Lambda{:?} -> {:?}", params, body)
-            }
+
             Self::Lambda(params, body) => write!($f, "({}) -> {}", params.join(", "), body),
             // Self::Macro(params, body) if $debug => write!($f, "{:?} ~> {:?}", params, body),
             // Self::Macro(params, body) => write!($f, "({}) ~> {}", params.join(", "), body),
 
             // If 修改
-            Self::If(cond, true_expr, false_expr) => {
-                if $debug {
-                    write!($f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
-                } else {
-                    write!($f, "if {} {} else {}", cond, true_expr, false_expr)
-                }
-            }
+            Self::If(cond, true_expr, false_expr) =>
+                    write!($f, "if {} {} else {}", cond, true_expr, false_expr),
 
             Self::Slice(l, r) => write!($f, "{}[{:?}:{:?}:{:?}]", l, r.start, r.end, r.step),
 
             // 修正List分支中的变量名错误
-            Self::List(exprs) if $debug => {
-                write!(
-                    $f,
-                    "[{}]",
-                    exprs
-                        .as_ref()
-                        .iter()
-                        .map(|e| format!("{:?}", e))
-                        .collect::<Vec<String>>()
-                        .join(", ")
-                )
-            }
+
             Self::List(exprs) => {
                 // Create a table with one column
                 let specified_width = $f.width().unwrap_or(
@@ -173,16 +152,7 @@ macro_rules! fmt_shared {
 
                 write!($f, "{}", t)
             }
-            Self::Map(exprs) if $debug => write!(
-                $f,
-                "{{{}}}",
-                exprs
-                    .as_ref()
-                    .iter()
-                    .map(|(k, e)| format!("{}: {:?}", k, e))
-                    .collect::<Vec<String>>()
-                    .join(", ")
-            ),
+
            Self::Map(exprs) => {
                 let specified_width = $f.width().unwrap_or(
                     terminal_size()
@@ -317,15 +287,7 @@ macro_rules! fmt_shared {
                 }
                 write!($f, "}}")
             }
-            Self::Apply(g, args) if $debug => write!(
-                $f,
-                "APPLY ☛{:?} {}☚ ",
-                g,
-                args.iter()
-                    .map(|e| format!("{:?}", e))
-                    .collect::<Vec<String>>()
-                    .join(" ")
-            ),
+
             Self::Apply(g, args) => write!(
                 $f,
                 "{:?} {}",
@@ -335,15 +297,7 @@ macro_rules! fmt_shared {
                     .collect::<Vec<String>>()
                     .join(" ")
             ),
-            Self::Command(g, args) if $debug => write!(
-                $f,
-                "COMMAND ☘{:?} {})☘ ",
-                g,
-                args.iter()
-                    .map(|e| format!("{:?}", e))
-                    .collect::<Vec<String>>()
-                    .join(" ")
-            ),
+
             Self::Command(g, args) => write!(
                 $f,
                 "{:?} {}",
@@ -522,7 +476,60 @@ impl<'a> TableRow<'a> {
 // Debug 实现
 impl fmt::Debug for Expression {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt_shared!(self, f, true)
+        match &self {
+            Self::String(s) => write!(f, "{:?}", s),
+            Self::Quote(inner) => write!(f, "'{:?}", inner),
+            Self::Group(inner) => write!(f, "Group({:?})", inner),
+            Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
+            Self::Lambda(params, body) => {
+                write!(f, "Lambda{:?} -> {:?}", params, body)
+            }
+            Self::List(exprs) => {
+                write!(
+                    f,
+                    "[{}]",
+                    exprs
+                        .as_ref()
+                        .iter()
+                        .map(|e| format!("{:?}", e))
+                        .collect::<Vec<String>>()
+                        .join(", ")
+                )
+            }
+            Self::Map(exprs) => write!(
+                f,
+                "{{{}}}",
+                exprs
+                    .as_ref()
+                    .iter()
+                    .map(|(k, e)| format!("{}: {:?}", k, e))
+                    .collect::<Vec<String>>()
+                    .join(", ")
+            ),
+            Self::Apply(g, args) => write!(
+                f,
+                "APPLY ☛  {:?} {}  ☚ ",
+                g,
+                args.iter()
+                    .map(|e| format!("{:?}", e))
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            ),
+            Self::If(cond, true_expr, false_expr) => {
+                write!(f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
+            }
+            Self::Command(g, args) => write!(
+                f,
+                "COMMAND ☘  {:?} {})  ☘ ",
+                g,
+                args.iter()
+                    .map(|e| format!("{:?}", e))
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            ),
+
+            _ => fmt_shared!(self, f, true),
+        }
     }
 }
 

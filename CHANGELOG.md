@@ -1,4 +1,15 @@
 # Changelog
+
+## [0.3.9]
+- add keybindings
+- fix parser for bare utf8 chars
+- redefine `>>` and `>>!`, `~=`,`~~`,`~:`
+- fix path for windows
+- enhance list and map display
+- use btreemap in expr, but hashmap for performance.
+- enhanced libs, `fs.ls`, `parse.cmd`,`where`,`select`...
+
+
 ## [0.3.8]
 - add loop and break
 - change `?-` to `?+`, which means to merge errs to stdout.

@@ -3,7 +3,7 @@ use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, Expression, Int, RuntimeError, binary};
 use core::option::Option::None;
 use regex_lite::Regex;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use std::rc::Rc;
 
@@ -435,12 +435,13 @@ impl Expression {
                         .iter()
                         .map(|(k, e)| Ok((k.clone(), e.eval_mut(true, env, depth + 1)?)))
                         .collect::<Result<HashMap<_, _>, RuntimeError>>()?;
-                    // let evaluated = items
-                    //     .as_ref()
-                    //     .iter()
-                    //     .map(|(k, e)| (k.clone(), e.eval_mut(true, env, depth + 1)?))
-                    //     .collect::<Result<HashMap<_, _>, _>>()
-                    //     .map(Expression::Map);
+                    return Ok(Expression::from(evaluated));
+                }
+                Self::BMap(items) => {
+                    let evaluated = items
+                        .iter()
+                        .map(|(k, e)| Ok((k.clone(), e.eval_mut(true, env, depth + 1)?)))
+                        .collect::<Result<BTreeMap<_, _>, RuntimeError>>()?;
                     return Ok(Expression::from(evaluated));
                 }
 
@@ -610,6 +611,13 @@ impl Expression {
                     .cloned()
                     .ok_or(RuntimeError::KeyNotFound(key))
             }
+            Expression::BMap(map) => {
+                let key = r.to_string(); // 自动转换Symbol/字符串
+                map.as_ref()
+                    .get(&key)
+                    .cloned()
+                    .ok_or(RuntimeError::KeyNotFound(key))
+            }
 
             // 处理字符串索引
             Expression::String(s) => {
@@ -749,6 +757,12 @@ impl Expression {
                 new_map.insert(key, value);
                 Ok(Self::Map(Rc::new(new_map)))
             }
+            Self::BMap(map) => {
+                let mut new_map = BTreeMap::new();
+                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.insert(key, value);
+                Ok(Self::BMap(Rc::new(new_map)))
+            }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
                 found: s.type_name(),
@@ -766,6 +780,35 @@ impl Expression {
                 new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
                 new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
                 Ok(Self::Map(Rc::new(new_map)))
+            }
+            Self::BMap(map) => {
+                let mut new_map = BTreeMap::new();
+                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
+                Ok(Self::BMap(Rc::new(new_map)))
+            }
+            s => Err(RuntimeError::TypeError {
+                expected: "Map".into(),
+                found: s.type_name(),
+            }),
+        }
+    }
+    pub fn bmap_append(
+        &self,
+        other: Rc<BTreeMap<String, Expression>>,
+    ) -> Result<Expression, RuntimeError> {
+        match self {
+            Self::Map(map) => {
+                let mut new_map = HashMap::new();
+                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
+                Ok(Self::Map(Rc::new(new_map)))
+            }
+            Self::BMap(map) => {
+                let mut new_map = BTreeMap::new();
+                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
+                Ok(Self::BMap(Rc::new(new_map)))
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),

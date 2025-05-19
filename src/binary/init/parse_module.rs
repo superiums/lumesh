@@ -1,7 +1,7 @@
 // use super::{get_list_arg, get_string_arg};
 use crate::{Environment, Expression, LmError, SyntaxError, parse_script};
 use common_macros::hash_map;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use tinyjson::JsonValue;
 
 pub fn get() -> Expression {
@@ -41,7 +41,7 @@ fn toml_to_expr(val: toml::Value) -> Expression {
         toml::Value::Table(o) => Expression::from(
             o.into_iter()
                 .map(|(k, v)| (k, toml_to_expr(v)))
-                .collect::<HashMap<String, Expression>>(),
+                .collect::<BTreeMap<String, Expression>>(),
         ),
     }
 }
@@ -81,7 +81,7 @@ fn json_to_expr(val: JsonValue) -> Expression {
         JsonValue::Object(o) => Expression::from(
             o.into_iter()
                 .map(|(k, v)| (k, json_to_expr(v)))
-                .collect::<HashMap<String, Expression>>(),
+                .collect::<BTreeMap<String, Expression>>(),
         ),
     }
 }
@@ -188,7 +188,7 @@ fn parse_command_output(
         }
 
         let values: Vec<&str> = line.split_whitespace().collect();
-        let mut row = HashMap::new();
+        let mut row = BTreeMap::new();
 
         for (i, header) in detected_headers.iter().enumerate() {
             if let Some(&value) = values.get(i) {

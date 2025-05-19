@@ -1,5 +1,5 @@
 use crate::{Environment, Int};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::rc::Rc;
 pub mod alias;
 pub mod basic;
@@ -33,6 +33,7 @@ pub enum Expression {
     // 集合类型使用Rc
     List(Rc<Vec<Self>>),
     Map(Rc<HashMap<String, Self>>),
+    BMap(Rc<BTreeMap<String, Self>>),
 
     // 索引和切片优化
     Index(Rc<Self>, Rc<Self>),

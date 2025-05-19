@@ -1,7 +1,7 @@
 use crate::{Environment, Int};
 use crate::{Expression, LmError};
 use common_macros::hash_map;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
@@ -52,7 +52,7 @@ fn join_current_path(path: &str) -> PathBuf {
 }
 
 fn get_system_dirs(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
-    let mut dir_tree = HashMap::<String, String>::new();
+    let mut dir_tree = BTreeMap::<String, String>::new();
 
     if let Some(home_dir) = dirs::home_dir() {
         dir_tree.insert("home".into(), home_dir.to_string_lossy().into());
@@ -113,8 +113,8 @@ fn get_directory_tree(
     Ok(Expression::from(build_directory_tree(&cwd, max_depth)))
 }
 
-fn build_directory_tree(path: &Path, max_depth: Option<Int>) -> HashMap<String, Expression> {
-    let mut tree = HashMap::new();
+fn build_directory_tree(path: &Path, max_depth: Option<Int>) -> BTreeMap<String, Expression> {
+    let mut tree = BTreeMap::new();
 
     tree.insert(
         ".".into(),

@@ -1,6 +1,6 @@
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::rc::Rc;
 
 pub fn get() -> Expression {
@@ -496,7 +496,7 @@ fn group_by(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     };
 
     let key_func = args[0].eval(env)?;
-    let mut groups: HashMap<String, Vec<Expression>> = HashMap::new();
+    let mut groups: BTreeMap<String, Vec<Expression>> = BTreeMap::new();
 
     for item in list.as_ref().iter() {
         let key = match Expression::Apply(Rc::new(key_func.clone()), Rc::new(vec![item.clone()]))
@@ -510,14 +510,9 @@ fn group_by(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
     let result = groups
         .into_iter()
-        .map(|(k, v)| {
-            Expression::List(Rc::new(vec![
-                Expression::String(k),
-                Expression::List(Rc::new(v)),
-            ]))
-        })
-        .collect();
-    Ok(Expression::List(Rc::new(result)))
+        .map(|(k, v)| Expression::from(vec![Expression::String(k), Expression::from(v)]))
+        .collect::<Vec<Expression>>();
+    Ok(Expression::from(result))
 }
 
 fn filter_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
@@ -616,7 +611,7 @@ fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         Expression::builtin("_id", |args, _| Ok(args[0].clone()), "identity function")
     };
 
-    let mut map = HashMap::new();
+    let mut map = BTreeMap::new();
     for item in list.as_ref().iter() {
         let key = match Expression::Apply(Rc::new(key_func.clone()), Rc::new(vec![item.clone()]))
             .eval(env)?
@@ -626,7 +621,7 @@ fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         };
         map.insert(key, item.clone());
     }
-    Ok(Expression::Map(Rc::new(map)))
+    Ok(Expression::from(map))
 }
 
 fn transpose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {

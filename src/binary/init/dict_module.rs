@@ -1,6 +1,6 @@
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::rc::Rc;
 
 pub fn get() -> Expression {
@@ -127,7 +127,7 @@ fn from_items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
     Ok(match expr {
         Expression::List(list) => {
-            let mut map = HashMap::with_capacity(list.as_ref().len());
+            let mut map = BTreeMap::new();
             for item in list.as_ref() {
                 if let Expression::List(pair) = item {
                     if pair.as_ref().len() == 2 {
@@ -135,7 +135,7 @@ fn from_items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
                     }
                 }
             }
-            Expression::Map(Rc::new(map))
+            Expression::from(map)
         }
         _ => Expression::None,
     })
@@ -163,13 +163,13 @@ fn intersect(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 
     Ok(match (expr1, expr2) {
         (Expression::Map(map1), Expression::Map(map2)) => {
-            let mut new_map = HashMap::new();
+            let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
                 if map2.as_ref().contains_key(k) {
                     new_map.insert(k.clone(), v.clone());
                 }
             }
-            Expression::Map(Rc::new(new_map))
+            Expression::from(new_map)
         }
         _ => Expression::None,
     })
@@ -182,13 +182,13 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
     Ok(match (expr1, expr2) {
         (Expression::Map(map1), Expression::Map(map2)) => {
-            let mut new_map = HashMap::new();
+            let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
                 if !map2.as_ref().contains_key(k) {
                     new_map.insert(k.clone(), v.clone());
                 }
             }
-            Expression::Map(Rc::new(new_map))
+            Expression::from(new_map)
         }
         _ => Expression::None,
     })
@@ -197,7 +197,7 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("dict.map", args, 2..3)?;
     let map = match args.last().unwrap().eval(env)? {
-        Expression::Map(m) => m,
+        Expression::BMap(m) => m,
         _ => {
             return Err(LmError::CustomError(
                 "dict.map requires a map as last argument".to_string(),
@@ -216,7 +216,7 @@ fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         )
     };
 
-    let mut new_map = HashMap::with_capacity(map.as_ref().len());
+    let mut new_map = BTreeMap::new();
 
     for (k, v) in map.as_ref().iter() {
         let new_key = match Expression::Apply(
@@ -234,7 +234,7 @@ fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         new_map.insert(new_key, new_val);
     }
 
-    Ok(Expression::Map(Rc::new(new_map)))
+    Ok(Expression::from(new_map))
 }
 
 fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
@@ -245,7 +245,7 @@ fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     }
 
     let mut base = match args[0].eval(env)? {
-        Expression::Map(m) => m.as_ref().clone(),
+        Expression::BMap(m) => m.as_ref().clone(),
         _ => {
             return Err(LmError::CustomError(
                 "deep_merge requires maps as arguments".to_string(),
@@ -255,7 +255,7 @@ fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
     for arg in args.iter().skip(1) {
         let next = match arg.eval(env)? {
-            Expression::Map(m) => m,
+            Expression::BMap(m) => m,
             _ => {
                 return Err(LmError::CustomError(
                     "deep_merge requires maps as arguments".to_string(),
@@ -265,21 +265,21 @@ fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
         base = deep_merge_maps(&base, next.as_ref())?;
     }
 
-    Ok(Expression::Map(Rc::new(base)))
+    Ok(Expression::from(base))
 }
 
 fn deep_merge_maps(
-    a: &HashMap<String, Expression>,
-    b: &HashMap<String, Expression>,
-) -> Result<HashMap<String, Expression>, LmError> {
+    a: &BTreeMap<String, Expression>,
+    b: &BTreeMap<String, Expression>,
+) -> Result<BTreeMap<String, Expression>, LmError> {
     let mut result = a.clone();
 
     for (k, v) in b.iter() {
         if let Some(existing) = result.get(k) {
-            if let (Expression::Map(ma), Expression::Map(mb)) = (existing, v) {
+            if let (Expression::BMap(ma), Expression::BMap(mb)) = (existing, v) {
                 result.insert(
                     k.clone(),
-                    Expression::Map(Rc::new(deep_merge_maps(ma.as_ref(), mb.as_ref())?)),
+                    Expression::BMap(Rc::new(deep_merge_maps(ma.as_ref(), mb.as_ref())?)),
                 );
                 continue;
             }
@@ -294,7 +294,7 @@ fn get_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     super::check_exact_args_len("get_path", args, 2)?;
 
     let map = match args[1].eval(env)? {
-        Expression::Map(m) => m,
+        Expression::BMap(m) => m,
         _ => {
             return Err(LmError::CustomError(
                 "get_path requires a map as last argument".to_string(),
@@ -313,17 +313,17 @@ fn get_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
     let path_segments: Vec<&str> = path.split('.').collect();
     if path_segments.is_empty() {
-        return Ok(Expression::Map(map));
+        return Ok(Expression::BMap(map));
     }
 
     get_value_by_path(map.as_ref(), &path_segments)
 }
 
 fn get_value_by_path(
-    map: &HashMap<String, Expression>,
+    map: &BTreeMap<String, Expression>,
     path: &[&str],
 ) -> Result<Expression, LmError> {
-    let mut current = Expression::Map(Rc::new(map.clone()));
+    let mut current = Expression::from(map.clone());
 
     for segment in path {
         match current {

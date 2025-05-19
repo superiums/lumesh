@@ -151,7 +151,7 @@ macro_rules! fmt_shared {
                 let (rows,heads_opt) = TableRow {
                     columns: exprs.as_ref(),
                     max_width: specified_width-10,
-                    col_padding: 3,
+                    col_padding: 3+2,
                 }.split_into_rows();
 
                 let mut t = Table::new();
@@ -183,7 +183,58 @@ macro_rules! fmt_shared {
                     .collect::<Vec<String>>()
                     .join(", ")
             ),
-            Self::Map(exprs) => {
+           Self::Map(exprs) => {
+                let specified_width = $f.width().unwrap_or(
+                    terminal_size()
+                        .map(|(Width(w), _)| w as usize)
+                        .unwrap_or(120),
+                );
+                let mut t = Table::new();
+                t.set_format(*FORMAT_BORDERS_ONLY);
+
+                // let heads=["Key","Value"];
+                // t.set_titles(Row::new(
+                //     heads.into_iter().map(|x| Cell::new(&x)).collect()
+                // ));
+                t.set_titles(row!("KEY","VALUE"));
+                // let fmt = t.get_format();
+                // fmt.padding(1, 1);
+                // // Set width to be 2/3
+                // fmt.borders('│');
+                // fmt.column_separator('│');
+                // fmt.separator(LinePosition::Top, LineSeparator::new('═', '╤', '╒', '╕'));
+                // fmt.separator(LinePosition::Title, LineSeparator::new('═', '╪', '╞', '╡'));
+                // fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
+                // fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
+
+                for (key, val) in exprs.as_ref().iter() {
+                    match &val {
+                        Self::Builtin(Builtin { help, .. }) => {
+                            t.add_row(row!(
+                                key,
+                                format!("{}", val),
+                                textwrap::fill(help, specified_width / 2)
+                            ));
+                        }
+                        Self::Map(_) => {
+                            t.add_row(row!(key, format!("{:specified_width$}", val)));
+                        }
+                        Self::List(_) => {
+                            let w = specified_width - key.len() - 3;
+                            let formatted = format!("{:w$}", val);
+                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
+                        }
+                        _ => {
+                            // Format the value to the width of the terminal / 5
+                            let formatted = format!("{:?}", val);
+                            let w = specified_width / 3;
+                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
+                        }
+                    }
+                }
+                write!($f, "{}", t)
+            }
+           Self::BMap(exprs) => {
                 let specified_width = $f.width().unwrap_or(
                     terminal_size()
                         .map(|(Width(w), _)| w as usize)
@@ -358,6 +409,10 @@ impl<'a> TableRow<'a> {
                 heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
                 a.keys().len()
             }
+            Some(Expression::BMap(a)) => {
+                heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
+                a.keys().len()
+            }
             _ => 0,
         };
         if cols > 0 {
@@ -369,6 +424,11 @@ impl<'a> TableRow<'a> {
                         }
                     }
                     Expression::Map(a) => {
+                        for (_, v) in a.iter() {
+                            current_row.push(v.to_string());
+                        }
+                    }
+                    Expression::BMap(a) => {
                         for (_, v) in a.iter() {
                             current_row.push(v.to_string());
                         }
@@ -398,6 +458,12 @@ impl<'a> TableRow<'a> {
                     .map(|(_, v)| v.to_string())
                     .collect::<Vec<String>>()
                     .join("\t"),
+                Expression::BMap(a) => a
+                    .as_ref()
+                    .iter()
+                    .map(|(_, v)| v.to_string())
+                    .collect::<Vec<String>>()
+                    .join("\t"),
                 other => other.to_string(),
             };
             let col_width = col.chars().count() + self.col_padding;
@@ -408,13 +474,13 @@ impl<'a> TableRow<'a> {
             if cols == 0 {
                 if !current_row.is_empty() && current_len + col_width > self.max_width {
                     cols = i;
-                    dbg!(&cols);
+                    // dbg!(&cols);
                     result.push(current_row);
                     current_row = vec![];
                     current_len = 0;
                 }
             } else if i % cols == 0 {
-                dbg!(&i);
+                // dbg!(&i);
                 result.push(current_row);
                 current_row = vec![];
                 current_len = 0;
@@ -474,6 +540,7 @@ impl Expression {
         match self {
             Self::List(_) => "List".into(),
             Self::Map(_) => "Map".into(),
+            Self::BMap(_) => "BMap".into(),
             Self::String(_) => "String".into(),
             Self::Integer(_) => "Integer".into(),
             Self::Symbol(_) => "Symbol".into(),

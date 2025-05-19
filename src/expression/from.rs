@@ -1,5 +1,8 @@
 use super::{Environment, Expression, Int};
-use std::{collections::HashMap, rc::Rc};
+use std::{
+    collections::{BTreeMap, HashMap},
+    rc::Rc,
+};
 
 impl From<Int> for Expression {
     fn from(x: Int) -> Self {
@@ -46,6 +49,19 @@ where
             map.into_iter()
                 .map(|(name, item)| (name, item.into()))
                 .collect::<HashMap<String, Self>>(),
+        ))
+    }
+}
+
+impl<T> From<BTreeMap<String, T>> for Expression
+where
+    T: Into<Self>,
+{
+    fn from(map: BTreeMap<String, T>) -> Self {
+        Self::BMap(Rc::new(
+            map.into_iter()
+                .map(|(name, item)| (name, item.into()))
+                .collect::<BTreeMap<String, Self>>(),
         ))
     }
 }

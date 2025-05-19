@@ -1,5 +1,5 @@
 use core::option::Option::None;
-use std::{collections::HashMap, rc::Rc};
+use std::{collections::BTreeMap, rc::Rc};
 
 use crate::{
     Diagnostic, Expression, Int, Pattern, SliceParams, SyntaxErrorKind, Token, TokenKind,
@@ -1088,9 +1088,9 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     let (input, _) = text_close("}")(input)?;
     // let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
     // dbg!(&input);
-    let hashmap: HashMap<String, Expression> = pairs.into_iter().collect();
+    let map: BTreeMap<String, Expression> = pairs.into_iter().collect();
     // Ok((input, Expression::Map(pairs)))
-    Ok((input, Expression::from(hashmap)))
+    Ok((input, Expression::from(map)))
 }
 
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {

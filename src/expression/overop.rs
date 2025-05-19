@@ -141,6 +141,8 @@ impl Add for Expression {
                 // new_map.insert(other.to_string(), other); // Insert the other element
                 // Ok(Self::Map(Rc::new(new_map)))
             }
+            (Self::BMap(a), Self::BMap(b)) => Self::BMap(a).bmap_append(b),
+            (Self::BMap(a), other) => Self::BMap(a).map_insert(other.to_string(), other),
 
             // (Self::Map(mut a), Self::Integer(n)) => {
             //     a.insert(n.to_string(), Self::Integer(n));

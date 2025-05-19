@@ -101,6 +101,9 @@ fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate
                 .iter()
                 .map(|item| match item.1 {
                     Expression::Map(_) => {
+                        (item.0.clone(), Expression::String("module".to_string()))
+                    }
+                    Expression::BMap(_) => {
                         (item.0.clone(), Expression::String("Module".to_string()))
                     }
                     other => (item.0.clone(), other.clone()),

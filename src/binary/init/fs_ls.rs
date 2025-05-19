@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 #[cfg(unix)]
 use std::os::unix::fs::{FileTypeExt, MetadataExt, PermissionsExt};
 use std::path::{Path, PathBuf};
@@ -69,7 +69,7 @@ pub fn get_file_expression(
     };
 
     let name = entry.file_name().to_string_lossy().into_owned();
-    let mut map = HashMap::new();
+    let mut map = BTreeMap::new();
 
     // 基础字段
     map.insert("name".to_string(), Expression::String(name.clone()));
@@ -139,7 +139,7 @@ pub fn get_file_expression(
         }
     }
 
-    Ok(Expression::Map(Rc::new(map)))
+    Ok(Expression::BMap(Rc::new(map)))
 }
 
 // 辅助函数保持不变（detect_file_type, system_time_to_unix_seconds等）

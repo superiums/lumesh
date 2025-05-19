@@ -4,7 +4,7 @@ use chrono::{
     TimeZone, Timelike,
 };
 use common_macros::hash_map;
-use std::{collections::HashMap, thread, time::Duration};
+use std::{collections::BTreeMap, thread, time::Duration};
 
 pub fn get() -> Expression {
     (hash_map! {
@@ -126,7 +126,7 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<DateTim
             )))
         }
         Expression::Integer(ts) => Ok(Local.timestamp_opt(ts, 0).unwrap()),
-        Expression::Map(m) => {
+        Expression::BMap(m) => {
             let map = m.as_ref();
             let year = get_map_value(map, "year")?.unwrap_or(Local::now().year() as i64);
             let month = get_map_value(map, "month")?.unwrap_or(1) as u32;
@@ -146,7 +146,7 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<DateTim
     }
 }
 
-fn get_map_value(map: &HashMap<String, Expression>, key: &str) -> Result<Option<i64>, LmError> {
+fn get_map_value(map: &BTreeMap<String, Expression>, key: &str) -> Result<Option<i64>, LmError> {
     match map.get(key) {
         Some(Expression::Integer(n)) => Ok(Some(*n)),
         Some(Expression::String(s)) => s

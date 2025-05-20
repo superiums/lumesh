@@ -32,8 +32,8 @@ pub enum Expression {
 
     // 集合类型使用Rc
     List(Rc<Vec<Self>>),
-    Map(Rc<HashMap<String, Self>>),
-    BMap(Rc<BTreeMap<String, Self>>),
+    HMap(Rc<HashMap<String, Self>>),
+    Map(Rc<BTreeMap<String, Self>>),
 
     // 索引和切片优化
     Index(Rc<Self>, Rc<Self>),

@@ -459,14 +459,14 @@ impl Expression {
                         .collect::<Result<Vec<_>, _>>()?;
                     return Ok(Expression::from(evaluated));
                 }
-                Self::Map(items) => {
+                Self::HMap(items) => {
                     let evaluated = items
                         .iter()
                         .map(|(k, e)| Ok((k.clone(), e.eval_mut(state, env, depth + 1)?)))
                         .collect::<Result<HashMap<_, _>, RuntimeError>>()?;
                     return Ok(Expression::from(evaluated));
                 }
-                Self::BMap(items) => {
+                Self::Map(items) => {
                     let evaluated = items
                         .iter()
                         .map(|(k, e)| Ok((k.clone(), e.eval_mut(state, env, depth + 1)?)))
@@ -637,14 +637,14 @@ impl Expression {
             }
 
             // 处理字典键访问
-            Expression::Map(map) => {
+            Expression::HMap(map) => {
                 let key = r.to_string(); // 自动转换Symbol/字符串
                 map.as_ref()
                     .get(&key)
                     .cloned()
                     .ok_or(RuntimeError::KeyNotFound(key))
             }
-            Expression::BMap(map) => {
+            Expression::Map(map) => {
                 let key = r.to_string(); // 自动转换Symbol/字符串
                 map.as_ref()
                     .get(&key)
@@ -785,17 +785,17 @@ impl Expression {
     // 映射插入示例
     pub fn map_insert(&self, key: String, value: Self) -> Result<Expression, RuntimeError> {
         match self {
-            Self::Map(map) => {
+            Self::HMap(map) => {
                 let mut new_map = HashMap::new();
                 new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
                 new_map.insert(key, value);
-                Ok(Self::Map(Rc::new(new_map)))
+                Ok(Self::from(new_map))
             }
-            Self::BMap(map) => {
+            Self::Map(map) => {
                 let mut new_map = BTreeMap::new();
                 new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
                 new_map.insert(key, value);
-                Ok(Self::BMap(Rc::new(new_map)))
+                Ok(Self::Map(Rc::new(new_map)))
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
@@ -809,17 +809,17 @@ impl Expression {
         other: Rc<HashMap<String, Expression>>,
     ) -> Result<Expression, RuntimeError> {
         match self {
-            Self::Map(map) => {
+            Self::HMap(map) => {
                 let mut new_map = HashMap::new();
                 new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
                 new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::Map(Rc::new(new_map)))
+                Ok(Self::HMap(Rc::new(new_map)))
             }
-            Self::BMap(map) => {
+            Self::Map(map) => {
                 let mut new_map = BTreeMap::new();
                 new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
                 new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::BMap(Rc::new(new_map)))
+                Ok(Self::Map(Rc::new(new_map)))
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
@@ -832,17 +832,17 @@ impl Expression {
         other: Rc<BTreeMap<String, Expression>>,
     ) -> Result<Expression, RuntimeError> {
         match self {
-            Self::Map(map) => {
+            Self::HMap(map) => {
                 let mut new_map = HashMap::new();
                 new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
                 new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::Map(Rc::new(new_map)))
+                Ok(Self::HMap(Rc::new(new_map)))
             }
-            Self::BMap(map) => {
+            Self::Map(map) => {
                 let mut new_map = BTreeMap::new();
                 new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
                 new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::BMap(Rc::new(new_map)))
+                Ok(Self::Map(Rc::new(new_map)))
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),

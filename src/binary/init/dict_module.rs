@@ -40,7 +40,7 @@ fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::BMap(map) => {
+        Expression::Map(map) => {
             let items = map
                 .as_ref()
                 .iter()
@@ -57,7 +57,7 @@ fn keys(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::BMap(map) => {
+        Expression::Map(map) => {
             let keys = map
                 .as_ref()
                 .keys()
@@ -74,7 +74,7 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::BMap(map) => {
+        Expression::Map(map) => {
             Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
         }
         _ => Expression::None,
@@ -88,10 +88,10 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let value = args[2].eval(env)?;
 
     Ok(match expr {
-        Expression::BMap(map) => {
+        Expression::Map(map) => {
             let mut new_map = map.as_ref().clone();
             new_map.insert(key.to_string(), value);
-            Expression::BMap(Rc::new(new_map))
+            Expression::Map(Rc::new(new_map))
         }
         _ => Expression::None,
     })
@@ -103,10 +103,10 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let key = args[1].eval(env)?;
 
     Ok(match expr {
-        Expression::BMap(map) => {
+        Expression::Map(map) => {
             let mut new_map = map.as_ref().clone();
             new_map.remove(&key.to_string());
-            Expression::BMap(Rc::new(new_map))
+            Expression::Map(Rc::new(new_map))
         }
         _ => Expression::None,
     })
@@ -118,7 +118,7 @@ fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     let key = args[1].eval(env)?;
 
     Ok(match expr {
-        Expression::BMap(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
+        Expression::Map(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
         _ => Expression::None,
     })
 }
@@ -149,10 +149,10 @@ fn union(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     let expr2 = args[1].eval(env)?;
 
     Ok(match (expr1, expr2) {
-        (Expression::BMap(map1), Expression::BMap(map2)) => {
+        (Expression::Map(map1), Expression::Map(map2)) => {
             let mut new_map = map1.as_ref().clone();
             new_map.extend(map2.as_ref().iter().map(|(k, v)| (k.clone(), v.clone())));
-            Expression::BMap(Rc::new(new_map))
+            Expression::Map(Rc::new(new_map))
         }
         _ => Expression::None,
     })
@@ -164,7 +164,7 @@ fn intersect(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     let expr2 = args[1].eval(env)?;
 
     Ok(match (expr1, expr2) {
-        (Expression::BMap(map1), Expression::BMap(map2)) => {
+        (Expression::Map(map1), Expression::Map(map2)) => {
             let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
                 if map2.as_ref().contains_key(k) {
@@ -183,7 +183,7 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     let expr2 = args[1].eval(env)?;
 
     Ok(match (expr1, expr2) {
-        (Expression::BMap(map1), Expression::BMap(map2)) => {
+        (Expression::Map(map1), Expression::Map(map2)) => {
             let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
                 if !map2.as_ref().contains_key(k) {
@@ -199,7 +199,7 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("dict.map", args, 2..3)?;
     let map = match args.last().unwrap().eval(env)? {
-        Expression::BMap(m) => m,
+        Expression::Map(m) => m,
         _ => {
             return Err(LmError::CustomError(
                 "dict.map requires a map as last argument".to_string(),
@@ -247,7 +247,7 @@ fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     }
 
     let mut base = match args[0].eval(env)? {
-        Expression::BMap(m) => m.as_ref().clone(),
+        Expression::Map(m) => m.as_ref().clone(),
         _ => {
             return Err(LmError::CustomError(
                 "deep_merge requires maps as arguments".to_string(),
@@ -257,7 +257,7 @@ fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
     for arg in args.iter().skip(1) {
         let next = match arg.eval(env)? {
-            Expression::BMap(m) => m,
+            Expression::Map(m) => m,
             _ => {
                 return Err(LmError::CustomError(
                     "deep_merge requires maps as arguments".to_string(),
@@ -278,10 +278,10 @@ fn deep_merge_maps(
 
     for (k, v) in b.iter() {
         if let Some(existing) = result.get(k) {
-            if let (Expression::BMap(ma), Expression::BMap(mb)) = (existing, v) {
+            if let (Expression::Map(ma), Expression::Map(mb)) = (existing, v) {
                 result.insert(
                     k.clone(),
-                    Expression::BMap(Rc::new(deep_merge_maps(ma.as_ref(), mb.as_ref())?)),
+                    Expression::Map(Rc::new(deep_merge_maps(ma.as_ref(), mb.as_ref())?)),
                 );
                 continue;
             }
@@ -296,7 +296,7 @@ fn get_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     super::check_exact_args_len("get_path", args, 2)?;
 
     let map = match args[1].eval(env)? {
-        Expression::BMap(m) => m,
+        Expression::Map(m) => m,
         _ => {
             return Err(LmError::CustomError(
                 "get_path requires a map as last argument".to_string(),
@@ -315,7 +315,7 @@ fn get_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
     let path_segments: Vec<&str> = path.split('.').collect();
     if path_segments.is_empty() {
-        return Ok(Expression::BMap(map));
+        return Ok(Expression::Map(map));
     }
 
     get_value_by_path(map.as_ref(), &path_segments)
@@ -329,7 +329,7 @@ fn get_value_by_path(
 
     for segment in path {
         match current {
-            Expression::BMap(m) => {
+            Expression::Map(m) => {
                 current = m
                     .as_ref()
                     .get(*segment)

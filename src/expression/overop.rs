@@ -1,6 +1,10 @@
 // 运算符重载（内存优化）
 
-use std::{cmp::Ordering, collections::HashMap, rc::Rc};
+use std::{
+    cmp::Ordering,
+    collections::{BTreeMap, HashMap},
+    rc::Rc,
+};
 
 use crate::RuntimeError;
 
@@ -128,21 +132,21 @@ impl Add for Expression {
             // 映射合并
 
             // Map merging
-            (Self::Map(a), Self::Map(b)) => {
-                Self::Map(a).map_append(b)
+            (Self::HMap(a), Self::HMap(b)) => {
+                Self::HMap(a).map_append(b)
                 // let mut new_map = a.as_ref().clone();
                 // new_map.extend(b.as_ref().iter().map(|(k, v)| (k.clone(), v.clone())));
 
                 // Ok(Self::Map(Rc::new(new_map)))
             }
-            (Self::Map(a), other) => {
-                Self::Map(a).map_insert(other.to_string(), other)
+            (Self::HMap(a), other) => {
+                Self::HMap(a).map_insert(other.to_string(), other)
                 // let mut new_map = a.as_ref().clone();
                 // new_map.insert(other.to_string(), other); // Insert the other element
                 // Ok(Self::Map(Rc::new(new_map)))
             }
-            (Self::BMap(a), Self::BMap(b)) => Self::BMap(a).bmap_append(b),
-            (Self::BMap(a), other) => Self::BMap(a).map_insert(other.to_string(), other),
+            (Self::Map(a), Self::Map(b)) => Self::Map(a).bmap_append(b),
+            (Self::Map(a), other) => Self::Map(a).map_insert(other.to_string(), other),
 
             // (Self::Map(mut a), Self::Integer(n)) => {
             //     a.insert(n.to_string(), Self::Integer(n));
@@ -259,17 +263,36 @@ impl Sub for Expression {
             }
 
             // Map operations
-            (Self::Map(a), Self::Map(b)) => {
+            (Self::HMap(a), Self::HMap(b)) => {
                 // 如果两个 Rc 指向同一个 HashMap，返回一个新的空 HashMap
                 if Rc::ptr_eq(&a, &b) {
-                    return Ok(Self::Map(Rc::new(HashMap::new())));
+                    return Ok(Self::HMap(Rc::new(HashMap::new())));
                 }
                 // 创建一个新的 HashMap，直接从 a 中移除 b 中的键
                 let mut a_map = a.as_ref().clone(); // 只在这里克隆一次
                 for key in b.as_ref().keys() {
                     a_map.remove(key); // 从 a_map 中移除 b_map 的键
                 }
-                Ok(Self::Map(Rc::new(a_map)))
+                Ok(Self::from(a_map))
+            }
+
+            (Self::HMap(a), Self::Symbol(key) | Self::String(key)) => {
+                let mut new_map = a.as_ref().clone();
+                new_map.remove(&key);
+                Ok(Self::from(new_map))
+            }
+            // BMap
+            (Self::Map(a), Self::Map(b)) => {
+                // 如果两个 Rc 指向同一个 HashMap，返回一个新的空 HashMap
+                if Rc::ptr_eq(&a, &b) {
+                    return Ok(Self::Map(Rc::new(BTreeMap::new())));
+                }
+                // 创建一个新的 HashMap，直接从 a 中移除 b 中的键
+                let mut a_map = a.as_ref().clone(); // 只在这里克隆一次
+                for key in b.as_ref().keys() {
+                    a_map.remove(key); // 从 a_map 中移除 b_map 的键
+                }
+                Ok(Self::from(a_map))
             }
 
             (Self::Map(a), Self::Symbol(key) | Self::String(key)) => {
@@ -643,8 +666,8 @@ impl PartialOrd for Expression {
             (Self::String(a), Self::String(b)) => a.partial_cmp(b),
             (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
             (Self::List(a), Self::List(b)) => a.partial_cmp(b),
+            (Self::HMap(a), Self::HMap(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
             (Self::Map(a), Self::Map(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
-            (Self::BMap(a), Self::BMap(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
             _ => None,
         }
     }

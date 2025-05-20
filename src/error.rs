@@ -1,10 +1,10 @@
 use super::{Expression, Int};
 use crate::{Diagnostic, tokens::Tokens};
-use common_macros::hash_map;
+use common_macros::b_tree_map;
 use core::{cmp::max, fmt};
 use detached_str::{Str, StrSlice};
 use nom::error::{ErrorKind, ParseError};
-use std::{error::Error as StdError, rc::Rc};
+use std::error::Error as StdError;
 use thiserror::Error;
 
 // ============== 语法错误部分 ==============
@@ -422,7 +422,7 @@ impl RuntimeError {
     pub const ERROR_CODE_EARLY_RETURN: Int = 20; // Added for EarlyReturn
 
     pub fn codes() -> Expression {
-        Expression::Map(Rc::new(hash_map! {
+        Expression::from(b_tree_map! {
             String::from("cannot_apply") => Expression::Integer(Self::ERROR_CODE_CANNOT_APPLY),
             String::from("symbol_not_defined") => Expression::Integer(Self::ERROR_CODE_SYMBOL_NOT_DEFINED),
             String::from("command_failed") => Expression::Integer(Self::ERROR_CODE_COMMAND_FAILED),
@@ -442,7 +442,7 @@ impl RuntimeError {
             String::from("key_not_found") => Expression::Integer(Self::ERROR_CODE_KEY_NOT_FOUND),
             String::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
             String::from("early_return") => Expression::Integer(Self::ERROR_CODE_EARLY_RETURN),
-        }))
+        })
     }
 
     pub fn code(&self) -> Int {
@@ -478,12 +478,12 @@ impl LmError {
     pub const ERROR_CODE_IO_ERROR: Int = 102;
     pub const ERROR_CODE_CS_ERROR: Int = 103;
     pub fn codes() -> Expression {
-        Expression::Map(Rc::new(hash_map! {
+        Expression::from(b_tree_map! {
             String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
             String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
             String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
-        }))
+        })
     }
     pub fn code(&self) -> Int {
         match self {

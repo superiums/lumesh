@@ -153,6 +153,60 @@ macro_rules! fmt_shared {
                 write!($f, "{}", t)
             }
 
+           Self::HMap(exprs) => {
+                let specified_width = $f.width().unwrap_or(
+                    terminal_size()
+                        .map(|(Width(w), _)| w as usize)
+                        .unwrap_or(120),
+                );
+                let mut t = Table::new();
+                t.set_format(*FORMAT_BORDERS_ONLY);
+
+                // let heads=["Key","Value"];
+                // t.set_titles(Row::new(
+                //     heads.into_iter().map(|x| Cell::new(&x)).collect()
+                // ));
+                t.set_titles(row!("KEY","VALUE"));
+                // let fmt = t.get_format();
+                // fmt.padding(1, 1);
+                // // Set width to be 2/3
+                // fmt.borders('│');
+                // fmt.column_separator('│');
+                // fmt.separator(LinePosition::Top, LineSeparator::new('═', '╤', '╒', '╕'));
+                // fmt.separator(LinePosition::Title, LineSeparator::new('═', '╪', '╞', '╡'));
+                // fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
+                // fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
+
+                for (key, val) in exprs.as_ref().iter() {
+                    match &val {
+                        Self::Builtin(Builtin { help, .. }) => {
+                            t.add_row(row!(
+                                key,
+                                format!("{}", val),
+                                textwrap::fill(help, specified_width / 2)
+                            ));
+                        }
+                        Self::HMap(_) => {
+                            t.add_row(row!(key, format!("{:specified_width$}", val)));
+                        }
+                        Self::Map(_) => {
+                            t.add_row(row!(key, format!("{:specified_width$}", val)));
+                        }
+                        Self::List(_) => {
+                            let w = specified_width - key.len() - 3;
+                            let formatted = format!("{:w$}", val);
+                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
+                        }
+                        _ => {
+                            // Format the value to the width of the terminal / 5
+                            let formatted = format!("{:?}", val);
+                            let w = specified_width / 3;
+                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
+                        }
+                    }
+                }
+                write!($f, "{}", t)
+            }
            Self::Map(exprs) => {
                 let specified_width = $f.width().unwrap_or(
                     terminal_size()
@@ -186,64 +240,10 @@ macro_rules! fmt_shared {
                                 textwrap::fill(help, specified_width / 2)
                             ));
                         }
-                        Self::Map(_) => {
+                        Self::HMap(_) => {
                             t.add_row(row!(key, format!("{:specified_width$}", val)));
-                        }
-                        Self::BMap(_) => {
-                            t.add_row(row!(key, format!("{:specified_width$}", val)));
-                        }
-                        Self::List(_) => {
-                            let w = specified_width - key.len() - 3;
-                            let formatted = format!("{:w$}", val);
-                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
-                        }
-                        _ => {
-                            // Format the value to the width of the terminal / 5
-                            let formatted = format!("{:?}", val);
-                            let w = specified_width / 3;
-                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
-                        }
-                    }
-                }
-                write!($f, "{}", t)
-            }
-           Self::BMap(exprs) => {
-                let specified_width = $f.width().unwrap_or(
-                    terminal_size()
-                        .map(|(Width(w), _)| w as usize)
-                        .unwrap_or(120),
-                );
-                let mut t = Table::new();
-                t.set_format(*FORMAT_BORDERS_ONLY);
-
-                // let heads=["Key","Value"];
-                // t.set_titles(Row::new(
-                //     heads.into_iter().map(|x| Cell::new(&x)).collect()
-                // ));
-                t.set_titles(row!("KEY","VALUE"));
-                // let fmt = t.get_format();
-                // fmt.padding(1, 1);
-                // // Set width to be 2/3
-                // fmt.borders('│');
-                // fmt.column_separator('│');
-                // fmt.separator(LinePosition::Top, LineSeparator::new('═', '╤', '╒', '╕'));
-                // fmt.separator(LinePosition::Title, LineSeparator::new('═', '╪', '╞', '╡'));
-                // fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
-                // fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
-
-                for (key, val) in exprs.as_ref().iter() {
-                    match &val {
-                        Self::Builtin(Builtin { help, .. }) => {
-                            t.add_row(row!(
-                                key,
-                                format!("{}", val),
-                                textwrap::fill(help, specified_width / 2)
-                            ));
                         }
                         Self::Map(_) => {
-                            t.add_row(row!(key, format!("{:specified_width$}", val)));
-                        }
-                        Self::BMap(_) => {
                             t.add_row(row!(key, format!("{:specified_width$}", val)));
                         }
                         Self::List(_) => {
@@ -365,11 +365,11 @@ impl<'a> TableRow<'a> {
                     .collect();
                 a.len()
             }
-            Some(Expression::Map(a)) => {
+            Some(Expression::HMap(a)) => {
                 heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
                 a.keys().len()
             }
-            Some(Expression::BMap(a)) => {
+            Some(Expression::Map(a)) => {
                 heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
                 a.keys().len()
             }
@@ -383,12 +383,12 @@ impl<'a> TableRow<'a> {
                             current_row.push(c.to_string());
                         }
                     }
-                    Expression::Map(a) => {
+                    Expression::HMap(a) => {
                         for (_, v) in a.iter() {
                             current_row.push(v.to_string());
                         }
                     }
-                    Expression::BMap(a) => {
+                    Expression::Map(a) => {
                         for (_, v) in a.iter() {
                             current_row.push(v.to_string());
                         }
@@ -412,13 +412,13 @@ impl<'a> TableRow<'a> {
                     .map(|f| f.to_string())
                     .collect::<Vec<String>>()
                     .join(", "),
-                Expression::Map(a) => a
+                Expression::HMap(a) => a
                     .as_ref()
                     .iter()
                     .map(|(_, v)| v.to_string())
                     .collect::<Vec<String>>()
                     .join("\t"),
-                Expression::BMap(a) => a
+                Expression::Map(a) => a
                     .as_ref()
                     .iter()
                     .map(|(_, v)| v.to_string())
@@ -502,7 +502,7 @@ impl fmt::Debug for Expression {
                         .join(", ")
                 )
             }
-            Self::Map(exprs) => write!(
+            Self::HMap(exprs) => write!(
                 f,
                 "{{{}}}",
                 exprs
@@ -512,7 +512,7 @@ impl fmt::Debug for Expression {
                     .collect::<Vec<String>>()
                     .join(", ")
             ),
-            Self::BMap(exprs) => write!(
+            Self::Map(exprs) => write!(
                 f,
                 "{{{}}}",
                 exprs
@@ -562,8 +562,8 @@ impl Expression {
     pub fn type_name(&self) -> String {
         match self {
             Self::List(_) => "List".into(),
-            Self::Map(_) => "Map".into(),
-            Self::BMap(_) => "BMap".into(),
+            Self::HMap(_) => "HMap".into(),
+            Self::Map(_) => "BMap".into(),
             Self::String(_) => "String".into(),
             Self::Integer(_) => "Integer".into(),
             Self::Symbol(_) => "Symbol".into(),
@@ -647,8 +647,8 @@ impl Expression {
             Self::Bytes(b) => !b.is_empty(),
             Self::Boolean(b) => *b,
             Self::List(exprs) => !exprs.as_ref().is_empty(),
+            Self::HMap(exprs) => !exprs.as_ref().is_empty(),
             Self::Map(exprs) => !exprs.as_ref().is_empty(),
-            Self::BMap(exprs) => !exprs.as_ref().is_empty(),
             Self::Lambda(..) => true,
             // Self::Macro(_, _) => true,
             Self::Builtin(_) => true,

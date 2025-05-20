@@ -143,7 +143,7 @@ pub fn run_repl(env: &mut Environment) {
     // abbr
     let abbr = env.get("LUME_ABBREVIATIONS");
     match abbr {
-        Some(Expression::Map(ab)) => {
+        Some(Expression::HMap(ab)) => {
             let abmap = ab
                 .iter()
                 .map(|m| (m.0.to_string(), m.1.to_string()))

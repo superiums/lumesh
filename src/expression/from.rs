@@ -45,7 +45,7 @@ where
     T: Into<Self>,
 {
     fn from(map: HashMap<String, T>) -> Self {
-        Self::Map(Rc::new(
+        Self::HMap(Rc::new(
             map.into_iter()
                 .map(|(name, item)| (name, item.into()))
                 .collect::<HashMap<String, Self>>(),
@@ -58,7 +58,7 @@ where
     T: Into<Self>,
 {
     fn from(map: BTreeMap<String, T>) -> Self {
-        Self::BMap(Rc::new(
+        Self::Map(Rc::new(
             map.into_iter()
                 .map(|(name, item)| (name, item.into()))
                 .collect::<BTreeMap<String, Self>>(),

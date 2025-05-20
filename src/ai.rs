@@ -8,7 +8,7 @@ use crate::Expression;
 
 pub fn init_ai(ai_cfg: Expression) -> MockAIClient {
     match ai_cfg {
-        Expression::BMap(cfg_map) => MockAIClient {
+        Expression::Map(cfg_map) => MockAIClient {
             host: match cfg_map.as_ref().get("host") {
                 Some(h) => h.to_string(),
                 _ => "localhost:11434".into(),

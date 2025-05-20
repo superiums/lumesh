@@ -126,7 +126,7 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<DateTim
             )))
         }
         Expression::Integer(ts) => Ok(Local.timestamp_opt(ts, 0).unwrap()),
-        Expression::BMap(m) => {
+        Expression::Map(m) => {
             let map = m.as_ref();
             let year = get_map_value(map, "year")?.unwrap_or(Local::now().year() as i64);
             let month = get_map_value(map, "month")?.unwrap_or(1) as u32;

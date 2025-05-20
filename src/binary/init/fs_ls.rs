@@ -139,7 +139,7 @@ pub fn get_file_expression(
         }
     }
 
-    Ok(Expression::BMap(Rc::new(map)))
+    Ok(Expression::Map(Rc::new(map)))
 }
 
 // 辅助函数保持不变（detect_file_type, system_time_to_unix_seconds等）

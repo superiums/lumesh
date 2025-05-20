@@ -154,8 +154,8 @@ fn expr_to_command<'a>(
         | Expression::String(..)
         | Expression::Boolean(..)
         | Expression::List(..)
+        | Expression::HMap(..)
         | Expression::Map(..)
-        | Expression::BMap(..)
         | Expression::Index(..)
         | Expression::Slice(..) => Ok((None, None, Some(expr), None)),
         // 是分组则解开后再次解释

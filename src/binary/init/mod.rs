@@ -100,10 +100,10 @@ fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate
             super::get_builtin_map()
                 .iter()
                 .map(|item| match item.1 {
-                    Expression::Map(_) => {
+                    Expression::HMap(_) => {
                         (item.0.clone(), Expression::String("module".to_string()))
                     }
-                    Expression::BMap(_) => {
+                    Expression::Map(_) => {
                         (item.0.clone(), Expression::String("Module".to_string()))
                     }
                     other => (item.0.clone(), other.clone()),
@@ -354,6 +354,11 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     let idx = args[1].eval(env)?;
     let val = args[2].eval(env)?;
     match (&mut arr, &idx) {
+        (Expression::HMap(exprs), Expression::String(key)) => {
+            let mut result = exprs.as_ref().clone();
+            result.insert(key.clone(), val);
+            Ok(Expression::from(result))
+        }
         (Expression::Map(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();
             result.insert(key.clone(), val);
@@ -394,6 +399,7 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
 fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("len", args, 1)?;
     match args[0].eval(env)? {
+        Expression::HMap(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::Map(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::List(list) => Ok(Expression::Integer(list.as_ref().len() as Int)),
         Expression::Symbol(x) | Expression::String(x) => {
@@ -456,6 +462,7 @@ fn report(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     check_exact_args_len("report", args, 1)?;
     let val = args[0].eval(env)?;
     match val {
+        Expression::HMap(_) => println!("{}", val),
         Expression::Map(_) => println!("{}", val),
         Expression::String(s) => println!("{}", s),
         Expression::None => {}
@@ -470,6 +477,11 @@ fn flatten(expr: Expression) -> Vec<Expression> {
         Expression::List(list) => list
             .as_ref()
             .iter()
+            .flat_map(|item| flatten(item.clone()))
+            .collect(),
+        Expression::HMap(map) => map
+            .as_ref()
+            .values()
             .flat_map(|item| flatten(item.clone()))
             .collect(),
         Expression::Map(map) => map
@@ -502,7 +514,16 @@ fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
     let mut filtered = Vec::new();
 
     for row in data.as_ref() {
-        if let Expression::Map(row_map) = row {
+        if let Expression::HMap(row_map) = row {
+            let mut row_env = env.fork();
+            for (k, v) in row_map.as_ref() {
+                row_env.define(k, v.clone());
+            }
+
+            if let Expression::Boolean(true) = condition.eval(&mut row_env)? {
+                filtered.push(row.clone());
+            }
+        } else if let Expression::Map(row_map) = row {
             let mut row_env = env.fork();
             for (k, v) in row_map.as_ref() {
                 row_env.define(k, v.clone());
@@ -557,7 +578,7 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
         .iter()
         .filter_map(|row| {
             // dbg!(&row, &row.type_name());
-            if let Expression::BMap(row_map) = row {
+            if let Expression::Map(row_map) = row {
                 // dbg!(&row_map);
                 let selected = headers
                     .iter()

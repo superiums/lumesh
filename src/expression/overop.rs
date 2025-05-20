@@ -644,6 +644,7 @@ impl PartialOrd for Expression {
             (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
             (Self::List(a), Self::List(b)) => a.partial_cmp(b),
             (Self::Map(a), Self::Map(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
+            (Self::BMap(a), Self::BMap(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
             _ => None,
         }
     }

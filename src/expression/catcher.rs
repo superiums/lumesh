@@ -3,7 +3,8 @@ use std::rc::Rc;
 use crate::{Environment, RuntimeError};
 
 use super::{CatchType, Expression, Int};
-use common_macros::hash_map;
+use common_macros::b_tree_map;
+// use common_macros::hash_map;
 
 pub fn catch_error(
     e: RuntimeError,
@@ -20,12 +21,12 @@ pub fn catch_error(
                     // dbg!(&deel.type_name());
                     let deeled_result = deel
                         .as_ref()
-                        .append_args(vec![Expression::Map(Rc::new(hash_map! {
+                        .append_args(vec![Expression::from(b_tree_map! {
                             // String::from("type") => Expression::String(e.type_name()),
                             String::from("msg") => Expression::String(e.to_string()),
                             String::from("code") => Expression::Integer(Int::from(e.code())),
                             String::from("expr") => Expression::Quote(body.clone())
-                        }))])
+                        })])
                         .eval_mut(true, env, depth);
                     deeled_result
                 }

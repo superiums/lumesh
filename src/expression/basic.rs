@@ -189,6 +189,9 @@ macro_rules! fmt_shared {
                         Self::Map(_) => {
                             t.add_row(row!(key, format!("{:specified_width$}", val)));
                         }
+                        Self::BMap(_) => {
+                            t.add_row(row!(key, format!("{:specified_width$}", val)));
+                        }
                         Self::List(_) => {
                             let w = specified_width - key.len() - 3;
                             let formatted = format!("{:w$}", val);
@@ -238,6 +241,9 @@ macro_rules! fmt_shared {
                             ));
                         }
                         Self::Map(_) => {
+                            t.add_row(row!(key, format!("{:specified_width$}", val)));
+                        }
+                        Self::BMap(_) => {
                             t.add_row(row!(key, format!("{:specified_width$}", val)));
                         }
                         Self::List(_) => {
@@ -506,6 +512,16 @@ impl fmt::Debug for Expression {
                     .collect::<Vec<String>>()
                     .join(", ")
             ),
+            Self::BMap(exprs) => write!(
+                f,
+                "{{{}}}",
+                exprs
+                    .as_ref()
+                    .iter()
+                    .map(|(k, e)| format!("{}: {:?}", k, e))
+                    .collect::<Vec<String>>()
+                    .join(", ")
+            ),
             Self::Apply(g, args) => write!(
                 f,
                 "APPLY ☛  {:?} {}  ☚ ",
@@ -632,6 +648,7 @@ impl Expression {
             Self::Boolean(b) => *b,
             Self::List(exprs) => !exprs.as_ref().is_empty(),
             Self::Map(exprs) => !exprs.as_ref().is_empty(),
+            Self::BMap(exprs) => !exprs.as_ref().is_empty(),
             Self::Lambda(..) => true,
             // Self::Macro(_, _) => true,
             Self::Builtin(_) => true,

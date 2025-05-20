@@ -40,7 +40,7 @@ fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => {
+        Expression::BMap(map) => {
             let items = map
                 .as_ref()
                 .iter()
@@ -57,7 +57,7 @@ fn keys(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => {
+        Expression::BMap(map) => {
             let keys = map
                 .as_ref()
                 .keys()
@@ -74,7 +74,9 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => Expression::List(Rc::new(map.as_ref().values().cloned().collect())),
+        Expression::BMap(map) => {
+            Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
+        }
         _ => Expression::None,
     })
 }
@@ -86,10 +88,10 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let value = args[2].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => {
+        Expression::BMap(map) => {
             let mut new_map = map.as_ref().clone();
             new_map.insert(key.to_string(), value);
-            Expression::Map(Rc::new(new_map))
+            Expression::BMap(Rc::new(new_map))
         }
         _ => Expression::None,
     })
@@ -101,10 +103,10 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let key = args[1].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => {
+        Expression::BMap(map) => {
             let mut new_map = map.as_ref().clone();
             new_map.remove(&key.to_string());
-            Expression::Map(Rc::new(new_map))
+            Expression::BMap(Rc::new(new_map))
         }
         _ => Expression::None,
     })
@@ -116,7 +118,7 @@ fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     let key = args[1].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
+        Expression::BMap(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
         _ => Expression::None,
     })
 }
@@ -147,10 +149,10 @@ fn union(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     let expr2 = args[1].eval(env)?;
 
     Ok(match (expr1, expr2) {
-        (Expression::Map(map1), Expression::Map(map2)) => {
+        (Expression::BMap(map1), Expression::BMap(map2)) => {
             let mut new_map = map1.as_ref().clone();
             new_map.extend(map2.as_ref().iter().map(|(k, v)| (k.clone(), v.clone())));
-            Expression::Map(Rc::new(new_map))
+            Expression::BMap(Rc::new(new_map))
         }
         _ => Expression::None,
     })
@@ -162,7 +164,7 @@ fn intersect(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     let expr2 = args[1].eval(env)?;
 
     Ok(match (expr1, expr2) {
-        (Expression::Map(map1), Expression::Map(map2)) => {
+        (Expression::BMap(map1), Expression::BMap(map2)) => {
             let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
                 if map2.as_ref().contains_key(k) {
@@ -181,7 +183,7 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     let expr2 = args[1].eval(env)?;
 
     Ok(match (expr1, expr2) {
-        (Expression::Map(map1), Expression::Map(map2)) => {
+        (Expression::BMap(map1), Expression::BMap(map2)) => {
             let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
                 if !map2.as_ref().contains_key(k) {
@@ -327,7 +329,7 @@ fn get_value_by_path(
 
     for segment in path {
         match current {
-            Expression::Map(m) => {
+            Expression::BMap(m) => {
                 current = m
                     .as_ref()
                     .get(*segment)

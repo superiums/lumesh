@@ -1,5 +1,6 @@
 use super::Builtin;
 use super::catcher::catch_error;
+use super::eval::State;
 use super::pipe_excutor::handle_pipes;
 use super::pipe_excutor::handle_stdin_redirect;
 use super::pipe_excutor::to_expr;
@@ -14,31 +15,36 @@ use std::rc::Rc;
 impl Expression {
     /// 处理复杂表达式的递归求值
     #[inline]
-    pub fn eval_complex(&self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
+    pub fn eval_complex(
+        &self,
+        state: State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Self, RuntimeError> {
         match self {
             // 控制流表达式
             Self::If(cond, true_expr, false_expr) => {
-                handle_if(cond, true_expr, false_expr, env, depth)
+                handle_if(cond, true_expr, false_expr, state, env, depth)
             }
 
             Self::Match(value, branches) => {
                 // 模式匹配求值
-                let val = value.as_ref().eval_mut(true, env, depth + 1)?;
+                let val = value.as_ref().eval_mut(state, env, depth + 1)?;
                 for (pat, expr) in branches {
                     if matches_pattern(&val, pat, env)? {
-                        return expr.as_ref().eval_mut(true, env, depth + 1);
+                        return expr.as_ref().eval_mut(state, env, depth + 1);
                     }
                 }
                 Err(RuntimeError::NoMatchingBranch(val.to_string()))
             }
 
-            Self::For(var, list_expr, body) => handle_for(var, list_expr, body, env, depth),
+            Self::For(var, list_expr, body) => handle_for(var, list_expr, body, state, env, depth),
 
             Self::While(cond, body) => {
                 // 循环求值直到条件为假
                 let mut last = Self::None;
-                while cond.as_ref().eval_mut(true, env, depth + 1)?.is_truthy() {
-                    last = body.as_ref().eval_mut(true, env, depth + 1)?;
+                while cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
+                    last = body.as_ref().eval_mut(state, env, depth + 1)?;
                     if let Self::Break(value) = last {
                         return Ok(value.as_ref().clone()); // 或者返回其他值
                     }
@@ -48,7 +54,7 @@ impl Expression {
             Self::Loop(body) => {
                 // 循环求值直到条件为假
                 loop {
-                    let last = body.as_ref().eval_mut(true, env, depth + 1);
+                    let last = body.as_ref().eval_mut(state, env, depth + 1);
                     match last {
                         Ok(_) => {} //继续
                         Err(RuntimeError::EarlyBreak(v)) => {
@@ -124,20 +130,20 @@ impl Expression {
                 // 顺序求值语句块
                 let mut last = Self::None;
                 for expr in exprs.as_ref() {
-                    last = expr.eval_mut(true, env, depth + 1)?;
+                    last = expr.eval_mut(state, env, depth + 1)?;
                 }
                 Ok(last)
             }
 
             Self::Return(expr) => {
                 // 提前返回机制
-                let v = expr.as_ref().eval_mut(true, env, depth + 1)?;
+                let v = expr.as_ref().eval_mut(state, env, depth + 1)?;
                 // Ok(Self::Return(Rc::new(v)))
                 Err(RuntimeError::EarlyReturn(v))
             }
             Self::Break(expr) => {
                 // 提前返回机制
-                let v = expr.as_ref().eval_mut(true, env, depth + 1)?;
+                let v = expr.as_ref().eval_mut(state, env, depth + 1)?;
                 // Ok(Self::Break(Rc::new(v)))
                 Err(RuntimeError::EarlyBreak(v))
             }
@@ -167,6 +173,7 @@ impl Expression {
                             false,
                             None,
                             None,
+                            state,
                             env,
                             depth,
                             always_pipe,
@@ -197,7 +204,7 @@ impl Expression {
                         // 执行左侧表达式
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                         let left_func = lhs.as_ref().ensure_apply();
-                        let left_output = left_func.eval_mut(true, env, depth + 1)?;
+                        let left_output = left_func.eval_mut(state, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
 
                         // 执行右侧表达式，获取函数或命令
@@ -207,16 +214,16 @@ impl Expression {
                         let args = vec![left_output];
                         rhs.as_ref()
                             .append_args(args)
-                            .eval_mut(true, env, depth + 1)
+                            .eval_mut(state, env, depth + 1)
                     }
                     ">>" => {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                         let left_func = lhs.as_ref().ensure_apply();
-                        let l = left_func.eval_mut(true, env, depth + 1)?;
+                        let l = left_func.eval_mut(state, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
 
                         let mut path = std::env::current_dir()?;
-                        path = path.join(rhs.as_ref().eval_mut(true, env, depth + 1)?.to_string());
+                        path = path.join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
                         if !path.exists() {
                             std::fs::File::create(path.clone())?;
                         }
@@ -256,11 +263,11 @@ impl Expression {
                         // dbg!("-->>--", &lhs);
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                         let left_func = lhs.as_ref().ensure_apply();
-                        let l = left_func.eval_mut(true, env, depth + 1)?;
+                        let l = left_func.eval_mut(state, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
                         // dbg!("-->> left=", &l);
                         let mut path = std::env::current_dir()?;
-                        path = path.join(rhs.as_ref().eval_mut(true, env, depth + 1)?.to_string());
+                        path = path.join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
                         // If the contents are bytes, write the bytes directly to the file.
                         let result = if let Expression::Bytes(bytes) = l.clone() {
                             std::fs::write(path, bytes)
@@ -279,7 +286,7 @@ impl Expression {
                     }
                     "<<" => {
                         // 输入重定向处理
-                        handle_stdin_redirect(lhs, rhs, env, depth, true)
+                        handle_stdin_redirect(lhs, rhs, state, env, depth, true)
                         // let path = rhs.eval_mut(true,env, depth + 1)?.to_string();
                         // let contents = std::fs::read_to_string(path)
                         //     .map(Self::String)
@@ -296,10 +303,10 @@ impl Expression {
             }
             Self::Catch(body, typ, deeling) => {
                 // dbg!(&typ, &deeling);
-                let result = body.as_ref().eval_mut(true, env, depth + 1);
+                let result = body.as_ref().eval_mut(state, env, depth + 1);
                 match result {
                     Ok(result) => Ok(result),
-                    Err(e) => catch_error(e, body, typ, deeling, env, depth + 1),
+                    Err(e) => catch_error(e, body, typ, deeling, state, env, depth + 1),
                 }
             }
             // 默认情况
@@ -312,14 +319,19 @@ impl Expression {
 
     // }
     /// 执行
-    pub fn eval_apply(&self, env: &mut Environment, depth: usize) -> Result<Self, RuntimeError> {
+    pub fn eval_apply(
+        &self,
+        state: State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Self, RuntimeError> {
         // 函数应用
         match self {
             Self::Apply(func, args) | Self::Command(func, args) => {
                 // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
 
                 // 递归求值函数和参数
-                let func_eval = func.as_ref().eval_mut(true, env, depth + 1)?;
+                let func_eval = func.as_ref().eval_mut(state, env, depth + 1)?;
                 // let args_eval = args
                 //     .into_iter()
                 //     .map(|a| a.eval_mut(true,env, depth + 1))
@@ -332,7 +344,7 @@ impl Expression {
                     Self::Symbol(name) | Self::String(name) => {
                         // Apply as Command
                         //dbg!("   3.--->applying symbol as Command:", &name);
-                        handle_command(&name, args, env, depth)
+                        handle_command(&name, args, state, env, depth)
                         // let bindings = env.get_bindings_map();
 
                         // let mut cmd_args = vec![];
@@ -446,14 +458,14 @@ impl Expression {
                         // 批量参数绑定前先求值所有参数
                         let evaluated_args = args
                             .iter()
-                            .map(|arg| arg.eval_mut(true, env, depth + 1))
+                            .map(|arg| arg.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
                         match bind_arguments(&params, &evaluated_args, &mut current_env) {
                             // 完全应用：求值函数体
                             None => {
                                 let result =
-                                    body.as_ref().eval_mut(true, &mut current_env, depth + 1);
+                                    body.as_ref().eval_mut(state, &mut current_env, depth + 1);
                                 match result {
                                     Ok(v) => {
                                         self.set_status_code(0, env);
@@ -500,7 +512,7 @@ impl Expression {
                         let mut actual_args = args
                             .as_ref()
                             .iter()
-                            .map(|a| a.eval_mut(true, env, depth + 1))
+                            .map(|a| a.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
                         // 填充默认值逻辑（新增）
@@ -539,7 +551,7 @@ impl Expression {
                         //     }
                         // }
                         // dbg!(&new_env);
-                        match body.as_ref().eval_mut(true, &mut new_env, depth + 1) {
+                        match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
                             Ok(v) => {
                                 self.set_status_code(0, env);
                                 Ok(v)
@@ -621,14 +633,15 @@ fn handle_if(
     cond: &Rc<Expression>,
     true_expr: &Rc<Expression>,
     false_expr: &Rc<Expression>,
+    state: State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {
     // 条件分支求值
-    if cond.as_ref().eval_mut(true, env, depth + 1)?.is_truthy() {
-        true_expr.as_ref().eval_mut(true, env, depth + 1)
+    if cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
+        true_expr.as_ref().eval_mut(state, env, depth + 1)
     } else {
-        false_expr.as_ref().eval_mut(true, env, depth + 1)
+        false_expr.as_ref().eval_mut(state, env, depth + 1)
     }
 }
 
@@ -637,18 +650,19 @@ fn handle_for(
     var: &String,
     list_expr: &Rc<Expression>,
     body: &Rc<Expression>,
+    state: State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {
     // 求值列表表达式
-    let list_excuted = list_expr.as_ref().eval_mut(true, env, depth + 1)?;
+    let list_excuted = list_expr.as_ref().eval_mut(state, env, depth + 1)?;
     // .as_list()?;
     if let Expression::List(list) = list_excuted {
         // 遍历每个元素执行循环体
         let mut result = Vec::with_capacity(list.len());
         for item in list.iter() {
             env.define(var, item.clone());
-            let last = body.as_ref().eval_mut(true, env, depth + 1)?;
+            let last = body.as_ref().eval_mut(state, env, depth + 1)?;
             result.push(last)
         }
         Ok(Expression::from(result))

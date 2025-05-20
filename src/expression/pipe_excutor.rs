@@ -6,7 +6,7 @@ use std::{
     rc::Rc,
 };
 
-use super::CatchType;
+use super::{CatchType, eval::State};
 
 fn is_interactive() -> bool {
     true
@@ -76,6 +76,7 @@ pub fn exec_single_cmd(
 /// 遇到外部命令则返回命令和参数，其他可执行命令返回表达式，否则返回错误
 fn expr_to_command<'a>(
     expr: &'a Expression,
+    state: State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<
@@ -102,7 +103,7 @@ fn expr_to_command<'a>(
         Expression::Apply(func, _) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.as_ref().eval_mut(true, env, depth + 1)?;
+            let func_eval = func.as_ref().eval_mut(state, env, depth + 1)?;
 
             // 得到执行后的实际命令
             match func_eval {
@@ -127,7 +128,7 @@ fn expr_to_command<'a>(
         Expression::Command(func, args) => {
             /* 处理函数调用，如 3+5 */
             // dbg!("applying in pipe:", func, args);
-            let func_eval = func.as_ref().eval_mut(true, env, depth + 1)?;
+            let func_eval = func.as_ref().eval_mut(state, env, depth + 1)?;
 
             // 得到执行后的实际命令
             match func_eval {
@@ -154,13 +155,14 @@ fn expr_to_command<'a>(
         | Expression::Boolean(..)
         | Expression::List(..)
         | Expression::Map(..)
+        | Expression::BMap(..)
         | Expression::Index(..)
         | Expression::Slice(..) => Ok((None, None, Some(expr), None)),
         // 是分组则解开后再次解释
-        Expression::Group(inner) => expr_to_command(inner, env, depth + 1),
+        Expression::Group(inner) => expr_to_command(inner, state, env, depth + 1),
         Expression::Catch(body, typ, deeling) => {
             // dbg!(&typ, &deeling);
-            let (body_name, body_arg, body_expr, _) = expr_to_command(body, env, depth + 1)?;
+            let (body_name, body_arg, body_expr, _) = expr_to_command(body, state, env, depth + 1)?;
             Ok((body_name, body_arg, body_expr, Some((typ, deeling))))
         }
         _ => Err(RuntimeError::ProgramNotFound(expr.to_string())),
@@ -174,6 +176,7 @@ pub fn handle_command(
     // bindings: &HashMap<String, String>,
     // has_right: bool,
     // input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
+    state: State,
     env: &mut Environment,
     depth: usize,
     // always_pipe: bool,
@@ -183,7 +186,7 @@ pub fn handle_command(
     let mut cmd_args = vec![];
     for arg in args {
         // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {
-        let e_arg = arg.eval_mut(false, env, depth)?;
+        let e_arg = arg.eval_mut(state, env, depth)?;
         match e_arg {
             Expression::String(s) => cmd_args.push(s),
             Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
@@ -204,6 +207,7 @@ pub fn handle_pipes<'a>(
     has_right: bool,
     input: Option<Vec<u8>>,         // 前一条命令的输出（None 表示第一个命令）
     expr_input: Option<Expression>, // 前一条命令的输出（None 表示第一个命令）
+    state: State,
     env: &mut Environment,
     depth: usize,
     always_pipe: bool,
@@ -220,13 +224,14 @@ pub fn handle_pipes<'a>(
                 true,
                 input,
                 expr_input,
+                state,
                 env,
                 depth + 1,
                 always_pipe,
             ),
 
             _ => {
-                let (cmd, args, expr, deeling) = expr_to_command(lhs, env, depth + 1)?;
+                let (cmd, args, expr, deeling) = expr_to_command(lhs, state, env, depth + 1)?;
                 // dbg!(&cmd, &args, &expr, &deeling);
                 // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种,还有从group解开的pipe
                 match expr {
@@ -238,21 +243,22 @@ pub fn handle_pipes<'a>(
                             true,
                             input,
                             expr_input,
+                            state,
                             env,
                             depth + 1,
                             always_pipe,
                         );
                         match result {
                             Ok(r) => Ok(r),
-                            Err(e) => handle_err(e, expr.unwrap(), deeling, env, depth),
+                            Err(e) => handle_err(e, expr.unwrap(), deeling, state, env, depth),
                         }
                     }
                     Some(ex) => {
                         // let result_expr = expr.unwrap().eval_apply(env, depth)?;
-                        let result_expr = ex.eval_mut(true, env, depth + 1);
+                        let result_expr = ex.eval_mut(state, env, depth + 1);
                         match result_expr {
                             Ok(r) => Ok((None, Some(r))),
-                            Err(e) => handle_err(e, ex, deeling, env, depth),
+                            Err(e) => handle_err(e, ex, deeling, state, env, depth),
                         }
                     }
                     None => {
@@ -262,9 +268,14 @@ pub fn handle_pipes<'a>(
                                 exec_single_cmd(&cmdx, args, env, input, false, always_pipe);
                             match result_pipe {
                                 Ok(r) => Ok((Some(r), None)),
-                                Err(e) => {
-                                    handle_err(e, &Expression::String(cmdx), deeling, env, depth)
-                                }
+                                Err(e) => handle_err(
+                                    e,
+                                    &Expression::String(cmdx),
+                                    deeling,
+                                    state,
+                                    env,
+                                    depth,
+                                ),
                             }
                         } else {
                             Err(RuntimeError::CustomError(
@@ -319,7 +330,7 @@ pub fn handle_pipes<'a>(
                 //         always_pipe,
                 //     ),
                 //     _ => {
-                let (cmd, args, expr, deeling) = expr_to_command(rhs, env, depth + 1)?;
+                let (cmd, args, expr, deeling) = expr_to_command(rhs, state, env, depth + 1)?;
 
                 match expr {
                     // 有表达式返回则执行表达式, 有apply和binaryOp,catch三种
@@ -335,12 +346,13 @@ pub fn handle_pipes<'a>(
                                 // dbg!(&choosed_input);
                                 let result_expr = ex.append_args(vec![choosed_input]).eval_apply(
                                     // true,
+                                    state,
                                     env,
                                     depth + 1,
                                 );
                                 match result_expr {
                                     Ok(r) => Ok((None, Some(r))),
-                                    Err(e) => handle_err(e, ex, deeling, env, depth),
+                                    Err(e) => handle_err(e, ex, deeling, state, env, depth),
                                 }
                             }
                             Expression::Pipe(op, l_arm, r_arm) if op == "|" => {
@@ -351,6 +363,7 @@ pub fn handle_pipes<'a>(
                                     has_right,
                                     pipe_out,
                                     expr_out,
+                                    state,
                                     env,
                                     depth + 1,
                                     always_pipe,
@@ -361,6 +374,7 @@ pub fn handle_pipes<'a>(
                                         e,
                                         &Expression::Pipe(op.clone(), l_arm.clone(), r_arm.clone()),
                                         deeling,
+                                        state,
                                         env,
                                         depth,
                                     ),
@@ -368,10 +382,10 @@ pub fn handle_pipes<'a>(
                             }
                             _ => {
                                 // 右侧为binop？报错？不能接收收入!!
-                                let result_expr = ex.eval_mut(true, env, depth + 1);
+                                let result_expr = ex.eval_mut(state, env, depth + 1);
                                 match result_expr {
                                     Ok(r) => Ok((None, Some(r))),
-                                    Err(e) => handle_err(e, ex, deeling, env, depth),
+                                    Err(e) => handle_err(e, ex, deeling, state, env, depth),
                                 }
                             }
                         }
@@ -431,13 +445,22 @@ fn handle_err(
     e: RuntimeError,
     body: &Expression,
     deeling: Option<(&CatchType, &Option<Rc<Expression>>)>,
+    state: State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<(Option<Vec<u8>>, Option<Expression>), RuntimeError> {
     match deeling {
         Some((ctyp, handler)) => {
             // dbg!("left err, deeling");
-            let exd = catch_error(e, &Rc::new(body.clone()), ctyp, handler, env, depth + 1)?;
+            let exd = catch_error(
+                e,
+                &Rc::new(body.clone()),
+                ctyp,
+                handler,
+                state,
+                env,
+                depth + 1,
+            )?;
             Ok((None, Some(exd)))
         }
         _ => Err(e),
@@ -460,15 +483,16 @@ fn to_bytes(expr_out: Option<Expression>) -> Vec<u8> {
 pub fn handle_stdin_redirect(
     lhs: &Expression,
     rhs: &Expression,
+    state: State,
     env: &mut Environment,
     depth: usize,
     always_pipe: bool,
 ) -> Result<Expression, RuntimeError> {
     // 读取
-    let path = rhs.eval_mut(true, env, depth + 1)?.to_string();
+    let path = rhs.eval_mut(state, env, depth + 1)?.to_string();
     let contents = std::fs::read(path)?;
     // 左侧
-    let (cmd, args, expr, deeling) = expr_to_command(lhs, env, depth)?;
+    let (cmd, args, expr, deeling) = expr_to_command(lhs, state, env, depth)?;
     // let bindings = env.get_bindings_map();
     if expr.is_some() {
         // lambda, fn, builtin may read stdin?
@@ -489,6 +513,7 @@ pub fn handle_stdin_redirect(
                         &Rc::new(Expression::String(cmdx)),
                         ctyp,
                         handler,
+                        state,
                         env,
                         depth + 1,
                     )?;

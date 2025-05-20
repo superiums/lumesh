@@ -11,10 +11,39 @@ use crate::STRICT;
 
 const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 
+#[derive(Debug, Clone, Copy)]
+pub struct State(u8);
+
+impl State {
+    const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
+    const PIPE_HAS_RIGHT: u8 = 1 << 2; // 0b00000100
+    const PIPE_IN: u8 = 1 << 3; // 0b00001000
+
+    // 创建一个新的 State 实例
+    pub fn new() -> Self {
+        State(0)
+    }
+
+    // 设置标志
+    pub fn set(&mut self, flag: u8) {
+        self.0 |= flag;
+    }
+
+    // 清除标志
+    pub fn clear(&mut self, flag: u8) {
+        self.0 &= !flag;
+    }
+
+    // 检查标志是否被设置
+    pub fn contains(&self, flag: u8) -> bool {
+        self.0 & flag != 0
+    }
+}
+
 impl Expression {
     /// 交互命令入口
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let result = self.eval_mut(true, env, 0);
+        let result = self.eval_mut(State::new(), env, 0);
         // dbg!(&result);
         match result {
             // apply symbol cmds
@@ -30,13 +59,13 @@ impl Expression {
     }
     /// 脚本计算入口
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        self.eval_mut(true, env, 0)
+        self.eval_mut(State::new(), env, 0)
     }
     /// 求值主逻辑
     #[inline]
     pub fn eval_mut(
         &self,
-        explain_builtin: bool,
+        state: State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
@@ -68,7 +97,7 @@ impl Expression {
                 Self::Symbol(name) => {
                     // dbg!("2.--->symbol----", &name);
                     // bultin
-                    if explain_builtin {
+                    if !state.contains(State::SKIP_BUILTIN_SEEK) {
                         if let Some(b) = binary::get_builtin(name) {
                             // dbg!("found builtin:", &name, bti);
                             return Ok(b.clone());
@@ -110,11 +139,11 @@ impl Expression {
                         expr.as_ref()
                     {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        let value = expr.as_ref().eval_mut(false, env, depth + 1)?;
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                         env.undefine("__ALWAYSPIPE");
                         env.define(name, value); // 新增 declare
                     } else {
-                        let value = expr.as_ref().eval_mut(false, env, depth + 1)?;
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                         env.define(name, value); // 新增 declare
                     }
                     // dbg!("declare---->", &name, &value.type_name());
@@ -133,7 +162,7 @@ impl Expression {
                     if is_cmd {
                         env.define("__ALWAYSPIPE", Expression::Boolean(true));
                     }
-                    let value = expr.as_ref().eval_mut(false, env, depth + 1)?;
+                    let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
 
                     // dbg!("assign---->", &name, &value.type_name());
                     if env.has(name) {
@@ -180,7 +209,7 @@ impl Expression {
                 // 元表达式处理
                 Self::Group(inner) => {
                     // dbg!("2.--->group:", &inner);
-                    return inner.as_ref().eval_mut(true, env, depth + 1);
+                    return inner.as_ref().eval_mut(state, env, depth + 1);
                 }
                 Self::Quote(inner) => return Ok(inner.as_ref().clone()),
 
@@ -227,7 +256,7 @@ impl Expression {
                             if let Some(oper) = env.get(op) {
                                 let rs =
                                     Expression::Apply(Rc::new(oper), Rc::new(vec![operand_eval]));
-                                return rs.eval_mut(true, env, depth + 1);
+                                return rs.eval_mut(state, env, depth + 1);
                             }
                             Err(RuntimeError::CustomError(format!(
                                 "custom operation {op:?} not defined"
@@ -315,17 +344,17 @@ impl Expression {
                             ))),
                         },
                         "&&" => Ok(Expression::Boolean(
-                            lhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy()
-                                && rhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy(),
+                            lhs.as_ref().eval_mut(state, env, depth + 1)?.is_truthy()
+                                && rhs.as_ref().eval_mut(state, env, depth + 1)?.is_truthy(),
                         )),
                         "||" => Ok(Expression::Boolean(
-                            lhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy()
-                                || rhs.as_ref().eval_mut(true, env, depth + 1)?.is_truthy(),
+                            lhs.as_ref().eval_mut(state, env, depth + 1)?.is_truthy()
+                                || rhs.as_ref().eval_mut(state, env, depth + 1)?.is_truthy(),
                         )),
                         _ => {
                             // fmt.red : left is builtin, right never.
-                            let l = lhs.as_ref().eval_mut(true, env, depth + 1)?;
-                            let r = rhs.as_ref().eval_mut(false, env, depth + 1)?;
+                            let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
+                            let r = rhs.as_ref().eval_mut(state, env, depth + 1)?;
                             break match operator.as_str() {
                                 "+" => l + r,
                                 "-" => l - r,
@@ -401,7 +430,7 @@ impl Expression {
                                     if let Some(oper) = env.get(op) {
                                         let rs =
                                             Expression::Apply(Rc::new(oper), Rc::new(vec![l, r]));
-                                        return rs.eval_mut(true, env, depth + 1);
+                                        return rs.eval_mut(state, env, depth + 1);
                                     }
                                     Err(RuntimeError::CustomError(format!(
                                         "custom operation {op:?} not defined"
@@ -426,21 +455,21 @@ impl Expression {
                     let evaluated = items
                         .as_ref()
                         .iter()
-                        .map(|e| e.eval_mut(true, env, depth + 1))
+                        .map(|e| e.eval_mut(state, env, depth + 1))
                         .collect::<Result<Vec<_>, _>>()?;
                     return Ok(Expression::from(evaluated));
                 }
                 Self::Map(items) => {
                     let evaluated = items
                         .iter()
-                        .map(|(k, e)| Ok((k.clone(), e.eval_mut(true, env, depth + 1)?)))
+                        .map(|(k, e)| Ok((k.clone(), e.eval_mut(state, env, depth + 1)?)))
                         .collect::<Result<HashMap<_, _>, RuntimeError>>()?;
                     return Ok(Expression::from(evaluated));
                 }
                 Self::BMap(items) => {
                     let evaluated = items
                         .iter()
-                        .map(|(k, e)| Ok((k.clone(), e.eval_mut(true, env, depth + 1)?)))
+                        .map(|(k, e)| Ok((k.clone(), e.eval_mut(state, env, depth + 1)?)))
                         .collect::<Result<BTreeMap<_, _>, RuntimeError>>()?;
                     return Ok(Expression::from(evaluated));
                 }
@@ -448,16 +477,19 @@ impl Expression {
                 // 其他复杂类型
                 Self::Slice(list, slice_params) => {
                     let listo = list.eval(env)?;
-                    let start_int = Expression::eval_to_int_opt(&slice_params.start, env, depth)?;
-                    let end_int = Expression::eval_to_int_opt(&slice_params.end, env, depth)?;
+                    let start_int =
+                        Expression::eval_to_int_opt(&slice_params.start, state, env, depth)?;
+                    let end_int =
+                        Expression::eval_to_int_opt(&slice_params.end, state, env, depth)?;
                     let step_int =
-                        Expression::eval_to_int_opt(&slice_params.step, env, depth)?.unwrap_or(1); // 默认步长1
+                        Expression::eval_to_int_opt(&slice_params.step, state, env, depth)?
+                            .unwrap_or(1); // 默认步长1
 
                     return Self::slice(listo, start_int, end_int, step_int);
                 }
                 Self::Index(lhs, rhs) => {
-                    let l = lhs.as_ref().eval_mut(true, env, depth + 1)?;
-                    let r = rhs.as_ref().eval_mut(false, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
+                    let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
+                    let r = rhs.as_ref().eval_mut(state, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
 
                     return match (l, r) {
                         // (Expression::List(m), Expression::Integer(n)) => {
@@ -474,7 +506,7 @@ impl Expression {
                 }
 
                 // 执行应用
-                Self::Apply(_, _) => break Self::eval_apply(self, env, depth),
+                Self::Apply(_, _) => break Self::eval_apply(self, state, env, depth),
                 Self::Command(cmd, args) => {
                     // dbg!("2.--->Command:", &self, &cmd, &args);
                     // alias
@@ -508,9 +540,9 @@ impl Expression {
                     match cmd.as_ref() {
                         // index类型的内置命令，或其他保存于map的命令
                         Expression::Index(..) => {
-                            let cmdx = cmd.as_ref().eval_mut(true, env, depth)?;
+                            let cmdx = cmd.as_ref().eval_mut(state, env, depth)?;
                             // dbg!(&cmd, &cmdx);
-                            return cmdx.apply(args.to_vec()).eval_apply(env, depth);
+                            return cmdx.apply(args.to_vec()).eval_apply(state, env, depth);
                         }
                         // 符号
                         // string like cmd: ./abc
@@ -529,19 +561,20 @@ impl Expression {
                                                 handle_command(
                                                     &cmd_name.as_ref().to_string(),
                                                     &cmd_args,
+                                                    state,
                                                     env,
                                                     depth,
                                                 )
                                             }
                                             Expression::Apply(..) => cmd_alias
                                                 .append_args(args.to_vec())
-                                                .eval_mut(true, env, depth),
+                                                .eval_mut(state, env, depth),
                                             Expression::Index(..) => {
-                                                let cmdx = cmd_alias.eval_mut(true, env, depth)?;
+                                                let cmdx = cmd_alias.eval_mut(state, env, depth)?;
                                                 // dbg!(&cmd, &cmdx);
                                                 return cmdx
                                                     .append_args(args.to_vec())
-                                                    .eval_apply(env, depth);
+                                                    .eval_apply(state, env, depth);
                                             }
                                             _ => Err(RuntimeError::TypeError {
                                                 expected: "Command or Builtin".into(),
@@ -549,7 +582,7 @@ impl Expression {
                                             }),
                                         };
                                     } else {
-                                        cmd_alias.eval_apply(env, depth)
+                                        cmd_alias.eval_apply(state, env, depth)
                                     }
                                 }
                                 _ => {
@@ -557,10 +590,10 @@ impl Expression {
                                         // 顶级内置命令
                                         Some(bti) => {
                                             // dbg!("branch to builtin:", &cmd, &bti);
-                                            bti.apply(args.to_vec()).eval_apply(env, depth)
+                                            bti.apply(args.to_vec()).eval_apply(state, env, depth)
                                         }
                                         // 三方命令
-                                        _ => handle_command(cmd_sym, args, env, depth),
+                                        _ => handle_command(cmd_sym, args, state, env, depth),
                                     };
                                 }
                             };
@@ -575,7 +608,7 @@ impl Expression {
                 }
                 // break Self::eval_command(self, env, depth),
                 // 其他表达式处理...
-                _ => break self.eval_complex(env, depth),
+                _ => break self.eval_complex(state, env, depth),
             };
             // depth += 1
         }
@@ -690,6 +723,7 @@ impl Expression {
     /// 辅助方法：将表达式求值为整数选项
     pub fn eval_to_int_opt(
         expr_opt: &Option<Rc<Self>>,
+        state: State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Option<Int>, RuntimeError> {
@@ -699,7 +733,7 @@ impl Expression {
             // 有表达式时进行求值
             Some(boxed_expr) => {
                 // 递归求值表达式
-                let evaluated = boxed_expr.as_ref().eval_mut(true, env, depth)?;
+                let evaluated = boxed_expr.as_ref().eval_mut(state, env, depth)?;
 
                 // 转换为整数
                 match evaluated {

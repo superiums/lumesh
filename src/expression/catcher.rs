@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use crate::{Environment, RuntimeError};
 
-use super::{CatchType, Expression, Int};
+use super::{CatchType, Expression, Int, eval::State};
 use common_macros::b_tree_map;
 // use common_macros::hash_map;
 
@@ -11,6 +11,7 @@ pub fn catch_error(
     body: &Rc<Expression>,
     typ: &CatchType,
     deeling: &Option<Rc<Expression>>,
+    state: State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {
@@ -27,10 +28,10 @@ pub fn catch_error(
                             String::from("code") => Expression::Integer(Int::from(e.code())),
                             String::from("expr") => Expression::Quote(body.clone())
                         })])
-                        .eval_mut(true, env, depth);
+                        .eval_mut(state, env, depth);
                     deeled_result
                 }
-                _ => deel.as_ref().eval_mut(true, env, depth),
+                _ => deel.as_ref().eval_mut(state, env, depth),
             },
             _ => Ok(Expression::None),
         },

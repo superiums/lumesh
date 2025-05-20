@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError, parse_and_eval};
 use common_macros::hash_map;
@@ -589,7 +589,7 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
                             .get(col)
                             .map(|val| (col.clone(), val.clone()))
                     })
-                    .collect::<HashMap<_, _>>();
+                    .collect::<BTreeMap<_, _>>();
 
                 Some(Expression::from(selected))
             } else {

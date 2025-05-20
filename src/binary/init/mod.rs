@@ -518,9 +518,32 @@ fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
 }
 
 fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("select", args, 2)?;
+    // check_exact_args_len("select", args, 2)?;
 
-    let data = if let Expression::List(list) = args[1].eval(env)? {
+    let headers = match args.len() {
+        3.. => args[..args.len() - 1]
+            .iter()
+            .map(|a| a.to_string())
+            .collect::<Vec<_>>(),
+        2 => {
+            let a = args[0].eval(env)?;
+            if let Expression::List(list) = a {
+                list.as_ref()
+                    .iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<_>>()
+            } else {
+                vec![a.to_string()]
+            }
+        }
+        0..2 => {
+            return Err(LmError::CustomError(
+                "select required 2 or more args".into(),
+            ));
+        }
+    };
+
+    let data = if let Expression::List(list) = args.last().unwrap().eval(env)? {
         list
     } else {
         return Err(LmError::CustomError(
@@ -528,24 +551,18 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
         ));
     };
 
-    let columns = match args[0].clone() {
-        Expression::List(list) => list.as_ref().iter().map(|e| e.to_string()).collect(),
-        Expression::String(s) | Expression::Symbol(s) => vec![s],
-        _ => {
-            return Err(LmError::CustomError(
-                "Columns must be a list or string".into(),
-            ));
-        }
-    };
-
+    // dbg!(&data, &headers);
     let result = data
         .as_ref()
         .iter()
         .filter_map(|row| {
-            if let Expression::Map(row_map) = row {
-                let selected = columns
+            // dbg!(&row, &row.type_name());
+            if let Expression::BMap(row_map) = row {
+                // dbg!(&row_map);
+                let selected = headers
                     .iter()
                     .filter_map(|col| {
+                        // dbg!(&col, &row_map.get(col));
                         row_map
                             .as_ref()
                             .get(col)
@@ -555,6 +572,7 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 
                 Some(Expression::from(selected))
             } else {
+                // dbg!("Not Map");
                 None
             }
         })

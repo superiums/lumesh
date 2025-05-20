@@ -111,26 +111,41 @@ fn parse_command_output(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
-    // dbg!(args);
-    super::check_args_len("parse_cmd", args, 1..=2)?;
+    // super::check_args_len("parse_cmd", args, 1..)?;
 
-    let headers = if args.len() > 1 {
-        if let Expression::List(list) = args[0].eval(env)? {
-            list.as_ref()
-                .iter()
-                .map(|e| e.to_string())
-                .collect::<Vec<_>>()
-        } else {
-            return Err(LmError::CustomError("Headers must be a list".into()));
+    let headers = match args.len() {
+        3.. => args[..args.len() - 1]
+            .iter()
+            .map(|a| a.to_string())
+            .collect::<Vec<_>>(),
+        2 => {
+            let a = args[0].eval(env)?;
+            if let Expression::List(list) = a {
+                list.as_ref()
+                    .iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<_>>()
+            } else {
+                vec![a.to_string()]
+            }
         }
-    } else {
-        Vec::new()
+
+        1 => Vec::new(),
+        0 => return Err(LmError::CustomError("no cmd outoupt received".into())),
     };
 
     let output = args.last().unwrap().eval(env)?.to_string();
     let mut lines: Vec<&str> = output.lines().collect();
     if lines.is_empty() {
         return Ok(Expression::from(Vec::<Expression>::new()));
+    } else {
+        // 检测已经是列表格式的：首行首尾都是相同的符号
+        let mut c = lines.first().unwrap().chars();
+        if let Some(first) = c.next() {
+            if first.is_ascii_punctuation() && Some(first) == c.last() {
+                return Ok(args.last().unwrap().clone());
+            }
+        }
     }
 
     // filter too short tips lines
@@ -200,7 +215,6 @@ fn parse_command_output(
             result.push(Expression::from(row));
         }
     }
-
     Ok(Expression::from(result))
 }
 

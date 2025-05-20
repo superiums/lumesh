@@ -11,7 +11,7 @@ pub fn catch_error(
     body: &Rc<Expression>,
     typ: &CatchType,
     deeling: &Option<Rc<Expression>>,
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {

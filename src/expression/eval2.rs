@@ -17,7 +17,7 @@ impl Expression {
     #[inline]
     pub fn eval_complex(
         &self,
-        mut state: State,
+        state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
@@ -154,36 +154,38 @@ impl Expression {
                     "|" => {
                         // let bindings = env.get_bindings_map();
                         // let always_pipe = env.has("__ALWAYSPIPE");
-                        let always_pipe = state.contains(State::PIPE_HAS_RIGHT);
                         //dbg!(&always_pipe, &lhs, &rhs);
                         // if always_pipe {
-                        //     let left_func = lhs.ensure_apply();
-                        //     let left_output = left_func.eval_mut(true,env, depth + 1)?;
-                        //     let mut new_env = env.fork();
-                        //     new_env.define("__stdin", left_output);
-
-                        //     let r_func = rhs.ensure_apply();
-                        //     let pipe_result = r_func.eval_mut(&mut new_env, depth + 1);
-                        //     // dbg!(&pipe_result);
-                        //     pipe_result
-                        // } else {
-                        let (pipe_out, expr_out) = handle_pipes(
-                            lhs,
-                            rhs,
-                            // &bindings,
-                            false,
-                            None,
-                            None,
-                            state,
-                            env,
-                            depth,
-                            always_pipe,
-                        )?;
-                        // dgb!(&expr_out);
-                        match expr_out {
-                            Some(e) => Ok(e),
-                            _ => Ok(to_expr(pipe_out)),
+                        let is_in_pipe = state.contains(State::IN_PIPE);
+                        state.set(State::IN_PIPE);
+                        let left_func = lhs.ensure_apply();
+                        let left_output = left_func.eval_mut(state, env, depth + 1)?;
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
                         }
+                        state.pipe_in(left_output);
+                        let r_func = rhs.ensure_apply();
+                        let pipe_result = r_func.eval_mut(state, env, depth + 1);
+                        // dbg!(&pipe_result);
+                        pipe_result
+                        // } else {
+                        // let (pipe_out, expr_out) = handle_pipes(
+                        //     lhs,
+                        //     rhs,
+                        //     // &bindings,
+                        //     false,
+                        //     None,
+                        //     None,
+                        //     state,
+                        //     env,
+                        //     depth,
+                        //     always_pipe,
+                        // )?;
+                        // // dgb!(&expr_out);
+                        // match expr_out {
+                        //     Some(e) => Ok(e),
+                        //     _ => Ok(to_expr(pipe_out)),
+                        // }
                         // }
                     }
 
@@ -203,16 +205,15 @@ impl Expression {
                     // }
                     "|>" => {
                         // 执行左侧表达式
-                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        state.set(State::PIPE_HAS_RIGHT);
+                        let is_in_pipe = state.contains(State::IN_PIPE);
+                        state.set(State::IN_PIPE);
                         let left_func = lhs.as_ref().ensure_apply();
                         let left_output = left_func.eval_mut(state, env, depth + 1)?;
-                        // env.undefine("__ALWAYSPIPE");
-                        state.set(State::PIPE_HAS_RIGHT);
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
+                        }
 
                         // 执行右侧表达式，获取函数或命令
-                        // let rhs_eval = rhs.eval_mut(true,env, depth + 1)?;
-
                         // 将左侧结果作为最后一个参数传递给右侧
                         let args = vec![left_output];
                         rhs.as_ref()
@@ -220,12 +221,13 @@ impl Expression {
                             .eval_mut(state, env, depth + 1)
                     }
                     ">>" => {
-                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        state.set(State::PIPE_HAS_RIGHT);
+                        let is_in_pipe = state.contains(State::IN_PIPE);
+                        state.set(State::IN_PIPE);
                         let left_func = lhs.as_ref().ensure_apply();
-                        let l = left_func.eval_mut(state, env, depth + 1)?;
-                        // env.undefine("__ALWAYSPIPE");
-                        state.clear(State::PIPE_HAS_RIGHT);
+                        let left_output = left_func.eval_mut(state, env, depth + 1)?;
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
+                        }
 
                         let mut path = std::env::current_dir()?;
                         path = path.join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
@@ -235,17 +237,17 @@ impl Expression {
                         match std::fs::OpenOptions::new().append(true).open(&path) {
                             Ok(mut file) => {
                                 // use std::io::prelude::*;
-                                let result = if let Expression::Bytes(bytes) = l.clone() {
+                                let result = if let Expression::Bytes(bytes) = left_output.clone() {
                                     // std::fs::write(path, bytes)
                                     file.write_all(&bytes)
                                 } else {
                                     // Otherwise, convert the contents to a pretty string and write that.
                                     // std::fs::write(path, contents.to_string())
-                                    file.write_all(l.to_string().as_bytes())
+                                    file.write_all(left_output.to_string().as_bytes())
                                 };
 
                                 match result {
-                                    Ok(()) => Ok(l),
+                                    Ok(()) => Ok(left_output),
                                     Err(e) => Err(RuntimeError::CustomError(format!(
                                         "could not append to file {}: {:?}",
                                         rhs, e
@@ -265,13 +267,13 @@ impl Expression {
                         }
                     }
                     ">>!" => {
-                        // dbg!("-->>--", &lhs);
-                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        state.set(State::PIPE_HAS_RIGHT);
+                        let is_in_pipe = state.contains(State::IN_PIPE);
+                        state.set(State::IN_PIPE);
                         let left_func = lhs.as_ref().ensure_apply();
                         let l = left_func.eval_mut(state, env, depth + 1)?;
-                        // env.undefine("__ALWAYSPIPE");
-                        state.clear(State::PIPE_HAS_RIGHT);
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
+                        }
 
                         // dbg!("-->> left=", &l);
                         let mut path = std::env::current_dir()?;
@@ -329,7 +331,7 @@ impl Expression {
     /// 执行
     pub fn eval_apply(
         &self,
-        state: State,
+        state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
@@ -443,7 +445,17 @@ impl Expression {
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
                         // dbg!("   3.--->applying Builtin:", &func, &args);
-                        match body(args.as_ref(), env) {
+
+                        let exe = match state.pipe_out() {
+                            Some(p) => {
+                                let mut na = args.as_ref().clone();
+                                na.push(p);
+                                body(&na, env)
+                            }
+                            _ => body(args.as_ref(), env),
+                        };
+
+                        match exe {
                             Ok(result) => {
                                 self.set_status_code(0, env);
                                 // dbg!(&result);
@@ -460,14 +472,22 @@ impl Expression {
                     }
                     // Lambda 应用 - 完全求值的函数应用
                     Self::Lambda(params, body) => {
+                        let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
                         // dbg!("2.--- applying lambda---", &params);
                         let mut current_env = env.fork();
 
                         // 批量参数绑定前先求值所有参数
-                        let evaluated_args = args
+                        let mut evaluated_args = args
                             .iter()
                             .map(|arg| arg.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
+
+                        match pipe_out {
+                            Some(p) => {
+                                evaluated_args.push(p);
+                            }
+                            _ => {}
+                        };
 
                         match bind_arguments(&params, &evaluated_args, &mut current_env) {
                             // 完全应用：求值函数体
@@ -509,7 +529,13 @@ impl Expression {
                         // dbg!("2.--- applying function---", &name, &params);
                         // dbg!(&def_env);
                         // 参数数量校验
-                        if pc.is_none() && args.len() > params.len() {
+                        let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
+                        let pipe_arg_len = match pipe_out {
+                            Some(_) => 1,
+                            _ => 0,
+                        };
+
+                        if pc.is_none() && args.len() + pipe_arg_len > params.len() {
                             return Err(RuntimeError::TooManyArguments {
                                 name,
                                 max: params.len(),
@@ -522,6 +548,13 @@ impl Expression {
                             .iter()
                             .map(|a| a.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
+
+                        match pipe_out {
+                            Some(p) => {
+                                actual_args.push(p);
+                            }
+                            _ => {}
+                        };
 
                         // 填充默认值逻辑（新增）
                         for (i, (_, default)) in params.iter().enumerate() {
@@ -641,7 +674,7 @@ fn handle_if(
     cond: &Rc<Expression>,
     true_expr: &Rc<Expression>,
     false_expr: &Rc<Expression>,
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {
@@ -658,7 +691,7 @@ fn handle_for(
     var: &String,
     list_expr: &Rc<Expression>,
     body: &Rc<Expression>,
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {

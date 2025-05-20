@@ -11,17 +11,17 @@ use crate::STRICT;
 
 const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 
-#[derive(Debug, Clone, Copy)]
-pub struct State(u8);
+#[derive(Debug, Clone)]
+pub struct State(u8, Option<Expression>);
 
 impl State {
     pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
-    pub const PIPE_HAS_RIGHT: u8 = 1 << 2; // 0b00000100
-    pub const PIPE_IN: u8 = 1 << 3; // 0b00001000
+    pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
+    // pub const PIPE_IN: u8 = 1 << 3; // 0b00001000
 
     // 创建一个新的 State 实例
     pub fn new() -> Self {
-        State(0)
+        State(0, None)
     }
 
     // 设置标志
@@ -38,12 +38,22 @@ impl State {
     pub fn contains(&self, flag: u8) -> bool {
         self.0 & flag != 0
     }
+
+    pub fn pipe_in(&mut self, data: Expression) {
+        self.1 = Some(data);
+    }
+
+    pub fn pipe_out(&mut self) -> Option<Expression> {
+        let p = self.1.clone();
+        self.1 = None;
+        p
+    }
 }
 
 impl Expression {
     /// 交互命令入口
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let result = self.eval_mut(State::new(), env, 0);
+        let result = self.eval_mut(&mut State::new(), env, 0);
         // dbg!(&result);
         match result {
             // apply symbol cmds
@@ -59,13 +69,13 @@ impl Expression {
     }
     /// 脚本计算入口
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        self.eval_mut(State::new(), env, 0)
+        self.eval_mut(&mut State::new(), env, 0)
     }
     /// 求值主逻辑
     #[inline]
     pub fn eval_mut(
         &self,
-        mut state: State,
+        state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
@@ -139,9 +149,12 @@ impl Expression {
                         expr.as_ref()
                     {
                         // env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        state.set(State::PIPE_HAS_RIGHT);
+                        let is_in_pipe = state.contains(State::IN_PIPE);
+                        state.set(State::IN_PIPE);
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
-                        state.clear(State::PIPE_HAS_RIGHT);
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
+                        }
                         // env.undefine("__ALWAYSPIPE");
                         env.define(name, value); // 新增 declare
                     } else {
@@ -155,16 +168,15 @@ impl Expression {
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
                     // dbg!("assign---->", &name, &expr.type_name());
-                    let is_cmd = match expr.as_ref() {
+                    let need_clear = match expr.as_ref() {
                         Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
-                            true
+                            let is_in_pipe = state.contains(State::IN_PIPE);
+                            state.set(State::IN_PIPE);
+                            true && is_in_pipe
                         }
                         _ => false,
                     };
-                    if is_cmd {
-                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
-                        state.set(State::PIPE_HAS_RIGHT);
-                    }
+
                     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
 
                     // dbg!("assign---->", &name, &value.type_name());
@@ -190,9 +202,9 @@ impl Expression {
                             }
                         }
                     }
-                    if is_cmd {
+                    if need_clear {
                         // env.undefine("__ALWAYSPIPE");
-                        state.clear(State::PIPE_HAS_RIGHT);
+                        state.clear(State::IN_PIPE);
                     }
                     return Ok(value);
                 }
@@ -727,7 +739,7 @@ impl Expression {
     /// 辅助方法：将表达式求值为整数选项
     pub fn eval_to_int_opt(
         expr_opt: &Option<Rc<Self>>,
-        state: State,
+        state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Option<Int>, RuntimeError> {

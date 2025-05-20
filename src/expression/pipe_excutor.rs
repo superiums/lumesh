@@ -76,7 +76,7 @@ pub fn exec_single_cmd(
 /// 遇到外部命令则返回命令和参数，其他可执行命令返回表达式，否则返回错误
 fn expr_to_command<'a>(
     expr: &'a Expression,
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<
@@ -176,14 +176,14 @@ pub fn handle_command(
     // bindings: &HashMap<String, String>,
     // has_right: bool,
     // input: Option<&[u8]>, // 前一条命令的输出（None 表示第一个命令）
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
     // always_pipe: bool,
 ) -> Result<Expression, RuntimeError> {
     // let bindings = env.get_bindings_map();
     // let always_pipe = env.has("__ALWAYSPIPE");
-    let always_pipe = state.contains(State::PIPE_HAS_RIGHT);
+    let always_pipe = state.contains(State::IN_PIPE);
     let mut cmd_args = vec![];
     for arg in args {
         // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {
@@ -196,7 +196,16 @@ pub fn handle_command(
         }
     }
     // dbg!(args, &cmd_args);
-    let result = exec_single_cmd(cmd, Some(cmd_args), env, None, true, always_pipe)?;
+    let last_input = state.pipe_out();
+    let pipe_input = to_bytes(last_input);
+    let result = exec_single_cmd(
+        cmd,
+        Some(cmd_args),
+        env,
+        Some(pipe_input),
+        true,
+        always_pipe,
+    )?;
     Ok(to_expr(Some(result)))
 }
 
@@ -208,7 +217,7 @@ pub fn handle_pipes<'a>(
     has_right: bool,
     input: Option<Vec<u8>>,         // 前一条命令的输出（None 表示第一个命令）
     expr_input: Option<Expression>, // 前一条命令的输出（None 表示第一个命令）
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
     always_pipe: bool,
@@ -446,7 +455,7 @@ fn handle_err(
     e: RuntimeError,
     body: &Expression,
     deeling: Option<(&CatchType, &Option<Rc<Expression>>)>,
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<(Option<Vec<u8>>, Option<Expression>), RuntimeError> {
@@ -484,7 +493,7 @@ fn to_bytes(expr_out: Option<Expression>) -> Vec<u8> {
 pub fn handle_stdin_redirect(
     lhs: &Expression,
     rhs: &Expression,
-    state: State,
+    state: &mut State,
     env: &mut Environment,
     depth: usize,
     always_pipe: bool,

@@ -57,13 +57,9 @@ if IS_INTERACTIVE {
 # }
 
 # ========== config for all mode ==========
-
 let get = (key, table) -> table[key];
 let open := fs@read();
 let concat = (x, y) -> (str y) + (str x);
-
-
-
 let logo = "
         ██╗     ██╗   ██╗███╗   ███╗███████╗
         ██║     ██║   ██║████╗ ████║██╔════╝
@@ -72,5 +68,4 @@ let logo = "
         ███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
         ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
 ";
-
 fmt@faint(fmt@red(logo))

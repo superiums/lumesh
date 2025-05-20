@@ -15,9 +15,9 @@ const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 pub struct State(u8);
 
 impl State {
-    const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
-    const PIPE_HAS_RIGHT: u8 = 1 << 2; // 0b00000100
-    const PIPE_IN: u8 = 1 << 3; // 0b00001000
+    pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
+    pub const PIPE_HAS_RIGHT: u8 = 1 << 2; // 0b00000100
+    pub const PIPE_IN: u8 = 1 << 3; // 0b00001000
 
     // 创建一个新的 State 实例
     pub fn new() -> Self {
@@ -65,7 +65,7 @@ impl Expression {
     #[inline]
     pub fn eval_mut(
         &self,
-        state: State,
+        mut state: State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
@@ -138,9 +138,11 @@ impl Expression {
                     if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
                         expr.as_ref()
                     {
-                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        state.set(State::PIPE_HAS_RIGHT);
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
-                        env.undefine("__ALWAYSPIPE");
+                        state.clear(State::PIPE_HAS_RIGHT);
+                        // env.undefine("__ALWAYSPIPE");
                         env.define(name, value); // 新增 declare
                     } else {
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
@@ -160,7 +162,8 @@ impl Expression {
                         _ => false,
                     };
                     if is_cmd {
-                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        state.set(State::PIPE_HAS_RIGHT);
                     }
                     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
 
@@ -188,7 +191,8 @@ impl Expression {
                         }
                     }
                     if is_cmd {
-                        env.undefine("__ALWAYSPIPE");
+                        // env.undefine("__ALWAYSPIPE");
+                        state.clear(State::PIPE_HAS_RIGHT);
                     }
                     return Ok(value);
                 }

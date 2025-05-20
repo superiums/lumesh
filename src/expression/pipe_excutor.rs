@@ -182,7 +182,8 @@ pub fn handle_command(
     // always_pipe: bool,
 ) -> Result<Expression, RuntimeError> {
     // let bindings = env.get_bindings_map();
-    let always_pipe = env.has("__ALWAYSPIPE");
+    // let always_pipe = env.has("__ALWAYSPIPE");
+    let always_pipe = state.contains(State::PIPE_HAS_RIGHT);
     let mut cmd_args = vec![];
     for arg in args {
         // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {

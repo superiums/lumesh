@@ -17,7 +17,7 @@ impl Expression {
     #[inline]
     pub fn eval_complex(
         &self,
-        state: State,
+        mut state: State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
@@ -153,7 +153,8 @@ impl Expression {
                 match operator.as_str() {
                     "|" => {
                         // let bindings = env.get_bindings_map();
-                        let always_pipe = env.has("__ALWAYSPIPE");
+                        // let always_pipe = env.has("__ALWAYSPIPE");
+                        let always_pipe = state.contains(State::PIPE_HAS_RIGHT);
                         //dbg!(&always_pipe, &lhs, &rhs);
                         // if always_pipe {
                         //     let left_func = lhs.ensure_apply();
@@ -202,10 +203,12 @@ impl Expression {
                     // }
                     "|>" => {
                         // 执行左侧表达式
-                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        state.set(State::PIPE_HAS_RIGHT);
                         let left_func = lhs.as_ref().ensure_apply();
                         let left_output = left_func.eval_mut(state, env, depth + 1)?;
-                        env.undefine("__ALWAYSPIPE");
+                        // env.undefine("__ALWAYSPIPE");
+                        state.set(State::PIPE_HAS_RIGHT);
 
                         // 执行右侧表达式，获取函数或命令
                         // let rhs_eval = rhs.eval_mut(true,env, depth + 1)?;
@@ -217,10 +220,12 @@ impl Expression {
                             .eval_mut(state, env, depth + 1)
                     }
                     ">>" => {
-                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        state.set(State::PIPE_HAS_RIGHT);
                         let left_func = lhs.as_ref().ensure_apply();
                         let l = left_func.eval_mut(state, env, depth + 1)?;
-                        env.undefine("__ALWAYSPIPE");
+                        // env.undefine("__ALWAYSPIPE");
+                        state.clear(State::PIPE_HAS_RIGHT);
 
                         let mut path = std::env::current_dir()?;
                         path = path.join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
@@ -261,10 +266,13 @@ impl Expression {
                     }
                     ">>!" => {
                         // dbg!("-->>--", &lhs);
-                        env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
+                        state.set(State::PIPE_HAS_RIGHT);
                         let left_func = lhs.as_ref().ensure_apply();
                         let l = left_func.eval_mut(state, env, depth + 1)?;
-                        env.undefine("__ALWAYSPIPE");
+                        // env.undefine("__ALWAYSPIPE");
+                        state.clear(State::PIPE_HAS_RIGHT);
+
                         // dbg!("-->> left=", &l);
                         let mut path = std::env::current_dir()?;
                         path = path.join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());

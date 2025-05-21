@@ -1,4 +1,11 @@
 # Changelog
+## [0.4.0]
+- refactor pipes and redirect
+- introduce bmap back
+- enhance list and map display
+- add support for background cmd
+- fix some issue
+
 
 ## [0.3.9]
 - add keybindings
@@ -6,7 +13,7 @@
 - redefine `>>` and `>>!`, `~=`,`~~`,`~:`
 - fix path for windows
 - enhance list and map display
-- use btreemap in expr, but hashmap for performance.
+- use btreemap in expr, but hashmap for performanc
 - enhanced libs, `fs.ls`, `parse.cmd`,`where`,`select`...
 
 

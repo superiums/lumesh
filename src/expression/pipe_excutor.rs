@@ -7,17 +7,14 @@ use std::{
 
 use super::eval::State;
 
-fn is_interactive() -> bool {
-    true
-}
 /// 执行单个命令（支持管道）
 pub fn exec_single_cmd(
     cmdstr: &String,
     args: Option<Vec<String>>,
     env: &mut Environment,
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
-    is_last: bool,          // 是否是最后一条命令？
-    always_pipe: bool,
+    pipe_out: bool,
+    is_background: bool, // 是否是最后一条命令？
 ) -> Result<Vec<u8>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(cmdstr);
@@ -40,13 +37,13 @@ pub fn exec_single_cmd(
     }
 
     // 设置 stdout（如果是交互式命令，直接接管终端）
-    let is_interactive = is_interactive();
-    if always_pipe {
+    if is_background {
+        cmd.stdout(Stdio::null());
+        cmd.stderr(Stdio::null());
+    } else if pipe_out {
         cmd.stdout(Stdio::piped());
-    } else if is_last && is_interactive {
-        cmd.stdout(Stdio::inherit());
     } else {
-        cmd.stdout(Stdio::piped());
+        cmd.stdout(Stdio::inherit());
     }
 
     // 执行命令
@@ -55,19 +52,21 @@ pub fn exec_single_cmd(
         _ => RuntimeError::CommandFailed2(cmdstr.clone(), e.to_string()),
     })?;
 
-    // 写入输入（如果不是第一条命令）
+    // 写入输入
     if let Some(input) = input {
         child.stdin.as_mut().unwrap().write_all(&input)?;
     }
 
-    // 获取输出（如果不是最后一条命令）
-    if always_pipe || !is_last || !is_interactive {
-        let output = child.wait_with_output()?;
-        // let expr = Expression::String(String::from_utf8_lossy(&output.stdout).into_owned());
-        // dgb!(cmd.get_program(), &expr);
-        Ok(output.stdout)
+    // 获取输出
+    if !is_background {
+        if pipe_out {
+            let output = child.wait_with_output()?;
+            Ok(output.stdout)
+        } else {
+            child.wait()?;
+            Ok(vec![])
+        }
     } else {
-        child.wait()?;
         Ok(vec![])
     }
 }
@@ -186,14 +185,23 @@ pub fn handle_command(
     let mut cmd_args = vec![];
     for arg in args {
         // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {
+        state.set(State::SKIP_BUILTIN_SEEK);
         let e_arg = arg.eval_mut(state, env, depth)?;
+        state.clear(State::SKIP_BUILTIN_SEEK);
         match e_arg {
-            Expression::String(s) => cmd_args.push(s),
+            Expression::Symbol(s) | Expression::String(s) => cmd_args.push(s),
             Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
             Expression::None => continue,
             _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
+    let is_background = match cmd_args.last() {
+        Some(s) if s == "&" => {
+            cmd_args.pop();
+            true
+        }
+        _ => false,
+    };
     // dbg!(args, &cmd_args);
     let last_input = state.pipe_out();
     let pipe_input = to_bytes(last_input);
@@ -202,8 +210,8 @@ pub fn handle_command(
         Some(cmd_args),
         env,
         Some(pipe_input),
-        true,
         always_pipe,
+        is_background,
     )?;
     Ok(to_expr(Some(result)))
 }

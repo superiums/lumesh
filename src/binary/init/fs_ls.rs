@@ -103,12 +103,16 @@ pub fn get_file_expression(
 
         // 符号链接目标（惰性检测）
         #[cfg(unix)]
-        if file_type == "symlink" {
-            if let Ok(target) = std::fs::read_link(entry.path()) {
-                map.insert(
-                    "target".to_string(),
-                    Expression::String(target.to_string_lossy().into_owned()),
-                );
+        if options.follow_links {
+            if file_type == "symlink" {
+                if let Ok(target) = std::fs::read_link(entry.path()) {
+                    map.insert(
+                        "target".to_string(),
+                        Expression::String(target.to_string_lossy().into_owned()),
+                    );
+                }
+            } else {
+                map.insert("target".to_string(), Expression::None);
             }
         }
     }

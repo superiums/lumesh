@@ -38,9 +38,11 @@ pub fn exec_single_cmd(
     }
 
     // 设置 stdout（如果是交互式命令，直接接管终端）
-    if is_background || null_out {
+    if is_background {
         cmd.stdout(Stdio::null());
         cmd.stderr(Stdio::null());
+    } else if null_out {
+        cmd.stdout(Stdio::null());
     } else if pipe_out {
         cmd.stdout(Stdio::piped());
     } else {

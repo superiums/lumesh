@@ -1,9 +1,7 @@
 use super::Builtin;
 use super::catcher::catch_error;
 use super::eval::State;
-use super::pipe_excutor::handle_pipes;
-use super::pipe_excutor::handle_stdin_redirect;
-use super::pipe_excutor::to_expr;
+
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, RuntimeError};
@@ -296,17 +294,17 @@ impl Expression {
                     }
                     "<<" => {
                         // 输入重定向处理
-                        handle_stdin_redirect(lhs, rhs, state, env, depth, true)
-                        // let path = rhs.eval_mut(true,env, depth + 1)?.to_string();
-                        // let contents = std::fs::read_to_string(path)
-                        //     .map(Self::String)
-                        //     .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+                        // handle_stdin_redirect(lhs, rhs, state, env, depth, true)
+                        let path = rhs.eval_mut(state, env, depth + 1)?;
+                        let contents = std::fs::read_to_string(path.to_string())
+                            .map(Self::String)
+                            .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
-                        // let mut new_env = env.fork();
-                        // new_env.define("__STDIN", contents);
-                        // let left_func = lhs.ensure_apply();
-                        // let result = left_func.eval_mut(&mut new_env, depth + 1)?;
-                        // return Ok(result);
+                        state.pipe_in(contents);
+
+                        let left_func = lhs.ensure_apply();
+                        let result = left_func.eval_mut(state, env, depth + 1)?;
+                        return Ok(result);
                     }
                     _ => unreachable!(),
                 }

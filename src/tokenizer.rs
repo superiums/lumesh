@@ -523,6 +523,11 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
         (input, _) = input.split_at(ws_chars);
     }
 
+    #[cfg(windows)]
+    if let Some((rest, nl_slice)) = input.strip_prefix("\r\n") {
+        return Ok((rest, nl_slice));
+    }
+
     if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
         // dbg!(nl_slice);
         // let original_str = input.as_original_str();
@@ -549,10 +554,6 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
     } else if let Some((rest, matched)) = input.strip_prefix(";") {
         Ok((rest, matched))
     } else {
-        #[cfg(windows)]
-        if let Some((rest, nl_slice)) = input.strip_prefix("\r\n") {
-            return Ok((rest, nl_slice));
-        }
         Err(NOT_FOUND)
     }
 }

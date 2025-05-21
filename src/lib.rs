@@ -38,8 +38,8 @@ pub mod ai;
 pub mod cmdhelper;
 pub mod prompt;
 
-pub mod binary;
-pub use binary::get_builtin;
+pub mod modules;
+pub use modules::get_builtin;
 
 pub mod keyhandler;
 

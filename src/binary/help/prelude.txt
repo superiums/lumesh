@@ -1,5 +1,0 @@
-Hello, welcome to lumesh's help macro!
-
-The `prelude` is the startup file that lumesh runs before executing
-interactive mode. This file is stored at `.lumesh-prelude` in your home
-directory. To do anything on lumesh's startup, add it to the prelude!

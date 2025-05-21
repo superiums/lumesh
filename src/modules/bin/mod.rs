@@ -7,7 +7,6 @@ use common_macros::hash_map;
 mod chess_module;
 mod console_module;
 mod dict_module;
-mod err_module;
 mod fmt_module;
 // mod fn_module;
 // use fn_module::curry;
@@ -33,7 +32,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("math") => math_module::get(),
         String::from("dict") => dict_module::get(),
         String::from("version") => shell_module::get(),
-        String::from("err") => err_module::get(),
+        // String::from("err") => err_module::get(),
         String::from("os") => os_module::get(),
         String::from("widget") => widget_module::get(),
         String::from("time") => time_module::get(),
@@ -82,8 +81,6 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
             String::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
             String::from("import") => Expression::builtin("import", import, "import a file (evaluate it in a new environment)"),
-
-            String::from("err-codes") =>Expression::builtin("err-codes", |_,_| Ok(RuntimeError::codes()), "display runtime error codes"),
 
             String::from("help") => Expression::builtin("help", help, "display lib modules"),
 

@@ -2,7 +2,7 @@ use std::{collections::HashMap, sync::LazyLock};
 
 use crate::Expression;
 
-mod init;
+mod bin;
 // use std::sync::RwLock;
 
 struct UnsafeStatic<T> {
@@ -11,7 +11,7 @@ struct UnsafeStatic<T> {
 unsafe impl<T> Sync for UnsafeStatic<T> {} // 手动标记为 Sync（单线程安全）
 
 static BUILTIN: UnsafeStatic<LazyLock<HashMap<String, Expression>>> = UnsafeStatic {
-    inner: LazyLock::new(init::get_module_map),
+    inner: LazyLock::new(bin::get_module_map),
 };
 
 pub fn get_builtin(name: &str) -> Option<&Expression> {

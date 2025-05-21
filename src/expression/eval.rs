@@ -1,6 +1,6 @@
 use crate::expression::alias;
 use crate::expression::pipe_excutor::handle_command;
-use crate::{Environment, Expression, Int, RuntimeError, binary};
+use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
@@ -108,7 +108,7 @@ impl Expression {
                     // dbg!("2.--->symbol----", &name);
                     // bultin
                     if !state.contains(State::SKIP_BUILTIN_SEEK) {
-                        if let Some(b) = binary::get_builtin(name) {
+                        if let Some(b) = get_builtin(name) {
                             // dbg!("found builtin:", &name, bti);
                             return Ok(b.clone());
                         };
@@ -611,7 +611,7 @@ impl Expression {
                                     }
                                 }
                                 _ => {
-                                    break match binary::get_builtin(cmd_sym) {
+                                    break match get_builtin(cmd_sym) {
                                         // 顶级内置命令
                                         Some(bti) => {
                                             // dbg!("branch to builtin:", &cmd, &bti);

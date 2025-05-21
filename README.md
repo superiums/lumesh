@@ -31,40 +31,35 @@ Lumesh aims to provide a fast, efficient, and user-friendly command-line experie
 | key-bindings|     ☑     |               |               |              |
 | AI helper  |     ☑        |               |               |               |
 
+## What is Lumesh?
 
-## Table of Contents
-- [Wiki](#wiki)
-- [Features](#features)
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-- [Benchmark](#benchmark)
-- [Contributing](#contributing)
-- [License](#license)
+**Lumesh** (or "lume") is a shell and scripting language designed as a complete rewrite of
+`Dune` with substantial improvements. The project aims to be:
+
+- **Fast and efficient**: Optimized for speed and resource management
+- **User-friendly**: Designed with improved syntax and error handling
+- **Feature-rich**: Includes built-in modules for common operations
+- **Compatible**: Works with traditional shell workflows
+
+
+## Key Features
+- **Intuitive Syntax**: More structured and readable than traditional shell scripts
+- **Performance-Focused**: Optimized for both interactive and script execution modes
+- **Built-in Modules**: Comprehensive library of functionality (fs, string, time, etc.)
+- **Powerful Error Handling**: Advanced error catching and recovery mechanisms
+- **Structured Pipelines**: Enhanced pipe operations for streams and values
+- **AI Integration**: Local AI capabilities for command completion and assistance
+
+The script parser, executor, and front end have been completely rewritten since version 0.3.0, targeting improved efficiency and flexibility for syntax extension.
+
+Discover more features in our [ChangeLog](CHANGELOG.md).
+
 
 ## Wiki
 For detailed documentation and guides, visit our [Wiki](https://codeberg.com/santo/lumesh/wiki).
 
 [中文wiki](https://codeberg.org/santo/lumesh/wiki/HOME-cn.md)
 
-## Features
-
-### Improved Features from Dune
-- **Fast and Efficient**: Optimized for speed and resource management.
-- **Syntax Highlighting**: Enhanced readability with syntax highlighting for commands.
-
-### New Features
-- **User-Friendly**: Designed with simplicity in mind for a better user experience.
-- **Extended Syntax Support**: More comprehensive syntax options for commands.
-- **Built-in Modules**: A variety of built-in modules to extend functionality.
-- **Environment Variable Management**: Easy handling of environment variables.
-- **Login Shell Support**: Seamless integration as a login shell.
-- **Command Suggestions**: Intelligent suggestions for commands as you type.
-- **Powerful Error Handling**: Powerful and swift error catch and deeling.
-- **Local AI Support**: Leverage AI capabilities for enhanced command execution.
-
-The script parser, executor, and front end have been completely rewritten since version 0.3.0, targeting improved efficiency and flexibility for syntax extension.
-
-Discover more features in our [ChangeLog](CHANGELOG.md).
 
 ## Benchmark
 

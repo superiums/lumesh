@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::{Environment, Expression};
+use crate::{Environment, Expression, RuntimeError};
 use common_macros::hash_map;
 
 pub fn get() -> Expression {
@@ -115,6 +115,9 @@ pub fn get() -> Expression {
             let name = args[0].to_string();
             Ok(Expression::Boolean(env.is_defined(&name)))
         }, "check if a variable is defined in the current environment"),
+
+        String::from("err-codes") =>Expression::builtin("err-codes", |_,_| Ok(RuntimeError::codes()), "display runtime error codes"),
+
     })
 }
 

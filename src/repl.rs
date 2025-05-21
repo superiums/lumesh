@@ -10,7 +10,7 @@ use rustyline::{
     line_buffer::LineBuffer,
     validate::Validator,
 };
-use rustyline::{Cmd, Modifiers};
+use rustyline::{Cmd, Modifiers, Movement};
 
 use std::borrow::Cow;
 use std::collections::HashMap;
@@ -83,7 +83,6 @@ pub fn run_repl(env: &mut Environment) {
     {
         let rl_clone = Arc::clone(&rl);
         let running_clone = Arc::clone(&running);
-        let hist = history_file.clone();
         if no_history {
             ctrlc::set_handler(move || {
                 running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
@@ -91,6 +90,7 @@ pub fn run_repl(env: &mut Environment) {
             })
             .expect("Error setting Ctrl-C handler");
         } else {
+            let hist = history_file.clone();
             ctrlc::set_handler(move || {
                 running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
                 let _ = rl_clone.lock().unwrap().save_history(&hist);
@@ -105,6 +105,10 @@ pub fn run_repl(env: &mut Environment) {
     rl.lock()
         .unwrap()
         .bind_sequence(KeyEvent::ctrl('j'), Cmd::CompleteHint);
+    rl.lock().unwrap().bind_sequence(
+        KeyEvent::ctrl('o'),
+        Cmd::Replace(Movement::WholeBuffer, Some(String::from(""))),
+    );
     // rl.lock()
     //     .unwrap()
     //     .bind_sequence(KeyEvent::ctrl('m'), Cmd::CompleteBackward);

@@ -12,6 +12,9 @@ if IS_INTERACTIVE {
     # ====== welcome msg
     # let LUME_WELCOME= "Welcome to Lumesh!"
 
+    # ====== history file
+    let LUME_HISTORY_FILE = "/tmp/lume_histroy"
+
     # ====== report compute result type and values. default True.
     # let LUME_PRINT_DIRECT= False
 
@@ -50,6 +53,7 @@ if IS_INTERACTIVE {
     # ====== alias
     alias join = string.join()
     alias chars = string.chars
+    alias open = fs.read()
 }
 # else {
 # ========== config for script mode ==========
@@ -57,9 +61,7 @@ if IS_INTERACTIVE {
 # }
 
 # ========== config for all mode ==========
-let get = (key, table) -> table[key];
-let open := fs@read();
-let concat = (x, y) -> (str y) + (str x);
+let concat = (x, y) -> (str x) + (str y)
 let logo = "
         ██╗     ██╗   ██╗███╗   ███╗███████╗
         ██║     ██║   ██║████╗ ████║██╔════╝
@@ -67,5 +69,5 @@ let logo = "
         ██║     ██║   ██║██║╚██╔╝██║██╔══╝
         ███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
         ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
-";
+"
 fmt@faint(fmt@red(logo))

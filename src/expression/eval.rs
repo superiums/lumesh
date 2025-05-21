@@ -422,7 +422,14 @@ impl Expression {
                                 ">=" => Ok(Expression::Boolean(l >= r)),
                                 "<=" => Ok(Expression::Boolean(l <= r)),
                                 "~:" => {
-                                    Ok(Expression::Boolean(l.to_string().contains(&r.to_string())))
+                                    let br = match l {
+                                        Expression::String(left) => left.contains(&r.to_string()),
+                                        Expression::List(left) => left.contains(&r),
+                                        Expression::Map(left) => left.contains_key(r.to_symbol()?),
+                                        _ => false,
+                                    };
+                                    Ok(Expression::Boolean(br))
+                                    // Ok(Expression::Boolean(l.to_string().contains(&r.to_string())))
                                 }
                                 "~~" => {
                                     let regex = Regex::new(&r.to_string())

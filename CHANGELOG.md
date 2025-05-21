@@ -5,6 +5,9 @@
 - enhance list and map display
 - support background cmd
 - support output shutdown
+- enhance contains operator : `~:`
+now support : String/List/Map keys containning check.
+
 - fix some issue
 
 

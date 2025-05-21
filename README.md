@@ -60,6 +60,7 @@ For detailed documentation and guides, visit our [Wiki](https://codeberg.com/san
 
 [中文wiki](https://codeberg.org/santo/lumesh/wiki/HOME-cn.md)
 
+[DeepWiki](https://deepwiki.com/superiums/lumesh)
 
 ## Benchmark
 

@@ -829,7 +829,7 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .is_none_or(|c| !c.is_ascii_alphanumeric() || [')', ']'].contains(&c))
+            .is_none_or(|c| !c.is_ascii_alphanumeric() && ![')', ']'].contains(&c))
         {
             return Err(NOT_FOUND);
         }

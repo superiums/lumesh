@@ -505,7 +505,9 @@ impl Expression {
                 }
                 Self::Index(lhs, rhs) => {
                     let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
+                    state.set(State::SKIP_BUILTIN_SEEK);
                     let r = rhs.as_ref().eval_mut(state, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
+                    state.clear(State::SKIP_BUILTIN_SEEK);
 
                     return match (l, r) {
                         // (Expression::List(m), Expression::Integer(n)) => {

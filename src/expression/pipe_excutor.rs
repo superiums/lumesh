@@ -14,8 +14,9 @@ pub fn exec_single_cmd(
     env: &mut Environment,
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
     pipe_out: bool,
-    is_background: bool, // 是否是最后一条命令？
-) -> Result<Vec<u8>, RuntimeError> {
+    is_background: bool,
+    null_out: bool,
+) -> Result<Option<Vec<u8>>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     let mut cmd = Command::new(cmdstr);
     match args {
@@ -37,7 +38,7 @@ pub fn exec_single_cmd(
     }
 
     // 设置 stdout（如果是交互式命令，直接接管终端）
-    if is_background {
+    if is_background || null_out {
         cmd.stdout(Stdio::null());
         cmd.stderr(Stdio::null());
     } else if pipe_out {
@@ -61,13 +62,13 @@ pub fn exec_single_cmd(
     if !is_background {
         if pipe_out {
             let output = child.wait_with_output()?;
-            Ok(output.stdout)
+            Ok(Some(output.stdout))
         } else {
             child.wait()?;
-            Ok(vec![])
+            Ok(None)
         }
     } else {
-        Ok(vec![])
+        Ok(None)
     }
 }
 
@@ -195,12 +196,16 @@ pub fn handle_command(
             _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
-    let is_background = match cmd_args.last() {
+    let (is_background, null_out) = match cmd_args.last() {
         Some(s) if s == "&" => {
             cmd_args.pop();
-            true
+            (true, false)
         }
-        _ => false,
+        Some(s) if s == "-&" => {
+            cmd_args.pop();
+            (false, true)
+        }
+        _ => (false, false),
     };
     // dbg!(args, &cmd_args);
     let last_input = state.pipe_out();
@@ -212,8 +217,9 @@ pub fn handle_command(
         Some(pipe_input),
         always_pipe,
         is_background,
+        null_out,
     )?;
-    Ok(to_expr(Some(result)))
+    Ok(to_expr(result))
 }
 
 // 管道

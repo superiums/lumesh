@@ -41,7 +41,7 @@ pub fn catch_error(
             Ok(Expression::None)
         }
         CatchType::PrintErr => {
-            eprintln!("[Err] {:?}", e);
+            eprintln!("\x1b[38;5;9m[Err] {:?}\x1b[m\x1b[0m", e);
             Ok(Expression::None)
         }
         CatchType::PrintOver => Ok(Expression::String(e.to_string())),

@@ -3,7 +3,8 @@
 - refactor pipes and redirect
 - introduce bmap back
 - enhance list and map display
-- add support for background cmd
+- support background cmd
+- support output shutdown
 - fix some issue
 
 

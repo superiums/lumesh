@@ -4,6 +4,13 @@
 - introduce bmap back
 - enhance list and map display
 - support background cmd
+```bash
+thunar &         # run in background, and shutdown stdout and stderr
+ls &-            # shutdown stdout
+ls /o &?         # shtudown stderr
+ls &+            # shutdown stdout and stderr
+
+```
 - support output shutdown
 - enhance contains operator : `~:`
 now support : String/List/Map keys containning check.

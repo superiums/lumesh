@@ -94,7 +94,8 @@ impl Expression {
                 | Self::Integer(_)
                 | Self::None
                 | Self::Float(_)
-                | Self::Bytes(_) => {
+                | Self::Bytes(_)
+                | Self::Range(_) => {
                     // dbg!("basic type");
                     break Ok(self.clone());
                 }
@@ -424,6 +425,13 @@ impl Expression {
                                 "~:" => {
                                     let br = match l {
                                         Expression::String(left) => left.contains(&r.to_string()),
+                                        Expression::Range(left) => {
+                                            if let Expression::Integer(i) = r {
+                                                left.contains(&i)
+                                            } else {
+                                                false
+                                            }
+                                        }
                                         Expression::List(left) => left.contains(&r),
                                         Expression::Map(left) => left.contains_key(r.to_symbol()?),
                                         _ => false,
@@ -440,10 +448,23 @@ impl Expression {
 
                                 ".." => match (l, r) {
                                     (Expression::Integer(fr), Expression::Integer(t)) => {
-                                        let v = (fr..t)
-                                            .map(Expression::from) // 将 i64 转换为 Expression
-                                            .collect::<Vec<_>>();
-                                        Ok(Expression::from(v))
+                                        // let v = (fr..t)
+                                        //     .map(Expression::from) // 将 i64 转换为 Expression
+                                        //     .collect::<Vec<_>>();
+                                        // Ok(Expression::from(v))
+                                        Ok(Expression::Range(fr..t))
+                                    }
+                                    _ => Err(RuntimeError::CustomError(
+                                        "not valid range option".into(),
+                                    )),
+                                },
+                                "..=" => match (l, r) {
+                                    (Expression::Integer(fr), Expression::Integer(t)) => {
+                                        // let v = (fr..=t)
+                                        //     .map(Expression::from) // 将 i64 转换为 Expression
+                                        //     .collect::<Vec<_>>();
+                                        // Ok(Expression::from(v))
+                                        Ok(Expression::Range(fr..t + 1))
                                     }
                                     _ => Err(RuntimeError::CustomError(
                                         "not valid range option".into(),

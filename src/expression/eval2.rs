@@ -698,6 +698,15 @@ fn handle_for(
     let list_excuted = list_expr.as_ref().eval_mut(state, env, depth + 1)?;
     // .as_list()?;
     match list_excuted {
+        Expression::Range(elist) => {
+            let mut result = Vec::with_capacity(elist.end as usize - elist.start as usize);
+            for item in elist {
+                env.define(var, Expression::Integer(item));
+                let last = body.as_ref().eval_mut(state, env, depth + 1)?;
+                result.push(last)
+            }
+            Ok(Expression::from(result))
+        }
         Expression::List(elist) => {
             let mut result = Vec::with_capacity(elist.len());
             for item in elist.iter() {

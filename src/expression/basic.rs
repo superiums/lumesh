@@ -321,6 +321,7 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
+            Self::Range(r) => write!($f, "{:?}", r),
             Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
             Self::Pipe(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
             Self::Index(l, r) => write!($f, "{}[{}]", l, r),
@@ -598,6 +599,7 @@ impl Expression {
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),
             Self::Alias(..) => "Alias".into(),
+            Self::Range(..) => "Range".into(),
             // Self::Error { .. } => "Error".into(),
             Self::None => "None".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),

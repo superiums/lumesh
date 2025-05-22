@@ -1,5 +1,6 @@
 use crate::{Environment, Int};
 use std::collections::{BTreeMap, HashMap};
+use std::ops::Range;
 use std::rc::Rc;
 pub mod alias;
 pub mod basic;
@@ -64,6 +65,7 @@ pub enum Expression {
     Builtin(Builtin),
     Quote(Rc<Self>),
     Catch(Rc<Self>, CatchType, Option<Rc<Self>>),
+    Range(Range<Int>),
 }
 
 #[derive(Debug, Clone, PartialEq)]

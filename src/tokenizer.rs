@@ -100,9 +100,10 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        infix_tag(".."), //range
-        infix_tag("."),  //index
-        infix_tag("@"),  //index
+        infix_tag(".."),  //range
+        infix_tag("..="), //range
+        infix_tag("."),   //index
+        infix_tag("@"),   //index
     ))(input)
 }
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {

@@ -52,7 +52,8 @@ impl Add for Expression {
                     )), // 转换失败
                 }
             }
-
+            // range
+            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range(a.start..a.end + b)),
             // 列表合并
             // List concatenation
             (Self::List(a), Self::List(b)) => {
@@ -237,6 +238,8 @@ impl Sub for Expression {
                     )), // 转换失败
                 }
             }
+
+            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range(a.start..a.end - b)),
 
             (Self::List(a), Self::List(b)) => {
                 if Rc::ptr_eq(&a, &b) {

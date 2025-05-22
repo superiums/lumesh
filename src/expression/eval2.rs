@@ -5,6 +5,7 @@ use super::eval::State;
 use super::{Expression, Pattern};
 use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, RuntimeError};
+use glob::glob;
 use std::io::ErrorKind;
 use std::io::Write;
 use std::rc::Rc;
@@ -696,24 +697,65 @@ fn handle_for(
     // 求值列表表达式
     let list_excuted = list_expr.as_ref().eval_mut(state, env, depth + 1)?;
     // .as_list()?;
-    if let Expression::List(list) = list_excuted {
-        // 遍历每个元素执行循环体
-        let mut result = Vec::with_capacity(list.len());
-        for item in list.iter() {
-            env.define(var, item.clone());
-            let last = body.as_ref().eval_mut(state, env, depth + 1)?;
-            result.push(last)
+    match list_excuted {
+        Expression::List(elist) => {
+            let mut result = Vec::with_capacity(elist.len());
+            for item in elist.iter() {
+                env.define(var, item.clone());
+                let last = body.as_ref().eval_mut(state, env, depth + 1)?;
+                result.push(last)
+            }
+            Ok(Expression::from(result))
         }
-        Ok(Expression::from(result))
-        // let r: Result<Vec<Expression>, RuntimeError> = list
-        //     .iter()
-        //     .map(|item| {
-        //         env.define(var, item.clone());
-        //         body.as_ref().eval_mut(true, env, depth + 1)
-        //     })
-        //     .collect();
-        // r.map(Expression::from)
-    } else {
-        Err(RuntimeError::ForNonList(list_excuted))
+        Expression::String(mut s) => {
+            if s.starts_with("~") {
+                if let Some(home_dir) = dirs::home_dir() {
+                    s = s.replace("~", home_dir.to_string_lossy().as_ref());
+                }
+            }
+            if s.contains('*') {
+                let mut elist = vec![];
+                for path in glob(&s).unwrap().filter_map(Result::ok) {
+                    elist.push(path.to_string_lossy().to_string());
+                }
+                if elist.len() < 1 {
+                    return Err(RuntimeError::WildcardNotMatched(s));
+                }
+                // loop
+                let mut result = Vec::with_capacity(elist.len());
+                for item in elist.iter() {
+                    env.define(var, Expression::String(item.clone()));
+                    let last = body.as_ref().eval_mut(state, env, depth + 1)?;
+                    result.push(last)
+                }
+                Ok(Expression::from(result))
+            } else {
+                let elist = s.chars();
+                let mut result = Vec::with_capacity(s.len());
+                for item in elist {
+                    env.define(var, Expression::String(item.to_string()));
+                    let last = body.as_ref().eval_mut(state, env, depth + 1)?;
+                    result.push(last)
+                }
+                Ok(Expression::from(result))
+            }
+        }
+        _ => Err(RuntimeError::ForNonList(list_excuted)),
     }
+    // 遍历每个元素执行循环体
+    // let mut result = Vec::with_capacity(elist.len());
+    // for item in elist.iter() {
+    //     env.define(var, item.clone());
+    //     let last = body.as_ref().eval_mut(state, env, depth + 1)?;
+    //     result.push(last)
+    // }
+    // Ok(Expression::from(result))
+    // let r: Result<Vec<Expression>, RuntimeError> = list
+    //     .iter()
+    //     .map(|item| {
+    //         env.define(var, item.clone());
+    //         body.as_ref().eval_mut(true, env, depth + 1)
+    //     })
+    //     .collect();
+    // r.map(Expression::from)
 }

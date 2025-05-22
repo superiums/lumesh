@@ -136,19 +136,21 @@ pub fn handle_command(
         state.clear(State::SKIP_BUILTIN_SEEK);
         match e_arg {
             Expression::Symbol(s) => cmd_args.push(s),
-            Expression::String(s) => {
+            Expression::String(mut s) => {
                 if s.starts_with("~") {
                     if let Some(home_dir) = dirs::home_dir() {
-                        cmd_args.push(s.replace("~", home_dir.to_string_lossy().as_ref()));
+                        s = s.replace("~", home_dir.to_string_lossy().as_ref());
                     }
-                } else if s.contains('*') {
+                }
+                if s.contains('*') {
                     let mut matched = false;
                     for path in glob(&s).unwrap().filter_map(Result::ok) {
                         matched = true;
                         cmd_args.push(path.to_string_lossy().to_string());
                     }
                     if !matched {
-                        cmd_args.push(s);
+                        return Err(RuntimeError::WildcardNotMatched(s));
+                        // cmd_args.push(s);
                     }
                 } else {
                     cmd_args.push(s)

@@ -286,6 +286,14 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         path_tag(".\\"),
         path_tag("."),
         win_abpath_tag(":"),
+        path_tag("~"),
+        path_tag("*/"),
+        path_tag("**/"),
+        path_tag("*."),
+        keyword_tag("&-"),
+        keyword_tag("&?"),
+        keyword_tag("&+"),
+        keyword_tag("&>"),
     ))(input)
 }
 // parse argument such as ls -l --color=auto ./

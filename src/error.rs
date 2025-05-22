@@ -383,6 +383,8 @@ pub enum RuntimeError {
     EarlyBreak(Expression),
     #[error("overflowed when: `{0}`")]
     Overflow(String),
+    #[error("wildcard not matched: `{0}`")]
+    WildcardNotMatched(String),
     #[error(transparent)]
     Io(#[from] std::io::Error),
 }

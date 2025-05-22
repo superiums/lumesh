@@ -3,8 +3,9 @@ use super::catcher::catch_error;
 use super::eval::State;
 
 use super::{Expression, Pattern};
+use crate::expression::alias;
 use crate::expression::pipe_excutor::handle_command;
-use crate::{Environment, RuntimeError};
+use crate::{Environment, RuntimeError, get_builtin};
 use glob::glob;
 use std::io::ErrorKind;
 use std::io::Write;
@@ -328,6 +329,83 @@ impl Expression {
 
     // }
     /// 执行
+    pub fn eval_command(
+        &self,
+        cmd: &Rc<Expression>,
+        args: &Rc<Vec<Expression>>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Self, RuntimeError> {
+        // dbg!("2.--->Command:", &self, &cmd, &args);
+
+        match cmd.as_ref() {
+            // index类型的内置命令，或其他保存于map的命令
+            Expression::Index(..) => {
+                let cmdx = cmd.as_ref().eval_mut(state, env, depth)?;
+                // dbg!(&cmd, &cmdx);
+                return cmdx.apply(args.to_vec()).eval_apply(state, env, depth);
+            }
+            // 符号
+            // string like cmd: ./abc
+            Expression::Symbol(cmd_sym) | Expression::String(cmd_sym) => {
+                match alias::get_alias(cmd_sym) {
+                    // 别名
+                    Some(cmd_alias) => {
+                        // dbg!(&cmd_alias.type_name());
+                        if !args.is_empty() {
+                            return match cmd_alias {
+                                Expression::Command(cmd_name, cmd_args) => {
+                                    cmd_args.as_ref().clone().append(&mut args.to_vec());
+                                    handle_command(
+                                        &cmd_name.as_ref().to_string(),
+                                        &cmd_args,
+                                        state,
+                                        env,
+                                        depth,
+                                    )
+                                }
+                                Expression::Apply(..) => cmd_alias
+                                    .append_args(args.to_vec())
+                                    .eval_mut(state, env, depth),
+                                Expression::Index(..) => {
+                                    let cmdx = cmd_alias.eval_mut(state, env, depth)?;
+                                    // dbg!(&cmd, &cmdx);
+                                    return cmdx
+                                        .append_args(args.to_vec())
+                                        .eval_apply(state, env, depth);
+                                }
+                                _ => Err(RuntimeError::TypeError {
+                                    expected: "Command or Builtin".into(),
+                                    found: cmd_alias.type_name(),
+                                }),
+                            };
+                        } else {
+                            cmd_alias.eval_apply(state, env, depth)
+                        }
+                    }
+                    _ => {
+                        match get_builtin(cmd_sym) {
+                            // 顶级内置命令
+                            Some(bti) => {
+                                // dbg!("branch to builtin:", &cmd, &bti);
+                                bti.apply(args.to_vec()).eval_apply(state, env, depth)
+                            }
+                            // 三方命令
+                            _ => handle_command(cmd_sym, args, state, env, depth),
+                        }
+                    }
+                }
+            }
+            e => {
+                return Err(RuntimeError::TypeError {
+                    expected: "Symbol".to_string(),
+                    found: e.type_name(),
+                });
+            }
+        }
+    }
+    /// 执行
     pub fn eval_apply(
         &self,
         state: &mut State,
@@ -353,7 +431,8 @@ impl Expression {
                     Self::Symbol(name) | Self::String(name) => {
                         // Apply as Command
                         //dbg!("   3.--->applying symbol as Command:", &name);
-                        handle_command(&name, args, state, env, depth)
+                        // handle_command(&name, args, state, env, depth)
+                        Self::eval_command(self, func, args, state, env, depth)
                         // let bindings = env.get_bindings_map();
 
                         // let mut cmd_args = vec![];

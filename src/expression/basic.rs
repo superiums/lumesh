@@ -294,7 +294,7 @@ macro_rules! fmt_shared {
                 write!($f, "}}")
             }
 
-            Self::Apply(g, args) => write!(
+            Self::Apply(g, args)|Self::Command(g, args) => write!(
                 $f,
                 "{:?} {}",
                 g,
@@ -304,15 +304,6 @@ macro_rules! fmt_shared {
                     .join(" ")
             ),
 
-            Self::Command(g, args) => write!(
-                $f,
-                "{:?} {}",
-                g,
-                args.iter()
-                    .map(|e| format!("{:?}", e))
-                    .collect::<Vec<String>>()
-                    .join(" ")
-            ),
             Self::Alias(name, cmd) => write!($f, "alias {} {:?}", name, cmd),
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
@@ -537,7 +528,7 @@ impl fmt::Debug for Expression {
             }
             Self::Command(g, args) => write!(
                 f,
-                "COMMAND ☘  {:?} {})  ☘ ",
+                "COMMAND ☘  {:?} {}  ☘ ",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))

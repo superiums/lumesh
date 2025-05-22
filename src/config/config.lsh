@@ -51,7 +51,9 @@ if IS_INTERACTIVE {
     }
 
     # ====== alias
-    alias join = string.join()
+    alias lsx = ls -l --time-style=long-iso
+    alias pls = parse.cmd(mode,hlink,user,group,size,mday,mtime,name)
+    alias join = list.join()
     alias chars = string.chars
     alias open = fs.read()
 }

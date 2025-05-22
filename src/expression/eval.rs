@@ -1,5 +1,4 @@
 use crate::expression::alias;
-use crate::expression::pipe_excutor::handle_command;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use core::option::Option::None;
 use regex_lite::Regex;
@@ -554,103 +553,7 @@ impl Expression {
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(self, state, env, depth),
                 Self::Command(cmd, args) => {
-                    // dbg!("2.--->Command:", &self, &cmd, &args);
-                    // alias
-                    // let real_cmd = env.get(cmd.to_string().as_str());
-                    // // dbg!(&real_cmd);
-                    // match real_cmd {
-                    //     Some(cmdx) => {
-                    //         // dbg!("   3.--->applying alias:", &cmd, &cmdx);
-                    //         return match cmdx {
-                    //             Expression::Command(cmd_name, mut cmd_args) => {
-                    //                 cmd_args.append(&mut args.clone());
-                    //                 handle_command(cmd_name.to_string(), &cmd_args, env, depth)
-                    //             }
-                    //             Expression::Apply(..) => cmdx
-                    //                 .clone()
-                    //                 .append_args(args.clone())
-                    //                 .eval_mut(true, env, depth),
-                    //             // Expression::Builtin(cmd_name) => Ok(Self::Apply(
-                    //             //     Box::new(Expression::Builtin(cmd_name)),
-                    //             //     args.clone(),
-                    //             // )),
-                    //             _ => Err(RuntimeError::TypeError {
-                    //                 expected: "Command or Builtin".into(),
-                    //                 found: cmd.type_name(),
-                    //             }),
-                    //         };
-                    //     }
-                    //     _ => {}
-                    // }
-
-                    match cmd.as_ref() {
-                        // index类型的内置命令，或其他保存于map的命令
-                        Expression::Index(..) => {
-                            let cmdx = cmd.as_ref().eval_mut(state, env, depth)?;
-                            // dbg!(&cmd, &cmdx);
-                            return cmdx.apply(args.to_vec()).eval_apply(state, env, depth);
-                        }
-                        // 符号
-                        // string like cmd: ./abc
-                        Expression::Symbol(cmd_sym) | Expression::String(cmd_sym) => {
-                            break match alias::get_alias(cmd_sym) {
-                                // 别名
-                                Some(cmd_alias) => {
-                                    // dbg!(&cmd_alias.type_name());
-                                    if !args.is_empty() {
-                                        return match cmd_alias {
-                                            Expression::Command(cmd_name, cmd_args) => {
-                                                cmd_args
-                                                    .as_ref()
-                                                    .clone()
-                                                    .append(&mut args.to_vec());
-                                                handle_command(
-                                                    &cmd_name.as_ref().to_string(),
-                                                    &cmd_args,
-                                                    state,
-                                                    env,
-                                                    depth,
-                                                )
-                                            }
-                                            Expression::Apply(..) => cmd_alias
-                                                .append_args(args.to_vec())
-                                                .eval_mut(state, env, depth),
-                                            Expression::Index(..) => {
-                                                let cmdx = cmd_alias.eval_mut(state, env, depth)?;
-                                                // dbg!(&cmd, &cmdx);
-                                                return cmdx
-                                                    .append_args(args.to_vec())
-                                                    .eval_apply(state, env, depth);
-                                            }
-                                            _ => Err(RuntimeError::TypeError {
-                                                expected: "Command or Builtin".into(),
-                                                found: cmd_alias.type_name(),
-                                            }),
-                                        };
-                                    } else {
-                                        cmd_alias.eval_apply(state, env, depth)
-                                    }
-                                }
-                                _ => {
-                                    break match get_builtin(cmd_sym) {
-                                        // 顶级内置命令
-                                        Some(bti) => {
-                                            // dbg!("branch to builtin:", &cmd, &bti);
-                                            bti.apply(args.to_vec()).eval_apply(state, env, depth)
-                                        }
-                                        // 三方命令
-                                        _ => handle_command(cmd_sym, args, state, env, depth),
-                                    };
-                                }
-                            };
-                        }
-                        e => {
-                            return Err(RuntimeError::TypeError {
-                                expected: "Symbol".to_string(),
-                                found: e.type_name(),
-                            });
-                        }
-                    }
+                    break Self::eval_command(self, cmd, args, state, env, depth);
                 }
                 // break Self::eval_command(self, env, depth),
                 // 其他表达式处理...

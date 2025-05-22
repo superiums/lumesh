@@ -1,11 +1,11 @@
 use crate::{Environment, Expression, RuntimeError};
 
+use super::eval::State;
+use glob::glob;
 use std::{
     io::{ErrorKind, Write},
     process::{Command, Stdio},
 };
-
-use super::eval::State;
 /// mode: 1=null_stdout, 2=null_err, 4=err_to_stdout,
 /// 8=background, 11=background,shutdown_all
 /// 执行单个命令（支持管道）
@@ -18,7 +18,7 @@ pub fn exec_single_cmd(
     mode: u8,
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
-    dbg!(&mode);
+    // dbg!(&mode);
     let mut cmd = Command::new(cmdstr);
     match args {
         Some(ar) => cmd
@@ -81,12 +81,12 @@ pub fn exec_single_cmd(
             //错误输出>标准输出
             let mut combined = Vec::new();
             combined.extend(output.stdout);
-            println!(
-                "err output: {}",
-                String::from_utf8_lossy(&output.stderr.clone().as_ref())
-            );
+            // println!(
+            //     "err output: {}",
+            //     String::from_utf8_lossy(&output.stderr.clone().as_ref())
+            // );
             combined.extend(output.stderr);
-            println!("Combined output: {}", String::from_utf8_lossy(&combined));
+            // println!("Combined output: {}", String::from_utf8_lossy(&combined));
 
             Ok(Some(combined))
         } else if mode & 2 == 0 {
@@ -135,7 +135,25 @@ pub fn handle_command(
         let e_arg = arg.eval_mut(state, env, depth)?;
         state.clear(State::SKIP_BUILTIN_SEEK);
         match e_arg {
-            Expression::Symbol(s) | Expression::String(s) => cmd_args.push(s),
+            Expression::Symbol(s) => cmd_args.push(s),
+            Expression::String(s) => {
+                if s.starts_with("~") {
+                    if let Some(home_dir) = dirs::home_dir() {
+                        cmd_args.push(s.replace("~", home_dir.to_string_lossy().as_ref()));
+                    }
+                } else if s.contains('*') {
+                    let mut matched = false;
+                    for path in glob(&s).unwrap().filter_map(Result::ok) {
+                        matched = true;
+                        cmd_args.push(path.to_string_lossy().to_string());
+                    }
+                    if !matched {
+                        cmd_args.push(s);
+                    }
+                } else {
+                    cmd_args.push(s)
+                }
+            }
             Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
             Expression::None => continue,
             _ => cmd_args.push(format!("{}", e_arg)),

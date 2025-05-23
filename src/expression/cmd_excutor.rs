@@ -50,9 +50,9 @@ pub fn eval_command(
                             Expression::Index(..) => {
                                 let cmdx = cmd_alias.eval_mut(state, env, depth)?;
                                 // dbg!(&cmd, &cmdx);
-                                return cmdx
+                                cmdx
                                     .append_args(args.to_vec())
-                                    .eval_apply(state, env, depth);
+                                    .eval_apply(state, env, depth)
                             }
                             _ => Err(RuntimeError::TypeError {
                                 expected: "Command or Builtin".into(),

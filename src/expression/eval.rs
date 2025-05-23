@@ -87,6 +87,8 @@ impl Expression {
         }
         let mut job = self;
         loop {
+            // println!();
+            // dbg!("------", &job);
             match job {
                 // 基础类型直接返回
                 Self::String(_)
@@ -98,11 +100,11 @@ impl Expression {
                 | Self::Range(_)
                 | Self::DateTime(_) => {
                     // dbg!("basic type");
-                    break Ok(self.clone());
+                    return Ok(job.clone());
                 }
                 Self::Builtin(_) => {
                     // dbg!("builtin type");
-                    break Ok(self.clone());
+                    break Ok(job.clone());
                 }
 
                 // 符号解析（错误处理优化）
@@ -119,11 +121,11 @@ impl Expression {
                     // var
                     unsafe {
                         if STRICT {
-                            return Ok(self.clone());
+                            return Ok(job.clone());
                         } else {
                             return match env.get(name) {
                                 Some(expr) => Ok(expr),
-                                None => Ok(self.clone()),
+                                None => Ok(job.clone()),
                             };
                         }
                     }
@@ -708,16 +710,16 @@ impl Expression {
                 }
 
                 // 执行应用
-                Self::Apply(_, _) => break Self::eval_apply(self, state, env, depth),
+                Self::Apply(_, _) => break Self::eval_apply(job, state, env, depth),
                 Self::Command(cmd, args) => {
-                    break Self::eval_command(self, cmd, args, state, env, depth);
+                    break Self::eval_command(job, cmd, args, state, env, depth);
                 }
                 // break Self::eval_command(self, env, depth),
                 // 简单控制流表达式
                 Self::If(cond, true_expr, false_expr) => {
-                    job = match cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
-                        true => true_expr.as_ref(),
-                        false => false_expr.as_ref(),
+                    match cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
+                        true => job = true_expr.as_ref(),
+                        false => job = false_expr.as_ref(),
                     };
                     continue;
                 }
@@ -739,7 +741,7 @@ impl Expression {
                     return Err(RuntimeError::NoMatchingBranch(val.to_string()));
                 }
                 // 其他表达式处理...
-                _ => break self.eval_complex(state, env, depth),
+                _ => break job.eval_complex(state, env, depth),
             };
             // depth += 1
         }

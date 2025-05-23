@@ -25,19 +25,9 @@ impl Expression {
 
             Self::While(cond, body) => {
                 // 循环求值直到条件为假
-                let mut last = Self::None;
+                let mut last = Ok(Expression::None);
                 while cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
-                    last = body.as_ref().eval_mut(state, env, depth + 1)?;
-                    if let Self::Break(value) = last {
-                        return Ok(value.as_ref().clone()); // 或者返回其他值
-                    }
-                }
-                Ok(last)
-            }
-            Self::Loop(body) => {
-                // 循环求值直到条件为假
-                loop {
-                    let last = body.as_ref().eval_mut(state, env, depth + 1);
+                    last = body.as_ref().eval_mut(state, env, depth + 1);
                     match last {
                         Ok(_) => {} //继续
                         Err(RuntimeError::EarlyBreak(v)) => {
@@ -45,9 +35,20 @@ impl Expression {
                         } // 捕获函数体内的return
                         Err(e) => return Err(e),
                     }
-                    // if let Self::Break(value) = last {
-                    //     return Ok(value.as_ref().clone()); // 或者返回其他值
-                    // }
+                }
+                last
+            }
+            Self::Loop(body) => {
+                loop {
+                    let last = body.as_ref().eval_mut(state, env, depth + 1);
+                    // dbg!(&last);
+                    match last {
+                        Ok(_) => {} //继续
+                        Err(RuntimeError::EarlyBreak(v)) => {
+                            return Ok(v);
+                        } // 捕获函数体内的return
+                        Err(e) => return Err(e),
+                    }
                 }
             }
             // TODO add Loop,break

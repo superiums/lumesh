@@ -194,8 +194,8 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("while"),
         keyword_tag("loop"),
         keyword_tag("export"), //set global env
-        keyword_alone_tag("break"),
-        keyword_alone_tag("return"),
+        keyword_tag("break"),
+        keyword_tag("return"),
         keyword_tag("del"),
         // keyword_tag("type"),
         // keyword_tag("None"),

@@ -89,21 +89,6 @@ pub fn get() -> Expression {
                 .unwrap_or(false)))
         }, "check if a year is a leap year"),
 
-        // 新增函数
-        String::from("today") => Expression::builtin("today", |args, env| {
-            let today = Local::now().date_naive();
-            if args.is_empty() {
-                Ok(Expression::DateTime(NaiveDateTime::new(today, NaiveTime::default())))
-            } else {
-                match args[0].eval(env)? {
-                    Expression::String(format) => {
-                        Ok(Expression::String(today.format(&format).to_string()))
-                    }
-                    _ => Err(LmError::CustomError("Expected format string".to_string()))
-                }
-            }
-        }, "get today's date as DateTime object or formatted string"),
-
         String::from("from_parts") => Expression::builtin("from_parts", from_parts,
             "create DateTime from components (year, month, day[, hour, minute, second])"),
 

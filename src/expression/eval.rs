@@ -94,7 +94,8 @@ impl Expression {
                 | Self::None
                 | Self::Float(_)
                 | Self::Bytes(_)
-                | Self::Range(_) => {
+                | Self::Range(_)
+                | Self::DateTime(_) => {
                     // dbg!("basic type");
                     break Ok(self.clone());
                 }

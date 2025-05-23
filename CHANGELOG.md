@@ -14,7 +14,7 @@ ls &+            # shutdown stdout and stderr
 - support output shutdown
 - enhance contains operator : `~:`
 now support : String/List/Map keys containning check.
-
+- support datetime expression
 - fix some issue
 
 

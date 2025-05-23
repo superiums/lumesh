@@ -13,6 +13,7 @@ pub mod overop;
 pub mod pipe_excutor;
 
 use builtin::Builtin;
+use chrono::NaiveDateTime;
 #[derive(Clone, PartialEq)]
 pub enum Expression {
     // 所有嵌套节点改为Rc包裹
@@ -66,6 +67,7 @@ pub enum Expression {
     Quote(Rc<Self>),
     Catch(Rc<Self>, CatchType, Option<Rc<Self>>),
     Range(Range<Int>),
+    DateTime(NaiveDateTime),
 }
 
 #[derive(Debug, Clone, PartialEq)]

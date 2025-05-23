@@ -5,6 +5,8 @@ use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use chrono::{DateTime, NaiveDateTime};
+
 use crate::{Environment, Expression, LmError};
 
 #[derive(Default)]
@@ -95,9 +97,10 @@ pub fn get_file_expression(
         // 时间表达式
         let modified = metadata.modified()?;
         let time_expr = if options.unix_time {
-            Expression::Integer(system_time_to_unix_seconds(modified)? as i64)
+            Expression::Integer(system_time_to_unix_duration(modified)?.as_secs() as i64)
         } else {
-            Expression::String(format_system_time(modified))
+            Expression::DateTime(system_time_to_naive_datetime(modified)?)
+            // Expression::String(format_system_time(modified))
         };
         map.insert("modified".to_string(), time_expr);
 
@@ -214,17 +217,28 @@ fn detect_file_type(metadata: &std::fs::Metadata) -> &'static str {
     }
 }
 
-fn system_time_to_unix_seconds(time: SystemTime) -> Result<u64, std::io::Error> {
-    time.duration_since(UNIX_EPOCH)
-        .map(|d| d.as_secs())
-        .map_err(|_| std::io::Error::new(std::io::ErrorKind::Other, "Time went backwards"))
+// 辅助函数：将 SystemTime 转换为 UNIX 时间戳的 Duration
+fn system_time_to_unix_duration(st: SystemTime) -> Result<std::time::Duration, LmError> {
+    st.duration_since(UNIX_EPOCH)
+        .map_err(|_| LmError::CustomError("SystemTime before UNIX EPOCH".to_string()))
 }
 
-fn format_system_time(time: SystemTime) -> String {
-    let datetime: chrono::DateTime<chrono::Local> =
-        (UNIX_EPOCH + time.duration_since(UNIX_EPOCH).unwrap()).into();
-    datetime.format("%Y-%m-%d %H:%M:%S").to_string()
+// 辅助函数：将 SystemTime 转换为 NaiveDateTime
+fn system_time_to_naive_datetime(st: SystemTime) -> Result<NaiveDateTime, LmError> {
+    let duration = system_time_to_unix_duration(st)?;
+    Ok(
+        DateTime::from_timestamp(duration.as_secs() as i64, duration.subsec_nanos())
+            .unwrap_or_default()
+            .naive_local(), // NaiveDateTime::from_timestamp_opt(duration.as_secs() as i64, duration.subsec_nanos())
+                            // .unwrap_or_default(),
+    ) // 提供默认值以防转换失败
 }
+
+// fn format_system_time(time: SystemTime) -> String {
+//     let datetime: chrono::DateTime<chrono::Local> =
+//         (UNIX_EPOCH + time.duration_since(UNIX_EPOCH).unwrap()).into();
+//     datetime.format("%Y-%m-%d %H:%M:%S").to_string()
+// }
 
 fn human_readable_size(size: u64) -> String {
     const UNITS: [&str; 5] = ["B", "K", "M", "G", "T"];

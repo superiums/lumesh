@@ -43,6 +43,7 @@ macro_rules! fmt_shared {
             Self::Float(n) => write!($f, "{}", *n),
             Self::Bytes(b) => write!($f, "b{:?}", b),
             Self::Boolean(b) => write!($f, "{}", if *b { "True" } else { "False" }),
+            Self::DateTime(n) => write!($f, "{}", n),
 
             Self::Declare(name, expr) => write!($f, "let {} = {:?}", name, expr),
             Self::Assign(name, expr) => write!($f, "{} = {:?}", name, expr),
@@ -558,6 +559,7 @@ impl Expression {
             Self::Map(_) => "BMap".into(),
             Self::String(_) => "String".into(),
             Self::Integer(_) => "Integer".into(),
+            Self::DateTime(_) => "DateTime".into(),
             Self::Symbol(_) => "Symbol".into(),
             Self::Variable(_) => "Variable".into(),
 

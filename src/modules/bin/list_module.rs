@@ -21,7 +21,7 @@ pub fn get() -> Expression {
 
         // create
         String::from("concat") => Expression::builtin("concat", concat, "create a list from a variable number of arguments"),
-        String::from("range") => Expression::builtin("range", range, "create a list from range"),
+        String::from("from") => Expression::builtin("from", from, "create a list from range"),
 
         // loop, walk on
         String::from("emulate") => Expression::builtin("emulate", emulate, "emulate over a list of index and values"),
@@ -156,13 +156,18 @@ fn append(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     Ok(Expression::List(Rc::new(new_list)))
 }
 
-fn range(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("range", args, 1)?;
-    match args[0].eval(env)? {
-        Expression::Range(r) => Ok(Expression::from(r.collect::<Vec<Int>>())),
-        _ => Err(LmError::CustomError(
-            "range requires a range (a..b) as arguments".to_string(),
+fn from(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    match args.len() {
+        0 => Err(LmError::CustomError(
+            "range requires a range (a..b) or some elements as arguments".to_string(),
         )),
+        1 => match args[0].eval(env)? {
+            Expression::Range(r) => Ok(Expression::from(r.collect::<Vec<Int>>())),
+            _ => Err(LmError::CustomError(
+                "the only arg should be a range (a..b)".to_string(),
+            )),
+        },
+        2.. => Ok(Expression::from(args.clone())),
     }
 }
 

@@ -1,15 +1,94 @@
-use crate::{Environment, Expression, RuntimeError};
+use crate::{Environment, Expression, RuntimeError, get_builtin};
 
-use super::eval::State;
+use super::{alias, eval::State};
 use glob::glob;
 use std::{
     io::{ErrorKind, Write},
     process::{Command, Stdio},
+    rc::Rc,
 };
+
+/// 执行
+pub fn eval_command(
+    cmd: &Rc<Expression>,
+    args: &Rc<Vec<Expression>>,
+    state: &mut State,
+    env: &mut Environment,
+    depth: usize,
+) -> Result<Expression, RuntimeError> {
+    // dbg!("2.--->Command:", &self, &cmd, &args);
+
+    match cmd.as_ref() {
+        // index类型的内置命令，或其他保存于map的命令
+        Expression::Index(..) => {
+            let cmdx = cmd.as_ref().eval_mut(state, env, depth)?;
+            // dbg!(&cmd, &cmdx);
+            return cmdx.apply(args.to_vec()).eval_apply(state, env, depth);
+        }
+        // 符号
+        // string like cmd: ./abc
+        Expression::Symbol(cmd_sym) | Expression::String(cmd_sym) => {
+            match alias::get_alias(cmd_sym) {
+                // 别名
+                Some(cmd_alias) => {
+                    // dbg!(&cmd_alias.type_name());
+                    if !args.is_empty() {
+                        return match cmd_alias {
+                            Expression::Command(cmd_name, cmd_args) => {
+                                cmd_args.as_ref().clone().append(&mut args.to_vec());
+                                handle_command(
+                                    &cmd_name.as_ref().to_string(),
+                                    &cmd_args,
+                                    state,
+                                    env,
+                                    depth,
+                                )
+                            }
+                            Expression::Apply(..) => cmd_alias
+                                .append_args(args.to_vec())
+                                .eval_mut(state, env, depth),
+                            Expression::Index(..) => {
+                                let cmdx = cmd_alias.eval_mut(state, env, depth)?;
+                                // dbg!(&cmd, &cmdx);
+                                return cmdx
+                                    .append_args(args.to_vec())
+                                    .eval_apply(state, env, depth);
+                            }
+                            _ => Err(RuntimeError::TypeError {
+                                expected: "Command or Builtin".into(),
+                                found: cmd_alias.type_name(),
+                            }),
+                        };
+                    } else {
+                        cmd_alias.eval_apply(state, env, depth)
+                    }
+                }
+                _ => {
+                    match get_builtin(cmd_sym) {
+                        // 顶级内置命令
+                        Some(bti) => {
+                            // dbg!("branch to builtin:", &cmd, &bti);
+                            bti.apply(args.to_vec()).eval_apply(state, env, depth)
+                        }
+                        // 三方命令
+                        _ => handle_command(cmd_sym, args, state, env, depth),
+                    }
+                }
+            }
+        }
+        e => {
+            return Err(RuntimeError::TypeError {
+                expected: "Symbol".to_string(),
+                found: e.type_name(),
+            });
+        }
+    }
+}
+
 /// mode: 1=null_stdout, 2=null_err, 4=err_to_stdout,
 /// 8=background, 11=background,shutdown_all
 /// 执行单个命令（支持管道）
-pub fn exec_single_cmd(
+fn exec_single_cmd(
     cmdstr: &String,
     args: Option<Vec<String>>,
     env: &mut Environment,
@@ -120,7 +199,7 @@ pub fn exec_single_cmd(
 }
 
 // 管道
-pub fn handle_command(
+fn handle_command(
     cmd: &String,
     args: &Vec<Expression>,
     state: &mut State,
@@ -175,11 +254,11 @@ pub fn handle_command(
                 cmd_args.pop();
                 2
             }
-            "&+" => {
+            "&." => {
                 cmd_args.pop();
                 3
             }
-            "&>" => {
+            "&+" => {
                 cmd_args.pop();
                 4
             }

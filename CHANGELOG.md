@@ -1,4 +1,8 @@
 # Changelog
+## [0.4.1]
+- optimize expr execution
+- fix break in while
+
 ## [0.4.0]
 - refactor pipes and redirect
 - introduce bmap back
@@ -8,7 +12,8 @@
 thunar &         # run in background, and shutdown stdout and stderr
 ls &-            # shutdown stdout
 ls /o &?         # shtudown stderr
-ls &+            # shutdown stdout and stderr
+ls &.            # shutdown stdout and stderr
+ls &+            # try to append stderr to stdout
 
 ```
 - support output shutdown

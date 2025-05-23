@@ -6,11 +6,11 @@ pub mod alias;
 pub mod basic;
 pub mod builtin;
 pub mod catcher;
+pub mod cmd_excutor;
 pub mod eval;
 pub mod eval2;
 pub mod from;
 pub mod overop;
-pub mod pipe_excutor;
 
 use builtin::Builtin;
 use chrono::NaiveDateTime;

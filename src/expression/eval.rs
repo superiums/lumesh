@@ -1,12 +1,13 @@
+use super::Pattern;
+use crate::STRICT;
 use crate::expression::alias;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
-
+use std::io::ErrorKind;
+use std::io::Write;
 use std::rc::Rc;
-
-use crate::STRICT;
 
 const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 
@@ -84,9 +85,9 @@ impl Expression {
                 return Err(RuntimeError::RecursionDepth(self.clone()));
             }
         }
-
+        let mut job = self;
         loop {
-            match self {
+            match job {
                 // 基础类型直接返回
                 Self::String(_)
                 | Self::Boolean(_)
@@ -226,9 +227,15 @@ impl Expression {
                 // 元表达式处理
                 Self::Group(inner) => {
                     // dbg!("2.--->group:", &inner);
-                    return inner.as_ref().eval_mut(state, env, depth + 1);
+                    // return inner.as_ref().eval_mut(state, env, depth + 1);
+                    job = inner.as_ref();
+                    continue;
                 }
-                Self::Quote(inner) => return Ok(inner.as_ref().clone()),
+                // Self::Quote(inner) => return Ok(inner.as_ref().clone()),
+                Self::Quote(inner) => {
+                    job = inner.as_ref();
+                    continue;
+                }
 
                 // 一元运算
                 Self::UnaryOp(op, operand, is_prefix) => {
@@ -486,7 +493,156 @@ impl Expression {
                         }
                     };
                 }
+                // 管道
+                Self::Pipe(operator, lhs, rhs) => {
+                    match operator.as_str() {
+                        "|" => {
+                            // let bindings = env.get_bindings_map();
+                            // let always_pipe = env.has("__ALWAYSPIPE");
+                            //dbg!(&always_pipe, &lhs, &rhs);
+                            // if always_pipe {
+                            let is_in_pipe = state.contains(State::IN_PIPE);
+                            state.set(State::IN_PIPE);
+                            let left_func = lhs.ensure_apply();
+                            let left_output = left_func.eval_mut(state, env, depth + 1)?;
+                            if !is_in_pipe {
+                                state.clear(State::IN_PIPE);
+                            }
+                            state.pipe_in(left_output);
 
+                            match rhs.as_ref() {
+                                Expression::Symbol(s) => {
+                                    return Expression::Apply(
+                                        Rc::new(Expression::Symbol(s.clone())),
+                                        Rc::new(vec![]),
+                                    )
+                                    .eval_apply(state, env, depth);
+                                }
+                                r => {
+                                    job = r;
+                                    continue;
+                                }
+                            }
+
+                            // let r_func = rhs.ensure_apply();
+                            // let pipe_result = r_func.eval_mut(state, env, depth + 1);
+                            // dbg!(&pipe_result);
+                            // pipe_result
+                        }
+                        "|>" => {
+                            // 执行左侧表达式
+                            let is_in_pipe = state.contains(State::IN_PIPE);
+                            state.set(State::IN_PIPE);
+                            let left_func = lhs.as_ref().ensure_apply();
+                            let left_output = left_func.eval_mut(state, env, depth + 1)?;
+                            if !is_in_pipe {
+                                state.clear(State::IN_PIPE);
+                            }
+
+                            // 执行右侧表达式，获取函数或命令
+                            // 将左侧结果作为最后一个参数传递给右侧
+                            let args = vec![left_output];
+                            return rhs
+                                .as_ref()
+                                .append_args(args)
+                                .eval_mut(state, env, depth + 1);
+                        }
+                        ">>" => {
+                            let is_in_pipe = state.contains(State::IN_PIPE);
+                            state.set(State::IN_PIPE);
+                            let left_func = lhs.as_ref().ensure_apply();
+                            let left_output = left_func.eval_mut(state, env, depth + 1)?;
+                            if !is_in_pipe {
+                                state.clear(State::IN_PIPE);
+                            }
+
+                            let mut path = std::env::current_dir()?;
+                            path = path
+                                .join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
+                            if !path.exists() {
+                                std::fs::File::create(path.clone())?;
+                            }
+                            match std::fs::OpenOptions::new().append(true).open(&path) {
+                                Ok(mut file) => {
+                                    // use std::io::prelude::*;
+                                    let result =
+                                        if let Expression::Bytes(bytes) = left_output.clone() {
+                                            // std::fs::write(path, bytes)
+                                            file.write_all(&bytes)
+                                        } else {
+                                            // Otherwise, convert the contents to a pretty string and write that.
+                                            // std::fs::write(path, contents.to_string())
+                                            file.write_all(left_output.to_string().as_bytes())
+                                        };
+
+                                    return match result {
+                                        Ok(()) => Ok(left_output),
+                                        Err(e) => Err(RuntimeError::CustomError(format!(
+                                            "could not append to file {}: {:?}",
+                                            rhs, e
+                                        ))),
+                                    };
+                                }
+                                Err(e) => {
+                                    return Err(match e.kind() {
+                                        ErrorKind::PermissionDenied => {
+                                            RuntimeError::PermissionDenied(rhs.as_ref().clone())
+                                        }
+                                        _ => RuntimeError::CustomError(format!(
+                                            "could not open file {}: {:?}",
+                                            path.display(),
+                                            e
+                                        )),
+                                    });
+                                }
+                            }
+                        }
+                        ">>!" => {
+                            let is_in_pipe = state.contains(State::IN_PIPE);
+                            state.set(State::IN_PIPE);
+                            let left_func = lhs.as_ref().ensure_apply();
+                            let l = left_func.eval_mut(state, env, depth + 1)?;
+                            if !is_in_pipe {
+                                state.clear(State::IN_PIPE);
+                            }
+
+                            // dbg!("-->> left=", &l);
+                            let mut path = std::env::current_dir()?;
+                            path = path
+                                .join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
+                            // If the contents are bytes, write the bytes directly to the file.
+                            let result = if let Expression::Bytes(bytes) = l.clone() {
+                                std::fs::write(path, bytes)
+                            } else {
+                                // Otherwise, convert the contents to a pretty string and write that.
+                                std::fs::write(path, l.to_string())
+                            };
+
+                            return match result {
+                                Ok(()) => Ok(l),
+                                Err(e) => Err(RuntimeError::CustomError(format!(
+                                    "could not write to file {}: {:?}",
+                                    rhs, e
+                                ))),
+                            };
+                        }
+                        "<<" => {
+                            // 输入重定向处理
+                            // handle_stdin_redirect(lhs, rhs, state, env, depth, true)
+                            let path = rhs.eval_mut(state, env, depth + 1)?;
+                            let contents = std::fs::read_to_string(path.to_string())
+                                .map(Self::String)
+                                .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+
+                            state.pipe_in(contents);
+
+                            let left_func = lhs.ensure_apply();
+                            let result = left_func.eval_mut(state, env, depth + 1)?;
+                            return Ok(result);
+                        }
+                        _ => unreachable!(),
+                    }
+                }
                 // 列表求值（内存优化）
                 // Self::List(elems) => {
                 //     let evaluated = elems
@@ -557,6 +713,31 @@ impl Expression {
                     break Self::eval_command(self, cmd, args, state, env, depth);
                 }
                 // break Self::eval_command(self, env, depth),
+                // 简单控制流表达式
+                Self::If(cond, true_expr, false_expr) => {
+                    job = match cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
+                        true => true_expr.as_ref(),
+                        false => false_expr.as_ref(),
+                    };
+                    continue;
+                }
+
+                Self::Match(value, branches) => {
+                    // 模式匹配求值
+                    let val = value.as_ref().eval_mut(state, env, depth + 1)?;
+                    let mut matched = false;
+                    for (pat, expr) in branches {
+                        if matches_pattern(&val, pat, env)? {
+                            job = expr.as_ref();
+                            matched = true;
+                            break;
+                        }
+                    }
+                    if matched {
+                        continue;
+                    }
+                    return Err(RuntimeError::NoMatchingBranch(val.to_string()));
+                }
                 // 其他表达式处理...
                 _ => break self.eval_complex(state, env, depth),
             };
@@ -799,5 +980,26 @@ impl Expression {
                 found: s.type_name(),
             }),
         }
+    }
+}
+
+/// match的比对
+fn matches_pattern(
+    value: &Expression,
+    pattern: &Pattern,
+    env: &mut Environment,
+) -> Result<bool, RuntimeError> {
+    match pattern {
+        Pattern::Bind(name) => {
+            if name == "_" {
+                // _作为通配符，不绑定变量
+                Ok(true)
+            } else {
+                // 正常变量绑定
+                env.define(name, value.clone());
+                Ok(true)
+            }
+        }
+        Pattern::Literal(lit) => Ok(value == lit.as_ref()),
     }
 }

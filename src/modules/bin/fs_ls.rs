@@ -86,7 +86,7 @@ pub fn get_file_expression(
 
         // 动态计算大小表达式
         let size_expr = if options.size_in_kb {
-            Expression::Integer(((metadata.len() + 1023) / 1024) as i64)
+            Expression::Integer(metadata.len().div_ceil(1024) as i64)
         } else {
             Expression::String(human_readable_size(metadata.len()))
             // } else {

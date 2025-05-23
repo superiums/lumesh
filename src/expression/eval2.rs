@@ -304,11 +304,8 @@ impl Expression {
                             .map(|arg| arg.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
-                        match pipe_out {
-                            Some(p) => {
-                                evaluated_args.push(p);
-                            }
-                            _ => {}
+                        if let Some(p) = pipe_out {
+                            evaluated_args.push(p);
                         };
 
                         match bind_arguments(&params, &evaluated_args, &mut current_env) {
@@ -371,11 +368,8 @@ impl Expression {
                             .map(|a| a.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
 
-                        match pipe_out {
-                            Some(p) => {
-                                actual_args.push(p);
-                            }
-                            _ => {}
+                        if let Some(p) = pipe_out {
+                            actual_args.push(p);
                         };
 
                         // 填充默认值逻辑（新增）
@@ -512,7 +506,7 @@ fn handle_for(
                 for path in glob(&s).unwrap().filter_map(Result::ok) {
                     elist.push(path.to_string_lossy().to_string());
                 }
-                if elist.len() < 1 {
+                if elist.is_empty() {
                     return Err(RuntimeError::WildcardNotMatched(s));
                 }
                 // loop

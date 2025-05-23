@@ -304,7 +304,7 @@ pub fn init_config(env: &mut Environment) {
         eprintln!("Error while running introduction prelude");
     }
 
-    unsafe { PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").map_or(true, |p| p.is_truthy()) }
+    unsafe { PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy()) }
     // cmds
     init_cmds(env);
 }

@@ -15,6 +15,12 @@ const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
 #[derive(Debug, Clone)]
 pub struct State(u8, Option<Expression>);
 
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl State {
     pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100

@@ -23,7 +23,7 @@ pub fn eval_command(
         Expression::Index(..) => {
             let cmdx = cmd.as_ref().eval_mut(state, env, depth)?;
             // dbg!(&cmd, &cmdx);
-            return cmdx.apply(args.to_vec()).eval_apply(state, env, depth);
+            cmdx.apply(args.to_vec()).eval_apply(state, env, depth)
         }
         // 符号
         // string like cmd: ./abc
@@ -33,7 +33,7 @@ pub fn eval_command(
                 Some(cmd_alias) => {
                     // dbg!(&cmd_alias.type_name());
                     if !args.is_empty() {
-                        return match cmd_alias {
+                        match cmd_alias {
                             Expression::Command(cmd_name, cmd_args) => {
                                 cmd_args.as_ref().clone().append(&mut args.to_vec());
                                 handle_command(
@@ -58,7 +58,7 @@ pub fn eval_command(
                                 expected: "Command or Builtin".into(),
                                 found: cmd_alias.type_name(),
                             }),
-                        };
+                        }
                     } else {
                         cmd_alias.eval_apply(state, env, depth)
                     }
@@ -77,10 +77,10 @@ pub fn eval_command(
             }
         }
         e => {
-            return Err(RuntimeError::TypeError {
+            Err(RuntimeError::TypeError {
                 expected: "Symbol".to_string(),
                 found: e.type_name(),
-            });
+            })
         }
     }
 }

@@ -163,9 +163,9 @@ impl Add for Expression {
                 "+".into(),
                 format!(
                     "Cannot add {}:{} and {}:{}",
-                    m.to_string(),
+                    m,
                     m.type_name(),
-                    n.to_string(),
+                    n,
                     n.type_name()
                 ),
             )),
@@ -309,9 +309,9 @@ impl Sub for Expression {
                 "-".into(),
                 format!(
                     "Cannot subtract {}:{} from {}:{}",
-                    m.to_string(),
+                    m,
                     m.type_name(),
-                    n.to_string(),
+                    n,
                     n.type_name()
                 ),
             )),
@@ -468,9 +468,9 @@ impl Mul for Expression {
                 "*".into(),
                 format!(
                     "Cannot multiply {}:{} and {}:{}",
-                    m.to_string(),
+                    m,
                     m.type_name(),
-                    n.to_string(),
+                    n,
                     n.type_name()
                 ),
             )),
@@ -553,9 +553,9 @@ impl Div for Expression {
                 "/".into(),
                 format!(
                     "Cannot divide {}:{} by {}:{}",
-                    m.to_string(),
+                    m,
                     m.type_name(),
-                    n.to_string(),
+                    n,
                     n.type_name()
                 ),
             )),

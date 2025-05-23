@@ -423,7 +423,7 @@ fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::String(cmd) => {
             if !cmd.is_empty() {
                 println!("  >> Evaling: \x1b[38;5;208m\x1b[1m{}\x1b[m\x1b[0m", cmd);
-                parse_and_eval(&cmd, env);
+                parse_and_eval(cmd, env);
             }
             Ok(Expression::None)
         }

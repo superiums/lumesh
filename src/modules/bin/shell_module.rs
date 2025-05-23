@@ -27,7 +27,9 @@ pub fn get() -> Expression {
         String::from("license") => Expression::String("APACHE-2.0".to_string()),
         String::from("prelude") => {
             // Home directory + .lumesh-prelude
-            let prelude_path = if let Some(home_dir) = dirs::home_dir() {
+            
+
+            if let Some(home_dir) = dirs::home_dir() {
                 let prelude_path = home_dir.join(".lumesh-prelude");
                 if prelude_path.exists() {
                     Expression::String(prelude_path.to_str().unwrap().to_string())
@@ -36,9 +38,7 @@ pub fn get() -> Expression {
                 }
             } else {
                 Expression::None
-            };
-
-            prelude_path
+            }
         }
     })
     .into()

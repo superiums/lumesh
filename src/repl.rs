@@ -38,7 +38,7 @@ const RESET: &str = "\x1b[0m";
 
 pub fn run_repl(env: &mut Environment) {
     match env.get("LUME_WELCOME") {
-        Some(wel) => println!("{}", wel.to_string()),
+        Some(wel) => println!("{}", wel),
         _ => println!("Welcome to Lumesh {}", env!("CARGO_PKG_VERSION")),
     }
     // init_config(env);
@@ -130,34 +130,28 @@ pub fn run_repl(env: &mut Environment) {
     };
 
     let hotkey_config = env.get("LUME_HOT_KEYS");
-    match hotkey_config {
-        Some(Expression::Map(keys)) => {
-            let mut rl_unlocked = rl.lock().unwrap();
-            for (k, cmd) in keys.iter() {
-                if let Some(c) = k.chars().next() {
-                    rl_unlocked.bind_sequence(
-                        KeyEvent::new(c, Modifiers::from_bits_retain(modifier)),
-                        LumeKeyHandler::new(cmd.to_string()),
-                    );
-                }
+    if let Some(Expression::Map(keys)) = hotkey_config {
+        let mut rl_unlocked = rl.lock().unwrap();
+        for (k, cmd) in keys.iter() {
+            if let Some(c) = k.chars().next() {
+                rl_unlocked.bind_sequence(
+                    KeyEvent::new(c, Modifiers::from_bits_retain(modifier)),
+                    LumeKeyHandler::new(cmd.to_string()),
+                );
             }
         }
-        _ => {}
     }
     // abbr
     let abbr = env.get("LUME_ABBREVIATIONS");
-    match abbr {
-        Some(Expression::HMap(ab)) => {
-            let abmap = ab
-                .iter()
-                .map(|m| (m.0.to_string(), m.1.to_string()))
-                .collect::<HashMap<String, String>>();
-            rl.lock().unwrap().bind_sequence(
-                KeyEvent::new(' ', Modifiers::NONE),
-                LumeAbbrHandler::new(abmap),
-            );
-        }
-        _ => {}
+    if let Some(Expression::HMap(ab)) = abbr {
+        let abmap = ab
+            .iter()
+            .map(|m| (m.0.to_string(), m.1.to_string()))
+            .collect::<HashMap<String, String>>();
+        rl.lock().unwrap().bind_sequence(
+            KeyEvent::new(' ', Modifiers::NONE),
+            LumeAbbrHandler::new(abmap),
+        );
     }
 
     // main loop

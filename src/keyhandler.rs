@@ -46,14 +46,11 @@ impl ConditionalEventHandler for LumeAbbrHandler {
         if ctx.line().contains(' ') {
             return None;
         }
-        match self.abbrs.get(ctx.line()) {
-            Some(ab) => Some(Cmd::Replace(
+        self.abbrs.get(ctx.line()).map(|ab| Cmd::Replace(
                 // rustyline::Movement::BackwardWord(1, Word::Big),
                 Movement::WholeBuffer,
                 Some(ab.to_owned() + " "),
-            )),
-            None => None,
-        }
+            ))
     }
 }
 // move one world

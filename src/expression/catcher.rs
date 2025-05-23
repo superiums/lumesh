@@ -20,7 +20,8 @@ pub fn catch_error(
             Some(deel) => match deel.as_ref() {
                 Expression::Symbol(..) | Expression::Lambda(..) | Expression::Function(..) => {
                     // dbg!(&deel.type_name());
-                    let deeled_result = deel
+                    
+                    deel
                         .as_ref()
                         .append_args(vec![Expression::from(b_tree_map! {
                             // String::from("type") => Expression::String(e.type_name()),
@@ -28,8 +29,7 @@ pub fn catch_error(
                             String::from("code") => Expression::Integer(Int::from(e.code())),
                             String::from("expr") => Expression::Quote(body.clone())
                         })])
-                        .eval_mut(state, env, depth);
-                    deeled_result
+                        .eval_mut(state, env, depth)
                 }
                 _ => deel.as_ref().eval_mut(state, env, depth),
             },

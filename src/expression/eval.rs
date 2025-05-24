@@ -288,23 +288,24 @@ impl Expression {
                                 current_val
                             })
                         }
-                        op if op.starts_with("__") => {
-                            if let Some(oper) = env.get(op) {
-                                let rs =
-                                    Expression::Apply(Rc::new(oper), Rc::new(vec![operand_eval]));
-                                return rs.eval_mut(state, env, depth + 1);
-                            }
-                            Err(RuntimeError::CustomError(format!(
-                                "custom operation {op:?} not defined"
-                            )))
-                        }
+
                         _ => Err(RuntimeError::CustomError(format!(
                             "Unknown unary operator: {op}"
                         ))),
                     };
                 }
                 // 特殊运算符
-
+                Self::CustomOp(op, operand) => {
+                    let operand_eval = operand.eval(env)?;
+                    if let Some(oper) = env.get(op) {
+                        let rs = Expression::Apply(Rc::new(oper), Rc::new(vec![operand_eval]));
+                        return rs.eval_mut(state, env, depth + 1);
+                    } else {
+                        return Err(RuntimeError::CustomError(format!(
+                            "custom operation {op:?} not defined"
+                        )));
+                    }
+                }
                 // 二元运算
                 Self::BinaryOp(operator, lhs, rhs) => {
                     break match operator.as_str() {

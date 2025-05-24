@@ -388,7 +388,7 @@ impl PrattParser {
                 // dbg!(&opx, &lhs);
                 Ok((
                     input.skip_n(1),
-                    Expression::CustomOp(opx.into(), Rc::new(lhs), false),
+                    Expression::CustomOp(opx.into(), Rc::new(lhs)),
                 ))
             }
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(

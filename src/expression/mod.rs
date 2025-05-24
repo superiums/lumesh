@@ -24,7 +24,7 @@ pub enum Expression {
     BinaryOp(SmallString<[u8; 3]>, Rc<Self>, Rc<Self>),
     Pipe(SmallString<[u8; 3]>, Rc<Self>, Rc<Self>),
     UnaryOp(SmallString<[u8; 3]>, Rc<Self>, bool),
-    CustomOp(SmallString<[u8; 10]>, Rc<Self>, bool),
+    CustomOp(SmallString<[u8; 10]>, Rc<Self>),
 
     // 基础类型保持原样
     Symbol(SmallString<[u8; 16]>),

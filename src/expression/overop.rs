@@ -6,6 +6,8 @@ use std::{
     rc::Rc,
 };
 
+use smallstr::SmallString;
+
 use crate::RuntimeError;
 
 use super::Expression;
@@ -141,13 +143,15 @@ impl Add for Expression {
                 // Ok(Self::Map(Rc::new(new_map)))
             }
             (Self::HMap(a), other) => {
-                Self::HMap(a).map_insert(other.to_string(), other)
+                Self::HMap(a).map_insert(SmallString::from(other.to_string()), other)
                 // let mut new_map = a.as_ref().clone();
                 // new_map.insert(other.to_string(), other); // Insert the other element
                 // Ok(Self::Map(Rc::new(new_map)))
             }
             (Self::Map(a), Self::Map(b)) => Self::Map(a).bmap_append(b),
-            (Self::Map(a), other) => Self::Map(a).map_insert(other.to_string(), other),
+            (Self::Map(a), other) => {
+                Self::Map(a).map_insert(SmallString::from(other.to_string()), other)
+            }
 
             // (Self::Map(mut a), Self::Integer(n)) => {
             //     a.insert(n.to_string(), Self::Integer(n));
@@ -279,9 +283,14 @@ impl Sub for Expression {
                 Ok(Self::from(a_map))
             }
 
-            (Self::HMap(a), Self::Symbol(key) | Self::String(key)) => {
+            (Self::HMap(a), Self::Symbol(key)) => {
                 let mut new_map = a.as_ref().clone();
                 new_map.remove(&key);
+                Ok(Self::from(new_map))
+            }
+            (Self::HMap(a), Self::String(key)) => {
+                let mut new_map = a.as_ref().clone();
+                new_map.remove(&SmallString::from(key));
                 Ok(Self::from(new_map))
             }
             // BMap
@@ -298,9 +307,14 @@ impl Sub for Expression {
                 Ok(Self::from(a_map))
             }
 
-            (Self::Map(a), Self::Symbol(key) | Self::String(key)) => {
+            (Self::Map(a), Self::Symbol(key)) => {
                 let mut new_map = a.as_ref().clone();
                 new_map.remove(&key);
+                Ok(Self::from(new_map))
+            }
+            (Self::Map(a), Self::String(key)) => {
+                let mut new_map = a.as_ref().clone();
+                new_map.remove(&SmallString::from(key));
                 Ok(Self::from(new_map))
             }
 

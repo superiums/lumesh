@@ -494,7 +494,7 @@ impl PrattParser {
                     Ok(name) => {
                         // 如果是命令, 则包装为字符串，命令应当明确用()包裹
                         let last = match rhs {
-                            Expression::Command(s, v) => Expression::Symbol(
+                            Expression::Command(s, v) => Expression::Symbol(SmallString::from(
                                 s.to_string()
                                     + " "
                                     + v.iter()
@@ -502,10 +502,13 @@ impl PrattParser {
                                         .collect::<Vec<String>>()
                                         .join(" ")
                                         .as_str(),
-                            ),
+                            )),
                             other => other,
                         };
-                        Ok(Expression::Assign(name.to_string(), Rc::new(last)))
+                        Ok(Expression::Assign(
+                            SmallString::from_str(name),
+                            Rc::new(last),
+                        ))
                     }
                     _ => {
                         // eprintln!("invalid left-hand-side: {:?}", lhs);
@@ -570,7 +573,7 @@ impl PrattParser {
                         Expression::List(elements) => elements
                             .as_ref()
                             .iter()
-                            .map(|e| e.to_symbol().map(|s| s.to_string()))
+                            .map(|e| e.to_symbol().map(|s| SmallString::from_str(s)))
                             .collect::<Result<SmallVec<_>, _>>(),
                         // 处理单个参数 (x)
                         // expr => match expr {
@@ -666,7 +669,7 @@ impl PrattParser {
                             other => other,
                         };
                         Ok(Expression::Assign(
-                            name.to_string(),
+                            SmallString::from_str(name),
                             Rc::new(Expression::Quote(Rc::new(last))),
                         ))
                     }
@@ -800,12 +803,12 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
 // 参数解析函数
 fn parse_param(
     input: Tokens<'_>,
-) -> IResult<Tokens<'_>, (String, Option<Expression>), SyntaxErrorKind> {
+) -> IResult<Tokens<'_>, (SmallString<[u8; 16]>, Option<Expression>), SyntaxErrorKind> {
     alt((
         // 带默认值的参数解析分支
         map(
             separated_pair(
-                parse_symbol_string,
+                parse_symbol_smallstring,
                 text("="),
                 // 限制只能解析基本类型表达式
                 parse_literal,
@@ -816,14 +819,21 @@ fn parse_param(
         //     (s, None, true)
         // }),
         // 普通参数解析分支
-        map(parse_symbol_string, |s| (s, None)), // , 1+2 also match first symbol, so failed in ) parser.
+        map(parse_symbol_smallstring, |s| (s, None)), // , 1+2 also match first symbol, so failed in ) parser.
     ))(input)
 }
 
 // 函数参数列表解析
 fn parse_param_list(
     input: Tokens<'_>,
-) -> IResult<Tokens<'_>, (Vec<(String, Option<Expression>)>, Option<String>), SyntaxErrorKind> {
+) -> IResult<
+    Tokens<'_>,
+    (
+        Vec<(SmallString<[u8; 16]>, Option<Expression>)>,
+        Option<SmallString<[u8; 16]>>,
+    ),
+    SyntaxErrorKind,
+> {
     let (input, _) = cut(text("("))(input).map_err(|_| {
         SyntaxErrorKind::failure(
             input.get_str_slice(),
@@ -844,7 +854,7 @@ fn parse_param_list(
     // }
     let (input, param_collector) = opt(preceded(
         opt(text(",")),
-        preceded(text("*"), parse_symbol_string),
+        preceded(text("*"), parse_symbol_smallstring),
     ))(input)?;
     // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; //允许可选回车
     // 如果还有其他字符，应报错
@@ -890,7 +900,7 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
     let (input, _) = text("fn")(input)?;
     // dbg!("---parse_fn_declare");
 
-    let (input, name) = parse_symbol_string(input).map_err(|_| {
+    let (input, name) = parse_symbol_smallstring(input).map_err(|_| {
         // eprintln!("mising fn name?");
         // dbg!(input, input.get_str_slice());
         SyntaxErrorKind::failure(
@@ -1017,11 +1027,18 @@ fn text_close<'a>(
 #[inline]
 fn parse_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     map(kind(TokenKind::Symbol), |t| {
-        Expression::Symbol(t.to_str(input.str).to_string())
+        Expression::Symbol(SmallString::from_str(t.to_str(input.str)))
     })(input)
 }
 fn parse_symbol_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
     map(kind(TokenKind::Symbol), |t| t.to_str(input.str).to_string())(input)
+}
+fn parse_symbol_smallstring(
+    input: Tokens<'_>,
+) -> IResult<Tokens<'_>, SmallString<[u8; 16]>, SyntaxErrorKind> {
+    map(kind(TokenKind::Symbol), |t| {
+        SmallString::from_str(t.to_str(input.str))
+    })(input)
 }
 
 #[inline]
@@ -1085,7 +1102,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     let (input, pairs) = separated_list0(
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
         separated_pair(
-            parse_symbol_string,
+            parse_symbol_smallstring,
             text(":"),
             alt((parse_literal, parse_symbol)),
         ),
@@ -1096,7 +1113,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     let (input, _) = text_close("}")(input)?;
     // let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
     // dbg!(&input);
-    let map: BTreeMap<String, Expression> = pairs.into_iter().collect();
+    let map: BTreeMap<SmallString<[u8; 16]>, Expression> = pairs.into_iter().collect();
     // Ok((input, Expression::Map(pairs)))
     Ok((input, Expression::from(map)))
 }
@@ -1392,7 +1409,7 @@ fn parse_loop_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxE
 // FOR循环解析
 fn parse_for_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("for")(input)?;
-    let (input, pattern) = parse_symbol_string(input)?; // 或更复杂的模式匹配
+    let (input, pattern) = parse_symbol_smallstring(input)?; // 或更复杂的模式匹配
     let (input, _) = text("in")(input)?;
     let (input, iterable) = parse_expr(input)?;
     let (input, body) = parse_block(input)?;
@@ -1462,7 +1479,7 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 // 别名解析逻辑
 fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("alias")(input)?;
-    let (input, symbol) = parse_symbol_string(input)?;
+    let (input, symbol) = parse_symbol_smallstring(input)?;
     let (input, _) = text("=")(input)?;
     let (input, expr) = parse_expr_with_single_cmd(input)?;
     // dbg!(&expr);
@@ -1471,7 +1488,7 @@ fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("let")(input)?;
-    let (input, symbol) = parse_symbol_string(input)?;
+    let (input, symbol) = parse_symbol_smallstring(input)?;
     let (input, _) = text(":=")(input)?; // 使用:=作为延迟赋值符号
     let (input, expr) = parse_expr_with_single_cmd(input)?;
     // dbg!(&expr);
@@ -1488,7 +1505,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     let (input, symbols) = separated_list0(
         text(","),
         alt((
-            parse_symbol_string,
+            parse_symbol_smallstring,
             parse_operator,
             parse_custom_postfix_operator,
         )),
@@ -1518,15 +1535,18 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
                 // };
                 // 如果是命令, 则包装为字符串，命令应当明确用()包裹
                 let last = match e[0].clone() {
-                    Expression::Command(s, v) => Expression::Symbol(
-                        s.to_string()
-                            + " "
-                            + v.iter()
+                    Expression::Command(s, v) => {
+                        let mut x = SmallString::from(s.to_string());
+                        x.push(' ');
+                        x.push_str(
+                            v.iter()
                                 .map(|e| e.to_string())
                                 .collect::<Vec<String>>()
                                 .join(" ")
                                 .as_str(),
-                    ),
+                        );
+                        Expression::Symbol(x)
+                    }
                     other => other,
                 };
                 return Ok((
@@ -1560,7 +1580,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
 
 fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("del")(input)?;
-    let (input, symbol) = parse_symbol_string(input).map_err(|_| {
+    let (input, symbol) = parse_symbol_smallstring(input).map_err(|_| {
         SyntaxErrorKind::failure(
             input.get_str_slice(),
             "symbol",
@@ -1571,16 +1591,18 @@ fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     Ok((input, Expression::Del(symbol)))
 }
 
-fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
+fn parse_operator(
+    input: Tokens<'_>,
+) -> IResult<Tokens<'_>, SmallString<[u8; 16]>, SyntaxErrorKind> {
     map(kind(TokenKind::Operator), |t| {
-        t.to_str(input.str).to_string()
+        SmallString::from_str(t.to_str(input.str))
     })(input)
 }
 fn parse_custom_postfix_operator(
     input: Tokens<'_>,
-) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
+) -> IResult<Tokens<'_>, SmallString<[u8; 16]>, SyntaxErrorKind> {
     map(kind(TokenKind::OperatorPostfix), |t| {
-        t.to_str(input.str).to_string()
+        SmallString::from_str(t.to_str(input.str))
     })(input)
 }
 // 模式匹配解析（简化示例）

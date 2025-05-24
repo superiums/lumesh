@@ -2,6 +2,7 @@ use super::builtin::Builtin;
 use super::{CatchType, Environment, Expression, Int};
 use crate::RuntimeError;
 // use num_traits::pow;
+use smallstr::SmallString;
 use std::fmt;
 use std::rc::Rc;
 use terminal_size::{Width, terminal_size};
@@ -295,7 +296,16 @@ macro_rules! fmt_shared {
                 write!($f, "}}")
             }
 
-            Self::Apply(g, args)|Self::Command(g, args) => write!(
+            Self::Apply(g, args) => write!(
+                $f,
+                "{:?} {}",
+                g,
+                args.iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<String>>()
+                    .join(" ")
+            ),
+            Self::Command(g, args) => write!(
                 $f,
                 "{:?} {}",
                 g,
@@ -349,7 +359,7 @@ struct TableRow<'a> {
 
 impl<'a> TableRow<'a> {
     /// 智能分Row算法
-    fn split_into_rows(&self) -> (Vec<Vec<String>>, Option<Vec<String>>) {
+    fn split_into_rows(&self) -> (Vec<Vec<String>>, Option<Vec<SmallString<[u8; 16]>>>) {
         let mut result = vec![];
         let mut heads = vec![];
         let mut current_row = vec![];
@@ -361,16 +371,22 @@ impl<'a> TableRow<'a> {
                 heads = a
                     .iter()
                     .enumerate()
-                    .map(|(i, _)| format!("C{}", i))
+                    .map(|(i, _)| SmallString::from(format!("C{}", i)))
                     .collect();
                 a.len()
             }
             Some(Expression::HMap(a)) => {
-                heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
+                heads = a
+                    .iter()
+                    .map(|(k, _)| k.to_owned())
+                    .collect::<Vec<SmallString<[u8; 16]>>>();
                 a.keys().len()
             }
             Some(Expression::Map(a)) => {
-                heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
+                heads = a
+                    .iter()
+                    .map(|(k, _)| k.to_owned())
+                    .collect::<Vec<SmallString<[u8; 16]>>>();
                 a.keys().len()
             }
             _ => 0,

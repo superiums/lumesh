@@ -2,10 +2,11 @@ use std::rc::Rc;
 
 use crate::{Environment, Expression, RuntimeError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 
 pub fn get() -> Expression {
     Expression::from(hash_map! {
-        String::from("parse") => Expression::builtin("parse", |args, env| {
+       SmallString::from("parse") => Expression::builtin("parse", |args, env| {
             super::check_exact_args_len("parse", args, 1)?;
             let expr = args[0].eval(env)?;
             Ok(match crate::parse(&expr.to_string()) {
@@ -14,22 +15,22 @@ pub fn get() -> Expression {
             })
         }, "parse an expression"),
 
-        String::from("quote") => Expression::builtin("quote", |args, _env| {
+       SmallString::from("quote") => Expression::builtin("quote", |args, _env| {
             super::check_exact_args_len("quote", args, 1)?;
             Ok(Expression::Quote(Rc::new(args[0].clone())))
         }, "quote an expression"),
 
-        // String::from("eval") => Expression::builtin("eval", |args, env| {
+        //SmallString::from("eval") => Expression::builtin("eval", |args, env| {
         //     let mut new_env = env.clone();
         //     Ok(args[0].eval(env)?.eval(&mut new_env)?)
         // }, "evaluate an expression without changing the environment"),
 
-        // String::from("exec") => Expression::builtin("exec", |args, env| {
+        //SmallString::from("exec") => Expression::builtin("exec", |args, env| {
         //     Ok(args[0].eval(env)?.eval(env)?)
         // }, "evaluate an expression in the current environment"),
 
         // Evaluate a file in the current environment.
-        // String::from("include") => Expression::builtin("include", |args, env| {
+        //SmallString::from("include") => Expression::builtin("include", |args, env| {
         //     super::check_exact_args_len("include", &args, 1)?;
 
         //     let cwd = std::env::current_dir()?;
@@ -50,7 +51,7 @@ pub fn get() -> Expression {
         // }, "evaluate a file in the current environment"),
 
         // Change the current working directory.
-        // String::from("cd") => Expression::builtin("cd", |args, env| {
+        //SmallString::from("cd") => Expression::builtin("cd", |args, env| {
         //     super::check_exact_args_len("cd", &args, 1)?;
         //     let cwd = std::env::current_dir()?;
         //     let path = cwd.join(args[0].eval(env)?.to_string());
@@ -64,13 +65,13 @@ pub fn get() -> Expression {
         // }, "change the current working directory"),
 
         // Get the current working directory.
-        // String::from("cwd") => Expression::builtin("cwd", |_args, env| {
+        //SmallString::from("cwd") => Expression::builtin("cwd", |_args, env| {
         //     let path = std::env::current_dir()?;
         //     Ok(Expression::String(path.))
         // }, "get the current working directory"),
 
         // Import a file (evaluate it in a new environment).
-        // String::from("import") => Expression::builtin("import", |args, env| {
+        //SmallString::from("import") => Expression::builtin("import", |args, env| {
         //     super::check_exact_args_len("import", &args, 1)?;
         //     let cwd = std::env::current_dir()?;
         //     let path = cwd.join(args[0].eval(env)?.to_string());
@@ -90,12 +91,12 @@ pub fn get() -> Expression {
         //     }
         // }, "import a file (evaluate it in a new environment)"),
 
-        String::from("env") => Expression::builtin("env", |_args, env| {
+       SmallString::from("env") => Expression::builtin("env", |_args, env| {
             Ok(Expression::from(env.clone()))
         }, "get the current environment as a map"),
-        String::from("vars") => Expression::builtin("vars", vars, "get a table of the defined variables"),
+       SmallString::from("vars") => Expression::builtin("vars", vars, "get a table of the defined variables"),
 
-        String::from("set") => Expression::builtin("set", |args, env| {
+       SmallString::from("set") => Expression::builtin("set", |args, env| {
             super::check_exact_args_len("set", args, 2)?;
             let name = args[0].to_string();
             let expr = args[1].clone();
@@ -103,20 +104,20 @@ pub fn get() -> Expression {
             Ok(Expression::None)
         }, "define a variable in the current environment"),
 
-        String::from("unset") => Expression::builtin("unset", |args, env| {
+       SmallString::from("unset") => Expression::builtin("unset", |args, env| {
             super::check_exact_args_len("unset", args, 1)?;
             let name = args[0].to_string();
             env.undefine(&name);
             Ok(Expression::None)
         }, "undefine a variable in the current environment"),
 
-        String::from("defined") => Expression::builtin("defined", |args, env| {
+       SmallString::from("defined") => Expression::builtin("defined", |args, env| {
             super::check_exact_args_len("defined", args, 1)?;
             let name = args[0].to_string();
             Ok(Expression::Boolean(env.is_defined(&name)))
         }, "check if a variable is defined in the current environment"),
 
-        String::from("err-codes") =>Expression::builtin("err-codes", |_,_| Ok(RuntimeError::codes()), "display runtime error codes"),
+       SmallString::from("err-codes") =>Expression::builtin("err-codes", |_,_| Ok(RuntimeError::codes()), "display runtime error codes"),
 
     })
 }

@@ -1,12 +1,14 @@
+use smallstr::SmallString;
+
 use super::Expression;
 use std::cell::RefCell;
 use std::collections::HashMap;
 
 thread_local! {
-    static ALIAS_MAP: RefCell<HashMap<String, Expression>> = RefCell::new(HashMap::new());
+    static ALIAS_MAP: RefCell<HashMap<SmallString<[u8; 16]>, Expression>> = RefCell::new(HashMap::new());
 }
 
-pub fn set_alias(name: String, expression: Expression) {
+pub fn set_alias(name: SmallString<[u8; 16]>, expression: Expression) {
     ALIAS_MAP.with(|map| {
         map.borrow_mut().insert(name, expression);
     });

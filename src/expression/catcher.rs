@@ -4,6 +4,7 @@ use crate::{Environment, RuntimeError};
 
 use super::{CatchType, Expression, Int, eval::State};
 use common_macros::b_tree_map;
+use smallstr::SmallString;
 // use common_macros::hash_map;
 
 pub fn catch_error(
@@ -24,9 +25,9 @@ pub fn catch_error(
                     deel.as_ref()
                         .append_args(vec![Expression::from(b_tree_map! {
                             // String::from("type") => Expression::String(e.type_name()),
-                            String::from("msg") => Expression::String(e.to_string()),
-                            String::from("code") => Expression::Integer(Int::from(e.code())),
-                            String::from("expr") => Expression::Quote(body.clone())
+                            SmallString::from("msg") => Expression::String(e.to_string()),
+                            SmallString::from("code") => Expression::Integer(Int::from(e.code())),
+                            SmallString::from("expr") => Expression::Quote(body.clone())
                         })])
                         .eval_mut(state, env, depth)
                 }

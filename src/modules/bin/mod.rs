@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, HashMap};
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError, parse_and_eval};
 use common_macros::hash_map;
+use smallstr::SmallString;
 
 #[cfg(feature = "chess-engine")]
 mod chess_module;
@@ -26,63 +27,63 @@ mod sys_module;
 mod time_module;
 mod widget_module;
 
-pub fn get_module_map() -> HashMap<String, Expression> {
+pub fn get_module_map() -> HashMap<SmallString<[u8; 16]>, Expression> {
     hash_map! {
-        String::from("log") => log_module::get(),
-        String::from("math") => math_module::get(),
-        String::from("dict") => dict_module::get(),
-        String::from("version") => shell_module::get(),
-        // String::from("err") => err_module::get(),
-        String::from("os") => os_module::get(),
-        String::from("widget") => widget_module::get(),
-        String::from("time") => time_module::get(),
-        String::from("rand") => rand_module::get(),
-        // String::from("fn") => fn_module::get(),
-        String::from("console") => console_module::get(),
-        String::from("fmt") => fmt_module::get(),
-        String::from("parse") => parse_module::get(),
-        String::from("fs") => fs_module::get(),
-        String::from("string") => string_module::get(),
-        String::from("regex") => regex_module::get(),
-        String::from("list") => list_module::get(),
-        String::from("sys") => sys_module::get(),
+       SmallString::from("log") => log_module::get(),
+       SmallString::from("math") => math_module::get(),
+       SmallString::from("dict") => dict_module::get(),
+       SmallString::from("version") => shell_module::get(),
+        //SmallString::from("err") => err_module::get(),
+       SmallString::from("os") => os_module::get(),
+       SmallString::from("widget") => widget_module::get(),
+       SmallString::from("time") => time_module::get(),
+       SmallString::from("rand") => rand_module::get(),
+        //SmallString::from("fn") => fn_module::get(),
+       SmallString::from("console") => console_module::get(),
+       SmallString::from("fmt") => fmt_module::get(),
+       SmallString::from("parse") => parse_module::get(),
+       SmallString::from("fs") => fs_module::get(),
+       SmallString::from("string") => string_module::get(),
+       SmallString::from("regex") => regex_module::get(),
+       SmallString::from("list") => list_module::get(),
+       SmallString::from("sys") => sys_module::get(),
 
-            String::from("exit") => Expression::builtin(
+           SmallString::from("exit") => Expression::builtin(
                 "exit",
                 exit,
                 "exit the shell",
             ),
-            String::from("cd") => Expression::builtin("cd", cd, "change directories"),
-            String::from("tap") => Expression::builtin("tap", tap,"print and return result"),
-            String::from("print") => Expression::builtin("print", print,"print the arguments without a newline"),
-            String::from("println") => Expression::builtin("println", println, "print the arguments and a newline"),
-            String::from("eprint") => Expression::builtin("eprintln", eprint, "print to stderr"),
-            String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr"),
-            String::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
-            String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
-            String::from("input") => Expression::builtin("input", input, "get user input"),
+           SmallString::from("cd") => Expression::builtin("cd", cd, "change directories"),
+           SmallString::from("tap") => Expression::builtin("tap", tap,"print and return result"),
+           SmallString::from("print") => Expression::builtin("print", print,"print the arguments without a newline"),
+           SmallString::from("println") => Expression::builtin("println", println, "print the arguments and a newline"),
+           SmallString::from("eprint") => Expression::builtin("eprintln", eprint, "print to stderr"),
+           SmallString::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr"),
+           SmallString::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
+           SmallString::from("report") => Expression::builtin("report", report, "default function for reporting values"),
+           SmallString::from("input") => Expression::builtin("input", input, "get user input"),
 
-            String::from("type") => Expression::builtin("type", get_type, "get type of data"),
-            String::from("str") => Expression::builtin("str", str, "format an expression to a string"),
-            String::from("int") => Expression::builtin("int", int, "convert a float or string to an int"),
+           SmallString::from("type") => Expression::builtin("type", get_type, "get type of data"),
+           SmallString::from("str") => Expression::builtin("str", str, "format an expression to a string"),
+           SmallString::from("int") => Expression::builtin("int", int, "convert a float or string to an int"),
 
-            String::from("len") => Expression::builtin("len", len, "get the length of an expression"),
-            String::from("insert") => Expression::builtin("insert", insert, "insert an item into a map or list"),
-            String::from("rev") => Expression::builtin("rev", rev, "reverse a string"),
-            String::from("flatten") => Expression::builtin("flatten", flatten_wrapper, "flatten a list or map"),
-            String::from("where") => Expression::builtin("where", filter_rows,
+           SmallString::from("len") => Expression::builtin("len", len, "get the length of an expression"),
+           SmallString::from("insert") => Expression::builtin("insert", insert, "insert an item into a map or list"),
+           SmallString::from("rev") => Expression::builtin("rev", rev, "reverse a string"),
+           SmallString::from("flatten") => Expression::builtin("flatten", flatten_wrapper, "flatten a list or map"),
+           SmallString::from("where") => Expression::builtin("where", filter_rows,
                 "filter rows in list of maps by condition"),
-            String::from("select") => Expression::builtin("select", select_columns,
+           SmallString::from("select") => Expression::builtin("select", select_columns,
                 "select columns from list of maps"),
 
-            String::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
-            String::from("evalstr") => Expression::builtin("evalstr", evalstr, "evaluate a string"),
-            String::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
-            // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
-            String::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
-            String::from("import") => Expression::builtin("import", import, "import a file (evaluate it in a new environment)"),
+           SmallString::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
+           SmallString::from("evalstr") => Expression::builtin("evalstr", evalstr, "evaluate a string"),
+           SmallString::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
+            //SmallString::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
+           SmallString::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
+           SmallString::from("import") => Expression::builtin("import", import, "import a file (evaluate it in a new environment)"),
 
-            String::from("help") => Expression::builtin("help", help, "display lib modules"),
+           SmallString::from("help") => Expression::builtin("help", help, "display lib modules"),
 
     }
 }
@@ -105,7 +106,7 @@ fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate
                     }
                     other => (item.0.clone(), other.clone()),
                 })
-                .collect::<HashMap<String, Expression>>(),
+                .collect::<HashMap<SmallString<[u8; 16]>, Expression>>(),
         ))
     }
 }
@@ -186,35 +187,32 @@ fn exit(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
 fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("cd", args, 1)?;
 
-    match args[0].eval(env)? {
-        Expression::Symbol(mut path) | Expression::String(mut path) => {
-            if path.starts_with("~") {
-                if let Some(home_dir) = dirs::home_dir() {
-                    path = path.replace("~", home_dir.to_string_lossy().as_ref());
-                }
-            }
-            std::env::set_current_dir(&path).map_err(|e| {
-                crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
-                    "PermissionDenied" => {
-                        format!("you don't have permission to read directory {:?}", &path)
-                    }
-                    "NotADirectory" => {
-                        format!("{:?} is not a directory", &path)
-                    }
-                    _ => format!("could not change directory to {:?}\n  reason: {}", &path, e),
-                })
-            })?;
+    let mut path = match args[0].eval(env)? {
+        Expression::Symbol(path) => path.to_string(),
+        Expression::String(path) => path,
 
-            // env.set_cwd(new_cwd.into_os_string().into_string().unwrap());
-            Ok(Expression::None)
-        }
+        other => other.to_string(),
+    };
 
-        other => {
-            // Try to convert the argument to a string
-            let path = other.to_string();
-            cd(&vec![Expression::String(path)], env)
+    if path.starts_with("~") {
+        if let Some(home_dir) = dirs::home_dir() {
+            path = path.replace("~", home_dir.to_string_lossy().as_ref());
         }
     }
+    std::env::set_current_dir(&path).map_err(|e| {
+        crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
+            "PermissionDenied" => {
+                format!("you don't have permission to read directory {:?}", &path)
+            }
+            "NotADirectory" => {
+                format!("{:?} is not a directory", &path)
+            }
+            _ => format!("could not change directory to {:?}\n  reason: {}", &path, e),
+        })
+    })?;
+
+    // env.set_cwd(new_cwd.into_os_string().into_string().unwrap());
+    Ok(Expression::None)
 }
 
 fn get_type(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
@@ -341,12 +339,12 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     match (&mut arr, &idx) {
         (Expression::HMap(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();
-            result.insert(key.clone(), val);
+            result.insert(SmallString::from_str(key.as_str()), val);
             Ok(Expression::from(result))
         }
         (Expression::Map(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();
-            result.insert(key.clone(), val);
+            result.insert(SmallString::from_str(key.as_str()), val);
             Ok(Expression::from(result))
         }
         (Expression::List(exprs), Expression::Integer(i)) => {
@@ -387,9 +385,8 @@ fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
         Expression::HMap(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::Map(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::List(list) => Ok(Expression::Integer(list.as_ref().len() as Int)),
-        Expression::Symbol(x) | Expression::String(x) => {
-            Ok(Expression::Integer(x.chars().count() as Int))
-        }
+        Expression::Symbol(x) => Ok(Expression::Integer(x.chars().count() as Int)),
+        Expression::String(x) => Ok(Expression::Integer(x.chars().count() as Int)),
         Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
 
         otherwise => Err(LmError::CustomError(format!(
@@ -569,10 +566,8 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
                     .iter()
                     .filter_map(|col| {
                         // dbg!(&col, &row_map.get(col));
-                        row_map
-                            .as_ref()
-                            .get(col)
-                            .map(|val| (col.clone(), val.clone()))
+                        let k = SmallString::from_str(col.as_str());
+                        row_map.as_ref().get(&k).map(|val| (k, val.clone()))
                     })
                     .collect::<BTreeMap<_, _>>();
 
@@ -621,7 +616,7 @@ fn check_exact_args_len(
         //     },
         // )
         Err(RuntimeError::ArgumentMismatch {
-            name: name.to_string(),
+            name: SmallString::from(name.to_string()),
             expected: expected_len,
             received: args.len(),
         })
@@ -652,7 +647,8 @@ fn check_exact_args_len(
 
 pub fn get_string_arg(expr: Expression) -> Result<String, LmError> {
     match expr {
-        Expression::Symbol(s) | Expression::String(s) => Ok(s),
+        Expression::Symbol(s) => Ok(s.into_string()),
+        Expression::String(s) => Ok(s),
         _ => Err(LmError::CustomError("expected string".to_string())),
     }
 }

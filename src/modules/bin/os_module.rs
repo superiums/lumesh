@@ -1,8 +1,8 @@
 use common_macros::hash_map;
 
-use os_info::Type;
-
 use crate::Expression;
+use os_info::Type;
+use smallstr::SmallString;
 
 fn get_os_family(t: &Type) -> String {
     match t {
@@ -51,9 +51,9 @@ pub fn get() -> Expression {
     let os_type = os.os_type();
 
     (hash_map! {
-        String::from("name") => Expression::String(os_type.to_string()),
-        String::from("family") => get_os_family(&os_type).into(),
-        String::from("version") => os.version().to_string().into(),
+       SmallString::from("name") => Expression::String(os_type.to_string()),
+       SmallString::from("family") => get_os_family(&os_type).into(),
+       SmallString::from("version") => os.version().to_string().into(),
 
     })
     .into()

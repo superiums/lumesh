@@ -1,12 +1,13 @@
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
 use rand::{Rng, distributions::Uniform, prelude::SliceRandom};
+use smallstr::SmallString;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("int") => Expression::builtin("int", int, "get a random integer between two numbers (exclusive)"),
-        String::from("choose") => Expression::builtin("choose", choose, "choose a random item in a list"),
-        String::from("shuffle") => Expression::builtin("shuffle", shuffle, "shuffle a list randomly"),
+       SmallString::from("int") => Expression::builtin("int", int, "get a random integer between two numbers (exclusive)"),
+       SmallString::from("choose") => Expression::builtin("choose", choose, "choose a random item in a list"),
+       SmallString::from("shuffle") => Expression::builtin("shuffle", shuffle, "shuffle a list randomly"),
     })
     .into()
 }

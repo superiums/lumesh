@@ -154,7 +154,7 @@ impl Expression {
                         if STRICT && env.has(name)
                         // && env.get("STRICT") == Some(Expression::Boolean(true))
                         {
-                            return Err(RuntimeError::Redeclaration(name.to_string()));
+                            return Err(RuntimeError::Redeclaration(name.to_owned()));
                         }
                     }
                     if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
@@ -781,14 +781,14 @@ impl Expression {
 
             // 处理字典键访问
             Expression::HMap(map) => {
-                let key = r.to_string(); // 自动转换Symbol/字符串
+                let key = SmallString::from(r.to_string()); // 自动转换Symbol/字符串
                 map.as_ref()
                     .get(&key)
                     .cloned()
                     .ok_or(RuntimeError::KeyNotFound(key))
             }
             Expression::Map(map) => {
-                let key = r.to_string(); // 自动转换Symbol/字符串
+                let key = SmallString::from(r.to_string()); // 自动转换Symbol/字符串
                 map.as_ref()
                     .get(&key)
                     .cloned()
@@ -926,7 +926,11 @@ impl Expression {
     }
 
     // 映射插入示例
-    pub fn map_insert(&self, key: String, value: Self) -> Result<Expression, RuntimeError> {
+    pub fn map_insert(
+        &self,
+        key: SmallString<[u8; 16]>,
+        value: Self,
+    ) -> Result<Expression, RuntimeError> {
         match self {
             Self::HMap(map) => {
                 let mut new_map = HashMap::new();
@@ -949,7 +953,7 @@ impl Expression {
 
     pub fn map_append(
         &self,
-        other: Rc<HashMap<String, Expression>>,
+        other: Rc<HashMap<SmallString<[u8; 16]>, Expression>>,
     ) -> Result<Expression, RuntimeError> {
         match self {
             Self::HMap(map) => {
@@ -972,7 +976,7 @@ impl Expression {
     }
     pub fn bmap_append(
         &self,
-        other: Rc<BTreeMap<String, Expression>>,
+        other: Rc<BTreeMap<SmallString<[u8; 16]>, Expression>>,
     ) -> Result<Expression, RuntimeError> {
         match self {
             Self::HMap(map) => {

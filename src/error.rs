@@ -351,31 +351,31 @@ pub enum RuntimeError {
     #[error("{0}")]
     CustomError(String),
     #[error("redeclaration of `{0}`")]
-    Redeclaration(String),
+    Redeclaration(SmallString<[u8; 16]>),
     #[error("undeclared variable: {0}")]
     UndeclaredVariable(SmallString<[u8; 16]>),
     #[error("no matching branch while evaluating `{0}`")]
     NoMatchingBranch(String),
     #[error("too many arguments for function `{name}`: max {max}, found {received}")]
     TooManyArguments {
-        name: String,
+        name: SmallString<[u8; 16]>,
         max: usize,
         received: usize,
     },
     #[error("arguments mismatch for function `{name}`: expected {expected}, found {received}")]
     ArgumentMismatch {
-        name: String,
+        name: SmallString<[u8; 16]>,
         expected: usize,
         received: usize,
     },
     #[error("invalid default value `{2}` for argument `{1}` in function `{0}`")]
-    InvalidDefaultValue(String, String, Expression),
+    InvalidDefaultValue(SmallString<[u8; 16]>, String, Expression),
     #[error("invalid operator `{0}`")]
     InvalidOperator(SmallString<[u8; 3]>),
     #[error("index {index} out of bounds (length {len})")]
     IndexOutOfBounds { index: Int, len: usize },
     #[error("key `{0}` not found in map")]
-    KeyNotFound(String),
+    KeyNotFound(SmallString<[u8; 16]>),
     #[error("type error: expected {expected}, found {found}")]
     TypeError { expected: String, found: String },
     #[error("illegal return outside function")]
@@ -426,25 +426,25 @@ impl RuntimeError {
 
     pub fn codes() -> Expression {
         Expression::from(b_tree_map! {
-            String::from("cannot_apply") => Expression::Integer(Self::ERROR_CODE_CANNOT_APPLY),
-            String::from("symbol_not_defined") => Expression::Integer(Self::ERROR_CODE_SYMBOL_NOT_DEFINED),
-            String::from("command_failed") => Expression::Integer(Self::ERROR_CODE_COMMAND_FAILED),
-            String::from("for_non_list") => Expression::Integer(Self::ERROR_CODE_FOR_NON_LIST),
-            String::from("recursion_depth") => Expression::Integer(Self::ERROR_CODE_RECURSION_DEPTH),
-            String::from("permission_denied") => Expression::Integer(Self::ERROR_CODE_PERMISSION_DENIED),
-            String::from("program_not_found") => Expression::Integer(Self::ERROR_CODE_PROGRAM_NOT_FOUND),
-            String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CUSTOM_ERROR),
-            String::from("redeclaration") => Expression::Integer(Self::ERROR_CODE_REDECLARATION),
-            String::from("undeclared_variable") => Expression::Integer(Self::ERROR_CODE_UNDECLARED_VARIABLE),
-            String::from("no_matching_branch") => Expression::Integer(Self::ERROR_CODE_NO_MATCHING_BRANCH),
-            String::from("too_many_arguments") => Expression::Integer(Self::ERROR_CODE_TOO_MANY_ARGUMENTS),
-            String::from("argument_mismatch") => Expression::Integer(Self::ERROR_CODE_ARGUMENT_MISMATCH),
-            String::from("invalid_default_value") => Expression::Integer(Self::ERROR_CODE_INVALID_DEFAULT_VALUE),
-            String::from("invalid_operator") => Expression::Integer(Self::ERROR_CODE_INVALID_OPERATOR),
-            String::from("index_out_of_bounds") => Expression::Integer(Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS),
-            String::from("key_not_found") => Expression::Integer(Self::ERROR_CODE_KEY_NOT_FOUND),
-            String::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
-            String::from("early_return") => Expression::Integer(Self::ERROR_CODE_EARLY_RETURN),
+            SmallString::from("cannot_apply") => Expression::Integer(Self::ERROR_CODE_CANNOT_APPLY),
+            SmallString::from("symbol_not_defined") => Expression::Integer(Self::ERROR_CODE_SYMBOL_NOT_DEFINED),
+            SmallString::from("command_failed") => Expression::Integer(Self::ERROR_CODE_COMMAND_FAILED),
+            SmallString::from("for_non_list") => Expression::Integer(Self::ERROR_CODE_FOR_NON_LIST),
+            SmallString::from("recursion_depth") => Expression::Integer(Self::ERROR_CODE_RECURSION_DEPTH),
+            SmallString::from("permission_denied") => Expression::Integer(Self::ERROR_CODE_PERMISSION_DENIED),
+            SmallString::from("program_not_found") => Expression::Integer(Self::ERROR_CODE_PROGRAM_NOT_FOUND),
+            SmallString::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CUSTOM_ERROR),
+            SmallString::from("redeclaration") => Expression::Integer(Self::ERROR_CODE_REDECLARATION),
+            SmallString::from("undeclared_variable") => Expression::Integer(Self::ERROR_CODE_UNDECLARED_VARIABLE),
+            SmallString::from("no_matching_branch") => Expression::Integer(Self::ERROR_CODE_NO_MATCHING_BRANCH),
+            SmallString::from("too_many_arguments") => Expression::Integer(Self::ERROR_CODE_TOO_MANY_ARGUMENTS),
+            SmallString::from("argument_mismatch") => Expression::Integer(Self::ERROR_CODE_ARGUMENT_MISMATCH),
+            SmallString::from("invalid_default_value") => Expression::Integer(Self::ERROR_CODE_INVALID_DEFAULT_VALUE),
+            SmallString::from("invalid_operator") => Expression::Integer(Self::ERROR_CODE_INVALID_OPERATOR),
+            SmallString::from("index_out_of_bounds") => Expression::Integer(Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS),
+            SmallString::from("key_not_found") => Expression::Integer(Self::ERROR_CODE_KEY_NOT_FOUND),
+            SmallString::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
+            SmallString::from("early_return") => Expression::Integer(Self::ERROR_CODE_EARLY_RETURN),
         })
     }
 
@@ -482,10 +482,10 @@ impl LmError {
     pub const ERROR_CODE_CS_ERROR: Int = 103;
     pub fn codes() -> Expression {
         Expression::from(b_tree_map! {
-            String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
-            String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
-            String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
-            String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
+            SmallString::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
+            SmallString::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
+            SmallString::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
+            SmallString::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
         })
     }
     pub fn code(&self) -> Int {

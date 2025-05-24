@@ -1,48 +1,49 @@
 use super::{get_integer_arg, get_string_arg, get_string_args};
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 
 pub fn get() -> Expression {
     (hash_map! {
         // justify
-        String::from("is-whitespace") => Expression::builtin("is-whitespace", is_whitespace, "is this string whitespace?"),
-        String::from("is-alpha") => Expression::builtin("is-alpha", is_alpha, "is this string alphabetic?"),
-        String::from("is-alphanumeric") => Expression::builtin("is-alphanumeric", is_alphanumeric, "is this string alphanumeric?"),
-        String::from("is-numeric") => Expression::builtin("is-numeric", is_numeric, "is this string numeric?"),
-        String::from("is-lower") => Expression::builtin("is-lower", is_lower, "is this string lowercase?"),
-        String::from("is-upper") => Expression::builtin("is-upper", is_upper, "is this string uppercase?"),
-        String::from("is-title") => Expression::builtin("is-title", is_title, "is this string title case?"),
+       SmallString::from("is-whitespace") => Expression::builtin("is-whitespace", is_whitespace, "is this string whitespace?"),
+       SmallString::from("is-alpha") => Expression::builtin("is-alpha", is_alpha, "is this string alphabetic?"),
+       SmallString::from("is-alphanumeric") => Expression::builtin("is-alphanumeric", is_alphanumeric, "is this string alphanumeric?"),
+       SmallString::from("is-numeric") => Expression::builtin("is-numeric", is_numeric, "is this string numeric?"),
+       SmallString::from("is-lower") => Expression::builtin("is-lower", is_lower, "is this string lowercase?"),
+       SmallString::from("is-upper") => Expression::builtin("is-upper", is_upper, "is this string uppercase?"),
+       SmallString::from("is-title") => Expression::builtin("is-title", is_title, "is this string title case?"),
 
-        String::from("starts-with") => Expression::builtin("starts-with", starts_with, "check if a string starts with a given substring"),
-        String::from("ends-with") => Expression::builtin("ends-with", ends_with, "check if a string ends with a given substring"),
-        String::from("contains") => Expression::builtin("contains", contains, "check if a string contains a given substring"),
+       SmallString::from("starts-with") => Expression::builtin("starts-with", starts_with, "check if a string starts with a given substring"),
+       SmallString::from("ends-with") => Expression::builtin("ends-with", ends_with, "check if a string ends with a given substring"),
+       SmallString::from("contains") => Expression::builtin("contains", contains, "check if a string contains a given substring"),
 
         // split to list
-        String::from("split") => Expression::builtin("split", split, "split a string on a given character"),
-        String::from("split-at") => Expression::builtin("split_at", split_at, "split a string at a given index"),
-        String::from("chars") => Expression::builtin("chars", chars, "split a string into characters"),
-        String::from("words") => Expression::builtin("words", words, "split a string into words"),
-        String::from("lines") => Expression::builtin("lines", lines, "split a string into lines"),
-        String::from("paragraphs") => Expression::builtin("paragraphs", paragraphs, "split a string into paragraphs"),
+       SmallString::from("split") => Expression::builtin("split", split, "split a string on a given character"),
+       SmallString::from("split-at") => Expression::builtin("split_at", split_at, "split a string at a given index"),
+       SmallString::from("chars") => Expression::builtin("chars", chars, "split a string into characters"),
+       SmallString::from("words") => Expression::builtin("words", words, "split a string into words"),
+       SmallString::from("lines") => Expression::builtin("lines", lines, "split a string into lines"),
+       SmallString::from("paragraphs") => Expression::builtin("paragraphs", paragraphs, "split a string into paragraphs"),
 
         // modify
-        String::from("repeat") => Expression::builtin("repeat", repeat, "repeat string specified number of times"),
-        String::from("replace") => Expression::builtin("replace", replace, "replace all instances of a substring in a string with another string"),
-        String::from("substring") => Expression::builtin("substring", substring, "get substring from start to end indices"),
+       SmallString::from("repeat") => Expression::builtin("repeat", repeat, "repeat string specified number of times"),
+       SmallString::from("replace") => Expression::builtin("replace", replace, "replace all instances of a substring in a string with another string"),
+       SmallString::from("substring") => Expression::builtin("substring", substring, "get substring from start to end indices"),
 
-        String::from("remove-prefix") => Expression::builtin("remove-prefix", remove_prefix, "remove prefix if present"),
-        String::from("remove-suffix") => Expression::builtin("remove-suffix", remove_suffix, "remove suffix if present"),
-        String::from("trim") => Expression::builtin("trim", trim, "trim whitespace from a string"),
-        String::from("trim-start") => Expression::builtin("trim-start", trim_start, "trim whitespace from the start of a string"),
-        String::from("trim-end") => Expression::builtin("trim-end", trim_end, "trim whitespace from the end of a string"),
+       SmallString::from("remove-prefix") => Expression::builtin("remove-prefix", remove_prefix, "remove prefix if present"),
+       SmallString::from("remove-suffix") => Expression::builtin("remove-suffix", remove_suffix, "remove suffix if present"),
+       SmallString::from("trim") => Expression::builtin("trim", trim, "trim whitespace from a string"),
+       SmallString::from("trim-start") => Expression::builtin("trim-start", trim_start, "trim whitespace from the start of a string"),
+       SmallString::from("trim-end") => Expression::builtin("trim-end", trim_end, "trim whitespace from the end of a string"),
 
-        String::from("to-lower") => Expression::builtin("to-lower", to_lower, "convert a string to lowercase"),
-        String::from("to-upper") => Expression::builtin("to-upper", to_upper, "convert a string to uppercase"),
-        String::from("to-title") => Expression::builtin("to-title", to_title, "convert a string to title case"),
+       SmallString::from("to-lower") => Expression::builtin("to-lower", to_lower, "convert a string to lowercase"),
+       SmallString::from("to-upper") => Expression::builtin("to-upper", to_upper, "convert a string to uppercase"),
+       SmallString::from("to-title") => Expression::builtin("to-title", to_title, "convert a string to title case"),
 
         // advance
-        String::from("caesar") => Expression::builtin("caesar-cipher", caesar_cipher, "encrypt a string using a caesar cipher"),
-        String::from("get-width") => Expression::builtin("get-width", get_width, "get the width of a string"),
+       SmallString::from("caesar") => Expression::builtin("caesar-cipher", caesar_cipher, "encrypt a string using a caesar cipher"),
+       SmallString::from("get-width") => Expression::builtin("get-width", get_width, "get the width of a string"),
 
     })
     .into()

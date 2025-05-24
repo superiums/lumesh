@@ -1,6 +1,7 @@
 use std::{collections::HashMap, sync::LazyLock};
 
 use crate::Expression;
+use smallstr::SmallString;
 
 mod bin;
 // use std::sync::RwLock;
@@ -10,14 +11,14 @@ struct UnsafeStatic<T> {
 }
 unsafe impl<T> Sync for UnsafeStatic<T> {} // 手动标记为 Sync（单线程安全）
 
-static BUILTIN: UnsafeStatic<LazyLock<HashMap<String, Expression>>> = UnsafeStatic {
+static BUILTIN: UnsafeStatic<LazyLock<HashMap<SmallString<[u8; 16]>, Expression>>> = UnsafeStatic {
     inner: LazyLock::new(bin::get_module_map),
 };
 
 pub fn get_builtin(name: &str) -> Option<&Expression> {
     BUILTIN.inner.get(name)
 }
-pub fn get_builtin_map() -> HashMap<String, Expression> {
+pub fn get_builtin_map() -> HashMap<SmallString<[u8; 16]>, Expression> {
     BUILTIN.inner.clone()
 }
 

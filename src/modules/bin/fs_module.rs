@@ -1,10 +1,10 @@
 use crate::{Environment, Int};
 use crate::{Expression, LmError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 use std::collections::BTreeMap;
 use std::io::Write;
 use std::path::{Path, PathBuf};
-
 // #[cfg(unix)]
 // use std::os::unix::fs::MetadataExt;
 
@@ -13,30 +13,30 @@ use super::fs_ls::list_directory_wrapper;
 pub fn get() -> Expression {
     let fs_module = hash_map! {
         // get
-        String::from("dirs") => Expression::builtin("dirs", get_system_dirs, "get system directories"),
-        String::from("ls") => Expression::builtin("ls", list_directory_wrapper, "list directory contents"),
-        String::from("glob") => Expression::builtin("glob", glob_pattern, "match files with pattern"),
-        String::from("tree") => Expression::builtin("tree", get_directory_tree, "get directory tree as nested map"),
-        String::from("canon") => Expression::builtin("canon", canonicalize_path, "canonicalize path"),
+       SmallString::from("dirs") => Expression::builtin("dirs", get_system_dirs, "get system directories"),
+       SmallString::from("ls") => Expression::builtin("ls", list_directory_wrapper, "list directory contents"),
+       SmallString::from("glob") => Expression::builtin("glob", glob_pattern, "match files with pattern"),
+       SmallString::from("tree") => Expression::builtin("tree", get_directory_tree, "get directory tree as nested map"),
+       SmallString::from("canon") => Expression::builtin("canon", canonicalize_path, "canonicalize path"),
 
         // modify
-        String::from("mkdir") => Expression::builtin("mkdir", make_directory, "create directory"),
-        String::from("rmdir") => Expression::builtin("rmdir", remove_directory, "remove empty directory"),
-        String::from("mv") => Expression::builtin("mv", move_path_wrapper, "move path"),
-        String::from("cp") => Expression::builtin("cp", copy_path_wrapper, "copy path"),
-        String::from("rm") => Expression::builtin("rm", remove_path_wrapper, "remove path"),
+       SmallString::from("mkdir") => Expression::builtin("mkdir", make_directory, "create directory"),
+       SmallString::from("rmdir") => Expression::builtin("rmdir", remove_directory, "remove empty directory"),
+       SmallString::from("mv") => Expression::builtin("mv", move_path_wrapper, "move path"),
+       SmallString::from("cp") => Expression::builtin("cp", copy_path_wrapper, "copy path"),
+       SmallString::from("rm") => Expression::builtin("rm", remove_path_wrapper, "remove path"),
 
         // check
-        String::from("exists") => Expression::builtin("exists", path_exists, "check if path exists"),
-        String::from("isdir") => Expression::builtin("isdir", is_directory, "check if path is directory"),
-        String::from("isfile") => Expression::builtin("isfile", is_file, "check if path is file"),
+       SmallString::from("exists") => Expression::builtin("exists", path_exists, "check if path exists"),
+       SmallString::from("isdir") => Expression::builtin("isdir", is_directory, "check if path is directory"),
+       SmallString::from("isfile") => Expression::builtin("isfile", is_file, "check if path is file"),
 
         // read/write
-        String::from("head") => Expression::builtin("head", read_file_head, "read first N lines of file"),
-        String::from("tail") => Expression::builtin("tail", read_file_tail, "read last N lines of file"),
-        String::from("read") => Expression::builtin("read", read_file, "read file contents"),
-        String::from("write") => Expression::builtin("write", write_file, "write to file"),
-        String::from("append") => Expression::builtin("append", append_to_file, "append to file"),
+       SmallString::from("head") => Expression::builtin("head", read_file_head, "read first N lines of file"),
+       SmallString::from("tail") => Expression::builtin("tail", read_file_tail, "read last N lines of file"),
+       SmallString::from("read") => Expression::builtin("read", read_file, "read file contents"),
+       SmallString::from("write") => Expression::builtin("write", write_file, "write to file"),
+       SmallString::from("append") => Expression::builtin("append", append_to_file, "append to file"),
     };
     Expression::from(fs_module)
 }
@@ -52,7 +52,7 @@ fn join_current_path(path: &str) -> PathBuf {
 }
 
 fn get_system_dirs(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
-    let mut dir_tree = BTreeMap::<String, String>::new();
+    let mut dir_tree = BTreeMap::<SmallString<[u8; 16]>, String>::new();
 
     if let Some(home_dir) = dirs::home_dir() {
         dir_tree.insert("home".into(), home_dir.to_string_lossy().into());
@@ -104,8 +104,11 @@ fn get_directory_tree(
                 cwd = cwd.join(path);
             }
         }
-        Expression::String(path) | Expression::Symbol(path) => {
+        Expression::String(path) => {
             cwd = cwd.join(path);
+        }
+        Expression::Symbol(path) => {
+            cwd = cwd.join(path.as_str());
         }
         _ => (),
     }
@@ -113,7 +116,10 @@ fn get_directory_tree(
     Ok(Expression::from(build_directory_tree(&cwd, max_depth)))
 }
 
-fn build_directory_tree(path: &Path, max_depth: Option<Int>) -> BTreeMap<String, Expression> {
+fn build_directory_tree(
+    path: &Path,
+    max_depth: Option<Int>,
+) -> BTreeMap<SmallString<[u8; 16]>, Expression> {
     let mut tree = BTreeMap::new();
 
     tree.insert(
@@ -138,11 +144,14 @@ fn build_directory_tree(path: &Path, max_depth: Option<Int>) -> BTreeMap<String,
                 if child_path.is_dir() {
                     let new_depth = max_depth.map(|d| d - 1);
                     tree.insert(
-                        name,
+                        SmallString::from(name),
                         Expression::from(build_directory_tree(&child_path, new_depth)),
                     );
                 } else {
-                    tree.insert(name, Expression::String(path.to_string_lossy().to_string()));
+                    tree.insert(
+                        SmallString::from(name),
+                        Expression::String(path.to_string_lossy().to_string()),
+                    );
                 }
             }
         }

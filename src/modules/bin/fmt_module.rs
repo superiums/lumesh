@@ -1,136 +1,137 @@
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("strip") => Expression::builtin("strip", |args, env| {
+       SmallString::from("strip") => Expression::builtin("strip", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(crate::repl::strip_ansi_escapes(args[0].eval(env)?).into())
         }, "strips all colors and styling from a string"),
 
-        String::from("wrap") => Expression::builtin("wrap", wrap,
+       SmallString::from("wrap") => Expression::builtin("wrap", wrap,
             "wrap text such that it fits in a specific number of columns"),
 
-        String::from("href") => Expression::builtin("href", href,
+       SmallString::from("href") => Expression::builtin("href", href,
             "create a hyperlink on the console"),
 
-        String::from("bold") => Expression::builtin("bold", |args, env| {
+       SmallString::from("bold") => Expression::builtin("bold", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to bold on the console"),
 
-        String::from("faint") => Expression::builtin("faint", |args, env| {
+       SmallString::from("faint") => Expression::builtin("faint", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to italics on the console"),
 
-        String::from("italics") => Expression::builtin("italics", |args, env| {
+       SmallString::from("italics") => Expression::builtin("italics", |args, env| {
         super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to italics on the console"),
 
-        String::from("underline") => Expression::builtin("underline", |args, env| {
+       SmallString::from("underline") => Expression::builtin("underline", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "underline text on the console"),
 
-        String::from("blink") => Expression::builtin("blink", |args, env| {
+       SmallString::from("blink") => Expression::builtin("blink", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "blink text on the console"),
 
-        String::from("invert") => Expression::builtin("invert", |args, env| {
+       SmallString::from("invert") => Expression::builtin("invert", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "invert text on the console"),
 
-        String::from("strike") => Expression::builtin("strike", |args, env| {
+       SmallString::from("strike") => Expression::builtin("strike", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "strike out text on the console"),
 
-        String::from("black") => Expression::builtin("black", |args, env| {
+       SmallString::from("black") => Expression::builtin("black", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to black on the console"),
 
-        String::from("red") => Expression::builtin("red", |args, env| {
+       SmallString::from("red") => Expression::builtin("red", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to red on the console"),
 
-        String::from("green") => Expression::builtin("green", |args, env| {
+       SmallString::from("green") => Expression::builtin("green", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to green on the console"),
 
-        String::from("yellow") => Expression::builtin("yellow", |args, env| {
+       SmallString::from("yellow") => Expression::builtin("yellow", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to yellow on the console"),
 
-        String::from("blue") => Expression::builtin("blue", |args, env| {
+       SmallString::from("blue") => Expression::builtin("blue", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to blue on the console"),
 
-        String::from("magenta") => Expression::builtin("magenta", |args, env| {
+       SmallString::from("magenta") => Expression::builtin("magenta", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to magenta on the console"),
 
-        String::from("cyan") => Expression::builtin("cyan", |args, env| {
+       SmallString::from("cyan") => Expression::builtin("cyan", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to cyan on the console"),
 
-        String::from("white") => Expression::builtin("white", |args, env| {
+       SmallString::from("white") => Expression::builtin("white", |args, env| {
             super::check_exact_args_len("strip", args, 1)?;
             Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
         }, "convert text to white on the console"),
 
-        String::from("dark") => hash_map! {
-            String::from("black") => Expression::builtin("black", |args, env| {
+       SmallString::from("dark") => hash_map! {
+           SmallString::from("black") => Expression::builtin("black", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to black on the console"),
 
-            String::from("red") => Expression::builtin("red", |args, env| {
+           SmallString::from("red") => Expression::builtin("red", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to red on the console"),
 
-            String::from("green") => Expression::builtin("green", |args, env| {
+           SmallString::from("green") => Expression::builtin("green", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to green on the console"),
 
-            String::from("yellow") => Expression::builtin("yellow", |args, env| {
+           SmallString::from("yellow") => Expression::builtin("yellow", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to yellow on the console"),
 
-            String::from("blue") => Expression::builtin("blue", |args, env| {
+           SmallString::from("blue") => Expression::builtin("blue", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to blue on the console"),
 
-            String::from("magenta") => Expression::builtin("magenta", |args, env| {
+           SmallString::from("magenta") => Expression::builtin("magenta", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to magenta on the console"),
 
-            String::from("cyan") => Expression::builtin("cyan", |args, env| {
+           SmallString::from("cyan") => Expression::builtin("cyan", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
             }, "convert text to cyan on the console"),
 
-            String::from("white") => Expression::builtin("white", |args, env| {
+           SmallString::from("white") => Expression::builtin("white", |args, env| {
                 super::check_exact_args_len("strip", args, 1)?;
                 Ok(format!("\x1b[37m{}\x1b[m\x6b[0m", args[0].eval(env)?).into())
             }, "convert text to white on the console"),
 
-            String::from("pad_start") => Expression::builtin("pad_start", |args, env| {
+           SmallString::from("pad_start") => Expression::builtin("pad_start", |args, env| {
                        super::check_args_len("pad_start", args, 2..3)?;
 
                        let (str_expr, length, pad_char) = match args.len() {
@@ -140,7 +141,8 @@ pub fn get() -> Expression {
                        };
 
                        let s = match str_expr.eval(env)? {
-                           Expression::Symbol(x) | Expression::String(x) => x,
+                           Expression::Symbol(x) => x.to_string(),
+                          Expression::String(x) => x,
                            _ => return Err(LmError::CustomError("pad_start requires a string as last argument".to_string())),
                        };
 
@@ -160,7 +162,7 @@ pub fn get() -> Expression {
                        Ok(Expression::String(format!("{}{}", padding, s)))
                    }, "pad string to specified length at start, with optional pad character"),
 
-                   String::from("pad_end") => Expression::builtin("pad_end", |args, env| {
+                  SmallString::from("pad_end") => Expression::builtin("pad_end", |args, env| {
                        super::check_args_len("pad_end", args, 2..3)?;
 
                        let (str_expr, length, pad_char) = match args.len() {
@@ -170,7 +172,8 @@ pub fn get() -> Expression {
                        };
 
                        let s = match str_expr.eval(env)? {
-                           Expression::Symbol(x) | Expression::String(x) => x,
+                           Expression::Symbol(x) => x.to_string(),
+                          Expression::String(x) => x,
                            _ => return Err(LmError::CustomError("pad_end requires a string as last argument".to_string())),
                        };
 
@@ -190,7 +193,7 @@ pub fn get() -> Expression {
                        Ok(Expression::String(format!("{}{}", s, padding)))
                    }, "pad string to specified length at end, with optional pad character"),
 
-                   String::from("center") => Expression::builtin("center", |args, env| {
+                  SmallString::from("center") => Expression::builtin("center", |args, env| {
                        super::check_args_len("center", args, 2..3)?;
 
                        let (str_expr, length, pad_char) = match args.len() {
@@ -200,7 +203,8 @@ pub fn get() -> Expression {
                        };
 
                        let s = match str_expr.eval(env)? {
-                           Expression::Symbol(x) | Expression::String(x) => x,
+                           Expression::Symbol(x) => x.to_string(),
+                          Expression::String(x) => x,
                            _ => return Err(LmError::CustomError("center requires a string as last argument".to_string())),
                        };
 
@@ -223,14 +227,15 @@ pub fn get() -> Expression {
                        Ok(Expression::String(format!("{}{}{}", left, s, right)))
                    }, "center string by padding both ends"),
 
-                   String::from("format") => Expression::builtin("format", |args, env| {
+                  SmallString::from("format") => Expression::builtin("format", |args, env| {
                                // format template arg1 arg2 ... argN
                                if args.is_empty() {
                                    return Err(LmError::CustomError("format requires at least a template string".to_string()));
                                }
 
                                let template = match args.last().unwrap().eval(env)? {
-                                   Expression::Symbol(x) | Expression::String(x) => x,
+                                   Expression::Symbol(x) => x.to_string(),
+                                  Expression::String(x) => x,
                                    _ => return Err(LmError::CustomError("format requires string template as last argument".to_string())),
                                };
 

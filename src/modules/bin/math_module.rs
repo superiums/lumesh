@@ -1,16 +1,17 @@
 use crate::{Expression, Int, LmError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("E")   => std::f64::consts::E.into(),
-        String::from("PI")  => std::f64::consts::PI.into(),
-        String::from("TAU") => std::f64::consts::TAU.into(),
+       SmallString::from("E")   => std::f64::consts::E.into(),
+       SmallString::from("PI")  => std::f64::consts::PI.into(),
+       SmallString::from("TAU") => std::f64::consts::TAU.into(),
 
-        // String::from("max") => crate::parse("(x , y) -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
-        // String::from("min") => crate::parse("(x , y) -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
+        //SmallString::from("max") => crate::parse("(x , y) -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
+        //SmallString::from("min") => crate::parse("(x , y) -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
 
-        String::from("l_rsh") => Expression::builtin("l_rsh", |args, env| {
+       SmallString::from("l_rsh") => Expression::builtin("l_rsh", |args, env| {
             super::check_exact_args_len("l_rsh", args, 2)?;
 
             let a = match args[0].eval(env)? {
@@ -30,7 +31,7 @@ pub fn get() -> Expression {
         }, "logical right shift"),
 
 
-        String::from("rsh") => Expression::builtin("rsh", |args, env| {
+       SmallString::from("rsh") => Expression::builtin("rsh", |args, env| {
             super::check_exact_args_len("rsh", args, 2)?;
 
             let a = match args[0].eval(env)? {
@@ -45,7 +46,7 @@ pub fn get() -> Expression {
             Ok((a >> b).into())
         }, "arithmetic right shift"),
 
-        String::from("lsh") => Expression::builtin("lsh", |args, env| {
+       SmallString::from("lsh") => Expression::builtin("lsh", |args, env| {
             super::check_exact_args_len("lsh", args, 2)?;
 
             let a = match args[0].eval(env)? {
@@ -61,7 +62,7 @@ pub fn get() -> Expression {
         }, "left shift"),
 
 
-        String::from("sum") => Expression::builtin("sum", |args, env| {
+       SmallString::from("sum") => Expression::builtin("sum", |args, env| {
             let mut int_sum = 0;
             let mut float_sum = 0.0;
             for arg in args {
@@ -88,7 +89,7 @@ pub fn get() -> Expression {
             }
         }, "sum a list of numbers"),
 
-        String::from("product") => Expression::builtin("product", |args, env| {
+       SmallString::from("product") => Expression::builtin("product", |args, env| {
             let mut int_product = 1;
             let mut float_product = 1.0;
 
@@ -116,7 +117,7 @@ pub fn get() -> Expression {
             }
         }, "multiply a list of numbers"),
 
-        String::from("fact") => Expression::builtin("fact", |args, env| {
+       SmallString::from("fact") => Expression::builtin("fact", |args, env| {
             super::check_exact_args_len("fact", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => {
@@ -141,7 +142,7 @@ pub fn get() -> Expression {
             }
         }, "get the factorial of a number"),
 
-        String::from("abs") => Expression::builtin("abs", |args, env| {
+       SmallString::from("abs") => Expression::builtin("abs", |args, env| {
             super::check_exact_args_len("abs", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.abs().into()),
@@ -150,7 +151,7 @@ pub fn get() -> Expression {
             }
         }, "get the absolute value of a number"),
 
-        String::from("floor") => Expression::builtin("floor", |args, env| {
+       SmallString::from("floor") => Expression::builtin("floor", |args, env| {
             super::check_exact_args_len("floor", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
@@ -159,7 +160,7 @@ pub fn get() -> Expression {
             }
         }, "get the floor of a number"),
 
-        String::from("ceil") => Expression::builtin("ceil", |args, env| {
+       SmallString::from("ceil") => Expression::builtin("ceil", |args, env| {
             super::check_exact_args_len("ceil", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
@@ -168,7 +169,7 @@ pub fn get() -> Expression {
             }
         }, "get the ceiling of a number"),
 
-        String::from("round") => Expression::builtin("round", |args, env| {
+       SmallString::from("round") => Expression::builtin("round", |args, env| {
             super::check_exact_args_len("round", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
@@ -177,7 +178,7 @@ pub fn get() -> Expression {
             }
         }, "round a number to the nearest integer"),
 
-        String::from("trunc") => Expression::builtin("trunc", |args, env| {
+       SmallString::from("trunc") => Expression::builtin("trunc", |args, env| {
             super::check_exact_args_len("trunc", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok(i.into()),
@@ -186,7 +187,7 @@ pub fn get() -> Expression {
             }
         }, "truncate a number"),
 
-        String::from("sinh") => Expression::builtin("sinh", |args, env| {
+       SmallString::from("sinh") => Expression::builtin("sinh", |args, env| {
             super::check_exact_args_len("sinh", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).sinh().into()),
@@ -195,7 +196,7 @@ pub fn get() -> Expression {
             }
         }, "get the hyperbolic sine of a number"),
 
-        String::from("cosh") => Expression::builtin("cosh", |args, env| {
+       SmallString::from("cosh") => Expression::builtin("cosh", |args, env| {
             super::check_exact_args_len("cosh", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).cosh().into()),
@@ -204,7 +205,7 @@ pub fn get() -> Expression {
             }
         }, "get the hyperbolic cosine of a number"),
 
-        String::from("tanh") => Expression::builtin("tanh", |args, env| {
+       SmallString::from("tanh") => Expression::builtin("tanh", |args, env| {
             super::check_exact_args_len("tanh", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).tanh().into()),
@@ -213,7 +214,7 @@ pub fn get() -> Expression {
             }
         }, "get the hyperbolic tangent of a number"),
 
-        String::from("asinh") => Expression::builtin("asinh", |args, env| {
+       SmallString::from("asinh") => Expression::builtin("asinh", |args, env| {
             super::check_exact_args_len("asinh", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).asinh().into()),
@@ -222,7 +223,7 @@ pub fn get() -> Expression {
             }
         }, "get the inverse hyperbolic sine of a number"),
 
-        String::from("acosh") => Expression::builtin("acosh", |args, env| {
+       SmallString::from("acosh") => Expression::builtin("acosh", |args, env| {
             super::check_exact_args_len("acosh", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).acosh().into()),
@@ -231,7 +232,7 @@ pub fn get() -> Expression {
             }
         }, "get the inverse hyperbolic cosine of a number"),
 
-        String::from("atanh") => Expression::builtin("atanh", |args, env| {
+       SmallString::from("atanh") => Expression::builtin("atanh", |args, env| {
             super::check_exact_args_len("atanh", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64).atanh().into()),
@@ -240,7 +241,7 @@ pub fn get() -> Expression {
             }
         }, "get the inverse hyperbolic tangent of a number"),
 
-        String::from("sinpi") => Expression::builtin("sinpi", |args, env| {
+       SmallString::from("sinpi") => Expression::builtin("sinpi", |args, env| {
             super::check_exact_args_len("sinpi", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).sin().into()),
@@ -249,7 +250,7 @@ pub fn get() -> Expression {
             }
         }, "get the sine of a number times pi"),
 
-        String::from("cospi") => Expression::builtin("cospi", |args, env| {
+       SmallString::from("cospi") => Expression::builtin("cospi", |args, env| {
             super::check_exact_args_len("cospi", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).cos().into()),
@@ -258,7 +259,7 @@ pub fn get() -> Expression {
             }
         }, "get the cosine of a number times pi"),
 
-        String::from("tanpi") => Expression::builtin("tanpi", |args, env| {
+       SmallString::from("tanpi") => Expression::builtin("tanpi", |args, env| {
             super::check_exact_args_len("tanpi", args, 1)?;
             match args[0].eval(env)? {
                 Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).tan().into()),
@@ -267,7 +268,7 @@ pub fn get() -> Expression {
             }
         }, "get the tangent of a number times pi"),
 
-        String::from("isodd") => Expression::builtin("isodd", |args, env| {
+       SmallString::from("isodd") => Expression::builtin("isodd", |args, env| {
             super::check_exact_args_len("odd", args, 1)?;
             Ok(match args[0].eval(env)? {
                 Expression::Integer(i) => i % 2 == 1,
@@ -276,7 +277,7 @@ pub fn get() -> Expression {
             }.into())
         }, "is a number odd?"),
 
-        String::from("iseven") => Expression::builtin("iseven", |args, env| {
+       SmallString::from("iseven") => Expression::builtin("iseven", |args, env| {
             super::check_exact_args_len("even", args, 1)?;
             Ok(match args[0].eval(env)? {
                 Expression::Integer(i) => i % 2 == 0,
@@ -285,7 +286,7 @@ pub fn get() -> Expression {
             }.into())
         }, "is a number even?"),
 
-        String::from("pow") => Expression::builtin("pow", |args, env| {
+       SmallString::from("pow") => Expression::builtin("pow", |args, env| {
             super::check_exact_args_len("pow", args, 2)?;
             match (args[0].eval(env)?, args[1].eval(env)?) {
                 (Expression::Float(base), Expression::Float(exponent)) => Ok(base.powf(exponent).into()),
@@ -300,7 +301,7 @@ pub fn get() -> Expression {
         }, "raise a number to a power"),
 
 
-        String::from("ln") => Expression::builtin("ln", |args, env| {
+       SmallString::from("ln") => Expression::builtin("ln", |args, env| {
             super::check_exact_args_len("ln", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -313,7 +314,7 @@ pub fn get() -> Expression {
         }, "get the natural log of a number"),
 
 // TODO test, removed curry
-        String::from("log") =>Expression::builtin("log", |args, env| {
+       SmallString::from("log") =>Expression::builtin("log", |args, env| {
             super::check_exact_args_len("log", args, 2)?;
 
             let base = match args[0].eval(env)? {
@@ -332,7 +333,7 @@ pub fn get() -> Expression {
         }, "get the log of a number using a given base"),
 
 
-        String::from("log2") => Expression::builtin("log2", |args, env| {
+       SmallString::from("log2") => Expression::builtin("log2", |args, env| {
             super::check_exact_args_len("log2", args, 1)?;
 
             let base = 2.0;
@@ -346,7 +347,7 @@ pub fn get() -> Expression {
             Ok(x.log(base).into())
         }, "get the log base 2 of a number"),
 
-        String::from("log10") => Expression::builtin("log10", |args, env| {
+       SmallString::from("log10") => Expression::builtin("log10", |args, env| {
             super::check_exact_args_len("log10", args, 1)?;
 
             let base = 10.0;
@@ -360,7 +361,7 @@ pub fn get() -> Expression {
             Ok(x.log(base).into())
         }, "get the log base 10 of a number"),
 
-        String::from("sqrt") => Expression::builtin("sqrt", |args, env| {
+       SmallString::from("sqrt") => Expression::builtin("sqrt", |args, env| {
             super::check_exact_args_len("sqrt", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -372,7 +373,7 @@ pub fn get() -> Expression {
             Ok(x.sqrt().into())
         }, "get the square root of a number"),
 
-        String::from("cbrt") => Expression::builtin("cbrt", |args, env| {
+       SmallString::from("cbrt") => Expression::builtin("cbrt", |args, env| {
             super::check_exact_args_len("cbrt", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -385,7 +386,7 @@ pub fn get() -> Expression {
         }, "get the cube root of a number"),
 
 
-        String::from("sin") => Expression::builtin("sin", |args, env| {
+       SmallString::from("sin") => Expression::builtin("sin", |args, env| {
             super::check_exact_args_len("sin", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -397,7 +398,7 @@ pub fn get() -> Expression {
             Ok(x.sin().into())
         }, "get the sin of a number"),
 
-        String::from("cos") => Expression::builtin("cos", |args, env| {
+       SmallString::from("cos") => Expression::builtin("cos", |args, env| {
             super::check_exact_args_len("cos", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -409,7 +410,7 @@ pub fn get() -> Expression {
             Ok(x.cos().into())
         }, "get the cosine of a number"),
 
-        String::from("tan") => Expression::builtin("tan", |args, env| {
+       SmallString::from("tan") => Expression::builtin("tan", |args, env| {
             super::check_exact_args_len("tan", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -423,7 +424,7 @@ pub fn get() -> Expression {
 
 
 
-        String::from("asin") => Expression::builtin("asin", |args, env| {
+       SmallString::from("asin") => Expression::builtin("asin", |args, env| {
             super::check_exact_args_len("asin", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -435,7 +436,7 @@ pub fn get() -> Expression {
             Ok(x.asin().into())
         }, "get the inverse sin of a number"),
 
-        String::from("acos") => Expression::builtin("acos", |args, env| {
+       SmallString::from("acos") => Expression::builtin("acos", |args, env| {
             super::check_exact_args_len("acos", args, 1)?;
 
             let x = match args[0].eval(env)? {
@@ -447,7 +448,7 @@ pub fn get() -> Expression {
             Ok(x.acos().into())
         }, "get the inverse cosine of a number"),
 
-        String::from("atan") => Expression::builtin("atan", |args, env| {
+       SmallString::from("atan") => Expression::builtin("atan", |args, env| {
             super::check_exact_args_len("atan", args, 1)?;
 
             let x = match args[0].eval(env)? {

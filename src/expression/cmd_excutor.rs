@@ -3,6 +3,7 @@ use crate::{Environment, Expression, RuntimeError, get_builtin};
 use super::{alias, eval::State};
 use glob::glob;
 use std::{
+    ffi::OsStr,
     io::{ErrorKind, Write},
     process::{Command, Stdio},
     rc::Rc,
@@ -27,7 +28,8 @@ pub fn eval_command(
         }
         // 符号
         // string like cmd: ./abc
-        Expression::Symbol(cmd_sym) | Expression::String(cmd_sym) => {
+        // TODO | Expression::String(cmd_sym)
+        Expression::Symbol(cmd_sym) => {
             match alias::get_alias(cmd_sym) {
                 // 别名
                 Some(cmd_alias) => {
@@ -36,13 +38,7 @@ pub fn eval_command(
                         match cmd_alias {
                             Expression::Command(cmd_name, cmd_args) => {
                                 cmd_args.as_ref().clone().append(&mut args.to_vec());
-                                handle_command(
-                                    &cmd_name.as_ref().to_string(),
-                                    &cmd_args,
-                                    state,
-                                    env,
-                                    depth,
-                                )
+                                handle_command(&cmd_name.to_string(), &cmd_args, state, env, depth)
                             }
                             Expression::Apply(..) => cmd_alias
                                 .append_args(args.to_vec())
@@ -50,8 +46,7 @@ pub fn eval_command(
                             Expression::Index(..) => {
                                 let cmdx = cmd_alias.eval_mut(state, env, depth)?;
                                 // dbg!(&cmd, &cmdx);
-                                cmdx
-                                    .append_args(args.to_vec())
+                                cmdx.append_args(args.to_vec())
                                     .eval_apply(state, env, depth)
                             }
                             _ => Err(RuntimeError::TypeError {
@@ -71,26 +66,24 @@ pub fn eval_command(
                             bti.apply(args.to_vec()).eval_apply(state, env, depth)
                         }
                         // 三方命令
-                        _ => handle_command(cmd_sym, args, state, env, depth),
+                        _ => handle_command(&cmd_sym.to_string(), args, state, env, depth),
                     }
                 }
             }
         }
-        e => {
-            Err(RuntimeError::TypeError {
-                expected: "Symbol".to_string(),
-                found: e.type_name(),
-            })
-        }
+        e => Err(RuntimeError::TypeError {
+            expected: "Symbol".to_string(),
+            found: e.type_name(),
+        }),
     }
 }
 
 /// mode: 1=null_stdout, 2=null_err, 4=err_to_stdout,
 /// 8=background, 11=background,shutdown_all
 /// 执行单个命令（支持管道）
-fn exec_single_cmd(
+fn exec_single_cmd<I: IntoIterator<Item = S>, S: AsRef<OsStr>>(
     cmdstr: &String,
-    args: Option<Vec<String>>,
+    args: Option<I>,
     env: &mut Environment,
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
     pipe_out: bool,
@@ -135,8 +128,8 @@ fn exec_single_cmd(
 
     // 执行命令
     let mut child = cmd.spawn().map_err(|e| match &e.kind() {
-        ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.clone()),
-        _ => RuntimeError::CommandFailed2(cmdstr.clone(), e.to_string()),
+        ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.into()),
+        _ => RuntimeError::CommandFailed2(cmdstr.into(), e.to_string()),
     })?;
 
     // 写入输入
@@ -199,7 +192,7 @@ fn exec_single_cmd(
 }
 
 // 管道
-fn handle_command(
+pub fn handle_command(
     cmd: &String,
     args: &Vec<Expression>,
     state: &mut State,
@@ -214,7 +207,7 @@ fn handle_command(
         let e_arg = arg.eval_mut(state, env, depth)?;
         state.clear(State::SKIP_BUILTIN_SEEK);
         match e_arg {
-            Expression::Symbol(s) => cmd_args.push(s),
+            Expression::Symbol(s) => cmd_args.push(s.to_string()),
             Expression::String(mut s) => {
                 if s.starts_with("~") {
                     if let Some(home_dir) = dirs::home_dir() {
@@ -271,7 +264,7 @@ fn handle_command(
     let pipe_input = to_bytes(last_input);
     let result = exec_single_cmd(
         cmd,
-        Some(cmd_args),
+        Some(&cmd_args),
         env,
         Some(pipe_input),
         always_pipe,

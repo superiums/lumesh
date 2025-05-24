@@ -1,5 +1,6 @@
 use crate::Expression;
 use rustc_hash::FxHasher;
+use smallstr::SmallString;
 use std::collections::HashMap;
 use std::hash::BuildHasherDefault;
 use std::rc::Rc;
@@ -9,7 +10,7 @@ pub type DefaultHasher = BuildHasherDefault<FxHasher>;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Environment {
-    pub bindings: Rc<HashMap<String, Expression, DefaultHasher>>,
+    pub bindings: Rc<HashMap<SmallString<[u8; 16]>, Expression, DefaultHasher>>,
     pub parent: Option<Box<Self>>,
 }
 
@@ -49,7 +50,7 @@ impl Environment {
 
     pub fn define(&mut self, name: &str, expr: Expression) {
         let bindings = Rc::make_mut(&mut self.bindings);
-        bindings.insert(name.to_string(), expr);
+        bindings.insert(SmallString::from_str(name), expr);
     }
 
     pub fn get_parent_mut(&mut self) -> Option<&mut Self> {
@@ -63,7 +64,7 @@ impl Environment {
         }
     }
 
-    pub fn get_bindings_string(&self) -> HashMap<&String, String> {
+    pub fn get_bindings_string(&self) -> HashMap<String, String> {
         self.bindings
             .iter()
             .filter(|(_, v)| match v {
@@ -74,7 +75,7 @@ impl Environment {
                 | Expression::Boolean(..) => true,
                 _ => false,
             })
-            .map(|(k, v)| (k, v.to_string()))
+            .map(|(k, v)| (k.to_string(), v.to_string()))
             // 过滤过长的值以避免参数列表溢出
             .filter(|(_, s)| s.len() <= 1024)
             .collect()
@@ -83,7 +84,7 @@ impl Environment {
     // pub fn get_bindings_iter(&self) -> impl Iterator<Item = (&String, &Expression)> {
     //     self.bindings.iter()
     // }
-    pub fn get_bindings_map(&self) -> HashMap<String, Expression> {
+    pub fn get_bindings_map(&self) -> HashMap<SmallString<[u8; 16]>, Expression> {
         self.bindings
             .iter()
             .map(|(k, v)| (k.clone(), v.clone()))

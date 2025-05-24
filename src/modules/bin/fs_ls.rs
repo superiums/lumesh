@@ -6,6 +6,7 @@ use std::rc::Rc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use chrono::{DateTime, NaiveDateTime};
+use smallstr::SmallString;
 
 use crate::{Environment, Expression, LmError};
 
@@ -27,31 +28,34 @@ pub fn parse_ls_args(args: &[Expression]) -> Result<(PathBuf, LsOptions), LmErro
     let mut path = PathBuf::from(".");
     // dbg!(args);
     for arg in args {
-        if let Expression::Symbol(s) | Expression::String(s) = arg {
-            match s.as_str() {
-                "-l" => options.detailed = true,
-                "-a" => options.show_hidden = true,
-                "-L" => options.follow_links = true,
-                // "-h" => options.human_readable = true,
-                "-U" => options.unix_time = true,
-                "-k" => options.size_in_kb = true,
-                "-u" => options.show_user = true,
-                "-m" => options.show_mode = true,
-                "-p" => options.show_path = true,
-                arg if !arg.starts_with('-') => {
-                    // dbg!("not stw -", arg);
-                    if arg.starts_with("~") {
-                        if let Some(home_dir) = dirs::home_dir() {
-                            let p = arg.replace("~", home_dir.to_string_lossy().as_ref());
-                            // dbg!(&p);
-                            path = PathBuf::from(p)
-                        }
-                    } else {
-                        path = PathBuf::from(arg)
+        let x = match arg {
+            Expression::Symbol(s) => &s.to_string(),
+            Expression::String(s) => s,
+            _ => continue,
+        };
+        match x.as_str() {
+            "-l" => options.detailed = true,
+            "-a" => options.show_hidden = true,
+            "-L" => options.follow_links = true,
+            // "-h" => options.human_readable = true,
+            "-U" => options.unix_time = true,
+            "-k" => options.size_in_kb = true,
+            "-u" => options.show_user = true,
+            "-m" => options.show_mode = true,
+            "-p" => options.show_path = true,
+            arg if !arg.starts_with('-') => {
+                // dbg!("not stw -", arg);
+                if arg.starts_with("~") {
+                    if let Some(home_dir) = dirs::home_dir() {
+                        let p = arg.replace("~", home_dir.to_string_lossy().as_ref());
+                        // dbg!(&p);
+                        path = PathBuf::from(p)
                     }
+                } else {
+                    path = PathBuf::from(arg)
                 }
-                _ => continue,
             }
+            _ => continue,
         }
     }
     // dbg!(&path);
@@ -74,13 +78,16 @@ pub fn get_file_expression(
     let mut map = BTreeMap::new();
 
     // 基础字段
-    map.insert("name".to_string(), Expression::String(name.clone()));
+    map.insert(
+        SmallString::from_str("name"),
+        Expression::String(name.clone()),
+    );
 
     if options.detailed {
         // 惰性检测字段
         let file_type = detect_file_type(&metadata);
         map.insert(
-            "type".to_string(),
+            SmallString::from_str("type"),
             Expression::String(file_type.to_string()),
         );
 
@@ -92,7 +99,7 @@ pub fn get_file_expression(
             // } else {
             //     Expression::Integer(metadata.len() as i64)
         };
-        map.insert("size".to_string(), size_expr);
+        map.insert(SmallString::from_str("size"), size_expr);
 
         // 时间表达式
         let modified = metadata.modified()?;
@@ -102,7 +109,7 @@ pub fn get_file_expression(
             Expression::DateTime(system_time_to_naive_datetime(modified)?)
             // Expression::String(format_system_time(modified))
         };
-        map.insert("modified".to_string(), time_expr);
+        map.insert(SmallString::from_str("modified"), time_expr);
 
         // 符号链接目标（惰性检测）
         #[cfg(unix)]
@@ -110,12 +117,12 @@ pub fn get_file_expression(
             if file_type == "symlink" {
                 if let Ok(target) = std::fs::read_link(entry.path()) {
                     map.insert(
-                        "target".to_string(),
+                        SmallString::from_str("target"),
                         Expression::String(target.to_string_lossy().into_owned()),
                     );
                 }
             } else {
-                map.insert("target".to_string(), Expression::None);
+                map.insert(SmallString::from_str("target"), Expression::None);
             }
         }
     }
@@ -125,13 +132,16 @@ pub fn get_file_expression(
     {
         if options.show_user {
             map.insert(
-                "user".to_string(),
+                SmallString::from_str("user"),
                 Expression::Integer(metadata.uid() as i64),
             );
         }
         if options.detailed || options.show_mode {
             let mode = metadata.permissions().mode() & 0o777;
-            map.insert("mode".to_string(), Expression::Integer(mode as i64));
+            map.insert(
+                SmallString::from_str("mode"),
+                Expression::Integer(mode as i64),
+            );
         }
     }
 
@@ -140,7 +150,7 @@ pub fn get_file_expression(
         if let Some(p) = base_path {
             let full_path = p.join(&name);
             map.insert(
-                "path".to_string(),
+                SmallString::from_str("path"),
                 Expression::String(full_path.to_string_lossy().into_owned()),
             );
         }

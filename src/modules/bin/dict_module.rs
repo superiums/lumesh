@@ -1,34 +1,35 @@
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
         // check
-        String::from("has") => Expression::builtin("has", has, "check if a map has a key"),
+        SmallString::from("has") => Expression::builtin("has", has, "check if a map has a key"),
 
         // get
-        String::from("get_path") => Expression::builtin("get_path", get_path, "get value from nested map using dot notation path"),
-        String::from("items") => Expression::builtin("items", items, "get the items of a map or list"),
-        String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map"),
-        String::from("values") => Expression::builtin("values", values, "get the values of a map"),
+        SmallString::from("get_path") => Expression::builtin("get_path", get_path, "get value from nested map using dot notation path"),
+        SmallString::from("items") => Expression::builtin("items", items, "get the items of a map or list"),
+        SmallString::from("keys") => Expression::builtin("keys", keys, "get the keys of a map"),
+        SmallString::from("values") => Expression::builtin("values", values, "get the values of a map"),
 
         // modify
-        String::from("insert") => Expression::builtin("insert", insert, "insert a key-value pair into a map"),
-        String::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map"),
+        SmallString::from("insert") => Expression::builtin("insert", insert, "insert a key-value pair into a map"),
+        SmallString::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map"),
 
         // create
-        String::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs"),
+        SmallString::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs"),
 
         // tranpose
-        String::from("union") => Expression::builtin("union", union, "combine two maps"),
-        String::from("intersect") => Expression::builtin("intersect", intersect, "get the intersection of two maps"),
-        String::from("difference") => Expression::builtin("difference", difference, "get the difference of two maps"),
-        String::from("deep_merge") => Expression::builtin("deep_merge", deep_merge, "recursively merge two or more maps"),
+        SmallString::from("union") => Expression::builtin("union", union, "combine two maps"),
+        SmallString::from("intersect") => Expression::builtin("intersect", intersect, "get the intersection of two maps"),
+        SmallString::from("difference") => Expression::builtin("difference", difference, "get the difference of two maps"),
+        SmallString::from("deep_merge") => Expression::builtin("deep_merge", deep_merge, "recursively merge two or more maps"),
 
         // loop
-        String::from("map") => Expression::builtin("map", map_map, "transform map keys and values with provided functions"),
+        SmallString::from("map") => Expression::builtin("map", map_map, "transform map keys and values with provided functions"),
     })
     .into()
 }
@@ -44,7 +45,7 @@ fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
             let items = map
                 .as_ref()
                 .iter()
-                .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
+                .map(|(k, v)| Expression::from(vec![Expression::String(k.to_string()), v.clone()]))
                 .collect();
             Expression::List(Rc::new(items))
         }
@@ -61,7 +62,7 @@ fn keys(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
             let keys = map
                 .as_ref()
                 .keys()
-                .map(|k| Expression::String(k.clone()))
+                .map(|k| Expression::String(k.to_string()))
                 .collect();
             Expression::List(Rc::new(keys))
         }
@@ -74,9 +75,7 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => {
-            Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
-        }
+        Expression::Map(map) => Expression::List(Rc::new(map.as_ref().values().cloned().collect())),
         _ => Expression::None,
     })
 }
@@ -90,7 +89,7 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     Ok(match expr {
         Expression::Map(map) => {
             let mut new_map = map.as_ref().clone();
-            new_map.insert(key.to_string(), value);
+            new_map.insert(SmallString::from(key.to_string()), value);
             Expression::Map(Rc::new(new_map))
         }
         _ => Expression::None,
@@ -105,7 +104,7 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     Ok(match expr {
         Expression::Map(map) => {
             let mut new_map = map.as_ref().clone();
-            new_map.remove(&key.to_string());
+            new_map.remove(&SmallString::from(key.to_string()));
             Expression::Map(Rc::new(new_map))
         }
         _ => Expression::None,
@@ -118,7 +117,10 @@ fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     let key = args[1].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
+        Expression::Map(map) => Expression::Boolean(
+            map.as_ref()
+                .contains_key(&SmallString::from(key.to_string())),
+        ),
         _ => Expression::None,
     })
 }
@@ -133,7 +135,10 @@ fn from_items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
             for item in list.as_ref() {
                 if let Expression::List(pair) = item {
                     if pair.as_ref().len() == 2 {
-                        map.insert(pair.as_ref()[0].to_string(), pair.as_ref()[1].clone());
+                        map.insert(
+                            SmallString::from(pair.as_ref()[0].to_string()),
+                            pair.as_ref()[1].clone(),
+                        );
                     }
                 }
             }
@@ -223,12 +228,12 @@ fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     for (k, v) in map.as_ref().iter() {
         let new_key = match Expression::Apply(
             Rc::new(key_func.clone()),
-            Rc::new(vec![Expression::String(k.clone())]),
+            Rc::new(vec![Expression::String(k.to_string())]),
         )
         .eval(env)?
         {
-            Expression::String(s) => s,
-            other => other.to_string(),
+            Expression::String(s) => SmallString::from(s),
+            other => SmallString::from(other.to_string()),
         };
 
         let new_val =
@@ -271,9 +276,9 @@ fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 fn deep_merge_maps(
-    a: &BTreeMap<String, Expression>,
-    b: &BTreeMap<String, Expression>,
-) -> Result<BTreeMap<String, Expression>, LmError> {
+    a: &BTreeMap<SmallString<[u8; 16]>, Expression>,
+    b: &BTreeMap<SmallString<[u8; 16]>, Expression>,
+) -> Result<BTreeMap<SmallString<[u8; 16]>, Expression>, LmError> {
     let mut result = a.clone();
 
     for (k, v) in b.iter() {
@@ -322,7 +327,7 @@ fn get_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 }
 
 fn get_value_by_path(
-    map: &BTreeMap<String, Expression>,
+    map: &BTreeMap<SmallString<[u8; 16]>, Expression>,
     path: &[&str],
 ) -> Result<Expression, LmError> {
     let mut current = Expression::from(map.clone());

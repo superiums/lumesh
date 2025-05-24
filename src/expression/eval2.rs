@@ -1,12 +1,12 @@
-use super::Builtin;
 use super::catcher::catch_error;
-use super::cmd_excutor::eval_command;
 use super::eval::State;
+use super::{Builtin, cmd_excutor::handle_command};
 
 use super::Expression;
 use crate::{Environment, RuntimeError};
 use glob::glob;
 
+use smallstr::SmallString;
 use smallvec::SmallVec;
 use std::rc::Rc;
 
@@ -159,7 +159,8 @@ impl Expression {
     ) -> Result<Self, RuntimeError> {
         // 函数应用
         match self {
-            Self::Apply(func, args) | Self::Command(func, args) => {
+            // TODO | Self::Command(func, args)
+            Self::Apply(func, args) => {
                 // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
 
                 // 递归求值函数和参数
@@ -173,11 +174,12 @@ impl Expression {
                 // 分派到具体类型处理
                 match func_eval {
                     // | Self::String(name)
-                    Self::Symbol(_name) | Self::String(_name) => {
+                    // TODO | Self::String(_name)
+                    Self::Symbol(name) => {
                         // Apply as Command
                         //dbg!("   3.--->applying symbol as Command:", &name);
-                        // handle_command(&name, args, state, env, depth)
-                        eval_command(func, args, state, env, depth)
+                        handle_command(&name.to_string(), args, state, env, depth)
+                        // eval_command(func, args, state, env, depth)
                         // let bindings = env.get_bindings_map();
 
                         // let mut cmd_args = vec![];
@@ -447,10 +449,10 @@ impl Expression {
 /// # 返回值
 /// 返回元组: (剩余未绑定的形式参数)
 pub fn bind_arguments(
-    params: &SmallVec<[String; 6]>,
+    params: &SmallVec<[SmallString<[u8; 16]>; 6]>,
     args: &Vec<Expression>,
     target_env: &mut Environment,
-) -> Option<SmallVec<[String; 6]>> {
+) -> Option<SmallVec<[SmallString<[u8; 16]>; 6]>> {
     // 计算实际能绑定的参数数量
     let bound_count = params.len().min(args.len());
     // 绑定参数到目标环境
@@ -467,7 +469,7 @@ pub fn bind_arguments(
 
 #[inline]
 fn handle_for(
-    var: &String,
+    var: &SmallString<[u8; 16]>,
     list_expr: &Rc<Expression>,
     body: &Rc<Expression>,
     state: &mut State,

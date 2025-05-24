@@ -4,42 +4,43 @@ use chrono::{
     NaiveTime, TimeZone, Timelike, Utc,
 };
 use common_macros::hash_map;
+use smallstr::SmallString;
 use std::{collections::BTreeMap, thread, time::Duration};
 
 pub fn get() -> Expression {
     (hash_map! {
         // 基本时间获取函数
-        String::from("sleep") => Expression::builtin("sleep", sleep,
+       SmallString::from("sleep") => Expression::builtin("sleep", sleep,
             "sleep for a given number of milliseconds [ms] or duration string (e.g. '1s', '2m')"),
 
-        String::from("display") => Expression::builtin("display", display,
+       SmallString::from("display") => Expression::builtin("display", display,
             "get preformatted datetime as map with time/date/datetime/etc."),
 
-        String::from("year") => Expression::builtin("year", |args, env| get_time_component(args, env, |dt| dt.year() as i64),
+       SmallString::from("year") => Expression::builtin("year", |args, env| get_time_component(args, env, |dt| dt.year() as i64),
             "get year (current or from specified datetime)"),
 
-        String::from("month") => Expression::builtin("month", |args, env| get_time_component(args, env, |dt| dt.month() as i64),
+       SmallString::from("month") => Expression::builtin("month", |args, env| get_time_component(args, env, |dt| dt.month() as i64),
             "get month (1-12, current or from specified datetime)"),
 
-        String::from("weekday") => Expression::builtin("weekday", |args, env| get_time_component(args, env, |dt| dt.weekday().num_days_from_monday() as i64 + 1),
+       SmallString::from("weekday") => Expression::builtin("weekday", |args, env| get_time_component(args, env, |dt| dt.weekday().num_days_from_monday() as i64 + 1),
             "get weekday (1-7, Monday=1, current or from specified datetime)"),
 
-        String::from("day") => Expression::builtin("day", |args, env| get_time_component(args, env, |dt| dt.day() as i64),
+       SmallString::from("day") => Expression::builtin("day", |args, env| get_time_component(args, env, |dt| dt.day() as i64),
             "get day of month (1-31, current or from specified datetime)"),
 
-        String::from("hour") => Expression::builtin("hour", |args, env| get_time_component(args, env, |dt| dt.hour() as i64),
+       SmallString::from("hour") => Expression::builtin("hour", |args, env| get_time_component(args, env, |dt| dt.hour() as i64),
             "get hour (0-23, current or from specified datetime)"),
 
-        String::from("minute") => Expression::builtin("minute", |args, env| get_time_component(args, env, |dt| dt.minute() as i64),
+       SmallString::from("minute") => Expression::builtin("minute", |args, env| get_time_component(args, env, |dt| dt.minute() as i64),
             "get minute (0-59, current or from specified datetime)"),
 
-        String::from("second") => Expression::builtin("second", |args, env| get_time_component(args, env, |dt| dt.second() as i64),
+       SmallString::from("second") => Expression::builtin("second", |args, env| get_time_component(args, env, |dt| dt.second() as i64),
             "get second (0-59, current or from specified datetime)"),
 
-        String::from("seconds") => Expression::builtin("seconds", |args, env| get_time_component(args, env, |dt| dt.time().num_seconds_from_midnight() as i64),
+       SmallString::from("seconds") => Expression::builtin("seconds", |args, env| get_time_component(args, env, |dt| dt.time().num_seconds_from_midnight() as i64),
             "get seconds since midnight (current or from specified datetime)"),
 
-        String::from("stamp") => Expression::builtin("stamp", |args, env| {
+       SmallString::from("stamp") => Expression::builtin("stamp", |args, env| {
             let dt = if args.is_empty() {
                 Utc::now()
             } else {
@@ -48,7 +49,7 @@ pub fn get() -> Expression {
             Ok(Expression::Integer(dt.timestamp()))
         }, "get Unix timestamp in seconds (current or from specified datetime)"),
 
-        String::from("stamp-ms") => Expression::builtin("stamp_ms", |args, env| {
+       SmallString::from("stamp-ms") => Expression::builtin("stamp_ms", |args, env| {
             let dt = if args.is_empty() {
                 Utc::now()
             } else {
@@ -57,26 +58,26 @@ pub fn get() -> Expression {
             Ok(Expression::Integer(dt.timestamp_millis()))
         }, "get Unix timestamp in milliseconds (current or from specified datetime)"),
 
-        String::from("fmt") => Expression::builtin("fmt", fmt,
+       SmallString::from("fmt") => Expression::builtin("fmt", fmt,
             "format datetime (current or specified) using chrono format string"),
 
         // 时间操作函数
-        String::from("now") => Expression::builtin("now", now,
+       SmallString::from("now") => Expression::builtin("now", now,
             "get current datetime as DateTime object or formatted string"),
 
-        String::from("parse") => Expression::builtin("parse", parse,
+       SmallString::from("parse") => Expression::builtin("parse", parse,
             "parse datetime string according to format and return DateTime object"),
 
-        String::from("add") => Expression::builtin("add", add,
+       SmallString::from("add") => Expression::builtin("add", add,
             "add duration to datetime (duration string like '1h30m' or components)"),
 
-        String::from("diff") => Expression::builtin("diff", diff,
+       SmallString::from("diff") => Expression::builtin("diff", diff,
             "calculate difference between two datetimes in specified units"),
 
-        String::from("timezone") => Expression::builtin("timezone", timezone,
+       SmallString::from("timezone") => Expression::builtin("timezone", timezone,
             "convert datetime to different timezone (offset in hours)"),
 
-        String::from("is_leap_year") => Expression::builtin("is_leap_year", |args, env| {
+       SmallString::from("is_leap_year") => Expression::builtin("is_leap_year", |args, env| {
             let year = match args.first().map(|a| a.eval(env)) {
                 Some(Ok(Expression::Integer(y))) => y,
                 Some(Ok(_)) => return Err(LmError::CustomError("Year must be an integer".to_string())),
@@ -89,10 +90,10 @@ pub fn get() -> Expression {
                 .unwrap_or(false)))
         }, "check if a year is a leap year"),
 
-        String::from("from_parts") => Expression::builtin("from_parts", from_parts,
+       SmallString::from("from_parts") => Expression::builtin("from_parts", from_parts,
             "create DateTime from components (year, month, day[, hour, minute, second])"),
 
-        String::from("to_string") => Expression::builtin("to_string", to_string,
+       SmallString::from("to_string") => Expression::builtin("to_string", to_string,
             "convert DateTime to string with optional format (default: RFC3339)"),
     })
     .into()
@@ -183,7 +184,10 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<NaiveDa
     }
 }
 
-fn get_map_value(map: &BTreeMap<String, Expression>, key: &str) -> Result<Option<i64>, LmError> {
+fn get_map_value(
+    map: &BTreeMap<SmallString<[u8; 16]>, Expression>,
+    key: &str,
+) -> Result<Option<i64>, LmError> {
     match map.get(key) {
         Some(Expression::Integer(n)) => Ok(Some(*n)),
         Some(Expression::String(s)) => s
@@ -257,15 +261,15 @@ fn display(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmErr
     let now = Local::now();
     let naive = now.naive_local();
     Ok(Expression::from(hash_map! {
-        String::from("time") => Expression::String(naive.time().format("%H:%M:%S").to_string()),
-        String::from("timepm") => Expression::String(naive.format("%-I:%M %p").to_string()),
-        String::from("date") => Expression::String(naive.date().format("%Y-%m-%d").to_string()),
-        String::from("datetime") => Expression::String(naive.format("%Y-%m-%d %H:%M:%S").to_string()),
-        String::from("rfc3339") => Expression::String(now.to_rfc3339()),
-        String::from("rfc2822") => Expression::String(now.to_rfc2822()),
-        String::from("week") => Expression::Integer(naive.iso_week().week() as i64),
-        String::from("ordinal") => Expression::Integer(naive.ordinal() as i64),
-        String::from("datetime_obj") => Expression::DateTime(naive),
+       SmallString::from("time") => Expression::String(naive.time().format("%H:%M:%S").to_string()),
+       SmallString::from("timepm") => Expression::String(naive.format("%-I:%M %p").to_string()),
+       SmallString::from("date") => Expression::String(naive.date().format("%Y-%m-%d").to_string()),
+       SmallString::from("datetime") => Expression::String(naive.format("%Y-%m-%d %H:%M:%S").to_string()),
+       SmallString::from("rfc3339") => Expression::String(now.to_rfc3339()),
+       SmallString::from("rfc2822") => Expression::String(now.to_rfc2822()),
+       SmallString::from("week") => Expression::Integer(naive.iso_week().week() as i64),
+       SmallString::from("ordinal") => Expression::Integer(naive.ordinal() as i64),
+       SmallString::from("datetime_obj") => Expression::DateTime(naive),
     }))
 }
 

@@ -1,11 +1,12 @@
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("create") => Expression::builtin("create", create, "create a text widget"),
-        String::from("joinx") => Expression::builtin("joinx", joinx, "join two widgets horizontally"),
-        String::from("joiny") => Expression::builtin("joiny", joiny, "join two widgets vertically")
+       SmallString::from("create") => Expression::builtin("create", create, "create a text widget"),
+       SmallString::from("joinx") => Expression::builtin("joinx", joinx, "join two widgets horizontally"),
+       SmallString::from("joiny") => Expression::builtin("joiny", joiny, "join two widgets vertically")
     })
     .into()
 }

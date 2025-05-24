@@ -1,3 +1,5 @@
+use smallstr::SmallString;
+
 use super::{Environment, Expression, Int};
 use std::{
     collections::{BTreeMap, HashMap},
@@ -40,28 +42,28 @@ impl From<bool> for Expression {
     }
 }
 
-impl<T> From<HashMap<String, T>> for Expression
+impl<T> From<HashMap<SmallString<[u8; 16]>, T>> for Expression
 where
     T: Into<Self>,
 {
-    fn from(map: HashMap<String, T>) -> Self {
+    fn from(map: HashMap<SmallString<[u8; 16]>, T>) -> Self {
         Self::HMap(Rc::new(
             map.into_iter()
                 .map(|(name, item)| (name, item.into()))
-                .collect::<HashMap<String, Self>>(),
+                .collect::<HashMap<SmallString<[u8; 16]>, Self>>(),
         ))
     }
 }
 
-impl<T> From<BTreeMap<String, T>> for Expression
+impl<T> From<BTreeMap<SmallString<[u8; 16]>, T>> for Expression
 where
     T: Into<Self>,
 {
-    fn from(map: BTreeMap<String, T>) -> Self {
+    fn from(map: BTreeMap<SmallString<[u8; 16]>, T>) -> Self {
         Self::Map(Rc::new(
             map.into_iter()
                 .map(|(name, item)| (name, item.into()))
-                .collect::<BTreeMap<String, Self>>(),
+                .collect::<BTreeMap<SmallString<[u8; 16]>, Self>>(),
         ))
     }
 }

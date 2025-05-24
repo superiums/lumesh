@@ -1,49 +1,50 @@
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
+use smallstr::SmallString;
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
         // read
-        String::from("first") => Expression::builtin("first", first, "get the first of a list"),
-        String::from("last") => Expression::builtin("last", last, "get the last of a list"),
-        String::from("nth") => Expression::builtin("nth", nth, "get the nth element of a list"),
-        String::from("take") => Expression::builtin("take", take, "take the first n elements of a list"),
-        String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list"),
+       SmallString::from("first") => Expression::builtin("first", first, "get the first of a list"),
+       SmallString::from("last") => Expression::builtin("last", last, "get the last of a list"),
+       SmallString::from("nth") => Expression::builtin("nth", nth, "get the nth element of a list"),
+       SmallString::from("take") => Expression::builtin("take", take, "take the first n elements of a list"),
+       SmallString::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list"),
 
         // modify
-        String::from("append") => Expression::builtin("append", append, "append an element to a list"),
-        String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list"),
-        String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
-        String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order"),
-        String::from("split-at") => Expression::builtin("split-at", split_at, "split a list at a given index"),
+       SmallString::from("append") => Expression::builtin("append", append, "append an element to a list"),
+       SmallString::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list"),
+       SmallString::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
+       SmallString::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order"),
+       SmallString::from("split-at") => Expression::builtin("split-at", split_at, "split a list at a given index"),
 
         // create
-        String::from("concat") => Expression::builtin("concat", concat, "create a list from a variable number of arguments"),
-        String::from("from") => Expression::builtin("from", from, "create a list from range"),
+       SmallString::from("concat") => Expression::builtin("concat", concat, "create a list from a variable number of arguments"),
+       SmallString::from("from") => Expression::builtin("from", from, "create a list from range"),
 
         // loop, walk on
-        String::from("emulate") => Expression::builtin("emulate", emulate, "emulate over a list of index and values"),
-        String::from("map") => Expression::builtin("map", map, "map a function over a list of values"),
-        String::from("filter") => Expression::builtin("filter", filter, "filter a list of values with a condition function"),
-        String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map list elements in one pass, skipping None values"),
-        String::from("reduce") => Expression::builtin("reduce", reduce, "reduce a function over a list of values"),
-        String::from("find") => Expression::builtin("find", find, "find the index of an element in a list, returns None if not found"),
+       SmallString::from("emulate") => Expression::builtin("emulate", emulate, "emulate over a list of index and values"),
+       SmallString::from("map") => Expression::builtin("map", map, "map a function over a list of values"),
+       SmallString::from("filter") => Expression::builtin("filter", filter, "filter a list of values with a condition function"),
+       SmallString::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map list elements in one pass, skipping None values"),
+       SmallString::from("reduce") => Expression::builtin("reduce", reduce, "reduce a function over a list of values"),
+       SmallString::from("find") => Expression::builtin("find", find, "find the index of an element in a list, returns None if not found"),
 
         // transfer to
-        String::from("join") => Expression::builtin("join", join, "join a list of strings with a separator"),
-        String::from("to-map") => Expression::builtin("to-map", to_map, "convert list to map using a key function (default: use items themselves as keys)"),
+       SmallString::from("join") => Expression::builtin("join", join, "join a list of strings with a separator"),
+       SmallString::from("to-map") => Expression::builtin("to-map", to_map, "convert list to map using a key function (default: use items themselves as keys)"),
 
         // flatten
         // transpose
-        String::from("transpose") => Expression::builtin("transpose", transpose, "transpose a matrix (list of lists) by switching rows and columns"),
-        String::from("group-by") => Expression::builtin("group-by", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
-        String::from("chunk") => Expression::builtin("chunk", chunk, "chunk a list into lists of n elements"),
-        String::from("foldl") => Expression::builtin("foldl", foldl, "fold a list from the left"),
-        String::from("foldr") => Expression::builtin("foldr", foldr, "fold a list from the right"),
-        String::from("zip") => Expression::builtin("zip", zip, "zip two lists together"),
-        String::from("unzip") => Expression::builtin("unzip", unzip, "unzip a list of pairs into a pair of lists"),
+       SmallString::from("transpose") => Expression::builtin("transpose", transpose, "transpose a matrix (list of lists) by switching rows and columns"),
+       SmallString::from("group-by") => Expression::builtin("group-by", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
+       SmallString::from("chunk") => Expression::builtin("chunk", chunk, "chunk a list into lists of n elements"),
+       SmallString::from("foldl") => Expression::builtin("foldl", foldl, "fold a list from the left"),
+       SmallString::from("foldr") => Expression::builtin("foldr", foldr, "fold a list from the right"),
+       SmallString::from("zip") => Expression::builtin("zip", zip, "zip two lists together"),
+       SmallString::from("unzip") => Expression::builtin("unzip", unzip, "unzip a list of pairs into a pair of lists"),
     })
     .into()
 }
@@ -619,8 +620,8 @@ fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         let key = match Expression::Apply(Rc::new(key_func.clone()), Rc::new(vec![item.clone()]))
             .eval(env)?
         {
-            Expression::String(s) => s,
-            other => other.to_string(),
+            Expression::String(s) => SmallString::from(s),
+            other => SmallString::from(other.to_string()),
         };
         map.insert(key, item.clone());
     }
@@ -719,7 +720,8 @@ fn emulate(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
 
 fn get_string_arg(expr: Expression) -> Result<String, LmError> {
     match expr {
-        Expression::Symbol(s) | Expression::String(s) => Ok(s),
+        Expression::Symbol(s) => Ok(s.to_string()),
+        Expression::String(s) => Ok(s),
         _ => Err(LmError::CustomError("expected string".to_string())),
     }
 }

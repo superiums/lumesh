@@ -1,11 +1,12 @@
 use crate::{Expression, LmError};
 use common_macros::hash_map;
 use regex_lite::Regex;
+use smallstr::SmallString;
 
 pub fn get() -> Expression {
     (hash_map! {
         // 编译正则表达式（实际使用时直接传字符串更高效，这里提供兼容接口）
-        String::from("new") => Expression::builtin("new", |args, env| {
+       SmallString::from("new") => Expression::builtin("new", |args, env| {
             super::check_exact_args_len("new", args, 1)?;
             let pattern = args[0].eval(env)?.to_string();
             Regex::new(&pattern)
@@ -14,7 +15,7 @@ pub fn get() -> Expression {
         }, "compile regex pattern (validation only)"),
 
         // 检查是否匹配
-        String::from("match") => Expression::builtin("match", |args, env| {
+       SmallString::from("match") => Expression::builtin("match", |args, env| {
             super::check_exact_args_len("match", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
@@ -23,7 +24,7 @@ pub fn get() -> Expression {
         }, "check if text matches pattern"),
 
         // 查找第一个匹配
-        String::from("find") => Expression::builtin("find", |args, env| {
+       SmallString::from("find") => Expression::builtin("find", |args, env| {
             super::check_exact_args_len("find", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
@@ -40,7 +41,7 @@ pub fn get() -> Expression {
         }, "find first match with [start, end, text]"),
 
         // 查找所有匹配
-        String::from("find_all") => Expression::builtin("find_all", |args, env| {
+       SmallString::from("find_all") => Expression::builtin("find_all", |args, env| {
             super::check_exact_args_len("find_all", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
@@ -58,7 +59,7 @@ pub fn get() -> Expression {
         }, "find all matches as [[start, end, text], ...]"),
 
         // 获取第一个捕获组
-        String::from("capture") => Expression::builtin("capture", |args, env| {
+       SmallString::from("capture") => Expression::builtin("capture", |args, env| {
             super::check_exact_args_len("capture", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
@@ -77,7 +78,7 @@ pub fn get() -> Expression {
         }, "get first capture groups as [full, group1, group2, ...]"),
 
         // 获取所有捕获组
-        String::from("captures") => Expression::builtin("captures", |args, env| {
+       SmallString::from("captures") => Expression::builtin("captures", |args, env| {
             super::check_exact_args_len("captures", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
@@ -95,7 +96,7 @@ pub fn get() -> Expression {
         }, "get all captures as [[full, group1, ...], ...]"),
 
         // 正则分割
-        String::from("split") => Expression::builtin("split", |args, env| {
+       SmallString::from("split") => Expression::builtin("split", |args, env| {
             super::check_exact_args_len("split", args, 2)?;
             let pattern = args[0].eval(env)?.to_string();
             let text = args[1].eval(env)?.to_string();
@@ -109,7 +110,7 @@ pub fn get() -> Expression {
         }, "split text by pattern"),
 
         // 替换所有匹配
-        String::from("replace") => Expression::builtin("replace", |args, env| {
+       SmallString::from("replace") => Expression::builtin("replace", |args, env| {
             super::check_exact_args_len("replace", args, 3)?;
             let pattern = args[0].eval(env)?.to_string();
             let replacement = args[1].eval(env)?.to_string();
@@ -121,7 +122,7 @@ pub fn get() -> Expression {
             ))
         }, "replace all matches in text"),
 
-        String::from("capture-name") => Expression::builtin("capture-name", |args, env| {
+       SmallString::from("capture-name") => Expression::builtin("capture-name", |args, env| {
                     super::check_args_len("capture-name", args, 2..3)?;
 
                     let (pattern, s, group_names) = match args.len() {
@@ -134,12 +135,14 @@ pub fn get() -> Expression {
                     };
 
                     let pattern = match pattern.eval(env)? {
-                        Expression::Symbol(x) | Expression::String(x) => x,
+                        Expression::Symbol(x)  => x,
+                        Expression::String(x) => SmallString::from(x),
                         _ => return Err(LmError::CustomError("capture-name requires string arguments".to_string())),
                     };
 
                     let s = match s.eval(env)? {
-                        Expression::Symbol(x) | Expression::String(x) => x,
+                        Expression::Symbol(x)  => x,
+                        Expression::String(x) => SmallString::from(x),
                         _ => return Err(LmError::CustomError("capture-name requires string arguments".to_string())),
                     };
 
@@ -170,16 +173,18 @@ pub fn get() -> Expression {
                     Ok(Expression::None)
                 }, "get regex capture groups, optionally with names"),
 
-                String::from("split") => Expression::builtin("split", |args, env| {
+               SmallString::from("split") => Expression::builtin("split", |args, env| {
                     super::check_exact_args_len("split", args, 2)?;
 
                     let pattern = match args[0].eval(env)? {
-                        Expression::Symbol(x) | Expression::String(x) => x,
+                        Expression::Symbol(x)  => x,
+                        Expression::String(x) => SmallString::from(x),
                         _ => return Err(LmError::CustomError("split requires string arguments".to_string())),
                     };
 
                     let s = match args[1].eval(env)? {
-                        Expression::Symbol(x) | Expression::String(x) => x,
+                        Expression::Symbol(x)  => x,
+                        Expression::String(x) => SmallString::from(x),
                         _ => return Err(LmError::CustomError("split requires string arguments".to_string())),
                     };
 

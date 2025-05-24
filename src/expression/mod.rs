@@ -27,7 +27,7 @@ pub enum Expression {
     CustomOp(SmallString<[u8; 10]>, Rc<Self>, bool),
 
     // 基础类型保持原样
-    Symbol(String),
+    Symbol(SmallString<[u8; 16]>),
     Variable(SmallString<[u8; 16]>),
     Integer(Int),
     Float(f64),
@@ -38,30 +38,30 @@ pub enum Expression {
 
     // 集合类型使用Rc
     List(Rc<Vec<Self>>),
-    HMap(Rc<HashMap<String, Self>>),
-    Map(Rc<BTreeMap<String, Self>>),
+    HMap(Rc<HashMap<SmallString<[u8; 16]>, Self>>),
+    Map(Rc<BTreeMap<SmallString<[u8; 16]>, Self>>),
 
     // 索引和切片优化
     Index(Rc<Self>, Rc<Self>),
     Slice(Rc<Self>, SliceParams),
 
     // 其他变体保持不变
-    Del(String),
-    Declare(String, Rc<Self>),
-    Assign(String, Rc<Self>),
-    For(String, Rc<Self>, Rc<Self>),
+    Del(SmallString<[u8; 16]>),
+    Declare(SmallString<[u8; 16]>, Rc<Self>),
+    Assign(SmallString<[u8; 16]>, Rc<Self>),
+    For(SmallString<[u8; 16]>, Rc<Self>, Rc<Self>),
     While(Rc<Self>, Rc<Self>),
     Loop(Rc<Self>),
     Match(Rc<Self>, SmallVec<[(Pattern, Rc<Self>); 6]>),
     If(Rc<Self>, Rc<Self>, Rc<Self>),
     Apply(Rc<Self>, Rc<Vec<Self>>),
     Command(Rc<Self>, Rc<Vec<Self>>),
-    Alias(String, Rc<Self>),
-    Lambda(SmallVec<[String; 6]>, Rc<Self>),
+    Alias(SmallString<[u8; 16]>, Rc<Self>),
+    Lambda(SmallVec<[SmallString<[u8; 16]>; 6]>, Rc<Self>),
     Function(
-        String,
-        Vec<(String, Option<Self>)>,
-        Option<String>,
+        SmallString<[u8; 16]>,
+        Vec<(SmallString<[u8; 16]>, Option<Self>)>,
+        Option<SmallString<[u8; 16]>>,
         Rc<Self>,
     ),
     Return(Rc<Self>),

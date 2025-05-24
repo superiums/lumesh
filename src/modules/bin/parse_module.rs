@@ -1,15 +1,16 @@
 // use super::{get_list_arg, get_string_arg};
 use crate::{Environment, Expression, LmError, SyntaxError, parse_script};
 use common_macros::hash_map;
+use smallstr::SmallString;
 use std::collections::BTreeMap;
 use tinyjson::JsonValue;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("toml") => Expression::builtin("toml", parse_toml, "parse TOML into lumesh expression"),
-        String::from("json") => Expression::builtin("json", parse_json, "parse JSON into lumesh expression"),
-        String::from("expr") => Expression::builtin("expr", parse_expr, "parse lumesh script"),
-        String::from("cmd") => Expression::builtin("cmd", parse_command_output,
+       SmallString::from("toml") => Expression::builtin("toml", parse_toml, "parse TOML into lumesh expression"),
+       SmallString::from("json") => Expression::builtin("json", parse_json, "parse JSON into lumesh expression"),
+       SmallString::from("expr") => Expression::builtin("expr", parse_expr, "parse lumesh script"),
+       SmallString::from("cmd") => Expression::builtin("cmd", parse_command_output,
             "parse command output into structured data"),
 
     })
@@ -40,8 +41,8 @@ fn toml_to_expr(val: toml::Value) -> Expression {
         }
         toml::Value::Table(o) => Expression::from(
             o.into_iter()
-                .map(|(k, v)| (k, toml_to_expr(v)))
-                .collect::<BTreeMap<String, Expression>>(),
+                .map(|(k, v)| (SmallString::from(k), toml_to_expr(v)))
+                .collect::<BTreeMap<SmallString<[u8; 16]>, Expression>>(),
         ),
     }
 }
@@ -80,8 +81,8 @@ fn json_to_expr(val: JsonValue) -> Expression {
         }
         JsonValue::Object(o) => Expression::from(
             o.into_iter()
-                .map(|(k, v)| (k, json_to_expr(v)))
-                .collect::<BTreeMap<String, Expression>>(),
+                .map(|(k, v)| (SmallString::from(k), json_to_expr(v)))
+                .collect::<BTreeMap<SmallString<[u8; 16]>, Expression>>(),
         ),
     }
 }
@@ -207,7 +208,10 @@ fn parse_command_output(
 
         for (i, header) in detected_headers.iter().enumerate() {
             if let Some(&value) = values.get(i) {
-                row.insert(header.clone(), Expression::String(value.to_string()));
+                row.insert(
+                    SmallString::from_str(header.as_str()),
+                    Expression::String(value.to_string()),
+                );
             }
         }
 

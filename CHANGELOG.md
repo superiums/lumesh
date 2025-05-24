@@ -2,6 +2,7 @@
 ## [0.4.1]
 - optimize expr execution
 - fix break in while
+- optimize mem usage via introducing smallstring and smallvec
 
 ## [0.4.0]
 - refactor pipes and redirect

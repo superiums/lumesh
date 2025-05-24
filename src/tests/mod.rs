@@ -1,5 +1,7 @@
 use std::rc::Rc;
 
+use smallstr::SmallString;
+
 use crate::{Diagnostic, Environment, Expression, SyntaxErrorKind, parse_script, tokenize};
 
 #[track_caller]
@@ -39,7 +41,7 @@ fn performance_test() {
     // 测试1: 简单表达式的构造和克隆
     let _ = Instant::now();
     let expr = Expression::BinaryOp(
-        "+".to_string(),
+        SmallString::from_str("+"),
         Rc::new(Expression::Integer(1)),
         Rc::new(Expression::Integer(2)),
     );
@@ -67,7 +69,7 @@ fn performance_test2() {
     // 测试1: 简单表达式的构造和克隆
     let _ = Instant::now();
     let expr = Expression::BinaryOp(
-        "..".to_string(),
+        SmallString::from_str(".."),
         Rc::new(Expression::Integer(1)),
         Rc::new(Expression::Integer(10000)),
     );
@@ -94,7 +96,7 @@ fn performance_test3() {
     // 测试1: 简单表达式的构造和克隆
     let _ = Instant::now();
     let r = Expression::BinaryOp(
-        "..".to_string(),
+        SmallString::from_str(".."),
         Rc::new(Expression::Integer(1)),
         Rc::new(Expression::Integer(1000000)),
     );
@@ -102,7 +104,7 @@ fn performance_test3() {
         "i".into(),
         Rc::new(r),
         Rc::new(Expression::BinaryOp(
-            "+=".to_string(),
+            SmallString::from_str("+="),
             Rc::new(Expression::Symbol("i".into())),
             Rc::new(Expression::Integer(1)),
         )),
@@ -130,12 +132,12 @@ fn performance_test4() {
     // 测试1: 简单表达式的构造和克隆
     let _ = Instant::now();
     let _ = Expression::BinaryOp(
-        "..".to_string(),
+        SmallString::from_str(".."),
         Rc::new(Expression::Integer(1)),
         Rc::new(Expression::Integer(1000)),
     );
     let r = Expression::BinaryOp(
-        "..".to_string(),
+        SmallString::from_str(".."),
         Rc::new(Expression::Integer(1)),
         Rc::new(Expression::Integer(10)),
     );
@@ -143,7 +145,7 @@ fn performance_test4() {
         "i".into(),
         Rc::new(r.clone()),
         Rc::new(Expression::BinaryOp(
-            "+".to_string(),
+            SmallString::from_str("+"),
             Rc::new(r.clone()),
             Rc::new(Expression::Symbol("i".into())),
         )),
@@ -173,12 +175,12 @@ fn test_conditional_operator() {
         Expression::If(
             Rc::new(Expression::Symbol("a".into())),
             Rc::new(Expression::BinaryOp(
-                "+".to_string(),
+                SmallString::from_str("+"),
                 Rc::new(Expression::Symbol("b".into())),
                 Rc::new(Expression::Symbol("c".into()))
             )),
             Rc::new(Expression::BinaryOp(
-                "*".to_string(),
+                SmallString::from_str("*"),
                 Rc::new(Expression::Symbol("d".into())),
                 Rc::new(Expression::Symbol("e".into()))
             ))

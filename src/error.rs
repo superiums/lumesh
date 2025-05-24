@@ -4,6 +4,7 @@ use common_macros::b_tree_map;
 use core::{cmp::max, fmt};
 use detached_str::{Str, StrSlice};
 use nom::error::{ErrorKind, ParseError};
+use smallstr::SmallString;
 use std::error::Error as StdError;
 use thiserror::Error;
 
@@ -352,7 +353,7 @@ pub enum RuntimeError {
     #[error("redeclaration of `{0}`")]
     Redeclaration(String),
     #[error("undeclared variable: {0}")]
-    UndeclaredVariable(String),
+    UndeclaredVariable(SmallString<[u8; 16]>),
     #[error("no matching branch while evaluating `{0}`")]
     NoMatchingBranch(String),
     #[error("too many arguments for function `{name}`: max {max}, found {received}")]
@@ -370,7 +371,7 @@ pub enum RuntimeError {
     #[error("invalid default value `{2}` for argument `{1}` in function `{0}`")]
     InvalidDefaultValue(String, String, Expression),
     #[error("invalid operator `{0}`")]
-    InvalidOperator(String),
+    InvalidOperator(SmallString<[u8; 3]>),
     #[error("index {index} out of bounds (length {len})")]
     IndexOutOfBounds { index: Int, len: usize },
     #[error("key `{0}` not found in map")]

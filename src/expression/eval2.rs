@@ -7,6 +7,7 @@ use super::Expression;
 use crate::{Environment, RuntimeError};
 use glob::glob;
 
+use smallvec::SmallVec;
 use std::rc::Rc;
 
 // Expression求值2
@@ -446,10 +447,10 @@ impl Expression {
 /// # 返回值
 /// 返回元组: (剩余未绑定的形式参数)
 pub fn bind_arguments(
-    params: &Vec<String>,
+    params: &SmallVec<[String; 6]>,
     args: &Vec<Expression>,
     target_env: &mut Environment,
-) -> Option<Vec<String>> {
+) -> Option<SmallVec<[String; 6]>> {
     // 计算实际能绑定的参数数量
     let bound_count = params.len().min(args.len());
     // 绑定参数到目标环境
@@ -458,7 +459,7 @@ pub fn bind_arguments(
     }
     // 获取剩余参数
     if bound_count < params.len() {
-        Some(params[bound_count..].to_vec())
+        Some(params[bound_count..].iter().cloned().collect())
     } else {
         None
     }

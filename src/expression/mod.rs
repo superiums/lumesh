@@ -14,21 +14,25 @@ pub mod overop;
 
 use builtin::Builtin;
 use chrono::NaiveDateTime;
+use smallstr::SmallString;
+use smallvec::SmallVec;
+
 #[derive(Clone, PartialEq)]
 pub enum Expression {
     // 所有嵌套节点改为Rc包裹
     Group(Rc<Self>),
-    BinaryOp(String, Rc<Self>, Rc<Self>),
-    Pipe(String, Rc<Self>, Rc<Self>),
-    UnaryOp(String, Rc<Self>, bool),
+    BinaryOp(SmallString<[u8; 3]>, Rc<Self>, Rc<Self>),
+    Pipe(SmallString<[u8; 3]>, Rc<Self>, Rc<Self>),
+    UnaryOp(SmallString<[u8; 3]>, Rc<Self>, bool),
+    CustomOp(SmallString<[u8; 10]>, Rc<Self>, bool),
 
     // 基础类型保持原样
     Symbol(String),
-    Variable(String),
+    Variable(SmallString<[u8; 16]>),
     Integer(Int),
     Float(f64),
-    Bytes(Vec<u8>), // 这个保持值类型，因为Rc<Vec>反而增加复杂度
-    String(String), // 同上
+    Bytes(Vec<u8>),
+    String(String),
     Boolean(bool),
     None,
 
@@ -48,12 +52,12 @@ pub enum Expression {
     For(String, Rc<Self>, Rc<Self>),
     While(Rc<Self>, Rc<Self>),
     Loop(Rc<Self>),
-    Match(Rc<Self>, Vec<(Pattern, Rc<Self>)>),
+    Match(Rc<Self>, SmallVec<[(Pattern, Rc<Self>); 6]>),
     If(Rc<Self>, Rc<Self>, Rc<Self>),
     Apply(Rc<Self>, Rc<Vec<Self>>),
     Command(Rc<Self>, Rc<Vec<Self>>),
     Alias(String, Rc<Self>),
-    Lambda(Vec<String>, Rc<Self>),
+    Lambda(SmallVec<[String; 6]>, Rc<Self>),
     Function(
         String,
         Vec<(String, Option<Self>)>,

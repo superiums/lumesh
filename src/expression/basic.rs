@@ -313,6 +313,13 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
+            Self::CustomOp(op, v, is_prefix) => {
+                if *is_prefix {
+                    write!($f, "({} {})", op, v)
+                } else {
+                    write!($f, "({} {})", v, op)
+                }
+            }
             Self::Range(r) => write!($f, "{:?}", r),
             Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
             Self::Pipe(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
@@ -569,6 +576,7 @@ impl Expression {
             Self::BinaryOp(_, _, _) => "BinaryOp".into(),
             Self::Pipe(_, _, _) => "Pipe".into(),
             Self::UnaryOp(..) => "UnaryOp".into(),
+            Self::CustomOp(..) => "CustomOp".into(),
             Self::Bytes(_) => "Bytes".into(),
             Self::Index(_, _) => "Index".into(),
             Self::Slice(_, _) => "Slice".into(),

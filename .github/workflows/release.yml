@@ -60,9 +60,9 @@ jobs:
           cp CHANGELOG.md doc
           cp README.md doc
           cp LICENSE doc
-          cp -r src/wiki/syntax.md doc
-          cp -r src/wiki/lib.md doc
-          cp -r src/wiki/keys.md doc
+          #cp -r src/wiki/syntax.md doc
+          #cp -r src/wiki/lib.md doc
+          #cp -r src/wiki/keys.md doc
           cp src/config/config.lsh doc
           # echo "Sample Documentation" > doc/README.md
 

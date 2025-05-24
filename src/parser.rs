@@ -8,7 +8,8 @@ use crate::{
 };
 use detached_str::StrSlice;
 use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
-
+use smallstr::SmallString;
+use smallvec::{SmallVec, smallvec};
 // -- 辅助类型和常量 --
 
 // 优先级常量
@@ -199,7 +200,8 @@ impl PrattParser {
                     // dbg!("--->post fix");
                     // dbg!(&lhs, operator, input);
                     // 后缀运算符 (函数调用、数组索引等)
-                    (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input)?;
+                    (input, lhs) =
+                        Self::build_postfix_ast(lhs, SmallString::from_str(operator), input)?;
                     // dbg!(&input, &lhs);
                 }
                 TokenKind::Symbol
@@ -276,9 +278,12 @@ impl PrattParser {
                 let op = first.text(input);
                 // vars
                 if op == "$" {
-                    return preceded(text("$"), map(parse_symbol_string, Expression::Variable))(
-                        input,
-                    );
+                    return preceded(
+                        text("$"),
+                        map(parse_symbol_string, |s| {
+                            Expression::Variable(SmallString::from(s))
+                        }),
+                    )(input);
                 }
                 // unary op
                 let prec = match op {
@@ -336,7 +341,7 @@ impl PrattParser {
     // 后缀表达式构建
     fn build_postfix_ast(
         lhs: Expression,
-        op: String,
+        op: SmallString<[u8; 3]>,
         input: Tokens<'_>,
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         match op.as_str() {
@@ -383,7 +388,7 @@ impl PrattParser {
                 // dbg!(&opx, &lhs);
                 Ok((
                     input.skip_n(1),
-                    Expression::UnaryOp(opx.into(), Rc::new(lhs), false),
+                    Expression::CustomOp(opx.into(), Rc::new(lhs), false),
                 ))
             }
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
@@ -566,11 +571,11 @@ impl PrattParser {
                             .as_ref()
                             .iter()
                             .map(|e| e.to_symbol().map(|s| s.to_string()))
-                            .collect::<Result<Vec<_>, _>>(),
+                            .collect::<Result<SmallVec<_>, _>>(),
                         // 处理单个参数 (x)
                         // expr => match expr {
                         // Expression::List(s) => return Ok(Expression::List(s)),
-                        Expression::Symbol(s) => Ok(vec![s.to_owned()]),
+                        Expression::Symbol(s) => Ok(smallvec![s.to_owned()]),
                         _ => {
                             return Err(SyntaxErrorKind::failure(
                                 input.get_str_slice(),
@@ -581,7 +586,7 @@ impl PrattParser {
                         } // },
                     },
                     // 处理无括号单参数
-                    Expression::Symbol(name) => Ok(vec![name]),
+                    Expression::Symbol(name) => Ok(smallvec![name]),
                     _ => {
                         // eprintln!("invalid lambda/macro param {:?}", lhs);
                         return Err(SyntaxErrorKind::failure(
@@ -1418,7 +1423,7 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     let branches = expr_map
         .into_iter()
         .map(|(pattern, expr)| (pattern, Rc::new(expr)))
-        .collect::<Vec<_>>();
+        .collect::<SmallVec<_>>();
     Ok((input, Expression::Match(Rc::new(matched), branches)))
 }
 

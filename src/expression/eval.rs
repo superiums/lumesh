@@ -5,6 +5,7 @@ use crate::expression::alias;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use core::option::Option::None;
 use regex_lite::Regex;
+use smallstr::SmallString;
 use std::collections::{BTreeMap, HashMap};
 use std::io::ErrorKind;
 use std::io::Write;
@@ -207,7 +208,9 @@ impl Expression {
                             if STRICT
                             // && env.get("STRICT") == Some(Expression::Boolean(true))
                             {
-                                return Err(RuntimeError::UndeclaredVariable(name.clone()));
+                                return Err(RuntimeError::UndeclaredVariable(
+                                    SmallString::from_str(name),
+                                ));
                             } else {
                                 env.define(name, value.clone());
                             }
@@ -265,9 +268,9 @@ impl Expression {
                             // 确保操作数是符号
                             let var_name = operand.to_symbol()?;
                             // 获取当前值
-                            let current_val = env
-                                .get(var_name)
-                                .ok_or(RuntimeError::UndeclaredVariable(var_name.to_string()))?;
+                            let current_val = env.get(var_name).ok_or(
+                                RuntimeError::UndeclaredVariable(SmallString::from_str(var_name)),
+                            )?;
                             // 确保操作是合法的，例如整数或浮点数
                             if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
                             {

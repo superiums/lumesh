@@ -20,9 +20,8 @@ pub fn catch_error(
             Some(deel) => match deel.as_ref() {
                 Expression::Symbol(..) | Expression::Lambda(..) | Expression::Function(..) => {
                     // dbg!(&deel.type_name());
-                    
-                    deel
-                        .as_ref()
+
+                    deel.as_ref()
                         .append_args(vec![Expression::from(b_tree_map! {
                             // String::from("type") => Expression::String(e.type_name()),
                             String::from("msg") => Expression::String(e.to_string()),

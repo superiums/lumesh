@@ -28,7 +28,6 @@ pub fn eval_command(
         }
         // 符号
         // string like cmd: ./abc
-        // TODO | Expression::String(cmd_sym)
         Expression::Symbol(cmd_sym) => {
             match alias::get_alias(cmd_sym) {
                 // 别名
@@ -51,7 +50,8 @@ pub fn eval_command(
                             }
                             _ => Err(RuntimeError::TypeError {
                                 expected: "Command or Builtin".into(),
-                                found: cmd_alias.type_name(),
+                                found: cmd_alias.to_string(),
+                                found_type: cmd_alias.type_name(),
                             }),
                         }
                     } else {
@@ -71,9 +71,14 @@ pub fn eval_command(
                 }
             }
         }
+        Expression::String(cmd_sym) => {
+            handle_command(&cmd_sym.to_string(), args, state, env, depth)
+        }
+
         e => Err(RuntimeError::TypeError {
             expected: "Symbol".to_string(),
-            found: e.type_name(),
+            found: e.to_string(),
+            found_type: e.type_name(),
         }),
     }
 }

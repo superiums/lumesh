@@ -774,7 +774,8 @@ impl Expression {
                 } else {
                     Err(RuntimeError::TypeError {
                         expected: "integer".into(),
-                        found: r.type_name(),
+                        found: r.to_string(),
+                        found_type: r.type_name(),
                     })
                 }
             }
@@ -808,14 +809,16 @@ impl Expression {
                 } else {
                     Err(RuntimeError::TypeError {
                         expected: "integer".into(),
-                        found: r.type_name(),
+                        found: r.to_string(),
+                        found_type: r.type_name(),
                     })
                 }
             }
 
             _ => Err(RuntimeError::TypeError {
                 expected: "indexable type (list/dict/string)".into(),
-                found: l.type_name(),
+                found: l.to_string(),
+                found_type: l.type_name(),
             }),
         }
     }
@@ -825,7 +828,8 @@ impl Expression {
             Self::List(v) => Ok(v.as_ref()),
             _ => Err(RuntimeError::TypeError {
                 expected: "list".into(),
-                found: self.type_name(),
+                found: self.to_string(),
+                found_type: self.type_name(),
             }),
         }
     }
@@ -886,7 +890,8 @@ impl Expression {
                     // 处理其他类型错误
                     _ => Err(RuntimeError::TypeError {
                         expected: "integer".into(),
-                        found: evaluated.type_name(),
+                        found: evaluated.to_string(),
+                        found_type: evaluated.type_name(),
                     }),
                 }
             }
@@ -906,7 +911,8 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "List".into(),
-                found: s.type_name(),
+                found: s.to_string(),
+                found_type: s.type_name(),
             }),
         }
     }
@@ -920,7 +926,8 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "List".into(),
-                found: s.type_name(),
+                found: s.to_string(),
+                found_type: s.type_name(),
             }),
         }
     }
@@ -946,7 +953,8 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
-                found: s.type_name(),
+                found: s.to_string(),
+                found_type: s.type_name(),
             }),
         }
     }
@@ -970,7 +978,8 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
-                found: s.type_name(),
+                found: s.to_string(),
+                found_type: s.type_name(),
             }),
         }
     }
@@ -993,7 +1002,8 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
-                found: s.type_name(),
+                found: s.to_string(),
+                found_type: s.type_name(),
             }),
         }
     }

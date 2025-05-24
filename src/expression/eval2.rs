@@ -174,7 +174,9 @@ impl Expression {
                 // 分派到具体类型处理
                 match func_eval {
                     // | Self::String(name)
-                    // TODO | Self::String(_name)
+                    Self::String(name) => {
+                        handle_command(&name.to_string(), args, state, env, depth)
+                    }
                     Self::Symbol(name) => {
                         // Apply as Command
                         //dbg!("   3.--->applying symbol as Command:", &name);

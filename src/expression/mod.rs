@@ -11,6 +11,7 @@ pub mod eval;
 pub mod eval2;
 pub mod from;
 pub mod overop;
+pub mod pty2;
 
 use builtin::Builtin;
 use chrono::NaiveDateTime;

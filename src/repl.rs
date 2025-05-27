@@ -207,14 +207,14 @@ pub fn run_repl(env: &mut Environment) {
 
 // 确保 helper 也是线程安全的
 #[derive(Clone)]
-struct LumeHelper {
+pub struct LumeHelper {
     completer: Arc<FilenameCompleter>,
     hinter: Arc<HistoryHinter>,
     highlighter: Arc<SyntaxHighlighter>,
     ai_client: Option<Arc<MockAIClient>>,
 }
 
-fn new_editor(ai_config: Option<Expression>) -> Editor<LumeHelper, FileHistory> {
+pub fn new_editor(ai_config: Option<Expression>) -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
         .completion_type(CompletionType::Circular)

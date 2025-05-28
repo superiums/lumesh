@@ -1,408 +1,228 @@
-use std::io::{self, Read, Write};
-use std::process::{Command, Stdio};
-use std::thread;
+use crossterm::terminal::{self, ClearType};
+use crossterm::tty::IsTty;
+// 包装器结构体
+use nix::sys::signal;
+use portable_pty::{CommandBuilder, PtySize, native_pty_system};
+use std::io::{self, IsTerminal, Read, Write};
+use std::sync::Arc;
 
-use libc::winsize;
-
-use crate::repl::{new_editor, read_user_input};
 use crate::{Environment, RuntimeError};
+use crossterm::execute;
 
-// 统一接口
-trait Pty {
-    fn resize(&self, cols: u16, rows: u16) -> io::Result<()>;
-    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize>;
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize>;
-    fn spawn_command(&mut self, cmd: &str) -> io::Result<()>;
-}
-
-// #[cfg(unix)]
-// fn create_pty() -> io::Result<Box<dyn Pty>> {
-//     Ok(Box::new(unix_pty::UnixPty::new()?))
-// }
-
-#[cfg(windows)]
-fn create_pty() -> io::Result<Box<dyn Pty>> {
-    Ok(Box::new(win_pty::WinPty::new()?))
-}
-
-fn nix_pty(
+pub fn exec_in_pty(
     cmdstr: &String,
     args: Option<Vec<String>>,
     env: &mut Environment,
-    input: Option<Vec<u8>>,
-) -> () {
-    use super::*;
-    use nix::pty::{ForkptyResult, forkpty};
-    use nix::sys::termios;
-    use nix::sys::wait::{WaitStatus, waitpid};
-    use nix::unistd::execvpe;
-    use nix::unistd::{close, dup2_stderr, dup2_stdout};
-    use nix::{pty::openpty, unistd::dup2_stdin};
-    use std::ffi::CStr;
-    use std::ffi::CString;
-    use std::os::{
-        fd::{AsFd, OwnedFd, RawFd},
-        unix::io::{AsRawFd, FromRawFd},
-    };
+    input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
+    pipe_out: bool,
+    mode: u8,
+) -> Result<Option<Vec<u8>>, RuntimeError> {
+    let _terminal_guard = TerminalGuard::new()?;
+    // terminal::enable_raw_mode()?;
+
+    // 设置信号处理，确保在收到信号时能正确清理
     unsafe {
-        let ws = winsize {
-            ws_row: 40,
-            ws_col: 90,
-            ws_xpixel: 0,
-            ws_ypixel: 0,
-        };
-        match forkpty(Some(&ws), None) {
-            Ok(ForkptyResult::Parent { child, master }) => {
-                // 父进程逻辑
-                println!("Parent process PID: {}", nix::unistd::getpid());
-                println!("Child process PID: {}", child);
+        signal::sigaction(
+            signal::Signal::SIGTERM,
+            &signal::SigAction::new(
+                signal::SigHandler::SigDfl,
+                signal::SaFlags::SA_RESTART,
+                signal::SigSet::empty(),
+            ),
+        )
+        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
-                // 读取子进程的输出
-                let mut buffer = [0u8; 1024];
-                let master_clone = master.try_clone().unwrap();
-                thread::spawn(move || {
-                    loop {
-                        let bytes_read =
-                            nix::unistd::read(master_clone.as_fd(), &mut buffer).unwrap();
-                        if bytes_read == 0 {
-                            break; // 子进程结束
-                        }
-                        // 将读取的数据输出到标准输出
-                        io::stdout().write_all(&buffer[..bytes_read]).unwrap();
-                    }
-                });
+        signal::sigaction(
+            signal::Signal::SIGINT,
+            &signal::SigAction::new(
+                signal::SigHandler::SigDfl,
+                signal::SaFlags::SA_RESTART,
+                signal::SigSet::empty(),
+            ),
+        )
+        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+    }
 
-                // use std::sync::{Arc, Mutex};
+    execute!(io::stdout(), terminal::Clear(ClearType::All))?;
 
-                // let master_clone = Arc::new(Mutex::new(master));
-                // thread::spawn({
-                //     let master_clone = Arc::clone(&master_clone);
-                //     move || {
-                //         let mut buffer = [0u8; 1024];
-                //         loop {
-                //             let mut guard = master_clone.lock().unwrap();
-                //             let bytes_read = nix::unistd::read(guard.as_fd(), &mut buffer).unwrap();
-                //             if bytes_read == 0 {
-                //                 break;
-                //             }
-                //             io::stdout().write_all(&buffer[..bytes_read]).unwrap();
-                //         }
-                //     }
-                // });
+    // 1. 创建PTY系统（自动选择平台适配的实现）
+    let pty_system = native_pty_system();
 
-                // let _ = dup2_stdin(master.try_clone().unwrap());
-                // let _ = dup2_stdout(master.try_clone().unwrap());
-                // let _ = dup2_stderr(master.try_clone().unwrap());
+    // 2. 创建PTY终端
+    let pair = pty_system
+        .openpty(PtySize {
+            rows: 24,
+            cols: 80,
+            // 像素尺寸可忽略（通常为0）
+            pixel_width: 0,
+            pixel_height: 0,
+        })
+        .unwrap();
 
-                // loop {
-                //     // let bytes_read = nix::unistd::read(master.as_fd(), &mut buffer).unwrap();
-                //     // if bytes_read == 0 {
-                //     //     break; // 子进程结束
-                //     // }
-                //     // // 将读取的数据输出到标准输出
-                //     // io::stdout().write_all(&buffer[..bytes_read]).unwrap();
+    // 2. 启动子进程（关键配置）
+    let mut cmd = CommandBuilder::new(cmdstr);
+    cmd.env("TERM", "xterm-256color");
+    cmd.env("COLORTERM", "truecolor");
+    // 3. 通过PTY启动（完全脱离当前终端）
+    let mut child = pair
+        .slave
+        .spawn_command(cmd)
+        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
-                //     // input
-                //     let mut input_buffer = [0u8; 10];
+    // 4. 主进程转发逻辑
+    let master_fd = pair.master.as_raw_fd().unwrap(); // 保存文件描述符
+    // 示例：使用 libc 直接配置 PTY
+    unsafe {
+        let mut termios = std::mem::zeroed();
+        libc::tcgetattr(master_fd, &mut termios);
 
-                //     let n = io::stdin()
-                //         .read(&mut input_buffer)
-                //         .expect("Failed to read line");
-                //     // 将输入写入伪终端
-                //     if n == 0 || n == 1 && input_buffer[0].to_string() == "q" {
-                //         break;
-                //     }
-                //     // let master_clone = Arc::clone(&master_clone);
+        // 启用关键控制标志
+        termios.c_lflag |= libc::ECHO | libc::ICANON;
+        termios.c_oflag |= libc::OPOST;
+        if cmdstr == "vi" {
+            termios.c_iflag &= !libc::IXON; // 禁用流控制
+        }
+        libc::tcsetattr(master_fd, libc::TCSANOW, &termios);
+    }
 
-                //     let _ = nix::unistd::write(master.as_fd(), &input_buffer);
-                // }
-                // 等待子进程退出
-                match waitpid(child, None) {
-                    Ok(WaitStatus::Exited(_, status)) => {
-                        println!("Child process exited with status: {}", status);
-                    }
-                    Ok(status) => {
-                        println!("Child process terminated abnormally: {:?}", status);
-                    }
-                    Err(e) => {
-                        eprintln!("Failed to wait for child process: {}", e);
-                    }
+    // disable_line_buffering();
+    let mut master_reader = pair
+        .master
+        .try_clone_reader()
+        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+    let mut master_writer = pair
+        .master
+        .take_writer()
+        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+
+    // 简单转发逻辑
+    // 读取子进程的输出
+    // let mut buffer = [0u8];
+    // let guard_1 = thread::spawn(move || {
+    //     loop {
+    //         // 将读取的数据输出到标准输出
+    //         match master_reader.read(&mut buffer) {
+    //             Ok(_) => io::stdout().write_all(&buffer).unwrap(),
+    //             Err(_) => break,
+    //         }
+    //     }
+    // });
+    let guard_1 = std::thread::spawn(move || {
+        std::io::copy(&mut master_reader, &mut std::io::stdout()).unwrap();
+    });
+
+    // 处理输入（自动支持控制字符）
+    let running = Arc::new(AtomicBool::new(false));
+    let running_clone = Arc::clone(&running);
+    let guard_2 = std::thread::spawn(move || {
+        //     std::io::copy(&mut std::io::stdin(), &mut master_writer).unwrap();
+        // });
+
+        loop {
+            if running_clone.load(Ordering::SeqCst) {
+                drop(master_writer);
+                break;
+            }
+            // input
+            let mut input_buffer = [0u8];
+            // println!("waiting input");
+
+            match io::stdin().read_exact(&mut input_buffer) {
+                Ok(_) => {}
+                Err(_) => {
+                    drop(master_writer);
+                    break;
                 }
-
-                // 关闭主设备文件描述符
-                // let master_clone = Arc::clone(&master_clone);
-
-                close(master).expect("Failed to close master FD");
             }
-            Ok(ForkptyResult::Child) => {
-                // 子进程逻辑
-                println!("Child process started.");
-                use nix::sys::signal;
-
-                signal::sigaction(
-                    signal::Signal::SIGTERM,
-                    &signal::SigAction::new(
-                        signal::SigHandler::SigDfl,
-                        signal::SaFlags::SA_RESTART,
-                        signal::SigSet::empty(),
-                    ),
-                )
-                .unwrap();
-
-                // 设置环境变量（可选）
-                // let env_vars = vec![
-                //     CString::new("TERM=xterm-256color").unwrap(),
-                //     CString::new(
-                //         "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-                //     )
-                //     .unwrap(),
-                // ];
-                let env_vars = env
-                    .get_bindings_string()
-                    .iter()
-                    .map(|(k, v)| CString::new(format!("{}={}", k, v)).unwrap())
-                    .collect::<Vec<_>>();
-                // 执行子进程命令（例如启动一个新的 shell）
-                let cargs = match args {
-                    Some(va) => va
-                        .iter()
-                        .map(|a| CString::new(a.as_str()).unwrap())
-                        .collect(),
-                    None => vec![],
-                };
-                let cmd = CString::new(cmdstr.as_str()).unwrap();
-
-                match execvpe(&cmd, &cargs, &env_vars) {
-                    Ok(_) => {}
-                    Err(e) => {
-                        eprintln!("Failed to execute command: {}", e);
-                        // exit(1);
-                    }
-                }
-
-                // 子进程不会到达此处
+            // println!("got");
+            // 将输入写入伪终端
+            if input_buffer.len() == 0
+            // || input_buffer.len() == 1 && input_buffer[0].to_string() == "113"
+            {
+                drop(master_writer);
+                break;
             }
-            Err(e) => {
-                eprintln!("Failed to fork: {}", e);
-            }
+            // let master_clone = Arc::clone(&master_clone);
+
+            let n = master_writer.write_all(&input_buffer);
+            let _ = master_writer.flush();
+            // println!(
+            //     "writed: {} bytes: {}",
+            //     n.unwrap(),
+            //     input_buffer[0].to_string()
+            // );
+            // let _ = nix::unistd::write(pair.master.take_writer().as_mut(), &input_buffer);
+        }
+    });
+
+    println!("当前终端: {:?}", pair.master.tty_name()); // 检查终端类型
+    println!("终端: {:?}", std::env::var("TERM")); // 检查终端类型
+    println!("控制终端: {:?}", unsafe { libc::isatty(0) }); // 检查stdin是否终端
+
+    // 使用通道实现简易退出
+    match child.wait() {
+        Ok(_) => {
+            println!("Child process exited.");
+        }
+        Err(e) => {
+            eprintln!("Failed to wait for child process: {}", e);
         }
     }
+    println!("---closing 1");
+    // let _ = guard_1.join();
+    println!("---closing 2");
+    running.store(true, Ordering::SeqCst); // 设置停止标志
+    let _ = guard_2.join();
+    println!("---closing 3");
+
+    // 子进程退出后关闭
+    // 显式释放（非必需但推荐）
+    // drop(controller);
+    drop(pair.master);
+    unsafe {
+        libc::close(master_fd);
+    }
+    // println!("---closing 4");
+
+    // // 显式关闭主设备
+    // drop(master_reader);
+    // drop(master_writer);
+    // drop(pair.master);
+
+    // 检查主文件描述符是否成功关闭
+    if master_fd < 0 {
+        println!("Master file descriptor closed successfully.");
+    } else {
+        println!("Master file descriptor is still open: {}", master_fd);
+    }
+
+    println!(
+        "tty:{}, terminal: {}",
+        io::stdin().is_tty(),
+        io::stdin().is_terminal()
+    );
+    // terminal::disable_raw_mode()?;
+    execute!(io::stdout(), terminal::Clear(ClearType::All))?;
+
+    Ok(None)
 }
 
-pub fn spawn_in_pty(
-    cmdstr: &String,
-    args: Option<Vec<String>>,
-    env: &mut Environment,
-    input: Option<Vec<u8>>,
-) -> io::Result<()> {
-    nix_pty(cmdstr, args, env, input);
-    // let mut pty = create_pty()?;
-    // pty.spawn_command(cmdstr)?;
+use std::sync::atomic::{AtomicBool, Ordering};
 
-    // // 设置初始终端大小
-    // pty.resize(80, 24)?;
-
-    // // 原始模式开关（Unix）
-    // #[cfg(unix)]
-    // let _guard = unix_pty::set_raw_mode()?;
-
-    // // 主循环：转发输入输出
-    // let mut buf = [0u8; 1024];
-    // loop {
-    //     // 从PTY读取输出并显示
-    //     match pty.read(&mut buf) {
-    //         Ok(0) => break, // EOF
-    //         Ok(n) => {
-    //             io::stdout().write_all(&buf[..n])?;
-    //             io::stdout().flush()?;
-    //         }
-    //         Err(e) if e.kind() == io::ErrorKind::WouldBlock => {}
-    //         Err(e) => return Err(e),
-    //     }
-
-    //     // 从用户输入读取并发送到PTY
-    //     match io::stdin().read(&mut buf) {
-    //         Ok(0) => break, // EOF
-    //         Ok(n) => {
-    //             pty.write(&buf[..n])?;
-    //         }
-    //         Err(e) if e.kind() == io::ErrorKind::WouldBlock => {}
-    //         Err(e) => return Err(e),
-    //     }
-    // }
-
-    Ok(())
+// RAII守卫，确保终端模式总是被恢复
+struct TerminalGuard;
+impl TerminalGuard {
+    fn new() -> Result<Self, RuntimeError> {
+        terminal::enable_raw_mode()?;
+        Ok(Self)
+    }
 }
-
-// Unix PTY 实现
-// #[cfg(unix)]
-// mod unix_pty {
-//     use super::*;
-//     use nix::pty::{ForkptyResult, forkpty};
-//     use nix::sys::termios;
-//     use nix::sys::wait::{WaitStatus, waitpid};
-//     use nix::unistd::execvpe;
-//     use nix::unistd::{close, dup2_stderr, dup2_stdout};
-//     use nix::{pty::openpty, unistd::dup2_stdin};
-//     use std::ffi::CStr;
-//     use std::ffi::CString;
-//     use std::os::{
-//         fd::{AsFd, OwnedFd, RawFd},
-//         unix::io::{AsRawFd, FromRawFd},
-//     };
-
-//     pub struct UnixPty {
-//         // master: std::fs::File,
-//         master: OwnedFd,
-//     }
-
-//     impl UnixPty {
-//         pub fn new() -> io::Result<UnixPty> {
-//             let pty = openpty(None, None).map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-//             Ok(Self {
-//                 // master: unsafe { std::fs::File::from_raw_fd(pty.master.as_raw_fd()) },
-//                 master: pty.master,
-//             })
-//         }
-//     }
-
-//     impl Pty for UnixPty {
-//         fn resize(&self, cols: u16, rows: u16) -> io::Result<()> {
-//             use libc::{TIOCSWINSZ, ioctl};
-//             use nix::pty::Winsize;
-
-//             let ws = Winsize {
-//                 ws_row: rows,
-//                 ws_col: cols,
-//                 ws_xpixel: 0,
-//                 ws_ypixel: 0,
-//             };
-//             // 使用 libc 的 ioctl 来设置终端大小
-//             let ptr = &ws as *const Winsize as *mut Winsize;
-//             let result = unsafe { ioctl(self.master.as_raw_fd(), TIOCSWINSZ, ptr) };
-
-//             if result == -1 {
-//                 return Err(io::Error::last_os_error());
-//             }
-//             Ok(())
-//         }
-
-//         fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-//             // self.master.read(buf)
-//         }
-
-//         fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-//             // self.master.write(buf)
-//         }
-
-//         fn spawn_command(&mut self, cmd: &str) -> io::Result<()> {
-//             use nix::unistd::{ForkResult, dup2, fork};
-
-//             match unsafe { fork() } {
-//                 Ok(ForkResult::Parent { .. }) => Ok(()),
-//                 Ok(ForkResult::Child) => {
-//                     // 在子进程中执行命令
-//                     // 修正点1: 创建临时的 OwnedFd 用于 dup2
-//                     // let mut stdin_fd = unsafe { OwnedFd::from_raw_fd(0) };
-//                     // let mut stdout_fd = unsafe { OwnedFd::from_raw_fd(1) };
-//                     // let mut stderr_fd = unsafe { OwnedFd::from_raw_fd(2) };
-
-//                     // 修正点2: 正确调用 dup2
-//                     dup2_stdin(self.master.as_fd()).unwrap(); // 标准输入
-//                     dup2_stdout(self.master.as_fd()).unwrap(); // 标准输出
-//                     dup2_stderr(self.master.as_fd()).unwrap(); // 标准错误
-
-//                     let mut command = Command::new("sh");
-//                     command.arg("-c").arg(cmd);
-//                     command.spawn();
-
-//                     unreachable!();
-//                 }
-//                 Err(e) => Err(io::Error::new(io::ErrorKind::Other, e)),
-//             }
-//         }
-//     }
-
-//     // 设置终端原始模式
-//     pub fn set_raw_mode() -> io::Result<RawModeGuard> {
-//         let fd = io::stdin().as_raw_fd();
-//         let mut termios = termios::tcgetattr(io::stdin().as_fd())
-//             .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-//         let original = termios.clone();
-
-//         termios::cfmakeraw(&mut termios);
-//         termios::tcsetattr(io::stdin().as_fd(), termios::SetArg::TCSANOW, &termios)
-//             .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-
-//         Ok(RawModeGuard { fd, original })
-//     }
-
-//     // 自动恢复终端设置
-//     pub struct RawModeGuard {
-//         fd: RawFd,
-//         original: termios::Termios,
-//     }
-
-//     impl Drop for RawModeGuard {
-//         fn drop(&mut self) {
-//             let _ = termios::tcsetattr(
-//                 io::stdin().as_fd(),
-//                 termios::SetArg::TCSANOW,
-//                 &self.original,
-//             );
-//         }
-//     }
-// }
-
-// Windows ConPTY 实现
-#[cfg(windows)]
-mod win_pty {
-    use super::*;
-    use conpty::Process;
-    use winapi::um::wincon::{COORD, SMALL_RECT};
-
-    pub struct WinPty {
-        process: Process,
-    }
-
-    impl WinPty {
-        pub fn new() -> io::Result<Self> {
-            Ok(Self {
-                process: Process::spawn("cmd /C btop").map_err(to_io_error)?,
-            })
+impl Drop for TerminalGuard {
+    fn drop(&mut self) {
+        // 确保在退出时恢复终端模式
+        let _ = terminal::disable_raw_mode();
+        unsafe {
+            libc::kill(0, libc::SIGCONT);
         }
-    }
-
-    impl Pty for WinPty {
-        fn resize(&self, cols: u16, rows: u16) -> io::Result<()> {
-            let size = COORD {
-                X: cols as i16,
-                Y: rows as i16,
-            };
-            let rect = SMALL_RECT {
-                Left: 0,
-                Top: 0,
-                Right: (cols - 1) as i16,
-                Bottom: (rows - 1) as i16,
-            };
-            self.process.resize(size, rect).map_err(to_io_error)
-        }
-
-        fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-            self.process.output().read(buf)
-        }
-
-        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-            self.process.input().write(buf)
-        }
-
-        fn spawn_command(&mut self, cmd: &str) -> io::Result<()> {
-            self.process = Process::spawn(&format!("cmd /C {}", cmd)).map_err(to_io_error)?;
-            Ok(())
-        }
-    }
-
-    fn to_io_error(e: impl std::fmt::Display) -> io::Error {
-        io::Error::new(io::ErrorKind::Other, e.to_string())
     }
 }

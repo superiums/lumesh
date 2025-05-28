@@ -1,8 +1,7 @@
-use crate::{Environment, Expression, RuntimeError, expression::pty2::exec_in_pty, get_builtin};
+use crate::{Environment, Expression, RuntimeError, expression::pty::exec_in_pty, get_builtin};
 
 use super::{alias, eval::State};
 use glob::glob;
-use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 // use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::{
     io::{ErrorKind, Write},
@@ -97,11 +96,10 @@ fn exec_single_cmd(
     mode: u8,
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
-    dbg!(&mode);
+    // dbg!(&mode);
     if mode & 16 != 0 {
         // spawn_in_pty(cmdstr, args, env, input);
-        exec_in_pty(cmdstr, args, env, input, pipe_out, mode);
-        return Ok(None);
+        return exec_in_pty(cmdstr, args, env, input, pipe_out, mode);
     }
     let mut cmd = Command::new(cmdstr);
     match args {
@@ -244,7 +242,7 @@ fn handle_command(
             _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
-    let cmd_mode: u8 = match ["btop", "fish"].contains(&cmd.as_str()) {
+    let cmd_mode: u8 = match ["btop", "fish", "top", "vi", "bash", "sh"].contains(&cmd.as_str()) {
         true => 16,
         false => match cmd_args.last() {
             Some(s) => match s.as_str() {

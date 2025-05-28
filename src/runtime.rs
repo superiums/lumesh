@@ -285,13 +285,13 @@ pub fn init_config(env: &mut Environment) {
     // If file doesn't exist
     if !profile.exists() {
         let prompt = format!(
-            "Could not find profile file at: {}\nWould you like me to write the default prelude to this location? (y/n)\n>>> ",
+            "Could not find profile file at: {}\nWould you like me to write the default prelude to this location? (Y/n)\n>>> ",
             profile.display()
         );
 
         let response = read_user_input(prompt);
 
-        if response.to_lowercase().trim() == "y" {
+        if response.is_empty() || response.to_lowercase().trim() == "y" {
             if let Err(e) = std::fs::write(&profile, INTRO_PRELUDE) {
                 eprintln!("Error while writing prelude: {}", e);
             }

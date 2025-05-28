@@ -109,6 +109,13 @@ pub fn run_repl(env: &mut Environment) {
         KeyEvent::ctrl('o'),
         Cmd::Replace(Movement::WholeBuffer, Some(String::from(""))),
     );
+    let hotkey_sudo = match env.get("LUME_SUDO_CMD") {
+        Some(s) => s.to_string(),
+        _ => "sudo".to_string(),
+    };
+    rl.lock()
+        .unwrap()
+        .bind_sequence(KeyEvent::alt('s'), Cmd::Insert(1, hotkey_sudo));
     // rl.lock()
     //     .unwrap()
     //     .bind_sequence(KeyEvent::ctrl('m'), Cmd::CompleteBackward);
@@ -143,7 +150,7 @@ pub fn run_repl(env: &mut Environment) {
     }
     // abbr
     let abbr = env.get("LUME_ABBREVIATIONS");
-    if let Some(Expression::HMap(ab)) = abbr {
+    if let Some(Expression::Map(ab)) = abbr {
         let abmap = ab
             .iter()
             .map(|m| (m.0.to_string(), m.1.to_string()))
@@ -424,9 +431,9 @@ impl Hinter for LumeHelper {
         // TODO add builtin cmds
         let cmds = [
             ("cd", 10),
-            ("ls", 9),
+            ("ls -l --color", 9),
             ("clear", 8),
-            ("exit 0", 7),
+            ("exit", 7),
             ("rm -ri", 6),
             ("cp -r", 5),
             ("head", 4),
@@ -437,7 +444,7 @@ impl Hinter for LumeHelper {
             ("else {", 1),
             ("match ", 1),
             ("while (", 1),
-            ("for ", 1),
+            ("for i in ", 1),
             ("loop {\n", 1),
             ("break", 1),
             ("return", 1),

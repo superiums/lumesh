@@ -7,13 +7,13 @@ if IS_LOGIN {
 # ========== config for interactive mode ==========
 if IS_INTERACTIVE {
     # ====== default strict mode
-    let IS_STRICT = true
+    # let IS_STRICT = true
 
     # ====== welcome msg
     # let LUME_WELCOME= "Welcome to Lumesh!"
 
     # ====== history file
-    let LUME_HISTORY_FILE = "/tmp/lume_histroy"
+    # let LUME_HISTORY_FILE = "/tmp/lume_histroy"
 
     # ====== report compute result type and values. default True.
     # let LUME_PRINT_DIRECT= False
@@ -38,7 +38,7 @@ if IS_INTERACTIVE {
         c: "clear",
         h: "fs.read /tmp/lume_histroy | fzf --preview '' | evalstr()",
         z: "fs.read /tmp/bookmark | fzf --preview '' | evalstr()",
-        s: 'let cmd := $CMD_CURRENT; println str(cmd) >> /tmp/bookmark; println "\n" >> /tmp/bookmark; print "COMMAND marked!"',
+        s: 'let cmd := $CMD_CURRENT; str(cmd) >> /tmp/bookmark; "\n" >> /tmp/bookmark; print "COMMAND marked!"',
     }
 
     # ====== abbreviations

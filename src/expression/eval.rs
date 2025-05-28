@@ -240,11 +240,7 @@ impl Expression {
                     job = inner.as_ref();
                     continue;
                 }
-                // Self::Quote(inner) => return Ok(inner.as_ref().clone()),
-                Self::Quote(inner) => {
-                    job = inner.as_ref();
-                    continue;
-                }
+                Self::Quote(inner) => return Ok(inner.as_ref().clone()),
 
                 // 一元运算
                 Self::UnaryOp(op, operand, is_prefix) => {

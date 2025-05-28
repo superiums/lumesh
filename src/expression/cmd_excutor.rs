@@ -1,7 +1,8 @@
-use crate::{Environment, Expression, RuntimeError, get_builtin};
+use crate::{Environment, Expression, RuntimeError, expression::pty::exec_in_pty, get_builtin};
 
 use super::{alias, eval::State};
 use glob::glob;
+// use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::{
     io::{ErrorKind, Write},
     process::{Command, Stdio},
@@ -50,8 +51,7 @@ pub fn eval_command(
                             Expression::Index(..) => {
                                 let cmdx = cmd_alias.eval_mut(state, env, depth)?;
                                 // dbg!(&cmd, &cmdx);
-                                cmdx
-                                    .append_args(args.to_vec())
+                                cmdx.append_args(args.to_vec())
                                     .eval_apply(state, env, depth)
                             }
                             _ => Err(RuntimeError::TypeError {
@@ -76,17 +76,16 @@ pub fn eval_command(
                 }
             }
         }
-        e => {
-            Err(RuntimeError::TypeError {
-                expected: "Symbol".to_string(),
-                found: e.type_name(),
-            })
-        }
+        e => Err(RuntimeError::TypeError {
+            expected: "Symbol".to_string(),
+            found: e.type_name(),
+        }),
     }
 }
 
 /// mode: 1=null_stdout, 2=null_err, 4=err_to_stdout,
 /// 8=background, 11=background,shutdown_all
+/// 16=pty
 /// 执行单个命令（支持管道）
 fn exec_single_cmd(
     cmdstr: &String,
@@ -98,6 +97,10 @@ fn exec_single_cmd(
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
     // dbg!(&mode);
+    if mode & 16 != 0 {
+        // spawn_in_pty(cmdstr, args, env, input);
+        return exec_in_pty(cmdstr, args, env, input);
+    }
     let mut cmd = Command::new(cmdstr);
     match args {
         Some(ar) => cmd
@@ -118,7 +121,6 @@ fn exec_single_cmd(
     }
 
     // 设置 stdout（如果是交互式命令，直接接管终端）
-
     if pipe_out {
         cmd.stdout(Stdio::piped());
     } else {
@@ -240,31 +242,34 @@ fn handle_command(
             _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
-    let cmd_mode: u8 = match cmd_args.last() {
-        Some(s) => match s.as_str() {
-            "&" => {
-                cmd_args.pop();
-                11
-            }
-            "&-" => {
-                cmd_args.pop();
-                1
-            }
-            "&?" => {
-                cmd_args.pop();
-                2
-            }
-            "&." => {
-                cmd_args.pop();
-                3
-            }
-            "&+" => {
-                cmd_args.pop();
-                4
-            }
+    let cmd_mode: u8 = match ["btop", "fish", "top", "vi", "bash", "sh"].contains(&cmd.as_str()) {
+        true => 16,
+        false => match cmd_args.last() {
+            Some(s) => match s.as_str() {
+                "&" => {
+                    cmd_args.pop();
+                    11
+                }
+                "&-" => {
+                    cmd_args.pop();
+                    1
+                }
+                "&?" => {
+                    cmd_args.pop();
+                    2
+                }
+                "&." => {
+                    cmd_args.pop();
+                    3
+                }
+                "&+" => {
+                    cmd_args.pop();
+                    4
+                }
+                _ => 0,
+            },
             _ => 0,
         },
-        _ => 0,
     };
     // dbg!(args, &cmd_args);
     let last_input = state.pipe_out();

@@ -1,21 +1,20 @@
 use crossterm::terminal::{self, ClearType};
-use crossterm::tty::IsTty;
+use terminal_size::{Height, Width, terminal_size};
 // 包装器结构体
-use nix::sys::signal;
-use portable_pty::{CommandBuilder, PtySize, native_pty_system};
-use std::io::{self, IsTerminal, Read, Write};
-use std::sync::Arc;
-
 use crate::{Environment, RuntimeError};
 use crossterm::execute;
+use nix::sys::signal;
+use portable_pty::{CommandBuilder, PtySize, native_pty_system};
+use std::io::{self, Read, Write};
+use std::sync::Arc;
+use std::thread;
+use std::time::Duration;
 
 pub fn exec_in_pty(
     cmdstr: &String,
     args: Option<Vec<String>>,
     env: &mut Environment,
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
-    pipe_out: bool,
-    mode: u8,
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     let _terminal_guard = TerminalGuard::new()?;
     // terminal::enable_raw_mode()?;
@@ -49,10 +48,15 @@ pub fn exec_in_pty(
     let pty_system = native_pty_system();
 
     // 2. 创建PTY终端
+    let size = terminal_size();
+    let (w, h) = match size {
+        Some((Width(w), Height(h))) => (w, h),
+        _ => (24, 80),
+    };
     let pair = pty_system
         .openpty(PtySize {
-            rows: 24,
-            cols: 80,
+            rows: h,
+            cols: w,
             // 像素尺寸可忽略（通常为0）
             pixel_width: 0,
             pixel_height: 0,
@@ -61,8 +65,14 @@ pub fn exec_in_pty(
 
     // 2. 启动子进程（关键配置）
     let mut cmd = CommandBuilder::new(cmdstr);
+    if let Some(ag) = args {
+        cmd.args(ag);
+    }
     cmd.env("TERM", "xterm-256color");
     cmd.env("COLORTERM", "truecolor");
+    for (k, v) in env.get_bindings_string() {
+        cmd.env(k, v);
+    }
     // 3. 通过PTY启动（完全脱离当前终端）
     let mut child = pair
         .slave
@@ -114,10 +124,20 @@ pub fn exec_in_pty(
     // 处理输入（自动支持控制字符）
     let running = Arc::new(AtomicBool::new(false));
     let running_clone = Arc::clone(&running);
-    let guard_2 = std::thread::spawn(move || {
+    // let cmdstr_clone = cmdstr.clone();
+    let guard_2 = thread::spawn(move || {
         //     std::io::copy(&mut std::io::stdin(), &mut master_writer).unwrap();
         // });
-
+        if let Some(last_input) = input {
+            // println!("Writing input: {:?}", last_input); // 调试输出
+            if let Err(e) = master_writer.write_all(&last_input) {
+                eprintln!("Failed to write to master: {}", e);
+            }
+            if let Err(e) = master_writer.flush() {
+                eprintln!("Failed to flush master: {}", e);
+            }
+            thread::sleep(Duration::from_millis(200));
+        }
         loop {
             if running_clone.load(Ordering::SeqCst) {
                 drop(master_writer);
@@ -126,6 +146,9 @@ pub fn exec_in_pty(
             // input
             let mut input_buffer = [0u8];
             // println!("waiting input");
+            // execute!(io::stdout(), cursor::MoveTo(0, 10)).unwrap(); // 移动光标到 (0, 0)
+            // println!("{}> ", cmdstr_clone);
+            // io::stdout().flush().unwrap();
 
             match io::stdin().read_exact(&mut input_buffer) {
                 Ok(_) => {}
@@ -145,35 +168,37 @@ pub fn exec_in_pty(
             // let master_clone = Arc::clone(&master_clone);
 
             let n = master_writer.write_all(&input_buffer);
-            let _ = master_writer.flush();
+            // let _ = master_writer.flush();
             // println!(
             //     "writed: {} bytes: {}",
             //     n.unwrap(),
             //     input_buffer[0].to_string()
             // );
             // let _ = nix::unistd::write(pair.master.take_writer().as_mut(), &input_buffer);
+            thread::sleep(Duration::from_millis(150));
         }
     });
 
-    println!("当前终端: {:?}", pair.master.tty_name()); // 检查终端类型
-    println!("终端: {:?}", std::env::var("TERM")); // 检查终端类型
-    println!("控制终端: {:?}", unsafe { libc::isatty(0) }); // 检查stdin是否终端
+    // println!("当前终端: {:?}", pair.master.tty_name()); // 检查终端类型
+    // println!("终端: {:?}", std::env::var("TERM")); // 检查终端类型
+    // println!("控制终端: {:?}", unsafe { libc::isatty(0) }); // 检查stdin是否终端
 
     // 使用通道实现简易退出
-    match child.wait() {
-        Ok(_) => {
-            println!("Child process exited.");
-        }
-        Err(e) => {
-            eprintln!("Failed to wait for child process: {}", e);
-        }
-    }
-    println!("---closing 1");
+    // match child.wait() {
+    //     Ok(_) => {
+    //         println!("Child process exited.");
+    //     }
+    //     Err(e) => {
+    //         eprintln!("Failed to wait for child process: {}", e);
+    //     }
+    // }
+    child.wait()?;
+    // println!("---closing 1");
     // let _ = guard_1.join();
-    println!("---closing 2");
+    // println!("---closing 2");
     running.store(true, Ordering::SeqCst); // 设置停止标志
     let _ = guard_2.join();
-    println!("---closing 3");
+    // println!("---closing 3");
 
     // 子进程退出后关闭
     // 显式释放（非必需但推荐）
@@ -182,27 +207,20 @@ pub fn exec_in_pty(
     unsafe {
         libc::close(master_fd);
     }
-    // println!("---closing 4");
+    println!("\nbye!");
 
     // // 显式关闭主设备
     // drop(master_reader);
     // drop(master_writer);
     // drop(pair.master);
 
-    // 检查主文件描述符是否成功关闭
-    if master_fd < 0 {
-        println!("Master file descriptor closed successfully.");
-    } else {
-        println!("Master file descriptor is still open: {}", master_fd);
-    }
-
-    println!(
-        "tty:{}, terminal: {}",
-        io::stdin().is_tty(),
-        io::stdin().is_terminal()
-    );
+    // println!(
+    //     "tty:{}, terminal: {}",
+    //     io::stdin().is_tty(),
+    //     io::stdin().is_terminal()
+    // );
     // terminal::disable_raw_mode()?;
-    execute!(io::stdout(), terminal::Clear(ClearType::All))?;
+    // execute!(io::stdout(), terminal::Clear(ClearType::All))?;
 
     Ok(None)
 }

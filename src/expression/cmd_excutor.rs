@@ -99,7 +99,7 @@ fn exec_single_cmd(
     // dbg!(&mode);
     if mode & 16 != 0 {
         // spawn_in_pty(cmdstr, args, env, input);
-        return exec_in_pty(cmdstr, args, env, input, pipe_out, mode);
+        return exec_in_pty(cmdstr, args, env, input);
     }
     let mut cmd = Command::new(cmdstr);
     match args {

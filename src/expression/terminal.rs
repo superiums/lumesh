@@ -84,7 +84,7 @@ use std::sync::{Arc, Mutex};
 #[cfg(windows)]
 use winapi::shared::minwindef::BOOL;
 #[cfg(windows)]
-use winapi::um::consoleapi::{GetConsoleMode, SetConsoleMode};
+use winapi::um::consoleapi::{GetConsoleMode, SetConsoleCtrlHandler, SetConsoleMode};
 #[cfg(windows)]
 use winapi::um::handleapi::INVALID_HANDLE_VALUE;
 #[cfg(windows)]

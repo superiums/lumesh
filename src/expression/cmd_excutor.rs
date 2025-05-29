@@ -242,7 +242,26 @@ fn handle_command(
             _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
-    let cmd_mode: u8 = match ["btop", "fish", "top", "vi", "bash", "sh"].contains(&cmd.as_str()) {
+    #[cfg(unix)]
+    let pty_cmds = [
+        "lume", "bash", "sh", "fish", "top", "btop", "vi", "passwd", "ssh", "script", "expect",
+        "telnet", "screen", "tmux", "ftp",
+    ];
+    #[cfg(windows)]
+    let pty_cmds = [
+        "lume",
+        "fish",
+        "ssh",
+        "telnet",
+        "screen",
+        "tmux",
+        "cmd.exe",
+        "PowerShell",
+        "Cygwin",
+        "WinPTY",
+        "ConPTY",
+    ];
+    let cmd_mode: u8 = match pty_cmds.contains(&cmd.as_str()) {
         true => 16,
         false => match cmd_args.last() {
             Some(s) => match s.as_str() {

@@ -2,13 +2,14 @@ use crossterm::terminal;
 use terminal_size::{Height, Width, terminal_size};
 // 包装器结构体
 use crate::{Environment, RuntimeError};
-use crossterm::execute;
-use nix::sys::signal;
 use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::io::{self, Read, Write};
 use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
+
+#[cfg(unix)]
+use nix::sys::signal;
 
 pub fn exec_in_pty(
     cmdstr: &String,
@@ -22,6 +23,7 @@ pub fn exec_in_pty(
     }
 
     // 设置信号处理，确保在收到信号时能正确清理
+    #[cfg(unix)]
     unsafe {
         signal::sigaction(
             signal::Signal::SIGTERM,
@@ -44,7 +46,7 @@ pub fn exec_in_pty(
         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
     }
 
-    execute!(io::stdout(), terminal::EnterAlternateScreen)?;
+    // execute!(io::stdout(), terminal::EnterAlternateScreen)?;
     // execute!(io::stdout(), terminal::DisableLineWrap)?;
 
     // 1. 创建PTY系统（自动选择平台适配的实现）
@@ -66,58 +68,63 @@ pub fn exec_in_pty(
         })
         .unwrap();
 
-    let master_fd = pair.master.as_raw_fd().unwrap_or(0);
+    // let master_fd = pair.master.as_raw_fd().unwrap_or(0);
+
+    #[cfg(unix)]
     unsafe {
-        let mut termios = std::mem::zeroed();
-        libc::tcgetattr(master_fd, &mut termios);
-        // print!("before:{}", (termios.c_lflag & libc::ICANON) != 0);
+        if let Some(master_fd) = pair.master.as_raw_fd() {
+            let mut termios = std::mem::zeroed();
+            if libc::tcgetattr(master_fd, &mut termios) == 0 {
+                // print!("before:{}", (termios.c_lflag & libc::ICANON) != 0);
 
-        // 输入控制
-        termios.c_cc[libc::VEOF] = 4; // Ctrl+D
-        termios.c_cc[libc::VEOL] = libc::_POSIX_VDISABLE; // 无 EOL
-        termios.c_cc[libc::VEOL2] = libc::_POSIX_VDISABLE;
-        termios.c_cc[libc::VERASE] = 0x7f; // ASCII DEL (Backspace)
-        termios.c_cc[libc::VWERASE] = 0x17; // Ctrl+W
-        termios.c_cc[libc::VKILL] = 0x15; // Ctrl+U
-        termios.c_cc[libc::VREPRINT] = 0x12; // Ctrl+R
-        termios.c_cc[libc::VINTR] = 0x03; // Ctrl+C
-        termios.c_cc[libc::VQUIT] = 0x1c; // Ctrl+\
-        termios.c_cc[libc::VSUSP] = 0x1a; // Ctrl+Z
-        termios.c_cc[libc::VSTART] = 0x11; // Ctrl+Q
-        termios.c_cc[libc::VSTOP] = 0x13; // Ctrl+S
-        termios.c_cc[libc::VLNEXT] = 0x16; // Ctrl+V
-        termios.c_cc[libc::VDISCARD] = 0x0f; // Ctrl+O
-        termios.c_cc[libc::VMIN] = 1;
-        termios.c_cc[libc::VTIME] = 0;
+                // 输入控制
+                termios.c_cc[libc::VEOF] = 4; // Ctrl+D
+                termios.c_cc[libc::VEOL] = libc::_POSIX_VDISABLE; // 无 EOL
+                termios.c_cc[libc::VEOL2] = libc::_POSIX_VDISABLE;
+                termios.c_cc[libc::VERASE] = 0x7f; // ASCII DEL (Backspace)
+                termios.c_cc[libc::VWERASE] = 0x17; // Ctrl+W
+                termios.c_cc[libc::VKILL] = 0x15; // Ctrl+U
+                termios.c_cc[libc::VREPRINT] = 0x12; // Ctrl+R
+                termios.c_cc[libc::VINTR] = 0x03; // Ctrl+C
+                termios.c_cc[libc::VQUIT] = 0x1c; // Ctrl+\
+                termios.c_cc[libc::VSUSP] = 0x1a; // Ctrl+Z
+                termios.c_cc[libc::VSTART] = 0x11; // Ctrl+Q
+                termios.c_cc[libc::VSTOP] = 0x13; // Ctrl+S
+                termios.c_cc[libc::VLNEXT] = 0x16; // Ctrl+V
+                termios.c_cc[libc::VDISCARD] = 0x0f; // Ctrl+O
+                termios.c_cc[libc::VMIN] = 1;
+                termios.c_cc[libc::VTIME] = 0;
 
-        // 启用关键控制标志
-        // 基本设置
-        // termios.c_lflag &= !libc::ICANON;
-        termios.c_lflag &= !(libc::IGNBRK
-            | libc::BRKINT
-            | libc::PARMRK
-            | libc::ISTRIP
-            | libc::INLCR
-            | libc::IGNCR
-            | libc::ICRNL);
-        termios.c_lflag |= libc::ICANON;
-        termios.c_lflag |= libc::ECHO | libc::ECHOE | libc::ECHOK | libc::IEXTEN;
-        // termios.c_lflag &= !libc::ECHONL; // 回车时不回显换行
+                // 启用关键控制标志
+                // 基本设置
+                // termios.c_lflag &= !libc::ICANON;
+                // termios.c_lflag &= !(libc::IGNBRK
+                //     | libc::BRKINT
+                //     | libc::PARMRK
+                //     | libc::ISTRIP
+                //     | libc::INLCR
+                //     | libc::IGNCR
+                //     | libc::ICRNL);
+                termios.c_lflag |= libc::ICANON;
+                termios.c_lflag |= libc::ECHO | libc::ECHOE | libc::ECHOK | libc::IEXTEN;
+                // termios.c_lflag &= !libc::ECHONL; // 回车时不回显换行
 
-        // 标志	是否应关闭	原因
-        // ICANON	✅ 是	关闭以进入非规范模式
-        // ECHO	✅ 是	如果你不希望自动回显
-        // ISIG	❌ 可选	若需保留 Ctrl+C、Ctrl+Z 信号处理
-        // IEXTEN	✅ 是	否则 Ctrl+V、Ctrl+O 等仍有效
-        // ECHOE	✅ 是	避免 shell 自动回显删除动作
-        // ECHOK	✅ 是	避免 shell 自动回显整行删除
-        termios.c_lflag |= libc::ISIG;
-        // termios.c_lflag &= !(libc::ECHO | libc::ICANON);
-        termios.c_oflag |= libc::OPOST;
-        if cmdstr == "vi" {
-            termios.c_iflag &= !libc::IXON; // 禁用流控制
+                // 标志	是否应关闭	原因
+                // ICANON	✅ 是	关闭以进入非规范模式
+                // ECHO	✅ 是	如果你不希望自动回显
+                // ISIG	❌ 可选	若需保留 Ctrl+C、Ctrl+Z 信号处理
+                // IEXTEN	✅ 是	否则 Ctrl+V、Ctrl+O 等仍有效
+                // ECHOE	✅ 是	避免 shell 自动回显删除动作
+                // ECHOK	✅ 是	避免 shell 自动回显整行删除
+                termios.c_lflag |= libc::ISIG;
+                // termios.c_lflag &= !(libc::ECHO | libc::ICANON);
+                termios.c_oflag |= libc::OPOST;
+                if cmdstr == "vi" {
+                    termios.c_iflag &= !libc::IXON; // 禁用流控制
+                }
+                libc::tcsetattr(master_fd, libc::TCSAFLUSH, &termios);
+            }
         }
-        libc::tcsetattr(master_fd, libc::TCSAFLUSH, &termios);
     }
 
     // 2. 启动子进程（关键配置）
@@ -270,10 +277,15 @@ pub fn exec_in_pty(
     // 子进程退出后关闭
     // 显式释放（非必需但推荐）
     // drop(controller);
-    drop(pair.master);
-    unsafe {
-        libc::close(master_fd);
+
+    #[cfg(unix)]
+    if let Some(master_fd) = pair.master.as_raw_fd() {
+        unsafe {
+            libc::close(master_fd);
+        }
     }
+    drop(pair.master);
+
     println!("\nbye!");
 
     // // 显式关闭主设备
@@ -288,7 +300,7 @@ pub fn exec_in_pty(
     // );
     // terminal::disable_raw_mode()?;
     // execute!(io::stdout(), terminal::Clear(ClearType::All))?;
-    execute!(io::stdout(), terminal::LeaveAlternateScreen)?;
+    // execute!(io::stdout(), terminal::LeaveAlternateScreen)?;
 
     Ok(None)
 }

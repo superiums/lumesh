@@ -1,4 +1,4 @@
-use crossterm::terminal::{self, ClearType};
+use crossterm::terminal;
 use terminal_size::{Height, Width, terminal_size};
 // 包装器结构体
 use crate::{Environment, RuntimeError};
@@ -17,7 +17,9 @@ pub fn exec_in_pty(
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     let _terminal_guard = TerminalGuard::new()?;
-    // terminal::enable_raw_mode()?;
+    if ["bash", "sh", "fish", "zsh"].contains(&cmdstr.as_str()) {
+        drop(_terminal_guard);
+    }
 
     // 设置信号处理，确保在收到信号时能正确清理
     unsafe {
@@ -42,7 +44,8 @@ pub fn exec_in_pty(
         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
     }
 
-    execute!(io::stdout(), terminal::Clear(ClearType::All))?;
+    execute!(io::stdout(), terminal::EnterAlternateScreen)?;
+    // execute!(io::stdout(), terminal::DisableLineWrap)?;
 
     // 1. 创建PTY系统（自动选择平台适配的实现）
     let pty_system = native_pty_system();
@@ -63,13 +66,67 @@ pub fn exec_in_pty(
         })
         .unwrap();
 
+    let master_fd = pair.master.as_raw_fd().unwrap_or(0);
+    unsafe {
+        let mut termios = std::mem::zeroed();
+        libc::tcgetattr(master_fd, &mut termios);
+        // print!("before:{}", (termios.c_lflag & libc::ICANON) != 0);
+
+        // 输入控制
+        termios.c_cc[libc::VEOF] = 4; // Ctrl+D
+        termios.c_cc[libc::VEOL] = libc::_POSIX_VDISABLE; // 无 EOL
+        termios.c_cc[libc::VEOL2] = libc::_POSIX_VDISABLE;
+        termios.c_cc[libc::VERASE] = 0x7f; // ASCII DEL (Backspace)
+        termios.c_cc[libc::VWERASE] = 0x17; // Ctrl+W
+        termios.c_cc[libc::VKILL] = 0x15; // Ctrl+U
+        termios.c_cc[libc::VREPRINT] = 0x12; // Ctrl+R
+        termios.c_cc[libc::VINTR] = 0x03; // Ctrl+C
+        termios.c_cc[libc::VQUIT] = 0x1c; // Ctrl+\
+        termios.c_cc[libc::VSUSP] = 0x1a; // Ctrl+Z
+        termios.c_cc[libc::VSTART] = 0x11; // Ctrl+Q
+        termios.c_cc[libc::VSTOP] = 0x13; // Ctrl+S
+        termios.c_cc[libc::VLNEXT] = 0x16; // Ctrl+V
+        termios.c_cc[libc::VDISCARD] = 0x0f; // Ctrl+O
+        termios.c_cc[libc::VMIN] = 1;
+        termios.c_cc[libc::VTIME] = 0;
+
+        // 启用关键控制标志
+        // 基本设置
+        // termios.c_lflag &= !libc::ICANON;
+        termios.c_lflag &= !(libc::IGNBRK
+            | libc::BRKINT
+            | libc::PARMRK
+            | libc::ISTRIP
+            | libc::INLCR
+            | libc::IGNCR
+            | libc::ICRNL);
+        termios.c_lflag |= libc::ICANON;
+        termios.c_lflag |= libc::ECHO | libc::ECHOE | libc::ECHOK | libc::IEXTEN;
+        // termios.c_lflag &= !libc::ECHONL; // 回车时不回显换行
+
+        // 标志	是否应关闭	原因
+        // ICANON	✅ 是	关闭以进入非规范模式
+        // ECHO	✅ 是	如果你不希望自动回显
+        // ISIG	❌ 可选	若需保留 Ctrl+C、Ctrl+Z 信号处理
+        // IEXTEN	✅ 是	否则 Ctrl+V、Ctrl+O 等仍有效
+        // ECHOE	✅ 是	避免 shell 自动回显删除动作
+        // ECHOK	✅ 是	避免 shell 自动回显整行删除
+        termios.c_lflag |= libc::ISIG;
+        // termios.c_lflag &= !(libc::ECHO | libc::ICANON);
+        termios.c_oflag |= libc::OPOST;
+        if cmdstr == "vi" {
+            termios.c_iflag &= !libc::IXON; // 禁用流控制
+        }
+        libc::tcsetattr(master_fd, libc::TCSAFLUSH, &termios);
+    }
+
     // 2. 启动子进程（关键配置）
     let mut cmd = CommandBuilder::new(cmdstr);
     if let Some(ag) = args {
         cmd.args(ag);
     }
-    cmd.env("TERM", "xterm-256color");
-    cmd.env("COLORTERM", "truecolor");
+    // cmd.env("TERM", "xterm-256color");
+    // cmd.env("COLORTERM", "truecolor");
     for (k, v) in env.get_bindings_string() {
         cmd.env(k, v);
     }
@@ -80,20 +137,18 @@ pub fn exec_in_pty(
         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
     // 4. 主进程转发逻辑
-    let master_fd = pair.master.as_raw_fd().unwrap(); // 保存文件描述符
     // 示例：使用 libc 直接配置 PTY
-    unsafe {
-        let mut termios = std::mem::zeroed();
-        libc::tcgetattr(master_fd, &mut termios);
 
-        // 启用关键控制标志
-        termios.c_lflag |= libc::ECHO | libc::ICANON;
-        termios.c_oflag |= libc::OPOST;
-        if cmdstr == "vi" {
-            termios.c_iflag &= !libc::IXON; // 禁用流控制
-        }
-        libc::tcsetattr(master_fd, libc::TCSANOW, &termios);
-    }
+    // if let Some(tios) = pair.master.get_termios() {
+    //     tios.local_flags &= !LocalFlags::ICANON;
+    //     tios.local_flags.remove(LocalFlags::ECHO);
+    //     tios.local_flags.remove(LocalFlags::ECHOE);
+    //     tios.local_flags.remove(LocalFlags::ECHOK);
+    //     tios.local_flags.remove(LocalFlags::ECHONL);
+    //     tios.local_flags.remove(nix::sys::termios::Termios::LocalFlags::IEXTEN);
+    //     tios.local_flags
+    //     // 禁用 canonical 模式
+    // }
 
     // disable_line_buffering();
     let mut master_reader = pair
@@ -125,10 +180,15 @@ pub fn exec_in_pty(
     let running = Arc::new(AtomicBool::new(false));
     let running_clone = Arc::clone(&running);
     // let cmdstr_clone = cmdstr.clone();
+    let is_vi = cmdstr == "vi";
     let guard_2 = thread::spawn(move || {
+        // let _ = master_writer.write_all(b"\n");
         //     std::io::copy(&mut std::io::stdin(), &mut master_writer).unwrap();
         // });
         if let Some(last_input) = input {
+            if is_vi {
+                let _ = master_writer.write_all("i".as_bytes());
+            }
             // println!("Writing input: {:?}", last_input); // 调试输出
             if let Err(e) = master_writer.write_all(&last_input) {
                 eprintln!("Failed to write to master: {}", e);
@@ -136,7 +196,15 @@ pub fn exec_in_pty(
             if let Err(e) = master_writer.flush() {
                 eprintln!("Failed to flush master: {}", e);
             }
-            thread::sleep(Duration::from_millis(200));
+            let _ = master_writer.flush();
+            // thread::sleep(Duration::from_millis(100));
+            if is_vi {
+                let _ = master_writer.write_all(b"\n");
+                let esc_char = [27u8]; // Esc字符的ASCII值
+                let _ = master_writer.write_all(&esc_char);
+                let _ = master_writer.flush();
+                thread::sleep(Duration::from_millis(100));
+            }
         }
         loop {
             if running_clone.load(Ordering::SeqCst) {
@@ -175,10 +243,9 @@ pub fn exec_in_pty(
             //     input_buffer[0].to_string()
             // );
             // let _ = nix::unistd::write(pair.master.take_writer().as_mut(), &input_buffer);
-            thread::sleep(Duration::from_millis(150));
+            thread::sleep(Duration::from_millis(130));
         }
     });
-
     // println!("当前终端: {:?}", pair.master.tty_name()); // 检查终端类型
     // println!("终端: {:?}", std::env::var("TERM")); // 检查终端类型
     // println!("控制终端: {:?}", unsafe { libc::isatty(0) }); // 检查stdin是否终端
@@ -221,6 +288,7 @@ pub fn exec_in_pty(
     // );
     // terminal::disable_raw_mode()?;
     // execute!(io::stdout(), terminal::Clear(ClearType::All))?;
+    execute!(io::stdout(), terminal::LeaveAlternateScreen)?;
 
     Ok(None)
 }

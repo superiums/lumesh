@@ -34,6 +34,7 @@ pub fn exec_in_pty(
     let terminal = get_terminal_impl();
 
     // 设置信号处理
+    #[cfg(unix)]
     terminal.setup_signal_handlers()?;
     let (w, h) = terminal.get_terminal_size()?;
 

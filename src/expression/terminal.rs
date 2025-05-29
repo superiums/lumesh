@@ -74,11 +74,13 @@ impl TerminalOps for UnixTerminal {
 pub struct WindowsTerminal;
 
 #[cfg(windows)]
-use super::*;
-#[cfg(windows)]
 use std::io::{stdin, stdout};
 #[cfg(windows)]
 use std::os::windows::io::AsRawHandle;
+#[cfg(windows)]
+use std::sync::atomic::{AtomicBool, Ordering};
+#[cfg(windows)]
+use std::sync::{Arc, Mutex};
 #[cfg(windows)]
 use winapi::shared::minwindef::BOOL;
 #[cfg(windows)]
@@ -86,11 +88,9 @@ use winapi::um::consoleapi::{GetConsoleMode, SetConsoleMode};
 #[cfg(windows)]
 use winapi::um::handleapi::INVALID_HANDLE_VALUE;
 #[cfg(windows)]
-use winapi::um::winbase::{CTRL_C_EVENT, SetConsoleCtrlHandler};
-#[cfg(windows)]
 use winapi::um::wincon::{
-    CONSOLE_SCREEN_BUFFER_INFO, ENABLE_ECHO_INPUT, ENABLE_LINE_INPUT, ENABLE_PROCESSED_INPUT,
-    GetConsoleScreenBufferInfo,
+    CONSOLE_SCREEN_BUFFER_INFO, CTRL_BREAK_EVENT, CTRL_C_EVENT, CTRL_CLOSE_EVENT,
+    ENABLE_ECHO_INPUT, ENABLE_LINE_INPUT, ENABLE_PROCESSED_INPUT, GetConsoleScreenBufferInfo,
 };
 
 #[cfg(windows)]
@@ -150,8 +150,6 @@ impl TerminalOps for WindowsTerminal {
     }
 
     fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeError> {
-        use winapi::um::wincon::{CTRL_BREAK_EVENT, CTRL_C_EVENT, CTRL_CLOSE_EVENT};
-
         lazy_static::lazy_static! {
             static ref RUNNING_FLAG: Mutex<Option<Arc<AtomicBool>>> = Mutex::new(None);
         }

@@ -1,4 +1,7 @@
 # Changelog
+## [0.4.2]
+- introduce pty
+
 ## [0.4.1]
 - optimize expr execution
 - fix break in while

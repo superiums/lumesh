@@ -12,6 +12,7 @@ pub mod eval2;
 pub mod from;
 pub mod overop;
 pub mod pty;
+pub mod terminal;
 
 use builtin::Builtin;
 use chrono::NaiveDateTime;

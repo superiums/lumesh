@@ -1,7 +1,6 @@
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
 use std::io::Write;
-use terminal_size::{Height, Width, terminal_size};
 
 pub fn get() -> Expression {
     (hash_map! {
@@ -192,15 +191,15 @@ pub fn get() -> Expression {
 }
 
 fn width(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
-    Ok(match terminal_size() {
-        Some((Width(w), _)) => (w as Int).into(),
+    Ok(match crossterm::terminal::size() {
+        Ok((w, _)) => (w as Int).into(),
         _ => Expression::None,
     })
 }
 
 fn height(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
-    Ok(match terminal_size() {
-        Some((_, Height(h))) => (h as Int).into(),
+    Ok(match crossterm::terminal::size() {
+        Ok((_, h)) => (h as Int).into(),
         _ => Expression::None,
     })
 }

@@ -36,7 +36,7 @@ pub fn exec_in_pty(
     // 设置信号处理
     #[cfg(unix)]
     terminal.setup_signal_handlers()?;
-    let (w, h) = terminal.get_terminal_size()?;
+    let (w, h) = terminal.get_terminal_size();
 
     // 输入处理线程
     let running = Arc::new(AtomicBool::new(false));

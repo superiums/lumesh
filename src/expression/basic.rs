@@ -4,7 +4,7 @@ use crate::RuntimeError;
 // use num_traits::pow;
 use std::fmt;
 use std::rc::Rc;
-use terminal_size::{Width, terminal_size};
+// use terminal_size::{Width, terminal_size};
 
 use prettytable::{
     Cell,
@@ -75,9 +75,7 @@ macro_rules! fmt_shared {
             Self::List(exprs) => {
                 // Create a table with one column
                 let specified_width = $f.width().unwrap_or(
-                    terminal_size()
-                        .map(|(Width(w), _)| w as usize)
-                        .unwrap_or(120),
+                   crossterm::terminal::size().unwrap_or((120,0)).0 as usize
                 );
                 // let mut t = Table::new();
                 // let fmt = t.get_format();
@@ -156,9 +154,7 @@ macro_rules! fmt_shared {
 
            Self::HMap(exprs) => {
                 let specified_width = $f.width().unwrap_or(
-                    terminal_size()
-                        .map(|(Width(w), _)| w as usize)
-                        .unwrap_or(120),
+                    crossterm::terminal::size().unwrap_or((120,0)).0 as usize
                 );
                 let mut t = Table::new();
                 t.set_format(*FORMAT_BORDERS_ONLY);
@@ -210,9 +206,7 @@ macro_rules! fmt_shared {
             }
            Self::Map(exprs) => {
                 let specified_width = $f.width().unwrap_or(
-                    terminal_size()
-                        .map(|(Width(w), _)| w as usize)
-                        .unwrap_or(120),
+                    crossterm::terminal::size().unwrap_or((120,0)).0 as usize
                 );
                 let mut t = Table::new();
                 t.set_format(*FORMAT_BORDERS_ONLY);

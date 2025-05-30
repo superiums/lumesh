@@ -1,4 +1,4 @@
-use rand::seq::SliceRandom;
+use rand::seq::IndexedRandom;
 use std::env::current_exe;
 
 use crate::{Expression, VERSION};
@@ -21,13 +21,13 @@ pub fn get() -> Expression {
             // Choose a random suggestion from the `help/suggestions.txt` file.
             let suggestions = include_str!("../../config/suggestions.txt");
             let suggestions = suggestions.split('\n').collect::<Vec<&str>>();
-            let suggestion = suggestions.choose(&mut rand::thread_rng()).unwrap();
+            let suggestion = suggestions.choose(&mut rand::rng()).unwrap();
             Expression::String(suggestion.to_string())
         },
         String::from("license") => Expression::String("APACHE-2.0".to_string()),
         String::from("prelude") => {
             // Home directory + .lumesh-prelude
-            
+
 
             if let Some(home_dir) = dirs::home_dir() {
                 let prelude_path = home_dir.join(".lumesh-prelude");

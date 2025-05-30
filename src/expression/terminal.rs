@@ -9,7 +9,7 @@ pub trait TerminalOps {
     fn setup_signal_handlers(&self) -> Result<(), RuntimeError>;
     #[cfg(windows)]
     fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeError>;
-    fn get_terminal_size(&self) -> Result<(u16, u16), RuntimeError>;
+    fn get_terminal_size(&self) -> (u16, u16);
 }
 
 // Unix 平台实现
@@ -59,13 +59,14 @@ impl TerminalOps for UnixTerminal {
     //     Ok(())
     // }
 
-    fn get_terminal_size(&self) -> Result<(u16, u16), RuntimeError> {
-        use terminal_size::{Height, Width, terminal_size};
+    fn get_terminal_size(&self) -> (u16, u16) {
+        crossterm::terminal::size().unwrap_or((24, 80))
 
-        match terminal_size() {
-            Some((Width(w), Height(h))) => Ok((w, h)),
-            _ => Ok((24, 80)),
-        }
+        // use terminal_size::{Height, Width, terminal_size};
+        // match terminal_size() {
+        //     Some((Width(w), Height(h))) => Ok((w, h)),
+        //     _ => Ok((24, 80)),
+        // }
     }
 }
 
@@ -179,22 +180,22 @@ impl TerminalOps for WindowsTerminal {
         Ok(())
     }
 
-    fn get_terminal_size(&self) -> Result<(u16, u16), RuntimeError> {
+    fn get_terminal_size(&self) -> (u16, u16) {
         unsafe {
             let handle = stdout().as_raw_handle();
             if handle == INVALID_HANDLE_VALUE {
-                return Ok((80, 24)); // Default size
+                return (80, 24); // Default size
             }
 
             let mut csbi: CONSOLE_SCREEN_BUFFER_INFO = std::mem::zeroed();
             if GetConsoleScreenBufferInfo(handle, &mut csbi) == 0 {
-                return Ok((80, 24)); // Default size
+                return (80, 24); // Default size
             }
 
             let width = csbi.srWindow.Right - csbi.srWindow.Left + 1;
             let height = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
-            Ok((width as u16, height as u16))
+            (width as u16, height as u16)
         }
     }
 }

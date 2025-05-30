@@ -41,15 +41,15 @@ pub fn exec_in_pty(
     // 输入处理线程
     let running = Arc::new(AtomicBool::new(false));
     let running_clone = Arc::clone(&running);
+    let running_clone2 = Arc::clone(&running);
     // 设置 Ctrl+C 处理
     #[cfg(windows)]
     terminal.handle_ctrl_c(Arc::clone(&running))?;
     // Guard
     let _terminal_guard = TerminalGuard::new(terminal)?;
-    if ["bash", "sh", "fish", "zsh"].contains(&cmdstr.as_str()) {
-        drop(_terminal_guard);
-    }
+
     let is_vi = cmdstr == "vi";
+    let is_shell = ["bash", "sh", "fish", "zsh"].contains(&cmdstr.as_str());
     // pty
     let pty_system = native_pty_system();
     let pair = pty_system
@@ -69,7 +69,32 @@ pub fn exec_in_pty(
                 let mut termios = std::mem::zeroed();
                 if libc::tcgetattr(master_fd, &mut termios) == 0 {
                     // 配置终端属性...
-                    libc::tcsetattr(master_fd, libc::TCSAFLUSH, &termios);
+                    // 输入控制
+                    // termios.c_cc[libc::VEOF] = 4; // Ctrl+D
+                    // termios.c_cc[libc::VEOL] = libc::_POSIX_VDISABLE; // 无 EOL
+                    // termios.c_cc[libc::VEOL2] = libc::_POSIX_VDISABLE;
+                    // termios.c_cc[libc::VERASE] = 0x7f; // ASCII DEL (Backspace)
+                    // termios.c_cc[libc::VWERASE] = 0x17; // Ctrl+W
+                    // termios.c_cc[libc::VKILL] = 0x15; // Ctrl+U
+                    // termios.c_cc[libc::VREPRINT] = 0x12; // Ctrl+R
+                    // termios.c_cc[libc::VINTR] = 0x03; // Ctrl+C
+                    // termios.c_cc[libc::VQUIT] = 0x1c; // Ctrl+\
+                    // termios.c_cc[libc::VSUSP] = 0x1a; // Ctrl+Z
+                    // termios.c_cc[libc::VSTART] = 0x11; // Ctrl+Q
+                    // termios.c_cc[libc::VSTOP] = 0x13; // Ctrl+S
+                    // termios.c_cc[libc::VLNEXT] = 0x16; // Ctrl+V
+                    // termios.c_cc[libc::VDISCARD] = 0x0f; // Ctrl+O
+                    // termios.c_cc[libc::VMIN] = 1;
+                    // termios.c_cc[libc::VTIME] = 0;
+
+                    termios.c_lflag |= libc::ECHO | libc::ICANON;
+                    termios.c_lflag |= libc::ISIG;
+                    // termios.c_lflag &= !libc::ISIG;
+                    termios.c_oflag |= libc::OPOST;
+                    if is_vi {
+                        termios.c_iflag &= !libc::IXON; // 禁用流控制
+                    }
+                    libc::tcsetattr(master_fd, libc::TCSANOW, &termios);
                 }
             }
         }
@@ -99,9 +124,30 @@ pub fn exec_in_pty(
         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
 
     // 输出转发线程
-    let _output_thread = thread::spawn(move || {
-        let _ = io::copy(&mut master_reader, &mut io::stdout());
-    });
+
+    let _output_thread = if is_shell {
+        // drop(_terminal_guard);
+        thread::spawn(move || {
+            loop {
+                if running_clone2.load(Ordering::SeqCst) {
+                    break;
+                }
+
+                // 将读取的数据输出到标准输出
+                let mut buffer = [0u8; 1024];
+                match master_reader.read(&mut buffer) {
+                    Ok(_) => io::stdout().write_all(&buffer).unwrap(),
+                    Err(_) => break,
+                }
+                thread::sleep(Duration::from_millis(100));
+                let _ = io::stdout().flush();
+            }
+        })
+    } else {
+        thread::spawn(move || {
+            let _ = io::copy(&mut master_reader, &mut io::stdout());
+        })
+    };
 
     let input_thread = thread::spawn(move || {
         if let Some(last_input) = input {
@@ -142,6 +188,9 @@ pub fn exec_in_pty(
     child.wait()?;
     running.store(true, Ordering::SeqCst);
     let _ = input_thread.join();
+    if is_shell {
+        let _ = _output_thread.join();
+    }
 
     Ok(None)
 }

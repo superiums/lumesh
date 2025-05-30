@@ -1,4 +1,12 @@
 # Changelog
+## [0.4.3]
+- update libs to newest.
+except nom.
+- enhance string loop
+support loop in string result now, we cut it to array via newline, witespace, `,`,`;`
+
+- fix hotkey
+
 ## [0.4.2]
 - introduce pty
 

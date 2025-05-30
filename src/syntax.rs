@@ -3,14 +3,6 @@
 use crate::{Diagnostic, TokenKind, tokenize};
 
 pub fn highlight(line: &str) -> String {
-    //     // 这里简化实现，实际应复用你现有的高亮逻辑
-    //     if line.contains("echo") {
-    //         format!("\x1b[94m{}\x1b[0m", line)
-    //     } else {
-    //         line.to_string()
-    //     }
-    // }
-    // fn syntax_highlight(line: &str) -> String {
     let (tokens, diagnostics) = tokenize(line);
     // dbg!(tokens);
 

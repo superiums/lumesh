@@ -117,17 +117,16 @@ fn joinx(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         match arg.eval(env)? {
             Expression::String(s) => {
                 let lines = s.lines().map(ToString::to_string).collect::<Vec<String>>();
-                string_args.push(lines.clone());
+                let lines_len = lines.len();
+                string_args.push(lines);
 
                 height = string_args[0].len();
 
-                if height != lines.len() {
+                if height != lines_len {
                     return Err(LmError::CustomError(format!(
                         "Heights of horizontally added widgets must be equal, \
                             first widget height={}, {}th widget height={}",
-                        height,
-                        i,
-                        lines.len()
+                        height, i, lines_len
                     )));
                 }
             }

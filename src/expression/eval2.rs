@@ -511,20 +511,31 @@ fn handle_for(
                 }
                 // loop
                 let mut result = Vec::with_capacity(elist.len());
-                for item in elist.iter() {
-                    env.define(var, Expression::String(item.clone()));
+                for item in elist.into_iter() {
+                    env.define(var, Expression::String(item));
                     let last = body.as_ref().eval_mut(state, env, depth + 1)?;
                     result.push(last)
                 }
                 Ok(Expression::from(result))
             } else {
-                let elist = s.chars();
-                let mut result = Vec::with_capacity(s.len());
-                for item in elist {
-                    env.define(var, Expression::String(item.to_string()));
-                    let last = body.as_ref().eval_mut(state, env, depth + 1)?;
-                    result.push(last)
+                let mut elist = s.lines().collect::<Vec<_>>();
+                if elist.len() < 2 {
+                    elist = s.split_ascii_whitespace().collect::<Vec<_>>();
+                    if elist.len() < 2 {
+                        elist = s.split_terminator(";").collect::<Vec<_>>();
+                        if elist.len() < 2 {
+                            elist = s.split_terminator(",").collect::<Vec<_>>();
+                        }
+                    }
                 }
+                let result = elist
+                    .into_iter()
+                    .map(|i| {
+                        env.define(var, Expression::String(i.to_string()));
+                        body.as_ref().eval_mut(state, env, depth + 1)
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+
                 Ok(Expression::from(result))
             }
         }

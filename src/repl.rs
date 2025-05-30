@@ -24,7 +24,7 @@ use crate::cmdhelper::{
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler};
 
 use crate::runtime::check;
-use crate::{Environment, parse_and_eval, prompt::get_prompt_engine, syntax_highlight};
+use crate::{Environment, highlight, parse_and_eval, prompt::get_prompt_engine};
 
 // use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
@@ -488,11 +488,11 @@ impl Highlighter for SyntaxHighlighter {
         //     (RED, false)
         } else {
             // 无命令，直接返回语法高亮
-            return Cow::Owned(syntax_highlight(line));
+            return Cow::Owned(highlight(line));
         };
 
         // 高亮命令部分，剩余部分调用 syntax_highlight
-        let highlighted_rest = syntax_highlight(rest);
+        let highlighted_rest = highlight(rest);
         let colored_line = if is_valid {
             format!("{}{}{} {}", color, cmd, RESET, highlighted_rest)
         } else {

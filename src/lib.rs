@@ -29,7 +29,7 @@ pub use tokenizer::*;
 pub mod repl;
 
 pub mod runtime;
-pub use runtime::{parse, parse_and_eval, syntax_highlight};
+pub use runtime::{parse, parse_and_eval};
 
 pub mod syntax;
 pub use syntax::highlight;

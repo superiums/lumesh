@@ -42,7 +42,6 @@ fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(match expr {
         Expression::Map(map) => {
             let items = map
-                .as_ref()
                 .iter()
                 .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
                 .collect();
@@ -74,9 +73,7 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
-        Expression::Map(map) => {
-            Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
-        }
+        Expression::Map(map) => Expression::List(Rc::new(map.as_ref().values().cloned().collect())),
         _ => Expression::None,
     })
 }
@@ -220,7 +217,7 @@ fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
 
     let mut new_map = BTreeMap::new();
 
-    for (k, v) in map.as_ref().iter() {
+    for (k, v) in map.iter() {
         let new_key = match Expression::Apply(
             Rc::new(key_func.clone()),
             Rc::new(vec![Expression::String(k.clone())]),

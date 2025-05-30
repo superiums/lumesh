@@ -125,7 +125,7 @@ pub fn exec_in_pty(
 
     // 输出转发线程
 
-    let _output_thread = if is_shell {
+    let _output_thread = if is_shell || is_vi {
         // drop(_terminal_guard);
         thread::spawn(move || {
             loop {
@@ -139,7 +139,7 @@ pub fn exec_in_pty(
                     Ok(_) => io::stdout().write_all(&buffer).unwrap(),
                     Err(_) => break,
                 }
-                thread::sleep(Duration::from_millis(100));
+                thread::sleep(Duration::from_millis(20));
                 let _ = io::stdout().flush();
             }
         })
@@ -164,8 +164,8 @@ pub fn exec_in_pty(
                 let _ = master_writer.write_all(b"\n");
                 let esc_char = [27u8];
                 let _ = master_writer.write_all(&esc_char);
+                thread::sleep(Duration::from_millis(50));
                 let _ = master_writer.flush();
-                thread::sleep(Duration::from_millis(100));
             }
         }
 
@@ -181,14 +181,14 @@ pub fn exec_in_pty(
                 }
                 Err(_) => break,
             }
-            thread::sleep(Duration::from_millis(130));
+            thread::sleep(Duration::from_millis(80));
         }
     });
 
     child.wait()?;
     running.store(true, Ordering::SeqCst);
     let _ = input_thread.join();
-    if is_shell {
+    if is_shell || is_vi {
         let _ = _output_thread.join();
     }
 

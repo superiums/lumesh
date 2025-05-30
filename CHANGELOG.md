@@ -4,7 +4,7 @@
 except nom.
 - enhance string loop
 support loop in string result now, we cut it to array via newline, witespace, `,`,`;`
-
+- fix pty for fish/vi
 - fix hotkey
 
 ## [0.4.2]

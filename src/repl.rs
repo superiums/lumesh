@@ -1,6 +1,10 @@
 use rustyline::validate::ValidationResult;
 use rustyline::{
-    Changeset, Editor, Helper, KeyEvent,
+    Changeset,
+    Editor,
+    // Event::KeySeq,
+    Helper,
+    KeyEvent,
     completion::{Completer, FilenameCompleter, Pair},
     config::CompletionType,
     error::ReadlineError,
@@ -126,6 +130,9 @@ pub fn run_repl(env: &mut Environment) {
     let hotkey_modifier = env.get("LUME_HOT_MODIFIER");
     let modifier: u8 = match hotkey_modifier {
         Some(Expression::Integer(bits)) => {
+            // if bits == 0 {
+            //     0
+            // } else
             if (bits as u8 & (Modifiers::CTRL | Modifiers::ALT | Modifiers::SHIFT).bits()) == 0 {
                 eprintln!("invalid LUME_HOT_MODIFIER {}", bits);
                 4
@@ -142,7 +149,10 @@ pub fn run_repl(env: &mut Environment) {
         for (k, cmd) in keys.iter() {
             if let Some(c) = k.chars().next() {
                 rl_unlocked.bind_sequence(
+                    // KeySeq(vec![
+                    //     KeyEvent::alt('z'),
                     KeyEvent::new(c, Modifiers::from_bits_retain(modifier)),
+                    // ]),
                     LumeKeyHandler::new(cmd.to_string()),
                 );
             }

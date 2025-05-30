@@ -22,12 +22,12 @@ impl From<LumeKeyHandler> for EventHandler {
 impl ConditionalEventHandler for LumeKeyHandler {
     fn handle(&self, _: &Event, _: RepeatCount, _: bool, ctx: &EventContext) -> Option<Cmd> {
         let mut env = Environment::new();
-        if ctx.line().is_empty() {
-            None
-        } else {
-            parse_and_eval(&self.command.replace("$CMD_CURRENT", ctx.line()), &mut env);
-            Some(Cmd::AcceptLine)
-        }
+        // if ctx.line().is_empty() {
+        //     None
+        // } else {
+        parse_and_eval(&self.command.replace("$CMD_CURRENT", ctx.line()), &mut env);
+        Some(Cmd::AcceptLine)
+        // }
     }
 }
 

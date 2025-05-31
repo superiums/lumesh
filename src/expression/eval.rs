@@ -8,6 +8,7 @@ use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
 use std::io::ErrorKind;
 use std::io::Write;
+
 use std::rc::Rc;
 
 const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
@@ -767,6 +768,24 @@ impl Expression {
                 } else {
                     Err(RuntimeError::TypeError {
                         expected: "integer".into(),
+                        sym: r.to_string(),
+                        found: r.type_name(),
+                    })
+                }
+            }
+            // range
+            Expression::Range(mut list) => {
+                if let Expression::Integer(index) = r {
+                    list.nth(index as usize)
+                        .and_then(|r| Some(Expression::Integer(r)))
+                        .ok_or_else(|| RuntimeError::IndexOutOfBounds {
+                            index: index as Int,
+                            len: list.count(),
+                        })
+                } else {
+                    Err(RuntimeError::TypeError {
+                        expected: "integer".into(),
+                        sym: r.to_string(),
                         found: r.type_name(),
                     })
                 }
@@ -801,6 +820,7 @@ impl Expression {
                 } else {
                     Err(RuntimeError::TypeError {
                         expected: "integer".into(),
+                        sym: r.to_string(),
                         found: r.type_name(),
                     })
                 }
@@ -808,6 +828,7 @@ impl Expression {
 
             _ => Err(RuntimeError::TypeError {
                 expected: "indexable type (list/dict/string)".into(),
+                sym: l.to_string(),
                 found: l.type_name(),
             }),
         }
@@ -818,6 +839,7 @@ impl Expression {
             Self::List(v) => Ok(v.as_ref()),
             _ => Err(RuntimeError::TypeError {
                 expected: "list".into(),
+                sym: self.to_string(),
                 found: self.type_name(),
             }),
         }
@@ -879,6 +901,7 @@ impl Expression {
                     // 处理其他类型错误
                     _ => Err(RuntimeError::TypeError {
                         expected: "integer".into(),
+                        sym: evaluated.to_string(),
                         found: evaluated.type_name(),
                     }),
                 }
@@ -899,6 +922,7 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "List".into(),
+                sym: s.to_string(),
                 found: s.type_name(),
             }),
         }
@@ -913,6 +937,7 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "List".into(),
+                sym: s.to_string(),
                 found: s.type_name(),
             }),
         }
@@ -935,6 +960,7 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
+                sym: s.to_string(),
                 found: s.type_name(),
             }),
         }
@@ -959,6 +985,7 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
+                sym: s.to_string(),
                 found: s.type_name(),
             }),
         }
@@ -982,6 +1009,7 @@ impl Expression {
             }
             s => Err(RuntimeError::TypeError {
                 expected: "Map".into(),
+                sym: s.to_string(),
                 found: s.type_name(),
             }),
         }

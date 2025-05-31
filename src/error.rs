@@ -375,8 +375,12 @@ pub enum RuntimeError {
     IndexOutOfBounds { index: Int, len: usize },
     #[error("key `{0}` not found in map")]
     KeyNotFound(String),
-    #[error("type error: expected {expected}, found {found}")]
-    TypeError { expected: String, found: String },
+    #[error("type error, expected {expected}, found {found}: {sym}")]
+    TypeError {
+        expected: String,
+        sym: String,
+        found: String,
+    },
     #[error("illegal return outside function")]
     EarlyReturn(Expression),
     #[error("illegal break outside loop")]

@@ -215,7 +215,8 @@ impl PrattParser {
                     // dbg!("--> Args: trying next loop", input.len(), PREC_CMD_ARG);
                     if input.len() == 1 {
                         // CMD arg1, 只有第一个参数
-                        let (new_input, rhs) = alt((parse_symbol, parse_literal))(input)?;
+                        let (new_input, rhs) =
+                            alt((parse_symbol, parse_variable, parse_literal))(input)?;
                         // dbg!(&rhs);
                         input = new_input;
                         lhs = Expression::Command(Rc::new(lhs), Rc::new(vec![rhs]));
@@ -276,9 +277,7 @@ impl PrattParser {
                 let op = first.text(input);
                 // vars
                 if op == "$" {
-                    return preceded(text("$"), map(parse_symbol_string, Expression::Variable))(
-                        input,
-                    );
+                    return parse_variable(input);
                 }
                 // unary op
                 let prec = match op {
@@ -1015,8 +1014,13 @@ fn parse_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErro
         Expression::Symbol(t.to_str(input.str).to_string())
     })(input)
 }
+#[inline]
 fn parse_symbol_string(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
     map(kind(TokenKind::Symbol), |t| t.to_str(input.str).to_string())(input)
+}
+#[inline]
+fn parse_variable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    preceded(text("$"), map(parse_symbol_string, Expression::Variable))(input)
 }
 
 #[inline]
@@ -1082,7 +1086,13 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
         separated_pair(
             parse_symbol_string,
             text(":"),
-            alt((parse_literal, parse_symbol)),
+            alt((
+                parse_literal,
+                parse_variable,
+                parse_symbol,
+                parse_map,
+                parse_list,
+            )),
         ),
     )(input)?;
     // dbg!(&input, &pairs);
@@ -1621,14 +1631,14 @@ fn parse_slice_params(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, (SliceParams, bool), SyntaxErrorKind> {
     // 解析 start 部分
-    let (input, start) = opt(alt((parse_integer, parse_symbol)))(input)?;
+    let (input, start) = opt(alt((parse_integer, parse_variable, parse_symbol)))(input)?;
 
     // 检查第一个冒号
     let (input, has_first_colon) = opt(text(":"))(input)?;
 
     // 解析 end 部分
     let (input, end) = if has_first_colon.is_some() {
-        opt(alt((parse_integer, parse_symbol)))(input)?
+        opt(alt((parse_integer, parse_variable, parse_symbol)))(input)?
     } else {
         (input, None) // 如果没有第一个冒号，就没有 end
     };
@@ -1638,7 +1648,7 @@ fn parse_slice_params(
 
     // 解析 step 部分
     let (input, step) = if has_second_colon.is_some() {
-        opt(alt((parse_integer, parse_symbol)))(input)?
+        opt(alt((parse_integer, parse_variable, parse_symbol)))(input)?
     } else {
         (input, None) // 如果没有第二个冒号，就没有 step
     };

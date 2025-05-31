@@ -56,6 +56,7 @@ pub fn eval_command(
                             }
                             _ => Err(RuntimeError::TypeError {
                                 expected: "Command or Builtin".into(),
+                                sym: cmd_alias.to_string(),
                                 found: cmd_alias.type_name(),
                             }),
                         }
@@ -78,6 +79,7 @@ pub fn eval_command(
         }
         e => Err(RuntimeError::TypeError {
             expected: "Symbol".to_string(),
+            sym: e.to_string(),
             found: e.type_name(),
         }),
     }

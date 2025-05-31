@@ -25,6 +25,7 @@ macro_rules! type_error {
     ($expected:expr, $found:expr) => {
         Err(RuntimeError::TypeError {
             expected: $expected.into(),
+            sym: $found.to_string(),
             found: $found.type_name(),
         })
     };

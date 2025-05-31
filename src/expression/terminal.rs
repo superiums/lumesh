@@ -64,8 +64,8 @@ impl TerminalOps for UnixTerminal {
 
         // use terminal_size::{Height, Width, terminal_size};
         // match terminal_size() {
-        //     Some((Width(w), Height(h))) => Ok((w, h)),
-        //     _ => Ok((24, 80)),
+        //     Some((Width(w), Height(h))) => (w, h),
+        //     _ => (24, 80),
         // }
     }
 }

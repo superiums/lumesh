@@ -49,7 +49,7 @@ pub fn exec_in_pty(
     let _terminal_guard = TerminalGuard::new(terminal)?;
 
     let is_vi = cmdstr == "vi";
-    let is_shell = ["bash", "sh", "fish", "zsh"].contains(&cmdstr.as_str());
+    let is_shell = ["bash", "lume", "sh", "fish", "zsh"].contains(&cmdstr.as_str());
     // pty
     let pty_system = native_pty_system();
     let pair = pty_system

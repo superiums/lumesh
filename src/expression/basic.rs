@@ -75,6 +75,7 @@ macro_rules! fmt_shared {
             Self::List(exprs) => {
                 // Create a table with one column
                 let specified_width = $f.width().unwrap_or(
+                    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
                    crossterm::terminal::size().unwrap_or((120,0)).0 as usize
                 );
                 // let mut t = Table::new();
@@ -154,6 +155,7 @@ macro_rules! fmt_shared {
 
            Self::HMap(exprs) => {
                 let specified_width = $f.width().unwrap_or(
+                    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
                     crossterm::terminal::size().unwrap_or((120,0)).0 as usize
                 );
                 let mut t = Table::new();
@@ -206,6 +208,7 @@ macro_rules! fmt_shared {
             }
            Self::Map(exprs) => {
                 let specified_width = $f.width().unwrap_or(
+                    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
                     crossterm::terminal::size().unwrap_or((120,0)).0 as usize
                 );
                 let mut t = Table::new();

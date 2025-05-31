@@ -335,9 +335,9 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
 
 fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("insert", args, 3)?;
-    let mut arr = args[0].eval(env)?;
-    let idx = args[1].eval(env)?;
-    let val = args[2].eval(env)?;
+    let mut arr = args[2].eval(env)?;
+    let idx = args[0].eval(env)?;
+    let val = args[1].eval(env)?;
     match (&mut arr, &idx) {
         (Expression::HMap(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();

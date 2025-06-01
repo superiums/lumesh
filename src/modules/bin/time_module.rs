@@ -89,7 +89,7 @@ pub fn get() -> Expression {
                 .unwrap_or(false)))
         }, "check if a year is a leap year"),
 
-        String::from("from_parts") => Expression::builtin("from_parts", from_parts,
+        String::from("from_map") => Expression::builtin("from_map", from_map,
             "create DateTime from components (year, month, day[, hour, minute, second])"),
 
         String::from("to_string") => Expression::builtin("to_string", to_string,
@@ -136,7 +136,22 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<NaiveDa
             if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%Y/%m/%d %H:%M:%S") {
                 return Ok(dt);
             }
+            if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%d/%m/%Y %H:%M:%S") {
+                return Ok(dt);
+            }
             if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%m/%d/%Y %H:%M:%S") {
+                return Ok(dt);
+            }
+            if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %I:%M %p") {
+                return Ok(dt);
+            }
+            if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%Y/%m/%d %I:%M %p") {
+                return Ok(dt);
+            }
+            if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%d/%m/%Y %I:%M %p") {
+                return Ok(dt);
+            }
+            if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%m/%d/%Y %I:%M %p") {
                 return Ok(dt);
             }
             if let Ok(dt) = NaiveDate::parse_from_str(&s, "%Y-%m-%d") {
@@ -146,6 +161,9 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<NaiveDa
                 return Ok(NaiveDateTime::new(Local::now().date_naive(), time));
             }
             if let Ok(time) = NaiveTime::parse_from_str(&s, "%H:%M") {
+                return Ok(NaiveDateTime::new(Local::now().date_naive(), time));
+            }
+            if let Ok(time) = NaiveTime::parse_from_str(&s, "%I:%M %p") {
                 return Ok(NaiveDateTime::new(Local::now().date_naive(), time));
             }
             // 尝试解析常见格式
@@ -270,7 +288,7 @@ fn display(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn fmt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("fmt", args, 1..2)?;
+    super::check_args_len("fmt", args, 1..=2)?;
 
     let format_str = match args[0].eval(env)? {
         Expression::String(s) => s,
@@ -332,7 +350,11 @@ fn parse(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
             }
         }
     } else {
-        "%Y-%m-%d %H:%M".to_owned()
+        // "%Y-%m-%d %H:%M:%S".to_owned()
+        return Ok(Expression::DateTime(parse_datetime_arg(
+            &Expression::String(datetime_str),
+            env,
+        )?));
     };
 
     // 尝试解析为 NaiveDateTime
@@ -358,7 +380,7 @@ fn parse(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 }
 
 fn add(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("add", args, 1..7)?;
+    super::check_args_len("add", args, 1..=7)?;
 
     // 解析目标时间（如果提供）
     let base_dt = if args.len() > 1 {
@@ -420,7 +442,7 @@ fn add(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 }
 
 fn diff(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("diff", args, 2..3)?;
+    super::check_args_len("diff", args, 2..=3)?;
     let unit = match args[0].eval(env)? {
         Expression::String(s) => s.to_lowercase(),
         _ => "seconds".to_string(),
@@ -450,7 +472,7 @@ fn diff(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 }
 
 fn timezone(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("timezone", args, 1..3)?;
+    super::check_args_len("timezone", args, 1..=3)?;
 
     let offset_hours = match args[0].eval(env)? {
         Expression::Integer(h) => h,
@@ -489,8 +511,8 @@ fn timezone(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
 // 新增功能函数
 
-fn from_parts(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("from_parts", args, 1)?;
+fn from_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("from_map", args, 1)?;
 
     // 处理 Map 类型参数
 
@@ -523,7 +545,7 @@ fn from_parts(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 fn to_string(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("to_string", args, 1..2)?;
+    super::check_args_len("to_string", args, 1..=2)?;
 
     let dt = parse_datetime_arg(&args[0], env)?;
 

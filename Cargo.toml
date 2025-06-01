@@ -1,7 +1,7 @@
 [package]
 name = "lumesh"
-version = "0.4.3"
-authors = ["Adam McDaniel; superiums"]
+version = "0.4.4"
+authors = ["Adam McDaniel; santo"]
 edition = "2024"
 license = "MIT"
 description = "A shell🐚 forked from dune!!"

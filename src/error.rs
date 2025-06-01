@@ -375,7 +375,7 @@ pub enum RuntimeError {
     IndexOutOfBounds { index: Int, len: usize },
     #[error("key `{0}` not found in map")]
     KeyNotFound(String),
-    #[error("type error, expected {expected}, found {found}: {sym}")]
+    #[error("type error, expected {expected}, found {sym}: {found}")]
     TypeError {
         expected: String,
         sym: String,
@@ -405,6 +405,12 @@ pub enum LmError {
     Io(#[from] std::io::Error),
     #[error("{0}")]
     CustomError(String),
+    #[error("type error, expected {expected}, found {sym}: {found}")]
+    TypeError {
+        expected: String,
+        sym: String,
+        found: String,
+    },
 }
 impl RuntimeError {
     pub const ERROR_CODE_CANNOT_APPLY: Int = 1;
@@ -483,12 +489,14 @@ impl LmError {
     pub const ERROR_CODE_SYNTAX_ERROR: Int = 101;
     pub const ERROR_CODE_IO_ERROR: Int = 102;
     pub const ERROR_CODE_CS_ERROR: Int = 103;
+    pub const ERROR_CODE_TYPE_ERROR: Int = 104;
     pub fn codes() -> Expression {
         Expression::from(b_tree_map! {
             String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
             String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
             String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
+            String::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
         })
     }
     pub fn code(&self) -> Int {
@@ -497,6 +505,7 @@ impl LmError {
             Self::Runtime(err) => err.code(),
             Self::Io(_) => Self::ERROR_CODE_IO_ERROR,
             Self::CustomError(_) => Self::ERROR_CODE_CS_ERROR,
+            Self::TypeError { .. } => Self::ERROR_CODE_TYPE_ERROR,
         }
     }
 }

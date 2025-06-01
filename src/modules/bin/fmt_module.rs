@@ -3,267 +3,255 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("strip") => Expression::builtin("strip", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(crate::repl::strip_ansi_escapes(args[0].eval(env)?).into())
-        }, "strips all colors and styling from a string"),
+            // 排列
+            String::from("pad_start") => Expression::builtin("pad_start", pad_start, "pad string to specified length at start, with optional pad character"),
+            String::from("pad_end") => Expression::builtin("pad_end", pad_end, "pad string to specified length at end, with optional pad character"),
+            String::from("center") => Expression::builtin("center", center, "center string by padding both ends"),
+            String::from("wrap") => Expression::builtin("wrap", wrap, "wrap text such that it fits in a specific number of columns"),
+            String::from("format") => Expression::builtin("format", format, "format string using {} placeholders"),
+            // 样式
+            String::from("strip") => Expression::builtin("strip", strip, "strips all colors and styling from a string"),
+            String::from("href") => Expression::builtin("href", href, "create a hyperlink on the console"),
+            String::from("bold") => Expression::builtin("bold", bold, "convert text to bold on the console"),
+            String::from("faint") => Expression::builtin("faint", faint, "convert text to italics on the console"),
+            String::from("italics") => Expression::builtin("italics", italics, "convert text to italics on the console"),
+            String::from("underline") => Expression::builtin("underline", underline, "underline text on the console"),
+            String::from("blink") => Expression::builtin("blink", blink, "blink text on the console"),
+            String::from("invert") => Expression::builtin("invert", invert, "invert text on the console"),
+            String::from("strike") => Expression::builtin("strike", strike, "strike out text on the console"),
+            // 颜色
+            String::from("black") => Expression::builtin("black", black, "convert text to black on the console"),
+            String::from("red") => Expression::builtin("red", red, "convert text to red on the console"),
+            String::from("green") => Expression::builtin("green", green, "convert text to green on the console"),
+            String::from("yellow") => Expression::builtin("yellow", yellow, "convert text to yellow on the console"),
+            String::from("blue") => Expression::builtin("blue", blue, "convert text to blue on the console"),
+            String::from("magenta") => Expression::builtin("magenta", magenta, "convert text to magenta on the console"),
+            String::from("cyan") => Expression::builtin("cyan", cyan, "convert text to cyan on the console"),
+            String::from("white") => Expression::builtin("white", white, "convert text to white on the console"),
+            // dark
+                String::from("dark_black") => Expression::builtin("dark_black", dark_black, "convert text to black on the console"),
+                String::from("dark_red") => Expression::builtin("dark_red", dark_red, "convert text to red on the console"),
+                String::from("dark_green") => Expression::builtin("dark_green", dark_green, "convert text to green on the console"),
+                String::from("dark_yellow") => Expression::builtin("dark_yellow", dark_yellow, "convert text to yellow on the console"),
+                String::from("dark_blue") => Expression::builtin("dark_blue", dark_blue, "convert text to blue on the console"),
+                String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "convert text to magenta on the console"),
+                String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "convert text to cyan on the console"),
+                String::from("dark_white") => Expression::builtin("dark_white", dark_white, "convert text to white on the console"),
 
-        String::from("wrap") => Expression::builtin("wrap", wrap,
-            "wrap text such that it fits in a specific number of columns"),
-
-        String::from("href") => Expression::builtin("href", href,
-            "create a hyperlink on the console"),
-
-        String::from("bold") => Expression::builtin("bold", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to bold on the console"),
-
-        String::from("faint") => Expression::builtin("faint", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to italics on the console"),
-
-        String::from("italics") => Expression::builtin("italics", |args, env| {
-        super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to italics on the console"),
-
-        String::from("underline") => Expression::builtin("underline", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "underline text on the console"),
-
-        String::from("blink") => Expression::builtin("blink", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "blink text on the console"),
-
-        String::from("invert") => Expression::builtin("invert", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "invert text on the console"),
-
-        String::from("strike") => Expression::builtin("strike", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "strike out text on the console"),
-
-        String::from("black") => Expression::builtin("black", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to black on the console"),
-
-        String::from("red") => Expression::builtin("red", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to red on the console"),
-
-        String::from("green") => Expression::builtin("green", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to green on the console"),
-
-        String::from("yellow") => Expression::builtin("yellow", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to yellow on the console"),
-
-        String::from("blue") => Expression::builtin("blue", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to blue on the console"),
-
-        String::from("magenta") => Expression::builtin("magenta", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to magenta on the console"),
-
-        String::from("cyan") => Expression::builtin("cyan", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to cyan on the console"),
-
-        String::from("white") => Expression::builtin("white", |args, env| {
-            super::check_exact_args_len("strip", args, 1)?;
-            Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-        }, "convert text to white on the console"),
-
-        String::from("dark") => hash_map! {
-            String::from("black") => Expression::builtin("black", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-            }, "convert text to black on the console"),
-
-            String::from("red") => Expression::builtin("red", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-            }, "convert text to red on the console"),
-
-            String::from("green") => Expression::builtin("green", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-            }, "convert text to green on the console"),
-
-            String::from("yellow") => Expression::builtin("yellow", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-            }, "convert text to yellow on the console"),
-
-            String::from("blue") => Expression::builtin("blue", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-            }, "convert text to blue on the console"),
-
-            String::from("magenta") => Expression::builtin("magenta", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-            }, "convert text to magenta on the console"),
-
-            String::from("cyan") => Expression::builtin("cyan", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
-            }, "convert text to cyan on the console"),
-
-            String::from("white") => Expression::builtin("white", |args, env| {
-                super::check_exact_args_len("strip", args, 1)?;
-                Ok(format!("\x1b[37m{}\x1b[m\x6b[0m", args[0].eval(env)?).into())
-            }, "convert text to white on the console"),
-
-            String::from("pad_start") => Expression::builtin("pad_start", |args, env| {
-                       super::check_args_len("pad_start", args, 2..3)?;
-
-                       let (str_expr, length, pad_char) = match args.len() {
-                           2 => (args[1].clone(), args[0].clone(), " ".to_string()),
-                           3 => (args[2].clone(), args[0].clone(), args[1].clone().to_string()),
-                           _ => unreachable!(),
-                       };
-
-                       let s = match str_expr.eval(env)? {
-                           Expression::Symbol(x) | Expression::String(x) => x,
-                           _ => return Err(LmError::CustomError("pad_start requires a string as last argument".to_string())),
-                       };
-
-                       let len = match length.eval(env)? {
-                           Expression::Integer(n) => n.max(0) as usize,
-                           _ => return Err(LmError::CustomError("pad_start requires an integer as length".to_string())),
-                       };
-
-                       let pad_ch = pad_char.chars().next().unwrap_or(' ');
-
-                       if s.len() >= len {
-                           return Ok(Expression::String(s));
-                       }
-
-                       let pad_len = len - s.len();
-                       let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
-                       Ok(Expression::String(format!("{}{}", padding, s)))
-                   }, "pad string to specified length at start, with optional pad character"),
-
-                   String::from("pad_end") => Expression::builtin("pad_end", |args, env| {
-                       super::check_args_len("pad_end", args, 2..3)?;
-
-                       let (str_expr, length, pad_char) = match args.len() {
-                           2 => (args[1].clone(), args[0].clone(), " ".to_string()),
-                           3 => (args[2].clone(), args[0].clone(), args[1].clone().to_string()),
-                           _ => unreachable!(),
-                       };
-
-                       let s = match str_expr.eval(env)? {
-                           Expression::Symbol(x) | Expression::String(x) => x,
-                           _ => return Err(LmError::CustomError("pad_end requires a string as last argument".to_string())),
-                       };
-
-                       let len = match length.eval(env)? {
-                           Expression::Integer(n) => n.max(0) as usize,
-                           _ => return Err(LmError::CustomError("pad_end requires an integer as length".to_string())),
-                       };
-
-                       let pad_ch = pad_char.chars().next().unwrap_or(' ');
-
-                       if s.len() >= len {
-                           return Ok(Expression::String(s));
-                       }
-
-                       let pad_len = len - s.len();
-                       let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
-                       Ok(Expression::String(format!("{}{}", s, padding)))
-                   }, "pad string to specified length at end, with optional pad character"),
-
-                   String::from("center") => Expression::builtin("center", |args, env| {
-                       super::check_args_len("center", args, 2..3)?;
-
-                       let (str_expr, length, pad_char) = match args.len() {
-                           2 => (args[1].clone(), args[0].clone(), " ".to_string()),
-                           3 => (args[2].clone(), args[0].clone(), args[1].clone().to_string()),
-                           _ => unreachable!(),
-                       };
-
-                       let s = match str_expr.eval(env)? {
-                           Expression::Symbol(x) | Expression::String(x) => x,
-                           _ => return Err(LmError::CustomError("center requires a string as last argument".to_string())),
-                       };
-
-                       let len = match length.eval(env)? {
-                           Expression::Integer(n) => n.max(0) as usize,
-                           _ => return Err(LmError::CustomError("center requires an integer as length".to_string())),
-                       };
-
-                       if s.len() >= len {
-                           return Ok(Expression::String(s));
-                       }
-
-                       let pad_ch = pad_char.chars().next().unwrap_or(' ');
-                       let total_pad = len - s.len();
-                       let left_pad = total_pad / 2;
-                       let right_pad = total_pad - left_pad;
-
-                       let left: String = std::iter::repeat_n(pad_ch, left_pad).collect();
-                       let right: String = std::iter::repeat_n(pad_ch, right_pad).collect();
-                       Ok(Expression::String(format!("{}{}{}", left, s, right)))
-                   }, "center string by padding both ends"),
-
-                   String::from("format") => Expression::builtin("format", |args, env| {
-                               // format template arg1 arg2 ... argN
-                               if args.is_empty() {
-                                   return Err(LmError::CustomError("format requires at least a template string".to_string()));
-                               }
-
-                               let template = match args.last().unwrap().eval(env)? {
-                                   Expression::Symbol(x) | Expression::String(x) => x,
-                                   _ => return Err(LmError::CustomError("format requires string template as last argument".to_string())),
-                               };
-
-                               let placeholders = template.matches("{}").count();
-                               if args.len() - 1 < placeholders {
-                                   return Err(LmError::CustomError(format!(
-                                       "format requires {} arguments for {} placeholders",
-                                       placeholders, placeholders
-                                   )));
-                               }
-
-                               let mut result = template.clone();
-                               for arg in args.iter().take(placeholders) {
-                                   let value = arg.eval(env)?;
-                                   result = result.replacen("{}", &value.to_string(), 1);
-                               }
-
-                               Ok(Expression::String(result))
-                           }, "format string using {} placeholders"),
-
-        }.into()
-    })
-    .into()
+        })
+        .into()
 }
 
+// 提取的独立函数 (字符串参数作为最后一个参数)
+fn pad_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("pad_start", args, 2..=3)?;
+    let (length, pad_char) = match args.len() {
+        2 => (args[0].clone(), " ".to_string()),
+        3 => (args[0].clone(), args[1].clone().to_string()),
+        _ => unreachable!(),
+    };
+    let s = args.last().unwrap().clone();
+
+    let s_val = match s.eval(env)? {
+        Expression::Symbol(x) | Expression::String(x) => x,
+        _ => {
+            return Err(LmError::CustomError(
+                "pad_start requires a string as last argument".to_string(),
+            ));
+        }
+    };
+
+    let len = match length.eval(env)? {
+        Expression::Integer(n) => n.max(0) as usize,
+        _ => {
+            return Err(LmError::CustomError(
+                "pad_start requires an integer as length".to_string(),
+            ));
+        }
+    };
+
+    let pad_ch = pad_char.chars().next().unwrap_or(' ');
+    pad_start_impl(len, pad_ch, s_val)
+}
+
+fn pad_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("pad_end", args, 2..=3)?;
+    let (length, pad_char) = match args.len() {
+        2 => (args[0].clone(), " ".to_string()),
+        3 => (args[0].clone(), args[1].clone().to_string()),
+        _ => unreachable!(),
+    };
+    let s = args.last().unwrap().clone();
+
+    let s_val = match s.eval(env)? {
+        Expression::Symbol(x) | Expression::String(x) => x,
+        _ => {
+            return Err(LmError::CustomError(
+                "pad_end requires a string as last argument".to_string(),
+            ));
+        }
+    };
+
+    let len = match length.eval(env)? {
+        Expression::Integer(n) => n.max(0) as usize,
+        _ => {
+            return Err(LmError::CustomError(
+                "pad_end requires an integer as length".to_string(),
+            ));
+        }
+    };
+
+    let pad_ch = pad_char.chars().next().unwrap_or(' ');
+    pad_end_impl(len, pad_ch, s_val)
+}
+
+fn center(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("center", args, 2..=3)?;
+    let (length, pad_char) = match args.len() {
+        2 => (args[0].clone(), " ".to_string()),
+        3 => (args[0].clone(), args[1].clone().to_string()),
+        _ => unreachable!(),
+    };
+    let s = args.last().unwrap().clone();
+
+    let s_val = match s.eval(env)? {
+        Expression::Symbol(x) | Expression::String(x) => x,
+        _ => {
+            return Err(LmError::CustomError(
+                "center requires a string as last argument".to_string(),
+            ));
+        }
+    };
+
+    let len = match length.eval(env)? {
+        Expression::Integer(n) => n.max(0) as usize,
+        _ => {
+            return Err(LmError::CustomError(
+                "center requires an integer as length".to_string(),
+            ));
+        }
+    };
+
+    if s_val.len() >= len {
+        return Ok(Expression::String(s_val));
+    }
+
+    let pad_ch = pad_char.chars().next().unwrap_or(' ');
+    center_impl(len, pad_ch, s_val)
+}
+
+// 模板字符串作为第一个参数（特殊处理）
+fn format(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    if args.is_empty() {
+        return Err(LmError::CustomError(
+            "format requires at least a template string".to_string(),
+        ));
+    }
+
+    let template = match args.first().unwrap().eval(env)? {
+        Expression::Symbol(x) | Expression::String(x) => x,
+        _ => {
+            return Err(LmError::CustomError(
+                "format requires string template as first argument".to_string(),
+            ));
+        }
+    };
+
+    let placeholders = template.matches("{}").count();
+    if args.len() - 1 < placeholders {
+        return Err(LmError::CustomError(format!(
+            "format requires {} arguments for {} placeholders",
+            placeholders, placeholders
+        )));
+    }
+
+    let mut result = template.clone();
+    for arg in args.iter().skip(1).take(placeholders) {
+        let value = arg.eval(env)?;
+        result = result.replacen("{}", &value.to_string(), 1);
+    }
+
+    Ok(Expression::String(result))
+}
+
+// 单参数函数（字符串作为最后一个参数）
+fn strip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("strip", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(crate::repl::strip_ansi_escapes(s.eval(env)?).into())
+}
+
+fn bold(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("bold", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+// 其他样式函数采用相同模式...
+fn faint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("faint", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn italics(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("italics", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+// 颜色函数采用相同模式...
+fn black(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("black", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn dark_black(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_black", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+// 其他颜色函数类似实现...
+
+// 原始实现函数保持不变
+fn pad_start_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmError> {
+    if s.len() >= len {
+        return Ok(Expression::String(s));
+    }
+    let pad_len = len - s.len();
+    let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
+    Ok(Expression::String(format!("{}{}", padding, s)))
+}
+
+fn pad_end_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmError> {
+    if s.len() >= len {
+        return Ok(Expression::String(s));
+    }
+    let pad_len = len - s.len();
+    let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
+    Ok(Expression::String(format!("{}{}", s, padding)))
+}
+
+fn center_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmError> {
+    let total_pad = len - s.len();
+    let left_pad = total_pad / 2;
+    let right_pad = total_pad - left_pad;
+    let left: String = std::iter::repeat_n(pad_ch, left_pad).collect();
+    let right: String = std::iter::repeat_n(pad_ch, right_pad).collect();
+    Ok(Expression::String(format!("{}{}{}", left, s, right)))
+}
+
+// 已存在的独立函数
 fn wrap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("wrap", args, 2)?;
-    match args[1].eval(env)? {
+    match args[0].eval(env)? {
         Expression::Integer(columns) => {
-            Ok(textwrap::fill(&args[0].eval(env)?.to_string(), columns as usize).into())
+            Ok(textwrap::fill(&args[1].eval(env)?.to_string(), columns as usize).into())
         }
         otherwise => Err(LmError::CustomError(format!(
-            "expected number of columns in wrap, but got {}",
+            "expected number of columns in wrap, but got `{}`",
             otherwise
         ))),
     }
@@ -277,4 +265,116 @@ fn href(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
         text = args[1].eval(env)?
     )
     .into())
+}
+
+// 继续实现剩余的单参数样式函数
+fn underline(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("underline", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn blink(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("blink", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn invert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("invert", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn strike(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("strike", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+// 实现所有颜色函数
+fn red(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("red", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn green(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("green", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn yellow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("yellow", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn blue(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("blue", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn magenta(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("magenta", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn cyan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("cyan", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn white(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("white", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+// 实现dark命名空间下的颜色函数
+fn dark_red(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_red", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn dark_green(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_green", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn dark_yellow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_yellow", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn dark_blue(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_blue", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn dark_magenta(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_magenta", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn dark_cyan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_cyan", args, 1)?;
+    let s = args.last().unwrap().clone();
+    Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", s.eval(env)?).into())
+}
+
+fn dark_white(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dark_white", args, 1)?;
+    let s = args.last().unwrap().clone();
+    // 修正原始代码中的转义序列错误
+    Ok(format!("\x1b[37m{}\x1b[m\x1b[0m", s.eval(env)?).into())
 }

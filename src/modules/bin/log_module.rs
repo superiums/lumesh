@@ -1,12 +1,10 @@
 use super::Int;
-use crate::{Expression, LmError};
+use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
 use lazy_static::lazy_static;
 use std::sync::RwLock;
-lazy_static! {
-    static ref LOG_LEVEL: RwLock<Int> = RwLock::new(0);
-}
 
+// 日志级别常量
 const NONE: Int = 0;
 const ERROR: Int = 1;
 const WARN: Int = 2;
@@ -14,10 +12,12 @@ const INFO: Int = 3;
 const DEBUG: Int = 4;
 const TRACE: Int = 5;
 
+lazy_static! {
+    static ref LOG_LEVEL: RwLock<Int> = RwLock::new(INFO); // 默认INFO级别
+}
+
+// 检查日志级别是否启用
 fn is_log_level_enabled(level: Int) -> bool {
-    if level <= NONE {
-        return true;
-    }
     *LOG_LEVEL.read().unwrap() >= level
 }
 
@@ -32,235 +32,137 @@ pub fn get() -> Expression {
             String::from("error") => Expression::Integer(ERROR),
         }),
 
-        String::from("set_level") => Expression::builtin("set_level", |args, _env| {
-            super::check_exact_args_len("set_level", args, 1)?;
-            let level = args[0].eval(_env)?;
-            if let Expression::Integer(level) = level {
-                *LOG_LEVEL.write().unwrap() = level;
-                Ok(Expression::None)
-            } else {
-                Err(LmError::CustomError(format!("expected an integer, found {}", level)))
-            }
-        }, "set the log level"),
-
-        String::from("get_level") => Expression::builtin("get_level", |args, _env| {
-            super::check_exact_args_len("get_level", args, 0)?;
-            return Ok(Expression::Integer(*LOG_LEVEL.read().unwrap()))
-        }, "get the log level"),
-
-        String::from("disable") => Expression::builtin("disable", |args, _env| {
-            super::check_exact_args_len("disable", args, 0)?;
-            *LOG_LEVEL.write().unwrap() = NONE;
-            Ok(Expression::None)
-        }, "disable logging"),
-
-        String::from("enabled") => Expression::builtin("enabled", |args, env| {
-            super::check_exact_args_len("enabled?", args, 1)?;
-            let level = args[0].eval(env)?;
-            if let Expression::Integer(level) = level {
-                Ok(Expression::Boolean(is_log_level_enabled(level)))
-            } else {
-                Err(LmError::CustomError(format!("expected an integer, found {}", level)))
-            }
-        }, "check if a log level is enabled"),
-
-        String::from("info") => Expression::builtin("info", |args, env| {
-            if !is_log_level_enabled(INFO) {
-                return Ok(Expression::None)
-            }
-
-            // Like `echo`, but with green formatting and an `[INFO]` prefix on new lines.
-            let mut last_was_newline = true;
-            let prefix = "\x1b[92m[INFO]\x1b[m ";
-            for (i, arg) in args.iter().enumerate() {
-                let x = arg.eval(env)?.to_string();
-                // Split into lines and print each line with a green `[INFO]` prefix.
-                let lines = x.split('\n').collect::<Vec<&str>>();
-                if lines.len() > 1 {
-                    for (i, line) in lines.iter().enumerate() {
-                        if i < lines.len() - 1 {
-                            println!("{}{}", prefix, line);
-                        } else if !line.is_empty() {
-                            print!("{}{}", prefix, line);
-                        }
-                    }
-                } else {
-                    if last_was_newline {
-                        print!("{}", prefix);
-                    }
-                    if i < args.len() - 1 {
-                        print!("{} ", x)
-                    } else {
-                        println!("{}", x)
-                    }
-                }
-
-                last_was_newline = x.ends_with('\n');
-            }
-
-            Ok(Expression::None)
-        }, "print a message to the console with green formatting and an `[INFO]` prefix on new lines"),
-
-        String::from("warn") => Expression::builtin("warn", |args, env| {
-            if !is_log_level_enabled(WARN) {
-                return Ok(Expression::None)
-            }
-
-            // Like `echo`, but with green formatting and an `[INFO]` prefix on new lines.
-            let mut last_was_newline = true;
-            let prefix = "\x1b[93m[WARN]\x1b[m ";
-            for (i, arg) in args.iter().enumerate() {
-                let x = arg.eval(env)?.to_string();
-                // Split into lines and print each line with a green `[INFO]` prefix.
-                let lines = x.split('\n').collect::<Vec<&str>>();
-                if lines.len() > 1 {
-                    for (i, line) in lines.iter().enumerate() {
-                        if i < lines.len() - 1 {
-                            println!("{}{}", prefix, line);
-                        } else if !line.is_empty() {
-                            print!("{}{}", prefix, line);
-                        }
-                    }
-                } else {
-                    if last_was_newline {
-                        print!("{}", prefix);
-                    }
-                    if i < args.len() - 1 {
-                        print!("{} ", x)
-                    } else {
-                        println!("{}", x)
-                    }
-                }
-
-                last_was_newline = x.ends_with('\n');
-            }
-
-            Ok(Expression::None)
-        }, "print a message to the console with yellow formatting and an `[WARN]` prefix on new lines"),
-
-        String::from("debug") => Expression::builtin("debug", |args, env| {
-            if !is_log_level_enabled(DEBUG) {
-                return Ok(Expression::None)
-            }
-
-
-            // Like `echo`, but with green formatting and an `[INFO]` prefix on new lines.
-            let mut last_was_newline = true;
-            let prefix = "\x1b[94m[DEBUG]\x1b[m ";
-            for (i, arg) in args.iter().enumerate() {
-                let x = arg.eval(env)?.to_string();
-                // Split into lines and print each line with a green `[INFO]` prefix.
-                let lines = x.split('\n').collect::<Vec<&str>>();
-                if lines.len() > 1 {
-                    for (i, line) in lines.iter().enumerate() {
-                        if i < lines.len() - 1 {
-                            println!("{}{}", prefix, line);
-                        } else if !line.is_empty() {
-                            print!("{}{}", prefix, line);
-                        }
-                    }
-                } else {
-                    if last_was_newline {
-                        print!("{}", prefix);
-                    }
-                    if i < args.len() - 1 {
-                        print!("{} ", x)
-                    } else {
-                        println!("{}", x)
-                    }
-                }
-
-                last_was_newline = x.ends_with('\n');
-            }
-
-            Ok(Expression::None)
-        }, "print a message to the console with blue formatting and an `[DEBUG]` prefix on new lines"),
-
-        String::from("error") => Expression::builtin("error", |args, env| {
-            if !is_log_level_enabled(ERROR) {
-                return Ok(Expression::None)
-            }
-
-            // Like `echo`, but with green formatting and an `[INFO]` prefix on new lines.
-            let mut last_was_newline = true;
-            let prefix = "\x1b[91m[ERROR]\x1b[m ";
-            for (i, arg) in args.iter().enumerate() {
-                let x = arg.eval(env)?.to_string();
-                // Split into lines and print each line with a green `[INFO]` prefix.
-                let lines = x.split('\n').collect::<Vec<&str>>();
-                if lines.len() > 1 {
-                    for (i, line) in lines.iter().enumerate() {
-                        if i < lines.len() - 1 {
-                            println!("{}{}", prefix, line);
-                        } else if !line.is_empty() {
-                            print!("{}{}", prefix, line);
-                        }
-                    }
-                } else {
-                    if last_was_newline {
-                        print!("{}", prefix);
-                    }
-                    if i < args.len() - 1 {
-                        print!("{} ", x)
-                    } else {
-                        println!("{}", x)
-                    }
-                }
-
-                last_was_newline = x.ends_with('\n');
-            }
-            Ok(Expression::None)
-        }, "print a message to the console with red formatting and an `[ERROR]` prefix on new lines"),
-
-        String::from("trace") => Expression::builtin("trace", |args, env| {
-            if !is_log_level_enabled(TRACE) {
-                return Ok(Expression::None)
-            }
-
-            // Like `echo`, but with green formatting and an `[INFO]` prefix on new lines.
-            let mut last_was_newline = true;
-            let prefix = "\x1b[95m[TRACE]\x1b[m ";
-            for (i, arg) in args.iter().enumerate() {
-                let x = arg.eval(env)?.to_string();
-                // Split into lines and print each line with a green `[INFO]` prefix.
-                let lines = x.split('\n').collect::<Vec<&str>>();
-                if lines.len() > 1 {
-                    for (i, line) in lines.iter().enumerate() {
-                        if i < lines.len() - 1 {
-                            println!("{}{}", prefix, line);
-                        } else if !line.is_empty() {
-                            print!("{}{}", prefix, line);
-                        }
-                    }
-                } else {
-                    if last_was_newline {
-                        print!("{}", prefix);
-                    }
-                    if i < args.len() - 1 {
-                        print!("{} ", x)
-                    } else {
-                        println!("{}", x)
-                    }
-                }
-
-                last_was_newline = x.ends_with('\n');
-            }
-
-            Ok(Expression::None)
-        }, "print a message to the console with magenta formatting and an `[TRACE]` prefix on new lines"),
-
-        String::from("echo") => Expression::builtin("echo", |args, env| {
-            // Like `echo`, but with no formatting.
-            for (i, arg) in args.iter().enumerate() {
-                let x = arg.eval(env)?.to_string();
-                if i < args.len() - 1 {
-                    print!("{} ", x)
-                } else {
-                    println!("{}", x)
-                }
-            }
-
-            Ok(Expression::None)
-        }, "print a message to the console with no formatting"),
+        String::from("set_level") => Expression::builtin("set_level", set_log_level, "set the log level"),
+        String::from("get_level") => Expression::builtin("get_level", get_log_level, "get the log level"),
+        String::from("disable") => Expression::builtin("disable", disable_logging, "disable logging"),
+        String::from("enabled") => Expression::builtin("enabled", is_level_enabled, "check if a log level is enabled"),
+        String::from("info") => Expression::builtin("info", log_info, "log info message"),
+        String::from("warn") => Expression::builtin("warn", log_warn, "log warning message"),
+        String::from("debug") => Expression::builtin("debug", log_debug, "log debug message"),
+        String::from("error") => Expression::builtin("error", log_error, "log error message"),
+        String::from("trace") => Expression::builtin("trace", log_trace, "log trace message"),
+        String::from("echo") => Expression::builtin("echo", log_echo, "print message without formatting"),
     }).into()
+}
+
+// 日志级别管理函数
+fn set_log_level(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("set_level", args, 1)?;
+
+    if let Expression::Integer(level) = args[0].eval(env)? {
+        *LOG_LEVEL.write().unwrap() = level;
+        Ok(Expression::None)
+    } else {
+        Err(LmError::TypeError {
+            expected: "integer".into(),
+            sym: args[0].type_name(),
+            found: args[0].to_string(),
+        })
+    }
+}
+
+fn get_log_level(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    Ok(Expression::Integer(*LOG_LEVEL.read().unwrap()))
+}
+
+fn disable_logging(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    *LOG_LEVEL.write().unwrap() = NONE;
+    Ok(Expression::None)
+}
+
+fn is_level_enabled(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("enabled", args, 1)?;
+
+    if let Expression::Integer(level) = args[0].eval(env)? {
+        Ok(Expression::Boolean(is_log_level_enabled(level)))
+    } else {
+        Err(LmError::TypeError {
+            expected: "integer".into(),
+            sym: args[0].type_name(),
+            found: args[0].to_string(),
+        })
+    }
+}
+
+// 通用日志打印函数
+fn log_message(
+    level: Int,
+    prefix: &str,
+    args: &Vec<Expression>,
+    env: &mut Environment,
+) -> Result<Expression, LmError> {
+    if !is_log_level_enabled(level) {
+        return Ok(Expression::None);
+    }
+
+    let mut output = String::new();
+    let mut first_arg = true;
+
+    for arg in args {
+        let value = arg.eval(env)?.to_string();
+
+        if !first_arg {
+            output.push(' ');
+        }
+
+        output.push_str(&value);
+        first_arg = false;
+    }
+
+    // 处理多行输出
+    for (i, line) in output.lines().enumerate() {
+        if i == 0 {
+            println!("{}{}", prefix, line);
+        } else {
+            println!("{}{}", " ".repeat(prefix.len()), line);
+        }
+    }
+
+    // 处理没有换行符的结尾
+    if !output.ends_with('\n') && !output.is_empty() {
+        println!();
+    }
+
+    Ok(Expression::None)
+}
+
+// 各日志级别专用函数
+fn log_info(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    log_message(INFO, "\x1b[92m[INFO] \x1b[m", args, env)
+}
+
+fn log_warn(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    log_message(WARN, "\x1b[93m[WARN] \x1b[m", args, env)
+}
+
+fn log_debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    log_message(DEBUG, "\x1b[94m[DEBUG]\x1b[m ", args, env)
+}
+
+fn log_error(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    log_message(ERROR, "\x1b[91m[ERROR]\x1b[m ", args, env)
+}
+
+fn log_trace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    log_message(TRACE, "\x1b[95m[TRACE]\x1b[m ", args, env)
+}
+
+// 简单回显函数
+fn log_echo(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    let mut output = String::new();
+    let mut first_arg = true;
+
+    for arg in args {
+        let value = arg.eval(env)?.to_string();
+
+        if !first_arg {
+            output.push(' ');
+        }
+
+        output.push_str(&value);
+        first_arg = false;
+    }
+
+    println!("{}", output);
+    Ok(Expression::None)
 }

@@ -166,8 +166,9 @@ fn shuffle(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     match args[0].eval(env)? {
         Expression::List(list) => {
             let mut rng = rand::rng();
-            list.as_ref().clone().shuffle(&mut rng);
-            Ok(Expression::List(list))
+            let mut s = list.as_ref().clone();
+            s.shuffle(&mut rng);
+            Ok(Expression::from(s))
         }
         otherwise => Err(LmError::CustomError(format!(
             "rand.shuffle expected a list, but got {}",

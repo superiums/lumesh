@@ -6,7 +6,7 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("author") => Expression::String("Adam McDaniel, superiums".to_string()),
+        String::from("author") => Expression::String("Adam McDaniel, santo".to_string()),
         String::from("git") => Expression::String("https://codeberg.com/santo/lumesh".to_string()),
         String::from("homepage") => Expression::String("https://codeberg.com/santo/lumesh".to_string()),
         String::from("version") => Expression::String(VERSION.to_string()),
@@ -26,11 +26,8 @@ pub fn get() -> Expression {
         },
         String::from("license") => Expression::String("APACHE-2.0".to_string()),
         String::from("prelude") => {
-            // Home directory + .lumesh-prelude
-
-
             if let Some(home_dir) = dirs::home_dir() {
-                let prelude_path = home_dir.join(".lumesh-prelude");
+                let prelude_path = home_dir.join("lumesh/config.lsh");
                 if prelude_path.exists() {
                     Expression::String(prelude_path.to_str().unwrap().to_string())
                 } else {

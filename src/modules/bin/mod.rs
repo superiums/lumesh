@@ -15,12 +15,12 @@ mod list_module;
 mod log_module;
 mod math_module;
 // mod operator_module;
+mod about_module;
 mod fs_ls;
 mod os_module;
 mod parse_module;
 mod rand_module;
 mod regex_module;
-mod shell_module;
 mod string_module;
 mod sys_module;
 mod time_module;
@@ -31,7 +31,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("log") => log_module::get(),
         String::from("math") => math_module::get(),
         String::from("map") => map_module::get(),
-        String::from("version") => shell_module::get(),
+        String::from("about") => about_module::get(),
         // String::from("err") => err_module::get(),
         String::from("os") => os_module::get(),
         String::from("widget") => widget_module::get(),
@@ -75,6 +75,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             String::from("select") => Expression::builtin("select", select_columns,
                 "select columns from list of maps"),
 
+            String::from("repeat") => Expression::builtin("repeat", repeat, "evaluate an expression without changing the environment"),
             String::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
             String::from("evalstr") => Expression::builtin("evalstr", evalstr, "evaluate a string"),
             String::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
@@ -431,6 +432,14 @@ fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
             "only String acceptable to evalstr".to_owned(),
         )),
     }
+}
+fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("repeat", args, 2)?;
+    let n = get_integer_arg(args[0].clone())?;
+    let r = (0..n)
+        .map(|_| args[1].eval(env))
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Expression::from(r))
 }
 fn eval(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("eval", args, 1)?;

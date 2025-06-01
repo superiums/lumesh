@@ -5,21 +5,21 @@ use common_macros::hash_map;
 pub fn get() -> Expression {
     (hash_map! {
         // justify
-        String::from("is-whitespace") => Expression::builtin("is-whitespace", is_whitespace, "is this string whitespace?"),
-        String::from("is-alpha") => Expression::builtin("is-alpha", is_alpha, "is this string alphabetic?"),
-        String::from("is-alphanumeric") => Expression::builtin("is-alphanumeric", is_alphanumeric, "is this string alphanumeric?"),
-        String::from("is-numeric") => Expression::builtin("is-numeric", is_numeric, "is this string numeric?"),
-        String::from("is-lower") => Expression::builtin("is-lower", is_lower, "is this string lowercase?"),
-        String::from("is-upper") => Expression::builtin("is-upper", is_upper, "is this string uppercase?"),
-        String::from("is-title") => Expression::builtin("is-title", is_title, "is this string title case?"),
+        String::from("is_whitespace") => Expression::builtin("is_whitespace", is_whitespace, "is this string whitespace?"),
+        String::from("is_alpha") => Expression::builtin("is_alpha", is_alpha, "is this string alphabetic?"),
+        String::from("is_alphanumeric") => Expression::builtin("is_alphanumeric", is_alphanumeric, "is this string alphanumeric?"),
+        String::from("is_numeric") => Expression::builtin("is_numeric", is_numeric, "is this string numeric?"),
+        String::from("is_lower") => Expression::builtin("is_lower", is_lower, "is this string lowercase?"),
+        String::from("is_upper") => Expression::builtin("is_upper", is_upper, "is this string uppercase?"),
+        String::from("is_title") => Expression::builtin("is_title", is_title, "is this string title case?"),
 
-        String::from("starts-with") => Expression::builtin("starts-with", starts_with, "check if a string starts with a given substring"),
-        String::from("ends-with") => Expression::builtin("ends-with", ends_with, "check if a string ends with a given substring"),
+        String::from("starts_with") => Expression::builtin("starts_with", starts_with, "check if a string starts with a given substring"),
+        String::from("ends_with") => Expression::builtin("ends_with", ends_with, "check if a string ends with a given substring"),
         String::from("contains") => Expression::builtin("contains", contains, "check if a string contains a given substring"),
 
         // split to list
         String::from("split") => Expression::builtin("split", split, "split a string on a given character"),
-        String::from("split-at") => Expression::builtin("split_at", split_at, "split a string at a given index"),
+        String::from("split_at") => Expression::builtin("split_at", split_at, "split a string at a given index"),
         String::from("chars") => Expression::builtin("chars", chars, "split a string into characters"),
         String::from("words") => Expression::builtin("words", words, "split a string into words"),
         String::from("lines") => Expression::builtin("lines", lines, "split a string into lines"),
@@ -30,19 +30,19 @@ pub fn get() -> Expression {
         String::from("replace") => Expression::builtin("replace", replace, "replace all instances of a substring in a string with another string"),
         String::from("substring") => Expression::builtin("substring", substring, "get substring from start to end indices"),
 
-        String::from("remove-prefix") => Expression::builtin("remove-prefix", remove_prefix, "remove prefix if present"),
-        String::from("remove-suffix") => Expression::builtin("remove-suffix", remove_suffix, "remove suffix if present"),
+        String::from("remove_prefix") => Expression::builtin("remove_prefix", remove_prefix, "remove prefix if present"),
+        String::from("remove_suffix") => Expression::builtin("remove_suffix", remove_suffix, "remove suffix if present"),
         String::from("trim") => Expression::builtin("trim", trim, "trim whitespace from a string"),
-        String::from("trim-start") => Expression::builtin("trim-start", trim_start, "trim whitespace from the start of a string"),
-        String::from("trim-end") => Expression::builtin("trim-end", trim_end, "trim whitespace from the end of a string"),
+        String::from("trim_start") => Expression::builtin("trim_start", trim_start, "trim whitespace from the start of a string"),
+        String::from("trim_end") => Expression::builtin("trim_end", trim_end, "trim whitespace from the end of a string"),
 
-        String::from("to-lower") => Expression::builtin("to-lower", to_lower, "convert a string to lowercase"),
-        String::from("to-upper") => Expression::builtin("to-upper", to_upper, "convert a string to uppercase"),
-        String::from("to-title") => Expression::builtin("to-title", to_title, "convert a string to title case"),
+        String::from("to_lower") => Expression::builtin("to_lower", to_lower, "convert a string to lowercase"),
+        String::from("to_upper") => Expression::builtin("to_upper", to_upper, "convert a string to uppercase"),
+        String::from("to_title") => Expression::builtin("to_title", to_title, "convert a string to title case"),
 
         // advance
-        String::from("caesar") => Expression::builtin("caesar-cipher", caesar_cipher, "encrypt a string using a caesar cipher"),
-        String::from("get-width") => Expression::builtin("get-width", get_width, "get the width of a string"),
+        String::from("caesar") => Expression::builtin("caesar", caesar_cipher, "encrypt a string using a caesar cipher"),
+        String::from("get_width") => Expression::builtin("get_width", get_width, "get the width of a string"),
 
     })
     .into()
@@ -84,19 +84,19 @@ fn get_width(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 }
 
 fn is_whitespace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("is-whitespace", args, 1)?;
+    super::check_exact_args_len("is_whitespace", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_whitespace())))
 }
 
 fn is_alpha(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("is-alpha", args, 1)?;
+    super::check_exact_args_len("is_alpha", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_alphabetic())))
 }
 
 fn is_alphanumeric(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("is-alphanumeric", args, 1)?;
+    super::check_exact_args_len("is_alphanumeric", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(
         text.chars().all(|c| c.is_alphanumeric()),
@@ -104,7 +104,7 @@ fn is_alphanumeric(args: &Vec<Expression>, env: &mut Environment) -> Result<Expr
 }
 
 fn is_numeric(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("is-numeric", args, 1)?;
+    super::check_exact_args_len("is_numeric", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_numeric())))
 }
@@ -124,19 +124,19 @@ fn split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 }
 
 fn to_lower(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("to-lower", args, 1)?;
+    super::check_exact_args_len("to_lower", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::String(text.to_lowercase()))
 }
 
 fn to_upper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("to-upper", args, 1)?;
+    super::check_exact_args_len("to_upper", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::String(text.to_uppercase()))
 }
 
 fn to_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("to-title", args, 1)?;
+    super::check_exact_args_len("to_title", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
 
     let mut title = String::with_capacity(text.len());
@@ -157,19 +157,19 @@ fn to_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 }
 
 fn is_lower(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("is-lower", args, 1)?;
+    super::check_exact_args_len("is_lower", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_lowercase())))
 }
 
 fn is_upper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("is-upper", args, 1)?;
+    super::check_exact_args_len("is_upper", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_uppercase())))
 }
 
 fn is_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("is-title", args, 1)?;
+    super::check_exact_args_len("is_title", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     let title = to_title(&vec![args[0].clone()], env)?;
     Ok(Expression::Boolean(text == title.to_string()))
@@ -245,13 +245,13 @@ fn trim(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 }
 
 fn trim_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("trim-start", args, 1)?;
+    super::check_exact_args_len("trim_start", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::String(text.trim_start().to_string()))
 }
 
 fn trim_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("trim-end", args, 1)?;
+    super::check_exact_args_len("trim_end", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::String(text.trim_end().to_string()))
 }
@@ -267,7 +267,7 @@ fn replace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
 }
 
 fn starts_with(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("starts-with", args, 2)?;
+    super::check_exact_args_len("starts_with", args, 2)?;
     let string_args = get_string_args(args, env)?;
     let [prefix, text] = string_args.as_slice() else {
         unreachable!()
@@ -277,7 +277,7 @@ fn starts_with(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
 }
 
 fn ends_with(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("ends-with", args, 2)?;
+    super::check_exact_args_len("ends_with", args, 2)?;
     let string_args = get_string_args(args, env)?;
     let [suffix, text] = string_args.as_slice() else {
         unreachable!()

@@ -17,7 +17,7 @@ pub fn get() -> Expression {
         String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list"),
         String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
         String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order"),
-        String::from("split-at") => Expression::builtin("split-at", split_at, "split a list at a given index"),
+        String::from("split_at") => Expression::builtin("split_at", split_at, "split a list at a given index"),
 
         // create
         String::from("concat") => Expression::builtin("concat", concat, "create a list from a variable number of arguments"),
@@ -33,7 +33,7 @@ pub fn get() -> Expression {
 
         // transfer to
         String::from("join") => Expression::builtin("join", join, "join a list of strings with a separator"),
-        String::from("to-map") => Expression::builtin("to-map", to_map, "convert list to map using a key function (default: use items themselves as keys)"),
+        String::from("to_map") => Expression::builtin("to_map", to_map, "convert list to map using a key function (default: use items themselves as keys)"),
 
         // flatten
         // transpose

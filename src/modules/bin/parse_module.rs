@@ -1,5 +1,5 @@
 // use super::{get_list_arg, get_string_arg};
-use crate::{Environment, Expression, LmError, SyntaxError, parse_script};
+use crate::{Environment, Expression, LmError, SyntaxError, parse, parse_script};
 use common_macros::hash_map;
 use std::collections::BTreeMap;
 use tinyjson::JsonValue;
@@ -96,14 +96,7 @@ fn parse_expr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
         return Ok(Expression::None);
     }
 
-    parse_script(&script).map_err(|e| match e {
-        nom::Err::Error(e) | nom::Err::Failure(e) => SyntaxError {
-            source: script.as_str().into(),
-            kind: e,
-        }
-        .into(),
-        nom::Err::Incomplete(_) => LmError::CustomError("Incomplete input".into()),
-    })
+    Ok(parse(&script)?)
 }
 
 // Command Output Parser
@@ -179,7 +172,12 @@ fn parse_command_output(
         if looks_like_header {
             let detected = maybe_header
                 .split_whitespace()
-                .map(|s| s.replace(":", "_").replace("\"", ""))
+                .map(|s| {
+                    s.replace(":", "_")
+                        .replace("\"", "")
+                        .replace("(", "_")
+                        .replace(")", "")
+                })
                 .collect();
             (&lines[1..], detected)
         } else {

@@ -9,152 +9,28 @@ pub fn get() -> Expression {
         String::from("write") => Expression::builtin("write", write, "write text to a specific position in the console"),
         String::from("title") => Expression::builtin("title", title, "set the title of the console"),
         String::from("clear") => Expression::builtin("clear", clear, "clear the console"),
-        String::from("flush") => Expression::builtin("flush", |_, _| {
-            std::io::stdout().flush().unwrap();
-            Ok(Expression::None)
-        }, "flush the console"),
+        String::from("flush") => Expression::builtin("flush", flush, "flush the console"),
         String::from("mode") => Expression::from(hash_map! {
-            String::from("raw") => Expression::builtin("raw", |_, _| {
-                match crossterm::terminal::enable_raw_mode() {
-                    Ok(_) => Ok(Expression::None),
-                    Err(_) => Err(LmError::CustomError("could not enable raw mode".to_string()))
-                }
-            }, "enable raw mode"),
-            String::from("cooked") => Expression::builtin("cooked", |_, _| {
-                match crossterm::terminal::disable_raw_mode() {
-                    Ok(_) => Ok(Expression::None),
-                    Err(_) => Err(LmError::CustomError("could not disable raw mode".to_string()))
-                }
-            }, "disable raw mode"),
-            String::from("alternate") => Expression::builtin("alternate", |_, _| {
-                print!("\x1b[?1049h");
-                Ok(Expression::None)
-            }, "enable alternate screen"),
-            String::from("normal") => Expression::builtin("normal", |_, _| {
-                print!("\x1b[?1049l");
-                Ok(Expression::None)
-            }, "disable alternate screen"),
+            String::from("raw") => Expression::builtin("raw", enable_raw_mode, "enable raw mode"),
+            String::from("cooked") => Expression::builtin("cooked", disable_raw_mode, "disable raw mode"),
+            String::from("alternate") => Expression::builtin("alternate", enable_alternate_screen, "enable alternate screen"),
+            String::from("normal") => Expression::builtin("normal", disable_alternate_screen, "disable alternate screen"),
         }),
         String::from("cursor") => Expression::from(hash_map! {
-            String::from("to") => Expression::builtin("to", |args, env| {
-                super::check_exact_args_len("to", args, 2)?;
-                let x = args[0].eval(env)?;
-                let y = args[1].eval(env)?;
-                match (x, y) {
-                    (Expression::Integer(x), Expression::Integer(y)) => {
-                        print!("\x1b[{row};{column}f", column = x, row = y);
-                    }
-                    (x, y) => return Err(LmError::CustomError(format!("expected first two arguments to be integers, but got: `{:?}`, `{:?}`", x, y)))
-                }
-                Ok(Expression::None)
-            }, "move the cursor to a specific position in the console"),
-
-            String::from("up") => Expression::builtin("up", |args, env| {
-                super::check_exact_args_len("up", args, 1)?;
-                let y = args[0].eval(env)?;
-                if let Expression::Integer(y) = &y {
-                    print!("\x1b[{y}A", y = y);
-                } else {
-                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", y)));
-                }
-                Ok(Expression::None)
-            }, "move the cursor up a specific number of lines"),
-
-            String::from("down") => Expression::builtin("down", |args, env| {
-                super::check_exact_args_len("down", args, 1)?;
-                let y = args[0].eval(env)?;
-                if let Expression::Integer(y) = &y {
-                    print!("\x1b[{y}B", y = y);
-                } else {
-                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", y)));
-                }
-                Ok(Expression::None)
-            }, "move the cursor down a specific number of lines"),
-
-            String::from("left") => Expression::builtin("left", |args, env| {
-                super::check_exact_args_len("left", args, 1)?;
-                let x = args[0].eval(env)?;
-                if let Expression::Integer(x) = &x {
-                    print!("\x1b[{x}D", x = x);
-                } else {
-                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", x)));
-                }
-                Ok(Expression::None)
-            }, "move the cursor left a specific number of columns"),
-
-            String::from("right") => Expression::builtin("right", |args, env| {
-                super::check_exact_args_len("right", args, 1)?;
-                let x = args[0].eval(env)?;
-                if let Expression::Integer(x) = &x {
-                    print!("\x1b[{x}C", x = x);
-                } else {
-                    return Err(LmError::CustomError(format!("expected first argument to be an integer, but got: `{:?}`", x)));
-                }
-                Ok(Expression::None)
-            }, "move the cursor right a specific number of columns"),
-
-            String::from("save") => Expression::builtin("save", |_, _| {
-                print!("\x1b[s");
-                Ok(Expression::None)
-            }, "save the current cursor position"),
-
-            String::from("restore") => Expression::builtin("restore", |_, _| {
-                print!("\x1b[u");
-                Ok(Expression::None)
-            }, "restore the last saved cursor position"),
-
-            String::from("hide") => Expression::builtin("hide", |_, _| {
-                print!("\x1b[?25l");
-                Ok(Expression::None)
-            }, "hide the cursor"),
-
-            String::from("show") => Expression::builtin("show", |_, _| {
-                print!("\x1b[?25h");
-                Ok(Expression::None)
-            }, "show the cursor"),
+            String::from("to") => Expression::builtin("to", cursor_to, "move the cursor to a specific position"),
+            String::from("up") => Expression::builtin("up", cursor_up, "move the cursor up"),
+            String::from("down") => Expression::builtin("down", cursor_down, "move the cursor down"),
+            String::from("left") => Expression::builtin("left", cursor_left, "move the cursor left"),
+            String::from("right") => Expression::builtin("right", cursor_right, "move the cursor right"),
+            String::from("save") => Expression::builtin("save", cursor_save, "save cursor position"),
+            String::from("restore") => Expression::builtin("restore", cursor_restore, "restore cursor position"),
+            String::from("hide") => Expression::builtin("hide", cursor_hide, "hide cursor"),
+            String::from("show") => Expression::builtin("show", cursor_show, "show cursor"),
         }),
-
         String::from("keyboard") => Expression::from(hash_map! {
-            String::from("read_line") => Expression::builtin("read_line", |_, _| {
-                let mut buffer = String::new();
-                std::io::stdin().read_line(&mut buffer).unwrap();
-                Ok(Expression::String(buffer))
-            }, "read a line from the keyboard"),
-            String::from("read_password") => Expression::builtin("read_password", |_, _| {
-                let password = rpassword::read_password().unwrap();
-                Ok(Expression::String(password))
-            }, "read a password from the keyboard"),
-            String::from("read_key") => Expression::builtin("read_key", |_, _| {
-                let key = crossterm::event::read().unwrap();
-                // Get the key as a string.
-                let key = match key {
-                    crossterm::event::Event::Key(key) => key,
-                    _ => return Ok(Expression::None)
-                };
-                let code = key.code;
-                use crossterm::event::KeyCode::*;
-                Ok(match code {
-                    Char(c) => Expression::String(c.to_string()),
-                    Enter => Expression::String("\n".to_string()),
-                    Backspace => Expression::String("\x08".to_string()),
-                    Delete => Expression::String("\x7f".to_string()),
-                    Left => Expression::String("\x1b[D".to_string()),
-                    Right => Expression::String("\x1b[C".to_string()),
-                    Up => Expression::String("\x1b[A".to_string()),
-                    Down => Expression::String("\x1b[B".to_string()),
-                    Home => Expression::String("\x1b[H".to_string()),
-                    End => Expression::String("\x1b[F".to_string()),
-                    PageUp => Expression::String("\x1b[5~".to_string()),
-                    PageDown => Expression::String("\x1b[6~".to_string()),
-                    Tab => Expression::String("\t".to_string()),
-                    Esc => Expression::String("\x1b".to_string()),
-                    Insert => Expression::String("\x1b[2~".to_string()),
-                    F(i) => Expression::String(format!("\x1b[{}~", i)),
-                    Null => Expression::String("\x00".to_string()),
-                    BackTab => Expression::String("\x1b[Z".to_string()),
-                    _ => Expression::None
-                })
-            }, "read a key from the keyboard"),
+            String::from("read_line") => Expression::builtin("read_line", keyboard_read_line, "read line from keyboard"),
+            String::from("read_password") => Expression::builtin("read_password", keyboard_read_password, "read password from keyboard"),
+            String::from("read_key") => Expression::builtin("read_key", keyboard_read_key, "read key from keyboard"),
             String::from("keys") => Expression::from(hash_map! {
                 String::from("enter") => Expression::String("\n".to_string()),
                 String::from("backspace") => Expression::String("\x08".to_string()),
@@ -190,52 +66,206 @@ pub fn get() -> Expression {
     .into()
 }
 
+// 控制台尺寸函数
 fn width(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
-    Ok(match crossterm::terminal::size() {
-        Ok((w, _)) => (w as Int).into(),
-        _ => Expression::None,
-    })
+    crossterm::terminal::size()
+        .map(|(w, _)| Expression::Integer(w as Int))
+        .or(Ok(Expression::None))
 }
 
 fn height(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
-    Ok(match crossterm::terminal::size() {
-        Ok((_, h)) => (h as Int).into(),
-        _ => Expression::None,
-    })
+    crossterm::terminal::size()
+        .map(|(_, h)| Expression::Integer(h as Int))
+        .or(Ok(Expression::None))
 }
 
+// 文本输出函数
 fn write(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("write", args, 3)?;
-    match (args[0].eval(env)?, args[1].eval(env)?, args[2].eval(env)?) {
-        (Expression::Integer(x), Expression::Integer(y), content) => {
-            let content = content.to_string();
-            for (y_offset, line) in content.lines().enumerate() {
+
+    let x = args[0].eval(env)?;
+    let y = args[1].eval(env)?;
+    let content = args[2].eval(env)?;
+
+    match (x, y) {
+        (Expression::Integer(x), Expression::Integer(y)) => {
+            let content_str = content.to_string();
+            for (y_offset, line) in content_str.lines().enumerate() {
                 print!(
-                    "\x1b[s\x1b[{row};{column}H\x1b[{row};{column}f{content}\x1b[u",
+                    "\x1b[s\x1b[{row};{column}H{line}\x1b[u",
                     column = x,
                     row = y + y_offset as Int,
-                    content = line
+                    line = line
                 );
             }
+            Ok(Expression::None)
         }
-        (x, y, _) => {
-            return Err(LmError::CustomError(format!(
-                "expected first two arguments to be integers, but got: `{:?}`, `{:?}`",
-                x, y
-            )));
-        }
+        (m, n) => Err(LmError::CustomError(format!(
+            "Expected integers for position, got ({} {:?}, {} {:?})",
+            m.type_name(),
+            m,
+            n.type_name(),
+            n
+        ))),
     }
-    Ok(Expression::None)
 }
 
 fn title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("title", args, 1)?;
-    print!("\x1b]2;{}\x1b[0m", args[0].eval(env)?);
+    let title = args[0].eval(env)?.to_string();
+    print!("\x1b]2;{}\x07", title);
     Ok(Expression::None)
 }
 
-fn clear(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("clear", args, 1)?;
+fn clear(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[2J\x1b[H");
     Ok(Expression::None)
+}
+
+fn flush(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    std::io::stdout()
+        .flush()
+        .map_err(|e| LmError::CustomError(format!("Flush failed: {}", e)))?;
+    Ok(Expression::None)
+}
+
+// 控制台模式函数
+fn enable_raw_mode(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    crossterm::terminal::enable_raw_mode()
+        .map(|_| Expression::None)
+        .map_err(|_| LmError::CustomError("Failed to enable raw mode".into()))
+}
+
+fn disable_raw_mode(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    crossterm::terminal::disable_raw_mode()
+        .map(|_| Expression::None)
+        .map_err(|_| LmError::CustomError("Failed to disable raw mode".into()))
+}
+
+fn enable_alternate_screen(
+    _: &Vec<Expression>,
+    _: &mut Environment,
+) -> Result<Expression, LmError> {
+    print!("\x1b[?1049h");
+    Ok(Expression::None)
+}
+
+fn disable_alternate_screen(
+    _: &Vec<Expression>,
+    _: &mut Environment,
+) -> Result<Expression, LmError> {
+    print!("\x1b[?1049l");
+    Ok(Expression::None)
+}
+
+// 光标控制函数
+fn cursor_to(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("cursor.to", args, 2)?;
+
+    let x = args[0].eval(env)?;
+    let y = args[1].eval(env)?;
+
+    match (x, y) {
+        (Expression::Integer(x), Expression::Integer(y)) => {
+            print!("\x1b[{};{}H", y, x);
+            Ok(Expression::None)
+        }
+        (m, n) => Err(LmError::CustomError(format!(
+            "Expected integers for position, got ({} {:?}, {} {:?})",
+            m.type_name(),
+            m,
+            n.type_name(),
+            n
+        ))),
+    }
+}
+
+macro_rules! cursor_move_fn {
+    ($name:ident, $code:literal, $doc:literal) => {
+        fn $name(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+            super::check_exact_args_len(stringify!($name), args, 1)?;
+
+            if let Expression::Integer(n) = args[0].eval(env)? {
+                print!(concat!("\x1b[", $code, "{}"), n);
+                Ok(Expression::None)
+            } else {
+                Err(LmError::CustomError(format!(
+                    "Expected integer for movement amount, got {:?}",
+                    args[0]
+                )))
+            }
+        }
+    };
+}
+
+cursor_move_fn!(cursor_up, "A", "Move cursor up");
+cursor_move_fn!(cursor_down, "B", "Move cursor down");
+cursor_move_fn!(cursor_left, "D", "Move cursor left");
+cursor_move_fn!(cursor_right, "C", "Move cursor right");
+
+fn cursor_save(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    print!("\x1b[s");
+    Ok(Expression::None)
+}
+
+fn cursor_restore(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    print!("\x1b[u");
+    Ok(Expression::None)
+}
+
+fn cursor_hide(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    print!("\x1b[?25l");
+    Ok(Expression::None)
+}
+
+fn cursor_show(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    print!("\x1b[?25h");
+    Ok(Expression::None)
+}
+
+// 键盘输入函数
+fn keyboard_read_line(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    let mut buffer = String::new();
+    std::io::stdin()
+        .read_line(&mut buffer)
+        .map_err(|e| LmError::CustomError(format!("Read failed: {}", e)))?;
+    Ok(Expression::String(buffer))
+}
+
+fn keyboard_read_password(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    rpassword::read_password()
+        .map(Expression::String)
+        .map_err(|e| LmError::CustomError(format!("Password read failed: {}", e)))
+}
+
+fn keyboard_read_key(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+    let event = crossterm::event::read()
+        .map_err(|e| LmError::CustomError(format!("Key read failed: {}", e)))?;
+
+    if let crossterm::event::Event::Key(key) = event {
+        use crossterm::event::KeyCode::*;
+        Ok(match key.code {
+            Char(c) => Expression::String(c.to_string()),
+            Enter => Expression::String("\n".to_string()),
+            Backspace => Expression::String("\x08".to_string()),
+            Delete => Expression::String("\x7f".to_string()),
+            Left => Expression::String("\x1b[D".to_string()),
+            Right => Expression::String("\x1b[C".to_string()),
+            Up => Expression::String("\x1b[A".to_string()),
+            Down => Expression::String("\x1b[B".to_string()),
+            Home => Expression::String("\x1b[H".to_string()),
+            End => Expression::String("\x1b[F".to_string()),
+            PageUp => Expression::String("\x1b[5~".to_string()),
+            PageDown => Expression::String("\x1b[6~".to_string()),
+            Tab => Expression::String("\t".to_string()),
+            Esc => Expression::String("\x1b".to_string()),
+            Insert => Expression::String("\x1b[2~".to_string()),
+            F(i) => Expression::String(format!("\x1b[{}~", i)),
+            Null => Expression::String("\x00".to_string()),
+            BackTab => Expression::String("\x1b[Z".to_string()),
+            _ => Expression::None,
+        })
+    } else {
+        Ok(Expression::None)
+    }
 }

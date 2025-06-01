@@ -6,8 +6,8 @@ use common_macros::hash_map;
 #[cfg(feature = "chess-engine")]
 mod chess_module;
 mod console_module;
-mod dict_module;
 mod fmt_module;
+mod map_module;
 // mod fn_module;
 // use fn_module::curry;
 mod fs_module;
@@ -30,7 +30,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
     hash_map! {
         String::from("log") => log_module::get(),
         String::from("math") => math_module::get(),
-        String::from("dict") => dict_module::get(),
+        String::from("map") => map_module::get(),
         String::from("version") => shell_module::get(),
         // String::from("err") => err_module::get(),
         String::from("os") => os_module::get(),

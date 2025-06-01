@@ -1,463 +1,689 @@
-use crate::{Expression, Int, LmError};
+use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
 
 pub fn get() -> Expression {
     (hash_map! {
+        // Constants
         String::from("E")   => std::f64::consts::E.into(),
         String::from("PI")  => std::f64::consts::PI.into(),
         String::from("TAU") => std::f64::consts::TAU.into(),
+        String::from("PHI") => 1.618033988749894848204586834365638118_f64.into(),
 
-        // String::from("max") => crate::parse("(x , y) -> if (x > y) { x } else { y }").unwrap().eval(env).unwrap(),
-        // String::from("min") => crate::parse("(x , y) -> if (x < y) { x } else { y }").unwrap().eval(env).unwrap(),
+        // Basic math functions
+        String::from("max") => Expression::builtin("max", max, "get max value in an array or multi args"),
+        String::from("min") => Expression::builtin("min", min, "get min value in an array or multi args"),
+        String::from("abs") => Expression::builtin("abs", abs, "get the absolute value of a number"),
+        String::from("clamp") => Expression::builtin("clamp", clamp, "clamp a value between min and max"),
+        String::from("sum") => Expression::builtin("sum", sum, "sum a list of numbers"),
+        String::from("average") => Expression::builtin("average", average, "get the average of a list of numbers"),
 
-        String::from("l_rsh") => Expression::builtin("l_rsh", |args, env| {
-            super::check_exact_args_len("l_rsh", args, 2)?;
+        // Binary operations
+        String::from("bit_and") => Expression::builtin("bit_and", bit_and, "bitwise AND operation"),
+        String::from("bit_or") => Expression::builtin("bit_or", bit_or, "bitwise OR operation"),
+        String::from("bit_xor") => Expression::builtin("bit_xor", bit_xor, "bitwise XOR operation"),
+        String::from("bit_not") => Expression::builtin("bit_not", bit_not, "bitwise NOT operation"),
+        String::from("bit_shl") => Expression::builtin("bit_shl", bit_shl, "bitwise shift left"),
+        String::from("bit_shr") => Expression::builtin("bit_shr", bit_shr, "bitwise shift right"),
 
-            let a = match args[0].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(LmError::CustomError(format!("invalid l_rsh argument {}", e)))
-            };
+        // Trigonometric functions
+        // --三角函数
+        String::from("sin") => Expression::builtin("sin", sin, "get the sine of a number"),
+        String::from("cos") => Expression::builtin("cos", cos, "get the cosine of a number"),
+        String::from("tan") => Expression::builtin("tan", tan, "get the tangent of a number"),
+        String::from("asin") => Expression::builtin("asin", asin, "get the inverse sine of a number"),
+        String::from("acos") => Expression::builtin("acos", acos, "get the inverse cosine of a number"),
+        String::from("atan") => Expression::builtin("atan", atan, "get the inverse tangent of a number"),
+        // --双曲函数
+        String::from("sinh") => Expression::builtin("sinh", sinh, "get the hyperbolic sine of a number"),
+        String::from("cosh") => Expression::builtin("cosh", cosh, "get the hyperbolic cosine of a number"),
+        String::from("tanh") => Expression::builtin("tanh", tanh, "get the hyperbolic tangent of a number"),
+        String::from("asinh") => Expression::builtin("asinh", asinh, "get the inverse hyperbolic sine of a number"),
+        String::from("acosh") => Expression::builtin("acosh", acosh, "get the inverse hyperbolic cosine of a number"),
+        String::from("atanh") => Expression::builtin("atanh", atanh, "get the inverse hyperbolic tangent of a number"),
+        // --π倍三角函数
+        String::from("sinpi") => Expression::builtin("sinpi", sinpi, "get the sine of a number times π"),
+        String::from("cospi") => Expression::builtin("cospi", cospi, "get the cosine of a number times π"),
+        String::from("tanpi") => Expression::builtin("tanpi", tanpi, "get the tangent of a number times π"),
 
-            let b = match args[1].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(LmError::CustomError(format!("invalid l_rsh argument {}", e)))
-            };
-
-            let a = a as u64;
-            let b = b as u64;
-
-            Ok(((a >> b) as Int).into())
-        }, "logical right shift"),
-
-
-        String::from("rsh") => Expression::builtin("rsh", |args, env| {
-            super::check_exact_args_len("rsh", args, 2)?;
-
-            let a = match args[0].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(LmError::CustomError(format!("invalid rsh argument {}", e)))
-            };
-            let b = match args[1].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(LmError::CustomError(format!("invalid rsh argument {}", e)))
-            };
-
-            Ok((a >> b).into())
-        }, "arithmetic right shift"),
-
-        String::from("lsh") => Expression::builtin("lsh", |args, env| {
-            super::check_exact_args_len("lsh", args, 2)?;
-
-            let a = match args[0].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(LmError::CustomError(format!("invalid lsh argument {}", e)))
-            };
-            let b = match args[1].eval(env)? {
-                Expression::Integer(i) => i,
-                e => return Err(LmError::CustomError(format!("invalid lsh argument {}", e)))
-            };
-
-            Ok((a << b).into())
-        }, "left shift"),
+        // Exponential and logarithmic functions
+        // --Exponential
+        String::from("pow") => Expression::builtin("pow", pow, "raise a number to a power"),
+        String::from("exp") => Expression::builtin("exp", exp, "get e raised to the power of a number"),
+        String::from("exp2") => Expression::builtin("exp2", exp2, "get 2 raised to the power of a number"),
+        // --Root functions
+        String::from("sqrt") => Expression::builtin("sqrt", sqrt, "get the square root of a number"),
+        String::from("cbrt") => Expression::builtin("cbrt", cbrt, "get the cube root of a number"),
+        // --Logarithmic
+        String::from("log") => Expression::builtin("log", log, "get the log of a number using a given base"),
+        String::from("log2") => Expression::builtin("log2", log2, "get the log base 2 of a number"),
+        String::from("log10") => Expression::builtin("log10", log10, "get the log base 10 of a number"),
+        String::from("ln") => Expression::builtin("ln", ln, "natural logarithm"),
 
 
-        String::from("sum") => Expression::builtin("sum", |args, env| {
-            let mut int_sum = 0;
-            let mut float_sum = 0.0;
-            for arg in args {
-                match arg.eval(env)? {
-                    Expression::Integer(i) => int_sum += i,
-                    Expression::Float(f) => float_sum += f,
-                    Expression::List(list) => {
-                        for item in list.as_ref().iter() {
-                            match item.eval(env)? {
-                                Expression::Integer(i) => int_sum += i,
-                                Expression::Float(f) => float_sum += f,
-                                e => return Err(LmError::CustomError(format!("invalid sum argument {:?}", e)))
-                            }
-                        }
-                    },
-                    e => return Err(LmError::CustomError(format!("invalid sum argument {:?}", e)))
+        // Rounding functions
+        String::from("floor") => Expression::builtin("floor", floor, "get the floor of a number"),
+        String::from("ceil") => Expression::builtin("ceil", ceil, "get the ceiling of a number"),
+        String::from("round") => Expression::builtin("round", round, "round a number to the nearest integer"),
+        String::from("trunc") => Expression::builtin("trunc", trunc, "truncate a number"),
+
+        // Other functions
+        String::from("isodd") => Expression::builtin("isodd", isodd, "is a number odd?"),
+    }).into()
+}
+
+// Helper function to evaluate arguments to f64
+fn eval_to_f64(
+    args: &[Expression],
+    env: &mut Environment,
+    func_name: &str,
+) -> Result<Vec<f64>, LmError> {
+    args.iter()
+        .map(|arg| match arg.eval(env)? {
+            Expression::Integer(i) => Ok(i as f64),
+            Expression::Float(f) => Ok(f),
+            e => Err(LmError::CustomError(format!(
+                "invalid {} argument {}",
+                func_name, e
+            ))),
+        })
+        .collect()
+}
+
+// Optimized max function that handles both integers and floats
+fn max(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    let nums = args_collect_iter(args, env)?;
+    let mut max_val: Option<f64> = None;
+
+    for num in nums {
+        match num {
+            Expression::Integer(i) => {
+                if let Some(current_max) = max_val {
+                    max_val = Some(current_max.max(i as f64));
+                } else {
+                    max_val = Some(i as f64);
                 }
             }
-
-            if float_sum == 0.0 {
-                Ok(int_sum.into())
-            } else {
-                Ok((int_sum as f64 + float_sum).into())
-            }
-        }, "sum a list of numbers"),
-
-        String::from("product") => Expression::builtin("product", |args, env| {
-            let mut int_product = 1;
-            let mut float_product = 1.0;
-
-            for arg in args {
-                match arg.eval(env)? {
-                    Expression::Integer(i) => int_product *= i,
-                    Expression::Float(f) => float_product *= f,
-                    Expression::List(list) => {
-                        for item in list.as_ref().iter() {
-                            match item.eval(env)? {
-                                Expression::Integer(i) => int_product *= i,
-                                Expression::Float(f) => float_product *= f,
-                                e => return Err(LmError::CustomError(format!("invalid product argument {:?}", e)))
-                            }
-                        }
-                    },
-                    e => return Err(LmError::CustomError(format!("invalid product argument {:?}", e)))
+            Expression::Float(f) => {
+                if let Some(current_max) = max_val {
+                    max_val = Some(current_max.max(f));
+                } else {
+                    max_val = Some(f);
                 }
             }
-
-            if float_product == 1.0 {
-                Ok(int_product.into())
-            } else {
-                Ok((int_product as f64 * float_product).into())
+            _ => {
+                return Err(LmError::CustomError(
+                    "max requires numeric arguments".into(),
+                ));
             }
-        }, "multiply a list of numbers"),
+        }
+    }
 
-        String::from("fact") => Expression::builtin("fact", |args, env| {
-            super::check_exact_args_len("fact", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => {
-                    if i < 0 {
-                        Err(LmError::CustomError("cannot take the factorial of a negative number".to_string()))
-                    } else {
-                        let mut result = 1;
-                        for n in 1..=i {
-                            result *= n;
-                        }
-                        Ok(result.into())
-                    }
-                },
-                Expression::Float(f) => {
-                    if f < 0.0 {
-                        Err(LmError::CustomError("cannot take the factorial of a negative number".to_string()))
-                    } else {
-                        Ok(f64::round(f64::exp(f64::ln(f) * f64::ln(f)) * f64::sqrt(2.0 * std::f64::consts::PI * f) * (1.0 + 1.0 / (12.0 * f) + 1.0 / (288.0 * f * f) - 139.0 / (51840.0 * f * f * f) - 571.0 / (2488320.0 * f * f * f * f))).into())
-                    }
-                },
-                e => Err(LmError::CustomError(format!("invalid fact argument {:?}", e)))
+    match max_val {
+        Some(m) => Ok(Expression::Float(m)),
+        None => Ok(Expression::None),
+    }
+}
+
+// Optimized min function that handles both integers and floats
+fn min(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    let nums = args_collect_iter(args, env)?;
+    let mut min_val: Option<f64> = None;
+
+    for num in nums {
+        match num {
+            Expression::Integer(i) => {
+                if let Some(current_min) = min_val {
+                    min_val = Some(current_min.min(i as f64));
+                } else {
+                    min_val = Some(i as f64);
+                }
             }
-        }, "get the factorial of a number"),
-
-        String::from("abs") => Expression::builtin("abs", |args, env| {
-            super::check_exact_args_len("abs", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok(i.abs().into()),
-                Expression::Float(f) => Ok(f.abs().into()),
-                e => Err(LmError::CustomError(format!("invalid abs argument {:?}", e)))
+            Expression::Float(f) => {
+                if let Some(current_min) = min_val {
+                    min_val = Some(current_min.min(f));
+                } else {
+                    min_val = Some(f);
+                }
             }
-        }, "get the absolute value of a number"),
-
-        String::from("floor") => Expression::builtin("floor", |args, env| {
-            super::check_exact_args_len("floor", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok(i.into()),
-                Expression::Float(f) => Ok(f.floor().into()),
-                e => Err(LmError::CustomError(format!("invalid floor argument {:?}", e)))
+            _ => {
+                return Err(LmError::CustomError(
+                    "min requires numeric arguments".into(),
+                ));
             }
-        }, "get the floor of a number"),
+        }
+    }
 
-        String::from("ceil") => Expression::builtin("ceil", |args, env| {
-            super::check_exact_args_len("ceil", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok(i.into()),
-                Expression::Float(f) => Ok(f.ceil().into()),
-                e => Err(LmError::CustomError(format!("invalid ceil argument {:?}", e)))
+    match min_val {
+        Some(m) => Ok(Expression::Float(m)),
+        None => Ok(Expression::None),
+    }
+}
+
+// Clamp function to limit a value between min and max
+fn clamp(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("clamp", args, 3)?;
+
+    let value = match args[0].eval(env)? {
+        Expression::Integer(i) => i as f64,
+        Expression::Float(f) => f,
+        e => return Err(LmError::CustomError(format!("invalid clamp value {}", e))),
+    };
+
+    let min_val = match args[1].eval(env)? {
+        Expression::Integer(i) => i as f64,
+        Expression::Float(f) => f,
+        e => return Err(LmError::CustomError(format!("invalid clamp min {}", e))),
+    };
+
+    let max_val = match args[2].eval(env)? {
+        Expression::Integer(i) => i as f64,
+        Expression::Float(f) => f,
+        e => return Err(LmError::CustomError(format!("invalid clamp max {}", e))),
+    };
+
+    if min_val > max_val {
+        return Err(LmError::CustomError("clamp min must be <= max".into()));
+    }
+
+    let result = if value < min_val {
+        min_val
+    } else if value > max_val {
+        max_val
+    } else {
+        value
+    };
+
+    Ok(Expression::Float(result))
+}
+
+// Bitwise AND operation
+fn bit_and(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("bit_and", args, 2)?;
+
+    let a = match args[0].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_and argument {}",
+                e
+            )));
+        }
+    };
+
+    let b = match args[1].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_and argument {}",
+                e
+            )));
+        }
+    };
+
+    Ok(Expression::Integer(a & b))
+}
+
+// Bitwise OR operation
+fn bit_or(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("bit_or", args, 2)?;
+
+    let a = match args[0].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_or argument {}",
+                e
+            )));
+        }
+    };
+
+    let b = match args[1].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_or argument {}",
+                e
+            )));
+        }
+    };
+
+    Ok(Expression::Integer(a | b))
+}
+
+// Bitwise XOR operation
+fn bit_xor(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("bit_xor", args, 2)?;
+
+    let a = match args[0].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_xor argument {}",
+                e
+            )));
+        }
+    };
+
+    let b = match args[1].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_xor argument {}",
+                e
+            )));
+        }
+    };
+
+    Ok(Expression::Integer(a ^ b))
+}
+
+// Bitwise NOT operation
+fn bit_not(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("bit_not", args, 1)?;
+
+    let a = match args[0].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_not argument {}",
+                e
+            )));
+        }
+    };
+
+    Ok(Expression::Integer(!a))
+}
+
+// Bitwise shift left
+fn bit_shl(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("bit_shl", args, 2)?;
+
+    let a = match args[0].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_shl argument {}",
+                e
+            )));
+        }
+    };
+
+    let b = match args[1].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_shl argument {}",
+                e
+            )));
+        }
+    };
+
+    Ok(Expression::Integer(a << b))
+}
+
+// Bitwise shift right
+fn bit_shr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("bit_shr", args, 2)?;
+
+    let a = match args[0].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_shr argument {}",
+                e
+            )));
+        }
+    };
+
+    let b = match args[1].eval(env)? {
+        Expression::Integer(i) => i,
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid bit_shr argument {}",
+                e
+            )));
+        }
+    };
+
+    Ok(Expression::Integer(a >> b))
+}
+
+// Helper function to collect arguments (used by max/min)
+fn args_collect_iter(
+    args: &Vec<Expression>,
+    env: &mut Environment,
+) -> Result<Vec<Expression>, LmError> {
+    match args.len() {
+        2.. => Ok(args
+            .iter()
+            .map(|f| f.eval(env))
+            .collect::<Result<Vec<_>, _>>()?),
+        1 => match args[0].eval(env)? {
+            Expression::List(li) => Ok(li.as_ref().clone()),
+            _ => Err(LmError::CustomError(
+                "the only arg for math.max/math.min should be a list".into(),
+            )),
+        },
+        0 => Err(LmError::CustomError(
+            "math.max/math.min requires 1 list or 2 or more nums".into(),
+        )),
+    }
+}
+
+// Implementations of all other math functions (kept similar to original but extracted)
+fn abs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("abs", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::Integer(i) => Ok(i.abs().into()),
+        Expression::Float(f) => Ok(f.abs().into()),
+        e => Err(LmError::CustomError(format!(
+            "invalid abs argument {:?}",
+            e
+        ))),
+    }
+}
+
+// Sum function that handles both integers and floats
+fn sum(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    let nums = args_collect_iter(args, env)?;
+    let mut int_sum = 0;
+    let mut float_sum = 0.0;
+    let mut has_float = false;
+
+    for num in nums {
+        match num {
+            Expression::Integer(i) => {
+                if has_float {
+                    float_sum += i as f64;
+                } else {
+                    int_sum += i;
+                }
             }
-        }, "get the ceiling of a number"),
-
-        String::from("round") => Expression::builtin("round", |args, env| {
-            super::check_exact_args_len("round", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok(i.into()),
-                Expression::Float(f) => Ok(f.round().into()),
-                e => Err(LmError::CustomError(format!("invalid round argument {:?}", e)))
+            Expression::Float(f) => {
+                if !has_float {
+                    float_sum = int_sum as f64;
+                    has_float = true;
+                }
+                float_sum += f;
             }
-        }, "round a number to the nearest integer"),
-
-        String::from("trunc") => Expression::builtin("trunc", |args, env| {
-            super::check_exact_args_len("trunc", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok(i.into()),
-                Expression::Float(f) => Ok(f.trunc().into()),
-                e => Err(LmError::CustomError(format!("invalid trunc argument {:?}", e)))
+            _ => {
+                return Err(LmError::CustomError(
+                    "sum requires numeric arguments".into(),
+                ));
             }
-        }, "truncate a number"),
+        }
+    }
 
-        String::from("sinh") => Expression::builtin("sinh", |args, env| {
-            super::check_exact_args_len("sinh", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64).sinh().into()),
-                Expression::Float(f) => Ok(f.sinh().into()),
-                e => Err(LmError::CustomError(format!("invalid sinh argument {:?}", e)))
+    if has_float {
+        Ok(Expression::Float(float_sum))
+    } else {
+        Ok(Expression::Integer(int_sum))
+    }
+}
+
+// Average function that handles both integers and floats
+fn average(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    let nums = args_collect_iter(args, env)?;
+    if nums.is_empty() {
+        return Err(LmError::CustomError(
+            "average requires at least one number".into(),
+        ));
+    }
+
+    let mut sum = 0.0;
+    let mut count = 0;
+
+    for num in nums {
+        match num {
+            Expression::Integer(i) => {
+                sum += i as f64;
+                count += 1;
             }
-        }, "get the hyperbolic sine of a number"),
-
-        String::from("cosh") => Expression::builtin("cosh", |args, env| {
-            super::check_exact_args_len("cosh", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64).cosh().into()),
-                Expression::Float(f) => Ok(f.cosh().into()),
-                e => Err(LmError::CustomError(format!("invalid cosh argument {:?}", e)))
+            Expression::Float(f) => {
+                sum += f;
+                count += 1;
             }
-        }, "get the hyperbolic cosine of a number"),
-
-        String::from("tanh") => Expression::builtin("tanh", |args, env| {
-            super::check_exact_args_len("tanh", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64).tanh().into()),
-                Expression::Float(f) => Ok(f.tanh().into()),
-                e => Err(LmError::CustomError(format!("invalid tanh argument {:?}", e)))
+            _ => {
+                return Err(LmError::CustomError(
+                    "average requires numeric arguments".into(),
+                ));
             }
-        }, "get the hyperbolic tangent of a number"),
+        }
+    }
 
-        String::from("asinh") => Expression::builtin("asinh", |args, env| {
-            super::check_exact_args_len("asinh", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64).asinh().into()),
-                Expression::Float(f) => Ok(f.asinh().into()),
-                e => Err(LmError::CustomError(format!("invalid asinh argument {:?}", e)))
-            }
-        }, "get the inverse hyperbolic sine of a number"),
+    Ok(Expression::Float(sum / count as f64))
+}
 
-        String::from("acosh") => Expression::builtin("acosh", |args, env| {
-            super::check_exact_args_len("acosh", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64).acosh().into()),
-                Expression::Float(f) => Ok(f.acosh().into()),
-                e => Err(LmError::CustomError(format!("invalid acosh argument {:?}", e)))
-            }
-        }, "get the inverse hyperbolic cosine of a number"),
+// Floor function
+fn floor(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("floor", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::Integer(i) => Ok(i.into()),
+        Expression::Float(f) => Ok(f.floor().into()),
+        e => Err(LmError::CustomError(format!(
+            "invalid floor argument {:?}",
+            e
+        ))),
+    }
+}
 
-        String::from("atanh") => Expression::builtin("atanh", |args, env| {
-            super::check_exact_args_len("atanh", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64).atanh().into()),
-                Expression::Float(f) => Ok(f.atanh().into()),
-                e => Err(LmError::CustomError(format!("invalid atanh argument {:?}", e)))
-            }
-        }, "get the inverse hyperbolic tangent of a number"),
+// Ceil function
+fn ceil(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("ceil", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::Integer(i) => Ok(i.into()),
+        Expression::Float(f) => Ok(f.ceil().into()),
+        e => Err(LmError::CustomError(format!(
+            "invalid ceil argument {:?}",
+            e
+        ))),
+    }
+}
 
-        String::from("sinpi") => Expression::builtin("sinpi", |args, env| {
-            super::check_exact_args_len("sinpi", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).sin().into()),
-                Expression::Float(f) => Ok((f * std::f64::consts::PI).sin().into()),
-                e => Err(LmError::CustomError(format!("invalid sinpi argument {:?}", e)))
-            }
-        }, "get the sine of a number times pi"),
+// Round function
+fn round(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("round", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::Integer(i) => Ok(i.into()),
+        Expression::Float(f) => Ok(f.round().into()),
+        e => Err(LmError::CustomError(format!(
+            "invalid round argument {:?}",
+            e
+        ))),
+    }
+}
 
-        String::from("cospi") => Expression::builtin("cospi", |args, env| {
-            super::check_exact_args_len("cospi", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).cos().into()),
-                Expression::Float(f) => Ok((f * std::f64::consts::PI).cos().into()),
-                e => Err(LmError::CustomError(format!("invalid cospi argument {:?}", e)))
-            }
-        }, "get the cosine of a number times pi"),
+// Trunc function
+fn trunc(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("trunc", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::Integer(i) => Ok(i.into()),
+        Expression::Float(f) => Ok(f.trunc().into()),
+        e => Err(LmError::CustomError(format!(
+            "invalid trunc argument {:?}",
+            e
+        ))),
+    }
+}
 
-        String::from("tanpi") => Expression::builtin("tanpi", |args, env| {
-            super::check_exact_args_len("tanpi", args, 1)?;
-            match args[0].eval(env)? {
-                Expression::Integer(i) => Ok((i as f64 * std::f64::consts::PI).tan().into()),
-                Expression::Float(f) => Ok((f * std::f64::consts::PI).tan().into()),
-                e => Err(LmError::CustomError(format!("invalid tanpi argument {:?}", e)))
-            }
-        }, "get the tangent of a number times pi"),
-
-        String::from("isodd") => Expression::builtin("isodd", |args, env| {
-            super::check_exact_args_len("odd", args, 1)?;
-            Ok(match args[0].eval(env)? {
-                Expression::Integer(i) => i % 2 == 1,
-                Expression::Float(f) => (f as Int) % 2 == 1,
-                e => return Err(LmError::CustomError(format!("invalid isodd argument {}", e)))
-            }.into())
-        }, "is a number odd?"),
-
-        String::from("iseven") => Expression::builtin("iseven", |args, env| {
-            super::check_exact_args_len("even", args, 1)?;
-            Ok(match args[0].eval(env)? {
-                Expression::Integer(i) => i % 2 == 0,
-                Expression::Float(f) => (f as Int) % 2 == 0,
-                e => return Err(LmError::CustomError(format!("invalid iseven argument {}", e)))
-            }.into())
-        }, "is a number even?"),
-
-        String::from("pow") => Expression::builtin("pow", |args, env| {
-            super::check_exact_args_len("pow", args, 2)?;
-            match (args[0].eval(env)?, args[1].eval(env)?) {
-                (Expression::Float(base), Expression::Float(exponent)) => Ok(base.powf(exponent).into()),
-                (Expression::Float(base), Expression::Integer(exponent)) => Ok(base.powf(exponent as f64).into()),
-                (Expression::Integer(base), Expression::Float(exponent)) => Ok((base as f64).powf(exponent).into()),
-                (Expression::Integer(base), Expression::Integer(exponent)) => match base.checked_pow(exponent as u32) {
-                    Some(n) => Ok(n.into()),
-                    None => Err(LmError::CustomError(format!("overflow when raising int {} to the power {}", base, exponent)))
-                },
-                (a, b) => Err(LmError::CustomError(format!("cannot raise {} to the power {}", a, b)))
-            }
-        }, "raise a number to a power"),
-
-
-        String::from("ln") => Expression::builtin("ln", |args, env| {
-            super::check_exact_args_len("ln", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid natural log argument {}", e)))
-            };
-
-            Ok(x.ln().into())
-        }, "get the natural log of a number"),
-
-// TODO test, removed curry
-        String::from("log") =>Expression::builtin("log", |args, env| {
-            super::check_exact_args_len("log", args, 2)?;
-
-            let base = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid log base {}", e)))
-            };
-
-            let x = match args[1].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid log argument {}", e)))
-            };
-
-            Ok(x.log(base).into())
-        }, "get the log of a number using a given base"),
-
-
-        String::from("log2") => Expression::builtin("log2", |args, env| {
-            super::check_exact_args_len("log2", args, 1)?;
-
-            let base = 2.0;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid log2 argument {}", e)))
-            };
-
-            Ok(x.log(base).into())
-        }, "get the log base 2 of a number"),
-
-        String::from("log10") => Expression::builtin("log10", |args, env| {
-            super::check_exact_args_len("log10", args, 1)?;
-
-            let base = 10.0;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid log10 argument {}", e)))
-            };
-
-            Ok(x.log(base).into())
-        }, "get the log base 10 of a number"),
-
-        String::from("sqrt") => Expression::builtin("sqrt", |args, env| {
-            super::check_exact_args_len("sqrt", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid sqrt argument {}", e)))
-            };
-
-            Ok(x.sqrt().into())
-        }, "get the square root of a number"),
-
-        String::from("cbrt") => Expression::builtin("cbrt", |args, env| {
-            super::check_exact_args_len("cbrt", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid cbrt argument {}", e)))
-            };
-
-            Ok(x.cbrt().into())
-        }, "get the cube root of a number"),
-
-
-        String::from("sin") => Expression::builtin("sin", |args, env| {
-            super::check_exact_args_len("sin", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid sin argument {}", e)))
-            };
-
-            Ok(x.sin().into())
-        }, "get the sin of a number"),
-
-        String::from("cos") => Expression::builtin("cos", |args, env| {
-            super::check_exact_args_len("cos", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid cos argument {}", e)))
-            };
-
-            Ok(x.cos().into())
-        }, "get the cosine of a number"),
-
-        String::from("tan") => Expression::builtin("tan", |args, env| {
-            super::check_exact_args_len("tan", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid tan argument {}", e)))
-            };
-
-            Ok(x.tan().into())
-        }, "get the tangent of a number"),
-
-
-
-        String::from("asin") => Expression::builtin("asin", |args, env| {
-            super::check_exact_args_len("asin", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid asin argument {}", e)))
-            };
-
-            Ok(x.asin().into())
-        }, "get the inverse sin of a number"),
-
-        String::from("acos") => Expression::builtin("acos", |args, env| {
-            super::check_exact_args_len("acos", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid acos argument {}", e)))
-            };
-
-            Ok(x.acos().into())
-        }, "get the inverse cosine of a number"),
-
-        String::from("atan") => Expression::builtin("atan", |args, env| {
-            super::check_exact_args_len("atan", args, 1)?;
-
-            let x = match args[0].eval(env)? {
-                Expression::Float(f) => f,
-                Expression::Integer(i) => i as f64,
-                e => return Err(LmError::CustomError(format!("invalid atan argument {}", e)))
-            };
-
-            Ok(x.atan().into())
-        }, "get the inverse tangent of a number"),
+// Isodd function
+fn isodd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("isodd", args, 1)?;
+    Ok(match args[0].eval(env)? {
+        Expression::Integer(i) => (i % 2 != 0).into(),
+        Expression::Float(f) => ((f as Int) % 2 != 0).into(),
+        e => {
+            return Err(LmError::CustomError(format!(
+                "invalid isodd argument {}",
+                e
+            )));
+        }
     })
-    .into()
+}
+
+// Sqrt function
+fn sqrt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("sqrt", args, 1)?;
+    let x = eval_to_f64(args, env, "sqrt")?[0];
+    Ok(x.sqrt().into())
+}
+
+// Cbrt function
+fn cbrt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("cbrt", args, 1)?;
+    let x = eval_to_f64(args, env, "cbrt")?[0];
+    Ok(x.cbrt().into())
+}
+
+// Exp function
+fn exp(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("exp", args, 1)?;
+    let x = eval_to_f64(args, env, "exp")?[0];
+    Ok(x.exp().into())
+}
+
+// Exp2 function
+fn exp2(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("exp2", args, 1)?;
+    let x = eval_to_f64(args, env, "exp2")?[0];
+    Ok(x.exp2().into())
+}
+
+// Log function
+fn log(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("log", args, 2)?;
+    let base = eval_to_f64(&args[0..1], env, "log")?[0];
+    let x = eval_to_f64(&args[1..2], env, "log")?[0];
+    Ok(x.log(base).into())
+}
+
+// Log2 function
+fn log2(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("log2", args, 1)?;
+    let x = eval_to_f64(args, env, "log2")?[0];
+    Ok(x.log2().into())
+}
+
+// Log10 function
+fn log10(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("log10", args, 1)?;
+    let x = eval_to_f64(args, env, "log10")?[0];
+    Ok(x.log10().into())
+}
+
+// Ln function
+fn ln(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("ln", args, 1)?;
+    let x = eval_to_f64(args, env, "ln")?[0];
+    Ok(x.ln().into())
+}
+
+// 幂函数
+fn pow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("pow", args, 2)?;
+    let nums = eval_to_f64(args, env, "pow")?;
+    Ok(nums[0].powf(nums[1]).into())
+}
+
+// 正弦函数
+fn sin(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("sin", args, 1)?;
+    let x = eval_to_f64(args, env, "sin")?[0];
+    Ok(x.sin().into())
+}
+
+// 余弦函数
+fn cos(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("cos", args, 1)?;
+    let x = eval_to_f64(args, env, "cos")?[0];
+    Ok(x.cos().into())
+}
+
+// 正切函数
+fn tan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("tan", args, 1)?;
+    let x = eval_to_f64(args, env, "tan")?[0];
+    Ok(x.tan().into())
+}
+
+// 反余弦函数
+fn acos(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("acos", args, 1)?;
+    let x = eval_to_f64(args, env, "acos")?[0];
+    Ok(x.acos().into())
+}
+
+// 反正弦函数
+fn asin(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("asin", args, 1)?;
+    let x = eval_to_f64(args, env, "asin")?[0];
+    Ok(x.asin().into())
+}
+
+// 反正切函数
+fn atan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("atan", args, 1)?;
+    let x = eval_to_f64(args, env, "atan")?[0];
+    Ok(x.atan().into())
+}
+
+// 双曲余弦函数
+fn cosh(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("cosh", args, 1)?;
+    let x = eval_to_f64(args, env, "cosh")?[0];
+    Ok(x.cosh().into())
+}
+
+// 双曲正弦函数
+fn sinh(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("sinh", args, 1)?;
+    let x = eval_to_f64(args, env, "sinh")?[0];
+    Ok(x.sinh().into())
+}
+
+// 双曲正切函数
+fn tanh(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("tanh", args, 1)?;
+    let x = eval_to_f64(args, env, "tanh")?[0];
+    Ok(x.tanh().into())
+}
+
+// 反双曲余弦函数
+fn acosh(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("acosh", args, 1)?;
+    let x = eval_to_f64(args, env, "acosh")?[0];
+    Ok(x.acosh().into())
+}
+
+// 反双曲正弦函数
+fn asinh(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("asinh", args, 1)?;
+    let x = eval_to_f64(args, env, "asinh")?[0];
+    Ok(x.asinh().into())
+}
+
+// 反双曲正切函数
+fn atanh(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("atanh", args, 1)?;
+    let x = eval_to_f64(args, env, "atanh")?[0];
+    Ok(x.atanh().into())
+}
+
+// π倍三角函数
+fn sinpi(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("sinpi", args, 1)?;
+    let x = eval_to_f64(args, env, "sinpi")?[0];
+    Ok((x * std::f64::consts::PI).sin().into())
+}
+
+fn cospi(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("cospi", args, 1)?;
+    let x = eval_to_f64(args, env, "cospi")?[0];
+    Ok((x * std::f64::consts::PI).cos().into())
+}
+
+fn tanpi(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("tanpi", args, 1)?;
+    let x = eval_to_f64(args, env, "tanpi")?[0];
+    Ok((x * std::f64::consts::PI).tan().into())
 }

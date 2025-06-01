@@ -554,7 +554,7 @@ impl Expression {
         match self {
             Self::List(_) => "List".into(),
             Self::HMap(_) => "HMap".into(),
-            Self::Map(_) => "BMap".into(),
+            Self::Map(_) => "Map".into(),
             Self::String(_) => "String".into(),
             Self::Integer(_) => "Integer".into(),
             Self::DateTime(_) => "DateTime".into(),

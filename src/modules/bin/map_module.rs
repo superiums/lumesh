@@ -1,5 +1,6 @@
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
+
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
@@ -80,9 +81,9 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
 fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("insert", args, 3)?;
-    let expr = args[0].eval(env)?;
-    let key = args[1].eval(env)?;
-    let value = args[2].eval(env)?;
+    let expr = args[2].eval(env)?;
+    let key = args[0].eval(env)?;
+    let value = args[1].eval(env)?;
 
     Ok(match expr {
         Expression::Map(map) => {
@@ -96,8 +97,8 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
 fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("remove", args, 2)?;
-    let expr = args[0].eval(env)?;
-    let key = args[1].eval(env)?;
+    let expr = args[1].eval(env)?;
+    let key = args[0].eval(env)?;
 
     Ok(match expr {
         Expression::Map(map) => {
@@ -111,8 +112,8 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
 fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("has", args, 2)?;
-    let expr = args[0].eval(env)?;
-    let key = args[1].eval(env)?;
+    let expr = args[1].eval(env)?;
+    let key = args[0].eval(env)?;
 
     Ok(match expr {
         Expression::Map(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
@@ -194,12 +195,12 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("dict.map", args, 2..3)?;
+    super::check_args_len("map.map", args, 2..=3)?;
     let map = match args.last().unwrap().eval(env)? {
         Expression::Map(m) => m,
         _ => {
             return Err(LmError::CustomError(
-                "dict.map requires a map as last argument".to_string(),
+                "map.map requires a map as last argument".to_string(),
             ));
         }
     };
@@ -305,7 +306,7 @@ fn get_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
         Expression::String(s) => s,
         _ => {
             return Err(LmError::CustomError(
-                "get_path requires a path string as second argument".to_string(),
+                "get_path requires a path string as first argument".to_string(),
             ));
         }
     };

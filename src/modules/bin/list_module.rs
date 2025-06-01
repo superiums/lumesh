@@ -38,7 +38,7 @@ pub fn get() -> Expression {
         // flatten
         // transpose
         String::from("transpose") => Expression::builtin("transpose", transpose, "transpose a matrix (list of lists) by switching rows and columns"),
-        String::from("group-by") => Expression::builtin("group-by", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
+        String::from("group") => Expression::builtin("group", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
         String::from("chunk") => Expression::builtin("chunk", chunk, "chunk a list into lists of n elements"),
         String::from("foldl") => Expression::builtin("foldl", foldl, "fold a list from the left"),
         String::from("foldr") => Expression::builtin("foldr", foldr, "fold a list from the right"),
@@ -598,7 +598,7 @@ fn unique(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 }
 
 fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("to-map", args, 1..2)?;
+    super::check_args_len("to-map", args, 1..=3)?;
     let list = match args.last().unwrap().eval(env)? {
         Expression::List(l) => l,
         _ => {
@@ -608,21 +608,38 @@ fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         }
     };
 
-    let key_func = if args.len() == 2 {
-        args[0].eval(env)?
-    } else {
-        Expression::builtin("_id", |args, _| Ok(args[0].clone()), "identity function")
+    let (key_func, val_func) = match args.len() {
+        3 => (Some(args[0].eval(env)?), Some(args[1].eval(env)?)),
+        2 => (Some(args[0].eval(env)?), None),
+        _ => {
+            let mut map = BTreeMap::new();
+            for i in (0..list.len()).step_by(2) {
+                map.insert(list[i].to_string(), list[i + 1].clone());
+            }
+            return Ok(Expression::from(map));
+        }
     };
 
     let mut map = BTreeMap::new();
     for item in list.as_ref().iter() {
-        let key = match Expression::Apply(Rc::new(key_func.clone()), Rc::new(vec![item.clone()]))
-            .eval(env)?
-        {
-            Expression::String(s) => s,
-            other => other.to_string(),
+        let key = match key_func {
+            Some(ref kf) => {
+                match Expression::Apply(Rc::new(kf.clone()), Rc::new(vec![item.clone()]))
+                    .eval(env)?
+                {
+                    Expression::String(s) => s,
+                    other => other.to_string(),
+                }
+            }
+            None => item.to_string(),
         };
-        map.insert(key, item.clone());
+        let value = match val_func {
+            Some(ref vf) => {
+                Expression::Apply(Rc::new(vf.clone()), Rc::new(vec![item.clone()])).eval(env)?
+            }
+            None => item.clone(),
+        };
+        map.insert(key, value);
     }
     Ok(Expression::from(map))
 }

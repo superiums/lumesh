@@ -77,7 +77,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
 
             String::from("repeat") => Expression::builtin("repeat", repeat, "evaluate an expression without changing the environment"),
             String::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
-            String::from("evalstr") => Expression::builtin("evalstr", evalstr, "evaluate a string"),
+            String::from("exec_str") => Expression::builtin("exec_str", exec_str, "evaluate a string"),
             String::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
             // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
             String::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
@@ -418,8 +418,8 @@ fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     }
 }
 
-fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("evalstr", args, 1)?;
+fn exec_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("exec_str", args, 1)?;
     match &args[0] {
         Expression::String(cmd) => {
             if !cmd.is_empty() {
@@ -429,7 +429,7 @@ fn evalstr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
             Ok(Expression::None)
         }
         _ => Err(LmError::CustomError(
-            "only String acceptable to evalstr".to_owned(),
+            "only String acceptable to exec_str".to_owned(),
         )),
     }
 }

@@ -36,9 +36,9 @@ if IS_INTERACTIVE {
     let LUME_HOT_KEYS = {
         q: "exit",
         c: "clear",
-        h: "fs.read /tmp/lume_histroy | fzf --preview '' | evalstr()",
-        z: "fs.read /tmp/bookmark | fzf --preview '' | evalstr()",
-        s: 'let cmd := $CMD_CURRENT; str(cmd) >> /tmp/bookmark; "\n" >> /tmp/bookmark; print "COMMAND marked!"',
+        h: "fs.read /tmp/lume_histroy | fzf --preview '' | exec_str()",
+        z: "fs.read /tmp/bookmark | fzf --preview '' | exec_str()",
+        s: 'let cmd := $CMD_CURRENT; str(cmd) >> /tmp/bookmark; "\n" >> /tmp/bookmark; println "\tCOMMAND marked!"',
     }
 
     # ====== abbreviations

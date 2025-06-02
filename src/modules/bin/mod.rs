@@ -181,10 +181,11 @@ fn exit(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
     } else if let Expression::Integer(n) = args[0].eval(env)? {
         std::process::exit(n as i32);
     } else {
-        Err(LmError::CustomError(format!(
-            "expected integer but got `{:?}`",
-            args[0]
-        )))
+        Err(LmError::TypeError {
+            expected: "Integer".to_string(),
+            found: args[0].type_name(),
+            sym: args[0].to_string(),
+        })
     }
 }
 fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
@@ -245,55 +246,64 @@ fn debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
 }
 
 fn tap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    let mut stdout = std::io::stdout().lock();
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
-            print!("{} ", x)
+            write!(&mut stdout, "{} ", x)?;
         } else {
-            println!("{}", x)
+            writeln!(&mut stdout, "{}", x)?;
         }
         result.push(x)
     }
+    stdout.flush()?;
     if result.len() == 1 {
         return Ok(result[0].clone());
     }
     Ok(Expression::from(result))
 }
 fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
         let x = arg.eval(env)?;
-        // if i < args.len() - 1 {
-        print!("{} ", x)
-        // } else {
-        //     println!("{}", x)
-        // }
+        write!(&mut stdout, "{} ", x)?;
     }
+    writeln!(&mut stdout, "")?;
+    stdout.flush()?;
     Ok(Expression::None)
 }
 fn println(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
         let x = arg.eval(env)?;
-        println!("{}", x);
+        // println!("{}", x);
+        writeln!(&mut stdout, "{}", x)?;
     }
+    stdout.flush()?;
     Ok(Expression::None)
 }
 
 fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    let mut stderr = std::io::stderr().lock();
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
-            eprint!("\x1b[38;5;9m{} \x1b[m\x1b[0m", x)
+            write!(&mut stderr, "\x1b[38;5;9m{} \x1b[m\x1b[0m", x)?;
         } else {
-            eprintln!("\x1b[38;5;9m{}\x1b[m\x1b[0m", x)
+            writeln!(&mut stderr, "\x1b[38;5;9m{}\x1b[m\x1b[0m", x)?;
         }
     }
+    stderr.flush()?;
     Ok(Expression::None)
 }
 fn eprintln(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    let mut stderr = std::io::stderr().lock();
     for arg in args.iter() {
-        arg.eval(env)?;
+        let x = arg.eval(env)?;
+        writeln!(&mut stderr, "\x1b[38;5;9m{}\x1b[m\x1b[0m", x)?;
     }
+    stderr.flush()?;
     Ok(Expression::None)
 }
 
@@ -432,7 +442,7 @@ fn exec_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     match &args[0] {
         Expression::String(cmd) => {
             if !cmd.is_empty() {
-                println!("  >> Evaling: \x1b[38;5;208m\x1b[1m{}\x1b[m\x1b[0m", cmd);
+                println!("\n  >> Excuting: \x1b[38;5;208m\x1b[1m{}\x1b[m\x1b[0m", cmd);
                 parse_and_eval(cmd, env);
             }
             Ok(Expression::None)
@@ -465,9 +475,9 @@ fn report(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     check_exact_args_len("report", args, 1)?;
     let val = args[0].eval(env)?;
     match val {
-        Expression::HMap(_) => println!("{}", val),
-        Expression::Map(_) => println!("{}", val),
-        Expression::String(s) => println!("{}", s),
+        // Expression::HMap(_) => println!("{}", val),
+        // Expression::Map(_) => println!("{}", val),
+        // Expression::String(s) => println!("{}", s),
         Expression::None => {}
         otherwise => println!("{}", otherwise),
     }
@@ -508,9 +518,7 @@ fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
     let data = if let Expression::List(list) = args[1].eval(env)? {
         list
     } else {
-        return Err(LmError::CustomError(
-            "Expected list of maps for filtering".into(),
-        ));
+        return Err(LmError::CustomError("Expected list for filtering".into()));
     };
 
     let condition = args[0].clone();
@@ -571,7 +579,7 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
         list
     } else {
         return Err(LmError::CustomError(
-            "Expected list of maps for column selection".into(),
+            "Expected list for column selection".into(),
         ));
     };
 
@@ -616,7 +624,7 @@ fn check_args_len(
         Ok(())
     } else {
         Err(LmError::CustomError(format!(
-            "too few arguments to function {}",
+            "mismatched count of arguments for function {}",
             name.to_string()
         )))
     }
@@ -668,10 +676,24 @@ fn check_exact_args_len(
 //         .collect()
 // }
 
+pub fn get_exact_string_arg(expr: Expression) -> Result<String, LmError> {
+    match expr {
+        Expression::String(s) => Ok(s),
+        e => Err(LmError::TypeError {
+            expected: "String".to_string(),
+            found: e.type_name(),
+            sym: e.to_string(),
+        }),
+    }
+}
 pub fn get_string_arg(expr: Expression) -> Result<String, LmError> {
     match expr {
         Expression::Symbol(s) | Expression::String(s) => Ok(s),
-        _ => Err(LmError::CustomError("expected string".to_string())),
+        e => Err(LmError::TypeError {
+            expected: "String".to_string(),
+            found: e.type_name(),
+            sym: e.to_string(),
+        }),
     }
 }
 
@@ -684,6 +706,10 @@ pub fn get_string_args(args: &[Expression], env: &mut Environment) -> Result<Vec
 pub fn get_integer_arg(expr: Expression) -> Result<i64, LmError> {
     match expr {
         Expression::Integer(i) => Ok(i),
-        _ => Err(LmError::CustomError("expected integer".to_string())),
+        e => Err(LmError::TypeError {
+            expected: "Integer".to_string(),
+            found: e.type_name(),
+            sym: e.to_string(),
+        }),
     }
 }

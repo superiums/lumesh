@@ -38,7 +38,7 @@ if IS_INTERACTIVE {
         c: "clear",
         h: "fs.read /tmp/lume_histroy | fzf --preview '' | exec_str()",
         z: "fs.read /tmp/bookmark | fzf --preview '' | exec_str()",
-        s: 'let cmd := $CMD_CURRENT; str(cmd) >> /tmp/bookmark; "\n" >> /tmp/bookmark; println "\tCOMMAND marked!"',
+        m: 'let cmd := "$CMD_CURRENT";let s = str(cmd); if s!="" {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
     }
 
     # ====== abbreviations

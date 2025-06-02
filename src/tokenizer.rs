@@ -109,7 +109,7 @@ fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         prefix_tag("!"), //bool negtive
-        prefix_tag("$"), //bool negtive
+        prefix_tag("$"), //var
         prefix_tag("-"),
         prefix_tag("++"),
         prefix_tag("--"),
@@ -844,7 +844,11 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
         }
         input
             .strip_prefix(keyword)
-            .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric()))
+            .filter(|(rest, _)| {
+                rest.starts_with(|c: char| {
+                    c.is_ascii_alphanumeric() || ['(', '[', '{'].contains(&c)
+                })
+            })
             .ok_or(NOT_FOUND)
     }
 }

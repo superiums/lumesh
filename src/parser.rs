@@ -295,7 +295,8 @@ impl PrattParser {
                 }
 
                 let input = input.skip_n(1);
-                let (input, expr) = Self::parse_prefix(input, prec)?;
+                let (input, expr) = Self::parse_expr_with_precedence(input, prec, 0)?;
+                // let (input, expr) = Self::parse_prefix(input, prec)?;
                 Ok((input, Expression::UnaryOp(op.into(), Rc::new(expr), true)))
             }
             TokenKind::Symbol => parse_symbol(input),

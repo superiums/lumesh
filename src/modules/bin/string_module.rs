@@ -5,6 +5,7 @@ use common_macros::hash_map;
 pub fn get() -> Expression {
     (hash_map! {
         // justify
+        String::from("is_empty") => Expression::builtin("is_empty", is_empty, "is this string empty?"),
         String::from("is_whitespace") => Expression::builtin("is_whitespace", is_whitespace, "is this string whitespace?"),
         String::from("is_alpha") => Expression::builtin("is_alpha", is_alpha, "is this string alphabetic?"),
         String::from("is_alphanumeric") => Expression::builtin("is_alphanumeric", is_alphanumeric, "is this string alphanumeric?"),
@@ -81,6 +82,12 @@ fn get_width(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     let max_width = text.lines().map(|line| line.len()).max().unwrap_or(0);
 
     Ok(Expression::Integer(max_width as Int))
+}
+
+fn is_empty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("is_empty", args, 1)?;
+    let text = super::get_exact_string_arg(args[0].eval(env)?)?;
+    Ok(Expression::Boolean(text.is_empty()))
 }
 
 fn is_whitespace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {

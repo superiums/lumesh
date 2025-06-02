@@ -57,6 +57,7 @@ thiserror = "2.0.12"
 rustc-hash = "2.1.1"
 tinyjson = "2.5.1"
 portable-pty = "0.9.0"
+# signal-hook = "0.3.18"
 
 [target.'cfg(unix)'.dependencies]
 nix = { version = "^0.30.1", features = ["term", "ioctl"] }

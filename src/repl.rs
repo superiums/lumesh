@@ -40,6 +40,8 @@ const RESET: &str = "\x1b[0m";
 // 使用 Arc<Mutex> 包装编辑器
 
 pub fn run_repl(env: &mut Environment) {
+    // state::register_signal_handler();
+
     match env.get("LUME_WELCOME") {
         Some(wel) => println!("{}", wel),
         _ => println!("Welcome to Lumesh {}", env!("CARGO_PKG_VERSION")),
@@ -179,8 +181,16 @@ pub fn run_repl(env: &mut Environment) {
             Ok(line) => line,
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
+                // state::set_signal(); // 更新共享状态
                 continue;
             }
+            // Err(ReadlineError::Signal(sig)) => {
+            //     if sig == rustyline::error::Signal::Interrupt {
+            //         println!("[Interrupt]");
+            //         state::set_signal(); // 更新共享状态
+            //     }
+            //     continue;
+            // }
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
                 continue;

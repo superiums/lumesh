@@ -2,11 +2,13 @@ use crate::{Environment, Expression, RuntimeError, expression::pty::exec_in_pty,
 
 use super::{alias, eval::State};
 use glob::glob;
+// use portable_pty::ChildKiller;
 // use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::{
     io::{ErrorKind, Write},
     process::{Command, Stdio},
     rc::Rc,
+    // time::Duration,
 };
 
 /// 执行
@@ -165,6 +167,18 @@ fn exec_single_cmd(
             // }
         }
     }
+
+    // 中断信号处理
+    // let mut child_ref = child.clone_killer();
+    // std::thread::spawn(move || {
+    //     loop {
+    //         if state::read_signal() {
+    //             let _ = child_ref.kill();
+    //             break;
+    //         }
+    //         std::thread::sleep(Duration::from_secs(1));
+    //     }
+    // });
 
     // 获取输出
     if pipe_out {

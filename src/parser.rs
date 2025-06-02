@@ -1340,16 +1340,23 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
         ))),
     )(input)?;
     // if is_single_cmd && input.is_empty() {
-    if let Expression::Symbol(s) = expr {
-        Ok((
+    match expr {
+        Expression::Symbol(s) => Ok((
             input,
             Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-        ))
-    } else {
-        Ok((input, expr))
+        )),
+        #[cfg(unix)]
+        Expression::String(s) if s.contains("/") => Ok((
+            input,
+            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+        )),
+        #[cfg(windows)]
+        Expression::String(s) if (s.contains(":\\") || s.contains(".\\")) => Ok((
+            input,
+            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+        )),
+        _ => Ok((input, expr)),
     }
-    // }
-    // Ok((input, expr))
 }
 
 // IF语句解析（支持else if链）

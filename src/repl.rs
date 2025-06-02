@@ -18,7 +18,6 @@ use rustyline::{Cmd, Modifiers, Movement};
 
 use std::borrow::Cow;
 use std::collections::HashMap;
-use std::process::exit;
 
 use crate::Expression;
 use crate::ai::{AIClient, MockAIClient, init_ai};
@@ -537,26 +536,26 @@ impl Highlighter for SyntaxHighlighter {
 //     stack.is_empty()
 // }
 
-fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> String {
-    let prompt = prompt.to_string();
-    loop {
-        // if let Some(helper) = rl.helper_mut() {
-        //     helper.set_prompt(&prompt);
-        // }
+// fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> String {
+//     let prompt = prompt.to_string();
+//     loop {
+//         // if let Some(helper) = rl.helper_mut() {
+//         //     helper.set_prompt(&prompt);
+//         // }
 
-        match rl.readline(&strip_ansi_escapes(&prompt)) {
-            Ok(line) => return line,
-            Err(ReadlineError::Interrupted) => return String::new(),
-            Err(ReadlineError::Eof) => exit(0),
-            Err(err) => eprintln!("Error: {:?}", err),
-        }
-    }
-}
+//         match rl.readline(&strip_ansi_escapes(&prompt)) {
+//             Ok(line) => return line,
+//             Err(ReadlineError::Interrupted) => return String::new(),
+//             Err(ReadlineError::Eof) => exit(0),
+//             Err(err) => eprintln!("Error: {:?}", err),
+//         }
+//     }
+// }
 
-pub fn read_user_input(prompt: impl ToString) -> String {
-    let mut rl = new_editor(None);
-    readline(prompt, &mut rl)
-}
+// pub fn read_user_input(prompt: impl ToString) -> String {
+//     let mut rl = new_editor(None);
+//     readline(prompt, &mut rl)
+// }
 pub fn strip_ansi_escapes(text: impl ToString) -> String {
     let text = text.to_string();
     let mut result = String::new();

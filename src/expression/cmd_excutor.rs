@@ -98,7 +98,8 @@ fn exec_single_cmd(
     mode: u8,
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
-    // dbg!(&mode);
+    dbg!(&mode, &pipe_out, &input.is_some());
+    // dbg!(&input);
     if mode & 16 != 0 {
         // spawn_in_pty(cmdstr, args, env, input);
         return exec_in_pty(cmdstr, args, env, input);
@@ -115,6 +116,7 @@ fn exec_single_cmd(
     };
     cmd.envs(env.get_bindings_string())
         .current_dir(std::env::current_dir()?);
+
     // 设置 stdin
     if input.is_some() {
         cmd.stdin(Stdio::piped());
@@ -128,13 +130,19 @@ fn exec_single_cmd(
     } else {
         if mode & 1 != 0 {
             cmd.stdout(Stdio::null());
-        }
-        if mode & 2 != 0 {
-            cmd.stderr(Stdio::null());
-        }
-        if mode == 0 || mode & 4 != 0 {
+        } else {
+            // if mode == 0 {
             cmd.stdout(Stdio::inherit());
         }
+    }
+
+    // 设置 stderr
+    if mode & 2 != 0 {
+        cmd.stderr(Stdio::null());
+    } else if mode & 4 != 0 {
+        cmd.stderr(Stdio::piped());
+    } else {
+        cmd.stderr(Stdio::inherit());
     }
 
     // 执行命令
@@ -148,17 +156,25 @@ fn exec_single_cmd(
         child.stdin.as_mut().unwrap().write_all(&input)?;
     }
 
-    // 获取输出
+    // 合并 stderr 和 stdout 的流
+    if mode & 4 != 0 {
+        if let Some(mut stderr) = child.stderr.take() {
+            // if let Some(mut stdout) = child.stdout.take() {
+            std::io::copy(&mut stderr, &mut std::io::stdout()).unwrap(); // 将 stderr 合并到 stdout
+            // }
+        }
+    }
 
+    // 获取输出
     if pipe_out {
         // 管道捕获
         let output = child.wait_with_output()?;
         if output.status.success() {
             if mode & 1 == 0 {
                 //未关闭标准输出才返回结果
-                Ok(Some(output.stdout))
+                return Ok(Some(output.stdout));
             } else {
-                Ok(None)
+                return Ok(None);
             }
         } else if mode & 4 != 0 {
             //错误输出>标准输出
@@ -170,26 +186,30 @@ fn exec_single_cmd(
             // );
             combined.extend(output.stderr);
             // println!("Combined output: {}", String::from_utf8_lossy(&combined));
-
-            Ok(Some(combined))
-        } else if mode & 2 == 0 {
-            //未关闭错误输出才返回错误
-            let stderr = String::from_utf8_lossy(output.stderr.as_ref())
-                .trim()
-                .to_string();
-            Err(RuntimeError::CommandFailed2(cmdstr.to_owned(), stderr))
+            return Ok(Some(combined));
         } else {
-            // 如果关闭了错误输出，则尝试返回标准输出，二者可能同时存在。
-            Ok(Some(output.stdout))
+            if mode & 2 == 0 {
+                //未关闭错误输出才返回错误
+                let stderr = String::from_utf8_lossy(output.stderr.as_ref())
+                    .trim()
+                    .to_string();
+                if stderr.is_empty() {
+                    return Err(RuntimeError::CommandFailed2(cmdstr.to_owned(), stderr));
+                }
+            } else if mode & 1 == 0 {
+                // 如果关闭了错误输出，则尝试返回标准输出，二者可能同时存在。
+                return Ok(Some(output.stdout));
+            }
+            return Ok(None);
         }
     } else if mode & 8 != 0 {
         // 后台运行
-        Ok(None)
+        return Ok(None);
     } else {
         // 正常模式
         let status = child.wait()?;
         if status.success() {
-            Ok(None)
+            return Ok(None);
         } else if mode & 2 == 0 {
             //未关闭错误输出才返回错误
             Err(RuntimeError::CommandFailed2(
@@ -247,7 +267,7 @@ fn handle_command(
     #[cfg(unix)]
     let pty_cmds = [
         "lume", "bash", "sh", "fish", "top", "btop", "vi", "passwd", "ssh", "script", "expect",
-        "telnet", "screen", "tmux", "ftp",
+        "telnet", "screen", "tmux", "ftp", "cmus",
     ];
     #[cfg(windows)]
     let pty_cmds = [
@@ -295,14 +315,7 @@ fn handle_command(
     // dbg!(args, &cmd_args);
     let last_input = state.pipe_out();
     let pipe_input = to_bytes(last_input);
-    let result = exec_single_cmd(
-        cmd,
-        Some(cmd_args),
-        env,
-        Some(pipe_input),
-        always_pipe,
-        cmd_mode,
-    )?;
+    let result = exec_single_cmd(cmd, Some(cmd_args), env, pipe_input, always_pipe, cmd_mode)?;
     Ok(to_expr(result))
 }
 
@@ -312,9 +325,9 @@ pub fn to_expr(bytes_out: Option<Vec<u8>>) -> Expression {
         _ => Expression::None,
     }
 }
-fn to_bytes(expr_out: Option<Expression>) -> Vec<u8> {
+fn to_bytes(expr_out: Option<Expression>) -> Option<Vec<u8>> {
     match expr_out {
-        Some(p) => p.to_string().as_bytes().to_owned(),
-        _ => vec![],
+        Some(p) => Some(p.to_string().as_bytes().to_owned()),
+        _ => None,
     }
 }

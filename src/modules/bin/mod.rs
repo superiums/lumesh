@@ -1,4 +1,7 @@
-use std::collections::{BTreeMap, HashMap};
+use std::{
+    collections::{BTreeMap, HashMap},
+    io::Write,
+};
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError, parse_and_eval};
 use common_macros::hash_map;
@@ -60,7 +63,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr"),
             String::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
             String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
-            String::from("input") => Expression::builtin("input", input, "get user input"),
+            String::from("read") => Expression::builtin("read", read, "get user input"),
 
             String::from("type") => Expression::builtin("type", get_type, "get type of data"),
             String::from("str") => Expression::builtin("str", str, "format an expression to a string"),
@@ -258,13 +261,13 @@ fn tap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     Ok(Expression::from(result))
 }
 fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    for (i, arg) in args.iter().enumerate() {
+    for arg in args.iter() {
         let x = arg.eval(env)?;
-        if i < args.len() - 1 {
-            print!("{} ", x)
-        } else {
-            println!("{}", x)
-        }
+        // if i < args.len() - 1 {
+        print!("{} ", x)
+        // } else {
+        //     println!("{}", x)
+        // }
     }
     Ok(Expression::None)
 }
@@ -294,17 +297,23 @@ fn eprintln(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     Ok(Expression::None)
 }
 
-fn input(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    let mut prompt = String::new();
-    for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval(env)?;
-        if i < args.len() - 1 {
-            prompt += &format!("{} ", x)
-        } else {
-            prompt += &format!("{}", x)
-        }
-    }
-    Ok(Expression::String(crate::repl::read_user_input(&prompt)))
+fn read(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    print(args, env)?;
+    let _ = std::io::stdout().flush();
+
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input)?;
+    Ok(Expression::String(input.trim().to_owned()))
+    // let mut prompt = String::new();
+    // for (i, arg) in args.iter().enumerate() {
+    //     let x = arg.eval(env)?;
+    //     if i < args.len() - 1 {
+    //         prompt += &format!("{} ", x)
+    //     } else {
+    //         prompt += &format!("{}", x)
+    //     }
+    // }
+    // Ok(Expression::String(crate::repl::read_user_input(&prompt)))
 }
 
 fn str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {

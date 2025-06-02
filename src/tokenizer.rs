@@ -49,10 +49,10 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             // triple_quote_string,
             map_valid_token(linebreak, TokenKind::LineBreak),
             map_valid_token(long_operator, TokenKind::Operator),
+            map_valid_token(postfix_operator, TokenKind::OperatorPostfix), // to allow ./.../app!
             map_valid_token(argument_symbol, TokenKind::StringLiteral), //argument first to allow args such as = -
             map_valid_token(prefix_operator, TokenKind::OperatorPrefix),
             map_valid_token(infix_operator, TokenKind::OperatorInfix),
-            map_valid_token(postfix_operator, TokenKind::OperatorPostfix),
             // map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
@@ -320,7 +320,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("&-"),
         keyword_tag("&?"),
         keyword_tag("&+"),
-        keyword_tag("&>"),
+        keyword_tag("&."),
     ))(input)
 
     // begin with -+./

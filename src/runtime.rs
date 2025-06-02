@@ -1,6 +1,6 @@
-use crate::repl::read_user_input;
 use crate::{Environment, Expression, PRINT_DIRECT, SyntaxError};
 use crate::{SyntaxErrorKind, parse_script};
+use std::io::{self, Write};
 use std::path::PathBuf;
 const INTRO_PRELUDE: &str = include_str!("config/config.lsh");
 
@@ -13,6 +13,7 @@ pub fn run_file(path: PathBuf, env: &mut Environment) -> bool {
         Ok(prelude) => parse_and_eval(&prelude, env),
         Err(e) => {
             eprintln!("\x1b[31m[ERROR]\x1b[0mFailed to read file:\n  {}", e);
+            let _ = io::stderr().flush();
             false
         }
     }
@@ -49,6 +50,7 @@ pub fn check(input: &str) -> bool {
           // }
     }
 }
+/// return whether parse success. no matter execute result is.
 pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
     if text.is_empty() {
         return true;
@@ -66,14 +68,19 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             match val {
                 Ok(Expression::None) => {}
                 Ok(Expression::Builtin(b)) => {
-                    println!("  >> [Builtin] {}\n{}\n", b.name, b.help)
+                    println!("  >> [Builtin] {}\n{}\n", b.name, b.help);
+                    let _ = io::stdout().flush();
                 }
                 Ok(result) => unsafe {
                     if PRINT_DIRECT {
                         println!("\n  >> [{}] <<\n{}", result.type_name(), result);
+                        let _ = io::stdout().flush();
                     }
                 },
-                Err(e) => eprintln!("\x1b[31m[ERROR]\x1b[0m {}", e),
+                Err(e) => {
+                    eprintln!("\x1b[31m[ERROR]\x1b[0m {}", e);
+                    let _ = io::stderr().flush();
+                }
             }
             // match val.clone() {
             //     Ok(Expression::Symbol(name)) => {
@@ -111,6 +118,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
 
         Err(e) => {
             eprintln!("[PARSE FAILED] {}", e);
+            let _ = io::stderr().flush();
             // if line.is_empty() {
             //     eprintln!("{}", e);
             //     lines = vec![];
@@ -148,7 +156,7 @@ pub fn init_config(env: &mut Environment) {
 
         let response = read_user_input(prompt);
 
-        if response.is_empty() || response.to_lowercase().trim() == "y" {
+        if response.is_empty() || response.to_lowercase() == "y" {
             if let Err(e) = std::fs::write(&profile, INTRO_PRELUDE) {
                 eprintln!("Error while writing prelude: {}", e);
             }
@@ -173,4 +181,14 @@ fn init_cmds(env: &mut Environment) {
     if !env.is_defined("pwd") {
         parse_and_eval("let pwd = () -> echo CWD", env);
     }
+}
+
+pub fn read_user_input(prompt: impl ToString) -> String {
+    print!("{}", prompt.to_string());
+    let _ = io::stdout().flush();
+    let mut input = String::new();
+    let _ = io::stdin()
+        .read_line(&mut input)
+        .map_err(|e| eprintln!("Read Failed: {}", e));
+    input.trim().to_owned()
 }

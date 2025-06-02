@@ -566,21 +566,7 @@ impl Highlighter for SyntaxHighlighter {
 //     let mut rl = new_editor(None);
 //     readline(prompt, &mut rl)
 // }
-pub fn strip_ansi_escapes(text: impl ToString) -> String {
-    let text = text.to_string();
-    let mut result = String::new();
-    let mut is_in_escape = false;
-    for ch in text.chars() {
-        if ch == '\x1b' {
-            is_in_escape = true;
-        } else if is_in_escape && ch == 'm' {
-            is_in_escape = false;
-        } else if !is_in_escape {
-            result.push(ch);
-        }
-    }
-    result
-}
+
 fn is_valid_command(cmd: &str) -> bool {
     PATH_COMMANDS.lock().unwrap().contains(cmd)
 }

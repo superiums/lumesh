@@ -1,4 +1,10 @@
 # Changelog
+## [0.4.5]
+- fix stdin read for third cmd
+- optimize io
+- fix combo keys in pty
+
+
 ## [0.4.4]
 - fix a lot in libs
 

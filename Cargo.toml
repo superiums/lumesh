@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.4.4"
+version = "0.4.5"
 authors = ["Adam McDaniel; santo"]
 edition = "2024"
 license = "MIT"
@@ -20,6 +20,7 @@ default = ["cli"]                    # 默认编译交互版
 cli = ["rustyline", "ctrlc", "clap"]
 runner = []
 help = ["cli"]
+rustyline = ["dep:rustyline"]
 
 [[bin]]
 name = "lume"

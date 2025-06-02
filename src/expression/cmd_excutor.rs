@@ -98,7 +98,7 @@ fn exec_single_cmd(
     mode: u8,
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args, &is_last);
-    dbg!(&mode, &pipe_out, &input.is_some());
+    // dbg!(&mode, &pipe_out, &input.is_some());
     // dbg!(&input);
     if mode & 16 != 0 {
         // spawn_in_pty(cmdstr, args, env, input);
@@ -156,6 +156,7 @@ fn exec_single_cmd(
         child.stdin.as_mut().unwrap().write_all(&input)?;
     }
 
+    // TODO not work yet
     // 合并 stderr 和 stdout 的流
     if mode & 4 != 0 {
         if let Some(mut stderr) = child.stderr.take() {
@@ -267,7 +268,7 @@ fn handle_command(
     #[cfg(unix)]
     let pty_cmds = [
         "lume", "bash", "sh", "fish", "top", "btop", "vi", "passwd", "ssh", "script", "expect",
-        "telnet", "screen", "tmux", "ftp", "cmus",
+        "telnet", "screen", "tmux", "ftp",
     ];
     #[cfg(windows)]
     let pty_cmds = [

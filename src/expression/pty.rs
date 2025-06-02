@@ -91,9 +91,9 @@ pub fn exec_in_pty(
                     termios.c_lflag |= libc::ISIG;
                     // termios.c_lflag &= !libc::ISIG;
                     termios.c_oflag |= libc::OPOST;
-                    if is_vi {
-                        termios.c_iflag &= !libc::IXON; // 禁用流控制
-                    }
+                    // if is_vi {
+                    //     termios.c_iflag &= !libc::IXON; // 禁用流控制
+                    // }
                     libc::tcsetattr(master_fd, libc::TCSANOW, &termios);
                 }
             }
@@ -139,8 +139,9 @@ pub fn exec_in_pty(
                     Ok(_) => io::stdout().write_all(&buffer).unwrap(),
                     Err(_) => break,
                 }
-                thread::sleep(Duration::from_millis(20));
+                // thread::sleep(Duration::from_millis(20));
                 let _ = io::stdout().flush();
+                thread::yield_now();
             }
         })
     } else {
@@ -166,22 +167,24 @@ pub fn exec_in_pty(
                 let _ = master_writer.write_all(&esc_char);
                 thread::sleep(Duration::from_millis(50));
                 let _ = master_writer.flush();
+                // thread::yield_now();
             }
         }
 
-        let mut input_buffer = [0u8; 1];
+        let mut input_buffer = [0u8];
         loop {
             if running_clone.load(Ordering::SeqCst) {
                 break;
             }
-
             match io::stdin().read_exact(&mut input_buffer) {
                 Ok(_) => {
                     let _ = master_writer.write_all(&input_buffer);
                 }
                 Err(_) => break,
             }
-            thread::sleep(Duration::from_millis(80));
+            // thread::sleep(Duration::from_millis(80));
+            let _ = master_writer.flush();
+            thread::yield_now();
         }
     });
 

@@ -145,6 +145,12 @@ impl PrattParser {
                     input = new_input;
                     match operator {
                         "." | "@" => lhs = Expression::Index(Rc::new(lhs), Rc::new(rhs)),
+                        "..." => {
+                            lhs = Expression::BinaryOp("...".into(), Rc::new(lhs), Rc::new(rhs))
+                        }
+                        "...=" => {
+                            lhs = Expression::BinaryOp("...=".into(), Rc::new(lhs), Rc::new(rhs))
+                        }
                         ".." => lhs = Expression::BinaryOp("..".into(), Rc::new(lhs), Rc::new(rhs)),
                         "..=" => {
                             lhs = Expression::BinaryOp("..=".into(), Rc::new(lhs), Rc::new(rhs))

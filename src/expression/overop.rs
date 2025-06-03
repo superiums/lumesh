@@ -26,12 +26,6 @@ impl Add for Expression {
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m + n as f64)),
             (Self::Float(m), Self::Float(n)) => Ok(Self::Float(m + n)),
 
-            // 字符串拼接
-            (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
-            (Self::String(m), Self::Integer(n)) => Ok(Self::String(m + &n.to_string())),
-            (Self::String(m), Self::Float(n)) => Ok(Self::String(m + &n.to_string())),
-
-            // to-string
             (Self::Integer(m), Self::String(n)) => {
                 // 尝试将字符串转换为整数
                 match n.parse::<i64>() {
@@ -52,18 +46,6 @@ impl Add for Expression {
                     )), // 转换失败
                 }
             }
-            // range
-            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range(a.start..a.end + b)),
-            // 列表合并
-            // List concatenation
-            (Self::List(a), Self::List(b)) => {
-                // let mut new_list = a.as_ref().clone(); // Clone the list
-                // new_list.extend(b.as_ref().iter().cloned()); // Extend with the second list
-                // Ok(Self::List(Rc::new(new_list)))
-                Self::List(a).list_append(b)
-            }
-            (Self::List(a), other) => Self::List(a).list_push(other),
-
             // to-list
             (Self::Integer(m), Self::List(b)) => {
                 // 将列表内部元素求和
@@ -97,6 +79,12 @@ impl Add for Expression {
                     .sum();
                 Ok(Self::Float(m + sum))
             }
+
+            // 字符串拼接
+            (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
+            (Self::String(m), Self::Integer(n)) => Ok(Self::String(m + &n.to_string())),
+            (Self::String(m), Self::Float(n)) => Ok(Self::String(m + &n.to_string())),
+
             (Self::String(m), Self::List(b)) => {
                 let concatenated: String = b
                     .as_ref()
@@ -112,23 +100,20 @@ impl Add for Expression {
                 Ok(Self::String(m + &concatenated))
             }
 
-            // bytes
-            (Self::Bytes(mut a), Self::Bytes(b)) => {
-                a.extend(b);
-                Ok(Self::Bytes(a))
+            // range
+            (Self::Range(a), Self::Integer(b)) if b >= 0 => {
+                Ok(Expression::Range(a.start..a.end + b))
             }
-            (Self::Bytes(mut a), Self::String(n)) => {
-                a.extend(n.into_bytes());
-                Ok(Self::Bytes(a))
+            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range((a.start + b)..a.end)),
+
+            // 列表合并
+            (Self::List(a), Self::List(b)) => {
+                // let mut new_list = a.as_ref().clone(); // Clone the list
+                // new_list.extend(b.as_ref().iter().cloned()); // Extend with the second list
+                // Ok(Self::List(Rc::new(new_list)))
+                Self::List(a).list_append(b)
             }
-            // (Self::Bytes(mut a), Self::Integer(n)) => {
-            //     a.extend(n.to_string().into_bytes());
-            //     Ok(Self::Bytes(a))
-            // }
-            // (Self::Bytes(mut a), Self::Float(n)) => {
-            //     a.extend(n.to_string().into_bytes());
-            //     Ok(Self::Bytes(a))
-            // }
+            (Self::List(a), other) => Self::List(a).list_push(other),
 
             // 映射合并
 
@@ -158,6 +143,23 @@ impl Add for Expression {
             //     Ok(Self::Map(a))
             // }
 
+            // bytes
+            (Self::Bytes(mut a), Self::Bytes(b)) => {
+                a.extend(b);
+                Ok(Self::Bytes(a))
+            }
+            (Self::Bytes(mut a), Self::String(n)) => {
+                a.extend(n.into_bytes());
+                Ok(Self::Bytes(a))
+            }
+            // (Self::Bytes(mut a), Self::Integer(n)) => {
+            //     a.extend(n.to_string().into_bytes());
+            //     Ok(Self::Bytes(a))
+            // }
+            // (Self::Bytes(mut a), Self::Float(n)) => {
+            //     a.extend(n.to_string().into_bytes());
+            //     Ok(Self::Bytes(a))
+            // }
             // 其他情况
             (m, n) => Err(RuntimeError::CommandFailed2(
                 "+".into(),
@@ -186,37 +188,6 @@ impl Sub for Expression {
             (Self::Integer(m), Self::Float(n)) => Ok(Self::Float(m as f64 - n)),
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m - n as f64)),
             (Self::Float(m), Self::Float(n)) => Ok(Self::Float(m - n)),
-
-            // string
-            (Self::String(m), Self::String(n)) => {
-                // 从字符串中移除另一个字符串
-                if let Some(pos) = m.find(&n) {
-                    let new_string = m[..pos].to_string() + &m[pos + n.len()..];
-                    Ok(Self::String(new_string))
-                } else {
-                    Ok(Self::String(m))
-                }
-            }
-            (Self::String(m), Self::Integer(n)) => {
-                // 将整数转换为字符串并从前一个字符串中移除
-                let n_str = n.to_string();
-                if let Some(pos) = m.find(&n_str) {
-                    let new_string = m[..pos].to_string() + &m[pos + n_str.len()..];
-                    Ok(Self::String(new_string))
-                } else {
-                    Ok(Self::String(m))
-                }
-            }
-            (Self::String(m), Self::Float(n)) => {
-                // 将整数转换为字符串并从前一个字符串中移除
-                let n_str = n.to_string();
-                if let Some(pos) = m.find(&n_str) {
-                    let new_string = m[..pos].to_string() + &m[pos + n_str.len()..];
-                    Ok(Self::String(new_string))
-                } else {
-                    Ok(Self::String(m))
-                }
-            }
             // to-string
             (Self::Integer(m), Self::String(n)) => {
                 // 尝试将字符串转换为整数
@@ -239,7 +210,50 @@ impl Sub for Expression {
                 }
             }
 
-            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range(a.start..a.end - b)),
+            // string
+            (Self::String(m), Self::String(n)) => {
+                // 从字符串中移除另一个字符串
+                if let Some(pos) = m.find(&n) {
+                    let new_string = m[..pos].to_string() + &m[pos + n.len()..];
+                    Ok(Self::String(new_string))
+                } else {
+                    Ok(Self::String(m))
+                }
+            }
+            (Self::String(m), Self::Integer(n)) => {
+                // 字符串首尾截取
+                // let n = n as usize;
+                if n >= 0 {
+                    if m.len() >= n as usize {
+                        let l = m.len() - n as usize;
+                        Ok(Self::String(m[..l].to_string()))
+                    } else {
+                        Ok(Self::String("".to_owned()))
+                    }
+                } else {
+                    let l = -n as usize;
+                    if l <= m.len() {
+                        Ok(Self::String(m[l..].to_string()))
+                    } else {
+                        Ok(Self::String("".to_owned()))
+                    }
+                }
+            }
+            (Self::String(m), Self::Float(n)) => {
+                // 将整数转换为字符串并从前一个字符串中移除
+                let n_str = n.to_string();
+                if let Some(pos) = m.find(&n_str) {
+                    let new_string = m[..pos].to_string() + &m[pos + n_str.len()..];
+                    Ok(Self::String(new_string))
+                } else {
+                    Ok(Self::String(m))
+                }
+            }
+
+            (Self::Range(a), Self::Integer(b)) if b >= 0 => {
+                Ok(Expression::Range(a.start..a.end - b))
+            }
+            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range(a.start - b..a.end)),
 
             (Self::List(a), Self::List(b)) => {
                 if Rc::ptr_eq(&a, &b) {
@@ -335,12 +349,6 @@ impl Mul for Expression {
             (Self::Integer(m), Self::Float(n)) => Ok(Self::Float(m as f64 * n)),
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m * n as f64)),
             (Self::Float(m), Self::Float(n)) => Ok(Self::Float(m * n)),
-
-            // string
-            (Self::String(m), Self::Integer(n)) => {
-                // 将字符串重复 n 次
-                Ok(Self::String(m.repeat(n as usize)))
-            }
             // to-string
             (Self::Integer(n), Self::String(m)) => {
                 // 尝试将字符串转换为整数
@@ -361,6 +369,12 @@ impl Mul for Expression {
                         format!("Cannot convert string `{}` to float", m),
                     )),
                 }
+            }
+
+            // string
+            (Self::String(m), Self::Integer(n)) => {
+                // 将字符串重复 n 次
+                Ok(Self::String(m.repeat(n as usize)))
             }
 
             // list
@@ -503,7 +517,7 @@ impl Div for Expression {
                 match m.parse::<i64>() {
                     Ok(num) => Ok(Self::Integer(n / num)),
                     Err(_) => Err(RuntimeError::CommandFailed2(
-                        "*".into(),
+                        "/".into(),
                         format!("Cannot convert string `{}` to integer", m),
                     )),
                 }
@@ -513,7 +527,7 @@ impl Div for Expression {
                 match m.parse::<f64>() {
                     Ok(num) => Ok(Self::Float(n / num)),
                     Err(_) => Err(RuntimeError::CommandFailed2(
-                        "*".into(),
+                        "/".into(),
                         format!("Cannot convert string `{}` to float", m),
                     )),
                 }
@@ -669,6 +683,8 @@ impl PartialOrd for Expression {
             (Self::String(a), Self::String(b)) => a.partial_cmp(b),
             (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
             (Self::List(a), Self::List(b)) => a.partial_cmp(b),
+            (Self::DateTime(a), Self::DateTime(b)) => a.partial_cmp(b),
+
             (Self::HMap(a), Self::HMap(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
             (Self::Map(a), Self::Map(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
             _ => None,

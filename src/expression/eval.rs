@@ -459,6 +459,28 @@ impl Expression {
                                     Ok(Expression::Boolean(regex.is_match(&l.to_string())))
                                 }
 
+                                "..." => match (l, r) {
+                                    (Expression::Integer(fr), Expression::Integer(t)) => {
+                                        let v = (fr..t)
+                                            .map(Expression::from) // 将 i64 转换为 Expression
+                                            .collect::<Vec<_>>();
+                                        Ok(Expression::from(v))
+                                    }
+                                    _ => Err(RuntimeError::CustomError(
+                                        "not valid range option".into(),
+                                    )),
+                                },
+                                "...=" => match (l, r) {
+                                    (Expression::Integer(fr), Expression::Integer(t)) => {
+                                        let v = (fr..=t)
+                                            .map(Expression::from) // 将 i64 转换为 Expression
+                                            .collect::<Vec<_>>();
+                                        Ok(Expression::from(v))
+                                    }
+                                    _ => Err(RuntimeError::CustomError(
+                                        "not valid range option".into(),
+                                    )),
+                                },
                                 ".." => match (l, r) {
                                     (Expression::Integer(fr), Expression::Integer(t)) => {
                                         // let v = (fr..t)

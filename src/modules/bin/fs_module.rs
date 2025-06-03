@@ -2,6 +2,7 @@ use crate::{Environment, Int};
 use crate::{Expression, LmError};
 use common_macros::hash_map;
 use std::collections::BTreeMap;
+use std::ffi::OsStr;
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
@@ -241,9 +242,16 @@ fn remove_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Exp
 
 fn move_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mv", args, 2)?;
-
     let src = join_current_path(&args[0].eval(env)?.to_string());
-    let dst = join_current_path(&args[1].eval(env)?.to_string());
+
+    let dst_str = args[1].eval(env)?.to_string();
+    let dst = if dst_str.ends_with("/") {
+        let mut dpath = join_current_path(&dst_str);
+        dpath.push(src.file_name().unwrap_or(OsStr::new("")));
+        dpath
+    } else {
+        join_current_path(&dst_str)
+    };
 
     move_path(&src, &dst)?;
     Ok(Expression::None)
@@ -253,7 +261,15 @@ fn copy_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Ex
     super::check_exact_args_len("cp", args, 2)?;
 
     let src = join_current_path(&args[0].eval(env)?.to_string());
-    let dst = join_current_path(&args[1].eval(env)?.to_string());
+
+    let dst_str = args[1].eval(env)?.to_string();
+    let dst = if dst_str.ends_with("/") {
+        let mut dpath = join_current_path(&dst_str);
+        dpath.push(src.file_name().unwrap_or(OsStr::new("")));
+        dpath
+    } else {
+        join_current_path(&dst_str)
+    };
 
     copy_path(&src, &dst)?;
     Ok(Expression::None)

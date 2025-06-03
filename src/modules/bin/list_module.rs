@@ -1,5 +1,6 @@
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
+use std::cmp::Ordering;
 use std::collections::BTreeMap;
 use std::rc::Rc;
 
@@ -542,32 +543,99 @@ fn filter_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 fn sort(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("sort", args, 1..2)?;
+    super::check_args_len("sort", args, 1..)?;
+    let key_func = args[0].eval(env)?;
+    let (func, headers) = match args.len() {
+        2 => match key_func {
+            Expression::Lambda(..) | Expression::Function(..) => (Some(Rc::new(key_func)), None),
+            Expression::Symbol(s) | Expression::String(s) => (None, Some(vec![s])),
+            Expression::List(s) => (
+                None,
+                Some(s.iter().map(|e| e.to_string()).collect::<Vec<_>>()),
+            ),
+            _ => (None, None),
+        },
+        3.. => {
+            let cols = super::get_string_args(&args[..args.len() - 1], env)?;
+            (None, Some(cols))
+        }
+
+        0..2 => (None, None),
+    };
+
     let list = match args.last().unwrap().eval(env)? {
         Expression::List(l) => l,
         s => {
-            return Err(LmError::CustomError(format!(
-                "sort requires list as last argument, found {}",
-                s.type_name()
-            )));
+            return Err(LmError::TypeError {
+                expected: "List as last argument".to_string(),
+                found: s.type_name(),
+                sym: s.to_string(),
+            });
         }
     };
     // dbg!(&list);
     let mut sorted = list.as_ref().clone();
     // dbg!(&sorted);
 
-    if args.len() == 2 {
-        let key_func = args[0].eval(env)?;
+    if let Some(sort_func) = func {
         sorted.sort_by(|a, b| {
-            let key_a = Expression::Apply(Rc::new(key_func.clone()), Rc::new(vec![a.clone()]))
-                .eval(env)
-                .unwrap_or(Expression::None);
-            let key_b = Expression::Apply(Rc::new(key_func.clone()), Rc::new(vec![b.clone()]))
-                .eval(env)
-                .unwrap_or(Expression::None);
-            key_a
-                .partial_cmp(&key_b)
-                .unwrap_or(std::cmp::Ordering::Equal)
+            let sort_result =
+                Expression::Apply(Rc::clone(&sort_func), Rc::new(vec![a.clone(), b.clone()]))
+                    .eval(env);
+            match sort_result {
+                Ok(Expression::Integer(i)) => match i {
+                    1.. => Ordering::Greater,
+                    0 => Ordering::Equal,
+                    ..0 => Ordering::Less,
+                },
+                Ok(Expression::Boolean(b)) => match b {
+                    true => Ordering::Greater,
+                    false => Ordering::Less,
+                },
+                _ => {
+                    Ordering::Equal
+                    // return Err(LmError::CustomError(
+                    //     "sort func should return 1,0,-1 or boolean".to_string(),
+                    // ));
+                } // e=> return e?;
+            }
+        });
+    } else if let Some(heads) = headers {
+        // sorted.sort_by_key(|item| {
+        //     if let Expression::Map(m) = item {
+        //         heads
+        //             .iter()
+        //             .map(|col| m.get(col).unwrap_or(&Expression::None))
+        //             .collect::<Vec<_>>()
+        //     } else {
+        //         vec![]
+        //     }
+        // });
+        sorted.sort_by(|a, b| {
+            match (a, b) {
+                (Expression::Map(map_a), Expression::Map(map_b)) => {
+                    // 提取每个键对应的值，并返回一个元组
+                    let key_a = heads
+                        .iter()
+                        .map(|col| map_a.get(col).unwrap_or(&Expression::None))
+                        .collect::<Vec<_>>();
+                    let key_b = heads
+                        .iter()
+                        .map(|col| map_b.get(col).unwrap_or(&Expression::None))
+                        .collect::<Vec<_>>();
+
+                    // 使用 PartialOrd 进行比较
+                    key_a
+                        .iter()
+                        .zip(key_b.iter())
+                        .find_map(|(a_val, b_val)| match a_val.partial_cmp(b_val) {
+                            Some(Ordering::Equal) => None,
+                            other => other,
+                        })
+                        .unwrap_or(Ordering::Equal) // 如果所有值都相等，返回 Equal
+                }
+                _ => Ordering::Equal, // 对于其他类型，返回 Equal
+            }
         });
     } else {
         sorted.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));

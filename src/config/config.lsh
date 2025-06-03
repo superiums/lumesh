@@ -51,6 +51,9 @@ if IS_INTERACTIVE {
     }
 
     # ====== alias
+    alias each = list.map()
+    alias sort = list.sort()
+    alias format = fmt.format()
     alias lsx = ls -l --time-style=long-iso
     alias pls = parse.cmd(mode,hlink,user,group,size,mday,mtime,name)
     alias join = list.join()

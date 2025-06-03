@@ -106,6 +106,7 @@ impl Expression {
                 | Self::Float(_)
                 | Self::Bytes(_)
                 | Self::Range(_)
+                | Self::FileSize(_)
                 | Self::DateTime(_) => {
                     // dbg!("basic type");
                     return Ok(job.clone());

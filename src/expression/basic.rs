@@ -36,6 +36,7 @@ macro_rules! fmt_shared {
         match $self {
             Self::Symbol(name) => write!($f, "{}", name),
             Self::Variable(name) => write!($f, "${}", name),
+            Self::FileSize(fsz) => write!($f, "{}", fsz.to_human_readable()),
 
             // Self::String(s) if $debug => write!($f, "{:?}", s),
             Self::String(s) => write!($f, "{}", s),
@@ -554,6 +555,7 @@ impl Expression {
         match self {
             Self::List(_) => "List".into(),
             Self::HMap(_) => "HMap".into(),
+            Self::FileSize(_) => "FileSize".into(),
             Self::Map(_) => "Map".into(),
             Self::String(_) => "String".into(),
             Self::Integer(_) => "Integer".into(),

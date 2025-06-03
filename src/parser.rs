@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, rc::Rc};
 
 use crate::{
     Diagnostic, Expression, Int, Pattern, SliceParams, SyntaxErrorKind, Token, TokenKind,
-    expression::CatchType,
+    expression::{CatchType, FileSize, SizeUnit},
     tokens::{Input, Tokens},
 };
 use detached_str::StrSlice;
@@ -391,6 +391,25 @@ impl PrattParser {
                     input.skip_n(1),
                     Expression::UnaryOp(opx.into(), Rc::new(lhs), false),
                 ))
+            }
+            "K" | "M" | "G" | "T" | "P" | "B" => {
+                let size = match lhs {
+                    Expression::Integer(s) => s as u64,
+                    Expression::Float(s) => s as u64,
+                    _ => 0,
+                };
+                Ok((
+                    input.skip_n(1),
+                    Expression::FileSize(FileSize::new(size, SizeUnit::from_str(&op))),
+                ))
+            }
+            "%" => {
+                let f = match lhs {
+                    Expression::Integer(s) => s as f64,
+                    Expression::Float(s) => s,
+                    _ => 0.0,
+                };
+                Ok((input.skip_n(1), Expression::Float(f / 100.0)))
             }
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                 op.to_string(),

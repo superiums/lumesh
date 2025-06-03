@@ -126,6 +126,13 @@ fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
         postfix_tag("++"),
         postfix_tag("--"),
         custom_tag("__"), //__* as custom postfix tag.
+        postfix_unit_tag("K"),
+        postfix_unit_tag("M"),
+        postfix_unit_tag("G"),
+        postfix_unit_tag("T"),
+        postfix_unit_tag("P"),
+        postfix_unit_tag("B"),
+        postfix_unit_tag("%"),
     ))(input)
 }
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -879,6 +886,20 @@ fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
             return Err(NOT_FOUND);
         }
         input.strip_prefix(keyword).ok_or(NOT_FOUND)
+    }
+}
+/// parse a unit tag after numbers.
+fn postfix_unit_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input.previous_char().is_none_or(|c| !c.is_numeric()) {
+            return Err(NOT_FOUND);
+        }
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| {
+                rest.starts_with(|c: char| c.is_ascii_whitespace() || c.is_ascii_punctuation())
+            })
+            .ok_or(NOT_FOUND)
     }
 }
 

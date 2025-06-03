@@ -1,7 +1,6 @@
 // 运算符重载（内存优化）
 
 use std::{
-    cmp::Ordering,
     collections::{BTreeMap, HashMap},
     rc::Rc,
 };
@@ -674,20 +673,10 @@ impl Rem for Expression {
 //     }
 // }
 
-/// PartialOrd实现
-impl PartialOrd for Expression {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        match (self, other) {
-            (Self::Integer(a), Self::Integer(b)) => a.partial_cmp(b),
-            (Self::Float(a), Self::Float(b)) => a.partial_cmp(b),
-            (Self::String(a), Self::String(b)) => a.partial_cmp(b),
-            (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
-            (Self::List(a), Self::List(b)) => a.partial_cmp(b),
-            (Self::DateTime(a), Self::DateTime(b)) => a.partial_cmp(b),
-
-            (Self::HMap(a), Self::HMap(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
-            (Self::Map(a), Self::Map(b)) => a.as_ref().keys().partial_cmp(b.as_ref().keys()),
-            _ => None,
-        }
-    }
-}
+// impl Ord for Expression {
+//     fn cmp(&self, other: &Self) -> Ordering {
+//         match (self, other) {
+//             _ => Ordering::Equal,
+//         }
+//     }
+// }

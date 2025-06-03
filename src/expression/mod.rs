@@ -1,4 +1,5 @@
 use crate::{Environment, Int};
+use std::cmp::Ordering;
 use std::collections::{BTreeMap, HashMap};
 use std::ops::Range;
 use std::rc::Rc;
@@ -70,6 +71,93 @@ pub enum Expression {
     Catch(Rc<Self>, CatchType, Option<Rc<Self>>),
     Range(Range<Int>),
     DateTime(NaiveDateTime),
+    FileSize(FileSize),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct FileSize {
+    size: u64, // 文件大小，以字节为单位
+    unit: SizeUnit,
+}
+impl FileSize {
+    pub fn new(size: u64, unit: SizeUnit) -> Self {
+        return Self { size, unit };
+    }
+}
+#[derive(Debug, Clone, PartialEq)]
+pub enum SizeUnit {
+    B,
+    K,
+    M,
+    G,
+    T,
+    P,
+    None,
+}
+impl SizeUnit {
+    pub fn from_str(unit: &str) -> Self {
+        match unit.to_uppercase().as_str() {
+            "B" | "" => SizeUnit::B,
+            "K" | "KB" => SizeUnit::K,
+            "M" | "MB" => SizeUnit::M,
+            "G" | "GB" => SizeUnit::G,
+            "T" | "TB" => SizeUnit::T,
+            "P" | "PB" => SizeUnit::P,
+            _ => SizeUnit::B,
+        }
+    }
+}
+impl FileSize {
+    fn to_bytes(&self) -> u64 {
+        match self.unit {
+            SizeUnit::None | SizeUnit::B => self.size,
+            SizeUnit::K => self.size << 10, // 1024 = 2^10
+            SizeUnit::M => self.size << 20, // 1024 * 1024 = 2^20
+            SizeUnit::G => self.size << 30, // 1024 * 1024 * 1024 = 2^30
+            SizeUnit::T => self.size << 40, // 1024 * 1024 * 1024 * 1024 = 2^40
+            SizeUnit::P => self.size << 50, // 1024 * 1024 * 1024 * 1024 * 1024 = 2^50
+        }
+    }
+    pub fn to_human_readable(&self) -> String {
+        let mut size = self.size;
+
+        // 根据单位进行位移运算
+        match &self.unit {
+            SizeUnit::None | SizeUnit::B => {}
+            SizeUnit::K => size <<= 10, // 乘以 1024
+            SizeUnit::M => size <<= 20, // 乘以 1024^2
+            SizeUnit::G => size <<= 30, // 乘以 1024^3
+            SizeUnit::T => size <<= 40, // 乘以 1024^4
+            SizeUnit::P => size <<= 50, // 乘以 1024^5
+        }
+
+        // 选择合适的单位
+        let (new_size, new_unit) =
+        //     if size >= 1 << 50 {
+        //     (size >> 50, SizeUnit::P)
+        // } else
+        if size >= 1 << 40 {
+            (size >> 40, SizeUnit::T)
+        } else if size >= 1 << 30 {
+            (size >> 30, SizeUnit::G)
+        } else if size >= 1 << 20 {
+            (size >> 20, SizeUnit::M)
+        } else if size >= 1 << 10 {
+            (size >> 10, SizeUnit::K)
+        } else {
+            (size, SizeUnit::B)
+        };
+        if new_unit == SizeUnit::B {
+            format!("{}", new_size)
+        } else {
+            format!("{}{:?}", new_size, new_unit)
+        }
+    }
+}
+impl PartialOrd for FileSize {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.to_bytes().partial_cmp(&other.to_bytes())
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -90,4 +178,24 @@ pub struct SliceParams {
     pub start: Option<Rc<Expression>>,
     pub end: Option<Rc<Expression>>,
     pub step: Option<Rc<Expression>>,
+}
+
+/// PartialOrd实现
+impl PartialOrd for Expression {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        match (self, other) {
+            (Self::Integer(a), Self::Integer(b)) => a.partial_cmp(b),
+            (Self::Float(a), Self::Float(b)) => a.partial_cmp(b),
+            (Self::String(a), Self::String(b)) => a.partial_cmp(b),
+            (Self::Symbol(a), Self::Symbol(b)) => a.partial_cmp(b),
+            (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
+            (Self::List(a), Self::List(b)) => a.partial_cmp(b),
+            (Self::DateTime(a), Self::DateTime(b)) => a.partial_cmp(b),
+            (Self::FileSize(a), Self::FileSize(b)) => a.partial_cmp(b),
+
+            (Self::HMap(a), Self::HMap(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
+            (Self::Map(a), Self::Map(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
+            _ => None,
+        }
+    }
 }

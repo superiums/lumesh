@@ -7,6 +7,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use chrono::{DateTime, NaiveDateTime};
 
+use crate::expression::{FileSize, SizeUnit};
 use crate::{Environment, Expression, LmError};
 
 #[derive(Default)]
@@ -88,7 +89,7 @@ pub fn get_file_expression(
         let size_expr = if options.size_in_kb {
             Expression::Integer(metadata.len().div_ceil(1024) as i64)
         } else {
-            Expression::String(human_readable_size(metadata.len()))
+            Expression::FileSize(FileSize::new(metadata.len(), SizeUnit::B))
             // } else {
             //     Expression::Integer(metadata.len() as i64)
         };
@@ -240,19 +241,19 @@ fn system_time_to_naive_datetime(st: SystemTime) -> Result<NaiveDateTime, LmErro
 //     datetime.format("%Y-%m-%d %H:%M:%S").to_string()
 // }
 
-fn human_readable_size(size: u64) -> String {
-    const UNITS: [&str; 5] = ["B", "K", "M", "G", "T"];
-    let mut size = size as f64;
-    let mut unit_idx = 0;
+// fn human_readable_size(size: u64) -> String {
+//     const UNITS: [&str; 5] = ["B", "K", "M", "G", "T"];
+//     let mut size = size as f64;
+//     let mut unit_idx = 0;
 
-    while size >= 1024.0 && unit_idx < UNITS.len() - 1 {
-        size /= 1024.0;
-        unit_idx += 1;
-    }
+//     while size >= 1024.0 && unit_idx < UNITS.len() - 1 {
+//         size /= 1024.0;
+//         unit_idx += 1;
+//     }
 
-    if unit_idx == 0 {
-        format!("{}", size)
-    } else {
-        format!("{:.1}{}", size, UNITS[unit_idx])
-    }
-}
+//     if unit_idx == 0 {
+//         format!("{}", size)
+//     } else {
+//         format!("{:.1}{}", size, UNITS[unit_idx])
+//     }
+// }

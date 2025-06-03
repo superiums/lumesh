@@ -897,7 +897,9 @@ fn postfix_unit_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRes
         input
             .strip_prefix(keyword)
             .filter(|(rest, _)| {
-                rest.starts_with(|c: char| c.is_ascii_whitespace() || c.is_ascii_punctuation())
+                rest.is_empty()
+                    || rest
+                        .starts_with(|c: char| c.is_ascii_whitespace() || c.is_ascii_punctuation())
             })
             .ok_or(NOT_FOUND)
     }

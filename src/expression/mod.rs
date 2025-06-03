@@ -74,7 +74,7 @@ pub enum Expression {
     FileSize(FileSize),
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone)]
 pub struct FileSize {
     size: u64, // 文件大小，以字节为单位
     unit: SizeUnit,
@@ -159,7 +159,11 @@ impl PartialOrd for FileSize {
         self.to_bytes().partial_cmp(&other.to_bytes())
     }
 }
-
+impl PartialEq for FileSize {
+    fn eq(&self, other: &Self) -> bool {
+        self.to_bytes().eq(&other.to_bytes())
+    }
+}
 #[derive(Debug, Clone, PartialEq)]
 pub enum Pattern {
     Bind(String),

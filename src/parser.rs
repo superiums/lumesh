@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, rc::Rc};
 
 use crate::{
     Diagnostic, Expression, Int, Pattern, SliceParams, SyntaxErrorKind, Token, TokenKind,
-    expression::{CatchType, FileSize, SizeUnit},
+    expression::{CatchType, FileSize},
     tokens::{Input, Tokens},
 };
 use detached_str::StrSlice;
@@ -400,7 +400,7 @@ impl PrattParser {
                 };
                 Ok((
                     input.skip_n(1),
-                    Expression::FileSize(FileSize::new(size, SizeUnit::from_str(&op))),
+                    Expression::FileSize(FileSize::from(size, &op)),
                 ))
             }
             "%" => {

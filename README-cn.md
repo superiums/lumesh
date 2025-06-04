@@ -58,9 +58,13 @@ Lumesh旨在提供快速、高效和用户友好的命令行体验，通过多�
 在我们的 ChangeLog [CHANGELOG.md] 中发现更多功能。
 
 ## Wiki
-有关详细文档和指南，请访问我们的 Wiki [https://codeberg.com/santo/lumesh/wiki/HOME-cn.md]。
+有关详细文档和指南，请访问我们的 Wiki
 
-wiki-English [https://codeberg.org/santo/lumesh/wiki/HOME]
+- wiki中文 [https://codeberg.com/santo/lumesh/wiki/HOME-cn]。
+- 语法手册 [https://codeberg.com/santo/lumesh/wiki/syntax-cn]。
+- 内置库手册 [https://codeberg.com/santo/lumesh/wiki/libs_cn]。
+
+- wiki-English [https://codeberg.org/santo/lumesh/wiki/HOME]
 
 [DeepWiki](https://deepwiki.com/superiums/lumesh)
 

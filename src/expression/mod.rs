@@ -74,16 +74,6 @@ pub enum Expression {
     FileSize(FileSize),
 }
 
-#[derive(Debug, Clone)]
-pub struct FileSize {
-    size: u64, // 文件大小，以字节为单位
-    unit: SizeUnit,
-}
-impl FileSize {
-    pub fn new(size: u64, unit: SizeUnit) -> Self {
-        return Self { size, unit };
-    }
-}
 #[derive(Debug, Clone, PartialEq)]
 pub enum SizeUnit {
     B,
@@ -107,50 +97,78 @@ impl SizeUnit {
         }
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct FileSize {
+    size: u64, // 文件大小，以字节为单位
+    unit: SizeUnit,
+}
 impl FileSize {
-    fn to_bytes(&self) -> u64 {
-        match self.unit {
-            SizeUnit::None | SizeUnit::B => self.size,
-            SizeUnit::K => self.size << 10, // 1024 = 2^10
-            SizeUnit::M => self.size << 20, // 1024 * 1024 = 2^20
-            SizeUnit::G => self.size << 30, // 1024 * 1024 * 1024 = 2^30
-            SizeUnit::T => self.size << 40, // 1024 * 1024 * 1024 * 1024 = 2^40
-            SizeUnit::P => self.size << 50, // 1024 * 1024 * 1024 * 1024 * 1024 = 2^50
+    pub fn new(size: u64, unit: SizeUnit) -> Self {
+        Self { size, unit }
+    }
+    pub fn from(size: u64, unit_str: &str) -> Self {
+        Self {
+            size,
+            unit: SizeUnit::from_str(unit_str),
         }
     }
-    pub fn to_human_readable(&self) -> String {
-        let mut size = self.size;
-
-        // 根据单位进行位移运算
-        match &self.unit {
-            SizeUnit::None | SizeUnit::B => {}
-            SizeUnit::K => size <<= 10, // 乘以 1024
-            SizeUnit::M => size <<= 20, // 乘以 1024^2
-            SizeUnit::G => size <<= 30, // 乘以 1024^3
-            SizeUnit::T => size <<= 40, // 乘以 1024^4
-            SizeUnit::P => size <<= 50, // 乘以 1024^5
+    pub fn from_bytes(size: u64) -> Self {
+        Self {
+            size,
+            unit: SizeUnit::B,
         }
+    }
 
-        // 选择合适的单位
-        let (new_size, new_unit) =
-        //     if size >= 1 << 50 {
-        //     (size >> 50, SizeUnit::P)
-        // } else
-        if size >= 1 << 40 {
-            (size >> 40, SizeUnit::T)
-        } else if size >= 1 << 30 {
-            (size >> 30, SizeUnit::G)
-        } else if size >= 1 << 20 {
-            (size >> 20, SizeUnit::M)
-        } else if size >= 1 << 10 {
-            (size >> 10, SizeUnit::K)
-        } else {
-            (size, SizeUnit::B)
+    fn to_bytes(&self) -> u64 {
+        let mut size = self.size;
+        // 根据单位进行转换
+        size <<= match &self.unit {
+            SizeUnit::None | SizeUnit::B => 0,
+            SizeUnit::K => 10,
+            SizeUnit::M => 20,
+            SizeUnit::G => 30,
+            SizeUnit::T => 40,
+            SizeUnit::P => 50,
         };
-        if new_unit == SizeUnit::B {
-            format!("{}", new_size)
+        size
+    }
+    pub fn to_human_readable(&self) -> String {
+        let size = self.to_bytes();
+        // 定义单位基数
+        const KB: u64 = 1 << 10;
+        const MB: u64 = 1 << 20;
+        const GB: u64 = 1 << 30;
+        const TB: u64 = 1 << 40;
+        const PB: u64 = 1 << 50;
+        let units = [
+            ("P", PB, 50),
+            ("T", TB, 40),
+            ("G", GB, 30),
+            ("M", MB, 20),
+            ("K", KB, 10),
+            ("B", 0, 0),
+        ];
+
+        // 查找合适的单位
+        let (unit_str, _, shift) = units
+            .iter()
+            .find(|(_, base, _)| size >= *base)
+            .unwrap_or(units.last().unwrap());
+        let scaled_size = size >> shift;
+
+        // 格式化输出
+        if *unit_str == "B" {
+            format!("{}", scaled_size)
+        } else if *unit_str == "K" {
+            format!("{}K", scaled_size)
         } else {
-            format!("{}{:?}", new_size, new_unit)
+            let frac_size = (size >> (shift - 10)) & 1023; // 计算小数部分
+            format!(
+                "{:.2}{}",
+                scaled_size as f64 + frac_size as f64 * 0.0009765625,
+                unit_str
+            )
         }
     }
 }

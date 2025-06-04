@@ -489,12 +489,12 @@ fn find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 }
 
 fn group_by(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("group_by", args, 2)?;
+    super::check_exact_args_len("group", args, 2)?;
     let list = match args[1].eval(env)? {
         Expression::List(l) => l,
         _ => {
             return Err(LmError::CustomError(
-                "group_by requires list as last argument".to_string(),
+                "group requires list as last argument".to_string(),
             ));
         }
     };
@@ -502,21 +502,55 @@ fn group_by(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     let key_func = args[0].eval(env)?;
     let mut groups: BTreeMap<String, Vec<Expression>> = BTreeMap::new();
 
-    for item in list.as_ref().iter() {
-        let key = match Expression::Apply(Rc::new(key_func.clone()), Rc::new(vec![item.clone()]))
-            .eval(env)?
-        {
-            Expression::String(s) => s,
-            other => other.to_string(),
-        };
-        groups.entry(key).or_default().push(item.clone());
-    }
+    match key_func {
+        Expression::Lambda(..) | Expression::Function(..) => {
+            let key_f = Rc::new(key_func);
+            for item in list.as_ref().iter() {
+                let key = match Expression::Apply(Rc::clone(&key_f), Rc::new(vec![item.clone()]))
+                    .eval(env)?
+                {
+                    Expression::String(s) => s,
+                    other => other.to_string(),
+                };
+                groups.entry(key).or_default().push(item.clone());
+            }
+        }
+        Expression::Symbol(k) | Expression::String(k) => {
+            for item in list.as_ref().iter() {
+                let keyitem = match item {
+                    Expression::Map(m) => m.get(&k),
+                    Expression::HMap(m) => m.get(&k),
+                    _ => {
+                        return Err(LmError::CustomError(
+                            "group by key can only apply to a map".to_string(),
+                        ));
+                    }
+                };
+                if let Some(key) = keyitem {
+                    groups
+                        .entry(key.to_string())
+                        .or_default()
+                        .push(item.clone());
+                } else {
+                    return Err(LmError::CustomError(format!(
+                        "no such key found in map: `{}`",
+                        k
+                    )));
+                }
+            }
+        }
+        _ => {
+            return Err(LmError::CustomError(
+                "group requires key-func or key".to_string(),
+            ));
+        }
+    };
 
-    let result = groups
-        .into_iter()
-        .map(|(k, v)| Expression::from(vec![Expression::String(k), Expression::from(v)]))
-        .collect::<Vec<Expression>>();
-    Ok(Expression::from(result))
+    // let result = groups
+    //     .into_iter()
+    //     .map(|(k, v)| Expression::from(vec![Expression::String(k), Expression::from(v)]))
+    //     .collect::<Vec<Expression>>();
+    Ok(Expression::from(groups))
 }
 
 fn filter_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {

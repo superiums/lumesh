@@ -7,7 +7,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 use chrono::{DateTime, NaiveDateTime};
 
-use crate::expression::{FileSize, SizeUnit};
+use crate::expression::FileSize;
 use crate::{Environment, Expression, LmError};
 
 #[derive(Default)]
@@ -89,7 +89,7 @@ pub fn get_file_expression(
         let size_expr = if options.size_in_kb {
             Expression::Integer(metadata.len().div_ceil(1024) as i64)
         } else {
-            Expression::FileSize(FileSize::new(metadata.len(), SizeUnit::B))
+            Expression::FileSize(FileSize::from_bytes(metadata.len()))
             // } else {
             //     Expression::Integer(metadata.len() as i64)
         };

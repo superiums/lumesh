@@ -37,7 +37,7 @@ if IS_INTERACTIVE {
         q: "exit",
         c: "clear",
         h: "fs.read /tmp/lume_histroy | fzf --preview '' | exec_str()",
-        z: "fs.read /tmp/bookmark | fzf --preview '' | exec_str()",
+        x: "fs.read /tmp/bookmark | fzf --preview '' | exec_str()",
         m: 'let cmd := "$CMD_CURRENT";let s = str(cmd); if s!="" {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
     }
 
@@ -53,7 +53,10 @@ if IS_INTERACTIVE {
     # ====== alias
     alias each = list.map()
     alias sort = list.sort()
+    alias group = list.group()
+    alias table = parse.cmd()
     alias format = fmt.format()
+    alias ll = fs.ls -l
     alias lsx = ls -l --time-style=long-iso
     alias pls = parse.cmd(mode,hlink,user,group,size,mday,mtime,name)
     alias join = list.join()

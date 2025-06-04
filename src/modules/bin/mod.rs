@@ -454,7 +454,7 @@ fn exec_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 }
 fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("repeat", args, 2)?;
-    let n = get_integer_arg(args[0].clone())?;
+    let n = get_integer_arg(args[0].eval(env)?)?;
     let r = (0..n)
         .map(|_| args[1].eval(env))
         .collect::<Result<Vec<_>, _>>()?;

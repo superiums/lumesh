@@ -225,27 +225,73 @@ fn custom_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
         Err(NOT_FOUND)
     }
 }
+// fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+//     move |input: Input<'_>| {
+//         if input.starts_with(punct) {
+//             // 检查前一个字符是否为空格或行首
+//             if input.previous_char().is_none_or(|c| c.is_whitespace()) {
+//                 let places = input
+//                     .chars()
+//                     .take_while(|&c| {
+//                         !c.is_ascii_whitespace()
+//                             && ![';', '`', ')', ']', '}', '|', '>'].contains(&c)
+//                     })
+//                     .map(char::len_utf8)
+//                     .sum();
+//                 // .count();
+//                 if places > 1 {
+//                     return Ok(input.split_at(places));
+//                 }
+//                 // 允许单字符路径，但仅在它们是输入的结尾时input.chars().nth(places-input.len()
+//                 // let next_char = input.chars().nth(places);
+
+//                 // 检查 punct 是否是结尾
+//                 if places + punct.len() >= input.len()
+//                 // if (input.len() - punct.len() <= 2 && input.chars().nth(2).is_none())
+//                 {
+//                     return Ok(input.split_at(places));
+//                 }
+//             }
+//         }
+//         Err(NOT_FOUND)
+//     }
+// }
 fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.starts_with(punct) {
             // 检查前一个字符是否为空格或行首
             if input.previous_char().is_none_or(|c| c.is_whitespace()) {
-                let places = input
-                    .chars()
-                    .take_while(|&c| {
-                        !c.is_whitespace() && ![';', '`', ')', ']', '}', '|', '>'].contains(&c)
-                    })
-                    .count();
+                let mut chars = input.chars();
+                let mut places = 0;
+
+                while let Some(c) = chars.next() {
+                    if c == '\\' {
+                        // 检查转义空格
+                        if let Some(next_c) = chars.next() {
+                            if [' ', '"', '\''].contains(&next_c) {
+                                places += c.len_utf8() + next_c.len_utf8();
+                                continue; // 跳过转义空格
+                            }
+                        }
+                    }
+
+                    if c.is_ascii_whitespace() {
+                        break; // 遇到普通空格，结束
+                    }
+
+                    if [';', '`', ')', ']', '}', '|', '>'].contains(&c) {
+                        break; // 遇到特殊字符，结束
+                    }
+
+                    places += c.len_utf8(); // 累加字符长度
+                }
+
                 if places > 1 {
                     return Ok(input.split_at(places));
                 }
-                // 允许单字符路径，但仅在它们是输入的结尾时input.chars().nth(places-input.len()
-                // let next_char = input.chars().nth(places);
 
-                // 检查 punct 是否是结尾
-                if places + punct.len() >= input.len()
-                // if (input.len() - punct.len() <= 2 && input.chars().nth(2).is_none())
-                {
+                // 允许单字符路径，但仅在它们是输入的结尾时
+                if places + punct.len() >= input.len() {
                     return Ok(input.split_at(places));
                 }
             }

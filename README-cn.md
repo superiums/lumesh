@@ -60,9 +60,10 @@ Lumesh旨在提供快速、高效和用户友好的命令行体验，通过多�
 ## Wiki
 有关详细文档和指南，请访问我们的 Wiki
 
-- wiki中文 [https://codeberg.com/santo/lumesh/wiki/HOME-cn]。
-- 语法手册 [https://codeberg.com/santo/lumesh/wiki/syntax-cn]。
-- 内置库手册 [https://codeberg.com/santo/lumesh/wiki/libs_cn]。
+- wiki中文 [https://codeberg.org/santo/lumesh/wiki/HOME-cn]。
+- 语法手册 [https://codeberg.org/santo/lumesh/wiki/syntax-cn]。
+- 内置库手册 [https://codeberg.org/santo/lumesh/wiki/libs_cn]。
+- Bash对比 [https://codeberg.org/santo/lumesh/wiki/bash_user_guid]。
 
 - wiki-English [https://codeberg.org/santo/lumesh/wiki/HOME]
 

@@ -56,14 +56,20 @@ pub fn run_repl(env: &mut Environment) {
         Some(hf) => hf.to_string(),
         _ => {
             if let Some(c_dir) = dirs::cache_dir() {
-                c_dir
-                    .join("lume_history")
-                    .into_os_string()
-                    .into_string()
-                    .unwrap()
+                let path = c_dir.join("lume_history");
+                if !path.exists() {
+                    match std::fs::create_dir_all(&c_dir) {
+                        Ok(_) => {}
+                        Err(e) => eprint!("Failed to create cache directory: {}", e),
+                    }
+                    path.into_os_string().into_string().unwrap()
+                } else {
+                    eprintln!("please config LUME_HISTORY_FILE");
+                    "lume_history".into()
+                }
             } else {
-                eprintln!("please config LUME_HISTORY_FILE");
-                "lume_history".into()
+                eprintln!("require cache dir failed. please set LUME_HISTORY_FILE");
+                "lume_history".to_owned()
             }
         }
     };
@@ -84,7 +90,7 @@ pub fn run_repl(env: &mut Environment) {
     let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
 
     // 设置信号处理 (Unix 系统)
-    #[cfg(unix)]
+    // #[cfg(unix)]
     {
         let rl_clone = Arc::clone(&rl);
         let running_clone = Arc::clone(&running);

@@ -1,4 +1,13 @@
 # Changelog
+## [0.4.6]
+- refactor sort function
+- optimize filesize, time display. optimize list.group.
+- add FileSize and cmp. add % as float.
+- fix 1M in line end.
+- fix non-ascii path broken
+- add ..., suport justify range start via +/-; fix fs.mv/cp
+- more detail while load history.
+
 ## [0.4.5]
 - fix stdin read for third cmd
 - optimize io

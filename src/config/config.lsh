@@ -6,6 +6,9 @@ if IS_LOGIN {
 
 # ========== config for interactive mode ==========
 if IS_INTERACTIVE {
+    # ====== default repl mode
+    # LUME_VI_MODE = true
+
     # ====== default strict mode
     # let IS_STRICT = true
 

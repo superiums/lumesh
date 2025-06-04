@@ -14,10 +14,11 @@ use rustyline::{
     line_buffer::LineBuffer,
     validate::Validator,
 };
-use rustyline::{Cmd, Modifiers, Movement};
+use rustyline::{Cmd, EditMode, Modifiers, Movement};
 
 use std::borrow::Cow;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 use crate::Expression;
 use crate::ai::{AIClient, MockAIClient, init_ai};
@@ -55,35 +56,39 @@ pub fn run_repl(env: &mut Environment) {
     let history_file = match env.get("LUME_HISTORY_FILE") {
         Some(hf) => hf.to_string(),
         _ => {
-            if let Some(c_dir) = dirs::cache_dir() {
-                let path = c_dir.join("lume_history");
-                if !path.exists() {
-                    match std::fs::create_dir_all(&c_dir) {
-                        Ok(_) => {}
-                        Err(e) => eprint!("Failed to create cache directory: {}", e),
-                    }
-                    path.into_os_string().into_string().unwrap()
-                } else {
-                    eprintln!("please config LUME_HISTORY_FILE");
-                    "lume_history".into()
+            let c_dir = match dirs::cache_dir() {
+                Some(c) => c,
+                _ => PathBuf::new(),
+            };
+            #[cfg(unix)]
+            let path = c_dir.join(".lume_history");
+            #[cfg(windows)]
+            let path = c_dir.join("lume_history.log");
+            if !path.exists() {
+                match std::fs::File::create(&path) {
+                    Ok(_) => {}
+                    Err(e) => eprint!("Failed to create cache directory: {}", e),
                 }
-            } else {
-                eprintln!("require cache dir failed. please set LUME_HISTORY_FILE");
-                "lume_history".to_owned()
             }
+            path.into_os_string().into_string().unwrap()
         }
     };
     let ai_config = env.get("LUME_AI_CONFIG");
+    let vi_mode = match env.get("LUME_VI_MODE") {
+        Some(Expression::Boolean(true)) => true,
+        _ => false,
+    };
     // let enable_ai = match env.get("LUME_AI_CONFIG") {
     //     Some(_) => true,
     //     _ => false,
     // };
 
     // 使用 Arc<Mutex> 保护编辑器
-    let rl = Arc::new(Mutex::new(new_editor(ai_config)));
+    let rl = Arc::new(Mutex::new(new_editor(ai_config, vi_mode)));
 
-    if rl.lock().unwrap().load_history(&history_file).is_err() {
-        println!("No previous history");
+    match rl.lock().unwrap().load_history(&history_file) {
+        Ok(_) => {}
+        Err(e) => println!("No previous history {}", e),
     }
 
     let pe = get_prompt_engine();
@@ -246,10 +251,17 @@ struct LumeHelper {
     ai_client: Option<Arc<MockAIClient>>,
 }
 
-fn new_editor(ai_config: Option<Expression>) -> Editor<LumeHelper, FileHistory> {
+fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
         .completion_type(CompletionType::Circular)
+        .edit_mode(if vi_mode {
+            EditMode::Vi
+        } else {
+            EditMode::Emacs
+        })
+        .history_ignore_dups(true)
+        .unwrap()
         .build();
 
     let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());

@@ -5,6 +5,7 @@ use detached_str::StrSlice;
 use nom::{
     IResult,
     branch::alt,
+    bytes::complete::take_until,
     combinator::{eof, map},
     error::ParseError,
     multi::fold_many_m_n,

@@ -448,6 +448,7 @@ impl Expression {
                                         }
                                         Expression::List(left) => left.contains(&r),
                                         Expression::Map(left) => left.contains_key(r.to_symbol()?),
+                                        Expression::HMap(left) => left.contains_key(r.to_symbol()?),
                                         _ => false,
                                     };
                                     Ok(Expression::Boolean(br))

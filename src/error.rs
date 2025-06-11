@@ -337,7 +337,7 @@ pub enum RuntimeError {
     SymbolNotDefined(String),
     #[error("command `{0}` failed with args {1:?}")]
     CommandFailed(String, Vec<Expression>),
-    #[error("command `{0}` failed: {1:?}")]
+    #[error("command `{0}` failed:\n{1}")]
     CommandFailed2(String, String),
     #[error("attempted to iterate over non-list `{0:?}`")]
     ForNonList(Expression),

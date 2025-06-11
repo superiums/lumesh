@@ -15,6 +15,12 @@ if IS_INTERACTIVE {
     # ====== welcome msg
     # let LUME_WELCOME= "Welcome to Lumesh!"
 
+    # ====== prompt
+    let LUME_PROMPT = {
+        STARSHIP_ENABLED: False,
+    #    TEMPLATE: "{cwd}|> "
+    }
+
     # ====== history file
     # let LUME_HISTORY_FILE = "/tmp/lume_histroy"
 
@@ -59,6 +65,7 @@ if IS_INTERACTIVE {
     alias group = list.group()
     alias table = parse.cmd()
     alias format = fmt.format()
+    alias get = map.get
     alias ll = fs.ls -l
     alias lsx = ls -l --time-style=long-iso
     alias pls = parse.cmd(mode,hlink,user,group,size,mday,mtime,name)
@@ -81,4 +88,4 @@ let logo = "
         ███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
         ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
 "
-fmt@faint(fmt@red(logo))
+print fmt@faint(fmt@green(logo))

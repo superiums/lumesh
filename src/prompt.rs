@@ -4,6 +4,8 @@ use std::process::{Command, Stdio};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
+use crate::Expression;
+
 // 提示符状态缓存
 #[derive(Clone)]
 struct PromptCache {
@@ -73,26 +75,26 @@ impl PromptEngineCommon for PromptEngine {
     }
 }
 impl PromptEngine {
-    pub fn new() -> Self {
-        let starship_enabled = env::var("STARSHIP_SHELL")
-            .map(|s| !s.is_empty())
-            .unwrap_or(false);
+    // pub fn new() -> Self {
+    //     let starship_enabled = env::var("STARSHIP_SHELL")
+    //         .map(|s| !s.is_empty())
+    //         .unwrap_or(false);
 
-        Self {
-            starship_enabled,
-            custom_template: None,
-            cache: Arc::new(Mutex::new(PromptCache {
-                last_update: Instant::now(),
-                content: "> ".to_string(),
-                ttl: Duration::from_secs(2),
-            })),
-        }
-    }
+    //     Self {
+    //         starship_enabled,
+    //         custom_template: None,
+    //         cache: Arc::new(Mutex::new(PromptCache {
+    //             last_update: Instant::now(),
+    //             content: "> ".to_string(),
+    //             ttl: Duration::from_secs(2),
+    //         })),
+    //     }
+    // }
 
     // 设置自定义模板 (支持 {cwd}, {git} 等占位符)
-    pub fn set_template(&mut self, template: String) {
-        self.custom_template = Some(template);
-    }
+    // pub fn set_template(&mut self, template: String) {
+    //     self.custom_template = Some(template);
+    // }
 
     fn render_template(&self, template: &str) -> String {
         // 实现简单的占位符替换
@@ -103,7 +105,7 @@ impl PromptEngine {
                 result = result.replace("{cwd}", cwd_str);
             }
         }
-
+        dbg!(&result);
         // 可以扩展更多占位符...
         result
     }
@@ -139,16 +141,35 @@ impl PromptEngine {
     }
 }
 
-pub fn get_prompt_engine() -> Box<dyn PromptEngineCommon> {
-    let starship = env::var("STARSHIP_SHELL").unwrap_or("".into());
-    //dbg!(&starship);
+pub fn get_prompt_engine(settings: Option<Expression>) -> Box<dyn PromptEngineCommon> {
+    match settings {
+        Some(setting) => {
+            match setting {
+                Expression::Map(sets) => {
+                    dbg!(sets.get("TEMPLATE"), sets.get("STARSHIP_ENABLED"));
+                    Box::new(PromptEngine {
+                        starship_enabled: sets
+                            .get("STARSHIP_ENABLED")
+                            .unwrap_or(&Expression::None)
+                            .is_truthy(),
+                        custom_template: sets.get("TEMPLATE").map(|t| t.to_string()),
+                        cache: Arc::new(Mutex::new(PromptCache {
+                            last_update: Instant::now(),
+                            content: "> ".to_string(),
+                            ttl: Duration::from_secs(2),
+                        })),
+                    })
+                }
+                _ => {
+                    eprintln!("LUME_PROMPT must be a map");
+                    Box::new(MyPrompt {})
+                }
+            }
 
-    if starship.is_empty() {
-        Box::new(MyPrompt {})
-    } else {
-        let mut prompt_engine = PromptEngine::new();
-        // Initialize it with a custom template
-        prompt_engine.set_template("{cwd}|> ".to_string());
-        Box::new(prompt_engine)
+            // Initialize it with a custom template
+            // prompt_engine.set_template("{cwd}|> ".to_string());
+            // Box::new(prompt_engine)
+        }
+        _ => Box::new(MyPrompt {}),
     }
 }

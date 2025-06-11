@@ -597,8 +597,33 @@ fn sort(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
         0..2 => (None, None),
     };
 
-    let list = match args.last().unwrap().eval(env)? {
-        Expression::List(l) => l,
+    let mut sorted: Vec<_> = match args.last().unwrap().eval(env)? {
+        Expression::List(l) => l.as_ref().clone(),
+        Expression::String(s) => {
+            let mut elist = s
+                .lines()
+                .map(|s| Expression::String(s.to_owned()))
+                .collect::<Vec<_>>();
+            if elist.len() < 2 {
+                elist = s
+                    .split_ascii_whitespace()
+                    .map(|s| Expression::String(s.to_owned()))
+                    .collect::<Vec<_>>();
+                if elist.len() < 2 {
+                    elist = s
+                        .split_terminator(";")
+                        .map(|s| Expression::String(s.to_owned()))
+                        .collect::<Vec<_>>();
+                    if elist.len() < 2 {
+                        elist = s
+                            .split_terminator(",")
+                            .map(|s| Expression::String(s.to_owned()))
+                            .collect::<Vec<_>>();
+                    }
+                }
+            }
+            elist
+        }
         s => {
             return Err(LmError::TypeError {
                 expected: "List as last argument".to_string(),
@@ -607,9 +632,6 @@ fn sort(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
             });
         }
     };
-    // dbg!(&list);
-    let mut sorted = list.as_ref().clone();
-    // dbg!(&sorted);
 
     if let Some(sort_func) = func {
         sorted.sort_by(|a, b| {
@@ -648,6 +670,27 @@ fn sort(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
         sorted.sort_by(|a, b| {
             match (a, b) {
                 (Expression::Map(map_a), Expression::Map(map_b)) => {
+                    // 提取每个键对应的值，并返回一个元组
+                    let key_a = heads
+                        .iter()
+                        .map(|col| map_a.get(col).unwrap_or(&Expression::None))
+                        .collect::<Vec<_>>();
+                    let key_b = heads
+                        .iter()
+                        .map(|col| map_b.get(col).unwrap_or(&Expression::None))
+                        .collect::<Vec<_>>();
+
+                    // 使用 PartialOrd 进行比较
+                    key_a
+                        .iter()
+                        .zip(key_b.iter())
+                        .find_map(|(a_val, b_val)| match a_val.partial_cmp(b_val) {
+                            Some(Ordering::Equal) => None,
+                            other => other,
+                        })
+                        .unwrap_or(Ordering::Equal) // 如果所有值都相等，返回 Equal
+                }
+                (Expression::HMap(map_a), Expression::HMap(map_b)) => {
                     // 提取每个键对应的值，并返回一个元组
                     let key_a = heads
                         .iter()

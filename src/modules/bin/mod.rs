@@ -68,6 +68,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
             String::from("type") => Expression::builtin("type", get_type, "get type of data"),
             String::from("str") => Expression::builtin("str", str, "format an expression to a string"),
             String::from("int") => Expression::builtin("int", int, "convert a float or string to an int"),
+            String::from("float") => Expression::builtin("float", float, "convert a int or string to an float"),
 
             String::from("len") => Expression::builtin("len", len, "get the length of an expression"),
             String::from("insert") => Expression::builtin("insert", insert, "insert an item into a map or list"),
@@ -348,6 +349,28 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
         }
         otherwise => Err(LmError::CustomError(format!(
             "could not convert {:?} to an integer",
+            otherwise
+        ))),
+    }
+}
+
+fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("float", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::Integer(x) => Ok(Expression::Float(x as f64)),
+        Expression::Float(x) => Ok(Expression::Float(x)),
+        Expression::String(x) => {
+            if let Ok(n) = x.parse::<f64>() {
+                Ok(Expression::Float(n))
+            } else {
+                Err(LmError::CustomError(format!(
+                    "could not convert {:?} to a float",
+                    x
+                )))
+            }
+        }
+        otherwise => Err(LmError::CustomError(format!(
+            "could not convert {:?} to a float",
             otherwise
         ))),
     }

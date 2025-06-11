@@ -1,17 +1,25 @@
 // use super::{get_list_arg, get_string_arg};
 use crate::{Environment, Expression, LmError, parse};
 use common_macros::hash_map;
+use regex_lite::Regex;
 use std::collections::BTreeMap;
 use tinyjson::JsonValue;
+
+use super::check_exact_args_len;
 
 pub fn get() -> Expression {
     (hash_map! {
         String::from("toml") => Expression::builtin("toml", parse_toml, "parse TOML into lumesh expression"),
         String::from("json") => Expression::builtin("json", parse_json, "parse JSON into lumesh expression"),
+        String::from("csv") => Expression::builtin("csv", parse_csv, "parse JSON into lumesh expression"),
+        String::from("to_toml") => Expression::builtin("to_toml", expr_to_toml, "parse TOML into lumesh expression"),
+        String::from("to_json") => Expression::builtin("to_json", expr_to_json, "parse JSON into lumesh expression"),
+        String::from("to_csv") => Expression::builtin("to_csv", expr_to_csv, "parse JSON into lumesh expression"),
         String::from("expr") => Expression::builtin("expr", parse_expr, "parse lumesh script"),
         String::from("cmd") => Expression::builtin("cmd", parse_command_output,
             "parse command output into structured data"),
-
+        String::from("jq") =>
+               Expression::builtin("jq", jq, "Apply jq-like query to JSON or TOML data"),
     })
     .into()
 }
@@ -216,38 +224,403 @@ fn parse_command_output(
     Ok(Expression::from(result))
 }
 
-// Data Processing Functions
+// CSV Reader and Converter Functions
+fn parse_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("csv", args, 1)?;
+    let text = args[0].eval(env)?.to_string();
 
-// Key improvements made:
+    let mut rdr = csv::ReaderBuilder::new()
+        .has_headers(true)
+        .from_reader(text.as_bytes());
 
-// 1. **Type Safety and Error Handling**:
-//    - Consolidated error messages to be more consistent
-//    - Improved error handling in parser functions
-//    - Better type checking for arguments
+    let headers = rdr
+        .headers()
+        .map_err(|e| LmError::CustomError(format!("CSV header error: {}", e)))?
+        .iter()
+        .map(|s| s.to_string())
+        .collect::<Vec<_>>();
 
-// 2. **Performance Optimizations**:
-//    - Reduced allocations by using references and iterators more effectively
-//    - Pre-allocated vectors where possible
-//    - Used `filter_map` to combine filtering and mapping operations
+    let mut result = Vec::new();
+    for record in rdr.records() {
+        let record = record.map_err(|e| LmError::CustomError(format!("CSV parse error: {}", e)))?;
+        let mut row = BTreeMap::new();
+        for (i, value) in record.iter().enumerate() {
+            let key = headers.get(i).cloned().unwrap_or_else(|| format!("C{}", i));
+            row.insert(key, Expression::String(value.to_string()));
+        }
+        result.push(Expression::from(row));
+    }
+    Ok(Expression::from(result))
+}
 
-// 3. **Code Organization**:
-//    - Grouped related functions together (TOML, JSON, expression parsers)
-//    - Made data processing functions more consistent
-//    - Simplified conditional logic
+// Expression to TOML Conversion
+fn expr_to_toml(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("to_toml", args, 1)?;
+    let expr = &args[0].eval(env)?;
+    let toml_str = expr_to_toml_string(expr, None);
+    Ok(Expression::String(toml_str))
+}
 
-// 4. **Bug Fixes**:
-//    - Fixed header handling in `parse_command_output`
-//    - Improved handling of empty inputs in parsers
-//    - Better column selection logic in `select_columns`
+// fn expr_to_toml_string(expr: &Expression) -> String {
+//     match expr {
+//         Expression::None => "".to_string(),
+//         Expression::Boolean(b) => b.to_string(),
+//         Expression::Integer(i) => i.to_string(),
+//         Expression::Float(f) => f.to_string(),
+//         Expression::String(s) => format!("\"{}\"", s),
+//         Expression::List(list) => {
+//             let items: Vec<String> = list.iter().map(expr_to_toml_string).collect();
+//             format!("[{}]", items.join(", "))
+//         }
+//         Expression::Map(map) => {
+//             let pairs: Vec<String> = map
+//                 .iter()
+//                 .map(|(k, v)| format!("{} = {}", k, expr_to_toml_string(v)))
+//                 .collect();
+//             pairs.join("\n")
+//         }
+//         other => other.to_string(),
+//     }
+// }
 
-// 5. **Consistency**:
-//    - Uniform use of `Rc` for nested structures
-//    - Consistent return types across all functions
-//    - Standardized argument validation
+// 递归序列化函数（新增表名前缀参数）
+fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String {
+    match expr {
+        // 基本类型处理
+        Expression::None => "".to_string(),
+        // Expression::Boolean(b) => b.to_string(),
+        // Expression::Integer(i) => i.to_string(),
+        // Expression::Float(f) => f.to_string(),
 
-// 6. **Readability**:
-//    - More concise function implementations
-//    - Better naming of variables
-//    - Reduced nesting levels through early returns
+        // 字符串处理（禁用Unicode转义）
+        Expression::String(s) => format!("\"{}\"", s.replace("\"", "\\\"")),
+        // Expression::DateTime(t) => t.to_string(),
 
-// The functions now handle edge cases better and should be more efficient while maintaining the same functionality. The `parse_command_output` function in particular has been improved to handle more command output formats reliably.
+        // 数组处理（保持原始结构）
+        Expression::List(list) => {
+            let items: Vec<String> = list.iter().map(|e| expr_to_toml_string(e, None)).collect();
+            format!("[{}]", items.join(", "))
+        }
+
+        // 映射表处理（核心改进）
+        Expression::Map(map) => {
+            let mut output = Vec::new();
+            let mut tables = BTreeMap::new();
+            let mut simple_keys = BTreeMap::new();
+
+            // 分离简单键和嵌套表
+            for (key, value) in map.as_ref() {
+                if let Expression::Map(_) = value {
+                    tables.insert(key.clone(), value);
+                } else {
+                    simple_keys.insert(key.clone(), value);
+                }
+            }
+
+            // 处理当前层简单键值对
+            for (key, value) in &simple_keys {
+                let line = format!("{} = {}", key, expr_to_toml_string(value, None));
+                output.push(line);
+            }
+
+            // 处理嵌套表
+            for (table_name, table_expr) in &tables {
+                let full_table_name = match table_prefix {
+                    Some(prefix) => format!("{}.{}", prefix, table_name),
+                    None => table_name.clone(),
+                };
+
+                // 添加表头
+                output.push(format!("\n[{}]", full_table_name));
+
+                // 递归处理子表
+                let table_content = expr_to_toml_string(table_expr, Some(&full_table_name));
+
+                // 添加子表内容（保留缩进）
+                for line in table_content.lines() {
+                    output.push(line.to_string());
+                }
+            }
+
+            output.join("\n")
+        }
+
+        // 其他类型保持原样
+        other => other.to_string(),
+    }
+}
+
+// Expression to JSON Conversion (优化版)
+fn expr_to_json(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    check_exact_args_len("to_json", args, 1)?;
+    let expr = &args[0].eval(env)?;
+    let json_str = match expr {
+        Expression::Map(map) => {
+            let pairs: Vec<String> = map
+                .iter()
+                .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
+                .collect();
+            format!("{{{}}}", pairs.join(","))
+        }
+        _ => expr_to_json_string(expr),
+    };
+    Ok(Expression::String(json_str))
+}
+
+fn expr_to_json_string(expr: &Expression) -> String {
+    match expr {
+        Expression::None => "null".to_string(),
+        // Expression::Boolean(b) => b.to_string(),
+        // Expression::Integer(i) => i.to_string(),
+        // Expression::Float(f) => f.to_string(),
+        Expression::String(s) => format!("\"{}\"", s),
+        Expression::List(list) => {
+            let items: Vec<String> = list.iter().map(expr_to_json_string).collect();
+            format!("[{}]", items.join(","))
+        }
+        Expression::Map(map) => {
+            let pairs: Vec<String> = map
+                .iter()
+                .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
+                .collect();
+            format!("{{{}}}", pairs.join(","))
+        }
+        other => other.to_string(),
+    }
+}
+
+// fn expr_to_csv_string(expr: &Expression) -> String {
+//     match expr {
+//         Expression::None => "null".to_string(),
+//         Expression::List(list) => {
+//             let items: Vec<String> = list.iter().map(expr_to_json_string).collect();
+//             format!("[{}]", items.join(","))
+//         }
+//         Expression::Map(map) => {
+//             let pairs: Vec<String> = map
+//                 .iter()
+//                 .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
+//                 .collect();
+//             format!("{{{}}}", pairs.join(","))
+//         }
+//         other => other.to_string(),
+//     }
+// }
+
+// Expression to CSV
+fn expr_to_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("to_csv", args, 1)?;
+    let expr = &args[0].eval(env)?;
+
+    let result = match expr {
+        Expression::List(rows) => {
+            let mut writer = csv::Writer::from_writer(vec![]);
+
+            // 获取所有可能的列名（按字母顺序）
+            let mut all_keys = BTreeMap::new();
+            for row in rows.as_ref() {
+                if let Expression::Map(map) = row {
+                    for key in map.keys() {
+                        all_keys.insert(key.clone(), ());
+                    }
+                }
+            }
+            let sorted_keys: Vec<_> = all_keys.keys().collect();
+
+            // 写入标题行
+            writer.write_record(&sorted_keys).unwrap();
+
+            // 写入数据行
+            for row in rows.as_ref() {
+                if let Expression::Map(map) = row {
+                    let mut record = Vec::new();
+                    for key in &sorted_keys {
+                        // TODO while v is map/list
+                        let value = map.get(*key).map(expr_to_json_string).unwrap_or_default();
+                        record.push(value);
+                    }
+                    writer.write_record(&record).unwrap();
+                }
+            }
+
+            String::from_utf8(writer.into_inner().unwrap()).unwrap()
+        }
+        Expression::Map(map) => {
+            let mut writer = csv::Writer::from_writer(vec![]);
+            let sorted_keys: Vec<_> = map.keys().collect();
+
+            writer.write_record(&sorted_keys).unwrap();
+
+            let record: Vec<_> = sorted_keys
+                .iter()
+                .map(|k| expr_to_json_string(map.get(*k).unwrap()))
+                .collect();
+
+            writer.write_record(&record).unwrap();
+            String::from_utf8(writer.into_inner().unwrap()).unwrap()
+        }
+        o => o.to_string(),
+    };
+
+    Ok(Expression::String(result))
+}
+
+// 定义操作步骤的枚举
+#[derive(Debug)]
+enum JqStep {
+    Field(String),
+    Index(usize),
+    Wildcard,
+    Function(String, String),
+}
+
+fn jq(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("jq", args, 2)?;
+    let query = args[0].eval(env)?;
+    let input = args[1].eval(env)?;
+
+    let json_value = match input {
+        Expression::String(s) => s
+            .parse::<JsonValue>()
+            .map_err(|_| LmError::CustomError("Invalid JSON string".into()))?,
+        _ => return Err(LmError::CustomError("Input must be a JSON string".into())),
+    };
+
+    let query_result = match query {
+        Expression::String(q) => {
+            // 解析管道查询
+            let pipeline = parse_jq_pipeline(&q);
+            apply_jq_pipeline(&pipeline, &json_value)
+        }
+
+        _ => {
+            return Err(LmError::CustomError(
+                "Query must be a string or function".into(),
+            ));
+        }
+    };
+
+    Ok(Expression::String(
+        query_result.stringify().unwrap_or("".to_string()),
+    ))
+}
+
+// 解析管道查询字符串
+fn parse_jq_pipeline(query: &str) -> Vec<JqStep> {
+    let mut steps = Vec::new();
+    // 按管道符分割查询
+    for part in query.split('|').map(|s| s.trim()) {
+        if part.starts_with("select(") && part.ends_with(')') {
+            // 处理select函数
+            let arg = &part[7..part.len() - 1];
+            steps.push(JqStep::Function("select".to_string(), arg.to_string()));
+        } else if part == ".[]" {
+            // 处理通配符
+            steps.push(JqStep::Wildcard);
+        } else if part.starts_with('[') && part.ends_with(']') {
+            // 处理数组索引
+            let index_str = &part[1..part.len() - 1];
+            if let Ok(index) = index_str.parse::<usize>() {
+                steps.push(JqStep::Index(index));
+            }
+        } else if part.starts_with('.') {
+            // 处理字段访问
+            let field_name = part.trim_start_matches('.').to_string();
+            steps.push(JqStep::Field(field_name));
+        }
+    }
+    steps
+}
+
+// 应用管道查询
+fn apply_jq_pipeline(pipeline: &[JqStep], json_value: &JsonValue) -> JsonValue {
+    let mut current_value = json_value.clone();
+    for step in pipeline {
+        current_value = apply_jq_step(step, &current_value);
+    }
+    current_value
+}
+
+// 应用单个查询步骤
+fn apply_jq_step(step: &JqStep, json_value: &JsonValue) -> JsonValue {
+    match step {
+        JqStep::Field(field) => {
+            if let JsonValue::Object(obj) = json_value {
+                obj.get(field).cloned().unwrap_or(JsonValue::Null)
+            } else {
+                JsonValue::Null
+            }
+        }
+        JqStep::Index(index) => {
+            if let JsonValue::Array(arr) = json_value {
+                if *index < arr.len() {
+                    arr[*index].clone()
+                } else {
+                    JsonValue::Null
+                }
+            } else {
+                JsonValue::Null
+            }
+        }
+        JqStep::Wildcard => {
+            if let JsonValue::Array(arr) = json_value {
+                // 通配符返回整个数组
+                JsonValue::Array(arr.clone())
+            } else {
+                JsonValue::Null
+            }
+        }
+        JqStep::Function(func_name, arg) => {
+            if func_name == "select" {
+                apply_select_function(arg, json_value)
+            } else {
+                JsonValue::Null
+            }
+        }
+    }
+}
+
+// 应用select函数
+fn apply_select_function(condition: &str, json_value: &JsonValue) -> JsonValue {
+    // 简化版条件解析：只支持数字比较
+    let re = Regex::new(r"\.(\w+)\s*([><=!]+)\s*(\d+)").unwrap();
+
+    if let Some(caps) = re.captures(condition) {
+        let field = caps.get(1).unwrap().as_str();
+        let op = caps.get(2).unwrap().as_str();
+        let value: i64 = caps.get(3).unwrap().as_str().parse().unwrap();
+
+        if let JsonValue::Array(arr) = json_value {
+            let filtered: Vec<JsonValue> = arr
+                .iter()
+                .filter(|item| {
+                    if let JsonValue::Object(obj) = item {
+                        if let Some(JsonValue::Number(n)) = obj.get(field) {
+                            let n_int = *n as i64;
+                            match op {
+                                ">" => n_int > value,
+                                "<" => n_int < value,
+                                ">=" => n_int >= value,
+                                "<=" => n_int <= value,
+                                "==" | "=" => n_int == value,
+                                "!=" => n_int != value,
+                                _ => false,
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    }
+                })
+                .cloned()
+                .collect();
+
+            JsonValue::Array(filtered)
+        } else {
+            JsonValue::Null
+        }
+    } else {
+        JsonValue::Null
+    }
+}

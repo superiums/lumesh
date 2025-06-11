@@ -257,6 +257,7 @@ pub fn handle_binary(
                 "@" => index_slm(l, r),
                 "." => match (l, r) {
                     (Expression::Map(m), n) => index_slm(Expression::Map(m), n),
+                    (Expression::HMap(m), n) => index_slm(Expression::HMap(m), n),
                     (Expression::Symbol(m), Expression::Symbol(n)) => {
                         Ok(Expression::String(format!("{}.{}", m, n)))
                     }
@@ -336,6 +337,12 @@ fn index_slm(l: Expression, r: Expression) -> Result<Expression, LmError> {
 
         // 处理字典键访问
         Expression::Map(map) => {
+            let key = r.to_string(); // 自动转换Symbol/字符串
+            map.get(&key)
+                .cloned()
+                .ok_or_else(|| LmError::KeyNotFound(key))
+        }
+        Expression::HMap(map) => {
             let key = r.to_string(); // 自动转换Symbol/字符串
             map.get(&key)
                 .cloned()

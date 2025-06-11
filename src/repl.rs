@@ -91,7 +91,7 @@ pub fn run_repl(env: &mut Environment) {
         Err(e) => println!("No previous history {}", e),
     }
 
-    let pe = get_prompt_engine();
+    let pe = get_prompt_engine(env.get("LUME_PROMPT"));
     let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
 
     // 设置信号处理 (Unix 系统)

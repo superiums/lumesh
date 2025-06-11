@@ -145,21 +145,19 @@ pub fn get_prompt_engine(settings: Option<Expression>) -> Box<dyn PromptEngineCo
     match settings {
         Some(setting) => {
             match setting {
-                Expression::Map(sets) => {
-                    dbg!(sets.get("TEMPLATE"), sets.get("STARSHIP_ENABLED"));
-                    Box::new(PromptEngine {
-                        starship_enabled: sets
-                            .get("STARSHIP_ENABLED")
-                            .unwrap_or(&Expression::None)
-                            .is_truthy(),
-                        custom_template: sets.get("TEMPLATE").map(|t| t.to_string()),
-                        cache: Arc::new(Mutex::new(PromptCache {
-                            last_update: Instant::now(),
-                            content: "> ".to_string(),
-                            ttl: Duration::from_secs(2),
-                        })),
-                    })
-                }
+                Expression::Map(sets) => Box::new(PromptEngine {
+                    starship_enabled: sets
+                        .get("STARSHIP_ENABLED")
+                        .unwrap_or(&Expression::None)
+                        .is_truthy(),
+                    custom_template: sets.get("TEMPLATE").map(|t| t.to_string()),
+                    cache: Arc::new(Mutex::new(PromptCache {
+                        last_update: Instant::now(),
+                        content: "> ".to_string(),
+                        ttl: Duration::from_secs(2),
+                    })),
+                }),
+
                 _ => {
                     eprintln!("LUME_PROMPT must be a map");
                     Box::new(MyPrompt {})

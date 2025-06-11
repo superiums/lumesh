@@ -16,10 +16,10 @@ if IS_INTERACTIVE {
     # let LUME_WELCOME= "Welcome to Lumesh!"
 
     # ====== prompt
-    let LUME_PROMPT = {
-        STARSHIP_ENABLED: False,
-    #    TEMPLATE: "{cwd}|> "
-    }
+    # let LUME_PROMPT = {
+    #     STARSHIP_ENABLED: False,
+    #     TEMPLATE: "{cwd}|> "
+    # }
 
     # ====== history file
     # let LUME_HISTORY_FILE = "/tmp/lume_histroy"

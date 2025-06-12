@@ -475,17 +475,25 @@ impl<'a> TableRow<'a> {
 impl fmt::Debug for Expression {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match &self {
-            Self::String(s) => write!(f, "{:?}", s),
-            Self::Quote(inner) => write!(f, "'{:?}", inner),
+            Self::Symbol(s) => write!(f, "Symbol({:?})", s),
+            Self::Variable(s) => write!(f, "Variable({:?})", s),
+            Self::String(s) => write!(f, "String({:?})", s),
+            Self::Integer(s) => write!(f, "Integer({:?})", s),
+            Self::Float(s) => write!(f, "Float({:?})", s),
+            Self::Boolean(s) => write!(f, "Boolean({:?})", s),
+            Self::DateTime(s) => write!(f, "DateTime({:?})", s),
+            Self::FileSize(s) => write!(f, "{:?}", s),
+            Self::Range(s) => write!(f, "Range({:?})", s),
+            Self::Quote(inner) => write!(f, "Quote({:?})", inner),
             Self::Group(inner) => write!(f, "Group({:?})", inner),
             Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
             Self::Lambda(params, body) => {
-                write!(f, "Lambda{:?} -> {:?}", params, body)
+                write!(f, "Lambda{:?} -> {:?}\n", params, body)
             }
             Self::List(exprs) => {
                 write!(
                     f,
-                    "[{}]",
+                    "[{}]\n",
                     exprs
                         .as_ref()
                         .iter()
@@ -496,7 +504,7 @@ impl fmt::Debug for Expression {
             }
             Self::HMap(exprs) => write!(
                 f,
-                "{{{}}}",
+                "{{{}}}\n",
                 exprs
                     .as_ref()
                     .iter()
@@ -506,7 +514,7 @@ impl fmt::Debug for Expression {
             ),
             Self::Map(exprs) => write!(
                 f,
-                "{{{}}}",
+                "{{{}}}\n",
                 exprs
                     .as_ref()
                     .iter()
@@ -516,7 +524,7 @@ impl fmt::Debug for Expression {
             ),
             Self::Apply(g, args) => write!(
                 f,
-                "APPLY ☛  {:?} {}  ☚ ",
+                "APPLY({:?} {})\n",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))
@@ -528,7 +536,7 @@ impl fmt::Debug for Expression {
             }
             Self::Command(g, args) => write!(
                 f,
-                "COMMAND ☘  {:?} {}  ☘ ",
+                "COMMAND({:?} {})\n",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))

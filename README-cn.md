@@ -58,16 +58,16 @@ Lumesh旨在提供快速、高效和用户友好的命令行体验，通过多�
 在我们的 ChangeLog [CHANGELOG.md] 中发现更多功能。
 
 ## Wiki
-有关详细文档和指南，请访问我们的 Wiki
+有关详细文档和指南，请访问我们的 [Wiki](https://lumesh.codeberg.page).
 
-- wiki中文 [https://codeberg.org/santo/lumesh/wiki/HOME-cn]。
-- 语法手册 [https://codeberg.org/santo/lumesh/wiki/syntax-cn]。
-- 内置库手册 [https://codeberg.org/santo/lumesh/wiki/libs_cn]。
-- Bash对比 [https://codeberg.org/santo/lumesh/wiki/bash_user_guid]。
-
-- wiki-English [https://codeberg.org/santo/lumesh/wiki/HOME]
+- 语法手册 [https://lumesh.codeberg.page/zh-cn/syntax]
+- 内置函数库 libs [https://lumesh.codeberg.page/zh-cn/libs/index]
+- Bash 对比 [https://lumesh.codeberg.page/zh-cn/bash_user_guid]
+- 快捷键 [https://lumesh.codeberg.page/zh-cn/keys]
 
 [DeepWiki](https://deepwiki.com/superiums/lumesh)
+
+- wiki English [https://lumesh.codeberg.page/en/index]。
 
 ## 基准测试
 

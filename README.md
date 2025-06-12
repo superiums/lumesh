@@ -56,14 +56,15 @@ Discover more features in our [ChangeLog](CHANGELOG.md).
 
 
 ## Wiki
-For detailed documentation and guides, visit our [Wiki](https://codeberg.com/santo/lumesh/wiki).
-
-- wiki中文 [https://codeberg.org/santo/lumesh/wiki/HOME-cn]。
-- 语法手册 [https://codeberg.org/santo/lumesh/wiki/syntax-cn]。
-- 内置库手册 [https://codeberg.org/santo/lumesh/wiki/libs_cn]。
-- Bash对比 [https://codeberg.org/santo/lumesh/wiki/bash_user_guid]。
+For detailed documentation and guides, visit our [Wiki](https://lumesh.codeberg.page/en/index).
+- syntax handbook [https://lumesh.codeberg.page/en/syntax]
+- builtin libs [https://lumesh.codeberg.page/en/libs/index]
+- Bash compare [https://lumesh.codeberg.page/en/bash]
+- keys [https://lumesh.codeberg.page/en/keys]
 
 [DeepWiki](https://deepwiki.com/superiums/lumesh)
+
+- wiki中文 [https://lumesh.codeberg.page/zh-cn/index]。
 
 ## Benchmark
 

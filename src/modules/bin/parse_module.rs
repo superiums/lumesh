@@ -11,11 +11,11 @@ pub fn get() -> Expression {
     (hash_map! {
         String::from("toml") => Expression::builtin("toml", parse_toml, "parse TOML into lumesh expression"),
         String::from("json") => Expression::builtin("json", parse_json, "parse JSON into lumesh expression"),
-        String::from("csv") => Expression::builtin("csv", parse_csv, "parse JSON into lumesh expression"),
-        String::from("to_toml") => Expression::builtin("to_toml", expr_to_toml, "parse TOML into lumesh expression"),
-        String::from("to_json") => Expression::builtin("to_json", expr_to_json, "parse JSON into lumesh expression"),
-        String::from("to_csv") => Expression::builtin("to_csv", expr_to_csv, "parse JSON into lumesh expression"),
-        String::from("expr") => Expression::builtin("expr", parse_expr, "parse lumesh script"),
+        String::from("csv") => Expression::builtin("csv", parse_csv, "parse CSV into lumesh expression"),
+        String::from("to_toml") => Expression::builtin("to_toml", expr_to_toml, "parse lumesh expression into TOML"),
+        String::from("to_json") => Expression::builtin("to_json", expr_to_json, "parse lumesh expression into JSON"),
+        String::from("to_csv") => Expression::builtin("to_csv", expr_to_csv, "parse lumesh expression into CSV"),
+        String::from("expr") => Expression::builtin("expr", parse_expr, "parse script str to lumesh expression"),
         String::from("cmd") => Expression::builtin("cmd", parse_command_output,
             "parse command output into structured data"),
         String::from("jq") =>
@@ -108,7 +108,7 @@ fn parse_expr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 // Command Output Parser
-fn parse_command_output(
+pub fn parse_command_output(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
@@ -254,7 +254,7 @@ fn parse_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 }
 
 // Expression to TOML Conversion
-fn expr_to_toml(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn expr_to_toml(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_toml", args, 1)?;
     let expr = &args[0].eval(env)?;
     let toml_str = expr_to_toml_string(expr, None);
@@ -351,7 +351,7 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
 }
 
 // Expression to JSON Conversion (优化版)
-fn expr_to_json(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn expr_to_json(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("to_json", args, 1)?;
     let expr = &args[0].eval(env)?;
     let json_str = match expr {
@@ -408,7 +408,7 @@ fn expr_to_json_string(expr: &Expression) -> String {
 // }
 
 // Expression to CSV
-fn expr_to_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn expr_to_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_csv", args, 1)?;
     let expr = &args[0].eval(env)?;
 

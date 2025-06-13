@@ -47,7 +47,7 @@ if IS_INTERACTIVE {
         c: "clear",
         h: "fs.read /tmp/lume_histroy | fzf --preview '' | exec_str()",
         x: "fs.read /tmp/bookmark | fzf --preview '' | exec_str()",
-        m: 'let cmd := "$CMD_CURRENT";let s = str(cmd); if s!="" {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
+        m: 'let cmd := "$CMD_CURRENT";let s = into.str(cmd); if s!="" {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
     }
 
     # ====== abbreviations
@@ -60,6 +60,8 @@ if IS_INTERACTIVE {
     }
 
     # ====== alias
+    alias int = into.int
+    alias str = into.str
     alias each = list.map()
     alias sort = list.sort()
     alias group = list.group()

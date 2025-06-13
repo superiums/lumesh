@@ -328,7 +328,7 @@ fn now(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     }
 }
 
-fn parse(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn parse(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("parse", args, 1..=2)?;
 
     let datetime_str = match args[0].eval(env)? {

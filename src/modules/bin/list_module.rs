@@ -16,9 +16,10 @@ pub fn get() -> Expression {
         // modify
         String::from("append") => Expression::builtin("append", append, "append an element to a list"),
         String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list"),
-        String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
         String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order"),
         String::from("split_at") => Expression::builtin("split_at", split_at, "split a list at a given index"),
+        String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
+        String::from("group") => Expression::builtin("group", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
 
         // create
         String::from("concat") => Expression::builtin("concat", concat, "create a list from a variable number of arguments"),
@@ -39,7 +40,6 @@ pub fn get() -> Expression {
         // flatten
         // transpose
         String::from("transpose") => Expression::builtin("transpose", transpose, "transpose a matrix (list of lists) by switching rows and columns"),
-        String::from("group") => Expression::builtin("group", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
         String::from("chunk") => Expression::builtin("chunk", chunk, "chunk a list into lists of n elements"),
         String::from("foldl") => Expression::builtin("foldl", foldl, "fold a list from the left"),
         String::from("foldr") => Expression::builtin("foldr", foldr, "fold a list from the right"),

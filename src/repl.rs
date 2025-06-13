@@ -26,6 +26,7 @@ use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
+use crate::expression::alias::get_alias_tips;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::modules::get_builtin_tips;
 
@@ -297,6 +298,7 @@ fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper
     };
     cmds.extend(get_builtin_tips());
     cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());
+    cmds.extend(get_alias_tips());
     let helper = LumeHelper {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),

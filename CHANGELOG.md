@@ -1,4 +1,14 @@
 # Changelog
+## [0.4.8]
+- part choose for path.
+- only hint in cmd place.
+- alias hint
+- full module hint. accecpt one world of hint.
+- complete and hint with builtin/cmds
+- into module
+- hint gray
+- add filesize convert.
+
 ## [0.4.7]
 - add csv
 - add jq

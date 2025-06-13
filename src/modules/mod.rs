@@ -29,7 +29,7 @@ pub fn get_builtin_tips() -> HashSet<String> {
     for (key, item) in get_builtin_map().iter() {
         match item {
             Expression::HMap(m) => {
-                tips.insert(format!("{}.\n{}", key, item));
+                tips.insert(format!("{}. \n{}", key, item));
                 for (k, _) in m.iter() {
                     tips.insert(format!("{}.{}", key, k));
                 }

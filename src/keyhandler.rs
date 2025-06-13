@@ -82,13 +82,23 @@ impl ConditionalEventHandler for LumeMoveHandler {
     ) -> Option<Cmd> {
         if ctx.has_hint() {
             let hint = ctx.hint_text().unwrap();
-            let pos = match hint.starts_with(" ") {
-                false => hint.find(" ").unwrap_or(hint.len()),
-                true => match hint.trim_start().find(" ") {
-                    Some(x) => x + 1,
-                    _ => hint.len(),
+            let pos = match hint.find("/") {
+                None => match hint.starts_with(" ") {
+                    false => hint.find(" ").unwrap_or(hint.len()),
+                    true => match hint.trim_start().find(" ") {
+                        Some(x) => x + 1,
+                        _ => hint.len(),
+                    },
                 },
+                Some(x) => {
+                    if x + 1 < hint.len() {
+                        x + 1
+                    } else {
+                        hint.len()
+                    }
+                }
             };
+
             let hintword = hint[..pos].to_string();
             // dbg!(&hint, &pos, &hintword);
             Some(Cmd::Insert(1, hintword))

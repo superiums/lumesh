@@ -222,7 +222,7 @@ pub fn run_repl(env: &mut Environment) {
             "exit" => break,
             "history" => {
                 for (i, entry) in rl.lock().unwrap().history().iter().enumerate() {
-                    println!("{}: {}", i + 1, entry);
+                    println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
                 }
             }
             _ => {
@@ -499,7 +499,8 @@ impl Hinter for LumeHelper {
                 // 扩展分隔符列表（根据需要调整）
                 if matches!(ch, ';' | '|' | '(' | '{' | '`' | '\n') {
                     segment.clear();
-                } else if !ch.is_ascii_whitespace() {
+                } else if segment.is_empty() && ch.is_ascii_whitespace() {
+                } else {
                     segment.push(ch);
                 }
                 if i == pos {
@@ -518,7 +519,7 @@ impl Hinter for LumeHelper {
                 .collect();
 
             // 权重降序, 较长的优先
-            matches.sort_by(|a, b| b.len().cmp(&a.len()));
+            matches.sort_by(|a, b| a.len().cmp(&b.len()));
             if let Some(matched) = matches.first() {
                 let suffix = &matched[segment.len()..];
                 if !suffix.is_empty() {

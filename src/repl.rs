@@ -16,8 +16,9 @@ use rustyline::{
 };
 use rustyline::{Cmd, EditMode, Modifiers, Movement};
 
+use common_macros::hash_set;
 use std::borrow::Cow;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
 
 use crate::Expression;
@@ -26,6 +27,7 @@ use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler};
+use crate::modules::get_builtin_tips;
 
 use crate::runtime::check;
 use crate::{Environment, highlight, parse_and_eval, prompt::get_prompt_engine};
@@ -251,6 +253,7 @@ struct LumeHelper {
     hinter: Arc<HistoryHinter>,
     highlighter: Arc<SyntaxHighlighter>,
     ai_client: Option<Arc<MockAIClient>>,
+    cmds: HashSet<String>,
 }
 
 fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper, FileHistory> {
@@ -268,11 +271,35 @@ fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper
 
     let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());
     let ai = ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
+    // 预定义命令列表（带权重排序）
+    // TODO add builtin cmds
+    let mut cmds: HashSet<String> = hash_set! {
+        "cd".into(),
+        "ls -l --color".into(),
+        "clear".into(),
+        "exit".into(),
+        "rm ".into(),
+        "cp -r".into(),
+        "let ".into(),
+        "fn ".into(),
+        "if ".into(),
+        "else {".into(),
+        "match ".into(),
+        "while (".into(),
+        "for i in ".into(),
+        "loop {\n".into(),
+        "break".into(),
+        "return".into(),
+        "del ".into(),
+    };
+    cmds.extend(get_builtin_tips());
+    cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());
     let helper = LumeHelper {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
         highlighter: Arc::new(SyntaxHighlighter),
         ai_client: ai,
+        cmds: cmds,
     };
     rl.set_helper(Some(helper));
     rl
@@ -341,7 +368,6 @@ impl LumeHelper {
     /// 命令补全逻辑
     fn cmd_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
         // 获取PATH_COMMANDS的锁
-        let path_commands = PATH_COMMANDS.lock().unwrap();
 
         // 计算起始位置
         let input = &line[..pos];
@@ -349,7 +375,8 @@ impl LumeHelper {
         let prefix = &input[start..];
         // dbg!(&input, &start, &prefix);
         // 过滤以prefix开头的命令
-        let mut candidates: Vec<Pair> = path_commands
+        let mut candidates: Vec<Pair> = self
+            .cmds
             .iter()
             .filter(|cmd| cmd.starts_with(prefix))
             .map(|cmd| {
@@ -484,41 +511,18 @@ impl Hinter for LumeHelper {
             }
         }
 
-        // 预定义命令列表（带权重排序）
-        // TODO add builtin cmds
-        let cmds = [
-            ("cd", 10),
-            ("ls -l --color", 9),
-            ("clear", 8),
-            ("exit", 7),
-            ("rm ", 6),
-            ("cp -r", 5),
-            // ("head ", 4),
-            // ("tail ", 3),
-            ("let ", 1),
-            ("fn ", 1),
-            ("if ", 1),
-            ("else {", 1),
-            ("match ", 1),
-            ("while (", 1),
-            ("for i in ", 1),
-            ("loop {\n", 1),
-            ("break", 1),
-            ("return", 1),
-            ("del ", 1),
-        ];
-
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {
             // 按权重排序匹配结果
-            let mut matches: Vec<_> = cmds
+            let matches: Vec<_> = self
+                .cmds
                 .iter()
-                .filter(|(cmd, _)| cmd.starts_with(&segment))
+                .filter(|cmd| cmd.starts_with(&segment))
                 .collect();
 
-            matches.sort_by(|a, b| b.1.cmp(&a.1)); // 权重降序
+            // matches.sort_by(|a, b| b.1.cmp(&a.1)); // 权重降序
 
-            if let Some((matched, _)) = matches.first() {
+            if let Some(matched) = matches.first() {
                 let suffix = &matched[segment.len()..];
                 if !suffix.is_empty() {
                     return Some(suffix.to_string());

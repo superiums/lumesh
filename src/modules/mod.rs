@@ -1,4 +1,7 @@
-use std::{collections::HashMap, sync::LazyLock};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::LazyLock,
+};
 
 use crate::Expression;
 
@@ -19,6 +22,28 @@ pub fn get_builtin(name: &str) -> Option<&Expression> {
 }
 pub fn get_builtin_map() -> HashMap<String, Expression> {
     BUILTIN.inner.clone()
+}
+pub fn get_builtin_tips() -> HashSet<String> {
+    let mut tips: HashSet<String> = HashSet::new();
+
+    for (key, item) in get_builtin_map().iter() {
+        match item {
+            Expression::HMap(m) => {
+                for (k, _) in m.iter() {
+                    tips.insert(format!("{}.{}", key, k));
+                }
+            }
+            Expression::Map(m) => {
+                for (k, _) in m.iter() {
+                    tips.insert(format!("{}.{}", key, k));
+                }
+            }
+            _ => {
+                tips.insert(key.to_owned());
+            }
+        }
+    }
+    tips
 }
 
 // use std::sync::OnceLock;

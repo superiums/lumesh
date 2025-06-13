@@ -101,28 +101,28 @@ pub fn run_repl(env: &mut Environment) {
 
     // 设置信号处理 (Unix 系统)
     // #[cfg(unix)]
-    {
-        let rl_clone = Arc::clone(&rl);
-        let running_clone = Arc::clone(&running);
-        if no_history {
-            ctrlc::set_handler(move || {
-                running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-                std::process::exit(0);
-            })
-            .expect("Error setting Ctrl-C handler");
-        } else {
-            let hist = history_file.clone();
-            ctrlc::set_handler(move || {
-                running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-                let _ = rl_clone.lock().unwrap().save_history(&hist);
-                std::process::exit(0);
-            })
-            .expect("Error setting Ctrl-C handler");
-        }
+    // {
+    let rl_clone = Arc::clone(&rl);
+    let running_clone = Arc::clone(&running);
+    if no_history {
+        ctrlc::set_handler(move || {
+            running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+            std::process::exit(0);
+        })
+        .expect("Error setting Ctrl-C handler");
+    } else {
+        let hist = history_file.clone();
+        ctrlc::set_handler(move || {
+            running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+            let _ = rl_clone.lock().unwrap().save_history(&hist);
+            std::process::exit(0);
+        })
+        .expect("Error setting Ctrl-C handler");
     }
+    // }
 
-    // key binding
-
+    // =======key binding=======
+    // 1. edit
     rl.lock()
         .unwrap()
         .bind_sequence(KeyEvent::ctrl('j'), Cmd::CompleteHint);
@@ -137,16 +137,12 @@ pub fn run_repl(env: &mut Environment) {
         Some(s) => s.to_string(),
         _ => "sudo".to_string(),
     };
-    rl.lock()
-        .unwrap()
-        .bind_sequence(KeyEvent::alt('s'), Cmd::Insert(1, hotkey_sudo));
-    // rl.lock()
-    //     .unwrap()
-    //     .bind_sequence(KeyEvent::ctrl('m'), Cmd::CompleteBackward);
-    // rl.lock()
-    //     .unwrap()
-    //     .bind_sequence(KeyEvent::alt('f'), LumeMoveHandler::new());
-    // hotkey
+    rl.lock().unwrap().bind_sequence(
+        KeyEvent::alt('s'),
+        Cmd::Replace(Movement::BeginningOfLine, Some(hotkey_sudo)),
+    );
+
+    // 2. custom hotkey
     let hotkey_modifier = env.get("LUME_HOT_MODIFIER");
     let modifier: u8 = match hotkey_modifier {
         Some(Expression::Integer(bits)) => {
@@ -178,7 +174,7 @@ pub fn run_repl(env: &mut Environment) {
             }
         }
     }
-    // abbr
+    // 3. abbr
     let abbr = env.get("LUME_ABBREVIATIONS");
     if let Some(Expression::Map(ab)) = abbr {
         let abmap = ab
@@ -190,6 +186,7 @@ pub fn run_repl(env: &mut Environment) {
             LumeAbbrHandler::new(abmap),
         );
     }
+    // =======key binding end=======
 
     // main loop
     while running.load(std::sync::atomic::Ordering::SeqCst) {
@@ -500,14 +497,9 @@ impl Hinter for LumeHelper {
         if !line.is_empty() {
             for (i, ch) in line.chars().enumerate() {
                 // 扩展分隔符列表（根据需要调整）
-                if ch.is_whitespace()
-                    || matches!(
-                        ch,
-                        ';' | '|' | '\'' | '(' | ')' | '{' | '}' | '"' | '\\' | '`'
-                    )
-                {
+                if matches!(ch, ';' | '|' | '(' | '{' | '`' | '\n') {
                     segment.clear();
-                } else {
+                } else if !ch.is_ascii_whitespace() {
                     segment.push(ch);
                 }
                 if i == pos {

@@ -26,7 +26,7 @@ use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
-use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler};
+use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::modules::get_builtin_tips;
 
 use crate::runtime::check;
@@ -125,6 +125,9 @@ pub fn run_repl(env: &mut Environment) {
     rl.lock()
         .unwrap()
         .bind_sequence(KeyEvent::ctrl('j'), Cmd::CompleteHint);
+    rl.lock()
+        .unwrap()
+        .bind_sequence(KeyEvent::alt('j'), LumeMoveHandler::new());
     rl.lock().unwrap().bind_sequence(
         KeyEvent::ctrl('o'),
         Cmd::Replace(Movement::WholeBuffer, Some(String::from(""))),
@@ -387,7 +390,7 @@ impl LumeHelper {
                 }
             })
             .collect();
-        // 按显示名称的长度升序排序
+        // 按显示名称的长度升序排序，较短的优先
         candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
 
         Ok((start, candidates))
@@ -514,14 +517,14 @@ impl Hinter for LumeHelper {
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {
             // 按权重排序匹配结果
-            let matches: Vec<_> = self
+            let mut matches: Vec<_> = self
                 .cmds
                 .iter()
                 .filter(|cmd| cmd.starts_with(&segment))
                 .collect();
 
-            // matches.sort_by(|a, b| b.1.cmp(&a.1)); // 权重降序
-
+            // 权重降序, 较长的优先
+            matches.sort_by(|a, b| b.len().cmp(&a.len()));
             if let Some(matched) = matches.first() {
                 let suffix = &matched[segment.len()..];
                 if !suffix.is_empty() {

@@ -38,6 +38,9 @@ if IS_INTERACTIVE {
         system_prompt: "you're a lumesh shell script helper",
     }
 
+    # ====== sudo cmd for Alt+s
+    LUME_SUDO_CMD = "doas"
+
     # ====== key bindings
     # NONE:0, SHIFT:2, ALT:4, CTRL:8,
     # ALT_SHIFT:6, CTRL_SHIFT: 10, CTRL_ALT:12, CTRL_ALT_SHIFT:14

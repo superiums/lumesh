@@ -6,6 +6,7 @@ use rustyline::{
     Cmd, ConditionalEventHandler, Event, EventContext, EventHandler, Movement, RepeatCount,
 };
 
+// ---- LumeKeyHandler
 pub struct LumeKeyHandler {
     command: String,
 }
@@ -31,7 +32,7 @@ impl ConditionalEventHandler for LumeKeyHandler {
     }
 }
 
-// abbr
+// ---- LumeAbbrHandler
 pub struct LumeAbbrHandler {
     abbrs: HashMap<String, String>,
 }
@@ -60,33 +61,39 @@ impl ConditionalEventHandler for LumeAbbrHandler {
     }
 }
 // move one world
-// pub struct LumeMoveHandler {}
-// impl LumeMoveHandler {
-//     pub fn new() -> Self {
-//         Self {}
-//     }
-// }
-// impl From<LumeMoveHandler> for EventHandler {
-//     fn from(c: LumeMoveHandler) -> Self {
-//         EventHandler::Conditional(Box::new(c))
-//     }
-// }
-// impl ConditionalEventHandler for LumeMoveHandler {
-//     fn handle(
-//         &self,
-//         evt: &Event,
-//         n: RepeatCount,
-//         positive: bool,
-//         ctx: &EventContext,
-//     ) -> Option<Cmd> {
-//         if ctx.has_hint() {
-//             Some(Cmd::Move(Movement::ForwardWord(
-//                 1,
-//                 At::AfterEnd,
-//                 Word::Emacs,
-//             )))
-//         } else {
-//             return None;
-//         }
-//     }
-// }
+pub struct LumeMoveHandler {}
+impl LumeMoveHandler {
+    pub fn new() -> Self {
+        Self {}
+    }
+}
+impl From<LumeMoveHandler> for EventHandler {
+    fn from(c: LumeMoveHandler) -> Self {
+        EventHandler::Conditional(Box::new(c))
+    }
+}
+impl ConditionalEventHandler for LumeMoveHandler {
+    fn handle(
+        &self,
+        _evt: &Event,
+        _n: RepeatCount,
+        _positive: bool,
+        ctx: &EventContext,
+    ) -> Option<Cmd> {
+        if ctx.has_hint() {
+            let hint = ctx.hint_text().unwrap();
+            let pos = match hint.starts_with(" ") {
+                false => hint.find(" ").unwrap_or(hint.len()),
+                true => match hint.trim_start().find(" ") {
+                    Some(x) => x + 1,
+                    _ => hint.len(),
+                },
+            };
+            let hintword = hint[..pos].to_string();
+            // dbg!(&hint, &pos, &hintword);
+            Some(Cmd::Insert(1, hintword))
+        } else {
+            return None;
+        }
+    }
+}

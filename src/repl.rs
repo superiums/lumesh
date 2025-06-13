@@ -36,6 +36,8 @@ use std::sync::{Arc, Mutex};
 
 // ANSI 转义码
 const GREEN_BOLD: &str = "\x1b[1;32m";
+const GRAY: &str = "\x1b[38;5;246m";
+// const GRAY2: &str = "\x1b[38;5;249m";
 // const RED: &str = "\x1b[31m";
 const RESET: &str = "\x1b[0m";
 // 使用 Arc<Mutex> 包装编辑器
@@ -345,17 +347,19 @@ impl LumeHelper {
         let input = &line[..pos];
         let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);
         let prefix = &input[start..];
-
+        // dbg!(&input, &start, &prefix);
         // 过滤以prefix开头的命令
         let mut candidates: Vec<Pair> = path_commands
             .iter()
             .filter(|cmd| cmd.starts_with(prefix))
-            .map(|cmd| Pair {
-                display: cmd.clone(),
-                replacement: cmd.clone(),
+            .map(|cmd| {
+                // dbg!(&cmd);
+                Pair {
+                    display: format!("{}{}{}", GRAY, cmd, RESET),
+                    replacement: cmd.clone(),
+                }
             })
             .collect();
-
         // 按显示名称的长度升序排序
         candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
 
@@ -411,6 +415,19 @@ impl Highlighter for LumeHelper {
     fn highlight<'l>(&self, line: &'l str, pos: usize) -> Cow<'l, str> {
         self.highlighter.highlight(line, pos)
     }
+    fn highlight_hint<'h>(&self, hint: &'h str) -> Cow<'h, str> {
+        self.highlighter.highlight_hint(hint)
+    }
+    // fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
+    //     &'s self,
+    //     prompt: &'p str,
+    //     default: bool,
+    // ) -> Cow<'b, str> {
+    //     self.highlighter.highlight_prompt(prompt, default)
+    // }
+    // fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
+    //     MatchingBracketHighlighter::highlight_char(line, pos, kind)
+    // }
 }
 
 // struct InputValidator;
@@ -452,7 +469,10 @@ impl Hinter for LumeHelper {
             for (i, ch) in line.chars().enumerate() {
                 // 扩展分隔符列表（根据需要调整）
                 if ch.is_whitespace()
-                    || matches!(ch, ';' | '\'' | '(' | ')' | '{' | '}' | '"' | '\\' | '`')
+                    || matches!(
+                        ch,
+                        ';' | '|' | '\'' | '(' | ')' | '{' | '}' | '"' | '\\' | '`'
+                    )
                 {
                     segment.clear();
                 } else {
@@ -471,10 +491,10 @@ impl Hinter for LumeHelper {
             ("ls -l --color", 9),
             ("clear", 8),
             ("exit", 7),
-            ("rm -ri", 6),
+            ("rm ", 6),
             ("cp -r", 5),
-            ("head", 4),
-            ("tail", 3),
+            // ("head ", 4),
+            // ("tail ", 3),
             ("let ", 1),
             ("fn ", 1),
             ("if ", 1),
@@ -485,7 +505,7 @@ impl Hinter for LumeHelper {
             ("loop {\n", 1),
             ("break", 1),
             ("return", 1),
-            ("del", 1),
+            ("del ", 1),
         ];
 
         // 仅当有有效片段时进行匹配
@@ -537,6 +557,22 @@ impl Highlighter for SyntaxHighlighter {
         };
         Cow::Owned(colored_line)
     }
+
+    fn highlight_hint<'h>(&self, hint: &'h str) -> Cow<'h, str> {
+        // dbg!(&hint);
+        Cow::Owned(format!("{}{}{}", GRAY, hint, RESET))
+    }
+
+    // fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
+    //     &'s self,
+    //     prompt: &'p str,
+    //     default: bool,
+    // ) -> Cow<'b, str> {
+    //     // dbg!(&prompt);
+    //     let _ = default;
+    //     // Borrowed(prompt)
+    //     Cow::Owned(format!("{}{}{}", GREEN_BOLD, prompt, RESET))
+    // }
 }
 // fn check_balanced(input: &str) -> bool {
 //     let mut stack = Vec::new();

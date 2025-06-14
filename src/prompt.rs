@@ -5,7 +5,7 @@ use std::process::{Command, Stdio};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use crate::Expression;
+use crate::{Environment, Expression};
 
 // 提示符状态缓存
 #[derive(Clone)]
@@ -19,6 +19,7 @@ struct PromptCache {
 struct PromptEngine {
     starship_enabled: bool,
     custom_template: Option<String>,
+    template_func: Option<Expression>,
     cache: Arc<Mutex<PromptCache>>,
 }
 pub trait PromptEngineCommon {
@@ -43,6 +44,7 @@ impl PromptEngineCommon for MyPrompt {
 impl PromptEngineCommon for PromptEngine {
     // 核心提示符生成方法
     fn get_prompt(&self) -> String {
+        // dbg!("getting prompt");
         // 1. 检查缓存有效性
         if let Ok(cache) = self.cache.lock() {
             if cache.last_update.elapsed() < cache.ttl {
@@ -51,7 +53,11 @@ impl PromptEngineCommon for PromptEngine {
         }
 
         // 2. 生成新提示符
-        let prompt = if let Some(template) = &self.custom_template {
+        // dbg!("rendering prompt");
+        let prompt = if let Some(func) = &self.template_func {
+            self.render_from_func(func)
+        } else if let Some(template) = &self.custom_template {
+            // dbg!("rendering template");
             self.render_template(template)
         } else if self.starship_enabled {
             self.get_starship_prompt()
@@ -96,7 +102,25 @@ impl PromptEngine {
     // pub fn set_template(&mut self, template: String) {
     //     self.custom_template = Some(template);
     // }
-
+    fn render_from_func(&self, func: &Expression) -> String {
+        // dbg!(&func.type_name());
+        if let Ok(cwd) = env::current_dir() {
+            if let Some(cwd_str) = cwd.to_str() {
+                let r = func
+                    .apply(vec![Expression::String(cwd_str.to_string())])
+                    .eval(&mut Environment::new());
+                dbg!(&r);
+                match r {
+                    Ok(s) => s.to_string(),
+                    _ => self.default_prompt(),
+                }
+            } else {
+                self.default_prompt()
+            }
+        } else {
+            self.default_prompt()
+        }
+    }
     fn render_template(&self, template: &str) -> String {
         // 实现简单的占位符替换
         let mut result = template.to_string();
@@ -220,7 +244,11 @@ pub fn get_prompt_engine(
             match setting {
                 Expression::Map(sets) => Box::new(PromptEngine {
                     starship_enabled: sets.get("STARSHIP_ENABLED").is_some_and(|s| s.is_truthy()),
-                    custom_template: template.map(|t| t.to_string()),
+                    custom_template: template.clone().map(|t| t.to_string()),
+                    template_func: template.and_then(|f| match f {
+                        Expression::Lambda(..) => Some(f),
+                        _ => None,
+                    }),
                     cache: Arc::new(Mutex::new(PromptCache {
                         last_update: Instant::now()
                             .checked_sub(Duration::from_secs(360))
@@ -249,7 +277,11 @@ pub fn get_prompt_engine(
         }
         _ if template.is_some() => Box::new(PromptEngine {
             starship_enabled: false,
-            custom_template: template.map(|t| t.to_string()),
+            custom_template: template.clone().map(|t| t.to_string()),
+            template_func: template.and_then(|f| match f {
+                Expression::Lambda(..) => Some(f),
+                _ => None,
+            }),
             cache: Arc::new(Mutex::new(PromptCache {
                 last_update: Instant::now()
                     .checked_sub(Duration::from_secs(360))

@@ -19,10 +19,10 @@ if IS_INTERACTIVE {
     # avaluable tmplate: $CWD, $CWD_SHORT
     let LUME_PROMPT_MODE = {
         STARSHIP_ENABLED: False,
-        EVAL_EVERYTIME: False,
-        TTL_SECS: 360
+        TTL_SECS: 2
     }
-    let LUME_PROMPT_TEMPLATE = (fmt.blue($CWD_SHORT) + fmt.yellow(fmt.bold(">> ")))
+    # let LUME_PROMPT_TEMPLATE = (fmt.blue($CWD_SHORT) + fmt.yellow(fmt.bold(">> ")))
+    let LUME_PROMPT_TEMPLATE := x -> fmt.blue(x) + fmt.green(fmt.bold("|> "))
 
     # ====== history file
     # let LUME_HISTORY_FILE = "/tmp/lume_histroy"

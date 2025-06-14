@@ -29,14 +29,14 @@ pub fn get() -> Expression {
             String::from("cyan") => Expression::builtin("cyan", cyan, "convert text to cyan on the console"),
             String::from("white") => Expression::builtin("white", white, "convert text to white on the console"),
             // dark
-                String::from("dark_black") => Expression::builtin("dark_black", dark_black, "convert text to black on the console"),
-                String::from("dark_red") => Expression::builtin("dark_red", dark_red, "convert text to red on the console"),
-                String::from("dark_green") => Expression::builtin("dark_green", dark_green, "convert text to green on the console"),
-                String::from("dark_yellow") => Expression::builtin("dark_yellow", dark_yellow, "convert text to yellow on the console"),
-                String::from("dark_blue") => Expression::builtin("dark_blue", dark_blue, "convert text to blue on the console"),
-                String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "convert text to magenta on the console"),
-                String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "convert text to cyan on the console"),
-                String::from("dark_white") => Expression::builtin("dark_white", dark_white, "convert text to white on the console"),
+            String::from("dark_black") => Expression::builtin("dark_black", dark_black, "convert text to black on the console"),
+            String::from("dark_red") => Expression::builtin("dark_red", dark_red, "convert text to red on the console"),
+            String::from("dark_green") => Expression::builtin("dark_green", dark_green, "convert text to green on the console"),
+            String::from("dark_yellow") => Expression::builtin("dark_yellow", dark_yellow, "convert text to yellow on the console"),
+            String::from("dark_blue") => Expression::builtin("dark_blue", dark_blue, "convert text to blue on the console"),
+            String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "convert text to magenta on the console"),
+            String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "convert text to cyan on the console"),
+            String::from("dark_white") => Expression::builtin("dark_white", dark_white, "convert text to white on the console"),
 
         })
         .into()

@@ -96,7 +96,6 @@ pub fn run_repl(env: &mut Environment) {
         Err(e) => println!("No previous history {}", e),
     }
 
-    let pe = get_prompt_engine(env.get("LUME_PROMPT_MODE"), env.get("LUME_PROMPT_TEMPLATE"));
     let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
 
     // 设置信号处理 (Unix 系统)
@@ -189,6 +188,10 @@ pub fn run_repl(env: &mut Environment) {
     // =======key binding end=======
 
     // main loop
+    let pe = get_prompt_engine(
+        env.get("LUME_PROMPT_SETTINGS"),
+        env.get("LUME_PROMPT_TEMPLATE"),
+    );
     while running.load(std::sync::atomic::Ordering::SeqCst) {
         let prompt = pe.get_prompt();
 
@@ -291,6 +294,7 @@ fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper
         "loop {\n".into(),
         "break".into(),
         "return".into(),
+        "history".into(),
         "del ".into(),
     };
     cmds.extend(get_builtin_tips());

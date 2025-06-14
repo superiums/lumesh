@@ -17,7 +17,7 @@ struct PromptCache {
 
 #[derive(Clone)]
 struct PromptEngine {
-    starship_enabled: bool,
+    mode: u8,
     custom_template: Option<String>,
     template_func: Option<Expression>,
     cache: Arc<Mutex<PromptCache>>,
@@ -26,21 +26,21 @@ pub trait PromptEngineCommon {
     fn get_prompt(&self) -> String;
     fn get_incomplete_prompt(&self) -> String;
 }
-struct MyPrompt {}
+// struct MyPrompt {}
 
-impl PromptEngineCommon for MyPrompt {
-    fn get_prompt(&self) -> String {
-        if let Ok(cwd) = env::current_dir() {
-            if let Some(cwd_str) = cwd.to_str() {
-                return format!("\x1b[1;34m(lumesh)\x1b[0m{} \x1b[32m❯\x1b[0m ", cwd_str);
-            }
-        }
-        ">> ".into()
-    }
-    fn get_incomplete_prompt(&self) -> String {
-        "... ".into()
-    }
-}
+// impl PromptEngineCommon for MyPrompt {
+//     fn get_prompt(&self) -> String {
+//         if let Ok(cwd) = env::current_dir() {
+//             if let Some(cwd_str) = cwd.to_str() {
+//                 return format!("\x1b[1;34m(lumesh)\x1b[0m{} \x1b[32m❯\x1b[0m ", cwd_str);
+//             }
+//         }
+//         ">> ".into()
+//     }
+//     fn get_incomplete_prompt(&self) -> String {
+//         "... ".into()
+//     }
+// }
 impl PromptEngineCommon for PromptEngine {
     // 核心提示符生成方法
     fn get_prompt(&self) -> String {
@@ -53,18 +53,33 @@ impl PromptEngineCommon for PromptEngine {
         }
 
         // 2. 生成新提示符
-        // dbg!("rendering prompt");
-        let prompt = if let Some(func) = &self.template_func {
-            self.render_from_func(func)
-        } else if let Some(template) = &self.custom_template {
-            // dbg!("rendering template");
-            self.render_template(template)
-        } else if self.starship_enabled {
-            self.get_starship_prompt()
-                .unwrap_or_else(|| "> ".to_string())
-        } else {
-            self.default_prompt()
+        let prompt = match self.mode {
+            1 => {
+                if let Some(func) = &self.template_func {
+                    self.render_from_func(func)
+                } else if let Some(template) = &self.custom_template {
+                    self.render_template(template)
+                } else {
+                    self.default_prompt()
+                }
+            }
+            2 => self
+                .get_starship_prompt()
+                .unwrap_or_else(|| self.default_prompt()),
+            _ => self.default_prompt(),
         };
+        // // dbg!("rendering prompt");
+        // let prompt = if let Some(func) = &self.template_func {
+        //     self.render_from_func(func)
+        // } else if let Some(template) = &self.custom_template {
+        //     // dbg!("rendering template");
+        //     self.render_template(template)
+        // } else if self.starship_enabled {
+        //     self.get_starship_prompt()
+        //         .unwrap_or_else(|| "> ".to_string())
+        // } else {
+        //     self.default_prompt()
+        // };
 
         // 3. 更新缓存
         if let Ok(mut cache) = self.cache.lock() {
@@ -109,17 +124,13 @@ impl PromptEngine {
                 let r = func
                     .apply(vec![Expression::String(cwd_str.to_string())])
                     .eval(&mut Environment::new());
-                dbg!(&r);
-                match r {
+                return match r {
                     Ok(s) => s.to_string(),
                     _ => self.default_prompt(),
-                }
-            } else {
-                self.default_prompt()
+                };
             }
-        } else {
-            self.default_prompt()
         }
+        self.default_prompt()
     }
     fn render_template(&self, template: &str) -> String {
         // 实现简单的占位符替换
@@ -166,15 +177,12 @@ impl PromptEngine {
 
     fn default_prompt(&self) -> String {
         // 简约但有用的默认提示符
-        env::current_dir()
-            .map(|p| {
-                if let Some(s) = p.file_name().and_then(|s| s.to_str()) {
-                    format!("{}> ", s)
-                } else {
-                    "> ".to_string()
-                }
-            })
-            .unwrap_or("> ".to_string())
+        if let Ok(cwd) = env::current_dir() {
+            if let Some(cwd_str) = cwd.to_str() {
+                return format!("\x1b[1;34m(lumesh)\x1b[0m{} \x1b[32m❯\x1b[0m ", cwd_str);
+            }
+        }
+        ">> ".into()
     }
 }
 
@@ -236,60 +244,48 @@ fn get_short_path(path: &Path) -> String {
 }
 
 pub fn get_prompt_engine(
-    modes: Option<Expression>,
+    settings: Option<Expression>,
     template: Option<Expression>,
 ) -> Box<dyn PromptEngineCommon> {
-    match modes {
-        Some(setting) => {
-            match setting {
-                Expression::Map(sets) => Box::new(PromptEngine {
-                    starship_enabled: sets.get("STARSHIP_ENABLED").is_some_and(|s| s.is_truthy()),
-                    custom_template: template.clone().map(|t| t.to_string()),
-                    template_func: template.and_then(|f| match f {
-                        Expression::Lambda(..) => Some(f),
-                        _ => None,
-                    }),
-                    cache: Arc::new(Mutex::new(PromptCache {
-                        last_update: Instant::now()
-                            .checked_sub(Duration::from_secs(360))
-                            .unwrap(),
-                        content: "> ".to_string(),
-                        ttl: Duration::from_secs(
-                            sets.get("TTL_SECS")
-                                .and_then(|t| match t {
-                                    Expression::Integer(ttl) => Some(*ttl as u64),
-                                    _ => Some(2),
-                                })
-                                .unwrap_or(2),
-                        ),
-                    })),
-                }),
-
-                _ => {
-                    eprintln!("LUME_PROMPT_MODE must be a map");
-                    Box::new(MyPrompt {})
-                }
-            }
-
-            // Initialize it with a custom template
-            // prompt_engine.set_template("{cwd}|> ".to_string());
-            // Box::new(prompt_engine)
+    let (mode, ttl) = match settings {
+        Some(Expression::Map(sets)) => {
+            let ttl = sets
+                .get("TTL_SECS")
+                .and_then(|t| match t {
+                    Expression::Integer(ttl) => Some(*ttl as u64),
+                    _ => Some(2),
+                })
+                .unwrap_or(2);
+            let mode = sets
+                .get("MODE")
+                .map(|s| match s {
+                    Expression::Integer(m) => *m as u8,
+                    _ => 0,
+                })
+                .unwrap_or(0);
+            (mode, ttl)
         }
-        _ if template.is_some() => Box::new(PromptEngine {
-            starship_enabled: false,
-            custom_template: template.clone().map(|t| t.to_string()),
-            template_func: template.and_then(|f| match f {
-                Expression::Lambda(..) => Some(f),
-                _ => None,
-            }),
-            cache: Arc::new(Mutex::new(PromptCache {
-                last_update: Instant::now()
-                    .checked_sub(Duration::from_secs(360))
-                    .unwrap(),
-                content: "> ".to_string(),
-                ttl: Duration::from_secs(2),
-            })),
+
+        _ => (0, 2),
+    };
+
+    Box::new(PromptEngine {
+        mode,
+        template_func: template.clone().and_then(|f| match f {
+            Expression::Lambda(..) => Some(f),
+            Expression::Function(..) => Some(f),
+            _ => None,
         }),
-        _ => Box::new(MyPrompt {}),
-    }
+        custom_template: template.and_then(|t| match t {
+            Expression::String(p) => Some(p),
+            _ => None,
+        }),
+        cache: Arc::new(Mutex::new(PromptCache {
+            content: "> ".to_string(),
+            ttl: Duration::from_secs(ttl),
+            last_update: Instant::now()
+                .checked_sub(Duration::from_secs(ttl))
+                .unwrap(),
+        })),
+    })
 }

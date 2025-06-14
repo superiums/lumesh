@@ -2,7 +2,6 @@ use crate::{Environment, Expression, PRINT_DIRECT, SyntaxError};
 use crate::{SyntaxErrorKind, parse_script};
 use std::io::{self, Write};
 use std::path::PathBuf;
-const INTRO_PRELUDE: &str = include_str!("config/config.lsh");
 
 // pub fn run_text(text: &str, env: &mut Environment) -> Result<Expression, Error> {
 //     parse(text)?.eval(env)
@@ -131,6 +130,8 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
 }
 
 pub fn init_config(env: &mut Environment) {
+    const INTRO_PRELUDE: &str = include_str!("config/config.lm");
+
     let profile = match env.get("LUME_PROFILE") {
         Some(p) => PathBuf::from(p.to_string()),
         _ => match dirs::config_dir() {
@@ -141,7 +142,7 @@ pub fn init_config(env: &mut Environment) {
                         eprintln!("Error while writing prelude: {}", e);
                     }
                 }
-                config_path.join("config.lsh")
+                config_path.join("config.lm")
             }
             _ => PathBuf::from(".lume_config"),
         },

@@ -140,7 +140,7 @@ let LUME_AI_CONFIG = {
 - add alias
 - custom profile, no history mode.
 - read config
-default config in `$config_dir/lumesh/config.lsh`
+default config in `$config_dir/lumesh/config.lm`
 or specify your own via `lume -c your/path`
 - allow mutline map, and tailing with `,`
 - parse cmd after = as string/symbol.
@@ -274,7 +274,7 @@ let _* = (x,y) -> x + y
 
   now config files moved to `dirs.config`.
 
-  in linux, it's `~/.config/lumesh/config.lsh`
+  in linux, it's `~/.config/lumesh/config.lm`
 
 - system env added. unifiy status env.
 

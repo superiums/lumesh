@@ -63,7 +63,7 @@ jobs:
           # cp -r src/wiki/syntax.md doc
           # cp -r src/wiki/lib.md doc
           # cp -r src/wiki/keys.md doc
-          cp src/config/config.lsh doc
+          cp src/config/config.lm doc
           # echo "Sample Documentation" > doc/README.md
 
       - name: Create compressed files

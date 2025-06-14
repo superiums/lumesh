@@ -1,5 +1,6 @@
 use std::env;
 
+use std::path::Path;
 use std::process::{Command, Stdio};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
@@ -64,7 +65,7 @@ impl PromptEngineCommon for PromptEngine {
             *cache = PromptCache {
                 last_update: Instant::now(),
                 content: prompt.clone(),
-                ttl: Duration::from_secs(2),
+                ttl: cache.ttl,
             };
         }
 
@@ -102,10 +103,22 @@ impl PromptEngine {
 
         if let Ok(cwd) = env::current_dir() {
             if let Some(cwd_str) = cwd.to_str() {
-                result = result.replace("{cwd}", cwd_str);
+                result = if result.contains("$CWD_SHORT") {
+                    result.replace("$CWD_SHORT", &get_short_path(cwd.as_path()))
+                } else {
+                    #[cfg(unix)]
+                    if cwd_str.starts_with("/home/") {
+                        if let Some(home_dir) = dirs::home_dir() {
+                            let cwd_new_str = cwd_str
+                                .to_owned()
+                                .replace(home_dir.to_string_lossy().as_ref(), "~");
+                            return result.replace("$CWD", &cwd_new_str);
+                        }
+                    }
+                    result.replace("$CWD", cwd_str)
+                };
             }
         }
-        dbg!(&result);
         // 可以扩展更多占位符...
         result
     }
@@ -141,25 +154,91 @@ impl PromptEngine {
     }
 }
 
-pub fn get_prompt_engine(settings: Option<Expression>) -> Box<dyn PromptEngineCommon> {
-    match settings {
+fn get_short_path(path: &Path) -> String {
+    // 将路径的组件收集到一个向量中
+    let components = path.components().collect::<Vec<_>>();
+    // dbg!(&components, components.len());
+
+    #[cfg(windows)]
+    let is_home = false;
+
+    #[cfg(unix)]
+    let is_home = dirs::home_dir().is_some_and(|home_dir| path.starts_with(home_dir));
+    #[cfg(unix)]
+    if is_home {
+        if let Some(home_dir) = dirs::home_dir() {
+            if components.len() < 6 {
+                return path
+                    .to_string_lossy()
+                    .to_string()
+                    .replace(home_dir.to_str().unwrap(), "~");
+            }
+        }
+    }
+
+    // 检查路径组件数量
+
+    if !is_home && components.len() < 5 {
+        return path.to_string_lossy().to_string();
+    }
+
+    let first_two: Vec<String> = match is_home {
+        true => vec![
+            "~/".to_string(),
+            components
+                .get(3)
+                .take()
+                .unwrap()
+                .as_os_str()
+                .to_string_lossy()
+                .to_string(),
+        ],
+        false => components
+            .iter()
+            .take(2)
+            .map(|comp| comp.as_os_str().to_string_lossy().to_string())
+            .collect(),
+    };
+    let last_two: Vec<String> = components
+        .iter()
+        .rev()
+        .take(2)
+        .rev()
+        .map(|comp| comp.as_os_str().to_string_lossy().to_string())
+        .collect();
+
+    // 生成短路径格式
+    format!("{}.../{}", first_two.join(""), last_two.join("/"))
+}
+
+pub fn get_prompt_engine(
+    modes: Option<Expression>,
+    template: Option<Expression>,
+) -> Box<dyn PromptEngineCommon> {
+    match modes {
         Some(setting) => {
             match setting {
                 Expression::Map(sets) => Box::new(PromptEngine {
-                    starship_enabled: sets
-                        .get("STARSHIP_ENABLED")
-                        .unwrap_or(&Expression::None)
-                        .is_truthy(),
-                    custom_template: sets.get("TEMPLATE").map(|t| t.to_string()),
+                    starship_enabled: sets.get("STARSHIP_ENABLED").is_some_and(|s| s.is_truthy()),
+                    custom_template: template.map(|t| t.to_string()),
                     cache: Arc::new(Mutex::new(PromptCache {
-                        last_update: Instant::now(),
+                        last_update: Instant::now()
+                            .checked_sub(Duration::from_secs(360))
+                            .unwrap(),
                         content: "> ".to_string(),
-                        ttl: Duration::from_secs(2),
+                        ttl: Duration::from_secs(
+                            sets.get("TTL_SECS")
+                                .and_then(|t| match t {
+                                    Expression::Integer(ttl) => Some(*ttl as u64),
+                                    _ => Some(2),
+                                })
+                                .unwrap_or(2),
+                        ),
                     })),
                 }),
 
                 _ => {
-                    eprintln!("LUME_PROMPT must be a map");
+                    eprintln!("LUME_PROMPT_MODE must be a map");
                     Box::new(MyPrompt {})
                 }
             }
@@ -168,6 +247,17 @@ pub fn get_prompt_engine(settings: Option<Expression>) -> Box<dyn PromptEngineCo
             // prompt_engine.set_template("{cwd}|> ".to_string());
             // Box::new(prompt_engine)
         }
+        _ if template.is_some() => Box::new(PromptEngine {
+            starship_enabled: false,
+            custom_template: template.map(|t| t.to_string()),
+            cache: Arc::new(Mutex::new(PromptCache {
+                last_update: Instant::now()
+                    .checked_sub(Duration::from_secs(360))
+                    .unwrap(),
+                content: "> ".to_string(),
+                ttl: Duration::from_secs(2),
+            })),
+        }),
         _ => Box::new(MyPrompt {}),
     }
 }

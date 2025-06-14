@@ -16,10 +16,13 @@ if IS_INTERACTIVE {
     # let LUME_WELCOME= "Welcome to Lumesh!"
 
     # ====== prompt
-    # let LUME_PROMPT = {
-    #     STARSHIP_ENABLED: False,
-    #     TEMPLATE: "{cwd}|> "
-    # }
+    # avaluable tmplate: $CWD, $CWD_SHORT
+    let LUME_PROMPT_MODE = {
+        STARSHIP_ENABLED: False,
+        EVAL_EVERYTIME: False,
+        TTL_SECS: 360
+    }
+    let LUME_PROMPT_TEMPLATE = (fmt.blue($CWD_SHORT) + fmt.yellow(fmt.bold(">> ")))
 
     # ====== history file
     # let LUME_HISTORY_FILE = "/tmp/lume_histroy"

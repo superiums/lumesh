@@ -58,7 +58,7 @@ macro_rules! fmt_shared {
 
             // While 修改
             Self::While(cond, body) => write!($f, "while {} {}", cond, body),
-            Self::Loop(inner) => write!($f, "(loop {})", inner),
+            Self::Loop(inner) => write!($f, "loop {}", inner),
 
             // Lambda 修改
 
@@ -200,7 +200,7 @@ macro_rules! fmt_shared {
                         }
                         _ => {
                             // Format the value to the width of the terminal / 5
-                            let formatted = format!("{:?}", val);
+                            let formatted = format!("{}", val);
                             let w = specified_width / 3;
                             t.add_row(row!(key, textwrap::fill(&formatted, w),));
                         }
@@ -253,7 +253,7 @@ macro_rules! fmt_shared {
                         }
                         _ => {
                             // Format the value to the width of the terminal / 5
-                            let formatted = format!("{:?}", val);
+                            let formatted = format!("{}", val);
                             let w = specified_width / 3;
                             t.add_row(row!(key, textwrap::fill(&formatted, w),));
                         }

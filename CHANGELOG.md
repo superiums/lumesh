@@ -1,4 +1,13 @@
 # Changelog
+## [0.4.9]
+- add func arg hint.
+- fix some func param position.
+- reorgnize console mode/cursor/keyboard.
+- fix map display
+- prompt with func.
+- prompt from func.
+- prompt template
+- use lm extention
 ## [0.4.8]
 - part choose for path.
 - only hint in cmd place.

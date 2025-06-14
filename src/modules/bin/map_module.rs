@@ -6,30 +6,30 @@ use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
-        // check
-        String::from("has") => Expression::builtin("has", has, "check if a map has a key"),
+        // 检查操作
+               String::from("has") => Expression::builtin("has", has, "check if a map has a key", "<key> <map>"),
 
-        // get
-        String::from("get") => Expression::builtin("get", get_path, "get value from nested map using dot notation path"),
-        String::from("items") => Expression::builtin("items", items, "get the items of a map or list"),
-        String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map"),
-        String::from("values") => Expression::builtin("values", values, "get the values of a map"),
+               // 数据获取
+               String::from("get") => Expression::builtin("get", get_path, "get value from nested map using dot notation path", "<path> <map>"),
+               String::from("items") => Expression::builtin("items", items, "get the items of a map or list", "<map>"),
+               String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map", "<map>"),
+               String::from("values") => Expression::builtin("values", values, "get the values of a map", "<map>"),
 
-        // modify
-        String::from("insert") => Expression::builtin("insert", insert, "insert a key-value pair into a map"),
-        String::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map"),
+               // 结构修改
+               String::from("insert") => Expression::builtin("insert", insert, "insert a key-value pair into a map", "<key> <value> <map>"),
+               String::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map", "<key> <map>"),
 
-        // create
-        String::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs"),
+               // 创建操作
+               String::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs", "<items>"),
 
-        // tranpose
-        String::from("union") => Expression::builtin("union", union, "combine two maps"),
-        String::from("intersect") => Expression::builtin("intersect", intersect, "get the intersection of two maps"),
-        String::from("difference") => Expression::builtin("difference", difference, "get the difference of two maps"),
-        String::from("deep_merge") => Expression::builtin("deep_merge", deep_merge, "recursively merge two or more maps"),
+               // 集合运算
+               String::from("union") => Expression::builtin("union", union, "combine two maps", "<map1> <map2>"),
+               String::from("intersect") => Expression::builtin("intersect", intersect, "get the intersection of two maps", "<map1> <map2>"),
+               String::from("difference") => Expression::builtin("difference", difference, "get the difference of two maps", "<map1> <map2>"),
+               String::from("deep_merge") => Expression::builtin("deep_merge", deep_merge, "recursively merge two or more maps", "<map1> <map2> [<map3> ...]"),
 
-        // loop
-        String::from("map") => Expression::builtin("map", map_map, "transform map keys and values with provided functions"),
+               // 转换操作
+               String::from("map") => Expression::builtin("map", map_map, "transform map keys and values with provided functions", "<key_fn> <val_fn> <map>"),
     })
     .into()
 }
@@ -213,6 +213,7 @@ fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
             "_id",
             |args, _| Ok(args.last().unwrap().clone()),
             "identity function",
+            "",
         )
     };
 

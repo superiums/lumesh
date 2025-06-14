@@ -8,6 +8,7 @@ pub struct Builtin {
     pub name: String,
     pub body: fn(&Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
     pub help: String,
+    pub hint: String,
 }
 
 impl fmt::Debug for Builtin {
@@ -32,11 +33,13 @@ impl Expression {
         name: impl ToString,
         body: fn(&Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
         help: impl ToString,
+        param_hint: impl ToString,
     ) -> Self {
         Self::Builtin(Builtin {
             name: name.to_string(),
             body,
             help: help.to_string(),
+            hint: param_hint.to_string(),
         })
     }
 

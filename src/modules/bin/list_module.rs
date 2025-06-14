@@ -6,45 +6,44 @@ use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
-        // read
-        String::from("first") => Expression::builtin("first", first, "get the first of a list"),
-        String::from("last") => Expression::builtin("last", last, "get the last of a list"),
-        String::from("nth") => Expression::builtin("nth", nth, "get the nth element of a list"),
-        String::from("take") => Expression::builtin("take", take, "take the first n elements of a list"),
-        String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list"),
+        // 读取操作
+               String::from("first") => Expression::builtin("first", first, "get the first element of a list", "<list>"),
+               String::from("last") => Expression::builtin("last", last, "get the last element of a list", "<list>"),
+               String::from("nth") => Expression::builtin("nth", nth, "get the nth element of a list", "<index> <list>"),
+               String::from("take") => Expression::builtin("take", take, "take the first n elements of a list", "<count> <list>"),
+               String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list", "<count> <list>"),
 
-        // modify
-        String::from("append") => Expression::builtin("append", append, "append an element to a list"),
-        String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list"),
-        String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order"),
-        String::from("split_at") => Expression::builtin("split_at", split_at, "split a list at a given index"),
-        String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function"),
-        String::from("group") => Expression::builtin("group", group_by, "group list elements by key function, returns list of [key, elements] pairs"),
+               // 修改操作
+               String::from("append") => Expression::builtin("append", append, "append an element to a list", "<element> <list>"),
+               String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list", "<element> <list>"),
+               String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order", "<list>"),
+               String::from("split_at") => Expression::builtin("split_at", split_at, "split a list at a given index", "<index> <list>"),
+               String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function", "[key_fn|key_list|keys...] <list>"),
+               String::from("group") => Expression::builtin("group", group_by, "group list elements by key function", "<key_fn|key> <list>"),
 
-        // create
-        String::from("concat") => Expression::builtin("concat", concat, "create a list from a variable number of arguments"),
-        String::from("from") => Expression::builtin("from", from, "create a list from range"),
+               // 创建操作
+               String::from("concat") => Expression::builtin("concat", concat, "concatenate multiple lists into one", "<list1|item1> <list2|item2> ..."),
+               String::from("from") => Expression::builtin("from", from, "create a list from a range", "<range|item...>"),
 
-        // loop, walk on
-        String::from("emulate") => Expression::builtin("emulate", emulate, "emulate over a list of index and values"),
-        String::from("map") => Expression::builtin("map", map, "map a function over a list of values"),
-        String::from("filter") => Expression::builtin("filter", filter, "filter a list of values with a condition function"),
-        String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map list elements in one pass, skipping None values"),
-        String::from("reduce") => Expression::builtin("reduce", reduce, "reduce a function over a list of values"),
-        String::from("find") => Expression::builtin("find", find, "find the index of an element in a list, returns None if not found"),
+               // 遍历操作
+               String::from("emulate") => Expression::builtin("emulate", emulate, "iterate over index-value pairs", "<list>"),
+               String::from("map") => Expression::builtin("map", map, "apply function to each element", "<fn> <list>"),
+               String::from("filter") => Expression::builtin("filter", filter, "filter elements by condition", "<fn> <list>"),
+               String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map in one pass", "<fn> <list>"),
+               String::from("reduce") => Expression::builtin("reduce", reduce, "reduce list with accumulator function", "<fn> <init> <list>"),
+               String::from("find") => Expression::builtin("find", find, "find index of matching element", "<item> <list>"),
 
-        // transfer to
-        String::from("join") => Expression::builtin("join", join, "join a list of strings with a separator"),
-        String::from("to_map") => Expression::builtin("to_map", to_map, "convert list to map using a key function (default: use items themselves as keys)"),
+               // 转换操作
+               String::from("join") => Expression::builtin("join", join, "join string list with separator", "<separator> <list>"),
+               String::from("to_map") => Expression::builtin("to_map", to_map, "convert list to map using key function", "[key_fn] [val_fn] <list>"),
 
-        // flatten
-        // transpose
-        String::from("transpose") => Expression::builtin("transpose", transpose, "transpose a matrix (list of lists) by switching rows and columns"),
-        String::from("chunk") => Expression::builtin("chunk", chunk, "chunk a list into lists of n elements"),
-        String::from("foldl") => Expression::builtin("foldl", foldl, "fold a list from the left"),
-        String::from("foldr") => Expression::builtin("foldr", foldr, "fold a list from the right"),
-        String::from("zip") => Expression::builtin("zip", zip, "zip two lists together"),
-        String::from("unzip") => Expression::builtin("unzip", unzip, "unzip a list of pairs into a pair of lists"),
+               // 结构操作
+               String::from("transpose") => Expression::builtin("transpose", transpose, "transpose matrix (list of lists)", "<matrix>"),
+               String::from("chunk") => Expression::builtin("chunk", chunk, "split list into chunks of size n", "<size> <list>"),
+               String::from("foldl") => Expression::builtin("foldl", foldl, "fold list from left with function", "<fn> <init> <list>"),
+               String::from("foldr") => Expression::builtin("foldr", foldr, "fold list from right with function", "<fn> <init> <list>"),
+               String::from("zip") => Expression::builtin("zip", zip, "zip two lists into list of pairs", "<list1> <list2>"),
+               String::from("unzip") => Expression::builtin("unzip", unzip, "unzip list of pairs into two lists", "<list_of_pairs>"),
     })
     .into()
 }

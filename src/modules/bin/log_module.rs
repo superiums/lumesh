@@ -32,16 +32,21 @@ pub fn get() -> Expression {
             String::from("error") => Expression::Integer(ERROR),
         }),
 
-        String::from("set_level") => Expression::builtin("set_level", set_log_level, "set the log level"),
-        String::from("get_level") => Expression::builtin("get_level", get_log_level, "get the log level"),
-        String::from("disable") => Expression::builtin("disable", disable_logging, "disable logging"),
-        String::from("enabled") => Expression::builtin("enabled", is_level_enabled, "check if a log level is enabled"),
-        String::from("info") => Expression::builtin("info", log_info, "log info message"),
-        String::from("warn") => Expression::builtin("warn", log_warn, "log warning message"),
-        String::from("debug") => Expression::builtin("debug", log_debug, "log debug message"),
-        String::from("error") => Expression::builtin("error", log_error, "log error message"),
-        String::from("trace") => Expression::builtin("trace", log_trace, "log trace message"),
-        String::from("echo") => Expression::builtin("echo", log_echo, "print message without formatting"),
+        // 日志级别控制
+               String::from("set_level") => Expression::builtin("set_level", set_log_level, "set the log level", "<level>"),
+               String::from("get_level") => Expression::builtin("get_level", get_log_level, "get the current log level", ""),
+               String::from("disable") => Expression::builtin("disable", disable_logging, "disable all logging output", ""),
+               String::from("enabled") => Expression::builtin("enabled", is_level_enabled, "check if a log level is enabled", "<level>"),
+
+               // 日志记录函数
+               String::from("info") => Expression::builtin("info", log_info, "log info message", "<message>"),
+               String::from("warn") => Expression::builtin("warn", log_warn, "log warning message", "<message>"),
+               String::from("debug") => Expression::builtin("debug", log_debug, "log debug message", "<message>"),
+               String::from("error") => Expression::builtin("error", log_error, "log error message", "<message>"),
+               String::from("trace") => Expression::builtin("trace", log_trace, "log trace message", "<message>"),
+
+               // 原始输出
+               String::from("echo") => Expression::builtin("echo", log_echo, "print message without formatting", "<message>"),
     }).into()
 }
 

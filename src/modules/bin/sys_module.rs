@@ -9,12 +9,12 @@ pub fn get() -> Expression {
         String::from("quote") => Expression::builtin("quote", |args, _env| {
             super::check_exact_args_len("quote", args, 1)?;
             Ok(Expression::Quote(Rc::new(args[0].clone())))
-        }, "quote an expression"),
+        }, "quote an expression","<expr>"),
 
         String::from("env") => Expression::builtin("env", |_args, env| {
             Ok(Expression::from(env.clone()))
-        }, "get the current environment as a map"),
-        String::from("vars") => Expression::builtin("vars", vars, "get a table of the defined variables"),
+        }, "get the current environment as a map",""),
+        String::from("vars") => Expression::builtin("vars", vars, "get a table of the defined variables",""),
 
         String::from("set") => Expression::builtin("set", |args, env| {
             super::check_exact_args_len("set", args, 2)?;
@@ -22,22 +22,22 @@ pub fn get() -> Expression {
             let expr = args[1].clone();
             env.define(&name, expr);
             Ok(Expression::None)
-        }, "define a variable in the current environment"),
+        }, "define a variable in the current environment","<var> <val>"),
 
         String::from("unset") => Expression::builtin("unset", |args, env| {
             super::check_exact_args_len("unset", args, 1)?;
             let name = args[0].to_string();
             env.undefine(&name);
             Ok(Expression::None)
-        }, "undefine a variable in the current environment"),
+        }, "undefine a variable in the current environment" ,"<var>"),
 
         String::from("defined") => Expression::builtin("defined", |args, env| {
             super::check_exact_args_len("defined", args, 1)?;
             let name = args[0].to_string();
             Ok(Expression::Boolean(env.is_defined(&name)))
-        }, "check if a variable is defined in the current environment"),
+        }, "check if a variable is defined in the current environment","<var>"),
 
-        String::from("err-codes") =>Expression::builtin("err-codes", |_,_| Ok(RuntimeError::codes()), "display runtime error codes"),
+        String::from("err-codes") =>Expression::builtin("err-codes", |_,_| Ok(RuntimeError::codes()), "display runtime error codes",""),
 
     })
 }

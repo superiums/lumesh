@@ -67,7 +67,10 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             match val {
                 Ok(Expression::None) => {}
                 Ok(Expression::Builtin(b)) => {
-                    println!("  >> [Builtin] {}\n{}\n", b.name, b.help);
+                    println!(
+                        "  >> [Builtin] {}\n\x1b[1;32mDescription\x1b[0m: {}\n\x1b[1;32mParams     \x1b[0m: {}\n",
+                        b.name, b.help, b.hint
+                    );
                     let _ = io::stdout().flush();
                 }
                 Ok(result) => unsafe {

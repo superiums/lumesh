@@ -11,16 +11,23 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     let into_module = hash_map! {
-            String::from("str") => Expression::builtin("str", str, "format an expression to a string"),
-            String::from("int") => Expression::builtin("int", int, "convert a float or string to an int"),
-            String::from("float") => Expression::builtin("float", float, "convert a int or string to an float"),
-            String::from("boolean") => Expression::builtin("boolean", boolean, "convert a int or string to an float"),
-            String::from("filesize") => Expression::builtin("filesize", filesize, "convert a int or string to an float"),
-            String::from("time") => Expression::builtin("time", parse, "convert a string to a datetime"),
-            String::from("table") => Expression::builtin("time", parse_command_output, "convert third-part cmd output to a table"),
-            String::from("toml") => Expression::builtin("to_toml", expr_to_toml, "parse lumesh expression into TOML"),
-            String::from("json") => Expression::builtin("to_json", expr_to_json, "parse lumesh expression into JSON"),
-            String::from("csv") => Expression::builtin("to_csv", expr_to_csv, "parse lumesh expression into CSV"),
+        // 类型转换函数（into库）
+              String::from("str") => Expression::builtin("str", str, "format an expression to a string", "<value>"),
+              String::from("int") => Expression::builtin("int", int, "convert a float or string to an int", "<value>"),
+              String::from("float") => Expression::builtin("float", float, "convert an int or string to a float", "<value>"),
+              String::from("boolean") => Expression::builtin("boolean", boolean, "convert a value to a boolean", "<value>"),
+              String::from("filesize") => Expression::builtin("filesize", filesize, "parse a string representing a file size into bytes", "<size_str>"),
+
+              // 时间解析（time库）
+              String::from("time") => Expression::builtin("time", parse, "convert a string to a datetime", "<datetime_str> [datetime_template]"),
+
+              // 解析第三方命令输出（parse库）
+              String::from("table") => Expression::builtin("table", parse_command_output, "convert third-party command output to a table", "<command_output>"),
+
+              // 序列化（parse库）
+              String::from("toml") => Expression::builtin("to_toml", expr_to_toml, "parse lumesh expression into TOML", "<expr>"),
+              String::from("json") => Expression::builtin("to_json", expr_to_json, "parse lumesh expression into JSON", "<expr>"),
+              String::from("csv") => Expression::builtin("to_csv", expr_to_csv, "parse lumesh expression into CSV", "<expr>"),
     };
     Expression::from(into_module)
 }

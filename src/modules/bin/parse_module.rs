@@ -9,17 +9,37 @@ use super::check_exact_args_len;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("toml") => Expression::builtin("toml", parse_toml, "parse TOML into lumesh expression"),
-        String::from("json") => Expression::builtin("json", parse_json, "parse JSON into lumesh expression"),
-        String::from("csv") => Expression::builtin("csv", parse_csv, "parse CSV into lumesh expression"),
-        String::from("to_toml") => Expression::builtin("to_toml", expr_to_toml, "parse lumesh expression into TOML"),
-        String::from("to_json") => Expression::builtin("to_json", expr_to_json, "parse lumesh expression into JSON"),
-        String::from("to_csv") => Expression::builtin("to_csv", expr_to_csv, "parse lumesh expression into CSV"),
-        String::from("expr") => Expression::builtin("expr", parse_expr, "parse script str to lumesh expression"),
-        String::from("cmd") => Expression::builtin("cmd", parse_command_output,
-            "parse command output into structured data"),
-        String::from("jq") =>
-               Expression::builtin("jq", jq, "Apply jq-like query to JSON or TOML data"),
+        // 数据格式解析
+             String::from("toml") => Expression::builtin("toml", parse_toml,
+                 "parse TOML into lumesh expression", "<toml_string>"),
+
+             String::from("json") => Expression::builtin("json", parse_json,
+                 "parse JSON into lumesh expression", "<json_string>"),
+
+             String::from("csv") => Expression::builtin("csv", parse_csv,
+                 "parse CSV into lumesh expression", "<csv_string>"),
+
+             // 数据格式序列化
+             String::from("to_toml") => Expression::builtin("to_toml", expr_to_toml,
+                 "parse lumesh expression into TOML", "<expression>"),
+
+             String::from("to_json") => Expression::builtin("to_json", expr_to_json,
+                 "parse lumesh expression into JSON", "<expression>"),
+
+             String::from("to_csv") => Expression::builtin("to_csv", expr_to_csv,
+                 "parse lumesh expression into CSV", "<expression>"),
+
+             // 表达式解析
+             String::from("expr") => Expression::builtin("expr", parse_expr,
+                 "parse script str to lumesh expression", "<script_string>"),
+
+             // 命令输出解析
+             String::from("cmd") => Expression::builtin("cmd", parse_command_output,
+                 "parse command output into structured data", "<cmd_output_string>"),
+
+             // 数据查询
+             String::from("jq") => Expression::builtin("jq", jq,
+                 "Apply jq-like query to JSON or TOML data", "<query_string> <json_data>"),
     })
     .into()
 }

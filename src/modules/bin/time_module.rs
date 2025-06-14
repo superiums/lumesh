@@ -8,74 +8,39 @@ use std::{collections::BTreeMap, thread, time::Duration};
 
 pub fn get() -> Expression {
     (hash_map! {
-        // 基本时间获取函数
-        String::from("sleep") => Expression::builtin("sleep", sleep,
-            "sleep for a given number of milliseconds [ms] or duration string (e.g. '1s', '2m')"),
+        // 基本时间获取
+        String::from("sleep") => Expression::builtin("sleep", sleep, "sleep for a given number of milliseconds [ms] or duration string (e.g. '1s', '2m')", "<duration>"),
+        String::from("display") => Expression::builtin("display", display, "get preformatted datetime as map with time/date/datetime/etc.", "[datetime]"),
 
-        String::from("display") => Expression::builtin("display", display,
-            "get preformatted datetime as map with time/date/datetime/etc."),
+        // 时间分量获取（参数格式统一为 [datetime]）
+        String::from("year") => Expression::builtin("year", |args, env| get_time_component(args, env, |dt| dt.year() as i64), "get year (current or from specified datetime)", "[datetime]"),
+        String::from("month") => Expression::builtin("month", |args, env| get_time_component(args, env, |dt| dt.month() as i64), "get month (1-12)", "[datetime]"),
+        String::from("weekday") => Expression::builtin("weekday", |args, env| get_time_component(args, env, |dt| dt.weekday().num_days_from_monday() as i64 + 1), "get weekday (1-7, Monday=1)", "[datetime]"),
+        String::from("day") => Expression::builtin("day", |args, env| get_time_component(args, env, |dt| dt.day() as i64), "get day of month (1-31)", "[datetime]"),
+        String::from("hour") => Expression::builtin("hour", |args, env| get_time_component(args, env, |dt| dt.hour() as i64), "get hour (0-23)", "[datetime]"),
+        String::from("minute") => Expression::builtin("minute", |args, env| get_time_component(args, env, |dt| dt.minute() as i64), "get minute (0-59)", "[datetime]"),
+        String::from("second") => Expression::builtin("second", |args, env| get_time_component(args, env, |dt| dt.second() as i64), "get second (0-59)", "[datetime]"),
+        String::from("seconds") => Expression::builtin("seconds", |args, env| get_time_component(args, env, |dt| dt.time().num_seconds_from_midnight() as i64), "get seconds since midnight", "[datetime]"),
 
-        String::from("year") => Expression::builtin("year", |args, env| get_time_component(args, env, |dt| dt.year() as i64),
-            "get year (current or from specified datetime)"),
-
-        String::from("month") => Expression::builtin("month", |args, env| get_time_component(args, env, |dt| dt.month() as i64),
-            "get month (1-12, current or from specified datetime)"),
-
-        String::from("weekday") => Expression::builtin("weekday", |args, env| get_time_component(args, env, |dt| dt.weekday().num_days_from_monday() as i64 + 1),
-            "get weekday (1-7, Monday=1, current or from specified datetime)"),
-
-        String::from("day") => Expression::builtin("day", |args, env| get_time_component(args, env, |dt| dt.day() as i64),
-            "get day of month (1-31, current or from specified datetime)"),
-
-        String::from("hour") => Expression::builtin("hour", |args, env| get_time_component(args, env, |dt| dt.hour() as i64),
-            "get hour (0-23, current or from specified datetime)"),
-
-        String::from("minute") => Expression::builtin("minute", |args, env| get_time_component(args, env, |dt| dt.minute() as i64),
-            "get minute (0-59, current or from specified datetime)"),
-
-        String::from("second") => Expression::builtin("second", |args, env| get_time_component(args, env, |dt| dt.second() as i64),
-            "get second (0-59, current or from specified datetime)"),
-
-        String::from("seconds") => Expression::builtin("seconds", |args, env| get_time_component(args, env, |dt| dt.time().num_seconds_from_midnight() as i64),
-            "get seconds since midnight (current or from specified datetime)"),
-
+        // 时间戳
         String::from("stamp") => Expression::builtin("stamp", |args, env| {
-            let dt = if args.is_empty() {
-                Utc::now()
-            } else {
-                parse_datetime_arg(&args[0], env)?.and_utc()
-            };
+            let dt = if args.is_empty() { Utc::now() } else { parse_datetime_arg(&args[0], env)?.and_utc() };
             Ok(Expression::Integer(dt.timestamp()))
-        }, "get Unix timestamp in seconds (current or from specified datetime)"),
-
+        }, "get Unix timestamp in seconds", "[datetime]"),
         String::from("stamp-ms") => Expression::builtin("stamp_ms", |args, env| {
-            let dt = if args.is_empty() {
-                Utc::now()
-            } else {
-                parse_datetime_arg(&args[0], env)?.and_utc()
-            };
+            let dt = if args.is_empty() { Utc::now() } else { parse_datetime_arg(&args[0], env)?.and_utc() };
             Ok(Expression::Integer(dt.timestamp_millis()))
-        }, "get Unix timestamp in milliseconds (current or from specified datetime)"),
+        }, "get Unix timestamp in milliseconds", "[datetime]"),
 
-        String::from("fmt") => Expression::builtin("fmt", fmt,
-            "format datetime (current or specified) using chrono format string"),
+        // 格式化
+        String::from("fmt") => Expression::builtin("fmt", fmt, "format datetime (current or specified) using chrono format string", "<format_string> [datetime]"),
 
-        // 时间操作函数
-        String::from("now") => Expression::builtin("now", now,
-            "get current datetime as DateTime object or formatted string"),
-
-        String::from("parse") => Expression::builtin("parse", parse,
-            "parse datetime string according to format and return DateTime object"),
-
-        String::from("add") => Expression::builtin("add", add,
-            "add duration to datetime (duration string like '1h30m' or components)"),
-
-        String::from("diff") => Expression::builtin("diff", diff,
-            "calculate difference between two datetimes in specified units"),
-
-        String::from("timezone") => Expression::builtin("timezone", timezone,
-            "convert datetime to different timezone (offset in hours)"),
-
+        // 核心操作
+        String::from("now") => Expression::builtin("now", now, "get current datetime as DateTime object or formatted string", "[format_string]"),
+        String::from("parse") => Expression::builtin("parse", parse, "parse datetime string according to format", "[format_string] <datetime_string>"),
+        String::from("add") => Expression::builtin("add", add, "add duration to datetime", "<duration> <datetime>"),
+        String::from("diff") => Expression::builtin("diff", diff, "calculate difference between two datetimes", "<unit> <datetime1> <datetime2>"),
+        String::from("timezone") => Expression::builtin("timezone", timezone, "convert datetime to different timezone", "<offset_hours> <datetime>"),
         String::from("is_leap_year") => Expression::builtin("is_leap_year", |args, env| {
             let year = match args.first().map(|a| a.eval(env)) {
                 Some(Ok(Expression::Integer(y))) => y,
@@ -83,17 +48,13 @@ pub fn get() -> Expression {
                 Some(Err(e)) => return Err(e.into()),
                 None => Local::now().year() as i64,
             };
-
             Ok(Expression::Boolean(NaiveDate::from_ymd_opt(year as i32, 1, 1)
                 .map(|d| d.leap_year())
                 .unwrap_or(false)))
-        }, "check if a year is a leap year"),
+        }, "check if a year is a leap year", "[year]"),
+        String::from("from_map") => Expression::builtin("from_map", from_map, "create DateTime from components", "<map>"),
+        String::from("to_string") => Expression::builtin("to_string", to_string, "convert DateTime to string", "[format_string] <datetime>")
 
-        String::from("from_map") => Expression::builtin("from_map", from_map,
-            "create DateTime from components (year, month, day[, hour, minute, second])"),
-
-        String::from("to_string") => Expression::builtin("to_string", to_string,
-            "convert DateTime to string with optional format (default: RFC3339)"),
     })
     .into()
 }
@@ -331,7 +292,7 @@ fn now(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 pub fn parse(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("parse", args, 1..=2)?;
 
-    let datetime_str = match args[0].eval(env)? {
+    let datetime_str = match args.last().unwrap().eval(env)? {
         Expression::String(s) => s,
         _ => {
             return Err(LmError::CustomError(
@@ -341,7 +302,7 @@ pub fn parse(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     };
 
     let format_str = if args.len() > 1 {
-        match args[1].eval(env)? {
+        match args[0].eval(env)? {
             Expression::String(s) => s,
             _ => {
                 return Err(LmError::CustomError(

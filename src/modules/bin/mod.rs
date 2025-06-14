@@ -53,46 +53,39 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("into") => into_module::get(),
 
         // console control
-        String::from("exit") => Expression::builtin(
-            "exit",
-            exit,
-            "exit the shell",
-        ),
-        String::from("cd") => Expression::builtin("cd", cd, "change directories"),
+        // Shell control
+                String::from("exit") => Expression::builtin("exit", exit, "exit the shell", "[status]"),
+                String::from("cd") => Expression::builtin("cd", cd, "change directories", "[path]"),
 
-        // io
-        String::from("tap") => Expression::builtin("tap", tap,"print and return result"),
-        String::from("print") => Expression::builtin("print", print,"print the arguments without a newline"),
-        String::from("println") => Expression::builtin("println", println, "print the arguments and a newline"),
-        String::from("eprint") => Expression::builtin("eprintln", eprint, "print to stderr"),
-        String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr"),
-        String::from("debug") => Expression::builtin("debug", debug, "print the debug representation of the arguments and a newline"),
-        String::from("report") => Expression::builtin("report", report, "default function for reporting values"),
-        String::from("read") => Expression::builtin("read", read, "get user input"),
+                // I/O operations
+                String::from("tap") => Expression::builtin("tap", tap, "print and return result", "<args>..."),
+                String::from("print") => Expression::builtin("print", print, "print arguments without newline", "<args>..."),
+                String::from("println") => Expression::builtin("println", println, "print arguments with newline", "<args>..."),
+                String::from("eprint") => Expression::builtin("eprint", eprint, "print to stderr without newline", "<args>..."),
+                String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr with newline", "<args>..."),
+                String::from("debug") => Expression::builtin("debug", debug, "print debug representation", "<args>..."),
+                String::from("report") => Expression::builtin("report", report, "default value reporting", "<value>"),
+                String::from("read") => Expression::builtin("read", read, "get user input", "[prompt]"),
 
-        // data
-        String::from("type") => Expression::builtin("type", get_type, "get type of data"),
-        String::from("len") => Expression::builtin("len", len, "get the length of an expression"),
-        String::from("insert") => Expression::builtin("insert", insert, "insert an item into a map or list"),
-        String::from("rev") => Expression::builtin("rev", rev, "reverse a string/list/bytes"),
-        String::from("flatten") => Expression::builtin("flatten", flatten_wrapper, "flatten a list or map"),
-        String::from("where") => Expression::builtin("where", filter_rows,
-            "filter rows in list of maps by condition"),
-        String::from("select") => Expression::builtin("select", select_columns,
-            "select columns from list of maps"),
+                // Data manipulation
+                String::from("type") => Expression::builtin("type", get_type, "get data type", "<value>"),
+                String::from("len") => Expression::builtin("len", len, "get length of expression", "<collection>"),
+                String::from("insert") => Expression::builtin("insert", insert, "insert item into collection", "<key/index> <value> <collection>"),
+                String::from("rev") => Expression::builtin("rev", rev, "reverse sequence", "<string|list|bytes>"),
+                String::from("flatten") => Expression::builtin("flatten", flatten_wrapper, "flatten nested structure", "<collection>"),
+                String::from("where") => Expression::builtin("where", filter_rows, "filter rows by condition", "<condition> <list[map]> "),
+                String::from("select") => Expression::builtin("select", select_columns, "select columns from list of maps", "<columns>...<list[map]>"),
 
-        // execute
-        String::from("repeat") => Expression::builtin("repeat", repeat, "evaluate an expression without changing the environment"),
-        String::from("eval") => Expression::builtin("eval", eval, "evaluate an expression without changing the environment"),
-        String::from("exec_str") => Expression::builtin("exec_str", exec_str, "evaluate a string"),
-        String::from("exec") => Expression::builtin("exec", exec, "evaluate an expression in the current environment"),
-        // String::from("unbind") => Expression::builtin("unbind", unbind, "unbind a variable from the environment"),
-        String::from("include") => Expression::builtin("include", include, "evaluate a file in the current environment"),
-        String::from("import") => Expression::builtin("import", import, "import a file (evaluate it in a new environment)"),
+                // Execution control
+                String::from("repeat") => Expression::builtin("repeat", repeat, "evaluate without env change", "<expression>"),
+                String::from("eval") => Expression::builtin("eval", eval, "evaluate expression", "<expression>"),
+                String::from("exec_str") => Expression::builtin("exec_str", exec_str, "evaluate string", "<string>"),
+                String::from("exec") => Expression::builtin("exec", exec, "evaluate in current env", "<expression>"),
+                String::from("include") => Expression::builtin("include", include, "evaluate file in current env", "<path>"),
+                String::from("import") => Expression::builtin("import", import, "evaluate file in new env", "<path>"),
 
-        // help
-        String::from("help") => Expression::builtin("help", help, "display lib modules"),
-
+                // Help system
+                String::from("help") => Expression::builtin("help", help, "display lib modules", "[module]")
     }
 }
 fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {

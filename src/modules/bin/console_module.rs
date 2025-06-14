@@ -4,60 +4,70 @@ use std::io::Write;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("width") => Expression::builtin("width", width, "get the width of the console"),
-        String::from("height") => Expression::builtin("height", height, "get the height of the console"),
-        String::from("write") => Expression::builtin("write", write, "write text to a specific position in the console"),
-        String::from("title") => Expression::builtin("title", title, "set the title of the console"),
-        String::from("clear") => Expression::builtin("clear", clear, "clear the console"),
-        String::from("flush") => Expression::builtin("flush", flush, "flush the console"),
-        String::from("mode_raw") => Expression::builtin("mode_raw", enable_raw_mode, "enable raw mode"),
-        String::from("mode_normal") => Expression::builtin("mode_normal", disable_raw_mode, "disable raw mode"),
-        String::from("screen_alternate") => Expression::builtin("screen_alternate", enable_alternate_screen, "enable alternate screen"),
-        String::from("screen_normal") => Expression::builtin("screen_normal", disable_alternate_screen, "disable alternate screen"),
-            // cursor
-        String::from("cursor_to") => Expression::builtin("cursor_to", cursor_to, "move the cursor to a specific position"),
-        String::from("cursor_up") => Expression::builtin("cursor_up", cursor_up, "move the cursor up"),
-        String::from("cursor_down") => Expression::builtin("cursor_down", cursor_down, "move the cursor down"),
-        String::from("cursor_left") => Expression::builtin("cursor_left", cursor_left, "move the cursor left"),
-        String::from("cursor_right") => Expression::builtin("cursor_right", cursor_right, "move the cursor right"),
-        String::from("cursor_save") => Expression::builtin("cursor_save", cursor_save, "save cursor position"),
-        String::from("cursor_restore") => Expression::builtin("cursor_restore", cursor_restore, "restore cursor position"),
-        String::from("cursor_hide") => Expression::builtin("cursor_hide", cursor_hide, "hide cursor"),
-        String::from("cursor_show") => Expression::builtin("cursor_show", cursor_show, "show cursor"),
-        // read
-        String::from("read_line") => Expression::builtin("read_line", keyboard_read_line, "read line from keyboard"),
-        String::from("read_password") => Expression::builtin("read_password", keyboard_read_password, "read password from keyboard"),
-        String::from("read_key") => Expression::builtin("read_key", keyboard_read_key, "read key from keyboard"),
-        String::from("keys") => Expression::from(hash_map! {
-            String::from("enter") => Expression::String("\n".to_string()),
-            String::from("backspace") => Expression::String("\x08".to_string()),
-            String::from("delete") => Expression::String("\x7f".to_string()),
-            String::from("left") => Expression::String("\x1b[D".to_string()),
-            String::from("right") => Expression::String("\x1b[C".to_string()),
-            String::from("up") => Expression::String("\x1b[A".to_string()),
-            String::from("down") => Expression::String("\x1b[B".to_string()),
-            String::from("home") => Expression::String("\x1b[H".to_string()),
-            String::from("end") => Expression::String("\x1b[F".to_string()),
-            String::from("page_up") => Expression::String("\x1b[5~".to_string()),
-            String::from("page_down") => Expression::String("\x1b[6~".to_string()),
-            String::from("tab") => Expression::String("\t".to_string()),
-            String::from("esc") => Expression::String("\x1b".to_string()),
-            String::from("insert") => Expression::String("\x1b[2~".to_string()),
-            String::from("f1") => Expression::String("\x1b[11~".to_string()),
-            String::from("f2") => Expression::String("\x1b[12~".to_string()),
-            String::from("f3") => Expression::String("\x1b[13~".to_string()),
-            String::from("f4") => Expression::String("\x1b[14~".to_string()),
-            String::from("f5") => Expression::String("\x1b[15~".to_string()),
-            String::from("f6") => Expression::String("\x1b[17~".to_string()),
-            String::from("f7") => Expression::String("\x1b[18~".to_string()),
-            String::from("f8") => Expression::String("\x1b[19~".to_string()),
-            String::from("f9") => Expression::String("\x1b[20~".to_string()),
-            String::from("f10") => Expression::String("\x1b[21~".to_string()),
-            String::from("f11") => Expression::String("\x1b[23~".to_string()),
-            String::from("f12") => Expression::String("\x1b[24~".to_string()),
-            String::from("null") => Expression::String("\x00".to_string()),
-            String::from("back_tab") => Expression::String("\x1b[Z".to_string()),
-        })
+
+            // Console information
+            String::from("width") => Expression::builtin("width", width, "get the width of the console", ""),
+            String::from("height") => Expression::builtin("height", height, "get the height of the console", ""),
+
+            // Output control
+            String::from("write") => Expression::builtin("write", write, "write text to a specific position in the console", "<x> <y> <text>"),
+            String::from("title") => Expression::builtin("title", title, "set the title of the console", "<string>"),
+            String::from("clear") => Expression::builtin("clear", clear, "clear the console", ""),
+            String::from("flush") => Expression::builtin("flush", flush, "flush the console", ""),
+
+            // Mode control
+            String::from("mode_raw") => Expression::builtin("mode_raw", enable_raw_mode, "enable raw mode", ""),
+            String::from("mode_normal") => Expression::builtin("mode_normal", disable_raw_mode, "disable raw mode", ""),
+            String::from("screen_alternate") => Expression::builtin("screen_alternate", enable_alternate_screen, "enable alternate screen", ""),
+            String::from("screen_normal") => Expression::builtin("screen_normal", disable_alternate_screen, "disable alternate screen", ""),
+
+            // Cursor control
+            String::from("cursor_to") => Expression::builtin("cursor_to", cursor_to, "move the cursor to a specific position", "<x> <y>"),
+            String::from("cursor_up") => Expression::builtin("cursor_up", cursor_up, "move the cursor up", "<n>"),
+            String::from("cursor_down") => Expression::builtin("cursor_down", cursor_down, "move the cursor down", "<n>"),
+            String::from("cursor_left") => Expression::builtin("cursor_left", cursor_left, "move the cursor left", "<n>"),
+            String::from("cursor_right") => Expression::builtin("cursor_right", cursor_right, "move the cursor right", "<n>"),
+            String::from("cursor_save") => Expression::builtin("cursor_save", cursor_save, "save cursor position", ""),
+            String::from("cursor_restore") => Expression::builtin("cursor_restore", cursor_restore, "restore cursor position", ""),
+            String::from("cursor_hide") => Expression::builtin("cursor_hide", cursor_hide, "hide cursor", ""),
+            String::from("cursor_show") => Expression::builtin("cursor_show", cursor_show, "show cursor", ""),
+
+            // Input control
+            String::from("read_line") => Expression::builtin("read_line", keyboard_read_line, "read line from keyboard", "[prompt]"),
+            String::from("read_password") => Expression::builtin("read_password", keyboard_read_password, "read password from keyboard", "[prompt]"),
+            String::from("read_key") => Expression::builtin("read_key", keyboard_read_key, "read key from keyboard", ""),
+
+
+            String::from("keys") => Expression::from(hash_map! {
+                String::from("enter") => Expression::String("\n".to_string()),
+                String::from("backspace") => Expression::String("\x08".to_string()),
+                String::from("delete") => Expression::String("\x7f".to_string()),
+                String::from("left") => Expression::String("\x1b[D".to_string()),
+                String::from("right") => Expression::String("\x1b[C".to_string()),
+                String::from("up") => Expression::String("\x1b[A".to_string()),
+                String::from("down") => Expression::String("\x1b[B".to_string()),
+                String::from("home") => Expression::String("\x1b[H".to_string()),
+                String::from("end") => Expression::String("\x1b[F".to_string()),
+                String::from("page_up") => Expression::String("\x1b[5~".to_string()),
+                String::from("page_down") => Expression::String("\x1b[6~".to_string()),
+                String::from("tab") => Expression::String("\t".to_string()),
+                String::from("esc") => Expression::String("\x1b".to_string()),
+                String::from("insert") => Expression::String("\x1b[2~".to_string()),
+                String::from("f1") => Expression::String("\x1b[11~".to_string()),
+                String::from("f2") => Expression::String("\x1b[12~".to_string()),
+                String::from("f3") => Expression::String("\x1b[13~".to_string()),
+                String::from("f4") => Expression::String("\x1b[14~".to_string()),
+                String::from("f5") => Expression::String("\x1b[15~".to_string()),
+                String::from("f6") => Expression::String("\x1b[17~".to_string()),
+                String::from("f7") => Expression::String("\x1b[18~".to_string()),
+                String::from("f8") => Expression::String("\x1b[19~".to_string()),
+                String::from("f9") => Expression::String("\x1b[20~".to_string()),
+                String::from("f10") => Expression::String("\x1b[21~".to_string()),
+                String::from("f11") => Expression::String("\x1b[23~".to_string()),
+                String::from("f12") => Expression::String("\x1b[24~".to_string()),
+                String::from("null") => Expression::String("\x00".to_string()),
+                String::from("back_tab") => Expression::String("\x1b[Z".to_string()),
+            })
     })
     .into()
 }

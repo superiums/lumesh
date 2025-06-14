@@ -6,12 +6,27 @@ use rand::{Rng, prelude::SliceRandom};
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("ratio") => Expression::builtin("ratio", ratio, "get a bool with ratio"),
-        String::from("alpha") => Expression::builtin("alpha", alpha, "get random char(s)"),
-        String::from("alphanum") => Expression::builtin("alphanum", alphanum, "get random alphanumeric string"),
-        String::from("int") => Expression::builtin("int", int, "get a random integer between two numbers (exclusive)"),
-        String::from("choose") => Expression::builtin("choose", choose, "choose a random item in a list"),
-        String::from("shuffle") => Expression::builtin("shuffle", shuffle, "shuffle a list randomly"),
+        // 概率函数
+        String::from("ratio") => Expression::builtin("ratio", ratio,
+            "get a bool with given probability", "<probability>"),
+
+        // 随机字符串生成
+        String::from("alpha") => Expression::builtin("alpha", alpha,
+            "get random alphabetic character(s)", "[length]"),
+
+        String::from("alphanum") => Expression::builtin("alphanum", alphanum,
+            "get random alphanumeric string", "[length]"),
+
+        // 数值随机
+        String::from("int") => Expression::builtin("int", int,
+            "get random integer in range (exclusive upper bound)", "[min] [max]"),
+
+        // 集合操作
+        String::from("choose") => Expression::builtin("choose", choose,
+            "choose random item from collection", "<list>"),
+
+        String::from("shuffle") => Expression::builtin("shuffle", shuffle,
+            "randomly shuffle collection items", "<list>"),
     })
     .into()
 }

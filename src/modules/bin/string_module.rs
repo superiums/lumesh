@@ -5,45 +5,45 @@ use common_macros::hash_map;
 pub fn get() -> Expression {
     (hash_map! {
         // justify
-        String::from("is_empty") => Expression::builtin("is_empty", is_empty, "is this string empty?"),
-        String::from("is_whitespace") => Expression::builtin("is_whitespace", is_whitespace, "is this string whitespace?"),
-        String::from("is_alpha") => Expression::builtin("is_alpha", is_alpha, "is this string alphabetic?"),
-        String::from("is_alphanumeric") => Expression::builtin("is_alphanumeric", is_alphanumeric, "is this string alphanumeric?"),
-        String::from("is_numeric") => Expression::builtin("is_numeric", is_numeric, "is this string numeric?"),
-        String::from("is_lower") => Expression::builtin("is_lower", is_lower, "is this string lowercase?"),
-        String::from("is_upper") => Expression::builtin("is_upper", is_upper, "is this string uppercase?"),
-        String::from("is_title") => Expression::builtin("is_title", is_title, "is this string title case?"),
+        // 基础检查
+        String::from("is_empty") => Expression::builtin("is_empty", is_empty, "is this string empty?", "<string>"),
+        String::from("is_whitespace") => Expression::builtin("is_whitespace", is_whitespace, "is this string whitespace?", "<string>"),
+        String::from("is_alpha") => Expression::builtin("is_alpha", is_alpha, "is this string alphabetic?", "<string>"),
+        String::from("is_alphanumeric") => Expression::builtin("is_alphanumeric", is_alphanumeric, "is this string alphanumeric?", "<string>"),
+        String::from("is_numeric") => Expression::builtin("is_numeric", is_numeric, "is this string numeric?", "<string>"),
+        String::from("is_lower") => Expression::builtin("is_lower", is_lower, "is this string lowercase?", "<string>"),
+        String::from("is_upper") => Expression::builtin("is_upper", is_upper, "is this string uppercase?", "<string>"),
+        String::from("is_title") => Expression::builtin("is_title", is_title, "is this string title case?", "<string>"),
 
-        String::from("starts_with") => Expression::builtin("starts_with", starts_with, "check if a string starts with a given substring"),
-        String::from("ends_with") => Expression::builtin("ends_with", ends_with, "check if a string ends with a given substring"),
-        String::from("contains") => Expression::builtin("contains", contains, "check if a string contains a given substring"),
+        // 子串检查
+        String::from("starts_with") => Expression::builtin("starts_with", starts_with, "check if a string starts with a given substring", "<substring> <string>"),
+        String::from("ends_with") => Expression::builtin("ends_with", ends_with, "check if a string ends with a given substring", "<substring> <string>"),
+        String::from("contains") => Expression::builtin("contains", contains, "check if a string contains a given substring", "<substring> <string>"),
 
-        // split to list
-        String::from("split") => Expression::builtin("split", split, "split a string on a given character"),
-        String::from("split_at") => Expression::builtin("split_at", split_at, "split a string at a given index"),
-        String::from("chars") => Expression::builtin("chars", chars, "split a string into characters"),
-        String::from("words") => Expression::builtin("words", words, "split a string into words"),
-        String::from("lines") => Expression::builtin("lines", lines, "split a string into lines"),
-        String::from("paragraphs") => Expression::builtin("paragraphs", paragraphs, "split a string into paragraphs"),
+        // 分割操作
+        String::from("split") => Expression::builtin("split", split, "split a string on a given character", "<delimiter> <string>"),
+        String::from("split_at") => Expression::builtin("split_at", split_at, "split a string at a given index", "<index> <string>"),
+        String::from("chars") => Expression::builtin("chars", chars, "split a string into characters", "<string>"),
+        String::from("words") => Expression::builtin("words", words, "split a string into words", "<string>"),
+        String::from("lines") => Expression::builtin("lines", lines, "split a string into lines", "<string>"),
+        String::from("paragraphs") => Expression::builtin("paragraphs", paragraphs, "split a string into paragraphs", "<string>"),
 
-        // modify
-        String::from("repeat") => Expression::builtin("repeat", repeat, "repeat string specified number of times"),
-        String::from("replace") => Expression::builtin("replace", replace, "replace all instances of a substring in a string with another string"),
-        String::from("substring") => Expression::builtin("substring", substring, "get substring from start to end indices"),
+        // 修改操作
+        String::from("repeat") => Expression::builtin("repeat", repeat, "repeat string specified number of times", "<count> <string>"),
+        String::from("replace") => Expression::builtin("replace", replace, "replace all instances of a substring", "<old> <new> <string>"),
+        String::from("substring") => Expression::builtin("substring", substring, "get substring from start to end indices", "<start> <end> <string>"),
+        String::from("remove_prefix") => Expression::builtin("remove_prefix", remove_prefix, "remove prefix if present", "<prefix> <string>"),
+        String::from("remove_suffix") => Expression::builtin("remove_suffix", remove_suffix, "remove suffix if present", "<suffix> <string>"),
+        String::from("trim") => Expression::builtin("trim", trim, "trim whitespace from a string", "<string>"),
+        String::from("trim_start") => Expression::builtin("trim_start", trim_start, "trim whitespace from the start", "<string>"),
+        String::from("trim_end") => Expression::builtin("trim_end", trim_end, "trim whitespace from the end", "<string>"),
+        String::from("to_lower") => Expression::builtin("to_lower", to_lower, "convert a string to lowercase", "<string>"),
+        String::from("to_upper") => Expression::builtin("to_upper", to_upper, "convert a string to uppercase", "<string>"),
+        String::from("to_title") => Expression::builtin("to_title", to_title, "convert a string to title case", "<string>"),
 
-        String::from("remove_prefix") => Expression::builtin("remove_prefix", remove_prefix, "remove prefix if present"),
-        String::from("remove_suffix") => Expression::builtin("remove_suffix", remove_suffix, "remove suffix if present"),
-        String::from("trim") => Expression::builtin("trim", trim, "trim whitespace from a string"),
-        String::from("trim_start") => Expression::builtin("trim_start", trim_start, "trim whitespace from the start of a string"),
-        String::from("trim_end") => Expression::builtin("trim_end", trim_end, "trim whitespace from the end of a string"),
-
-        String::from("to_lower") => Expression::builtin("to_lower", to_lower, "convert a string to lowercase"),
-        String::from("to_upper") => Expression::builtin("to_upper", to_upper, "convert a string to uppercase"),
-        String::from("to_title") => Expression::builtin("to_title", to_title, "convert a string to title case"),
-
-        // advance
-        String::from("caesar") => Expression::builtin("caesar", caesar_cipher, "encrypt a string using a caesar cipher"),
-        String::from("get_width") => Expression::builtin("get_width", get_width, "get the width of a string"),
+        // 高级操作
+        String::from("caesar") => Expression::builtin("caesar", caesar_cipher, "encrypt a string using a caesar cipher", "<shift> <string>"),
+        String::from("get_width") => Expression::builtin("get_width", get_width, "get the width of a string", "<string>")
 
     })
     .into()
@@ -54,9 +54,9 @@ pub fn get() -> Expression {
 fn caesar_cipher(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("caesar_cipher", args, 1..=2)?;
 
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args.last().unwrap().eval(env)?)?;
     let shift = if args.len() > 1 {
-        get_integer_arg(args[1].eval(env)?)?
+        get_integer_arg(args[0].eval(env)?)?
     } else {
         13
     };

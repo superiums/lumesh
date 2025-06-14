@@ -3,9 +3,9 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     (hash_map! {
-        String::from("create") => Expression::builtin("create", create, "create a text widget"),
-        String::from("joinx") => Expression::builtin("joinx", joinx, "join two widgets horizontally"),
-        String::from("joiny") => Expression::builtin("joiny", joiny, "join two widgets vertically")
+        String::from("create") => Expression::builtin("create", create, "create a text widget","<title> <content> <width> <height>"),
+        String::from("joinx") => Expression::builtin("joinx", joinx, "join two widgets horizontally","<widget1> <widget2>"),
+        String::from("joiny") => Expression::builtin("joiny", joiny, "join two widgets vertically","<widget1> <widget2>")
     })
     .into()
 }

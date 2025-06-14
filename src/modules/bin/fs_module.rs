@@ -14,30 +14,30 @@ use super::fs_ls::list_directory_wrapper;
 pub fn get() -> Expression {
     let fs_module = hash_map! {
         // get
-        String::from("dirs") => Expression::builtin("dirs", get_system_dirs, "get system directories"),
-        String::from("ls") => Expression::builtin("ls", list_directory_wrapper, "list directory contents"),
-        String::from("glob") => Expression::builtin("glob", glob_pattern, "match files with pattern"),
-        String::from("tree") => Expression::builtin("tree", get_directory_tree, "get directory tree as nested map"),
-        String::from("canon") => Expression::builtin("canon", canonicalize_path, "canonicalize path"),
+               String::from("dirs") => Expression::builtin("dirs", get_system_dirs, "get system directories", ""),
+               String::from("ls") => Expression::builtin("ls", list_directory_wrapper, "list directory contents", "[path]"),
+               String::from("glob") => Expression::builtin("glob", glob_pattern, "match files with pattern", "<pattern>"),
+               String::from("tree") => Expression::builtin("tree", get_directory_tree, "get directory tree as nested map", "[path]"),
+               String::from("canon") => Expression::builtin("canon", canonicalize_path, "canonicalize path", "<path>"),
 
-        // modify
-        String::from("mkdir") => Expression::builtin("mkdir", make_directory, "create directory"),
-        String::from("rmdir") => Expression::builtin("rmdir", remove_directory, "remove empty directory"),
-        String::from("mv") => Expression::builtin("mv", move_path_wrapper, "move path"),
-        String::from("cp") => Expression::builtin("cp", copy_path_wrapper, "copy path"),
-        String::from("rm") => Expression::builtin("rm", remove_path_wrapper, "remove path"),
+               // modify
+               String::from("mkdir") => Expression::builtin("mkdir", make_directory, "create directory", "<path>"),
+               String::from("rmdir") => Expression::builtin("rmdir", remove_directory, "remove empty directory", "<path>"),
+               String::from("mv") => Expression::builtin("mv", move_path_wrapper, "move path", "<source> <destination>"),
+               String::from("cp") => Expression::builtin("cp", copy_path_wrapper, "copy path", "<source> <destination>"),
+               String::from("rm") => Expression::builtin("rm", remove_path_wrapper, "remove path", "<path>"),
 
-        // check
-        String::from("exists") => Expression::builtin("exists", path_exists, "check if path exists"),
-        String::from("isdir") => Expression::builtin("isdir", is_directory, "check if path is directory"),
-        String::from("isfile") => Expression::builtin("isfile", is_file, "check if path is file"),
+               // check
+               String::from("exists") => Expression::builtin("exists", path_exists, "check if path exists", "<path>"),
+               String::from("isdir") => Expression::builtin("isdir", is_directory, "check if path is directory", "<path>"),
+               String::from("isfile") => Expression::builtin("isfile", is_file, "check if path is file", "<path>"),
 
-        // read/write
-        String::from("head") => Expression::builtin("head", read_file_head, "read first N lines of file"),
-        String::from("tail") => Expression::builtin("tail", read_file_tail, "read last N lines of file"),
-        String::from("read") => Expression::builtin("read", read_file, "read file contents"),
-        String::from("write") => Expression::builtin("write", write_file, "write to file"),
-        String::from("append") => Expression::builtin("append", append_to_file, "append to file"),
+               // read/write
+               String::from("head") => Expression::builtin("head", read_file_head, "read first N lines of file", "[n] <file>"),
+               String::from("tail") => Expression::builtin("tail", read_file_tail, "read last N lines of file", "[n] <file>"),
+               String::from("read") => Expression::builtin("read", read_file, "read file contents", "<file>"),
+               String::from("write") => Expression::builtin("write", write_file, "write to file", "<file> <content>"),
+               String::from("append") => Expression::builtin("append", append_to_file, "append to file", "<file> <content>"),
     };
     Expression::from(fs_module)
 }
@@ -171,16 +171,20 @@ fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, Lm
 }
 
 fn read_file_head(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("head", args, 2)?;
+    super::check_args_len("head", args, 1..=2)?;
 
-    let path = join_current_path(&args[0].eval(env)?.to_string());
-    let n = match args[1].eval(env)? {
-        Expression::Integer(n) => n,
-        _ => {
-            return Err(LmError::CustomError(
-                "Second argument must be an integer".into(),
-            ));
-        }
+    let path = join_current_path(&args.last().unwrap().eval(env)?.to_string());
+    let n = match args.len() {
+        2 => match args[0].eval(env)? {
+            Expression::Integer(n) => n,
+            _ => {
+                return Err(LmError::CustomError(
+                    "Second argument must be an integer".into(),
+                ));
+            }
+        },
+        1 => 10,
+        _ => unreachable!(),
     };
 
     let result = read_file_portion(&path, n, true)?;
@@ -188,16 +192,20 @@ fn read_file_head(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 }
 
 fn read_file_tail(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("tail", args, 2)?;
+    super::check_args_len("head", args, 1..=2)?;
 
-    let path = join_current_path(&args[0].eval(env)?.to_string());
-    let n = match args[1].eval(env)? {
-        Expression::Integer(n) => n,
-        _ => {
-            return Err(LmError::CustomError(
-                "Second argument must be an integer".into(),
-            ));
-        }
+    let path = join_current_path(&args.last().unwrap().eval(env)?.to_string());
+    let n = match args.len() {
+        2 => match args[0].eval(env)? {
+            Expression::Integer(n) => n,
+            _ => {
+                return Err(LmError::CustomError(
+                    "Second argument must be an integer".into(),
+                ));
+            }
+        },
+        1 => 10,
+        _ => unreachable!(),
     };
 
     let result = read_file_portion(&path, n, false)?;

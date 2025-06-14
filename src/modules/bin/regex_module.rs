@@ -4,16 +4,34 @@ use regex_lite::Regex;
 // 注册所有正则表达式函数
 pub fn get() -> Expression {
     (hash_map! {
-            String::from("find") => Expression::builtin("find", regex_find, "find first match with [start, end, text]"),
-            String::from("find_all") => Expression::builtin("find_all", regex_find_all, "find all matches as [[start, end, text], ...]"),
-            String::from("match") => Expression::builtin("match", regex_match, "check if text matches pattern"),
-            String::from("capture") => Expression::builtin("capture", regex_capture, "get first capture groups as [full, group1, group2, ...]"),
-            String::from("captures") => Expression::builtin("captures", regex_captures, "get all captures as [[full, group1, ...], ...]"),
-            String::from("split") => Expression::builtin("split", regex_split, "split text by pattern"),
-            String::from("replace") => Expression::builtin("replace", regex_replace, "replace all matches in text"),
-            String::from("capture_name") => Expression::builtin("capture_name", regex_capture_name, "get regex capture groups, optionally with names"),
-        })
-        .into()
+    // 匹配定位
+           String::from("find") => Expression::builtin("find", regex_find,
+               "find first regex match with [start, end, text]", "<pattern> <text>"),
+
+           String::from("find_all") => Expression::builtin("find_all", regex_find_all,
+               "find all matches as [[start, end, text], ...]", "<pattern> <text>"),
+
+           // 匹配验证
+           String::from("match") => Expression::builtin("match", regex_match,
+               "check if entire text matches pattern", "<pattern> <text>"),
+
+           // 捕获组操作
+           String::from("capture") => Expression::builtin("capture", regex_capture,
+               "get first capture groups as [full, group1, group2, ...]", "<pattern> <text>"),
+
+           String::from("captures") => Expression::builtin("captures", regex_captures,
+               "get all captures as [[full, group1, ...], ...]", "<pattern> <text>"),
+
+           String::from("capture_name") => Expression::builtin("capture_name", regex_capture_name,
+               "get regex capture groups with names", "<pattern> <text> [with_name?]"),
+
+           // 文本处理
+           String::from("split") => Expression::builtin("split", regex_split,
+               "split text by regex pattern", "<pattern> <text>"),
+
+           String::from("replace") => Expression::builtin("replace", regex_replace,
+               "replace all regex matches in text", "<pattern> <replacement> <text>"), })
+    .into()
 }
 
 // 辅助函数：验证并获取字符串参数

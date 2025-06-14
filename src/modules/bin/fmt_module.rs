@@ -4,39 +4,42 @@ use common_macros::hash_map;
 pub fn get() -> Expression {
     (hash_map! {
             // 排列
-            String::from("pad_start") => Expression::builtin("pad_start", pad_start, "pad string to specified length at start, with optional pad character"),
-            String::from("pad_end") => Expression::builtin("pad_end", pad_end, "pad string to specified length at end, with optional pad character"),
-            String::from("center") => Expression::builtin("center", center, "center string by padding both ends"),
-            String::from("wrap") => Expression::builtin("wrap", wrap, "wrap text such that it fits in a specific number of columns"),
-            String::from("format") => Expression::builtin("format", format, "format string using {} placeholders"),
+            String::from("pad_start") => Expression::builtin("pad_start", pad_start, "pad string to specified length at start", "<length> [pad_char] <string>"),
+            String::from("pad_end") => Expression::builtin("pad_end", pad_end, "pad string to specified length at end", "<length> [pad_char] <string>"),
+            String::from("center") => Expression::builtin("center", center, "center string by padding both ends", "<length> [pad_char] <string>"),
+            String::from("wrap") => Expression::builtin("wrap", wrap, "wrap text to fit in specific number of columns", "<width> <string>"),
+            String::from("format") => Expression::builtin("format", format, "format string using {} placeholders", "<format_string> <args>..."),
+
             // 样式
-            String::from("strip") => Expression::builtin("strip", strip, "strips all colors and styling from a string"),
-            String::from("href") => Expression::builtin("href", href, "create a hyperlink on the console"),
-            String::from("bold") => Expression::builtin("bold", bold, "convert text to bold on the console"),
-            String::from("faint") => Expression::builtin("faint", faint, "convert text to italics on the console"),
-            String::from("italics") => Expression::builtin("italics", italics, "convert text to italics on the console"),
-            String::from("underline") => Expression::builtin("underline", underline, "underline text on the console"),
-            String::from("blink") => Expression::builtin("blink", blink, "blink text on the console"),
-            String::from("invert") => Expression::builtin("invert", invert, "invert text on the console"),
-            String::from("strike") => Expression::builtin("strike", strike, "strike out text on the console"),
-            // 颜色
-            String::from("black") => Expression::builtin("black", black, "convert text to black on the console"),
-            String::from("red") => Expression::builtin("red", red, "convert text to red on the console"),
-            String::from("green") => Expression::builtin("green", green, "convert text to green on the console"),
-            String::from("yellow") => Expression::builtin("yellow", yellow, "convert text to yellow on the console"),
-            String::from("blue") => Expression::builtin("blue", blue, "convert text to blue on the console"),
-            String::from("magenta") => Expression::builtin("magenta", magenta, "convert text to magenta on the console"),
-            String::from("cyan") => Expression::builtin("cyan", cyan, "convert text to cyan on the console"),
-            String::from("white") => Expression::builtin("white", white, "convert text to white on the console"),
-            // dark
-            String::from("dark_black") => Expression::builtin("dark_black", dark_black, "convert text to black on the console"),
-            String::from("dark_red") => Expression::builtin("dark_red", dark_red, "convert text to red on the console"),
-            String::from("dark_green") => Expression::builtin("dark_green", dark_green, "convert text to green on the console"),
-            String::from("dark_yellow") => Expression::builtin("dark_yellow", dark_yellow, "convert text to yellow on the console"),
-            String::from("dark_blue") => Expression::builtin("dark_blue", dark_blue, "convert text to blue on the console"),
-            String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "convert text to magenta on the console"),
-            String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "convert text to cyan on the console"),
-            String::from("dark_white") => Expression::builtin("dark_white", dark_white, "convert text to white on the console"),
+            String::from("strip") => Expression::builtin("strip", strip, "remove all ANSI escape codes from string", "<string>"),
+            String::from("href") => Expression::builtin("href", href, "create terminal hyperlink", "<url> <text>"),
+            String::from("bold") => Expression::builtin("bold", bold, "apply bold styling", "<string>"),
+            String::from("faint") => Expression::builtin("faint", faint, "apply faint/dim styling", "<string>"),
+            String::from("italics") => Expression::builtin("italics", italics, "apply italic styling", "<string>"),
+            String::from("underline") => Expression::builtin("underline", underline, "apply underline styling", "<string>"),
+            String::from("blink") => Expression::builtin("blink", blink, "apply blinking effect", "<string>"),
+            String::from("invert") => Expression::builtin("invert", invert, "invert foreground/background colors", "<string>"),
+            String::from("strike") => Expression::builtin("strike", strike, "apply strikethrough styling", "<string>"),
+
+            // 标准颜色
+            String::from("black") => Expression::builtin("black", black, "apply black foreground", "<string>"),
+            String::from("red") => Expression::builtin("red", red, "apply red foreground", "<string>"),
+            String::from("green") => Expression::builtin("green", green, "apply green foreground", "<string>"),
+            String::from("yellow") => Expression::builtin("yellow", yellow, "apply yellow foreground", "<string>"),
+            String::from("blue") => Expression::builtin("blue", blue, "apply blue foreground", "<string>"),
+            String::from("magenta") => Expression::builtin("magenta", magenta, "apply magenta foreground", "<string>"),
+            String::from("cyan") => Expression::builtin("cyan", cyan, "apply cyan foreground", "<string>"),
+            String::from("white") => Expression::builtin("white", white, "apply white foreground", "<string>"),
+
+            // 暗色
+            String::from("dark_black") => Expression::builtin("dark_black", dark_black, "apply dark black foreground", "<string>"),
+            String::from("dark_red") => Expression::builtin("dark_red", dark_red, "apply dark red foreground", "<string>"),
+            String::from("dark_green") => Expression::builtin("dark_green", dark_green, "apply dark green foreground", "<string>"),
+            String::from("dark_yellow") => Expression::builtin("dark_yellow", dark_yellow, "apply dark yellow foreground", "<string>"),
+            String::from("dark_blue") => Expression::builtin("dark_blue", dark_blue, "apply dark blue foreground", "<string>"),
+            String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "apply dark magenta foreground", "<string>"),
+            String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "apply dark cyan foreground", "<string>"),
+            String::from("dark_white") => Expression::builtin("dark_white", dark_white, "apply dark white foreground", "<string>")
 
         })
         .into()

@@ -3,71 +3,68 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     (hash_map! {
-        // Constants
+        // 数学常量（无参数）
         String::from("E")   => std::f64::consts::E.into(),
         String::from("PI")  => std::f64::consts::PI.into(),
         String::from("TAU") => std::f64::consts::TAU.into(),
         String::from("PHI") => 1.618033988749894848204586834365638118_f64.into(),
 
-        // Basic math functions
-        String::from("max") => Expression::builtin("max", max, "get max value in an array or multi args"),
-        String::from("min") => Expression::builtin("min", min, "get min value in an array or multi args"),
-        String::from("abs") => Expression::builtin("abs", abs, "get the absolute value of a number"),
-        String::from("clamp") => Expression::builtin("clamp", clamp, "clamp a value between min and max"),
-        String::from("sum") => Expression::builtin("sum", sum, "sum a list of numbers"),
-        String::from("average") => Expression::builtin("average", average, "get the average of a list of numbers"),
+        // 基础数学函数
+        String::from("max") => Expression::builtin("max", max, "get max value in an array or multi args", "<num1> <num2> ... | <array>"),
+        String::from("min") => Expression::builtin("min", min, "get min value in an array or multi args", "<num1> <num2> ... | <array>"),
+        String::from("abs") => Expression::builtin("abs", abs, "get the absolute value of a number", "<number>"),
+        String::from("clamp") => Expression::builtin("clamp", clamp, "clamp a value between min and max", "<min> <max> <value>"),
+        String::from("sum") => Expression::builtin("sum", sum, "sum a list of numbers", "<num1> <num2> ... | <array>"),
+        String::from("average") => Expression::builtin("average", average, "get the average of a list of numbers", "<num1> <num2> ... | <array>"),
 
-        // Binary operations
-        String::from("bit_and") => Expression::builtin("bit_and", bit_and, "bitwise AND operation"),
-        String::from("bit_or") => Expression::builtin("bit_or", bit_or, "bitwise OR operation"),
-        String::from("bit_xor") => Expression::builtin("bit_xor", bit_xor, "bitwise XOR operation"),
-        String::from("bit_not") => Expression::builtin("bit_not", bit_not, "bitwise NOT operation"),
-        String::from("bit_shl") => Expression::builtin("bit_shl", bit_shl, "bitwise shift left"),
-        String::from("bit_shr") => Expression::builtin("bit_shr", bit_shr, "bitwise shift right"),
+        // 位运算
+        String::from("bit_and") => Expression::builtin("bit_and", bit_and, "bitwise AND operation", "<int1> <int2>"),
+        String::from("bit_or") => Expression::builtin("bit_or", bit_or, "bitwise OR operation", "<int1> <int2>"),
+        String::from("bit_xor") => Expression::builtin("bit_xor", bit_xor, "bitwise XOR operation", "<int1> <int2>"),
+        String::from("bit_not") => Expression::builtin("bit_not", bit_not, "bitwise NOT operation", "<integer>"),
+        String::from("bit_shl") => Expression::builtin("bit_shl", bit_shl, "bitwise shift left", "<shift_bits> <integer>"),
+        String::from("bit_shr") => Expression::builtin("bit_shr", bit_shr, "bitwise shift right", "<shift_bits> <integer>"),
 
-        // Trigonometric functions
-        // --三角函数
-        String::from("sin") => Expression::builtin("sin", sin, "get the sine of a number"),
-        String::from("cos") => Expression::builtin("cos", cos, "get the cosine of a number"),
-        String::from("tan") => Expression::builtin("tan", tan, "get the tangent of a number"),
-        String::from("asin") => Expression::builtin("asin", asin, "get the inverse sine of a number"),
-        String::from("acos") => Expression::builtin("acos", acos, "get the inverse cosine of a number"),
-        String::from("atan") => Expression::builtin("atan", atan, "get the inverse tangent of a number"),
-        // --双曲函数
-        String::from("sinh") => Expression::builtin("sinh", sinh, "get the hyperbolic sine of a number"),
-        String::from("cosh") => Expression::builtin("cosh", cosh, "get the hyperbolic cosine of a number"),
-        String::from("tanh") => Expression::builtin("tanh", tanh, "get the hyperbolic tangent of a number"),
-        String::from("asinh") => Expression::builtin("asinh", asinh, "get the inverse hyperbolic sine of a number"),
-        String::from("acosh") => Expression::builtin("acosh", acosh, "get the inverse hyperbolic cosine of a number"),
-        String::from("atanh") => Expression::builtin("atanh", atanh, "get the inverse hyperbolic tangent of a number"),
-        // --π倍三角函数
-        String::from("sinpi") => Expression::builtin("sinpi", sinpi, "get the sine of a number times π"),
-        String::from("cospi") => Expression::builtin("cospi", cospi, "get the cosine of a number times π"),
-        String::from("tanpi") => Expression::builtin("tanpi", tanpi, "get the tangent of a number times π"),
+        // 三角函数（单位：弧度）
+        String::from("sin") => Expression::builtin("sin", sin, "get the sine of a number", "<radians>"),
+        String::from("cos") => Expression::builtin("cos", cos, "get the cosine of a number", "<radians>"),
+        String::from("tan") => Expression::builtin("tan", tan, "get the tangent of a number", "<radians>"),
+        String::from("asin") => Expression::builtin("asin", asin, "get the inverse sine of a number", "<value>"),
+        String::from("acos") => Expression::builtin("acos", acos, "get the inverse cosine of a number", "<value>"),
+        String::from("atan") => Expression::builtin("atan", atan, "get the inverse tangent of a number", "<value>"),
 
-        // Exponential and logarithmic functions
-        // --Exponential
-        String::from("pow") => Expression::builtin("pow", pow, "raise a number to a power"),
-        String::from("exp") => Expression::builtin("exp", exp, "get e raised to the power of a number"),
-        String::from("exp2") => Expression::builtin("exp2", exp2, "get 2 raised to the power of a number"),
-        // --Root functions
-        String::from("sqrt") => Expression::builtin("sqrt", sqrt, "get the square root of a number"),
-        String::from("cbrt") => Expression::builtin("cbrt", cbrt, "get the cube root of a number"),
-        // --Logarithmic
-        String::from("log") => Expression::builtin("log", log, "get the log of a number using a given base"),
-        String::from("log2") => Expression::builtin("log2", log2, "get the log base 2 of a number"),
-        String::from("log10") => Expression::builtin("log10", log10, "get the log base 10 of a number"),
-        String::from("ln") => Expression::builtin("ln", ln, "natural logarithm"),
+        // 双曲函数
+        String::from("sinh") => Expression::builtin("sinh", sinh, "get the hyperbolic sine of a number", "<value>"),
+        String::from("cosh") => Expression::builtin("cosh", cosh, "get the hyperbolic cosine of a number", "<value>"),
+        String::from("tanh") => Expression::builtin("tanh", tanh, "get the hyperbolic tangent of a number", "<value>"),
+        String::from("asinh") => Expression::builtin("asinh", asinh, "get the inverse hyperbolic sine of a number", "<value>"),
+        String::from("acosh") => Expression::builtin("acosh", acosh, "get the inverse hyperbolic cosine of a number", "<value>"),
+        String::from("atanh") => Expression::builtin("atanh", atanh, "get the inverse hyperbolic tangent of a number", "<value>"),
 
+        // π倍三角函数
+        String::from("sinpi") => Expression::builtin("sinpi", sinpi, "get the sine of a number times π", "<value>"),
+        String::from("cospi") => Expression::builtin("cospi", cospi, "get the cosine of a number times π", "<value>"),
+        String::from("tanpi") => Expression::builtin("tanpi", tanpi, "get the tangent of a number times π", "<value>"),
 
-        // Rounding functions
-        String::from("floor") => Expression::builtin("floor", floor, "get the floor of a number"),
-        String::from("ceil") => Expression::builtin("ceil", ceil, "get the ceiling of a number"),
-        String::from("round") => Expression::builtin("round", round, "round a number to the nearest integer"),
-        String::from("trunc") => Expression::builtin("trunc", trunc, "truncate a number"),
+        // 指数与对数
+        String::from("pow") => Expression::builtin("pow", pow, "raise a number to a power", "<exponent> <base>"),
+        String::from("exp") => Expression::builtin("exp", exp, "get e raised to the power of a number", "<exponent>"),
+        String::from("exp2") => Expression::builtin("exp2", exp2, "get 2 raised to the power of a number", "<exponent>"),
+        String::from("sqrt") => Expression::builtin("sqrt", sqrt, "get the square root of a number", "<number>"),
+        String::from("cbrt") => Expression::builtin("cbrt", cbrt, "get the cube root of a number", "<number>"),
+        String::from("log") => Expression::builtin("log", log, "get the log of a number using a given base", "<number> <base>"),
+        String::from("log2") => Expression::builtin("log2", log2, "get the log base 2 of a number", "<number>"),
+        String::from("log10") => Expression::builtin("log10", log10, "get the log base 10 of a number", "<number>"),
+        String::from("ln") => Expression::builtin("ln", ln, "natural logarithm", "<number>"),
 
-        // Other functions
-        String::from("isodd") => Expression::builtin("isodd", isodd, "is a number odd?"),
+        // 舍入函数
+        String::from("floor") => Expression::builtin("floor", floor, "get the floor of a number", "<number>"),
+        String::from("ceil") => Expression::builtin("ceil", ceil, "get the ceiling of a number", "<number>"),
+        String::from("round") => Expression::builtin("round", round, "round a number to the nearest integer", "<number>"),
+        String::from("trunc") => Expression::builtin("trunc", trunc, "truncate a number", "<number>"),
+
+        // 其他函数
+        String::from("isodd") => Expression::builtin("isodd", isodd, "is a number odd?", "<integer>"),
     }).into()
 }
 
@@ -163,19 +160,19 @@ fn min(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 fn clamp(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("clamp", args, 3)?;
 
-    let value = match args[0].eval(env)? {
+    let value = match args[2].eval(env)? {
         Expression::Integer(i) => i as f64,
         Expression::Float(f) => f,
         e => return Err(LmError::CustomError(format!("invalid clamp value {}", e))),
     };
 
-    let min_val = match args[1].eval(env)? {
+    let min_val = match args[0].eval(env)? {
         Expression::Integer(i) => i as f64,
         Expression::Float(f) => f,
         e => return Err(LmError::CustomError(format!("invalid clamp min {}", e))),
     };
 
-    let max_val = match args[2].eval(env)? {
+    let max_val = match args[1].eval(env)? {
         Expression::Integer(i) => i as f64,
         Expression::Float(f) => f,
         e => return Err(LmError::CustomError(format!("invalid clamp max {}", e))),
@@ -302,7 +299,7 @@ fn bit_shl(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shl argument {}",
+                "invalid bit_shl shift_bit argument {}",
                 e
             )));
         }
@@ -312,13 +309,13 @@ fn bit_shl(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shl argument {}",
+                "invalid bit_shl base argument {}",
                 e
             )));
         }
     };
 
-    Ok(Expression::Integer(a << b))
+    Ok(Expression::Integer(b << a))
 }
 
 // Bitwise shift right
@@ -329,7 +326,7 @@ fn bit_shr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shr argument {}",
+                "invalid bit_shr shift_bit argument {}",
                 e
             )));
         }
@@ -339,13 +336,13 @@ fn bit_shr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shr argument {}",
+                "invalid bit_shr base argument {}",
                 e
             )));
         }
     };
 
-    Ok(Expression::Integer(a >> b))
+    Ok(Expression::Integer(b >> a))
 }
 
 // Helper function to collect arguments (used by max/min)
@@ -582,7 +579,7 @@ fn ln(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
 fn pow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("pow", args, 2)?;
     let nums = eval_to_f64(args, env, "pow")?;
-    Ok(nums[0].powf(nums[1]).into())
+    Ok(nums[1].powf(nums[0]).into())
 }
 
 // 正弦函数

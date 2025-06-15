@@ -1,4 +1,7 @@
 # Changelog
+## [0.5.0]
+- fix max for only int
+- fix pipeout capture for builtin funcs.
 ## [0.4.9]
 - add func arg hint.
 - fix some func param position.

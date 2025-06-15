@@ -159,7 +159,14 @@ impl Expression {
         // 函数应用
         match self {
             Self::Apply(func, args) | Self::Command(func, args) => {
-                // dbg!("2.--->Applying:", &self, &self.type_name(), &func, &args);
+                //dbg!(
+                //     "2.--->Applying:",
+                //     &self,
+                //     &self.type_name(),
+                //     &func,
+                //     &func.type_name(),
+                //     &args
+                // );
 
                 // 递归求值函数和参数
                 let func_eval = func.as_ref().eval_mut(state, env, depth + 1)?;
@@ -168,13 +175,16 @@ impl Expression {
                 //     .map(|a| a.eval_mut(true,env, depth + 1))
                 //     .collect::<Result<Vec<_>, _>>()?;
                 // let func_eval = *func.clone();
+                let is_in_pipe = state.contains(State::IN_PIPE);
+                state.set(State::IN_PIPE);
+                //dbg!(&state, &func_eval.type_name());
 
                 // 分派到具体类型处理
-                match func_eval {
+                let result = match func_eval {
                     // | Self::String(name)
                     Self::Symbol(_name) | Self::String(_name) => {
                         // Apply as Command
-                        //dbg!("   3.--->applying symbol as Command:", &name);
+                        //dbg!("   3.--->applying symbol as Command:", &_name);
                         // handle_command(&name, args, state, env, depth)
                         eval_command(func, args, state, env, depth)
                         // let bindings = env.get_bindings_map();
@@ -266,25 +276,31 @@ impl Expression {
 
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),
                     Self::Builtin(Builtin { body, .. }) => {
-                        // dbg!("   3.--->applying Builtin:", &func, &args);
+                        //dbg!("   3.--->applying Builtin:", &func, &args);
+                        let pipe_out = state.pipe_out();
 
-                        let exe = match state.pipe_out() {
+                        let mut actual_args = args
+                            .as_ref()
+                            .iter()
+                            .map(|a| a.eval_mut(state, env, depth + 1))
+                            .collect::<Result<Vec<_>, _>>()?;
+
+                        let exe = match pipe_out {
                             Some(p) => {
-                                let mut na = args.as_ref().clone();
-                                na.push(p);
-                                body(&na, env)
+                                actual_args.push(p);
+                                body(&actual_args, env)
                             }
-                            _ => body(args.as_ref(), env),
+                            _ => body(actual_args.as_ref(), env),
                         };
 
                         match exe {
                             Ok(result) => {
-                                self.set_status_code(0, env);
+                                // self.set_status_code(0, env);
                                 // dbg!(&result);
                                 Ok(result)
                             }
                             Err(e) => {
-                                self.set_status_code(1, env);
+                                // self.set_status_code(1, env);
                                 Err(RuntimeError::CommandFailed2(
                                     func.to_string(),
                                     e.to_string(),
@@ -315,15 +331,15 @@ impl Expression {
                                     body.as_ref().eval_mut(state, &mut current_env, depth + 1);
                                 match result {
                                     Ok(v) => {
-                                        self.set_status_code(0, env);
+                                        // self.set_status_code(0, env);
                                         Ok(v)
                                     }
                                     Err(RuntimeError::EarlyReturn(v)) => {
-                                        self.set_status_code(0, env);
+                                        // self.set_status_code(0, env);
                                         Ok(v)
                                     } // 捕获函数体内的return
                                     Err(e) => {
-                                        self.set_status_code(1, env);
+                                        // self.set_status_code(1, env);
                                         Err(e)
                                     }
                                 }
@@ -410,16 +426,16 @@ impl Expression {
                         // dbg!(&new_env);
                         match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
                             Ok(v) => {
-                                self.set_status_code(0, env);
+                                // self.set_status_code(0, env);
                                 Ok(v)
                             }
                             Err(RuntimeError::EarlyReturn(v)) => {
-                                self.set_status_code(0, env);
+                                // self.set_status_code(0, env);
 
                                 Ok(v)
                             } // 捕获函数体内的return
                             Err(e) => {
-                                self.set_status_code(1, env);
+                                // self.set_status_code(1, env);
                                 Err(e)
                             }
                         }
@@ -428,7 +444,12 @@ impl Expression {
                         func.as_ref().clone(),
                         args.as_ref().clone(),
                     )),
+                };
+
+                if !is_in_pipe {
+                    state.clear(State::IN_PIPE);
                 }
+                result
             }
             _ => Err(RuntimeError::CustomError(self.to_string())), // unreachable!(),
         }

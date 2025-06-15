@@ -19,7 +19,7 @@ pub fn eval_command(
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {
-    // dbg!("2.--->Command:", &self, &cmd, &args);
+    // dbg!("2.--->Command:", &cmd, &args, &state);
 
     match cmd.as_ref() {
         // index类型的内置命令，或其他保存于map的命令
@@ -331,6 +331,7 @@ fn handle_command(
     let last_input = state.pipe_out();
     let pipe_input = to_bytes(last_input);
     let result = exec_single_cmd(cmd, Some(cmd_args), env, pipe_input, always_pipe, cmd_mode)?;
+    //dbg!(&always_pipe, &cmd, &result);
     Ok(to_expr(result))
 }
 

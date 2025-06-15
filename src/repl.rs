@@ -278,8 +278,8 @@ fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper
     // 预定义命令列表（带权重排序）
     // TODO add builtin cmds
     let mut cmds: HashSet<String> = hash_set! {
-        "cd".into(),
-        "ls -l --color".into(),
+        "cd ./".into(),
+        "ls -l --color ./".into(),
         "clear".into(),
         "exit".into(),
         "rm ".into(),

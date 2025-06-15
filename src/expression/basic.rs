@@ -1,5 +1,5 @@
 use super::builtin::Builtin;
-use super::{CatchType, Environment, Expression, Int};
+use super::{CatchType, Expression};
 use crate::RuntimeError;
 // use num_traits::pow;
 use std::fmt;
@@ -638,9 +638,9 @@ impl Expression {
         }
     }
 
-    pub fn set_status_code(&self, code: Int, env: &mut Environment) {
-        env.define("STATUS", Expression::Integer(code));
-    }
+    // pub fn set_status_code(&self, code: Int, env: &mut Environment) {
+    //     env.define("STATUS", Expression::Integer(code));
+    // }
 
     pub fn is_truthy(&self) -> bool {
         match self {

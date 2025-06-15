@@ -77,10 +77,10 @@ pub fn get_module_map() -> HashMap<String, Expression> {
                 String::from("select") => Expression::builtin("select", select_columns, "select columns from list of maps", "<columns>...<list[map]>"),
 
                 // Execution control
-                String::from("repeat") => Expression::builtin("repeat", repeat, "evaluate without env change", "<expression>"),
-                String::from("eval") => Expression::builtin("eval", eval, "evaluate expression", "<expression>"),
+                String::from("repeat") => Expression::builtin("repeat", repeat, "evaluate without env change", "<expr>"),
+                String::from("eval") => Expression::builtin("eval", eval, "evaluate expression", "<expr>"),
                 String::from("exec_str") => Expression::builtin("exec_str", exec_str, "evaluate string", "<string>"),
-                String::from("exec") => Expression::builtin("exec", exec, "evaluate in current env", "<expression>"),
+                String::from("exec") => Expression::builtin("exec", exec, "evaluate in current env", "<expr>"),
                 String::from("include") => Expression::builtin("include", include, "evaluate file in current env", "<path>"),
                 String::from("import") => Expression::builtin("import", import, "evaluate file in new env", "<path>"),
 

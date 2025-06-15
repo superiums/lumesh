@@ -21,13 +21,13 @@ pub fn get() -> Expression {
 
              // 数据格式序列化
              String::from("to_toml") => Expression::builtin("to_toml", expr_to_toml,
-                 "parse lumesh expression into TOML", "<expression>"),
+                 "parse lumesh expression into TOML", "<expr>"),
 
              String::from("to_json") => Expression::builtin("to_json", expr_to_json,
-                 "parse lumesh expression into JSON", "<expression>"),
+                 "parse lumesh expression into JSON", "<expr>"),
 
              String::from("to_csv") => Expression::builtin("to_csv", expr_to_csv,
-                 "parse lumesh expression into CSV", "<expression>"),
+                 "parse lumesh expression into CSV", "<expr>"),
 
              // 表达式解析
              String::from("expr") => Expression::builtin("expr", parse_expr,

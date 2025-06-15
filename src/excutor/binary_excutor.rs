@@ -100,7 +100,7 @@ pub fn handle_binary(
 
         // {
         //     // 管道运算符特殊处理
-        //     dbg!("--pipe--", &lhs, &rhs);
+        // //dbg!("--pipe--", &lhs, &rhs);
         //     // dbg!("--pipe--");
         //     let left_func = lhs.ensure_apply();
         //     let left_output = left_func.eval_mut(env, depth + 1)?;

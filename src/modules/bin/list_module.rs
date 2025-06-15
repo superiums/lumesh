@@ -18,7 +18,7 @@ pub fn get() -> Expression {
                String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list", "<element> <list>"),
                String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order", "<list>"),
                String::from("split_at") => Expression::builtin("split_at", split_at, "split a list at a given index", "<index> <list>"),
-               String::from("sort") => Expression::builtin("sort", sort, "sort a list, optionally with a key function", "[key_fn|key_list|keys...] <list>"),
+               String::from("sort") => Expression::builtin("sort", sort, "sort a string/list, optionally with a key function or key_list", "[key_fn|key_list|keys...] <string|list>"),
                String::from("group") => Expression::builtin("group", group_by, "group list elements by key function", "<key_fn|key> <list>"),
 
                // 创建操作

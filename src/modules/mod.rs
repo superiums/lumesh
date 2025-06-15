@@ -35,7 +35,10 @@ pub fn get_builtin_tips() -> HashSet<String> {
                     match v {
                         Expression::Builtin(b) => {
                             // dbg!(&b.name, &b.hint);
-                            tips.insert(format!("{}.{} {}", key, k, b.hint));
+                            match b.hint.is_empty() {
+                                true => tips.insert(format!("{}.{}()", key, k)),
+                                false => tips.insert(format!("{}.{} {}", key, k, b.hint)),
+                            };
                         }
                         Expression::HMap(mm) => {
                             for (mk, _) in mm.iter() {

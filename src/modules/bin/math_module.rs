@@ -86,25 +86,26 @@ fn eval_to_f64(
         .collect()
 }
 
-// Optimized max function that handles both integers and floats
 fn max(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     let nums = args_collect_iter(args, env)?;
-    let mut max_val: Option<f64> = None;
+    let mut max_val_int: Option<i64> = None; // 用于存储整数最大值
+    let mut max_val_float: Option<f64> = None; // 用于存储浮点数最大值
 
     for num in nums {
         match num {
             Expression::Integer(i) => {
-                if let Some(current_max) = max_val {
-                    max_val = Some(current_max.max(i as f64));
+                if let Some(current_max) = max_val_int {
+                    max_val_int = Some(current_max.max(i));
                 } else {
-                    max_val = Some(i as f64);
+                    max_val_int = Some(i);
                 }
+                // 由于我们遇到了整数，继续检查
             }
             Expression::Float(f) => {
-                if let Some(current_max) = max_val {
-                    max_val = Some(current_max.max(f));
+                if let Some(current_max) = max_val_float {
+                    max_val_float = Some(current_max.max(f));
                 } else {
-                    max_val = Some(f);
+                    max_val_float = Some(f);
                 }
             }
             _ => {
@@ -115,9 +116,18 @@ fn max(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
         }
     }
 
-    match max_val {
-        Some(m) => Ok(Expression::Float(m)),
-        None => Ok(Expression::None),
+    // 根据输入类型返回结果
+
+    match max_val_float {
+        Some(m_float) => match max_val_int {
+            Some(m) => Ok(Expression::Float(m_float.max(m as f64))),
+            None => Ok(Expression::Float(m_float)),
+        },
+
+        None => match max_val_int {
+            Some(m) => Ok(Expression::Integer(m)),
+            None => Ok(Expression::None),
+        },
     }
 }
 

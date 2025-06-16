@@ -68,6 +68,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
                 String::from("read") => Expression::builtin("read", read, "get user input", "[prompt]"),
 
                 // Data manipulation
+                String::from("get") => Expression::builtin("get", get, "get value from nested map/list using dot notation path", "<path> <map>"),
                 String::from("type") => Expression::builtin("type", get_type, "get data type", "<value>"),
                 String::from("len") => Expression::builtin("len", len, "get length of expression", "<collection>"),
                 String::from("insert") => Expression::builtin("insert", insert, "insert item into collection", "<key/index> <value> <collection>"),
@@ -582,6 +583,84 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
         .collect::<Vec<_>>();
 
     Ok(Expression::from(result))
+}
+
+fn get(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    check_exact_args_len("get", args, 2)?;
+
+    let index = args[0].eval(env)?;
+    let mut current = args[1].eval(env)?;
+
+    // let path = get_string_arg(index)?;
+    let path = match index {
+        Expression::Symbol(s) | Expression::String(s) => s,
+        Expression::Integer(i) => i.to_string(),
+        _ => {
+            return Err(LmError::TypeError {
+                expected: "symbol/string/integer as path".to_owned(),
+                found: index.type_name(),
+                sym: index.to_string(),
+            });
+        }
+    };
+    let path_segments: Vec<&str> = path.split('.').collect();
+    if path_segments.is_empty() {
+        return Ok(current);
+    }
+
+    for segment in path_segments {
+        match current {
+            Expression::Map(m) => {
+                current = m
+                    .as_ref()
+                    .get(segment)
+                    .ok_or_else(|| {
+                        LmError::CustomError(format!(
+                            "path segment '{}' not found in Map `{:?}`",
+                            segment,
+                            m.as_ref()
+                        ))
+                    })?
+                    .clone();
+            }
+            Expression::List(m) => match segment.parse::<usize>() {
+                Ok(key) => {
+                    current = m
+                        .as_ref()
+                        .get(key)
+                        .ok_or_else(|| {
+                            LmError::CustomError(format!(
+                                "path index '{}' not found in List `{:?}`",
+                                segment,
+                                m.as_ref()
+                            ))
+                        })?
+                        .clone();
+                }
+                _ => {
+                    return Err(LmError::CustomError(format!(
+                        "path index '{}' is not valid for List",
+                        segment
+                    )));
+                }
+            },
+            _ => {
+                return Err(LmError::CustomError(format!(
+                    "path segment '{}' attempt to access on non-indexable type: {}",
+                    segment,
+                    current.type_name()
+                )));
+            }
+        }
+    }
+
+    Ok(current)
+
+    // _ => {
+    //     return Err(LmError::CustomError(
+    //         "get requires a map as last argument".to_string(),
+    //     ));
+    // }
 }
 
 // Helper functions

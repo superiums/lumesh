@@ -10,7 +10,6 @@ pub fn get() -> Expression {
                String::from("has") => Expression::builtin("has", has, "check if a map has a key", "<key> <map>"),
 
                // 数据获取
-               String::from("get") => Expression::builtin("get", get_path, "get value from nested map using dot notation path", "<path> <map>"),
                String::from("items") => Expression::builtin("items", items, "get the items of a map or list", "<map>"),
                String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map", "<map>"),
                String::from("values") => Expression::builtin("values", values, "get the values of a map", "<map>"),
@@ -289,54 +288,4 @@ fn deep_merge_maps(
     }
 
     Ok(result)
-}
-
-fn get_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("get", args, 2)?;
-
-    let map = match args[1].eval(env)? {
-        Expression::Map(m) => m,
-        _ => {
-            return Err(LmError::CustomError(
-                "get_path requires a map as last argument".to_string(),
-            ));
-        }
-    };
-
-    let path = super::get_string_arg(args[0].eval(env)?)?;
-
-    let path_segments: Vec<&str> = path.split('.').collect();
-    if path_segments.is_empty() {
-        return Ok(Expression::Map(map));
-    }
-
-    get_value_by_path(map.as_ref(), &path_segments)
-}
-
-fn get_value_by_path(
-    map: &BTreeMap<String, Expression>,
-    path: &[&str],
-) -> Result<Expression, LmError> {
-    let mut current = Expression::from(map.clone());
-
-    for segment in path {
-        match current {
-            Expression::Map(m) => {
-                current = m
-                    .as_ref()
-                    .get(*segment)
-                    .ok_or_else(|| {
-                        LmError::CustomError(format!("path segment '{}' not found", segment))
-                    })?
-                    .clone();
-            }
-            _ => {
-                return Err(LmError::CustomError(
-                    "path segment access on non-map type".to_string(),
-                ));
-            }
-        }
-    }
-
-    Ok(current)
 }

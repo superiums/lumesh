@@ -79,7 +79,6 @@ if IS_INTERACTIVE {
     alias group = list.group()
     alias table = parse.cmd()
     alias format = fmt.format()
-    alias get = map.get
     alias ll = fs.ls -l
     alias lsx = ls -l --time-style=long-iso
     alias pls = parse.cmd(mode,hlink,user,group,size,mday,mtime,name)

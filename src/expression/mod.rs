@@ -22,6 +22,7 @@ pub enum Expression {
     // 所有嵌套节点改为Rc包裹
     Group(Rc<Self>),
     BinaryOp(String, Rc<Self>, Rc<Self>),
+    RangeOp(String, Rc<Self>, Rc<Self>, Option<Rc<Self>>),
     Pipe(String, Rc<Self>, Rc<Self>),
     UnaryOp(String, Rc<Self>, bool),
 
@@ -69,7 +70,7 @@ pub enum Expression {
     Builtin(Builtin),
     Quote(Rc<Self>),
     Catch(Rc<Self>, CatchType, Option<Rc<Self>>),
-    Range(Range<Int>),
+    Range(Range<Int>, usize),
     DateTime(NaiveDateTime),
     FileSize(FileSize),
 }

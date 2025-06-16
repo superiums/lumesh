@@ -1,6 +1,8 @@
 # Changelog
 ## [0.5.1]
-- enhanced get for both list and map path.
+- enhanced get for mixed list/range and map path.
+- add range step.
+`0..8:2`
 
 ## [0.5.0]
 - fix max for only int

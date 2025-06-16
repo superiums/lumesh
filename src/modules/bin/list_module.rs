@@ -162,7 +162,9 @@ fn from(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
             "range requires a range (a..b) or some elements as arguments".to_string(),
         )),
         1 => match args[0].eval(env)? {
-            Expression::Range(r) => Ok(Expression::from(r.collect::<Vec<Int>>())),
+            Expression::Range(r, step) => {
+                Ok(Expression::from(r.step_by(step).collect::<Vec<Int>>()))
+            }
             _ => Err(LmError::CustomError(
                 "the only arg should be a range (a..b)".to_string(),
             )),

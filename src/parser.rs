@@ -145,16 +145,26 @@ impl PrattParser {
                     input = new_input;
                     match operator {
                         "." | "@" => lhs = Expression::Index(Rc::new(lhs), Rc::new(rhs)),
-                        "..." => {
-                            lhs = Expression::BinaryOp("...".into(), Rc::new(lhs), Rc::new(rhs))
+                        // "..." => {
+                        //     lhs = Expression::BinaryOp("...".into(), Rc::new(lhs), Rc::new(rhs))
+                        // }
+                        "..." | "...=" | ".." | "..=" => {
+                            let (nnew_input, exprs) = opt(preceded(
+                                text(":"),
+                                alt((parse_symbol, parse_integer)),
+                            ))(input)?;
+                            input = nnew_input;
+                            lhs = Expression::RangeOp(
+                                operator.into(),
+                                Rc::new(lhs),
+                                Rc::new(rhs),
+                                exprs.and_then(|st| Some(Rc::new(st))),
+                            )
                         }
-                        "...=" => {
-                            lhs = Expression::BinaryOp("...=".into(), Rc::new(lhs), Rc::new(rhs))
-                        }
-                        ".." => lhs = Expression::BinaryOp("..".into(), Rc::new(lhs), Rc::new(rhs)),
-                        "..=" => {
-                            lhs = Expression::BinaryOp("..=".into(), Rc::new(lhs), Rc::new(rhs))
-                        }
+                        // ".." => lhs = Expression::BinaryOp("..".into(), Rc::new(lhs), Rc::new(rhs)),
+                        // "..=" => {
+                        //     lhs = Expression::BinaryOp("..=".into(), Rc::new(lhs), Rc::new(rhs))
+                        // }
                         _ => unreachable!(),
                     }
                 }

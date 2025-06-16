@@ -498,9 +498,9 @@ fn handle_for(
     let list_excuted = list_expr.as_ref().eval_mut(state, env, depth + 1)?;
     // .as_list()?;
     match list_excuted {
-        Expression::Range(elist) => {
-            let mut result = Vec::with_capacity(elist.end as usize - elist.start as usize);
-            for item in elist {
+        Expression::Range(elist, step) => {
+            let mut result = Vec::with_capacity((elist.end as usize - elist.start as usize) / step);
+            for item in elist.step_by(step) {
                 env.define(var, Expression::Integer(item));
                 let last = body.as_ref().eval_mut(state, env, depth + 1)?;
                 result.push(last)

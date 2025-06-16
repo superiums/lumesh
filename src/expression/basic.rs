@@ -312,8 +312,12 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
-            Self::Range(r) => write!($f, "{:?}", r),
+            Self::Range(r,st) => write!($f, "{:?}:{}", r,st),
             Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
+            Self::RangeOp(op, l, r,step) =>match step{
+                Some(st) => write!($f, "{:?}{}{:?}:{:?}", l, op, r,st),
+                _ =>  write!($f, "{:?}{}{:?}", l, op, r)
+            }
             Self::Pipe(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
             Self::Index(l, r) => write!($f, "{}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
@@ -483,7 +487,7 @@ impl fmt::Debug for Expression {
             Self::Boolean(s) => write!(f, "Boolean({:?})", s),
             Self::DateTime(s) => write!(f, "DateTime({:?})", s),
             Self::FileSize(s) => write!(f, "{:?}", s),
-            Self::Range(s) => write!(f, "Range({:?})", s),
+            Self::Range(s, st) => write!(f, "Range({:?},{})", s, st),
             Self::Quote(inner) => write!(f, "Quote({:?})", inner),
             Self::Group(inner) => write!(f, "Group({:?})", inner),
             Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
@@ -575,6 +579,7 @@ impl Expression {
             Self::Boolean(_) => "Boolean".into(),
             Self::Group(_) => "Group".into(),
             Self::BinaryOp(_, _, _) => "BinaryOp".into(),
+            Self::RangeOp(..) => "RangeOp".into(),
             Self::Pipe(_, _, _) => "Pipe".into(),
             Self::UnaryOp(..) => "UnaryOp".into(),
             Self::Bytes(_) => "Bytes".into(),
@@ -652,7 +657,7 @@ impl Expression {
             Self::List(exprs) => !exprs.as_ref().is_empty(),
             Self::HMap(exprs) => !exprs.as_ref().is_empty(),
             Self::Map(exprs) => !exprs.as_ref().is_empty(),
-            Self::Range(exprs) => !exprs.is_empty(),
+            Self::Range(exprs, _) => !exprs.is_empty(),
             Self::Lambda(..) => true,
             Self::DateTime(..) => true,
             // Self::Macro(_, _) => true,

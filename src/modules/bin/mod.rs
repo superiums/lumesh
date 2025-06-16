@@ -68,7 +68,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
                 String::from("read") => Expression::builtin("read", read, "get user input", "[prompt]"),
 
                 // Data manipulation
-                String::from("get") => Expression::builtin("get", get, "get value from nested map/list using dot notation path", "<path> <map>"),
+                String::from("get") => Expression::builtin("get", get, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),
                 String::from("type") => Expression::builtin("type", get_type, "get data type", "<value>"),
                 String::from("len") => Expression::builtin("len", len, "get length of expression", "<collection>"),
                 String::from("insert") => Expression::builtin("insert", insert, "insert item into collection", "<key/index> <value> <collection>"),
@@ -640,6 +640,28 @@ fn get(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
                 _ => {
                     return Err(LmError::CustomError(format!(
                         "path index '{}' is not valid for List",
+                        segment
+                    )));
+                }
+            },
+            Expression::Range(m, step) => match segment.parse::<usize>() {
+                Ok(key) => {
+                    current = m
+                        .step_by(step)
+                        .skip(key)
+                        .next()
+                        .map(Expression::Integer)
+                        .ok_or_else(|| {
+                            LmError::CustomError(format!(
+                                "path index '{}' not found in Range",
+                                segment
+                            ))
+                        })?
+                        .clone();
+                }
+                _ => {
+                    return Err(LmError::CustomError(format!(
+                        "path index '{}' is not valid for Range",
                         segment
                     )));
                 }

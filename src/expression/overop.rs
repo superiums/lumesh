@@ -100,10 +100,12 @@ impl Add for Expression {
             }
 
             // range
-            (Self::Range(a), Self::Integer(b)) if b >= 0 => {
-                Ok(Expression::Range(a.start..a.end + b))
+            (Self::Range(a, step), Self::Integer(b)) if b >= 0 => {
+                Ok(Expression::Range(a.start..a.end + b, step))
             }
-            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range((a.start + b)..a.end)),
+            (Self::Range(a, step), Self::Integer(b)) => {
+                Ok(Expression::Range((a.start + b)..a.end, step))
+            }
 
             // 列表合并
             (Self::List(a), Self::List(b)) => {
@@ -249,10 +251,12 @@ impl Sub for Expression {
                 }
             }
 
-            (Self::Range(a), Self::Integer(b)) if b >= 0 => {
-                Ok(Expression::Range(a.start..a.end - b))
+            (Self::Range(a, step), Self::Integer(b)) if b >= 0 => {
+                Ok(Expression::Range(a.start..a.end - b, step))
             }
-            (Self::Range(a), Self::Integer(b)) => Ok(Expression::Range(a.start - b..a.end)),
+            (Self::Range(a, step), Self::Integer(b)) => {
+                Ok(Expression::Range(a.start - b..a.end, step))
+            }
 
             (Self::List(a), Self::List(b)) => {
                 if Rc::ptr_eq(&a, &b) {

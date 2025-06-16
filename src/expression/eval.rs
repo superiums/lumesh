@@ -105,7 +105,7 @@ impl Expression {
                 | Self::None
                 | Self::Float(_)
                 | Self::Bytes(_)
-                | Self::Range(_)
+                | Self::Range(..)
                 | Self::FileSize(_)
                 | Self::DateTime(_) => {
                     // dbg!("basic type");
@@ -439,9 +439,12 @@ impl Expression {
                                 "~:" => {
                                     let br = match l {
                                         Expression::String(left) => left.contains(&r.to_string()),
-                                        Expression::Range(left) => {
+                                        Expression::Range(left, st) => {
                                             if let Expression::Integer(i) = r {
-                                                left.contains(&i)
+                                                match st {
+                                                    1 => left.contains(&i),
+                                                    _ => left.step_by(st).any(|f| f == i),
+                                                }
                                             } else {
                                                 false
                                             }
@@ -461,52 +464,6 @@ impl Expression {
                                     Ok(Expression::Boolean(regex.is_match(&l.to_string())))
                                 }
 
-                                "..." => match (l, r) {
-                                    (Expression::Integer(fr), Expression::Integer(t)) => {
-                                        let v = (fr..t)
-                                            .map(Expression::from) // 将 i64 转换为 Expression
-                                            .collect::<Vec<_>>();
-                                        Ok(Expression::from(v))
-                                    }
-                                    _ => Err(RuntimeError::CustomError(
-                                        "not valid range option".into(),
-                                    )),
-                                },
-                                "...=" => match (l, r) {
-                                    (Expression::Integer(fr), Expression::Integer(t)) => {
-                                        let v = (fr..=t)
-                                            .map(Expression::from) // 将 i64 转换为 Expression
-                                            .collect::<Vec<_>>();
-                                        Ok(Expression::from(v))
-                                    }
-                                    _ => Err(RuntimeError::CustomError(
-                                        "not valid range option".into(),
-                                    )),
-                                },
-                                ".." => match (l, r) {
-                                    (Expression::Integer(fr), Expression::Integer(t)) => {
-                                        // let v = (fr..t)
-                                        //     .map(Expression::from) // 将 i64 转换为 Expression
-                                        //     .collect::<Vec<_>>();
-                                        // Ok(Expression::from(v))
-                                        Ok(Expression::Range(fr..t))
-                                    }
-                                    _ => Err(RuntimeError::CustomError(
-                                        "not valid range option".into(),
-                                    )),
-                                },
-                                "..=" => match (l, r) {
-                                    (Expression::Integer(fr), Expression::Integer(t)) => {
-                                        // let v = (fr..=t)
-                                        //     .map(Expression::from) // 将 i64 转换为 Expression
-                                        //     .collect::<Vec<_>>();
-                                        // Ok(Expression::from(v))
-                                        Ok(Expression::Range(fr..t + 1))
-                                    }
-                                    _ => Err(RuntimeError::CustomError(
-                                        "not valid range option".into(),
-                                    )),
-                                },
                                 op if op.starts_with("_") => {
                                     if let Some(oper) = env.get(op) {
                                         let rs =
@@ -521,6 +478,67 @@ impl Expression {
                                 _ => Err(RuntimeError::InvalidOperator(operator.clone())),
                             };
                         }
+                    };
+                }
+                // RangeOP
+                Self::RangeOp(operator, lhs, rhs, step) => {
+                    let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
+                    let r = rhs.as_ref().eval_mut(state, env, depth + 1)?;
+                    let st = match step {
+                        Some(s) => match s.as_ref().eval_mut(state, env, depth + 1)? {
+                            Expression::Integer(i) => i as usize,
+                            other => {
+                                return Err(RuntimeError::TypeError {
+                                    expected: "Integer".to_owned(),
+                                    sym: other.to_string(),
+                                    found: other.type_name(),
+                                });
+                            }
+                        },
+                        _ => 1,
+                    };
+                    return match operator.as_str() {
+                        "..." => match (l, r) {
+                            (Expression::Integer(fr), Expression::Integer(t)) => {
+                                let v = (fr..t)
+                                    .step_by(st)
+                                    .map(Expression::from) // 将 i64 转换为 Expression
+                                    .collect::<Vec<_>>();
+                                Ok(Expression::from(v))
+                            }
+                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                        },
+                        "...=" => match (l, r) {
+                            (Expression::Integer(fr), Expression::Integer(t)) => {
+                                let v = (fr..=t)
+                                    .step_by(st)
+                                    .map(Expression::from) // 将 i64 转换为 Expression
+                                    .collect::<Vec<_>>();
+                                Ok(Expression::from(v))
+                            }
+                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                        },
+                        ".." => match (l, r) {
+                            (Expression::Integer(fr), Expression::Integer(t)) => {
+                                // let v = (fr..t)
+                                //     .map(Expression::from) // 将 i64 转换为 Expression
+                                //     .collect::<Vec<_>>();
+                                // Ok(Expression::from(v))
+                                Ok(Expression::Range(fr..t, st))
+                            }
+                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                        },
+                        "..=" => match (l, r) {
+                            (Expression::Integer(fr), Expression::Integer(t)) => {
+                                // let v = (fr..=t)
+                                //     .map(Expression::from) // 将 i64 转换为 Expression
+                                //     .collect::<Vec<_>>();
+                                // Ok(Expression::from(v))
+                                Ok(Expression::Range(fr..t + 1, st))
+                            }
+                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                        },
+                        _ => Err(RuntimeError::InvalidOperator(operator.clone())),
                     };
                 }
                 // 管道
@@ -798,13 +816,13 @@ impl Expression {
                 }
             }
             // range
-            Expression::Range(mut list) => {
+            Expression::Range(list, step) => {
                 if let Expression::Integer(index) = r {
-                    list.nth(index as usize)
+                    list.step_by(step)
+                        .nth(index as usize)
                         .and_then(|r| Some(Expression::Integer(r)))
-                        .ok_or_else(|| RuntimeError::IndexOutOfBounds {
-                            index: index as Int,
-                            len: list.count(),
+                        .ok_or_else(|| {
+                            RuntimeError::CustomError(format!("index {}: out of bounds", index))
                         })
                 } else {
                     Err(RuntimeError::TypeError {

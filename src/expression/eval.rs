@@ -498,7 +498,7 @@ impl Expression {
                         _ => 1,
                     };
                     return match operator.as_str() {
-                        "..." => match (l, r) {
+                        "...<" => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 let v = (fr..t)
                                     .step_by(st)
@@ -508,7 +508,7 @@ impl Expression {
                             }
                             _ => Err(RuntimeError::CustomError("not valid range option".into())),
                         },
-                        "...=" => match (l, r) {
+                        "..." => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 let v = (fr..=t)
                                     .step_by(st)
@@ -518,7 +518,7 @@ impl Expression {
                             }
                             _ => Err(RuntimeError::CustomError("not valid range option".into())),
                         },
-                        ".." => match (l, r) {
+                        "..<" => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 // let v = (fr..t)
                                 //     .map(Expression::from) // 将 i64 转换为 Expression
@@ -528,7 +528,7 @@ impl Expression {
                             }
                             _ => Err(RuntimeError::CustomError("not valid range option".into())),
                         },
-                        "..=" => match (l, r) {
+                        ".." => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 // let v = (fr..=t)
                                 //     .map(Expression::from) // 将 i64 转换为 Expression

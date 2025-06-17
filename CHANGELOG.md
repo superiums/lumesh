@@ -3,6 +3,7 @@
 - enhanced get for mixed list/range and map path.
 - add range step.
 `0..8:2`
+- change range: closure as `..` and right open with `..<`
 
 ## [0.5.0]
 - fix max for only int

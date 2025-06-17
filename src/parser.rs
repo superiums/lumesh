@@ -148,7 +148,7 @@ impl PrattParser {
                         // "..." => {
                         //     lhs = Expression::BinaryOp("...".into(), Rc::new(lhs), Rc::new(rhs))
                         // }
-                        "..." | "...=" | ".." | "..=" => {
+                        "..." | "...<" | ".." | "..<" => {
                             let (nnew_input, exprs) = opt(preceded(
                                 text(":"),
                                 alt((parse_symbol, parse_integer)),

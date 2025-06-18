@@ -14,7 +14,7 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
             // dbg!(&caps);
             // 优先处理带大括号的变量
             if let Some(name) = caps.get(1) {
-                dbg!(&name);
+                // dbg!(&name);
                 return env
                     .get(name.as_str())
                     .map(|v| v.to_string())

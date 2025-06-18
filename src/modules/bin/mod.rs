@@ -496,6 +496,7 @@ fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
     let mut filtered = Vec::new();
 
     let mut row_env = Environment::new();
+    row_env.define("LINES", Expression::Integer(data.len() as i64));
     for (i, row) in data.as_ref().iter().enumerate() {
         row_env.define("LINENO", Expression::Integer(i as i64));
 
@@ -515,13 +516,6 @@ fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
             let c = args[0].eval(&mut row_env)?;
             // dbg!(&c);
             if let Expression::Boolean(true) = c {
-                filtered.push(row.clone());
-            }
-        } else if let Expression::String(_) = row {
-            row_env.define("VALUE", row.clone());
-            // dbg!(row_env.get("VALUE"));
-
-            if let Expression::Boolean(true) = args[0].eval(&mut row_env)? {
                 filtered.push(row.clone());
             }
         }

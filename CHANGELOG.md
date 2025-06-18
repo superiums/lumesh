@@ -1,4 +1,18 @@
 # Changelog
+## [0.5.2]
+- fix where condition executed too early
+- fix capture output of comand as args for builtin
+`fmt.red(lspci -k)`
+
+- support args with cmd mode without file
+this is for compatible with `lf` file manager.
+
+- add `LINENO` and `LINES` for where/list.filter
+`fs.ls -l | where(LINENO>1)`
+
+- support string template render
+`a is $a or ${a}`
+
 ## [0.5.1]
 - enhanced get for mixed list/range and map path.
 - add range step.

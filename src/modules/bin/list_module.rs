@@ -421,6 +421,7 @@ fn filter(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         Expression::Function(_, params, _, _) => params.len(),
         _ => {
             let mut row_env = env.fork();
+            row_env.define("LINES", Expression::Integer(data.len() as i64));
             for (i, item) in data.as_ref().iter().enumerate() {
                 row_env.define("LINENO", Expression::Integer(i as i64));
                 if let Expression::Boolean(true) = args[0].eval(&mut row_env)? {

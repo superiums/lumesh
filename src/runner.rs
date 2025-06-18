@@ -5,82 +5,60 @@ use std::path::Path;
 use std::path::PathBuf;
 
 fn main() {
-    let path = std::env::args().nth(1).unwrap_or_else(|| {
-        eprintln!("script file or command is expected.");
-        std::process::exit(0);
-    });
+    // 获取所有命令行参数
+    let args: Vec<String> = std::env::args().collect();
 
-    let mut args = std::env::args().skip(1); // 跳过二进制名称
-    let mut cmd = None;
-    let mut file = None;
-    let mut script_args = Vec::new();
-
+    // 初始化变量
+    let mut cmd = None; // 存储 `-c` 参数
+    let mut file = None; // 存储脚本文件路径
+    let mut script_args = Vec::new(); // 存储脚本参数
+    let mut is_command_mode = false; // 是否处于 `-c` 模式
+    let mut is_script_mode = false; // 是否处于脚本模式
     let mut env = Environment::new();
-    // is login shell
-    let is_login_shell = std::env::args()
-        .next()
+
+    // 判断是否为登录 shell
+    let is_login_shell = args
+        .first()
         .map(|arg| {
-            Path::new(&arg)
+            Path::new(arg)
                 .file_name()
                 .and_then(|n| n.to_str())
-                .unwrap_or(&arg) // 使用文件名或原始参数
+                .unwrap_or(arg)
                 .starts_with('-')
         })
         .unwrap_or(false);
+
     env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
-    // global env
+
+    // 如果不是登录 shell，加载环境变量
     if !is_login_shell {
         for (key, value) in std::env::vars() {
-            env.define(&mut key.to_owned(), Expression::String(value));
+            env.define(key.as_str(), Expression::String(value));
         }
     }
 
-    // 原生参数解析
-    while let Some(arg) = args.next() {
-        match arg.as_str() {
-            "-h" => {
-                println!("usage:");
-                println!("      lumesh [options] [file] <args...>");
-                println!("      lumesh [options] -c [command]");
-                println!("      lumesh -h");
-                println!("");
-                println!("options:");
-                // println!("      -s: for strict mode.");
-                println!("      -p: profile.");
-                println!("      -h: for help.");
-                println!("");
-                println!("this is a swift script runtime without interactive.");
-                println!("for interactive, use lume instead.");
-                std::process::exit(0);
-            }
-            // "-s" => {
-            //     // strict mode
-            //     unsafe {
-            //         STRICT = true;
-            //     }
-            //     env.define("IS_STRICT", Expression::Boolean(true));
-            // }
-            "-p" => {
-                let profile = args.next().unwrap_or_else(|| {
-                    eprintln!("-p needs profile path");
-                    std::process::exit(0);
-                });
-                env.define("LUME_PROFILE", Expression::String(profile));
-            }
-            "-c" => {
-                cmd = Some(args.next().unwrap_or_else(|| {
-                    eprintln!("-c needs command.");
-                    std::process::exit(0);
-                }));
-            }
-            _ => {
-                if file.is_none() {
-                    // 第一个非选项参数视为文件路径
-                    file = Some(arg);
-                    // 剩余参数作为脚本参数
-                    script_args = args.collect();
-                    break;
-                }
+    // 遍历参数
+    for arg in args.iter().skip(1) {
+        if is_script_mode {
+            // 已进入脚本参数模式
+            script_args.push(arg.clone());
+        } else if arg == "--" {
+            // 遇到 `--`，切换到脚本参数模式
+            is_script_mode = true;
+        } else if arg == "-c" {
+            // 处理 `-c` 参数
+            is_command_mode = true;
+        } else if is_command_mode {
+            // 累积 `-c` 后的命令片段
+            cmd.get_or_insert_with(Vec::new).push(arg.clone());
+        } else {
+            // 处理普通参数
+            if file.is_none() {
+                // 第一个非选项参数视为文件路径
+                file = Some(arg.clone());
+            } else {
+                // 其他参数视为脚本参数
+                script_args.push(arg.clone());
             }
         }
     }
@@ -88,7 +66,6 @@ fn main() {
     // config
     init_config(&mut env);
 
-    env.define("SCRIPT", Expression::String(path));
     env.define(
         "argv",
         Expression::from(
@@ -100,9 +77,10 @@ fn main() {
     );
 
     // run
-    if let Some(cmd_str) = cmd {
-        parse_and_eval(&cmd_str, &mut env);
+    if let Some(cmd_part) = cmd {
+        parse_and_eval(&cmd_part.join(" "), &mut env);
     } else if let Some(file_path) = file {
+        env.define("SCRIPT", Expression::String(file_path.clone()));
         let path = PathBuf::from(file_path);
         run_file(path, &mut env);
     }

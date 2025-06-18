@@ -221,6 +221,7 @@ impl PrattParser {
                 TokenKind::Symbol
                 | TokenKind::StringLiteral
                 | TokenKind::StringRaw
+                | TokenKind::StringTemplate
                 | TokenKind::IntegerLiteral
                 | TokenKind::FloatLiteral
                 | TokenKind::ValueSymbol
@@ -318,6 +319,7 @@ impl PrattParser {
             TokenKind::Symbol => parse_symbol(input),
             TokenKind::StringLiteral if PREC_LITERAL >= min_prec => parse_string(input),
             TokenKind::StringRaw if PREC_LITERAL >= min_prec => parse_string_raw(input),
+            TokenKind::StringTemplate if PREC_LITERAL >= min_prec => parse_string_template(input),
             TokenKind::IntegerLiteral if PREC_LITERAL >= min_prec => parse_integer(input),
             TokenKind::FloatLiteral if PREC_LITERAL >= min_prec => parse_float(input),
             TokenKind::ValueSymbol if PREC_LITERAL >= min_prec => parse_value_symbol(input),
@@ -328,10 +330,10 @@ impl PrattParser {
                         // 分组{表达式 (expr)
                         alt((parse_group, parse_lambda_param))(input)
                     }
-                    "`" => {
-                        // 数组字面量 [expr, ...]
-                        parse_subcommand(input)
-                    }
+                    // "`" => {
+                    //     // 数组字面量 [expr, ...]
+                    //     parse_subcommand(input)
+                    // }
                     "[" => {
                         // 数组字面量 [expr, ...]
                         parse_list(input)
@@ -794,14 +796,14 @@ fn parse_expr_with_single_cmd(
     }
 }
 // -- 子命令 --
-fn parse_subcommand(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // dbg!(input);
-    // let (input, sub) = delimited(text("`"), parse_command_call, text_close("`"))(input)?;
-    // 需要允许 && | 等操作，不能只是单独的命令。
-    let (input, sub) = delimited(text("`"), parse_expr_with_single_cmd, text_close("`"))(input)?;
-    // dbg!(input, &sub);
-    Ok((input, sub))
-}
+// fn parse_subcommand(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     // dbg!(input);
+//     // let (input, sub) = delimited(text("`"), parse_command_call, text_close("`"))(input)?;
+//     // 需要允许 && | 等操作，不能只是单独的命令。
+//     let (input, sub) = delimited(text("`"), parse_expr_with_single_cmd, text_close("`"))(input)?;
+//     // dbg!(input, &sub);
+//     Ok((input, sub))
+// }
 // -- 分组 --
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     delimited(
@@ -1095,9 +1097,43 @@ fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     } else {
         Err(SyntaxErrorKind::failure(
             expr,
-            "raw string enclosed in single quotes",
+            "raw string enclosed in ''",
             Some(raw_str.to_string()),
             Some("raw strings must surround with '"),
+        ))
+    }
+}
+#[inline]
+fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, expr) = kind(TokenKind::StringTemplate)(input)?;
+    let raw_str = expr.to_str(input.str);
+
+    // 检查首尾单引号
+    if raw_str.len() >= 2 {
+        // 通过StrSlice直接计算子范围
+        // let start = expr.start() + 1;
+
+        // 如果有右侧引号，则调整结束位置
+        let start = match raw_str.chars().next().unwrap() {
+            '`' => expr.start() + 1,
+            _ => expr.start(),
+        };
+        let end = match raw_str.chars().last().unwrap() {
+            '`' => expr.end() - 1,
+            _ => expr.end(),
+        };
+
+        let content = input.str.get(start..end); // 截取中间部分
+        Ok((
+            input,
+            Expression::StringTemplate(content.to_str(input.str).to_string()),
+        ))
+    } else {
+        Err(SyntaxErrorKind::failure(
+            expr,
+            "template string enclosed with ``",
+            Some(raw_str.to_string()),
+            Some("template strings must surround with `"),
         ))
     }
 }
@@ -1109,6 +1145,7 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         parse_float,
         parse_string,
         parse_string_raw,
+        parse_string_template,
         parse_value_symbol,
     ))(input)
 }

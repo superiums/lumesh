@@ -184,7 +184,7 @@ fn is_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
 fn lines(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("lines", args, 1)?;
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
 
     let lines = text
         .lines()
@@ -195,7 +195,7 @@ fn lines(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn chars(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("chars", args, 1)?;
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
 
     let chars = text
         .chars()
@@ -206,7 +206,7 @@ fn chars(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn words(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("words", args, 1)?;
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
 
     let words = text
         .split_whitespace()
@@ -217,7 +217,7 @@ fn words(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn paragraphs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("paragraphs", args, 1)?;
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
 
     let paragraphs = text
         .split("\n\n")
@@ -228,7 +228,7 @@ fn paragraphs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
 fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("split_at", args, 2)?;
-    let text = get_string_arg(args[1].eval(env)?)?;
+    let text = get_string_arg(args[1].eval_in_pipe(env)?)?;
     let index = get_integer_arg(args[0].eval(env)?)? as usize;
 
     if index > text.len() {
@@ -247,19 +247,19 @@ fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
 fn trim(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim", args, 1)?;
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
     Ok(Expression::String(text.trim().to_string()))
 }
 
 fn trim_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim_start", args, 1)?;
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
     Ok(Expression::String(text.trim_start().to_string()))
 }
 
 fn trim_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim_end", args, 1)?;
-    let text = get_string_arg(args[0].eval(env)?)?;
+    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
     Ok(Expression::String(text.trim_end().to_string()))
 }
 
@@ -313,7 +313,7 @@ fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
 fn substring(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("substring", args, 2..3)?;
-    let text = get_string_arg(args.last().unwrap().eval(env)?)?;
+    let text = get_string_arg(args.last().unwrap().eval_in_pipe(env)?)?;
 
     let start = get_integer_arg(args[0].eval(env)?)?;
     let start_idx = if start < 0 {

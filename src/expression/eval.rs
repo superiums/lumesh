@@ -2,6 +2,7 @@ use super::Pattern;
 use super::cmd_excutor::eval_command;
 use crate::STRICT;
 use crate::expression::alias;
+use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use core::option::Option::None;
 use regex_lite::Regex;
@@ -79,6 +80,12 @@ impl Expression {
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         self.eval_mut(&mut State::new(), env, 0)
     }
+    /// builtin args eval in pipe.
+    pub fn eval_in_pipe(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
+        let mut state = State::new();
+        state.set(State::IN_PIPE);
+        self.eval_mut(&mut state, env, 0)
+    }
     /// 求值主逻辑
     #[inline]
     pub fn eval_mut(
@@ -113,7 +120,7 @@ impl Expression {
                 }
                 Self::Builtin(_) => {
                     // dbg!("builtin type");
-                    break Ok(job.clone());
+                    return Ok(job.clone());
                 }
 
                 // 符号解析（错误处理优化）
@@ -138,6 +145,9 @@ impl Expression {
                             };
                         }
                     }
+                }
+                Self::StringTemplate(template) => {
+                    return Ok(Expression::String(render_template(template, env)));
                 }
                 Self::Variable(name) => {
                     // dbg!("2.--->variable----", &name);
@@ -302,7 +312,7 @@ impl Expression {
 
                 // 二元运算
                 Self::BinaryOp(operator, lhs, rhs) => {
-                    break match operator.as_str() {
+                    return match operator.as_str() {
                         "+=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
@@ -386,7 +396,7 @@ impl Expression {
                             // fmt.red : left is builtin, right never.
                             let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
                             let r = rhs.as_ref().eval_mut(state, env, depth + 1)?;
-                            break match operator.as_str() {
+                            return match operator.as_str() {
                                 "+" => l + r,
                                 "-" => l - r,
                                 "*" => l * r,

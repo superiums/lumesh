@@ -25,13 +25,6 @@ use std::path::{Path, PathBuf};
     // disable_version_flag = true // 禁用默认的 --version
 )]
 struct Cli {
-    /// 执行字符串命令
-    #[arg(short = 'i', long, num_args = 0..1)]
-    interactive: bool,
-
-    #[arg(short = 'c', long, num_args = 1..)]
-    cmd: Option<Vec<String>>,
-
     #[arg(short = 'p', long, num_args = 0..1)]
     profile: Option<String>,
 
@@ -45,6 +38,13 @@ struct Cli {
     /// 关闭ai
     #[arg(short = 'a', long)]
     aioff: bool,
+
+    #[arg(short = 'i', long, num_args = 0..1)]
+    interactive: bool,
+
+    /// 执行字符串命令
+    #[arg(short = 'c', long, num_args = 1..)]
+    cmd: Option<Vec<String>>,
 
     /// 脚本文件路径
     #[arg(
@@ -60,7 +60,6 @@ struct Cli {
         last = true,
         num_args=0..,
         allow_hyphen_values = true,
-        requires ="file",
         index = 2
     )]
     argv: Vec<String>,

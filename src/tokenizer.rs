@@ -94,7 +94,7 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("]"),
         punctuation_tag("{"),
         punctuation_tag("}"),
-        punctuation_tag("`"), //sub command capture
+        // punctuation_tag("`"), //template
     ))(input)
 }
 
@@ -449,8 +449,11 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
 // }
 fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
     // 1. 解析开始引号
-    let (rest_after_start, start_quote_range) =
-        alt((punctuation_tag("\""), punctuation_tag("'")))(input)?;
+    let (rest_after_start, start_quote_range) = alt((
+        punctuation_tag("\""),
+        punctuation_tag("'"),
+        punctuation_tag("`"),
+    ))(input)?;
     let quote_char = start_quote_range.to_str(input.as_original_str());
 
     // 2. 解析字符串内容（含转义处理）
@@ -481,6 +484,8 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
     // 6. 根据引号类型生成TokenKind
     let kind = if is_double {
         TokenKind::StringLiteral
+    } else if quote_char == "`" {
+        TokenKind::StringTemplate
     } else {
         TokenKind::StringRaw
     };

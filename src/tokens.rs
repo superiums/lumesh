@@ -133,6 +133,7 @@ pub enum TokenKind {
     Keyword,
     StringLiteral,
     StringRaw,
+    StringTemplate,
     IntegerLiteral,
     FloatLiteral,
     ValueSymbol,

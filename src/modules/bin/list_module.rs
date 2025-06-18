@@ -407,38 +407,61 @@ fn map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
         Ok(Expression::List(Rc::new(result)))
     }
 }
-
 fn filter(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    if args.len() == 1 {
-        Ok(Expression::Apply(
-            Rc::new(crate::parse(
-                r#"(f,list) -> { let result = []; for item in list { if (f item) { let result = result + [item]; } } result }"#,
-            )?),
-            Rc::new(args.clone()),
-        ).eval(env)?)
+    super::check_exact_args_len("filter", args, 2)?;
+    let data = if let Expression::List(list) = args[1].eval(env)? {
+        list
     } else {
-        super::check_exact_args_len("filter", args, 2)?;
-        let f = args[0].eval(env)?;
-        let list = match args[1].eval(env)? {
-            Expression::List(l) => l,
-            _ => {
-                return Err(LmError::CustomError(
-                    "filter requires list as second argument".to_string(),
-                ));
-            }
-        };
+        return Err(LmError::CustomError("Expected list for filtering".into()));
+    };
 
-        let mut result = Vec::new();
-        for item in list.as_ref().iter() {
-            if Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone()]))
-                .eval(env)?
-                .is_truthy()
-            {
-                result.push(item.clone());
+    let mut result = Vec::new();
+    let fn_arg_count = match args[0].clone() {
+        Expression::Lambda(params, _) => params.len(),
+        Expression::Function(_, params, _, _) => params.len(),
+        _ => {
+            let mut row_env = env.fork();
+            for (i, item) in data.as_ref().iter().enumerate() {
+                row_env.define("LINENO", Expression::Integer(i as i64));
+                if let Expression::Boolean(true) = args[0].eval(&mut row_env)? {
+                    result.push(item.clone())
+                }
+            }
+            return Ok(Expression::List(Rc::new(result)));
+        }
+    };
+
+    let cond = Rc::new(args[0].clone());
+    match fn_arg_count {
+        1 => {
+            for item in data.as_ref() {
+                if let Expression::Boolean(true) =
+                    Expression::Apply(Rc::clone(&cond), Rc::new(vec![item.clone()])).eval(env)?
+                {
+                    result.push(item.clone());
+                }
             }
         }
-        Ok(Expression::List(Rc::new(result)))
+        2 => {
+            for (i, item) in data.as_ref().iter().enumerate() {
+                if let Expression::Boolean(true) = Expression::Apply(
+                    Rc::clone(&cond),
+                    Rc::new(vec![Expression::Integer(i as i64), item.clone()]),
+                )
+                .eval(env)?
+                {
+                    result.push(item.clone());
+                }
+            }
+        }
+        _ => {
+            return Err(LmError::CustomError(
+                "expected 1..2 params for filter-fn".into(),
+            ));
+        }
     }
+
+    Ok(Expression::List(Rc::new(result)))
 }
 
 fn reduce(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {

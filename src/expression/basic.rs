@@ -40,6 +40,7 @@ macro_rules! fmt_shared {
 
             // Self::String(s) if $debug => write!($f, "{:?}", s),
             Self::String(s) => write!($f, "{}", s),
+            Self::StringTemplate(s) => write!($f, "`{}`", s),
 
             Self::Integer(i) => write!($f, "{}", *i),
             Self::Float(n) => write!($f, "{}", *n),
@@ -312,7 +313,7 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
-            Self::Range(r,st) => write!($f, "{:?}:{}", r,st),
+            Self::Range(r,st) => write!($f, "{:?}:<{}", r,st),
             Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
             Self::RangeOp(op, l, r,step) =>match step{
                 Some(st) => write!($f, "{:?}{}{:?}:{:?}", l, op, r,st),
@@ -570,6 +571,7 @@ impl Expression {
             Self::FileSize(_) => "FileSize".into(),
             Self::Map(_) => "Map".into(),
             Self::String(_) => "String".into(),
+            Self::StringTemplate(_) => "StringTemplate".into(),
             Self::Integer(_) => "Integer".into(),
             Self::DateTime(_) => "DateTime".into(),
             Self::Symbol(_) => "Symbol".into(),

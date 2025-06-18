@@ -493,26 +493,35 @@ fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
         return Err(LmError::CustomError("Expected list for filtering".into()));
     };
 
-    let condition = args[0].clone();
     let mut filtered = Vec::new();
 
-    for row in data.as_ref() {
+    let mut row_env = Environment::new();
+    for (i, row) in data.as_ref().iter().enumerate() {
+        row_env.define("LINENO", Expression::Integer(i as i64));
+
+        // dbg!(row_env.get("LINENO"));
         if let Expression::HMap(row_map) = row {
-            let mut row_env = env.fork();
             for (k, v) in row_map.as_ref() {
                 row_env.define(k, v.clone());
             }
-
-            if let Expression::Boolean(true) = condition.eval(&mut row_env)? {
+            if let Expression::Boolean(true) = args[0].eval(&mut row_env)? {
                 filtered.push(row.clone());
             }
         } else if let Expression::Map(row_map) = row {
-            let mut row_env = env.fork();
             for (k, v) in row_map.as_ref() {
                 row_env.define(k, v.clone());
             }
 
-            if let Expression::Boolean(true) = condition.eval(&mut row_env)? {
+            let c = args[0].eval(&mut row_env)?;
+            // dbg!(&c);
+            if let Expression::Boolean(true) = c {
+                filtered.push(row.clone());
+            }
+        } else if let Expression::String(_) = row {
+            row_env.define("VALUE", row.clone());
+            // dbg!(row_env.get("VALUE"));
+
+            if let Expression::Boolean(true) = args[0].eval(&mut row_env)? {
                 filtered.push(row.clone());
             }
         }

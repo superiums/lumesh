@@ -13,6 +13,7 @@ pub mod eval2;
 pub mod from;
 pub mod overop;
 pub mod pty;
+pub mod render;
 pub mod terminal;
 
 use builtin::Builtin;
@@ -31,8 +32,9 @@ pub enum Expression {
     Variable(String),
     Integer(Int),
     Float(f64),
-    Bytes(Vec<u8>), // 这个保持值类型，因为Rc<Vec>反而增加复杂度
-    String(String), // 同上
+    Bytes(Vec<u8>),         // 这个保持值类型，因为Rc<Vec>反而增加复杂度
+    String(String),         // 同上
+    StringTemplate(String), // 同上
     Boolean(bool),
     None,
 

@@ -279,12 +279,14 @@ impl Expression {
                         //dbg!("   3.--->applying Builtin:", &func, &args);
                         let pipe_out = state.pipe_out();
 
-                        let mut actual_args = args
-                            .as_ref()
-                            .iter()
-                            .map(|a| a.eval_mut(state, env, depth + 1))
-                            .collect::<Result<Vec<_>, _>>()?;
-
+                        // let mut actual_args = args
+                        //     .as_ref()
+                        //     .iter()
+                        //     .map(|a| a.eval_mut(state, env, depth + 1))
+                        //     .collect::<Result<Vec<_>, _>>()?;
+                        // 执行时机应由内置函数自己选择，如 where(size>0)
+                        // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
+                        let mut actual_args = args.as_ref().clone();
                         let exe = match pipe_out {
                             Some(p) => {
                                 actual_args.push(p);

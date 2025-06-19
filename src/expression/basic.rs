@@ -1,4 +1,3 @@
-use super::builtin::Builtin;
 use super::{CatchType, Expression};
 use crate::RuntimeError;
 // use num_traits::pow;
@@ -6,14 +5,6 @@ use std::fmt;
 use std::rc::Rc;
 // use terminal_size::{Width, terminal_size};
 
-use prettytable::{
-    Cell,
-    Row,
-    Table,
-    format::consts::{FORMAT_BORDERS_ONLY, FORMAT_BOX_CHARS},
-    // format::{LinePosition, LineSeparator},
-    row,
-};
 // const GREEN_BOLD: &str = "\x1b[1;32m";
 // // const RED: &str = "\x1b[31m";
 // const RESET: &str = "\x1b[0m";
@@ -62,205 +53,54 @@ macro_rules! fmt_shared {
             Self::Loop(inner) => write!($f, "loop {}", inner),
 
             // Lambda 修改
-
             Self::Lambda(params, body) => write!($f, "({}) -> {}", params.join(", "), body),
             // Self::Macro(params, body) if $debug => write!($f, "{:?} ~> {:?}", params, body),
             // Self::Macro(params, body) => write!($f, "({}) ~> {}", params.join(", "), body),
 
             // If 修改
-            Self::If(cond, true_expr, false_expr) =>
-                    write!($f, "if {} {} else {}", cond, true_expr, false_expr),
+            Self::If(cond, true_expr, false_expr) => {
+                write!($f, "if {} {} else {}", cond, true_expr, false_expr)
+            }
 
             Self::Slice(l, r) => write!($f, "{}[{:?}:{:?}:{:?}]", l, r.start, r.end, r.step),
 
             // 修正List分支中的变量名错误
-
             Self::List(exprs) => {
-                // Create a table with one column
-                let specified_width = $f.width().unwrap_or(
-                    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
-                   crossterm::terminal::size().unwrap_or((120,0)).0 as usize
-                );
-                // let mut t = Table::new();
-                // let fmt = t.get_format();
-                // fmt.padding(1, 1);
-                // fmt.borders('│');
-                // fmt.column_separator('│');
-                // fmt.separator(LinePosition::Top, LineSeparator::new('─', '┬', '┌', '┐'));
-                // fmt.separator(LinePosition::Title, LineSeparator::new('─', '┼', '├', '┤'));
-                // fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
-                // fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
-
-                // let mut row = vec![];
-                // let mut total_len = 1;
-                // for expr in exprs.as_ref().iter() {
-                //     let formatted = match expr {
-                //         Expression::String(s) => format!("{}", s),
-                //         _ => format!("{}", expr),
-                //     };
-                //     // Get the length of the first line
-                //     if formatted.contains('\n') {
-                //         let max_line_len = formatted.lines().map(|l| l.len()).max().unwrap_or(0);
-                //         total_len += max_line_len + 1;
-                //         // let first_line_len = formatted.lines().next().unwrap().len();
-                //         // total_len += first_line_len + 1;
-                //     } else {
-                //         total_len += formatted.len() + 1;
-                //     }
-                //     row.push(formatted);
-                // }
-                // // if total_len > specified_width {
-                // //     return write!($f, "{:?}", $self);
-                // // }
-                // // 换行或截断处理
-                // if total_len > specified_width {
-                //     t.set_format(*prettytable::format::consts::FORMAT_BORDERS_ONLY);
-                //     // 或自动换行：
-                //     // fmt.set_column_max_width(specified_width / exprs.len());
-                // }
-                // // let row = Row::new(row.into_iter().map(|x| Cell::new(&x)).collect::<Vec<_>>());
-                // // t.add_row(row);
-
-                // let cells = exprs
-                //     .iter()
-                //     .map(|expr| match expr {
-                //         Expression::String(s) => Cell::new(s),
-                //         _ => Cell::new(&expr.to_string()),
-                //     })
-                //     .collect::<Vec<_>>();
-                // t.add_row(Row::new(cells));
-
-                let (rows,heads_opt) = TableRow {
-                    columns: exprs.as_ref(),
-                    max_width: specified_width-10,
-                    col_padding: 3+2,
-                }.split_into_rows();
-
-                let mut t = Table::new();
-                if let Some(heads)=heads_opt {
-                    t.set_format(*FORMAT_BORDERS_ONLY);
-                    t.set_titles(Row::new(
-                        heads.into_iter().map(|x| Cell::new(&x.to_uppercase())).collect()
-                    ));
-
-                }else{
-                    t.set_format(*FORMAT_BOX_CHARS);
-
-                }
-                for row in rows {
-                    t.add_row(Row::new(
-                        row.into_iter().map(|x| Cell::new(&x)).collect()
-                    ));
-                }
-
-                write!($f, "{}", t)
+                write!(
+                    $f,
+                    "[{}]\n",
+                    exprs
+                        .as_ref()
+                        .iter()
+                        .map(|e| format!("{}", e))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                )
             }
 
-           Self::HMap(exprs) => {
-                let specified_width = $f.width().unwrap_or(
-                    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
-                    crossterm::terminal::size().unwrap_or((120,0)).0 as usize
-                );
-                let mut t = Table::new();
-                t.set_format(*FORMAT_BORDERS_ONLY);
-
-                // let heads=["Key","Value"];
-                // t.set_titles(Row::new(
-                //     heads.into_iter().map(|x| Cell::new(&x)).collect()
-                // ));
-                t.set_titles(row!("KEY","VALUE"));
-                // let fmt = t.get_format();
-                // fmt.padding(1, 1);
-                // // Set width to be 2/3
-                // fmt.borders('│');
-                // fmt.column_separator('│');
-                // fmt.separator(LinePosition::Top, LineSeparator::new('═', '╤', '╒', '╕'));
-                // fmt.separator(LinePosition::Title, LineSeparator::new('═', '╪', '╞', '╡'));
-                // fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
-                // fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
-
-                for (key, val) in exprs.as_ref().iter() {
-                    match &val {
-                        Self::Builtin(Builtin { help, .. }) => {
-                            t.add_row(row!(
-                                key,
-                                format!("{}", val),
-                                textwrap::fill(help, specified_width / 2)
-                            ));
-                        }
-                        Self::HMap(_) => {
-                            t.add_row(row!(key, format!("{:specified_width$}", val)));
-                        }
-                        Self::Map(_) => {
-                            t.add_row(row!(key, format!("{:specified_width$}", val)));
-                        }
-                        Self::List(_) => {
-                            let w = specified_width - key.len() - 3;
-                            let formatted = format!("{:w$}", val);
-                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
-                        }
-                        _ => {
-                            // Format the value to the width of the terminal / 5
-                            let formatted = format!("{}", val);
-                            let w = specified_width / 3;
-                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
-                        }
-                    }
-                }
-                write!($f, "{}", t)
+            Self::HMap(exprs) => {
+                write!(
+                    $f,
+                    "{{{}}}",
+                    exprs
+                        .as_ref()
+                        .iter()
+                        .map(|(_, v)| format!("{}", v))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                )
             }
-           Self::Map(exprs) => {
-                let specified_width = $f.width().unwrap_or(
-                    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
-                    crossterm::terminal::size().unwrap_or((120,0)).0 as usize
-                );
-                let mut t = Table::new();
-                t.set_format(*FORMAT_BORDERS_ONLY);
-
-                // let heads=["Key","Value"];
-                // t.set_titles(Row::new(
-                //     heads.into_iter().map(|x| Cell::new(&x)).collect()
-                // ));
-                t.set_titles(row!("KEY","VALUE"));
-                // let fmt = t.get_format();
-                // fmt.padding(1, 1);
-                // // Set width to be 2/3
-                // fmt.borders('│');
-                // fmt.column_separator('│');
-                // fmt.separator(LinePosition::Top, LineSeparator::new('═', '╤', '╒', '╕'));
-                // fmt.separator(LinePosition::Title, LineSeparator::new('═', '╪', '╞', '╡'));
-                // fmt.separator(LinePosition::Intern, LineSeparator::new('─', '┼', '├', '┤'));
-                // fmt.separator(LinePosition::Bottom, LineSeparator::new('─', '┴', '└', '┘'));
-
-                for (key, val) in exprs.as_ref().iter() {
-                    match &val {
-                        Self::Builtin(Builtin { help, .. }) => {
-                            t.add_row(row!(
-                                key,
-                                format!("{}", val),
-                                textwrap::fill(help, specified_width / 2)
-                            ));
-                        }
-                        Self::HMap(_) => {
-                            t.add_row(row!(key, format!("{:specified_width$}", val)));
-                        }
-                        Self::Map(_) => {
-                            t.add_row(row!(key, format!("{:specified_width$}", val)));
-                        }
-                        Self::List(_) => {
-                            let w = specified_width - key.len() - 3;
-                            let formatted = format!("{:w$}", val);
-                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
-                        }
-                        _ => {
-                            // Format the value to the width of the terminal / 5
-                            let formatted = format!("{}", val);
-                            let w = specified_width / 3;
-                            t.add_row(row!(key, textwrap::fill(&formatted, w),));
-                        }
-                    }
-                }
-                write!($f, "{}", t)
+            Self::Map(exprs) => {
+                write!(
+                    $f,
+                    "{{{}}}",
+                    exprs
+                        .as_ref()
+                        .iter()
+                        .map(|(_, v)| format!("{}", v))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                )
             }
 
             Self::None => write!($f, "None"),
@@ -295,7 +135,7 @@ macro_rules! fmt_shared {
                 write!($f, "}}")
             }
 
-            Self::Apply(g, args)|Self::Command(g, args) => write!(
+            Self::Apply(g, args) | Self::Command(g, args) => write!(
                 $f,
                 "{:?} {}",
                 g,
@@ -313,12 +153,12 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
-            Self::Range(r,st) => write!($f, "{:?}:<{}", r,st),
+            Self::Range(r, st) => write!($f, "{:?}:<{}", r, st),
             Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
-            Self::RangeOp(op, l, r,step) =>match step{
-                Some(st) => write!($f, "{:?}{}{:?}:{:?}", l, op, r,st),
-                _ =>  write!($f, "{:?}{}{:?}", l, op, r)
-            }
+            Self::RangeOp(op, l, r, step) => match step {
+                Some(st) => write!($f, "{:?}{}{:?}:{:?}", l, op, r, st),
+                _ => write!($f, "{:?}{}{:?}", l, op, r),
+            },
             Self::Pipe(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
             Self::Index(l, r) => write!($f, "{}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
@@ -336,144 +176,6 @@ macro_rules! fmt_shared {
                // } // _ => write!($f, "Unreachable"), // 作为兜底逻辑
         }
     };
-}
-
-struct TableRow<'a> {
-    columns: &'a Vec<Expression>, // 原始数据
-    max_width: usize,             // 单行总宽度限制
-    col_padding: usize,           // 列间距（通常为3：1边框+2空格）
-}
-
-impl<'a> TableRow<'a> {
-    /// 智能分Row算法
-    fn split_into_rows(&self) -> (Vec<Vec<String>>, Option<Vec<String>>) {
-        let mut result = vec![];
-        let mut heads = vec![];
-        let mut current_row = vec![];
-        let mut current_len = 0;
-
-        // 二维表格
-        let mut cols = match self.columns.first() {
-            Some(Expression::List(a)) => {
-                heads = a
-                    .iter()
-                    .enumerate()
-                    .map(|(i, _)| format!("C{}", i))
-                    .collect();
-                a.len()
-            }
-            Some(Expression::HMap(a)) => {
-                heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
-                a.keys().len()
-            }
-            Some(Expression::Map(a)) => {
-                heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
-                a.keys().len()
-            }
-            _ => 0,
-        };
-        if cols > 0 {
-            for expr in self.columns.iter() {
-                match expr {
-                    Expression::List(a) => {
-                        for c in a.iter() {
-                            current_row.push(c.to_string());
-                        }
-                    }
-                    Expression::HMap(a) => {
-                        for (_, v) in a.iter() {
-                            current_row.push(v.to_string());
-                        }
-                    }
-                    Expression::Map(a) => {
-                        for (_, v) in a.iter() {
-                            current_row.push(v.to_string());
-                        }
-                    }
-                    other => current_row.push(other.to_string()),
-                };
-                if !current_row.is_empty() {
-                    result.push(current_row);
-                    current_row = vec![];
-                }
-            }
-            return (result, Some(heads));
-        }
-
-        // 一唯表格
-        for (i, expr) in self.columns.iter().enumerate() {
-            let col = match expr {
-                Expression::List(a) => a
-                    .as_ref()
-                    .iter()
-                    .map(|f| f.to_string())
-                    .collect::<Vec<String>>()
-                    .join(", "),
-                Expression::HMap(a) => a
-                    .as_ref()
-                    .iter()
-                    .map(|(_, v)| v.to_string())
-                    .collect::<Vec<String>>()
-                    .join("\t"),
-                Expression::Map(a) => a
-                    .as_ref()
-                    .iter()
-                    .map(|(_, v)| v.to_string())
-                    .collect::<Vec<String>>()
-                    .join("\t"),
-                other => other.to_string(),
-            };
-            let col_width = col.chars().count() + self.col_padding;
-
-            // 两种情况需要换行：
-            // 1. 当前行已有内容且加入新列会超限
-            // 2. 单列宽度已超过总限制（需强制拆分列）
-            if cols == 0 {
-                if !current_row.is_empty() && current_len + col_width > self.max_width {
-                    cols = i;
-                    // dbg!(&cols);
-                    result.push(current_row);
-                    current_row = vec![];
-                    current_len = 0;
-                }
-            } else if i % cols == 0 {
-                // dbg!(&i);
-                result.push(current_row);
-                current_row = vec![];
-                current_len = 0;
-            }
-            // 处理超宽列（需拆分成多段）
-            if col_width > self.max_width {
-                let chunks = self.split_column(&col);
-                for chunk in chunks {
-                    if !current_row.is_empty() {
-                        result.push(current_row);
-                        current_row = vec![];
-                    }
-                    current_row.push(chunk);
-                }
-                current_len = current_row.last().map(|s| s.len()).unwrap_or(0);
-            } else {
-                current_row.push(col);
-                current_len += col_width;
-            }
-        }
-
-        if !current_row.is_empty() {
-            result.push(current_row);
-        }
-        (result, None)
-    }
-
-    /// 拆分超宽列为多段
-    fn split_column(&self, text: &str) -> Vec<String> {
-        let max_chunk = self.max_width - self.col_padding;
-        text.chars()
-            .collect::<Vec<_>>()
-            .chunks(max_chunk)
-            .map(|chunk| chunk.iter().collect())
-            .collect()
-    }
 }
 
 // Debug 实现

@@ -1,4 +1,9 @@
 # Changelog
+## [0.5.3]
+- add fuzzy picker
+- add pretty print
+
+
 ## [0.5.2]
 - fix where condition executed too early
 - fix capture output of comand as args for builtin

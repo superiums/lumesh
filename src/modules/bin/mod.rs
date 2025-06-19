@@ -5,6 +5,7 @@ use std::{
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError, parse_and_eval};
 use common_macros::hash_map;
+use pprint::pretty_print;
 
 #[cfg(feature = "chess-engine")]
 mod chess_module;
@@ -23,11 +24,13 @@ mod fs_ls;
 mod into_module;
 mod os_module;
 mod parse_module;
+mod pprint;
 mod rand_module;
 mod regex_module;
 mod string_module;
 mod sys_module;
 mod time_module;
+mod ui_module;
 mod widget_module;
 
 pub fn get_module_map() -> HashMap<String, Expression> {
@@ -38,6 +41,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("about") => about_module::get(),
         // String::from("err") => err_module::get(),
         String::from("os") => os_module::get(),
+        String::from("ui") => ui_module::get(),
         String::from("widget") => widget_module::get(),
         String::from("time") => time_module::get(),
         String::from("rand") => rand_module::get(),
@@ -60,6 +64,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
                 // I/O operations
                 String::from("tap") => Expression::builtin("tap", tap, "print and return result", "<args>..."),
                 String::from("print") => Expression::builtin("print", print, "print arguments without newline", "<args>..."),
+                String::from("pprint") => Expression::builtin("pprint", pretty_print, "pretty print", "<list>|<map>"),
                 String::from("println") => Expression::builtin("println", println, "print arguments with newline", "<args>..."),
                 String::from("eprint") => Expression::builtin("eprint", eprint, "print to stderr without newline", "<args>..."),
                 String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr with newline", "<args>..."),
@@ -262,6 +267,7 @@ fn tap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     }
     Ok(Expression::from(result))
 }
+
 fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {

@@ -457,8 +457,8 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
     let quote_char = start_quote_range.to_str(input.as_original_str());
 
     // 2. 解析字符串内容（含转义处理）
-    let is_double = quote_char == "\"";
-    let (rest_after_content, diagnostics) = parse_string_inner(rest_after_start, is_double)?;
+    let (rest_after_content, diagnostics) =
+        parse_string_inner(rest_after_start, quote_char.chars().next().unwrap())?;
 
     // 3. 解析结束引号（或EOF）
     let (rest_after_end, _) = alt((
@@ -482,12 +482,11 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
     // };
 
     // 6. 根据引号类型生成TokenKind
-    let kind = if is_double {
-        TokenKind::StringLiteral
-    } else if quote_char == "`" {
-        TokenKind::StringTemplate
-    } else {
-        TokenKind::StringRaw
+    let kind = match quote_char {
+        "'" => TokenKind::StringRaw,
+        "\"" => TokenKind::StringLiteral,
+        "`" => TokenKind::StringTemplate,
+        _ => unreachable!(),
     };
 
     let token = Token::new(kind, content_range);
@@ -677,18 +676,17 @@ fn comment(input: Input<'_>) -> TokenizationResult<'_> {
     }
 }
 
-fn parse_string_inner(
-    input: Input<'_>,
-    is_double_quote: bool,
-) -> TokenizationResult<'_, Diagnostic> {
+fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<'_, Diagnostic> {
     let mut rest = input;
     let mut errors = Vec::new();
     let mut unicode_errors = Vec::new();
 
-    if is_double_quote {
-        loop {
-            match rest.chars().next() {
-                Some('"') | None => break,
+    match quote_char {
+        '"' => loop {
+            let next_char = rest.chars().next();
+            match next_char {
+                Some('"') => break,
+                None => break,
                 Some('\\') => {
                     let (r, diagnostic) = parse_escape(rest)?;
                     rest = r;
@@ -717,11 +715,12 @@ fn parse_string_inner(
                     }
                 }
             }
-        }
-    } else {
-        loop {
-            match rest.chars().next() {
-                Some('\'') | None => break,
+        },
+        '\'' | '`' => loop {
+            let next_char = rest.chars().next();
+            match next_char {
+                Some('\'') | Some('`') if next_char == Some(quote_char) => break,
+                None => break,
                 // Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
                 Some(ch) => {
                     // UTF-8有效性检查
@@ -734,7 +733,8 @@ fn parse_string_inner(
                     }
                 }
             }
-        }
+        },
+        _ => unreachable!(),
     }
 
     // let diagnostic = match errors.is_empty() {

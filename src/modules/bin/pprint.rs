@@ -1,7 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use crate::Builtin;
-use crate::{Environment, Expression};
+use crate::Expression;
 use prettytable::{
     Cell,
     Row,
@@ -10,13 +10,8 @@ use prettytable::{
     // format::{LinePosition, LineSeparator},
     row,
 };
-pub fn pretty_print(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("pp", args, 1)?;
-
-    match args[0].eval(env)? {
+pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
+    match arg {
         Expression::Map(exprs) => pprint_map(exprs.as_ref()),
         Expression::HMap(exprs) => pprint_hmap(exprs.as_ref()),
 
@@ -50,7 +45,7 @@ pub fn pretty_print(
             t.printstd();
         }
         _ => {
-            println!("{}", args[0]);
+            println!("{}", arg);
         }
     }
     Ok(Expression::None)

@@ -5,7 +5,7 @@ use std::{
 
 use crate::{Environment, Expression, Int, LmError, RuntimeError, parse_and_eval};
 use common_macros::hash_map;
-use pprint::pretty_print;
+use pprint::pretty_printer;
 
 #[cfg(feature = "chess-engine")]
 mod chess_module;
@@ -97,25 +97,23 @@ pub fn get_module_map() -> HashMap<String, Expression> {
 fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {
     if !args.is_empty() {
         match super::get_builtin(&args[0].to_string()) {
-            Some(m) => Ok(m.clone()),
-            _ => Err(LmError::CustomError("no lib found".into())),
+            Some(m) => {
+                pretty_printer(m)?;
+            }
+            _ => return Err(LmError::CustomError("no lib found".into())),
         }
     } else {
-        Ok(Expression::from(
-            super::get_builtin_map()
-                .iter()
-                .map(|item| match item.1 {
-                    Expression::HMap(_) => {
-                        (item.0.clone(), Expression::String("module".to_string()))
-                    }
-                    Expression::Map(_) => {
-                        (item.0.clone(), Expression::String("Module".to_string()))
-                    }
-                    other => (item.0.clone(), other.clone()),
-                })
-                .collect::<HashMap<String, Expression>>(),
-        ))
+        let m = super::get_builtin_map()
+            .iter()
+            .map(|item| match item.1 {
+                Expression::HMap(_) => (item.0.clone(), Expression::String("module".to_string())),
+                Expression::Map(_) => (item.0.clone(), Expression::String("Module".to_string())),
+                other => (item.0.clone(), other.clone()),
+            })
+            .collect::<HashMap<String, Expression>>();
+        pretty_printer(&Expression::from(m))?;
     }
+    Ok(Expression::None)
 }
 fn import(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("import", args, 1)?;
@@ -288,7 +286,15 @@ fn println(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     stdout.flush()?;
     Ok(Expression::None)
 }
+fn pretty_print(
+    args: &Vec<Expression>,
+    env: &mut Environment,
+) -> Result<Expression, crate::LmError> {
+    check_exact_args_len("pp", args, 1)?;
 
+    let _ = args.iter().map(|a| pretty_printer(&a.eval(env)?));
+    Ok(Expression::None)
+}
 fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     let mut stderr = std::io::stderr().lock();
     for (i, arg) in args.iter().enumerate() {

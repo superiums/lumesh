@@ -68,7 +68,7 @@ macro_rules! fmt_shared {
             Self::List(exprs) => {
                 write!(
                     $f,
-                    "[{}]\n",
+                    "[{}]",
                     exprs
                         .as_ref()
                         .iter()

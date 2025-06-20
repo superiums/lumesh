@@ -134,7 +134,7 @@ impl PrattParser {
 
             // 处理不同类型的运算符
             match operator_token.kind {
-                TokenKind::LineBreak | TokenKind::Punctuation | TokenKind::OperatorPrefix => {
+                TokenKind::LineBreak | TokenKind::Punctuation  => {
                     // dbg!("---break1.1---");
                     break;
                 }
@@ -225,6 +225,7 @@ impl PrattParser {
                 | TokenKind::IntegerLiteral
                 | TokenKind::FloatLiteral
                 | TokenKind::ValueSymbol
+                | TokenKind::OperatorPrefix     //$ in cmd arg goes to parse_literal, other ++/--/! should never comes.
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用

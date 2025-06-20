@@ -5,10 +5,10 @@ use glob::glob;
 // use portable_pty::ChildKiller;
 // use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::{
+    borrow::Cow,
     io::{ErrorKind, Write},
     process::{Command, Stdio},
-    rc::Rc,
-    // time::Duration,
+    rc::Rc, // time::Duration,
 };
 
 /// 执行
@@ -120,7 +120,7 @@ fn exec_single_cmd(
     pipe_out: bool,
     mode: u8,
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
-    // dbg!("------ exec:------", &cmdstr, &args, &is_last);
+    // dbg!("------ exec:------", &cmdstr, &args);
     // dbg!(&mode, &pipe_out, &input.is_some());
     // dbg!(&input);
     if mode & 16 != 0 {
@@ -257,7 +257,14 @@ fn exec_single_cmd(
         }
     }
 }
-
+pub fn expand_home(path: &str) -> Cow<str> {
+    if path.starts_with("~") {
+        if let Some(home_dir) = dirs::home_dir() {
+            return Cow::Owned(path.replace("~", home_dir.to_string_lossy().as_ref()));
+        }
+    }
+    Cow::Borrowed(path)
+}
 // 管道
 fn handle_command(
     cmd: &String,
@@ -276,11 +283,12 @@ fn handle_command(
         match e_arg {
             Expression::Symbol(s) => cmd_args.push(s),
             Expression::String(mut s) => {
-                if s.starts_with("~") {
-                    if let Some(home_dir) = dirs::home_dir() {
-                        s = s.replace("~", home_dir.to_string_lossy().as_ref());
-                    }
-                }
+                s = expand_home(s.as_str()).to_string();
+                // if s.starts_with("~") {
+                //     if let Some(home_dir) = dirs::home_dir() {
+                //         s = s.replace("~", home_dir.to_string_lossy().as_ref());
+                //     }
+                // }
                 if s.contains('*') {
                     let mut matched = false;
                     for path in glob(&s).unwrap().filter_map(Result::ok) {
@@ -355,7 +363,7 @@ fn handle_command(
     let last_input = state.pipe_out();
     let pipe_input = to_bytes(last_input);
     let result = exec_single_cmd(cmd, Some(cmd_args), env, pipe_input, always_pipe, cmd_mode)?;
-    //dbg!(&always_pipe, &cmd, &result);
+    // dbg!(&cmd, &always_pipe, &cmd_mode, &result);
     Ok(to_expr(result))
 }
 

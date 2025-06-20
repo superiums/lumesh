@@ -2,6 +2,7 @@ use super::Pattern;
 use super::cmd_excutor::eval_command;
 use crate::STRICT;
 use crate::expression::alias;
+use crate::expression::cmd_excutor::expand_home;
 use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use core::option::Option::None;
@@ -195,7 +196,7 @@ impl Expression {
                         Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            true && is_in_pipe
+                            !is_in_pipe
                         }
                         _ => false,
                     };
@@ -568,6 +569,7 @@ impl Expression {
                             }
                             state.pipe_in(left_output);
 
+                            // dbg!(&is_in_pipe, &state.contains(State::IN_PIPE));
                             match rhs.as_ref() {
                                 Expression::Symbol(s) => {
                                     return Expression::Apply(
@@ -614,9 +616,9 @@ impl Expression {
                                 state.clear(State::IN_PIPE);
                             }
 
-                            let mut path = std::env::current_dir()?;
-                            path = path
-                                .join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
+                            let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
+                            let path =
+                                std::env::current_dir()?.join(expand_home(s.as_str()).to_string());
                             if !path.exists() {
                                 std::fs::File::create(path.clone())?;
                             }
@@ -665,9 +667,9 @@ impl Expression {
                             }
 
                             // dbg!("-->> left=", &l);
-                            let mut path = std::env::current_dir()?;
-                            path = path
-                                .join(rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string());
+                            let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
+                            let path =
+                                std::env::current_dir()?.join(expand_home(s.as_str()).to_string());
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
                                 std::fs::write(path, bytes)

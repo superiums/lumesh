@@ -175,8 +175,7 @@ impl Expression {
                 //     .map(|a| a.eval_mut(true,env, depth + 1))
                 //     .collect::<Result<Vec<_>, _>>()?;
                 // let func_eval = *func.clone();
-                let is_in_pipe = state.contains(State::IN_PIPE);
-                state.set(State::IN_PIPE);
+
                 //dbg!(&state, &func_eval.type_name());
 
                 // 分派到具体类型处理
@@ -232,10 +231,15 @@ impl Expression {
                         let mut current_env = env.fork();
 
                         // 批量参数绑定前先求值所有参数
+                        let is_in_pipe = state.contains(State::IN_PIPE);
+                        state.set(State::IN_PIPE);
                         let mut evaluated_args = args
                             .iter()
                             .map(|arg| arg.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
+                        }
 
                         if let Some(p) = pipe_out {
                             evaluated_args.push(p);
@@ -295,11 +299,16 @@ impl Expression {
                             });
                         }
 
+                        let is_in_pipe = state.contains(State::IN_PIPE);
+                        state.set(State::IN_PIPE);
                         let mut actual_args = args
                             .as_ref()
                             .iter()
                             .map(|a| a.eval_mut(state, env, depth + 1))
                             .collect::<Result<Vec<_>, _>>()?;
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
+                        }
 
                         if let Some(p) = pipe_out {
                             actual_args.push(p);
@@ -363,9 +372,6 @@ impl Expression {
                     )),
                 };
 
-                if !is_in_pipe {
-                    state.clear(State::IN_PIPE);
-                }
                 result
             }
             _ => Err(RuntimeError::CustomError(self.to_string())), // unreachable!(),

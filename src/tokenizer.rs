@@ -898,7 +898,7 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .is_some_and(|c| !c.is_ascii_whitespace())
+            .is_some_and(|c| !c.is_ascii_whitespace() && !['(', '[', '{'].contains(&c))
         {
             return Err(NOT_FOUND);
         }

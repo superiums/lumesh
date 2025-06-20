@@ -90,7 +90,15 @@ pub fn eval_command(
         }
         Expression::Variable(..) => {
             let cmdx = cmd.eval_mut(state, env, depth)?;
-            eval_command(&Rc::new(cmdx), args, state, env, depth)
+            let cmdx_str=cmdx.to_string();
+            if (cmdx_str=="" || cmdx_str==";") && !args.is_empty(){
+                let aa=args.split_at(1);
+                let newcmd=aa.0.to_vec();
+                eval_command(&Rc::new(newcmd.iter().next().unwrap()), &Rc::new(aa.1.to_vec()), state, env, depth)
+
+            }else{
+                eval_command(&Rc::new(cmdx), args, state, env, depth)
+            }
         }
         e => Err(RuntimeError::TypeError {
             expected: "Symbol".to_string(),

@@ -182,96 +182,11 @@ impl Expression {
                 // 分派到具体类型处理
                 let result = match func_eval {
                     // | Self::String(name)
-                    Self::Symbol(_name) | Self::String(_name) => {
-                        // Apply as Command
-                        //dbg!("   3.--->applying symbol as Command:", &_name);
-                        // handle_command(&name, args, state, env, depth)
-                        eval_command(func, args, state, env, depth)
-                        // let bindings = env.get_bindings_map();
-
-                        // let mut cmd_args = vec![];
-                        // for arg in args {
-                        //     for flattened_arg in
-                        //         Self::flatten(vec![arg.eval_mut(env, depth + 1)?])
-                        //     {
-                        //         match flattened_arg {
-                        //             Self::String(s) => cmd_args.push(s),
-                        //             Self::Bytes(b) => {
-                        //                 cmd_args.push(String::from_utf8_lossy(&b).to_string())
-                        //             }
-                        //             Self::None => continue,
-                        //             _ => cmd_args.push(format!("{}", flattened_arg)),
-                        //         }
-                        //     }
-                        // }
-
-                        // let always_pipe = env.has("__ALWAYSPIPE");
-                        // if always_pipe {
-                        //     let output = Command::new(&name)
-                        //         .current_dir(env.get_cwd())
-                        //         .args(
-                        //             cmd_args, // Self::flatten(args.clone()).iter()
-                        //                      //     .filter(|&x| x != &Self::None)
-                        //                      //     // .map(|x| Ok(format!("{}", x.eval_mut(env, depth + 1)?)))
-                        //                      //     .collect::<Result<Vec<String>, Error>>()?,
-                        //         )
-                        //         .envs(bindings)
-                        //         .output();
-
-                        //     match output {
-                        //         Ok(result) => {
-                        //             // 检查命令是否成功执行
-                        //             if result.status.success() {
-                        //                 // 将标准输出转换为字符串并打印
-                        //                 let stdout = String::from_utf8_lossy(&result.stdout);
-                        //                 // println!("Command output:\n{}", stdout);
-                        //                 return Ok(Expression::String(stdout.into_owned()));
-                        //             } else {
-                        //                 // 如果命令执行失败，打印错误信息
-                        //                 let stderr = String::from_utf8_lossy(&result.stderr);
-                        //                 // eprintln!("Command failed with error:\n{}", &stderr);
-                        //                 return Err(RuntimeError::CustomError(format!(
-                        //                     "{} command failed with error:\n{}",
-                        //                     name, stderr,
-                        //                 )));
-                        //             }
-                        //         }
-                        //         Err(e) => {
-                        //             return Err(match e.kind() {
-                        //                 ErrorKind::NotFound => RuntimeError::ProgramNotFound(name),
-                        //                 ErrorKind::PermissionDenied => {
-                        //                     RuntimeError::PermissionDenied(self.clone())
-                        //                 }
-                        //                 _ => RuntimeError::CommandFailed(name, args.clone()),
-                        //             });
-                        //         }
-                        //     }
-                        // } else {
-                        //     let mut child = Command::new(&name)
-                        //         .current_dir(env.get_cwd())
-                        //         .args(cmd_args)
-                        //         .envs(bindings)
-                        //         .stdin(Stdio::inherit()) // 继承标准输入
-                        //         .stdout(Stdio::inherit()) // 继承标准输出
-                        //         .stderr(Stdio::inherit()) // 继承标准错误
-                        //         .spawn()
-                        //         .map_err(|e| match e.kind() {
-                        //             ErrorKind::NotFound => {
-                        //                 RuntimeError::ProgramNotFound(name.to_string())
-                        //             }
-                        //             ErrorKind::PermissionDenied => {
-                        //                 RuntimeError::PermissionDenied(self.clone())
-                        //             }
-                        //             _ => {
-                        //                 RuntimeError::CommandFailed(name.to_string(), args.clone())
-                        //             }
-                        //         })?;
-                        //     child.wait().map_err(|e| {
-                        //         RuntimeError::CommandFailed2(name.to_string(), e.to_string())
-                        //     })?;
-
-                        //     return Ok(Expression::None);
-                        // }
+                    Self::Symbol(name) => {
+                        eval_command(&Self::Symbol(name), args, state, env, depth)
+                    }
+                    Self::String(name) => {
+                        eval_command(&Self::String(name), args, state, env, depth)
                     }
 
                     // Self::Builtin(builtin) => (builtin.body)(args_eval, env),

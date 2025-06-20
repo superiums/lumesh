@@ -293,6 +293,7 @@ fn pretty_print(
     check_exact_args_len("pp", args, 1)?;
 
     let _ = args.iter().map(|a| pretty_printer(&a.eval(env)?));
+
     Ok(Expression::None)
 }
 fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {

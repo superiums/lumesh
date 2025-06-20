@@ -13,7 +13,7 @@ use std::{
 
 /// 执行
 pub fn eval_command(
-    cmd: &Rc<Expression>,
+    cmd: &Expression,
     args: &Rc<Vec<Expression>>,
     state: &mut State,
     env: &mut Environment,
@@ -21,17 +21,23 @@ pub fn eval_command(
 ) -> Result<Expression, RuntimeError> {
     // dbg!("2.--->Command:", &cmd, &args, &state);
 
-    match cmd.as_ref() {
-        // index类型的内置命令，或其他保存于map的命令
+    match cmd {
+        // index类型的内置命令，或其他保存于map的命令; $var命令
         Expression::Index(..) => {
-            let cmdx = cmd.as_ref().eval_mut(state, env, depth)?;
+            let cmdx = cmd.eval_mut(state, env, depth)?;
             // dbg!(&cmd, &cmdx);
             cmdx.apply(args.to_vec()).eval_apply(state, env, depth)
         }
-        // 符号
+
         // string like cmd: ./abc
-        Expression::Symbol(cmd_sym) | Expression::String(cmd_sym) => {
-            match alias::get_alias(cmd_sym) {
+        Expression::String(cmd_str) =>
+        handle_command(&cmd_str, args.as_ref(), state, env, depth)
+        ,
+
+
+        // 符号
+        Expression::Symbol(cmd_sym) => {
+            match alias::get_alias(cmd_sym.as_str()) {
                 // 别名
                 Some(cmd_alias) => {
                     // dbg!(&cmd_alias.type_name());
@@ -47,6 +53,9 @@ pub fn eval_command(
                                     depth,
                                 )
                             }
+                            Expression::String(cmd_str) => {
+                                handle_command(&cmd_str, args.as_ref(), state, env, depth)
+                            }
                             Expression::Apply(..) => cmd_alias
                                 .append_args(args.to_vec())
                                 .eval_mut(state, env, depth),
@@ -57,7 +66,7 @@ pub fn eval_command(
                                     .eval_apply(state, env, depth)
                             }
                             _ => Err(RuntimeError::TypeError {
-                                expected: "Command or Builtin".into(),
+                                expected: "alias for Command/Function/Builtin".into(),
                                 sym: cmd_alias.to_string(),
                                 found: cmd_alias.type_name(),
                             }),
@@ -67,7 +76,7 @@ pub fn eval_command(
                     }
                 }
                 _ => {
-                    match get_builtin(cmd_sym) {
+                    match get_builtin(cmd_sym.as_str()) {
                         // 顶级内置命令
                         Some(bti) => {
                             // dbg!("branch to builtin:", &cmd, &bti);
@@ -78,6 +87,10 @@ pub fn eval_command(
                     }
                 }
             }
+        }
+        Expression::Variable(..) => {
+            let cmdx = cmd.eval_mut(state, env, depth)?;
+            eval_command(&Rc::new(cmdx), args, state, env, depth)
         }
         e => Err(RuntimeError::TypeError {
             expected: "Symbol".to_string(),
@@ -273,6 +286,9 @@ fn handle_command(
                 } else {
                     cmd_args.push(s)
                 }
+            }
+            Expression::List(ls) => {
+                ls.iter().for_each(|a| cmd_args.push(format!("{}", a)));
             }
             Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
             Expression::None => continue,

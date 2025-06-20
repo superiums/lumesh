@@ -768,7 +768,7 @@ impl Expression {
                 // 执行应用
                 Self::Apply(_, _) => break Self::eval_apply(job, state, env, depth),
                 Self::Command(cmd, args) => {
-                    return eval_command(cmd, args, state, env, depth);
+                    return eval_command(cmd.as_ref(), args, state, env, depth);
                 }
                 // break Self::eval_command(self, env, depth),
                 // 简单控制流表达式

@@ -191,21 +191,21 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("let"),
-        keyword_tag("alias"),
-        keyword_tag("if"),
+        keyword_alone_tag("let"),
+        keyword_alone_tag("alias"),
+        keyword_alone_tag("if"),
         // keyword_tag("then"),
         keyword_tag("else"),
         keyword_alone_tag("fn"),
-        keyword_tag("match"),
-        keyword_tag("for"),
-        keyword_tag("in"),
-        keyword_tag("while"),
-        keyword_tag("loop"),
-        keyword_tag("export"), //set global env
+        keyword_alone_tag("match"),
+        keyword_alone_tag("for"),
+        keyword_alone_tag("in"),
+        keyword_alone_tag("while"),
+        keyword_alone_tag("loop"),
+        keyword_alone_tag("export"), //set global env
         keyword_tag("break"),
         keyword_tag("return"),
-        keyword_tag("del"),
+        keyword_alone_tag("del"),
         // keyword_tag("type"),
         // keyword_tag("None"),
     ))(input)

@@ -234,6 +234,8 @@ pub fn parse_command_output(
         for (i, header) in detected_headers.iter().enumerate() {
             if let Some(&value) = values.get(i) {
                 row.insert(header.clone(), Expression::String(value.to_string()));
+            } else {
+                row.insert(header.clone(), Expression::None);
             }
         }
 

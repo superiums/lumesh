@@ -60,6 +60,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         // Shell control
                 String::from("exit") => Expression::builtin("exit", exit, "exit the shell", "[status]"),
                 String::from("cd") => Expression::builtin("cd", cd, "change directories", "[path]"),
+                String::from("pwd") => Expression::builtin("pwd", pwd, "print working directory", ""),
 
                 // I/O operations
                 String::from("tap") => Expression::builtin("tap", tap, "print and return result", "<args>..."),
@@ -223,6 +224,11 @@ fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate
         }
     }
 }
+fn pwd(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {
+    let path = std::env::current_dir()?;
+    println!("{}", path.display());
+    Ok(Expression::None)
+}
 
 fn get_type(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("type", args, 1)?;
@@ -290,10 +296,12 @@ fn pretty_print(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("pp", args, 1)?;
-
-    let _ = args.iter().map(|a| pretty_printer(&a.eval(env)?));
-
+    check_args_len("pprint", args, 1..)?;
+    // let _ = args.iter().map(|a| pretty_printer(&a.eval(env)?));
+    for arg in args.iter() {
+        let r = arg.eval(env)?;
+        pretty_printer(&r)?;
+    }
     Ok(Expression::None)
 }
 fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {

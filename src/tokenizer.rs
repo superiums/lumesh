@@ -22,6 +22,7 @@ pub enum Diagnostic {
     Valid,
     InvalidUnicode(Box<[StrSlice]>),
     InvalidStringEscapes(Box<[StrSlice]>),
+    InvalidColorCode(Box<[StrSlice]>),
     InvalidNumber(StrSlice),
     IllegalChar(StrSlice),
     NotTokenized(StrSlice),
@@ -687,6 +688,15 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
             match next_char {
                 Some('"') => break,
                 None => break,
+
+                // Some('\x1b') => {
+                //     // 同时处理两种转义字符
+                //     let (r, diagnostic) = parse_ansi_sequence(rest)?;
+                //     rest = r;
+                //     if let Diagnostic::InvalidColorCode(ranges) = diagnostic {
+                //         unicode_errors.extend(ranges.into_vec());
+                //     }
+                // }
                 Some('\\') => {
                     let (r, diagnostic) = parse_escape(rest)?;
                     rest = r;
@@ -754,8 +764,62 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
 
     Ok((rest, diagnostic))
 }
+fn parse_ansi_sequence(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
+    // 同时匹配两种开头的转义序列
+    let (rest, range) = alt((
+        punctuation_tag("\\x1b["), // 匹配 \x1b[
+        punctuation_tag("\\033["), // 匹配 \033[ (八进制表示)
+        punctuation_tag("\\x1b]"), // 匹配 \x1b[
+        punctuation_tag("\\033]"), // 匹配 \033[ (八进制表示)
+        punctuation_tag("\\007"),  // 匹配 \0007 (八进制表示 bell)
+        punctuation_tag("\\x07"),  // 匹配 \0007 (十六进制表示 bell)
+    ))(input)?;
+
+    // 查找结束符 'm'
+    let mut found_m = false;
+    let mut pos = 0;
+
+    for c in rest.chars() {
+        if c == 'm' || ['A', 'B', 'C', 'D'].contains(&c) {
+            found_m = true;
+            break;
+        }
+        pos += c.len_utf8();
+    }
+    // 控制序列还可能以;结尾，如 	\033]0;My Title\007
+    if !found_m {
+        pos = 0;
+        for c in rest.chars() {
+            if c == ';' {
+                found_m = true;
+                break;
+            }
+            pos += c.len_utf8();
+        }
+    }
+
+    if found_m {
+        // 截取到'm'结束（包含'm'）
+        let (remaining, _) = rest.split_at(pos + 1); // +1 包含'm'
+        Ok((remaining, Diagnostic::Valid))
+    } else {
+        // bell 无须结束符
+        let fd = range.to_str(input.as_original_str());
+        if ["\\007", "\\x0a"].contains(&fd) {
+            return Ok((rest, Diagnostic::Valid));
+        }
+        // 未找到结束符，标记为无效序列
+        let ranges = vec![range].into_boxed_slice();
+        Ok((rest, Diagnostic::InvalidColorCode(ranges)))
+    }
+}
 
 fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
+    let (r, dia1) = parse_ansi_sequence(input)?;
+    if dia1 == Diagnostic::Valid {
+        return Ok((r, dia1));
+    }
+
     fn parse_hex_digit(input: Input<'_>) -> TokenizationResult<'_> {
         input
             .chars()
@@ -777,10 +841,13 @@ fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
         punctuation_tag("r"),
         punctuation_tag("t"),
     ));
+
+    // 尝试解析基础转义字符
     if let Ok((rest, _)) = parser1(rest) {
         return Ok((rest, Diagnostic::Valid));
     }
 
+    // Unicode 转义序列解析器
     let mut parser2 = tuple((
         punctuation_tag("u{"),
         fold_many_m_n(
@@ -867,6 +934,12 @@ fn keyword_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
 /// This parser ensures that the word is followed by whitespace.
 fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
+        if input
+            .previous_char()
+            .is_some_and(|c| !c.is_ascii_whitespace() && !['(', '[', '{'].contains(&c))
+        {
+            return Err(NOT_FOUND);
+        }
         input
             .strip_prefix(keyword)
             .filter(|(rest, _)| rest.starts_with(char::is_whitespace))

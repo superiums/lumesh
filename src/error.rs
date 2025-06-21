@@ -533,6 +533,15 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
             }
             Ok(())
         }
+        Diagnostic::InvalidColorCode(ranges) => {
+            for &at in ranges.iter() {
+                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
+                let escape = at.to_str(string).trim();
+                writeln!(f, "invalid color code sequence `{}`", escape)?;
+                print_error_lines(string, at, f, 72)?;
+            }
+            Ok(())
+        }
         &Diagnostic::InvalidNumber(at) => {
             write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
             let num = at.to_str(string).trim();

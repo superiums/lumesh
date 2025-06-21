@@ -1065,9 +1065,14 @@ fn parse_variable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
 #[inline]
 fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, string) = kind(TokenKind::StringLiteral)(input)?;
+    let ansi_escaped = string
+        .to_str(input.str)
+        .replace("\\x1b", "\x1b")
+        .replace("\\033", "\x1b")
+        .replace("\\007", "\x07");
     Ok((
         input,
-        Expression::String(snailquote::unescape(string.to_str(input.str)).unwrap()),
+        Expression::String(snailquote::unescape(ansi_escaped.as_str()).unwrap()),
     ))
 }
 #[inline]

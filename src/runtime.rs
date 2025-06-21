@@ -182,9 +182,6 @@ fn init_cmds(env: &mut Environment) {
     if !env.is_defined("clear") {
         parse_and_eval("let clear = () -> console@clear()", env);
     }
-    if !env.is_defined("pwd") {
-        parse_and_eval("let pwd = () -> echo CWD", env);
-    }
 }
 
 pub fn read_user_input(prompt: impl ToString) -> String {

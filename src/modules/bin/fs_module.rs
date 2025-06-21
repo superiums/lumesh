@@ -29,8 +29,8 @@ pub fn get() -> Expression {
 
                // check
                String::from("exists") => Expression::builtin("exists", path_exists, "check if path exists", "<path>"),
-               String::from("isdir") => Expression::builtin("isdir", is_directory, "check if path is directory", "<path>"),
-               String::from("isfile") => Expression::builtin("isfile", is_file, "check if path is file", "<path>"),
+               String::from("is_dir") => Expression::builtin("is_dir", is_directory, "check if path is directory", "<path>"),
+               String::from("is_file") => Expression::builtin("is_file", is_file, "check if path is file", "<path>"),
 
                // read/write
                String::from("head") => Expression::builtin("head", read_file_head, "read first N lines of file", "[n] <file>"),

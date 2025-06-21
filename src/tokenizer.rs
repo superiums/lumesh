@@ -896,10 +896,10 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
 /// parse a tag before letters/numbers.
 fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
-        if input
-            .previous_char()
-            .is_some_and(|c| !c.is_ascii_whitespace() && !['(', '[', '{'].contains(&c))
-        {
+        if input.previous_char().is_some_and(|c| {
+            !c.is_ascii_whitespace() && !c.is_ascii_punctuation()
+            // !['(', '[', '{', '`', ',', ':'].contains(&c)
+        }) {
             return Err(NOT_FOUND);
         }
         input

@@ -23,7 +23,7 @@ if IS_INTERACTIVE {
     }
     # template could be normal expression or func.
     # avaluable tmplate var: $CWD, $CWD_SHORT
-    let LUME_PROMPT_TEMPLATE = (fmt.blue($CWD_SHORT) + fmt.yellow(fmt.bold(">> ")))
+    let LUME_PROMPT_TEMPLATE = (fmt.blue("$CWD_SHORT") + fmt.yellow(fmt.bold(">> ")))
     # if template is lambda/func, it will be evaluated everytime.
     # let LUME_PROMPT_TEMPLATE := x -> {
     #     fmt.format "{} {}{}{} " fmt.blue(x) fmt.green(fmt.bold("|")) \

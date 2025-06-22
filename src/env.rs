@@ -96,4 +96,17 @@ impl Environment {
             None => self,
         }
     }
+
+    pub fn define_in_root(&mut self, name: &str, expr: Expression) {
+        match self.parent.as_mut() {
+            Some(p) => p.define_in_root(name, expr),
+            None => self.define(name, expr),
+        }
+    }
+    pub fn undefine_in_root(&mut self, name: &str) {
+        match self.parent.as_mut() {
+            Some(p) => p.undefine_in_root(name),
+            None => self.undefine(name),
+        }
+    }
 }

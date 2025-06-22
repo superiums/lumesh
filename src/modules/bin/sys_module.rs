@@ -5,13 +5,15 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     Expression::from(hash_map! {
+        String::from("env") => Expression::builtin("env", env_builtin, "get root environment as a map", ""),
+        String::from("set") => Expression::builtin("set", set_builtin, "define a variable in root environment", "<var> <val>"),
+        String::from("unset") => Expression::builtin("unset", unset_builtin, "undefine a variable in root environment", "<var>"),
+
+        String::from("vars") => Expression::builtin("vars", vars_builtin, "get defined variables in current enviroment", ""),
+        String::from("has") => Expression::builtin("has", has_builtin, "check if a variable is defined in current environment", "<var>"),
+        String::from("defined") => Expression::builtin("defined", defined_builtin, "check if a variable is defined in current environment tree", "<var>"),
+
         String::from("quote") => Expression::builtin("quote", quote_builtin, "quote an expression", "<expr>"),
-        String::from("env") => Expression::builtin("env", env_builtin, "get the current environment as a map", ""),
-        String::from("vars") => Expression::builtin("vars", vars_builtin, "get a table of the defined variables", ""),
-        String::from("set") => Expression::builtin("set", set_builtin, "define a variable in the current environment", "<var> <val>"),
-        String::from("unset") => Expression::builtin("unset", unset_builtin, "undefine a variable in the current environment", "<var>"),
-        String::from("has") => Expression::builtin("has", has_builtin, "check if a variable is defined in the current environment", "<var>"),
-        String::from("defined") => Expression::builtin("defined", defined_builtin, "check if a variable is defined in the current environment tree", "<var>"),
         String::from("err-codes") => Expression::builtin("err-codes", err_codes_builtin, "display runtime error codes", ""),
     })
 }
@@ -41,8 +43,8 @@ fn set_builtin(
 ) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("set", &args, 2)?;
     let name = args[0].to_string();
-    let expr = args[1].clone();
-    env.define(&name, expr);
+    let expr = args[1].eval(env)?;
+    env.define_in_root(&name, expr);
     Ok(Expression::None)
 }
 
@@ -52,7 +54,7 @@ fn unset_builtin(
 ) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("unset", &args, 1)?;
     let name = args[0].to_string();
-    env.undefine(&name);
+    env.undefine_in_root(&name);
     Ok(Expression::None)
 }
 

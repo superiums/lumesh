@@ -208,23 +208,23 @@ impl Expression {
                         env.define(name, value.clone());
                     } else {
                         // 向上层环境查找并修改（根据语言设计需求）
-                        let mut current_env = env.clone();
-                        while let Some(parent) = current_env.get_parent_mut() {
-                            if parent.has(name) {
-                                parent.define(name, value.clone());
-                                return Ok(value);
-                            }
-                            current_env = parent.clone();
-                        }
+                        // let mut current_env = env.clone();
+                        // while let Some(parent) = current_env.get_parent_mut() {
+                        //     if parent.has(name) {
+                        //         parent.define(name, value.clone());
+                        //         return Ok(value);
+                        //     }
+                        //     current_env = parent.clone();
+                        // }
                         unsafe {
                             if STRICT
                             // && env.get("STRICT") == Some(Expression::Boolean(true))
                             {
                                 return Err(RuntimeError::UndeclaredVariable(name.clone()));
-                            } else {
-                                env.define(name, value.clone());
                             }
                         }
+
+                        env.define(name, value.clone());
                     }
                     if need_clear {
                         // env.undefine("__ALWAYSPIPE");

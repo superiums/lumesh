@@ -13,6 +13,7 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
         .replace_all(template, |caps: &Captures<'_>| {
             // 优先处理带大括号的变量,解析并执行
             if let Some(name) = caps.get(1) {
+                // dbg!(&name);
                 return match parse(name.as_str()) {
                     Ok(expr) => match expr.eval_in_pipe(env) {
                         Ok(r) => r.to_string(),

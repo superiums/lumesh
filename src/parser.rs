@@ -1062,86 +1062,84 @@ fn parse_variable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
     preceded(text("$"), map(parse_symbol_string, Expression::Variable))(input)
 }
 
+/// 辅助函数：解析字符串字面量的通用逻辑
+#[inline]
+fn parse_string_common(
+    input: Tokens<'_>,
+    kind_token: TokenKind,
+    enable_ansi_escape: bool,
+    enable_normal_escape: bool,
+) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
+    // 提取字符串字面量
+    let (input, expr) = kind(kind_token)(input)?;
+    let raw_str = expr.to_str(input.str);
+    // 检查是否符合格式要求
+    if raw_str.len() >= 2 {
+        // 验证开头和结尾是否为指定字符
+        let quote_char = match kind_token {
+            TokenKind::StringRaw => '\'',
+            TokenKind::StringLiteral => ' ', //never replace "", snailquote need.
+            TokenKind::StringTemplate => '`',
+            _ => unreachable!(),
+        };
+        // 如果有右侧引号，则调整结束位置
+        let start = match raw_str.starts_with(quote_char) {
+            true => expr.start() + 1,
+            false => expr.start(),
+        };
+        let end = match raw_str.ends_with(quote_char) {
+            true => expr.end() - 1,
+            false => expr.end(),
+        };
+
+        // 截取中间的内容并进行转义替换
+        let cs = input.str.get(start..end);
+        let content = cs.to_str(input.str);
+
+        // 如果启用了 ANSI 转义序列替换，则进行处理
+        let ansi_escaped = if enable_ansi_escape {
+            content
+                .replace("\\x1b", "\x1b")
+                .replace("\\033", "\x1b")
+                .replace("\\007", "\x07")
+        } else {
+            content.to_string()
+        };
+        let result = if enable_normal_escape {
+            snailquote::unescape(&ansi_escaped).map_err(|e| {
+                nom::Err::Failure(SyntaxErrorKind::InvalidEscapeSequence(e.to_string()))
+            })?
+        } else {
+            ansi_escaped
+        };
+
+        // 返回解析结果
+        Ok((input, result))
+    } else {
+        // 如果不符合格式要求，返回错误
+        Err(SyntaxErrorKind::failure(
+            expr,
+            "string enclosed",
+            Some(raw_str.to_string()),
+            Some("check string surrounds"),
+        ))
+    }
+}
+
 #[inline]
 fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, string) = kind(TokenKind::StringLiteral)(input)?;
-    let ansi_escaped = string
-        .to_str(input.str)
-        .replace("\\x1b", "\x1b")
-        .replace("\\033", "\x1b")
-        .replace("\\007", "\x07");
-    Ok((
-        input,
-        Expression::String(snailquote::unescape(ansi_escaped.as_str()).unwrap()),
-    ))
+    let (input, r) = parse_string_common(input, TokenKind::StringLiteral, true, true)?;
+    Ok((input, Expression::String(r)))
 }
 #[inline]
 fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, expr) = kind(TokenKind::StringRaw)(input)?;
-    let raw_str = expr.to_str(input.str);
-
-    // 检查首尾单引号
-    if raw_str.len() >= 2 {
-        // 通过StrSlice直接计算子范围
-        // let start = expr.start() + 1;
-
-        // 如果有右侧引号，则调整结束位置
-        let start = match raw_str.chars().next().unwrap() {
-            '\'' => expr.start() + 1,
-            _ => expr.start(),
-        };
-        let end = match raw_str.chars().last().unwrap() {
-            '\'' => expr.end() - 1,
-            _ => expr.end(),
-        };
-
-        let content = input.str.get(start..end); // 截取中间部分
-        Ok((
-            input,
-            Expression::String(content.to_str(input.str).to_string()),
-        ))
-    } else {
-        Err(SyntaxErrorKind::failure(
-            expr,
-            "raw string enclosed in ''",
-            Some(raw_str.to_string()),
-            Some("raw strings must surround with '"),
-        ))
-    }
+    let (input, r) = parse_string_common(input, TokenKind::StringRaw, false, false)?;
+    Ok((input, Expression::String(r)))
 }
 #[inline]
 fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, expr) = kind(TokenKind::StringTemplate)(input)?;
-    let raw_str = expr.to_str(input.str);
-
-    // 检查首尾单引号
-    if raw_str.len() >= 2 {
-        // 通过StrSlice直接计算子范围
-        // let start = expr.start() + 1;
-
-        // 如果有右侧引号，则调整结束位置
-        let start = match raw_str.chars().next().unwrap() {
-            '`' => expr.start() + 1,
-            _ => expr.start(),
-        };
-        let end = match raw_str.chars().last().unwrap() {
-            '`' => expr.end() - 1,
-            _ => expr.end(),
-        };
-
-        let content = input.str.get(start..end); // 截取中间部分
-        Ok((
-            input,
-            Expression::StringTemplate(content.to_str(input.str).to_string()),
-        ))
-    } else {
-        Err(SyntaxErrorKind::failure(
-            expr,
-            "template string enclosed with ``",
-            Some(raw_str.to_string()),
-            Some("template strings must surround with `"),
-        ))
-    }
+    let (input, r) = parse_string_common(input, TokenKind::StringTemplate, true, false)?;
+    Ok((input, Expression::StringTemplate(r)))
 }
 
 // -- 字面量解析 --

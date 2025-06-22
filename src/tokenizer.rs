@@ -764,61 +764,86 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
 
     Ok((rest, diagnostic))
 }
+
 fn parse_ansi_sequence(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
-    // 同时匹配两种开头的转义序列
+    // 定义 ANSI 转义序列的起始模式
     let (rest, range) = alt((
+        // 控制字符序列（Control Sequence Introducer, CSI）
         punctuation_tag("\\x1b["), // 匹配 \x1b[
-        punctuation_tag("\\033["), // 匹配 \033[ (八进制表示)
-        punctuation_tag("\\x1b]"), // 匹配 \x1b[
-        punctuation_tag("\\033]"), // 匹配 \033[ (八进制表示)
-        punctuation_tag("\\007"),  // 匹配 \0007 (八进制表示 bell)
-        punctuation_tag("\\x07"),  // 匹配 \0007 (十六进制表示 bell)
+        punctuation_tag("\\033["), // 匹配 \033[
+        // 操作系统命令（Operating System Command, OSC）
+        // 主序列（Primary Sequence）
+        // 私有序列（Private Sequence）
+        punctuation_tag("\\x1b]"), // 匹配 \x1b]
+        punctuation_tag("\\033]"), // 匹配 \033]
+        // 设备控制字符串（Device Control String, DCS）
+        punctuation_tag("\\x1bP"), // 匹配 \x1bP
+        punctuation_tag("\\033P"), // 匹配 \033P
+        // 结束符：\x07 或 \007（铃声字符）
+        punctuation_tag("\\007"), // 匹配 \007 (bell)
+        punctuation_tag("\\x07"), // 匹配 \x07 (bell)
     ))(input)?;
 
-    // 查找结束符 'm'
-    let mut found_m = false;
-    let mut pos = 0;
+    // 获取起始范围对应的原始字符串
+    let original_str = range.to_str(input.as_original_str());
 
+    // 初始化变量
+    let mut invalid_ranges = Vec::new();
+
+    // 根据起始模式判断后续逻辑
+    let end_chars = match original_str {
+        "\\x1b[" | "\\033[" => {
+            // 匹配 \x1b[ 或 \033[ 的情况
+            vec![
+                'm', 'f', 'H', 'J', 'K', 'A', 'B', 'C', 'D', 'r', 's', 'u', 'l', 'h',
+            ]
+        }
+        "\\x1b]" | "\\033]" => {
+            // 匹配 \x1b] 或 \033] 的情况
+            // \x1b\, \033\ 可能作为序列结束
+            vec![';', '\\']
+        }
+        "\\x1bP" | "\\033P" => {
+            return Ok((rest, Diagnostic::Valid)); // 无需结束符
+        }
+        _ => {
+            // 匹配 \007 或 \x07 的情况
+            return Ok((rest, Diagnostic::Valid)); // bell 无需结束符
+        }
+    };
+
+    // 如果有结束符，尝试解析到结束符为止
+    let mut pos = 0;
+    let mut found = false;
     for c in rest.chars() {
-        if c == 'm' || ['A', 'B', 'C', 'D'].contains(&c) {
-            found_m = true;
+        pos += c.len_utf8();
+        if end_chars.contains(&c) {
+            found = true;
             break;
         }
-        pos += c.len_utf8();
-    }
-    // 控制序列还可能以;结尾，如 	\033]0;My Title\007
-    if !found_m {
-        pos = 0;
-        for c in rest.chars() {
-            if c == ';' {
-                found_m = true;
-                break;
-            }
-            pos += c.len_utf8();
-        }
     }
 
-    if found_m {
-        // 截取到'm'结束（包含'm'）
-        let (remaining, _) = rest.split_at(pos + 1); // +1 包含'm'
+    if found == true {
+        // 截取到结束符的位置
+        let (remaining, _) = rest.split_at(pos);
         Ok((remaining, Diagnostic::Valid))
     } else {
-        // bell 无须结束符
-        let fd = range.to_str(input.as_original_str());
-        if ["\\007", "\\x0a"].contains(&fd) {
-            return Ok((rest, Diagnostic::Valid));
-        }
-        // 未找到结束符，标记为无效序列
-        let ranges = vec![range].into_boxed_slice();
-        Ok((rest, Diagnostic::InvalidColorCode(ranges)))
+        // 如果未找到结束符，标记为无效序列
+        invalid_ranges.push(range);
+        Ok((
+            rest,
+            Diagnostic::InvalidColorCode(invalid_ranges.into_boxed_slice()),
+        ))
     }
 }
 
 fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
-    let (r, dia1) = parse_ansi_sequence(input)?;
-    if dia1 == Diagnostic::Valid {
-        return Ok((r, dia1));
-    }
+    match parse_ansi_sequence(input) {
+        Ok(ansi) => {
+            return Ok(ansi);
+        }
+        _ => {}
+    };
 
     fn parse_hex_digit(input: Input<'_>) -> TokenizationResult<'_> {
         input

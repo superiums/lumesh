@@ -68,10 +68,7 @@ fn pprint_map(exprs: &BTreeMap<String, Expression>) {
                     textwrap::fill(help, specified_width / 2)
                 ));
             }
-            Expression::HMap(_) => {
-                t.add_row(row!(key, format!("{:specified_width$}", val)));
-            }
-            Expression::Map(_) => {
+            Expression::HMap(_) | Expression::Map(_) => {
                 t.add_row(row!(key, format!("{:specified_width$}", val)));
             }
             Expression::List(_) => {
@@ -108,10 +105,7 @@ fn pprint_hmap(exprs: &HashMap<String, Expression>) {
                     textwrap::fill(help, specified_width / 2)
                 ));
             }
-            Expression::HMap(_) => {
-                t.add_row(row!(key, format!("{:specified_width$}", val)));
-            }
-            Expression::Map(_) => {
+            Expression::HMap(_) | Expression::Map(_) => {
                 t.add_row(row!(key, format!("{:specified_width$}", val)));
             }
             Expression::List(_) => {

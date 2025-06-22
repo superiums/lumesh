@@ -35,6 +35,7 @@ pub enum SyntaxErrorKind {
     },
     InternalError,
     UnknownOperator(String),
+    InvalidEscapeSequence(String),
     PrecedenceTooLow,
     NoExpression,
     ArgumentMismatch {
@@ -296,6 +297,13 @@ impl fmt::Display for SyntaxError {
             }
             SyntaxErrorKind::UnknownOperator(op) => {
                 writeln!(f, "{}{}unknown operator {op:?}{}", RED_START, BOLD, RESET)
+            }
+            SyntaxErrorKind::InvalidEscapeSequence(op) => {
+                writeln!(
+                    f,
+                    "{}{}invalid escape sequence {op:?}{}",
+                    RED_START, BOLD, RESET
+                )
             }
             SyntaxErrorKind::PrecedenceTooLow => {
                 writeln!(f, "{}{}precedence too low {}", RED_START, BOLD, RESET)

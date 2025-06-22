@@ -192,6 +192,7 @@ pub fn run_repl(env: &mut Environment) {
         env.get("LUME_PROMPT_SETTINGS"),
         env.get("LUME_PROMPT_TEMPLATE"),
     );
+    // let mut repl_env = env.fork();
     while running.load(std::sync::atomic::Ordering::SeqCst) {
         let prompt = pe.get_prompt();
 

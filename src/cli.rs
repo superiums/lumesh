@@ -95,8 +95,9 @@ fn main() {
         }
     }
 
+    let mut cli_env = env.fork();
     // argv
-    env.define(
+    cli_env.define(
         "argv",
         Expression::from(
             cli.argv
@@ -110,10 +111,10 @@ fn main() {
 
     // profile
     if let Some(profile) = cli.profile {
-        env.define("LUME_PROFILE", Expression::String(profile));
+        cli_env.define("LUME_PROFILE", Expression::String(profile));
     }
     if cli.nohistory {
-        env.define("LUME_NO_HISTORY", Expression::Boolean(true));
+        cli_env.define("LUME_NO_HISTORY", Expression::Boolean(true));
     }
 
     // 命令执行模式
@@ -122,10 +123,10 @@ fn main() {
         env_config(&mut env, cli.aioff, cli.strict);
 
         let cmd = cmd_parts.join(" ");
-        parse_and_eval(cmd.as_str(), &mut env);
+        parse_and_eval(cmd.as_str(), &mut cli_env);
 
         if cli.interactive {
-            repl::run_repl(&mut env);
+            repl::run_repl(&mut cli_env);
         }
     }
     // 文件执行模式
@@ -135,14 +136,14 @@ fn main() {
 
         env_config(&mut env, cli.aioff, cli.strict);
         let path = PathBuf::from(file);
-        run_file(path, &mut env);
+        run_file(path, &mut cli_env);
     }
     // 纯交互模式
     else {
         env.define("IS_INTERACTIVE", Expression::Boolean(true));
 
         env_config(&mut env, cli.aioff, cli.strict);
-        repl::run_repl(&mut env);
+        repl::run_repl(&mut cli_env);
     }
 }
 

@@ -89,4 +89,11 @@ impl Environment {
             .map(|(k, v)| (k.clone(), v.clone()))
             .collect()
     }
+
+    pub fn get_root(&self) -> &Self {
+        match self.parent.as_ref() {
+            Some(p) => p.get_root(),
+            None => self,
+        }
+    }
 }

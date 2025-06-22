@@ -28,8 +28,6 @@ fn main() {
         })
         .unwrap_or(false);
 
-    env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
-
     // 如果不是登录 shell，加载环境变量
     if !is_login_shell {
         for (key, value) in std::env::vars() {
@@ -63,10 +61,14 @@ fn main() {
         }
     }
 
+    env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
+
     // config
     init_config(&mut env);
 
-    env.define(
+    let mut runner_env = env.fork();
+
+    runner_env.define(
         "argv",
         Expression::from(
             script_args
@@ -78,10 +80,10 @@ fn main() {
 
     // run
     if let Some(cmd_part) = cmd {
-        parse_and_eval(&cmd_part.join(" "), &mut env);
+        parse_and_eval(&cmd_part.join(" "), &mut runner_env);
     } else if let Some(file_path) = file {
         env.define("SCRIPT", Expression::String(file_path.clone()));
         let path = PathBuf::from(file_path);
-        run_file(path, &mut env);
+        run_file(path, &mut runner_env);
     }
 }

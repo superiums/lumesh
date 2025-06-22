@@ -38,6 +38,9 @@ pub fn get() -> Expression {
                String::from("read") => Expression::builtin("read", read_file, "read file contents", "<file>"),
                String::from("write") => Expression::builtin("write", write_file, "write to file", "<file> <content>"),
                String::from("append") => Expression::builtin("append", append_to_file, "append to file", "<file> <content>"),
+               // assist
+               String::from("base_name") => Expression::builtin("base_name", extract_filename, "extract base_name from path", "[split_ext?] <path>"),
+               String::from("join") => Expression::builtin("join", join_path, "join paths", "<path>..."),
     };
     Expression::from(fs_module)
 }
@@ -397,6 +400,66 @@ fn glob_pattern(args: &Vec<Expression>, env: &mut Environment) -> Result<Express
     }
 
     Ok(Expression::from(results))
+}
+
+fn extract_filename(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("base_name", args, 1..=2)?;
+    let path = args.last().unwrap().eval(env)?.to_string();
+    let split_extension = args.len() > 1
+        && match args[0] {
+            Expression::Boolean(b) => b,
+            _ => false,
+        };
+
+    let path = Path::new(path.as_str());
+
+    // 获取文件名
+    let file_name = match path.file_name() {
+        Some(name) => name.to_string_lossy().into_owned(),
+        None => String::from(""),
+    };
+
+    // 如果需要分割扩展名
+    if split_extension {
+        let parts = file_name.split_once('.');
+        Ok(Expression::from(match parts {
+            Some(ps) => vec![
+                Expression::String(ps.0.to_string()),
+                Expression::String(ps.1.to_string()),
+            ],
+            _ => vec![Expression::None, Expression::None],
+        }))
+    } else {
+        Ok(Expression::String(file_name))
+    }
+}
+
+fn join_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    // 检查至少有一个参数
+    super::check_args_len("join", args, 1..)?;
+
+    let mut final_path = PathBuf::new();
+
+    for arg in args {
+        let path_str = arg.eval(env)?.to_string();
+
+        // 处理 ~ 符号
+        let expanded_path = if path_str.starts_with('~') {
+            let home_dir = dirs::home_dir().ok_or_else(|| {
+                LmError::CustomError("Could not retrieve home directory.".to_string())
+            })?;
+            let start = if path_str.len() == 1 { 1 } else { 2 };
+            home_dir.join(&path_str[start..]) // 去掉 ~ 并与主目录连接
+        } else {
+            Path::new(&path_str).to_path_buf()
+        };
+        final_path = final_path.join(expanded_path);
+    }
+
+    // 返回合并后的路径作为 Expression
+    Ok(Expression::String(
+        final_path.to_string_lossy().into_owned(),
+    ))
 }
 
 // File operation implementations (unchanged from previous version)

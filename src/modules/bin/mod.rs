@@ -226,8 +226,8 @@ fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate
 }
 fn pwd(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {
     let path = std::env::current_dir()?;
-    println!("{}", path.display());
-    Ok(Expression::None)
+    // println!("{}", path.display());
+    Ok(Expression::String(path.to_string_lossy().into_owned()))
 }
 
 fn get_type(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {

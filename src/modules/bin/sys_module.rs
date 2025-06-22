@@ -16,15 +16,26 @@ pub fn get() -> Expression {
         String::from("quote") => Expression::builtin("quote", quote_builtin, "quote an expression", "<expr>"),
         String::from("err_codes") => Expression::builtin("err_codes", err_codes_builtin, "display runtime error codes", ""),
         String::from("print_tty") => Expression::builtin("print_tty", print_tty, "print control sequence to tty", "<arg>"),
+        String::from("discard") => Expression::builtin("discard", discard, "send data to /dev/null", "<arg>"),
 
     })
 }
 
 fn print_tty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("quote", &args, 1)?;
+    super::check_exact_args_len("quote", args, 1)?;
     let mut tty = OpenOptions::new().write(true).open("/dev/tty")?;
     let v = args[0].eval(env)?;
     tty.write_all(v.to_string().as_bytes())?;
+
+    Ok(Expression::None)
+}
+fn discard(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, crate::LmError> {
+    super::check_args_len("discard", args, 1..)?;
+    let mut null_device = OpenOptions::new().write(true).open("/dev/null")?;
+
+    // 写入数据到 /dev/null
+    let data = args[0].to_string();
+    null_device.write_all(data.as_bytes())?;
 
     Ok(Expression::None)
 }
@@ -32,7 +43,7 @@ fn quote_builtin(
     args: &Vec<Expression>,
     _env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("quote", &args, 1)?;
+    super::check_exact_args_len("quote", args, 1)?;
     Ok(Expression::Quote(Rc::new(args[0].clone())))
 }
 
@@ -51,7 +62,7 @@ fn set_builtin(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("set", &args, 2)?;
+    super::check_exact_args_len("set", args, 2)?;
     let name = args[0].to_string();
     let expr = args[1].eval(env)?;
     env.define_in_root(&name, expr);
@@ -62,7 +73,7 @@ fn unset_builtin(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("unset", &args, 1)?;
+    super::check_exact_args_len("unset", args, 1)?;
     let name = args[0].to_string();
     env.undefine_in_root(&name);
     Ok(Expression::None)
@@ -72,7 +83,7 @@ fn has_builtin(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("has", &args, 1)?;
+    super::check_exact_args_len("has", args, 1)?;
     let name = args[0].to_string();
     Ok(Expression::Boolean(env.has(&name)))
 }
@@ -80,7 +91,7 @@ fn defined_builtin(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("defined", &args, 1)?;
+    super::check_exact_args_len("defined", args, 1)?;
     let name = args[0].to_string();
     Ok(Expression::Boolean(env.is_defined(&name)))
 }

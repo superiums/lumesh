@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{fs::OpenOptions, io::Write, rc::Rc};
 
 use crate::{Environment, Expression, RuntimeError};
 use common_macros::hash_map;
@@ -14,10 +14,20 @@ pub fn get() -> Expression {
         String::from("defined") => Expression::builtin("defined", defined_builtin, "check if a variable is defined in current environment tree", "<var>"),
 
         String::from("quote") => Expression::builtin("quote", quote_builtin, "quote an expression", "<expr>"),
-        String::from("err-codes") => Expression::builtin("err-codes", err_codes_builtin, "display runtime error codes", ""),
+        String::from("err_codes") => Expression::builtin("err_codes", err_codes_builtin, "display runtime error codes", ""),
+        String::from("print_tty") => Expression::builtin("print_tty", print_tty, "print control sequence to tty", "<arg>"),
+
     })
 }
 
+fn print_tty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    super::check_exact_args_len("quote", &args, 1)?;
+    let mut tty = OpenOptions::new().write(true).open("/dev/tty")?;
+    let v = args[0].eval(env)?;
+    tty.write_all(v.to_string().as_bytes())?;
+
+    Ok(Expression::None)
+}
 fn quote_builtin(
     args: &Vec<Expression>,
     _env: &mut Environment,

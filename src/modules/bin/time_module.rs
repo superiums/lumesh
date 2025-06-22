@@ -27,7 +27,7 @@ pub fn get() -> Expression {
             let dt = if args.is_empty() { Utc::now() } else { parse_datetime_arg(&args[0], env)?.and_utc() };
             Ok(Expression::Integer(dt.timestamp()))
         }, "get Unix timestamp in seconds", "[datetime]"),
-        String::from("stamp-ms") => Expression::builtin("stamp_ms", |args, env| {
+        String::from("stamp_ms") => Expression::builtin("stamp_ms", |args, env| {
             let dt = if args.is_empty() { Utc::now() } else { parse_datetime_arg(&args[0], env)?.and_utc() };
             Ok(Expression::Integer(dt.timestamp_millis()))
         }, "get Unix timestamp in milliseconds", "[datetime]"),

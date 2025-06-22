@@ -58,7 +58,7 @@ fn vars_builtin(_: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     Ok(Expression::from(env.get_bindings_map()))
 }
 
-fn set_builtin(
+pub fn set_builtin(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
@@ -69,7 +69,7 @@ fn set_builtin(
     Ok(Expression::None)
 }
 
-fn unset_builtin(
+pub fn unset_builtin(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {

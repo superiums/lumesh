@@ -58,7 +58,7 @@ if IS_INTERACTIVE {
     }
 
     # ====== sudo cmd for Alt+s
-    LUME_SUDO_CMD = "doas"
+    let LUME_SUDO_CMD = "doas"
 
     # ====== key bindings
     # NONE:0, SHIFT:2, ALT:4, CTRL:8,

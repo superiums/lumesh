@@ -61,12 +61,10 @@ fn main() {
         }
     }
 
-    env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
-
-    // config
-    init_config(&mut env);
-
     let mut runner_env = env.fork();
+    runner_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
+    // config
+    init_config(&mut runner_env);
 
     runner_env.define(
         "argv",
@@ -82,7 +80,7 @@ fn main() {
     if let Some(cmd_part) = cmd {
         parse_and_eval(&cmd_part.join(" "), &mut runner_env);
     } else if let Some(file_path) = file {
-        env.define("SCRIPT", Expression::String(file_path.clone()));
+        runner_env.define("SCRIPT", Expression::String(file_path.clone()));
         let path = PathBuf::from(file_path);
         run_file(path, &mut runner_env);
     }

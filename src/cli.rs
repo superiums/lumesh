@@ -87,7 +87,6 @@ fn main() {
                 .starts_with('-')
         })
         .unwrap_or(false);
-    env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
     // global env
     if !is_login_shell {
         for (key, value) in std::env::vars() {
@@ -96,6 +95,7 @@ fn main() {
     }
 
     let mut cli_env = env.fork();
+    cli_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
     // argv
     cli_env.define(
         "argv",
@@ -119,8 +119,8 @@ fn main() {
 
     // 命令执行模式
     if let Some(cmd_parts) = cli.cmd {
-        env.define("IS_INTERACTIVE", Expression::Boolean(cli.interactive));
-        env_config(&mut env, cli.aioff, cli.strict);
+        cli_env.define("IS_INTERACTIVE", Expression::Boolean(cli.interactive));
+        env_config(&mut cli_env, cli.aioff, cli.strict);
 
         let cmd = cmd_parts.join(" ");
         parse_and_eval(cmd.as_str(), &mut cli_env);
@@ -131,18 +131,18 @@ fn main() {
     }
     // 文件执行模式
     else if let Some(file) = cli.file {
-        env.define("IS_INTERACTIVE", Expression::Boolean(false));
-        env.define("SCRIPT", Expression::String(file.to_owned()));
+        cli_env.define("IS_INTERACTIVE", Expression::Boolean(false));
+        cli_env.define("SCRIPT", Expression::String(file.to_owned()));
 
-        env_config(&mut env, cli.aioff, cli.strict);
+        env_config(&mut cli_env, cli.aioff, cli.strict);
         let path = PathBuf::from(file);
         run_file(path, &mut cli_env);
     }
     // 纯交互模式
     else {
-        env.define("IS_INTERACTIVE", Expression::Boolean(true));
+        cli_env.define("IS_INTERACTIVE", Expression::Boolean(true));
 
-        env_config(&mut env, cli.aioff, cli.strict);
+        env_config(&mut cli_env, cli.aioff, cli.strict);
         repl::run_repl(&mut cli_env);
     }
 }

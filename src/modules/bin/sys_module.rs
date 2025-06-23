@@ -20,25 +20,28 @@ pub fn get() -> Expression {
 
     })
 }
-
 fn print_tty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    super::check_exact_args_len("quote", args, 1)?;
-    let mut tty = OpenOptions::new().write(true).open("/dev/tty")?;
-    let v = args[0].eval(env)?;
-    tty.write_all(v.to_string().as_bytes())?;
+    super::check_exact_args_len("print_tty", args, 1)?;
+
+    // 判断操作系统
+    let tty_path = if cfg!(windows) {
+        "CON" // Windows控制台
+    } else {
+        "/dev/tty" // Unix
+    };
+
+    let mut tty = OpenOptions::new().write(true).open(tty_path)?;
+    let v = super::get_string_arg(args[0].eval(env)?)?;
+    tty.write_all(v.as_bytes())?;
 
     Ok(Expression::None)
 }
-fn discard(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, crate::LmError> {
-    super::check_args_len("discard", args, 1..)?;
-    let mut null_device = OpenOptions::new().write(true).open("/dev/null")?;
 
-    // 写入数据到 /dev/null
-    let data = args[0].to_string();
-    null_device.write_all(data.as_bytes())?;
-
+fn discard(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, crate::LmError> {
+    // 不用打开任何设备，只是丢弃参数
     Ok(Expression::None)
 }
+
 fn quote_builtin(
     args: &Vec<Expression>,
     _env: &mut Environment,

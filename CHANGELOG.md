@@ -1,8 +1,27 @@
 # Changelog
+## [0.5.4]
+- more ui component
+- fix highlight frequence
+- fix IN_PIPE covers last.
+- ansi code; pwd;
+- reorganize parse_string* ; more ansi seq.
+- add discard/base_name/join.
+- print_tty; rename err_codes/stamp_ms;
+- rename to fs.is_dir/is_file
+- alone env for root.
+- root env only clone std:vars. set /unset to top.
+- set/unset root env. fix var set in child env.
+- more keyword alone.
+- fix $var in after`,:
+- fix blank $var as cmd; fix $var in ().
+- fix $arg in cmd
+- $var as cmd, list args flatten, fix template execution pipe capture.
+- template parse fix;render exec; pretty help;
+- filesize to boolean
+
 ## [0.5.3]
 - add fuzzy picker
 - add pretty print
-
 
 ## [0.5.2]
 - fix where condition executed too early

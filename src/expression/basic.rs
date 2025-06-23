@@ -357,6 +357,7 @@ impl Expression {
             Self::Float(f) => *f != 0.0,
             Self::String(s) => !s.is_empty(),
             Self::Bytes(b) => !b.is_empty(),
+            Self::FileSize(b) => b.size != 0,
             Self::Boolean(b) => *b,
             Self::List(exprs) => !exprs.as_ref().is_empty(),
             Self::HMap(exprs) => !exprs.as_ref().is_empty(),

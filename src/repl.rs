@@ -1,3 +1,4 @@
+use rustyline::highlight::CmdKind;
 use rustyline::validate::ValidationResult;
 use rustyline::{
     Changeset,
@@ -446,6 +447,9 @@ impl Validator for LumeHelper {
 }
 
 impl Highlighter for LumeHelper {
+    fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
+        self.highlighter.highlight_char(line, pos, kind)
+    }
     fn highlight<'l>(&self, line: &'l str, pos: usize) -> Cow<'l, str> {
         self.highlighter.highlight(line, pos)
     }
@@ -541,6 +545,14 @@ impl Hinter for LumeHelper {
 struct SyntaxHighlighter;
 
 impl Highlighter for SyntaxHighlighter {
+    fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
+        let _s = (line, pos, kind);
+        if kind == CmdKind::MoveCursor {
+            return false;
+        }
+        true
+    }
+
     fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
         let mut parts = line.splitn(2, |c: char| c.is_whitespace());
         let cmd = parts.next().unwrap_or("");

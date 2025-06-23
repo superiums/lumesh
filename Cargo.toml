@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.5.3"
+version = "0.5.4"
 authors = ["Adam McDaniel; santo"]
 edition = "2024"
 license = "MIT"
@@ -58,7 +58,7 @@ rustc-hash = "2.1.1"
 tinyjson = "2.5.1"
 portable-pty = "0.9.0"
 csv = "1.3.1"
-fuzzypicker = "0.2.1"
+inquire = "0.7.5"
 # signal-hook = "0.3.18"
 
 [target.'cfg(unix)'.dependencies]

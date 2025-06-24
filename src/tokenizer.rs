@@ -51,7 +51,7 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             map_valid_token(linebreak, TokenKind::LineBreak),
             map_valid_token(long_operator, TokenKind::Operator),
             map_valid_token(postfix_operator, TokenKind::OperatorPostfix), // to allow ./.../app!
-            map_valid_token(argument_symbol, TokenKind::StringLiteral), //argument first to allow args such as = -
+            map_valid_token(argument_symbol, TokenKind::StringRaw), //argument first to allow args such as = -
             map_valid_token(prefix_operator, TokenKind::OperatorPrefix),
             map_valid_token(infix_operator, TokenKind::OperatorInfix),
             // map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
@@ -257,11 +257,15 @@ fn custom_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
 //         Err(NOT_FOUND)
 //     }
 // }
+
 fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.starts_with(punct) {
             // 检查前一个字符是否为空格或行首
-            if input.previous_char().is_none_or(|c| c.is_whitespace()) {
+            if input
+                .previous_char()
+                .is_none_or(|c| c.is_whitespace() || c == '(')
+            {
                 let mut chars = input.chars();
                 let mut places = 0;
 
@@ -286,7 +290,7 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
 
                     places += c.len_utf8(); // 累加字符长度
                 }
-
+                // dbg!(places, punct, punct.len(), input.len());
                 if places > 1 {
                     return Ok(input.split_at(places));
                 }
@@ -353,7 +357,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("&-"),
         keyword_tag("&?"),
         keyword_tag("&+"),
-        keyword_tag("&>"),
+        keyword_tag("&."),
     ))(input)
 }
 // parse argument such as ls -l --color=auto ./

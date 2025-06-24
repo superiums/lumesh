@@ -7,6 +7,7 @@ use crate::expression::cmd_excutor::handle_command;
 use crate::{Environment, Expression, RuntimeError, get_builtin};
 
 /// 执行
+#[inline]
 pub fn eval_apply(
     func: &Rc<Expression>,
     args: &Rc<Vec<Expression>>,
@@ -188,6 +189,7 @@ pub fn eval_apply(
 }
 
 /// 执行
+#[inline]
 pub fn eval_command(
     cmd: &Rc<Expression>,
     args: &Rc<Vec<Expression>>,
@@ -254,6 +256,7 @@ pub fn eval_command(
     }
 }
 
+#[inline]
 pub fn eval_symbo(
     cmd_sym: String,
     args: &Rc<Vec<Expression>>,
@@ -325,6 +328,7 @@ pub fn eval_symbo(
         }
     }
 }
+#[inline]
 pub fn eval_builtin(
     bti: &Builtin,
     args: &Rc<Vec<Expression>>,
@@ -358,6 +362,7 @@ pub fn eval_builtin(
 ///
 /// # 返回值
 /// 返回元组: (剩余未绑定的形式参数)
+#[inline]
 pub fn bind_arguments(
     params: &Vec<String>,
     args: &Vec<Expression>,

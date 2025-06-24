@@ -1123,12 +1123,13 @@ fn parse_string_common(
         Ok((input, result))
     } else {
         // 如果不符合格式要求，返回错误
-        Err(SyntaxErrorKind::failure(
-            expr,
-            "string enclosed",
-            Some(raw_str.to_string()),
-            Some("check string surrounds"),
-        ))
+        // Err(SyntaxErrorKind::failure(
+        //     expr,
+        //     "string enclosed",
+        //     Some(raw_str.to_string()),
+        //     Some("check string surrounds"),
+        // ))
+        Ok((input, raw_str.to_string()))
     }
 }
 

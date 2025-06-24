@@ -134,7 +134,7 @@ impl PrattParser {
 
             // 处理不同类型的运算符
             match operator_token.kind {
-                TokenKind::LineBreak | TokenKind::Punctuation  => {
+                TokenKind::LineBreak   => {
                     // dbg!("---break1.1---");
                     break;
                 }
@@ -204,7 +204,7 @@ impl PrattParser {
                             // dbg!("--->try bin:", &operator, operator == "?.");
                             // inclue | "?:"
                             let (new_input, rhs) =
-                                Self::parse_expr_with_precedence(input, next_min_prec, depth)?;
+                                Self::parse_expr_with_precedence(input, next_min_prec, depth+1)?;
                             // dbg!("--> binOp: after next loop", &rhs);
                             input = new_input;
                             lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
@@ -225,9 +225,15 @@ impl PrattParser {
                 | TokenKind::IntegerLiteral
                 | TokenKind::FloatLiteral
                 | TokenKind::ValueSymbol
-                | TokenKind::OperatorPrefix     //$ in cmd arg goes to parse_literal, other ++/--/! should never comes.
+                | TokenKind::OperatorPrefix     // $ in cmd arg goes to parse_literal, other ++/--/! should never comes.
+                | TokenKind::Punctuation        // ( [ as first argument begin.
                     if min_prec < PREC_CMD_ARG =>
                 {
+                    // 对于Punctuation, 只接受 ( [
+                    if operator_token.kind == TokenKind::Punctuation && !["(","["].contains(&operator) {
+                        break;
+                    }
+                    // 对于OperatorPrefix, 只接受 $, 由parse_literal处理。
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
                     //
                     // dbg!("--> Args: trying next loop", input.len(), PREC_CMD_ARG);
@@ -241,7 +247,7 @@ impl PrattParser {
                     } else {
                         // CMD ... 所有参数
                         let (new_input, rhs) = many0(|input| {
-                            Self::parse_expr_with_precedence(input, PREC_CMD_ARG, depth)
+                            Self::parse_expr_with_precedence(input, PREC_CMD_ARG, depth+1)
                         })(input)?;
                         //dbg!("--> Args: after next loop", &rhs);
 
@@ -1555,7 +1561,7 @@ fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     let (input, _) = text("=")(input)?;
     let (input, expr) = parse_expr_with_single_cmd(input)?;
     // dbg!(&expr);
-    Ok((input, Expression::Alias(symbol, Rc::new(expr))))
+    Ok((input, Expression::AliasOp(symbol, Rc::new(expr))))
 }
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1607,7 +1613,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
                 // };
                 // 如果是命令, 则包装为字符串，命令应当明确用()包裹
                 let last = match e[0].clone() {
-                    Expression::Command(s, v) => Expression::Symbol(
+                    Expression::Command(s, v) => Expression::String(
                         s.to_string()
                             + " "
                             + v.iter()

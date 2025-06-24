@@ -27,6 +27,7 @@ macro_rules! fmt_shared {
         match $self {
             Self::Symbol(name) => write!($f, "{}", name),
             Self::Variable(name) => write!($f, "${}", name),
+
             Self::FileSize(fsz) => write!($f, "{}", fsz.to_human_readable()),
 
             // Self::String(s) if $debug => write!($f, "{:?}", s),
@@ -145,7 +146,7 @@ macro_rules! fmt_shared {
                     .join(" ")
             ),
 
-            Self::Alias(name, cmd) => write!($f, "alias {} {:?}", name, cmd),
+            Self::AliasOp(name, cmd) => write!($f, "alias {} {:?}", name, cmd),
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
                     write!($f, "({} {})", op, v)
@@ -308,7 +309,8 @@ impl Expression {
             Self::Builtin(_) => "Builtin".into(),
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),
-            Self::Alias(..) => "Alias".into(),
+
+            Self::AliasOp(..) => "AliasOp".into(),
             Self::Range(..) => "Range".into(),
             // Self::Error { .. } => "Error".into(),
             Self::None => "None".into(),
@@ -337,12 +339,18 @@ impl Expression {
                 new_vec.extend_from_slice(&args);
                 Expression::Apply(f.clone(), Rc::new(new_vec))
             }
+            Expression::Command(f, existing_args) => {
+                let mut new_vec = Vec::with_capacity(existing_args.len() + args.len());
+                new_vec.extend_from_slice(existing_args);
+                new_vec.extend_from_slice(&args);
+                Expression::Command(f.clone(), Rc::new(new_vec))
+            }
             _ => Expression::Apply(Rc::new(self.clone()), Rc::new(args)), //report error?
         }
     }
-    pub fn ensure_apply(&self) -> Expression {
+    pub fn ensure_execute(&self) -> Expression {
         match self {
-            Expression::Symbol(_) => Expression::Apply(Rc::new(self.clone()), Rc::new(vec![])),
+            Expression::Symbol(_) => Expression::Command(Rc::new(self.clone()), Rc::new(vec![])),
             _ => self.clone(), //others, like binop,group,pipe...
         }
     }

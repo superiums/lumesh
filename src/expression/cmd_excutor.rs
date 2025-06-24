@@ -1,6 +1,7 @@
-use crate::{Environment, Expression, RuntimeError, expression::pty::exec_in_pty, get_builtin};
+use crate::{Environment, Expression, RuntimeError, expression::pty::exec_in_pty};
 
-use super::{alias, eval::State};
+use super::eval::State;
+
 use glob::glob;
 // use portable_pty::ChildKiller;
 // use portable_pty::{CommandBuilder, PtySize, native_pty_system};
@@ -8,105 +9,7 @@ use std::{
     borrow::Cow,
     io::{ErrorKind, Write},
     process::{Command, Stdio},
-    rc::Rc, // time::Duration,
 };
-
-/// 执行
-pub fn eval_command(
-    cmd: &Expression,
-    args: &Rc<Vec<Expression>>,
-    state: &mut State,
-    env: &mut Environment,
-    depth: usize,
-) -> Result<Expression, RuntimeError> {
-    // dbg!("2.--->Command:", &cmd, &args, &state);
-
-    match cmd {
-        // index类型的内置命令，或其他保存于map的命令; $var命令
-        Expression::Index(..) => {
-            let cmdx = cmd.eval_mut(state, env, depth)?;
-            // dbg!(&cmd, &cmdx);
-            cmdx.apply(args.to_vec()).eval_apply(state, env, depth)
-        }
-
-        // string like cmd: ./abc
-        Expression::String(cmd_str) =>
-        handle_command(&cmd_str, args.as_ref(), state, env, depth)
-        ,
-
-
-        // 符号
-        Expression::Symbol(cmd_sym) => {
-            match alias::get_alias(cmd_sym.as_str()) {
-                // 别名
-                Some(cmd_alias) => {
-                    // dbg!(&cmd_alias.type_name());
-                    if !args.is_empty() {
-                        match cmd_alias {
-                            Expression::Command(cmd_name, cmd_args) => {
-                                cmd_args.as_ref().clone().append(&mut args.to_vec());
-                                handle_command(
-                                    &cmd_name.as_ref().to_string(),
-                                    &cmd_args,
-                                    state,
-                                    env,
-                                    depth,
-                                )
-                            }
-                            Expression::String(cmd_str) => {
-                                handle_command(&cmd_str, args.as_ref(), state, env, depth)
-                            }
-                            Expression::Apply(..) => cmd_alias
-                                .append_args(args.to_vec())
-                                .eval_mut(state, env, depth),
-                            Expression::Index(..) => {
-                                let cmdx = cmd_alias.eval_mut(state, env, depth)?;
-                                // dbg!(&cmd, &cmdx);
-                                cmdx.append_args(args.to_vec())
-                                    .eval_apply(state, env, depth)
-                            }
-                            _ => Err(RuntimeError::TypeError {
-                                expected: "alias for Command/Function/Builtin".into(),
-                                sym: cmd_alias.to_string(),
-                                found: cmd_alias.type_name(),
-                            }),
-                        }
-                    } else {
-                        cmd_alias.eval_apply(state, env, depth)
-                    }
-                }
-                _ => {
-                    match get_builtin(cmd_sym.as_str()) {
-                        // 顶级内置命令
-                        Some(bti) => {
-                            // dbg!("branch to builtin:", &cmd, &bti);
-                            bti.apply(args.to_vec()).eval_apply(state, env, depth)
-                        }
-                        // 三方命令
-                        _ => handle_command(cmd_sym, args, state, env, depth),
-                    }
-                }
-            }
-        }
-        Expression::Variable(..) => {
-            let cmdx = cmd.eval_mut(state, env, depth)?;
-            let cmdx_str=cmdx.to_string();
-            if (cmdx_str=="" || cmdx_str==";") && !args.is_empty(){
-                let aa=args.split_at(1);
-                let newcmd=aa.0.to_vec();
-                eval_command(&Rc::new(newcmd.iter().next().unwrap()), &Rc::new(aa.1.to_vec()), state, env, depth)
-
-            }else{
-                eval_command(&Rc::new(cmdx), args, state, env, depth)
-            }
-        }
-        e => Err(RuntimeError::TypeError {
-            expected: "Symbol".to_string(),
-            sym: e.to_string(),
-            found: e.type_name(),
-        }),
-    }
-}
 
 /// mode: 1=null_stdout, 2=null_err, 4=err_to_stdout,
 /// 8=background, 11=background,shutdown_all
@@ -266,20 +169,24 @@ pub fn expand_home(path: &str) -> Cow<str> {
     Cow::Borrowed(path)
 }
 // 管道
-fn handle_command(
+pub fn handle_command(
     cmd: &String,
     args: &Vec<Expression>,
     state: &mut State,
     env: &mut Environment,
     depth: usize,
 ) -> Result<Expression, RuntimeError> {
-    let always_pipe = state.contains(State::IN_PIPE);
+    // dbg!("   3.--->handle_command:", &cmd, &args);
+
+    let is_in_pipe = state.contains(State::IN_PIPE);
     let mut cmd_args = vec![];
+    state.set(State::SKIP_BUILTIN_SEEK | State::IN_PIPE);
     for arg in args {
         // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {
-        state.set(State::SKIP_BUILTIN_SEEK);
-        let e_arg = arg.eval_mut(state, env, depth)?;
-        state.clear(State::SKIP_BUILTIN_SEEK);
+        // dbg!("     4.--->arg:", &arg, arg.type_name());
+        let e_arg = arg.eval_mut(state, env, depth + 1)?;
+        // dbg!("     4.--->evaluated_arg:", &e_arg, e_arg.type_name());
+
         match e_arg {
             Expression::Symbol(s) => cmd_args.push(s),
             Expression::String(mut s) => {
@@ -311,6 +218,11 @@ fn handle_command(
             _ => cmd_args.push(format!("{}", e_arg)),
         }
     }
+    state.clear(State::SKIP_BUILTIN_SEEK);
+    if !is_in_pipe {
+        state.clear(State::IN_PIPE);
+    }
+
     #[cfg(unix)]
     let pty_cmds = [
         "lume", "bash", "sh", "fish", "top", "btop", "vi", "passwd", "ssh", "script", "expect",
@@ -362,8 +274,7 @@ fn handle_command(
     // dbg!(args, &cmd_args);
     let last_input = state.pipe_out();
     let pipe_input = to_bytes(last_input);
-    let result = exec_single_cmd(cmd, Some(cmd_args), env, pipe_input, always_pipe, cmd_mode)?;
-    // dbg!(&cmd, &always_pipe, &cmd_mode, &result);
+    let result = exec_single_cmd(cmd, Some(cmd_args), env, pipe_input, is_in_pipe, cmd_mode)?;
     Ok(to_expr(result))
 }
 

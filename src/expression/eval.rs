@@ -1,8 +1,9 @@
 use super::Pattern;
-use super::cmd_excutor::eval_command;
+
 use crate::STRICT;
 use crate::expression::alias;
 use crate::expression::cmd_excutor::expand_home;
+use crate::expression::eval3::{eval_apply, eval_command};
 use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use core::option::Option::None;
@@ -240,7 +241,7 @@ impl Expression {
                 }
 
                 // 处理变量声明（仅允许未定义变量）
-                Self::Alias(name, expr) => {
+                Self::AliasOp(name, expr) => {
                     // dbg!("alias---->", &name, &expr.type_name());
                     alias::set_alias(name.clone(), expr.as_ref().clone()); // 新增 declare
                     return Ok(Self::None);
@@ -531,20 +532,12 @@ impl Expression {
                         },
                         "..<" => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
-                                // let v = (fr..t)
-                                //     .map(Expression::from) // 将 i64 转换为 Expression
-                                //     .collect::<Vec<_>>();
-                                // Ok(Expression::from(v))
                                 Ok(Expression::Range(fr..t, st))
                             }
                             _ => Err(RuntimeError::CustomError("not valid range option".into())),
                         },
                         ".." => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
-                                // let v = (fr..=t)
-                                //     .map(Expression::from) // 将 i64 转换为 Expression
-                                //     .collect::<Vec<_>>();
-                                // Ok(Expression::from(v))
                                 Ok(Expression::Range(fr..t + 1, st))
                             }
                             _ => Err(RuntimeError::CustomError("not valid range option".into())),
@@ -556,44 +549,30 @@ impl Expression {
                 Self::Pipe(operator, lhs, rhs) => {
                     match operator.as_str() {
                         "|" => {
-                            // let bindings = env.get_bindings_map();
-                            // let always_pipe = env.has("__ALWAYSPIPE");
-                            //dbg!(&always_pipe, &lhs, &rhs);
-                            // if always_pipe {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.ensure_apply();
+                            let left_func = lhs.ensure_execute();
                             let left_output = left_func.eval_mut(state, env, depth + 1)?;
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
                             }
                             state.pipe_in(left_output);
 
-                            // dbg!(&is_in_pipe, &state.contains(State::IN_PIPE));
                             match rhs.as_ref() {
-                                Expression::Symbol(s) => {
-                                    return Expression::Apply(
-                                        Rc::new(Expression::Symbol(s.clone())),
-                                        Rc::new(vec![]),
-                                    )
-                                    .eval_apply(state, env, depth);
+                                Expression::Symbol(_) => {
+                                    return rhs.ensure_execute().eval_mut(state, env, depth + 1);
                                 }
                                 r => {
                                     job = r;
                                     continue;
                                 }
                             }
-
-                            // let r_func = rhs.ensure_apply();
-                            // let pipe_result = r_func.eval_mut(state, env, depth + 1);
-                            // dbg!(&pipe_result);
-                            // pipe_result
                         }
                         "|>" => {
                             // 执行左侧表达式
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.as_ref().ensure_apply();
+                            let left_func = lhs.as_ref().ensure_execute();
                             let left_output = left_func.eval_mut(state, env, depth + 1)?;
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
@@ -610,7 +589,7 @@ impl Expression {
                         ">>" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.as_ref().ensure_apply();
+                            let left_func = lhs.as_ref().ensure_execute();
                             let left_output = left_func.eval_mut(state, env, depth + 1)?;
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
@@ -660,7 +639,7 @@ impl Expression {
                         ">>!" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.as_ref().ensure_apply();
+                            let left_func = lhs.as_ref().ensure_execute();
                             let l = left_func.eval_mut(state, env, depth + 1)?;
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
@@ -696,7 +675,7 @@ impl Expression {
 
                             state.pipe_in(contents);
 
-                            let left_func = lhs.ensure_apply();
+                            let left_func = lhs.ensure_execute();
                             let result = left_func.eval_mut(state, env, depth + 1)?;
                             return Ok(result);
                         }
@@ -738,11 +717,11 @@ impl Expression {
                 Self::Slice(list, slice_params) => {
                     let listo = list.eval(env)?;
                     let start_int =
-                        Expression::eval_to_int_opt(&slice_params.start, state, env, depth)?;
+                        Expression::eval_to_int_opt(&slice_params.start, state, env, depth + 1)?;
                     let end_int =
-                        Expression::eval_to_int_opt(&slice_params.end, state, env, depth)?;
+                        Expression::eval_to_int_opt(&slice_params.end, state, env, depth + 1)?;
                     let step_int =
-                        Expression::eval_to_int_opt(&slice_params.step, state, env, depth)?
+                        Expression::eval_to_int_opt(&slice_params.step, state, env, depth + 1)?
                             .unwrap_or(1); // 默认步长1
 
                     return Self::slice(listo, start_int, end_int, step_int);
@@ -768,11 +747,12 @@ impl Expression {
                 }
 
                 // 执行应用
-                Self::Apply(_, _) => break Self::eval_apply(job, state, env, depth),
+                Self::Apply(func, args) => break eval_apply(func, args, state, env, depth + 1),
                 Self::Command(cmd, args) => {
-                    return eval_command(cmd.as_ref(), args, state, env, depth);
+                    // dbg!("====", &cmd, &args);
+                    break eval_command(cmd, args, state, env, depth + 1);
                 }
-                // break Self::eval_command(self, env, depth),
+                // break Self::eval_command(self, env, depth+1),
                 // 简单控制流表达式
                 Self::If(cond, true_expr, false_expr) => {
                     match cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
@@ -799,7 +779,7 @@ impl Expression {
                     return Err(RuntimeError::NoMatchingBranch(val.to_string()));
                 }
                 // 其他表达式处理...
-                _ => break job.eval_complex(state, env, depth),
+                _ => break job.eval_flows(state, env, depth + 1),
             };
             // depth += 1
         }
@@ -945,7 +925,7 @@ impl Expression {
             // 有表达式时进行求值
             Some(boxed_expr) => {
                 // 递归求值表达式
-                let evaluated = boxed_expr.as_ref().eval_mut(state, env, depth)?;
+                let evaluated = boxed_expr.as_ref().eval_mut(state, env, depth + 1)?;
 
                 // 转换为整数
                 match evaluated {

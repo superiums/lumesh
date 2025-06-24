@@ -10,6 +10,7 @@ pub mod catcher;
 pub mod cmd_excutor;
 pub mod eval;
 pub mod eval2;
+pub mod eval3;
 pub mod from;
 pub mod overop;
 pub mod pty;
@@ -23,9 +24,9 @@ pub enum Expression {
     // 所有嵌套节点改为Rc包裹
     Group(Rc<Self>),
     BinaryOp(String, Rc<Self>, Rc<Self>),
+    UnaryOp(String, Rc<Self>, bool),
     RangeOp(String, Rc<Self>, Rc<Self>, Option<Rc<Self>>),
     Pipe(String, Rc<Self>, Rc<Self>),
-    UnaryOp(String, Rc<Self>, bool),
 
     // 基础类型保持原样
     Symbol(String),
@@ -58,7 +59,7 @@ pub enum Expression {
     If(Rc<Self>, Rc<Self>, Rc<Self>),
     Apply(Rc<Self>, Rc<Vec<Self>>),
     Command(Rc<Self>, Rc<Vec<Self>>),
-    Alias(String, Rc<Self>),
+    AliasOp(String, Rc<Self>),
     Lambda(Vec<String>, Rc<Self>),
     Function(
         String,

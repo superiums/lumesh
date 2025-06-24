@@ -93,7 +93,7 @@ pub fn handle_binary(
         "|" => {
             let bindings = env.get_bindings_map();
             let (pipe_out, expr_out) =
-                handle_pipes(&lhs, &rhs, &bindings, false, None, env, depth)?;
+                handle_pipes(&lhs, &rhs, &bindings, false, None, env, depth + 1)?;
             // dbg!(pipe_out, &expr_out);
             Ok(expr_out)
         }
@@ -308,9 +308,9 @@ pub fn handle_slice(
     depth: usize,
 ) -> Result<Expression, LmError> {
     let listo = list.eval(env)?;
-    let start_int = eval_to_int_opt(slice_params.start, env, depth)?;
-    let end_int = eval_to_int_opt(slice_params.end, env, depth)?;
-    let step_int = eval_to_int_opt(slice_params.step, env, depth)?.unwrap_or(1); // 默认步长1
+    let start_int = eval_to_int_opt(slice_params.start, env, depth + 1)?;
+    let end_int = eval_to_int_opt(slice_params.end, env, depth + 1)?;
+    let step_int = eval_to_int_opt(slice_params.step, env, depth + 1)?.unwrap_or(1); // 默认步长1
 
     return slice(listo, start_int, end_int, step_int);
 }
@@ -419,7 +419,7 @@ fn eval_to_int_opt(
         // 有表达式时进行求值
         Some(boxed_expr) => {
             // 递归求值表达式
-            let evaluated = boxed_expr.eval_mut(env, depth)?;
+            let evaluated = boxed_expr.eval_mut(env, depth + 1)?;
 
             // 转换为整数
             match evaluated {

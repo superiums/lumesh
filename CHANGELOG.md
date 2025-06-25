@@ -1,4 +1,16 @@
 # Changelog
+## [0.5.5]
+- optimize cmd execute
+- support IFS in
+  cmd args/for/str.spit/parse.cmd/csv/to_csv/ui.pick/mpick/
+
+- fix ( { aa first arg
+- support multi match in one branch
+- add !~: and !~~
+- allow !$x
+- remove none result from for
+- fix str arg parse without quote
+
 ## [0.5.4]
 - more ui component
 - fix highlight frequence

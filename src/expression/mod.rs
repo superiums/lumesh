@@ -190,6 +190,7 @@ impl PartialEq for FileSize {
 pub enum Pattern {
     Bind(String),
     Literal(Rc<Expression>),
+    List(Rc<Vec<Expression>>),
 }
 #[derive(Debug, Clone, PartialEq)]
 pub enum CatchType {

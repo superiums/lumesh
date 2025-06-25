@@ -1680,6 +1680,9 @@ fn parse_custom_postfix_operator(
 // 模式匹配解析（简化示例）
 fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Pattern, SyntaxErrorKind> {
     alt((
+        map(separated_list1(text(","), parse_literal), |s| {
+            Pattern::List(Rc::new(s))
+        }),
         map(text("_"), |_| Pattern::Bind("_".to_string())), // 将_视为特殊绑定
         map(parse_symbol_string, Pattern::Bind),
         map(parse_literal, |lit| Pattern::Literal(Rc::new(lit))),

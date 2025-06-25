@@ -1053,6 +1053,7 @@ fn matches_pattern(
             }
         }
         Pattern::Literal(lit) => Ok(value == lit.as_ref()),
+        Pattern::List(list) => Ok(list.contains(value)),
     }
 }
 

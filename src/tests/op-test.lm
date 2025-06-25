@@ -107,7 +107,7 @@ test_count += 1
 println! "\n=== 测试组6：错误提示 ==="
 
 # # 测试6.1 严格模式变量检查
-let test_assign = ./target/debug/lume -s -c "y=1 ?! | grep 'undeclared var'" 
+let test_assign = ./target/debug/lume -s -c "y=1 ?! | grep 'undeclared var'"
 if test_assign {
     println! "[PASS] 严格模式变量检查"
 } else {
@@ -116,7 +116,7 @@ if test_assign {
 test_count += 1
 
 # 测试6.2 除零错误
-let test_a = 5 / 0 ?! | grep "by zero"
+let test_a = 5 / 0 ?+ | grep "by zero"
 if test_a {
     println! "[PASS] 除零错误检测"
 } else {

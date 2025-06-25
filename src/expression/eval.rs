@@ -448,32 +448,17 @@ impl Expression {
                                 "<" => Ok(Expression::Boolean(l < r)),
                                 ">=" => Ok(Expression::Boolean(l >= r)),
                                 "<=" => Ok(Expression::Boolean(l <= r)),
-                                "~:" => {
-                                    let br = match l {
-                                        Expression::String(left) => left.contains(&r.to_string()),
-                                        Expression::Range(left, st) => {
-                                            if let Expression::Integer(i) = r {
-                                                match st {
-                                                    1 => left.contains(&i),
-                                                    _ => left.step_by(st).any(|f| f == i),
-                                                }
-                                            } else {
-                                                false
-                                            }
-                                        }
-                                        Expression::List(left) => left.contains(&r),
-                                        Expression::Map(left) => left.contains_key(r.to_symbol()?),
-                                        Expression::HMap(left) => left.contains_key(r.to_symbol()?),
-                                        _ => false,
-                                    };
-                                    Ok(Expression::Boolean(br))
-                                    // Ok(Expression::Boolean(l.to_string().contains(&r.to_string())))
-                                }
+                                "~:" => Ok(Expression::Boolean(handle_contains(l, r)?)),
+                                "!~:" => Ok(Expression::Boolean(!handle_contains(l, r)?)),
                                 "~~" => {
                                     let regex = Regex::new(&r.to_string())
                                         .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
-
                                     Ok(Expression::Boolean(regex.is_match(&l.to_string())))
+                                }
+                                "!~~" => {
+                                    let regex = Regex::new(&r.to_string())
+                                        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+                                    Ok(Expression::Boolean(!regex.is_match(&l.to_string())))
                                 }
 
                                 op if op.starts_with("_") => {
@@ -1069,4 +1054,24 @@ fn matches_pattern(
         }
         Pattern::Literal(lit) => Ok(value == lit.as_ref()),
     }
+}
+
+fn handle_contains(l: Expression, r: Expression) -> Result<bool, RuntimeError> {
+    Ok(match l {
+        Expression::String(left) => left.contains(&r.to_string()),
+        Expression::Range(left, st) => {
+            if let Expression::Integer(i) = r {
+                match st {
+                    1 => left.contains(&i),
+                    _ => left.step_by(st).any(|f| f == i),
+                }
+            } else {
+                false
+            }
+        }
+        Expression::List(left) => left.contains(&r),
+        Expression::Map(left) => left.contains_key(r.to_symbol()?),
+        Expression::HMap(left) => left.contains_key(r.to_symbol()?),
+        _ => false,
+    })
 }

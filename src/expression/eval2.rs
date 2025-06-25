@@ -47,20 +47,7 @@ impl Expression {
                     }
                 }
             }
-            // TODO add Loop,break
-            //
-            // 函数相关表达式
 
-            // Self::Function(name, params, body, def_env) => {
-            //     // 函数定义时捕获环境
-            //     return Ok(Self::Function(name, params, body, def_env));
-            // }
-            // // Apply a function or macro to an argument
-            // Lambda定义优化（自动捕获环境）
-            // Self::Lambda(params, body, _) => {
-            //     // 自动捕获当前环境
-            //     Ok(Self::Lambda(params, body, env.fork()))
-            // }
             // 处理函数定义
             Self::Function(name, params, pc, body) => {
                 // dbg!(&def_env);
@@ -167,6 +154,7 @@ fn handle_for(
                 let last = body.as_ref().eval_mut(state, env, depth + 1)?;
                 result.push(last)
             }
+            result.retain(|r| r != &Expression::None);
             Ok(Expression::from(result))
         }
         Expression::List(elist) => {
@@ -176,6 +164,7 @@ fn handle_for(
                 let last = body.as_ref().eval_mut(state, env, depth + 1)?;
                 result.push(last)
             }
+            result.retain(|r| r != &Expression::None);
             Ok(Expression::from(result))
         }
         Expression::String(mut s) => {
@@ -199,6 +188,7 @@ fn handle_for(
                     let last = body.as_ref().eval_mut(state, env, depth + 1)?;
                     result.push(last)
                 }
+                result.retain(|r| r != &Expression::None);
                 Ok(Expression::from(result))
             } else {
                 let ifs = env.get("IFS");
@@ -220,7 +210,7 @@ fn handle_for(
                         elist
                     }
                 };
-                let result = slist
+                let mut result = slist
                     .into_iter()
                     .map(|i| {
                         env.define(var, Expression::String(i.to_string()));
@@ -228,6 +218,7 @@ fn handle_for(
                     })
                     .collect::<Result<Vec<_>, _>>()?;
 
+                result.retain(|r| r != &Expression::None);
                 Ok(Expression::from(result))
             }
         }

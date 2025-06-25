@@ -143,7 +143,9 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("!="),
         punctuation_tag(">="),
         punctuation_tag("<="),
+        keyword_tag("!~~"),
         keyword_tag("~~"),
+        keyword_tag("!~:"),
         keyword_tag("~:"),
         keyword_tag("~="),
         keyword_tag("&&"),
@@ -152,10 +154,12 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("<<"),
         keyword_tag(">>!"),
         keyword_tag(">>"),
-        operator_tag("+="),
-        operator_tag("-="),
-        operator_tag("*="),
-        operator_tag("/="),
+        alt((
+            operator_tag("+="),
+            operator_tag("-="),
+            operator_tag("*="),
+            operator_tag("/="),
+        )),
         keyword_tag(":="),
         punctuation_tag("->"), // `->foo` is also a valid symbol
         // punctuation_tag("~>"), // `~>foo` is also a valid symbol
@@ -1005,7 +1009,7 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
             .strip_prefix(keyword)
             .filter(|(rest, _)| {
                 rest.starts_with(|c: char| {
-                    c.is_ascii_alphanumeric() || ['(', '[', '{'].contains(&c)
+                    c.is_ascii_alphanumeric() || ['(', '[', '{', '$'].contains(&c)
                 })
             })
             .ok_or(NOT_FOUND)

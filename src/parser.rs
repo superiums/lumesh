@@ -471,7 +471,7 @@ impl PrattParser {
                 Some(OperatorInfo::new(op, PREC_COMPARISON, false))
             }
             // 匹配
-            "~~" | "~:" => Some(OperatorInfo::new(op, PREC_COMPARISON, false)),
+            "~~" | "~:" | "!~~" | "!~:" => Some(OperatorInfo::new(op, PREC_COMPARISON, false)),
             // 三目
             "?" => Some(OperatorInfo::new(
                 "?",
@@ -557,11 +557,9 @@ impl PrattParser {
                     }
                 }
             }
-            "==" | "!=" | ">" | "<" | ">=" | "<=" | "~~" | "~=" | "~:" => Ok(Expression::BinaryOp(
-                op.symbol.into(),
-                Rc::new(lhs),
-                Rc::new(rhs),
-            )),
+            "==" | "!=" | ">" | "<" | ">=" | "<=" | "~~" | "~=" | "~:" | "!~~" | "!~:" => Ok(
+                Expression::BinaryOp(op.symbol.into(), Rc::new(lhs), Rc::new(rhs)),
+            ),
 
             // "->" => {
             //     // 参数处理

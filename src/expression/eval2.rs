@@ -201,17 +201,26 @@ fn handle_for(
                 }
                 Ok(Expression::from(result))
             } else {
-                let mut elist = s.lines().collect::<Vec<_>>();
-                if elist.len() < 2 {
-                    elist = s.split_ascii_whitespace().collect::<Vec<_>>();
-                    if elist.len() < 2 {
-                        elist = s.split_terminator(";").collect::<Vec<_>>();
-                        if elist.len() < 2 {
-                            elist = s.split_terminator(",").collect::<Vec<_>>();
-                        }
+                let ifs = env.get("IFS");
+                let slist = match ifs {
+                    Some(Expression::String(fs)) => {
+                        s.split_terminator(fs.as_str()).collect::<Vec<_>>()
                     }
-                }
-                let result = elist
+                    _ => {
+                        let mut elist = s.lines().collect::<Vec<_>>();
+                        if elist.len() < 2 {
+                            elist = s.split_ascii_whitespace().collect::<Vec<_>>();
+                            if elist.len() < 2 {
+                                elist = s.split_terminator(";").collect::<Vec<_>>();
+                                if elist.len() < 2 {
+                                    elist = s.split_terminator(",").collect::<Vec<_>>();
+                                }
+                            }
+                        }
+                        elist
+                    }
+                };
+                let result = slist
                     .into_iter()
                     .map(|i| {
                         env.define(var, Expression::String(i.to_string()));

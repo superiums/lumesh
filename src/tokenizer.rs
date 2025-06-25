@@ -262,10 +262,7 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.starts_with(punct) {
             // 检查前一个字符是否为空格或行首
-            if input
-                .previous_char()
-                .is_none_or(|c| c.is_whitespace() || c == '(')
-            {
+            if input.previous_char().is_none_or(|c| c.is_whitespace()) {
                 let mut chars = input.chars();
                 let mut places = 0;
 

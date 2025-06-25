@@ -169,21 +169,33 @@ pub fn parse_command_output(
         }
     }
 
+    // delimeter
+    let delimiter = match env.get("IFS") {
+        Some(Expression::String(fs)) if fs != "\n" => fs,
+        _ => " ".to_string(), // 使用空格作为默认分隔符
+    };
+
     // filter too short tips lines
     if lines.len() > 2 {
-        if lines[0].split_whitespace().collect::<Vec<&str>>().len()
-            < lines[1].split_whitespace().collect::<Vec<&str>>().len()
+        if lines[0]
+            .split_terminator(delimiter.as_str())
+            .collect::<Vec<&str>>()
+            .len()
+            < lines[1]
+                .split_terminator(delimiter.as_str())
+                .collect::<Vec<&str>>()
+                .len()
         {
             lines.remove(0);
         }
         if lines
             .last()
             .unwrap()
-            .split_whitespace()
+            .split_terminator(delimiter.as_str())
             .collect::<Vec<&str>>()
             .len()
             < lines[lines.len() - 2]
-                .split_whitespace()
+                .split_terminator(delimiter.as_str())
                 .collect::<Vec<&str>>()
                 .len()
         {
@@ -194,12 +206,12 @@ pub fn parse_command_output(
     let (data_lines, detected_headers) = if headers.is_empty() {
         let maybe_header = lines[0];
         let looks_like_header = maybe_header
-            .split_whitespace()
+            .split_terminator(delimiter.as_str())
             .all(|s| s.chars().any(|c| c.is_uppercase() || !c.is_ascii()));
 
         if looks_like_header {
             let detected = maybe_header
-                .split_whitespace()
+                .split_terminator(delimiter.as_str())
                 .map(|s| {
                     s.replace(":", "_")
                         .replace("\"", "")
@@ -211,7 +223,7 @@ pub fn parse_command_output(
         } else {
             // No headers detected, use column numbers
             let cols = lines[0]
-                .split_whitespace()
+                .split_terminator(delimiter.as_str())
                 .enumerate()
                 .map(|(i, _)| format!("C{}", i))
                 .collect();
@@ -228,11 +240,14 @@ pub fn parse_command_output(
             continue;
         }
 
-        let values: Vec<&str> = line.split_whitespace().collect();
+        let slist = line
+            .split_terminator(delimiter.as_str())
+            .collect::<Vec<_>>();
+
         let mut row = BTreeMap::new();
 
         for (i, header) in detected_headers.iter().enumerate() {
-            if let Some(&value) = values.get(i) {
+            if let Some(&value) = slist.get(i) {
                 row.insert(header.clone(), Expression::String(value.to_string()));
             } else {
                 row.insert(header.clone(), Expression::None);
@@ -251,8 +266,16 @@ fn parse_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     super::check_exact_args_len("csv", args, 1)?;
     let text = args[0].eval(env)?.to_string();
 
+    // 获取自定义分隔符
+    let delimiter = match env.get("IFS") {
+        Some(Expression::String(fs)) if fs != "\n" => fs.as_bytes()[0],
+        _ => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
+    };
+
+    // 设置 CSV 解析器的分隔符
     let mut rdr = csv::ReaderBuilder::new()
         .has_headers(true)
+        .delimiter(delimiter) // 将字符串转换为字节并取第一个字符
         .from_reader(text.as_bytes());
 
     let headers = rdr
@@ -434,9 +457,17 @@ pub fn expr_to_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expr
     super::check_exact_args_len("to_csv", args, 1)?;
     let expr = &args[0].eval(env)?;
 
+    // 获取自定义分隔符
+    let delimiter = match env.get("IFS") {
+        Some(Expression::String(fs)) if fs != "\n" => fs.as_bytes()[0],
+        _ => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
+    };
+
     let result = match expr {
         Expression::List(rows) => {
-            let mut writer = csv::Writer::from_writer(vec![]);
+            let mut writer = csv::WriterBuilder::new()
+                .delimiter(delimiter) // 设置分隔符
+                .from_writer(vec![]);
 
             // 获取所有可能的列名（按字母顺序）
             let mut all_keys = BTreeMap::new();
@@ -468,7 +499,10 @@ pub fn expr_to_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expr
             String::from_utf8(writer.into_inner().unwrap()).unwrap()
         }
         Expression::Map(map) => {
-            let mut writer = csv::Writer::from_writer(vec![]);
+            let mut writer = csv::WriterBuilder::new()
+                .delimiter(delimiter) // 设置分隔符
+                .from_writer(vec![]);
+
             let sorted_keys: Vec<_> = map.keys().collect();
 
             writer.write_record(&sorted_keys).unwrap();

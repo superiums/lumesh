@@ -99,11 +99,19 @@ fn selector_wrapper(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
+    let delimiter = match env.get("IFS") {
+        Some(Expression::String(fs)) => fs,
+        _ => " ".to_string(), // 使用空格作为默认分隔符
+    };
+
     let (cfgs, options) = match args.len() {
-        1 => (None, extract_options(args[0].eval(env)?)?),
+        1 => (
+            None,
+            extract_options(delimiter.as_str(), args[0].eval(env)?)?,
+        ),
         2 => (
             Some(extract_cfg(args[0].eval(env)?)?),
-            extract_options(args[1].eval(env)?)?,
+            extract_options(delimiter.as_str(), args[1].eval(env)?)?,
         ),
         3.. => (Some(extract_cfg(args[0].eval(env)?)?), args[1..].to_vec()),
         0 => {
@@ -227,11 +235,11 @@ fn multi_select_wrapper<'a>(
         ))),
     }
 }
-fn extract_options(expr: Expression) -> Result<Vec<Expression>, LmError> {
+fn extract_options(delimiter: &str, expr: Expression) -> Result<Vec<Expression>, LmError> {
     match expr {
         Expression::List(list) => Ok(list.as_ref().clone()),
         Expression::String(str) => Ok(str
-            .lines()
+            .split_terminator(delimiter)
             .map(|line| Expression::String(line.to_string()))
             .collect::<Vec<_>>()),
         _ => Err(LmError::CustomError(

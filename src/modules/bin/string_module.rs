@@ -21,7 +21,7 @@ pub fn get() -> Expression {
         String::from("contains") => Expression::builtin("contains", contains, "check if a string contains a given substring", "<substring> <string>"),
 
         // 分割操作
-        String::from("split") => Expression::builtin("split", split, "split a string on a given character", "<delimiter> <string>"),
+        String::from("split") => Expression::builtin("split", split, "split a string on a given character", "[delimiter] <string>"),
         String::from("split_at") => Expression::builtin("split_at", split_at, "split a string at a given index", "<index> <string>"),
         String::from("chars") => Expression::builtin("chars", chars, "split a string into characters", "<string>"),
         String::from("words") => Expression::builtin("words", words, "split a string into words", "<string>"),
@@ -117,16 +117,25 @@ fn is_numeric(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 fn split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("split", args, 2)?;
+    super::check_args_len("split", args, 1..=2)?;
+
     let string_args = get_string_args(args, env)?;
-    let [delimiter, text] = string_args.as_slice() else {
-        unreachable!()
+    let text = string_args.last().unwrap().to_owned();
+
+    let delimiter = if args.len() > 1 {
+        string_args.first().unwrap().to_owned()
+    } else {
+        match env.get("IFS") {
+            Some(Expression::String(fs)) => fs,
+            _ => " ".to_string(), // 使用空格作为默认分隔符
+        }
     };
 
-    let parts = text
-        .split(delimiter)
+    let parts: Vec<Expression> = text
+        .split(&delimiter)
         .map(|s| Expression::String(s.to_string()))
-        .collect::<Vec<Expression>>();
+        .collect();
+
     Ok(Expression::from(parts))
 }
 

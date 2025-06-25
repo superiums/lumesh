@@ -1722,7 +1722,9 @@ fn parse_slice_params(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, (SliceParams, bool), SyntaxErrorKind> {
     // 解析 start 部分
+    // TODO allow neg int.
     let (input, start) = opt(alt((parse_integer, parse_variable, parse_symbol)))(input)?;
+    // let (input, start) = PrattParser::parse_prefix(input, PREC_UNARY).ok();
 
     // 检查第一个冒号
     let (input, has_first_colon) = opt(text(":"))(input)?;

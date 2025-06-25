@@ -181,6 +181,7 @@ pub fn handle_command(
     let is_in_pipe = state.contains(State::IN_PIPE);
     let mut cmd_args = vec![];
     state.set(State::SKIP_BUILTIN_SEEK | State::IN_PIPE);
+
     for arg in args {
         // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {
         // dbg!("     4.--->arg:", &arg, arg.type_name());
@@ -207,7 +208,14 @@ pub fn handle_command(
                         // cmd_args.push(s);
                     }
                 } else {
-                    cmd_args.push(s)
+                    // 分割多参数字符串
+                    let delimiter = match env.get("IFS") {
+                        Some(Expression::String(fs)) => fs,
+                        _ => " ".to_string(), // 使用空格作为默认分隔符
+                    };
+                    s.split_terminator(delimiter.as_str())
+                        .for_each(|v| cmd_args.push(v.to_string()));
+                    // cmd_args.push(s)
                 }
             }
             Expression::List(ls) => {

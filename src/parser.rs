@@ -240,15 +240,15 @@ impl PrattParser {
                     if input.len() == 1 {
                         // CMD arg1, 只有第一个参数
                         let (new_input, rhs) =
-                            alt((parse_symbol, parse_variable, parse_literal))(input)?;
+                            cut(alt((parse_symbol, parse_variable, parse_literal)))(input)?;
                         // dbg!(&rhs);
                         input = new_input;
                         lhs = Expression::Command(Rc::new(lhs), Rc::new(vec![rhs]));
                     } else {
                         // CMD ... 所有参数
-                        let (new_input, rhs) = many0(|input| {
+                        let (new_input, rhs) = cut(many0(|input| {
                             Self::parse_expr_with_precedence(input, PREC_CMD_ARG, depth+1)
-                        })(input)?;
+                        }))(input)?;
                         //dbg!("--> Args: after next loop", &rhs);
 
                         // dbg!(&rhs);
@@ -301,7 +301,7 @@ impl PrattParser {
                 let op = first.text(input);
                 // vars
                 if op == "$" {
-                    return parse_variable(input);
+                    return cut(parse_variable)(input);
                 }
                 // unary op
                 let prec = match op {
@@ -343,7 +343,7 @@ impl PrattParser {
                     // }
                     "[" => {
                         // 数组字面量 [expr, ...]
-                        parse_list(input)
+                        cut(parse_list)(input)
                     }
                     "{" => alt((parse_map, parse_block))(input),
                     // opx if opx.starts_with("__") => map(parse_operator(input),TokenKind::OperatorPrefix),
@@ -1339,12 +1339,12 @@ pub fn parse_script_tokens(
             "unrecognized satement. \nremaining:{:?}\nrecognized:{:?}",
             &input.slice, &module
         );
-        return Err(SyntaxErrorKind::expected(
-            input.get_str_slice(),
-            "valid Expression",
-            Some("unrecognized expression".into()),
-            Some("check your syntax"),
-        ));
+        // return Err(SyntaxErrorKind::expected(
+        //     input.get_str_slice(),
+        //     "valid Expression",
+        //     Some("unrecognized expression".into()),
+        //     Some("check your syntax"),
+        // ));
     }
 
     // dbg!("==========", &functions);
@@ -1540,10 +1540,10 @@ fn parse_if_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     // 解析else分支
     let (input, else_branch) = opt(preceded(
         text("else"),
-        alt((
+        cut(alt((
             parse_if_flow,       // else if
             parse_block_or_expr, // else
-        )),
+        ))),
     ))(input)?;
 
     Ok((

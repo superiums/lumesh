@@ -1,7 +1,7 @@
 use super::{Expression, Int};
 use crate::{Diagnostic, tokens::Tokens};
 use common_macros::b_tree_map;
-use core::{cmp::max, fmt};
+use core::fmt;
 use detached_str::{Str, StrSlice};
 use nom::error::{ErrorKind, ParseError};
 use std::error::Error as StdError;
@@ -34,9 +34,10 @@ pub enum SyntaxErrorKind {
         cause: Option<Box<SyntaxError>>,
     },
     InternalError(String),
-    UnknownOperator(String),
-    InvalidEscapeSequence(String),
-    PrecedenceTooLow,
+    CustomError(String, StrSlice),
+    UnknownOperator(String, StrSlice),
+    InvalidEscapeSequence(String, StrSlice),
+    PrecedenceTooLow(StrSlice),
     NoExpression,
     ArgumentMismatch {
         name: String,
@@ -71,6 +72,7 @@ impl StdError for SyntaxError {
         }
     }
 }
+
 impl SyntaxError {
     pub fn new(source: Str, kind: SyntaxErrorKind) -> Self {
         Self { source, kind }
@@ -220,8 +222,8 @@ impl ParseError<Tokens<'_>> for SyntaxErrorKind {
             (NomError { .. }, ArgumentMismatch { .. }) => other,
 
             // UnknownOperator 比 NoExpression 更具体
-            (UnknownOperator(_), NoExpression) => self,
-            (NoExpression, UnknownOperator(_)) => other,
+            (UnknownOperator(..), NoExpression) => self,
+            (NoExpression, UnknownOperator(..)) => other,
 
             // 对于相同类型的错误，选择包含更多上下文信息的
             (
@@ -316,7 +318,10 @@ impl fmt::Display for SyntaxError {
                     write!(f, ", found {}{}{}", RED2_START, found, RESET)?;
                 }
                 writeln!(f)?;
+                // 使用增强的错误显示
                 print_error_lines(&self.source, *input, f, 72)?;
+
+                // print_error_lines(&self.source, *input, f, 72)?;
                 if let Some(hint) = hint {
                     writeln!(f, "    hint: {}", hint)?;
                 }
@@ -330,9 +335,15 @@ impl fmt::Display for SyntaxError {
             }
             SyntaxErrorKind::ExpectedChar { expected, at } => {
                 write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
-                writeln!(f, "expect {:?}", expected)?;
+                write!(
+                    f,
+                    "expect character {}{:?}{}",
+                    YELLOW_START, expected, RESET
+                )?;
+                writeln!(f)?;
                 if let Some(at) = at {
                     print_error_lines(&self.source, *at, f, 72)?;
+                    // writeln!(f, "    hint: check if quotes or brackets are properly closed")?;
                 }
                 Ok(())
             }
@@ -354,21 +365,36 @@ impl fmt::Display for SyntaxError {
                     RED_START, BOLD, s, RESET
                 )
             }
+            SyntaxErrorKind::CustomError(s, at) => {
+                writeln!(
+                    f,
+                    "{}{}unexpected syntax error: {}{}",
+                    RED_START, BOLD, s, RESET
+                )?;
+                print_error_lines(&self.source, *at, f, 72)?;
+                Ok(())
+            }
             SyntaxErrorKind::NoExpression => {
                 writeln!(f, "{}{}no expression recognized{}", RED_START, BOLD, RESET)
             }
-            SyntaxErrorKind::UnknownOperator(op) => {
-                writeln!(f, "{}{}unknown operator {op:?}{}", RED_START, BOLD, RESET)
+            SyntaxErrorKind::UnknownOperator(op, at) => {
+                writeln!(f, "{}{}unknown operator {op:?}{}", RED_START, BOLD, RESET)?;
+                print_error_lines(&self.source, *at, f, 72)?;
+                Ok(())
             }
-            SyntaxErrorKind::InvalidEscapeSequence(op) => {
+            SyntaxErrorKind::InvalidEscapeSequence(op, at) => {
                 writeln!(
                     f,
                     "{}{}invalid escape sequence {op:?}{}",
                     RED_START, BOLD, RESET
-                )
+                )?;
+                print_error_lines(&self.source, *at, f, 72)?;
+                Ok(())
             }
-            SyntaxErrorKind::PrecedenceTooLow => {
-                writeln!(f, "{}{}precedence too low {}", RED_START, BOLD, RESET)
+            SyntaxErrorKind::PrecedenceTooLow(at) => {
+                writeln!(f, "{}{}precedence too low {}", RED_START, BOLD, RESET)?;
+                print_error_lines(&self.source, *at, f, 72)?;
+                Ok(())
             }
             SyntaxErrorKind::ArgumentMismatch {
                 name,
@@ -635,77 +661,231 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
     }
 }
 
-fn print_error_lines(
-    string: &Str,
-    at: StrSlice,
-    f: &mut fmt::Formatter,
-    max_width: usize,
-) -> fmt::Result {
-    let mut lines = at.to_str(string).lines().collect::<Vec<&str>>();
-    if lines.is_empty() {
-        lines.push("");
-    }
-    let singleline = lines.len() == 1;
+// fn print_error_lines(
+//     string: &Str,
+//     at: StrSlice,
+//     f: &mut fmt::Formatter,
+//     max_width: usize,
+// ) -> fmt::Result {
+//     let mut lines = at.to_str(string).lines().collect::<Vec<&str>>();
+//     if lines.is_empty() {
+//         lines.push("");
+//     }
+//     let singleline = lines.len() == 1;
 
-    let before = &string[..at.start()];
-    let after = &string[at.end()..];
+//     let before = &string[..at.start()];
+//     let after = &string[at.end()..];
 
-    let line_before = before.lines().next_back().unwrap_or_default();
+//     let line_before = before.lines().next_back().unwrap_or_default();
 
-    let line_after = after.lines().next().unwrap_or_default();
+//     let line_after = after.lines().next().unwrap_or_default();
 
-    let first_line_number = max(before.lines().count(), 1);
-    // dbg!(&lines, line_before, line_after, first_line_number);
-    writeln!(f, "      |")?;
+//     let first_line_number = max(before.lines().count(), 1);
+//     // dbg!(&lines, line_before, line_after, first_line_number);
+//     writeln!(f, "      |")?;
 
-    if singleline {
-        let before_len = line_before.chars().take(max_width).count().min(max_width);
+//     if singleline {
+//         let before_len = line_before.chars().take(max_width).count().min(max_width);
 
-        let line = line_before
-            .chars()
-            .take(max_width)
-            .chain(RED_START.chars())
-            .chain(lines[0].chars())
-            .chain(RESET.chars())
-            .chain(line_after.chars().take(max_width - before_len))
-            .collect::<String>();
+//         let line = line_before
+//             .chars()
+//             .take(max_width)
+//             .chain(RED_START.chars())
+//             .chain(lines[0].chars())
+//             .chain(RESET.chars())
+//             .chain(line_after.chars().take(max_width - before_len))
+//             .collect::<String>();
 
-        writeln!(f, "{:>5} | {}", first_line_number, line)?;
-    } else {
-        let first_line = line_before
-            .chars()
-            .chain(RED_START.chars())
-            .chain(lines[0].chars())
-            .take(max_width)
-            .chain(RESET.chars())
-            .collect::<String>();
-        write!(f, "{:>5} | {}", first_line_number, first_line)?;
+//         writeln!(f, "{:>5} | {}", first_line_number, line)?;
+//     } else {
+//         let first_line = line_before
+//             .chars()
+//             .chain(RED_START.chars())
+//             .chain(lines[0].chars())
+//             .take(max_width)
+//             .chain(RESET.chars())
+//             .collect::<String>();
+//         write!(f, "{:>5} | {}", first_line_number, first_line)?;
 
-        for (i, line) in lines.iter().copied().enumerate().skip(1) {
-            let line = RED_START
-                .chars()
-                .chain(line.chars().take(max_width))
-                .chain(RESET.chars())
-                .collect::<String>();
-            write!(f, "\n{:>5} | {}", first_line_number + i, line)?;
-        }
+//         for (i, line) in lines.iter().copied().enumerate().skip(1) {
+//             let line = RED_START
+//                 .chars()
+//                 .chain(line.chars().take(max_width))
+//                 .chain(RESET.chars())
+//                 .collect::<String>();
+//             write!(f, "\n{:>5} | {}", first_line_number + i, line)?;
+//         }
 
-        let last_len = lines.last().unwrap().chars().count();
-        let suffix = line_after
-            .chars()
-            .take(max_width - last_len)
-            .chain(RESET.chars())
-            .collect::<String>();
-        writeln!(f, "\n{}", suffix)?;
-    }
+//         let last_len = lines.last().unwrap().chars().count();
+//         let suffix = line_after
+//             .chars()
+//             .take(max_width - last_len)
+//             .chain(RESET.chars())
+//             .collect::<String>();
+//         writeln!(f, "\n{}", suffix)?;
+//     }
 
-    writeln!(f, "      |")?;
+//     writeln!(f, "      |")?;
 
-    Ok(())
-}
+//     Ok(())
+// }
 
 const YELLOW_START: &str = "\x1b[38;5;230m";
 const RED2_START: &str = "\x1b[38;5;210m";
 const RED_START: &str = "\x1b[38;5;9m";
 const BOLD: &str = "\x1b[1m";
 const RESET: &str = "\x1b[m\x1b[0m";
+
+fn print_error_lines(
+    string: &Str,
+    at: StrSlice,
+    f: &mut fmt::Formatter,
+    _max_width: usize,
+) -> fmt::Result {
+    let error_start = at.start();
+    let error_end = at.end();
+
+    // 计算错误所在的行号和列号
+    let before_text = &string[..error_start];
+    let lines_before: Vec<&str> = before_text.lines().collect();
+    let error_line_num = lines_before.len();
+    let error_col = lines_before.last().map(|line| line.len()).unwrap_or(0);
+
+    // 获取错误周围的上下文行（前后各3行）
+    let all_lines: Vec<&str> = string.lines().collect();
+    let context_start = error_line_num.saturating_sub(3);
+    let context_end = (error_line_num + 3).min(all_lines.len());
+
+    writeln!(f, "      |")?;
+
+    // 显示上下文行
+    for (i, line) in all_lines[context_start..context_end].iter().enumerate() {
+        let line_num = context_start + i + 1;
+        let is_error_line = line_num == error_line_num;
+
+        // dbg!(is_error_line, line_num, error_line_num, i, line);
+        if is_error_line {
+            // 安全地计算行内位置
+            let line_start = before_text.rfind('\n').map(|pos| pos + 1).unwrap_or(0);
+            let error_start_in_line = error_start.saturating_sub(line_start);
+            let error_end_in_line = (error_end.saturating_sub(line_start)).min(line.len());
+
+            // 确保索引不超出行的范围
+            let safe_start = error_start_in_line.min(line.len());
+            let safe_end = error_end_in_line.min(line.len()).max(safe_start);
+            // dbg!(error_start_in_line, error_end_in_line, safe_start, safe_end);
+
+            write!(
+                f,
+                "{}{:>5}{} {}|{} ",
+                RED_START, line_num, RESET, BLUE_START, RESET
+            )?;
+            if safe_start > 0 {
+                write!(f, "{}", &line[..safe_start])?;
+            }
+            if safe_end > safe_start {
+                write!(f, "{}{}{}", RED_START, &line[safe_start..safe_end], RESET)?;
+            }
+            if safe_end < line.len() {
+                writeln!(f, "{}", &line[safe_end..])?;
+            } else {
+                writeln!(f)?;
+            }
+
+            // 添加指示箭头（只有在有错误内容时才显示）
+            if safe_end >= safe_start {
+                write!(f, "      {}|{} ", BLUE_START, RESET)?;
+                for _ in 0..safe_start {
+                    write!(f, " ")?;
+                }
+                write!(f, "{}{}^", RED_START, BOLD)?;
+                for _ in 1..(safe_end - safe_start) {
+                    write!(f, "~")?;
+                }
+                writeln!(f, "{}", RESET)?;
+            }
+        } else {
+            // 普通上下文行
+            writeln!(
+                f,
+                "{}{:>5}{} {}|{} {}{}{}",
+                GREEN_START, line_num, RESET, BLUE_START, RESET, DIM_START, line, RESET
+            )?;
+        }
+    }
+
+    writeln!(f, "      |")?;
+
+    // 显示错误位置信息
+    writeln!(
+        f,
+        "      = at line {}, column {}",
+        error_line_num,
+        error_col + 1
+    )?;
+
+    Ok(())
+}
+
+// 添加语法高亮的版本
+// fn print_highlighted_error_lines(
+//     string: &Str,
+//     at: StrSlice,
+//     f: &mut fmt::Formatter,
+//     _max_width: usize,
+// ) -> fmt::Result {
+//     use crate::syntax::highlight; // 复用现有的语法高亮功能
+
+//     let error_start = at.start();
+//     let error_end = at.end();
+
+//     let before_text = &string[..error_start];
+//     let lines_before: Vec<&str> = before_text.lines().collect();
+//     let error_line_num = lines_before.len();
+
+//     let all_lines: Vec<&str> = string.lines().collect();
+//     let context_start = error_line_num.saturating_sub(2);
+//     let context_end = (error_line_num + 2).min(all_lines.len());
+
+//     writeln!(f, "      |")?;
+
+//     for (i, line) in all_lines[context_start..context_end].iter().enumerate() {
+//         let line_num = context_start + i + 1;
+//         let is_error_line = line_num == error_line_num;
+
+//         if is_error_line {
+//             // 错误行：应用语法高亮后再高亮错误部分
+//             let highlighted = highlight(line);
+//             write!(f, "{:>5} | ", line_num)?;
+
+//             // 在语法高亮的基础上添加错误高亮
+//             let line_start = before_text.rfind('\n').map(|pos| pos + 1).unwrap_or(0);
+//             let error_start_in_line = error_start - line_start;
+//             let error_end_in_line = error_end - line_start;
+
+//             // 简化处理：直接在错误位置添加下划线
+//             writeln!(f, "{}", highlighted)?;
+//             write!(f, "      | ")?;
+//             for _ in 0..error_start_in_line {
+//                 write!(f, " ")?;
+//             }
+//             write!(f, "{}{}^", RED_START, BOLD)?;
+//             for _ in 1..error_end_in_line.saturating_sub(error_start_in_line) {
+//                 write!(f, "~")?;
+//             }
+//             writeln!(f, " {}", RESET)?;
+//         } else {
+//             // 上下文行：使用淡化的语法高亮
+//             let highlighted = highlight(line);
+//             writeln!(f, "{:>5} | {}{}{}", line_num, DIM_START, highlighted, RESET)?;
+//         }
+//     }
+
+//     writeln!(f, "      |")?;
+//     Ok(())
+// }
+
+// 添加新的颜色常量
+const DIM_START: &str = "\x1b[2m";
+const GREEN_START: &str = "\x1b[32m";
+const BLUE_START: &str = "\x1b[34m";

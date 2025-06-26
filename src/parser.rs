@@ -310,12 +310,15 @@ impl PrattParser {
                     _ => {
                         return Err(nom::Err::Failure(SyntaxErrorKind::UnknownOperator(
                             op.to_string(),
+                            input.get_str_slice(),
                         )));
                     }
                 };
 
                 if prec < min_prec {
-                    return Err(nom::Err::Error(SyntaxErrorKind::PrecedenceTooLow));
+                    return Err(nom::Err::Error(SyntaxErrorKind::PrecedenceTooLow(
+                        input.get_str_slice(),
+                    )));
                 }
 
                 let input = input.skip_n(1);
@@ -349,16 +352,19 @@ impl PrattParser {
                     // opx if opx.starts_with("__") => map(parse_operator(input),TokenKind::OperatorPrefix),
                     _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                         op.to_string(),
+                        input.get_str_slice(),
                     ))), //其余的操作符，不在前缀中处理
                 }
             }
             TokenKind::Keyword => parse_control_flow(input),
-            TokenKind::LineBreak => Err(nom::Err::Error(SyntaxErrorKind::InternalError(
+            TokenKind::LineBreak => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
                 "line ended too early".to_string(),
+                input.get_str_slice(),
             ))),
 
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                 first.text(input).to_string(),
+                input.get_str_slice(),
             ))),
         }
     }
@@ -436,6 +442,7 @@ impl PrattParser {
             }
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                 op.to_string(),
+                input.get_str_slice(),
             ))),
         }
     }
@@ -831,14 +838,16 @@ fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     delimited(
         text("["),
-        map(
-            separated_list0(
-                terminated(text(","), opt(kind(TokenKind::LineBreak))),
-                parse_expr,
+        terminated(
+            map(
+                separated_list0(
+                    terminated(text(","), opt(kind(TokenKind::LineBreak))),
+                    parse_expr,
+                ),
+                |s| Expression::from(s),
             ),
-            |s| Expression::from(s),
+            opt(text(",")), // 允许末尾，
         ),
-        // opt(text(",")), //TODO 允许末尾，
         text_close("]"),
     )(input)
 }
@@ -854,7 +863,7 @@ fn parse_param(
                 parse_symbol_string,
                 text("="),
                 // 限制只能解析基本类型表达式
-                parse_literal,
+                cut(parse_literal),
             ),
             |(name, expr)| (name, Some(expr)), // 将结果包装为Some
         ),
@@ -898,20 +907,20 @@ fn parse_param_list(
     ))(input)?;
     // 如果还有其他字符，应报错
     // dbg!(&input, &params);
-    if !input.is_empty() {
-        match input.first() {
-            Some(&token) if token.text(input) != ")" => {
-                // dbg!(token.text(input));
-                return Err(SyntaxErrorKind::failure(
-                    input.get_str_slice(),
-                    "valid function params declare",
-                    None,
-                    Some("params should like (x,y=0)"),
-                ));
-            }
-            _ => {}
-        }
-    }
+    // if !input.is_empty() {
+    //     match input.first() {
+    //         Some(&token) if token.text(input) != ")" => {
+    //             // dbg!(token.text(input));
+    //             return Err(SyntaxErrorKind::failure(
+    //                 input.get_str_slice(),
+    //                 "valid function params declare",
+    //                 None,
+    //                 Some("params should like (x,y=0)"),
+    //             ));
+    //         }
+    //         _ => {}
+    //     }
+    // }
     let (input, _) = cut(text_close(")"))(input)?;
     Ok((input, (params, param_collector)))
 }
@@ -1031,10 +1040,10 @@ fn parse_break(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 fn kind(kind: TokenKind) -> impl Fn(Tokens<'_>) -> IResult<Tokens<'_>, StrSlice, SyntaxErrorKind> {
     move |input: Tokens<'_>| match input.first() {
         Some(&token) if token.kind == kind => Ok((input.skip_n(1), token.range)),
-        _ => Err(nom::Err::Error(SyntaxErrorKind::InternalError(format!(
-            "expect kind {:?}",
-            kind
-        )))),
+        _ => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+            format!("expect kind {:?}", kind),
+            input.get_str_slice(),
+        ))),
     }
 }
 
@@ -1042,10 +1051,10 @@ fn kind(kind: TokenKind) -> impl Fn(Tokens<'_>) -> IResult<Tokens<'_>, StrSlice,
 fn text<'a>(text: &'a str) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, SyntaxErrorKind> {
     move |input: Tokens<'a>| match input.first() {
         Some(&token) if token.text(input) == text => Ok((input.skip_n(1), token)),
-        _ => Err(nom::Err::Error(SyntaxErrorKind::ExpectedChar {
-            expected: text.chars().next().unwrap_or(' '),
-            at: Some(input.get_str_slice()),
-        })), // _ => Err(nom::Err::Error(SyntaxErrorKind::Expected {
+        _ => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+            format!("expect {:?}", text),
+            input.get_str_slice(),
+        ))), // _ => Err(nom::Err::Error(SyntaxErrorKind::Expected {
              //     expected: "some text",
              //     input: input.get_str_slice(),
              //     found: None,
@@ -1138,7 +1147,10 @@ fn parse_string_common(
         };
         let result = if enable_normal_escape {
             snailquote::unescape(&ansi_escaped).map_err(|e| {
-                nom::Err::Failure(SyntaxErrorKind::InvalidEscapeSequence(e.to_string()))
+                nom::Err::Failure(SyntaxErrorKind::InvalidEscapeSequence(
+                    e.to_string(),
+                    input.get_str_slice(),
+                ))
             })?
         } else {
             ansi_escaped
@@ -1175,6 +1187,7 @@ fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, S
 }
 
 // -- 字面量解析 --
+#[inline]
 fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     alt((
         parse_integer,
@@ -1187,6 +1200,7 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
 }
 
 // 映射解析
+#[inline]
 fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // 不能用cut，防止map识别失败时，影响后面的block解析。
     let (input, _) = terminated(text("{"), opt(kind(TokenKind::LineBreak)))(input)?;
@@ -1194,14 +1208,14 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
         separated_pair(
             parse_symbol_string,
-            text(":"),
-            alt((
+            terminated(text(":"), opt(kind(TokenKind::LineBreak))),
+            cut(alt((
                 parse_literal,
                 parse_variable,
                 parse_symbol,
                 parse_map,
                 parse_list,
-            )),
+            ))),
         ),
     )(input)?;
     // dbg!(&input, &pairs);
@@ -1214,7 +1228,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     // Ok((input, Expression::Map(pairs)))
     Ok((input, Expression::from(map)))
 }
-
+#[inline]
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;
     let num = num.to_str(input.str).parse::<Int>().map_err(|e| {
@@ -1339,12 +1353,12 @@ pub fn parse_script_tokens(
             "unrecognized satement. \nremaining:{:?}\nrecognized:{:?}",
             &input.slice, &module
         );
-        // return Err(SyntaxErrorKind::expected(
-        //     input.get_str_slice(),
-        //     "valid Expression",
-        //     Some("unrecognized expression".into()),
-        //     Some("check your syntax"),
-        // ));
+        return Err(SyntaxErrorKind::expected(
+            input.get_str_slice(),
+            "valid Expression",
+            Some("unrecognized expression".into()),
+            Some("check your syntax"),
+        ));
     }
 
     // dbg!("==========", &functions);
@@ -1620,6 +1634,7 @@ fn parse_block_or_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
 }
 // 解析代码块（带花括号）
 // TODO with return?
+#[inline]
 fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, block) = delimited(
         terminated(text("{"), opt(many0(kind(TokenKind::LineBreak)))),
@@ -1650,7 +1665,7 @@ fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     let (input, _) = text("let")(input)?;
     let (input, symbol) = parse_symbol_string(input)?;
     let (input, _) = text(":=")(input)?; // 使用:=作为延迟赋值符号
-    let (input, expr) = parse_expr_with_single_cmd(input)?;
+    let (input, expr) = cut(parse_expr_with_single_cmd)(input)?;
     // dbg!(&expr);
     Ok((
         input,
@@ -1682,7 +1697,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     // 解析等号和多表达式
     let (input, exprs) = opt(preceded(
         text("="),
-        separated_list0(text(","), cut(parse_expr)),
+        cut(separated_list0(text(","), parse_expr)),
     ))(input)?;
 
     // 构建右侧表达式
@@ -1726,7 +1741,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
                 input.get_str_slice(),
                 "matching values count",
                 Some(format!(
-                    "got {} variables but {} values",
+                    "{} variables but {} values",
                     symbols.len(),
                     e.len()
                 )),
@@ -1756,6 +1771,7 @@ fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     Ok((input, Expression::Del(symbol)))
 }
 
+#[inline]
 fn parse_operator(input: Tokens<'_>) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
     map(kind(TokenKind::Operator), |t| {
         t.to_str(input.str).to_string()

@@ -1,4 +1,9 @@
 # Changelog
+## [0.5.6]
+- tip early line end; remove IFS from parse.cmd
+- rewrite match to support regex.
+- optimize error showing.
+
 ## [0.5.5]
 - optimize cmd execute
 - support IFS in

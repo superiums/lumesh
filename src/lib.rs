@@ -7,7 +7,7 @@ mod expression;
 
 pub use expression::builtin::Builtin;
 pub use expression::eval;
-pub use expression::{Expression, Pattern, SliceParams};
+pub use expression::{Expression, SliceParams};
 // mod expr2;
 // pub use expr2::*;
 

@@ -33,7 +33,7 @@ pub enum SyntaxErrorKind {
         at: Option<StrSlice>,
         cause: Option<Box<SyntaxError>>,
     },
-    InternalError,
+    InternalError(String),
     UnknownOperator(String),
     InvalidEscapeSequence(String),
     PrecedenceTooLow,
@@ -196,8 +196,62 @@ impl ParseError<Tokens<'_>> for SyntaxErrorKind {
     }
 
     fn or(self, other: Self) -> Self {
-        match self {
-            SyntaxErrorKind::InternalError => other,
+        use SyntaxErrorKind::*;
+
+        match (&self, &other) {
+            // InternalError 优先级最低，总是被其他错误替换
+            (InternalError(_), _) => other,
+            (_, InternalError(_)) => self,
+
+            // Expected 错误优先级较高，包含具体的期望信息
+            (Expected { .. }, NomError { .. }) => self,
+            (NomError { .. }, Expected { .. }) => other,
+
+            // TokenizationErrors 是致命错误，优先级最高
+            (TokenizationErrors(_), _) => self,
+            (_, TokenizationErrors(_)) => other,
+
+            // RecursionDepth 是严重错误，优先级很高
+            (RecursionDepth { .. }, _) => self,
+            (_, RecursionDepth { .. }) => other,
+
+            // ArgumentMismatch 比一般错误更具体
+            (ArgumentMismatch { .. }, NomError { .. }) => self,
+            (NomError { .. }, ArgumentMismatch { .. }) => other,
+
+            // UnknownOperator 比 NoExpression 更具体
+            (UnknownOperator(_), NoExpression) => self,
+            (NoExpression, UnknownOperator(_)) => other,
+
+            // 对于相同类型的错误，选择包含更多上下文信息的
+            (
+                Expected {
+                    input: input1,
+                    hint: hint1,
+                    ..
+                },
+                Expected {
+                    input: input2,
+                    hint: hint2,
+                    ..
+                },
+            ) => {
+                // 优先选择有 hint 的错误
+                if hint1.is_some() && hint2.is_none() {
+                    self
+                } else if hint1.is_none() && hint2.is_some() {
+                    other
+                } else {
+                    // 选择输入位置更靠前的错误（通常更相关）
+                    if input1.start() <= input2.start() {
+                        self
+                    } else {
+                        other
+                    }
+                }
+            }
+
+            // 默认情况：保留第一个错误
             _ => self,
         }
     }
@@ -237,7 +291,11 @@ impl ParseError<Tokens<'_>> for SyntaxError {
 
     fn or(self, other: Self) -> Self {
         match self.kind {
-            SyntaxErrorKind::InternalError => other,
+            SyntaxErrorKind::InternalError(_) => other,
+            SyntaxErrorKind::TokenizationErrors(..) => self,
+            //    ExpectedChar { /* … */ }=>
+            // Expected { /* … */ },
+            //    NomError { /* … */ },
             _ => self,
         }
     }
@@ -289,8 +347,12 @@ impl fmt::Display for SyntaxError {
                 }
                 Ok(())
             }
-            SyntaxErrorKind::InternalError => {
-                writeln!(f, "{}{}unexpected syntax error{}", RED_START, BOLD, RESET)
+            SyntaxErrorKind::InternalError(s) => {
+                writeln!(
+                    f,
+                    "{}{}unexpected syntax error: {}{}",
+                    RED_START, BOLD, s, RESET
+                )
             }
             SyntaxErrorKind::NoExpression => {
                 writeln!(f, "{}{}no expression recognized{}", RED_START, BOLD, RESET)

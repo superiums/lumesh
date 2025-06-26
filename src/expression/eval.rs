@@ -1,5 +1,3 @@
-use super::Pattern;
-
 use crate::STRICT;
 use crate::expression::alias;
 use crate::expression::cmd_excutor::expand_home;
@@ -751,9 +749,9 @@ impl Expression {
                     // 模式匹配求值
                     let val = value.as_ref().eval_mut(state, env, depth + 1)?;
                     let mut matched = false;
-                    for (pat, expr) in branches {
-                        if matches_pattern(&val, pat, env)? {
-                            job = expr.as_ref();
+                    for (pat, expr) in branches.as_ref().iter() {
+                        if matches_pattern(&val, pat) {
+                            job = expr;
                             matched = true;
                             break;
                         }
@@ -1036,25 +1034,16 @@ impl Expression {
 }
 
 /// match的比对
-fn matches_pattern(
-    value: &Expression,
-    pattern: &Pattern,
-    env: &mut Environment,
-) -> Result<bool, RuntimeError> {
-    match pattern {
-        Pattern::Bind(name) => {
-            if name == "_" {
-                // _作为通配符，不绑定变量
-                Ok(true)
-            } else {
-                // 正常变量绑定
-                env.define(name, value.clone());
-                Ok(true)
-            }
+fn matches_pattern(value: &Expression, pattern: &Vec<Expression>) -> bool {
+    pattern.iter().any(|pat| match pat {
+        Expression::Symbol(s) if s == "_" => true,
+        Expression::Symbol(s) => s == &value.to_string(),
+        Expression::String(s) => {
+            Regex::new(s).is_ok_and(|r| r.is_match(value.to_string().as_str()))
         }
-        Pattern::Literal(lit) => Ok(value == lit.as_ref()),
-        Pattern::List(list) => Ok(list.contains(value)),
-    }
+
+        o => o == value,
+    })
 }
 
 fn handle_contains(l: Expression, r: Expression) -> Result<bool, RuntimeError> {

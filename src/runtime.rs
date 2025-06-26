@@ -28,7 +28,7 @@ pub fn parse(input: &str) -> Result<Expression, SyntaxError> {
         }),
         Err(nom::Err::Incomplete(_)) => Err(SyntaxError {
             source: input.into(),
-            kind: SyntaxErrorKind::InternalError,
+            kind: SyntaxErrorKind::InternalError("incomplted".to_string()),
         }),
     }
 }

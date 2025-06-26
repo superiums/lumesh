@@ -55,7 +55,7 @@ pub enum Expression {
     For(String, Rc<Self>, Rc<Self>),
     While(Rc<Self>, Rc<Self>),
     Loop(Rc<Self>),
-    Match(Rc<Self>, Vec<(Pattern, Rc<Self>)>),
+    Match(Rc<Self>, Rc<Vec<(Vec<Self>, Self)>>),
     If(Rc<Self>, Rc<Self>, Rc<Self>),
     Apply(Rc<Self>, Rc<Vec<Self>>),
     Command(Rc<Self>, Rc<Vec<Self>>),
@@ -186,12 +186,7 @@ impl PartialEq for FileSize {
         self.to_bytes().eq(&other.to_bytes())
     }
 }
-#[derive(Debug, Clone, PartialEq)]
-pub enum Pattern {
-    Bind(String),
-    Literal(Rc<Expression>),
-    List(Rc<Vec<Expression>>),
-}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum CatchType {
     Ignore,

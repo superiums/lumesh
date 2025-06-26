@@ -353,10 +353,10 @@ impl PrattParser {
                 }
             }
             TokenKind::Keyword => parse_control_flow(input),
-            // TokenKind::LineBreak => {
-            //     let (input, _) = kind(TokenKind::LineBreak)(input)?;
-            //     Self::parse_prefix(input, min_prec)
-            // }
+            TokenKind::LineBreak => Err(nom::Err::Error(SyntaxErrorKind::InternalError(
+                "line ended too early".to_string(),
+            ))),
+
             _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                 first.text(input).to_string(),
             ))),

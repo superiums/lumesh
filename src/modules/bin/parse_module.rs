@@ -170,32 +170,26 @@ pub fn parse_command_output(
     }
 
     // delimeter
-    let delimiter = match env.get("IFS") {
-        Some(Expression::String(fs)) if fs != "\n" => fs,
-        _ => " ".to_string(), // 使用空格作为默认分隔符
-    };
+    // let delimiter = match env.get("IFS") {
+    //     Some(Expression::String(fs)) if fs != "\n" => fs,
+    //     _ => " ".to_string(), // 使用空格作为默认分隔符
+    // };
 
     // filter too short tips lines
     if lines.len() > 2 {
-        if lines[0]
-            .split_terminator(delimiter.as_str())
-            .collect::<Vec<&str>>()
-            .len()
-            < lines[1]
-                .split_terminator(delimiter.as_str())
-                .collect::<Vec<&str>>()
-                .len()
+        if lines[0].split_whitespace().collect::<Vec<&str>>().len()
+            < lines[1].split_whitespace().collect::<Vec<&str>>().len()
         {
             lines.remove(0);
         }
         if lines
             .last()
             .unwrap()
-            .split_terminator(delimiter.as_str())
+            .split_whitespace()
             .collect::<Vec<&str>>()
             .len()
             < lines[lines.len() - 2]
-                .split_terminator(delimiter.as_str())
+                .split_whitespace()
                 .collect::<Vec<&str>>()
                 .len()
         {
@@ -206,12 +200,12 @@ pub fn parse_command_output(
     let (data_lines, detected_headers) = if headers.is_empty() {
         let maybe_header = lines[0];
         let looks_like_header = maybe_header
-            .split_terminator(delimiter.as_str())
+            .split_whitespace()
             .all(|s| s.chars().any(|c| c.is_uppercase() || !c.is_ascii()));
 
         if looks_like_header {
             let detected = maybe_header
-                .split_terminator(delimiter.as_str())
+                .split_whitespace()
                 .map(|s| {
                     s.replace(":", "_")
                         .replace("\"", "")
@@ -223,7 +217,7 @@ pub fn parse_command_output(
         } else {
             // No headers detected, use column numbers
             let cols = lines[0]
-                .split_terminator(delimiter.as_str())
+                .split_whitespace()
                 .enumerate()
                 .map(|(i, _)| format!("C{}", i))
                 .collect();
@@ -240,9 +234,7 @@ pub fn parse_command_output(
             continue;
         }
 
-        let slist = line
-            .split_terminator(delimiter.as_str())
-            .collect::<Vec<_>>();
+        let slist = line.split_whitespace().collect::<Vec<_>>();
 
         let mut row = BTreeMap::new();
 

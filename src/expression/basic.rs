@@ -36,12 +36,12 @@ macro_rules! fmt_shared {
 
             Self::Integer(i) => write!($f, "{}", *i),
             Self::Float(n) => write!($f, "{}", *n),
-            Self::Bytes(b) => write!($f, "b{:?}", b),
+            Self::Bytes(b) => write!($f, "b{}", String::from_utf8_lossy(b)),
             Self::Boolean(b) => write!($f, "{}", if *b { "True" } else { "False" }),
             Self::DateTime(n) => write!($f, "{}", n.format("%Y-%m-%d %H:%M")),
 
-            Self::Declare(name, expr) => write!($f, "let {} = {:?}", name, expr),
-            Self::Assign(name, expr) => write!($f, "{} = {:?}", name, expr),
+            Self::Declare(name, expr) => write!($f, "let {} = {}", name, expr),
+            Self::Assign(name, expr) => write!($f, "{} = {}", name, expr),
 
             // Quote 修改
             Self::Quote(inner) => write!($f, "'{}", inner),
@@ -63,7 +63,23 @@ macro_rules! fmt_shared {
                 write!($f, "if {}\n\t{}\nelse\n\t{}", cond, true_expr, false_expr)
             }
 
-            Self::Slice(l, r) => write!($f, "{}[{:?}:{:?}:{:?}]", l, r.start, r.end, r.step),
+            Self::Slice(l, r) => write!(
+                $f,
+                "{}[{}:{}:{}]",
+                l,
+                match &r.start {
+                    Some(s) => s.as_ref(),
+                    _ => &Expression::None,
+                },
+                match &r.end {
+                    Some(s) => s.as_ref(),
+                    _ => &Expression::None,
+                },
+                match &r.step {
+                    Some(s) => s.as_ref(),
+                    _ => &Expression::None,
+                },
+            ),
 
             // 修正List分支中的变量名错误
             Self::List(exprs) => {
@@ -104,41 +120,81 @@ macro_rules! fmt_shared {
                 )
             }
 
-            Self::None => write!($f, "None"),
+            Self::None => write!($f, ""),
             Self::Function(name, param, pc, body) => match pc {
                 Some(collector) => write!(
                     $f,
-                    "fn {}({:?},...{}) {{\n\t{:?}\n}}",
-                    name, param, collector, body
+                    "fn {}({},...{}) {{\n\t{}\n}}",
+                    name,
+                    param
+                        .iter()
+                        .map(|(p, v)| match v {
+                            Some(vv) => format!("{}={}", p, vv),
+                            _ => p.to_string(),
+                        })
+                        .collect::<Vec<String>>()
+                        .join(","),
+                    collector,
+                    body
                 ),
-                _ => write!($f, "fn {}({:?}) {{\n\t{:?}\n}}", name, param, body),
+                _ => write!(
+                    $f,
+                    "fn {}({}) {{\n\t{}\n}}",
+                    name,
+                    param
+                        .iter()
+                        .map(|(p, v)| match v {
+                            Some(vv) => format!("{}={}", p, vv),
+                            _ => p.to_string(),
+                        })
+                        .collect::<Vec<String>>()
+                        .join(","),
+                    body
+                ),
             },
             Self::Return(body) => write!($f, "return {}", body),
             Self::Break(body) => write!($f, "break {}", body),
-            Self::For(name, list, body) => write!($f, "for {} in {:?}\n\t{:?}", name, list, body),
+            Self::For(name, list, body) => write!($f, "for {} in {}\n\t{}", name, list, body),
             Self::Do(exprs) => write!(
                 $f,
                 "{{\n\t{}\n\t}}",
                 exprs
                     .iter()
-                    .map(|e| format!("{:?}", e))
+                    .map(|e| format!("{}", e))
                     .collect::<Vec<String>>()
-                    .join("; ")
+                    .join(";\n")
             ),
 
             Self::Del(name) => write!($f, "del {}", name),
 
             Self::Match(value, branches) => {
-                write!($f, "match {:?} {{", value)?;
+                write!($f, "match {} {{", value)?;
                 for (pat, expr) in branches.iter() {
-                    write!($f, "\n\t{:?} => {:?}, ", pat, expr)?;
+                    write!(
+                        $f,
+                        "\n\t{} => {}, ",
+                        pat.iter()
+                            .map(|e| e.to_string())
+                            .collect::<Vec<String>>()
+                            .join(" "),
+                        expr
+                    )?;
                 }
                 write!($f, "\n}}")
             }
 
-            Self::Apply(g, args) | Self::Command(g, args) => write!(
+            Self::Apply(g, args) => write!(
                 $f,
-                "{:?} {}",
+                "{}({})",
+                g,
+                args.iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<String>>()
+                    .join(", ")
+            ),
+            Self::Command(g, args) => write!(
+                $f,
+                "{}  {}",
                 g,
                 args.iter()
                     .map(|e| e.to_string())
@@ -146,7 +202,7 @@ macro_rules! fmt_shared {
                     .join(" ")
             ),
 
-            Self::AliasOp(name, cmd) => write!($f, "alias {} {:?}", name, cmd),
+            Self::AliasOp(name, cmd) => write!($f, "alias {} = {}", name, cmd),
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
                     write!($f, "({} {})", op, v)
@@ -154,23 +210,23 @@ macro_rules! fmt_shared {
                     write!($f, "({} {})", v, op)
                 }
             }
-            Self::Range(r, st) => write!($f, "{:?}:<{}", r, st),
-            Self::BinaryOp(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
+            Self::Range(r, st) => write!($f, "{}..<{}:{}", r.start, r.end, st),
+            Self::BinaryOp(op, l, r) => write!($f, "{} {} {}", l, op, r),
             Self::RangeOp(op, l, r, step) => match step {
-                Some(st) => write!($f, "{:?}{}{:?}:{:?}", l, op, r, st),
-                _ => write!($f, "{:?}{}{:?}", l, op, r),
+                Some(st) => write!($f, "{}{}{}:{}", l, op, r, st),
+                _ => write!($f, "{}{}{}", l, op, r),
             },
-            Self::Pipe(op, l, r) => write!($f, "{:?} {} {:?}", l, op, r),
+            Self::Pipe(op, l, r) => write!($f, "{} {} {}", l, op, r),
             Self::Index(l, r) => write!($f, "{}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
             Self::Catch(body, ctyp, deel) => match ctyp {
-                CatchType::Ignore => write!($f, "{:?} ?.", body),
-                CatchType::PrintStd => write!($f, "{:?} ?+", body),
-                CatchType::PrintErr => write!($f, "{:?} ??", body),
-                CatchType::PrintOver => write!($f, "{:?} ?!", body),
+                CatchType::Ignore => write!($f, "{} ?.", body),
+                CatchType::PrintStd => write!($f, "{} ?+", body),
+                CatchType::PrintErr => write!($f, "{} ??", body),
+                CatchType::PrintOver => write!($f, "{} ?!", body),
                 CatchType::Deel => match deel {
-                    Some(deelx) => write!($f, "{:?} ?: {}", body, deelx),
-                    _ => write!($f, "{:?} ?: {{}}", body),
+                    Some(deelx) => write!($f, "{} ?: {}", body, deelx),
+                    _ => write!($f, "{} ?: {{}}", body),
                 },
             }, // Self::Error { code, msg, expr } => {
                //     write!($f, "Error<(code:{}\nmsg:{}\nexpr:{:?})>", code, msg, expr)
@@ -194,6 +250,8 @@ impl fmt::Debug for Expression {
             Self::Range(s, st) => write!(f, "Range〈{:?},{}〉", s, st),
             Self::Quote(inner) => write!(f, "Quote〈{:?}〉", inner),
             Self::Group(inner) => write!(f, "Group〈{:?}〉", inner),
+            Self::None => write!(f, "None"),
+
             Self::While(cond, body) => write!(f, "while {:?}\n\t{:?}", cond, body),
             Self::Lambda(params, body) => {
                 write!(f, "Lambda〖{:?} -> {:?}〗\n", params, body)
@@ -232,12 +290,12 @@ impl fmt::Debug for Expression {
             ),
             Self::Apply(g, args) => write!(
                 f,
-                "FN「{:?} {}」",
+                "APPLY「{:?}({})」",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))
                     .collect::<Vec<String>>()
-                    .join(" ")
+                    .join(", ")
             ),
             Self::If(cond, true_expr, false_expr) => {
                 write!(
@@ -248,7 +306,7 @@ impl fmt::Debug for Expression {
             }
             Self::Command(g, args) => write!(
                 f,
-                "CMD『{:?} {}』\n",
+                "CMD『{:?} {}』",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))

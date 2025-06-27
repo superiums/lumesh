@@ -1,5 +1,5 @@
 use super::terminal::{TerminalOps, get_terminal_impl};
-use crate::{Environment, RuntimeError, RuntimeErrorKind};
+use crate::{Environment, RuntimeErrorKind};
 use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::io::{self, Read, Write};
 use std::sync::Arc;

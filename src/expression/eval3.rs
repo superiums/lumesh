@@ -235,6 +235,7 @@ impl Expression {
                     } else {
                         let aa = args.split_at(1);
                         handle_command(
+                            self,
                             &aa.0.to_vec().first().unwrap().to_string(),
                             &Rc::new(aa.1.to_vec()),
                             state,
@@ -254,6 +255,7 @@ impl Expression {
                     );
                     new_vec.extend_from_slice(&args);
                     handle_command(
+                        self,
                         &cmdx_vec.first().unwrap().to_string(),
                         &new_vec,
                         state,
@@ -303,6 +305,7 @@ impl Expression {
                         new_vec.extend_from_slice(&cmd_args);
                         new_vec.extend_from_slice(&args);
                         handle_command(
+                            self,
                             &cmd_name.as_ref().to_string(),
                             &new_vec,
                             state,
@@ -312,7 +315,7 @@ impl Expression {
                     }
                     // alias a=ls
                     Expression::String(cmd_str) => {
-                        handle_command(&cmd_str, args.as_ref(), state, env, depth + 1)
+                        handle_command(self, &cmd_str, args.as_ref(), state, env, depth + 1)
                     }
                     // alias a=fmt.red()
                     Expression::Apply(..) => {
@@ -358,7 +361,7 @@ impl Expression {
                         self.eval_builtin(bti, args, state, env, depth + 1)
                     }
                     // 三方命令
-                    _ => handle_command(&cmd_sym, args, state, env, depth + 1),
+                    _ => handle_command(self, &cmd_sym, args, state, env, depth + 1),
                 }
             }
         }

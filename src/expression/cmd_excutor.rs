@@ -9,7 +9,7 @@ use glob::glob;
 // use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::{
     borrow::Cow,
-    io::{ErrorKind, Write},
+    io::Write,
     process::{Command, Stdio},
 };
 
@@ -18,6 +18,7 @@ use std::{
 /// 16=pty
 /// 执行单个命令（支持管道）
 fn exec_single_cmd(
+    job: &Expression,
     cmdstr: &String,
     args: Option<Vec<String>>,
     env: &mut Environment,
@@ -32,7 +33,7 @@ fn exec_single_cmd(
     if mode & 16 != 0 {
         // spawn_in_pty(cmdstr, args, env, input);
         return exec_in_pty(cmdstr, args, env, input)
-            .map_err(|e| RuntimeError::new(e, Expression::None, depth));
+            .map_err(|e| RuntimeError::new(e, job.clone(), depth));
     }
     let mut cmd = Command::new(cmdstr);
 
@@ -42,8 +43,7 @@ fn exec_single_cmd(
     };
 
     cmd.args(ar).envs(env.get_bindings_string()).current_dir(
-        std::env::current_dir()
-            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?,
+        std::env::current_dir().map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?,
     );
 
     // 设置 stdin
@@ -80,7 +80,7 @@ fn exec_single_cmd(
         // match &e.kind() {
         // ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.clone()),
         // e =>
-        RuntimeError::from_io_error(e, Expression::None, depth),
+        RuntimeError::from_io_error(e, job.clone(), depth),
         // }
     )?;
 
@@ -91,7 +91,7 @@ fn exec_single_cmd(
             .as_mut()
             .unwrap()
             .write_all(&input)
-            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?;
+            .map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?;
     }
 
     // TODO not work yet
@@ -121,7 +121,7 @@ fn exec_single_cmd(
         // 管道捕获
         let output = child
             .wait_with_output()
-            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?;
+            .map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?;
         if output.status.success() {
             if mode & 1 == 0 {
                 //未关闭标准输出才返回结果
@@ -150,7 +150,7 @@ fn exec_single_cmd(
                     // return Err(RuntimeError::CommandFailed2(cmdstr.to_owned(), stderr));
                     return Err(RuntimeError::new(
                         RuntimeErrorKind::CommandFailed2(cmdstr.to_owned(), stderr),
-                        Expression::None,
+                        job.clone(),
                         depth,
                     ));
                 }
@@ -167,14 +167,14 @@ fn exec_single_cmd(
         // 正常模式
         let status = child
             .wait()
-            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?;
+            .map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?;
         if status.success() {
             return Ok(None);
         } else if mode & 2 == 0 {
             //未关闭错误输出才返回错误
             Err(RuntimeError::new(
                 RuntimeErrorKind::CommandFailed2(cmdstr.to_owned(), status.to_string()),
-                Expression::None,
+                job.clone(),
                 depth,
             ))
         } else {
@@ -192,6 +192,7 @@ pub fn expand_home(path: &str) -> Cow<str> {
 }
 // 管道
 pub fn handle_command(
+    job: &Expression,
     cmd: &String,
     args: &Vec<Expression>,
     state: &mut State,
@@ -228,7 +229,7 @@ pub fn handle_command(
                     if !matched {
                         return Err(RuntimeError {
                             kind: RuntimeErrorKind::WildcardNotMatched(s),
-                            context: Expression::None,
+                            context: job.clone(),
                             depth,
                         });
                         // cmd_args.push(s);
@@ -309,6 +310,7 @@ pub fn handle_command(
     let last_input = state.pipe_out();
     let pipe_input = to_bytes(last_input);
     let result = exec_single_cmd(
+        job,
         cmd,
         Some(cmd_args),
         env,

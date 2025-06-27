@@ -1,4 +1,9 @@
 # Changelog
+## [0.5.7]
+- more friendly runtime errors
+now display the expression context and ast, depth for runtime errors.
+
+
 ## [0.5.6]
 - tip early line end; remove IFS from parse.cmd
 - rewrite match to support regex.

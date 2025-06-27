@@ -5,22 +5,22 @@ use std::{
     rc::Rc,
 };
 
-use crate::RuntimeError;
+use crate::RuntimeErrorKind;
 
 use super::Expression;
 
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Rem, Sub, SubAssign};
 
 impl Add for Expression {
-    type Output = Result<Self, RuntimeError>;
+    type Output = Result<Self, RuntimeErrorKind>;
 
-    fn add(self, other: Self) -> Result<Self, RuntimeError> {
+    fn add(self, other: Self) -> Result<Self, RuntimeErrorKind> {
         match (self, other) {
             // 数值运算
             (Self::Integer(m), Self::Integer(n)) => m
                 .checked_add(n)
                 .map(Self::Integer)
-                .ok_or_else(|| RuntimeError::Overflow(format!("{} + {}", m, n))),
+                .ok_or_else(|| RuntimeErrorKind::Overflow(format!("{} + {}", m, n))),
             (Self::Integer(m), Self::Float(n)) => Ok(Self::Float(m as f64 + n)),
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m + n as f64)),
             (Self::Float(m), Self::Float(n)) => Ok(Self::Float(m + n)),
@@ -29,7 +29,7 @@ impl Add for Expression {
                 // 尝试将字符串转换为整数
                 match n.parse::<i64>() {
                     Ok(n) => Ok(Self::Integer(m + n)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "+".into(),
                         format!("Cannot convert string `{}` to integer", n),
                     )), // 转换失败
@@ -39,7 +39,7 @@ impl Add for Expression {
                 // 尝试将字符串转换为浮点数
                 match n.parse::<f64>() {
                     Ok(n) => Ok(Self::Float(m + n)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "+".into(),
                         format!("Cannot convert string `{}` to integer", n),
                     )), // 转换失败
@@ -162,7 +162,7 @@ impl Add for Expression {
             //     Ok(Self::Bytes(a))
             // }
             // 其他情况
-            (m, n) => Err(RuntimeError::CommandFailed2(
+            (m, n) => Err(RuntimeErrorKind::CommandFailed2(
                 "+".into(),
                 format!(
                     "Cannot add {}:{} and {}:{}",
@@ -177,15 +177,15 @@ impl Add for Expression {
 }
 
 impl Sub for Expression {
-    type Output = Result<Self, RuntimeError>;
+    type Output = Result<Self, RuntimeErrorKind>;
 
-    fn sub(self, other: Self) -> Result<Self, RuntimeError> {
+    fn sub(self, other: Self) -> Result<Self, RuntimeErrorKind> {
         match (self, other) {
             // 数值运算
             (Self::Integer(m), Self::Integer(n)) => m
                 .checked_sub(n)
                 .map(Self::Integer)
-                .ok_or_else(|| RuntimeError::Overflow(format!("{} - {}", m, n))),
+                .ok_or_else(|| RuntimeErrorKind::Overflow(format!("{} - {}", m, n))),
             (Self::Integer(m), Self::Float(n)) => Ok(Self::Float(m as f64 - n)),
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m - n as f64)),
             (Self::Float(m), Self::Float(n)) => Ok(Self::Float(m - n)),
@@ -194,7 +194,7 @@ impl Sub for Expression {
                 // 尝试将字符串转换为整数
                 match n.parse::<i64>() {
                     Ok(n) => Ok(Self::Integer(m - n)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "-".into(),
                         format!("Cannot convert string `{}` to integer", n),
                     )), // 转换失败
@@ -204,7 +204,7 @@ impl Sub for Expression {
                 // 尝试将字符串转换为浮点数
                 match n.parse::<f64>() {
                     Ok(n) => Ok(Self::Float(m - n)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "-".into(),
                         format!("Cannot convert string `{}` to integer", n),
                     )), // 转换失败
@@ -322,7 +322,7 @@ impl Sub for Expression {
             }
 
             // 其他情况
-            (n, m) => Err(RuntimeError::CommandFailed2(
+            (n, m) => Err(RuntimeErrorKind::CommandFailed2(
                 "-".into(),
                 format!(
                     "Cannot subtract {}:{} from {}:{}",
@@ -337,14 +337,14 @@ impl Sub for Expression {
 }
 
 impl Mul for Expression {
-    type Output = Result<Self, RuntimeError>;
+    type Output = Result<Self, RuntimeErrorKind>;
 
-    fn mul(self, other: Self) -> Result<Self, RuntimeError> {
+    fn mul(self, other: Self) -> Result<Self, RuntimeErrorKind> {
         match (self, other) {
             // num
             (Self::Integer(m), Self::Integer(n)) => match m.checked_mul(n) {
                 Some(result) => Ok(Self::Integer(result)),
-                None => Err(RuntimeError::Overflow(format!(
+                None => Err(RuntimeErrorKind::Overflow(format!(
                     "Integer overflow when multiplying {} and {}",
                     m, n
                 ))),
@@ -357,7 +357,7 @@ impl Mul for Expression {
                 // 尝试将字符串转换为整数
                 match m.parse::<i64>() {
                     Ok(num) => Ok(Self::Integer(n * num)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "*".into(),
                         format!("Cannot convert string `{}` to integer", m),
                     )),
@@ -367,7 +367,7 @@ impl Mul for Expression {
                 // 尝试将字符串转换为浮点数
                 match m.parse::<f64>() {
                     Ok(num) => Ok(Self::Float(n * num)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "*".into(),
                         format!("Cannot convert string `{}` to float", m),
                     )),
@@ -403,7 +403,7 @@ impl Mul for Expression {
                 };
 
                 if a_cols != b.as_ref().len() {
-                    return Err(RuntimeError::CommandFailed2(
+                    return Err(RuntimeErrorKind::CommandFailed2(
                         "*".into(),
                         format!(
                             "Matrix dimensions do not match for multiplication: {}x{} and {}x{}",
@@ -458,7 +458,7 @@ impl Mul for Expression {
                     Self::Integer(n) => n as f64, // 将整数转换为浮点数
                     Self::Float(n) => n,
                     _ => {
-                        return Err(RuntimeError::CommandFailed2(
+                        return Err(RuntimeErrorKind::CommandFailed2(
                             "*".into(),
                             format!("Cannot multiply by non-numeric value {:?}", value),
                         ));
@@ -470,7 +470,7 @@ impl Mul for Expression {
                         Self::Integer(val) => new_list.push(Self::Float(*val as f64 * n)),
                         Self::Float(val) => new_list.push(Self::Float(val * n)),
                         _ => {
-                            return Err(RuntimeError::CommandFailed2(
+                            return Err(RuntimeErrorKind::CommandFailed2(
                                 "*".into(),
                                 format!("Cannot multiply non-numeric element {:?}", element),
                             ));
@@ -481,7 +481,7 @@ impl Mul for Expression {
             }
 
             // 其他情况
-            (m, n) => Err(RuntimeError::CommandFailed2(
+            (m, n) => Err(RuntimeErrorKind::CommandFailed2(
                 "*".into(),
                 format!(
                     "Cannot multiply {}:{} and {}:{}",
@@ -496,19 +496,17 @@ impl Mul for Expression {
 }
 
 impl Div for Expression {
-    type Output = Result<Self, RuntimeError>;
+    type Output = Result<Self, RuntimeErrorKind>;
 
-    fn div(self, other: Self) -> Result<Self, RuntimeError> {
+    fn div(self, other: Self) -> Result<Self, RuntimeErrorKind> {
         match (self, other) {
             // 数值类型
-            (l, Self::Integer(0) | Self::Float(0.0)) => Err(RuntimeError::CustomError(format!(
-                "can't divide {} by zero",
-                l
-            ))),
-            (l, Self::String(s)) if s == "0" => Err(RuntimeError::CustomError(format!(
-                "can't divide {} by zero",
-                l
-            ))),
+            (l, Self::Integer(0) | Self::Float(0.0)) => Err(RuntimeErrorKind::CustomError(
+                format!("can't divide {} by zero", l).into(),
+            )),
+            (l, Self::String(s)) if s == "0" => Err(RuntimeErrorKind::CustomError(
+                format!("can't divide {} by zero", l).into(),
+            )),
             (Self::Integer(m), Self::Integer(n)) => Ok(Self::Integer(m / n)),
             (Self::Integer(m), Self::Float(n)) => Ok(Self::Float(m as f64 / n)),
             (Self::Float(m), Self::Integer(n)) => Ok(Self::Float(m / n as f64)),
@@ -519,7 +517,7 @@ impl Div for Expression {
                 // 尝试将字符串转换为整数
                 match m.parse::<i64>() {
                     Ok(num) => Ok(Self::Integer(n / num)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "/".into(),
                         format!("Cannot convert string `{}` to integer", m),
                     )),
@@ -529,7 +527,7 @@ impl Div for Expression {
                 // 尝试将字符串转换为浮点数
                 match m.parse::<f64>() {
                     Ok(num) => Ok(Self::Float(n / num)),
-                    Err(_) => Err(RuntimeError::CommandFailed2(
+                    Err(_) => Err(RuntimeErrorKind::CommandFailed2(
                         "/".into(),
                         format!("Cannot convert string `{}` to float", m),
                     )),
@@ -542,20 +540,20 @@ impl Div for Expression {
                     Self::Integer(n) => n as f64,
                     Self::Float(n) => n,
                     _ => {
-                        return Err(RuntimeError::CommandFailed2(
+                        return Err(RuntimeErrorKind::CommandFailed2(
                             "/".into(),
                             format!("Cannot divide by non-numeric value {:?}", value),
                         ));
                     }
                 };
 
-                let new_list: Result<Vec<Self>, RuntimeError> = a
+                let new_list: Result<Vec<Self>, RuntimeErrorKind> = a
                     .as_ref()
                     .iter()
                     .map(|element| match element {
                         Self::Integer(val) => Ok(Self::Float(*val as f64 / divisor)),
                         Self::Float(val) => Ok(Self::Float(val / divisor)),
-                        _ => Err(RuntimeError::CommandFailed2(
+                        _ => Err(RuntimeErrorKind::CommandFailed2(
                             "/".into(),
                             format!("Cannot divide non-numeric element {:?}", element),
                         )),
@@ -566,7 +564,7 @@ impl Div for Expression {
             }
 
             // 其他情况
-            (m, n) => Err(RuntimeError::CommandFailed2(
+            (m, n) => Err(RuntimeErrorKind::CommandFailed2(
                 "/".into(),
                 format!(
                     "Cannot divide {}:{} by {}:{}",

@@ -1,11 +1,9 @@
-use super::{Expression, Int};
 use crate::{Diagnostic, tokens::Tokens};
-use common_macros::b_tree_map;
+
 use core::fmt;
 use detached_str::{Str, StrSlice};
 use nom::error::{ErrorKind, ParseError};
 use std::error::Error as StdError;
-use thiserror::Error;
 
 // ============== 语法错误部分 ==============
 
@@ -423,197 +421,14 @@ impl fmt::Display for SyntaxError {
     }
 }
 
-// ============== 运行时错误部分 ==============
-
-#[derive(Debug, Error)]
-pub enum RuntimeError {
-    #[error("cannot apply `{0:?}` to the arguments {1:?}")]
-    CannotApply(Expression, Vec<Expression>),
-    #[error("symbol \"{0}\" not defined")]
-    SymbolNotDefined(String),
-    #[error("command `{0}` failed with args {1:?}")]
-    CommandFailed(String, Vec<Expression>),
-    #[error("command `{0}` failed:\n{1}")]
-    CommandFailed2(String, String),
-    #[error("attempted to iterate over non-list `{0:?}`")]
-    ForNonList(Expression),
-    #[error("recursion depth exceeded while evaluating `{0:?}`")]
-    RecursionDepth(Expression),
-    #[error("permission denied while evaluating `{0:?}`")]
-    PermissionDenied(Expression),
-    #[error("program \"{0}\" not found")]
-    ProgramNotFound(String),
-    #[error("{0}")]
-    CustomError(String),
-    #[error("redeclaration of `{0}`")]
-    Redeclaration(String),
-    #[error("undeclared variable: {0}")]
-    UndeclaredVariable(String),
-    #[error("no matching branch while evaluating `{0}`")]
-    NoMatchingBranch(String),
-    #[error("too many arguments for function `{name}`: max {max}, found {received}")]
-    TooManyArguments {
-        name: String,
-        max: usize,
-        received: usize,
-    },
-    #[error("arguments mismatch for function `{name}`: expected {expected}, found {received}")]
-    ArgumentMismatch {
-        name: String,
-        expected: usize,
-        received: usize,
-    },
-    #[error("invalid default value `{2}` for argument `{1}` in function `{0}`")]
-    InvalidDefaultValue(String, String, Expression),
-    #[error("invalid operator `{0}`")]
-    InvalidOperator(String),
-    #[error("index {index} out of bounds (length {len})")]
-    IndexOutOfBounds { index: Int, len: usize },
-    #[error("key `{0}` not found in map")]
-    KeyNotFound(String),
-    #[error("type error, expected {expected}, found {sym}: {found}")]
-    TypeError {
-        expected: String,
-        sym: String,
-        found: String,
-    },
-    #[error("illegal return outside function")]
-    EarlyReturn(Expression),
-    #[error("illegal break outside loop")]
-    EarlyBreak(Expression),
-    #[error("overflowed when: `{0}`")]
-    Overflow(String),
-    #[error("wildcard not matched: `{0}`")]
-    WildcardNotMatched(String),
-    #[error(transparent)]
-    Io(#[from] std::io::Error),
-}
-
-// ============== 顶级错误类型 ==============
-
-#[derive(Debug, Error)]
-pub enum LmError {
-    #[error(transparent)]
-    Syntax(#[from] SyntaxError),
-    #[error(transparent)]
-    Runtime(#[from] RuntimeError),
-    #[error(transparent)]
-    Io(#[from] std::io::Error),
-    #[error("{0}")]
-    CustomError(String),
-    #[error("type error, expected {expected}, found {sym}: {found}")]
-    TypeError {
-        expected: String,
-        sym: String,
-        found: String,
-    },
-}
-impl RuntimeError {
-    pub const ERROR_CODE_CANNOT_APPLY: Int = 1;
-    pub const ERROR_CODE_SYMBOL_NOT_DEFINED: Int = 2;
-    pub const ERROR_CODE_COMMAND_FAILED: Int = 3;
-    pub const ERROR_CODE_FOR_NON_LIST: Int = 5;
-    pub const ERROR_CODE_RECURSION_DEPTH: Int = 6;
-    pub const ERROR_CODE_PERMISSION_DENIED: Int = 7;
-    pub const ERROR_CODE_PROGRAM_NOT_FOUND: Int = 8;
-    pub const ERROR_CODE_CUSTOM_ERROR: Int = 9;
-    pub const ERROR_CODE_REDECLARATION: Int = 10; // Added for Redeclaration
-    pub const ERROR_CODE_UNDECLARED_VARIABLE: Int = 11; // Added for UndeclaredVariable
-    pub const ERROR_CODE_NO_MATCHING_BRANCH: Int = 12; // Added for NoMatchingBranch
-    pub const ERROR_CODE_TOO_MANY_ARGUMENTS: Int = 13; // Added for TooManyArguments
-    pub const ERROR_CODE_ARGUMENT_MISMATCH: Int = 14; // Added for ArgumentMismatch
-    pub const ERROR_CODE_INVALID_DEFAULT_VALUE: Int = 15; // Added for InvalidDefaultValue
-    pub const ERROR_CODE_INVALID_OPERATOR: Int = 16; // Added for InvalidOperator
-    pub const ERROR_CODE_INDEX_OUT_OF_BOUNDS: Int = 17; // Added for IndexOutOfBounds
-    pub const ERROR_CODE_KEY_NOT_FOUND: Int = 18; // Added for KeyNotFound
-    pub const ERROR_CODE_TYPE_ERROR: Int = 19; // Added for TypeError
-    pub const ERROR_CODE_EARLY_RETURN: Int = 20; // Added for EarlyReturn
-
-    pub fn codes() -> Expression {
-        Expression::from(b_tree_map! {
-            String::from("cannot_apply") => Expression::Integer(Self::ERROR_CODE_CANNOT_APPLY),
-            String::from("symbol_not_defined") => Expression::Integer(Self::ERROR_CODE_SYMBOL_NOT_DEFINED),
-            String::from("command_failed") => Expression::Integer(Self::ERROR_CODE_COMMAND_FAILED),
-            String::from("for_non_list") => Expression::Integer(Self::ERROR_CODE_FOR_NON_LIST),
-            String::from("recursion_depth") => Expression::Integer(Self::ERROR_CODE_RECURSION_DEPTH),
-            String::from("permission_denied") => Expression::Integer(Self::ERROR_CODE_PERMISSION_DENIED),
-            String::from("program_not_found") => Expression::Integer(Self::ERROR_CODE_PROGRAM_NOT_FOUND),
-            String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CUSTOM_ERROR),
-            String::from("redeclaration") => Expression::Integer(Self::ERROR_CODE_REDECLARATION),
-            String::from("undeclared_variable") => Expression::Integer(Self::ERROR_CODE_UNDECLARED_VARIABLE),
-            String::from("no_matching_branch") => Expression::Integer(Self::ERROR_CODE_NO_MATCHING_BRANCH),
-            String::from("too_many_arguments") => Expression::Integer(Self::ERROR_CODE_TOO_MANY_ARGUMENTS),
-            String::from("argument_mismatch") => Expression::Integer(Self::ERROR_CODE_ARGUMENT_MISMATCH),
-            String::from("invalid_default_value") => Expression::Integer(Self::ERROR_CODE_INVALID_DEFAULT_VALUE),
-            String::from("invalid_operator") => Expression::Integer(Self::ERROR_CODE_INVALID_OPERATOR),
-            String::from("index_out_of_bounds") => Expression::Integer(Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS),
-            String::from("key_not_found") => Expression::Integer(Self::ERROR_CODE_KEY_NOT_FOUND),
-            String::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
-            String::from("early_return") => Expression::Integer(Self::ERROR_CODE_EARLY_RETURN),
-        })
-    }
-
-    pub fn code(&self) -> Int {
-        match self {
-            RuntimeError::CannotApply(..) => Self::ERROR_CODE_CANNOT_APPLY,
-            RuntimeError::SymbolNotDefined(..) => Self::ERROR_CODE_SYMBOL_NOT_DEFINED,
-            RuntimeError::CommandFailed(..) | RuntimeError::CommandFailed2(..) => {
-                Self::ERROR_CODE_COMMAND_FAILED
-            }
-            RuntimeError::ForNonList(..) => Self::ERROR_CODE_FOR_NON_LIST,
-            RuntimeError::RecursionDepth(..) => Self::ERROR_CODE_RECURSION_DEPTH,
-            RuntimeError::PermissionDenied(..) => Self::ERROR_CODE_PERMISSION_DENIED,
-            RuntimeError::ProgramNotFound(..) => Self::ERROR_CODE_PROGRAM_NOT_FOUND,
-            RuntimeError::Redeclaration(..) => Self::ERROR_CODE_REDECLARATION,
-            RuntimeError::UndeclaredVariable(..) => Self::ERROR_CODE_UNDECLARED_VARIABLE,
-            RuntimeError::NoMatchingBranch(..) => Self::ERROR_CODE_NO_MATCHING_BRANCH,
-            RuntimeError::TooManyArguments { .. } => Self::ERROR_CODE_TOO_MANY_ARGUMENTS,
-            RuntimeError::ArgumentMismatch { .. } => Self::ERROR_CODE_ARGUMENT_MISMATCH,
-            RuntimeError::InvalidDefaultValue(..) => Self::ERROR_CODE_INVALID_DEFAULT_VALUE,
-            RuntimeError::InvalidOperator(..) => Self::ERROR_CODE_INVALID_OPERATOR,
-            RuntimeError::IndexOutOfBounds { .. } => Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS,
-            RuntimeError::KeyNotFound(..) => Self::ERROR_CODE_KEY_NOT_FOUND,
-            RuntimeError::TypeError { .. } => Self::ERROR_CODE_TYPE_ERROR,
-            RuntimeError::EarlyReturn(..) => Self::ERROR_CODE_EARLY_RETURN,
-            _ => Self::ERROR_CODE_CUSTOM_ERROR,
-        }
-    }
-}
-
-impl LmError {
-    pub const ERROR_CODE_RUNTIME_ERROR: Int = 100;
-    pub const ERROR_CODE_SYNTAX_ERROR: Int = 101;
-    pub const ERROR_CODE_IO_ERROR: Int = 102;
-    pub const ERROR_CODE_CS_ERROR: Int = 103;
-    pub const ERROR_CODE_TYPE_ERROR: Int = 104;
-    pub fn codes() -> Expression {
-        Expression::from(b_tree_map! {
-            String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
-            String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
-            String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
-            String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
-            String::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
-        })
-    }
-    pub fn code(&self) -> Int {
-        match self {
-            Self::Syntax(_) => Self::ERROR_CODE_SYNTAX_ERROR,
-            Self::Runtime(err) => err.code(),
-            Self::Io(_) => Self::ERROR_CODE_IO_ERROR,
-            Self::CustomError(_) => Self::ERROR_CODE_CS_ERROR,
-            Self::TypeError { .. } => Self::ERROR_CODE_TYPE_ERROR,
-        }
-    }
-}
-
 // ============== 彩色显示辅助函数 ==============
 
 fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fmt::Result {
+    write!(f, "{}{}token error{}: ", RED_START, BOLD, RESET)?;
     match err {
         Diagnostic::Valid => Ok(()),
         Diagnostic::InvalidUnicode(ranges) => {
             for &at in ranges.iter() {
-                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
                 let escape = at.to_str(string).trim();
                 writeln!(f, "invalid unicode sequence `{}`", escape)?;
                 print_error_lines(string, at, f, 72)?;
@@ -622,7 +437,6 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
         }
         Diagnostic::InvalidStringEscapes(ranges) => {
             for &at in ranges.iter() {
-                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
                 let escape = at.to_str(string).trim();
                 writeln!(f, "invalid string escape sequence `{}`", escape)?;
                 print_error_lines(string, at, f, 72)?;
@@ -631,7 +445,6 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
         }
         Diagnostic::InvalidColorCode(ranges) => {
             for &at in ranges.iter() {
-                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
                 let escape = at.to_str(string).trim();
                 writeln!(f, "invalid color code sequence `{}`", escape)?;
                 print_error_lines(string, at, f, 72)?;
@@ -639,21 +452,18 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
             Ok(())
         }
         &Diagnostic::InvalidNumber(at) => {
-            write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
             let num = at.to_str(string).trim();
             writeln!(f, "invalid number `{}`", num)?;
             print_error_lines(string, at, f, 72)
         }
         &Diagnostic::IllegalChar(at) => {
-            write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
-            writeln!(f, "invalid token {:?}", at.to_str(string))?;
+            writeln!(f, "invalid char {:?}", at.to_str(string))?;
             print_error_lines(string, at, f, 72)
         }
         &Diagnostic::NotTokenized(at) => {
-            write!(f, "{}{}error{}: ", RED_START, BOLD, RESET)?;
             writeln!(
                 f,
-                "there are leftover tokens after tokenizing: {}",
+                "there are leftover tokens after tokenizing:\n{}",
                 at.to_str(string)
             )?;
             print_error_lines(string, at, f, 72)
@@ -661,75 +471,10 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
     }
 }
 
-// fn print_error_lines(
-//     string: &Str,
-//     at: StrSlice,
-//     f: &mut fmt::Formatter,
-//     max_width: usize,
-// ) -> fmt::Result {
-//     let mut lines = at.to_str(string).lines().collect::<Vec<&str>>();
-//     if lines.is_empty() {
-//         lines.push("");
-//     }
-//     let singleline = lines.len() == 1;
-
-//     let before = &string[..at.start()];
-//     let after = &string[at.end()..];
-
-//     let line_before = before.lines().next_back().unwrap_or_default();
-
-//     let line_after = after.lines().next().unwrap_or_default();
-
-//     let first_line_number = max(before.lines().count(), 1);
-//     // dbg!(&lines, line_before, line_after, first_line_number);
-//     writeln!(f, "      |")?;
-
-//     if singleline {
-//         let before_len = line_before.chars().take(max_width).count().min(max_width);
-
-//         let line = line_before
-//             .chars()
-//             .take(max_width)
-//             .chain(RED_START.chars())
-//             .chain(lines[0].chars())
-//             .chain(RESET.chars())
-//             .chain(line_after.chars().take(max_width - before_len))
-//             .collect::<String>();
-
-//         writeln!(f, "{:>5} | {}", first_line_number, line)?;
-//     } else {
-//         let first_line = line_before
-//             .chars()
-//             .chain(RED_START.chars())
-//             .chain(lines[0].chars())
-//             .take(max_width)
-//             .chain(RESET.chars())
-//             .collect::<String>();
-//         write!(f, "{:>5} | {}", first_line_number, first_line)?;
-
-//         for (i, line) in lines.iter().copied().enumerate().skip(1) {
-//             let line = RED_START
-//                 .chars()
-//                 .chain(line.chars().take(max_width))
-//                 .chain(RESET.chars())
-//                 .collect::<String>();
-//             write!(f, "\n{:>5} | {}", first_line_number + i, line)?;
-//         }
-
-//         let last_len = lines.last().unwrap().chars().count();
-//         let suffix = line_after
-//             .chars()
-//             .take(max_width - last_len)
-//             .chain(RESET.chars())
-//             .collect::<String>();
-//         writeln!(f, "\n{}", suffix)?;
-//     }
-
-//     writeln!(f, "      |")?;
-
-//     Ok(())
-// }
-
+// 添加新的颜色常量
+const DIM_START: &str = "\x1b[2m";
+const GREEN_START: &str = "\x1b[32m";
+const BLUE_START: &str = "\x1b[34m";
 const YELLOW_START: &str = "\x1b[38;5;230m";
 const RED2_START: &str = "\x1b[38;5;210m";
 const RED_START: &str = "\x1b[38;5;9m";
@@ -756,7 +501,7 @@ fn print_error_lines(
     let context_start = error_line_num.saturating_sub(3);
     let context_end = (error_line_num + 3).min(all_lines.len());
 
-    writeln!(f, "      |")?;
+    writeln!(f, "     {} ▏{}", BLUE_START, RESET)?;
 
     // 显示上下文行
     for (i, line) in all_lines[context_start..context_end].iter().enumerate() {
@@ -777,7 +522,7 @@ fn print_error_lines(
 
             write!(
                 f,
-                "{}{:>5}{} {}|{} ",
+                "{}{:>5}{} {}▏{} ",
                 RED_START, line_num, RESET, BLUE_START, RESET
             )?;
             if safe_start > 0 {
@@ -794,7 +539,7 @@ fn print_error_lines(
 
             // 添加指示箭头（只有在有错误内容时才显示）
             if safe_end >= safe_start {
-                write!(f, "      {}|{} ", BLUE_START, RESET)?;
+                write!(f, "      {}▏{} ", BLUE_START, RESET)?;
                 for _ in 0..safe_start {
                     write!(f, " ")?;
                 }
@@ -808,84 +553,21 @@ fn print_error_lines(
             // 普通上下文行
             writeln!(
                 f,
-                "{}{:>5}{} {}|{} {}{}{}",
+                "{}{:>5}{} {}▏{} {}{}{}",
                 GREEN_START, line_num, RESET, BLUE_START, RESET, DIM_START, line, RESET
             )?;
         }
     }
 
-    writeln!(f, "      |")?;
+    writeln!(f, "     {} ▏{}", BLUE_START, RESET)?;
 
     // 显示错误位置信息
     writeln!(
         f,
-        "      = at line {}, column {}",
+        "      ↳ at line {}, column {}",
         error_line_num,
         error_col + 1
     )?;
 
     Ok(())
 }
-
-// 添加语法高亮的版本
-// fn print_highlighted_error_lines(
-//     string: &Str,
-//     at: StrSlice,
-//     f: &mut fmt::Formatter,
-//     _max_width: usize,
-// ) -> fmt::Result {
-//     use crate::syntax::highlight; // 复用现有的语法高亮功能
-
-//     let error_start = at.start();
-//     let error_end = at.end();
-
-//     let before_text = &string[..error_start];
-//     let lines_before: Vec<&str> = before_text.lines().collect();
-//     let error_line_num = lines_before.len();
-
-//     let all_lines: Vec<&str> = string.lines().collect();
-//     let context_start = error_line_num.saturating_sub(2);
-//     let context_end = (error_line_num + 2).min(all_lines.len());
-
-//     writeln!(f, "      |")?;
-
-//     for (i, line) in all_lines[context_start..context_end].iter().enumerate() {
-//         let line_num = context_start + i + 1;
-//         let is_error_line = line_num == error_line_num;
-
-//         if is_error_line {
-//             // 错误行：应用语法高亮后再高亮错误部分
-//             let highlighted = highlight(line);
-//             write!(f, "{:>5} | ", line_num)?;
-
-//             // 在语法高亮的基础上添加错误高亮
-//             let line_start = before_text.rfind('\n').map(|pos| pos + 1).unwrap_or(0);
-//             let error_start_in_line = error_start - line_start;
-//             let error_end_in_line = error_end - line_start;
-
-//             // 简化处理：直接在错误位置添加下划线
-//             writeln!(f, "{}", highlighted)?;
-//             write!(f, "      | ")?;
-//             for _ in 0..error_start_in_line {
-//                 write!(f, " ")?;
-//             }
-//             write!(f, "{}{}^", RED_START, BOLD)?;
-//             for _ in 1..error_end_in_line.saturating_sub(error_start_in_line) {
-//                 write!(f, "~")?;
-//             }
-//             writeln!(f, " {}", RESET)?;
-//         } else {
-//             // 上下文行：使用淡化的语法高亮
-//             let highlighted = highlight(line);
-//             writeln!(f, "{:>5} | {}{}{}", line_num, DIM_START, highlighted, RESET)?;
-//         }
-//     }
-
-//     writeln!(f, "      |")?;
-//     Ok(())
-// }
-
-// 添加新的颜色常量
-const DIM_START: &str = "\x1b[2m";
-const GREEN_START: &str = "\x1b[32m";
-const BLUE_START: &str = "\x1b[34m";

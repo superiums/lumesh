@@ -1349,16 +1349,13 @@ pub fn parse_script_tokens(
 
     if !input.is_empty() {
         // dbg!("-----==>Remaining:", &input.slice, &functions);
-        eprintln!(
-            "unrecognized satement. \nremaining:{:?}\nrecognized:{:?}",
-            &input.slice, &module
-        );
-        return Err(SyntaxErrorKind::expected(
-            input.get_str_slice(),
-            "valid Expression",
-            Some("unrecognized expression".into()),
-            Some("check your syntax"),
-        ));
+        // eprintln!(
+        //     "unrecognized satement. \nremaining:{:?}\nrecognized:{:?}",
+        //     &input.slice, &module
+        // );
+        return Err(nom::Err::Failure(SyntaxErrorKind::TokenizationErrors(
+            Box::new([Diagnostic::NotTokenized(input.get_str_slice())]),
+        )));
     }
 
     // dbg!("==========", &functions);
@@ -1819,7 +1816,7 @@ fn parse_index_or_slice(
     input: Tokens<'_>,
 ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, (params, is_slice)) =
-        delimited(text("["), parse_slice_params, text_close("]"))(input)?;
+        delimited(text("["), parse_slice_params, cut(text_close("]")))(input)?;
 
     Ok((
         input,

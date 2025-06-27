@@ -1,5 +1,5 @@
 use super::{CatchType, Expression};
-use crate::RuntimeError;
+use crate::{RuntimeError, RuntimeErrorKind};
 // use num_traits::pow;
 use std::fmt;
 use std::rc::Rc;
@@ -12,15 +12,15 @@ use std::rc::Rc;
 //     format!("{}{}{}", GREEN_BOLD, s, RESET)
 // }
 // 错误处理宏（优化点）
-macro_rules! type_error {
-    ($expected:expr, $found:expr) => {
-        Err(RuntimeError::TypeError {
-            expected: $expected.into(),
-            sym: $found.to_string(),
-            found: $found.type_name(),
-        })
-    };
-}
+// macro_rules! type_error {
+//     ($expected:expr, $found:expr) => {
+//         Err(RuntimeError::TypeError {
+//             expected: $expected.into(),
+//             sym: $found.to_string(),
+//             found: $found.type_name().into(),
+//         })
+//     };
+// }
 // 宏定义（可放在 impl 块外）
 macro_rules! fmt_shared {
     ($self:ident, $f:ident, $debug:expr) => {
@@ -50,7 +50,7 @@ macro_rules! fmt_shared {
             Self::Group(inner) => write!($f, "({})", inner),
 
             // While 修改
-            Self::While(cond, body) => write!($f, "while {} {}", cond, body),
+            Self::While(cond, body) => write!($f, "while {}\n\t{}", cond, body),
             Self::Loop(inner) => write!($f, "loop {}", inner),
 
             // Lambda 修改
@@ -60,7 +60,7 @@ macro_rules! fmt_shared {
 
             // If 修改
             Self::If(cond, true_expr, false_expr) => {
-                write!($f, "if {} {} else {}", cond, true_expr, false_expr)
+                write!($f, "if {}\n\t{}\nelse\n\t{}", cond, true_expr, false_expr)
             }
 
             Self::Slice(l, r) => write!($f, "{}[{:?}:{:?}:{:?}]", l, r.start, r.end, r.step),
@@ -108,17 +108,17 @@ macro_rules! fmt_shared {
             Self::Function(name, param, pc, body) => match pc {
                 Some(collector) => write!(
                     $f,
-                    "fn {}({:?},...{}) {{ {:?} }}",
+                    "fn {}({:?},...{}) {{\n\t{:?}\n}}",
                     name, param, collector, body
                 ),
-                _ => write!($f, "fn {}({:?}) {{ {:?} }}", name, param, body),
+                _ => write!($f, "fn {}({:?}) {{\n\t{:?}\n}}", name, param, body),
             },
             Self::Return(body) => write!($f, "return {}", body),
             Self::Break(body) => write!($f, "break {}", body),
-            Self::For(name, list, body) => write!($f, "for {} in {:?} {:?}", name, list, body),
+            Self::For(name, list, body) => write!($f, "for {} in {:?}\n\t{:?}", name, list, body),
             Self::Do(exprs) => write!(
                 $f,
-                "{{ {} }}",
+                "{{\n\t{}\n\t}}",
                 exprs
                     .iter()
                     .map(|e| format!("{:?}", e))
@@ -129,11 +129,11 @@ macro_rules! fmt_shared {
             Self::Del(name) => write!($f, "del {}", name),
 
             Self::Match(value, branches) => {
-                write!($f, "match {:?} {{ ", value)?;
+                write!($f, "match {:?} {{", value)?;
                 for (pat, expr) in branches.iter() {
-                    write!($f, "{:?} => {:?}, ", pat, expr)?;
+                    write!($f, "\n\t{:?} => {:?}, ", pat, expr)?;
                 }
-                write!($f, "}}")
+                write!($f, "\n}}")
             }
 
             Self::Apply(g, args) | Self::Command(g, args) => write!(
@@ -183,20 +183,20 @@ macro_rules! fmt_shared {
 impl fmt::Debug for Expression {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match &self {
-            Self::Symbol(s) => write!(f, "Symbol({:?})", s),
-            Self::Variable(s) => write!(f, "Variable({:?})", s),
-            Self::String(s) => write!(f, "String({:?})", s),
-            Self::Integer(s) => write!(f, "Integer({:?})", s),
-            Self::Float(s) => write!(f, "Float({:?})", s),
-            Self::Boolean(s) => write!(f, "Boolean({:?})", s),
-            Self::DateTime(s) => write!(f, "DateTime({:?})", s),
-            Self::FileSize(s) => write!(f, "{:?}", s),
-            Self::Range(s, st) => write!(f, "Range({:?},{})", s, st),
-            Self::Quote(inner) => write!(f, "Quote({:?})", inner),
-            Self::Group(inner) => write!(f, "Group({:?})", inner),
-            Self::While(cond, body) => write!(f, "while {:?} {:?}", cond, body),
+            Self::Symbol(s) => write!(f, "Symbol〈{:?}〉", s),
+            Self::Variable(s) => write!(f, "Variable〈{:?}〉", s),
+            Self::String(s) => write!(f, "String〈{:?}〉", s),
+            Self::Integer(s) => write!(f, "Integer〈{:?}〉", s),
+            Self::Float(s) => write!(f, "Float〈{:?}〉", s),
+            Self::Boolean(s) => write!(f, "Boolean〈{:?}〉", s),
+            Self::DateTime(s) => write!(f, "DateTime〈{:?}〉", s),
+            Self::FileSize(s) => write!(f, "FileSize〈{:?}〉", s),
+            Self::Range(s, st) => write!(f, "Range〈{:?},{}〉", s, st),
+            Self::Quote(inner) => write!(f, "Quote〈{:?}〉", inner),
+            Self::Group(inner) => write!(f, "Group〈{:?}〉", inner),
+            Self::While(cond, body) => write!(f, "while {:?}\n\t{:?}", cond, body),
             Self::Lambda(params, body) => {
-                write!(f, "Lambda{:?} -> {:?}\n", params, body)
+                write!(f, "Lambda〖{:?} -> {:?}〗\n", params, body)
             }
             Self::List(exprs) => {
                 write!(
@@ -232,7 +232,7 @@ impl fmt::Debug for Expression {
             ),
             Self::Apply(g, args) => write!(
                 f,
-                "APPLY({:?} {})\n",
+                "FN「{:?} {}」",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))
@@ -240,11 +240,15 @@ impl fmt::Debug for Expression {
                     .join(" ")
             ),
             Self::If(cond, true_expr, false_expr) => {
-                write!(f, "if {:?} {:?} else {:?}", cond, true_expr, false_expr)
+                write!(
+                    f,
+                    "if {:?}\n\t{:?}\nelse\n\t{:?}",
+                    cond, true_expr, false_expr
+                )
             }
             Self::Command(g, args) => write!(
                 f,
-                "COMMAND({:?} {})\n",
+                "CMD『{:?} {}』\n",
                 g,
                 args.iter()
                     .map(|e| format!("{:?}", e))
@@ -323,7 +327,18 @@ impl Expression {
         if let Self::Symbol(s) = self {
             Ok(s)
         } else {
-            type_error!("symbol", self)
+            // type_error!("symbol", self)
+            //     ($expected:expr, $found:expr) => {
+            Err(RuntimeError {
+                kind: RuntimeErrorKind::TypeError {
+                    expected: "symbol".to_string(),
+                    sym: self.to_string(),
+                    found: self.type_name().into(),
+                },
+                context: self.clone(),
+                depth: 0,
+            })
+            // };
         }
     }
 

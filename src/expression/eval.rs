@@ -1,13 +1,12 @@
-use crate::STRICT;
 use crate::expression::alias;
 use crate::expression::cmd_excutor::expand_home;
-use crate::expression::eval3::{eval_apply, eval_command};
+
 use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
+use crate::{RuntimeErrorKind, STRICT};
 use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
-use std::io::ErrorKind;
 use std::io::Write;
 
 use std::rc::Rc;
@@ -97,7 +96,11 @@ impl Expression {
         // dbg!("1.--->eval_mut:", &self, &self.type_name());
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
-                return Err(RuntimeError::RecursionDepth(self.clone()));
+                return Err(RuntimeError::new(
+                    RuntimeErrorKind::RecursionDepth(self.clone()),
+                    self.clone(),
+                    depth,
+                ));
             }
         }
         let mut job = self;
@@ -154,7 +157,11 @@ impl Expression {
                     // var
                     return match env.get(name) {
                         Some(expr) => Ok(expr),
-                        None => Err(RuntimeError::UndeclaredVariable(name.clone())),
+                        None => Err(RuntimeError::new(
+                            RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                            self.clone(),
+                            depth,
+                        )),
                     };
                 }
 
@@ -165,7 +172,11 @@ impl Expression {
                         if STRICT && env.has(name)
                         // && env.get("STRICT") == Some(Expression::Boolean(true))
                         {
-                            return Err(RuntimeError::Redeclaration(name.to_string()));
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::Redeclaration(name.to_string()),
+                                self.clone(),
+                                depth,
+                            ));
                         }
                     }
                     if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
@@ -219,7 +230,11 @@ impl Expression {
                             if STRICT
                             // && env.get("STRICT") == Some(Expression::Boolean(true))
                             {
-                                return Err(RuntimeError::UndeclaredVariable(name.clone()));
+                                return Err(RuntimeError::new(
+                                    RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                                    self.clone(),
+                                    depth,
+                                ));
                             }
                         }
 
@@ -263,9 +278,12 @@ impl Expression {
                             Expression::Integer(i) => Ok(Expression::Integer(-i)),
                             Expression::Float(i) => Ok(Expression::Float(-i)),
                             _ => {
-                                return Err(RuntimeError::CustomError(format!(
-                                    "Cannot apply Neg to {operand:?}:{operand_eval:?}"
-                                )));
+                                return Err(RuntimeError::common(
+                                    format!("Cannot apply Neg to {operand:?}:{operand_eval:?}")
+                                        .into(),
+                                    self.clone(),
+                                    depth,
+                                ));
                             }
                         },
                         // 处理 ++a 转换为 a = a + 1
@@ -273,19 +291,26 @@ impl Expression {
                             // 确保操作数是符号
                             let var_name = operand.to_symbol()?;
                             // 获取当前值
-                            let current_val = env
-                                .get(var_name)
-                                .ok_or(RuntimeError::UndeclaredVariable(var_name.to_string()))?;
+                            let current_val = env.get(var_name).ok_or(RuntimeError::new(
+                                RuntimeErrorKind::UndeclaredVariable(var_name.to_string()),
+                                self.clone(),
+                                depth,
+                            ))?;
+
                             // 确保操作是合法的，例如整数或浮点数
                             if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
                             {
-                                return Err(RuntimeError::CustomError(format!(
-                                    "Cannot apply {op} to {operand:?}:{current_val:?}"
-                                )));
+                                return Err(RuntimeError::common(
+                                    format!("Cannot apply {op} to {operand:?}:{current_val:?}")
+                                        .into(),
+                                    self.clone(),
+                                    depth,
+                                ));
                             }
                             // 计算新值
                             let step = if op == "++" { 1 } else { -1 };
-                            let new_val = (current_val.clone() + Expression::Integer(step))?;
+                            let new_val = (current_val.clone() + Expression::Integer(step))
+                                .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                             env.define(var_name, new_val.clone());
                             Ok(if is_prefix == &true {
                                 new_val
@@ -299,13 +324,18 @@ impl Expression {
                                     Expression::Apply(Rc::new(oper), Rc::new(vec![operand_eval]));
                                 return rs.eval_mut(state, env, depth + 1);
                             }
-                            Err(RuntimeError::CustomError(format!(
-                                "custom operation {op:?} not defined"
-                            )))
+
+                            Err(RuntimeError::common(
+                                format!("custom operation {op:?} not defined").into(),
+                                self.clone(),
+                                depth,
+                            ))
                         }
-                        _ => Err(RuntimeError::CustomError(format!(
-                            "Unknown unary operator: {op}"
-                        ))),
+                        _ => Err(RuntimeError::common(
+                            format!("Unknown unary operator: {op}").into(),
+                            self.clone(),
+                            depth,
+                        )),
                     };
                 }
                 // 特殊运算符
@@ -320,14 +350,19 @@ impl Expression {
                                 env.define(base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(RuntimeError::CustomError(format!(
-                                "cannot apply {} to  {}:{} and {}:{}",
-                                operator,
-                                lhs,
-                                lhs.type_name(),
-                                rhs,
-                                rhs.type_name()
-                            ))),
+                            _ => Err(RuntimeError::common(
+                                format!(
+                                    "cannot apply {} to  {}:{} and {}:{}",
+                                    operator,
+                                    lhs,
+                                    lhs.type_name(),
+                                    rhs,
+                                    rhs.type_name()
+                                )
+                                .into(),
+                                self.clone(),
+                                depth,
+                            )),
                         },
                         "-=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
@@ -336,14 +371,19 @@ impl Expression {
                                 env.define(base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(RuntimeError::CustomError(format!(
-                                "cannot apply {} to  {}:{} and {}:{}",
-                                operator,
-                                lhs,
-                                lhs.type_name(),
-                                rhs,
-                                rhs.type_name()
-                            ))),
+                            _ => Err(RuntimeError::common(
+                                format!(
+                                    "cannot apply {} to  {}:{} and {}:{}",
+                                    operator,
+                                    lhs,
+                                    lhs.type_name(),
+                                    rhs,
+                                    rhs.type_name()
+                                )
+                                .into(),
+                                self.clone(),
+                                depth,
+                            )),
                         },
                         "*=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
@@ -352,37 +392,48 @@ impl Expression {
                                 env.define(base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(RuntimeError::CustomError(format!(
-                                "cannot apply {} to  {}:{} and {}:{}",
-                                operator,
-                                lhs,
-                                lhs.type_name(),
-                                rhs,
-                                rhs.type_name()
-                            ))),
+                            _ => Err(RuntimeError::common(
+                                format!(
+                                    "cannot apply {} to  {}:{} and {}:{}",
+                                    operator,
+                                    lhs,
+                                    lhs.type_name(),
+                                    rhs,
+                                    rhs.type_name()
+                                )
+                                .into(),
+                                self.clone(),
+                                depth,
+                            )),
                         },
                         "/=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
                                 let right = rhs.eval(env)?;
                                 if !right.is_truthy() {
-                                    return Err(RuntimeError::CustomError(format!(
-                                        "can't divide {} by zero",
-                                        base
-                                    )));
+                                    return Err(RuntimeError::common(
+                                        format!("can't divide {} by zero", base).into(),
+                                        self.clone(),
+                                        depth,
+                                    ));
                                 };
                                 left /= right;
                                 env.define(base, left.clone());
                                 Ok(left)
                             }
-                            _ => Err(RuntimeError::CustomError(format!(
-                                "cannot apply {} to  {}:{} and {}:{}",
-                                operator,
-                                lhs,
-                                lhs.type_name(),
-                                rhs,
-                                rhs.type_name()
-                            ))),
+                            _ => Err(RuntimeError::common(
+                                format!(
+                                    "cannot apply {} to  {}:{} and {}:{}",
+                                    operator,
+                                    lhs,
+                                    lhs.type_name(),
+                                    rhs,
+                                    rhs.type_name()
+                                )
+                                .into(),
+                                self.clone(),
+                                depth,
+                            )),
                         },
                         "&&" => Ok(Expression::Boolean(
                             lhs.as_ref().eval_mut(state, env, depth + 1)?.is_truthy()
@@ -397,10 +448,18 @@ impl Expression {
                             let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
                             let r = rhs.as_ref().eval_mut(state, env, depth + 1)?;
                             return match operator.as_str() {
-                                "+" => l + r,
-                                "-" => l - r,
-                                "*" => l * r,
-                                "/" => l / r, //no zero
+                                "+" => {
+                                    (l + r).map_err(|e| RuntimeError::new(e, self.clone(), depth))
+                                }
+                                "-" => {
+                                    (l - r).map_err(|e| RuntimeError::new(e, self.clone(), depth))
+                                }
+                                "*" => {
+                                    (l * r).map_err(|e| RuntimeError::new(e, self.clone(), depth))
+                                }
+                                "/" => {
+                                    (l / r).map_err(|e| RuntimeError::new(e, self.clone(), depth))
+                                } //no zero
                                 "%" => Ok(l % r),
                                 "^" => match (l, r) {
                                     (Expression::Float(base), Expression::Float(exponent)) => {
@@ -415,28 +474,43 @@ impl Expression {
                                     (Expression::Integer(base), Expression::Integer(exponent)) => {
                                         // 确保 exponent 是非负的
                                         if exponent < 0 {
-                                            return Err(RuntimeError::CustomError(format!(
-                                                "cannot raise {} to a negative power {}",
-                                                base, exponent
-                                            )));
+                                            return Err(RuntimeError::common(
+                                                format!(
+                                                    "cannot raise {} to a negative power {}",
+                                                    base, exponent
+                                                )
+                                                .into(),
+                                                self.clone(),
+                                                depth,
+                                            ));
                                         }
 
                                         // 使用 checked_pow 进行幂运算
                                         match base.checked_pow(exponent as u32) {
                                             Some(n) => Ok(n.into()),
-                                            None => Err(RuntimeError::CustomError(format!(
-                                                "overflow when raising int {} to the power {}",
-                                                base, exponent
-                                            ))),
+                                            None => Err(RuntimeError::common(
+                                                format!(
+                                                    "overflow when raising int {} to the power {}",
+                                                    base, exponent
+                                                )
+                                                .into(),
+                                                self.clone(),
+                                                depth,
+                                            )),
                                         }
                                     }
-                                    (a, b) => Err(RuntimeError::CustomError(format!(
-                                        "cannot raise {}:{} to the power {}:{}",
-                                        a,
-                                        a.type_name(),
-                                        b,
-                                        b.type_name()
-                                    ))),
+                                    (a, b) => Err(RuntimeError::common(
+                                        format!(
+                                            "cannot raise {}:{} to the power {}:{}",
+                                            a,
+                                            a.type_name(),
+                                            b,
+                                            b.type_name()
+                                        )
+                                        .into(),
+                                        self.clone(),
+                                        depth,
+                                    )),
                                 },
 
                                 "==" => Ok(Expression::Boolean(l == r)),
@@ -449,13 +523,23 @@ impl Expression {
                                 "~:" => Ok(Expression::Boolean(handle_contains(l, r)?)),
                                 "!~:" => Ok(Expression::Boolean(!handle_contains(l, r)?)),
                                 "~~" => {
-                                    let regex = Regex::new(&r.to_string())
-                                        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+                                    let regex = Regex::new(&r.to_string()).map_err(|e| {
+                                        RuntimeError::common(
+                                            e.to_string().into(),
+                                            self.clone(),
+                                            depth,
+                                        )
+                                    })?;
                                     Ok(Expression::Boolean(regex.is_match(&l.to_string())))
                                 }
                                 "!~~" => {
-                                    let regex = Regex::new(&r.to_string())
-                                        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+                                    let regex = Regex::new(&r.to_string()).map_err(|e| {
+                                        RuntimeError::common(
+                                            e.to_string().into(),
+                                            self.clone(),
+                                            depth,
+                                        )
+                                    })?;
                                     Ok(Expression::Boolean(!regex.is_match(&l.to_string())))
                                 }
 
@@ -465,12 +549,19 @@ impl Expression {
                                             Expression::Apply(Rc::new(oper), Rc::new(vec![l, r]));
                                         return rs.eval_mut(state, env, depth + 1);
                                     }
-                                    Err(RuntimeError::CustomError(format!(
-                                        "custom operation {op:?} not defined"
-                                    )))
+
+                                    Err(RuntimeError::common(
+                                        format!("custom operation {op:?} not defined",).into(),
+                                        self.clone(),
+                                        depth,
+                                    ))
                                 }
                                 // ----------
-                                _ => Err(RuntimeError::InvalidOperator(operator.clone())),
+                                _ => Err(RuntimeError::new(
+                                    RuntimeErrorKind::InvalidOperator(operator.clone()),
+                                    self.clone(),
+                                    depth,
+                                )),
                             };
                         }
                     };
@@ -483,11 +574,15 @@ impl Expression {
                         Some(s) => match s.as_ref().eval_mut(state, env, depth + 1)? {
                             Expression::Integer(i) => i as usize,
                             other => {
-                                return Err(RuntimeError::TypeError {
-                                    expected: "Integer".to_owned(),
-                                    sym: other.to_string(),
-                                    found: other.type_name(),
-                                });
+                                return Err(RuntimeError::new(
+                                    RuntimeErrorKind::TypeError {
+                                        expected: "Integer".to_owned(),
+                                        sym: other.to_string(),
+                                        found: other.type_name(),
+                                    },
+                                    self.clone(),
+                                    depth,
+                                ));
                             }
                         },
                         _ => 1,
@@ -501,7 +596,11 @@ impl Expression {
                                     .collect::<Vec<_>>();
                                 Ok(Expression::from(v))
                             }
-                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                            _ => Err(RuntimeError::new(
+                                RuntimeErrorKind::CustomError("not valid range option".into()),
+                                self.clone(),
+                                depth,
+                            )),
                         },
                         "..." => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
@@ -511,21 +610,37 @@ impl Expression {
                                     .collect::<Vec<_>>();
                                 Ok(Expression::from(v))
                             }
-                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                            _ => Err(RuntimeError::new(
+                                RuntimeErrorKind::CustomError("not valid range option".into()),
+                                self.clone(),
+                                depth,
+                            )),
                         },
                         "..<" => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 Ok(Expression::Range(fr..t, st))
                             }
-                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                            _ => Err(RuntimeError::new(
+                                RuntimeErrorKind::CustomError("not valid range option".into()),
+                                self.clone(),
+                                depth,
+                            )),
                         },
                         ".." => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 Ok(Expression::Range(fr..t + 1, st))
                             }
-                            _ => Err(RuntimeError::CustomError("not valid range option".into())),
+                            _ => Err(RuntimeError::new(
+                                RuntimeErrorKind::CustomError("not valid range option".into()),
+                                self.clone(),
+                                depth,
+                            )),
                         },
-                        _ => Err(RuntimeError::InvalidOperator(operator.clone())),
+                        _ => Err(RuntimeError::new(
+                            RuntimeErrorKind::InvalidOperator(operator.clone()),
+                            self.clone(),
+                            depth,
+                        )),
                     };
                 }
                 // 管道
@@ -579,10 +694,13 @@ impl Expression {
                             }
 
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path =
-                                std::env::current_dir()?.join(expand_home(s.as_str()).to_string());
+                            let path = std::env::current_dir()
+                                .map_err(|e| RuntimeError::from_io_error(e, self.clone(), depth))?
+                                .join(expand_home(s.as_str()).to_string());
                             if !path.exists() {
-                                std::fs::File::create(path.clone())?;
+                                std::fs::File::create(path.clone()).map_err(|e| {
+                                    RuntimeError::from_io_error(e, self.clone(), depth)
+                                })?;
                             }
                             match std::fs::OpenOptions::new().append(true).open(&path) {
                                 Ok(mut file) => {
@@ -599,23 +717,28 @@ impl Expression {
 
                                     return match result {
                                         Ok(()) => Ok(left_output),
-                                        Err(e) => Err(RuntimeError::CustomError(format!(
-                                            "could not append to file {}: {:?}",
-                                            rhs, e
-                                        ))),
+                                        Err(e) => {
+                                            Err(RuntimeError::from_io_error(e, self.clone(), depth))
+                                        }
                                     };
                                 }
                                 Err(e) => {
-                                    return Err(match e.kind() {
-                                        ErrorKind::PermissionDenied => {
-                                            RuntimeError::PermissionDenied(rhs.as_ref().clone())
-                                        }
-                                        _ => RuntimeError::CustomError(format!(
-                                            "could not open file {}: {:?}",
-                                            path.display(),
-                                            e
-                                        )),
-                                    });
+                                    return Err(RuntimeError::from_io_error(
+                                        e,
+                                        self.clone(),
+                                        depth,
+                                    ));
+
+                                    // return Err(match e.kind() {
+                                    //     ErrorKind::PermissionDenied => {
+                                    //         RuntimeError::PermissionDenied(rhs.as_ref().clone())
+                                    //     }
+                                    //     _ => RuntimeError::CustomError(format!(
+                                    //         "could not open file {}: {:?}",
+                                    //         path.display(),
+                                    //         e
+                                    //     )),
+                                    // });
                                 }
                             }
                         }
@@ -630,8 +753,9 @@ impl Expression {
 
                             // dbg!("-->> left=", &l);
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path =
-                                std::env::current_dir()?.join(expand_home(s.as_str()).to_string());
+                            let path = std::env::current_dir()
+                                .map_err(|e| RuntimeError::from_io_error(e, self.clone(), depth))?
+                                .join(expand_home(s.as_str()).to_string());
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
                                 std::fs::write(path, bytes)
@@ -642,10 +766,12 @@ impl Expression {
 
                             return match result {
                                 Ok(()) => Ok(l),
-                                Err(e) => Err(RuntimeError::CustomError(format!(
-                                    "could not write to file {}: {:?}",
-                                    rhs, e
-                                ))),
+
+                                Err(e) => Err(RuntimeError::from_io_error(e, self.clone(), depth)),
+                                // Err(RuntimeError::CustomError(format!(
+                                //     "could not write to file {}: {:?}",
+                                //     rhs, e
+                                // ))),
                             };
                         }
                         "<<" => {
@@ -654,7 +780,7 @@ impl Expression {
                             let path = rhs.eval_mut(state, env, depth + 1)?;
                             let contents = std::fs::read_to_string(path.to_string())
                                 .map(Self::String)
-                                .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+                                .map_err(|e| RuntimeError::from_io_error(e, self.clone(), depth))?;
 
                             state.pipe_in(contents);
 
@@ -697,8 +823,8 @@ impl Expression {
                 }
 
                 // 其他复杂类型
-                Self::Slice(list, slice_params) => {
-                    let listo = list.eval(env)?;
+                Self::Slice(lis, slice_params) => {
+                    let listo = lis.eval(env)?;
                     let start_int =
                         Expression::eval_to_int_opt(&slice_params.start, state, env, depth + 1)?;
                     let end_int =
@@ -707,7 +833,32 @@ impl Expression {
                         Expression::eval_to_int_opt(&slice_params.step, state, env, depth + 1)?
                             .unwrap_or(1); // 默认步长1
 
-                    return Self::slice(listo, start_int, end_int, step_int);
+                    // return Self::slice(listo, start_int, end_int, step_int);
+                    let list = listo
+                        .as_list()
+                        .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?;
+                    let len = list.len() as Int;
+
+                    let clamp = |v: Int| if v < 0 { len + v } else { v }.clamp(0, len - 1);
+
+                    let (mut start, mut end) = (
+                        start_int.map(clamp).unwrap_or(0),
+                        end_int.map(|v| clamp(v).min(len)).unwrap_or(len),
+                    );
+
+                    if step_int < 0 {
+                        (start, end) = (end.clamp(0, len), start.clamp(0, len));
+                    }
+
+                    let mut result = Vec::new();
+                    let mut i = start;
+                    while (step_int > 0 && i < end) || (step_int < 0 && i > end) {
+                        if let Some(item) = list.get(i as usize) {
+                            result.push(item.clone());
+                        }
+                        i += step_int;
+                    }
+                    return Ok(Self::from(result));
                 }
                 Self::Index(lhs, rhs) => {
                     let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
@@ -725,15 +876,18 @@ impl Expression {
                         }
                         // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
                         // _ => Err(RuntimeError::CustomError("not valid index option".into())),
-                        (left, right) => Self::index_slm(left, right),
+                        (left, right) => Ok(Self::index_slm(left, right)
+                            .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
                     };
                 }
 
                 // 执行应用
-                Self::Apply(func, args) => break eval_apply(func, args, state, env, depth + 1),
+                Self::Apply(func, args) => {
+                    break self.eval_apply(func, args, state, env, depth + 1);
+                }
                 Self::Command(cmd, args) => {
                     // dbg!("====", &cmd, &args);
-                    break eval_command(cmd, args, state, env, depth + 1);
+                    break self.eval_command(cmd, args, state, env, depth + 1);
                 }
                 // break Self::eval_command(self, env, depth+1),
                 // 简单控制流表达式
@@ -759,7 +913,11 @@ impl Expression {
                     if matched {
                         continue;
                     }
-                    return Err(RuntimeError::NoMatchingBranch(val.to_string()));
+                    return Err(RuntimeError::new(
+                        RuntimeErrorKind::NoMatchingBranch(val.to_string()),
+                        self.clone(),
+                        depth,
+                    ));
                 }
                 // 其他表达式处理...
                 _ => break job.eval_flows(state, env, depth + 1),
@@ -771,19 +929,19 @@ impl Expression {
 
 impl Expression {
     /// 索引访问
-    fn index_slm(l: Expression, r: Expression) -> Result<Expression, RuntimeError> {
+    fn index_slm(l: Expression, r: Expression) -> Result<Expression, RuntimeErrorKind> {
         match l {
             // 处理列表索引
             Expression::List(list) => {
                 if let Expression::Integer(index) = r {
                     list.as_ref().get(index as usize).cloned().ok_or_else(|| {
-                        RuntimeError::IndexOutOfBounds {
+                        RuntimeErrorKind::IndexOutOfBounds {
                             index: index as Int,
                             len: list.as_ref().len(),
                         }
                     })
                 } else {
-                    Err(RuntimeError::TypeError {
+                    Err(RuntimeErrorKind::TypeError {
                         expected: "integer".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
@@ -797,10 +955,12 @@ impl Expression {
                         .nth(index as usize)
                         .and_then(|r| Some(Expression::Integer(r)))
                         .ok_or_else(|| {
-                            RuntimeError::CustomError(format!("index {}: out of bounds", index))
+                            RuntimeErrorKind::CustomError(
+                                format!("index {}: out of bounds", index).into(),
+                            )
                         })
                 } else {
-                    Err(RuntimeError::TypeError {
+                    Err(RuntimeErrorKind::TypeError {
                         expected: "integer".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
@@ -814,14 +974,14 @@ impl Expression {
                 map.as_ref()
                     .get(&key)
                     .cloned()
-                    .ok_or(RuntimeError::KeyNotFound(key))
+                    .ok_or(RuntimeErrorKind::KeyNotFound(key))
             }
             Expression::Map(map) => {
                 let key = r.to_string(); // 自动转换Symbol/字符串
                 map.as_ref()
                     .get(&key)
                     .cloned()
-                    .ok_or(RuntimeError::KeyNotFound(key))
+                    .ok_or(RuntimeErrorKind::KeyNotFound(key))
             }
 
             // 处理字符串索引
@@ -830,12 +990,12 @@ impl Expression {
                     s.chars()
                         .nth(index as usize)
                         .map(|c| Expression::String(c.to_string()))
-                        .ok_or(RuntimeError::IndexOutOfBounds {
+                        .ok_or(RuntimeErrorKind::IndexOutOfBounds {
                             index: index as Int,
                             len: s.len(),
                         })
                 } else {
-                    Err(RuntimeError::TypeError {
+                    Err(RuntimeErrorKind::TypeError {
                         expected: "integer".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
@@ -843,7 +1003,7 @@ impl Expression {
                 }
             }
 
-            _ => Err(RuntimeError::TypeError {
+            _ => Err(RuntimeErrorKind::TypeError {
                 expected: "indexable type (list/dict/string)".into(),
                 sym: l.to_string(),
                 found: l.type_name(),
@@ -851,48 +1011,15 @@ impl Expression {
         }
     }
 
-    pub fn as_list(&self) -> Result<&Vec<Expression>, RuntimeError> {
+    pub fn as_list(&self) -> Result<&Vec<Expression>, RuntimeErrorKind> {
         match self {
             Self::List(v) => Ok(v.as_ref()),
-            _ => Err(RuntimeError::TypeError {
+            _ => Err(RuntimeErrorKind::TypeError {
                 expected: "list".into(),
                 sym: self.to_string(),
                 found: self.type_name(),
             }),
         }
-    }
-
-    /// 列表切片，处理负数索引和越界...
-
-    pub fn slice(
-        list: Self,
-        start: Option<Int>,
-        end: Option<Int>,
-        step: Int,
-    ) -> Result<Self, RuntimeError> {
-        let list = list.as_list()?;
-        let len = list.len() as Int;
-
-        let clamp = |v: Int| if v < 0 { len + v } else { v }.clamp(0, len - 1);
-
-        let (mut start, mut end) = (
-            start.map(clamp).unwrap_or(0),
-            end.map(|v| clamp(v).min(len)).unwrap_or(len),
-        );
-
-        if step < 0 {
-            (start, end) = (end.clamp(0, len), start.clamp(0, len));
-        }
-
-        let mut result = Vec::new();
-        let mut i = start;
-        while (step > 0 && i < end) || (step < 0 && i > end) {
-            if let Some(item) = list.get(i as usize) {
-                result.push(item.clone());
-            }
-            i += step;
-        }
-        Ok(Self::from(result))
     }
 
     /// 辅助方法：将表达式求值为整数选项
@@ -916,11 +1043,15 @@ impl Expression {
                     // 处理隐式类型转换
                     Self::Float(f) if f.fract() == 0.0 => Ok(Some(f as Int)),
                     // 处理其他类型错误
-                    _ => Err(RuntimeError::TypeError {
-                        expected: "integer".into(),
-                        sym: evaluated.to_string(),
-                        found: evaluated.type_name(),
-                    }),
+                    _ => Err(RuntimeError::new(
+                        RuntimeErrorKind::TypeError {
+                            expected: "integer".into(),
+                            sym: evaluated.to_string(),
+                            found: evaluated.type_name(),
+                        },
+                        boxed_expr.as_ref().clone(),
+                        depth,
+                    )),
                 }
             }
         }
@@ -929,7 +1060,7 @@ impl Expression {
 
 impl Expression {
     // 列表追加示例（写时复制）
-    pub fn list_push(&self, item: Self) -> Result<Expression, RuntimeError> {
+    pub fn list_push(&self, item: Self) -> Result<Expression, RuntimeErrorKind> {
         match self {
             Self::List(items) => {
                 let mut new_vec = Vec::with_capacity(items.len() + 1);
@@ -937,14 +1068,14 @@ impl Expression {
                 new_vec.push(item);
                 Ok(Self::List(Rc::new(new_vec)))
             }
-            s => Err(RuntimeError::TypeError {
+            s => Err(RuntimeErrorKind::TypeError {
                 expected: "List".into(),
                 sym: s.to_string(),
                 found: s.type_name(),
             }),
         }
     }
-    pub fn list_append(&self, other: Rc<Vec<Expression>>) -> Result<Expression, RuntimeError> {
+    pub fn list_append(&self, other: Rc<Vec<Expression>>) -> Result<Expression, RuntimeErrorKind> {
         match self {
             Self::List(items) => {
                 let mut new_vec = Vec::with_capacity(items.len() + other.len());
@@ -952,7 +1083,7 @@ impl Expression {
                 new_vec.extend_from_slice(&other);
                 Ok(Self::List(Rc::new(new_vec)))
             }
-            s => Err(RuntimeError::TypeError {
+            s => Err(RuntimeErrorKind::TypeError {
                 expected: "List".into(),
                 sym: s.to_string(),
                 found: s.type_name(),
@@ -961,7 +1092,7 @@ impl Expression {
     }
 
     // 映射插入示例
-    pub fn map_insert(&self, key: String, value: Self) -> Result<Expression, RuntimeError> {
+    pub fn map_insert(&self, key: String, value: Self) -> Result<Expression, RuntimeErrorKind> {
         match self {
             Self::HMap(map) => {
                 let mut new_map = HashMap::new();
@@ -975,7 +1106,7 @@ impl Expression {
                 new_map.insert(key, value);
                 Ok(Self::Map(Rc::new(new_map)))
             }
-            s => Err(RuntimeError::TypeError {
+            s => Err(RuntimeErrorKind::TypeError {
                 expected: "Map".into(),
                 sym: s.to_string(),
                 found: s.type_name(),
@@ -986,7 +1117,7 @@ impl Expression {
     pub fn map_append(
         &self,
         other: Rc<HashMap<String, Expression>>,
-    ) -> Result<Expression, RuntimeError> {
+    ) -> Result<Expression, RuntimeErrorKind> {
         match self {
             Self::HMap(map) => {
                 let mut new_map = HashMap::new();
@@ -1000,7 +1131,7 @@ impl Expression {
                 new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
                 Ok(Self::Map(Rc::new(new_map)))
             }
-            s => Err(RuntimeError::TypeError {
+            s => Err(RuntimeErrorKind::TypeError {
                 expected: "Map".into(),
                 sym: s.to_string(),
                 found: s.type_name(),
@@ -1010,7 +1141,7 @@ impl Expression {
     pub fn bmap_append(
         &self,
         other: Rc<BTreeMap<String, Expression>>,
-    ) -> Result<Expression, RuntimeError> {
+    ) -> Result<Expression, RuntimeErrorKind> {
         match self {
             Self::HMap(map) => {
                 let mut new_map = HashMap::new();
@@ -1024,7 +1155,7 @@ impl Expression {
                 new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
                 Ok(Self::Map(Rc::new(new_map)))
             }
-            s => Err(RuntimeError::TypeError {
+            s => Err(RuntimeErrorKind::TypeError {
                 expected: "Map".into(),
                 sym: s.to_string(),
                 found: s.type_name(),

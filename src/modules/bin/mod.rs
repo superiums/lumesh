@@ -4,7 +4,7 @@ use std::{
 };
 
 use crate::{
-    Environment, Expression, Int, LmError, RuntimeError,
+    Environment, Expression, Int, LmError, RuntimeError, RuntimeErrorKind,
     modules::bin::sys_module::{set_builtin, unset_builtin},
     parse_and_eval,
 };
@@ -749,11 +749,15 @@ fn check_exact_args_len(
         //         received: args.len(),
         //     },
         // )
-        Err(RuntimeError::ArgumentMismatch {
-            name: name.to_string(),
-            expected: expected_len,
-            received: args.len(),
-        })
+        Err(RuntimeError::new(
+            RuntimeErrorKind::ArgumentMismatch {
+                name: name.to_string(),
+                expected: expected_len,
+                received: args.len(),
+            },
+            Expression::None,
+            0,
+        ))
 
         // Err(RuntimeError::ArgumentMismatch(if args.len() > expected_len {
         //     format!("too many arguments to function {}", name.to_string())

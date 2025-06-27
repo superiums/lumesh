@@ -1,5 +1,5 @@
 use super::terminal::{TerminalOps, get_terminal_impl};
-use crate::{Environment, RuntimeError};
+use crate::{Environment, RuntimeError, RuntimeErrorKind};
 use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::io::{self, Read, Write};
 use std::sync::Arc;
@@ -13,7 +13,7 @@ struct TerminalGuard {
 }
 
 impl TerminalGuard {
-    fn new(terminal: Box<dyn TerminalOps>) -> Result<Self, RuntimeError> {
+    fn new(terminal: Box<dyn TerminalOps>) -> Result<Self, RuntimeErrorKind> {
         terminal.enable_raw_mode()?;
         Ok(Self { terminal })
     }
@@ -30,7 +30,7 @@ pub fn exec_in_pty(
     args: Option<Vec<String>>,
     env: &mut Environment,
     input: Option<Vec<u8>>,
-) -> Result<Option<Vec<u8>>, RuntimeError> {
+) -> Result<Option<Vec<u8>>, RuntimeErrorKind> {
     let terminal = get_terminal_impl();
 
     // 设置信号处理
@@ -59,7 +59,7 @@ pub fn exec_in_pty(
             pixel_width: 0,
             pixel_height: 0,
         })
-        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+        .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
 
     // Unix 特定的终端设置
     #[cfg(unix)]
@@ -112,16 +112,16 @@ pub fn exec_in_pty(
     let mut child = pair
         .slave
         .spawn_command(cmd)
-        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+        .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
 
     let mut master_reader = pair
         .master
         .try_clone_reader()
-        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+        .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
     let mut master_writer = pair
         .master
         .take_writer()
-        .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+        .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
 
     // 输出转发线程
 

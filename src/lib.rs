@@ -14,8 +14,10 @@ pub use expression::{Expression, SliceParams};
 mod env;
 pub use env::*;
 
-mod error;
-pub use error::*;
+mod errors;
+pub use errors::LmError;
+pub use errors::error_runtime::*;
+pub use errors::error_syntax::*;
 
 mod parser;
 pub use parser::*;

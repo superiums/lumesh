@@ -4,355 +4,397 @@ use super::Builtin;
 use super::eval::State;
 use crate::expression::alias;
 use crate::expression::cmd_excutor::handle_command;
-use crate::{Environment, Expression, RuntimeError, get_builtin};
+use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind, get_builtin};
 
 /// 执行
-#[inline]
-pub fn eval_apply(
-    func: &Rc<Expression>,
-    args: &Rc<Vec<Expression>>,
-    state: &mut State,
-    env: &mut Environment,
-    depth: usize,
-) -> Result<Expression, RuntimeError> {
-    // 函数应用
+impl Expression {
+    #[inline]
+    pub fn eval_apply(
+        &self,
+        func: &Rc<Expression>,
+        args: &Rc<Vec<Expression>>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        // 函数应用
 
-    println!();
-    // dbg!(
-    //     "2.--->Applying:",
-    //     &func,
-    //     &func.type_name(),
-    //     &func,
-    //     &func.type_name(),
-    //     &args
-    // );
+        println!();
+        // dbg!(
+        //     "2.--->Applying:",
+        //     &func,
+        //     &func.type_name(),
+        //     &func,
+        //     &func.type_name(),
+        //     &args
+        // );
 
-    // 递归求值函数和参数
-    let func_eval = func.as_ref().eval_mut(state, env, depth + 1)?;
+        // 递归求值函数和参数
+        let func_eval = func.as_ref().eval_mut(state, env, depth + 1)?;
 
-    //dbg!(&state, &func_eval.type_name());
+        //dbg!(&state, &func_eval.type_name());
 
-    // 分派到具体类型处理
-    let result = match func_eval {
-        // 顶级builtin，函数别名
-        Expression::Symbol(cmd_sym) => eval_symbo(cmd_sym, args, state, env, depth + 1),
+        // 分派到具体类型处理
+        let result = match func_eval {
+            // 顶级builtin，函数别名
+            Expression::Symbol(cmd_sym) => self.eval_symbo(cmd_sym, args, state, env, depth + 1),
 
-        Expression::Builtin(bti) => eval_builtin(&bti, args, state, env),
-        // Lambda 应用 - 完全求值的函数应用
-        Expression::Lambda(params, body) => {
-            let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
-            // dbg!("2.--- applying lambda---", &params);
-            let mut current_env = env.fork();
+            Expression::Builtin(bti) => self.eval_builtin(&bti, args, state, env, depth + 1),
+            // Lambda 应用 - 完全求值的函数应用
+            Expression::Lambda(params, body) => {
+                let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
+                // dbg!("2.--- applying lambda---", &params);
+                let mut current_env = env.fork();
 
-            // 批量参数绑定前先求值所有参数
-            let is_in_pipe = state.contains(State::IN_PIPE);
-            state.set(State::IN_PIPE);
-            let mut evaluated_args = args
-                .iter()
-                .map(|arg| arg.eval_mut(state, env, depth + 1))
-                .collect::<Result<Vec<_>, _>>()?;
-            if !is_in_pipe {
-                state.clear(State::IN_PIPE);
-            }
-
-            if let Some(p) = pipe_out {
-                evaluated_args.push(p);
-            };
-
-            match bind_arguments(&params, &evaluated_args, &mut current_env) {
-                // 完全应用：求值函数体
-                None => {
-                    let result = body.as_ref().eval_mut(state, &mut current_env, depth + 1);
-                    match result {
-                        Ok(v) => {
-                            // self.set_status_code(0, env);
-                            Ok(v)
-                        }
-                        Err(RuntimeError::EarlyReturn(v)) => {
-                            // self.set_status_code(0, env);
-                            Ok(v)
-                        } // 捕获函数体内的return
-                        Err(e) => {
-                            // self.set_status_code(1, env);
-                            Err(e)
-                        }
-                    }
+                // 批量参数绑定前先求值所有参数
+                let is_in_pipe = state.contains(State::IN_PIPE);
+                state.set(State::IN_PIPE);
+                let mut evaluated_args = args
+                    .iter()
+                    .map(|arg| arg.eval_mut(state, env, depth + 1))
+                    .collect::<Result<Vec<_>, _>>()?;
+                if !is_in_pipe {
+                    state.clear(State::IN_PIPE);
                 }
 
-                // 部分应用：返回新的柯里化lambda
-                Some(remain) => Ok(Expression::Lambda(remain, body)),
-            }
-        }
+                if let Some(p) = pipe_out {
+                    evaluated_args.push(p);
+                };
 
-        // Macro 应用 - 不自动求值参数的展开
-        // Expression::Macro(params, body) => {
-        //     match bind_arguments(params, args.to_owned(), env) {
-        //         // 完全应用：求值函数体
-        //         None => body.eval_mut(true, env, depth + 1),
-
-        //         // 部分应用：返回新的柯里化lambda
-        //         Some(remain) => Ok(Expression::Macro(remain, body)),
-        //     }
-        // }
-        Expression::Function(name, params, pc, body) => {
-            // dbg!("2.--- applying function---", &name, &params);
-            // dbg!(&def_env);
-            // 参数数量校验
-            let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
-            let pipe_arg_len = match pipe_out {
-                Some(_) => 1,
-                _ => 0,
-            };
-
-            if pc.is_none() && args.len() + pipe_arg_len > params.len() {
-                return Err(RuntimeError::TooManyArguments {
-                    name,
-                    max: params.len(),
-                    received: args.len(),
-                });
-            }
-
-            let is_in_pipe = state.contains(State::IN_PIPE);
-            state.set(State::IN_PIPE);
-            let mut actual_args = args
-                .as_ref()
-                .iter()
-                .map(|a| a.eval_mut(state, env, depth + 1))
-                .collect::<Result<Vec<_>, _>>()?;
-            if !is_in_pipe {
-                state.clear(State::IN_PIPE);
-            }
-
-            if let Some(p) = pipe_out {
-                actual_args.push(p);
-            };
-
-            // 填充默认值逻辑（新增）
-            for (i, (_, default)) in params.iter().enumerate() {
-                if i >= actual_args.len() {
-                    if let Some(def_expr) = default {
-                        // 仅允许基本类型直接使用
-                        actual_args.push(def_expr.clone());
-                    } else {
-                        return Err(RuntimeError::ArgumentMismatch {
-                            name,
-                            expected: params.len(),
-                            received: actual_args.len(),
-                        });
+                match bind_arguments(&params, &evaluated_args, &mut current_env) {
+                    // 完全应用：求值函数体
+                    None => {
+                        let result = body.as_ref().eval_mut(state, &mut current_env, depth + 1);
+                        match result {
+                            Ok(v) => {
+                                // self.set_status_code(0, env);
+                                Ok(v)
+                            }
+                            Err(RuntimeError {
+                                kind: RuntimeErrorKind::EarlyReturn(v),
+                                context: _,
+                                depth: _,
+                            }) => {
+                                // self.set_status_code(0, env);
+                                Ok(v)
+                            } // 捕获函数体内的return
+                            Err(e) => {
+                                // self.set_status_code(1, env);
+                                Err(e)
+                            }
+                        }
                     }
+
+                    // 部分应用：返回新的柯里化lambda
+                    Some(remain) => Ok(Expression::Lambda(remain, body)),
                 }
             }
 
-            // 创建新作用域并执行
-            let mut new_env = env.fork();
-            if let Some(collector) = pc {
-                new_env.define(
-                    collector.as_str(),
-                    Expression::from(actual_args[params.len()..].to_vec()),
-                );
-            }
-            for ((param, _), arg) in params.iter().zip(actual_args) {
-                new_env.define(param, arg);
-            }
-            // body env
-            // for symbol in body.get_used_symbols() {
-            //     if !def_env.is_defined(&symbol) {
-            //         if let Some(val) = env.get(&symbol) {
-            //             new_env.define(&symbol, val)
-            //         }
+            // Macro 应用 - 不自动求值参数的展开
+            // Expression::Macro(params, body) => {
+            //     match bind_arguments(params, args.to_owned(), env) {
+            //         // 完全应用：求值函数体
+            //         None => body.eval_mut(true, env, depth + 1),
+
+            //         // 部分应用：返回新的柯里化lambda
+            //         Some(remain) => Ok(Expression::Macro(remain, body)),
             //     }
             // }
-            // dbg!(&new_env);
-            match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
-                Ok(v) => {
-                    // self.set_status_code(0, env);
-                    Ok(v)
-                }
-                Err(RuntimeError::EarlyReturn(v)) => {
-                    // self.set_status_code(0, env);
+            Expression::Function(name, params, pc, body) => {
+                // dbg!("2.--- applying function---", &name, &params);
+                // dbg!(&def_env);
+                // 参数数量校验
+                let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
+                let pipe_arg_len = match pipe_out {
+                    Some(_) => 1,
+                    _ => 0,
+                };
 
-                    Ok(v)
-                } // 捕获函数体内的return
-                Err(e) => {
-                    // self.set_status_code(1, env);
-                    Err(e)
+                if pc.is_none() && args.len() + pipe_arg_len > params.len() {
+                    return Err(RuntimeError::new(
+                        crate::RuntimeErrorKind::TooManyArguments {
+                            name,
+                            max: params.len(),
+                            received: args.len(),
+                        },
+                        self.clone(),
+                        depth,
+                    ));
+                }
+
+                let is_in_pipe = state.contains(State::IN_PIPE);
+                state.set(State::IN_PIPE);
+                let mut actual_args = args
+                    .as_ref()
+                    .iter()
+                    .map(|a| a.eval_mut(state, env, depth + 1))
+                    .collect::<Result<Vec<_>, _>>()?;
+                if !is_in_pipe {
+                    state.clear(State::IN_PIPE);
+                }
+
+                if let Some(p) = pipe_out {
+                    actual_args.push(p);
+                };
+
+                // 填充默认值逻辑（新增）
+                for (i, (_, default)) in params.iter().enumerate() {
+                    if i >= actual_args.len() {
+                        if let Some(def_expr) = default {
+                            // 仅允许基本类型直接使用
+                            actual_args.push(def_expr.clone());
+                        } else {
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::ArgumentMismatch {
+                                    name,
+                                    expected: params.len(),
+                                    received: actual_args.len(),
+                                },
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+
+                // 创建新作用域并执行
+                let mut new_env = env.fork();
+                if let Some(collector) = pc {
+                    new_env.define(
+                        collector.as_str(),
+                        Expression::from(actual_args[params.len()..].to_vec()),
+                    );
+                }
+                for ((param, _), arg) in params.iter().zip(actual_args) {
+                    new_env.define(param, arg);
+                }
+                // body env
+                // for symbol in body.get_used_symbols() {
+                //     if !def_env.is_defined(&symbol) {
+                //         if let Some(val) = env.get(&symbol) {
+                //             new_env.define(&symbol, val)
+                //         }
+                //     }
+                // }
+                // dbg!(&new_env);
+                match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
+                    Ok(v) => {
+                        // self.set_status_code(0, env);
+                        Ok(v)
+                    }
+                    Err(RuntimeError {
+                        kind: RuntimeErrorKind::EarlyBreak(v),
+                        context: _,
+                        depth: _,
+                    }) => {
+                        // self.set_status_code(0, env);
+
+                        Ok(v)
+                    } // 捕获函数体内的return
+                    Err(e) => {
+                        // self.set_status_code(1, env);
+                        Err(e)
+                    }
                 }
             }
-        }
-        _ => Err(RuntimeError::CannotApply(
-            func.as_ref().clone(),
-            args.as_ref().clone(),
-        )),
-    };
+            _ => Err(RuntimeError::new(
+                RuntimeErrorKind::CannotApply(func.as_ref().clone(), args.as_ref().clone()),
+                self.clone(),
+                depth,
+            )),
+        };
 
-    result
-}
-
-/// 执行
-#[inline]
-pub fn eval_command(
-    cmd: &Rc<Expression>,
-    args: &Rc<Vec<Expression>>,
-    state: &mut State,
-    env: &mut Environment,
-    depth: usize,
-) -> Result<Expression, RuntimeError> {
-    let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
-    // dbg!(
-    //     "2.--->Command:",
-    //     &eval_cmd,
-    //     &eval_cmd.type_name(),
-    //     &args,
-    //     &state
-    // );
-    match eval_cmd {
-        Expression::Builtin(bti) => eval_builtin(&bti, args, state, env),
-        Expression::String(cmdx_str) => {
-            // 空命令
-            if cmdx_str == "" || cmdx_str == ":" {
-                if args.is_empty() {
-                    return Ok(Expression::None);
-                } else {
-                    let aa = args.split_at(1);
-                    handle_command(
-                        &aa.0.to_vec().first().unwrap().to_string(),
-                        &Rc::new(aa.1.to_vec()),
-                        state,
-                        env,
-                        depth + 1,
-                    )
-                }
-            } else {
-                // let a=ls -l; a '/';
-                let cmdx_vec = cmdx_str.split_whitespace().collect::<Vec<_>>();
-                let mut new_vec = Vec::with_capacity(cmdx_vec.len() + args.len());
-                new_vec.extend_from_slice(
-                    &cmdx_vec[1..]
-                        .iter()
-                        .map(|v| Expression::from(v.to_string()))
-                        .collect::<Vec<_>>(),
-                );
-                new_vec.extend_from_slice(&args);
-                handle_command(
-                    &cmdx_vec.first().unwrap().to_string(),
-                    &new_vec,
-                    state,
-                    env,
-                    depth + 1,
-                )
-            }
-        }
-        // 符号
-        Expression::Symbol(cmd_sym) => eval_symbo(cmd_sym, args, state, env, depth + 1),
-        other => match args.is_empty() {
-            true => Ok(other), // 单个symbol或变量，直接返回
-            false => Err(RuntimeError::TypeError {
-                //非法命令
-                expected: "Symbol as command".to_string(),
-                sym: cmd.to_string(),
-                found: other.type_name(),
-            }),
-        },
+        result
     }
-}
 
-#[inline]
-pub fn eval_symbo(
-    cmd_sym: String,
-    args: &Rc<Vec<Expression>>,
-    state: &mut State,
-    env: &mut Environment,
-    depth: usize,
-) -> Result<Expression, RuntimeError> {
-    // dbg!("   3.--->applying Symbol:", &cmd_sym, &args);
-    match alias::get_alias(cmd_sym.as_str()) {
-        // 别名
-        Some(cmd_alias) => {
-            // dbg!(&cmd_alias.type_name());
-
-            // 合并参数
-            match cmd_alias {
-                // alias a=ls -l
-                Expression::Command(cmd_name, cmd_args) => {
-                    let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
-                    new_vec.extend_from_slice(&cmd_args);
+    /// 执行
+    #[inline]
+    pub fn eval_command(
+        &self,
+        cmd: &Rc<Expression>,
+        args: &Rc<Vec<Expression>>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
+        // dbg!(
+        //     "2.--->Command:",
+        //     &eval_cmd,
+        //     &eval_cmd.type_name(),
+        //     &args,
+        //     &state
+        // );
+        match eval_cmd {
+            Expression::Builtin(bti) => self.eval_builtin(&bti, args, state, env, depth),
+            Expression::String(cmdx_str) => {
+                // 空命令
+                if cmdx_str == "" || cmdx_str == ":" {
+                    if args.is_empty() {
+                        return Ok(Expression::None);
+                    } else {
+                        let aa = args.split_at(1);
+                        handle_command(
+                            &aa.0.to_vec().first().unwrap().to_string(),
+                            &Rc::new(aa.1.to_vec()),
+                            state,
+                            env,
+                            depth + 1,
+                        )
+                    }
+                } else {
+                    // let a=ls -l; a '/';
+                    let cmdx_vec = cmdx_str.split_whitespace().collect::<Vec<_>>();
+                    let mut new_vec = Vec::with_capacity(cmdx_vec.len() + args.len());
+                    new_vec.extend_from_slice(
+                        &cmdx_vec[1..]
+                            .iter()
+                            .map(|v| Expression::from(v.to_string()))
+                            .collect::<Vec<_>>(),
+                    );
                     new_vec.extend_from_slice(&args);
                     handle_command(
-                        &cmd_name.as_ref().to_string(),
+                        &cmdx_vec.first().unwrap().to_string(),
                         &new_vec,
                         state,
                         env,
                         depth + 1,
                     )
                 }
-                // alias a=ls
-                Expression::String(cmd_str) => {
-                    handle_command(&cmd_str, args.as_ref(), state, env, depth + 1)
-                }
-                // alias a=fmt.red()
-                Expression::Apply(..) => {
-                    cmd_alias
-                        .append_args(args.to_vec())
-                        .eval_mut(state, env, depth + 1)
-                }
-                // alias a=fmt.red
-                Expression::Index(..) => {
-                    let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
-                    return match cmdx {
-                        Expression::Builtin(bti) => eval_builtin(&bti, args, state, env),
-                        _ => Err(RuntimeError::TypeError {
-                            expected: "alias contains Builtin".into(),
-                            sym: cmdx.to_string(),
-                            found: cmdx.type_name(),
-                        }),
-                    };
-                }
-                _ => Err(RuntimeError::TypeError {
-                    expected: "alias for Command/Function/Builtin".into(),
-                    sym: cmd_alias.to_string(),
-                    found: cmd_alias.type_name(),
-                }),
             }
+            // 符号
+            Expression::Symbol(cmd_sym) => self.eval_symbo(cmd_sym, args, state, env, depth + 1),
+            other => match args.is_empty() {
+                true => Ok(other), // 单个symbol或变量，直接返回
+                false => Err(RuntimeError::new(
+                    RuntimeErrorKind::TypeError {
+                        //非法命令
+                        expected: "Symbol as command".to_string(),
+                        sym: cmd.to_string(),
+                        found: other.type_name(),
+                    },
+                    self.clone(),
+                    depth,
+                )),
+            },
         }
-        _ => {
-            match get_builtin(cmd_sym.as_str()) {
-                // 顶级内置命令
-                Some(Expression::Builtin(bti)) => {
-                    // dbg!("branch to builtin:", &cmd, &bti);
-                    // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
-                    eval_builtin(bti, args, state, env)
+    }
+
+    #[inline]
+    pub fn eval_symbo(
+        &self,
+        cmd_sym: String,
+        args: &Rc<Vec<Expression>>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        // dbg!("   3.--->applying Symbol:", &cmd_sym, &args);
+        match alias::get_alias(cmd_sym.as_str()) {
+            // 别名
+            Some(cmd_alias) => {
+                // dbg!(&cmd_alias.type_name());
+
+                // 合并参数
+                match cmd_alias {
+                    // alias a=ls -l
+                    Expression::Command(cmd_name, cmd_args) => {
+                        let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
+                        new_vec.extend_from_slice(&cmd_args);
+                        new_vec.extend_from_slice(&args);
+                        handle_command(
+                            &cmd_name.as_ref().to_string(),
+                            &new_vec,
+                            state,
+                            env,
+                            depth + 1,
+                        )
+                    }
+                    // alias a=ls
+                    Expression::String(cmd_str) => {
+                        handle_command(&cmd_str, args.as_ref(), state, env, depth + 1)
+                    }
+                    // alias a=fmt.red()
+                    Expression::Apply(..) => {
+                        cmd_alias
+                            .append_args(args.to_vec())
+                            .eval_mut(state, env, depth + 1)
+                    }
+                    // alias a=fmt.red
+                    Expression::Index(..) => {
+                        let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
+                        return match cmdx {
+                            Expression::Builtin(bti) => {
+                                self.eval_builtin(&bti, args, state, env, depth)
+                            }
+                            _ => Err(RuntimeError::new(
+                                RuntimeErrorKind::TypeError {
+                                    expected: "alias contains Builtin".into(),
+                                    sym: cmdx.to_string(),
+                                    found: cmdx.type_name(),
+                                },
+                                self.clone(),
+                                depth,
+                            )),
+                        };
+                    }
+                    _ => Err(RuntimeError::new(
+                        RuntimeErrorKind::TypeError {
+                            expected: "alias for Command/Function/Builtin".into(),
+                            sym: cmd_alias.to_string(),
+                            found: cmd_alias.type_name(),
+                        },
+                        self.clone(),
+                        depth,
+                    )),
                 }
-                // 三方命令
-                _ => handle_command(&cmd_sym, args, state, env, depth + 1),
+            }
+            _ => {
+                match get_builtin(cmd_sym.as_str()) {
+                    // 顶级内置命令
+                    Some(Expression::Builtin(bti)) => {
+                        // dbg!("branch to builtin:", &cmd, &bti);
+                        // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
+                        self.eval_builtin(bti, args, state, env, depth + 1)
+                    }
+                    // 三方命令
+                    _ => handle_command(&cmd_sym, args, state, env, depth + 1),
+                }
             }
         }
     }
+    #[inline]
+    pub fn eval_builtin(
+        &self,
+        bti: &Builtin,
+        args: &Rc<Vec<Expression>>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        // dbg!("   3.--->applying Builtin:", &bti.name, &args);
+        let pipe_out = state.pipe_out();
+
+        // 执行时机应由内置函数自己选择，如 where(size>0)
+        // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
+        let rst = match pipe_out {
+            Some(p) => {
+                let mut appened_args = args.as_ref().clone();
+                appened_args.push(p);
+                (bti.body)(&appened_args, env)
+            }
+            _ => (bti.body)(args.as_ref(), env),
+        };
+
+        rst.map_err(|e| {
+            RuntimeError::new(
+                RuntimeErrorKind::CommandFailed2(bti.name.clone(), e.to_string()),
+                self.clone(),
+                depth,
+            )
+        })
+    }
 }
-#[inline]
-pub fn eval_builtin(
-    bti: &Builtin,
-    args: &Rc<Vec<Expression>>,
-    state: &mut State,
-    env: &mut Environment,
-    // depth: usize,
-) -> Result<Expression, RuntimeError> {
-    // dbg!("   3.--->applying Builtin:", &bti.name, &args);
-    let pipe_out = state.pipe_out();
-
-    // 执行时机应由内置函数自己选择，如 where(size>0)
-    // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
-    let rst = match pipe_out {
-        Some(p) => {
-            let mut appened_args = args.as_ref().clone();
-            appened_args.push(p);
-            (bti.body)(&appened_args, env)
-        }
-        _ => (bti.body)(args.as_ref(), env),
-    };
-
-    rst.map_err(|e| RuntimeError::CommandFailed2(bti.name.clone(), e.to_string()))
-}
-
 /// 参数绑定辅助函数 - 将参数绑定到环境中
 ///
 /// # 参数

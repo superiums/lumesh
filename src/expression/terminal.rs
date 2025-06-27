@@ -1,14 +1,14 @@
-use crate::RuntimeError;
+use crate::RuntimeErrorKind;
 // use std::sync::{Arc, atomic::AtomicBool};
 
 // 定义跨平台终端操作 trait
 pub trait TerminalOps {
-    fn enable_raw_mode(&self) -> Result<(), RuntimeError>;
-    fn disable_raw_mode(&self) -> Result<(), RuntimeError>;
+    fn enable_raw_mode(&self) -> Result<(), RuntimeErrorKind>;
+    fn disable_raw_mode(&self) -> Result<(), RuntimeErrorKind>;
     #[cfg(unix)]
-    fn setup_signal_handlers(&self) -> Result<(), RuntimeError>;
+    fn setup_signal_handlers(&self) -> Result<(), RuntimeErrorKind>;
     #[cfg(windows)]
-    fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeError>;
+    fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeErrorKind>;
     fn get_terminal_size(&self) -> (u16, u16);
 }
 
@@ -18,16 +18,17 @@ pub struct UnixTerminal;
 
 #[cfg(unix)]
 impl TerminalOps for UnixTerminal {
-    fn enable_raw_mode(&self) -> Result<(), RuntimeError> {
-        crossterm::terminal::enable_raw_mode().map_err(|e| RuntimeError::CustomError(e.to_string()))
+    fn enable_raw_mode(&self) -> Result<(), RuntimeErrorKind> {
+        crossterm::terminal::enable_raw_mode()
+            .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))
     }
 
-    fn disable_raw_mode(&self) -> Result<(), RuntimeError> {
+    fn disable_raw_mode(&self) -> Result<(), RuntimeErrorKind> {
         crossterm::terminal::disable_raw_mode()
-            .map_err(|e| RuntimeError::CustomError(e.to_string()))
+            .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))
     }
 
-    fn setup_signal_handlers(&self) -> Result<(), RuntimeError> {
+    fn setup_signal_handlers(&self) -> Result<(), RuntimeErrorKind> {
         use nix::sys::signal;
 
         unsafe {
@@ -39,7 +40,7 @@ impl TerminalOps for UnixTerminal {
                     signal::SigSet::empty(),
                 ),
             )
-            .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+            .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
 
             signal::sigaction(
                 signal::Signal::SIGINT,
@@ -49,12 +50,12 @@ impl TerminalOps for UnixTerminal {
                     signal::SigSet::empty(),
                 ),
             )
-            .map_err(|e| RuntimeError::CustomError(e.to_string()))?;
+            .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
         }
         Ok(())
     }
 
-    // fn handle_ctrl_c(&self, _running: Arc<AtomicBool>) -> Result<(), RuntimeError> {
+    // fn handle_ctrl_c(&self, _running: Arc<AtomicBool>) -> Result<(), RuntimeErrorKind> {
     //     // Unix 上已经通过信号处理
     //     Ok(())
     // }
@@ -96,18 +97,18 @@ use winapi::um::wincon::{
 
 #[cfg(windows)]
 impl TerminalOps for WindowsTerminal {
-    fn enable_raw_mode(&self) -> Result<(), RuntimeError> {
+    fn enable_raw_mode(&self) -> Result<(), RuntimeErrorKind> {
         unsafe {
             let handle = stdin().as_raw_handle();
             if handle == INVALID_HANDLE_VALUE {
-                return Err(RuntimeError::CustomError(
+                return Err(RuntimeErrorKind::CustomError(
                     "Failed to get stdin handle".to_string(),
                 ));
             }
 
             let mut mode: u32 = 0;
             if GetConsoleMode(handle, &mut mode) == 0 {
-                return Err(RuntimeError::CustomError(
+                return Err(RuntimeErrorKind::CustomError(
                     "Failed to get console mode".to_string(),
                 ));
             }
@@ -115,7 +116,7 @@ impl TerminalOps for WindowsTerminal {
             mode &= !(ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT);
 
             if SetConsoleMode(handle, mode) == 0 {
-                return Err(RuntimeError::CustomError(
+                return Err(RuntimeErrorKind::CustomError(
                     "Failed to set raw mode".to_string(),
                 ));
             }
@@ -123,18 +124,18 @@ impl TerminalOps for WindowsTerminal {
         Ok(())
     }
 
-    fn disable_raw_mode(&self) -> Result<(), RuntimeError> {
+    fn disable_raw_mode(&self) -> Result<(), RuntimeErrorKind> {
         unsafe {
             let handle = stdin().as_raw_handle();
             if handle == INVALID_HANDLE_VALUE {
-                return Err(RuntimeError::CustomError(
+                return Err(RuntimeErrorKind::CustomError(
                     "Failed to get stdin handle".to_string(),
                 ));
             }
 
             let mut mode: u32 = 0;
             if GetConsoleMode(handle, &mut mode) == 0 {
-                return Err(RuntimeError::CustomError(
+                return Err(RuntimeErrorKind::CustomError(
                     "Failed to get console mode".to_string(),
                 ));
             }
@@ -142,7 +143,7 @@ impl TerminalOps for WindowsTerminal {
             mode |= ENABLE_ECHO_INPUT | ENABLE_LINE_INPUT | ENABLE_PROCESSED_INPUT;
 
             if SetConsoleMode(handle, mode) == 0 {
-                return Err(RuntimeError::CustomError(
+                return Err(RuntimeErrorKind::CustomError(
                     "Failed to restore console mode".to_string(),
                 ));
             }
@@ -150,7 +151,7 @@ impl TerminalOps for WindowsTerminal {
         Ok(())
     }
 
-    fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeError> {
+    fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeErrorKind> {
         lazy_static::lazy_static! {
             static ref RUNNING_FLAG: Mutex<Option<Arc<AtomicBool>>> = Mutex::new(None);
         }
@@ -171,7 +172,7 @@ impl TerminalOps for WindowsTerminal {
 
         unsafe {
             if SetConsoleCtrlHandler(Some(handler), 1) == 0 {
-                return Err(RuntimeError::CustomError(
+                return Err(RuntimeErrorKind::CustomError(
                     "Failed to set Ctrl+C handler".to_string(),
                 ));
             }

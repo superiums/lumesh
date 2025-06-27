@@ -1,4 +1,6 @@
-use crate::{Environment, Expression, RuntimeError, expression::pty::exec_in_pty};
+use crate::{
+    Environment, Expression, RuntimeError, RuntimeErrorKind, expression::pty::exec_in_pty,
+};
 
 use super::eval::State;
 
@@ -22,26 +24,27 @@ fn exec_single_cmd(
     input: Option<Vec<u8>>, // 前一条命令的输出（None 表示第一个命令）
     pipe_out: bool,
     mode: u8,
+    depth: usize,
 ) -> Result<Option<Vec<u8>>, RuntimeError> {
     // dbg!("------ exec:------", &cmdstr, &args);
     // dbg!(&mode, &pipe_out, &input.is_some());
     // dbg!(&input);
     if mode & 16 != 0 {
         // spawn_in_pty(cmdstr, args, env, input);
-        return exec_in_pty(cmdstr, args, env, input);
+        return exec_in_pty(cmdstr, args, env, input)
+            .map_err(|e| RuntimeError::new(e, Expression::None, depth));
     }
     let mut cmd = Command::new(cmdstr);
-    match args {
-        Some(ar) => cmd
-            .args(ar)
-            .envs(env.get_bindings_string())
-            .current_dir(std::env::current_dir()?),
-        _ => cmd
-            .envs(env.get_bindings_string())
-            .current_dir(std::env::current_dir()?),
+
+    let ar = match args {
+        Some(x) => x,
+        _ => vec![],
     };
-    cmd.envs(env.get_bindings_string())
-        .current_dir(std::env::current_dir()?);
+
+    cmd.args(ar).envs(env.get_bindings_string()).current_dir(
+        std::env::current_dir()
+            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?,
+    );
 
     // 设置 stdin
     if input.is_some() {
@@ -72,14 +75,23 @@ fn exec_single_cmd(
     }
 
     // 执行命令
-    let mut child = cmd.spawn().map_err(|e| match &e.kind() {
-        ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.clone()),
-        _ => RuntimeError::CommandFailed2(cmdstr.clone(), e.to_string()),
-    })?;
+    let mut child = cmd.spawn().map_err(
+        |e|
+        // match &e.kind() {
+        // ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.clone()),
+        // e =>
+        RuntimeError::from_io_error(e, Expression::None, depth),
+        // }
+    )?;
 
     // 写入输入
     if let Some(input) = input {
-        child.stdin.as_mut().unwrap().write_all(&input)?;
+        child
+            .stdin
+            .as_mut()
+            .unwrap()
+            .write_all(&input)
+            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?;
     }
 
     // TODO not work yet
@@ -107,7 +119,9 @@ fn exec_single_cmd(
     // 获取输出
     if pipe_out {
         // 管道捕获
-        let output = child.wait_with_output()?;
+        let output = child
+            .wait_with_output()
+            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?;
         if output.status.success() {
             if mode & 1 == 0 {
                 //未关闭标准输出才返回结果
@@ -133,7 +147,12 @@ fn exec_single_cmd(
                     .trim()
                     .to_string();
                 if stderr.is_empty() {
-                    return Err(RuntimeError::CommandFailed2(cmdstr.to_owned(), stderr));
+                    // return Err(RuntimeError::CommandFailed2(cmdstr.to_owned(), stderr));
+                    return Err(RuntimeError::new(
+                        RuntimeErrorKind::CommandFailed2(cmdstr.to_owned(), stderr),
+                        Expression::None,
+                        depth,
+                    ));
                 }
             } else if mode & 1 == 0 {
                 // 如果关闭了错误输出，则尝试返回标准输出，二者可能同时存在。
@@ -146,14 +165,17 @@ fn exec_single_cmd(
         return Ok(None);
     } else {
         // 正常模式
-        let status = child.wait()?;
+        let status = child
+            .wait()
+            .map_err(|e| RuntimeError::from_io_error(e, Expression::None, depth))?;
         if status.success() {
             return Ok(None);
         } else if mode & 2 == 0 {
             //未关闭错误输出才返回错误
-            Err(RuntimeError::CommandFailed2(
-                cmdstr.to_owned(),
-                status.to_string(),
+            Err(RuntimeError::new(
+                RuntimeErrorKind::CommandFailed2(cmdstr.to_owned(), status.to_string()),
+                Expression::None,
+                depth,
             ))
         } else {
             Ok(None)
@@ -204,7 +226,11 @@ pub fn handle_command(
                         cmd_args.push(path.to_string_lossy().to_string());
                     }
                     if !matched {
-                        return Err(RuntimeError::WildcardNotMatched(s));
+                        return Err(RuntimeError {
+                            kind: RuntimeErrorKind::WildcardNotMatched(s),
+                            context: Expression::None,
+                            depth,
+                        });
                         // cmd_args.push(s);
                     }
                 } else {
@@ -282,7 +308,15 @@ pub fn handle_command(
     // dbg!(args, &cmd_args);
     let last_input = state.pipe_out();
     let pipe_input = to_bytes(last_input);
-    let result = exec_single_cmd(cmd, Some(cmd_args), env, pipe_input, is_in_pipe, cmd_mode)?;
+    let result = exec_single_cmd(
+        cmd,
+        Some(cmd_args),
+        env,
+        pipe_input,
+        is_in_pipe,
+        cmd_mode,
+        depth,
+    )?;
     Ok(to_expr(result))
 }
 

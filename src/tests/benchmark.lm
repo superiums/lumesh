@@ -1,11 +1,11 @@
 let count = 1000000
 print "--- 循环求和For ---"
-let start=time.stamp-ms();
+let start=time.stamp_ms();
 let sum=0;
 for i in 0..count {
     sum += i
 };
-let end=time.stamp-ms();
+let end=time.stamp_ms();
 print "从 1 到 "count" 的总和是: " sum;
 print "所需时间: " end - start "毫秒";
 
@@ -13,14 +13,14 @@ print "所需时间: " end - start "毫秒";
 # 所需时间:  588 毫秒
 
 print "--- 循环求和While ---"
-let start=time.stamp-ms();
+let start=time.stamp_ms();
 let sum=0;
 let i = count;
 while (i>0) {
     i = i - 1
     sum += i
 };
-let end=time.stamp-ms();
+let end=time.stamp_ms();
 print "从 1 到 "count" 的总和是: " sum;
 print "所需时间: " end - start "毫秒";
 
@@ -28,13 +28,13 @@ print "所需时间: " end - start "毫秒";
 # 所需时间:  1006 毫秒
 
 print "--- 循环+条件判断 ---"
-let start=time.stamp-ms();
+let start=time.stamp_ms();
 let sum=0; for i in 0..1000000 {
     if i % 2 == 0 {
         sum += i
     }
 };
-let end=time.stamp-ms();
+let end=time.stamp_ms();
 print "从 1 到 "count" 的偶数和是: " sum;
 print "所需时间: " end - start "毫秒";
 
@@ -43,13 +43,13 @@ print "所需时间: " end - start "毫秒";
 
 
 print "--- 内存使用情况 ---"
-initial_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
-let start=time.stamp-ms();
+initial_memory = (grep VmRSS /proc/self/status)
+let start=time.stamp_ms();
 let sum=0; for i in 0..1000001 {
     sum += i
 };
-let end=time.stamp-ms();
-final_memory = `grep VmRSS /proc/self/status | awk '{print $2}'`
+let end=time.stamp_ms();
+final_memory = (grep VmRSS /proc/self/status)
 
 print "从 1 到 " count " 的总和是:" sum
 print "初始内存使用:" initial_memory kB
@@ -62,11 +62,11 @@ print "所需时间: " end - start "毫秒";
 # 所需时间:  612 毫秒
 
 print "--- cpu性能 ---"
-let start=time.stamp-ms();
+let start=time.stamp_ms();
 let j=1; for i in 1..count {
     i * i
 };
-let end=time.stamp-ms();
+let end=time.stamp_ms();
 print "所需时间: " end - start "毫秒";
 # 所需时间:  408 毫秒
 
@@ -112,3 +112,34 @@ print "所需时间: " end - start "毫秒";
 # 所需时间:  404 毫秒
 # --- cpu性能 ---
 # 所需时间:  389 毫秒
+
+
+#------v0.5.7重构后
+
+# --- 循环求和For ---
+#
+#
+# 从 1 到  1000000  的总和是:  500000500000
+# 所需时间:  187 毫秒
+# --- 循环求和While ---
+#
+#
+# 从 1 到  1000000  的总和是:  499999500000
+# 所需时间:  349 毫秒
+# --- 循环+条件判断 ---
+#
+#
+# 从 1 到  1000000  的偶数和是:  250000500000
+# 所需时间:  274 毫秒
+# --- 内存使用情况 ---
+#
+#
+# 从 1 到  1000000  的总和是: 500001500001
+# 初始内存使用: VmRSS:	   6088 kB kB
+# 结束时内存使用: VmRSS:	   6120 kB kB
+# 内存使用变化: VmRSS:	   6120 kB kB
+# 所需时间:  193 毫秒
+# --- cpu性能 ---
+#
+#
+# 所需时间:  193 毫秒

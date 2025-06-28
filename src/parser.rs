@@ -215,7 +215,7 @@ impl PrattParser {
                     // dbg!("--->post fix");
                     // dbg!(&lhs, operator, input);
                     // 后缀运算符 (函数调用、数组索引等)
-                    (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input)?;
+                    (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input,depth+1)?;
                     // dbg!(&input, &lhs);
                 }
                 TokenKind::Symbol
@@ -373,6 +373,7 @@ impl PrattParser {
         lhs: Expression,
         op: String,
         input: Tokens<'_>,
+        depth: u8,
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         match op.as_str() {
             "(" => {
@@ -380,11 +381,17 @@ impl PrattParser {
                 // let (input, args) =
                 //     terminated(separated_list0(text(","), parse_expr), text(")"))(input)?;
                 let (input, args) = delimited(
-                    text("("),
-                    cut(separated_list0(text(","), |inp| {
-                        PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, 0)
-                        // PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, 0)
-                    })),
+                    terminated(text("("), opt(kind(TokenKind::LineBreak))),
+                    cut(terminated(
+                        separated_list0(
+                            terminated(text(","), opt(kind(TokenKind::LineBreak))),
+                            |inp| {
+                                PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, depth)
+                                // PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, 0)
+                            },
+                        ),
+                        opt(kind(TokenKind::LineBreak)),
+                    )),
                     cut(text_close(")")),
                 )(input)?;
                 // dbg!(&lhs, &args);
@@ -395,10 +402,9 @@ impl PrattParser {
                 // let (input, args) =
                 //     terminated(separated_list0(text(","), parse_expr), text(")"))(input)?;
 
-                let (input, args) =
-                    many0(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, 0))(
-                        input.skip_n(1),
-                    )?;
+                let (input, args) = many0(|inp| {
+                    PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, depth)
+                })(input.skip_n(1))?;
                 // dbg!(&lhs, &args);
                 Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
             }

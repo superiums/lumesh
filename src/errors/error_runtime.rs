@@ -13,7 +13,7 @@ pub struct RuntimeError {
 }
 #[derive(Debug, Error)]
 pub enum RuntimeErrorKind {
-    #[error("cannot apply `{0:?}` to the arguments {1:?}")]
+    #[error("cannot apply `{0:?}` with the arguments {1:?}")]
     CannotApply(Expression, Vec<Expression>),
     #[error("symbol \"{0}\" not defined")]
     SymbolNotDefined(String),

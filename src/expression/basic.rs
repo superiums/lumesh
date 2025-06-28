@@ -176,7 +176,7 @@ macro_rules! fmt_shared {
                         pat.iter()
                             .map(|e| e.to_string())
                             .collect::<Vec<String>>()
-                            .join(" "),
+                            .join(","),
                         expr
                     )?;
                 }
@@ -238,6 +238,24 @@ macro_rules! fmt_shared {
 // Debug 实现
 impl fmt::Debug for Expression {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.fmt_indent(f, 0)
+    }
+}
+fn idt(indent: usize) -> String {
+    "  ".repeat(indent)
+}
+// Display 实现
+impl fmt::Display for Expression {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fmt_shared!(self, f, false)
+    }
+}
+
+// Expression 辅助函数
+impl Expression {
+    fn fmt_indent(&self, f: &mut fmt::Formatter, indent: usize) -> fmt::Result {
+        let i = if f.alternate() { indent + 1 } else { indent };
+        write!(f, "{}", idt(i))?;
         match &self {
             Self::Symbol(s) => write!(f, "Symbol〈{:?}〉", s),
             Self::Variable(s) => write!(f, "Variable〈{:?}〉", s),
@@ -252,82 +270,136 @@ impl fmt::Debug for Expression {
             Self::Group(inner) => write!(f, "Group〈{:?}〉", inner),
             Self::None => write!(f, "None"),
 
-            Self::While(cond, body) => write!(f, "while {:?}\n\t{:?}", cond, body),
-            Self::Lambda(params, body) => {
-                write!(f, "Lambda〖{:?} -> {:?}〗\n", params, body)
-            }
             Self::List(exprs) => {
-                write!(
-                    f,
-                    "[{}]\n",
-                    exprs
-                        .as_ref()
-                        .iter()
-                        .map(|e| format!("{:?}", e))
-                        .collect::<Vec<String>>()
-                        .join(", ")
-                )
+                write!(f, "\n{}[\n", idt(i))?;
+                exprs.iter().for_each(|e| {
+                    let _ = e.fmt_indent(f, i + 1);
+                    let _ = write!(f, ",\n");
+                });
+                write!(f, "{}]\n", idt(i))
             }
-            Self::HMap(exprs) => write!(
-                f,
-                "{{{}}}\n",
-                exprs
-                    .as_ref()
-                    .iter()
-                    .map(|(k, e)| format!("{}: {:?}", k, e))
-                    .collect::<Vec<String>>()
-                    .join(", ")
-            ),
-            Self::Map(exprs) => write!(
-                f,
-                "{{{}}}\n",
-                exprs
-                    .as_ref()
-                    .iter()
-                    .map(|(k, e)| format!("{}: {:?}", k, e))
-                    .collect::<Vec<String>>()
-                    .join(", ")
-            ),
-            Self::Apply(g, args) => write!(
-                f,
-                "APPLY「{:?}({})」",
-                g,
-                args.iter()
-                    .map(|e| format!("{:?}", e))
-                    .collect::<Vec<String>>()
-                    .join(", ")
-            ),
-            Self::If(cond, true_expr, false_expr) => {
-                write!(
-                    f,
-                    "if {:?}\n\t{:?}\nelse\n\t{:?}",
-                    cond, true_expr, false_expr
-                )
+            Self::HMap(exprs) => {
+                write!(f, "\n{}{{\n", idt(i))?;
+                exprs.iter().for_each(|(k, v)| {
+                    let _ = write!(f, "\n{}{:?}:{:?}\n", idt(i + 1), k, v);
+                });
+                write!(f, "\n{}}}\n", idt(i))
             }
-            Self::Command(g, args) => write!(
-                f,
-                "CMD『{:?} {}』",
-                g,
-                args.iter()
-                    .map(|e| format!("{:?}", e))
-                    .collect::<Vec<String>>()
-                    .join(" ")
-            ),
+            Self::Map(exprs) => {
+                write!(f, "\n{}{{\n", idt(i))?;
+                exprs.iter().for_each(|(k, v)| {
+                    let _ = write!(f, "\n{}{:?}:{:?}\n", idt(i + 1), k, v);
+                });
+                write!(f, "\n{}}}\n", idt(i))
+            }
+            Self::Do(exprs) => {
+                write!(f, "\n{}{{\n", idt(i))?;
+                exprs.iter().for_each(|e| {
+                    let _ = e.fmt_indent(f, i + 1);
+                    let _ = write!(f, "\n");
+                });
+                write!(f, "{}}}\n", idt(i))
+            }
 
-            _ => fmt_shared!(self, f, true),
+            Self::BinaryOp(op, l, r) => {
+                let _ = writeln!(f);
+                let _ = l.fmt_indent(f, i + 1);
+                let _ = write!(f, "\n{}{}\n", idt(i + 1), op);
+                r.fmt_indent(f, i + 1)
+            }
+
+            Self::If(cond, true_expr, false_expr) => {
+                write!(f, "\n{}if ({:?}) {{\n", idt(i), cond)?;
+                let _ = true_expr.fmt_indent(f, i + 1);
+                let _ = write!(f, "\n{}}}else{{\n", idt(i));
+                let _ = false_expr.fmt_indent(f, i + 1);
+                write!(f, "\n{}}}\n", idt(i))
+            }
+            Self::Match(value, branches) => {
+                write!(f, "\n{}match {} {{", idt(i), value)?;
+                for (pat, expr) in branches.iter() {
+                    write!(
+                        f,
+                        "\n{}{} => {:?}, ",
+                        idt(i + 1),
+                        pat.iter()
+                            .map(|e| e.to_string())
+                            .collect::<Vec<String>>()
+                            .join(","),
+                        expr
+                    )?;
+                }
+                write!(f, "\n{}}}\n", idt(i))
+            }
+            Self::For(name, list, body) => {
+                write!(f, "\n{}for {} in {:?} {{\n", idt(i), name, list)?;
+                let _ = body.fmt_indent(f, i + 1);
+                write!(f, "\n{}}}\n", idt(i))
+            }
+
+            Self::While(cond, body) => {
+                write!(f, "\n{}while {:?} {{\n", idt(i), cond)?;
+                let _ = body.as_ref().fmt_indent(f, i + 1);
+                write!(f, "\n{}}}\n", idt(i))
+            }
+            Self::Loop(body) => {
+                write!(f, "\n{}loop {{\n", idt(i))?;
+                let _ = body.as_ref().fmt_indent(f, i + 1);
+                write!(f, "\n{}}}\n", idt(i))
+            }
+            Self::Lambda(params, body) => {
+                write!(
+                    f,
+                    "\n{}Lambda ({}) ->\n",
+                    idt(i),
+                    params.iter().cloned().collect::<Vec<_>>().join(",")
+                )?;
+                body.as_ref().fmt_indent(f, i + 1)
+            }
+            Self::Function(name, param, pc, body) => {
+                let _ = write!(
+                    f,
+                    "\n{}fn {}({},*{}) {{\n",
+                    idt(i),
+                    name,
+                    param
+                        .iter()
+                        .map(|(p, v)| match v {
+                            Some(vv) => format!("{}={}", p, vv),
+                            _ => p.to_string(),
+                        })
+                        .collect::<Vec<String>>()
+                        .join(","),
+                    pc.clone().unwrap_or("None".to_string()),
+                );
+                let _ = body.fmt_indent(f, i + 1);
+                write!(f, "{})\n", idt(i))
+            }
+            Self::Apply(func, args) => {
+                write!(f, "\n{}Apply 〈{:?}〉(\n", idt(i), func)?;
+                args.iter().for_each(|e| {
+                    let _ = e.fmt_indent(f, i + 1);
+                    let _ = write!(f, "\n");
+                });
+                write!(f, "{})\n", idt(i))
+            }
+
+            Self::Command(cmd, args) => {
+                write!(f, "\n{}Cmd 〈{:?}〉〖\n", idt(i), cmd)?;
+                args.iter().for_each(|e| {
+                    let _ = e.fmt_indent(f, i + 1);
+                    let _ = writeln!(f);
+                });
+                write!(f, "{}〗\n", idt(i))
+            }
+
+            _ => {
+                let _ = write!(f, "\n{}", idt(i));
+                fmt_shared!(self, f, true)
+            }
         }
     }
-}
 
-// Display 实现
-impl fmt::Display for Expression {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt_shared!(self, f, false)
-    }
-}
-
-// Expression 辅助函数
-impl Expression {
     /// 类型名称
     pub fn type_name(&self) -> String {
         match self {

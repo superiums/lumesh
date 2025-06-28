@@ -592,33 +592,33 @@ impl Neg for Expression {
 impl AddAssign for Expression {
     fn add_assign(&mut self, other: Self) {
         *self = match (&self, other) {
-            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() + n),
-            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 + n),
-            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() + n as f64),
-            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() + n),
-            _ => Self::None,
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.checked_add(n).unwrap_or(*m)),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(*m as f64 + n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(*m + n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(*m + n),
+            _ => return,
         }
     }
 }
 impl SubAssign for Expression {
     fn sub_assign(&mut self, other: Self) {
         *self = match (&self, other) {
-            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() - n),
-            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 - n),
-            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() - n as f64),
-            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() - n),
-            _ => Self::None,
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.checked_sub(n).unwrap_or(*m)),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(*m as f64 - n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(*m - n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(*m - n),
+            _ => return,
         }
     }
 }
 impl MulAssign for Expression {
     fn mul_assign(&mut self, other: Self) {
         *self = match (&self, other) {
-            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() * n),
-            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 * n),
-            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() * n as f64),
-            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() * n),
-            _ => Self::None,
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(*m * n),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(*m as f64 * n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(*m * n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(*m * n),
+            _ => return,
         }
     }
 }
@@ -627,11 +627,11 @@ impl DivAssign for Expression {
         *self = match (&self, other) {
             (_, Self::Integer(0)) => Self::None,
             (_, Self::Float(0.0)) => Self::None,
-            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.to_owned() / n),
-            (Self::Integer(m), Self::Float(n)) => Self::Float(m.to_owned() as f64 / n),
-            (Self::Float(m), Self::Integer(n)) => Self::Float(m.to_owned() / n as f64),
-            (Self::Float(m), Self::Float(n)) => Self::Float(m.to_owned() / n),
-            _ => Self::None,
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(*m / n),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(*m as f64 / n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(*m / n as f64),
+            (Self::Float(m), Self::Float(n)) => Self::Float(*m / n),
+            _ => return,
         }
     }
 }

@@ -1,43 +1,55 @@
 variables:
-  # 全局变量定义
   PKG_NAME: "lumesh"
   MAIN_BINARY: "lume"
   RUNNER_BINARY: "lumesh"
 
+when:
+  event: tag
+  # tag: "v[0-9]+.*"
+
 steps:
   setup:
-    image: alpine
+    image: alpine:latest
     commands:
-      - export VERSION=${WOODPECKER_TAG#v}
+      - export VERSION=${CI_COMMIT_TAG#v}
       - echo "VERSION=$VERSION" >> .env
-      - echo "REPO_PATH=codeberg.org/youruser/yourrepo" >> .env
-    when:
-      event: tag
+      - echo "REPO_PATH=${CI_REPO}" >> .env
+      - echo "Building version $VERSION"
 
   create_release:
-    image: alpine/git
+    image: alpine:latest
     commands:
       - source .env
-      - apk add curl jq
+      - apk add --no-cache curl jq
       - |
-        RELEASE_RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/$REPO_PATH/releases" \
-          -H "Authorization: token $WOODPECKER_REPO_TOKEN" \
+        RELEASE_DATA='{
+          "tag_name": "'$CI_COMMIT_TAG'",
+          "name": "Release '$CI_COMMIT_TAG'",
+          "body": "This is a new release of lumesh. [Read the changelog here](https://codeberg.org/'$CI_REPO'/src/tag/'$CI_COMMIT_TAG'/CHANGELOG.md).\n\n- lume: an edition contains interactive repl and script parser.\n- lumesh: an swift edition only contains script parser. used to run script swiftly.\n- doc: help docs.\n\nIf you'\''re running on Linux, macOS or Windows, you can probably use one of the binaries below.",
+          "draft": false,
+          "prerelease": false
+        }'
+      - |
+        RELEASE_RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/$CI_REPO/releases" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: application/json" \
-          -d '{
-            "tag_name": "'$WOODPECKER_TAG'",
-            "name": "'$PKG_NAME' $VERSION",
-            "body": "Automated release of '$PKG_NAME' version '$VERSION'",
-            "draft": false,
-            "prerelease": false
-          }')
+          -d "$RELEASE_DATA")
       - echo "RELEASE_ID=$(echo "$RELEASE_RESPONSE" | jq -r '.id')" >> .env
       - echo "UPLOAD_URL=$(echo "$RELEASE_RESPONSE" | jq -r '.upload_url' | sed 's/{?name,label}//')" >> .env
-    environment:
-      MY_TOKEN:
-        from_secret: [WOODPECKER_REPO_TOKEN]
+    # secrets: [CODEBERG_TOKEN]
     depends_on: [setup]
-    when:
-      event: tag
+
+  build_docs:
+    image: alpine:latest
+    commands:
+      - mkdir -p doc
+      - cp CHANGELOG.md doc/
+      - cp README.md doc/
+      - cp LICENSE doc/
+      - cp src/config/config.lm doc/
+      - tar -czvf doc.tar.gz -C doc .
+      - zip -r doc.zip doc/*
+    depends_on: [create_release]
 
   build_linux:
     image: rust:latest
@@ -47,16 +59,15 @@ steps:
       # 标准构建
       - cargo build --release --locked
       - cp target/release/$MAIN_BINARY $MAIN_BINARY-linux
+      # Runner 构建
       - cargo build --features runner --release
       - cp target/release/$RUNNER_BINARY $RUNNER_BINARY-linux
-      # musl静态链接构建
+      # musl 静态链接构建
       - cargo build --release --target x86_64-unknown-linux-musl --locked
       - cp target/x86_64-unknown-linux-musl/release/$MAIN_BINARY $MAIN_BINARY-linux-musl
       - cargo build --features runner --release --target x86_64-unknown-linux-musl
       - cp target/x86_64-unknown-linux-musl/release/$RUNNER_BINARY $RUNNER_BINARY-linux-musl
     depends_on: [create_release]
-    when:
-      event: tag
 
   build_macos:
     image: messense/rust-musl-cross:x86_64-apple-darwin
@@ -65,42 +76,76 @@ steps:
       # Intel Mac
       - cargo build --release --locked --target x86_64-apple-darwin
       - cp target/x86_64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-x86_64
+      - cargo build --features runner --release --target x86_64-apple-darwin
+      - cp target/x86_64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-x86_64
       # Apple Silicon Mac
       - cargo build --release --locked --target aarch64-apple-darwin
       - cp target/aarch64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-arm64
-      # Runner builds
-      - cargo build --features runner --release --target x86_64-apple-darwin
-      - cp target/x86_64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-x86_64
       - cargo build --features runner --release --target aarch64-apple-darwin
       - cp target/aarch64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-arm64
     depends_on: [create_release]
-    when:
-      event: tag
 
   build_windows:
     image: rust:latest
     commands:
-      - rustup target add x86_64-pc-windows-msvc
+      - rustup target add x86_64-pc-windows-gnu
+      - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
       # 标准构建
-      - cargo build --release --locked --target x86_64-pc-windows-msvc
-      - cp target/x86_64-pc-windows-msvc/release/$MAIN_BINARY.exe $MAIN_BINARY-windows.exe
-      # Runner构建
-      - cargo build --features runner --release --target x86_64-pc-windows-msvc
-      - cp target/x86_64-pc-windows-msvc/release/$RUNNER_BINARY.exe $RUNNER_BINARY-windows.exe
+      - cargo build --release --locked --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/$MAIN_BINARY.exe $MAIN_BINARY-windows.exe
+      # Runner 构建
+      - cargo build --features runner --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/$RUNNER_BINARY.exe $RUNNER_BINARY-windows.exe
     depends_on: [create_release]
-    when:
-      event: tag
 
-  upload_binaries:
-    image: codeberg.org/ci/gitea-release
-    environment:
-      MY_TOKEN:
-        from_secret: [WOODPECKER_REPO_TOKEN]
-    # settings:
-    #   api_key: $WOODPECKER_REPO_TOKEN
-    #   base_url: https://codeberg.org
-    #   files: dist/*
-    #   tag: ${CI_COMMIT_TAG}
-    when:
-      event: tag
-    depends_on: [build_linux, build_windows, build_macos]
+  upload_assets:
+    image: alpine:latest
+    commands:
+      - source .env
+      - apk add --no-cache curl jq
+      # 上传文档
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@doc.tar.gz;filename=doc.tar.gz"
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@doc.zip;filename=doc.zip"
+      # 上传 Linux 二进制文件
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@$MAIN_BINARY-linux;filename=${MAIN_BINARY}_linux_${VERSION}"
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@$RUNNER_BINARY-linux;filename=${RUNNER_BINARY}_linux_${VERSION}"
+      # 上传 macOS 二进制文件
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@$MAIN_BINARY-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@$RUNNER_BINARY-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
+      # 上传 Windows 二进制文件
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@$MAIN_BINARY-windows.exe;filename=${MAIN_BINARY}_windows_${VERSION}.exe"
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@$RUNNER_BINARY-windows.exe;filename=${RUNNER_BINARY}_windows_${VERSION}.exe"
+    # secrets: [CODEBERG_TOKEN]
+    depends_on: [build_docs, build_linux, build_macos, build_windows]

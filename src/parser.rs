@@ -1,5 +1,5 @@
 use core::option::Option::None;
-use std::{collections::BTreeMap, rc::Rc};
+use std::{borrow::Cow, collections::BTreeMap, rc::Rc};
 
 use crate::{
     Diagnostic, Expression, Int, SliceParams, SyntaxErrorKind, Token, TokenKind,
@@ -1109,7 +1109,7 @@ fn parse_string_common(
     kind_token: TokenKind,
     enable_ansi_escape: bool,
     enable_normal_escape: bool,
-) -> IResult<Tokens<'_>, String, SyntaxErrorKind> {
+) -> IResult<Tokens<'_>, Cow<'_, str>, SyntaxErrorKind> {
     // 提取字符串字面量
     let (input, expr) = kind(kind_token)(input)?;
     let raw_str = expr.to_str(input.str);
@@ -1138,26 +1138,29 @@ fn parse_string_common(
 
         // 如果启用了 ANSI 转义序列替换，则进行处理
         let ansi_escaped = if enable_ansi_escape {
-            content
-                .replace("\\x1b", "\x1b")
-                .replace("\\033", "\x1b")
-                .replace("\\007", "\x07")
+            Cow::Owned(
+                content
+                    .replace("\\x1b", "\x1b")
+                    .replace("\\033", "\x1b")
+                    .replace("\\007", "\x07"),
+            )
         } else {
-            content.to_string()
+            Cow::Borrowed(content)
         };
-        let result = if enable_normal_escape {
-            snailquote::unescape(&ansi_escaped).map_err(|e| {
+        if enable_normal_escape {
+            let r = snailquote::unescape(ansi_escaped.as_ref()).map_err(|e| {
                 nom::Err::Failure(SyntaxErrorKind::InvalidEscapeSequence(
                     e.to_string(),
                     input.get_str_slice(),
                 ))
-            })?
+            })?;
+            return Ok((input, r.into()));
         } else {
-            ansi_escaped
-        };
+            return Ok((input, ansi_escaped.into()));
+        }
 
         // 返回解析结果
-        Ok((input, result))
+        // Ok((input, result))
     } else {
         // 如果不符合格式要求，返回错误
         // Err(SyntaxErrorKind::failure(
@@ -1166,24 +1169,24 @@ fn parse_string_common(
         //     Some(raw_str.to_string()),
         //     Some("check string surrounds"),
         // ))
-        Ok((input, raw_str.to_string()))
+        Ok((input, Cow::Borrowed(raw_str)))
     }
 }
 
 #[inline]
 fn parse_string(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, r) = parse_string_common(input, TokenKind::StringLiteral, true, true)?;
-    Ok((input, Expression::String(r)))
+    Ok((input, Expression::String(r.into())))
 }
 #[inline]
 fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, r) = parse_string_common(input, TokenKind::StringRaw, false, false)?;
-    Ok((input, Expression::String(r)))
+    Ok((input, Expression::String(r.into())))
 }
 #[inline]
 fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, r) = parse_string_common(input, TokenKind::StringTemplate, true, false)?;
-    Ok((input, Expression::StringTemplate(r)))
+    Ok((input, Expression::StringTemplate(r.into())))
 }
 
 // -- 字面量解析 --

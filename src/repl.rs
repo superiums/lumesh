@@ -557,7 +557,9 @@ impl Highlighter for SyntaxHighlighter {
         let mut parts = line.splitn(2, |c: char| c.is_whitespace());
         let cmd = parts.next().unwrap_or("");
         let rest = parts.next().unwrap_or("");
-
+        if cmd.is_empty() {
+            return Cow::Borrowed(line);
+        }
         let (color, is_valid) = if is_valid_command(cmd) {
             (GREEN_BOLD, true)
         // } else if !cmd.is_empty() {
@@ -579,6 +581,10 @@ impl Highlighter for SyntaxHighlighter {
 
     fn highlight_hint<'h>(&self, hint: &'h str) -> Cow<'h, str> {
         // dbg!(&hint);
+        // 如果提示为空或已经包含颜色代码，直接返回借用
+        if hint.is_empty() || hint.contains('\x1b') {
+            return Cow::Borrowed(hint);
+        }
         Cow::Owned(format!("{}{}{}", GRAY, hint, RESET))
     }
 

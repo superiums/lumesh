@@ -80,6 +80,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                     }
                 },
                 Err(e) => {
+                    let _ = io::stdout().flush();
                     eprintln!("\x1b[31m[ERROR]\x1b[0m {}", e);
                     let _ = io::stderr().flush();
                 }
@@ -119,7 +120,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
         }
 
         Err(e) => {
-            eprintln!("[PARSE FAILED] {}", e);
+            eprintln!("[PARSE FAILED]\n{}", e);
             let _ = io::stderr().flush();
             // if line.is_empty() {
             //     eprintln!("{}", e);

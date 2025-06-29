@@ -301,7 +301,7 @@ impl Expression {
                 write!(f, "{}}}\n", idt(i))
             }
 
-            Self::BinaryOp(op, l, r) => {
+            Self::BinaryOp(op, l, r) | Self::Pipe(op, l, r) => {
                 let _ = writeln!(f);
                 let _ = l.fmt_indent(f, i + 1);
                 let _ = write!(f, "\n{}{}\n", idt(i + 1), op);
@@ -376,7 +376,7 @@ impl Expression {
                 write!(f, "{})\n", idt(i))
             }
             Self::Apply(func, args) => {
-                write!(f, "\n{}Apply 〈{:?}〉(\n", idt(i), func)?;
+                write!(f, "\n{}Apply 〈{:?}〉\n{}(\n", idt(i), func, idt(i))?;
                 args.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
                     let _ = write!(f, "\n");
@@ -385,16 +385,15 @@ impl Expression {
             }
 
             Self::Command(cmd, args) => {
-                write!(f, "\n{}Cmd 〈{:?}〉〖\n", idt(i), cmd)?;
+                write!(f, "\n{}Cmd 〈{:?}〉\n{}〖\n", idt(i), cmd, idt(i))?;
                 args.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
                     let _ = writeln!(f);
                 });
                 write!(f, "{}〗\n", idt(i))
             }
-
             _ => {
-                let _ = write!(f, "\n{}", idt(i));
+                // let _ = write!(f, "\n{}", idt(i));
                 fmt_shared!(self, f, true)
             }
         }

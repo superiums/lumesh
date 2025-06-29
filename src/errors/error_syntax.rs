@@ -473,7 +473,7 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
 
 // 添加新的颜色常量
 const DIM_START: &str = "\x1b[2m";
-const GREEN_START: &str = "\x1b[32m";
+// const GREEN_START: &str = "\x1b[32m";
 const BLUE_START: &str = "\x1b[34m";
 const YELLOW_START: &str = "\x1b[38;5;230m";
 const RED2_START: &str = "\x1b[38;5;210m";
@@ -543,7 +543,7 @@ fn print_error_lines(
                 for _ in 0..safe_start {
                     write!(f, " ")?;
                 }
-                write!(f, "{}{}^", RED_START, BOLD)?;
+                write!(f, "{}{}\x1b[5m^", RED_START, BOLD)?;
                 for _ in 1..(safe_end - safe_start) {
                     write!(f, "~")?;
                 }
@@ -553,8 +553,8 @@ fn print_error_lines(
             // 普通上下文行
             writeln!(
                 f,
-                "{}{:>5}{} {}▏{} {}{}{}",
-                GREEN_START, line_num, RESET, BLUE_START, RESET, DIM_START, line, RESET
+                "{}{:>5} ▏{} {}{}{}",
+                BLUE_START, line_num, RESET, DIM_START, line, RESET
             )?;
         }
     }

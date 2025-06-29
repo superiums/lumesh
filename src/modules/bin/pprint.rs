@@ -1,49 +1,21 @@
 use std::collections::{BTreeMap, HashMap};
+use tabled::{
+    Table, Tabled,
+    builder::Builder,
+    settings::{
+        Color, Modify, Style, Width,
+        object::{Columns, Rows},
+    },
+};
 
 use crate::Builtin;
 use crate::Expression;
-use prettytable::{
-    Cell,
-    Row,
-    Table,
-    format::consts::{FORMAT_BORDERS_ONLY, FORMAT_BOX_CHARS},
-    // format::{LinePosition, LineSeparator},
-    row,
-};
+
 pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
     match arg {
         Expression::Map(exprs) => pprint_map(exprs.as_ref()),
         Expression::HMap(exprs) => pprint_hmap(exprs.as_ref()),
-
-        Expression::List(exprs) => {
-            // Create a table with one column
-            let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
-
-            let (rows, heads_opt) = TableRow {
-                columns: exprs.as_ref(),
-                max_width: specified_width - 10,
-                col_padding: 3 + 2,
-            }
-            .split_into_rows();
-
-            let mut t = Table::new();
-            if let Some(heads) = heads_opt {
-                t.set_format(*FORMAT_BORDERS_ONLY);
-                t.set_titles(Row::new(
-                    heads
-                        .into_iter()
-                        .map(|x| Cell::new(&x.to_uppercase()))
-                        .collect(),
-                ));
-            } else {
-                t.set_format(*FORMAT_BOX_CHARS);
-            }
-            for row in rows {
-                t.add_row(Row::new(row.into_iter().map(|x| Cell::new(&x)).collect()));
-            }
-
-            t.printstd();
-        }
+        Expression::List(exprs) => pprint_list(exprs.as_ref()),
         _ => {
             println!("{}", arg);
         }
@@ -51,79 +23,145 @@ pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
     Ok(Expression::None)
 }
 
+#[derive(Tabled)]
+struct KeyValueRow {
+    #[tabled(rename = "KEY")]
+    key: String,
+    #[tabled(rename = "VALUE")]
+    value: String,
+}
+
 fn pprint_map(exprs: &BTreeMap<String, Expression>) {
     let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
-    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
 
-    let mut t = Table::new();
-    t.set_format(*FORMAT_BORDERS_ONLY);
-    t.set_titles(row!("KEY", "VALUE"));
+    let rows: Vec<KeyValueRow> = exprs
+        .iter()
+        .map(|(key, val)| {
+            let value = match val {
+                Expression::Builtin(Builtin { help, .. }) => {
+                    format!("{}\n{}", val, textwrap::fill(help, specified_width * 4 / 5))
+                }
+                Expression::HMap(_) | Expression::Map(_) => {
+                    format!("{:width$}", val, width = specified_width)
+                }
+                Expression::List(_) => {
+                    let w = specified_width - key.len() - 3;
+                    let formatted = format!("{:w$}", val);
+                    textwrap::fill(&formatted, w)
+                }
+                _ => {
+                    let formatted = format!("{}", val);
+                    let w = specified_width * 2 / 3;
+                    textwrap::fill(&formatted, w)
+                }
+            };
+            KeyValueRow {
+                key: key.clone(),
+                value,
+            }
+        })
+        .collect();
 
-    for (key, val) in exprs.iter() {
-        match &val {
-            Expression::Builtin(Builtin { help, .. }) => {
-                t.add_row(row!(
-                    key,
-                    format!("{}", val),
-                    textwrap::fill(help, specified_width / 2)
-                ));
-            }
-            Expression::HMap(_) | Expression::Map(_) => {
-                t.add_row(row!(key, format!("{:specified_width$}", val)));
-            }
-            Expression::List(_) => {
-                let w = specified_width - key.len() - 3;
-                let formatted = format!("{:w$}", val);
-                t.add_row(row!(key, textwrap::fill(&formatted, w),));
-            }
-            _ => {
-                // Format the value to the width of the terminal / 5
-                let formatted = format!("{}", val);
-                let w = specified_width / 3;
-                t.add_row(row!(key, textwrap::fill(&formatted, w),));
-            }
-        }
-    }
-    // write!($f, "{}", t)
-    t.printstd();
+    let mut table = Table::new(rows);
+    table
+        .modify(Columns::first(), Color::FG_GREEN)
+        .with(Style::rounded())
+        .with(Width::wrap(specified_width).keep_words(true));
+
+    println!("{}", table);
 }
 
 fn pprint_hmap(exprs: &HashMap<String, Expression>) {
     let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
-    // terminal_size().map(|(Width(w), _)| w as usize).unwrap_or(120)
 
-    let mut t = Table::new();
-    t.set_format(*FORMAT_BORDERS_ONLY);
-    t.set_titles(row!("KEY", "VALUE"));
+    let rows: Vec<KeyValueRow> = exprs
+        .iter()
+        .map(|(key, val)| {
+            let value = match val {
+                Expression::Builtin(Builtin { help, .. }) => {
+                    format!("{}\n{}", val, textwrap::fill(help, specified_width * 4 / 5))
+                }
+                Expression::HMap(_) | Expression::Map(_) => {
+                    format!("{:width$}", val, width = specified_width)
+                }
+                Expression::List(_) => {
+                    let w = specified_width - key.len() - 3;
+                    let formatted = format!("{:w$}", val);
+                    textwrap::fill(&formatted, w)
+                }
+                _ => {
+                    let formatted = format!("{}", val);
+                    let w = specified_width * 2 / 3;
+                    textwrap::fill(&formatted, w)
+                }
+            };
+            KeyValueRow {
+                key: key.clone(),
+                value,
+            }
+        })
+        .collect();
 
-    for (key, val) in exprs.iter() {
-        match &val {
-            Expression::Builtin(Builtin { help, .. }) => {
-                t.add_row(row!(
-                    key,
-                    format!("{}", val),
-                    textwrap::fill(help, specified_width / 2)
-                ));
-            }
-            Expression::HMap(_) | Expression::Map(_) => {
-                t.add_row(row!(key, format!("{:specified_width$}", val)));
-            }
-            Expression::List(_) => {
-                let w = specified_width - key.len() - 3;
-                let formatted = format!("{:w$}", val);
-                t.add_row(row!(key, textwrap::fill(&formatted, w),));
-            }
-            _ => {
-                // Format the value to the width of the terminal / 5
-                let formatted = format!("{}", val);
-                let w = specified_width / 3;
-                t.add_row(row!(key, textwrap::fill(&formatted, w),));
-            }
-        }
-    }
-    // write!($f, "{}", t)
-    t.printstd();
+    let mut table = Table::new(rows);
+    table
+        .modify(Columns::first(), Color::FG_BLUE)
+        .with(Style::rounded())
+        .with(Width::wrap(specified_width).keep_words(true));
+
+    println!("{}", table);
 }
+
+fn pprint_list(exprs: &Vec<Expression>) {
+    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
+
+    let (rows, heads_opt) = TableRow {
+        columns: exprs.as_ref(),
+        max_width: specified_width - 10,
+        col_padding: 5,
+    }
+    .split_into_rows();
+
+    if rows.is_empty() {
+        return;
+    }
+    let mut builder;
+
+    let has_header = match heads_opt {
+        Some(heads) => {
+            builder = Builder::with_capacity(rows.len(), heads.len());
+            builder.insert_record(0, heads);
+            true
+        }
+        _ => {
+            builder = Builder::with_capacity(rows.len(), rows[0].len());
+
+            false
+        }
+    };
+    for row in rows {
+        builder.push_record(row);
+    }
+
+    // builder.insert_record(0, (0..Y).map(|i| i.to_string()));
+    // builder.insert_column(0, once(String::new()).chain((0..X).map(|i| i.to_string())));
+    let mut table = builder.build();
+
+    table
+        .modify(Rows::first(), Color::FG_BLUE)
+        .with(Style::rounded())
+        .with(Width::wrap(specified_width).keep_words(true));
+
+    if has_header {
+        table.with(
+            Modify::new(Rows::first()).with(tabled::settings::format::Format::content(|s| {
+                s.to_uppercase()
+            })),
+        );
+    }
+    println!("{}", table);
+}
+
+// 保持原有的智能布局逻辑
 
 struct TableRow<'a> {
     columns: &'a Vec<Expression>, // 原始数据

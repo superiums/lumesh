@@ -1,4 +1,10 @@
 # Changelog
+## [0.5.8]
+- pretty print with tabled
+- fmt debug tree
+- allow linebreak in arguments of fn call
+- optimize with Cow
+
 ## [0.5.7]
 - more friendly runtime errors
 now display the expression context and ast, depth for runtime errors.

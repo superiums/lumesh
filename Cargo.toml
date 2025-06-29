@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.5.7"
+version = "0.5.8"
 authors = ["Adam McDaniel; santo"]
 edition = "2024"
 license = "MIT"
@@ -59,6 +59,7 @@ tinyjson = "2.5.1"
 portable-pty = "0.9.0"
 csv = "1.3.1"
 inquire = "0.7.5"
+tabled = "0.20.0"
 # signal-hook = "0.3.18"
 
 [target.'cfg(unix)'.dependencies]
@@ -89,10 +90,6 @@ features = ["clock", "std"]
 version = "3.10"
 default-features = false
 
-[dependencies.prettytable-rs]
-version = "0.10"
-default-features = false
-features = ["win_crlf"]
 
 [dev-dependencies]
 criterion = "0.3"

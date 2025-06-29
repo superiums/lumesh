@@ -101,7 +101,7 @@ fn selector_wrapper(
 ) -> Result<Expression, LmError> {
     let delimiter = match env.get("IFS") {
         Some(Expression::String(fs)) => fs,
-        _ => " ".to_string(), // 使用空格作为默认分隔符
+        _ => "\n".to_string(), // 使用空格作为默认分隔符
     };
 
     let (cfgs, options) = match args.len() {

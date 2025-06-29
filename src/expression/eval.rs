@@ -25,6 +25,7 @@ impl Default for State {
 impl State {
     pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
+    pub const IN_ASSIGN: u8 = 1 << 3; // 0b00001000
     // pub const PIPE_IN: u8 = 1 << 3; // 0b00001000
 
     // 创建一个新的 State 实例
@@ -93,7 +94,7 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Self, RuntimeError> {
-        // dbg!("1.--->eval_mut:", &self, &self.type_name());
+        // dbg!("1.--->eval_mut:", &self, &self.type_name(), &state);
         if let Some(max) = MAX_RECURSION_DEPTH {
             if depth > max {
                 return Err(RuntimeError::new(
@@ -192,7 +193,9 @@ impl Expression {
                         // env.undefine("__ALWAYSPIPE");
                         env.define(name, value); // 新增 declare
                     } else {
+                        state.set(State::IN_ASSIGN);
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                        state.clear(State::IN_ASSIGN);
                         env.define(name, value); // 新增 declare
                     }
                     // dbg!("declare---->", &name, &value.type_name());
@@ -210,8 +213,9 @@ impl Expression {
                         }
                         _ => false,
                     };
-
+                    state.set(State::IN_ASSIGN);
                     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                    state.clear(State::IN_ASSIGN);
 
                     // dbg!("assign---->", &name, &value.type_name());
                     if env.has(name) {

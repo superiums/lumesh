@@ -167,85 +167,23 @@ impl Expression {
         let list_excuted = list_expr.as_ref().eval_mut(state, env, depth + 1)?;
         // .as_list()?;
         match list_excuted {
-            Expression::Range(elist, step) => {
-                let mut result =
-                    Vec::with_capacity((elist.end as usize - elist.start as usize) / step);
-                for item in elist.step_by(step) {
-                    env.define(var, Expression::Integer(item));
-                    let last = body.as_ref().eval_mut(state, env, depth + 1)?;
-                    result.push(last)
-                }
-                result.retain(|r| r != &Expression::None);
-                Ok(Expression::from(result))
+            Expression::Range(range, step) => {
+                let iterator = range.step_by(step).map(Expression::Integer);
+                execute_iteration(var, iterator, body, state, env, depth)
             }
-            Expression::List(elist) => {
-                let mut result = Vec::with_capacity(elist.len());
-                for item in elist.iter() {
-                    env.define(var, item.clone());
-                    let last = body.as_ref().eval_mut(state, env, depth + 1)?;
-                    result.push(last)
-                }
-                result.retain(|r| r != &Expression::None);
-                Ok(Expression::from(result))
+            Expression::List(items) => {
+                let iterator = items.iter().cloned();
+                execute_iteration(var, iterator, body, state, env, depth)
             }
-            Expression::String(mut s) => {
-                if s.starts_with("~") {
-                    if let Some(home_dir) = dirs::home_dir() {
-                        s = s.replace("~", home_dir.to_string_lossy().as_ref());
-                    }
-                }
-                if s.contains('*') {
-                    let mut elist = vec![];
-                    for path in glob(&s).unwrap().filter_map(Result::ok) {
-                        elist.push(path.to_string_lossy().to_string());
-                    }
-                    if elist.is_empty() {
-                        return Err(RuntimeError::new(
-                            crate::RuntimeErrorKind::WildcardNotMatched(s),
-                            self.clone(),
-                            depth,
-                        ));
-                    }
-                    // loop
-                    let mut result = Vec::with_capacity(elist.len());
-                    for item in elist.into_iter() {
-                        env.define(var, Expression::String(item));
-                        let last = body.as_ref().eval_mut(state, env, depth + 1)?;
-                        result.push(last)
-                    }
-                    result.retain(|r| r != &Expression::None);
-                    Ok(Expression::from(result))
+            Expression::String(s) => {
+                let iterator = if s.contains('*') {
+                    // glob expansion logic
+                    glob_expand(&s).into_iter().map(Expression::String)
                 } else {
-                    let ifs = env.get("IFS");
-                    let slist = match ifs {
-                        Some(Expression::String(fs)) => {
-                            s.split_terminator(fs.as_str()).collect::<Vec<_>>()
-                        }
-                        _ => {
-                            let mut elist = s.lines().collect::<Vec<_>>();
-                            if elist.len() < 2 {
-                                elist = s.split_ascii_whitespace().collect::<Vec<_>>();
-                                if elist.len() < 2 {
-                                    elist = s.split_terminator(";").collect::<Vec<_>>();
-                                    if elist.len() < 2 {
-                                        elist = s.split_terminator(",").collect::<Vec<_>>();
-                                    }
-                                }
-                            }
-                            elist
-                        }
-                    };
-                    let mut result = slist
-                        .into_iter()
-                        .map(|i| {
-                            env.define(var, Expression::String(i.to_string()));
-                            body.as_ref().eval_mut(state, env, depth + 1)
-                        })
-                        .collect::<Result<Vec<_>, _>>()?;
-
-                    result.retain(|r| r != &Expression::None);
-                    Ok(Expression::from(result))
-                }
+                    // IFS splitting logic
+                    ifs_split(&s, env).into_iter().map(Expression::String)
+                };
+                execute_iteration(var, iterator, body, state, env, depth)
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::ForNonList(list_excuted),
@@ -253,21 +191,83 @@ impl Expression {
                 depth,
             )),
         }
-        // 遍历每个元素执行循环体
-        // let mut result = Vec::with_capacity(elist.len());
-        // for item in elist.iter() {
-        //     env.define(var, item.clone());
-        //     let last = body.as_ref().eval_mut(state, env, depth + 1)?;
-        //     result.push(last)
-        // }
-        // Ok(Expression::from(result))
-        // let r: Result<Vec<Expression>, RuntimeError> = list
-        //     .iter()
-        //     .map(|item| {
-        //         env.define(var, item.clone());
-        //         body.as_ref().eval_mut(true, env, depth + 1)
-        //     })
-        //     .collect();
-        // r.map(Expression::from)
+    }
+}
+
+fn glob_expand(s: &str) -> Vec<String> {
+    let mut elist = vec![];
+    for entry in glob(&s).unwrap() {
+        match entry {
+            Ok(p) => elist.push(p.to_string_lossy().to_string()),
+            _ => {}
+        }
+    }
+    elist
+}
+fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
+    let ifs = env.get("IFS");
+    match ifs {
+        Some(Expression::String(fs)) => s
+            .split_terminator(fs.as_str())
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>(),
+        _ => {
+            let mut elist = s.lines().collect::<Vec<_>>();
+            if elist.len() < 2 {
+                elist = s.split_ascii_whitespace().collect::<Vec<_>>();
+                if elist.len() < 2 {
+                    elist = s.split_terminator(";").collect::<Vec<_>>();
+                    if elist.len() < 2 {
+                        elist = s.split_terminator(",").collect::<Vec<_>>();
+                    }
+                }
+            }
+            elist.iter().map(|v| v.to_string()).collect::<Vec<_>>()
+        }
+    }
+}
+fn execute_iteration<I>(
+    var: &String,
+    iterator: I,
+    body: &Rc<Expression>,
+    state: &mut State,
+    env: &mut Environment,
+    depth: usize,
+) -> Result<Expression, RuntimeError>
+where
+    I: Iterator<Item = Expression>,
+{
+    if state.contains(State::IN_ASSIGN) {
+        let mut results = Vec::new();
+
+        for item in iterator {
+            env.define(var, item);
+            match body.as_ref().eval_mut(state, env, depth) {
+                Ok(result) => {
+                    // if !matches!(result, Expression::None) {
+                    results.push(result);
+                    // }
+                }
+                Err(RuntimeError {
+                    kind: RuntimeErrorKind::EarlyBreak(v),
+                    ..
+                }) => return Ok(v),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(Expression::from(results))
+    } else {
+        for item in iterator {
+            env.define(var, item);
+            match body.as_ref().eval_mut(state, env, depth) {
+                Ok(_) => {}
+                Err(RuntimeError {
+                    kind: RuntimeErrorKind::EarlyBreak(v),
+                    ..
+                }) => return Ok(v),
+                Err(e) => return Err(e),
+            }
+        }
+        Ok(Expression::None)
     }
 }

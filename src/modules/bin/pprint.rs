@@ -105,7 +105,7 @@ fn pprint_hmap(exprs: &HashMap<String, Expression>) {
     let mut table = Table::new(rows);
     table
         .modify(Columns::first(), Color::FG_BLUE)
-        .with(Style::rounded())
+        .with(Style::dots())
         .with(Width::wrap(specified_width).keep_words(true));
 
     println!("{}", table);

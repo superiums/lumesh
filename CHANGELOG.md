@@ -1,5 +1,7 @@
 # Changelog
 ## [0.5.8]
+- add |_ as position pipe
+- add |^ as pty pipe
 - pretty print with tabled
 - fmt debug tree
 - allow linebreak in arguments of fn call

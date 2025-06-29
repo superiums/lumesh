@@ -25,8 +25,8 @@ impl Default for State {
 impl State {
     pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
-    pub const IN_ASSIGN: u8 = 1 << 3; // 0b00001000
-    // pub const PIPE_IN: u8 = 1 << 3; // 0b00001000
+    pub const PTY_MODE: u8 = 1 << 3; // 0b00001000
+    pub const IN_ASSIGN: u8 = 1 << 4; // 0b00010000
 
     // 创建一个新的 State 实例
     pub fn new() -> Self {
@@ -650,7 +650,7 @@ impl Expression {
                 // 管道
                 Self::Pipe(operator, lhs, rhs) => {
                     match operator.as_str() {
-                        "|" => {
+                        "|" | "|_" | "|^" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
                             let left_func = lhs.ensure_execute();
@@ -658,36 +658,42 @@ impl Expression {
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
                             }
-                            state.pipe_in(left_output);
+                            match operator.as_str() {
+                                "|^" => {
+                                    state.set(State::PTY_MODE);
+                                    state.pipe_in(left_output);
 
-                            match rhs.as_ref() {
-                                Expression::Symbol(_) => {
-                                    return rhs.ensure_execute().eval_mut(state, env, depth + 1);
+                                    let r = rhs.ensure_execute().eval_mut(state, env, depth + 1);
+                                    state.clear(State::PTY_MODE);
+                                    return r;
                                 }
-                                r => {
-                                    job = r;
-                                    continue;
+
+                                "|_" => {
+                                    return rhs
+                                        .as_ref()
+                                        .replace_or_append_arg(left_output)
+                                        .eval_mut(state, env, depth + 1);
                                 }
+                                "|" => {
+                                    state.pipe_in(left_output);
+                                    match rhs.as_ref() {
+                                        Expression::Symbol(_) => {
+                                            return rhs.ensure_execute().eval_mut(
+                                                state,
+                                                env,
+                                                depth + 1,
+                                            );
+                                        }
+                                        r => {
+                                            job = r;
+                                            continue;
+                                        }
+                                    }
+                                }
+                                _ => unreachable!(),
                             }
                         }
-                        "|>" => {
-                            // 执行左侧表达式
-                            let is_in_pipe = state.contains(State::IN_PIPE);
-                            state.set(State::IN_PIPE);
-                            let left_func = lhs.as_ref().ensure_execute();
-                            let left_output = left_func.eval_mut(state, env, depth + 1)?;
-                            if !is_in_pipe {
-                                state.clear(State::IN_PIPE);
-                            }
 
-                            // 执行右侧表达式，获取函数或命令
-                            // 将左侧结果作为最后一个参数传递给右侧
-                            let args = vec![left_output];
-                            return rhs
-                                .as_ref()
-                                .append_args(args)
-                                .eval_mut(state, env, depth + 1);
-                        }
                         ">>" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);

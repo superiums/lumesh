@@ -277,7 +277,7 @@ pub fn handle_command(
         "WinPTY",
         "ConPTY",
     ];
-    let cmd_mode: u8 = match pty_cmds.contains(&cmd.as_str()) {
+    let cmd_mode: u8 = match state.contains(State::PTY_MODE) || pty_cmds.contains(&cmd.as_str()) {
         true => 16,
         false => match cmd_args.last() {
             Some(s) => match s.as_str() {

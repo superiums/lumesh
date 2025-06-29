@@ -475,6 +475,46 @@ impl Expression {
         Self::Apply(Rc::new(self.clone()), Rc::new(args))
     }
     // 参数合并方法
+    pub fn replace_or_append_arg(&self, arg: Expression) -> Expression {
+        let mut found = false;
+        match self {
+            Expression::Apply(f, existing_args) => {
+                let new_args = existing_args
+                    .iter()
+                    .map(|a| match a {
+                        Self::Symbol(inner) if inner == "_" => {
+                            found = true;
+                            arg.clone()
+                        }
+                        _ => a.clone(),
+                    })
+                    .collect();
+                if found {
+                    Expression::Apply(f.clone(), Rc::new(new_args))
+                } else {
+                    self.append_args(vec![arg])
+                }
+            }
+            Expression::Command(f, existing_args) => {
+                let new_args = existing_args
+                    .iter()
+                    .map(|a| match a {
+                        Self::Symbol(inner) if inner == "_" => {
+                            found = true;
+                            arg.clone()
+                        }
+                        _ => a.clone(),
+                    })
+                    .collect();
+                if found {
+                    Expression::Command(f.clone(), Rc::new(new_args))
+                } else {
+                    self.append_args(vec![arg])
+                }
+            }
+            _ => Expression::Command(Rc::new(self.clone()), Rc::new(vec![arg])), //report error?
+        }
+    }
     pub fn append_args(&self, args: Vec<Expression>) -> Expression {
         match self {
             Expression::Apply(f, existing_args) => {
@@ -489,7 +529,7 @@ impl Expression {
                 new_vec.extend_from_slice(&args);
                 Expression::Command(f.clone(), Rc::new(new_vec))
             }
-            _ => Expression::Apply(Rc::new(self.clone()), Rc::new(args)), //report error?
+            _ => Expression::Command(Rc::new(self.clone()), Rc::new(args)), //report error?
         }
     }
     pub fn ensure_execute(&self) -> Expression {

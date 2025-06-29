@@ -150,7 +150,8 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("~="),
         keyword_tag("&&"),
         keyword_tag("||"),
-        keyword_tag("|>"), //param pipe
+        keyword_tag("|_"), //param pipe
+        keyword_tag("|^"), //pty pipe
         keyword_tag("<<"),
         keyword_tag(">>!"),
         keyword_tag(">>"),

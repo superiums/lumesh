@@ -501,7 +501,7 @@ impl PrattParser {
                 true, //important
             )),
             // ... 管道操作符 ...
-            "|" | "|>" => Some(OperatorInfo::new(
+            "|" | "|_" | "|^" => Some(OperatorInfo::new(
                 op, PREC_PIPE, // 例如设为 4（低于逻辑运算符）
                 false,
             )),
@@ -747,7 +747,7 @@ impl PrattParser {
             //             Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
             //         Ok(Expression::Assign(lhs.to_string(), Box::new(new_rhs)))
             //     }
-            "|" | "|>" => Ok(Expression::Pipe(
+            "|" | "|_" | "|^" => Ok(Expression::Pipe(
                 op.symbol.into(),
                 Rc::new(lhs),
                 Rc::new(rhs),

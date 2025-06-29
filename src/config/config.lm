@@ -67,9 +67,9 @@ if IS_INTERACTIVE {
     let LUME_HOT_KEYS = {
         q: "exit",
         c: "clear",
-        h: "fs.read /tmp/lume_histroy | fzf --preview '' | exec_str()",
-        x: "fs.read /tmp/bookmark | fzf --preview '' | exec_str()",
-        m: 'let cmd := "$CMD_CURRENT";let s = into.str(cmd); if s!="" {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
+        h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?. | exec_str()",
+        x: "fs.read /tmp/bookmark | string.lines() | ui.pick('select bookmark:') ?. | exec_str()",
+        m: 'let cmd := "$CMD_CURRENT";let s = into.str(cmd); if s {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
     }
 
     # ====== abbreviations
@@ -102,4 +102,4 @@ if IS_INTERACTIVE {
 # }
 
 # ========== config for all mode ==========
-let concat = (x, y) -> (str x) + (str y)
+let concat = (x, y) -> (into.str x) + (into.str y)

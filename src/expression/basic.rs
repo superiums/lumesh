@@ -102,7 +102,7 @@ macro_rules! fmt_shared {
                     exprs
                         .as_ref()
                         .iter()
-                        .map(|(_, v)| format!("{}", v))
+                        .map(|(k, v)| format!("{}:{}", k, v))
                         .collect::<Vec<_>>()
                         .join(", ")
                 )
@@ -114,7 +114,7 @@ macro_rules! fmt_shared {
                     exprs
                         .as_ref()
                         .iter()
-                        .map(|(_, v)| format!("{}", v))
+                        .map(|(k, v)| format!("{}:{}", k, v))
                         .collect::<Vec<_>>()
                         .join(", ")
                 )

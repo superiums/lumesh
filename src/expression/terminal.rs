@@ -102,14 +102,14 @@ impl TerminalOps for WindowsTerminal {
             let handle = stdin().as_raw_handle();
             if handle == INVALID_HANDLE_VALUE {
                 return Err(RuntimeErrorKind::CustomError(
-                    "Failed to get stdin handle".to_string(),
+                    "Failed to get stdin handle".into(),
                 ));
             }
 
             let mut mode: u32 = 0;
             if GetConsoleMode(handle, &mut mode) == 0 {
                 return Err(RuntimeErrorKind::CustomError(
-                    "Failed to get console mode".to_string(),
+                    "Failed to get console mode".into(),
                 ));
             }
 
@@ -117,7 +117,7 @@ impl TerminalOps for WindowsTerminal {
 
             if SetConsoleMode(handle, mode) == 0 {
                 return Err(RuntimeErrorKind::CustomError(
-                    "Failed to set raw mode".to_string(),
+                    "Failed to set raw mode".into(),
                 ));
             }
         }
@@ -129,14 +129,14 @@ impl TerminalOps for WindowsTerminal {
             let handle = stdin().as_raw_handle();
             if handle == INVALID_HANDLE_VALUE {
                 return Err(RuntimeErrorKind::CustomError(
-                    "Failed to get stdin handle".to_string(),
+                    "Failed to get stdin handle".into(),
                 ));
             }
 
             let mut mode: u32 = 0;
             if GetConsoleMode(handle, &mut mode) == 0 {
                 return Err(RuntimeErrorKind::CustomError(
-                    "Failed to get console mode".to_string(),
+                    "Failed to get console mode".into(),
                 ));
             }
 
@@ -144,7 +144,7 @@ impl TerminalOps for WindowsTerminal {
 
             if SetConsoleMode(handle, mode) == 0 {
                 return Err(RuntimeErrorKind::CustomError(
-                    "Failed to restore console mode".to_string(),
+                    "Failed to restore console mode".into(),
                 ));
             }
         }
@@ -173,7 +173,7 @@ impl TerminalOps for WindowsTerminal {
         unsafe {
             if SetConsoleCtrlHandler(Some(handler), 1) == 0 {
                 return Err(RuntimeErrorKind::CustomError(
-                    "Failed to set Ctrl+C handler".to_string(),
+                    "Failed to set Ctrl+C handler".into(),
                 ));
             }
         }

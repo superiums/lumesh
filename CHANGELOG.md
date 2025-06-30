@@ -1,6 +1,14 @@
 # Changelog
 ## [0.5.9]
 - add chain call support
+```bash
+"a b c".split(' ').join(',')
+```
+
+- add chain pipe method support
+```bash
+"a b c" | .split(' ')
+```
 - dim syntax tree debug
 
 ## [0.5.8]

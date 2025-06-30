@@ -12,8 +12,8 @@ pub fn chess_fn(args: Vec<Expression>, env: &mut Environment) -> Result<Expressi
         }
         _ => {
             return Err(Error::CustomError(
-                "call chess with a color, like \"black\" or \"white\"".to_string(),
-            ))
+                "call chess with a color, like \"black\" or \"white\"".into(),
+            ));
         }
     };
 

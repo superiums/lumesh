@@ -110,6 +110,7 @@ fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
+        prefix_tag("."), //pipemethod
         prefix_tag("!"), //bool negtive
         prefix_tag("$"), //var
         prefix_tag("-"),
@@ -371,7 +372,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         path_tag("/"),
         path_tag("../"),
         path_tag("./"),
-        path_tag("."),
+        keyword_alone_tag("."),
         path_tag("~"),
         path_tag("*/"),
         path_tag("**/"),

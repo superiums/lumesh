@@ -304,6 +304,9 @@ impl PrattParser {
                 if op == "$" {
                     return cut(parse_variable)(input);
                 }
+                if op == "." {
+                    return cut(parse_pipe_method)(input);
+                }
                 // unary op
                 let prec = match op {
                     "!" | "-" => PREC_UNARY,
@@ -847,6 +850,15 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
         ),
         text_close("]"),
     )(input)
+}
+
+fn parse_pipe_method(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text(".")(input)?;
+    let (input, method_name) = cut(parse_symbol_string)(input)?;
+    let (input, args) = parse_args(input, 0)?;
+
+    // 创建一个特殊的管道方法表达式
+    Ok((input, Expression::PipeMethod(method_name, Rc::new(args))))
 }
 
 fn parse_chaind_or_index(

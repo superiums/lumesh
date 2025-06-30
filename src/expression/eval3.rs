@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::rc::Rc;
 
 use super::Builtin;
@@ -445,7 +446,7 @@ impl Expression {
             // 构造方法调用表达式
             let excuted = match &current_base {
                 Expression::String(_) => self.eval_chaind_method(
-                    "string",
+                    "string".into(),
                     method,
                     &call.args,
                     current_base,
@@ -454,7 +455,7 @@ impl Expression {
                     depth,
                 ),
                 Expression::List(_) => self.eval_chaind_method(
-                    "list",
+                    "list".into(),
                     method,
                     &call.args,
                     current_base,
@@ -463,7 +464,7 @@ impl Expression {
                     depth,
                 ),
                 Expression::DateTime(_) => self.eval_chaind_method(
-                    "time",
+                    "time".into(),
                     method,
                     &call.args,
                     current_base,
@@ -492,7 +493,7 @@ impl Expression {
                         None => {
                             // 尝试内置方法
                             self.eval_chaind_method(
-                                "map",
+                                "map".into(),
                                 method,
                                 &call.args,
                                 current_base,
@@ -525,7 +526,7 @@ impl Expression {
                         None => {
                             // 尝试内置方法
                             self.eval_chaind_method(
-                                "map",
+                                "map".into(),
                                 method,
                                 &call.args,
                                 current_base,
@@ -552,7 +553,7 @@ impl Expression {
     #[inline]
     pub fn eval_chaind_method(
         &self,
-        module: &'static str,
+        module: Cow<'static, str>,
         call_method: &str,
         call_args: &Vec<Expression>,
         current_base: Expression,
@@ -560,7 +561,7 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        match get_builtin(module.into()) {
+        match get_builtin(&module) {
             // 顶级内置命令
             Some(Expression::HMap(hmap)) => {
                 let mut final_args = call_args.clone();
@@ -568,7 +569,10 @@ impl Expression {
 
                 //dbg!(&hmap);
                 let bti_expr = hmap.as_ref().get(call_method).ok_or(RuntimeError::new(
-                    RuntimeErrorKind::MethodNotFound(call_method.to_string().into(), module.into()),
+                    RuntimeErrorKind::MethodNotFound(
+                        call_method.to_string().into(),
+                        module.to_owned(),
+                    ),
                     self.clone(),
                     depth,
                 ))?;
@@ -580,7 +584,7 @@ impl Expression {
                     // chained bti, inner has child.
                     {
                         Err(RuntimeError::new(
-                            RuntimeErrorKind::CustomError(module.into()),
+                            RuntimeErrorKind::CustomError(module),
                             self.clone(),
                             depth,
                         ))
@@ -589,7 +593,7 @@ impl Expression {
             }
 
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::ModuleNotFound(module.into()),
+                RuntimeErrorKind::ModuleNotFound(module),
                 self.clone(),
                 depth,
             )),

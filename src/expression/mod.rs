@@ -77,6 +77,7 @@ pub enum Expression {
     DateTime(NaiveDateTime),
     FileSize(FileSize),
     Chain(Rc<Expression>, Vec<ChainCall>), // 链式调用
+    PipeMethod(String, Rc<Vec<Self>>),
 }
 
 #[derive(Debug, Clone, PartialEq)]

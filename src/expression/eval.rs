@@ -675,20 +675,34 @@ impl Expression {
                                         .eval_mut(state, env, depth + 1);
                                 }
                                 "|" => {
-                                    state.pipe_in(left_output);
-                                    match rhs.as_ref() {
-                                        Expression::Symbol(_) => {
-                                            return rhs.ensure_execute().eval_mut(
+                                    return match rhs.as_ref() {
+                                        Expression::PipeMethod(method, args) => self
+                                            .eval_chaind_method(
+                                                left_output.type_name().to_lowercase().into(),
+                                                method,
+                                                args,
+                                                left_output,
                                                 state,
                                                 env,
-                                                depth + 1,
-                                            );
+                                                depth,
+                                            ),
+                                        _ => {
+                                            state.pipe_in(left_output);
+                                            match rhs.as_ref() {
+                                                Expression::Symbol(_) => {
+                                                    return rhs.ensure_execute().eval_mut(
+                                                        state,
+                                                        env,
+                                                        depth + 1,
+                                                    );
+                                                }
+                                                r => {
+                                                    job = r;
+                                                    continue;
+                                                }
+                                            }
                                         }
-                                        r => {
-                                            job = r;
-                                            continue;
-                                        }
-                                    }
+                                    };
                                 }
                                 _ => unreachable!(),
                             }
@@ -932,6 +946,7 @@ impl Expression {
                 Expression::Chain(base, calls) => {
                     return self.eval_chain(base, calls, state, env, depth);
                 }
+                // Expression::PipeMethod(, )
                 // 其他表达式处理...
                 _ => break job.eval_flows(state, env, depth + 1),
             };

@@ -1,4 +1,8 @@
 # Changelog
+## [0.5.9]
+- add chain call support
+- dim syntax tree debug
+
 ## [0.5.8]
 - add |_ as position pipe
 - add |^ as pty pipe

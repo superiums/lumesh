@@ -76,6 +76,13 @@ pub enum Expression {
     Range(Range<Int>, usize),
     DateTime(NaiveDateTime),
     FileSize(FileSize),
+    Chain(Rc<Expression>, Vec<ChainCall>), // 链式调用
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct ChainCall {
+    pub method: String,
+    pub args: Vec<Expression>,
 }
 
 #[derive(Debug, Clone, PartialEq)]

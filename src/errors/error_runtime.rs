@@ -57,6 +57,14 @@ pub enum RuntimeErrorKind {
     IndexOutOfBounds { index: Int, len: usize },
     #[error("key `{0}` not found in map")]
     KeyNotFound(String),
+    #[error("method `{0}` not found in module {1}")]
+    MethodNotFound(Cow<'static, str>, Cow<'static, str>),
+    #[error("module `{0}` not found")]
+    ModuleNotFound(Cow<'static, str>),
+    #[error("no module defined for type `{0}`")]
+    NoModuleForType(Cow<'static, str>),
+    #[error("not a callabel function: `{0}`")]
+    NotAFunction(String),
     #[error("type error, expected {expected}, found {sym}: {found}")]
     TypeError {
         expected: String,
@@ -95,6 +103,7 @@ impl RuntimeError {
     }
 }
 const BLUE_START: &str = "\x1b[34m";
+const DIM_START: &str = "\x1b[2m";
 const RESET: &str = "\x1b[m\x1b[0m";
 impl std::fmt::Display for RuntimeError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -114,8 +123,8 @@ impl std::fmt::Display for RuntimeError {
         )?;
         writeln!(
             f,
-            "\n{}SyntaxTree[{}]{}: {:?}",
-            BLUE_START, self.depth, RESET, self.context
+            "\n{}SyntaxTree[{}]{}: {}{:?}{}",
+            BLUE_START, self.depth, RESET, DIM_START, self.context, RESET
         )
     }
 }

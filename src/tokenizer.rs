@@ -50,10 +50,10 @@ fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
             // triple_quote_string,
             map_valid_token(linebreak, TokenKind::LineBreak),
             map_valid_token(long_operator, TokenKind::Operator),
+            map_valid_token(infix_operator, TokenKind::OperatorInfix), // ... before .
             map_valid_token(postfix_operator, TokenKind::OperatorPostfix), // to allow ./.../app!
             map_valid_token(argument_symbol, TokenKind::StringRaw), //argument first to allow args such as = -
             map_valid_token(prefix_operator, TokenKind::OperatorPrefix),
-            map_valid_token(infix_operator, TokenKind::OperatorInfix),
             // map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
@@ -105,7 +105,6 @@ fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
         infix_tag("...<"), //extend range
         infix_tag(".."),   //range
         infix_tag("..<"),  //range
-        infix_tag("."),    //index
         infix_tag("@"),    //index
     ))(input)
 }
@@ -121,6 +120,7 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
+        postfix_tag("."), //chaind call/index
         postfix_tag("!"), //func call as flat as cmd
         postfix_tag("("), //func call
         postfix_tag("["), //array index or slice
@@ -1031,12 +1031,12 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
             .ok_or(NOT_FOUND)
     }
 }
-/// parse a tag after letters/numbers/].
+/// parse a tag after letters/numbers/]/)/'/"/`.
 fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .is_none_or(|c| !c.is_ascii_alphanumeric() && c != ']')
+            .is_none_or(|c| !c.is_ascii_alphanumeric() && ![')', ']', '\'', '"', '`'].contains(&c))
         {
             return Err(NOT_FOUND);
         }

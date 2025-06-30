@@ -893,7 +893,7 @@ impl Expression {
 
                 // 执行应用
                 Self::Apply(func, args) => {
-                    break self.eval_apply(func, args, state, env, depth + 1);
+                    break self.eval_apply(func.as_ref(), args, state, env, depth + 1);
                 }
                 Self::Command(cmd, args) => {
                     // dbg!("====", &cmd, &args);
@@ -928,6 +928,9 @@ impl Expression {
                         self.clone(),
                         depth,
                     ));
+                }
+                Expression::Chain(base, calls) => {
+                    return self.eval_chain(base, calls, state, env, depth);
                 }
                 // 其他表达式处理...
                 _ => break job.eval_flows(state, env, depth + 1),

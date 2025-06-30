@@ -2,8 +2,8 @@ use std::rc::Rc;
 
 use super::Builtin;
 use super::eval::State;
-use crate::expression::alias;
 use crate::expression::cmd_excutor::handle_command;
+use crate::expression::{ChainCall, alias};
 use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind, get_builtin};
 
 /// 执行
@@ -11,8 +11,8 @@ impl Expression {
     #[inline]
     pub fn eval_apply(
         &self,
-        func: &Rc<Expression>,
-        args: &Rc<Vec<Expression>>,
+        func: &Expression,
+        args: &Vec<Expression>,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -30,7 +30,7 @@ impl Expression {
         // );
 
         // 递归求值函数和参数
-        let func_eval = func.as_ref().eval_mut(state, env, depth + 1)?;
+        let func_eval = func.eval_mut(state, env, depth + 1)?;
 
         // dbg!(&func, &func_eval, &func_eval.type_name());
 
@@ -125,7 +125,6 @@ impl Expression {
                 let is_in_pipe = state.contains(State::IN_PIPE);
                 state.set(State::IN_PIPE);
                 let mut actual_args = args
-                    .as_ref()
                     .iter()
                     .map(|a| a.eval_mut(state, env, depth + 1))
                     .collect::<Result<Vec<_>, _>>()?;
@@ -198,7 +197,7 @@ impl Expression {
                 }
             }
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::CannotApply(func.as_ref().clone(), args.as_ref().clone()),
+                RuntimeErrorKind::CannotApply(func.clone(), args.clone()),
                 self.clone(),
                 depth,
             )),
@@ -286,7 +285,7 @@ impl Expression {
     pub fn eval_symbo(
         &self,
         cmd_sym: String,
-        args: &Rc<Vec<Expression>>,
+        args: &Vec<Expression>,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -370,7 +369,7 @@ impl Expression {
     pub fn eval_builtin(
         &self,
         bti: &Builtin,
-        args: &Rc<Vec<Expression>>,
+        args: &Vec<Expression>,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -382,7 +381,7 @@ impl Expression {
         // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
         let rst = match pipe_out {
             Some(p) => {
-                let mut appened_args = args.as_ref().clone();
+                let mut appened_args = args.clone();
                 appened_args.push(p);
                 (bti.body)(&appened_args, env)
             }
@@ -424,5 +423,176 @@ pub fn bind_arguments(
         Some(params[bound_count..].to_vec())
     } else {
         None
+    }
+}
+
+impl Expression {
+    pub fn eval_chain(
+        &self,
+        base: &Expression,
+        calls: &Vec<ChainCall>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        // 首先求值基础表达式
+        let mut current_base = base.eval_mut(state, env, depth + 1)?;
+
+        // 依次执行每个链式调用
+        for call in calls {
+            let method = call.method.as_str();
+
+            // 构造方法调用表达式
+            let excuted = match &current_base {
+                Expression::String(_) => self.eval_chaind_method(
+                    "string",
+                    method,
+                    &call.args,
+                    current_base,
+                    state,
+                    env,
+                    depth,
+                ),
+                Expression::List(_) => self.eval_chaind_method(
+                    "list",
+                    method,
+                    &call.args,
+                    current_base,
+                    state,
+                    env,
+                    depth,
+                ),
+                Expression::DateTime(_) => self.eval_chaind_method(
+                    "time",
+                    method,
+                    &call.args,
+                    current_base,
+                    state,
+                    env,
+                    depth,
+                ),
+                Expression::HMap(map) => {
+                    match map.get(method) {
+                        Some(func) => {
+                            // 字典的键值是可执行对象
+                            match &func {
+                                Expression::Builtin(bti) => {
+                                    self.eval_builtin(bti, &call.args, state, env, depth + 1)
+                                }
+                                Expression::Lambda(..) | Expression::Function(..) => {
+                                    self.eval_apply(func, &call.args, state, env, depth)
+                                }
+                                s => Err(RuntimeError::new(
+                                    RuntimeErrorKind::NotAFunction(s.to_string()),
+                                    self.clone(),
+                                    depth,
+                                )),
+                            }
+                        }
+                        None => {
+                            // 尝试内置方法
+                            self.eval_chaind_method(
+                                "map",
+                                method,
+                                &call.args,
+                                current_base,
+                                state,
+                                env,
+                                depth,
+                            )
+                        }
+                    }
+                }
+                // 如果当前值是对象，尝试获取其方法
+                Expression::Map(map) => {
+                    match map.get(method) {
+                        Some(func) => {
+                            // 字典的键值是可执行对象
+                            match func {
+                                Expression::Lambda(..) | Expression::Function(..) => {
+                                    self.eval_apply(func, &call.args, state, env, depth)
+                                }
+                                Expression::Builtin(bti) => {
+                                    self.eval_builtin(bti, &call.args, state, env, depth + 1)
+                                }
+                                s => Err(RuntimeError::new(
+                                    RuntimeErrorKind::NotAFunction(s.to_string()),
+                                    self.clone(),
+                                    depth,
+                                )),
+                            }
+                        }
+                        None => {
+                            // 尝试内置方法
+                            self.eval_chaind_method(
+                                "map",
+                                method,
+                                &call.args,
+                                current_base,
+                                state,
+                                env,
+                                depth,
+                            )
+                        }
+                    }
+                }
+                // 对于其他类型，查找内置方法
+                o => Err(RuntimeError::new(
+                    RuntimeErrorKind::NoModuleForType(o.type_name().into()),
+                    self.clone(),
+                    depth,
+                )),
+            };
+            current_base = excuted?;
+        }
+
+        Ok(current_base)
+    }
+
+    #[inline]
+    pub fn eval_chaind_method(
+        &self,
+        module: &'static str,
+        call_method: &str,
+        call_args: &Vec<Expression>,
+        current_base: Expression,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        match get_builtin(module.into()) {
+            // 顶级内置命令
+            Some(Expression::HMap(hmap)) => {
+                let mut final_args = call_args.clone();
+                final_args.push(current_base);
+
+                //dbg!(&hmap);
+                let bti_expr = hmap.as_ref().get(call_method).ok_or(RuntimeError::new(
+                    RuntimeErrorKind::MethodNotFound(call_method.to_string().into(), module.into()),
+                    self.clone(),
+                    depth,
+                ))?;
+                match bti_expr {
+                    Expression::Builtin(bti) => {
+                        self.eval_builtin(bti, &final_args, state, env, depth + 1)
+                    }
+                    _ =>
+                    // chained bti, inner has child.
+                    {
+                        Err(RuntimeError::new(
+                            RuntimeErrorKind::CustomError(module.into()),
+                            self.clone(),
+                            depth,
+                        ))
+                    }
+                }
+            }
+
+            _ => Err(RuntimeError::new(
+                RuntimeErrorKind::ModuleNotFound(module.into()),
+                self.clone(),
+                depth,
+            )),
+        }
     }
 }

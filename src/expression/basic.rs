@@ -121,6 +121,7 @@ macro_rules! fmt_shared {
             }
 
             Self::None => write!($f, ""),
+            Self::Chain(t, c) => write!($f, "{}.{:?}", t, c),
             Self::Function(name, param, pc, body) => match pc {
                 Some(collector) => write!(
                     $f,
@@ -445,6 +446,8 @@ impl Expression {
 
             Self::AliasOp(..) => "AliasOp".into(),
             Self::Range(..) => "Range".into(),
+            Self::Chain(_, _) => "Chain".into(),
+
             // Self::Error { .. } => "Error".into(),
             Self::None => "None".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),

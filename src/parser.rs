@@ -366,7 +366,7 @@ impl PrattParser {
                 input.get_str_slice(),
             ))),
 
-            _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
+            _ => Err(nom::Err::Failure(SyntaxErrorKind::UnknownOperator(
                 first.text(input).to_string(),
                 input.get_str_slice(),
             ))),

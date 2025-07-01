@@ -14,6 +14,7 @@ normal changes
 - fix err fmt, optimize display
 - detailed io error
 - allow bare func in pipe without apply tag
+- fix unkonwn operator error report
 
 ## [0.5.9]
 - add chain call support

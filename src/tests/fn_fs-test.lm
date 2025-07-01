@@ -1,59 +1,59 @@
-#!/usr/bin/env lumesh  
-  
-# 扩展的断言函数  
-fn assert_with_context(actual, expected, test_name, context="") {  
-    if actual != expected {  
-        print "[FAIL]" test_name "| 上下文：" context "| 实际：" actual "| 预期：" expected  
-        exit(1)  
-    } else {  
-        print "[PASS]" test_name  
-    }  
-}  
-  
-# 高级数据结构测试  
-println("=== 高级数据结构测试 ===")  
-  
-# 嵌套对象操作  
-let user = {  
-    name: "Alice",  
-    profile: {  
-        age: 25,  
-        skills: ["rust", "javascript", "python"]  
-    }  
-}  
-  
-assert_with_context(  
-    user.profile.skills@1,  
-    "javascript",  
-    "嵌套对象属性访问",  
-    "深度为3的对象结构"  
-)  
-  
-# 函数式编程特性  
-let numbers = 1...10  
-let doubled = numbers |> list.map(x -> x * 2) |> list.filter(x -> x > 10)  
-assert_with_context(  
-    doubled@0,  
-    12,  
-    "函数式管道操作",  
-    "map和filter组合"  
+#!/usr/bin/env lumesh
+
+# 扩展的断言函数
+fn assert_with_context(actual, expected, test_name, context="") {
+    if actual != expected {
+        print "[FAIL]" test_name "| 上下文：" context "| 实际：" actual "| 预期：" expected
+        exit(1)
+    } else {
+        print "[PASS]" test_name
+    }
+}
+
+# 高级数据结构测试
+println("=== 高级数据结构测试 ===")
+
+# 嵌套对象操作
+let user = {
+    name: "Alice",
+    profile: {
+        age: 25,
+        skills: ["rust", "javascript", "python"]
+    }
+}
+
+assert_with_context(
+    user.profile.skills@1,
+    "javascript",
+    "嵌套对象属性访问",
+    "深度为3的对象结构"
+)
+
+# 函数式编程特性
+let numbers = 1...10
+let doubled = numbers | list.map(x -> x * 2) | list.filter(x -> x > 10)
+assert_with_context(
+    doubled@0,
+    12,
+    "函数式管道操作",
+    "map和filter组合"
 )
 
 
 let assert = assert_with_context
-# 文件系统操作测试  
-println("=== 文件系统操作测试 ===")  
-  
-# 创建测试目录  
-let test_dir = "/tmp/lumesh_test_" + time.stamp_ms()  
-fs.mkdir(test_dir)  
-assert(fs.exists(test_dir), True, "目录创建")  
-  
-# 文件读写测试  
-let test_file = test_dir + "/test.txt"  
-fs.write(test_file, "Hello, Lumesh!")  
-assert(fs.read(test_file), "Hello, Lumesh!", "文件读写")  
-  
-# 清理测试环境  
-fs.rm(test_file)  
+# 文件系统操作测试
+println("=== 文件系统操作测试 ===")
+
+# 创建测试目录
+let test_dir = "/tmp/lumesh_test_" + time.stamp_ms()
+fs.mkdir(test_dir)
+assert(fs.exists(test_dir), True, "目录创建")
+
+# 文件读写测试
+let test_file = test_dir + "/test.txt"
+fs.write(test_file, "Hello, Lumesh!")
+assert(fs.read(test_file), "Hello, Lumesh!", "文件读写")
+
+# 清理测试环境
+fs.rm(test_file)
 fs.rmdir(test_dir)

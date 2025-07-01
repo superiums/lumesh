@@ -116,7 +116,7 @@ if test_assign {
 test_count += 1
 
 # 测试6.2 除零错误
-let test_a = 5 / 0 ?+ | grep "by zero"
+let test_a = 5 / 0 ?> | grep "by zero"
 if test_a {
     println! "[PASS] 除零错误检测"
 } else {

@@ -1,4 +1,5 @@
 use super::{CatchType, Expression};
+use crate::expression::DestructurePattern;
 use crate::{RuntimeError, RuntimeErrorKind};
 // use num_traits::pow;
 use std::fmt;
@@ -41,6 +42,7 @@ macro_rules! fmt_shared {
             Self::DateTime(n) => write!($f, "{}", n.format("%Y-%m-%d %H:%M")),
 
             Self::Declare(name, expr) => write!($f, "let {} = {}", name, expr),
+            Self::DestructureAssign(name, expr) => write!($f, "let {:?} = {}", name, expr),
             Self::Assign(name, expr) => write!($f, "{} = {}", name, expr),
 
             // Quote 修改
@@ -237,7 +239,15 @@ macro_rules! fmt_shared {
         }
     };
 }
-
+impl fmt::Display for DestructurePattern {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Rest(s) => write!(f, "...{}", s),
+            Self::Identifier(s) => write!(f, "{}", s),
+            Self::Renamed((k, n)) => write!(f, "{}:{}", k, n),
+        }
+    }
+}
 // Debug 实现
 impl fmt::Debug for Expression {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -450,6 +460,7 @@ impl Expression {
             Self::Range(..) => "Range".into(),
             Self::Chain(_, _) => "Chain".into(),
             Self::PipeMethod(_, _) => "PipeMethod".into(),
+            Self::DestructureAssign(_, _) => "DestructureAssign".into(),
 
             // Self::Error { .. } => "Error".into(),
             Self::None => "None".into(),

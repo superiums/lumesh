@@ -3,7 +3,7 @@ use std::{borrow::Cow, collections::BTreeMap, rc::Rc};
 
 use crate::{
     Diagnostic, Expression, Int, SliceParams, SyntaxErrorKind, Token, TokenKind,
-    expression::{CatchType, ChainCall, FileSize},
+    expression::{CatchType, ChainCall, DestructurePattern, FileSize},
     tokens::{Input, Tokens},
 };
 use detached_str::StrSlice;
@@ -871,7 +871,7 @@ fn parse_chaind_or_index(
 ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // 解析方法名
     //dbg!("dot");
-    let (input, method_name) = parse_symbol_string(input.skip_n(1))?;
+    let (input, method_name) = cut(parse_symbol_string)(input.skip_n(1))?;
     //dbg!(&method_name);
     // 检查是否有参数列表
     match input.first() {
@@ -1119,7 +1119,7 @@ fn kind(kind: TokenKind) -> impl Fn(Tokens<'_>) -> IResult<Tokens<'_>, StrSlice,
     move |input: Tokens<'_>| match input.first() {
         Some(&token) if token.kind == kind => Ok((input.skip_n(1), token.range)),
         _ => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
-            format!("expect kind {:?}", kind),
+            format!("expect token kind: {:?}", kind),
             input.get_str_slice(),
         ))),
     }
@@ -1520,8 +1520,7 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
     let (input, statement) = alt((
         parse_fn_declare, // 函数声明（仅语句级）这里的作用是允许函数嵌套
         // 1.声明语句
-        parse_lazy_assign,
-        parse_declare,
+        parse_lets,
         parse_alias,
         parse_del,
         // 2.控制流语句
@@ -1729,6 +1728,49 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     Ok((input, block))
 }
 
+fn parse_array_destructure(
+    input: Tokens<'_>,
+) -> IResult<Tokens<'_>, Vec<DestructurePattern>, SyntaxErrorKind> {
+    delimited(
+        text("["),
+        cut(separated_list1(
+            text(","),
+            alt((
+                map(preceded(text("*"), cut(parse_symbol_string)), |s| {
+                    DestructurePattern::Rest(s)
+                }),
+                map(cut(parse_symbol_string), |s| {
+                    DestructurePattern::Identifier(s)
+                }),
+            )),
+        )),
+        cut(text_close("]")),
+    )(input)
+}
+
+fn parse_map_destructure(
+    input: Tokens<'_>,
+) -> IResult<Tokens<'_>, Vec<DestructurePattern>, SyntaxErrorKind> {
+    delimited(
+        text("{"),
+        cut(separated_list1(
+            text(","),
+            alt((
+                // {key: newName} 语法
+                map(
+                    separated_pair(parse_symbol_string, text(":"), cut(parse_symbol_string)),
+                    |(i, n)| DestructurePattern::Renamed((i, n)),
+                ),
+                // {key} 简写语法
+                map(cut(parse_symbol_string), |s| {
+                    DestructurePattern::Identifier(s)
+                }),
+            )),
+        )),
+        cut(text_close("}")),
+    )(input)
+}
+
 // 别名解析逻辑
 fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("alias")(input)?;
@@ -1738,9 +1780,13 @@ fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     // dbg!(&expr);
     Ok((input, Expression::AliasOp(symbol, Rc::new(expr))))
 }
+fn parse_lets(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("let")(input)?;
+    alt((parse_destructure_assign, parse_lazy_assign, parse_declare))(input)
+}
 // 延迟赋值解析逻辑
 fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, _) = text("let")(input)?;
+    // let (input, _) = text("let")(input)?;
     let (input, symbol) = parse_symbol_string(input)?;
     let (input, _) = text(":=")(input)?; // 使用:=作为延迟赋值符号
     let (input, expr) = cut(parse_expr_with_single_cmd)(input)?;
@@ -1752,7 +1798,7 @@ fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
 }
 
 fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, _) = text("let")(input)?;
+    // let (input, _) = text("let")(input)?;
     // dbg!("parse_declare");
     // 解析逗号分隔的多个符号, 允许重载操作符,自定义操作符
     let (input, symbols) = separated_list1(
@@ -1780,37 +1826,35 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
 
     // 构建右侧表达式
     let assignments = match exprs {
-        Some(e) if e.len() == 1 => {
-            if symbols.len() == 1 {
-                // 如果是单独的symbol，则包装为命令
-                // let last = match &e[0] {
-                //     Expression::Symbol(s) => {
-                //         Expression::Command(Rc::new(Expression::Symbol(s.to_owned())), vec![])
-                //     }
-                //     other => other.clone(),
-                // };
-                // 如果是命令, 则包装为字符串，命令应当明确用()包裹
-                let last = match e[0].clone() {
-                    Expression::Command(s, v) => Expression::String(
-                        s.to_string()
-                            + " "
-                            + v.iter()
-                                .map(|e| e.to_string())
-                                .collect::<Vec<String>>()
-                                .join(" ")
-                                .as_str(),
-                    ),
-                    other => other,
-                };
-                return Ok((
-                    input,
-                    Expression::Declare(symbols[0].clone(), Rc::new(last)),
-                ));
-            }
-            (0..symbols.len())
-                .map(|i| Expression::Declare(symbols[i].clone(), Rc::new(e[0].clone())))
-                .collect()
+        Some(e) if e.len() == 1 && symbols.len() == 1 => {
+            // 如果是单独的symbol，则包装为命令
+            // let last = match &e[0] {
+            //     Expression::Symbol(s) => {
+            //         Expression::Command(Rc::new(Expression::Symbol(s.to_owned())), vec![])
+            //     }
+            //     other => other.clone(),
+            // };
+            // 如果是命令, 则包装为字符串，命令应当明确用()包裹
+            let last = match &e[0] {
+                Expression::Command(s, v) => Expression::Symbol(
+                    s.to_string()
+                        + " "
+                        + v.iter()
+                            .map(|e| e.to_string())
+                            .collect::<Vec<String>>()
+                            .join(" ")
+                            .as_str(),
+                ),
+                other => other.clone(),
+            };
+            return Ok((
+                input,
+                Expression::Declare(symbols[0].clone(), Rc::new(last)),
+            ));
         }
+        Some(e) if e.len() == 1 => (0..symbols.len())
+            .map(|i| Expression::Declare(symbols[i].clone(), Rc::new(e[0].clone())))
+            .collect(),
         Some(e) if e.len() == symbols.len() => (0..symbols.len())
             .map(|i| Expression::Declare(symbols[i].clone(), Rc::new(e[i].clone())))
             .collect(),
@@ -1836,6 +1880,15 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     Ok((input, Expression::Do(Rc::new(assignments))))
 }
 
+fn parse_destructure_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    // let (input, _) = text("let")(input)?;
+    let (input, pattern) = alt((parse_array_destructure, parse_map_destructure))(input)?;
+    let (input, exprs) = preceded(text("="), cut(parse_expr))(input)?;
+    Ok((
+        input,
+        Expression::DestructureAssign(pattern, Rc::new(exprs)),
+    ))
+}
 fn parse_del(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("del")(input)?;
     let (input, symbol) = cut(parse_symbol_string)(input).map_err(|_| {

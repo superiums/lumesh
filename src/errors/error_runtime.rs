@@ -136,14 +136,14 @@ const RESET: &str = "\x1b[m\x1b[0m";
 impl std::fmt::Display for RuntimeError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // 使用 RuntimeErrorKind 的 Display 实现
-        write!(
+        writeln!(
             f,
-            "\n{}Message   [{}]{}: {}",
+            "{}Message   [{}]{}: {}",
             BLUE_START, self.depth, RESET, self.kind
         )?;
         writeln!(
             f,
-            "\n{}Expression[{}]{}: {}",
+            "{}Expression[{}]{}: {}",
             BLUE_START,
             self.depth,
             RESET,
@@ -151,7 +151,7 @@ impl std::fmt::Display for RuntimeError {
         )?;
         writeln!(
             f,
-            "\n{}SyntaxTree[{}]{}: {}{:?}{}",
+            "{}SyntaxTree[{}]{}: {}{:?}{}",
             BLUE_START, self.depth, RESET, DIM_START, self.context, RESET
         )
     }

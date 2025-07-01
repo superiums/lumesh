@@ -988,7 +988,11 @@ impl Expression {
                     ));
                 }
                 Expression::Chain(base, calls) => {
-                    return self.eval_chain(base, calls, state, env, depth);
+                    return self.eval_chain(base, calls, state, env, depth + 1);
+                }
+                Expression::DestructureAssign(pattern, value) => {
+                    let evaluated_value = value.eval_mut(state, env, depth + 1)?;
+                    return self.destructure_assign(pattern, evaluated_value, env, depth + 1);
                 }
                 // Expression::PipeMethod(, )
                 // 其他表达式处理...

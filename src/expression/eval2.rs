@@ -1,6 +1,8 @@
 use super::catcher::catch_error;
 use super::eval::State;
-use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind};
+use crate::{
+    Environment, Expression, RuntimeError, RuntimeErrorKind, expression::DestructurePattern,
+};
 use glob::glob;
 use std::rc::Rc;
 
@@ -187,6 +189,79 @@ impl Expression {
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::ForNonList(list_excuted),
+                self.clone(),
+                depth,
+            )),
+        }
+    }
+
+    pub fn destructure_assign(
+        &self,
+        patterns: &Vec<DestructurePattern>,
+        value: Expression,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        match value {
+            // 数组解构
+            Expression::List(values) => {
+                for (i, pattern) in patterns.iter().enumerate() {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            if let Some(val) = values.get(i) {
+                                env.define(name.as_str(), val.clone());
+                            } else {
+                                env.define(name.as_str(), Expression::None);
+                            }
+                        }
+                        DestructurePattern::Rest(name) => {
+                            let rest_values: Vec<Expression> =
+                                values.iter().skip(i).cloned().collect();
+                            env.define(name.as_str(), Expression::List(Rc::new(rest_values)));
+                            break;
+                        } // ... 其他模式
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use map_destructure on List".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
+
+            // 对象解构
+            Expression::Map(map) => {
+                for pattern in patterns {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            let value = map.get(name).cloned().unwrap_or(Expression::None);
+                            env.define(name.as_str(), value);
+                        }
+                        DestructurePattern::Renamed((key, name)) => {
+                            let value = map.get(key).cloned().unwrap_or(Expression::None);
+                            env.define(name.as_str(), value);
+                        }
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use list_destructure on Map".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
+
+            _ => Err(RuntimeError::new(
+                RuntimeErrorKind::TypeError {
+                    expected: "destructurable value".into(),
+                    sym: value.to_string(),
+                    found: value.type_name(),
+                },
                 self.clone(),
                 depth,
             )),

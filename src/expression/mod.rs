@@ -78,12 +78,22 @@ pub enum Expression {
     FileSize(FileSize),
     Chain(Rc<Expression>, Vec<ChainCall>), // 链式调用
     PipeMethod(String, Rc<Vec<Self>>),
+    DestructureAssign(Vec<DestructurePattern>, Rc<Expression>), // 解构赋值
 }
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ChainCall {
     pub method: String,
     pub args: Vec<Expression>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum DestructurePattern {
+    Identifier(String),
+    Renamed((String, String)),
+    Rest(String), // ...rest 语法
+                  // Nested(Box<Expression>),          // 嵌套解构
+                  // Default(String, Box<Expression>), // 默认值
 }
 
 #[derive(Debug, Clone, PartialEq)]

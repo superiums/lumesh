@@ -18,7 +18,7 @@ pub fn catch_error(
         CatchType::Deel => match deeling {
             Some(deel) => match deel.as_ref() {
                 Expression::Symbol(..) | Expression::Lambda(..) | Expression::Function(..) => {
-                    dbg!(&deel.type_name());
+                    // dbg!(&deel.type_name());
 
                     deel.as_ref()
                         .apply(vec![Expression::from(b_tree_map! {

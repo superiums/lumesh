@@ -346,7 +346,7 @@ impl fmt::Display for SyntaxError {
                 Ok(())
             }
             SyntaxErrorKind::NomError { kind, at, cause } => {
-                write!(f, "{}{}unexpected syntax error{}: ", RED_START, BOLD, RESET)?;
+                write!(f, "{}{}nom syntax error{}: ", RED_START, BOLD, RESET)?;
                 writeln!(f, "`{:?}`", kind)?;
                 if let Some(at) = at {
                     print_error_lines(&self.source, *at, f, 72)?;
@@ -359,16 +359,12 @@ impl fmt::Display for SyntaxError {
             SyntaxErrorKind::InternalError(s) => {
                 writeln!(
                     f,
-                    "{}{}unexpected syntax error: {}{}",
+                    "{}{}internal syntax error: {}{}",
                     RED_START, BOLD, s, RESET
                 )
             }
             SyntaxErrorKind::CustomError(s, at) => {
-                writeln!(
-                    f,
-                    "{}{}unexpected syntax error: {}{}",
-                    RED_START, BOLD, s, RESET
-                )?;
+                writeln!(f, "{}{}syntax error: {}{}", RED_START, BOLD, s, RESET)?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }

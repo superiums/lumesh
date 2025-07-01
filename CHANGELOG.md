@@ -7,10 +7,13 @@
 
 normal changes
 
+- add destructure assign support
 - add error popup function: `sys.error`
-- disable string args split.
-- fix err deel. optimize output.
-- fix err fmt
+- disable string args split
+- fix err deel. optimize output
+- fix err fmt, optimize display
+- detailed io error
+- allow bare func in pipe without apply tag
 
 ## [0.5.9]
 - add chain call support

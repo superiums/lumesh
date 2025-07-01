@@ -145,6 +145,10 @@ impl PrattParser {
                     input = new_input;
                     match operator {
                         "@" => lhs = Expression::Index(Rc::new(lhs), Rc::new(rhs)),
+                        // "::" => lhs = {
+                        //     let (input,args) = parse_args(input, depth+1)?;
+                        //     Expression::ModuleCall(Rc::new(lhs), Rc::new(rhs),args)
+                        // },
 
                         // "..." => {
                         //     lhs = Expression::BinaryOp("...".into(), Rc::new(lhs), Rc::new(rhs))
@@ -205,7 +209,8 @@ impl PrattParser {
                             // dbg!("--->try bin:", &operator, operator == "?.");
                             // inclue | "?:"
                             let (new_input, rhs) =
-                                Self::parse_expr_with_precedence(input, next_min_prec, depth+1)?;
+                                Self::parse_expr_with_precedence(input, next_min_prec, depth+1).map_err(
+                                    |e|  nom::Err::Failure(SyntaxErrorKind::CustomError(e.to_string(), input.get_str_slice())))?;
                             // dbg!("--> binOp: after next loop", &rhs);
                             input = new_input;
                             lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
@@ -366,7 +371,7 @@ impl PrattParser {
                 input.get_str_slice(),
             ))),
 
-            _ => Err(nom::Err::Failure(SyntaxErrorKind::UnknownOperator(
+            _ => Err(nom::Err::Error(SyntaxErrorKind::UnExpectedToken(
                 first.text(input).to_string(),
                 input.get_str_slice(),
             ))),

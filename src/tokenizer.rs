@@ -106,6 +106,7 @@ fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
         infix_tag(".."),   //range
         infix_tag("..<"),  //range
         infix_tag("@"),    //index
+        infix_tag("::"),   //module call
     ))(input)
 }
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {

@@ -457,7 +457,13 @@ impl Expression {
     ) -> Result<Expression, RuntimeError> {
         // 首先求值基础表达式
         let mut current_base = base.eval_mut(state, env, depth + 1)?;
-
+        // explain bultin
+        if let Expression::Symbol(sym) = &current_base {
+            match get_builtin(sym) {
+                Some(b) => current_base = b.clone(),
+                _ => {}
+            };
+        }
         // 依次执行每个链式调用
         for call in calls {
             let method = call.method.as_str();

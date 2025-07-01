@@ -34,6 +34,7 @@ pub enum SyntaxErrorKind {
     InternalError(String),
     CustomError(String, StrSlice),
     UnknownOperator(String, StrSlice),
+    UnExpectedToken(String, StrSlice),
     InvalidEscapeSequence(String, StrSlice),
     PrecedenceTooLow(StrSlice),
     NoExpression,
@@ -373,6 +374,11 @@ impl fmt::Display for SyntaxError {
             }
             SyntaxErrorKind::UnknownOperator(op, at) => {
                 writeln!(f, "{}{}unknown operator {op:?}{}", RED_START, BOLD, RESET)?;
+                print_error_lines(&self.source, *at, f, 72)?;
+                Ok(())
+            }
+            SyntaxErrorKind::UnExpectedToken(op, at) => {
+                writeln!(f, "{}{}unexpected token {op:?}{}", RED_START, BOLD, RESET)?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }

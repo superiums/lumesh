@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::{Environment, RuntimeError};
+use crate::{Environment, RuntimeError, RuntimeErrorKind};
 
 use super::{CatchType, Expression, eval::State};
 use common_macros::b_tree_map;
@@ -54,6 +54,11 @@ pub fn catch_error(
             String::from("depth") => Expression::Integer(e.depth as i64),
             // String::from("expr") => Expression::Quote(body.clone())
         })),
+        CatchType::Terminate => Err(RuntimeError::new(
+            RuntimeErrorKind::Terminated,
+            e.context,
+            e.depth,
+        )),
     }
     // Ok(Expression::None)
 }

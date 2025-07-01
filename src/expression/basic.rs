@@ -225,7 +225,8 @@ macro_rules! fmt_shared {
                 CatchType::Ignore => write!($f, "{} ?.", body),
                 CatchType::PrintStd => write!($f, "{} ?+", body),
                 CatchType::PrintErr => write!($f, "{} ??", body),
-                CatchType::PrintOver => write!($f, "{} ?!", body),
+                CatchType::PrintOver => write!($f, "{} ?>", body),
+                CatchType::Terminate => write!($f, "{} ?!", body),
                 CatchType::Deel => match deel {
                     Some(deelx) => write!($f, "{} ?: {}", body, deelx),
                     _ => write!($f, "{} ?: {{}}", body),

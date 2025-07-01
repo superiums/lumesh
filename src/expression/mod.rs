@@ -201,6 +201,7 @@ pub enum CatchType {
     PrintStd,
     PrintErr,
     PrintOver,
+    Terminate,
     Deel,
 }
 #[derive(Debug, Clone, PartialEq)]

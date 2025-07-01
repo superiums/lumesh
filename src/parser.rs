@@ -193,7 +193,7 @@ impl PrattParser {
                     // dbg!("--> binOp: trying next loop", input, next_min_prec);
                     // dbg!("--> binOp: trying next loop", &lhs, &operator);
                     match operator {
-                        "?." | "?+" | "??" | "?!" => {
+                        "?." | "?+" | "??" |"?>" | "?!" => {
                             // dbg!("--->try catch ast:");
                             lhs = Self::build_catch_ast(op_info, lhs)?
                         }
@@ -500,14 +500,16 @@ impl PrattParser {
                 false,
             )),
             // ... 重定向操作符 ...
-            "<<" | ">>" | ">>!" => Some(OperatorInfo::new(op, PREC_REDIRECT, false)),
+            "<<" | ">>" | ">!" => Some(OperatorInfo::new(op, PREC_REDIRECT, false)),
             // opa if opa.starts_with("__") => Some(OperatorInfo::new(
             //     opa,
             //     PREC_UNARY,
             //     false,
             //     OperatorKind::Prefix,
             // )),
-            "?." | "?+" | "??" | "?!" | "?:" => Some(OperatorInfo::new(op, PREC_CATCH, false)),
+            "?." | "?+" | "??" | "?>" | "?!" | "?:" => {
+                Some(OperatorInfo::new(op, PREC_CATCH, false))
+            }
 
             opa if opa.starts_with("_+") => Some(OperatorInfo::new(opa, PREC_ADD_SUB, false)),
             ops if ops.starts_with("_*") => Some(OperatorInfo::new(ops, PREC_MUL_DIV, false)),
@@ -747,7 +749,7 @@ impl PrattParser {
                 Rc::new(rhs),
             )),
 
-            "<<" | ">>" | ">>!" => Ok(Expression::Pipe(
+            "<<" | ">>" | ">!" => Ok(Expression::Pipe(
                 op.symbol.into(),
                 Rc::new(lhs),
                 Rc::new(rhs),
@@ -776,7 +778,8 @@ impl PrattParser {
             "?." => Expression::Catch(Rc::new(lhs), CatchType::Ignore, None),
             "?+" => Expression::Catch(Rc::new(lhs), CatchType::PrintStd, None),
             "??" => Expression::Catch(Rc::new(lhs), CatchType::PrintErr, None),
-            "?!" => Expression::Catch(Rc::new(lhs), CatchType::PrintOver, None),
+            "?>" => Expression::Catch(Rc::new(lhs), CatchType::PrintOver, None),
+            "?!" => Expression::Catch(Rc::new(lhs), CatchType::Terminate, None),
             _ => unreachable!(),
         })
     }
@@ -1055,7 +1058,8 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
         map(text("?."), |_| (CatchType::Ignore, None)),
         map(text("?+"), |_| (CatchType::PrintStd, None)),
         map(text("??"), |_| (CatchType::PrintErr, None)),
-        map(text("?!"), |_| (CatchType::PrintOver, None)),
+        map(text("?>"), |_| (CatchType::PrintOver, None)),
+        map(text("?!"), |_| (CatchType::Terminate, None)),
         map(preceded(text("?:"), cut(parse_expr)), |e| {
             (CatchType::Deel, Some(Rc::new(e)))
         }),

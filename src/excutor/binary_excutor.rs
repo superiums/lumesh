@@ -164,7 +164,7 @@ pub fn handle_binary(
                 }
             }
         }
-        ">>!" => {
+        ">!" => {
             // dbg!("-->>--", &lhs);
             let left_func = lhs.ensure_apply();
             let l = left_func.eval_mut(env, depth + 1)?;

@@ -1,5 +1,5 @@
 
-Use `>>` to append to files, and `>>!` to overwrite !
+Use `>>` to append to files, and `>!` to overwrite !
 Use the `fs` module to interact with files and perform glob operations!
 Use `os` to interact with and manipulate the operating system!
 Use the `?:` to handle errors and read error messages!

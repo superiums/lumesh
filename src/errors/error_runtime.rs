@@ -81,6 +81,8 @@ pub enum RuntimeErrorKind {
     WildcardNotMatched(String),
     #[error("builtin func `{0}` failed:\n{1}")]
     BuiltinFailed(String, String),
+    #[error("terminated")]
+    Terminated,
     #[error(transparent)]
     Io(#[from] std::io::Error),
 }

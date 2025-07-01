@@ -1,4 +1,17 @@
 # Changelog
+## [0.6.0]
+**broken changes**
+- change `?!` to `?>` : return err map as result.
+- add `?!` as quiet terminate when err occurs, for pipes.
+- change `>>!` to `>!` : overwrite to file.
+
+normal changes
+
+- add error popup function: `sys.error`
+- disable string args split.
+- fix err deel. optimize output.
+- fix err fmt
+
 ## [0.5.9]
 - add chain call support
 ```bash

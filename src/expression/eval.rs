@@ -654,7 +654,15 @@ impl Expression {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
                             let left_func = lhs.ensure_execute();
-                            let left_output = left_func.eval_mut(state, env, depth + 1)?;
+                            let left_output = match left_func.eval_mut(state, env, depth + 1) {
+                                Ok(r) => r,
+                                Err(e) => {
+                                    return match e.kind {
+                                        RuntimeErrorKind::Terminated => Ok(Expression::None),
+                                        _ => Err(e),
+                                    };
+                                }
+                            };
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
                             }
@@ -766,7 +774,7 @@ impl Expression {
                                 }
                             }
                         }
-                        ">>!" => {
+                        ">!" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
                             let left_func = lhs.as_ref().ensure_execute();

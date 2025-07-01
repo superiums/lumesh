@@ -140,7 +140,7 @@ impl Expression {
                 let result = body.as_ref().eval_mut(state, env, depth + 1);
                 match result {
                     Ok(result) => Ok(result),
-                    Err(e) => catch_error(e, body, typ, deeling, state, env, depth + 1),
+                    Err(e) => catch_error(e, typ, deeling, state, env, depth + 1),
                 }
             }
             // 默认情况

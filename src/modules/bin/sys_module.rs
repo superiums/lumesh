@@ -1,6 +1,6 @@
 use std::{fs::OpenOptions, io::Write, rc::Rc};
 
-use crate::{Environment, Expression, RuntimeError};
+use crate::{Environment, Expression, LmError, RuntimeError};
 use common_macros::hash_map;
 
 pub fn get() -> Expression {
@@ -15,6 +15,7 @@ pub fn get() -> Expression {
 
         String::from("quote") => Expression::builtin("quote", quote_builtin, "quote an expression", "<expr>"),
         String::from("err_codes") => Expression::builtin("err_codes", err_codes_builtin, "display runtime error codes", ""),
+        String::from("error") => Expression::builtin("error", err, "return a runtime error", "<msg>"),
         String::from("print_tty") => Expression::builtin("print_tty", print_tty, "print control sequence to tty", "<arg>"),
         String::from("discard") => Expression::builtin("discard", discard, "send data to /dev/null", "<arg>"),
 
@@ -104,4 +105,10 @@ fn err_codes_builtin(
     _env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     Ok(RuntimeError::codes())
+}
+
+fn err(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    super::check_exact_args_len("sys.error", args, 1)?;
+    let msg = args[0].eval(env)?;
+    Err(LmError::CustomError(msg.to_string()))
 }

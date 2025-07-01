@@ -1449,7 +1449,7 @@ pub fn parse_script_tokens(
 fn parse_module(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, SyntaxErrorKind> {
     // dbg!("---parse_functions");
 
-    let (input, statement) = many0(alt((
+    let (input, module) = many0(alt((
         // parse_import,        // 模块导入（仅语句级）
         terminated(
             parse_fn_declare,
@@ -1463,8 +1463,8 @@ fn parse_module(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synta
     )))(input)?;
     // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
 
-    //dbg!(&input, &statement);
-    Ok((input, statement))
+    // dbg!(&input, &module);
+    Ok((input, module))
 }
 // 语句块解析器（顶层结构）
 // fn parse_statement_with_better_errors(

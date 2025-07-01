@@ -2,13 +2,12 @@ use std::rc::Rc;
 
 use crate::{Environment, RuntimeError};
 
-use super::{CatchType, Expression, Int, eval::State};
+use super::{CatchType, Expression, eval::State};
 use common_macros::b_tree_map;
 // use common_macros::hash_map;
 
 pub fn catch_error(
     e: RuntimeError,
-    body: &Rc<Expression>,
     typ: &CatchType,
     deeling: &Option<Rc<Expression>>,
     state: &mut State,
@@ -19,14 +18,17 @@ pub fn catch_error(
         CatchType::Deel => match deeling {
             Some(deel) => match deel.as_ref() {
                 Expression::Symbol(..) | Expression::Lambda(..) | Expression::Function(..) => {
-                    // dbg!(&deel.type_name());
+                    dbg!(&deel.type_name());
 
                     deel.as_ref()
-                        .append_args(vec![Expression::from(b_tree_map! {
-                            // String::from("type") => Expression::String(e.type_name()),
-                            String::from("msg") => Expression::String(e.to_string()),
-                            String::from("code") => Expression::Integer(Int::from(e.code())),
-                            String::from("expr") => Expression::Quote(body.clone())
+                        .apply(vec![Expression::from(b_tree_map! {
+                            String::from("code") => Expression::Integer(e.code()),
+                            String::from("msg") => Expression::String(e.kind.to_string()),
+                            String::from("expr") => Expression::String(e.context.to_string()),
+                            String::from("ast") => Expression::String(format!("{:?}",e.context)),
+                            String::from("type") => Expression::String(e.context.type_name()),
+                            String::from("depth") => Expression::Integer(e.depth as i64),
+                            // String::from("expr") => Expression::Quote(body.clone())
                         })])
                         .eval_mut(state, env, depth + 1)
                 }
@@ -36,14 +38,22 @@ pub fn catch_error(
         },
         CatchType::Ignore => Ok(Expression::None),
         CatchType::PrintStd => {
-            println!("[Err->Std] {:?}", e);
+            println!("{:?}", e);
             Ok(Expression::None)
         }
         CatchType::PrintErr => {
-            eprintln!("\x1b[38;5;9m[Err] {:?}\x1b[m\x1b[0m", e);
+            eprintln!("\x1b[38;5;9m{:?}\x1b[0m", e);
             Ok(Expression::None)
         }
-        CatchType::PrintOver => Ok(Expression::String(e.to_string())),
+        CatchType::PrintOver => Ok(Expression::from(b_tree_map! {
+            String::from("code") => Expression::Integer(e.code()),
+            String::from("msg") => Expression::String(e.kind.to_string()),
+            String::from("expr") => Expression::String(e.context.to_string()),
+            String::from("ast") => Expression::String(format!("{:?}",e.context)),
+            String::from("type") => Expression::String(e.context.type_name()),
+            String::from("depth") => Expression::Integer(e.depth as i64),
+            // String::from("expr") => Expression::Quote(body.clone())
+        })),
     }
     // Ok(Expression::None)
 }

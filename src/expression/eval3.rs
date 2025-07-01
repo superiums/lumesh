@@ -391,7 +391,7 @@ impl Expression {
 
         rst.map_err(|e| {
             RuntimeError::new(
-                RuntimeErrorKind::CommandFailed2(bti.name.clone(), e.to_string()),
+                RuntimeErrorKind::BuiltinFailed(bti.name.clone(), e.to_string()),
                 self.clone(),
                 depth,
             )

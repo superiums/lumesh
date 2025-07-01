@@ -79,6 +79,8 @@ pub enum RuntimeErrorKind {
     Overflow(String),
     #[error("wildcard not matched: `{0}`")]
     WildcardNotMatched(String),
+    #[error("builtin func `{0}` failed:\n{1}")]
+    BuiltinFailed(String, String),
     #[error(transparent)]
     Io(#[from] std::io::Error),
 }
@@ -181,27 +183,27 @@ impl RuntimeError {
     }
 
     pub fn code(&self) -> Int {
-        match self {
-            // RuntimeError::CannotApply(..) => Self::ERROR_CODE_CANNOT_APPLY,
-            // RuntimeError::SymbolNotDefined(..) => Self::ERROR_CODE_SYMBOL_NOT_DEFINED,
-            // RuntimeError::CommandFailed(..) | RuntimeError::CommandFailed2(..) => {
-            //     Self::ERROR_CODE_COMMAND_FAILED
-            // }
-            // RuntimeError::ForNonList(..) => Self::ERROR_CODE_FOR_NON_LIST,
-            // RuntimeError::RecursionDepth(..) => Self::ERROR_CODE_RECURSION_DEPTH,
-            // RuntimeError::PermissionDenied(..) => Self::ERROR_CODE_PERMISSION_DENIED,
-            // RuntimeError::ProgramNotFound(..) => Self::ERROR_CODE_PROGRAM_NOT_FOUND,
-            // RuntimeError::Redeclaration(..) => Self::ERROR_CODE_REDECLARATION,
-            // RuntimeError::UndeclaredVariable(..) => Self::ERROR_CODE_UNDECLARED_VARIABLE,
-            // RuntimeError::NoMatchingBranch(..) => Self::ERROR_CODE_NO_MATCHING_BRANCH,
-            // RuntimeError::TooManyArguments { .. } => Self::ERROR_CODE_TOO_MANY_ARGUMENTS,
-            // RuntimeError::ArgumentMismatch { .. } => Self::ERROR_CODE_ARGUMENT_MISMATCH,
-            // RuntimeError::InvalidDefaultValue(..) => Self::ERROR_CODE_INVALID_DEFAULT_VALUE,
-            // RuntimeError::InvalidOperator(..) => Self::ERROR_CODE_INVALID_OPERATOR,
-            // RuntimeError::IndexOutOfBounds { .. } => Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS,
-            // RuntimeError::KeyNotFound(..) => Self::ERROR_CODE_KEY_NOT_FOUND,
-            // RuntimeError::TypeError { .. } => Self::ERROR_CODE_TYPE_ERROR,
-            // RuntimeError::EarlyReturn(..) => Self::ERROR_CODE_EARLY_RETURN,
+        match self.kind {
+            RuntimeErrorKind::CannotApply(..) => Self::ERROR_CODE_CANNOT_APPLY,
+            RuntimeErrorKind::SymbolNotDefined(..) => Self::ERROR_CODE_SYMBOL_NOT_DEFINED,
+            RuntimeErrorKind::CommandFailed(..) | RuntimeErrorKind::CommandFailed2(..) => {
+                Self::ERROR_CODE_COMMAND_FAILED
+            }
+            RuntimeErrorKind::ForNonList(..) => Self::ERROR_CODE_FOR_NON_LIST,
+            RuntimeErrorKind::RecursionDepth(..) => Self::ERROR_CODE_RECURSION_DEPTH,
+            RuntimeErrorKind::PermissionDenied(..) => Self::ERROR_CODE_PERMISSION_DENIED,
+            RuntimeErrorKind::ProgramNotFound(..) => Self::ERROR_CODE_PROGRAM_NOT_FOUND,
+            RuntimeErrorKind::Redeclaration(..) => Self::ERROR_CODE_REDECLARATION,
+            RuntimeErrorKind::UndeclaredVariable(..) => Self::ERROR_CODE_UNDECLARED_VARIABLE,
+            RuntimeErrorKind::NoMatchingBranch(..) => Self::ERROR_CODE_NO_MATCHING_BRANCH,
+            RuntimeErrorKind::TooManyArguments { .. } => Self::ERROR_CODE_TOO_MANY_ARGUMENTS,
+            RuntimeErrorKind::ArgumentMismatch { .. } => Self::ERROR_CODE_ARGUMENT_MISMATCH,
+            RuntimeErrorKind::InvalidDefaultValue(..) => Self::ERROR_CODE_INVALID_DEFAULT_VALUE,
+            RuntimeErrorKind::InvalidOperator(..) => Self::ERROR_CODE_INVALID_OPERATOR,
+            RuntimeErrorKind::IndexOutOfBounds { .. } => Self::ERROR_CODE_INDEX_OUT_OF_BOUNDS,
+            RuntimeErrorKind::KeyNotFound(..) => Self::ERROR_CODE_KEY_NOT_FOUND,
+            RuntimeErrorKind::TypeError { .. } => Self::ERROR_CODE_TYPE_ERROR,
+            RuntimeErrorKind::EarlyReturn(..) => Self::ERROR_CODE_EARLY_RETURN,
             _ => Self::ERROR_CODE_CUSTOM_ERROR,
         }
     }

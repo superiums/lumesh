@@ -236,13 +236,13 @@ pub fn handle_command(
                     }
                 } else {
                     // 分割多参数字符串
-                    let delimiter = match env.get("IFS") {
-                        Some(Expression::String(fs)) => fs,
-                        _ => " ".to_string(), // 使用空格作为默认分隔符
-                    };
-                    s.split_terminator(delimiter.as_str())
-                        .for_each(|v| cmd_args.push(v.to_string()));
-                    // cmd_args.push(s)
+                    // let delimiter = match env.get("IFS") {
+                    //     Some(Expression::String(fs)) => fs,
+                    //     _ => " ".to_string(), // 使用空格作为默认分隔符
+                    // };
+                    // s.split_terminator(delimiter.as_str())
+                    //     .for_each(|v| cmd_args.push(v.to_string()));
+                    cmd_args.push(s)
                 }
             }
             Expression::List(ls) => {

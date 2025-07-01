@@ -1,11 +1,9 @@
-use std::borrow::Cow;
-use std::rc::Rc;
-
 use super::Builtin;
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
 use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind, get_builtin};
+use std::borrow::Cow;
 
 /// 执行
 impl Expression {
@@ -38,7 +36,9 @@ impl Expression {
         // 分派到具体类型处理
         let result = match func_eval {
             // 顶级builtin，函数别名
-            Expression::Symbol(cmd_sym) => self.eval_symbo(cmd_sym, args, state, env, depth + 1),
+            Expression::Symbol(cmd_sym) => {
+                self.eval_symbo(cmd_sym, args, false, state, env, depth + 1)
+            }
 
             Expression::Builtin(bti) => self.eval_builtin(&bti, args, state, env, depth + 1),
             // Lambda 应用 - 完全求值的函数应用
@@ -211,8 +211,8 @@ impl Expression {
     #[inline]
     pub fn eval_command(
         &self,
-        cmd: &Rc<Expression>,
-        args: &Rc<Vec<Expression>>,
+        cmd: &Expression,
+        args: &Vec<Expression>,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -237,7 +237,7 @@ impl Expression {
                         handle_command(
                             self,
                             &aa.0.to_vec().first().unwrap().to_string(),
-                            &Rc::new(aa.1.to_vec()),
+                            &aa.1.to_vec(),
                             state,
                             env,
                             depth + 1,
@@ -265,7 +265,9 @@ impl Expression {
                 }
             }
             // 符号
-            Expression::Symbol(cmd_sym) => self.eval_symbo(cmd_sym, args, state, env, depth + 1),
+            Expression::Symbol(cmd_sym) => {
+                self.eval_symbo(cmd_sym, args, true, state, env, depth + 1)
+            }
             other => match args.is_empty() {
                 true => Ok(other), // 单个symbol或变量，直接返回
                 false => Err(RuntimeError::new(
@@ -287,6 +289,7 @@ impl Expression {
         &self,
         cmd_sym: String,
         args: &Vec<Expression>,
+        is_cmd_mode: bool,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -300,7 +303,7 @@ impl Expression {
                 // 合并参数
                 match cmd_alias {
                     // alias a=ls -l
-                    Expression::Command(cmd_name, cmd_args) => {
+                    Expression::Command(cmd_name, cmd_args) if is_cmd_mode => {
                         let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
                         new_vec.extend_from_slice(&cmd_args);
                         new_vec.extend_from_slice(&args);
@@ -314,15 +317,13 @@ impl Expression {
                         )
                     }
                     // alias a=ls
-                    Expression::String(cmd_str) => {
+                    Expression::String(cmd_str) if is_cmd_mode => {
                         handle_command(self, &cmd_str, args.as_ref(), state, env, depth + 1)
                     }
                     // alias a=fmt.red()
-                    Expression::Apply(..) => {
-                        cmd_alias
-                            .append_args(args.to_vec())
-                            .eval_mut(state, env, depth + 1)
-                    }
+                    Expression::Apply(..) if !is_cmd_mode => cmd_alias
+                        .append_args(args.to_vec())
+                        .eval_mut(state, env, depth + 1),
                     // alias a=fmt.red
                     Expression::Index(..) => {
                         let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
@@ -343,7 +344,10 @@ impl Expression {
                     }
                     _ => Err(RuntimeError::new(
                         RuntimeErrorKind::TypeError {
-                            expected: "alias for Command/Function/Builtin".into(),
+                            expected: match is_cmd_mode {
+                                true => "alias for Command/Builtin".into(),
+                                false => "alias for Function/Builtin".into(),
+                            },
                             sym: cmd_alias.to_string(),
                             found: cmd_alias.type_name(),
                         },
@@ -360,8 +364,23 @@ impl Expression {
                         // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
                         self.eval_builtin(bti, args, state, env, depth + 1)
                     }
-                    // 三方命令
-                    _ => handle_command(self, &cmd_sym, args, state, env, depth + 1),
+                    // Some(exp) => {} //never here
+                    _ => {
+                        if is_cmd_mode {
+                            // 三方命令
+                            handle_command(self, &cmd_sym, args, state, env, depth + 1)
+                        } else {
+                            Err(RuntimeError::new(
+                                RuntimeErrorKind::TypeError {
+                                    expected: "symbol for Function/Builtin".into(),
+                                    sym: cmd_sym,
+                                    found: "Symbol with no meaning".to_string(),
+                                },
+                                self.clone(),
+                                depth,
+                            ))
+                        }
+                    }
                 }
             }
         }

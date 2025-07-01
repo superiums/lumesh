@@ -43,7 +43,8 @@ fn exec_single_cmd(
     };
 
     cmd.args(ar).envs(env.get_bindings_string()).current_dir(
-        std::env::current_dir().map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?,
+        std::env::current_dir()
+            .map_err(|e| RuntimeError::from_io_error(e, "get cwd".into(), job.clone(), depth))?,
     );
 
     // 设置 stdin
@@ -80,7 +81,7 @@ fn exec_single_cmd(
         // match &e.kind() {
         // ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.clone()),
         // e =>
-        RuntimeError::from_io_error(e, job.clone(), depth),
+        RuntimeError::from_io_error(e,"spawn cmd".into(), job.clone(), depth),
         // }
     )?;
 
@@ -91,7 +92,9 @@ fn exec_single_cmd(
             .as_mut()
             .unwrap()
             .write_all(&input)
-            .map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?;
+            .map_err(|e| {
+                RuntimeError::from_io_error(e, "write to stdin".into(), job.clone(), depth)
+            })?;
     }
 
     // TODO not work yet
@@ -121,7 +124,7 @@ fn exec_single_cmd(
         // 管道捕获
         let output = child
             .wait_with_output()
-            .map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?;
+            .map_err(|e| RuntimeError::from_io_error(e, "exec cmd".into(), job.clone(), depth))?;
         if output.status.success() {
             if mode & 1 == 0 {
                 //未关闭标准输出才返回结果
@@ -167,7 +170,7 @@ fn exec_single_cmd(
         // 正常模式
         let status = child
             .wait()
-            .map_err(|e| RuntimeError::from_io_error(e, job.clone(), depth))?;
+            .map_err(|e| RuntimeError::from_io_error(e, "exec cmd".into(), job.clone(), depth))?;
         if status.success() {
             return Ok(None);
         } else if mode & 2 == 0 {

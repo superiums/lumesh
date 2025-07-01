@@ -653,7 +653,7 @@ impl Expression {
                         "|" | "|_" | "|^" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.ensure_execute();
+                            let left_func = lhs.ensure_fn_apply();
                             let left_output = match left_func.eval_mut(state, env, depth + 1) {
                                 Ok(r) => r,
                                 Err(e) => {
@@ -671,7 +671,7 @@ impl Expression {
                                     state.set(State::PTY_MODE);
                                     state.pipe_in(left_output);
 
-                                    let r = rhs.ensure_execute().eval_mut(state, env, depth + 1);
+                                    let r = rhs.ensure_fn_apply().eval_mut(state, env, depth + 1);
                                     state.clear(State::PTY_MODE);
                                     return r;
                                 }
@@ -679,6 +679,7 @@ impl Expression {
                                 "|_" => {
                                     return rhs
                                         .as_ref()
+                                        .ensure_fn_apply()
                                         .replace_or_append_arg(left_output)
                                         .eval_mut(state, env, depth + 1);
                                 }
@@ -698,7 +699,7 @@ impl Expression {
                                             state.pipe_in(left_output);
                                             match rhs.as_ref() {
                                                 Expression::Symbol(_) => {
-                                                    return rhs.ensure_execute().eval_mut(
+                                                    return rhs.execute(vec![]).eval_mut(
                                                         state,
                                                         env,
                                                         depth + 1,
@@ -719,7 +720,7 @@ impl Expression {
                         ">>" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.as_ref().ensure_execute();
+                            let left_func = lhs.as_ref().ensure_fn_apply();
                             let left_output = left_func.eval_mut(state, env, depth + 1)?;
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
@@ -727,11 +728,23 @@ impl Expression {
 
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
                             let path = std::env::current_dir()
-                                .map_err(|e| RuntimeError::from_io_error(e, self.clone(), depth))?
+                                .map_err(|e| {
+                                    RuntimeError::from_io_error(
+                                        e,
+                                        "get cwd".into(),
+                                        self.clone(),
+                                        depth,
+                                    )
+                                })?
                                 .join(expand_home(s.as_str()).to_string());
                             if !path.exists() {
                                 std::fs::File::create(path.clone()).map_err(|e| {
-                                    RuntimeError::from_io_error(e, self.clone(), depth)
+                                    RuntimeError::from_io_error(
+                                        e,
+                                        "create file".into(),
+                                        self.clone(),
+                                        depth,
+                                    )
                                 })?;
                             }
                             match std::fs::OpenOptions::new().append(true).open(&path) {
@@ -749,14 +762,18 @@ impl Expression {
 
                                     return match result {
                                         Ok(()) => Ok(left_output),
-                                        Err(e) => {
-                                            Err(RuntimeError::from_io_error(e, self.clone(), depth))
-                                        }
+                                        Err(e) => Err(RuntimeError::from_io_error(
+                                            e,
+                                            "write bytes".into(),
+                                            self.clone(),
+                                            depth,
+                                        )),
                                     };
                                 }
                                 Err(e) => {
                                     return Err(RuntimeError::from_io_error(
                                         e,
+                                        "append file".into(),
                                         self.clone(),
                                         depth,
                                     ));
@@ -777,7 +794,7 @@ impl Expression {
                         ">!" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.as_ref().ensure_execute();
+                            let left_func = lhs.as_ref().ensure_fn_apply();
                             let l = left_func.eval_mut(state, env, depth + 1)?;
                             if !is_in_pipe {
                                 state.clear(State::IN_PIPE);
@@ -786,7 +803,14 @@ impl Expression {
                             // dbg!("-->> left=", &l);
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
                             let path = std::env::current_dir()
-                                .map_err(|e| RuntimeError::from_io_error(e, self.clone(), depth))?
+                                .map_err(|e| {
+                                    RuntimeError::from_io_error(
+                                        e,
+                                        "get cwd".into(),
+                                        self.clone(),
+                                        depth,
+                                    )
+                                })?
                                 .join(expand_home(s.as_str()).to_string());
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
@@ -799,7 +823,12 @@ impl Expression {
                             return match result {
                                 Ok(()) => Ok(l),
 
-                                Err(e) => Err(RuntimeError::from_io_error(e, self.clone(), depth)),
+                                Err(e) => Err(RuntimeError::from_io_error(
+                                    e,
+                                    "write bytes".into(),
+                                    self.clone(),
+                                    depth,
+                                )),
                                 // Err(RuntimeError::CustomError(format!(
                                 //     "could not write to file {}: {:?}",
                                 //     rhs, e
@@ -812,11 +841,18 @@ impl Expression {
                             let path = rhs.eval_mut(state, env, depth + 1)?;
                             let contents = std::fs::read_to_string(path.to_string())
                                 .map(Self::String)
-                                .map_err(|e| RuntimeError::from_io_error(e, self.clone(), depth))?;
+                                .map_err(|e| {
+                                    RuntimeError::from_io_error(
+                                        e,
+                                        "read file".into(),
+                                        self.clone(),
+                                        depth,
+                                    )
+                                })?;
 
                             state.pipe_in(contents);
 
-                            let left_func = lhs.ensure_execute();
+                            let left_func = lhs.ensure_fn_apply();
                             let result = left_func.eval_mut(state, env, depth + 1)?;
                             return Ok(result);
                         }
@@ -919,7 +955,7 @@ impl Expression {
                 }
                 Self::Command(cmd, args) => {
                     // dbg!("====", &cmd, &args);
-                    break self.eval_command(cmd, args, state, env, depth + 1);
+                    break self.eval_command(cmd.as_ref(), args.as_ref(), state, env, depth + 1);
                 }
                 // break Self::eval_command(self, env, depth+1),
                 // 简单控制流表达式

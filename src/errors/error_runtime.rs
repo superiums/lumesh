@@ -83,6 +83,13 @@ pub enum RuntimeErrorKind {
     BuiltinFailed(String, String),
     #[error("terminated")]
     Terminated,
+    #[error("IO Error during {operation}:\n{kind}: {message}")]
+    IoDetailed {
+        operation: Cow<'static, str>,
+        message: String,
+        kind: std::io::ErrorKind,
+        os_error: Option<i32>,
+    },
     #[error(transparent)]
     Io(#[from] std::io::Error),
 }
@@ -95,8 +102,25 @@ impl RuntimeError {
             depth,
         }
     }
-    pub fn from_io_error(io_err: std::io::Error, context: Expression, depth: usize) -> Self {
-        Self::new(RuntimeErrorKind::Io(io_err), context, depth)
+    // pub fn from_io_error(io_err: std::io::Error, context: Expression, depth: usize) -> Self {
+    //     Self::new(RuntimeErrorKind::Io(io_err), context, depth)
+    // }
+    pub fn from_io_error(
+        io_err: std::io::Error,
+        operation: Cow<'static, str>,
+        context: Expression,
+        depth: usize,
+    ) -> Self {
+        Self::new(
+            RuntimeErrorKind::IoDetailed {
+                operation: operation.into(),
+                message: io_err.to_string(),
+                kind: io_err.kind(),
+                os_error: io_err.raw_os_error(),
+            },
+            context,
+            depth,
+        )
     }
     pub fn common(msg: Cow<'static, str>, context: Expression, depth: usize) -> Self {
         Self {

@@ -480,6 +480,9 @@ impl Expression {
     pub fn apply(&self, args: Vec<Self>) -> Self {
         Self::Apply(Rc::new(self.clone()), Rc::new(args))
     }
+    pub fn execute(&self, args: Vec<Self>) -> Self {
+        Self::Command(Rc::new(self.clone()), Rc::new(args))
+    }
     // 参数合并方法
     pub fn replace_or_append_arg(&self, arg: Expression) -> Expression {
         let mut found = false;
@@ -521,6 +524,7 @@ impl Expression {
             _ => Expression::Command(Rc::new(self.clone()), Rc::new(vec![arg])), //report error?
         }
     }
+    /// please make sure only use with Apply/Command
     pub fn append_args(&self, args: Vec<Expression>) -> Expression {
         match self {
             Expression::Apply(f, existing_args) => {
@@ -535,12 +539,16 @@ impl Expression {
                 new_vec.extend_from_slice(&args);
                 Expression::Command(f.clone(), Rc::new(new_vec))
             }
-            _ => Expression::Command(Rc::new(self.clone()), Rc::new(args)), //report error?
+            _ => unreachable!(), // _ => Expression::Command(Rc::new(self.clone()), Rc::new(args)), //report error?
         }
     }
-    pub fn ensure_execute(&self) -> Expression {
+    pub fn ensure_fn_apply(&self) -> Expression {
         match self {
-            Expression::Symbol(_) => Expression::Command(Rc::new(self.clone()), Rc::new(vec![])),
+            Expression::Function(..) | Expression::Lambda(..) | Expression::Builtin(..) => {
+                self.apply(vec![])
+            }
+            // symbol maybe alias, but also maybe var/string, so let user decide.
+            // Expression::Symbol(_) => Expression::Command(Rc::new(self.clone()), Rc::new(vec![])),
             _ => self.clone(), //others, like binop,group,pipe...
         }
     }

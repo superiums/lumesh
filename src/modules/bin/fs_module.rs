@@ -156,8 +156,8 @@ fn build_directory_tree(path: &Path, max_depth: Option<Int>) -> BTreeMap<String,
 }
 
 fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, LmError> {
-    let contents = std::fs::read_to_string(path)
-        .map_err(|_| LmError::CustomError(format!("Could not read file: {}", path.display())))?;
+    let contents = std::fs::read_to_string(path)?;
+    // .map_err(|e| LmError::CustomError(format!("Could not read file: {}", path.display())))?;
 
     let mut lines: Vec<&str> = contents.lines().collect();
     if !from_start {
@@ -182,7 +182,7 @@ fn read_file_head(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
             Expression::Integer(n) => n,
             _ => {
                 return Err(LmError::CustomError(
-                    "Second argument must be an integer".into(),
+                    "First argument must be an integer".into(),
                 ));
             }
         },
@@ -203,7 +203,7 @@ fn read_file_tail(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
             Expression::Integer(n) => n,
             _ => {
                 return Err(LmError::CustomError(
-                    "Second argument must be an integer".into(),
+                    "First argument must be an integer".into(),
                 ));
             }
         },
@@ -219,9 +219,10 @@ fn canonicalize_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Ex
     super::check_exact_args_len("canon", args, 1)?;
 
     let path = join_current_path(&args[0].eval(env)?.to_string());
-    let canon_path = dunce::canonicalize(&path).map_err(|_| {
-        LmError::CustomError(format!("Could not canonicalize path: {}", path.display()))
-    })?;
+    let canon_path = dunce::canonicalize(&path)?;
+    //     .map_err(|_| {
+    //     LmError::CustomError(format!("Could not canonicalize path: {}", path.display()))
+    // })?;
 
     Ok(Expression::String(canon_path.to_string_lossy().into()))
 }
@@ -230,9 +231,10 @@ fn make_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     super::check_exact_args_len("mkdir", args, 1)?;
 
     let path = join_current_path(&args[0].eval(env)?.to_string());
-    std::fs::create_dir_all(&path).map_err(|_| {
-        LmError::CustomError(format!("Could not create directory: {}", path.display()))
-    })?;
+    std::fs::create_dir_all(&path)?;
+    // .map_err(|_| {
+    //     LmError::CustomError(format!("Could not create directory: {}", path.display()))
+    // })?;
 
     Ok(Expression::None)
 }
@@ -241,12 +243,13 @@ fn remove_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Exp
     super::check_exact_args_len("rmdir", args, 1)?;
 
     let path = join_current_path(&args[0].eval(env)?.to_string());
-    std::fs::remove_dir(&path).map_err(|_| {
-        LmError::CustomError(format!(
-            "Could not remove directory (is it empty?): {}",
-            path.display()
-        ))
-    })?;
+    std::fs::remove_dir(&path)?;
+    //     .map_err(|_| {
+    //     LmError::CustomError(format!(
+    //         "Could not remove directory (is it empty?): {}",
+    //         path.display()
+    //     ))
+    // })?;
 
     Ok(Expression::None)
 }
@@ -329,8 +332,8 @@ fn read_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     }
 
     // Fall back to reading as bytes
-    let bytes = std::fs::read(&path)
-        .map_err(|_| LmError::CustomError(format!("Could not read file: {}", path.display())))?;
+    let bytes = std::fs::read(&path)?;
+    // .map_err(|_| LmError::CustomError(format!("Could not read file: {}", path.display())))?;
 
     Ok(Expression::Bytes(bytes))
 }
@@ -344,10 +347,10 @@ fn write_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     match contents {
         Expression::Bytes(bytes) => std::fs::write(&path, bytes),
         _ => std::fs::write(&path, contents.to_string()),
-    }
-    .map_err(|e| {
-        LmError::CustomError(format!("Could not write file: {} - {}", path.display(), e))
-    })?;
+    }?;
+    // .map_err(|e| {
+    //     LmError::CustomError(format!("Could not write file: {} - {}", path.display(), e))
+    // })?;
 
     Ok(Expression::None)
 }
@@ -358,24 +361,22 @@ fn append_to_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     let path = join_current_path(&args[0].eval(env)?.to_string());
     let contents = args[1].eval(env)?;
 
-    let mut file = std::fs::OpenOptions::new()
-        .append(true)
-        .open(&path)
-        .map_err(|e| {
-            LmError::CustomError(format!("Could not open file: {} - {}", path.display(), e))
-        })?;
+    let mut file = std::fs::OpenOptions::new().append(true).open(&path)?;
+    // .map_err(|e| {
+    //     LmError::CustomError(format!("Could not open file: {} - {}", path.display(), e))
+    // })?;
 
     match contents {
         Expression::Bytes(bytes) => file.write_all(&bytes),
         _ => file.write_all(contents.to_string().as_bytes()),
-    }
-    .map_err(|e| {
-        LmError::CustomError(format!(
-            "Could not append to file: {} - {}",
-            path.display(),
-            e
-        ))
-    })?;
+    }?;
+    // .map_err(|e| {
+    //     LmError::CustomError(format!(
+    //         "Could not append to file: {} - {}",
+    //         path.display(),
+    //         e
+    //     ))
+    // })?;
 
     Ok(Expression::None)
 }
@@ -502,23 +503,24 @@ fn copy_path(src: &Path, dst: &Path) -> Result<(), LmError> {
             copy_path(&entry.path(), &dst_path)?;
         }
     } else {
-        std::fs::copy(src, dst).map_err(|e| {
-            LmError::CustomError(format!(
-                "Could not copy {} to {}: {}",
-                src.display(),
-                dst.display(),
-                e
-            ))
-        })?;
+        std::fs::copy(src, dst)?;
+        //     .map_err(|e| {
+        //     LmError::CustomError(format!(
+        //         "Could not copy {} to {}: {}",
+        //         src.display(),
+        //         dst.display(),
+        //         e
+        //     ))
+        // })?;
     }
     Ok(())
 }
 
 fn remove_path(path: &Path) -> Result<(), LmError> {
     if path.is_dir() {
-        std::fs::remove_dir_all(path)
+        Ok(std::fs::remove_dir_all(path)?)
     } else {
-        std::fs::remove_file(path)
+        Ok(std::fs::remove_file(path)?)
     }
-    .map_err(|e| LmError::CustomError(format!("Could not remove {}: {}", path.display(), e)))
+    // .map_err(|e| LmError::CustomError(format!("Could not remove {}: {}", path.display(), e)))
 }

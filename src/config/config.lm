@@ -67,8 +67,8 @@ if IS_INTERACTIVE {
     let LUME_HOT_KEYS = {
         q: "exit",
         c: "clear",
-        h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?. | exec_str()",
-        x: "fs.read /tmp/bookmark | string.lines() | ui.pick('select bookmark:') ?. | exec_str()",
+        h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?! | exec_str()",
+        x: "fs.read /tmp/bookmark | string.lines() | ui.pick('select bookmark:') ?! | exec_str()",
         m: 'let cmd := "$CMD_CURRENT";let s = into.str(cmd); if s {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
     }
 
@@ -82,8 +82,8 @@ if IS_INTERACTIVE {
     }
 
     # ====== alias
-    alias int = into.int
-    alias str = into.str
+    alias int = into.int()
+    alias str = into.str()
     alias each = list.map()
     alias sort = list.sort()
     alias group = list.group()
@@ -93,7 +93,7 @@ if IS_INTERACTIVE {
     alias lsx = ls -l --time-style=long-iso
     alias pls = parse.cmd(mode,hlink,user,group,size,mday,mtime,name)
     alias join = list.join()
-    alias chars = string.chars
+    alias chars = string.chars()
     alias open = fs.read()
 }
 # else {

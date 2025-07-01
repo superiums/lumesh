@@ -325,23 +325,23 @@ impl Expression {
                         .append_args(args.to_vec())
                         .eval_mut(state, env, depth + 1),
                     // alias a=fmt.red
-                    Expression::Index(..) => {
-                        let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
-                        return match cmdx {
-                            Expression::Builtin(bti) => {
-                                self.eval_builtin(&bti, args, state, env, depth)
-                            }
-                            _ => Err(RuntimeError::new(
-                                RuntimeErrorKind::TypeError {
-                                    expected: "alias contains Builtin".into(),
-                                    sym: cmdx.to_string(),
-                                    found: cmdx.type_name(),
-                                },
-                                self.clone(),
-                                depth,
-                            )),
-                        };
-                    }
+                    // Expression::Index(..) => {
+                    //     let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
+                    //     return match cmdx {
+                    //         Expression::Builtin(bti) => {
+                    //             self.eval_builtin(&bti, args, state, env, depth)
+                    //         }
+                    //         _ => Err(RuntimeError::new(
+                    //             RuntimeErrorKind::TypeError {
+                    //                 expected: "alias contains Builtin".into(),
+                    //                 sym: cmdx.to_string(),
+                    //                 found: cmdx.type_name(),
+                    //             },
+                    //             self.clone(),
+                    //             depth,
+                    //         )),
+                    //     };
+                    // }
                     _ => Err(RuntimeError::new(
                         RuntimeErrorKind::TypeError {
                             expected: match is_cmd_mode {

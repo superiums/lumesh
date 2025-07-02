@@ -1990,7 +1990,10 @@ fn parse_index_or_slice(
         input,
         match is_slice {
             true => Expression::Slice(Rc::new(target), params),
-            false => Expression::Index(Rc::new(target), params.start.unwrap()),
+            false => Expression::Index(
+                Rc::new(target),
+                params.start.unwrap_or(Rc::new(Expression::Integer(0))),
+            ),
         },
     ))
 }

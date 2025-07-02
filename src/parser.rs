@@ -89,6 +89,14 @@ fn parse_expr(input: Tokens) -> IResult<Tokens, Expression, SyntaxErrorKind> {
     Ok((input, got))
 }
 
+fn parse_expr_or_failure(
+    input: Tokens<'_>,
+    min_prec: u8,
+    depth: u8,
+) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    cut(|input| PrattParser::parse_expr_with_precedence(input, min_prec, depth))(input)
+}
+
 struct PrattParser;
 /// Pratt解析器增强实现, 基于优先级的表达式解析
 impl PrattParser {
@@ -100,12 +108,13 @@ impl PrattParser {
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         // 1. 解析前缀表达式
         // dbg!("===----prepare to prefix---===>", input, min_prec);
-        let (new_input, mut lhs) = Self::parse_prefix(input, min_prec)?;
+        let (new_input, mut lhs) = Self::parse_prefix(input, min_prec, depth)?;
         input = new_input;
         // dbg!("=======prefix=======>", input, &lhs, min_prec);
         // opt(alt((kind(TokenKind::LineBreak), eof_slice)));
         // 2. 循环处理中缀和后缀
         loop {
+            //dbg!(depth, &input.get_str_slice().to_str(input.str));
             depth += 1;
             if depth > MAX_DEPTH {
                 // break;
@@ -115,12 +124,7 @@ impl PrattParser {
                 }));
             }
             // 检查终止条件
-            if input.is_empty()
-            // || input
-            //     .first()
-            //     .map(|t| t.kind == TokenKind::LineBreak)
-            //     .unwrap_or(false)
-            {
+            if input.is_empty() {
                 //dbg!("---break1---");
                 break;
             }
@@ -129,8 +133,7 @@ impl PrattParser {
             let operator_token = input.first().unwrap();
             let operator = operator_token.text(input);
 
-            // let tk_kind = operator_token.kind.clone();
-            // dbg!(&operator, operator_token.kind);
+            //dbg!(&operator, operator_token.kind);
 
             // 处理不同类型的运算符
             match operator_token.kind {
@@ -141,7 +144,7 @@ impl PrattParser {
                 TokenKind::OperatorInfix => {
                     // 中缀运算符 (. .. @)
                     input = input.skip_n(1);
-                    let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX)?;
+                    let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX,depth)?;
                     input = new_input;
                     match operator {
                         "@" => lhs = Expression::Index(Rc::new(lhs), Rc::new(rhs)),
@@ -156,7 +159,7 @@ impl PrattParser {
                         "..." | "...<" | ".." | "..<" => {
                             let (nnew_input, exprs) = opt(preceded(
                                 text(":"),
-                                alt((parse_symbol, parse_integer,parse_variable)),
+                                cut(alt((parse_symbol, parse_integer,parse_variable))),
                             ))(input)?;
                             input = nnew_input;
                             lhs = Expression::RangeOp(
@@ -208,9 +211,9 @@ impl PrattParser {
                             }
                             // dbg!("--->try bin:", &operator, operator == "?.");
                             // inclue | "?:"
-                            let (new_input, rhs) =
-                                Self::parse_expr_with_precedence(input, next_min_prec, depth+1).map_err(
-                                    |e|  nom::Err::Failure(SyntaxErrorKind::CustomError(e.to_string(), input.get_str_slice())))?;
+                            let (new_input, rhs) = parse_expr_or_failure(input, next_min_prec, depth+1)?;
+                                // Self::parse_expr_with_precedence(input, next_min_prec, depth+1).map_err(
+                                //     |e|  nom::Err::Failure(SyntaxErrorKind::CustomError(e.to_string(), input.get_str_slice())))?;
                             // dbg!("--> binOp: after next loop", &rhs);
                             input = new_input;
                             lhs = Self::build_bin_ast(input, op_info, lhs, rhs)?;
@@ -221,8 +224,8 @@ impl PrattParser {
                     // dbg!("--->post fix");
                     // dbg!(&lhs, operator, input);
                     // 后缀运算符 (函数调用、数组索引等)
-                    (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input,depth+1)?;
-//dbg!(&input, &lhs);
+                    (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input,depth)?;
+                    //dbg!(&input, &lhs);
                 }
                 TokenKind::Symbol
                 | TokenKind::StringLiteral
@@ -231,33 +234,32 @@ impl PrattParser {
                 | TokenKind::IntegerLiteral
                 | TokenKind::FloatLiteral
                 | TokenKind::ValueSymbol
-                | TokenKind::OperatorPrefix     // $ in cmd arg goes to parse_literal, other ++/--/! should never comes.
-                | TokenKind::Punctuation        // ( [ as first argument begin.
+                | TokenKind::OperatorPrefix     // $ in cmd arg goes to parse_expr_with_precedence, other ++/--/! should never comes.
+                | TokenKind::Punctuation        // ( [ as first argument begin. { will course if x {} expect more {
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 对于Punctuation, 只接受 ( [
                     if operator_token.kind == TokenKind::Punctuation && !["(","["].contains(&operator) {
                         break;
                     }
-                    // 对于OperatorPrefix, 只接受 $, 由parse_literal处理。
+                    // 对于OperatorPrefix, 只接受 $, $x长度>1 由parse_expr_with_precedence处理。
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
                     //
                     // dbg!("--> Args: trying next loop", input.len(), PREC_CMD_ARG);
                     if input.len() == 1 {
                         // CMD arg1, 只有第一个参数
                         let (new_input, rhs) =
-                            cut(alt((parse_symbol, parse_variable, parse_literal)))(input)?;
+                            cut(alt((parse_symbol, parse_literal)))(input)?;
                         // dbg!(&rhs);
                         input = new_input;
                         lhs = Expression::Command(Rc::new(lhs), Rc::new(vec![rhs]));
                     } else {
                         // CMD ... 所有参数
+                        // let (new_input, rhs) = many0(|input| Self::parse_expr_with_precedence(input, PREC_CMD_ARG, depth+1))(input)?;
                         let (new_input, rhs) = cut(many0(|input| {
                             Self::parse_expr_with_precedence(input, PREC_CMD_ARG, depth+1)
                         }))(input)?;
-                        //dbg!("--> Args: after next loop", &rhs);
-
-                        // dbg!(&rhs);
+                        //dbg!("--> Args: after next loop", &rhs,&new_input);
                         input = new_input;
                         lhs = Expression::Command(Rc::new(lhs), Rc::new(rhs));
                     }
@@ -297,6 +299,7 @@ impl PrattParser {
     fn parse_prefix(
         input: Tokens<'_>,
         min_prec: u8,
+        depth: u8,
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         SyntaxErrorKind::empty_back(input)?;
 
@@ -331,7 +334,7 @@ impl PrattParser {
                 }
 
                 let input = input.skip_n(1);
-                let (input, expr) = Self::parse_expr_with_precedence(input, prec, 0)?;
+                let (input, expr) = parse_expr_or_failure(input, prec, depth + 1)?;
                 // let (input, expr) = Self::parse_prefix(input, prec)?;
                 Ok((input, Expression::UnaryOp(op.into(), Rc::new(expr), true)))
             }
@@ -347,7 +350,14 @@ impl PrattParser {
                 match op {
                     "(" => {
                         // 分组{表达式 (expr)
-                        alt((parse_group, parse_lambda_param))(input)
+                        cut(alt((parse_group, parse_lambda_param)))(input).map_err(|_| {
+                            SyntaxErrorKind::failure(
+                                input.get_str_slice(),
+                                "some expression",
+                                None,
+                                Some("write entire expr or remove this `(`"),
+                            )
+                        })
                     }
                     // "`" => {
                     //     // 数组字面量 [expr, ...]
@@ -357,7 +367,7 @@ impl PrattParser {
                         // 数组字面量 [expr, ...]
                         cut(parse_list)(input)
                     }
-                    "{" => alt((parse_map, parse_block))(input),
+                    "{" => cut(alt((parse_map, cut(parse_block))))(input),
                     // opx if opx.starts_with("__") => map(parse_operator(input),TokenKind::OperatorPrefix),
                     _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                         op.to_string(),
@@ -371,10 +381,17 @@ impl PrattParser {
                 input.get_str_slice(),
             ))),
 
-            _ => Err(nom::Err::Error(SyntaxErrorKind::UnExpectedToken(
+            TokenKind::OperatorInfix | TokenKind::OperatorPostfix => {
+                Err(nom::Err::Error(SyntaxErrorKind::UnExpectedToken(
+                    first.text(input).to_string(),
+                    input.get_str_slice(),
+                )))
+            }
+            TokenKind::Operator => Err(nom::Err::Error(SyntaxErrorKind::UnExpectedToken(
                 first.text(input).to_string(),
                 input.get_str_slice(),
             ))),
+            _ => unreachable!(),
         }
     }
     // 后缀表达式构建
@@ -401,14 +418,14 @@ impl PrattParser {
                 //     terminated(separated_list0(text(","), parse_expr), text(")"))(input)?;
 
                 let (input, args) = many0(|inp| {
-                    PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, depth)
+                    PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, depth + 1)
                 })(input.skip_n(1))?;
                 // dbg!(&lhs, &args);
                 Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
             }
             "[" => {
                 // 数组索引或切片
-                parse_index_or_slice(lhs, input)
+                parse_index_or_slice(lhs, input, depth)
             }
             "++" | "--" => {
                 // 后置自增/自减
@@ -924,7 +941,7 @@ fn parse_args(
             separated_list0(
                 terminated(text(","), opt(kind(TokenKind::LineBreak))),
                 |inp| {
-                    PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, depth)
+                    PrattParser::parse_expr_with_precedence(inp, PREC_FUNC_ARG, depth + 1)
                     // PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, 0)
                 },
             ),
@@ -1303,7 +1320,15 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
                 parse_list,
             ))),
         ),
-    )(input)?;
+    )(input)
+    .map_err(|_| {
+        SyntaxErrorKind::failure(
+            input.get_str_slice(),
+            "some value",
+            None,
+            Some("add some value for this item"),
+        )
+    })?;
     // dbg!(&input, &pairs);
     let (input, _) = opt(text(","))(input)?;
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
@@ -1395,22 +1420,14 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxErrorKind>
 
     // dbg!(&token_vec);
     // 语法分析
-    match parse_script_tokens(
+    let (_, parsed) = parse_script_tokens(
         Tokens {
             str: &str,
             slice: token_vec.as_slice(),
         },
         // true,
-    ) {
-        Ok((_, expr)) => Ok(expr),
-        Err(e) => {
-            // eprintln!("parse error");
-            Err(e)
-        }
-    }
-    // dbg!(&expr);
-
-    // Ok(expr)
+    )?;
+    Ok(parsed)
 }
 // ================== 控制结构解析 ==================
 // 核心解析流程架构
@@ -1458,7 +1475,7 @@ pub fn parse_script_tokens(
 fn parse_module(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, SyntaxErrorKind> {
     // dbg!("---parse_functions");
 
-    let (input, module) = many0(alt((
+    let (input, module) = cut(many0(alt((
         // parse_import,        // 模块导入（仅语句级）
         terminated(
             parse_fn_declare,
@@ -1469,7 +1486,7 @@ fn parse_module(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synta
             parse_statement,
             opt(kind(TokenKind::LineBreak)), // 允许换行符作为语句分隔
         ), // 函数声明（顶级）
-    )))(input)?;
+    ))))(input)?;
     // let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; // 消费换行符
 
     // dbg!(&input, &module);
@@ -1640,7 +1657,15 @@ fn parse_if_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
             parse_if_flow,       // else if
             parse_block_or_expr, // else
         ))),
-    ))(input)?;
+    ))(input)
+    .map_err(|_| {
+        SyntaxErrorKind::failure(
+            input.get_str_slice(),
+            "some body",
+            None,
+            Some("add a body for `else`"),
+        )
+    })?;
 
     Ok((
         input,
@@ -1953,9 +1978,13 @@ fn eof_slice(input: Tokens<'_>) -> IResult<Tokens<'_>, StrSlice, SyntaxErrorKind
 fn parse_index_or_slice(
     target: Expression,
     input: Tokens<'_>,
+    depth: u8,
 ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, (params, is_slice)) =
-        delimited(text("["), parse_slice_params, cut(text_close("]")))(input)?;
+    let (input, (params, is_slice)) = delimited(
+        text("["),
+        |input| parse_slice_params(input, depth),
+        cut(text_close("]")),
+    )(input)?;
 
     Ok((
         input,
@@ -1968,12 +1997,13 @@ fn parse_index_or_slice(
 
 fn parse_slice_params(
     input: Tokens<'_>,
+    depth: u8,
 ) -> IResult<Tokens<'_>, (SliceParams, bool), SyntaxErrorKind> {
     // 解析 start 部分
     // allow neg int.
     // let (input, start) = opt(alt((parse_integer, parse_variable, parse_symbol)))(input)?;
     let (input, start) =
-        opt(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_UNARY, 0))(input)?;
+        opt(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_ADD_SUB, depth + 1))(input)?;
 
     // 检查第一个冒号
     let (input, has_first_colon) = opt(text(":"))(input)?;
@@ -1981,7 +2011,7 @@ fn parse_slice_params(
     // 解析 end 部分
     let (input, end) = if has_first_colon.is_some() {
         // opt(alt((parse_integer, parse_variable, parse_symbol)))(input)?
-        opt(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_UNARY, 0))(input)?
+        opt(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_ADD_SUB, depth + 1))(input)?
     } else {
         (input, None) // 如果没有第一个冒号，就没有 end
     };
@@ -1992,7 +2022,7 @@ fn parse_slice_params(
     // 解析 step 部分
     let (input, step) = if has_second_colon.is_some() {
         // opt(alt((parse_integer, parse_variable, parse_symbol)))(input)?
-        opt(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_UNARY, 0))(input)?
+        opt(|inp| PrattParser::parse_expr_with_precedence(inp, PREC_UNARY, depth + 1))(input)?
     } else {
         (input, None) // 如果没有第二个冒号，就没有 step
     };

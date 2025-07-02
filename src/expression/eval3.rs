@@ -324,6 +324,9 @@ impl Expression {
                     Expression::Apply(..) if !is_cmd_mode => cmd_alias
                         .append_args(args.to_vec())
                         .eval_mut(state, env, depth + 1),
+                    Expression::Chain(..) if !is_cmd_mode => cmd_alias
+                        .append_args(args.to_vec())
+                        .eval_mut(state, env, depth + 1),
                     // alias a=fmt.red
                     // Expression::Index(..) => {
                     //     let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;

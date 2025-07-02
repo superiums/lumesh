@@ -1,5 +1,5 @@
 use super::{CatchType, Expression};
-use crate::expression::DestructurePattern;
+use crate::expression::{ChainCall, DestructurePattern};
 use crate::{RuntimeError, RuntimeErrorKind};
 // use num_traits::pow;
 use std::fmt;
@@ -122,7 +122,7 @@ macro_rules! fmt_shared {
                 )
             }
 
-            Self::None => write!($f, ""),
+            Self::None => Ok(()),
             Self::Chain(t, c) => write!($f, "{}.{:?}", t, c),
             Self::PipeMethod(t, a) => write!($f, ".{}({:?})", t, a),
             Self::Function(name, param, pc, body) => match pc {
@@ -532,6 +532,33 @@ impl Expression {
                     self.append_args(vec![arg])
                 }
             }
+            Expression::Chain(base, calls) => {
+                if calls.is_empty() {
+                    return Expression::Chain(base.clone(), calls.clone());
+                } else {
+                    let (call, others) = calls.split_at(1);
+                    let mut new_args: Vec<Expression> = call[0]
+                        .args
+                        .iter()
+                        .map(|a| match a {
+                            Self::Symbol(inner) if inner == "_" => {
+                                found = true;
+                                arg.clone()
+                            }
+                            _ => a.clone(),
+                        })
+                        .collect();
+                    if !found {
+                        new_args.push(arg);
+                    }
+                    let mut new_calls = vec![ChainCall {
+                        method: call[0].method.clone(),
+                        args: new_args,
+                    }];
+                    new_calls.extend_from_slice(others);
+                    return Expression::Chain(base.clone(), new_calls);
+                }
+            }
             _ => Expression::Command(Rc::new(self.clone()), Rc::new(vec![arg])), //report error?
         }
     }
@@ -549,6 +576,23 @@ impl Expression {
                 new_vec.extend_from_slice(existing_args);
                 new_vec.extend_from_slice(&args);
                 Expression::Command(f.clone(), Rc::new(new_vec))
+            }
+            Expression::Chain(base, calls) => {
+                if calls.is_empty() {
+                    return Expression::Chain(base.clone(), calls.clone());
+                } else {
+                    let (call, others) = calls.split_at(1);
+
+                    let mut new_vec = Vec::with_capacity(call[0].args.len() + args.len());
+                    new_vec.extend_from_slice(&call[0].args);
+                    new_vec.extend_from_slice(&args);
+                    let mut new_calls = vec![ChainCall {
+                        method: call[0].method.clone(),
+                        args: new_vec,
+                    }];
+                    new_calls.extend_from_slice(others);
+                    return Expression::Chain(base.clone(), new_calls);
+                }
             }
             _ => unreachable!(), // _ => Expression::Command(Rc::new(self.clone()), Rc::new(args)), //report error?
         }

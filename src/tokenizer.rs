@@ -1004,8 +1004,9 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
 fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.previous_char().is_some_and(|c| {
-            !c.is_ascii_whitespace() && !c.is_ascii_punctuation()
-            // !['(', '[', '{', '`', ',', ':'].contains(&c)
+            !c.is_ascii_whitespace() && !['(', '[', '{', '`', ',', ':'].contains(&c)
+            // if allow all punc, {k:v}.k is prefix and require k()
+            // !c.is_ascii_punctuation()
         }) {
             return Err(NOT_FOUND);
         }
@@ -1037,10 +1038,9 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
 /// parse a tag after letters/numbers/]/)/'/"/`.
 fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
-        if input
-            .previous_char()
-            .is_none_or(|c| !c.is_ascii_alphanumeric() && ![')', ']', '\'', '"', '`'].contains(&c))
-        {
+        if input.previous_char().is_none_or(|c| {
+            !c.is_ascii_alphanumeric() && ![')', ']', '}', '\'', '"', '`'].contains(&c)
+        }) {
             return Err(NOT_FOUND);
         }
         input.strip_prefix(keyword).ok_or(NOT_FOUND)

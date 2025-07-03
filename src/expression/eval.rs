@@ -720,8 +720,8 @@ impl Expression {
                                 "|" => {
                                     return match rhs.as_ref() {
                                         Expression::PipeMethod(method, args) => self
-                                            .eval_chaind_method(
-                                                left_output.type_name().to_lowercase().into(),
+                                            .eval_module_method(
+                                                left_output.get_module_name(),
                                                 method,
                                                 args,
                                                 left_output,
@@ -1114,7 +1114,7 @@ impl Expression {
             }
 
             _ => Err(RuntimeErrorKind::TypeError {
-                expected: "indexable type (list/dict/string)".into(),
+                expected: "indexable type (List/Map/String)".into(),
                 sym: l.to_string(),
                 found: l.type_name(),
             }),

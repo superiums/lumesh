@@ -11,11 +11,13 @@
 which means every item of the left list is dispatched to right, and runs right handside 6 times.
 this action is simlar as `xargs`
 
+- remove `report`
+
 
 ## [0.6.1]
 - optimize error report for pratt parser
 - optimize depth for pratt parser.
-- allow |_ to chaincall. replace arg of first call with _
+- allow `|_` to chaincall. replace arg of first call with `_`
 - allow chaincall as alias.
 
 ## [0.6.0]

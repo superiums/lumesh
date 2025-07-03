@@ -75,7 +75,6 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("eprint") => Expression::builtin("eprint", eprint, "print to stderr without newline", "<args>..."),
         String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr with newline", "<args>..."),
         String::from("debug") => Expression::builtin("debug", debug, "print debug representation", "<args>..."),
-        String::from("report") => Expression::builtin("report", report, "default value reporting", "<value>"),
         String::from("read") => Expression::builtin("read", read, "get user input", "[prompt]"),
 
         // Data manipulation
@@ -467,20 +466,6 @@ fn eval(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
 fn exec(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("exec", args, 1)?;
     Ok(args[0].eval(env)?.eval(env)?)
-}
-
-fn report(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
-    check_exact_args_len("report", args, 1)?;
-    let val = args[0].eval(env)?;
-    match val {
-        // Expression::HMap(_) => println!("{}", val),
-        // Expression::Map(_) => println!("{}", val),
-        // Expression::String(s) => println!("{}", s),
-        Expression::None => {}
-        otherwise => println!("{}", otherwise),
-    }
-
-    Ok(Expression::None)
 }
 
 fn flatten(expr: Expression) -> Vec<Expression> {

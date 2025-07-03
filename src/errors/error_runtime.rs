@@ -59,8 +59,8 @@ pub enum RuntimeErrorKind {
     KeyNotFound(String),
     #[error("method `{0}` not found in module {1}")]
     MethodNotFound(Cow<'static, str>, Cow<'static, str>),
-    #[error("module `{0}` not found")]
-    ModuleNotFound(Cow<'static, str>),
+    // #[error("module `{0}` not found")]
+    // ModuleNotFound(Cow<'static, str>),
     #[error("no module defined for type `{0}`")]
     NoModuleForType(Cow<'static, str>),
     #[error("not a callabel function: `{0}`")]

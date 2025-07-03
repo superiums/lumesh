@@ -368,7 +368,7 @@ fn index_slm(l: Expression, r: Expression) -> Result<Expression, LmError> {
         }
 
         _ => Err(LmError::TypeError {
-            expected: "indexable type (list/dict/string)".into(),
+            expected: "indexable type (List/Map/String)".into(),
             found: l.type_name(),
         }),
     }

@@ -476,33 +476,6 @@ impl Expression {
 
             // 构造方法调用表达式
             let excuted = match &current_base {
-                Expression::String(_) => self.eval_chaind_method(
-                    "String".into(),
-                    method,
-                    &call.args,
-                    current_base,
-                    state,
-                    env,
-                    depth,
-                ),
-                Expression::List(_) => self.eval_chaind_method(
-                    "List".into(),
-                    method,
-                    &call.args,
-                    current_base,
-                    state,
-                    env,
-                    depth,
-                ),
-                Expression::DateTime(_) => self.eval_chaind_method(
-                    "Time".into(),
-                    method,
-                    &call.args,
-                    current_base,
-                    state,
-                    env,
-                    depth,
-                ),
                 Expression::HMap(map) => {
                     match map.get(method) {
                         Some(func) => {
@@ -523,7 +496,7 @@ impl Expression {
                         }
                         None => {
                             // 尝试内置方法
-                            self.eval_chaind_method(
+                            self.eval_module_method(
                                 "map".into(),
                                 method,
                                 &call.args,
@@ -556,7 +529,7 @@ impl Expression {
                         }
                         None => {
                             // 尝试内置方法
-                            self.eval_chaind_method(
+                            self.eval_module_method(
                                 "Map".into(),
                                 method,
                                 &call.args,
@@ -569,11 +542,15 @@ impl Expression {
                     }
                 }
                 // 对于其他类型，查找内置方法
-                o => Err(RuntimeError::new(
-                    RuntimeErrorKind::NoModuleForType(o.type_name().into()),
-                    self.clone(),
+                o => self.eval_module_method(
+                    o.get_module_name(),
+                    method,
+                    &call.args,
+                    current_base,
+                    state,
+                    env,
                     depth,
-                )),
+                ),
             };
             current_base = excuted?;
         }
@@ -582,7 +559,7 @@ impl Expression {
     }
 
     #[inline]
-    pub fn eval_chaind_method(
+    pub fn eval_module_method(
         &self,
         module: Cow<'static, str>,
         call_method: &str,
@@ -624,7 +601,7 @@ impl Expression {
             }
 
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::ModuleNotFound(module),
+                RuntimeErrorKind::NoModuleForType(current_base.type_name().into()),
                 self.clone(),
                 depth,
             )),

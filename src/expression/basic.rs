@@ -1,6 +1,7 @@
 use super::{CatchType, Expression};
 use crate::expression::{ChainCall, DestructurePattern};
 use crate::{RuntimeError, RuntimeErrorKind};
+use std::borrow::Cow;
 // use num_traits::pow;
 use std::fmt;
 use std::rc::Rc;
@@ -413,6 +414,17 @@ impl Expression {
     }
 
     /// 类型名称
+    pub fn get_module_name(&self) -> Cow<'static, str> {
+        match self {
+            Self::List(_) | Self::Range(..) => "List".into(),
+            Self::Map(_) | Self::HMap(_) => "Map".into(),
+            Self::String(_) | Self::StringTemplate(_) | Self::Bytes(_) => "String".into(),
+            Self::Integer(_) | Self::Float(_) => "Math".into(),
+            Self::DateTime(_) => "Time".into(),
+            Self::Symbol(_) => "Symbol".into(),
+            _ => "otherModule".into(),
+        }
+    }
     pub fn type_name(&self) -> String {
         match self {
             Self::List(_) => "List".into(),

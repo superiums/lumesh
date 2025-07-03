@@ -459,14 +459,17 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // 首先求值基础表达式
-        let mut current_base = base.eval_mut(state, env, depth + 1)?;
-        // explain bultin
-        if let Expression::Symbol(sym) = &current_base {
-            match get_builtin(sym) {
-                Some(b) => current_base = b.clone(),
-                _ => {}
-            };
-        }
+        let mut current_base = match &base {
+            // explain bultin
+            Expression::Symbol(sym) if sym.starts_with(char::is_uppercase) => {
+                match get_builtin(sym) {
+                    Some(b) => b.clone(),
+                    _ => base.eval_mut(state, env, depth + 1)?,
+                }
+            }
+            _ => base.eval_mut(state, env, depth + 1)?,
+        };
+
         // 依次执行每个链式调用
         for call in calls {
             let method = call.method.as_str();
@@ -474,7 +477,7 @@ impl Expression {
             // 构造方法调用表达式
             let excuted = match &current_base {
                 Expression::String(_) => self.eval_chaind_method(
-                    "string".into(),
+                    "String".into(),
                     method,
                     &call.args,
                     current_base,
@@ -483,7 +486,7 @@ impl Expression {
                     depth,
                 ),
                 Expression::List(_) => self.eval_chaind_method(
-                    "list".into(),
+                    "List".into(),
                     method,
                     &call.args,
                     current_base,
@@ -492,7 +495,7 @@ impl Expression {
                     depth,
                 ),
                 Expression::DateTime(_) => self.eval_chaind_method(
-                    "time".into(),
+                    "Time".into(),
                     method,
                     &call.args,
                     current_base,
@@ -554,7 +557,7 @@ impl Expression {
                         None => {
                             // 尝试内置方法
                             self.eval_chaind_method(
-                                "map".into(),
+                                "Map".into(),
                                 method,
                                 &call.args,
                                 current_base,

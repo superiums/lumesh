@@ -1,4 +1,8 @@
 # Changelog
+## [0.6.2]
+- rename builtin modules with Uppercase
+
+
 ## [0.6.1]
 - optimize error report for pratt parser
 - optimize depth for pratt parser.

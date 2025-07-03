@@ -140,29 +140,30 @@ fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("=>"),     //for match
-        punctuation_tag("=="), //to allow a==b
-        punctuation_tag("!="),
-        punctuation_tag(">="),
-        punctuation_tag("<="),
-        keyword_tag("!~~"),
-        keyword_tag("~~"),
-        keyword_tag("!~:"),
-        keyword_tag("~:"),
-        keyword_tag("~="),
+        keyword_tag("=>"), //for match
+        alt((
+            punctuation_tag("=="), //to allow a==b
+            punctuation_tag("!="),
+            punctuation_tag(">="),
+            punctuation_tag("<="),
+            keyword_tag("!~~"),
+            keyword_tag("~~"),
+            keyword_tag("!~:"),
+            keyword_tag("~:"),
+            keyword_tag("~="),
+        )),
         keyword_tag("&&"),
         keyword_tag("||"),
         keyword_tag("|_"), //param pipe
+        keyword_tag("|>"), //dispatch pipe
         keyword_tag("|^"), //pty pipe
         keyword_tag("<<"),
         keyword_tag(">!"),
         keyword_tag(">>"),
-        alt((
-            operator_tag("+="),
-            operator_tag("-="),
-            operator_tag("*="),
-            operator_tag("/="),
-        )),
+        operator_tag("+="),
+        operator_tag("-="),
+        operator_tag("*="),
+        operator_tag("/="),
         keyword_tag(":="),
         punctuation_tag("->"), // `->foo` is also a valid symbol
         // punctuation_tag("~>"), // `~>foo` is also a valid symbol

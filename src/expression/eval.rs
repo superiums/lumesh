@@ -1,6 +1,7 @@
 use crate::expression::alias;
 use crate::expression::cmd_excutor::expand_home;
 
+use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use crate::{RuntimeErrorKind, STRICT};
@@ -650,7 +651,7 @@ impl Expression {
                 // 管道
                 Self::Pipe(operator, lhs, rhs) => {
                     match operator.as_str() {
-                        "|" | "|_" | "|^" => {
+                        "|" | "|_" | "|>" | "|^" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
                             let left_func = lhs.ensure_fn_apply();
@@ -683,6 +684,39 @@ impl Expression {
                                         .replace_or_append_arg(left_output)
                                         .eval_mut(state, env, depth + 1);
                                 }
+                                "|>" => match left_output {
+                                    Expression::List(ls) => {
+                                        return ls
+                                            .iter()
+                                            .map(|item| {
+                                                rhs.as_ref()
+                                                    .ensure_fn_apply()
+                                                    .replace_or_append_arg(item.clone())
+                                                    .eval_mut(state, env, depth + 1)
+                                            })
+                                            .collect::<Result<Vec<_>, _>>()
+                                            .and_then(|r| Ok(Expression::from(r)));
+                                    }
+                                    Expression::String(strls) => {
+                                        return ifs_split(&strls, env)
+                                            .into_iter()
+                                            .map(|item| {
+                                                rhs.as_ref()
+                                                    .ensure_fn_apply()
+                                                    .replace_or_append_arg(Expression::String(item))
+                                                    .eval_mut(state, env, depth + 1)
+                                            })
+                                            .collect::<Result<Vec<_>, _>>()
+                                            .and_then(|r| Ok(Expression::from(r)));
+                                    }
+                                    _ => {
+                                        return rhs
+                                            .as_ref()
+                                            .ensure_fn_apply()
+                                            .replace_or_append_arg(left_output)
+                                            .eval_mut(state, env, depth + 1);
+                                    }
+                                },
                                 "|" => {
                                     return match rhs.as_ref() {
                                         Expression::PipeMethod(method, args) => self

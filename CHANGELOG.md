@@ -1,6 +1,15 @@
 # Changelog
 ## [0.6.2]
 - rename builtin modules with Uppercase
+- add dispatch pipe
+```bash
+    let add = (x,y) -> x+y
+    0...5 |> add(_,10)
+
+    # outpu: [10, 11, 12, 13, 14, 15]
+```
+which means every item of the left list is dispatched to right, and runs right handside 6 times.
+this action is simlar as `xargs`
 
 
 ## [0.6.1]

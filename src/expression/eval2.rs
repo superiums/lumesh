@@ -279,7 +279,7 @@ fn glob_expand(s: &str) -> Vec<String> {
     }
     elist
 }
-fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
+pub fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
     let ifs = env.get("IFS");
     match ifs {
         Some(Expression::String(fs)) => s

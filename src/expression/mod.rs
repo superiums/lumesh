@@ -79,6 +79,8 @@ pub enum Expression {
     Chain(Rc<Expression>, Vec<ChainCall>), // 链式调用
     PipeMethod(String, Rc<Vec<Self>>),
     DestructureAssign(Vec<DestructurePattern>, Rc<Expression>), // 解构赋值
+    Use(Option<String>, String),
+    ModuleEnv(Rc<Environment>),
 }
 
 #[derive(Debug, Clone, PartialEq)]

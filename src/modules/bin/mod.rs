@@ -637,6 +637,19 @@ fn get(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
                     })?
                     .clone();
             }
+            Expression::HMap(m) => {
+                current = m
+                    .as_ref()
+                    .get(segment)
+                    .ok_or_else(|| {
+                        LmError::CustomError(format!(
+                            "path segment '{}' not found in HMap `{:?}`",
+                            segment,
+                            m.as_ref()
+                        ))
+                    })?
+                    .clone();
+            }
             Expression::List(m) => match segment.parse::<usize>() {
                 Ok(key) => {
                     current = m

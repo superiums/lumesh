@@ -1,4 +1,6 @@
-use crate::{Environment, Expression, PRINT_DIRECT, SyntaxError};
+use crate::{
+    Environment, Expression, ModuleInfo, PRINT_DIRECT, RuntimeError, SyntaxError, use_script,
+};
 use crate::{SyntaxErrorKind, parse_script};
 use std::io::{self, Write};
 use std::path::PathBuf;
@@ -7,6 +9,41 @@ use std::path::PathBuf;
 //     parse(text)?.eval(env)
 // }
 
+pub fn load_module(path: PathBuf) -> Result<ModuleInfo, RuntimeError> {
+    match std::fs::read_to_string(path) {
+        Ok(module_content) => match use_script(&module_content) {
+            Ok(result) => Ok(result),
+            Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
+                let err = SyntaxError {
+                    source: format!("{}   ", module_content).into(),
+                    kind: e,
+                };
+                Err(RuntimeError::common(
+                    err.to_string().into(),
+                    Expression::None,
+                    0,
+                ))
+            }
+            Err(nom::Err::Incomplete(_)) => {
+                let err = SyntaxError {
+                    source: module_content.into(),
+                    kind: SyntaxErrorKind::InternalError("incomplted".to_string()),
+                };
+                Err(RuntimeError::common(
+                    err.to_string().into(),
+                    Expression::None,
+                    0,
+                ))
+            }
+        },
+        Err(e) => Err(RuntimeError::from_io_error(
+            e,
+            "loading module".into(),
+            Expression::None,
+            0,
+        )),
+    }
+}
 pub fn run_file(path: PathBuf, env: &mut Environment) -> bool {
     match std::fs::read_to_string(path) {
         Ok(prelude) => parse_and_eval(&prelude, env),

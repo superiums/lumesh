@@ -47,6 +47,13 @@ fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
                 .collect();
             Expression::List(Rc::new(items))
         }
+        Expression::HMap(map) => {
+            let items = map
+                .iter()
+                .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
+                .collect();
+            Expression::List(Rc::new(items))
+        }
         _ => Expression::None,
     })
 }
@@ -64,6 +71,14 @@ fn keys(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
                 .collect();
             Expression::List(Rc::new(keys))
         }
+        Expression::HMap(map) => {
+            let keys = map
+                .as_ref()
+                .keys()
+                .map(|k| Expression::String(k.clone()))
+                .collect();
+            Expression::List(Rc::new(keys))
+        }
         _ => Expression::None,
     })
 }
@@ -74,6 +89,9 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
     Ok(match expr {
         Expression::Map(map) => Expression::List(Rc::new(map.as_ref().values().cloned().collect())),
+        Expression::HMap(map) => {
+            Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
+        }
         _ => Expression::None,
     })
 }
@@ -90,6 +108,11 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
             new_map.insert(key.to_string(), value);
             Expression::Map(Rc::new(new_map))
         }
+        Expression::HMap(map) => {
+            let mut new_map = map.as_ref().clone();
+            new_map.insert(key.to_string(), value);
+            Expression::HMap(Rc::new(new_map))
+        }
         _ => Expression::None,
     })
 }
@@ -105,6 +128,11 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
             new_map.remove(&key.to_string());
             Expression::Map(Rc::new(new_map))
         }
+        Expression::HMap(map) => {
+            let mut new_map = map.as_ref().clone();
+            new_map.remove(&key.to_string());
+            Expression::HMap(Rc::new(new_map))
+        }
         _ => Expression::None,
     })
 }
@@ -116,6 +144,7 @@ fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 
     Ok(match expr {
         Expression::Map(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
+        Expression::HMap(map) => Expression::Boolean(map.as_ref().contains_key(&key.to_string())),
         _ => Expression::None,
     })
 }

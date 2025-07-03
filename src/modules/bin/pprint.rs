@@ -32,27 +32,33 @@ struct KeyValueRow {
 }
 
 fn pprint_map(exprs: &BTreeMap<String, Expression>) {
-    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
+    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize - 20;
+
+    // 为表格预留边框和间距
+    let table_padding = 10; // 边框 + 列间距
+    let available_width = specified_width.saturating_sub(table_padding);
+
+    // 为 KEY 列预留固定宽度，剩余给 VALUE 列
+    let key_column_width = 20; // 或者动态计算最长键名
+    let value_column_width = available_width.saturating_sub(key_column_width);
 
     let rows: Vec<KeyValueRow> = exprs
         .iter()
         .map(|(key, val)| {
             let value = match val {
                 Expression::Builtin(Builtin { help, .. }) => {
-                    format!("{}\n{}", val, textwrap::fill(help, specified_width * 4 / 5))
+                    format!("{}\n{}", val, textwrap::fill(help, value_column_width))
                 }
                 Expression::HMap(_) | Expression::Map(_) => {
-                    format!("{:width$}", val, width = specified_width)
+                    format!("{:width$}", val, width = value_column_width)
                 }
                 Expression::List(_) => {
-                    let w = specified_width - key.len() - 3;
-                    let formatted = format!("{:w$}", val);
-                    textwrap::fill(&formatted, w)
+                    let formatted = format!("{}", val);
+                    textwrap::fill(&formatted, value_column_width)
                 }
                 _ => {
                     let formatted = format!("{}", val);
-                    let w = specified_width * 2 / 3;
-                    textwrap::fill(&formatted, w)
+                    textwrap::fill(&formatted, value_column_width)
                 }
             };
             KeyValueRow {
@@ -70,29 +76,34 @@ fn pprint_map(exprs: &BTreeMap<String, Expression>) {
 
     println!("{}", table);
 }
-
 fn pprint_hmap(exprs: &HashMap<String, Expression>) {
-    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
+    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize - 20;
+
+    // 为表格预留边框和间距
+    let table_padding = 10; // 边框 + 列间距
+    let available_width = specified_width.saturating_sub(table_padding);
+
+    // 为 KEY 列预留固定宽度，剩余给 VALUE 列
+    let key_column_width = 20; // 或者动态计算最长键名
+    let value_column_width = available_width.saturating_sub(key_column_width);
 
     let rows: Vec<KeyValueRow> = exprs
         .iter()
         .map(|(key, val)| {
             let value = match val {
                 Expression::Builtin(Builtin { help, .. }) => {
-                    format!("{}\n{}", val, textwrap::fill(help, specified_width * 4 / 5))
+                    format!("{}\n{}", val, textwrap::fill(help, value_column_width))
                 }
                 Expression::HMap(_) | Expression::Map(_) => {
-                    format!("{:width$}", val, width = specified_width)
+                    format!("{:width$}", val, width = value_column_width)
                 }
                 Expression::List(_) => {
-                    let w = specified_width - key.len() - 3;
-                    let formatted = format!("{:w$}", val);
-                    textwrap::fill(&formatted, w)
+                    let formatted = format!("{}", val);
+                    textwrap::fill(&formatted, value_column_width)
                 }
                 _ => {
                     let formatted = format!("{}", val);
-                    let w = specified_width * 2 / 3;
-                    textwrap::fill(&formatted, w)
+                    textwrap::fill(&formatted, value_column_width)
                 }
             };
             KeyValueRow {
@@ -105,7 +116,8 @@ fn pprint_hmap(exprs: &HashMap<String, Expression>) {
     let mut table = Table::new(rows);
     table
         .modify(Columns::first(), Color::FG_BLUE)
-        .with(Style::dots())
+        .modify(Columns::first(), Width::increase(20))
+        .with(Style::ascii())
         .with(Width::wrap(specified_width).keep_words(true));
 
     println!("{}", table);

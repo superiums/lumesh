@@ -197,6 +197,7 @@ impl Expression {
                     }
                 }
             }
+
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::CannotApply(func.clone(), args.clone()),
                 self.clone(),

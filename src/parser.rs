@@ -1,5 +1,10 @@
 use core::option::Option::None;
-use std::{borrow::Cow, collections::BTreeMap, rc::Rc};
+use detached_str::Str;
+use std::{
+    borrow::Cow,
+    collections::{BTreeMap, HashMap},
+    rc::Rc,
+};
 
 use crate::{
     Diagnostic, Expression, Int, SliceParams, SyntaxErrorKind, Token, TokenKind,
@@ -1396,13 +1401,10 @@ fn normalize_linebreaks(tokens: &mut Vec<Token>) {
     }
 }
 
-// -- 入口函数与脚本解析 --
-
-// -- 入口函数 --
-pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
+// -- 脚本解析 --
+pub fn tokenize_source(input: &Str) -> Result<Vec<Token>, nom::Err<SyntaxErrorKind>> {
     // 词法分析阶段
-    let str = input.into();
-    let tokenization_input = Input::new(&str);
+    let tokenization_input = Input::new(input);
     let (mut token_vec, mut diagnostics) = super::parse_tokens(tokenization_input);
 
     // dbg!(&token_vec);
@@ -1417,16 +1419,26 @@ pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxErrorKind>
     // remove whitespace
     token_vec.retain(|t| !matches!(t.kind, TokenKind::Whitespace | TokenKind::Comment));
     normalize_linebreaks(&mut token_vec);
-
-    // dbg!(&token_vec);
-    // 语法分析
-    let (_, parsed) = parse_script_tokens(
-        Tokens {
-            str: &str,
-            slice: token_vec.as_slice(),
-        },
-        // true,
-    )?;
+    Ok(token_vec)
+}
+// -- 模块导入 入口函数 --
+pub fn use_script(input: &str) -> Result<ModuleInfo, nom::Err<SyntaxErrorKind>> {
+    let str: Str = input.into();
+    let token_vec = tokenize_source(&str)?;
+    let (_, parsed) = parse_module_selective(Tokens {
+        str: &str,
+        slice: token_vec.as_slice(),
+    })?;
+    Ok(parsed)
+}
+// -- 入口函数 --
+pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
+    let str: Str = input.into();
+    let token_vec = tokenize_source(&str)?;
+    let (_, parsed) = parse_script_tokens(Tokens {
+        str: &str,
+        slice: token_vec.as_slice(),
+    })?;
     Ok(parsed)
 }
 // ================== 控制结构解析 ==================
@@ -1476,6 +1488,10 @@ fn parse_module(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synta
     // dbg!("---parse_functions");
 
     let (input, module) = cut(many0(alt((
+        terminated(
+            parse_use_statement,
+            opt(kind(TokenKind::LineBreak)), // 允许换行符作为语句分隔
+        ),
         // parse_import,        // 模块导入（仅语句级）
         terminated(
             parse_fn_declare,
@@ -2041,4 +2057,63 @@ fn parse_slice_params(
             has_first_colon.is_some(),
         ),
     ))
+}
+
+#[derive(Debug, Clone)]
+pub struct ModuleInfo {
+    pub use_statements: Vec<(Option<String>, String)>, // (path, alias)
+    pub functions: HashMap<String, Expression>,
+}
+
+// 优化的模块解析器 - 只解析 fn 和 use
+fn parse_module_selective(input: Tokens<'_>) -> IResult<Tokens<'_>, ModuleInfo, SyntaxErrorKind> {
+    let mut use_statements = Vec::new();
+    let mut functions = HashMap::new();
+    let mut remaining = input;
+
+    while !remaining.is_empty() {
+        // 尝试解析 use 语句
+        if let Ok((rest, use_stmt)) = parse_use_statement(remaining) {
+            if let Expression::Use(alias, path) = use_stmt {
+                use_statements.push((alias, path));
+            }
+            remaining = rest;
+            continue;
+        }
+
+        // 尝试解析函数声明
+        if let Ok((rest, func)) = parse_fn_declare(remaining) {
+            if let Expression::Function(name, ..) = &func {
+                functions.insert(name.clone(), func);
+                remaining = rest;
+            }
+            continue;
+        }
+
+        let mut place = 0;
+        for token in remaining.iter() {
+            place += 1;
+            if token.kind == TokenKind::LineBreak {
+                break;
+            }
+        }
+        remaining = remaining.skip_n(place);
+    }
+
+    Ok((
+        remaining,
+        ModuleInfo {
+            use_statements,
+            functions,
+        },
+    ))
+}
+
+fn parse_use_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("use")(input)?;
+    let (input, module_path) = cut(parse_symbol_string)(input)?;
+    let (input, alias) = opt(preceded(text("as"), parse_symbol_string))(input)?;
+
+    // 暂时创建空环境，后续会被替换
+    Ok((input, Expression::Use(alias, module_path)))
 }

@@ -224,6 +224,16 @@ macro_rules! fmt_shared {
             Self::Pipe(op, l, r) => write!($f, "{} {} {}", l, op, r),
             Self::Index(l, r) => write!($f, "{}[{}]", l, r),
             Self::Builtin(builtin) => fmt::Debug::fmt(builtin, $f),
+            Self::Use(n, p) => write!(
+                $f,
+                "use {} as {}",
+                p,
+                match n {
+                    Some(name) => name.as_str(),
+                    _ => "_",
+                }
+            ),
+            Self::ModuleEnv(_) => write!($f, "module env"),
             Self::Catch(body, ctyp, deel) => match ctyp {
                 CatchType::Ignore => write!($f, "{} ?.", body),
                 CatchType::PrintStd => write!($f, "{} ?+", body),
@@ -475,6 +485,8 @@ impl Expression {
             Self::DestructureAssign(_, _) => "DestructureAssign".into(),
 
             // Self::Error { .. } => "Error".into(),
+            Self::Use(..) => "Use".into(),
+            Self::ModuleEnv(..) => "ModuleEnv".into(),
             Self::None => "None".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),
         }

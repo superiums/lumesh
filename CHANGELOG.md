@@ -11,6 +11,7 @@ IFS_CSV: u8 = 1 << 4; // parse.to_csv
 IFS_PCK: u8 = 1 << 5; // ui.pick
 ```
 
+- allow {k,} as Map
 
 ## [0.6.2]
 **broken changes**

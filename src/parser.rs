@@ -1314,17 +1314,19 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     let (input, _) = terminated(text("{"), opt(kind(TokenKind::LineBreak)))(input)?;
     let (input, pairs) = separated_list0(
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
-        separated_pair(
+        tuple((
             parse_symbol_string,
-            terminated(text(":"), opt(kind(TokenKind::LineBreak))),
-            cut(alt((
-                parse_literal,
-                parse_variable,
-                parse_symbol,
-                parse_map,
-                parse_list,
-            ))),
-        ),
+            opt(preceded(
+                terminated(text(":"), opt(kind(TokenKind::LineBreak))),
+                cut(alt((
+                    parse_literal,
+                    parse_variable,
+                    parse_symbol,
+                    parse_map,
+                    parse_list,
+                ))),
+            )),
+        )),
     )(input)
     .map_err(|_| {
         SyntaxErrorKind::failure(
@@ -1335,12 +1337,21 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
         )
     })?;
     // dbg!(&input, &pairs);
-    let (input, _) = opt(text(","))(input)?;
+    let (input, comma) = opt(text(","))(input)?;
+    if comma.is_none() && pairs.len() < 2 {
+        return Err(nom::Err::Error(SyntaxErrorKind::NoExpression)); //return err and try parse_block
+    }
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
     let (input, _) = text_close("}")(input)?;
     // let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
     // dbg!(&input);
-    let map: BTreeMap<String, Expression> = pairs.into_iter().collect();
+    let map: BTreeMap<String, Expression> = pairs
+        .into_iter()
+        .map(|(k, v)| match v {
+            Some(ex) => (k, ex),
+            None => (k.clone(), Expression::String(k)),
+        })
+        .collect();
     // Ok((input, Expression::Map(pairs)))
     Ok((input, Expression::from(map)))
 }

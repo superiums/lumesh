@@ -106,7 +106,7 @@ impl Expression {
                 // dbg!(&def_env);
                 // 参数数量校验
                 let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
-                let pipe_arg_len = match pipe_out {
+                let pipe_arg_len = match &pipe_out {
                     Some(_) => 1,
                     _ => 0,
                 };
@@ -168,33 +168,16 @@ impl Expression {
                 for ((param, _), arg) in params.iter().zip(actual_args) {
                     new_env.define(param, arg);
                 }
-                // body env
-                // for symbol in body.get_used_symbols() {
-                //     if !def_env.is_defined(&symbol) {
-                //         if let Some(val) = env.get(&symbol) {
-                //             new_env.define(&symbol, val)
-                //         }
-                //     }
-                // }
-                // dbg!(&new_env);
+
                 match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
-                    Ok(v) => {
-                        // self.set_status_code(0, env);
-                        Ok(v)
-                    }
+                    Ok(v) => Ok(v),
+                    // 捕获函数体内的return
                     Err(RuntimeError {
                         kind: RuntimeErrorKind::EarlyBreak(v),
                         context: _,
                         depth: _,
-                    }) => {
-                        // self.set_status_code(0, env);
-
-                        Ok(v)
-                    } // 捕获函数体内的return
-                    Err(e) => {
-                        // self.set_status_code(1, env);
-                        Err(e)
-                    }
+                    }) => Ok(v),
+                    Err(e) => Err(e),
                 }
             }
 

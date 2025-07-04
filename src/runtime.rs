@@ -122,49 +122,13 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                     let _ = io::stderr().flush();
                 }
             }
-            // match val.clone() {
-            //     Ok(Expression::Symbol(name)) => {
-            //         if let Err(e) =
-            //             Expression::Apply(Box::new(Expression::Symbol(name)), vec![]).eval(env)
-            //         {
-            //             eprintln!("{}", e)
-            //         }
-            //     }
-            //     Ok(Expression::None) => {}
-            //     Ok(Expression::Macro(_, _)) => {
-            //         let _ = Expression::Apply(
-            //             Box::new(Expression::Symbol("report".to_string())),
-            //             vec![Expression::Apply(
-            //                 Box::new(val.unwrap().clone()),
-            //                 vec![env.get_cwd().into()],
-            //             )],
-            //         )
-            //         .eval(env);
-            //     }
-            //     Ok(val) => {
-            //         let _ = Expression::Apply(
-            //             Box::new(Expression::Symbol("report".to_string())),
-            //             vec![Expression::Quote(Box::new(val))],
-            //         )
-            //         .eval(env);
-            //     }
-            //     Err(e) => {
-            //         eprintln!("{}", e)
-            //     }
-            // }
-            // lines = vec![];
+
             return true;
         }
 
         Err(e) => {
             eprintln!("\x1b[31m[PARSE ERROR]\x1b[0m\n{}", e);
             let _ = io::stderr().flush();
-            // if line.is_empty() {
-            //     eprintln!("{}", e);
-            //     lines = vec![];
-            // } else {
-            //     rl.add_history_entry(text.as_str());
-            // }
         }
     }
     false
@@ -233,4 +197,18 @@ pub fn read_user_input(prompt: impl ToString) -> String {
         .read_line(&mut input)
         .map_err(|e| eprintln!("Read Failed: {}", e));
     input.trim().to_owned()
+}
+
+pub const IFS_CMD: u8 = 1 << 1; // cmd str_arg
+pub const IFS_FOR: u8 = 1 << 2; // for i in str; str |> do
+pub const IFS_STR: u8 = 1 << 3; // string.split
+pub const IFS_CSV: u8 = 1 << 4; // parse.to_csv
+pub const IFS_PCK: u8 = 1 << 5; // ui.pick
+pub fn ifs_contains(mode: u8, env: &mut Environment) -> bool {
+    if let Some(Expression::Integer(m)) = env.get("LUME_IFS_MODE") {
+        if m as u8 & mode != 0 {
+            return true;
+        }
+    }
+    false
 }

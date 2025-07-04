@@ -1,8 +1,9 @@
 use super::catcher::catch_error;
 use super::eval::State;
 use crate::{
-    Environment, Expression, RuntimeError, RuntimeErrorKind, expression::DestructurePattern,
-    runtime::load_module,
+    Environment, Expression, RuntimeError, RuntimeErrorKind,
+    expression::DestructurePattern,
+    runtime::{IFS_FOR, ifs_contains, load_module},
 };
 use glob::glob;
 use std::{
@@ -196,14 +197,14 @@ impl Expression {
                 execute_iteration(var, iterator, body, state, env, depth)
             }
             Expression::String(s) => {
-                let iterator = if s.contains('*') {
+                if s.contains('*') {
                     // glob expansion logic
-                    glob_expand(&s).into_iter().map(Expression::String)
+                    let iterator = glob_expand(&s).into_iter().map(Expression::String);
+                    execute_iteration(var, iterator, body, state, env, depth)
                 } else {
-                    // IFS splitting logic
-                    ifs_split(&s, env).into_iter().map(Expression::String)
-                };
-                execute_iteration(var, iterator, body, state, env, depth)
+                    let iterator = ifs_split(&s, env).into_iter().map(Expression::String);
+                    execute_iteration(var, iterator, body, state, env, depth)
+                }
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::ForNonList(list_excuted),
@@ -298,7 +299,10 @@ fn glob_expand(s: &str) -> Vec<String> {
     elist
 }
 pub fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
-    let ifs = env.get("IFS");
+    let ifs = match ifs_contains(IFS_FOR, env) {
+        true => env.get("IFS"),
+        _ => None,
+    };
     match ifs {
         Some(Expression::String(fs)) => s
             .split_terminator(fs.as_str())
@@ -319,6 +323,7 @@ pub fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
         }
     }
 }
+
 fn execute_iteration<I>(
     var: &String,
     iterator: I,

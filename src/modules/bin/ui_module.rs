@@ -1,6 +1,9 @@
 use std::{collections::BTreeMap, rc::Rc};
 
-use crate::{Environment, Expression, LmError};
+use crate::{
+    Environment, Expression, LmError,
+    runtime::{IFS_PCK, ifs_contains},
+};
 use common_macros::hash_map;
 // use inquire::ui::RenderConfig;
 use inquire::{Confirm, CustomType, MultiSelect, Password, PasswordDisplayMode, Select, Text};
@@ -99,8 +102,11 @@ fn selector_wrapper(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
-    let delimiter = match env.get("IFS") {
-        Some(Expression::String(fs)) => fs,
+    let delimiter = match ifs_contains(IFS_PCK, env) {
+        true => match env.get("IFS") {
+            Some(Expression::String(fs)) => fs,
+            _ => "\n".to_string(), // 使用空格作为默认分隔符
+        },
         _ => "\n".to_string(), // 使用空格作为默认分隔符
     };
 

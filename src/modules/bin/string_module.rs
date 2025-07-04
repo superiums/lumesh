@@ -1,5 +1,8 @@
 use super::{get_integer_arg, get_string_arg, get_string_args};
-use crate::{Environment, Expression, Int, LmError};
+use crate::{
+    Environment, Expression, Int, LmError,
+    runtime::{IFS_STR, ifs_contains},
+};
 use common_macros::hash_map;
 
 pub fn get() -> Expression {
@@ -131,10 +134,16 @@ fn split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         }
     };
 
-    let parts: Vec<Expression> = text
-        .split(&delimiter)
-        .map(|s| Expression::String(s.to_string()))
-        .collect();
+    let parts: Vec<Expression> = match ifs_contains(IFS_STR, env) {
+        true => text
+            .split(&delimiter)
+            .map(|s| Expression::String(s.to_string()))
+            .collect(),
+        false => text
+            .split_whitespace()
+            .map(|s| Expression::String(s.to_string()))
+            .collect(),
+    };
 
     Ok(Expression::from(parts))
 }

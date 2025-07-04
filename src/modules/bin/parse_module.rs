@@ -1,5 +1,8 @@
 // use super::{get_list_arg, get_string_arg};
-use crate::{Environment, Expression, LmError, parse};
+use crate::{
+    Environment, Expression, LmError, parse,
+    runtime::{IFS_CSV, ifs_contains},
+};
 use common_macros::hash_map;
 use regex_lite::Regex;
 use std::collections::BTreeMap;
@@ -450,9 +453,12 @@ pub fn expr_to_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expr
     let expr = &args[0].eval(env)?;
 
     // 获取自定义分隔符
-    let delimiter = match env.get("IFS") {
-        Some(Expression::String(fs)) if fs != "\n" => fs.as_bytes()[0],
-        _ => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
+    let delimiter = match ifs_contains(IFS_CSV, env) {
+        true => match env.get("IFS") {
+            Some(Expression::String(fs)) if fs != "\n" => fs.as_bytes()[0],
+            _ => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
+        },
+        false => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
     };
 
     let result = match expr {

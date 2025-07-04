@@ -1,6 +1,7 @@
 # Changelog
 ## [0.6.3]
-- add `LUME_IFS_MODE`
+- add decorator support
+- add `LUME_IFS_MODE` to control where to apply `IFS`
 
 with bit meanings:
 ```rust

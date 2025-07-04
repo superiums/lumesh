@@ -126,7 +126,7 @@ macro_rules! fmt_shared {
             Self::None => Ok(()),
             Self::Chain(t, c) => write!($f, "{}.{:?}", t, c),
             Self::PipeMethod(t, a) => write!($f, ".{}({:?})", t, a),
-            Self::Function(name, param, pc, body) => match pc {
+            Self::Function(name, param, pc, body, _) => match pc {
                 Some(collector) => write!(
                     $f,
                     "fn {}({},...{}) {{\n\t{}\n}}",
@@ -380,7 +380,7 @@ impl Expression {
                 )?;
                 body.as_ref().fmt_indent(f, i + 1)
             }
-            Self::Function(name, param, pc, body) => {
+            Self::Function(name, param, pc, body, _) => {
                 let _ = write!(
                     f,
                     "\n{}fn {}({},*{}) {{\n",

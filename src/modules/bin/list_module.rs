@@ -418,7 +418,7 @@ fn filter(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let mut result = Vec::new();
     let fn_arg_count = match args[0].clone() {
         Expression::Lambda(params, _) => params.len(),
-        Expression::Function(_, params, _, _) => params.len(),
+        Expression::Function(_, params, _, _, _) => params.len(),
         _ => {
             let mut row_env = env.fork();
             row_env.define("LINES", Expression::Integer(data.len() as i64));

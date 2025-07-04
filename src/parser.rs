@@ -1044,10 +1044,17 @@ fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxEr
     Ok((input, Expression::Group(Rc::new(expr))))
 }
 // 函数定义解析
-fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    (input, _) = opt(many0(kind(TokenKind::LineBreak)))(input)?;
-
+fn parse_fn_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = opt(many0(kind(TokenKind::LineBreak)))(input)?;
     SyntaxErrorKind::empty_back(input)?;
+
+    let (input, decos) = many0(preceded(
+        text("@"),
+        terminated(
+            tuple((parse_symbol_string, opt(|input| parse_args(input, 0)))),
+            kind(TokenKind::LineBreak),
+        ),
+    ))(input)?;
 
     let (input, _) = text("fn")(input)?;
     // dbg!("---parse_fn_declare");
@@ -1098,7 +1105,7 @@ fn parse_fn_declare(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Sy
     };
     Ok((
         input,
-        Expression::Function(name, params, param_collector, last_body),
+        Expression::Function(name, params, param_collector, last_body, decos),
     ))
 }
 // return statement

@@ -66,7 +66,7 @@ impl Expression {
             }
 
             // 处理函数定义
-            Self::Function(name, params, pc, body) => {
+            Self::Function(name, params, pc, body, decos) => {
                 // dbg!(&def_env);
                 // 验证默认值类型（新增）
                 for (p, default) in params {
@@ -101,7 +101,13 @@ impl Expression {
                 //     }
                 // }
                 // dbg!(&new_env);
-                let func = Self::Function(name.clone(), params.clone(), pc.clone(), body.clone());
+                let func = Self::Function(
+                    name.clone(),
+                    params.clone(),
+                    pc.clone(),
+                    body.clone(),
+                    decos.clone(),
+                );
                 env.define(name, func.clone());
                 Ok(func)
             }

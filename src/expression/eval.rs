@@ -12,7 +12,7 @@ use std::io::Write;
 
 use std::rc::Rc;
 
-const MAX_RECURSION_DEPTH: Option<usize> = Some(800);
+const MAX_RECURSION_DEPTH: usize = 800;
 
 #[derive(Debug, Clone)]
 pub struct State(u8, Option<Expression>);
@@ -28,6 +28,7 @@ impl State {
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
     pub const PTY_MODE: u8 = 1 << 3; // 0b00001000
     pub const IN_ASSIGN: u8 = 1 << 4; // 0b00010000
+    pub const NO_ENV_FORK: u8 = 1 << 5;
 
     // 创建一个新的 State 实例
     pub fn new() -> Self {
@@ -96,14 +97,12 @@ impl Expression {
         depth: usize,
     ) -> Result<Self, RuntimeError> {
         // dbg!("1.--->eval_mut:", &self, &self.type_name(), &state);
-        if let Some(max) = MAX_RECURSION_DEPTH {
-            if depth > max {
-                return Err(RuntimeError::new(
-                    RuntimeErrorKind::RecursionDepth(self.clone()),
-                    self.clone(),
-                    depth,
-                ));
-            }
+        if depth > MAX_RECURSION_DEPTH {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::RecursionDepth(self.clone()),
+                self.clone(),
+                depth,
+            ));
         }
         let mut job = self;
         loop {

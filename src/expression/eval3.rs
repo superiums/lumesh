@@ -4,6 +4,7 @@ use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
 use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind, get_builtin};
 use std::borrow::Cow;
+const MAX_APPLY_DEPTH: usize = 100;
 
 /// 执行
 impl Expression {
@@ -17,16 +18,16 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // 函数应用
+        if depth > MAX_APPLY_DEPTH {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::RecursionDepth(self.clone()),
+                self.clone(),
+                depth,
+            ));
+        }
 
         // println!();
-        // dbg!(
-        //     "2.--->Applying:",
-        //     &func,
-        //     &func.type_name(),
-        //     &func,
-        //     &func.type_name(),
-        //     &args
-        // );
+        // dbg!("2.--->Applying:", &func, &func.type_name(), &args);
 
         // 递归求值函数和参数
         let func_eval = func.eval_mut(state, env, depth + 1)?;
@@ -101,8 +102,8 @@ impl Expression {
             //         Some(remain) => Ok(Expression::Macro(remain, body)),
             //     }
             // }
-            Expression::Function(name, params, pc, body) => {
-                // dbg!("2.--- applying function---", &name, &params);
+            Expression::Function(name, params, pc, body, mut decos) => {
+                // dbg!("2.--- applying function---", &name, &params, &decos);
                 // dbg!(&def_env);
                 // 参数数量校验
                 let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
@@ -125,59 +126,119 @@ impl Expression {
 
                 let is_in_pipe = state.contains(State::IN_PIPE);
                 state.set(State::IN_PIPE);
-                let mut actual_args = args
-                    .iter()
-                    .map(|a| a.eval_mut(state, env, depth + 1))
-                    .collect::<Result<Vec<_>, _>>()?;
-                if !is_in_pipe {
-                    state.clear(State::IN_PIPE);
-                }
 
-                if let Some(p) = pipe_out {
-                    actual_args.push(p);
-                };
+                // dbg!(&decos, "----");
+                // println!();
+                match decos.is_empty() {
+                    false => {
+                        // dbg!(&decov);
+                        let mut last_fn = Expression::Function(name, params, pc, body, vec![]);
+                        let mut env_deco = env.fork();
+                        state.set(State::NO_ENV_FORK);
+                        decos.reverse();
+                        for deco in decos {
+                            // dbg!(&deco);
+                            let deco_f = env.get(deco.0.as_str());
+                            if let Some(deco_fn) = deco_f {
+                                let deco_symbo_type = deco_fn.type_name();
+                                if "Function" == deco_symbo_type || "Labmda" == deco_symbo_type {
+                                    // dbg!("deco is func");
+                                    let deco_args = deco.1.unwrap_or(vec![]);
+                                    let evaled_deco = deco_fn.eval_apply(
+                                        &deco_fn,
+                                        &deco_args,
+                                        state,
+                                        &mut env_deco,
+                                        depth + 1,
+                                    )?;
+                                    // 只构建装饰器链，不执行
+                                    last_fn = evaled_deco.eval_apply(
+                                        &evaled_deco,
+                                        &vec![last_fn],
+                                        state,
+                                        &mut env_deco,
+                                        depth + 1,
+                                    )?;
+                                } else {
+                                    return Err(RuntimeError::common(
+                                        "trying to apply non-function as decorator".into(),
+                                        deco_fn,
+                                        depth,
+                                    ));
+                                }
+                            } else {
+                                return Err(RuntimeError::common(
+                                    "decorator not defined".into(),
+                                    func.clone(),
+                                    depth,
+                                ));
+                            }
+                        }
+                        last_fn =
+                            last_fn.eval_apply(&last_fn, args, state, &mut env_deco, depth + 1)?;
+                        state.clear(State::NO_ENV_FORK);
+                        // 最后执行装饰过的函数
+                        Ok(last_fn)
+                    }
+                    _ => {
+                        let mut actual_args = args
+                            .iter()
+                            .map(|a| a.eval_mut(state, env, depth + 1))
+                            .collect::<Result<Vec<_>, _>>()?;
+                        if !is_in_pipe {
+                            state.clear(State::IN_PIPE);
+                        }
 
-                // 填充默认值逻辑（新增）
-                for (i, (_, default)) in params.iter().enumerate() {
-                    if i >= actual_args.len() {
-                        if let Some(def_expr) = default {
-                            // 仅允许基本类型直接使用
-                            actual_args.push(def_expr.clone());
-                        } else {
-                            return Err(RuntimeError::new(
-                                RuntimeErrorKind::ArgumentMismatch {
-                                    name,
-                                    expected: params.len(),
-                                    received: actual_args.len(),
-                                },
-                                self.clone(),
-                                depth,
-                            ));
+                        if let Some(p) = pipe_out {
+                            actual_args.push(p);
+                        };
+
+                        // 填充默认值逻辑（新增）
+                        for (i, (_, default)) in params.iter().enumerate() {
+                            if i >= actual_args.len() {
+                                if let Some(def_expr) = default {
+                                    // 仅允许基本类型直接使用
+                                    actual_args.push(def_expr.clone());
+                                } else {
+                                    return Err(RuntimeError::new(
+                                        RuntimeErrorKind::ArgumentMismatch {
+                                            name,
+                                            expected: params.len(),
+                                            received: actual_args.len(),
+                                        },
+                                        self.clone(),
+                                        depth,
+                                    ));
+                                }
+                            }
+                        }
+
+                        // 创建新作用域并执行
+                        let mut new_env = match state.contains(State::NO_ENV_FORK) {
+                            true => env,
+                            _ => &mut env.fork(),
+                        };
+                        if let Some(collector) = pc {
+                            new_env.define(
+                                collector.as_str(),
+                                Expression::from(actual_args[params.len()..].to_vec()),
+                            );
+                        }
+                        for ((param, _), arg) in params.iter().zip(actual_args) {
+                            new_env.define(param, arg);
+                        }
+
+                        match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
+                            Ok(v) => Ok(v),
+                            // 捕获函数体内的return
+                            Err(RuntimeError {
+                                kind: RuntimeErrorKind::EarlyBreak(v),
+                                context: _,
+                                depth: _,
+                            }) => Ok(v),
+                            Err(e) => Err(e),
                         }
                     }
-                }
-
-                // 创建新作用域并执行
-                let mut new_env = env.fork();
-                if let Some(collector) = pc {
-                    new_env.define(
-                        collector.as_str(),
-                        Expression::from(actual_args[params.len()..].to_vec()),
-                    );
-                }
-                for ((param, _), arg) in params.iter().zip(actual_args) {
-                    new_env.define(param, arg);
-                }
-
-                match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
-                    Ok(v) => Ok(v),
-                    // 捕获函数体内的return
-                    Err(RuntimeError {
-                        kind: RuntimeErrorKind::EarlyBreak(v),
-                        context: _,
-                        depth: _,
-                    }) => Ok(v),
-                    Err(e) => Err(e),
                 }
             }
 

@@ -184,6 +184,9 @@ fn init_cmds(env: &mut Environment) {
     if !env.is_defined("IFS") {
         env.define("IFS", Expression::None);
     }
+    if !env.is_defined("LUME_IFS_MODE") {
+        env.define("IFS", Expression::Integer(60));
+    }
     if !env.is_defined("clear") {
         parse_and_eval("let clear = () -> console@clear()", env);
     }

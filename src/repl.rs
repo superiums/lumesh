@@ -50,13 +50,20 @@ pub fn run_repl(env: &mut Environment) {
     // state::register_signal_handler();
 
     match env.get("LUME_WELCOME") {
-        Some(wel) => println!("{}", wel),
+        Some(wel) => {
+            println!("{}", wel);
+            env.undefine("LUME_WELCOME");
+        }
         _ => println!("Welcome to Lumesh {}", env!("CARGO_PKG_VERSION")),
     }
+
     // init_config(env);
     //
     let no_history = match env.get("LUME_NO_HISTORY") {
-        Some(Expression::Boolean(t)) => t,
+        Some(Expression::Boolean(t)) => {
+            env.undefine("LUME_NO_HISTORY");
+            t
+        }
         _ => false,
     };
     let history_file = match env.get("LUME_HISTORY_FILE") {
@@ -80,8 +87,12 @@ pub fn run_repl(env: &mut Environment) {
         }
     };
     let ai_config = env.get("LUME_AI_CONFIG");
+    env.undefine("LUME_AI_CONFIG");
     let vi_mode = match env.get("LUME_VI_MODE") {
-        Some(Expression::Boolean(true)) => true,
+        Some(Expression::Boolean(true)) => {
+            env.undefine("LUME_AI_CONFIG");
+            true
+        }
         _ => false,
     };
     // let enable_ai = match env.get("LUME_AI_CONFIG") {
@@ -134,7 +145,10 @@ pub fn run_repl(env: &mut Environment) {
         Cmd::Replace(Movement::WholeBuffer, Some(String::from(""))),
     );
     let hotkey_sudo = match env.get("LUME_SUDO_CMD") {
-        Some(s) => s.to_string(),
+        Some(s) => {
+            env.undefine("LUME_SUDO_CMD");
+            s.to_string()
+        }
         _ => "sudo".to_string(),
     };
     rl.lock().unwrap().bind_sequence(
@@ -144,6 +158,7 @@ pub fn run_repl(env: &mut Environment) {
 
     // 2. custom hotkey
     let hotkey_modifier = env.get("LUME_HOT_MODIFIER");
+    env.undefine("LUME_HOT_MODIFIER");
     let modifier: u8 = match hotkey_modifier {
         Some(Expression::Integer(bits)) => {
             // if bits == 0 {
@@ -160,6 +175,8 @@ pub fn run_repl(env: &mut Environment) {
     };
 
     let hotkey_config = env.get("LUME_HOT_KEYS");
+    env.undefine("LUME_HOT_KEYS");
+
     if let Some(Expression::Map(keys)) = hotkey_config {
         let mut rl_unlocked = rl.lock().unwrap();
         for (k, cmd) in keys.iter() {
@@ -176,6 +193,8 @@ pub fn run_repl(env: &mut Environment) {
     }
     // 3. abbr
     let abbr = env.get("LUME_ABBREVIATIONS");
+    env.undefine("LUME_ABBREVIATIONS");
+
     if let Some(Expression::Map(ab)) = abbr {
         let abmap = ab
             .iter()
@@ -193,6 +212,9 @@ pub fn run_repl(env: &mut Environment) {
         env.get("LUME_PROMPT_SETTINGS"),
         env.get("LUME_PROMPT_TEMPLATE"),
     );
+    env.undefine("LUME_PROMPT_SETTINGS");
+    env.undefine("LUME_PROMPT_TEMPLATE");
+
     // let mut repl_env = env.fork();
     while running.load(std::sync::atomic::Ordering::SeqCst) {
         let prompt = pe.get_prompt();

@@ -1,6 +1,23 @@
 # Changelog
+## [0.6.3]
+- add `LUME_IFS_MODE`
+
+with bit meanings:
+```rust
+IFS_CMD: u8 = 1 << 1; // cmd str_arg
+IFS_FOR: u8 = 1 << 2; // for i in str; str |> do
+IFS_STR: u8 = 1 << 3; // string.split
+IFS_CSV: u8 = 1 << 4; // parse.to_csv
+IFS_PCK: u8 = 1 << 5; // ui.pick
+```
+
+
 ## [0.6.2]
+**broken changes**
 - rename builtin modules with Uppercase
+
+normal changes
+
 - add dispatch pipe
 ```bash
     let add = (x,y) -> x+y

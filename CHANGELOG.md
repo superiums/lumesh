@@ -24,6 +24,23 @@ STRICT=True
 - add support to config max recursion
 via `LUME_MAX_SYNTAX_RECURSION` and `LUME_MAX_SYNTAX_RECURSION`
 
+- stop wrap command as symbo after assign
+`x = a b; let x= a b` now keeps as command.
+
+- stop wrap symbo as command after lazy assign
+`x := a` now keeps as symbo.
+
+
+now, the wraps action works as follow:
+1. `a` single symbo was warped as command.
+2. `./a` single path was warped as command.
+3. ` (a)` single symbo in *group* was warped as command.
+4. `alias x = a` single symbo in *alias declaration* was warped as commnd.
+5. `let x := a` single symbo in *lasy declaration* was warped as commnd.
+note this not include the lasy assign: `x := a`, which keeps as symbo.
+  and `eval x` or `x` or `x other_args` could launch it.
+
+
 
 ## [0.6.2]
 **broken changes**

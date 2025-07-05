@@ -357,7 +357,7 @@ impl PrattParser {
                 match op {
                     "(" => {
                         // 分组{表达式 (expr)
-                        cut(alt((parse_group, parse_lambda_param)))(input).map_err(|_| {
+                        cut(alt((parse_lambda_param, parse_group)))(input).map_err(|_| {
                             SyntaxErrorKind::failure(
                                 input.get_str_slice(),
                                 "some expression",
@@ -574,19 +574,19 @@ impl PrattParser {
                 match lhs.to_symbol() {
                     Ok(name) => {
                         // 如果是命令, 则包装为字符串，命令应当明确用()包裹
-                        let last = match rhs {
-                            Expression::Command(s, v) => Expression::Symbol(
-                                s.to_string()
-                                    + " "
-                                    + v.iter()
-                                        .map(|e| e.to_string())
-                                        .collect::<Vec<String>>()
-                                        .join(" ")
-                                        .as_str(),
-                            ),
-                            other => other,
-                        };
-                        Ok(Expression::Assign(name.to_string(), Rc::new(last)))
+                        // let last = match rhs {
+                        //     Expression::Command(s, v) => Expression::Symbol(
+                        //         s.to_string()
+                        //             + " "
+                        //             + v.iter()
+                        //                 .map(|e| e.to_string())
+                        //                 .collect::<Vec<String>>()
+                        //                 .join(" ")
+                        //                 .as_str(),
+                        //     ),
+                        //     other => other,
+                        // };
+                        Ok(Expression::Assign(name.to_string(), Rc::new(rhs)))
                     }
                     _ => {
                         // eprintln!("invalid left-hand-side: {:?}", lhs);
@@ -660,19 +660,18 @@ impl PrattParser {
                                 input.get_str_slice(),
                                 "symbol in parameter list",
                                 Some(boxed_expr.type_name()),
-                                "put only valid symbols in lambda/macro param list".into(),
+                                "put only valid symbols in lambda param list".into(),
                             ));
                         } // },
                     },
                     // 处理无括号单参数
                     Expression::Symbol(name) => Ok(vec![name]),
                     _ => {
-                        // eprintln!("invalid lambda/macro param {:?}", lhs);
                         return Err(SyntaxErrorKind::failure(
                             input.get_str_slice(),
                             "symbol or parameter list",
                             Some(lhs.to_string()),
-                            "Lambda/Macro requires valid parameter list".into(),
+                            "Lambda requires valid parameter list".into(),
                         ));
                     }
                 };
@@ -688,30 +687,9 @@ impl PrattParser {
                 };
 
                 // 构建Lambda表达式
-                // match op.symbol {
-                // "->" =>
                 Ok(Expression::Lambda(params.unwrap(), Rc::new(body)))
-                //     "~>" => Ok(Expression::Macro(params.unwrap(), Box::new(body))),
-                //     _ => unreachable!(),
-                // }
             }
-            // "~>" => {
-            //     // 参数处理
-            //     match lhs.to_symbol() {
-            //         // 解析体部分
-            //         Ok(name) => Ok(Expression::Macro(name.to_string(), Box::new(rhs))),
-            //         _ => {
-            //             eprintln!("invalid macro-param {:?}", lhs);
 
-            //             Err(SyntaxErrorKind::expected(
-            //                 input.get_str_slice(),
-            //                 "symbol",
-            //                 Some(lhs.to_string()),
-            //                 "macro params must be symbol".into(),
-            //             ))
-            //         }
-            //     }
-            // }
             "?" => {
                 // dbg!("?+--->", &lhs, &rhs);
                 let (true_expr, false_expr) = match rhs {
@@ -738,15 +716,15 @@ impl PrattParser {
                 match lhs.to_symbol() {
                     Ok(name) => {
                         // 如果是单独的symbol，则包装为命令
-                        let last = match rhs {
-                            Expression::Symbol(s) => {
-                                Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![]))
-                            }
-                            other => other,
-                        };
+                        // let last = match rhs {
+                        //     Expression::Symbol(s) => {
+                        //         Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![]))
+                        //     }
+                        //     other => other,
+                        // };
                         Ok(Expression::Assign(
                             name.to_string(),
-                            Rc::new(Expression::Quote(Rc::new(last))),
+                            Rc::new(Expression::Quote(Rc::new(rhs))),
                         ))
                     }
                     _ => {
@@ -1043,7 +1021,11 @@ fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxEr
         // )),
         text_close(")"),
     )(input)?;
-    Ok((input, Expression::Group(Rc::new(expr))))
+    if input.first().is_some_and(|c| c.text(input) == "->") {
+        Ok((input, Expression::Group(Rc::new(expr))))
+    } else {
+        Err(nom::Err::Error(SyntaxErrorKind::NoExpression))
+    }
 }
 // 函数定义解析
 fn parse_fn_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1901,18 +1883,19 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
             //     other => other.clone(),
             // };
             // 如果是命令, 则包装为字符串，命令应当明确用()包裹
-            let last = match &e[0] {
-                Expression::Command(s, v) => Expression::Symbol(
-                    s.to_string()
-                        + " "
-                        + v.iter()
-                            .map(|e| e.to_string())
-                            .collect::<Vec<String>>()
-                            .join(" ")
-                            .as_str(),
-                ),
-                other => other.clone(),
-            };
+            // let last = match &e[0] {
+            //     Expression::Command(s, v) => Expression::Symbol(
+            //         s.to_string()
+            //             + " "
+            //             + v.iter()
+            //                 .map(|e| e.to_string())
+            //                 .collect::<Vec<String>>()
+            //                 .join(" ")
+            //                 .as_str(),
+            //     ),
+            //     other => other.clone(),
+            // };
+            let last = e[0].clone();
             return Ok((
                 input,
                 Expression::Declare(symbols[0].clone(), Rc::new(last)),

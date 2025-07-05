@@ -247,7 +247,7 @@ impl Expression {
                             Ok(v) => Ok(v),
                             // 捕获函数体内的return
                             Err(RuntimeError {
-                                kind: RuntimeErrorKind::EarlyBreak(v),
+                                kind: RuntimeErrorKind::EarlyReturn(v),
                                 context: _,
                                 depth: _,
                             }) => Ok(v),
@@ -327,6 +327,13 @@ impl Expression {
             // 符号
             Expression::Symbol(cmd_sym) => {
                 self.eval_symbo(cmd_sym, args, true, state, env, depth + 1)
+            }
+            // 延迟赋值命令 let x := ls
+            Expression::Command(cmd_sym, cmd_args) => {
+                let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
+                new_vec.extend_from_slice(&cmd_args);
+                new_vec.extend_from_slice(&args);
+                handle_command(self, &cmd_sym.to_string(), &new_vec, state, env, depth + 1)
             }
             other => match args.is_empty() {
                 true => Ok(other), // 单个symbol或变量，直接返回

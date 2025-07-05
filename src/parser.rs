@@ -2129,7 +2129,10 @@ fn parse_module_selective(input: Tokens<'_>) -> IResult<Tokens<'_>, ModuleInfo, 
 
 fn parse_use_statement(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("use")(input)?;
-    let (input, module_path) = cut(parse_symbol_string)(input)?;
+    let (input, module_path) = cut(alt((parse_symbol_string, |input| {
+        parse_string_common(input, TokenKind::StringRaw, false, false)
+            .map(|(tk, s)| (tk, s.into_owned()))
+    })))(input)?;
     let (input, alias) = opt(preceded(text("as"), parse_symbol_string))(input)?;
 
     // 暂时创建空环境，后续会被替换

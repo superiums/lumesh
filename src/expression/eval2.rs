@@ -6,12 +6,7 @@ use crate::{
     runtime::{IFS_FOR, ifs_contains, load_module},
 };
 use glob::glob;
-use std::{
-    borrow::Cow,
-    collections::HashMap,
-    path::{Path, PathBuf},
-    rc::Rc,
-};
+use std::{borrow::Cow, collections::HashMap, path::Path, rc::Rc};
 
 // Expression求值2
 impl Expression {
@@ -161,7 +156,7 @@ impl Expression {
 
             Expression::Use(alias, module_path) => {
                 let mut loaded_modules = HashMap::new();
-                load_modules_to_map(&mut loaded_modules, alias, module_path, self, depth)?;
+                load_modules_to_map(&mut loaded_modules, alias, module_path, self, env, depth)?;
 
                 for (module, functions) in loaded_modules.iter() {
                     env.define(module, functions.clone());
@@ -382,6 +377,7 @@ fn load_modules_to_map(
     module_path: &str,
     // loaded_modules: &mut HashSet<String>,
     context: &Expression,
+    env: &mut Environment,
     depth: usize,
 ) -> Result<(), RuntimeError> {
     let module_name = get_module_name_from_path(module_alias, module_path, context, depth + 1)?;
@@ -394,8 +390,8 @@ fn load_modules_to_map(
     }
 
     // 读取模块文件
-    let file_path = PathBuf::from(format!("{}.lm", module_path));
-    let module_info = load_module(file_path)?;
+    // let file_path = PathBuf::from(format!("{}.lm", module_path));
+    let module_info = load_module(module_path, env)?;
 
     // 当前导入模块的函数
     result.insert(module_name.into(), Expression::from(module_info.functions));
@@ -407,6 +403,7 @@ fn load_modules_to_map(
             dep_alias,
             dep_path,
             &Expression::Use(dep_alias.clone(), dep_path.clone()),
+            env,
             depth + 1,
         )?;
     }

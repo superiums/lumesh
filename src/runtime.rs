@@ -2,15 +2,53 @@ use crate::{
     Environment, Expression, ModuleInfo, PRINT_DIRECT, RuntimeError, SyntaxError, use_script,
 };
 use crate::{SyntaxErrorKind, parse_script};
+use std::fs::{create_dir, read_to_string, write};
 use std::io::{self, Write};
-use std::path::PathBuf;
-
+use std::path::{Path, PathBuf};
 // pub fn run_text(text: &str, env: &mut Environment) -> Result<Expression, Error> {
 //     parse(text)?.eval(env)
 // }
 
-pub fn load_module(path: PathBuf) -> Result<ModuleInfo, RuntimeError> {
-    match std::fs::read_to_string(path) {
+pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo, RuntimeError> {
+    let base = match env.get("SCRIPT") {
+        Some(Expression::String(script)) => script,
+        _ => ".".to_string(),
+    };
+    let cwd = Path::new(&base).parent().unwrap_or(Path::new("."));
+    let file = Path::new(file_path).with_extension("lm");
+    let mut mod_file = cwd.join("mods").join(&file);
+    if !mod_file.exists() {
+        if file.is_absolute() {
+            return Err(RuntimeError::common(
+                format!("module `{}` not found", file_path,).into(),
+                Expression::String(file.to_string_lossy().into()),
+                0,
+            ));
+        }
+        mod_file = cwd.join(&file);
+        if !mod_file.exists() {
+            let lib = match env.get("LUME_MODULES_PATH") {
+                Some(Expression::String(mo)) => Path::new(&mo).to_path_buf(),
+                _ => dirs::data_dir().unwrap_or(Path::new(".").to_path_buf()),
+            };
+            mod_file = lib.join(&file);
+            if !mod_file.exists() {
+                return Err(RuntimeError::common(
+                    format!(
+                        "module `{}` not found in following places:\n\t{}\n\t{}\n\t{}",
+                        file_path,
+                        cwd.join("mods").join(&file).to_string_lossy(),
+                        cwd.join(&file).to_string_lossy(),
+                        lib.join(&file).to_string_lossy()
+                    )
+                    .into(),
+                    Expression::String(file.to_string_lossy().into()),
+                    0,
+                ));
+            }
+        }
+    };
+    match read_to_string(mod_file) {
         Ok(module_content) => match use_script(&module_content) {
             Ok(result) => Ok(result),
             Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
@@ -45,7 +83,7 @@ pub fn load_module(path: PathBuf) -> Result<ModuleInfo, RuntimeError> {
     }
 }
 pub fn run_file(path: PathBuf, env: &mut Environment) -> bool {
-    match std::fs::read_to_string(path) {
+    match read_to_string(path) {
         Ok(prelude) => parse_and_eval(&prelude, env),
         Err(e) => {
             eprintln!("\x1b[31m[IO ERROR]\x1b[0mFailed to read file:\n  {}", e);
@@ -143,7 +181,7 @@ pub fn init_config(env: &mut Environment) {
             Some(config_dir) => {
                 let config_path = config_dir.join("lumesh");
                 if !config_path.exists() {
-                    if let Err(e) = std::fs::create_dir(&config_path) {
+                    if let Err(e) = create_dir(&config_path) {
                         eprintln!("Error while writing prelude: {}", e);
                     }
                 }
@@ -163,7 +201,7 @@ pub fn init_config(env: &mut Environment) {
         let response = read_user_input(prompt);
 
         if response.is_empty() || response.to_lowercase() == "y" {
-            if let Err(e) = std::fs::write(&profile, INTRO_PRELUDE) {
+            if let Err(e) = write(&profile, INTRO_PRELUDE) {
                 eprintln!("Error while writing prelude: {}", e);
             }
         }

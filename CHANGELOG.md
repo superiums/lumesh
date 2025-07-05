@@ -1,18 +1,5 @@
 # Changelog
-## [0.6.3]
-- add decorator support
-- add `LUME_IFS_MODE` to control where to apply `IFS`
-
-with bit meanings:
-```rust
-IFS_CMD: u8 = 1 << 1; // cmd str_arg
-IFS_FOR: u8 = 1 << 2; // for i in str; str |> do
-IFS_STR: u8 = 1 << 3; // string.split
-IFS_CSV: u8 = 1 << 4; // parse.to_csv
-IFS_PCK: u8 = 1 << 5; // ui.pick
-```
-
-- allow `{k,}` as Map
+## [0.6.4]
 - allow set modules path with `LUME_MODULES_PATH`
 - pass only root env to cmd.
 - allow set strict mode in script.
@@ -43,6 +30,22 @@ now, the wraps action works as follow:
 note this not include the lasy assign: `x := a`, which keeps as symbo.
   and `eval x` or `x` or `x other_args` could launch it.
 
+
+
+## [0.6.3]
+- add decorator support
+- add `LUME_IFS_MODE` to control where to apply `IFS`
+
+with bit meanings:
+```rust
+IFS_CMD: u8 = 1 << 1; // cmd str_arg
+IFS_FOR: u8 = 1 << 2; // for i in str; str |> do
+IFS_STR: u8 = 1 << 3; // string.split
+IFS_CSV: u8 = 1 << 4; // parse.to_csv
+IFS_PCK: u8 = 1 << 5; // ui.pick
+```
+
+- allow `{k,}` as Map
 
 
 ## [0.6.2]

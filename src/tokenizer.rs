@@ -125,6 +125,7 @@ fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         postfix_tag("."), //chaind call/index
         postfix_tag("!"), //func call as flat as cmd
+        postfix_tag("^"), //make symbo as cmd
         postfix_tag("("), //func call
         postfix_tag("["), //array index or slice
         postfix_tag("++"),
@@ -1070,7 +1071,7 @@ fn postfix_unit_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRes
 fn is_symbol_char(c: char) -> bool {
     macro_rules! special_char_pattern {
         () => {
-            '_' | '~' | '?' | '&' | '#' | '^' | '$' | '-' | '/' | '\\'
+            '_' | '~' | '?' | '&' | '#' | '$' | '-' | '/' | '\\'
         };
         // add - / back because it's used so offen in cmd string. "connman-gtk"
         // remove + - /  %  > < to allow non space operator such as a+1

@@ -430,6 +430,12 @@ impl PrattParser {
                 // dbg!(&lhs, &args);
                 Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
             }
+            "^" => {
+                let (input, args) = many0(|inp| {
+                    PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, depth + 1)
+                })(input.skip_n(1))?;
+                Ok((input, Expression::Command(Rc::new(lhs), Rc::new(args))))
+            }
             "[" => {
                 // 数组索引或切片
                 parse_index_or_slice(lhs, input, depth)

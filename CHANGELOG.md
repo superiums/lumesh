@@ -24,6 +24,9 @@ STRICT=True
 - add support to config max recursion
 via `LUME_MAX_SYNTAX_RECURSION` and `LUME_MAX_SYNTAX_RECURSION`
 
+- add `^` to force a symbo to be a third part command
+`sort^` call cmd `sort` in your system insteadof lumesh function.
+
 - stop wrap command as symbo after assign
 `x = a b; let x= a b` now keeps as command.
 

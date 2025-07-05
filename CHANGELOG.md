@@ -19,6 +19,8 @@ IFS_PCK: u8 = 1 << 5; // ui.pick
 ```bash
 STRICT=True
 ```
+- strict fn redeclare;
+- strict param covers in deco.
 
 ## [0.6.2]
 **broken changes**

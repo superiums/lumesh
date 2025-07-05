@@ -103,13 +103,16 @@ impl Expression {
                     body.clone(),
                     decos.clone(),
                 );
+                if state.contains(State::STRICT) && env.has(name) {
+                    return Err(RuntimeError::new(
+                        RuntimeErrorKind::Redeclaration(name.to_string()),
+                        self.clone(),
+                        depth,
+                    ));
+                }
                 env.define(name, func.clone());
                 Ok(func)
             }
-            // Self::Macro(param, body) => {
-            //     // 宏定义保持未求值状态
-            //     Ok(Self::Macro(param, body))
-            // }
 
             // 块表达式
             Self::Do(exprs) => {

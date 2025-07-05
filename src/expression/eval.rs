@@ -29,8 +29,7 @@ impl State {
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
     pub const PTY_MODE: u8 = 1 << 3; // 0b00001000
     pub const IN_ASSIGN: u8 = 1 << 4; // 0b00010000
-    pub const NO_ENV_FORK: u8 = 1 << 5;
-    pub const NO_RE_DECLARE: u8 = 1 << 6;
+    pub const IN_DECO: u8 = 1 << 5;
 
     // 创建一个新的 State 实例
     pub fn new(strict: bool) -> Self {
@@ -184,9 +183,7 @@ impl Expression {
                 Self::Declare(name, expr) => {
                     // dbg!("declare---->", &name, &expr.type_name());
 
-                    if state.contains(State::STRICT) && env.has(name)
-                    // && env.get("STRICT") == Some(Expression::Boolean(true))
-                    {
+                    if state.contains(State::STRICT) && env.has(name) {
                         return Err(RuntimeError::new(
                             RuntimeErrorKind::Redeclaration(name.to_string()),
                             self.clone(),
@@ -197,14 +194,12 @@ impl Expression {
                     if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
                         expr.as_ref()
                     {
-                        // env.define("__ALWAYSPIPE", Expression::Boolean(true));
                         let is_in_pipe = state.contains(State::IN_PIPE);
                         state.set(State::IN_PIPE);
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                         if !is_in_pipe {
                             state.clear(State::IN_PIPE);
                         }
-                        // env.undefine("__ALWAYSPIPE");
                         env.define(name, value); // 新增 declare
                     } else {
                         state.set(State::IN_ASSIGN);
@@ -245,9 +240,7 @@ impl Expression {
                         //     current_env = parent.clone();
                         // }
 
-                        if state.contains(State::STRICT)
-                        // && env.get("STRICT") == Some(Expression::Boolean(true))
-                        {
+                        if state.contains(State::STRICT) {
                             return Err(RuntimeError::new(
                                 RuntimeErrorKind::UndeclaredVariable(name.clone()),
                                 self.clone(),
@@ -258,7 +251,6 @@ impl Expression {
                         env.define(name, value.clone());
                     }
                     if need_clear {
-                        // env.undefine("__ALWAYSPIPE");
                         state.clear(State::IN_PIPE);
                     }
                     return Ok(value);

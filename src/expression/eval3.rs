@@ -134,7 +134,7 @@ impl Expression {
                         // dbg!(&decov);
                         let mut last_fn = Expression::Function(name, params, pc, body, vec![]);
                         let mut env_deco = env.fork();
-                        state.set(State::NO_ENV_FORK);
+                        state.set(State::IN_DECO);
                         decos.reverse();
                         for deco in decos {
                             // dbg!(&deco);
@@ -176,7 +176,7 @@ impl Expression {
                         }
                         last_fn =
                             last_fn.eval_apply(&last_fn, args, state, &mut env_deco, depth + 1)?;
-                        state.clear(State::NO_ENV_FORK);
+                        state.clear(State::IN_DECO);
                         // 最后执行装饰过的函数
                         Ok(last_fn)
                     }
@@ -214,17 +214,32 @@ impl Expression {
                         }
 
                         // 创建新作用域并执行
-                        let mut new_env = match state.contains(State::NO_ENV_FORK) {
+                        let mut new_env = match state.contains(State::IN_DECO) {
                             true => env,
                             _ => &mut env.fork(),
                         };
                         if let Some(collector) = pc {
+                            if state.contains(State::IN_DECO) && new_env.has(collector.as_str()) {
+                                return Err(RuntimeError::new(
+                                    RuntimeErrorKind::Redeclaration(collector),
+                                    self.clone(),
+                                    depth,
+                                ));
+                            }
                             new_env.define(
                                 collector.as_str(),
                                 Expression::from(actual_args[params.len()..].to_vec()),
                             );
                         }
                         for ((param, _), arg) in params.iter().zip(actual_args) {
+                            // 装饰器内，不允许各个装饰器中有重复的参数名
+                            if state.contains(State::IN_DECO) && new_env.has(param) {
+                                return Err(RuntimeError::new(
+                                    RuntimeErrorKind::Redeclaration(param.to_string()),
+                                    self.clone(),
+                                    depth,
+                                ));
+                            }
                             new_env.define(param, arg);
                         }
 

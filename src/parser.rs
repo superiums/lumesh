@@ -7,7 +7,8 @@ use std::{
 };
 
 use crate::{
-    Diagnostic, Expression, Int, SliceParams, SyntaxErrorKind, Token, TokenKind,
+    Diagnostic, Expression, Int, MAX_SYNTAX_RECURSION, SliceParams, SyntaxErrorKind, Token,
+    TokenKind,
     expression::{CatchType, ChainCall, DestructurePattern, FileSize},
     tokens::{Input, Tokens},
 };
@@ -85,7 +86,7 @@ impl<'a> OperatorInfo<'a> {
     }
 }
 // -- Pratt 解析器核心结构 --
-const MAX_DEPTH: u8 = 100;
+
 /// 基于优先级0
 fn parse_expr(input: Tokens) -> IResult<Tokens, Expression, SyntaxErrorKind> {
     // dbg!("--parse--");
@@ -97,7 +98,7 @@ fn parse_expr(input: Tokens) -> IResult<Tokens, Expression, SyntaxErrorKind> {
 fn parse_expr_or_failure(
     input: Tokens<'_>,
     min_prec: u8,
-    depth: u8,
+    depth: usize,
 ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     cut(|input| PrattParser::parse_expr_with_precedence(input, min_prec, depth))(input)
 }
@@ -109,7 +110,7 @@ impl PrattParser {
     fn parse_expr_with_precedence(
         mut input: Tokens<'_>,
         min_prec: u8,
-        mut depth: u8,
+        mut depth: usize,
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         // 1. 解析前缀表达式
         // dbg!("===----prepare to prefix---===>", input, min_prec);
@@ -121,12 +122,13 @@ impl PrattParser {
         loop {
             //dbg!(depth, &input.get_str_slice().to_str(input.str));
             depth += 1;
-            if depth > MAX_DEPTH {
-                // break;
-                return Err(nom::Err::Failure(SyntaxErrorKind::RecursionDepth {
-                    input: input.get_str_slice(),
-                    depth,
-                }));
+            unsafe {
+                if depth > MAX_SYNTAX_RECURSION {
+                    return Err(nom::Err::Failure(SyntaxErrorKind::RecursionDepth {
+                        input: input.get_str_slice(),
+                        depth,
+                    }));
+                }
             }
             // 检查终止条件
             if input.is_empty() {
@@ -304,7 +306,7 @@ impl PrattParser {
     fn parse_prefix(
         input: Tokens<'_>,
         min_prec: u8,
-        depth: u8,
+        depth: usize,
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         SyntaxErrorKind::empty_back(input)?;
 
@@ -404,7 +406,7 @@ impl PrattParser {
         lhs: Expression,
         op: String,
         input: Tokens<'_>,
-        depth: u8,
+        depth: usize,
     ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
         match op.as_str() {
             "(" => {
@@ -894,7 +896,7 @@ fn parse_pipe_method(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
 fn parse_chaind_or_index(
     input: Tokens<'_>,
     lhs: Expression,
-    depth: u8,
+    depth: usize,
 ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     // 解析方法名
     //dbg!("dot");
@@ -938,7 +940,7 @@ fn parse_chaind_or_index(
 
 fn parse_args(
     input: Tokens<'_>,
-    depth: u8,
+    depth: usize,
 ) -> IResult<Tokens<'_>, Vec<Expression>, SyntaxErrorKind> {
     delimited(
         terminated(text("("), opt(kind(TokenKind::LineBreak))),
@@ -2012,7 +2014,7 @@ fn eof_slice(input: Tokens<'_>) -> IResult<Tokens<'_>, StrSlice, SyntaxErrorKind
 fn parse_index_or_slice(
     target: Expression,
     input: Tokens<'_>,
-    depth: u8,
+    depth: usize,
 ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, (params, is_slice)) = delimited(
         text("["),
@@ -2034,7 +2036,7 @@ fn parse_index_or_slice(
 
 fn parse_slice_params(
     input: Tokens<'_>,
-    depth: u8,
+    depth: usize,
 ) -> IResult<Tokens<'_>, (SliceParams, bool), SyntaxErrorKind> {
     // 解析 start 部分
     // allow neg int.

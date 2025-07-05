@@ -21,6 +21,9 @@ STRICT=True
 ```
 - strict fn redeclare;
 - strict param covers in deco.
+- add support to config max recursion
+via `LUME_MAX_SYNTAX_RECURSION` and `LUME_MAX_SYNTAX_RECURSION`
+
 
 ## [0.6.2]
 **broken changes**

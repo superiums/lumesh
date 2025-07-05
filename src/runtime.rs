@@ -1,5 +1,6 @@
 use crate::{
-    Environment, Expression, ModuleInfo, PRINT_DIRECT, RuntimeError, SyntaxError, use_script,
+    Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, ModuleInfo, PRINT_DIRECT,
+    RuntimeError, SyntaxError, use_script,
 };
 use crate::{SyntaxErrorKind, parse_script};
 use std::fs::{create_dir, read_to_string, write};
@@ -213,7 +214,15 @@ pub fn init_config(env: &mut Environment) {
         eprintln!("Error while running introduction prelude");
     }
 
-    unsafe { PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy()) }
+    unsafe {
+        PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy());
+        if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_RUNTIME_RECURSION") {
+            MAX_RUNTIME_RECURSION = run_rec as usize;
+        }
+        if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_SYNTAX_RECURSION") {
+            MAX_SYNTAX_RECURSION = run_rec as usize;
+        }
+    }
     // cmds
     init_cmds(env);
 }

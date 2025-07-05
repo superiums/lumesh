@@ -1,18 +1,16 @@
 use crate::expression::alias;
 use crate::expression::cmd_excutor::expand_home;
 
-use crate::RuntimeErrorKind;
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
+use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind};
 use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
 
 use std::rc::Rc;
-
-const MAX_RECURSION_DEPTH: usize = 800;
 
 #[derive(Debug, Clone)]
 pub struct State(u8, Option<Expression>);
@@ -111,12 +109,14 @@ impl Expression {
         depth: usize,
     ) -> Result<Self, RuntimeError> {
         // dbg!("1.--->eval_mut:", &self, &self.type_name(), &state);
-        if depth > MAX_RECURSION_DEPTH {
-            return Err(RuntimeError::new(
-                RuntimeErrorKind::RecursionDepth(self.clone()),
-                self.clone(),
-                depth,
-            ));
+        unsafe {
+            if depth > MAX_RUNTIME_RECURSION {
+                return Err(RuntimeError::new(
+                    RuntimeErrorKind::RecursionDepth(self.clone()),
+                    self.clone(),
+                    depth,
+                ));
+            }
         }
         let mut job = self;
         loop {

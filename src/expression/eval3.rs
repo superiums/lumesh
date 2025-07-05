@@ -4,10 +4,10 @@ use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
 use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind, get_builtin};
 use std::borrow::Cow;
-const MAX_APPLY_DEPTH: usize = 100;
 
 /// 执行
 impl Expression {
+    // 函数应用
     #[inline]
     pub fn eval_apply(
         &self,
@@ -17,8 +17,8 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        // 函数应用
-        if depth > MAX_APPLY_DEPTH {
+        if depth > 400 {
+            //防止函数互相调用无限循环
             return Err(RuntimeError::new(
                 RuntimeErrorKind::RecursionDepth(self.clone()),
                 self.clone(),

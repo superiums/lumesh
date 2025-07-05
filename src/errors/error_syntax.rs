@@ -40,12 +40,12 @@ pub enum SyntaxErrorKind {
     NoExpression,
     ArgumentMismatch {
         name: String,
-        expected: usize,
-        received: usize,
+        expected: u8,
+        received: u8,
     },
     RecursionDepth {
         input: StrSlice,
-        depth: u8,
+        depth: usize,
     },
 }
 
@@ -415,7 +415,7 @@ impl fmt::Display for SyntaxError {
                 print_error_lines(&self.source, *input, f, 72)?;
                 writeln!(
                     f,
-                    "    hint: simplify your script, or config LUME_MAX_PARSE_RECURSION larger."
+                    "    hint: simplify your script, or config LUME_MAX_SYNTAX_RECURSION larger."
                 )?;
                 Ok(())
             }

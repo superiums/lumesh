@@ -1,10 +1,10 @@
 use crate::expression::alias;
 use crate::expression::cmd_excutor::expand_home;
 
+use crate::RuntimeErrorKind;
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
-use crate::{RuntimeErrorKind, STRICT};
 use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
@@ -19,20 +19,26 @@ pub struct State(u8, Option<Expression>);
 
 impl Default for State {
     fn default() -> Self {
-        Self::new()
+        Self::new(false)
     }
 }
 
 impl State {
+    pub const STRICT: u8 = 1;
     pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
     pub const PTY_MODE: u8 = 1 << 3; // 0b00001000
     pub const IN_ASSIGN: u8 = 1 << 4; // 0b00010000
     pub const NO_ENV_FORK: u8 = 1 << 5;
+    pub const NO_RE_DECLARE: u8 = 1 << 6;
 
     // 创建一个新的 State 实例
-    pub fn new() -> Self {
-        State(0, None)
+    pub fn new(strict: bool) -> Self {
+        if strict {
+            State(State::STRICT, None)
+        } else {
+            State(0, None)
+        }
     }
 
     // 设置标志
@@ -61,10 +67,17 @@ impl State {
     }
 }
 
+fn is_strict(env: &mut Environment) -> bool {
+    match env.get("STRICT") {
+        Some(Expression::Boolean(b)) => b,
+        _ => false,
+    }
+}
 impl Expression {
     /// 交互命令入口
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let result = self.eval_mut(&mut State::new(), env, 0);
+        let strict = is_strict(env);
+        let result = self.eval_mut(&mut State::new(strict), env, 0);
         // dbg!(&result);
         match result {
             // apply symbol cmds
@@ -80,11 +93,13 @@ impl Expression {
     }
     /// 脚本计算入口
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        self.eval_mut(&mut State::new(), env, 0)
+        let strict = is_strict(env);
+        self.eval_mut(&mut State::new(strict), env, 0)
     }
     /// builtin args eval in pipe.
     pub fn eval_in_pipe(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let mut state = State::new();
+        let strict = is_strict(env);
+        let mut state = State::new(strict);
         state.set(State::IN_PIPE);
         self.eval_mut(&mut state, env, 0)
     }
@@ -139,15 +154,14 @@ impl Expression {
                     }
 
                     // var
-                    unsafe {
-                        if STRICT {
-                            return Ok(job.clone());
-                        } else {
-                            return match env.get(name) {
-                                Some(expr) => Ok(expr),
-                                None => Ok(job.clone()),
-                            };
-                        }
+
+                    if state.contains(State::STRICT) {
+                        return Ok(job.clone());
+                    } else {
+                        return match env.get(name) {
+                            Some(expr) => Ok(expr),
+                            None => Ok(job.clone()),
+                        };
                     }
                 }
                 Self::StringTemplate(template) => {
@@ -169,17 +183,17 @@ impl Expression {
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {
                     // dbg!("declare---->", &name, &expr.type_name());
-                    unsafe {
-                        if STRICT && env.has(name)
-                        // && env.get("STRICT") == Some(Expression::Boolean(true))
-                        {
-                            return Err(RuntimeError::new(
-                                RuntimeErrorKind::Redeclaration(name.to_string()),
-                                self.clone(),
-                                depth,
-                            ));
-                        }
+
+                    if state.contains(State::STRICT) && env.has(name)
+                    // && env.get("STRICT") == Some(Expression::Boolean(true))
+                    {
+                        return Err(RuntimeError::new(
+                            RuntimeErrorKind::Redeclaration(name.to_string()),
+                            self.clone(),
+                            depth,
+                        ));
                     }
+
                     if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
                         expr.as_ref()
                     {
@@ -230,16 +244,15 @@ impl Expression {
                         //     }
                         //     current_env = parent.clone();
                         // }
-                        unsafe {
-                            if STRICT
-                            // && env.get("STRICT") == Some(Expression::Boolean(true))
-                            {
-                                return Err(RuntimeError::new(
-                                    RuntimeErrorKind::UndeclaredVariable(name.clone()),
-                                    self.clone(),
-                                    depth,
-                                ));
-                            }
+
+                        if state.contains(State::STRICT)
+                        // && env.get("STRICT") == Some(Expression::Boolean(true))
+                        {
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                                self.clone(),
+                                depth,
+                            ));
                         }
 
                         env.define(name, value.clone());

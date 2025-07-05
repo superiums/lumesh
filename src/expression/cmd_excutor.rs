@@ -44,10 +44,13 @@ fn exec_single_cmd(
         _ => vec![],
     };
 
-    cmd.args(ar).envs(env.get_bindings_string()).current_dir(
-        std::env::current_dir()
-            .map_err(|e| RuntimeError::from_io_error(e, "get cwd".into(), job.clone(), depth))?,
-    );
+    cmd.args(ar)
+        .envs(env.get_root().get_bindings_string())
+        .current_dir(
+            std::env::current_dir().map_err(|e| {
+                RuntimeError::from_io_error(e, "get cwd".into(), job.clone(), depth)
+            })?,
+        );
 
     // 设置 stdin
     if input.is_some() {

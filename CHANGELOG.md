@@ -12,7 +12,13 @@ IFS_CSV: u8 = 1 << 4; // parse.to_csv
 IFS_PCK: u8 = 1 << 5; // ui.pick
 ```
 
-- allow {k,} as Map
+- allow `{k,}` as Map
+- allow set modules path with `LUME_MODULES_PATH`
+- pass only root env to cmd.
+- allow set strict mode in script.
+```bash
+STRICT=True
+```
 
 ## [0.6.2]
 **broken changes**

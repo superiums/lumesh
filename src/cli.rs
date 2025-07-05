@@ -8,7 +8,7 @@ use lumesh::runtime::init_config;
 // 新增模块引用
 // use lumesh::binary;
 // use lumesh::ENV;
-use lumesh::STRICT;
+// use lumesh::STRICT;
 use lumesh::runtime::run_file;
 use lumesh::{Environment, Expression};
 use std::env;
@@ -151,10 +151,10 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
     init_config(env);
 
     // strict
-    env.define("IS_STRICT", Expression::Boolean(strict));
-    unsafe {
-        STRICT = strict;
-    }
+    env.define("STRICT", Expression::Boolean(strict));
+    // unsafe {
+    //     STRICT = strict;
+    // }
 
     // ai off
     if aioff {

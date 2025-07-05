@@ -50,6 +50,6 @@ pub mod keyhandler;
 // pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-pub static mut STRICT: bool = false;
+// pub static mut STRICT: bool = false;
 pub static mut PRINT_DIRECT: bool = true;
 // pub static mut ENV: Environment = Environment::new();

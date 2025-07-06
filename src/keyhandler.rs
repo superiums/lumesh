@@ -61,10 +61,12 @@ impl ConditionalEventHandler for LumeAbbrHandler {
     }
 }
 // move one world
-pub struct LumeMoveHandler {}
+pub struct LumeMoveHandler {
+    mode: u8,
+}
 impl LumeMoveHandler {
-    pub fn new() -> Self {
-        Self {}
+    pub fn new(mode: u8) -> Self {
+        Self { mode }
     }
 }
 impl From<LumeMoveHandler> for EventHandler {
@@ -82,21 +84,21 @@ impl ConditionalEventHandler for LumeMoveHandler {
     ) -> Option<Cmd> {
         if ctx.has_hint() {
             let hint = ctx.hint_text().unwrap();
-            let pos = match hint.find("/") {
-                None => match hint.starts_with(" ") {
-                    false => hint.find(" ").unwrap_or(hint.len()),
-                    true => match hint.trim_start().find(" ") {
-                        Some(x) => x + 1,
-                        _ => hint.len(),
-                    },
-                },
-                Some(x) => {
-                    if x + 1 < hint.len() {
-                        x + 1
-                    } else {
-                        hint.len()
-                    }
+            let pos = match self.mode {
+                1 => {
+                    let pos = hint.find(&['<', '[']);
+                    pos.unwrap_or(hint.len())
                 }
+                _ => match hint.find('/') {
+                    None => match hint.starts_with(" ") {
+                        false => hint.find(" ").unwrap_or(hint.len()),
+                        true => match hint.trim_start().find(" ") {
+                            Some(x) => x + 1,
+                            _ => hint.len(),
+                        },
+                    },
+                    Some(x) => (x + 1).max(hint.len()),
+                },
             };
 
             let hintword = hint[..pos].to_string();

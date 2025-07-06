@@ -136,10 +136,10 @@ pub fn run_repl(env: &mut Environment) {
     // 1. edit
     rl.lock()
         .unwrap()
-        .bind_sequence(KeyEvent::ctrl('j'), Cmd::CompleteHint);
+        .bind_sequence(KeyEvent::ctrl('j'), LumeMoveHandler::new(1));
     rl.lock()
         .unwrap()
-        .bind_sequence(KeyEvent::alt('j'), LumeMoveHandler::new());
+        .bind_sequence(KeyEvent::alt('j'), LumeMoveHandler::new(0));
     rl.lock().unwrap().bind_sequence(
         KeyEvent::ctrl('o'),
         Cmd::Replace(Movement::WholeBuffer, Some(String::from(""))),

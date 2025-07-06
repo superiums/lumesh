@@ -7,7 +7,11 @@ use std::rc::Rc;
 pub fn get() -> Expression {
     (hash_map! {
         // 检查操作
-               String::from("has") => Expression::builtin("has", has, "check if a map has a key", "<key> <map>"),
+        String::from("len") => Expression::builtin("len", super::len, "get length of map", "<map>"),
+        String::from("insert") => Expression::builtin("insert", super::insert, "insert item into map", "<key> <value> <map>"),
+        String::from("flatten") => Expression::builtin("flatten", super::flatten_wrapper, "flatten nested structure", "<map>"),
+
+        String::from("has") => Expression::builtin("has", has, "check if a map has a key", "<key> <map>"),
 
                // 数据获取
                String::from("items") => Expression::builtin("items", items, "get the items of a map or list", "<map>"),

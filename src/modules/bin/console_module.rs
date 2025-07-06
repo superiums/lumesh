@@ -166,7 +166,7 @@ fn disable_alternate_screen(
 
 // 光标控制函数
 fn cursor_to(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("cursor.to", args, 2)?;
+    super::check_exact_args_len("cursor_to", args, 2)?;
 
     let x = args[0].eval(env)?;
     let y = args[1].eval(env)?;

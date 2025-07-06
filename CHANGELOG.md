@@ -7,7 +7,7 @@
 - fix % in parse_cmd;
 - allow linebreak in List;
 - update readme.
-
+- link len/insert/rev/flattern to list/map.
 
 ## [0.6.4]
 - allow set modules path with `LUME_MODULES_PATH`

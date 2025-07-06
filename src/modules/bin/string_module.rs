@@ -17,6 +17,7 @@ pub fn get() -> Expression {
         String::from("is_lower") => Expression::builtin("is_lower", is_lower, "is this string lowercase?", "<string>"),
         String::from("is_upper") => Expression::builtin("is_upper", is_upper, "is this string uppercase?", "<string>"),
         String::from("is_title") => Expression::builtin("is_title", is_title, "is this string title case?", "<string>"),
+        String::from("len") => Expression::builtin("len", len, "get length of string", "<string>"),
 
         // 子串检查
         String::from("starts_with") => Expression::builtin("starts_with", starts_with, "check if a string starts with a given substring", "<substring> <string>"),
@@ -92,7 +93,19 @@ pub fn get() -> Expression {
 }
 
 // String operation implementations
-
+fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+    super::check_exact_args_len("len", args, 1)?;
+    match args[0].eval(env)? {
+        Expression::Symbol(x) | Expression::String(x) => {
+            Ok(Expression::Integer(x.chars().count() as Int))
+        }
+        otherwise => Err(LmError::TypeError {
+            expected: "List".into(),
+            found: otherwise.type_name(),
+            sym: otherwise.to_string(),
+        }),
+    }
+}
 fn caesar_cipher(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("caesar_cipher", args, 1..=2)?;
 

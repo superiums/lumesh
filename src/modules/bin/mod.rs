@@ -342,7 +342,7 @@ fn read(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
     // Ok(Expression::String(crate::repl::read_user_input(&prompt)))
 }
 
-fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("insert", args, 3)?;
     let mut arr = args[2].eval(env)?;
     let idx = args[0].eval(env)?;
@@ -390,7 +390,7 @@ fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     // Ok(arr)
 }
 
-fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("len", args, 1)?;
     match args[0].eval(env)? {
         Expression::HMap(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
@@ -400,7 +400,7 @@ fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
             Ok(Expression::Integer(x.chars().count() as Int))
         }
         Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
-
+        Expression::Range(a, b) => Ok(Expression::Integer(a.step_by(b).count() as Int)),
         otherwise => Err(LmError::CustomError(format!(
             "cannot get length of {}:{}",
             otherwise,
@@ -409,7 +409,7 @@ fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     }
 }
 
-fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("rev", args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {
@@ -481,7 +481,10 @@ fn flatten(expr: Expression) -> Vec<Expression> {
     }
 }
 
-fn flatten_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn flatten_wrapper(
+    args: &Vec<Expression>,
+    env: &mut Environment,
+) -> Result<Expression, LmError> {
     check_exact_args_len("flatten", args, 1)?;
     Ok(Expression::from(flatten(args[0].eval(env)?)))
 }

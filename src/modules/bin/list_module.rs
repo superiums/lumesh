@@ -1,3 +1,4 @@
+use super::get_string_arg;
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
 use std::cmp::Ordering;
@@ -14,29 +15,38 @@ pub fn get() -> Expression {
 
         String::from("first") => Expression::builtin("first", first, "get the first element of a list", "<list>"),
         String::from("last") => Expression::builtin("last", last, "get the last element of a list", "<list>"),
-        String::from("nth") => Expression::builtin("nth", nth, "get the nth element of a list", "<index> <list>"),
+        String::from("at") => Expression::builtin("at", at, "get the nth element of a list", "<index> <list>"),
         String::from("take") => Expression::builtin("take", take, "take the first n elements of a list", "<count> <list>"),
         String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list", "<count> <list>"),
+        // 查找操作
+        String::from("contains") => Expression::builtin("contains", contains, "check if list contains an item", "<item> <list>"),
+        String::from("find") => Expression::builtin("find", find_index, "find first index of matching element", "<item|fn> [start_index] <list>"),
+        String::from("find_last") => Expression::builtin("find_last", find_last_index, "find last index of item", "<item|fn> [start_index] <list>"),
 
         // 修改操作
         String::from("append") => Expression::builtin("append", append, "append an element to a list", "<element> <list>"),
         String::from("prepend") => Expression::builtin("prepend", prepend, "prepend an element to a list", "<element> <list>"),
         String::from("unique") => Expression::builtin("unique", unique, "remove duplicates from a list while preserving order", "<list>"),
         String::from("split_at") => Expression::builtin("split_at", split_at, "split a list at a given index", "<index> <list>"),
+        // String::from("splice") => Expression::builtin("splice", splice, "change contents by removing/adding elements", "<start> <deleteCount> [items...] <list>"),
         String::from("sort") => Expression::builtin("sort", sort, "sort a string/list, optionally with a key function or key_list", "[key_fn|key_list|keys...] <string|list>"),
         String::from("group") => Expression::builtin("group", group_by, "group list elements by key function", "<key_fn|key> <list>"),
+        String::from("remove_at") => Expression::builtin("remove_at", remove_at, "remove n elements starting from index", "<index> [count] <list>"),
+        String::from("remove") => Expression::builtin("remove", remove, "remove first matching element", "<item> [all?] <list>"),
 
         // 创建操作
         String::from("concat") => Expression::builtin("concat", concat, "concatenate multiple lists into one", "<list1|item1> <list2|item2> ..."),
         String::from("from") => Expression::builtin("from", from, "create a list from a range", "<range|item...>"),
 
         // 遍历操作
+        String::from("each") => Expression::builtin("each", for_each, "execute function for each element", "<fn> <list>"),
         String::from("emulate") => Expression::builtin("emulate", emulate, "iterate over index-value pairs", "<list>"),
         String::from("map") => Expression::builtin("map", map, "apply function to each element", "<fn> <list>"),
         String::from("filter") => Expression::builtin("filter", filter, "filter elements by condition", "<fn> <list>"),
         String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map in one pass", "<fn> <list>"),
         String::from("reduce") => Expression::builtin("reduce", reduce, "reduce list with accumulator function", "<fn> <init> <list>"),
-        String::from("find") => Expression::builtin("find", find, "find index of matching element", "<item> <list>"),
+        String::from("some") => Expression::builtin("some", some, "test if any element passes condition", "<fn> <list>"),
+        String::from("every") => Expression::builtin("every", every, "test if all elements pass condition", "<fn> <list>"),
 
         // 转换操作
         String::from("join") => Expression::builtin("join", join, "join string list with separator", "<separator> <list>"),
@@ -59,14 +69,7 @@ fn concat(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, 
 
 fn last(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("last", args, 1)?;
-    let list = match args[0].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "last requires a list as argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[0].eval(env)?)?;
 
     list.as_ref()
         .last()
@@ -76,14 +79,7 @@ fn last(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 
 fn first(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("first", args, 1)?;
-    let list = match args[0].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "first requires a list as argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[0].eval(env)?)?;
 
     list.as_ref()
         .first()
@@ -93,23 +89,8 @@ fn first(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn chunk(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("chunk", args, 2)?;
-    let n = match args[0].eval(env)? {
-        Expression::Integer(n) => n,
-        _ => {
-            return Err(LmError::CustomError(
-                "chunk requires integer as first argument".to_string(),
-            ));
-        }
-    };
-
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "chunk requires list as second argument".to_string(),
-            ));
-        }
-    };
+    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let mut result = Vec::new();
     let mut chunk = Vec::new();
@@ -129,14 +110,7 @@ fn chunk(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 fn prepend(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cons", args, 2)?;
     let head = args[0].eval(env)?;
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "cons requires list as second argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let mut new_list = Vec::with_capacity(list.as_ref().len() + 1);
     new_list.push(head);
@@ -146,14 +120,7 @@ fn prepend(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
 
 fn append(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("append", args, 2)?;
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "append requires list as last argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let item = args[0].eval(env)?;
     let mut new_list = list.as_ref().to_vec();
@@ -182,14 +149,7 @@ fn foldl(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     super::check_exact_args_len("foldl", args, 3)?;
     let f = args[0].eval(env)?;
     let mut acc = args[1].eval(env)?;
-    let list = match args[2].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "foldl requires list as third argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[2].eval(env)?)?;
 
     for item in list.as_ref().iter() {
         acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![acc, item.clone()])).eval(env)?;
@@ -201,14 +161,7 @@ fn foldr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     super::check_exact_args_len("foldr", args, 3)?;
     let f = args[0].eval(env)?;
     let mut acc = args[1].eval(env)?;
-    let list = match args[2].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "foldr requires list as third argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[2].eval(env)?)?;
 
     for item in list.as_ref().iter().rev() {
         acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
@@ -237,14 +190,7 @@ fn zip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 
 fn unzip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("unzip", args, 1)?;
-    let list = match args[0].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "unzip requires list as argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[0].eval(env)?)?;
 
     let mut list1 = Vec::with_capacity(list.as_ref().len());
     let mut list2 = Vec::with_capacity(list.as_ref().len());
@@ -273,23 +219,8 @@ fn unzip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn take(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("take", args, 2)?;
-    let n = match args[0].eval(env)? {
-        Expression::Integer(n) => n,
-        _ => {
-            return Err(LmError::CustomError(
-                "take requires integer as first argument".to_string(),
-            ));
-        }
-    };
-
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "take requires list as second argument".to_string(),
-            ));
-        }
-    };
+    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let taken = list.as_ref().iter().take(n as usize).cloned().collect();
     Ok(Expression::List(Rc::new(taken)))
@@ -297,23 +228,8 @@ fn take(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 
 fn drop(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("drop", args, 2)?;
-    let n = match args[0].eval(env)? {
-        Expression::Integer(n) => n,
-        _ => {
-            return Err(LmError::CustomError(
-                "drop requires integer as first argument".to_string(),
-            ));
-        }
-    };
-
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "drop requires list as second argument".to_string(),
-            ));
-        }
-    };
+    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let dropped = list.as_ref().iter().skip(n as usize).cloned().collect();
     Ok(Expression::List(Rc::new(dropped)))
@@ -321,23 +237,8 @@ fn drop(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 
 fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("split_at", args, 2)?;
-    let n = match args[0].eval(env)? {
-        Expression::Integer(n) => n,
-        _ => {
-            return Err(LmError::CustomError(
-                "split_at requires integer as first argument".to_string(),
-            ));
-        }
-    };
-
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "split_at requires list as second argument".to_string(),
-            ));
-        }
-    };
+    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let taken = list.as_ref().iter().take(n as usize).cloned().collect();
     let dropped = list.as_ref().iter().skip(n as usize).cloned().collect();
@@ -348,25 +249,10 @@ fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     ])))
 }
 
-fn nth(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("nth", args, 2)?;
-    let n = match args[0].eval(env)? {
-        Expression::Integer(n) => n,
-        _ => {
-            return Err(LmError::CustomError(
-                "nth requires integer as first argument".to_string(),
-            ));
-        }
-    };
-
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "nth requires list as second argument".to_string(),
-            ));
-        }
-    };
+fn at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("at", args, 2)?;
+    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let idx = if n < 0 {
         list.as_ref().len().checked_sub((-n) as usize)
@@ -385,40 +271,52 @@ fn nth(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 }
 
 fn map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    if args.len() == 1 {
-        Ok(Expression::Apply(
-            Rc::new(crate::parse("(f,list) -> for item in list {f item}")?),
-            Rc::new(args.clone()),
-        )
-        .eval(env)?)
-    } else {
-        super::check_exact_args_len("map", args, 2)?;
-        let f = args[0].eval(env)?;
-        let list = match args[1].eval(env)? {
-            Expression::List(l) => l,
-            _ => {
-                return Err(LmError::CustomError(
-                    "map requires list as second argument".to_string(),
-                ));
-            }
-        };
+    super::check_exact_args_len("map", args, 2)?;
+    let f = args[0].eval(env)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
 
-        let mut result = Vec::with_capacity(list.as_ref().len());
-        for item in list.as_ref().iter() {
-            result.push(
-                Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone()])).eval(env)?,
-            );
-        }
-        Ok(Expression::List(Rc::new(result)))
+    let mut result = Vec::with_capacity(list.as_ref().len());
+    for item in list.as_ref().iter() {
+        result.push(Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone()])).eval(env)?);
     }
+    Ok(Expression::List(Rc::new(result)))
 }
+fn for_each(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("forEach", args, 2)?;
+    let func = args[0].eval(env)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
+
+    let need_index = match &func {
+        Expression::Function(_, p, c, _, _) => p.len() > 1 || c.is_some(),
+        Expression::Lambda(p, _) => p.len() > 1,
+        o => {
+            return Err(LmError::TypeError {
+                expected: "Function/Lambda".into(),
+                sym: args[0].to_string(),
+                found: o.type_name(),
+            });
+        }
+    };
+    if need_index {
+        for (index, item) in list.as_ref().iter().enumerate() {
+            Expression::Apply(
+                Rc::new(func.clone()),
+                Rc::new(vec![Expression::Integer(index as Int), item.clone()]),
+            )
+            .eval(env)?;
+        }
+    } else {
+        for item in list.as_ref().iter() {
+            Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)?;
+        }
+    }
+
+    Ok(Expression::None)
+}
+
 fn filter(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("filter", args, 2)?;
-    let data = if let Expression::List(list) = args[1].eval(env)? {
-        list
-    } else {
-        return Err(LmError::CustomError("Expected list for filtering".into()));
-    };
+    let data = get_list_arg(args[1].eval(env)?)?;
 
     let mut result = Vec::new();
     let fn_arg_count = match args[0].clone() {
@@ -483,14 +381,7 @@ fn reduce(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         super::check_exact_args_len("reduce", args, 3)?;
         let f = args[0].eval(env)?;
         let mut acc = args[1].eval(env)?;
-        let list = match args[2].eval(env)? {
-            Expression::List(l) => l,
-            _ => {
-                return Err(LmError::CustomError(
-                    "reduce requires list as third argument".to_string(),
-                ));
-            }
-        };
+        let list = get_list_arg(args[2].eval(env)?)?;
 
         for item in list.as_ref().iter() {
             acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![acc, item.clone()]))
@@ -500,34 +391,9 @@ fn reduce(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     }
 }
 
-fn find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("find", args, 2)?;
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "find requires list as last argument".to_string(),
-            ));
-        }
-    };
-    let target = args[0].eval(env)?;
-
-    Ok(match list.as_ref().iter().position(|x| *x == target) {
-        Some(index) => Expression::Integer(index as Int),
-        None => Expression::None,
-    })
-}
-
 fn group_by(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("group", args, 2)?;
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "group requires list as last argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let key_func = args[0].eval(env)?;
     let mut groups: BTreeMap<String, Vec<Expression>> = BTreeMap::new();
@@ -585,14 +451,7 @@ fn group_by(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
 fn filter_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("filter_map", args, 2)?;
-    let list = match args[1].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "filter_map requires list as last argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[1].eval(env)?)?;
 
     let func = args[0].eval(env)?;
     let mut result = Vec::new();
@@ -752,14 +611,7 @@ fn sort(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 
 fn unique(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("unique", args, 1)?;
-    let list = match args[0].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "unique requires list as argument".to_string(),
-            ));
-        }
-    };
+    let list = get_list_arg(args[0].eval(env)?)?;
 
     let mut seen = std::collections::HashSet::new();
     let mut result = Vec::new();
@@ -773,15 +625,8 @@ fn unique(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 }
 
 fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("to-map", args, 1..=3)?;
-    let list = match args.last().unwrap().eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "to-map requires list as last argument".to_string(),
-            ));
-        }
-    };
+    super::check_args_len("to_map", args, 1..=3)?;
+    let list = get_list_arg(args.last().unwrap().eval(env)?)?;
 
     let (key_func, val_func) = match args.len() {
         3 => (Some(args[0].eval(env)?), Some(args[1].eval(env)?)),
@@ -821,14 +666,7 @@ fn to_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
 fn transpose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("transpose", args, 1)?;
-    let matrix = match args[0].eval(env)? {
-        Expression::List(l) => l,
-        _ => {
-            return Err(LmError::CustomError(
-                "transpose requires list of lists as argument".to_string(),
-            ));
-        }
-    };
+    let matrix = get_list_arg(args[0].eval(env)?)?;
 
     if matrix.as_ref().is_empty() {
         return Ok(Expression::List(Rc::new(vec![])));
@@ -909,9 +747,193 @@ fn emulate(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     })
 }
 
-fn get_string_arg(expr: Expression) -> Result<String, LmError> {
+fn contains(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("includes", args, 2)?;
+    let item = args[0].eval(env)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
+
+    Ok(Expression::Boolean(
+        list.as_ref().iter().any(|x| *x == item),
+    ))
+}
+
+fn some(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("some", args, 2)?;
+    let func = args[0].eval(env)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
+
+    for item in list.as_ref().iter() {
+        match Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)? {
+            Expression::Boolean(true) => return Ok(Expression::Boolean(true)),
+            _ => continue,
+        }
+    }
+
+    Ok(Expression::Boolean(false))
+}
+
+fn every(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("every", args, 2)?;
+    let func = args[0].eval(env)?;
+    let list = get_list_arg(args[1].eval(env)?)?;
+
+    for item in list.as_ref().iter() {
+        match Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)? {
+            Expression::Boolean(false) => return Ok(Expression::Boolean(false)),
+            _ => continue,
+        }
+    }
+
+    Ok(Expression::Boolean(true))
+}
+
+fn find_index(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("findIndex", args, 2..=3)?;
+    let target = args[0].eval(env)?;
+    let list = get_list_arg(args.last().unwrap().eval(env)?)?;
+    let start = if args.len() == 3 {
+        super::get_integer_arg(args[1].eval(env)?)? as usize
+    } else {
+        0
+    };
+
+    match &target {
+        Expression::Function(..) | Expression::Lambda(..) => {
+            for (i, item) in list.as_ref().iter().enumerate().skip(start) {
+                match Expression::Apply(Rc::new(target.clone()), Rc::new(vec![item.clone()]))
+                    .eval(env)?
+                {
+                    Expression::Boolean(true) => return Ok(Expression::Integer(i as Int)),
+                    _ => continue,
+                }
+            }
+
+            Ok(Expression::None)
+        }
+        _ => Ok(
+            match list.as_ref().iter().skip(start).position(|x| *x == target) {
+                Some(index) => Expression::Integer(index as Int),
+                None => Expression::None,
+            },
+        ),
+    }
+}
+
+fn find_last_index(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("findIndex", args, 2..=3)?;
+    let target = args[0].eval(env)?;
+    let list = get_list_arg(args.last().unwrap().eval(env)?)?;
+    let start = if args.len() == 3 {
+        super::get_integer_arg(args[1].eval(env)?)? as usize
+    } else {
+        0
+    };
+    match &target {
+        Expression::Function(..) | Expression::Lambda(..) => {
+            for (i, item) in list.as_ref().iter().enumerate().rev().skip(start) {
+                match Expression::Apply(Rc::new(target.clone()), Rc::new(vec![item.clone()]))
+                    .eval(env)?
+                {
+                    Expression::Boolean(true) => return Ok(Expression::Integer(i as Int)),
+                    _ => continue,
+                }
+            }
+
+            Ok(Expression::None)
+        }
+        _ => Ok(
+            match list
+                .as_ref()
+                .iter()
+                .rev()
+                .skip(start)
+                .position(|x| *x == target)
+            {
+                Some(index) => Expression::Integer(index as Int),
+                None => Expression::None,
+            },
+        ),
+    }
+}
+
+fn remove_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("remove_at", args, 2..=3)?;
+
+    let index = super::get_integer_arg(args[0].eval(env)?)?;
+
+    let count = if args.len() == 3 {
+        super::get_integer_arg(args[1].eval(env)?)?
+    } else {
+        1
+    };
+
+    let list = get_list_arg(args.last().unwrap().eval(env)?)?;
+
+    if count <= 0 {
+        return Ok(Expression::List(list));
+    }
+
+    let list_len = list.as_ref().len() as Int;
+    let start_idx = if index < 0 {
+        (list_len + index).max(0) as usize
+    } else {
+        (index as usize).min(list_len as usize)
+    };
+
+    let end_idx = (start_idx + count as usize).min(list_len as usize);
+
+    if start_idx >= list_len as usize {
+        return Ok(Expression::List(list));
+    }
+
+    let mut new_list = Vec::new();
+    new_list.extend(list.as_ref().iter().take(start_idx).cloned());
+    new_list.extend(list.as_ref().iter().skip(end_idx).cloned());
+
+    Ok(Expression::List(Rc::new(new_list)))
+}
+
+fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("remove", args, 2..=3)?;
+
+    let item = args[0].eval(env)?;
+
+    let all = if args.len() == 3 {
+        if let Expression::Boolean(b) = args[1].eval(env)? {
+            b
+        } else {
+            false
+        }
+    } else {
+        false
+    };
+
+    let list = get_list_arg(args.last().unwrap().eval(env)?)?;
+    if all {
+        let new_list = list
+            .iter()
+            .filter(|x| **x != item)
+            .cloned()
+            .collect::<Vec<_>>();
+        Ok(Expression::from(new_list))
+    } else {
+        if let Some(pos) = list.iter().position(|x| *x == item) {
+            let mut new_list = list.as_ref().clone();
+            new_list.remove(pos);
+            Ok(Expression::from(new_list))
+        } else {
+            Ok(Expression::List(list))
+        }
+    }
+}
+
+fn get_list_arg(expr: Expression) -> Result<Rc<Vec<Expression>>, LmError> {
     match expr {
-        Expression::Symbol(s) | Expression::String(s) => Ok(s),
-        _ => Err(LmError::CustomError("expected string".to_string())),
+        Expression::List(s) => Ok(s),
+        e => Err(LmError::TypeError {
+            expected: "List".to_string(),
+            found: e.type_name(),
+            sym: e.to_string(),
+        }),
     }
 }

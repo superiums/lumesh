@@ -1056,7 +1056,7 @@ impl Expression {
                     })
                 } else {
                     Err(RuntimeErrorKind::TypeError {
-                        expected: "integer".into(),
+                        expected: "Integer to index a List".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
                     })
@@ -1075,7 +1075,7 @@ impl Expression {
                         })
                 } else {
                     Err(RuntimeErrorKind::TypeError {
-                        expected: "integer".into(),
+                        expected: "Integer to index a Range".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
                     })
@@ -1110,7 +1110,7 @@ impl Expression {
                         })
                 } else {
                     Err(RuntimeErrorKind::TypeError {
-                        expected: "integer".into(),
+                        expected: "Integer to index a String".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
                     })
@@ -1159,7 +1159,7 @@ impl Expression {
                     // 处理其他类型错误
                     _ => Err(RuntimeError::new(
                         RuntimeErrorKind::TypeError {
-                            expected: "integer".into(),
+                            expected: "Integer".into(),
                             sym: evaluated.to_string(),
                             found: evaluated.type_name(),
                         },

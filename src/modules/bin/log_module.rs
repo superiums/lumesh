@@ -59,7 +59,7 @@ fn set_log_level(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
         Ok(Expression::None)
     } else {
         Err(LmError::TypeError {
-            expected: "integer".into(),
+            expected: "Integer".into(),
             sym: args[0].type_name(),
             found: args[0].to_string(),
         })
@@ -82,7 +82,7 @@ fn is_level_enabled(args: &Vec<Expression>, env: &mut Environment) -> Result<Exp
         Ok(Expression::Boolean(is_log_level_enabled(level)))
     } else {
         Err(LmError::TypeError {
-            expected: "integer".into(),
+            expected: "Integer".into(),
             sym: args[0].type_name(),
             found: args[0].to_string(),
         })

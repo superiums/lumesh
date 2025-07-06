@@ -1359,7 +1359,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;
     let num = num.to_str(input.str).parse::<Int>().map_err(|e| {
-        SyntaxErrorKind::failure(num, "integer", Some(format!("error: {}", e)), None)
+        SyntaxErrorKind::failure(num, "Integer", Some(format!("error: {}", e)), None)
     })?;
     Ok((input, Expression::Integer(num)))
 }

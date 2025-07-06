@@ -13,26 +13,27 @@ pub fn get() -> Expression {
 
         String::from("has") => Expression::builtin("has", has, "check if a map has a key", "<key> <map>"),
 
-               // 数据获取
-               String::from("items") => Expression::builtin("items", items, "get the items of a map or list", "<map>"),
-               String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map", "<map>"),
-               String::from("values") => Expression::builtin("values", values, "get the values of a map", "<map>"),
+        // 数据获取
+        String::from("items") => Expression::builtin("items", items, "get the items of a map or list", "<map>"),
+        String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map", "<map>"),
+        String::from("values") => Expression::builtin("values", values, "get the values of a map", "<map>"),
+        // 查找
+        String::from("find") => Expression::builtin("find", find, "find first key-value pair matching condition", "<predicate_fn> <map>"),
+        String::from("filter") => Expression::builtin("filter", filter, "filter map by condition", "<predicate_fn> <map>"),
+        // 结构修改
+        String::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map", "<key> <map>"),
 
-               // 结构修改
-               String::from("insert") => Expression::builtin("insert", insert, "insert a key-value pair into a map", "<key> <value> <map>"),
-               String::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map", "<key> <map>"),
+        // 创建操作
+        String::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs", "<items>"),
 
-               // 创建操作
-               String::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs", "<items>"),
+        // 集合运算
+        String::from("union") => Expression::builtin("union", union, "combine two maps", "<map1> <map2>"),
+        String::from("intersect") => Expression::builtin("intersect", intersect, "get the intersection of two maps", "<map1> <map2>"),
+        String::from("difference") => Expression::builtin("difference", difference, "get the difference of two maps", "<map1> <map2>"),
+        String::from("merge") => Expression::builtin("merge", deep_merge, "recursively merge two or more maps", "<map1> <map2> [<map3> ...]"),
 
-               // 集合运算
-               String::from("union") => Expression::builtin("union", union, "combine two maps", "<map1> <map2>"),
-               String::from("intersect") => Expression::builtin("intersect", intersect, "get the intersection of two maps", "<map1> <map2>"),
-               String::from("difference") => Expression::builtin("difference", difference, "get the difference of two maps", "<map1> <map2>"),
-               String::from("deep_merge") => Expression::builtin("deep_merge", deep_merge, "recursively merge two or more maps", "<map1> <map2> [<map3> ...]"),
-
-               // 转换操作
-               String::from("map") => Expression::builtin("map", map_map, "transform map keys and values with provided functions", "<key_fn> <val_fn> <map>"),
+        // 转换操作
+        String::from("map") => Expression::builtin("map", map_map, "transform map keys and values with provided functions", "<key_fn> <val_fn> <map>"),
     })
     .into()
 }
@@ -95,27 +96,6 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         Expression::Map(map) => Expression::List(Rc::new(map.as_ref().values().cloned().collect())),
         Expression::HMap(map) => {
             Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
-        }
-        _ => Expression::None,
-    })
-}
-
-fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("insert", args, 3)?;
-    let expr = args[2].eval(env)?;
-    let key = args[0].eval(env)?;
-    let value = args[1].eval(env)?;
-
-    Ok(match expr {
-        Expression::Map(map) => {
-            let mut new_map = map.as_ref().clone();
-            new_map.insert(key.to_string(), value);
-            Expression::Map(Rc::new(new_map))
-        }
-        Expression::HMap(map) => {
-            let mut new_map = map.as_ref().clone();
-            new_map.insert(key.to_string(), value);
-            Expression::HMap(Rc::new(new_map))
         }
         _ => Expression::None,
     })
@@ -228,14 +208,8 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
 fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("map.map", args, 2..=3)?;
-    let map = match args.last().unwrap().eval(env)? {
-        Expression::Map(m) => m,
-        _ => {
-            return Err(LmError::CustomError(
-                "map.map requires a map as last argument".to_string(),
-            ));
-        }
-    };
+
+    let map = get_map_arg(args.last().unwrap().eval(env)?)?;
 
     let key_func = args[0].eval(env)?;
     let val_func = if args.len() == 3 {
@@ -271,34 +245,16 @@ fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
 }
 
 fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    if args.len() < 2 {
-        return Err(LmError::CustomError(
-            "deep_merge requires at least two maps".to_string(),
-        ));
-    }
+    super::check_args_len("merge", args, 2..)?;
 
-    let mut base = match args[0].eval(env)? {
-        Expression::Map(m) => m.as_ref().clone(),
-        _ => {
-            return Err(LmError::CustomError(
-                "deep_merge requires maps as arguments".to_string(),
-            ));
-        }
-    };
-
+    let base = get_map_arg(args[0].eval(env)?)?;
+    let mut r = BTreeMap::new();
     for arg in args.iter().skip(1) {
-        let next = match arg.eval(env)? {
-            Expression::Map(m) => m,
-            _ => {
-                return Err(LmError::CustomError(
-                    "deep_merge requires maps as arguments".to_string(),
-                ));
-            }
-        };
-        base = deep_merge_maps(&base, next.as_ref())?;
+        let next = get_map_arg(arg.eval(env)?)?;
+        r = deep_merge_maps(base.as_ref(), next.as_ref())?;
     }
 
-    Ok(Expression::from(base))
+    Ok(Expression::from(r))
 }
 
 fn deep_merge_maps(
@@ -321,4 +277,61 @@ fn deep_merge_maps(
     }
 
     Ok(result)
+}
+
+fn find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("map.find", args, 2)?;
+    let map = get_map_arg(args[1].eval(env)?)?;
+
+    let predicate = args[0].eval(env)?;
+
+    for (k, v) in map.iter() {
+        let result = Expression::Apply(
+            Rc::new(predicate.clone()),
+            Rc::new(vec![Expression::String(k.clone()), v.clone()]),
+        )
+        .eval(env)?;
+
+        if let Expression::Boolean(true) = result {
+            return Ok(Expression::from(vec![
+                Expression::String(k.clone()),
+                v.clone(),
+            ]));
+        }
+    }
+
+    Ok(Expression::None)
+}
+
+fn filter(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("map.filter", args, 2)?;
+    let map = get_map_arg(args[1].eval(env)?)?;
+
+    let predicate = args[0].eval(env)?;
+    let mut new_map = BTreeMap::new();
+
+    for (k, v) in map.iter() {
+        let result = Expression::Apply(
+            Rc::new(predicate.clone()),
+            Rc::new(vec![Expression::String(k.clone()), v.clone()]),
+        )
+        .eval(env)?;
+
+        if let Expression::Boolean(true) = result {
+            new_map.insert(k.clone(), v.clone());
+        }
+    }
+
+    Ok(Expression::from(new_map))
+}
+
+fn get_map_arg(expr: Expression) -> Result<Rc<BTreeMap<String, Expression>>, LmError> {
+    match expr {
+        Expression::Map(s) => Ok(s),
+        e => Err(LmError::TypeError {
+            expected: "Map".to_string(),
+            found: e.type_name(),
+            sym: e.to_string(),
+        }),
+    }
 }

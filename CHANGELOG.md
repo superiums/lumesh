@@ -10,7 +10,7 @@
 - link len/insert/rev/flattern to list/map.
 - optimize ctrl+j to never include param hint.
 - add more fn for list module, and optimize some existing fn.
-
+- add find/filter to map module.
 
 ## [0.6.4]
 - allow set modules path with `LUME_MODULES_PATH`

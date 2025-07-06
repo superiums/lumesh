@@ -14,7 +14,7 @@ if IS_INTERACTIVE {
             ███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
             ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
     "
-    print Fmt.faint(Fmt.green(logo))
+    print logo.green().faint()
 
     # ====== default repl mode
     # LUME_VI_MODE = true
@@ -33,12 +33,12 @@ if IS_INTERACTIVE {
     }
     # template could be normal expression or func.
     # avaluable tmplate var: $CWD, $CWD_SHORT
-    let LUME_PROMPT_TEMPLATE = (Fmt.blue("$CWD_SHORT") + Fmt.yellow(Fmt.bold(">> ")))
+    let LUME_PROMPT_TEMPLATE = (String.blue("$CWD_SHORT") + ">> ".bold().yellow())
     # if template is lambda/func, it will be evaluated everytime.
     # let LUME_PROMPT_TEMPLATE := x -> {
-    #     fmt.format "{} {}{}{} " fmt.blue(x) fmt.green(fmt.bold("|")) \
-    #     (if (fs.exists '.git') {git branch --show-current | fmt.cyan()} else "") \
-    #     fmt.green(fmt.bold(">"))
+    #     String.format "{} {}{}{} " String.blue(x) String.green(String.bold("|")) \
+    #     (if (fs.exists '.git') {git branch --show-current | String.cyan()} else "") \
+    #     String.green(String.bold(">"))
     # }
     # ====== history file
     # let LUME_HISTORY_FILE = "/tmp/lume_histroy"
@@ -88,7 +88,7 @@ if IS_INTERACTIVE {
     alias sort = List.sort()
     alias group = List.group()
     alias table = Parse.cmd()
-    alias format = Fmt.format()
+    alias format = String.format()
     alias ll = Fs.ls -l
     alias lsx = ls -l --time-style=long-iso
     alias pls = Parse.cmd(mode,hlink,user,group,size,mday,mtime,name)

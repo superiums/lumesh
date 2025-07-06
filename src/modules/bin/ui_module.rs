@@ -17,6 +17,11 @@ pub fn get() -> Expression {
         String::from("confirm") => Expression::builtin("confirm", confirm, "ask user to confirm", "<msg>"),
         String::from("pick") => Expression::builtin("pick", pick, "select one from list/string", "[msg|cfg_map] <list|items...>"),
         String::from("multi_pick") => Expression::builtin("multi_pick", multi_pick, "select multi from list/string", "[msg|cfg_map] <list|items...>"),
+
+        String::from("widget") => Expression::builtin("widget", widget, "create a text widget","<title> <content> [width] [height]"),
+        String::from("joinx") => Expression::builtin("joinx", joinx, "join two widgets horizontally","<widget1> <widget2>"),
+        String::from("joiny") => Expression::builtin("joiny", joiny, "join two widgets vertically","<widget1> <widget2>"),
+        String::from("join_flow") => Expression::builtin("join_flow", join_flow, "join widgets with flow layout","<max_width> <widgets...>")
     })
     .into()
 }
@@ -266,4 +271,306 @@ fn extract_cfg(expr: Expression) -> Result<Rc<BTreeMap<String, Expression>>, LmE
             "cfg should be a string msg or map".to_string(),
         )),
     }
+}
+
+fn widget(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    // 支持2-4个参数：title, content, [width], [height]
+    super::check_args_len("widget", args, 2..=4)?;
+
+    let title = args[0].eval(env)?.to_string();
+    let title_len = title.chars().count();
+    let content = args[1].eval(env)?.to_string();
+
+    // 自动计算宽度
+    let auto_width = calculate_auto_width(&title, &content);
+    let text_width = if args.len() >= 3 {
+        match args[2].eval(env)? {
+            Expression::Integer(n) if n > 4 => n as usize,
+            otherwise => {
+                return Err(LmError::CustomError(format!(
+                    "expected width argument to be integer greater than 4, but got {}",
+                    otherwise
+                )));
+            }
+        }
+    } else {
+        auto_width
+    } - 2;
+
+    // 自动计算高度
+    let auto_height = calculate_auto_height(&content, text_width);
+    let widget_height = if args.len() >= 4 {
+        match args[3].eval(env)? {
+            Expression::Integer(n) if n >= 3 => n as usize,
+            otherwise => {
+                return Err(LmError::CustomError(format!(
+                    "expected height argument to be an integer greater than 2, but got {}",
+                    otherwise
+                )));
+            }
+        }
+    } else {
+        auto_height
+    };
+
+    let format_width = text_width * 2 / 3;
+    let text = textwrap::fill(&format!("{:format_width$}", content), text_width);
+
+    if text_width < title_len {
+        return Err(LmError::CustomError(String::from(
+            "width is less than title length",
+        )));
+    }
+
+    let mut left_border_half = "─".repeat(((text_width - title_len) as f64 / 2.0).round() as usize);
+    let right_border_half = left_border_half.clone();
+    let left_len = left_border_half.chars().count();
+    if (left_len * 2 + title_len + 2) > text_width + 2 {
+        left_border_half.pop();
+    }
+
+    let mut result = format!(
+        "┌{left_side}{}{right_side}┐\n",
+        title,
+        left_side = left_border_half,
+        right_side = right_border_half
+    );
+    let width = result.chars().count() - 1;
+
+    let mut lines = 1;
+    let mut i = 0;
+    for ch in text.replace('\r', "").chars() {
+        if i == 0 {
+            result.push(' ');
+            i += 1;
+        }
+
+        if ch == '\n' {
+            lines += 1;
+            result += &" ".repeat(width - i);
+            i = width;
+        } else {
+            result.push(ch);
+        }
+
+        if lines == widget_height - 1 {
+            break;
+        }
+
+        if i >= width - 1 {
+            result += "\n";
+            i = 0;
+        } else {
+            i += 1;
+        }
+    }
+
+    result += &" ".repeat(width - i);
+
+    while result.lines().count() < widget_height - 1 {
+        result += "\n";
+        result += &" ".repeat(width);
+    }
+
+    result += &format!(
+        "\n└{left_side}{}{right_side}┘",
+        "─".repeat(title_len),
+        left_side = left_border_half,
+        right_side = right_border_half
+    );
+
+    Ok(result.into())
+}
+
+// 计算自动宽度
+fn calculate_auto_width(title: &str, content: &str) -> usize {
+    let title_len = title.chars().count();
+    let content_lines = content.lines();
+    let max_content_width = content_lines
+        .map(|line| line.chars().count())
+        .max()
+        .unwrap_or(0);
+
+    // 取标题长度和内容最大行宽度的较大值，加上边框和内边距
+    std::cmp::max(title_len + 4, max_content_width + 4)
+}
+
+// 计算自动高度
+fn calculate_auto_height(content: &str, text_width: usize) -> usize {
+    let wrapped_content = textwrap::fill(content, text_width);
+    let content_lines = wrapped_content.lines().count();
+    // 加上标题行和底部边框
+    content_lines + 3
+}
+
+fn joinx(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("joinx", args, 2..)?;
+
+    let mut string_args = vec![];
+    let mut max_height = 0;
+
+    // 收集所有widget并找到最大高度
+    for arg in args.iter() {
+        match arg.eval(env)? {
+            Expression::String(s) => {
+                let lines = s.lines().map(ToString::to_string).collect::<Vec<String>>();
+                let lines_len = lines.len();
+                string_args.push(lines);
+                max_height = std::cmp::max(max_height, lines_len);
+            }
+            otherwise => {
+                return Err(LmError::CustomError(format!(
+                    "expected string, but got {}",
+                    otherwise
+                )));
+            }
+        }
+    }
+
+    // 将所有widget填充到相同高度
+    for widget_lines in &mut string_args {
+        while widget_lines.len() < max_height {
+            let width = widget_lines
+                .first()
+                .map(|line| line.chars().count())
+                .unwrap_or(0);
+            widget_lines.push(" ".repeat(width));
+        }
+    }
+
+    let mut result = String::new();
+    for line_n in 0..max_height {
+        for widget_lines in &string_args {
+            result += &widget_lines[line_n].replace('\r', "");
+        }
+        result += "\n";
+    }
+
+    Ok(result.into())
+}
+
+fn joiny(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("joiny", args, 2..)?;
+
+    let mut string_args = vec![];
+    let mut max_width = 0;
+
+    // 收集所有widget并找到最大宽度
+    for arg in args.iter() {
+        match arg.eval(env)? {
+            Expression::String(s) => {
+                let trimmed = s.trim().to_string();
+                let width = trimmed
+                    .lines()
+                    .map(|line| line.chars().count())
+                    .max()
+                    .unwrap_or(0);
+                max_width = std::cmp::max(max_width, width);
+                string_args.push(trimmed);
+            }
+            otherwise => {
+                return Err(LmError::CustomError(format!(
+                    "expected string, but got {}",
+                    otherwise
+                )));
+            }
+        }
+    }
+
+    // 将所有widget填充到相同宽度
+    let mut padded_widgets = vec![];
+    for widget in string_args {
+        let padded_lines: Vec<String> = widget
+            .lines()
+            .map(|line| {
+                let line_width = line.chars().count();
+                if line_width < max_width {
+                    format!("{}{}", line, " ".repeat(max_width - line_width))
+                } else {
+                    line.to_string()
+                }
+            })
+            .collect();
+        padded_widgets.push(padded_lines.join("\n"));
+    }
+
+    Ok(padded_widgets
+        .into_iter()
+        .map(|x| x.replace('\r', ""))
+        .collect::<Vec<_>>()
+        .join("\n")
+        .into())
+}
+
+// 新增：流式排布函数
+fn join_flow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    if args.len() < 2 {
+        return Err(LmError::CustomError(
+            "join_flow requires at least 2 arguments: max_width and widgets".to_string(),
+        ));
+    }
+
+    let max_width = match args[0].eval(env)? {
+        Expression::Integer(w) if w > 0 => w as usize,
+        otherwise => {
+            return Err(LmError::CustomError(format!(
+                "expected positive integer for max_width, got {}",
+                otherwise
+            )));
+        }
+    };
+
+    let mut rows = vec![];
+    let mut current_row = vec![];
+    let mut current_width = 0;
+
+    for arg in &args[1..] {
+        match arg.eval(env)? {
+            Expression::String(widget) => {
+                let widget_width = widget
+                    .lines()
+                    .map(|line| line.chars().count())
+                    .max()
+                    .unwrap_or(0);
+
+                // 如果当前行加上新widget会超过最大宽度，则开始新行
+                if !current_row.is_empty() && current_width + widget_width > max_width {
+                    rows.push(current_row);
+                    current_row = vec![];
+                    current_width = 0;
+                }
+
+                current_row.push(widget);
+                current_width += widget_width;
+            }
+            otherwise => {
+                return Err(LmError::CustomError(format!(
+                    "expected string widget, got {}",
+                    otherwise
+                )));
+            }
+        }
+    }
+
+    if !current_row.is_empty() {
+        rows.push(current_row);
+    }
+
+    // 将每行的widgets水平连接，然后将所有行垂直连接
+    let mut result_rows = vec![];
+    for row in rows {
+        if row.len() == 1 {
+            result_rows.push(row[0].clone());
+        } else {
+            // 使用现有的joinx逻辑
+            let row_expressions: Vec<Expression> =
+                row.into_iter().map(Expression::String).collect();
+            match joinx(&row_expressions, env)? {
+                Expression::String(joined) => result_rows.push(joined),
+                _ => return Err(LmError::CustomError("joinx failed".to_string())),
+            }
+        }
+    }
+
+    Ok(result_rows.join("\n").into())
 }

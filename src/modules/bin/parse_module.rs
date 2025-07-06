@@ -212,8 +212,10 @@ pub fn parse_command_output(
                 .map(|s| {
                     s.replace(":", "_")
                         .replace("\"", "")
+                        .replace("%", "")
                         .replace("(", "_")
                         .replace(")", "")
+                        .replace("$", "")
                 })
                 .collect();
             (&lines[1..], detected)

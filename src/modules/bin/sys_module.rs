@@ -19,7 +19,12 @@ pub fn get() -> Expression {
         String::from("print_tty") => Expression::builtin("print_tty", print_tty, "print control sequence to tty", "<arg>"),
         String::from("discard") => Expression::builtin("discard", discard, "send data to /dev/null", "<arg>"),
 
+        String::from("info") => Expression::builtin("info", info, "get os info", "<arg>"),
     })
+}
+fn info(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, crate::LmError> {
+    let info = os_info::get();
+    Ok(Expression::String(info.to_string()))
 }
 fn print_tty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("print_tty", args, 1)?;

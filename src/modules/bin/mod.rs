@@ -11,10 +11,7 @@ use crate::{
 use common_macros::hash_map;
 use pprint::pretty_printer;
 
-#[cfg(feature = "chess-engine")]
-mod chess_module;
 mod console_module;
-mod fmt_module;
 mod map_module;
 // mod fn_module;
 // use fn_module::curry;
@@ -26,7 +23,6 @@ mod math_module;
 mod about_module;
 mod fs_ls;
 mod into_module;
-mod os_module;
 mod parse_module;
 mod pprint;
 mod rand_module;
@@ -35,7 +31,6 @@ mod string_module;
 mod sys_module;
 mod time_module;
 mod ui_module;
-mod widget_module;
 
 pub fn get_module_map() -> HashMap<String, Expression> {
     hash_map! {
@@ -43,13 +38,10 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("Math") => math_module::get(),
         String::from("Map") => map_module::get(),
         String::from("About") => about_module::get(),
-        String::from("Os") => os_module::get(),
         String::from("Ui") => ui_module::get(),
-        String::from("Widget") => widget_module::get(),
         String::from("Time") => time_module::get(),
         String::from("Rand") => rand_module::get(),
         String::from("Console") => console_module::get(),
-        String::from("Fmt") => fmt_module::get(),
         String::from("Parse") => parse_module::get(),
         String::from("Fs") => fs_module::get(),
         String::from("String") => string_module::get(),

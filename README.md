@@ -1,110 +1,180 @@
 ### [中文说明-点这里](README-cn.md)
-# Lumesh - a lighting Shell
 
-### Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
-
-
-Welcome to **Lumesh**, a powerful lighting shell, full rewrite of [Dune](https://github.com/adam-mcdaniel/dune)!
-
-[lumesh](https://codeberg.org/santo/lumesh/raw/branch/main/assets/lumesh.png)
-
-Lumesh aims to provide a fast, efficient, and user-friendly command-line experience, enhancing your productivity with a variety of new features.
-
-- write like `python`/`js`
-- works like `bash`
-- runs like **light**
-- stays like **air**
-- flows like **water**
-
-## Why lumesh
-
-| compare |    lume       |     bash      |     dash      |     fish      |
-|---------|---------------|---------------|---------------|---------------|
-| speed(million circle)    |     *****     |     ***       |     ****      |    *          |
-| interactive    |     ****      |     **        |     *         |    *****      |
-| sytax    |     *****     |     **        |     *         |    ****       |
-| size    |     ****      |     ***       |     *****     |    **         |
-| error tips|     *****     |     *         |     *         |    ***        |
-| error catch|     *****     |     *         |     *         |    *        |
-| builtin Lib  |     *****     |               |               |    *       |
-| key-bindings|     ☑     |               |               |      ☑        |
-| structured pipe|     ☑     |               |               |              |
-| AI helper  |     ☑        |               |               |               |
-
-## What is Lumesh?
-
-**Lumesh** (or "lume") is a shell and scripting language designed as a complete rewrite of
-`Dune` with substantial improvements. The project aims to be:
-
-- **Fast and efficient**: Optimized for speed and resource management
-- **User-friendly**: Designed with improved syntax and error handling
-- **Feature-rich**: Includes built-in modules for common operations
-- **Compatible**: Works with traditional shell workflows
+- Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
 
 
-## Key Features
-- **Intuitive Syntax**: More structured and readable than traditional shell scripts
-- **Performance-Focused**: Optimized for both interactive and script execution modes
-- **Built-in Modules**: Comprehensive library of functionality (fs, string, time, etc.)
-- **Powerful Error Handling**: Advanced error catching and recovery mechanisms
-- **Structured Pipelines**: Enhanced pipe operations for streams and values
-- **AI Integration**: Local AI capabilities for command completion and assistance
+# Lumesh - Light-speed Shell and Scripting Language
 
-The script parser, executor, and front end have been completely rewritten since version 0.3.0, targeting improved efficiency and flexibility for syntax extension.
+**Write like js, work like Bash, run like light**
 
-Discover more features in our [ChangeLog](CHANGELOG.md).
+Lumesh is a modern shell and scripting language, completely rewritten from Dune, designed for high performance and user-friendly experience.
+
+## ⚑ Why Choose Lumesh?
+
+### Performance Comparison
+
+| Comparison Item |    lume       |     bash      |     dash      |     fish      |
+|------------------|---------------|---------------|---------------|---------------|
+| Speed (million loops) |     *****     |     ***       |     ****      |    *          |
+| Syntax Friendliness |     *****     |     **        |     *         |    ****       |
+| Error Messages |     *****     |     *         |     *         |    ***        |
+| Error Handling |     *****     |     *         |     *         |    *          |
+| Built-in Libraries |     *****     |               |               |    *       |
+| Interactivity |     ****      |     **        |     *         |    *****      |
+| Size |     ****      |     ***       |     *****     |    **         |
+| Key Bindings |     ☑      |               |               |     ☑         |
+| Structured Pipelines |     ☑      |               |               |              |
+| AI Interaction |     ☑        |               |               |               |
+
+## ⚑ Core Features
+
+### ⚡ Intuitive Syntax Design
+```bash
+# Syntax like modern programming languages
+let user = {name: "Alice", age: 25}
+let numbers = 1..10 | list.filter(x -> x > 5)
+let [a, b] = [1, 2]
+```
+
+### ⚡ Chained Calls
+Supports method chaining similar to object-oriented languages:
+
+```bash
+"hello world".split(' ').join(',')
+data | .filter(x -> x > 0)
+```
 
 
-## Wiki
-For detailed documentation and guides, visit our [Wiki](https://lumesh.codeberg.page/en/index).
-- syntax handbook [https://lumesh.codeberg.page/en/syntax]
-- builtin libs [https://lumesh.codeberg.page/en/libs/index]
-- Bash compare [https://lumesh.codeberg.page/en/bash]
-- keys [https://lumesh.codeberg.page/en/keys]
+### ⚡ Powerful Error Handling
+More intelligent error tips, error capture and recovery deeling than traditional shells.
 
-[DeepWiki](https://deepwiki.com/superiums/lumesh)
+```bash
+command?.        # Ignore errors
+command?: e      # Error capture or default value
+command?+        # Print to standard output
+command??        # Print to error output
+command?>        # Override print (data channel)
+command?!        # Terminate on error (terminate pipeline)
+```
 
-- wiki中文 [https://lumesh.codeberg.page/zh-cn/index]。
+### ⚡ Diverse Pipeline Operations
+```bash
+data | process           # Standard pipeline, supports structured data
+data |_ positional       # Positional pipeline
+data |> loop_deel        # Loop pipeline
+data |^ interactive      # PTY pipeline
+```
 
-## Benchmark
+Structured pipelines:
+```bash
+ls -l | into.table() | where(size > 5K)
+Fs.ls -l | where(size > 5K) | select(name,size,modified)
+ls -1 |> cp -r _ /tmp/
+```
+
+### ⚡ Rich Built-in Modules
+- **Collection Operations**: `List.reduce, List.map`
+- **File System**: `Fs.ls, Fs.read, Fs.write`
+- **String Processing**: `String.split, String.join`, regex module, formatting module
+- **Time Operations**: `Time.now, Time.format`
+- **Data Conversion**: Into, Parse
+- **Mathematical Calculations**: Complete math function library
+- **Logging**: Log module
+- **UI Operations**: `ui.pick, ui.confirm`
+
+
+### ⚡ Function Decorators
+Supports function decorator syntax:
+
+```bash
+@decorator_name
+@decorator_with_args(param1, param2)
+fn my_function() { ... }
+```
+
+### ⚡ Module import
+Supports module import syntax:
+
+```bash
+use moduleA as ma
+```
+
+### AI Integration Support
+Built-in local AI assistant, supports command completion and smart suggestions.
+
+## ⚑ Use Cases
+
+### ☘ Interactive Shell
+Replace traditional shells, providing a modern command-line experience:
+```bash
+# Start interactive shell
+lume
+```
+
+### ☘ Script Automation [7](#1-6)
+```bash
+#!/usr/bin/env lumesh
+
+# File processing script
+let files = Fs.ls("/data") | where(size > 1MB)
+files | List.map(f -> Fs.cp(f, './backup'))
+```
+
+### ☘ System Management
+```bash
+# System monitoring and management
+ps -u 1000  u | Into.table() | pprint
+```
+
+## ⚑ Quick Start
+
+### Installation Methods
+
+**Method 1: Download Precompiled Version**
+- [release-page 1](https://codeberg.com/santo/lumesh/releases)
+- [release-page 2](https://github.com/superiums/lumesh/releases)
+
+**Method 2: Compile from Source**
+```bash
+git clone 'https://codeberg.com/santo/lumesh.git'
+cd lumesh
+cargo build --release
+```
+
+### Experience Immediately
+- **`lume`**: Complete interactive shell, supports REPL, auto-completion, syntax highlighting
+- **`lumesh`**: Lightweight script executor, quick startup, minimal dependencies
+
+```bash
+# Start interactive shell
+lume
+
+# Or execute script
+lumesh script.lm
+```
+
+## Benchmark Testing
 
 | ![highlight](assets/mem_chart.png) | ![highlight](assets/time_chart.png) |
 |------------------------|------------------------|
 
-_as fish was unable to fishish one million times task, we take the time of its harf task_
+_Due to fish being unable to complete one million tasks, we recorded its half-task time._
 
+## ⚑ Learning Resources
 
-## Installation
+- [中文 Wiki](https://lumesh.codeberg.page)
+- [Wiki English](https://lumesh.codeberg.page/en/index)
 
-You can install Lumesh in two ways:
+- **Syntax Manual** [https://lumesh.codeberg.page/en/syntax]
+- **Built-in Function Library** [https://lumesh.codeberg.page/en/libs/index]
+- **Bash Comparison** [https://lumesh.codeberg.page/en/bash_user_guid]
+- **Hotkeys** [https://lumesh.codeberg.page/en/keys]
 
-1. **Download from the Latest Release**: Get the precompiled binaries from our
-- [release-page 1](https://codeberg.com/santo/lumesh/releases)
-- [release-page 2](https://github.com/superiums/lumesh/releases)
-2. **Compile from Source**:
-   ```bash
-   git clone 'https://codeberg.com/santo/lumesh.git'
-   cd lumesh
-   cargo build --release
-   ```
-
-## Getting Started
-
-After installation, simply run the Lumesh executable:
-
-```bash
-# Start Lumesh
-lume
-```
-
-## Contributing
-
-We welcome contributions! If you would like to contribute to Lumesh, please check out our [Contributing Guidelines](CONTRIBUTING.md).
-
-## License
-
-Lumesh is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+## ⚑ Version History
+Current version **0.6.3**, continuously updated:
+- Decorator support
+- IFS mode control
+- Performance optimization
+Completely rewritten since version 0.3.0, focusing on efficiency improvements and syntax extension flexibility.
 
 ---
-
-Thank you for choosing Lumesh! We hope you enjoy using it as much as we enjoyed building it. If you have any questions or feedback, feel free to reach out through our GitHub repository. Happy scripting!

@@ -639,7 +639,10 @@ impl Expression {
         match get_builtin(&module) {
             // 顶级内置命令
             Some(Expression::HMap(hmap)) => {
-                let mut final_args = call_args.clone();
+                let mut final_args = call_args
+                    .iter()
+                    .map(|a| a.eval_mut(state, env, depth + 1))
+                    .collect::<Result<Vec<_>, _>>()?;
                 final_args.push(current_base);
 
                 //dbg!(&hmap);

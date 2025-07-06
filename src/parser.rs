@@ -853,7 +853,7 @@ fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 
 fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     delimited(
-        text("["),
+        terminated(text("["), opt(kind(TokenKind::LineBreak))),
         terminated(
             map(
                 separated_list0(
@@ -862,7 +862,10 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
                 ),
                 |s| Expression::from(s),
             ),
-            opt(text(",")), // 允许末尾，
+            opt(alt((
+                map(text(","), |_| {}),
+                map(kind(TokenKind::LineBreak), |_| {}),
+            ))),
         ),
         text_close("]"),
     )(input)

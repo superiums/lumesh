@@ -732,14 +732,6 @@ fn check_exact_args_len(
     if args.len() == expected_len {
         Ok(())
     } else {
-        // SyntaxError::new(
-        //     "",
-        //     lumesh::SyntaxErrorKind::ArgumentMismatch {
-        //         name: name,
-        //         expected: expected_len,
-        //         received: args.len(),
-        //     },
-        // )
         Err(RuntimeError::new(
             RuntimeErrorKind::ArgumentMismatch {
                 name: name.to_string(),
@@ -749,12 +741,6 @@ fn check_exact_args_len(
             Expression::None,
             0,
         ))
-
-        // Err(RuntimeError::ArgumentMismatch(if args.len() > expected_len {
-        //     format!("too many arguments to function {}", name.to_string())
-        // } else {
-        //     format!("too few arguments to function {}", name.to_string())
-        // }))
     }
 }
 

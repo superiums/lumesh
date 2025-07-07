@@ -534,8 +534,10 @@ impl Expression {
                                 "<" => Ok(Expression::Boolean(l < r)),
                                 ">=" => Ok(Expression::Boolean(l >= r)),
                                 "<=" => Ok(Expression::Boolean(l <= r)),
-                                "~:" => Ok(Expression::Boolean(handle_contains(l, r)?)),
-                                "!~:" => Ok(Expression::Boolean(!handle_contains(l, r)?)),
+                                "~:" => Ok(Expression::Boolean(handle_contains(l, r, job, depth)?)),
+                                "!~:" => {
+                                    Ok(Expression::Boolean(!handle_contains(l, r, job, depth)?))
+                                }
                                 "~~" => {
                                     let regex = Regex::new(&r.to_string()).map_err(|e| {
                                         RuntimeError::common(
@@ -1296,7 +1298,12 @@ fn matches_pattern(value: &Expression, pattern: &Vec<Expression>) -> bool {
     })
 }
 
-fn handle_contains(l: Expression, r: Expression) -> Result<bool, RuntimeError> {
+fn handle_contains(
+    l: Expression,
+    r: Expression,
+    ctx: &Expression,
+    depth: usize,
+) -> Result<bool, RuntimeError> {
     Ok(match l {
         Expression::String(left) => left.contains(&r.to_string()),
         Expression::Range(left, st) => {
@@ -1306,12 +1313,41 @@ fn handle_contains(l: Expression, r: Expression) -> Result<bool, RuntimeError> {
                     _ => left.step_by(st).any(|f| f == i),
                 }
             } else {
-                false
+                return Err(RuntimeError::common(
+                    "element of Range should be Integer".into(),
+                    ctx.clone(),
+                    depth,
+                ));
             }
         }
         Expression::List(left) => left.contains(&r),
-        Expression::Map(left) => left.contains_key(r.to_symbol()?),
-        Expression::HMap(left) => left.contains_key(r.to_symbol()?),
-        _ => false,
+        Expression::Map(left) => match &r {
+            Expression::Symbol(k) | Expression::String(k) => left.contains_key(k),
+            _ => {
+                return Err(RuntimeError::common(
+                    "key of Map should be Symbo/String".into(),
+                    ctx.clone(),
+                    depth,
+                ));
+            }
+        },
+        Expression::HMap(left) => match &r {
+            Expression::Symbol(k) | Expression::String(k) => left.contains_key(k),
+            _ => {
+                return Err(RuntimeError::common(
+                    "key of HMap should be Symbo/String".into(),
+                    ctx.clone(),
+                    depth,
+                ));
+            }
+        },
+
+        _ => {
+            return Err(RuntimeError::common(
+                "`contains` operator can only check Map/List/Range/String".into(),
+                ctx.clone(),
+                depth,
+            ));
+        }
     })
 }

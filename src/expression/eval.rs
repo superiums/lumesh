@@ -191,22 +191,22 @@ impl Expression {
                         ));
                     }
 
-                    if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
-                        expr.as_ref()
-                    {
-                        let is_in_pipe = state.contains(State::IN_PIPE);
-                        state.set(State::IN_PIPE);
-                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
-                        if !is_in_pipe {
-                            state.clear(State::IN_PIPE);
-                        }
-                        env.define(name, value); // 新增 declare
-                    } else {
-                        state.set(State::IN_ASSIGN);
-                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
-                        state.clear(State::IN_ASSIGN);
-                        env.define(name, value); // 新增 declare
-                    }
+                    // if let Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) =
+                    //     expr.as_ref()
+                    // {
+                    //     let is_in_pipe = state.contains(State::IN_PIPE);
+                    //     state.set(State::IN_PIPE);
+                    //     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                    //     if !is_in_pipe {
+                    //         state.clear(State::IN_PIPE);
+                    //     }
+                    //     env.define(name, value); // 新增 declare
+                    // } else {
+                    state.set(State::IN_ASSIGN);
+                    let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                    state.clear(State::IN_ASSIGN);
+                    env.define(name, value); // 新增 declare
+                    // }
                     // dbg!("declare---->", &name, &value.type_name());
                     return Ok(Self::None);
                 }
@@ -214,14 +214,14 @@ impl Expression {
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
                     // dbg!("assign---->", &name, &expr.type_name());
-                    let need_clear = match expr.as_ref() {
-                        Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
-                            let is_in_pipe = state.contains(State::IN_PIPE);
-                            state.set(State::IN_PIPE);
-                            !is_in_pipe
-                        }
-                        _ => false,
-                    };
+                    // let need_clear = match expr.as_ref() {
+                    //     Expression::Command(..) | Expression::Group(..) | Expression::Pipe(..) => {
+                    //         let is_in_pipe = state.contains(State::IN_PIPE);
+                    //         state.set(State::IN_PIPE);
+                    //         !is_in_pipe
+                    //     }
+                    //     _ => false,
+                    // };
                     state.set(State::IN_ASSIGN);
                     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                     state.clear(State::IN_ASSIGN);
@@ -250,9 +250,9 @@ impl Expression {
 
                         env.define(name, value.clone());
                     }
-                    if need_clear {
-                        state.clear(State::IN_PIPE);
-                    }
+                    // if need_clear {
+                    //     state.clear(State::IN_PIPE);
+                    // }
                     return Ok(value);
                 }
 
@@ -271,9 +271,14 @@ impl Expression {
 
                 // 元表达式处理
                 Self::Group(inner) => {
-                    // dbg!("2.--->group:", &inner);
+                    dbg!("2.--->group:", &inner, &state);
                     // return inner.as_ref().eval_mut(state, env, depth + 1);
                     job = inner.as_ref();
+                    if state.contains(State::IN_ASSIGN) {
+                        if let Expression::Symbol(_) = job {
+                            return job.eval_command(job, &vec![], state, env, depth + 1);
+                        }
+                    }
                     continue;
                 }
                 Self::Quote(inner) => return Ok(inner.as_ref().clone()),

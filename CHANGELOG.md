@@ -1,4 +1,18 @@
 # Changelog
+## [0.6.6]
+- remove the following command warp, keep it as it was.
+
+> 3. ` (a)` single symbo in *group*
+> 4. `alias x = a` single symbo in *alias declaration*
+> 5. `let x := a` single symbo in *lasy declaration*
+
+- make use of IN_ASSIGN:
+  - check IN_ASSIGN in Group, and convert single symbo to Command.
+  - check IN_ASSIGN mode in cmd, set it to pipe mode if true.
+  - set IN_ASSIGN mode for args.
+
+- allow symbol as alias cmd
+
 ## [0.6.5]
 - move os to sys;
 - move fmt to string;

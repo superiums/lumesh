@@ -384,7 +384,7 @@ impl Expression {
                         )
                     }
                     // alias a=ls
-                    Expression::String(cmd_str) if is_cmd_mode => {
+                    Expression::Symbol(cmd_str) | Expression::String(cmd_str) if is_cmd_mode => {
                         handle_command(self, &cmd_str, args.as_ref(), state, env, depth + 1)
                     }
                     // alias a=fmt.red()

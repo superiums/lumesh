@@ -814,20 +814,20 @@ fn parse_control_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
 /// a b c as expr
 /// a as cmd
 /// 如果是单独的symbol，则包装为命令
-fn parse_expr_with_single_cmd(
-    input: Tokens<'_>,
-) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // dbg!("---parse_single_expr");
-    let (input, expr) = parse_expr(input)?;
-    if let Expression::Symbol(s) = expr {
-        Ok((
-            input,
-            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-        ))
-    } else {
-        Ok((input, expr))
-    }
-}
+// fn parse_expr_with_single_cmd(
+//     input: Tokens<'_>,
+// ) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+//     // dbg!("---parse_single_expr");
+//     let (input, expr) = parse_expr(input)?;
+//     if let Expression::Symbol(s) = expr {
+//         Ok((
+//             input,
+//             Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+//         ))
+//     } else {
+//         Ok((input, expr))
+//     }
+// }
 // -- 子命令 --
 // fn parse_subcommand(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
 //     // dbg!(input);
@@ -841,9 +841,7 @@ fn parse_expr_with_single_cmd(
 fn parse_group(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     delimited(
         text("("),
-        map(parse_expr_with_single_cmd, |e| {
-            Expression::Group(Rc::new(e))
-        }),
+        map(parse_expr, |e| Expression::Group(Rc::new(e))),
         // map(alt((parse_math, parse_command_call)), |e| {
         //     Expression::Group(Box::new(e))
         // }),
@@ -1833,7 +1831,7 @@ fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     let (input, _) = text("alias")(input)?;
     let (input, symbol) = cut(parse_symbol_string)(input)?;
     let (input, _) = cut(text("="))(input)?;
-    let (input, expr) = cut(parse_expr_with_single_cmd)(input)?;
+    let (input, expr) = cut(parse_expr)(input)?;
     // dbg!(&expr);
     Ok((input, Expression::AliasOp(symbol, Rc::new(expr))))
 }
@@ -1846,7 +1844,7 @@ fn parse_lazy_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     // let (input, _) = text("let")(input)?;
     let (input, symbol) = parse_symbol_string(input)?;
     let (input, _) = text(":=")(input)?; // 使用:=作为延迟赋值符号
-    let (input, expr) = cut(parse_expr_with_single_cmd)(input)?;
+    let (input, expr) = cut(parse_expr)(input)?;
     // dbg!(&expr);
     Ok((
         input,

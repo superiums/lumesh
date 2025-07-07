@@ -22,7 +22,7 @@ pub fn get() -> Expression {
               String::from("time") => Expression::builtin("time", parse, "convert a string to a datetime", "<datetime_str> [datetime_template]"),
 
               // 解析第三方命令输出（parse库）
-              String::from("table") => Expression::builtin("table", parse_command_output, "convert third-party command output to a table", "<command_output>"),
+              String::from("table") => Expression::builtin("table", parse_command_output, "convert third-party command output to a table", "[headers|header...] <command_output>"),
 
               // 序列化（parse库）
               String::from("toml") => Expression::builtin("to_toml", expr_to_toml, "parse lumesh expression into TOML", "<expr>"),

@@ -6,6 +6,8 @@ use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
+        String::from("pprint") => Expression::builtin("pprint", super::pretty_print, "pretty print", "<map>"),
+
         // 检查操作
         String::from("len") => Expression::builtin("len", super::len, "get length of map", "<map>"),
         String::from("insert") => Expression::builtin("insert", super::insert, "insert item into map", "<key> <value> <map>"),

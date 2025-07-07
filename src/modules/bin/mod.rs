@@ -288,7 +288,7 @@ fn println(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     stdout.flush()?;
     Ok(Expression::None)
 }
-fn pretty_print(
+pub fn pretty_print(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {

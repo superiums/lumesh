@@ -38,7 +38,7 @@ pub fn get() -> Expression {
 
              // 命令输出解析
              String::from("cmd") => Expression::builtin("cmd", parse_command_output,
-                 "parse command output into structured data", "<cmd_output_string>"),
+                 "parse command output into structured data", "[headers|header...] <cmd_output_string>"),
 
              // 数据查询
              String::from("jq") => Expression::builtin("jq", jq,

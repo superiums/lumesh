@@ -8,6 +8,9 @@ use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
+        // 打印
+        String::from("pprint") => Expression::builtin("pprint", super::pretty_print, "pretty print", "<list>"),
+
         // 数学统计
         String::from("max") => Expression::builtin("max", max, "get max value in an array or multi args", "<num1> <num2> ... | <array>"),
         String::from("min") => Expression::builtin("min", min, "get min value in an array or multi args", "<num1> <num2> ... | <array>"),

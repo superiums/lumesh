@@ -3,6 +3,7 @@ use super::parse_module::parse_command_output;
 use super::time_module::parse;
 use super::{get_integer_arg, get_string_arg, get_string_args};
 
+use crate::modules::bin::pprint::pretty_printer;
 use crate::{
     Environment, Expression, Int, LmError,
     runtime::{IFS_STR, ifs_contains},
@@ -11,6 +12,8 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     (hash_map! {
+        String::from("pprint") => Expression::builtin("pprint", table_pprint, "convert to table and pretty print", "[headers|header...]"),
+
         // 转换
         String::from("to_int") => Expression::builtin("int", int, "convert a float or string to an int", "<value>"),
         String::from("to_float") => Expression::builtin("float", float, "convert an int or string to a float", "<value>"),
@@ -103,6 +106,14 @@ pub fn get() -> Expression {
 }
 
 // String operation implementations
+fn table_pprint(
+    args: &Vec<Expression>,
+    env: &mut Environment,
+) -> Result<Expression, crate::LmError> {
+    super::check_args_len("len", args, 1..)?;
+    let table = parse_command_output(args, env)?;
+    pretty_printer(&table)
+}
 fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("len", args, 1)?;
     match args[0].eval(env)? {

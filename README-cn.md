@@ -50,12 +50,12 @@ data | .filter(x -> x > 0)
 比传统 shell 更智能的错误提示、错误捕获和处理机制。
 
 ```bash
-command?.        # 忽略错误
-command?: e      # 错误捕获 或 默认值
-command?+        # 打印到标准输出
-command??        # 打印到错误输出
-command?>        # 覆盖打印 （数据通道）
-command?!        # 遇错终止  (终止管道)
+command ?.        # 忽略错误
+command ?: e      # 错误捕获 或 默认值
+command ?+        # 打印到标准输出
+command ??        # 打印到错误输出
+command ?>        # 覆盖打印 （数据通道）
+command ?!        # 遇错终止  (终止管道)
 ```
 
 
@@ -69,7 +69,7 @@ data |^ interactive      # PTY 管道
 
 结构化管道：
 ```bash
-ls -l | into.table() | where(size > 5K)
+ls -l | .to_table() | where(size > 5K)
 Fs.ls -l | where(size > 5K) | select(name,size,modified)
 ls -1 |> cp -r _ /tmp/
 ```
@@ -116,7 +116,7 @@ use moduleA as ma
 lume
 ```
 
-### ☘ 脚本自动化 [7](#1-6)
+### ☘ 脚本自动化
 ```bash
 #!/usr/bin/env lumesh
 

@@ -49,12 +49,12 @@ data | .filter(x -> x > 0)
 More intelligent error tips, error capture and recovery deeling than traditional shells.
 
 ```bash
-command?.        # Ignore errors
-command?: e      # Error capture or default value
-command?+        # Print to standard output
-command??        # Print to error output
-command?>        # Override print (data channel)
-command?!        # Terminate on error (terminate pipeline)
+command ?.        # Ignore errors
+command ?: e      # Error capture or default value
+command ?+        # Print to standard output
+command ??        # Print to error output
+command ?>        # Override print (data channel)
+command ?!        # Terminate on error (terminate pipeline)
 ```
 
 ### ⚡ Diverse Pipeline Operations
@@ -67,7 +67,7 @@ data |^ interactive      # PTY pipeline
 
 Structured pipelines:
 ```bash
-ls -l | into.table() | where(size > 5K)
+ls -l | .to_table() | where(size > 5K)
 Fs.ls -l | where(size > 5K) | select(name,size,modified)
 ls -1 |> cp -r _ /tmp/
 ```
@@ -111,7 +111,7 @@ Replace traditional shells, providing a modern command-line experience:
 lume
 ```
 
-### ☘ Script Automation [7](#1-6)
+### ☘ Script Automation
 ```bash
 #!/usr/bin/env lumesh
 

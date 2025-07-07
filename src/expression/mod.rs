@@ -81,7 +81,6 @@ pub enum Expression {
     PipeMethod(String, Rc<Vec<Self>>),
     DestructureAssign(Vec<DestructurePattern>, Rc<Expression>), // 解构赋值
     Use(Option<String>, String),
-    ModuleEnv(Rc<Environment>),
 }
 
 #[derive(Debug, Clone, PartialEq)]

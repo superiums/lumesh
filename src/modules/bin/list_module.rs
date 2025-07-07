@@ -15,6 +15,7 @@ pub fn get() -> Expression {
         String::from("average") => Expression::builtin("average", average, "get the average of a list of numbers", "<num1> <num2> ... | <array>"),
 
         // 读取操作
+        String::from("get") => Expression::builtin("get", super::get, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),
         String::from("len") => Expression::builtin("len", super::len, "get length of list", "<list>"),
         String::from("insert") => Expression::builtin("insert", super::insert, "insert item into list", "<index> <value> <list>"),
         String::from("rev") => Expression::builtin("rev", super::rev, "reverse sequence", "<list>"),
@@ -26,7 +27,7 @@ pub fn get() -> Expression {
         String::from("take") => Expression::builtin("take", take, "take the first n elements of a list", "<count> <list>"),
         String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list", "<count> <list>"),
         // 查找操作
-        String::from("contains") => Expression::builtin("contains", contains, "check if list contains an item", "<item> <list>"),
+        String::from("has") => Expression::builtin("has", contains, "check if list contains an item", "<item> <list>"),
         String::from("find") => Expression::builtin("find", find_index, "find first index of matching element", "<item|fn> [start_index] <list>"),
         String::from("find_last") => Expression::builtin("find_last", find_last_index, "find last index of item", "<item|fn> [start_index] <list>"),
 
@@ -47,7 +48,7 @@ pub fn get() -> Expression {
 
         // 遍历操作
         String::from("each") => Expression::builtin("each", for_each, "execute function for each element", "<fn> <list>"),
-        String::from("emulate") => Expression::builtin("emulate", emulate, "iterate over index-value pairs", "<list>"),
+        String::from("items") => Expression::builtin("items", entries, "iterate over index-value pairs", "<list>"),
         String::from("map") => Expression::builtin("map", map, "apply function to each element", "<fn> <list>"),
         String::from("filter") => Expression::builtin("filter", filter, "filter elements by condition", "<fn> <list>"),
         String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map in one pass", "<fn> <list>"),
@@ -736,8 +737,8 @@ fn join(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     }
 }
 
-fn emulate(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("emulate", args, 1)?;
+fn entries(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("items", args, 1)?;
     let expr = args[0].eval(env)?;
 
     Ok(match expr {

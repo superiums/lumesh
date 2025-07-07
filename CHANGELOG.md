@@ -14,6 +14,16 @@
 - allow symbol as alias cmd
 - optimize display and debug of expression
 - link some func from Math to List
+- link some fn from into/parse to String.
+  such as:
+    to_int
+    to_float
+    to_filesize
+    to_time
+    to_table
+- rename some fn in List
+- link get to List/Map.
+- add at to Map.
 
 ## [0.6.5]
 - move os to sys;

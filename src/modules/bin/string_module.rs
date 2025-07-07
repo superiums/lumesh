@@ -1,4 +1,8 @@
+use super::into_module::{filesize, float, int};
+use super::parse_module::parse_command_output;
+use super::time_module::parse;
 use super::{get_integer_arg, get_string_arg, get_string_args};
+
 use crate::{
     Environment, Expression, Int, LmError,
     runtime::{IFS_STR, ifs_contains},
@@ -7,7 +11,13 @@ use common_macros::hash_map;
 
 pub fn get() -> Expression {
     (hash_map! {
-        // justify
+        // 转换
+        String::from("to_int") => Expression::builtin("int", int, "convert a float or string to an int", "<value>"),
+        String::from("to_float") => Expression::builtin("float", float, "convert an int or string to a float", "<value>"),
+        String::from("to_filesize") => Expression::builtin("filesize", filesize, "parse a string representing a file size into bytes", "<size_str>"),
+        String::from("to_time") => Expression::builtin("time", parse, "convert a string to a datetime", "<datetime_str> [datetime_template]"),
+        String::from("to_table") => Expression::builtin("table", parse_command_output, "convert third-party command output to a table", "<command_output>"),
+
         // 基础检查
         String::from("is_empty") => Expression::builtin("is_empty", is_empty, "is this string empty?", "<string>"),
         String::from("is_whitespace") => Expression::builtin("is_whitespace", is_whitespace, "is this string whitespace?", "<string>"),

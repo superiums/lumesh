@@ -41,7 +41,7 @@ fn str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     Ok(Expression::String(args[0].eval(env)?.to_string()))
 }
 
-fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("int", args, 1)?;
     match args[0].eval(env)? {
         Expression::Integer(x) => Ok(Expression::Integer(x)),
@@ -63,7 +63,7 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     }
 }
 
-fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("float", args, 1)?;
     match args[0].eval(env)? {
         Expression::Integer(x) => Ok(Expression::Float(x as f64)),
@@ -85,7 +85,10 @@ fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     }
 }
 
-fn filesize(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn filesize(
+    args: &Vec<Expression>,
+    env: &mut Environment,
+) -> Result<Expression, crate::LmError> {
     check_exact_args_len("filesize", args, 1)?;
     match args[0].eval(env)? {
         Expression::Integer(x) => Ok(Expression::FileSize(FileSize::from_bytes(x as u64))),

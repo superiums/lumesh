@@ -14,6 +14,8 @@ pub fn get() -> Expression {
         String::from("has") => Expression::builtin("has", has, "check if a map has a key", "<key> <map>"),
 
         // 数据获取
+        String::from("get") => Expression::builtin("get", super::get, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),
+        String::from("at") => Expression::builtin("at", at, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),
         String::from("items") => Expression::builtin("items", items, "get the items of a map or list", "<map>"),
         String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map", "<map>"),
         String::from("values") => Expression::builtin("values", values, "get the values of a map", "<map>"),
@@ -39,6 +41,16 @@ pub fn get() -> Expression {
 }
 
 // Helper function implementations
+fn at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("at", args, 2)?;
+    let k = super::get_string_arg(args[0].eval(env)?)?;
+    let map = get_map_arg(args[1].eval(env)?)?;
+
+    map.as_ref()
+        .get(&k)
+        .cloned()
+        .ok_or_else(|| LmError::CustomError(format!("key '{}' not found in Map `{}`", k, args[1])))
+}
 
 fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("items", args, 1)?;

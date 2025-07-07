@@ -65,6 +65,7 @@ pub fn get() -> Expression {
 
         // 其他函数
         String::from("isodd") => Expression::builtin("isodd", isodd, "is a number odd?", "<integer>"),
+        String::from("to_str") => Expression::builtin("to_str", super::into_module::str, "trans to String", "<number>"),
     }).into()
 }
 

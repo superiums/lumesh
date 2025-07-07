@@ -36,7 +36,7 @@ fn boolean(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     check_exact_args_len("boolean", args, 1)?;
     Ok(Expression::Boolean(args[0].eval(env)?.is_truthy()))
 }
-fn str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("str", args, 1)?;
     Ok(Expression::String(args[0].eval(env)?.to_string()))
 }

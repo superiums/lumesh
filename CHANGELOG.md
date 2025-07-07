@@ -31,6 +31,8 @@ pprint in String accecpt headers define.
 - detaied err while no module;
 - reduce unkown module seek;
 - make range able to chain call most List funcs.
+- link to_str to Math
+so user could call `3 | .to_str()`
 
 ## [0.6.5]
 - move os to sys;

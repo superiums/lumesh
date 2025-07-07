@@ -275,7 +275,7 @@ fn is_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
 fn lines(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("lines", args, 1)?;
-    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
     let lines = text
         .lines()
@@ -286,7 +286,7 @@ fn lines(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn chars(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("chars", args, 1)?;
-    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
     let chars = text
         .chars()
@@ -297,7 +297,7 @@ fn chars(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn words(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("words", args, 1)?;
-    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
     let words = text
         .split_whitespace()
@@ -308,7 +308,7 @@ fn words(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 
 fn paragraphs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("paragraphs", args, 1)?;
-    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
     let paragraphs = text
         .split("\n\n")
@@ -319,7 +319,7 @@ fn paragraphs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
 fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("split_at", args, 2)?;
-    let text = get_string_arg(args[1].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[1].eval_in_assign(env)?)?;
     let index = get_integer_arg(args[0].eval(env)?)? as usize;
 
     if index > text.len() {
@@ -338,19 +338,19 @@ fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
 fn trim(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim", args, 1)?;
-    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
     Ok(Expression::String(text.trim().to_string()))
 }
 
 fn trim_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim_start", args, 1)?;
-    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
     Ok(Expression::String(text.trim_start().to_string()))
 }
 
 fn trim_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim_end", args, 1)?;
-    let text = get_string_arg(args[0].eval_in_pipe(env)?)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
     Ok(Expression::String(text.trim_end().to_string()))
 }
 
@@ -404,7 +404,7 @@ fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
 fn substring(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("substring", args, 2..3)?;
-    let text = get_string_arg(args.last().unwrap().eval_in_pipe(env)?)?;
+    let text = get_string_arg(args.last().unwrap().eval_in_assign(env)?)?;
 
     let start = get_integer_arg(args[0].eval(env)?)?;
     let start_idx = if start < 0 {
@@ -468,7 +468,7 @@ fn pad_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
         3 => (args[0].clone(), args[1].clone().to_string()),
         _ => unreachable!(),
     };
-    let s_val = match args.last().unwrap().eval_in_pipe(env)? {
+    let s_val = match args.last().unwrap().eval_in_assign(env)? {
         Expression::Symbol(x) | Expression::String(x) => x,
         _ => {
             return Err(LmError::CustomError(
@@ -498,7 +498,7 @@ fn pad_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         _ => unreachable!(),
     };
 
-    let s_val = match args.last().unwrap().eval_in_pipe(env)? {
+    let s_val = match args.last().unwrap().eval_in_assign(env)? {
         Expression::Symbol(x) | Expression::String(x) => x,
         _ => {
             return Err(LmError::CustomError(
@@ -528,7 +528,7 @@ fn center(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         _ => unreachable!(),
     };
 
-    let s_val = match args.last().unwrap().eval_in_pipe(env)? {
+    let s_val = match args.last().unwrap().eval_in_assign(env)? {
         Expression::Symbol(x) | Expression::String(x) => x,
         _ => {
             return Err(LmError::CustomError(
@@ -562,7 +562,7 @@ fn format(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         ));
     }
 
-    let template = match args.first().unwrap().eval_in_pipe(env)? {
+    let template = match args.first().unwrap().eval_in_assign(env)? {
         Expression::Symbol(x) | Expression::String(x) => x,
         _ => {
             return Err(LmError::CustomError(
@@ -581,7 +581,7 @@ fn format(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 
     let mut result = template.clone();
     for arg in args.iter().skip(1).take(placeholders) {
-        let value = arg.eval_in_pipe(env)?;
+        let value = arg.eval_in_assign(env)?;
         result = result.replacen("{}", &value.to_string(), 1);
     }
 
@@ -591,34 +591,34 @@ fn format(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 // 单参数函数（字符串作为最后一个参数）
 fn strip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("strip", args, 1)?;
-    Ok(strip_ansi_escapes(args[0].eval_in_pipe(env)?.to_string().as_str()).into())
+    Ok(strip_ansi_escapes(args[0].eval_in_assign(env)?.to_string().as_str()).into())
 }
 
 fn bold(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("bold", args, 1)?;
-    Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 其他样式函数采用相同模式...
 fn faint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("faint", args, 1)?;
-    Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn italics(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("italics", args, 1)?;
-    Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 颜色函数采用相同模式...
 fn black(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("black", args, 1)?;
-    Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn dark_black(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_black", args, 1)?;
-    Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 其他颜色函数类似实现...
@@ -655,7 +655,7 @@ fn wrap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     super::check_exact_args_len("wrap", args, 2)?;
     match args[0].eval(env)? {
         Expression::Integer(columns) => {
-            Ok(textwrap::fill(&args[1].eval_in_pipe(env)?.to_string(), columns as usize).into())
+            Ok(textwrap::fill(&args[1].eval_in_assign(env)?.to_string(), columns as usize).into())
         }
         otherwise => Err(LmError::CustomError(format!(
             "expected number of columns in wrap, but got `{}`",
@@ -668,8 +668,8 @@ fn href(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     super::check_exact_args_len("href", args, 2)?;
     Ok(format!(
         "\x1b]8;;{url}\x1b\\{text}\x1b]8;;\x1b\\",
-        url = args[0].eval_in_pipe(env)?,
-        text = args[1].eval_in_pipe(env)?
+        url = args[0].eval_in_assign(env)?,
+        text = args[1].eval_in_assign(env)?
     )
     .into())
 }
@@ -677,95 +677,95 @@ fn href(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 // 继续实现剩余的单参数样式函数
 fn underline(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("underline", args, 1)?;
-    Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn blink(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("blink", args, 1)?;
-    Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn invert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("invert", args, 1)?;
-    Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn strike(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("strike", args, 1)?;
-    Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 实现所有颜色函数
 fn red(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("red", args, 1)?;
-    Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn green(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("green", args, 1)?;
-    Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn yellow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("yellow", args, 1)?;
-    Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn blue(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("blue", args, 1)?;
-    Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn magenta(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("magenta", args, 1)?;
-    Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn cyan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cyan", args, 1)?;
-    Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn white(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("white", args, 1)?;
-    Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 实现dark命名空间下的颜色函数
 fn dark_red(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_red", args, 1)?;
-    Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn dark_green(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_green", args, 1)?;
-    Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn dark_yellow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_yellow", args, 1)?;
-    Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn dark_blue(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_blue", args, 1)?;
-    Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn dark_magenta(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_magenta", args, 1)?;
-    Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn dark_cyan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_cyan", args, 1)?;
-    Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 fn dark_white(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_white", args, 1)?;
     // 修正原始代码中的转义序列错误
-    Ok(format!("\x1b[37m{}\x1b[m\x1b[0m", args[0].eval_in_pipe(env)?).into())
+    Ok(format!("\x1b[37m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // pub fn strip_ansi_escapes(text: impl ToString) -> String {

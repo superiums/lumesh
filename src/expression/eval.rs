@@ -94,10 +94,10 @@ impl Expression {
         self.eval_mut(&mut State::new(strict), env, 0)
     }
     /// builtin args eval in pipe.
-    pub fn eval_in_pipe(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
+    pub fn eval_in_assign(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         let strict = is_strict(env);
         let mut state = State::new(strict);
-        state.set(State::IN_PIPE);
+        state.set(State::IN_ASSIGN);
         self.eval_mut(&mut state, env, 0)
     }
     /// 求值主逻辑

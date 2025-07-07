@@ -1,4 +1,8 @@
 # Changelog
+## [0.6.7]
+- eval args for builtin in assign mode
+so user could call `String.red((ls))` and got the expected result.
+
 ## [0.6.6]
 - remove the following command warp, keep it as it was.
 

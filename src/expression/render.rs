@@ -25,7 +25,7 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
                 }
                 // dbg!(&name);
                 return match parse(name.as_str()) {
-                    Ok(expr) => match expr.eval_in_pipe(env) {
+                    Ok(expr) => match expr.eval_in_assign(env) {
                         Ok(r) => r.to_string(),
                         Err(e) => {
                             eprintln!(

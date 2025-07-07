@@ -730,16 +730,28 @@ impl Expression {
                                 },
                                 "|" => {
                                     return match rhs.as_ref() {
-                                        Expression::PipeMethod(method, args) => self
-                                            .eval_module_method(
-                                                left_output.get_module_name(),
-                                                method,
-                                                args,
-                                                left_output,
-                                                state,
-                                                env,
-                                                depth,
-                                            ),
+                                        Expression::PipeMethod(method, args) => {
+                                            match left_output.get_module_name() {
+                                                Some(mo_name) => self.eval_module_method(
+                                                    mo_name,
+                                                    method,
+                                                    args,
+                                                    left_output,
+                                                    state,
+                                                    env,
+                                                    depth,
+                                                ),
+                                                _ => Err(RuntimeError::new(
+                                                    RuntimeErrorKind::NoModuleDefined(
+                                                        left_output.to_string(),
+                                                        left_output.type_name().into(),
+                                                    ),
+                                                    self.clone(),
+                                                    depth,
+                                                )),
+                                            }
+                                        }
+
                                         _ => {
                                             state.pipe_in(left_output);
                                             match rhs.as_ref() {

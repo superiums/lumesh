@@ -609,15 +609,25 @@ impl Expression {
                     }
                 }
                 // 对于其他类型，查找内置方法
-                o => self.eval_module_method(
-                    o.get_module_name(),
-                    method,
-                    &call.args,
-                    current_base,
-                    state,
-                    env,
-                    depth,
-                ),
+                o => match o.get_module_name() {
+                    Some(mo_name) => self.eval_module_method(
+                        mo_name,
+                        method,
+                        &call.args,
+                        current_base,
+                        state,
+                        env,
+                        depth,
+                    ),
+                    _ => Err(RuntimeError::new(
+                        RuntimeErrorKind::NoModuleDefined(
+                            current_base.to_string(),
+                            current_base.type_name().into(),
+                        ),
+                        self.clone(),
+                        depth,
+                    )),
+                },
             };
             current_base = excuted?;
         }
@@ -671,7 +681,10 @@ impl Expression {
             }
 
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::NoModuleForType(current_base.type_name().into()),
+                RuntimeErrorKind::NoModuleDefined(
+                    current_base.to_string(),
+                    current_base.type_name().into(),
+                ),
                 self.clone(),
                 depth,
             )),

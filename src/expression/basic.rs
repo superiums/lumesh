@@ -614,15 +614,14 @@ impl Expression {
     }
 
     /// 类型名称
-    pub fn get_module_name(&self) -> Cow<'static, str> {
+    pub fn get_module_name(&self) -> Option<Cow<'static, str>> {
         match self {
-            Self::List(_) | Self::Range(..) => "List".into(),
-            Self::Map(_) | Self::HMap(_) => "Map".into(),
-            Self::String(_) | Self::StringTemplate(_) | Self::Bytes(_) => "String".into(),
-            Self::Integer(_) | Self::Float(_) => "Math".into(),
-            Self::DateTime(_) => "Time".into(),
-            Self::Symbol(_) => "Symbol".into(),
-            _ => "otherModule".into(),
+            Self::List(_) | Self::Range(..) => Some("List".into()),
+            Self::Map(_) | Self::HMap(_) => Some("Map".into()),
+            Self::String(_) | Self::StringTemplate(_) | Self::Bytes(_) => Some("String".into()),
+            Self::Integer(_) | Self::Float(_) => Some("Math".into()),
+            Self::DateTime(_) => Some("Time".into()),
+            _ => None,
         }
     }
     pub fn type_name(&self) -> String {

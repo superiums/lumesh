@@ -28,6 +28,9 @@
 pprint in String accecpt headers define.
 - detailed contains err
 - fix map like `{a,}` and `{a:b}`
+- detaied err while no module;
+- reduce unkown module seek;
+- make range able to chain call most List funcs.
 
 ## [0.6.5]
 - move os to sys;

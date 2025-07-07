@@ -941,6 +941,9 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 fn get_list_arg(expr: Expression) -> Result<Rc<Vec<Expression>>, LmError> {
     match expr {
         Expression::List(s) => Ok(s),
+        Expression::Range(r, step) => Ok(Rc::new(
+            r.step_by(step).map(Expression::Integer).collect::<Vec<_>>(),
+        )),
         e => Err(LmError::TypeError {
             expected: "List".to_string(),
             found: e.type_name(),

@@ -367,6 +367,9 @@ fn args_collect_iter(
             .collect::<Result<Vec<_>, _>>()?),
         1 => match args[0].eval(env)? {
             Expression::List(li) => Ok(li.as_ref().clone()),
+            Expression::Range(r, step) => {
+                Ok(r.step_by(step).map(Expression::Integer).collect::<Vec<_>>())
+            }
             _ => Err(LmError::CustomError(
                 "the only arg for math.max/math.min should be a list".into(),
             )),

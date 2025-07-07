@@ -1336,7 +1336,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     })?;
     // dbg!(&input, &pairs);
     let (input, comma) = opt(text(","))(input)?;
-    if comma.is_none() && pairs.len() < 2 {
+    if pairs.is_empty() || comma.is_none() && pairs.len() < 2 && pairs[0].1.is_none() {
         return Err(nom::Err::Error(SyntaxErrorKind::NoExpression)); //return err and try parse_block
     }
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
@@ -1347,7 +1347,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
         .into_iter()
         .map(|(k, v)| match v {
             Some(ex) => (k, ex),
-            None => (k.clone(), Expression::String(k)),
+            None => (k.clone(), Expression::Variable(k)),
         })
         .collect();
     // Ok((input, Expression::Map(pairs)))

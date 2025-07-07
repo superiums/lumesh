@@ -26,7 +26,8 @@
 - add at to Map.
 - link pprint to List/Map/String
 pprint in String accecpt headers define.
-
+- detailed contains err
+- fix map like `{a,}` and `{a:b}`
 
 ## [0.6.5]
 - move os to sys;

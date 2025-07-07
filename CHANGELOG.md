@@ -12,6 +12,8 @@
   - set IN_ASSIGN mode for args.
 
 - allow symbol as alias cmd
+- optimize display and debug of expression
+- link some func from Math to List
 
 ## [0.6.5]
 - move os to sys;

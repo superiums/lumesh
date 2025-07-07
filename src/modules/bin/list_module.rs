@@ -1,4 +1,5 @@
 use super::get_string_arg;
+use super::math_module::{average, max, min, sum};
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
 use std::cmp::Ordering;
@@ -7,6 +8,12 @@ use std::rc::Rc;
 
 pub fn get() -> Expression {
     (hash_map! {
+        // 数学统计
+        String::from("max") => Expression::builtin("max", max, "get max value in an array or multi args", "<num1> <num2> ... | <array>"),
+        String::from("min") => Expression::builtin("min", min, "get min value in an array or multi args", "<num1> <num2> ... | <array>"),
+        String::from("sum") => Expression::builtin("sum", sum, "sum a list of numbers", "<num1> <num2> ... | <array>"),
+        String::from("average") => Expression::builtin("average", average, "get the average of a list of numbers", "<num1> <num2> ... | <array>"),
+
         // 读取操作
         String::from("len") => Expression::builtin("len", super::len, "get length of list", "<list>"),
         String::from("insert") => Expression::builtin("insert", super::insert, "insert item into list", "<index> <value> <list>"),

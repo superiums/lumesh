@@ -12,10 +12,10 @@ pub fn get() -> Expression {
         // 基础数学函数
         String::from("max") => Expression::builtin("max", max, "get max value in an array or multi args", "<num1> <num2> ... | <array>"),
         String::from("min") => Expression::builtin("min", min, "get min value in an array or multi args", "<num1> <num2> ... | <array>"),
-        String::from("abs") => Expression::builtin("abs", abs, "get the absolute value of a number", "<number>"),
-        String::from("clamp") => Expression::builtin("clamp", clamp, "clamp a value between min and max", "<min> <max> <value>"),
         String::from("sum") => Expression::builtin("sum", sum, "sum a list of numbers", "<num1> <num2> ... | <array>"),
         String::from("average") => Expression::builtin("average", average, "get the average of a list of numbers", "<num1> <num2> ... | <array>"),
+        String::from("abs") => Expression::builtin("abs", abs, "get the absolute value of a number", "<number>"),
+        String::from("clamp") => Expression::builtin("clamp", clamp, "clamp a value between min and max", "<min> <max> <value>"),
 
         // 位运算
         String::from("bit_and") => Expression::builtin("bit_and", bit_and, "bitwise AND operation", "<int1> <int2>"),
@@ -86,7 +86,7 @@ fn eval_to_f64(
         .collect()
 }
 
-fn max(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn max(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     let nums = args_collect_iter(args, env)?;
     let mut max_val_int: Option<i64> = None; // 用于存储整数最大值
     let mut max_val_float: Option<f64> = None; // 用于存储浮点数最大值
@@ -132,7 +132,7 @@ fn max(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 }
 
 // Optimized min function that handles both integers and floats
-fn min(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn min(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     let nums = args_collect_iter(args, env)?;
     let mut min_val: Option<f64> = None;
 
@@ -391,7 +391,7 @@ fn abs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 }
 
 // Sum function that handles both integers and floats
-fn sum(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn sum(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     let nums = args_collect_iter(args, env)?;
     let mut int_sum = 0;
     let mut float_sum = 0.0;
@@ -429,7 +429,7 @@ fn sum(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 }
 
 // Average function that handles both integers and floats
-fn average(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn average(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     let nums = args_collect_iter(args, env)?;
     if nums.is_empty() {
         return Err(LmError::CustomError(

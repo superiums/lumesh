@@ -24,6 +24,9 @@
 - rename some fn in List
 - link get to List/Map.
 - add at to Map.
+- link pprint to List/Map/String
+pprint in String accecpt headers define.
+
 
 ## [0.6.5]
 - move os to sys;

@@ -271,7 +271,7 @@ impl Expression {
 
                 // 元表达式处理
                 Self::Group(inner) => {
-                    dbg!("2.--->group:", &inner, &state);
+                    // dbg!("2.--->group:", &inner, &state);
                     // return inner.as_ref().eval_mut(state, env, depth + 1);
                     job = inner.as_ref();
                     if state.contains(State::IN_ASSIGN) {

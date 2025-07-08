@@ -2,7 +2,7 @@ use super::catcher::catch_error;
 use super::eval::State;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind,
-    expression::DestructurePattern,
+    expression::{DestructurePattern, cmd_excutor::expand_home},
     runtime::{IFS_FOR, ifs_contains, load_module},
 };
 use glob::glob;
@@ -200,7 +200,8 @@ impl Expression {
                 let iterator = items.iter().cloned();
                 execute_iteration(var, iterator, body, state, env, depth)
             }
-            Expression::String(s) => {
+            Expression::String(str) => {
+                let s = expand_home(str.as_ref());
                 if s.contains('*') {
                     // glob expansion logic
                     let iterator = glob_expand(&s).into_iter().map(Expression::String);

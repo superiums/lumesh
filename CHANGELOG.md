@@ -8,6 +8,7 @@ so user could call `String.red((ls))` and got the expected result.
 - allow var after `!`/`=` like `!$x`, `=$x`
 - add `quit` to repl.
 while `exit [status]` used for script, `quit` used for repl.
+- expand home during `for`,`use` and in `Fs` functions.
 
 ## [0.6.6]
 - remove the following command warp, keep it as it was.

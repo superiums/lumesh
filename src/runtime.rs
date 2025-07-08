@@ -1,3 +1,4 @@
+use crate::expression::cmd_excutor::expand_home;
 use crate::{
     Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, ModuleInfo, PRINT_DIRECT,
     RuntimeError, SyntaxError, use_script,
@@ -16,7 +17,7 @@ pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo,
         _ => ".".to_string(),
     };
     let cwd = Path::new(&base).parent().unwrap_or(Path::new("."));
-    let file = Path::new(file_path).with_extension("lm");
+    let file = Path::new(expand_home(file_path).as_ref()).with_extension("lm");
     let mut mod_file = cwd.join("mods").join(&file);
     if !mod_file.exists() {
         if file.is_absolute() {

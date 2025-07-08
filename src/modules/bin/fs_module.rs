@@ -1,3 +1,4 @@
+use crate::expression::cmd_excutor::expand_home;
 use crate::{Environment, Int};
 use crate::{Expression, LmError};
 use common_macros::hash_map;
@@ -175,8 +176,8 @@ fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, Lm
 
 fn read_file_head(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("head", args, 1..=2)?;
-
-    let path = join_current_path(&args.last().unwrap().eval(env)?.to_string());
+    let p = args.last().unwrap().eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     let n = match args.len() {
         2 => match args[0].eval(env)? {
             Expression::Integer(n) => n,
@@ -196,8 +197,8 @@ fn read_file_head(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 
 fn read_file_tail(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("head", args, 1..=2)?;
-
-    let path = join_current_path(&args.last().unwrap().eval(env)?.to_string());
+    let p = args.last().unwrap().eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     let n = match args.len() {
         2 => match args[0].eval(env)? {
             Expression::Integer(n) => n,
@@ -217,8 +218,8 @@ fn read_file_tail(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 
 fn canonicalize_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("canon", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     let canon_path = dunce::canonicalize(&path)?;
     //     .map_err(|_| {
     //     LmError::CustomError(format!("Could not canonicalize path: {}", path.display()))
@@ -229,8 +230,8 @@ fn canonicalize_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Ex
 
 fn make_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mkdir", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     std::fs::create_dir_all(&path)?;
     // .map_err(|_| {
     //     LmError::CustomError(format!("Could not create directory: {}", path.display()))
@@ -241,8 +242,8 @@ fn make_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 
 fn remove_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("rmdir", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     std::fs::remove_dir(&path)?;
     //     .map_err(|_| {
     //     LmError::CustomError(format!(
@@ -256,8 +257,8 @@ fn remove_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Exp
 
 fn move_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mv", args, 2)?;
-    let src = join_current_path(&args[0].eval(env)?.to_string());
-
+    let p = args[0].eval(env)?.to_string();
+    let src = join_current_path(expand_home(p.as_str()).as_ref());
     let dst_str = args[1].eval(env)?.to_string();
     let dst = if dst_str.ends_with("/") {
         let mut dpath = join_current_path(&dst_str);
@@ -273,8 +274,8 @@ fn move_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Ex
 
 fn copy_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cp", args, 2)?;
-
-    let src = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let src = join_current_path(expand_home(p.as_str()).as_ref());
 
     let dst_str = args[1].eval(env)?.to_string();
     let dst = if dst_str.ends_with("/") {
@@ -294,37 +295,37 @@ fn remove_path_wrapper(
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
     super::check_exact_args_len("rm", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     remove_path(&path)?;
     Ok(Expression::None)
 }
 
 fn path_exists(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("exists", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     Ok(Expression::Boolean(path.exists()))
 }
 
 fn is_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("isdir", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     Ok(Expression::Boolean(path.is_dir()))
 }
 
 fn is_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("isfile", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     Ok(Expression::Boolean(path.is_file()))
 }
 
 fn read_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("read", args, 1)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
 
     // First try to read as text
     if let Ok(contents) = std::fs::read_to_string(&path) {
@@ -340,8 +341,8 @@ fn read_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 
 fn write_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("write", args, 2)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     let contents = args[1].eval(env)?;
 
     match contents {
@@ -357,8 +358,8 @@ fn write_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
 fn append_to_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("append", args, 2)?;
-
-    let path = join_current_path(&args[0].eval(env)?.to_string());
+    let p = args[0].eval(env)?.to_string();
+    let path = join_current_path(expand_home(p.as_str()).as_ref());
     let contents = args[1].eval(env)?;
 
     let mut file = std::fs::OpenOptions::new().append(true).open(&path)?;

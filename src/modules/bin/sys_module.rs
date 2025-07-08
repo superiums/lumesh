@@ -14,7 +14,8 @@ pub fn get() -> Expression {
         String::from("defined") => Expression::builtin("defined", defined_builtin, "check if a variable is defined in current environment tree", "<var>"),
 
         String::from("quote") => Expression::builtin("quote", quote_builtin, "quote an expression", "<expr>"),
-        String::from("err_codes") => Expression::builtin("err_codes", err_codes_builtin, "display runtime error codes", ""),
+        String::from("ecodes_rt") => Expression::builtin("ecodes_rt", err_codes_runtime, "display runtime error codes", ""),
+        String::from("ecodes_lm") => Expression::builtin("ecodes_lm", err_codes_lmerror, "display Lmerror codes", ""),
         String::from("error") => Expression::builtin("error", err, "return a runtime error", "<msg>"),
         String::from("print_tty") => Expression::builtin("print_tty", print_tty, "print control sequence to tty", "<arg>"),
         String::from("discard") => Expression::builtin("discard", discard, "send data to /dev/null", "<arg>"),
@@ -105,11 +106,17 @@ fn defined_builtin(
     Ok(Expression::Boolean(env.is_defined(&name)))
 }
 
-fn err_codes_builtin(
+fn err_codes_runtime(
     _args: &Vec<Expression>,
     _env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     Ok(RuntimeError::codes())
+}
+fn err_codes_lmerror(
+    _args: &Vec<Expression>,
+    _env: &mut Environment,
+) -> Result<Expression, crate::LmError> {
+    Ok(LmError::codes())
 }
 
 fn err(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {

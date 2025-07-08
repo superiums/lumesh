@@ -61,6 +61,7 @@ pub fn get() -> Expression {
         // 高级操作
         String::from("caesar") => Expression::builtin("caesar", caesar_cipher, "encrypt a string using a caesar cipher", "<shift> <string>"),
         String::from("get_width") => Expression::builtin("get_width", get_width, "get the width of a string", "<string>"),
+        String::from("grep") => Expression::builtin("grep", grep, "find lines which contains the substring", "<substring> <string>"),
 
         // 格式化
         String::from("pad_start") => Expression::builtin("pad_start", pad_start, "pad string to specified length at start", "<length> [pad_char] <string>"),
@@ -158,6 +159,19 @@ fn get_width(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     let max_width = text.lines().map(|line| line.len()).max().unwrap_or(0);
 
     Ok(Expression::Integer(max_width as Int))
+}
+
+fn grep(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("grep", args, 2)?;
+    let pat = get_string_arg(args[0].eval_in_assign(env)?)?;
+    let text = get_string_arg(args[1].eval_in_assign(env)?)?;
+
+    let lines = text
+        .lines()
+        .filter(|x| x.contains(&pat))
+        .map(|line| Expression::String(line.to_string()))
+        .collect::<Vec<Expression>>();
+    Ok(Expression::from(lines))
 }
 
 fn is_empty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {

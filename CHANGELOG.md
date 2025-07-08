@@ -2,6 +2,9 @@
 ## [0.6.7]
 - eval args for builtin in assign mode
 so user could call `String.red((ls))` and got the expected result.
+- add `grep` for String module.
+- add `highlight` for Parse module.
+
 
 ## [0.6.6]
 - remove the following command warp, keep it as it was.

@@ -1,6 +1,6 @@
 // use super::{get_list_arg, get_string_arg};
 use crate::{
-    Environment, Expression, LmError, parse,
+    Environment, Expression, LmError, highlight, parse,
     runtime::{IFS_CSV, ifs_contains},
 };
 use common_macros::hash_map;
@@ -35,6 +35,8 @@ pub fn get() -> Expression {
              // 表达式解析
              String::from("expr") => Expression::builtin("expr", parse_expr,
                  "parse script str to lumesh expression", "<script_string>"),
+             String::from("highlight") => Expression::builtin("highlight", highlight_str,
+                 "highlight script str", "<script_string>"),
 
              // 命令输出解析
              String::from("cmd") => Expression::builtin("cmd", parse_command_output,
@@ -128,6 +130,17 @@ fn parse_expr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     }
 
     Ok(parse(&script)?)
+}
+fn highlight_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("highlight", args, 1)?;
+    let script = args[0].eval(env)?.to_string();
+
+    if script.is_empty() {
+        return Ok(Expression::None);
+    }
+
+    let hi = highlight(script.as_str());
+    Ok(Expression::String(hi))
 }
 
 // Command Output Parser

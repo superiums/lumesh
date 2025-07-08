@@ -246,7 +246,7 @@ pub fn run_repl(env: &mut Environment) {
 
         match line.trim() {
             "" => {}
-            "quit" => break,
+            "exit" => break,
             "history" => {
                 for (i, entry) in rl.lock().unwrap().history().iter().enumerate() {
                     println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
@@ -305,7 +305,6 @@ fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper
         "cd ./".into(),
         "ls -l --color ./".into(),
         "clear".into(),
-        "exit".into(),
         "rm ".into(),
         "cp -r".into(),
         "let ".into(),
@@ -320,6 +319,7 @@ fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper
         "return".into(),
         "history".into(),
         "del ".into(),
+        "use ".into(),
     };
     cmds.extend(get_builtin_tips());
     cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());

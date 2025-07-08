@@ -111,7 +111,7 @@ impl Expression {
                     ));
                 }
                 env.define(name, func.clone());
-                Ok(func)
+                Ok(Expression::None)
             }
 
             // 块表达式

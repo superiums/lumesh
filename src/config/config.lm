@@ -108,3 +108,14 @@ let LUME_IFS_MODE=2
 # let LUME_MAX_SYNTAX_RECURSION = 100
 # let LUME_MAX_RUNTIME_RECURSION = 800
 let concat = (x, y) -> (Into.str x) + (Into.str y)
+# decorator func
+fn timeit(){
+    fn wrapper(func_ti){
+        (args_ti) -> {
+            let start = Time.stamp_ms()
+            func_ti(args_ti)
+            let end = Time.stamp_ms()
+            print '>Time:'.green().bold() (end - start) 'ms'
+        }
+    }
+}

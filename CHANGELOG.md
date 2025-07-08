@@ -4,6 +4,8 @@
 so user could call `String.red((ls))` and got the expected result.
 - add `grep` for String module.
 - add `highlight` for Parse module.
+- pull down echo for function declare.
+- allow var after `!` like `!$x`.
 
 
 ## [0.6.6]

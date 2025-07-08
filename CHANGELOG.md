@@ -6,7 +6,8 @@ so user could call `String.red((ls))` and got the expected result.
 - add `highlight` for Parse module.
 - pull down echo for function declare.
 - allow var after `!` like `!$x`.
-
+- add `quit` to repl.
+while `exit [status]` used for script, `quit` used for repl.
 
 ## [0.6.6]
 - remove the following command warp, keep it as it was.

@@ -246,7 +246,7 @@ pub fn run_repl(env: &mut Environment) {
 
         match line.trim() {
             "" => {}
-            "exit" => break,
+            "quit" => break,
             "history" => {
                 for (i, entry) in rl.lock().unwrap().history().iter().enumerate() {
                     println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);

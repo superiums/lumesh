@@ -1008,7 +1008,7 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
 fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.previous_char().is_some_and(|c| {
-            !c.is_ascii_whitespace() && !['(', '[', '{', '`', ',', ':', '!'].contains(&c)
+            !c.is_ascii_whitespace() && !['(', '[', '{', '`', ',', ':', '!', '='].contains(&c)
             // if allow all punc, {k:v}.k is prefix and require k()
             // !c.is_ascii_punctuation()
         }) {

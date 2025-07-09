@@ -1,4 +1,10 @@
 # Changelog
+## [0.6.8]
+- add boolean module;
+- add concat to string module;
+- optimize capture_name for Regex;
+- add `gt/ge/lt/le/eq/ne` to math;
+
 ## [0.6.7]
 - eval args for builtin in assign mode
 so user could call `String.red((ls))` and got the expected result.

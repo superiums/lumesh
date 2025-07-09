@@ -25,6 +25,14 @@ pub fn get() -> Expression {
         String::from("bit_shl") => Expression::builtin("bit_shl", bit_shl, "bitwise shift left", "<shift_bits> <integer>"),
         String::from("bit_shr") => Expression::builtin("bit_shr", bit_shr, "bitwise shift right", "<shift_bits> <integer>"),
 
+        //逻辑运算
+        String::from("gt") => Expression::builtin("gt", gt, "check if greater than", "<number> <number_base>"),
+        String::from("ge") => Expression::builtin("ge", ge, "check if greater than or equal", "<number> <number_base>"),
+        String::from("lt") => Expression::builtin("lt", lt, "check if lower than", "<number> <number_base>"),
+        String::from("le") => Expression::builtin("le", le, "check if lower than or equal", "<number> <number_base>"),
+        String::from("eq") => Expression::builtin("eq", eq, "check if equal", "<number> <number_base>"),
+        String::from("ne") => Expression::builtin("ne", ne, "check if NOT equal", "<number> <number_base>"),
+
         // 三角函数（单位：弧度）
         String::from("sin") => Expression::builtin("sin", sin, "get the sine of a number", "<radians>"),
         String::from("cos") => Expression::builtin("cos", cos, "get the cosine of a number", "<radians>"),
@@ -356,31 +364,45 @@ fn bit_shr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     Ok(Expression::Integer(b >> a))
 }
 
-// Helper function to collect arguments (used by max/min)
-fn args_collect_iter(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Vec<Expression>, LmError> {
-    match args.len() {
-        2.. => Ok(args
-            .iter()
-            .map(|f| f.eval(env))
-            .collect::<Result<Vec<_>, _>>()?),
-        1 => match args[0].eval(env)? {
-            Expression::List(li) => Ok(li.as_ref().clone()),
-            Expression::Range(r, step) => {
-                Ok(r.step_by(step).map(Expression::Integer).collect::<Vec<_>>())
-            }
-            _ => Err(LmError::CustomError(
-                "the only arg for math.max/math.min should be a list".into(),
-            )),
-        },
-        0 => Err(LmError::CustomError(
-            "math.max/math.min requires 1 list or 2 or more nums".into(),
-        )),
-    }
+fn gt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("gt", args, 2)?;
+    let other = get_float_arg(args[0].eval(env)?)?;
+    let base = get_float_arg(args[1].eval(env)?)?;
+    return Ok(Expression::Boolean(base.gt(&other)));
 }
 
+fn ge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("ge", args, 2)?;
+    let other = get_float_arg(args[0].eval(env)?)?;
+    let base = get_float_arg(args[1].eval(env)?)?;
+    return Ok(Expression::Boolean(base.ge(&other)));
+}
+
+fn lt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("lt", args, 2)?;
+    let other = get_float_arg(args[0].eval(env)?)?;
+    let base = get_float_arg(args[1].eval(env)?)?;
+    return Ok(Expression::Boolean(base.lt(&other)));
+}
+
+fn le(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("le", args, 2)?;
+    let other = get_float_arg(args[0].eval(env)?)?;
+    let base = get_float_arg(args[1].eval(env)?)?;
+    return Ok(Expression::Boolean(base.le(&other)));
+}
+fn eq(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("eq", args, 2)?;
+    let other = get_float_arg(args[0].eval(env)?)?;
+    let base = get_float_arg(args[1].eval(env)?)?;
+    return Ok(Expression::Boolean(base.eq(&other)));
+}
+fn ne(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("ne", args, 2)?;
+    let other = get_float_arg(args[0].eval(env)?)?;
+    let base = get_float_arg(args[1].eval(env)?)?;
+    return Ok(Expression::Boolean(base.ne(&other)));
+}
 // Implementations of all other math functions (kept similar to original but extracted)
 fn abs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("abs", args, 1)?;
@@ -697,4 +719,40 @@ fn tanpi(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     super::check_exact_args_len("tanpi", args, 1)?;
     let x = eval_to_f64(args, env, "tanpi")?[0];
     Ok((x * std::f64::consts::PI).tan().into())
+}
+
+// Helper function to collect arguments (used by max/min)
+fn args_collect_iter(
+    args: &Vec<Expression>,
+    env: &mut Environment,
+) -> Result<Vec<Expression>, LmError> {
+    match args.len() {
+        2.. => Ok(args
+            .iter()
+            .map(|f| f.eval(env))
+            .collect::<Result<Vec<_>, _>>()?),
+        1 => match args[0].eval(env)? {
+            Expression::List(li) => Ok(li.as_ref().clone()),
+            Expression::Range(r, step) => {
+                Ok(r.step_by(step).map(Expression::Integer).collect::<Vec<_>>())
+            }
+            _ => Err(LmError::CustomError(
+                "the only arg for math.max/math.min should be a list".into(),
+            )),
+        },
+        0 => Err(LmError::CustomError(
+            "math.max/math.min requires 1 list or 2 or more nums".into(),
+        )),
+    }
+}
+pub fn get_float_arg(expr: Expression) -> Result<f64, LmError> {
+    match expr {
+        Expression::Integer(i) => Ok(i as f64),
+        Expression::Float(i) => Ok(i),
+        e => Err(LmError::TypeError {
+            expected: "Integer/Float".to_string(),
+            found: e.type_name(),
+            sym: e.to_string(),
+        }),
+    }
 }

@@ -44,6 +44,7 @@ pub fn get() -> Expression {
         String::from("words") => Expression::builtin("words", words, "split a string into words", "<string>"),
         String::from("lines") => Expression::builtin("lines", lines, "split a string into lines", "<string>"),
         String::from("paragraphs") => Expression::builtin("paragraphs", paragraphs, "split a string into paragraphs", "<string>"),
+        String::from("concat") => Expression::builtin("concat", concat, "concat strings", "<string>..."),
 
         // 修改操作
         String::from("repeat") => Expression::builtin("repeat", repeat, "repeat string specified number of times", "<count> <string>"),
@@ -329,6 +330,18 @@ fn paragraphs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
         .map(|para| Expression::String(para.to_string()))
         .collect::<Vec<Expression>>();
     Ok(Expression::from(paragraphs))
+}
+
+fn concat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("concat", args, 2..)?;
+    let text = get_string_arg(args.last().unwrap().eval_in_assign(env)?)?;
+    let others = args[..args.len() - 1]
+        .iter()
+        .map(|a| a.to_string())
+        .collect::<Vec<_>>()
+        .concat();
+
+    Ok(Expression::from(text + &others))
 }
 
 fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {

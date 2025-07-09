@@ -30,7 +30,7 @@ pub fn get() -> Expression {
         String::from("take") => Expression::builtin("take", take, "take the first n elements of a list", "<count> <list>"),
         String::from("drop") => Expression::builtin("drop", drop, "drop the first n elements of a list", "<count> <list>"),
         // 查找操作
-        String::from("has") => Expression::builtin("has", contains, "check if list contains an item", "<item> <list>"),
+        String::from("contains") => Expression::builtin("contains", contains, "check if list contains an item", "<item> <list>"),
         String::from("find") => Expression::builtin("find", find_index, "find first index of matching element", "<item|fn> [start_index] <list>"),
         String::from("find_last") => Expression::builtin("find_last", find_last_index, "find last index of item", "<item|fn> [start_index] <list>"),
 

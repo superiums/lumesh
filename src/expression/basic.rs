@@ -621,6 +621,7 @@ impl Expression {
             Self::String(_) | Self::StringTemplate(_) | Self::Bytes(_) => Some("String".into()),
             Self::Integer(_) | Self::Float(_) => Some("Math".into()),
             Self::DateTime(_) => Some("Time".into()),
+            Self::Boolean(_) => Some("Boolean".into()),
             _ => None,
         }
     }

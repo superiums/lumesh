@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
 use regex_lite::Regex;
@@ -23,7 +25,7 @@ pub fn get() -> Expression {
                "get all captures as [[full, group1, ...], ...]", "<pattern> <text>"),
 
            String::from("capture_name") => Expression::builtin("capture_name", regex_capture_name,
-               "get regex capture groups with names", "<pattern> <text> [with_name?]"),
+               "get regex capture groups with names", "<pattern> <text>"),
 
            // 文本处理
            String::from("split") => Expression::builtin("split", regex_split,
@@ -170,47 +172,30 @@ fn regex_capture_name(
     args: &Vec<Expression>,
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
-    super::check_args_len("capture-name", args, 2..=3)?;
-    let (pattern, text, group_names) = match args.len() {
-        2 => (args[0].clone(), args[1].clone(), false),
-        3 => (
-            args[0].clone(),
-            args[1].clone(),
-            match args[2] {
-                Expression::Boolean(b) => b,
-                _ => {
-                    return Err(LmError::CustomError(
-                        "capture-name names parameter must be boolean".to_string(),
-                    ));
-                }
-            },
-        ),
+    super::check_exact_args_len("capture_name", args, 2)?;
+    let (pattern, text) = match args.len() {
+        2 => (args[0].clone(), args[1].clone()),
         _ => unreachable!(),
     };
 
-    let pattern = get_string_arg(&[pattern], 0, "capture-name", env)?;
-    let text = get_string_arg(&[text], 0, "capture-name", env)?;
+    let pattern = get_string_arg(&[pattern], 0, "capture_name", env)?;
+    let text = get_string_arg(&[text], 0, "capture_name", env)?;
 
     let re = Regex::new(&pattern)
         .map_err(|e| LmError::CustomError(format!("invalid regex pattern: {}", e)))?;
 
     if let Some(caps) = re.captures(&text) {
-        let mut result = Vec::new();
-        for (i, name) in re.capture_names().enumerate() {
-            if i == 0 {
-                continue; // Skip full match
+        // let mut result = Vec::new();
+        let mut found = BTreeMap::new();
+        for (i, name) in re.capture_names().enumerate().skip(1) {
+            match (caps.get(i), name) {
+                (Some(mat), Some(n)) => {
+                    found.insert(n.to_string(), Expression::String(mat.as_str().to_string()));
+                }
+                _ => {}
             }
-            let value = match (caps.get(i), group_names, name) {
-                (Some(mat), true, Some(n)) => Expression::from(vec![
-                    Expression::String(n.to_string()),
-                    Expression::String(mat.as_str().to_string()),
-                ]),
-                (Some(mat), false, _) => Expression::String(mat.as_str().to_string()),
-                _ => Expression::None,
-            };
-            result.push(value);
         }
-        return Ok(Expression::from(result));
+        return Ok(Expression::from(found));
     }
     Ok(Expression::None)
 }

@@ -56,6 +56,11 @@ pub fn highlight(line: &str) -> String {
                 is_colored = true;
                 result.push_str(k);
             }
+            (TokenKind::Time, s) => {
+                result.push_str("\x1b[38;5;202m");
+                is_colored = true;
+                result.push_str(s);
+            }
             (TokenKind::Regex, s) => {
                 result.push_str("\x1b[38;5;203m");
                 is_colored = true;

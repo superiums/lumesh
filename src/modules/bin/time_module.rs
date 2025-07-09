@@ -37,7 +37,7 @@ pub fn get() -> Expression {
 
         // 核心操作
         String::from("now") => Expression::builtin("now", now, "get current datetime as DateTime object or formatted string", "[format_string]"),
-        String::from("parse") => Expression::builtin("parse", parse, "parse datetime string according to format", "[format_string] <datetime_string>"),
+        String::from("parse") => Expression::builtin("parse", parse_time, "parse datetime string according to format", "[format_string] <datetime_string>"),
         String::from("add") => Expression::builtin("add", add, "add duration to datetime", "<duration> <datetime>"),
         String::from("diff") => Expression::builtin("diff", diff, "calculate difference between two datetimes", "<unit> <datetime1> <datetime2>"),
         String::from("timezone") => Expression::builtin("timezone", timezone, "convert datetime to different timezone", "<offset_hours> <datetime>"),
@@ -289,7 +289,7 @@ fn now(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     }
 }
 
-pub fn parse(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn parse_time(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("parse", args, 1..=2)?;
 
     let datetime_str = match args.last().unwrap().eval(env)? {

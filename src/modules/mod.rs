@@ -7,6 +7,7 @@ use crate::Expression;
 
 mod bin;
 // use std::sync::RwLock;
+pub use bin::time_module::parse_time;
 
 struct UnsafeStatic<T> {
     inner: T,

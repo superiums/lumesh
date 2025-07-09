@@ -30,7 +30,7 @@ mod rand_module;
 mod regex_module;
 mod string_module;
 mod sys_module;
-mod time_module;
+pub mod time_module;
 mod ui_module;
 
 pub fn get_module_map() -> HashMap<String, Expression> {

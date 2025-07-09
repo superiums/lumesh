@@ -13,6 +13,8 @@ now user could hold one Regex expr and match it multi times.
 - change regex match in match expr;
 now in match expr, only Regex expr was matched as regex, string expr keeps what it is.
 
+- add raw mode for type `DateTime`:
+now user could write time like `t'2025-7-10'`
 
 ## [0.6.7]
 - eval args for builtin in assign mode

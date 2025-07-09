@@ -146,6 +146,7 @@ pub enum TokenKind {
     // LineContinuation, //add linecontinue
     Comment,
     Regex,
+    Time,
 }
 
 impl fmt::Debug for Token {

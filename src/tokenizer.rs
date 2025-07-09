@@ -467,7 +467,8 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
         punctuation_tag("\""),
         punctuation_tag("'"),
         punctuation_tag("`"),
-        punctuation_tag("r'"), //regex str
+        punctuation_tag("r'"), //regex
+        punctuation_tag("t'"), //time
     ))(input)?;
     let quote_char = start_quote_range.to_str(input.as_original_str());
     let q_char = match quote_char.len() {
@@ -504,6 +505,7 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
         "\"" => TokenKind::StringLiteral,
         "`" => TokenKind::StringTemplate,
         "r'" => TokenKind::Regex,
+        "t'" => TokenKind::Time,
         _ => unreachable!(),
     };
 

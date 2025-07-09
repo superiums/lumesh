@@ -81,6 +81,7 @@ impl fmt::Display for Expression {
             Self::Bytes(b) => write!(f, "b{}", String::from_utf8_lossy(b)),
             Self::Boolean(b) => write!(f, "{}", if *b { "True" } else { "False" }),
             Self::DateTime(n) => write!(f, "{}", n.format("%Y-%m-%d %H:%M")),
+            Self::TimeDef(s) => write!(f, "t'{}'", s),
             Self::RegexDef(s) => write!(f, "r'{}'", s),
             Self::Regex(s) => write!(f, "r'{}'", s.regex.as_str()),
 
@@ -354,6 +355,7 @@ impl Expression {
             Self::Range(s, st) => write!(f, "Range〈{:?},{}〉", s, st),
             Self::Quote(inner) => write!(f, "Quote〈{:?}〉", inner),
             Self::Group(inner) => write!(f, "Group〈{:?}〉", inner),
+            Self::TimeDef(s) => write!(f, "TimeDef〈{:?}〉", s),
             Self::RegexDef(s) => write!(f, "RegexDef〈{:?}〉", s),
             Self::Regex(s) => write!(f, "Regex〈{:?}〉", s.regex.as_str()),
             Self::None => write!(f, "None"),
@@ -681,6 +683,7 @@ impl Expression {
 
             // Self::Error { .. } => "Error".into(),
             Self::Use(..) => "Use".into(),
+            Self::TimeDef(..) => "TimeDef".into(),
             Self::RegexDef(..) => "RegexDef".into(),
             Self::Regex(..) => "Regex".into(),
 

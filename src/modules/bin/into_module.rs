@@ -4,7 +4,7 @@ use crate::{
     modules::bin::{
         check_exact_args_len,
         parse_module::{expr_to_csv, expr_to_json, expr_to_toml, parse_command_output},
-        time_module::parse,
+        time_module::parse_time,
     },
 };
 use common_macros::hash_map;
@@ -19,7 +19,7 @@ pub fn get() -> Expression {
               String::from("filesize") => Expression::builtin("filesize", filesize, "parse a string representing a file size into bytes", "<size_str>"),
 
               // 时间解析（time库）
-              String::from("time") => Expression::builtin("time", parse, "convert a string to a datetime", "<datetime_str> [datetime_template]"),
+              String::from("time") => Expression::builtin("time", parse_time, "convert a string to a datetime", "<datetime_str> [datetime_template]"),
 
               // 解析第三方命令输出（parse库）
               String::from("table") => Expression::builtin("table", parse_command_output, "convert third-party command output to a table", "[headers|header...] <command_output>"),

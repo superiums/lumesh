@@ -34,11 +34,12 @@ pub enum Expression {
     Variable(String),
     Integer(Int),
     Float(f64),
-    Bytes(Vec<u8>),         // 这个保持值类型，因为Rc<Vec>反而增加复杂度
-    String(String),         // 同上
-    StringTemplate(String), // 同上
-    RegexDef(String),       // 同上
-    Regex(LumeRegex),       // 同上
+    Bytes(Vec<u8>), // 这个保持值类型，因为Rc<Vec>反而增加复杂度
+    String(String),
+    StringTemplate(String),
+    RegexDef(String),
+    TimeDef(String),
+    Regex(LumeRegex),
     Boolean(bool),
     None,
 

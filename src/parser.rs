@@ -244,6 +244,7 @@ impl PrattParser {
                 | TokenKind::OperatorPrefix     // $ in cmd arg goes to parse_expr_with_precedence, other ++/--/! should never comes.
                 | TokenKind::Punctuation        // ( [ as first argument begin. { will course if x {} expect more {
                 | TokenKind::Regex
+                | TokenKind::Time
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 对于Punctuation, 只接受 ( [
@@ -354,6 +355,7 @@ impl PrattParser {
             TokenKind::FloatLiteral if PREC_LITERAL >= min_prec => parse_float(input),
             TokenKind::ValueSymbol if PREC_LITERAL >= min_prec => parse_value_symbol(input),
             TokenKind::Regex if PREC_LITERAL >= min_prec => parse_regex(input),
+            TokenKind::Time if PREC_LITERAL >= min_prec => parse_time(input),
             TokenKind::Punctuation if PREC_GROUP >= min_prec => {
                 let op = first.text(input);
                 match op {
@@ -1222,17 +1224,17 @@ fn parse_string_common(
     if raw_str.len() >= 2 {
         // 验证开头和结尾是否为指定字符
         let quote_char = match kind_token {
-            TokenKind::Regex => '\'',
-            TokenKind::StringRaw => '\'',
             TokenKind::StringLiteral => ' ', //never replace "", snailquote need.
             TokenKind::StringTemplate => '`',
+            TokenKind::StringRaw | TokenKind::Regex | TokenKind::Time => '\'',
             _ => unreachable!(),
         };
         let start_chars = match kind_token {
-            TokenKind::Regex => "r'",
             TokenKind::StringRaw => "'",
             TokenKind::StringLiteral => " ", //never replace "", snailquote need.
             TokenKind::StringTemplate => "`",
+            TokenKind::Regex => "r'",
+            TokenKind::Time => "t'",
             _ => unreachable!(),
         };
         // 如果有右侧引号，则调整结束位置
@@ -1296,10 +1298,14 @@ fn parse_string_raw(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     let (input, r) = parse_string_common(input, TokenKind::StringRaw, false, false)?;
     Ok((input, Expression::String(r.into())))
 }
-#[inline]
+
 fn parse_regex(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, r) = parse_string_common(input, TokenKind::Regex, false, false)?;
     Ok((input, Expression::RegexDef(r.into())))
+}
+fn parse_time(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, r) = parse_string_common(input, TokenKind::Time, false, false)?;
+    Ok((input, Expression::TimeDef(r.into())))
 }
 #[inline]
 fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1318,6 +1324,7 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         parse_string_template,
         parse_value_symbol,
         parse_regex,
+        parse_time,
     ))(input)
 }
 
@@ -1996,9 +2003,10 @@ fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synt
             parse_float,
             parse_string,
             parse_string_raw,
-            parse_regex,
             parse_value_symbol,
             parse_symbol,
+            parse_regex,
+            parse_time,
         )),
     )(input)?;
     Ok((input, pat))

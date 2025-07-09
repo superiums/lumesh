@@ -4,7 +4,7 @@ use crate::expression::{LumeRegex, alias};
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
-use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind};
+use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind, modules::parse_time};
 use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
@@ -1057,6 +1057,12 @@ impl Expression {
                         RuntimeError::common(e.to_string().into(), job.clone(), depth)
                     })?;
                     return Ok(Expression::Regex(LumeRegex { regex }));
+                }
+                Expression::TimeDef(t) => {
+                    let t = parse_time(&vec![Expression::String(t.clone())], env).map_err(|e| {
+                        RuntimeError::common(e.to_string().into(), job.clone(), depth)
+                    })?;
+                    return Ok(t);
                 }
                 // 其他表达式处理...
                 _ => break job.eval_flows(state, env, depth + 1),

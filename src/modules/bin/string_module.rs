@@ -1,6 +1,6 @@
 use super::into_module::{filesize, float, int};
 use super::parse_module::parse_command_output;
-use super::time_module::parse;
+use super::time_module::parse_time;
 use super::{get_integer_arg, get_string_arg, get_string_args};
 
 use crate::modules::bin::pprint::pretty_printer;
@@ -18,7 +18,7 @@ pub fn get() -> Expression {
         String::from("to_int") => Expression::builtin("int", int, "convert a float or string to an int", "<value>"),
         String::from("to_float") => Expression::builtin("float", float, "convert an int or string to a float", "<value>"),
         String::from("to_filesize") => Expression::builtin("filesize", filesize, "parse a string representing a file size into bytes", "<size_str>"),
-        String::from("to_time") => Expression::builtin("time", parse, "convert a string to a datetime", "<datetime_str> [datetime_template]"),
+        String::from("to_time") => Expression::builtin("time", parse_time, "convert a string to a datetime", "<datetime_str> [datetime_template]"),
         String::from("to_table") => Expression::builtin("table", parse_command_output, "convert third-party command output to a table", "<command_output>"),
 
         // 基础检查

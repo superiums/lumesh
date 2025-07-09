@@ -164,6 +164,8 @@ _Due to fish being unable to complete one million tasks, we recorded its half-ta
 
 - [中文 Wiki](https://lumesh.codeberg.page)
 - [Wiki English](https://lumesh.codeberg.page/en/index)
+- [DeepWiki](https://deepwiki.com/superiums/lumesh)
+
 
 - **Syntax Manual** [https://lumesh.codeberg.page/en/syntax]
 - **Built-in Function Library** [https://lumesh.codeberg.page/en/libs/index]

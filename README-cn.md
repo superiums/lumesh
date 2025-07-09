@@ -170,6 +170,7 @@ _由于fish无法完成一百万次的任务，我们记录了其一半任务的
 
 - [中文Wiki](https://lumesh.codeberg.page)
 - [Wiki English](https://lumesh.codeberg.page/en/index)
+- [DeepWiki](https://deepwiki.com/superiums/lumesh)
 
 - **语法手册** [https://lumesh.codeberg.page/zh-cn/syntax]
 - **内置函数库** libs [https://lumesh.codeberg.page/zh-cn/libs/index]

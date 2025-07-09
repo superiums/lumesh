@@ -4,6 +4,15 @@
 - add concat to string module;
 - optimize capture_name for Regex;
 - add `gt/ge/lt/le/eq/ne` to math;
+- add a type `Regex`;
+now user could write regex like `r'\w'`
+
+- optimize regex module;
+now user could hold one Regex expr and match it multi times.
+
+- change regex match in match expr;
+now in match expr, only Regex expr was matched as regex, string expr keeps what it is.
+
 
 ## [0.6.7]
 - eval args for builtin in assign mode

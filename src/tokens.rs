@@ -145,6 +145,7 @@ pub enum TokenKind {
     OperatorPostfix,
     // LineContinuation, //add linecontinue
     Comment,
+    Regex,
 }
 
 impl fmt::Debug for Token {

@@ -81,6 +81,8 @@ impl fmt::Display for Expression {
             Self::Bytes(b) => write!(f, "b{}", String::from_utf8_lossy(b)),
             Self::Boolean(b) => write!(f, "{}", if *b { "True" } else { "False" }),
             Self::DateTime(n) => write!(f, "{}", n.format("%Y-%m-%d %H:%M")),
+            Self::RegexDef(s) => write!(f, "r'{}'", s),
+            Self::Regex(s) => write!(f, "r'{}'", s.regex.as_str()),
 
             Self::Declare(name, expr) => write!(f, "let {} = {}", name, expr),
             Self::DestructureAssign(pattern, expr) => {
@@ -272,7 +274,7 @@ impl fmt::Display for Expression {
                     .join(" ")
             ),
 
-            Self::AliasOp(name, cmd) => write!(f, "alias {} = {}", name, cmd),
+            Self::AliasDef(name, cmd) => write!(f, "alias {} = {}", name, cmd),
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
                     write!(f, "({} {})", op, v)
@@ -352,6 +354,8 @@ impl Expression {
             Self::Range(s, st) => write!(f, "Range〈{:?},{}〉", s, st),
             Self::Quote(inner) => write!(f, "Quote〈{:?}〉", inner),
             Self::Group(inner) => write!(f, "Group〈{:?}〉", inner),
+            Self::RegexDef(s) => write!(f, "RegexDef〈{:?}〉", s),
+            Self::Regex(s) => write!(f, "Regex〈{:?}〉", s.regex.as_str()),
             Self::None => write!(f, "None"),
 
             // 新增：字符串模板和字节数据
@@ -446,8 +450,8 @@ impl Expression {
             }
 
             // 新增：别名操作
-            Self::AliasOp(name, cmd) => {
-                write!(f, "\n{}AliasOp〈{}〉 =\n", idt(i), name)?;
+            Self::AliasDef(name, cmd) => {
+                write!(f, "\n{}AliasDef〈{}〉 =\n", idt(i), name)?;
                 cmd.fmt_indent(f, i + 1)
             }
 
@@ -622,6 +626,7 @@ impl Expression {
             Self::Integer(_) | Self::Float(_) => Some("Math".into()),
             Self::DateTime(_) => Some("Time".into()),
             Self::Boolean(_) => Some("Boolean".into()),
+            Self::Regex(_) => Some("Regex".into()),
             _ => None,
         }
     }
@@ -668,7 +673,7 @@ impl Expression {
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),
 
-            Self::AliasOp(..) => "AliasOp".into(),
+            Self::AliasDef(..) => "AliasDef".into(),
             Self::Range(..) => "Range".into(),
             Self::Chain(_, _) => "Chain".into(),
             Self::PipeMethod(_, _) => "PipeMethod".into(),
@@ -676,6 +681,8 @@ impl Expression {
 
             // Self::Error { .. } => "Error".into(),
             Self::Use(..) => "Use".into(),
+            Self::RegexDef(..) => "RegexDef".into(),
+            Self::Regex(..) => "Regex".into(),
 
             Self::None => "None".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),

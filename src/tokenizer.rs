@@ -467,18 +467,21 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
         punctuation_tag("\""),
         punctuation_tag("'"),
         punctuation_tag("`"),
+        punctuation_tag("r'"), //regex str
     ))(input)?;
     let quote_char = start_quote_range.to_str(input.as_original_str());
+    let q_char = match quote_char.len() {
+        1 => quote_char,
+        _ => "'",
+    };
 
     // 2. 解析字符串内容（含转义处理）
     let (rest_after_content, diagnostics) =
-        parse_string_inner(rest_after_start, quote_char.chars().next().unwrap())?;
+        parse_string_inner(rest_after_start, q_char.chars().next().unwrap())?;
 
     // 3. 解析结束引号（或EOF）
-    let (rest_after_end, _) = alt((
-        punctuation_tag(quote_char),
-        map(eof, |_| input.split_empty()),
-    ))(rest_after_content)?;
+    let (rest_after_end, _) =
+        alt((punctuation_tag(q_char), map(eof, |_| input.split_empty())))(rest_after_content)?;
     // 4.split
     let (_, content_range) = input.split_until(rest_after_end);
     // 4. 计算内容范围
@@ -500,6 +503,7 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
         "'" => TokenKind::StringRaw,
         "\"" => TokenKind::StringLiteral,
         "`" => TokenKind::StringTemplate,
+        "r'" => TokenKind::Regex,
         _ => unreachable!(),
     };
 

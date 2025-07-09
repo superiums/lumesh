@@ -36,44 +36,19 @@ pub fn get() -> Expression {
     .into()
 }
 
-// 辅助函数：验证并获取字符串参数
-fn get_string_arg(
-    args: &[Expression],
-    index: usize,
-    func_name: &str,
-    env: &mut Environment,
-) -> Result<String, LmError> {
-    match args
-        .get(index)
-        .ok_or(LmError::CustomError(format!(
-            "regex.{} requires argument at index {}",
-            func_name, index
-        )))?
-        .eval(env)?
-    {
-        Expression::Symbol(s) | Expression::String(s) => Ok(s.clone()),
-        _ => Err(LmError::CustomError(format!(
-            "regex.{} requires string argument at index {}",
-            func_name, index
-        ))),
-    }
-}
-
 // 检查是否匹配
 fn regex_match(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("match", args, 2)?;
-    let pattern = get_string_arg(args, 0, "match", env)?;
-    let text = get_string_arg(args, 1, "match", env)?;
-    let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
+    let (regex, text) = get_r_args(args, env)?;
+
     Ok(Expression::Boolean(regex.is_match(&text)))
 }
 
 // 查找第一个匹配
 fn regex_find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("find", args, 2)?;
-    let pattern = get_string_arg(args, 0, "find", env)?;
-    let text = get_string_arg(args, 1, "find", env)?;
-    let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
+    let (regex, text) = get_r_args(args, env)?;
+
     regex.find(&text).map_or(Ok(Expression::None), |m| {
         Ok(Expression::from(vec![
             Expression::Integer(m.start() as i64),
@@ -86,9 +61,8 @@ fn regex_find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 // 查找所有匹配
 fn regex_find_all(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("find_all", args, 2)?;
-    let pattern = get_string_arg(args, 0, "find_all", env)?;
-    let text = get_string_arg(args, 1, "find_all", env)?;
-    let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
+    let (regex, text) = get_r_args(args, env)?;
+
     let matches: Vec<Expression> = regex
         .find_iter(&text)
         .map(|m| {
@@ -105,9 +79,8 @@ fn regex_find_all(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 // 获取第一个捕获组
 fn regex_capture(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("capture", args, 2)?;
-    let pattern = get_string_arg(args, 0, "capture", env)?;
-    let text = get_string_arg(args, 1, "capture", env)?;
-    let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
+    let (regex, text) = get_r_args(args, env)?;
+
     regex.captures(&text).map_or(Ok(Expression::None), |caps| {
         let groups: Vec<Expression> = (0..caps.len())
             .map(|i| {
@@ -123,9 +96,8 @@ fn regex_capture(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
 // 获取所有捕获组
 fn regex_captures(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("captures", args, 2)?;
-    let pattern = get_string_arg(args, 0, "captures", env)?;
-    let text = get_string_arg(args, 1, "captures", env)?;
-    let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
+    let (regex, text) = get_r_args(args, env)?;
+
     let all_caps: Vec<Expression> = regex
         .captures_iter(&text)
         .map(|caps| {
@@ -145,9 +117,8 @@ fn regex_captures(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 // 正则分割
 fn regex_split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("split", args, 2)?;
-    let pattern = get_string_arg(args, 0, "split", env)?;
-    let text = get_string_arg(args, 1, "split", env)?;
-    let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
+    let (regex, text) = get_r_args(args, env)?;
+
     let parts: Vec<Expression> = regex
         .split(&text)
         .map(|s| Expression::String(s.to_string()))
@@ -158,10 +129,23 @@ fn regex_split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
 // 替换所有匹配
 fn regex_replace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("replace", args, 3)?;
-    let pattern = get_string_arg(args, 0, "replace", env)?;
-    let replacement = get_string_arg(args, 1, "replace", env)?;
-    let text = get_string_arg(args, 2, "replace", env)?;
-    let regex = Regex::new(&pattern).map_err(|e| LmError::CustomError(e.to_string()))?;
+
+    let first = args[0].eval(env)?;
+    let second = args[1].eval(env)?;
+    let last = args[2].eval(env)?;
+    let (replacement, text, regex) = match last {
+        Expression::Regex(regex) => (first.to_string(), second.to_string(), regex.regex),
+        Expression::String(text) => {
+            let (regex, replace) = get_r_args(args, env)?;
+            (replace, text, regex)
+        }
+        _ => {
+            return Err(LmError::CustomError(
+                "regex option requires text as last argument".into(),
+            ));
+        }
+    };
+
     Ok(Expression::String(
         regex.replace_all(&text, replacement.as_str()).to_string(),
     ))
@@ -173,16 +157,7 @@ fn regex_capture_name(
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
     super::check_exact_args_len("capture_name", args, 2)?;
-    let (pattern, text) = match args.len() {
-        2 => (args[0].clone(), args[1].clone()),
-        _ => unreachable!(),
-    };
-
-    let pattern = get_string_arg(&[pattern], 0, "capture_name", env)?;
-    let text = get_string_arg(&[text], 0, "capture_name", env)?;
-
-    let re = Regex::new(&pattern)
-        .map_err(|e| LmError::CustomError(format!("invalid regex pattern: {}", e)))?;
+    let (re, text) = get_r_args(args, env)?;
 
     if let Some(caps) = re.captures(&text) {
         // let mut result = Vec::new();
@@ -199,3 +174,32 @@ fn regex_capture_name(
     }
     Ok(Expression::None)
 }
+
+fn get_r_args(args: &Vec<Expression>, env: &mut Environment) -> Result<(Regex, String), LmError> {
+    match (args[0].eval(env)?, args[1].eval(env)?) {
+        (Expression::Regex(r), Expression::String(t) | Expression::Symbol(t)) => Ok((r.regex, t)),
+        (Expression::String(t) | Expression::Symbol(t), Expression::Regex(r)) => Ok((r.regex, t)),
+        (
+            Expression::String(r) | Expression::Symbol(r),
+            Expression::String(t) | Expression::Symbol(t),
+        ) => Ok((
+            Regex::new(&r)
+                .map_err(|e| LmError::CustomError(format!("invalid regex pattern: {}", e)))?,
+            t,
+        )),
+
+        _ => Err(LmError::CustomError(
+            "regex option requires Regex/pattern_string as first argument".into(),
+        )),
+    }
+}
+// fn get_regex(arg: Expression) -> Result<Regex, LmError> {
+//     match arg {
+//         Expression::String(pattern) | Expression::Symbol(pattern) => Ok(Regex::new(&pattern)
+//             .map_err(|e| LmError::CustomError(format!("invalid regex pattern: {}", e)))?),
+//         Expression::Regex(r) => Ok(r.regex),
+//         _ => Err(LmError::CustomError(
+//             "regex option requires Regex/pattern_string as first argument".into(),
+//         )),
+//     }
+// }

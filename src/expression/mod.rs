@@ -19,6 +19,7 @@ pub mod terminal;
 
 use builtin::Builtin;
 use chrono::NaiveDateTime;
+use regex_lite::Regex;
 #[derive(Clone, PartialEq)]
 pub enum Expression {
     // 所有嵌套节点改为Rc包裹
@@ -36,6 +37,8 @@ pub enum Expression {
     Bytes(Vec<u8>),         // 这个保持值类型，因为Rc<Vec>反而增加复杂度
     String(String),         // 同上
     StringTemplate(String), // 同上
+    RegexDef(String),       // 同上
+    Regex(LumeRegex),       // 同上
     Boolean(bool),
     None,
 
@@ -59,7 +62,7 @@ pub enum Expression {
     If(Rc<Self>, Rc<Self>, Rc<Self>),
     Apply(Rc<Self>, Rc<Vec<Self>>),
     Command(Rc<Self>, Rc<Vec<Self>>),
-    AliasOp(String, Rc<Self>),
+    AliasDef(String, Rc<Self>),
     Lambda(Vec<String>, Rc<Self>),
     Function(
         String,
@@ -81,6 +84,16 @@ pub enum Expression {
     PipeMethod(String, Rc<Vec<Self>>),
     DestructureAssign(Vec<DestructurePattern>, Rc<Expression>), // 解构赋值
     Use(Option<String>, String),
+}
+
+#[derive(Debug, Clone)]
+pub struct LumeRegex {
+    pub regex: Regex,
+}
+impl PartialEq for LumeRegex {
+    fn eq(&self, _other: &LumeRegex) -> bool {
+        false
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]

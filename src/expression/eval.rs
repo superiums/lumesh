@@ -1,5 +1,5 @@
-use crate::expression::alias;
 use crate::expression::cmd_excutor::expand_home;
+use crate::expression::{LumeRegex, alias};
 
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
@@ -132,7 +132,8 @@ impl Expression {
                 | Self::Bytes(_)
                 | Self::Range(..)
                 | Self::FileSize(_)
-                | Self::DateTime(_) => {
+                | Self::DateTime(_)
+                | Self::Regex(_) => {
                     // dbg!("basic type");
                     return Ok(job.clone());
                 }
@@ -263,7 +264,7 @@ impl Expression {
                 }
 
                 // 处理变量声明（仅允许未定义变量）
-                Self::AliasOp(name, expr) => {
+                Self::AliasDef(name, expr) => {
                     // dbg!("alias---->", &name, &expr.type_name());
                     alias::set_alias(name.clone(), expr.as_ref().clone()); // 新增 declare
                     return Ok(Self::None);
@@ -1051,7 +1052,12 @@ impl Expression {
                     let evaluated_value = value.eval_mut(state, env, depth + 1)?;
                     return self.destructure_assign(pattern, evaluated_value, env, depth + 1);
                 }
-                // Expression::PipeMethod(, )
+                Expression::RegexDef(pattern) => {
+                    let regex = Regex::new(pattern).map_err(|e| {
+                        RuntimeError::common(e.to_string().into(), job.clone(), depth)
+                    })?;
+                    return Ok(Expression::Regex(LumeRegex { regex }));
+                }
                 // 其他表达式处理...
                 _ => break job.eval_flows(state, env, depth + 1),
             };
@@ -1301,8 +1307,8 @@ impl Expression {
 fn matches_pattern(value: &Expression, pattern: &Vec<Expression>) -> bool {
     pattern.iter().any(|pat| match pat {
         Expression::Symbol(s) if s == "_" => true,
-        Expression::Symbol(s) => s == &value.to_string(),
-        Expression::String(s) => {
+        Expression::Symbol(s) | Expression::String(s) => s == &value.to_string(),
+        Expression::RegexDef(s) => {
             Regex::new(s).is_ok_and(|r| r.is_match(value.to_string().as_str()))
         }
 

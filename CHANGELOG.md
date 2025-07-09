@@ -1,4 +1,12 @@
 # Changelog
+## [0.6.9]
+- highlight builtin cmds;
+- add theme config
+    set theme via `LUME_THEME`
+
+    modify theme via `LUME_THEME_CONFIG`
+
+
 ## [0.6.8]
 - add boolean module;
 - add concat to string module;

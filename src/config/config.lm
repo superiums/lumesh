@@ -16,6 +16,14 @@ if IS_INTERACTIVE {
     "
     print logo.green().faint()
 
+    # ====== base theme: 'dark', 'light', 'ayu_dark'
+    LUME_THEME = 'ayu_dark'
+
+    # ====== theme modify
+    #LUME_THEME_CONFIG = {
+    #    String::from("keyword") => "\x1b[38;5;170m".to_string(),           // 紫色 (#C678DD)
+    #    ...
+    #}
     # ====== default repl mode
     # LUME_VI_MODE = true
 

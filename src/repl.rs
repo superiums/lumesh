@@ -30,6 +30,7 @@ use crate::cmdhelper::{
 use crate::expression::alias::get_alias_tips;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::modules::get_builtin_tips;
+use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
 
 use crate::runtime::check;
 use crate::{Environment, highlight, parse_and_eval, prompt::get_prompt_engine};
@@ -86,6 +87,7 @@ pub fn run_repl(env: &mut Environment) {
             path.into_os_string().into_string().unwrap()
         }
     };
+    // ai config
     let ai_config = env.get("LUME_AI_CONFIG");
     env.undefine("LUME_AI_CONFIG");
     let vi_mode = match env.get("LUME_VI_MODE") {
@@ -95,13 +97,28 @@ pub fn run_repl(env: &mut Environment) {
         }
         _ => false,
     };
-    // let enable_ai = match env.get("LUME_AI_CONFIG") {
-    //     Some(_) => true,
-    //     _ => false,
-    // };
+
+    // theme
+    let theme_base = env.get("LUME_THEME");
+    env.undefine("LUME_THEME");
+    let theme = match theme_base {
+        Some(Expression::String(t)) => match t.as_ref() {
+            "light" => get_light_theme(),
+            "ayu_dark" => get_ayu_dark_theme(),
+            _ => get_dark_theme(),
+        },
+        _ => get_dark_theme(),
+    };
+
+    let theme_config = env.get("LUME_THEME_CONFIG");
+    env.undefine("LUME_THEME_CONFIG");
+    let theme_merged = match theme_config {
+        Some(Expression::Map(m)) => get_merged_theme(theme, m.as_ref()),
+        _ => theme,
+    };
 
     // 使用 Arc<Mutex> 保护编辑器
-    let rl = Arc::new(Mutex::new(new_editor(ai_config, vi_mode)));
+    let rl = Arc::new(Mutex::new(new_editor(ai_config, vi_mode, theme_merged)));
 
     match rl.lock().unwrap().load_history(&history_file) {
         Ok(_) => {}
@@ -284,7 +301,11 @@ struct LumeHelper {
     cmds: HashSet<String>,
 }
 
-fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper, FileHistory> {
+fn new_editor(
+    ai_config: Option<Expression>,
+    vi_mode: bool,
+    theme: HashMap<String, String>,
+) -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
         .completion_type(CompletionType::Circular)
@@ -327,7 +348,7 @@ fn new_editor(ai_config: Option<Expression>, vi_mode: bool) -> Editor<LumeHelper
     let helper = LumeHelper {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
-        highlighter: Arc::new(SyntaxHighlighter),
+        highlighter: Arc::new(SyntaxHighlighter::new(theme)),
         ai_client: ai,
         cmds: cmds,
     };
@@ -564,8 +585,15 @@ impl Hinter for LumeHelper {
     }
 }
 
-struct SyntaxHighlighter;
+struct SyntaxHighlighter {
+    theme: HashMap<String, String>,
+}
 
+impl SyntaxHighlighter {
+    pub fn new(theme: HashMap<String, String>) -> Self {
+        Self { theme }
+    }
+}
 impl Highlighter for SyntaxHighlighter {
     fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
         let _s = (line, pos, kind);
@@ -588,11 +616,11 @@ impl Highlighter for SyntaxHighlighter {
         //     (RED, false)
         } else {
             // 无命令，直接返回语法高亮
-            return Cow::Owned(highlight(line));
+            return Cow::Owned(highlight(line, &self.theme));
         };
 
         // 高亮命令部分，剩余部分调用 syntax_highlight
-        let highlighted_rest = highlight(rest);
+        let highlighted_rest = highlight(rest, &self.theme);
         let colored_line = if is_valid {
             format!("{}{}{} {}", color, cmd, RESET, highlighted_rest)
         } else {

@@ -1,7 +1,8 @@
 // use super::{get_list_arg, get_string_arg};
 use crate::{
-    Environment, Expression, LmError, highlight, parse,
+    Environment, Expression, LmError, parse,
     runtime::{IFS_CSV, ifs_contains},
+    syntax::highlight_dark_theme,
 };
 use common_macros::hash_map;
 use regex_lite::Regex;
@@ -139,7 +140,7 @@ fn highlight_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
         return Ok(Expression::None);
     }
 
-    let hi = highlight(script.as_str());
+    let hi = highlight_dark_theme(script.as_str());
     Ok(Expression::String(hi))
 }
 

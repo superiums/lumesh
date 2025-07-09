@@ -65,6 +65,35 @@ pub fn get_builtin_tips() -> HashSet<String> {
     }
     tips
 }
+pub fn get_builtin_symbos() -> HashSet<String> {
+    let mut tips: HashSet<String> = HashSet::new();
+
+    for (key, item) in get_builtin_map().iter() {
+        tips.insert(key.to_owned());
+        match item {
+            Expression::HMap(m) => {
+                for (k, v) in m.iter() {
+                    tips.insert(k.to_owned());
+                    match v {
+                        Expression::HMap(mm) => {
+                            for (mk, _) in mm.iter() {
+                                tips.insert(mk.to_owned());
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            Expression::Map(m) => {
+                for (k, _) in m.iter() {
+                    tips.insert(k.to_owned());
+                }
+            }
+            _ => {}
+        }
+    }
+    tips
+}
 
 // use std::sync::OnceLock;
 

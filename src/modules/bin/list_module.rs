@@ -44,7 +44,7 @@ pub fn get() -> Expression {
         String::from("group") => Expression::builtin("group", group_by, "group list elements by key function", "<key_fn|key> <list>"),
         String::from("remove_at") => Expression::builtin("remove_at", remove_at, "remove n elements starting from index", "<index> [count] <list>"),
         String::from("remove") => Expression::builtin("remove", remove, "remove first matching element", "<item> [all?] <list>"),
-
+        String::from("set") => Expression::builtin("set", set_list, "set element at existing index", "<index> <value> <list>"),
         // 创建操作
         String::from("concat") => Expression::builtin("concat", concat, "concatenate multiple lists into one", "<list1|item1> <list2|item2> ..."),
         String::from("from") => Expression::builtin("from", from, "create a list from a range", "<range|item...>"),
@@ -72,6 +72,27 @@ pub fn get() -> Expression {
         String::from("unzip") => Expression::builtin("unzip", unzip, "unzip list of pairs into two lists", "<list_of_pairs>"),
     })
     .into()
+}
+
+fn set_list(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("set", args, 3)?;
+
+    let val = args[1].eval(env)?;
+    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    let list = get_list_arg(args[2].eval(env)?)?;
+
+    let index = n as usize;
+    if index < list.as_ref().len() {
+        let mut result = list.as_ref().clone();
+        result[index] = val;
+        Ok(Expression::from(result))
+    } else {
+        Err(LmError::CustomError(format!(
+            "index {} out of bounds for list of length {}",
+            n,
+            list.as_ref().len()
+        )))
+    }
 }
 
 fn concat(args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {

@@ -17,7 +17,7 @@ pub fn get() -> Expression {
 
         // 数据获取
         String::from("get") => Expression::builtin("get", super::get, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),
-        String::from("at") => Expression::builtin("at", at, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),
+        String::from("at") => Expression::builtin("at", at, "get value from map", "<key> <map>"),
         String::from("items") => Expression::builtin("items", items, "get the items of a map or list", "<map>"),
         String::from("keys") => Expression::builtin("keys", keys, "get the keys of a map", "<map>"),
         String::from("values") => Expression::builtin("values", values, "get the values of a map", "<map>"),
@@ -26,7 +26,7 @@ pub fn get() -> Expression {
         String::from("filter") => Expression::builtin("filter", filter, "filter map by condition", "<predicate_fn> <map>"),
         // 结构修改
         String::from("remove") => Expression::builtin("remove", remove, "remove a key-value pair from a map", "<key> <map>"),
-
+        String::from("set") => Expression::builtin("set", set_map, "set value for existing key in map", "<key> <value> <map>"),
         // 创建操作
         String::from("from_items") => Expression::builtin("from_items", from_items, "create a map from a list of key-value pairs", "<items>"),
 
@@ -112,6 +112,41 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
             Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
         }
         _ => Expression::None,
+    })
+}
+
+fn set_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("set", args, 3)?;
+    let expr = args[2].eval(env)?;
+    let value = args[1].eval(env)?;
+    let key_str = super::get_string_arg(args[0].eval(env)?)?;
+
+    Ok(match expr {
+        Expression::Map(map) => {
+            if map.as_ref().contains_key(&key_str) {
+                let mut new_map = map.as_ref().clone();
+                new_map.insert(key_str, value);
+                Expression::Map(Rc::new(new_map))
+            } else {
+                return Err(LmError::CustomError(format!(
+                    "key '{}' not found in map",
+                    key_str
+                )));
+            }
+        }
+        Expression::HMap(map) => {
+            if map.as_ref().contains_key(&key_str) {
+                let mut new_map = map.as_ref().clone();
+                new_map.insert(key_str, value);
+                Expression::HMap(Rc::new(new_map))
+            } else {
+                return Err(LmError::CustomError(format!(
+                    "key '{}' not found in map",
+                    key_str
+                )));
+            }
+        }
+        _ => return Err(LmError::CustomError("expected map".to_string())),
     })
 }
 

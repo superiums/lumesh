@@ -17,6 +17,7 @@ now in match expr, only Regex expr was matched as regex, string expr keeps what 
 now user could write time like `t'2025-7-10'`
 
 - add `Filesize` module.
+- add `set` for list/map.
 
 ## [0.6.7]
 - eval args for builtin in assign mode

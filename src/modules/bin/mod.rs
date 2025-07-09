@@ -16,6 +16,7 @@ mod map_module;
 // mod fn_module;
 // use fn_module::curry;
 mod boolean_module;
+mod filesize_module;
 mod fs_module;
 mod list_module;
 mod log_module;
@@ -51,6 +52,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("Sys") => sys_module::get(),
         String::from("Into") => into_module::get(),
         String::from("Boolean") => boolean_module::get(),
+        String::from("Filesize") => filesize_module::get(),
 
         // console control
         // Shell control

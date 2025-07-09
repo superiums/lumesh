@@ -158,7 +158,7 @@ impl FileSize {
         }
     }
 
-    fn to_bytes(&self) -> u64 {
+    pub fn to_bytes(&self) -> u64 {
         let mut size = self.size;
         // 根据单位进行转换
         size <<= match &self.unit {

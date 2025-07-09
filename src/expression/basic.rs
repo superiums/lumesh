@@ -629,6 +629,7 @@ impl Expression {
             Self::DateTime(_) => Some("Time".into()),
             Self::Boolean(_) => Some("Boolean".into()),
             Self::Regex(_) => Some("Regex".into()),
+            Self::FileSize(_) => Some("Filesize".into()),
             _ => None,
         }
     }

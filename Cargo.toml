@@ -1,10 +1,10 @@
 [package]
 name = "lumesh"
-version = "0.6.7"
+version = "0.6.8"
 authors = ["Adam McDaniel; santo"]
 edition = "2024"
 license = "MIT"
-description = "A shell🐚 forked from dune!!"
+description = "a lighting shell ⚡"
 readme = "README.md"
 documentation = "https://docs.rs/lumesh"
 homepage = "https://codeberg.com/santo/lumesh"

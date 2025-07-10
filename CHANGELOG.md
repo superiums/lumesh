@@ -10,6 +10,7 @@
 - fix alt+j for space before /;
 - fix completition with longer first.
 - optimize syntax get_color;
+- idented display for expr.
 
 ## [0.6.8]
 - add boolean module;

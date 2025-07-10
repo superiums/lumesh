@@ -741,7 +741,7 @@ fn args_collect_iter(
             )),
         },
         0 => Err(LmError::CustomError(
-            "math.max/math.min requires 1 list or 2 or more nums".into(),
+            "math.max/math.min requires 1 list or multi nums".into(),
         )),
     }
 }

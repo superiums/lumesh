@@ -5,6 +5,7 @@
     set theme via `LUME_THEME`
 
     modify theme via `LUME_THEME_CONFIG`
+- optimize `find/find_all` of regex to return map instead of list.
 
 
 ## [0.6.8]

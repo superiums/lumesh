@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use crate::{Environment, Expression, LmError};
-use common_macros::hash_map;
+use common_macros::{b_tree_map, hash_map};
 use regex_lite::Regex;
 // 注册所有正则表达式函数
 pub fn get() -> Expression {
@@ -50,11 +50,11 @@ fn regex_find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     let (regex, text) = get_r_args(args, env)?;
 
     regex.find(&text).map_or(Ok(Expression::None), |m| {
-        Ok(Expression::from(vec![
-            Expression::Integer(m.start() as i64),
-            Expression::Integer(m.end() as i64),
-            Expression::String(m.as_str().to_string()),
-        ]))
+        Ok(Expression::from(b_tree_map! {
+          String::from("start") => Expression::Integer(m.start() as i64),
+          String::from("end") => Expression::Integer(m.end() as i64),
+          String::from("found") => Expression::String(m.as_str().to_string()),
+        }))
     })
 }
 
@@ -66,11 +66,11 @@ fn regex_find_all(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     let matches: Vec<Expression> = regex
         .find_iter(&text)
         .map(|m| {
-            Expression::from(vec![
-                Expression::Integer(m.start() as i64),
-                Expression::Integer(m.end() as i64),
-                Expression::String(m.as_str().to_string()),
-            ])
+            Expression::from(b_tree_map! {
+              String::from("start") => Expression::Integer(m.start() as i64),
+              String::from("end") => Expression::Integer(m.end() as i64),
+              String::from("found") => Expression::String(m.as_str().to_string()),
+            })
         })
         .collect();
     Ok(Expression::from(matches))

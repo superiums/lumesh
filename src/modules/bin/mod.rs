@@ -4,7 +4,7 @@ use std::{
 };
 
 use crate::{
-    Environment, Expression, Int, LmError, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, Int, LmError,
     modules::bin::sys_module::{set_builtin, unset_builtin},
     parse_and_eval,
 };
@@ -220,7 +220,7 @@ fn cd(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError>
         other => {
             // Try to convert the argument to a string
             let path = other.to_string();
-            cd(&vec![Expression::String(path)], env)
+            cd(&[Expression::String(path)], env)
         }
     }
 }
@@ -719,19 +719,15 @@ fn check_exact_args_len(
     name: impl ToString,
     args: &[Expression],
     expected_len: usize,
-) -> Result<(), RuntimeError> {
+) -> Result<(), LmError> {
     if args.len() == expected_len {
         Ok(())
     } else {
-        Err(RuntimeError::new(
-            RuntimeErrorKind::ArgumentMismatch {
-                name: name.to_string(),
-                expected: expected_len,
-                received: args.len(),
-            },
-            Expression::None,
-            0,
-        ))
+        Err(LmError::ArgumentMismatch {
+            name: name.to_string(),
+            expected: expected_len,
+            received: args.len(),
+        })
     }
 }
 

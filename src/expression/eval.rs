@@ -1055,7 +1055,7 @@ impl Expression {
                     return Ok(Expression::Regex(LumeRegex { regex }));
                 }
                 Expression::TimeDef(t) => {
-                    let t = parse_time(&vec![Expression::String(t.clone())], env).map_err(|e| {
+                    let t = parse_time(&[Expression::String(t.clone())], env).map_err(|e| {
                         RuntimeError::common(e.to_string().into(), job.clone(), depth)
                     })?;
                     return Ok(t);

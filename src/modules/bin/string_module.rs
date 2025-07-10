@@ -281,7 +281,7 @@ fn is_upper(args: &[Expression], env: &mut Environment) -> Result<Expression, Lm
 fn is_title(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_title", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
-    let title = to_title(&vec![args[0].clone()], env)?;
+    let title = to_title(&[args[0].clone()], env)?;
     Ok(Expression::Boolean(text == title.to_string()))
 }
 

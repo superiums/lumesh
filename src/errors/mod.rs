@@ -24,6 +24,12 @@ pub enum LmError {
         sym: String,
         found: String,
     },
+    #[error("arguments mismatch for builtin `{name}`: expected {expected}, found {received}")]
+    ArgumentMismatch {
+        name: String,
+        expected: usize,
+        received: usize,
+    },
 }
 
 impl LmError {
@@ -31,13 +37,15 @@ impl LmError {
     pub const ERROR_CODE_SYNTAX_ERROR: Int = 101;
     pub const ERROR_CODE_IO_ERROR: Int = 102;
     pub const ERROR_CODE_CS_ERROR: Int = 103;
-    pub const ERROR_CODE_TYPE_ERROR: Int = 104;
+    pub const ERROR_CODE_ARGS_ERROR: Int = 104;
+    pub const ERROR_CODE_TYPE_ERROR: Int = 105;
     pub fn codes() -> Expression {
         Expression::from(b_tree_map! {
             String::from("runtime_error") => Expression::Integer(Self::ERROR_CODE_RUNTIME_ERROR),
             String::from("syntax_error") => Expression::Integer(Self::ERROR_CODE_SYNTAX_ERROR),
             String::from("io_error") => Expression::Integer(Self::ERROR_CODE_IO_ERROR),
             String::from("custom_error") => Expression::Integer(Self::ERROR_CODE_CS_ERROR),
+            String::from("args_error") => Expression::Integer(Self::ERROR_CODE_ARGS_ERROR),
             String::from("type_error") => Expression::Integer(Self::ERROR_CODE_TYPE_ERROR),
         })
     }
@@ -47,6 +55,7 @@ impl LmError {
             Self::Runtime(err) => err.code(),
             Self::Io(_) => Self::ERROR_CODE_IO_ERROR,
             Self::CustomError(_) => Self::ERROR_CODE_CS_ERROR,
+            Self::ArgumentMismatch { .. } => Self::ERROR_CODE_ARGS_ERROR,
             Self::TypeError { .. } => Self::ERROR_CODE_TYPE_ERROR,
         }
     }

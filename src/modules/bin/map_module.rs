@@ -43,7 +43,7 @@ pub fn get() -> Expression {
 }
 
 // Helper function implementations
-fn at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn at(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("at", args, 2)?;
     let k = super::get_string_arg(args[0].eval(env)?)?;
     let map = get_map_arg(args[1].eval(env)?)?;
@@ -54,7 +54,7 @@ fn at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
         .ok_or_else(|| LmError::CustomError(format!("key '{}' not found in Map `{}`", k, args[1])))
 }
 
-fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn items(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("items", args, 1)?;
     let expr = args[0].eval(env)?;
 
@@ -77,7 +77,7 @@ fn items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     })
 }
 
-fn keys(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn keys(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("keys", args, 1)?;
     let expr = args[0].eval(env)?;
 
@@ -102,7 +102,7 @@ fn keys(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     })
 }
 
-fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn values(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("values", args, 1)?;
     let expr = args[0].eval(env)?;
 
@@ -115,7 +115,7 @@ fn values(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     })
 }
 
-fn set_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn set_map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("set", args, 3)?;
     let expr = args[2].eval(env)?;
     let value = args[1].eval(env)?;
@@ -148,7 +148,7 @@ fn set_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     })
 }
 
-fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn remove(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("remove", args, 2)?;
     let expr = args[1].eval(env)?;
     let key = args[0].eval(env)?;
@@ -168,7 +168,7 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     })
 }
 
-fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn has(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("has", args, 2)?;
     let expr = args[1].eval(env)?;
     let key = args[0].eval(env)?;
@@ -180,7 +180,7 @@ fn has(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     })
 }
 
-fn from_items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn from_items(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("from_items", args, 1)?;
     let expr = args[0].eval(env)?;
 
@@ -200,7 +200,7 @@ fn from_items(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     })
 }
 
-fn union(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn union(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("union", args, 2)?;
     let expr1 = args[0].eval(env)?;
     let expr2 = args[1].eval(env)?;
@@ -215,7 +215,7 @@ fn union(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     })
 }
 
-fn intersect(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn intersect(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("intersect", args, 2)?;
     let expr1 = args[0].eval(env)?;
     let expr2 = args[1].eval(env)?;
@@ -234,7 +234,7 @@ fn intersect(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     })
 }
 
-fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn difference(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("difference", args, 2)?;
     let expr1 = args[0].eval(env)?;
     let expr2 = args[1].eval(env)?;
@@ -253,7 +253,7 @@ fn difference(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     })
 }
 
-fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn map_map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("map.map", args, 2..=3)?;
 
     let map = get_map_arg(args.last().unwrap().eval(env)?)?;
@@ -291,7 +291,7 @@ fn map_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     Ok(Expression::from(new_map))
 }
 
-fn deep_merge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn deep_merge(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("merge", args, 2..)?;
 
     let base = get_map_arg(args[0].eval(env)?)?;
@@ -326,7 +326,7 @@ fn deep_merge_maps(
     Ok(result)
 }
 
-fn find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn find(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("map.find", args, 2)?;
     let map = get_map_arg(args[1].eval(env)?)?;
 
@@ -350,7 +350,7 @@ fn find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(Expression::None)
 }
 
-fn filter(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn filter(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("map.filter", args, 2)?;
     let map = get_map_arg(args[1].eval(env)?)?;
 

@@ -123,7 +123,7 @@ fn pprint_hmap(exprs: &HashMap<String, Expression>) {
     println!("{table}");
 }
 
-fn pprint_list(exprs: &Vec<Expression>) {
+fn pprint_list(exprs: &[Expression]) {
     let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
 
     let (rows, heads_opt) = TableRow {
@@ -176,9 +176,9 @@ fn pprint_list(exprs: &Vec<Expression>) {
 // 保持原有的智能布局逻辑
 
 struct TableRow<'a> {
-    columns: &'a Vec<Expression>, // 原始数据
-    max_width: usize,             // 单行总宽度限制
-    col_padding: usize,           // 列间距（通常为3：1边框+2空格）
+    columns: &'a [Expression], // 原始数据
+    max_width: usize,          // 单行总宽度限制
+    col_padding: usize,        // 列间距（通常为3：1边框+2空格）
 }
 
 impl<'a> TableRow<'a> {
@@ -192,11 +192,7 @@ impl<'a> TableRow<'a> {
         // 二维表格
         let mut cols = match self.columns.first() {
             Some(Expression::List(a)) => {
-                heads = a
-                    .iter()
-                    .enumerate()
-                    .map(|(i, _)| format!("C{i}"))
-                    .collect();
+                heads = a.iter().enumerate().map(|(i, _)| format!("C{i}")).collect();
                 a.len()
             }
             Some(Expression::HMap(a)) => {
@@ -247,11 +243,15 @@ impl<'a> TableRow<'a> {
                     .collect::<Vec<String>>()
                     .join(", "),
                 Expression::HMap(a) => a
-                    .as_ref().values().map(|v| v.to_string())
+                    .as_ref()
+                    .values()
+                    .map(|v| v.to_string())
                     .collect::<Vec<String>>()
                     .join("\t"),
                 Expression::Map(a) => a
-                    .as_ref().values().map(|v| v.to_string())
+                    .as_ref()
+                    .values()
+                    .map(|v| v.to_string())
                     .collect::<Vec<String>>()
                     .join("\t"),
                 other => other.to_string(),

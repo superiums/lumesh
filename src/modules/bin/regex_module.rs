@@ -37,7 +37,7 @@ pub fn get() -> Expression {
 }
 
 // 检查是否匹配
-fn regex_match(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn regex_match(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("match", args, 2)?;
     let (regex, text) = get_r_args(args, env)?;
 
@@ -45,7 +45,7 @@ fn regex_match(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
 }
 
 // 查找第一个匹配
-fn regex_find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn regex_find(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("find", args, 2)?;
     let (regex, text) = get_r_args(args, env)?;
 
@@ -59,7 +59,7 @@ fn regex_find(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 }
 
 // 查找所有匹配
-fn regex_find_all(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn regex_find_all(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("find_all", args, 2)?;
     let (regex, text) = get_r_args(args, env)?;
 
@@ -77,7 +77,7 @@ fn regex_find_all(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 }
 
 // 获取第一个捕获组
-fn regex_capture(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn regex_capture(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("capture", args, 2)?;
     let (regex, text) = get_r_args(args, env)?;
 
@@ -94,7 +94,7 @@ fn regex_capture(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
 }
 
 // 获取所有捕获组
-fn regex_captures(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn regex_captures(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("captures", args, 2)?;
     let (regex, text) = get_r_args(args, env)?;
 
@@ -115,7 +115,7 @@ fn regex_captures(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
 }
 
 // 正则分割
-fn regex_split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn regex_split(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("split", args, 2)?;
     let (regex, text) = get_r_args(args, env)?;
 
@@ -127,7 +127,7 @@ fn regex_split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
 }
 
 // 替换所有匹配
-fn regex_replace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn regex_replace(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("replace", args, 3)?;
 
     let first = args[0].eval(env)?;
@@ -152,10 +152,7 @@ fn regex_replace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
 }
 
 // 获取命名捕获组
-fn regex_capture_name(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, LmError> {
+fn regex_capture_name(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("capture_name", args, 2)?;
     let (re, text) = get_r_args(args, env)?;
 
@@ -172,7 +169,7 @@ fn regex_capture_name(
     Ok(Expression::None)
 }
 
-fn get_r_args(args: &Vec<Expression>, env: &mut Environment) -> Result<(Regex, String), LmError> {
+fn get_r_args(args: &[Expression], env: &mut Environment) -> Result<(Regex, String), LmError> {
     match (args[0].eval(env)?, args[1].eval(env)?) {
         (Expression::Regex(r), Expression::String(t) | Expression::Symbol(t)) => Ok((r.regex, t)),
         (Expression::String(t) | Expression::Symbol(t), Expression::Regex(r)) => Ok((r.regex, t)),

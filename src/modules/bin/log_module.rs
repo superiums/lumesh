@@ -51,7 +51,7 @@ pub fn get() -> Expression {
 }
 
 // 日志级别管理函数
-fn set_log_level(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn set_log_level(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("set_level", args, 1)?;
 
     if let Expression::Integer(level) = args[0].eval(env)? {
@@ -66,16 +66,16 @@ fn set_log_level(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
     }
 }
 
-fn get_log_level(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn get_log_level(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     Ok(Expression::Integer(*LOG_LEVEL.read().unwrap()))
 }
 
-fn disable_logging(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn disable_logging(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     *LOG_LEVEL.write().unwrap() = NONE;
     Ok(Expression::None)
 }
 
-fn is_level_enabled(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_level_enabled(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("enabled", args, 1)?;
 
     if let Expression::Integer(level) = args[0].eval(env)? {
@@ -93,7 +93,7 @@ fn is_level_enabled(args: &Vec<Expression>, env: &mut Environment) -> Result<Exp
 fn log_message(
     level: Int,
     prefix: &str,
-    args: &Vec<Expression>,
+    args: &[Expression],
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
     if !is_log_level_enabled(level) {
@@ -132,28 +132,28 @@ fn log_message(
 }
 
 // 各日志级别专用函数
-fn log_info(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn log_info(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     log_message(INFO, "\x1b[92m[INFO] \x1b[m", args, env)
 }
 
-fn log_warn(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn log_warn(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     log_message(WARN, "\x1b[93m[WARN] \x1b[m", args, env)
 }
 
-fn log_debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn log_debug(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     log_message(DEBUG, "\x1b[94m[DEBUG]\x1b[m ", args, env)
 }
 
-fn log_error(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn log_error(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     log_message(ERROR, "\x1b[91m[ERROR]\x1b[m ", args, env)
 }
 
-fn log_trace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn log_trace(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     log_message(TRACE, "\x1b[95m[TRACE]\x1b[m ", args, env)
 }
 
 // 简单回显函数
-fn log_echo(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn log_echo(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     let mut output = String::new();
     let mut first_arg = true;
 

@@ -56,7 +56,7 @@ fn join_current_path(path: &str) -> PathBuf {
     get_current_path().join(path)
 }
 
-fn get_system_dirs(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, LmError> {
+fn get_system_dirs(_args: &[Expression], _env: &mut Environment) -> Result<Expression, LmError> {
     let mut dir_tree = BTreeMap::<String, String>::new();
 
     if let Some(home_dir) = dirs::home_dir() {
@@ -92,10 +92,7 @@ fn get_system_dirs(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Ex
     Ok(Expression::from(dir_tree))
 }
 
-fn get_directory_tree(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, LmError> {
+fn get_directory_tree(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("tree", args, 1..=2)?;
 
     let mut cwd = get_current_path();
@@ -174,7 +171,7 @@ fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, Lm
     Ok(portion)
 }
 
-fn read_file_head(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn read_file_head(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("head", args, 1..=2)?;
     let p = args.last().unwrap().eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -195,7 +192,7 @@ fn read_file_head(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     Ok(Expression::String(result))
 }
 
-fn read_file_tail(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn read_file_tail(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("head", args, 1..=2)?;
     let p = args.last().unwrap().eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -216,7 +213,7 @@ fn read_file_tail(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     Ok(Expression::String(result))
 }
 
-fn canonicalize_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn canonicalize_path(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("canon", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -228,7 +225,7 @@ fn canonicalize_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Ex
     Ok(Expression::String(canon_path.to_string_lossy().into()))
 }
 
-fn make_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn make_directory(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mkdir", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -240,7 +237,7 @@ fn make_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     Ok(Expression::None)
 }
 
-fn remove_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn remove_directory(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("rmdir", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -255,7 +252,7 @@ fn remove_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Exp
     Ok(Expression::None)
 }
 
-fn move_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn move_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mv", args, 2)?;
     let p = args[0].eval(env)?.to_string();
     let src = join_current_path(expand_home(p.as_str()).as_ref());
@@ -272,7 +269,7 @@ fn move_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Ex
     Ok(Expression::None)
 }
 
-fn copy_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn copy_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cp", args, 2)?;
     let p = args[0].eval(env)?.to_string();
     let src = join_current_path(expand_home(p.as_str()).as_ref());
@@ -290,10 +287,7 @@ fn copy_path_wrapper(args: &Vec<Expression>, env: &mut Environment) -> Result<Ex
     Ok(Expression::None)
 }
 
-fn remove_path_wrapper(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, LmError> {
+fn remove_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("rm", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -301,28 +295,28 @@ fn remove_path_wrapper(
     Ok(Expression::None)
 }
 
-fn path_exists(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn path_exists(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("exists", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
     Ok(Expression::Boolean(path.exists()))
 }
 
-fn is_directory(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_directory(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("isdir", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
     Ok(Expression::Boolean(path.is_dir()))
 }
 
-fn is_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("isfile", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
     Ok(Expression::Boolean(path.is_file()))
 }
 
-fn read_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn read_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("read", args, 1)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -339,7 +333,7 @@ fn read_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     Ok(Expression::Bytes(bytes))
 }
 
-fn write_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn write_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("write", args, 2)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -356,7 +350,7 @@ fn write_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     Ok(Expression::None)
 }
 
-fn append_to_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn append_to_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("append", args, 2)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
@@ -382,7 +376,7 @@ fn append_to_file(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     Ok(Expression::None)
 }
 
-fn glob_pattern(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn glob_pattern(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("glob", args, 1)?;
 
     let pattern = args[0].eval(env)?.to_string();
@@ -404,7 +398,7 @@ fn glob_pattern(args: &Vec<Expression>, env: &mut Environment) -> Result<Express
     Ok(Expression::from(results))
 }
 
-fn extract_filename(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn extract_filename(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("base_name", args, 1..=2)?;
     let path = args.last().unwrap().eval(env)?.to_string();
     let split_extension = args.len() > 1
@@ -436,7 +430,7 @@ fn extract_filename(args: &Vec<Expression>, env: &mut Environment) -> Result<Exp
     }
 }
 
-fn join_path(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn join_path(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     // 检查至少有一个参数
     super::check_args_len("join", args, 1..)?;
 

@@ -73,20 +73,20 @@ pub fn get() -> Expression {
 }
 
 // 控制台尺寸函数
-fn width(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn width(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     crossterm::terminal::size()
         .map(|(w, _)| Expression::Integer(w as Int))
         .or(Ok(Expression::None))
 }
 
-fn height(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn height(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     crossterm::terminal::size()
         .map(|(_, h)| Expression::Integer(h as Int))
         .or(Ok(Expression::None))
 }
 
 // 文本输出函数
-fn write(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn write(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("write", args, 3)?;
 
     let x = args[0].eval(env)?;
@@ -116,19 +116,19 @@ fn write(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     }
 }
 
-fn title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn title(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("title", args, 1)?;
     let title = args[0].eval(env)?.to_string();
     print!("\x1b]2;{title}\x07");
     Ok(Expression::None)
 }
 
-fn clear(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn clear(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[2J\x1b[H");
     Ok(Expression::None)
 }
 
-fn flush(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn flush(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     std::io::stdout()
         .flush()
         .map_err(|e| LmError::CustomError(format!("Flush failed: {e}")))?;
@@ -136,36 +136,30 @@ fn flush(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError
 }
 
 // 控制台模式函数
-fn enable_raw_mode(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn enable_raw_mode(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     crossterm::terminal::enable_raw_mode()
         .map(|_| Expression::None)
         .map_err(|_| LmError::CustomError("Failed to enable raw mode".into()))
 }
 
-fn disable_raw_mode(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn disable_raw_mode(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     crossterm::terminal::disable_raw_mode()
         .map(|_| Expression::None)
         .map_err(|_| LmError::CustomError("Failed to disable raw mode".into()))
 }
 
-fn enable_alternate_screen(
-    _: &Vec<Expression>,
-    _: &mut Environment,
-) -> Result<Expression, LmError> {
+fn enable_alternate_screen(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[?1049h");
     Ok(Expression::None)
 }
 
-fn disable_alternate_screen(
-    _: &Vec<Expression>,
-    _: &mut Environment,
-) -> Result<Expression, LmError> {
+fn disable_alternate_screen(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[?1049l");
     Ok(Expression::None)
 }
 
 // 光标控制函数
-fn cursor_to(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn cursor_to(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cursor_to", args, 2)?;
 
     let x = args[0].eval(env)?;
@@ -188,7 +182,7 @@ fn cursor_to(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 
 macro_rules! cursor_move_fn {
     ($name:ident, $code:literal, $doc:literal) => {
-        fn $name(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+        fn $name(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
             super::check_exact_args_len(stringify!($name), args, 1)?;
 
             if let Expression::Integer(n) = args[0].eval(env)? {
@@ -209,28 +203,28 @@ cursor_move_fn!(cursor_down, "B", "Move cursor down");
 cursor_move_fn!(cursor_left, "D", "Move cursor left");
 cursor_move_fn!(cursor_right, "C", "Move cursor right");
 
-fn cursor_save(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn cursor_save(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[s");
     Ok(Expression::None)
 }
 
-fn cursor_restore(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn cursor_restore(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[u");
     Ok(Expression::None)
 }
 
-fn cursor_hide(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn cursor_hide(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[?25l");
     Ok(Expression::None)
 }
 
-fn cursor_show(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn cursor_show(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     print!("\x1b[?25h");
     Ok(Expression::None)
 }
 
 // 键盘输入函数
-fn keyboard_read_line(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn keyboard_read_line(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     let mut buffer = String::new();
     std::io::stdin()
         .read_line(&mut buffer)
@@ -238,13 +232,13 @@ fn keyboard_read_line(_: &Vec<Expression>, _: &mut Environment) -> Result<Expres
     Ok(Expression::String(buffer))
 }
 
-fn keyboard_read_password(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn keyboard_read_password(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     rpassword::read_password()
         .map(Expression::String)
         .map_err(|e| LmError::CustomError(format!("Password read failed: {e}")))
 }
 
-fn keyboard_read_key(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn keyboard_read_key(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     let event = crossterm::event::read()
         .map_err(|e| LmError::CustomError(format!("Key read failed: {e}")))?;
 

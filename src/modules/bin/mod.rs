@@ -95,7 +95,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("help") => Expression::builtin("help", help, "display lib modules", "[module]")
     }
 }
-fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {
+fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     if !args.is_empty() {
         match super::get_builtin(&args[0].to_string()) {
             Some(m) => {
@@ -116,7 +116,7 @@ fn help(args: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate
     }
     Ok(Expression::None)
 }
-fn import(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn import(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("import", args, 1)?;
     let cwd = std::env::current_dir()?;
     let path = cwd.join(args[0].eval(env)?.to_string());
@@ -147,7 +147,7 @@ fn import(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
         )))
     }
 }
-fn include(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn include(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("include", args, 1)?;
 
     let cwd = std::env::current_dir()?;
@@ -178,7 +178,7 @@ fn include(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         )))
     }
 }
-fn exit(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn exit(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     if args.is_empty() {
         std::process::exit(0);
     } else if let Expression::Integer(n) = args[0].eval(env)? {
@@ -191,7 +191,7 @@ fn exit(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
         })
     }
 }
-fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn cd(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("cd", args, 1)?;
 
     match args[0].eval(env)? {
@@ -224,13 +224,13 @@ fn cd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate
         }
     }
 }
-fn pwd(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, crate::LmError> {
+fn pwd(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     let path = std::env::current_dir()?;
     // println!("{}", path.display());
     Ok(Expression::String(path.to_string_lossy().into_owned()))
 }
 
-fn get_type(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn get_type(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("type", args, 1)?;
     let x_type = args[0].type_name();
     let rs = if &x_type == "Symbol" {
@@ -241,7 +241,7 @@ fn get_type(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     Ok(Expression::String(rs))
 }
 
-fn debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn debug(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
@@ -253,7 +253,7 @@ fn debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     Ok(Expression::None)
 }
 
-fn tap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn tap(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     let mut stdout = std::io::stdout().lock();
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
     for (i, arg) in args.iter().enumerate() {
@@ -272,7 +272,7 @@ fn tap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     Ok(Expression::from(result))
 }
 
-fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn print(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
         let x = arg.eval(env)?;
@@ -282,7 +282,7 @@ fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     stdout.flush()?;
     Ok(Expression::None)
 }
-fn println(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn println(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
         let x = arg.eval(env)?;
@@ -292,10 +292,7 @@ fn println(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     stdout.flush()?;
     Ok(Expression::None)
 }
-pub fn pretty_print(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, crate::LmError> {
+pub fn pretty_print(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_args_len("pprint", args, 1..)?;
     // let _ = args.iter().map(|a| pretty_printer(&a.eval(env)?));
     for arg in args.iter() {
@@ -304,7 +301,7 @@ pub fn pretty_print(
     }
     Ok(Expression::None)
 }
-fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn eprint(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     let mut stderr = std::io::stderr().lock();
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
@@ -317,7 +314,7 @@ fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     stderr.flush()?;
     Ok(Expression::None)
 }
-fn eprintln(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn eprintln(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     let mut stderr = std::io::stderr().lock();
     for arg in args.iter() {
         let x = arg.eval(env)?;
@@ -327,7 +324,7 @@ fn eprintln(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     Ok(Expression::None)
 }
 
-fn read(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn read(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     print(args, env)?;
     let _ = std::io::stdout().flush();
 
@@ -346,7 +343,7 @@ fn read(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cra
     // Ok(Expression::String(crate::repl::read_user_input(&prompt)))
 }
 
-pub fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn insert(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("insert", args, 3)?;
     let mut arr = args[2].eval(env)?;
     let idx = args[0].eval(env)?;
@@ -391,7 +388,7 @@ pub fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     // Ok(arr)
 }
 
-pub fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn len(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("len", args, 1)?;
     match args[0].eval(env)? {
         Expression::HMap(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
@@ -410,7 +407,7 @@ pub fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     }
 }
 
-pub fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn rev(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("rev", args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {
@@ -427,7 +424,7 @@ pub fn rev(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     }
 }
 
-fn exec_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn exec_str(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("exec_str", args, 1)?;
     match &args[0] {
         Expression::String(cmd) => {
@@ -442,7 +439,7 @@ fn exec_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
         )),
     }
 }
-fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn repeat(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("repeat", args, 2)?;
     let n = get_integer_arg(args[0].eval(env)?)?;
     let r = (0..n)
@@ -450,13 +447,13 @@ fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
         .collect::<Result<Vec<_>, _>>()?;
     Ok(Expression::from(r))
 }
-fn eval(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn eval(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("eval", args, 1)?;
     let mut new_env = env.clone();
     Ok(args[0].eval(env)?.eval(&mut new_env)?)
 }
 
-fn exec(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn exec(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("exec", args, 1)?;
     Ok(args[0].eval(env)?.eval(env)?)
 }
@@ -482,15 +479,12 @@ fn flatten(expr: Expression) -> Vec<Expression> {
     }
 }
 
-pub fn flatten_wrapper(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, LmError> {
+pub fn flatten_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("flatten", args, 1)?;
     Ok(Expression::from(flatten(args[0].eval(env)?)))
 }
 
-fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn filter_rows(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     // dbg!(&args);
     check_exact_args_len("where", args, 2)?;
 
@@ -531,7 +525,7 @@ fn filter_rows(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
     Ok(Expression::from(filtered))
 }
 
-fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn select_columns(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     // check_exact_args_len("select", args, 2)?;
 
     let headers = match args.len() {
@@ -595,7 +589,7 @@ fn select_columns(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     Ok(Expression::from(result))
 }
 
-fn get(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn get(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("get", args, 2)?;
 
     let index = args[0].eval(env)?;
@@ -669,7 +663,8 @@ fn get(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
             Expression::Range(m, step) => match segment.parse::<usize>() {
                 Ok(key) => {
                     current = m
-                        .step_by(step).nth(key)
+                        .step_by(step)
+                        .nth(key)
                         .map(Expression::Integer)
                         .ok_or_else(|| {
                             LmError::CustomError(format!(

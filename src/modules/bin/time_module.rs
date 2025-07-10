@@ -63,7 +63,7 @@ pub fn get() -> Expression {
 
 /// 获取时间组件（支持从指定时间或当前时间）
 fn get_time_component<F>(
-    args: &Vec<Expression>,
+    args: &[Expression],
     env: &mut Environment,
     extractor: F,
 ) -> Result<Expression, LmError>
@@ -169,9 +169,7 @@ fn get_map_value(map: &BTreeMap<String, Expression>, key: &str) -> Result<Option
             .map(Some)
             .map_err(|_| LmError::CustomError(format!("Invalid integer value for {key}"))),
         None => Ok(None),
-        _ => Err(LmError::CustomError(format!(
-            "Expected integer for {key}"
-        ))),
+        _ => Err(LmError::CustomError(format!("Expected integer for {key}"))),
     }
 }
 
@@ -190,9 +188,7 @@ fn parse_duration_string(s: &str) -> Result<Duration, LmError> {
                 'h' => 60 * 60 * 1_000,
                 'd' => 24 * 60 * 60 * 1_000,
                 _ => {
-                    return Err(LmError::CustomError(format!(
-                        "Unknown duration unit: {c}"
-                    )));
+                    return Err(LmError::CustomError(format!("Unknown duration unit: {c}")));
                 }
             };
             total_ms += num * multiplier;
@@ -210,7 +206,7 @@ fn parse_duration_string(s: &str) -> Result<Duration, LmError> {
 
 // 主要功能函数实现
 
-fn sleep(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn sleep(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("sleep", args, 1)?;
 
     let duration = match args[0].eval(env)? {
@@ -228,7 +224,7 @@ fn sleep(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::None)
 }
 
-fn display(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
+fn display(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     let now = Local::now();
     let naive = now.naive_local();
     Ok(Expression::from(hash_map! {
@@ -244,7 +240,7 @@ fn display(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmErr
     }))
 }
 
-fn fmt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn fmt(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("fmt", args, 1..=2)?;
 
     let format_str = match args[0].eval(env)? {
@@ -265,7 +261,7 @@ fn fmt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     Ok(Expression::String(dt.format(&format_str).to_string()))
 }
 
-fn now(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn now(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     match args.len() {
         0 => Ok(Expression::DateTime(Local::now().naive_local())),
         1 => {
@@ -285,7 +281,7 @@ fn now(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     }
 }
 
-pub fn parse_time(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn parse_time(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("parse", args, 1..=2)?;
 
     let datetime_str = match args.last().unwrap().eval(env)? {
@@ -335,7 +331,7 @@ pub fn parse_time(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     )))
 }
 
-fn add(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn add(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("add", args, 1..=7)?;
 
     // 解析目标时间（如果提供）
@@ -397,7 +393,7 @@ fn add(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     Ok(Expression::DateTime(result_dt))
 }
 
-fn diff(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn diff(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("diff", args, 2..=3)?;
     let unit = match args[0].eval(env)? {
         Expression::String(s) => s.to_lowercase(),
@@ -427,7 +423,7 @@ fn diff(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(Expression::Integer(value))
 }
 
-fn timezone(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn timezone(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("timezone", args, 1..=3)?;
 
     let offset_hours = match args[0].eval(env)? {
@@ -467,7 +463,7 @@ fn timezone(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 
 // 新增功能函数
 
-fn from_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn from_map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("from_map", args, 1)?;
 
     // 处理 Map 类型参数
@@ -500,7 +496,7 @@ fn from_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     }
 }
 
-fn to_string(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn to_string(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("to_string", args, 1..=2)?;
 
     let dt = parse_datetime_arg(&args[0], env)?;

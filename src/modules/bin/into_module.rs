@@ -32,16 +32,16 @@ pub fn get() -> Expression {
     Expression::from(into_module)
 }
 
-fn boolean(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn boolean(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("boolean", args, 1)?;
     Ok(Expression::Boolean(args[0].eval(env)?.is_truthy()))
 }
-pub fn str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn str(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("str", args, 1)?;
     Ok(Expression::String(args[0].eval(env)?.to_string()))
 }
 
-pub fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn int(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("int", args, 1)?;
     match args[0].eval(env)? {
         Expression::Integer(x) => Ok(Expression::Integer(x)),
@@ -61,7 +61,7 @@ pub fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     }
 }
 
-pub fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+pub fn float(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("float", args, 1)?;
     match args[0].eval(env)? {
         Expression::Integer(x) => Ok(Expression::Float(x as f64)),
@@ -81,10 +81,7 @@ pub fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     }
 }
 
-pub fn filesize(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, crate::LmError> {
+pub fn filesize(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     check_exact_args_len("filesize", args, 1)?;
     match args[0].eval(env)? {
         Expression::Integer(x) => Ok(Expression::FileSize(FileSize::from_bytes(x as u64))),

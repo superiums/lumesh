@@ -11,6 +11,8 @@
 - fix completition with longer first.
 - optimize syntax get_color;
 - idented display for expr.
+- clippy
+- builtin args optimize
 
 ## [0.6.8]
 - add boolean module;

@@ -35,7 +35,6 @@ impl Expression {
         // dbg!(&func, &func_eval, &func_eval.type_name());
 
         // 分派到具体类型处理
-        
 
         match func_eval {
             // 顶级builtin，函数别名
@@ -473,7 +472,7 @@ impl Expression {
             Some(p) => {
                 let mut appened_args = args.clone();
                 appened_args.push(p);
-                (bti.body)(&appened_args, env)
+                (bti.body)(appened_args.as_slice(), env)
             }
             _ => (bti.body)(args, env),
         };

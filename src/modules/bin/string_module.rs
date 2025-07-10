@@ -108,15 +108,12 @@ pub fn get() -> Expression {
 }
 
 // String operation implementations
-fn table_pprint(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, crate::LmError> {
+fn table_pprint(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     super::check_args_len("len", args, 1..)?;
     let table = parse_command_output(args, env)?;
     pretty_printer(&table)
 }
-fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn len(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("len", args, 1)?;
     match args[0].eval(env)? {
         Expression::Symbol(x) | Expression::String(x) => {
@@ -129,7 +126,7 @@ fn len(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
         }),
     }
 }
-fn caesar_cipher(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn caesar_cipher(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("caesar_cipher", args, 1..=2)?;
 
     let text = get_string_arg(args.last().unwrap().eval(env)?)?;
@@ -153,7 +150,7 @@ fn caesar_cipher(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
     Ok(Expression::String(result))
 }
 
-fn get_width(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn get_width(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("get_width", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
 
@@ -162,7 +159,7 @@ fn get_width(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     Ok(Expression::Integer(max_width as Int))
 }
 
-fn grep(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn grep(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("grep", args, 2)?;
     let pat = get_string_arg(args[0].eval_in_assign(env)?)?;
     let text = get_string_arg(args[1].eval_in_assign(env)?)?;
@@ -175,25 +172,25 @@ fn grep(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(Expression::from(lines))
 }
 
-fn is_empty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_empty(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_empty", args, 1)?;
     let text = super::get_exact_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.is_empty()))
 }
 
-fn is_whitespace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_whitespace(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_whitespace", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_whitespace())))
 }
 
-fn is_alpha(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_alpha(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_alpha", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_alphabetic())))
 }
 
-fn is_alphanumeric(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_alphanumeric(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_alphanumeric", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(
@@ -201,13 +198,13 @@ fn is_alphanumeric(args: &Vec<Expression>, env: &mut Environment) -> Result<Expr
     ))
 }
 
-fn is_numeric(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_numeric(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_numeric", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_numeric())))
 }
 
-fn split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn split(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("split", args, 1..=2)?;
 
     let string_args = get_string_args(args, env)?;
@@ -236,19 +233,19 @@ fn split(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::from(parts))
 }
 
-fn to_lower(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn to_lower(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_lower", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::String(text.to_lowercase()))
 }
 
-fn to_upper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn to_upper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_upper", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::String(text.to_uppercase()))
 }
 
-fn to_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn to_title(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_title", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
 
@@ -269,26 +266,26 @@ fn to_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     Ok(Expression::String(title))
 }
 
-fn is_lower(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_lower(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_lower", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_lowercase())))
 }
 
-fn is_upper(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_upper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_upper", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_uppercase())))
 }
 
-fn is_title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn is_title(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("is_title", args, 1)?;
     let text = get_string_arg(args[0].eval(env)?)?;
     let title = to_title(&vec![args[0].clone()], env)?;
     Ok(Expression::Boolean(text == title.to_string()))
 }
 
-fn lines(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn lines(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("lines", args, 1)?;
     let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
@@ -299,7 +296,7 @@ fn lines(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::from(lines))
 }
 
-fn chars(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn chars(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("chars", args, 1)?;
     let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
@@ -310,7 +307,7 @@ fn chars(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::from(chars))
 }
 
-fn words(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn words(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("words", args, 1)?;
     let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
@@ -321,7 +318,7 @@ fn words(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::from(words))
 }
 
-fn paragraphs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn paragraphs(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("paragraphs", args, 1)?;
     let text = get_string_arg(args[0].eval_in_assign(env)?)?;
 
@@ -332,7 +329,7 @@ fn paragraphs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     Ok(Expression::from(paragraphs))
 }
 
-fn concat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn concat(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("concat", args, 2..)?;
     let text = get_string_arg(args.last().unwrap().eval_in_assign(env)?)?;
     let others = args[..args.len() - 1]
@@ -344,7 +341,7 @@ fn concat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     Ok(Expression::from(text + &others))
 }
 
-fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn split_at(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("split_at", args, 2)?;
     let text = get_string_arg(args[1].eval_in_assign(env)?)?;
     let index = get_integer_arg(args[0].eval(env)?)? as usize;
@@ -363,25 +360,25 @@ fn split_at(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     ]))
 }
 
-fn trim(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn trim(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim", args, 1)?;
     let text = get_string_arg(args[0].eval_in_assign(env)?)?;
     Ok(Expression::String(text.trim().to_string()))
 }
 
-fn trim_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn trim_start(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim_start", args, 1)?;
     let text = get_string_arg(args[0].eval_in_assign(env)?)?;
     Ok(Expression::String(text.trim_start().to_string()))
 }
 
-fn trim_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn trim_end(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("trim_end", args, 1)?;
     let text = get_string_arg(args[0].eval_in_assign(env)?)?;
     Ok(Expression::String(text.trim_end().to_string()))
 }
 
-fn replace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn replace(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("replace", args, 3)?;
     let string_args = get_string_args(args, env)?;
     let [from, to, text] = string_args.as_slice() else {
@@ -391,7 +388,7 @@ fn replace(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     Ok(Expression::String(text.replace(from, to)))
 }
 
-fn starts_with(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn starts_with(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("starts_with", args, 2)?;
     let string_args = get_string_args(args, env)?;
     let [prefix, text] = string_args.as_slice() else {
@@ -401,7 +398,7 @@ fn starts_with(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressi
     Ok(Expression::Boolean(text.starts_with(prefix)))
 }
 
-fn ends_with(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn ends_with(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("ends_with", args, 2)?;
     let string_args = get_string_args(args, env)?;
     let [suffix, text] = string_args.as_slice() else {
@@ -411,7 +408,7 @@ fn ends_with(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     Ok(Expression::Boolean(text.ends_with(suffix)))
 }
 
-fn contains(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn contains(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("contains", args, 2)?;
     let string_args = get_string_args(args, env)?;
     let [substring, text] = string_args.as_slice() else {
@@ -421,7 +418,7 @@ fn contains(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     Ok(Expression::Boolean(text.contains(substring)))
 }
 
-fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn repeat(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("repeat", args, 2)?;
     let count = get_integer_arg(args[0].eval(env)?)?;
     let text = get_string_arg(args[1].eval(env)?)?;
@@ -429,7 +426,7 @@ fn repeat(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     Ok(Expression::String(text.repeat(count.max(0) as usize)))
 }
 
-fn substring(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn substring(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("substring", args, 2..3)?;
     let text = get_string_arg(args.last().unwrap().eval_in_assign(env)?)?;
 
@@ -463,7 +460,7 @@ fn substring(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     Ok(Expression::String(result))
 }
 
-fn remove_prefix(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn remove_prefix(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("remove_prefix", args, 2)?;
     let string_args = get_string_args(args, env)?;
     let [prefix, text] = string_args.as_slice() else {
@@ -475,7 +472,7 @@ fn remove_prefix(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
     ))
 }
 
-fn remove_suffix(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn remove_suffix(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("remove_suffix", args, 2)?;
     let string_args = get_string_args(args, env)?;
     let [suffix, text] = string_args.as_slice() else {
@@ -488,7 +485,7 @@ fn remove_suffix(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
 }
 
 // ================== fmt ====================
-fn pad_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn pad_start(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("pad_start", args, 2..=3)?;
     let (length, pad_char) = match args.len() {
         2 => (args[0].clone(), " ".to_string()),
@@ -517,7 +514,7 @@ fn pad_start(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     pad_start_impl(len, pad_ch, s_val)
 }
 
-fn pad_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn pad_end(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("pad_end", args, 2..=3)?;
     let (length, pad_char) = match args.len() {
         2 => (args[0].clone(), " ".to_string()),
@@ -547,7 +544,7 @@ fn pad_end(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     pad_end_impl(len, pad_ch, s_val)
 }
 
-fn center(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn center(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("center", args, 2..=3)?;
     let (length, pad_char) = match args.len() {
         2 => (args[0].clone(), " ".to_string()),
@@ -582,7 +579,7 @@ fn center(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 }
 
 // 模板字符串作为第一个参数（特殊处理）
-fn format(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn format(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     if args.is_empty() {
         return Err(LmError::CustomError(
             "format requires at least a template string".to_string(),
@@ -615,34 +612,34 @@ fn format(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 }
 
 // 单参数函数（字符串作为最后一个参数）
-fn strip(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn strip(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("strip", args, 1)?;
     Ok(strip_ansi_escapes(args[0].eval_in_assign(env)?.to_string().as_str()).into())
 }
 
-fn bold(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn bold(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("bold", args, 1)?;
     Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 其他样式函数采用相同模式...
-fn faint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn faint(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("faint", args, 1)?;
     Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn italics(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn italics(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("italics", args, 1)?;
     Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 颜色函数采用相同模式...
-fn black(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn black(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("black", args, 1)?;
     Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_black(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_black(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_black", args, 1)?;
     Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
@@ -677,7 +674,7 @@ fn center_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmErro
     Ok(Expression::String(format!("{left}{s}{right}")))
 }
 
-fn wrap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn wrap(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("wrap", args, 2)?;
     match args[0].eval(env)? {
         Expression::Integer(columns) => {
@@ -689,7 +686,7 @@ fn wrap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     }
 }
 
-fn href(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn href(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("href", args, 2)?;
     Ok(format!(
         "\x1b]8;;{url}\x1b\\{text}\x1b]8;;\x1b\\",
@@ -700,94 +697,94 @@ fn href(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
 }
 
 // 继续实现剩余的单参数样式函数
-fn underline(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn underline(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("underline", args, 1)?;
     Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn blink(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn blink(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("blink", args, 1)?;
     Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn invert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn invert(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("invert", args, 1)?;
     Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn strike(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn strike(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("strike", args, 1)?;
     Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 实现所有颜色函数
-fn red(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn red(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("red", args, 1)?;
     Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn green(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn green(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("green", args, 1)?;
     Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn yellow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn yellow(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("yellow", args, 1)?;
     Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn blue(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn blue(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("blue", args, 1)?;
     Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn magenta(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn magenta(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("magenta", args, 1)?;
     Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn cyan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn cyan(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cyan", args, 1)?;
     Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn white(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn white(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("white", args, 1)?;
     Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
 // 实现dark命名空间下的颜色函数
-fn dark_red(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_red(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_red", args, 1)?;
     Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_green(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_green(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_green", args, 1)?;
     Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_yellow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_yellow(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_yellow", args, 1)?;
     Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_blue(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_blue(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_blue", args, 1)?;
     Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_magenta(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_magenta(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_magenta", args, 1)?;
     Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_cyan(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_cyan(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_cyan", args, 1)?;
     Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_white(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn dark_white(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dark_white", args, 1)?;
     // 修正原始代码中的转义序列错误
     Ok(format!("\x1b[37m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())

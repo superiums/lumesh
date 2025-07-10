@@ -143,7 +143,7 @@ pub fn get_file_expression(
 // 辅助函数保持不变（detect_file_type, system_time_to_unix_seconds等）
 
 pub fn list_directory_wrapper(
-    args: &Vec<Expression>,
+    args: &[Expression],
     _env: &mut Environment,
 ) -> Result<Expression, LmError> {
     let (full_path, options) = parse_ls_args(args)?;

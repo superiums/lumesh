@@ -6,7 +6,7 @@ use std::fmt;
 #[derive(Clone)]
 pub struct Builtin {
     pub name: String,
-    pub body: fn(&Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
+    pub body: fn(&[Expression], &mut Environment) -> Result<Expression, LmError>,
     pub help: String,
     pub hint: String,
 }
@@ -31,7 +31,7 @@ impl PartialEq for Builtin {
 impl Expression {
     pub fn builtin(
         name: impl ToString,
-        body: fn(&Vec<Expression>, &mut Environment) -> Result<Expression, LmError>,
+        body: fn(&[Expression], &mut Environment) -> Result<Expression, LmError>,
         help: impl ToString,
         param_hint: impl ToString,
     ) -> Self {

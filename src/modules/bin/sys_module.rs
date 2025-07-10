@@ -23,11 +23,11 @@ pub fn get() -> Expression {
         String::from("info") => Expression::builtin("info", info, "get os info", "<arg>"),
     })
 }
-fn info(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn info(_args: &[Expression], _env: &mut Environment) -> Result<Expression, crate::LmError> {
     let info = os_info::get();
     Ok(Expression::String(info.to_string()))
 }
-fn print_tty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn print_tty(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("print_tty", args, 1)?;
 
     // 判断操作系统
@@ -44,32 +44,29 @@ fn print_tty(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
     Ok(Expression::None)
 }
 
-fn discard(_args: &Vec<Expression>, _env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn discard(_args: &[Expression], _env: &mut Environment) -> Result<Expression, crate::LmError> {
     // 不用打开任何设备，只是丢弃参数
     Ok(Expression::None)
 }
 
 fn quote_builtin(
-    args: &Vec<Expression>,
+    args: &[Expression],
     _env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("quote", args, 1)?;
     Ok(Expression::Quote(Rc::new(args[0].clone())))
 }
 
-fn env_builtin(
-    _args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, crate::LmError> {
+fn env_builtin(_args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     Ok(Expression::from(env.get_root().clone()))
 }
 
-fn vars_builtin(_: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn vars_builtin(_: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     Ok(Expression::from(env.get_bindings_map()))
 }
 
 pub fn set_builtin(
-    args: &Vec<Expression>,
+    args: &[Expression],
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("set", args, 2)?;
@@ -80,7 +77,7 @@ pub fn set_builtin(
 }
 
 pub fn unset_builtin(
-    args: &Vec<Expression>,
+    args: &[Expression],
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("unset", args, 1)?;
@@ -89,16 +86,13 @@ pub fn unset_builtin(
     Ok(Expression::None)
 }
 
-fn has_builtin(
-    args: &Vec<Expression>,
-    env: &mut Environment,
-) -> Result<Expression, crate::LmError> {
+fn has_builtin(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("has", args, 1)?;
     let name = args[0].to_string();
     Ok(Expression::Boolean(env.has(&name)))
 }
 fn defined_builtin(
-    args: &Vec<Expression>,
+    args: &[Expression],
     env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("defined", args, 1)?;
@@ -107,19 +101,19 @@ fn defined_builtin(
 }
 
 fn err_codes_runtime(
-    _args: &Vec<Expression>,
+    _args: &[Expression],
     _env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     Ok(RuntimeError::codes())
 }
 fn err_codes_lmerror(
-    _args: &Vec<Expression>,
+    _args: &[Expression],
     _env: &mut Environment,
 ) -> Result<Expression, crate::LmError> {
     Ok(LmError::codes())
 }
 
-fn err(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crate::LmError> {
+fn err(args: &[Expression], env: &mut Environment) -> Result<Expression, crate::LmError> {
     super::check_exact_args_len("sys.error", args, 1)?;
     let msg = args[0].eval(env)?;
     Err(LmError::CustomError(msg.to_string()))

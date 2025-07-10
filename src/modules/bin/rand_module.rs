@@ -31,7 +31,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn ratio(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn ratio(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     match args.len() {
         0 => {
             let mut rng = rand::rng();
@@ -64,7 +64,7 @@ fn ratio(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         )),
     }
 }
-fn alpha(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn alpha(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     match args.len() {
         0 => {
             let mut rng = rand::rng();
@@ -87,7 +87,7 @@ fn alpha(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         )),
     }
 }
-fn alphanum(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn alphanum(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     match args.len() {
         0 => {
             let mut rng = rand::rng();
@@ -118,7 +118,7 @@ fn alphanum(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
 ///1 参数：返回一个介于 0 和 max 之间的整数（包含 max）。
 ///
 ///2 参数：返回一个介于 min 和 max 之间的整数（包含 min 和 max）。
-fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn int(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     match args.len() {
         0 => {
             let n: i64 = rand::rng().random();
@@ -156,7 +156,7 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
 }
 
 ///接受一个列表参数，返回一个随机选择的元素。
-fn choose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn choose(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("choose", args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {
@@ -173,7 +173,7 @@ fn choose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
 }
 
 ///接受一个列表参数，返回一个新的被打乱顺序的列表。
-fn shuffle(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn shuffle(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("shuffle", args, 1)?;
     match args[0].eval(env)? {
         Expression::List(list) => {

@@ -14,7 +14,7 @@ pub fn get() -> Expression {
     }).into()
 }
 
-fn from(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn from(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("from", args, 1)?;
     let s = match &args[0].eval(env)? {
         Expression::String(s) => {
@@ -47,39 +47,39 @@ fn from(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     Ok(Expression::FileSize(s))
 }
 
-fn bytes(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn bytes(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("btyes", args, 1)?;
     let s = get_fsize_arg(&args[0], env)?;
     Ok(Expression::Integer(s.to_bytes() as Int))
 }
-fn kb(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn kb(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("kb", args, 1)?;
     let s = get_fsize_arg(&args[0], env)?;
 
     Ok(Expression::Integer((s.to_bytes() >> 10) as Int))
 }
-fn mb(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn mb(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mb", args, 1)?;
     let s = get_fsize_arg(&args[0], env)?.to_bytes();
     let r = (s >> 20) as f64 + ((s >> 10) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
 }
-fn gb(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn gb(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("gb", args, 1)?;
     let s = get_fsize_arg(&args[0], env)?.to_bytes();
     let r = (s >> 30) as f64 + ((s >> 20) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
 }
-fn tb(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn tb(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("tb", args, 1)?;
     let s = get_fsize_arg(&args[0], env)?.to_bytes();
     let r = (s >> 40) as f64 + ((s >> 30) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
 }
-fn to_string(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn to_string(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_string", args, 1)?;
     let s = get_fsize_arg(&args[0], env)?;
 

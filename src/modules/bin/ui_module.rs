@@ -26,7 +26,7 @@ pub fn get() -> Expression {
     .into()
 }
 
-fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn int(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("text", args, 1)?;
     let msg = super::get_string_arg(args.last().unwrap().eval(env)?)?;
     // let n = super::get_integer_arg(args[0].eval(env)?)?;
@@ -41,7 +41,7 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
         Err(e) => Err(LmError::CustomError(format!("ui.text: {e}"))),
     }
 }
-fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn float(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("text", args, 1)?;
     let msg = super::get_string_arg(args.last().unwrap().eval(env)?)?;
     // let n = super::get_integer_arg(args[0].eval(env)?)?;
@@ -56,7 +56,7 @@ fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         Err(e) => Err(LmError::CustomError(format!("ui.text: {e}"))),
     }
 }
-fn text(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn text(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("text", args, 1)?;
     let msg = super::get_string_arg(args.last().unwrap().eval(env)?)?;
 
@@ -67,7 +67,7 @@ fn text(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     }
 }
 
-fn passwd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn passwd(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("passwd", args, 1..=2)?;
     let msg = super::get_string_arg(args[0].eval(env)?)?;
     let confirm = args[1].eval(env)?.is_truthy();
@@ -77,32 +77,28 @@ fn passwd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     }
     match ans.prompt() {
         Ok(s) => Ok(Expression::String(s)),
-        Err(e) => Err(LmError::CustomError(format!(
-            "ui.passwd: {e}"
-        ))),
+        Err(e) => Err(LmError::CustomError(format!("ui.passwd: {e}"))),
     }
 }
-fn confirm(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn confirm(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("confirm", args, 1)?;
     let msg = super::get_string_arg(args[0].eval(env)?)?;
     let ans = Confirm::new(msg.as_str()).prompt();
     match ans {
         Ok(s) => Ok(Expression::Boolean(s)),
-        Err(e) => Err(LmError::CustomError(format!(
-            "ui.confirm: {e}"
-        ))),
+        Err(e) => Err(LmError::CustomError(format!("ui.confirm: {e}"))),
     }
 }
-fn pick(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn pick(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     selector_wrapper(false, args, env)
 }
-fn multi_pick(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn multi_pick(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     selector_wrapper(true, args, env)
 }
 
 fn selector_wrapper(
     multi: bool,
-    args: &Vec<Expression>,
+    args: &[Expression],
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
     let delimiter = match ifs_contains(IFS_PCK, env) {
@@ -133,7 +129,8 @@ fn selector_wrapper(
     let msg = match &cfgs {
         None => "your choice:".to_string(),
         Some(m) => m
-            .get("msg").map(|v| v.to_string())
+            .get("msg")
+            .map(|v| v.to_string())
             .unwrap_or("your choice:".to_string()),
     };
 
@@ -231,9 +228,7 @@ fn multi_select_wrapper(
     }
     match ans.prompt() {
         Ok(choice) => Ok(Expression::from(choice)),
-        Err(e) => Err(LmError::CustomError(format!(
-            "ui.multi_pick: {e}"
-        ))),
+        Err(e) => Err(LmError::CustomError(format!("ui.multi_pick: {e}"))),
     }
 }
 fn extract_options(delimiter: &str, expr: Expression) -> Result<Vec<Expression>, LmError> {
@@ -263,7 +258,7 @@ fn extract_cfg(expr: Expression) -> Result<Rc<BTreeMap<String, Expression>>, LmE
     }
 }
 
-fn widget(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn widget(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     // 支持2-4个参数：title, content, [width], [height]
     super::check_args_len("widget", args, 2..=4)?;
 
@@ -317,9 +312,7 @@ fn widget(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         left_border_half.pop();
     }
 
-    let mut result = format!(
-        "┌{left_border_half}{title}{right_border_half}┐\n"
-    );
+    let mut result = format!("┌{left_border_half}{title}{right_border_half}┐\n");
     let width = result.chars().count() - 1;
 
     let mut lines = 1;
@@ -388,7 +381,7 @@ fn calculate_auto_height(content: &str, text_width: usize) -> usize {
     content_lines + 3
 }
 
-fn joinx(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn joinx(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("joinx", args, 2..)?;
 
     let mut string_args = vec![];
@@ -433,7 +426,7 @@ fn joinx(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     Ok(result.into())
 }
 
-fn joiny(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn joiny(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("joiny", args, 2..)?;
 
     let mut string_args = vec![];
@@ -486,7 +479,7 @@ fn joiny(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 }
 
 // 新增：流式排布函数
-fn join_flow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn join_flow(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     if args.len() < 2 {
         return Err(LmError::CustomError(
             "join_flow requires at least 2 arguments: max_width and widgets".to_string(),

@@ -10,21 +10,21 @@ pub fn get() -> Expression {
     }).into()
 }
 
-fn and(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn and(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("and", args, 2)?;
     let a = args[0].eval(env)?;
     let b = args[1].eval(env)?;
 
     Ok(Expression::Boolean(a.is_truthy() && b.is_truthy()))
 }
-fn or(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn or(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("or", args, 2)?;
     let a = args[0].eval(env)?;
     let b = args[1].eval(env)?;
 
     Ok(Expression::Boolean(a.is_truthy() || b.is_truthy()))
 }
-fn not(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn not(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("not", args, 2)?;
     let a = args[0].eval(env)?;
 

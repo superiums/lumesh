@@ -52,7 +52,7 @@ pub fn get() -> Expression {
 
 // TOML Parser Functions
 
-fn parse_toml(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn parse_toml(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("toml", args, 1)?;
     let text = args[0].eval(env)?;
     let text_str = text.to_string();
@@ -82,7 +82,7 @@ fn toml_to_expr(val: toml::Value) -> Expression {
 
 // JSON Parser Functions
 
-fn parse_json(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn parse_json(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("json", args, 1)?;
     let text = args[0].eval(env)?;
     let text_str = text.to_string();
@@ -122,7 +122,7 @@ fn json_to_expr(val: JsonValue) -> Expression {
 
 // Expression Parser
 
-fn parse_expr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn parse_expr(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("expr", args, 1)?;
     let script = args[0].eval(env)?.to_string();
 
@@ -132,7 +132,7 @@ fn parse_expr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
     Ok(parse(&script)?)
 }
-fn highlight_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn highlight_str(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("highlight", args, 1)?;
     let script = args[0].eval(env)?.to_string();
 
@@ -146,7 +146,7 @@ fn highlight_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expres
 
 // Command Output Parser
 pub fn parse_command_output(
-    args: &Vec<Expression>,
+    args: &[Expression],
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
     // super::check_args_len("parse_cmd", args, 1..)?;
@@ -273,7 +273,7 @@ pub fn parse_command_output(
 }
 
 // CSV Reader and Converter Functions
-fn parse_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn parse_csv(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("csv", args, 1)?;
     let text = args[0].eval(env)?.to_string();
 
@@ -310,7 +310,7 @@ fn parse_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 }
 
 // Expression to TOML Conversion
-pub fn expr_to_toml(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn expr_to_toml(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_toml", args, 1)?;
     let expr = &args[0].eval(env)?;
     let toml_str = expr_to_toml_string(expr, None);
@@ -407,7 +407,7 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
 }
 
 // Expression to JSON Conversion (优化版)
-pub fn expr_to_json(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn expr_to_json(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("to_json", args, 1)?;
     let expr = &args[0].eval(env)?;
     let json_str = match expr {
@@ -464,7 +464,7 @@ fn expr_to_json_string(expr: &Expression) -> String {
 // }
 
 // Expression to CSV
-pub fn expr_to_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+pub fn expr_to_csv(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("to_csv", args, 1)?;
     let expr = &args[0].eval(env)?;
 
@@ -544,7 +544,7 @@ enum JqStep {
     Function(String, String),
 }
 
-fn jq(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
+fn jq(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("jq", args, 2)?;
     let query = args[0].eval(env)?;
     let input = args[1].eval(env)?;

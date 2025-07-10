@@ -17,7 +17,7 @@ pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
         Expression::HMap(exprs) => pprint_hmap(exprs.as_ref()),
         Expression::List(exprs) => pprint_list(exprs.as_ref()),
         _ => {
-            println!("{}", arg);
+            println!("{arg}");
         }
     }
     Ok(Expression::None)
@@ -50,14 +50,14 @@ fn pprint_map(exprs: &BTreeMap<String, Expression>) {
                     format!("{}\n{}", val, textwrap::fill(help, value_column_width))
                 }
                 Expression::HMap(_) | Expression::Map(_) => {
-                    format!("{:width$}", val, width = value_column_width)
+                    format!("{val:value_column_width$}")
                 }
                 Expression::List(_) => {
-                    let formatted = format!("{}", val);
+                    let formatted = format!("{val}");
                     textwrap::fill(&formatted, value_column_width)
                 }
                 _ => {
-                    let formatted = format!("{}", val);
+                    let formatted = format!("{val}");
                     textwrap::fill(&formatted, value_column_width)
                 }
             };
@@ -74,7 +74,7 @@ fn pprint_map(exprs: &BTreeMap<String, Expression>) {
         .with(Style::rounded())
         .with(Width::wrap(specified_width).keep_words(true));
 
-    println!("{}", table);
+    println!("{table}");
 }
 fn pprint_hmap(exprs: &HashMap<String, Expression>) {
     let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize - 20;
@@ -95,14 +95,14 @@ fn pprint_hmap(exprs: &HashMap<String, Expression>) {
                     format!("{}\n{}", val, textwrap::fill(help, value_column_width))
                 }
                 Expression::HMap(_) | Expression::Map(_) => {
-                    format!("{:width$}", val, width = value_column_width)
+                    format!("{val:value_column_width$}")
                 }
                 Expression::List(_) => {
-                    let formatted = format!("{}", val);
+                    let formatted = format!("{val}");
                     textwrap::fill(&formatted, value_column_width)
                 }
                 _ => {
-                    let formatted = format!("{}", val);
+                    let formatted = format!("{val}");
                     textwrap::fill(&formatted, value_column_width)
                 }
             };
@@ -120,14 +120,14 @@ fn pprint_hmap(exprs: &HashMap<String, Expression>) {
         .with(Style::ascii())
         .with(Width::wrap(specified_width).keep_words(true));
 
-    println!("{}", table);
+    println!("{table}");
 }
 
 fn pprint_list(exprs: &Vec<Expression>) {
     let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
 
     let (rows, heads_opt) = TableRow {
-        columns: exprs.as_ref(),
+        columns: exprs,
         max_width: specified_width - 10,
         col_padding: 5,
     }
@@ -170,7 +170,7 @@ fn pprint_list(exprs: &Vec<Expression>) {
             })),
         );
     }
-    println!("{}", table);
+    println!("{table}");
 }
 
 // 保持原有的智能布局逻辑
@@ -195,16 +195,16 @@ impl<'a> TableRow<'a> {
                 heads = a
                     .iter()
                     .enumerate()
-                    .map(|(i, _)| format!("C{}", i))
+                    .map(|(i, _)| format!("C{i}"))
                     .collect();
                 a.len()
             }
             Some(Expression::HMap(a)) => {
-                heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
+                heads = a.keys().map(|k| k.to_owned()).collect::<Vec<String>>();
                 a.keys().len()
             }
             Some(Expression::Map(a)) => {
-                heads = a.iter().map(|(k, _)| k.to_owned()).collect::<Vec<String>>();
+                heads = a.keys().map(|k| k.to_owned()).collect::<Vec<String>>();
                 a.keys().len()
             }
             _ => 0,
@@ -247,15 +247,11 @@ impl<'a> TableRow<'a> {
                     .collect::<Vec<String>>()
                     .join(", "),
                 Expression::HMap(a) => a
-                    .as_ref()
-                    .iter()
-                    .map(|(_, v)| v.to_string())
+                    .as_ref().values().map(|v| v.to_string())
                     .collect::<Vec<String>>()
                     .join("\t"),
                 Expression::Map(a) => a
-                    .as_ref()
-                    .iter()
-                    .map(|(_, v)| v.to_string())
+                    .as_ref().values().map(|v| v.to_string())
                     .collect::<Vec<String>>()
                     .join("\t"),
                 other => other.to_string(),

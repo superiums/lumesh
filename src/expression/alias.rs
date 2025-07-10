@@ -17,7 +17,7 @@ pub fn get_alias(name: &str) -> Option<Expression> {
 }
 
 pub fn get_alias_tips() -> HashSet<String> {
-    ALIAS_MAP.with(|map| map.borrow().iter().map(|(k, _)| k.to_owned()).collect())
+    ALIAS_MAP.with(|map| map.borrow().keys().map(|k| k.to_owned()).collect())
 }
 
 // fn remove_alias(name: &str) {

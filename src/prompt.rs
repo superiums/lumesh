@@ -179,7 +179,7 @@ impl PromptEngine {
         // 简约但有用的默认提示符
         if let Ok(cwd) = env::current_dir() {
             if let Some(cwd_str) = cwd.to_str() {
-                return format!("\x1b[1;34m(lumesh)\x1b[0m{} \x1b[32m❯\x1b[0m ", cwd_str);
+                return format!("\x1b[1;34m(lumesh)\x1b[0m{cwd_str} \x1b[32m❯\x1b[0m ");
             }
         }
         ">> ".into()
@@ -219,7 +219,6 @@ fn get_short_path(path: &Path) -> String {
             "~/".to_string(),
             components
                 .get(3)
-                .take()
                 .unwrap()
                 .as_os_str()
                 .to_string_lossy()
@@ -251,9 +250,9 @@ pub fn get_prompt_engine(
         Some(Expression::Map(sets)) => {
             let ttl = sets
                 .get("TTL_SECS")
-                .and_then(|t| match t {
-                    Expression::Integer(ttl) => Some(*ttl as u64),
-                    _ => Some(2),
+                .map(|t| match t {
+                    Expression::Integer(ttl) => *ttl as u64,
+                    _ => 2,
                 })
                 .unwrap_or(2);
             let mode = sets

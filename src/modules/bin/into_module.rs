@@ -51,14 +51,12 @@ pub fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
                 Ok(Expression::Integer(n))
             } else {
                 Err(LmError::CustomError(format!(
-                    "could not convert {:?} to an integer",
-                    x
+                    "could not convert {x:?} to an integer"
                 )))
             }
         }
         otherwise => Err(LmError::CustomError(format!(
-            "could not convert {:?} to an integer",
-            otherwise
+            "could not convert {otherwise:?} to an integer"
         ))),
     }
 }
@@ -73,14 +71,12 @@ pub fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
                 Ok(Expression::Float(n))
             } else {
                 Err(LmError::CustomError(format!(
-                    "could not convert {:?} to a float",
-                    x
+                    "could not convert {x:?} to a float"
                 )))
             }
         }
         otherwise => Err(LmError::CustomError(format!(
-            "could not convert {:?} to a float",
-            otherwise
+            "could not convert {otherwise:?} to a float"
         ))),
     }
 }
@@ -101,14 +97,12 @@ pub fn filesize(
                 Ok(Expression::FileSize(FileSize::from(num as u64, unit)))
             } else {
                 Err(LmError::CustomError(format!(
-                    "could not convert {:?} to a filesize",
-                    x
+                    "could not convert {x:?} to a filesize"
                 )))
             }
         }
         otherwise => Err(LmError::CustomError(format!(
-            "could not convert {:?} to a filesize",
-            otherwise
+            "could not convert {otherwise:?} to a filesize"
         ))),
     }
 }
@@ -129,7 +123,7 @@ fn split_file_size(size_str: &str) -> Option<(f64, &'static str)> {
             let number: f64 = number_part.parse().ok()?;
             if number_part.contains(".") && unit_index > 0 {
                 // 处理可选的"B"
-                return Some((number * 1024 as f64, units[unit_index - 1]));
+                return Some((number * 1024_f64, units[unit_index - 1]));
             }
             return Some((number, unit));
         }

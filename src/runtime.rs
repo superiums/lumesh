@@ -22,7 +22,7 @@ pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo,
     if !mod_file.exists() {
         if file.is_absolute() {
             return Err(RuntimeError::common(
-                format!("module `{}` not found", file_path,).into(),
+                format!("module `{file_path}` not found",).into(),
                 Expression::String(file.to_string_lossy().into()),
                 0,
             ));
@@ -55,7 +55,7 @@ pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo,
             Ok(result) => Ok(result),
             Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
                 let err = SyntaxError {
-                    source: format!("{}   ", module_content).into(),
+                    source: format!("{module_content}   ").into(),
                     kind: e,
                 };
                 Err(RuntimeError::common(
@@ -88,7 +88,7 @@ pub fn run_file(path: PathBuf, env: &mut Environment) -> bool {
     match read_to_string(path) {
         Ok(prelude) => parse_and_eval(&prelude, env),
         Err(e) => {
-            eprintln!("\x1b[31m[IO ERROR]\x1b[0mFailed to read file:\n  {}", e);
+            eprintln!("\x1b[31m[IO ERROR]\x1b[0mFailed to read file:\n  {e}");
             let _ = io::stderr().flush();
             false
         }
@@ -100,7 +100,7 @@ pub fn parse(input: &str) -> Result<Expression, SyntaxError> {
     match parse_script(input) {
         Ok(result) => Ok(result),
         Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => Err(SyntaxError {
-            source: format!("{}   ", input).into(),
+            source: format!("{input}   ").into(),
             kind: e,
         }),
         Err(nom::Err::Incomplete(_)) => Err(SyntaxError {
@@ -158,7 +158,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                 },
                 Err(e) => {
                     let _ = io::stdout().flush();
-                    eprintln!("\x1b[31m[RUNTIME ERROR]\x1b[0m\n{}", e);
+                    eprintln!("\x1b[31m[RUNTIME ERROR]\x1b[0m\n{e}");
                     let _ = io::stderr().flush();
                 }
             }
@@ -167,7 +167,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
         }
 
         Err(e) => {
-            eprintln!("\x1b[31m[PARSE ERROR]\x1b[0m\n{}", e);
+            eprintln!("\x1b[31m[PARSE ERROR]\x1b[0m\n{e}");
             let _ = io::stderr().flush();
         }
     }
@@ -184,7 +184,7 @@ pub fn init_config(env: &mut Environment) {
                 let config_path = config_dir.join("lumesh");
                 if !config_path.exists() {
                     if let Err(e) = create_dir(&config_path) {
-                        eprintln!("Error while writing prelude: {}", e);
+                        eprintln!("Error while writing prelude: {e}");
                     }
                 }
                 config_path.join("config.lm")
@@ -204,7 +204,7 @@ pub fn init_config(env: &mut Environment) {
 
         if response.is_empty() || response.to_lowercase() == "y" {
             if let Err(e) = write(&profile, INTRO_PRELUDE) {
-                eprintln!("Error while writing prelude: {}", e);
+                eprintln!("Error while writing prelude: {e}");
             }
         }
 
@@ -246,7 +246,7 @@ pub fn read_user_input(prompt: impl ToString) -> String {
     let mut input = String::new();
     let _ = io::stdin()
         .read_line(&mut input)
-        .map_err(|e| eprintln!("Read Failed: {}", e));
+        .map_err(|e| eprintln!("Read Failed: {e}"));
     input.trim().to_owned()
 }
 

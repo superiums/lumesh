@@ -119,7 +119,7 @@ fn write(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
 fn title(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("title", args, 1)?;
     let title = args[0].eval(env)?.to_string();
-    print!("\x1b]2;{}\x07", title);
+    print!("\x1b]2;{title}\x07");
     Ok(Expression::None)
 }
 
@@ -131,7 +131,7 @@ fn clear(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError
 fn flush(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     std::io::stdout()
         .flush()
-        .map_err(|e| LmError::CustomError(format!("Flush failed: {}", e)))?;
+        .map_err(|e| LmError::CustomError(format!("Flush failed: {e}")))?;
     Ok(Expression::None)
 }
 
@@ -173,7 +173,7 @@ fn cursor_to(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 
     match (x, y) {
         (Expression::Integer(x), Expression::Integer(y)) => {
-            print!("\x1b[{};{}H", y, x);
+            print!("\x1b[{y};{x}H");
             Ok(Expression::None)
         }
         (m, n) => Err(LmError::CustomError(format!(
@@ -234,19 +234,19 @@ fn keyboard_read_line(_: &Vec<Expression>, _: &mut Environment) -> Result<Expres
     let mut buffer = String::new();
     std::io::stdin()
         .read_line(&mut buffer)
-        .map_err(|e| LmError::CustomError(format!("Read failed: {}", e)))?;
+        .map_err(|e| LmError::CustomError(format!("Read failed: {e}")))?;
     Ok(Expression::String(buffer))
 }
 
 fn keyboard_read_password(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     rpassword::read_password()
         .map(Expression::String)
-        .map_err(|e| LmError::CustomError(format!("Password read failed: {}", e)))
+        .map_err(|e| LmError::CustomError(format!("Password read failed: {e}")))
 }
 
 fn keyboard_read_key(_: &Vec<Expression>, _: &mut Environment) -> Result<Expression, LmError> {
     let event = crossterm::event::read()
-        .map_err(|e| LmError::CustomError(format!("Key read failed: {}", e)))?;
+        .map_err(|e| LmError::CustomError(format!("Key read failed: {e}")))?;
 
     if let crossterm::event::Event::Key(key) = event {
         use crossterm::event::KeyCode::*;
@@ -266,7 +266,7 @@ fn keyboard_read_key(_: &Vec<Expression>, _: &mut Environment) -> Result<Express
             Tab => Expression::String("\t".to_string()),
             Esc => Expression::String("\x1b".to_string()),
             Insert => Expression::String("\x1b[2~".to_string()),
-            F(i) => Expression::String(format!("\x1b[{}~", i)),
+            F(i) => Expression::String(format!("\x1b[{i}~")),
             Null => Expression::String("\x00".to_string()),
             BackTab => Expression::String("\x1b[Z".to_string()),
             _ => Expression::None,

@@ -39,10 +39,7 @@ fn exec_single_cmd(
     }
     let mut cmd = Command::new(cmdstr);
 
-    let ar = match args {
-        Some(x) => x,
-        _ => vec![],
-    };
+    let ar = args.unwrap_or_default();
 
     cmd.args(ar)
         .envs(env.get_root().get_bindings_string())
@@ -62,13 +59,11 @@ fn exec_single_cmd(
     // 设置 stdout（如果是交互式命令，直接接管终端）
     if pipe_out {
         cmd.stdout(Stdio::piped());
+    } else if mode & 1 != 0 {
+        cmd.stdout(Stdio::null());
     } else {
-        if mode & 1 != 0 {
-            cmd.stdout(Stdio::null());
-        } else {
-            // if mode == 0 {
-            cmd.stdout(Stdio::inherit());
-        }
+        // if mode == 0 {
+        cmd.stdout(Stdio::inherit());
     }
 
     // 设置 stderr
@@ -133,9 +128,9 @@ fn exec_single_cmd(
         if output.status.success() {
             if mode & 1 == 0 {
                 //未关闭标准输出才返回结果
-                return Ok(Some(output.stdout));
+                Ok(Some(output.stdout))
             } else {
-                return Ok(None);
+                Ok(None)
             }
         } else if mode & 4 != 0 {
             //错误输出>标准输出
@@ -258,11 +253,11 @@ pub fn handle_command(
                 }
             }
             Expression::List(ls) => {
-                ls.iter().for_each(|a| cmd_args.push(format!("{}", a)));
+                ls.iter().for_each(|a| cmd_args.push(format!("{a}")));
             }
             Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
             Expression::None => continue,
-            _ => cmd_args.push(format!("{}", e_arg)),
+            _ => cmd_args.push(format!("{e_arg}")),
         }
     }
     state.clear(State::SKIP_BUILTIN_SEEK);
@@ -341,8 +336,5 @@ pub fn to_expr(bytes_out: Option<Vec<u8>>) -> Expression {
     }
 }
 fn to_bytes(expr_out: Option<Expression>) -> Option<Vec<u8>> {
-    match expr_out {
-        Some(p) => Some(p.to_string().as_bytes().to_owned()),
-        _ => None,
-    }
+    expr_out.map(|p| p.to_string().as_bytes().to_owned())
 }

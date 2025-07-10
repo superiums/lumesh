@@ -117,7 +117,7 @@ fn log_message(
     // 处理多行输出
     for (i, line) in output.lines().enumerate() {
         if i == 0 {
-            println!("{}{}", prefix, line);
+            println!("{prefix}{line}");
         } else {
             println!("{}{}", " ".repeat(prefix.len()), line);
         }
@@ -168,6 +168,6 @@ fn log_echo(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
         first_arg = false;
     }
 
-    println!("{}", output);
+    println!("{output}");
     Ok(Expression::None)
 }

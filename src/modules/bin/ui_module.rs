@@ -32,13 +32,13 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     // let n = super::get_integer_arg(args[0].eval(env)?)?;
 
     let amount = CustomType::<i64>::new(msg.as_str())
-        .with_formatter(&|i| format!("${:.0}", i))
+        .with_formatter(&|i| format!("${i:.0}"))
         .with_error_message("Please type a valid int")
         .with_help_message("Type an Integer");
 
     match amount.prompt() {
         Ok(s) => Ok(Expression::Integer(s)),
-        Err(e) => Err(LmError::CustomError(format!("ui.text: {}", e.to_string()))),
+        Err(e) => Err(LmError::CustomError(format!("ui.text: {e}"))),
     }
 }
 fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
@@ -47,13 +47,13 @@ fn float(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     // let n = super::get_integer_arg(args[0].eval(env)?)?;
 
     let amount = CustomType::<f64>::new(msg.as_str())
-        .with_formatter(&|i| format!("${:.2}", i))
+        .with_formatter(&|i| format!("${i:.2}"))
         .with_error_message("Please type a valid number")
         .with_help_message("Type the amount using a decimal point as a separator");
 
     match amount.prompt() {
         Ok(s) => Ok(Expression::Float(s)),
-        Err(e) => Err(LmError::CustomError(format!("ui.text: {}", e.to_string()))),
+        Err(e) => Err(LmError::CustomError(format!("ui.text: {e}"))),
     }
 }
 fn text(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
@@ -63,7 +63,7 @@ fn text(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
     let ans = Text::new(msg.as_str());
     match ans.prompt() {
         Ok(s) => Ok(Expression::String(s)),
-        Err(e) => Err(LmError::CustomError(format!("ui.text: {}", e.to_string()))),
+        Err(e) => Err(LmError::CustomError(format!("ui.text: {e}"))),
     }
 }
 
@@ -78,8 +78,7 @@ fn passwd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     match ans.prompt() {
         Ok(s) => Ok(Expression::String(s)),
         Err(e) => Err(LmError::CustomError(format!(
-            "ui.passwd: {}",
-            e.to_string()
+            "ui.passwd: {e}"
         ))),
     }
 }
@@ -90,8 +89,7 @@ fn confirm(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     match ans {
         Ok(s) => Ok(Expression::Boolean(s)),
         Err(e) => Err(LmError::CustomError(format!(
-            "ui.confirm: {}",
-            e.to_string()
+            "ui.confirm: {e}"
         ))),
     }
 }
@@ -135,8 +133,7 @@ fn selector_wrapper(
     let msg = match &cfgs {
         None => "your choice:".to_string(),
         Some(m) => m
-            .get("msg")
-            .and_then(|v| Some(v.to_string()))
+            .get("msg").map(|v| v.to_string())
             .unwrap_or("your choice:".to_string()),
     };
 
@@ -146,103 +143,96 @@ fn selector_wrapper(
     }
 }
 
-fn single_select_wrapper<'a>(
-    msg: &'a str,
+fn single_select_wrapper(
+    msg: &str,
     options: Vec<Expression>,
     cfgs: Option<Rc<BTreeMap<String, Expression>>>,
 ) -> Result<Expression, LmError> {
-    let mut ans = Select::new(&msg, options);
-    match cfgs {
-        Some(m) => {
-            let page_size = m.get("page_size");
-            if let Some(ps) = page_size {
-                match ps {
-                    Expression::Integer(size) => {
-                        ans = ans.with_page_size(*size as usize);
-                    }
-                    _ => {
-                        return Err(LmError::CustomError(
-                            "page_size should be an Integer".to_string(),
-                        ));
-                    }
+    let mut ans = Select::new(msg, options);
+    if let Some(m) = cfgs {
+        let page_size = m.get("page_size");
+        if let Some(ps) = page_size {
+            match ps {
+                Expression::Integer(size) => {
+                    ans = ans.with_page_size(*size as usize);
+                }
+                _ => {
+                    return Err(LmError::CustomError(
+                        "page_size should be an Integer".to_string(),
+                    ));
                 }
             }
-            let starting_cursor = m.get("starting_cursor");
-            if let Some(c) = starting_cursor {
-                match c {
-                    Expression::Integer(c) => {
-                        ans = ans.with_starting_cursor(*c as usize);
-                    }
-                    _ => {
-                        return Err(LmError::CustomError(
-                            "starting_cursor should be an Integer".to_string(),
-                        ));
-                    }
-                }
-            }
-            // let help = m.get("help");
-            // if let Some(h) = help {
-            //     if let Expression::String(h_msg) = h {
-            //         let hh: Cow<str> = Cow::Borrowed(h_msg); // 使用借用
-            //         ans = ans.with_help_message(&hh);
-            //     }
-            // }
         }
-        _ => {}
+        let starting_cursor = m.get("starting_cursor");
+        if let Some(c) = starting_cursor {
+            match c {
+                Expression::Integer(c) => {
+                    ans = ans.with_starting_cursor(*c as usize);
+                }
+                _ => {
+                    return Err(LmError::CustomError(
+                        "starting_cursor should be an Integer".to_string(),
+                    ));
+                }
+            }
+        }
+        // let help = m.get("help");
+        // if let Some(h) = help {
+        //     if let Expression::String(h_msg) = h {
+        //         let hh: Cow<str> = Cow::Borrowed(h_msg); // 使用借用
+        //         ans = ans.with_help_message(&hh);
+        //     }
+        // }
     }
     match ans.prompt() {
         Ok(choice) => Ok(choice),
-        Err(e) => Err(LmError::CustomError(format!("ui.pick: {}", e.to_string()))),
+        Err(e) => Err(LmError::CustomError(format!("ui.pick: {e}"))),
     }
 }
-fn multi_select_wrapper<'a>(
-    msg: &'a str,
+fn multi_select_wrapper(
+    msg: &str,
     options: Vec<Expression>,
     cfgs: Option<Rc<BTreeMap<String, Expression>>>,
 ) -> Result<Expression, LmError> {
-    let mut ans = MultiSelect::new(&msg, options);
-    match cfgs {
-        Some(m) => {
-            let page_size = m.get("page_size");
-            if let Some(ps) = page_size {
-                match ps {
-                    Expression::Integer(size) => {
-                        ans = ans.with_page_size(*size as usize);
-                    }
-                    _ => {
-                        return Err(LmError::CustomError(
-                            "page_size should be an Integer".to_string(),
-                        ));
-                    }
+    let mut ans = MultiSelect::new(msg, options);
+    if let Some(m) = cfgs {
+        let page_size = m.get("page_size");
+        if let Some(ps) = page_size {
+            match ps {
+                Expression::Integer(size) => {
+                    ans = ans.with_page_size(*size as usize);
+                }
+                _ => {
+                    return Err(LmError::CustomError(
+                        "page_size should be an Integer".to_string(),
+                    ));
                 }
             }
-            let starting_cursor = m.get("starting_cursor");
-            if let Some(c) = starting_cursor {
-                match c {
-                    Expression::Integer(c) => {
-                        ans = ans.with_starting_cursor(*c as usize);
-                    }
-                    _ => {
-                        return Err(LmError::CustomError(
-                            "starting_cursor should be an Integer".to_string(),
-                        ));
-                    }
-                }
-            }
-            // let help = m.get("help");
-            // if let Some(h) = help {
-            //     if let Expression::String(h_msg) = h {
-            //         ans = ans.with_help_message(h_msg.as_str());
-            //     }
-            // }
         }
-        _ => {}
+        let starting_cursor = m.get("starting_cursor");
+        if let Some(c) = starting_cursor {
+            match c {
+                Expression::Integer(c) => {
+                    ans = ans.with_starting_cursor(*c as usize);
+                }
+                _ => {
+                    return Err(LmError::CustomError(
+                        "starting_cursor should be an Integer".to_string(),
+                    ));
+                }
+            }
+        }
+        // let help = m.get("help");
+        // if let Some(h) = help {
+        //     if let Expression::String(h_msg) = h {
+        //         ans = ans.with_help_message(h_msg.as_str());
+        //     }
+        // }
     }
     match ans.prompt() {
         Ok(choice) => Ok(Expression::from(choice)),
         Err(e) => Err(LmError::CustomError(format!(
-            "ui.multi_pick: {}",
-            e.to_string()
+            "ui.multi_pick: {e}"
         ))),
     }
 }
@@ -288,8 +278,7 @@ fn widget(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
             Expression::Integer(n) if n > 4 => n as usize,
             otherwise => {
                 return Err(LmError::CustomError(format!(
-                    "expected width argument to be integer greater than 4, but got {}",
-                    otherwise
+                    "expected width argument to be integer greater than 4, but got {otherwise}"
                 )));
             }
         }
@@ -304,8 +293,7 @@ fn widget(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
             Expression::Integer(n) if n >= 3 => n as usize,
             otherwise => {
                 return Err(LmError::CustomError(format!(
-                    "expected height argument to be an integer greater than 2, but got {}",
-                    otherwise
+                    "expected height argument to be an integer greater than 2, but got {otherwise}"
                 )));
             }
         }
@@ -314,7 +302,7 @@ fn widget(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     };
 
     let format_width = text_width * 2 / 3;
-    let text = textwrap::fill(&format!("{:format_width$}", content), text_width);
+    let text = textwrap::fill(&format!("{content:format_width$}"), text_width);
 
     if text_width < title_len {
         return Err(LmError::CustomError(String::from(
@@ -330,10 +318,7 @@ fn widget(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     }
 
     let mut result = format!(
-        "┌{left_side}{}{right_side}┐\n",
-        title,
-        left_side = left_border_half,
-        right_side = right_border_half
+        "┌{left_border_half}{title}{right_border_half}┐\n"
     );
     let width = result.chars().count() - 1;
 
@@ -420,8 +405,7 @@ fn joinx(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
             }
             otherwise => {
                 return Err(LmError::CustomError(format!(
-                    "expected string, but got {}",
-                    otherwise
+                    "expected string, but got {otherwise}"
                 )));
             }
         }
@@ -470,8 +454,7 @@ fn joiny(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
             }
             otherwise => {
                 return Err(LmError::CustomError(format!(
-                    "expected string, but got {}",
-                    otherwise
+                    "expected string, but got {otherwise}"
                 )));
             }
         }
@@ -514,8 +497,7 @@ fn join_flow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
         Expression::Integer(w) if w > 0 => w as usize,
         otherwise => {
             return Err(LmError::CustomError(format!(
-                "expected positive integer for max_width, got {}",
-                otherwise
+                "expected positive integer for max_width, got {otherwise}"
             )));
         }
     };
@@ -545,8 +527,7 @@ fn join_flow(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
             }
             otherwise => {
                 return Err(LmError::CustomError(format!(
-                    "expected string widget, got {}",
-                    otherwise
+                    "expected string widget, got {otherwise}"
                 )));
             }
         }

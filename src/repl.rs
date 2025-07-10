@@ -53,7 +53,7 @@ pub fn run_repl(env: &mut Environment) {
 
     match env.get("LUME_WELCOME") {
         Some(wel) => {
-            println!("{}", wel);
+            println!("{wel}");
             env.undefine("LUME_WELCOME");
         }
         _ => println!("Welcome to Lumesh {}", env!("CARGO_PKG_VERSION")),
@@ -82,7 +82,7 @@ pub fn run_repl(env: &mut Environment) {
             if !path.exists() {
                 match std::fs::File::create(&path) {
                     Ok(_) => {}
-                    Err(e) => eprint!("Failed to create cache directory: {}", e),
+                    Err(e) => eprint!("Failed to create cache directory: {e}"),
                 }
             }
             path.into_os_string().into_string().unwrap()
@@ -123,7 +123,7 @@ pub fn run_repl(env: &mut Environment) {
 
     match rl.lock().unwrap().load_history(&history_file) {
         Ok(_) => {}
-        Err(e) => println!("No previous history {}", e),
+        Err(e) => println!("No previous history {e}"),
     }
 
     let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
@@ -183,7 +183,7 @@ pub fn run_repl(env: &mut Environment) {
             //     0
             // } else
             if (bits as u8 & (Modifiers::CTRL | Modifiers::ALT | Modifiers::SHIFT).bits()) == 0 {
-                eprintln!("invalid LUME_HOT_MODIFIER {}", bits);
+                eprintln!("invalid LUME_HOT_MODIFIER {bits}");
                 4
             } else {
                 bits as u8
@@ -257,7 +257,7 @@ pub fn run_repl(env: &mut Environment) {
                 continue;
             }
             Err(err) => {
-                println!("Error: {:?}", err);
+                println!("Error: {err:?}");
                 break;
             }
         };
@@ -276,7 +276,7 @@ pub fn run_repl(env: &mut Environment) {
                 {
                     match rl.lock().unwrap().add_history_entry(&line) {
                         Ok(_) => {}
-                        Err(e) => eprintln!("add history err: {}", e),
+                        Err(e) => eprintln!("add history err: {e}"),
                     };
                 }
             }
@@ -287,7 +287,7 @@ pub fn run_repl(env: &mut Environment) {
     if !no_history {
         match rl.lock().unwrap().save_history(&history_file) {
             Ok(_) => {}
-            Err(e) => eprintln!("save history err: {}", e),
+            Err(e) => eprintln!("save history err: {e}"),
         };
     }
 }
@@ -351,7 +351,7 @@ fn new_editor(
         hinter: Arc::new(HistoryHinter::new()),
         highlighter: Arc::new(SyntaxHighlighter::new(theme)),
         ai_client: ai,
-        cmds: cmds,
+        cmds,
     };
     rl.set_helper(Some(helper));
     rl
@@ -439,7 +439,7 @@ impl LumeHelper {
             .map(|cmd| {
                 // dbg!(&cmd);
                 Pair {
-                    display: format!("{}{}{}", cpl_color, cmd, RESET),
+                    display: format!("{cpl_color}{cmd}{RESET}"),
                     replacement: cmd.clone(),
                 }
             })
@@ -640,9 +640,9 @@ impl Highlighter for SyntaxHighlighter {
         // 高亮命令部分，剩余部分调用 syntax_highlight
         let highlighted_rest = highlight(rest, &self.theme);
         let colored_line = if is_valid {
-            format!("{}{}{} {}", color, cmd, RESET, highlighted_rest)
+            format!("{color}{cmd}{RESET} {highlighted_rest}")
         } else {
-            format!("{}{}{} {}", color, cmd, RESET, highlighted_rest)
+            format!("{color}{cmd}{RESET} {highlighted_rest}")
         };
         Cow::Owned(colored_line)
     }

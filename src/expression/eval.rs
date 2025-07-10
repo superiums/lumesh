@@ -427,7 +427,7 @@ impl Expression {
                                 let right = rhs.eval(env)?;
                                 if !right.is_truthy() {
                                     return Err(RuntimeError::common(
-                                        format!("can't divide {} by zero", base).into(),
+                                        format!("can't divide {base} by zero").into(),
                                         self.clone(),
                                         depth,
                                     ));
@@ -491,8 +491,7 @@ impl Expression {
                                         if exponent < 0 {
                                             return Err(RuntimeError::common(
                                                 format!(
-                                                    "cannot raise {} to a negative power {}",
-                                                    base, exponent
+                                                    "cannot raise {base} to a negative power {exponent}"
                                                 )
                                                 .into(),
                                                 self.clone(),
@@ -505,8 +504,7 @@ impl Expression {
                                             Some(n) => Ok(n.into()),
                                             None => Err(RuntimeError::common(
                                                 format!(
-                                                    "overflow when raising int {} to the power {}",
-                                                    base, exponent
+                                                    "overflow when raising int {base} to the power {exponent}"
                                                 )
                                                 .into(),
                                                 self.clone(),
@@ -706,8 +704,7 @@ impl Expression {
                                                     .replace_or_append_arg(item.clone())
                                                     .eval_mut(state, env, depth + 1)
                                             })
-                                            .collect::<Result<Vec<_>, _>>()
-                                            .and_then(|r| Ok(Expression::from(r)));
+                                            .collect::<Result<Vec<_>, _>>().map(Expression::from);
                                     }
                                     Expression::String(strls) => {
                                         return ifs_split(&strls, env)
@@ -718,8 +715,7 @@ impl Expression {
                                                     .replace_or_append_arg(Expression::String(item))
                                                     .eval_mut(state, env, depth + 1)
                                             })
-                                            .collect::<Result<Vec<_>, _>>()
-                                            .and_then(|r| Ok(Expression::from(r)));
+                                            .collect::<Result<Vec<_>, _>>().map(Expression::from);
                                     }
                                     _ => {
                                         return rhs
@@ -998,7 +994,7 @@ impl Expression {
                         // }
                         // (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
                         (Self::Symbol(m), Self::Symbol(n)) => {
-                            Ok(Self::String(format!("{}.{}", m, n)))
+                            Ok(Self::String(format!("{m}.{n}")))
                         }
                         // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
                         // _ => Err(RuntimeError::CustomError("not valid index option".into())),
@@ -1097,11 +1093,10 @@ impl Expression {
             Expression::Range(list, step) => {
                 if let Expression::Integer(index) = r {
                     list.step_by(step)
-                        .nth(index as usize)
-                        .and_then(|r| Some(Expression::Integer(r)))
+                        .nth(index as usize).map(Expression::Integer)
                         .ok_or_else(|| {
                             RuntimeErrorKind::CustomError(
-                                format!("index {}: out of bounds", index).into(),
+                                format!("index {index}: out of bounds").into(),
                             )
                         })
                 } else {

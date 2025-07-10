@@ -56,8 +56,7 @@ fn ratio(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
                 Ok(Expression::Boolean(b))
             }
             (l, h) => Err(LmError::CustomError(format!(
-                "rand.ratio expected two integers, but got {} and {}",
-                l, h
+                "rand.ratio expected two integers, but got {l} and {h}"
             ))),
         },
         _ => Err(LmError::CustomError(
@@ -147,8 +146,7 @@ fn int(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
                 Ok(Expression::Integer(rng.random_range(l..h)))
             }
             (l, h) => Err(LmError::CustomError(format!(
-                "rand.int expected two integers, but got {} and {}",
-                l, h
+                "rand.int expected two integers, but got {l} and {h}"
             ))),
         },
         _ => Err(LmError::CustomError(
@@ -169,8 +167,7 @@ fn choose(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
             })
         }
         otherwise => Err(LmError::CustomError(format!(
-            "rand.choose expected a list, but got {}",
-            otherwise
+            "rand.choose expected a list, but got {otherwise}"
         ))),
     }
 }
@@ -186,8 +183,7 @@ fn shuffle(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
             Ok(Expression::from(s))
         }
         otherwise => Err(LmError::CustomError(format!(
-            "rand.shuffle expected a list, but got {}",
-            otherwise
+            "rand.shuffle expected a list, but got {otherwise}"
         ))),
     }
 }

@@ -31,7 +31,7 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
                             eprintln!(
                                 "template `{}` execute failed:\n{}",
                                 name.as_str(),
-                                e.to_string()
+                                e
                             );
                             "".to_string()
                         }
@@ -40,7 +40,7 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
                         eprintln!(
                             "template `{}` render failed:\n{}",
                             name.as_str(),
-                            e.to_string()
+                            e
                         );
                         "".to_string()
                     }

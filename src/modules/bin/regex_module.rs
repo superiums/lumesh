@@ -163,11 +163,8 @@ fn regex_capture_name(
         // let mut result = Vec::new();
         let mut found = BTreeMap::new();
         for (i, name) in re.capture_names().enumerate().skip(1) {
-            match (caps.get(i), name) {
-                (Some(mat), Some(n)) => {
-                    found.insert(n.to_string(), Expression::String(mat.as_str().to_string()));
-                }
-                _ => {}
+            if let (Some(mat), Some(n)) = (caps.get(i), name) {
+                found.insert(n.to_string(), Expression::String(mat.as_str().to_string()));
             }
         }
         return Ok(Expression::from(found));
@@ -184,7 +181,7 @@ fn get_r_args(args: &Vec<Expression>, env: &mut Environment) -> Result<(Regex, S
             Expression::String(t) | Expression::Symbol(t),
         ) => Ok((
             Regex::new(&r)
-                .map_err(|e| LmError::CustomError(format!("invalid regex pattern: {}", e)))?,
+                .map_err(|e| LmError::CustomError(format!("invalid regex pattern: {e}")))?,
             t,
         )),
 

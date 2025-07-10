@@ -842,7 +842,7 @@ fn parse_ansi_sequence(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
         }
     }
 
-    if found == true {
+    if found {
         // 截取到结束符的位置
         let (remaining, _) = rest.split_at(pos);
         Ok((remaining, Diagnostic::Valid))
@@ -857,11 +857,8 @@ fn parse_ansi_sequence(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
 }
 
 fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
-    match parse_ansi_sequence(input) {
-        Ok(ansi) => {
-            return Ok(ansi);
-        }
-        _ => {}
+    if let Ok(ansi) = parse_ansi_sequence(input) {
+        return Ok(ansi);
     };
 
     fn parse_hex_digit(input: Input<'_>) -> TokenizationResult<'_> {

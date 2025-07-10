@@ -86,7 +86,7 @@ impl ConditionalEventHandler for LumeMoveHandler {
             let hint = ctx.hint_text().unwrap();
             let pos = match self.mode {
                 1 => {
-                    let pos = hint.find(&['<', '[']);
+                    let pos = hint.find(['<', '[']);
                     pos.unwrap_or(hint.len())
                 }
                 _ => hint
@@ -101,7 +101,7 @@ impl ConditionalEventHandler for LumeMoveHandler {
             // dbg!(&hint, &pos, &hintword);
             Some(Cmd::Insert(1, hintword))
         } else {
-            return None;
+            None
         }
     }
 }

@@ -7,7 +7,7 @@ pub fn get() -> Expression {
         String::from("E")   => std::f64::consts::E.into(),
         String::from("PI")  => std::f64::consts::PI.into(),
         String::from("TAU") => std::f64::consts::TAU.into(),
-        String::from("PHI") => 1.618033988749894848204586834365638118_f64.into(),
+        String::from("PHI") => 1.618_033_988_749_895_f64.into(),
 
         // 基础数学函数
         String::from("max") => Expression::builtin("max", max, "get max value in an array or multi args", "<num1> <num2> ... | <array>"),
@@ -88,8 +88,7 @@ fn eval_to_f64(
             Expression::Integer(i) => Ok(i as f64),
             Expression::Float(f) => Ok(f),
             e => Err(LmError::CustomError(format!(
-                "invalid {} argument {}",
-                func_name, e
+                "invalid {func_name} argument {e}"
             ))),
         })
         .collect()
@@ -182,19 +181,19 @@ fn clamp(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
     let value = match args[2].eval(env)? {
         Expression::Integer(i) => i as f64,
         Expression::Float(f) => f,
-        e => return Err(LmError::CustomError(format!("invalid clamp value {}", e))),
+        e => return Err(LmError::CustomError(format!("invalid clamp value {e}"))),
     };
 
     let min_val = match args[0].eval(env)? {
         Expression::Integer(i) => i as f64,
         Expression::Float(f) => f,
-        e => return Err(LmError::CustomError(format!("invalid clamp min {}", e))),
+        e => return Err(LmError::CustomError(format!("invalid clamp min {e}"))),
     };
 
     let max_val = match args[1].eval(env)? {
         Expression::Integer(i) => i as f64,
         Expression::Float(f) => f,
-        e => return Err(LmError::CustomError(format!("invalid clamp max {}", e))),
+        e => return Err(LmError::CustomError(format!("invalid clamp max {e}"))),
     };
 
     if min_val > max_val {
@@ -220,8 +219,7 @@ fn bit_and(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_and argument {}",
-                e
+                "invalid bit_and argument {e}"
             )));
         }
     };
@@ -230,8 +228,7 @@ fn bit_and(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_and argument {}",
-                e
+                "invalid bit_and argument {e}"
             )));
         }
     };
@@ -247,8 +244,7 @@ fn bit_or(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_or argument {}",
-                e
+                "invalid bit_or argument {e}"
             )));
         }
     };
@@ -257,8 +253,7 @@ fn bit_or(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_or argument {}",
-                e
+                "invalid bit_or argument {e}"
             )));
         }
     };
@@ -274,8 +269,7 @@ fn bit_xor(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_xor argument {}",
-                e
+                "invalid bit_xor argument {e}"
             )));
         }
     };
@@ -284,8 +278,7 @@ fn bit_xor(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_xor argument {}",
-                e
+                "invalid bit_xor argument {e}"
             )));
         }
     };
@@ -301,8 +294,7 @@ fn bit_not(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_not argument {}",
-                e
+                "invalid bit_not argument {e}"
             )));
         }
     };
@@ -318,8 +310,7 @@ fn bit_shl(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shl shift_bit argument {}",
-                e
+                "invalid bit_shl shift_bit argument {e}"
             )));
         }
     };
@@ -328,8 +319,7 @@ fn bit_shl(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shl base argument {}",
-                e
+                "invalid bit_shl base argument {e}"
             )));
         }
     };
@@ -345,8 +335,7 @@ fn bit_shr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shr shift_bit argument {}",
-                e
+                "invalid bit_shr shift_bit argument {e}"
             )));
         }
     };
@@ -355,8 +344,7 @@ fn bit_shr(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
         Expression::Integer(i) => i,
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid bit_shr base argument {}",
-                e
+                "invalid bit_shr base argument {e}"
             )));
         }
     };
@@ -368,40 +356,40 @@ fn gt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmErr
     super::check_exact_args_len("gt", args, 2)?;
     let other = get_float_arg(args[0].eval(env)?)?;
     let base = get_float_arg(args[1].eval(env)?)?;
-    return Ok(Expression::Boolean(base.gt(&other)));
+    Ok(Expression::Boolean(base.gt(&other)))
 }
 
 fn ge(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("ge", args, 2)?;
     let other = get_float_arg(args[0].eval(env)?)?;
     let base = get_float_arg(args[1].eval(env)?)?;
-    return Ok(Expression::Boolean(base.ge(&other)));
+    Ok(Expression::Boolean(base.ge(&other)))
 }
 
 fn lt(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("lt", args, 2)?;
     let other = get_float_arg(args[0].eval(env)?)?;
     let base = get_float_arg(args[1].eval(env)?)?;
-    return Ok(Expression::Boolean(base.lt(&other)));
+    Ok(Expression::Boolean(base.lt(&other)))
 }
 
 fn le(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("le", args, 2)?;
     let other = get_float_arg(args[0].eval(env)?)?;
     let base = get_float_arg(args[1].eval(env)?)?;
-    return Ok(Expression::Boolean(base.le(&other)));
+    Ok(Expression::Boolean(base.le(&other)))
 }
 fn eq(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("eq", args, 2)?;
     let other = get_float_arg(args[0].eval(env)?)?;
     let base = get_float_arg(args[1].eval(env)?)?;
-    return Ok(Expression::Boolean(base.eq(&other)));
+    Ok(Expression::Boolean(base.eq(&other)))
 }
 fn ne(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("ne", args, 2)?;
     let other = get_float_arg(args[0].eval(env)?)?;
     let base = get_float_arg(args[1].eval(env)?)?;
-    return Ok(Expression::Boolean(base.ne(&other)));
+    Ok(Expression::Boolean(base.ne(&other)))
 }
 // Implementations of all other math functions (kept similar to original but extracted)
 fn abs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
@@ -410,8 +398,7 @@ fn abs(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
         Expression::Integer(i) => Ok(i.abs().into()),
         Expression::Float(f) => Ok(f.abs().into()),
         e => Err(LmError::CustomError(format!(
-            "invalid abs argument {:?}",
-            e
+            "invalid abs argument {e:?}"
         ))),
     }
 }
@@ -494,8 +481,7 @@ fn floor(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         Expression::Integer(i) => Ok(i.into()),
         Expression::Float(f) => Ok(f.floor().into()),
         e => Err(LmError::CustomError(format!(
-            "invalid floor argument {:?}",
-            e
+            "invalid floor argument {e:?}"
         ))),
     }
 }
@@ -507,8 +493,7 @@ fn ceil(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
         Expression::Integer(i) => Ok(i.into()),
         Expression::Float(f) => Ok(f.ceil().into()),
         e => Err(LmError::CustomError(format!(
-            "invalid ceil argument {:?}",
-            e
+            "invalid ceil argument {e:?}"
         ))),
     }
 }
@@ -520,8 +505,7 @@ fn round(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         Expression::Integer(i) => Ok(i.into()),
         Expression::Float(f) => Ok(f.round().into()),
         e => Err(LmError::CustomError(format!(
-            "invalid round argument {:?}",
-            e
+            "invalid round argument {e:?}"
         ))),
     }
 }
@@ -533,8 +517,7 @@ fn trunc(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         Expression::Integer(i) => Ok(i.into()),
         Expression::Float(f) => Ok(f.trunc().into()),
         e => Err(LmError::CustomError(format!(
-            "invalid trunc argument {:?}",
-            e
+            "invalid trunc argument {e:?}"
         ))),
     }
 }
@@ -547,8 +530,7 @@ fn isodd(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         Expression::Float(f) => ((f as Int) % 2 != 0).into(),
         e => {
             return Err(LmError::CustomError(format!(
-                "invalid isodd argument {}",
-                e
+                "invalid isodd argument {e}"
             )));
         }
     })

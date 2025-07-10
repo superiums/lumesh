@@ -156,10 +156,10 @@ pub fn exec_in_pty(
                 let _ = master_writer.write_all("i".as_bytes());
             }
             if let Err(e) = master_writer.write_all(&last_input) {
-                eprintln!("Failed to write to master: {}", e);
+                eprintln!("Failed to write to master: {e}");
             }
             if let Err(e) = master_writer.flush() {
-                eprintln!("Failed to flush master: {}", e);
+                eprintln!("Failed to flush master: {e}");
             }
             if is_vi {
                 let _ = master_writer.write_all(b"\n");

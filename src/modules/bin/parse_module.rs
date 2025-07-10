@@ -59,7 +59,7 @@ fn parse_toml(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
 
     toml::from_str(&text_str)
         .map(toml_to_expr)
-        .map_err(|e| LmError::CustomError(format!("TOML parse error: {}", e)))
+        .map_err(|e| LmError::CustomError(format!("TOML parse error: {e}")))
 }
 
 fn toml_to_expr(val: toml::Value) -> Expression {
@@ -94,7 +94,7 @@ fn parse_json(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
     text_str
         .parse::<JsonValue>()
         .map(json_to_expr)
-        .map_err(|e| LmError::CustomError(format!("JSON parse error: {}", e)))
+        .map_err(|e| LmError::CustomError(format!("JSON parse error: {e}")))
 }
 
 fn json_to_expr(val: JsonValue) -> Expression {
@@ -238,7 +238,7 @@ pub fn parse_command_output(
             let cols = lines[0]
                 .split_whitespace()
                 .enumerate()
-                .map(|(i, _)| format!("C{}", i))
+                .map(|(i, _)| format!("C{i}"))
                 .collect();
             (&lines[..], cols)
         }
@@ -291,17 +291,17 @@ fn parse_csv(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression
 
     let headers = rdr
         .headers()
-        .map_err(|e| LmError::CustomError(format!("CSV header error: {}", e)))?
+        .map_err(|e| LmError::CustomError(format!("CSV header error: {e}")))?
         .iter()
         .map(|s| s.to_string())
         .collect::<Vec<_>>();
 
     let mut result = Vec::new();
     for record in rdr.records() {
-        let record = record.map_err(|e| LmError::CustomError(format!("CSV parse error: {}", e)))?;
+        let record = record.map_err(|e| LmError::CustomError(format!("CSV parse error: {e}")))?;
         let mut row = BTreeMap::new();
         for (i, value) in record.iter().enumerate() {
-            let key = headers.get(i).cloned().unwrap_or_else(|| format!("C{}", i));
+            let key = headers.get(i).cloned().unwrap_or_else(|| format!("C{i}"));
             row.insert(key, Expression::String(value.to_string()));
         }
         result.push(Expression::from(row));
@@ -382,12 +382,12 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
             // 处理嵌套表
             for (table_name, table_expr) in &tables {
                 let full_table_name = match table_prefix {
-                    Some(prefix) => format!("{}.{}", prefix, table_name),
+                    Some(prefix) => format!("{prefix}.{table_name}"),
                     None => table_name.clone(),
                 };
 
                 // 添加表头
-                output.push(format!("\n[{}]", full_table_name));
+                output.push(format!("\n[{full_table_name}]"));
 
                 // 递归处理子表
                 let table_content = expr_to_toml_string(table_expr, Some(&full_table_name));
@@ -429,7 +429,7 @@ fn expr_to_json_string(expr: &Expression) -> String {
         // Expression::Boolean(b) => b.to_string(),
         // Expression::Integer(i) => i.to_string(),
         // Expression::Float(f) => f.to_string(),
-        Expression::String(s) => format!("\"{}\"", s),
+        Expression::String(s) => format!("\"{s}\""),
         Expression::List(list) => {
             let items: Vec<String> = list.iter().map(expr_to_json_string).collect();
             format!("[{}]", items.join(","))

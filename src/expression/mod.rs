@@ -197,9 +197,9 @@ impl FileSize {
 
         // 格式化输出
         if *unit_str == "B" {
-            format!("{}", scaled_size)
+            format!("{scaled_size}")
         } else if *unit_str == "K" {
-            format!("{}K", scaled_size)
+            format!("{scaled_size}K")
         } else {
             let frac_size = (size >> (shift - 10)) & 1023; // 计算小数部分
             format!(

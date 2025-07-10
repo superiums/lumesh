@@ -245,9 +245,9 @@ fn debug(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
-            print!("{:?} ", x)
+            print!("{x:?} ")
         } else {
-            println!("{:?}", x)
+            println!("{x:?}")
         }
     }
     Ok(Expression::None)
@@ -259,9 +259,9 @@ fn tap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, crat
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
-            write!(&mut stdout, "{} ", x)?;
+            write!(&mut stdout, "{x} ")?;
         } else {
-            writeln!(&mut stdout, "{}", x)?;
+            writeln!(&mut stdout, "{x}")?;
         }
         result.push(x)
     }
@@ -276,9 +276,9 @@ fn print(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, cr
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
         let x = arg.eval(env)?;
-        write!(&mut stdout, "{} ", x)?;
+        write!(&mut stdout, "{x} ")?;
     }
-    writeln!(&mut stdout, "")?;
+    writeln!(&mut stdout)?;
     stdout.flush()?;
     Ok(Expression::None)
 }
@@ -287,7 +287,7 @@ fn println(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
     for arg in args.iter() {
         let x = arg.eval(env)?;
         // println!("{}", x);
-        writeln!(&mut stdout, "{}", x)?;
+        writeln!(&mut stdout, "{x}")?;
     }
     stdout.flush()?;
     Ok(Expression::None)
@@ -309,9 +309,9 @@ fn eprint(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, c
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
         if i < args.len() - 1 {
-            write!(&mut stderr, "\x1b[38;5;9m{} \x1b[m\x1b[0m", x)?;
+            write!(&mut stderr, "\x1b[38;5;9m{x} \x1b[m\x1b[0m")?;
         } else {
-            writeln!(&mut stderr, "\x1b[38;5;9m{}\x1b[m\x1b[0m", x)?;
+            writeln!(&mut stderr, "\x1b[38;5;9m{x}\x1b[m\x1b[0m")?;
         }
     }
     stderr.flush()?;
@@ -321,7 +321,7 @@ fn eprintln(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     let mut stderr = std::io::stderr().lock();
     for arg in args.iter() {
         let x = arg.eval(env)?;
-        writeln!(&mut stderr, "\x1b[38;5;9m{}\x1b[m\x1b[0m", x)?;
+        writeln!(&mut stderr, "\x1b[38;5;9m{x}\x1b[m\x1b[0m")?;
     }
     stderr.flush()?;
     Ok(Expression::None)
@@ -369,8 +369,7 @@ pub fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
                 Ok(Expression::from(result))
             } else {
                 Err(LmError::CustomError(format!(
-                    "index {} out of bounds for {:?}",
-                    idx, arr
+                    "index {idx} out of bounds for {arr:?}"
                 )))
             }
         }
@@ -380,14 +379,12 @@ pub fn insert(args: &Vec<Expression>, env: &mut Environment) -> Result<Expressio
                 Ok(Expression::String(s.clone()))
             } else {
                 Err(LmError::CustomError(format!(
-                    "index {} out of bounds for {:?}",
-                    idx, arr
+                    "index {idx} out of bounds for {arr:?}"
                 )))
             }
         }
         _ => Err(LmError::CustomError(format!(
-            "cannot insert {:?} into {:?} with index {:?}",
-            val, arr, idx
+            "cannot insert {val:?} into {arr:?} with index {idx:?}"
         ))),
     }
 
@@ -435,7 +432,7 @@ fn exec_str(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     match &args[0] {
         Expression::String(cmd) => {
             if !cmd.is_empty() {
-                println!("\n  >> Excuting: \x1b[38;5;208m\x1b[1m{}\x1b[m\x1b[0m", cmd);
+                println!("\n  >> Excuting: \x1b[38;5;208m\x1b[1m{cmd}\x1b[m\x1b[0m");
                 parse_and_eval(cmd, env);
             }
             Ok(Expression::None)
@@ -665,30 +662,25 @@ fn get(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
                 }
                 _ => {
                     return Err(LmError::CustomError(format!(
-                        "path index '{}' is not valid for List",
-                        segment
+                        "path index '{segment}' is not valid for List"
                     )));
                 }
             },
             Expression::Range(m, step) => match segment.parse::<usize>() {
                 Ok(key) => {
                     current = m
-                        .step_by(step)
-                        .skip(key)
-                        .next()
+                        .step_by(step).nth(key)
                         .map(Expression::Integer)
                         .ok_or_else(|| {
                             LmError::CustomError(format!(
-                                "path index '{}' not found in Range",
-                                segment
+                                "path index '{segment}' not found in Range"
                             ))
                         })?
                         .clone();
                 }
                 _ => {
                     return Err(LmError::CustomError(format!(
-                        "path index '{}' is not valid for Range",
-                        segment
+                        "path index '{segment}' is not valid for Range"
                     )));
                 }
             },

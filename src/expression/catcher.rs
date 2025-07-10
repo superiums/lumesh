@@ -38,11 +38,11 @@ pub fn catch_error(
         },
         CatchType::Ignore => Ok(Expression::None),
         CatchType::PrintStd => {
-            println!("{:?}", e);
+            println!("{e:?}");
             Ok(Expression::None)
         }
         CatchType::PrintErr => {
-            eprintln!("\x1b[38;5;9m{:?}\x1b[0m", e);
+            eprintln!("\x1b[38;5;9m{e:?}\x1b[0m");
             Ok(Expression::None)
         }
         CatchType::PrintOver => Ok(Expression::from(b_tree_map! {

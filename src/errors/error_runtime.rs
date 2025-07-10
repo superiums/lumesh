@@ -113,7 +113,7 @@ impl RuntimeError {
     ) -> Self {
         Self::new(
             RuntimeErrorKind::IoDetailed {
-                operation: operation.into(),
+                operation,
                 message: io_err.to_string(),
                 kind: io_err.kind(),
                 os_error: io_err.raw_os_error(),
@@ -147,7 +147,7 @@ impl std::fmt::Display for RuntimeError {
             BLUE_START,
             self.depth,
             RESET,
-            self.context.to_string(),
+            self.context,
         )?;
         writeln!(
             f,

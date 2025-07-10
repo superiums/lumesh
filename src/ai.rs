@@ -110,7 +110,7 @@ impl AIClient for MockAIClient {
                 Ok("No suggestion".to_string())
             }
             Err(e) => {
-                eprintln!("JSON parse error: {}", e);
+                eprintln!("JSON parse error: {e}");
                 Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     "Invalid JSON response",
@@ -153,7 +153,7 @@ impl AIClient for MockAIClient {
                 Ok("No message".to_string())
             }
             Err(e) => {
-                eprintln!("JSON parse error: {}", e);
+                eprintln!("JSON parse error: {e}");
                 Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     "Invalid JSON response",

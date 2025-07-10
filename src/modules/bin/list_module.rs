@@ -461,8 +461,7 @@ fn group_by(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
                         .push(item.clone());
                 } else {
                     return Err(LmError::CustomError(format!(
-                        "no such key found in map: `{}`",
-                        k
+                        "no such key found in map: `{k}`"
                     )));
                 }
             }
@@ -785,7 +784,7 @@ fn contains(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression,
     let list = get_list_arg(args[1].eval(env)?)?;
 
     Ok(Expression::Boolean(
-        list.as_ref().iter().any(|x| *x == item),
+        list.as_ref().contains(&item),
     ))
 }
 
@@ -948,14 +947,12 @@ fn remove(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
             .cloned()
             .collect::<Vec<_>>();
         Ok(Expression::from(new_list))
+    } else if let Some(pos) = list.iter().position(|x| *x == item) {
+        let mut new_list = list.as_ref().clone();
+        new_list.remove(pos);
+        Ok(Expression::from(new_list))
     } else {
-        if let Some(pos) = list.iter().position(|x| *x == item) {
-            let mut new_list = list.as_ref().clone();
-            new_list.remove(pos);
-            Ok(Expression::from(new_list))
-        } else {
-            Ok(Expression::List(list))
-        }
+        Ok(Expression::List(list))
     }
 }
 

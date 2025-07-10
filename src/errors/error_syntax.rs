@@ -311,10 +311,10 @@ impl fmt::Display for SyntaxError {
                 found,
                 hint,
             } => {
-                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
-                write!(f, "expect {}{}{}", YELLOW_START, expected, RESET)?;
+                write!(f, "{RED_START}{BOLD}syntax error{RESET}: ")?;
+                write!(f, "expect {YELLOW_START}{expected}{RESET}")?;
                 if let Some(found) = found {
-                    write!(f, ", found {}{}{}", RED2_START, found, RESET)?;
+                    write!(f, ", found {RED2_START}{found}{RESET}")?;
                 }
                 writeln!(f)?;
                 // 使用增强的错误显示
@@ -322,7 +322,7 @@ impl fmt::Display for SyntaxError {
 
                 // print_error_lines(&self.source, *input, f, 72)?;
                 if let Some(hint) = hint {
-                    writeln!(f, "    hint: {}", hint)?;
+                    writeln!(f, "    hint: {hint}")?;
                 }
                 Ok(())
             }
@@ -333,11 +333,10 @@ impl fmt::Display for SyntaxError {
                 Ok(())
             }
             SyntaxErrorKind::ExpectedChar { expected, at } => {
-                write!(f, "{}{}syntax error{}: ", RED_START, BOLD, RESET)?;
+                write!(f, "{RED_START}{BOLD}syntax error{RESET}: ")?;
                 write!(
                     f,
-                    "expect character {}{:?}{}",
-                    YELLOW_START, expected, RESET
+                    "expect character {YELLOW_START}{expected:?}{RESET}"
                 )?;
                 writeln!(f)?;
                 if let Some(at) = at {
@@ -347,52 +346,50 @@ impl fmt::Display for SyntaxError {
                 Ok(())
             }
             SyntaxErrorKind::NomError { kind, at, cause } => {
-                write!(f, "{}{}nom syntax error{}: ", RED_START, BOLD, RESET)?;
-                writeln!(f, "`{:?}`", kind)?;
+                write!(f, "{RED_START}{BOLD}nom syntax error{RESET}: ")?;
+                writeln!(f, "`{kind:?}`")?;
                 if let Some(at) = at {
                     print_error_lines(&self.source, *at, f, 72)?;
                 }
                 if let Some(cause) = cause {
-                    writeln!(f, "Caused by: {}", cause)?;
+                    writeln!(f, "Caused by: {cause}")?;
                 }
                 Ok(())
             }
             SyntaxErrorKind::InternalError(s) => {
                 writeln!(
                     f,
-                    "{}{}internal syntax error: {}{}",
-                    RED_START, BOLD, s, RESET
+                    "{RED_START}{BOLD}internal syntax error: {s}{RESET}"
                 )
             }
             SyntaxErrorKind::CustomError(s, at) => {
-                writeln!(f, "{}{}syntax error: {}{}", RED_START, BOLD, s, RESET)?;
+                writeln!(f, "{RED_START}{BOLD}syntax error: {s}{RESET}")?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }
             SyntaxErrorKind::NoExpression => {
-                writeln!(f, "{}{}no expression recognized{}", RED_START, BOLD, RESET)
+                writeln!(f, "{RED_START}{BOLD}no expression recognized{RESET}")
             }
             SyntaxErrorKind::UnknownOperator(op, at) => {
-                writeln!(f, "{}{}unknown operator {op:?}{}", RED_START, BOLD, RESET)?;
+                writeln!(f, "{RED_START}{BOLD}unknown operator {op:?}{RESET}")?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }
             SyntaxErrorKind::UnExpectedToken(op, at) => {
-                writeln!(f, "{}{}unexpected token {op:?}{}", RED_START, BOLD, RESET)?;
+                writeln!(f, "{RED_START}{BOLD}unexpected token {op:?}{RESET}")?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }
             SyntaxErrorKind::InvalidEscapeSequence(op, at) => {
                 writeln!(
                     f,
-                    "{}{}invalid escape sequence {op:?}{}",
-                    RED_START, BOLD, RESET
+                    "{RED_START}{BOLD}invalid escape sequence {op:?}{RESET}"
                 )?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }
             SyntaxErrorKind::PrecedenceTooLow(at) => {
-                writeln!(f, "{}{}precedence too low {}", RED_START, BOLD, RESET)?;
+                writeln!(f, "{RED_START}{BOLD}precedence too low {RESET}")?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }
@@ -403,13 +400,12 @@ impl fmt::Display for SyntaxError {
             } => {
                 writeln!(
                     f,
-                    "{}{}arguments mismatch for function `{name}`: expected {expected}, found {received} {}",
-                    RED_START, BOLD, RESET
+                    "{RED_START}{BOLD}arguments mismatch for function `{name}`: expected {expected}, found {received} {RESET}"
                 )
             }
             SyntaxErrorKind::RecursionDepth { input, depth } => {
-                write!(f, "{}{}max recursion reached{}: ", RED_START, BOLD, RESET)?;
-                write!(f, "depth: {}{}{}", YELLOW_START, depth, RESET)?;
+                write!(f, "{RED_START}{BOLD}max recursion reached{RESET}: ")?;
+                write!(f, "depth: {YELLOW_START}{depth}{RESET}")?;
 
                 writeln!(f)?;
                 print_error_lines(&self.source, *input, f, 72)?;
@@ -426,13 +422,13 @@ impl fmt::Display for SyntaxError {
 // ============== 彩色显示辅助函数 ==============
 
 fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fmt::Result {
-    write!(f, "{}{}token error{}: ", RED_START, BOLD, RESET)?;
+    write!(f, "{RED_START}{BOLD}token error{RESET}: ")?;
     match err {
         Diagnostic::Valid => Ok(()),
         Diagnostic::InvalidUnicode(ranges) => {
             for &at in ranges.iter() {
                 let escape = at.to_str(string).trim();
-                writeln!(f, "invalid unicode sequence `{}`", escape)?;
+                writeln!(f, "invalid unicode sequence `{escape}`")?;
                 print_error_lines(string, at, f, 72)?;
             }
             Ok(())
@@ -440,7 +436,7 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
         Diagnostic::InvalidStringEscapes(ranges) => {
             for &at in ranges.iter() {
                 let escape = at.to_str(string).trim();
-                writeln!(f, "invalid string escape sequence `{}`", escape)?;
+                writeln!(f, "invalid string escape sequence `{escape}`")?;
                 print_error_lines(string, at, f, 72)?;
             }
             Ok(())
@@ -448,14 +444,14 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
         Diagnostic::InvalidColorCode(ranges) => {
             for &at in ranges.iter() {
                 let escape = at.to_str(string).trim();
-                writeln!(f, "invalid color code sequence `{}`", escape)?;
+                writeln!(f, "invalid color code sequence `{escape}`")?;
                 print_error_lines(string, at, f, 72)?;
             }
             Ok(())
         }
         &Diagnostic::InvalidNumber(at) => {
             let num = at.to_str(string).trim();
-            writeln!(f, "invalid number `{}`", num)?;
+            writeln!(f, "invalid number `{num}`")?;
             print_error_lines(string, at, f, 72)
         }
         &Diagnostic::IllegalChar(at) => {
@@ -503,7 +499,7 @@ fn print_error_lines(
     let context_start = error_line_num.saturating_sub(3);
     let context_end = (error_line_num + 3).min(all_lines.len());
 
-    writeln!(f, "     {} ▏{}", BLUE_START, RESET)?;
+    writeln!(f, "     {BLUE_START} ▏{RESET}")?;
 
     // 显示上下文行
     for (i, line) in all_lines[context_start..context_end].iter().enumerate() {
@@ -524,8 +520,7 @@ fn print_error_lines(
 
             write!(
                 f,
-                "{}{:>5}{} {}▏{} ",
-                RED_START, line_num, RESET, BLUE_START, RESET
+                "{RED_START}{line_num:>5}{RESET} {BLUE_START}▏{RESET} "
             )?;
             if safe_start > 0 {
                 write!(f, "{}", &line[..safe_start])?;
@@ -541,27 +536,26 @@ fn print_error_lines(
 
             // 添加指示箭头（只有在有错误内容时才显示）
             if safe_end >= safe_start {
-                write!(f, "      {}▏{} ", BLUE_START, RESET)?;
+                write!(f, "      {BLUE_START}▏{RESET} ")?;
                 for _ in 0..safe_start {
                     write!(f, " ")?;
                 }
-                write!(f, "{}{}\x1b[5m^", RED_START, BOLD)?;
+                write!(f, "{RED_START}{BOLD}\x1b[5m^")?;
                 for _ in 1..(safe_end - safe_start) {
                     write!(f, "~")?;
                 }
-                writeln!(f, "{}", RESET)?;
+                writeln!(f, "{RESET}")?;
             }
         } else {
             // 普通上下文行
             writeln!(
                 f,
-                "{}{:>5} ▏{} {}{}{}",
-                BLUE_START, line_num, RESET, DIM_START, line, RESET
+                "{BLUE_START}{line_num:>5} ▏{RESET} {DIM_START}{line}{RESET}"
             )?;
         }
     }
 
-    writeln!(f, "     {} ▏{}", BLUE_START, RESET)?;
+    writeln!(f, "     {BLUE_START} ▏{RESET}")?;
 
     // 显示错误位置信息
     writeln!(

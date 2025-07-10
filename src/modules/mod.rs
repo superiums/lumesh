@@ -30,24 +30,24 @@ pub fn get_builtin_tips() -> HashSet<String> {
     for (key, item) in get_builtin_map().iter() {
         match item {
             Expression::HMap(m) => {
-                tips.insert(format!("{}. \n{}", key, item));
+                tips.insert(format!("{key}. \n{item}"));
                 for (k, v) in m.iter() {
                     // dbg!(&k, &v.to_string(), v.type_name());
                     match v {
                         Expression::Builtin(b) => {
                             // dbg!(&b.name, &b.hint);
                             match b.hint.is_empty() {
-                                true => tips.insert(format!("{}.{}()", key, k)),
+                                true => tips.insert(format!("{key}.{k}()")),
                                 false => tips.insert(format!("{}.{} {}", key, k, b.hint)),
                             };
                         }
                         Expression::HMap(mm) => {
                             for (mk, _) in mm.iter() {
-                                tips.insert(format!("{}.{}.{}", key, k, mk));
+                                tips.insert(format!("{key}.{k}.{mk}"));
                             }
                         }
                         _ => {
-                            tips.insert(format!("{}.{}", key, k));
+                            tips.insert(format!("{key}.{k}"));
                         }
                     }
                 }
@@ -55,7 +55,7 @@ pub fn get_builtin_tips() -> HashSet<String> {
             Expression::Map(m) => {
                 // tips.insert(format!("{}. \n{}", key, item));
                 for (k, _) in m.iter() {
-                    tips.insert(format!("{}.{}", key, k));
+                    tips.insert(format!("{key}.{k}"));
                 }
             }
             _ => {
@@ -74,13 +74,10 @@ pub fn get_builtin_symbos() -> HashSet<String> {
             Expression::HMap(m) => {
                 for (k, v) in m.iter() {
                     tips.insert(k.to_owned());
-                    match v {
-                        Expression::HMap(mm) => {
-                            for (mk, _) in mm.iter() {
-                                tips.insert(mk.to_owned());
-                            }
+                    if let Expression::HMap(mm) = v {
+                        for (mk, _) in mm.iter() {
+                            tips.insert(mk.to_owned());
                         }
-                        _ => {}
                     }
                 }
             }

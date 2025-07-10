@@ -35,7 +35,9 @@ impl Expression {
         // dbg!(&func, &func_eval, &func_eval.type_name());
 
         // 分派到具体类型处理
-        let result = match func_eval {
+        
+
+        match func_eval {
             // 顶级builtin，函数别名
             Expression::Symbol(cmd_sym) => {
                 self.eval_symbo(cmd_sym, args, false, state, env, depth + 1)
@@ -214,7 +216,7 @@ impl Expression {
                         }
 
                         // 创建新作用域并执行
-                        let mut new_env = match state.contains(State::IN_DECO) {
+                        let new_env = match state.contains(State::IN_DECO) {
                             true => env,
                             _ => &mut env.fork(),
                         };
@@ -243,7 +245,7 @@ impl Expression {
                             new_env.define(param, arg);
                         }
 
-                        match body.as_ref().eval_mut(state, &mut new_env, depth + 1) {
+                        match body.as_ref().eval_mut(state, new_env, depth + 1) {
                             Ok(v) => Ok(v),
                             // 捕获函数体内的return
                             Err(RuntimeError {
@@ -262,9 +264,7 @@ impl Expression {
                 self.clone(),
                 depth,
             )),
-        };
-
-        result
+        }
     }
 
     /// 执行
@@ -289,9 +289,9 @@ impl Expression {
             Expression::Builtin(bti) => self.eval_builtin(&bti, args, state, env, depth),
             Expression::String(cmdx_str) => {
                 // 空命令
-                if cmdx_str == "" || cmdx_str == ":" {
+                if cmdx_str.is_empty() || cmdx_str == ":" {
                     if args.is_empty() {
-                        return Ok(Expression::None);
+                        Ok(Expression::None)
                     } else {
                         let aa = args.split_at(1);
                         handle_command(
@@ -313,7 +313,7 @@ impl Expression {
                             .map(|v| Expression::from(v.to_string()))
                             .collect::<Vec<_>>(),
                     );
-                    new_vec.extend_from_slice(&args);
+                    new_vec.extend_from_slice(args);
                     handle_command(
                         self,
                         &cmdx_vec.first().unwrap().to_string(),
@@ -332,7 +332,7 @@ impl Expression {
             Expression::Command(cmd_sym, cmd_args) => {
                 let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
                 new_vec.extend_from_slice(&cmd_args);
-                new_vec.extend_from_slice(&args);
+                new_vec.extend_from_slice(args);
                 handle_command(self, &cmd_sym.to_string(), &new_vec, state, env, depth + 1)
             }
             other => match args.is_empty() {
@@ -373,7 +373,7 @@ impl Expression {
                     Expression::Command(cmd_name, cmd_args) if is_cmd_mode => {
                         let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
                         new_vec.extend_from_slice(&cmd_args);
-                        new_vec.extend_from_slice(&args);
+                        new_vec.extend_from_slice(args);
                         handle_command(
                             self,
                             &cmd_name.as_ref().to_string(),
@@ -385,7 +385,7 @@ impl Expression {
                     }
                     // alias a=ls
                     Expression::Symbol(cmd_str) | Expression::String(cmd_str) if is_cmd_mode => {
-                        handle_command(self, &cmd_str, args.as_ref(), state, env, depth + 1)
+                        handle_command(self, &cmd_str, args, state, env, depth + 1)
                     }
                     // alias a=fmt.red()
                     Expression::Apply(..) if !is_cmd_mode => cmd_alias
@@ -475,7 +475,7 @@ impl Expression {
                 appened_args.push(p);
                 (bti.body)(&appened_args, env)
             }
-            _ => (bti.body)(args.as_ref(), env),
+            _ => (bti.body)(args, env),
         };
 
         rst.map_err(|e| {

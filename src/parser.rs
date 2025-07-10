@@ -173,7 +173,7 @@ impl PrattParser {
                                 operator.into(),
                                 Rc::new(lhs),
                                 Rc::new(rhs),
-                                exprs.and_then(|st| Some(Rc::new(st))),
+                                exprs.map(Rc::new),
                             )
                         }
                         // ".." => lhs = Expression::BinaryOp("..".into(), Rc::new(lhs), Rc::new(rhs)),
@@ -603,7 +603,7 @@ impl PrattParser {
                         Err(SyntaxErrorKind::failure(
                             input.get_str_slice(),
                             "symbol",
-                            Some(format!("{:?}", lhs)),
+                            Some(format!("{lhs:?}")),
                             Some("only assign to symbol allowed"),
                         ))
                     }
@@ -862,7 +862,7 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
                     terminated(text(","), opt(kind(TokenKind::LineBreak))),
                     parse_expr,
                 ),
-                |s| Expression::from(s),
+                Expression::from,
             ),
             opt(alt((
                 map(text(","), |_| {}),
@@ -1148,7 +1148,7 @@ fn kind(kind: TokenKind) -> impl Fn(Tokens<'_>) -> IResult<Tokens<'_>, StrSlice,
     move |input: Tokens<'_>| match input.first() {
         Some(&token) if token.kind == kind => Ok((input.skip_n(1), token.range)),
         _ => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
-            format!("expect token kind: {:?}", kind),
+            format!("expect token kind: {kind:?}"),
             input.get_str_slice(),
         ))),
     }
@@ -1159,7 +1159,7 @@ fn text<'a>(text: &'a str) -> impl Fn(Tokens<'a>) -> IResult<Tokens<'a>, Token, 
     move |input: Tokens<'a>| match input.first() {
         Some(&token) if token.text(input) == text => Ok((input.skip_n(1), token)),
         _ => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
-            format!("expect {:?}", text),
+            format!("expect {text:?}"),
             input.get_str_slice(),
         ))), // _ => Err(nom::Err::Error(SyntaxErrorKind::Expected {
              //     expected: "some text",
@@ -1269,9 +1269,9 @@ fn parse_string_common(
                     input.get_str_slice(),
                 ))
             })?;
-            return Ok((input, r.into()));
+            Ok((input, r.into()))
         } else {
-            return Ok((input, ansi_escaped.into()));
+            Ok((input, ansi_escaped))
         }
 
         // 返回解析结果
@@ -1380,7 +1380,7 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;
     let num = num.to_str(input.str).parse::<Int>().map_err(|e| {
-        SyntaxErrorKind::failure(num, "Integer", Some(format!("error: {}", e)), None)
+        SyntaxErrorKind::failure(num, "Integer", Some(format!("error: {e}")), None)
     })?;
     Ok((input, Expression::Integer(num)))
 }
@@ -1391,7 +1391,7 @@ fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
         SyntaxErrorKind::failure(
             num,
             "float",
-            Some(format!("error: {}", e)),
+            Some(format!("error: {e}")),
             Some("valid floats can be written like 1.0 or 5.23"),
         )
     })?;

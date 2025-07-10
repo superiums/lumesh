@@ -601,8 +601,7 @@ fn format(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, L
     let placeholders = template.matches("{}").count();
     if args.len() - 1 < placeholders {
         return Err(LmError::CustomError(format!(
-            "format requires {} arguments for {} placeholders",
-            placeholders, placeholders
+            "format requires {placeholders} arguments for {placeholders} placeholders"
         )));
     }
 
@@ -657,7 +656,7 @@ fn pad_start_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmE
     }
     let pad_len = len - s.len();
     let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
-    Ok(Expression::String(format!("{}{}", padding, s)))
+    Ok(Expression::String(format!("{padding}{s}")))
 }
 
 fn pad_end_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmError> {
@@ -666,7 +665,7 @@ fn pad_end_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmErr
     }
     let pad_len = len - s.len();
     let padding: String = std::iter::repeat_n(pad_ch, pad_len).collect();
-    Ok(Expression::String(format!("{}{}", s, padding)))
+    Ok(Expression::String(format!("{s}{padding}")))
 }
 
 fn center_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmError> {
@@ -675,7 +674,7 @@ fn center_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, LmErro
     let right_pad = total_pad - left_pad;
     let left: String = std::iter::repeat_n(pad_ch, left_pad).collect();
     let right: String = std::iter::repeat_n(pad_ch, right_pad).collect();
-    Ok(Expression::String(format!("{}{}{}", left, s, right)))
+    Ok(Expression::String(format!("{left}{s}{right}")))
 }
 
 fn wrap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmError> {
@@ -685,8 +684,7 @@ fn wrap(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmE
             Ok(textwrap::fill(&args[1].eval_in_assign(env)?.to_string(), columns as usize).into())
         }
         otherwise => Err(LmError::CustomError(format!(
-            "expected number of columns in wrap, but got `{}`",
-            otherwise
+            "expected number of columns in wrap, but got `{otherwise}`"
         ))),
     }
 }

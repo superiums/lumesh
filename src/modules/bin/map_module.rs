@@ -129,8 +129,7 @@ fn set_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
                 Expression::Map(Rc::new(new_map))
             } else {
                 return Err(LmError::CustomError(format!(
-                    "key '{}' not found in map",
-                    key_str
+                    "key '{key_str}' not found in map"
                 )));
             }
         }
@@ -141,8 +140,7 @@ fn set_map(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, 
                 Expression::HMap(Rc::new(new_map))
             } else {
                 return Err(LmError::CustomError(format!(
-                    "key '{}' not found in map",
-                    key_str
+                    "key '{key_str}' not found in map"
                 )));
             }
         }

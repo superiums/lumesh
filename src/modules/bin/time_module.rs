@@ -138,8 +138,7 @@ fn parse_datetime_arg(arg: &Expression, env: &mut Environment) -> Result<NaiveDa
                 return Ok(Utc.timestamp_opt(ts, 0).unwrap().naive_utc());
             }
             Err(LmError::CustomError(format!(
-                "Unrecognized datetime format: {}",
-                s
+                "Unrecognized datetime format: {s}"
             )))
         }
         Expression::Integer(ts) => Ok(Utc.timestamp_opt(ts, 0).unwrap().naive_utc()),
@@ -168,11 +167,10 @@ fn get_map_value(map: &BTreeMap<String, Expression>, key: &str) -> Result<Option
         Some(Expression::String(s)) => s
             .parse()
             .map(Some)
-            .map_err(|_| LmError::CustomError(format!("Invalid integer value for {}", key))),
+            .map_err(|_| LmError::CustomError(format!("Invalid integer value for {key}"))),
         None => Ok(None),
         _ => Err(LmError::CustomError(format!(
-            "Expected integer for {}",
-            key
+            "Expected integer for {key}"
         ))),
     }
 }
@@ -193,8 +191,7 @@ fn parse_duration_string(s: &str) -> Result<Duration, LmError> {
                 'd' => 24 * 60 * 60 * 1_000,
                 _ => {
                     return Err(LmError::CustomError(format!(
-                        "Unknown duration unit: {}",
-                        c
+                        "Unknown duration unit: {c}"
                     )));
                 }
             };
@@ -222,8 +219,7 @@ fn sleep(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, Lm
         Expression::String(s) => parse_duration_string(&s)?,
         otherwise => {
             return Err(LmError::CustomError(format!(
-                "expected positive number or duration string, got {}",
-                otherwise
+                "expected positive number or duration string, got {otherwise}"
             )));
         }
     };
@@ -335,8 +331,7 @@ pub fn parse_time(args: &Vec<Expression>, env: &mut Environment) -> Result<Expre
     }
 
     Err(LmError::CustomError(format!(
-        "Failed to parse datetime '{}' with format '{}'",
-        datetime_str, format_str
+        "Failed to parse datetime '{datetime_str}' with format '{format_str}'"
     )))
 }
 
@@ -354,7 +349,7 @@ fn add(args: &Vec<Expression>, env: &mut Environment) -> Result<Expression, LmEr
     let duration = if let Expression::String(s) = args[0].eval(env)? {
         let std_duration = parse_duration_string(&s)?;
         ChronoDuration::from_std(std_duration)
-            .map_err(|e| LmError::CustomError(format!("Invalid duration: {}", e)))?
+            .map_err(|e| LmError::CustomError(format!("Invalid duration: {e}")))?
     } else {
         // 兼容旧版：支持单独的时分秒等参数
         let mut duration = ChronoDuration::zero();

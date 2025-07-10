@@ -9,9 +9,9 @@ use std::rc::Rc;
 impl fmt::Display for DestructurePattern {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Rest(s) => write!(f, "...{}", s),
-            Self::Identifier(s) => write!(f, "{}", s),
-            Self::Renamed((k, n)) => write!(f, "{}:{}", k, n),
+            Self::Rest(s) => write!(f, "...{s}"),
+            Self::Identifier(s) => write!(f, "{s}"),
+            Self::Renamed((k, n)) => write!(f, "{k}:{n}"),
         }
     }
 }
@@ -59,12 +59,12 @@ impl Expression {
     fn fmt_display_indent(&self, f: &mut fmt::Formatter, indent: usize) -> fmt::Result {
         match self {
             // 基础类型 - 无需缩进
-            Self::Symbol(name) => write!(f, "{}", name),
-            Self::Variable(name) => write!(f, "${}", name),
-            Self::Integer(i) => write!(f, "{}", i),
-            Self::Float(n) => write!(f, "{}", n),
-            Self::String(s) => write!(f, "{}", s),
-            Self::StringTemplate(s) => write!(f, "`{}`", s),
+            Self::Symbol(name) => write!(f, "{name}"),
+            Self::Variable(name) => write!(f, "${name}"),
+            Self::Integer(i) => write!(f, "{i}"),
+            Self::Float(n) => write!(f, "{n}"),
+            Self::String(s) => write!(f, "{s}"),
+            Self::StringTemplate(s) => write!(f, "`{s}`"),
             Self::Boolean(b) => write!(f, "{}", if *b { "True" } else { "False" }),
             Self::Bytes(b) => write!(f, "b\"{}\"", String::from_utf8_lossy(b)),
             Self::DateTime(n) => write!(f, "{}", n.format("%Y-%m-%d %H:%M:%S")),
@@ -82,7 +82,7 @@ impl Expression {
                     if i > 0 {
                         write!(f, ", ")?;
                     }
-                    write!(f, "{}", p)?;
+                    write!(f, "{p}")?;
                 }
                 write!(f, " = ")?;
                 expr.fmt_display_indent(f, 0)
@@ -107,7 +107,7 @@ impl Expression {
             Self::If(cond, true_expr, false_expr) => {
                 write!(f, "{}if ", idt(indent))?;
                 cond.fmt_display_indent(f, 0)?;
-                write!(f, " {{\n")?;
+                writeln!(f, " {{")?;
                 true_expr.fmt_display_indent(f, indent + 1)?;
                 write!(f, "\n{}}} else {{\n", idt(indent))?;
                 false_expr.fmt_display_indent(f, indent + 1)?;
@@ -117,13 +117,13 @@ impl Expression {
             Self::While(cond, body) => {
                 write!(f, "{}while ", idt(indent))?;
                 cond.fmt_display_indent(f, 0)?;
-                write!(f, " {{\n")?;
+                writeln!(f, " {{")?;
                 body.fmt_display_indent(f, indent + 1)?;
                 write!(f, "\n{}}}", idt(indent))
             }
 
             Self::Loop(body) => {
-                write!(f, "{}loop {{\n", idt(indent))?;
+                writeln!(f, "{}loop {{", idt(indent))?;
                 body.fmt_display_indent(f, indent + 1)?;
                 write!(f, "\n{}}}", idt(indent))
             }
@@ -131,7 +131,7 @@ impl Expression {
             Self::For(name, list, body) => {
                 write!(f, "{}for {} in ", idt(indent), name)?;
                 list.fmt_display_indent(f, 0)?;
-                write!(f, " {{\n")?;
+                writeln!(f, " {{")?;
                 body.fmt_display_indent(f, indent + 1)?;
                 write!(f, "\n{}}}", idt(indent))
             }
@@ -139,7 +139,7 @@ impl Expression {
             Self::Match(value, branches) => {
                 write!(f, "{}match ", idt(indent))?;
                 value.fmt_display_indent(f, 0)?;
-                write!(f, " {{\n")?;
+                writeln!(f, " {{")?;
                 for (pat, expr) in branches.iter() {
                     write!(
                         f,
@@ -151,7 +151,7 @@ impl Expression {
                             .join(", ")
                     )?;
                     expr.fmt_display_indent(f, 0)?;
-                    write!(f, ",\n")?;
+                    writeln!(f, ",")?;
                 }
                 write!(f, "{}}}", idt(indent))
             }
@@ -160,7 +160,7 @@ impl Expression {
             Self::Lambda(params, body) => {
                 write!(f, "{}({}) -> ", idt(indent), params.join(", "))?;
                 if matches!(body.as_ref(), Self::Do(_)) {
-                    write!(f, "\n")?;
+                    writeln!(f)?;
                     body.fmt_display_indent(f, indent + 1)
                 } else {
                     body.fmt_display_indent(f, 0)
@@ -173,7 +173,7 @@ impl Expression {
                     if i > 0 {
                         write!(f, ", ")?;
                     }
-                    write!(f, "{}", param)?;
+                    write!(f, "{param}")?;
                     if let Some(def) = default {
                         write!(f, " = ")?;
                         def.fmt_display_indent(f, 0)?;
@@ -183,19 +183,19 @@ impl Expression {
                     if !params.is_empty() {
                         write!(f, ", ")?;
                     }
-                    write!(f, "...{}", coll)?;
+                    write!(f, "...{coll}")?;
                 }
-                write!(f, ") {{\n")?;
+                writeln!(f, ") {{")?;
                 body.fmt_display_indent(f, indent + 1)?;
                 write!(f, "\n{}}}", idt(indent))
             }
 
             // 代码块
             Self::Do(exprs) => {
-                write!(f, "{}{{\n", idt(indent))?;
+                writeln!(f, "{}{{", idt(indent))?;
                 for expr in exprs.iter() {
                     expr.fmt_display_indent(f, indent + 1)?;
-                    write!(f, "\n")?;
+                    writeln!(f)?;
                 }
                 write!(f, "{}}}", idt(indent))
             }
@@ -218,7 +218,7 @@ impl Expression {
                     if i > 0 {
                         write!(f, ", ")?;
                     }
-                    write!(f, "{}: ", k)?;
+                    write!(f, "{k}: ")?;
                     v.fmt_display_indent(f, 0)?;
                 }
                 write!(f, "{}}}", idt(indent))
@@ -229,7 +229,7 @@ impl Expression {
                     if i > 0 {
                         write!(f, ", ")?;
                     }
-                    write!(f, "{}: ", k)?;
+                    write!(f, "{k}: ")?;
                     v.fmt_display_indent(f, 0)?;
                 }
                 write!(f, "}}")
@@ -238,23 +238,23 @@ impl Expression {
             // 操作符
             Self::BinaryOp(op, l, r) => {
                 l.fmt_display_indent(f, 0)?;
-                write!(f, " {} ", op)?;
+                write!(f, " {op} ")?;
                 r.fmt_display_indent(f, 0)
             }
 
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
-                    write!(f, "{}", op)?;
+                    write!(f, "{op}")?;
                     v.fmt_display_indent(f, 0)
                 } else {
                     v.fmt_display_indent(f, 0)?;
-                    write!(f, "{}", op)
+                    write!(f, "{op}")
                 }
             }
 
             Self::RangeOp(op, l, r, step) => {
                 l.fmt_display_indent(f, 0)?;
-                write!(f, "{}", op)?;
+                write!(f, "{op}")?;
                 r.fmt_display_indent(f, 0)?;
                 if let Some(st) = step {
                     write!(f, ":")?;
@@ -265,7 +265,7 @@ impl Expression {
 
             Self::Pipe(op, l, r) => {
                 l.fmt_display_indent(f, 0)?;
-                write!(f, " {} ", op)?;
+                write!(f, " {op} ")?;
                 r.fmt_display_indent(f, 0)
             }
 
@@ -330,7 +330,7 @@ impl Expression {
             Self::Range(range, step) => {
                 write!(f, "{}..<{}", range.start, range.end)?;
                 if *step != 1 {
-                    write!(f, ":{}", step)?;
+                    write!(f, ":{step}")?;
                 }
                 Ok(())
             }
@@ -351,7 +351,7 @@ impl Expression {
             }
 
             Self::PipeMethod(method, args) => {
-                write!(f, ".{}(", method)?;
+                write!(f, ".{method}(")?;
                 for (i, arg) in args.iter().enumerate() {
                     if i > 0 {
                         write!(f, ", ")?;
@@ -398,9 +398,9 @@ impl Expression {
             }
 
             Self::Builtin(builtin) => write!(f, "builtin@{}", builtin.name),
-            Self::RegexDef(s) => write!(f, "r'{}'", s),
+            Self::RegexDef(s) => write!(f, "r'{s}'"),
             Self::Regex(r) => write!(f, "r'{}'", r.regex.as_str()),
-            Self::TimeDef(t) => write!(f, "t'{}'", t),
+            Self::TimeDef(t) => write!(f, "t'{t}'"),
         }
     }
 }
@@ -417,7 +417,7 @@ fn fmt_binary_op(
     // let i = if f.alternate() { indent + 1 } else { indent };
     write!(f, "\n{}{}〈{}〉\n", idt(i), op_name, op)?;
     left.fmt_indent(f, i + 1)?;
-    write!(f, "\n")?;
+    writeln!(f)?;
     right.fmt_indent(f, i + 1)?;
     if let Some(step_expr) = step {
         write!(f, "\n{}step:\n", idt(i + 1))?;
@@ -433,24 +433,24 @@ impl Expression {
         write!(f, "{}", idt(i))?;
         match &self {
             // 基础类型 - 保持原有实现
-            Self::Symbol(s) => write!(f, "Symbol〈{:?}〉", s),
-            Self::Variable(s) => write!(f, "Variable〈{:?}〉", s),
-            Self::String(s) => write!(f, "String〈{:?}〉", s),
-            Self::Integer(s) => write!(f, "Integer〈{:?}〉", s),
-            Self::Float(s) => write!(f, "Float〈{:?}〉", s),
-            Self::Boolean(s) => write!(f, "Boolean〈{:?}〉", s),
-            Self::DateTime(s) => write!(f, "DateTime〈{:?}〉", s),
-            Self::FileSize(s) => write!(f, "FileSize〈{:?}〉", s),
-            Self::Range(s, st) => write!(f, "Range〈{:?},{}〉", s, st),
-            Self::Quote(inner) => write!(f, "Quote〈{:?}〉", inner),
-            Self::Group(inner) => write!(f, "Group〈{:?}〉", inner),
-            Self::TimeDef(s) => write!(f, "TimeDef〈{:?}〉", s),
-            Self::RegexDef(s) => write!(f, "RegexDef〈{:?}〉", s),
+            Self::Symbol(s) => write!(f, "Symbol〈{s:?}〉"),
+            Self::Variable(s) => write!(f, "Variable〈{s:?}〉"),
+            Self::String(s) => write!(f, "String〈{s:?}〉"),
+            Self::Integer(s) => write!(f, "Integer〈{s:?}〉"),
+            Self::Float(s) => write!(f, "Float〈{s:?}〉"),
+            Self::Boolean(s) => write!(f, "Boolean〈{s:?}〉"),
+            Self::DateTime(s) => write!(f, "DateTime〈{s:?}〉"),
+            Self::FileSize(s) => write!(f, "FileSize〈{s:?}〉"),
+            Self::Range(s, st) => write!(f, "Range〈{s:?},{st}〉"),
+            Self::Quote(inner) => write!(f, "Quote〈{inner:?}〉"),
+            Self::Group(inner) => write!(f, "Group〈{inner:?}〉"),
+            Self::TimeDef(s) => write!(f, "TimeDef〈{s:?}〉"),
+            Self::RegexDef(s) => write!(f, "RegexDef〈{s:?}〉"),
             Self::Regex(s) => write!(f, "Regex〈{:?}〉", s.regex.as_str()),
             Self::None => write!(f, "None"),
 
             // 新增：字符串模板和字节数据
-            Self::StringTemplate(s) => write!(f, "StringTemplate〈`{}`〉", s),
+            Self::StringTemplate(s) => write!(f, "StringTemplate〈`{s}`〉"),
             Self::Bytes(b) => write!(f, "Bytes〈{:?}〉", String::from_utf8_lossy(b)),
 
             // 新增：声明和赋值操作
@@ -468,7 +468,7 @@ impl Expression {
             }
 
             // 新增：删除和控制流语句
-            Self::Del(name) => write!(f, "Del〈{}〉", name),
+            Self::Del(name) => write!(f, "Del〈{name}〉"),
             Self::Return(expr) => {
                 write!(f, "\n{}Return\n", idt(i))?;
                 expr.fmt_indent(f, i + 1)
@@ -503,15 +503,15 @@ impl Expression {
                     params
                         .start
                         .as_ref()
-                        .map_or("None".to_string(), |s| format!("{:?}", s)),
+                        .map_or("None".to_string(), |s| format!("{s:?}")),
                     params
                         .end
                         .as_ref()
-                        .map_or("None".to_string(), |s| format!("{:?}", s)),
+                        .map_or("None".to_string(), |s| format!("{s:?}")),
                     params
                         .step
                         .as_ref()
-                        .map_or("None".to_string(), |s| format!("{:?}", s))
+                        .map_or("None".to_string(), |s| format!("{s:?}"))
                 )
             }
 
@@ -525,7 +525,7 @@ impl Expression {
                         if idx > 0 {
                             write!(f, ", ")?;
                         }
-                        write!(f, "{:?}", arg)?;
+                        write!(f, "{arg:?}")?;
                     }
                     write!(f, ")")?;
                 }
@@ -535,9 +535,9 @@ impl Expression {
                 write!(f, "\n{}PipeMethod〈{}〉\n{}(\n", idt(i), method, idt(i))?;
                 args.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
-                    let _ = write!(f, "\n");
+                    let _ = writeln!(f);
                 });
-                write!(f, "{})\n", idt(i))
+                writeln!(f, "{})", idt(i))
             }
 
             // 新增：别名操作
@@ -547,7 +547,7 @@ impl Expression {
             }
 
             // 新增：内置函数
-            Self::Builtin(builtin) => write!(f, "Builtin〈{:?}〉", builtin),
+            Self::Builtin(builtin) => write!(f, "Builtin〈{builtin:?}〉"),
 
             // 新增：错误捕获
             Self::Catch(body, ctyp, deel) => {
@@ -575,16 +575,16 @@ impl Expression {
                 write!(f, "\n{}[\n", idt(i))?;
                 exprs.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
-                    let _ = write!(f, ",\n");
+                    let _ = writeln!(f, ",");
                 });
-                write!(f, "{}]\n", idt(i))
+                writeln!(f, "{}]", idt(i))
             }
             Self::HMap(exprs) => {
                 write!(f, "\n{}{{\n", idt(i))?;
                 exprs.iter().for_each(|(k, v)| {
                     let _ = write!(f, "\n{}{:?}:", idt(i + 1), k);
                     let _ = v.fmt_indent(f, i + 2);
-                    let _ = write!(f, "\n");
+                    let _ = writeln!(f);
                 });
                 write!(f, "\n{}}}\n", idt(i))
             }
@@ -593,7 +593,7 @@ impl Expression {
                 exprs.iter().for_each(|(k, v)| {
                     let _ = write!(f, "\n{}{:?}:", idt(i + 1), k);
                     let _ = v.fmt_indent(f, i + 2);
-                    let _ = write!(f, "\n");
+                    let _ = writeln!(f);
                 });
                 write!(f, "\n{}}}\n", idt(i))
             }
@@ -601,9 +601,9 @@ impl Expression {
                 write!(f, "\n{}{{\n", idt(i))?;
                 exprs.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
-                    let _ = write!(f, "\n");
+                    let _ = writeln!(f);
                 });
-                write!(f, "{}}}\n", idt(i))
+                writeln!(f, "{}}}", idt(i))
             }
 
             // 二元操作 - 保持原有实现
@@ -663,7 +663,7 @@ impl Expression {
                     f,
                     "\n{}Lambda ({})\n",
                     idt(i),
-                    params.iter().cloned().collect::<Vec<_>>().join(",")
+                    params.to_vec().join(",")
                 )?;
                 body.as_ref().fmt_indent(f, i + 1)
             }
@@ -676,7 +676,7 @@ impl Expression {
                     param
                         .iter()
                         .map(|(p, v)| match v {
-                            Some(vv) => format!("{}={}", p, vv),
+                            Some(vv) => format!("{p}={vv}"),
                             _ => p.to_string(),
                         })
                         .collect::<Vec<String>>()
@@ -691,9 +691,9 @@ impl Expression {
                 write!(f, "\n{}(\n", idt(i))?;
                 args.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
-                    let _ = write!(f, "\n");
+                    let _ = writeln!(f);
                 });
-                write!(f, "{})\n", idt(i))
+                writeln!(f, "{})", idt(i))
             }
             Self::Command(cmd, args) => {
                 write!(f, "\n{}Cmd\n", idt(i))?;
@@ -703,7 +703,7 @@ impl Expression {
                     let _ = e.fmt_indent(f, i + 1);
                     let _ = writeln!(f);
                 });
-                write!(f, "{}〗\n", idt(i))
+                writeln!(f, "{}〗", idt(i))
             }
         }
     }
@@ -793,7 +793,7 @@ impl Expression {
                 kind: RuntimeErrorKind::TypeError {
                     expected: "symbol".to_string(),
                     sym: self.to_string(),
-                    found: self.type_name().into(),
+                    found: self.type_name(),
                 },
                 context: self.clone(),
                 depth: 0,
@@ -848,7 +848,7 @@ impl Expression {
             }
             Expression::Chain(base, calls) => {
                 if calls.is_empty() {
-                    return Expression::Chain(base.clone(), calls.clone());
+                    Expression::Chain(base.clone(), calls.clone())
                 } else {
                     let (call, others) = calls.split_at(1);
                     let mut new_args: Vec<Expression> = call[0]
@@ -870,7 +870,7 @@ impl Expression {
                         args: new_args,
                     }];
                     new_calls.extend_from_slice(others);
-                    return Expression::Chain(base.clone(), new_calls);
+                    Expression::Chain(base.clone(), new_calls)
                 }
             }
             _ => Expression::Command(Rc::new(self.clone()), Rc::new(vec![arg])), //report error?
@@ -893,7 +893,7 @@ impl Expression {
             }
             Expression::Chain(base, calls) => {
                 if calls.is_empty() {
-                    return Expression::Chain(base.clone(), calls.clone());
+                    Expression::Chain(base.clone(), calls.clone())
                 } else {
                     let (call, others) = calls.split_at(1);
 
@@ -905,7 +905,7 @@ impl Expression {
                         args: new_vec,
                     }];
                     new_calls.extend_from_slice(others);
-                    return Expression::Chain(base.clone(), new_calls);
+                    Expression::Chain(base.clone(), new_calls)
                 }
             }
             _ => unreachable!(), // _ => Expression::Command(Rc::new(self.clone()), Rc::new(args)), //report error?

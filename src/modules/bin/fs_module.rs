@@ -390,9 +390,9 @@ fn glob_pattern(args: &Vec<Expression>, env: &mut Environment) -> Result<Express
     let mut results = Vec::new();
 
     for entry in glob::glob(&pattern)
-        .map_err(|e| LmError::CustomError(format!("Invalid glob pattern: {} - {}", pattern, e)))?
+        .map_err(|e| LmError::CustomError(format!("Invalid glob pattern: {pattern} - {e}")))?
     {
-        let path = entry.map_err(|e| LmError::CustomError(format!("Glob error: {}", e)))?;
+        let path = entry.map_err(|e| LmError::CustomError(format!("Glob error: {e}")))?;
         let display_path = path
             .strip_prefix(&cwd)
             .unwrap_or(&path)

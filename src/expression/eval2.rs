@@ -295,11 +295,8 @@ impl Expression {
 
 fn glob_expand(s: &str) -> Vec<String> {
     let mut elist = vec![];
-    for entry in glob(&s).unwrap() {
-        match entry {
-            Ok(p) => elist.push(p.to_string_lossy().to_string()),
-            _ => {}
-        }
+    for entry in glob(s).unwrap() {
+        if let Ok(p) = entry { elist.push(p.to_string_lossy().to_string()) }
     }
     elist
 }
@@ -436,11 +433,11 @@ fn get_module_name_from_path<'a>(
                     })
                 }
                 None => {
-                    return Err(RuntimeError::common(
+                    Err(RuntimeError::common(
                         "get filename failed".into(),
                         context.clone(),
                         depth,
-                    ));
+                    ))
                 }
             }
         }

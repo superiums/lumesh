@@ -16,7 +16,7 @@ if IS_INTERACTIVE {
     "
     print logo.green().faint()
 
-    # ====== base theme: 'dark', 'light', 'ayu_dark'
+    # ====== base theme: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'
 
     # ====== theme modify

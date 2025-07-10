@@ -11,6 +11,7 @@ use lazy_static::lazy_static;
 lazy_static! {
     static ref BULTIN_COMMANDS: Mutex<HashSet<String>> = Mutex::new(get_builtin_symbos());
 }
+const DEFAULT: &str = "";
 
 pub fn highlight_dark_theme(line: &str) -> String {
     highlight(line, &get_dark_theme())
@@ -37,77 +38,52 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
             //     TokenKind::Punctuation,
             //     o @ ("@" | "\'" | "=" | "|" | ">>" | "<<" | ">!" | "->" | "~>"),
             // ) => {
-            //     result.push_str(theme.get("punctuation_special").unwrap_or(&"".to_string()).as_str());
+            //     result.push_str(get_color("punctuation_special",theme,&default));
             //     is_colored = true;
             //     result.push_str(o);
             // }
             (TokenKind::Punctuation, o) => {
-                result.push_str(theme.get("punctuation").unwrap_or(&"".to_string()).as_str());
+                result.push_str(get_color("punctuation", theme));
                 is_colored = true;
                 result.push_str(o);
             }
             (TokenKind::Keyword, k) => {
-                result.push_str(theme.get("keyword").unwrap_or(&"".to_string()).as_str());
+                result.push_str(get_color("keyword", theme));
                 is_colored = true;
                 result.push_str(k);
             }
             (TokenKind::Operator, k) => {
-                result.push_str(theme.get("operator").unwrap_or(&"".to_string()).as_str());
+                result.push_str(get_color("operator", theme));
                 is_colored = true;
                 result.push_str(k);
             }
             (TokenKind::OperatorPrefix, k) => {
-                result.push_str(
-                    theme
-                        .get("operator_prefix")
-                        .unwrap_or(&"".to_string())
-                        .as_str(),
-                );
+                result.push_str(get_color("operator_prefix", theme));
                 is_colored = true;
                 result.push_str(k);
             }
             (TokenKind::OperatorInfix, k) => {
-                result.push_str(
-                    theme
-                        .get("operator_infix")
-                        .unwrap_or(&"".to_string())
-                        .as_str(),
-                );
+                result.push_str(get_color("operator_infix", theme));
                 is_colored = true;
                 result.push_str(k);
             }
             (TokenKind::OperatorPostfix, k) => {
-                result.push_str(
-                    theme
-                        .get("operator_postfix")
-                        .unwrap_or(&"".to_string())
-                        .as_str(),
-                );
+                result.push_str(get_color("operator_postfix", theme));
                 is_colored = true;
                 result.push_str(k);
             }
             (TokenKind::StringRaw, s) => {
-                result.push_str(theme.get("string_raw").unwrap_or(&"".to_string()).as_str());
+                result.push_str(get_color("string_raw", theme));
                 is_colored = true;
                 result.push_str(s);
             }
             (TokenKind::StringTemplate, s) => {
-                result.push_str(
-                    theme
-                        .get("string_template")
-                        .unwrap_or(&"".to_string())
-                        .as_str(),
-                );
+                result.push_str(get_color("string_template", theme));
                 is_colored = true;
                 result.push_str(s);
             }
             (TokenKind::StringLiteral, s) => {
-                result.push_str(
-                    theme
-                        .get("string_literal")
-                        .unwrap_or(&"".to_string())
-                        .as_str(),
-                );
+                result.push_str(get_color("string_literal", theme));
                 is_colored = true;
 
                 if let Diagnostic::InvalidStringEscapes(ranges) = diagnostic {
@@ -115,19 +91,9 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
 
                     for &range in ranges.iter() {
                         result.push_str(&line[last_end..range.start()]);
-                        result.push_str(
-                            theme
-                                .get("string_error")
-                                .unwrap_or(&"".to_string())
-                                .as_str(),
-                        );
+                        result.push_str(get_color("string_error", theme));
                         result.push_str(range.to_str(line));
-                        result.push_str(
-                            theme
-                                .get("string_literal")
-                                .unwrap_or(&"".to_string())
-                                .as_str(),
-                        );
+                        result.push_str(get_color("string_literal", theme));
                         last_end = range.end();
                     }
 
@@ -138,17 +104,12 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
             }
             (TokenKind::IntegerLiteral | TokenKind::FloatLiteral, l) => {
                 if let Diagnostic::InvalidNumber(e) = diagnostic {
-                    result.push_str(
-                        theme
-                            .get("number_error")
-                            .unwrap_or(&"".to_string())
-                            .as_str(),
-                    );
+                    result.push_str(get_color("number_error", theme));
                     result.push_str(e.to_str(line));
                     is_colored = true;
                 } else {
                     if is_colored {
-                        result.push_str(theme.get("reset").unwrap_or(&"".to_string()).as_str());
+                        result.push_str(get_color("reset", theme));
                         is_colored = false;
                     }
                     result.push_str(l);
@@ -156,22 +117,16 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
             }
             (TokenKind::Symbol, l) => {
                 if let Diagnostic::IllegalChar(e) = diagnostic {
-                    result.push_str(
-                        theme
-                            .get("string_error")
-                            .unwrap_or(&"".to_string())
-                            .as_str(),
-                    );
+                    result.push_str(get_color("string_error", theme));
                     result.push_str(e.to_str(line));
                     is_colored = true;
                 } else {
                     if BULTIN_COMMANDS.lock().unwrap().contains(l) {
                         // if matches!(l, "echo" | "exit" | "clear" | "cd" | "rm") {
-                        result
-                            .push_str(theme.get("builtin_cmd").unwrap_or(&"".to_string()).as_str());
+                        result.push_str(get_color("builtin_cmd", theme));
                         is_colored = true;
                     } else if is_colored {
-                        result.push_str(theme.get("reset").unwrap_or(&"".to_string()).as_str());
+                        result.push_str(get_color("reset", theme));
                         is_colored = false;
                     }
 
@@ -185,17 +140,17 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                 result.push_str(w);
             }
             (TokenKind::Comment, w) => {
-                result.push_str(theme.get("comment").unwrap_or(&"".to_string()).as_str());
+                result.push_str(get_color("comment", theme));
                 is_colored = true;
                 result.push_str(w);
             }
             (TokenKind::Regex, s) => {
-                result.push_str(theme.get("regex").unwrap_or(&"".to_string()).as_str());
+                result.push_str(get_color("regex", theme));
                 is_colored = true;
                 result.push_str(s);
             }
             (TokenKind::Time, s) => {
-                result.push_str(theme.get("time").unwrap_or(&"".to_string()).as_str());
+                result.push_str(get_color("time", theme));
                 is_colored = true;
                 result.push_str(s);
             }
@@ -205,12 +160,7 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
     if diagnostics.len() > tokens.len() {
         for diagnostic in &diagnostics[tokens.len()..] {
             if let Diagnostic::NotTokenized(e) = diagnostic {
-                result.push_str(
-                    theme
-                        .get("string_error")
-                        .unwrap_or(&"".to_string())
-                        .as_str(),
-                );
+                result.push_str(get_color("string_error", theme));
                 result.push_str(e.to_str(line));
                 is_colored = true;
             }
@@ -218,10 +168,17 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
     }
 
     if is_colored {
-        result.push_str(theme.get("reset").unwrap_or(&"".to_string()).as_str());
+        result.push_str(get_color("reset", theme));
     }
 
     result
+}
+
+fn get_color<'a>(color: &str, theme: &'a HashMap<String, String>) -> &'a str {
+    match theme.get(color) {
+        Some(c) => c.as_str(),
+        _ => DEFAULT,
+    }
 }
 
 pub fn get_merged_theme(

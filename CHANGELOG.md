@@ -6,7 +6,10 @@
 
     modify theme via `LUME_THEME_CONFIG`
 - optimize `find/find_all` of regex to return map instead of list.
-
+- theme for complete and hint;
+- fix alt+j for space before /;
+- fix completition with longer first.
+- optimize syntax get_color;
 
 ## [0.6.8]
 - add boolean module;

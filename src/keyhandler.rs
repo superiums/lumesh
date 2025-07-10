@@ -89,16 +89,12 @@ impl ConditionalEventHandler for LumeMoveHandler {
                     let pos = hint.find(&['<', '[']);
                     pos.unwrap_or(hint.len())
                 }
-                _ => match hint.find('/') {
-                    None => match hint.starts_with(" ") {
-                        false => hint.find(" ").unwrap_or(hint.len()),
-                        true => match hint.trim_start().find(" ") {
-                            Some(x) => x + 1,
-                            _ => hint.len(),
-                        },
-                    },
-                    Some(x) => (x + 1).max(hint.len()),
-                },
+                _ => hint
+                    .trim_start()
+                    .find(|c: char| c.is_ascii_whitespace() || c == '/')
+                    .map_or(hint.len(), |x| {
+                        x + if hint.starts_with(' ') { 2 } else { 1 }
+                    }),
             };
 
             let hintword = hint[..pos].to_string();

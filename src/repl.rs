@@ -40,8 +40,9 @@ use crate::{Environment, highlight, parse_and_eval, prompt::get_prompt_engine};
 use std::sync::{Arc, Mutex};
 
 // ANSI 转义码
+const DEFAULT: &str = "";
 const GREEN_BOLD: &str = "\x1b[1;32m";
-const GRAY: &str = "\x1b[38;5;246m";
+// const GRAY: &str = "\x1b[38;5;246m";
 // const GRAY2: &str = "\x1b[38;5;249m";
 // const RED: &str = "\x1b[31m";
 const RESET: &str = "\x1b[0m";
@@ -426,6 +427,11 @@ impl LumeHelper {
         let prefix = &input[start..];
         // dbg!(&input, &start, &prefix);
         // 过滤以prefix开头的命令
+        let cpl_color = self
+            .highlighter
+            .theme
+            .get("completion_cmd")
+            .map_or(DEFAULT, |c| c.as_str());
         let mut candidates: Vec<Pair> = self
             .cmds
             .iter()
@@ -433,7 +439,7 @@ impl LumeHelper {
             .map(|cmd| {
                 // dbg!(&cmd);
                 Pair {
-                    display: format!("{}{}{}", GRAY, cmd, RESET),
+                    display: format!("{}{}{}", cpl_color, cmd, RESET),
                     replacement: cmd.clone(),
                 }
             })
@@ -454,7 +460,15 @@ impl LumeHelper {
             .unwrap_or_default();
 
         let pair = Pair {
-            display: format!("\x1b[34m{}\x1b[0m", suggestion), // 保持ANSI颜色
+            display: format!(
+                "{}{}{}",
+                self.highlighter
+                    .theme
+                    .get("completion_ai")
+                    .map_or(DEFAULT, |c| c.as_str()),
+                suggestion,
+                RESET
+            ), // 保持ANSI颜色
             replacement: suggestion,
         };
         Ok((pos, vec![pair]))
@@ -560,7 +574,6 @@ impl Hinter for LumeHelper {
                 }
             }
         }
-
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {
             // 按权重排序匹配结果
@@ -571,9 +584,11 @@ impl Hinter for LumeHelper {
                 .collect();
 
             // 权重降序, 较长的优先
-            matches.sort_by(|a, b| a.len().cmp(&b.len()));
+            matches.sort_by(|a, b| b.len().cmp(&a.len()));
+            // dbg!(&matches);
             if let Some(matched) = matches.first() {
                 let suffix = &matched[segment.len()..];
+                // dbg!(&segment, &segment.len(), &matched, &suffix, &suffix.len());
                 if !suffix.is_empty() {
                     return Some(suffix.to_string());
                 }
@@ -597,10 +612,7 @@ impl SyntaxHighlighter {
 impl Highlighter for SyntaxHighlighter {
     fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
         let _s = (line, pos, kind);
-        if kind == CmdKind::MoveCursor {
-            return false;
-        }
-        true
+        kind != CmdKind::MoveCursor
     }
 
     fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
@@ -610,8 +622,14 @@ impl Highlighter for SyntaxHighlighter {
         if cmd.is_empty() {
             return Cow::Borrowed(line);
         }
+
         let (color, is_valid) = if is_valid_command(cmd) {
-            (GREEN_BOLD, true)
+            (
+                self.theme
+                    .get("command_valid")
+                    .map_or(DEFAULT, |c| c.as_str()),
+                true,
+            )
         // } else if !cmd.is_empty() {
         //     (RED, false)
         } else {
@@ -635,7 +653,12 @@ impl Highlighter for SyntaxHighlighter {
         if hint.is_empty() || hint.contains('\x1b') {
             return Cow::Borrowed(hint);
         }
-        Cow::Owned(format!("{}{}{}", GRAY, hint, RESET))
+        Cow::Owned(format!(
+            "{}{}{}",
+            self.theme.get("hint").map_or(DEFAULT, |c| c.as_str()),
+            hint,
+            RESET
+        ))
     }
 
     // fn highlight_prompt<'b, 's: 'b, 'p: 'b>(

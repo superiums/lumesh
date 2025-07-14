@@ -1136,7 +1136,7 @@ pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>
     if !input.is_empty() {
         diagnostics.push(Diagnostic::NotTokenized(input.as_str_slice()))
     }
-    dbg!(input, &tokens);
+    // dbg!(input, &tokens);
     (tokens, diagnostics)
 }
 

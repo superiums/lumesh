@@ -3,7 +3,7 @@
 - fix long hint cover the screen
 - fix `.` at end of line requires more linebreak
 - link `throw` to top level
-
+- optimize pprint
 
 ## [0.6.9]
 - highlight builtin cmds;

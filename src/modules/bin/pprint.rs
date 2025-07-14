@@ -8,8 +8,8 @@ use tabled::{
     },
 };
 
-use crate::Builtin;
 use crate::Expression;
+use crate::{Builtin, modules::bin::string_module::strip_ansi_escapes};
 
 pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
     match arg {
@@ -31,30 +31,36 @@ struct KeyValueRow {
     value: String,
 }
 
-fn pprint_map(exprs: &BTreeMap<String, Expression>) {
-    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize - 20;
-
+fn pprint_map_internal<I>(items: I, use_btree_style: bool)
+where
+    I: Iterator<Item = (String, Expression)>,
+{
+    // 共同的格式化逻辑
+    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
     // 为表格预留边框和间距
     let table_padding = 10; // 边框 + 列间距
     let available_width = specified_width.saturating_sub(table_padding);
 
     // 为 KEY 列预留固定宽度，剩余给 VALUE 列
-    let key_column_width = 20; // 或者动态计算最长键名
+    let key_column_width = 6; // 或者动态计算最长键名
     let value_column_width = available_width.saturating_sub(key_column_width);
 
-    let rows: Vec<KeyValueRow> = exprs
-        .iter()
+    let rows: Vec<KeyValueRow> = items
         .map(|(key, val)| {
-            let value = match val {
-                Expression::Builtin(Builtin { help, .. }) => {
-                    format!("{}\n{}", val, textwrap::fill(help, value_column_width))
-                }
+            let value = match &val {
                 Expression::HMap(_) | Expression::Map(_) => {
                     format!("{val:value_column_width$}")
                 }
                 Expression::List(_) => {
                     let formatted = format!("{val}");
                     textwrap::fill(&formatted, value_column_width)
+                }
+                Expression::Builtin(Builtin { help, .. }) => {
+                    format!(
+                        "{}\n{}",
+                        val,
+                        textwrap::fill(help.as_str(), value_column_width)
+                    )
                 }
                 _ => {
                     let formatted = format!("{val}");
@@ -69,66 +75,35 @@ fn pprint_map(exprs: &BTreeMap<String, Expression>) {
         .collect();
 
     let mut table = Table::new(rows);
-    table
-        .modify(Columns::first(), Color::FG_GREEN)
-        .with(Style::rounded())
-        .with(Width::wrap(specified_width).keep_words(true));
+    if use_btree_style {
+        table
+            .modify(Columns::first(), Color::FG_GREEN)
+            .with(Style::rounded());
+    } else {
+        table
+            .modify(Columns::first(), Color::FG_BLUE)
+            .modify(Columns::first(), Width::increase(key_column_width))
+            .with(Style::ascii());
+    }
 
+    table.with(Width::wrap(specified_width).keep_words(true));
     println!("{table}");
 }
+
+fn pprint_map(exprs: &BTreeMap<String, Expression>) {
+    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), true);
+}
+
 fn pprint_hmap(exprs: &HashMap<String, Expression>) {
-    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize - 20;
-
-    // 为表格预留边框和间距
-    let table_padding = 10; // 边框 + 列间距
-    let available_width = specified_width.saturating_sub(table_padding);
-
-    // 为 KEY 列预留固定宽度，剩余给 VALUE 列
-    let key_column_width = 20; // 或者动态计算最长键名
-    let value_column_width = available_width.saturating_sub(key_column_width);
-
-    let rows: Vec<KeyValueRow> = exprs
-        .iter()
-        .map(|(key, val)| {
-            let value = match val {
-                Expression::Builtin(Builtin { help, .. }) => {
-                    format!("{}\n{}", val, textwrap::fill(help, value_column_width))
-                }
-                Expression::HMap(_) | Expression::Map(_) => {
-                    format!("{val:value_column_width$}")
-                }
-                Expression::List(_) => {
-                    let formatted = format!("{val}");
-                    textwrap::fill(&formatted, value_column_width)
-                }
-                _ => {
-                    let formatted = format!("{val}");
-                    textwrap::fill(&formatted, value_column_width)
-                }
-            };
-            KeyValueRow {
-                key: key.clone(),
-                value,
-            }
-        })
-        .collect();
-
-    let mut table = Table::new(rows);
-    table
-        .modify(Columns::first(), Color::FG_BLUE)
-        .modify(Columns::first(), Width::increase(20))
-        .with(Style::ascii())
-        .with(Width::wrap(specified_width).keep_words(true));
-
-    println!("{table}");
+    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), false);
 }
 
 fn pprint_list(exprs: &[Expression]) {
     let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
 
     let (rows, heads_opt) = TableRow {
-        columns: exprs,
-        max_width: specified_width - 10,
+        rows: exprs,
+        max_width: specified_width,
         col_padding: 5,
     }
     .split_into_rows();
@@ -176,37 +151,39 @@ fn pprint_list(exprs: &[Expression]) {
 // 保持原有的智能布局逻辑
 
 struct TableRow<'a> {
-    columns: &'a [Expression], // 原始数据
-    max_width: usize,          // 单行总宽度限制
-    col_padding: usize,        // 列间距（通常为3：1边框+2空格）
+    rows: &'a [Expression], // 原始数据
+    max_width: usize,       // 单行总宽度限制
+    col_padding: usize,     // 列间距（通常为3：1边框+2空格）
 }
 
 impl<'a> TableRow<'a> {
     /// 智能分Row算法
     fn split_into_rows(&self) -> (Vec<Vec<String>>, Option<Vec<String>>) {
-        let mut result = vec![];
-        let mut heads = vec![];
-        let mut current_row = vec![];
-        let mut current_len = 0;
+        let mut result = Vec::with_capacity(self.rows.len());
+        // let mut heads = vec![];
 
         // 二维表格
-        let mut cols = match self.columns.first() {
+        let heads = match self.rows.first() {
             Some(Expression::List(a)) => {
-                heads = a.iter().enumerate().map(|(i, _)| format!("C{i}")).collect();
-                a.len()
+                Some(a.iter().enumerate().map(|(i, _)| format!("C{i}")).collect())
             }
+
             Some(Expression::HMap(a)) => {
-                heads = a.keys().map(|k| k.to_owned()).collect::<Vec<String>>();
-                a.keys().len()
+                Some(a.keys().map(|k| k.to_owned()).collect::<Vec<String>>())
             }
+
             Some(Expression::Map(a)) => {
-                heads = a.keys().map(|k| k.to_owned()).collect::<Vec<String>>();
-                a.keys().len()
+                Some(a.keys().map(|k| k.to_owned()).collect::<Vec<String>>())
             }
-            _ => 0,
+
+            _ => None,
         };
+        let mut cols = heads.as_ref().map_or(0, |h| h.len());
+        let mut current_row = Vec::with_capacity(cols);
+        let mut current_len = 0;
+
         if cols > 0 {
-            for expr in self.columns.iter() {
+            for expr in self.rows.iter() {
                 match expr {
                     Expression::List(a) => {
                         for c in a.iter() {
@@ -230,11 +207,11 @@ impl<'a> TableRow<'a> {
                     current_row = vec![];
                 }
             }
-            return (result, Some(heads));
+            return (result, heads);
         }
 
         // 一唯表格
-        for (i, expr) in self.columns.iter().enumerate() {
+        for (i, expr) in self.rows.iter().enumerate() {
             let col = match expr {
                 Expression::List(a) => a
                     .as_ref()
@@ -256,7 +233,7 @@ impl<'a> TableRow<'a> {
                     .join("\t"),
                 other => other.to_string(),
             };
-            let col_width = col.chars().count() + self.col_padding;
+            let col_width = strip_ansi_escapes(&col).chars().count() + self.col_padding;
 
             // 两种情况需要换行：
             // 1. 当前行已有内容且加入新列会超限
@@ -300,11 +277,15 @@ impl<'a> TableRow<'a> {
 
     /// 拆分超宽列为多段
     fn split_column(&self, text: &str) -> Vec<String> {
-        let max_chunk = self.max_width - self.col_padding;
-        text.chars()
-            .collect::<Vec<_>>()
-            .chunks(max_chunk)
-            .map(|chunk| chunk.iter().collect())
+        let max_chunk = self.max_width.saturating_sub(self.col_padding);
+        if max_chunk == 0 {
+            return vec![text.to_string()];
+        }
+
+        // 使用textwrap进行智能换行，考虑单词边界
+        textwrap::wrap(text, max_chunk)
+            .into_iter()
+            .map(|s| s.to_string())
             .collect()
     }
 }

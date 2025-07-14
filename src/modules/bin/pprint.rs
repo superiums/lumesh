@@ -13,8 +13,8 @@ use crate::{Builtin, modules::bin::string_module::strip_ansi_escapes};
 
 pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
     match arg {
-        Expression::Map(exprs) => pprint_map(exprs.as_ref()),
-        Expression::HMap(exprs) => pprint_hmap(exprs.as_ref()),
+        Expression::Map(exprs) => println!("{}", pprint_map(exprs.as_ref())),
+        Expression::HMap(exprs) => println!("{}", pprint_hmap(exprs.as_ref())),
         Expression::List(exprs) => pprint_list(exprs.as_ref()),
         _ => {
             println!("{arg}");
@@ -31,7 +31,7 @@ struct KeyValueRow {
     value: String,
 }
 
-fn pprint_map_internal<I>(items: I, use_btree_style: bool)
+fn pprint_map_internal<I>(items: I, use_btree_style: bool) -> Table
 where
     I: Iterator<Item = (String, Expression)>,
 {
@@ -87,15 +87,15 @@ where
     }
 
     table.with(Width::wrap(specified_width).keep_words(true));
-    println!("{table}");
+    table
 }
 
-fn pprint_map(exprs: &BTreeMap<String, Expression>) {
-    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), true);
+fn pprint_map(exprs: &BTreeMap<String, Expression>) -> Table {
+    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), true)
 }
 
-fn pprint_hmap(exprs: &HashMap<String, Expression>) {
-    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), false);
+pub fn pprint_hmap(exprs: &HashMap<String, Expression>) -> Table {
+    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), false)
 }
 
 fn pprint_list(exprs: &[Expression]) {

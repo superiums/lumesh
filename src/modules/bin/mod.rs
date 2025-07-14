@@ -26,7 +26,7 @@ mod about_module;
 mod fs_ls;
 mod into_module;
 mod parse_module;
-mod pprint;
+pub mod pprint;
 mod rand_module;
 mod regex_module;
 mod string_module;

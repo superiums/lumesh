@@ -3,7 +3,7 @@ use std::{
     sync::LazyLock,
 };
 
-use crate::Expression;
+use crate::{Expression, modules::bin::pprint::pprint_hmap};
 
 mod bin;
 // use std::sync::RwLock;
@@ -26,11 +26,11 @@ pub fn get_builtin_map() -> HashMap<String, Expression> {
 }
 pub fn get_builtin_tips() -> HashSet<String> {
     let mut tips: HashSet<String> = HashSet::new();
-
-    for (key, item) in get_builtin_map().iter() {
+    for (key, item) in get_builtin_map().into_iter() {
         match item {
             Expression::HMap(m) => {
-                tips.insert(format!("{key}. \n{item}"));
+                let table = pprint_hmap(m.as_ref());
+                tips.insert(format!("{key}. \n{table}"));
                 for (k, v) in m.iter() {
                     // dbg!(&k, &v.to_string(), v.type_name());
                     match v {

@@ -378,7 +378,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         path_tag("/"),
         path_tag("../"),
         path_tag("./"),
-        keyword_alone_tag("."),
+        keyword_alone_or_end("."),
         path_tag("~"),
         path_tag("*/"),
         path_tag("**/"),
@@ -386,10 +386,10 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         path_tag("http"),
         path_tag("ftp"),
         path_tag("file:/"),
-        keyword_tag("&-"),
-        keyword_tag("&?"),
-        keyword_tag("&+"),
-        keyword_tag("&."),
+        keyword_alone_or_end("&-"),
+        keyword_alone_or_end("&?"),
+        keyword_alone_or_end("&+"),
+        keyword_alone_or_end("&."),
     ))(input)
 
     // begin with -+./
@@ -987,6 +987,20 @@ fn keyword_alone_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationRe
             .ok_or(NOT_FOUND)
     }
 }
+fn keyword_alone_or_end(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input
+            .previous_char()
+            .is_some_and(|c| !c.is_ascii_whitespace())
+        {
+            return Err(NOT_FOUND);
+        }
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| rest.is_empty() || rest.starts_with(char::is_whitespace))
+            .ok_or(NOT_FOUND)
+    }
+}
 /// This parser ensures that the word is *not* immediately followed by punctuation.
 fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
@@ -1122,7 +1136,7 @@ pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>
     if !input.is_empty() {
         diagnostics.push(Diagnostic::NotTokenized(input.as_str_slice()))
     }
-    // dbg!(input, &tokens);
+    dbg!(input, &tokens);
     (tokens, diagnostics)
 }
 

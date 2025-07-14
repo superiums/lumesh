@@ -5,7 +5,7 @@ use std::{
 
 use crate::{
     Environment, Expression, Int, LmError,
-    modules::bin::sys_module::{set_builtin, unset_builtin},
+    modules::bin::sys_module::{set_builtin, throw, unset_builtin},
     parse_and_eval,
 };
 use common_macros::hash_map;
@@ -72,6 +72,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("eprintln") => Expression::builtin("eprintln", eprintln, "print to stderr with newline", "<args>..."),
         String::from("debug") => Expression::builtin("debug", debug, "print debug representation", "<args>..."),
         String::from("read") => Expression::builtin("read", read, "get user input", "[prompt]"),
+        String::from("throw") => Expression::builtin("throw", throw, "return a runtime error", "<msg>"),
 
         // Data manipulation
         String::from("get") => Expression::builtin("get", get, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),

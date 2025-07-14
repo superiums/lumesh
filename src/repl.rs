@@ -583,8 +583,8 @@ impl Hinter for LumeHelper {
                 .filter(|cmd| cmd.starts_with(&segment))
                 .collect();
 
-            // 权重降序, 较长的优先
-            matches.sort_by(|a, b| b.len().cmp(&a.len()));
+            // 权重降序, 较短的优先
+            matches.sort_by(|a, b| a.len().cmp(&b.len()));
             // dbg!(&matches);
             if let Some(matched) = matches.first() {
                 let suffix = &matched[segment.len()..];

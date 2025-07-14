@@ -704,7 +704,8 @@ impl Expression {
                                                     .replace_or_append_arg(item.clone())
                                                     .eval_mut(state, env, depth + 1)
                                             })
-                                            .collect::<Result<Vec<_>, _>>().map(Expression::from);
+                                            .collect::<Result<Vec<_>, _>>()
+                                            .map(Expression::from);
                                     }
                                     Expression::String(strls) => {
                                         return ifs_split(&strls, env)
@@ -715,7 +716,8 @@ impl Expression {
                                                     .replace_or_append_arg(Expression::String(item))
                                                     .eval_mut(state, env, depth + 1)
                                             })
-                                            .collect::<Result<Vec<_>, _>>().map(Expression::from);
+                                            .collect::<Result<Vec<_>, _>>()
+                                            .map(Expression::from);
                                     }
                                     _ => {
                                         return rhs
@@ -993,9 +995,7 @@ impl Expression {
                         //     Self::index_slm(Expression::List(m), Expression::Integer(n))
                         // }
                         // (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
-                        (Self::Symbol(m), Self::Symbol(n)) => {
-                            Ok(Self::String(format!("{m}.{n}")))
-                        }
+                        (Self::Symbol(m), Self::Symbol(n)) => Ok(Self::String(format!("{m}.{n}"))),
                         // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
                         // _ => Err(RuntimeError::CustomError("not valid index option".into())),
                         (left, right) => Ok(Self::index_slm(left, right)
@@ -1093,7 +1093,8 @@ impl Expression {
             Expression::Range(list, step) => {
                 if let Expression::Integer(index) = r {
                     list.step_by(step)
-                        .nth(index as usize).map(Expression::Integer)
+                        .nth(index as usize)
+                        .map(Expression::Integer)
                         .ok_or_else(|| {
                             RuntimeErrorKind::CustomError(
                                 format!("index {index}: out of bounds").into(),
@@ -1360,7 +1361,7 @@ fn handle_contains(
                 ));
             }
         },
-
+        Expression::None => false,
         _ => {
             return Err(RuntimeError::common(
                 "`contains` operator can only check Map/List/Range/String".into(),

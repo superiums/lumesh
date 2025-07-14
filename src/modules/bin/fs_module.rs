@@ -1,4 +1,5 @@
 use crate::expression::cmd_excutor::expand_home;
+use crate::modules::bin::get_string_arg;
 use crate::{Environment, Int};
 use crate::{Expression, LmError};
 use common_macros::hash_map;
@@ -41,6 +42,7 @@ pub fn get() -> Expression {
                String::from("append") => Expression::builtin("append", append_to_file, "append to file", "<file> <content>"),
                // assist
                String::from("base_name") => Expression::builtin("base_name", extract_filename, "extract base_name from path", "[split_ext?] <path>"),
+               String::from("dir_name") => Expression::builtin("dir_name", extract_parent, "extract dir_name from path", "<path>"),
                String::from("join") => Expression::builtin("join", join_path, "join paths", "<path>..."),
     };
     Expression::from(fs_module)
@@ -428,6 +430,24 @@ fn extract_filename(args: &[Expression], env: &mut Environment) -> Result<Expres
     } else {
         Ok(Expression::String(file_name))
     }
+}
+fn extract_parent(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("dir_name", args, 1)?;
+    let pathstr = get_string_arg(args[0].eval(env)?)?;
+
+    let pathsep = if cfg!(windows) { "\\" } else { "/" };
+    if pathstr.ends_with(pathsep) {
+        return Ok(Expression::String(pathstr));
+    }
+    let path = Path::new(pathstr.as_str());
+
+    // 获取文件名
+    let dir_name = match path.parent() {
+        Some(name) => name.to_string_lossy().into_owned(),
+        None => String::from(""),
+    };
+
+    Ok(Expression::String(dir_name))
 }
 
 fn join_path(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {

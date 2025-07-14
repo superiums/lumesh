@@ -8,7 +8,8 @@
 - fix match as cmd;
 - fix pprint modules hint.
 type `String. ` to see pretty table hint.
-
+- add `Fs.dir_name`.
+- fix check None contains.
 
 ## [0.6.9]
 - highlight builtin cmds;

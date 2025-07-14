@@ -255,6 +255,11 @@ impl PrattParser {
                     // 当operator不是符号时，表示这不是双目运算，而是类似cmd a 3 c+d e.f 之类的函数调用
                     //
                     // dbg!("--> Args: trying next loop", input.len(), PREC_CMD_ARG);
+                    match &lhs {
+                        Expression::Symbol(_)|Expression::Variable(_)| Expression::String(_)
+                        |Expression::Index(.. )|Expression::Builtin(..)=>{}
+                        _ => break()
+                    }
                     if input.len() == 1 {
                         // CMD arg1, 只有第一个参数
                         let (new_input, rhs) =
@@ -1379,9 +1384,10 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
 #[inline]
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;
-    let num = num.to_str(input.str).parse::<Int>().map_err(|e| {
-        SyntaxErrorKind::failure(num, "Integer", Some(format!("error: {e}")), None)
-    })?;
+    let num = num
+        .to_str(input.str)
+        .parse::<Int>()
+        .map_err(|e| SyntaxErrorKind::failure(num, "Integer", Some(format!("error: {e}")), None))?;
     Ok((input, Expression::Integer(num)))
 }
 

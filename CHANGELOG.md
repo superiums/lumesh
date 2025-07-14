@@ -5,6 +5,7 @@
 - link `throw` to top level
 - optimize pprint
 - fix split with ifs;
+- fix match as cmd;
 
 ## [0.6.9]
 - highlight builtin cmds;

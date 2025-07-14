@@ -241,12 +241,12 @@ pub fn handle_command(
                 } else {
                     // 分割多参数字符串
                     if ifs_contains(IFS_CMD, env) {
-                        let delimiter = match env.get("IFS") {
-                            Some(Expression::String(fs)) => fs,
-                            _ => " ".to_string(), // 使用空格作为默认分隔符
+                        let ifs = env.get("IFS");
+                        let sp = match &ifs {
+                            Some(Expression::String(fs)) => s.split_terminator(fs.as_str()),
+                            _ => s.split_terminator("\n"),
                         };
-                        s.split_terminator(delimiter.as_str())
-                            .for_each(|v| cmd_args.push(v.to_string()));
+                        sp.for_each(|v| cmd_args.push(v.to_string()));
                     } else {
                         cmd_args.push(s)
                     }

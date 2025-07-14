@@ -101,22 +101,17 @@ fn selector_wrapper(
     args: &[Expression],
     env: &mut Environment,
 ) -> Result<Expression, LmError> {
-    let delimiter = match ifs_contains(IFS_PCK, env) {
-        true => match env.get("IFS") {
-            Some(Expression::String(fs)) => fs,
-            _ => "\n".to_string(), // 使用空格作为默认分隔符
-        },
-        _ => "\n".to_string(), // 使用空格作为默认分隔符
+    let ifs = env.get("IFS");
+    let delimiter = match (ifs_contains(IFS_PCK, env), &ifs) {
+        (true, Some(Expression::String(fs))) => fs,
+        _ => "\n",
     };
 
     let (cfgs, options) = match args.len() {
-        1 => (
-            None,
-            extract_options(delimiter.as_str(), args[0].eval(env)?)?,
-        ),
+        1 => (None, extract_options(delimiter, args[0].eval(env)?)?),
         2 => (
             Some(extract_cfg(args[0].eval(env)?)?),
-            extract_options(delimiter.as_str(), args[1].eval(env)?)?,
+            extract_options(delimiter, args[1].eval(env)?)?,
         ),
         3.. => (Some(extract_cfg(args[0].eval(env)?)?), args[1..].to_vec()),
         0 => {

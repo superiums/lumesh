@@ -469,12 +469,10 @@ pub fn expr_to_csv(args: &[Expression], env: &mut Environment) -> Result<Express
     let expr = &args[0].eval(env)?;
 
     // 获取自定义分隔符
-    let delimiter = match ifs_contains(IFS_CSV, env) {
-        true => match env.get("IFS") {
-            Some(Expression::String(fs)) if fs != "\n" => fs.as_bytes()[0],
-            _ => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
-        },
-        false => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
+    let ifs = env.get("IFS");
+    let delimiter = match (ifs_contains(IFS_CSV, env), &ifs) {
+        (true, Some(Expression::String(fs))) if fs != "\n" => fs.as_bytes()[0],
+        _ => ",".as_bytes()[0],
     };
 
     let result = match expr {

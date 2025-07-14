@@ -210,21 +210,22 @@ fn split(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
     let string_args = get_string_args(args, env)?;
     let text = string_args.last().unwrap().to_owned();
 
+    let ifs = env.get("IFS");
     let delimiter = if args.len() > 1 {
-        string_args.first().unwrap().to_owned()
+        string_args.first()
     } else {
-        match env.get("IFS") {
-            Some(Expression::String(fs)) => fs,
-            _ => " ".to_string(), // 使用空格作为默认分隔符
+        match (ifs_contains(IFS_STR, env), &ifs) {
+            (true, Some(Expression::String(fs))) => Some(fs),
+            _ => None,
         }
     };
 
-    let parts: Vec<Expression> = match ifs_contains(IFS_STR, env) {
-        true => text
-            .split(&delimiter)
+    let parts: Vec<Expression> = match delimiter {
+        Some(sep) => text
+            .split(sep)
             .map(|s| Expression::String(s.to_string()))
             .collect(),
-        false => text
+        _ => text
             .split_whitespace()
             .map(|s| Expression::String(s.to_string()))
             .collect(),

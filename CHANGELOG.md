@@ -4,6 +4,7 @@
 - fix `.` at end of line requires more linebreak
 - link `throw` to top level
 - optimize pprint
+- fix split with ifs;
 
 ## [0.6.9]
 - highlight builtin cmds;

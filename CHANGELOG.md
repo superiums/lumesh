@@ -10,6 +10,12 @@
 type `String. ` to see pretty table hint.
 - add `Fs.dir_name`.
 - fix check None contains.
+- optimize `help` display
+added `help libs`, `help top`
+
+added ordered display.
+
+
 
 ## [0.6.9]
 - highlight builtin cmds;

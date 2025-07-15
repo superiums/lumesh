@@ -97,23 +97,52 @@ pub fn get_module_map() -> HashMap<String, Expression> {
     }
 }
 fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
-    if !args.is_empty() {
-        match super::get_builtin(&args[0].to_string()) {
-            Some(m) => {
-                pretty_printer(m)?;
+    match args.is_empty() {
+        false => match args[0].to_string().as_str() {
+            "tops" => {
+                let m = super::get_builtin_map()
+                    .into_iter()
+                    .filter(|item| match item.1 {
+                        Expression::Builtin(_) => true,
+                        _ => false,
+                    })
+                    .collect::<HashMap<_, _>>();
+                pretty_printer(&Expression::from(m))?;
             }
-            _ => return Err(LmError::CustomError("no lib found".into())),
+            "libs" | "modules" => {
+                let m = super::get_builtin_map()
+                    .iter()
+                    .filter_map(|item| match item.1 {
+                        Expression::HMap(second) => {
+                            let mut s_keys = second.keys().cloned().collect::<Vec<_>>();
+                            s_keys.sort();
+                            Some((item.0.clone(), Expression::from(s_keys)))
+                        }
+                        _ => None,
+                    })
+                    .collect::<HashMap<String, Expression>>();
+                pretty_printer(&Expression::from(m))?;
+            }
+            _ => match super::get_builtin(&args[0].to_string()) {
+                Some(m) => {
+                    pretty_printer(m)?;
+                }
+                _ => return Err(LmError::CustomError("no lib found".into())),
+            },
+        },
+        true => {
+            let m = super::get_builtin_map()
+                .iter()
+                .map(|item| match item.1 {
+                    Expression::HMap(_) => {
+                        (item.0.clone(), Expression::String("module".to_string()))
+                    }
+                    // Expression::Map(_) => (item.0.clone(), Expression::String("Module".to_string())),
+                    other => (item.0.clone(), other.clone()),
+                })
+                .collect::<HashMap<String, Expression>>();
+            pretty_printer(&Expression::from(m))?;
         }
-    } else {
-        let m = super::get_builtin_map()
-            .iter()
-            .map(|item| match item.1 {
-                Expression::HMap(_) => (item.0.clone(), Expression::String("module".to_string())),
-                Expression::Map(_) => (item.0.clone(), Expression::String("Module".to_string())),
-                other => (item.0.clone(), other.clone()),
-            })
-            .collect::<HashMap<String, Expression>>();
-        pretty_printer(&Expression::from(m))?;
     }
     Ok(Expression::None)
 }

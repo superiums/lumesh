@@ -23,15 +23,19 @@ pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
     Ok(Expression::None)
 }
 
-#[derive(Tabled)]
+#[derive(Tabled, PartialOrd, PartialEq, Eq)]
 struct KeyValueRow {
     #[tabled(rename = "KEY")]
     key: String,
     #[tabled(rename = "VALUE")]
     value: String,
 }
-
-fn pprint_map_internal<I>(items: I, use_btree_style: bool) -> Table
+impl Ord for KeyValueRow {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.key.cmp(&other.key)
+    }
+}
+fn pprint_map_internal<I>(items: I, is_hmap: bool) -> Table
 where
     I: Iterator<Item = (String, Expression)>,
 {
@@ -45,7 +49,7 @@ where
     let key_column_width = 6; // 或者动态计算最长键名
     let value_column_width = available_width.saturating_sub(key_column_width);
 
-    let rows: Vec<KeyValueRow> = items
+    let mut rows: Vec<KeyValueRow> = items
         .map(|(key, val)| {
             let value = match &val {
                 Expression::HMap(_) | Expression::Map(_) => {
@@ -73,17 +77,19 @@ where
             }
         })
         .collect();
-
+    if is_hmap {
+        rows.sort();
+    }
     let mut table = Table::new(rows);
-    if use_btree_style {
-        table
-            .modify(Columns::first(), Color::FG_GREEN)
-            .with(Style::rounded());
-    } else {
+    if is_hmap {
         table
             .modify(Columns::first(), Color::FG_BLUE)
             .modify(Columns::first(), Width::increase(key_column_width))
             .with(Style::ascii());
+    } else {
+        table
+            .modify(Columns::first(), Color::FG_GREEN)
+            .with(Style::rounded());
     }
 
     table.with(Width::wrap(specified_width).keep_words(true));
@@ -91,11 +97,11 @@ where
 }
 
 fn pprint_map(exprs: &BTreeMap<String, Expression>) -> Table {
-    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), true)
+    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), false)
 }
 
 pub fn pprint_hmap(exprs: &HashMap<String, Expression>) -> Table {
-    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), false)
+    pprint_map_internal(exprs.iter().map(|(k, v)| (k.clone(), v.clone())), true)
 }
 
 fn pprint_list(exprs: &[Expression]) {

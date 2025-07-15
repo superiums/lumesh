@@ -7,13 +7,21 @@
 - fix split with ifs;
 - fix match as cmd;
 - fix pprint modules hint.
-type `String. ` to see pretty table hint.
+    type `String. ` to see pretty table hint.
 - add `Fs.dir_name`.
 - fix check None contains.
 - optimize `help` display
-added `help libs`, `help top`
+    added `help libs`, `help top`
 
-added ordered display.
+    added ordered display.
+
+- add raw command with could skip env seek:
+    ```bash
+    let id = 3
+    id -u          # error, id is integer
+    id^ -u         # ok, id is forced command
+    ```
+
 
 
 

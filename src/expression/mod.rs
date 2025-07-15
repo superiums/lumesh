@@ -63,6 +63,7 @@ pub enum Expression {
     If(Rc<Self>, Rc<Self>, Rc<Self>),
     Apply(Rc<Self>, Rc<Vec<Self>>),
     Command(Rc<Self>, Rc<Vec<Self>>),
+    CommandRaw(Rc<Self>, Rc<Vec<Self>>),
     AliasDef(String, Rc<Self>),
     Lambda(Vec<String>, Rc<Self>),
     Function(

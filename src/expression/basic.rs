@@ -282,7 +282,7 @@ impl Expression {
                 write!(f, ")")
             }
 
-            Self::Command(cmd, args) => {
+            Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
                 cmd.fmt_display_indent(f, indent)?;
                 for arg in args.iter() {
                     write!(f, " ")?;
@@ -659,12 +659,7 @@ impl Expression {
 
             // 函数相关 - 保持原有实现
             Self::Lambda(params, body) => {
-                write!(
-                    f,
-                    "\n{}Lambda ({})\n",
-                    idt(i),
-                    params.to_vec().join(",")
-                )?;
+                write!(f, "\n{}Lambda ({})\n", idt(i), params.to_vec().join(","))?;
                 body.as_ref().fmt_indent(f, i + 1)
             }
             Self::Function(name, param, pc, body, _) => {
@@ -695,7 +690,7 @@ impl Expression {
                 });
                 writeln!(f, "{})", idt(i))
             }
-            Self::Command(cmd, args) => {
+            Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
                 write!(f, "\n{}Cmd\n", idt(i))?;
                 cmd.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}〖\n", idt(i))?;
@@ -755,6 +750,7 @@ impl Expression {
             Self::If(_, _, _) => "If".into(),
             Self::Apply(_, _) => "Apply".into(),
             Self::Command(_, _) => "Command".into(),
+            Self::CommandRaw(_, _) => "CommandRaw".into(),
             Self::Lambda(..) => "Lambda".into(),
             // Self::Macro(_, _) => "Macro".into(),
             Self::Function(..) => "Function".into(),

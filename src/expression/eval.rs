@@ -277,7 +277,7 @@ impl Expression {
                     job = inner.as_ref();
                     if state.contains(State::IN_ASSIGN) {
                         if let Expression::Symbol(_) = job {
-                            return job.eval_command(job, &vec![], state, env, depth + 1);
+                            return job.eval_command(job.clone(), &vec![], state, env, depth + 1);
                         }
                     }
                     continue;
@@ -1008,8 +1008,17 @@ impl Expression {
                     break self.eval_apply(func.as_ref(), args, state, env, depth + 1);
                 }
                 Self::Command(cmd, args) => {
-                    // dbg!("====", &cmd, &args);
-                    break self.eval_command(cmd.as_ref(), args.as_ref(), state, env, depth + 1);
+                    let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
+                    break self.eval_command(eval_cmd, args.as_ref(), state, env, depth + 1);
+                }
+                Self::CommandRaw(cmd, args) => {
+                    break self.eval_command(
+                        cmd.as_ref().clone(),
+                        args.as_ref(),
+                        state,
+                        env,
+                        depth + 1,
+                    );
                 }
                 // break Self::eval_command(self, env, depth+1),
                 // 简单控制流表达式

@@ -443,7 +443,7 @@ impl PrattParser {
                 let (input, args) = many0(|inp| {
                     PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, depth + 1)
                 })(input.skip_n(1))?;
-                Ok((input, Expression::Command(Rc::new(lhs), Rc::new(args))))
+                Ok((input, Expression::CommandRaw(Rc::new(lhs), Rc::new(args))))
             }
             "[" => {
                 // 数组索引或切片

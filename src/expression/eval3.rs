@@ -270,13 +270,12 @@ impl Expression {
     #[inline]
     pub fn eval_command(
         &self,
-        cmd: &Expression,
+        eval_cmd: Expression,
         args: &Vec<Expression>,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
         // dbg!(
         //     "2.--->Command:",
         //     &eval_cmd,
@@ -340,7 +339,7 @@ impl Expression {
                     RuntimeErrorKind::TypeError {
                         //非法命令
                         expected: "Symbol as command".to_string(),
-                        sym: cmd.to_string(),
+                        sym: other.to_string(),
                         found: other.type_name(),
                     },
                     self.clone(),

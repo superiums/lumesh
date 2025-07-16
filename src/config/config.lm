@@ -1,7 +1,7 @@
 # ========== config for login mode ==========
 # only login mode need PATH, other mode will retrieve it from parent shell.
 if IS_LOGIN {
-    let PATH = "/usr/local/bin:/usr/bin:/bin"
+    let PATH = "~/.local/bin:/usr/local/bin:/usr/bin:/bin"
 }
 
 # ========== config for interactive mode ==========

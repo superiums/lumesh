@@ -56,8 +56,8 @@ pub fn get() -> Expression {
         String::from("filter") => Expression::builtin("filter", filter, "filter elements by condition", "<fn> <list>"),
         String::from("filter_map") => Expression::builtin("filter_map", filter_map, "filter and map in one pass", "<fn> <list>"),
         String::from("reduce") => Expression::builtin("reduce", reduce, "reduce list with accumulator function", "<fn> <init> <list>"),
-        String::from("some") => Expression::builtin("some", some, "test if any element passes condition", "<fn> <list>"),
-        String::from("every") => Expression::builtin("every", every, "test if all elements pass condition", "<fn> <list>"),
+        String::from("any") => Expression::builtin("any", any, "test if any element passes condition", "<fn> <list>"),
+        String::from("all") => Expression::builtin("all", all, "test if all elements pass condition", "<fn> <list>"),
 
         // 转换操作
         String::from("join") => Expression::builtin("join", join, "join string list with separator", "<separator> <list>"),
@@ -786,7 +786,7 @@ fn contains(args: &[Expression], env: &mut Environment) -> Result<Expression, Lm
     Ok(Expression::Boolean(list.as_ref().contains(&item)))
 }
 
-fn some(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+fn any(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("some", args, 2)?;
     let func = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;
@@ -801,7 +801,7 @@ fn some(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
     Ok(Expression::Boolean(false))
 }
 
-fn every(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+fn all(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("every", args, 2)?;
     let func = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;

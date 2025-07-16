@@ -247,7 +247,7 @@ pub fn parse_command_output(
         (&lines[..], headers)
     };
 
-    let mut result = Vec::new();
+    let mut result = Vec::with_capacity(data_lines.len());
     for line in data_lines {
         if line.trim().is_empty() {
             continue;

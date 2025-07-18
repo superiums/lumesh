@@ -111,7 +111,12 @@ impl Expression {
                     ));
                 }
                 env.define(name, func.clone());
-                Ok(Expression::None)
+                // deco eval need it
+                if state.contains(State::IN_DECO | State::IN_ASSIGN) {
+                    Ok(func)
+                } else {
+                    Ok(Expression::None)
+                }
             }
 
             // 块表达式
@@ -296,7 +301,9 @@ impl Expression {
 fn glob_expand(s: &str) -> Vec<String> {
     let mut elist = vec![];
     for entry in glob(s).unwrap() {
-        if let Ok(p) = entry { elist.push(p.to_string_lossy().to_string()) }
+        if let Ok(p) = entry {
+            elist.push(p.to_string_lossy().to_string())
+        }
     }
     elist
 }
@@ -432,13 +439,11 @@ fn get_module_name_from_path<'a>(
                         _ => fname.to_string().into(),
                     })
                 }
-                None => {
-                    Err(RuntimeError::common(
-                        "get filename failed".into(),
-                        context.clone(),
-                        depth,
-                    ))
-                }
+                None => Err(RuntimeError::common(
+                    "get filename failed".into(),
+                    context.clone(),
+                    depth,
+                )),
             }
         }
     }

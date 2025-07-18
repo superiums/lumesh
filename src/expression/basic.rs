@@ -446,38 +446,39 @@ impl Expression {
             Self::Bytes(b) => write!(f, "Bytes〈{:?}〉", String::from_utf8_lossy(b)),
 
             Self::Group(inner) => {
-                write!(f, "\n{}Group\n", idt(i))?;
-                inner.fmt_indent(f, i + 1)
+                write!(f, "\n{}Group\n{}(", idt(i), idt(i + 1))?;
+                inner.fmt_indent(f, i + 2)?;
+                write!(f, "\n{})", idt(i + 1))
             }
 
             // 新增：声明和赋值操作
             Self::Declare(name, expr) => {
-                write!(f, "\n{}Declare〈{}〉 =\n", idt(i), name)?;
+                write!(f, "\n{}Declare〈{}〉 =", idt(i), name)?;
                 expr.fmt_indent(f, i + 1)
             }
             Self::DestructureAssign(pattern, expr) => {
-                write!(f, "\n{}DestructureAssign〈{:?}〉 =\n", idt(i), pattern)?;
+                write!(f, "\n{}DestructureAssign〈{:?}〉 =", idt(i), pattern)?;
                 expr.fmt_indent(f, i + 1)
             }
             Self::Assign(name, expr) => {
-                write!(f, "\n{}Assign〈{}〉 =\n", idt(i), name)?;
+                write!(f, "\n{}Assign〈{}〉 =", idt(i), name)?;
                 expr.fmt_indent(f, i + 1)
             }
 
             // 新增：删除和控制流语句
             Self::Del(name) => write!(f, "Del〈{name}〉"),
             Self::Return(expr) => {
-                write!(f, "\n{}Return\n", idt(i))?;
+                write!(f, "\n{}Return", idt(i))?;
                 expr.fmt_indent(f, i + 1)
             }
             Self::Break(expr) => {
-                write!(f, "\n{}Break\n", idt(i))?;
+                write!(f, "\n{}Break", idt(i))?;
                 expr.fmt_indent(f, i + 1)
             }
 
             // 新增：操作符
             Self::UnaryOp(op, expr, is_prefix) => {
-                write!(f, "\n{}UnaryOp〈{}, prefix:{}〉\n", idt(i), op, is_prefix)?;
+                write!(f, "\n{}UnaryOp〈{}, prefix:{}〉", idt(i), op, is_prefix)?;
                 expr.fmt_indent(f, i + 1)
             }
             Self::RangeOp(op, l, r, step) => fmt_binary_op(f, "RangeOp", op, l, r, step, i),
@@ -500,15 +501,15 @@ impl Expression {
                     params
                         .start
                         .as_ref()
-                        .map_or("None".to_string(), |s| format!("{s:?}")),
+                        .map_or(Cow::Borrowed(""), |s| Cow::Owned(format!("{s:?}"))),
                     params
                         .end
                         .as_ref()
-                        .map_or("None".to_string(), |s| format!("{s:?}")),
+                        .map_or(Cow::Borrowed(""), |s| Cow::Owned(format!("{s:?}"))),
                     params
                         .step
                         .as_ref()
-                        .map_or("None".to_string(), |s| format!("{s:?}"))
+                        .map_or(Cow::Borrowed(""), |s| Cow::Owned(format!("{s:?}"))),
                 )
             }
 
@@ -617,7 +618,7 @@ impl Expression {
                 false_expr.fmt_indent(f, i + 1)
             }
             Self::Match(value, branches) => {
-                write!(f, "\n{}match\n", idt(i))?;
+                write!(f, "\n{}match ", idt(i))?;
                 value.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}{{\n", idt(i))?;
                 for (pat, expr) in branches.iter() {
@@ -635,14 +636,14 @@ impl Expression {
                 write!(f, "\n{}}}\n", idt(i))
             }
             Self::For(name, list, body) => {
-                write!(f, "\n{}for {} in\n", idt(i), name)?;
+                write!(f, "\n{}for {} in ", idt(i), name)?;
                 list.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}{{\n", idt(i))?;
                 body.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}}}\n", idt(i))
             }
             Self::While(cond, body) => {
-                write!(f, "\n{}while\n", idt(i))?;
+                write!(f, "\n{}while", idt(i))?;
                 cond.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}{{\n", idt(i))?;
                 body.as_ref().fmt_indent(f, i + 1)?;
@@ -656,10 +657,28 @@ impl Expression {
 
             // 函数相关 - 保持原有实现
             Self::Lambda(params, body) => {
-                write!(f, "\n{}Lambda ({})\n", idt(i), params.to_vec().join(","))?;
+                write!(f, "\n{}Lambda ({}) ->", idt(i), params.to_vec().join(","))?;
                 body.as_ref().fmt_indent(f, i + 1)
             }
-            Self::Function(name, param, pc, body, _) => {
+            Self::Function(name, param, pc, body, decos) => {
+                for (deco, args) in decos {
+                    write!(
+                        f,
+                        "\n{}@{}({})",
+                        idt(i),
+                        deco,
+                        match args {
+                            Some(a) => Cow::Owned(
+                                a.iter()
+                                    .map(|x| x.to_string())
+                                    .collect::<Vec<_>>()
+                                    .join(",")
+                            ),
+                            _ => Cow::Borrowed(""),
+                        }
+                    )?;
+                }
+
                 let collector = match pc {
                     Some(x) => Cow::Owned(format!(",*{}", x)),
                     _ => Cow::Borrowed(""),
@@ -681,9 +700,7 @@ impl Expression {
                 body.fmt_indent(f, i + 1)
             }
             Self::Apply(func, args) => {
-                write!(f, "\n{}Apply\n", idt(i))?;
-                func.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}(\n", idt(i))?;
+                write!(f, "\n{}Apply〈{}〉\n{}(\n", idt(i), func, idt(i))?;
                 args.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
                     let _ = writeln!(f);
@@ -691,14 +708,12 @@ impl Expression {
                 writeln!(f, "{})", idt(i))
             }
             Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
-                write!(f, "\n{}Cmd\n", idt(i))?;
-                cmd.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}〖\n", idt(i))?;
+                write!(f, "\n{}Command〈{}〉\n{}(", idt(i), cmd, idt(i))?;
                 args.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
                     let _ = writeln!(f);
                 });
-                writeln!(f, "{}〗", idt(i))
+                writeln!(f, "{})", idt(i))
             }
         }
     }

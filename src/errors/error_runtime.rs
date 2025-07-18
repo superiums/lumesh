@@ -13,8 +13,8 @@ pub struct RuntimeError {
 }
 #[derive(Debug, Error)]
 pub enum RuntimeErrorKind {
-    #[error("cannot apply `{0:?}` with the arguments {1:?}")]
-    CannotApply(Expression, Vec<Expression>),
+    #[error("type `{0}` is not appliable: {1:?}")]
+    CannotApply(String, Expression),
     #[error("symbol \"{0}\" not defined")]
     SymbolNotDefined(String),
     #[error("command `{0}` failed with args {1:?}")]
@@ -144,10 +144,7 @@ impl std::fmt::Display for RuntimeError {
         writeln!(
             f,
             "{}Expression[{}]{}: {}",
-            BLUE_START,
-            self.depth,
-            RESET,
-            self.context,
+            BLUE_START, self.depth, RESET, self.context,
         )?;
         writeln!(
             f,

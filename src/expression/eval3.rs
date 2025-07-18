@@ -27,12 +27,12 @@ impl Expression {
         }
 
         // println!();
-        // dbg!("2.--->Applying:", &func, &func.type_name(), &args);
+        // dbg!("2.--->Applying:", depth, &func, &func.type_name(), &args);
 
         // 递归求值函数和参数
         let func_eval = func.eval_mut(state, env, depth + 1)?;
 
-        // dbg!(&func, &func_eval, &func_eval.type_name());
+        // dbg!(&func_eval, &func_eval.type_name());
 
         // 分派到具体类型处理
 
@@ -141,19 +141,24 @@ impl Expression {
                             // dbg!(&deco);
                             let deco_f = env.get(deco.0.as_str());
                             if let Some(deco_fn) = deco_f {
-                                let deco_symbo_type = deco_fn.type_name();
-                                if "Function" == deco_symbo_type || "Labmda" == deco_symbo_type {
-                                    // dbg!("deco is func");
+                                // let deco_symbo_type = deco_fn.type_name();
+                                // if "Function" == deco_symbo_type || "Labmda" == deco_symbo_type {
+                                if matches!(
+                                    deco_fn,
+                                    Expression::Function(..) | Expression::Lambda(..)
+                                ) {
                                     let deco_args = deco.1.unwrap_or(vec![]);
-                                    let evaled_deco = deco_fn.eval_apply(
+                                    // dbg!("deco is func", &deco_fn, &deco_args, &last_fn);
+                                    let evaled_deco = self.eval_apply(
                                         &deco_fn,
                                         &deco_args,
                                         state,
                                         &mut env_deco,
                                         depth + 1,
                                     )?;
+                                    // dbg!(&evaled_deco);
                                     // 只构建装饰器链，不执行
-                                    last_fn = evaled_deco.eval_apply(
+                                    last_fn = self.eval_apply(
                                         &evaled_deco,
                                         &vec![last_fn],
                                         state,
@@ -170,13 +175,13 @@ impl Expression {
                             } else {
                                 return Err(RuntimeError::common(
                                     "decorator not defined".into(),
-                                    func.clone(),
+                                    self.clone(),
                                     depth,
                                 ));
                             }
                         }
                         last_fn =
-                            last_fn.eval_apply(&last_fn, args, state, &mut env_deco, depth + 1)?;
+                            self.eval_apply(&last_fn, args, state, &mut env_deco, depth + 1)?;
                         state.clear(State::IN_DECO);
                         // 最后执行装饰过的函数
                         Ok(last_fn)
@@ -257,12 +262,14 @@ impl Expression {
                     }
                 }
             }
-
-            _ => Err(RuntimeError::new(
-                RuntimeErrorKind::CannotApply(func.clone(), args.clone()),
-                self.clone(),
-                depth,
-            )),
+            o => {
+                // dbg!(o.type_name());
+                Err(RuntimeError::new(
+                    RuntimeErrorKind::CannotApply(o.type_name(), func.clone()),
+                    self.clone(),
+                    depth,
+                ))
+            }
         }
     }
 

@@ -2,6 +2,8 @@
 ## [0.7.1]
 - rename `List.some` and `List.every` to `any` and `all`
 - fix test
+- fix func return in deco
+- fix fmt indent
 
 ## [0.7.0]
 - fix long hint cover the screen

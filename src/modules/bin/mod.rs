@@ -262,11 +262,10 @@ fn pwd(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
 
 fn get_type(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("type", args, 1)?;
-    let x_type = args[0].type_name();
-    let rs = if &x_type == "Symbol" {
+    let rs = if matches!(args[0], Expression::Symbol(_) | Expression::Variable(_)) {
         args[0].eval(env)?.type_name()
     } else {
-        x_type
+        args[0].type_name()
     };
     Ok(Expression::String(rs))
 }

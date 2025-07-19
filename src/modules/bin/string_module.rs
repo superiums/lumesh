@@ -1,5 +1,5 @@
+use super::from_module::parse_command_output;
 use super::into_module::{filesize, float, int};
-use super::parse_module::parse_command_output;
 use super::time_module::parse_time;
 use super::{get_integer_arg, get_string_arg, get_string_args};
 

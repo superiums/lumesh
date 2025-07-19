@@ -1,43 +1,23 @@
 // use super::{get_list_arg, get_string_arg};
-use crate::{
-    Environment, Expression, LmError, parse,
-    runtime::{IFS_CSV, ifs_contains},
-    syntax::highlight_dark_theme,
-};
+use crate::{Environment, Expression, LmError, parse};
 use common_macros::hash_map;
 use regex_lite::Regex;
 use std::collections::BTreeMap;
 use tinyjson::JsonValue;
-
-use super::check_exact_args_len;
 
 pub fn get() -> Expression {
     (hash_map! {
         // 数据格式解析
              String::from("toml") => Expression::builtin("toml", parse_toml,
                  "parse TOML into lumesh expression", "<toml_string>"),
-
              String::from("json") => Expression::builtin("json", parse_json,
                  "parse JSON into lumesh expression", "<json_string>"),
-
              String::from("csv") => Expression::builtin("csv", parse_csv,
                  "parse CSV into lumesh expression", "<csv_string>"),
 
-             // 数据格式序列化
-             String::from("to_toml") => Expression::builtin("to_toml", expr_to_toml,
-                 "parse lumesh expression into TOML", "<expr>"),
-
-             String::from("to_json") => Expression::builtin("to_json", expr_to_json,
-                 "parse lumesh expression into JSON", "<expr>"),
-
-             String::from("to_csv") => Expression::builtin("to_csv", expr_to_csv,
-                 "parse lumesh expression into CSV", "<expr>"),
-
              // 表达式解析
-             String::from("expr") => Expression::builtin("expr", parse_expr,
+             String::from("script") => Expression::builtin("script", parse_script,
                  "parse script str to lumesh expression", "<script_string>"),
-             String::from("highlight") => Expression::builtin("highlight", highlight_str,
-                 "highlight script str", "<script_string>"),
 
              // 命令输出解析
              String::from("cmd") => Expression::builtin("cmd", parse_command_output,
@@ -122,8 +102,8 @@ fn json_to_expr(val: JsonValue) -> Expression {
 
 // Expression Parser
 
-fn parse_expr(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("expr", args, 1)?;
+fn parse_script(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("script", args, 1)?;
     let script = args[0].eval(env)?.to_string();
 
     if script.is_empty() {
@@ -131,17 +111,6 @@ fn parse_expr(args: &[Expression], env: &mut Environment) -> Result<Expression, 
     }
 
     Ok(parse(&script)?)
-}
-fn highlight_str(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("highlight", args, 1)?;
-    let script = args[0].eval(env)?.to_string();
-
-    if script.is_empty() {
-        return Ok(Expression::None);
-    }
-
-    let hi = highlight_dark_theme(script.as_str());
-    Ok(Expression::String(hi))
 }
 
 // Command Output Parser
@@ -307,230 +276,6 @@ fn parse_csv(args: &[Expression], env: &mut Environment) -> Result<Expression, L
         result.push(Expression::from(row));
     }
     Ok(Expression::from(result))
-}
-
-// Expression to TOML Conversion
-pub fn expr_to_toml(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("to_toml", args, 1)?;
-    let expr = &args[0].eval(env)?;
-    let toml_str = expr_to_toml_string(expr, None);
-    Ok(Expression::String(toml_str))
-}
-
-// fn expr_to_toml_string(expr: &Expression) -> String {
-//     match expr {
-//         Expression::None => "".to_string(),
-//         Expression::Boolean(b) => b.to_string(),
-//         Expression::Integer(i) => i.to_string(),
-//         Expression::Float(f) => f.to_string(),
-//         Expression::String(s) => format!("\"{}\"", s),
-//         Expression::List(list) => {
-//             let items: Vec<String> = list.iter().map(expr_to_toml_string).collect();
-//             format!("[{}]", items.join(", "))
-//         }
-//         Expression::Map(map) => {
-//             let pairs: Vec<String> = map
-//                 .iter()
-//                 .map(|(k, v)| format!("{} = {}", k, expr_to_toml_string(v)))
-//                 .collect();
-//             pairs.join("\n")
-//         }
-//         other => other.to_string(),
-//     }
-// }
-
-// 递归序列化函数（新增表名前缀参数）
-fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String {
-    match expr {
-        // 基本类型处理
-        Expression::None => "".to_string(),
-        // Expression::Boolean(b) => b.to_string(),
-        // Expression::Integer(i) => i.to_string(),
-        // Expression::Float(f) => f.to_string(),
-
-        // 字符串处理（禁用Unicode转义）
-        Expression::String(s) => format!("\"{}\"", s.replace("\"", "\\\"")),
-        // Expression::DateTime(t) => t.to_string(),
-
-        // 数组处理（保持原始结构）
-        Expression::List(list) => {
-            let items: Vec<String> = list.iter().map(|e| expr_to_toml_string(e, None)).collect();
-            format!("[{}]", items.join(", "))
-        }
-
-        // 映射表处理（核心改进）
-        Expression::Map(map) => {
-            let mut output = Vec::new();
-            let mut tables = BTreeMap::new();
-            let mut simple_keys = BTreeMap::new();
-
-            // 分离简单键和嵌套表
-            for (key, value) in map.as_ref() {
-                if let Expression::Map(_) = value {
-                    tables.insert(key.clone(), value);
-                } else {
-                    simple_keys.insert(key.clone(), value);
-                }
-            }
-
-            // 处理当前层简单键值对
-            for (key, value) in &simple_keys {
-                let line = format!("{} = {}", key, expr_to_toml_string(value, None));
-                output.push(line);
-            }
-
-            // 处理嵌套表
-            for (table_name, table_expr) in &tables {
-                let full_table_name = match table_prefix {
-                    Some(prefix) => format!("{prefix}.{table_name}"),
-                    None => table_name.clone(),
-                };
-
-                // 添加表头
-                output.push(format!("\n[{full_table_name}]"));
-
-                // 递归处理子表
-                let table_content = expr_to_toml_string(table_expr, Some(&full_table_name));
-
-                // 添加子表内容（保留缩进）
-                for line in table_content.lines() {
-                    output.push(line.to_string());
-                }
-            }
-
-            output.join("\n")
-        }
-
-        // 其他类型保持原样
-        other => other.to_string(),
-    }
-}
-
-// Expression to JSON Conversion (优化版)
-pub fn expr_to_json(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("to_json", args, 1)?;
-    let expr = &args[0].eval(env)?;
-    let json_str = match expr {
-        Expression::Map(map) => {
-            let pairs: Vec<String> = map
-                .iter()
-                .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
-                .collect();
-            format!("{{{}}}", pairs.join(","))
-        }
-        _ => expr_to_json_string(expr),
-    };
-    Ok(Expression::String(json_str))
-}
-
-fn expr_to_json_string(expr: &Expression) -> String {
-    match expr {
-        Expression::None => "null".to_string(),
-        // Expression::Boolean(b) => b.to_string(),
-        // Expression::Integer(i) => i.to_string(),
-        // Expression::Float(f) => f.to_string(),
-        Expression::String(s) => format!("\"{s}\""),
-        Expression::List(list) => {
-            let items: Vec<String> = list.iter().map(expr_to_json_string).collect();
-            format!("[{}]", items.join(","))
-        }
-        Expression::Map(map) => {
-            let pairs: Vec<String> = map
-                .iter()
-                .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
-                .collect();
-            format!("{{{}}}", pairs.join(","))
-        }
-        other => other.to_string(),
-    }
-}
-
-// fn expr_to_csv_string(expr: &Expression) -> String {
-//     match expr {
-//         Expression::None => "null".to_string(),
-//         Expression::List(list) => {
-//             let items: Vec<String> = list.iter().map(expr_to_json_string).collect();
-//             format!("[{}]", items.join(","))
-//         }
-//         Expression::Map(map) => {
-//             let pairs: Vec<String> = map
-//                 .iter()
-//                 .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
-//                 .collect();
-//             format!("{{{}}}", pairs.join(","))
-//         }
-//         other => other.to_string(),
-//     }
-// }
-
-// Expression to CSV
-pub fn expr_to_csv(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("to_csv", args, 1)?;
-    let expr = &args[0].eval(env)?;
-
-    // 获取自定义分隔符
-    let ifs = env.get("IFS");
-    let delimiter = match (ifs_contains(IFS_CSV, env), &ifs) {
-        (true, Some(Expression::String(fs))) if fs != "\n" => fs.as_bytes()[0],
-        _ => ",".as_bytes()[0],
-    };
-
-    let result = match expr {
-        Expression::List(rows) => {
-            let mut writer = csv::WriterBuilder::new()
-                .delimiter(delimiter) // 设置分隔符
-                .from_writer(vec![]);
-
-            // 获取所有可能的列名（按字母顺序）
-            let mut all_keys = BTreeMap::new();
-            for row in rows.as_ref() {
-                if let Expression::Map(map) = row {
-                    for key in map.keys() {
-                        all_keys.insert(key.clone(), ());
-                    }
-                }
-            }
-            let sorted_keys: Vec<_> = all_keys.keys().collect();
-
-            // 写入标题行
-            writer.write_record(&sorted_keys).unwrap();
-
-            // 写入数据行
-            for row in rows.as_ref() {
-                if let Expression::Map(map) = row {
-                    let mut record = Vec::new();
-                    for key in &sorted_keys {
-                        // TODO while v is map/list
-                        let value = map.get(*key).map(expr_to_json_string).unwrap_or_default();
-                        record.push(value);
-                    }
-                    writer.write_record(&record).unwrap();
-                }
-            }
-
-            String::from_utf8(writer.into_inner().unwrap()).unwrap()
-        }
-        Expression::Map(map) => {
-            let mut writer = csv::WriterBuilder::new()
-                .delimiter(delimiter) // 设置分隔符
-                .from_writer(vec![]);
-
-            let sorted_keys: Vec<_> = map.keys().collect();
-
-            writer.write_record(&sorted_keys).unwrap();
-
-            let record: Vec<_> = sorted_keys
-                .iter()
-                .map(|k| expr_to_json_string(map.get(*k).unwrap()))
-                .collect();
-
-            writer.write_record(&record).unwrap();
-            String::from_utf8(writer.into_inner().unwrap()).unwrap()
-        }
-        o => o.to_string(),
-    };
-
-    Ok(Expression::String(result))
 }
 
 // 定义操作步骤的枚举

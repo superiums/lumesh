@@ -23,9 +23,9 @@ mod log_module;
 mod math_module;
 // mod operator_module;
 mod about_module;
+mod from_module;
 mod fs_ls;
 mod into_module;
-mod parse_module;
 pub mod pprint;
 mod rand_module;
 mod regex_module;
@@ -44,7 +44,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("Time") => time_module::get(),
         String::from("Rand") => rand_module::get(),
         String::from("Console") => console_module::get(),
-        String::from("Parse") => parse_module::get(),
+        String::from("From") => from_module::get(),
         String::from("Fs") => fs_module::get(),
         String::from("String") => string_module::get(),
         String::from("Regex") => regex_module::get(),

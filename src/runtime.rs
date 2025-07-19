@@ -4,6 +4,7 @@ use crate::{
     RuntimeError, SyntaxError, use_script,
 };
 use crate::{SyntaxErrorKind, parse_script};
+use std::collections::HashSet;
 use std::fs::{create_dir, read_to_string, write};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -235,8 +236,17 @@ fn init_cmds(env: &mut Environment) {
     if !env.is_defined("LUME_IFS_MODE") {
         env.define("IFS", Expression::Integer(60));
     }
-    if !env.is_defined("clear") {
-        parse_and_eval("let clear = () -> console@clear()", env);
+    if let Some(Expression::String(pathes)) = env.get("PATH") {
+        let np = pathes
+            .split_terminator(":")
+            .into_iter()
+            .filter(|p| !p.is_empty()) // 可选：过滤空字符串
+            .map(|p| expand_home(p))
+            .collect::<HashSet<_>>() // 使用 HashSet 去重
+            .into_iter()
+            .collect::<Vec<_>>()
+            .join(":");
+        env.define("PATH", Expression::String(np));
     }
 }
 

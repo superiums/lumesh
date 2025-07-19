@@ -6,7 +6,7 @@
 - fix fmt indent
 - move `Parse` module to `From` module
 - move `highlight` to `Into` module
-
+- expand home and keeps uniques in `PATH`
 
 ## [0.7.0]
 - fix long hint cover the screen

@@ -137,7 +137,6 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                 result.push_str(w);
             }
             (TokenKind::LineBreak, w) => {
-                result.push_str("\t");
                 result.push_str(w);
             }
             (TokenKind::Comment, w) => {

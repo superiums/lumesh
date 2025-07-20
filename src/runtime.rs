@@ -1,4 +1,5 @@
 use crate::expression::cmd_excutor::expand_home;
+use crate::modules::pretty_printer;
 use crate::{
     Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, ModuleInfo, PRINT_DIRECT,
     RuntimeError, SyntaxError, use_script,
@@ -150,6 +151,14 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                         b.name, b.help, b.hint
                     );
                     let _ = io::stdout().flush();
+                }
+                Ok(m)
+                    if matches!(
+                        m,
+                        Expression::Map(_) | Expression::HMap(_) | Expression::List(_)
+                    ) =>
+                {
+                    let _ = pretty_printer(&m);
                 }
                 Ok(result) => unsafe {
                     if PRINT_DIRECT {

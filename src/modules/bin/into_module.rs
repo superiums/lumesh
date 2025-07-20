@@ -75,7 +75,15 @@ pub fn float(args: &[Expression], env: &mut Environment) -> Result<Expression, c
         Expression::Integer(x) => Ok(Expression::Float(x as f64)),
         Expression::Float(x) => Ok(Expression::Float(x)),
         Expression::String(x) => {
-            if let Ok(n) = x.parse::<f64>() {
+            let xt = x.trim();
+            let r = match xt.ends_with("%") {
+                true => xt
+                    .trim_end_matches('%')
+                    .parse::<f64>()
+                    .and_then(|f| Ok(f * 0.01)),
+                false => xt.parse::<f64>(),
+            };
+            if let Ok(n) = r {
                 Ok(Expression::Float(n))
             } else {
                 Err(LmError::CustomError(format!(

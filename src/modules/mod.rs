@@ -7,6 +7,7 @@ use crate::{Expression, modules::bin::pprint::pprint_hmap};
 
 mod bin;
 // use std::sync::RwLock;
+pub use bin::pprint::pretty_printer;
 pub use bin::time_module::parse_time;
 
 struct UnsafeStatic<T> {

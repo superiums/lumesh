@@ -9,4 +9,4 @@ Use `+` to append List and Maps.
 Use `-` to remove items in List and Maps.
 Use `*` to repeat strings.
 Use `~:` to check if String/List/Map contains element.
-Type `fs. ` to got functions hint for fs module.
+Type `Fs. ` to got functions hint for Fs module.

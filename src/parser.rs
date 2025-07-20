@@ -881,10 +881,13 @@ fn parse_list(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
 fn parse_pipe_method(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text(".")(input)?;
     let (input, method_name) = cut(parse_symbol_string)(input)?;
-    let (input, args) = parse_args(input, 0)?;
+    let (input, args_opt) = opt(|input| parse_args(input, 0))(input)?;
 
     // 创建一个特殊的管道方法表达式
-    Ok((input, Expression::PipeMethod(method_name, Rc::new(args))))
+    match args_opt {
+        Some(args) => Ok((input, Expression::PipeMethod(method_name, Rc::new(args)))),
+        _ => Ok((input, Expression::PipeMethod(method_name, Rc::new(vec![])))),
+    }
 }
 
 fn parse_chaind_or_index(

@@ -1,4 +1,11 @@
 # Changelog
+## [0.7.2]
+- allow pipemethod without pathens
+- auto pretty print map/list
+- allow convert '%' to float
+- fix suggestion module name
+- fix '\t' in linebreak
+
 ## [0.7.1]
 - rename `List.some` and `List.every` to `any` and `all`
 - fix test

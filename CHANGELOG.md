@@ -3,6 +3,7 @@
 - allow pipemethod without pathens
 - auto pretty print map/list
 - allow convert '%' to float
+- filter None result in loop pipe
 - fix suggestion module name
 - fix '\t' in linebreak
 

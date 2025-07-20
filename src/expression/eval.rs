@@ -704,6 +704,10 @@ impl Expression {
                                                     .replace_or_append_arg(item.clone())
                                                     .eval_mut(state, env, depth + 1)
                                             })
+                                            .filter(|x| {
+                                                x.as_ref()
+                                                    .is_ok_and(|r| !matches!(r, Expression::None))
+                                            })
                                             .collect::<Result<Vec<_>, _>>()
                                             .map(Expression::from);
                                     }
@@ -715,6 +719,10 @@ impl Expression {
                                                     .ensure_fn_apply()
                                                     .replace_or_append_arg(Expression::String(item))
                                                     .eval_mut(state, env, depth + 1)
+                                            })
+                                            .filter(|x| {
+                                                x.as_ref()
+                                                    .is_ok_and(|r| !matches!(r, Expression::None))
                                             })
                                             .collect::<Result<Vec<_>, _>>()
                                             .map(Expression::from);

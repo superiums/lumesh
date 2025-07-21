@@ -9,7 +9,7 @@ use std::rc::Rc;
 impl fmt::Display for DestructurePattern {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Rest(s) => write!(f, "...{s}"),
+            Self::Rest(s) => write!(f, "*{s}"),
             Self::Identifier(s) => write!(f, "{s}"),
             Self::Renamed((k, n)) => write!(f, "{k}:{n}"),
         }
@@ -69,7 +69,7 @@ impl Expression {
             Self::Bytes(b) => write!(f, "b\"{}\"", String::from_utf8_lossy(b)),
             Self::DateTime(n) => write!(f, "{}", n.format("%Y-%m-%d %H:%M:%S")),
             Self::FileSize(fsz) => write!(f, "{}", fsz.to_human_readable()),
-            Self::None => write!(f, ""),
+            Self::None => Ok(()),
 
             // 声明和赋值
             Self::Declare(name, expr) => {
@@ -268,14 +268,14 @@ impl Expression {
                     args.iter()
                         .map(|x| x.to_string())
                         .collect::<Vec<_>>()
-                        .join(",")
+                        .join(", ")
                 )
             }
 
             Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
                 write!(
                     f,
-                    "\n{}{cmd}{}",
+                    "\n{}{cmd} {}",
                     idt(i),
                     args.iter()
                         .map(|x| x.to_string())

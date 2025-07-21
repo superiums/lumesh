@@ -6,6 +6,7 @@
 - filter None result in loop pipe
 - fix suggestion module name
 - fix '\t' in linebreak
+- fix `PATH` not in root env
 
 ## [0.7.1]
 - rename `List.some` and `List.every` to `any` and `all`

@@ -255,7 +255,7 @@ fn init_cmds(env: &mut Environment) {
             .into_iter()
             .collect::<Vec<_>>()
             .join(":");
-        env.define("PATH", Expression::String(np));
+        env.define_in_root("PATH", Expression::String(np));
     }
 }
 

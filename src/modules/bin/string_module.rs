@@ -72,7 +72,6 @@ pub fn get() -> Expression {
         String::from("format") => Expression::builtin("format", format, "format string using {} placeholders", "<format_string> <args>..."),
 
         // 样式
-        String::from("strip") => Expression::builtin("strip", strip, "remove all ANSI escape codes from string", "<string>"),
         String::from("href") => Expression::builtin("href", href, "create terminal hyperlink", "<url> <text>"),
         String::from("bold") => Expression::builtin("bold", bold, "apply bold styling", "<string>"),
         String::from("faint") => Expression::builtin("faint", faint, "apply faint/dim styling", "<string>"),
@@ -101,7 +100,6 @@ pub fn get() -> Expression {
         String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "apply dark magenta foreground", "<string>"),
         String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "apply dark cyan foreground", "<string>"),
         String::from("dark_white") => Expression::builtin("dark_white", dark_white, "apply dark white foreground", "<string>")
-
 
     })
     .into()
@@ -612,12 +610,6 @@ fn format(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
     Ok(Expression::String(result))
 }
 
-// 单参数函数（字符串作为最后一个参数）
-fn strip(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("strip", args, 1)?;
-    Ok(strip_ansi_escapes(args[0].eval_in_assign(env)?.to_string().as_str()).into())
-}
-
 fn bold(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("bold", args, 1)?;
     Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
@@ -789,44 +781,4 @@ fn dark_white(args: &[Expression], env: &mut Environment) -> Result<Expression, 
     super::check_exact_args_len("dark_white", args, 1)?;
     // 修正原始代码中的转义序列错误
     Ok(format!("\x1b[37m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
-// pub fn strip_ansi_escapes(text: impl ToString) -> String {
-//     let text = text.to_string();
-//     let mut result = String::new();
-//     let mut is_in_escape = false;
-//     for ch in text.chars() {
-//         if ch == '\x1b' {
-//             is_in_escape = true;
-//         } else if is_in_escape && ch == 'm' {
-//             is_in_escape = false;
-//         } else if !is_in_escape {
-//             result.push(ch);
-//         }
-//     }
-//     result
-// }
-use regex_lite::Regex;
-pub fn strip_ansi_escapes(text: &str) -> String {
-    // 更全面的正则表达式，匹配大多数常见的 ANSI 转义序列
-    let ansi_escape_pattern = Regex::new(r"(?:\\x1b[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]").unwrap();
-    ansi_escape_pattern.replace_all(text, "").into_owned()
-    // (?:\\x1b[@-_]|[\x80-\x9F]):
-
-    // (?: ... )：这是一个非捕获组，表示匹配其中的内容但不捕获它。
-    // \\x1b[@-_]：匹配 \x1b 后面跟着 @ 到 _ 的字符。\x1b 是 ASCII 中的 ESC 字符（即转义字符），表示 ANSI 转义序列的开始。
-    // |：逻辑或操作符，表示匹配左边或右边的内容。
-    // [\x80-\x9F]：匹配从 \x80 到 \x9F 的字符范围。这些字符也是 ANSI 转义序列的一部分。
-    // [0-?]*:
-
-    // [0-?]：匹配从 0 到 ? 的字符范围。? 是 ASCII 中的一个特殊字符。
-    // *：表示前面的字符范围可以出现零次或多次。
-    // [ -/]*:
-
-    // [ -/]：匹配从空格到 / 的字符范围。
-    // *：表示前面的字符范围可以出现零次或多次。
-    // [@-~]:
-
-    // [@-~]：匹配从 @ 到 ~ 的字符范围。
-    // 这个范围包括了常见的控制字符，如 A-Z, a-z, 0-9, 和一些符号。
 }

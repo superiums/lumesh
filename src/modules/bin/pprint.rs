@@ -9,7 +9,7 @@ use tabled::{
 };
 
 use crate::Expression;
-use crate::{Builtin, modules::bin::string_module::strip_ansi_escapes};
+use crate::{Builtin, modules::bin::into_module::strip_ansi_escapes};
 
 pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
     match arg {

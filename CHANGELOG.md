@@ -8,6 +8,7 @@
 - fix '\t' in linebreak
 - fix `PATH` not in root env
 - pprint differ heads
+- move `strip` to `Into` module
 
 ## [0.7.1]
 - rename `List.some` and `List.every` to `any` and `all`

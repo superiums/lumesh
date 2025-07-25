@@ -141,15 +141,18 @@ fn pprint_list(exprs: &[Expression]) {
 
     table
         .modify(Rows::first(), Color::FG_BLUE)
-        .with(Style::rounded())
         .with(Width::wrap(specified_width).keep_words(true));
 
     if has_header {
-        table.with(
-            Modify::new(Rows::first()).with(tabled::settings::format::Format::content(|s| {
-                s.to_uppercase()
-            })),
-        );
+        table
+            .with(
+                Modify::new(Rows::first()).with(tabled::settings::format::Format::content(|s| {
+                    s.to_uppercase()
+                })),
+            )
+            .with(Style::rounded());
+    } else {
+        table.with(Style::modern_rounded());
     }
     println!("{table}");
 }

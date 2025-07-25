@@ -174,7 +174,7 @@ _由于fish无法完成一百万次的任务，我们记录了其一半任务的
 
 - **语法手册** [https://lumesh.codeberg.page/zh-cn/syntax]
 - **内置函数库** libs [https://lumesh.codeberg.page/zh-cn/libs/index]
-- **Bash对比** [https://lumesh.codeberg.page/zh-cn/bash_user_guid]
+- **Bash对比** [https://lumesh.codeberg.page/rv/zh.html]
 - **快捷键** [https://lumesh.codeberg.page/zh-cn/keys]
 
 ## ⚑ 版本历程

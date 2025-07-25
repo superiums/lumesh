@@ -169,7 +169,7 @@ _Due to fish being unable to complete one million tasks, we recorded its half-ta
 
 - **Syntax Manual** [https://lumesh.codeberg.page/en/syntax]
 - **Built-in Function Library** [https://lumesh.codeberg.page/en/libs/index]
-- **Bash Comparison** [https://lumesh.codeberg.page/en/bash_user_guid]
+- **Bash Comparison** [https://lumesh.codeberg.page/rv/en.html]
 - **Hotkeys** [https://lumesh.codeberg.page/en/keys]
 
 ## ⚑ Version History

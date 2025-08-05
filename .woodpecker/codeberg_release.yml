@@ -5,7 +5,7 @@ variables:
 
 when:
   event: tag
-  # tag: "v[0-9]+.*"
+  ref: refs/tags/v*
 
 steps:
   setup:
@@ -99,11 +99,12 @@ steps:
       - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
     depends_on: [create_release]
 
-  upload_assets:
+  upload_assets_doc:
     image: alpine:latest
     commands:
       - source .env
       - apk add --no-cache curl jq
+
       # 上传文档
       - |
         curl -X POST "$UPLOAD_URL" \
@@ -115,6 +116,17 @@ steps:
       #     -H "Authorization: token $CODEBERG_TOKEN" \
       #     -H "Content-Type: multipart/form-data" \
       #     -F "attachment=@doc.zip;filename=doc.zip"
+
+    # secrets: [CODEBERG_TOKEN]
+    environment:
+      CODEBERG_TOKEN:
+        from_secret: codeberg_token
+      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+    depends_on: [build_docs]
+  upload_assets_linux:
+    image: alpine:latest
+    commands:
+      - source .env
       # 上传 Linux 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \
@@ -126,17 +138,27 @@ steps:
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
           -F "attachment=@lumesh-linux;filename=${RUNNER_BINARY}_linux_${VERSION}"
-      # 上传 macOS 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lume-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
+          -F "attachment=@lume-linux-musl;filename=${MAIN_BINARY}_linux_musl_${VERSION}"
       - |
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lumesh-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
+          -F "attachment=@lumesh-linux-musl;filename=${RUNNER_BINARY}_linux_musl_${VERSION}"
+
+    environment:
+      CODEBERG_TOKEN:
+        from_secret: codeberg_token
+      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+    depends_on: [build_linux]
+  upload_assets_windows:
+    image: alpine:latest
+    commands:
+      - source .env
+      - apk add --no-cache curl jq
       # 上传 Windows 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \
@@ -148,5 +170,40 @@ steps:
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
           -F "attachment=@lumesh-windows.exe;filename=${RUNNER_BINARY}_windows_${VERSION}.exe"
-    # secrets: [CODEBERG_TOKEN]
-    depends_on: [build_docs, build_linux, build_macos, build_windows]
+    environment:
+      CODEBERG_TOKEN:
+        from_secret: codeberg_token
+      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+    depends_on: [build_windows]
+  upload_assets_macos:
+    image: alpine:latest
+    commands:
+      - source .env
+      - apk add --no-cache curl jq
+      # 上传 macOS 二进制文件
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@lume-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@lumesh-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@lume-linux-musl;filename=${MAIN_BINARY}_linux_musl_${VERSION}"
+      - |
+        curl -X POST "$UPLOAD_URL" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: multipart/form-data" \
+          -F "attachment=@lumesh-linux-musl;filename=${RUNNER_BINARY}_linux_musl_${VERSION}"
+
+    environment:
+      CODEBERG_TOKEN:
+        from_secret: codeberg_token
+      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+    depends_on: [build_macos]

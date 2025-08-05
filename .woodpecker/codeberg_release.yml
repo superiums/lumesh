@@ -102,9 +102,11 @@ steps:
   upload_assets_doc:
     image: alpine:latest
     commands:
+      - echo "prepare to upload docs"
       - source .env
       - apk add --no-cache curl jq
-
+      - echo "uploading..."
+      - echo $UPLOAD_URL
       # 上传文档
       - |
         curl -X POST "$UPLOAD_URL" \
@@ -116,17 +118,20 @@ steps:
       #     -H "Authorization: token $CODEBERG_TOKEN" \
       #     -H "Content-Type: multipart/form-data" \
       #     -F "attachment=@doc.zip;filename=doc.zip"
-
+      - echo "finished"
     # secrets: [CODEBERG_TOKEN]
     environment:
       CODEBERG_TOKEN:
         from_secret: codeberg_token
-      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
     depends_on: [build_docs]
   upload_assets_linux:
     image: alpine:latest
     commands:
+      - echo "prepare to upload docs"
       - source .env
+      - apk add --no-cache curl jq
+      - echo "uploading..."
       # 上传 Linux 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \
@@ -148,17 +153,18 @@ steps:
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
           -F "attachment=@lumesh-linux-musl;filename=${RUNNER_BINARY}_linux_musl_${VERSION}"
-
+      - echo "finished"
     environment:
       CODEBERG_TOKEN:
         from_secret: codeberg_token
-      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
     depends_on: [build_linux]
   upload_assets_windows:
     image: alpine:latest
     commands:
       - source .env
       - apk add --no-cache curl jq
+      - echo "uploading..."
       # 上传 Windows 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \
@@ -170,10 +176,11 @@ steps:
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
           -F "attachment=@lumesh-windows.exe;filename=${RUNNER_BINARY}_windows_${VERSION}.exe"
+      - echo "finished"
     environment:
       CODEBERG_TOKEN:
         from_secret: codeberg_token
-      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
     depends_on: [build_windows]
   upload_assets_macos:
     image: alpine:latest
@@ -205,5 +212,5 @@ steps:
     environment:
       CODEBERG_TOKEN:
         from_secret: codeberg_token
-      UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
     depends_on: [build_macos]

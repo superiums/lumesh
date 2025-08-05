@@ -354,7 +354,7 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         path_tag("/"),
         path_tag("..\\"),
         path_tag(".\\"),
-        path_tag("."),
+        keyword_alone_or_end("."),
         win_abpath_tag(":"),
         path_tag("~"),
         path_tag("*/"),
@@ -363,10 +363,10 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         path_tag("http"),
         path_tag("ftp"),
         path_tag("file:"),
-        keyword_tag("&-"),
-        keyword_tag("&?"),
-        keyword_tag("&+"),
-        keyword_tag("&."),
+        keyword_alone_or_end("&-"),
+        keyword_alone_or_end("&?"),
+        keyword_alone_or_end("&+"),
+        keyword_alone_or_end("&."),
     ))(input)
 }
 // parse argument such as ls -l --color=auto ./

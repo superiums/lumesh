@@ -348,7 +348,7 @@ fn highlight_str(args: &[Expression], env: &mut Environment) -> Result<Expressio
 }
 
 // 单参数函数（字符串作为最后一个参数）
-fn strip_str(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+pub fn strip_str(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("striped", args, 1)?;
     Ok(strip_ansi_escapes(args[0].eval_in_assign(env)?.to_string().as_str()).into())
 }

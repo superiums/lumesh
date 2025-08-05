@@ -139,7 +139,12 @@ ps -u 1000  u | Into.table() | pprint
 - [release-page 1](https://codeberg.com/santo/lumesh/releases)
 - [release-page 2](https://github.com/superiums/lumesh/releases)
 
-**方式二：从源码编译**
+**方式二：从cargo编译**
+```bash
+cargo install lumesh
+```
+
+**方式三：从源码编译**
 ```bash
 git clone 'https://codeberg.com/santo/lumesh.git'
 cd lumesh

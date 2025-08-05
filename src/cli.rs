@@ -28,25 +28,26 @@ struct Cli {
     #[arg(short = 'p', long, num_args = 0..1)]
     profile: Option<String>,
 
-    /// 严格模式
+    /// strict mode
     #[arg(short = 's', long)]
     strict: bool,
 
+    /// private mode
     #[arg(short = 'n', long)]
     nohistory: bool,
 
-    /// 关闭ai
+    /// no-ai mode
     #[arg(short = 'a', long)]
     aioff: bool,
 
     #[arg(short = 'i', long, num_args = 0..1)]
     interactive: bool,
 
-    /// 执行字符串命令
+    /// command to execute
     #[arg(short = 'c', long, num_args = 1..)]
     cmd: Option<Vec<String>>,
 
-    /// 脚本文件路径
+    /// script to load
     #[arg(
         required = false,
         num_args = 1,
@@ -55,7 +56,7 @@ struct Cli {
     )]
     file: Option<String>,
 
-    /// 传递给脚本的参数
+    /// args for script/cmd
     #[arg(
         last = true,
         num_args=0..,

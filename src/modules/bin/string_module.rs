@@ -1,14 +1,18 @@
+use std::collections::HashMap;
+
 use super::from_module::parse_command_output;
 use super::into_module::{filesize, float, int};
 use super::time_module::parse_time;
 use super::{get_integer_arg, get_string_arg, get_string_args};
 
+use crate::modules::bin::into_module::strip_str;
 use crate::modules::bin::pprint::pretty_printer;
 use crate::{
     Environment, Expression, Int, LmError,
     runtime::{IFS_STR, ifs_contains},
 };
 use common_macros::hash_map;
+use lazy_static::lazy_static;
 
 pub fn get() -> Expression {
     (hash_map! {
@@ -63,6 +67,7 @@ pub fn get() -> Expression {
         String::from("caesar") => Expression::builtin("caesar", caesar_cipher, "encrypt a string using a caesar cipher", "<shift> <string>"),
         String::from("get_width") => Expression::builtin("get_width", get_width, "get the width of a string", "<string>"),
         String::from("grep") => Expression::builtin("grep", grep, "find lines which contains the substring", "<substring> <string>"),
+        String::from("strip") => Expression::builtin("strip", strip_str, "remove all ANSI escape codes from string", "<string>"),
 
         // 格式化
         String::from("pad_start") => Expression::builtin("pad_start", pad_start, "pad string to specified length at start", "<length> [pad_char] <string>"),
@@ -99,7 +104,13 @@ pub fn get() -> Expression {
         String::from("dark_blue") => Expression::builtin("dark_blue", dark_blue, "apply dark blue foreground", "<string>"),
         String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "apply dark magenta foreground", "<string>"),
         String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "apply dark cyan foreground", "<string>"),
-        String::from("dark_white") => Expression::builtin("dark_white", dark_white, "apply dark white foreground", "<string>")
+        String::from("dark_white") => Expression::builtin("dark_white", dark_white, "apply dark white foreground", "<string>"),
+
+        // 高级颜色
+        String::from("color256") => Expression::builtin("color256", color256, "apply color using 256-color code", "<color_spec> <string>"),
+        String::from("color256_bg") => Expression::builtin("color256_bg", color256_bg, "apply background color using 256-color code", "<color_spec> <string>"),
+        String::from("color") => Expression::builtin("color", color, "apply true color using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"),
+        String::from("color_bg") => Expression::builtin("color_bg", color_bg, "apply true color background using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"),
 
     })
     .into()
@@ -781,4 +792,250 @@ fn dark_white(args: &[Expression], env: &mut Environment) -> Result<Expression, 
     super::check_exact_args_len("dark_white", args, 1)?;
     // 修正原始代码中的转义序列错误
     Ok(format!("\x1b[37m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
+}
+
+fn color_256(args: &[Expression], bg: bool, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_exact_args_len("color256", args, 2)?;
+    let color_spec = super::get_integer_arg(args[0].eval_in_assign(env)?)?;
+    let text = super::get_string_arg(args[1].eval_in_assign(env)?)?;
+
+    if color_spec < 0 || color_spec > 255 {
+        return Err(LmError::CustomError(
+            "color values must between 0-255".into(),
+        ));
+    }
+
+    if bg {
+        Ok(format!("\x1b[48;5;{}m{}\x1b[m\x1b[0m", color_spec, text).into())
+    } else {
+        Ok(format!("\x1b[38;5;{}m{}\x1b[m\x1b[0m", color_spec, text).into())
+    }
+}
+
+fn color256(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    color_256(args, false, env)
+}
+fn color256_bg(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    color_256(args, true, env)
+}
+
+fn color(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    true_color(args, false, env)
+}
+fn color_bg(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    true_color(args, true, env)
+}
+
+fn true_color(args: &[Expression], bg: bool, env: &mut Environment) -> Result<Expression, LmError> {
+    super::check_args_len("color", args, 2..=4)?;
+
+    let (r, g, b) = match args.len() {
+        2 => match args[0].eval_in_assign(env)? {
+            // 十六进制颜色代码，如 #FF0000 或 #ff0000
+            Expression::String(hex_color) if hex_color.starts_with('#') => {
+                parse_hex_color(&hex_color)?
+            }
+            // 颜色名称，如 "red", "green", "blue"
+            Expression::String(color_name) | Expression::Symbol(color_name) => {
+                parse_color_name(color_name.as_str())?
+            }
+            _ => {
+                return Err(LmError::CustomError(
+                    "Color spec must be hex color (#RRGGBB), color name, or RGB integer".into(),
+                ));
+            }
+        },
+        4 => {
+            let r = super::get_integer_arg(args[0].eval_in_assign(env)?)?;
+            let g = super::get_integer_arg(args[1].eval_in_assign(env)?)?;
+            let b = super::get_integer_arg(args[2].eval_in_assign(env)?)?;
+            (r, g, b)
+        }
+        _ => return Err(LmError::CustomError("Args mismatch".into())),
+    };
+    if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+        return Err(LmError::CustomError("RGB values must be 0-255".into()));
+    }
+
+    let text = super::get_string_arg(args.last().unwrap().eval_in_assign(env)?)?;
+    if bg {
+        Ok(format!("\x1b[48;2;{};{};{}m{}\x1b[m\x1b[0m", r, g, b, text).into())
+    } else {
+        Ok(format!("\x1b[38;2;{};{};{}m{}\x1b[m\x1b[0m", r, g, b, text).into())
+    }
+}
+
+// 解析十六进制颜色代码
+fn parse_hex_color(hex: &str) -> Result<(i64, i64, i64), LmError> {
+    if hex.len() != 7 {
+        return Err(LmError::CustomError(
+            "Hex color must be in format #RRGGBB".into(),
+        ));
+    }
+
+    let hex_digits = &hex[1..]; // 去掉 # 前缀
+
+    let r = i64::from_str_radix(&hex_digits[0..2], 16)
+        .map_err(|_| LmError::CustomError("Invalid hex color format".into()))?;
+    let g = i64::from_str_radix(&hex_digits[2..4], 16)
+        .map_err(|_| LmError::CustomError("Invalid hex color format".into()))?;
+    let b = i64::from_str_radix(&hex_digits[4..6], 16)
+        .map_err(|_| LmError::CustomError("Invalid hex color format".into()))?;
+
+    Ok((r, g, b))
+}
+
+fn parse_color_name(color: &str) -> Result<(i64, i64, i64), LmError> {
+    color_map
+        .get(color)
+        .cloned()
+        .ok_or(LmError::CustomError("Invalid color name".into()))
+}
+
+lazy_static! {
+    static ref color_map: HashMap<&'static str, (i64, i64, i64)> = hash_map! {
+        "aliceblue" => (240, 248, 255),
+        "antiquewhite" => (250, 235, 215),
+        "aqua" => (0, 255, 255),
+        "aquamarine" => (127, 255, 212),
+        "azure" => (240, 255, 255),
+        "beige" => (245, 245, 220),
+        "bisque" => (255, 228, 196),
+        "black" => (0, 0, 0),
+        "blanchedalmond" => (255, 235, 205),
+        "blue" => (0, 0, 255),
+        "blueviolet" => (138, 43, 226),
+        "brown" => (165, 42, 42),
+        "burlywood" => (222, 184, 135),
+        "cadetblue" => (95, 158, 160),
+        "chartreuse" => (127, 255, 0),
+        "chocolate" => (210, 105, 30),
+        "coral" => (255, 127, 80),
+        "cornflowerblue" => (100, 149, 237),
+        "cornsilk" => (255, 248, 220),
+        "crimson" => (220, 20, 60),
+        "cyan" => (0, 255, 255),
+        "darkblue" => (0, 0, 139),
+        "darkcyan" => (0, 139, 139),
+        "darkgoldenrod" => (184, 134, 11),
+        "darkgray" => (169, 169, 169),
+        "darkgreen" => (0, 100, 0),
+        "darkgrey" => (169, 169, 169),
+        "darkkhaki" => (189, 183, 107),
+        "darkmagenta" => (139, 0, 139),
+        "darkolivegreen" => (85, 107, 47),
+        "darkorange" => (255, 140, 0),
+        "darkorchid" => (153, 50, 204),
+        "darkred" => (139, 0, 0),
+        "darksalmon" => (233, 150, 122),
+        "darkseagreen" => (143, 188, 143),
+        "darkslateblue" => (72, 61, 139),
+        "darkslategrey" => (47, 79, 79),
+        "darkturquoise" => (0, 206, 209),
+        "darkviolet" => (148, 0, 211),
+        "deeppink" => (255, 20, 147),
+        "deepskyblue" => (0, 191, 255),
+        "dimgray" => (105, 105, 105),
+        "dodgerblue" => (30, 144, 255),
+        "firebrick" => (178, 34, 34),
+        "floralwhite" => (255, 250, 240),
+        "forestgreen" => (34, 139, 34),
+        "fuchsia" => (255, 0, 255),
+        "gainsboro" => (221, 221, 221),
+        "ghostwhite" => (248, 248, 255),
+        "gold" => (255, 215, 0),
+        "goldenrod" => (218, 165, 32),
+        "gray" => (128, 128, 128),
+        "green" => (0, 255, 0),
+        "greenyellow" => (173, 255, 47),
+        "honeydew" => (240, 255, 240),
+        "hotpink" => (255, 105, 180),
+        "indianred" => (205, 92, 92),
+        "indigo" => (75, 0, 130),
+        "ivory" => (255, 255, 240),
+        "khaki" => (240, 230, 140),
+        "lavender" => (230, 230, 250),
+        "lavenderblush" => (255, 245, 245),
+        "lawngreen" => (124, 252, 0),
+        "lemonchiffon" => (255, 250, 205),
+        "lightblue" => (173, 216, 230),
+        "lightcoral" => (240, 128, 128),
+        "lightcyan" => (224, 255, 255),
+        "lightgoldenrodyellow" => (250, 250, 210),
+        "lightgray" => (211, 211, 211),
+        "lightgreen" => (144, 238, 144),
+        "lightgrey" => (211, 211, 211),
+        "lightpink" => (255, 182, 193),
+        "lightsalmon" => (255, 160, 122),
+        "lightseagreen" => (32, 178, 170),
+        "lightskyblue" => (135, 206, 250),
+        "lightslategray" => (119, 136, 153),
+        "lightsteelblue" => (176, 196, 222),
+        "lightyellow" => (255, 255, 224),
+        "lime" => (0, 255, 0),
+        "limegreen" => (50, 205, 50),
+        "linen" => (250, 240, 230),
+        "magenta" => (255, 0, 255),
+        "maroon" => (128, 0, 0),
+        "mediumaquamarine" => (102, 209, 209),
+        "mediumblue" => (0, 0, 205),
+        "mediumorchid" => (183, 105, 224),
+        "mediumpurple" => (147, 112, 219),
+        "mediumseagreen" => (60, 179, 113),
+        "mediumslateblue" => (123, 104, 238),
+        "mediumspringgreen" => (0, 250, 150),
+        "mediumturquoise" => (72, 209, 204),
+        "mediumvioletred" => (199, 21, 133),
+        "midnightblue" => (25, 25, 112),
+        "mintcream" => (245, 255, 250),
+        "mistyrose" => (255, 228, 225),
+        "moccasin" => (255, 228, 181),
+        "navajowhite" => (255, 222, 173),
+        "navy" => (0, 0, 128),
+        "oldlace" => (253, 245, 230),
+        "olive" => (128, 128, 0),
+        "olivedrab" => (107, 142, 35),
+        "orange" => (255, 165, 0),
+        "orangered" => (255, 69, 0),
+        "orchid" => (218, 112, 214),
+        "palegoldenrod" => (238, 232, 170),
+        "palegreen" => (152, 251, 152),
+        "paleturquoise" => (175, 238, 238),
+        "palevioletred" => (238, 130, 238),
+        "papayawhip" => (255, 239, 213),
+        "peachpuff" => (255, 218, 185),
+        "peru" => (205, 133, 63),
+        "pink" => (255, 192, 203),
+        "plum" => (221, 160, 221),
+        "powderblue" => (176, 224, 230),
+        "purple" => (128, 0, 128),
+        "rebeccapurple" => (102, 51, 153),
+        "red" => (255, 0, 0),
+        "rosybrown" => (188, 143, 143),
+        "royalblue" => (65, 105, 225),
+        "saddlebrown" => (139, 69, 19),
+        "salmon" => (250, 128, 114),
+        "sandybrown" => (244, 164, 96),
+        "seagreen" => (46, 139, 87),
+        "seashell" => (255, 245, 238),
+        "sienna" => (160, 82, 45),
+        "silver" => (192, 192, 192),
+        "skyblue" => (135, 206, 235),
+        "slateblue" => (106, 90, 205),
+        "slategray" => (112, 128, 144),
+        "snow" => (255, 250, 250),
+        "springgreen" => (0, 255, 128),
+        "steelblue" => (70, 130, 180),
+        "tan" => (210, 180, 140),
+        "teal" => (0, 128, 128),
+        "thistle" => (216, 191, 216),
+        "tomato" => (255, 99, 71),
+        "turquoise" => (64, 224, 208),
+        "violet" => (238, 130, 238),
+        "wheat" => (245, 222, 179),
+        "white" => (255, 255, 255),
+        "whitesmoke" => (245, 245, 245),
+        "yellow" => (255, 255, 0),
+        "yellowgreen" => (154, 255, 50),
+    };
 }

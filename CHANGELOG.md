@@ -1,4 +1,11 @@
 # Changelog
+## [0.7.4]
+- link `strip` to String
+- add `color256`,  `color256_bg` and `color`,`color_bg` function for String
+- fix prompt for windows
+- remove cmd scan for windows
+- give default `PATH` for lin/win
+
 ## [0.7.3]
 - fix suggestion module name
 - fix '\t' in linebreak

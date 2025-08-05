@@ -20,7 +20,7 @@ pub fn get() -> Expression {
         String::from("print_tty") => Expression::builtin("print_tty", print_tty, "print control sequence to tty", "<arg>"),
         String::from("discard") => Expression::builtin("discard", discard, "send data to /dev/null", "<arg>"),
 
-        String::from("info") => Expression::builtin("info", info, "get os info", "<arg>"),
+        String::from("info") => Expression::builtin("info", info, "get os info", ""),
     })
 }
 fn info(_args: &[Expression], _env: &mut Environment) -> Result<Expression, crate::LmError> {

@@ -256,6 +256,17 @@ fn init_cmds(env: &mut Environment) {
             .collect::<Vec<_>>()
             .join(":");
         env.define_in_root("PATH", Expression::String(np));
+    } else {
+        #[cfg(unix)]
+        env.define_in_root(
+            "PATH",
+            Expression::String("/usr/local/bin:/usr/sbin:/usr/bin:".to_owned()),
+        );
+        #[cfg(windows)]
+        env.define_in_root(
+            "PATH",
+            Expression::String("C:\\windows\\system32".to_owned()),
+        );
     }
 }
 

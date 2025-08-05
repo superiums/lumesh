@@ -48,7 +48,8 @@ steps:
       - cp LICENSE doc/
       - cp src/config/config.lm doc/
       - tar -czvf doc.tar.gz -C doc .
-      - zip -r doc.zip doc/*
+      # - apk add zip
+      # - zip -r doc.zip doc/*
     depends_on: [create_release]
 
   build_linux:
@@ -57,29 +58,29 @@ steps:
       - rustup target add x86_64-unknown-linux-musl
       - apt-get update && apt-get install -y musl-tools
       # 标准构建
-      - cargo build --release --locked
+      - cargo build --release
       - cp target/release/$MAIN_BINARY $MAIN_BINARY-linux
       # Runner 构建
       - cargo build --features runner --release
       - cp target/release/$RUNNER_BINARY $RUNNER_BINARY-linux
       # musl 静态链接构建
-      - cargo build --release --target x86_64-unknown-linux-musl --locked
+      - cargo build --release --target x86_64-unknown-linux-musl
       - cp target/x86_64-unknown-linux-musl/release/$MAIN_BINARY $MAIN_BINARY-linux-musl
       - cargo build --features runner --release --target x86_64-unknown-linux-musl
       - cp target/x86_64-unknown-linux-musl/release/$RUNNER_BINARY $RUNNER_BINARY-linux-musl
     depends_on: [create_release]
 
   build_macos:
-    image: messense/rust-musl-cross:x86_64-apple-darwin
+    image: rust:latest
     commands:
       - rustup target add x86_64-apple-darwin aarch64-apple-darwin
       # Intel Mac
-      - cargo build --release --locked --target x86_64-apple-darwin
+      - cargo build --release --target x86_64-apple-darwin
       - cp target/x86_64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-x86_64
       - cargo build --features runner --release --target x86_64-apple-darwin
       - cp target/x86_64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-x86_64
       # Apple Silicon Mac
-      - cargo build --release --locked --target aarch64-apple-darwin
+      - cargo build --release --target aarch64-apple-darwin
       - cp target/aarch64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-arm64
       - cargo build --features runner --release --target aarch64-apple-darwin
       - cp target/aarch64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-arm64
@@ -91,7 +92,7 @@ steps:
       - rustup target add x86_64-pc-windows-gnu
       - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
       # 标准构建
-      - cargo build --release --locked --target x86_64-pc-windows-gnu
+      - cargo build --release --target x86_64-pc-windows-gnu
       - cp target/x86_64-pc-windows-gnu/release/$MAIN_BINARY.exe $MAIN_BINARY-windows.exe
       # Runner 构建
       - cargo build --features runner --release --target x86_64-pc-windows-gnu
@@ -109,11 +110,11 @@ steps:
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
           -F "attachment=@doc.tar.gz;filename=doc.tar.gz"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@doc.zip;filename=doc.zip"
+      # - |
+      #   curl -X POST "$UPLOAD_URL" \
+      #     -H "Authorization: token $CODEBERG_TOKEN" \
+      #     -H "Content-Type: multipart/form-data" \
+      #     -F "attachment=@doc.zip;filename=doc.zip"
       # 上传 Linux 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \

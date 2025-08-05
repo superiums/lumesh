@@ -134,7 +134,12 @@ ps -u 1000  u | Into.table() | pprint
 - [release-page 1](https://codeberg.com/santo/lumesh/releases)
 - [release-page 2](https://github.com/superiums/lumesh/releases)
 
-**Method 2: Compile from Source**
+**Method 2: Build from Cargo**
+```bash
+cargo install lumesh
+```
+
+**Method 3: Compile from Source**
 ```bash
 git clone 'https://codeberg.com/santo/lumesh.git'
 cd lumesh

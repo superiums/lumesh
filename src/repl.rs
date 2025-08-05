@@ -344,6 +344,7 @@ fn new_editor(
         "use ".into(),
     };
     cmds.extend(get_builtin_tips());
+    #[cfg(unix)]
     cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());
     cmds.extend(get_alias_tips());
     let helper = LumeHelper {

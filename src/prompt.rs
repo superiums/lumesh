@@ -191,12 +191,12 @@ fn get_short_path(path: &Path) -> String {
     let components = path.components().collect::<Vec<_>>();
     // dbg!(&components, components.len());
 
-    #[cfg(windows)]
-    let is_home = false;
+    // #[cfg(windows)]
+    // let is_home = false;
 
-    #[cfg(unix)]
+    // #[cfg(unix)]
     let is_home = dirs::home_dir().is_some_and(|home_dir| path.starts_with(home_dir));
-    #[cfg(unix)]
+    // #[cfg(unix)]
     if is_home {
         if let Some(home_dir) = dirs::home_dir() {
             if components.len() < 6 {
@@ -214,9 +214,11 @@ fn get_short_path(path: &Path) -> String {
         return path.to_string_lossy().to_string();
     }
 
+    let sep = if cfg!(windows) { "\\" } else { "/" };
+
     let first_two: Vec<String> = match is_home {
         true => vec![
-            "~/".to_string(),
+            "~".to_owned() + sep,
             components
                 .get(3)
                 .unwrap()
@@ -239,7 +241,7 @@ fn get_short_path(path: &Path) -> String {
         .collect();
 
     // 生成短路径格式
-    format!("{}.../{}", first_two.join(""), last_two.join("/"))
+    format!("{}...{}{}", first_two.join(""), sep, last_two.join(sep))
 }
 
 pub fn get_prompt_engine(

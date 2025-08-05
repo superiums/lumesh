@@ -70,21 +70,21 @@ steps:
       - cp target/x86_64-unknown-linux-musl/release/lumesh lumesh-linux-musl
     depends_on: [create_release]
 
-  build_macos:
-    image: rust:latest
-    commands:
-      - rustup target add x86_64-apple-darwin aarch64-apple-darwin
-      # Intel Mac
-      - cargo build --release --target x86_64-apple-darwin
-      - cp target/x86_64-apple-darwin/release/lume lume-macos-x86_64
-      - cargo build --features runner --release --target x86_64-apple-darwin
-      - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
-      # Apple Silicon Mac
-      - cargo build --release --target aarch64-apple-darwin
-      - cp target/aarch64-apple-darwin/release/lume lume-macos-arm64
-      - cargo build --features runner --release --target aarch64-apple-darwin
-      - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
-    depends_on: [create_release]
+  # build_macos:
+  #   image: rust:latest
+  #   commands:
+  #     - rustup target add x86_64-apple-darwin aarch64-apple-darwin
+  #     # Intel Mac
+  #     - cargo build --release --target x86_64-apple-darwin
+  #     - cp target/x86_64-apple-darwin/release/lume lume-macos-x86_64
+  #     - cargo build --features runner --release --target x86_64-apple-darwin
+  #     - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
+  #     # Apple Silicon Mac
+  #     - cargo build --release --target aarch64-apple-darwin
+  #     - cp target/aarch64-apple-darwin/release/lume lume-macos-arm64
+  #     - cargo build --features runner --release --target aarch64-apple-darwin
+  #     - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
+  #   depends_on: [create_release]
 
   build_windows:
     image: rust:latest
@@ -182,35 +182,35 @@ steps:
         from_secret: codeberg_token
       # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
     depends_on: [build_windows]
-  upload_assets_macos:
-    image: alpine:latest
-    commands:
-      - source .env
-      - apk add --no-cache curl jq
-      # 上传 macOS 二进制文件
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lume-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lumesh-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lume-linux-musl;filename=${MAIN_BINARY}_linux_musl_${VERSION}"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lumesh-linux-musl;filename=${RUNNER_BINARY}_linux_musl_${VERSION}"
+  # upload_assets_macos:
+  #   image: alpine:latest
+  #   commands:
+  #     - source .env
+  #     - apk add --no-cache curl jq
+  #     # 上传 macOS 二进制文件
+  #     - |
+  #       curl -X POST "$UPLOAD_URL" \
+  #         -H "Authorization: token $CODEBERG_TOKEN" \
+  #         -H "Content-Type: multipart/form-data" \
+  #         -F "attachment=@lume-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
+  #     - |
+  #       curl -X POST "$UPLOAD_URL" \
+  #         -H "Authorization: token $CODEBERG_TOKEN" \
+  #         -H "Content-Type: multipart/form-data" \
+  #         -F "attachment=@lumesh-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
+  #     - |
+  #       curl -X POST "$UPLOAD_URL" \
+  #         -H "Authorization: token $CODEBERG_TOKEN" \
+  #         -H "Content-Type: multipart/form-data" \
+  #         -F "attachment=@lume-linux-musl;filename=${MAIN_BINARY}_linux_musl_${VERSION}"
+  #     - |
+  #       curl -X POST "$UPLOAD_URL" \
+  #         -H "Authorization: token $CODEBERG_TOKEN" \
+  #         -H "Content-Type: multipart/form-data" \
+  #         -F "attachment=@lumesh-linux-musl;filename=${RUNNER_BINARY}_linux_musl_${VERSION}"
 
-    environment:
-      CODEBERG_TOKEN:
-        from_secret: codeberg_token
-      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
-    depends_on: [build_macos]
+  #   environment:
+  #     CODEBERG_TOKEN:
+  #       from_secret: codeberg_token
+  #     # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
+  #   depends_on: [build_macos]

@@ -14,8 +14,6 @@ steps:
       - export VERSION=${CI_COMMIT_TAG#v}
       - echo "VERSION=$VERSION" >> .env
       - echo "REPO_PATH=${CI_REPO}" >> .env
-      - echo "MAIN_BINARY=lume" >> .env
-      - echo "RUNNER_BINARY=lumesh" >> .env
       - echo "Building version $VERSION"
 
   create_release:
@@ -61,15 +59,15 @@ steps:
       - apt-get update && apt-get install -y musl-tools
       # 标准构建
       - cargo build --release
-      - cp target/release/$MAIN_BINARY $MAIN_BINARY-linux
+      - cp target/release/lume lume-linux
       # Runner 构建
       - cargo build --features runner --release
-      - cp target/release/$RUNNER_BINARY $RUNNER_BINARY-linux
+      - cp target/release/lumesh lumesh-linux
       # musl 静态链接构建
       - cargo build --release --target x86_64-unknown-linux-musl
-      - cp target/x86_64-unknown-linux-musl/release/$MAIN_BINARY $MAIN_BINARY-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/lume lume-linux-musl
       - cargo build --features runner --release --target x86_64-unknown-linux-musl
-      - cp target/x86_64-unknown-linux-musl/release/$RUNNER_BINARY $RUNNER_BINARY-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/lumesh lumesh-linux-musl
     depends_on: [create_release]
 
   build_macos:
@@ -78,14 +76,14 @@ steps:
       - rustup target add x86_64-apple-darwin aarch64-apple-darwin
       # Intel Mac
       - cargo build --release --target x86_64-apple-darwin
-      - cp target/x86_64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-x86_64
+      - cp target/x86_64-apple-darwin/release/lume lume-macos-x86_64
       - cargo build --features runner --release --target x86_64-apple-darwin
-      - cp target/x86_64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-x86_64
+      - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
       # Apple Silicon Mac
       - cargo build --release --target aarch64-apple-darwin
-      - cp target/aarch64-apple-darwin/release/$MAIN_BINARY $MAIN_BINARY-macos-arm64
+      - cp target/aarch64-apple-darwin/release/lume lume-macos-arm64
       - cargo build --features runner --release --target aarch64-apple-darwin
-      - cp target/aarch64-apple-darwin/release/$RUNNER_BINARY $RUNNER_BINARY-macos-arm64
+      - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
     depends_on: [create_release]
 
   build_windows:
@@ -95,10 +93,10 @@ steps:
       - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
       # 标准构建
       - cargo build --release --target x86_64-pc-windows-gnu
-      - cp target/x86_64-pc-windows-gnu/release/$MAIN_BINARY.exe $MAIN_BINARY-windows.exe
+      - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows.exe
       # Runner 构建
       - cargo build --features runner --release --target x86_64-pc-windows-gnu
-      - cp target/x86_64-pc-windows-gnu/release/$RUNNER_BINARY.exe $RUNNER_BINARY-windows.exe
+      - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
     depends_on: [create_release]
 
   upload_assets:
@@ -122,33 +120,33 @@ steps:
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@$MAIN_BINARY-linux;filename=${MAIN_BINARY}_linux_${VERSION}"
+          -F "attachment=@lume-linux;filename=${MAIN_BINARY}_linux_${VERSION}"
       - |
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@$RUNNER_BINARY-linux;filename=${RUNNER_BINARY}_linux_${VERSION}"
+          -F "attachment=@lumesh-linux;filename=${RUNNER_BINARY}_linux_${VERSION}"
       # 上传 macOS 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@$MAIN_BINARY-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
+          -F "attachment=@lume-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
       - |
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@$RUNNER_BINARY-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
+          -F "attachment=@lumesh-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
       # 上传 Windows 二进制文件
       - |
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@$MAIN_BINARY-windows.exe;filename=${MAIN_BINARY}_windows_${VERSION}.exe"
+          -F "attachment=@lume-windows.exe;filename=${MAIN_BINARY}_windows_${VERSION}.exe"
       - |
         curl -X POST "$UPLOAD_URL" \
           -H "Authorization: token $CODEBERG_TOKEN" \
           -H "Content-Type: multipart/form-data" \
-          -F "attachment=@$RUNNER_BINARY-windows.exe;filename=${RUNNER_BINARY}_windows_${VERSION}.exe"
+          -F "attachment=@lumesh-windows.exe;filename=${RUNNER_BINARY}_windows_${VERSION}.exe"
     # secrets: [CODEBERG_TOKEN]
     depends_on: [build_docs, build_linux, build_macos, build_windows]

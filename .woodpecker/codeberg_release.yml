@@ -14,6 +14,8 @@ steps:
       - export VERSION=${CI_COMMIT_TAG#v}
       - echo "VERSION=$VERSION" >> .env
       - echo "REPO_PATH=${CI_REPO}" >> .env
+      - echo "MAIN_BINARY=lume" >> .env
+      - echo "RUNNER_BINARY=lumesh" >> .env
       - echo "Building version $VERSION"
 
   create_release:

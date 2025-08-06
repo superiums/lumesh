@@ -110,7 +110,8 @@ pub fn get() -> Expression {
         String::from("color256") => Expression::builtin("color256", color256, "apply color using 256-color code", "<color_spec> <string>"),
         String::from("color256_bg") => Expression::builtin("color256_bg", color256_bg, "apply background color using 256-color code", "<color_spec> <string>"),
         String::from("color") => Expression::builtin("color", color, "apply true color using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"),
-        String::from("color_bg") => Expression::builtin("color_bg", color_bg, "apply true color background using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"),
+        String::from("color_bg") => Expression::builtin("color_bg", color_bg, "apply True Color background using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"),
+        String::from("colors") => Expression::builtin("colors", colors, "list all color_name for True Color", "[colorized?]"),
 
     })
     .into()
@@ -819,6 +820,33 @@ fn color256_bg(args: &[Expression], env: &mut Environment) -> Result<Expression,
     color_256(args, true, env)
 }
 
+fn colors(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    if args.len() > 0 && args[0].eval(env)?.is_truthy() {
+        use std::io::Write;
+        let mut stdout = std::io::stdout().lock();
+
+        for (i, (text, (r, g, b))) in COLOR_MAP.iter().enumerate() {
+            let pad_len = 20 - text.len();
+            let padding: String = std::iter::repeat_n(" ", pad_len).collect();
+            write!(
+                &mut stdout,
+                "\x1b[48;2;{r};{g};{b}m     \x1b[m\x1b[0m \x1b[38;2;{r};{g};{b}m{text}\x1b[m\x1b[0m{padding}"
+            )?;
+            if i % 3 == 2 {
+                writeln!(&mut stdout, "\n")?;
+            }
+        }
+        writeln!(&mut stdout)?;
+        Ok(Expression::None)
+    } else {
+        Ok(Expression::from(
+            COLOR_MAP
+                .iter()
+                .map(|(&k, _)| Expression::String(k.to_owned()))
+                .collect::<Vec<_>>(),
+        ))
+    }
+}
 fn color(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     true_color(args, false, env)
 }
@@ -886,14 +914,14 @@ fn parse_hex_color(hex: &str) -> Result<(i64, i64, i64), LmError> {
 }
 
 fn parse_color_name(color: &str) -> Result<(i64, i64, i64), LmError> {
-    color_map
+    COLOR_MAP
         .get(color)
         .cloned()
         .ok_or(LmError::CustomError("Invalid color name".into()))
 }
 
 lazy_static! {
-    static ref color_map: HashMap<&'static str, (i64, i64, i64)> = hash_map! {
+    static ref COLOR_MAP: HashMap<&'static str, (i64, i64, i64)> = hash_map! {
         "aliceblue" => (240, 248, 255),
         "antiquewhite" => (250, 235, 215),
         "aqua" => (0, 255, 255),

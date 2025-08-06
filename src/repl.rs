@@ -344,7 +344,6 @@ fn new_editor(
         "use ".into(),
     };
     cmds.extend(get_builtin_tips());
-    #[cfg(unix)]
     cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());
     cmds.extend(get_alias_tips());
     let helper = LumeHelper {
@@ -420,8 +419,6 @@ impl LumeHelper {
 
     /// 命令补全逻辑
     fn cmd_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        // 获取PATH_COMMANDS的锁
-
         // 计算起始位置
         let input = &line[..pos];
         let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);

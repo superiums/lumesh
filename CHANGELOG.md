@@ -2,6 +2,7 @@
 ## [0.7.4]
 - link `strip` to String
 - add `color256`,  `color256_bg` and `color`,`color_bg` function for String
+- add `colors` fro String
 - fix prompt for windows
 - remove cmd scan for windows
 - give default `PATH` for lin/win

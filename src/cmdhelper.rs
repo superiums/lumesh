@@ -17,13 +17,13 @@ fn is_executable(path: &Path) -> bool {
         .unwrap_or(false)
 }
 
-#[cfg(windows)]
-fn is_executable(path: &Path) -> bool {
-    path.extension().map_or(false, |ext| {
-        ["exe", "bat", "cmd", "ps1"].contains(&ext.to_str().unwrap())
-    })
-}
-
+// #[cfg(windows)]
+// fn is_executable(path: &Path) -> bool {
+//     path.extension().map_or(false, |ext| {
+//         ["exe", "bat", "cmd", "ps1"].contains(&ext.to_str().unwrap())
+//     })
+// }
+#[cfg(unix)]
 fn scan_cmds() -> HashSet<String> {
     let path_var = env::var("PATH").unwrap_or_default();
     let path_separator = if cfg!(windows) { ";" } else { ":" };
@@ -36,7 +36,12 @@ fn scan_cmds() -> HashSet<String> {
         })
         .collect()
 }
+#[cfg(windows)]
+fn scan_cmds() -> HashSet<String> {
+    HashSet::new()
+}
 // 目录扫描函数（支持递归扩展）
+#[cfg(unix)]
 fn scan_directory(dir: &Path) -> Vec<String> {
     let mut commands = Vec::new();
     if let Ok(entries) = dir.read_dir() {

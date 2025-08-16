@@ -32,8 +32,10 @@ Lumesh 是一个现代化的 shell 和脚本语言，完全重写自 Dune，专�
 ```bash
 # 像现代编程语言一样的语法
 let user = {name: "Alice", age: 25}
-let numbers = 1..10 | list.filter(x -> x > 5)
+let {name, age} = user
+let numbers = 1..10 | List.filter(x -> x > 5)
 let [a, b] = [1, 2]
+
 ```
 
 
@@ -78,12 +80,12 @@ ls -1 |> cp -r _ /tmp/
 ### ⚡ 丰富的内置模块
 - **集合操作**: `List.reduce, List.map`
 - **文件系统**: `Fs.ls, Fs.read, Fs.write`
-- **字符串处理**: `String.split, String.join`、正则模块、格式化模块
+- **字符串处理**: `String.split, String.join`、正则模块
 - **时间操作**: `Time.now, Time.format`
-- **数据转换**: Into, Parse
+- **数据转换**: `Into`, `From`
 - **数学计算**: 完整的数学函数库
-- **日志记录**: Log模块
-- **UI操作**: `ui.pick, ui.confirm`
+- **日志记录**: `Log`模块
+- **UI操作**: `Ui.pick, Ui.confirm`
 
 
 ### ⚡ 函数装饰器
@@ -127,8 +129,8 @@ files | List.map(f -> Fs.cp(f, './backup'))
 
 ### ☘ 系统管理
 ```bash
-# 系统监控和管理
-ps -u 1000  u | Into.table() | pprint
+# 系统管理
+df -h | Into.table()
 ```
 
 ## ⚑ 快速开始

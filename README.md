@@ -32,7 +32,8 @@ Lumesh is a modern shell and scripting language, completely rewritten from Dune,
 ```bash
 # Syntax like modern programming languages
 let user = {name: "Alice", age: 25}
-let numbers = 1..10 | list.filter(x -> x > 5)
+let {name, age} = user
+let numbers = 1..10 | List.filter(x -> x > 5)
 let [a, b] = [1, 2]
 ```
 
@@ -75,12 +76,12 @@ ls -1 |> cp -r _ /tmp/
 ### ⚡ Rich Built-in Modules
 - **Collection Operations**: `List.reduce, List.map`
 - **File System**: `Fs.ls, Fs.read, Fs.write`
-- **String Processing**: `String.split, String.join`, regex module, formatting module
+- **String Processing**: `String.split, String.join`, `Regex` module
 - **Time Operations**: `Time.now, Time.format`
-- **Data Conversion**: Into, Parse
-- **Mathematical Calculations**: Complete math function library
-- **Logging**: Log module
-- **UI Operations**: `ui.pick, ui.confirm`
+- **Data Conversion**: `Into`, `From` module
+- **Mathematical Calculations**: Complete `Math` function library
+- **Logging**: `Log` module
+- **UI Operations**: `Ui.pick, Ui.confirm`
 
 
 ### ⚡ Function Decorators
@@ -122,8 +123,8 @@ files | List.map(f -> Fs.cp(f, './backup'))
 
 ### ☘ System Management
 ```bash
-# System monitoring and management
-ps -u 1000  u | Into.table() | pprint
+# System management
+df -h | Into.table()
 ```
 
 ## ⚑ Quick Start

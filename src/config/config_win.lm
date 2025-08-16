@@ -1,20 +1,20 @@
 # ========== config for login mode ==========
 # only login mode need PATH, other mode will retrieve it from parent shell.
 if IS_LOGIN {
-    let PATH = "C:\;C:\Windows;C:\windows\system32;"
+    let PATH = 'C:\;C:\Windows;C:\windows\system32;'
 }
 
 # ========== config for interactive mode ==========
 if IS_INTERACTIVE {
-    let logo = "
+    let logo = '
             ██╗     ██╗   ██╗███╗   ███╗███████╗
             ██║     ██║   ██║████╗ ████║██╔════╝
             ██║     ██║   ██║██╔████╔██║█████╗
             ██║     ██║   ██║██║╚██╔╝██║██╔══╝
             ███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
             ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
-    "
-    print logo.green().faint()
+    '
+    print logo.color('olive')
 
     # ====== base theme: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'
@@ -31,7 +31,7 @@ if IS_INTERACTIVE {
     # let STRICT = true
 
     # ====== welcome msg
-    # let LUME_WELCOME= "Welcome to Lumesh!"
+    # let LUME_WELCOME= 'Welcome to Lumesh!'
 
     # ====== prompt
     # MODE: 1=use template; 2=use starship; 0=use default.
@@ -41,40 +41,40 @@ if IS_INTERACTIVE {
     }
     # template could be normal expression or func.
     # avaluable tmplate var: $CWD, $CWD_SHORT
-    let LUME_PROMPT_TEMPLATE = "$CWD_SHORT" + ">>"
+    let LUME_PROMPT_TEMPLATE = '$CWD_SHORT' + '>> '
     # if template is lambda/func, it will be evaluated everytime.
     # let LUME_PROMPT_TEMPLATE := x -> {
-    #     String.format "{} {}{}{} " String.blue(x) String.green(String.bold("|")) \
-    #     (if (fs.exists '.git') {git branch --show-current | String.cyan()} else "") \
-    #     String.green(String.bold(">"))
+    #     String.format '{} {}{}{} ' String.blue(x) String.green(String.bold('|')) \
+    #     (if (fs.exists '.git') {git branch --show-current | String.cyan()} else '') \
+    #     String.green(String.bold('>'))
     # }
     # ====== history file
-    # let LUME_HISTORY_FILE = "/tmp/lume_histroy"
+    # let LUME_HISTORY_FILE = '/tmp/lume_histroy'
 
     # ====== report compute result type and values. default True.
     # let LUME_PRINT_DIRECT= False
 
     # ====== default AI Helper settings. following is default.
     let LUME_AI_CONFIG = {
-        host: "localhost:11434",
-        complete_url: "/completion",
-        chat_url: "/v1/chat/completions",
+        host: 'localhost:11434',
+        complete_url: '/completion',
+        chat_url: '/v1/chat/completions',
         complete_max_tokens: 10,
         chat_max_tokens: 100,
-        model: "",
+        model: '',
         system_prompt: "you're a lumesh shell script helper",
     }
 
     # ====== sudo cmd for Alt+s
-    let LUME_SUDO_CMD = "doas"
+    let LUME_SUDO_CMD = 'doas'
 
     # ====== key bindings
     # NONE:0, SHIFT:2, ALT:4, CTRL:8,
     # ALT_SHIFT:6, CTRL_SHIFT: 10, CTRL_ALT:12, CTRL_ALT_SHIFT:14
     let LUME_HOT_MODIFIER = 4
     let LUME_HOT_KEYS = {
-        q: "exit",
-        c: "clear",
+        q: 'exit',
+        c: 'clear',
         h: "Fs.read ~/.cache/.lume_history | String.lines() | Ui.pick('select history:') ?! | exec_str()",
         x: "Fs.read /tmp/bookmark | String.lines() | Ui.pick('select bookmark:') ?! | exec_str()",
         m: 'let cmd := "$CMD_CURRENT";let s = Into.str(cmd); if s {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',

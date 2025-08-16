@@ -800,16 +800,16 @@ fn color_256(args: &[Expression], bg: bool, env: &mut Environment) -> Result<Exp
     let color_spec = super::get_integer_arg(args[0].eval_in_assign(env)?)?;
     let text = super::get_string_arg(args[1].eval_in_assign(env)?)?;
 
-    if color_spec < 0 || color_spec > 255 {
+    if !(0..=255).contains(&color_spec) {
         return Err(LmError::CustomError(
             "color values must between 0-255".into(),
         ));
     }
 
     if bg {
-        Ok(format!("\x1b[48;5;{}m{}\x1b[m\x1b[0m", color_spec, text).into())
+        Ok(format!("\x1b[48;5;{color_spec}m{text}\x1b[m\x1b[0m").into())
     } else {
-        Ok(format!("\x1b[38;5;{}m{}\x1b[m\x1b[0m", color_spec, text).into())
+        Ok(format!("\x1b[38;5;{color_spec}m{text}\x1b[m\x1b[0m").into())
     }
 }
 
@@ -881,15 +881,16 @@ fn true_color(args: &[Expression], bg: bool, env: &mut Environment) -> Result<Ex
         }
         _ => return Err(LmError::CustomError("Args mismatch".into())),
     };
-    if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255 {
+    let range = 0..=255;
+    if !range.contains(&r) || !range.contains(&g) || !range.contains(&b) {
         return Err(LmError::CustomError("RGB values must be 0-255".into()));
     }
 
     let text = super::get_string_arg(args.last().unwrap().eval_in_assign(env)?)?;
     if bg {
-        Ok(format!("\x1b[48;2;{};{};{}m{}\x1b[m\x1b[0m", r, g, b, text).into())
+        Ok(format!("\x1b[48;2;{r};{g};{b}m{text}\x1b[m\x1b[0m").into())
     } else {
-        Ok(format!("\x1b[38;2;{};{};{}m{}\x1b[m\x1b[0m", r, g, b, text).into())
+        Ok(format!("\x1b[38;2;{r};{g};{b}m{text}\x1b[m\x1b[0m").into())
     }
 }
 

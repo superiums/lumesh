@@ -350,12 +350,10 @@ fn add(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError
         // 兼容旧版：支持单独的时分秒等参数
         let mut duration = ChronoDuration::zero();
 
-        if let Ok(Expression::Integer(secs)) = if args.len() > 1 {
-            args[0].eval(env)
-        } else {
-            args[0].eval(env)
-        } {
-            duration += ChronoDuration::seconds(secs);
+        if args.len() > 1 {
+            if let Ok(Expression::Integer(secs)) = args[0].eval(env) {
+                duration += ChronoDuration::seconds(secs);
+            }
         }
 
         if args.len() > 2 {

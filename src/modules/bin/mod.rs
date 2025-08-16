@@ -102,10 +102,7 @@ fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError>
             "tops" => {
                 let m = super::get_builtin_map()
                     .into_iter()
-                    .filter(|item| match item.1 {
-                        Expression::Builtin(_) => true,
-                        _ => false,
-                    })
+                    .filter(|item| matches!(item.1, Expression::Builtin(_)))
                     .collect::<HashMap<_, _>>();
                 pretty_printer(&Expression::from(m))?;
             }

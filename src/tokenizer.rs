@@ -40,7 +40,7 @@ impl<I> ParseError<I> for NotFoundError {
 
 type TokenizationResult<'a, T = StrSlice> = IResult<Input<'a>, T, NotFoundError>;
 
-fn parse_token(input: Input) -> TokenizationResult<'_, (Token, Diagnostic)> {
+fn parse_token(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
     if input.is_empty() {
         Err(NOT_FOUND)
     } else {

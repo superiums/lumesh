@@ -1028,7 +1028,7 @@ fn parse_param_list(
     Ok((input, (params, param_collector)))
 }
 // lambda参数
-fn parse_lambda_param(input: Tokens) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+fn parse_lambda_param(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, expr) = delimited(
         text("("),
         // alt((

@@ -185,7 +185,7 @@ fn exec_single_cmd(
         }
     }
 }
-pub fn expand_home(path: &str) -> Cow<str> {
+pub fn expand_home(path: &'_ str) -> Cow<'_, str> {
     if path.starts_with("~") {
         if let Some(home_dir) = dirs::home_dir() {
             return Cow::Owned(path.replace("~", home_dir.to_string_lossy().as_ref()));

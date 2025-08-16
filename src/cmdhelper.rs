@@ -1,8 +1,13 @@
 use lazy_static::lazy_static;
 use std::collections::HashSet;
+
+#[cfg(unix)]
 use std::env;
+#[cfg(unix)]
 use std::ffi::OsStr;
+#[cfg(unix)]
 use std::path::Path;
+#[cfg(unix)]
 use std::path::PathBuf;
 use std::sync::Mutex;
 lazy_static! {

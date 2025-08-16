@@ -1,4 +1,15 @@
 # Changelog
+## [0.7.5]
+- update rustyline to 17.0.
+- fix `hep About`
+- increase width for key.
+- `String.colors` colorized as default.
+- update suggestions.
+- allow chain as alias.
+- split config for windows. without color prompt by default.
+- allow `Fs.write` to create a blank file.
+- fix path splitor for windows.
+
 ## [0.7.4]
 - link `strip` to String
 - add `color256`,  `color256_bg` and `color`,`color_bg` function for String

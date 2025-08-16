@@ -46,7 +46,7 @@ where
     let available_width = specified_width.saturating_sub(table_padding);
 
     // 为 KEY 列预留固定宽度，剩余给 VALUE 列
-    let key_column_width = 6; // 或者动态计算最长键名
+    let key_column_width = 12; // 或者动态计算最长键名
     let value_column_width = available_width.saturating_sub(key_column_width);
 
     let mut rows: Vec<KeyValueRow> = items

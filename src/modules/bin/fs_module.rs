@@ -38,7 +38,7 @@ pub fn get() -> Expression {
                String::from("head") => Expression::builtin("head", read_file_head, "read first N lines of file", "[n] <file>"),
                String::from("tail") => Expression::builtin("tail", read_file_tail, "read last N lines of file", "[n] <file>"),
                String::from("read") => Expression::builtin("read", read_file, "read file contents", "<file>"),
-               String::from("write") => Expression::builtin("write", write_file, "write to file", "<file> <content>"),
+               String::from("write") => Expression::builtin("write", write_file, "create/write to file", "<file> [content]"),
                String::from("append") => Expression::builtin("append", append_to_file, "append to file", "<file> <content>"),
                // assist
                String::from("base_name") => Expression::builtin("base_name", extract_filename, "extract base_name from path", "[split_ext?] <path>"),
@@ -336,18 +336,27 @@ fn read_file(args: &[Expression], env: &mut Environment) -> Result<Expression, L
 }
 
 fn write_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("write", args, 2)?;
+    super::check_args_len("write", args, 1..=2)?;
     let p = args[0].eval(env)?.to_string();
     let path = join_current_path(expand_home(p.as_str()).as_ref());
-    let contents = args[1].eval(env)?;
 
-    match contents {
-        Expression::Bytes(bytes) => std::fs::write(&path, bytes),
-        _ => std::fs::write(&path, contents.to_string()),
-    }?;
-    // .map_err(|e| {
-    //     LmError::CustomError(format!("Could not write file: {} - {}", path.display(), e))
-    // })?;
+    match args.len() {
+        1 => {
+            // 只有一个参数时，创建空白文件（如果不存在）
+            if !path.exists() {
+                std::fs::File::create(&path)?;
+            }
+        }
+        2 => {
+            // 两个参数时，正常写入内容
+            let contents = args[1].eval(env)?;
+            match contents {
+                Expression::Bytes(bytes) => std::fs::write(&path, bytes),
+                _ => std::fs::write(&path, contents.to_string()),
+            }?;
+        }
+        _ => unreachable!(),
+    }
 
     Ok(Expression::None)
 }

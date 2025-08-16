@@ -111,7 +111,7 @@ pub fn get() -> Expression {
         String::from("color256_bg") => Expression::builtin("color256_bg", color256_bg, "apply background color using 256-color code", "<color_spec> <string>"),
         String::from("color") => Expression::builtin("color", color, "apply true color using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"),
         String::from("color_bg") => Expression::builtin("color_bg", color_bg, "apply True Color background using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"),
-        String::from("colors") => Expression::builtin("colors", colors, "list all color_name for True Color", "[colorized?]"),
+        String::from("colors") => Expression::builtin("colors", colors, "list all color_name for True Color", "[skip_colorized?]"),
 
     })
     .into()
@@ -821,7 +821,14 @@ fn color256_bg(args: &[Expression], env: &mut Environment) -> Result<Expression,
 }
 
 fn colors(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    if args.len() > 0 && args[0].eval(env)?.is_truthy() {
+    if args.len() > 0 && !args[0].eval(env)?.is_truthy() {
+        Ok(Expression::from(
+            COLOR_MAP
+                .iter()
+                .map(|(&k, _)| Expression::String(k.to_owned()))
+                .collect::<Vec<_>>(),
+        ))
+    } else {
         use std::io::Write;
         let mut stdout = std::io::stdout().lock();
 
@@ -838,13 +845,6 @@ fn colors(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
         }
         writeln!(&mut stdout)?;
         Ok(Expression::None)
-    } else {
-        Ok(Expression::from(
-            COLOR_MAP
-                .iter()
-                .map(|(&k, _)| Expression::String(k.to_owned()))
-                .collect::<Vec<_>>(),
-        ))
     }
 }
 fn color(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {

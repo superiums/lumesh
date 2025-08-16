@@ -185,7 +185,10 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
 }
 
 pub fn init_config(env: &mut Environment) {
+    #[cfg(unix)]
     const INTRO_PRELUDE: &str = include_str!("config/config.lm");
+    #[cfg(windows)]
+    const INTRO_PRELUDE: &str = include_str!("config/config_win.lm");
 
     let profile = match env.get("LUME_PROFILE") {
         Some(p) => PathBuf::from(p.to_string()),
@@ -245,16 +248,20 @@ fn init_cmds(env: &mut Environment) {
     if !env.is_defined("LUME_IFS_MODE") {
         env.define("IFS", Expression::Integer(60));
     }
+    #[cfg(unix)]
+    let sp = ":";
+    #[cfg(windows)]
+    let sp = ";";
     if let Some(Expression::String(pathes)) = env.get("PATH") {
         let np = pathes
-            .split_terminator(":")
+            .split_terminator(sp)
             .into_iter()
             .filter(|p| !p.is_empty()) // 可选：过滤空字符串
             .map(|p| expand_home(p))
             .collect::<HashSet<_>>() // 使用 HashSet 去重
             .into_iter()
             .collect::<Vec<_>>()
-            .join(":");
+            .join(sp);
         env.define_in_root("PATH", Expression::String(np));
     } else {
         #[cfg(unix)]
@@ -265,7 +272,7 @@ fn init_cmds(env: &mut Environment) {
         #[cfg(windows)]
         env.define_in_root(
             "PATH",
-            Expression::String("C:\\windows\\system32".to_owned()),
+            Expression::String("C:\\windows\\system32;".to_owned()),
         );
     }
 }

@@ -494,9 +494,12 @@ impl Validator for LumeHelper {
     ) -> rustyline::Result<ValidationResult> {
         // self.validator.validate(ctx)
         // check_balanced(ctx.input())
+        if ctx.input().ends_with(" \\") {
+            return Ok(ValidationResult::Incomplete);
+        }
         if ctx.input().ends_with("\n\n") || check(ctx.input()) {
             return Ok(ValidationResult::Valid(None));
-        };
+        }
         Ok(ValidationResult::Incomplete)
     }
 }

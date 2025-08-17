@@ -6,6 +6,7 @@
 - allow `/` to trigger path complete for windows
 - more default alias for `Fs` operation
 - skip invalid escape like `\windows` in windows
+- fix line continue in repl
 
 ## [0.7.5]
 - update rustyline to 17.0.

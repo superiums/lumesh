@@ -444,8 +444,13 @@ fn extract_parent(args: &[Expression], env: &mut Environment) -> Result<Expressi
     super::check_exact_args_len("dir_name", args, 1)?;
     let pathstr = get_string_arg(args[0].eval(env)?)?;
 
-    let pathsep = if cfg!(windows) { "\\" } else { "/" };
-    if pathstr.ends_with(pathsep) {
+    let is_dir = if cfg!(windows) {
+        pathstr.ends_with("\\") || pathstr.ends_with("/")
+    } else {
+        pathstr.ends_with("/")
+    };
+
+    if is_dir {
         return Ok(Expression::String(pathstr));
     }
     let path = Path::new(pathstr.as_str());

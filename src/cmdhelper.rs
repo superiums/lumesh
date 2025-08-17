@@ -72,9 +72,11 @@ pub fn should_trigger_path_completion(line: &str, pos: usize) -> bool {
         .rsplit(|c: char| c.is_whitespace())
         .next()
         .unwrap_or("");
-    let path_separator = if cfg!(windows) { "\\" } else { "/" };
-
-    current_word.contains(path_separator)
+    if cfg!(windows) {
+        current_word.contains("\\") || current_word.contains("/")
+    } else {
+        current_word.contains("/")
+    }
 }
 pub fn should_trigger_cmd_completion(line: &str, pos: usize) -> bool {
     // 条件优先级排序

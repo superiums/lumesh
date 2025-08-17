@@ -21,7 +21,7 @@ if IS_INTERACTIVE {
 
     # ====== theme modify
     #LUME_THEME_CONFIG = {
-    #    keyword: "\x1b[38;5;170m",           // 紫色 (#C678DD)
+    #    keyword: "\x1b[38;5;170m",
     #    ...
     #}
     # ====== default repl mode
@@ -97,11 +97,22 @@ if IS_INTERACTIVE {
     alias group = List.group()
     alias table = Into.table()
     alias format = String.format()
-    alias lsa = Fs.ls('-l')
     alias lsi = ls -l --time-style=long-iso
     alias pls = Into.table(mode,hlink,user,group,size,mday,mtime,name)
     alias join = List.join()
     alias open = Fs.read()
+    alias fls = Fs.ls('-l')
+    alias fmkdir = Fs.mkdir()
+    alias ftouch = Fs.write()
+    alias fmv = Fs.mv()
+    alias frm = Fs.rm()
+    alias fcp = Fs.cp()
+    alias fhead = Fs.head()
+    alias ftail = Fs.tail()
+    alias fis_dir = Fs.is_dir()
+    alias fis_file = Fs.is_file()
+    alias fbasename = Fs.base_name()
+    alias fdirname = Fs.dir_name()
 }
 # else {
 # ========== config for script mode ==========

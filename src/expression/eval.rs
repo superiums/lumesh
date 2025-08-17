@@ -1017,6 +1017,9 @@ impl Expression {
                 }
                 Self::Command(cmd, args) => {
                     let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
+                    if args.len() == 1 && args[0].to_string().as_str() == "_" {
+                        break self.eval_command(eval_cmd, &vec![], state, env, depth + 1);
+                    }
                     break self.eval_command(eval_cmd, args.as_ref(), state, env, depth + 1);
                 }
                 Self::CommandRaw(cmd, args) => {
@@ -1155,6 +1158,19 @@ impl Expression {
                 } else {
                     Err(RuntimeErrorKind::TypeError {
                         expected: "Integer to index a String".into(),
+                        sym: r.to_string(),
+                        found: r.type_name(),
+                    })
+                }
+            }
+
+            // symbol like: cmd.exe
+            Expression::Symbol(s) => {
+                if let Expression::Symbol(rs) | Expression::String(rs) = r {
+                    Ok(Expression::Symbol(s + "." + &rs))
+                } else {
+                    Err(RuntimeErrorKind::TypeError {
+                        expected: "Symbol".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
                     })

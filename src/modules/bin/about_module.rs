@@ -17,7 +17,8 @@ pub fn get() -> Expression {
                 Expression::None
             }
         },
-        String::from("Tips") => {
+        #[cfg(unix)]
+        String::from("tips") => {
             // Choose a random suggestion from the `help/suggestions.txt` file.
             let suggestions = include_str!("../../config/suggestions.txt");
             let suggestions = suggestions.split('\n').collect::<Vec<&str>>();

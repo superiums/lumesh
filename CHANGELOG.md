@@ -7,6 +7,7 @@
 - more default alias for `Fs` operation
 - skip invalid escape like `\windows` in windows
 - fix line continue in repl
+- shutdown ai helper by default
 
 ## [0.7.5]
 - update rustyline to 17.0.

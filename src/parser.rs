@@ -1271,12 +1271,13 @@ fn parse_string_common(
             Cow::Borrowed(content)
         };
         if enable_normal_escape {
-            let r = snailquote::unescape(ansi_escaped.as_ref()).map_err(|e| {
-                nom::Err::Failure(SyntaxErrorKind::InvalidEscapeSequence(
-                    e.to_string(),
-                    input.get_str_slice(),
-                ))
-            })?;
+            let r = snailquote::unescape(ansi_escaped.as_ref()).unwrap_or(ansi_escaped.to_string());
+            //     .map_err(|e| {
+            //     nom::Err::Error(SyntaxErrorKind::InvalidEscapeSequence(
+            //         e.to_string(),
+            //         input.get_str_slice(),
+            //     ))
+            // })?;
             Ok((input, r.into()))
         } else {
             Ok((input, ansi_escaped))

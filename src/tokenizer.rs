@@ -686,7 +686,7 @@ fn comment(input: Input<'_>) -> TokenizationResult<'_> {
     if input.starts_with('#') {
         let len = input
             .chars()
-            .take_while(|&c| !matches!(c, '\r' | '\n'))
+            .take_while(|&c| !matches!(c, '\n' | '\r'))
             .map(char::len_utf8)
             .sum();
 
@@ -872,6 +872,9 @@ fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
     }
 
     let (rest, _) = punctuation_tag("\\")(input)?;
+    if rest.is_empty() {
+        return Ok((rest, Diagnostic::Valid));
+    }
 
     let mut parser1 = alt((
         punctuation_tag("\""),
@@ -936,10 +939,17 @@ fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
             }
         }
         Ok((rest, (_, None))) => (rest, None),
+        #[cfg(unix)]
         Err(_) => {
             let (rest, range) = input.split_saturating(2);
             let ranges = vec![range].into_boxed_slice();
             (rest, Some(Diagnostic::InvalidStringEscapes(ranges)))
+        }
+        #[cfg(windows)]
+        Err(_) => {
+            // 对于未知转义序列，跳过反斜杠后的字符，当作普通字符处理
+            let (rest, _) = rest.split_at(1);
+            return Ok((rest, Diagnostic::Valid));
         }
     };
 

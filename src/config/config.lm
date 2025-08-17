@@ -55,15 +55,15 @@ if IS_INTERACTIVE {
     # let LUME_PRINT_DIRECT= False
 
     # ====== default AI Helper settings. following is default.
-    let LUME_AI_CONFIG = {
-        host: 'localhost:11434',
-        complete_url: '/completion',
-        chat_url: '/v1/chat/completions',
-        complete_max_tokens: 10,
-        chat_max_tokens: 100,
-        model: '',
-        system_prompt: "you're a lumesh shell script helper",
-    }
+    # let LUME_AI_CONFIG = {
+    #     host: 'localhost:11434',
+    #     complete_url: '/completion',
+    #     chat_url: '/v1/chat/completions',
+    #     complete_max_tokens: 10,
+    #     chat_max_tokens: 100,
+    #     model: '',
+    #     system_prompt: "you're a lumesh shell script helper",
+    # }
 
     # ====== sudo cmd for Alt+s
     let LUME_SUDO_CMD = 'doas'

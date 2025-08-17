@@ -73,7 +73,7 @@ pub fn should_trigger_path_completion(line: &str, pos: usize) -> bool {
         .next()
         .unwrap_or("");
     if cfg!(windows) {
-        current_word.contains("\\") || current_word.contains("/")
+        current_word.contains("\\")
     } else {
         current_word.contains("/")
     }

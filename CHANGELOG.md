@@ -4,7 +4,6 @@
 - allow blank argument `_` for command
 - ignore `About.tips` in windows
 - allow `/` to trigger path complete for windows
-- allow use `/` as path separtor in windows
 - more default alias for `Fs` operation
 
 ## [0.7.5]

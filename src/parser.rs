@@ -1230,48 +1230,53 @@ fn parse_string_common(
     let raw_str = expr.to_str(input.str);
     // 检查是否符合格式要求
     if raw_str.len() >= 2 {
+        // 如果启用了 ANSI 转义序列替换，则进行处理
+        let ansi_escaped = if enable_ansi_escape {
+            Cow::Owned(
+                raw_str
+                    .replace("\\x1b", "\x1b")
+                    .replace("\\033", "\x1b")
+                    .replace("\\007", "\x07"),
+            )
+        } else {
+            Cow::Borrowed(raw_str)
+        };
+
         // 验证开头和结尾是否为指定字符
         let quote_char = match kind_token {
-            TokenKind::StringLiteral => ' ', //never replace "", snailquote need.
+            TokenKind::StringLiteral => '"', //never replace "", snailquote need.
             TokenKind::StringTemplate => '`',
             TokenKind::StringRaw | TokenKind::Regex | TokenKind::Time => '\'',
             _ => unreachable!(),
         };
         let start_chars = match kind_token {
             TokenKind::StringRaw => "'",
-            TokenKind::StringLiteral => " ", //never replace "", snailquote need.
+            TokenKind::StringLiteral => "\"", //never replace "", snailquote need.
             TokenKind::StringTemplate => "`",
             TokenKind::Regex => "r'",
             TokenKind::Time => "t'",
             _ => unreachable!(),
         };
         // 如果有右侧引号，则调整结束位置
-        let start = match raw_str.starts_with(start_chars) {
+        let start = match ansi_escaped.starts_with(start_chars) {
             true => expr.start() + start_chars.len(),
             false => expr.start(),
         };
-        let end = match raw_str.ends_with(quote_char) {
+        let end = match ansi_escaped.ends_with(quote_char) {
             true => expr.end() - 1,
             false => expr.end(),
         };
 
         // 截取中间的内容并进行转义替换
         let cs = input.str.get(start..end);
-        let content = cs.to_str(input.str);
-
-        // 如果启用了 ANSI 转义序列替换，则进行处理
-        let ansi_escaped = if enable_ansi_escape {
-            Cow::Owned(
-                content
-                    .replace("\\x1b", "\x1b")
-                    .replace("\\033", "\x1b")
-                    .replace("\\007", "\x07"),
-            )
-        } else {
-            Cow::Borrowed(content)
+        let content = match kind_token {
+            TokenKind::StringLiteral => ansi_escaped, //never replace "", snailquote need.
+            _ => Cow::Borrowed(cs.to_str(input.str)),
         };
+
         if enable_normal_escape {
-            let r = snailquote::unescape(ansi_escaped.as_ref()).unwrap_or(ansi_escaped.to_string());
+            let r =
+                snailquote::unescape(content.as_ref()).unwrap_or(cs.to_str(input.str).to_string());
             //     .map_err(|e| {
             //     nom::Err::Error(SyntaxErrorKind::InvalidEscapeSequence(
             //         e.to_string(),
@@ -1280,7 +1285,7 @@ fn parse_string_common(
             // })?;
             Ok((input, r.into()))
         } else {
-            Ok((input, ansi_escaped))
+            Ok((input, content))
         }
 
         // 返回解析结果

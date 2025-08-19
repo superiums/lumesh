@@ -52,6 +52,15 @@ steps:
       # - zip -r doc.zip doc/*
     depends_on: [create_release]
 
+  publish_doc:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "doc.tar.gz"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_docs]
+
   build_linux:
     image: rust:latest
     commands:
@@ -70,44 +79,6 @@ steps:
       - cp target/x86_64-unknown-linux-musl/release/lumesh lumesh-linux-musl
     depends_on: [create_release]
 
-  # build_macos:
-  #   image: rust:latest
-  #   commands:
-  #     - rustup target add x86_64-apple-darwin aarch64-apple-darwin
-  #     # Intel Mac
-  #     - cargo build --release --target x86_64-apple-darwin
-  #     - cp target/x86_64-apple-darwin/release/lume lume-macos-x86_64
-  #     - cargo build --features runner --release --target x86_64-apple-darwin
-  #     - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
-  #     # Apple Silicon Mac
-  #     - cargo build --release --target aarch64-apple-darwin
-  #     - cp target/aarch64-apple-darwin/release/lume lume-macos-arm64
-  #     - cargo build --features runner --release --target aarch64-apple-darwin
-  #     - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
-  #   depends_on: [create_release]
-
-  build_windows:
-    image: rust:latest
-    commands:
-      - rustup target add x86_64-pc-windows-gnu
-      - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
-      # 标准构建
-      - cargo build --release --target x86_64-pc-windows-gnu
-      - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows.exe
-      # Runner 构建
-      - cargo build --features runner --release --target x86_64-pc-windows-gnu
-      - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
-    depends_on: [create_release]
-
-  publish_doc:
-    image: woodpeckerci/plugin-release
-    settings:
-      files:
-        - "doc.tar.gz"
-      api_key:
-        from_secret: codeberg_token
-    depends_on: [build_docs]
-
   publish_linux:
     image: woodpeckerci/plugin-release
     settings:
@@ -120,6 +91,43 @@ steps:
         from_secret: codeberg_token
     depends_on: [build_linux]
 
+  build_macos:
+    image: rust:latest
+    commands:
+      - cargo install cross
+      - cross build --target x86_64-apple-darwin --release
+      - cross build --target aarch64-apple-darwin --release
+      - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
+      - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
+
+    depends_on: [create_release]
+
+  publish_macos:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-macos-x86_64"
+        - "lume-macos-arm64"
+        # - "lumesh-macos-x86_64"
+        # - "lumesh-macos-arm64"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_macos]
+
+  build_windows:
+    image: rust:latest
+    commands:
+      - rustup target add x86_64-pc-windows-gnu
+      # - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
+      - apt-get update && apt-get install -y mingw-w64
+      # 标准构建
+      - cargo build --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows.exe
+      # Runner 构建
+      - cargo build --features runner --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
+    depends_on: [create_release]
+
   publish_windows:
     image: woodpeckerci/plugin-release
     settings:
@@ -129,3 +137,25 @@ steps:
       api_key:
         from_secret: codeberg_token
     depends_on: [build_windows]
+
+  build_arm:
+    image: rust:latest
+    commands:
+      # - dpkg --add-architecture arm64
+      # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
+      - cargo install cross
+      - cross build --target aarch64-unknown-linux-gnu --release
+      - cross build --target aarch64-unknown-linux-musl --release
+      - cp target/aarch64-unknown-linux-gnu/release/lumesh lumesh-aarch64-gnu
+      - cp target/aarch64-unknown-linux-musl/release/lumesh lumesh-aarch64-musl
+    depends_on: [create_release]
+
+  publish_arm:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lumesh-aarch64-gnu"
+        - "lumesh-aarch64-musl"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_macos]

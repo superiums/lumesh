@@ -131,23 +131,23 @@ pub fn run_repl(env: &mut Environment) {
     // 设置信号处理 (Unix 系统)
     // #[cfg(unix)]
     // {
-    let rl_clone = Arc::clone(&rl);
+    // let rl_clone = Arc::clone(&rl);
     let running_clone = Arc::clone(&running);
-    if no_history {
-        ctrlc::set_handler(move || {
-            running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-            std::process::exit(0);
-        })
-        .expect("Error setting Ctrl-C handler");
-    } else {
-        let hist = history_file.clone();
-        ctrlc::set_handler(move || {
-            running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-            let _ = rl_clone.lock().unwrap().save_history(&hist);
-            std::process::exit(0);
-        })
-        .expect("Error setting Ctrl-C handler");
-    }
+    // if no_history {
+    //     ctrlc::set_handler(move || {
+    //         running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+    //         // std::process::exit(0);
+    //     })
+    //     .expect("Error setting Ctrl-C handler");
+    // } else {
+    // let hist = history_file.clone();
+    ctrlc::set_handler(move || {
+        running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+        // let _ = rl_clone.lock().unwrap().save_history(&hist);
+        // std::process::exit(0);
+    })
+    .expect("Error setting Ctrl-C handler");
+    // }
     // }
 
     // =======key binding=======

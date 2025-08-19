@@ -61,35 +61,35 @@ steps:
         from_secret: codeberg_token
     depends_on: [build_docs]
 
-  # build_linux:
-  #   image: rust:latest
-  #   commands:
-  #     - rustup target add x86_64-unknown-linux-musl
-  #     - apt-get update && apt-get install -y musl-tools
-  #     # 标准构建
-  #     - cargo build --release
-  #     - cp target/release/lume lume-linux
-  #     # Runner 构建
-  #     - cargo build --features runner --release
-  #     - cp target/release/lumesh lumesh-linux
-  #     # musl 静态链接构建
-  #     - cargo build --release --target x86_64-unknown-linux-musl
-  #     - cp target/x86_64-unknown-linux-musl/release/lume lume-linux-musl
-  #     - cargo build --features runner --release --target x86_64-unknown-linux-musl
-  #     - cp target/x86_64-unknown-linux-musl/release/lumesh lumesh-linux-musl
-  #   depends_on: [create_release]
+  build_linux:
+    image: rust:latest
+    commands:
+      - rustup target add x86_64-unknown-linux-musl
+      - apt-get update && apt-get install -y musl-tools
+      # 标准构建
+      - cargo build --release
+      - cp target/release/lume lume-linux
+      # Runner 构建
+      - cargo build --features runner --release
+      - cp target/release/lumesh lumesh-linux
+      # musl 静态链接构建
+      - cargo build --release --target x86_64-unknown-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/lume lume-linux-musl
+      - cargo build --features runner --release --target x86_64-unknown-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/lumesh lumesh-linux-musl
+    depends_on: [create_release]
 
-  # publish_linux:
-  #   image: woodpeckerci/plugin-release
-  #   settings:
-  #     files:
-  #       - "lume-linux"
-  #       - "lumesh-linux"
-  #       - "lume-linux-musl"
-  #       - "lumesh-linux-musl"
-  #     api_key:
-  #       from_secret: codeberg_token
-  #   depends_on: [build_linux]
+  publish_linux:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-linux"
+        - "lumesh-linux"
+        - "lume-linux-musl"
+        - "lumesh-linux-musl"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_linux]
 
   # build_macos:
   #   image: rust:latest
@@ -118,58 +118,58 @@ steps:
   #       from_secret: codeberg_token
   #   depends_on: [build_macos]
 
-  # build_windows:
-  #   image: rust:latest
-  #   commands:
-  #     - rustup target add x86_64-pc-windows-gnu
-  #     # - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
-  #     - apt-get update && apt-get install -y mingw-w64
-  #     # 标准构建
-  #     - cargo build --release --target x86_64-pc-windows-gnu
-  #     - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows.exe
-  #     # Runner 构建
-  #     - cargo build --features runner --release --target x86_64-pc-windows-gnu
-  #     - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
-  #   depends_on: [create_release]
-
-  # publish_windows:
-  #   image: woodpeckerci/plugin-release
-  #   settings:
-  #     files:
-  #       - "lume-windows.exe"
-  #       - "lumesh-windows.exe"
-  #     api_key:
-  #       from_secret: codeberg_token
-  #   depends_on: [build_windows]
-
-  build_cross:
+  build_windows:
     image: rust:latest
     commands:
-      - apt-get update && apt-get install --assume-yes podman qemu-system
-      - podman machine init -v /tmp:/tmp -v /var:/var -v /usr:/usr -v /lib:/lib -v /lib64:/lib64 -v /run:/run -v /etc:/etc -v /woodpecker:/woodpecker
-      # - podman machine init -v /tmp:/tmp -v /private:/private
-      # - apt-get update && apt-get install --assume-yes docker.io
-      # - dpkg --add-architecture arm64
-      # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
-      - cargo install cross
-      - cross build --target x86_64-unknown-freebsd --release
-      - cross build --target x86_64-pc-windows-gnu --release
-      - cross build --target aarch64-unknown-linux-gnu --release
-      - cross build --target aarch64-unknown-linux-musl --release
-      - cp target/x86_64-unknown-freebsd/release/lumesh lumesh-freebsd
-      - cp target/x86_64-pc-windows-gnu/release/lumesh lumesh-win
-      - cp target/aarch64-unknown-linux-gnu/release/lumesh lumesh-aarch64-gnu
-      - cp target/aarch64-unknown-linux-musl/release/lumesh lumesh-aarch64-musl
+      - rustup target add x86_64-pc-windows-gnu
+      # - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
+      - apt-get update && apt-get install -y mingw-w64
+      # 标准构建
+      - cargo build --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows.exe
+      # Runner 构建
+      - cargo build --features runner --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
     depends_on: [create_release]
 
-  publish_cross:
+  publish_windows:
     image: woodpeckerci/plugin-release
     settings:
       files:
-        - "lumesh-freebsd"
-        - "lumesh-win"
-        - "lumesh-aarch64-gnu"
-        - "lumesh-aarch64-musl"
+        - "lume-windows.exe"
+        - "lumesh-windows.exe"
       api_key:
         from_secret: codeberg_token
-    depends_on: [build_cross]
+    depends_on: [build_windows]
+
+  # build_cross:
+  #   image: rust:latest
+  #   commands:
+  #     - apt-get update && apt-get install --assume-yes podman qemu-system
+  #     - podman machine init -v /tmp:/tmp -v /var:/var -v /usr:/usr -v /lib:/lib -v /lib64:/lib64 -v /run:/run -v /etc:/etc -v /woodpecker:/woodpecker
+  #     # - podman machine init -v /tmp:/tmp -v /private:/private
+  #     # - apt-get update && apt-get install --assume-yes docker.io
+  #     # - dpkg --add-architecture arm64
+  #     # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
+  #     - cargo install cross
+  #     - cross build --target x86_64-unknown-freebsd --release
+  #     - cross build --target x86_64-pc-windows-gnu --release
+  #     - cross build --target aarch64-unknown-linux-gnu --release
+  #     - cross build --target aarch64-unknown-linux-musl --release
+  #     - cp target/x86_64-unknown-freebsd/release/lumesh lumesh-freebsd
+  #     - cp target/x86_64-pc-windows-gnu/release/lumesh lumesh-win
+  #     - cp target/aarch64-unknown-linux-gnu/release/lumesh lumesh-aarch64-gnu
+  #     - cp target/aarch64-unknown-linux-musl/release/lumesh lumesh-aarch64-musl
+  #   depends_on: [create_release]
+
+  # publish_cross:
+  #   image: woodpeckerci/plugin-release
+  #   settings:
+  #     files:
+  #       - "lumesh-freebsd"
+  #       - "lumesh-win"
+  #       - "lumesh-aarch64-gnu"
+  #       - "lumesh-aarch64-musl"
+  #     api_key:
+  #       from_secret: codeberg_token
+  #   depends_on: [build_cross]

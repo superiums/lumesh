@@ -91,32 +91,52 @@ steps:
         from_secret: codeberg_token
     depends_on: [build_linux]
 
-  build_macos:
+  build_bsd:
     image: rust:latest
     commands:
-      - apt-get update && apt-get install --assume-yes docker.io
-      # libclang-19-dev
-      - cargo install cross
-      - rustup target add x86_64-apple-darwin
-      - rustup target add aarch64-apple-darwin
-      - cross build --target x86_64-apple-darwin --release
-      - cross build --target aarch64-apple-darwin --release
-      - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
-      - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
+      - rustup target add x86_64-unknown-freebsd
+
+      # 标准构建
+      - cargo build --release --target x86_64-unknown-freebsd
+      - cp target/x86_64-unknown-freebsd/release/lume lume-freebsd
 
     depends_on: [create_release]
 
-  publish_macos:
+  publish_bsd:
     image: woodpeckerci/plugin-release
     settings:
       files:
-        - "lume-macos-x86_64"
-        - "lume-macos-arm64"
-        # - "lumesh-macos-x86_64"
-        # - "lumesh-macos-arm64"
+        - "lume-freebsd"
       api_key:
         from_secret: codeberg_token
-    depends_on: [build_macos]
+    depends_on: [build_bsd]
+
+  # build_macos:
+  #   image: rust:latest
+  #   commands:
+  #     - apt-get update && apt-get install --assume-yes docker.io
+  #     # libclang-19-dev
+  #     - cargo install cross
+  #     - rustup target add x86_64-apple-darwin
+  #     - rustup target add aarch64-apple-darwin
+  #     - cross build --target x86_64-apple-darwin --release
+  #     - cross build --target aarch64-apple-darwin --release
+  #     - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
+  #     - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
+
+  #   depends_on: [create_release]
+
+  # publish_macos:
+  #   image: woodpeckerci/plugin-release
+  #   settings:
+  #     files:
+  #       - "lume-macos-x86_64"
+  #       - "lume-macos-arm64"
+  #       # - "lumesh-macos-x86_64"
+  #       # - "lumesh-macos-arm64"
+  #     api_key:
+  #       from_secret: codeberg_token
+  #   depends_on: [build_macos]
 
   build_windows:
     image: rust:latest
@@ -142,10 +162,32 @@ steps:
         from_secret: codeberg_token
     depends_on: [build_windows]
 
+  build_windows_cross:
+    image: rust:latest
+    commands:
+      - cargo install cross
+      # 标准构建
+      - cross build --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows-cross.exe
+      # Runner 构建
+      - cross build --features runner --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows-cross.exe
+    depends_on: [create_release]
+
+  publish_windows_cross:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-windows-cross.exe"
+        - "lumesh-windows-cross.exe"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_windows_cross]
+
   build_arm:
     image: rust:latest
     commands:
-      - apt-get update && apt-get install --assume-yes podman
+      - apt-get update && apt-get install --assume-yes docker.io docker-cli
       # - dpkg --add-architecture arm64
       # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
       - cargo install cross

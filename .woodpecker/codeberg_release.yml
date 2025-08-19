@@ -145,7 +145,10 @@ steps:
   build_cross:
     image: rust:latest
     commands:
-      - apt-get update && apt-get install --assume-yes docker.io
+      - apt-get update && apt-get install --assume-yes podman
+      - podman machine init -v /tmp:/tmp -v /var:/var -v /woodpecker:/woodpecker
+      # - podman machine init -v /tmp:/tmp -v /private:/private
+      # - apt-get update && apt-get install --assume-yes docker.io
       # - dpkg --add-architecture arm64
       # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
       - cargo install cross

@@ -1,0 +1,14 @@
+[target.x86_64-unknown-freebsd]
+image = "x86_64-unknown-freebsd"
+[target.x86_64-pc-windows-gnu]
+image = "x86_64-pc-windows-gnu"
+[target.aarch64-unknown-linux-gnu]
+# Translates to `ghcr.io/cross-rs/aarch64-unknown-linux-gnu:edge`
+image = ":edge"
+[target.aarch64-unknown-linux-musl]
+# Translates to `ghcr.io/cross-rs/aarch64-unknown-linux-gnu:edge`
+image.name = ":edge"
+image.toolchain = [
+    "x86_64-unknown-linux-musl",
+    "linux/arm64=aarch64-unknown-linux-musl",
+] # Defaults to `x86_64-unknown-linux-gnu`

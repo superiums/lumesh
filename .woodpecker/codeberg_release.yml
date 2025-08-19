@@ -94,7 +94,7 @@ steps:
   build_macos:
     image: rust:latest
     commands:
-      - apt-get install docker
+      - apt-get update && apt-get install docker.io docker-cli
       # libclang-19-dev
       - cargo install cross
       - rustup target add x86_64-apple-darwin
@@ -145,7 +145,7 @@ steps:
   build_arm:
     image: rust:latest
     commands:
-      - apt-get install podman
+      - apt-get update && apt-get install podman
       # - dpkg --add-architecture arm64
       # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
       - cargo install cross

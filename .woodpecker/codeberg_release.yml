@@ -91,26 +91,6 @@ steps:
         from_secret: codeberg_token
     depends_on: [build_linux]
 
-  build_bsd:
-    image: rust:latest
-    commands:
-      - rustup target add x86_64-unknown-freebsd
-
-      # 标准构建
-      - cargo build --release --target x86_64-unknown-freebsd
-      - cp target/x86_64-unknown-freebsd/release/lume lume-freebsd
-
-    depends_on: [create_release]
-
-  publish_bsd:
-    image: woodpeckerci/plugin-release
-    settings:
-      files:
-        - "lume-freebsd"
-      api_key:
-        from_secret: codeberg_token
-    depends_on: [build_bsd]
-
   # build_macos:
   #   image: rust:latest
   #   commands:
@@ -162,47 +142,31 @@ steps:
         from_secret: codeberg_token
     depends_on: [build_windows]
 
-  build_windows_cross:
+  build_cross:
     image: rust:latest
     commands:
-      - cargo install cross
-      # 标准构建
-      - cross build --release --target x86_64-pc-windows-gnu
-      - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows-cross.exe
-      # Runner 构建
-      - cross build --features runner --release --target x86_64-pc-windows-gnu
-      - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows-cross.exe
-    depends_on: [create_release]
-
-  publish_windows_cross:
-    image: woodpeckerci/plugin-release
-    settings:
-      files:
-        - "lume-windows-cross.exe"
-        - "lumesh-windows-cross.exe"
-      api_key:
-        from_secret: codeberg_token
-    depends_on: [build_windows_cross]
-
-  build_arm:
-    image: rust:latest
-    commands:
-      - apt-get update && apt-get install --assume-yes docker.io docker-cli
+      - apt-get update && apt-get install --assume-yes docker.io
       # - dpkg --add-architecture arm64
       # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
       - cargo install cross
+      - cross build --target x86_64-unknown-freebsd --release
+      - cross build --target x86_64-pc-windows-gnu --release
       - cross build --target aarch64-unknown-linux-gnu --release
       - cross build --target aarch64-unknown-linux-musl --release
+      - cp target/x86_64-unknown-freebsd/release/lumesh lumesh-freebsd
+      - cp target/x86_64-pc-windows-gnu/release/lumesh lumesh-win
       - cp target/aarch64-unknown-linux-gnu/release/lumesh lumesh-aarch64-gnu
       - cp target/aarch64-unknown-linux-musl/release/lumesh lumesh-aarch64-musl
     depends_on: [create_release]
 
-  publish_arm:
+  publish_cross:
     image: woodpeckerci/plugin-release
     settings:
       files:
+        - "lumesh-freebsd"
+        - "lumesh-win"
         - "lumesh-aarch64-gnu"
         - "lumesh-aarch64-musl"
       api_key:
         from_secret: codeberg_token
-    depends_on: [build_arm]
+    depends_on: [build_cross]

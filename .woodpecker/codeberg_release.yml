@@ -145,7 +145,7 @@ steps:
   build_cross:
     image: rust:latest
     commands:
-      - apt-get update && apt-get install --assume-yes podman
+      - apt-get update && apt-get install --assume-yes podman qemu-system
       - podman machine init -v /tmp:/tmp -v /var:/var -v /usr:/usr -v /lib:/lib -v /lib64:/lib64 -v /run:/run -v /etc:/etc -v /woodpecker:/woodpecker
       # - podman machine init -v /tmp:/tmp -v /private:/private
       # - apt-get update && apt-get install --assume-yes docker.io

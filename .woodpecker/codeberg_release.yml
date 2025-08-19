@@ -99,118 +99,33 @@ steps:
       - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
     depends_on: [create_release]
 
-  upload_assets_doc:
-    image: alpine:latest
-    commands:
-      - echo "prepare to upload docs"
-      - source .env
-      - apk add --no-cache curl jq
-      - echo "uploading..."
-      - echo $UPLOAD_URL
-      # 上传文档
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@doc.tar.gz;filename=doc.tar.gz"
-      # - |
-      #   curl -X POST "$UPLOAD_URL" \
-      #     -H "Authorization: token $CODEBERG_TOKEN" \
-      #     -H "Content-Type: multipart/form-data" \
-      #     -F "attachment=@doc.zip;filename=doc.zip"
-      - echo "finished"
-    # secrets: [CODEBERG_TOKEN]
-    environment:
-      CODEBERG_TOKEN:
+  publish_doc:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "doc.tar.gz"
+      api_key:
         from_secret: codeberg_token
-      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
     depends_on: [build_docs]
-  upload_assets_linux:
-    image: alpine:latest
-    commands:
-      - echo "prepare to upload docs"
-      - source .env
-      - apk add --no-cache curl jq
-      - echo "uploading..."
-      # 上传 Linux 二进制文件
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lume-linux;filename=${MAIN_BINARY}_linux_${VERSION}"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lumesh-linux;filename=${RUNNER_BINARY}_linux_${VERSION}"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lume-linux-musl;filename=${MAIN_BINARY}_linux_musl_${VERSION}"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lumesh-linux-musl;filename=${RUNNER_BINARY}_linux_musl_${VERSION}"
-      - echo "finished"
-    environment:
-      CODEBERG_TOKEN:
-        from_secret: codeberg_token
-      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
-    depends_on: [build_linux]
-  upload_assets_windows:
-    image: alpine:latest
-    commands:
-      - source .env
-      - apk add --no-cache curl jq
-      - echo "uploading..."
-      # 上传 Windows 二进制文件
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lume-windows.exe;filename=${MAIN_BINARY}_windows_${VERSION}.exe"
-      - |
-        curl -X POST "$UPLOAD_URL" \
-          -H "Authorization: token $CODEBERG_TOKEN" \
-          -H "Content-Type: multipart/form-data" \
-          -F "attachment=@lumesh-windows.exe;filename=${RUNNER_BINARY}_windows_${VERSION}.exe"
-      - echo "finished"
-    environment:
-      CODEBERG_TOKEN:
-        from_secret: codeberg_token
-      # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
-    depends_on: [build_windows]
-  # upload_assets_macos:
-  #   image: alpine:latest
-  #   commands:
-  #     - source .env
-  #     - apk add --no-cache curl jq
-  #     # 上传 macOS 二进制文件
-  #     - |
-  #       curl -X POST "$UPLOAD_URL" \
-  #         -H "Authorization: token $CODEBERG_TOKEN" \
-  #         -H "Content-Type: multipart/form-data" \
-  #         -F "attachment=@lume-macos-x86_64;filename=${MAIN_BINARY}_macos_x86_64_${VERSION}"
-  #     - |
-  #       curl -X POST "$UPLOAD_URL" \
-  #         -H "Authorization: token $CODEBERG_TOKEN" \
-  #         -H "Content-Type: multipart/form-data" \
-  #         -F "attachment=@lumesh-macos-x86_64;filename=${RUNNER_BINARY}_macos_x86_64_${VERSION}"
-  #     - |
-  #       curl -X POST "$UPLOAD_URL" \
-  #         -H "Authorization: token $CODEBERG_TOKEN" \
-  #         -H "Content-Type: multipart/form-data" \
-  #         -F "attachment=@lume-linux-musl;filename=${MAIN_BINARY}_linux_musl_${VERSION}"
-  #     - |
-  #       curl -X POST "$UPLOAD_URL" \
-  #         -H "Authorization: token $CODEBERG_TOKEN" \
-  #         -H "Content-Type: multipart/form-data" \
-  #         -F "attachment=@lumesh-linux-musl;filename=${RUNNER_BINARY}_linux_musl_${VERSION}"
 
-  #   environment:
-  #     CODEBERG_TOKEN:
-  #       from_secret: codeberg_token
-  #     # UPLOAD_URL: https://codeberg.org/api/packages/santo/generic/lumesh/${VERSION}
-  #   depends_on: [build_macos]
+  publish_linux:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-linux"
+        - "lumesh-linux"
+        - "lume-linux-musl"
+        - "lumesh-linux-musl"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_linux]
+
+  publish_windows:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-windows.exe"
+        - "lumesh-windows.exe"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_windows]

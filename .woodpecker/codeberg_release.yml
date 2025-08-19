@@ -94,7 +94,11 @@ steps:
   build_macos:
     image: rust:latest
     commands:
+      - apt-get install docker
+      # libclang-19-dev
       - cargo install cross
+      - rustup target add x86_64-apple-darwin
+      - rustup target add aarch64-apple-darwin
       - cross build --target x86_64-apple-darwin --release
       - cross build --target aarch64-apple-darwin --release
       - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
@@ -141,6 +145,7 @@ steps:
   build_arm:
     image: rust:latest
     commands:
+      - apt-get install podman
       # - dpkg --add-architecture arm64
       # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
       - cargo install cross
@@ -158,4 +163,4 @@ steps:
         - "lumesh-aarch64-musl"
       api_key:
         from_secret: codeberg_token
-    depends_on: [build_macos]
+    depends_on: [build_arm]

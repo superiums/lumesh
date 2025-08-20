@@ -22,7 +22,6 @@ use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
 
-use crate::Expression;
 use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
@@ -31,6 +30,7 @@ use crate::expression::alias::get_alias_tips;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::modules::get_builtin_tips;
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
+use crate::{Expression, childman};
 
 use crate::runtime::check;
 use crate::{Environment, highlight, parse_and_eval, prompt::get_prompt_engine};
@@ -126,25 +126,16 @@ pub fn run_repl(env: &mut Environment) {
         Err(e) => println!("No previous history {e}"),
     }
 
-    let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
+    // let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
 
     // 设置信号处理 (Unix 系统)
-    // #[cfg(unix)]
-    // {
-    // let rl_clone = Arc::clone(&rl);
-    let running_clone = Arc::clone(&running);
-    // if no_history {
-    //     ctrlc::set_handler(move || {
-    //         running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-    //         // std::process::exit(0);
-    //     })
-    //     .expect("Error setting Ctrl-C handler");
-    // } else {
-    // let hist = history_file.clone();
+    // let running_clone = Arc::clone(&running);
     ctrlc::set_handler(move || {
-        running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-        // let _ = rl_clone.lock().unwrap().save_history(&hist);
-        // std::process::exit(0);
+        // running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
+        println!("^C");
+        if childman::kill_child() {
+            childman::clear_child();
+        }
     })
     .expect("Error setting Ctrl-C handler");
     // }
@@ -234,7 +225,8 @@ pub fn run_repl(env: &mut Environment) {
     env.undefine("LUME_PROMPT_TEMPLATE");
 
     // let mut repl_env = env.fork();
-    while running.load(std::sync::atomic::Ordering::SeqCst) {
+    // while running.load(std::sync::atomic::Ordering::SeqCst) {
+    loop {
         let prompt = pe.get_prompt();
 
         // 在锁的保护下执行 readline
@@ -245,20 +237,20 @@ pub fn run_repl(env: &mut Environment) {
                 // state::set_signal(); // 更新共享状态
                 continue;
             }
-            // Err(ReadlineError::Signal(sig)) => {
-            //     if sig == rustyline::error::Signal::Interrupt {
-            //         println!("[Interrupt]");
-            //         state::set_signal(); // 更新共享状态
-            //     }
-            //     continue;
-            // }
+            Err(ReadlineError::Signal(sig)) => {
+                if sig == rustyline::error::Signal::Interrupt {
+                    println!("[Interrupt]");
+                    // state::set_signal(); // 更新共享状态
+                }
+                continue;
+            }
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
                 continue;
             }
             Err(err) => {
                 println!("Error: {err:?}");
-                break;
+                continue;
             }
         };
 

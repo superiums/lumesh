@@ -43,8 +43,8 @@ pub mod prompt;
 pub mod modules;
 pub use modules::get_builtin;
 
+pub mod childman;
 pub mod keyhandler;
-// pub mod state;
 
 // pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

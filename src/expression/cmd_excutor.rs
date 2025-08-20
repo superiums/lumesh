@@ -1,5 +1,5 @@
 use crate::{
-    Environment, Expression, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, RuntimeError, RuntimeErrorKind, childman,
     expression::pty::exec_in_pty,
     runtime::{IFS_CMD, ifs_contains},
 };
@@ -76,14 +76,24 @@ fn exec_single_cmd(
     }
 
     // 执行命令
-    let mut child = cmd.spawn().map_err(
-        |e|
-        // match &e.kind() {
-        // ErrorKind::NotFound => RuntimeError::ProgramNotFound(cmdstr.clone()),
-        // e =>
-        RuntimeError::from_io_error(e,"spawn cmd".into(), job.clone(), depth),
-        // }
-    )?;
+    let mut child = cmd.spawn().map_err(|e| match &e.kind() {
+        std::io::ErrorKind::NotFound => RuntimeError::new(
+            RuntimeErrorKind::ProgramNotFound(cmdstr.clone()),
+            job.clone(),
+            depth,
+        ),
+        std::io::ErrorKind::PermissionDenied => RuntimeError::new(
+            RuntimeErrorKind::PermissionDenied(cmdstr.clone()),
+            job.clone(),
+            depth,
+        ),
+        _ => RuntimeError::from_io_error(
+            e,
+            format!("spawn cmd `{cmdstr}`").into(),
+            job.clone(),
+            depth,
+        ),
+    })?;
 
     // 写入输入
     if let Some(input) = input {
@@ -93,7 +103,12 @@ fn exec_single_cmd(
             .unwrap()
             .write_all(&input)
             .map_err(|e| {
-                RuntimeError::from_io_error(e, "write to stdin".into(), job.clone(), depth)
+                RuntimeError::from_io_error(
+                    e,
+                    format!("pipe stdin to `{cmdstr}`").into(),
+                    job.clone(),
+                    depth,
+                )
             })?;
     }
 
@@ -108,7 +123,8 @@ fn exec_single_cmd(
     }
 
     // 中断信号处理
-    // let mut child_ref = child.clone_killer();
+    // let mut child_ref = child;
+    childman::set_child(child.id());
     // std::thread::spawn(move || {
     //     loop {
     //         if state::read_signal() {
@@ -122,9 +138,16 @@ fn exec_single_cmd(
     // 获取输出
     if pipe_out {
         // 管道捕获
-        let output = child
-            .wait_with_output()
-            .map_err(|e| RuntimeError::from_io_error(e, "exec cmd".into(), job.clone(), depth))?;
+        let output = child.wait_with_output().map_err(|e| {
+            RuntimeError::from_io_error(
+                e,
+                format!("wait output of cmd `{cmdstr}`").into(),
+                job.clone(),
+                depth,
+            )
+        })?;
+        childman::clear_child();
+
         if output.status.success() {
             if mode & 1 == 0 {
                 //未关闭标准输出才返回结果
@@ -168,16 +191,24 @@ fn exec_single_cmd(
         return Ok(None);
     } else {
         // 正常模式
-        let status = child
-            .wait()
-            .map_err(|e| RuntimeError::from_io_error(e, "exec cmd".into(), job.clone(), depth))?;
+        let status = child.wait().map_err(|e| {
+            RuntimeError::from_io_error(
+                e,
+                format!("wait cmd `{cmdstr}`").into(),
+                job.clone(),
+                depth,
+            )
+        })?;
+        childman::clear_child();
+
         if status.success() {
             return Ok(None);
         } else if mode & 2 == 0 {
             //未关闭错误输出才返回错误
             Err(RuntimeError::new(
                 RuntimeErrorKind::CommandFailed2(cmdstr.to_owned(), status.to_string()),
-                job.clone(),
+                // job.clone(),
+                Expression::None,
                 depth,
             ))
         } else {

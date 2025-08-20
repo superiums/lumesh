@@ -985,9 +985,9 @@ fn parse_param_list(
     let (input, _) = cut(text("("))(input).map_err(|_| {
         SyntaxErrorKind::failure(
             input.get_str_slice(),
-            "function params declare",
+            "params declaration",
             None,
-            Some("add something like (x,y)"),
+            Some("declare params like (x,y,z=0)"),
         )
     })?;
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?; //允许可选回车
@@ -1069,7 +1069,7 @@ fn parse_fn_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
             input.get_str_slice(),
             "function name",
             None,
-            Some("add a name for your function"),
+            Some("add a name"),
         )
     })?;
     let (input, (params, param_collector)) = cut(parse_param_list)(input)?; // 使用新参数列表
@@ -1086,7 +1086,7 @@ fn parse_fn_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
             input.get_str_slice(),
             "function body",
             None,
-            Some("add a function body like {...}"),
+            Some("add a body like {...}"),
         ));
     }
     let (input, body) = cut(parse_block)(input)?;

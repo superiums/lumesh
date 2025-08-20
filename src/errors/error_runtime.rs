@@ -15,7 +15,7 @@ pub struct RuntimeError {
 pub enum RuntimeErrorKind {
     #[error("type `{0}` is not appliable: {1:?}")]
     CannotApply(String, Expression),
-    #[error("symbol \"{0}\" not defined")]
+    #[error("symbol `{0}` not defined")]
     SymbolNotDefined(String),
     #[error("command `{0}` failed with args {1:?}")]
     CommandFailed(String, Vec<Expression>),
@@ -25,9 +25,9 @@ pub enum RuntimeErrorKind {
     ForNonList(Expression),
     #[error("recursion depth exceeded while evaluating `{0:?}`")]
     RecursionDepth(Expression),
-    #[error("permission denied while evaluating `{0:?}`")]
-    PermissionDenied(Expression),
-    #[error("program \"{0}\" not found")]
+    #[error("permission denied while spawn `{0}`")]
+    PermissionDenied(String),
+    #[error("program `{0}` not found")]
     ProgramNotFound(String),
     #[error("{0}")]
     CustomError(Cow<'static, str>),

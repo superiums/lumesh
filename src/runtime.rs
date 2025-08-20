@@ -168,7 +168,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                 },
                 Err(e) => {
                     let _ = io::stdout().flush();
-                    eprintln!("\x1b[31m__________\x1b[0m\n{e}");
+                    eprintln!("\x1b[31m_____________\x1b[0m\n{e}");
                     let _ = io::stderr().flush();
                 }
             }

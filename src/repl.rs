@@ -238,8 +238,12 @@ pub fn run_repl(env: &mut Environment) {
                 continue;
             }
             Err(ReadlineError::Signal(sig)) => {
+                #[cfg(unix)]
                 if sig == rustyline::error::Signal::Interrupt {
                     println!("[Interrupt]");
+                    if childman::kill_child() {
+                        childman::clear_child();
+                    }
                     // state::set_signal(); // 更新共享状态
                 }
                 continue;

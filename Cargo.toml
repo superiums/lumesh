@@ -96,3 +96,10 @@ criterion = "0.3"
 [[bench]]
 name = "parser_benchmark"
 harness = false
+
+[profile.release]
+opt-level = "z"   # 优化体积而非速度
+lto = true        # 链接时优化
+codegen-units = 1 # 减少代码生成单元
+panic = "abort"   # 使用abort而非unwind
+strip = true      # 移除调试符号

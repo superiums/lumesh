@@ -179,10 +179,11 @@ _Due to fish being unable to complete one million tasks, we recorded its half-ta
 - **Hotkeys** [https://lumesh.codeberg.page/en/keys]
 
 ## ⚑ Version History
-Current version **0.6.3**, continuously updated:
-- Decorator support
-- IFS mode control
-- Performance optimization
-Completely rewritten since version 0.3.0, focusing on efficiency improvements and syntax extension flexibility.
+Recent development has emphasized:
+
+Decorator support for function enhancement
+IFS (Internal Field Separator) mode control for compatibility
+Enhanced module system with cross-linking between modules
+Improved error reporting and debugging capabilities
 
 ---

@@ -1,4 +1,9 @@
 # Changelog
+## [0.7.7]
+- compile optimize
+- add childmanager
+- optimize errors for cmd and fn
+
 ## [0.7.6]
 - fix command like `cmd.exe`
 - allow blank argument `_` for command

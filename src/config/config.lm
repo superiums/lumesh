@@ -115,7 +115,6 @@ if IS_INTERACTIVE {
     alias fdirname = Fs.dir_name()
 
     # ===== check update
-
     fn update(){
         println 'checking latest version...'
         let url = 'https://codeberg.org/santo/lumesh/releases/latest'
@@ -140,7 +139,8 @@ if IS_INTERACTIVE {
           eprintln 'version check failed.'
         }
     }
-    update()
+    # uncomment this if you want to check update automaticlly.
+    # update()
 
 }
 # else {

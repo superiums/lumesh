@@ -207,8 +207,7 @@ fn exec_single_cmd(
             //未关闭错误输出才返回错误
             Err(RuntimeError::new(
                 RuntimeErrorKind::CommandFailed2(cmdstr.to_owned(), status.to_string()),
-                // job.clone(),
-                Expression::None,
+                job.clone(),
                 depth,
             ))
         } else {
@@ -257,9 +256,11 @@ pub fn handle_command(
                 // }
                 if s.contains('*') {
                     let mut matched = false;
-                    for path in glob(&s).unwrap().filter_map(Result::ok) {
-                        matched = true;
-                        cmd_args.push(path.to_string_lossy().to_string());
+                    if let Some(g) = glob(&s).ok() {
+                        for path in g.filter_map(Result::ok) {
+                            matched = true;
+                            cmd_args.push(path.to_string_lossy().to_string());
+                        }
                     }
                     if !matched {
                         return Err(RuntimeError {

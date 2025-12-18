@@ -1,4 +1,9 @@
 # Changelog
+## [0.7.8]
+- optimize path regcognization, `..` and more
+- fix panic for invalid regex.
+- optimize help tips.
+
 ## [0.7.7]
 - compile optimize
 - add childmanager

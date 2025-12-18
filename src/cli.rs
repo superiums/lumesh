@@ -25,6 +25,7 @@ use std::path::{Path, PathBuf};
     // disable_version_flag = true // 禁用默认的 --version
 )]
 struct Cli {
+    /// config file
     #[arg(short = 'p', long, num_args = 0..1)]
     profile: Option<String>,
 
@@ -40,6 +41,7 @@ struct Cli {
     #[arg(short = 'a', long)]
     aioff: bool,
 
+    /// force interactive mode
     #[arg(short = 'i', long, num_args = 0..1)]
     interactive: bool,
 

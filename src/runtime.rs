@@ -113,20 +113,7 @@ pub fn parse(input: &str) -> Result<Expression, SyntaxError> {
 }
 
 pub fn check(input: &str) -> bool {
-    match parse_script(input) {
-        Ok(_) => {
-            // eprint!("parse ok");
-            true
-        }
-        Err(_) => {
-            // eprint!("parse failed:{}", e);
-            false
-        } // _ => {
-          //     // eprint!("parse failed without err");
-
-          //     false
-          // }
-    }
+    parse_script(input).is_ok()
 }
 /// return whether parse success. no matter execute result is.
 pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {

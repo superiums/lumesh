@@ -300,9 +300,11 @@ impl Expression {
 
 fn glob_expand(s: &str) -> Vec<String> {
     let mut elist = vec![];
-    for entry in glob(s).unwrap() {
-        if let Ok(p) = entry {
-            elist.push(p.to_string_lossy().to_string())
+    if let Some(g) = glob(s).ok() {
+        for entry in g {
+            if let Ok(p) = entry {
+                elist.push(p.to_string_lossy().to_string())
+            }
         }
     }
     elist

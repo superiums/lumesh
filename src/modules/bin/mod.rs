@@ -100,13 +100,16 @@ fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError>
     match args.is_empty() {
         false => match args[0].to_string().as_str() {
             "tops" => {
+                println!("Top level Functions List\n");
                 let m = super::get_builtin_map()
                     .into_iter()
                     .filter(|item| matches!(item.1, Expression::Builtin(_)))
                     .collect::<HashMap<_, _>>();
                 pretty_printer(&Expression::from(m))?;
+                println!("\njust use them directly anywhere!");
             }
             "libs" | "modules" => {
+                println!("Modules List\n");
                 let m = super::get_builtin_map()
                     .iter()
                     .filter_map(|item| match item.1 {
@@ -119,26 +122,64 @@ fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError>
                     })
                     .collect::<HashMap<String, Expression>>();
                 pretty_printer(&Expression::from(m))?;
+                println!("\ntype `help <module-name>` to list functions of the module.");
+                println!("\n\nUsage:");
+                println!("\n    <module-name>.<function-name> params");
+                println!("\nExample:");
+                println!("\n    String.green hi");
+                println!("\n    String.green(hi)");
+                println!("\n    'hi'.green()");
             }
-            _ => match super::get_builtin(&args[0].to_string()) {
+            mo => match super::get_builtin(mo) {
                 Some(m) => {
-                    pretty_printer(m)?;
+                    if mo
+                        .char_indices()
+                        .next()
+                        .is_some_and(|f| f.1.is_ascii_uppercase())
+                    {
+                        println!("Functions for module {mo}\n");
+                        pretty_printer(m)?;
+                        println!("\ntype `{mo}.<function-name>` to see details of the function");
+                        println!("\ntype `{mo}.<tab>`           to cycle functions in the module");
+                        println!("\ntype `{mo}. <tab>`          to popup functions in the module");
+                    } else {
+                        pretty_printer(m)?; //for top funcs
+                        println!("\nit's a top level function. just use it directly anywhere!");
+                    }
                 }
-                _ => return Err(LmError::CustomError("no lib found".into())),
+                _ => return Err(LmError::CustomError(format!("no lib named {mo}"))),
             },
         },
         true => {
-            let m = super::get_builtin_map()
-                .iter()
-                .map(|item| match item.1 {
-                    Expression::HMap(_) => {
-                        (item.0.clone(), Expression::String("module".to_string()))
-                    }
-                    // Expression::Map(_) => (item.0.clone(), Expression::String("Module".to_string())),
-                    other => (item.0.clone(), other.clone()),
-                })
-                .collect::<HashMap<String, Expression>>();
-            pretty_printer(&Expression::from(m))?;
+            let mut stdout = std::io::stdout().lock();
+            writeln!(&mut stdout, "Welcome to Lumesh help center.")?;
+            writeln!(&mut stdout, "=================\n")?;
+            writeln!(
+                &mut stdout,
+                "type `help libs/modules`         to list libs/modules."
+            )?;
+            writeln!(
+                &mut stdout,
+                "type `help <module-name>`        to list functions of the module."
+            )?;
+            writeln!(
+                &mut stdout,
+                "type `help tops`                 to list functions of the top level."
+            )?;
+            writeln!(
+                &mut stdout,
+                "type `help <func-name>`          to see the detail of top functions."
+            )?;
+            writeln!(
+                &mut stdout,
+                "type `<module-name>.<func-name>` to see the detail of the function."
+            )?;
+            writeln!(
+                &mut stdout,
+                "\nPlease visit https://lumesh.codeberg.page for more docs."
+            )?;
+
+            stdout.flush()?;
         }
     }
     Ok(Expression::None)

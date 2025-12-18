@@ -113,6 +113,35 @@ if IS_INTERACTIVE {
     alias fis_file = Fs.is_file()
     alias fbasename = Fs.base_name()
     alias fdirname = Fs.dir_name()
+
+    # ===== check update
+
+    fn update(){
+        println 'checking latest version...'
+        let url = 'https://codeberg.org/santo/lumesh/releases/latest'
+        let ver = (curl $url ?: eprintln 'network err' && exit |  Regex.find(r'\d[\d\.]+').found ?: '0')
+        latest = (ver.split('.').join('').to_int() ?: 0)
+        if latest > 0 {
+          let current = (About | .get('version'))
+          current = current.split('.').join('').to_int()
+          if latest > current {
+              print 'Found new version: ' ver.green()
+              if Ui.confirm('download now?') {
+                  curl -o /tmp/lume `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
+                  sudo cp /tmp/lume /usr/bin/ ?: doas cp /tmp/lume /usr/bin/
+                  println 'finished'
+              } else {
+                  println 'you may download it manually:' $url
+              }
+          } else {
+              println 'Already newest'.yellow()
+          }
+        } else {
+          eprintln 'version check failed.'
+        }
+    }
+    update()
+
 }
 # else {
 # ========== config for script mode ==========

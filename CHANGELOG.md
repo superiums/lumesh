@@ -3,6 +3,8 @@
 - optimize path regcognization, `..` and more
 - fix panic for invalid regex.
 - optimize help tips.
+- update rustyline.
+- add `update script`.
 
 ## [0.7.7]
 - compile optimize

@@ -334,10 +334,7 @@ impl fmt::Display for SyntaxError {
             }
             SyntaxErrorKind::ExpectedChar { expected, at } => {
                 write!(f, "{RED_START}{BOLD}syntax error{RESET}: ")?;
-                write!(
-                    f,
-                    "expect character {YELLOW_START}{expected:?}{RESET}"
-                )?;
+                write!(f, "expect character {YELLOW_START}{expected:?}{RESET}")?;
                 writeln!(f)?;
                 if let Some(at) = at {
                     print_error_lines(&self.source, *at, f, 72)?;
@@ -357,10 +354,7 @@ impl fmt::Display for SyntaxError {
                 Ok(())
             }
             SyntaxErrorKind::InternalError(s) => {
-                writeln!(
-                    f,
-                    "{RED_START}{BOLD}internal syntax error: {s}{RESET}"
-                )
+                writeln!(f, "{RED_START}{BOLD}internal syntax error: {s}{RESET}")
             }
             SyntaxErrorKind::CustomError(s, at) => {
                 writeln!(f, "{RED_START}{BOLD}syntax error: {s}{RESET}")?;
@@ -381,10 +375,7 @@ impl fmt::Display for SyntaxError {
                 Ok(())
             }
             SyntaxErrorKind::InvalidEscapeSequence(op, at) => {
-                writeln!(
-                    f,
-                    "{RED_START}{BOLD}invalid escape sequence {op:?}{RESET}"
-                )?;
+                writeln!(f, "{RED_START}{BOLD}invalid escape sequence {op:?}{RESET}")?;
                 print_error_lines(&self.source, *at, f, 72)?;
                 Ok(())
             }
@@ -518,10 +509,7 @@ fn print_error_lines(
             let safe_end = error_end_in_line.min(line.len()).max(safe_start);
             // dbg!(error_start_in_line, error_end_in_line, safe_start, safe_end);
 
-            write!(
-                f,
-                "{RED_START}{line_num:>5}{RESET} {BLUE_START}▏{RESET} "
-            )?;
+            write!(f, "{RED_START}{line_num:>5}{RESET} {BLUE_START}▏{RESET} ")?;
             if safe_start > 0 {
                 write!(f, "{}", &line[..safe_start])?;
             }

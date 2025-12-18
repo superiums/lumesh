@@ -28,20 +28,12 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
                     Ok(expr) => match expr.eval_in_assign(env) {
                         Ok(r) => r.to_string(),
                         Err(e) => {
-                            eprintln!(
-                                "template `{}` execute failed:\n{}",
-                                name.as_str(),
-                                e
-                            );
+                            eprintln!("template `{}` execute failed:\n{}", name.as_str(), e);
                             "".to_string()
                         }
                     },
                     Err(e) => {
-                        eprintln!(
-                            "template `{}` render failed:\n{}",
-                            name.as_str(),
-                            e
-                        );
+                        eprintln!("template `{}` render failed:\n{}", name.as_str(), e);
                         "".to_string()
                     }
                 };

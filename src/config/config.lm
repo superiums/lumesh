@@ -125,7 +125,7 @@ if IS_INTERACTIVE {
           current = current.split('.').join('').to_int()
           if latest > current {
               print 'Found new version: ' ver.green()
-              if Ui.confirm('download now?') {
+              if Ui.confirm('download [normal edition for linux] now?') {
                   curl -o /tmp/lume `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
                   chmod '+x' /tmp/lume
                   sudo cp /tmp/lume /usr/bin/ ?: doas cp /tmp/lume /usr/bin/

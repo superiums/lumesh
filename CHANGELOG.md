@@ -1,4 +1,20 @@
 # Changelog
+## [0.8.0]
+- introduce CFM (command first mode)
+CFM is for daily usage, if there's only a single line, it will be parsed in CFM.
+
+in CFM, eg.
+- `ping 1.1.1.1` is ok
+- `chmod +x` is ok
+in NORMAL mode, you have to write:
+- `ping '1.1.1.1'`
+- `chmod '+x'`
+
+if you have a single line code but what to enter NORMAL mode, just type `:` at head of the line.
+eg.
+- `:1+2`
+- `: a.b`
+
 ## [0.7.8]
 - optimize path regcognization, `..` and more
 - fix panic for invalid regex.

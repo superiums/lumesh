@@ -204,7 +204,6 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_alone_tag("let"),
-        keyword_alone_tag("use"),
         keyword_alone_tag("alias"),
         keyword_alone_tag("if"),
         // keyword_tag("then"),
@@ -219,6 +218,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("break"),
         keyword_tag("return"),
         keyword_alone_tag("del"),
+        keyword_alone_tag("use"),
         // keyword_tag("type"),
         // keyword_tag("None"),
     ))(input)
@@ -1140,8 +1140,26 @@ fn is_symbol_char(c: char) -> bool {
 }
 
 pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
+    // 检查是否为单行命令模式
+    if is_cfm_mode(input) {
+        // println!("------------single----------");
+        return parse_command_tokens(input);
+    }
+
+    // 多行输入使用正常模式
     let mut tokens = Vec::new();
     let mut diagnostics = Vec::new();
+    // skip multiline mode prefix
+    match map_valid_token(punctuation_tag(":"), TokenKind::Comment)(input) {
+        Ok((new_input, (token, diagnostic))) => {
+            input = new_input;
+            tokens.push(token);
+            diagnostics.push(diagnostic);
+        }
+        Err(_) => {}
+    }
+
+    // go
     loop {
         match parse_token(input) {
             Err(_) => break,
@@ -1163,4 +1181,106 @@ pub fn tokenize(input: &str) -> (Vec<Token>, Vec<Diagnostic>) {
     let str = input.into();
     let input = Input::new(&str);
     parse_tokens(input)
+}
+
+/// CFM: command first mode
+fn is_cfm_mode(input: Input<'_>) -> bool {
+    // dbg!(&input);
+    match input.starts_with(":") {
+        true => false,
+        false => !input.contains("\n"),
+    }
+}
+
+fn parse_command_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
+    let mut tokens = Vec::new();
+    let mut diagnostics = Vec::new();
+
+    while !input.is_empty() {
+        match parse_command_token(input) {
+            Ok((new_input, (token, diagnostic))) => {
+                input = new_input;
+                tokens.push(token);
+                diagnostics.push(diagnostic);
+            }
+            Err(_) => break,
+        }
+    }
+    // dbg!(&tokens);
+    (tokens, diagnostics)
+}
+
+fn parse_command_token(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    if input.is_empty() {
+        return Err(NOT_FOUND);
+    }
+
+    // 按优先级解析特殊符号
+    alt((
+        string_literal,
+        map_valid_token(any_punctuation, TokenKind::Punctuation),
+        map_valid_token(cfm_operator, TokenKind::Operator),
+        map_valid_token(cfm_postfix_operator, TokenKind::OperatorPostfix),
+        map_valid_token(cfm_prefix_operator, TokenKind::OperatorPrefix),
+        map_valid_token(any_keyword, TokenKind::Keyword),
+        map_valid_token(whitespace, TokenKind::Whitespace),
+        // number_literal,
+        map_valid_token(value_symbol, TokenKind::ValueSymbol),
+        map_valid_token(comment, TokenKind::Comment),
+        map_valid_token(non_ascii, TokenKind::StringRaw),
+        cfm_parse_symbol, // 普通符号
+    ))(input)
+}
+
+fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {
+    // 读取直到遇到空格、括号或管道符号
+    let mut chars = input.chars();
+    let mut length = 0;
+
+    while let Some(c) = chars.next() {
+        if c.is_ascii_whitespace() || "([^!".contains(c) {
+            break;
+        }
+        length += c.len_utf8();
+    }
+
+    if length == 0 {
+        Err(NOT_FOUND)
+    } else {
+        let (rest, range) = input.split_at(length);
+        let token = Token::new(TokenKind::Symbol, range);
+        Ok((rest, (token, Diagnostic::Valid)))
+    }
+}
+
+fn cfm_prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        // prefix_tag("."), //pipemethod
+        prefix_tag("!"), //bool negtive
+        prefix_tag("$"), //var
+    ))(input)
+}
+
+fn cfm_postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        // postfix_tag("."), //chaind call/index
+        postfix_tag("!"), //func call as flat as cmd
+        postfix_tag("^"), //make symbo as cmd
+        postfix_tag("("), //func call
+        postfix_tag("["), //array index or slice
+    ))(input)
+}
+
+fn cfm_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((long_operator, cfm_short_operator))(input)
+}
+fn cfm_short_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        keyword_tag("|"),  //standard io stream pipe
+        operator_tag("<"), // not followed by punct, allow space,symbol like.
+        operator_tag(">"),
+        // operator_tag("%"),
+        // operator_tag("^"), //math power
+        punctuation_tag("="), // allow all.
+    ))(input)
 }

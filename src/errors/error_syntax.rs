@@ -452,7 +452,7 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
         &Diagnostic::NotTokenized(at) => {
             writeln!(
                 f,
-                "there are leftover tokens after tokenizing:\n{}",
+                "there are leftover tokens after tokenization:\n{}",
                 at.to_str(string)
             )?;
             print_error_lines(string, at, f, 72)

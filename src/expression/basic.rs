@@ -708,7 +708,7 @@ impl Expression {
                 writeln!(f, "{})", idt(i))
             }
             Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
-                write!(f, "\n{}Command〈{}〉\n{}(", idt(i), cmd, idt(i))?;
+                write!(f, "\n{}Command〈{}〉\n{}(\n", idt(i), cmd, idt(i))?;
                 args.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
                     let _ = writeln!(f);

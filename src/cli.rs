@@ -2,6 +2,7 @@
 
 // mod binary;
 use clap::Parser;
+use lumesh::modules::join_current_path_with_home;
 use lumesh::parse_and_eval;
 use lumesh::repl;
 use lumesh::runtime::init_config;
@@ -12,7 +13,7 @@ use lumesh::runtime::init_config;
 use lumesh::runtime::run_file;
 use lumesh::{Environment, Expression};
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 #[derive(Parser)]
 #[command(
@@ -138,7 +139,8 @@ fn main() {
         cli_env.define("SCRIPT", Expression::String(file.to_owned()));
 
         env_config(&mut cli_env, cli.aioff, cli.strict);
-        let path = PathBuf::from(file);
+        // let path = PathBuf::from(file);
+        let path = join_current_path_with_home(&file);
         run_file(path, &mut cli_env);
     }
     // 纯交互模式

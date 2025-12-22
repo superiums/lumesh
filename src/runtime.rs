@@ -1,5 +1,5 @@
 use crate::expression::cmd_excutor::expand_home;
-use crate::modules::pretty_printer;
+use crate::modules::{canon, pretty_printer};
 use crate::{
     Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, ModuleInfo, PRINT_DIRECT,
     RuntimeError, SyntaxError, use_script,
@@ -21,6 +21,7 @@ pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo,
     let cwd = Path::new(&base).parent().unwrap_or(Path::new("."));
     let file = Path::new(expand_home(file_path).as_ref()).with_extension("lm");
     let mut mod_file = cwd.join("mods").join(&file);
+    mod_file = canon(mod_file.to_str().unwrap_or_default())?;
     if !mod_file.exists() {
         if file.is_absolute() {
             return Err(RuntimeError::common(
@@ -30,12 +31,14 @@ pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo,
             ));
         }
         mod_file = cwd.join(&file);
+        mod_file = canon(mod_file.to_str().unwrap_or_default())?;
         if !mod_file.exists() {
             let lib = match env.get("LUME_MODULES_PATH") {
                 Some(Expression::String(mo)) => Path::new(&mo).to_path_buf(),
                 _ => dirs::data_dir().unwrap_or(Path::new(".").to_path_buf()),
             };
             mod_file = lib.join(&file);
+            mod_file = canon(mod_file.to_str().unwrap_or_default())?;
             if !mod_file.exists() {
                 return Err(RuntimeError::common(
                     format!(
@@ -86,12 +89,21 @@ pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo,
         )),
     }
 }
-pub fn run_file(path: PathBuf, env: &mut Environment) -> bool {
-    match read_to_string(path) {
-        Ok(prelude) => parse_and_eval(&prelude, env),
+pub fn run_file(path: &str, env: &mut Environment) -> bool {
+    match canon(path) {
+        Ok(p) => match read_to_string(p) {
+            Ok(prelude) => parse_and_eval(&prelude, env),
+            Err(e) => {
+                eprintln!(
+                    "\x1b[31m[IO ERROR]\x1b[0mFailed to read file '{}':\n  {e}",
+                    path
+                );
+                let _ = io::stderr().flush();
+                false
+            }
+        },
         Err(e) => {
-            eprintln!("\x1b[31m[IO ERROR]\x1b[0mFailed to read file:\n  {e}");
-            let _ = io::stderr().flush();
+            eprintln!("script file `{}` not found.\n{}", path, e);
             false
         }
     }
@@ -211,7 +223,7 @@ pub fn init_config(env: &mut Environment) {
         if !parse_and_eval(INTRO_PRELUDE, env) {
             eprintln!("Error while running introduction prelude");
         }
-    } else if !run_file(profile, env) {
+    } else if !run_file(profile.to_str().unwrap_or_default(), env) {
         eprintln!("Error while running introduction prelude");
     }
 

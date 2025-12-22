@@ -1,6 +1,6 @@
 use crate::expression::cmd_excutor::expand_home;
 use crate::modules::bin::get_string_arg;
-use crate::{Environment, Int};
+use crate::{Environment, Int, RuntimeError};
 use crate::{Expression, LmError};
 use common_macros::hash_map;
 use std::collections::BTreeMap;
@@ -57,8 +57,14 @@ fn get_current_path() -> PathBuf {
 fn join_current_path(path: &str) -> PathBuf {
     get_current_path().join(path)
 }
-pub fn join_current_path_with_home(path: &str) -> PathBuf {
+fn join_current_path_with_home(path: &str) -> PathBuf {
     get_current_path().join(expand_home(path).as_ref())
+}
+pub fn canon(p: &str) -> Result<PathBuf, RuntimeError> {
+    let path = join_current_path_with_home(p);
+    dunce::canonicalize(&path).map_err(|e| {
+        RuntimeError::from_io_error(e, "canon".into(), Expression::String(p.to_string()), 0)
+    })
 }
 
 fn get_system_dirs(_args: &[Expression], _env: &mut Environment) -> Result<Expression, LmError> {
@@ -179,7 +185,7 @@ fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, Lm
 fn read_file_head(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("head", args, 1..=2)?;
     let p = args.last().unwrap().eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     let n = match args.len() {
         2 => match args[0].eval(env)? {
             Expression::Integer(n) => n,
@@ -200,7 +206,7 @@ fn read_file_head(args: &[Expression], env: &mut Environment) -> Result<Expressi
 fn read_file_tail(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("head", args, 1..=2)?;
     let p = args.last().unwrap().eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     let n = match args.len() {
         2 => match args[0].eval(env)? {
             Expression::Integer(n) => n,
@@ -221,11 +227,7 @@ fn read_file_tail(args: &[Expression], env: &mut Environment) -> Result<Expressi
 fn canonicalize_path(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("canon", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
-    let canon_path = dunce::canonicalize(&path)?;
-    //     .map_err(|_| {
-    //     LmError::CustomError(format!("Could not canonicalize path: {}", path.display()))
-    // })?;
+    let canon_path = canon(&p)?;
 
     Ok(Expression::String(canon_path.to_string_lossy().into()))
 }
@@ -233,7 +235,7 @@ fn canonicalize_path(args: &[Expression], env: &mut Environment) -> Result<Expre
 fn make_directory(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mkdir", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     std::fs::create_dir_all(&path)?;
     // .map_err(|_| {
     //     LmError::CustomError(format!("Could not create directory: {}", path.display()))
@@ -245,7 +247,7 @@ fn make_directory(args: &[Expression], env: &mut Environment) -> Result<Expressi
 fn remove_directory(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("rmdir", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     std::fs::remove_dir(&path)?;
     //     .map_err(|_| {
     //     LmError::CustomError(format!(
@@ -260,7 +262,7 @@ fn remove_directory(args: &[Expression], env: &mut Environment) -> Result<Expres
 fn move_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("mv", args, 2)?;
     let p = args[0].eval(env)?.to_string();
-    let src = join_current_path_with_home(&p);
+    let src = canon(&p)?;
     let dst_str = args[1].eval(env)?.to_string();
     let dst = if dst_str.ends_with("/") {
         let mut dpath = join_current_path(&dst_str);
@@ -277,7 +279,7 @@ fn move_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expre
 fn copy_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("cp", args, 2)?;
     let p = args[0].eval(env)?.to_string();
-    let src = join_current_path_with_home(&p);
+    let src = canon(&p)?;
 
     let dst_str = args[1].eval(env)?.to_string();
     let dst = if dst_str.ends_with("/") {
@@ -295,7 +297,7 @@ fn copy_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expre
 fn remove_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("rm", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     remove_path(&path)?;
     Ok(Expression::None)
 }
@@ -303,28 +305,28 @@ fn remove_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Exp
 fn path_exists(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("exists", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     Ok(Expression::Boolean(path.exists()))
 }
 
 fn is_directory(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("isdir", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     Ok(Expression::Boolean(path.is_dir()))
 }
 
 fn is_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("isfile", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     Ok(Expression::Boolean(path.is_file()))
 }
 
 fn read_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("read", args, 1)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
 
     // First try to read as text
     if let Ok(contents) = std::fs::read_to_string(&path) {
@@ -341,7 +343,7 @@ fn read_file(args: &[Expression], env: &mut Environment) -> Result<Expression, L
 fn write_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_args_len("write", args, 1..=2)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
 
     match args.len() {
         1 => {
@@ -367,7 +369,7 @@ fn write_file(args: &[Expression], env: &mut Environment) -> Result<Expression, 
 fn append_to_file(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("append", args, 2)?;
     let p = args[0].eval(env)?.to_string();
-    let path = join_current_path_with_home(&p);
+    let path = canon(&p)?;
     let contents = args[1].eval(env)?;
 
     let mut file = std::fs::OpenOptions::new().append(true).open(&path)?;

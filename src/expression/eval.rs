@@ -1,8 +1,7 @@
-use crate::expression::cmd_excutor::expand_home;
-use crate::expression::{LumeRegex, alias};
-
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
+use crate::expression::{LumeRegex, alias};
+use crate::modules::canon;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind, modules::parse_time};
 use core::option::Option::None;
@@ -791,16 +790,7 @@ impl Expression {
                             }
 
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path = std::env::current_dir()
-                                .map_err(|e| {
-                                    RuntimeError::from_io_error(
-                                        e,
-                                        "get cwd".into(),
-                                        self.clone(),
-                                        depth,
-                                    )
-                                })?
-                                .join(expand_home(s.as_str()).to_string());
+                            let path = canon(&s)?;
                             if !path.exists() {
                                 std::fs::File::create(path.clone()).map_err(|e| {
                                     RuntimeError::from_io_error(
@@ -866,16 +856,7 @@ impl Expression {
 
                             // dbg!("-->> left=", &l);
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path = std::env::current_dir()
-                                .map_err(|e| {
-                                    RuntimeError::from_io_error(
-                                        e,
-                                        "get cwd".into(),
-                                        self.clone(),
-                                        depth,
-                                    )
-                                })?
-                                .join(expand_home(s.as_str()).to_string());
+                            let path = canon(&s)?;
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
                                 std::fs::write(path, bytes)
@@ -903,7 +884,8 @@ impl Expression {
                             // 输入重定向处理
                             // handle_stdin_redirect(lhs, rhs, state, env, depth, true)
                             let path = rhs.eval_mut(state, env, depth + 1)?;
-                            let contents = std::fs::read_to_string(path.to_string())
+                            let cpath = canon(&path.to_string())?;
+                            let contents = std::fs::read_to_string(cpath)
                                 .map(Self::String)
                                 .map_err(|e| {
                                     RuntimeError::from_io_error(

@@ -8,7 +8,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use chrono::{DateTime, NaiveDateTime};
 
 use crate::expression::FileSize;
-use crate::expression::cmd_excutor::expand_home;
+use crate::modules::canon;
 use crate::{Environment, Expression, LmError};
 
 #[derive(Default)]
@@ -40,7 +40,7 @@ pub fn parse_ls_args(args: &[Expression]) -> Result<(PathBuf, LsOptions), LmErro
                 "-u" => options.show_user = true,
                 "-m" => options.show_mode = true,
                 "-p" => options.show_path = true,
-                arg if !arg.starts_with('-') => path = PathBuf::from(expand_home(arg).as_ref()),
+                arg if !arg.starts_with('-') => path = canon(arg)?,
                 _ => continue,
             }
         }

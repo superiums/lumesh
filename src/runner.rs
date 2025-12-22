@@ -81,7 +81,7 @@ fn main() {
         parse_and_eval(&cmd_part.join(" "), &mut runner_env);
     } else if let Some(file_path) = file {
         runner_env.define("SCRIPT", Expression::String(file_path.clone()));
-        let path = PathBuf::from(file_path);
-        run_file(path, &mut runner_env);
+        // let path = PathBuf::from(file_path);
+        run_file(&file_path, &mut runner_env);
     }
 }

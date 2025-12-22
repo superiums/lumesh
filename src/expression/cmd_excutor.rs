@@ -1,6 +1,7 @@
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind, childman,
     expression::pty::exec_in_pty,
+    modules::canon,
     runtime::{IFS_CMD, ifs_contains},
 };
 
@@ -247,13 +248,9 @@ pub fn handle_command(
 
         match e_arg {
             Expression::Symbol(s) => cmd_args.push(s),
-            Expression::String(mut s) => {
-                s = expand_home(s.as_str()).to_string();
-                // if s.starts_with("~") {
-                //     if let Some(home_dir) = dirs::home_dir() {
-                //         s = s.replace("~", home_dir.to_string_lossy().as_ref());
-                //     }
-                // }
+            Expression::String(st) => {
+                let sb = canon(st.as_str())?;
+                let s = sb.to_str().unwrap_or_default();
                 if s.contains('*') {
                     let mut matched = false;
                     if let Some(g) = glob(&s).ok() {
@@ -264,7 +261,7 @@ pub fn handle_command(
                     }
                     if !matched {
                         return Err(RuntimeError {
-                            kind: RuntimeErrorKind::WildcardNotMatched(s),
+                            kind: RuntimeErrorKind::WildcardNotMatched(s.to_string()),
                             context: job.clone(),
                             depth,
                         });
@@ -280,7 +277,7 @@ pub fn handle_command(
                         };
                         sp.for_each(|v| cmd_args.push(v.to_string()));
                     } else {
-                        cmd_args.push(s)
+                        cmd_args.push(s.to_string())
                     }
                 }
             }

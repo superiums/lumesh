@@ -39,7 +39,7 @@ jobs:
           body: |
             This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
             - lume: an edition contains interactive repl and script parser.
-            - lumesh: an swift edition only contains script parser. used to run script swiftly.
+            - lume-se: an swift edition only contains script parser. used to run script swiftly.
             - doc: help docs.
 
             If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
@@ -146,6 +146,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: lumesh_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/lumesh${{ matrix.file_ending }}
+          asset_name: lume-se_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
+          asset_path: target/release/lume-se${{ matrix.file_ending }}
           asset_content_type: application/octet-stream

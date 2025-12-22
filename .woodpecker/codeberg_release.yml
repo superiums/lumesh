@@ -1,7 +1,7 @@
 variables:
   PKG_NAME: "lumesh"
   MAIN_BINARY: "lume"
-  RUNNER_BINARY: "lumesh"
+  RUNNER_BINARY: "lume-se"
 
 when:
   event: tag
@@ -25,7 +25,7 @@ steps:
         RELEASE_DATA='{
           "tag_name": "'$CI_COMMIT_TAG'",
           "name": "Release '$CI_COMMIT_TAG'",
-          "body": "This is a new release of lumesh. [Read the changelog here](https://codeberg.org/'$CI_REPO'/src/tag/'$CI_COMMIT_TAG'/CHANGELOG.md).\n\n- lume: an edition contains interactive repl and script parser.\n- lumesh: an swift edition only contains script parser. used to run script swiftly.\n- doc: help docs.\n\nIf you'\''re running on Linux, macOS or Windows, you can probably use one of the binaries below.",
+          "body": "This is a new release of lumesh. [Read the changelog here](https://codeberg.org/'$CI_REPO'/src/tag/'$CI_COMMIT_TAG'/CHANGELOG.md).\n\n- lume: an edition contains interactive repl and script parser.\n- lume-se: an swift edition only contains script parser. used to run script swiftly.\n- doc: help docs.\n\nIf you'\''re running on Linux, macOS or Windows, you can probably use one of the binaries below.",
           "draft": false,
           "prerelease": false
         }'
@@ -71,12 +71,12 @@ steps:
       - cp target/release/lume lume-linux
       # Runner 构建
       - cargo build --features runner --release
-      - cp target/release/lumesh lumesh-linux
+      - cp target/release/lume-se lume-se-linux
       # musl 静态链接构建
       - cargo build --release --target x86_64-unknown-linux-musl
       - cp target/x86_64-unknown-linux-musl/release/lume lume-linux-musl
       - cargo build --features runner --release --target x86_64-unknown-linux-musl
-      - cp target/x86_64-unknown-linux-musl/release/lumesh lumesh-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/lume-se lume-se-linux-musl
     depends_on: [create_release]
 
   publish_linux:
@@ -84,9 +84,9 @@ steps:
     settings:
       files:
         - "lume-linux"
-        - "lumesh-linux"
+        - "lume-se-linux"
         - "lume-linux-musl"
-        - "lumesh-linux-musl"
+        - "lume-se-linux-musl"
       api_key:
         from_secret: codeberg_token
     depends_on: [build_linux]
@@ -129,7 +129,7 @@ steps:
       - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows.exe
       # Runner 构建
       - cargo build --features runner --release --target x86_64-pc-windows-gnu
-      - cp target/x86_64-pc-windows-gnu/release/lumesh.exe lumesh-windows.exe
+      - cp target/x86_64-pc-windows-gnu/release/lume-se.exe lume-se-windows.exe
     depends_on: [create_release]
 
   publish_windows:
@@ -137,7 +137,7 @@ steps:
     settings:
       files:
         - "lume-windows.exe"
-        - "lumesh-windows.exe"
+        - "lume-se-windows.exe"
       api_key:
         from_secret: codeberg_token
     depends_on: [build_windows]

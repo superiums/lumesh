@@ -4,7 +4,7 @@ version = "0.8.1"
 authors = ["Adam McDaniel; santo"]
 edition = "2024"
 license = "MIT"
-description = "a lighting shell ⚡"
+description = "a lighting shell ⚡ bash alternative"
 readme = "README.md"
 documentation = "https://docs.rs/lumesh"
 homepage = "https://lumesh.codeberg.page"
@@ -28,7 +28,7 @@ path = "src/cli.rs"
 required-features = ["cli"]
 
 [[bin]]
-name = "lumesh"
+name = "lume-se"
 path = "src/runner.rs"
 required-features = ["runner"]
 

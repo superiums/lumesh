@@ -1,7 +1,6 @@
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind, childman,
     expression::pty::exec_in_pty,
-    modules::canon,
     runtime::{IFS_CMD, ifs_contains},
 };
 
@@ -249,8 +248,7 @@ pub fn handle_command(
         match e_arg {
             Expression::Symbol(s) => cmd_args.push(s),
             Expression::String(st) => {
-                let sb = canon(st.as_str())?;
-                let s = sb.to_str().unwrap_or_default();
+                let s = expand_home(&st).to_string();
                 if s.contains('*') {
                     let mut matched = false;
                     if let Some(g) = glob(&s).ok() {

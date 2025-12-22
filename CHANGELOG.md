@@ -1,4 +1,12 @@
 # Changelog
+## [0.8.3]
+- fix argument in CFM;
+- fix cmd params with cannon.
+now works well with lf file-manager.
+
+## [0.8.2]
+- rename lite edtion to lume-se
+
 ## [0.8.1]
 - fix canon of paths
 - update clap

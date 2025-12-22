@@ -1217,8 +1217,10 @@ fn parse_command_token(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagn
 
     // 按优先级解析特殊符号
     alt((
+        map_valid_token(linebreak, TokenKind::LineBreak),
         string_literal,
         map_valid_token(any_punctuation, TokenKind::Punctuation),
+        map_valid_token(argument_symbol, TokenKind::StringRaw), //argument first to allow args such as = -
         map_valid_token(cfm_operator, TokenKind::Operator),
         map_valid_token(cfm_postfix_operator, TokenKind::OperatorPostfix),
         map_valid_token(cfm_prefix_operator, TokenKind::OperatorPrefix),
@@ -1236,9 +1238,9 @@ fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnost
     // 读取直到遇到空格、括号或管道符号
     let mut chars = input.chars();
     let mut length = 0;
-
+    // `=` is used for var asign: IFS='';xx
     while let Some(c) = chars.next() {
-        if c.is_ascii_whitespace() || "([^!".contains(c) {
+        if c.is_ascii_whitespace() || "=;([^$!".contains(c) {
             break;
         }
         length += c.len_utf8();

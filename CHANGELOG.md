@@ -1,4 +1,9 @@
 # Changelog
+## [0.8.1]
+- fix canon of paths
+- update clap
+- update cli arguments for script file
+
 ## [0.8.0]
 - introduce CFM (command first mode)
 CFM is for daily usage, if there's only a single line, it will be parsed in CFM.

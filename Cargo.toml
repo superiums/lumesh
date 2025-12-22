@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.8.0"
+version = "0.8.1"
 authors = ["Adam McDaniel; santo"]
 edition = "2024"
 license = "MIT"
@@ -35,7 +35,7 @@ required-features = ["runner"]
 [dependencies]
 rustyline = { version = "17.0.2", optional = true }
 ctrlc = { version = "3.2", optional = true }
-clap = { version = "4.5.35", features = ["derive"], optional = true }
+clap = { version = "4.5.53", features = ["derive"], optional = true }
 # json = "0.12.4"
 # terminal_size = "0.1.17"
 textwrap = "0.16.2"

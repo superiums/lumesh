@@ -45,27 +45,27 @@ struct Cli {
     #[arg(short = 'i', long, num_args = 0..1)]
     interactive: bool,
 
-    /// command to execute
+    /// command and args to eval
     #[arg(short = 'c', long, num_args = 1..)]
     cmd: Option<Vec<String>>,
 
-    /// script to load
+    /// script and args to execute
     #[arg(
         required = false,
-        num_args = 1,
+        num_args = 1..,
         index = 1,
+        allow_hyphen_values = true,
         conflicts_with = "interactive"
     )]
-    file: Option<String>,
-
-    /// args for script/cmd
-    #[arg(
-        last = true,
-        num_args=0..,
-        allow_hyphen_values = true,
-        index = 2
-    )]
-    argv: Vec<String>,
+    file_and_args: Option<Vec<String>>,
+    // args for script/cmd
+    // #[arg(
+    //     last = true,
+    //     num_args=0..,
+    //     allow_hyphen_values = true,
+    //     index = 2
+    // )]
+    // argv: Vec<String>,
     // 显示帮助信息
     // #[arg(long, action = clap::ArgAction::Help)]
     // help: Option<bool>,
@@ -100,15 +100,18 @@ fn main() {
     let mut cli_env = env.fork();
     cli_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
     // argv
-    cli_env.define(
-        "argv",
-        Expression::from(
-            cli.argv
+    let file_args = &cli.file_and_args.unwrap_or_default();
+    let (script, args) = match file_args.split_first() {
+        Some((f, s)) => (
+            Some(f.clone()),
+            s.to_vec()
                 .into_iter()
                 .map(Expression::String)
                 .collect::<Vec<Expression>>(),
         ),
-    );
+        None => (None, vec![]),
+    };
+    cli_env.define("argv", Expression::from(args));
     // bultiin
     // binary::init(&mut env);
 
@@ -133,13 +136,13 @@ fn main() {
         }
     }
     // 文件执行模式
-    else if let Some(file) = cli.file {
+    else if let Some(s) = script {
         cli_env.define("IS_INTERACTIVE", Expression::Boolean(false));
-        cli_env.define("SCRIPT", Expression::String(file.to_owned()));
+        cli_env.define("SCRIPT", Expression::String(s.to_owned()));
 
         env_config(&mut cli_env, cli.aioff, cli.strict);
         // let path = PathBuf::from(file);
-        run_file(&file, &mut cli_env);
+        run_file(&s, &mut cli_env);
     }
     // 纯交互模式
     else {

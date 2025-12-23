@@ -1,4 +1,9 @@
 # Changelog
+## [0.8.4]
+- add abs for fs.
+- fix canon check for fs funcs.
+- update readme
+
 ## [0.8.3]
 - fix argument in CFM;
 - fix cmd params with cannon.

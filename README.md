@@ -7,7 +7,7 @@
 
 **Write like js, work like Bash, run like light**
 
-Lumesh is a modern shell and scripting language, completely rewritten from Dune, designed for high performance and user-friendly experience.
+Lumesh is a modern shell and scripting language, as a bash replacer, it was completely rewritten from Dune, designed for high performance and user-friendly experience.
 
 ## ⚑ Why Choose Lumesh?
 
@@ -149,7 +149,7 @@ cargo build --release
 
 ### Experience Immediately
 - **`lume`**: Complete interactive shell, supports REPL, auto-completion, syntax highlighting
-- **`lumesh`**: Lightweight script executor, quick startup, minimal dependencies
+- **`lume-se`**: Lightweight script executor, quick startup, minimal dependencies
 
 ```bash
 # Start interactive shell
@@ -185,5 +185,7 @@ Decorator support for function enhancement
 IFS (Internal Field Separator) mode control for compatibility
 Enhanced module system with cross-linking between modules
 Improved error reporting and debugging capabilities
+CFM (Command First Mode) for daily commands
+More friendly help info
 
 ---

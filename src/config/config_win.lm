@@ -112,6 +112,7 @@ if IS_INTERACTIVE {
     alias is_file = Fs.is_file()
     alias basename = Fs.base_name()
     alias dirname = Fs.dir_name()
+    alias doc = start https://lumesh.codeberg.page
 
     # ===== check update
     fn update(){

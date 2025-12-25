@@ -113,6 +113,7 @@ if IS_INTERACTIVE {
     alias fis_file = Fs.is_file()
     alias fbasename = Fs.base_name()
     alias fdirname = Fs.dir_name()
+    alias doc = xdg-open https://lumesh.codeberg.page
 
     # ===== check update
     fn update(){

@@ -5,6 +5,7 @@ CFM is enabled by default, disabled for script or '-m' arg.
 
 - add abs for fs.
 - fix canon check for fs funcs.
+- add `doc` script to open official document.
 - update readme
 
 ## [0.8.3]

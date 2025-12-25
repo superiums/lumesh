@@ -51,6 +51,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 // pub static mut STRICT: bool = false;
 pub static mut PRINT_DIRECT: bool = true;
+pub static mut CFM_ENABLED: bool = false;
 // pub static mut ENV: Environment = Environment::new();
 pub static mut MAX_RUNTIME_RECURSION: usize = 800;
 pub static mut MAX_SYNTAX_RECURSION: usize = 100;

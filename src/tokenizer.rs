@@ -1,4 +1,4 @@
-// use crate::STRICT;
+use crate::CFM_ENABLED;
 use crate::tokens::{Input, Token, TokenKind};
 use core::option::Option::None;
 use detached_str::StrSlice;
@@ -1186,9 +1186,12 @@ pub fn tokenize(input: &str) -> (Vec<Token>, Vec<Diagnostic>) {
 /// CFM: command first mode
 fn is_cfm_mode(input: Input<'_>) -> bool {
     // dbg!(&input);
-    match input.starts_with(":") {
-        true => false,
-        false => !input.contains("\n"),
+    unsafe {
+        CFM_ENABLED
+            && match input.starts_with(":") {
+                true => false,
+                false => !input.contains("\n"),
+            }
     }
 }
 

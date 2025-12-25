@@ -1,5 +1,8 @@
 # Changelog
 ## [0.8.4]
+- add cli arg to control CFM
+CFM is enabled by default, disabled for script or '-m' arg.
+
 - add abs for fs.
 - fix canon check for fs funcs.
 - update readme

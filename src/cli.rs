@@ -2,6 +2,7 @@
 
 // mod binary;
 use clap::Parser;
+use lumesh::CFM_ENABLED;
 use lumesh::parse_and_eval;
 use lumesh::repl;
 use lumesh::runtime::init_config;
@@ -37,9 +38,13 @@ struct Cli {
     #[arg(short = 'n', long)]
     nohistory: bool,
 
-    /// no-ai mode
+    /// NO ai mode
     #[arg(short = 'a', long)]
     aioff: bool,
+
+    /// NO command first mode
+    #[arg(short = 'm', long)]
+    cfmoff: bool,
 
     /// force interactive mode
     #[arg(short = 'i', long, num_args = 0..1)]
@@ -132,6 +137,7 @@ fn main() {
         parse_and_eval(cmd.as_str(), &mut cli_env);
 
         if cli.interactive {
+            set_cfm(!cli.cfmoff);
             repl::run_repl(&mut cli_env);
         }
     }
@@ -149,6 +155,7 @@ fn main() {
         cli_env.define("IS_INTERACTIVE", Expression::Boolean(true));
 
         env_config(&mut cli_env, cli.aioff, cli.strict);
+        set_cfm(!cli.cfmoff);
         repl::run_repl(&mut cli_env);
     }
 }
@@ -165,5 +172,12 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
     // ai off
     if aioff {
         env.undefine("LUME_AI_CONFIG");
+    }
+}
+
+fn set_cfm(cfm: bool) {
+    // cli_env.define("LUME_NO_CFM", Expression::Boolean(cli.cfmoff));
+    unsafe {
+        CFM_ENABLED = cfm;
     }
 }

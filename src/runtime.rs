@@ -241,10 +241,10 @@ pub fn init_config(env: &mut Environment) {
 }
 
 fn init_cmds(env: &mut Environment) {
-    if !env.is_defined("IFS") {
+    if !env.has("IFS") {
         env.define("IFS", Expression::None);
     }
-    if !env.is_defined("LUME_IFS_MODE") {
+    if !env.has("LUME_IFS_MODE") {
         env.define("IFS", Expression::Integer(60));
     }
     #[cfg(unix)]

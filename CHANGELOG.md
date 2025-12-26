@@ -1,4 +1,7 @@
 # Changelog
+## [0.8.5]
+- fix `--` arguments for lf file manager
+
 ## [0.8.4]
 - add cli arg to control CFM
 CFM is enabled by default, disabled for script or '-m' arg.

@@ -34,43 +34,52 @@ struct Cli {
     #[arg(short = 's', long)]
     strict: bool,
 
-    /// private mode
-    #[arg(short = 'n', long)]
-    nohistory: bool,
-
-    /// NO ai mode
-    #[arg(short = 'a', long)]
-    aioff: bool,
+    /// force interactive mode
+    #[arg(short = 'i', long)]
+    interactive: bool,
 
     /// NO command first mode
     #[arg(short = 'm', long)]
     cfmoff: bool,
 
-    /// force interactive mode
-    #[arg(short = 'i', long, num_args = 0..1)]
-    interactive: bool,
+    /// NO ai mode
+    #[arg(short = 'a', long)]
+    aioff: bool,
+
+    /// private mode
+    #[arg(short = 'n', long)]
+    nohistory: bool,
 
     /// command and args to eval
-    #[arg(short = 'c', long, num_args = 1..)]
-    cmd: Option<Vec<String>>,
+    #[arg(short = 'c', long, num_args = 1)]
+    cmd: Option<String>,
 
-    /// script and args to execute
+    // /// script and args to execute
+    // #[arg(
+    //     required = false,
+    //     num_args = 1,
+    //     index = 1,
+    //     conflicts_with = "interactive"
+    // )]
+    // file: Option<String>,
+    /// args for cmd/script
     #[arg(
-        required = false,
-        num_args = 1..,
+        required=false,
+        num_args=1..,
         index = 1,
         allow_hyphen_values = true,
         conflicts_with = "interactive"
     )]
-    file_and_args: Option<Vec<String>>,
-    // args for script/cmd
-    // #[arg(
-    //     last = true,
-    //     num_args=0..,
-    //     allow_hyphen_values = true,
-    //     index = 2
-    // )]
-    // argv: Vec<String>,
+    file_n_args: Option<Vec<String>>,
+
+    /// rest args for cmd/script
+    #[arg(
+        last = true,
+        num_args=0..,
+        index = 2,
+        allow_hyphen_values = true,
+    )]
+    cmd_argv: Vec<String>,
     // 显示帮助信息
     // #[arg(long, action = clap::ArgAction::Help)]
     // help: Option<bool>,
@@ -84,6 +93,7 @@ fn main() {
     let cli = Cli::parse();
     // 初始化核心环境
     let mut env = Environment::new();
+    std::env::args().for_each(|a| println!("{}", &a));
     // login
     let is_login_shell = std::env::args()
         .next()
@@ -104,21 +114,10 @@ fn main() {
 
     let mut cli_env = env.fork();
     cli_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
-    // argv
-    let file_args = &cli.file_and_args.unwrap_or_default();
-    let (script, args) = match file_args.split_first() {
-        Some((f, s)) => (
-            Some(f.clone()),
-            s.to_vec()
-                .into_iter()
-                .map(Expression::String)
-                .collect::<Vec<Expression>>(),
-        ),
-        None => (None, vec![]),
-    };
-    cli_env.define("argv", Expression::from(args));
-    // bultiin
-    // binary::init(&mut env);
+
+    // println!("file_n_args {:?}", &cli.file_n_args);
+    // println!("file {:?}", &cli.file);
+    // println!("cmd_argv {:?}", &cli.cmd_argv);
 
     // profile
     if let Some(profile) = cli.profile {
@@ -129,11 +128,18 @@ fn main() {
     }
 
     // 命令执行模式
-    if let Some(cmd_parts) = cli.cmd {
+    if let Some(cmd) = cli.cmd {
         cli_env.define("IS_INTERACTIVE", Expression::Boolean(cli.interactive));
+        let argv = match cli.file_n_args {
+            Some(fa) => fa,       //accept 'cmd a b -c --d -- e' which goes to cli.file_n_args
+            None => cli.cmd_argv, //accept 'cmd -- a b -c --d e' which goes to cli.cmd_argv
+        };
+        cli_env.define(
+            "argv",
+            Expression::from(argv.into_iter().map(Expression::String).collect::<Vec<_>>()),
+        );
         env_config(&mut cli_env, cli.aioff, cli.strict);
 
-        let cmd = cmd_parts.join(" ");
         parse_and_eval(cmd.as_str(), &mut cli_env);
 
         if cli.interactive {
@@ -142,13 +148,22 @@ fn main() {
         }
     }
     // 文件执行模式
-    else if let Some(s) = script {
-        cli_env.define("IS_INTERACTIVE", Expression::Boolean(false));
-        cli_env.define("SCRIPT", Expression::String(s.to_owned()));
-
-        env_config(&mut cli_env, cli.aioff, cli.strict);
-        // let path = PathBuf::from(file);
-        run_file(&s, &mut cli_env);
+    else if let Some(file_n_args) = cli.file_n_args {
+        if let Some((s, args)) = file_n_args.split_first() {
+            cli_env.define("IS_INTERACTIVE", Expression::Boolean(false));
+            cli_env.define("SCRIPT", Expression::String(s.to_owned()));
+            cli_env.define(
+                "argv",
+                Expression::from(
+                    args.iter()
+                        .map(|a| Expression::String(a.to_owned()))
+                        .collect::<Vec<_>>(),
+                ),
+            );
+            env_config(&mut cli_env, cli.aioff, cli.strict);
+            // let path = PathBuf::from(file);
+            run_file(s, &mut cli_env);
+        }
     }
     // 纯交互模式
     else {

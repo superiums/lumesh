@@ -46,23 +46,15 @@ struct Cli {
     #[arg(short = 'a', long)]
     aioff: bool,
 
-    /// private mode
+    /// NO history (private) mode
     #[arg(short = 'n', long)]
     nohistory: bool,
 
-    /// command and args to eval
+    /// command to eval
     #[arg(short = 'c', long, num_args = 1)]
     cmd: Option<String>,
 
-    // /// script and args to execute
-    // #[arg(
-    //     required = false,
-    //     num_args = 1,
-    //     index = 1,
-    //     conflicts_with = "interactive"
-    // )]
-    // file: Option<String>,
-    /// args for cmd/script
+    /// script file and args to execute
     #[arg(
         required=false,
         num_args=1..,
@@ -72,7 +64,7 @@ struct Cli {
     )]
     file_n_args: Option<Vec<String>>,
 
-    /// rest args for cmd/script
+    /// args for cmd
     #[arg(
         last = true,
         num_args=0..,
@@ -93,7 +85,7 @@ fn main() {
     let cli = Cli::parse();
     // 初始化核心环境
     let mut env = Environment::new();
-    std::env::args().for_each(|a| println!("{}", &a));
+    // std::env::args().for_each(|a| println!("{}", &a));
     // login
     let is_login_shell = std::env::args()
         .next()

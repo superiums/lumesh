@@ -1,4 +1,8 @@
 # Changelog
+## [0.8.6]
+- update default config
+- fix hot-key conflict with CFM
+
 ## [0.8.5]
 - fix `--` arguments for lf file manager
 

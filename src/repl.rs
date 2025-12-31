@@ -174,7 +174,7 @@ pub fn run_repl(env: &mut Environment) {
             //     0
             // } else
             if (bits as u8 & (Modifiers::CTRL | Modifiers::ALT | Modifiers::SHIFT).bits()) == 0 {
-                eprintln!("invalid LUME_HOT_MODIFIER {bits}");
+                eprintln!("invalid LUME_HOT_MODIFIER {bits}, fallback to `Alt`");
                 4
             } else {
                 bits as u8
@@ -191,11 +191,9 @@ pub fn run_repl(env: &mut Environment) {
         for (k, cmd) in keys.iter() {
             if let Some(c) = k.chars().next() {
                 rl_unlocked.bind_sequence(
-                    // KeySeq(vec![
-                    //     KeyEvent::alt('z'),
                     KeyEvent::new(c, Modifiers::from_bits_retain(modifier)),
-                    // ]),
-                    LumeKeyHandler::new(cmd.to_string()),
+                    // \n is for skip CFM
+                    LumeKeyHandler::new(cmd.to_string() + "\n"),
                 );
             }
         }

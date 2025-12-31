@@ -11,6 +11,7 @@
 - remove dark colors in String module.
 - allow methods in Map be used in HMap.
 - remove `++` and `--`
+- add `help doc`
 
 ## [0.8.5]
 - fix `--` arguments for lf file manager

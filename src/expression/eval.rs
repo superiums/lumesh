@@ -285,7 +285,7 @@ impl Expression {
                 Self::Quote(inner) => return Ok(inner.as_ref().clone()),
 
                 // 一元运算
-                Self::UnaryOp(op, operand, is_prefix) => {
+                Self::UnaryOp(op, operand, _) => {
                     let operand_eval = operand.eval(env)?;
                     return match op.as_str() {
                         "!" => Ok(Expression::Boolean(!operand_eval.is_truthy())),

@@ -41,7 +41,7 @@ const PREC_CUSTOM: u8 = 14; // 自定义
 // 其他
 // prefix
 const PREC_UNARY: u8 = 20; // 单目运算符     ! -
-const PREC_PRIFIX: u8 = 21; // 单目运算符     ++ --
+// const PREC_PRIFIX: u8 = 21; // 单目运算符     ++ --
 // postfix
 // const PREC_POSTFIX: u8 = 22; //             ++ --
 // const PREC_CALL: u8 = 24; //                func()

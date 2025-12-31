@@ -102,9 +102,12 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("help") => Expression::builtin("help", help, "display lib modules", "[module]")
     }
 }
-fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
+fn help(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     match args.is_empty() {
         false => match args[0].to_string().as_str() {
+            "doc" => {
+                parse_and_eval("xdg-open https://lumesh.codeberg.page", env);
+            }
             "tops" => {
                 println!("Top level Functions List\n");
                 let m = super::get_builtin_map()
@@ -158,7 +161,7 @@ fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError>
         },
         true => {
             let mut stdout = std::io::stdout().lock();
-            writeln!(&mut stdout, "Welcome to Lumesh help center.")?;
+            writeln!(&mut stdout, "\nWelcome to Lumesh help center")?;
             writeln!(&mut stdout, "=================\n")?;
             writeln!(
                 &mut stdout,
@@ -182,7 +185,7 @@ fn help(args: &[Expression], _: &mut Environment) -> Result<Expression, LmError>
             )?;
             writeln!(
                 &mut stdout,
-                "\nPlease visit https://lumesh.codeberg.page for more docs."
+                "type `help doc`                  to visit document on https://lumesh.codeberg.page"
             )?;
 
             stdout.flush()?;

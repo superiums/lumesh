@@ -1,7 +1,8 @@
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
 use crate::expression::{LumeRegex, alias};
-use crate::modules::canon;
+use crate::utils::abs;
+use crate::utils::canon;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
 use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind, modules::parse_time};
 use core::option::Option::None;
@@ -790,7 +791,7 @@ impl Expression {
                             }
 
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path = canon(&s)?;
+                            let path = abs(&s);
                             if !path.exists() {
                                 std::fs::File::create(path.clone()).map_err(|e| {
                                     RuntimeError::from_io_error(
@@ -856,7 +857,7 @@ impl Expression {
 
                             // dbg!("-->> left=", &l);
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path = canon(&s)?;
+                            let path = abs(&s);
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
                                 std::fs::write(path, bytes)

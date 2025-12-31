@@ -1,5 +1,7 @@
-use super::get_string_arg;
 use super::math_module::{average, max, min, sum};
+use super::{
+    check_args_len, check_exact_args_len, get_integer_arg, get_string_arg, get_string_args,
+};
 use crate::{Environment, Expression, Int, LmError};
 use common_macros::hash_map;
 use std::cmp::Ordering;
@@ -75,10 +77,10 @@ pub fn get() -> Expression {
 }
 
 fn set_list(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("set", args, 3)?;
+    check_exact_args_len("set", args, 3)?;
 
     let val = args[1].eval(env)?;
-    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    let n = get_integer_arg(args[0].eval(env)?)?;
     let list = get_list_arg(args[2].eval(env)?)?;
 
     let index = n as usize;
@@ -100,7 +102,7 @@ fn concat(args: &[Expression], _env: &mut Environment) -> Result<Expression, LmE
 }
 
 fn last(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("last", args, 1)?;
+    check_exact_args_len("last", args, 1)?;
     let list = get_list_arg(args[0].eval(env)?)?;
 
     list.as_ref()
@@ -110,7 +112,7 @@ fn last(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
 }
 
 fn first(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("first", args, 1)?;
+    check_exact_args_len("first", args, 1)?;
     let list = get_list_arg(args[0].eval(env)?)?;
 
     list.as_ref()
@@ -120,8 +122,8 @@ fn first(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn chunk(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("chunk", args, 2)?;
-    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    check_exact_args_len("chunk", args, 2)?;
+    let n = get_integer_arg(args[0].eval(env)?)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let mut result = Vec::new();
@@ -140,7 +142,7 @@ fn chunk(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn prepend(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("cons", args, 2)?;
+    check_exact_args_len("cons", args, 2)?;
     let head = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
@@ -151,7 +153,7 @@ fn prepend(args: &[Expression], env: &mut Environment) -> Result<Expression, LmE
 }
 
 fn append(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("append", args, 2)?;
+    check_exact_args_len("append", args, 2)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let item = args[0].eval(env)?;
@@ -178,7 +180,7 @@ fn from(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
 }
 
 fn foldl(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("foldl", args, 3)?;
+    check_exact_args_len("foldl", args, 3)?;
     let f = args[0].eval(env)?;
     let mut acc = args[1].eval(env)?;
     let list = get_list_arg(args[2].eval(env)?)?;
@@ -190,7 +192,7 @@ fn foldl(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn foldr(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("foldr", args, 3)?;
+    check_exact_args_len("foldr", args, 3)?;
     let f = args[0].eval(env)?;
     let mut acc = args[1].eval(env)?;
     let list = get_list_arg(args[2].eval(env)?)?;
@@ -202,7 +204,7 @@ fn foldr(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn zip(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("zip", args, 2)?;
+    check_exact_args_len("zip", args, 2)?;
     match (args[0].eval(env)?, args[1].eval(env)?) {
         (Expression::List(list1), Expression::List(list2)) => {
             let mut result = Vec::with_capacity(list1.as_ref().len().min(list2.as_ref().len()));
@@ -221,7 +223,7 @@ fn zip(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError
 }
 
 fn unzip(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("unzip", args, 1)?;
+    check_exact_args_len("unzip", args, 1)?;
     let list = get_list_arg(args[0].eval(env)?)?;
 
     let mut list1 = Vec::with_capacity(list.as_ref().len());
@@ -250,8 +252,8 @@ fn unzip(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
 }
 
 fn take(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("take", args, 2)?;
-    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    check_exact_args_len("take", args, 2)?;
+    let n = get_integer_arg(args[0].eval(env)?)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let taken = list.as_ref().iter().take(n as usize).cloned().collect();
@@ -259,8 +261,8 @@ fn take(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
 }
 
 fn drop(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("drop", args, 2)?;
-    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    check_exact_args_len("drop", args, 2)?;
+    let n = get_integer_arg(args[0].eval(env)?)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let dropped = list.as_ref().iter().skip(n as usize).cloned().collect();
@@ -268,8 +270,8 @@ fn drop(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
 }
 
 fn split_at(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("split_at", args, 2)?;
-    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    check_exact_args_len("split_at", args, 2)?;
+    let n = get_integer_arg(args[0].eval(env)?)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let taken = list.as_ref().iter().take(n as usize).cloned().collect();
@@ -282,8 +284,8 @@ fn split_at(args: &[Expression], env: &mut Environment) -> Result<Expression, Lm
 }
 
 fn at(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("at", args, 2)?;
-    let n = super::get_integer_arg(args[0].eval(env)?)?;
+    check_exact_args_len("at", args, 2)?;
+    let n = get_integer_arg(args[0].eval(env)?)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let idx = if n < 0 {
@@ -303,7 +305,7 @@ fn at(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError>
 }
 
 fn map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("map", args, 2)?;
+    check_exact_args_len("map", args, 2)?;
     let f = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
@@ -314,7 +316,7 @@ fn map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError
     Ok(Expression::List(Rc::new(result)))
 }
 fn for_each(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("forEach", args, 2)?;
+    check_exact_args_len("forEach", args, 2)?;
     let func = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
@@ -347,7 +349,7 @@ fn for_each(args: &[Expression], env: &mut Environment) -> Result<Expression, Lm
 }
 
 fn filter(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("filter", args, 2)?;
+    check_exact_args_len("filter", args, 2)?;
     let data = get_list_arg(args[1].eval(env)?)?;
 
     let mut result = Vec::new();
@@ -410,7 +412,7 @@ fn reduce(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
         )
         .eval(env)?)
     } else {
-        super::check_exact_args_len("reduce", args, 3)?;
+        check_exact_args_len("reduce", args, 3)?;
         let f = args[0].eval(env)?;
         let mut acc = args[1].eval(env)?;
         let list = get_list_arg(args[2].eval(env)?)?;
@@ -424,7 +426,7 @@ fn reduce(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
 }
 
 fn group_by(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("group", args, 2)?;
+    check_exact_args_len("group", args, 2)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let key_func = args[0].eval(env)?;
@@ -481,7 +483,7 @@ fn group_by(args: &[Expression], env: &mut Environment) -> Result<Expression, Lm
 }
 
 fn filter_map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("filter_map", args, 2)?;
+    check_exact_args_len("filter_map", args, 2)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
     let func = args[0].eval(env)?;
@@ -497,7 +499,7 @@ fn filter_map(args: &[Expression], env: &mut Environment) -> Result<Expression, 
 }
 
 fn sort(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("sort", args, 1..)?;
+    check_args_len("sort", args, 1..)?;
     let key_func = args[0].eval(env)?;
     let (func, headers) = match args.len() {
         2 => match key_func {
@@ -510,7 +512,7 @@ fn sort(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
             _ => (None, None),
         },
         3.. => {
-            let cols = super::get_string_args(&args[..args.len() - 1], env)?;
+            let cols = get_string_args(&args[..args.len() - 1], env)?;
             (None, Some(cols))
         }
 
@@ -641,7 +643,7 @@ fn sort(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
 }
 
 fn unique(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("unique", args, 1)?;
+    check_exact_args_len("unique", args, 1)?;
     let list = get_list_arg(args[0].eval(env)?)?;
 
     let mut seen = std::collections::HashSet::new();
@@ -656,7 +658,7 @@ fn unique(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
 }
 
 fn to_map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("to_map", args, 1..=3)?;
+    check_args_len("to_map", args, 1..=3)?;
     let list = get_list_arg(args.last().unwrap().eval(env)?)?;
 
     let (key_func, val_func) = match args.len() {
@@ -696,7 +698,7 @@ fn to_map(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
 }
 
 fn transpose(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("transpose", args, 1)?;
+    check_exact_args_len("transpose", args, 1)?;
     let matrix = get_list_arg(args[0].eval(env)?)?;
 
     if matrix.as_ref().is_empty() {
@@ -742,7 +744,7 @@ fn transpose(args: &[Expression], env: &mut Environment) -> Result<Expression, L
 }
 
 fn join(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("join", args, 2)?;
+    check_exact_args_len("join", args, 2)?;
     let separator = get_string_arg(args[0].eval(env)?)?;
 
     match args[1].eval(env)? {
@@ -761,7 +763,7 @@ fn join(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
 }
 
 fn entries(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("items", args, 1)?;
+    check_exact_args_len("items", args, 1)?;
     let expr = args[0].eval(env)?;
 
     Ok(match expr {
@@ -779,7 +781,7 @@ fn entries(args: &[Expression], env: &mut Environment) -> Result<Expression, LmE
 }
 
 fn contains(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("includes", args, 2)?;
+    check_exact_args_len("includes", args, 2)?;
     let item = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
@@ -787,7 +789,7 @@ fn contains(args: &[Expression], env: &mut Environment) -> Result<Expression, Lm
 }
 
 fn any(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("some", args, 2)?;
+    check_exact_args_len("some", args, 2)?;
     let func = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
@@ -802,7 +804,7 @@ fn any(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError
 }
 
 fn all(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("every", args, 2)?;
+    check_exact_args_len("every", args, 2)?;
     let func = args[0].eval(env)?;
     let list = get_list_arg(args[1].eval(env)?)?;
 
@@ -817,11 +819,11 @@ fn all(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError
 }
 
 fn find_index(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("findIndex", args, 2..=3)?;
+    check_args_len("findIndex", args, 2..=3)?;
     let target = args[0].eval(env)?;
     let list = get_list_arg(args.last().unwrap().eval(env)?)?;
     let start = if args.len() == 3 {
-        super::get_integer_arg(args[1].eval(env)?)? as usize
+        get_integer_arg(args[1].eval(env)?)? as usize
     } else {
         0
     };
@@ -849,11 +851,11 @@ fn find_index(args: &[Expression], env: &mut Environment) -> Result<Expression, 
 }
 
 fn find_last_index(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("findIndex", args, 2..=3)?;
+    check_args_len("findIndex", args, 2..=3)?;
     let target = args[0].eval(env)?;
     let list = get_list_arg(args.last().unwrap().eval(env)?)?;
     let start = if args.len() == 3 {
-        super::get_integer_arg(args[1].eval(env)?)? as usize
+        get_integer_arg(args[1].eval(env)?)? as usize
     } else {
         0
     };
@@ -886,12 +888,12 @@ fn find_last_index(args: &[Expression], env: &mut Environment) -> Result<Express
 }
 
 fn remove_at(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("remove_at", args, 2..=3)?;
+    check_args_len("remove_at", args, 2..=3)?;
 
-    let index = super::get_integer_arg(args[0].eval(env)?)?;
+    let index = get_integer_arg(args[0].eval(env)?)?;
 
     let count = if args.len() == 3 {
-        super::get_integer_arg(args[1].eval(env)?)?
+        get_integer_arg(args[1].eval(env)?)?
     } else {
         1
     };
@@ -923,7 +925,7 @@ fn remove_at(args: &[Expression], env: &mut Environment) -> Result<Expression, L
 }
 
 fn remove(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_args_len("remove", args, 2..=3)?;
+    check_args_len("remove", args, 2..=3)?;
 
     let item = args[0].eval(env)?;
 

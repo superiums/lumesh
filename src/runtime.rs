@@ -1,5 +1,6 @@
 use crate::expression::cmd_excutor::expand_home;
-use crate::modules::{canon, pretty_printer};
+use crate::modules::pretty_printer;
+use crate::utils::canon;
 use crate::{
     Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, ModuleInfo, PRINT_DIRECT,
     RuntimeError, SyntaxError, use_script,

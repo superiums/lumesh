@@ -3,13 +3,14 @@ use std::{
     sync::LazyLock,
 };
 
-use crate::{Expression, modules::bin::pprint::pprint_hmap};
+use crate::{Expression, modules::pprint::pprint_hmap};
 
 mod bin;
 // use std::sync::RwLock;
-pub use bin::fs_module::canon;
-pub use bin::pprint::pretty_printer;
+// pub use bin::fs_module::canon;
 pub use bin::time_module::parse_time;
+mod pprint;
+pub use pprint::pretty_printer;
 
 struct UnsafeStatic<T> {
     inner: T,

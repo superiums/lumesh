@@ -8,7 +8,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use chrono::{DateTime, NaiveDateTime};
 
 use crate::expression::FileSize;
-use crate::modules::canon;
+use crate::utils::canon;
 use crate::{Environment, Expression, LmError};
 
 #[derive(Default)]

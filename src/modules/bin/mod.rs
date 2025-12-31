@@ -5,11 +5,14 @@ use std::{
 
 use crate::{
     Environment, Expression, Int, LmError,
-    modules::bin::sys_module::{set_builtin, throw, unset_builtin},
+    modules::{
+        bin::sys_module::{set_builtin, throw, unset_builtin},
+        // helper::{check_args_len, check_exact_args_len},
+        pretty_printer,
+    },
     parse_and_eval,
 };
 use common_macros::hash_map;
-use pprint::pretty_printer;
 
 mod console_module;
 mod map_module;
@@ -24,16 +27,19 @@ mod math_module;
 mod about_module;
 mod from_module;
 mod fs_ls;
-pub mod fs_module;
+mod fs_module;
+mod helper;
 mod into_module;
-pub mod pprint;
 mod rand_module;
 mod regex_module;
 mod string_module;
 mod sys_module;
 pub mod time_module;
 mod ui_module;
-
+pub use helper::{
+    check_args_len, check_exact_args_len, get_exact_string_arg, get_integer_arg, get_string_arg,
+    get_string_args,
+};
 pub fn get_module_map() -> HashMap<String, Expression> {
     hash_map! {
         String::from("Log") => log_module::get(),
@@ -763,91 +769,4 @@ fn get(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError
     //         "get requires a map as last argument".to_string(),
     //     ));
     // }
-}
-
-// Helper functions
-
-fn check_args_len(
-    name: impl ToString,
-    args: &[Expression],
-    expected_len: impl std::ops::RangeBounds<usize>,
-) -> Result<(), LmError> {
-    if expected_len.contains(&args.len()) {
-        Ok(())
-    } else {
-        Err(LmError::CustomError(format!(
-            "mismatched count of arguments for function {}",
-            name.to_string()
-        )))
-    }
-}
-
-fn check_exact_args_len(
-    name: impl ToString,
-    args: &[Expression],
-    expected_len: usize,
-) -> Result<(), LmError> {
-    if args.len() == expected_len {
-        Ok(())
-    } else {
-        Err(LmError::ArgumentMismatch {
-            name: name.to_string(),
-            expected: expected_len,
-            received: args.len(),
-        })
-    }
-}
-
-// pub fn get_list_arg(expr: Expression) -> Result<Rc<Vec<Expression>>, LmError> {
-//     match expr {
-//         Expression::List(s) => Ok(s),
-//         _ => Err(LmError::CustomError("expected string".to_string())),
-//     }
-// }
-
-// pub fn get_list_args(
-//     args: &[Expression],
-//     env: &mut Environment,
-// ) -> Result<Vec<Rc<Vec<Expression>>>, LmError> {
-//     args.iter()
-//         .map(|arg| get_list_arg(arg.eval(env)?))
-//         .collect()
-// }
-
-pub fn get_exact_string_arg(expr: Expression) -> Result<String, LmError> {
-    match expr {
-        Expression::String(s) => Ok(s),
-        e => Err(LmError::TypeError {
-            expected: "String".to_string(),
-            found: e.type_name(),
-            sym: e.to_string(),
-        }),
-    }
-}
-pub fn get_string_arg(expr: Expression) -> Result<String, LmError> {
-    match expr {
-        Expression::Symbol(s) | Expression::String(s) => Ok(s),
-        e => Err(LmError::TypeError {
-            expected: "String".to_string(),
-            found: e.type_name(),
-            sym: e.to_string(),
-        }),
-    }
-}
-
-pub fn get_string_args(args: &[Expression], env: &mut Environment) -> Result<Vec<String>, LmError> {
-    args.iter()
-        .map(|arg| get_string_arg(arg.eval(env)?))
-        .collect()
-}
-
-pub fn get_integer_arg(expr: Expression) -> Result<i64, LmError> {
-    match expr {
-        Expression::Integer(i) => Ok(i),
-        e => Err(LmError::TypeError {
-            expected: "Integer".to_string(),
-            found: e.type_name(),
-            sym: e.to_string(),
-        }),
-    }
 }

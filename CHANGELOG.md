@@ -2,6 +2,10 @@
 ## [0.8.6]
 - update default config
 - fix hot-key conflict with CFM
+- adjust `>>` and `>!` to compatible with bash, create if not exist.
+- remove Fs.dirs.current (already have `pwd`).
+- reorganize pprint and check functions, path utils.
+
 
 ## [0.8.5]
 - fix `--` arguments for lf file manager

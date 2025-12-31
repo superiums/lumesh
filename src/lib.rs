@@ -46,6 +46,10 @@ pub use modules::get_builtin;
 pub mod childman;
 pub mod keyhandler;
 
+pub mod utils;
+// pub use utils::abs;
+// pub use utils::canon;
+
 // pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 

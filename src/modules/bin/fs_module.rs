@@ -1,6 +1,6 @@
-use crate::expression::cmd_excutor::expand_home;
-use crate::modules::bin::get_string_arg;
-use crate::{Environment, Int, RuntimeError};
+use super::get_string_arg;
+use crate::utils::{abs, canon, get_current_path, join_current_path};
+use crate::{Environment, Int};
 use crate::{Expression, LmError};
 use common_macros::hash_map;
 use std::collections::BTreeMap;
@@ -49,25 +49,6 @@ pub fn get() -> Expression {
     Expression::from(fs_module)
 }
 
-// Helper functions
-
-fn get_current_path() -> PathBuf {
-    std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
-}
-
-fn join_current_path(path: &str) -> PathBuf {
-    get_current_path().join(path)
-}
-fn abs(path: &str) -> PathBuf {
-    get_current_path().join(expand_home(path).as_ref())
-}
-pub fn canon(p: &str) -> Result<PathBuf, RuntimeError> {
-    let path = abs(p);
-    dunce::canonicalize(&path).map_err(|e| {
-        RuntimeError::from_io_error(e, "canon".into(), Expression::String(p.to_string()), 0)
-    })
-}
-
 fn get_system_dirs(_args: &[Expression], _env: &mut Environment) -> Result<Expression, LmError> {
     let mut dir_tree = BTreeMap::<String, String>::new();
 
@@ -96,10 +77,10 @@ fn get_system_dirs(_args: &[Expression], _env: &mut Environment) -> Result<Expre
         dir_tree.insert("down".into(), download_dir.to_string_lossy().into());
     }
 
-    dir_tree.insert(
-        "current".into(),
-        get_current_path().to_string_lossy().into(),
-    );
+    // dir_tree.insert(
+    //     "current".into(),
+    //     get_current_path().to_string_lossy().into(),
+    // );
 
     Ok(Expression::from(dir_tree))
 }

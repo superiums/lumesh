@@ -527,8 +527,9 @@ impl Expression {
                                 },
 
                                 "==" => Ok(Expression::Boolean(l == r)),
-                                "~=" => Ok(Expression::Boolean(l.to_string() == r.to_string())),
                                 "!=" => Ok(Expression::Boolean(l != r)),
+                                "~=" => Ok(Expression::Boolean(l.to_string() == r.to_string())),
+                                "!~=" => Ok(Expression::Boolean(l.to_string() != r.to_string())),
                                 ">" => Ok(Expression::Boolean(l > r)),
                                 "<" => Ok(Expression::Boolean(l < r)),
                                 ">=" => Ok(Expression::Boolean(l >= r)),
@@ -536,26 +537,6 @@ impl Expression {
                                 "~:" => Ok(Expression::Boolean(handle_contains(l, r, job, depth)?)),
                                 "!~:" => {
                                     Ok(Expression::Boolean(!handle_contains(l, r, job, depth)?))
-                                }
-                                "~~" => {
-                                    let regex = Regex::new(&r.to_string()).map_err(|e| {
-                                        RuntimeError::common(
-                                            e.to_string().into(),
-                                            self.clone(),
-                                            depth,
-                                        )
-                                    })?;
-                                    Ok(Expression::Boolean(regex.is_match(&l.to_string())))
-                                }
-                                "!~~" => {
-                                    let regex = Regex::new(&r.to_string()).map_err(|e| {
-                                        RuntimeError::common(
-                                            e.to_string().into(),
-                                            self.clone(),
-                                            depth,
-                                        )
-                                    })?;
-                                    Ok(Expression::Boolean(!regex.is_match(&l.to_string())))
                                 }
 
                                 op if op.starts_with("_") => {
@@ -1341,21 +1322,23 @@ fn handle_contains(
     depth: usize,
 ) -> Result<bool, RuntimeError> {
     Ok(match l {
-        Expression::String(left) => left.contains(&r.to_string()),
-        Expression::Range(left, st) => {
-            if let Expression::Integer(i) = r {
-                match st {
-                    1 => left.contains(&i),
-                    _ => left.step_by(st).any(|f| f == i),
-                }
-            } else {
+        Expression::String(left) => match r {
+            Expression::Regex(reg) => reg.regex.is_match(&left),
+            _ => left.contains(&r.to_string()),
+        },
+        Expression::Range(left, st) => match r {
+            Expression::Integer(i) => match st {
+                1 => left.contains(&i),
+                _ => left.step_by(st).any(|f| f == i),
+            },
+            _ => {
                 return Err(RuntimeError::common(
                     "element of Range should be Integer".into(),
                     ctx.clone(),
                     depth,
                 ));
             }
-        }
+        },
         Expression::List(left) => left.contains(&r),
         Expression::Map(left) => match &r {
             Expression::Symbol(k) | Expression::String(k) => left.contains_key(k),

@@ -526,7 +526,7 @@ impl PrattParser {
                 Some(OperatorInfo::new(op, PREC_COMPARISON, false))
             }
             // 匹配
-            "~~" | "~:" | "!~~" | "!~:" => Some(OperatorInfo::new(op, PREC_COMPARISON, false)),
+            "~:" | "!~:" => Some(OperatorInfo::new(op, PREC_COMPARISON, false)),
             // 三目
             "?" => Some(OperatorInfo::new(
                 "?",

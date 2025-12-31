@@ -148,8 +148,6 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
             punctuation_tag("!="),
             punctuation_tag(">="),
             punctuation_tag("<="),
-            keyword_tag("!~~"),
-            keyword_tag("~~"),
             keyword_tag("!~:"),
             keyword_tag("~:"),
             keyword_tag("~="),

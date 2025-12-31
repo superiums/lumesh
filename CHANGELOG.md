@@ -5,6 +5,8 @@
 - adjust `>>` and `>!` to compatible with bash, create if not exist.
 - remove Fs.dirs.current (already have `pwd`).
 - reorganize pprint and check functions, path utils.
+- move regex contains to `~:`, remove `~~`,`!~~`
+- add `!~=`
 
 
 ## [0.8.5]

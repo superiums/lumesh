@@ -7,6 +7,7 @@
 - reorganize pprint and check functions, path utils.
 - move regex contains to `~:`, remove `~~`,`!~~`
 - add `!~=`
+- rename `type` to `typeof`, to keep compat with 3rd linux command.
 
 
 ## [0.8.5]

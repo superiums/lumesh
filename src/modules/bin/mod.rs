@@ -82,7 +82,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
 
         // Data manipulation
         String::from("get") => Expression::builtin("get", get, "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"),
-        String::from("type") => Expression::builtin("type", get_type, "get data type", "<value>"),
+        String::from("typeof") => Expression::builtin("typeof", get_type, "get data type", "<value>"),
         String::from("len") => Expression::builtin("len", len, "get length of expression", "<collection>"),
         String::from("insert") => Expression::builtin("insert", insert, "insert item into collection", "<key/index> <value> <collection>"),
         String::from("rev") => Expression::builtin("rev", rev, "reverse sequence", "<string|list|bytes>"),
@@ -305,7 +305,7 @@ fn pwd(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
 }
 
 fn get_type(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("type", args, 1)?;
+    check_exact_args_len("typeof", args, 1)?;
     let rs = if matches!(args[0], Expression::Symbol(_) | Expression::Variable(_)) {
         args[0].eval(env)?.type_name()
     } else {

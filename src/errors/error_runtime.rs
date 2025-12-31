@@ -17,9 +17,9 @@ pub enum RuntimeErrorKind {
     CannotApply(String, Expression),
     #[error("symbol `{0}` not defined")]
     SymbolNotDefined(String),
-    #[error("command `{0}` failed with args {1:?}")]
+    #[error("command `{0}` failed with args:\n  {1:?}")]
     CommandFailed(String, Vec<Expression>),
-    #[error("command `{0}` failed:\n{1}")]
+    #[error("command `{0}` failed:\n  {1}")]
     CommandFailed2(String, String),
     #[error("attempted to iterate over non-list `{0:?}`")]
     ForNonList(Expression),
@@ -33,7 +33,7 @@ pub enum RuntimeErrorKind {
     CustomError(Cow<'static, str>),
     #[error("redeclaration of `{0}`")]
     Redeclaration(String),
-    #[error("undeclared variable: {0}")]
+    #[error("undeclared variable: `{0}`")]
     UndeclaredVariable(String),
     #[error("no matching branch while evaluating `{0}`")]
     NoMatchingBranch(String),
@@ -57,15 +57,15 @@ pub enum RuntimeErrorKind {
     IndexOutOfBounds { index: Int, len: usize },
     #[error("key `{0}` not found in map")]
     KeyNotFound(String),
-    #[error("method `{0}` not found in module {1}")]
+    #[error("method `{0}` not found in module `{1}`")]
     MethodNotFound(Cow<'static, str>, Cow<'static, str>),
     // #[error("module `{0}` not found")]
     // ModuleNotFound(Cow<'static, str>),
     #[error("no module defined for `{0}`:{1}")]
     NoModuleDefined(String, Cow<'static, str>),
-    #[error("not a callabel function: `{0}`")]
+    #[error("not a callable function: `{0}`")]
     NotAFunction(String),
-    #[error("type error, expected {expected}, found {sym}: {found}")]
+    #[error("type error, expected `{expected}`, found `{found}`:\n  {sym}")]
     TypeError {
         expected: String,
         sym: String,
@@ -79,11 +79,11 @@ pub enum RuntimeErrorKind {
     Overflow(String),
     #[error("wildcard not matched: `{0}`")]
     WildcardNotMatched(String),
-    #[error("builtin func `{0}` failed:\n{1}")]
+    #[error("builtin func `{0}` failed:\n  {1}")]
     BuiltinFailed(String, String),
     #[error("terminated")]
     Terminated,
-    #[error("IO Error during {operation}:\n{kind}: {message}")]
+    #[error("IO Error during {operation}:\n  {kind}: {message}")]
     IoDetailed {
         operation: Cow<'static, str>,
         message: String,

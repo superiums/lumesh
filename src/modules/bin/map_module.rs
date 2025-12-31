@@ -375,6 +375,13 @@ fn filter(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
 fn get_map_arg(expr: Expression) -> Result<Rc<BTreeMap<String, Expression>>, LmError> {
     match expr {
         Expression::Map(s) => Ok(s),
+        Expression::HMap(rc_hashmap) => {
+            let btree_map: BTreeMap<_, _> = rc_hashmap
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone()))
+                .collect();
+            Ok(Rc::new(btree_map))
+        }
         e => Err(LmError::TypeError {
             expected: "Map".to_string(),
             found: e.type_name(),

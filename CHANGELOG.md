@@ -9,7 +9,7 @@
 - add `!~=`
 - rename `type` to `typeof`, to keep compat with 3rd linux command.
 - remove dark colors in String module.
-
+- allow methods in Map be used in HMap.
 
 ## [0.8.5]
 - fix `--` arguments for lf file manager

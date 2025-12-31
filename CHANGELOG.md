@@ -8,6 +8,7 @@
 - move regex contains to `~:`, remove `~~`,`!~~`
 - add `!~=`
 - rename `type` to `typeof`, to keep compat with 3rd linux command.
+- remove dark colors in String module.
 
 
 ## [0.8.5]

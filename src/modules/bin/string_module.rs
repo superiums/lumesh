@@ -100,16 +100,6 @@ pub fn get() -> Expression {
         String::from("cyan") => Expression::builtin("cyan", cyan, "apply cyan foreground", "<string>"),
         String::from("white") => Expression::builtin("white", white, "apply white foreground", "<string>"),
 
-        // 暗色
-        String::from("dark_black") => Expression::builtin("dark_black", dark_black, "apply dark black foreground", "<string>"),
-        String::from("dark_red") => Expression::builtin("dark_red", dark_red, "apply dark red foreground", "<string>"),
-        String::from("dark_green") => Expression::builtin("dark_green", dark_green, "apply dark green foreground", "<string>"),
-        String::from("dark_yellow") => Expression::builtin("dark_yellow", dark_yellow, "apply dark yellow foreground", "<string>"),
-        String::from("dark_blue") => Expression::builtin("dark_blue", dark_blue, "apply dark blue foreground", "<string>"),
-        String::from("dark_magenta") => Expression::builtin("dark_magenta", dark_magenta, "apply dark magenta foreground", "<string>"),
-        String::from("dark_cyan") => Expression::builtin("dark_cyan", dark_cyan, "apply dark cyan foreground", "<string>"),
-        String::from("dark_white") => Expression::builtin("dark_white", dark_white, "apply dark white foreground", "<string>"),
-
         // 高级颜色
         String::from("color256") => Expression::builtin("color256", color256, "apply color using 256-color code", "<color_spec> <string>"),
         String::from("color256_bg") => Expression::builtin("color256_bg", color256_bg, "apply background color using 256-color code", "<color_spec> <string>"),
@@ -648,11 +638,6 @@ fn black(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
     Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
 }
 
-fn dark_black(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_black", args, 1)?;
-    Ok(format!("\x1b[30m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
 // 其他颜色函数类似实现...
 
 // 原始实现函数保持不变
@@ -763,41 +748,6 @@ fn white(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
 }
 
 // 实现dark命名空间下的颜色函数
-fn dark_red(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_red", args, 1)?;
-    Ok(format!("\x1b[31m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
-fn dark_green(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_green", args, 1)?;
-    Ok(format!("\x1b[32m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
-fn dark_yellow(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_yellow", args, 1)?;
-    Ok(format!("\x1b[33m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
-fn dark_blue(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_blue", args, 1)?;
-    Ok(format!("\x1b[34m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
-fn dark_magenta(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_magenta", args, 1)?;
-    Ok(format!("\x1b[35m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
-fn dark_cyan(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_cyan", args, 1)?;
-    Ok(format!("\x1b[36m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
-
-fn dark_white(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("dark_white", args, 1)?;
-    // 修正原始代码中的转义序列错误
-    Ok(format!("\x1b[37m{}\x1b[m\x1b[0m", args[0].eval_in_assign(env)?).into())
-}
 
 fn color_256(args: &[Expression], bg: bool, env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("color256", args, 2)?;

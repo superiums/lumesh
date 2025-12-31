@@ -123,11 +123,11 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        postfix_tag("."), //chaind call/index
-        postfix_tag("!"), //func call as flat as cmd
-        postfix_tag("^"), //make symbo as cmd
-        postfix_tag("("), //func call
-        postfix_tag("["), //array index or slice
+        postfix_tag("."),       //chaind call/index
+        postfix_break_tag("!"), //func call as flat as cmd
+        postfix_break_tag("^"), //make symbo as cmd
+        postfix_tag("("),       //func call
+        postfix_tag("["),       //array index or slice
         // postfix_tag("++"),
         // postfix_tag("--"),
         custom_tag("__"), //__* as custom postfix tag.
@@ -1083,6 +1083,22 @@ fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
             return Err(NOT_FOUND);
         }
         input.strip_prefix(keyword).ok_or(NOT_FOUND)
+    }
+}
+/// parse a tag after letters/numbers/]/)/'/"/`. and space followed.
+fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input.previous_char().is_none_or(|c| {
+            !c.is_ascii_alphanumeric() && ![')', ']', '}', '\'', '"', '`'].contains(&c)
+        }) {
+            return Err(NOT_FOUND);
+        }
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| {
+                rest.is_empty() || rest.starts_with(|c: char| c.is_ascii_whitespace())
+            })
+            .ok_or(NOT_FOUND)
     }
 }
 /// parse a unit tag after numbers.

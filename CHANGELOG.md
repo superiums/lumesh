@@ -3,15 +3,18 @@
 - update default config
 - fix hot-key conflict with CFM
 - adjust `>>` and `>!` to compatible with bash, create if not exist.
-- remove Fs.dirs.current (already have `pwd`).
 - reorganize pprint and check functions, path utils.
-- move regex contains to `~:`, remove `~~`,`!~~`
+- allow methods in Map be used in HMap.
+- move regex contains to `~:`
+- add `help doc`
 - add `!~=`
 - rename `type` to `typeof`, to keep compat with 3rd linux command.
+- remove Fs.dirs.current (already have `pwd`).
+- remove `~~`,`!~~`
 - remove dark colors in String module.
-- allow methods in Map be used in HMap.
 - remove `++` and `--`
-- add `help doc`
+- require cmd/func raise followed by space.
+to better differ `2^3` and `cmd^ b c`
 
 ## [0.8.5]
 - fix `--` arguments for lf file manager

@@ -522,7 +522,7 @@ impl PrattParser {
             "&&" => Some(OperatorInfo::new("&&", PREC_LOGICAL_AND, false)),
             "||" => Some(OperatorInfo::new("||", PREC_LOGICAL_OR, false)),
             // 比较运算符
-            "==" | "~=" | "!=" | ">" | "<" | ">=" | "<=" => {
+            "==" | "~=" | "!=" | "!~=" | ">" | "<" | ">=" | "<=" => {
                 Some(OperatorInfo::new(op, PREC_COMPARISON, false))
             }
             // 匹配

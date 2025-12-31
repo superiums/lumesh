@@ -302,37 +302,37 @@ impl Expression {
                             }
                         },
                         // 处理 ++a 转换为 a = a + 1
-                        "++" | "--" => {
-                            // 确保操作数是符号
-                            let var_name = operand.to_symbol()?;
-                            // 获取当前值
-                            let current_val = env.get(var_name).ok_or(RuntimeError::new(
-                                RuntimeErrorKind::UndeclaredVariable(var_name.to_string()),
-                                self.clone(),
-                                depth,
-                            ))?;
+                        // "++" | "--" => {
+                        //     // 确保操作数是符号
+                        //     let var_name = operand.to_symbol()?;
+                        //     // 获取当前值
+                        //     let current_val = env.get(var_name).ok_or(RuntimeError::new(
+                        //         RuntimeErrorKind::UndeclaredVariable(var_name.to_string()),
+                        //         self.clone(),
+                        //         depth,
+                        //     ))?;
 
-                            // 确保操作是合法的，例如整数或浮点数
-                            if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
-                            {
-                                return Err(RuntimeError::common(
-                                    format!("Cannot apply {op} to {operand:?}:{current_val:?}")
-                                        .into(),
-                                    self.clone(),
-                                    depth,
-                                ));
-                            }
-                            // 计算新值
-                            let step = if op == "++" { 1 } else { -1 };
-                            let new_val = (current_val.clone() + Expression::Integer(step))
-                                .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
-                            env.define(var_name, new_val.clone());
-                            Ok(if is_prefix == &true {
-                                new_val
-                            } else {
-                                current_val
-                            })
-                        }
+                        //     // 确保操作是合法的，例如整数或浮点数
+                        //     if !matches!(current_val, Expression::Integer(_) | Expression::Float(_))
+                        //     {
+                        //         return Err(RuntimeError::common(
+                        //             format!("Cannot apply {op} to {operand:?}:{current_val:?}")
+                        //                 .into(),
+                        //             self.clone(),
+                        //             depth,
+                        //         ));
+                        //     }
+                        //     // 计算新值
+                        //     let step = if op == "++" { 1 } else { -1 };
+                        //     let new_val = (current_val.clone() + Expression::Integer(step))
+                        //         .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
+                        //     env.define(var_name, new_val.clone());
+                        //     Ok(if is_prefix == &true {
+                        //         new_val
+                        //     } else {
+                        //         current_val
+                        //     })
+                        // }
                         op if op.starts_with("__") => {
                             if let Some(oper) = env.get(op) {
                                 let rs =

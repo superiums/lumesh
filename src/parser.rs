@@ -332,7 +332,7 @@ impl PrattParser {
                 // unary op
                 let prec = match op {
                     "!" | "-" => PREC_UNARY,
-                    "++" | "--" => PREC_PRIFIX,
+                    // "++" | "--" => PREC_PRIFIX,
                     _ => {
                         return Err(nom::Err::Failure(SyntaxErrorKind::UnknownOperator(
                             op.to_string(),
@@ -449,13 +449,13 @@ impl PrattParser {
                 // 数组索引或切片
                 parse_index_or_slice(lhs, input, depth)
             }
-            "++" | "--" => {
-                // 后置自增/自减
-                Ok((
-                    input.skip_n(1),
-                    Expression::UnaryOp(op, Rc::new(lhs), false),
-                ))
-            }
+            // "++" | "--" => {
+            //     // 后置自增/自减
+            //     Ok((
+            //         input.skip_n(1),
+            //         Expression::UnaryOp(op, Rc::new(lhs), false),
+            //     ))
+            // }
             opx if opx.starts_with("__") => {
                 // 后置自定义
                 // dbg!(&opx, &lhs);

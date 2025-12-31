@@ -116,9 +116,9 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
         prefix_tag("$"), //var
         prefix_tag("-"),
         prefix_tag("@"), //var
-        prefix_tag("++"),
-        prefix_tag("--"),
-        // infix_tag("__"), custom prefix?
+                         // prefix_tag("++"),
+                         // prefix_tag("--"),
+                         // infix_tag("__"), custom prefix?
     ))(input)
 }
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -128,8 +128,8 @@ fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
         postfix_tag("^"), //make symbo as cmd
         postfix_tag("("), //func call
         postfix_tag("["), //array index or slice
-        postfix_tag("++"),
-        postfix_tag("--"),
+        // postfix_tag("++"),
+        // postfix_tag("--"),
         custom_tag("__"), //__* as custom postfix tag.
         postfix_unit_tag("K"),
         postfix_unit_tag("M"),

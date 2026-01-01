@@ -60,7 +60,6 @@ struct Cli {
         num_args=1..,
         index = 1,
         allow_hyphen_values = true,
-        conflicts_with = "interactive"
     )]
     file_n_args: Option<Vec<String>>,
 

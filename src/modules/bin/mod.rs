@@ -93,9 +93,10 @@ pub fn get_module_map() -> HashMap<String, Expression> {
 
         // Execution control
         String::from("repeat") => Expression::builtin("repeat", repeat, "evaluate without env change", "<expr>"),
-        String::from("eval") => Expression::builtin("eval", eval, "evaluate expression", "<expr>"),
-        String::from("exec_str") => Expression::builtin("exec_str", exec_str, "evaluate string", "<string>"),
-        String::from("exec") => Expression::builtin("exec", exec, "evaluate in current env", "<expr>"),
+        String::from("eval") => Expression::builtin("eval", eval, "evaluate expression in current env", "<expr>"),
+        String::from("exec") => Expression::builtin("exec", exec, "execute expression in new env", "<expr>"),
+        String::from("eval_str") => Expression::builtin("eval_str", eval_str, "evaluate string in current env", "<expr>"),
+        String::from("exec_str") => Expression::builtin("exec_str", exec_str, "execute string in new env", "<string>"),
         String::from("include") => Expression::builtin("include", include, "evaluate file in current env", "<path>"),
         String::from("import") => Expression::builtin("import", import, "evaluate file in new env", "<path>"),
 
@@ -471,20 +472,38 @@ pub fn rev(args: &[Expression], env: &mut Environment) -> Result<Expression, LmE
     }
 }
 
+fn eval_str(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    check_exact_args_len("eval_str", args, 1)?;
+    let exp = match &args[0] {
+        Expression::String(cmd) => cmd,
+        Expression::StringTemplate(_) | Expression::Symbol(_) | Expression::Variable(_) => {
+            &args[0].eval(env)?.to_string()
+        }
+        Expression::Group(cmd) => match cmd.as_ref() {
+            Expression::String(cmd) => cmd,
+            _ => {
+                return Err(LmError::CustomError(
+                    "only String acceptable to exec_str".to_owned(),
+                ));
+            }
+        },
+        _ => {
+            return Err(LmError::CustomError(
+                "only String acceptable to exec_str".to_owned(),
+            ));
+        }
+    };
+    if exp.is_empty() {
+        Ok(Expression::None)
+    } else {
+        println!("\n  >> Excuting: \x1b[38;5;208m\x1b[1m{exp}\x1b[m\x1b[0m");
+        Ok(Expression::Boolean(parse_and_eval(exp, env)))
+    }
+}
 fn exec_str(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("exec_str", args, 1)?;
-    match &args[0] {
-        Expression::String(cmd) => {
-            if !cmd.is_empty() {
-                println!("\n  >> Excuting: \x1b[38;5;208m\x1b[1m{cmd}\x1b[m\x1b[0m");
-                parse_and_eval(cmd, env);
-            }
-            Ok(Expression::None)
-        }
-        _ => Err(LmError::CustomError(
-            "only String acceptable to exec_str".to_owned(),
-        )),
-    }
+    let mut new_env = env.clone();
+    eval_str(args, &mut new_env)
 }
 fn repeat(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("repeat", args, 2)?;
@@ -496,13 +515,13 @@ fn repeat(args: &[Expression], env: &mut Environment) -> Result<Expression, LmEr
 }
 fn eval(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("eval", args, 1)?;
-    let mut new_env = env.clone();
-    Ok(args[0].eval(env)?.eval(&mut new_env)?)
+    Ok(args[0].eval(env)?.eval(env)?)
 }
 
 fn exec(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("exec", args, 1)?;
-    Ok(args[0].eval(env)?.eval(env)?)
+    let mut new_env = env.clone();
+    Ok(args[0].eval(env)?.eval(&mut new_env)?)
 }
 
 fn flatten(expr: Expression) -> Vec<Expression> {

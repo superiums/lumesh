@@ -75,8 +75,9 @@ if IS_INTERACTIVE {
     let LUME_HOT_KEYS = {
         q: 'exit',
         h: "Fs.read ~/.cache/.lume_history | String.lines() | Ui.pick('select history:') ?! | exec_str()",
-        x: "Fs.read /tmp/bookmark | String.lines() | Ui.pick('select bookmark:') ?! | exec_str()",
-        m: 'let cmd := "$CMD_CURRENT";let s = Into.str(cmd); if s {s+"\n" >> /tmp/bookmark;println "\t[MARKED]"}',
+        x: "Fs.read ~/.cache/lume_bookmark | String.lines() | Ui.pick('select bookmark:') ?! | exec_str()",
+        m: 'let cmd := "$CMD_CURRENT";let s = Into.str(cmd); if s {s+"\n" >> ~/.cache/lume_bookmark; println "\t[MARKED]"}',
+        e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=Fs.read($tc); if len($lmcode) && Ui.confirm("Execute it?"){exec_str($lmcode)}'
     }
 
     # ====== abbreviations

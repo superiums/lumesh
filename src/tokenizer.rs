@@ -758,6 +758,17 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
             match next_char {
                 Some('\'') | Some('`') if next_char == Some(quote_char) => break,
                 None => break,
+                Some('\\') => {
+                    // 检查下一个字符是否是单引号
+                    let rest_after_backslash = rest.split_at(1).0;
+                    if Some(quote_char) == rest_after_backslash.chars().next() {
+                        // 是 \' 转义，跳过反斜杠和单引号
+                        rest = rest_after_backslash.split_at(1).0;
+                    } else {
+                        // 不是 \' 转义，保留反斜杠作为普通字符
+                        rest = rest_after_backslash;
+                    }
+                }
                 // Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
                 Some(ch) => {
                     // UTF-8有效性检查

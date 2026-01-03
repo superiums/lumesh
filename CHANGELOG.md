@@ -3,7 +3,10 @@
 - add `IS_CFM` var
 - optimize import and include.
 - fix config in set_as_login_shell
-
+- optimize `eval_str` to allow variable and symbol
+- change `eval` as 'eval in current env'
+- change `exec` as `exec in new env`
+- allow `\'` in `''` without escape
 
 ## [0.8.6]
 - update default config

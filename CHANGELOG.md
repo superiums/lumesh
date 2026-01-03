@@ -1,4 +1,10 @@
 # Changelog
+## [0.8.7]
+- add `IS_CFM` var
+- optimize import and include.
+- fix config in set_as_login_shell
+
+
 ## [0.8.6]
 - update default config
 - fix hot-key conflict with CFM

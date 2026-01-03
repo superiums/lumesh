@@ -134,7 +134,7 @@ fn main() {
         parse_and_eval(cmd.as_str(), &mut cli_env);
 
         if cli.interactive {
-            set_cfm(!cli.cfmoff);
+            set_cfm(!cli.cfmoff, &mut cli_env);
             repl::run_repl(&mut cli_env);
         }
     }
@@ -161,7 +161,7 @@ fn main() {
         cli_env.define("IS_INTERACTIVE", Expression::Boolean(true));
 
         env_config(&mut cli_env, cli.aioff, cli.strict);
-        set_cfm(!cli.cfmoff);
+        set_cfm(!cli.cfmoff, &mut cli_env);
         repl::run_repl(&mut cli_env);
     }
 }
@@ -181,8 +181,8 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
     }
 }
 
-fn set_cfm(cfm: bool) {
-    // cli_env.define("LUME_NO_CFM", Expression::Boolean(cli.cfmoff));
+fn set_cfm(cfm: bool, env: &mut Environment) {
+    env.define("IS_CFM", Expression::Boolean(cfm));
     unsafe {
         CFM_ENABLED = cfm;
     }

@@ -147,7 +147,7 @@ if IS_INTERACTIVE {
 
     fn set_as_login_shell(){
         let p = (About | .get('bin'))
-        if !(Fs.read /etc/shells | .contains($p)) {
+        if Fs.read(/etc/shells) !~: $p {
             sudo lume -c `Fs.append /etc/shells "\n$p"` ?: doas lume -c `Fs.append /etc/shells "\n$p"`
         }
         println `chsh -s $p`

@@ -11,6 +11,7 @@ use crate::{
         pretty_printer,
     },
     parse_and_eval,
+    utils::canon,
 };
 use common_macros::hash_map;
 
@@ -195,65 +196,35 @@ fn help(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
 }
 fn import(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("import", args, 1)?;
-    let cwd = std::env::current_dir()?;
-    let path = cwd.join(args[0].eval(env)?.to_string());
 
-    if let Ok(canon_path) = dunce::canonicalize(&path) {
-        // Read the file.
-        let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
-            LmError::CustomError(format!(
-                "could not read file {}: {}",
-                canon_path.display(),
-                e
-            ))
-        })?;
-        // Evaluate the file.
-        if let Ok(expr) = crate::parse(&contents) {
-            let mut new_env = env.clone();
-            Ok(expr.eval(&mut new_env)?)
-        } else {
-            Err(LmError::CustomError(format!(
-                "could not parse file {}",
-                canon_path.display()
-            )))
-        }
-    } else {
-        Err(LmError::CustomError(format!(
-            "could not canonicalize path {}",
-            path.display()
-        )))
-    }
+    let canon_path = canon(&args[0].eval(env)?.to_string())?;
+    // Read the file.
+    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
+        LmError::CustomError(format!(
+            "could not read file {}: {}",
+            canon_path.display(),
+            e
+        ))
+    })?;
+    // Evaluate the file.
+    let r = parse_and_eval(&contents, &mut env.fork());
+    Ok(Expression::from(r))
 }
 fn include(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     check_exact_args_len("include", args, 1)?;
+    let canon_path = canon(&args[0].eval(env)?.to_string())?;
 
-    let cwd = std::env::current_dir()?;
-    let path = cwd.join(args[0].eval(env)?.to_string());
-
-    if let Ok(canon_path) = dunce::canonicalize(&path) {
-        // Read the file.
-        let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
-            LmError::CustomError(format!(
-                "could not read file {}: {}",
-                canon_path.display(),
-                e
-            ))
-        })?;
-        // Evaluate the file.
-        if let Ok(expr) = crate::parse(&contents) {
-            Ok(expr.eval(env)?)
-        } else {
-            Err(LmError::CustomError(format!(
-                "could not parse file {}",
-                canon_path.display()
-            )))
-        }
-    } else {
-        Err(LmError::CustomError(format!(
-            "could not canonicalize path {}",
-            path.display()
-        )))
-    }
+    // Read the file.
+    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
+        LmError::CustomError(format!(
+            "could not read file {}: {}",
+            canon_path.display(),
+            e
+        ))
+    })?;
+    // Evaluate the file.
+    let r = parse_and_eval(&contents, env);
+    Ok(Expression::from(r))
 }
 fn exit(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     if args.is_empty() {

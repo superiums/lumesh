@@ -1,8 +1,13 @@
-### [Readme English](README.md)
+English | [简体中文](README-cn.md)
+
+# Lumesh
+![GitHub License](https://img.shields.io/github/license/superiums/lumesh)
+![GitHub Repo stars](https://img.shields.io/github/stars/superiums/lumesh)
+![GitHub Release](https://img.shields.io/github/v/release/superiums/lumesh)
+
 
 - 开发现在在 Codeberg [https://codeberg.org/santo/lumesh] 继续进行， GitHub [https://github.com/superiums/lumesh] 仓库将成为镜像。
 
-# Lumesh - 光速 Shell 和脚本语言
 
 **像 js 一样编写，像 Bash 一样工作，像光一样运行**
 
@@ -154,7 +159,7 @@ cargo build --release
 ```
 
 ### 立即体验
-- **`lume`**: 完整交互式 shell，支持 REPL、自动补全、语法高亮
+- **`lume`**: 完整shell，支持 REPL、自动补全、语法高亮
 - **`lume-se`**: 轻量级脚本执行器，快速启动，最小依赖
 
 ```bash
@@ -175,14 +180,8 @@ _由于fish无法完成一百万次的任务，我们记录了其一半任务的
 
 ## ⚑ 学习资源
 
-- [中文Wiki](https://lumesh.codeberg.page)
-- [Wiki English](https://lumesh.codeberg.page/en/index)
+- [文档](https://lumesh.codeberg.page/zh-cn)
 - [DeepWiki](https://deepwiki.com/superiums/lumesh)
-
-- **语法手册** [https://lumesh.codeberg.page/zh-cn/syntax]
-- **内置函数库** libs [https://lumesh.codeberg.page/zh-cn/libs/index]
-- **Bash对比** [https://lumesh.codeberg.page/rv/zh.html]
-- **快捷键** [https://lumesh.codeberg.page/zh-cn/keys]
 
 ## ⚑ 版本历程
 最近的开发重点：
@@ -195,5 +194,7 @@ _由于fish无法完成一百万次的任务，我们记录了其一半任务的
 - 更友好的帮助信息
 
 ---
+
+![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)
 
 **立即开始您的 Lumesh 之旅吧！**

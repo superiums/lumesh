@@ -1,11 +1,16 @@
-### [中文说明-点这里](README-cn.md)
+English | [简体中文](README-cn.md)
+
+# Lumesh
+
+[![GitHub License](https://img.shields.io/github/license/superiums/lumesh)]()
+[![GitHub Repo stars](https://img.shields.io/github/stars/superiums/lumesh)]()
+[![GitHub Release](https://img.shields.io/github/v/release/superiums/lumesh)]()
+
 
 - Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
 
 
-# Lumesh - Light-speed Shell and Scripting Language
-
-**Write like js, work like Bash, run like light**
+**Write as js, works as Bash, run as light**
 
 Lumesh is a modern shell and scripting language, as a bash replacer, it was completely rewritten from Dune, designed for high performance and user-friendly experience.
 
@@ -148,8 +153,8 @@ cargo build --release
 ```
 
 ### Experience Immediately
-- **`lume`**: Complete interactive shell, supports REPL, auto-completion, syntax highlighting
-- **`lume-se`**: Lightweight script executor, quick startup, minimal dependencies
+- **`lume`**: Complete shell, supports REPL, auto-completion, syntax highlighting
+- **`lume-se`**: Lightweight script executor, quick startup, minimal dependencies.
 
 ```bash
 # Start interactive shell
@@ -168,24 +173,21 @@ _Due to fish being unable to complete one million tasks, we recorded its half-ta
 
 ## ⚑ Learning Resources
 
-- [中文 Wiki](https://lumesh.codeberg.page)
-- [Wiki English](https://lumesh.codeberg.page/en/index)
+- [Document](https://lumesh.codeberg.page/)
 - [DeepWiki](https://deepwiki.com/superiums/lumesh)
-
-
-- **Syntax Manual** [https://lumesh.codeberg.page/en/syntax]
-- **Built-in Function Library** [https://lumesh.codeberg.page/en/libs/index]
-- **Bash Comparison** [https://lumesh.codeberg.page/rv/en.html]
-- **Hotkeys** [https://lumesh.codeberg.page/en/keys]
 
 ## ⚑ Version History
 Recent development has emphasized:
 
-Decorator support for function enhancement
-IFS (Internal Field Separator) mode control for compatibility
-Enhanced module system with cross-linking between modules
-Improved error reporting and debugging capabilities
-CFM (Command First Mode) for daily commands
-More friendly help info
+- Decorator support for function enhancement
+- IFS (Internal Field Separator) mode control for compatibility
+- Enhanced module system with cross-linking between modules
+- Improved error reporting and debugging capabilities
+- CFM (Command First Mode) for daily commands
+- More friendly help info
 
 ---
+
+![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)
+
+**start your travel with lumesh now**

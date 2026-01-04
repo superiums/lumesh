@@ -929,22 +929,32 @@ impl Expression {
                         Expression::eval_to_int_opt(&slice_params.step, state, env, depth + 1)?
                             .unwrap_or(1); // 默认步长1
 
+                    // is string
+                    if let Expression::String(str) = listo {
+                        if step_int == 1 {
+                            let (start, end) =
+                                clamp(start_int, end_int, step_int, str.len() as Int);
+                            let res = str
+                                .chars()
+                                .skip(start as usize)
+                                .take((end - start) as usize)
+                                .collect();
+                            return Ok(Expression::String(res));
+                        } else {
+                            return Err(RuntimeError::common(
+                                "string slice step not supported.".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                    // is list
                     // return Self::slice(listo, start_int, end_int, step_int);
                     let list = listo
                         .as_list()
                         .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?;
                     let len = list.len() as Int;
-
-                    let clamp = |v: Int| if v < 0 { len + v } else { v }.clamp(0, len - 1);
-
-                    let (mut start, mut end) = (
-                        start_int.map(clamp).unwrap_or(0),
-                        end_int.map(|v| clamp(v).min(len)).unwrap_or(len),
-                    );
-
-                    if step_int < 0 {
-                        (start, end) = (end.clamp(0, len), start.clamp(0, len));
-                    }
+                    let (start, end) = clamp(start_int, end_int, step_int, len);
 
                     let mut result = Vec::new();
                     let mut i = start;
@@ -1369,4 +1379,19 @@ fn handle_contains(
             ));
         }
     })
+}
+
+fn clamp(start_int: Option<Int>, end_int: Option<Int>, step_int: Int, len: Int) -> (Int, Int) {
+    // clamp
+    let clamp = |v: Int| if v < 0 { len + v } else { v }.clamp(0, len - 1);
+
+    let (mut start, mut end) = (
+        start_int.map(clamp).unwrap_or(0),
+        end_int.map(|v| clamp(v).min(len)).unwrap_or(len),
+    );
+
+    if step_int < 0 {
+        (start, end) = (end.clamp(0, len), start.clamp(0, len));
+    }
+    (start, end)
 }

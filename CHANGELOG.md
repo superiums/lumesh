@@ -1,4 +1,9 @@
 # Changelog
+## [0.8.8]
+- support str slice
+- fix `::` token in slice
+
+
 ## [0.8.7]
 - add `IS_CFM` var
 - optimize import and include

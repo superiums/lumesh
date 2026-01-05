@@ -26,6 +26,7 @@ use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
+use crate::completion::CompletionDatabase;
 use crate::expression::alias::get_alias_tips;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::modules::get_builtin_tips;
@@ -294,6 +295,7 @@ struct LumeHelper {
     highlighter: Arc<SyntaxHighlighter>,
     ai_client: Option<Arc<MockAIClient>>,
     cmds: HashSet<String>,
+    completion_db: Arc<CompletionDatabase>,
 }
 
 fn new_editor(
@@ -303,7 +305,7 @@ fn new_editor(
 ) -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
-        .completion_type(CompletionType::Circular)
+        .completion_type(CompletionType::List)
         .edit_mode(if vi_mode {
             EditMode::Vi
         } else {
@@ -340,12 +342,17 @@ fn new_editor(
     cmds.extend(get_builtin_tips());
     cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());
     cmds.extend(get_alias_tips());
+
+    // Load completion database
+    let completion_db = Arc::new(CompletionDatabase::load_completion_database());
+
     let helper = LumeHelper {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
         highlighter: Arc::new(SyntaxHighlighter::new(theme)),
         ai_client: ai,
         cmds,
+        completion_db,
     };
     rl.set_helper(Some(helper));
     rl
@@ -374,6 +381,7 @@ impl Completer for LumeHelper {
         match self.detect_completion_type(line, pos) {
             LumeCompletionType::Path => self.path_completion(line, pos, ctx),
             LumeCompletionType::Command => self.cmd_completion(line, pos),
+            LumeCompletionType::Argument => self.argument_completion(line, pos, ctx),
             LumeCompletionType::AI => self.ai_completion(line, pos),
             LumeCompletionType::None => Ok((pos, Vec::new())),
         }
@@ -394,6 +402,9 @@ impl LumeHelper {
             LumeCompletionType::Path
         } else if should_trigger_cmd_completion(line, pos) {
             LumeCompletionType::Command
+        } else if self.should_trigger_argument_completion(line, pos) {
+            // dbg!("--should trigger arg---");
+            LumeCompletionType::Argument
         } else if self.should_trigger_ai(line) {
             LumeCompletionType::AI
         } else {
@@ -401,6 +412,13 @@ impl LumeHelper {
         }
     }
 
+    fn should_trigger_argument_completion(&self, line: &str, pos: usize) -> bool {
+        let input = &line[..pos];
+        let tokens: Vec<&str> = input.split_whitespace().collect();
+        // dbg!("--should trigger?", &input, &tokens);
+        // Trigger if we have a command and are not at the first position
+        tokens.len() > 0 //&& !should_trigger_path_completion(line, pos)
+    }
     /// 路径补全逻辑
     fn path_completion(
         &self,
@@ -442,6 +460,126 @@ impl LumeHelper {
         Ok((start, candidates))
     }
 
+    /// 参数补全逻辑
+    fn argument_completion(
+        &self,
+        line: &str,
+        pos: usize,
+        ctx: &rustyline::Context<'_>,
+    ) -> Result<(usize, Vec<Pair>), ReadlineError> {
+        let input = &line[..pos];
+        let tokens: Vec<String> = input.split_whitespace().map(|s| s.to_string()).collect();
+
+        if let Some((command, args)) = tokens.split_first() {
+            let current_token = if let Some(last_space) = input.rfind(' ') {
+                &input[last_space + 1..]
+            } else {
+                ""
+            };
+
+            let start = if let Some(last_space) = input.rfind(' ') {
+                last_space + 1
+            } else {
+                0
+            };
+
+            let matching_entries =
+                self.completion_db
+                    .get_completions_for_context(command, args, current_token);
+
+            let mut candidates = Vec::new();
+
+            // dbg!(
+            //     &tokens,
+            //     &command,
+            //     &current_token,
+            //     &start,
+            //     &matching_entries.len()
+            // );
+            dbg!(
+                &matching_entries,
+                &matching_entries.len(),
+                &current_token,
+                &args
+            );
+
+            let prompt_type = match current_token.starts_with("-") {
+                true => match current_token.starts_with("--") {
+                    false => 1,
+                    true => 2,
+                },
+                _ => 3,
+            };
+
+            for entry in matching_entries {
+                // Generate completion candidates based on entry type
+                match prompt_type {
+                    2 => {
+                        if let Some(ref long_opt) = entry.long_opt {
+                            if current_token.len() == 2 || long_opt.starts_with(&current_token[2..])
+                            {
+                                candidates.push(Pair {
+                                    display: format!("--{}", long_opt),
+                                    replacement: format!("--{}", long_opt),
+                                });
+                            }
+                        }
+                    }
+
+                    1 => {
+                        if let Some(ref short_opt) = entry.short_opt {
+                            candidates.push(Pair {
+                                display: format!("-{}", short_opt),
+                                replacement: format!("-{}", short_opt),
+                            });
+                            // for ch in short_opt.chars() {
+                            //     candidates.push(Pair {
+                            //         display: format!("-{}", ch),
+                            //         replacement: format!("-{}", ch),
+                            //     });
+                            // }
+                        }
+                    }
+
+                    // Handle special argument types (@F, @D)
+                    3 => {
+                        for arg in &entry.args {
+                            match arg.as_str() {
+                                "@F" => {
+                                    // Delegate to file completion
+                                    return self.completer.complete(line, pos, ctx);
+                                }
+                                "@D" => {
+                                    // Delegate to directory completion (could be customized)
+                                    return self.completer.complete(line, pos, ctx);
+                                }
+                                _ => {
+                                    // Fixed value completion
+                                    if current_token.is_empty() || arg.starts_with(current_token) {
+                                        candidates.push(Pair {
+                                            display: arg.clone(),
+                                            replacement: arg.clone(),
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    _ => unreachable!(),
+                }
+            }
+
+            // Sort by priority and then by length
+            candidates.sort_by(|a, b| {
+                // This is simplified - you'd need to map back to entries for priority
+                a.display.len().cmp(&b.display.len())
+            });
+
+            return Ok((start, candidates));
+        }
+        Ok((pos, Vec::new()))
+    }
+
     /// AI 补全逻辑
     fn ai_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
         let prompt = line.trim();
@@ -477,6 +615,7 @@ impl LumeHelper {
 enum LumeCompletionType {
     Path,
     Command,
+    Argument,
     AI,
     None,
 }

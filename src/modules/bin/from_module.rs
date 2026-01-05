@@ -249,7 +249,7 @@ fn parse_csv(args: &[Expression], env: &mut Environment) -> Result<Expression, L
     // 获取自定义分隔符
     let delimiter = match env.get("IFS") {
         Some(Expression::String(fs)) if fs != "\n" => fs.as_bytes()[0],
-        _ => ",".as_bytes()[0].to_owned(), // 使用空格作为默认分隔符
+        _ => ",".as_bytes()[0].to_owned(), // 默认分隔符
     };
 
     // 设置 CSV 解析器的分隔符

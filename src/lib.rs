@@ -49,7 +49,7 @@ pub mod keyhandler;
 pub mod utils;
 // pub use utils::abs;
 // pub use utils::canon;
-
+pub mod completion;
 // pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 

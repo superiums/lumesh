@@ -2,7 +2,8 @@
 ## [0.8.8]
 - support str slice
 - fix `::` token in slice
-
+- add `String.words_quoted`
+- add fish2csv script to prepare completion data
 
 ## [0.8.7]
 - add `IS_CFM` var

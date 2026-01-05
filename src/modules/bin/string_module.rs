@@ -17,6 +17,7 @@ use crate::{
 };
 use common_macros::hash_map;
 use lazy_static::lazy_static;
+use regex_lite::Regex;
 
 pub fn get() -> Expression {
     (hash_map! {
@@ -50,6 +51,7 @@ pub fn get() -> Expression {
         String::from("split_at") => Expression::builtin("split_at", split_at, "split a string at a given index", "<index> <string>"),
         String::from("chars") => Expression::builtin("chars", chars, "split a string into characters", "<string>"),
         String::from("words") => Expression::builtin("words", words, "split a string into words", "<string>"),
+        String::from("words_quoted") => Expression::builtin("words_quoted", words_quoted, "split a string into words,quoted as one", "<string>"),
         String::from("lines") => Expression::builtin("lines", lines, "split a string into lines", "<string>"),
         String::from("paragraphs") => Expression::builtin("paragraphs", paragraphs, "split a string into paragraphs", "<string>"),
         String::from("concat") => Expression::builtin("concat", concat, "concat strings", "<string>..."),
@@ -320,6 +322,25 @@ fn words(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErr
         .split_whitespace()
         .map(|word| Expression::String(word.to_string()))
         .collect::<Vec<Expression>>();
+    Ok(Expression::from(words))
+}
+
+fn words_quoted(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
+    check_exact_args_len("words_quoted", args, 1)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?)?;
+
+    // 优化后的正则表达式
+    let re = Regex::new(r#""((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+)"#).unwrap();
+    let words = re
+        .captures_iter(&text)
+        .filter_map(|cap| {
+            cap.get(1)
+                .or_else(|| cap.get(2))
+                .or_else(|| cap.get(3))
+                .map(|m| Expression::String(m.as_str().to_string()))
+        })
+        .collect::<Vec<Expression>>();
+
     Ok(Expression::from(words))
 }
 

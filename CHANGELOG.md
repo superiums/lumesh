@@ -4,6 +4,7 @@
 - fix `::` token in slice
 - add `String.words_quoted`
 - add fish2csv script to prepare completion data
+- add support: param completion
 
 ## [0.8.7]
 - add `IS_CFM` var

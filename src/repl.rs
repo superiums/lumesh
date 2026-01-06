@@ -483,92 +483,21 @@ impl LumeHelper {
                 0
             };
 
-            let matching_entries =
+            let (mut candidates, trig_file) =
                 self.completion_db
                     .get_completions_for_context(command, args, current_token);
 
-            let mut candidates = Vec::new();
-
+            dbg!(&command, &args, &current_token, &start, &candidates.len());
             // dbg!(
-            //     &tokens,
-            //     &command,
+            //     &matching_entries,
+            //     &matching_entries.len(),
             //     &current_token,
-            //     &start,
-            //     &matching_entries.len()
+            //     &args
             // );
-            dbg!(
-                &matching_entries,
-                &matching_entries.len(),
-                &current_token,
-                &args
-            );
 
-            let prompt_type = match current_token.starts_with("-") {
-                true => match current_token.starts_with("--") {
-                    false => 1,
-                    true => 2,
-                },
-                _ => 3,
-            };
-
-            for entry in matching_entries {
-                // Generate completion candidates based on entry type
-                match prompt_type {
-                    2 => {
-                        if let Some(ref long_opt) = entry.long_opt {
-                            if current_token.len() == 2 || long_opt.starts_with(&current_token[2..])
-                            {
-                                candidates.push(Pair {
-                                    display: format!("--{}", long_opt),
-                                    replacement: format!("--{}", long_opt),
-                                });
-                            }
-                        }
-                    }
-
-                    1 => {
-                        if let Some(ref short_opt) = entry.short_opt {
-                            candidates.push(Pair {
-                                display: format!("-{}", short_opt),
-                                replacement: format!("-{}", short_opt),
-                            });
-                            // for ch in short_opt.chars() {
-                            //     candidates.push(Pair {
-                            //         display: format!("-{}", ch),
-                            //         replacement: format!("-{}", ch),
-                            //     });
-                            // }
-                        }
-                    }
-
-                    // Handle special argument types (@F, @D)
-                    3 => {
-                        for arg in &entry.args {
-                            match arg.as_str() {
-                                "@F" => {
-                                    // Delegate to file completion
-                                    return self.completer.complete(line, pos, ctx);
-                                }
-                                "@D" => {
-                                    // Delegate to directory completion (could be customized)
-                                    return self.completer.complete(line, pos, ctx);
-                                }
-                                _ => {
-                                    // Fixed value completion
-                                    if current_token.is_empty() || arg.starts_with(current_token) {
-                                        candidates.push(Pair {
-                                            display: arg.clone(),
-                                            replacement: arg.clone(),
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    _ => unreachable!(),
-                }
+            if trig_file {
+                return self.completer.complete(line, pos, ctx);
             }
-
             // Sort by priority and then by length
             candidates.sort_by(|a, b| {
                 // This is simplified - you'd need to map back to entries for priority

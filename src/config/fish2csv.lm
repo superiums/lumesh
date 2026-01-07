@@ -3,6 +3,8 @@
 # ======directive=======
 # @n not contains any listed condition
 #    @n apply to empty list, means require at least one arg provided
+# @a any, allows have or not have subcmd.
+# @m multi, allow options to be used multi-times.
 # @D Directory complete
 # @F File complete
 # -----following means as same as fish complete
@@ -11,7 +13,7 @@
 # @x no file and required
 # @k keep
 # ======================
-# 
+#
 # 检查参数
 if len(argv) < 1 {
     print("用法: fish2csv.lm <fish_completion_file> [output_dir]")
@@ -127,7 +129,7 @@ let rp_n = [
                 # r'f' => i += 1;
                 _ => { i += 1; print i ':' part args }
             }}else{
-                i += 1; print '  ' i ':' part 
+                i += 1; print '  ' i ':' part
             }
         }
 
@@ -153,7 +155,7 @@ let rp_n = [
                 Fs.append(deel_file, csv_line)
             }else{
                 Fs.append(output_file, csv_line)
-                
+
             }
 
         }

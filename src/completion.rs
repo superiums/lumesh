@@ -26,8 +26,8 @@ enum MatchType {
     Short,
     Long,
     Argument,
-    LongAndArgument,
-    // ShortAndArgument,
+    ArgumentWithLong,
+    ArgumentWithShort,
     // CondAndShort,
     // CondAndLong,
     // All,
@@ -137,14 +137,10 @@ impl CompletionDatabase {
         args: &[String],
         __current_token: &str,
     ) -> bool {
-        // let require_at_least_one = entry.directives.contains("@a");
-        // if require_at_least_one {
-        //     match args.len() {
-        //         0 => return false,
-        //         1.. => return true,
-        //     }
-        // }
-        let reverse = !entry.directives.iter().any(|f| f == "@n");
+        if entry.directives.iter().any(|f| f == "@a") {
+            return true;
+        }
+        let reverse = entry.directives.iter().any(|f| f == "@n");
         if entry.conditions.is_empty() {
             if reverse {
                 return args.len() > 0;
@@ -154,10 +150,40 @@ impl CompletionDatabase {
         for condition in &entry.conditions {
             // Check if any condition matches the args
             if args.iter().any(|a| condition == a) {
-                return reverse;
+                return !reverse;
             }
         }
         return false;
+    }
+
+    fn check_opt(&self, entry: &CompletionEntry, args: &[String], __current_token: &str) -> bool {
+        let mut need = false;
+        if let Some(short) = entry.short_opt.as_ref() {
+            // allow short args compose like -abc contains -b
+            if args.iter().any(|a| {
+                a.len() > 1
+                    && a.starts_with('-')
+                    && !a[1..].starts_with('-')
+                    && a[1..].contains(short)
+            }) {
+                return true;
+            }
+            need = true;
+        }
+        if let Some(long) = entry.long_opt.as_ref() {
+            if args
+                .iter()
+                .any(|a| a.len() > 2 && a.starts_with("--") && long == &a[2..])
+            {
+                return true;
+            }
+            need = true;
+        }
+        if need {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -177,11 +203,14 @@ impl CompletionDatabase {
                 || entry
                     .long_opt
                     .as_ref()
-                    .unwrap()
-                    .starts_with(&current_token[2..])
+                    .is_some_and(|x| x.starts_with(&current_token[2..]))
             {
                 if self.check_condition(entry, args, current_token) {
-                    return MatchType::Long;
+                    if entry.directives.iter().any(|d| d == "@m")
+                        || !self.check_opt(entry, args, current_token)
+                    {
+                        return MatchType::Long;
+                    }
                 }
             }
             return MatchType::None;
@@ -190,83 +219,138 @@ impl CompletionDatabase {
                 || entry
                     .short_opt
                     .as_ref()
-                    .unwrap()
-                    .starts_with(&current_token[1..])
+                    .is_some_and(|x| x.starts_with(&current_token[1..]))
             {
                 if self.check_condition(entry, args, current_token) {
-                    return MatchType::Short;
+                    if entry.directives.iter().any(|d| d == "@m")
+                        || !self.check_opt(entry, args, current_token)
+                    {
+                        return MatchType::Short;
+                    }
                 }
             }
             return MatchType::None;
             // 只检测正在输入
         } else if !current_token.is_empty() {
-            // 有参数且不以-开始，匹配condition或action
-            // 只有一个参数，有condition则匹配，无condition则action，并带出长短选项
-            // 有多个参数，则检验是否满足长短选项
-            // if args.len() == 1 {
+            // 有参数且不以-开始，则优先匹配action，其次长短选项
             if self.check_condition(entry, args, current_token) {
-                // 无condition则action，并带出长短选项
-                if entry.args.iter().any(|x| x.starts_with(current_token)) {
-                    if entry.long_opt.is_some() {
-                        return MatchType::LongAndArgument; //长短皆可，默认？选择？
-                    } else {
+                // 如果满足长短选项，则只匹配argument；如未满足，则匹配argument后携带长短选项
+                if self.check_opt(entry, args, current_token) {
+                    if entry.args.iter().any(|x| x.starts_with(current_token)) {
                         return MatchType::Argument;
                     }
+                } else {
+                    // action，并带出长短选项
+                    if entry.args.iter().any(|x| x.starts_with(current_token)) {
+                        if entry.long_opt.is_some() {
+                            return MatchType::ArgumentWithLong; //长短皆可，默认？选择？
+                        } else if entry.short_opt.is_some() {
+                            return MatchType::ArgumentWithShort; //长短皆可，默认？选择？
+                        } else {
+                            return MatchType::Argument;
+                        }
+                    }
                 }
-                // 继续匹配长短选项
-                if entry
-                    .long_opt
-                    .as_ref()
-                    .is_some_and(|x| x.starts_with(current_token))
-                {
-                    return MatchType::Long;
+                // 【扩展匹配】未匹配action则继续匹配长短选项
+                // if entry
+                //     .short_opt
+                //     .as_ref()
+                //     .is_some_and(|x| x.starts_with(current_token))
+                // {
+                //     return MatchType::Short;
+                // }
+                // if entry
+                //     .long_opt
+                //     .as_ref()
+                //     .is_some_and(|x| x.starts_with(current_token))
+                // {
+                //     return MatchType::Long;
+                // }
+            }
+
+            return MatchType::None;
+            // 当前单词为空
+        } else {
+            if self.check_condition(entry, args, current_token) {
+                // 满足长短选项
+                if self.check_opt(entry, args, current_token) {
+                    if entry.directives.iter().any(|d| d == "@F" || d == "@D") {
+                        return MatchType::File;
+                    }
+                    if entry.directives.iter().any(|d| d == "@r") {
+                        return MatchType::Require; //TODO test this
+                    }
+                    // 无特殊指令，显示所有argument
+                    if !entry.args.is_empty() {
+                        return MatchType::Argument;
+                    }
+                } else {
+                    //【扩展匹配】列出所有长短选项
+                    // if entry.short_opt.is_some() {
+                    //     return MatchType::Short;
+                    // } else if entry.long_opt.is_some() {
+                    //     return MatchType::Long;
+                    // } else if !entry.args.is_empty() {
+                    //     return MatchType::Argument;
+                    // }
                 }
+            }
+        }
+        MatchType::None
+    }
+    /**
+     * match more, fuzzy
+     */
+    fn matches_more(
+        &self,
+        entry: &CompletionEntry,
+        args: &[String],
+        current_token: &str,
+    ) -> MatchType {
+        if !current_token.is_empty() && !current_token.starts_with("-") {
+            // 有参数且不以-开始，则优先匹配action，其次长短选项
+            if self.check_condition(entry, args, current_token) {
+                // 【扩展匹配】未匹配action则继续匹配长短选项
                 if entry
                     .short_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(current_token))
                 {
-                    return MatchType::Short;
+                    if entry.directives.iter().any(|d| d == "@m")
+                        || !self.check_opt(entry, args, current_token)
+                    {
+                        return MatchType::Short;
+                    }
+                }
+                if entry
+                    .long_opt
+                    .as_ref()
+                    .is_some_and(|x| x.starts_with(current_token))
+                {
+                    if entry.directives.iter().any(|d| d == "@m")
+                        || !self.check_opt(entry, args, current_token)
+                    {
+                        return MatchType::Long;
+                    }
                 }
             }
-            // } else {
-            //     // args >1 , 只匹配argument参数，但需要检验长短选项
-            //     if entry
-            //         .long_opt
-            //         .as_ref()
-            //         .is_some_and(|x| args.iter().any(|a| a == &format!("--{}", x)))
-            //     {
-            //         if entry.args.iter().any(|x| x.starts_with(current_token)) {
-            //             return MatchType::LongAndArgument;
-            //         }
-            //     }
-            //     if entry
-            //         .short_opt
-            //         .as_ref()
-            //         .is_some_and(|x| args.iter().any(|a| a == &format!("-{}", x)))
-            //     {
-            //         if entry.args.iter().any(|x| x.starts_with(current_token)) {
-            //             return MatchType::ShortAndArgument;
-            //         }
-            //     }
-            // }
+
             return MatchType::None;
             // 当前单词为空
         } else {
             if self.check_condition(entry, args, current_token) {
-                if entry.directives.iter().any(|d| d == "@F" || d == "@D") {
-                    return MatchType::File;
-                }
-                if !entry.directives.iter().any(|d| d == "@r") {
-                    if entry.short_opt.is_some() {
-                        return MatchType::Short;
-                    } else if entry.long_opt.is_some() {
-                        return MatchType::Long;
-                    } else if !entry.args.is_empty() {
-                        return MatchType::Argument;
+                // 不满足长短选项
+                if !self.check_opt(entry, args, current_token) {
+                    // 【扩展匹配】列出所有长短选项
+                    if entry.directives.iter().any(|d| d == "@m")
+                        || !self.check_opt(entry, args, current_token)
+                    {
+                        if entry.short_opt.is_some() {
+                            return MatchType::Short;
+                        } else if entry.long_opt.is_some() {
+                            return MatchType::Long;
+                        }
                     }
-                } else {
-                    return MatchType::Require; //TODO test this
                 }
             }
         }
@@ -279,14 +363,52 @@ impl CompletionDatabase {
         args: &[String],
         current_token: &str,
     ) -> (Vec<Pair>, bool) {
+        let (v, b) = self.get_completions_once(command, args, current_token, false);
+        if v.is_empty() {
+            return self.get_completions_once(command, args, current_token, true);
+        }
+        return (v, b);
+    }
+    pub fn get_completions_once(
+        &self,
+        command: &str,
+        args: &[String],
+        current_token: &str,
+        match_more: bool,
+    ) -> (Vec<Pair>, bool) {
         let mut v = Vec::<Pair>::new();
+
+        // let mut contents = vec![format!("{},{:?},{}", command, args, current_token)];
+        // if let Some(indices) = self.command_index.get(command) {
+        //     for idx in indices {
+        //         let entry = &self.entries[*idx];
+        //         contents.push(format!(
+        //             "{},{:#?},{:#?},{:#?},{},{}",
+        //             idx,
+        //             entry.conditions,
+        //             entry.short_opt,
+        //             entry.long_opt,
+        //             &self.check_condition(entry, args, current_token),
+        //             &self.check_opt(entry, args, current_token)
+        //         ));
+        //     }
+        //     let _ = std::fs::write("/tmp/debug.csv", contents.join("\n"))
+        //         .map_err(|x| println!("{}", x));
+        // }
+
         if let Some(indices) = self.command_index.get(command) {
             for idx in indices {
                 let entry = &self.entries[*idx];
-                match self.matches_context(entry, args, current_token) {
+                // dbg!(&entry, self.check_condition(entry, args, current_token));
+                let matched = if match_more {
+                    self.matches_more(entry, args, current_token)
+                } else {
+                    self.matches_context(entry, args, current_token)
+                };
+                match matched {
                     MatchType::Short => v.push(Pair {
                         display: format!(
-                            "-{} :{}",
+                            "-{:<18} :{}",
                             entry.short_opt.as_ref().unwrap(),
                             entry.description
                         ),
@@ -294,7 +416,7 @@ impl CompletionDatabase {
                     }),
                     MatchType::Long => v.push(Pair {
                         display: format!(
-                            "--{} :{}",
+                            "--{:<18} :{}",
                             entry.long_opt.as_ref().unwrap(),
                             entry.description
                         ),
@@ -318,7 +440,7 @@ impl CompletionDatabase {
                         for a in entry.args.iter() {
                             if a.starts_with(current_token) {
                                 v.push(Pair {
-                                    display: format!("{} :{}", a, entry.description),
+                                    display: format!("{:<20} :{}", a, entry.description),
                                     // display: a.clone(),
                                     replacement: a.clone(),
                                 })
@@ -351,13 +473,16 @@ impl CompletionDatabase {
                     //         })
                     //     }
                     // }
-                    MatchType::LongAndArgument => {
-                        // arg需要过滤，opt不一定存在，需要检测
+                    MatchType::ArgumentWithLong => {
+                        // arg需要过滤
                         for x in entry.args.iter() {
                             if x.starts_with(current_token) {
                                 if let Some(long) = entry.long_opt.clone() {
                                     v.push(Pair {
-                                        display: format!("--{} {} :{}", long, x, entry.description),
+                                        display: format!(
+                                            "--{:<18} {:<15} :{}",
+                                            long, x, entry.description
+                                        ),
                                         replacement: format!("--{} {}", long, x),
                                     })
                                 }
@@ -366,25 +491,25 @@ impl CompletionDatabase {
 
                         // v.push()
                     }
-                    // MatchType::ShortAndArgument => {
-                    //     // arg需要过滤，opt不一定存在，需要检测
-                    //     for x in entry.args.iter() {
-                    //         if x.starts_with(current_token) {
-                    //             if let Some(short) = entry.short_opt.clone() {
-                    //                 v.push(Pair {
-                    //                     display: format!("-{} {}", short, x),
-                    //                     replacement: format!("-{} {}", short, x),
-                    //                 })
-                    //             }
-                    //         }
-                    //     }
+                    MatchType::ArgumentWithShort => {
+                        // arg需要过滤
+                        for x in entry.args.iter() {
+                            if x.starts_with(current_token) {
+                                if let Some(short) = entry.short_opt.clone() {
+                                    v.push(Pair {
+                                        display: format!("-{:<19} {}", short, x),
+                                        replacement: format!("-{} {}", short, x),
+                                    })
+                                }
+                            }
+                        }
 
-                    //     // v.push()
-                    // }
+                        // v.push()
+                    }
                     MatchType::File => return (v, true),
                     MatchType::Require => {
                         v.push(Pair {
-                            display: String::from("_ :param required"),
+                            display: String::from("_                    :param required"),
                             replacement: String::from("_"),
                         });
                     }

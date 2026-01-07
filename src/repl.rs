@@ -470,7 +470,7 @@ impl LumeHelper {
         let input = &line[..pos];
         let tokens: Vec<String> = input.split_whitespace().map(|s| s.to_string()).collect();
 
-        if let Some((command, args)) = tokens.split_first() {
+        if let Some((command, tokens)) = tokens.split_first() {
             let current_token = if let Some(last_space) = input.rfind(' ') {
                 &input[last_space + 1..]
             } else {
@@ -483,11 +483,17 @@ impl LumeHelper {
                 0
             };
 
+            let args = if current_token.is_empty() {
+                tokens
+            } else {
+                tokens[..tokens.len() - 1].as_ref()
+            };
+
             let (mut candidates, trig_file) =
                 self.completion_db
                     .get_completions_for_context(command, args, current_token);
 
-            dbg!(&command, &args, &current_token, &start, &candidates.len());
+            // dbg!(&command, &args, &current_token, &start, &candidates.len());
             // dbg!(
             //     &matching_entries,
             //     &matching_entries.len(),
@@ -499,10 +505,7 @@ impl LumeHelper {
                 return self.completer.complete(line, pos, ctx);
             }
             // Sort by priority and then by length
-            candidates.sort_by(|a, b| {
-                // This is simplified - you'd need to map back to entries for priority
-                a.display.len().cmp(&b.display.len())
-            });
+            candidates.sort_by(|a, b| a.replacement.cmp(&b.replacement));
 
             return Ok((start, candidates));
         }

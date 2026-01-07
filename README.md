@@ -7,6 +7,11 @@ English | [简体中文](README-cn.md)
 [![GitHub Release](https://img.shields.io/github/v/release/superiums/lumesh)]()
 
 
+[Document](https://lumesh.codeberg.page/)
+| [DeepWiki](https://deepwiki.com/superiums/lumesh)
+| [release-page 1](https://codeberg.com/santo/lumesh/releases)
+| [release-page 2](https://github.com/superiums/lumesh/releases)
+
 - Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
 
 
@@ -171,11 +176,6 @@ lumesh script.lm
 
 _Due to fish being unable to complete one million tasks, we recorded its half-task time._
 
-## ⚑ Learning Resources
-
-- [Document](https://lumesh.codeberg.page/)
-- [DeepWiki](https://deepwiki.com/superiums/lumesh)
-
 ## ⚑ Version History
 Recent development has emphasized:
 
@@ -183,9 +183,9 @@ Recent development has emphasized:
 - IFS (Internal Field Separator) mode control for compatibility
 - Enhanced module system with cross-linking between modules
 - Improved error reporting and debugging capabilities
-- CFM (Command First Mode) for daily commands
-- More friendly help info
-
+- CFM (Command First Mode) for daily commands (v0.8.0)
+- More friendly help info (v0.8.5)
+- Params completion from fish (v0.8.8)
 ---
 
 ![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)

@@ -1,9 +1,15 @@
-English | [简体中文](README-cn.md)
+[English](README.md) | 简体中文
 
 # Lumesh
 ![GitHub License](https://img.shields.io/github/license/superiums/lumesh)
 ![GitHub Repo stars](https://img.shields.io/github/stars/superiums/lumesh)
 ![GitHub Release](https://img.shields.io/github/v/release/superiums/lumesh)
+
+
+[文档](https://lumesh.codeberg.page/)
+| [DeepWiki](https://deepwiki.com/superiums/lumesh)
+| [发布页 1](https://codeberg.com/santo/lumesh/releases)
+| [发布页 2](https://github.com/superiums/lumesh/releases)
 
 
 - 开发现在在 Codeberg [https://codeberg.org/santo/lumesh] 继续进行， GitHub [https://github.com/superiums/lumesh] 仓库将成为镜像。
@@ -178,11 +184,6 @@ lumesh script.lm
 
 _由于fish无法完成一百万次的任务，我们记录了其一半任务的时间_
 
-## ⚑ 学习资源
-
-- [文档](https://lumesh.codeberg.page/zh-cn)
-- [DeepWiki](https://deepwiki.com/superiums/lumesh)
-
 ## ⚑ 版本历程
 最近的开发重点：
 
@@ -190,9 +191,9 @@ _由于fish无法完成一百万次的任务，我们记录了其一半任务的
 - 兼容性的IFS（内部字段分隔符）模式控制
 - 增强的模块系统，模块之间的交叉链接
 - 改进的错误报告和调试能力
-- CFM (命令优先模式) 方便日常命令行使用场景
-- 更友好的帮助信息
-
+- CFM (命令优先模式) 方便日常命令行使用场景 (v0.8.0)
+- 更友好的帮助信息 (v0.8.5)
+- 来自fish的命令参数自动完成 (v0.8.8)
 ---
 
 ![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)

@@ -26,7 +26,7 @@ use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
     PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
 };
-use crate::completion::CompletionDatabase;
+use crate::completion::ParamCompleter;
 use crate::expression::alias::get_alias_tips;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::modules::get_builtin_tips;
@@ -119,8 +119,21 @@ pub fn run_repl(env: &mut Environment) {
         _ => theme,
     };
 
+    // complition
+    let completion_dir = match env.get("LUME_COMPLETION_DIR") {
+        Some(Expression::String(c)) => c,
+        _ => String::from("/usr/share/lumesh/completion"),
+    };
+    env.undefine("LUME_COMPLETION_DIR");
+
     // 使用 Arc<Mutex> 保护编辑器
-    let rl = Arc::new(Mutex::new(new_editor(ai_config, vi_mode, theme_merged)));
+    let cfg = EditorConfig {
+        ai_config,
+        vi_mode,
+        theme: theme_merged,
+        completion_dir,
+    };
+    let rl = Arc::new(Mutex::new(new_editor(cfg)));
 
     match rl.lock().unwrap().load_history(&history_file) {
         Ok(_) => {}
@@ -295,18 +308,20 @@ struct LumeHelper {
     highlighter: Arc<SyntaxHighlighter>,
     ai_client: Option<Arc<MockAIClient>>,
     cmds: HashSet<String>,
-    completion_db: Arc<CompletionDatabase>,
+    completion_db: Arc<ParamCompleter>,
 }
 
-fn new_editor(
+struct EditorConfig {
     ai_config: Option<Expression>,
     vi_mode: bool,
     theme: HashMap<String, String>,
-) -> Editor<LumeHelper, FileHistory> {
+    completion_dir: String,
+}
+fn new_editor(cfg: EditorConfig) -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
         .completion_type(CompletionType::List)
-        .edit_mode(if vi_mode {
+        .edit_mode(if cfg.vi_mode {
             EditMode::Vi
         } else {
             EditMode::Emacs
@@ -316,7 +331,7 @@ fn new_editor(
         .build();
 
     let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());
-    let ai = ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
+    let ai = cfg.ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
     // 预定义命令列表（带权重排序）
     // TODO add builtin cmds
     let mut cmds: HashSet<String> = hash_set! {
@@ -343,16 +358,13 @@ fn new_editor(
     cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());
     cmds.extend(get_alias_tips());
 
-    // Load completion database
-    let completion_db = Arc::new(CompletionDatabase::load_completion_database());
-
     let helper = LumeHelper {
         completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
-        highlighter: Arc::new(SyntaxHighlighter::new(theme)),
+        highlighter: Arc::new(SyntaxHighlighter::new(cfg.theme)),
         ai_client: ai,
         cmds,
-        completion_db,
+        completion_db: Arc::new(ParamCompleter::new(cfg.completion_dir)),
     };
     rl.set_helper(Some(helper));
     rl

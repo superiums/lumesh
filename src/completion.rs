@@ -1,7 +1,28 @@
-use std::collections::HashMap;
 use std::fs::read_to_string;
+use std::path::Path;
+use std::sync::RwLock;
+use std::{collections::HashMap, sync::Arc};
 
+use lazy_static::lazy_static;
 use rustyline::completion::Pair;
+
+use crate::{Expression, RuntimeError};
+
+pub struct CompletionDatabase {
+    entries: HashMap<String, Arc<Vec<CompletionEntry>>>,
+    // base_dir: String,
+}
+impl CompletionDatabase {
+    pub fn new() -> Self {
+        Self {
+            entries: HashMap::new(),
+        }
+    }
+}
+
+lazy_static! {
+    static ref COMPLETION_DB: RwLock<CompletionDatabase> = RwLock::new(CompletionDatabase::new());
+}
 
 #[derive(Debug, Clone)]
 pub struct CompletionEntry {
@@ -16,10 +37,9 @@ pub struct CompletionEntry {
 }
 
 #[derive(Debug, Clone)]
-pub struct CompletionDatabase {
-    entries: Vec<CompletionEntry>,
-    // Index for faster lookup: command -> entries
-    command_index: HashMap<String, Vec<usize>>,
+pub struct ParamCompleter {
+    // entries: Rc<HashMap<String, Vec<CompletionEntry>>>,
+    base_dirs: Vec<String>,
 }
 enum MatchType {
     // Condition,
@@ -36,99 +56,108 @@ enum MatchType {
     None,
 }
 
-impl CompletionDatabase {
-    pub fn load_completion_database() -> CompletionDatabase {
-        // Load from file or embed the CSV data
-        let path = "/tmp/completions.csv";
-        let csv_data = read_to_string(&path).unwrap_or_else(|e| {
-            eprintln!("Read file failed:\n  {}", e);
-            String::from("")
-        }); // Or load from config dir
-        let db = CompletionDatabase::from_csv(&csv_data).unwrap_or_else(|_| {
-            eprintln!("Warning: Failed to load completion database");
-            CompletionDatabase {
-                entries: Vec::new(),
-                command_index: HashMap::new(),
-            }
-        });
-        // dbg!(&db);
-        db
+fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
+    let mut entries = Vec::new();
+
+    // let mut rdr = csv::ReaderBuilder::new()
+    //     .has_headers(true)
+    //     .delimiter(',') // 将字符串转换为字节并取第一个字符
+    //     .from_reader(csv_content.as_bytes());
+
+    for (line_num, line) in csv_content.lines().enumerate() {
+        if line_num == 0 || line.trim().is_empty() {
+            continue;
+        } // Skip header
+
+        let parts: Vec<&str> = line.split(',').collect();
+        // if parts.len() != 7 {
+        //     eprintln!("Warning: Invalid CSV line {}: {}", line_num, line);
+        //     continue;
+        // }
+
+        let entry = CompletionEntry {
+            command: parts[0].trim().to_string(),
+            conditions: if parts[1].trim().is_empty() {
+                Vec::new()
+            } else {
+                parts[1]
+                    .trim()
+                    .split_whitespace()
+                    .map(|s| s.to_string())
+                    .collect()
+            },
+            short_opt: if parts[2].trim().is_empty() {
+                None
+            } else {
+                Some(parts[2].trim().to_string())
+            },
+            long_opt: if parts[3].trim().is_empty() {
+                None
+            } else {
+                Some(parts[3].trim().to_string())
+            },
+            args: if parts[4].trim().is_empty() {
+                Vec::new()
+            } else {
+                parts[4]
+                    .trim()
+                    .split_whitespace()
+                    .map(|s| s.to_string())
+                    .collect()
+            },
+            directives: if parts[5].trim().is_empty() {
+                Vec::new()
+            } else {
+                parts[5]
+                    .trim()
+                    .split_whitespace()
+                    .map(|s| s.to_string())
+                    .collect()
+            },
+            priority: parts[6].trim().parse().unwrap_or(0),
+            description: parts[7].trim().to_string(),
+        };
+
+        // let idx = entries.len();
+        // command_index
+        //     .entry(entry.command.clone())
+        //     .or_insert_with(Vec::new)
+        //     .push(idx);
+        entries.push(entry);
     }
-    pub fn from_csv(csv_content: &str) -> Result<Self, Box<dyn std::error::Error>> {
-        let mut entries = Vec::new();
-        let mut command_index: HashMap<String, Vec<usize>> = HashMap::new();
 
-        // let mut rdr = csv::ReaderBuilder::new()
-        //     .has_headers(true)
-        //     .delimiter(',') // 将字符串转换为字节并取第一个字符
-        //     .from_reader(csv_content.as_bytes());
+    Ok(entries)
+}
 
-        for (line_num, line) in csv_content.lines().enumerate() {
-            if line_num == 0 || line.trim().is_empty() {
-                continue;
-            } // Skip header
-
-            let parts: Vec<&str> = line.split(',').collect();
-            // if parts.len() != 7 {
-            //     eprintln!("Warning: Invalid CSV line {}: {}", line_num, line);
-            //     continue;
-            // }
-
-            let entry = CompletionEntry {
-                command: parts[0].trim().to_string(),
-                conditions: if parts[1].trim().is_empty() {
-                    Vec::new()
-                } else {
-                    parts[1]
-                        .trim()
-                        .split_whitespace()
-                        .map(|s| s.to_string())
-                        .collect()
-                },
-                short_opt: if parts[2].trim().is_empty() {
-                    None
-                } else {
-                    Some(parts[2].trim().to_string())
-                },
-                long_opt: if parts[3].trim().is_empty() {
-                    None
-                } else {
-                    Some(parts[3].trim().to_string())
-                },
-                args: if parts[4].trim().is_empty() {
-                    Vec::new()
-                } else {
-                    parts[4]
-                        .trim()
-                        .split_whitespace()
-                        .map(|s| s.to_string())
-                        .collect()
-                },
-                directives: if parts[5].trim().is_empty() {
-                    Vec::new()
-                } else {
-                    parts[5]
-                        .trim()
-                        .split_whitespace()
-                        .map(|s| s.to_string())
-                        .collect()
-                },
-                priority: parts[6].trim().parse().unwrap_or(0),
-                description: parts[7].trim().to_string(),
-            };
-
-            let idx = entries.len();
-            command_index
-                .entry(entry.command.clone())
-                .or_insert_with(Vec::new)
-                .push(idx);
-            entries.push(entry);
+impl ParamCompleter {
+    pub fn new(base_dir: String) -> Self {
+        let base_dirs = vec![
+            String::from("/usr/share/lumesh/vendor_completions.d"),
+            String::from("/usr/share/lumesh/completions"),
+            base_dir,
+        ];
+        Self {
+            // entries: HashMap::new(),
+            base_dirs,
         }
+    }
 
-        Ok(CompletionDatabase {
-            entries,
-            command_index,
-        })
+    fn load_entry(&self, cmd: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
+        // Load from file or embed the CSV data
+        for dir in &self.base_dirs {
+            let path = Path::new(dir).join(format!("{}.csv", cmd));
+            if path.exists() {
+                let csv_data = read_to_string(path).map_err(|e| {
+                    RuntimeError::from_io_error(e, "read file".into(), Expression::None, 0)
+                })?;
+                return from_csv(&csv_data);
+            }
+        }
+        Err(RuntimeError::common(
+            "no completion".into(),
+            Expression::None,
+            0,
+        ))
     }
 
     fn check_condition(
@@ -357,6 +386,60 @@ impl CompletionDatabase {
         MatchType::None
     }
 
+    // // 添加补全条目
+    // pub fn add_completion(key: String, entry: CompletionEntry) {
+    //     if let Ok(mut db) = COMPLETION_DB.write() {
+    //         db.entries.entry(key).or_default().push(entry);
+    //     }
+    // }
+
+    // // 获取补全条目
+    // pub fn get_completions(key: &str) -> Vec<CompletionEntry> {
+    //     COMPLETION_DB.read()
+    //         .ok()
+    //         .and_then(|db| db.entries.get(key).cloned())
+    //         .unwrap_or_default()
+    // }
+
+    fn get_entry_for_command(&self, command: &str) -> Option<Arc<Vec<CompletionEntry>>> {
+        // 先尝试读锁
+        if let Ok(db) = COMPLETION_DB.read() {
+            if let Some(entries) = db.entries.get(command) {
+                return Some(Arc::clone(entries));
+            }
+        }
+
+        // 如果不存在，获取写锁并插入
+        if let Ok(mut db) = COMPLETION_DB.write() {
+            // 再次检查
+            if let Some(entries) = db.entries.get(command) {
+                return Some(Arc::clone(entries));
+            }
+
+            // 插入新条目（用 Arc 包装）
+            let entry = self.load_entry(command).unwrap_or_default();
+            let arc_entry = Arc::new(entry);
+            db.entries
+                .insert(command.to_string(), Arc::clone(&arc_entry));
+            Some(arc_entry)
+        } else {
+            None
+        }
+    }
+
+    // fn get_entry_for_command(&self, command: &str) -> Option<&Vec<CompletionEntry>> {
+    //     let entry = COMPLETION_DB.
+    //         .entries
+    //         .entry(command.to_string())
+    //         .or_insert_with(|| {
+    //             // 如果不存在加载条目并插入,出错（如文件不存在，则用空vec占位，避免下次继续读取文件
+    //             load_entry(&self.base_dir, command).unwrap_or_default()
+    //         });
+    //     Some(entry)
+    // }
+    /**
+     * args should exclude cmd and the current-token
+     */
     pub fn get_completions_for_context(
         &self,
         command: &str,
@@ -369,7 +452,7 @@ impl CompletionDatabase {
         }
         return (v, b);
     }
-    pub fn get_completions_once(
+    fn get_completions_once(
         &self,
         command: &str,
         args: &[String],
@@ -395,10 +478,8 @@ impl CompletionDatabase {
         //     let _ = std::fs::write("/tmp/debug.csv", contents.join("\n"))
         //         .map_err(|x| println!("{}", x));
         // }
-
-        if let Some(indices) = self.command_index.get(command) {
-            for idx in indices {
-                let entry = &self.entries[*idx];
+        if let Some(entries) = self.get_entry_for_command(command) {
+            for entry in entries.as_ref() {
                 // dbg!(&entry, self.check_condition(entry, args, current_token));
                 let matched = if match_more {
                     self.matches_more(entry, args, current_token)
@@ -516,9 +597,7 @@ impl CompletionDatabase {
                     _ => {}
                 };
             }
-            (v, false)
-        } else {
-            (Vec::new(), false)
         }
+        (v, false)
     }
 }

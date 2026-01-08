@@ -4,7 +4,21 @@
 - fix `::` token in slice
 - add `String.words_quoted`
 - add fish2csv script to prepare completion data
-- add support: param completion
+- add support: **param completion**
+- optimize cmd and param completion trigger
+now support cmd part in pipe, logical and/or, subcomand in `()`
+
+- change ai trigger to **'leading space'**
+- add `LUME_COMPLETION_DIR` to add a custom completion dir.
+default includes:
+  > Linux
+  + /usr/share/lumesh/vendor_completions.d
+  + /usr/share/lumesh/completions
+  
+  > Windows
+  + C:\ProgramData\lumesh\vendor_completions,
+  + C:\ProgramData\lumesh\completions,
+    
 
 ## [0.8.7]
 - add `IS_CFM` var

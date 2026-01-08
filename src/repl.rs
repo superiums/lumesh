@@ -24,7 +24,7 @@ use std::path::PathBuf;
 
 use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
-    PATH_COMMANDS, should_trigger_cmd_completion, should_trigger_path_completion,
+    LumeCompletionType, PATH_COMMANDS, detect_completion_type, extract_command_section,
 };
 use crate::completion::ParamCompleter;
 use crate::expression::alias::get_alias_tips;
@@ -390,10 +390,10 @@ impl Completer for LumeHelper {
         pos: usize,
         ctx: &rustyline::Context<'_>,
     ) -> Result<(usize, Vec<Self::Candidate>), ReadlineError> {
-        match self.detect_completion_type(line, pos) {
+        match detect_completion_type(line, pos, self.ai_client.is_some()) {
             LumeCompletionType::Path => self.path_completion(line, pos, ctx),
             LumeCompletionType::Command => self.cmd_completion(line, pos),
-            LumeCompletionType::Argument => self.argument_completion(line, pos, ctx),
+            LumeCompletionType::Param => self.param_completion(line, pos, ctx),
             LumeCompletionType::AI => self.ai_completion(line, pos),
             LumeCompletionType::None => Ok((pos, Vec::new())),
         }
@@ -409,28 +409,28 @@ impl Completer for LumeHelper {
 // 扩展实现
 impl LumeHelper {
     /// 新增补全类型检测
-    fn detect_completion_type(&self, line: &str, pos: usize) -> LumeCompletionType {
-        if should_trigger_path_completion(line, pos) {
-            LumeCompletionType::Path
-        } else if should_trigger_cmd_completion(line, pos) {
-            LumeCompletionType::Command
-        } else if self.should_trigger_argument_completion(line, pos) {
-            // dbg!("--should trigger arg---");
-            LumeCompletionType::Argument
-        } else if self.should_trigger_ai(line) {
-            LumeCompletionType::AI
-        } else {
-            LumeCompletionType::None
-        }
-    }
+    // fn detect_completion_type(&self, line: &str, pos: usize) -> LumeCompletionType {
+    //     if should_trigger_path_completion(line, pos) {
+    //         LumeCompletionType::Path
+    //     } else if should_trigger_cmd_completion(line, pos) {
+    //         LumeCompletionType::Command
+    //     } else if self.should_trigger_argument_completion(line, pos) {
+    //         // dbg!("--should trigger arg---");
+    //         LumeCompletionType::Argument
+    //     } else if self.should_trigger_ai(line) {
+    //         LumeCompletionType::AI
+    //     } else {
+    //         LumeCompletionType::None
+    //     }
+    // }
 
-    fn should_trigger_argument_completion(&self, line: &str, pos: usize) -> bool {
-        let input = &line[..pos];
-        let tokens: Vec<&str> = input.split_whitespace().collect();
-        // dbg!("--should trigger?", &input, &tokens);
-        // Trigger if we have a command and are not at the first position
-        tokens.len() > 0 //&& !should_trigger_path_completion(line, pos)
-    }
+    // fn should_trigger_argument_completion(&self, line: &str, pos: usize) -> bool {
+    //     let input = &line[..pos];
+    //     let tokens: Vec<&str> = input.split_whitespace().collect();
+    //     // dbg!("--should trigger?", &input, &tokens);
+    //     // Trigger if we have a command and are not at the first position
+    //     tokens.len() > 0 //&& !should_trigger_path_completion(line, pos)
+    // }
     /// 路径补全逻辑
     fn path_completion(
         &self,
@@ -445,8 +445,15 @@ impl LumeHelper {
     fn cmd_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
         // 计算起始位置
         let input = &line[..pos];
-        let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);
-        let prefix = &input[start..];
+        // let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);
+        // keep same as extract_command_section;
+        let start = input
+            .char_indices()
+            .rev()
+            .find(|(_, c)| matches!(c, ';' | '|' | '&' | '\n' | '('))
+            .map(|(i, _)| i + 1)
+            .unwrap_or(0);
+        let prefix = &input[start..].trim_start();
         // dbg!(&input, &start, &prefix);
         // 过滤以prefix开头的命令
         let cpl_color = self
@@ -473,23 +480,27 @@ impl LumeHelper {
     }
 
     /// 参数补全逻辑
-    fn argument_completion(
+    fn param_completion(
         &self,
         line: &str,
         pos: usize,
         ctx: &rustyline::Context<'_>,
     ) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        let input = &line[..pos];
-        let tokens: Vec<String> = input.split_whitespace().map(|s| s.to_string()).collect();
+        let cmd_section = extract_command_section(&line[..pos]).trim_start();
+
+        let tokens = cmd_section
+            .split_whitespace()
+            .map(|s| s)
+            .collect::<Vec<_>>();
 
         if let Some((command, tokens)) = tokens.split_first() {
-            let current_token = if let Some(last_space) = input.rfind(' ') {
-                &input[last_space + 1..]
+            let current_token = if let Some(last_space) = cmd_section.rfind(' ') {
+                &cmd_section[last_space + 1..]
             } else {
                 ""
             };
 
-            let start = if let Some(last_space) = input.rfind(' ') {
+            let start = if let Some(last_space) = cmd_section.rfind(' ') {
                 last_space + 1
             } else {
                 0
@@ -548,20 +559,10 @@ impl LumeHelper {
         Ok((pos, vec![pair]))
     }
 
-    /// AI补全触发条件
-    fn should_trigger_ai(&self, line: &str) -> bool {
-        self.ai_client.is_some() && line.split_whitespace().count() > 1
-    }
-}
-
-// 扩展补全类型枚举
-#[derive(Debug, PartialEq)]
-enum LumeCompletionType {
-    Path,
-    Command,
-    Argument,
-    AI,
-    None,
+    // AI补全触发条件
+    // fn should_trigger_ai(&self, line: &str) -> bool {
+    //     self.ai_client.is_some() && line.split_whitespace().count() > 1
+    // }
 }
 
 impl Validator for LumeHelper {

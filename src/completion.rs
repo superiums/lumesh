@@ -131,9 +131,16 @@ fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
 
 impl ParamCompleter {
     pub fn new(base_dir: String) -> Self {
+        #[cfg(unix)]
         let base_dirs = vec![
             String::from("/usr/share/lumesh/vendor_completions.d"),
             String::from("/usr/share/lumesh/completions"),
+            base_dir,
+        ];
+        #[cfg(windows)]
+        let base_dirs = vec![
+            String::from("C:\\ProgramData\\lumesh\\vendor_completions"),
+            String::from("C:\\ProgramData\\lumesh\\completions"),
             base_dir,
         ];
         Self {
@@ -163,7 +170,7 @@ impl ParamCompleter {
     fn check_condition(
         &self,
         entry: &CompletionEntry,
-        args: &[String],
+        args: &[&str],
         __current_token: &str,
     ) -> bool {
         if entry.directives.iter().any(|f| f == "@a") {
@@ -185,7 +192,7 @@ impl ParamCompleter {
         return false;
     }
 
-    fn check_opt(&self, entry: &CompletionEntry, args: &[String], __current_token: &str) -> bool {
+    fn check_opt(&self, entry: &CompletionEntry, args: &[&str], __current_token: &str) -> bool {
         let mut need = false;
         if let Some(short) = entry.short_opt.as_ref() {
             // allow short args compose like -abc contains -b
@@ -222,7 +229,7 @@ impl ParamCompleter {
     fn matches_context(
         &self,
         entry: &CompletionEntry,
-        args: &[String],
+        args: &[&str],
         current_token: &str,
     ) -> MatchType {
         // check condition as subcommand
@@ -333,7 +340,7 @@ impl ParamCompleter {
     fn matches_more(
         &self,
         entry: &CompletionEntry,
-        args: &[String],
+        args: &[&str],
         current_token: &str,
     ) -> MatchType {
         if !current_token.is_empty() && !current_token.starts_with("-") {
@@ -443,7 +450,7 @@ impl ParamCompleter {
     pub fn get_completions_for_context(
         &self,
         command: &str,
-        args: &[String],
+        args: &[&str],
         current_token: &str,
     ) -> (Vec<Pair>, bool) {
         let (v, b) = self.get_completions_once(command, args, current_token, false);
@@ -455,7 +462,7 @@ impl ParamCompleter {
     fn get_completions_once(
         &self,
         command: &str,
-        args: &[String],
+        args: &[&str],
         current_token: &str,
         match_more: bool,
     ) -> (Vec<Pair>, bool) {

@@ -17,19 +17,16 @@ use rustyline::{
 };
 use rustyline::{Cmd, EditMode, Modifiers, Movement};
 
-use common_macros::hash_set;
 use std::borrow::Cow;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::path::PathBuf;
 
 use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
-    LumeCompletionType, PATH_COMMANDS, detect_completion_type, extract_command_section,
+    LumeCompletionType, collect_command_with_prefix, detect_completion_type, is_valid_command,
 };
 use crate::completion::ParamCompleter;
-use crate::expression::alias::get_alias_tips;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
-use crate::modules::get_builtin_tips;
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
 use crate::{Expression, childman};
 
@@ -303,12 +300,11 @@ pub fn run_repl(env: &mut Environment) {
 // 确保 helper 也是线程安全的
 #[derive(Clone)]
 struct LumeHelper {
-    completer: Arc<FilenameCompleter>,
+    file_completer: Arc<FilenameCompleter>,
     hinter: Arc<HistoryHinter>,
     highlighter: Arc<SyntaxHighlighter>,
     ai_client: Option<Arc<MockAIClient>>,
-    cmds: HashSet<String>,
-    completion_db: Arc<ParamCompleter>,
+    param_completer: Arc<ParamCompleter>,
 }
 
 struct EditorConfig {
@@ -332,39 +328,13 @@ fn new_editor(cfg: EditorConfig) -> Editor<LumeHelper, FileHistory> {
 
     let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());
     let ai = cfg.ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
-    // 预定义命令列表（带权重排序）
-    // TODO add builtin cmds
-    let mut cmds: HashSet<String> = hash_set! {
-        "cd ./".into(),
-        "ls -l --color ./".into(),
-        "clear".into(),
-        "rm ".into(),
-        "cp -r".into(),
-        "let ".into(),
-        "fn ".into(),
-        "if ".into(),
-        "else {".into(),
-        "match ".into(),
-        "while (".into(),
-        "for i in ".into(),
-        "loop {\n".into(),
-        "break".into(),
-        "return".into(),
-        "history".into(),
-        "del ".into(),
-        "use ".into(),
-    };
-    cmds.extend(get_builtin_tips());
-    cmds.extend(PATH_COMMANDS.lock().unwrap().iter().cloned());
-    cmds.extend(get_alias_tips());
 
     let helper = LumeHelper {
-        completer: Arc::new(FilenameCompleter::new()),
+        file_completer: Arc::new(FilenameCompleter::new()),
         hinter: Arc::new(HistoryHinter::new()),
         highlighter: Arc::new(SyntaxHighlighter::new(cfg.theme)),
         ai_client: ai,
-        cmds,
-        completion_db: Arc::new(ParamCompleter::new(cfg.completion_dir)),
+        param_completer: Arc::new(ParamCompleter::new(cfg.completion_dir)),
     };
     rl.set_helper(Some(helper));
     rl
@@ -391,11 +361,15 @@ impl Completer for LumeHelper {
         ctx: &rustyline::Context<'_>,
     ) -> Result<(usize, Vec<Self::Candidate>), ReadlineError> {
         match detect_completion_type(line, pos, self.ai_client.is_some()) {
-            LumeCompletionType::Path => self.path_completion(line, pos, ctx),
-            LumeCompletionType::Command => self.cmd_completion(line, pos),
-            LumeCompletionType::Param => self.param_completion(line, pos, ctx),
-            LumeCompletionType::AI => self.ai_completion(line, pos),
-            LumeCompletionType::None => Ok((pos, Vec::new())),
+            (LumeCompletionType::Path, _) => self.file_completer.complete(line, pos, ctx),
+            (LumeCompletionType::Command, section_pos) => {
+                self.cmd_completion(line, pos, section_pos)
+            }
+            (LumeCompletionType::Param, section_pos) => {
+                self.param_completion(line, pos, section_pos, ctx)
+            }
+            (LumeCompletionType::AI, section_pos) => self.ai_completion(line, section_pos),
+            (LumeCompletionType::None, _) => Ok((pos, Vec::new())),
         }
     }
 
@@ -431,29 +405,15 @@ impl LumeHelper {
     //     // Trigger if we have a command and are not at the first position
     //     tokens.len() > 0 //&& !should_trigger_path_completion(line, pos)
     // }
-    /// 路径补全逻辑
-    fn path_completion(
+
+    /// 命令补全逻辑
+    fn cmd_completion(
         &self,
         line: &str,
         pos: usize,
-        ctx: &rustyline::Context<'_>,
+        section_start: usize,
     ) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        self.completer.complete(line, pos, ctx)
-    }
-
-    /// 命令补全逻辑
-    fn cmd_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        // 计算起始位置
-        let input = &line[..pos];
-        // let start = input.rfind(' ').map(|i| i + 1).unwrap_or(0);
-        // keep same as extract_command_section;
-        let start = input
-            .char_indices()
-            .rev()
-            .find(|(_, c)| matches!(c, ';' | '|' | '&' | '\n' | '('))
-            .map(|(i, _)| i + 1)
-            .unwrap_or(0);
-        let prefix = &input[start..].trim_start();
+        let prefix = &line[section_start..pos];
         // dbg!(&input, &start, &prefix);
         // 过滤以prefix开头的命令
         let cpl_color = self
@@ -461,22 +421,20 @@ impl LumeHelper {
             .theme
             .get("completion_cmd")
             .map_or(DEFAULT, |c| c.as_str());
-        let mut candidates: Vec<Pair> = self
-            .cmds
+        let mut candidates: Vec<Pair> = collect_command_with_prefix(prefix)
             .iter()
-            .filter(|cmd| cmd.starts_with(prefix))
             .map(|cmd| {
                 // dbg!(&cmd);
                 Pair {
                     display: format!("{cpl_color}{cmd}{RESET}"),
-                    replacement: cmd.clone(),
+                    replacement: cmd.to_string(),
                 }
             })
             .collect();
         // 按显示名称的长度升序排序，较短的优先
         candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
 
-        Ok((start, candidates))
+        Ok((section_start, candidates))
     }
 
     /// 参数补全逻辑
@@ -484,9 +442,10 @@ impl LumeHelper {
         &self,
         line: &str,
         pos: usize,
+        section_start: usize,
         ctx: &rustyline::Context<'_>,
     ) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        let cmd_section = extract_command_section(&line[..pos]).trim_start();
+        let cmd_section = &line[section_start..pos];
 
         let tokens = cmd_section
             .split_whitespace()
@@ -513,7 +472,7 @@ impl LumeHelper {
             };
 
             let (mut candidates, trig_file) =
-                self.completion_db
+                self.param_completer
                     .get_completions_for_context(command, args, current_token);
 
             // dbg!(&command, &args, &current_token, &start, &candidates.len());
@@ -525,7 +484,7 @@ impl LumeHelper {
             // );
 
             if trig_file {
-                return self.completer.complete(line, pos, ctx);
+                return self.file_completer.complete(line, section_start, ctx);
             }
             // Sort by priority and then by length
             candidates.sort_by(|a, b| a.replacement.cmp(&b.replacement));
@@ -656,11 +615,7 @@ impl Hinter for LumeHelper {
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {
             // 按权重排序匹配结果
-            let mut matches: Vec<_> = self
-                .cmds
-                .iter()
-                .filter(|cmd| cmd.starts_with(&segment))
-                .collect();
+            let mut matches: Vec<_> = collect_command_with_prefix(&segment);
 
             // 权重降序, 较短的优先
             matches.sort_by(|a, b| a.len().cmp(&b.len()));
@@ -797,7 +752,3 @@ impl Highlighter for SyntaxHighlighter {
 //     let mut rl = new_editor(None);
 //     readline(prompt, &mut rl)
 // }
-
-fn is_valid_command(cmd: &str) -> bool {
-    PATH_COMMANDS.lock().unwrap().contains(cmd)
-}

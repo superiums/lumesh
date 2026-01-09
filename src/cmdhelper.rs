@@ -1,3 +1,4 @@
+use common_macros::hash_set;
 use lazy_static::lazy_static;
 use std::collections::HashSet;
 
@@ -9,9 +10,58 @@ use std::ffi::OsStr;
 use std::path::Path;
 #[cfg(unix)]
 use std::path::PathBuf;
-use std::sync::Mutex;
+use std::path::is_separator;
+
+use crate::expression::alias::get_alias_tips;
+use crate::modules::get_builtin_tips;
+
 lazy_static! {
-    pub static ref PATH_COMMANDS: Mutex<HashSet<String>> = Mutex::new(scan_cmds());
+    pub static ref CMDS: HashSet<String> = get_cmds();
+    pub static ref PATH_COMMANDS: HashSet<String> = scan_cmds();
+}
+
+fn get_cmds() -> HashSet<String> {
+    let mut cmds: HashSet<String> = hash_set! {
+        "cd ./".into(),
+        "ls -l --color ./".into(),
+        "clear".into(),
+        "rm ".into(),
+        "cp -r".into(),
+        "let ".into(),
+        "fn ".into(),
+        "if ".into(),
+        "else {".into(),
+        "match ".into(),
+        "while (".into(),
+        "for i in ".into(),
+        "loop {\n".into(),
+        "break".into(),
+        "return".into(),
+        "history".into(),
+        "del ".into(),
+        "use ".into(),
+    };
+    cmds.extend(get_builtin_tips());
+    // cmds.extend(scan_cmds());
+    cmds.extend(get_alias_tips());
+    cmds
+}
+
+pub fn is_valid_command(cmd: &str) -> bool {
+    PATH_COMMANDS.contains(cmd)
+}
+pub fn collect_command_with_prefix(prefix: &str) -> Vec<&String> {
+    let c1 = CMDS
+        .iter()
+        .filter(|x| x.starts_with(prefix))
+        .collect::<Vec<_>>();
+    if c1.is_empty() {
+        return PATH_COMMANDS
+            .iter()
+            .filter(|x| x.starts_with(prefix))
+            .collect::<Vec<_>>();
+    }
+    c1
 }
 // 平台相关代码参考自
 #[cfg(unix)]
@@ -68,15 +118,11 @@ fn scan_directory(dir: &Path) -> Vec<String> {
 //  line: &str,
 // pos: usize,
 pub fn should_trigger_path_completion(line: &str, pos: usize) -> bool {
-    let current_word = line[..pos]
-        .rsplit(|c: char| c.is_whitespace())
-        .next()
-        .unwrap_or("");
-    if cfg!(windows) {
-        current_word.contains("\\")
-    } else {
-        current_word.contains("/")
-    }
+    // most efficiency if not allow space in path
+    let last = line[..pos]
+        .rfind(|c: char| c.is_ascii_whitespace() || is_separator(c))
+        .unwrap_or(0);
+    is_separator(line.chars().nth(last).unwrap_or_default())
 }
 // pub fn should_trigger_cmd_completion(line: &str, pos: usize) -> bool {
 //     // 条件优先级排序
@@ -174,76 +220,76 @@ pub enum LumeCompletionType {
     None,
 }
 
-pub fn detect_completion_type(line: &str, pos: usize, ai_avaluable: bool) -> LumeCompletionType {
+pub fn detect_completion_type(
+    line: &str,
+    pos: usize,
+    ai_avaluable: bool,
+) -> (LumeCompletionType, usize) {
     // Early exit for empty lines
     if line.is_empty() || pos == 0 {
-        return LumeCompletionType::None;
+        return (LumeCompletionType::None, pos);
     }
 
     let prefix = &line[..pos];
 
     // Check path completion first (highest priority)
     if should_trigger_path_completion(line, pos) {
-        return LumeCompletionType::Path;
+        return (LumeCompletionType::Path, pos);
     }
 
     // Check AI completion with new trigger logic
     if ai_avaluable && should_trigger_ai(prefix) {
-        return LumeCompletionType::AI;
+        return (LumeCompletionType::AI, pos);
     }
 
     // Extract command section once and reuse
-    let command_section = extract_command_section(prefix);
+    let command_pos = find_command_pos(prefix);
+    let command_section = &prefix[command_pos..];
 
     // Check if we're typing a command (incomplete first word)
     if is_typing_command(command_section) {
-        return LumeCompletionType::Command;
+        return (LumeCompletionType::Command, command_pos);
     }
 
     // Check if we're after a complete command word (parameter context)
     if is_after_command_word(command_section) {
-        return LumeCompletionType::Param;
+        return (LumeCompletionType::Param, command_pos);
     }
 
-    LumeCompletionType::None
+    (LumeCompletionType::None, pos)
 }
 
 // Shared function to extract command section after last separator
-pub fn extract_command_section(prefix: &str) -> &str {
+fn find_command_pos(prefix: &str) -> usize {
     // Find the last command separator position
-    let last_separator_pos = prefix
-        .char_indices()
-        .rev()
-        .find(|(_, c)| matches!(c, ';' | '|' | '&' | '\n' | '('))
-        .map(|(i, _)| i);
-
-    if let Some(sep_pos) = last_separator_pos {
-        &prefix[sep_pos + 1..]
-    } else {
-        prefix
-    }
+    let pos = prefix
+        .rfind(|c: char| matches!(c, '|' | '&' | '(' | ';' | '\n'))
+        .map(|i| i + 1)
+        .unwrap_or(0);
+    // After pipe, allow leading spaces before command
+    prefix[pos..]
+        .find(|x: char| !char::is_ascii_whitespace(&x))
+        .map(|i| i + pos)
+        .unwrap_or(0)
 }
 
 // Check if we're typing a command (incomplete first word)
 fn is_typing_command(command_section: &str) -> bool {
-    // After pipe, allow leading spaces before command
-    let command_start = command_section.trim_start();
-
     // Check if we're in the first word (no space yet)
-    !command_start.contains(' ')
+    !command_section.contains(' ')
 }
 
 // Check if we're after a complete command word (has space after command)
 fn is_after_command_word(command_section: &str) -> bool {
-    // After pipe, allow leading spaces before command
-    let command_start = command_section.trim_start();
-
     // Check if we have a complete command word followed by space
-    if let Some(space_pos) = command_start.find(' ') {
+    if let Some(space_pos) = command_section.find(' ') {
         // Ensure we're not at terminating symbols
-        let after_space = &command_start[space_pos + 1..];
+        let after_space = &command_section[space_pos + 1..];
         after_space.is_empty()
-            || !matches!(after_space.chars().next(), Some('|' | ';' | '&' | '\n'))
+            || !matches!(
+                after_space.chars().next(),
+                Some('|' | '&' | ')' | ';' | '\n')
+            )
     } else {
         false
     }
@@ -251,5 +297,5 @@ fn is_after_command_word(command_section: &str) -> bool {
 
 fn should_trigger_ai(prefix: &str) -> bool {
     // Trigger AI completion with double space
-    prefix.ends_with("  ") && !prefix.trim().is_empty()
+    prefix.starts_with("  ") && !prefix.trim().is_empty()
 }

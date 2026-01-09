@@ -252,7 +252,7 @@ fn move_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expre
     let p = args[0].eval(env)?.to_string();
     let src = abs(&p);
     let dst_str = args[1].eval(env)?.to_string();
-    let dst = if dst_str.ends_with("/") {
+    let dst = if is_dir(&dst_str) {
         let mut dpath = join_current_path(&dst_str);
         dpath.push(src.file_name().unwrap_or(OsStr::new("")));
         dpath
@@ -270,7 +270,7 @@ fn copy_path_wrapper(args: &[Expression], env: &mut Environment) -> Result<Expre
     let src = abs(&p);
 
     let dst_str = args[1].eval(env)?.to_string();
-    let dst = if dst_str.ends_with("/") {
+    let dst = if is_dir(&dst_str) {
         let mut dpath = join_current_path(&dst_str);
         dpath.push(src.file_name().unwrap_or(OsStr::new("")));
         dpath
@@ -433,17 +433,20 @@ fn extract_filename(args: &[Expression], env: &mut Environment) -> Result<Expres
         Ok(Expression::String(file_name))
     }
 }
+fn is_dir(path: &str) -> bool {
+    #[cfg(unix)]
+    return path.ends_with("/");
+
+    #[cfg(windows)]
+    {
+        return path.ends_with("\\") || pathstr.ends_with("/");
+    }
+}
 fn extract_parent(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
     super::check_exact_args_len("dir_name", args, 1)?;
     let pathstr = get_string_arg(args[0].eval(env)?)?;
 
-    let is_dir = if cfg!(windows) {
-        pathstr.ends_with("\\") || pathstr.ends_with("/")
-    } else {
-        pathstr.ends_with("/")
-    };
-
-    if is_dir {
+    if is_dir(&pathstr) {
         return Ok(Expression::String(pathstr));
     }
     let path = Path::new(pathstr.as_str());

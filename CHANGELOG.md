@@ -1,5 +1,5 @@
 # Changelog
-## [0.8.8]
+## [0.8.9]
 - optimize completion efficency
 - fix function call err for mod use
 - disable `Print_Direct` for script

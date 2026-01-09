@@ -341,15 +341,6 @@ fn new_editor(cfg: EditorConfig) -> Editor<LumeHelper, FileHistory> {
 }
 
 impl Helper for LumeHelper {}
-// impl LumeHelper {
-//     fn set_prompt(&mut self, prompt: impl ToString) {
-//         self.colored_prompt = prompt.to_string();
-//     }
-
-//     fn update_env(&mut self, env: &Environment) {
-//         self.env = env.clone();
-//     }
-// }
 
 impl Completer for LumeHelper {
     type Candidate = Pair;
@@ -382,30 +373,6 @@ impl Completer for LumeHelper {
 
 // 扩展实现
 impl LumeHelper {
-    /// 新增补全类型检测
-    // fn detect_completion_type(&self, line: &str, pos: usize) -> LumeCompletionType {
-    //     if should_trigger_path_completion(line, pos) {
-    //         LumeCompletionType::Path
-    //     } else if should_trigger_cmd_completion(line, pos) {
-    //         LumeCompletionType::Command
-    //     } else if self.should_trigger_argument_completion(line, pos) {
-    //         // dbg!("--should trigger arg---");
-    //         LumeCompletionType::Argument
-    //     } else if self.should_trigger_ai(line) {
-    //         LumeCompletionType::AI
-    //     } else {
-    //         LumeCompletionType::None
-    //     }
-    // }
-
-    // fn should_trigger_argument_completion(&self, line: &str, pos: usize) -> bool {
-    //     let input = &line[..pos];
-    //     let tokens: Vec<&str> = input.split_whitespace().collect();
-    //     // dbg!("--should trigger?", &input, &tokens);
-    //     // Trigger if we have a command and are not at the first position
-    //     tokens.len() > 0 //&& !should_trigger_path_completion(line, pos)
-    // }
-
     /// 命令补全逻辑
     fn cmd_completion(
         &self,
@@ -475,14 +442,6 @@ impl LumeHelper {
                 self.param_completer
                     .get_completions_for_context(command, args, current_token);
 
-            // dbg!(&command, &args, &current_token, &start, &candidates.len());
-            // dbg!(
-            //     &matching_entries,
-            //     &matching_entries.len(),
-            //     &current_token,
-            //     &args
-            // );
-
             if trig_file {
                 return self.file_completer.complete(line, section_start, ctx);
             }
@@ -517,11 +476,6 @@ impl LumeHelper {
         };
         Ok((pos, vec![pair]))
     }
-
-    // AI补全触发条件
-    // fn should_trigger_ai(&self, line: &str) -> bool {
-    //     self.ai_client.is_some() && line.split_whitespace().count() > 1
-    // }
 }
 
 impl Validator for LumeHelper {
@@ -730,25 +684,4 @@ impl Highlighter for SyntaxHighlighter {
 //         }
 //     }
 //     stack.is_empty()
-// }
-
-// fn readline(prompt: impl ToString, rl: &mut Editor<LumeHelper, FileHistory>) -> String {
-//     let prompt = prompt.to_string();
-//     loop {
-//         // if let Some(helper) = rl.helper_mut() {
-//         //     helper.set_prompt(&prompt);
-//         // }
-
-//         match rl.readline(&strip_ansi_escapes(&prompt)) {
-//             Ok(line) => return line,
-//             Err(ReadlineError::Interrupted) => return String::new(),
-//             Err(ReadlineError::Eof) => exit(0),
-//             Err(err) => eprintln!("Error: {:?}", err),
-//         }
-//     }
-// }
-
-// pub fn read_user_input(prompt: impl ToString) -> String {
-//     let mut rl = new_editor(None);
-//     readline(prompt, &mut rl)
 // }

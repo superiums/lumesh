@@ -420,19 +420,10 @@ impl LumeHelper {
             .collect::<Vec<_>>();
 
         if let Some((command, tokens)) = tokens.split_first() {
-            let current_token = if let Some(last_space) = cmd_section.rfind(' ') {
-                &cmd_section[last_space + 1..]
-            } else {
-                ""
-            };
+            let param_start = cmd_section.rfind(' ').map(|x| x + 1);
+            let current_token = param_start.map_or("", |x| &cmd_section[x..]);
 
-            let start = if let Some(last_space) = cmd_section.rfind(' ') {
-                last_space + 1
-            } else {
-                0
-            };
-
-            let args = if current_token.is_empty() {
+            let params = if current_token.is_empty() {
                 tokens
             } else {
                 tokens[..tokens.len() - 1].as_ref()
@@ -440,7 +431,7 @@ impl LumeHelper {
 
             let (mut candidates, trig_file) =
                 self.param_completer
-                    .get_completions_for_context(command, args, current_token);
+                    .get_completions_for_context(command, params, current_token);
 
             if trig_file {
                 return self.file_completer.complete(line, section_start, ctx);
@@ -448,7 +439,10 @@ impl LumeHelper {
             // Sort by priority and then by length
             candidates.sort_by(|a, b| a.replacement.cmp(&b.replacement));
 
-            return Ok((start, candidates));
+            return Ok((
+                param_start.map_or(section_start, |x| section_start + x),
+                candidates,
+            ));
         }
         Ok((pos, Vec::new()))
     }

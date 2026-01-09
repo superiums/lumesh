@@ -1,6 +1,6 @@
-use crate::expression::cmd_excutor::expand_home;
 use crate::modules::pretty_printer;
 use crate::utils::canon;
+use crate::utils::expand_home;
 use crate::{
     Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, ModuleInfo, PRINT_DIRECT,
     RuntimeError, SyntaxError, use_script,
@@ -10,86 +10,86 @@ use std::collections::HashSet;
 use std::fs::{create_dir, read_to_string, write};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
-// pub fn run_text(text: &str, env: &mut Environment) -> Result<Expression, Error> {
-//     parse(text)?.eval(env)
-// }
 
 pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo, RuntimeError> {
+    // 获取基础路径
     let base = match env.get("SCRIPT") {
         Some(Expression::String(script)) => script,
         _ => ".".to_string(),
     };
     let cwd = Path::new(&base).parent().unwrap_or(Path::new("."));
+
+    // 构建文件名（统一处理扩展名和路径）
     let file = Path::new(expand_home(file_path).as_ref()).with_extension("lm");
-    let mut mod_file = cwd.join("mods").join(&file);
-    mod_file = canon(mod_file.to_str().unwrap_or_default())?;
-    if !mod_file.exists() {
-        if file.is_absolute() {
-            return Err(RuntimeError::common(
-                format!("module `{file_path}` not found",).into(),
+
+    // 预构建所有候选路径
+    let lib = match env.get("LUME_MODULES_PATH") {
+        Some(Expression::String(mo)) => Path::new(&mo).to_path_buf(),
+        _ => dirs::data_dir().unwrap_or(Path::new(".").to_path_buf()),
+    };
+
+    let candidate_paths = vec![
+        cwd.join("mods").join(&file),
+        cwd.join(&file),
+        lib.join(&file),
+    ];
+
+    // 使用 iter() 和 find_map() 查找第一个有效路径
+    let mod_file = candidate_paths
+        .iter()
+        .find_map(|path| {
+            let path_str = path.to_str().unwrap_or_default();
+            canon(path_str).ok()
+        })
+        .ok_or_else(|| {
+            RuntimeError::common(
+                format!("module `{file_path}` not found").into(),
                 Expression::String(file.to_string_lossy().into()),
+                0,
+            )
+        })?;
+
+    // 读取并解析模块文件
+    let module_content = match read_to_string(&mod_file) {
+        Ok(content) => content,
+        Err(e) => {
+            return Err(RuntimeError::from_io_error(
+                e,
+                "loading module".into(),
+                Expression::None,
                 0,
             ));
         }
-        mod_file = cwd.join(&file);
-        mod_file = canon(mod_file.to_str().unwrap_or_default())?;
-        if !mod_file.exists() {
-            let lib = match env.get("LUME_MODULES_PATH") {
-                Some(Expression::String(mo)) => Path::new(&mo).to_path_buf(),
-                _ => dirs::data_dir().unwrap_or(Path::new(".").to_path_buf()),
-            };
-            mod_file = lib.join(&file);
-            mod_file = canon(mod_file.to_str().unwrap_or_default())?;
-            if !mod_file.exists() {
-                return Err(RuntimeError::common(
-                    format!(
-                        "module `{}` not found in following places:\n\t{}\n\t{}\n\t{}",
-                        file_path,
-                        cwd.join("mods").join(&file).to_string_lossy(),
-                        cwd.join(&file).to_string_lossy(),
-                        lib.join(&file).to_string_lossy()
-                    )
-                    .into(),
-                    Expression::String(file.to_string_lossy().into()),
-                    0,
-                ));
-            }
-        }
     };
-    match read_to_string(mod_file) {
-        Ok(module_content) => match use_script(&module_content) {
-            Ok(result) => Ok(result),
-            Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
-                let err = SyntaxError {
-                    source: format!("{module_content}   ").into(),
-                    kind: e,
-                };
-                Err(RuntimeError::common(
-                    err.to_string().into(),
-                    Expression::None,
-                    0,
-                ))
-            }
-            Err(nom::Err::Incomplete(_)) => {
-                let err = SyntaxError {
-                    source: module_content.into(),
-                    kind: SyntaxErrorKind::InternalError("incomplted".to_string()),
-                };
-                Err(RuntimeError::common(
-                    err.to_string().into(),
-                    Expression::None,
-                    0,
-                ))
-            }
-        },
-        Err(e) => Err(RuntimeError::from_io_error(
-            e,
-            "loading module".into(),
-            Expression::None,
-            0,
-        )),
+
+    // 解析模块内容
+    match use_script(&module_content) {
+        Ok(result) => Ok(result),
+        Err(nom::Err::Error(e)) | Err(nom::Err::Failure(e)) => {
+            let err = SyntaxError {
+                source: format!("{module_content}   ").into(),
+                kind: e,
+            };
+            Err(RuntimeError::common(
+                err.to_string().into(),
+                Expression::None,
+                0,
+            ))
+        }
+        Err(nom::Err::Incomplete(_)) => {
+            let err = SyntaxError {
+                source: module_content.into(),
+                kind: SyntaxErrorKind::InternalError("incompleted".to_string()),
+            };
+            Err(RuntimeError::common(
+                err.to_string().into(),
+                Expression::None,
+                0,
+            ))
+        }
     }
 }
+
 pub fn run_file(path: &str, env: &mut Environment) -> bool {
     match canon(path) {
         Ok(p) => match read_to_string(p) {
@@ -162,7 +162,12 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                 }
                 Ok(result) => unsafe {
                     if PRINT_DIRECT {
-                        println!("\n  >> [{}] <<\n{}", result.type_name(), result);
+                        match result {
+                            // skip function and lambda define PD
+                            Expression::Function(_, _, _, _, _) => {}
+                            Expression::Lambda(_, _) => {}
+                            r => println!("\n  >> [{}] <<\n{}", r.type_name(), r),
+                        };
                         let _ = io::stdout().flush();
                     }
                 },
@@ -229,7 +234,9 @@ pub fn init_config(env: &mut Environment) {
     }
 
     unsafe {
-        PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy());
+        // turn PD off while in script mode.
+        PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy())
+            && env.get("SCRIPT").is_none();
         if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_RUNTIME_RECURSION") {
             MAX_RUNTIME_RECURSION = run_rec as usize;
         }

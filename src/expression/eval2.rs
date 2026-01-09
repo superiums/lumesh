@@ -2,8 +2,9 @@ use super::catcher::catch_error;
 use super::eval::State;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind,
-    expression::{DestructurePattern, cmd_excutor::expand_home},
+    expression::DestructurePattern,
     runtime::{IFS_FOR, ifs_contains, load_module},
+    utils::expand_home,
 };
 use glob::glob;
 use std::{borrow::Cow, collections::HashMap, path::Path, rc::Rc};
@@ -112,11 +113,11 @@ impl Expression {
                 }
                 env.define(name, func.clone());
                 // deco eval need it
-                if state.contains(State::IN_DECO | State::IN_ASSIGN) {
-                    Ok(func)
-                } else {
-                    Ok(Expression::None)
-                }
+                // if state.contains(State::IN_DECO | State::IN_ASSIGN) {
+                Ok(func)
+                // } else {
+                //     Ok(Expression::None)
+                // }
             }
 
             // 块表达式

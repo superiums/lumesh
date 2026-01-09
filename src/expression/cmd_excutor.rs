@@ -2,6 +2,7 @@ use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind, childman,
     expression::pty::exec_in_pty,
     runtime::{IFS_CMD, ifs_contains},
+    utils::expand_home,
 };
 
 use super::eval::State;
@@ -10,7 +11,6 @@ use glob::glob;
 // use portable_pty::ChildKiller;
 // use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::{
-    borrow::Cow,
     io::Write,
     process::{Command, Stdio},
 };
@@ -215,14 +215,7 @@ fn exec_single_cmd(
         }
     }
 }
-pub fn expand_home(path: &'_ str) -> Cow<'_, str> {
-    if path.starts_with("~") {
-        if let Some(home_dir) = dirs::home_dir() {
-            return Cow::Owned(path.replace("~", home_dir.to_string_lossy().as_ref()));
-        }
-    }
-    Cow::Borrowed(path)
-}
+
 // 管道
 pub fn handle_command(
     job: &Expression,

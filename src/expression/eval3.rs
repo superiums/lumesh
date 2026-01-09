@@ -262,6 +262,7 @@ impl Expression {
                     }
                 }
             }
+            // Expression::None => Ok(Expression::None),
             o => {
                 // dbg!(o.type_name());
                 Err(RuntimeError::new(

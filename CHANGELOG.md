@@ -1,5 +1,11 @@
 # Changelog
 ## [0.8.8]
+- optimize completion efficency
+- fix function call err for mod use
+- disable `Print_Direct` for script
+- skip `Print_Direct` while define function and lambda
+
+## [0.8.8]
 - support str slice
 - fix `::` token in slice
 - add `String.words_quoted`

@@ -1,8 +1,0 @@
-let dirs = [
-    '~/.config/fish/completions',
-    '/etc/fish/completions',
-    '~/.local/share/fish/vendor_completions.d',
-    '/usr/share/fish/vendor_completions.d',
-    '/usr/share/fish/completions',
-    '~/.cache/fish/generated_completions'
-]

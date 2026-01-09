@@ -631,6 +631,7 @@ impl Expression {
                         RuntimeErrorKind::NoModuleDefined(
                             current_base.to_string(),
                             current_base.type_name().into(),
+                            "eval_chain".into(),
                         ),
                         self.clone(),
                         depth,
@@ -692,6 +693,7 @@ impl Expression {
                 RuntimeErrorKind::NoModuleDefined(
                     current_base.to_string(),
                     current_base.type_name().into(),
+                    "eval_module_method".into(),
                 ),
                 self.clone(),
                 depth,

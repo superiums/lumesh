@@ -733,6 +733,7 @@ impl Expression {
                                                     RuntimeErrorKind::NoModuleDefined(
                                                         left_output.to_string(),
                                                         left_output.type_name().into(),
+                                                        "eval pipe".into(),
                                                     ),
                                                     self.clone(),
                                                     depth,

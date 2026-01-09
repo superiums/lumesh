@@ -333,22 +333,18 @@ fn write_file(args: &[Expression], env: &mut Environment) -> Result<Expression, 
     let p = args[0].eval(env)?.to_string();
     let path = abs(&p);
 
-    match args.len() {
-        1 => {
-            // 只有一个参数时，创建空白文件（如果不存在）
-            if !path.exists() {
-                std::fs::File::create(&path)?;
-            }
-        }
-        2 => {
-            // 两个参数时，正常写入内容
-            let contents = args[1].eval(env)?;
-            match contents {
-                Expression::Bytes(bytes) => std::fs::write(&path, bytes),
-                _ => std::fs::write(&path, contents.to_string()),
-            }?;
-        }
-        _ => unreachable!(),
+    // 只有一个参数时，创建空白文件（如果不存在）
+    if !path.exists() {
+        std::fs::File::create(&path)?;
+    }
+
+    // 两个参数时，正常写入内容
+    if args.len() == 2 {
+        let contents = args[1].eval(env)?;
+        match contents {
+            Expression::Bytes(bytes) => std::fs::write(&path, bytes),
+            _ => std::fs::write(&path, contents.to_string()),
+        }?;
     }
 
     Ok(Expression::None)
@@ -360,10 +356,10 @@ fn append_to_file(args: &[Expression], env: &mut Environment) -> Result<Expressi
     let path = abs(&p);
     let contents = args[1].eval(env)?;
 
-    let mut file = std::fs::OpenOptions::new().append(true).open(&path)?;
-    // .map_err(|e| {
-    //     LmError::CustomError(format!("Could not open file: {} - {}", path.display(), e))
-    // })?;
+    let mut file = std::fs::OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open(&path)?;
 
     match contents {
         Expression::Bytes(bytes) => file.write_all(&bytes),

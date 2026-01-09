@@ -4,6 +4,7 @@
 - fix function call err for mod use
 - disable `Print_Direct` for script
 - skip `Print_Direct` while define function and lambda
+- change `Fs.write` and `Fs.append` always create if not exists
 
 ## [0.8.8]
 - support str slice

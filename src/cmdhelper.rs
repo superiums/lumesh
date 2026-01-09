@@ -201,10 +201,9 @@ fn is_after_command_word(command_section: &str) -> bool {
         // Ensure we're not at terminating symbols
         let after_space = &command_section[space_pos + 1..];
         after_space.is_empty()
-            || !matches!(
-                after_space.chars().next(),
-                Some('|' | '&' | ')' | ';' | '\n')
-            )
+            || !after_space
+                .char_indices()
+                .any(|(_, c)| matches!(&c, '|' | '&' | ')' | ';' | '\n'))
     } else {
         false
     }

@@ -11,6 +11,7 @@ English | [简体中文](README-cn.md)
 | [DeepWiki](https://deepwiki.com/superiums/lumesh)
 | [release-page 1](https://codeberg.com/santo/lumesh/releases)
 | [release-page 2](https://github.com/superiums/lumesh/releases)
+| [tree-sitter](https://github.com/superiums/tree-sitter-lumesh)
 
 - Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
 
@@ -168,6 +169,12 @@ lume
 # Or execute script
 lumesh script.lm
 ```
+
+### Grammer highlight
+- Interactive highlight：already supported within box
+- editor highlight：
+ [tree-sitter](https://github.com/superiums/tree-sitter-lumesh)
+ 
 
 ## Benchmark Testing
 

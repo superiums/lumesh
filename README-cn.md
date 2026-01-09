@@ -10,6 +10,7 @@
 | [DeepWiki](https://deepwiki.com/superiums/lumesh)
 | [发布页 1](https://codeberg.com/santo/lumesh/releases)
 | [发布页 2](https://github.com/superiums/lumesh/releases)
+| [语法高亮](https://github.com/superiums/tree-sitter-lumesh)
 
 
 - 开发现在在 Codeberg [https://codeberg.org/santo/lumesh] 继续进行， GitHub [https://github.com/superiums/lumesh] 仓库将成为镜像。
@@ -176,7 +177,11 @@ lume
 lumesh script.lm
 ```
 
-
+### 语法高亮
+- 命令行语法高亮：开箱支持
+- 编辑器语法高亮：
+ [tree-sitter](https://github.com/superiums/tree-sitter-lumesh)
+ 
 ## 基准测试
 
 | ![highlight](assets/mem_chart.png) | ![highlight](assets/time_chart.png) |

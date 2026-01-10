@@ -1,5 +1,5 @@
 use std::fs::read_to_string;
-use std::path::Path;
+use std::path::PathBuf;
 use std::sync::RwLock;
 use std::{collections::HashMap, sync::Arc};
 
@@ -39,7 +39,7 @@ pub struct CompletionEntry {
 #[derive(Debug, Clone)]
 pub struct ParamCompleter {
     // entries: Rc<HashMap<String, Vec<CompletionEntry>>>,
-    base_dirs: Vec<String>,
+    base_dirs: Vec<PathBuf>,
 }
 enum MatchType {
     // Condition,
@@ -116,14 +116,9 @@ fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
                     .collect()
             },
             priority: parts[6].trim().parse().unwrap_or(0),
-            description: parts[7].trim().to_string(),
+            description: parts[7..].join(",").trim().to_string(),
         };
 
-        // let idx = entries.len();
-        // command_index
-        //     .entry(entry.command.clone())
-        //     .or_insert_with(Vec::new)
-        //     .push(idx);
         entries.push(entry);
     }
 
@@ -134,15 +129,32 @@ impl ParamCompleter {
     pub fn new(base_dir: String) -> Self {
         #[cfg(unix)]
         let base_dirs = vec![
-            String::from("/usr/share/lumesh/vendor_completions.d"),
-            String::from("/usr/share/lumesh/completions"),
-            base_dir,
+            dirs::data_local_dir()
+                .unwrap_or_default()
+                .join("lumesh")
+                .join("vendor_completions"),
+            dirs::data_local_dir()
+                .unwrap_or_default()
+                .join("lumesh")
+                .join("completions"),
+            PathBuf::from("/usr/share/lumesh/vendor_completions.d"),
+            PathBuf::from("/usr/share/lumesh/completions"),
+            PathBuf::from(base_dir),
         ];
+
         #[cfg(windows)]
         let base_dirs = vec![
-            String::from("C:\\ProgramData\\lumesh\\vendor_completions"),
-            String::from("C:\\ProgramData\\lumesh\\completions"),
-            base_dir,
+            dirs::data_local_dir()
+                .unwrap_or_default()
+                .join("lumesh")
+                .join("vendor_completions"),
+            dirs::data_local_dir()
+                .unwrap_or_default()
+                .join("lumesh")
+                .join("completions"),
+            PathBuf::from("C:\\Program Files\\lumesh\\vendor_completions"),
+            PathBuf::from("C:\\Program Files\\lumesh\\completions"),
+            PathBuf::from(base_dir),
         ];
         Self {
             // entries: HashMap::new(),
@@ -153,7 +165,7 @@ impl ParamCompleter {
     fn load_entry(&self, cmd: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
         // Load from file or embed the CSV data
         for dir in &self.base_dirs {
-            let path = Path::new(dir).join(format!("{}.csv", cmd));
+            let path = PathBuf::from(dir).join(format!("{}.csv", cmd));
             if path.exists() {
                 let csv_data = read_to_string(path).map_err(|e| {
                     RuntimeError::from_io_error(e, "read file".into(), Expression::None, 0)
@@ -174,7 +186,7 @@ impl ParamCompleter {
         args: &[&str],
         __current_token: &str,
     ) -> bool {
-        if entry.directives.iter().any(|f| f == "@a") {
+        if entry.directives.iter().any(|f| f == "@t") {
             return true;
         }
         let reverse = entry.directives.iter().any(|f| f == "@n");

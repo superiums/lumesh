@@ -55,16 +55,16 @@ jobs:
 
       - name: Generate docs
         run: |
-          # 假设你的文档生成命令（例如 mkdocs、cargo doc 等）
-          mkdir -p doc
-          cp CHANGELOG.md doc
-          cp README.md doc
-          cp LICENSE doc
-          # cp -r src/wiki/syntax.md doc
-          # cp -r src/wiki/lib.md doc
-          # cp -r src/wiki/keys.md doc
-          cp src/config/config.lm doc
-          # echo "Sample Documentation" > doc/README.md
+          mkdir -p doc/install
+          cp CHANGELOG.md doc/
+          cp README.md doc/
+          cp docs/INS_README.md doc/
+          cp docs/RULE.md doc/
+          cp -r docs/config doc/
+          cp -r docs/unprocessed doc/
+          cp -r docs/mods doc/install
+          cp -r docs/completions doc/install
+          cp LICENSE doc/install
 
       - name: Create compressed files
         run: |

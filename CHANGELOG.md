@@ -5,6 +5,8 @@
 - disable `Print_Direct` for script
 - skip `Print_Direct` while define function and lambda
 - change `Fs.write` and `Fs.append` always create if not exists
+- deploy completions dir
+- add `install.sh`
 
 ## [0.8.8]
 - support str slice
@@ -19,10 +21,14 @@ now support cmd part in pipe, logical and/or, subcomand in `()`
 - add `LUME_COMPLETION_DIR` to add a custom completion dir.
 default includes:
   > Linux
+  + ~/.local/share/lumesh/vendor_completions.d
+  + ~/.local/share/lumesh/completions.d
   + /usr/share/lumesh/vendor_completions.d
   + /usr/share/lumesh/completions
   
   > Windows
+  + C:\Users\xx\AppData\Local\lumesh\vendor_completions
+  + C:\Users\xx\AppData\Local\lumesh\completions
   + C:\ProgramData\lumesh\vendor_completions,
   + C:\ProgramData\lumesh\completions,
     

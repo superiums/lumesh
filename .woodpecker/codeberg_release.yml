@@ -42,11 +42,19 @@ steps:
   build_docs:
     image: alpine:latest
     commands:
-      - mkdir -p doc
+      - mkdir -p doc/install
       - cp CHANGELOG.md doc/
       - cp README.md doc/
-      - cp LICENSE doc/
-      - cp src/config/config.lm doc/
+      - cp docs/INS_README.md doc/
+      - cp docs/RULE.md doc/
+      - cp -r docs/config doc/
+      - cp -r docs/unprocessed doc/
+      - cp -r docs/mods doc/install
+      - cp -r docs/completions doc/install
+      - cp LICENSE doc/install
+
+      - cp docs/install.sh .
+      - cp docs/install.bat .
       - tar -czvf doc.tar.gz -C doc .
       # - apk add zip
       # - zip -r doc.zip doc/*
@@ -57,6 +65,8 @@ steps:
     settings:
       files:
         - "doc.tar.gz"
+        - "install.sh"
+        - "install.bat"
       api_key:
         from_secret: codeberg_token
     depends_on: [build_docs]

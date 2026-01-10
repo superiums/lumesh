@@ -25,7 +25,7 @@ pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo,
     // 预构建所有候选路径
     let lib = match env.get("LUME_MODULES_PATH") {
         Some(Expression::String(mo)) => Path::new(&mo).to_path_buf(),
-        _ => dirs::data_dir().unwrap_or(Path::new(".").to_path_buf()),
+        _ => dirs::data_local_dir().unwrap_or(Path::new(".").to_path_buf()),
     };
 
     let candidate_paths = vec![

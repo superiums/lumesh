@@ -179,9 +179,15 @@ impl ParamCompleter {
         let reverse = entry.directives.iter().any(|f| f == "@n");
         if entry.conditions.is_empty() {
             if reverse {
-                return args.len() > 0;
+                // return args.len() > 0;
+                // only subcmd, not long/short option
+                // return args.iter().any(|x| !x.starts_with('-'));
+                // don't take argument after -- as condition, it's not subcmd
+                return !args.is_empty() && !args[0].starts_with('-');
             }
-            return args.len() == 0;
+            // return args.len() == 0;
+            // return !args.iter().any(|x| !x.starts_with('-'));
+            return args.is_empty() || args[0].starts_with('-');
         }
         for condition in &entry.conditions {
             // Check if any condition matches the args
@@ -277,15 +283,15 @@ impl ParamCompleter {
                     }
                 } else {
                     // action，并带出长短选项
-                    if entry.args.iter().any(|x| x.starts_with(current_token)) {
-                        if entry.long_opt.is_some() {
-                            return MatchType::ArgumentWithLong; //长短皆可，默认？选择？
-                        } else if entry.short_opt.is_some() {
-                            return MatchType::ArgumentWithShort; //长短皆可，默认？选择？
-                        } else {
-                            return MatchType::Argument;
-                        }
-                    }
+                    // if entry.args.iter().any(|x| x.starts_with(current_token)) {
+                    //     if entry.long_opt.is_some() {
+                    //         return MatchType::ArgumentWithLong; //长短皆可，默认？选择？
+                    //     } else if entry.short_opt.is_some() {
+                    //         return MatchType::ArgumentWithShort; //长短皆可，默认？选择？
+                    //     } else {
+                    //         return MatchType::Argument;
+                    //     }
+                    // }
                 }
                 // 【扩展匹配】未匹配action则继续匹配长短选项
                 // if entry
@@ -313,11 +319,13 @@ impl ParamCompleter {
                     if entry.directives.iter().any(|d| d == "@F" || d == "@D") {
                         return MatchType::File;
                     }
-                    if entry.directives.iter().any(|d| d == "@r") {
-                        return MatchType::Require; //TODO test this
-                    }
-                    // 无特殊指令，显示所有argument
-                    if !entry.args.is_empty() {
+                    if entry.args.is_empty() {
+                        // 无argument，且要求具有参数
+                        if entry.directives.iter().any(|d| d == "@r") {
+                            return MatchType::Require;
+                        }
+                    } else {
+                        // 无特殊指令，显示所有argument
                         return MatchType::Argument;
                     }
                 } else {
@@ -343,18 +351,43 @@ impl ParamCompleter {
         args: &[&str],
         current_token: &str,
     ) -> MatchType {
-        if !current_token.is_empty() && !current_token.starts_with("-") {
+        if !current_token.is_empty() {
             // 有参数且不以-开始，则优先匹配action，其次长短选项
-            if self.check_condition(entry, args, current_token) {
-                // 【扩展匹配】未匹配action则继续匹配长短选项
+            if !current_token.starts_with("-") && self.check_condition(entry, args, current_token) {
+                // 不满足本条opt，则匹配action，并带出长短选项
+                if !self.check_opt(entry, args, current_token) {
+                    if entry.args.iter().any(|x| x.starts_with(current_token)) {
+                        if entry.long_opt.is_some() {
+                            return MatchType::ArgumentWithLong; //长短皆可，默认？选择？
+                        } else if entry.short_opt.is_some() {
+                            return MatchType::ArgumentWithShort; //长短皆可，默认？选择？
+                        } else {
+                            return MatchType::Argument;
+                        }
+                    }
+                    // 【扩展匹配】未匹配action则继续匹配长短选项
+                    if entry
+                        .short_opt
+                        .as_ref()
+                        .is_some_and(|x| x.starts_with(current_token))
+                    {
+                        return MatchType::Short;
+                    }
+                    if entry
+                        .long_opt
+                        .as_ref()
+                        .is_some_and(|x| x.starts_with(current_token))
+                    {
+                        return MatchType::Long;
+                    }
+                }
+                // 【扩展匹配】允许多次出现的长短选项
                 if entry
                     .short_opt
                     .as_ref()
                     .is_some_and(|x| x.starts_with(current_token))
                 {
-                    if entry.directives.iter().any(|d| d == "@m")
-                        || !self.check_opt(entry, args, current_token)
-                    {
+                    if entry.directives.iter().any(|d| d == "@m") {
                         return MatchType::Short;
                     }
                 }
@@ -363,9 +396,7 @@ impl ParamCompleter {
                     .as_ref()
                     .is_some_and(|x| x.starts_with(current_token))
                 {
-                    if entry.directives.iter().any(|d| d == "@m")
-                        || !self.check_opt(entry, args, current_token)
-                    {
+                    if entry.directives.iter().any(|d| d == "@m") {
                         return MatchType::Long;
                     }
                 }

@@ -53,6 +53,7 @@ enum MatchType {
     // All,
     File,
     Require,
+    Space,
     None,
 }
 
@@ -248,6 +249,13 @@ impl ParamCompleter {
                     .is_some_and(|x| x.starts_with(&current_token[2..]))
             {
                 if self.check_condition(entry, args, current_token) {
+                    if entry
+                        .long_opt
+                        .as_ref()
+                        .is_some_and(|x| x == &current_token[2..])
+                    {
+                        return MatchType::Space;
+                    }
                     if entry.directives.iter().any(|d| d == "@m")
                         || !self.check_opt(entry, args, current_token)
                     {
@@ -264,6 +272,13 @@ impl ParamCompleter {
                     .is_some_and(|x| x.starts_with(&current_token[1..]))
             {
                 if self.check_condition(entry, args, current_token) {
+                    if entry
+                        .short_opt
+                        .as_ref()
+                        .is_some_and(|x| x == &current_token[1..])
+                    {
+                        return MatchType::Space;
+                    }
                     if entry.directives.iter().any(|d| d == "@m")
                         || !self.check_opt(entry, args, current_token)
                     {
@@ -408,7 +423,11 @@ impl ParamCompleter {
             if self.check_condition(entry, args, current_token) {
                 // 不满足长短选项
                 if !self.check_opt(entry, args, current_token) {
-                    // 【扩展匹配】列出所有长短选项
+                    // 无ignore file标记，则进行路径补全
+                    if !entry.directives.iter().any(|d| d == "@f") {
+                        return MatchType::File;
+                    }
+                    // 【扩展匹配】列出长短选项，允许多次出现的，或未出现过的
                     if entry.directives.iter().any(|d| d == "@m")
                         || !self.check_opt(entry, args, current_token)
                     {
@@ -526,20 +545,16 @@ impl ParamCompleter {
                 };
                 match matched {
                     MatchType::Short => v.push(Pair {
-                        display: format!(
-                            "-{:<18} :{}",
-                            entry.short_opt.as_ref().unwrap(),
-                            entry.description
-                        ),
+                        display: format_opt(entry),
                         replacement: format!("-{}", entry.short_opt.as_ref().unwrap()),
                     }),
                     MatchType::Long => v.push(Pair {
-                        display: format!(
-                            "--{:<18} :{}",
-                            entry.long_opt.as_ref().unwrap(),
-                            entry.description
-                        ),
+                        display: format_opt(entry),
                         replacement: format!("--{}", entry.long_opt.as_ref().unwrap()),
+                    }),
+                    MatchType::Space => v.push(Pair {
+                        display: format!("{:<5} :OK", " "),
+                        replacement: format!("{} ", current_token),
                     }),
                     // MatchType::Condition => {
                     //     for cond in entry.conditions.iter() {
@@ -559,7 +574,10 @@ impl ParamCompleter {
                         for a in entry.args.iter() {
                             if a.starts_with(current_token) {
                                 v.push(Pair {
-                                    display: format!("{:<20} :{}", a, entry.description),
+                                    display: format!(
+                                        "{:<10} \x1b[96m{:>}\x1b[m\x1b[0m",
+                                        a, entry.description
+                                    ),
                                     // display: a.clone(),
                                     replacement: a.clone(),
                                 })
@@ -598,10 +616,7 @@ impl ParamCompleter {
                             if x.starts_with(current_token) {
                                 if let Some(long) = entry.long_opt.clone() {
                                     v.push(Pair {
-                                        display: format!(
-                                            "--{:<18} {:<15} :{}",
-                                            long, x, entry.description
-                                        ),
+                                        display: format_arg_opt(entry, x),
                                         replacement: format!("--{} {}", long, x),
                                     })
                                 }
@@ -616,7 +631,7 @@ impl ParamCompleter {
                             if x.starts_with(current_token) {
                                 if let Some(short) = entry.short_opt.clone() {
                                     v.push(Pair {
-                                        display: format!("-{:<19} {}", short, x),
+                                        display: format_arg_opt(entry, x),
                                         replacement: format!("-{} {}", short, x),
                                     })
                                 }
@@ -628,7 +643,7 @@ impl ParamCompleter {
                     MatchType::File => return (v, true),
                     MatchType::Require => {
                         v.push(Pair {
-                            display: String::from("_                    :param required"),
+                            display: String::from("_      :param required"),
                             replacement: String::from("_"),
                         });
                     }
@@ -637,5 +652,40 @@ impl ParamCompleter {
             }
         }
         (v, false)
+    }
+}
+
+/**
+ * 1: opt, 2: action, 3=1+2
+ */
+fn format_opt(entry: &CompletionEntry) -> String {
+    match (entry.short_opt.as_ref(), entry.long_opt.as_ref()) {
+        (Some(s), Some(l)) => format!(
+            "-{:<4} --{:<18} \x1b[96m{:>}\x1b[m\x1b[0m",
+            s, l, entry.description
+        ),
+        (_, Some(l)) => format!(
+            "      --{:<18} \x1b[96m{:>}\x1b[m\x1b[0m",
+            l, entry.description
+        ),
+        (Some(s), _) => format!("-{:<21} \x1b[96m{:>}\x1b[m\x1b[0m", s, entry.description),
+        _ => String::from("Err"),
+    }
+}
+fn format_arg_opt(entry: &CompletionEntry, arg: &String) -> String {
+    match (entry.short_opt.as_ref(), entry.long_opt.as_ref()) {
+        (Some(s), Some(l)) => format!(
+            "-{:<4} --{:<18} {:10} \x1b[96m{:>}\x1b[m\x1b[0m",
+            s, l, arg, entry.description
+        ),
+        (_, Some(l)) => format!(
+            "      --{:<18} {:10} \x1b[96m{:>}\x1b[m\x1b[0m",
+            l, arg, entry.description
+        ),
+        (Some(s), _) => format!(
+            "-{:<21} {:10} \x1b[96m{:>}\x1b[m\x1b[0m",
+            s, arg, entry.description
+        ),
+        _ => String::from(arg),
     }
 }

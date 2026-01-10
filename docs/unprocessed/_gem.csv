@@ -1,0 +1,117 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gem, __fish_use_subcommand,h,help, , ,101,Print usage informations and quit
+gem, __fish_use_subcommand,v,version, , ,102,Print the version and quit
+gem, __fish_use_subcommand, , ,build, ,103,Build a gem from a gemspec
+gem, __fish_use_subcommand, , ,cert, ,104,Adjust RubyGems certificate settings
+gem, __fish_use_subcommand, , ,check, ,105,Check installed gems
+gem, __fish_use_subcommand, , ,cleanup, ,106,Cleanup old versions of installed gems in the local repository
+gem, __fish_use_subcommand, , ,contents, ,107,Display the contents of the installed gems
+gem, __fish_use_subcommand, , ,dependency, ,108,Show the dependencies of an installed gem
+gem, __fish_use_subcommand, , ,environment, ,109,Display RubyGems environmental information
+gem, __fish_use_subcommand, , ,fetch, ,110,Download a gem into current directory
+gem, __fish_use_subcommand, , ,help, ,111,Provide help on the 'gem' command
+gem, __fish_use_subcommand, , ,install, ,112,Install a gem into the local repository
+gem, __fish_use_subcommand, , ,list, ,113,Display all gems whose name starts with STRING
+gem, __fish_use_subcommand, , ,query, ,114,Query gem information in local or remote repositories
+gem, __fish_use_subcommand, , ,rdoc, ,115,Generates RDoc for pre-installed gems
+gem, __fish_use_subcommand, , ,search, ,116,Display all gems whose name contains STRING
+gem, __fish_use_subcommand, , ,specification, ,117,Display gem specification (in YAML)
+gem, __fish_use_subcommand, , ,uninstall, ,118,Uninstall a gem from the local repository
+gem, __fish_use_subcommand, , ,unpack, ,119,Unpack an installed gem to the current directory
+gem, __fish_use_subcommand, , ,update, ,120,Update the named gem or all installed gems in the local repository
+$common_opt, , ,source, , ,121,Use URL as the remote source for gems
+$common_opt, ,p,http-proxy, , ,122,Use the given HTTP proxy for remote operations
+$common_opt, , ,no-http-proxy, , ,123,Use no HTTP proxy for remote operations
+$common_opt, ,h,help, , ,124,Get help on this command
+$common_opt, ,v,verbose, , ,125,Set the verbose level of output
+$common_opt, , ,config-file, , ,126,Use this config file instead of default
+$common_opt, , ,backtrace, , ,127,Show stack backtrace on errors
+$common_opt, , ,debug, , ,128,Turn on Ruby debugging
+$cert_opt, ,a,add, , ,129,Add a trusted certificate
+$cert_opt, ,l,list, , ,130,List trusted certificates
+$cert_opt, ,r,remove, , ,131,Remove trusted certificates containing STRING
+$cert_opt, ,b,build, , ,132,Build private key and self-signed certificate for EMAIL_ADDR
+$cert_opt, ,C,certificate, , ,133,Certificate for --sign command
+$cert_opt, ,K,private-key, , ,134,Private key for --sign command
+$cert_opt, ,s,sign, , ,135,Sign a certificate with my key and certificate
+$check_opt, ,v,verify, , ,136,Verify gem file against its internal checksum
+$check_opt, ,a,alien, , ,137,Report 'unmanaged' or rogue files in the gem repository
+$check_opt, ,t,test, , ,138,Run unit tests for gem
+$check_opt, ,V,version, , ,139,Specify version for which to run unit tests
+$cleanup_opt, ,d,dryrun, , ,140,Don't really cleanup
+$contents_opt, ,l,list, , ,141,List the files inside a Gem
+$contents_opt, ,V,version, , ,142,Specify version for gem to view
+$contents_opt, ,s,spec-dir, , ,143,Search for gems under specific paths
+$contents_opt, ,v,verbose, , ,144,Be verbose when showing status
+$dep_opt, ,v,version, , ,145,Specify version of gem to uninstall
+$dep_opt, ,r,reverse-dependencies, , ,146,Include reverse dependencies in the output
+$dep_opt, , ,no-reverse-dependencies, , ,147,Don't include reverse dependencies in the output
+$dep_opt, ,p,pipe, , ,148,Pipe Format (name --version ver)
+$env_opt, , , ,packageversion gemdir gempath version remotesources, ,149, 
+$fetch_opt, ,v,version, , ,150,Specify version of gem to download
+$help_opt, , , ,commands examples build cert check cleanup contents dependency environment help install list query rdoc search specification uninstall unpack update, ,151, 
+$install_opt, ,v,version, , ,152,Specify version of gem to install
+$install_opt, ,l,local, , ,153,Restrict operations to the LOCAL domain (default)
+$install_opt, ,r,remote, , ,154,Restrict operations to the REMOTE domain
+$install_opt, ,b,both, , ,155,Allow LOCAL and REMOTE operations
+$install_opt, ,i,install-dir, , ,156,Gem repository directory to get installed gems
+$install_opt, ,i,user-install, , ,157,Install in user's home directory instead of GEM_HOME.
+$install_opt, ,N,no-document, , ,158,Disable documentation generation on install
+$install_opt, , ,document, , ,159,Specify the documentation types you wish to generate
+$install_opt, ,f,force, , ,160,"Force gem to install, bypassing dependency checks"
+$install_opt, , ,no-force, , ,161,"Don't force gem to install, bypassing dependency checks"
+$install_opt, ,t,test, , ,162,Run unit tests prior to installation
+$install_opt, , ,no-test, , ,163,Don't run unit tests prior to installation
+$install_opt, ,w,wrappers, , ,164,Use bin wrappers for executables
+$install_opt, , ,no-wrappers, , ,165,Don't use bin wrappers for executables
+$install_opt, ,P,trust-policy, , ,166,Specify gem trust policy
+$install_opt, , ,ignore-dependencies, , ,167,Do not install any required dependent gems
+$install_opt, ,y,include-dependencies, , ,168,Unconditionally install the required dependent gems
+$list_opt, ,d,details, , ,169,Display detailed information of gem(s)
+$list_opt, , ,no-details, , ,170,Don't display detailed information of gem(s)
+$list_opt, ,l,local, , ,171,Restrict operations to the LOCAL domain (default)
+$list_opt, ,r,remote, , ,172,Restrict operations to the REMOTE domain
+$list_opt, ,b,both, , ,173,Allow LOCAL and REMOTE operations
+$query_opt, ,n,name-matches, , ,174,Name of gem(s) to query on matches the provided REGEXP
+$query_opt, ,d,details, , ,175,Display detailed information of gem(s)
+$query_opt, , ,no-details, , ,176,Don't display detailed information of gem(s)
+$query_opt, ,l,local, , ,177,Restrict operations to the LOCAL domain (default)
+$query_opt, ,r,remote, , ,178,Restrict operations to the REMOTE domain
+$query_opt, ,b,both, , ,179,Allow LOCAL and REMOTE operations
+$rdoc_opt, , ,all, , ,180,Generate RDoc/RI documentation for all installed gems
+$rdoc_opt, , ,rdoc, , ,181,Include RDoc generated documents
+$rdoc_opt, , ,no-rdoc, , ,182,Don't include RDoc generated documents
+$rdoc_opt, , ,ri, , ,183,Include RI generated documents
+$rdoc_opt, , ,no-ri, , ,184,Don't include RI generated documents
+$rdoc_opt, ,v,version, , ,185,Specify version of gem to rdoc
+$search_opt, ,d,details, , ,186,Display detailed information of gem(s)
+$search_opt, , ,no-details, , ,187,Don't display detailed information of gem(s)
+$search_opt, ,l,local, , ,188,Restrict operations to the LOCAL domain (default)
+$search_opt, ,r,remote, , ,189,Restrict operations to the REMOTE domain
+$search_opt, ,b,both, , ,190,Allow LOCAL and REMOTE operations
+$specification_opt, ,v,version, , ,191,Specify version of gem to examine
+$specification_opt, ,l,local, , ,192,Restrict operations to the LOCAL domain (default)
+$specification_opt, ,r,remote, , ,193,Restrict operations to the REMOTE domain
+$specification_opt, ,b,both, , ,194,Allow LOCAL and REMOTE operations
+$specification_opt, , ,all, , ,195,Output specifications for all versions of the gem
+$uninstall_opt, ,a,all, , ,196,Uninstall all matching versions
+$uninstall_opt, , ,no-all, , ,197,Don't uninstall all matching versions
+$uninstall_opt, ,i,ignore-dependencies, , ,198,Ignore dependency requirements while uninstalling
+$uninstall_opt, , ,no-ignore-dependencies, , ,199,Don't ignore dependency requirements while uninstalling
+$uninstall_opt, ,x,executables, , ,200,Uninstall applicable executables without confirmation
+$uninstall_opt, , ,no-executables, , ,201,Don't uninstall applicable executables without confirmation
+$uninstall_opt, ,v,version, , ,202,Specify version of gem to uninstall
+$unpack_opt, ,v,version, , ,203,Specify version of gem to unpack
+$update_opt, ,i,install-dir, , ,204,Gem repository directory to get installed gems
+$update_opt, ,N,no-document, , ,205,Disable documentation generation on update
+$update_opt, , ,document, , ,206,Specify the documentation types you wish to generate
+$update_opt, ,f,force, , ,207,"Force gem to install, bypassing dependency checks"
+$update_opt, , ,no-force, , ,208,"Don't force gem to install, bypassing dependency checks"
+$update_opt, ,t,test, , ,209,Run unit tests prior to installation
+$update_opt, , ,no-test, , ,210,Don't run unit tests prior to installation
+$update_opt, ,w,wrappers, , ,211,Use bin wrappers for executables
+$update_opt, , ,no-wrappers, , ,212,Don't use bin wrappers for executables
+$update_opt, ,P,trust-policy, , ,213,Specify gem trust policy
+$update_opt, , ,ignore-dependencies, , ,214,Do not install any required dependent gems
+$update_opt, ,y,include-dependencies, , ,215,Unconditionally install the required dependent gems
+$update_opt, , ,system, , ,216,Update the RubyGems system software

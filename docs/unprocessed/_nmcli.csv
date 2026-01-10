@@ -1,0 +1,72 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nmcli, $nmcli_commands,t,terse, , ,100,Output is terse
+nmcli, $nmcli_commands,p,pretty, , ,100,Output is pretty
+nmcli, $nmcli_commands,m,mode,tabular multiline, ,100,Switch between tabular and multiline mode
+nmcli, $nmcli_commands,c,color,auto yes no, ,100,Whether to use colors in output
+nmcli, $nmcli_commands,f,fields,all common, ,100,Specify the output fields
+nmcli, $nmcli_commands,e,escape,yes no, ,100,Whether to escape ':' and '\' characters
+nmcli, $nmcli_commands,a,ask, , ,100,Ask for missing parameters
+nmcli, $nmcli_commands,s,show-secrets, , ,100,Allow displaying passwords
+nmcli, $nmcli_commands,w,wait, ,@f @r,100,Set timeout (seconds) waiting for finishing operations
+nmcli, $nmcli_commands,v,version, ,@f @r,100,Show nmcli version
+nmcli, $nmcli_commands, , ,$nmcli_commands, ,101, 
+nmcli," general; and $nmcli_general", , ,status, ,101,Show overall status of NetworkManager
+nmcli," general; and $nmcli_general", , ,hostname, ,101,Get or change persistent system hostname
+nmcli," general; and $nmcli_general", , ,permissions, ,101,Show caller permissions for authenticated operations
+nmcli," general; and $nmcli_general", , ,logging, ,101,Get or change NetworkManager logging level and domains
+nmcli," general; and $nmcli_general", , ,help, ,101, 
+nmcli, contains_seq general logging -- (commandline -xp), , ,level domains help, ,102, 
+nmcli," networking; and $nmcli_networking", , ,on, ,102,Switch networking on
+nmcli," networking; and $nmcli_networking", , ,off, ,102,Switch networking off
+nmcli," networking; and $nmcli_networking", , ,connectivity, ,102,Get network connectivity state
+nmcli," networking; and $nmcli_networking", , ,help, ,102, 
+nmcli, contains_seq networking connectivity -- (commandline -xp), , ,check, ,103,Re-check the connectivity
+nmcli," radio; and $nmcli_radio", , ,all, ,103,"Get status of all radio switches; turn them on/off"
+nmcli, contains_seq radio all -- (commandline -xp), , ,on off help, ,104, 
+nmcli," radio; and $nmcli_radio", , ,wifi, ,104,"Get status of Wi-Fi radio switch; turn it on/off"
+nmcli, contains_seq radio wifi -- (commandline -xp), , ,on off help, ,105, 
+nmcli," radio; and $nmcli_radio", , ,wwan, ,105,"Get status of mobile broadband radio switch; turn it on/off"
+nmcli, contains_seq radio wwan -- (commandline -xp), , ,on off help, ,106, 
+nmcli," connection; and $nmcli_connection", , ,$nmcli_connection, ,106, 
+nmcli," connection; and $nmcli_connection", , ,modify, ,106,Modify one or more properties
+nmcli," connection; and $nmcli_connection", , ,edit, ,106,Interactive edit
+nmcli, contains_seq connection show -- (commandline -xp), ,active, , ,107,List only active profiles
+nmcli, contains_seq connection show -- (commandline -xp), ,order, , ,108,Custom connection ordering
+nmcli, contains_seq connection show -- (commandline -xp), , ,help $cname, ,109, 
+nmcli, contains_seq connection up -- (commandline -xp) && contains -- (commandline -xp)[-1] ifname ap, , ,help $cname, ,110, 
+nmcli, contains_seq connection up -- (commandline -xp) && test (commandline -xp)[-1] = ifname, , ,$ifname, ,111, 
+nmcli, contains_seq connection up -- (commandline -xp) && test (commandline -xp)[-1] = ap, , ,$bssid, ,112, 
+nmcli, contains_seq connection up -- (commandline -xp), , ,nsp, ,113,Specify NSP to connect to (only for WiMAX)
+nmcli, contains_seq connection up -- (commandline -xp), , ,passwd-file, ,114,password file to activate the connection
+nmcli, contains_seq connection down -- (commandline -xp), , ,help $cname, ,115, 
+nmcli, contains_seq connection add -- (commandline -xp), , ,type ifname con-name autoconnect save master slave-type help, ,116, 
+nmcli, contains_seq connection add -- (commandline -xp) && test (commandline -xp)[-1] = ifname, , ,$ifname, ,117, 
+nmcli, contains_seq connection modify -- (commandline -xp), ,temporary, , ,118, 
+nmcli, contains_seq connection modify -- (commandline -xp), , ,help $cname, ,119, 
+nmcli, contains_seq connection clone -- (commandline -xp), ,temporary, , ,120, 
+nmcli, contains_seq connection clone -- (commandline -xp), , ,help $cname, ,121, 
+nmcli, contains_seq connection edit -- (commandline -xp), , ,type help $cname, ,122, 
+nmcli, contains_seq connection edit type -- (commandline -xp), , ,con-name, ,123, 
+nmcli, contains_seq connection delete -- (commandline -xp), , ,help $cname, ,124, 
+nmcli, contains_seq connection monitor -- (commandline -xp), , ,help $cname, ,125, 
+nmcli, contains_seq connection import -- (commandline -xp), ,temporary, , ,126, 
+nmcli, contains_seq connection import -- (commandline -xp), , ,type file help, ,127, 
+nmcli, contains_seq connection export -- (commandline -xp), , ,help $cname, ,128, 
+nmcli," device; and $nmcli_device", , ,$nmcli_device, ,128, 
+nmcli, contains_seq device set -- (commandline -xp), , ,ifname autoconnect managed, ,129, 
+nmcli," contains_seq device wifi -- (commandline -xp); and $wifi_commands", , ,$wifi_commands, ,129, 
+nmcli, contains_seq device wifi list -- (commandline -xp), , ,ifname bssid, ,130, 
+nmcli, contains_seq device wifi list ifname -- (commandline -xp), , ,$ifname, ,131, 
+nmcli, contains_seq device wifi list bssid -- (commandline -xp), , ,$bssid, ,132, 
+nmcli, contains_seq device wifi connect -- (commandline -xp), , ,$ssid $bssid password wep-key-type ifname bssid name private hidden, ,133, 
+nmcli, contains_seq device wifi connect ifname -- (commandline -xp), , ,$ifname, ,134, 
+nmcli, contains_seq device wifi connect bssid -- (commandline -xp), , ,$bssid, ,135, 
+nmcli, contains_seq device wifi hotspot -- (commandline -xp), , ,ifname con-name ssid band channel password, ,136, 
+nmcli, contains_seq device wifi hotspot ifname -- (commandline -xp), , ,$ifname, ,137, 
+nmcli, contains_seq device wifi rescan -- (commandline -xp), , ,ifname ssid, ,138, 
+nmcli, contains_seq device wifi rescan ifname -- (commandline -xp), , ,$ifname, ,139, 
+nmcli, contains_seq device wifi rescan ssid -- (commandline -xp), , ,$ssid, ,140, 
+nmcli, contains_seq device lldp -- (commandline -xp), , ,list, ,141, 
+nmcli," agent; and $nmcli_agent", , ,secret, ,141,Register nmcli as NM secret agent
+nmcli," agent; and $nmcli_agent", , ,polkit, ,141,Register nmcli as a polkit agent for user session
+nmcli," agent; and $nmcli_agent", , ,all, ,141,Run nmcli as secret and polkit agent

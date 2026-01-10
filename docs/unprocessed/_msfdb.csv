@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msfdb, __fish_use_subcommand, , ,init,@f @r,101,Initialize the component
+msfdb, __fish_use_subcommand, , ,reinit,@f @r,102,Delete and reinitialize the component
+msfdb, __fish_use_subcommand, , ,delete,@f @r,103,Delete and stop the component
+msfdb, __fish_use_subcommand, , ,status,@f @r,104,Check component status
+msfdb, __fish_use_subcommand, , ,start,@f @r,105,Start the component
+msfdb, __fish_use_subcommand, , ,stop,@f @r,106,Stop the component
+msfdb, __fish_use_subcommand, , ,restart,@f @r,107,Restart the component

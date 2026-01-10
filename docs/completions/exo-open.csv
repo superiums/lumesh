@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+exo-open, , ,launch, , ,101,"tries to launch the preferred application for a certain category, optionally …"
+exo-open, ,?,help, , ,102, 
+exo-open, ,v,version, , ,103, 
+exo-open, , ,working-directory, , ,104, 

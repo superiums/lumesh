@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+test-spice, , ,help, , ,101,Show help
+test-spice, ,r,remove, , ,102,Remove all test spices
+test-spice, ,s,skip, , ,103,Skip validation with `validate-spice`

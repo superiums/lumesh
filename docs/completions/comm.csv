@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+comm, , ,check-order, , ,101,"check that the input is correctly sorted, even if all input lines are pairable"
+comm, , ,nocheck-order, , ,102,do not check that the input is correctly sorted
+comm, , ,output-delimiter, , ,103,separate columns with STR
+comm, , ,total, , ,104,output a summary
+comm, ,z,zero-terminated, , ,105,"line delimiter is NUL, not newline"
+comm, , ,help, , ,106,display this help and exit
+comm, , ,version, , ,107,output version information and exit

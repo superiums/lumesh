@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+csharp, , ,attach, ,@f @r,101,Inject into other processes
+csharp, ,e, , ,@f @r,102,Specify expression to execute
+csharp, ,s, , ,@r,103,Use file to execute

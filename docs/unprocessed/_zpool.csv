@@ -1,0 +1,148 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zpool, __fish_zpool_needs_command,?, , ,@f,101,Display a help message
+zpool, __fish_zpool_needs_command, , ,add,@f,102,Add new virtual devices to pool
+zpool, __fish_zpool_needs_command, , ,attach,@f,103,Attach virtual device to a pool device
+zpool, __fish_zpool_needs_command, , ,clear,@f,104,Clear devices errors in pool
+zpool, __fish_zpool_needs_command, , ,create,@f,105,Create a new storage pool
+zpool, __fish_zpool_needs_command, , ,destroy,@f,106,Destroy a storage pool
+zpool, __fish_zpool_needs_command, , ,detach,@f,107,Detach virtual device from a mirroring pool
+zpool, __fish_zpool_needs_command, , ,events,@f,108,Display pool event log
+zpool, __fish_zpool_needs_command, , ,export,@f,109,Export a pool
+zpool, __fish_zpool_needs_command, , ,get,@f,110,Get one or several pool properties
+zpool, __fish_zpool_needs_command, , ,history,@f,111,Display pool command history
+zpool, __fish_zpool_needs_command, , ,import,@f,112,"List importable pools, or import some"
+zpool, __fish_zpool_needs_command, , ,iostat,@f,113,Display pool I/O stats
+zpool, __fish_zpool_needs_command, , ,labelclear,@f,114,Remove ZFS label information from the specified device
+zpool, __fish_zpool_needs_command, , ,list,@f,115,List pools with health status and space usage
+zpool, __fish_zpool_needs_command, , ,offline,@f,116,Take the specified devices offline
+zpool, __fish_zpool_needs_command, , ,online,@f,117,Bring the specified devices back online
+zpool, __fish_zpool_needs_command, , ,reguid,@f,118,Reset pool GUID
+zpool, __fish_zpool_needs_command, , ,remove,@f,119,Remove virtual devices from pool
+zpool, __fish_zpool_needs_command, , ,reopen,@f,120,Reopen pool devices
+zpool, __fish_zpool_needs_command, , ,replace,@f,121,Replace a pool virtual device
+zpool, __fish_zpool_needs_command, , ,scrub,@f,122,Start or stop scrubbing
+zpool, __fish_zpool_needs_command, , ,set,@f,123,Set a pool property
+zpool, __fish_zpool_needs_command, , ,split,@f,124,Create a pool by splitting an existing mirror one
+zpool, __fish_zpool_needs_command, , ,status,@f,125,Display detailed pool health status
+zpool, __fish_zpool_needs_command, , ,upgrade,@f,126,"List upgradeable pools, or upgrade one"
+zpool, __fish_zpool_using_command add,f, , ,@f,127,Force use of virtual device
+zpool, __fish_zpool_using_command add,n, , ,@f,128,Dry run: only display resulting configuration
+zpool, __fish_zpool_using_command add,g, , ,@f,129,Display virtual device GUID instead of device name
+zpool, __fish_zpool_using_command add,L, , ,@f,130,Resolve device path symbolic links
+zpool, __fish_zpool_using_command add,P, , ,@f,131,Display device full path
+zpool, __fish_zpool_using_command add,o, , ,@f @r,132,Pool property
+zpool," __fish_zpool_using_command add; and __fish_is_nth_token 2", , , ,@f @r,133,Pool to add virtual device(s) to
+zpool," __fish_zpool_using_command add; and __fish_prev_arg_in add", , , ,@f @k @r,134,Virtual device to add
+zpool, __fish_zpool_using_command attach,f, , ,@f,135,Force use of virtual device
+zpool, __fish_zpool_using_command attach,o, , ,@f @r,136,Pool property
+zpool," __fish_zpool_using_command attach; and __fish_is_nth_token 2", , , ,@f @r,137,Pool to attach virtual device to
+zpool," __fish_zpool_using_command attach; and __fish_is_nth_token 3", , , ,@f @r,138,Existing pool device to attach to
+zpool," __fish_zpool_using_command attach; and __fish_is_nth_token 4", , , ,@f @r,139,Device to be attached
+zpool, __fish_zpool_using_command clear,F, , ,@f,140,Initiate recovery mode
+zpool," __fish_zpool_using_command clear; and __fish_contains_opt -s F",n, , ,@f,141,"Dry run: only determine if the recovery is possible, without attempting it"
+zpool, __fish_zpool_using_command clear, , , ,@f @r,142,Pool to clear errors on
+zpool, __fish_zpool_using_command clear, , , ,@f,143,Virtual device to operate on
+zpool, __fish_zpool_using_command create,B, , ,@f,144,Create whole disk pool with EFI System partition to support booting system with UEFI firmware
+zpool, __fish_zpool_using_command create,f, , ,@f,145,Force use of virtual device
+zpool, __fish_zpool_using_command create,n, , ,@f,146,"Dry run, only display resulting configuration"
+zpool, __fish_zpool_using_command create,d, , ,@f,147,Do not enable any feature on the new pool
+zpool, __fish_zpool_using_command create,o, , ,@f @r,148,Pool property
+zpool, __fish_zpool_using_command create,O, , ,@f @r,149,Root filesystem property
+zpool, __fish_zpool_using_command create,R, , ,@r,150,"Equivalent to '-o cachefile=none,altroot=ROOT'"
+zpool, __fish_zpool_using_command create,m, ,legacy none,@f @r,151,Root filesystem mountpoint
+zpool, __fish_zpool_using_command create,t, , ,@f @r,152,Set a different in-core pool name
+zpool, __fish_zpool_using_command create, , , ,@f @r,153,Virtual device to add
+zpool, __fish_zpool_using_command destroy,f, , ,@f,154,Force unmounting of all contained datasets
+zpool, __fish_zpool_using_command destroy, , , ,@f @r,155,Pool to destroy
+zpool, __fish_zpool_using_command clear, , , ,@f @r,156,Pool to detach device from
+zpool, __fish_zpool_using_command clear, , , ,@f @r,157,Physical device to detach
+zpool, __fish_zpool_using_command events,v, , ,@f,158,Print verbose event information
+zpool, __fish_zpool_using_command events,H, , ,@f,159,Print output in a machine-parsable format
+zpool, __fish_zpool_using_command events,f, , ,@f,160,Output appended data as the log grows
+zpool, __fish_zpool_using_command events,c, , ,@f,161,Clear all previous events
+zpool, __fish_zpool_using_command events, , , ,@f,162,Pool to read events from
+zpool, __fish_zpool_using_command export,a, , ,@f,163,Export all pools
+zpool, __fish_zpool_using_command export,f, , ,@f,164,Force unmounting of all contained datasets
+zpool, __fish_zpool_using_command export, , , ,@f @r,165,Pool to export
+zpool, __fish_zpool_using_command get,p, , ,@f,166,Print parsable (exact) values for numbers
+zpool, __fish_zpool_using_command get,H, , ,@f,167,Print output in a machine-parsable format
+zpool, __fish_zpool_using_command get,o, , ,@f @r,168,Fields to display
+zpool, __fish_zpool_using_command get, , , ,@f @r,169,Properties to get
+zpool, __fish_zpool_using_command get, , , ,@f @r,170,Pool to get properties of
+zpool, __fish_zpool_using_command history,i, , ,@f,171,Also display internal events
+zpool, __fish_zpool_using_command history,l, , ,@f,172,Display log records using long format
+zpool, __fish_zpool_using_command history, , , ,@f,173,Pool to get command history of
+zpool," __fish_zpool_using_command import; and __fish_not_contain_opt -s d",c, , ,@r,174,Read configuration from specified cache file
+zpool," __fish_zpool_using_command import; and __fish_not_contain_opt -s c",d, , ,@r,175,Search for devices or files in specified directory
+zpool, __fish_zpool_using_command import,D, , ,@f,176,List or import destroyed pools only (requires -f for importation)
+zpool, __fish_zpool_using_command import,o, , ,@f @r,177,Mount properties for contained datasets
+zpool, __fish_zpool_using_command import,o, , ,@f @r,178,Properties of the imported pool
+zpool, __fish_zpool_using_command import,f, , ,@f,179,Force import
+zpool, __fish_zpool_using_command import,F, , ,@f,180,Recovery mode
+zpool, __fish_zpool_using_command import,a, , ,@f,181,Search for and import all pools found
+zpool, __fish_zpool_using_command import,m, , ,@f,182,Ignore missing log device (risk of loss of last changes)
+zpool, __fish_zpool_using_command import,R, , ,@r,183,"Equivalent to '-o cachefile=none,altroot=ROOT'"
+zpool, __fish_zpool_using_command import,N, , ,@f,184,Do not mount contained filesystems
+zpool," __fish_zpool_using_command import; and __fish_contains_opt -s F",n, , ,@f,185,"Dry run: only determine if the recovery is possible, without attempting it"
+zpool," __fish_zpool_using_command import; and __fish_contains_opt -s F",X, , ,@f,186,Roll back to a previous TXG (hazardous)
+zpool, __fish_zpool_using_command import,T, , ,@r,187,TXG to roll back to (implies -FX)
+zpool, __fish_zpool_using_command import,t, , ,@f,188,"Specify, as the last argument, a temporary pool name"
+zpool," __fish_zpool_using_command import; and __fish_not_contain_opt -s a", , , ,@f,189,Pool to import
+zpool, __fish_zpool_using_command iostat,T, , ,@f @r,190,Display a timestamp using specified format
+zpool, __fish_zpool_using_command iostat,g, , ,@f,191,Display virtual device GUID instead of device name
+zpool, __fish_zpool_using_command iostat,L, , ,@f,192,Resolve device path symbolic links
+zpool, __fish_zpool_using_command iostat,P, , ,@f,193,Display device full path
+zpool, __fish_zpool_using_command iostat,y, , ,@f,194,Omit statistics since boot
+zpool, __fish_zpool_using_command iostat,v, , ,@f,195,Print verbose statistics
+zpool, __fish_zpool_using_command iostat, , , ,@f,196,Pool to retrieve I/O stats from
+zpool, __fish_zpool_using_command labelclear,f, , ,@f,197,Treat exported or foreign devices as inactive
+zpool, __fish_zpool_using_command labelclear, , , ,@f @r,198,Device to clear ZFS label information from
+zpool, __fish_zpool_using_command list,H, , ,@f,199,Print output in a machine-parsable format
+zpool, __fish_zpool_using_command list,g, , ,@f,200,Display virtual device GUID instead of device name
+zpool, __fish_zpool_using_command list,L, , ,@f,201,Resolve device path symbolic links
+zpool, __fish_zpool_using_command list,P, , ,@f,202,Display device full path
+zpool, __fish_zpool_using_command list,T, , ,@f @r,203,Display a timestamp using specified format
+zpool, __fish_zpool_using_command list,v, , ,@f,204,Print verbose statistics
+zpool, __fish_zpool_using_command list,o, , ,@f @r,205,Property to list
+zpool, __fish_zpool_using_command list, , , ,@f,206,Pool to list properties of
+zpool, __fish_zpool_using_command offline,t, , ,@f,207,Temporarily offline
+zpool, __fish_zpool_using_command offline, , , ,@f @r,208,Pool to offline device from
+zpool, __fish_zpool_using_command offline, , , ,@f @r,209,Physical device to offline
+zpool, __fish_zpool_using_command online,e, , ,@f,210,Expand the device to use all available space
+zpool, __fish_zpool_using_command online, , , ,@f @r,211,Pool to bring device back online on
+zpool, __fish_zpool_using_command online, , , ,@f @r,212,Physical device to bring back online
+zpool, __fish_zpool_using_command reguid, , , ,@f @r,213,Pool which GUID is to be changed
+zpool, __fish_zpool_using_command remove, , , ,@f @r,214,Pool to remove device from
+zpool, __fish_zpool_using_command remove, , , ,@f @r,215,Physical device to remove
+zpool, __fish_zpool_using_command reopen, , , ,@f @r,216,Pool which devices are to be reopened
+zpool, __fish_zpool_using_command replace,f, , ,@f,217,Force use of virtual device
+zpool, __fish_zpool_using_command replace,o, , ,@f @r,218,Pool property
+zpool, __fish_zpool_using_command replace, , , ,@f @r,219,Pool to replace device
+zpool, __fish_zpool_using_command replace, , , ,@f @r,220,Pool device to be replaced
+zpool, __fish_zpool_using_command replace, , , ,@f,221,Device to use for replacement
+zpool, __fish_zpool_using_command scrub,s, , ,@f,222,Stop scrubbing
+zpool, __fish_zpool_using_command scrub,p, , ,@f,223,Pause scrubbing
+zpool, __fish_zpool_using_command scrub, , , ,@f @r,224,Pool to start/stop scrubbing
+zpool, __fish_zpool_using_command set, , , ,@f @r,225,Property to set
+zpool, __fish_zpool_using_command set, , , ,@f @r,226,Pool which property is to be set
+zpool, __fish_zpool_using_command split,g, , ,@f,227,Display virtual device GUID instead of device name
+zpool, __fish_zpool_using_command split,L, , ,@f,228,Resolve device path symbolic links
+zpool, __fish_zpool_using_command split,P, , ,@f,229,Display device full path
+zpool, __fish_zpool_using_command split,n, , ,@f,230,Dry run: only display resulting configuration
+zpool, __fish_zpool_using_command split,R, , ,@r,231,Set altroot for newpool and automatically import it
+zpool, __fish_zpool_using_command split,o, , ,@f @r,232,Pool property
+zpool," __fish_zpool_using_command split; and __fish_contains_opt -s R",o, , ,@f @r,233,Mount properties for contained datasets
+zpool, __fish_zpool_using_command split, , , ,@f @r,234,Pool to split
+zpool, __fish_zpool_using_command status,g, , ,@f,235,Display virtual device GUID instead of device name
+zpool, __fish_zpool_using_command status,L, , ,@f,236,Resolve device path symbolic links
+zpool, __fish_zpool_using_command status,P, , ,@f,237,Display device full path
+zpool, __fish_zpool_using_command status,D, , ,@f,238,Display deduplication histogram
+zpool, __fish_zpool_using_command status,D, , ,@f,239,Display deduplication histogram
+zpool, __fish_zpool_using_command status,v, , ,@f,240,Verbose mode
+zpool, __fish_zpool_using_command status,x, , ,@f,241,Only display status for unhealthy or unavailable pools
+zpool, __fish_zpool_using_command status,T, , ,@f @r,242,Display a timestamp using specified format
+zpool, __fish_zpool_using_command status, , , ,@f,243,Pool which status is to be displayed
+zpool, __fish_zpool_using_command upgrade,a, , ,@f,244,"Upgrade all eligible pools, enabling all supported features"
+zpool, __fish_zpool_using_command upgrade,v, , ,@f,245,Display upgradeable ZFS versions
+zpool, __fish_zpool_using_command upgrade,V, , ,@f @r,246,Upgrade to the specified legacy version
+zpool," __fish_zpool_using_command upgrade; and __fish_not_contain_opt -s a", , , ,@f,247,Pool which status is to be displayed

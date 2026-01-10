@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgcmp, ,D,directory, , ,101,add DIRECTORY to list for input files search . SS 'Operation modifiers:'
+msgcmp, ,m,multi-domain, , ,102,apply ref. pot to each of the domains in def. po
+msgcmp, ,N,no-fuzzy-matching, , ,103,do not use fuzzy matching
+msgcmp, , ,use-fuzzy, , ,104,consider fuzzy entries
+msgcmp, , ,use-untranslated, , ,105,consider untranslated entries . SS 'Input file syntax:'
+msgcmp, ,P,properties-input, , ,106,input files are in Java . properties syntax
+msgcmp, , ,stringtable-input, , ,107,input files are in NeXTstep/GNUstep . strings syntax 
+msgcmp, ,h,help, , ,108,display this help and exit
+msgcmp, ,V,version, , ,109,output version information and exit AUTHOR Written by Peter Miller

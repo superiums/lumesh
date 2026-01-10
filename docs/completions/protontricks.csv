@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+protontricks, ,h,help, , ,101,Show help message and exit
+protontricks, ,v,verbose, , ,102,"Increase log verbosity, can be supplied twice"
+protontricks, , ,no-term, , ,103,Specify that no terminal is available to Protontricks
+protontricks, ,s,search, , ,104,Search for game(s) with the given name
+protontricks, ,l,list, , ,105,List all apps
+protontricks, ,c,command, , ,106,Run a command with Wine-related environment variables set
+protontricks, , ,gui, , ,107,Launch the Protontricks GUI
+protontricks, , ,no-runtime, , ,108,Disable Steam Runtime
+protontricks, , ,no-bwrap, , ,109,Disable bwrap containerization when using Steam Runtime
+protontricks, , ,background-wineserver, , ,110,Launch a wineserver process to improve Wine startup time
+protontricks, , ,no-background-wineserver, , ,111,Do not launch wineserver process
+protontricks, , ,cwd-app, , ,112,Change to the Steam app directory when launching command
+protontricks, ,V,version, , ,113,Show version number and exit

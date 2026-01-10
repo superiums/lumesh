@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wireshark, , ,display, , ,101,Specifies the X display to use
+wireshark, , ,fullscreen, , ,102,Start Wireshark in full screen
+wireshark, ,P, , ,@f @r,103,Override a configuration or data path

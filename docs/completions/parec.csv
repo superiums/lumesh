@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+parec, ,h,help, , ,101,Show help
+parec, , ,version, , ,102,Show version information
+parec, ,r,record, , ,103,Capture audio data and write it to the specified file or to STDOUT if none is…
+parec, ,p,playback, , ,104,"Read audio data from the specified file or STDIN if none is specified, and pl…"
+parec, ,v,verbose, , ,105,Enable verbose operation
+parec, ,s,server, , ,106,Choose the server to connect to
+parec, ,d,device, , ,107,Specify the symbolic name of the sink/source to play/record this stream on/fr…
+parec, , ,monitor-stream, , ,108,Record from the sink input with index INDEX
+parec, ,n,client-name, , ,109,Specify the client name paplay shall pass to the server when connecting
+parec, , ,stream-name, , ,110,Specify the stream name paplay shall pass to the server when creating the str…
+parec, , ,volume, , ,111,Specify the initial playback volume to use
+parec, , ,rate, , ,112,Capture or play back audio with the specified sample rate
+parec, , ,format, , ,113,Capture or play back audio with the specified sample format.  See https://www
+parec, , ,channels, , ,114,Capture or play back audio with the specified number of channels
+parec, , ,channel-map, , ,115,Explicitly choose a channel map when playing back this stream
+parec, , ,fix-format, , ,116,"If passed, the sample format of the stream is changed to the native format of…"
+parec, , ,fix-rate, , ,117,"If passed, the sampling rate of the stream is changed to the native rate of t…"
+parec, , ,fix-channels, , ,118,"If passed, the number of channels and the channel map of the stream is change…"
+parec, , ,no-remix, , ,119,Never upmix or downmix channels
+parec, , ,no-remap, , ,120,Never remap channels
+parec, , ,latency, , ,121,"Explicitly configure the latency, with a time specified in bytes in the selec…"
+parec, , ,latency-msec, , ,122,"Explicitly configure the latency, with a time specified in milliseconds"
+parec, , ,process-time, , ,123,"Explicitly configure the process time, with a time specified in bytes in the …"
+parec, , ,process-time-msec, , ,124,"Explicitly configure the process time, with a time specified in milliseconds"
+parec, , ,property, , ,125,Attach a property to the client and stream.  May be used multiple times
+parec, , ,raw, , ,126,Play/record raw audio data
+parec, , ,file-format, , ,127,Play/record encoded audio data in the file format specified
+parec, , ,list-file-formats, , ,128,List supported file formats

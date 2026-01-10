@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lpadmin, ,o, ,printer-policy=(test -r /etc/cups/cupsd.conf; and string replace -r --filter _ _ < /etc/cups/cupsd.conf), ,114,Set IPP operation policy associated with dest
+lpadmin, ,u, ,allow:all allow:none (__fish_stripprefix=_ __fish_complete_list , __fish_complete_users allow:), ,115,Sets user-level access control on a destination
+lpadmin, ,u, ,deny:all deny:none (__fish_stripprefix=_ __fish_complete_list , __fish_complete_users deny:), ,116,Sets user-level access control on a destination

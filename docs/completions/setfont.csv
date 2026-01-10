@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setfont, ,\\,default8x, , ,101,Load default font . RI (default8x N )
+setfont, , ,font-height, , ,102,Override font height
+setfont, ,d,double, , ,103,"Doubles the size of the font, by replicating all of its pixels vertically and…"
+setfont, ,o,output-font, , ,104,Save previous font in R FILE 
+setfont, , ,output-consolemap, , ,105,Store console map in R FILE 
+setfont, , ,output-unicodemap, , ,106,Save previous Unicode map in R FILE 
+setfont, ,O,output-fullfont, , ,107,Save previous font and Unicode map in R FILE 
+setfont, ,m,consolemap, , ,108,Load console map or Unicode console map from R FILE 
+setfont, ,u,unicodemap, , ,109,Load Unicode table describing the font from R FILE 
+setfont, ,C,console, , ,110,Set the font for the indicated console.  (May require root permissions. )
+setfont, ,f,force, , ,111,Force-load unicode map: Setfont`issues the system call to load the unicode ma…
+setfont, ,R,reset, , ,112,"Reset the screen font, size, and Unicode mapping to the bootup defaults"
+setfont, ,v,verbose, , ,113,Be verbose
+setfont, ,V,version, , ,114,Print version and exit
+setfont, , ,help, , ,115,Print a message describing the options and exit

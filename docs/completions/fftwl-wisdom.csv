@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fftwl-wisdom, ,h,help, , ,101,Display help on the command-line options and usage
+fftwl-wisdom, ,V,version, , ,102,Print the version number and copyright information
+fftwl-wisdom, ,v,verbose, , ,103,Verbose output
+fftwl-wisdom, ,c,canonical, , ,104,Optimize/pre-plan a canonical set of sizes: all powers of two and ten up to 2…
+fftwl-wisdom, ,t,time-limit, , ,105,"Stop after a time of  hours (hours) has elapsed, outputting accumulated wisdom"
+fftwl-wisdom, ,o,output-file, , ,106,Send wisdom output to  file rather than to standard output (the default)
+fftwl-wisdom, ,x,exhaustive, , ,107,"Normally,   fftwl-wisdom creates plans in FFTW_PATIENT mode, but with these o…"
+fftwl-wisdom, ,n,no-system-wisdom, , ,108,Do not import the system wisdom from  /etc/fftw/wisdoml (which is normally re…
+fftwl-wisdom, ,w,wisdom-file, , ,109,"Import wisdom from  file (in addition to the system wisdom, unless   -n is sp…"
+fftwl-wisdom, ,T,threads, , ,110,Plan with N threads

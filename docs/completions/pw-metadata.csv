@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-metadata, ,r,remote, , ,101,The name the remote instance to use
+pw-metadata, ,h,help, , ,102,Show help
+pw-metadata, , ,version, , ,103,Show version information
+pw-metadata, ,l,list, , ,104,List available metadata objects
+pw-metadata, ,m,monitor, , ,105,Keeps running and log the changes to the metadata
+pw-metadata, ,d,delete, , ,106,Delete all metadata for id or for the specified key of object id
+pw-metadata, ,n,name, , ,107,Metadata name (Default: 'default')

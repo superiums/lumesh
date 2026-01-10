@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+du, ,0,null, , ,101,"end each output line with NUL, not newline"
+du, ,a,all, , ,102,"write counts for all files, not just directories"
+du, , ,apparent-size, , ,103,"print apparent sizes rather than device usage; although the apparent size is …"
+du, ,B,block-size, , ,104,"scale sizes by SIZE before printing them; e. g"
+du, ,b,bytes, , ,105,"equivalent to '--apparent-size --block-size=\\,1\\/'"
+du, ,c,total, , ,106,produce a grand total
+du, ,D,dereference-args, , ,107,dereference only symlinks that are listed on the command line
+du, ,d,max-depth, , ,108,"print the total for a directory (or file, with --all) only if it is N or fewe…"
+du, , ,files0-from, , ,109,"summarize device usage of the NUL-terminated file names specified in file F; …"
+du, ,h,human-readable, , ,110,"print sizes in human readable format (e. g. , 1K 234M 2G)"
+du, , ,inodes, , ,111,list inode usage information instead of block usage
+du, ,L,dereference, , ,112,dereference all symbolic links
+du, ,l,count-links, , ,113,count sizes many times if hard linked
+du, ,P,no-dereference, , ,114,don't follow any symbolic links (this is the default)
+du, ,S,separate-dirs, , ,115,for directories do not include size of subdirectories
+du, , ,si, , ,116,"like -h, but use powers of 1000 not 1024"
+du, ,s,summarize, , ,117,display only a total for each argument
+du, ,t,threshold, , ,118,"exclude entries smaller than SIZE if positive, or entries greater than SIZE i…"
+du, , ,time, , ,119,"show time of the last modification of any file in the directory, or any of it…"
+du, , ,time-style, , ,120,"show times using STYLE, which can be: full-iso, long-iso, iso, or +FORMAT; FO…"
+du, ,X,exclude-from, , ,121,exclude files that match any pattern in FILE
+du, , ,exclude, , ,122,exclude files that match PATTERN
+du, ,x,one-file-system, , ,123,skip directories on different file systems
+du, , ,help, , ,124,display this help and exit
+du, , ,version, , ,125,output version information and exit

@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+clj, ,X, , ,@f @k @r,101,Use concatenated aliases to modify classpath or supply exec fn/args
+clj, ,A, , ,@f @k @r,102,Use concatenated aliases to modify classpath
+clj, ,M, , ,@f @k @r,103,Use concatenated aliases to modify classpath or supply main opts
+clj, ,T, , ,@f @k @r,104,Invoke tool by name or via aliases ala -X
+clj, , , , ,@f @r,105,Deps data to use as the last deps file to be merged
+clj, , , , ,@f,106,Compute classpath and echo to stdout only
+clj, , , , ,@f,107,Generate (or update) pom.xml with deps and paths
+clj, , , , ,@f,108,Print dependency tree
+clj, , , , ,@f @r,109,"Do NOT compute or cache classpath, use this one instead"
+clj, , , , ,@f,110,Ignore the ~/.clojure/deps.edn config file
+clj, , , , ,@f,111,Force recomputation of the classpath (don't use the cache)
+clj, , , , ,@f,112,Print important path info to console
+clj, , , , ,@f,113,Print environment and command parsing info as data
+clj, , , , ,@f,114,Set specific number of download threads
+clj, , , , ,@f,115,Write a trace.edn file that traces deps expansion
+clj, ,h,help, ,@f @k,116,Show help
+clj, ,P, , ,@f,117,"Prepare deps - download libs, cache classpath, but don't exec"
+clj, ,i,init, ,@r,118,Load a file or resource
+clj, ,e,eval, ,@f @r,119,"Eval exprs in string; print non-nil values"
+clj, , ,report, ,@f,120,"Report uncaught exception to 'file' (default), 'stderr', or 'none'"
+clj, , ,version, ,@f,121,Print the version to stdout and exit
+clj, ,m,main, ,@f,122,Call the -main function from namespace w/args
+clj, ,r,repl, ,@f,123,Run a repl
+clj, , , , ,@r,124,Run a script from a file or resource

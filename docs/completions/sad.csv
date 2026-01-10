@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sad, ,0,read0, , ,101,Use \0 as stdin delimiter
+sad, ,e,exact, , ,102,String literal mode
+sad, ,f,flags, ,@f @r,103,Regex flags: use `--help` instead of `-h` to see details
+sad, , ,fzf,never,@f @r,104,"Additional Fzf options, disable = never"
+sad, , ,help, , ,105,Print detailed help information
+sad, ,k,commit, , ,106,"No preview, write changes to file"
+sad, ,p,pager,never,@f @r,107,"Colourizing program, disable = never, default = $GIT_PAGER"
+sad, ,u,unified,0 1 2 3 4 5,@f @r,108,"Same as in GNU diff --unified={size}, affects aggregate size"
+sad, ,V,version, ,@f @r,109,Print version information

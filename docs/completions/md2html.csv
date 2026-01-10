@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+md2html, ,o,output, , ,101,Write output to OUTFILE instead of stdout(3) 
+md2html, ,f,full-html, , ,102,"Generate full HTML document, including header "
+md2html, ,s,stat, , ,103,Measure time of input parsing 
+md2html, ,h,help, , ,104,Display help and exit 
+md2html, ,v,version, , ,105,Display version and exit . SS Markdown dialect options: 
+md2html, , ,commonmark, , ,106,CommonMark (the default) 
+md2html, , ,github, , ,107,Github Flavored Markdown 
+md2html, , ,fcollapse-whitespace, , ,108,Collapse non-trivial whitespace 
+md2html, , ,fverbatim-entities, , ,109,Do not translate entities 
+md2html, , ,fpermissive-atx-headers, , ,110,Allow ATX headers without delimiting space 
+md2html, , ,fpermissive-url-autolinks, , ,111,Allow URL autolinks without '<' and '>' delimiters 
+md2html, , ,fpermissive-www-autolinks, , ,112,Allow WWW autolinks without any scheme (e. g.  'www. example. com') 
+md2html, , ,fpermissive-email-autolinks, , ,113,"Allow e-mail autolinks without '<', '>' and 'mailto:' "
+md2html, , ,fpermissive-autolinks, , ,114,Enable all 3 of the above permissive autolinks options
+md2html, , ,fhard-soft-breaks, , ,115,Force all soft breaks to act as hard breaks 
+md2html, , ,fno-indented-code, , ,116,Disable indented code blocks 
+md2html, , ,fno-html-blocks, , ,117,Disable raw HTML blocks 
+md2html, , ,fno-html-spans, , ,118,Disable raw HTML spans 
+md2html, , ,fno-html, , ,119,Same as --fno-html-blocks --fno-html-spans 
+md2html, , ,ftables, , ,120,Enable tables 
+md2html, , ,fstrikethrough, , ,121,Enable strikethrough spans 
+md2html, , ,ftasklists, , ,122,Enable task lists

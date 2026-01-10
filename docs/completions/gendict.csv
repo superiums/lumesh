@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gendict, ,?,help, , ,101,Print help about usage and exit
+gendict, ,V,version, , ,102,Print the version of  gendict and exit
+gendict, ,c,copyright, , ,103,Embeds the standard ICU copyright into the R output-file 
+gendict, ,v,verbose, , ,104,Display extra informative messages during execution
+gendict, ,i,icudatadir, , ,105,Look for any necessary ICU data files in R directory 
+gendict, , ,uchars, , ,106,Set the output trie type to UChar.  Mutually exclusive with  --bytes
+gendict, , ,bytes, , ,107,Set the output trie type to Bytes.  Mutually exclusive with   --uchars
+gendict, , ,transform, , ,108,Set the transform type.  Should only be specified with  --bytes

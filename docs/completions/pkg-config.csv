@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkg-config, , ,modversion, ,@f,101,Print versions of the specified libraries
+pkg-config, , ,version, ,@f,102,Display the version of pkg-config and quit
+pkg-config, , ,help, ,@f,103,Displays a help message and quit
+pkg-config, , ,print-errors, ,@f,104,Print message when errors occur
+pkg-config, , ,silence-errors, ,@f,105,Stay quiet when errors occur
+pkg-config, , ,errors-to-stdout, ,@f,106,Print errors to stdout instead of stderr
+pkg-config, , ,debug, ,@f,107,Print debugging information
+pkg-config, , ,cflags, ,@f,108,Print pre-processor and compile flags for the specified libraries
+pkg-config, , ,cflags-only-I, ,@f,109,This prints the -I part of '--cflags'.
+pkg-config, , ,libs, ,@f,110,Print link flags
+pkg-config, , ,libs-only-L, ,@f,111,This prints the -L/-R part of '--libs'.
+pkg-config, , ,libs-only-l, ,@f,112,This prints the -l part of '--libs'
+pkg-config, , ,variable, ,@f,113,This returns the value of a variable defined in a package's .pc file
+pkg-config, , ,define-variable, ,@f,114,This sets a global value for a variable
+pkg-config, , ,print-variables, ,@f,115,Returns a list of all variables defined in the package
+pkg-config, , ,uninstalled, ,@f,116,Return success if any -uninstalled packages are used
+pkg-config, , ,max-version, ,@f,117,Test if a package has at most the specified version
+pkg-config, , ,atleast-version, ,@f,118,Test if a package has at least this version
+pkg-config, , ,exact-version, ,@f,119,Test if a package has exactly this version
+pkg-config, , ,exists, ,@f,120,Test if a package exists
+pkg-config, , ,static, ,@f,121,Output libraries suitable for static linking
+pkg-config, , ,list-all, ,@f,122,List all modules found in the pkg-config path
+pkg-config, , ,print-provides, ,@f,123,List all modules the given packages provides
+pkg-config, , ,print-requires, ,@f,124,List all modules the given packages requires
+pkg-config, , ,print-requires-private, ,@f,125,List all modules the given packages requires for static linking
+pkg-config, , , , ,@f,126, 

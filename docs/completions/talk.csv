@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+talk, ,?,help, , ,101,give this help list
+talk, , ,usage, , ,102,give a short usage message
+talk, ,V,version, , ,103,"print program version AUTHOR Written by Kipp Hickman, Clem Cole, and Peter Mo…"

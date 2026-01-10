@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pathchk, , ,portability, , ,101,check for all POSIX systems (equivalent to -p -P)
+pathchk, , ,help, , ,102,display this help and exit
+pathchk, , ,version, , ,103,"output version information and exit AUTHOR Written by Paul Eggert, David MacK…"

@@ -1,0 +1,65 @@
+cmd,conds,short,long,params,dirs,pri,desc
+out123, , ,name, , ,101,"Set the name of this instance, possibly used in various places"
+out123, ,o,output, , ,102,Select audio output module
+out123, , ,list-modules, , ,103,List the available modules
+out123, , ,list-devices, , ,104,List the available output devices for given output module
+out123, ,a,audiodevice, , ,105,Specify the audio device to use
+out123, ,s,stdout, , ,106,"The audio samples are written to standard output, instead of playing them thr…"
+out123, ,S,STDOUT, , ,107,"This variant additionally writes the data to stdout, while still playing it o…"
+out123, ,O,outfile, , ,108,Write raw output into a file (instead of simply redirecting standard output t…
+out123, ,w,wav, , ,109,"Write output as WAV file  file , or standard output if  - is or the empty str…"
+out123, , ,au, , ,110,Write to  file in SUN audio format
+out123, , ,cdr, , ,111,"Write to  file as a CDR (CD-ROM audio, more correctly CDDA for Compact Disc D…"
+out123, ,r,rate, , ,112,Set sample rate in Hz (default: 44100)
+out123, ,R,inputrate, , ,113,Set input sample rate to a different value
+out123, , ,speed, , ,114,Speed up/down playback by that factor using resampling.  See --resample
+out123, , ,resample, , ,115,This chooses the method for resampling between differing sampling rates or to…
+out123, ,c,channels, , ,116,Set channel count to given value
+out123, ,C,inputch, , ,117,Set input channel count to a differnt value than for output
+out123, ,e,encoding, , ,118,Choose output sample encoding
+out123, , ,endian, , ,119,Select output endianess (byte order)
+out123, ,E,inputenc, , ,120,Specify input encoding different from output encoding for conversion
+out123, , ,inputend, , ,121,Select input endianess (byte order)
+out123, , ,byteswap, , ,122,"A switch to trigger swapping of byte order just before output, after any othe…"
+out123, ,m,mono, , ,123,"Set for single-channel audio (default is two channels, stereo)"
+out123, , ,stereo, , ,124,"Select stereo output (2 channels, default)"
+out123, , ,list-encodings, , ,125,List known encoding short and long names to standard output
+out123, , ,mix, , ,126,"Specify a mixing matrix between input and output channels as linear factors, …"
+out123, , ,filter, , ,127,Apply digital filter(s) before pre-amplification (see --preamp) with the coef…
+out123, ,P,preamp, , ,128,Enable a pre-amplification stage that amplifies the signal with the given val…
+out123, , ,offset, , ,129,Apply a PCM offset (floating point value scaled in [-1:1] in the pre-amplific…
+out123, , ,clip, , ,130,Select clipping mode: 'soft' or 'hard' for forced clipping also for floating …
+out123, , ,dither, , ,131,Enable dithering for conversions to integer.  If you insist
+out123, , ,test-format, , ,132,Check if given format is supported by given driver and device (in command lin…
+out123, , ,test-encodings, , ,133,Print out the short names of encodings supported with the current setup
+out123, , ,query-format, , ,134,"If the selected driver and device communicate some default accepted format, p…"
+out123, , ,headphones, , ,135,"Direct audio output to the headphone connector (some hardware only; AIX, HP, …"
+out123, , ,speaker, , ,136,"Direct audio output to the speaker  (some hardware only; AIX, HP, SUN)"
+out123, , ,lineout, , ,137,"Direct audio output to the line-out connector (some hardware only; AIX, HP, S…"
+out123, ,b,buffer, , ,138,Use an audio output buffer of  size Kbytes
+out123, , ,preload, , ,139,Wait for the buffer to be filled to  fraction before starting playback (fract…
+out123, , ,devbuffer, , ,140,"Set device buffer in seconds; <= 0 means default value"
+out123, , ,timelimit, , ,141,Set playback time limit in PCM samples if set to a value greater than zero
+out123, , ,seconds, , ,142,Set time limit in seconds instead
+out123, , ,source, , ,143,Choose the signal source: 'file' (default) for playback of the given file(s) …
+out123, , ,wave-freq, , ,144,Set wave generator frequency or list of those with comma separation for enabl…
+out123, , ,wave-pat, , ,145,Set the waveform patterns of the generated waves as comma-separated list
+out123, , ,wave-phase, , ,146,"Set waveform phase shift(s) as comma-separated list, negative values invertin…"
+out123, , ,wave-direction, , ,147,Set wave direction explicitly (the sign counts)
+out123, , ,wave-sweep, , ,148,"Sweep a generated wave to the given frequency, from first one specified for -…"
+out123, , ,sweep-time, , ,149,Set frequency sweep duration in seconds if > 0
+out123, , ,sweep-count, , ,150,Set timelimit to exactly produce that many (smooth) sweeps
+out123, , ,sweep-type, , ,151,"Set sweep type: lin(ear) for linear, qua(d) (default) for quadratic, or exp(o…"
+out123, , ,sweep-hard, , ,152,Disable post-sweep smoothing for periodicity
+out123, , ,genbuffer, , ,153,"Set the buffer size (limit) for signal generators, if > 0 (default), this enf…"
+out123, , ,wave-limit, , ,154,This is an alias for --genbuffer
+out123, , ,pink-rows, , ,155,Activate pink noise source and choose rows for the algorithm (<1 chooses defa…
+out123, , ,geiger-activity, , ,156,"This configures the simulation of a Geiger-Mueller counter as source, with th…"
+out123, ,t,test, , ,157,"Test mode.   The audio stream is read, but no output occurs"
+out123, ,v,verbose, , ,158,Increase the verbosity level
+out123, ,q,quiet, , ,159,Quiet.   Suppress diagnostic messages
+out123, , ,aggressive, , ,160,Tries to get higher priority
+out123, ,T,realtime, , ,161,Tries to gain realtime priority
+out123, ,?,help, , ,162,Shows short usage instructions
+out123, , ,longhelp, , ,163,Shows long usage instructions
+out123, , ,version, , ,164,Print the version string.  AUTHORS

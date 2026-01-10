@@ -1,0 +1,169 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cf, __fish_use_subcommand, , ,help,@f,101,Show help
+cf, __fish_use_subcommand, , ,version,@f,102,Print the version
+cf, __fish_use_subcommand, , ,login,@f,103,Log user in
+cf, __fish_use_subcommand, , ,logout,@f,104,Log user out
+cf, __fish_use_subcommand, , ,passwd,@f,105,Change user password
+cf, __fish_use_subcommand, , ,target,@f,106,Set or view the targeted org or space
+cf, __fish_use_subcommand, , ,api,@f,107,Set or view target api url
+cf, __fish_use_subcommand, , ,auth,@f,108,Authenticate user non-interactively
+cf, __fish_use_subcommand, , ,apps,@f,109,List all apps in the target space
+cf, __fish_use_subcommand, , ,app,@f,110,Display health and status for an app
+cf, __fish_use_subcommand, , ,push,@f,111,Push a new app or sync changes to an existing app
+cf, __fish_use_subcommand, , ,scale,@f,112,"Change or view the instance count, disk space limit, and memory limit for an app"
+cf, __fish_use_subcommand, , ,delete,@f,113,Delete an app
+cf, __fish_use_subcommand, , ,rename,@f,114,Rename an app
+cf, __fish_use_subcommand, , ,start,@f,115,Start an app
+cf, __fish_use_subcommand, , ,stop,@f,116,Stop an app
+cf, __fish_use_subcommand, , ,restart,@f,117,"Stop all instances of the app, then start them again"
+cf, __fish_use_subcommand, , ,restage,@f,118,Recreate the app's executable artifact using the latest pushed app files and environment
+cf, __fish_use_subcommand, , ,restart-app-instance,@f,119,"Terminate, then restart an app instance"
+cf, __fish_use_subcommand, , ,run-task,@f,120,Run a one-off task on an app
+cf, __fish_use_subcommand, , ,tasks,@f,121,List tasks of an app
+cf, __fish_use_subcommand, , ,terminate-task,@f,122,Terminate a running task of an app
+cf, __fish_use_subcommand, , ,events,@f,123,Show recent app events
+cf, __fish_use_subcommand, , ,files,@f,124,Print out a list of files or contents of a specific file of an app running on the DEA backend
+cf, __fish_use_subcommand, , ,logs,@f,125,Tail or show recent logs for an app
+cf, __fish_use_subcommand, , ,env,@f,126,Show all env variables for an app
+cf, __fish_use_subcommand, , ,set-env,@f,127,Set an env variable for an app
+cf, __fish_use_subcommand, , ,unset-env,@f,128,Remove an env variable
+cf, __fish_use_subcommand, , ,stacks,@f,129,"List all stacks (stack is a pre-built file system, including an OS, to run apps)"
+cf, __fish_use_subcommand, , ,stack,@f,130,"Show stack info (stack is a pre-built file system, including an OS, to run apps)"
+cf, __fish_use_subcommand, , ,copy-source,@f,131,Copy the source to another existing app (and restart that)
+cf, __fish_use_subcommand, , ,create-app-manifest,@f,132,Create an app manifest for an app that has been pushed successfully
+cf, __fish_use_subcommand, , ,get-health-check,@f,133,Show the type of health check performed on an app
+cf, __fish_use_subcommand, , ,set-health-check,@f,134,Change type of health check performed on an app
+cf, __fish_use_subcommand, , ,enable-ssh,@f,135,Enable ssh for the application
+cf, __fish_use_subcommand, , ,disable-ssh,@f,136,Disable ssh for the application
+cf, __fish_use_subcommand, , ,ssh-enabled,@f,137,Reports whether SSH is enabled on an application container instance
+cf, __fish_use_subcommand, , ,ssh,@f,138,SSH to an application container instance
+cf, __fish_use_subcommand, , ,marketplace,@f,139,List available offerings in the marketplace
+cf, __fish_use_subcommand, , ,services,@f,140,List all service instances in the target space
+cf, __fish_use_subcommand, , ,service,@f,141,Show service instance info
+cf, __fish_use_subcommand, , ,create-service,@f,142,Create a service instance
+cf, __fish_use_subcommand, , ,update-service,@f,143,Update a service instance
+cf, __fish_use_subcommand, , ,delete-service,@f,144,Delete a service instance
+cf, __fish_use_subcommand, , ,rename-service,@f,145,Rename a service instance
+cf, __fish_use_subcommand, , ,create-service-key,@f,146,Create key for a service instance
+cf, __fish_use_subcommand, , ,service-keys,@f,147,List keys for a service instance
+cf, __fish_use_subcommand, , ,service-key,@f,148,Show service key info
+cf, __fish_use_subcommand, , ,delete-service-key,@f,149,Delete a service key
+cf, __fish_use_subcommand, , ,bind-service,@f,150,Bind a service instance to an app
+cf, __fish_use_subcommand, , ,unbind-service,@f,151,Unbind a service instance from an app
+cf, __fish_use_subcommand, , ,bind-route-service,@f,152,Bind a service instance to an HTTP route
+cf, __fish_use_subcommand, , ,unbind-route-service,@f,153,Unbind a service instance from an HTTP route
+cf, __fish_use_subcommand, , ,create-user-provided-service,@f,154,Make a user-provided service instance available to CF apps
+cf, __fish_use_subcommand, , ,update-user-provided-service,@f,155,Update user-provided service instance
+cf, __fish_use_subcommand, , ,orgs,@f,156,List all orgs
+cf, __fish_use_subcommand, , ,org,@f,157,Show org info
+cf, __fish_use_subcommand, , ,create-org,@f,158,Create an org
+cf, __fish_use_subcommand, , ,delete-org,@f,159,Delete an org
+cf, __fish_use_subcommand, , ,rename-org,@f,160,Rename an org
+cf, __fish_use_subcommand, , ,spaces,@f,161,List all spaces in an org
+cf, __fish_use_subcommand, , ,space,@f,162,Show space info
+cf, __fish_use_subcommand, , ,create-space,@f,163,Create a space
+cf, __fish_use_subcommand, , ,delete-space,@f,164,Delete a space
+cf, __fish_use_subcommand, , ,rename-space,@f,165,Rename a space
+cf, __fish_use_subcommand, , ,allow-space-ssh,@f,166,Allow SSH access for the space
+cf, __fish_use_subcommand, , ,disallow-space-ssh,@f,167,Disallow SSH access for the space
+cf, __fish_use_subcommand, , ,space-ssh-allowed,@f,168,Reports whether SSH is allowed in a space
+cf, __fish_use_subcommand, , ,domains,@f,169,List domains in the target org
+cf, __fish_use_subcommand, , ,create-domain,@f,170,Create a domain in an org for later use
+cf, __fish_use_subcommand, , ,delete-domain,@f,171,Delete a domain
+cf, __fish_use_subcommand, , ,create-shared-domain,@f,172,Create a domain that can be used by all orgs (admin-only)
+cf, __fish_use_subcommand, , ,delete-shared-domain,@f,173,Delete a shared domain
+cf, __fish_use_subcommand, , ,router-groups,@f,174,List router groups
+cf, __fish_use_subcommand, , ,routes,@f,175,List all routes in the current space or the current organization
+cf, __fish_use_subcommand, , ,create-route,@f,176,Create a url route in a space for later use
+cf, __fish_use_subcommand, , ,check-route,@f,177,Perform a simple check to determine whether a route currently exists or not
+cf, __fish_use_subcommand, , ,map-route,@f,178,Add a url route to an app
+cf, __fish_use_subcommand, , ,unmap-route,@f,179,Remove a url route from an app
+cf, __fish_use_subcommand, , ,delete-route,@f,180,Delete a route
+cf, __fish_use_subcommand, , ,delete-orphaned-routes,@f,181,Delete all orphaned routes (i.e. those that are not mapped to an app)
+cf, __fish_use_subcommand, , ,network-policies,@f,182,List direct network traffic policies
+cf, __fish_use_subcommand, , ,add-network-policy,@f,183,Create policy to allow direct network traffic from one app to another
+cf, __fish_use_subcommand, , ,remove-network-policy,@f,184,Remove network traffic policy of an app
+cf, __fish_use_subcommand, , ,buildpacks,@f,185,List all buildpacks
+cf, __fish_use_subcommand, , ,create-buildpack,@f,186,Create a buildpack
+cf, __fish_use_subcommand, , ,update-buildpack,@f,187,Update a buildpack
+cf, __fish_use_subcommand, , ,rename-buildpack,@f,188,Rename a buildpack
+cf, __fish_use_subcommand, , ,delete-buildpack,@f,189,Delete a buildpack
+cf, __fish_use_subcommand, , ,create-user,@f,190,Create a new user
+cf, __fish_use_subcommand, , ,delete-user,@f,191,Delete a user
+cf, __fish_use_subcommand, , ,org-users,@f,192,Show org users by role
+cf, __fish_use_subcommand, , ,set-org-role,@f,193,Assign an org role to a user
+cf, __fish_use_subcommand, , ,unset-org-role,@f,194,Remove an org role from a user
+cf, __fish_use_subcommand, , ,space-users,@f,195,Show space users by role
+cf, __fish_use_subcommand, , ,set-space-role,@f,196,Assign a space role to a user
+cf, __fish_use_subcommand, , ,unset-space-role,@f,197,Remove a space role from a user
+cf, __fish_use_subcommand, , ,quotas,@f,198,List available usage quotas
+cf, __fish_use_subcommand, , ,quota,@f,199,Show quota info
+cf, __fish_use_subcommand, , ,set-quota,@f,200,Assign a quota to an org
+cf, __fish_use_subcommand, , ,create-quota,@f,201,Define a new resource quota
+cf, __fish_use_subcommand, , ,delete-quota,@f,202,Delete a quota
+cf, __fish_use_subcommand, , ,update-quota,@f,203,Update an existing resource quota
+cf, __fish_use_subcommand, , ,share-private-domain,@f,204,Share a private domain with an org
+cf, __fish_use_subcommand, , ,unshare-private-domain,@f,205,Unshare a private domain with an org
+cf, __fish_use_subcommand, , ,space-quotas,@f,206,List available space resource quotas
+cf, __fish_use_subcommand, , ,space-quota,@f,207,Show space quota info
+cf, __fish_use_subcommand, , ,create-space-quota,@f,208,Define a new space resource quota
+cf, __fish_use_subcommand, , ,update-space-quota,@f,209,Update an existing space quota
+cf, __fish_use_subcommand, , ,delete-space-quota,@f,210,Delete a space quota definition and unassign the space quota from all spaces
+cf, __fish_use_subcommand, , ,set-space-quota,@f,211,Assign a space quota definition to a space
+cf, __fish_use_subcommand, , ,unset-space-quota,@f,212,Unassign a quota from a space
+cf, __fish_use_subcommand, , ,service-auth-tokens,@f,213,List service auth tokens
+cf, __fish_use_subcommand, , ,create-service-auth-token,@f,214,Create a service auth token
+cf, __fish_use_subcommand, , ,update-service-auth-token,@f,215,Update a service auth token
+cf, __fish_use_subcommand, , ,delete-service-auth-token,@f,216,Delete a service auth token
+cf, __fish_use_subcommand, , ,service-brokers,@f,217,List service brokers
+cf, __fish_use_subcommand, , ,create-service-broker,@f,218,Create a service broker
+cf, __fish_use_subcommand, , ,update-service-broker,@f,219,Update a service broker
+cf, __fish_use_subcommand, , ,delete-service-broker,@f,220,Delete a service broker
+cf, __fish_use_subcommand, , ,rename-service-broker,@f,221,Rename a service broker
+cf, __fish_use_subcommand, , ,migrate-service-instances,@f,222,Migrate service instances from one service plan to another
+cf, __fish_use_subcommand, , ,purge-service-offering,@f,223,Recursively remove service from CF database without requests to service broker
+cf, __fish_use_subcommand, , ,purge-service-instance,@f,224,Recursively remove service instance from CF database without requests to service broker
+cf, __fish_use_subcommand, , ,service-access,@f,225,List service access settings
+cf, __fish_use_subcommand, , ,enable-service-access,@f,226,Enable access to a service or service plan
+cf, __fish_use_subcommand, , ,disable-service-access,@f,227,Disable access to a service or service plan
+cf, __fish_use_subcommand, , ,security-group,@f,228,Show a single security group
+cf, __fish_use_subcommand, , ,security-groups,@f,229,List all security groups
+cf, __fish_use_subcommand, , ,create-security-group,@f,230,Create a security group
+cf, __fish_use_subcommand, , ,update-security-group,@f,231,Update a security group
+cf, __fish_use_subcommand, , ,delete-security-group,@f,232,Deletes a security group
+cf, __fish_use_subcommand, , ,bind-security-group,@f,233,"Bind a security group to a particular space, or all existing spaces of an org"
+cf, __fish_use_subcommand, , ,unbind-security-group,@f,234,Unbind a security group from a space
+cf, __fish_use_subcommand, , ,bind-staging-security-group,@f,235,Bind a security group to the list of security groups to be used for staging applications
+cf, __fish_use_subcommand, , ,staging-security-groups,@f,236,List security groups in the staging set for applications
+cf, __fish_use_subcommand, , ,unbind-staging-security-group,@f,237,Unbind a security group from the set of security groups for staging applications
+cf, __fish_use_subcommand, , ,bind-running-security-group,@f,238,Bind a security group to the list of security groups to be used for running applications
+cf, __fish_use_subcommand, , ,running-security-groups,@f,239,List security groups in the set of security groups for running applications
+cf, __fish_use_subcommand, , ,unbind-running-security-group,@f,240,Unbind a security group from the set of security groups for running applications
+cf, __fish_use_subcommand, , ,running-environment-variable-group,@f,241,Retrieve the contents of the running environment variable group
+cf, __fish_use_subcommand, , ,staging-environment-variable-group,@f,242,Retrieve the contents of the staging environment variable group
+cf, __fish_use_subcommand, , ,set-staging-environment-variable-group,@f,243,Pass parameters as JSON to create a staging environment variable group
+cf, __fish_use_subcommand, , ,set-running-environment-variable-group,@f,244,Pass parameters as JSON to create a running environment variable group
+cf, __fish_use_subcommand, , ,isolation-segments,@f,245,List all isolation segments
+cf, __fish_use_subcommand, , ,create-isolation-segment,@f,246,Create an isolation segment
+cf, __fish_use_subcommand, , ,delete-isolation-segment,@f,247,Delete an isolation segment
+cf, __fish_use_subcommand, , ,enable-org-isolation,@f,248,Entitle an organization to an isolation segment
+cf, __fish_use_subcommand, , ,disable-org-isolation,@f,249,Revoke an organization's entitlement to an isolation segment
+cf, __fish_use_subcommand, , ,set-org-default-isolation-segment,@f,250,Set the default isolation segment used for apps in spaces in an org
+cf, __fish_use_subcommand, , ,reset-org-default-isolation-segment,@f,251,Reset the default isolation segment used for apps in spaces of an org
+cf, __fish_use_subcommand, , ,set-space-isolation-segment,@f,252,Assign the isolation segment for a space
+cf, __fish_use_subcommand, , ,reset-space-isolation-segment,@f,253,Reset the space's isolation segment to the org default
+cf, __fish_use_subcommand, , ,feature-flags,@f,254,Retrieve list of feature flags with status
+cf, __fish_use_subcommand, , ,feature-flag,@f,255,Retrieve an individual feature flag with status
+cf, __fish_use_subcommand, , ,enable-feature-flag,@f,256,Allow use of a feature
+cf, __fish_use_subcommand, , ,disable-feature-flag,@f,257,Prevent use of a feature
+cf, __fish_use_subcommand, , ,curl,@f,258,Executes a request to the targeted API endpoint
+cf, __fish_use_subcommand, , ,config,@f,259,Write default values to the config
+cf, __fish_use_subcommand, , ,oauth-token,@f,260,Retrieve and display the OAuth token for the current session
+cf, __fish_use_subcommand, , ,ssh-code,@f,261,Get a one time password for ssh clients
+cf, __fish_use_subcommand, , ,add-plugin-repo,@f,262,Add a new plugin repository
+cf, __fish_use_subcommand, , ,remove-plugin-repo,@f,263,Remove a plugin repository
+cf, __fish_use_subcommand, , ,list-plugin-repos,@f,264,List all the added plugin repositories
+cf, __fish_use_subcommand, , ,repo-plugins,@f,265,List all available plugins in specified repository or in all added repositories
+cf, __fish_use_subcommand, , ,plugins,@f,266,List commands of installed plugins
+cf, __fish_use_subcommand, , ,install-plugin,@f,267,Install CLI plugin
+cf, __fish_use_subcommand, , ,uninstall-plugin,@f,268,Uninstall CLI plugin

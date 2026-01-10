@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-quirks-list, , ,data-dir, , ,101,Use the given directory as data directory for quirks files
+libinput-quirks-list, , ,help, , ,102,Print help
+libinput-quirks-list, , ,verbose, , ,103,"Use verbose output, useful for debugging"

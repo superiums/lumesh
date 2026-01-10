@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+reuse, __fish_no_arguments, ,debug, , ,102,enable debug logging
+reuse, __fish_no_arguments, ,suppress-deprecation, , ,103,hide deprecation warnings
+reuse, __fish_no_arguments, ,include-submodules, , ,104,do not ignore Git submodules
+reuse, __fish_no_arguments, ,include-meson-subprojects, , ,105,do not ignore Meson subprojects
+reuse, __fish_no_arguments, ,no-multiprocessing, , ,106,disable multiprocessing
+reuse, __fish_no_arguments, ,root, ,@r,107,set root of project
+reuse, __fish_no_arguments, ,version, , ,108,show version number
+reuse, __fish_use_subcommand, , ,annotate,@f @r,109,add REUSE information to files
+reuse, __fish_use_subcommand, , ,download,@f @r,110,download license files
+reuse, __fish_use_subcommand, , ,init,@f @r,111,initialize REUSE project
+reuse, __fish_use_subcommand, , ,lint,@f @r,112,list all non-compliant files
+reuse, __fish_use_subcommand, , ,spdx,@f @r,113,generate SPDX bill of materials
+reuse, __fish_use_subcommand, , ,supported-licenses,@f @r,114,list all supported licenses

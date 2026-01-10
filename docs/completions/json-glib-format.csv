@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+json-glib-format, ,h,help, , ,101,Print a help message and exit
+json-glib-format, , ,output, , ,102,Redirects the output to FILE instead of using the standard output
+json-glib-format, ,p,prettify, , ,103,"Prettifies the output, by adding spaces and indentation"
+json-glib-format, , ,indent-spaces, , ,104,Changes the number of spaces using to indent the JSON data from the default o…

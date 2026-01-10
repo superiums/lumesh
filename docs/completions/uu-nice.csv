@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-nice, ,n,adjustment, , ,101,add N to the niceness (default is 10)
+uu-nice, ,h,help, , ,102,Print help
+uu-nice, ,V,version, , ,103,Print version

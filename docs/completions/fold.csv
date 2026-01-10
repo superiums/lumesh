@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fold, ,b,bytes, , ,101,count bytes rather than columns
+fold, ,s,spaces, , ,102,break at spaces
+fold, ,w,width, , ,103,use WIDTH columns instead of 80
+fold, , ,help, , ,104,display this help and exit
+fold, , ,version, , ,105,output version information and exit AUTHOR Written by David MacKenzie

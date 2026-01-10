@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+loadunimap, ,o,output, , ,101,save the old map to the FILE
+loadunimap, ,C,console, , ,102,the console device to be used
+loadunimap, ,V,version, , ,103,print version number
+loadunimap, ,h,help, , ,104,print this usage message.  FILES

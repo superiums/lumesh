@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+jbake, , ,bake, ,@f,101,Perform a bake
+jbake, , ,help, ,@f,102,Print the help message
+jbake, , ,init, , ,103,Initialise the required directory structure with default templates
+jbake, , ,server, , ,104,Run the HTTP server to serve out the baked site
+jbake, , ,template, ,@f @r,105,Use the specified template engine for default templates

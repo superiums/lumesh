@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gcov-dump, , ,help, , ,101,X Item '--help' 
+gcov-dump, , ,long, , ,102,X Item '--long' . PD Dump content of records
+gcov-dump, , ,positions, , ,103,X Item '--positions' . PD Dump positions of records
+gcov-dump, , ,raw, , ,104,X Item '--raw' . PD Print content records in raw format
+gcov-dump, , ,stable, , ,105,X Item '--stable' . PD Print content in stable format usable for comparison
+gcov-dump, , ,version, , ,106,"Display the gcov-dump version number (on the standard output), and exit witho…"

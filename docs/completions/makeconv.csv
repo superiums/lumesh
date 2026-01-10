@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+makeconv, ,?,help, , ,101,Print help about usage and exit
+makeconv, ,c,copyright, , ,102,Include a copyright notice in the binary data
+makeconv, ,v,verbose, , ,103,Display extra informative messages during execution
+makeconv, ,d,destdir, , ,104,Set the destination directory to destination 

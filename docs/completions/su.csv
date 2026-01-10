@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+su, , , , ,@f @r,101, 
+su, ,l,login, , ,102,Make login shell
+su, ,c,command, , ,103,Pass command to shell
+su, ,f,fast, , ,104,Pass -f to the shell
+su, ,g,group, ,@f @r,105,Specify the primary group
+su, ,G,supp-group, ,@f @r,106,Specify a supplemental group
+su, ,p,preserve_environment, , ,107,Preserve environment
+su, ,P,pty, , ,108,Create pseudo-terminal for the session
+su, ,s,shell, ,@f @r,109,Run the specified shell
+su, ,w,whitelist-environment, ,@f @r,110,Don't reset these environment variables
+su, ,h,help, , ,111,Display help and exit
+su, ,V,version, , ,112,Display version and exit

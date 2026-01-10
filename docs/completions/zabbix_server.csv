@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_server, ,c,config, , ,101,Path to the configuration file.
+zabbix_server, ,f,foreground, ,@f,102,Run Zabbix server in foreground.
+zabbix_server, ,h,help, ,@f,103,Display this help message.
+zabbix_server, ,V,version, ,@f,104,Display version number.
+zabbix_server, ,R,runtime-control,$runtime,@f,105,Perform administrative functions.

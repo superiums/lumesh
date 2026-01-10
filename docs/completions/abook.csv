@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+abook, ,C,config, , ,101,Use an alternative configuration file
+abook, , ,datafile, , ,102,Use an alternative addressbook file
+abook, , ,mutt-query, , ,103,Make a query for mutt
+abook, , ,add-email, , ,104,Read email message from stdin and add the sender
+abook, , ,add-email-quiet, , ,105,Same as --add-email. Without confirmation
+abook, , ,convert, , ,106,Convert address book files
+abook, , ,formats, , ,111,Print available formats

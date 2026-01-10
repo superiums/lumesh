@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-image, , ,version, , ,101,"Print the btrfs-image version, builtin features and exit"

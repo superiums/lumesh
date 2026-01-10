@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bind, ,a,all, , ,101,Show unavailable key bindings/erase all bindings
+bind, ,e,erase, , ,102,Erase mode
+bind, ,f,function-names, , ,103,Print names of available functions
+bind, ,h,help, , ,104,Display help and exit
+bind, ,K,key-names, , ,105,Print names of available keys
+bind, ,M,mode, , ,106,Specify the bind mode that the bind is used in
+bind, ,m,sets-mode, , ,107,Change current mode after bind is executed
+bind, ,L,list-modes, , ,108,Display a list of defined bind modes
+bind, ,s,silent, , ,109,Operate silently
+bind, , ,preset, , ,110,Operate on preset bindings
+bind, , ,user, , ,111,Operate on user bindings
+bind, , , , ,@k,112, 

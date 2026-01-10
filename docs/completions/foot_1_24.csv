@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+foot, ,C,check-config, , ,101,"Verify configuration and then exit with 0 if ok, otherwise exit"
+foot, ,o,override, , ,102,Override an option set in the configuration file.  If SECTION is not
+foot, ,f,font, , ,103,"Comma separated list of fonts to use, in fontconfig format (see"
+foot, ,w,window-size-pixels, , ,104,"Set initial window width and height, in pixels.  Default: 700x500"
+foot, ,W,window-size-chars, , ,105,"Set initial window width and height, in characters.  Default: not set"
+foot, ,t,term, , ,106,Value to set the environment variable TERM to (see TERMINFO
+foot, ,T,title, , ,107,Initial window title.  Default: foot
+foot, ,a,app-id, , ,108,Value to set the app-id property on the Wayland window
+foot, ,m,maximized, , ,109,Start in maximized mode.  If both --maximized and --fullscreen
+foot, ,F,fullscreen, , ,110,Start in fullscreen mode.  If both --maximized and --fullscreen
+foot, ,L,login-shell, , ,111,"Start a login shell, by prepending a '-' to argv[0]"
+foot, , ,pty, , ,112,Display an existing pty instead of creating one.  This is useful
+foot, ,D,working-directory, , ,113,Initial working directory for the client application.  Default:
+foot, ,s,server, , ,114,"Run as a server.  In this mode, a single foot instance hosts"
+foot, ,H,hold, , ,115,Remain open after child process exits
+foot, ,p,print-pid, , ,116,"Print PID to this file, or FD, when successfully started.  The file"
+foot, ,d,log-level, , ,117,"Log level, used both for log output on stderr as well as"
+foot, ,l,log-colorize, , ,118,Enables or disables colorization of log output on stderr.  Default:
+foot, ,S,log-no-syslog, , ,119,Disables syslog logging.  Logging is only done on stderr.  This
+foot, ,v,version, , ,120,Show the version number and quit

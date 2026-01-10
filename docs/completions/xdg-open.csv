@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-open, , ,help, , ,101,Show command synopsis
+xdg-open, , ,manual, , ,102,Show this manual page
+xdg-open, , ,version, , ,103,Show the xdg-utils version information

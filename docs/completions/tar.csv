@@ -1,0 +1,116 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tar, ,A,concatenate, , ,101,Append archive to archive
+tar, ,c,create, , ,102,Create archive
+tar, ,d,compare, , ,103,Compare archive and filesystem
+tar, , ,delete, , ,104,Delete from archive
+tar, ,r,append, , ,105,Append files to archive
+tar, ,t,list, , ,106,List archive
+tar, , ,test-label, , ,107,Test the archive volume label
+tar, ,u,update, , ,108,Append new files
+tar, ,x,get, , ,109,Extract from archive
+tar, , ,show-defaults, , ,110,Show built-in defaults for various tar options
+tar, ,\?,help, , ,111,Display short option summary
+tar, , ,usage, , ,112,List available options
+tar, , ,version, , ,113,Print program version and copyright information
+tar, , ,check-device, , ,114,Check device numbers when creating incremental archives
+tar, ,g,listed-incremental, ,@r,115,Handle new GNU-format incremental backups
+tar, , ,hole-detection,seek raw,@f @r,116,Use  METHOD  to detect holes in sparse files
+tar, ,G,incremental, , ,117,Use old incremental GNU format
+tar, , ,ignore-failed-read, , ,118,Do not exit with nonzero on unreadable files
+tar, , ,level,0,@f @r,119,Set  dump  level  for  a created listed-incremental archive
+tar, ,n,seek, , ,120,Assume  the  archive is seekable
+tar, , ,no-check-device, , ,121,Do not check device numbers when creating incremental archives
+tar, , ,no-seek, , ,122,Assume the archive is not seekable
+tar, , ,occurrence, ,@r,123,Process only the Nth occurrence of each file in the archive
+tar, , ,restrict, , ,124,Disable the use of some potentially harmful options
+tar, , ,sparse-version,0.0 0.1 1.0,@f @r,125,Set which version  of  the  sparse  format  to  use
+tar, ,S,sparse, , ,126,Handle sparse files
+tar, ,k,keep-old-files, , ,127,Don't overwrite
+tar, , ,keep-newer-files, , ,128,Don't replace existing files that are newer
+tar, , ,keep-directory-symlink, , ,129,Don't replace existing symlinks
+tar, , ,no-overwrite-dir, , ,130,Preserve metadata of existing directories
+tar, , ,one-top-level, , ,131,Extract into directory
+tar, , ,overwrite, , ,132,Overwrite existing files when extracting
+tar, , ,overwrite-dir, , ,133,Overwrite metadata of existing directories
+tar, , ,recursive-unlink, , ,134,Recursively remove all files in the directory prior to extracting it
+tar, , ,remove-files, , ,135,Remove files after adding to archive
+tar, , ,skip-old-files, , ,136,Don't replace existing files when extracting
+tar, ,U,unlink-first, , ,137,Remove each file prior to extracting over it
+tar, ,W,verify, , ,138,Verify archive
+tar, , ,ignore-command-error, , ,139,Ignore subprocess exit codes
+tar, , ,no-ignore-command-error, , ,140,Treat non-zero exit codes of children as error
+tar, ,O,to-stdout, , ,141,Extract to stdout
+tar, , ,to-command, ,@r,142,Pipe  extracted files to COMMAND
+tar, , ,atime-preserve, , ,143,Keep access time
+tar, , ,delay-directory-restore, , ,144,Delay  setting  modification  times
+tar, , ,group, ,@f @r,145,Force  NAME  as  group for added files
+tar, , ,group-map, ,@r,146,Read group translation map from FILE
+tar, , ,mode, ,@f @r,147,Force symbolic mode CHANGES for added files
+tar, , ,mtime, ,@r,148,Set mtime for added files
+tar, ,m,touch, , ,149,Don't extract modification time
+tar, , ,no-delay-directory-restore, , ,150,Cancel the effect of the prior --delay-directory-restore
+tar, , ,no-same-owner, , ,151,Extract files as yourself
+tar, , ,no-same-permissions, , ,152,Apply the user's umask when extracting
+tar, , ,numeric-owner, , ,153,Always use numbers for user/group names
+tar, , ,owner, ,@f @r,154,Force NAME as owner for added files
+tar, , ,owner-map, ,@r,155,Read owner translation map from FILE
+tar, ,p,preserve-permissions, , ,156,Extract all permissions
+tar, , ,same-owner, , ,157,Try  extracting  files with the same ownership
+tar, ,s,preserve-order, , ,158,Do not sort file arguments
+tar, , ,sort,none name inode,@f @r,159,sort directory entries according to ORDER
+tar, , ,acls, , ,160,Enable POSIX ACLs support
+tar, , ,no-acls, , ,161,Disable POSIX ACLs support
+tar, , ,selinux, , ,162,Enable SELinux context support
+tar, , ,no-selinux, , ,163,Disable SELinux context support
+tar, , ,xattrs, , ,164,Enable extended attributes support
+tar, , ,no-xattrs, , ,165,Disable extended attributes support
+tar, , ,xattrs-exclude, , ,166,Specify the exclude pattern for xattr keys
+tar, , ,xattrs-include, , ,167,Specify the include pattern for xattr keys
+tar, ,f,file, ,@r,168,Archive file
+tar, , ,force-local, ,@r,169,Archive file is local even if it has a colon
+tar, ,F,new-volume-script, ,@r,170,Run script at end of tape
+tar, ,L,tape-length, ,@r,171,Tape length
+tar, ,M,multi-volume, , ,172,Multi volume archive
+tar, , ,rmt-command, ,@r,173,Use COMMAND instead of rmt
+tar, , ,rsh-command, ,@r,174,Use COMMAND instead of rsh
+tar, , ,volno-file, ,@r,175,keep track of which volume of a multi-volume archive it is working in FILE
+tar, ,f,file, ,@r,176,Archive file
+tar, ,f,file, ,@r,177,Archive file
+tar, ,f,file, ,@r,178,Archive file
+tar, ,b,block-size, , ,179,Block size
+tar, ,B,read-full-blocks, , ,180,Reblock while reading
+tar, ,C,directory, ,@r,181,Change directory
+tar, , ,checkpoint, , ,182,Print directory names
+tar, , ,force-local, , ,183,Archive is local
+tar, ,h,dereference, , ,184,Dereference symlinks
+tar, ,i,ignore-zeros, , ,185,Ignore zero block in archive
+tar, ,K,starting-file, ,@r,186,Starting file in archive
+tar, ,l,one-file-system, , ,187,Stay in local filesystem
+tar, ,m,modification-time, , ,188,Don't extract modification time
+tar, ,N,after-date, ,@r,189,Only store newer files
+tar, , ,newer, ,@r,190,Only store newer files
+tar, ,o,old-archive, , ,191,Use V7 format
+tar, , ,portability, , ,192,Use V7 format
+tar, ,P,absolute-paths, , ,193,Don't strip leading /
+tar, , ,preserve, , ,194,Preserve all permissions and do not sort file arguments
+tar, ,R,record-number, , ,195,Show record number
+tar, ,T,files-from, ,@r,196,Extract file from file
+tar, , ,null, , ,197,-T has null-terminated names
+tar, , ,totals, , ,198,Print total bytes written
+tar, ,v,verbose, , ,199,Verbose mode
+tar, ,V,label, ,@r,200,Set volume name
+tar, ,w,interactive, , ,201,Ask for confirmation
+tar, , ,confirmation, , ,202,Ask for confirmation
+tar, , ,exclude, ,@r,203,Exclude file
+tar, ,X,exclude-from, ,@r,204,Exclude files listed in specified file
+tar, ,a,auto-compress, , ,205,Use archive suffix to determine the compression program
+tar, ,I,use-compress-program, ,@r,206,Filter through specified program
+tar, ,j,bzip2, , ,207,Filter through bzip2
+tar, ,J,xz, , ,208,Filter through xz
+tar, , ,lzip, , ,209,Filter through lzip
+tar, , ,lzma, , ,210,Filter through lzma
+tar, , ,lzop, , ,211,Filter through lzop
+tar, , ,no-auto-compress, , ,212,Do not use archive suffix to determine the compression program
+tar, ,z,ungzip, , ,213,Filter through gzip
+tar, ,Z,uncompress, , ,214,Filter through compress
+tar, , ,zstd, , ,215,Filter through zstd

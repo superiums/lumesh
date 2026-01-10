@@ -1,0 +1,106 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tofu, , , , ,@f,102,Show help
+tofu, console, , , ,@r,116,Path to a OpenTofu state file
+tofu, console, , , ,@f,117,Set a variable in the OpenTofu configuration
+tofu, console, , , ,@r,118,Set variables from a file
+tofu, fmt, , , ,@f,120,Don't list files whose formatting differs
+tofu, fmt, , , ,@f,121,Don't write to source files
+tofu, fmt, , , ,@f,122,Display diffs of formatting changes
+tofu, fmt, , , ,@f,123,Check if the input is formatted
+tofu, fmt, , , ,@f,124,"If specified, output won't contain any color"
+tofu, fmt, , , ,@f,125,Also process files in subdirectories
+tofu, get, , , ,@f,127,Check modules for updates
+tofu, get, , , ,@f,128,"If specified, output won't contain any color"
+tofu, graph, , , ,@f,130,Use specified plan file instead of current directory
+tofu, graph, , , ,@f,131,Highlight any cycles in the graph
+tofu, graph, , , ,@f,132,Output plan graph
+tofu, graph, , , ,@f,133,Output plan graph assuming refresh only
+tofu, graph, , , ,@f,134,Output plan graph assuming destroy
+tofu, graph, , , ,@f,135,Output apply graph
+tofu, graph, , , ,@f,136,Shorten the plan output
+tofu, import, , , ,@r,138,Path to backup the existing state file
+tofu, import, , , ,@f,139,Path to a directory of configuration files
+tofu, import, , , ,@f,140,Allow import without resource block
+tofu, import, , , ,@f,141,Disable interactive input prompts
+tofu, import, , , ,@f,142,Don't hold a state lock
+tofu, import, , , ,@f,143,Duration to retry a state lock
+tofu, import, , , ,@f,144,"If specified, output won't contain any color"
+tofu, import, , , ,@r,145,Path to a OpenTofu state file
+tofu, import, , , ,@r,146,Path to write state
+tofu, import, , , ,@f,147,Set a variable in the OpenTofu configuration
+tofu, import, , , ,@r,148,Set variables from a file
+tofu, init, , , ,@f,150,Disable backend initialization
+tofu, init, , , ,@f,151,Disable backend initialization
+tofu, init, , , ,@r,152,Backend configuration
+tofu, init, , , ,@f,153,Suppress prompts about copying state data
+tofu, init, , , ,@f,154,Copy the module into target directory before init
+tofu, init, , , ,@f,155,Disable downloading modules for this configuration
+tofu, init, , , ,@f,156,Disable interactive prompts
+tofu, init, , , ,@f,157,Don't hold state lock
+tofu, init, , , ,@f,158,Duration to retry a state lock
+tofu, init, , , ,@f,159,"If specified, output won't contain any color"
+tofu, init, , , ,@f,160,Directory containing plugin binaries
+tofu, init, , , ,@f,161,Ignore any saved configuration
+tofu, init, , , ,@r,162,"Reconfigure backend, migrating existing state"
+tofu, init, , , ,@f,163,"Install latest dependencies, ignoring lockfile"
+tofu, init, , , ,@f,164,Set dependency lockfile mode to readonly
+tofu, init, , , ,@f,165,Ignore local and remote backend compatibility check
+tofu, init, , , ,@f,166,Print output in JSON
+tofu, login, , , ,@f,168, 
+tofu, logout, , , ,@f,170, 
+tofu, output, , , ,@r,172,Path to the state file to read
+tofu, output, , , ,@f,173,"If specified, output won't contain any color"
+tofu, output, , , ,@f,174,Print output in JSON format
+tofu, output, , , ,@f,175,Print raw strings directly
+tofu, plan, , , ,@f,177,Show only error summaries
+tofu, plan, , , ,@f,178,Return detailed exit codes
+tofu, plan, , , ,@f,179,Ask for input for variables if not directly set
+tofu, plan, , , ,@f,180,Don't hold a state lock during the operation
+tofu, plan, , , ,@f,181,Duration to retry a state lock
+tofu, plan, , , ,@f,182,"If specified, output won't contain any color"
+tofu, plan, , , ,@f,183,Write a plan file to the given path
+tofu, plan, , , ,@f,184,Limit the number of concurrent operations
+tofu, plan, , , ,@r,185,Path to a OpenTofu state file
+tofu, providers, , ,lock mirror schema,@f,195, 
+tofu, refresh, , , ,@r,198,Path to backup the existing state file
+tofu, refresh, , , ,@f,199,Ask for input for variables if not directly set
+tofu, refresh, , , ,@f,200,Don't hold a state lock
+tofu, refresh, , , ,@f,201,Duration to retry a state lock
+tofu, refresh, , , ,@f,202,"If specified, output won't contain any color"
+tofu, refresh, , , ,@r,203,Path to a OpenTofu state file
+tofu, refresh, , , ,@r,204,Path to write state
+tofu, refresh, , , ,@f,205,Resource to target
+tofu, refresh, , , ,@f,206,Set a variable in the OpenTofu configuration
+tofu, refresh, , , ,@r,207,Set variables from a file
+tofu, show, , , ,@f,209,"If specified, output won't contain any color"
+tofu, validate, , , ,@f,210,Produce output in JSON format
+tofu, state, , ,list,@f,212,List resources in state
+tofu, state, , ,ls,@f,213,List resources in state
+tofu, state, , ,mv,@f,214,Move an item in the state
+tofu, state, , ,move,@f,215,Move an item in the state
+tofu, state, , ,pull,@f,216,Pull current state and output to stdout
+tofu, state, , ,push,@f,217,Update remote state from local state
+tofu, state, , ,replace-provider,@f,218,Replace provider in the state
+tofu, state, , ,rm,@f,219,Remove instance from the state
+tofu, state, , ,remove,@f,220,Remove instance from the state
+tofu, state, , ,show,@f,221,Show a resource in the state
+tofu, taint, , , ,@f,223,Succeed even if resource is missing
+tofu, taint, , , ,@r,224,Path to backup the existing state file
+tofu, taint, , , ,@f,225,Don't hold a state lock
+tofu, taint, , , ,@f,226,Duration to retry a state lock
+tofu, taint, , , ,@f,227,Ignore local and remote backend compatibility check
+tofu, taint, , , ,@r,228,Path to a OpenTofu state file
+tofu, taint, , , ,@r,229,Path to write state
+tofu, test, , , ,@f,231,Show only error summaries
+tofu, test, , , ,@f,232,Also write test results to provided JUnit XML file
+tofu, test, , , ,@f,233,"If specified, output won't contain any color"
+tofu, untaint, , , ,@f,235,Succeed even if resource is missing
+tofu, untaint, , , ,@r,236,Path to backup the existing state file
+tofu, untaint, , , ,@f,237,Don't hold a state lock
+tofu, untaint, , , ,@f,238,Duration to retry a state lock
+tofu, untaint, , , ,@f,239,Ignore local and remote backend compatibility check
+tofu, untaint, , , ,@r,240,Path to a OpenTofu state file
+tofu, untaint, , , ,@r,241,Path to write state
+tofu, validate, , , ,@f,243,Produce output in JSON format
+tofu, validate, , , ,@f,244,"If specified, output won't contain any color"
+tofu, workspace && select delete, , , ,@f,247, 

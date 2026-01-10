@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scrypt, enc dec, ,logN, ,@f @r,104,Set the work parameter N
+scrypt, enc dec,M, , ,@f @r,105,Use at most the specified bytes of RAM
+scrypt, enc dec,m, , ,@f @r,106,Use at most the specified fraction of the available RAM
+scrypt, enc dec,p, , ,@f @r,107,Set the work parameter p
+scrypt, enc dec, ,passphrase,,@f @r,108, 
+scrypt, enc dec,r, , ,@f @r,109,Set the work parameter r
+scrypt, enc dec,t, , ,@f @r,110,Use at most the specified seconds of CPU time
+scrypt, enc dec info, ,version, ,@f @r,110,Print version

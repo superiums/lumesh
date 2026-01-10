@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bzip2, ,c,stdout, , ,101,Compress to stdout
+bzip2, ,d,decompress, ,@f @k @r,102, 
+bzip2, ,z,compress, , ,103,Compress file
+bzip2, ,t,test, , ,104,Check integrity
+bzip2, ,f,force, , ,105,Overwrite
+bzip2, ,k,keep, , ,106,Do not overwrite
+bzip2, ,s,small, , ,107,Reduce memory usage
+bzip2, ,q,quiet, , ,108,Suppress errors
+bzip2, ,v,verbose, , ,109,Print compression ratios
+bzip2, ,L,license, , ,110,Print license
+bzip2, ,V,version, , ,111,Display version and exit
+bzip2, ,1,fast, , ,112,Small block size
+bzip2, ,9,best, , ,113,Large block size

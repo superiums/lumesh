@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-screensaver, , ,help, , ,101,Show command synopsis
+xdg-screensaver, , ,manual, , ,102,Show this manual page
+xdg-screensaver, , ,version, , ,103,Show the xdg-utils version information

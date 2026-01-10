@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpgconf, , ,homedir, , ,101,Set the name of the home directory to dir
+gpgconf, , ,chuid, , ,102,Change the current user to uid which may either be a number or a name
+gpgconf, , ,list-components, , ,103,List all components.   This is the default command used if none is specified
+gpgconf, , ,check-programs, , ,104,List all available backend programs and test whether they are runnable
+gpgconf, , ,list-options, , ,105,List all options of the component component
+gpgconf, , ,change-options, , ,106,Change the options of the component component
+gpgconf, , ,check-options, , ,107,Check the options for the component component
+gpgconf, , ,apply-profile, , ,108,Apply the configuration settings listed in file to the configuration files
+gpgconf, , ,apply-defaults, , ,109,Update all configuration files with values taken from the global configuratio…
+gpgconf, , ,list-dirs, , ,110, 
+gpgconf, , ,list-config, , ,111,List the global configuration file in a colon separated format
+gpgconf, , ,check-config, , ,112,Run a syntax check on the global configuration file
+gpgconf, , ,query-swdb, , ,113,Returns the current version for package_name and if version_string is given a…
+gpgconf, , ,reload, , ,114, 
+gpgconf, , ,launch, , ,115,"If the component is not already running, start it"
+gpgconf, , ,kill, , ,116, 
+gpgconf, , ,create-socketdir, , ,117,Create a directory for sockets below /run/user or /var/run/user
+gpgconf, , ,remove-socketdir, , ,118,Remove a directory created with command --create-socketdir
+gpgconf, , ,unlock, , ,119, 
+gpgconf, , ,lock, , ,120,Remove a stale lock file hold for `file'
+gpgconf, , ,output, , ,121,Write output to file.   Default is to write to stdout
+gpgconf, , ,verbose, , ,122,Outputs additional information while running
+gpgconf, , ,quiet, , ,123,Try to be as quiet as possible
+gpgconf, , ,dry-run, , ,124,Do not actually change anything
+gpgconf, , ,runtime, , ,125,Only used together with --change-options
+gpgconf, , ,status-fd, , ,126,Write special status strings to the file descriptor n

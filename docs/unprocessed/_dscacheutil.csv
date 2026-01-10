@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dscacheutil, [ (commandline -xpc | count) -le 1 ],h, , ,@f,102,lists options
+dscacheutil, [ (commandline -xpc | count) -le 1 ] || contains -- -a (commandline -xpc) || contains -- -q (commandline -xpc) && [ (commandline -xpc | count) -lt 3 ],q, ,,@f @r,103,initiate query
+dscacheutil, contains -- -q (commandline -xpc),a, , ,@f,104,-q: specific key & value
+dscacheutil, [ (commandline -xpc | count) -le 1 ], , , ,@f,105,dump cache overview
+dscacheutil, contains -- -cachedump (commandline -xpc), , , ,@f,106,show hash buckets
+dscacheutil, contains -- -cachedump (commandline -xpc), , ,,@f,107,-cachedump: cache entries
+dscacheutil, [ (commandline -xpc | count) -le 1 ], , , ,@f,108,print current config
+dscacheutil, [ (commandline -xpc | count) -le 1 ], , , ,@f,109,prints cache stats
+dscacheutil, [ (commandline -xpc | count) -le 1 ], , , ,@f @k,110,reset cache (DNS	)

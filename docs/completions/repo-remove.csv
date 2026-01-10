@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+repo-remove, ,q,quiet, , ,101, 
+repo-remove, ,s,sign, , ,102, 
+repo-remove, ,k,key, , ,103, 
+repo-remove, ,v,verify, , ,104, 
+repo-remove, , ,nocolor, , ,105, 
+repo-remove, ,n,new, , ,106, 
+repo-remove, ,R,remove, , ,107, 
+repo-remove, , ,include-sigs, , ,108, 

@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bash, , ,debugger, , ,101,Arrange for the debugger profile to be executed before the shell starts
+bash, , ,dump-po-strings, , ,102,"Equivalent to -D, but the output is in the GNU gettext po (portable object) f…"
+bash, , ,dump-strings, , ,103,Equivalent to -D
+bash, , ,help, , ,104,Display a usage message on standard output and exit successfully
+bash, , ,rcfile, , ,105,PD Execute commands from  file instead of the standard personal initializatio…
+bash, , ,login, , ,106,Equivalent to -l
+bash, , ,noediting, , ,107,Do not use the GNU  readline library to read command lines when the shell is …
+bash, , ,noprofile, , ,108,Do not read either the system-wide startup file 
+bash, , ,norc, , ,109,Do not read and execute the personal initialization file  ~/
+bash, , ,posix, , ,110,Change the behavior of bash where the default operation differs from the POSI…
+bash, , ,restricted, , ,111,The shell becomes restricted (see . SM  'RESTRICTED SHELL' below)
+bash, , ,verbose, , ,112,Equivalent to -v
+bash, , ,init-file, , ,113, 
+bash, , ,version, , ,114,Show version information for this instance of bash on the standard output and…

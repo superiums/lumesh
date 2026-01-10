@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+traceroute, , , , ,@f @r,101, 
+traceroute, , ,help, , ,102,Print help info and exit
+traceroute, ,I,icmp, , ,103,Use ICMP ECHO for probes
+traceroute, ,T,tcp, , ,104,Use TCP SYN for probes
+traceroute, ,d,debug, , ,105,Enable socket level debugging
+traceroute, ,F,dont-fragment, , ,106,Do not fragment probe packets
+traceroute, ,f,first, ,@f @r,107,Specifies with what TTL to start
+traceroute, ,g,gateway, ,@f @r,108,Route the packet through the specified gateway
+traceroute, ,i,interface, ,@f @r,109,Specify network interface
+traceroute, ,m,max-hops, ,@f @r,110,Maximum number of hops
+traceroute, ,N,sim-queries, ,@f @r,111,Number of probe packets sent out simultaneously
+traceroute, ,p,port, ,@f @r,112,Destination port
+traceroute, ,t,tos, ,@f @r,113,Set Type of Service or Traffic Control value
+traceroute, ,l,flowlabel, ,@f @r,114,Use specified flow_label for IPv6
+traceroute, ,w,wait, ,@f @r,115,How long to wait for a response
+traceroute, ,q,queries, ,@f @r,116,Number of probe packets per hop
+traceroute, ,s,source, ,@f @r,117,Chooses an alternative source address
+traceroute, ,z,sendwait, ,@f @r,118,Minimal time interval between probes
+traceroute, ,e,extensions, , ,119,Show ICMP extensions
+traceroute, ,A,as-path-lookups, , ,120,Perform AS path lookups
+traceroute, ,V,version, , ,121,Print the version and exit
+traceroute, , ,sport, ,@f @r,122,Chooses the source port
+traceroute, , ,fwmark, ,@f @r,123,Set the firewall mark for outgoing packets
+traceroute, ,M,module,default icmp tcp tcpconn udp udplite dccp raw,@f @r,124,Use specified method for traceroute
+traceroute, ,O,options, ,@f @r,125,Specifies some method-specific options
+traceroute, ,U,udp, , ,126,Use UDP to particular destination port
+traceroute, ,D,dccp, , ,127,Use DCCP requests for probes
+traceroute, ,P,protocol, ,@f @r,128,Use raw packet of specified protocol for tracerouting
+traceroute, , ,mtu, , ,129,Discover MTU along the path
+traceroute, , ,back, , ,130,Print the number of backward hops

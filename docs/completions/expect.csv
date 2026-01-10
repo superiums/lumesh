@@ -1,0 +1,3 @@
+cmd,conds,short,long,params,dirs,pri,desc
+expect, ,c, , ,@r,101,execute command
+expect, ,f, , ,@r,103,script path

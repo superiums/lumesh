@@ -1,0 +1,36 @@
+cmd,conds,short,long,params,dirs,pri,desc
+prt-get, , ,ignore, ,@f @r,135,Ignore the listed ports
+prt-get, , ,cache, , ,136,Use cache
+prt-get, , ,test, , ,137,Dry run
+prt-get, , ,pre-install, , ,138,Exec eventual pre-install script
+prt-get, , ,post-install, , ,139,Exec eventual post-install script
+prt-get, , ,install-scripts, , ,140,Exec eventual pre-post-install scripts
+prt-get, , ,no-std-config, ,@r,141,Ignore default config file
+prt-get, , ,config-prepend, ,@r,142,Prepend string to config file
+prt-get, , ,config-append, ,@r,143,Append string to config file
+prt-get, , ,config-set, ,@r,144,Overrirde config file with string
+prt-get, , ,margs, ,@r,145,Arguments for pkgmk
+prt-get, , ,aargs, ,@r,146,Arguments for pkgadd
+prt-get, , ,rargs, ,@r,147,Arguments for pkgrm
+prt-get, , ,prefer-higher, , ,148,Prefer higher version
+prt-get, , ,strict-diff, , ,149,Override prefer-higher
+prt-get, , ,config, ,@r,150,Use alternative config file
+prt-get, , ,install-root, ,@r,151,Use this alternative root for installation
+prt-get, , ,log, , ,152,Write output to log file
+prt-cache, , ,ignore, ,@f @r,185,Ignore the listed ports
+prt-cache, , ,test, , ,186,Dry run
+prt-cache, , ,pre-install, , ,187,Exec eventual pre-install script
+prt-cache, , ,post-install, , ,188,Exec eventual post-install script
+prt-cache, , ,install-scripts, , ,189,Exec eventual pre-post-install scripts
+prt-cache, , ,no-std-config, ,@r,190,Ignore default config file
+prt-cache, , ,config-prepend, ,@r,191,Prepend string to config file
+prt-cache, , ,config-append, ,@r,192,Append string to config file
+prt-cache, , ,config-set, ,@r,193,Overrirde config file with string
+prt-cache, , ,margs, ,@r,194,Arguments for pkgmk
+prt-cache, , ,aargs, ,@r,195,Arguments for pkgadd
+prt-cache, , ,rargs, ,@r,196,Arguments for pkgrm
+prt-cache, , ,prefer-higher, , ,197,Prefer higher version
+prt-cache, , ,strict-diff, , ,198,Override prefer-higher
+prt-cache, , ,config, ,@r,199,Use alternative config file
+prt-cache, , ,install-root, ,@r,200,Use this alternative root for installation
+prt-cache, , ,log, , ,201,Write output to log file

@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+caddy, , , , ,@f @r,101,URL to certificate authority's ACME server directory
+caddy, , , , ,@f @r,102,Default ACME CA HTTP timeout
+caddy, , , ,stdin,@r,103,Caddyfile to load
+caddy, , , , ,@f @r,104,CPU cap
+caddy, , , , ,@f @r,105,Default ACME CA account email address
+caddy, , , , ,@f @r,106,Maximum duration of graceful shutdown
+caddy, , , , ,@f @r,107,Default host
+caddy, , , , ,@f @r,108,Default port to use for HTTP
+caddy, , , , ,@f @r,109,Default port to use for HTTPS
+caddy, , , , ,@r,110,Process log file
+caddy, , , , ,@r,111,Path to write pid file
+caddy, , , , ,@f @r,112,Default port
+caddy, , , , ,@f @r,113,Hostname for which to revoke the certificate
+caddy, , , , ,@r,114,Root path of default site
+caddy, , , , ,@f @r,115,Type of server to run

@@ -1,0 +1,46 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gv, , , , ,@k,101, 
+gv, , ,monochrome, , ,102,Display document using only black and white
+gv, , ,grayscale, , ,103,Display document without colors
+gv, , ,color, , ,104,Display document as usual
+gv, , ,safer, , ,105,Start ghostscript in safe mode
+gv, , ,nosafer, , ,106,Do not start ghostscript in safe mode
+gv, , ,safedir, , ,107,Start ghostscript from a safe directory
+gv, , ,nosafedir, , ,108,Do not start ghostscript from a safe directory
+gv, , ,quiet, , ,109,Start ghostscript with the -dQUIET option
+gv, , ,noquiet, , ,110,Do not start ghostscript with the -dQUIET option
+gv, , ,infoSilent, , ,111,Do not show any messages in the info popup window
+gv, , ,infoErrors, , ,112,Do not show warning messages in the info popup window
+gv, , ,infoAll, , ,113,Do show all messages in the info popup window
+gv, , ,arguments, , ,114,Start ghostscript with additional options as specified by the string ARGS
+gv, , ,page, , ,115,Display the page with label LABEL first
+gv, , ,center, , ,116,The page should be centered automatically
+gv, , ,nocenter, , ,117,The page should not be centered automatically
+gv, , ,media, , ,118,Selects the paper size to be used
+gv, , ,orientation,automatic bbox letter legal statement tabloid ledger folio quatro 10x14 executive a3 a4 a5 b4 b5, ,119,Sets the orientation of the page
+gv, , ,scale, , ,120,"Selects the scale N, or arbitrary scale f.f"
+gv, , ,scalebase, , ,121,Selects the scale base N
+gv, , ,swap, , ,122,Interchange the meaning of the orientations landscape and seascape
+gv, , ,noswap, , ,123,Do not interchange the meaning of the orientation landscape and seascape
+gv, , ,antialias, , ,124,Use antialiasing
+gv, , ,noantialias, , ,125,Do not use antialiasing
+gv, , ,dsc, , ,126,Dsc comments are respected
+gv, , ,nodsc, , ,127,Dsc comments are not respected
+gv, , ,eof, , ,128,Ignore the postscript EOF comment while scanning documents
+gv, , ,noeof, , ,129,Do not ignore the postscript EOF comment while scanning documents
+gv, , ,pixmap, , ,130,Use backing pixmap
+gv, , ,nopixmap, , ,131,Do not use backing pixmap
+gv, , ,watch, , ,132,Watch the document file for changes
+gv, , ,nowatch, , ,133,Do not watch the document file for changes
+gv, , ,help, , ,134,Print a help message and exit
+gv, , ,usage, , ,135,Print a usage message and exit
+gv, , ,resize, , ,136,Fit the size of the window to the size of the page
+gv, , ,noresize, , ,137,Do not fit the size of the window to the size of the page
+gv, , ,ad, , ,138,Read and use additional resources from FILE (higher priority)
+gv, , ,style, , ,139,Read and use additional resources from FILE (lower priority)
+gv, , ,password, , ,140,Sets the password for opening encrypted PDF files
+gv, , ,spartan, , ,141,Shortcut for --style=gv_spartan.dat
+gv, , ,widgetless, , ,142,Shortcut for --style=gv_widgetless.dat
+gv, , ,fullscreen, , ,143,Start in fullscreen mode (needs support from WM)
+gv, , ,presentation, , ,144,Presentation mode 
+gv, , ,version, , ,145,Show gv version and exit

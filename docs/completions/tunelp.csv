@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tunelp, ,i,irq, , ,101, 
+tunelp, ,t,time, , ,102, 
+tunelp, ,c,chars, , ,103, 
+tunelp, ,w,wait, , ,104, 
+tunelp, ,a,abort, , ,105, 
+tunelp, ,o,check-status, , ,106, 
+tunelp, ,C,careful, , ,107, 
+tunelp, ,s,status, , ,108, 
+tunelp, ,r,reset, , ,109, 
+tunelp, ,q,print-irq, , ,110, 

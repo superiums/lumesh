@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+g-ir-compiler, , ,help, , ,101,Show help options
+g-ir-compiler, , ,output, , ,102,Save the resulting output in FILENAME
+g-ir-compiler, , ,verbose, , ,103,Show verbose messages
+g-ir-compiler, , ,debug, , ,104,Show debug messages
+g-ir-compiler, , ,includedir, , ,105,Adds a directory which will be used to find includes inside the GIR format
+g-ir-compiler, , ,module, , ,106,FIXME
+g-ir-compiler, , ,shared-library, , ,107,Specifies the shared library where the symbols in the typelib can be found
+g-ir-compiler, , ,version, , ,108,Show program's version number and exit

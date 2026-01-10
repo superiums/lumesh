@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpgv, , ,verbose, , ,101,TQ   -v Gives more information during processing
+gpgv, , ,quiet, , ,102,TQ   -q Try to be as quiet as possible
+gpgv, , ,keyring, , ,103,Add file to the list of keyrings
+gpgv, , ,output, , ,104,"TQ   -o file Write output to file; to write to stdout use -"
+gpgv, , ,status-fd, , ,105,Write special status strings to the file descriptor n
+gpgv, , ,logger-fd, , ,106,Write log output to file descriptor n and not to stderr
+gpgv, , ,log-file, , ,107,"Same as --logger-fd, except the logger data is written to file file"
+gpgv, , ,ignore-time-conflict, , ,108,GnuPG normally checks that the timestamps associated with keys and signatures…
+gpgv, , ,homedir, , ,109,Set the name of the home directory to dir
+gpgv, , ,weak-digest, , ,110,Treat the specified digest algorithm as weak
+gpgv, , ,enable-special-filenames, , ,111,"This option enables a mode in which filenames of the form '-&n', where n is a…"
+gpgv, , ,assert-pubkey-algo, , ,112,This option works in the same way as described for gpg

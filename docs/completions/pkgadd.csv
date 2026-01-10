@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkgadd, , ,upgrade, , ,101,Upgrade
+pkgadd, , ,force, , ,102,"Force installation, overwriting"
+pkgadd, , ,root, , ,103,Alternative installation root
+pkgadd, , ,version, , ,104,Print version
+pkgadd, , ,help, , ,105,Print help

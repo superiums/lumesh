@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+usbip, , , , ,@f,101, 
+usbip, attach,r,remote, ,@f,108,The machine with exported USB devices
+usbip, attach,b,busid, ,@f,109,Busid of the device on <host>
+usbip, attach,d,device, ,@f,110,Id of the virtual UDB on <host>
+usbip, detach,p,port, ,@f,111,Vhci_hcd port the device is on
+usbip, list,p,parsable, ,@f,112,Parsable list format
+usbip, list,r,remote, ,@f,113,List the exportable USB devices on <host>
+usbip, list,l,local, ,@f,114,List the local USB devices
+usbip, list,d,device, ,@f,115,List the local USB gadgets bound to usbip-vudc
+usbip, bind,b,busid, ,@f,116,Bind usbip-host.ko to device on <busid>
+usbip, unbind,b,busid, ,@f,117,Unbind usbip-host.ko to device on <busid>

@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-readlink, ,f,canonicalize, , ,101,"canonicalize by following every symlink in every component of the given name recursively; all but the last component must exist"
+uu-readlink, ,e,canonicalize-existing, , ,102,"canonicalize by following every symlink in every component of the given name recursively, all components must exist"
+uu-readlink, ,m,canonicalize-missing, , ,103,"canonicalize by following every symlink in every component of the given name recursively, without requirements on components existence"
+uu-readlink, ,n,no-newline, , ,104,do not output the trailing delimiter
+uu-readlink, ,q,quiet, , ,105,suppress most error messages
+uu-readlink, ,s,silent, , ,106,suppress most error messages
+uu-readlink, ,v,verbose, , ,107,report error message
+uu-readlink, ,z,zero, , ,108,separate output with NUL rather than newline
+uu-readlink, ,h,help, , ,109,Print help
+uu-readlink, ,V,version, , ,110,Print version

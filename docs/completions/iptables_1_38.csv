@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iptables, ,A,append, , ,101,Append one or more rules to the end of the selected chain
+iptables, ,C,check, , ,102,Check whether a rule matching the specification does exist in the selected ch…
+iptables, ,D,delete, , ,103,ns
+iptables, ,I,insert, , ,104,Insert one or more rules in the selected chain as the given rule number
+iptables, ,R,replace, , ,105,Replace a rule in the selected chain
+iptables, ,L,list, , ,106,List all rules in the selected chain
+iptables, ,S,list-rules, , ,107,Print all rules in the selected chain
+iptables, ,F,flush, , ,108,Flush the selected chain (all the chains in the table if none is given)
+iptables, ,Z,zero, , ,109,"Zero the packet and byte counters in all chains, or only the given chain, or …"
+iptables, ,N,new-chain, , ,110,Create a new user-defined chain by the given name
+iptables, ,X,delete-chain, , ,111,Delete the chain specified.   There must be no references to the chain
+iptables, ,P,policy, , ,112,Set the policy for the built-in (non-user-defined) chain to the given target
+iptables, ,E,rename-chain, , ,113,Rename the user specified chain to the user supplied name
+iptables, ,4,ipv4, , ,114,This option has no effect in iptables and iptables-restore
+iptables, ,6,ipv6, , ,115,If a rule using the -6 option is inserted with (and only with) iptables-resto…
+iptables, ,p,protocol, , ,116,The protocol of the rule or of the packet to check
+iptables, ,s,source, , ,117,Source specification
+iptables, ,d,destination, , ,118,Destination specification
+iptables, ,m,match, , ,119,"Specifies a match to use, that is, an extension module that tests for a speci…"
+iptables, ,j,jump, , ,120,"This specifies the target of the rule; i. e"
+iptables, ,g,goto, , ,121,This specifies that the processing should continue in a user specified chain
+iptables, ,i,in-interface, , ,122,Name of an interface via which a packet was received (only for packets enteri…
+iptables, ,o,out-interface, , ,123,Name of an interface via which a packet is going to be sent (for packets ente…
+iptables, ,f,fragment, , ,124,This means that the rule only refers to second and further IPv4 fragments of …
+iptables, ,c,set-counters, , ,125,This enables the administrator to initialize the packet and byte counters of …
+iptables, ,v,verbose, , ,126,Verbose output
+iptables, ,V,version, , ,127,Show program version and the kernel API used
+iptables, ,w,wait, , ,128,Wait for the xtables lock
+iptables, ,n,numeric, , ,129,Numeric output
+iptables, ,x,exact, , ,130,Expand numbers
+iptables, , ,line-numbers, , ,131,"When listing rules, add line numbers to the beginning of each rule, correspon…"
+iptables, ,t,table, , ,132,This option specifies the packet matching table which the command should oper…
+iptables, , ,dst, , ,133, 
+iptables, , ,modprobe, , ,134,"When adding or inserting rules into a chain, use command to load any necessar…"

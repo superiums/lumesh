@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xrdb, , , , ,@r,101,preprocessor to use [/usr/bin/mcpp]
+xrdb, , , , ,@r,102,edit resources into file
+xrdb, , , , ,@f @r,103,backup suffix for -edit [.bak]

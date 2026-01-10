@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gtk-encode-symbolic-svg, ,o,output, , ,101,Write png files to DIRECTORY instead of the current working directory

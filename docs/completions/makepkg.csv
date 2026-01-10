@@ -1,0 +1,37 @@
+cmd,conds,short,long,params,dirs,pri,desc
+makepkg, ,A,ignorearch, , ,101,Ignore missing or incomplete arch field
+makepkg, ,c,clean, , ,102,Clean up work files after build
+makepkg, , ,config, , ,103,Use alternate config <file>
+makepkg, ,d,nodeps, , ,104,Do not perform dependency checks
+makepkg, ,e,noextract, , ,105,Do not extract source files
+makepkg, , ,verifysource, , ,106,Only perform integrity checks
+makepkg, ,f,force, , ,107,Force rebuild of the package
+makepkg, ,g,geninteg, , ,108,Generate integrity checks
+makepkg, , ,skipinteg, , ,109,Do not perform integrity checks
+makepkg, , ,skipchecksums, , ,110,Do not verify checksums
+makepkg, , ,skippgpcheck, , ,111,Do not verify PGP signatures
+makepkg, ,h,help, , ,112,Display syntax and command line options
+makepkg, , ,holdver, , ,113,No automatic bump of pkgver
+makepkg, ,i,install, , ,114,Install the package after build
+makepkg, ,L,log, , ,115,Enable makepkg build logging
+makepkg, ,m,nocolor, , ,116,Disable color in output messages
+makepkg, ,o,nobuild, , ,117,Only download and extract files
+makepkg, ,r,rmdeps, , ,118,Remove installed deps after build
+makepkg, ,R,repackage, , ,119,Repackage without rebuilding
+makepkg, ,s,syncdeps, , ,120,Install missing dependencies
+makepkg, ,S,source, , ,121,Build a source-only tarball for AUR
+makepkg, ,V,version, , ,122,Display the version and exit
+makepkg, ,C,cleanbuild, , ,123,Remove the srcdir before building the package
+makepkg, , ,allsource, , ,124,Build a source-only GPL tarball for AUR
+makepkg, , ,check, , ,125,Run the check function in the PKGBUILD
+makepkg, , ,noarchive, , ,126,Do not create the archive
+makepkg, , ,nocheck, , ,127,Do not run the check function in the PKGBUILD
+makepkg, , ,sign, , ,128,Sign the resulting package with gpg
+makepkg, , ,nosign, , ,129,Do not create a signature for the package
+makepkg, , ,key, , ,130,Specify a <key> to use when signing
+makepkg, , ,noconfirm, , ,131,Passed to pacman: Do not ask for confirmation
+makepkg, , ,needed, , ,132,Passed to pacman: Only install what is needed
+makepkg, , ,asdeps, , ,133,Passed to pacman: Install as dependencies
+makepkg, , ,noprogressbar, , ,134,Passed to pacman: Do not display a progress bar
+makepkg, , ,packagelist, , ,135,List all packages that would be built
+makepkg, , ,printsrcinfo, , ,136,Print SRCINFO to stdout

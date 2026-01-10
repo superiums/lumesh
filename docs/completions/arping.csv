@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+arping, ,c, , ,@f @r,101,Stop after number of packets
+arping, ,w, , ,@f @r,102,Specify a timeout (seconds)
+arping, ,i, , ,@f @r,103,Specify an interval between packets (seconds)
+arping, , ,help, , ,104,Show extended help
+arping, ,c, , ,@f @r,105,Only send count requests
+arping, ,C, , ,@f @r,106,Only wait for count replies
+arping, ,m, , ,@f @r,107,Type of timestamp to use for incoming packets
+arping, ,Q, , ,@f @r,108,802.1p priority to set
+arping, ,s, , ,@f @r,109,Set source MAC address
+arping, ,t, , ,@f @r,110,Set target MAC address
+arping, ,T, , ,@f @r,111,Set target address when pinging MACs that won't respond to broadcasts
+arping, ,V, , ,@f @r,112,VLAN tag to set
+arping, ,w, , ,@f @r,113,Timeout before ping exits (seconds)
+arping, ,W, , ,@f @r,114,Time to wait between pings (seconds)

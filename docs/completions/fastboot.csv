@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fastboot, ,h,help, , ,101,Show this message
+fastboot, ,v,verbose, , ,102,Verbose output
+fastboot, , ,version, , ,103,Display version
+fastboot, flash, , , ,@f @k,104, 
+fastboot, flash, ,skip-secondary, , ,105,Don't flash secondary slots in flashall/update
+fastboot, flash, ,skip-reboot, , ,106,Don't reboot device after flashing
+fastboot, flash, ,disable-verity, , ,107,Sets disable-verity when flashing vbmeta
+fastboot, flash, ,disable-verification, , ,108,Sets disable-verification when flashing vbmeta
+fastboot, flash, ,force, , ,109,Force a flash operation that may be unsafe
+fastboot, fetch, , , ,@f,110, 
+fastboot, format, , , ,@f,111, 
+fastboot, erase, , , ,@f,112, 
+fastboot, flashing, , ,lock unlock lock_critical unlock_critical get_unlock_ability,@f,113, 
+fastboot, reboot, , ,bootloader fastboot, ,114, 
+fastboot, oem, , ,device-info lock unlock edl, ,115, 

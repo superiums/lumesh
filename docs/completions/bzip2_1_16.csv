@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bzip2, ,c,stdout, , ,101,Compress or decompress to standard output
+bzip2, ,d,decompress, , ,102,Force decompression
+bzip2, ,z,compress, , ,103,"The complement to -d: forces compression, regardless of the invocation name"
+bzip2, ,t,test, , ,104,"Check integrity of the specified file(s), but don't decompress them"
+bzip2, ,f,force, , ,105,Force overwrite of output files
+bzip2, ,k,keep, , ,106,Keep (don't delete) input files during compression or decompression
+bzip2, ,s,small, , ,107,"Reduce memory usage, for compression, decompression and testing"
+bzip2, ,q,quiet, , ,108,Suppress non-essential warning messages
+bzip2, ,v,verbose, , ,109,Verbose mode -- show the compression ratio for each file processed
+bzip2, ,V,version, , ,110,"Display the software version, license terms and conditions"
+bzip2, ,9,best, , ,111,"Set the block size to 100 k, 200 k .   900 k when compressing"
+bzip2, , ,repetitive-best, , ,112,These flags are redundant in versions 0. 9. 5 and above

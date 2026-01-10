@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bluetoothctl, pair trust untrust block unblock connect disconnect, , , ,@f,101, 
+bluetoothctl, show select, , , ,@f,102, 
+bluetoothctl, power pairable discoverable agent advertize, , ,on off,@f,103, 

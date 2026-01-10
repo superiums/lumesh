@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rustc, ,h,help, , ,101,Display the help message
+rustc, , ,cfg, , ,102,Configure the compilation environment
+rustc, , ,crate-type, , ,103,Comma separated list of types of crates for the compiler to emit
+rustc, , ,crate-name, , ,104,Specify the name of the crate being built
+rustc, , ,emit, , ,105,Configure the output that rustc will produce
+rustc, , ,print, , ,106,Comma separated list of compiler information to print on stdout
+rustc, , ,out-dir, , ,107,Write output to compiler\\[hy]chosen filename in DIR
+rustc, , ,explain, , ,108,Provide a detailed explanation of an error message
+rustc, , ,test, , ,109,Build a test harness
+rustc, , ,target, , ,110,Target triple for which the code is compiled
+rustc, , ,warn, , ,111,Set lint warnings
+rustc, ,A,allow, , ,112,Set lint allowed
+rustc, ,D,deny, , ,113,Set lint denied
+rustc, ,F,forbid, , ,114,Set lint forbidden
+rustc, ,C,codegen, , ,115,Set a codegen\\[hy]related flag to the value specified
+rustc, ,V,version, , ,116,Print version info and exit
+rustc, ,v,verbose, , ,117,Use verbose output
+rustc, , ,remap-path-prefix, , ,118,"Remap source path prefixes in all output, including compiler diagnostics, deb…"
+rustc, , ,extern, , ,119,Specify where an external rust library is located
+rustc, , ,sysroot, , ,120,Override the system root
+rustc, , ,color, , ,121,Configure coloring of output: . RS

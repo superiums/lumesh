@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+radeontop, ,b,bus, , ,101,"If you have multiple cards, use this parameter to select a specific one"
+radeontop, ,c,color, , ,102,Enables colorized output
+radeontop, ,d,dump, , ,103,"Instead of displaying the data, dump it to file.  Use - for stdout"
+radeontop, ,h,help, , ,104,Displays help
+radeontop, ,i,dump-interval, , ,105,Wait for N seconds between data output
+radeontop, ,l,limit, , ,106,Quit after dumping limit lines.  Only valid in dump mode
+radeontop, ,m,mem, , ,107,"Forces the use of the /dev/mem path, in case autodetection fails"
+radeontop, ,p,path, , ,108,Open the DRM device node specified by device path
+radeontop, ,t,ticks, , ,109,How many times per second to sample the data.  The default is 120
+radeontop, ,v,version, , ,110,Displays the program version

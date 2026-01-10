@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sync, ,d,data, , ,101,"sync only file data, no unneeded metadata"
+sync, ,f,file-system, , ,102,sync the file systems that contain the files
+sync, , ,help, , ,103,display this help and exit
+sync, , ,version, , ,104,output version information and exit

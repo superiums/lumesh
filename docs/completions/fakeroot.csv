@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fakeroot, ,l,lib, , ,101,Specify an alternative wrapper library
+fakeroot, , ,faked, , ,102,Specify an alternative binary to use as faked
+fakeroot, ,u,unknown-is-real, , ,103,Use the real ownership of files previously unknown to fakeroot instead of pre…

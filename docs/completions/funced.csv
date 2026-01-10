@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+funced, ,e,editor, , ,101,Open function in external editor
+funced, ,i,interactive, , ,102,"Edit in fish, not external editor"
+funced, ,s,save, , ,103,Autosave after successful edit

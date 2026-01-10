@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+icu-config, , ,bindir, , ,101,Prints the binary (executable) directory path.  Normally equivalent to 'bin'
+icu-config, , ,cc, , ,102,Print the C compiler used.   Equivalent to the $(CC) Makefile variable
+icu-config, , ,cflags, , ,103,Print the C compiler flags.  Equivalent to the $(CFLAGS) Makefile variable
+icu-config, , ,cppflags, , ,104,Print the C preprocessor flags
+icu-config, , ,cppflags-searchpath, , ,105,"Print the C preprocessor flags, as above but only -I search paths"
+icu-config, , ,cxx, , ,106,Print the C++ compiler.  Equivalent to the $(CXX) Makefile variable
+icu-config, , ,cxxflags, , ,107,Print the C++ compiler flags
+icu-config, , ,detect-prefix, , ,108,"If ICU has been moved from its installed location, prepending this flag to ot…"
+icu-config, , ,exec-prefix, , ,109,"Print the prefix used for executable program directories (such as bin, sbin, …"
+icu-config, , ,exists, , ,110,Script will return with a successful (0) status if ICU seems to be installed …
+icu-config, ,?,usage, , ,111,Print a help and usage message
+icu-config, , ,icudata, , ,112,Print the shortname of the ICU data file
+icu-config, , ,icudata-install-dir, , ,113,Print the directory where ICU packaged data should  be installed
+icu-config, , ,icudata-mode, , ,114,"Print the default ICU pkgdata mode, such as dll or common"
+icu-config, , ,icudatadir, , ,115,Print the path to packaged archive data
+icu-config, , ,invoke, , ,116,If ICU is not installed in a location where the operating system will locate …
+icu-config, , ,ldflags, , ,117,Print any flags which should be passed to the linker
+icu-config, , ,ldflags-layout, , ,118,Prints the link option for the ICU layout library
+icu-config, , ,ldflags-icuio, , ,119,Prints the link option to add the ICU I/O package
+icu-config, , ,ldflags-libsonly, , ,120,Similar to --ldflags but only includes the -l options
+icu-config, , ,ldflags-searchpath, , ,121,Similar to --ldflags but only includes the -L search path options
+icu-config, , ,ldflags-system, , ,122,Similar to --ldflags but only includes system libraries (such as pthreads)  '…
+icu-config, , ,prefix, , ,123,Prints the prefix (base directory) under which the installed ICU resides
+icu-config, , ,sbindir, , ,124,"Prints the location of ICU system binaries, normally (sbin)"
+icu-config, , ,shared-datadir, , ,125,"Prints the location of ICU shared data, normally (share)"
+icu-config, , ,sysconfdir, , ,126,"Prints the location of ICU system configuration data, normally (etc)"
+icu-config, , ,unicode-version, , ,127,Prints the Version of the Unicode Standard which the current ICU uses
+icu-config, , ,version, , ,128,Prints the current version of ICU
+icu-config, , ,mandir, , ,129,Prints the location of the installed ICU man pages.  Normally (man)
+icu-config, , ,incfile, , ,130,"Prints the 'Makefile. inc' path, suitable for use with pkgdata(1)'s -O option"

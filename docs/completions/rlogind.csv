@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rlogind, ,4,ipv4, , ,101,daemon mode only accepts IPv4
+rlogind, ,6,ipv6, , ,102,only IPv6 in daemon mode
+rlogind, ,a,verify-hostname, , ,103,ask hostname for verification
+rlogind, ,d,daemon, , ,104,"daemon mode, with instance limit"
+rlogind, ,D,debug, , ,105,set debug level
+rlogind, ,l,no-rhosts, , ,106,ignore . rhosts file
+rlogind, ,L,local-domain, , ,107,set local domain name
+rlogind, ,n,no-keepalive, , ,108,do not set SO_KEEPALIVE
+rlogind, ,o,allow-root, , ,109,"allow uid 0 to login, disabled by default"
+rlogind, ,p,port, , ,110,listen on given port (valid only in daemon mode)
+rlogind, ,r,reverse-required, , ,111,require reverse resolving of a remote host IP
+rlogind, ,?,help, , ,112,give this help list
+rlogind, , ,usage, , ,113,give a short usage message
+rlogind, ,V,version, , ,114,print program version

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pwd, ,L,logical, , ,101,"use PWD from environment, even if it contains symlinks"
+pwd, ,P,physical, , ,102,resolve all symlinks
+pwd, , ,help, , ,103,display this help and exit
+pwd, , ,version, , ,104,output version information and exit

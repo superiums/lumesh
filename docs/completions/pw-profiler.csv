@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-profiler, ,r,remote, , ,101,The name the remote instance to monitor
+pw-profiler, ,h,help, , ,102,Show help
+pw-profiler, , ,version, , ,103,Show version information
+pw-profiler, ,o,output, , ,104,Profiler output name (default 'profiler. log')

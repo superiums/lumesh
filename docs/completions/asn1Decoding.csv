@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+asn1Decoding, ,b,benchmark, , ,101,perform a benchmark on decoding
+asn1Decoding, ,s,strict, , ,102,use strict DER decoding
+asn1Decoding, ,t,no-time-strict, , ,103,use strict DER decoding but not in time fields
+asn1Decoding, ,h,help, , ,104,display this help and exit
+asn1Decoding, ,v,version, , ,105,output version information and exit AUTHOR Written by Fabio Fiorina

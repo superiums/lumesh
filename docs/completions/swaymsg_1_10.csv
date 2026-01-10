@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+swaymsg, ,m,monitor, , ,101,Monitor for responses until killed instead of exiting after the first
+swaymsg, ,p,pretty, , ,102,Use pretty output even when not using a tty
+swaymsg, ,q,quiet, , ,103,Sends the IPC message but does not print the response from sway
+swaymsg, ,r,raw, , ,104,Use raw JSON output even if using a tty
+swaymsg, ,s,socket, , ,105,"Use the specified socket path.  Otherwise, swaymsg will ask sway where the"
+swaymsg, ,t,type, , ,106,Specify the type of IPC message.  See below
+swaymsg, ,v,version, , ,107,Print the version (of swaymsg) and quit

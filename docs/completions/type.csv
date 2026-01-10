@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+type, ,h,help, , ,101,Display help and exit
+type, ,a,all, , ,102,Print all possible definitions of the specified name
+type, ,f,no-functions, , ,103,Suppress function and builtin lookup
+type, ,t,type, , ,104,Print command type
+type, ,p,path, , ,105,"Print path to command, or nothing if name is not a command"
+type, ,P,force-path, , ,106,Print path to command
+type, ,q,quiet, , ,107,Check if something exists without output
+type, ,s,short, , ,108,Don't print function definition

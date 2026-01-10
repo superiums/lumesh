@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicedebug, ,u,udid, , ,101,target specific device by UDID
+idevicedebug, ,n,network, , ,102,connect to network device
+idevicedebug, ,e,env, , ,103,set environment variable NAME to VALUE
+idevicedebug, ,d,debug, , ,104,enable communication debugging
+idevicedebug, ,h,help, , ,105,prints usage information
+idevicedebug, ,v,version, , ,106,prints version information

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dumpiso, ,c,channels, , ,101,Sets the channels to listen on
+dumpiso, ,p,port, , ,102,Choose port PORT for receiving
+dumpiso, ,h,help, , ,103,Show help text and exit

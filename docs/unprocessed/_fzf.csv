@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fzf, string match '+*' -- (commandline -ct), , ,+x, ,102,no-extended
+fzf, string match '+*' -- (commandline -ct), , ,+i, ,104,case-sensitive match
+fzf, string match '+*' -- (commandline -ct), , ,+s, ,111,Do not sort the result
+fzf, string match '+*' -- (commandline -ct), , ,+m, ,117,Disable multi-select

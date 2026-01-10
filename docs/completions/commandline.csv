@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+commandline, ,h,help, , ,101,Display help and exit
+commandline, ,a,append, , ,102,Add text to the end of the selected area
+commandline, ,i,insert, , ,103,Add text at cursor
+commandline, ,i,insert-smart, , ,104,"Add text at cursor but DWIM, stripping leading $"
+commandline, ,r,replace, , ,105,Replace selected part
+commandline, ,j,current-job, , ,106,Select job under cursor
+commandline, ,p,current-process, , ,107,Select process under cursor
+commandline, ,s,current-selection, , ,108,Select current selection
+commandline, ,t,current-token, , ,109,Select token under cursor
+commandline, ,b,current-buffer, , ,110,Select entire command line (default)
+commandline, ,c,cut-at-cursor, , ,111,Only return that part of the command line before the cursor
+commandline, ,f,function, , ,112,execute readline function
+commandline, ,x,tokens-expanded, , ,113,Print a list of expanded tokens
+commandline, ,I,input, , ,114,Specify command to operate on
+commandline, ,C,cursor, , ,115,"Set/get cursor position, not buffer contents"
+commandline, ,B,selection-start, , ,116,Get current selection starting position
+commandline, ,E,selection-end, , ,117,Get current selection ending position
+commandline, ,L,line, , ,118,Print/set the line the cursor is on
+commandline, , ,column, , ,119,Print/set the column the cursor is on
+commandline, ,S,search-mode, , ,120,Return true if performing a history search
+commandline, ,P,paging-mode, , ,121,Return true if showing pager content
+commandline, , ,paging-full-mode, , ,122,Return true if pager is showing all content
+commandline, , ,search-field, , ,123,Operate on the pager search field
+commandline, , ,is-valid, , ,124,Return true if the command line is syntactically valid and complete
+commandline, , ,showing-suggestion, , ,125,Return true if the command line has an autosuggestion

@@ -1,0 +1,61 @@
+cmd,conds,short,long,params,dirs,pri,desc
+journalctl, ,h,help, ,@f,102,Prints a short help text and exits
+journalctl, , ,version, ,@f,103,Prints a short version string and exits
+journalctl, , ,no-pager, ,@f,104,Do not pipe output into a pager
+journalctl, ,a,all, ,@f,105,Show all fields in full
+journalctl, ,f,follow, ,@f,106,Show live tail of entries
+journalctl, ,e,pager-end, ,@f,107,Skip to the end of the journal
+journalctl, ,n,lines, ,@f,108,Controls the number of journal lines
+journalctl, , ,no-tail, ,@f,109,"Show all lines, even in follow mode"
+journalctl, ,o,output, ,@f,110,Controls the formatting
+journalctl, ,q,quiet, ,@f,111,Suppress warning about normal user
+journalctl, ,m,merge, ,@f,112,Show entries interleaved from all journals
+journalctl, , ,this-boot, ,@f,113,Show data only from the current boot
+journalctl, ,b,boot, ,@f,114,Show data only from a certain boot
+journalctl, ,u,unit, ,@f,115,Show data only of the specified unit
+journalctl, ,p,priority,emerg 0 alert 1 crit 2 err 3 warning 4 notice 5 info 6 debug 7,@f,116,Filter by priority
+journalctl, ,c,cursor, ,@f,117,Start from the passing cursor
+journalctl, , ,since,yesterday today tomorrow now,@f,118,Entries on or newer than DATE
+journalctl, , ,until,yesterday today tomorrow now,@f,119,Entries on or older than DATE
+journalctl, ,F,field, ,@f,120,Print all possible data values of FIELD
+journalctl, ,D,directory, ,@D @f,121,Specify journal directory
+journalctl, , ,new-id128, ,@f,122,Generate a new 128 bit ID
+journalctl, , ,header, ,@f,123,Show internal header information
+journalctl, , ,disk-usage, ,@f,124,Shows the current disk usage
+journalctl, , ,setup-keys, ,@f,125,Generate Forward Secure Sealing key pair
+journalctl, , ,interval, ,@f,126,Change interval for the sealing
+journalctl, , ,verify, ,@f,127,Check journal for internal consistency
+journalctl, , ,verify-key, ,@f,128,Specifies FSS key for --verify
+journalctl, ,r,reverse, ,@f,129,Reverse output to show newest entries first
+journalctl, , ,utc, ,@f,130,Express time in Coordinated Universal Time (UTC)
+journalctl, , ,no-hostname, ,@f,131,Don't show the hostname field
+journalctl, ,x,catalog, ,@f,132,Augment log lines with explanation texts from the message catalog
+journalctl, , ,list-boots, ,@f,133,"Show a list of boot numbers, their IDs and timestamps"
+journalctl, ,k,dmesg, ,@f,134,Show only kernel messages
+journalctl, ,N,fields, ,@f,135,Print all field names used in all entries of the journal
+journalctl, , ,update-catalog, ,@f,136,Update the message catalog index
+journalctl, , ,sync, ,@f,137,Write all unwritten journal data and sync journals
+journalctl, , ,flush, ,@f,138,Flush log data from /run/log/journal/ into /var/log/journal/
+journalctl, , ,relinquish-var, ,@f,139,Write to /run/log/journal/ instead of /var/log/journal/
+journalctl, , ,smart-relinquish-var, ,@f,140,Similar to --relinquish-var
+journalctl, , ,rotate, ,@f,141,Mark active journal files as archived and create new empty ones
+journalctl, , ,output-fields, ,@f,142,List of fields to be included in the output
+journalctl, ,t,identifier, ,@f,143,Show messages for specified syslog identifier
+journalctl, , ,user-unit, ,@f,144,Show messages for the specified user session unit
+journalctl, , ,facility, ,@f,145,Filter output by syslog facility
+journalctl, ,g,grep, ,@f,146,Show entries where MESSAGE field matches regex
+journalctl, , ,case-sensitive, ,@f,147,Toggle pattern matching case sensitivity
+journalctl, , ,cursor-file, ,@F,148,"Load cursor from file or save to file, if missing"
+journalctl, , ,after-cursor, ,@f,149,Show entries after the passed cursor
+journalctl, , ,show-cursor, ,@f,150,Show cursor after the last entry
+journalctl, , ,user, ,@f,151,Show messages from service of current user
+journalctl, , ,system, ,@f,152,Show messages from system services and the kernel
+journalctl, ,M,machine, ,@f,153,"Show messages from a running, local container"
+journalctl, , ,file, ,@f,154,Operate only on journal files matching glob
+journalctl, , ,root, ,@D @f,155,Use specified directory instead of the root directory
+journalctl, , ,namespace, ,@f,156,Show log data of specified namespace
+journalctl, , ,vacuum-size, ,@f,157,Reduce disk usage below specified SIZE
+journalctl, , ,vacuum-time, ,@f,158,Remove journal files older than TIME
+journalctl, , ,vacuum-files, ,@f,159,Leave only INT number of journal files
+journalctl, , ,list-catalog, ,@f,160,Show message catalog entries as a table
+journalctl, , ,dump-catalog, ,@f,161,Show message catalog entries

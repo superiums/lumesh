@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aseqdump, ,h,help, , ,101,Prints a list of options
+aseqdump, ,V,version, , ,102,Prints the current version
+aseqdump, ,l,list, , ,103,Prints a list of possible input ports
+aseqdump, ,u,ump, , ,104,"Sets the client MIDI version.  0 is for legacy mode, 1 is UMP MIDI 1"
+aseqdump, ,r,raw, , ,105,Suppress the automatic conversion of events among UMP and legacy clients
+aseqdump, ,R,raw-view, , ,106,Shows the raw values as is
+aseqdump, ,N,normalized-view, , ,107,Shows the normalized values to be aligned with MIDI 1. 0
+aseqdump, ,P,percent-view, , ,108,Shows the values in percentage
+aseqdump, ,p,port, , ,109,Sets the sequencer port(s) from which events are received

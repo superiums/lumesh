@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+namei, ,l,long, , ,101, 
+namei, ,m,modes, , ,102, 
+namei, ,n,nosymlinks, , ,103, 
+namei, ,o,owners, , ,104, 
+namei, ,v,vertical, , ,105, 
+namei, ,x,mountpoints, , ,106, 
+namei, ,Z,context, , ,107, 
+namei, ,h,help, , ,108, 
+namei, ,V,version, , ,109, 

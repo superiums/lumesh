@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-uptime, ,s,since, , ,101,system up since
+uu-uptime, ,h,help, , ,102,Print help
+uu-uptime, ,V,version, , ,103,Print version

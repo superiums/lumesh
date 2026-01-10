@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+isosize, ,x,sectors, , ,101, 
+isosize, ,d,divisor, , ,102, 
+isosize, ,h,help, , ,103, 
+isosize, ,V,version, , ,104, 

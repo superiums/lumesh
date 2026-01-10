@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+asciinema, __fish_no_arguments, ,version, , ,102,Show program's version number and exit
+asciinema, __fish_use_subcommand, , ,rec, ,103,Record terminal session
+asciinema, __fish_use_subcommand, , ,play, ,116,Replay terminal session
+asciinema, __fish_use_subcommand, , ,cat, ,119,Print full output of terminal session
+asciinema, __fish_use_subcommand, , ,upload, ,120,Upload locally saved terminal session to asciinema.org
+asciinema, __fish_use_subcommand, , ,auth, ,121,Manage recordings on asciinema.org account

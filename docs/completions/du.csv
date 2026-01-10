@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+du, ,a,all, , ,101,Write size for all files
+du, , ,apparent-size, , ,102,"Print file size, not disk usage"
+du, ,B,block-size, , ,103,Block size
+du, ,b,bytes, , ,104,Use 1B block size
+du, ,c,total, , ,105,Produce grand total
+du, ,D,dereference-args, , ,106,Dereference file symlinks
+du, ,h,human-readable, , ,107,Human readable sizes
+du, ,H,si, , ,108,"Human readable sizes, powers of 1000"
+du, ,l,count-links, , ,109,Count hard links multiple times
+du, ,L,dereference, , ,110,Dereference all symlinks
+du, ,S,separate-dirs, , ,111,Do not include subdirectory size
+du, ,s,summarize, , ,112,Display only a total for each argument
+du, ,x,one-file-system, , ,113,Skip other file systems
+du, ,X,exclude-from, ,@r,114,Exclude files that match pattern in file
+du, , ,exclude, ,@r,115,Exclude files that match pattern
+du, , ,max-depth, ,@r,116,Recursion limit
+du, , ,help, , ,117,Display help and exit
+du, , ,version, , ,118,Display version and exit

@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+adduser, , , , ,@f @r,101, 
+adduser, , ,conf, , ,102,Specify config file
+adduser, , ,disabled-login, , ,103,Do not run passwd to set the password
+adduser, , ,disabled-password, , ,104,"Do not set password, but allow non-password logins (e.g. SSH RSA)"
+adduser, , ,force-badname, , ,105,Apply only a weak check for validity of the user/group name
+adduser, , ,gecos, , ,106,Set the gecos field for the new entry generated
+adduser, , ,gid, , ,107,"When creating a group, force the groupid to be the given number"
+adduser, , ,group, , ,108,Create a group
+adduser, , ,help, , ,109,Display brief instructions
+adduser, , ,home, ,@D @f @r,110,Use specified directory as the user's home directory
+adduser, , ,shell, ,@f @r,111,"Use shell as the user's login shell, rather than the default"
+adduser, , ,ingroup, ,@f @r,112,Add the new user to GROUP instead of a usergroup or the default group
+adduser, , ,no-create-home, , ,113,Do not create the home directory
+adduser, , ,quiet, , ,114,"Suppress informational messages, only show warnings and errors"
+adduser, , ,debug, , ,115,"Be verbose, most useful if you want to nail down a problem with adduser"
+adduser, , ,system, , ,116,Create a system user or group
+adduser, , ,uid, , ,117,Force the new userid to be the given number
+adduser, , ,firstuid, , ,118,Override the first uid in the range that the uid is chosen from (FIRST_UID)
+adduser, , ,lastuid, , ,119,ID Override the last uid in the range that the uid is chosen from (LAST_UID)
+adduser, , ,add_extra_groups, , ,120,Add new user to extra groups defined in the configuration file
+adduser, , ,version, , ,121,Display version and copyright information

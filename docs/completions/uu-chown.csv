@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-chown, , ,from, , ,101,"change the owner and/or group of each file only if its current owner and/or group match those specified here. Either may be omitted, in which case a match is not required for the omitted attribute"
+uu-chown, , ,reference, ,@r,102,use RFILE's owner and group rather than specifying OWNER:GROUP values
+uu-chown, , ,help, , ,103,Print help information.
+uu-chown, ,c,changes, , ,104,like verbose but report only when a change is made
+uu-chown, , ,preserve-root, , ,105,fail to operate recursively on '/'
+uu-chown, , ,no-preserve-root, , ,106,do not treat '/' specially (the default)
+uu-chown, , ,quiet, , ,107,suppress most error messages
+uu-chown, ,R,recursive, , ,108,operate on files and directories recursively
+uu-chown, ,f,silent, , ,109, 
+uu-chown, ,v,verbose, , ,110,output a diagnostic for every file processed
+uu-chown, , ,dereference, , ,111,"affect the referent of each symbolic link (this is the default), rather than the symbolic link itself"
+uu-chown, ,h,no-dereference, , ,112,affect symbolic links instead of any referenced file (useful only on systems that can change the ownership of a symlink)
+uu-chown, ,V,version, , ,113,Print version

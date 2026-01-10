@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+navi, widget && $supported_shells, , ,$supported_shells,@k,100, 
+navi, $sub_commands, ,best-match, , ,100,Returns the best match
+navi, $sub_commands, ,cheatsh, ,@f @r,100,Searches for cheatsheets using the cheat.sh repository
+navi, $sub_commands, ,finder,fzf skim,@f @r,100,Finder application to use
+navi, $sub_commands, ,fzf-overrides, ,@f @r,100,Finder overrides for snippet selection
+navi, $sub_commands, ,fzf-overrides-var, ,@f @r,100,Finder overrides for variable selection
+navi, $sub_commands,h,help, ,@f @r,100,Print help information
+navi, $sub_commands,p,path, ,@r,100,Colon-separated list of paths containing .cheat files
+navi, $sub_commands, ,print, , ,100,"Instead of executing a snippet, prints it to stdout"
+navi, $sub_commands,q,query, ,@f @r,100,Prepopulates the search field
+navi, $sub_commands, ,tag-rules, ,@f @r,100,[Experimental] Comma-separated list as filter for tags. ! represents negation
+navi, $sub_commands, ,tldr, ,@f @r,100,Searches for cheatsheets using the tldr-pages repository
+navi, $sub_commands,V,version, ,@f @r,100,Print version information

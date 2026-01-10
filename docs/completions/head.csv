@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+head, ,c,bytes, , ,101,"Print the first N bytes; Leading "
+head, ,n,lines, , ,102,"Print the first N lines; Leading "
+head, ,q,silent, , ,103,Never print file names
+head, ,v,verbose, , ,104,Always print file names
+head, , ,version, ,@f,105,Display version
+head, , ,help, ,@f,106,Display help

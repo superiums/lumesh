@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ports, ,u,update, ,@f,101,Update ports
+ports, ,l,list, ,@f,102,List ports
+ports, ,d,diff, ,@f,103,List version diffs between local and installed ports
+ports, ,v,version, ,@f,104,Print version
+ports, ,h,help, ,@f,105,Print help

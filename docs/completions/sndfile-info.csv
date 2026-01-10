@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sndfile-info, , ,broadcast, , ,101,Display broadcast (BWF) info
+sndfile-info, , ,cart, , ,102,Display the cart chunk of a WAV (or related) file
+sndfile-info, , ,channel-map, , ,103,Display channel map
+sndfile-info, , ,instrument, , ,104,"Display instrument info: a base note, gain, velocity, key, and loop points"

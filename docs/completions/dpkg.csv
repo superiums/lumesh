@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dpkg, ,i,install, ,@k,101,Install .deb package
+dpkg, , ,unpack, ,@k,102,Unpack .deb package
+dpkg, , ,configure, , ,103,Configure package
+dpkg, ,r,remove, , ,104,Remove package
+dpkg, ,P,purge, , ,105,Purge package
+dpkg, ,V,verify, , ,106,Verify contents of package
+dpkg, , ,force-all, , ,107,Continue on all problems
+dpkg, ,b,build, ,@D,108,Build package from directory
+dpkg, ,c,contents, ,@k,109,List contents of .deb
+dpkg, ,I,info, ,@k,110,Show .deb information
+dpkg, ,l,list, , ,111,List packages matching pattern
+dpkg, ,L,listfiles, , ,112,List contents of packages
+dpkg, ,s,status, , ,113,Print status of package
+dpkg, ,S,search, , ,114,Search for packages containing file

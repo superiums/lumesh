@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hyprctl, , ,batch, , ,101,Specify a batch of commands to execute

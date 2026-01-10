@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xxd, , , , ,@f @r,101,Number of octets per line
+xxd, , , ,0 1 2 4, ,102,Octets per group
+xxd, , , , ,@f @r,103,Stop after NUM octets
+xxd, , , , ,@f @r,105,Add OFFSET to displayed file position
+xxd, , , ,never always auto, ,106,Output coloring mode

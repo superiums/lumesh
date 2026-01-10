@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+jobs, ,h,help, , ,101,Display help and exit
+jobs, ,p,pid, , ,102,Show the process ID of each process in the job
+jobs, ,g,group, , ,103,Show group ID of job
+jobs, ,c,command, , ,104,Show commandname of each job
+jobs, ,l,last, , ,105,Only show status for last job to be started
+jobs, ,q,query, , ,106,Check if a job exists without output

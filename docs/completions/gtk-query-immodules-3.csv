@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gtk-query-immodules-3.0, , ,update-cache, , ,101,Write the output to the default cache location instead of stdout

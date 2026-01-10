@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-mididump, ,r,remote, , ,101,The name the remote instance to monitor
+pw-mididump, ,h,help, , ,102,Show help
+pw-mididump, , ,version, , ,103,Show version information

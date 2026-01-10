@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yash, , ,help, , ,101,Show help and exit
+yash, ,V,version, , ,102,Show version and exit
+yash, ,c,cmdline, , ,103,Commands to run
+yash, ,s,stdin, , ,104,Read commands from stdin
+yash, ,v,verbose, , ,105,List optional features
+yash, ,l,login, , ,106,Use login shell
+yash, ,i,interactive, , ,107,Use interactive shell
+yash, , ,profile, , ,108,Load profile
+yash, , ,noprofile, , ,109,Do not load profile
+yash, , ,rcfile, , ,110,Load .rc file
+yash, , ,norcfile, , ,111,Do not load .rc file

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xxd, __fish_seen_argument -o i, , , ,@f @r,104,Set variable name
+xxd, __fish_seen_argument -o r, , ,-32 -8 +8 +32, ,106,Start at SEEK bytes offset in file
+xxd, __fish_seen_argument -o r, , ,-32 -8 +8 +32, ,107,Add OFFSET to file positions in hexdump

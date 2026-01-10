@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+eopkg, __fish_use_subcommand, , ,$subcommand,@f,101, 
+eopkg, __fish_use_subcommand, , ,$subcommand,@f,102, 
+eopkg, __fish_use_subcommand, , ,$shortcut,@f,103, 
+eopkg, $subcommand, , , ,@f,104, 
+eopkg, $subcommand, , , ,@f,105, 
+eopkg, $shortcut, , , ,@f,106, 

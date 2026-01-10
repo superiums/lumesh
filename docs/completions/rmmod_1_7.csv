@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rmmod, ,s,syslog, , ,101,Send errors to syslog instead of standard error
+rmmod, ,v,verbose, , ,102,Print messages about what the program is doing.  Usually rmmod prints
+rmmod, ,V,version, , ,103,Show version of program and exit
+rmmod, ,h,help, , ,104,Print the help message and exit

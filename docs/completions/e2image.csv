@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+e2image, , ,sparse, , ,101,option to the GNU version of cp (1)

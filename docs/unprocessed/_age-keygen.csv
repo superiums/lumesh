@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+age-keygen, __fish_contains_opt -s o output,o,output, , ,101,output file for secret key

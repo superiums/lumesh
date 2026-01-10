@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zpaq, $seen $commands, , ,$commands,@f,101, 
+zpaq, $seen $commands, , ,a,@f,102,add
+zpaq, $seen $commands, , ,add,@f,103,Append files to archive if dates have changed
+zpaq, $seen $commands, , ,x,@f,104,extract
+zpaq, $seen $commands, , ,extract,@f,105,Extract most recent versions of files
+zpaq, $seen $commands, , ,l,@f,106,list
+zpaq, $seen $commands, , ,list,@f,107,List or compare external files to archive
+zpaq, $seen $commands, , ,N,@f @r,108,Extract/list versions in N [4] digit directories
+zpaq, $seen $commands,f, , ,@f,109,-force
+zpaq, $seen $command1, , , ,@f,110,Append files if contents have changed
+zpaq, $seen $command2, , , ,@f,111,Compare file contents instead of dates
+zpaq, $seen $command3, , , ,@f,112,Overwrite existing output files
+zpaq, $seen $commands, , ,N,@f @r,113,Set the dedupe fragment size (64 2^N to 8128 2^N bytes)
+zpaq, $seen $command1, , ,F,@f @r,114,"Create suffix for archive indexed by F, update F"
+zpaq, $seen $command3, , ,F,@f @r,115,Create index F for archive
+zpaq, $seen $commands, , ,X,@f @r,116,Create or access encrypted archive with password X
+zpaq, $seen $command1, , , ,@f @r,117,-method N
+zpaq, $seen $command1, , ,N,@f @r,118,"Compress level N (0..5 = faster..better, default 1)"
+zpaq, $seen $commands, , , ,@f,119,Ignore/don't save file attributes or permissions
+zpaq, $seen $commands, , , ,@r,120,Exclude. * and ? match any string or char
+zpaq, $seen $command2, , , ,@r,121,Exclude. =[+-#^?] exclude by comparison result
+zpaq, $seen $commands, , , ,@r,122,Include only matches (default: *)
+zpaq, $seen $command3, , ,F,@f @r,123,Extract to new archive F with key [X] (default: none)
+zpaq, $seen $commands, , , ,@f @r,124,-summary N
+zpaq, $seen $commands, , ,N,@f @r,125,If N > 0 show brief progress
+zpaq, $seen $command2, , ,N,@f @r,126,Show top N sorted by size. -1: show frag IDs
+zpaq, $seen $command3, , , ,@f,127,Verify but do not write files
+zpaq, $seen $commands, , , ,@f @r,128,-threads N
+zpaq, $seen $commands, , ,N,@f @r,129,Use N threads (default: 0 = all cores)
+zpaq, $seen $commands, , ,P,@r,130,Rename files... to P... or all to P/all
+zpaq, $seen $commands, , ,N,@f @r,131,Roll back archive to N'th update or -N from end
+zpaq, $seen $commands, , ,D,@f @r,132,"Set date D, roll back (UT, default time: 235959)"

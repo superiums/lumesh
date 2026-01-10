@@ -1,0 +1,303 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fossil, __fish_fossil_needs_command, , ,add,@f @r,101,Add files to checkout
+fossil, __fish_fossil_command add, ,case-sensitive,yes no,@f @r,102,Case insensitive file matching
+fossil, __fish_fossil_command add, ,dotfiles, , ,103,Include dotfiles
+fossil, __fish_fossil_command add, ,ignore, ,@r,104,Files to ignore
+fossil, __fish_fossil_command add, ,clean, ,@r,105,Files to ignore
+fossil, __fish_fossil_command add, , , ,@f @r,106,File
+fossil, __fish_fossil_needs_command, , ,addremove,@f,107,Remove and add files to checkout
+fossil, __fish_fossil_command addremove, ,case-sensitive,yes no,@f @r,108,Case insensitive file matching
+fossil, __fish_fossil_command addremove, ,dotfiles, , ,109,Include dotfiles
+fossil, __fish_fossil_command addremove, ,ignore, ,@r,110,Files to ignore
+fossil, __fish_fossil_command addremove, ,clean, ,@r,111,Files to ignore
+fossil, __fish_fossil_command addremove,n,dry-run, , ,112,Display actions without running
+fossil, __fish_fossil_needs_command, , ,all,@f,113,Check all repositories
+fossil, __fish_fossil_subcommand all, , ,changes,@f,114,List changes
+fossil, __fish_fossil_subcommand all, , ,ignore, ,115,Ignore repository
+fossil, __fish_fossil_subsubcommand all ignore, , , ,@f @r,116,Ignore repository
+fossil, __fish_fossil_subcommand all, , ,list ls, ,117,Display locations
+fossil, __fish_fossil_subcommand all, , ,pull, ,118,Pull repositories
+fossil, __fish_fossil_subcommand all, , ,push, ,119,Push repositories
+fossil, __fish_fossil_subcommand all, , ,rebuild, ,120,Rebuild repositories
+fossil, __fish_fossil_subcommand all, , ,sync, ,121,Sync repositories
+fossil, __fish_fossil_needs_command, , ,annotate, ,122,Shows file modifications
+fossil, __fish_fossil_command annotate, ,filevers, , ,123,Show file versions
+fossil, __fish_fossil_command annotate,l,log, , ,124,List all analyzed versions
+fossil, __fish_fossil_command annotate,n,limit, ,@f @r,125,Limit analyzed versions
+fossil, __fish_fossil_needs_command, , ,bisect,@f,126,Find regressions
+fossil, __fish_fossil_subcommand bisect, , ,bad,@f @r,127,Identify version as not working
+fossil, __fish_fossil_subcommand bisect, , ,good,@f @r,128,Identify version as working
+fossil, __fish_fossil_subcommand bisect, , ,log, ,129,Show log of bisects in test order
+fossil, __fish_fossil_subcommand bisect, , ,chart, ,130,Show log of bisects in check-in order
+fossil, __fish_fossil_subcommand bisect, , ,next, ,131,Skip version
+fossil, __fish_fossil_subcommand bisect, , ,options, ,132,Show bisect options
+fossil, __fish_fossil_subsubcommand_only bisect options, , ,auto-next,@f @r,133,Automatically run bisect next
+fossil, __fish_fossil_subsubcommand_only bisect options, , ,direct-only,@f @r,134,Follow only primary parent-child links
+fossil, __fish_fossil_subsubcommand_only bisect options, , ,display,@f @r,135,Command to show after bisect next
+fossil, __fish_fossil_subsubsubcommand_only bisect options auto-next, , ,on off,@f @r,136,Automatically run bisect next
+fossil, __fish_fossil_subsubsubcommand_only bisect options direct-only, , ,on off,@f @r,137,Follow only primary parent-child links
+fossil, __fish_fossil_subsubsubcommand_only bisect options display, , ,chart,@f @r,138,Show log of bisects in check-in order
+fossil, __fish_fossil_subsubsubcommand_only bisect options display, , ,log,@f @r,139,Show log of bisects in test order
+fossil, __fish_fossil_subsubsubcommand_only bisect options display, , ,status,@f @r,140,List versions between bad and good
+fossil, __fish_fossil_subsubsubcommand_only bisect options display, , ,none,@f @r,141,Don't show anything
+fossil, __fish_fossil_subcommand bisect, , ,reset, ,142,Reinitialize bisect
+fossil, __fish_fossil_subcommand bisect, , ,vlist ls status, ,143,List versions between bad and good
+fossil, __fish_fossil_subsubcommand bisect vlist,a,all, , ,144,Show all versions
+fossil, __fish_fossil_subsubcommand bisect ls,a,all, , ,145,Show all versions
+fossil, __fish_fossil_subsubcommand bisect status,a,all, , ,146,Show all versions
+fossil, __fish_fossil_subcommand bisect, , ,undo, ,147,Undo latest bad/good command.
+fossil, __fish_fossil_needs_command, , ,branch,@f,148,Create a new branch
+fossil, __fish_fossil_subcommand branch, , ,new,@f @r,149,Create new branch
+fossil, __fish_fossil_subsubcommand branch new, ,private, , ,150,Make branch local
+fossil, __fish_fossil_subsubcommand branch new, ,bgcolor, ,@f @r,151,Set background color
+fossil, __fish_fossil_subsubcommand branch new, ,nosign, , ,152,Don't sign the branch with GPG
+fossil, __fish_fossil_subsubcommand branch new, ,date-override, ,@f @r,153,Override date
+fossil, __fish_fossil_subsubcommand branch new, ,user-override, ,@f @r,154,Override user
+fossil, __fish_fossil_subcommand branch, , ,list ls,@f @r,155,List branches
+fossil, __fish_fossil_subsubcommand branch list,a,all, , ,156,Show all branches
+fossil, __fish_fossil_subsubcommand branch ls,a,all, , ,157,Show all branches
+fossil, __fish_fossil_subsubcommand branch list,c,closed, , ,158,Show closed branches
+fossil, __fish_fossil_subsubcommand branch ls,c,closed, , ,159,Show closed branches
+fossil, __fish_fossil_command branch,R,repository, ,@r,160,Run command on repository
+fossil, __fish_fossil_needs_command, , ,cat, ,161,Print a file
+fossil, __fish_fossil_command cat,R,repository, ,@r,162,Run command on repository
+fossil, __fish_fossil_command cat,r, , ,@f @r,163,Print specific revision
+fossil, __fish_fossil_needs_command, , ,changes,@f,164,List local changes
+fossil, __fish_fossil_command changes, ,abs-paths, , ,165,Display absolute paths
+fossil, __fish_fossil_command changes, ,rel-paths, , ,166,Display relative paths
+fossil, __fish_fossil_command changes, ,sha1sum, , ,167,Verify file status using SHA1
+fossil, __fish_fossil_command changes, ,header, , ,168,Identify the repository if there are changes
+fossil, __fish_fossil_command changes,v,verbose, , ,169,Say (none) if there are no changes
+fossil, __fish_fossil_needs_command, , ,co checkout,@f,170,Checkout version
+fossil, __fish_fossil_command co checkout, , , ,@f @r,171,Version to check out
+fossil, __fish_fossil_command co checkout, ,force, , ,172,Ignore edited files
+fossil, __fish_fossil_command co checkout, ,force-missing, , ,173,Ignore missing content
+fossil, __fish_fossil_command co checkout, ,keep, , ,174,Only update the manifest
+fossil, __fish_fossil_command co checkout, ,latest, , ,175,Update to latest version
+fossil, __fish_fossil_needs_command, , ,clean, ,176,Delete all extra files
+fossil, __fish_fossil_command clean, ,case-sensitive,yes no,@f @r,177,Case insensitive file matching
+fossil, __fish_fossil_command clean, ,dotfiles, , ,178,Include dotfiles
+fossil, __fish_fossil_command clean, ,ignore, ,@r,179,Files to ignore
+fossil, __fish_fossil_command clean, ,clean, ,@r,180,Files to clean without prompting
+fossil, __fish_fossil_command clean,f,force, , ,181,Remove without prompting
+fossil, __fish_fossil_command clean,n,dry-run, , ,182,Display actions without running
+fossil, __fish_fossil_command clean, ,temp, , ,183,Only remove Fossil temporary files
+fossil, __fish_fossil_command clean,v,verbose, , ,184,Show removed files
+fossil, __fish_fossil_needs_command, , ,clone, ,185,Clone repository
+fossil, __fish_fossil_command clone,A,admin-user, ,@f @r,186,Make username an administrator
+fossil, __fish_fossil_command clone, ,private, , ,187,Clone private branches
+fossil, __fish_fossil_command clone, ,ssl-identity, ,@r,188,Use SSL identity
+fossil, __fish_fossil_needs_command, , ,ci commit, ,189,Create new revision
+fossil, __fish_fossil_command ci commit, , , ,@f @r,190,File
+fossil, __fish_fossil_command ci commit, ,allow-conflict, , ,191,Allow unresolved merge conflicts
+fossil, __fish_fossil_command ci commit, ,allow-empty, , ,192,Allow empty check-ins
+fossil, __fish_fossil_command ci commit, ,allow-fork, , ,193,Allow forking
+fossil, __fish_fossil_command ci commit, ,allow-older, , ,194,Allow commit older than ancestor
+fossil, __fish_fossil_command ci commit, ,baseline, , ,195,Use a baseline manifest
+fossil, __fish_fossil_command ci commit, ,bgcolor, ,@f @r,196,Apply color to check-in
+fossil, __fish_fossil_command ci commit, ,branch, ,@f @r,197,Check-in to new branch
+fossil, __fish_fossil_command ci commit, ,branchcolor, ,@f @r,198,Apply color to branch
+fossil, __fish_fossil_command ci commit, ,close, , ,199,Close the branch
+fossil, __fish_fossil_command ci commit, ,delta, , ,200,Use a delta manifest
+fossil, __fish_fossil_command ci commit,m,comment, ,@f @r,201,Commit comment
+fossil, __fish_fossil_command ci commit,M,message-file, ,@r,202,Read commit comment from a file
+fossil, __fish_fossil_command ci commit, ,mimetype, ,@f @r,203,Mimetype of commit comment
+fossil, __fish_fossil_command ci commit,n,dry-run, , ,204,Display actions without running
+fossil, __fish_fossil_command ci commit, ,no-warnings, , ,205,Omit all warnings
+fossil, __fish_fossil_command ci commit, ,nosign, , ,206,Don't sign the branch with GPG
+fossil, __fish_fossil_command ci commit, ,private, , ,207,Don't sync the changes
+fossil, __fish_fossil_command ci commit, ,tag, ,@f @r,208,Assign a tag to the checkin
+fossil, __fish_fossil_needs_command, , ,diff gdiff, ,209,Show differences
+fossil, __fish_fossil_command diff gdiff, ,binary, ,@r,210,Binary files glob pattern
+fossil, __fish_fossil_command diff gdiff, ,branch, ,@f @r,211,Show diff of branch
+fossil, __fish_fossil_command diff gdiff, ,brief, , ,212,Show file names only
+fossil, __fish_fossil_command diff gdiff,c,context, ,@f @r,213,Context lines
+fossil, __fish_fossil_command diff gdiff, ,diff-binary,yes no,@f @r,214,Include binary files
+fossil, __fish_fossil_command diff gdiff,r,from, ,@f @r,215,Select revision to compare with
+fossil, __fish_fossil_command diff gdiff,i,internal, , ,216,Use internal diff logic
+fossil, __fish_fossil_command diff gdiff,y,side-by-side, , ,217,Side-by-side diff
+fossil, __fish_fossil_command diff gdiff, ,tk, , ,218,Launch GUI
+fossil, __fish_fossil_command diff gdiff, ,to, ,@f @r,219,Select revision to compare to
+fossil, __fish_fossil_command diff gdiff, ,unified, , ,220,Unified diff
+fossil, __fish_fossil_command diff gdiff,v,verbose, , ,221,Output complete text
+fossil, __fish_fossil_command diff gdiff,W,width, ,@f @r,222,Line width in side-by-side diff
+fossil, __fish_fossil_needs_command, , ,export, ,223,Export repository to git
+fossil, __fish_fossil_command export, ,export-marks, ,@r,224,Export rids of exported data to file
+fossil, __fish_fossil_command export, ,import-marks, ,@r,225,Read rids of data to ignore from file
+fossil, __fish_fossil_command export,R,repository, ,@r,226,Run command on repository
+fossil, __fish_fossil_needs_command, , ,extras, ,227,Show files that aren't part of checkout
+fossil, __fish_fossil_command extras, ,abs-paths, , ,228,Display absolute paths
+fossil, __fish_fossil_command extras, ,case-sensitive,yes no,@f @r,229,Case insensitive file matching
+fossil, __fish_fossil_command extras, ,dotfiles, , ,230,Include dotfiles
+fossil, __fish_fossil_command extras, ,ignore, ,@r,231,Files to ignore
+fossil, __fish_fossil_command extras, ,rel-paths, , ,232,Display relative paths
+fossil, __fish_fossil_needs_command, , ,finfo, ,233,Print complete file history
+fossil, __fish_fossil_command finfo,b,brief, , ,234,Display one-line summary
+fossil, __fish_fossil_command finfo, ,case-sensitive,yes no,@f @r,235,Case insensitive file matching
+fossil, __fish_fossil_command finfo,l,log, , ,236,Select log mode (default)
+fossil, __fish_fossil_command finfo,n,limit, ,@f @r,237,Limit analyzed versions
+fossil, __fish_fossil_command finfo, ,offset, ,@f @r,238,Skip changes
+fossil, __fish_fossil_command finfo,p,print, , ,239,Select print mode
+fossil, __fish_fossil_command finfo,r,revision, ,@f @r,240,Print specific revision
+fossil, __fish_fossil_command finfo,s,status, , ,241,Select status mode
+fossil, __fish_fossil_needs_command, , ,help,@f,242,Display help
+fossil, __fish_fossil_command help,a,all, , ,243,Show main and auxiliary commands
+fossil, __fish_fossil_command help,t,test, , ,244,Show test commands only
+fossil, __fish_fossil_command help,x,aux, , ,245,Show auxiliary commands only
+fossil, __fish_fossil_command help,w,www, , ,246,Show list of web UI pages
+fossil, __fish_fossil_needs_command, , ,import, ,247,Import repository from git
+fossil, __fish_fossil_command import, ,incremental, , ,248,Allow importing into existing repository
+fossil, __fish_fossil_needs_command, , ,import, ,249,Provide information about object
+fossil, __fish_fossil_command import,R,repository, ,@r,250,Run command on repository
+fossil, __fish_fossil_command import,v,verbose, , ,251,Show extra information
+fossil, __fish_fossil_needs_command, , ,init new, ,252,Create a repository
+fossil, __fish_fossil_command init new, ,template, ,@r,253,Copy settings from repository
+fossil, __fish_fossil_command init new,A,admin-user, ,@r,254,Make username an administrator
+fossil, __fish_fossil_command init new, ,date-override, ,@f @r,255,Override date
+fossil, __fish_fossil_needs_command, , ,json, ,256,Make JSON request
+fossil, __fish_fossil_command json,R,repository, ,@r,257,Run command on repository
+fossil, __fish_fossil_needs_command, , ,ls, ,258,List files
+fossil, __fish_fossil_command ls,r, , ,@f @r,259,Tag
+fossil, __fish_fossil_command ls, ,age, , ,260,Show commit time
+fossil, __fish_fossil_command ls,v,verbose, , ,261,Provide extra information
+fossil, __fish_fossil_needs_command, , ,merge, ,262,Merge commits
+fossil, __fish_fossil_command merge, ,baseline, ,@f @r,263,Use baseline
+fossil, __fish_fossil_command merge, ,binary, ,@r,264,Binary files glob pattern
+fossil, __fish_fossil_command merge, ,case-sensitive,yes no,@f @r,265,Case insensitive file matching
+fossil, __fish_fossil_command merge,f,force, , ,266,Allow empty merge
+fossil, __fish_fossil_command merge, ,integrate, , ,267,Close merged branch
+fossil, __fish_fossil_command merge,n,dry-run, , ,268,Display actions without running
+fossil, __fish_fossil_command merge,v,verbose, , ,269,Show extra information
+fossil, __fish_fossil_needs_command, , ,mv, ,270,Move file
+fossil, __fish_fossil_command mv, ,case-sensitive,yes no,@f @r,271,Case insensitive file matching
+fossil, __fish_fossil_needs_command, , ,open, ,272,Open repository
+fossil, __fish_fossil_command open, ,keep, , ,273,Only modify manifest
+fossil, __fish_fossil_command open, ,nested, , ,274,Allow opening inside an opened repository
+fossil, __fish_fossil_needs_command, , ,pull, ,275,Pull from a repository
+fossil, __fish_fossil_command pull,R,repository, ,@r,276,Run command on repository
+fossil, __fish_fossil_command pull, ,private, ,@r,277,Pull private branches
+fossil, __fish_fossil_needs_command, , ,push, ,278,Push into a repository
+fossil, __fish_fossil_command push,R,repository, ,@r,279,Run command on repository
+fossil, __fish_fossil_command push, ,private, , ,280,Pull private branches
+fossil, __fish_fossil_needs_command, , ,rebuild, ,281,Rebuild a repository
+fossil, __fish_fossil_command rebuild, ,cluster, , ,282,Compute clusters
+fossil, __fish_fossil_command rebuild, ,compress, , ,283,Compress database
+fossil, __fish_fossil_command rebuild, ,force, , ,284,Force rebuild even with errors
+fossil, __fish_fossil_command rebuild, ,noverify, , ,285,Skip BLOB table verification
+fossil, __fish_fossil_command rebuild, ,pagesize,512 1024 2048 4096 8192 16384 32768 65536,@f @r,286,Set the database pagesize
+fossil, __fish_fossil_command rebuild, ,randomize, , ,287,Scan in random order
+fossil, __fish_fossil_command rebuild, ,vacuum, , ,288,Run VACUUM
+fossil, __fish_fossil_command rebuild, ,deanalyze, , ,289,Remove ANALYZE tables
+fossil, __fish_fossil_command rebuild, ,analyze, , ,290,Run ANALYZE
+fossil, __fish_fossil_command rebuild, ,wal, , ,291,Set Write-Ahead-Log journalling
+fossil, __fish_fossil_command rebuild, ,stats, , ,292,Show statistics
+fossil, __fish_fossil_needs_command, , ,remote-url, ,293,Default server URL
+fossil, __fish_fossil_needs_command, , ,revert,@f,294,Revert a commit
+fossil, __fish_fossil_command revert,r, , ,@f @r,295,Revert back to given revision
+fossil, __fish_fossil_needs_command, , ,rm delete, ,296,Remove a file from repository
+fossil, __fish_fossil_command rm delete, ,hard, , ,297,Remove files from this checkout
+fossil, __fish_fossil_command rm delete, ,soft, , ,298,Skip removing files from this checkout
+fossil, __fish_fossil_command rm delete,n,dry-run, , ,299,Display actions without running
+fossil, __fish_fossil_command rm delete, ,case-sensitive,yes no,@f @r,300,Case insensitive file matching
+fossil, __fish_fossil_needs_command, , ,settings,@f,301,Manage settings
+fossil, __fish_fossil_subcommand settings, , ,access-log,@f @r,302,Log accesses
+fossil, __fish_fossil_subcommand settings, , ,allow-symlinks,@f @r,303,Allow symbolic links
+fossil, __fish_fossil_subcommand settings, , ,auto-captcha,@f @r,304,Allow automatically filling CAPTCHA
+fossil, __fish_fossil_subcommand settings, , ,auto-hyperlink,@f @r,305,Use JavaScript to enable hyperlinks
+fossil, __fish_fossil_subcommand settings, , ,auto-shun,@f @r,306,Pull list of shunned references from server
+fossil, __fish_fossil_subcommand settings, , ,autosync,@f @r,307,Automatically sync the repository
+fossil, __fish_fossil_subcommand settings, , ,binary-glob,@f @r,308,Binary files glob pattern
+fossil, __fish_fossil_subcommand settings, , ,case-sensitive,@f @r,309,Case insensitive file matching
+fossil, __fish_fossil_subcommand settings, , ,clean-glob,@f @r,310,Files to clean without prompting
+fossil, __fish_fossil_subcommand settings, , ,clearsign,@f @r,311,Sign commits using GPG
+fossil, __fish_fossil_subcommand settings, , ,crnl-glob,@f @r,312,Non-standard line endings allowed glob pattern
+fossil, __fish_fossil_subcommand settings, , ,default-perms,@f @r,313,Permissions given to new users
+fossil, __fish_fossil_subcommand settings, , ,diff-binary,@f @r,314,Allow binary files to be diffed
+fossil, __fish_fossil_subcommand settings, , ,diff-command,@f @r,315,External diff command
+fossil, __fish_fossil_subcommand settings, , ,dont-push,@f @r,316,Disallow pushing to the repository
+fossil, __fish_fossil_subcommand settings, , ,editor,@f @r,317,Text editor for writing check-in comments
+fossil, __fish_fossil_subcommand settings, , ,empty-dirs,@f @r,318,List of empty directories
+fossil, __fish_fossil_subcommand settings, , ,encoding-glob,@f @r,319,Non-UTF-8 files glob pattern
+fossil, __fish_fossil_subcommand settings, , ,gdiff-command,@f @r,320,Command to use for graphical diff
+fossil, __fish_fossil_subcommand settings, , ,gmerge-command,@f @r,321,Command to use for graphical merge
+fossil, __fish_fossil_subcommand settings, , ,http-port,@f @r,322,HTTP port for fossil ui
+fossil, __fish_fossil_subcommand settings, , ,https-login,@f @r,323,Send login credentials using HTTPS
+fossil, __fish_fossil_subcommand settings, , ,ignore-glob,@f @r,324,Files to ignore glob pattern
+fossil, __fish_fossil_subcommand settings, , ,keep-glob,@f @r,325,Files to keep when cleaning
+fossil, __fish_fossil_subcommand settings, , ,localauth,@f @r,326,Require authentication for localhost logins
+fossil, __fish_fossil_subcommand settings, , ,main-branch,@f @r,327,Primary branch
+fossil, __fish_fossil_subcommand settings, , ,manifest,@f @r,328,Automatically create manifest files
+fossil, __fish_fossil_subcommand settings, , ,max-upload,@f @r,329,HTTP request size limit
+fossil, __fish_fossil_subcommand settings, , ,mtime-changes,@f @r,330,Use modification times
+fossil, __fish_fossil_subcommand settings, , ,pgp-command,@f @r,331,PGP command
+fossil, __fish_fossil_subcommand settings, , ,proxy,@f @r,332,HTTP proxy URL
+fossil, __fish_fossil_subcommand settings, , ,relative-paths,@f @r,333,Report relative paths
+fossil, __fish_fossil_subcommand settings, , ,repo-cksum,@f @r,334,Compute checksums over all files
+fossil, __fish_fossil_subcommand settings, , ,self-register,@f @r,335,Allow users to register themselves
+fossil, __fish_fossil_subcommand settings, , ,ssh-command,@f @r,336,Command to use for SSH protocol
+fossil, __fish_fossil_subcommand settings, , ,ssl-ca-location,@f @r,337,Location of SSL CA root certificates
+fossil, __fish_fossil_subcommand settings, , ,ssl-identity,@f @r,338,SSL private certificate path
+fossil, __fish_fossil_subcommand settings, , ,tcl,@f @r,339,Allow Tcl scripting
+fossil, __fish_fossil_subcommand settings, , ,tcl-setup,@f @r,340,Tcl initialization script
+fossil, __fish_fossil_subcommand settings, , ,th1-setup,@f @r,341,TH1 initialization script
+fossil, __fish_fossil_subcommand settings, , ,web-browser,@f @r,342,Web browser name
+fossil, __fish_fossil_command settings, ,global, , ,343,Set globally
+fossil, __fish_fossil_needs_command, , ,sqlite3,@f,344,Run SQL commands
+fossil, __fish_fossil_needs_command, , ,stash,@f,345,Manage stashes
+fossil, __fish_fossil_subcommand stash, , ,save snapshot,@f @r,346,Save current changes
+fossil, __fish_fossil_subsubcommand stash save,m,comment, ,@f @r,347,Stash comment
+fossil, __fish_fossil_subsubcommand stash snapshot,m,comment, ,@f @r,348,Stash comment
+fossil, __fish_fossil_subcommand stash, , ,list ls,@f @r,349,List all stashes
+fossil, __fish_fossil_subsubcommand stash list,v,verbose, , ,350,Show information about files
+fossil, __fish_fossil_subsubcommand stash ls,v,verbose, , ,351,Show information about files
+fossil, __fish_fossil_subcommand stash, , ,show,@f @r,352,Show stash contents
+fossil, __fish_fossil_subcommand stash, , ,pop,@f @r,353,Pop last stash
+fossil, __fish_fossil_subcommand stash, , ,apply,@f @r,354,Apply stash
+fossil, __fish_fossil_subcommand stash, , ,goto,@f @r,355,Updates to stash state
+fossil, __fish_fossil_subcommand stash, , ,drop rm,@f @r,356,Forget about stash
+fossil, __fish_fossil_subsubcommand stash drop,a,all, , ,357,Forget ALL stashes
+fossil, __fish_fossil_subsubcommand stash rm,a,all, , ,358,Forget ALL stashes
+fossil, __fish_fossil_subcommand stash, , ,goto,@f @r,359,Compare stash
+fossil, __fish_fossil_needs_command, , ,status,@f,360,Show status
+fossil, __fish_fossil_command status, ,abs-paths, , ,361,Display absolute paths
+fossil, __fish_fossil_command status, ,rel-paths, , ,362,Display relative paths
+fossil, __fish_fossil_command status, ,sha1sum, , ,363,Verify file status using SHA1
+fossil, __fish_fossil_needs_command, , ,sync, ,364,Sync with a repository
+fossil, __fish_fossil_command sync,R,repository, ,@r,365,Run command on repository
+fossil, __fish_fossil_command sync, ,private, ,@r,366,Sync private branches
+fossil, __fish_fossil_needs_command, , ,tag, ,367,Manage tags
+fossil, __fish_fossil_subcommand tag, , ,add,@f @r,368,Add tag to check-in
+fossil, __fish_fossil_subsubcommand tag add, ,raw, , ,369,Add raw tag
+fossil, __fish_fossil_subsubcommand tag add, ,propagate, , ,370,Propagate tag
+fossil, __fish_fossil_subcommand tag, , ,remove,@f @r,371,Remove tag from check-in
+fossil, __fish_fossil_subsubcommand tag remove, ,raw, , ,372,Remove raw tag
+fossil, __fish_fossil_subcommand tag, , ,find,@f @r,373,Find tag
+fossil, __fish_fossil_subsubcommand tag find, ,raw, , ,374,Find raw tag
+fossil, __fish_fossil_subsubcommand tag find,t,type,ci e,@f @r,375,Find tag type
+fossil, __fish_fossil_subsubcommand tag find,n,limit, ,@f @r,376,Limit number of tags
+fossil, __fish_fossil_subcommand tag, , ,list,@f @r,377,List tags
+fossil, __fish_fossil_subsubcommand tag list, ,raw, , ,378,List raw tags
+fossil, __fish_fossil_needs_command, , ,timeline, ,379,Show timeline
+fossil, __fish_fossil_command timeline,n,limit, ,@f @r,380,Limit timeline entries
+fossil, __fish_fossil_command timeline,t,type,ci e t w,@f @r,381,Output only event type
+fossil, __fish_fossil_command timeline,v,verbose, , ,382,Output list of files changed
+fossil, __fish_fossil_needs_command, , ,ui, ,383,Open web UI
+fossil, __fish_fossil_needs_command, , ,server, ,384,Start web server
+fossil, __fish_fossil_command ui server, ,localauth, , ,385,Enable automatic login for localhost
+fossil, __fish_fossil_command server, ,localhost, , ,386,Only listen on localhost
+fossil, __fish_fossil_command ui server,P,port, , ,387,Port to listen on
+fossil, __fish_fossil_command ui server, ,th-trace, , ,388,Trace TH1 execution
+fossil, __fish_fossil_command ui server, ,baseurl, , ,389,Use base URL
+fossil, __fish_fossil_command ui server, ,notfound, , ,390,Redirect
+fossil, __fish_fossil_command ui server, ,files, , ,391,Static files glob
+fossil, __fish_fossil_command ui server, ,scgi, , ,392,Use SCGI rather than HTTP
+fossil, __fish_fossil_needs_command, , ,undo, ,393,Undo the changes
+fossil, __fish_fossil_command undo,n,dry-run, , ,394,Display actions without running
+fossil, __fish_fossil_needs_command, , ,update, ,395,Update version
+fossil, __fish_fossil_command update, ,case-sensitive,yes no,@f @r,396,Case insensitive file matching
+fossil, __fish_fossil_command update, ,debug, , ,397,Print debug information
+fossil, __fish_fossil_command update, ,latest, , ,398,Update to latest version
+fossil, __fish_fossil_command update,n,dry-run, , ,399,Display actions without running
+fossil, __fish_fossil_command update,v,verbose, , ,400,Print information about all files
+fossil, __fish_fossil_needs_command, , ,version, ,401,Print fossil version
+fossil, __fish_fossil_command version,v,verbose, , ,402,Print version of optional features

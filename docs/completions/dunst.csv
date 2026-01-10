@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dunst, ,v,version, , ,101,Print version
+dunst, , , ,crit warn mesg info debug,@f @r,102,Minimum level for message
+dunst, , ,print, , ,103,Print notifications to stdout
+dunst, , ,startup_notification, , ,104,Display a notification on startup
+dunst, ,h,help, , ,105,Print help

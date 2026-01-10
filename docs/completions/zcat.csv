@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zcat, , , , ,@f @k @r,101, 
+zcat, ,f,force, , ,102,Overwrite
+zcat, ,h,help, , ,103,Display help and exit
+zcat, ,L,license, , ,104,Print license
+zcat, ,V,version, , ,105,Display version and exit

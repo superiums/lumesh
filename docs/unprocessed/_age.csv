@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+age, __fish_contains_opt -s d decrypt,e,encrypt, , ,101,encrypt
+age," __fish_contains_opt -s d decrypt; and __fish_contains_opt -s p passphrase",r,recipient, , ,102,public key
+age," __fish_contains_opt -s d decrypt; and __fish_contains_opt -s p passphrase",R,recipients-file, , ,103,file with public key(s)
+age, __fish_contains_opt -s d decrypt,a,armor, , ,104,PEM encode ciphertext
+age," __fish_contains_opt -s d decrypt; and __fish_contains_opt -s r recipient -s R recipients-file",p,passphrase, , ,105,passphrase
+age, __fish_contains_opt -s e encrypt,d,decrypt, , ,106,decrypt
+age, __fish_contains_opt -s e encrypt -s d decrypt,i,identity, , ,107,file with private key(s)

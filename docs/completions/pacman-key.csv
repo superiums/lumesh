@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pacman-key, ,a,add, , ,101,Add or update keys from <file>
+pacman-key, , ,config, , ,102,Use an alternate config <file>
+pacman-key, ,d,delete, , ,103,Remove the <keys> from the keyring
+pacman-key, ,e,export, , ,104,Export <keys> to stdout
+pacman-key, , ,edit-key, , ,105,Present a menu on specified <keys>
+pacman-key, ,f,finger, , ,106,List a fingerprint for each specified <key>
+pacman-key, , ,gpgdir, , ,107,Alternate home <dir> for GnuPG
+pacman-key, ,h,help, , ,108,Output syntax and command line options
+pacman-key, , ,import, , ,109,Imports keys from <dir>/pubring.gpg
+pacman-key, , ,import-trustdb, , ,110,Imports ownertrust values from <dir>/trustdb.gpg
+pacman-key, , ,init, , ,111,Initialize the keyring
+pacman-key, , ,keyserver, , ,112,Use the specified <keyserver>
+pacman-key, ,l,list-keys, , ,113,Lists all or specified <keys> from the keyring
+pacman-key, , ,list-sigs, , ,114,"Same as --list-keys, but with signatures"
+pacman-key, , ,lsign-key, , ,115,Locally sign the given <key>
+pacman-key, ,r,recv-keys, , ,116,Equivalent to --recv-keys in GnuPG
+pacman-key, , ,refresh-keys, , ,117,Equivalent to --refresh-keys in GnuPG
+pacman-key, , ,populate, , ,118,Reload the default keys
+pacman-key, ,u,updatedb, , ,119,Equivalent to --check-trustdb in GnuPG
+pacman-key, ,v,verify, , ,120,Verify the given <signature> file
+pacman-key, ,V,version, , ,121,Displays the program version

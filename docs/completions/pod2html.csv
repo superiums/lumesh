@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pod2html.1perl, , ,nobacklink, , ,101,cachedir 4   --cachedir=name Specify which directory is used for storing cache
+pod2html.1perl, , ,noheader, , ,102,blocks.  help 4   --help Displays the usage message
+pod2html.1perl, , ,norecurse, , ,103,title 4   --title=title Specify the title of the resulting HTML file

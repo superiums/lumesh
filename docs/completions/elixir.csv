@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+elixir, ,v, , ,@f,101,Prints version and exit
+elixir, ,e, , ,@f,102,Evaluates the given command
+elixir, ,pr, , , ,103,Requires the given files/patterns in parallel
+elixir, ,pa, , , ,104,Prepends the given path to Erlang code path
+elixir, ,pz, , , ,105,Appends the given path to Erlang code path
+elixir, , ,app, , ,106,Start the given app and its dependencies
+elixir, , ,erl, ,@f,107,Switches to be passed down to erlang
+elixir, , ,name, ,@f,108,Makes and assigns a name to the distributed node
+elixir, , ,sname, ,@f,109,Makes and assigns a short name to the distributed node
+elixir, , ,cookie, ,@f,110,Sets a cookie for this distributed node
+elixir, , ,hidden, ,@f,111,Makes a hidden node
+elixir, , ,detached, ,@f,112,Starts the Erlang VM detached from console
+elixir, , ,no-halt, ,@f,113,Does not halt the Erlang VM after execution

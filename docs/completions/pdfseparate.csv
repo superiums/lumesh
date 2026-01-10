@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pdfseparate, , ,help, , ,101,are equivalent. ) EXAMPLE pdfseparate sample. pdf sample-%d. pdf

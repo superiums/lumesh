@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+faillog, ,a,all, , ,101,Display (or act on) faillog records for all users having an entry in the fail…
+faillog, ,h,help, , ,102,Display help message and exit
+faillog, ,l,lock-secsSEC, , ,103,Lock account for SEC seconds after failed login
+faillog, ,m,maximumMAX, , ,104,Set the maximum number of login failures after the account is disabled to MAX
+faillog, ,r,reset, , ,105,Reset the counters of login failures
+faillog, ,R,rootCHROOT_DIR, , ,106,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+faillog, ,t,timeDAYS, , ,107,Display faillog records more recent than DAYS
+faillog, ,u,userLOGIN, , ,108,Display faillog record or maintains failure counters and limits (if used with…
+faillog, , ,lock-secs, , ,109, 
+faillog, , ,maximum, , ,110, 
+faillog, , ,root, , ,111, 
+faillog, , ,time, , ,112, 
+faillog, , ,user, , ,113, 

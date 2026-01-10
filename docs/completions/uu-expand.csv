@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-expand, ,t,tabs, , ,101,"have tabs N characters apart, not 8 or use comma separated list of explicit tab positions"
+uu-expand, ,i,initial, , ,102,do not convert tabs after non blanks
+uu-expand, ,U,no-utf8, , ,103,interpret input file as 8-bit ASCII rather than UTF-8
+uu-expand, ,h,help, , ,104,Print help
+uu-expand, ,V,version, , ,105,Print version

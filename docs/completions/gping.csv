@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gping, , , , ,@f @r,101,"Ping, but with a graph"
+gping, , ,cmd, ,@f @r,102,Graph execution time for this command
+gping, ,h,help, ,@f,103,Print help information
+gping, ,4, , ,@f,104,Resolve ping targets to IPv4 address
+gping, ,6, , ,@f,105,Resolve ping targets to IPv6 address
+gping, ,s,simple-graphics, ,@f,106,Use dot character instead of braille
+gping, ,b,buffer, ,@f @r,107,Number of seconds to display on graph
+gping, ,n,watch-interval, ,@f @r,108,Watch interval in seconds

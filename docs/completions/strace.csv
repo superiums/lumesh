@@ -1,0 +1,59 @@
+cmd,conds,short,long,params,dirs,pri,desc
+strace, ,E,env, , ,101,Remove var from the inherited environment before passing it on to the command
+strace, ,p,attach, , ,102, 
+strace, ,u,user, , ,103, 
+strace, , ,argv0, , ,104,Set argv[0] of the command being executed to name
+strace, ,b,detach-on, , ,105,Detach when the specified syscall is reached
+strace, ,D,daemonize, , ,106,"Run tracer process as a grandchild, not as the parent of the tracee"
+strace, ,f,follow-forks, , ,107, 
+strace, , ,output-separately, , ,108, 
+strace, ,I,interruptible, , ,109,When strace can be interrupted by signals
+strace, , ,syscall-limit, , ,110,Detach all tracees when LIMIT number of syscalls have been captured
+strace, , ,kill-on-exit, , ,111,Set PTRACE_O_EXITKILL ptrace option to all tracee processes
+strace, ,e,trace, , ,112,Set expression which modifies which events to trace
+strace, ,e,trace-fds, , ,113,Set expression which modifies which events to trace
+strace, ,e,signal, , ,114,Set expression which modifies which events to trace
+strace, ,e,status, , ,115,Set expression which modifies which events to trace
+strace, ,P,trace-path, , ,116,Trace only system calls accessing path
+strace, ,z,successful-only, , ,117,Print only syscalls that returned without an error code
+strace, ,Z,failed-only, , ,118,Print only syscalls that returned with an error code
+strace, ,a,columns, , ,119,Align output in columns
+strace, ,e,verbose, , ,120,Dereference structures for the specified set of system calls
+strace, , ,decode-pids, , ,121,Decode various information associated with process IDs
+strace, , ,quiet, , ,122,Suppress various information messages
+strace, , ,decode-fds, , ,123,Decode various information associated with file descriptors
+strace, , ,decode-pids, , ,124,Decode various information associated with process IDs
+strace, , ,kvm, , ,125,Print the exit reason of kvm vcpu
+strace, ,i,instruction-pointer, , ,126,Print the instruction pointer at the time of the system call
+strace, ,n,syscall-number, , ,127,Print the syscall number
+strace, ,k,stack-traces, , ,128,Print the execution stack trace of the traced processes after each system call
+strace, ,o,output, , ,129,Write the trace output to the file filename rather than to stderr
+strace, ,A,output-append-mode, , ,130,Open the file provided in the -o option in append mode
+strace, ,q,quiet, , ,131, 
+strace, , ,quiet, , ,132, 
+strace, , ,quiet, , ,133, 
+strace, ,r,relative-timestamps, , ,134,Print a relative timestamp upon entry to each system call
+strace, ,s,string-limit, , ,135,Specify the maximum string size to print (the default is 32)
+strace, , ,timestamps, , ,136,Prefix each line of the trace with the wall clock time
+strace, ,t,absolute-timestamps, , ,137,Prefix each line of the trace with the wall clock time
+strace, , ,absolute-timestamps, , ,138,"If given twice, the time printed will include the microseconds"
+strace, , ,absolute-timestamps, , ,139, 
+strace, ,T,syscall-times, , ,140,Show the time spent in system calls
+strace, ,v,no-abbrev, , ,141,Print unabbreviated versions of environment
+strace, , ,strings-in-hex, , ,142,Control usage of escape sequences with hexadecimal numbers in the printed strings
+strace, ,X,const-print-style, , ,143,Set the format for printing of named constants and flags
+strace, , ,decode-fds, , ,144,Print all available information associated with file descriptors
+strace, ,y,decode-fds, , ,145,Print paths associated with file descriptor arguments and with the AT_FDCWD constant
+strace, , ,decode-pids, , ,146,print PIDs in strace's namespace
+strace, ,Y,decode-pids, , ,147,Print command names for PIDs
+strace, ,c,summary-only, , ,148,Suppress output and report summary on exit
+strace, ,C,summary, , ,149,Display output and report summary on exit
+strace, ,O,summary-syscall-overhead, , ,150,Set the overhead for tracing system calls to overhead
+strace, ,S,summary-sort-by,time time_total total_time calls count errors error name syscall syscall_name nothing none, ,151,Sort summary by the specified criterion
+strace, ,U,summary-columns, , ,152,Configure a set (and order) of columns being shown in the call summary
+strace, ,w,summary-wall-clock, , ,153,Summarise the time difference between the beginning and end of each system call
+strace, ,d,debug, , ,154,Debug output
+strace, , ,seccomp-bpf, , ,155,Try to enable use of seccomp-bpf
+strace, , ,tips, , ,156,"Show strace tips, tricks, and tweaks before exit"
+strace, ,h,help, , ,157,Print help and exit
+strace, ,V,version, , ,158,Print version and exit

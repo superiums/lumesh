@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bunzip2, , , , ,@f @k @r,101, 
+bunzip2, ,c,stdout, , ,102,Decompress to stdout
+bunzip2, ,f,force, , ,103,Overwrite
+bunzip2, ,k,keep, , ,104,Do not overwrite
+bunzip2, ,s,small, , ,105,Reduce memory usage
+bunzip2, ,v,verbose, , ,106,Print compression ratios
+bunzip2, ,L,license, , ,107,Print license
+bunzip2, ,V,version, , ,108,Display version and exit

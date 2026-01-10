@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-build, , ,help, , ,101,Display help and exit
+apt-build, , , ,update,@f,102,Update list of packages
+apt-build, , , ,upgrade,@f,103,Upgrade packages
+apt-build, , , ,world,@f,104,Rebuild your system
+apt-build, , , ,install,@f @r,105,Build and install a new package
+apt-build, , , ,source,@f @r,106,Download and extract a source
+apt-build, , , ,info,@f @r,107,Info on a package
+apt-build, , , ,remove,@f @r,108,Remove packages
+apt-build, , , ,clean-build,@f @r,109,Erase built packages
+apt-build, , , ,build-source,@f @r,110,Build source without install
+apt-build, , , ,clean-sources,@f @r,111,Clean source directories
+apt-build, , , ,update-source,@f @r,112,Update source and rebuild
+apt-build, , , ,update-repository,@f @r,113,Update the repository
+apt-build, , ,nowrapper, ,@f,114,Do not use gcc wrapper
+apt-build, , ,remove-builddep, ,@f,115,Remove build-dep
+apt-build, , ,no-source, ,@f,116,Do not download source
+apt-build, , ,build-dir, ,@f,117,Specify build-dir
+apt-build, , ,rebuild, ,@f,118,Rebuild a package
+apt-build, , ,reinstall, ,@f,119,Rebuild and install an installed package
+apt-build, , ,build-command, ,@f @r,120,Use <command> to build
+apt-build, , ,patch, ,@r,121,Apply <file> patch
+apt-build, ,p,patch-strip, , ,122,Prefix to strip on patch
+apt-build, ,y,yes, , ,123,Assume yes to all questions
+apt-build, , ,purge, , ,124,Use purge instead of remove
+apt-build, , ,noupdate, , ,125,Do not run update
+apt-build, , ,source-list, ,@r,126,Specify sources.list file
+apt-build, ,v,version, ,@f,127,Display version and exit

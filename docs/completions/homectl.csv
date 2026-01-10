@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+homectl, ,h,help, , ,101,Show this help
+homectl, , ,version, , ,102,Show package version
+homectl, , ,no-pager, , ,103,Do not pipe output into a pager
+homectl, , ,no-legend, , ,104,Do not show the headers and footers
+homectl, , ,no-ask-password, , ,105,Do not ask for system passwords
+homectl, ,H,host, , ,106,Operate on remote host
+homectl, ,M,machine, , ,107,Operate on local container
+homectl, , ,identity, , ,108,Read JSON identity from file
+homectl, , ,json,pretty short off, ,109,Output inspection data in JSON
+homectl, , ,export-format,full stripped minimal, ,110,Strip JSON inspection data

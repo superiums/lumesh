@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+signtool, , ,leavearc, , ,101,Retains the temporary . arc (archive) directories that the -J option creates
+signtool, , ,norecurse, , ,102,Blocks recursion into subdirectories when signing a directory\\*(Aqs contents …
+signtool, , ,outfile, , ,103,Specifies a file to receive redirected output from Netscape Signing Tool
+signtool, , ,verbosity, , ,104,Sets the quantity of information Netscape Signing Tool generates in operation
+signtool, , ,----------, , ,105,  BBN Certificate Services CA Root 1    IBM World Registry CA    VeriSign Cla…
+signtool, , ,-------------------------------------, , ,106, 
+signtool, , ,---------------------------------------------, , ,107,	1

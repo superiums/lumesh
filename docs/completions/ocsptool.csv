@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ocsptool, , ,load-issuer, , ,101,against its specified issuer certificate.  Verify response
+ocsptool, ,i,request-info, , ,102,"The -Q parameter specify the name of the file containing the OCSP request, an…"
+ocsptool, , ,no-nonce, , ,103,Verify signature in OCSP response To verify the signature in an OCSP response…
+ocsptool, , ,verify-response, , ,104,"OCSP response in DER format from standard input, or from the file specified b…"
+ocsptool, , ,load-trust, , ,105,in PEM format
+ocsptool, , ,load-signer, , ,106,one certificate and it will be used to verify the signature in the OCSP respo…

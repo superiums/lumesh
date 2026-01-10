@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+Hyprland, ,h,help, , ,101,Show command usage
+Hyprland, ,c,config, , ,102,Specify config file to use
+Hyprland, , ,socket, , ,103,Sets the Wayland socket name (for Wayland socket handover)
+Hyprland, , ,wayland-fd, , ,104,Sets the Wayland socket file descriptor (for Wayland socket handover)

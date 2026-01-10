@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsinitcpio, ,a,analyze, , ,101, 
+lsinitcpio, ,c,config, , ,102, 
+lsinitcpio, ,l,list, , ,103, 
+lsinitcpio, ,x,extract, , ,104, 
+lsinitcpio, ,h,help, , ,105, 
+lsinitcpio, ,n,nocolor, , ,106, 
+lsinitcpio, ,V,version, , ,107, 
+lsinitcpio, ,v,verbose, , ,108, 
+lsinitcpio, , ,cpio, , ,109, 
+lsinitcpio, , ,early, , ,110, 

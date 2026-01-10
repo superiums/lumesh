@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsusb, ,v,verbose, , ,101,Increase verbosity (show descriptors)
+lsusb, ,s, , ,@f @r,102,Show only devices with specified device and/or bus numbers (in decimal)
+lsusb, ,D,device, , ,103,Selects which device lsusb will examine
+lsusb, ,t,tree, , ,104,Dump the physical USB device hierarchy as a tree
+lsusb, ,V,version, , ,105,Show version of program
+lsusb, ,h,help, , ,106,Show usage and help

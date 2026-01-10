@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xargs, ,0,null, , ,101,"Input items are terminated by a null character instead of by whitespace, and …"
+xargs, ,a,arg-file, , ,102,Read items from  file instead of standard input
+xargs, ,d,delimiter, , ,103,Input items are terminated by the specified character
+xargs, ,e,eof, , ,104,This option is a synonym for the  -E option
+xargs, ,i,replace, , ,105,This option is a synonym for  -I replace-str if  replace-str is specified
+xargs, ,l,max-lines, , ,106,"Synonym for the  -L option.  Unlike  -L , the  max-lines argument is optional"
+xargs, ,n,max-args, , ,107,Use at most max-args arguments per command line
+xargs, ,P,max-procs, , ,108,"Run up to  max-procs processes at a time; the default is 1"
+xargs, ,o,open-tty, , ,109,Reopen stdin as  /dev/tty in the child process before executing the command
+xargs, ,p,interactive, , ,110,Prompt the user about whether to run each command line and read a line from t…
+xargs, , ,process-slot-var, , ,111,Set the environment variable  name to a unique value in each running child pr…
+xargs, ,r,no-run-if-empty, , ,112,"If the standard input does not contain any nonblanks, do not run the command"
+xargs, ,s,max-chars, , ,113,"Use at most max-chars characters per command line, including the command and …"
+xargs, , ,show-limits, , ,114,Display the limits on the command-line length which are imposed by the operat…
+xargs, ,t,verbose, , ,115,Print the command line on the standard error output before executing it
+xargs, ,x,exit, , ,116,Exit if the size (see the  -s option) is exceeded
+xargs, , ,help, , ,117,Print a summary of the options to  xargs and exit
+xargs, , ,mycommand, , ,118,instead of rejecting this as unrecognized option
+xargs, , ,version, , ,119,Print the version number of xargs and exit

@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+asp," checkout {diff,short,}log export list-{arches,repos} show update untrack", , , ,@f,101, 

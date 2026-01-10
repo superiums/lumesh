@@ -1,0 +1,67 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hledger, $takes_general_input_flags $takes_general_reporting_flags,f,file, ,@r,101,Input file
+hledger, $takes_general_input_flags $takes_general_reporting_flags, ,rules-file, ,@r,102,CSV-conversion-rules file
+hledger, $takes_general_input_flags $takes_general_reporting_flags, ,separator, ,@f @r,103,CSV separator
+hledger, $takes_general_input_flags $takes_general_reporting_flags, ,alias, ,@r,104,Rename account
+hledger, $takes_general_input_flags $takes_general_reporting_flags, ,anon, ,@f,105,Anonymize accounts and payees
+hledger, $takes_general_input_flags $takes_general_reporting_flags, ,pivot, ,@f @r,106,Use some other field/tag for account names
+hledger, $takes_general_input_flags $takes_general_reporting_flags,I,ignore-assertions, ,@f @r,107,Ignore any balance assertions
+hledger, $takes_general_reporting_flags,b,begin, ,@f @r,108,Include postings/txns on or after this date
+hledger, $takes_general_reporting_flags,e,end, ,@f @r,109,Include postings/txns before this date
+hledger, $takes_general_reporting_flags,D,daily, ,@f,110,Multiperiod/multicolumn report by day
+hledger, $takes_general_reporting_flags,W,weekly, ,@f,111,Multiperiod/multicolumn report by week
+hledger, $takes_general_reporting_flags,M,monthly, ,@f,112,Multiperiod/multicolumn report by month
+hledger, $takes_general_reporting_flags,Q,quarterly, ,@f,113,Multiperiod/multicolumn report by quarter
+hledger, $takes_general_reporting_flags,Y,yearly, ,@f,114,Multiperiod/multicolumn report by year
+hledger, $takes_general_reporting_flags,p,period, ,@f @r,115,"Set start date, end date, and report interval"
+hledger, $takes_general_reporting_flags, ,date2, ,@f,116,Match secondary date instead
+hledger, $takes_general_reporting_flags,U,unmarked, ,@f,117,Include only unmarked postings/txns
+hledger, $takes_general_reporting_flags,P,pending, ,@f,118,Include only pending (“!”) postings/txns
+hledger, $takes_general_reporting_flags,C,cleared, ,@f,119,Include only cleared (“*”) postings/txns
+hledger, $takes_general_reporting_flags,R,real, ,@f,120,Include only non-virtual postings
+hledger, $takes_general_reporting_flags, ,depth, ,@f @r,121,Hide accounts/postings deeper than this
+hledger, $takes_general_reporting_flags,E,empty, ,@f,122,Show items with zero amount
+hledger, $takes_general_reporting_flags,B,cost, ,@f,123,Converts amounts to their cost at txn time
+hledger, $takes_general_reporting_flags,V,value, ,@f,124,Converts amounts to their market value on report end date
+hledger, $takes_general_reporting_flags, ,auto, ,@f,125,Apply automated posting rules to modify txns
+hledger, $takes_general_reporting_flags, ,forecast, ,@f,126,Apply periodic txn rules to generate future txns
+hledger, __fish_use_subcommand, , ,add,@f,130,Add transactions using guided prompts
+hledger, __fish_use_subcommand, , ,import, ,132,Add new transactions from other files
+hledger, __fish_use_subcommand, , ,check-dates,@f,134,Ensure transactions are ordered by date
+hledger, __fish_use_subcommand, , ,check-dupes,@f,136,Ensure accounts have different leaf names
+hledger, __fish_use_subcommand, , ,close equity,@f,137,Generate balance-resetting transactions
+hledger, __fish_use_subcommand, , ,rewrite,@f,140,Generate automated postings/diffs
+hledger, __fish_use_subcommand, , ,balancesheet       bs,@f,143,"Show assets, liabilities, and net worth"
+hledger, __fish_use_subcommand, , ,balancesheetequity bse,@f,144,"Show assets, liabilities, and equity"
+hledger, __fish_use_subcommand, , ,cashflow           cf,@f,145,Show changes in liquid assets
+hledger, __fish_use_subcommand, , ,incomestatement    is,@f,146,Show revenues and expenses
+hledger, $financial_reports_commands, ,change, ,@f,147,Show balance change in each period
+hledger, $financial_reports_commands, ,cumulative, ,@f,148,Show balance change accumulated across periods
+hledger, $financial_reports_commands,H,historical, ,@f,149,Show historical ending balance in each period
+hledger, $financial_reports_commands, ,flat, ,@f,150,Show accounts as a list
+hledger, $financial_reports_commands, ,drop, ,@f @r,151,Omit N leading account-name parts (in flat mode)
+hledger, $financial_reports_commands,N,no-total, ,@f,152,Omit the final total row
+hledger, $financial_reports_commands, ,tree, ,@f,153,"Show accounts as a tree; amounts include subaccounts"
+hledger, $financial_reports_commands,A,average, ,@f,154,Show a row average column in multicolumn reports
+hledger, $financial_reports_commands,T,row-total, ,@f,155,Show a row total column in multicolumn reports
+hledger, $financial_reports_commands, ,no-elide, ,@f,156,Don’t squash boring parent accounts in tree mode
+hledger, $financial_reports_commands, ,format, ,@f @r,157,Use a custom line format in multicolumn reports
+hledger, $financial_reports_commands, ,pretty-tables, ,@f,158,Use Unicode when displaying tables
+hledger, $financial_reports_commands,S,sort-amount, ,@f,159,Sort by amount instead of account code/name
+hledger, $financial_reports_commands,O,output-format,txt csv html,@f,160,Select an output format
+hledger, $financial_reports_commands,o,output-file, ,@r,161,"Write output to given file; extension selects format"
+hledger, __fish_use_subcommand, , ,roi,@f,162,Show return on investments
+hledger, __fish_use_subcommand, , ,accounts,@f,166,Show account names
+hledger, __fish_use_subcommand, , ,activity,@f,172,Show postings-per-interval bar charts
+hledger, __fish_use_subcommand, , ,balance,@f,173,Show balance changes/end balances/budgets in accounts
+hledger, __fish_use_subcommand, , ,commodities,@f,192,Show commodity/currency symbols
+hledger, __fish_use_subcommand, , ,files,@f,193,Show input file paths
+hledger, __fish_use_subcommand, , ,prices,@f,194,Show market-price records
+hledger, __fish_use_subcommand, , ,print txns,@f,197,Show transactions
+hledger, __fish_use_subcommand, , ,print-unique,@f,198,Show only transactions with unique descriptions
+hledger, __fish_use_subcommand, , ,register,@f,204,Show postings in one or more accounts & running total
+hledger, __fish_use_subcommand, , ,register-match,@f,213,Show a recent posting that best matches a description
+hledger, __fish_use_subcommand, , ,stats,@f,214,Show journal statistics
+hledger, __fish_use_subcommand, , ,tags,@f,216,Show tag names
+hledger, __fish_use_subcommand, , ,test,@f,217,Run self-tests
+hledger, __fish_use_subcommand, , ,help,@f,218,Show hledger manual list

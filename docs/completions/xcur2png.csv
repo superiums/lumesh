@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xcur2png, ,V,version, , ,101,Display the version number and exit with status 0
+xcur2png, ,h,help, , ,102,Display the usage message and exit with status 0
+xcur2png, ,c,conf, , ,103,"Set output path of config-file.  If '-' is specified, stdout(3) is used"
+xcur2png, ,d,directory, , ,104,Set the path of a directory which PNG images are saved in
+xcur2png, ,i,initial-suffix, , ,105,Set the initial suffix of PNG images to suffix
+xcur2png, ,q,quiet, , ,106,Suppress progress message
+xcur2png, ,n,dry-run, , ,107,Do not output PNG images and config-data to files

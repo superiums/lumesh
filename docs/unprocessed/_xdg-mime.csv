@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-mime, contains_seq xdg-mime install -- (commandline -cxp), ,mode,user system, ,101,Set mode
+xdg-mime, contains_seq xdg-mime install -- (commandline -cxp), ,novendor, , ,102,Disable vendor check
+xdg-mime, contains_seq xdg-mime uninstall -- (commandline -cxp), ,mode,user system, ,103,Set mode

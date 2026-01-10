@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ibus, __fish_use_subcommand, , ,engine,@f,101,Set or get engine
+ibus, __fish_use_subcommand, , ,exit,@f,102,Exit ibus-daemon
+ibus, __fish_use_subcommand, , ,list-engine,@f,103,Show available engines
+ibus, __fish_use_subcommand, , ,restart,@f,104,Restart ibus-daemon
+ibus, __fish_use_subcommand, , ,version,@f,105,Show version
+ibus, __fish_use_subcommand, , ,read-cache,@f,106,Show the content of registry cache
+ibus, __fish_use_subcommand, , ,write-cache,@f,107,Create registry cache
+ibus, __fish_use_subcommand, , ,address,@f,108,Print the D-Bus address of ibus-daemon
+ibus, __fish_use_subcommand, , ,read-config,@f,109,Show the configuration values
+ibus, __fish_use_subcommand, , ,reset-config,@f,110,Reset the configuration values
+ibus, __fish_use_subcommand, , ,emoji,@f,111,Save emoji on dialog to clipboard
+ibus, __fish_use_subcommand, , ,help,@f,112, 

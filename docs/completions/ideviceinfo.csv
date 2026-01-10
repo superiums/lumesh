@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ideviceinfo, ,s,simple, , ,101,use a simple connection to avoid auto-pairing with the device
+ideviceinfo, ,u,udid, , ,102,target specific device by UDID
+ideviceinfo, ,n,network, , ,103,connect to network device
+ideviceinfo, ,d,debug, , ,104,enable communication debugging
+ideviceinfo, ,q,domain, , ,105,set domain of query to NAME.  Default: None
+ideviceinfo, ,k,key, , ,106,only query key specified by NAME.  Default: All keys
+ideviceinfo, ,x,xml, , ,107,output information as xml plist instead of key/value pairs
+ideviceinfo, ,h,help, , ,108,prints usage information
+ideviceinfo, ,v,version, , ,109,prints version information

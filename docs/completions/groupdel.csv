@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+groupdel, ,f,force, , ,101,"This option forces the removal of the group, even if there\\*(Aqs some user ha…"
+groupdel, ,h,help, , ,102,Display help message and exit
+groupdel, ,R,rootCHROOT_DIR, , ,103,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+groupdel, ,P,prefixPREFIX_DIR, , ,104,Apply changes in the PREFIX_DIR directory and use the configuration files fro…
+groupdel, , ,root, , ,105, 
+groupdel, , ,prefix, , ,106, 

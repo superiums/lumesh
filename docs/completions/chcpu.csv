@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chcpu, ,c,configure, , ,101, 
+chcpu, ,d,disable, , ,102, 
+chcpu, ,e,enable, , ,103, 
+chcpu, ,g,deconfigure, , ,104, 
+chcpu, ,p,dispatch, , ,105, 
+chcpu, ,r,rescan, , ,106, 
+chcpu, ,h,help, , ,107, 
+chcpu, ,V,version, , ,108, 

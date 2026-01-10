@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wc, ,c,bytes, , ,101,Print byte count
+wc, ,m,chars, , ,102,Print character count
+wc, ,l,lines, , ,103,Print number of lines
+wc, ,L,max-line-length, , ,104,Print length of longest line
+wc, ,w,words, , ,105,Print number of words
+wc, , ,files0-from, , ,106,Read input from NUL-terminated filenames in the given file
+wc, , ,help, , ,107,Display help and exit
+wc, , ,version, , ,108,Display version and exit

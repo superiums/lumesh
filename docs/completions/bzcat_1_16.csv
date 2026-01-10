@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bzcat, ,c,stdout, , ,101,Compress or decompress to standard output
+bzcat, ,d,decompress, , ,102,Force decompression
+bzcat, ,z,compress, , ,103,"The complement to -d: forces compression, regardless of the invocation name"
+bzcat, ,t,test, , ,104,"Check integrity of the specified file(s), but don't decompress them"
+bzcat, ,f,force, , ,105,Force overwrite of output files
+bzcat, ,k,keep, , ,106,Keep (don't delete) input files during compression or decompression
+bzcat, ,s,small, , ,107,"Reduce memory usage, for compression, decompression and testing"
+bzcat, ,q,quiet, , ,108,Suppress non-essential warning messages
+bzcat, ,v,verbose, , ,109,Verbose mode -- show the compression ratio for each file processed
+bzcat, ,V,version, , ,110,"Display the software version, license terms and conditions"
+bzcat, ,9,best, , ,111,"Set the block size to 100 k, 200 k .   900 k when compressing"
+bzcat, , ,repetitive-best, , ,112,These flags are redundant in versions 0. 9. 5 and above

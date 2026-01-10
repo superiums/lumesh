@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+screen, ,c, , ,@r,101,Specify init file
+screen, ,e, , ,@f @r,102,Escape character
+screen, , , , ,@f @r,103,History length
+screen, , , , ,@r,104,Set shell
+screen, , , , ,@f @r,105,Session name
+screen, , , , ,@f @r,106,Session title
+screen, , , , ,@f @r,107,Value to use for $TERM (default 'screen')
+screen, , , , ,@r,108,Send command

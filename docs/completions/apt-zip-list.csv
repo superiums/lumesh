@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-zip-list, ,h,help, , ,101,Display help and exit
+apt-zip-list, ,V,version, ,@f,102,Display version and exit
+apt-zip-list, ,m,medium, , ,103,Removable medium
+apt-zip-list, ,a,aptgetaction,dselect-upgrade upgrade dist-upgrade,@f,104,Select an action
+apt-zip-list, ,p,packages, , ,105,List of packages to install
+apt-zip-list, ,f,fix-broken, ,@f,106,Fix broken option
+apt-zip-list, , ,skip-mount, , ,107,Specify a non-mountpoint dir
+apt-zip-list, ,M,method, , ,108,Select a method
+apt-zip-list, ,o,options,tar restart, ,109,Specify options
+apt-zip-list, ,A,accept,http ftp, ,110,Accept protocols
+apt-zip-list, ,R,reject,http ftp, ,111,Reject protocols

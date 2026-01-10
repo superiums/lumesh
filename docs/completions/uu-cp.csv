@@ -1,0 +1,32 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-cp, ,t,target-directory, ,@D @f @r,101,copy all SOURCE arguments into target-directory
+uu-cp, , ,backup, , ,102,make a backup of each existing destination file
+uu-cp, ,S,suffix, , ,103,override the usual backup suffix
+uu-cp, , ,update,none,@f @r,104,move only when the SOURCE file is newer than the destination file or when the destination file is missing
+uu-cp, , ,reflink,auto,@f @r,105,control clone/CoW copies. See below
+uu-cp, , ,preserve,mode,@f @r,106,"Preserve the specified attributes (default: mode, ownership (unix only), timestamps), if possible additional attributes: context, links, xattr, all"
+uu-cp, , ,no-preserve,mode,@f @r,107,don't preserve the specified attributes
+uu-cp, , ,sparse,never,@f @r,108,control creation of sparse files. See below
+uu-cp, , ,context, , ,109,"like -Z, or if CTX is specified then set the SELinux or SMACK security context to CTX"
+uu-cp, ,T,no-target-directory, , ,110,Treat DEST as a regular file and not a directory
+uu-cp, ,i,interactive, , ,111,ask before overwriting files
+uu-cp, ,l,link, , ,112,hard-link files instead of copying
+uu-cp, ,n,no-clobber, , ,113,don't overwrite a file that already exists
+uu-cp, ,r,recursive, , ,114,copy directories recursively
+uu-cp, , ,strip-trailing-slashes, , ,115,remove any trailing slashes from each SOURCE argument
+uu-cp, , ,debug, , ,116,explain how a file is copied. Implies -v
+uu-cp, ,v,verbose, , ,117,explicitly state what is being done
+uu-cp, ,s,symbolic-link, , ,118,make symbolic links instead of copying
+uu-cp, ,f,force, , ,119,"if an existing destination file cannot be opened, remove it and try again (this option is ignored when the -n option is also used). Currently not implemented for Windows."
+uu-cp, , ,remove-destination, , ,120,"remove each existing destination file before attempting to open it (contrast with --force). On Windows, currently only works for writeable files."
+uu-cp, , ,attributes-only, , ,121,"Don't copy the file data, just the attributes"
+uu-cp, ,p,preserve-default-attributes, , ,122,"same as --preserve=mode,ownership(unix only),timestamps"
+uu-cp, , ,parents, , ,123,use full source file name under DIRECTORY
+uu-cp, ,P,no-dereference, , ,124,never follow symbolic links in SOURCE
+uu-cp, ,L,dereference, , ,125,always follow symbolic links in SOURCE
+uu-cp, ,a,archive, , ,126,Same as -dR --preserve=all
+uu-cp, ,x,one-file-system, , ,127,stay on this file system
+uu-cp, ,g,progress, , ,128,Display a progress bar. Note: this feature is not supported by GNU coreutils.
+uu-cp, , ,copy-contents, , ,129,NotImplemented: copy contents of special files when recursive
+uu-cp, ,h,help, , ,130,Print help
+uu-cp, ,V,version, , ,131,Print version

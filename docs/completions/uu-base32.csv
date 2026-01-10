@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-base32, ,w,wrap, , ,101,"wrap encoded lines after COLS character (default 76, 0 to disable wrapping)"
+uu-base32, ,D,decode, , ,102,decode data
+uu-base32, ,i,ignore-garbage, , ,103,"when decoding, ignore non-alphabetic characters"
+uu-base32, ,h,help, , ,104,Print help
+uu-base32, ,V,version, , ,105,Print version

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+base32, ,d,decode, , ,101,decode data
+base32, ,i,ignore-garbage, , ,102,"when decoding, ignore non-alphabet characters"
+base32, ,w,wrap, , ,103,wrap encoded lines after COLS character (default 76)
+base32, , ,help, , ,104,display this help and exit
+base32, , ,version, , ,105,output version information and exit

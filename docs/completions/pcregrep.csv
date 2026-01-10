@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pcregrep, ,A,after-context, , ,101,Output number lines of context after each matching line
+pcregrep, ,a,text, , ,102,Treat binary files as text.  This is equivalent to --binary-files=text
+pcregrep, ,B,before-context, , ,103,Output number lines of context before each matching line
+pcregrep, , ,binary-files, , ,104,Specify how binary files are to be processed
+pcregrep, , ,buffer-size, , ,105,Set the parameter that controls how much memory is used for buffering files t…
+pcregrep, ,C,context, , ,106,Output number lines of context both before and after each matching line
+pcregrep, ,c,count, , ,107,"Do not output individual lines from the files that are being scanned; instead…"
+pcregrep, , ,color, , ,108,"If this option is given without any data, it is equivalent to '--colour=auto'"
+pcregrep, ,D,devices, , ,109,"If an input path is not a regular file or a directory, 'action' specifies how…"
+pcregrep, ,d,directories, , ,110,"If an input path is a directory, 'action' specifies how it is to be processed"
+pcregrep, ,e,regexp, , ,111,Specify a pattern to be matched
+pcregrep, , ,exclude, , ,112,Files (but not directories) whose names match the pattern are skipped without…
+pcregrep, , ,exclude-from, , ,113,Treat each non-empty line of the file as the data for an --exclude option
+pcregrep, , ,exclude-dir, , ,114,Directories whose names match the pattern are skipped without being processed…
+pcregrep, ,F,fixed-strings, , ,115,"Interpret each data-matching pattern as a list of fixed strings, separated by…"
+pcregrep, ,f,file, , ,116,"Read patterns from the file, one per line, and match them against each line o…"
+pcregrep, , ,file-list, , ,117,Read a list of files and/or directories that are to be scanned from the given…
+pcregrep, , ,file-offsets, , ,118,"Instead of showing lines or parts of lines that match, show each match as an …"
+pcregrep, ,H,with-filename, , ,119,Force the inclusion of the filename at the start of output lines when searchi…
+pcregrep, ,h,no-filename, , ,120,Suppress the output filenames when searching multiple files
+pcregrep, , ,help, , ,121,"Output a help message, giving brief details of the command options and file t…"
+pcregrep, ,i,ignore-case, , ,122,Ignore upper/lower case distinctions during comparisons
+pcregrep, , ,include, , ,123,"If any --include patterns are specified, the only files that are processed ar…"
+pcregrep, , ,include-from, , ,124,Treat each non-empty line of the file as the data for an --include option
+pcregrep, , ,include-dir, , ,125,"If any --include-dir patterns are specified, the only directories that are pr…"
+pcregrep, ,L,files-without-match, , ,126,"Instead of outputting lines from the files, just output the names of the file…"
+pcregrep, ,l,files-with-matches, , ,127,"Instead of outputting lines from the files, just output the names of the file…"
+pcregrep, , ,label, , ,128,This option supplies a name to be used for the standard input when file names…
+pcregrep, , ,line-buffered, , ,129,"When this option is given, input is read and processed line by line, and the …"
+pcregrep, , ,line-offsets, , ,130,"Instead of showing lines or parts of lines that match, show each match as a l…"
+pcregrep, , ,locale, , ,131,This option specifies a locale to be used for pattern matching
+pcregrep, , ,match-limit, , ,132,Processing some regular expression patterns can require a very large amount o…
+pcregrep, ,M,multiline, , ,133,Allow patterns to match more than one line
+pcregrep, ,N,newline, , ,134,The PCRE library supports five different conventions for indicating the ends …
+pcregrep, ,n,line-number, , ,135,"Precede each output line by its line number in the file, followed by a colon …"
+pcregrep, , ,no-jit, , ,136,If the PCRE library is built with support for just-in-time compiling (which s…
+pcregrep, ,o,only-matching, , ,137,Show only the part of the line that matched a pattern instead of the whole li…
+pcregrep, , ,om-separator, , ,138,Specify a separating string for multiple occurrences of -o
+pcregrep, ,q,quiet, , ,139,"Work quietly, that is, display nothing except error messages"
+pcregrep, ,r,recursive, , ,140,"If any given path is a directory, recursively scan the files it contains, tak…"
+pcregrep, , ,recursion-limit, , ,141,See --match-limit above
+pcregrep, ,s,no-messages, , ,142,Suppress error messages about non-existent or unreadable files
+pcregrep, ,u,utf-8, , ,143,Operate in UTF-8 mode
+pcregrep, ,V,version, , ,144,Write the version numbers of pcregrep and the PCRE library to the standard ou…
+pcregrep, ,v,invert-match, , ,145,"Invert the sense of the match, so that lines which do not match any of the pa…"
+pcregrep, ,w,word-regexp, , ,146,Force the patterns to match only whole words
+pcregrep, , ,line-regexp, , ,147,Force the patterns to be anchored (each must start matching at the beginning …
+pcregrep, , ,xxx-regex, , ,148,"(PCRE terminology).  However, the --file-list, --file-offsets,"

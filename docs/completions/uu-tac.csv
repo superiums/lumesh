@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-tac, ,s,separator, , ,101,use STRING as the separator instead of newline
+uu-tac, ,b,before, , ,102,attach the separator before instead of after
+uu-tac, ,r,regex, , ,103,interpret the sequence as a regular expression
+uu-tac, ,h,help, , ,104,Print help
+uu-tac, ,V,version, , ,105,Print version

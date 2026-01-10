@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ptargrep.1perl, ,b,basename, , ,101,"X Item '--basename (alias -b)' When matching files are extracted, ignore the …"
+ptargrep.1perl, ,i,ignore-case, , ,102,X Item '--ignore-case (alias -i)' Make pattern matching case-insensitive
+ptargrep.1perl, ,l,list-only, , ,103,X Item '--list-only (alias -l)' Print the pathname of each matching file from…
+ptargrep.1perl, ,v,verbose, , ,104,X Item '--verbose (alias -v)' Log debugging info to STDERR
+ptargrep.1perl, ,?,help, , ,105, 

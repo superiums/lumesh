@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dhclient, , ,decline-wait-time, , ,101,Specify the time (in seconds) that an IPv4 client should wait after declining…
+dhclient, , ,address-prefix-len, , ,102,Specify the length of the prefix for IPv6 addresses
+dhclient, , ,dad-wait-time, , ,103,Specify maximum time (in seconds) that the client should wait for the duplica…
+dhclient, , ,prefix-len-hint, , ,104,"When used in conjunction with -P, it directs the client to use the given leng…"
+dhclient, , ,no-pid, , ,105,Option to disable writing pid files
+dhclient, , ,version, , ,106,Print version number and exit

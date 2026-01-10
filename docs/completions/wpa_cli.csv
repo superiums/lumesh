@@ -1,0 +1,38 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wpa_cli, , , ,status,@f @r,101,get current WPA/EAPOL/EAP status
+wpa_cli, , , ,mib,@f @r,102,"get MIB variables (dot1x, dot11)"
+wpa_cli, , , ,help,@f @r,103,show this usage help
+wpa_cli, , , ,interface,@f @r,104,show interfaces/select interface
+wpa_cli, , , ,level,@f @r,105,change debug level
+wpa_cli, , , ,license,@f @r,106,show full wpa_cli license
+wpa_cli, , , ,logoff,@f @r,107,IEEE 802.1X EAPOL state machine logoff
+wpa_cli, , , ,logon,@f @r,108,IEEE 802.1X EAPOL state machine logon
+wpa_cli, , , ,set,@f @r,109,set/list variables
+wpa_cli, , , ,pmksa,@f @r,110,show PMKSA cache
+wpa_cli, , , ,reassociate,@f @r,111,force reassociation
+wpa_cli, , , ,reconfigure,@f @r,112,force wpa_supplicant to re-read its config file
+wpa_cli, , , ,preauthenticate,@f @r,113,force preauthentication
+wpa_cli, , , ,identity,@f @r,114,configure identity for an SSID
+wpa_cli, , , ,password,@f @r,115,configure password for an SSID
+wpa_cli, , , ,new_password,@f @r,116,change password for an SSID
+wpa_cli, , , ,pin,@f @r,117,configure pin for an SSID
+wpa_cli, , , ,otp,@f @r,118,configure one-time-password for an SSID
+wpa_cli, , , ,passphrase,@f @r,119,configure private key passphrase for an SSID
+wpa_cli, , , ,bssid,@f @r,120,set preferred BSSID for an SSID
+wpa_cli, , , ,list_networks,@f @r,121,list configured networks
+wpa_cli, , , ,select_network,@f @r,122,select a network (disable others)
+wpa_cli, , , ,enable_network,@f @r,123,enable a network
+wpa_cli, , , ,disable_network,@f @r,124,disable a network
+wpa_cli, , , ,add_network,@f @r,125,add a network
+wpa_cli, , , ,remove_network,@f @r,126,remove a network
+wpa_cli, , , ,set_network,@f @r,127,set/list network variables
+wpa_cli, , , ,get_network,@f @r,128,get network variables
+wpa_cli, , , ,save_config,@f @r,129,save the current configuration
+wpa_cli, , , ,disconnect,@f @r,130,disconnect and wait for reassociate command before connecting
+wpa_cli, , , ,scan,@f @r,131,request new BSS scan
+wpa_cli, , , ,scan_results,@f @r,132,get latest scan results
+wpa_cli, , , ,get_capability,@f @r,133,get capabilities
+wpa_cli, , , ,stakey-request,@f @r,134,request STAKey negotiation with <addr>
+wpa_cli, , , ,ap_scan,@f @r,135,set ap_scan parameter
+wpa_cli, , , ,stkstart,@f @r,136,request STK negotiation with <addr>
+wpa_cli, , , ,terminate,@f @r,137,terminate wpa_supplicant

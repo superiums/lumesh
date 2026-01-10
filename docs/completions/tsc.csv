@@ -1,0 +1,83 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tsc, , ,allowJs, , ,101,Allow JavaScript files to be compiled
+tsc, , ,allowSyntheticDefaultImports, , ,102,Allow default imports from modules with no default export
+tsc, , ,allowUmdGlobalAccess, , ,103,Allow accessing UMD globals from modules
+tsc, , ,allowUnreachableCode, , ,104,Do not report errors on unreachable code
+tsc, , ,allowUnusedLabels, , ,105,Do not report errors on unused labels
+tsc, , ,alwaysStrict, , ,106,Parse in strict mode and emit 'use strict' for each source file
+tsc, , ,baseUrl, , ,107,Base directory to resolve non-relative module names
+tsc, ,b,build, , ,108,Builds this project and all of its dependencies specified by Project References
+tsc, , ,charset, , ,109,The character set of the input files
+tsc, , ,checkJs, , ,110,Report errors in .js files
+tsc, , ,composite, , ,111,Enable constraints that allow a TypeScript project to be used with project references.
+tsc, ,d,declaration, , ,112,Generates corresponding .d.ts file
+tsc, , ,declarationDir, , ,113,Output directory for generated declaration files
+tsc, , ,declarationMap, , ,114,Create sourcemaps for d.ts files.
+tsc, , ,diagnostics, , ,115,Show diagnostic information
+tsc, , ,disableSizeLimit, , ,116,Disable size limitation on JavaScript project
+tsc, , ,downlevelIteration, , ,117,"Emit more compliant, but verbose and less performant JavaScript for iteration."
+tsc, , ,emitBOM, , ,118,Emit a UTF-8 Byte Order Mark (BOM) in the beginning of output files
+tsc, , ,emitDeclarationOnly, , ,119,Only emit ‘.d.ts’ declaration files
+tsc, , ,emitDecoratorMetadata, , ,120,Emit design-type metadata for decorated declarations in source
+tsc, , ,esModuleInterop, , ,121,Emit additional JavaScript to ease support for importing CommonJS modules
+tsc, , ,experimentalDecorators, , ,122,Enables experimental support for ES decorators
+tsc, , ,extendedDiagnostics, , ,123,Show verbose diagnostic information
+tsc, , ,forceConsistentCasingInFileNames, , ,124,Disallow inconsistently-cased references to the same file
+tsc, ,h,help, , ,125,Print help message
+tsc, , ,importHelpers, , ,126,Allow importing helper functions from tslib once per project
+tsc, , ,incremental, , ,127,Save .tsbuildinfo files to allow for incremental compilation of projects.
+tsc, , ,inlineSourceMap, , ,128,Include sourcemap files inside the emitted JavaScript.
+tsc, , ,inlineSources, , ,129,Emit the source alongside the sourcemaps within a single file
+tsc, , ,init, , ,130,Initializes a TypeScript project and creates a tsconfig.json file
+tsc, , ,isolatedModules, , ,131,Transpile each file as a separate module (similar to “ts.transpileModule”)
+tsc, , ,jsx, , ,132,"Support JSX in .tsx files: 'react', 'preserve', 'react-native'"
+tsc, , ,jsxFactory, , ,133,Specify the JSX factory function used when targeting React JSX emit
+tsc, , ,keyofStringsOnly, , ,134,Resolve keyof to string valued property names only (no numbers or symbols)
+tsc, , ,lib,ES5 ES6 ES2015 ES7 ES2016 ES2017 ES2018 ESNext DOM DOM.Iterable WebWorker ScriptHost ES2015.Core ES2015.Collection ES2015.Generator ES2015.Iterable ES2015.Promise ES2015.Proxy ES2015.Reflect ES2015.Symbol ES2015.Symbol.WellKnown ES2016.Array.Include ES2017.object ES2017.Intl ES2017.SharedMemory ES2017.String ES2017.TypedArrays ES2018.Intl ES2018.Promise ES2018.RegExp ESNext.AsyncIterable ESNext.Array ESNext.Intl ESNext.Symbol,@f @r,135,List of library files to be included in the compilation
+tsc, , ,listEmittedFiles, , ,136,Print names of generated files part of the compilation
+tsc, , ,listFiles, , ,137,Print names of files part of the compilation
+tsc, , ,mapRoot, , ,139,Specify the location where debugger should locate map files instead of generated locations
+tsc, , ,maxNodeModuleJsDepth, , ,140,The maximum folder depth used for checking JavaScript files from node_modules
+tsc, ,m,module,None CommonJS AMD System UMD ES6 ES2015 ESNext,@f @r,141,Specify module code generation
+tsc, , ,moduleResolution,Node Classic,@f @r,142,Determine how modules get resolved
+tsc, , ,noEmit, , ,144,Do not emit outputs
+tsc, , ,noEmitHelpers, , ,145,Disable generating custom helper functions in compiled output
+tsc, , ,noEmitOnError, , ,146,Do not emit outputs if any errors were reported
+tsc, , ,noErrorTruncation, , ,147,Do not truncate error messages
+tsc, , ,noFallthroughCasesInSwitch, , ,148,Report errors for fallthrough cases in switch statement
+tsc, , ,noImplicitAny, , ,149,Raise error on expressions and declarations with an implied any type
+tsc, , ,noImplicitReturns, , ,150,Report an error for codepaths that do not return in a function
+tsc, , ,noImplicitThis, , ,151,Raise error on this expressions with an implied any type
+tsc, , ,noImplicitUseStrict, , ,152,Do not emit 'use strict' directives in module output
+tsc, , ,noLib, , ,153,Do not include the default library file (lib.d.ts)
+tsc, , ,noResolve, , ,154,Do not add triple-slash references or module import targets to the list of compiled files
+tsc, , ,noStrictGenericChecks, , ,155,Disable strict checking of generic signatures in function types
+tsc, , ,noUnusedLocals, , ,156,Report errors on unused locals
+tsc, , ,noUnusedParameters, , ,157,Report errors on unused parameters
+tsc, , ,outDir, , ,158,Redirect output structure to the directory
+tsc, , ,outFile, , ,159,Concatenate and emit output to single file
+tsc, , ,preserveConstEnums, , ,160,Do not erase const enum declarations in generated code
+tsc, , ,preserveSymlinks, , ,161,Disable resolving symlinks to their realpath
+tsc, , ,preserveWatchOutput, , ,162,Disable wiping the console in watch mode
+tsc, , ,pretty, , ,163,Stylize errors and messages using color and context
+tsc, ,p,project, , ,164,Compile a project given a valid configuration file
+tsc, , ,removeComments, , ,165,Remove all comments except copy-right header comments beginning with /*!
+tsc, , ,resolveJsonModule, , ,166,Include modules imported with .json extension
+tsc, , ,rootDir, , ,167,Specifies the root directory of input files
+tsc, , ,showConfig, , ,168,Print the final configuration instead of building
+tsc, , ,skipLibCheck, , ,169,Skip type checking of all declaration files (*.d.ts)
+tsc, , ,sourceMap, , ,170,Generates corresponding .map file
+tsc, , ,sourceRoot, , ,171,Specify the root path for debuggers to find the reference source code
+tsc, , ,strict, , ,172,Enable all strict type checking options
+tsc, , ,strictBindCallApply, , ,173,"Enable stricter checking of the bind, call, and apply methods on functions"
+tsc, , ,strictFunctionTypes, , ,174,Disable bivariant parameter checking for function types
+tsc, , ,strictPropertyInitialization, , ,175,Ensure non-undefined class properties are initialized in the constructor
+tsc, , ,strictNullChecks, , ,176,"When type checking, take into account null and undefined"
+tsc, , ,suppressExcessPropertyErrors, , ,177,Suppress excess property checks for object literals
+tsc, , ,suppressImplicitAnyIndexErrors, , ,178,Suppress --noImplicitAny errors for indexing objects lacking index signatures
+tsc, , ,traceResolution, , ,180,Report module resolution log messages
+tsc, , ,tsBuildInfoFile, , ,181,Specify what file to store incremental build information in
+tsc, , ,types, , ,182,List of names of type definitions to include
+tsc, , ,typeRoots, , ,183,List of folders to include type definitions from
+tsc, ,v,version, , ,184,Print the compiler’s version
+tsc, ,w,watch, , ,185,Run the compiler in watch mode

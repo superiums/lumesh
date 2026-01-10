@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yo, ,h,help, , ,101,Show help
+yo, ,v,version, , ,102,Show version
+yo, ,f,force, , ,103,Allow overwrite files that already exist
+yo, , ,no-color, , ,104,Disable colors
+yo, , ,generators, , ,105,List available generators
+yo, --generators, ,local-only, , ,106,Disable lookup of globally-installed generators

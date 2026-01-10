@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ninja, , , , ,@f,101,target
+ninja, ,t, , ,@f @r,102,subtool
+ninja, ,C, , ,@D @f @r,103,change to specified directory
+ninja, ,f, , ,@f @k @r,104,specify build file [default=build.ninja]
+ninja, ,n, , ,@f,105,dry run
+ninja, ,v, , ,@f,106,show all command lines while building
+ninja, ,j, , ,@f,107,number of jobs to run in parallel [default derived from CPUs]
+ninja, ,l, , ,@f,108,do not start if load average > N
+ninja, ,k, , ,@f,109,keep going until N jobs fail [default=1]
+ninja, ,h, , ,@f,110,show help
+ninja, ,d, , ,@f,111,"enable debugging, specify debug mode"
+ninja, ,w, , ,@f,112,"adjust warnings, specify flags"
+ninja, ,v,verbose, ,@f,113,show all command lines while building
+ninja, , ,version, ,@f,114,print ninja version

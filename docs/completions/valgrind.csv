@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+valgrind, , ,$skin,, ,101,Skin
+valgrind, , ,help, , ,102,Display help and exit
+valgrind, , ,help-debug, , ,103,Display help and debug options
+valgrind, , ,version, , ,104,Display version and exit
+valgrind, ,q,quiet, , ,105,Quiet mode
+valgrind, ,v,verbose, , ,106,Verbose mode
+valgrind, , ,trace-children,yes no, ,107,Valgrind-ise children
+valgrind, , ,track-fds,yes no, ,108,Track file descriptors
+valgrind, , ,log-fd,0 1 2 3 4 5 6 7 8 9, ,109,Log to file descriptor
+valgrind, , ,log-file, , ,110,Log to file
+valgrind, , ,logsocket, , ,111,Log to socket
+valgrind, , ,demangle,yes no, ,112,Demangle C++ names
+valgrind, , ,num-callers, , ,113,Callers in stack trace
+valgrind, , ,error-limit,yes no, ,114,Stop showing errors if too many
+valgrind, , ,show-below-main,yes no, ,115,Continue trace below main()
+valgrind, , ,suppressions, , ,116,Suppress errors from file
+valgrind, , ,gen-suppressions, , ,117,Print suppressions for detected errors
+valgrind, , ,db-attach,yes no, ,118,Start debugger on error
+valgrind, , ,db-command, , ,119,Debugger command
+valgrind, , ,input-fd,0 1 2 3 4 5 6 7 8 9, ,120,File descriptor for input

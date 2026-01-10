@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setfacl, ,x,set, ,@f,103, 
+setfacl, ,b,remove-all, , ,104,Remove all extended ACL entries
+setfacl, ,k,remove-default, , ,105,Remove the Default ACL
+setfacl, ,n,no-mask, , ,106,Do not recalculate the effective rights mask
+setfacl, , ,mask, , ,107,Do recalculate the effective rights mask
+setfacl, ,d,default, , ,108,All operations apply to the Default ACL
+setfacl, , ,restore, , ,109,Restore a permission backup created by `getfacl -R' or similar
+setfacl, , ,test, , ,110,Test mode
+setfacl, ,R,recursive, , ,111,Apply operations to all files and directories recursively
+setfacl, ,L,logical, , ,112,"Logical walk, follow symbolic links to directories"
+setfacl, ,P,physical, , ,113,"Physical walk, do not follow symbolic links to directories"
+setfacl, ,v,version, ,@f,114,Print the version of setfacl and exit
+setfacl, ,h,help, ,@f,115,Print help explaining the command line options
+setfacl, ,m,modify, , ,116,Modify the current ACL(s) of file(s)
+setfacl, ,x,remove, , ,117,Remove entries from the ACL(s) of file(s)
+setfacl, ,M,modify-file, , ,118,Read ACL entries to modify from file
+setfacl, ,X,remove-file, , ,119,Read ACL entries to remove from file
+setfacl, , ,set-file, , ,120,Read ACL entries to set from file
+setfacl, , ,set, , ,121,"Set the ACL of file(s), replacing the current ACL"

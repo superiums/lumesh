@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dunstctl, action close close-all context history history-clear is-paused get-pause-level set-pause-level debug help, , , ,@f @r,119, 
+dunstctl, count, , ,displayed history waiting,@f @r,120, 
+dunstctl, history-pop history-rm, , , ,@f @r,121, 
+dunstctl, set-paused, , ,true false toggle,@f @r,122, 
+dunstctl, rule, , , ,@f @r,123, 
+dunstctl, rules, , ,--json,@f @r,124, 

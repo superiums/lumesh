@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mknetdir, , ,compress, , ,101,compress GRUB files [optional]
+grub-mknetdir, , ,disable-cli, , ,102,disabled command line interface access
+grub-mknetdir, , ,disable-shim-lock, , ,103,disable shim_lock verifier
+grub-mknetdir, , ,dtb, , ,104,embed a specific DTB
+grub-mknetdir, ,d,directory, , ,105,use images and modules under DIR [default=/usr/lib/grub/<platform>]
+grub-mknetdir, , ,fonts, , ,106,install FONTS [default=unicode]
+grub-mknetdir, , ,install-modules, , ,107,install only MODULES and their dependencies [default=all]
+grub-mknetdir, ,k,pubkey, , ,108,embed FILE as public key for signature checking
+grub-mknetdir, , ,locale-directory, , ,109,[default=/usr/share/locale]
+grub-mknetdir, , ,locales, , ,110,install only LOCALES [default=all]
+grub-mknetdir, , ,modules, , ,111,pre-load specified modules MODULES
+grub-mknetdir, , ,sbat, , ,112,SBAT metadata
+grub-mknetdir, , ,themes, , ,113,install THEMES [default=starfield]
+grub-mknetdir, ,v,verbose, , ,114,print verbose messages
+grub-mknetdir, , ,core-compress, , ,115,choose the compression to use for core image
+grub-mknetdir, , ,net-directory, , ,116,root directory of TFTP server
+grub-mknetdir, , ,subdir, , ,117,relative subdirectory on network server
+grub-mknetdir, ,?,help, , ,118,give this help list
+grub-mknetdir, , ,usage, , ,119,give a short usage message
+grub-mknetdir, ,V,version, , ,120,print program version

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfstune, , ,convert-to-block-group-tree, , ,101,(since kernel 6. 1) 
+btrfstune, , ,convert-from-block-group-tree, , ,102,(since kernel 6. 1) 
+btrfstune, , ,convert-to-free-space-tree, , ,103,(since kernel 4. 5) 
+btrfstune, , ,enable-simple-quota, , ,104,(since kernel 6. 7) . sp Enable simple quota accounting (squota mkfs feature)
+btrfstune, , ,remove-simple-quota, , ,105,Remove simple quota accounting related structures
+btrfstune, , ,version, , ,106,"Print the btrfstune version, builtin features and exit"

@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tlp-stat, ,b,battery, , ,101,View battery data
+tlp-stat, ,c,config, , ,102,View active configuration
+tlp-stat, ,d,disk, , ,103,View disk device information
+tlp-stat, ,e,pcie, , ,104,View PCIe device information
+tlp-stat, ,g,graphics, , ,105,View graphics card information
+tlp-stat, ,m,mode, , ,106,View tlp status information
+tlp-stat, ,p,processor, , ,107,View processor information
+tlp-stat, ,q,quiet, , ,108,Show less information
+tlp-stat, ,r,rfkill, , ,109,View radio device states
+tlp-stat, ,s,system, , ,110,View system information and TLP status
+tlp-stat, ,t,temp, , ,111,View temperatures and fan speed
+tlp-stat, ,u,usb, , ,112,View USB device information
+tlp-stat, ,w,warn, , ,113,View warnings about SATA disks
+tlp-stat, ,v,verbose, , ,114,Show more information
+tlp-stat, ,P,psup, , ,115,View power supply diagnostics
+tlp-stat, ,T,trace, , ,116,View trace output
+tlp-stat, , ,cdiff, , ,117,View difference between defaults and user configuration
+tlp-stat, , ,pev, , ,118,Monitor power supply udev events
+tlp-stat, , ,udev, , ,119,Check if udev rules for power source changes and connecting USB devices are active
+tlp-stat, , ,version, , ,120,Print TLP version

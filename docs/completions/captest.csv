@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+captest, , ,ambient, , ,101,This attempts to add CAP_CHOWN ambient capability
+captest, , ,drop-all, , ,102,This drops all capabilities including ambient and clears the bounding set
+captest, , ,drop-caps, , ,103,This drops just traditional capabilities
+captest, , ,id, , ,104,"This changes to uid and gid 99, drops supplemental groups, and clears the bou…"
+captest, , ,init-grp, , ,105,This changes to uid and gid 99 and then adds any supplemental groups that com…
+captest, , ,text, , ,106,This option outputs the effective capabilities in text rather than numerically
+captest, , ,lock, , ,107,This prevents the ability for child processes to regain privileges if the uid…

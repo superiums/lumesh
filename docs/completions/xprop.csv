@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xprop, , , , ,@f @r,101,Select window by id
+xprop, , , , ,@f @r,102,Display font properties
+xprop, , , , ,@f @r,103,Maximum display length
+xprop, , , , ,@r,104,Set format file
+xprop, , , , ,@f @r,105,Remove property
+xprop, , , , ,@f @r,107,Property

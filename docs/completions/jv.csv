@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+jv, ,h,help, , ,101,Show help
+jv, ,v,version, , ,102,Show version
+jv, ,q,quiet, , ,103,Hide errors
+jv, ,d,draft,4 5 7 2019 2020,@f @r,104,Specify the draft version used when '\$schema' is missing
+jv, ,o,output,simple alt flag basic detailed,@f @r,105,Specify the output format
+jv, ,f,assert-format, , ,106,Enable format assertions with draft >= 2019
+jv, ,c,assert-content, , ,107,Enable content assertions with draft >= 7
+jv, ,k,insecure, , ,108,Use insecure TLS connection
+jv, , ,cacert, , ,109,Specify a pem-file to verify the peers
+jv, ,m,map, , ,110,Load url with a prefix from the directory

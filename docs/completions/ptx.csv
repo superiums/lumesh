@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ptx, ,A,auto-reference, , ,101,output automatically generated references
+ptx, ,G,traditional, , ,102,behave more like System V 'ptx'
+ptx, ,F,flag-truncation, , ,103,use STRING for flagging line truncations.  The default is '/'
+ptx, ,M,macro-name, , ,104,macro name to use instead of 'xx'
+ptx, ,O,format, , ,105,generate output as roff directives
+ptx, ,R,right-side-refs, , ,106,"put references at right, not counted in -w"
+ptx, ,S,sentence-regexp, , ,107,for end of lines or end of sentences
+ptx, ,W,word-regexp, , ,108,use REGEXP to match each keyword
+ptx, ,b,break-file, , ,109,word break characters in this FILE
+ptx, ,f,ignore-case, , ,110,fold lower case to upper case for sorting
+ptx, ,g,gap-size, , ,111,gap size in columns between output fields
+ptx, ,i,ignore-file, , ,112,read ignore word list from FILE
+ptx, ,o,only-file, , ,113,read only word list from this FILE
+ptx, ,r,references, , ,114,first field of each line is a reference 
+ptx, ,w,width, , ,115,"output width in columns, reference excluded"
+ptx, , ,help, , ,116,display this help and exit
+ptx, ,t,typeset-mode, , ,117, 
+ptx, , ,version, , ,118,output version information and exit AUTHOR Written by F.  Pinard

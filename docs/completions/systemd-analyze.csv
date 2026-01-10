@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+systemd-analyze, , ,from-pattern, , ,106,dot: show relationships matching left-hand nodes pattern
+systemd-analyze, , ,to-pattern, , ,107,dot: show relationships matching right-hand nodes pattern
+systemd-analyze, , ,fuzz, ,@f @r,108,critical-chain: also show units which finished timespan earlier than last unit in same level
+systemd-analyze, , ,man,no, ,109,Do not invoke man to verify the existence of man pages
+systemd-analyze, , ,generators, , ,110,Invoke unit generators
+systemd-analyze, , ,instance, ,@r,111,Fallback instance name for template units
+systemd-analyze, , ,root, ,@D,112,"With cat-files, show config files underneath the specified root path"
+systemd-analyze, , ,image, ,@r,113,"With cat-files, show config files inside the specified image path"
+systemd-analyze, , ,image-policy, , ,114,Disk image dissection policy
+systemd-analyze, , ,iterations, ,@f @r,115,calendar: show number of iterations the calendar expression will elapse next
+systemd-analyze, , ,base-time, ,@f @r,116,calendar: show next iterations relative to the specified point in time
+systemd-analyze, , ,tldr, , ,117,"cat-config: skip comments, empty lines and section headers"
+systemd-analyze, , ,unit, ,@r,118,condition: evaluate Condition and Assert assignments in unit file
+systemd-analyze, , ,table, , ,119,plot: output raw time data in a table
+systemd-analyze, , ,no-legend, , ,120,plot: exclude legends/hints
+systemd-analyze, , ,detailed, , ,121,plot: show activation timestamps details in SVG plot
+systemd-analyze, , ,scale-svg, ,@r,122,plot: stretch the x-axis of the plot
+systemd-analyze, ,H,host, , ,123,Execute the operation on a remote host
+systemd-analyze, ,M,machine, , ,124,Execute operation on a VM or container
+systemd-analyze, ,h,help, , ,125,Print a short help and exit
+systemd-analyze, , ,version, , ,126,Print a short version and exit
+systemd-analyze, , ,no-pager, , ,127,Do not pipe output into a pager

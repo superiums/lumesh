@@ -1,0 +1,32 @@
+cmd,conds,short,long,params,dirs,pri,desc
+code, ,d,diff, , ,101,Compare two files with each other
+code, ,m,merge, , ,102,Perform a three-way merge
+code, ,a,add, , ,103,Add folder(s) to the last active window
+code, ,g,goto, ,@r,104,line and character position
+code, ,n,new-window, , ,105,Force to open a new window
+code, ,r,reuse-window, , ,106,Force to open a file or folder in an already opened window
+code, ,w,wait, , ,107,Wait for the files to be closed before returning
+code, , ,locale, ,@f @r,108,The locale to use (e.g. en-US or zh-TW)
+code, , ,user-data-dir, ,@D,109,Specifies the directory that user data is kept in
+code, , ,profile, , ,110,Opens the provided folder or workspace with the given profile
+code, ,v,version, , ,111,Print version
+code, ,h,help, , ,112,Print usage
+code, , ,extensions-dir, ,@r,113,Set the root path for extensions
+code, , ,list-extensions, , ,114,List the installed extensions
+code, , ,install-extension, , ,117,Installs or updates the extension
+code, , ,update-extensions, , ,120,Update the installed extensions
+code, , ,enable-proposed-api, , ,121,Enables proposed API features for extensions
+code, , ,uninstall-extension, , ,122,Uninstall extension
+code, , ,disable-extension, , ,123,Disable extension(s)
+code, , ,disable-extensions, , ,124,Disable all installed extensions
+code, , ,verbose, , ,125,Print verbose output (implies --wait)
+code, , ,log,critical error warn info debug trace off, ,126,Log level to use (default: info)
+code, ,s,status, , ,127,Print process usage and diagnostics information
+code, , ,prof-startup, , ,128,Run CPU profiler during startup
+code, , ,sync,on off, ,129,Turn sync on or off
+code, , ,inspect-extensions, ,@f @r,130,Allow debugging and profiling of extensions
+code, , ,inspect-brk-extensions, ,@f @r,131,Allow debugging and profiling of extensions
+code, , ,disable-lcd-text, , ,132,Disable LCD font rendering
+code, , ,disable-gpu, , ,133,Disable GPU hardware acceleration
+code, , ,disable-chromium-sandbox, , ,134,Disable the Chromium sandbox environment
+code, , ,telemetry, , ,135,Shows all telemetry events which VS code collects

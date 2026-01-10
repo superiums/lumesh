@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xterm, ,e, , ,@f @r,147,Run program in xterm
+xterm, , , , ,@r,148,Blinking cursor will be off for that many milliseconds
+xterm, , , , ,@r,149,Blinking cursor will be on for that many milliseconds
+xterm, , , , ,@r,150,Override xterm resource class
+xterm, , , , ,@r,151,Color for the text cursor
+xterm, , , , ,@r,152,xterm encoding
+xterm, , , , ,@r,153,Bold font
+xterm, , , , ,@r,154,FreeType font pattern
+xterm, , , , ,@r,155,FreeType double-width font pattern
+xterm, , , , ,@r,156,Font for active icons
+xterm, , , , ,@r,157,Font size for FreeType font
+xterm, , , , ,@r,158,Font for displaying wide text
+xterm, , , , ,@r,159,Font for displaying bold wide text
+xterm, , , , ,@r,160,Font for the preedit string in 'OverTheSpot'
+xterm, , , , ,@r,161,Color for highlighted text
+xterm, , , , ,@r,162,Embed xterm into window
+xterm, , , ,unknown default hp sco sun vt220,@r,163,Set keyboard type
+xterm, , , , ,@r,164,File name for the encoding converter
+xterm, , , , ,@r,165,Log filename
+xterm, , , , ,@r,166,Maximum time in milliseconds between multi-click selections
+xterm, , , , ,@r,167,Color for the pointer cursor
+xterm, , , , ,@r,168,Distance from the right end for ringing the margin bell
+xterm, , , , ,@r,169,Number of scrolled off lines
+xterm, , , ,vt52 vt100 vt101 vt102 vt220,@r,170,Terminal identification
+xterm, , , , ,@r,171,Terminal name for $TERM
+xterm, , , , ,@r,172,zIconBeep percentage
+xterm, ,b, , ,@r,173,Size of the inner border

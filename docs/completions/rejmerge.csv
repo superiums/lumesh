@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rejmerge, , ,root, ,@f,101,Alternative root
+rejmerge, , ,version, ,@f,102,Print version
+rejmerge, , ,help, ,@f,103,Print help

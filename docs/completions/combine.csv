@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+combine, , , ,and, ,101,Output lines that are in both files
+combine, , , ,not, ,102,Output lines that are inf file1 but not in file2
+combine, , , ,or, ,103,Output lines that are in file1 or in file2
+combine, , , ,xor, ,104,"Output lines that are in either file1 or file2, but not in both files"

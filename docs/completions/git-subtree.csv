@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+git, , , ,subtree,@f,101,Manage git subtrees
+git, subtree,q,quiet, ,@f,102,Suppress output
+git, subtree,d,debug, ,@f,103,Debug output
+git, subtree,P,path, ,@f,104,Path to the subtree
+git, subtree, , ,add,@f,105,Add a new subtree to the repository
+git, subtree, , ,merge,@f,106,Merge changes from a subtree into the repository
+git, subtree, , ,split,@f,107,Extract a subtree from the repository
+git, subtree, , ,pull,@f,108,Fetch and integrate changes from a remote subtree
+git, subtree, , ,push,@f,109,Push changes to a remote subtree
+git," subtree; and push split", ,annotate, ,@f,110,Annotate the commit
+git," subtree; and push split",b,branch, ,@f,111,Branch to split
+git," subtree; and push split", ,ignore-joins, ,@f,112,Ignore joins during history reconstruction
+git," subtree; and push split", ,onto, ,@f,113,Specify the commit ID to start history reconstruction
+git," subtree; and push split", ,rejoin, ,@f,114,Merge the synthetic history back into the main project
+git," subtree; and add merge", ,squash, ,@f,118,Merge subtree changes as a single commit
+git," subtree; and add merge", ,no-squash, ,@f,119,Do not merge subtree changes as a single commit
+git," subtree; and add merge",m,message, ,@f,120,Use the given message as the commit message for the merge commit

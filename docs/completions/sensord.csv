@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sensord, ,i,interval, , ,101,"Specify the interval between scanning for sensor alarms; the default is to sc…"
+sensord, ,l,log-interval, , ,102,"Specify the interval between logging all sensor readings; the default is to l…"
+sensord, ,1,oneline, , ,103,"Log sensor value, chip, and adapter on one line for easier parsing"
+sensord, ,t,rrd-interval, , ,104,Specify the interval between logging all sensor readings to a round-robin dat…
+sensord, ,T,rrd-no-average, , ,105,Specify that the round-robin database should not be averaged
+sensord, ,r,rrd-file, , ,106,"Specify a round-robin database into which to log all sensor readings; e. g"
+sensord, ,c,config-file, , ,107,Specify a  libsensors (3) configuration file
+sensord, ,p,pid-file, , ,108,"Specify what PID file to write; the default is to write the file `/var/run/se…"
+sensord, ,f,syslog-facility, , ,109,Specify the  syslog (3) facility to use when logging sensor readings and alar…
+sensord, ,g,rrd-cgi, , ,110,Prints out a sample  rrdcgi (1) CGI script that can be used to display graphs…
+sensord, ,a,load-average, , ,111,Include the load average in the RRD database
+sensord, ,d,debug, , ,112,Prints a small amount of additional debugging information
+sensord, ,h,help, , ,113,Prints a help message and exits
+sensord, ,v,version, , ,114,Displays the program version and exits

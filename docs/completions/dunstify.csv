@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dunstify, ,?,help, , ,101,Show help options
+dunstify, ,a,appname, ,@r,102,Name of your application
+dunstify, ,u,urgency,low normal critical,@f @r,103,The urgency of this notification
+dunstify, ,h,hints, ,@f @r,104,User specified hints
+dunstify, ,A,action, ,@f @r,105,Actions the user can invoke
+dunstify, ,t,timeout, ,@f @r,106,The time in milliseconds until the notification expires
+dunstify, ,i,icon, ,@f @r,107,An Icon that should be displayed with the notification
+dunstify, ,I,raw_icon, ,@r,108,Path to the icon to be sent as raw image data
+dunstify, ,c,category, , ,109,The category of this notification
+dunstify, , ,capabilities, , ,110,Print the server capabilities and exit
+dunstify, ,s,serverinfo, , ,111,Print server information and exit
+dunstify, ,p,printid, , ,112,"Print id, which can be used to update/replace this notification"
+dunstify, ,r,replace, ,@f @r,113,Set id of this notification.
+dunstify, ,C,close, ,@f @r,114,Close the notification with the specified ID
+dunstify, ,b,block, , ,115,Block until notification is closed and print close reason

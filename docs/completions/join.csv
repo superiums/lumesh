@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+join, ,i,ignore-case, , ,101,ignore differences in case when comparing fields
+join, , ,check-order, , ,102,"check that the input is correctly sorted, even if all input lines are pairable"
+join, , ,nocheck-order, , ,103,do not check that the input is correctly sorted
+join, , ,header, , ,104,"treat the first line in each file as field headers, print them without trying…"
+join, ,z,zero-terminated, , ,105,"line delimiter is NUL, not newline"
+join, , ,help, , ,106,display this help and exit
+join, , ,version, , ,107,output version information and exit

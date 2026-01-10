@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cat, ,A,show-all, , ,101,Escape all unprintables
+cat, ,b,number-nonblank, , ,102,Number non-blank lines
+cat, ,E,show-ends, , ,103,Display \$ at line end
+cat, ,n,number, , ,104,Enumerate lines
+cat, ,s,squeeze-blank, , ,105,Never >1 blank line
+cat, ,T,show-tabs, , ,106,Escape tab
+cat, , ,help, , ,107,Display help and exit
+cat, , ,version, , ,108,Display version and exit

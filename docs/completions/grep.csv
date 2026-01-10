@@ -1,0 +1,50 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grep, ,A,after-context, , ,101,Print NUM lines of trailing context
+grep, ,a,text, , ,102,Process binary file as text
+grep, ,B,before-context, , ,103,Print NUM lines of leading context
+grep, ,C,context, , ,104,Print NUM lines of context
+grep, ,b,byte-offset, , ,105,Print byte offset of matches
+grep, , ,binary-files,binary text,@f @r,106,Assume data type for binary files
+grep, , ,colour,never always auto,@f,107,Colour output
+grep, , ,color,never always auto,@f,108,Color output
+grep, ,c,count, , ,109,Only print number of matches
+grep, ,D,devices,read skip,@f @r,110,Action for devices
+grep, ,d,directories,read skip recurse,@f @r,111,Action for directories
+grep, ,E,extended-regexp, , ,112,Pattern is extended regexp
+grep, ,e,regexp, , ,113,Specify a pattern
+grep, , ,exclude-from, , ,114,Read pattern list from file. Skip files whose base name matches list
+grep, , ,exclude-dir, , ,115,Exclude matching directories from recursive searches
+grep, ,F,fixed-strings, , ,116,Pattern is a fixed string
+grep, ,f,file, , ,117,Use patterns from a file
+grep, ,G,basic-regexp, , ,118,Pattern is basic regex
+grep, ,H,with-filename, , ,119,Print filename
+grep, ,h,no-filename, , ,120,Suppress printing filename
+grep, , ,help, , ,121,Display help and exit
+grep, ,i,ignore-case, , ,122,Ignore case
+grep, ,L,files-without-match, , ,123,Print name of files without matches
+grep, ,l,files-with-matches, , ,124,Print name of files with matches
+grep, ,m,max-count, , ,125,Stop reading after NUM matches
+grep, , ,mmap, , ,126,Use the mmap system call to read input
+grep, ,n,line-number, , ,127,Print line number
+grep, ,o,only-matching, , ,128,Show only matching part
+grep, , ,label, , ,129,Rename stdin
+grep, , ,line-buffered, , ,130,Use line buffering
+grep, ,P,perl-regexp, , ,131,Pattern is a Perl regexp (PCRE) string
+grep, ,q,quiet, , ,132,Do not write anything
+grep, , ,silent, , ,133,Do not write anything
+grep, ,R,dereference-recursive, , ,134,"Recursively read files under each directory, following symlinks"
+grep, ,r,recursive, , ,135,Recursively read files under each directory
+grep, , ,include, , ,136,Search only files matching PATTERN
+grep, , ,exclude, , ,137,Skip files matching PATTERN
+grep, ,s,no-messages, , ,138,Suppress error messages
+grep, ,T,initial-tab, , ,139,Ensure first character of actual line content lies on a tab stop
+grep, ,U,binary, , ,140,Treat files as binary
+grep, ,u,unix-byte-offsets, , ,141,Report Unix-style byte offsets
+grep, ,V,version, , ,142,Display version and exit
+grep, ,v,invert-match, , ,143,Invert the sense of matching
+grep, ,w,word-regexp, , ,144,Only whole matching words
+grep, ,x,line-regexp, , ,145,Only whole matching lines
+grep, ,z,null-data, , ,146,Treat input as a set of zero-terminated lines
+grep, ,Z,null, , ,147,Output a zero byte after filename
+grep, , ,group-separator, ,@f @r,148,Set a group separator
+grep, , ,no-group-separator, , ,149,Use empty string as a group separator

@@ -1,0 +1,65 @@
+cmd,conds,short,long,params,dirs,pri,desc
+llm, $subcmds, ,version, , ,100,Show version info
+llm, $condition,s,system, , ,102,System prompt to use
+llm, $condition,m,model, , ,103,Model to use
+llm, $condition,a,attachment, , ,104,Attachment to use
+llm, $condition, ,at, , ,105,Attachment type
+llm, $condition, ,attachment-type, , ,106,Attachment type
+llm, $condition,n,no-log, , ,107,Don't log to db
+llm, $condition,l,log, , ,108,Log prompt/reply to db
+llm, $condition,c,continue, , ,109,Continue most recent conversation
+llm, $condition, ,key, , ,110,API key to use
+llm, $condition, ,save, , ,111,Save prompt as template with name
+llm,$condition __fish_is_nth_token 2, , ,list, ,112,List current aliases
+llm,$condition __fish_is_nth_token 2, , ,path, ,113,Print path of llm's aliases.json
+llm,$condition __fish_is_nth_token 2, , ,remove, ,114,Remove an llm alias
+llm,$condition __fish_is_nth_token 2, , ,set, ,115,Set an alias for a model
+llm, $condition,s,system, , ,116,System prompt to use
+llm, $condition,m,model, , ,117,Model to use
+llm, $condition, ,cid, , ,118,Continue conversation with given id
+llm, $condition, ,conversation, , ,119,Continue conversation with given id
+llm, $condition,t,template, , ,120,Template to use
+llm, $condition,p,param, , ,121,Set template parameter to value
+llm, $condition,o,option, , ,122,Set key/value option for model
+llm, $condition, ,no-stream, , ,123,Do not stream output
+llm, $condition, ,key, , ,124,API key to use
+llm, $condition, , ,list, ,125,List collections
+llm, $condition, , ,delete, ,126,Delete specified collection
+llm, $condition, , ,path, ,127,Print path to embeddings database
+llm, $condition,i,input, , ,128,File to embed
+llm, $condition,m,model, , ,129,Model to use
+llm, $condition, ,store, , ,130,Store the text itself in the db
+llm, $condition,d,database, , ,131,Path to db to use
+llm, $condition,c,content, , ,132,Text content to embed
+llm, $condition, ,binary, , ,133,Treat input as binary
+llm, $condition, ,metadata, , ,134,JSON object metadata to store
+llm, $condition,f,format,json blob base64 hex, ,135,Output format
+llm, $condition, , ,list, ,136,List available embedding models
+llm, $condition, , ,default, ,137,Show or set default embedding model
+llm, $condition, ,format,json csv tsv nl, ,138,Format of input (default: auto-detected)
+llm, $condition, ,files, ,@r,139,Embed files in DIR matching GLOB
+llm, $condition, ,encoding, ,@r,140,Encoding to use when reading input
+llm, $condition, ,binary, , ,141,Treat input as binary
+llm, $condition, ,sql, ,@f @r,142,Read input using this SQL query
+llm, $condition, ,attach, ,@f @r,143,Attach db ALIAS from PATH
+llm, $condition, ,batch-size, ,@f @r,144,Batch size to use for embeddings
+llm, $condition, ,prefix, ,@f @r,145,Prefix to add to the IDs
+llm, $condition,m,model, , ,146,Embedding model to use
+llm, $condition, ,store, , ,147,Store the text itself in the db
+llm, $condition,d,database, , ,148,Path to db to use
+llm, $condition,U,upgrade, , ,149,Upgrade packages to latest version
+llm, $condition,e,editable, , ,150,Install project in editable mode from PATH
+llm, $condition, ,force-reinstall, , ,151,"Reinstall all packages, even if up-to-date"
+llm, $condition, ,no-cache-dir, , ,152,Disable cache
+llm, $condition, , ,list, ,153,List names of all stored keys
+llm, $condition, , ,get, ,154,Print saved key
+llm, $condition, , ,path, ,155,Print path of llm's keys.json
+llm, $condition, , ,set, ,156,Save a key in llm's keys.json
+llm, $condition, , ,list, ,157,List recent prompts and responses
+llm, $condition, , ,off, ,158,Turn off logging
+llm, $condition, , ,on, ,159,Turn on logging
+llm, $condition, , ,path, ,160,Print path to llm's logs.db
+llm, $condition, , ,status, ,161,Show current status of db logging
+llm, $condition, , ,list, ,162,List available models
+llm, $condition, , ,default, ,163,Show or set default model
+llm, $condition, ,all, , ,164,Include built-in/default plugins

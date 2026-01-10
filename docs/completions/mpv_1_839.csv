@@ -1,0 +1,814 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mpv, , ,alang, , ,101,"Specify a prioritized list of audio languages to use, as IETF language tags"
+mpv, , ,slang, , ,102,"Equivalent to --alang, for subtitle tracks. sp This is a string list option"
+mpv, , ,vlang, , ,103,"Equivalent to --alang and --slang, for video tracks"
+mpv, , ,aid, , ,104,"Select audio track.  auto selects the default, no disables audio"
+mpv, , ,sid, , ,105,Display the subtitle stream specified by <ID>
+mpv, , ,vid, , ,106,"Select video channel.  auto selects the default, no disables video"
+mpv, , ,edition, , ,107,"(Matroska files only) Specify the edition (set of chapters) to use, where 0 i…"
+mpv, , ,track-auto-selection, , ,108,Enable the default track auto-selection (default: yes)
+mpv, , ,subs-with-matching-audio, , ,109,"When autoselecting a subtitle track, select it even if the selected audio str…"
+mpv, , ,subs-match-os-language, , ,110,"When autoselecting a subtitle track, select the track that matches the langua…"
+mpv, , ,subs-fallback, , ,111,"When autoselecting a subtitle track, if no tracks match your preferred langua…"
+mpv, , ,subs-fallback-forced, , ,112,"When autoselecting a subtitle track, the default value of yes will prefer usi…"
+mpv, , ,start, , ,113,Seek to given time position
+mpv, , ,end, , ,114,"Seeks to 30 seconds, plays 10 seconds, and exits"
+mpv, , ,length, , ,115,"Seeks to 3 minutes and 20 seconds before the end of the file, plays 10 second…"
+mpv, , ,rebase-start-time, , ,116,Whether to move the file start time to 00:00:00 (default: yes)
+mpv, , ,speed, , ,117,Slow down or speed up playback by the factor given as parameter
+mpv, , ,pitch, , ,118,Raise or lower the audio's pitch by the factor given as parameter
+mpv, , ,pause, , ,119,Start the player in paused state
+mpv, , ,shuffle, , ,120,Play files in random order
+mpv, , ,playlist-start, , ,121,Set which file on the internal playlist to start playback with
+mpv, , ,playlist, , ,122,Play files according to a playlist file.  Supports some common formats
+mpv, , ,chapter-merge-threshold, , ,123,Threshold for merging almost consecutive ordered chapter parts in millisecond…
+mpv, , ,chapter-seek-threshold, , ,124,Distance in seconds from the beginning of a chapter within which a backward c…
+mpv, , ,hr-seek, , ,125,Select when to use precise seeks that are not limited to keyframes
+mpv, , ,hr-seek-demuxer-offset, , ,126,This option exists to work around failures to do precise seeks (as in --hr-se…
+mpv, , ,hr-seek-framedrop, , ,127,"Allow the video decoder to drop frames during seek, if these frames are befor…"
+mpv, , ,index, , ,128,Controls how to seek in files
+mpv, , ,load-unsafe-playlists, , ,129,Load URLs from playlists which are considered unsafe (default: no)
+mpv, , ,access-references, , ,130,Follow any references in the file being opened (default: yes)
+mpv, , ,loop-playlist, , ,131,Loops playback N times
+mpv, , ,loop, , ,132,"Loop a single file N times.  inf means forever, no means normal playback"
+mpv, , ,ab-loop-b, , ,133,Set loop points
+mpv, , ,ab-loop-count, , ,134,"Run A-B loops only N times, then ignore the A-B loop points (default: inf)"
+mpv, , ,ordered-chapters, , ,135,Enable support for Matroska ordered chapters
+mpv, , ,ordered-chapters-files, , ,136,"Loads the given file as playlist, and tries to use the files contained in it …"
+mpv, , ,chapters-file, , ,137,"Load chapters from this file, instead of using the chapter metadata found in …"
+mpv, , ,sstep, , ,138,Skip <sec> seconds after every frame. sp NOTE: NDENT 7. 0 NDENT 3
+mpv, , ,stop-playback-on-init-failure, , ,139,Stop playback if either audio or video fails to initialize (default: no)
+mpv, ,>,play-direction, , ,140,Control the playback direction (default: forward)
+mpv, , ,audio-reversal-buffer, , ,141,For backward decoding
+mpv, , ,audio-backward-overlap, , ,142,Number of overlapping keyframe ranges to use for backward decoding (default: …
+mpv, , ,audio-backward-batch, , ,143,Number of keyframe ranges to decode at once when backward decoding (default: …
+mpv, , ,demuxer-backward-playback-step, , ,144,Number of seconds the demuxer should seek back to get new packets during back…
+mpv, ,V,version, , ,145,Print version string and exit
+mpv, , ,no-config, , ,146,Do not load default configuration or any user files
+mpv, , ,list-options, , ,147,Prints all available options
+mpv, , ,list-properties, , ,148,Print a list of the available properties
+mpv, , ,list-protocols, , ,149,Print a list of the supported protocols
+mpv, , ,log-file, , ,150,"Opens the given path for writing, and print log messages to it"
+mpv, , ,config-dir, , ,151,Force a different configuration directory
+mpv, , ,dump-stats, , ,152,Write certain statistics to the given file.  The file is truncated on opening
+mpv, , ,idle, , ,153,Makes mpv wait idly instead of quitting when there is no file to play
+mpv, , ,include, , ,154,Specify configuration file to be parsed after the default ones
+mpv, , ,load-scripts, , ,155,"If set to no, don't auto-load scripts from the scripts configuration subdirec…"
+mpv, , ,scripts, , ,156,Load a Lua script
+mpv, , ,script-opts, , ,157,Set options for scripts.  A script can query an option by key
+mpv, , ,merge-files, , ,158,"Pretend that all files passed to mpv are concatenated into a single, big file"
+mpv, , ,profile, , ,159,"Use the given profile(s), --profile=help displays a list of the defined profi…"
+mpv, , ,reset-on-next-file, , ,160,"Normally, mpv will try to keep all settings when playing the next file on the…"
+mpv, , ,show-profile, , ,161,Show the description and content of a profile
+mpv, , ,use-filedir-conf, , ,162,Look for a file-specific configuration file in the same directory as the file…
+mpv, , ,ytdl, , ,163,Enable the youtube-dl hook-script
+mpv, , ,ytdl-format, , ,164,Video format/quality that is directly passed to youtube-dl
+mpv, , ,ytdl-raw-options, , ,165,Pass arbitrary options to youtube-dl
+mpv, , ,js-memory-report, , ,166,Enable memory reporting for javascript scripts in the stats overlay
+mpv, , ,load-stats-overlay, , ,167,Enable the builtin script that shows useful playback information on a key bin…
+mpv, , ,load-osd-console, , ,168,Enable the built-in script that shows a console on a key binding and lets you…
+mpv, , ,load-auto-profiles, , ,169,Enable the builtin script that does auto profiles (default: auto)
+mpv, , ,load-select, , ,170,Enable the builtin script that lets you select from lists of items (default: …
+mpv, , ,player-operation-mode, , ,171,"For enabling 'pseudo GUI mode', which means that the defaults for some option…"
+mpv, , ,save-position-on-quit, , ,172,Always save the current playback position on quit
+mpv, , ,watch-later-dir, , ,173,The directory in which to store the 'watch later' temporary files
+mpv, , ,resume-playback, , ,174,"Restore playback position from the watch_later configuration subdirectory, us…"
+mpv, , ,resume-playback-check-mtime, , ,175,Only restore the playback position from the watch_later configuration subdire…
+mpv, , ,watch-later-options, , ,176,The options that are saved in 'watch later' files if they have been changed s…
+mpv, , ,write-filename-in-watch-later-config, , ,177,Prepend the watch later config files with the name of the file they refer to
+mpv, , ,ignore-path-in-watch-later-config, , ,178,Ignore path (i. e.  use filename only) when using watch later feature
+mpv, , ,vo, , ,179,Specify the video output backend to be used
+mpv, , ,vd, , ,180,"Specify a priority list of video decoders to be used, according to their fami…"
+mpv, , ,vf, , ,181,Specify a list of video filters to apply to the video stream
+mpv, , ,untimed, , ,182,Do not sleep when outputting video frames
+mpv, , ,framedrop, , ,183,"Skip displaying some frames to maintain A/V sync on slow systems, or playing …"
+mpv, , ,video-latency-hacks, , ,184,Enable some things which tend to reduce video latency by 1 or 2 frames (defau…
+mpv, , ,display-fps-override, , ,185,Set the display FPS used with the --video-sync=display-* modes
+mpv, , ,hwdec, , ,186,Specify the hardware video decoding API that should be used if possible
+mpv, , ,gpu-hwdec-interop, , ,187,This option is for troubleshooting hwdec interop issues
+mpv, , ,hwdec-extra-frames, , ,188,Number of GPU frames hardware decoding should preallocate (default: see --lis…
+mpv, , ,hwdec-image-format, , ,189,Set the internal pixel format used by hardware decoding via --hwdec (default …
+mpv, , ,cuda-decode-device, , ,190,Choose the GPU device used for decoding when using the cuda or nvdec hwdecs w…
+mpv, , ,vaapi-device, , ,191,Choose the DRM device for vaapi-copy
+mpv, , ,panscan, , ,192,Enables pan-and-scan functionality (cropping the sides of e. g
+mpv, , ,video-aspect-override, , ,193,"Override video aspect ratio, in case aspect information is incorrect or missi…"
+mpv, , ,video-aspect-method, , ,194,This sets the default video aspect determination method (if the aspect is _no…
+mpv, , ,video-unscaled, , ,195,Disable scaling of the video
+mpv, , ,video-pan-y, , ,196,Moves the displayed video rectangle by the given value in the X or Y direction
+mpv, , ,video-rotate, , ,197,"Rotate the video clockwise, in degrees"
+mpv, , ,video-crop, , ,198,"Crop the video by starting at the x, y offset for w, h pixels"
+mpv, , ,video-zoom, , ,199,Adjust the video display scale factor by the given value
+mpv, , ,video-scale-y, , ,200,Multiply the video display size with the given value (default: 1. 0)
+mpv, , ,video-align-y, , ,201,"Moves the video rectangle within the black borders, which are usually added t…"
+mpv, , ,video-margin-ratio-bottom, , ,202,Set extra video margins on each border (default: 0)
+mpv, , ,correct-pts, , ,203,--correct-pts=no switches mpv to a mode where video timing is determined usin…
+mpv, , ,container-fps-override, , ,204,Override video framerate.  Useful if the original value is wrong or missing
+mpv, , ,deinterlace, , ,205,Enable or disable deinterlacing (default: no)
+mpv, , ,deinterlace-field-parity, , ,206,Specify the field parity/order when deinterlacing (default: auto)
+mpv, , ,frames, , ,207,"Play/convert only first <number> video frames, then quit"
+mpv, , ,video-output-levels, , ,208,RGB color levels used with YUV to RGB conversion
+mpv, , ,hwdec-codecs, , ,209,Allow hardware decoding for a given list of codecs only
+mpv, , ,vd-lavc-check-hw-profile, , ,210,Check hardware decoder profile (default: yes)
+mpv, , ,vd-lavc-software-fallback, , ,211,Fallback to software decoding if the hardware-accelerated decoder fails (defa…
+mpv, , ,vd-lavc-film-grain, , ,212,Enables film grain application on the GPU
+mpv, , ,vd-lavc-dr, , ,213,Enable direct rendering (default: auto)
+mpv, , ,vd-lavc-bitexact, , ,214,Only use bit-exact algorithms in all decoding steps (for codec testing)
+mpv, , ,vd-lavc-fast, , ,215,Enable optimizations which do not comply with the format specification and po…
+mpv, , ,vd-lavc-o, , ,216,Pass AVOptions to libavcodec decoder
+mpv, , ,vd-lavc-show-all, , ,217,Show even broken/corrupt frames (default: no)
+mpv, , ,vd-lavc-skiploopfilter, , ,218,Skips the loop filter (AKA deblocking) during decoding
+mpv, , ,vd-lavc-skipidct, , ,219,Skips the IDCT step
+mpv, , ,vd-lavc-skipframe, , ,220,Skips decoding of frames completely
+mpv, , ,vd-lavc-framedrop, , ,221,Set framedropping mode used with --framedrop (see skiploopfilter for availabl…
+mpv, , ,vd-lavc-threads, , ,222,Number of threads to use for decoding
+mpv, , ,vd-lavc-assume-old-x264, , ,223,"Assume the video was encoded by an old, buggy x264 version (default: no)"
+mpv, , ,vd-apply-cropping, , ,224,"Certain video codecs support cropping, meaning that only a sub-rectangle of t…"
+mpv, , ,swapchain-depth, , ,225,Allow up to N in-flight frames.  This essentially controls the frame latency
+mpv, , ,audio-pitch-correction, , ,226,"If this is enabled (default), playing with a speed different from normal auto…"
+mpv, , ,audio-device, , ,227,"Use the given audio device.  This consists of the audio output name, e. g"
+mpv, , ,audio-exclusive, , ,228,Enable exclusive output mode
+mpv, , ,audio-fallback-to-null, , ,229,"If no audio device can be opened, behave as if --ao=null was given"
+mpv, , ,ao, , ,230,Specify the audio output drivers to be used
+mpv, , ,af, , ,231,Specify a list of audio filters to apply to the audio stream
+mpv, , ,audio-spdif, , ,232,List of codecs for which compressed audio passthrough should be used
+mpv, , ,ad, , ,233,"Specify a priority list of audio decoders to be used, according to their deco…"
+mpv, , ,volume, , ,234,Set the startup volume
+mpv, , ,volume-max, , ,235,Set the maximum amplification level in percent (default: 130)
+mpv, , ,volume-gain, , ,236,Set the volume gain in dB
+mpv, , ,volume-gain-min, , ,237,"Set the volume gain range in dB (default: -96 dB min, 12 dB max)"
+mpv, , ,replaygain, , ,238,Adjust volume gain according to replaygain values stored in the file metadata
+mpv, , ,replaygain-preamp, , ,239,Pre-amplification gain in dB to apply to the selected replaygain gain (defaul…
+mpv, , ,replaygain-clip, , ,240,Allow the volume gain to clip (default: no)
+mpv, , ,replaygain-fallback, , ,241,Gain in dB to apply if the file has no replay gain tags
+mpv, , ,audio-delay, , ,242,Audio delay in seconds (positive or negative float value)
+mpv, , ,mute, , ,243,Set startup audio mute status (default: no). sp See also: --volume
+mpv, , ,audio-demuxer, , ,244,Use this audio demuxer type when using --audio-file
+mpv, , ,ad-lavc-ac3drc, , ,245,Select the Dynamic Range Compression level for AC-3 audio streams
+mpv, , ,ad-lavc-downmix, , ,246,Whether to request audio channel downmixing from the decoder (default: no)
+mpv, , ,ad-lavc-threads, , ,247,Number of threads to use for decoding
+mpv, , ,ad-lavc-o, , ,248,Pass AVOptions to libavcodec decoder
+mpv, , ,dtshd, , ,249,"If DTS is passed through, use DTS-HD. sp WARNING: NDENT 7. 0 NDENT 3"
+mpv, , ,audio-channels, , ,250,Control which audio channels are output (e. g.  surround vs.  stereo)
+mpv, , ,audio-display, , ,251,Determines whether to display cover art when playing audio files and with wha…
+mpv, , ,audio-files, , ,252,Play audio from an external file while viewing a video
+mpv, , ,audio-file, , ,253,CLI/config file only alias for --audio-files-append
+mpv, , ,audio-format, , ,254,Select the sample format used for output from the audio filter layer to the s…
+mpv, , ,audio-samplerate, , ,255,Select the output sample rate to be used (of course sound cards have limits o…
+mpv, , ,gapless-audio, , ,256,Try to play consecutive audio files with no silence or disruption at the poin…
+mpv, , ,initial-audio-sync, , ,257,"When starting a video file or after events such as seeking, mpv will by defau…"
+mpv, , ,audio-file-auto, , ,258,Load additional audio files matching the video filename
+mpv, , ,audio-exts, , ,259,"Audio file extentions to try to match when using --audio-file-auto, --autocre…"
+mpv, , ,audio-file-paths, , ,260,"Equivalent to --sub-file-paths option, but for auto-loaded audio files"
+mpv, , ,audio-client-name, , ,261,The application name the player reports to the audio API
+mpv, , ,audio-buffer, , ,262,Set the audio output minimum buffer
+mpv, , ,audio-stream-silence, , ,263,Cash-grab consumer audio hardware (such as A/V receivers) often ignore initia…
+mpv, , ,audio-wait-open, , ,264,This makes sense for use with --audio-stream-silence=yes
+mpv, , ,sub-demuxer, , ,265,Force subtitle demuxer type for --sub-file
+mpv, , ,sub-lavc-o, , ,266,Pass AVOptions to libavcodec decoder
+mpv, , ,sub-delay, , ,267,Delays primary subtitles by <sec> seconds.  Can be negative
+mpv, , ,secondary-sub-delay, , ,268,Delays secondary subtitles by <sec> seconds.  Can be negative
+mpv, , ,sub-file, , ,269,Add a subtitle file to the list of external subtitles
+mpv, , ,secondary-sid, , ,270,Select a secondary subtitle stream.  This is similar to --sid
+mpv, , ,sub-scale, , ,271,Factor for the text subtitle font size (default: 1). sp NOTE: NDENT 7
+mpv, , ,sub-scale-by-window, , ,272,Whether to scale subtitles with the window size (default: yes)
+mpv, , ,sub-scale-with-window, , ,273,Make the subtitle font size relative to the window (default: yes)
+mpv, , ,sub-ass-scale-with-window, , ,274,"Like --sub-scale-with-window, but affects subtitles in ASS format only"
+mpv, , ,embeddedfonts, , ,275,Use fonts embedded in Matroska container files and ASS scripts (default: yes)
+mpv, , ,sub-pos, , ,276,Specify the position of subtitles on the screen
+mpv, , ,secondary-sub-pos, , ,277,Specify the position of secondary subtitles on the screen
+mpv, , ,sub-speed, , ,278,Multiply the subtitle event timestamps with the given value
+mpv, , ,sub-ass-style-overrides, , ,279,Override some style or script info parameters
+mpv, , ,sub-ass-hinting, , ,280,Set font hinting type.  <type> can be: NDENT 7. 0
+mpv, , ,sub-ass-line-spacing, , ,281,Set line spacing value for SSA/ASS renderer
+mpv, , ,sub-ass-shaper, , ,282,Set the text layout engine used by libass.  NDENT 7. 0
+mpv, , ,sub-ass-styles, , ,283,Load all SSA/ASS styles found in the specified file and use them for renderin…
+mpv, , ,sub-ass-override, , ,284,Control whether user style overrides should be applied
+mpv, , ,secondary-sub-ass-override, , ,285,Control whether user secondary substyle overrides should be applied
+mpv, , ,sub-ass-force-margins, , ,286,Enables placing toptitles and subtitles in black borders when they are availa…
+mpv, , ,sub-use-margins, , ,287,Enables placing toptitles and subtitles in black borders when they are availa…
+mpv, , ,sub-ass-use-video-data, , ,288,Controls which information about the video stream is passed to libass
+mpv, , ,sub-ass-video-aspect-override, , ,289,Allows passing any arbitrary aspect ratio to libass instead of the videoâs …
+mpv, , ,sub-vsfilter-bidi-compat, , ,290,Set implicit bidi detection to ltr instead of auto to match ASS' default
+mpv, , ,sub-ass-vsfilter-color-compat, , ,291,Mangle colors like (xy-)vsfilter do (default: basic)
+mpv, , ,stretch-dvd-subs, , ,292,Stretch DVD subtitles when playing anamorphic videos for better looking fonts…
+mpv, , ,stretch-image-subs-to-screen, , ,293,"Stretch DVD and other image subtitles to the screen, ignoring the video margi…"
+mpv, , ,image-subs-video-resolution, , ,294,Override the image subtitle resolution with the video resolution (default: no)
+mpv, , ,sub-ass, , ,295,Render ASS subtitles natively (default: yes). sp NOTE: NDENT 7. 0 NDENT 3
+mpv, , ,sub-auto, , ,296,Load additional subtitle files matching the video filename
+mpv, , ,sub-auto-exts, , ,297,Subtitle extentions to try and match when using --sub-auto
+mpv, , ,sub-codepage, , ,298,You can use this option to specify the subtitle codepage
+mpv, , ,sub-stretch-durations, , ,299,Stretch a subtitle duration so it ends when the next one starts
+mpv, , ,sub-fix-timing, , ,300,Adjust subtitle timing is to remove minor gaps or overlaps between subtitles …
+mpv, , ,sub-forced-events-only, , ,301,Enabling this displays only forced events within subtitle streams
+mpv, , ,sub-fps, , ,302,Specify the framerate of the subtitle file (default: video fps)
+mpv, , ,sub-gauss, , ,303,Apply Gaussian blur to image subtitles (default: 0)
+mpv, , ,sub-gray, , ,304,Convert image subtitles to grayscale
+mpv, , ,sub-file-paths, , ,305,Specify extra directories to search for subtitles matching the video
+mpv, , ,sub-visibility, , ,306,"Can be used to disable display of subtitles, but still select and decode them"
+mpv, , ,secondary-sub-visibility, , ,307,"Can be used to disable display of secondary subtitles, but still select and d…"
+mpv, , ,sub-clear-on-seek, , ,308,"(Obscure, rarely useful"
+mpv, , ,teletext-page, , ,309,Select a teletext page number to decode
+mpv, , ,sub-past-video-end, , ,310,"After the last frame of video, if this option is enabled, subtitles will cont…"
+mpv, , ,sub-font, , ,311,Specify font to use for subtitles that do not themselves specify a particular…
+mpv, , ,sub-font-size, , ,312,Specify the sub font size
+mpv, , ,sub-blur, , ,313,Gaussian blur factor applied to the sub font border
+mpv, , ,sub-bold, , ,314,Format text on bold
+mpv, , ,sub-italic, , ,315,Format text on italic
+mpv, , ,sub-outline-color, , ,316,See --sub-color.  Color used for the sub font outline
+mpv, , ,sub-back-color, , ,317,See --sub-color.  Color used for sub text background
+mpv, , ,sub-outline-size, , ,318,Size of the sub font outline in scaled pixels (see --sub-font-size for detail…
+mpv, , ,sub-border-style, , ,319,The style of the border.  NDENT 7. 0
+mpv, , ,sub-color, , ,320,Specify the color used for unstyled text subtitles
+mpv, , ,sub-margin-x, , ,321,Left and right screen margin for the subs in scaled pixels (see --sub-font-si…
+mpv, , ,sub-margin-y, , ,322,Top and bottom screen margin for the subs in scaled pixels (see --sub-font-si…
+mpv, , ,sub-align-x, , ,323,Control to which corner of the screen text subtitles should be aligned to (de…
+mpv, , ,sub-align-y, , ,324,Vertical position (default: bottom).  Details see --sub-align-x
+mpv, , ,sub-justify, , ,325,Control how multi line subs are justified irrespective of where they are alig…
+mpv, , ,sub-ass-justify, , ,326,Applies justification as defined by --sub-justify on ASS subtitles if --sub-a…
+mpv, , ,sub-shadow-offset, , ,327,Displacement of the sub text shadow in scaled pixels (see --sub-font-size for…
+mpv, , ,sub-spacing, , ,328,Horizontal sub font spacing in scaled pixels (see --sub-font-size for details)
+mpv, , ,sub-filter-sdh, , ,329,Applies filter removing subtitle additions for the deaf or hard-of-hearing (S…
+mpv, , ,sub-filter-sdh-harder, , ,330,Do harder SDH filtering (if enabled by --sub-filter-sdh)
+mpv, , ,sub-filter-sdh-enclosures, , ,331,Specify a string of characters that --sub-filter-sdh will use to potentially …
+mpv, , ,sub-filter-regex-, , ,332,"Set a list of regular expressions to match on text subtitles, and remove any …"
+mpv, , ,sub-filter-jsre-, , ,333,Same as --sub-filter-regex but with JavaScript regular expressions
+mpv, , ,sub-filter-regex-plain, , ,334,Whether to first convert the ASS 'Text' field to plain-text (default: no)
+mpv, , ,sub-filter-regex-warn, , ,335,"Log dropped lines with warning log level, instead of verbose (default: no)"
+mpv, , ,sub-filter-regex-enable, , ,336,Whether to enable regex filtering (default: yes)
+mpv, , ,sub-create-cc-track, , ,337,"For every video stream, create a closed captions track (default: no)"
+mpv, , ,sub-font-provider, , ,338,Which libass font provider backend to use (default: auto)
+mpv, , ,sub-fonts-dir, , ,339,Font files in this directory are used by mpv/libass for subtitles
+mpv, , ,title, , ,340,Set the window title
+mpv, , ,screen, , ,341,In multi-monitor configurations (i. e
+mpv, , ,screen-name, , ,342,"In multi-monitor configurations, this option tells mpv which screen to displa…"
+mpv, , ,fs, , ,343,Fullscreen playback
+mpv, , ,fs-screen, , ,344,In multi-monitor configurations (i. e
+mpv, , ,fs-screen-name, , ,345,"In multi-monitor configurations, this option tells mpv which screen to go ful…"
+mpv, , ,keep-open, , ,346,"Do not terminate when playing or seeking beyond the end of the file, and ther…"
+mpv, , ,keep-open-pause, , ,347,"If set to no, instead of pausing when --keep-open is active, just stop at end…"
+mpv, , ,image-display-duration, , ,348,"If the current file is an image, play the image for the given amount of secon…"
+mpv, , ,force-window, , ,349,Create a video output window even if there is no video
+mpv, , ,taskbar-progress, , ,350,(Windows only) Enable/disable playback progress rendering in taskbar (Windows…
+mpv, , ,snap-window, , ,351,(Windows only) Snap the player window to screen edges
+mpv, , ,drag-and-drop, , ,352,Controls the default behavior of drag and drop on platforms that support this
+mpv, , ,ontop, , ,353,Makes the player window stay on top of other windows
+mpv, , ,ontop-level, , ,354,(macOS only) Sets the level of an ontop window (default: window).  NDENT 7. 0
+mpv, , ,focus-on, , ,355,(macOS only) Focus the video window and make it the front most window on spec…
+mpv, , ,window-corners, , ,356,(Windows only) Set the preference for window corner rounding.  NDENT 7. 0
+mpv, , ,border, , ,357,Play video with window border and decorations
+mpv, , ,title-bar, , ,358,(Windows and X11 only) Play video with the window title bar
+mpv, , ,on-all-workspaces, , ,359,(X11 and macOS only) Show the video window on all virtual desktops
+mpv, , ,geometry, , ,360,Adjust the initial window position or size
+mpv, , ,autofit, , ,361,"Set the initial window size to a maximum size specified by WxH, without chang…"
+mpv, , ,autofit-larger, , ,362,"This option behaves exactly like --autofit, except that it sets the maximum s…"
+mpv, , ,autofit-smaller, , ,363,"This option behaves exactly like --autofit, except that it sets the minimum s…"
+mpv, , ,window-scale, , ,364,Resize the video window to a multiple (or fraction) of the video size
+mpv, , ,window-minimized, , ,365,Whether the video window is minimized or not
+mpv, , ,window-maximized, , ,366,Whether the video window is maximized or not
+mpv, , ,cursor-autohide, , ,367,Make mouse cursor automatically hide after given number of milliseconds (defa…
+mpv, , ,cursor-autohide-fs-only, , ,368,"If this option is given, the cursor is always visible in windowed mode"
+mpv, , ,force-rgba-osd-rendering, , ,369,Change how some video outputs render the OSD and text subtitles
+mpv, , ,force-render, , ,370,Forces mpv to always render frames regardless of the visibility of the window
+mpv, , ,force-window-position, , ,371,Forcefully move mpv's video output window to default location whenever there …
+mpv, , ,auto-window-resize, , ,372,"By default, mpv will automatically resize itself if the video's size changes …"
+mpv, , ,keepaspect, , ,373,"--keepaspect=no will always stretch the video to window size, and will disabl…"
+mpv, , ,keepaspect-window, , ,374,--keepaspect-window=yes (the default) will lock the window size to the video …
+mpv, , ,monitoraspect, , ,375,Set the aspect ratio of your monitor or TV screen
+mpv, , ,hidpi-window-scale, , ,376,Scale the window size according to the backing DPI scale factor from the OS (…
+mpv, , ,native-fs, , ,377,(macOS only) Uses the native fullscreen mechanism of the OS (default: yes)
+mpv, , ,show-in-taskbar, , ,378,(Windows and X11 only) Show mpv in the taskbar (default: yes)
+mpv, , ,monitorpixelaspect, , ,379,Set the aspect of a single pixel of your monitor or TV screen (default: 1)
+mpv, , ,stop-screensaver, , ,380,Turns off the screensaver (or screen blanker and similar mechanisms) at start…
+mpv, , ,wid, , ,381,This tells mpv to attach to an existing window
+mpv, , ,window-dragging, , ,382,Move the window when clicking on it and moving the mouse pointer (default: ye…
+mpv, , ,x11-name, , ,383,Set the window instance name for X11-based video output methods
+mpv, , ,x11-netwm, , ,384,(X11 only) Control the use of NetWM protocol features
+mpv, , ,x11-bypass-compositor, , ,385,"If set to yes, then ask the compositor to unredirect the mpv window (default:…"
+mpv, , ,x11-present, , ,386,Whether or not to use presentation statistics from X11's presentation extensi…
+mpv, , ,x11-wid-title, , ,387,Whether or not to set the window title when mpv is embedded on X11 (default: …
+mpv, , ,cdda-device, , ,388,Specify the CD device for CDDA playback (default: /dev/cdrom)
+mpv, , ,dvd-device, , ,389,Specify the DVD device or . iso filename (default: /dev/dvd)
+mpv, , ,bluray-device, , ,390,(Blu-ray only) Specify the Blu-ray disc location
+mpv, , ,cdda-, , ,391,These options can be used to tune the CD Audio reading feature of mpv
+mpv, , ,cdda-speed, , ,392,Set CD spin speed
+mpv, , ,cdda-paranoia, , ,393,Set paranoia level
+mpv, , ,cdda-sector-size, , ,394,Set atomic read size
+mpv, , ,cdda-overlap, , ,395,Force minimum overlap search during verification to <value> sectors
+mpv, , ,cdda-toc-offset, , ,396,Add <value> sectors to the values reported when addressing tracks
+mpv, , ,cdda-skip, , ,397,(Never) accept imperfect data reconstruction
+mpv, , ,cdda-cdtext, , ,398,Print CD text
+mpv, , ,dvd-speed, , ,399,"Try to limit DVD speed (default: 0, no change)"
+mpv, , ,dvd-angle, , ,400,Some DVDs contain scenes that can be viewed from multiple angles
+mpv, , ,brightness, , ,401,Adjust the brightness of the video signal (default: 0)
+mpv, , ,contrast, , ,402,Adjust the contrast of the video signal (default: 0)
+mpv, , ,saturation, , ,403,Adjust the saturation of the video signal (default: 0)
+mpv, , ,gamma, , ,404,Adjust the gamma of the video signal (default: 0)
+mpv, , ,hue, , ,405,Adjust the hue of the video signal (default: 0)
+mpv, , ,demuxer, , ,406,Force demuxer type
+mpv, , ,demuxer-lavf-analyzeduration, , ,407,Maximum length in seconds to analyze the stream properties
+mpv, , ,demuxer-lavf-probe-info, , ,408,Whether to probe stream information (default: auto)
+mpv, , ,demuxer-lavf-probescore, , ,409,Minimum required libavformat probe score
+mpv, , ,demuxer-lavf-allow-mimetype, , ,410,Allow deriving the format from the HTTP MIME type (default: yes)
+mpv, , ,demuxer-lavf-format, , ,411,Force a specific libavformat demuxer
+mpv, , ,demuxer-lavf-hacks, , ,412,"By default, some formats will be handled differently from other formats by ex…"
+mpv, , ,demuxer-lavf-o, , ,413,Pass AVOptions to libavformat demuxer
+mpv, , ,demuxer-lavf-probesize, , ,414,Maximum amount of data to probe during the detection phase
+mpv, , ,demuxer-lavf-buffersize, , ,415,Size of the stream read buffer allocated for libavformat in bytes (default: 3…
+mpv, , ,demuxer-lavf-linearize-timestamps, , ,416,Attempt to linearize timestamp resets in demuxed streams (default: auto)
+mpv, , ,demuxer-lavf-propagate-opts, , ,417,Propagate FFmpeg-level options to recursively opened connections (default: ye…
+mpv, , ,demuxer-mkv-subtitle-preroll, , ,418,Try harder to show embedded soft subtitles when seeking somewhere
+mpv, , ,demuxer-mkv-subtitle-preroll-secs, , ,419,See --demuxer-mkv-subtitle-preroll
+mpv, , ,demuxer-mkv-subtitle-preroll-secs-index, , ,420,See --demuxer-mkv-subtitle-preroll
+mpv, , ,demuxer-mkv-probe-start-time, , ,421,Check the start time of Matroska files (default: yes)
+mpv, , ,demuxer-mkv-probe-video-duration, , ,422,"When opening the file, seek to the end of it, and check what timestamp the la…"
+mpv, , ,demuxer-rawaudio-channels, , ,423,Number of channels (or channel layout) if --demuxer=rawaudio is used (default…
+mpv, , ,demuxer-rawaudio-format, , ,424,Sample format for --demuxer=rawaudio (default: s16le)
+mpv, , ,demuxer-rawaudio-rate, , ,425,Sample rate for --demuxer=rawaudio (default: 44 kHz)
+mpv, , ,demuxer-rawvideo-fps, , ,426,Rate in frames per second for --demuxer=rawvideo (default: 25. 0)
+mpv, , ,demuxer-rawvideo-h, , ,427,Image dimension in pixels for --demuxer=rawvideo.  NDENT 7. 0 NDENT 3. 5
+mpv, , ,demuxer-rawvideo-format, , ,428,Color space (fourcc) in hex or string for --demuxer=rawvideo (default: YV12)
+mpv, , ,demuxer-rawvideo-mp-format, , ,429,Color space by internal video format for --demuxer=rawvideo
+mpv, , ,demuxer-rawvideo-codec, , ,430,Set the video codec instead of selecting the rawvideo codec when using --demu…
+mpv, , ,demuxer-rawvideo-size, , ,431,Frame size in bytes when using --demuxer=rawvideo
+mpv, , ,demuxer-max-bytes, , ,432,This controls how much the demuxer is allowed to buffer ahead
+mpv, , ,demuxer-max-back-bytes, , ,433,This controls how much past data the demuxer is allowed to preserve
+mpv, , ,demuxer-donate-buffer, , ,434,Whether to let the back buffer use part of the forward buffer (default: yes)
+mpv, , ,demuxer-seekable-cache, , ,435,Debugging option to control whether seeking can use the demuxer cache (defaul…
+mpv, , ,demuxer-thread, , ,436,"Run the demuxer in a separate thread, and let it prefetch a certain amount of…"
+mpv, , ,demuxer-termination-timeout, , ,437,Number of seconds the player should wait to shutdown the demuxer (default: 0
+mpv, , ,demuxer-readahead-secs, , ,438,"If --demuxer-thread is enabled, this controls how much the demuxer should buf…"
+mpv, , ,demuxer-hysteresis-secs, , ,439,"Once the demuxer limit is reached (--demuxer-max-bytes, --demuxer-readahead-s…"
+mpv, , ,prefetch-playlist, , ,440,Prefetch next playlist entry while playback of the current entry is ending (d…
+mpv, , ,force-seekable, , ,441,If the player thinks that the media is not seekable (e. g
+mpv, , ,demuxer-cache-wait, , ,442,"Before starting playback, read data until either the end of the file was reac…"
+mpv, , ,rar-list-all-volumes, , ,443,"When opening multi-volume rar files, open all volumes to create a full list o…"
+mpv, , ,directory-mode, , ,444,"When opening a directory, open subdirectories lazily, recursively or not at a…"
+mpv, , ,directory-filter-types, , ,445,Media file types to filter when opening directory
+mpv, , ,autocreate-playlist, , ,446,"When opening a local file, act as if the parent directory is opened and creat…"
+mpv, , ,native-keyrepeat, , ,447,"Use system settings for keyrepeat delay and rate, instead of --input-ar-delay…"
+mpv, , ,native-touch, , ,448,(Windows only) For platforms which send emulated mouse inputs for touch-unawa…
+mpv, , ,input-ar-delay, , ,449,Delay in milliseconds before we start to autorepeat a key (default: 200)
+mpv, , ,input-ar-rate, , ,450,Number of key presses to generate per second on autorepeat (default: 40)
+mpv, , ,input-conf, , ,451,Specify input configuration file other than the default location in the mpv c…
+mpv, , ,input-default-bindings, , ,452,Enable default-level ('weak') key bindings (default: yes)
+mpv, , ,input-builtin-bindings, , ,453,Enable loading of built-in key bindings during start-up (default: yes)
+mpv, , ,input-builtin-dragging, , ,454,Enable the built-in window-dragging behavior (default: yes)
+mpv, , ,input-cmdlist, , ,455,Prints all commands that can be bound to keys
+mpv, , ,input-commands, , ,456,Define a list of commands for mpv to run
+mpv, , ,input-doubleclick-time, , ,457,Time in milliseconds to recognize two consecutive button presses as a double-…
+mpv, , ,input-keylist, , ,458,Prints all keys that can be bound to commands
+mpv, , ,input-key-fifo-size, , ,459,Specify the size of the FIFO that buffers key events (default: 7)
+mpv, , ,input-test, , ,460,Input test mode
+mpv, , ,input-terminal, , ,461,--input-terminal=no prevents the player from reading key events from standard…
+mpv, , ,input-ipc-server, , ,462,Enable the IPC support and create the listening socket at the given path
+mpv, , ,input-ipc-client, , ,463,Connect a single IPC client to the given FD
+mpv, , ,input-gamepad, , ,464,Enable/disable SDL2 Gamepad support.  Disabled by default
+mpv, , ,input-cursor, , ,465,Permit mpv to receive pointer events reported by the video output driver
+mpv, , ,input-cursor-passthrough, , ,466,Tell the backend windowing system to allow pointer events to passthrough the …
+mpv, , ,input-media-keys, , ,467,On systems where mpv can choose between receiving media keys or letting the s…
+mpv, , ,input-preprocess-wheel, , ,468,Preprocess WHEEL_* events so that while scrolling on the horizontal or vertic…
+mpv, , ,input-right-alt-gr, , ,469,(macOS and Windows only) Use the right Alt key as Alt Gr to produce special c…
+mpv, , ,input-vo-keyboard, , ,470,Disable all keyboard input on for VOs which can't participate in proper keybo…
+mpv, , ,input-touch-emulate-mouse, , ,471,"When multi-touch support is enabled (either required by the platform, or enab…"
+mpv, , ,input-dragging-deadzone, , ,472,Begin the built-in window dragging when the mouse moves outside a deadzone of…
+mpv, , ,osc, , ,473,Whether to load the on-screen-controller (default: yes)
+mpv, , ,osd-bar, , ,474,Enable display of the OSD bar (default: yes)
+mpv, , ,osd-on-seek, , ,475,Set what is displayed on the OSD during seeks.  The default is bar
+mpv, , ,osd-duration, , ,476,Set the duration of the OSD messages in ms (default: 1000)
+mpv, , ,osd-font, , ,477,Specify font to use for OSD.  The default is sans-serif.  NDENT 7. 0 NDENT 3
+mpv, , ,osd-font-size, , ,478,Specify the OSD font size.  See --sub-font-size for details. sp Default: 55
+mpv, , ,osd-msg1, , ,479,Show this string as message on OSD with OSD level 1 (visible by default)
+mpv, , ,osd-msg2, , ,480,"Similar to --osd-msg1, but for OSD level 2"
+mpv, , ,osd-msg3, , ,481,"Similar to --osd-msg1, but for OSD level 3"
+mpv, , ,osd-status-msg, , ,482,Show a custom string during playback instead of the standard status text
+mpv, , ,osd-playing-msg, , ,483,Show a message on OSD when playback starts
+mpv, , ,osd-playing-msg-duration, , ,484,Set the duration of osd-playing-msg in ms
+mpv, , ,osd-playlist-entry, , ,485,"Whether to display the media title, filename, or both"
+mpv, , ,osd-bar-align-x, , ,486,"Position of the OSD bar.  -1 is far left, 0 is centered, 1 is far right"
+mpv, , ,osd-bar-align-y, , ,487,"Position of the OSD bar.  -1 is top, 0 is centered, 1 is bottom"
+mpv, , ,osd-bar-w, , ,488,"Width of the OSD bar, in percentage of the screen width (default: 75)"
+mpv, , ,osd-bar-h, , ,489,"Height of the OSD bar, in percentage of the screen height (default: 3. 125)"
+mpv, , ,osd-bar-outline-size, , ,490,Size of the outline of the OSD bar in scaled pixels (see --sub-font-size for …
+mpv, , ,osd-blur, , ,491,Gaussian blur factor applied to the OSD font border
+mpv, , ,osd-bold, , ,492,Format text on bold
+mpv, , ,osd-italic, , ,493,Format text on italic
+mpv, , ,osd-outline-color, , ,494,See --sub-color.  Color used for the OSD font outline
+mpv, , ,osd-back-color, , ,495,See --sub-color.  Color used for OSD text background
+mpv, , ,osd-outline-size, , ,496,Size of the OSD font outline in scaled pixels (see --sub-font-size for detail…
+mpv, , ,osd-border-style, , ,497,See --sub-border-style.  Style used for OSD text border
+mpv, , ,osd-color, , ,498,Specify the color used for OSD.  See --sub-color for details
+mpv, , ,osd-fractions, , ,499,Show OSD times with fractions of seconds (in millisecond precision)
+mpv, , ,osd-level, , ,500,Specifies which mode the OSD should start in.  NDENT 7. 0
+mpv, , ,osd-margin-x, , ,501,Left and right screen margin for the OSD in scaled pixels (see --sub-font-siz…
+mpv, , ,osd-margin-y, , ,502,Top and bottom screen margin for the OSD in scaled pixels (see --sub-font-siz…
+mpv, , ,osd-align-x, , ,503,Control to which corner of the screen OSD should be aligned to (default: left)
+mpv, , ,osd-align-y, , ,504,Vertical position (default: top).  Details see --osd-align-x
+mpv, , ,osd-scale, , ,505,"OSD font size multiplier, multiplied with --osd-font-size value"
+mpv, , ,osd-scale-by-window, , ,506,Whether to scale the OSD with the window size (default: yes)
+mpv, , ,osd-shadow-offset, , ,507,Displacement of the OSD shadow in scaled pixels (see --sub-font-size for deta…
+mpv, , ,osd-spacing, , ,508,Horizontal OSD/sub font spacing in scaled pixels (see --sub-font-size for det…
+mpv, , ,video-osd, , ,509,Enabled OSD rendering on the video window (default: yes)
+mpv, , ,osd-font-provider, , ,510,See --sub-font-provider for details and accepted values
+mpv, , ,osd-fonts-dir, , ,511,See --sub-fonts-dir for details.   Defaults to ~~/fonts
+mpv, , ,screenshot-format, , ,512,Set the image file type used for saving screenshots
+mpv, , ,screenshot-tag-colorspace, , ,513,Tag screenshots with the appropriate colorspace (default: yes)
+mpv, , ,screenshot-high-bit-depth, , ,514,"If possible, write screenshots with a bit depth similar to the source video (…"
+mpv, , ,screenshot-template, , ,515,Specify the filename template used to save screenshots
+mpv, , ,screenshot-dir, , ,516,Store screenshots in this directory
+mpv, , ,screenshot-jpeg-quality, , ,517,Set the JPEG quality level.  Higher means better quality.  The default is 90
+mpv, , ,screenshot-jpeg-source-chroma, , ,518,Write JPEG files with the same chroma subsampling as the video (default: yes)
+mpv, , ,screenshot-png-compression, , ,519,Set the PNG compression level.  Higher means better compression
+mpv, , ,screenshot-png-filter, , ,520,Set the filter applied prior to PNG compression
+mpv, , ,screenshot-webp-lossless, , ,521,Write lossless WebP files
+mpv, , ,screenshot-webp-quality, , ,522,Set the WebP quality level.  Higher means better quality.  The default is 75
+mpv, , ,screenshot-webp-compression, , ,523,Set the WebP compression level
+mpv, , ,screenshot-jxl-distance, , ,524,Set the JPEG XL Butteraugli distance.  Lower means better quality
+mpv, , ,screenshot-jxl-effort, , ,525,Set the JPEG XL compression effort
+mpv, , ,screenshot-avif-encoder, , ,526,Specify the AV1 encoder to be used by libavcodec for encoding avif screenshots
+mpv, , ,screenshot-avif-pixfmt, , ,527,Specify the pixel format for the libavcodec encoder
+mpv, , ,screenshot-avif-opts, , ,528,Specifies libavcodec options for selected encoder
+mpv, , ,screenshot-sw, , ,529,Whether to use software rendering for screenshots (default: no)
+mpv, , ,sws-scaler, , ,530,Specify the software scaler algorithm to be used with --vf=scale
+mpv, , ,sws-lgb, , ,531,Software scaler Gaussian blur filter (luma).  See --sws-scaler
+mpv, , ,sws-cgb, , ,532,Software scaler Gaussian blur filter (chroma).  See --sws-scaler
+mpv, , ,sws-ls, , ,533,Software scaler sharpen filter (luma).  See --sws-scaler
+mpv, , ,sws-cs, , ,534,Software scaler sharpen filter (chroma).  See --sws-scaler
+mpv, , ,sws-chs, , ,535,Software scaler chroma horizontal shifting.  See --sws-scaler
+mpv, , ,sws-cvs, , ,536,Software scaler chroma vertical shifting.  See --sws-scaler
+mpv, , ,sws-bitexact, , ,537,Unknown functionality (default: no).  Consult libswscale source code
+mpv, , ,sws-fast, , ,538,"Allow optimizations that help with performance, but reduce quality (default: …"
+mpv, , ,sws-allow-zimg, , ,539,Allow using zimg (if the component using the internal swscale wrapper explici…
+mpv, , ,zimg-scaler, , ,540,Zimg luma scaler to use (default: lanczos)
+mpv, , ,zimg-scaler-param-b, , ,541,Set scaler parameters
+mpv, , ,zimg-scaler-chroma, , ,542,"Same as --zimg-scaler, for for chroma interpolation (default: bilinear)"
+mpv, , ,zimg-scaler-chroma-param-b, , ,543,"Same as --zimg-scaler-param-a / --zimg-scaler-param-b, for chroma"
+mpv, , ,zimg-dither, , ,544,Dithering (default: random)
+mpv, , ,zimg-threads, , ,545,Set the maximum number of threads to use for scaling (default: auto)
+mpv, , ,zimg-fast, , ,546,"Allow optimizations that help with performance, but reduce quality (default: …"
+mpv, , ,audio-resample-filter-size, , ,547,Length of the filter with respect to the lower sampling rate.  (default: 16)
+mpv, , ,audio-resample-phase-shift, , ,548,"Log2 of the number of polyphase entries.  (. , 10->1024, 11->2048, 12->4096, "
+mpv, , ,audio-resample-cutoff, , ,549,"Cutoff frequency (0. 0-1. 0), default set depending upon filter length"
+mpv, , ,audio-resample-linear, , ,550,If set then filters will be linearly interpolated between polyphase entries
+mpv, , ,audio-normalize-downmix, , ,551,Enable/disable normalization if surround audio is downmixed to stereo (defaul…
+mpv, , ,audio-resample-max-output-size, , ,552,"Limit maximum size of audio frames filtered at once, in ms (default: 40)"
+mpv, , ,audio-swresample-o, , ,553,Set AVOptions on the SwrContext or AVAudioResampleContext
+mpv, , ,quiet, , ,554,"Make console output less verbose; in particular, prevents the status line (i"
+mpv, , ,really-quiet, , ,555,Display even less output and status messages than with --quiet
+mpv, , ,terminal, , ,556,--terminal=no disables any use of the terminal and stdin/stdout/stderr
+mpv, , ,msg-color, , ,557,Enable colorful console output on terminals (default: yes)
+mpv, , ,msg-level, , ,558,Control verbosity directly for each module
+mpv, , ,term-osd, , ,559,Control whether OSD messages are shown on the console when no video output is…
+mpv, , ,term-osd-bar, , ,560,Enable printing a progress bar under the status line on the terminal
+mpv, , ,term-osd-bar-chars, , ,561,Customize the --term-osd-bar feature
+mpv, , ,term-playing-msg, , ,562,Print out a string after starting playback
+mpv, , ,term-status-msg, , ,563,Print out a custom string during playback instead of the standard status line
+mpv, , ,term-title, , ,564,Set the terminal title
+mpv, , ,msg-module, , ,565,Prepend module name to each console message
+mpv, , ,msg-time, , ,566,Prepend timing information to each console message
+mpv, , ,cache, , ,567,Decide whether to use network cache settings (default: auto)
+mpv, , ,cache-secs, , ,568,How many seconds of audio/video to prefetch if the cache is active
+mpv, , ,cache-on-disk, , ,569,"Write packet data to a temporary file, instead of keeping them in memory"
+mpv, , ,demuxer-cache-dir, , ,570,Directory where to create temporary files
+mpv, , ,cache-pause, , ,571,Whether the player should automatically pause when the cache runs out of data…
+mpv, , ,cache-pause-wait, , ,572,Number of seconds the packet cache should have buffered before starting playb…
+mpv, , ,cache-pause-initial, , ,573,Enter 'buffering' mode before starting playback (default: no)
+mpv, , ,demuxer-cache-unlink-files, , ,574,Whether or when to unlink cache files (default: immediate)
+mpv, , ,stream-buffer-size, , ,575,Size of the low level stream byte buffer (default: 128KB)
+mpv, , ,ad-queue-enable, , ,576,Enable running the video/audio decoder on a separate thread (default: no)
+mpv, , ,ad-queue-max-bytes, , ,577,Maximum approximate allowed size of the queue
+mpv, , ,ad-queue-max-samples, , ,578,Maximum number of frames (video) or samples (audio) of the queue
+mpv, , ,ad-queue-max-secs, , ,579,Maximum number of seconds of media in the queue
+mpv, , ,user-agent, , ,580,Use <string> as user agent for HTTP streaming
+mpv, , ,cookies, , ,581,Support cookies when making HTTP requests.  Disabled by default
+mpv, , ,cookies-file, , ,582,Read HTTP cookies from <filename>
+mpv, , ,http-header-fields, , ,583,Set custom HTTP fields when accessing HTTP stream
+mpv, , ,http-proxy, , ,584,URL of the HTTP/HTTPS proxy
+mpv, , ,tls-ca-file, , ,585,Certificate authority database file for use with TLS
+mpv, , ,tls-verify, , ,586,Verify peer certificates when using TLS (e. g.  with https://. )
+mpv, , ,tls-cert-file, , ,587,A file containing a certificate to use in the handshake with the peer
+mpv, , ,tls-key-file, , ,588,A file containing the private key for the certificate
+mpv, , ,referrer, , ,589,Specify a referrer path or URL for HTTP requests
+mpv, , ,network-timeout, , ,590,Specify the network timeout in seconds (default: 60 seconds)
+mpv, , ,rtsp-transport, , ,591,Select RTSP transport method (default: tcp)
+mpv, , ,hls-bitrate, , ,592,"If HLS streams are played, this option controls what streams are selected by …"
+mpv, , ,dvbin-prog, , ,593,This defines the program to tune to
+mpv, , ,dvbin-card, , ,594,Specifies using card number 0-15 (default: 0)
+mpv, , ,dvbin-file, , ,595,Instructs mpv to read the channels list from <filename>
+mpv, , ,dvbin-timeout, , ,596,Maximum number of seconds to wait when trying to tune a frequency before givi…
+mpv, , ,dvbin-full-transponder, , ,597,"Apply no filters on program PIDs, only tune to frequency and pass full transp…"
+mpv, , ,dvbin-channel-switch-offset, , ,598,"This value is not meant for setting via configuration, but used in channel sw…"
+mpv, , ,scale, , ,599,The filter function to use when upscaling video.  NDENT 7. 0
+mpv, , ,cscale, , ,600,"As --scale, but for interpolating chroma information"
+mpv, , ,dscale, , ,601,"Like --scale, but apply these filters on downscaling instead"
+mpv, , ,tscale, , ,602,The filter used for interpolating the temporal axis (frames)
+mpv, , ,tscale-param2, , ,603,Set filter parameters
+mpv, , ,tscale-blur, , ,604,Kernel scaling factor (also known as a blur factor)
+mpv, , ,tscale-clamp, , ,605,Specifies a weight bias to multiply into negative coefficients
+mpv, , ,tscale-wtaper, , ,606,Kernel/window taper factor.  Increasing this flattens the filter function
+mpv, , ,tscale-radius, , ,607,"Set radius for tunable filters, must be a float number between 0. 5 and 16. 0"
+mpv, , ,tscale-antiring, , ,608,Set the antiringing strength
+mpv, , ,tscale-window, , ,609,(Advanced users only) Choose a custom windowing function for the kernel
+mpv, , ,tscale-wparam, , ,610,(Advanced users only) Configure the parameter for the window function given b…
+mpv, , ,scaler-resizes-only, , ,611,Disable the scaler if the video image is not resized
+mpv, , ,correct-downscaling, , ,612,"When using convolution based filters, extend the filter size when downscaling"
+mpv, , ,linear-downscaling, , ,613,Scale in linear light when downscaling
+mpv, , ,linear-upscaling, , ,614,Scale in linear light when upscaling
+mpv, , ,sigmoid-upscaling, , ,615,"When upscaling, use a sigmoidal color transform to avoid emphasizing ringing …"
+mpv, , ,sigmoid-center, , ,616,"The center of the sigmoid curve used for --sigmoid-upscaling, must be a float…"
+mpv, , ,sigmoid-slope, , ,617,"The slope of the sigmoid curve used for --sigmoid-upscaling, must be a float …"
+mpv, , ,interpolation, , ,618,Reduce stuttering caused by mismatches in the video fps and display refresh r…
+mpv, , ,interpolation-threshold, , ,619,Threshold below which frame ratio interpolation gets disabled (default: 0
+mpv, , ,interpolation-preserve, , ,620,Preserve the previous frames' interpolated results even when renderer paramet…
+mpv, , ,opengl-pbo, , ,621,Enable use of PBOs
+mpv, , ,dither-depth, , ,622,Set dither target depth to N.  Default: auto.  NDENT 7. 0
+mpv, , ,dither-size-fruit, , ,623,Set the size of the dither matrix (default: 6)
+mpv, , ,dither, , ,624,Select dithering algorithm (default: fruit)
+mpv, , ,temporal-dither, , ,625,Enable temporal dithering.  (Only active if dithering is enabled in general
+mpv, , ,temporal-dither-period, , ,626,Determines how often the dithering pattern is updated when --temporal-dither …
+mpv, , ,error-diffusion, , ,627,The error diffusion kernel to use when --dither=error-diffusion is set
+mpv, , ,gpu-debug, , ,628,Enables GPU debugging.  What this means depends on the API type
+mpv, , ,opengl-swapinterval, , ,629,Interval in displayed frames between two buffer swaps
+mpv, , ,egl-config-id, , ,630,(EGL only) Select EGLConfig with specific EGL_CONFIG_ID
+mpv, , ,egl-output-format, , ,631,(EGL only) Select a specific EGL output format to utilize for OpenGL rendering
+mpv, , ,vulkan-device, , ,632,The name or UUID of the Vulkan device to use for rendering and presentation
+mpv, , ,vulkan-swap-mode, , ,633,Controls the presentation mode of the vulkan swapchain
+mpv, , ,vulkan-queue-count, , ,634,Controls the number of VkQueues used for rendering (limited by how many your …
+mpv, , ,vulkan-async-transfer, , ,635,Enables the use of async transfer queues on supported vulkan devices
+mpv, , ,vulkan-async-compute, , ,636,Enables the use of async compute queues on supported vulkan devices
+mpv, , ,vulkan-display-display, , ,637,"The index of the display, on the selected Vulkan device, to present on when u…"
+mpv, , ,vulkan-display-mode, , ,638,"The index of the display mode, of the selected Vulkan display, to use when us…"
+mpv, , ,vulkan-display-plane, , ,639,"The index of the plane, on the selected Vulkan device, to present on when usi…"
+mpv, , ,d3d11-exclusive-fs, , ,640,Switches the D3D11 swap chain fullscreen state to 'fullscreen' when fullscree…
+mpv, , ,d3d11-warp, , ,641,Use WARP (Windows Advanced Rasterization Platform) with the D3D11 GPU backend…
+mpv, , ,d3d11-feature-level, , ,642,Select a specific feature level when using the D3D11 GPU backend
+mpv, , ,d3d11-flip, , ,643,"Enable flip-model presentation, which avoids unnecessarily copying the backbu…"
+mpv, , ,d3d11-sync-interval, , ,644,Schedule each frame to be presented for this number of VBlank intervals
+mpv, , ,d3d11-adapter, , ,645,Select a specific D3D11 adapter to utilize for D3D11 rendering
+mpv, , ,d3d11-output-format, , ,646,Select a specific D3D11 output format to utilize for D3D11 rendering
+mpv, , ,d3d11-output-csp, , ,647,Select a specific D3D11 output color space to utilize for D3D11 rendering
+mpv, , ,d3d11va-zero-copy, , ,648,"By default, when using hardware decoding with --gpu-api=d3d11, the video imag…"
+mpv, , ,wayland-app-id, , ,649,Set the client app id for Wayland-based video output methods (default: mpv)
+mpv, , ,wayland-configure-bounds, , ,650,Controls whether or not mpv opts into the configure bounds event if sent by t…
+mpv, , ,wayland-content-type, , ,651,"If supported by the compositor, mpv will send a hint using the content-type p…"
+mpv, , ,wayland-disable-vsync, , ,652,Disable mpv's internal vsync for Wayland-based video output (default: no)
+mpv, , ,wayland-edge-pixels-pointer, , ,653,Defines the size of an edge border (default: 16) to initiate client side resi…
+mpv, , ,wayland-edge-pixels-touch, , ,654,Defines the size of an edge border (default: 32) to initiate client side resi…
+mpv, , ,wayland-present, , ,655,Enable the use of wayland's presentation time protocol for more accurate fram…
+mpv, , ,spirv-compiler, , ,656,Controls which compiler is used to translate GLSL to SPIR-V
+mpv, , ,glsl-shaders, , ,657,Custom GLSL hooks
+mpv, , ,glsl-shader-opts, , ,658,Specifies the options to use for tunable shader parameters
+mpv, , ,deband, , ,659,Enable the debanding algorithm
+mpv, , ,deband-iterations, , ,660,The number of debanding steps to perform per sample
+mpv, , ,deband-threshold, , ,661,The debanding filter's cut-off threshold
+mpv, , ,deband-range, , ,662,The debanding filter's initial radius
+mpv, , ,deband-grain, , ,663,Add some extra noise to the image
+mpv, , ,corner-rounding, , ,664,If set to a value above 0
+mpv, , ,sharpen, , ,665,"If set to a value other than 0, enable an unsharp masking filter"
+mpv, , ,opengl-glfinish, , ,666,Call glFinish() before swapping buffers (default: disabled)
+mpv, , ,opengl-waitvsync, , ,667,Call glXWaitVideoSyncSGI after each buffer swap (default: disabled)
+mpv, , ,opengl-dwmflush, , ,668,(Windows only) Calls DwmFlush after swapping buffers on Windows (default: aut…
+mpv, , ,angle-d3d11-feature-level, , ,669,Selects a specific feature level when using the ANGLE backend with D3D11
+mpv, , ,angle-d3d11-warp, , ,670,Use WARP (Windows Advanced Rasterization Platform) when using the ANGLE backe…
+mpv, , ,angle-egl-windowing, , ,671,Use ANGLE's built in EGL windowing functions to create a swap chain (default:…
+mpv, , ,angle-flip, , ,672,"Enable flip-model presentation, which avoids unnecessarily copying the backbu…"
+mpv, , ,angle-renderer, , ,673,Forces a specific renderer when using the ANGLE backend (default: auto)
+mpv, , ,macos-force-dedicated-gpu, , ,674,Deactivates the automatic graphics switching and forces the dedicated GPU
+mpv, , ,cocoa-cb-sw-renderer, , ,675,Use the Apple Software Renderer when using cocoa-cb (default: auto)
+mpv, , ,cocoa-cb-10bit-context, , ,676,Creates a 10bit capable pixel format for the context creation (default: yes)
+mpv, , ,cocoa-cb-output-csp, , ,677,This sets the color space of the layer to activate the macOS color transforma…
+mpv, , ,macos-title-bar-appearance, , ,678,Sets the appearance of the title bar (default: auto)
+mpv, , ,macos-title-bar-material, , ,679,Sets the material of the title bar (default: titlebar)
+mpv, , ,macos-title-bar-color, , ,680,Sets the color of the title bar (default: completely transparent)
+mpv, , ,macos-fs-animation-duration, , ,681,Sets the fullscreen resize animation duration in ms (default: default)
+mpv, , ,macos-app-activation-policy, , ,682,Changes the App activation policy
+mpv, , ,macos-geometry-calculation, , ,683,This changes the rectangle which is used to calculate the screen position and…
+mpv, , ,macos-render-timer, , ,684,Sets the mode (default: callback) for syncing the rendering of frames to the …
+mpv, , ,macos-menu-shortcuts, , ,685,Enables the default menu bar shortcuts (default: yes)
+mpv, , ,android-surface-size, , ,686,Set dimensions of the rendering surface used by the Android gpu context
+mpv, , ,gpu-sw, , ,687,Continue even if a software renderer is detected
+mpv, , ,gpu-context, , ,688,Specify a priority list of the GPU contexts to be used
+mpv, , ,gpu-api, , ,689,Specify a priority list of accepted graphics APIs.  NDENT 7. 0
+mpv, , ,opengl-es, , ,690,Controls which type of OpenGL context will be accepted: NDENT 7. 0
+mpv, , ,fbo-format, , ,691,Selects the internal format of textures used for FBOs
+mpv, , ,gamma-factor, , ,692,Set an additional raw gamma factor (default: 1. 0)
+mpv, , ,gamma-auto, , ,693,Automatically corrects the gamma value depending on ambient lighting conditio…
+mpv, , ,image-lut, , ,694,Specifies a custom LUT file (in Adobe 
+mpv, , ,image-lut-type, , ,695,Controls the interpretation of color values fed to and from the LUT specified…
+mpv, , ,target-colorspace-hint, , ,696,Automatically configure the output colorspace of the display to pass through …
+mpv, , ,target-prim, , ,697,Specifies the primaries of the display
+mpv, , ,target-trc, , ,698,Specifies the transfer characteristics (gamma) of the display
+mpv, , ,target-peak, , ,699,"Specifies the measured peak brightness of the output display, in cd/m^2 (AKA …"
+mpv, , ,target-contrast, , ,700,Specifies the measured contrast of the output display
+mpv, , ,target-gamut, , ,701,Constrains the gamut of the display.  You can use this option to output e. g
+mpv, , ,target-lut, , ,702,Specifies a custom LUT file (in Adobe 
+mpv, , ,tone-mapping, , ,703,Specifies the algorithm used for tone-mapping images onto the target display
+mpv, , ,tone-mapping-param, , ,704,Set tone mapping parameters
+mpv, , ,inverse-tone-mapping, , ,705,"If set, allows inverse tone mapping (expanding SDR to HDR)"
+mpv, , ,tone-mapping-max-boost, , ,706,Upper limit for how much the tone mapping algorithm is allowed to boost the a…
+mpv, , ,tone-mapping-visualize, , ,707,Display a (PQ-PQ) graph of the active tone-mapping LUT
+mpv, , ,gamut-mapping-mode, , ,708,Specifies the algorithm used for reducing the gamut of images for the target …
+mpv, , ,hdr-compute-peak, , ,709,Compute the HDR peak and frame average brightness per-frame instead of relyin…
+mpv, , ,allow-delayed-peak-detect, , ,710,"When using --hdr-compute-peak, allow delaying the detected peak by a frame wh…"
+mpv, , ,hdr-peak-percentile, , ,711,Which percentile of the input image brightness histogram to consider as the t…
+mpv, , ,hdr-peak-decay-rate, , ,712,The decay rate used for the HDR peak detection algorithm (default: 20. 0)
+mpv, , ,hdr-scene-threshold-high, , ,713,The lower and upper thresholds (in dB) for a brightness difference to be cons…
+mpv, , ,hdr-contrast-smoothness, , ,714,"Enables the HDR contrast recovery algorithm, which is to designed to enhance …"
+mpv, , ,use-embedded-icc-profile, , ,715,Load the embedded ICC profile contained in media files such as PNG images
+mpv, , ,icc-profile, , ,716,Load an ICC profile and use it to transform video RGB to screen output
+mpv, , ,icc-profile-auto, , ,717,Automatically select the ICC display profile currently specified by the displ…
+mpv, , ,icc-cache, , ,718,Store and load 3DLUTs created from the ICC profile on disk in the cache direc…
+mpv, , ,icc-cache-dir, , ,719,The directory where icc cache is stored
+mpv, , ,icc-intent, , ,720,Specifies the ICC intent used for the color transformation (when using --icc-…
+mpv, , ,icc-3dlut-size, , ,721,Size of the 3D LUT generated from the ICC profile in each dimension
+mpv, , ,icc-force-contrast, , ,722,Override the target device's detected contrast ratio by a specific value
+mpv, , ,icc-use-luma, , ,723,Use ICC profile luminance value.  (Only for --vo=gpu-next)
+mpv, , ,lut, , ,724,Specifies a custom LUT (in Adobe 
+mpv, , ,lut-type, , ,725,Controls the interpretation of color values fed to and from the LUT specified…
+mpv, , ,blend-subtitles, , ,726,"Blend subtitles directly onto upscaled video frames, before interpolation and…"
+mpv, , ,background, , ,727,"If the frame has an alpha component, decide what kind of background, if any, …"
+mpv, , ,background-color, , ,728,Color used to draw parts of the mpv window not covered by video
+mpv, , ,border-background, , ,729,Same as --background but only applies to the black bar/border area of the win…
+mpv, , ,opengl-rectangle-textures, , ,730,Force use of rectangle textures (default: no)
+mpv, , ,gpu-tex-pad-y, , ,731,Enlarge the video source textures by this many pixels
+mpv, , ,opengl-early-flush, , ,732,Call glFlush() after rendering a frame and before attempting to display it (d…
+mpv, , ,gpu-dumb-mode, , ,733,"This mode is extremely restricted, and will disable most extended features"
+mpv, , ,gpu-shader-cache, , ,734,Store and load compiled GLSL shaders in the cache directory (Default: yes)
+mpv, , ,gpu-shader-cache-dir, , ,735,The directory where gpu shader cache is stored
+mpv, , ,libplacebo-opts, , ,736,Passes extra raw option to the libplacebo rendering backend (used by --vo=gpu…
+mpv, , ,display-tags, , ,737,Set the list of tags that should be displayed on the terminal and stats
+mpv, , ,mc, , ,738,Maximum A-V sync correction per frame (in seconds)
+mpv, , ,autosync, , ,739,Gradually adjusts the A/V sync based on audio delay measurements
+mpv, , ,video-timing-offset, , ,740,Control how long before video display target time the frame should be rendere…
+mpv, , ,video-sync, , ,741,How the player synchronizes audio and video
+mpv, , ,video-sync-max-factor, , ,742,Maximum multiple for which to try to fit the video's FPS to the display's FPS…
+mpv, , ,video-sync-max-video-change, , ,743,Maximum speed difference in percent that is applied to video with --video-syn…
+mpv, , ,video-sync-max-audio-change, , ,744,Maximum additional speed difference in percent that is applied to audio with …
+mpv, , ,mf-fps, , ,745,Framerate used when decoding from multiple PNG or JPEG files with mf:// (defa…
+mpv, , ,mf-type, , ,746,"Input file type for mf:// (available: jpeg, png, tga, sgi)"
+mpv, , ,stream-dump, , ,747,"Instead of playing a file, read its byte stream and write it to the given des…"
+mpv, , ,stream-lavf-o, , ,748,Set AVOptions on streams opened with libavformat
+mpv, , ,backdrop-type, , ,749,(Windows only) Controls the backdrop/border style.  NDENT 7. 0
+mpv, , ,window-affinity, , ,750,(Windows only) Controls the window affinity behavior of mpv.  NDENT 7. 0
+mpv, , ,vo-mmcss-profile, , ,751,(Windows only) Set the MMCSS profile for the video renderer thread (default: …
+mpv, , ,priority, , ,752,(Windows only) Set process priority for mpv according to the predefined prior…
+mpv, , ,media-controls, , ,753,(Windows only) Enable integration of media control interface SystemMediaTrans…
+mpv, , ,force-media-title, , ,754,Force the contents of the media-title property to this value
+mpv, , ,external-files, , ,755,Load a file and add all of its tracks
+mpv, , ,external-file, , ,756,CLI/config file only alias for --external-files-append
+mpv, , ,cover-art-files, , ,757,Use an external file as cover art while playing audio
+mpv, , ,cover-art-file, , ,758,CLI/config file only alias for --cover-art-files-append
+mpv, , ,cover-art-auto, , ,759,Whether to load _external_ cover art automatically
+mpv, , ,image-exts, , ,760,"Image file extentions to try to match when using --cover-art-auto, --autocrea…"
+mpv, , ,cover-art-whitelist, , ,761,"Filenames to load as cover art, sorted by descending priority"
+mpv, , ,video-exts, , ,762,Video file extentions to try to match when using --autocreate-playlist or --d…
+mpv, , ,autoload-files, , ,763,Automatically load/select external files (default: yes)
+mpv, , ,stream-record, , ,764,Write received/read data from the demuxer to the given output file
+mpv, , ,lavfi-complex, , ,765,"Set a 'complex' libavfilter filter, which means a single filter graph can tak…"
+mpv, , ,metadata-codepage, , ,766,Codepage for various input metadata (default: auto)
+mpv, , ,option, , ,767, 
+mpv, , ,no-fs, , ,768,is the same as --no-fs
+mpv, , ,sub-files-append, , ,769, 
+mpv, , ,flag, , ,770,T}	T{ flag T} _ T{
+mpv, , ,opt, , ,771,T}	T{ opt=val T} _ T{
+mpv, , ,audio, , ,772, 
+mpv, , ,sub, , ,773, 
+mpv, , ,video, , ,774, 
+mpv, , ,ytdl-raw-options-append, , ,775, 
+mpv, , ,watch-later-directory, , ,776, 
+mpv, , ,watch-later-options-remove, , ,777,The subtitle track selection will not be restored.  o 2
+mpv, , ,no-video-aspect-override, , ,778, 
+mpv, , ,sub-border-color, , ,779, 
+mpv, , ,sub-shadow-color, , ,780, 
+mpv, , ,sub-border-size, , ,781, 
+mpv, , ,sub-filter-regex-append, , ,782,"new regular expression, without having to fight escaping problems"
+mpv, , ,osd-bar-border-size, , ,783, 
+mpv, , ,osd-border-color, , ,784, 
+mpv, , ,osd-shadow-color, , ,785, 
+mpv, , ,osd-border-size, , ,786, 
+mpv, , ,screenshot-directory, , ,787, 
+mpv, , ,zimg-, , ,788, 
+mpv, , ,alsa-resample, , ,789,Enable ALSA resampling plugin
+mpv, , ,alsa-mixer-device, , ,790,Set the mixer device used with ao-volume (default: default)
+mpv, , ,alsa-mixer-name, , ,791,Set the name of the mixer element (default: Master)
+mpv, , ,alsa-mixer-index, , ,792,Set the index of the mixer channel (default: 0)
+mpv, , ,alsa-non-interleaved, , ,793,Allow output of non-interleaved formats (if the audio decoder uses this forma…
+mpv, , ,alsa-ignore-chmap, , ,794,Don't read or set the channel map of the ALSA device - only request the requi…
+mpv, , ,alsa-buffer-time, , ,795,Set the requested buffer time in microseconds
+mpv, , ,alsa-periods, , ,796,Number of periods requested from the ALSA API
+mpv, , ,jack-port, , ,797,Connects to the ports with the given name (default: physical ports)
+mpv, , ,jack-name, , ,798,Client name that is passed to JACK (default: mpv)
+mpv, , ,jack-autostart, , ,799,Automatically start jackd if necessary (default: disabled)
+mpv, , ,jack-connect, , ,800,Automatically create connections to output ports (default: enabled)
+mpv, , ,jack-std-channel-layout, , ,801,Select the standard channel layout (default: waveext)
+mpv, , ,coreaudio-change-physical-format, , ,802,Change the physical format to one similar to the requested audio format (defa…
+mpv, , ,coreaudio-spdif-hack, , ,803,Try to pass through AC3/DTS data as PCM
+mpv, , ,openal-num-buffers, , ,804,Specify the number of audio buffers to use
+mpv, , ,openal-num-samples, , ,805,Specify the number of complete samples to use for each buffer
+mpv, , ,openal-direct-channels, , ,806,Enable OpenAL Soft's direct channel extension when available to avoid tinting…
+mpv, , ,pulse-host, , ,807,Specify the host to use
+mpv, , ,pulse-buffer, , ,808,Set the audio buffer size in milliseconds
+mpv, , ,pulse-latency-hacks, , ,809,Enable hacks to workaround PulseAudio timing bugs (default: yes)
+mpv, , ,pulse-allow-suspended, , ,810,Allow mpv to use PulseAudio even if the sink is suspended (default: no)
+mpv, , ,pipewire-buffer, , ,811,Set the audio buffer size in milliseconds
+mpv, , ,pipewire-remote, , ,812,Specify the PipeWire remote daemon name to connect to via local UNIX sockets
+mpv, , ,pipewire-volume-mode, , ,813,Specify if the ao-volume property should apply to the channel volumes or the …
+mpv, , ,sdl-buflen, , ,814,Sets the audio buffer length in seconds
+mpv, , ,ao-null-untimed, , ,815, 
+mpv, , ,ao-null-buffer, , ,816,Simulated buffer length in seconds
+mpv, , ,ao-null-outburst, , ,817,Simulated chunk size in samples
+mpv, , ,ao-null-speed, , ,818,Simulated audio playback speed as a multiplier
+mpv, , ,ao-null-latency, , ,819,Simulated device latency.  This is additional to EOF
+mpv, , ,ao-null-broken-eof, , ,820,"Simulate broken audio drivers, which always add the fixed device latency to t…"
+mpv, , ,ao-null-broken-delay, , ,821,"Simulate broken audio drivers, which don't report latency correctly"
+mpv, , ,ao-null-channel-layouts, , ,822,"If not empty, this is a , separated list of channel layouts the AO allows"
+mpv, , ,ao-null-format, , ,823,Force the audio output format the AO will accept.  If unset accepts any
+mpv, , ,ao-pcm-waveheader, , ,824,Include or do not include the WAVE header (default: included)
+mpv, , ,ao-pcm-file, , ,825,Write the sound to <filename> instead of the default audiodump. wav
+mpv, , ,ao-pcm-append, , ,826,"Append to the file, instead of overwriting it"
+mpv, , ,wasapi-exclusive-buffer, , ,827,"Set buffer duration in exclusive mode (i. e. , with"
+mpv, , ,xv-adaptor, , ,828,Select a specific XVideo adapter (check xvinfo results)
+mpv, , ,xv-port, , ,829,Select a specific XVideo port
+mpv, , ,xv-ck, , ,830,Select the source from which the color key is taken (default: cur)
+mpv, , ,xv-ck-method, , ,831,Sets the color key drawing method (default: man).  none Disables color-keying
+mpv, , ,xv-colorkey, , ,832,Changes the color key to an RGB value of your choice
+mpv, , ,xv-buffers, , ,833,Number of image buffers to use for the internal ringbuffer (default: 2)
+mpv, , ,vo-vdpau-sharpen, , ,834,(Deprecated.  See note about vdpaupp. )
+mpv, , ,vo-vdpau-denoise, , ,835,(Deprecated.  See note about vdpaupp. )
+mpv, , ,vo-vdpau-chroma-deint, , ,836,(Deprecated.  See note about vdpaupp. )
+mpv, , ,vo-vdpau-pullup, , ,837,(Deprecated.  See note about vdpaupp. )
+mpv, , ,vo-vdpau-hqscaling, , ,838,(Deprecated.  See note about vdpaupp. ) 0 Use default VDPAU scaling (default)
+mpv, , ,vo-vdpau-fps, , ,839,Override autodetected display refresh rate value (the value is needed for fra…
+mpv, , ,vo-vdpau-composite-detect, , ,840,NVIDIA's current VDPAU implementation behaves somewhat differently under a co…
+mpv, , ,vo-vdpau-queuetime-windowed, , ,841,Use VDPAU's presentation queue functionality to queue future video frame chan…
+mpv, , ,vo-vdpau-output-surfaces, , ,842,Allocate this many output surfaces to display video frames (default: 3)
+mpv, , ,vo-vdpau-colorkey, , ,843,"Set the VDPAU presentation queue background color, which in practice is the c…"
+mpv, , ,vo-vdpau-force-yuv, , ,844,Never accept RGBA input
+mpv, , ,vo-direct3d-disable-texture-align, , ,845,Normally texture sizes are always aligned to 16
+mpv, , ,vo-direct3d-force-power-of-2, , ,846,"Always force textures to power of 2, even if the device reports non-power-of-…"
+mpv, , ,vo-direct3d-texture-memory, , ,847,"Only affects operation with shaders/texturing enabled, and (E)OSD"
+mpv, , ,vo-direct3d-swap-discard, , ,848,"Use D3DSWAPEFFECT_DISCARD, which might be faster"
+mpv, , ,vo-direct3d-exact-backbuffer, , ,849,Always resize the backbuffer to window size.  sdl SDL 2
+mpv, , ,sdl-sw, , ,850,Continue even if a software renderer is detected
+mpv, , ,sdl-switch-mode, , ,851,Instruct SDL to switch the monitor video mode when going fullscreen
+mpv, , ,vo-vaapi-scaling, , ,852,default Driver default (mpv default as well)
+mpv, , ,vo-vaapi-scaled-osd, , ,853,"If enabled, then the OSD is rendered at video resolution and scaled to displa…"
+mpv, , ,vo-null-fps, , ,854,Simulate display FPS
+mpv, , ,vo-tct-algo, , ,855,Select how to write the pixels to the terminal
+mpv, , ,vo-tct-buffering, , ,856,Specifies the size of data batches buffered before being sent to the terminal
+mpv, , ,vo-tct-height, , ,857,Assume the terminal has the specified character width and/or height
+mpv, , ,vo-tct-256, , ,858,Use 256 colors - for terminals which don't support true color
+mpv, , ,vo-kitty-rows, , ,859,"Specify the terminal size in character cells, otherwise (0) read it from the …"
+mpv, , ,vo-kitty-height, , ,860,"Specify the available size in pixels, otherwise (0) read it from the terminal…"
+mpv, , ,vo-kitty-top, , ,861,Specify the position in character cells where the image starts (1 is the firs…
+mpv, , ,vo-kitty-config-clear, , ,862,Whether or not to clear the terminal whenever the output is reconfigured (e
+mpv, , ,vo-kitty-alt-screen, , ,863,Whether or not to use the alternate screen buffer and return the terminal to …
+mpv, , ,vo-kitty-use-shm, , ,864,Use shared memory objects to transfer image data to the terminal
+mpv, , ,vo-sixel-rows, , ,865,"Specify the terminal size in character cells, otherwise (0) read it from the …"
+mpv, , ,vo-sixel-height, , ,866,"Specify the available size in pixels, otherwise (0) read it from the terminal…"
+mpv, , ,vo-sixel-top, , ,867,Specify the position in character cells where the image starts (1 is the firs…
+mpv, , ,vo-sixel-pad-y, , ,868,Used only when mpv reads the size in pixels from the terminal
+mpv, , ,vo-sixel-config-clear, , ,869,Whether or not to clear the terminal whenever the output is reconfigured (e
+mpv, , ,vo-sixel-alt-screen, , ,870,Whether or not to use the alternate screen buffer and return the terminal to …
+mpv, , ,vo-sixel-exit-clear, , ,871,may be removed in the future
+mpv, , ,vo-sixel-buffered, , ,872,Buffers the full output sequence before writing it to the terminal
+mpv, , ,vo-sixel-dither, , ,873,Selects the dither algorithm which libsixel should apply
+mpv, , ,vo-sixel-fixedpalette, , ,874,Use libsixel's built-in static palette using the XTERM256 profile for dither
+mpv, , ,vo-sixel-reqcolors, , ,875,Has no effect with fixed palette
+mpv, , ,vo-sixel-threshold, , ,876,Has no effect with fixed palette
+mpv, , ,vo-image-format, , ,877,"Select the image file format.  jpg JPEG files, extension . jpg.  (Default. )"
+mpv, , ,vo-image-png-compression, , ,878,PNG compression factor (speed vs.  file size tradeoff) (default: 7)
+mpv, , ,vo-image-png-filter, , ,879,"Filter applied prior to PNG compression (0 = none; 1 = sub; 2 = up; 3 = avera…"
+mpv, , ,vo-image-jpeg-quality, , ,880,JPEG quality factor (default: 90)
+mpv, , ,vo-image-jpeg-optimize, , ,881,JPEG optimization factor (default: 100)
+mpv, , ,vo-image-webp-lossless, , ,882,Enable writing lossless WebP files (default: no)
+mpv, , ,vo-image-webp-quality, , ,883,WebP quality (default: 75)
+mpv, , ,vo-image-webp-compression, , ,884,WebP compression factor (default: 4)
+mpv, , ,vo-image-outdir, , ,885,Specify the directory to save the image files to (default: . /)
+mpv, , ,drm-connector, , ,886,Select the connector to use (usually this is a monitor
+mpv, , ,drm-device, , ,887,Select the DRM device file to use
+mpv, , ,drm-mode, , ,888,Mode to use (resolution and frame rate)
+mpv, , ,drm-draw-plane, , ,889,"Select the DRM plane to which video and OSD is drawn to, under normal circums…"
+mpv, , ,drm-drmprime-video-plane, , ,890,Select the DRM plane to use for video with the drmprime-overlay hwdec interop…
+mpv, , ,drm-format, , ,891,Select the DRM format to use (default: xrgb8888)
+mpv, , ,drm-draw-surface-size, , ,892,Sets the size of the surface used on the draw plane
+mpv, , ,drm-vrr-enabled, , ,893,"Toggle use of Variable Refresh Rate (VRR), aka Freesync or Adaptive Sync on c…"
+mpv, , ,af-clr, , ,894, 
+mpv, , ,vf-append, , ,895,Appends the filter given as arguments to the filter list
+mpv, , ,vf-add, , ,896,Appends the filter given as arguments to the filter list
+mpv, , ,vf-pre, , ,897,Prepends the filters given as arguments to the filter list
+mpv, , ,vf-remove, , ,898,Deletes the filter from the list
+mpv, , ,vf-toggle, , ,899,"Add the given filter to the list if it was not present yet, or remove it from…"
+mpv, , ,vf-clr, , ,900,Completely empties the filter list
+mpv, , ,of, , ,901,Specifies the output format (overrides autodetection by the file name extensi…
+mpv, , ,ofopts, , ,902,Specifies the output format options for libavformat
+mpv, , ,ofopts-add, , ,903,Appends the option given as an argument to the options list
+mpv, , ,oac, , ,904,Specifies the output audio codec
+mpv, , ,oacopts, , ,905,Specifies the output audio codec options for libavcodec
+mpv, , ,oacopts-add, , ,906,Appends the option given as an argument to the options list
+mpv, , ,ovc, , ,907,Specifies the output video codec
+mpv, , ,ovcopts, , ,908,Specifies the output video codec options for libavcodec
+mpv, , ,ovcopts-add, , ,909,Appends the option given as an argument to the options list
+mpv, , ,orawts, , ,910,Copies input pts to the output video (not supported by some output container …
+mpv, , ,ocopy-metadata, , ,911,Copy metadata from input files to output files when encoding (default: yes)
+mpv, , ,oset-metadata, , ,912,Specifies metadata to include in the output file
+mpv, , ,oremove-metadata, , ,913,Specifies metadata to exclude from the output file when copying from the inpu…

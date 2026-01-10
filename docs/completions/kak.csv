@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kak, , , , ,@f @r,101,connect to given session
+kak, , , , ,@f @r,102,execute argument on client initialisation
+kak, , , , ,@f @r,103,execute argument on server initialisation
+kak, , , , ,@f @r,104,set session name
+kak, , , , ,@f @r,105,just send stdin as commands to the given session
+kak, , , , ,@f @r,106,"filter: for each file, select the entire buffer and execute the given keys"
+kak, , , , ,@f @r,107,backup the files on which a filter is applied using the given suffix
+kak, , , ,terminal dummy json,@f @r,108,set the type of user interface to use
+kak, , , ,hooks shell profile keys commands,@f @r,109,initial debug option value

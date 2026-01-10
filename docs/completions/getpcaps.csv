@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+getpcaps, , ,usage, , ,101,Displays usage information and exits
+getpcaps, , ,legacy, , ,102,Displays output in a somewhat ugly legacy format
+getpcaps, , ,verbose, , ,103,Displays usage in a legacy-like format but not quite so ugly in modern defaul…
+getpcaps, , ,iab, , ,104,Displays IAB tuple capabilities from the process

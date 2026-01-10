@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xonsh, ,h,help, , ,101,Show help and exit
+xonsh, ,v,version, , ,102,Show version and exit
+xonsh, ,i,interactive, , ,103,Use interactive mode
+xonsh, ,l,login, , ,104,Use login shell
+xonsh, , ,rc, , ,105,.rc files to load
+xonsh, , ,no-rc, , ,106,Do not load .rc files
+xonsh, , ,no-script-cache, , ,107,Do not use script cache
+xonsh, , ,cache-everything, , ,108,Use script cache
+xonsh, , ,shell-type,b best d dumb ptk prompt-toolkit prompt_toolkit rand random rl readline,@f @r,109,Specify shell type
+xonsh, , ,timings, , ,110,Show timing information

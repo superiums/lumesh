@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scanimage, ,l, , ,@r,101,Top-left x position of scan area [0..480pel]/[0..218mm]
+scanimage, ,t, , ,@r,102,Top-left y position of scan area [0..360pel]
+scanimage, ,x, , ,@r,103,Width of scan area [160..640pel]
+scanimage, ,y, , ,@r,104,Height of scan area [120..480pel]
+scanimage, , ,brightness, ,@r,105,Controls the brightness of the acquired image [0..255: 128]
+scanimage, , ,hue, , ,106,Controls the 'hue' (blue-level) of the acquired image [0..255]: 128
+scanimage, , ,color, , ,107,Sets the picture's color [0..255]: 133
+scanimage, , ,contrast, , ,108,Controls the contrast of the acquired image [0..255]: 128
+scanimage, , ,white-level, , ,109,Selects what radiance level should be considered 'white' [0..255]: 124
+scanimage, , ,custom-gamma, , ,110,Use custom gamma gable
+scanimage, , ,gamma-table, ,@r,111,"Gamma-correction table [0..255, …]"
+scanimage, , ,mode,Lineart Gray Color, ,112,Scan mode
+scanimage, ,d,device-name, , ,113,Device name to use
+scanimage, ,L,list-devices, , ,114,List devices
+scanimage, ,f,formatted-device-list, ,@r,115,"Print formatted device list [%d, %v, %m, %t, %i, %n]"
+scanimage, , ,channel, ,@r,116,Selects the channel of the v4l device (e.g. television or video-in.)
+scanimage, , ,filename, , ,117,The filename of the image to be loaded
+scanimage, , ,format,pnm tiff, ,118,Output image format
+scanimage, ,i,icc-profile, ,@r,119,Include this ICC profile into TIFF file
+scanimage, ,b,batch, , ,120,"Working in batch mode, FORMAT is 'out%d.pnm' or 'out%d.tif' by default depending on --format"
+scanimage, , ,batch-start, ,@r,121,Page number to start naming files with
+scanimage, , ,batch-count, ,@r,122,How many pages to scan in batch mode
+scanimage, , ,batch-increment, ,@r,123,Increase page number in filename by #
+scanimage, , ,batch-double, , ,124,Increment page number by two
+scanimage, , ,batch-prompt, , ,125,Ask for pressing a key before scanning a page
+scanimage, , ,accept-md5-only, , ,126,Only accept authorization requests using md5
+scanimage, ,p,progress, , ,127,Print progress messages
+scanimage, ,n,dont-scan, , ,128,"Only set options, don't actually scan"
+scanimage, ,T,test, , ,129,Test backend thoroughly
+scanimage, ,A,all-options, , ,130,List all available backend options
+scanimage, ,h,help, , ,131,Display this help message and exit
+scanimage, ,v,verbose, , ,132,Give even more status messages
+scanimage, ,B,buffer-size, ,@r,133,"Change input buffer size (in kB, default 32)"
+scanimage, ,V,version, , ,134,Print version information

@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgconv, ,D,directory, , ,101,add DIRECTORY to list for input files search 
+msgconv, ,o,output-file, , ,102,write output to specified file 
+msgconv, ,t,to-code, , ,103,encoding for output 
+msgconv, ,P,properties-input, , ,104,input file is in Java . properties syntax
+msgconv, , ,stringtable-input, , ,105,input file is in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msgconv, , ,color, , ,106,use colors and other text attributes always
+msgconv, , ,style, , ,107,specify CSS style rule file for --color
+msgconv, ,e,no-escape, , ,108,do not use C escapes in output (default)
+msgconv, ,E,escape, , ,109,"use C escapes in output, no extended chars"
+msgconv, , ,force-po, , ,110,write PO file even if empty
+msgconv, ,i,indent, , ,111,indented output style
+msgconv, , ,no-location, , ,112,suppress '#: filename:line' lines
+msgconv, ,n,add-location, , ,113,preserve '#: filename:line' lines (default)
+msgconv, , ,strict, , ,114,strict Uniforum output style
+msgconv, ,p,properties-output, , ,115,write out a Java . properties file
+msgconv, , ,stringtable-output, , ,116,write out a NeXTstep/GNUstep . strings file
+msgconv, ,w,width, , ,117,set output page width
+msgconv, , ,no-wrap, , ,118,"do not break long message lines, longer than the output page width, into seve…"
+msgconv, ,s,sort-output, , ,119,generate sorted output
+msgconv, ,F,sort-by-file, , ,120,sort output by file location . SS 'Informative output:'
+msgconv, ,h,help, , ,121,display this help and exit
+msgconv, ,V,version, , ,122,output version information and exit AUTHOR Written by Bruno Haible

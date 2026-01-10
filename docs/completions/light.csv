@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+light, ,-H, , , ,101,Print help and exit
+light, ,A, , ,@f @r,102,Add value
+light, ,U, , ,@f @r,103,Subtract value
+light, ,S, , ,@f @r,104,Set value
+light, ,s, , ,@f @r,105,Specify controller to use
+light, ,v, ,0 1 2 3,@f @r,106,Sets the verbosity level

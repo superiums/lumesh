@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+okular, ,p,page, , ,101,A page number
+okular, , ,presentation, , ,102,Enable presentation mode
+okular, , ,print, , ,103,Show print dialog
+okular, , ,print-and-exit, , ,104,Show print dialog and exit
+okular, , ,unique, , ,105,Enable unique instance control
+okular, , ,noraise, , ,106,Disable window raising
+okular, , ,find, , ,107,A string to find
+okular, , ,editor-cmd, , ,108,An external editor command

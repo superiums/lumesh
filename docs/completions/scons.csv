@@ -1,0 +1,34 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scons, ,c,remove, , ,101,Clean up all target files
+scons, , ,cache-debug, , ,102,Print debug information about the CacheDir() derived-file caching to the specified file
+scons, , ,no-cache, , ,103,Disable the derived-file caching specified by CacheDir()
+scons, , ,cache-populate, , ,104,Populate cache with already existing files
+scons, , ,cache-show, , ,105,Show how a cached file would be built
+scons, , ,config,', ,106,How the Configure call should run the config tests
+scons, ,C,directory, , ,107,Change to this directory before searching for the sconstruct file
+scons, , ,debug,count dtree explain findlibs includes memoizer memory nomemoizer objects pdb presub stacktrace stree time tree, ,108,Debug the build process
+scons, , ,diskcheck,all none match rcs , ,109,Check if files and directories are where they should be
+scons, ,f,sconstruct, , ,110,Use file as the initial SConscript file
+scons, ,h,help, , ,111,Print a help message for this build
+scons, ,H,help-options, , ,112,Print the standard help message about command-line options and exit
+scons, ,i,ignore-errors, , ,113,Ignore all errors from commands executed to rebuild files
+scons, ,I,include-dir, , ,114,Specifies a directory to search for imported Python modules
+scons, , ,implicit-cache, , ,115,Cache implicit dependencies
+scons, , ,implicit-deps-changed, , ,116,Force SCons to ignore the cached implicit dependencies
+scons, , ,implicit-deps-unchanged, , ,117,Force SCons to ignore changes in the implicit dependencies
+scons, ,j,jobs, , ,118,Specifies the number of jobs (commands) to run simultaneously
+scons, ,k,keep-going, , ,119,Continue as much as possible after an error
+scons, , ,duplicate,hard-soft-copy soft-hard-copy hard-copy soft-copy copy, ,120,How to duplicate files
+scons, , ,max-drift, , ,121,Set the maximum expected drift in the modification time of files to SECONDS
+scons, ,n,recon, , ,122,No execute
+scons, , ,profile, , ,123,Run SCons under the Python profiler and save the results in the specified file
+scons, ,q,question, , ,124,"Do not run any commands, or print anything"
+scons, , ,random, , ,125,Build dependencies in a random order
+scons, ,s,quiet, , ,126,Silent
+scons, , ,taskmastertrace, , ,127,Prints Taskmaster trace information to the specified file
+scons, ,u,search-up, , ,128,"Walks up directories for an SConstruct file, and uses that as the top of the directory tree"
+scons, ,v,version, , ,129,Print the scons version information
+scons, ,w,print-directory, , ,130,Print the working directory
+scons, , ,warn,all no-all dependency no-dependency deprecated no-deprecated missing-sconscript no-missing-sconscript, ,131,Enable or disable warnings
+scons, , ,no-print-directory, , ,132,"Turn off -w, even if it was turned on implicitly"
+scons, ,Y,repository, , ,133,Search this repo for input and target files not in the local directory tree

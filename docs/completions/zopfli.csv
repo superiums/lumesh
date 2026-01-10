@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zopfli, , ,gzip, , ,101,Output to gzip format (default)
+zopfli, , ,zlib, , ,102,Output to zlib format
+zopfli, , ,deflate, , ,103,Output to deflate format
+zopfli, , ,splitlast, , ,104,Left for backwards compatibility

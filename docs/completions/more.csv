@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+more, ,d,silent, , ,101, 
+more, ,l,logical, , ,102, 
+more, ,e,exit-on-eof, , ,103, 
+more, ,f,no-pause, , ,104, 
+more, ,p,print-over, , ,105, 
+more, ,c,clean-print, , ,106, 
+more, ,s,squeeze, , ,107, 
+more, ,u,plain, , ,108, 
+more, ,n,lines, , ,109, 
+more, ,h,help, , ,110, 
+more, ,V,version, , ,111, 

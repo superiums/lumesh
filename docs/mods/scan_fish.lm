@@ -1,0 +1,16 @@
+use fish2csv
+let dirs = [
+    '~/.config/fish/completions',
+    '/etc/fish/completions',
+    '~/.local/share/fish/vendor_completions.d',
+    '/usr/share/fish/vendor_completions.d',
+    '/usr/share/fish/completions',
+    '~/.cache/fish/generated_completions'
+]
+
+let escape_csv=fish2csv.escape_csv
+
+for dir in dirs {
+    println dir.green()
+    dir | Fs.ls() ?! | .map(f -> Fs.join(dir, f.name)) |> fish2csv.trans()
+}

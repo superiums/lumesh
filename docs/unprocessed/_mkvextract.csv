@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkvextract, __fish_mkvextract_get_mode, , ,tracks,@f,104,Extract tracks to external files
+mkvextract, __fish_mkvextract_get_mode, , ,tags,@f,105,Extract tags as XML
+mkvextract, __fish_mkvextract_get_mode, , ,attachments,@f,106,Extract attachments
+mkvextract, __fish_mkvextract_get_mode, , ,chapters,@f,107,Extract chapters as XML
+mkvextract, __fish_mkvextract_get_mode, , ,cuesheet,@f,108,Extract chapters and tags as CUE sheet
+mkvextract, __fish_mkvextract_get_mode, , ,timecodes_v2,@f,109,Extract timecodes of a track as timecode v2 file
+mkvextract, __fish_mkvextract_get_mode, , ,cues,@f,110,Extract cue information as text file
+mkvextract, __fish_mkvextract_using_mode tracks timecodes_v2 cues, , , ,@f,111, 
+mkvextract, __fish_mkvextract_using_mode attachments, , , ,@f,112, 
+mkvextract, __fish_mkvextract_using_mode tags chapters cuesheet, , , ,@f,113, 
+mkvextract, __fish_mkvextract_using_mode tracks,c, , ,@f @r,124,Convert text subtitles to a charset
+mkvextract, __fish_mkvextract_using_mode tracks, ,cuesheet, ,@f,125,Also try to extract the CUE sheet
+mkvextract, __fish_mkvextract_using_mode tracks, ,blockadd, ,@f @r,126,Keep only the BlockAdditions up to the specified level
+mkvextract, __fish_mkvextract_using_mode tracks, ,raw, ,@f,127,Extract the data to a raw file
+mkvextract, __fish_mkvextract_using_mode tracks, ,fullraw, ,@f,128,Extract the data to a raw file including the CodecPrivate as header
+mkvextract, __fish_mkvextract_using_mode chapters,s,simple, ,@f,129,Exports the chapter information in a simple format
+mkvextract, __fish_mkvextract_using_mode chapters, ,simple-language, ,@f @r,130,Uses the chapter names of the specified language

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+optimus-manager, , ,switch,integrated nvidia hybrid, ,101,Set the GPU mode to MODE. You need to log out then log in to apply the change
+optimus-manager, , ,temp-config, , ,102,Set a path to a temporary configuration file to use for the next reboot ONLY
+optimus-manager, ,h,help, , ,103,show this help message and exit
+optimus-manager, ,v,version, , ,104,Print version and exit
+optimus-manager, , ,status, , ,105,Print current status of optimus-manager
+optimus-manager, , ,print-mode, , ,106,Print the GPU mode that your current desktop session is running on
+optimus-manager, , ,print-next-mode, , ,107,Print the GPU mode that will be used the next time you log into your session
+optimus-manager, , ,print-startup, , ,108,Print the GPU mode that will be used on startup
+optimus-manager, , ,unset-temp-config, , ,109,Undo --temp-config (unset temp config path)
+optimus-manager, , ,no-confirm, , ,110,Do not ask for confirmation and skip all warnings when switching GPUs
+optimus-manager, , ,cleanup, , ,111,Remove auto-generated configuration files left over by the daemon

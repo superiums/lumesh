@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chgpasswd, ,c,crypt-method, , ,101,Use the specified method to encrypt the passwords
+chgpasswd, ,e,encrypted, , ,102,Supplied passwords are in encrypted form
+chgpasswd, ,h,help, , ,103,Display help message and exit
+chgpasswd, ,m,md5, , ,104,Use MD5 encryption instead of DES when the supplied passwords are not encrypt…
+chgpasswd, ,R,rootCHROOT_DIR, , ,105,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+chgpasswd, ,s,sha-rounds, , ,106,Use the specified number of rounds to encrypt the passwords
+chgpasswd, , ,root, , ,107, 

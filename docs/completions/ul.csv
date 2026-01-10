@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ul, ,i,indicated, , ,101, 
+ul, ,T,terminal, , ,102, 
+ul, ,h,help, , ,103, 
+ul, ,V,version, , ,104, 

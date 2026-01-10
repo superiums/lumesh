@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-measure-fuzz, , ,help, , ,101,Print help LIBINPUT Part of the libinput(1) suite

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dbus-launch, , ,auto-syntax, , ,101,Choose --csh-syntax or --sh-syntax based on the SHELL environment variable
+dbus-launch, , ,binary-syntax, , ,102,"Write to stdout a nul-terminated bus address, then the bus PID as a binary in…"
+dbus-launch, , ,close-stderr, , ,103,Close the standard error output stream before starting the D-Bus daemon
+dbus-launch, , ,config-file, , ,104,"Pass --config-file=FILENAME to the bus daemon, instead of passing it the --se…"
+dbus-launch, , ,csh-syntax, , ,105,Emit csh compatible code to set up environment variables
+dbus-launch, , ,exit-with-x11, , ,106,"If this option is provided, a persistent 'babysitter' process will be created…"
+dbus-launch, , ,exit-with-session, , ,107,"If this option is provided, a persistent 'babysitter' process will be created…"
+dbus-launch, , ,autolaunch, , ,108,This option implies that dbus-launch should scan for a previously-started ses…
+dbus-launch, , ,sh-syntax, , ,109,Emit Bourne-shell compatible code to set up environment variables
+dbus-launch, , ,version, , ,110,Print the version of dbus-launch
+dbus-launch, , ,help, , ,111,Print the help info of dbus-launch

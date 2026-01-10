@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+getopt, ,a,alternative, , ,101, 
+getopt, ,l,longoptions, , ,102, 
+getopt, ,n,name, , ,103, 
+getopt, ,o,options, , ,104, 
+getopt, ,q,quiet, , ,105, 
+getopt, ,Q,quiet-output, , ,106, 
+getopt, ,s,shell, , ,107, 
+getopt, ,T,test, , ,108, 
+getopt, ,u,unquoted, , ,109, 
+getopt, ,h,help, , ,110, 
+getopt, ,V,version, , ,111, 

@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-qgroup, , ,rescan, , ,101,(default since: 4
+btrfs-qgroup, , ,no-rescan, , ,102,"Explicitly ask not to do a rescan, even if the assignment will make the quota…"
+btrfs-qgroup, , ,raw, , ,103,"raw numbers in bytes, without the B suffix"
+btrfs-qgroup, , ,human-readable, , ,104,"print human friendly numbers, base 1024, this is the default"
+btrfs-qgroup, , ,iec, , ,105,"select the 1024 base for the following options, according to the IEC standard"
+btrfs-qgroup, , ,si, , ,106,"select the 1000 base for the following options, according to the SI standard"
+btrfs-qgroup, , ,kbytes, , ,107,"show sizes in KiB, or kB with --si"
+btrfs-qgroup, , ,mbytes, , ,108,"show sizes in MiB, or MB with --si"
+btrfs-qgroup, , ,gbytes, , ,109,"show sizes in GiB, or GB with --si"
+btrfs-qgroup, , ,tbytes, , ,110,"show sizes in TiB, or TB with --si"
+btrfs-qgroup, , ,sort, , ,111,list qgroups in order of <attr>
+btrfs-qgroup, , ,sync, , ,112,"To retrieve information after updating the state of qgroups, force sync of th…"
+btrfs-qgroup, , ,--, , ,113,0/5          16. 00KiB     16. 00KiB 0/261        16. 00KiB     16

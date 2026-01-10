@@ -1,0 +1,66 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fsharpc, , ,out:, , ,101,Name of the output file
+fsharpc, , ,target:exe, , ,102,Build a console executable
+fsharpc, , ,target:winexe, , ,103,Build a Windows executable
+fsharpc, , ,target:library, , ,104,Build a library
+fsharpc, , ,target:module, , ,105,Build a module that can be added to another assembly
+fsharpc, , ,delaysign+, , ,106,Delay-sign the assembly using only the public portion of the strong name key
+fsharpc, , ,delaysign-, , ,107,Disable --delaysign
+fsharpc, , ,doc:, , ,108,Write the xmldoc of the assembly to the given file
+fsharpc, , ,keyfile:, , ,109,Specify a strong name key file
+fsharpc, , ,keycontainer:, , ,110,Specify a strong name key container
+fsharpc, , ,platform:x86, , ,111,Limit the platform to x86
+fsharpc, , ,platform:Itanium, , ,112,Limit the platform to Itanium
+fsharpc, , ,platform:x64, , ,113,Limit the platform to x64
+fsharpc, , ,platform:anycpu32bitpreferred, , ,114,Limit the platform to anycpu32bitpreferred
+fsharpc, , ,platform:anycpu, , ,115,Limit the platform to anycpu (default)
+fsharpc, , ,nooptimizationdata, , ,116,Only include optimization information for inlined constructs
+fsharpc, , ,nointerfacedata, , ,117,Don't add a resource to the assembly containing F#-specific metadata
+fsharpc, , ,sig:, , ,118,Print the inferred interface of the assembly to a file
+fsharpc, , ,reference:, , ,119,Reference an assembly
+fsharpc, , ,win32res:, , ,120,Specify a Win32 resource file (.res)
+fsharpc, , ,win32manifest:, , ,121,Specify a Win32 manifest file
+fsharpc, , ,nowin32manifest, , ,122,Do not include the default Win32 manifest
+fsharpc, , ,resource:, , ,123,Embed the specified managed resource
+fsharpc, , ,linkresource:, , ,124,Link the specified resource to this assembly
+fsharpc, ,g,debug+, , ,125,Emit debug information
+fsharpc, , ,debug-, , ,126,Disable --debug
+fsharpc, , ,debug:$arguments, , ,127,Specify debugging type
+fsharpc, ,O,optimize+, , ,128,Enable optimizations
+fsharpc, , ,optimize-, , ,129,Disable --optimize
+fsharpc, , ,tailcalls+, , ,130,Enable or disable tailcalls
+fsharpc, , ,tailcalls-, , ,131,Disable --tailcalls
+fsharpc, , ,deterministic+, , ,132,Produce a deterministic assembly
+fsharpc, , ,deterministic-, , ,133,Disable --deterministic
+fsharpc, , ,crossoptimize+, , ,134,Enable or disable cross-module optimizations
+fsharpc, , ,crossoptimize-, , ,135,Disable --crossoptimize
+fsharpc, , ,warnaserror+, , ,136,Report all warnings as errors
+fsharpc, , ,warnaserror-, , ,137,Disable --warnaserror
+fsharpc, , ,warnaserror+:, , ,138,Report specific warnings as errors
+fsharpc, , ,warnaserror-:, , ,139,Disable --warnaserror:
+fsharpc, , ,warn:$warning_level, , ,140,Set a warning level to $warning_level
+fsharpc, , ,nowarn:, , ,141,Disable specific warning messages
+fsharpc, , ,warnon:, , ,142,Enable specific warnings that may be off by default
+fsharpc, , ,consolecolors+, , ,143,Output warning and error messages in color
+fsharpc, , ,consolecolors-, , ,144,Disable --consolecolors
+fsharpc, , ,checked+, , ,145,Generate overflow checks
+fsharpc, , ,checked-, , ,146,Disable --checked
+fsharpc, , ,define:, , ,147,Define conditional compilation symbols
+fsharpc, , ,mlcompatibility, , ,148,Ignore ML compatibility warnings
+fsharpc, , ,nologo, , ,149,Suppress compiler copyright message
+fsharpc, ,?,help, , ,150,Display this usage message
+fsharpc, , ,codepage:, , ,151,Specify the codepage used to read source files
+fsharpc, , ,utf8output, , ,152,Output messages in UTF-8 encoding
+fsharpc, , ,fullpaths, , ,153,Output messages with fully qualified paths
+fsharpc, , ,lib:, , ,154,Specify a directory for include path for resolving source files and assemblies
+fsharpc, , ,simpleresolution, , ,155,Resolve assembly references using directory-based rules
+fsharpc, , ,baseaddress:, , ,156,Base address for the library to be built
+fsharpc, , ,noframework, , ,157,Do not reference the default CLI assemblies by default
+fsharpc, , ,standalone, , ,158,Statically link F# library and referenced DLLs into the generated assembly
+fsharpc, , ,staticlink:, , ,159,Statically link the assembly and referenced DLLs that depend on this assembly
+fsharpc, , ,pdb:, , ,160,Name the output debug file
+fsharpc, , ,highentropyva+, , ,161,Enable high-entropy ASLR
+fsharpc, , ,highentropyva-, , ,162,Disable --highentropyva
+fsharpc, , ,subsystemversion:, , ,163,Specify subsystem version of this assembly
+fsharpc, , ,quotations-debug+, , ,164,Emit debug information in quotations
+fsharpc, , ,quotations-debug-, , ,165,Disable --quotations-debug

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$PROG, ,a, , ,@F,101,Specify autostart executable
+$PROG, ,c, , ,@F,102,Specify a configuration file
+$PROG, ,h, , ,@f,103,Show help message and quit
+$PROG, ,v, , ,@f,104,Show version and quit

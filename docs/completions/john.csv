@@ -1,0 +1,85 @@
+cmd,conds,short,long,params,dirs,pri,desc
+john, , ,help, , ,101,print usage summary
+john, , ,single, , ,102,single crack mode
+john, , ,single-seed, ,@f,103,add static seed word(s) for all salts in single mode
+john, , ,single-wordlist, ,@F,104,short wordlist with static seed words/morphemes
+john, , ,single-user-seed, ,@F,105,wordlist with seeds per username
+john, , ,single-retest-guess, , ,106,enable SingleRetestGuess
+john, , ,no-single-retest-guess, , ,107,disable SingleRetestGuess
+john, , ,single-pair-max, ,@f,108,max. number of word pairs generated
+john, , ,no-single-pair, , ,109,disable single word pair generation
+john, , ,wordlist, ,@F,110,read wordlist from file
+john, , ,stdin, , ,111,read wordlist from stdin
+john, , ,pipe, , ,112,read wordlist from stdin but with bulk reads and allows rules
+john, , ,mem-file-size, ,@f,113,size threshold for wordlist preload
+john, , ,loopback, ,@F,114,parse .pot file as a wordlist
+john, , ,dupe-suppression, , ,115,suppress all dupes in wordlist
+john, , ,prince, ,@F,116,"PRINCE mode, read words from file"
+john, , ,prince-loopback, ,@F,117,"PRINCE mode, fetch words from a .pot file"
+john, , ,prince-elem-cnt-min, ,@f,118,minimum number of elements per chain
+john, , ,prince-elem-cnt-max, ,@f,119,maximum number of elements per chain
+john, , ,prince-skip, ,@f,120,initial skip
+john, , ,prince-limit, ,@f,121,limit number of candidates generated
+john, , ,prince-wl-dist-len, , ,122,calculate length distribution from wordlist
+john, , ,prince-wl-max, ,@f,123,load only N words from input wordlist
+john, , ,prince-case-permute, , ,124,permute case of first letter
+john, , ,prince-mmap, , ,125,memory-map infile
+john, , ,prince-keyspace, , ,126,just show total keyspace that would be produced
+john, , ,rules, , ,128,enable word mangling rules
+john, , ,rules-stack, , ,129,stacked rules
+john, , ,rules-skip-nop, , ,130,skip any NOP rules
+john, , ,incremental, , ,131,incremental mode
+john, , ,incremental-charcount, ,@f,132,override CharCount for incremental mode
+john, , ,mask, ,@f,133,mask mode
+john, , ,markov, ,@f,134,Markov mode
+john, , ,mkv-stats, ,@F,135,markov stats file
+john, , ,external, , ,136,external mode or word filter
+john, , ,subsets, ,@f,137,subsets mode
+john, , ,subsets-required, ,@f,138,The N first characters of subsets charset are the required set
+john, , ,subsets-min-diff, ,@f,139,Minimum unique characters in subset
+john, , ,subsets-max-diff, ,@f,140,Maximum unique characters in subset
+john, , ,stdout, ,@f,141,just output candidate passwords
+john, , ,restore, ,@f,142,restore an interrupted session
+john, , ,session, ,@f,143,give a new session a name
+john, , ,status, ,@f,144,print status of a session
+john, , ,make-charset, ,@F,145,make a charset file
+john, , ,reject-printable, , ,146,reject printable binaries
+john, , ,show,, ,147,show cracked passwords
+john, , ,test, ,@f,148,run tests and benchmarks for TIME seconds each
+john, , ,stress-test, ,@f,149,loop self tests forever
+john, , ,no-mask, , ,150,used with --test for alternate benchmark w/o mask
+john, , ,skip-self-tests, , ,151,skip self tests
+john, , ,test-full, ,@f,152,run more thorough self-tests
+john, , ,users, ,@f,153,load or don't load these users only
+john, , ,groups, ,@f,154,load users in or not in these groups only
+john, , ,shells, ,@f,155,load users with or without these shells only
+john, , ,salts, ,@f,156,load salts
+john, , ,costs, ,@f,157,load salts with or without cost value
+john, , ,save-memory,1 2 3, ,158,enable memory saving
+john, , ,node, ,@f,159,this node's number range out of TOTAL count
+john, , ,subformat,md5crypt bcrypt sha256crypt sha512crypt, ,160,pick a benchmark format for --format=crypt
+john, , ,mkpc, ,@f,161,request a lower max. keys per crypt
+john, , ,min-length, ,@f,162,request a minimum candidate length in bytes
+john, , ,max-length, ,@f,163,request a maximum candidate length in bytes
+john, , ,length, ,@f,164,shortcut for --min-len=N --max-len=N
+john, , ,field-separator-char, ,@f,165,use custom character instead of ':' in input and pot files
+john, , ,config, ,@F,166,use custom file instead of john.conf or john.ini
+john, , ,log-stderr, , ,167,log to screen instead of file
+john, , ,no-loader-dupecheck, , ,168,disable the dupe checking when loading hashes
+john, , ,verbosity,1 2 3 4 5 6, ,169,change verbosity
+john, , ,no-log, , ,170,disables creation and writing to john.log file
+john, , ,bare-always-valid,Y N, ,171,treat bare hashes as valid
+john, , ,progress-every, ,@f,172,emit a status line every N seconds
+john, , ,crack-status, , ,173,emit a status line whenever a password is cracked
+john, , ,no-crack-status, , ,174,don't emit a status line whenever a password is cracked
+john, , ,keep-guessing, , ,175,try finding plaintext collisions
+john, , ,no-keep-guessing, , ,176,don't try finding plaintext collisions
+john, , ,max-candidates, ,@f,177,gracefully exit after this many candidates tried
+john, , ,max-run-time, ,@f,178,gracefully exit after this many seconds
+john, , ,regen-lost-salts, ,@f,179,brute force unknown salts
+john, , ,fork, ,@f,180,fork N processes
+john, , ,pot, ,@F,181,pot file to use
+john, , ,list,help subformats inc-modes rules externals ext-modes ext-hybrids ext-filters ext-filters-only build-info encodings formats format-details format-all-details format-methods format-tests sections parameters: list-data:, ,182,list capabilities
+john, , ,tune,auto report N, ,185,tuning options
+john, , ,force-tty, , ,186,set up terminal for reading keystrokes
+john, , ,format, , ,187,force hash type

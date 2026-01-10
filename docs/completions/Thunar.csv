@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+Thunar, , ,bulk-rename, , ,101,"option is specified no file managers windows will be opened, but instead the …"
+Thunar, ,?,help, , ,102, 
+Thunar, ,V,version, , ,103, 
+Thunar, , ,daemon, , ,104, 
+Thunar, , ,display, , ,105, 
+Thunar, ,q,quit, , ,106, 

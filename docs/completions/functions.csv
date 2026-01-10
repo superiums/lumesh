@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+functions, ,e,erase, ,@f @r,101,Erase function
+functions, ,a,all, , ,102,Show hidden functions
+functions, ,h,help, , ,103,Display help and exit
+functions, ,d,description, , ,104,Set function description
+functions, ,q,query, , ,105,Test if function is defined
+functions, ,n,names, , ,106,"List the names of the functions, but not their definition"
+functions, ,c,copy, , ,107,Copy the specified function to the specified new name
+functions, ,D,details, , ,108,Display information about the function
+functions, ,v,verbose, , ,109,Print more output
+functions, ,H,handlers, , ,110,Show event handlers
+functions, ,t,handlers-type,signal variable exit job-id generic,@f @r,111,Show event handlers matching the given type

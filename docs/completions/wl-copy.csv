@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wl-copy, ,h,help, , ,101,Display a help message
+wl-copy, ,v,version, , ,102,Display version info
+wl-copy, ,o,paste-once, , ,103,Only serve one paste request and then exit
+wl-copy, ,c,clear, , ,104,"Instead of copying anything, clear the clipboard"
+wl-copy, ,p,primary, , ,105,Use the 'primary' clipboard
+wl-copy, ,n,trim-newline, , ,106,Do not copy the trailing newline character
+wl-copy, ,t,type, ,@f @r,107,Override the inferred MIME type for the content
+wl-copy, ,s,seat, ,@f @r,108,Pick the seat to work with

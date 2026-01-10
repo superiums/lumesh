@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kvno, , ,cached-only, , ,101,"Only retrieve credentials already present in the cache, not from the KDC"
+kvno, , ,no-store, , ,102,Do not store retrieved credentials in the cache
+kvno, , ,out-cache, , ,103,Initialize ccache and store all retrieved credentials into it
+kvno, , ,u2u, , ,104,Requests a user-to-user ticket

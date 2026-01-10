@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rustc, ,h,help, , ,101, 
+rustc, , ,cfg, ,@f @r,102, 
+rustc, , ,check-cfg, ,@f @r,103,Provide list of expected cfgs for checking
+rustc, ,L, ,dependency= crate= native= framework= all=,@r,104, 
+rustc, ,l, ,dylib= static= framework=,@f @r,105, 
+rustc, , ,crate-type,bin lib rlib dylib cdylib staticlib proc-macro,@f @r,106, 
+rustc, , ,crate-name, ,@r,107, 
+rustc, , ,edition,2015 2018 2021,@f @r,108,Specify compiler edition
+rustc, , ,emit,asm llvm-bc llvm-ir obj link dep-info metadata mir,@f @r,109, 
+rustc, , ,print, ,@f @r,110,Print compiler information
+rustc, ,o, , ,@r,111,Write output to <filename>
+rustc, , ,out-dir, ,@r,112, 
+rustc, , ,explain, ,@f @r,113, 
+rustc, , ,test, , ,114, 
+rustc, , ,target, , ,115, 
+rustc, , ,cap-lints, ,@f @r,116, 
+rustc, ,V,version, , ,117,Print version info and exit
+rustc, ,v,verbose, , ,118,Use verbose output
+rustc, , ,extern, ,@f,119, 
+rustc, , ,sysroot, ,@f,120, 
+rustc, , ,color,auto always never,@f @r,121, 
+rustc, ,C,codegen, , ,122, 
+rustc, ,Z, , ,@f @r,123, 
+rustc, ,W,warn, , ,124,Warn on lint
+rustc, ,A,allow, , ,125,Allow lint
+rustc, ,D,deny, , ,126,Deny lint
+rustc, ,F,forbid, , ,127,Forbid lint

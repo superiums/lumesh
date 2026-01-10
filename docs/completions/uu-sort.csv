@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-sort, , ,sort,general-numeric,@f @r,101, 
+uu-sort, ,c,check,silent,@f @r,102,"check for sorted input; do not sort"
+uu-sort, ,o,output, ,@r,103,write output to FILENAME instead of stdout
+uu-sort, ,k,key, , ,104,sort by a key
+uu-sort, ,t,field-separator, , ,105,custom separator for -k
+uu-sort, , ,parallel, , ,106,change the number of threads running concurrently to NUM_THREADS
+uu-sort, ,S,buffer-size, , ,107,sets the maximum SIZE of each segment in number of sorted items
+uu-sort, ,T,temporary-directory, ,@D @f @r,108,"use DIR for temporaries, not $TMPDIR or /tmp"
+uu-sort, , ,compress-program, ,@f @r,109,"compress temporary files with PROG, decompress with PROG -d; PROG has to take input from stdin and output to stdout"
+uu-sort, , ,batch-size, , ,110,Merge at most N_MERGE inputs at once.
+uu-sort, , ,files0-from, ,@r,111,read input from the files specified by NUL-terminated NUL_FILE
+uu-sort, , ,help, , ,112,Print help information.
+uu-sort, , ,version, , ,113,Print version information.
+uu-sort, ,h,human-numeric-sort, , ,114,"compare according to human readable sizes, eg 1M > 100k"
+uu-sort, ,M,month-sort, , ,115,compare according to month name abbreviation
+uu-sort, ,n,numeric-sort, , ,116,compare according to string numerical value
+uu-sort, ,g,general-numeric-sort, , ,117,compare according to string general numerical value
+uu-sort, ,V,version-sort, , ,118,"Sort by SemVer version number, eg 1.12.2 > 1.1.2"
+uu-sort, ,R,random-sort, , ,119,shuffle in random order
+uu-sort, ,d,dictionary-order, , ,120,consider only blanks and alphanumeric characters
+uu-sort, ,m,merge, , ,121,"merge already sorted files; do not sort"
+uu-sort, ,C,check-silent, , ,122,"exit successfully if the given file is already sorted, and exit with status 1 otherwise."
+uu-sort, ,f,ignore-case, , ,123,fold lower case to upper case characters
+uu-sort, ,i,ignore-nonprinting, , ,124,ignore nonprinting characters
+uu-sort, ,b,ignore-leading-blanks, , ,125,ignore leading blanks when finding sort keys in each line
+uu-sort, ,r,reverse, , ,126,reverse the output
+uu-sort, ,s,stable, , ,127,stabilize sort by disabling last-resort comparison
+uu-sort, ,u,unique, , ,128,output only the first of an equal run
+uu-sort, ,z,zero-terminated, , ,129,"line delimiter is NUL, not newline"
+uu-sort, , ,debug, , ,130,underline the parts of the line that are actually used for sorting

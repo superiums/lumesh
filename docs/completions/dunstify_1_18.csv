@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dunstify, ,?,help, , ,101,"X Item '-?, --help' Show help options"
+dunstify, ,a,appname, , ,102,"X Item '-a, --appname=NAME' Set the app name of the notification"
+dunstify, ,u,urgency, , ,103,"X Item '-u, --urgency=URG' Set the urgency level (low, normal, critical) of t…"
+dunstify, ,h,hints, , ,104,"X Item '-h, --hints=HINT' Specifies hints to pass"
+dunstify, ,A,action, , ,105,"X Item '-A, --action=ACTION' Specifies the actions to display to the user"
+dunstify, ,t,timeout, , ,106,"X Item '-t, --timeout=TIMEOUT' The time in milliseconds until the notificatio…"
+dunstify, ,i,icon, , ,107,"X Item '-i, --icon=ICON' Specifies an icon to display with the notification"
+dunstify, ,I,raw_icon, , ,108,"X Item '-I, --raw_icon=PATH' Path to the icon to be sent as raw image data"
+dunstify, ,c,category, , ,109,"X Item '-c, --category=TYPE' The category of this notification"
+dunstify, , ,capabilities, , ,110,X Item '--capabilities' Print the server capabilities and exit
+dunstify, ,s,serverinfo, , ,111,"X Item '-s, --serverinfo' Print server information and exit"
+dunstify, ,p,printid, , ,112,"X Item '-p, --printid' Print id, which can be used to update/replace this not…"
+dunstify, ,r,replace, , ,113,"X Item '-r, --replace=ID' Set the id of this notification to The ID of the no…"
+dunstify, ,C,close, , ,114,"X Item '-C, --close=ID' Close the notification with the specified ID"
+dunstify, ,b,block, , ,115, 

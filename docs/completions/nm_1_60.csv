@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nm, , ,print-file-name, , ,101,X Item '--print-file-name' 
+nm, , ,debug-syms, , ,102,X Item '--debug-syms' 
+nm, , ,demangle, , ,103,X Item '--demangle[=style]' 
+nm, , ,no-demangle, , ,104,X Item '--no-demangle' Do not demangle low-level symbol names
+nm, , ,recurse-limit, , ,105,X Item '--recurse-limit'
+nm, , ,no-recurse-limit, , ,106,X Item '--no-recurse-limit'
+nm, , ,recursion-limit, , ,107,X Item '--recursion-limit'
+nm, , ,no-recursion-limit, , ,108,X Item '--no-recursion-limit' 
+nm, , ,dynamic, , ,109,X Item '--dynamic' 
+nm, , ,format, , ,110,X Item '--format=format' 
+nm, , ,extern-only, , ,111,X Item '--extern-only' . PD Display only external symbols
+nm, , ,help, , ,112,X Item '--help' . PD Show a summary of the options to nm and exit
+nm, , ,ifunc-chars, , ,113,X Item '--ifunc-chars=CHARS' When display GNU indirect function symbols nm wi…
+nm, , ,line-numbers, , ,114,X Item '--line-numbers' 
+nm, , ,inlines, , ,115,"X Item '--inlines' When option -l is active, if the address belongs to a func…"
+nm, , ,numeric-sort, , ,116,X Item '--numeric-sort' 
+nm, , ,no-sort, , ,117,X Item '--no-sort' 
+nm, , ,portability, , ,118,X Item '--portability' . PD Use the POSIX
+nm, , ,reverse-sort, , ,119,X Item '--reverse-sort' 
+nm, , ,print-size, , ,120,X Item '--print-size' 
+nm, , ,print-armap, , ,121,X Item '--print-armap' 
+nm, , ,radix, , ,122,X Item '--radix=radix' 
+nm, , ,undefined-only, , ,123,X Item '--undefined-only' 
+nm, , ,defined-only, , ,124,X Item '--defined-only' 
+nm, , ,version, , ,125,X Item '--version' . PD Show the version number of nm and exit
+nm, , ,plugin, , ,126,X Item '--plugin name' Load the plugin called name to add support for extra t…
+nm, , ,size-sort, , ,127,X Item '--size-sort' Sort symbols by size
+nm, , ,special-syms, , ,128,X Item '--special-syms' Display symbols which have a target-specific special …
+nm, , ,synthetic, , ,129,X Item '--synthetic' Include synthetic symbols in the output
+nm, , ,unicode, , ,130,X Item '--unicode=[default|invalid|locale|escape|hex|highlight]' Controls the…
+nm, , ,no-weak, , ,131,X Item '--no-weak' . PD Do not display weak symbols
+nm, , ,with-symbol-versions, , ,132,X Item '--with-symbol-versions'
+nm, , ,without-symbol-versions, , ,133,X Item '--without-symbol-versions' 
+nm, , ,target, , ,134,X Item '--target=bfdname' Specify an object code format other than your syste…

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+printenv, ,0,null, , ,101,"end each output line with NUL, not newline"
+printenv, , ,help, , ,102,display this help and exit
+printenv, , ,version, , ,103,output version information and exit

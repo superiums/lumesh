@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+python, __fish_python_no_arg,c, , ,@f @r,101,Execute argument as command
+python, __fish_python_no_arg, ,check-hash-based-pycs,default always never, ,102,Control validation behaviour of pyc files
+python, __fish_python_no_arg,?,help, , ,103,Display help and exit
+python, __fish_python_no_arg,V,version, , ,104,Display version and exit
+python, __fish_python_no_arg,W, ,ignore default all module once error,@f @r,105,Warning control
+python, __fish_python_no_arg, , , ,@f @k,106, 
+python, __fish_python_no_arg, , ,-,@f,107,Read program from stdin
+python, python -V 2>&1 | string match -rq '^.*\s3' && __fish_python_no_arg,X, , ,@f @r,109,Set implementation-specific option

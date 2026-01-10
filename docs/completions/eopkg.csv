@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+eopkg, remove-repo rr enable-repo er disable-repo dr list-available la, , , ,@f,107,Repository
+eopkg, upgrade up install it info, , , ,@f,108,Available Package
+eopkg, remove rm autoremove rmf check, , , ,@f,109,Installed package
+eopkg, upgrade up remove rm install it info check list-available la list-installed li list-upgrades lu,c,component, ,@f,110,Component
+eopkg, search sr,r,repository, ,@f,111,Repository
+eopkg, , ,version, , ,112,Show program's version number and exit
+eopkg, ,d,debug, , ,113,Show debugging information
+eopkg, ,D,destdir, ,@r,114,Change the system root for eopkg commands
+eopkg, ,h,help, , ,115,Show help message and exit
+eopkg, ,L,bandwidth-limit, ,@f @r,116,Keep bandwidth usage under specified KB's
+eopkg, ,p,password, , ,117, 
+eopkg, ,u,username, , ,118, 
+eopkg, ,v,verbose, , ,119,Detailed output
+eopkg, ,y,yes-all, , ,120,Assume yes for all yes/no queries

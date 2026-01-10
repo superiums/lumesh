@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+busctl, , , , ,@f,101, 
+busctl, , , , ,@f,102, 
+busctl, call, ,quiet, ,@f,103,Suppress message payload display
+busctl, call get-property, ,verbose, ,@f,104, 
+busctl, tree, ,list, ,@f,105,Show a flat list instead of a tree
+busctl, call, ,expect-reply,yes no,@f @r,106, 
+busctl, call, ,auto-start,yes no,@f @r,107,Activate the peer if necessary
+busctl, call, ,allow-interactive-authorization,yes no,@f @r,108, 
+busctl, call, ,timeout, ,@f @r,109, 
+busctl, list, ,unique, ,@f,110,Only show unique (:X.Y) names
+busctl, list, ,acquired, ,@f,111,Only show well-known names
+busctl, list, ,activatable, ,@f,112,Only show peers that have not been activated yet but can be
+busctl, list, ,show-machine, ,@f,113,Show the machine the peers belong to
+busctl, list status, ,augment-creds,yes no,@f @r,114, 
+busctl, , ,user, ,@f,115, 
+busctl, , ,system, ,@f,116, 
+busctl, ,H,host, ,@f,117, 
+busctl, ,M,machine, ,@f,118, 
+busctl, , ,no-pager, ,@f,119, 
+busctl, , ,no-legend, ,@f,120, 
+busctl, ,h,help, ,@f,121, 
+busctl, , ,version, ,@f,122, 

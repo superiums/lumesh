@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ffplay, ,?,help, ,@f @r,101,Show help
+ffplay, ,v, ,quiet panic fatal error warning info verbose debug trace,@f @r,102,Set logging level
+ffplay, , , , ,@f @r,103,Seek by bytes
+ffplay, , , , ,@f @r,104,Select show mode
+ffplay, , , , ,@f @r,105,Force decoder

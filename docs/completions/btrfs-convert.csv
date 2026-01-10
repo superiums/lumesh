@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-convert, , ,checksum, , ,101,Specify the checksum algorithm.  Default is crc32c
+btrfs-convert, ,d,no-datasum, , ,102,"disable data checksum calculations and set the NODATASUM file flag, this can …"
+btrfs-convert, ,i,no-xattr, , ,103,ignore xattrs and ACLs of files
+btrfs-convert, ,n,no-inline, , ,104,"disable inlining of small files to metadata blocks, this will decrease the me…"
+btrfs-convert, ,N,nodesize, , ,105,"set filesystem nodesize, the tree block size in which btrfs stores its metada…"
+btrfs-convert, ,r,rollback, , ,106,rollback to the original ext2/3/4 filesystem if possible
+btrfs-convert, ,l,label, , ,107,set filesystem label during conversion
+btrfs-convert, ,L,copy-label, , ,108,use label from the converted filesystem
+btrfs-convert, ,O,features, , ,109,A list of filesystem features enabled the at time of conversion
+btrfs-convert, ,p,progress, , ,110,show progress of conversion (a heartbeat indicator and number of inodes proce…
+btrfs-convert, , ,no-progress, , ,111,disable progress and show only the main phases of conversion
+btrfs-convert, , ,uuid, , ,112,set the FSID of the new filesystem based on 'SPEC': NDENT 7. 0
+btrfs-convert, , ,version, , ,113,"Print the btrfs-convert version, builtin features and exit"

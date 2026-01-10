@@ -1,0 +1,45 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ls, ,a,all, , ,101,do not ignore entries starting with 
+ls, ,A,almost-all, , ,102,do not list implied .  and 
+ls, , ,author, , ,103,"with -l, print the author of each file"
+ls, ,b,escape, , ,104,print C-style escapes for nongraphic characters
+ls, , ,block-size, , ,105,"with -l, scale sizes by SIZE when printing them; e. g"
+ls, ,B,ignore-backups, , ,106,do not list implied entries ending with ~
+ls, , ,color, , ,107,"color the output WHEN; more info below"
+ls, ,d,directory, , ,108,"list directories themselves, not their contents"
+ls, ,D,dired, , ,109,generate output designed for Emacs' dired mode
+ls, ,F,classify, , ,110,append indicator (one of */=>@|) to entries WHEN
+ls, , ,file-type, , ,111,"likewise, except do not append '*'"
+ls, , ,format, , ,112,"across -x, commas -m, horizontal -x, long -l, single-column -1, verbose -l, v…"
+ls, , ,full-time, , ,113,"like -l --time-style=\\,full-iso\\/"
+ls, , ,group-directories-first, , ,114,group directories before files
+ls, ,G,no-group, , ,115,"in a long listing, don't print group names"
+ls, ,h,human-readable, , ,116,"with -l and -s, print sizes like 1K 234M 2G etc"
+ls, , ,si, , ,117,"likewise, but use powers of 1000 not 1024"
+ls, ,H,dereference-command-line, , ,118,follow symbolic links listed on the command line
+ls, , ,dereference-command-line-symlink-to-dir, , ,119,follow each command line symbolic link that points to a directory
+ls, , ,hide, , ,120,do not list implied entries matching shell PATTERN (overridden by -a or -A)
+ls, , ,hyperlink, , ,121,hyperlink file names WHEN
+ls, , ,indicator-style, , ,122,"append indicator with style WORD to entry names: none (default), slash (-p), …"
+ls, ,i,inode, , ,123,print the index number of each file
+ls, ,I,ignore, , ,124,do not list implied entries matching shell PATTERN
+ls, ,k,kibibytes, , ,125,"default to 1024-byte blocks for file system usage; used only with -s and per …"
+ls, ,L,dereference, , ,126,"when showing file information for a symbolic link, show information for the f…"
+ls, ,n,numeric-uid-gid, , ,127,"like -l, but list numeric user and group IDs"
+ls, ,N,literal, , ,128,print entry names without quoting
+ls, ,q,hide-control-chars, , ,129,print ? instead of nongraphic characters
+ls, , ,show-control-chars, , ,130,"show nongraphic characters as-is (the default, unless program is 'ls' and out…"
+ls, ,Q,quote-name, , ,131,enclose entry names in double quotes
+ls, , ,quoting-style, , ,132,"use quoting style WORD for entry names: literal, locale, shell, shell-always,…"
+ls, ,r,reverse, , ,133,reverse order while sorting
+ls, ,R,recursive, , ,134,list subdirectories recursively
+ls, ,s,size, , ,135,"print the allocated size of each file, in blocks"
+ls, , ,sort, , ,136,"change default 'name' sort to WORD: none (-U), size (-S), time (-t), version …"
+ls, , ,time, , ,137,"select which timestamp used to display or sort; access time (-u): atime, acce…"
+ls, , ,time-style, , ,138,"time/date format with -l; see TIME_STYLE below"
+ls, ,T,tabsize, , ,139,assume tab stops at each COLS instead of 8
+ls, ,w,width, , ,140,set output width to COLS.   0 means no limit
+ls, ,Z,context, , ,141,print any security context of each file
+ls, , ,zero, , ,142,"end each output line with NUL, not newline"
+ls, , ,help, , ,143,display this help and exit
+ls, , ,version, , ,144,output version information and exit 

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+stat, ,L,dereference, , ,101,follow links
+stat, ,f,file-system, , ,102,display file system status instead of file status
+stat, ,c,format, ,@f @r,103,"use the specified FORMAT, with implicit newline"
+stat, , ,printf, ,@f @r,104,"use specified FORMAT, with backslash escapes and no implicit trailing newline"
+stat, ,t,terse, , ,105,print the information in terse form
+stat, , ,help, , ,106,display this help and exit
+stat, , ,version, , ,107,output version information and exit

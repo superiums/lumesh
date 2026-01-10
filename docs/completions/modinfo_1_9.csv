@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+modinfo, ,F,field, , ,101,"Only print this field value, one per line.  This is most useful for"
+modinfo, ,b,basedir, , ,102,"Root directory for modules, / by default"
+modinfo, ,0,null, , ,103,"Use the ASCII zero character to separate field values, instead of a new"
+modinfo, ,n,filename, , ,104,"These are shortcuts for the --field flag's author, description,"
+modinfo, ,h,help, , ,105,Print the help message and exit

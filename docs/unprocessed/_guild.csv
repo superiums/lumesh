@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$command, $compile_condition, , ,compile scripts, ,101, 
+$command, $compile_condition,h,help, , ,102,Show help
+$command, $compile_condition, ,version, , ,103,Show version
+$command, ,L,load-path, ,@F,104, 
+$command, ,o,output, ,@F,105, 
+$command, ,x, , ,@f @r,106, 
+$command, ,W,warning, , ,107, 
+$command, ,O,optimize, , ,108, 
+$command, , ,$option, , ,109, 
+$command, ,f,from, , ,110, 
+$command, ,t,to, , ,111, 
+$command, ,T,target, , ,112, 

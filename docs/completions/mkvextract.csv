@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkvextract, ,V,version, ,@f,101,Show version information
+mkvextract, ,h,help, ,@f,102,Show help
+mkvextract, , ,check-for-updates, ,@f,103,Check online for updates
+mkvextract, ,f,parse-fully, , ,114,Parse the whole file instead of relying on the index
+mkvextract, ,v,verbose, , ,115,Increase verbosity
+mkvextract, ,q,quiet, , ,116,Suppress status output
+mkvextract, , ,ui-language, ,@r,117,Force a locale
+mkvextract, , ,command-line-charset, ,@r,118,Charset for strings on the command line
+mkvextract, , ,output-charset, ,@r,119,Outputs messages in specified charset
+mkvextract, ,r,redirect-output, ,@r,120,Redirect all messages into a file
+mkvextract, , ,debug, ,@r,121,Turn on debugging for a specific feature
+mkvextract, , ,engage, ,@r,122,Turn on an experimental feature
+mkvextract, , ,gui-mode, , ,123,Enable GUI mode

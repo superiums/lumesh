@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkfs.minix, ,c,check, , ,101, 
+mkfs.minix, ,n,namelength, , ,102, 
+mkfs.minix, , ,lock, , ,103, 
+mkfs.minix, ,i,inodes, , ,104, 
+mkfs.minix, ,l,badblocks, , ,105, 
+mkfs.minix, ,h,help, , ,106, 
+mkfs.minix, ,V,version, , ,107, 

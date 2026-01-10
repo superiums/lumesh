@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-csplit, ,b,suffix-format, , ,101,use sprintf FORMAT instead of %02d
+uu-csplit, ,f,prefix, , ,102,use PREFIX instead of 'xx'
+uu-csplit, ,n,digits, , ,103,use specified number of digits instead of 2
+uu-csplit, ,k,keep-files, , ,104,do not remove output files on errors
+uu-csplit, , ,suppress-matched, , ,105,suppress the lines matching PATTERN
+uu-csplit, ,s,silent, , ,106,do not print counts of output file sizes
+uu-csplit, ,z,elide-empty-files, , ,107,remove empty output files
+uu-csplit, ,h,help, , ,108,Print help
+uu-csplit, ,V,version, , ,109,Print version

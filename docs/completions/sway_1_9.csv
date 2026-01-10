@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sway, ,c,config, , ,101,Specifies a config file
+sway, ,C,validate, , ,102,"Check the validity of the config file, then exit"
+sway, ,d,debug, , ,103,"Enables full logging, including debug information"
+sway, ,v,version, , ,104,Show the version number and quit
+sway, ,V,verbose, , ,105,Enables more verbose logging
+sway, , ,get-socketpath, , ,106,"Gets the IPC socket path and prints it, then exits"

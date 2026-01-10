@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+arecord, ,h,help, , ,101,Help: show syntax
+arecord, , ,version, , ,102,Print current version
+arecord, ,l,list-devices, , ,103,List all soundcards and digital audio devices
+arecord, ,L,list-pcms, , ,104,List all PCMs defined
+arecord, ,D,device, , ,105,Select PCM by name
+arecord, ,q,quiet, , ,106,Quiet mode.  Suppress messages (not sound :))
+arecord, ,t,file-type, , ,107,"File type (voc, wav, raw or au)"
+arecord, ,c,channels, , ,108,The number of channels.  The default is one channel
+arecord, ,f,format, , ,109,Sample format 
+arecord, ,r,rate, , ,110,Sampling rate in Hertz.  The default rate is 8000 Hertz
+arecord, ,d,duration, , ,111,Interrupt after # seconds.  A value of zero means infinity
+arecord, ,s,samples, , ,112,Interrupt after transmission of # PCM frames.  A value of zero means infinity
+arecord, ,M,mmap, , ,113,Use memory-mapped (mmap) I/O mode for the audio stream
+arecord, ,N,nonblock, , ,114,Open the audio device in non-blocking mode
+arecord, ,F,period-time, , ,115,Distance between interrupts is # microseconds
+arecord, ,B,buffer-time, , ,116,Buffer duration is # microseconds If no buffer time and no buffer size is giv…
+arecord, , ,period-size, , ,117,Distance between interrupts is # frames If no period size and no period time …
+arecord, , ,buffer-size, , ,118,Buffer duration is # frames If no buffer time and no buffer size is given the…
+arecord, ,A,avail-min, , ,119,Min available space for wakeup is # microseconds
+arecord, ,R,start-delay, , ,120,Delay for automatic PCM start is # microseconds  (relative to buffer size if …
+arecord, ,T,stop-delay, , ,121,Delay for automatic PCM stop is # microseconds from xrun
+arecord, ,v,verbose, , ,122,Show PCM structure and setup.  This option is accumulative
+arecord, ,V,vumeter, , ,123,"Specifies the VU-meter type, either stereo or mono"
+arecord, ,I,separate-channels, , ,124,One file for each channel
+arecord, ,i,interactive, , ,125,Allow interactive operation via stdin
+arecord, ,m,chmap, , ,126,Give the channel map to override or follow
+arecord, , ,disable-resample, , ,127,Disable automatic rate resample
+arecord, , ,disable-channels, , ,128,Disable automatic channel conversions
+arecord, , ,disable-format, , ,129,Disable automatic format conversions
+arecord, , ,disable-softvol, , ,130,Disable software volume control (softvol)
+arecord, , ,test-position, , ,131,Test ring buffer position
+arecord, , ,test-coef, , ,132,"Test coefficient for ring buffer position; default is 8"
+arecord, , ,test-nowait, , ,133,Do not wait for the ring buffer \\(hy eats the whole CPU
+arecord, , ,max-file-time, , ,134,"While recording, when the output file has been accumulating sound for this lo…"
+arecord, , ,process-id-file, , ,135,"aplay writes its process ID here, so other programs can send signals to it"
+arecord, , ,use-strftime, , ,136,"When recording, interpret %-codes in the file name parameter using the strfti…"
+arecord, , ,dump-hw-params, , ,137,Dump hw_params of the device preconfigured status to stderr
+arecord, , ,fatal-errors, , ,138,Disables recovery attempts when errors (e. g

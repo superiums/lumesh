@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chronyc, ,4, , ,@f,101,Use only IPv4 address for hostname resolution
+chronyc, ,6, , ,@f,102,Use only IPv6 address for hostname resolution
+chronyc, ,n, , ,@f,103,Disable resolving of IP address to hostname
+chronyc, ,c, , ,@f,104,Print the report in CSV format
+chronyc, ,d, , ,@f,105,Enable print of debugging message
+chronyc, ,m, , ,@f,106,Allow multiple commands to be specified
+chronyc, ,h, , ,@f,107,Specify the host to connect
+chronyc, ,p, , ,@f,108,Specify the UDP port number used by the target to monitor connections
+chronyc, ,f, , ,@f,109,Option for compatibility
+chronyc, ,a, , ,@f,110,Option for compatibility
+chronyc, ,v, , ,@f,111,Show version number
+chronyc, sources,v, , ,@f @r,117,Be verbose
+chronyc, sourcestats,v, , ,@f @r,119,Be verbose
+chronyc, add, , ,peer,@f,125,Add new NTP peer
+chronyc, add, , ,server,@f,126,Add new NTP server
+chronyc, manual, , ,on,@f,141,Enable settime command
+chronyc, manual, , ,off,@f,142,Disable settime command
+chronyc, manual, , ,delete,@f,143,Delete previous settime entry
+chronyc, manual, , ,list,@f,144,Show previous settime entries
+chronyc, manual, , ,reset,@f,145,Reset settime command
+chronyc, allow, , ,all,@f,151,Allow access to subnet and all children
+chronyc, deny, , ,all,@f,153,Deny access to subnet and all children
+chronyc, local, , ,off,@f,155,Don't serve time when not synced
+chronyc, smoothtime, , ,activate,@f,158,Activate time smoothing
+chronyc, smoothtime, , ,reset,@f,159,Reset time smoothing
+chronyc, cmdallow, , ,all,@f,162,Allow access to subnet and all children
+chronyc, cmddeny, , ,all,@f,164,Deny access to subnet and all children

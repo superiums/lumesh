@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-listbugs, ,h,help, , ,101,Display help and exit
+apt-listbugs, ,s,severity,critical grave,@f,102,Set severity
+apt-listbugs, ,T,tag, ,@f,103,Tags you want to see
+apt-listbugs, ,S,stats,outstanding _ resolved done open,@f,104,Bug-status you want to see
+apt-listbugs, ,l,showless, ,@f,105,Ignore bugs in your system
+apt-listbugs, ,g,showgreater, ,@f,106,Ignore newer bugs than upgrade packages
+apt-listbugs, ,D,show-downgrade, ,@f,107,Bugs for downgrade packages
+apt-listbugs, ,H,hostname,osdn.debian.or.jp,@f,108,Bug Tracking system
+apt-listbugs, ,p,port, ,@f,109,Specify port for web interface
+apt-listbugs, ,R,release-critical, ,@f,110,Use daily bug report
+apt-listbugs, ,I,index, ,@f,111,Use the raw index.db
+apt-listbugs, ,X,indexdir, ,@f,112,Specify index dir
+apt-listbugs, ,P,pin-priority, ,@f,113,Specify Pin-Priority value
+apt-listbugs, , ,title, ,@f,114,Specify the title of rss
+apt-listbugs, ,f,force-download, ,@f,115,Retrieve fresh bugs
+apt-listbugs, ,q,quiet, ,@f,116,Do not display progress bar
+apt-listbugs, ,c,cache-dir,/var/cache/apt-listbugs/,@f,117,Specify local cache dir
+apt-listbugs, ,t,timer, ,@f,118,Specify the expire cache timer
+apt-listbugs, ,C,aptconf, , ,119,Specify apt config file
+apt-listbugs, ,y,force-yes, ,@f,120,Assume yes to all questions
+apt-listbugs, ,n,force-no, ,@f,121,Assume no to all questions
+apt-listbugs, , , ,list, ,122,List bugs from packages
+apt-listbugs, , , ,rss, ,123,List bugs in rss format

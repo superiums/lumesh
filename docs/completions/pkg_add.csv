@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkg_add, , , ,allversions arch checksum dontmerge donttie downgrade installed libdepends nonroot paranoid repair scripts SIGNER snap unsigned updatedepends, ,101,failsafe to overwrite

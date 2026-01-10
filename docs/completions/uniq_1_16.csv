@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uniq, ,c,count, , ,101,prefix lines by the number of occurrences
+uniq, ,d,repeated, , ,102,"only print duplicate lines, one for each group"
+uniq, , ,all-repeated, , ,103,"like -D, but allow separating groups with an empty line; METHOD={none(default…"
+uniq, ,f,skip-fields, , ,104,avoid comparing the first N fields
+uniq, , ,group, , ,105,"show all items, separating groups with an empty line; METHOD={separate(defaul…"
+uniq, ,i,ignore-case, , ,106,ignore differences in case when comparing
+uniq, ,s,skip-chars, , ,107,avoid comparing the first N characters
+uniq, ,u,unique, , ,108,only print unique lines
+uniq, ,z,zero-terminated, , ,109,"line delimiter is NUL, not newline"
+uniq, ,w,check-chars, , ,110,compare no more than N characters in lines
+uniq, , ,help, , ,111,display this help and exit
+uniq, , ,version, , ,112,output version information and exit

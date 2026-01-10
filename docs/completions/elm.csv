@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+elm, repl, ,no-colors, , ,101,Turn off the colors in REPL
+elm, repl, ,interpreter, , ,102,Path to an alternative JS interpreter
+elm, reactor, ,port, , ,103,Compile code with a click
+elm, make, ,output, ,@F @r,104,Specify the name of resulting JS file
+elm, make, ,debug, , ,105,Turn on the time-travelling debugger
+elm, make, ,optimize, , ,106,Turn on optimizations to make code smaller and faster
+elm, make, ,docs, , ,107,Generate a JSON file of documentation for a package
+elm, , ,help, , ,108,Show a more detailed description

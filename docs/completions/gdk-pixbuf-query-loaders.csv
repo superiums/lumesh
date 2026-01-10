@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdk-pixbuf-query-loaders, , ,update-cache, , ,101,Writes the output to the default cache location instead of the standard output

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+panelctl, ,c,commands, , ,101,Print command list (requires a dummy argument)
+panelctl, ,d,debug, , ,102,Debug mode
+panelctl, ,g,guid, , ,103,Specify GUID for the STB to control 
+panelctl, ,s,specid, , ,104,Specify spec_id of STB to control
+panelctl, ,v,verbose, , ,105,Produce verbose output
+panelctl, ,?,help, , ,106,Give this help list
+panelctl, , ,usage, , ,107,Give a short usage message
+panelctl, ,n,swversion, , ,108, 
+panelctl, ,V,version, , ,109,Print program version

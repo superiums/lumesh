@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+python, python -V 2>&1 | string match -rq '^.*\s2',Q, ,old new warn warnall,@f @r,108,Division control

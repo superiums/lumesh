@@ -1,0 +1,45 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pango-view, ,h,help, , ,101,Show help options
+pango-view, , ,help-all, , ,102,Show all help options
+pango-view, , ,help-cairo, , ,103,Show help for options understood by the cairo backend
+pango-view, , ,version, , ,104,Print the command's version and exit.  CAIRO BACKEND OPTIONS
+pango-view, , ,annotate, , ,105,Annotate the output
+pango-view, , ,no-auto-dir, , ,106,No layout direction according to contents
+pango-view, , ,backend, , ,107,Pango backend to use for rendering (default: cairo)
+pango-view, , ,background, , ,108,Set the background color
+pango-view, ,q,no-display, , ,109,Do not display (just write to file or whatever)
+pango-view, , ,dpi, , ,110,Set the resolution
+pango-view, , ,align, , ,111,Set text alignment
+pango-view, , ,ellipsize, , ,112,Set ellipsization mode
+pango-view, , ,font, , ,113,Set the font description
+pango-view, , ,foreground, , ,114,Set the text color
+pango-view, , ,gravity, , ,115,Set base gravity: glyph rotation
+pango-view, , ,gravity-hint, , ,116,Set gravity hint
+pango-view, , ,header, , ,117,Display the options in the output
+pango-view, , ,height, , ,118,Set height in points (positive) or number of lines (negative) for ellipsizing
+pango-view, , ,hinting, , ,119,Set hinting style
+pango-view, , ,antialias, , ,120,Set antialiasing
+pango-view, , ,hint-metrics, , ,121,Set hint metrics
+pango-view, , ,subpixel-positions, , ,122,Set subpixel positioning
+pango-view, , ,subpixel-order, , ,123,Set subpixel order
+pango-view, , ,indent, , ,124,Set paragraph indentation (in points)
+pango-view, , ,spacing, , ,125,Set line spacing (in points)
+pango-view, , ,line-spacing, , ,126,Set spread factor for line height
+pango-view, , ,justify, , ,127,Stretch paragraph lines to be justified
+pango-view, , ,justify-last-line, , ,128,Justify the last line of the paragraph
+pango-view, , ,language, , ,129,Set language to use for font selection
+pango-view, , ,margin, , ,130,Set the margin on the output in pixels
+pango-view, , ,markup, , ,131,Interpret text as Pango markup
+pango-view, ,o,output, , ,132,Save rendered image to output file
+pango-view, , ,pixels, , ,133,Use pixel units instead of points (sets dpi to 72)
+pango-view, , ,pango-units, , ,134,Use Pango units instead of points
+pango-view, , ,rtl, , ,135,Set base direction to right-to-left
+pango-view, , ,rotate, , ,136,"Set angle at which to rotate results,"
+pango-view, ,n,runs, , ,137,Run Pango layout engine this many times
+pango-view, , ,single-par, , ,138,Enable single-paragraph mode
+pango-view, ,t,text, , ,139,Text to display (instead of a file)
+pango-view, , ,waterfall, , ,140,Create a waterfall display
+pango-view, ,w,width, , ,141,Width in points to which to wrap lines or ellipsize
+pango-view, , ,wrap, , ,142,Text wrapping mode (needs a width to be set)
+pango-view, , ,serialized, , ,143,"Create layout from a serialized file,"
+pango-view, , ,serialize-to, , ,144,Serialize result to a file

@@ -1,0 +1,85 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dnf, __fish_use_subcommand, , ,alias, ,101,Manage aliases
+dnf, __fish_use_subcommand, , ,autoremove, ,105,Removes unneeded packages
+dnf, __fish_use_subcommand, , ,check, ,106,Check for problems in packagedb
+dnf, __fish_use_subcommand, , ,check-update, ,111,Checks for updates
+dnf, __fish_use_subcommand, , ,clean, ,113,Clean up cache directory
+dnf, __fish_use_subcommand, , ,distro-sync, ,119,Synchronizes packages to match the latest
+dnf, __fish_use_subcommand, , ,downgrade, ,120,Downgrades the specified package
+dnf, __fish_use_subcommand, , ,group, ,121,Manage groups
+dnf, __fish_use_subcommand, , ,help, ,129,Display help and exit
+dnf, __fish_use_subcommand, , ,history, ,130,View and manage past transactions
+dnf, __fish_use_subcommand, , ,info, ,137,Describes the given package
+dnf, __fish_use_subcommand, , ,install, ,138,Install package
+dnf, __fish_use_subcommand, , ,list, ,140,Lists all packages
+dnf, __fish_use_subcommand, , ,makecache, ,149,Downloads and caches metadata for all known repos
+dnf, __fish_use_subcommand, , ,mark, ,151,Mark packages
+dnf, __fish_use_subcommand, , ,module, ,155,Manage modules
+dnf, __fish_use_subcommand, , ,offline-distrosync, ,169,Synchronizes packages to match the latest
+dnf, __fish_use_subcommand, , ,offline-upgrade, ,175,Prepare offline upgrade of the system
+dnf, __fish_use_subcommand, , ,provides, ,180,Finds packages providing the given command
+dnf, __fish_use_subcommand, , ,reinstall, ,181,Reinstalls a package
+dnf, __fish_use_subcommand, , ,remove, ,182,Remove packages
+dnf, __fish_use_subcommand, , ,repoinfo, ,185,Verbose repolist
+dnf, __fish_use_subcommand, , ,repolist, ,186,Lists all enabled repositories
+dnf, $i, ,enabled, , ,187,Lists all enabled repositories
+dnf, $i, ,disabled, , ,188,Lists all disabled repositories
+dnf, $i, ,all, , ,189,Lists all repositories
+dnf, __fish_use_subcommand, , ,repoquery, ,190,Queries DNF repositories
+dnf, __fish_use_subcommand, , ,system-upgrade, ,220,Prepare major version upgrade of the system
+dnf, __fish_use_subcommand, , ,repository-packages, ,249,Run commands on all packages in the repository
+dnf, __fish_use_subcommand, , ,search, ,250,Search package metadata for keywords
+dnf, __fish_use_subcommand, , ,shell, ,252,Opens an interactive shell
+dnf, __fish_use_subcommand, , ,swap, ,253,Remove spec and install spec in one transaction
+dnf, __fish_use_subcommand, , ,updateinfo, ,254,Display information about update advisories
+dnf, __fish_use_subcommand, , ,upgrade, ,262,Updates packages
+dnf, __fish_use_subcommand, , ,upgrade-minimal, ,263,Updates packages
+dnf, __fish_use_subcommand, , ,versionlock, ,264,DNF versionlock plugin
+dnf, __fish_no_arguments, ,advisories, , ,270,Include packages corresponding to the advisory ID
+dnf, __fish_no_arguments, ,allowerasing, , ,271,Allow erasing of installed packages to resolve dependencies
+dnf, __fish_no_arguments, ,assumeno, , ,272,Answer no for all questions
+dnf, __fish_no_arguments,b,best, , ,273,Try the best available package versions in transactions
+dnf, __fish_no_arguments, ,bugfix, , ,274,Include packages that fix a bugfix issue
+dnf, __fish_no_arguments, ,bzs, , ,275,Include packages that fix a Bugzilla ID
+dnf, __fish_no_arguments,C,cacheonly, , ,276,Run entirely from system cache
+dnf, __fish_no_arguments, ,color,always never auto, ,277,Control whether color is used
+dnf, __fish_no_arguments,c,config, , ,278,Configuration file location
+dnf, __fish_no_arguments, ,cves, , ,279,Include packages that fix a CVE
+dnf, __fish_no_arguments,d,debuglevel, , ,280,Debugging output level
+dnf, __fish_no_arguments, ,debugsolver, , ,281,Dump dependency solver debugging info
+dnf, __fish_no_arguments, ,disableexcludepkgs, , ,282,Disable excludes
+dnf, __fish_no_arguments, ,set-disabled, , ,283,Disable specified repositories
+dnf, __fish_no_arguments, ,disableplugin, , ,284,Disable the listed plugins specified
+dnf, __fish_no_arguments, ,disablerepo, , ,285,Disable specified repositories
+dnf, __fish_no_arguments, ,destdir, , ,286,Change downloaded packages to provided directory
+dnf, __fish_no_arguments, ,downloadonly, , ,287,Download packages without performing any transaction
+dnf, __fish_no_arguments, ,set-enabled, , ,288,Enable specified repositories
+dnf, __fish_no_arguments, ,enableplugin, , ,289,Enable the listed plugins
+dnf, __fish_no_arguments, ,enablerepo, , ,290,Enable additional repositories
+dnf, __fish_no_arguments, ,enhancement, , ,291,Include enhancement relevant packages
+dnf, __fish_no_arguments,x,exclude, , ,292,Exclude packages specified
+dnf, __fish_no_arguments, ,forcearch, , ,293,Force the use of the specified architecture
+dnf, __fish_no_arguments,h,help-i, , ,294,Show the help
+dnf, __fish_no_arguments, ,installroot, , ,295,Specifies an alternative installroot
+dnf, __fish_no_arguments, ,newpackage, , ,296,Include newpackage relevant packages
+dnf, __fish_no_arguments, ,noautoremove, , ,297,Disable autoremove
+dnf, __fish_no_arguments, ,nobest, , ,298,Set best option to False
+dnf, __fish_no_arguments, ,nodocs, , ,299,Do not install documentation
+dnf, __fish_no_arguments, ,nogpgcheck, , ,300,Skip checking GPG signatures on packages
+dnf, __fish_no_arguments, ,noplugins, , ,301,Disable all plugins
+dnf, __fish_no_arguments, ,obsoletes, , ,302,Enables obsoletes processing logic
+dnf, __fish_no_arguments,q,quiet, , ,303,Quiet mode
+dnf, __fish_no_arguments,R,randomwait, , ,304,Maximum command wait time
+dnf, __fish_no_arguments, ,refresh, , ,305,Set metadata as expired before running the command
+dnf, __fish_no_arguments, ,releasever, , ,306,Configure the distribution release
+dnf, __fish_no_arguments, ,repofrompath, , ,307,Specify repository to add to the repositories for this query
+dnf, __fish_no_arguments, ,repoid, , ,308,Enable just specific repositories by an id or a glob
+dnf, __fish_no_arguments, ,rpmverbosity, , ,309,RPM debug scriptlet output level
+dnf, __fish_no_arguments, ,secseverity, , ,310,Includes packages that provide a fix for an issue of the specified severity
+dnf, __fish_no_arguments, ,security, , ,311,Includes packages that provide a fix for a security issue
+dnf, __fish_no_arguments, ,setopt, , ,312,Override a configuration option
+dnf, __fish_no_arguments, ,skip-broken, , ,313,Skips broken packages
+dnf, __fish_no_arguments, ,showduplicates, , ,314,Shows duplicate packages
+dnf, __fish_no_arguments,v,verbose, , ,315,Verbose mode
+dnf, __fish_no_arguments, ,version, , ,316,Shows DNF version and exit
+dnf, __fish_no_arguments,y,assumeyes, , ,317,Answer yes for all questions

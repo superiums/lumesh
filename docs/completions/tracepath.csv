@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tracepath, , , , ,@f @r,101, 
+tracepath, ,l, , ,@f @r,102,Sets the initial packet length
+tracepath, ,m, , ,@f @r,103,Set maximum hops
+tracepath, ,p, , ,@f @r,104,Sets the initial destination port

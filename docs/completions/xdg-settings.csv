@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-settings, , ,help, , ,101,Show command synopsis
+xdg-settings, , ,list, , ,102,List all properties xdg-settings knows about
+xdg-settings, , ,manual, , ,103,Show this manual page
+xdg-settings, , ,version, , ,104,Show the xdg-utils version information

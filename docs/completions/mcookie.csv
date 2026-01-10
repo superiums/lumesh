@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mcookie, ,f,file, , ,101, 
+mcookie, ,m,max-size, , ,102, 
+mcookie, ,v,verbose, , ,103, 
+mcookie, ,h,help, , ,104, 
+mcookie, ,V,version, , ,105, 

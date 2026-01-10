@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wlogout, ,l,layout, , ,101,Specify a custom layout file
+wlogout, ,v,version, , ,102,Show version number and stop
+wlogout, ,b,buttons-per-row, , ,103,Set the number of buttons per row
+wlogout, ,c,column-spacing, , ,104,Set space between buttons columns
+wlogout, ,r,row-spacing, , ,105,Set space between buttons rows
+wlogout, ,m,margin, , ,106,Set margin on all sides
+wlogout, ,L,margin-left, , ,107,Set margin for left of buttons
+wlogout, ,R,margin-right, , ,108,Set margin for right of buttons
+wlogout, ,p,protocol, , ,109,Takes either layer-shell or xdg
+wlogout, ,s,show-binds, , ,110,Will show the keybinds of a button by inserting the key needed to activate th…
+wlogout, ,P,primary-monitor, , ,111,"Select the monitor to display buttons on; Monitors are numbered from 0 up"
+wlogout, ,n,no-span, , ,112,"Stops wlogout from spanning across multiple monitors, can be combined with `-…"

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+trap, ,l,list-signals, , ,101,Display names of all signals
+trap, ,p,print, , ,102,Display all currently defined trap handlers
+trap, ,h,help, , ,103,Display help and exit

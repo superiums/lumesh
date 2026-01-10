@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tree, ,L, , ,@f @r,101,Descend only level directories deep
+tree, ,P, , ,@r,102,List only those files that match the pattern given
+tree, ,I, , ,@r,103,Do not list files that match the given pattern
+tree, , ,gitignore, , ,104,Filter by using .gitignore files
+tree, , ,ignore-case, , ,105,Ignore case when pattern matching
+tree, , ,matchdirs, , ,106,Include directory names in -P pattern matching
+tree, , ,metafirst, , ,107,Print meta-data at the beginning of each line
+tree, , ,prune, , ,108,Prune empty directories from the output
+tree, , ,info, , ,109,Print information about files found in .info files
+tree, , ,noreport, , ,110,Turn off file/directory count at end of tree listing
+tree, , ,charset, ,@f @r,111,Use charset X for terminal/HTML and indentation line output
+tree, , ,filelimit, ,@r,112,Do not descend dirs with more than # files in them
+tree, ,o, , ,@r,113,Output to file instead of stdout
+tree, , ,si, , ,114,"Like -h, but use in SI units (powers of 1000)"
+tree, , ,du, , ,115,Compute size of directories by their contents
+tree, , ,timefmt, ,@f @r,116,Print and format time according to the format <f>
+tree, , ,inodes, , ,117,Print inode number of each file
+tree, , ,device, , ,118,Print device ID number to which each file belongs
+tree, , ,dirsfirst, , ,119,List directories before files (-U disables)
+tree, , ,filesfirst, , ,120,List files before directories (-U disables)
+tree, , ,sort,name version size mtime ctime, ,121,Select sort
+tree, ,H, , ,@r,122,Prints out HTML format with baseHREF as top directory
+tree, ,T, , ,@r,123,Replace the default HTML title and H1 header with string
+tree, , ,nolinks, , ,124,Turn off hyperlinks in HTML output
+tree, , ,fromfile, ,@r,125,Reads paths from files (.=stdin)
+tree, , ,version, , ,126,Print version and exit
+tree, , ,help, , ,127,Print usage and this help message and exit

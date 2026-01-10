@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rshd, ,a,verify-hostname, , ,101,ask hostname for verification
+rshd, ,l,no-rhosts, , ,102,ignore . rhosts file
+rshd, ,L,log-sessions, , ,103,log successful logins
+rshd, ,n,no-keepalive, , ,104,do not set SO_KEEPALIVE
+rshd, ,r,reverse-required, , ,105,require reverse resolving of remote host IP
+rshd, ,?,help, , ,106,give this help list
+rshd, , ,usage, , ,107,give a short usage message
+rshd, ,V,version, , ,108,print program version AUTHOR Written by many authors

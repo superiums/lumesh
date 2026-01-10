@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-protect, ,a,action, , ,101,Add or remove a key protector to or from a key
+grub-protect, ,p,protector, , ,102,Set key protector to use (only tpm2 is currently supported)
+grub-protect, , ,tpm2-asymmetric, , ,103,(ECC_NIST_P256). (default: ECC)
+grub-protect, , ,tpm2-bank, , ,104,"Set the bank of PCRs used to authorize key release: SHA1, SHA256, SHA384, or …"
+grub-protect, , ,tpm2-device, , ,105,"Set the path to the TPM2 device.  (default: \\,/dev/tpm0\\/)"
+grub-protect, , ,tpm2-evict, , ,106,"Evict a previously persisted SRK from the TPM, if any"
+grub-protect, , ,tpm2-keyfile, , ,107,Set the path to a file that contains the cleartext key to protect
+grub-protect, , ,tpm2-outfile, , ,108,Set the path to the file that will contain the key after sealing (must be acc…
+grub-protect, , ,tpm2-pcrs, , ,109,Set a comma-separated list of PCRs used to authorize key release e. g
+grub-protect, , ,tpm2-srk, , ,110,Set the SRK handle if the SRK is to be made persistent
+grub-protect, , ,tpm2key, , ,111,Use TPM 2. 0 Key File format
+grub-protect, ,?,help, , ,112,give this help list
+grub-protect, , ,usage, , ,113,give a short usage message
+grub-protect, ,V,version, , ,114,print program version

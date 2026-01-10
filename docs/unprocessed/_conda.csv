@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+conda, __fish_conda_subcommand env, , ,create, ,102,Create a new environment
+conda, __fish_conda_subcommand env, , ,list, ,103,List all conda environments
+conda, __fish_conda_subcommand env create,f,file, ,@F,104,Create environment from yaml file

@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ncursesw6-config, , ,mouse-version, , ,101,--prefix reports the package prefix of \\%ncurses
+ncursesw6-config, , ,exec-prefix, , ,102,reports the executable prefix of \\%ncurses
+ncursesw6-config, , ,cflags, , ,103,reports the C compiler flags needed to compile with \\%ncurses
+ncursesw6-config, , ,libs, , ,104,reports the libraries needed to link with \\%ncurses
+ncursesw6-config, , ,abi-version, , ,105,reports the ABI version of \\%ncurses
+ncursesw6-config, , ,bindir, , ,106,reports the directory containing \\%ncurses programs
+ncursesw6-config, , ,datadir, , ,107,reports the directory containing \\%ncurses data
+ncursesw6-config, , ,includedir, , ,108,reports the directory containing \\%ncurses header files
+ncursesw6-config, , ,libdir, , ,109,reports the directory containing \\%ncurses libraries
+ncursesw6-config, , ,mandir, , ,110,reports the directory containing \\%ncurses man pages
+ncursesw6-config, , ,terminfo, , ,111,"reports the \\%TERMINFO terminfo database path, for example \\%/usr/share/termi…"
+ncursesw6-config, , ,terminfo-dirs, , ,112,reports the \\%TERMINFO_DIRS supplemental search path for the terminfo databas…
+ncursesw6-config, , ,termpath, , ,113,"reports the \\%TERMPATH supplemental search path for the termcap database, if …"
+ncursesw6-config, , ,version, , ,114,--help issues a usage message and exits successfully
+ncursesw6-config, , ,prefix, , ,115,reports the package prefix of %ncurses
+ncursesw6-config, , ,help, , ,116,issues a usage message and exits successfully

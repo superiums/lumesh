@@ -1,0 +1,101 @@
+cmd,conds,short,long,params,dirs,pri,desc
+terraform, , , , ,@f,102,Show help
+terraform, console, , , ,@r,116,Path to a Terraform state file
+terraform, console, , , ,@f,117,Set a variable in the Terraform configuration
+terraform, console, , , ,@r,118,Set variables from a file
+terraform, fmt, , , ,@f,120,Don't list files whose formatting differs
+terraform, fmt, , , ,@f,121,Don't write to source files
+terraform, fmt, , , ,@f,122,Display diffs of formatting changes
+terraform, fmt, , , ,@f,123,Check if the input is formatted
+terraform, fmt, , , ,@f,124,"If specified, output won't contain any color"
+terraform, fmt, , , ,@f,125,Also process files in subdirectories
+terraform, get, , , ,@f,127,Check modules for updates
+terraform, get, , , ,@f,128,"If specified, output won't contain any color"
+terraform, graph, , , ,@f,130,Use specified plan file instead of current directory
+terraform, graph, , , ,@f,131,Highlight any cycles in the graph
+terraform, graph, , , ,@f,132,Output plan graph
+terraform, graph, , , ,@f,133,Output plan graph assuming refresh only
+terraform, graph, , , ,@f,134,Output plan graph assuming destroy
+terraform, graph, , , ,@f,135,Output apply graph
+terraform, import, , , ,@r,137,Path to backup the existing state file
+terraform, import, , , ,@f,138,Path to a directory of configuration files
+terraform, import, , , ,@f,139,Allow import without resource block
+terraform, import, , , ,@f,140,Disable interactive input prompts
+terraform, import, , , ,@f,141,Don't hold a state lock
+terraform, import, , , ,@f,142,Duration to retry a state lock
+terraform, import, , , ,@f,143,"If specified, output won't contain any color"
+terraform, import, , , ,@r,144,Path to a Terraform state file
+terraform, import, , , ,@r,145,Path to write state
+terraform, import, , , ,@f,146,Set a variable in the Terraform configuration
+terraform, import, , , ,@r,147,Set variables from a file
+terraform, init, , , ,@f,149,Disable backend initialization
+terraform, init, , , ,@f,150,Disable backend initialization
+terraform, init, , , ,@r,151,Backend configuration
+terraform, init, , , ,@f,152,Suppress prompts about copying state data
+terraform, init, , , ,@f,153,Copy the module into target directory before init
+terraform, init, , , ,@f,154,Disable downloading modules for this configuration
+terraform, init, , , ,@f,155,Disable interactive prompts
+terraform, init, , , ,@f,156,Don't hold state lock
+terraform, init, , , ,@f,157,Duration to retry a state lock
+terraform, init, , , ,@f,158,"If specified, output won't contain any color"
+terraform, init, , , ,@f,159,Directory containing plugin binaries
+terraform, init, , , ,@f,160,Ignore any saved configuration
+terraform, init, , , ,@r,161,"Reconfigure backend, migrating existing state"
+terraform, init, , , ,@f,162,"Install latest dependencies, ignoring lockfile"
+terraform, init, , , ,@f,163,Set dependency lockfile mode to readonly
+terraform, init, , , ,@f,164,Ignore local and remote backend compatibility check
+terraform, login, , , ,@f,166, 
+terraform, logout, , , ,@f,168, 
+terraform, output, , , ,@r,170,Path to the state file to read
+terraform, output, , , ,@f,171,"If specified, output won't contain any color"
+terraform, output, , , ,@f,172,Print output in JSON format
+terraform, output, , , ,@f,173,Print raw strings directly
+terraform, plan, , , ,@f,175,Show only error summaries
+terraform, plan, , , ,@f,176,Return detailed exit codes
+terraform, plan, , , ,@f,177,Ask for input for variables if not directly set
+terraform, plan, , , ,@f,178,Don't hold a state lock during the operation
+terraform, plan, , , ,@f,179,Duration to retry a state lock
+terraform, plan, , , ,@f,180,"If specified, output won't contain any color"
+terraform, plan, , , ,@f,181,Write a plan file to the given path
+terraform, plan, , , ,@f,182,Limit the number of concurrent operations
+terraform, plan, , , ,@r,183,Path to a Terraform state file
+terraform, providers, , ,lock mirror schema,@f,192, 
+terraform, refresh, , , ,@r,195,Path to backup the existing state file
+terraform, refresh, , , ,@f,196,Ask for input for variables if not directly set
+terraform, refresh, , , ,@f,197,Don't hold a state lock
+terraform, refresh, , , ,@f,198,Duration to retry a state lock
+terraform, refresh, , , ,@f,199,"If specified, output won't contain any color"
+terraform, refresh, , , ,@r,200,Path to a Terraform state file
+terraform, refresh, , , ,@r,201,Path to write state
+terraform, refresh, , , ,@f,202,Resource to target
+terraform, refresh, , , ,@f,203,Set a variable in the Terraform configuration
+terraform, refresh, , , ,@r,204,Set variables from a file
+terraform, show, , , ,@f,206,"If specified, output won't contain any color"
+terraform, validate, , , ,@f,207,Produce output in JSON format
+terraform, state, , ,list,@f,209,List resources in state
+terraform, state, , ,mv,@f,210,Move an item in the state
+terraform, state, , ,pull,@f,211,Pull current state and output to stdout
+terraform, state, , ,push,@f,212,Update remote state from local state
+terraform, state, , ,replace-provider,@f,213,Replace provider in the state
+terraform, state, , ,rm,@f,214,Remove instance from the state
+terraform, state, , ,show,@f,215,Show a resource in the state
+terraform, taint, , , ,@f,217,Succeed even if resource is missing
+terraform, taint, , , ,@r,218,Path to backup the existing state file
+terraform, taint, , , ,@f,219,Don't hold a state lock
+terraform, taint, , , ,@f,220,Duration to retry a state lock
+terraform, taint, , , ,@f,221,Ignore local and remote backend compatibility check
+terraform, taint, , , ,@r,222,Path to a Terraform state file
+terraform, taint, , , ,@r,223,Path to write state
+terraform, test, , , ,@f,225,Show only error summaries
+terraform, test, , , ,@f,226,Also write test results to provided JUnit XML file
+terraform, test, , , ,@f,227,"If specified, output won't contain any color"
+terraform, untaint, , , ,@f,229,Succeed even if resource is missing
+terraform, untaint, , , ,@r,230,Path to backup the existing state file
+terraform, untaint, , , ,@f,231,Don't hold a state lock
+terraform, untaint, , , ,@f,232,Duration to retry a state lock
+terraform, untaint, , , ,@f,233,Ignore local and remote backend compatibility check
+terraform, untaint, , , ,@r,234,Path to a Terraform state file
+terraform, untaint, , , ,@r,235,Path to write state
+terraform, validate, , , ,@f,237,Produce output in JSON format
+terraform, validate, , , ,@f,238,"If specified, output won't contain any color"
+terraform, workspace && select delete, , , ,@f,241, 

@@ -1,0 +1,371 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zypper, __fish_zypper_use_repo, , , ,@f,101,Repo
+zypper, __fish_zypper_not_use_file, , , ,@f,102, 
+zypper, __fish_zypper_no_subcommand, , ,help ?,@f,103,Print help
+zypper, __fish_zypper_no_subcommand, , ,shell sh,@f,104,Accept multiple commands at once
+zypper, __fish_zypper_no_subcommand, , ,repos lr,@f,105,List all defined repositories
+zypper, __fish_zypper_no_subcommand, , ,addrepo ar,@f,106,Add a new repository
+zypper, __fish_zypper_no_subcommand, , ,removerepo rr,@f,107,Remove specified repository
+zypper, __fish_zypper_no_subcommand, , ,renamerepo nr,@f,108,Rename specified repository
+zypper, __fish_zypper_no_subcommand, , ,modifyrepo mr,@f,109,Modify specified repository
+zypper, __fish_zypper_no_subcommand, , ,refresh ref,@f,110,Refresh all repositories
+zypper, __fish_zypper_no_subcommand, , ,clean cc,@f,111,Clean local caches
+zypper, __fish_zypper_no_subcommand, , ,services ls,@f,112,List all defined services
+zypper, __fish_zypper_no_subcommand, , ,addservice as,@f,113,Add a new service
+zypper, __fish_zypper_no_subcommand, , ,modifyservice ms,@f,114,Modify specified service
+zypper, __fish_zypper_no_subcommand, , ,removeservice rs,@f,115,Remove specified service
+zypper, __fish_zypper_no_subcommand, , ,refresh-services refs,@f,116,Refresh all services
+zypper, __fish_zypper_no_subcommand, , ,install in, ,117,Install packages
+zypper, __fish_zypper_no_subcommand, , ,remove rm,@f,118,Remove packages
+zypper, __fish_zypper_no_subcommand, , ,verify ve,@f,119,Verify integrity of package dependencies
+zypper, __fish_zypper_no_subcommand, , ,source-install si,@f,120,Install source packages and their build dependencies
+zypper, __fish_zypper_no_subcommand, , ,install-new-recommends inr,@f,121,Install newly added packages recommended by installed packages
+zypper, __fish_zypper_no_subcommand, , ,update up,@f,122,Update installed packages with newer versions
+zypper, __fish_zypper_no_subcommand, , ,list-updates lu,@f,123,List available updates
+zypper, __fish_zypper_no_subcommand, , ,patch,@f,124,Install needed patches
+zypper, __fish_zypper_no_subcommand, , ,list-patches lp,@f,125,List needed patches
+zypper, __fish_zypper_no_subcommand, , ,dist-upgrade dup,@f,126,Perform a distribution upgrade
+zypper, __fish_zypper_no_subcommand, , ,patch-check pchk,@f,127,Check for patches
+zypper, __fish_zypper_no_subcommand, , ,search se,@f,128,Search for packages matching a pattern
+zypper, __fish_zypper_no_subcommand, , ,info if,@f,129,Show full information for specified packages
+zypper, __fish_zypper_no_subcommand, , ,patch-info,@f,130,Show full information for specified patches
+zypper, __fish_zypper_no_subcommand, , ,pattern-info,@f,131,Show full information for specified patterns
+zypper, __fish_zypper_no_subcommand, , ,product-info,@f,132,Show full information for specified products
+zypper, __fish_zypper_no_subcommand, , ,patches pch,@f,133,List all available patches
+zypper, __fish_zypper_no_subcommand, , ,packages pa,@f,134,List all available packages
+zypper, __fish_zypper_no_subcommand, , ,patterns pt,@f,135,List all available patterns
+zypper, __fish_zypper_no_subcommand, , ,products pd,@f,136,List all available products
+zypper, __fish_zypper_no_subcommand, , ,what-provides wp,@f,137,List packages providing specified capability
+zypper, __fish_zypper_no_subcommand, , ,addlock al,@f,138,Add a package lock
+zypper, __fish_zypper_no_subcommand, , ,removelock rl,@f,139,Remove a package lock
+zypper, __fish_zypper_no_subcommand, , ,locks ll,@f,140,List current package locks
+zypper, __fish_zypper_no_subcommand, , ,cleanlocks cl,@f,141,Remove unused locks
+zypper, __fish_zypper_no_subcommand, , ,locales lloc,@f,142,List requested locales (languages codes)
+zypper, __fish_zypper_no_subcommand, , ,addlocale aloc,@f,143,Add locale(s) to requested locales
+zypper, __fish_zypper_no_subcommand, , ,removelocale rloc,@f,144,Remove locale(s) from requested locales
+zypper, __fish_zypper_no_subcommand, , ,versioncmp vcmp,@f,145,Compare two version strings
+zypper, __fish_zypper_no_subcommand, , ,targetos tos,@f,146,Print the target operating system ID string
+zypper, __fish_zypper_no_subcommand, , ,licenses,@f,147,Print report about licenses and EULAs of installed packages
+zypper, __fish_zypper_no_subcommand, , ,download,@f,148,Download rpms specified on the commandline to a local directory
+zypper, __fish_zypper_no_subcommand, , ,source-download,@f,149,Download source rpms for all installed packages to a local directory
+zypper, __fish_zypper_no_subcommand, , ,needs-rebooting,@f,150,Check if the needs-reboot flag was set
+zypper, __fish_zypper_no_subcommand, , ,ps,@f,151,List running processes still using deleted files
+zypper, __fish_zypper_no_subcommand, , ,subcommand,@f,152,Lists available subcommands
+zypper, __fish_zypper_no_subcommand, , ,$__fish_zypper_subcommands,@f,153, 
+zypper, __fish_zypper_no_subcommand,h,help, , ,154,Help
+zypper, __fish_zypper_no_subcommand,V,version, , ,155,Output the version number
+zypper, __fish_zypper_no_subcommand, ,promptids, , ,156,Output a list of zypper user prompts
+zypper, __fish_zypper_no_subcommand,c,config, ,@r,157,Use specified config file instead of the default
+zypper, __fish_zypper_no_subcommand, ,userdata, , ,158,User defined transaction id used in history and plugins
+zypper, __fish_zypper_no_subcommand,q,quiet, , ,159,"Suppress normal output, print only error messages"
+zypper, __fish_zypper_no_subcommand,v,verbose, , ,160,Increase verbosity
+zypper, __fish_zypper_no_subcommand,A,no-abbrev, , ,161,Do not abbreviate text in tables
+zypper, __fish_zypper_no_subcommand,s,table-style, , ,162,Table style (integer)
+zypper, __fish_zypper_no_subcommand,r,rug-compatible, , ,163,Turn on rug compatibility
+zypper, __fish_zypper_no_subcommand,n,non-interactive, , ,164,"Do not ask anything, use default answers automatically"
+zypper, __fish_zypper_no_subcommand, ,non-interactive-include-reboot-patches, , ,165,"Do not treat patches as interactive, which have the rebootSuggested-flag set"
+zypper, __fish_zypper_no_subcommand,x,xmlout, , ,166,Switch to XML output
+zypper, __fish_zypper_no_subcommand,i,ignore-unknown, , ,167,Ignore unknown packages
+zypper, __fish_zypper_no_subcommand,t,terse, , ,168,Terse output for machine consumption. Implies --no-abbrev and --no-color
+zypper, __fish_zypper_no_subcommand,D,reposd-dir, ,@r,169,Use alternative repository definition file directory
+zypper, __fish_zypper_no_subcommand,C,cache-dir, ,@r,170,Use alternative directory for all caches
+zypper, __fish_zypper_no_subcommand, ,raw-cache-dir, ,@r,171,Use alternative raw meta-data cache directory
+zypper, __fish_zypper_no_subcommand, ,solv-cache-dir, ,@r,172,Use alternative solv file cache directory
+zypper, __fish_zypper_no_subcommand, ,pkg-cache-dir, ,@r,173,Use alternative package cache directory
+zypper, __fish_zypper_no_subcommand, ,no-gpg-checks, , ,174,Ignore GPG check failures and continue
+zypper, __fish_zypper_no_subcommand, ,gpg-auto-import-keys, , ,175,Automatically trust and import new repository signing keys
+zypper, __fish_zypper_no_subcommand,p,plus-repo, ,@f,176,Use an additional repository
+zypper, __fish_zypper_no_subcommand,p,plus-content, ,@f,177,Additionally use disabled repositories providing a specific keyword
+zypper, __fish_zypper_no_subcommand, ,disable-repositories, , ,178,Do not read meta-data from repositories
+zypper, __fish_zypper_no_subcommand, ,no-refresh, , ,179,Do not refresh the repositories
+zypper, __fish_zypper_no_subcommand, ,no-cd, , ,180,Ignore CD/DVD repositories
+zypper, __fish_zypper_no_subcommand, ,no-remote, , ,181,Ignore remote repositories
+zypper, __fish_zypper_no_subcommand, ,releasever, , ,182,Set the value of $releasever in all .repo files
+zypper, __fish_zypper_no_subcommand,R,root, ,@r,183,Operate on a different root directory
+zypper, __fish_zypper_no_subcommand, ,installroot, ,@r,184,"Operate on a different root directory, but share repositories with the host"
+zypper, __fish_zypper_no_subcommand, ,disable-system-resolvables, , ,185,Do not read installed packages
+zypper, __fish_zypper_is_subcommand_lr,e,export, ,@r,186,Export all defined repositories as a single local .repo file
+zypper, __fish_zypper_is_subcommand_lr,a,alias, , ,187,Show also repository alias
+zypper, __fish_zypper_is_subcommand_lr,n,name, , ,188,Show also repository name
+zypper, __fish_zypper_is_subcommand_lr,r,refresh, , ,189,Show also the autorefresh flag
+zypper, __fish_zypper_is_subcommand_lr,u,uri, , ,190,Show also base URI of repositories
+zypper, __fish_zypper_is_subcommand_lr,p,priority, , ,191,Show also repository priority
+zypper, __fish_zypper_is_subcommand_lr,d,details, , ,192,"Show more information like URI, priority, type"
+zypper, __fish_zypper_is_subcommand_lr,s,service, , ,193,Show also alias of parent service
+zypper, __fish_zypper_is_subcommand_lr,E,show-enabled-only, , ,194,Show enabled repos only
+zypper, __fish_zypper_is_subcommand_lr,U,sort-by-uri, , ,195,Sort the list by URI
+zypper, __fish_zypper_is_subcommand_lr,N,sort-by-name, , ,196,Sort the list by name
+zypper, __fish_zypper_is_subcommand_lr,P,sort-by-priority, , ,197,Sort the list by repository priority
+zypper, __fish_zypper_is_subcommand_lr,A,sort-by-alias, , ,198,Sort the list by alias
+zypper, __fish_zypper_is_subcommand_ar,r,repo, ,@r,199,Just another means to specify a .repo file to read
+zypper, __fish_zypper_is_subcommand_ar,c,check, , ,200,Probe URI
+zypper, __fish_zypper_is_subcommand_ar,C,no-check, , ,201,"Don't probe URI, probe later during refresh"
+zypper, __fish_zypper_is_subcommand_ar,p,priority, , ,202,Set the priority of the repository
+zypper, __fish_zypper_is_subcommand_ar,k,keep-packages, , ,203,Enable RPM files caching
+zypper, __fish_zypper_is_subcommand_ar,K,no-keep-packages, , ,204,Disable RPM files caching
+zypper, __fish_zypper_is_subcommand_ar,g,gpgcheck, , ,205,Enable GPG check for this repository
+zypper, __fish_zypper_is_subcommand_ar, ,gpgcheck-strict, , ,206,Enable strict GPG check for this repository
+zypper, __fish_zypper_is_subcommand_ar, ,gpgcheck-allow-unsigned, , ,207,Short hand for --gpgcheck-allow-unsigned-repo --gpgcheck-allow-unsigned-package
+zypper, __fish_zypper_is_subcommand_ar, ,gpgcheck-allow-unsigned-repo, , ,208,Enable GPG check but allow the repository metadata to be unsigned
+zypper, __fish_zypper_is_subcommand_ar, ,gpgcheck-allow-unsigned-package, , ,209,Enable GPG check but allow installing unsigned packages from this repository.
+zypper, __fish_zypper_is_subcommand_ar,G,no-gpgcheck, , ,210,Disable GPG check for this repository
+zypper, __fish_zypper_is_subcommand_ar, ,default-gpgcheck, , ,211,Use the global GPG check setting defined in /etc/zypp/zypp.conf
+zypper, __fish_zypper_is_subcommand_ar,n,name, ,@r,212,Specify descriptive name for the repository
+zypper, __fish_zypper_is_subcommand_ar,d,enable, , ,213,Add the repository as enabled
+zypper, __fish_zypper_is_subcommand_ar,d,disable, , ,214,Add the repository as disabled
+zypper, __fish_zypper_is_subcommand_ar,f,refresh, , ,215,Enable autorefresh of the repository
+zypper, __fish_zypper_is_subcommand_ar,F,no-refresh, , ,216,Disable autorefresh of the repository
+zypper, __fish_zypper_is_subcommand_rr, ,loose-auth, , ,217,Ignore user authentication data in the URI
+zypper, __fish_zypper_is_subcommand_rr, ,loose-query, , ,218,Ignore query string in the URI
+zypper, __fish_zypper_is_subcommand_rr,a,all, , ,219,Apply changes to all repositories
+zypper, __fish_zypper_is_subcommand_rr,l,local, , ,220,Apply changes to all local repositories
+zypper, __fish_zypper_is_subcommand_rr,t,remote, , ,221,Apply changes to all remote repositories
+zypper, __fish_zypper_is_subcommand_rr,m,medium-type, ,@r,222,Apply changes to repositories of specified type
+zypper, __fish_zypper_is_subcommand_mr,n,name, ,@r,223,Set a descriptive name for the repository
+zypper, __fish_zypper_is_subcommand_mr,d,disable, , ,224,Disable the repository
+zypper, __fish_zypper_is_subcommand_mr,e,enable, , ,225,Enable the repository
+zypper, __fish_zypper_is_subcommand_mr,f,refresh, , ,226,Enable auto-refresh of the repository
+zypper, __fish_zypper_is_subcommand_mr,F,no-refresh, , ,227,Disable auto-refresh of the repository
+zypper, __fish_zypper_is_subcommand_mr,p,priority, ,@r,228,Set the priority of the repository
+zypper, __fish_zypper_is_subcommand_mr,k,keep-packages, , ,229,Enable RPM files caching
+zypper, __fish_zypper_is_subcommand_mr,K,no-keep-packages, , ,230,Disable RPM files caching
+zypper, __fish_zypper_is_subcommand_mr,g,gpgcheck, , ,231,Enable GPG check for this repository
+zypper, __fish_zypper_is_subcommand_mr, ,gpgcheck-strict, , ,232,Enable strict GPG check for this repository
+zypper, __fish_zypper_is_subcommand_mr, ,gpgcheck-allow-unsigned, , ,233,Short hand for --gpgcheck-allow-unsigned-repo --gpgcheck-allow-unsigned-package
+zypper, __fish_zypper_is_subcommand_mr, ,gpgcheck-allow-unsigned-repo, , ,234,Enable GPG check but allow the repository metadata to be unsigned
+zypper, __fish_zypper_is_subcommand_mr, ,gpgcheck-allow-unsigned-package, , ,235,Enable GPG check but allow installing unsigned packages from this repository.
+zypper, __fish_zypper_is_subcommand_mr,G,no-gpgcheck, , ,236,Disable GPG check for this repository
+zypper, __fish_zypper_is_subcommand_mr, ,default-gpgcheck, , ,237,Use the global GPG check setting defined in /etc/zypp/zypp.conf
+zypper, __fish_zypper_is_subcommand_mr,a,all, , ,238,Apply changes to all repositories
+zypper, __fish_zypper_is_subcommand_mr,l,local, , ,239,Apply changes to all local repositories
+zypper, __fish_zypper_is_subcommand_mr,t,remote, , ,240,Apply changes to all remote repositories
+zypper, __fish_zypper_is_subcommand_mr,m,medium-type, ,@r,241,Apply changes to repositories of specified type
+zypper, __fish_zypper_is_subcommand_ref,f,force, , ,242,Force a complete refresh
+zypper, __fish_zypper_is_subcommand_ref,b,force-build, , ,243,Force rebuild of the database
+zypper, __fish_zypper_is_subcommand_ref,d,force-download, , ,244,Force download of raw metadata
+zypper, __fish_zypper_is_subcommand_ref,B,build-only, , ,245,"Only build the database, don't download metadata"
+zypper, __fish_zypper_is_subcommand_ref,D,download-only, , ,246,"Only download raw metadata, don't build the database"
+zypper, __fish_zypper_is_subcommand_ref,r,repo, ,@f,247,Refresh only specified repositories
+zypper, __fish_zypper_is_subcommand_ref,s,services, , ,248,Refresh also services before refreshing repos
+zypper, __fish_zypper_is_subcommand_ls,u,uri, , ,249,Show also base URI of repositories
+zypper, __fish_zypper_is_subcommand_ls,p,priority, , ,250,Show also repository priority
+zypper, __fish_zypper_is_subcommand_ls,d,details, , ,251,"Show more information like URI, priority, type"
+zypper, __fish_zypper_is_subcommand_ls,r,with-repos, , ,252,Show also repositories belonging to the services
+zypper, __fish_zypper_is_subcommand_ls,E,show-enabled-only, , ,253,Show enabled repos only
+zypper, __fish_zypper_is_subcommand_ls,P,sort-by-priority, , ,254,Sort the list by repository priority
+zypper, __fish_zypper_is_subcommand_ls,U,sort-by-uri, , ,255,Sort the list by URI
+zypper, __fish_zypper_is_subcommand_ls,N,sort-by-name, , ,256,Sort the list by name
+zypper, __fish_zypper_is_subcommand_as,n,name, ,@r,257,Set a descriptive name for the service
+zypper, __fish_zypper_is_subcommand_as,d,enable, , ,258,Add the service as enabled
+zypper, __fish_zypper_is_subcommand_as,d,disable, , ,259,Add the service as disabled
+zypper, __fish_zypper_is_subcommand_as,f,refresh, , ,260,Enable autorefresh of the repository
+zypper, __fish_zypper_is_subcommand_as,F,no-refresh, , ,261,Disable autorefresh of the repository
+zypper, __fish_zypper_is_subcommand_ms,n,name, ,@r,262,Set a descriptive name for the service
+zypper, __fish_zypper_is_subcommand_ms,e,enable, , ,263,Enable a disabled service
+zypper, __fish_zypper_is_subcommand_ms,d,disable, , ,264,Disable the service (but don't remove it)
+zypper, __fish_zypper_is_subcommand_ms,r,refresh, , ,265,Enable auto-refresh of the service
+zypper, __fish_zypper_is_subcommand_ms,R,no-refresh, , ,266,Disable auto-refresh of the service
+zypper, __fish_zypper_is_subcommand_ms,a,all, , ,267,Apply changes to all services
+zypper, __fish_zypper_is_subcommand_ms,l,local, , ,268,Apply changes to all local services
+zypper, __fish_zypper_is_subcommand_ms,t,remote, , ,269,Apply changes to all remote services
+zypper, __fish_zypper_is_subcommand_ms,m,medium-type, , ,270,Apply changes to services of specified type
+zypper, __fish_zypper_is_subcommand_ms,i,ar-to-enable, ,@r,271,Add a RIS service repository to enable
+zypper, __fish_zypper_is_subcommand_ms,I,ar-to-disable, ,@r,272,Add a RIS service repository to disable
+zypper, __fish_zypper_is_subcommand_ms,j,rr-to-enable, ,@r,273,Remove a RIS service repository to enable
+zypper, __fish_zypper_is_subcommand_ms,J,rr-to-disable, ,@r,274,Remove a RIS service repository to disable
+zypper, __fish_zypper_is_subcommand_ms,k,cl-to-enable, , ,275,Clear the list of RIS repositories to enable
+zypper, __fish_zypper_is_subcommand_ms,K,cl-to-disable, , ,276,Clear the list of RIS repositories to disable
+zypper, __fish_zypper_is_subcommand_rs, ,loose-auth, , ,277,Ignore user authentication data in the URI
+zypper, __fish_zypper_is_subcommand_rs, ,loose-query, , ,278,Ignore query string in the URI
+zypper, __fish_zypper_is_subcommand_refs,f,force, , ,279,Force a complete refresh
+zypper, __fish_zypper_is_subcommand_refs,r,with-repos, , ,280,Refresh also repositories
+zypper, __fish_zypper_is_subcommand_refs,R,restore-status, , ,281,Also restore service repositories enabled/disabled state
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,debug-solver, , ,282,Create solver test case for debugging
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,force-resolution, , ,283,Force the solver to find a solution (even an aggressive one)
+zypper, __fish_zypper_subcommand_has_solver_expert_options,R,no-force-resolution, , ,284,"Do not force the solver to find solution, let it ask"
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,solver-focus,$__fish_zypper_solver_focus_modes,@f,285,Create solver test case for debugging
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,recommends, , ,286,Install also recommended packages in addition to the required
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,no-recommends, , ,287,"Do not install recommended packages, only required"
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,no-allow-downgrade, , ,288,Whether to allow downgrading installed resolvables
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,no-allow-name-change, , ,289,Whether to allow changing the names of installed resolvables
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,no-allow-arch-change, , ,290,Whether to allow changing the architecture of installed resolvables
+zypper, __fish_zypper_subcommand_has_solver_expert_options, ,no-allow-vendor-change, , ,291,Whether to allow changing the vendor of installed resolvables
+zypper, __fish_zypper_is_subcommand_in,t,type,$__fish_zypper_package_types,@f,292,Type of package
+zypper, __fish_zypper_is_subcommand_in,n,name, , ,293,"Select packages by plain name, not by capability"
+zypper, __fish_zypper_is_subcommand_in,C,capability, , ,294,Select packages by capability
+zypper, __fish_zypper_is_subcommand_in, ,details, , ,295,Show the detailed installation summary
+zypper, __fish_zypper_is_subcommand_in, ,from, ,@f,296,Select packages from the specified repository
+zypper, __fish_zypper_is_subcommand_in, ,oldpackage, , ,297,Allow to replace a newer item with an older one.
+zypper, __fish_zypper_is_subcommand_in, ,allow-unsigned-rpm, , ,298,Silently install unsigned rpm packages given as commandline parameters
+zypper, __fish_zypper_is_subcommand_in,f,force, , ,299,"Install even if the item is installed, downgraded or changes vendor/architecture"
+zypper, __fish_zypper_is_subcommand_in,r,repo, ,@f,300,Load only the specified repository
+zypper, __fish_zypper_is_subcommand_in,y,no-confirm, , ,301,Don't require user interaction
+zypper, __fish_zypper_is_subcommand_in,D,dry-run, , ,302,"Test the installation, do not actually install"
+zypper, __fish_zypper_is_subcommand_in, ,replacefiles, , ,303,Install even if it replaces files from other installed packages
+zypper, __fish_zypper_is_subcommand_in,l,auto-agree-with-licenses, , ,304,Automatically say 'yes' to third party license confirmation prompt
+zypper, __fish_zypper_is_subcommand_in, ,download,$__fish_zypper_download_modes,@f,305,Set the download-install mode
+zypper, __fish_zypper_is_subcommand_in,d,download-only, , ,306,"Only download the packages, do not install"
+zypper, __fish_zypper_is_subcommand_rm,t,type,$__fish_zypper_package_types,@f,307,Type of package
+zypper, __fish_zypper_is_subcommand_rm,n,name, , ,308,"Select packages by plain name, not by capability"
+zypper, __fish_zypper_is_subcommand_rm,C,capability, , ,309,Select packages by capability
+zypper, __fish_zypper_is_subcommand_rm, ,details, , ,310,Show the detailed installation summary
+zypper, __fish_zypper_is_subcommand_rm,r,repo, ,@f,311,Load only the specified repository
+zypper, __fish_zypper_is_subcommand_rm,y,no-confirm, , ,312,Don't require user interaction
+zypper, __fish_zypper_is_subcommand_rm,D,dry-run, , ,313,"Test the removal, do not actually remove"
+zypper, __fish_zypper_is_subcommand_rm,u,clean-deps, , ,314,Automatically remove unneeded dependencies
+zypper, __fish_zypper_is_subcommand_rm,U,no-clean-deps, , ,315,No automatic removal of unneeded dependencies
+zypper, __fish_zypper_is_subcommand_rm, ,debug-solver, , ,316,Create solver test case for debugging
+zypper, __fish_zypper_is_subcommand_rm, ,force-resolution, , ,317,Force the solver to find a solution (even an aggressive one)
+zypper, __fish_zypper_is_subcommand_rm,R,no-force-resolution, , ,318,"Do not force the solver to find solution, let it ask"
+zypper, __fish_zypper_is_subcommand_rm, ,solver-focus,$__fish_zypper_solver_focus_modes,@f,319,Create solver test case for debugging
+zypper, __fish_zypper_is_subcommand_ve, ,details, , ,320,Show the detailed installation summary
+zypper, __fish_zypper_is_subcommand_ve,D,dry-run, , ,321,"Test the repair, do not actually do anything to the system"
+zypper, __fish_zypper_is_subcommand_ve, ,download,$__fish_zypper_download_modes,@f,322,Set the download-install mode
+zypper, __fish_zypper_is_subcommand_ve,d,download-only, , ,323,"Only download the packages, do not install"
+zypper, __fish_zypper_is_subcommand_ve,r,repo, ,@f,324,Load only the specified repository
+zypper, __fish_zypper_is_subcommand_ve,y,no-confirm, , ,325,Don't require user interaction
+zypper, __fish_zypper_is_subcommand_si,d,build-deps-only, , ,326,Install only build dependencies of specified packages
+zypper, __fish_zypper_is_subcommand_si,D,no-build-deps, , ,327,Don't install build dependencies
+zypper, __fish_zypper_is_subcommand_si,r,repo, ,@f,328,Install packages only from specified repositories
+zypper, __fish_zypper_is_subcommand_si, ,download,$__fish_zypper_download_modes,@f,329,Set the download-install mode
+zypper, __fish_zypper_is_subcommand_si,d,download-only, , ,330,"Only download the packages, do not install"
+zypper, __fish_zypper_is_subcommand_inr, ,details, , ,331,Show the detailed installation summary
+zypper, __fish_zypper_is_subcommand_inr,D,dry-run, , ,332,"Test the installation, do not actually install"
+zypper, __fish_zypper_is_subcommand_inr, ,download,$__fish_zypper_download_modes,@f,333,Set the download-install mode
+zypper, __fish_zypper_is_subcommand_inr,d,download-only, , ,334,"Only download the packages, do not install"
+zypper, __fish_zypper_is_subcommand_inr,r,repo, ,@f,335,Load only the specified repositories
+zypper, __fish_zypper_is_subcommand_up,t,type,$__fish_zypper_package_types,@f,336,Type of package
+zypper, __fish_zypper_is_subcommand_up, ,details, , ,337,Show the detailed installation summary
+zypper, __fish_zypper_is_subcommand_up, ,best-effort, , ,338,Accept updates to a lower than the latest version
+zypper, __fish_zypper_is_subcommand_up, ,replacefiles, , ,339,Install even if it replaces files from other installed packages
+zypper, __fish_zypper_is_subcommand_up,r,repo, ,@f,340,Load only the specified repository
+zypper, __fish_zypper_is_subcommand_up,y,no-confirm, , ,341,Don't require user interaction
+zypper, __fish_zypper_is_subcommand_up, ,with-interactive, , ,342,Do not skip interactive updates
+zypper, __fish_zypper_is_subcommand_up, ,skip-interactive, , ,343,Skip interactive updates
+zypper, __fish_zypper_is_subcommand_up,l,auto-agree-with-licenses, , ,344,Automatically say 'yes' to third party license confirmation prompt
+zypper, __fish_zypper_is_subcommand_up,D,dry-run, , ,345,"Test the update, do not actually update"
+zypper, __fish_zypper_is_subcommand_up, ,download,$__fish_zypper_download_modes,@f,346,Set the download-install mode
+zypper, __fish_zypper_is_subcommand_up,d,download-only, , ,347,"Only download the packages, do not install"
+zypper, __fish_zypper_is_subcommand_lu,t,type,$__fish_zypper_package_types,@f,348,Type of package
+zypper, __fish_zypper_is_subcommand_lu, ,best-effort, , ,349,Accept updates to a lower than the latest version
+zypper, __fish_zypper_is_subcommand_lu,a,all, , ,350,"List all packages with newer versions, even uninstalled"
+zypper, __fish_zypper_is_subcommand_lu,r,repo, ,@f,351,List only updates from the specified repository
+zypper, __fish_zypper_is_subcommand_lu, ,no-allow-downgrade, , ,352,Whether to allow downgrading installed resolvables
+zypper, __fish_zypper_is_subcommand_lu, ,no-allow-name-change, , ,353,Whether to allow changing the names of installed resolvables
+zypper, __fish_zypper_is_subcommand_lu, ,no-allow-arch-change, , ,354,Whether to allow changing the architecture of installed resolvables
+zypper, __fish_zypper_is_subcommand_lu, ,no-allow-vendor-change, , ,355,Whether to allow changing the vendor of installed resolvables
+zypper, __fish_zypper_is_subcommand_lp,a,all, , ,356,"List all patches, not only the needed ones"
+zypper, __fish_zypper_is_subcommand_lp,r,repo, ,@f,357,List only patches from the specified repository
+zypper, __fish_zypper_is_subcommand_lp,g,category,$__fish_zypper_patch_category,@f,358,Select patches with the specified category
+zypper, __fish_zypper_is_subcommand_lp, ,severity,$__fish_zypper_patch_severity,@f,359,Select patches with the specified severity
+zypper, __fish_zypper_is_subcommand_lp, ,date, ,@f,360,"Select patches issued up to, but not including, the specified date"
+zypper, __fish_zypper_is_subcommand_lp,b,bugzilla, , ,361,Select applicable patches for the specified Bugzilla issues
+zypper, __fish_zypper_is_subcommand_lp, ,cve, , ,362,Select applicable patches for the specified CVE issues
+zypper, __fish_zypper_is_subcommand_lp, ,issues, , ,363,Select issues matching the specified string
+zypper, __fish_zypper_is_subcommand_lp, ,without-optional, , ,364,Whether applicable optional patches should be treated as needed or be excluded
+zypper, __fish_zypper_is_subcommand_dup, ,from, ,@f,365,Restrict upgrade to specified repository
+zypper, __fish_zypper_is_subcommand_dup, ,details, , ,366,Show the detailed installation summary
+zypper, __fish_zypper_is_subcommand_dup, ,replacefiles, , ,367,Install even if it replaces files from other installed packages
+zypper, __fish_zypper_is_subcommand_dup,r,repo, ,@f,368,Load only the specified repository
+zypper, __fish_zypper_is_subcommand_dup,l,auto-agree-with-licenses, , ,369,Automatically say 'yes' to third party license confirmation prompt
+zypper, __fish_zypper_is_subcommand_dup,D,dry-run, , ,370,"Test the upgrade, do not actually upgrade"
+zypper, __fish_zypper_is_subcommand_dup,y,no-confirm, , ,371,Don't require user interaction
+zypper, __fish_zypper_is_subcommand_dup, ,download,$__fish_zypper_download_modes,@f,372,Set the download-install mode
+zypper, __fish_zypper_is_subcommand_dup,d,download-only, , ,373,"Only download the packages, do not install"
+zypper, __fish_zypper_is_subcommand_pchk, ,updatestack-only, , ,374,Consider only patches which affect the package management itself
+zypper, __fish_zypper_is_subcommand_pchk,r,repo, ,@f,375,Check for patches only in the specified repository
+zypper, __fish_zypper_is_subcommand_pchk, ,without-optional, , ,376,Whether applicable optional patches should be treated as needed or be excluded
+zypper, __fish_zypper_is_subcommand_se, ,match-substrings, , ,377,Search for a match to partial words (default)
+zypper, __fish_zypper_is_subcommand_se, ,match-words, , ,378,Search for a match to whole words only
+zypper, __fish_zypper_is_subcommand_se,x,match-exact, , ,379,Searches for an exact package name
+zypper, __fish_zypper_is_subcommand_se, ,provides, , ,380,Search for packages which provide the search strings
+zypper, __fish_zypper_is_subcommand_se, ,requires, , ,381,Search for packages which require the search strings
+zypper, __fish_zypper_is_subcommand_se, ,recommends, , ,382,Search for packages which recommend the search strings
+zypper, __fish_zypper_is_subcommand_se, ,supplements, , ,383,Search for packages which supplements the search strings
+zypper, __fish_zypper_is_subcommand_se, ,conflicts, , ,384,Search packages conflicting with search strings
+zypper, __fish_zypper_is_subcommand_se, ,obsoletes, , ,385,Search for packages which obsolete the search strings
+zypper, __fish_zypper_is_subcommand_se, ,suggests, , ,386,Search for packages which suggest the search strings
+zypper, __fish_zypper_is_subcommand_se,t,type,$__fish_zypper_package_types,@f,387,Search only for packages of the specified type
+zypper, __fish_zypper_is_subcommand_se,n,name, , ,388,Search package name even with dependency options
+zypper, __fish_zypper_is_subcommand_se,f,file-list, , ,389,Search for a match in the file list of packages
+zypper, __fish_zypper_is_subcommand_se,d,search-descriptions, , ,390,Search also in package summaries and descriptions
+zypper, __fish_zypper_is_subcommand_se,C,case-sensitive, , ,391,Perform case-sensitive search
+zypper, __fish_zypper_is_subcommand_se,s,details, , ,392,Show each available version in each repository on a separate line
+zypper, __fish_zypper_is_subcommand_se,s,verbose, , ,393,"Like --details, with additional info (useful for search in dependencies)"
+zypper, __fish_zypper_is_subcommand_se, ,sort-by-name, , ,394,Sort packages by name (default)
+zypper, __fish_zypper_is_subcommand_se, ,sort-by-repo, , ,395,Sort packages by repository
+zypper, __fish_zypper_is_subcommand_se,r,repo, ,@f,396,Search only in the specified repository
+zypper, __fish_zypper_is_subcommand_se,i,installed-only, , ,397,Show only packages that are already installed
+zypper, __fish_zypper_is_subcommand_se,u,not-installed-only, , ,398,Show only packages that are not currently installed
+zypper, __fish_zypper_is_subcommand_if,s,match-substrings, , ,399,Print information for packages partially matching name
+zypper, __fish_zypper_is_subcommand_if,t,type,$__fish_zypper_package_types,@f,400,Type of package
+zypper, __fish_zypper_is_subcommand_if, ,provides, , ,401,Show provides
+zypper, __fish_zypper_is_subcommand_if, ,requires, , ,402,Show requires and prerequires
+zypper, __fish_zypper_is_subcommand_if, ,conflicts, , ,403,Show conflicts
+zypper, __fish_zypper_is_subcommand_if, ,obsoletes, , ,404,Show obsoletes
+zypper, __fish_zypper_is_subcommand_if, ,recommends, , ,405,Show recommends
+zypper, __fish_zypper_is_subcommand_if, ,supplements, , ,406,Show supplements
+zypper, __fish_zypper_is_subcommand_if, ,suggests, , ,407,Show suggests
+zypper, __fish_zypper_is_subcommand_if,r,repo, ,@f,408,Work only with the specified repository
+zypper, __fish_zypper_is_subcommand_pch,r,repo, ,@f,409,Just another means to specify repository
+zypper, __fish_zypper_is_subcommand_pa, ,orphaned, , ,410,Show packages which are orphaned (without repository)
+zypper, __fish_zypper_is_subcommand_pa, ,suggested, , ,411,Show packages which are suggested
+zypper, __fish_zypper_is_subcommand_pa, ,recommended, , ,412,Show packages which are recommended
+zypper, __fish_zypper_is_subcommand_pa, ,unneeded, , ,413,Show packages which are unneeded
+zypper, __fish_zypper_is_subcommand_pa,N,sort-by-name, , ,414,Sort the list by package name
+zypper, __fish_zypper_is_subcommand_pa,R,sort-by-repo, , ,415,Sort the list by repository
+zypper, __fish_zypper_is_subcommand_pa,r,repo, ,@f,416,Just another means to specify repository
+zypper, __fish_zypper_is_subcommand_pa,i,installed-only, , ,417,Show only installed packages
+zypper, __fish_zypper_is_subcommand_pa,u,not-installed-only, , ,418,Show only packages which are not installed
+zypper, __fish_zypper_is_subcommand_pt,r,repo, ,@f,419,Just another means to specify repository
+zypper, __fish_zypper_is_subcommand_pt,i,installed-only, , ,420,Show only installed patterns
+zypper, __fish_zypper_is_subcommand_pt,u,not-installed-only, , ,421,Show only patterns which are not installed
+zypper, __fish_zypper_is_subcommand_pd, ,xmlfwd, ,@r,422,XML output only: Literally forward the XML tags found in a product file
+zypper, __fish_zypper_is_subcommand_pd,r,repo, ,@f,423,Just another means to specify repository
+zypper, __fish_zypper_is_subcommand_pd,i,installed-only, , ,424,Show only installed products
+zypper, __fish_zypper_is_subcommand_pd,u,not-installed-only, , ,425,Show only products which are not installed
+zypper, __fish_zypper_is_subcommand_al,r,repo, ,@f,426,Restrict the lock to the specified repository
+zypper, __fish_zypper_is_subcommand_al,t,type,$__fish_zypper_package_types,@f,427,Type of package
+zypper, __fish_zypper_is_subcommand_rl,r,repo, ,@f,428,Remove only locks with specified repository
+zypper, __fish_zypper_is_subcommand_rl,t,type,$__fish_zypper_package_types,@f,429,Type of package
+zypper, __fish_zypper_is_subcommand_cl,d,only-duplicates, , ,430,Clean only duplicate locks
+zypper, __fish_zypper_is_subcommand_cl,e,only-empty, , ,431,Clean only locks which doesn't lock anything
+zypper, __fish_zypper_is_subcommand_lloc,p,packages, , ,432,Show corresponding packages
+zypper, __fish_zypper_is_subcommand_lloc,a,all, , ,433,List all available locales
+zypper, __fish_zypper_is_subcommand_aloc,n,no-packages, , ,434,Do not install corresponding packages for given locale(s)
+zypper, __fish_zypper_is_subcommand_rloc,n,no-packages, , ,435,Do not remove corresponding packages for given locale(s)
+zypper, __fish_zypper_is_subcommand_vcmp,m,match, , ,436,Takes missing release number as any release
+zypper, __fish_zypper_is_subcommand_tos,l,label, , ,437,Show the operating system label
+zypper, __fish_zypper_is_subcommand_clean,r,repo, ,@f,438,Clean only specified repositories
+zypper, __fish_zypper_is_subcommand_clean,m,metadata, , ,439,Clean metadata cache
+zypper, __fish_zypper_is_subcommand_clean,M,raw-metadata, , ,440,Clean raw metadata cache
+zypper, __fish_zypper_is_subcommand_clean,a,all, , ,441,Clean both metadata and package caches
+zypper, __fish_zypper_is_subcommand_patch, ,updatestack-only, , ,442,Consider only patches which affect the package management itself
+zypper, __fish_zypper_is_subcommand_patch, ,with-update, , ,443,Additionally try to update all packages not covered by patches
+zypper, __fish_zypper_is_subcommand_patch, ,details, , ,444,Show the detailed installation summary
+zypper, __fish_zypper_is_subcommand_patch, ,replacefiles, , ,445,Install even if it replaces files from other installed packages
+zypper, __fish_zypper_is_subcommand_patch,r,repo, ,@f,446,Load only the specified repository
+zypper, __fish_zypper_is_subcommand_patch,g,category,$__fish_zypper_patch_category,@f,447,Select patches with the specified category
+zypper, __fish_zypper_is_subcommand_patch, ,severity,$__fish_zypper_patch_severity,@f,448,Select patches with the specified severity
+zypper, __fish_zypper_is_subcommand_patch, ,date, ,@r,449,"Select patches issued up to, but not including, the specified date"
+zypper, __fish_zypper_is_subcommand_patch,b,bugzilla, , ,450,Select applicable patches for the specified Bugzilla issues
+zypper, __fish_zypper_is_subcommand_patch, ,cve, , ,451,Select applicable patches for the specified CVE issues
+zypper, __fish_zypper_is_subcommand_patch,y,no-confirm, , ,452,Don't require user interaction
+zypper, __fish_zypper_is_subcommand_patch, ,without-optional, , ,453,Whether applicable optional patches should be treated as needed or be excluded
+zypper, __fish_zypper_is_subcommand_patch, ,with-interactive, , ,454,Do not skip interactive patches
+zypper, __fish_zypper_is_subcommand_patch, ,skip-interactive, , ,455,Skip interactive patches
+zypper, __fish_zypper_is_subcommand_patch,l,auto-agree-with-licenses, , ,456,Automatically say 'yes' to third party license confirmation prompt
+zypper, __fish_zypper_is_subcommand_patch,D,dry-run, , ,457,"Test the update, do not actually update"
+zypper, __fish_zypper_is_subcommand_patch, ,download,$__fish_zypper_download_modes,@f,458,Set the download-install mode
+zypper, __fish_zypper_is_subcommand_patch,d,download-only, , ,459,"Only download the packages, do not install"
+zypper, __fish_zypper_is_subcommand_sourcedownload,d,directory, ,@r,460,Download all source rpms to this directory
+zypper, __fish_zypper_is_subcommand_sourcedownload, ,delete, , ,461,Delete extraneous source rpms in the local directory
+zypper, __fish_zypper_is_subcommand_sourcedownload, ,no-delete, , ,462,Do not delete extraneous source rpms
+zypper, __fish_zypper_is_subcommand_sourcedownload, ,status, , ,463,Show which source rpms are missing or extraneous
+zypper, __fish_zypper_is_subcommand_download, ,all-matches, , ,464,Download all versions matching the commandline arguments
+zypper, __fish_zypper_is_subcommand_download, ,from, ,@f,465,Select packages from the specified repository
+zypper, __fish_zypper_is_subcommand_download,D,dry-run, , ,466,"Don't change anything, just report what would be done"
+zypper, __fish_zypper_is_subcommand_download,r,repo, ,@f,467,Work only with the specified repository
+zypper, __fish_zypper_is_subcommand_ps,s,short, , ,468,Create a short table not showing the deleted files
+zypper, __fish_zypper_is_subcommand_ps, ,print, ,@f,469,For each associated system service print <format>
+zypper, __fish_zypper_is_subcommand_ps,d,debugFile, ,@r,470,Write debug output to file

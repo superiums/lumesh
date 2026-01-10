@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dmesg, , , , ,@f,101,Display system message buffer
+dmesg, ,C,clear, ,@f,102,kernel
+dmesg, ,c,read-clear, ,@f,103,&
+dmesg, ,D,console-off, ,@f,104,writing
+dmesg, ,d,show-delta, ,@f,105,timestamp
+dmesg, writing,E,console-on, ,@f,106, 
+dmesg, ,F,file, ,@r,107,file
+dmesg, print,f,facility, ,@f @r,108, 
+dmesg, ,h,help, ,@f,109,help'
+dmesg, kernel,k,kernel, ,@f,110, 
+output, ,l,level,$levels,@f @r,111, 
+dmesg, ,n,console-level,$levels,@f @r,112,threshold
+dmesg, raw,r,raw, ,@f,113, 
+dmesg, ,s,buffer-size, ,@f @r,114,size
+dmesg, timestamps',T,ctime, ,@f,115, 
+dmesg, print,t,notime, ,@f,116, 
+dmesg, userspace,u,userspace, ,@f,117, 
+dmesg, ,V,version, ,@f,118,dmesg
+dmesg, ,w,follow, ,@f,119,for
+dmesg, ,W,follow-new, ,@f,120,and
+facility, ,x,decode, ,@f,121, 
+dmesg, ,d, , ,@f,122,timestamp
+dmesg, timestamps',T, , ,@f,123, 
+dmesg, print,t, , ,@f,124, 
+dmesg, ,S, , ,@f,125,console
+dmesg, all,a, , ,@f,126, 
+kernel, ,c, , ,@f,127, 
+dmesg, ,M, , ,@r,128,namelist
+dmesg, ,N, , ,@r,129,namelist

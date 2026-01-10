@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpasswd, ,a,adduser, , ,101,Add the user to the named group
+gpasswd, ,d,deleteuser, , ,102,Remove the user from the named group
+gpasswd, ,h,help, , ,103,Display help message and exit
+gpasswd, ,Q,rootCHROOT_DIR, , ,104,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+gpasswd, ,r,remove-password, , ,105,Remove the password from the named group.  The group password will be empty
+gpasswd, ,R,restrict, , ,106,Restrict the access to the named group.  The group password is set to '!'
+gpasswd, ,A,administratorsuser, , ,107,Set the list of administrative users
+gpasswd, ,M,membersuser, , ,108,Set the list of group members
+gpasswd, , ,add, , ,109, 
+gpasswd, , ,delete, , ,110, 
+gpasswd, , ,root, , ,111, 
+gpasswd, , ,administrators, , ,112, 
+gpasswd, , ,members, , ,113, 

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+math, , , , ,@f,101, 
+math, ,s,scale, ,@f,102, 
+math, ,b,base, ,@f,103, 

@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fastboot, $commands,s, , ,@f @r,103,Specify a device
+fastboot, $commands, ,slot,all other a b, ,103,"Use SLOT; 'all' for both slots, 'other' for non-current slot (default: current active slot)"
+fastboot, $commands, ,set-active,a b, ,103,Sets the active slot before rebooting
+fastboot, $commands, , ,flashall,@f,103,Flash all partitions from $ANDROID_PRODUCT_OUT
+fastboot, $commands, , ,getvar,@f,103,Display given bootloader variable
+fastboot, $commands, , ,oem,@f,103,Execute OEM-specific command
+fastboot, $commands, , ,flashing,@f,103,Lock/unlock
+fastboot, $commands, , ,reboot,@f,103,Reboot device
+fastboot, $commands, , ,update,@f,103,Flash all partitions from an update.zip package
+fastboot, $commands, , ,erase,@f,103,Erase a flash partition
+fastboot, $commands, , ,format,@f,103,Format a flash partition
+fastboot, $commands, , ,devices,@f,103,List devices in bootloader
+fastboot, $commands, , ,flash,@f,103,Flash given partition
+fastboot, $commands, , ,help,@f,103,Show help message
+fastboot, $commands, , ,stage,@f,103,Sends given file to stage for the next command
+fastboot, $commands, , ,get_staged,@f,103,Writes data staged by the last command to a file
+fastboot, $commands, , ,fetch,@f,103,Fetch a partition image from the device
+fastboot, $commands, , ,boot,@f,103,Download and boot kernel from RAM

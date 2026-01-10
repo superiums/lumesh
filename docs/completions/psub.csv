@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+psub, ,h,help, , ,101,Display help and exit
+psub, ,f,file, , ,102,"Communicate using a regular file, not a named pipe"
+psub, ,F,fifo, , ,103,Communicate using a named pipe
+psub, ,s,suffix, , ,104,Append suffix to the filename

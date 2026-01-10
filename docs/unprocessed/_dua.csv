@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dua, $_sub_commands help, , ,aggregate, ,100,Aggregate the consumed space of one or more directories or files
+dua, $_sub_commands, , ,help,@f,103,Print help message or the help of the given subcommand(s)
+dua,help __fish_any_arg_in $_sub_commands, , ,$_sub_commands,@f @r,104, 
+dua, $_sub_commands help, , ,interactive, ,104,Launch the terminal user interface

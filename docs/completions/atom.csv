@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+atom, ,d,dev, , ,101,Run in development mode
+atom, ,f,foreground, , ,102,Keep main process in foreground
+atom, ,h,help, , ,103,Print usage message
+atom, ,l,log-file, ,@r,104,Log all output to file
+atom, ,n,new-window, , ,105,Open a new window
+atom, , ,profile-startup, , ,106,Profile startup execution time
+atom, ,r,resource-path, ,@r,107,Set Atom source directory and enable dev mode
+atom, , ,safe, , ,108,Run in safe mode
+atom, , ,benchmark, , ,109,Run the specified benchmarks in a new window
+atom, , ,benchmark-test, , ,110,Run a faster version of the benchmarks in headless mode
+atom, ,t,test, , ,111,Run the specified specs and exit with error code on failures
+atom, ,m,main-process, , ,112,Run the specified specs in the main process
+atom, , ,timeout, ,@r,113,Set timeout for test mode (minutes)
+atom, ,v,version, , ,114,Print the version information
+atom, ,w,wait, , ,115,Wait for editor to be closed before returning
+atom, , ,clear-window-state, , ,116,Delete all Atom environment state
+atom, , ,enable-electron-logging, , ,117,Enable low-level logging messages from Electron
+atom, ,a,add, , ,118,Open path as a new project in last used window

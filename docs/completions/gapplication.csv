@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gapplication, help, , ,help version list-apps launch list-actions action,@f,107,Command

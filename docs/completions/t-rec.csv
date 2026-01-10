@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+t-rec, ,v,verbose, , ,101,Enable verbose insights for the curious
+t-rec, ,q,quiet, , ,102,"Quiet mode, suppresses the banner"
+t-rec, ,m,video, , ,103,Generate both gif and mp4 video
+t-rec, ,M,video-only, , ,104,"Generate only mp4 video, not gif"
+t-rec, ,d,decor,shadow none, ,105,Decorate animation
+t-rec, ,b,bg,white black transparent, ,106,Background color when decors are used
+t-rec, ,n,natural, , ,107,"Natural typing, disables idle detection and sampling optimization"
+t-rec, ,l,ls, , ,108,List windows available for recording by their id
+t-rec, ,w,win-id, , ,109,Id of window to capture
+t-rec, ,e,end-pause, , ,110,Pause time at end of animation
+t-rec, ,s,start-pause, , ,111,Pause time at start of animation
+t-rec, ,o,output, , ,112,"Output file (without extension); defaults to t-rec"
+t-rec, ,h,help, , ,113,Print help
+t-rec, ,V,version, , ,114,Print version

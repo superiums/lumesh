@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-move, , , ,get, ,101,Generate master file
+apt-move, , , ,getlocal, ,102,Alias for 'get'
+apt-move, , , ,move,@f,103,Move packages to local tree
+apt-move, , , ,delete,@f,104,Delete obsolete package files
+apt-move, , , ,packages,@f,105,Build new local files
+apt-move, , , ,fsck,@f,106,Rebuild index files
+apt-move, , , ,update,@f,107,Move packages from cache to local mirror
+apt-move, , , ,local,@f,108,Alias for 'move delete packages'
+apt-move, , , ,localupdate,@f,109,Alias for 'update'
+apt-move, , , ,mirror,@f,110,Download package missing from mirror
+apt-move, , , ,sync,@f,111,Sync packages installed
+apt-move, , , ,exclude,@f,112,test $LOCALDIR/.exclude file
+apt-move, , , ,movefile, ,113,Move file specified on commandline
+apt-move, , , ,listbin,@f,114,List packages that may serve as input to mirrorbin or mirrorsource
+apt-move, , , ,mirrorbin,@f,115,Fetch package from STDIN
+apt-move, , , ,mirrorsrc,@f,116,Fetch source package from STDIN
+apt-move, ,a, , ,@f,117,Process all packages
+apt-move, ,f, , ,@f,118,Force deletion
+apt-move, ,q, , ,@f,119,Suppresses normal output
+apt-move, ,t, , ,@f,120,Test run

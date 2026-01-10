@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+latexmk, , , , ,@f @k @r,101, 
+latexmk, , , , ,@f @r,102,Print message across the page when converting to postscript
+latexmk, , , , ,@f @r,103,Set contrast or intensity of banner
+latexmk, , , , ,@f @r,104,Set scale for banner
+latexmk, , , , ,@r,105,"Set dependency list file name, show dependency list"
+latexmk, , , , ,@f @r,106,Filter to apply to dvi file
+latexmk, , , , ,@f @r,107,Execute specified Perl code on start-up
+latexmk, , , , ,@f @r,108,set basename of output files to STRING
+latexmk, , , , ,@D,109,set name of directory for output files
+latexmk, , , , ,@f @r,110,Filter to apply to postscript file
+latexmk, , , , ,@r,111,Read custom RC file

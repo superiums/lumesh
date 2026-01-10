@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_proxy, ,c,config, , ,101,Use an alternate config-file.
+zabbix_proxy, ,f,foreground, ,@f,102,Run Zabbix agent in foreground.
+zabbix_proxy, ,R,runtime-control,$runtime,@f,103,Perform administrative functions.
+zabbix_proxy, ,h,help, ,@f,104,Display this help and exit.
+zabbix_proxy, ,V,version, ,@f,105,Output version information and exit.

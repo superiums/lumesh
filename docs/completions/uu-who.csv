@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-who, ,a,all, , ,101,same as -b -d --login -p -r -t -T -u
+uu-who, ,b,boot, , ,102,time of last system boot
+uu-who, ,d,dead, , ,103,print dead processes
+uu-who, ,H,heading, , ,104,print line of column headings
+uu-who, ,l,login, , ,105,print system login processes
+uu-who, , ,lookup, , ,106,attempt to canonicalize hostnames via DNS
+uu-who, ,p,process, , ,107,print active processes spawned by init
+uu-who, ,q,count, , ,108,all login names and number of users logged on
+uu-who, ,r,runlevel, , ,109,print current runlevel
+uu-who, ,s,short, , ,110,"print only name, line, and time (default)"
+uu-who, ,t,time, , ,111,print last system clock change
+uu-who, ,u,users, , ,112,list users logged in
+uu-who, ,w,writable, , ,113,"add user's message status as +, - or ?"
+uu-who, ,h,help, , ,114,Print help
+uu-who, ,V,version, , ,115,Print version

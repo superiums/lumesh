@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gi-compile-repository, , ,help, , ,101,Show help options
+gi-compile-repository, ,o,output, , ,102,Save the resulting output in FILENAME
+gi-compile-repository, , ,verbose, , ,103,Show verbose messages
+gi-compile-repository, , ,debug, , ,104,Show debug messages
+gi-compile-repository, , ,includedir, , ,105,Add DIRECTORY to the search path for GIR XML
+gi-compile-repository, ,l,shared-library, , ,106,Specifies the shared library where the symbols in the typelib can be found
+gi-compile-repository, , ,version, , ,107,Show programâs version number and exit

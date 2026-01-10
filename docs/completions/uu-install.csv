@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-install, , ,backup, , ,101,make a backup of each existing destination file
+uu-install, ,g,group, , ,102,"set group ownership, instead of process's current group"
+uu-install, ,m,mode, , ,103,"set permission mode (as in chmod), instead of rwxr-xr-x"
+uu-install, ,o,owner, ,@f @r,104,set ownership (super-user only)
+uu-install, , ,strip-program, ,@f @r,105,program used to strip binaries (no action Windows)
+uu-install, ,S,suffix, , ,106,override the usual backup suffix
+uu-install, ,t,target-directory, ,@D @f @r,107,move all SOURCE arguments into DIRECTORY
+uu-install, , ,context, , ,108,set security context of files and directories
+uu-install, ,C,compare, , ,109,"compare each pair of source and destination files, and in some cases, do not modify the destination at all"
+uu-install, ,d,directory, , ,110,treat all arguments as directory names. create all components of the specified directories
+uu-install, ,p,preserve-timestamps, , ,111,apply access/modification times of SOURCE files to corresponding destination files
+uu-install, ,s,strip, , ,112,strip symbol tables (no action Windows)
+uu-install, ,T,no-target-directory, , ,113,treat DEST as a normal file
+uu-install, ,v,verbose, , ,114,explain what is being done
+uu-install, ,P,preserve-context, , ,115,preserve security context
+uu-install, ,h,help, , ,116,Print help
+uu-install, ,V,version, , ,117,Print version

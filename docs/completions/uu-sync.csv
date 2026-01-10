@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-sync, ,f,file-system, , ,101,sync the file systems that contain the files (Linux and Windows only)
+uu-sync, ,d,data, , ,102,"sync only file data, no unneeded metadata (Linux only)"
+uu-sync, ,h,help, , ,103,Print help
+uu-sync, ,V,version, , ,104,Print version

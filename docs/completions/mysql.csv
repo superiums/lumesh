@@ -1,0 +1,85 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mysql, ,\?,help, , ,101,Display a help message
+mysql, , ,abort-source-on-error, , ,102,Abort source filename operations in case of errors
+mysql, , ,auto-rehash, , ,103,Enable automatic rehashing
+mysql, , ,auto-vertical-output, , ,104,Automatically switch to vertical output
+mysql, ,B,batch, , ,105,Batch mode results
+mysql, , ,binary-mode, , ,106,Binary input mode
+mysql, , ,character-sets-dir, ,@D @f @r,107,Set directory where character sets are installed
+mysql, , ,column-names, , ,108,Write column names in results
+mysql, ,m,column-type-info, , ,109,Display result set metadata
+mysql, ,c,comments, , ,110,Preserve comments in statements
+mysql, , ,skip-comments, , ,111,Discard comments in statements
+mysql, ,C,compress, , ,112,Compress all information
+mysql, , ,connect-timeout, ,@f @r,113,Set the number of seconds before connection timeout
+mysql, ,\#,debug, , ,114,Write a debugging log
+mysql, , ,debug-check, , ,115,Print some debugging information
+mysql, ,T,debug-info, , ,116,Prints debugging information and memory and CPU usage
+mysql, , ,default-auth, ,@f @r,117,Default authentication client-side plugin
+mysql, , ,default-character-set, ,@f @r,118,Use charset_name as the default character set
+mysql, , ,defaults-extra-file, ,@F,119,Read default options from file after global defaults
+mysql, , ,defaults-file, ,@F,120,Read default options from file overriding global defaults
+mysql, , ,defaults-group-suffix, ,@f @r,121,Read groups that have the given suffix
+mysql, , ,delimiter, ,@f @r,122,Set the statement delimiter
+mysql, , ,disable-named-commands, , ,123,Disable named commands
+mysql, ,e,execute, ,@f @r,124,Execute the statement
+mysql, ,f,force, , ,125,Continue even if an SQL error occurs
+mysql, ,h,host, ,@f @r,126,Connect to the server on the given host
+mysql, ,H,html, , ,127,Produce HTML output
+mysql, ,i,ignore-spaces, , ,128,Ignore spaces after function names
+mysql, , ,init-command, ,@f @r,129,SQL Command to execute when connecting to the server
+mysql, , ,line-numbers, , ,130,Write line numbers for errors
+mysql, , ,local-infile,0 1, ,131,Enable or disable LOCAL capability for LOAD DATA INFILE
+mysql, , ,max-allowed-packet, ,@f @r,132,Set the maximum packet length
+mysql, , ,max-join-size, ,@f @r,133,Set the automatic limit for rows in a join
+mysql, ,G,named-commands, , ,134,Enable named mysql commands
+mysql, , ,skip-named-commands, , ,135,Disable named commands
+mysql, , ,net-buffer-length, ,@f @r,136,Set the buffer size for TCP/IP and socket communication
+mysql, ,A,disable-auto-rehash, , ,137,Disable automatic rehashing
+mysql, ,b,no-beep, , ,138,Do not beep when errors occur
+mysql, , ,no-defaults, , ,139,Do not read default options from any option file
+mysql, ,o,one-database, , ,140,Ignore statements for other databases than the chosen one
+mysql, , ,pager, , ,141,Use the given command for paging query output
+mysql, , ,skip-pager, , ,142,Disable paging
+mysql, ,p,password, , ,143,Password to use when connecting (empty for prompt)
+mysql, ,W,pipe, , ,144,Connect to the server via a named pipe
+mysql, , ,plugin-dir, ,@D @f @r,145,Directory for client-side plugins
+mysql, ,P,port, ,@f @r,146,The port to use for the connection
+mysql, , ,print-defaults, , ,147,Print the program argument list
+mysql, , ,progress-reports, , ,148,Get progress reports for long running commands
+mysql, , ,skip-progress-reports, , ,149,Disable progress reports for long running commands
+mysql, , ,prompt, ,@f @r,150,Set the prompt to the specified format
+mysql, , ,protocol,TCP SOCKET PIPE MEMORY,@f @r,151,The connection protocol to use
+mysql, ,q,quick, , ,152,Print each row as it is received
+mysql, ,r,raw, , ,153,Disables character escaping
+mysql, , ,reconnect, , ,154,Try to reconnect when connection gets lost
+mysql, , ,disable-reconnect, , ,155,Do not try to reconnect when connection gets lost
+mysql, ,U,i-am-a-dummy, , ,156,Allow only those statements that specify which rows to modify
+mysql, , ,secure-auth, , ,157,Do not send passwords to the server in old format
+mysql, , ,select-limit, ,@f @r,158,Set automatic limit for SELECT when using --safe-updates
+mysql, , ,server-arg, ,@f @r,159,Send a parameter to the embedded server
+mysql, , ,show-warnings, , ,160,Cause warnings to be shown
+mysql, , ,sigint-ignore, , ,161,Ignore SIGINT signals
+mysql, ,s,silent, , ,162,Silent mode
+mysql, ,N,skip-column-names, , ,163,Do not write column names in results
+mysql, ,L,skip-line-numbers, , ,164,Do not write line numbers for errors
+mysql, ,S,socket, ,@F,165,For connections to localhost the socket file or named pipe
+mysql, , ,ssl, , ,166,Enable SSL for connection
+mysql, , ,skip-ssl, , ,167,Disable SSL for connection
+mysql, , ,ssl-ca, ,@F,168,CA file in PEM format
+mysql, , ,ssl-capath, ,@D @f @r,169,CA directory
+mysql, , ,ssl-cert, ,@F,170,X509 cert in PEM format
+mysql, , ,ssl-cipher, ,@f @r,171,SSL cipher to use
+mysql, , ,ssl-key, ,@F,172,X509 key in PEM format
+mysql, , ,ssl-crl, ,@F,173,Certificate revocation list
+mysql, , ,ssl-crlpath, ,@D @f @r,174,Certificate revocation list path
+mysql, , ,ssl-verify-server-cert, , ,175,Verify server's 'Common Name'
+mysql, ,t,table, , ,176,Display output in table format
+mysql, , ,tee, ,@F,177,Append a copy of output to the given file
+mysql, ,n,unbuffered, , ,178,Flush the buffer after each query
+mysql, ,u,user, ,@f @r,179,User name to use when connecting
+mysql, ,v,verbose, , ,180,Verbose mode
+mysql, ,V,version, , ,181,Display version information
+mysql, ,E,vertical, , ,182,Print query output rows vertically
+mysql, ,w,wait, , ,183,"If the connection cannot be established, wait and retry"
+mysql, ,X,xml, , ,184,Produce XML output

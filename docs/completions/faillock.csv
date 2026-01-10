@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+faillock, , ,conf, , ,101,The file where the configuration is located
+faillock, , ,dir, , ,102,The directory where the user files with the failure records are kept
+faillock, , ,user, , ,103,The user whose failure records should be displayed or cleared
+faillock, , ,reset, , ,104,"Instead of displaying the user\\*(Aqs failure records, clear them"

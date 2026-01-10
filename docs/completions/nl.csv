@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nl, ,b,body-numbering,$style, ,101,use STYLE for numbering body lines
+nl, ,d,section-delimiter, ,@f @r,102,use for separating logical pages
+nl, ,f,footer-numbering,$style, ,103,use STYLE for numbering footer lines
+nl, ,h,header-numbering,$style, ,104,use STYLE for numbering header lines
+nl, ,i,line-increment, ,@f @r,105,line number increment at each line
+nl, ,l,join-blank-lines, ,@f @r,106,group of NUMBER empty lines counted as one
+nl, ,n,number-format, ,@f @r,107,insert line numbers according to FORMAT
+nl, ,n,number-format,ln, ,108,"left justified, no leading zeroes"
+nl, ,n,number-format,rn, ,109,"right justified, no leading zeroes"
+nl, ,n,number-format,rz, ,110,"right justified, leading zeroes"
+nl, ,p,no-renumber, , ,111,do not reset line numbers at logical pages
+nl, ,s,number-separator, ,@f @r,112,add STRING after (possible) line number
+nl, ,v,starting-line-number, ,@f @r,113,first line number on each logical page
+nl, ,w,number-width, ,@f @r,114,use NUMBER columns for line numbers
+nl, , ,help, , ,115,display this help and exit
+nl, , ,version, , ,116,output version information and exit

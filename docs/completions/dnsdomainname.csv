@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dnsdomainname, ,?,help, , ,101,give this help list
+dnsdomainname, , ,usage, , ,102,give a short usage message
+dnsdomainname, ,V,version, , ,103,print program version AUTHOR Written by Simon Josefsson

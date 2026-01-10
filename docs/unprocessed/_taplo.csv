@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+taplo, __fish_use_subcommand, ,colors,{auto	_,always	_,never	_},@f @r,101, 
+taplo, __fish_use_subcommand, ,verbose, , ,102,Enable a verbose logging format
+taplo, __fish_use_subcommand, ,log-spans, , ,103,Enable logging spans
+taplo, __fish_use_subcommand,h,help, , ,104,Print help (see more with '--help')
+taplo, __fish_use_subcommand,V,version, , ,105,Print version
+taplo, __fish_use_subcommand, , ,lint,@f,106,Lint TOML documents
+taplo, __fish_use_subcommand, , ,format,@f,107,Format TOML documents
+taplo, __fish_use_subcommand, , ,lsp,@f,108,Language server operations
+taplo, __fish_use_subcommand, , ,config,@f,109,Operations with the Taplo config file
+taplo, __fish_use_subcommand, , ,get,@f,110,Extract a value from the given TOML document
+taplo, __fish_use_subcommand, , ,toml-test,@f,111,Start a decoder for `toml-test` (https://github.com/BurntSushi/toml-test)
+taplo, __fish_use_subcommand, , ,completions,@f,112,Generate completions for Taplo CLI
+taplo, __fish_use_subcommand, , ,help,@f,113,Print this message or the help of the given subcommand(s)

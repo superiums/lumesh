@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sudo, __fish_sudo_no_subcommand,C, ,0 1 2 255, ,101,Close all file descriptors greater or equal to the given number
+sudo, __fish_sudo_no_subcommand,e, , ,@F,102,Edit
+sudo, __fish_sudo_no_subcommand,g, , ,@f @r,103,Run command as group
+sudo, __fish_sudo_no_subcommand,u, , ,@f @r,104,Run command as user
+sudo, __fish_seen_argument -s e, , , ,@f @r,104, 

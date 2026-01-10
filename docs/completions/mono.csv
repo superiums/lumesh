@@ -1,0 +1,37 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mono, ,h,help, , ,101,Show help
+mono, ,V,version,number,@f,102,Show version
+mono, , ,aot-path, , ,104,Show additional directories to search for AOT images
+mono, , ,apply-bindings, , ,105, 
+mono, , ,assembly-loader, , ,106, 
+mono, , ,attach,disable,@f,107,Disable the attach functionality
+mono, , ,config, , ,108,Read configuration from file instead of using default one
+mono, , ,desktop, , ,110, 
+mono, , ,full-aot, , ,111, 
+mono, , ,full-aot-interp, , ,112, 
+mono, , ,gc,boehm sgen,@f,113,Use the Garbage Collector engine
+mono, , ,gc-debug, ,@f,114,Specify MONO_GC_DEBUG environment variable value
+mono, , ,gc-params, ,@f,115,Specify MONO_GC_PARAMS environment variable value
+mono, , ,interpreter, , ,116,Use Mono interpreter to execute a given assembly
+mono, , ,hybrid-aot, , ,117,Run assemblies that have been stripped of IL
+mono, , ,llvm, , ,118,Use the LLVM optimization and code generation engine to JIT or AOT compile
+mono, , ,ffast-math, , ,119,Use Mono and LLVM aggressive floating point optimizations
+mono, , ,response, , ,121,Use a response file
+mono, , ,runtime, ,@f,122,Use Mono version
+mono, , ,server, , ,123,Optimize the virtual machine to be better suited for server operations
+mono, , ,use-map-jit, , ,124,Generate code using MAP_JIT on MacOS
+mono, , ,verify-all, , ,125, 
+mono, , ,profile, ,@f,127,Use a profiler module with the given arguments
+mono, , ,trace, ,@f,128,Show method names as they are invoked
+mono, , ,no-x86-stack-align, , ,129,Don't align stack frames on the x86 architecture
+mono, , ,jitmap, , ,130,Generate a JIT method map in a /tmp/perf-PID.map file
+mono, , ,bisect, ,@f,131,This flag is used by the automatic optimization bug bisector
+mono, , ,break, ,@f @r,132, 
+mono, , ,breakonex, , ,133,Use a breakpoint on exceptions
+mono, , ,compile, ,@f @r,134,Compile a method (namespace.name:methodname)
+mono, , ,compile-all, , ,135,Compile all the methods in an assembly
+mono, , ,graph, , ,136, 
+mono, , ,ncompile, , ,137, 
+mono, , ,stats, , ,138, 
+mono, , ,wapi, , ,139, 
+mono, ,v,verbose, , ,140,Show more messages

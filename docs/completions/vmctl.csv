@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vmctl, list console create load log reload reset start status stop pause unpause send receive, , ,console create load log reload reset start status stop pause unpause send receive, ,100, 

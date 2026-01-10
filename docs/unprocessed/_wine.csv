@@ -1,0 +1,61 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$command, , , ,/c, ,101, 
+$command, , , ,/k, ,102, 
+$command, , , ,/s, ,103, 
+$command, $condition, , ,/q, ,104,Turn echo off
+$command, , , ,/d, ,105, 
+$command, , , ,/a, ,106, 
+$command, , , ,/u, ,107, 
+$command, , , ,/t, ,108, 
+$command, $condition, , ,/e, ,109,Manage command extensions
+$command, , , ,/f, ,110, 
+$command, , , ,/v, ,111, 
+$command, $condition, , ,/?, ,112,Show help
+$command, $condition, , ,/n, ,113,Use the single pain view
+$command, $condition, , ,/e,, ,114,Use the default view
+$command, , , ,/root,, ,115,Specify the root level of a view
+$command, , , ,/select,, ,116,Specify the selection in a view
+$command, , , ,/desktop=, ,117,Specify the desktop name
+$command, $condition, , ,/? /h, ,118,Show help
+$command, , , ,/i, ,119, 
+$command, , , ,/a, ,120, 
+$command, , , ,/f, ,121, 
+$command, , , ,/uninstall, ,122, 
+$command, , , ,/j, ,123, 
+$command, , , ,/p, ,124, 
+$command, , , ,/q, ,125, 
+$command, , , ,/l, ,126, 
+$command, , , ,/y, ,127, 
+$command, , , ,/z, ,128, 
+$command, $condition, , ,/?, ,129,Show help
+$command, , , ,/L, ,130, 
+$command, , , ,/R, ,131, 
+$command, , , ,/C, ,132, 
+$command, , , ,/D, ,133, 
+$command, , , ,/E, ,134, 
+$command, , , ,/S, ,135, 
+$command, , , ,/V, ,136, 
+$command, $condition, , ,/?, ,137,Show help
+$command, , , ,/d, ,138, 
+$command, , , ,/b, ,139, 
+$command, , , ,/i, ,140, 
+$command, , , ,/min, ,141, 
+$command, , , ,/max, ,142, 
+$command, , , ,/low, ,143, 
+$command, , , ,/normal, ,144, 
+$command, , , ,/high, ,145, 
+$command, , , ,/realtime, ,146, 
+$command, , , ,/abovenormal, ,147, 
+$command, , , ,/belownormal, ,148, 
+$command, , , ,/node, ,149, 
+$command, , , ,/affinity, ,150, 
+$command, , , ,/wait, ,151, 
+$command, , , ,/unix, ,152, 
+$command, , , ,/w, ,153, 
+$command, ,u,unix, , ,154, 
+$command, ,w,windows, , ,155, 
+$command, ,l,long, , ,156, 
+$command, ,s,short, , ,157, 
+$command, , ,help, , ,158,Show help
+$command, , ,version, , ,159,Show version
+$command, $root_condition, , ,$subcommands_with_descriptions, ,160, 

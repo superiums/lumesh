@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mdls, ,n, , ,@f @r,101,Print only the matching metadata attribute value
+mdls, ,r, , ,@f,102,Print raw attribute data
+mdls, -raw -r, , , ,@f @r,103,Sets a marker string to be used when a requested attribute is null
+mdls, ,p, , ,@r,104,Output attributes in XML format to file

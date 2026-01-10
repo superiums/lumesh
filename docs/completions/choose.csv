@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+choose, ,c,character-wise, , ,101,Choose fields by character number
+choose, ,d,debug, , ,102,Activate debug mode
+choose, ,x,exclusive, , ,103,"Use exclusive ranges, similar to array indexing in many programming languages"
+choose, ,h,help, ,@f @r,104,Prints help information
+choose, ,n,non-greedy, , ,105,Use non-greedy field separators
+choose, , ,one-indexed, , ,106,Index from 1 instead of 0
+choose, ,V,version, , ,107,Prints version information
+choose, ,f,field-separator, ,@f @r,108,"Specify field separator other than whitespace, using Rust `regex` syntax"
+choose, ,i,input, ,@r,109,Specify input file
+choose, ,o,output-field-separator, ,@f @r,110,Specify output field separator

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pipewire, ,h,help, , ,101,Show help
+pipewire, ,v,verbose, , ,102,Increase the verbosity by one level
+pipewire, , ,version, , ,103,Show version information
+pipewire, ,c,config, , ,104,Load the given config file (Default: pipewire. conf)
+pipewire, ,P,properties, , ,105,Add the given properties as a SPA JSON object to the context

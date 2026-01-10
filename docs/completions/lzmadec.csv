@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lzmadec, ,d,uncompress, , ,101,Ignored for  xz (1) compatibility.   xzdec supports only decompression
+lzmadec, ,k,keep, , ,102,Ignored for  xz (1) compatibility.   xzdec never creates or removes any files
+lzmadec, ,c,to-stdout, , ,103,Ignored for  xz (1) compatibility
+lzmadec, ,q,quiet, , ,104,Specifying this once does nothing since  xzdec never displays any warnings or…
+lzmadec, ,Q,no-warn, , ,105,Ignored for  xz (1) compatibility.   xzdec never uses the exit status 2
+lzmadec, ,h,help, , ,106,Display a help message and exit successfully
+lzmadec, ,V,version, , ,107,Display the version number of xzdec and liblzma.  EXIT STATUS

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+code, __fish_seen_argument -l list-extensions, ,show-versions, , ,115,Show versions of installed extensions
+code, __fish_seen_argument -l list-extensions, ,category, ,@f @r,116,Filters installed extensions by provided category
+code, __fish_seen_argument -l install-extension, ,force, , ,118,Updates to the latest version
+code, __fish_seen_argument -l install-extension, ,pre-release, , ,119,Installs the pre-release version

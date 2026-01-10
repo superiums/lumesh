@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nice, ,n,adjustment, , ,101,add integer N to the niceness (default 10)
+nice, , ,help, , ,102,display this help and exit
+nice, , ,version, , ,103,output version information and exit 

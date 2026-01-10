@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ausearch, ,a,event, , ,101,Search for an event based on the given event ID
+ausearch, , ,arch, , ,102,Search for events based on a specific CPU architecture
+ausearch, ,c,comm, , ,103,Search for an event based on the given comm name
+ausearch, , ,debug, , ,104,Write malformed events that are skipped to stderr
+ausearch, , ,checkpoint, , ,105,Checkpoint the output between successive invocations of ausearch such that on…
+ausearch, , ,eoe-timeout, , ,106,Set the end of event parsing timeout.  See end_of_event_timeout in auditd
+ausearch, ,e,exit, , ,107,Search for an event based on the given syscall exit code or errno
+ausearch, , ,escape, , ,108,This option determines if the output is escaped to make the content safer for…
+ausearch, , ,extra-keys, , ,109,"When the format mode is csv, this option will add a final column with key inf…"
+ausearch, , ,extra-labels, , ,110,"When the format mode is csv, this option will add columns of information abou…"
+ausearch, , ,extra-obj2, , ,111,"When the format mode is csv, this option will add columns of information abou…"
+ausearch, , ,extra-time, , ,112,"When the format mode is csv, this option will add columns of information abou…"
+ausearch, ,f,file, , ,113,Search for an event based on the given filename
+ausearch, , ,format, , ,114,Events that match the search criteria are formatted using this option
+ausearch, , ,gid-all, , ,115,Search for an event with either effective group ID or group ID matching the g…
+ausearch, , ,gid-effective, , ,116,Search for an event with the given effective group ID or group name
+ausearch, , ,gid, , ,117,Search for an event with the given group ID or group name
+ausearch, ,h,help, , ,118,Help
+ausearch, , ,host, , ,119,Search for an event with the given host name
+ausearch, ,i,interpret, , ,120,Interpret numeric entities into text
+ausearch, , ,input, , ,121,Use the given file or directory instead of the logs
+ausearch, , ,input-logs, , ,122,Use the log file location from auditd. conf as input for searching
+ausearch, , ,just-one, , ,123,Stop after emitting the first event that matches the search criteria
+ausearch, ,k,key, , ,124,Search for an event based on the given key string
+ausearch, ,l,line-buffered, , ,125,Flush output on every line
+ausearch, ,m,message, , ,126,Search for an event matching the given message type
+ausearch, ,n,node, , ,127,Search for events originating from a specific machine
+ausearch, ,o,object, , ,128,Search for event with tcontext (object) matching the string
+ausearch, ,p,pid, , ,129,Search for an event matching the given process ID
+ausearch, , ,ppid, , ,130,Search for an event matching the given parent process ID
+ausearch, ,r,raw, , ,131,Output is completely unformatted
+ausearch, , ,syscall, , ,132,Search for an event matching the given syscall
+ausearch, , ,context, , ,133,Search for events with either scontext/subject or tcontext/object matching th…
+ausearch, , ,session, , ,134,Search for events matching the given Login Session ID
+ausearch, , ,subject, , ,135,Search for event with scontext (subject) matching the string
+ausearch, , ,success, , ,136,Search for an event matching the given success value
+ausearch, , ,end, , ,137,Search for events with time stamps equal to or before the given end time
+ausearch, , ,start, , ,138,Search for events with time stamps equal to or after the given start time
+ausearch, , ,terminal, , ,139,Search for an event matching the given terminal value
+ausearch, , ,uid-all, , ,140,"Search for an event with either user ID, effective user ID, or login user ID …"
+ausearch, , ,uid-effective, , ,141,Search for an event with the given effective user ID
+ausearch, , ,uid, , ,142,Search for an event with the given user ID
+ausearch, , ,loginuid, , ,143,Search for an event with the given login user ID
+ausearch, , ,uuid, , ,144,Search for an event with the given guest UUID
+ausearch, ,v,version, , ,145,Print the version and exit
+ausearch, , ,vm-name, , ,146,Search for an event with the given guest name
+ausearch, ,w,word, , ,147,String based matches must match the whole word
+ausearch, ,x,executable, , ,148,Search for an event matching the given executable name

@@ -1,0 +1,3 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hmac256, , ,binary, , ,101,Print the MAC as a binary string
+hmac256, , ,version, , ,102,Print version of the program and exit.  SEE ALSO sha256sum(1)

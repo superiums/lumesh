@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cleanmgr, , , , ,@f,101, 
+cleanmgr, , , ,/d,@f,102,Specify the drive
+cleanmgr, , , ,/sageset,@f,103, 
+cleanmgr, , , ,/sagerun,@f,104,Run the specified tasks that are assigned to the n value
+cleanmgr, , , ,/tuneup,@f,105,Run /sageset and /sagerun for the same n
+cleanmgr, , , ,/lowdisk,@f,106,Run with the default settings
+cleanmgr, , , ,/verylowdisk,@f,107,"Run with the default settings, no user prompts"
+cleanmgr, , , ,/?,@f,108,Show help

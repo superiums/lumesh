@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+shred, ,f,force, , ,101,change permissions to allow writing if necessary
+shred, ,n,iterations, , ,102,overwrite N times instead of the default (3)
+shred, , ,random-source, , ,103,get random bytes from FILE
+shred, ,s,size, , ,104,"shred this many bytes (suffixes like K, M, G accepted)"
+shred, , ,remove, , ,105,"like -u but give control on HOW to delete;  See below"
+shred, ,v,verbose, , ,106,show progress
+shred, ,x,exact, , ,107,"do not round file sizes up to the next full block; P this is the default for …"
+shred, ,z,zero, , ,108,add a final overwrite with zeros to hide shredding
+shred, , ,help, , ,109,display this help and exit
+shred, , ,version, , ,110,output version information and exit

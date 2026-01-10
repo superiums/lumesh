@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+equery, __fish_use_subcommand, , ,belongs, ,106,List all pkgs owning file(s)
+equery, __fish_use_subcommand, , ,changes, ,107,List changelog entries for ATOM
+equery, __fish_use_subcommand, , ,check, ,108,Check pkg's MD5sums and timestamps
+equery, __fish_use_subcommand, , ,depends, ,109,List all pkgs depending on specified pkg
+equery, __fish_use_subcommand, , ,depgraph, ,110,Display pkg's dependency tree
+equery, __fish_use_subcommand, , ,files, ,111,List files owned by pkg
+equery, __fish_use_subcommand, , ,has, ,112,List pkgs for matching ENVIRONMENT data
+equery, __fish_use_subcommand, , ,hasuse, ,113,List pkgs with specified useflag
+equery, __fish_use_subcommand, , ,keywords, ,114,Display pkg's keywords
+equery, __fish_use_subcommand, , ,list, ,115,List all pkgs matching pattern
+equery, __fish_use_subcommand, , ,meta, ,116,Display pkg's metadata
+equery, __fish_use_subcommand, , ,size, ,117,Print size of files contained in pkg
+equery, __fish_use_subcommand, , ,uses, ,118,Display pkg's USE flags
+equery, __fish_use_subcommand, , ,which, ,119,Print full path to ebuild for pkg

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ouch, ,y,yes, , ,101,Skip [Y/n] questions positively
+ouch, ,n,no, , ,102,Skip [Y/n] questions negatively
+ouch, ,A,accessible, , ,103,"Activate accessibility mode, reducing visual noise "
+ouch, ,H,hidden, , ,104,Ignores hidden files
+ouch, ,q,quiet, , ,105,Silences output
+ouch, ,g,gitignore, , ,106,Ignores files matched by git\\*(Aqs ignore files
+ouch, ,f,format, , ,107,Specify the format of the archive
+ouch, ,h,help, , ,108,Print help (see a summary with \\*(Aq-h\\*(Aq)
+ouch, ,V,version, , ,109,Print version SUBCOMMANDS

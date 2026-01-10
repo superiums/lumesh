@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+reflector, ,h,help, , ,101,Show help
+reflector, , ,connection-timeout, , ,102,The number of seconds to wait before a connection times out
+reflector, , ,download-timeout, , ,103,The number of seconds to wait before a download times out
+reflector, , ,list-countries, , ,104,Display a table of the distribution of servers by country
+reflector, , ,cache-timeout, , ,105,The cache timeout in seconds for the data retrieved from the Arch Linux Mirror Status API
+reflector, , ,url, , ,106,The URL from which to retrieve the mirror data in JSON format
+reflector, , ,save, , ,107,Save the mirrorlist to the given path
+reflector, , ,sort,age rate country score delay, ,108,Sort the mirrorlist
+reflector, , ,threads, , ,109,The number of threads to use for downloading
+reflector, , ,verbose, , ,110,Print extra information
+reflector, , ,info, , ,111,Print mirror information instead of a mirror list
+reflector, ,a,age, , ,112,Only return mirrors that have synchronized in the last n hours
+reflector, , ,delay, , ,113,"Only return mirrors with a reported sync delay of n hours or less, where n is a float"
+reflector, ,c,country, , ,114,Restrict mirrors to selected countries
+reflector, ,f,fastest, , ,115,Return the n fastest mirrors that meet the other criteria
+reflector, ,i,include, , ,116,Include servers that match <regex>
+reflector, ,x,exclude, , ,117,Exclude servers that match <regex>
+reflector, ,l,latest, , ,118,Limit the list to the n most recently synchronized servers
+reflector, , ,score, , ,119,Limit the list to the n servers with the highest score
+reflector, ,n,number, , ,120,Return at most n mirrors
+reflector, ,p,protocol,http https ftp rsync, ,121,Match one of the given protocols
+reflector, , ,completion-percent, , ,122,Set the minimum completion percent for the returned mirrors
+reflector, , ,isos, , ,123,Only return mirrors that host ISOs
+reflector, , ,ipv4, , ,124,Only return mirrors that support IPv4
+reflector, , ,ipv6, , ,125,Only return mirrors that support IPv6

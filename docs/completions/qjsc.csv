@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+qjsc, ,o, , ,@r,101,Set the output filename
+qjsc, ,N, , ,@r,102,Set the C name of the generated data
+qjsc, ,D, , ,@r,103,Compile a dynamically loaded module or worker
+qjsc, ,M, , ,@r,104,Add initialization code for an external C module
+qjsc, ,p, , ,@r,105,Set the prefix of the generated C names
+qjsc, ,S, , ,@r,106,Set the maximum stack size to 

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lxpanel, ,h,help, , ,101,print this help and exit
+lxpanel, ,v,version, , ,102,print version and exit
+lxpanel, ,p,profile, , ,103,use specified profile
+lxpanel, , ,log, ,@r,104,set log level 0-5. 0 - none 5 - chatty

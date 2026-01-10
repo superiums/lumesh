@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yum, ,h,help, , ,111,Display help and exit
+yum, ,t,tolerant, , ,112,Be tolerant of errors in commandline
+yum, , ,version, , ,113,Display version and exit
+yum, , ,installroot, , ,114,Specify installroot
+yum, , ,enablerepo, , ,115,Enable repository
+yum, , ,disablerepo, , ,116,Disable repository
+yum, , ,obsoletes, , ,117,Enables obsolets processing logic
+yum, , ,rss-filename, , ,118,Output rss-data to file
+yum, , ,exclude, , ,119,Exclude specified package from updates

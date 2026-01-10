@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fadvise, ,d,fd, , ,101, 
+fadvise, ,a,advice, , ,102, 
+fadvise, ,o,offset, , ,103, 
+fadvise, ,l,length, , ,104, 
+fadvise, ,h,help, , ,105, 
+fadvise, ,V,version, , ,106, 

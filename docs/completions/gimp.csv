@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gimp, ,h,help, , ,101,show help
+gimp, , ,help-all, , ,102,show help with advanced options
+gimp, , ,help-gtk, , ,103,show help with GTK+ options
+gimp, , ,help-gegl, , ,104,show help with GEGL options
+gimp, ,v,version, , ,105,show version
+gimp, , ,license, , ,106,show license
+gimp, , ,verbose, , ,107,show verbosely
+gimp, ,n,new-instance, , ,108,open new instance
+gimp, ,a,as-new, , ,109,open with new images
+gimp, ,i,no-interface, , ,110,hide UI
+gimp, ,d,no-data, , ,111,"do not load patterns, gradients, palettes, and brushes"
+gimp, ,f,no-fonts, , ,112,do not load fonts
+gimp, ,s,no-splash, , ,113,hide splash screen
+gimp, , ,no-shm, , ,114,do not use shared memory
+gimp, , ,no-cpu-accel, , ,115,do not use CPU acceleration
+gimp, , ,display, , ,116,open with X display
+gimp, , ,session, , ,117,open with alternative sessionrc
+gimp, ,g,gimprc, , ,118,open with alternative gimprc
+gimp, , ,system-gimprc, , ,119,open with alternative system gimprc
+gimp, , ,dump-gimprc, , ,120,show gimprc
+gimp, , ,console-messages, , ,121,show messages on the console
+gimp, , ,debug-handlers, , ,122,enable debug handlers
+gimp, , ,stack-trace-mode,never query always, ,123,whether generate stack-trace in case of fatal signals
+gimp, , ,pdb-compat-mode,off on warn, ,124,whether PDB provides aliases for deprecated functions
+gimp, , ,batch-interpreter, , ,125,run procedure to use to process batch events
+gimp, ,b,batch,-, ,126,run command non-interactively

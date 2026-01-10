@@ -1,0 +1,42 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pg_dumpall, ,f,file, ,@r,101,Output file name
+pg_dumpall, ,v,verbose, , ,102,Verbose mode
+pg_dumpall, ,V,version, , ,103,Output version information
+pg_dumpall, , ,lock-wait-timeout, ,@f @r,104,Fail after waiting TIMEOUT for a table lock
+pg_dumpall, ,?,help, , ,105,Show this help
+pg_dumpall, ,a,data-only, , ,106,"Dump only the data, not the schema"
+pg_dumpall, ,c,clean, , ,107,Clean (drop) database objects before recreating
+pg_dumpall, ,E,encoding, ,@f @r,108,Dump the data in encoding ENCODING
+pg_dumpall, ,g,globals-only, , ,109,"Dump only global objects, no databases"
+pg_dumpall, ,o,oids, , ,110,Include OIDs in dump
+pg_dumpall, ,O,no-owner, , ,111,Skip restoration of object ownership
+pg_dumpall, ,r,roles-only, , ,112,"Dump only roles, no databases or tablespaces"
+pg_dumpall, ,s,schema-only, , ,113,"Dump only the schema, no data"
+pg_dumpall, ,S,superuser, ,@f @r,114,Superuser user name to use in the dump
+pg_dumpall, ,t,tablespaces-only, , ,115,"Dump only tablespaces, no databases or roles"
+pg_dumpall, ,x,no-privileges, , ,116,Do not dump privileges (grant/revoke)
+pg_dumpall, , ,binary-upgrade, , ,117,For use by upgrade utilities only
+pg_dumpall, , ,column-inserts, , ,118,Dump data as INSERT commands with column names
+pg_dumpall, , ,disable-dollar-quoting, , ,119,"Disable dollar quoting, use SQL standard quoting"
+pg_dumpall, , ,disable-triggers, , ,120,Disable triggers during data-only restore
+pg_dumpall, , ,if-exists, , ,121,Use IF EXISTS when dropping objects
+pg_dumpall, , ,inserts, , ,122,"Dump data as INSERT commands, rather than COPY"
+pg_dumpall, , ,load-via-partition-root, , ,123,Load partitions via the root table
+pg_dumpall, , ,no-comments, , ,124,Do not dump comments
+pg_dumpall, , ,no-publications, , ,125,Do not dump publications
+pg_dumpall, , ,no-role-passwords, , ,126,Do not dump passwords for roles
+pg_dumpall, , ,no-security-labels, , ,127,Do not dump security label assignments
+pg_dumpall, , ,no-subscriptions, , ,128,Do not dump subscriptions
+pg_dumpall, , ,no-sync, , ,129,Do not wait for changes to be written safely to disk
+pg_dumpall, , ,no-tablespaces, , ,130,Do not dump tablespace assignments
+pg_dumpall, , ,no-unlogged-table-data, , ,131,Do not dump unlogged table data
+pg_dumpall, , ,quote-all-identifiers, , ,132,"Quote all identifiers, even if not key words"
+pg_dumpall, , ,use-set-session-authorization, , ,133,Use SET SESSION AUTHORIZATION instead of ALTER OWNER
+pg_dumpall, ,d,dbname, ,@f @r,134,Database to dump
+pg_dumpall, ,h,host, ,@f @r,135,Database server host or socket directory
+pg_dumpall, ,l,database, ,@f @r,136,Alternative default database
+pg_dumpall, ,p,port, ,@f @r,137,Database server port number
+pg_dumpall, ,U,username, ,@f @r,138,Connect as specified database user
+pg_dumpall, ,w,no-password, , ,139,Never prompt for password
+pg_dumpall, ,W,password, , ,140,Force password prompt (should happen automatically)
+pg_dumpall, , ,role, ,@f @r,141,Do SET ROLE before dump

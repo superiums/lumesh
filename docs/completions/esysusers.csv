@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+esysusers, , ,root, , ,101,Takes a directory path as an argument
+esysusers, , ,image, , ,102,Takes a path to a disk image file or block device node
+esysusers, , ,image-policy, , ,103,"Takes an image policy string as argument, as per systemd. image-policy(7)"
+esysusers, , ,dry-run, , ,104,"Process the configuration and figure out what entries would be created, but d…"
+esysusers, , ,inline, , ,105,Treat each positional argument as a separate configuration line instead of a …
+esysusers, , ,cat-config, , ,106,Copy the contents of config files to standard output
+esysusers, , ,tldr, , ,107,Copy the contents of config files to standard output
+esysusers, , ,no-pager, , ,108,Do not pipe output into a pager
+esysusers, ,h,help, , ,109,Print a short help text and exit
+esysusers, , ,version, , ,110,Print a short version string and exit
+esysusers, , ,replace, , ,111,"is specified, arguments specified on the command line are used instead of the…"

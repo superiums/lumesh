@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zoxide-query, , ,all, , ,101,Show deleted directories
+zoxide-query, , ,exclude, , ,102,Exclude a path from query results
+zoxide-query, ,h,help, , ,103,Print help information
+zoxide-query, ,i,interactive, , ,104,Use interactive selection.  This option requires fzf(1)
+zoxide-query, ,l,list, , ,105,"List all results, rather than just the one with the highest frecency"
+zoxide-query, ,s,score, , ,106,Print the calculated score as well as the matched path

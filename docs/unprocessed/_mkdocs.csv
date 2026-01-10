@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkdocs, contains build (commandline -pxc),c,clean, ,@f,104,Remove old site_dir before building (the default)
+mkdocs, contains build (commandline -pxc),f,config-file, ,@r,105,Provide a specific MkDocs config
+mkdocs, contains build (commandline -pxc),s,strict, ,@f,106,Enable strict mode. This will cause MkDocs to abort the build on any warnings
+mkdocs, contains build (commandline -pxc),t,theme,mkdocs readthedocs material, ,107,The theme to use when building your documentation
+mkdocs, contains build (commandline -pxc),e,theme-dir, ,@r,108,The theme directory to use when building your documentation
+mkdocs, contains build (commandline -pxc),d,site-dir, ,@r,109,The directory to output the result of the documentation build
+mkdocs, contains gh-deploy (commandline -pxc),c,clean, ,@f,110,Remove old site_dir before building (the default)
+mkdocs, contains gh-deploy (commandline -pxc),f,config-file, ,@r,111,Provide a specific MkDocs config
+mkdocs, contains gh-deploy (commandline -pxc),m,message, ,@f @r,112,A commit message to use when committing to the GitHub Pages remote branch
+mkdocs, contains gh-deploy (commandline -pxc),b,remote-branch, ,@f @r,113,The remote branch to commit to for GitHub Pages
+mkdocs, contains gh-deploy (commandline -pxc),r,remote-name, ,@f @r,114,The remote name to commit to for GitHub Pages
+mkdocs, contains gh-deploy (commandline -pxc), ,force, ,@f,115,Force the push to the repository
+mkdocs, contains serve (commandline -pxc),f,config-file, ,@r,116,Provide a specific MkDocs config
+mkdocs, contains serve (commandline -pxc),a,dev-addr, ,@r,117,IP address and port to serve documentation locally (default: localhost:8000)
+mkdocs, contains serve (commandline -pxc),s,strict, ,@f,118,Enable strict mode. This will cause MkDocs to abort the build on any warnings
+mkdocs, contains serve (commandline -pxc),t,theme,mkdocs readthedocs material, ,119,The theme to use when building your documentation
+mkdocs, contains serve (commandline -pxc),e,theme-dir, ,@r,120,The theme directory to use when building your documentation
+mkdocs, contains serve (commandline -pxc), ,livereload, ,@f,121,Enable the live reloading in the development server (this is the default)
+mkdocs, contains serve (commandline -pxc), ,no-livereload, ,@f,122,Disable the live reloading in the development server
+mkdocs, contains serve (commandline -pxc), ,dirtyreload, ,@f,123,"Enable the live reloading in the development server, but only re-build files that have changed"

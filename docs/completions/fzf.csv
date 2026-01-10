@@ -1,0 +1,56 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fzf, , ,no-extended, , ,101,no-extended
+fzf, ,e,exact, , ,103,Enable exact-match
+fzf, , ,literal, , ,105,Do not normalize latin script letters for matching
+fzf, , ,algo,v1 v2,@f @r,106,Fuzzy matching algorithm
+fzf, ,n,nth, , ,107,Limit search scope using field index expressions
+fzf, , ,with-nth, , ,108,Transform each line using field index expressions
+fzf, ,d,delimiter, , ,109,Field delimiter regex for --nth and --with-nth
+fzf, , ,no-sort, , ,110,Do not sort the result
+fzf, , ,tac, , ,112,Reverse the order of the input
+fzf, , ,disabled, , ,113,Do not perform search
+fzf, , ,tiebreak,length begin end index,@f @r,114,Sort criteria when breaking ties
+fzf, ,m,multi, , ,115,Enable multi-select with tab/shift-tab
+fzf, , ,no-multi, , ,116,Disable multi-select
+fzf, , ,no-mouse, , ,118,Disable mouse
+fzf, , ,bind, , ,119,Custom key bindings
+fzf, , ,cycle, , ,120,Enable cyclic scroll
+fzf, , ,keep-right, , ,121,Keep the right end of the line visible on overflow
+fzf, , ,no-hscroll, , ,122,Disable horizontal scroll
+fzf, , ,hscroll-off, , ,123,Number of columns to keep right of highlighted substring
+fzf, , ,filepath-word, , ,124,Make word-wise movements respect path separators
+fzf, , ,jump-labels, , ,125,Label characters for jump and jump-accept
+fzf, , ,height, , ,126,Display fzf window with the given height
+fzf, , ,min-height, , ,127,Minimum height when --height is given in percent
+fzf, , ,layout,default reverse reverse-list,@f @r,128,Choose the layout
+fzf, , ,reverse, , ,129,A synonym for --layout=reverse
+fzf, , ,border,rounded sharp horizontal,@f @r,130,Draw border around the finder
+fzf, , ,no-unicode, , ,131,Draw border with ASCII characters
+fzf, , ,margin, , ,132,Expression for margins around the finder
+fzf, , ,info,default inline hidden,@f @r,133,Finder info style
+fzf, , ,inline-info, , ,134,Display finder info inline with the query
+fzf, , ,prompt, , ,135,Input prompt
+fzf, , ,pointer, , ,136,Pointer to the current line
+fzf, , ,marker, , ,137,Multi-select marker
+fzf, , ,header, , ,138,String to print as header
+fzf, , ,header-lines, , ,139,Treat the first N lines of input as header
+fzf, , ,ansi, , ,140,Enable processing of ANSI color codes
+fzf, , ,tabstop, , ,141,Number of spaces for a tab character
+fzf, , ,color, , ,142,Color configuration
+fzf, , ,no-bold, , ,143,Do not use bold text
+fzf, , ,black, , ,144,Use black background
+fzf, , ,history, , ,145,History file
+fzf, , ,history-size, , ,146,Maximum number of history entries
+fzf, , ,preview, , ,147,Command to preview highlighted line
+fzf, , ,preview-window, , ,148,Preview window layout
+fzf, ,q,query, , ,149,Start the finder with the given query
+fzf, ,1,select-1, , ,150,Automatically select the only match
+fzf, ,0,exit-0, , ,151,Exit immediately when there's no match
+fzf, ,f,filter, , ,152,Filter mode. Do not start interactive finder
+fzf, , ,print-query, , ,153,Print query as the first line
+fzf, , ,expect, , ,154,List of keys to complete fzf
+fzf, , ,read0, , ,155,Read input delimited by ASCII NUL characters
+fzf, , ,print0, , ,156,Print output delimited by ASCII NUL characters
+fzf, , ,no-clear, , ,157,Do not clear finder interface on exit
+fzf, , ,sync, , ,158,Synchronous search for multi-staged filtering
+fzf, , ,version, , ,159,Display version information and exit

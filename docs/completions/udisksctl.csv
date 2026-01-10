@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+udisksctl, info,p,object-path, ,@f,102,Object to get information about
+udisksctl, info,b,block-device, , ,103,Block device to get information about
+udisksctl, info,d,drive, ,@f,104,Drive to get information about
+udisksctl, mount,t,filesystem-type, ,@F @f @r,105,Filesystem type to use
+udisksctl, mount,o,options, ,@f @r,106,Mount options
+udisksctl, unmount,f,force, , ,107,Force/layzy unmount
+udisksctl, unmount, , , ,@f,108,Mount point
+udisksctl, unmount,b,block-device, ,@f @r,109,Mounted block device
+udisksctl, loop-setup,f,file, , ,110,File to set-up a loop device for
+udisksctl, loop-setup,r,read-only, , ,111,Setup read-only device
+udisksctl, loop-setup,o,offset, ,@f @r,112,Start at <num> bytes into file
+udisksctl, loop-setup,s,size, ,@f @r,113,Limit size to <num> bytes
+udisksctl, loop-delete,p,object-path, , ,114,Object for loop device to delete
+udisksctl, loop-delete,b,block-device, , ,115,Loop device to delete
+udisksctl, smart-simulate,f,file, , ,116,File with libatasmart blob
+udisksctl, mount unmount lock unlock loop-setup loop-delete power-off smart-simulate, ,no-user-interaction, , ,117,Do not authenticate the user if needed

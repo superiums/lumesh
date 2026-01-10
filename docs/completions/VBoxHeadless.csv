@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+VBoxHeadless, ,s,startvm, ,@f @r,101,Start given VM
+VBoxHeadless, ,v,vrde,on off config, ,102,Enable or disamble VRDE server or don't change setting
+VBoxHeadless, ,e,vrdeproperty, ,@f @r,103,Set VRDE property
+VBoxHeadless, , ,settingspw, ,@f @r,104,Specify settings password
+VBoxHeadless, , ,settingspwfile, ,@f,105,Specify file containing setting password
+VBoxHeadless, , ,start-paused, , ,106,Start VM in paused state
+VBoxHeadless, ,c,capture, ,@f @r,107,Record VM screen output to file
+VBoxHeadless, ,w,width, ,@f @r,108,Frame width when recording
+VBoxHeadless, ,h,height, ,@f @r,109,Frame height when recording
+VBoxHeadless, ,r,bitrate, ,@f @r,110,Recording bit rate when recording
+VBoxHeadless, ,f,filename, ,@f,111,File name when recording

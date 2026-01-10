@@ -1,0 +1,36 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mocp, ,V,version, , ,101,Print program version
+mocp, ,h,help, , ,102,Print usage
+mocp, ,D,debug, , ,103,Turn on logging to a file
+mocp, ,S,server, , ,104,Run only the server
+mocp, ,F,foreground, , ,105,"Run server in fg, log to stdout"
+mocp, ,R,sound-driver,oss alsa jack null, ,106,Use the specified sound driver
+mocp, ,m,music-dir, ,@r,107,Start in MusicDir
+mocp, ,a,append, ,@r,108,Append to the playlist
+mocp, ,q,enqueue, ,@r,109,Add files to the queue
+mocp, ,c,clear, , ,110,Clear the playlist
+mocp, ,p,play, ,@r,111,Start playing from the first item on the playlist
+mocp, ,l,playit, ,@r,112,Play files without modifying the playlist
+mocp, ,s,stop, , ,113,Stop playing
+mocp, ,f,next, , ,114,Play next song
+mocp, ,r,previous, , ,115,Play previous song
+mocp, ,x,exit, , ,116,Shutdown the server
+mocp, ,T,theme, ,@r,117,Use selected theme file
+mocp, ,C,config, ,@r,118,Use config file instead of the default
+mocp, ,O,set-option, ,@r,119,NAME=VALUE Override configuration option NAME
+mocp, ,M,moc-dir, ,@r,120,Use MOC directory instead of the default
+mocp, ,P,pause, , ,121,Pause
+mocp, ,U,unpause, , ,122,Unpause
+mocp, ,G,toggle-pause, , ,123,Toggle between play/pause
+mocp, ,v,volume,+ -, ,124,(+/-)LEVEL Adjust PCM volume
+mocp, ,y,sync, , ,125,Synchronize the playlist with other clients
+mocp, ,n,nosync, , ,126,Don't synchronize the playlist with other clients
+mocp, ,A,ascii, , ,127,Use ASCII characters to draw lines
+mocp, ,i,info, , ,128,Information of the currently played file
+mocp, ,Q,format, ,@f,129,Formatted information about currently played file
+mocp, ,e,recursively, , ,130,Alias for -a
+mocp, ,k,seek, ,@f,131,Seek by N seconds (can be negative)
+mocp, ,j,jump, ,@f,132,"N{%,s} Jump to some position of the current track"
+mocp, ,o,on,shuffle autonext repeat, ,133,Turn on a control
+mocp, ,u,off,shuffle autonext repeat, ,134,Turn off a control
+mocp, ,t,toggle, , ,135,Toggle a control

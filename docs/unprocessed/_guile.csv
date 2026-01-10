@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$command, ,h,help, , ,101,Show help
+$command, ,v,version, , ,102,Show version
+$command, ,s, , ,@F @r,103,Specify the script to run
+$command, ,c, , ,@f @r,104,Specify the code to run
+$command, ,L, , ,@F @r,105, 
+$command, ,C, , ,@F @r,106, 
+$command, ,x, , ,@f @r,107, 
+$command, ,l, , ,@F @r,108,Specify the script to load
+$command, ,e, , ,@f @r,109, 
+$command, , ,use-srfi, , ,110, 
+$command, , ,$option, , ,111, 
+$command, , ,debug, , ,112,Use debug mode
+$command, , ,no-debug, , ,113,Don't use debug mode
+$command, , ,listen, , ,114, 
+$command, , ,auto-compile, , ,115,Compile scripts automatically
+$command, , ,fresh-auto-compile, , ,116, 
+$command, , ,no-auto-compile, , ,117,Don't compile scripts automatically
+$command, , ,language, , ,118, 

@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,state,@f,101,Shows if the system is online or offline
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,technologies,@f,102,Display technologies
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,clock,@f,103,Get System Clock Properties
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,enable,@f,104,Enables given technology or offline mode
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] enable", , , ,@f,105, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,disable,@f,106,Disables given technology or offline mode
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] disable", , , ,@f,107, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,tether,@f,108,"Enable, disable tethering, set SSID and passphrase for wifi"
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] tether", , , ,@f,109, 
+connmanctl," test (count (commandline -xpc)) -eq 3; and contains -- (commandline -xpc)[2] tether", , ,on off,@f,110, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,services,@f,111,Display services
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] services", , , ,@f,112, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,peers,@f,113,Display peers
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,scan,@f,114,Scans for new services for given technology
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] scan", , , ,@f,115, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,connect,@f,116,Connect a given service or peer
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] connect", , , ,@f,117, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,disconnect,@f,118,Disconnect a given service or peer
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] disconnect", , , ,@f,119, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,config,@f,120,Set service configuration options
+connmanctl," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] config", , , ,@f,121, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,monitor,@f,122,Monitor signals from interfaces
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,vpnconnections,@f,123,Display VPN connections
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] vpnconnections", , , ,@f,124, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,session,@f,125,Enable or disable a session
+connmanctl," test (count (commandline -xpc)) -eq 2; and contains -- (commandline -xpc)[2] session", , ,on off connect disconnect config,@f,126, 
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,peer_service,@f,127,(Un)Register a Peer Service
+connmanctl, test (count (commandline -xpc)) -lt 2, , ,help,@f,128,Show help

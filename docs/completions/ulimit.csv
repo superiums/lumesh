@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ulimit, ,S,soft, , ,101,Set or get soft limit
+ulimit, ,H,hard, , ,102,Set or get hard limit
+ulimit, ,a,all, , ,103,Get all current limits
+ulimit, ,b,socket-buffers, , ,104,Maximum size of socket buffers
+ulimit, ,c,core-size, , ,105,Maximum size of core files created
+ulimit, ,d,data-size, , ,106,Maximum size of a process's data segment
+ulimit, ,e,nice, , ,107,Control of maximum nice priority
+ulimit, ,f,file-size, , ,108,Maximum size of files created by the shell
+ulimit, ,i,pending-signals, , ,109,Maximum number of pending signals
+ulimit, ,l,lock-size, , ,110,Maximum size that may be locked into memory
+ulimit, ,m,resident-set-size, , ,111,Maximum resident set size
+ulimit, ,n,file-descriptor-count, , ,112,Maximum number of open file descriptors
+ulimit, ,q,queue-size, , ,113,Maximum bytes in POSIX message queues
+ulimit, ,r,realtime-priority, , ,114,Maximum realtime scheduling priority
+ulimit, ,s,stack-size, , ,115,Maximum stack size
+ulimit, ,t,cpu-time, , ,116,Maximum amount of cpu time in seconds
+ulimit, ,u,process-count, , ,117,Maximum number of processes available to a single user
+ulimit, ,v,virtual-memory-size, , ,118,Maximum amount of virtual memory available to the shell
+ulimit, ,w,swap-size, , ,119,Maximum swap space
+ulimit, ,y,realtime-maxtime, , ,120,Maximum contiguous realtime CPU time
+ulimit, ,K,kernel-queues, , ,121,Maximum number of kqueues
+ulimit, ,P,ptys, , ,122,Maximum number of pseudo-terminals
+ulimit, ,T,threads, , ,123,Maximum number of simultaneous threads
+ulimit, ,h,help, , ,124,Display help and exit
+ulimit, , , ,unlimited soft hard, ,125,New resource limit

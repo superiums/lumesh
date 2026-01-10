@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+isatty, , , , ,@k,101, 
+isatty, , , ,stderr,@k,102,2
+isatty, , , ,stdout,@k,103,1
+isatty, , , ,stdin,@k,104,0

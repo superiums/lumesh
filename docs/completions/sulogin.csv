@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sulogin, ,e,force, , ,101, 
+sulogin, ,p,login-shell, , ,102, 
+sulogin, ,t,timeout, , ,103, 
+sulogin, ,h,help, , ,104, 
+sulogin, ,V,version, , ,105, 

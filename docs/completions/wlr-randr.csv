@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wlr-randr, ,h,help, , ,101,Show help
+wlr-randr, , ,json, , ,102,Print as JSON
+wlr-randr, , ,dryrun, , ,103,Dry run
+wlr-randr, , ,output, ,@f @r,104,Output
+wlr-randr, , ,on, , ,105,Turn on
+wlr-randr, , ,off, , ,106,Turn off
+wlr-randr, , ,mode, ,@f @r,107,Mode
+wlr-randr, , ,pos, ,@r,108,Position
+wlr-randr, , ,left-of, ,@f @r,109,Relative left position
+wlr-randr, , ,right-of, ,@f @r,110,Relative right position
+wlr-randr, , ,above, ,@f @r,111,Relative top position
+wlr-randr, , ,below, ,@f @r,112,Relative bottom position
+wlr-randr, , ,transform,normal 90 180 270 flipped flipped-90 flipped-180 flipped-270,@f @r,113,Transformation
+wlr-randr, , ,scale, ,@f @r,114,Scale

@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zathura, ,e,reparent, , ,101,Reparents to window specified by xid
+zathura, ,c,config-dir, , ,102,Path to config directory
+zathura, ,d,data-dir, , ,103,Path to data directory
+zathura, , ,cache-dir, , ,104,Path to cache directory
+zathura, ,p,plugins-dir, , ,105,Path to plugins directory
+zathura, ,w,password, , ,106,Document password
+zathura, ,P,page, , ,107,Page number to go to
+zathura, ,l,log-level,debug info warning error,@f @r,108,Log level
+zathura, ,x,synctex-editor-command, , ,109,Synctex editor (forwarded to the synctex command)
+zathura, , ,synctex-forward, , ,110,Move to given synctex position
+zathura, , ,synctex-pid, ,@f @r,111,Highlight position in given process
+zathura, , ,mode,presentation fullscreen,@f @r,112,Start in a non-default mode
+zathura, , ,fork, , ,113,Fork into the background
+zathura, ,h,help, , ,114,Show help options
+zathura, ,v,version, , ,115,Print version information

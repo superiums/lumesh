@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+update-eix, ,h,help, , ,101,Show a short help screen
+update-eix, ,V,version, , ,102,Show version string
+update-eix, , ,dump, , ,103,Show eixrc-variables
+update-eix, , ,dump-defaults, , ,104,Show default eixrc-variables
+update-eix, ,q,quiet, , ,105,Produce no output
+update-eix, ,o,output, , ,106,Output to the given file
+update-eix, ,x,exclude-overlay, , ,107,Exclude the given overlay from the update-process
+update-eix, ,a,add-overlay, , ,108,Add the given overlay to the update-process
+update-eix, ,m,override-method, , ,109,Override cache method for a specified overlay

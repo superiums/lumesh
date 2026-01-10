@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+quilt, , ,version, , ,101,Show version
+quilt, -d, ,quiltrc, ,@r,102, 
+quilt, -d, ,trace, ,@r,103, 
+quilt, , , ,add,@r,104,Add file(s) to the topmost/named patch
+quilt, , , ,annotate,@r,105,Print an annotated listing of the given file
+quilt, , , ,applied,@r,106,Print a list of applied patches
+quilt, , , ,delete,@r,107,Remove the topmost/given patch from the series file
+quilt, , , ,diff,@r,108,Produces a diff of the given file(s) in the topmost/given patch
+quilt, , , ,edit,@r,109,Edit the given file(s) in $EDITOR
+quilt, , , ,files,@r,110,Lists files that the topmost/given patch changes
+quilt, , , ,fold,@r,111,Integrate the patch read from standard input into the topmost patch
+quilt, -d, , ,fork,@r,112, 
+quilt, -d, , ,graph,@r,113, 
+quilt, -d, , ,grep,@r,114, 
+quilt, -d, , ,header,@r,115, 
+quilt, , , ,import,@r,116,Import external patches
+quilt, , , ,mail,@r,117,"Create mail messages from patches in the series file, stores/sends them"
+quilt, , , ,new,@r,118,"Creates new patch with the given name, inserts it after topmost patch"
+quilt, , , ,next,@r,119,Prints name of patch after the topmost/given patch in the series file
+quilt, , , ,patches,@r,120,Print the list of patches that modify the given file
+quilt, , , ,pop,@r,121,Remove patch(es) from the stack of applied patches
+quilt, , , ,previous,@r,122,Prints name of patch before the topmost/given patch in the series file
+quilt, , , ,push,@r,123,Apply patch(es) from the series file
+quilt, , , ,refresh,@r,124,"Refresh the given patch, or the topmost patch by default"
+quilt, , , ,remove,@r,125,Remove one or more files from the topmost/named patch
+quilt, , , ,rename,@r,126,Rename the topmost/named patch
+quilt, -d, , ,series,@r,127, 
+quilt, , , ,setup,@r,128,Initializes a source tree from an rpm spec or a quilt series file
+quilt, -d, , ,snapshot,@r,129, 
+quilt, , , ,top, ,130,Prints name of the topmost patch in the current stack of applied patches
+quilt, , , ,unapplied,@r,131,List patches not applied or patches that follow the patch in the series file
+quilt, , , ,upgrade, ,132,Upgrade meta-data in a working tree to the current version of quilt

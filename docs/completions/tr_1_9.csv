@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tr, ,C,complement, , ,101,use the complement of ARRAY1
+tr, ,d,delete, , ,102,"delete characters in ARRAY1, do not translate"
+tr, ,s,squeeze-repeats, , ,103,replace each sequence of a repeated character that is listed in the last spec…
+tr, ,t,truncate-set1, , ,104,first truncate ARRAY1 to length of ARRAY2
+tr, , ,help, , ,105,display this help and exit
+tr, , ,version, , ,106,output version information and exit 

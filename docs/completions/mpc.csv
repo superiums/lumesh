@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mpc, ,f,format, , ,101,Configure the format used to display songs
+mpc, , ,wait, , ,102,Wait for operation to finish (e. g.  database update)
+mpc, , ,range, , ,103,Operate on a range
+mpc, ,q,no-status, , ,104,Prevents the current song status from being printed
+mpc, , ,verbose, , ,105,Verbose output
+mpc, , ,host, , ,106,The MPD server to connect to
+mpc, ,p,port, , ,107,The TCP port of the MPD server to connect to
+mpc, consume random repeat single, , ,on off, ,108, 
+mpc, replaygain, , ,off track album, ,109, 

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsamixer, ,h,help, , ,101,Help: show available flags
+alsamixer, ,c,card, , ,102,"Select the soundcard to use, if you have more than one"
+alsamixer, ,D,device, , ,103,Select the mixer device to control
+alsamixer, ,V,view, , ,104,"Select the starting view mode, either playback, capture or all"
+alsamixer, ,B,black-background, , ,105,Use the black background color
+alsamixer, ,g,no-color, , ,106,Toggle the using of colors
+alsamixer, , ,-----, , ,107,capture switch is turned on

@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msfvenom, ,l,list,payloads encoders nops platforms archs encrypt formats all, ,101,List all modules for type
+msfvenom, ,p,payload, , ,102,Payload to use
+msfvenom, , ,list-options, , ,103,List options for payload
+msfvenom, ,f,format, , ,104,Output format
+msfvenom, ,e,encoder, , ,105,The encoder to use
+msfvenom, , ,service-name, ,@f @r,106,Service name to use when generating a service binary
+msfvenom, , ,sec-name, ,@f @r,107,Section name when generating Windows binaries
+msfvenom, , ,smallest, , ,108,Generate the smallest possible payload
+msfvenom, , ,encrypt, , ,109,Type of encryption to apply to the shellcode
+msfvenom, , ,encrypt-key, ,@f @r,110,A key to be used for --encrypt
+msfvenom, , ,encrypt-iv, ,@f @r,111,An initialization vector for --encrypt
+msfvenom, ,a,arch, , ,112,The architecture to use
+msfvenom, , ,platform, , ,113,The platform to use
+msfvenom, ,o,out, ,@F,114,Save the payload to a file
+msfvenom, ,b,bad-chars, ,@f @r,115,Characters to avoid
+msfvenom, ,n,nopsled, ,@f @r,116,Prepend a nopsled
+msfvenom, , ,pad-nops, , ,117,Use nopsled size as total payload size
+msfvenom, ,s,space, ,@f @r,118,Maximum size of the resulting payload
+msfvenom, , ,encoder-space, ,@f @r,119,Maximum size of the encoded payload
+msfvenom, ,i,iterations, ,@f @r,120,Number of times to encode the payload
+msfvenom, ,c,add-code, ,@F,121,Additional win32 shellcode file to include
+msfvenom, ,x,template, ,@F,122,Custom executable file to use as a template
+msfvenom, ,k,keep, , ,123,Inject the payload as a new thread (for template)
+msfvenom, ,v,var-name, ,@f @r,124,Custom variable name for certain output formats
+msfvenom, ,t,timeout, ,@f @r,125,Number of seconds to wait when reading the payload
+msfvenom, ,h,help, , ,126,Show help message

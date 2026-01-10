@@ -1,0 +1,485 @@
+cmd,conds,short,long,params,dirs,pri,desc
+npm, __fish_npm_needs_command, , ,run-script run,@f,101,Run arbitrary package scripts
+npm, __fish_npm_using_command $c, , , ,@f,102, 
+npm, __fish_npm_using_command $c, ,if-present, ,@f,103,Don't error on nonexistent script
+npm, __fish_npm_using_command $c, ,ignore-scripts, ,@f,104,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command $c,script-shell, , ,@f @r,105,The shell to use for scripts
+npm, __fish_npm_using_command $c, ,foreground-scripts, ,@f,106,Run all build scripts in the foreground
+npm, __fish_npm_needs_command, , ,access,@f,107,Set access level on published packages
+npm,__fish_npm_using_command access $access_commands, , ,list,@f @r,107,List access info
+npm,__fish_npm_using_command access $access_commands, , ,get,@f @r,107,Get access level
+npm,__fish_npm_using_command access $access_commands, , ,grant,@f @r,107,Grant access to users
+npm,__fish_npm_using_command access $access_commands, , ,revoke,@f @r,107,Revoke access from users
+npm,__fish_npm_using_command access $access_commands, , ,set,@f @r,107,Set access level
+npm,__fish_npm_using_command access list, , ,packages collaborators,@f @r,108, 
+npm,__fish_npm_using_command access get, , ,status,@f @r,109, 
+npm,__fish_npm_using_command access grant, , ,read-only read-write,@f @r,110, 
+npm,__fish_npm_using_command access set, , ,status=public status=private,@f @r,111,Set package status
+npm,__fish_npm_using_command access set, , ,mfa=none mfa=publish mfa=automation,@f @r,112,Set package MFA
+npm,__fish_npm_using_command access set, , ,2fa=none 2fa=publish 2fa=automation,@f @r,113,Set package MFA
+npm, __fish_npm_using_command access, ,json, ,@f,114,Output JSON
+npm, __fish_npm_using_command access, ,otp, ,@f @r,115,2FA one-time password
+npm, __fish_npm_using_command access, ,registry, ,@f @r,116,Registry base URL
+npm, __fish_npm_using_command access,h,help, ,@f,117,Display help
+npm, __fish_npm_needs_command, , ,adduser,@f,118,Add a registry user account
+npm, __fish_npm_needs_command, , ,login,@f,119,Login to a registry user account
+npm, __fish_npm_using_command $c, ,registry, ,@f @r,120,Registry base URL
+npm, __fish_npm_using_command $c, ,scope, ,@f @r,121,Log into a private repository
+npm, __fish_npm_using_command $c, ,auth-type,legacy web,@f @r,122,Authentication strategy
+npm, __fish_npm_using_command $c,h,help, ,@f,123,Display help
+npm, __fish_npm_needs_command, , ,audit,@f,124,Run a security audit
+npm, __fish_npm_using_command audit, , ,signatures,@f,125,Verify registry signatures
+npm, __fish_npm_using_command audit, , ,fix,@f,126,Install compatible updates to vulnerable deps
+npm, __fish_npm_using_command audit, ,audit-level,info low moderate high critical none,@f @r,127,Audit level
+npm, __fish_npm_using_command audit, ,dry-run, ,@f,128,Do not make any changes
+npm, __fish_npm_using_command audit,f,force, ,@f,129,Removes various protections
+npm, __fish_npm_using_command audit, ,json, ,@f,130,Output JSON
+npm, __fish_npm_using_command audit, ,package-lock-only, ,@f,131,"Only use package-lock.json, ignore node_modules"
+npm, __fish_npm_using_command audit, ,omit,dev optional peer,@f @r,132,Omit dependency type
+npm, __fish_npm_using_command audit, ,foreground-scripts, ,@f,133,Run all build scripts in the foreground
+npm, __fish_npm_using_command audit, ,ignore-scripts, ,@f,134,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command audit, ,install-links, ,@f,135,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command audit,h,help, ,@f,136,Display help
+npm, __fish_npm_needs_command, , ,$c,@f,137,Report bugs for a package in a web browser
+npm, __fish_npm_using_command $c, ,browser, ,@f @r,138,Set browser
+npm, __fish_npm_using_command $c, ,no-browser, ,@f @r,139,Print to stdout
+npm, __fish_npm_using_command $c, ,registry, ,@f @r,140,Registry base URL
+npm, __fish_npm_using_command $c,h,help, ,@f,141,Display help
+npm, __fish_npm_needs_command, , ,cache,@f,142,Manipulates package's cache
+npm, __fish_npm_using_command cache, , ,add,@f,143,Add the specified package to the local cache
+npm, __fish_npm_using_command cache, , ,clean,@f,144,Delete data out of the cache folder
+npm, __fish_npm_using_command cache, , ,ls,@f,145,Show the data in the cache
+npm, __fish_npm_using_command cache, , ,verify,@f,146,Verify the contents of the cache folder
+npm, __fish_npm_using_command cache, ,cache, ,@D @f @r,147,Cache location
+npm, __fish_npm_using_command cache,h,help, ,@f,148,Display help
+npm, __fish_npm_needs_command, , ,ci clean-install,@f,149,Clean install a project
+npm, __fish_npm_needs_command, , ,install-ci-test cit,@f,150,Install a project with a clean slate and run tests
+npm, __fish_npm_using_command $c, ,install-strategy,hoisted nested shallow linked,@f @r,151,Install strategy
+npm, __fish_npm_using_command $c, ,omit,dev optional peer,@f @r,152,Omit dependency type
+npm, __fish_npm_using_command $c, ,strict-peer-deps, ,@f @r,153,Treat conflicting peerDependencies as failure
+npm, __fish_npm_using_command $c, ,foreground-scripts, ,@f,154,Run all build scripts in the foreground
+npm, __fish_npm_using_command $c, ,ignore-scripts, ,@f,155,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command $c, ,no-audit, ,@f,156,Don't submit audit reports
+npm, __fish_npm_using_command $c, ,no-bin-links, ,@f,157,Don't symblink package executables
+npm, __fish_npm_using_command $c, ,no-fund, ,@f,158,Don't display funding info
+npm, __fish_npm_using_command $c, ,dry-run, ,@f,159,Do not make any changes
+npm, __fish_npm_using_command $c, ,install-links, ,@f,160,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command $c,h,help, ,@f,161,Display help
+npm, __fish_npm_needs_command, , ,completion,@f,162,Tab Completion for npm
+npm, __fish_npm_using_command completion,h,help, ,@f,163,Display help
+npm, __fish_npm_needs_command, , ,config,@f,164,Manage the npm configuration files
+npm,__fish_npm_using_command $c $config_commands, , ,set,@f @r,164,Sets the config keys to the values
+npm,__fish_npm_using_command $c $config_commands, , ,get,@f @r,164,Echo the config value(s) to stdout
+npm,__fish_npm_using_command $c $config_commands, , ,delete,@f @r,164,Deletes the key from all config files
+npm,__fish_npm_using_command $c $config_commands, , ,list,@f @r,164,Show all config settings
+npm,__fish_npm_using_command $c $config_commands, , ,edit,@f @r,164,Opens the config file in an editor
+npm,__fish_npm_using_command $c $config_commands, , ,fix,@f @r,164,Attempts to repair invalid config items
+npm, __fish_npm_using_command $c, ,json, ,@f,165,Output JSON
+npm, __fish_npm_using_command $c,g,global, ,@f,166,Edit global config
+npm, __fish_npm_using_command $c, ,editor, ,@f @r,167,Specify the editor
+npm, __fish_npm_using_command $c,L,location,global user project,@f @r,168,Which config file
+npm, __fish_npm_using_command $c,l,long, ,@f,169,Show extended information
+npm, __fish_npm_using_command $c,h,help, ,@f,170,Display help
+npm, __fish_npm_needs_command, , ,get,@f,171,Get a value from the npm configuration
+npm, __fish_npm_using_command get,l,long, ,@f,172,Show extended information
+npm, __fish_npm_using_command get,h,help, ,@f,173,Display help
+npm, __fish_npm_needs_command, , ,set,@f,174,Set a value in the npm configuration
+npm, __fish_npm_using_command set,L,location,global user project,@f @r,175,Which config file
+npm, __fish_npm_using_command set,g,global, ,@f,176,Edit global config
+npm, __fish_npm_using_command set,h,help, ,@f,177,Display help
+npm, __fish_npm_needs_command, , ,dedupe,@f,178,Reduce duplication
+npm, __fish_npm_needs_command, , ,find-dupes,@f,179,Find duplication
+npm, __fish_npm_using_command $c, ,install-strategy,hoisted nested shallow linked,@f @r,180,Install strategy
+npm, __fish_npm_using_command $c, ,strict-peer-deps, ,@f @r,181,Treat conflicting peerDependencies as failure
+npm, __fish_npm_using_command $c, ,no-package-lock, ,@f @r,182,Ignore package-lock.json
+npm, __fish_npm_using_command $c, ,omit,dev optional peer,@f @r,183,Omit dependency type
+npm, __fish_npm_using_command $c, ,ignore-scripts, ,@f,184,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command $c, ,no-audit, ,@f,185,Don't submit audit reports
+npm, __fish_npm_using_command $c, ,no-bin-links, ,@f,186,Don't symblink package executables
+npm, __fish_npm_using_command $c, ,no-fund, ,@f,187,Don't display funding info
+npm, __fish_npm_using_command $c, ,install-links, ,@f,188,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command $c,h,help, ,@f,189,Display help
+npm, __fish_npm_using_command $c, ,dry-run, ,@f,190,Don't display funding info
+npm, __fish_npm_needs_command, , ,deprecate,@f,191,Deprecate a version of a package
+npm, __fish_npm_using_command deprecate, ,registry, ,@f @r,192,Registry base URL
+npm, __fish_npm_using_command deprecate, ,otp, ,@f @r,193,2FA one-time password
+npm, __fish_npm_using_command deprecate,h,help, ,@f,194,Display help
+npm, __fish_npm_needs_command, , ,diff,@f,195,The registry diff command
+npm, __fish_npm_using_command diff, ,diff, ,@f @r,196,Arguments to compare
+npm, __fish_npm_using_command diff, ,diff-name-only, ,@f,197,Prints only filenames
+npm, __fish_npm_using_command diff, ,diff-unified, ,@f @r,198,The number of lines to print
+npm, __fish_npm_using_command diff, ,diff-ignore-all-space, ,@f,199,Ignore whitespace
+npm, __fish_npm_using_command diff, ,diff-no-prefix, ,@f,200,Do not show any prefix
+npm, __fish_npm_using_command diff, ,diff-src-prefix, ,@f @r,201,Source prefix
+npm, __fish_npm_using_command diff, ,diff-dst-prefix, ,@f @r,202,Destination prefix
+npm, __fish_npm_using_command diff, ,diff-text, ,@f,203,Treat all files as text
+npm, __fish_npm_using_command diff,g,global, ,@f,204,Operates in 'global' mode
+npm, __fish_npm_using_command diff, ,tag, ,@f @r,205,The tag used to fetch the tarball
+npm, __fish_npm_using_command diff,h,help, ,@f,206,Display help
+npm, __fish_npm_needs_command, , ,dist-tag,@f,207,Modify package distribution tags
+npm, __fish_npm_using_command $c, , ,add,@f,208,Tag the package
+npm, __fish_npm_using_command $c, , ,rm,@f,209,Clear a tag from the package
+npm, __fish_npm_using_command $c, , ,ls,@f,210,List all dist-tags
+npm, __fish_npm_using_command $c,h,help, ,@f,211,Display help
+npm, __fish_npm_needs_command, , ,docs,@f,212,Open docs for a package in a web browser
+npm, __fish_npm_using_command $c, ,browser, ,@f @r,213,Set browser
+npm, __fish_npm_using_command $c, ,registry, ,@f @r,214,Registry base URL
+npm, __fish_npm_using_command $c,h,help, ,@f,215,Display help
+npm, __fish_npm_needs_command, , ,doctor,@f,216,Check your npm environment
+npm, __fish_npm_using_command doctor, , ,ping,@f,217,Check npm ping
+npm, __fish_npm_using_command doctor, , ,registry,@f,218,Check registry
+npm, __fish_npm_using_command doctor, , ,versions,@f,219,Check installed versions
+npm, __fish_npm_using_command doctor, , ,environment,@f,220,Check PATH
+npm, __fish_npm_using_command doctor, , ,permissions,@f,221,Check file permissions
+npm, __fish_npm_using_command doctor, , ,cache,@f,222,Verify cache
+npm, __fish_npm_using_command doctor,h,help, ,@f,223,Display help
+npm, __fish_npm_needs_command, , ,edit,@f,224,Edit an installed package
+npm, __fish_npm_using_command edit, ,editor, ,@f,225,Specify the editor
+npm, __fish_npm_using_command edit,h,help, ,@f,226,Display help
+npm, __fish_npm_needs_command, , ,exec,@f,227,Run a command from a local or remote npm package
+npm, __fish_npm_using_command $c, ,package, ,@f @r,228,The package(s) to install
+npm, __fish_npm_using_command $c, ,call, ,@f @r,229,Specify a custom command
+npm, __fish_npm_using_command $c,h,help, ,@f,230,Display help
+npm, __fish_npm_needs_command, , ,$c,@f,231,Explain installed packages
+npm, __fish_npm_using_command $c, ,json, ,@f,232,Output JSON
+npm, __fish_npm_using_command $c,h,help, ,@f,233,Display help
+npm, __fish_npm_needs_command, , ,explore,@f,234,Browse an installed package
+npm, __fish_npm_using_command explore, , ,shell,@f,235,The shell to open
+npm, __fish_npm_using_command explore,h,help, ,@f,236,Display help
+npm, __fish_npm_needs_command, , ,fund,@f,237,Retrieve funding information
+npm, __fish_npm_using_command fund, ,json, ,@f,238,Output JSON
+npm, __fish_npm_using_command fund, ,browser, ,@f @r,239,Set browser
+npm, __fish_npm_using_command fund, ,no-browser, ,@f,240,Print to stdout
+npm, __fish_npm_using_command fund, ,unicode, ,@f,241,Use unicode characters in the output
+npm, __fish_npm_using_command fund, ,no-unicode, ,@f,242,Use ascii characters over unicode glyphs
+npm, __fish_npm_using_command fund, ,which, ,@f @r,243,Which source URL to open (1-indexed)
+npm, __fish_npm_using_command fund,h,help, ,@f,244,Display help
+npm, __fish_npm_needs_command, , ,help,@f,245,Get help on npm
+npm, __fish_npm_using_command $c, ,viewer,browser man,@f,246,Program to view content
+npm, __fish_npm_using_command $c,h,help, ,@f,247,Display help
+npm, __fish_npm_using_command $c, , ,registry,@f,248,The JavaScript Package Registry
+npm, __fish_npm_using_command $c, , ,removal,@f,249,Cleaning the Slate
+npm, __fish_npm_using_command $c, , ,logging,@f,250,"Why, What & How We Log"
+npm, __fish_npm_using_command $c, , ,scope,@f,251,How npm handles the 'scripts' field
+npm, __fish_npm_using_command $c, , ,dependency-selectors,@f,252,Dependency Selector Syntax & Querying
+npm, __fish_npm_using_command $c, , ,npm,@f,253,javascript package manager
+npm, __fish_npm_using_command $c, , ,npmrc,@f,254,The npm config files
+npm, __fish_npm_using_command $c, , ,shrinkwrap,@f,255,A publishable lockfile
+npm, __fish_npm_using_command $c, , ,developers,@f,256,Developer Guide
+npm, __fish_npm_using_command $c, , ,npx,@f,257,Run a command from a local or remote npm package
+npm, __fish_npm_using_command $c, , ,package-json,@f,258,Specifics of npm's package.json handling
+npm, __fish_npm_using_command $c, , ,package-lock-json,@f,259,A manifestation of the manifest
+npm, __fish_npm_using_command $c, , ,package-spec,@f,260,Package name specifier
+npm, __fish_npm_using_command $c, , ,folders,@f,261,Folder Structures Used by npm
+npm, __fish_npm_using_command $c, , ,global,@f,262,Folder Structures Used by npm
+npm, __fish_npm_using_command $c, , ,workspaces,@f,263,FolderWorking with workspaces
+npm, __fish_npm_using_command $c, , ,run-script run,@f,264,Run arbitrary package scripts
+npm, __fish_npm_using_command $c, , ,access,@f,265,Set access level on published packages
+npm, __fish_npm_using_command $c, , ,adduser,@f,266,Add a registry user account
+npm, __fish_npm_using_command $c, , ,login,@f,267,Login to a registry user account
+npm, __fish_npm_using_command $c, , ,audit,@f,268,Run a security audit
+npm, __fish_npm_using_command $c, , ,bugs issues,@f,269,Report bugs for a package in a web browser
+npm, __fish_npm_using_command $c, , ,cache,@f,270,Manipulates package's cache
+npm, __fish_npm_using_command $c, , ,ci clean-install,@f,271,Clean install a project
+npm, __fish_npm_using_command $c, , ,install-ci-test cit,@f,272,Install a project with a clean slate and run tests
+npm, __fish_npm_using_command $c, , ,config,@f,273,Manage the npm configuration files
+npm, __fish_npm_using_command $c, , ,dedupe,@f,274,Reduce duplication
+npm, __fish_npm_using_command $c, , ,find-dupes,@f,275,Find duplication
+npm, __fish_npm_using_command $c, , ,deprecate,@f,276,Deprecate a version of a package
+npm, __fish_npm_using_command $c, , ,diff,@f,277,The registry diff command
+npm, __fish_npm_using_command $c, , ,dist-tag,@f,278,Modify package distribution tags
+npm, __fish_npm_using_command $c, , ,docs,@f,279,Open docs for a package in a web browser
+npm, __fish_npm_using_command $c, , ,doctor,@f,280,Check your npm environment
+npm, __fish_npm_using_command $c, , ,edit,@f,281,Edit an installed package
+npm, __fish_npm_using_command $c, , ,exec,@f,282,Run a command from a local or remote npm package
+npm, __fish_npm_using_command $c, , ,explaiin why,@f,283,Explain installed packages
+npm, __fish_npm_using_command $c, , ,explore,@f,284,Browse an installed package
+npm, __fish_npm_using_command $c, , ,fund,@f,285,Retrieve funding information
+npm, __fish_npm_using_command $c, , ,help,@f,286,Get help on npm
+npm, __fish_npm_using_command $c, , ,help-search,@f,287,Search npm help documentation
+npm, __fish_npm_using_command $c, , ,hook,@f,288,Manage registry hooks
+npm, __fish_npm_using_command $c, , ,init create,@f,289,Create a package.json file
+npm, __fish_npm_using_command $c, , ,install add i,@f,290,Install a package
+npm, __fish_npm_using_command $c, , ,install-test it,@f,291,Install package(s) and run tests
+npm, __fish_npm_using_command $c, , ,logout,@f,292,Log out of the registry
+npm, __fish_npm_using_command $c, , ,ls list,@f,293,List installed packages
+npm, __fish_npm_using_command $c, , ,outdated,@f,294,Check for outdated packages
+npm, __fish_npm_using_command $c, , ,org,@f,295,Manage orgs
+npm, __fish_npm_using_command $c, , ,owner author,@f,296,Manage package owners
+npm, __fish_npm_using_command $c, , ,pack,@f,297,Create a tarball from a package
+npm, __fish_npm_using_command $c, , ,ping,@f,298,Ping npm registry
+npm, __fish_npm_using_command $c, , ,pkg,@f,299,Manages your package.json
+npm, __fish_npm_using_command $c, , ,prefix,@f,300,Display npm prefix
+npm, __fish_npm_using_command $c, , ,publish,@f,301,Publish a package
+npm, __fish_npm_using_command $c, , ,query,@f,302,Dependency selector query
+npm, __fish_npm_using_command $c, , ,uninstall remove un,@f,303,Remove a package
+npm, __fish_npm_using_command $c, , ,repo,@f,304,Open package repository page in the browser
+npm, __fish_npm_using_command $c, , ,restart,@f,305,Restart a package
+npm, __fish_npm_using_command $c, , ,start,@f,306,Start a package
+npm, __fish_npm_using_command $c, , ,stop,@f,307,Stop a package
+npm, __fish_npm_using_command $c, , ,test,@f,308,Test a package
+npm, __fish_npm_using_command $c, , ,root,@f,309,Display npm root
+npm, __fish_npm_using_command $c, , ,search find,@f,310,Search for packages
+npm, __fish_npm_using_command $c, , ,star,@f,311,Mark your favorite packages
+npm, __fish_npm_using_command $c, , ,stars,@f,312,View packages marked as favorites
+npm, __fish_npm_using_command $c, , ,update up upgrade,@f,313,Update package(s)
+npm, __fish_npm_using_command $c, , ,unstar,@f,314,Remove star from a package
+npm, __fish_npm_using_command $c, , ,version,@f,315,Bump a package version
+npm, __fish_npm_using_command $c, , ,view info,@f,316,View registry info
+npm, __fish_npm_using_command $c, , ,whoami,@f,317,Display npm username
+npm, __fish_npm_using_command $c, , ,link ln,@f,318,Symlink a package folder
+npm, __fish_npm_using_command $c, , ,profile,@f,319,Change settings on your registry profile
+npm, __fish_npm_using_command $c, , ,prune,@f,320,Remove extraneous packages
+npm, __fish_npm_using_command $c, , ,rebuild,@f,321,Rebuild a package
+npm, __fish_npm_using_command $c, , ,team,@f,322,Manage organization teams and team memberships
+npm, __fish_npm_using_command $c, , ,token,@f,323,Manage your authentication tokens
+npm, __fish_npm_using_command $c, , ,unpublish,@f,324,Remove a package from the registry
+npm, __fish_npm_using_command $c, , ,completion,@f,325,Tab Completion for npm
+npm, __fish_npm_using_command $c, , ,shrinkwrap,@f,326,Lock down dependency versions
+npm, __fish_npm_needs_command, , ,help-search,@f,327,Search npm help documentation
+npm, __fish_npm_using_command help-search,l,long, ,@f,328,Show extended information
+npm, __fish_npm_using_command help-search,h,help, ,@f,329,Display help
+npm, __fish_npm_needs_command, , ,hook,@f,330,Manage registry hooks
+npm,__fish_npm_using_command hook $hook_commands, , ,add,@f,330,Add a hook
+npm,__fish_npm_using_command hook $hook_commands, , ,ls,@f,330,List all active hooks
+npm,__fish_npm_using_command hook $hook_commands, , ,update,@f,330,Update an existing hook
+npm,__fish_npm_using_command hook $hook_commands, , ,rm,@f,330,Remove a hook
+npm,__fish_npm_using_command hook add, ,type, ,@f,331,Hook type
+npm, __fish_npm_using_command hook, ,registry, ,@f @r,332,Registry base URL
+npm, __fish_npm_using_command hook, ,otp, ,@f @r,333,2FA one-time password
+npm, __fish_npm_using_command hook,h,help, ,@f,334,Display help
+npm, __fish_npm_needs_command, , ,init create, ,335,Create a package.json file
+npm, __fish_npm_using_command $c,y,yes, ,@f,336,Automatically answer 'yes' to all prompts
+npm, __fish_npm_using_command $c,f,force, ,@f,337,Removes various protections
+npm, __fish_npm_using_command $c, ,scope, ,@f @r,338,Create a scoped package
+npm, __fish_npm_using_command $c,h,help, ,@f,339,Display help
+npm, __fish_npm_needs_command, , ,install add i, ,340,Install a package
+npm, __fish_npm_needs_command, , ,install-test it,@f,341,Install package(s) and run tests
+npm, __fish_npm_needs_command, , ,link ln,@f,342,Symlink a package folder
+npm, __fish_npm_using_command $c,S,save, ,@f,343,Save to dependencies
+npm, __fish_npm_using_command $c, ,no-save, ,@f,344,Prevents saving to dependencies
+npm, __fish_npm_using_command $c,P,save-prod, ,@f,345,Save to dependencies
+npm, __fish_npm_using_command $c,D,save-dev, ,@f,346,Save to devDependencies
+npm, __fish_npm_using_command $c,O,save-optional, ,@f,347,Save to optionalDependencies
+npm, __fish_npm_using_command $c, ,save-peer, ,@f,348,Save to peerDependencies
+npm, __fish_npm_using_command $c,B,save-bundle, ,@f,349,Also save to bundleDependencies
+npm, __fish_npm_using_command $c,E,save-exact, ,@f,350,Save dependency with exact version
+npm, __fish_npm_using_command $c,g,global, ,@f,351,Install package globally
+npm, __fish_npm_using_command $c, ,install-strategy,hoisted nested shallow linked,@f @r,352,Install strategy
+npm, __fish_npm_using_command $c, ,omit,dev optional peer,@f @r,353,Omit dependency type
+npm, __fish_npm_using_command $c, ,strict-peer-deps, ,@f @r,354,Treat conflicting peerDependencies as failure
+npm, __fish_npm_using_command $c, ,no-package-lock, ,@f @r,355,Ignore package-lock.json
+npm, __fish_npm_using_command $c, ,ignore-scripts, ,@f,356,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command $c, ,no-audit, ,@f,357,Don't submit audit reports
+npm, __fish_npm_using_command $c, ,no-bin-links, ,@f,358,Don't symblink package executables
+npm, __fish_npm_using_command $c, ,no-fund, ,@f,359,Don't display funding info
+npm, __fish_npm_using_command $c, ,dry-run, ,@f,360,Do not make any changes
+npm, __fish_npm_using_command $c, ,install-links, ,@f,361,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command $c,h,help, ,@f,362,Display help
+npm, __fish_npm_using_command $c, ,foreground-scripts, ,@f,363,Run all build scripts in the foreground
+npm, __fish_npm_using_command $c, ,prefer-dedupe, ,@f,364,Prefer to deduplicate packages
+npm, __fish_npm_needs_command, , ,logout,@f,365,Log out of the registry
+npm, __fish_npm_using_command logout, ,registry, ,@f @r,366,Registry base URL
+npm, __fish_npm_using_command logout, ,scope, ,@f @r,367,Log out of private repository
+npm, __fish_npm_using_command logout,h,help, ,@f,368,Display help
+npm, __fish_npm_needs_command, , ,ls list ll,@f,369,List installed packages
+npm, __fish_npm_using_command $c,a,all, ,@f,370,Also show indirect dependencies
+npm, __fish_npm_using_command $c, ,json, ,@f,371,Output JSON
+npm, __fish_npm_using_command $c,l,long, ,@f,372,Show extended information
+npm, __fish_npm_using_command $c,p,parseable, ,@f,373,Output parseable results
+npm, __fish_npm_using_command $c,g,global, ,@f,374,List global packages
+npm, __fish_npm_using_command $c, ,depth, ,@f @r,375,Dependency recursion depth
+npm, __fish_npm_using_command $c, ,omit,dev optional peer,@f @r,376,Omit dependency type
+npm, __fish_npm_using_command $c, ,linked, ,@f,377,Only show linked packages
+npm, __fish_npm_using_command $c, ,package-lock-only, ,@f,378,"Only use package-lock.json, ignore node_modules"
+npm, __fish_npm_using_command $c, ,unicode, ,@f,379,Use unicode characters in the output
+npm, __fish_npm_using_command $c, ,no-unicode, ,@f,380,Use ascii characters over unicode glyphs
+npm, __fish_npm_using_command $c, ,install-links, ,@f,381,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command $c,h,help, ,@f,382,Display help
+npm, __fish_npm_needs_command, , ,outdated,@f,383,Check for outdated packages
+npm, __fish_npm_using_command outdated,a,all, ,@f,384,Also show indirect dependencies
+npm, __fish_npm_using_command outdated, ,json, ,@f,385,Output JSON
+npm, __fish_npm_using_command outdated,l,long, ,@f,386,Show extended information
+npm, __fish_npm_using_command outdated, ,parseable, ,@f,387,Output parseable results
+npm, __fish_npm_using_command outdated,g,global, ,@f,388,Check global packages
+npm, __fish_npm_using_command outdated,h,help, ,@f,389,Display help
+npm, __fish_npm_needs_command, , ,org,@f,390,Manage orgs
+npm,__fish_npm_using_command $c __fish_is_nth_token 2, , ,set,@f,391,Add a new user
+npm,__fish_npm_using_command $c __fish_is_nth_token 2, , ,rm,@f,392,Remove a user
+npm,__fish_npm_using_command $c __fish_is_nth_token 2, , ,ls,@f,393,List all users
+npm,__fish_npm_using_command $c __fish_is_nth_token 5 set, , ,admin,@f,394,Add admin
+npm,__fish_npm_using_command $c __fish_is_nth_token 5 set, , ,developer,@f,395,Add developer
+npm,__fish_npm_using_command $c __fish_is_nth_token 5 set, , ,owner,@f,396,Add owner
+npm, __fish_npm_using_command $c,h,help, ,@f,397,Display help
+npm, __fish_npm_needs_command, , ,$c,@f,398,Manage package owners
+npm, __fish_npm_using_command $c, , ,ls,@f,399,List package owners
+npm, __fish_npm_using_command $c, , ,add,@f,400,Add a new owner to package
+npm, __fish_npm_using_command $c, , ,rm,@f,401,Remove an owner from package
+npm, __fish_npm_using_command $c, ,registry, ,@f @r,402,Registry base URL
+npm, __fish_npm_using_command $c, ,otp, ,@f @r,403,2FA one-time password
+npm, __fish_npm_using_command $c,h,help, ,@f,404,Display help
+npm, __fish_npm_needs_command, , ,pack,@f,405,Create a tarball from a package
+npm, __fish_npm_using_command pack, ,dry-run, ,@f,406,Do not make any changes
+npm, __fish_npm_using_command pack, ,json, ,@f,407,Output JSON
+npm, __fish_npm_using_command pack, ,pack-destination, ,@D @f @r,408,Tarball destination directory
+npm, __fish_npm_using_command pack,h,help, ,@f,409,Display help
+npm, __fish_npm_needs_command, , ,ping,@f,410,Ping npm registry
+npm, __fish_npm_using_command ping, ,registry, ,@f @r,411,Registry base URL
+npm, __fish_npm_using_command ping,h,help, ,@f,412,Display help
+npm, __fish_npm_needs_command, , ,pkg,@f,413,Manages your package.json
+npm, __fish_npm_using_command pkg, , ,set,@f @r,414,Sets a value
+npm, __fish_npm_using_command pkg, , ,get,@f @r,415,Retrieves a value
+npm, __fish_npm_using_command pkg, , ,delete,@f @r,416,Deletes a key
+npm, __fish_npm_using_command pkg,f,force, ,@f,417,Removes various protections
+npm, __fish_npm_using_command pkg, ,json, ,@f,418,Parse values with JSON.parse()
+npm, __fish_npm_using_command pkg,h,help, ,@f,419,Display help
+npm, __fish_npm_needs_command, , ,prefix,@f,420,Display npm prefix
+npm, __fish_npm_using_command prefix,g,global, ,@f,421,Display global prefix
+npm, __fish_npm_using_command prefix,h,help, ,@f,422,Display help
+npm, __fish_npm_needs_command, , ,profile,@f,423,Change settings on your registry profile
+npm,__fish_npm_using_command profile $profile_commands, , ,enable-2fa,@f @r,423,Enables two-factor authentication
+npm,__fish_npm_using_command profile $profile_commands, , ,disable-2fa,@f @r,423,Disables two-factor authentication
+npm,__fish_npm_using_command profile $profile_commands, , ,get,@f @r,423,Display profile properties
+npm,__fish_npm_using_command profile $profile_commands, , ,set,@f @r,423,Set the value of a profile property
+npm,__fish_npm_using_command profile enable-2fa, , ,auth-only,@f @r,424,Require an OTP on profile changes
+npm,__fish_npm_using_command profile enable-2fa, , ,auth-and-writes,@f @r,425,Also require an OTP on package changes
+npm, __fish_npm_using_command profile,h,help, ,@f,426,Display help
+npm, __fish_npm_needs_command, , ,prune,@f,427,Remove extraneous packages
+npm, __fish_npm_using_command prune, ,omit,dev optional peer,@f @r,428,Omit dependency type
+npm, __fish_npm_using_command prune, ,dry-run, ,@f,429,Do not make any changes
+npm, __fish_npm_using_command prune, ,json, ,@f,430,Output JSON
+npm, __fish_npm_using_command prune, ,foreground-scripts, ,@f,431,Run all build scripts in the foreground
+npm, __fish_npm_using_command prune, ,ignore-scripts, ,@f,432,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command prune, ,install-links, ,@f,433,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command prune,h,help, ,@f,434,Display help
+npm, __fish_npm_needs_command, , ,publish,@f,435,Publish a package
+npm, __fish_npm_using_command publish, ,tag, ,@f @r,436,Upload to tag
+npm, __fish_npm_using_command publish, ,access,public restricted,@f @r,437,Restrict access
+npm, __fish_npm_using_command publish, ,dry-run, ,@f,438,Do not make any changes
+npm, __fish_npm_using_command publish, ,otp, ,@f @r,439,2FA one-time password
+npm, __fish_npm_using_command publish, ,provenance, ,@f,440,Link to build location when publishing from CI/CD
+npm, __fish_npm_using_command publish,h,help, ,@f,441,Display help
+npm, __fish_npm_needs_command, , ,query,@f,442,Dependency selector query
+npm, __fish_npm_using_command query,g,global, ,@f,443,Query global packages
+npm, __fish_npm_using_command query,h,help, ,@f,444,Display help
+npm, __fish_npm_needs_command, , ,rebuild,@f,445,Rebuild a package
+npm, __fish_npm_using_command $c,g,global, ,@f @r,446,Rebuild global package
+npm, __fish_npm_using_command $c, ,foreground-scripts, ,@f,447,Run all build scripts in the foreground
+npm, __fish_npm_using_command $c, ,ignore-scripts, ,@f,448,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command $c, ,no-bin-links, ,@f,449,Don't symblink package executables
+npm, __fish_npm_using_command $c, ,install-links, ,@f,450,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command $c,h,help, ,@f,451,Display help
+npm, __fish_npm_needs_command, , ,repo,@f,452,Open package repository page in the browser
+npm, __fish_npm_using_command repo,g,global, ,@f,453,Display global root
+npm, __fish_npm_using_command repo, ,browser, ,@f @r,454,Set browser
+npm, __fish_npm_using_command repo, ,no-browser, ,@f @r,455,Print to stdout
+npm, __fish_npm_using_command repo, ,registry, ,@f @r,456,Registry base URL
+npm, __fish_npm_using_command repo,h,help, ,@f,457,Display help
+npm, __fish_npm_needs_command, , ,restart,@f,458,Restart a package
+npm, __fish_npm_needs_command, , ,start,@f,459,Start a package
+npm, __fish_npm_needs_command, , ,stop,@f,460,Stop a package
+npm, __fish_npm_needs_command, , ,test,@f,461,Test a package
+npm, __fish_npm_using_command $c,ignore-scripts, , ,@f,462,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command $c,script-shell, , ,@f @r,463,The shell to use for scripts
+npm, __fish_npm_using_command $c,h,help, ,@f,464,Display help
+npm, __fish_npm_needs_command, , ,root,@f,465,Display npm root
+npm, __fish_npm_using_command root,g,global, ,@f,466,Display global root
+npm, __fish_npm_using_command root,h,help, ,@f,467,Display help
+npm, __fish_npm_needs_command, , ,search find,@f,468,Search for packages
+npm, __fish_npm_using_command $c,l,long, ,@f,469,Show extended information
+npm, __fish_npm_using_command $c, ,json, ,@f,470,Output JSON data
+npm, __fish_npm_using_command $c, ,color,always,@f,471,Print color
+npm, __fish_npm_using_command $c, ,color,always,@f @r,472,Print color
+npm, __fish_npm_using_command $c, ,no-color, ,@f,473,Don't print color
+npm, __fish_npm_using_command $c,p,parseable, ,@f,474,Output parseable results
+npm, __fish_npm_using_command $c, ,no-description, ,@f,475,Don't show the description
+npm, __fish_npm_using_command $c, ,searchopts, ,@f @r,476,Space-separated search options
+npm, __fish_npm_using_command $c, ,searchexclude, ,@f @r,477,Space-separated options to exclude from search
+npm, __fish_npm_using_command $c, ,registry, ,@f @r,478,Registry base URL
+npm, __fish_npm_using_command $c, ,prefer-online, ,@f,479,Force staleness checks for cached data
+npm, __fish_npm_using_command $c, ,prefer-offline, ,@f,480,Bypass staleness checks for cached data
+npm, __fish_npm_using_command $c, ,offline, ,@f,481,Force offline mode
+npm, __fish_npm_using_command $c,h,help, ,@f,482,Display help
+npm, __fish_npm_needs_command, , ,shrinkwrap,@f,483,Lock down dependency versions
+npm, __fish_npm_using_command shrinkwrap,h,help, ,@f,484,Display help
+npm, __fish_npm_needs_command, , ,star,@f,485,Mark your favorite packages
+npm, __fish_npm_using_command star, ,registry, ,@f @r,486,Registry base URL
+npm, __fish_npm_using_command star, ,unicode, ,@f,487,Use unicode characters in the output
+npm, __fish_npm_using_command star, ,no-unicode, ,@f,488,Use ascii characters over unicode glyphs
+npm, __fish_npm_using_command star, ,otp, ,@f @r,489,2FA one-time password
+npm, __fish_npm_using_command star,h,help, ,@f,490,Display help
+npm, __fish_npm_needs_command, , ,stars,@f,491,View packages marked as favorites
+npm, __fish_npm_using_command stars, ,registry, ,@f @r,492,Registry base URL
+npm, __fish_npm_using_command stars,h,help, ,@f,493,Display help
+npm, __fish_npm_needs_command, , ,team,@f,494,Manage organization teams and team memberships
+npm,__fish_npm_using_command team $team_commands, , ,create,@f @r,494,Create a new team
+npm,__fish_npm_using_command team $team_commands, , ,destroy,@f @r,494,Destroy an existing team
+npm,__fish_npm_using_command team $team_commands, , ,add,@f @r,494,Add a user to an existing team
+npm,__fish_npm_using_command team $team_commands, , ,rm,@f @r,494,Remove users from a team
+npm,__fish_npm_using_command team $team_commands, , ,ls,@f @r,494,List teams or team members
+npm,__fish_npm_using_command team ls, ,otp, ,@f @r,494,2FA one-time password
+npm, __fish_npm_using_command team, ,registry, ,@f @r,495,Registry base URL
+npm, __fish_npm_using_command team,p,parseable, ,@f,496,Output parseable results
+npm, __fish_npm_using_command team, ,json, ,@f,497,Output JSON
+npm, __fish_npm_using_command team,h,help, ,@f,498,Display help
+npm, __fish_npm_needs_command, , ,token,@f,499,Manage your authentication tokens
+npm,__fish_npm_using_command token $token_commands, , ,list,@f @r,499,Shows active authentication tokens
+npm,__fish_npm_using_command token $token_commands, , ,revoke,@f @r,499,Revokes an authentication token
+npm,__fish_npm_using_command token $token_commands, , ,create,@f @r,499,Create a new authentication token
+npm,__fish_npm_using_command token create, ,read-only, ,@f,500,Mark a token as unable to publish
+npm,__fish_npm_using_command token create, ,cidr, ,@f @r,501,List of CIDR address
+npm, __fish_npm_using_command token, ,registry, ,@f @r,502,Registry base URL
+npm, __fish_npm_using_command token, ,otp, ,@f @r,503,2FA one-time password
+npm, __fish_npm_using_command token,h,help, ,@f,504,Display help
+npm, __fish_npm_needs_command, , ,update up upgrade,@f,505,Update package(s)
+npm, __fish_npm_using_command $c,S,save, ,@f,506,Save to dependencies
+npm, __fish_npm_using_command $c, ,no-save, ,@f @r,507,Do not remove package from your dependencies
+npm, __fish_npm_using_command $c,g,global, ,@f,508,Update global package(s)
+npm, __fish_npm_using_command $c, ,install-strategy,hoisted nested shallow linked,@f @r,509,Install strategy
+npm, __fish_npm_using_command $c, ,omit,dev optional peer,@f @r,510,Omit dependency type
+npm, __fish_npm_using_command $c, ,strict-peer-deps, ,@f @r,511,Treat conflicting peerDependencies as failure
+npm, __fish_npm_using_command $c, ,no-package-lock, ,@f @r,512,Ignore package-lock.json
+npm, __fish_npm_using_command $c, ,foreground-scripts, ,@f,513,Run all build scripts in the foreground
+npm, __fish_npm_using_command $c, ,ignore-scripts, ,@f,514,"Don't run pre-, post- and life-cycle scripts"
+npm, __fish_npm_using_command $c, ,no-audit, ,@f,515,Don't submit audit reports
+npm, __fish_npm_using_command $c, ,no-bin-links, ,@f,516,Don't symblink package executables
+npm, __fish_npm_using_command $c, ,no-fund, ,@f,517,Don't display funding info
+npm, __fish_npm_using_command $c, ,dry-run, ,@f,518,Do not make any changes
+npm, __fish_npm_using_command $c, ,install-links, ,@f,519,Install file: protocol deps as regular deps
+npm, __fish_npm_using_command $c,h,help, ,@f,520,Display help
+npm, __fish_npm_needs_command, , ,uninstall remove un,@f,521,Remove a package
+npm, __fish_npm_using_command $c, , , ,@f @r,522,Remove package
+npm, __fish_npm_using_command $c,g,global, ,@f @r,523,Remove global package
+npm, __fish_npm_using_command $c,S,save, ,@f,524,Save to dependencies
+npm, __fish_npm_using_command $c, ,no-save, ,@f @r,525,Do not remove package from your dependencies
+npm, __fish_npm_using_command $c, ,install-links, ,@f,526,Install file: protocol deps as regular deps
+npm, __fish_npm_needs_command, , ,unpublish,@f,527,Remove a package from the registry
+npm, __fish_npm_using_command unpublish, ,dry-run, ,@f @r,528,Do not make any changes
+npm, __fish_npm_using_command unpublish,f,force, ,@f @r,529,Removes various protections
+npm, __fish_npm_using_command unpublish,h,help, ,@f,530,Display help
+npm, __fish_npm_needs_command, , ,unstar,@f,531,Remove star from a package
+npm, __fish_npm_using_command unstar, ,registry, ,@f @r,532,Registry base URL
+npm, __fish_npm_using_command unstar, ,unicode, ,@f,533,Use unicode characters in the output
+npm, __fish_npm_using_command unstar, ,no-unicode, ,@f,534,Use ascii characters over unicode glyphs
+npm, __fish_npm_using_command unstar, ,otp, ,@f @r,535,2FA one-time password
+npm, __fish_npm_using_command unstar,h,help, ,@f,536,Display help
+npm, __fish_npm_needs_command, , ,version,@f,537,Bump a package version
+npm, __fish_npm_using_command $c, , ,major minor patch premajor preminor prepatch prerelease,@f @r,538, 
+npm, __fish_npm_using_command $c, ,allow-same-version, ,@f,539,Allow same version
+npm, __fish_npm_using_command $c, ,no-commit-hooks, ,@f,540,Don't run git commit hooks
+npm, __fish_npm_using_command $c, ,no-git-tag-version, ,@f,541,Don't tag the commit
+npm, __fish_npm_using_command $c, ,json, ,@f,542,Output JSON
+npm, __fish_npm_using_command $c, ,preid, ,@f @r,543,The prerelease identifier
+npm, __fish_npm_using_command $c, ,sign-git-tag, ,@f,544,Sign the version tag
+npm, __fish_npm_using_command $c,h,help, ,@f,545,Display help
+npm, __fish_npm_needs_command, , ,view info,@f,546,View registry info
+npm,__fish_npm_using_command $c __fish_is_nth_token 2, , , ,@f,547, 
+npm,__fish_npm_using_command $c __fish_is_nth_token 3, , ,author bin bugs description engines exports homepage keywords license main name repository scripts type types,@f,548, 
+npm,__fish_npm_using_command $c __fish_is_nth_token 3, , ,dependencies devDependencies optionalDependencies peerDependencies,@f,549, 
+npm,__fish_npm_using_command $c __fish_is_nth_token 3, , ,directories dist dist-tags gitHead maintainers readme time users version versions,@f,550, 
+npm, __fish_npm_using_command $c, ,json, ,@f,551,Output JSON
+npm, __fish_npm_using_command $c,h,help, ,@f,552,Display help
+npm, __fish_npm_needs_command, , ,whoami,@f,553,Display npm username
+npm, __fish_npm_using_command whoami, , ,registry,@f,554,Check registry
+npm, __fish_npm_using_command whoami,h,help, ,@f,555,Display help
+npm," add i in ins inst insta instal isnt isnta isntal isntall; and __fish_is_switch", , , ,@f,556, 

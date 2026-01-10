@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+asp, $commands, , ,checkout, ,100,Checkout package
+asp, $commands, , ,difflog, ,100,"Show the full history of the target, with file diffs"
+asp, $commands, , ,export, ,100,Put the source files in current directory
+asp, $commands, , ,gc, ,100,Collect garbage
+asp, $commands, , ,disk-usage, ,100,Report approximate disk usage
+asp, $commands, , ,help, ,100,Display help and exit
+asp, $commands, , ,list-all, ,100,List all known packages
+asp, $commands, , ,list-arches, ,100,List the architectures the targets are available for
+asp, $commands, , ,list-local, ,100,List locally tracked packages
+asp, $commands, , ,list-repos, ,100,List repos the targets exist in
+asp, $commands, , ,log, ,100,Show revision history of the target
+asp, $commands, , ,shortlog, ,100,Show condensed revision history
+asp, $commands, , ,show, ,100,Show the target's PKGBUILD
+asp, $commands, , ,update, ,100,Update given targets
+asp, $commands, , ,untrack, ,100,Remove target from local repository

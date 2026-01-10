@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+i3-msg, ,q,quiet, , ,101,Only send ipc message and suppress output
+i3-msg, ,v,version, , ,102,Display version number and exit
+i3-msg, ,h,help, , ,103,Display help and exit
+i3-msg, ,s,socket, , ,104,Set socket
+i3-msg, ,t, ,',@f @r,105,Specify ipc message type

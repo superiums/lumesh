@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+w, ,c,container, , ,101,show the container uptime instead of system uptime in the header
+w, ,h,no-header, , ,102,Don't print the header
+w, ,u,no-current, , ,103,Ignores the username while figuring out the current process and cpu times
+w, ,s,short, , ,104,"Use the short format.   Don't print the login time, JCPU or PCPU times"
+w, ,f,from, , ,105,Toggle printing the  from (remote hostname) field
+w, , ,help, , ,106,Display help text and exit
+w, ,i,ip-addr, , ,107,Display IP address instead of hostname for from field
+w, ,p,pids, , ,108,Display pid of the login process/the 'what' process in the 'what' field
+w, ,V,version, , ,109,Display version information
+w, ,o,old-style, , ,110,Old style output.   Prints blank space for idle times less than one minute

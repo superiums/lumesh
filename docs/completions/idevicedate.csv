@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicedate, ,u,udid, , ,101,target specific device by UDID
+idevicedate, ,n,network, , ,102,connect to network device
+idevicedate, ,d,debug, , ,103,enable communication debugging
+idevicedate, ,s,set, , ,104,set UTC time described by TIMESTAMP
+idevicedate, ,c,sync, , ,105,set time of device to current system time
+idevicedate, ,h,help, , ,106,prints usage information
+idevicedate, ,v,version, , ,107,prints version information

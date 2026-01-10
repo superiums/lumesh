@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dvb-format-convert, ,I,input-format, , ,101,"Format of the input file.  Supported input formats: channel, zap and dvbv5"
+dvb-format-convert, ,O,output-format, , ,102,Format of the output file
+dvb-format-convert, ,s,delsys, , ,103,Delivery system type.  Needed if input or output format is ZAP
+dvb-format-convert, ,?,help, , ,104,Outputs the usage help
+dvb-format-convert, , ,usage, , ,105,Give a short usage message
+dvb-format-convert, ,V,version, , ,106,Print program version.  EXAMPLES

@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sed, , ,silent, , ,101,Silent mode
+sed, ,l,line-length, ,@f @r,102,Specify line-length
+sed, , ,posix, , ,103,Disable all GNU extensions
+sed, ,r,regexp-extended, , ,104,Use extended regexp
+sed, ,s,separate, , ,105,Consider files as separate
+sed, ,u,unbuffered, , ,106,Use minimal IO buffers
+sed, , ,help, , ,107,Display help and exit
+sed, ,V,version, , ,108,Display version and exit

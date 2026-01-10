@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dcb, ,n,netns, , ,101,switches  dcb to the specified network namespace R NETNS 
+dcb, ,V,Version, , ,102,Print the version of the  dcb utility and exit
+dcb, ,b,batch, , ,103,Read commands from provided file or standard input and invoke them
+dcb, ,f,force, , ,104,Don't terminate dcb on errors in batch mode
+dcb, ,i,iec, , ,105,"When showing rates, use ISO/IEC 1024-based prefixes (Ki, Mi, Bi) instead of t…"
+dcb, ,j,json, , ,106,Generate JSON output
+dcb, ,N,Numeric, , ,107,"If the subtool in question translates numbers to symbolic names in some way, …"
+dcb, ,p,pretty, , ,108,When combined with -j generate a pretty JSON output
+dcb, ,s,statistics, , ,109,"If the object in question contains any statistical counters, shown them as pa…"

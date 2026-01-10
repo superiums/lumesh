@@ -1,0 +1,44 @@
+cmd,conds,short,long,params,dirs,pri,desc
+svn, __fish_use_subcommand, , ,$add,@f @r,101,"Put files under version control, scheduling them for addition in the next commit"
+svn, __fish_use_subcommand, , ,$blame,@f @r,102,Output the content of specified files or URLs with revision and author information in-line
+svn, __fish_use_subcommand, , ,$cat,@f @r,103,Output the content of specified files or URLs
+svn, __fish_use_subcommand, , ,$changelist,@f @r,104,Output the content of specified files or URLs with revision and author information in-line
+svn, __fish_use_subcommand, , ,$checkout,@f @r,105,Check out a working copy from a repository
+svn, __fish_use_subcommand, , ,$cleanup,@f @r,106,"Recursively clean up the working copy, removing locks, resuming unfinished operations, etc"
+svn, __fish_use_subcommand, , ,$commit,@f @r,107,Send changes from your working copy to the repository
+svn, __fish_use_subcommand, , ,$copy,@f @r,108,"Duplicate something in working copy or repository, remembering history"
+svn, __fish_use_subcommand, , ,$diff,@f @r,109,Display the differences between two revisions or paths
+svn, __fish_use_subcommand, , ,$export,@f @r,110,Create an unversioned copy of a tree
+svn, __fish_use_subcommand, , ,$help,@f @r,111,Describe the usage of this program or its subcommands
+svn, __fish_use_subcommand, , ,$import,@f @r,112,Commit an unversioned file or tree into the repository
+svn, __fish_use_subcommand, , ,$info,@f @r,113,Display information about a local or remote item
+svn, __fish_use_subcommand, , ,$list,@f @r,114,List directory entries in the repository
+svn, __fish_use_subcommand, , ,$lock,@f @r,115,"Lock working copy paths/URLs in the repo, so that no other user can commit changes to them"
+svn, __fish_use_subcommand, , ,$log,@f @r,116,Show the log messages for a set of revision(s) and/or file(s)
+svn, __fish_use_subcommand, , ,$merge,@f @r,117,Apply the differences between two sources to a working copy path
+svn, __fish_use_subcommand, , ,$mergeinfo,@f @r,118,Display information related to merges
+svn, __fish_use_subcommand, , ,$mkdir,@f @r,119,Create a new directory under version control
+svn, __fish_use_subcommand, , ,$move,@f @r,120,Move and/or rename something in working copy or repository
+svn, __fish_use_subcommand, , ,$patch,@f @r,121,Apply a unidiff patch to the working copy
+svn, __fish_use_subcommand, , ,$propdel,@f @r,122,"Remove a property from files, dirs, or revisions"
+svn, __fish_use_subcommand, , ,$propedit,@f @r,123,Edit a property with an external editor
+svn, __fish_use_subcommand, , ,$propget,@f @r,124,"Print the value of a property on files, dirs, or revisions"
+svn, __fish_use_subcommand, , ,$proplist,@f @r,125,"List all properties on files, dirs, or revisions"
+svn, __fish_use_subcommand, , ,$propset,@f @r,126,"Set the value of a property on files, dirs, or revisions"
+svn, __fish_use_subcommand, , ,$relocate,@f @r,127,Rewrite working copy url metadata
+svn, __fish_use_subcommand, , ,$remove,@f @r,128,Remove files and directories from version control
+svn, __fish_use_subcommand, , ,$resolve,@f @r,129,Remove conflicts on working copy files or directories
+svn, __fish_use_subcommand, , ,$resolved,@f @r,130,Remove 'conflicted' state on working copy files or directories
+svn, __fish_use_subcommand, , ,$revert,@f @r,131,Restore pristine working copy file (undo most local edits)
+svn, __fish_use_subcommand, , ,$stat,@f @r,132,Print the status of working copy files and directories
+svn, __fish_use_subcommand, , ,$switch,@f @r,133,Update the working copy to a different URL
+svn, __fish_use_subcommand, , ,$unlock,@f @r,134,Unlock working copy paths or URLs
+svn, __fish_use_subcommand, , ,$update,@f @r,135,Bring changes from the repository into the working copy
+svn, __fish_use_subcommand, , ,$upgrade,@f @r,136,Upgrade the metadata storage format for a working copy
+svn, __fish_use_subcommand, ,username, ,@f @r,137,Specify a username ARG
+svn, __fish_use_subcommand, ,password, ,@f @r,138,Specify a password ARG
+svn, __fish_use_subcommand, ,no-auth-cache, , ,139,Do not cache authentication tokens
+svn, __fish_use_subcommand, ,non-interactive, , ,140,Do no interactive prompting
+svn, __fish_use_subcommand, ,trust-server-cert, , ,141,Accept SSL server certificates from unknown authorities (only with --non-interactive)
+svn, __fish_use_subcommand, ,config-dir, ,@f @r,142,Read user configuration files from directory ARG
+svn, __fish_use_subcommand, ,config-option, ,@f @r,143,Set user configuration option in the format: FILE:SECTION:OPTION=[VALUE]

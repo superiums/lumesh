@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+utmpdump, ,f,follow, , ,101, 
+utmpdump, ,o,output, , ,102, 
+utmpdump, ,r,reverse, , ,103, 
+utmpdump, ,h,help, , ,104, 
+utmpdump, ,V,version, , ,105, 

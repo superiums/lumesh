@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kill, ,s, ,$name,@f @k @r,101, 
+kill, ,s,signal, , ,102,Signal to send
+kill, ,l,list, , ,103,List signal names
+kill, ,L,table, , ,104,List signal names and their #s
+kill, ,a,all, , ,105,Resolve PIDs from other users' too
+kill, ,p,pid, , ,106,"Show resolved PID, don't send signal"
+kill, ,q,queue, , ,107,Use sigqueue(2) rather than kill(2)
+kill, , ,verbose, , ,108,Print PIDs and signals sent

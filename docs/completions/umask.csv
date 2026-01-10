@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+umask, ,S,symbolic, ,@f @r,101,Gets the umask in symbolic format instead of octal
+umask, ,p,as-command, ,@f @r,102,Gets the umask in a format that can be used as a command
+umask, ,h,help, ,@f @r,103,Display help and exit

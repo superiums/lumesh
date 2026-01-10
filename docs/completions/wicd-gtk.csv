@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wicd-gtk, ,t,tray, , ,101,Run the wicd tray icon only.
+wicd-gtk, ,n,no-tray, , ,102,Run wicd without the tray icon.
+wicd-gtk, ,h,help, , ,103,Print this help information.
+wicd-gtk, ,a,no-animate, , ,104,Run the tray without network traffic tray animations.
+wicd-gtk, ,o,only-notifications, , ,105,Don't display anything except notifications.

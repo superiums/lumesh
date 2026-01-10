@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+udisksctl, $cmds, ,help, ,@f,101,Shows help
+udisksctl, $cmds, , ,help,@f,101,Shows help
+udisksctl, $cmds, , ,info,@f,101,Shows information about an object
+udisksctl, $cmds, , ,dump,@f,101,Shows information about all objects
+udisksctl, $cmds, , ,status,@f,101,Shows high-level status
+udisksctl, $cmds, , ,monitor,@f,101,Monitor changes to objects
+udisksctl, $cmds, , ,mount,@f,101,Mount a filesystem
+udisksctl, $cmds, , ,unmount,@f,101,Unmount a filesystem
+udisksctl, $cmds, , ,unlock,@f,101,Unlock an encrypted device
+udisksctl, $cmds, , ,lock,@f,101,Lock an encrypted device
+udisksctl, $cmds, , ,loop-setup,@f,101,Set-up a loop device
+udisksctl, $cmds, , ,loop-delete,@f,101,Delete a loop device
+udisksctl, $cmds, , ,power-off,@f,101,Safely power off a drive
+udisksctl, $cmds, , ,smart-simulate,@f,101,Set SMART data for a drive
+udisksctl, $cmd,p,object-path, ,@r,118,Object to $cmd
+udisksctl, $cmd,b,block-device, ,@r,119,Block device to $cmd
+udisksctl, $cmd,p,object-path, ,@r,120,Object path for ATA device
+udisksctl, $cmd,b,block-device, ,@r,121,Block device for ATA device

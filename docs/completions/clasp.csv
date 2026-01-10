@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+clasp, ,h,help, , ,101,Show [h]elp
+clasp, ,v,version, , ,102,Show [v]ersion
+clasp, ,A,auth, , ,103,Path to a '.clasprc.json' or to a directory with it
+clasp, ,I,ignore, , ,104,Path to a '.claspignore.json' or to a directory with it
+clasp, ,P,project, , ,105,Path to a '.clasp.json' or to a directory with it
+clasp, ,W,why, , ,106,Display some debugging info upon exit
+clasp, pull, ,versionNumber, , ,133,A project version to pull
+clasp, status, ,json, , ,136,Show in JSON format
+clasp, list, ,noShorten, , ,145,Do not shorten long names

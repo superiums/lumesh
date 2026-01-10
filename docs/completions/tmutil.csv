@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tmutil, status, , , ,@f,102, 
+tmutil, addexclusion,v, , ,@r,104,Volume exclusion
+tmutil, addexclusion,p, , ,@r,105,Path exclusion
+tmutil, compare,a, , ,@f,109,Compare all supported metadata
+tmutil, compare,n, , ,@f,110,No metadata comparison
+tmutil, compare,@, , ,@f,111,Compare extended attributes
+tmutil, compare,c, , ,@f,112,Compare creation times
+tmutil, compare,d, , ,@f,113,Compare file data forks
+tmutil, compare,e, , ,@f,114,Compare ACLs
+tmutil, compare,f, , ,@f,115,Compare file flags
+tmutil, compare,g, , ,@f,116,Compare GIDs
+tmutil, compare,m, , ,@f,117,Compare file modes
+tmutil, compare,s, , ,@f,118,Compare sizes
+tmutil, compare,t, , ,@f,119,Compare modification times
+tmutil, compare,u, , ,@f,120,Compare UIDs
+tmutil, compare,D, , ,@r,121,Limit traversal depth to depth levels from the beginning of iteration
+tmutil, compare,E, , ,@f,122,Dont take exclusions into account
+tmutil, compare,I, , ,@r,123,Ignore path
+tmutil, compare,U, , ,@f,124,Ignore logical volume identity
+tmutil, delete,d, , ,@r,126,Backup mount point
+tmutil, delete,t, , ,@f @r,127,Timestamp
+tmutil, delete,p, , ,@r,128,Path
+tmutil, removeexclusion,v, , ,@f,147,Volume exclusion
+tmutil, removeexclusion,p, , ,@f,148,Path exclusion
+tmutil, restore,v, , ,@r,150, 
+tmutil, setdestination,a, , ,@f,152,Add to the list of destinations
+tmutil, setdestination,p, , ,@f,153,Enter the password at a non-echoing interactive prompt
+tmutil, startbackup,a,auto, ,@f,156,Automatic mode
+tmutil, startbackup,b,block, ,@f,157,Block until finished
+tmutil, startbackup,r,rotation, ,@f,158,Automatic rotation
+tmutil, destinationinfo isexcluded compare status,X, , ,@f,167,Print as XML
+tmutil, latestbackup listbackups,m, , ,@f,168,Destination volume to list backups from
+tmutil, latestbackup listbackups,t, , ,@f,169,Attempt to mount the backups and list their mounted paths
+tmutil, latestbackup listbackups,d, , ,@f,170,Backup mount point

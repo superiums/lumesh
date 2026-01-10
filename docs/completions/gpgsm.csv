@@ -1,0 +1,104 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpgsm, , ,options, , ,101,Reads configuration from file instead of from the default per-user configurat…
+gpgsm, , ,homedir, , ,102,Set the name of the home directory to dir
+gpgsm, , ,verbose, , ,103,Outputs additional information while running
+gpgsm, , ,keyserver, , ,104,This is a deprecated option.   It was used to add an LDAP server to use for X
+gpgsm, , ,policy-file, , ,105,Change the default name of the policy file to filename
+gpgsm, , ,agent-program, , ,106,Specify an agent program to be used for secret key operations
+gpgsm, , ,dirmngr-program, , ,107,Specify a dirmngr program to be used for CRL checks
+gpgsm, , ,prefer-system-dirmngr, , ,108,This option is obsolete and ignored
+gpgsm, , ,disable-dirmngr, , ,109,Entirely disable the use of the Dirmngr
+gpgsm, , ,no-autostart, , ,110,Do not start the gpg-agent or the dirmngr if it has not yet been started and …
+gpgsm, , ,no-secmem-warning, , ,111,Do not print a warning when the so called 'secure memory' cannot be used
+gpgsm, , ,log-file, , ,112,"When running in server mode, append all logging output to file"
+gpgsm, , ,log-time, , ,113,Prefix all log output with a timestamp even if no log file is used. P    
+gpgsm, , ,enable-policy-checks, , ,114,TQ   --disable-policy-checks By default policy checks are enabled
+gpgsm, , ,enable-crl-checks, , ,115,TQ   --disable-crl-checks By default the CRL checks are enabled and the DirMn…
+gpgsm, , ,enable-trusted-cert-crl-check, , ,116,TQ   --disable-trusted-cert-crl-check By default the CRL for trusted root cer…
+gpgsm, , ,force-crl-refresh, , ,117,Tell the dirmngr to reload the CRL for each request
+gpgsm, , ,enable-issuer-based-crl-check, , ,118,Run a CRL check even for certificates which do not have any CRL distribution …
+gpgsm, , ,enable-ocsp, , ,119,TQ   --disable-ocsp By default OCSP checks are disabled
+gpgsm, , ,auto-issuer-key-retrieve, , ,120,If a required certificate is missing while validating the chain of certificat…
+gpgsm, , ,validation-model, , ,121,This option changes the default validation model
+gpgsm, , ,ignore-cert-extension, , ,122,Add oid to the list of ignored certificate extensions
+gpgsm, , ,armor, , ,123,TQ   -a Create PEM encoded output.   Default is binary output
+gpgsm, , ,base64, , ,124,"Create Base-64 encoded output; i. e.  PEM without the header lines"
+gpgsm, , ,assume-armor, , ,125,Assume the input data is PEM encoded
+gpgsm, , ,assume-base64, , ,126,Assume the input data is plain base-64 encoded
+gpgsm, , ,assume-binary, , ,127,Assume the input data is binary encoded
+gpgsm, , ,input-size-hint, , ,128,This option can be used to tell GPGSM the size of the input data in bytes
+gpgsm, , ,p12-charset, , ,129,gpgsm uses the UTF-8 encoding when encoding passphrases for PKCS#12 files
+gpgsm, , ,default-key, , ,130,Use user_id as the standard key for signing
+gpgsm, , ,recipient, , ,131,TQ   -r Encrypt to the user id name
+gpgsm, , ,output, , ,132,TQ   -o file Write output to file.   The default is to write it to stdout
+gpgsm, , ,with-key-data, , ,133,Displays extra information with the --list-keys commands
+gpgsm, , ,with-validation, , ,134,"When doing a key listing, do a full validation check for each key and print t…"
+gpgsm, , ,with-md5-fingerprint, , ,135,"For standard key listings, also print the MD5 fingerprint of the certificate"
+gpgsm, , ,with-keygrip, , ,136,Include the keygrip in standard key listings
+gpgsm, , ,with-secret, , ,137,Include info about the presence of a secret key in public key listings done w…
+gpgsm, , ,no-pretty-dn, , ,138,By default gpgsm prints distinguished names (DNs) like the Issuer or Subject …
+gpgsm, , ,include-certs, , ,139,"Using n of -2 includes all certificate except for the root cert, -1 includes …"
+gpgsm, , ,cipher-algo, , ,140,Use the cipher algorithm with the ASN. 1 object identifier oid for encryption
+gpgsm, , ,digest-algo, , ,141,Use name as the message digest algorithm
+gpgsm, , ,chuid, , ,142,Change the current user to uid which may either be a number or a name
+gpgsm, , ,extra-digest-algo, , ,143,Sometimes signatures are broken in that they announce a different digest algo…
+gpgsm, , ,compliance, , ,144,Set the compliance mode
+gpgsm, , ,min-rsa-length, , ,145,This option adjusts the compliance mode 'de-vs' for stricter key size require…
+gpgsm, , ,require-compliance, , ,146,To check that data has been encrypted according to the rules of the current c…
+gpgsm, , ,assert-signer, , ,147,This option checks whether at least one valid signature on a file has been ma…
+gpgsm, , ,always-trust, , ,148,Force encryption to the specified certificates without any validation of the …
+gpgsm, , ,ignore-cert-with-oid, , ,149,Add oid to the list of OIDs to be checked while reading certificates from sma…
+gpgsm, , ,faked-system-time, , ,150,"This option is only useful for testing; it sets the system time back or forth…"
+gpgsm, , ,with-ephemeral-keys, , ,151,Include ephemeral flagged keys in the output of key listings
+gpgsm, , ,compatibility-flags, , ,152,Set compatibility flags to work around problems due to non-compliant certific…
+gpgsm, , ,debug-level, , ,153,Select the debug level for investigating problems
+gpgsm, , ,debug, , ,154,Set debug flags.   All flags are or-ed and flags may be given in C syntax (e
+gpgsm, , ,debug-all, , ,155,Same as --debug=0xffffffff
+gpgsm, , ,debug-allow-core-dump, , ,156,Usually gpgsm tries to avoid dumping core by well written code and by disabli…
+gpgsm, , ,debug-no-chain-validation, , ,157,This is actually not a debugging option but only useful as such
+gpgsm, , ,debug-ignore-expiration, , ,158,This is actually not a debugging option but only useful as such
+gpgsm, , ,passphrase-fd, , ,159,Read the passphrase from file descriptor n
+gpgsm, , ,pinentry-mode, , ,160,Set the pinentry mode to mode.   Allowed values for mode are: . RS
+gpgsm, , ,request-origin, , ,161,Tell gpgsm to assume that the operation ultimately originated at origin
+gpgsm, , ,version, , ,162,Print the program version and licensing information
+gpgsm, ,h,help, , ,163,Print a usage message summarizing the most useful command-line options
+gpgsm, , ,warranty, , ,164,Print warranty information.   Note that you cannot abbreviate this command
+gpgsm, , ,dump-options, , ,165,Print a list of all available options and commands
+gpgsm, , ,encrypt, , ,166,Perform an encryption
+gpgsm, , ,decrypt, , ,167,"Perform a decryption; the type of input is automatically determined"
+gpgsm, , ,sign, , ,168,Create a digital signature
+gpgsm, , ,verify, , ,169,Check a signature file for validity
+gpgsm, , ,server, , ,170,Run in server mode and wait for commands on the stdin
+gpgsm, , ,call-dirmngr, , ,171,Behave as a Dirmngr client issuing the request command with the optional list…
+gpgsm, , ,call-protect-tool, , ,172,Certain maintenance operations are done by an external program call gpg-prote…
+gpgsm, , ,generate-key, , ,173, 
+gpgsm, , ,gen-key, , ,174,This command allows the creation of a certificate signing request or a self-s…
+gpgsm, , ,list-keys, , ,175, 
+gpgsm, , ,list-secret-keys, , ,176, 
+gpgsm, , ,list-external-keys, , ,177,List certificates matching pattern using an external server
+gpgsm, , ,list-chain, , ,178,Same as --list-keys but also prints all keys making up the chain
+gpgsm, , ,dump-cert, , ,179, 
+gpgsm, , ,dump-keys, , ,180,List all available certificates stored in the local key database using a form…
+gpgsm, , ,dump-chain, , ,181,Same as --dump-keys but also prints all keys making up the chain
+gpgsm, , ,dump-secret-keys, , ,182,List all available certificates for which a corresponding a secret key is ava…
+gpgsm, , ,dump-external-keys, , ,183,List certificates matching pattern using an external server
+gpgsm, , ,show-certs, , ,184,This command takes certificate files as input and prints information about th…
+gpgsm, , ,keydb-clear-some-cert-flags, , ,185,This is a debugging aid to reset certain flags in the key database which are …
+gpgsm, , ,delete-keys, , ,186,Delete the keys matching pattern
+gpgsm, , ,export, , ,187,Export all certificates stored in the Keybox or those specified by the option…
+gpgsm, , ,export-secret-key-p12, , ,188,Export the private key and the certificate identified by key-id using the PKC…
+gpgsm, , ,export-secret-key-p8, , ,189, 
+gpgsm, , ,export-secret-key-raw, , ,190,Export the private key of the certificate identified by key-id with any encry…
+gpgsm, , ,import, , ,191,Import the certificates from the PEM or binary encoded files as well as from …
+gpgsm, , ,learn-card, , ,192,Read information about the private keys from the smartcard and import the cer…
+gpgsm, , ,change-passphrase, , ,193, 
+gpgsm, , ,passwd, , ,194,Change the passphrase of the private key belonging to the certificate specifi…
+gpgsm, , ,disable-policy-checks, , ,195,By default policy checks are enabled
+gpgsm, , ,disable-crl-checks, , ,196,By default the CRL checks are enabled and the DirMngr is used to check for re…
+gpgsm, , ,disable-trusted-cert-crl-check, , ,197,By default the CRL for trusted root certificates are checked like for any oth…
+gpgsm, , ,disable-ocsp, , ,198,By default OCSP checks are disabled
+gpgsm, , ,allow-ocsp, , ,199,so you will get the error code `Not supported'
+gpgsm, , ,status-fd, , ,200,``total'' if that is not available by other means
+gpgsm, , ,local-users, , ,201,"set; however --default-key always overrides this"
+gpgsm, , ,local-user, , ,202, 
+gpgsm, , ,no-common-certs-import, , ,203,Suppress the import of common certificates on keybox creation

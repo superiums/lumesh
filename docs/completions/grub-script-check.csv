@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-script-check, ,v,verbose, , ,101,print verbose messages
+grub-script-check, ,?,help, , ,102,give this help list
+grub-script-check, , ,usage, , ,103,give a short usage message
+grub-script-check, ,V,version, , ,104,print program version REPORTING BUGS Report bugs to <bug-grub@gnu. org>

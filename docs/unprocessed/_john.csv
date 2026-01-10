@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+john, , ,input-encoding,$__fish_john_encodings, ,127,input encoding
+john, , ,internal-codepage,$__fish_john_encodings, ,183,codepage used in rules/masks
+john, , ,target-encoding,$__fish_john_encodings, ,184,output encoding

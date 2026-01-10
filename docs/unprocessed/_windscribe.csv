@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+windscribe, $seen $commands, ,help, ,@f @r,101, 
+windscribe, $seen $commands, , , ,@f,102, 
+windscribe, $seen $commands, , ,account,@f,103,Output current account details
+windscribe, $seen $commands, , ,connect,@f,104,Connect to Windscribe
+windscribe, $seen $commands, , ,disconnect,@f,105,Disconnect from VPN
+windscribe, $seen $commands, , ,examples,@f,106,Show usage examples
+windscribe, $seen $commands, , ,firewall,@f,107,View/Modify Firewall mode
+windscribe, $seen $commands, , ,lanbypass,@f,108,View/Modify Firewall LAN bypass
+windscribe, $seen $commands, , ,locations,@f,109,Output list of all available server locations
+windscribe, $seen $commands, , ,login,@f,110,Login to Windscribe account
+windscribe, $seen $commands, , ,logout,@f,111,Logout and disconnect
+windscribe, $seen $commands, , ,port,@f,112,View/Modify default Port
+windscribe, $seen $commands, , ,protocol,@f,113,View/Modify default Protocol
+windscribe, $seen $commands, , ,proxy,@f,114,View/Modify Proxy Settings
+windscribe, $seen $commands, , ,sendlog,@f,115,Send the debug log to Support
+windscribe, $seen $commands, , ,speedtest,@f,116,Test the connection speed
+windscribe, $seen $commands, , ,status,@f,117,Check status of Windscribe and connection
+windscribe, $seen $commands, , ,viewlog,@f,118,View the debug log

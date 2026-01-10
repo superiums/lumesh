@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+auditctl, , ,backlog_wait_time, , ,101,Set the time for the kernel to wait (Kernel Default 60*HZ) when the backlog l…
+auditctl, , ,reset_backlog_wait_time_actual, , ,102,Reset the actual backlog wait time counter shown by the status command
+auditctl, , ,loginuid-immutable, , ,103,This option tells the kernel to make loginuids unchangeable once they are set
+auditctl, , ,reset-lost, , ,104,Reset the lost record counter shown by the status command
+auditctl, , ,signal, , ,105,Send a signal to the audit daemon.  You must have privileges to do this

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+forfiles, , , ,/P,@f,101,Specify the path from which to start the search
+forfiles, , , ,/M,@f,102,Search files according to the specified search mask
+forfiles, , , ,/S,@f,103,Instruct the forfiles command to search in subdirectories recursively
+forfiles, , , ,/C,@f,104,Run the specified command on each file
+forfiles, , , ,/D,@f,105, 
+forfiles, , , ,/?,@f,106,Show help

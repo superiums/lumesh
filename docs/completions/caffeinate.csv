@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+caffeinate, ,d, , ,@f,101,Create an assertion to prevent the display from sleeping
+caffeinate, ,i, , ,@f,102,Create an assertion to prevent the system from idle sleeping
+caffeinate, ,m, , ,@f,103,Create an assertion to prevent the disk from idle sleeping
+caffeinate, ,s, , ,@f,104,Create an assertion to prevent the system from sleeping (AC power)
+caffeinate, ,u, , ,@f,105,Create an assertion to declare that user is active
+caffeinate, ,t, ,10 60 300 600 1800 3600,@f @r,106,Specifies the timeout value in seconds
+caffeinate, ,w, , ,@f @r,107,Waits for the process with the specified PID to exit
+caffeinate, , , , ,@f @r,108, 

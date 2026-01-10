@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+makepkg, ,A,ignorearch, , ,101,Ignore a missing or incomplete arch field in the build script
+makepkg, ,c,clean, , ,102,Clean up leftover work files and directories after a successful build
+makepkg, , ,config, , ,103,Use an alternate configuration file instead of the /etc/makepkg. conf default
+makepkg, ,d,nodeps, , ,104,Do not perform any dependency checks
+makepkg, ,e,noextract, , ,105,"Do not extract source files or run the prepare() function (if present); use w…"
+makepkg, , ,verifysource, , ,106,"For each source file in the source array of PKGBUILD, download the file if re…"
+makepkg, ,f,force, , ,107,makepkg will not build a package if a built package already exists in the PKG…
+makepkg, ,g,geninteg, , ,108,"For each source file in the source array of PKGBUILD, download the file if re…"
+makepkg, , ,skipinteg, , ,109,Do not perform any integrity checks (checksum and PGP) on source files
+makepkg, , ,skipchecksums, , ,110,Do not verify checksums of source files
+makepkg, , ,skippgpcheck, , ,111,Do not verify PGP signatures of source files
+makepkg, ,h,help, , ,112,Output syntax and command line options
+makepkg, , ,holdver, , ,113,When using VCS sources (PKGBUILD(5)) any currently checked out source will no…
+makepkg, ,i,install, , ,114,Install or upgrade the package after a successful build using pacman(8)
+makepkg, ,L,log, , ,115,Enable logging
+makepkg, ,m,nocolor, , ,116,Disable color in output messages
+makepkg, ,o,nobuild, , ,117,"Download and extract files, run the prepare() function, but do not build them"
+makepkg, ,r,rmdeps, , ,118,"Upon successful build, remove any dependencies installed by makepkg during de…"
+makepkg, ,R,repackage, , ,119,Repackage contents of the package without rebuilding the package
+makepkg, ,s,syncdeps, , ,120,Install missing dependencies using pacman
+makepkg, ,S,source, , ,121,"Do not actually build the package, but build a source-only tarball that does …"
+makepkg, ,V,version, , ,122,Display version information
+makepkg, ,C,cleanbuild, , ,123,Clean build artifacts from previous runs of makepkg in the current directory …
+makepkg, ,D,dir, , ,124,Change to directory <dir> before reading the PKGBUILD or doing anything else
+makepkg, , ,allsource, , ,125,"Do not actually build the package, but build a source-only tarball that inclu…"
+makepkg, , ,check, , ,126,"Run the check() function in the PKGBUILD, overriding the setting in makepkg"
+makepkg, , ,noarchive, , ,127,Do not create the archive at the end of the build process
+makepkg, , ,nocheck, , ,128,Do not run the check() function in the PKGBUILD or handle the checkdepends
+makepkg, , ,noprepare, , ,129,Do not run the prepare() function in the PKGBUILD
+makepkg, , ,noverify, , ,130,Do not run the verify() function in the PKGBUILD
+makepkg, , ,sign, , ,131,"Sign the resulting package with gpg, overriding the setting in makepkg"
+makepkg, , ,nosign, , ,132,Do not create a signature for the built package
+makepkg, , ,key, , ,133,"Specify a key to use when signing packages, overriding the GPGKEY setting in …"
+makepkg, , ,noconfirm, , ,134,(Passed to pacman) Prevent pacman from waiting for user input before proceedi…
+makepkg, , ,needed, , ,135,(Passed to pacman) Tell pacman not to reinstall a target if it is already up-…
+makepkg, , ,asdeps, , ,136,(Passed to pacman) Install packages as non-explicitly installed (used with -i…
+makepkg, , ,noprogressbar, , ,137,"(Passed to pacman) Prevent pacman from displaying a progress bar; useful if y…"
+makepkg, , ,packagelist, , ,138,List the package filenames that would be produced without building
+makepkg, , ,printsrcinfo, , ,139,Generate and print the SRCINFO file to stdout

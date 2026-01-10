@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ansible-playbook, , ,ask-vault-pass, ,@f,101,Ask for vault password
+ansible-playbook, ,C,check, ,@f,102,"Just check, don't make any changes"
+ansible-playbook, ,D,diff, ,@f,103,Show the differences in files and templates
+ansible-playbook, ,e,extra-vars, ,@r,104,Set additional variables as key=value or YAML/JSON
+ansible-playbook, , ,flush-cache, , ,105,Clear the fact cache
+ansible-playbook, , ,force-handlers, , ,106,Run handlers even if a task fails
+ansible-playbook, ,f,forks, , ,107,Number of parallel processes to use (default=5)
+ansible-playbook, ,h,help, , ,108,Shows a help message
+ansible-playbook, ,i,inventory, ,@r,109,Specify inventory host path or comma separated host list
+ansible-playbook, ,l,limit, ,@r,110,Further limit selected hosts to an additional pattern
+ansible-playbook, , ,list-hosts, , ,111,List all matching hosts
+ansible-playbook, , ,list-tags, , ,112,List all available tags
+ansible-playbook, , ,list-tasks, , ,113,List all tasks that would be executed
+ansible-playbook, ,M,module-path, ,@r,114,Specify path(s) to module library (default=None)
+ansible-playbook, , ,new-vault-password-file, ,@f,115,New vault password file for rekey
+ansible-playbook, , ,output, ,@f,116,"Output file name for encrypt or decrypt; use - for stdout"
+ansible-playbook, , ,skip-tags, ,@r,117,Don't run plays and tasks whose tags match these values
+ansible-playbook, , ,start-at-task, ,@r,118,Start the playbook at the task matching this name
+ansible-playbook, , ,step, , ,119,Confirm each task before running
+ansible-playbook, , ,syntax-check, ,@f,120,Perform a syntax check on the playbook
+ansible-playbook, ,t,tags, ,@f @r,121,Only run plays and tasks tagged with these values
+ansible-playbook, , ,vault-password-file, , ,122,Vault password file
+ansible-playbook, ,v,verbose, ,@f,123,Verbose mode (-vv/-vvv/-vvvv for more)
+ansible-playbook, , ,version, ,@f,124,Display version and exit
+ansible-playbook, ,k,ask-pass, ,@f,125,Ask for connection password
+ansible-playbook, , ,private-key, ,@r,126,Use this file to authenticate the connection
+ansible-playbook, ,u,user, ,@f,127,Connect as this user (default=None)
+ansible-playbook, ,c,connection, ,@f,128,Connection type to use (default=smart)
+ansible-playbook, ,T,timeout, ,@f,129,Set the connection timeout in seconds (default=10)
+ansible-playbook, , ,ssh-common-args, ,@f,130,Specify common arguments to pass to sftp/scp/ssh
+ansible-playbook, , ,sftp-extra-args, ,@f,131,Specify extra arguments to pass to sftp only
+ansible-playbook, , ,scp-extra-args, ,@f,132,Specify extra arguments to pass to scp only
+ansible-playbook, , ,ssh-extra-args, ,@f,133,Specify extra arguments to pass to ssh only
+ansible-playbook, ,b,become, ,@f,134,Run operations with become
+ansible-playbook, , ,become-method,sudo su pbrun pfexec runas doas dzdo,@f @r,135,Privilege escalation method to use (default=sudo)
+ansible-playbook, , ,become-user, ,@f @r,136,Run operations as this user (default=root)
+ansible-playbook, ,K,ask-become-pass, ,@f,137,Ask for privilege escalation password
+ansible-playbook, , ,become-password-file, , ,138,Become password file

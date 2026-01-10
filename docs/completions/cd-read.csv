@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cd-read, ,a,access-mode, , ,101,Set CD control access mode
+cd-read, ,m,mode, , ,102,"set CD-ROM read mode (audio, m1f1, m1f2, m2mf1, m2f2)"
+cd-read, ,d,debug, , ,103,Set debugging to LEVEL
+cd-read, ,x,hexdump, , ,104,Show output as a hex dump
+cd-read, ,j,just-hex, , ,105,Don't display printable chars on hex dump.  The default is print chars too
+cd-read, , ,no-header, , ,106,Don't display header and copyright (for regression testing)
+cd-read, , ,no-hexdump, , ,107,Don't show output as a hex dump
+cd-read, ,s,start, , ,108,Set LBA to start reading from
+cd-read, ,e,end, , ,109,Set LBA to end reading from
+cd-read, ,n,number, , ,110,Set number of sectors to read
+cd-read, ,b,bin-file, , ,111,set 'bin' CD-ROM disk image file as source
+cd-read, ,c,cue-file, , ,112,set 'cue' CD-ROM disk image file as source
+cd-read, ,i,input, , ,113,set source and determine if 'bin' image or device
+cd-read, ,C,cdrom-device, , ,114,set CD-ROM device as source
+cd-read, ,N,nrg-file, , ,115,set Nero CD-ROM disk image file as source
+cd-read, ,t,toc-file, , ,116,set 'TOC' CD-ROM disk image file as source
+cd-read, ,o,output-file, , ,117,Output blocks to file rather than give a hexdump
+cd-read, ,V,version, , ,118,display version and copyright information and exit . SS 'Help options:'
+cd-read, ,?,help, , ,119,Show this help message
+cd-read, , ,usage, , ,120,Display brief usage message AUTHOR Rocky Bernstein <rocky@gnu

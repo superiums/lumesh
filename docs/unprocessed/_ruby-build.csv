@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ruby-build, __fish_ruby-build_needs_command, , , ,@f,101,Definition
+ruby-build, __fish_ruby-build_needs_command,k,keep, ,@f,102,Do not remove source tree after installation
+ruby-build, __fish_ruby-build_needs_command,v,verbose, ,@f,103,Verbose mode: print compilation status to stdout
+ruby-build, __fish_ruby-build_needs_command, ,definitions, ,@f,104,List all built-in definitions
+ruby-build, __fish_ruby-build_needs_command,h,help, ,@f,105,Display help information

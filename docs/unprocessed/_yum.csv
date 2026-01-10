@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yum, __fish_use_subcommand, , ,install, ,101,Install the latest version of a package
+yum, __fish_use_subcommand, , ,update upgrade, ,102,Update specified packages (defaults to all packages)
+yum, __fish_use_subcommand, , ,check-update, ,103,Print list of available updates
+yum, __fish_use_subcommand, , ,remove erase, ,104,Remove the specified packages and packages that depend on them
+yum, __fish_use_subcommand, , ,list, ,105,List available packages
+yum, __fish_use_subcommand, , ,info, ,106,Describe available packages
+yum, __fish_use_subcommand, , ,provides whatprovides, ,107,Find package providing a feature or file
+yum, __fish_use_subcommand, , ,search, ,108,find packages matching description regexp
+yum, __fish_use_subcommand, , ,clean, ,109,Clean up cache directory
+yum, __fish_use_subcommand, , ,generate-rss, ,110,Generate rss changelog
+yum, contains list (commandline -pxc), , ,all, ,120,List all packages
+yum, contains list (commandline -pxc), , ,available, ,121,List packages available for installation
+yum, contains list (commandline -pxc), , ,updates, ,122,List packages with updates available
+yum, contains list (commandline -pxc), , ,installed, ,123,List installed packages
+yum, contains list (commandline -pxc), , ,extras, ,124,List packages not available in repositories
+yum, contains list (commandline -pxc), , ,obsoletes, ,125,List packages that are obsoleted by packages in repositories
+yum, contains clean (commandline -pxc), , ,packages,@f @r,126,Delete cached package files
+yum, contains clean (commandline -pxc), , ,headers,@f @r,127,Delete cached header files
+yum, contains clean (commandline -pxc), , ,all,@f @r,128,Delete all cache contents

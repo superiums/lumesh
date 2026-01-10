@@ -1,0 +1,74 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bluetoothctl, $cmds, , ,list,@f,100,List available controllers
+bluetoothctl, $cmds, , ,show,@f,100,Controller information
+bluetoothctl, $cmds, , ,select,@f,100,Select default controller
+bluetoothctl, $cmds, , ,devices,@f,100,List available devices
+bluetoothctl, $cmds, , ,paired-devices,@f,100,List paired devices
+bluetoothctl, $cmds, , ,system-alias,@f,100,Set controller alias
+bluetoothctl, $cmds, , ,reset-alias,@f,100,Reset controller alias
+bluetoothctl, $cmds, , ,power,@f,100,Set controller power
+bluetoothctl, $cmds, , ,pairable,@f,100,Set controller pairable mode
+bluetoothctl, $cmds, , ,discoverable,@f,100,Set controller discoverable mode
+bluetoothctl, $cmds, , ,discoverable-timeout,@f,100,Set discoverable timeout
+bluetoothctl, $cmds, , ,agent,@f,100,Enable/disable agent with given capability
+bluetoothctl, $cmds, , ,default-agent,@f,100,Set agent as the default one
+bluetoothctl, $cmds, , ,advertise,@f,100,Enable/disable advertising with given type
+bluetoothctl, $cmds, , ,set-alias,@f,100,Set device alias
+bluetoothctl, $cmds, , ,scan,@f,100,Scan for devices
+bluetoothctl, $cmds, , ,info,@f,100,Device information
+bluetoothctl, $cmds, , ,pair,@f,100,Pair with device
+bluetoothctl, $cmds, , ,cancel-pairing,@f,100,Cancel pairing with device
+bluetoothctl, $cmds, , ,trust,@f,100,Trust device
+bluetoothctl, $cmds, , ,untrust,@f,100,Untrust device
+bluetoothctl, $cmds, , ,block,@f,100,Block device
+bluetoothctl, $cmds, , ,unblock,@f,100,Unblock device
+bluetoothctl, $cmds, , ,remove,@f,100,Remove device
+bluetoothctl, $cmds, , ,connect,@f,100,Connect device
+bluetoothctl, $cmds, , ,disconnect,@f,100,Disconnect device
+bluetoothctl, $cmds, , ,scan.uuids,@f,100,Set/Get advertise uuids
+bluetoothctl, $cmds, , ,scan.service,@f,100,Set/Get advertise service data
+bluetoothctl, $cmds, , ,scan.manufacturer,@f,100,Set/Get advertise manufacturer data
+bluetoothctl, $cmds, , ,scan.data,@f,100,Set/Get advertise data
+bluetoothctl, $cmds, , ,scan.discoverable,@f,100,Set/Get advertise discoverable
+bluetoothctl, $cmds, , ,scan.discoverable-timeout,@f,100,Set/Get advertise discoverable timeout
+bluetoothctl, $cmds, , ,scan.tx-power,@f,100,Show/Enable/Disable TX power to be advertised
+bluetoothctl, $cmds, , ,scan.name,@f,100,Configure local name to be advertised
+bluetoothctl, $cmds, , ,scan.appearance,@f,100,Configure custom appearance to be advertised
+bluetoothctl, $cmds, , ,scan.duration,@f,100,Set/Get advertise duration
+bluetoothctl, $cmds, , ,scan.timeout,@f,100,Set/Get advertise timeout
+bluetoothctl, $cmds, , ,scan.secondary,@f,100,Set/Get advertise secondary channel
+bluetoothctl, $cmds, , ,scan.clear,@f,100,Clear advertise config
+bluetoothctl, $cmds, , ,gatt.list-attributes,@f,100,List attributes
+bluetoothctl, $cmds, , ,gatt.select-attribute,@f,100,Select attribute
+bluetoothctl, $cmds, , ,gatt.attribute-info,@f,100,Select attribute
+bluetoothctl, $cmds, , ,gatt.read,@f,100,Read attribute value
+bluetoothctl, $cmds, , ,gatt.write,@f,100,Write attribute value
+bluetoothctl, $cmds, , ,gatt.acquire-write,@f,100,Acquire Write file descriptor
+bluetoothctl, $cmds, , ,gatt.release-write,@f,100,Release Write file descriptor
+bluetoothctl, $cmds, , ,gatt.acquire-notify,@f,100,Acquire Notify file descriptor
+bluetoothctl, $cmds, , ,gatt.release-notify,@f,100,Release Notify file descriptor
+bluetoothctl, $cmds, , ,gatt.notify,@f,100,Notify attribute value
+bluetoothctl, $cmds, , ,gatt.clone,@f,100,Clone a device or attribute
+bluetoothctl, $cmds, , ,gatt.register-application,@f,100,Register profile to connect
+bluetoothctl, $cmds, , ,gatt.unregister-application,@f,100,Unregister profile
+bluetoothctl, $cmds, , ,gatt.register-service,@f,100,Register application service
+bluetoothctl, $cmds, , ,gatt.unregister-service,@f,100,Unregister application service
+bluetoothctl, $cmds, , ,gatt.register-includes,@f,100,Register as Included service in
+bluetoothctl, $cmds, , ,gatt.unregister-includes,@f,100,Unregister Included service
+bluetoothctl, $cmds, , ,gatt.register-characteristic,@f,100,Register application characteristic
+bluetoothctl, $cmds, , ,gatt.unregister-characteristic,@f,100,Unregister application characteristic
+bluetoothctl, $cmds, , ,gatt.register-descriptor,@f,100,Register application descriptor
+bluetoothctl, $cmds, , ,gatt.unregister-descriptor,@f,100,Unregister application descriptor
+bluetoothctl, $cmds, , ,advertise.uuids,@f,100,Set/Get advertise uuids
+bluetoothctl, $cmds, , ,advertise.service,@f,100,Set/Get advertise service data
+bluetoothctl, $cmds, , ,advertise.manufacturer,@f,100,Set/Get advertise manufacturer data
+bluetoothctl, $cmds, , ,advertise.data,@f,100,Set/Get advertise data
+bluetoothctl, $cmds, , ,advertise.discoverable,@f,100,Set/Get advertise discoverable
+bluetoothctl, $cmds, , ,advertise.discoverable-timeout,@f,100,Set/Get advertise discoverable timeout
+bluetoothctl, $cmds, , ,advertise.tx-power,@f,100,Show/Enable/Disable TX power to be advertised
+bluetoothctl, $cmds, , ,advertise.name,@f,100,Configure local name to be advertised
+bluetoothctl, $cmds, , ,advertise.appearance,@f,100,Configure custom appearance to be advertised
+bluetoothctl, $cmds, , ,advertise.duration,@f,100,Set/Get advertise duration
+bluetoothctl, $cmds, , ,advertise.timeout,@f,100,Set/Get advertise timeout
+bluetoothctl, $cmds, , ,advertise.secondary,@f,100,Set/Get advertise secondary channel
+bluetoothctl, $cmds, , ,advertise.clear,@f,100,Clear advertise config

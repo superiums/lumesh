@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+atd, ,l, , ,@f,101,Limiting load factor
+atd, ,b, , ,@f,102,Minimum interval in seconds
+atd, ,d, , ,@f,103,Debug mode
+atd, ,s, , ,@f,104,Process at queue only once

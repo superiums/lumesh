@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bootctl, $commands, , ,status, ,100,Show status of EFI variables
+bootctl, $commands, , ,install, ,100,Install systemd-boot
+bootctl, $commands, , ,update, ,100,Update systemd-boot
+bootctl, $commands, , ,remove, ,100,Remove systemd-boot
+bootctl, $commands, , ,is-installed, ,100,Test whether systemd-boot is installed
+bootctl, $commands, , ,random-seed, ,100,Initialize random seed
+bootctl, $commands, , ,systemd-efi-options, ,100,Query or set system options string
+bootctl, $commands, , ,reboot-to-firmware, ,100,Query or set reboot-to-firmware EFI flag
+bootctl, $commands, , ,list, ,101,List boot loader entries
+bootctl, $commands, , ,set-default, ,101,Set default boot loader entry
+bootctl, $commands, , ,set-oneshot, ,101,Set default boot loader entry (Once)
+bootctl, $commands, , ,set-timeout, ,102,Set default boot loader timeout
+bootctl, $commands, , ,set-timeout-oneshot, ,102,Set default boot loader timeout (Once)

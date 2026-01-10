@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+diff3, ,A,show-all, , ,101,"output all changes, bracketing conflicts"
+diff3, ,e,ed, , ,102,output ed script incorporating changes from OLDFILE to YOURFILE into MYFILE
+diff3, ,E,show-overlap, , ,103,"like -e, but bracket conflicts"
+diff3, ,3,easy-only, , ,104,"like -e, but incorporate only nonoverlapping changes"
+diff3, ,x,overlap-only, , ,105,"like -e, but incorporate only overlapping changes"
+diff3, ,m,merge, , ,106,"output actual merged file, according to -A if no other options are given"
+diff3, ,a,text, , ,107,treat all files as text
+diff3, , ,strip-trailing-cr, , ,108,strip trailing carriage return on input
+diff3, ,T,initial-tab, , ,109,make tabs line up by prepending a tab
+diff3, , ,diff-program, , ,110,use PROGRAM to compare files
+diff3, ,L,label, , ,111,use LABEL instead of file name (can be repeated up to three times)
+diff3, , ,help, , ,112,display this help and exit
+diff3, ,v,version, , ,113,output version information and exit

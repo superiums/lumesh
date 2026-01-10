@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wc, ,c,bytes, , ,101,print the byte counts
+wc, ,m,chars, , ,102,print the character counts
+wc, ,l,lines, , ,103,print the newline counts
+wc, , ,files0-from, , ,104,"read input from the files specified by NUL-terminated names in file F; If F i…"
+wc, ,L,max-line-length, , ,105,print the maximum display width
+wc, ,w,words, , ,106,print the word counts
+wc, , ,total, , ,107,"when to print a line with total counts; WHEN can be: auto, always, only, never"
+wc, , ,help, , ,108,display this help and exit
+wc, , ,version, , ,109,output version information and exit AUTHOR Written by Paul Rubin and David Ma…

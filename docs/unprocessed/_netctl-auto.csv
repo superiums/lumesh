@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+netctl-auto, $cmds, ,help, , ,100,Show help
+netctl-auto, $cmds, ,version, , ,100,Show version
+netctl-auto, $cmds, , ,list,@f,100,List all available profiles for automatic selection
+netctl-auto, $cmds, , ,start,@f,100,Start automatic profile selection on interface
+netctl-auto, $cmds, , ,stop,@f,100,Stop automatic profile selection on interface
+netctl-auto, $cmds, , ,switch-to,@f,100,Switch to the given network profile
+netctl-auto, $cmds, , ,enable,@f,100,Enable network profile for automatic selection
+netctl-auto, $cmds, , ,disable,@f,100,Disable network profile for automatic selection
+netctl-auto, $cmds, , ,enable-all,@f,100,Enable all profiles for automatic selection
+netctl-auto, $cmds, , ,disable-all,@f,100,Disable all profiles for automatic selection
+netctl-auto, $cmds, , ,is-active,@f,100,Check whether specified profile is active
+netctl-auto, $cmds, , ,is-enabled,@f,100,Check whether specified profile is enabled

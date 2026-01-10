@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+insmod, ,s,syslog, , ,101,Send errors to syslog instead of standard error
+insmod, ,v,verbose, , ,102,Print messages about what the program is doing.  Usually insmod prints
+insmod, ,V,version, , ,103,Show version of program and exit
+insmod, ,h,help, , ,104,Print the help message and exit

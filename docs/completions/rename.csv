@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rename, ,s,symlink, , ,101,Rename symlink target(s)
+rename, ,n,no-act, , ,104,Make no changes
+rename, ,a,all, , ,105,Replace all occurrences
+rename, ,l,last, , ,106,Replace only the last occurrence
+rename, ,i,interactive, , ,109,Ask before overwriting
+rename, ,h,help, , ,110,Print help text and exit
+rename, ,V,version, , ,111,Print version and exit
+rename, ,v,verbose, , ,112,Print renamed files
+rename, ,0,null, , ,113,Split on NUL when reading from stdin
+rename, ,n,nono, , ,114,Only show what would be renamed
+rename, ,f,force, , ,115,Overwrite existing files
+rename, ,h,help, , ,118,Print synopsis and options
+rename, ,m,man, , ,119,Print manual page
+rename, ,V,version, , ,120,Show version number
+rename, ,u,unicode, , ,121,Treat filenames as Unicode strings
+rename, ,e, , ,@f @r,122,Perl expression
+rename, ,E, , ,@f @r,123,Perl statement
+rename, ,h,help, , ,124,See a synopsis
+rename, , ,man, , ,125,Browse the manpage
+rename, ,0,null, , ,126,Split on NUL bytes
+rename, ,f,force, , ,127,Rename over existing files
+rename, ,g,glob, , ,128,Glob filename arguments
+rename, ,i,interactive, , ,129,Confirm every action
+rename, ,k,reverse-order, , ,130,Process last file first
+rename, ,M,use, ,@f @r,133,Like perl -M
+rename, ,n,just-print, , ,134,Only show what would be renamed
+rename, ,N,counter-format,01 001 0001,@f @r,135,Format and set $N per template
+rename, ,p,make-dirs, , ,136,Create non-existent dirs
+rename, , ,no-stdin, , ,137,Always/never read list of files from STDIN
+rename, ,T,transcode, ,@f @r,138,Transcode filenames
+rename, ,v,verbose, , ,139,Print more information
+rename, ,a,append, ,@f @r,140,Append STRING to each filename
+rename, ,A,prepend, ,@f @r,141,Prepend STRING to each filename
+rename, ,c,lower-case, , ,142,Convert to all lowercase
+rename, ,C,upper-case, , ,143,Convert to all uppercase
+rename, ,e,expr, ,@f @r,144,Perl expression
+rename, ,P,pipe, , ,145,Pass filenames to external command
+rename, ,s,subst, ,@f @r,146,Simple text substitution
+rename, ,S,subst-all, ,@f @r,147,"Like -s, but substitutes all matches"
+rename, ,x,remove-extension, , ,148,Remove extension
+rename, ,X,keep-extension, , ,149,Save and remove extension
+rename, ,z,sanitize, , ,150,Shortcut for --nows --noctrl --nometa --trim
+rename, , ,camelcase, , ,151,Capitalise each word in the filename
+rename, , ,urlesc, , ,152,Decode URL-escaped filenames
+rename, , ,nows, , ,153,Replace all whitespace with underscores
+rename, , ,rews, , ,154,Replace all underscores with whitespace
+rename, , ,noctrl, , ,155,Replace all control chars with underscores
+rename, , ,nometa, , ,156,Replace all shell meta-chars with underscores

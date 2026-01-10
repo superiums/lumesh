@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+topgrade, ,c,cleanup, ,@f,101,Cleanup temporary or old files
+topgrade, , ,disable-predefined-git-repos, ,@f,102,Don't pull the predefined git repos
+topgrade, ,n,dry-run, ,@f,103,Print what would be done
+topgrade, , ,edit-config, ,@f,104,Edit the configuration file
+topgrade, ,h,help, ,@f,105,Prints help information
+topgrade, ,k,keep, ,@f,106,Prompt for a key before exiting
+topgrade, , ,no-retry, ,@f,107,Do not ask to retry failed steps
+topgrade, ,t,tmux, ,@f,108,Run inside tmux
+topgrade, , ,config-reference, ,@f,109,Show config reference
+topgrade, , ,show-skipped, ,@f,110,Show the reason for skipped steps
+topgrade, ,V,version, ,@f,111,Prints version information
+topgrade, ,v,verbose, ,@f,112,Output logs
+topgrade, , ,config, ,@f @r,113,Alternative configuration file
+topgrade, , ,disable,asdf atom brew_cask brew_formula bin cargo chezmoi chocolatey choosenim composer custom_commands deno dotnet emacs firmware flatpak flutter fossil gcloud gem git_repos haxelib gnome_shell_extensions home_manager jetpack krew macports mas micro myrepos nix node opam pacdiff pacstall pearl pipx pip3 pkg pkgin pnpm powershell raco remotes restarts rtcl rustup scoop sdkman silnite sheldon shell snap spicetify stack system tldr tlmgr tmux vagrant vcpkg vim winget wsl yadm,@f @r,114,Do not perform upgrades for the given steps
+topgrade, , ,only,asdf atom brew_cask brew_formula bin cargo chezmoi chocolatey choosenim composer custom_commands deno dotnet emacs firmware flatpak flutter fossil gcloud gem git_repos haxelib gnome_shell_extensions home_manager jetpack krew macports mas micro myrepos nix node opam pacdiff pacstall pearl pipx pip3 pkg pkgin pnpm powershell raco remotes restarts rtcl rustup scoop sdkman silnite sheldon shell snap spicetify stack system tldr tlmgr tmux vagrant vcpkg vim winget wsl yadm,@f @r,115,Perform only the specified steps (experimental)
+topgrade, , ,remote-host-limit, ,@f @r,116,A regular expression for restricting remote host execution
+topgrade, ,y,yes, ,@f,117,Say yes to package manager's prompt

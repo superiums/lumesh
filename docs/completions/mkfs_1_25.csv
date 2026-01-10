@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkfs.btrfs, ,b,byte-count, , ,101,Specify the size of each device as seen by the filesystem
+mkfs.btrfs, , ,checksum, , ,102,Specify the checksum algorithm.  Default is crc32c
+mkfs.btrfs, ,d,data, , ,103,Specify the profile for the data block groups
+mkfs.btrfs, ,m,metadata, , ,104,Specify the profile for the metadata block groups
+mkfs.btrfs, ,M,mixed, , ,105,Normally the data and metadata block groups are isolated
+mkfs.btrfs, ,n,nodesize, , ,106,"Specify the nodesize, the tree block size in which btrfs stores metadata"
+mkfs.btrfs, ,s,sectorsize, , ,107,"Specify the sectorsize, the minimum data block allocation unit"
+mkfs.btrfs, ,L,label, , ,108,Specify a label for the filesystem
+mkfs.btrfs, ,K,nodiscard, , ,109,Do not perform whole device TRIM operation on devices that are capable of that
+mkfs.btrfs, ,r,rootdir, , ,110,Populate the toplevel subvolume with files from rootdir
+mkfs.btrfs, , ,compress, , ,111,Try to compress files when using --rootdir
+mkfs.btrfs, ,u,subvol, , ,112,Specify that subdir is to be created as a subvolume rather than a regular dir…
+mkfs.btrfs, , ,shrink, , ,113,"Shrink the filesystem to its minimal size, only works with --rootdir option"
+mkfs.btrfs, ,O,features, , ,114,A list of filesystem features turned on at mkfs time
+mkfs.btrfs, ,f,force, , ,115,Forcibly overwrite the block devices when an existing filesystem is detected
+mkfs.btrfs, ,q,quiet, , ,116,Print only error or warning messages
+mkfs.btrfs, ,U,uuid, , ,117,Create the filesystem with the given UUID
+mkfs.btrfs, , ,device-uuid, , ,118,Create the filesystem with the given device-uuid UUID (also known as UUID_SUB…
+mkfs.btrfs, ,v,verbose, , ,119,"Increase verbosity level, default is 1"
+mkfs.btrfs, ,V,version, , ,120,"Print the mkfs. btrfs version, builtin features and exit"
+mkfs.btrfs, , ,help, , ,121,Print help
+mkfs.btrfs, ,R,runtime-features, , ,122,"Removed in 6. 3, was used to specify features not affecting on-disk format"

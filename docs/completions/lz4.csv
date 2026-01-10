@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lz4, ,z,compress, , ,101,Compress (default)
+lz4, ,d,uncompress,,@f @k @r,102,Decompress
+lz4, ,t,test, , ,103,Test the integrity
+lz4, , ,list, , ,104,List information about .lz4 file(s)
+lz4, , ,fast, , ,105,Ultra-fast compression
+lz4, , ,best, , ,106,"Highest compression, same as -12"
+lz4, , ,favor-decSpeed, , ,107,Generate file(s) optimized for decompression speed
+lz4, ,D, , ,@r,108,Use specified file as dictionary
+lz4, ,f,force, , ,109,Overwrite without prompting
+lz4, ,c,to-stdout, , ,110,Force write to stdout
+lz4, ,m,multiple, , ,111,Multiple input files
+lz4, , ,no-frame-crc, , ,112,Disable frame checksum
+lz4, , ,content-size, , ,113,Header includes original size
+lz4, , ,sparse, , ,114,Enable sparse mode
+lz4, , ,no-sparse, , ,115,Disable sparse mode
+lz4, ,v,verbose, , ,116,Be verbose
+lz4, ,q,quiet, , ,117,Suppress warnings
+lz4, ,h,help, , ,118,Show help
+lz4, ,V,version, , ,119,Show version
+lz4, ,k,keep, , ,120,Keep input file(s) (default)
+lz4, , ,rm, , ,121,Remove input file(s) after de/compression

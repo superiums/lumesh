@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rc-service, ,e,exists, , ,101,Tests if the service exists or not
+rc-service, ,i,ifexists, , ,102, 
+rc-service, ,l,list, , ,103,List all available services
+rc-service, ,r,resolve, , ,104, 
+rc-service, ,h,help, , ,105,Display the help output
+rc-service, ,C,nocolor, , ,106,Disable color output
+rc-service, ,V,version, , ,107,Display software version
+rc-service, ,v,verbose, , ,108,Run verbosely
+rc-service, ,q,quiet, , ,109,Run quietly (Does not affect errors)

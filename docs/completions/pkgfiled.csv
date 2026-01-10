@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkgfiled, ,f,force, , ,101,"X Item '-f, --force' On the initial sync, ignore timestamp comparisons and re…"
+pkgfiled, ,o,oneshot, , ,102,"X Item '-o, --oneshot' Exit after pkgfiled's initial sync, rather than contin…"
+pkgfiled, ,z,compress, , ,103,"X Item '-z, --compress[=COMPRESSION]' Repack repos with the optionally suppli…"
+pkgfiled, ,h,help, , ,104,"X Item '-h, --help' Print help and exit"
+pkgfiled, ,V,version, , ,105, 

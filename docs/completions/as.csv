@@ -1,0 +1,52 @@
+cmd,conds,short,long,params,dirs,pri,desc
+as, , ,alternate, , ,101,Initially turn on alternate macro syntax
+as, , ,compress-debug-sections,none zlib zlib-gnu zlib-gabi,@f @r,102,Compress DWARF debug sections using zlib
+as, , ,nocompress-debug-sections, , ,103,Don't compress DWARF debug sections
+as, , ,debug-prefix-map, ,@f @r,104,Remap debug information
+as, , ,defsym, ,@f @r,105,Redefine symbols
+as, , ,execstack, , ,106,Require executable stack for this object
+as, , ,noexecstack, , ,107,Don't require executable stack for this object
+as, , ,size-check,error warning,@f @r,108,ELF .size directive check
+as, , ,elf-stt-common,yes no, ,109,Generate ELF common symbols with STT_COMMON type
+as, , ,sectname-subst, , ,110,Enable section name substitution sequences
+as, ,g,gen-debug, , ,111,Generate debugging information
+as, , ,gstabs, , ,112,Generate STABS debugging information
+as, , ,gstabs+, , ,113,Generate STABS debug info with GNU extensions
+as, , ,gdwarf-2, , ,114,Generate DWARF2 debugging information
+as, , ,gdwarf-sections, , ,115,Generate per-function section names for DWARF line information
+as, , ,hash-size, ,@f @r,116,Set the hash table size close
+as, , ,help, , ,117,Show help message and exit
+as, , ,target-help, , ,118,Show target specific options
+as, ,I, , ,@r,119,Add DIR to search list for .include directives
+as, ,M,mri, , ,120,Assemble in MRI compatibility mode
+as, , ,MD, ,@r,121,Write dependency information in given file
+as, ,o, , ,@r,122,Set object-file output file name
+as, , ,reduce-memory-overheads, , ,123,Prefer smaller memory use
+as, , ,statistics, , ,124,Print various measured statistics from execution
+as, , ,strip-local-absolute, , ,125,Strip local absolute symbols
+as, , ,traditional-format, , ,126,Use same format as native assembler when possible
+as, , ,version, , ,127,Print assembler version number and exit
+as, ,W,no-warn, , ,128,Suppress warnings
+as, , ,warn, , ,129,Don't suppress warnings
+as, , ,fatal-warnings, , ,130,Treat warnings as errors
+as, , ,listing-lhs-width, , ,131, 
+as, , ,listing-lhs-width2, , ,132, 
+as, , ,listing-rhs-width, , ,133, 
+as, , ,listing-cont-lines, , ,134, 
+as, ,@, , ,@r,135,Read option from given file
+as, , ,32, , ,136,Generate 32 bits code
+as, , ,64, , ,137,Generate 64 bits code
+as, , ,x32, , ,138,Generate x32 code
+as, , , ,none error warning,@f @r,139,Check SSE instructions
+as, , , ,none error warning,@f @r,140,Check operand combinations for validity
+as, , , ,128 256,@f @r,141,Encode scalar AVX instructions with specific vector length
+as, , , ,128 256 512,@f @r,142,Encode scalar EVEX instructions with specific vector length
+as, , , ,0 1,@f @r,143,Encode EVEX instructions with specific EVEX.W
+as, , , ,rne rd ru rz,@f @r,144,Encode EVEX instructions with specific EVEX.RC
+as, , , ,att intel,@f @r,145,Use specified mnemonic
+as, , , ,att intel,@f @r,146,Use specified syntax
+as, , , ,yes no,@f @r,147,Strip all lock prefixes
+as, , , ,yes no,@f @r,148,Encode lfence mfence and sfence as lock addl $0x0 (%{re}sp)
+as, , , ,yes no,@f @r,149,Generate relax relocations
+as, , , , ,@f @r,150, 
+as, , , ,generic32 generic64 i8086 i186 i286 i386 i486 i586 i686 pentium pentiumpro pentiumii pentiumiii pentium4 prescott nocona core core2 corei7 l1om k1om iamcu k6 k6_2 athlon opteron k8 amdfam10 bdver1 bdver2 bdver3 bdver4 znver1 btver1 btver2,@f @r,151,Optimize for given CPU

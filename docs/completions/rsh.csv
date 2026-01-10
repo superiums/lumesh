@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rsh, ,4,ipv4, , ,101,use only IPv4
+rsh, ,6,ipv6, , ,102,use only IPv6
+rsh, ,8,8-bit, , ,103,allows an eight-bit input data path at all times
+rsh, ,d,debug, , ,104,turns on socket debugging (see setsockopt(2))
+rsh, ,e,escape, , ,105,allows user specification of the escape character (``~'' by default)
+rsh, ,l,user, , ,106,run as USER on the remote system
+rsh, ,n,no-input, , ,107,"use \\,/dev/null\\/ as input"
+rsh, ,?,help, , ,108,give this help list
+rsh, , ,usage, , ,109,give a short usage message
+rsh, ,V,version, , ,110,print program version

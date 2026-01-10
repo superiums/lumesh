@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tinysparql-introspect, ,b,dbus-service, , ,101,Connects to a SPARQL endpoint at a D-Bus name
+tinysparql-introspect, ,d,database-path, , ,102,Connects to a database by location in the filesystem
+tinysparql-introspect, ,r,remote-service, , ,103,Connects to a HTTP SPARQL endpoint
+tinysparql-introspect, ,c,list-classes, , ,104,Returns a list of classes which describe the ontology used for storing data
+tinysparql-introspect, ,x,list-class-prefixes, , ,105,Returns a list of prefixes in shortened and long form
+tinysparql-introspect, ,p,list-properties, , ,106,Returns a list of properties which pertain to a class
+tinysparql-introspect, ,n,list-notifies, , ,107,Returns a list of classes which are notified over D-Bus about any changes tha…
+tinysparql-introspect, ,i,list-indexes, , ,108,Returns a list of properties which are indexed in the database
+tinysparql-introspect, ,g,list-graphs, , ,109,List all the named graphs in the database
+tinysparql-introspect, ,t,tree, , ,110,Prints a tree showing all parent classes of class in the ontology
+tinysparql-introspect, ,s,search, , ,111,Returns a list of classes and properties which partially match needle in the …
+tinysparql-introspect, , ,query, , ,112, 
+tinysparql-introspect, , ,get-shorthand, , ,113,and
+tinysparql-introspect, , ,get-longhand, , ,114,"for details).  If no class is given, the entire tree is shown"

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdbus, __fish_use_subcommand, , ,introspect,@f,101,Introspect a remote object
+gdbus, __fish_use_subcommand, , ,monitor,@f,102,Monitor a remote object
+gdbus, __fish_use_subcommand, , ,call,@f,103,Invoke a method on a remote object
+gdbus, __fish_use_subcommand, , ,emit,@f,104,Emit a signal
+gdbus, __fish_use_subcommand, , ,wait,@f,105,Wait for a bus name to appear
+gdbus, __fish_use_subcommand, , ,help,@f,106,Prints help

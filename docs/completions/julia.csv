@@ -1,0 +1,42 @@
+cmd,conds,short,long,params,dirs,pri,desc
+julia, ,v,version, , ,101,Display version
+julia, ,h,help, , ,102,Print help
+julia, , ,help-hidden, , ,103,Print help of uncommon options
+julia, , ,project, , ,104,Set DIR as the home project/environment
+julia, ,J,sysimage, ,@r,105,Start up with SYSIMAGE
+julia, ,H,home, ,@r,106,Set location of julia executable
+julia, , ,startup-file,yes no,@f @r,107,Load ~/.julia/config/startup.jl
+julia, , ,handle-signals,yes no,@f @r,108,Julia's default signal handlers
+julia, , ,sysimage-native-code,yes no,@f @r,109,Use native code from SYSIMAGE
+julia, , ,compiled-modules,yes no,@f @r,110,Incremental precompilation of modules
+julia, ,e,eval, ,@f @r,111,Evaluate EXPR
+julia, ,E,print, ,@f @r,112,Evaluate EXPR and display the result
+julia, ,L,load, ,@r,113,Load FILE immediately on all processors
+julia, ,t,threads,auto,@f @r,114,The number of worker threads
+julia, ,p,procs,auto,@f @r,115,The number of local worker processes
+julia, , ,machine-file, , ,116,Run processes on hosts listed in FILE
+julia, ,q,quiet, , ,117,Quiet startup
+julia, , ,banner,yes no auto,@f @r,118,Startup banner
+julia, , ,color,yes no auto,@f @r,119,Color text
+julia, , ,history-file,yes no,@f @r,120,Load/Save history
+julia, , ,depwarn,yes no error,@f @r,121,Syntax and method deprecation warnings
+julia, , ,warn-overwrite,yes no,@f @r,122,Method overwrite warnings
+julia, , ,warn-scope,yes no,@f @r,123,Warning for ambiguous top-level scope
+julia, ,C,cpu-target, ,@f @r,124,Limit usage of CPU features
+julia, ,O,optimize,0 1 2 3,@f @r,125,Set the optimization level
+julia, ,g, , ,@f @r,126,Set the level of debug info generation
+julia, , ,inline,yes no,@f @r,127,Control inlining
+julia, , ,check-bounds,yes no,@f @r,128,Emit bounds checks
+julia, , ,math-mode,ieee fast,@f @r,129,Unsafe floating point optimizations
+julia, , ,code-coverage,none user all,@f @r,130,Count executions of source lines
+julia, , ,track-allocation,none user all,@f @r,131,Count bytes allocated by each source line
+julia, , ,bug-report, , ,132,Launch a bug report session
+julia, , ,compile,yes no all min,@f @r,133,JIT compiler
+julia, , ,output-o, , ,134,Generate an object file
+julia, , ,output-ji, , ,135,Generate a SYSIMAGE
+julia, , ,output-unopt-bc, , ,136,Generate unoptimized LLVM bitcode
+julia, , ,output-jit-bc, , ,137,Dump all IR
+julia, , ,output-bc, , ,138,Generate LLVM bitcode
+julia, , ,output-asm, , ,139,Generate an assembly
+julia, , ,output-incremental,no,@f @r,140,Generate an incremental output file
+julia, , ,trace-compile,stdout stderr,@f @r,141,Print precompile statements

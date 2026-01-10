@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pstree, ,a,arguments, , ,101,Show command line arguments
+pstree, ,A,ascii, , ,102,use ASCII line drawing characters
+pstree, ,c,compact, , ,103,don't compact identical subtrees
+pstree, ,h,highlight-all, , ,104,highlight current process and its ancestors
+pstree, ,H,highlight-pid, , ,105,highlight this process and its ancestors
+pstree, ,g,show-pgids, , ,106,"show process group ids; implies -c"
+pstree, ,G,vt100, , ,107,use VT100 line drawing characters
+pstree, ,l,long, , ,108,don't truncate long lines
+pstree, ,n,numeric-sort, , ,109,sort output by PID
+pstree, ,N,ns-sort,cgroup ipc mnt net pid user uts, ,110,sort by namespace type
+pstree, ,p,show-pids, , ,111,"show PIDs; implies -c"
+pstree, ,s,show-parents, , ,112,show parents of the selected process
+pstree, ,S,ns-changes, , ,113,show namespace transitions
+pstree, ,t,thread-names, , ,114,show full thread names
+pstree, ,T,hide-threads, , ,115,"hide threads, show only processes"
+pstree, ,u,uid-changes, , ,116,show uid transitions
+pstree, ,U,unicode, , ,117,use UTF-8 line drawing characters
+pstree, ,V,version, , ,118,display version information
+pstree, ,Z,security-context, , ,119,show SELinux security contexts

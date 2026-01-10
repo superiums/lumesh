@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iconv, ,f,from-code, ,@f @r,101,Convert from specified encoding
+iconv, ,t,to-code, ,@f @r,102,Convert to specified encoding
+iconv, , ,list, , ,103,List known coded character sets
+iconv, ,o,output, , ,104,Output file
+iconv, , ,verbose, , ,105,Print progress information
+iconv, , ,help, , ,106,Display version and exit
+iconv, , ,version, , ,107,Display help and exit

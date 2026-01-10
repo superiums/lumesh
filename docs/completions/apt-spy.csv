@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-spy, ,d, ,stable testing unstable,@f,101,Debian distribution
+apt-spy, ,a, ,Africa Asia Europe North-America Oceania South-America,@f,102,Servers in the areas
+apt-spy, ,e, , ,@f,103,Finish after number of servers
+apt-spy, ,p, , ,@f,104,Use proxy server
+apt-spy, ,s, , ,@f,105,Comma separated country list
+apt-spy, ,t, , ,@f,106,How long in sec to download
+apt-spy, ,u, , ,@f,107,Custom URL to get mirror list
+apt-spy, ,n, , ,@f,108,Number of top servers
+apt-spy, , , ,update,@f,109,Update mirror list
+apt-spy, ,v, , ,@f,110,Version number

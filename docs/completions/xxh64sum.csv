@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xxh64sum, ,V,version, , ,101,Display version
+xxh64sum, , ,little-endian, , ,102,Display hashes in little endian
+xxh64sum, ,h,help, , ,103,Display help
+xxh64sum, ,c,check, , ,104,Check xxHash sums
+xxh64sum, ,q,quiet, , ,105,Don't print OK when the checksum match
+xxh64sum, , ,strict, , ,106,Exit non-zero if any line is invalid
+xxh64sum, , ,status, , ,107,Don't output anything
+xxh64sum, ,w,warn, , ,108,Warn about invalid lines

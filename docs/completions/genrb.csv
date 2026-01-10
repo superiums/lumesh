@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+genrb, ,?,help, , ,101,Print help about usage and exit
+genrb, ,V,version, , ,102,Print the version of  genrb and exit
+genrb, ,v,verbose, , ,103,Display extra informative messages during execution
+genrb, ,e,encoding, , ,104,Set the encoding used to read input files to R encoding 
+genrb, ,j,write-java, , ,105,Generate a Java source code for use with ICU4J
+genrb, ,s,sourcedir, , ,106,Set the source directory to R source 
+genrb, ,d,destdir, , ,107,Set the destination directory to R destination 
+genrb, ,i,icudatadir, , ,108,Look for any necessary ICU data files in directory 

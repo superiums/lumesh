@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iex, ,v, , ,@f,101,Prints version and exit
+iex, ,e, , ,@f,102,Evaluates the given command
+iex, ,pr, , , ,103,Requires the given files/patterns in parallel
+iex, ,pa, , , ,104,Prepends the given path to Erlang code path
+iex, ,pz, , , ,105,Appends the given path to Erlang code path
+iex, , ,app, , ,106,Start the given app and its dependencies
+iex, , ,erl, ,@f,107,Switches to be passed down to erlang
+iex, , ,name, ,@f,108,Make & assign a name to the distributed node
+iex, , ,sname, ,@f,109,Make & assign a short name to the distributed node
+iex, , ,cookie, ,@f,110,Sets a cookie for this distributed node
+iex, , ,hidden, ,@f,111,Makes a hidden node
+iex, , ,detached, ,@f,112,Starts the Erlang VM detached from console
+iex, , ,remsh, ,@f,113,Connects to a node using a remote shell
+iex, , ,dot-iex, , ,114,Overrides default .iex file and uses path instead

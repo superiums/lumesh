@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wl-paste, __fish_contains_opt -s w watch, , , ,@f,101, 
+wl-paste, __fish_not_contain_opt -s w watch,h,help, , ,102,Display a help message
+wl-paste, __fish_not_contain_opt -s w watch,v,version, , ,103,Display version info
+wl-paste, __fish_not_contain_opt -s w watch,n,no-newline, , ,104,Do not append a newline character
+wl-paste, __fish_not_contain_opt -s w watch,l,list-types, , ,105,"Instead of pasting, list the offered types"
+wl-paste, __fish_not_contain_opt -s w watch,p,primary, , ,106,Use the 'primary' clipboard
+wl-paste, __fish_not_contain_opt -s w watch,w,watch, , ,107,Run a command each time the selection changes
+wl-paste, __fish_not_contain_opt -s w watch,t,type, ,@f @r,108,Override the inferred MIME type for the content
+wl-paste, __fish_not_contain_opt -s w watch,s,seat, ,@f @r,109,Pick the seat to work with

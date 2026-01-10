@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+umount, , , , ,@f @r,101,Mount point
+umount, ,V,version, , ,102,Display version
+umount, ,h,help, , ,103,Display help
+umount, ,v,verbose, , ,104,Say what is being done
+umount, ,n,no-mtab, , ,105,Don't write to /etc/mtab
+umount, ,r,read-only, , ,106,"In case unmounting fails, try to remount read-only"
+umount, ,d,detach-loop, , ,107,"In case the unmounted device was a loop device, also free this loop device"
+umount, ,i,internal-only, , ,108,Don't call the umount.<type> helpers
+umount, ,a,all, , ,109,Unmount all of the file systems described in /etc/mtab
+umount, ,t,types, ,@F,110,Actions should only be taken on file systems of the specified type
+umount, ,O,test-opts, , ,111,Actions should only be taken on file systems with the specified options in /etc/fstab
+umount, ,f,force, , ,112,Force unmount (in case of an unreachable NFS system)
+umount, ,l,lazy, , ,113,Lazy unmount (unmount a 'busy' filesystem)
+umount, ,R,recursive, , ,114,Recursively unmount a target with all its children
+umount, ,A,all-targets, , ,115,Unmount all mountpoints for the given device in the current namespaces
+umount, ,c,no-canonicalize, , ,116,Don't canonicalize paths
+umount, , ,fake, , ,117,"dry run; skip the umount(2) syscall"

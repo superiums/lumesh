@@ -1,0 +1,57 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dotnet, __fish_is_first_arg, ,additionalprobingpath, ,@f,101,Path containing probing policy and assemblies to probe
+dotnet, __fish_is_first_arg, ,additional-deps, ,@f,102,Path to additional deps.json
+dotnet, __fish_is_first_arg, ,depsfile, ,@f,103,Path to deps.json
+dotnet, __fish_is_first_arg, ,fx-version, ,@f,104,Version of the .NET runtime to use
+dotnet, __fish_is_first_arg, ,roll-forward,LatestPatch Minor LatestMinor Major LatestMajor Disable,@f @r,105,Roll forward to framework version
+dotnet, __fish_is_first_arg, ,runtimeconfig, ,@f,106,Path to runtimeconfig.json
+dotnet, __fish_is_first_arg, ,info, ,@f,109,Display .NET information
+dotnet, __fish_is_first_arg, ,list-runtimes, ,@f,110,Display the installed runtimes
+dotnet, __fish_is_first_arg, ,list-sdks, ,@f,111,Display the installed SDKs
+dotnet, __fish_is_first_arg, ,version, ,@f,112,Display .NET SDK version
+dotnet, __fish_use_subcommand, , ,add,@f,113,Add a package/reference
+dotnet, __fish_use_subcommand, , ,build,@f,114,Build a .NET project
+dotnet, __fish_use_subcommand, , ,build-server,@f,115,Interact with build servers
+dotnet, __fish_use_subcommand, , ,clean,@f,116,Clean build outputs
+dotnet, __fish_use_subcommand, , ,help,@f,117,Show help
+dotnet, __fish_use_subcommand, , ,list,@f,118,List project references
+dotnet, __fish_use_subcommand, , ,msbuild,@f,119,Run MSBuild commands
+dotnet, __fish_use_subcommand, , ,new,@f,120,Create a new .NET project
+dotnet, __fish_use_subcommand, , ,nuget,@f,121,Run additional NuGet commands
+dotnet, __fish_use_subcommand, , ,pack,@f,122,Create a NuGet package
+dotnet, __fish_use_subcommand, , ,publish,@f,123,Publish a .NET project for deployment
+dotnet, __fish_use_subcommand, , ,remove,@f,124,Remove a package/reference
+dotnet, __fish_use_subcommand, , ,restore,@f,125,Restore dependencies
+dotnet, __fish_use_subcommand, , ,run,@f,126,Run the application from source
+dotnet, __fish_use_subcommand, , ,sln,@f,127,Modify Visual Studio solution files
+dotnet, __fish_use_subcommand, , ,store,@f,128,Store assemblies
+dotnet, __fish_use_subcommand, , ,test,@f,129,Run unit tests
+dotnet, __fish_use_subcommand, , ,tool,@f,130,Manage .NET tool
+dotnet, __fish_use_subcommand, , ,vstest,@f,131,Run VSTest commands
+dotnet, add && $project_commands nuget sln, , ,package,@f,131,Add a NuGet package reference
+dotnet, list && $project_commands nuget sln tool, , ,package,@f,131,List all package references
+dotnet, remove && $project_commands nuget sln, , ,package,@f,131,Remove a NuGet package reference
+dotnet, add && $project_commands nuget sln, , ,reference,@f,131,Add a P2P reference
+dotnet, list && $project_commands nuget sln tool, , ,reference,@f,131,List all P2P references
+dotnet, remove && $project_commands nuget sln, , ,reference,@f,131,Remove a P2P reference
+dotnet, nuget && $nuget_commands, , ,add,@f,131,Add a NuGet source
+dotnet, nuget && $nuget_commands, , ,delete,@f,131,Delete a package from the server
+dotnet, nuget && $nuget_commands, , ,disable,@f,131,Disable a NuGet source
+dotnet, nuget && $nuget_commands, , ,enable,@f,131,Enable a NuGet source
+dotnet, nuget && $nuget_commands, , ,list,@f,131,List configured NuGet sources
+dotnet, nuget && $nuget_commands, , ,locals,@f,131,Clear/List local NuGet resources
+dotnet, nuget && $nuget_commands, , ,push,@f,131,Push a package to the server
+dotnet, nuget && $nuget_commands, , ,remove,@f,131,Remove a NuGet source
+dotnet, nuget && $nuget_commands, , ,update,@f,131,Update a NuGet source
+dotnet, nuget && $nuget_commands, , ,verify,@f,131,Verify a signed NuGet package
+dotnet, tool && $tool_commands, , ,install,@f,131,Install global/local tool
+dotnet, tool && $tool_commands, , ,uninstall,@f,131,Uninstall a global/local tool
+dotnet, tool && $tool_commands, , ,update,@f,131,Update a global tool
+dotnet, tool && $tool_commands, , ,list,@f,131,List tools installed globally/locally
+dotnet, tool && $tool_commands, , ,run,@f,131,Run local tool
+dotnet, tool && $tool_commands, , ,search,@f,131,Search .NET tools in NuGet.org
+dotnet, tool && $tool_commands, , ,restore,@f,131,Restore tools defined in the local tool manifest
+dotnet, nuget && $nuget_commands, ,version, ,@f,186,Show version
+dotnet, sln && $sln_commands, , ,add,@f,280,Add one/more projects to a solution file
+dotnet, sln && $sln_commands, , ,list,@f,280,List all projects in a solution file
+dotnet, sln && $sln_commands, , ,remove,@f,280,Remove one/more projects from a solution file

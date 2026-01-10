@@ -1,0 +1,53 @@
+cmd,conds,short,long,params,dirs,pri,desc
+unlzma, ,z,compress, , ,101,Compress
+unlzma, ,d,uncompress, , ,102,Decompress
+unlzma, ,t,test, , ,103,Test the integrity of compressed R files 
+unlzma, ,l,list, , ,104,Print information about compressed R files 
+unlzma, ,k,keep, , ,105,Don't delete the input files
+unlzma, ,f,force, , ,106,This option has several effects: . RS
+unlzma, ,c,to-stdout, , ,107,Write the compressed or decompressed data to standard output instead of a file
+unlzma, , ,single-stream, , ,108,Decompress only the first  
+unlzma, , ,no-sparse, , ,109,Disable creation of sparse files
+unlzma, ,S,suffix, , ,110,"When compressing, use  . suf as the suffix for the target file instead of  "
+unlzma, , ,files, , ,111,"Read the filenames to process from R file ; if  file is omitted, filenames ar…"
+unlzma, , ,files0, , ,112,This is identical to --files[=file] except that each filename must be termina…
+unlzma, ,F,format, , ,113,Specify the file  format to compress or decompress: . RS
+unlzma, ,C,check, , ,114,Specify the type of the integrity check
+unlzma, , ,ignore-check, , ,115,Don't verify the integrity check of the compressed data when decompressing
+unlzma, ,e,extreme, , ,116,Use a slower variant of the selected compression preset level . RB ( -0 ' 
+unlzma, , ,best, , ,117,"PD These are somewhat misleading aliases for  -0 and  -9 , respectively"
+unlzma, , ,block-size, , ,118,When compressing to the  
+unlzma, , ,block-list, , ,119,When compressing to the  
+unlzma, , ,flush-timeout, , ,120,"When compressing, if more than  timeout milliseconds (a positive integer) has…"
+unlzma, , ,memlimit-compress, , ,121,Set a memory usage limit for compression
+unlzma, , ,memlimit-decompress, , ,122,Set a memory usage limit for decompression
+unlzma, , ,memlimit-mt-decompress, , ,123,Set a memory usage limit for multi-threaded decompression
+unlzma, ,M,memory, , ,124,This is equivalent to specifying  --memlimit-compress= limit  --memlimit-deco…
+unlzma, , ,no-adjust, , ,125,Display an error and exit if the memory usage limit cannot be met without adj…
+unlzma, ,T,threads, , ,126,Specify the number of worker threads to use
+unlzma, , ,filters, , ,127,Specify the full filter chain or a preset in a single option
+unlzma, , ,filters9, , ,128,Specify up to nine additional filter chains that can be used with  --block-li…
+unlzma, , ,filters-help, , ,129,Display a help message describing how to specify presets and custom filter ch…
+unlzma, , ,lzma2, , ,130,PD Add LZMA1 or LZMA2 filter to the filter chain
+unlzma, , ,riscv, , ,131,PD Add a branch/call/jump (BCJ) filter to the filter chain
+unlzma, , ,delta, , ,132,Add the Delta filter to the filter chain
+unlzma, ,q,quiet, , ,133,Suppress warnings and notices.  Specify this twice to suppress errors too
+unlzma, ,v,verbose, , ,134,Be verbose
+unlzma, ,Q,no-warn, , ,135,Don't set the exit status to 2 even if a condition worth a warning was detect…
+unlzma, , ,robot, , ,136,Print messages in a machine-parsable format
+unlzma, , ,info-memory, , ,137,"Display, in human-readable format, how much physical memory (RAM) and how man…"
+unlzma, ,h,help, , ,138,"Display a help message describing the most commonly used options, and exit su…"
+unlzma, ,H,long-help, , ,139,"Display a help message describing all features of  xz , and exit successfully"
+unlzma, , ,fast, , ,140, 
+unlzma, , ,filters3, , ,141,and 2 MiB input o 3 The filter chain specified by
+unlzma, , ,filters2, , ,142,and 4 MiB input o 3 The filter chain specified by
+unlzma, , ,lzma1, , ,143, 
+unlzma, , ,x86, , ,144, 
+unlzma, , ,arm, , ,145, 
+unlzma, , ,armthumb, , ,146, 
+unlzma, , ,arm64, , ,147, 
+unlzma, , ,powerpc, , ,148, 
+unlzma, , ,ia64, , ,149, 
+unlzma, , ,sparc, , ,150, 
+unlzma, ,V,version, , ,151,Display the version number of xz and liblzma in human readable format
+unlzma, , ,rsyncable, , ,152,"has been implemented, the resulting files won't necessarily be rsyncable unle…"

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+renice, , ,priority, , ,101, 
+renice, , ,relative, , ,102, 
+renice, ,g,pgrp, , ,103, 
+renice, ,p,pid, , ,104, 
+renice, ,u,user, , ,105, 
+renice, ,h,help, , ,106, 
+renice, ,V,version, , ,107, 

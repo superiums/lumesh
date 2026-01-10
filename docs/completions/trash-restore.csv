@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+trash-restore, ,h,help, ,@f,101,show help message
+trash-restore, , ,print-completion,bash zsh tcsh,@f,102,print shell completion script(default: None)
+trash-restore, , ,sort,date path none,@f,103,sort candidates(default: date)
+trash-restore, , ,version, ,@f,104,show version number

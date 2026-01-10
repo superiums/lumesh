@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cut, ,b,bytes, , ,101,select only these bytes
+cut, ,c,characters, , ,102,select only these characters
+cut, ,d,delimiter, , ,103,use DELIM instead of TAB for field delimiter
+cut, ,f,fields, , ,104,"select only these fields;  also print any line that contains no delimiter cha…"
+cut, , ,complement, , ,105,"complement the set of selected bytes, characters or fields"
+cut, ,s,only-delimited, , ,106,do not print lines not containing delimiters
+cut, , ,output-delimiter, , ,107,use STRING as the output delimiter the default is to use the input delimiter
+cut, ,z,zero-terminated, , ,108,"line delimiter is NUL, not newline"
+cut, , ,help, , ,109,display this help and exit
+cut, , ,version, , ,110,output version information and exit 

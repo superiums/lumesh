@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ip, $ip_all_commands, , ,$ip_commands,@f,102, 
+ip, $ip_commands,h,human, , ,102,Output statistics with human readable values
+ip, $ip_commands,b,batch, , ,102,Read commands from file or stdin
+ip, $ip_commands, ,force, , ,102,Don't terminate on errors in batch mode
+ip, $ip_commands,V,Version, , ,102,Print the version
+ip, $ip_commands,s,stats, ,@f,102,Output more information
+ip, $ip_commands,d,details, ,@f,102,Output more detailed information
+ip, $ip_commands,l,loops, ,@f,102,Specify maximum number of loops for 'ip addr flush'
+ip, $ip_commands,f,family,inet inet6 bridge ipx dnet link any,@f,102,The protocol family to use
+ip, $ip_commands,4, , ,@f,102,Short for --family inet
+ip, $ip_commands,6, , ,@f,102,Short for --family inet6
+ip, $ip_commands,B, , ,@f,102,Short for --family bridge
+ip, $ip_commands,M, , ,@f,102,Short for --family mpls
+ip, $ip_commands,0, , ,@f,102,Short for --family link
+ip, $ip_commands,o,oneline, ,@f,102,Output on one line
+ip, $ip_commands,r,resolve, ,@f,102,Resolve names and print them instead of addresses
+ip, $ip_commands,n,netns, ,@f,102,Use specified network namespace
+ip, $ip_commands,a,all, ,@f,102,Execute command for all objects
+ip, $ip_commands,c,color, ,@f,102,Configure color output
+ip, $ip_commands,t,timestamp, ,@f,102,Display current time when using monitor
+ip, $ip_commands, ,tshort, ,@f,102,"Like -timestamp, but shorter format"
+ip, $ip_commands, ,rcvbuf, ,@f,102,Set the netlink socket receive buffer size
+ip, $ip_commands, , , ,@f,102,Print human readable rates in IEC units
+ip, $ip_commands, ,brief, ,@f,102,Print only basic information in a tabular format
+ip, $ip_commands,j,json, ,@f,102,Output results in JSON
+ip, $ip_commands,p,pretty, ,@f,102,Output results in pretty JSON

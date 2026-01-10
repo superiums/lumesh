@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tty, ,s,quiet, , ,101,"print nothing, only return an exit status"
+tty, , ,help, , ,102,display this help and exit
+tty, , ,version, , ,103,output version information and exit AUTHOR Written by David MacKenzie

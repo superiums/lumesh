@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hostnamectl, set-chassis chassis, , ,desktop laptop convertible server tablet handset watch embedded vm container, ,103, 
+hostnamectl, set-deployment deployment, , ,development integration staging production, ,104, 
+hostnamectl, , ,no-ask-password, , ,105,Don't query for authentication for privileged operations
+hostnamectl, , ,static, , ,106,Get or set static hostname
+hostnamectl, , ,transient, , ,107,Get or set transient hostname
+hostnamectl, , ,pretty, , ,108,Get or set pretty hostname
+hostnamectl, ,H,host, ,@f @r,109,Execute operation on remote host
+hostnamectl, ,M,machine, ,@f @r,110,Execute operation on local container
+hostnamectl, ,h,help, , ,111,Print short help
+hostnamectl, , ,version, , ,112,Print version
+hostnamectl, , ,json,short pretty off, ,113,Show output as JSON

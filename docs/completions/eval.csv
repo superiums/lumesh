@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+eval, ,h,help, , ,101,Display help and exit

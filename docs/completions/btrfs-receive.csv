@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-receive, ,C,chroot, , ,101,confine the process to path using \\X'tty: link https://man7
+btrfs-receive, ,E,max-errors, , ,102,terminate as soon as NERR errors occur while stream processing commands from …
+btrfs-receive, , ,force-decompress, , ,103,if the stream contains compressed data (see --compressed-data in \\%btrfs-send…
+btrfs-receive, , ,dump, , ,104,"dump the stream metadata, one line per operation "
+btrfs-receive, ,q,quiet, , ,105,(deprecated) alias for global -q option . UNINDENT NDENT 0. 0
+btrfs-receive, , ,verbose, , ,106,"increase verbosity about performed actions, print details about each operation"

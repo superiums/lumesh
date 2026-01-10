@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wall, ,n,nobanner, , ,101, 
+wall, ,t,timeout, , ,102, 
+wall, ,g,group, , ,103, 
+wall, ,h,help, , ,104, 
+wall, ,V,version, , ,105, 

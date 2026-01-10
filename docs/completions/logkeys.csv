@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+logkeys, ,s,start, , ,101,Starts the keylogging daemon
+logkeys, ,k,kill, , ,102,Terminates the logkeys daemon
+logkeys, ,o,output, , ,103,Set output LOGFILE
+logkeys, ,d,device, , ,105,Use DEVICE as keyboard input
+logkeys, , ,export-keymap, , ,107,Export dynamic KEYMAP to file
+logkeys, , ,no-func-keys, , ,108,Log only character key presses
+logkeys, , ,no-timestamps, , ,109,No timestamp to each line of log
+logkeys, , ,post-size, , ,110,"On SIZE, rotate current logfile"
+logkeys, , ,post-http, , ,111,POST the log file to URL

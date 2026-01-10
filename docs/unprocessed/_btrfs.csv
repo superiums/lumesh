@@ -1,0 +1,354 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs, __fish_is_first_arg, , ,check,@f,102,Check structural integrity of a filesystem (unmounted).
+btrfs, __fish_is_first_arg, , ,restore,@f,103,Try to restore files from a damaged filesystem (unmounted)
+btrfs, __fish_is_first_arg, , ,send,@f,104,Send the subvolume(s) to stdout.
+btrfs, __fish_is_first_arg, , ,receive,@f,105,Receive subvolumes from a stream
+btrfs, __fish_is_first_arg, , ,help,@f,106,Display help information
+btrfs, __fish_is_first_arg, , ,version,@f,107,Display btrfs-progs version
+btrfs, __fish_is_first_arg, , ,subvolume,@f,108,"manage subvolumes: create, delete, list, etc"
+btrfs, __fish_is_first_arg, , ,filesystem,@f,109,overall filesystem tasks and information
+btrfs, __fish_is_first_arg, , ,balance,@f,110,"balance data across devices, or change block groups using filters"
+btrfs, __fish_is_first_arg, , ,device,@f,111,manage and query devices in the filesystem
+btrfs, __fish_is_first_arg, , ,scrub,@f,112,verify checksums of data and metadata
+btrfs, __fish_is_first_arg, , ,rescue,@f,113,toolbox for specific rescue operations
+btrfs, __fish_is_first_arg, , ,inspect-internal,@f,114,query various internal information
+btrfs, __fish_is_first_arg, , ,property,@f,115,modify properties of filesystem objects
+btrfs, __fish_is_first_arg, , ,quota,@f,116,manage filesystem quota settings
+btrfs, __fish_is_first_arg, , ,qgroup,@f,117,manage quota groups
+btrfs, __fish_is_first_arg, , ,replace,@f,118,replace a device in the filesystem
+btrfs, $check,s,super, ,@f,119,Use this SUPERBLOCK copy
+btrfs, $check,b,backup, ,@f,120,Use the first valid BACKUP root copy
+btrfs, $check,r,tree-root, ,@f,121,Use the given bytenr for the TREE root
+btrfs, $check, ,chunk-root, ,@f,122,Use the given bytenr for the CHUNK-TREE root
+btrfs, $check, ,readonly, ,@f,123,Run in read-only mode
+btrfs, $check, ,repair, ,@f,124,Try to repair the filesystem
+btrfs, $check, ,force, ,@f,125,"Skip mount checks, repair is not possible"
+btrfs, $check, ,mode,{original,lowmem},@f,126,Allows choice of memory/IO trade-offs
+btrfs, $check, ,init-csum-tree, ,@f,127,Create a new CRC tree (repair only)
+btrfs, $check, ,init-extent-tree, ,@f,128,Create a new extent tree (repair only)
+btrfs, $check, ,clear-space-cache,{v1,v2},@f,129,clear space cache (repair only)
+btrfs, $check, ,check-data-csum, ,@f,130,Verify checksums of data blocks
+btrfs, $check,Q,qgroup-report, ,@f,131,Print a report on qgroup consistency
+btrfs, $check,E,subvol-extents, ,@f,132,Print subvolume extents and sharing state
+btrfs, $check,p,progress, ,@f,133,Indicate progress
+btrfs, $restore,s,snapshots, ,@f,134,Get snapshots
+btrfs, $restore,x,xattr, ,@f,135,Restore extended attributes
+btrfs, $restore,m,metadata, ,@f,136,"Restore owner, mode and times"
+btrfs, $restore,S,symlink, ,@f,137,Restore symbolic links
+btrfs, $restore,v,verbose, ,@f,138,Verbose
+btrfs, $restore,i,ignore-errors, ,@f,139,Ignore errors
+btrfs, $restore,o,overwrite, ,@f,140,Overwrite
+btrfs, $restore,t, , ,@f @r,141,Tree location
+btrfs, $restore,f, , ,@f @r,142,Filesystem location
+btrfs, $restore,u,super, ,@f @r,143,Super mirror
+btrfs, $restore,r,root, ,@f @r,144,Root objectid
+btrfs, $restore,d, , ,@f,145,Find dir
+btrfs, $restore,l,list-roots, ,@f,146,List tree roots
+btrfs, $restore,D,dry-run, ,@f,147,Only list files that would be recovered
+btrfs, $restore, ,path-regex, ,@f @r,148,Restore only filenames matching regex
+btrfs, $restore,c, , ,@f,149,Ignore case (--path-regex only)
+btrfs, $send,e, , ,@f,150,
+btrfs, $send,p, , ,@f @r,151,Send an incremental stream from <parent> to <subvol>
+btrfs, $send,c, , ,@f @r,152,Use this snapshot as a clone source for an incremental send
+btrfs, $send,f, , ,@f @r,153,Output is normally written to stdout
+btrfs, $send, ,no-data, ,@f,154,send in NO_FILE_DATA mode
+btrfs, $send,v,verbose, ,@f,155,Enable verbose output to stderr
+btrfs, $send,q,quiet, ,@f,156,"Suppress all messages, except errors"
+btrfs, $send, ,proto,0 1 2,@f @r,157,Use send protocol version
+btrfs, $send, ,compressed-data, ,@f,158,Send compressed data directly
+btrfs, $receive,v, , ,@f,159,Increase verbosity about performed actions
+btrfs, $receive,q,quiet, ,@f,160,"Suppress all messages, except errors"
+btrfs, $receive,f, , ,@f @r,161,Read the stream from FILE instead of stdin
+btrfs, $receive,e, , ,@f,162,Terminate after receiving an <end cmd> marker in the stream
+btrfs, $receive,C,chroot, ,@f,163,Confine the process to <mount> using chroot
+btrfs, $receive,E,max-errors, ,@f @r,164,Terminate when NUMBER errors occur
+btrfs, $receive,m, , ,@f @r,165,The root mount point of the destination filesystem
+btrfs, $receive, ,force-decompress, ,@f @r,166,Always decompress data
+btrfs, $receive, ,dump, ,@f,167,Dump stream metadata
+btrfs, $help, ,full, ,@f,168,Display detailed help on every command
+btrfs, $help, ,box, ,@f,169,Show list of built-in tools (busybox style)
+btrfs, $subvolume, , ,create,@f,170,Create a subvolume
+btrfs, $subvolume, , ,delete,@f,171,Delete subvolume(s)
+btrfs, $subvolume, , ,list,@f,172,List subvolumes and snapshots in the filesystem.
+btrfs, $subvolume, , ,snapshot,@f,173,Create a snapshot of the subvolume
+btrfs, $subvolume, , ,get-default,@f,174,Get the default subvolume of a filesystem
+btrfs, $subvolume, , ,set-default,@f,175,Set the default subvolume of the filesystem mounted as default.
+btrfs, $subvolume, , ,find-new,@f,176,List the recently modified files in a filesystem
+btrfs, $subvolume, , ,show,@f,177,Show more information about the subvolume
+btrfs, $subvolume, , ,sync,@f,178,Wait until given subvolume(s) are completely removed from the filesystem.
+btrfs, __btrfs_command_groups subvolume create,i, , ,@f,179,Add subvolume to a qgroup (can be given multiple times)
+btrfs, __btrfs_command_groups subvolume create,p, , ,@f,180,Create any missing parent directories
+btrfs, __btrfs_command_groups subvolume delete,c,commit-after, ,@f,181,Wait for transaction commit at the end of the operation
+btrfs, __btrfs_command_groups subvolume delete,C,commit-each, ,@f,182,Wait for transaction commit after deleting each subvolume
+btrfs, __btrfs_command_groups subvolume delete,R,recursive, ,@f,183,Delete subvolumes beneath each subvolume recursively
+btrfs, __btrfs_command_groups subvolume delete,v,verbose, ,@f,184,Verbose output of operations
+btrfs, __btrfs_command_groups subvolume list,o, , ,@f,185,Print only subvolumes below specified path
+btrfs, __btrfs_command_groups subvolume list,a, , ,@f,186,Print all the subvolumes and absolute and relative path
+btrfs, __btrfs_command_groups subvolume list,p, , ,@f,187,Print parent ID
+btrfs, __btrfs_command_groups subvolume list,c, , ,@f,188,Print the ogeneration of the subvolume
+btrfs, __btrfs_command_groups subvolume list,g, , ,@f,189,Print the generation of the subvolume
+btrfs, __btrfs_command_groups subvolume list,u, , ,@f,190,Print the uuid of subvolumes (and snapshots)
+btrfs, __btrfs_command_groups subvolume list,q, , ,@f,191,Print the parent uuid of the snapshots
+btrfs, __btrfs_command_groups subvolume list,R, , ,@f,192,Print the uuid of the received snapshots
+btrfs, __btrfs_command_groups subvolume list,s, , ,@f,193,List only snapshots
+btrfs, __btrfs_command_groups subvolume list,r, , ,@f,194,List readonly subvolumes (including snapshots)
+btrfs, __btrfs_command_groups subvolume list,d, , ,@f,195,List deleted subvolumes that are not yet cleaned
+btrfs, __btrfs_command_groups subvolume list,t, , ,@f,196,Print the result as a table
+btrfs, __btrfs_command_groups subvolume list,G, , ,@f @r,197,Filter the subvolumes by generation
+btrfs, __btrfs_command_groups subvolume list,C, , ,@f @r,198,Filter the subvolumes by ogeneration
+btrfs, __btrfs_command_groups subvolume list, ,sort,{gen,ogen,rootid,path},@f,199,List the subvolume in order
+btrfs, __btrfs_command_groups subvolume snapshot,r, , ,@f,200,Create a readonly snapshot
+btrfs, __btrfs_command_groups subvolume snapshot,i, , ,@f,201,Add snapshot to a qgroup (can be given multiple times)
+btrfs, __btrfs_command_groups subvolume show,r,rootid, ,@f,202,Show rootid of the subvolume
+btrfs, __btrfs_command_groups subvolume show,u,uuid, ,@f,203,Show uuid of the subvolume
+btrfs, __btrfs_command_groups subvolume show,b,raw, ,@f,204,Show raw numbers in bytes
+btrfs, __btrfs_command_groups subvolume show,h,human-readable, ,@f,205,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups subvolume show,H, , ,@f,206,"Show human friendly numbers, base 1000"
+btrfs, __btrfs_command_groups subvolume show, ,iec, ,@f,207,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups subvolume show, ,si, ,@f,208,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups subvolume show,k,kbytes, ,@f,209,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups subvolume show,m,mbytes, ,@f,210,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups subvolume show,g,gbytes, ,@f,211,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups subvolume show,t,tbytes, ,@f,212,"Show sizes in TiB, or TB with --si"
+btrfs, __btrfs_command_groups subvolume sync,s, , ,@f,213,Sleep NUMBER seconds between checks
+btrfs, $filesystem, , ,df,@f,214,Show space usage information for a mount point
+btrfs, $filesystem, , ,du,@f,215,Summarize disk usage of each file.
+btrfs, $filesystem, , ,show,@f,216,Show the structure of a filesystem
+btrfs, $filesystem, , ,sync,@f,217,Force a sync on a filesystem
+btrfs, $filesystem, , ,defragment,@f,218,Defragment a file or a directory
+btrfs, $filesystem, , ,resize,@f,219,Resize a filesystem
+btrfs, $filesystem, , ,label,@f,220,Get or change the label of a filesystem
+btrfs, $filesystem, , ,usage,@f,221,Show detailed information about internal filesystem usage.
+btrfs, $filesystem, , ,mkswapfile,@f,222,Create a new swapfile
+btrfs, __btrfs_command_groups filesystem df,b,raw, ,@f,223,Show raw numbers in bytes
+btrfs, __btrfs_command_groups filesystem df,h,human-readable, ,@f,224,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups filesystem df,H, , ,@f,225,"Show human friendly numbers, base 1000"
+btrfs, __btrfs_command_groups filesystem df, ,iec, ,@f,226,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups filesystem df, ,si, ,@f,227,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups filesystem df,k,kbytes, ,@f,228,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups filesystem df,m,mbytes, ,@f,229,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups filesystem df,g,gbytes, ,@f,230,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups filesystem df,t,tbytes, ,@f,231,"Show sizes in TiB, or TB with --si"
+btrfs, __btrfs_command_groups filesystem du,s,summarize, ,@f,232,Display only a total for each argument
+btrfs, __btrfs_command_groups filesystem du, ,raw, ,@f,233,Show raw numbers in bytes
+btrfs, __btrfs_command_groups filesystem du, ,human-readable, ,@f,234,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups filesystem du, ,iec, ,@f,235,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups filesystem du, ,si, ,@f,236,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups filesystem du, ,kbytes, ,@f,237,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups filesystem du, ,mbytes, ,@f,238,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups filesystem du, ,gbytes, ,@f,239,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups filesystem du, ,tbytes, ,@f,240,"Show sizes in TiB, or TB with --si"
+btrfs, __btrfs_command_groups filesystem show,d,all-devices, ,@f,241,Show only disks under /dev containing btrfs filesystem
+btrfs, __btrfs_command_groups filesystem show,m,mounted, ,@f,242,Show only mounted btrfs
+btrfs, __btrfs_command_groups filesystem show, ,raw, ,@f,243,Show raw numbers in bytes
+btrfs, __btrfs_command_groups filesystem show, ,human-readable, ,@f,244,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups filesystem show, ,iec, ,@f,245,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups filesystem show, ,si, ,@f,246,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups filesystem show, ,kbytes, ,@f,247,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups filesystem show, ,mbytes, ,@f,248,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups filesystem show, ,gbytes, ,@f,249,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups filesystem show, ,tbytes, ,@f,250,"Show sizes in TiB, or TB with --si"
+btrfs, __btrfs_command_groups filesystem defragment,v, , ,@f,251,Be verbose
+btrfs, __btrfs_command_groups filesystem defragment,r, , ,@f,252,Defragment files recursively
+btrfs, __btrfs_command_groups filesystem defragment,c, ,{zlib,lzo,zstd},@f,253,Compress the file while defragmenting
+btrfs, __btrfs_command_groups filesystem defragment,f, , ,@f,254,Flush data to disk immediately after defragmenting
+btrfs, __btrfs_command_groups filesystem defragment,s, , ,@f @r,255,Defragment only from NUMBER byte onward
+btrfs, __btrfs_command_groups filesystem defragment,l, , ,@f @r,256,Defragment only up to LEN bytes
+btrfs, __btrfs_command_groups filesystem defragment,t, , ,@f @r,257,Target extent SIZE hint
+btrfs, __btrfs_command_groups filesystem defragment, ,step, ,@f @r,258,Defragment in steps of SIZE
+btrfs, __btrfs_command_groups filesystem defragment,L,level, ,@f @r,259,Specify compression levels
+btrfs, __btrfs_command_groups filesystem usage,b,raw, ,@f,260,Show raw numbers in bytes
+btrfs, __btrfs_command_groups filesystem usage,h,human-readable, ,@f,261,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups filesystem usage,H, , ,@f,262,"Show human friendly numbers, base 1000"
+btrfs, __btrfs_command_groups filesystem usage, ,iec, ,@f,263,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups filesystem usage, ,si, ,@f,264,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups filesystem usage,k,kbytes, ,@f,265,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups filesystem usage,m,mbytes, ,@f,266,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups filesystem usage,g,gbytes, ,@f,267,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups filesystem usage,t,tbytes, ,@f,268,"Show sizes in TiB, or TB with --si"
+btrfs, __btrfs_command_groups filesystem usage,T, , ,@f,269,Show data in tabular format
+btrfs, __btrfs_command_groups filesystem mkswapfile,s,size, ,@f @r,270,Swapfile size
+btrfs, __btrfs_command_groups filesystem mkswapfile,U,uuid, ,@f @r,271,UUID for the swapfile
+btrfs, __btrfs_command_groups filesystem resize, ,enqueue, ,@f,272,Wait for other exclusive operations
+btrfs, $balance, , ,start,@f,273,Balance chunks across the devices
+btrfs, $balance, , ,pause,@f,274,Pause running balance
+btrfs, $balance, , ,cancel,@f,275,Cancel running or paused balance
+btrfs, $balance, , ,resume,@f,276,Resume interrupted balance
+btrfs, $balance, , ,status,@f,277,Show status of running or paused balance
+btrfs, __btrfs_command_groups balance start,d, , ,@f,278,Act on data chunks with FILTERS
+btrfs, __btrfs_command_groups balance start,m, , ,@f,279,Act on metadata chunks with FILTERS
+btrfs, __btrfs_command_groups balance start,s, , ,@f,280,Act on system chunks with FILTERS (only under -f)
+btrfs, __btrfs_command_groups balance start,v, , ,@f,281,Be verbose
+btrfs, __btrfs_command_groups balance start,f, , ,@f,282,Force a reduction of metadata integrity
+btrfs, __btrfs_command_groups balance start, ,full-balance, ,@f,283,Do not print warning and do not delay start
+btrfs, __btrfs_command_groups balance start, ,bg, ,@f,284,Run the balance as a background process
+btrfs, __btrfs_command_groups balance start, ,enqueue, ,@f,285,Wait for other exclusive operations
+btrfs, __btrfs_command_groups balance status,v, , ,@f,286,Be verbose
+btrfs, $device, , ,add,@f,287,Add one or more devices to a mounted filesystem.
+btrfs, $device, , ,delete,@f,288,Remove a device from a filesystem
+btrfs, $device, , ,remove,@f,289,Remove a device from a filesystem
+btrfs, $device, , ,scan,@f,290,Scan or forget (unregister) devices of btrfs filesystems
+btrfs, $device, , ,ready,@f,291,Check and wait until a group of devices of a filesystem is ready for mount
+btrfs, $device, , ,stats,@f,292,Show device IO error statistics
+btrfs, $device, , ,usage,@f,293,Show detailed information about internal allocations in devices.
+btrfs, __btrfs_command_groups device add,K,nodiscard, ,@f,294,Do not perform TRIM on DEVICES
+btrfs, __btrfs_command_groups device add,f,force, ,@f,295,Force overwrite existing filesystem on the disk
+btrfs, __btrfs_command_groups device scan,d,all-devices, ,@f,296,Enumerate and register all devices
+btrfs, __btrfs_command_groups device scan,u,forget, ,@f,297,Unregister a given device or all stale devices
+btrfs, __btrfs_command_groups device stats,c,check, ,@f,298,Return non-zero if any stat counter is not zero
+btrfs, __btrfs_command_groups device stats,z,reset, ,@f,299,Show current stats and reset values to zero
+btrfs, __btrfs_command_groups device stats,T, , ,@f,300,Print stats in a tabular form
+btrfs, __btrfs_command_groups device remove, ,enqueue, ,@f,301,Wait for other exclusive operations
+btrfs, __btrfs_command_groups device remove, ,force, ,@f,302,Skip the safety timeout for removing multiple devices
+btrfs, __btrfs_command_groups device usage,b,raw, ,@f,303,Show raw numbers in bytes
+btrfs, __btrfs_command_groups device usage,h,human-readable, ,@f,304,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups device usage,H, , ,@f,305,"Show human friendly numbers, base 1000"
+btrfs, __btrfs_command_groups device usage, ,iec, ,@f,306,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups device usage, ,si, ,@f,307,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups device usage,k,kbytes, ,@f,308,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups device usage,m,mbytes, ,@f,309,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups device usage,g,gbytes, ,@f,310,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups device usage,t,tbytes, ,@f,311,"Show sizes in TiB, or TB with --si"
+btrfs, $scrub, , ,start,@f,312,"Start a new scrub. If a scrub is already running, the new one fails."
+btrfs, $scrub, , ,cancel,@f,313,Cancel a running scrub
+btrfs, $scrub, , ,resume,@f,314,Resume previously canceled or interrupted scrub
+btrfs, $scrub, , ,status,@f,315,Show status of running or finished scrub
+btrfs, $scrub, , ,limit,@f,316,Show or set scrub limits on devices of the given filesystem
+btrfs, __btrfs_command_groups scrub limit,d,devid, ,@f,317,Select the device by DEVID to apply the limit
+btrfs, __btrfs_command_groups scrub limit,l,limit, ,@f,318,Set the limit of the device
+btrfs, __btrfs_command_groups scrub limit,a,all, ,@f,319,Apply the limit to all devices
+btrfs, __btrfs_command_groups scrub start,B, , ,@f,320,Do not background
+btrfs, __btrfs_command_groups scrub start,d, , ,@f,321,Stats per device (-B only)
+btrfs, __btrfs_command_groups scrub start,q, , ,@f,322,Be quiet
+btrfs, __btrfs_command_groups scrub start,r, , ,@f,323,Read only mode
+btrfs, __btrfs_command_groups scrub start,R, , ,@f,324,"Raw print mode, print full data instead of summary"
+btrfs, __btrfs_command_groups scrub start, ,limit, ,@f,325,Set the scrub throughput limit
+btrfs, __btrfs_command_groups scrub start,c, , ,@f,326,Set ioprio class (see ionice(1) manpage)
+btrfs, __btrfs_command_groups scrub start,n, , ,@f,327,Set ioprio classdata (see ionice(1) manpage)
+btrfs, __btrfs_command_groups scrub start,f, , ,@f,328,Force starting new scrub
+btrfs, __btrfs_command_groups scrub resume,B, , ,@f,329,Do not background
+btrfs, __btrfs_command_groups scrub resume,d, , ,@f,330,Stats per device (-B only)
+btrfs, __btrfs_command_groups scrub resume,q, , ,@f,331,Be quiet
+btrfs, __btrfs_command_groups scrub resume,r, , ,@f,332,Read only mode
+btrfs, __btrfs_command_groups scrub resume,R, , ,@f,333,"Raw print mode, print full data instead of summary"
+btrfs, __btrfs_command_groups scrub resume,c, , ,@f,334,Set ioprio class (see ionice(1) manpage)
+btrfs, __btrfs_command_groups scrub resume,n, , ,@f,335,Set ioprio classdata (see ionice(1) manpage)
+btrfs, __btrfs_command_groups scrub status,d, , ,@f,336,Stats per DEVICE
+btrfs, __btrfs_command_groups scrub status,R, , ,@f,337,Print raw stats
+btrfs, $rescue, , ,chunk-recover,@f,338,Recover the chunk tree by scanning the devices one by one.
+btrfs, $rescue, , ,super-recover,@f,339,Recover bad superblocks from good copies
+btrfs, $rescue, , ,zero-log,@f,340,Clear the tree log. Usable if it's corrupted and prevents mount.
+btrfs, $rescue, , ,fix-device-size,@f,341,Re-align device and super block sizes
+btrfs, $rescue, , ,clear-ino-cache,@f,342,Remove leftover items pertaining to the deprecated inode cache feature
+btrfs, $rescue, , ,clear-space-cache,@f,343,Completely remove the on-disk data of free space cache of given version
+btrfs, $rescue, , ,clear-uuid-tree,@f,344,Clear the UUID tree
+btrfs, __btrfs_command_groups rescue chunk-recover,y, , ,@f,345,Assume an answer of YES to all questions
+btrfs, __btrfs_command_groups rescue chunk-recover,v, , ,@f,346,Verbose mode
+btrfs, __btrfs_command_groups rescue super-recover,y, , ,@f,347,Assume an answer of YES to all questions
+btrfs, __btrfs_command_groups rescue super-recover,v, , ,@f,348,Verbose mode
+btrfs, $inspect_internal, , ,inode-resolve,@f,349,Get file system paths for the given inode
+btrfs, $inspect_internal, , ,logical-resolve,@f,350,Get file system paths for the given logical address
+btrfs, $inspect_internal, , ,subvolid-resolve,@f,351,Get file system paths for the given subvolume ID.
+btrfs, $inspect_internal, , ,rootid,@f,352,Get tree ID of the containing subvolume of path.
+btrfs, $inspect_internal, , ,min-dev-size,@f,353,Get the minimum size the device can be shrunk to. (Default: 1)
+btrfs, $inspect_internal, , ,dump-tree,@f,354,Dump tree structures from a given device
+btrfs, $inspect_internal, , ,dump-super,@f,355,Dump superblock from a device in a textual form
+btrfs, $inspect_internal, , ,tree-stats,@f,356,Print various stats for trees
+btrfs, $inspect_internal, , ,list-chunks,@f,357,Enumerate chunks on all devices
+btrfs, $inspect_internal, , ,map-swapfile,@f,358,Find device-specific physical offset of file that can be used for hibernation
+btrfs, __btrfs_command_groups inspect-internal inode-resolve,v, , ,@f,359,Verbose mode
+btrfs, __btrfs_command_groups inspect-internal logical-resolve,P, , ,@f,360,Skip the path resolving and print the inodes instead
+btrfs, __btrfs_command_groups inspect-internal logical-resolve,v, , ,@f,361,Verbose mode
+btrfs, __btrfs_command_groups inspect-internal logical-resolve,s, , ,@f,362,Set inode container's SIZE
+btrfs, __btrfs_command_groups inspect-internal min-dev-size, ,id, ,@f,363,Specify the DEVICE-ID to query
+btrfs, __btrfs_command_groups inspect-internal dump-tree,e,extents, ,@f,364,Print only extent info: extent and device trees
+btrfs, __btrfs_command_groups inspect-internal dump-tree,d,device, ,@f,365,"Print only device info: tree root, chunk and device trees"
+btrfs, __btrfs_command_groups inspect-internal dump-tree,r,roots, ,@f,366,Print only short root node info
+btrfs, __btrfs_command_groups inspect-internal dump-tree,R,backups, ,@f,367,Print short root node info and backup root info
+btrfs, __btrfs_command_groups inspect-internal dump-tree,u,uuid, ,@f,368,Print only the uuid tree
+btrfs, __btrfs_command_groups inspect-internal dump-tree,b,block, ,@f @r,369,Print info from the specified BLOCK only
+btrfs, __btrfs_command_groups inspect-internal dump-tree,t,tree, ,@f @r,370,Print only tree with the given ID
+btrfs, __btrfs_command_groups inspect-internal dump-tree, ,follow, ,@f,371,"Use with -b, to show all children tree blocks of <block_num>"
+btrfs, __btrfs_command_groups inspect-internal dump-tree, ,noscan, ,@f,372,Do not scan the devices from the filesystem
+btrfs, __btrfs_command_groups inspect-internal dump-tree, ,bfs, ,@f,373,"Breadth-first traversal of the trees, print nodes, then leaves"
+btrfs, __btrfs_command_groups inspect-internal dump-tree, ,dfs, ,@f,374,Depth-first traversal of the trees
+btrfs, __btrfs_command_groups inspect-internal dump-tree, ,hide-names, ,@f,375,Print placeholder instead of names
+btrfs, __btrfs_command_groups inspect-internal dump-tree, ,csum-headers, ,@f,376,Print b-tree node checksums in headers
+btrfs, __btrfs_command_groups inspect-internal dump-tree, ,csum-items, ,@f,377,Print checksums stored in checksum items
+btrfs, __btrfs_command_groups inspect-internal dump-super,f,full, ,@f,378,"Print full superblock information, backup roots etc."
+btrfs, __btrfs_command_groups inspect-internal dump-super,a,all, ,@f,379,Print information about all superblocks
+btrfs, __btrfs_command_groups inspect-internal dump-super,s,super,{0,1,2},@f,380,Specify which SUPER-BLOCK copy to print out
+btrfs, __btrfs_command_groups inspect-internal dump-super,F,force, ,@f,381,Attempt to dump superblocks with bad magic
+btrfs, __btrfs_command_groups inspect-internal dump-super, ,bytenr, ,@f,382,Specify alternate superblock OFFSET
+btrfs, __btrfs_command_groups logical-resolve,P, , ,@f,383,Print inodes instead of resolving paths
+btrfs, __btrfs_command_groups logical-resolve,o, , ,@f,384,"Ignore offsets, find all references to an extent"
+btrfs, __btrfs_command_groups logical-resolve,s, , ,@f @r,385,Set internal buffer size for storing file names
+btrfs, __btrfs_command_groups inspect-internal tree-stats,b, , ,@f,386,Show raw numbers in bytes
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,sort,devid pstart lstart usage length,@f,387,Sort by a column (ascending)
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,raw, ,@f,388,Show raw numbers in bytes
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,human-readable, ,@f,389,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,iec, ,@f,390,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,si, ,@f,391,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,kbytes, ,@f,392,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,mbytes, ,@f,393,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,gbytes, ,@f,394,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups inspect-internal list-chunks, ,tbytes, ,@f,395,"Show sizes in TiB, or TB with --si"
+btrfs, __btrfs_command_groups inspect-internal map-swapfile,r,resume-offset, ,@f,396,Print the value suitable as resume offset for /sys/power/resume_offset.
+btrfs, __btrfs_command_groups inspect-internal tree-stats,t, , ,@f @r,397,Print stats only for the given treeid
+btrfs, __btrfs_command_groups inspect-internal tree-stats,b,raw, ,@f,398,Show raw numbers in bytes
+btrfs, __btrfs_command_groups inspect-internal tree-stats, ,human-readable, ,@f,399,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups inspect-internal tree-stats, ,iec, ,@f,400,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups inspect-internal tree-stats, ,si, ,@f,401,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups inspect-internal tree-stats, ,kbytes, ,@f,402,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups inspect-internal tree-stats, ,mbytes, ,@f,403,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups inspect-internal tree-stats, ,gbytes, ,@f,404,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups inspect-internal tree-stats, ,tbytes, ,@f,405,"Show sizes in TiB, or TB with --si"
+btrfs, $property, , ,get,@f,406,Get a property value of a btrfs object
+btrfs, $property, , ,set,@f,407,Set a property on a btrfs object
+btrfs, $property, , ,list,@f,408,Lists available properties with their descriptions for the given object
+btrfs, __btrfs_command_groups property get,t, ,{inode,subvol,filesystem,device},@f,409,List properties for the given object type
+btrfs, __btrfs_command_groups property set,t, ,{inode,subvol,filesystem,device},@f,410,List properties for the given object type
+btrfs, __btrfs_command_groups property list,t, ,{inode,subvol,filesystem,device},@f,411,List properties for the given object type
+btrfs, $quota, , ,enable,@f,412,Enable subvolume quota support for a filesystem.
+btrfs, $quota, , ,disable,@f,413,Disable subvolume quota support for a filesystem.
+btrfs, $quota, , ,rescan,@f,414,Trash all qgroup numbers and scan the metadata again with the current config.
+btrfs, __btrfs_command_groups quota enable,s,simple, ,@f,415,Use simple quotas
+btrfs, __btrfs_command_groups quota rescan,s,status, ,@f,416,Show status of a running rescan operation
+btrfs, __btrfs_command_groups quota rescan,w,wait, ,@f,417,Wait for rescan operation to finish
+btrfs, __btrfs_command_groups quota rescan,W,wait-norescan, ,@f,418,Wait for rescan to finish without starting it
+btrfs, $qgroup, , ,assign,@f,419,Assign SRC as the child qgroup of DST
+btrfs, $qgroup, , ,remove,@f,420,Remove a child qgroup SRC from DST.
+btrfs, $qgroup, , ,create,@f,421,Create a subvolume quota group.
+btrfs, $qgroup, , ,destroy,@f,422,Destroy a quota group.
+btrfs, $qgroup, , ,show,@f,423,Show subvolume quota groups.
+btrfs, $qgroup, , ,clear-stale,@f,424,Clear all stale qgroups whose subvolume does not exist
+btrfs, $qgroup, , ,limit,@f,425,Set the limits a subvolume quota group.
+btrfs, __btrfs_command_groups qgroup assign, ,rescan, ,@f,426,Schedule qutoa rescan if needed
+btrfs, __btrfs_command_groups qgroup assign, ,no-rescan, ,@f,427,Don't schedule quota rescan
+btrfs, __btrfs_command_groups qgroup show,p, , ,@f,428,Print parent qgroup id
+btrfs, __btrfs_command_groups qgroup show,c, , ,@f,429,Print child qgroup id
+btrfs, __btrfs_command_groups qgroup show,r, , ,@f,430,Print limit of referenced size of qgroup
+btrfs, __btrfs_command_groups qgroup show,e, , ,@f,431,Print limit of exclusive size of qgroup
+btrfs, __btrfs_command_groups qgroup show,F, , ,@f,432,List all qgroups including ancestral qgroups
+btrfs, __btrfs_command_groups qgroup show,f, , ,@f,433,List all qgroups excluding ancestral qgroups
+btrfs, __btrfs_command_groups qgroup show, ,raw, ,@f,434,Show raw numbers in bytes
+btrfs, __btrfs_command_groups qgroup show, ,human-readable, ,@f,435,"Show human friendly numbers, base 1024"
+btrfs, __btrfs_command_groups qgroup show, ,iec, ,@f,436,"Use 1024 as a base (KiB, MiB, GiB, TiB)"
+btrfs, __btrfs_command_groups qgroup show, ,si, ,@f,437,"Use 1000 as a base (kB, MB, GB, TB)"
+btrfs, __btrfs_command_groups qgroup show, ,kbytes, ,@f,438,"Show sizes in KiB, or kB with --si"
+btrfs, __btrfs_command_groups qgroup show, ,mbytes, ,@f,439,"Show sizes in MiB, or MB with --si"
+btrfs, __btrfs_command_groups qgroup show, ,gbytes, ,@f,440,"Show sizes in GiB, or GB with --si"
+btrfs, __btrfs_command_groups qgroup show, ,tbytes, ,@f,441,"Show sizes in TiB, or TB with --si"
+btrfs, __btrfs_command_groups qgroup show, ,sort,{qgroupid,rfer,excl,max_rfer,max_excl},@f,442,List qgroups sorted by specified items
+btrfs, __btrfs_command_groups qgroup show, ,sync, ,@f,443,Force sync of the filesystem before getting info
+btrfs, __btrfs_command_groups qgroup limit,c, , ,@f,444,Limit amount of data after compression
+btrfs, __btrfs_command_groups qgroup limit,e, , ,@f,445,Limit space exclusively assigned to this qgroup
+btrfs, $replace, , ,start,@f,446,Replace device of a btrfs filesystem.
+btrfs, $replace, , ,status,@f,447,Print status and progress information of a running device replace
+btrfs, $replace, , ,cancel,@f,448,Cancel a running device replace operation.
+btrfs, __btrfs_command_groups replace start,r, , ,@f,449,Only read from <srcdev> if no other zero-defect mirror exists
+btrfs, __btrfs_command_groups replace start,f, , ,@f,450,Force using and overwriting <targetdev>
+btrfs, __btrfs_command_groups replace start,B, , ,@f,451,Do not background
+btrfs, __btrfs_command_groups replace start, ,enqueue, ,@f,452,Wait if there's another exclusive operation running
+btrfs, __btrfs_command_groups replace start,K,nodiscard, ,@f,453,Do not perform TRIM on DEVICES
+btrfs, __btrfs_command_groups replace status,1, , ,@f,454,Only print once until the replace operation finishes

@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gorename, , ,diffcmd, , ,101,Diff command invoked when using -d
+gorename, , ,force, , ,102,"Proceed, even if conflicts were reported"
+gorename, , ,from, , ,103,Identifier to be renamed
+gorename, , ,help, , ,104,Show usage message
+gorename, , ,offset, , ,105,File and byte offset of identifier to be renamed
+gorename, , ,tags, , ,106,Build tag
+gorename, , ,to, , ,107,New name for identifier
+gorename, ,h,help, , ,108,Show help

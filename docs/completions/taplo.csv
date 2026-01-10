@@ -1,0 +1,92 @@
+cmd,conds,short,long,params,dirs,pri,desc
+taplo, lint,c,config, ,@r,114,Path to the Taplo configuration file
+taplo, lint, ,cache-path, ,@r,115,Set a cache path
+taplo, lint, ,schema, , ,116,URL to the schema to be used for validation
+taplo, lint, ,schema-catalog, , ,117,URL to a schema catalog (index) that is compatible with Schema Store or Taplo catalogs
+taplo, lint, ,colors,{auto	_,always	_,never	_},@f @r,118, 
+taplo, lint, ,no-auto-config, , ,119,Do not search for a configuration file
+taplo, lint, ,default-schema-catalogs, , ,120,Use the default online catalogs for schemas
+taplo, lint, ,no-schema, , ,121,Disable all schema validations
+taplo, lint, ,verbose, , ,122,Enable a verbose logging format
+taplo, lint, ,log-spans, , ,123,Enable logging spans
+taplo, lint,h,help, , ,124,Print help (see more with '--help')
+taplo, format,c,config, ,@r,125,Path to the Taplo configuration file
+taplo, format, ,cache-path, ,@r,126,Set a cache path
+taplo, format,o,option, , ,127,"A formatter option given as a 'key=value', can be set multiple times"
+taplo, format, ,stdin-filepath, , ,128,A path to the file that the Taplo CLI will treat like stdin
+taplo, format, ,colors,{auto	_,always	_,never	_},@f @r,129, 
+taplo, format, ,no-auto-config, , ,130,Do not search for a configuration file
+taplo, format,f,force, , ,131,Ignore syntax errors and force formatting
+taplo, format, ,check, , ,132,Dry-run and report any files that are not correctly formatted
+taplo, format, ,diff, , ,133,Print the differences in patch formatting to `stdout`
+taplo, format, ,verbose, , ,134,Enable a verbose logging format
+taplo, format, ,log-spans, , ,135,Enable logging spans
+taplo, format,h,help, , ,136,Print help (see more with '--help')
+taplo," lsp; and tcp; and stdio; and help",c,config, ,@r,136,Path to the Taplo configuration file
+taplo," lsp; and tcp; and stdio; and help", ,cache-path, ,@r,136,Set a cache path
+taplo," lsp; and tcp; and stdio; and help", ,colors,{auto	_,always	_,never	_},@f @r,136, 
+taplo," lsp; and tcp; and stdio; and help", ,no-auto-config, , ,136,Do not search for a configuration file
+taplo," lsp; and tcp; and stdio; and help", ,verbose, , ,136,Enable a verbose logging format
+taplo," lsp; and tcp; and stdio; and help", ,log-spans, , ,136,Enable logging spans
+taplo," lsp; and tcp; and stdio; and help",h,help, , ,136,Print help (see more with '--help')
+taplo," lsp; and tcp; and stdio; and help", , ,tcp,@f,136,Run the language server and listen on a TCP address
+taplo," lsp; and tcp; and stdio; and help", , ,stdio,@f,136,Run the language server over the standard input and output
+taplo," lsp; and tcp; and stdio; and help", , ,help,@f,136,Print this message or the help of the given subcommand(s)
+taplo," lsp; and tcp", ,address, , ,137,The address to listen on
+taplo," lsp; and tcp", ,colors,{auto	_,always	_,never	_},@f @r,138, 
+taplo," lsp; and tcp", ,verbose, , ,139,Enable a verbose logging format
+taplo," lsp; and tcp", ,log-spans, , ,140,Enable logging spans
+taplo," lsp; and tcp",h,help, , ,141,Print help (see more with '--help')
+taplo," lsp; and stdio", ,colors,{auto	_,always	_,never	_},@f @r,142, 
+taplo," lsp; and stdio", ,verbose, , ,143,Enable a verbose logging format
+taplo," lsp; and stdio", ,log-spans, , ,144,Enable logging spans
+taplo," lsp; and stdio",h,help, , ,145,Print help (see more with '--help')
+taplo," lsp; and help; and tcp; and stdio; and help", , ,tcp,@f,145,Run the language server and listen on a TCP address
+taplo," lsp; and help; and tcp; and stdio; and help", , ,stdio,@f,145,Run the language server over the standard input and output
+taplo," lsp; and help; and tcp; and stdio; and help", , ,help,@f,145,Print this message or the help of the given subcommand(s)
+taplo," config; and default; and schema; and help", ,colors,{auto	_,always	_,never	_},@f @r,145, 
+taplo," config; and default; and schema; and help", ,verbose, , ,145,Enable a verbose logging format
+taplo," config; and default; and schema; and help", ,log-spans, , ,145,Enable logging spans
+taplo," config; and default; and schema; and help",h,help, , ,145,Print help (see more with '--help')
+taplo," config; and default; and schema; and help", , ,default,@f,145,Print the default `.taplo.toml` configuration file
+taplo," config; and default; and schema; and help", , ,schema,@f,145,Print the JSON schema of the `.taplo.toml` configuration file
+taplo," config; and default; and schema; and help", , ,help,@f,145,Print this message or the help of the given subcommand(s)
+taplo," config; and default", ,colors,{auto	_,always	_,never	_},@f @r,146, 
+taplo," config; and default", ,verbose, , ,147,Enable a verbose logging format
+taplo," config; and default", ,log-spans, , ,148,Enable logging spans
+taplo," config; and default",h,help, , ,149,Print help (see more with '--help')
+taplo," config; and schema", ,colors,{auto	_,always	_,never	_},@f @r,150, 
+taplo," config; and schema", ,verbose, , ,151,Enable a verbose logging format
+taplo," config; and schema", ,log-spans, , ,152,Enable logging spans
+taplo," config; and schema",h,help, , ,153,Print help (see more with '--help')
+taplo," config; and help; and default; and schema; and help", , ,default,@f,153,Print the default `.taplo.toml` configuration file
+taplo," config; and help; and default; and schema; and help", , ,schema,@f,153,Print the JSON schema of the `.taplo.toml` configuration file
+taplo," config; and help; and default; and schema; and help", , ,help,@f,153,Print this message or the help of the given subcommand(s)
+taplo, get,o,output-format,{value	_,json	_,toml	_},@f @r,154,The format specifying how the output is printed
+taplo, get,f,file-path, ,@r,155,"Path to the TOML document, if omitted the standard input will be used"
+taplo, get, ,separator, , ,156,A string that separates array values when printing to stdout
+taplo, get, ,colors,{auto	_,always	_,never	_},@f @r,157, 
+taplo, get,s,strip-newline, , ,158,Strip the trailing newline from the output
+taplo, get, ,verbose, , ,159,Enable a verbose logging format
+taplo, get, ,log-spans, , ,160,Enable logging spans
+taplo, get,h,help, , ,161,Print help (see more with '--help')
+taplo, toml-test, ,colors,{auto	_,always	_,never	_},@f @r,162, 
+taplo, toml-test, ,verbose, , ,163,Enable a verbose logging format
+taplo, toml-test, ,log-spans, , ,164,Enable logging spans
+taplo, toml-test,h,help, , ,165,Print help (see more with '--help')
+taplo, completions, ,colors,{auto	_,always	_,never	_},@f @r,166, 
+taplo, completions, ,verbose, , ,167,Enable a verbose logging format
+taplo, completions, ,log-spans, , ,168,Enable logging spans
+taplo, completions,h,help, , ,169,Print help (see more with '--help')
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,lint,@f,169,Lint TOML documents
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,format,@f,169,Format TOML documents
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,lsp,@f,169,Language server operations
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,config,@f,169,Operations with the Taplo config file
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,get,@f,169,Extract a value from the given TOML document
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,toml-test,@f,169,Start a decoder for `toml-test` (https://github.com/BurntSushi/toml-test)
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,completions,@f,169,Generate completions for Taplo CLI
+taplo," help; and lint; and format; and lsp; and config; and get; and toml-test; and completions; and help", , ,help,@f,169,Print this message or the help of the given subcommand(s)
+taplo," help; and lsp; and tcp; and stdio", , ,tcp,@f,169,Run the language server and listen on a TCP address
+taplo," help; and lsp; and tcp; and stdio", , ,stdio,@f,169,Run the language server over the standard input and output
+taplo," help; and config; and default; and schema", , ,default,@f,169,Print the default `.taplo.toml` configuration file
+taplo," help; and config; and default; and schema", , ,schema,@f,169,Print the JSON schema of the `.taplo.toml` configuration file

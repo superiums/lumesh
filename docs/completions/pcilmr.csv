@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pcilmr, , ,margin, , ,101,Margin selected Links
+pcilmr, , ,full, , ,102,Margin all ready for testing (in a meaning similar to the  --scan option) Lin…
+pcilmr, , ,scan, , ,103,Scan for Links with negotiated speed 16 GT/s or higher

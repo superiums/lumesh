@@ -1,0 +1,61 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dart, ,h,help, , ,101,Print this usage information
+dart, ,v,verbose, , ,102,Show additional command output
+dart, , ,version, , ,103,Print the Dart SDK version
+dart, , ,enable-analytics, , ,104,Enable analytics
+dart, , ,disable-analytics, , ,105,Disable analytics
+dart, analyze, ,fatal-infos, , ,115,Treat info level issues as fatal
+dart, analyze, ,fatal-warnings, , ,116,Treat warning level issues as fatal. (default on)
+dart, analyze, ,no-fatal-warnings, , ,117,Don't treat warning level issues as fatal. (default on)
+dart, compile, , ,aot-snapshot, ,118,Compile Dart to an AOT snapshot
+dart, compile, , ,exe, ,119,Compile Dart to a self-contained executable
+dart, compile, , ,jit-snapshot, ,120,Compile Dart to a JIT snapshot
+dart, compile, , ,js, ,121,Compile Dart to JavaScript
+dart, compile, , ,kernel, ,122,Compile Dart to a kernel snapshot
+dart, create,t,template,console-simple console-full package-simple server-shelf web-simple, ,123,The project template to use
+dart, create, ,pub, , ,124,Run 'pub get' after the project has been created (default)
+dart, create, ,no-pub, , ,125,Don't run 'pub get' after the project has been created (default yes)
+dart, create, ,force, , ,126,"Force project generation, even if the target directory already exists"
+dart, fix, ,dry-run, , ,127,Preview the proposed changes but make no changes
+dart, fix, ,apply, , ,128,Apply the proposed changes
+dart, format,o,output, , ,129,Set where to write formatted output
+dart, format, ,set-exit-if-changed, , ,130,Return exit code 1 if there are any formatting changes
+dart, format, ,fix, , ,131,Apply all style fixes
+dart, format,l,line-length, , ,132,Wrap lines longer than this. (default '80')
+dart, migrate, ,apply-changes, , ,133,Apply the proposed null safety changes to the files on disk
+dart, migrate, ,ignore-errors, , ,134,Attempt to perform null safety analysis even if the project has analysis errors
+dart, migrate, ,skip-import-check, , ,135,Go ahead with migration even if some imported files have not yet been migrated
+dart, migrate, ,web-preview, , ,136,Show preview of the proposed null safety changes in a browser window
+dart, migrate, ,no-web-preview, , ,137,Show preview of the proposed null safety changes in the console
+dart, migrate, ,preview-hostname, , ,138,Run the preview server on the specified hostname
+dart, migrate, ,preview-port, , ,139,Run the preview server on the specified port
+dart, pub,C,directory, , ,140,Run the subcommand in this directory. (default '')
+dart, pub, , ,add, ,141,Add a dependency to pubspec.yaml
+dart, pub, , ,cache, ,142,Work with the system cache
+dart, pub, , ,deps, ,143,Print package dependencies
+dart, pub, , ,downgrade, ,144,Downgrade the current package's dependencies to oldest versions
+dart, pub, , ,get, ,145,Get the current package's dependencies
+dart, pub, , ,global, ,146,Work with global packages
+dart, pub, , ,login, ,147,Log into pub.dev
+dart, pub, , ,logout, ,148,Log out of pub.dev
+dart, pub, , ,outdated, ,149,Analyze your dependencies to find which ones can be upgraded
+dart, pub, , ,publish, ,150,Publish the current package to pub.dartlang.org
+dart, pub, , ,remove, ,151,Removes a dependency from the current package
+dart, pub, , ,upgrade, ,152,Upgrade the current package's dependencies to latest versions
+dart, pub, , ,ploader, ,153,Manage uploaders for a package on pub.dartlang.org
+dart, run, ,observe, , ,154,Run a program with common options for debugging
+dart, run, ,enable-vm-service, , ,155,Enables VM service and listen on the specified port (default localhost:8181)
+dart, run, ,serve-devtools, , ,156,Serve Dart DevTools debugger/profiler via service at <vm-service-uri>/devtools
+dart, run, ,no-serve-devtools, , ,157,Serve Dart DevTools debugger/profiler via service at <vm-service-uri>/devtools
+dart, run, ,pause-isolates-on-exit, , ,158,Pause isolates on exit when running with --enable-vm-service
+dart, run, ,no-pause-isolates-on-exit, , ,159,Pause isolates on exit when running with --enable-vm-service
+dart, run, ,pause-isolates-on-unhandled-exceptions, , ,160,Pause isolates after unhandled exception when running with --enable-vm-service
+dart, run, ,no-pause-isolates-on-unhandled-exceptions, , ,161,Don't pause isolates after unhandled exception when running with --enable-vm-service
+dart, run, ,warn-on-pause-with-no-debugger, , ,162,Warn when isolate pauses with no attached debugger when running with --enable-vm-service
+dart, run, ,no-warn-on-pause-with-no-debugger, , ,163,Don't warn when isolate pauses with no attached debugger when running with --enable-vm-service
+dart, run, ,pause-isolates-on-start, , ,164,Pause isolates on start when running with --enable-vm-service
+dart, run, ,no-pause-isolates-on-start, , ,165,Don't pause isolates on start when running with --enable-vm-service
+dart, run, ,enable-asserts, , ,166,Enable assert statements
+dart, run, ,no-enable-asserts, , ,167,Disable assert statements
+dart, run, ,verbosity, , ,168,Sets the verbosity level of the compilation
+dart, run,D,define, , ,169,Define an environment declaration

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fmt, ,c,crown-margin, , ,101,preserve indentation of first two lines
+fmt, ,p,prefix, , ,102,"reformat only lines beginning with STRING, reattaching the prefix to reformat…"
+fmt, ,s,split-only, , ,103,"split long lines, but do not refill"
+fmt, ,t,tagged-paragraph, , ,104,indentation of first line different from second
+fmt, ,u,uniform-spacing, , ,105,"one space between words, two after sentences"
+fmt, ,w,width, , ,106,maximum line width (default of 75 columns)
+fmt, ,g,goal, , ,107,goal width (default of 93% of width)
+fmt, , ,help, , ,108,display this help and exit
+fmt, , ,version, , ,109,output version information and exit AUTHOR Written by Ross Paterson

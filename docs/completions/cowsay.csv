@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cowsay, ,f, , ,@f @r,101,Specify cow file

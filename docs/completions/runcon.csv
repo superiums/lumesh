@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+runcon, ,c,compute, , ,101,compute process transition context before modifying
+runcon, ,t,type, , ,102,type (for same role as parent)
+runcon, ,u,user, , ,103,user identity
+runcon, ,r,role, , ,104,role
+runcon, ,l,range, , ,105,levelrange
+runcon, , ,help, , ,106,display this help and exit
+runcon, , ,version, , ,107,output version information and exit . SS 'Exit status:'

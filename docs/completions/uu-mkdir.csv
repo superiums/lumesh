@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-mkdir, ,m,mode, , ,101,set file mode (not implemented on windows)
+uu-mkdir, , ,context, , ,102,"like -Z, or if CTX is specified then set the SELinux or SMACK security context to CTX"
+uu-mkdir, ,p,parents, , ,103,make parent directories as needed
+uu-mkdir, ,v,verbose, , ,104,print a message for each printed directory
+uu-mkdir, ,h,help, , ,105,Print help
+uu-mkdir, ,V,version, , ,106,Print version

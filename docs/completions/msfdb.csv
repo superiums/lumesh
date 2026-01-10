@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msfdb, , ,component,all database webservice,@f @r,108,Component used with provided command
+msfdb, ,d,debug, , ,109,Enable debug output
+msfdb, ,h,help, , ,110,Show help message
+msfdb, , ,use-defaults, , ,111,Accept all defaults and do not prompt for options
+msfdb, , ,msf-db-name, ,@f @r,112,Database name
+msfdb, , ,msf-db-user-name, ,@f @r,113,Database username
+msfdb, , ,msf-test-db-name, ,@f @r,114,Test database name
+msfdb, , ,msf-test-db-user-name, ,@f @r,115,Test database username
+msfdb, , ,db-port, ,@f @r,116,Database port
+msfdb, , ,db-pool, ,@f @r,117,Database connection pool size
+msfdb, ,a,address, ,@f @r,118,Bind to host address
+msfdb, ,p,port, ,@f @r,119,Web service port
+msfdb, , ,ssl, , ,120,Enable SSL
+msfdb, , ,no-ssl, , ,121,Disable SSL
+msfdb, , ,ssl-key-file, ,@F,122,Path to private key
+msfdb, , ,ssl-cert-file, ,@F,123,Path to certificate
+msfdb, , ,ssl-disable-verify, , ,124,Disables (optional) client cert requests
+msfdb, , ,no-ssl-disable-verify, , ,125,Enables (optional) client cert requests
+msfdb, , ,environment,production development, ,126,Web service framework environment
+msfdb, , ,retry-max, ,@f @r,127,Maximum number of web service connect attempts
+msfdb, , ,retry-delay, ,@f @r,128,Delay (seconds) between web service connect attempts
+msfdb, , ,user, ,@f @r,129,Initial web service admin username
+msfdb, , ,pass, ,@f @r,130,Initial web service admin password
+msfdb, , ,msf-data-service, ,@f @r,131,Local msfconsole data service connection name
+msfdb, , ,no-msf-data-service, ,@f @r,132,Disable local msfconsole data service connection

@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ps, ,H,forest, , ,101,Show hierarchy
+ps, ,s,sid, ,@f @r,102,Select by session ID
+ps, ,u,user, ,@f @r,103,Select by user
+ps, ,V,version, , ,104,Display version and exit
+ps, , ,width, , ,105,Set screen width
+ps, , ,cumulative, , ,106,Include dead child process data
+ps, , ,deselect, , ,107,Deselect all processes that do not fulfill conditions
+ps, , ,headers, , ,108,"Repeat header lines, one per page"
+ps, , ,help, , ,109,Display help and exit
+ps, , ,info, , ,110,Display debug info
+ps, , ,rows, , ,111,Set screen height
+ps, , ,no-headers, , ,112,Print no headers
+ps, , ,ppid, ,@f @r,113,Select by parent PID
+ps, , ,sort, , ,114,Specify sort order
+ps, -d,G, , ,@f @r,115, 
+ps, -d,U, , ,@f @r,116, 
+ps, -d,p, , ,@f @r,117, 

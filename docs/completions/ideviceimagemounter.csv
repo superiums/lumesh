@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ideviceimagemounter, ,u,udid, , ,101,target specific device by UDID
+ideviceimagemounter, ,n,network, , ,102,connect to network device
+ideviceimagemounter, ,d,debug, , ,103,enable communication debugging
+ideviceimagemounter, ,l,list, , ,104,list mount information
+ideviceimagemounter, ,t,imagetype, , ,105,"the image type to use, default is 'Developer'"
+ideviceimagemounter, ,x,xml, , ,106,use XML output
+ideviceimagemounter, ,h,help, , ,107,prints usage information
+ideviceimagemounter, ,v,version, , ,108,prints version information

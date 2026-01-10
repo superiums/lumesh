@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+unzip, ,d, , ,@D,101,extract files into dir
+unzip, ,aa, , , ,102,treat ALL files as text
+unzip, ,O, , ,@f @r,103,"specify a character encoding for DOS, Windows and OS/2 archives"
+unzip, ,I, , ,@f @r,104,specify a character encoding for UNIX and other archives
+unzip, , , , ,@k,106, 

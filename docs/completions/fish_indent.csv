@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_indent, ,h,help, , ,101,Display help and exit
+fish_indent, ,v,version, , ,102,Display version and exit
+fish_indent, ,c,check, , ,103,"Do not indent, only return 0 if the code is already indented as fish_indent would"
+fish_indent, ,i,no-indent, , ,104,"Do not indent output, only reformat into one job per line"
+fish_indent, , ,only-indent, , ,105,"Do not reformat, only indent lines"
+fish_indent, , ,only-unindent, , ,106,"Do not reformat, only unindent lines"
+fish_indent, , ,ansi, , ,107,Colorize the output using ANSI escape sequences
+fish_indent, , ,html, , ,108,Output in HTML format
+fish_indent, ,w,write, , ,109,Write to file
+fish_indent, ,d,debug, ,@f @r,110,Enable debug at specified verbosity level
+fish_indent, ,o,debug-output, , ,111,Where to direct debug output to
+fish_indent, ,D,debug-stack-frames, ,@f @r,112,Specify how many stack frames to display in debug messages
+fish_indent, , ,dump-parse-tree, , ,113,Dump information about parsed statements to stderr

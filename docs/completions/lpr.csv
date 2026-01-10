@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lpr, , , , ,@k,101, 
+lpr, ,H, , ,@f @r,102,Specifies an alternate server
+lpr, ,T, , ,@f @r,103,Sets the job name

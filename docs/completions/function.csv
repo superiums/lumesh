@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+function, ,d,description, , ,101,Set function description
+function, ,j,on-job-exit, , ,102,Make the function a job exit event handler
+function, ,p,on-process-exit, , ,103,Make the function a process exit event handler
+function, ,s,on-signal, , ,104,Make the function a signal event handler
+function, ,v,on-variable, , ,105,Make the function a variable update event handler
+function, ,e,on-event, , ,106,Make the function a generic event handler
+function, ,a,argument-names, , ,107,Specify named arguments
+function, ,S,no-scope-shadowing, , ,108,Do not shadow variable scope of calling function
+function, ,w,wraps, , ,109,Inherit completions from the given command
+function, ,V,inherit-variable, , ,110,Snapshot and define local variable

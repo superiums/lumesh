@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aptitude, ,h,help, , ,101,Display a brief help message. Identical to the help action
+aptitude, ,D,show-deps, , ,128,Show explanations of automatic installations and removals
+aptitude, ,d,download-only, , ,129,Download only
+aptitude, ,f,fix-broken, , ,130,Aggressively try to fix broken packages
+aptitude, , ,purge-unused, , ,131,Purge packages that are not required by any installed package
+aptitude, ,P,prompt, , ,132,Always display a prompt
+aptitude, ,R,without-recommends, , ,133,Do not treat recommendations as dependencies
+aptitude, ,r,with-recommends, , ,134,Treat recommendations as dependencies
+aptitude, ,s,simulate, , ,135,Don't perform the actions. Just show them
+aptitude, , ,schedule-only, , ,136,Schedule operations to be performed in the future
+aptitude, ,q,quiet, , ,137,Suppress incremental progress indicators
+aptitude, ,V,show-versions, , ,138,Show which versions of packages will be installed
+aptitude, ,v,verbose, , ,139,Display extra information
+aptitude, , ,version, , ,140,Display the version of aptitude and compile information
+aptitude, , ,visual-preview, , ,141,Start up the visual interface and display its preview screen
+aptitude, ,y,assume-yes, , ,142,Assume the answer yes for all question prompts
+aptitude, ,F,display-format, ,@r,143,Specify the format to be used by the search command
+aptitude, ,t,target-release, ,@r,144,Set the release from which packages should be installed
+aptitude, ,O,sort, ,@r,145,Specify the order for the output from the search command
+aptitude, ,o, , ,@r,146,Set a configuration file option directly
+aptitude, ,w,width, ,@r,147,Specify the display width for the output from the search command

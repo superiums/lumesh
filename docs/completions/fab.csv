@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fab, , , , ,@f @r,101, 
+fab, ,h,help, , ,102,show this help message and exit
+fab, ,d,display, ,@f @r,103,print detailed info about command NAME
+fab, ,F,list-format,short normal nested,@f @r,104,"formats --list, choices: short, normal, nested"
+fab, ,I,initial-password-prompt, , ,105,Force password prompt up-front
+fab, , ,initial-sudo-password-prompt, , ,106,Force sudo password prompt up-front
+fab, ,l,list, , ,107,print list of possible commands and exit
+fab, , ,set, ,@f @r,108,comma separated KEY=VALUE pairs to set Fab env vars
+fab, , ,shortlist, , ,109,alias for -F short --list
+fab, ,V,version, , ,110,show program's version number and exit
+fab, ,a,no_agent, , ,111,don't user the running SSH agent
+fab, ,A,forward-agent, , ,112,forward local agent to remote end
+fab, , ,abort-on-prompts, , ,113,"abort instead of prompting (for password, host, etc)"
+fab, ,c,config, ,@r,114,specify location of config file to use
+fab, , ,colorize-errors, , ,115,Color error output
+fab, ,D,disable-known-host, , ,116,do not load user known_hosts file
+fab, ,e,eagerly-disconnect, , ,117,disconnect from hosts as soon as possible
+fab, ,f,fabfile, ,@r,118,"python module file to import, e.g. '../other.py'"
+fab, ,g,gateway, ,@f @r,119,gateway host to connect through
+fab, , ,gss-auth, , ,120,Use GSS-API authentication
+fab, , ,gss-deleg, , ,121,Delegate GSS-API client credentials or not
+fab, , ,gss-kex, , ,122,Perform GSS-API Key Exchange and user authentication
+fab, , ,hide, ,@f @r,123,comma-separated list of output levels to hide
+fab, ,H,hosts, ,@f @r,124,comma-separated list of hosts to operate on
+fab, ,i, , ,@r,125,path to SSH private key file. May be repeated.
+fab, ,k,no-keys, , ,126,don't load private key files from ~/.ssh/
+fab, , ,keepaplive, ,@f @r,127,enables a keepalive every N seconds
+fab, , ,linewise, , ,128,print line-by-line instead of byte-by-byte
+fab, ,n,connection-attempts, ,@f @r,129,make M attempts to connect before giving up
+fab, , ,no-pty, , ,130,do not use pseudo-terminal in run/sudo
+fab, ,p,password, , ,131,password for use with authentication and/or sudo
+fab, ,P,parallel, , ,132,default to parallel execution method
+fab, , ,port, ,@f @r,133,SSH connection port
+fab, ,r,reject-unknown-host, , ,134,reject unknown hosts
+fab, , ,sudo-password, ,@f @r,135,password for use with sudo only
+fab, , ,system-known-hosts, ,@f @r,136,load system known_hosts file before reading user known_hosts
+fab, ,R,roles, ,@f @r,137,comma-separated list of roles to operate on
+fab, ,s,shell, ,@f @r,138,"specify a new shell, defaults to '/bin/bash -l -c'"
+fab, , ,show, ,@f @r,139,comma-separated list of output levels to show
+fab, , ,skip-bad-hosts, , ,140,skip over hosts that can't be reached
+fab, , ,skip-unknown-tasks, , ,141,skip over unknown tasks
+fab, , ,ssh-config-path, ,@r,142,Path to SSH config file
+fab, ,t,timeout, ,@f @r,143,set connection timeout to N seconds
+fab, ,T,command-timeout, ,@f @r,144,set remote command timeout to N seconds
+fab, ,u,user, ,@f @r,145,username to use when connecting to remote hosts
+fab, ,w,warn-only, , ,146,"warn, instead of abort, when commands fail"
+fab, ,x,exclude-hosts, ,@f @r,147,comma-separated list of hosts to exclude
+fab, ,z,pool-size, ,@f @r,148,number of concurrent processes to use in parallel mode

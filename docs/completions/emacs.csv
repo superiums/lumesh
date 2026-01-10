@@ -1,0 +1,55 @@
+cmd,conds,short,long,params,dirs,pri,desc
+emacs, , ,batch, , ,101,"do not do interactive display; implies -q"
+emacs, , ,chdir, , ,102,change to directory DIR
+emacs, , ,daemon, , ,103,start a server in the background
+emacs, , ,debug-init, , ,104,enable Emacs Lisp debugger for init file
+emacs, ,d,display, , ,105,use X server DISPLAY
+emacs, , ,no-desktop, , ,106,do not load a saved desktop
+emacs, ,q,no-init-file, , ,107,load neither ~/.emacs nor default.el
+emacs, , ,no-loadup, , ,108,do not load loadup.el into bare Emacs
+emacs, , ,no-site-file, , ,109,do not load site-start.el
+emacs, , ,no-site-lisp, , ,110,do not add site-lisp directories to load-path
+emacs, , ,no-splash, , ,111,do not display a splash screen on startup
+emacs, , ,no-window-system, , ,112,"do not communicate with X, ignoring $DISPLAY"
+emacs, ,Q,quick, , ,113,equivalent to: emacs -q --no-site-file --no-splash
+emacs, , ,script, , ,114,run FILE as an Emacs Lisp script
+emacs, ,t,terminal, , ,115,use DEVICE for terminal I/O
+emacs, ,u,user, , ,116,load ~USER/.emacs instead of your own
+emacs, , ,init-directory, , ,117,start emacs with specified init directory
+emacs, ,L,directory, , ,118,"prepend DIR to load-path (with :DIR, append DIR)"
+emacs, , ,eval, , ,119,evaluate Emacs Lisp expression EXPR
+emacs, , ,execute, , ,120,evaluate Emacs Lisp expression EXPR
+emacs, , ,file, , ,121,visit FILE using find-file
+emacs, , ,find-file, , ,122,visit FILE using find-file
+emacs, ,f,funcall, , ,123,call Emacs Lisp function FUNC with no arguments
+emacs, , ,insert, , ,124,insert contents of FILE into current buffer
+emacs, , ,kill, , ,125,exit without asking for confirmation
+emacs, ,l,load, , ,126,load Emacs Lisp FILE using the load function
+emacs, , ,visit, , ,127,visit FILE using find-file
+emacs, , ,color,auto never always ansi8, ,128,override color mode for character terminals
+emacs, , ,background-color, , ,129,window background color
+emacs, ,D,basic-display, , ,130,"disable many display features; used for debugging Emacs"
+emacs, , ,border-color, , ,131,main border color
+emacs, , ,border-width, , ,132,width of main border
+-d, , ,cursor-color, , ,133, 
+emacs, , ,font, , ,134,"default font; must be fixed-width"
+emacs, , ,foreground-color, , ,135,window foreground color
+emacs, , ,fullheight, , ,136,make the first frame high as the screen
+emacs, , ,fullscreen, , ,137,make the first frame fullscreen
+emacs, , ,fullwidth, , ,138,make the first frame wide as the screen
+emacs, , ,maximized, , ,139,make the first frame maximized
+emacs, ,g,geometry, , ,140,window geometry
+emacs, , ,no-bitmap-icon, , ,141,do not use picture of gnu for Emacs icon
+emacs, , ,iconic, , ,142,start Emacs in iconified state
+emacs, , ,internal-border, , ,143,width between text and main border
+emacs, , ,line-spacing, , ,144,additional space to put between lines
+emacs, , ,mouse-color, , ,145,mouse cursor color in Emacs window
+emacs, , ,name, , ,146,title for initial Emacs frame
+emacs, , ,no-blinking-cursor, , ,147,disable blinking cursor
+emacs, ,r,reverse-video, , ,148,switch foreground and background
+emacs, ,T,title, , ,149,title for initial Emacs frame
+emacs, , ,vertical-scroll-bars, , ,150,enable vertical scroll bars
+emacs, , ,xrm, , ,151,set additional X resources
+emacs, , ,parent-id, , ,152,set parent window
+emacs, , ,help, , ,153,display help and exit
+emacs, , ,version, , ,154,output version information and exit

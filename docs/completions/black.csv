@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+black, ,c,code, ,@f @r,101,Format code passed in as a string
+black, ,l,line-length, ,@f @r,102,Characters per line
+black, ,t,target-version, ,@f @r,103,Python versions supported by output
+black, , ,pyi, , ,104,Format all input files like typing stubs regardless of file extension
+black, ,S,skip-string-normalization, , ,105,Don't normalize string quotes or prefixes
+black, ,C,skip-magic-trailing-comma, , ,106,Don't use trailing commas as a reason to split lines
+black, , ,check, , ,107,"Don't write the files back, just return the status"
+black, , ,diff, , ,108,"Don't write the files back, just output a diff for each file"
+black, , ,color, , ,109,Show colored diff
+black, , ,no-color, , ,110,Do not color diff output
+black, , ,fast, , ,111,Skip temporary sanity checks
+black, , ,safe, , ,112,Do not skip temporary sanity checks
+black, , ,required-version, ,@f @r,113,Require a specific version of Black to be running
+black, , ,include, ,@r,114,Regular expression of items to include
+black, , ,exclude, ,@r,115,Regular expression of items to exclude
+black, , ,extend-exclude, ,@r,116,Regular expression of additional items to exclude
+black, , ,force-exclude, ,@r,117,Regular expression of Items to always exclude
+black, , ,stdin-filename, ,@r,118,The name of the file when passing through stdin
+black, ,q,quiet, , ,119,Only print error messages to stderr
+black, ,v,verbose, , ,120,Report files that were unchanged or ignored
+black, , ,version, , ,121,Show version
+black, , ,config, ,@r,122,Configuration file
+black, ,h,help, , ,123,Show help

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gencmn, ,?,help, , ,101,Print help about usage and exit
+gencmn, ,v,verbose, , ,102,Display extra informative messages during execution
+gencmn, ,c,copyright, , ,103,Include the ICU copyright notice in the resulting data
+gencmn, ,C,comment, , ,104,Include the specified  comment in the resulting data instead of the ICU copyr…
+gencmn, ,d,destdir, , ,105,Set the destination directory to R destination 
+gencmn, ,n,name, , ,106,Set the data name to  name instead of the default
+gencmn, ,t,type, , ,107,Use  type as the type of the data
+gencmn, ,S,source, , ,108,Write a C source file with the table of contents of the data
+gencmn, ,e,entrypoint, , ,109,Set the data entry point (used for linking against the data in a shared libra…

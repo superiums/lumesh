@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+taskset, , ,cpu-list, , ,101, 
+taskset, ,a,all-tasks, , ,102, 
+taskset, ,p,pid, , ,103, 
+taskset, ,h,help, , ,104, 
+taskset, ,V,version, , ,105, 

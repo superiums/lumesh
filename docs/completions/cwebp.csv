@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cwebp, , , , ,@f,101,Help (short)
+cwebp, , ,help, ,@f,102,Help (long)
+cwebp, , , , ,@f @r,103,"Quality (float; 0…100; default: 75)"
+cwebp, , , , ,@f @r,104,"Transparency-compression quality (integer 0…100; default: 100)"
+cwebp, , , ,$z_opts,@f @r,106,Lossless preset of level
+cwebp, , , ,$m_opts,@f @r,107,Compression method
+cwebp, , , ,$segments_opts,@f @r,108,Number of segments to use
+cwebp, , , , ,@f @r,109,Target size (in bytes)
+cwebp, , , , ,@f @r,110,"Target PSNR (in dB; typically: 42)"
+cwebp, , , , ,@f @r,111,Input size (width x height) for YUV
+cwebp, , , , ,@f @r,112,"Spatial noise shaping (integer 0…100; default: 50)"
+cwebp, , , , ,@f @r,113,"Filter strength (integer 0…100; default: 60)"
+cwebp, , , ,$sharpness_opts,@f @r,114,Filter sharpness
+cwebp, , , , ,@f @r,115,Limit quality to fit 512k limit on first partition (0:no degradation…100:full degradation)
+cwebp, , , , ,@f @r,116,Analysis pass number
+cwebp, , , , ,@f @r,117,Crop picture with <x> <y> <v> <h> rectangle
+cwebp, , , , ,@f @r,118,Resize picture to <w> <h> after any cropping
+cwebp, , , , ,@f @r,119,Print map of extra info
+cwebp, , , , ,@k @r,120,Dump compressed output to given PGM file
+cwebp, , , ,$alpha_method_opts,@f @r,121,Transparency-compression method
+cwebp, , , ,$alpha_filter_opts,@f @k @r,122,Predictive filtering for alpha plane
+cwebp, , , , ,@f @r,123,Preserve RGB values in transparent area
+cwebp, , , , ,@f @r,124,Blend colors against background color (e.g. 0xc0e0d0)
+cwebp, , , , ,@f @r,125,"Use near-lossless image preprocessing (integer 0…100:off; default: 100)"
+cwebp, , , ,photo picture graph,@f @r,126,Specify image-characteristics hint
+cwebp, , , ,$metadata_opts,@f @k @r,127,"Comma-separated list of metadata to copy, if present"
+cwebp, , , , ,@f @r,128,Pre-processing filter (integer)
+cwebp, , , , ,@k @r,129,Output to file

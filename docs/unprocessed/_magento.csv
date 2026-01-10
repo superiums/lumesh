@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+magento, __fish_magento_not_in_command, , ,$argv[1], ,101, 

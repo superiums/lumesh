@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rakudo, , ,doc, , ,102,Extract documentation and print it as text
+rakudo, ,e, , ,@f @r,103,"One line of program, strict is enabled by default"
+rakudo, ,h,help, ,@f @r,104,Display help text
+rakudo, ,I, , ,@r,105,Add the path to the module search path
+rakudo, ,M, , ,@r,106,Load the module prior to running the program
+rakudo, , ,target,start parse syntaxcheck ast optimize mast mbc moar,@f @k @r,107,Specify compilation stage to emit
+rakudo, , ,optimize,0 1 2 3,@f @r,108,"use the given level of optimization, pass 0..3"
+rakudo, ,o,output, ,@r,109,Specify name of output file
+rakudo, ,v,version, ,@f @r,110,Display version information
+rakudo, ,V, , ,@f @r,111,Print configuration summary
+rakudo, , ,rakudo-home, ,@r,112,Override the path of the Rakudo runtime files
+rakudo, , ,stagestats, , ,113,Display time spent in the compilation stages
+rakudo, , ,repl-mode,interactive non-interactive,@f @r,114,Specify the REPL mode
+rakudo, , ,profile, ,@r,115,Write profile information to a file. Extension controls format
+rakudo, , ,profile-compile, ,@r,116,Write compile-time profile information to a file. Extension controls format
+rakudo, , ,profile-kind,instrumented heap,@f @r,117,Choose the type of profile to generate
+rakudo, , ,profile-stage, ,@f,118,Write profile information for the given compilation stage to a file
+rakudo, , ,debug-port, ,@f @r,119,Listen for incoming debugger connections
+rakudo, , ,tracing, ,@f,120,"Output a line to stderr on every interpreter instr, if enabled in MoarVM"

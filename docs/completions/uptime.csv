@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uptime, ,c,container, , ,101,show the container uptime instead of system uptime
+uptime, ,p,pretty, , ,102,show uptime in pretty format
+uptime, ,h,help, , ,103,display this help text
+uptime, ,r,raw, , ,104,Display values in a raw format
+uptime, ,s,since, , ,105,"system up since, in yyyy-mm-dd HH:MM:SS format"
+uptime, ,V,version, , ,106,display version information and exit ENVIRONMENT

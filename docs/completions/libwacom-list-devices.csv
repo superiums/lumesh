@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libwacom-list-devices, , ,format, , ,101,Sets the output format to be used

@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+epkginfo, ,h,help, , ,101,display help
+epkginfo, ,d,description, , ,102,extended pkg description
+epkginfo, ,H,herd, , ,103,herd(s) for the pkg
+epkginfo, ,k,keywords, , ,104,keywords for all matching pkg versions
+epkginfo, ,l,license, , ,105,licenses for the best matching version
+epkginfo, ,m,maintainer, , ,106,maintainer(s) for the pkg
+epkginfo, ,S,stablreq, , ,107,STABLEREQ arches (cc's) for all matching pkg version
+epkginfo, ,u,useflags, , ,108,per-pkg USE flag descriptions
+epkginfo, ,U,upstream, , ,109,pkg's upstream information
+epkginfo, ,x,xml, , ,110,plain metadata.xml file

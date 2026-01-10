@@ -1,0 +1,36 @@
+cmd,conds,short,long,params,dirs,pri,desc
+patch, ,b,backup, , ,101,Back up the original contents of each file
+patch, , ,backup-if-mismatch, , ,102,Back up files if patch doesn't match exactly
+patch, , ,no-backup-if-mismatch, , ,103,Don't back up for mismatching patches
+patch, ,B,prefix, ,@f @r,104,Prepend PREFIX to backup filenames
+patch, ,c,context, , ,105,Interpret patch as context diff
+patch, ,d,directory, ,@D,106,Change directory to DIR first
+patch, ,D,ifdef, ,@f @r,107,Make merged if-then-else output using NAME
+patch, , ,dry-run, , ,108,"Don't change files; just print what would happen"
+patch, ,e,ed, , ,109,Interpret patch as an 'ed' script
+patch, ,E,remove-empty-files, , ,110,Remove output files empty after patching
+patch, ,f,force, , ,111,"Like -t, but ignore bad-Prereq patches, assume unreversed"
+patch, ,F,fuzz, ,@f @r,112,Number of LINES for inexact 'fuzzy' matching
+patch, ,g,get, ,@f @r,113,"Get files from RCS etc. if positive; ask if negative"
+patch, , ,help, ,@f,114,Display help
+patch, ,i,input, ,@f @k @r,115,Read patch from FILE instead of stdin
+patch, ,l,ignore-whitespace, , ,116,Ignore whitespace changes between patch & input
+patch, ,n,normal, , ,117,Interpret patch as normal diff
+patch, ,N,forward, , ,118,Ignore patches that seem reversed or already applied
+patch, ,o,output, ,@r,119,Output patched files to FILE
+patch, ,p,strip, ,@f @r,120,Strip NUM path components from filenames
+patch, , ,posix, , ,121,Conform to the POSIX standard
+patch, , ,quoting-style,literal shell shell-always c escape,@f @r,122,Output file names using quoting style
+patch, ,r,reject-file, ,@r,123,Output rejects to FILE
+patch, ,R,reverse, , ,124,Assume patches were created with old/new files swapped
+patch, ,s,quiet, , ,125,Work silently unless an error occurs
+patch, ,t,batch, , ,126,"Ask no questions; skip bad-Prereq patches; assume reversed"
+patch, ,T,set-time, , ,127,Set times of patched files assuming diff uses local time
+patch, ,u,unified, , ,128,Interpret patch file as a unified diff
+patch, ,v,version, , ,129,Display version
+patch, ,V,version-control,simple numbered existing,@f @r,130,Use method to determine backup file names
+patch, , ,verbose, , ,131,Output extra information about work being done
+patch, ,x,debug, ,@f @r,132,Set internal debugging flags
+patch, ,Y,basename-prefix, ,@f @r,133,Prepend PREFIX to backup file basenames
+patch, ,z,suffix, ,@f @r,134,Append SUFFIX to backup file name
+patch, ,Z,set-utc, , ,135,Set times of patched files assuming diff uses UTC

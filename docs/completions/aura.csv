@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aura, ,V,version, ,@f,118,Display version and exit
+aura, ,h,help, ,@f,119,Display help
+aura, , ,log-level, , ,120,Minimum level of Aura log messages to display
+aura, , ,noconfirm, , ,121,Do not ask for any confirmation

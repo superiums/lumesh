@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+blkdiscard, ,f,force, , ,101, 
+blkdiscard, ,o,offset, , ,102, 
+blkdiscard, ,l,length, , ,103, 
+blkdiscard, ,p,step, , ,104, 
+blkdiscard, ,q,quiet, , ,105, 
+blkdiscard, ,s,secure, , ,106, 
+blkdiscard, ,z,zeroout, , ,107, 
+blkdiscard, ,v,verbose, , ,108, 
+blkdiscard, ,h,help, , ,109, 
+blkdiscard, ,V,version, , ,110, 

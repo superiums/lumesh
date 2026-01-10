@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-mime, , ,mode, , ,101,mode can be user or system
+xdg-mime, , ,novendor, , ,102,"Normally, xdg-mime checks to ensure that the mimetypes-file to be installed h…"
+xdg-mime, , ,help, , ,103,Show command synopsis
+xdg-mime, , ,manual, , ,104,Show this manual page
+xdg-mime, , ,version, , ,105,Show the xdg-utils version information

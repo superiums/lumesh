@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+jq, , ,version, , ,101,Output jq version
+jq, , ,seq, , ,102,Use application/json-seq MIME type
+jq, , ,stream, , ,103,Parse input in streaming fashion
+jq, ,s,slurp, , ,104,Read input to array and filter once
+jq, ,R,raw-input, , ,105,Parse input as string (not JSON)
+jq, ,n,null-input, , ,106,Ignore input and treat it as null
+jq, ,c,compact-output, , ,107,Don't pretty-print JSON
+jq, , ,tab, , ,108,Indent w/ tabs instead of spaces
+jq, , ,indent, ,@f @r,109,Num of spaces per indent
+jq, ,C,color-output, , ,110,Color output
+jq, ,M,monochrome-output, , ,111,Don't color output
+jq, ,a,ascii-output, , ,112,Replace UTF-8 chars w/ escape sequences
+jq, , ,unbuffered, , ,113,Flush output after each JSON object
+jq, ,S,sort-keys, , ,114,Sort object keys in output
+jq, ,r,raw-output, , ,115,Write string output w/out quotes
+jq, ,j,join-output, , ,116,Raw output without newlines
+jq, ,f,from-file, ,@r,117,Read filter from file
+jq, ,e,exit-status, , ,118,Set exit status from output
+jq, , ,arg, ,@f @r,119,Set variable
+jq, , ,argjson, ,@f @r,120,Set JSON-encoded variable
+jq, , ,slurpfile, ,@f @r,121,Read JSON in file and bind to given variable
+jq, , ,argfile, ,@f @r,122,Read JSON in file and bind to given variable [see man]
+jq, , ,args, , ,123,Remaining args are positional string args
+jq, , ,jsonargs, , ,124,Remaining args are positional JSON text args
+jq, , ,run-tests, , ,125,Run tests in given file

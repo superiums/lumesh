@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grunt, ,h,help, , ,101,Display help text
+grunt, , ,base, , ,102,Specify an alternate base path
+grunt, , ,no-color, , ,103,Disable colored output
+grunt, , ,gruntfile, , ,104,Specify an alternate Gruntfile
+grunt, ,d,debug, , ,105,Enable debugging mode for tasks that support it
+grunt, , ,stack, , ,106,Print a stack trace when exiting with a warning or fatal error
+grunt, ,f,force, , ,107,A way to force your way past warnings.
+grunt, , ,tasks, , ,108,Additional directory paths to scan for task and 
+grunt, , ,npm, ,@f @r,109,Npm-installed grunt plugins to scan for task and 
+grunt, , ,no-write, , ,110,Disable writing files (dry run)
+grunt, ,v,verbose, , ,111,Verbose mode. A lot more information output
+grunt, ,V,version, , ,112,Print the grunt version. Combine with --verbose for more info
+grunt, , ,completion, , ,113,Output shell auto-completion rules.

@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xgettext, ,f,files-from, , ,101,Get list of input files from FILE
+xgettext, ,D,directory, , ,102,Add DIRECTORY to list for input files search
+xgettext, ,d,default-domain, , ,103,Use NAME
+xgettext, ,o,output, , ,104,Write output to specified file
+xgettext, ,p,output-dir, , ,105,Output files will be placed in directory DIR
+xgettext, ,L,language, , ,106,Recognise the specified programming language
+xgettext, ,C,c++, , ,107,Shorthand for --language=C++
+xgettext, , ,from-code, , ,108,"Encoding of input files (except for Python, Tcl, Glade)"
+xgettext, ,j,join-existing, , ,109,Join messages with existing file
+xgettext, ,x,exclude-file, , ,110,Entries from FILE
+xgettext, ,c,add-comments, , ,111,Place comment block with TAG (or those preceding keyword lines) in output file
+xgettext, ,a,extract-all, , ,112,Extract all strings (only some languages)
+xgettext, ,k,keyword, , ,113,Look for this as an additional keyword
+xgettext, , ,flag, , ,114,Additional flag for strings inside the argument number ARG of keyword WORD
+xgettext, ,T,trigraphs, , ,115,"Understand ANSI C trigraphs for input (only languages C, C++, ObjectiveC)"
+xgettext, , ,qt, , ,116,Recognize Qt format strings (only language C++)
+xgettext, , ,boost, , ,117,Recognize Boost format strings (only language C++)
+xgettext, , ,debug, , ,118,More detailed formatstring recognition result
+xgettext, ,e,no-escape, , ,119,Do not use C escapes in output (default)
+xgettext, ,E,escape, , ,120,"Use C escapes in output, no extended chars"
+xgettext, , ,force-po, , ,121,Write PO file even if empty
+xgettext, ,i,indent, , ,122,Write the
+xgettext, , ,no-location, , ,123,Do not write #: filename:line lines
+xgettext, ,n,add-location, , ,124,Generate #: filename:line lines (default)
+xgettext, , ,strict, , ,125,Write out strict Uniforum conforming
+xgettext, , ,properties-output, , ,126,Write out a Java
+xgettext, , ,stringtable-output, , ,127,Write out a NeXTstep/GNUstep
+xgettext, ,w,width, , ,128,Set output page width
+xgettext, , ,no-wrap, , ,129,Do not break long message lines into several lines
+xgettext, ,s,sort-output, , ,130,Generate sorted output
+xgettext, ,F,sort-by-file, , ,131,Sort output by file location
+xgettext, , ,omit-header, , ,132,Dont write header with msgid '' entry
+xgettext, , ,copyright-holder, , ,133,Set copyright holder in output
+xgettext, , ,foreign-user, , ,134,Omit FSF copyright in output for foreign user
+xgettext, , ,msgid-bugs-address, , ,135,Set report address for msgid bugs
+xgettext, ,m,msgstr-prefix, , ,136,Use STRING or '' as prefix for msgstr entries
+xgettext, ,M,msgstr-suffix, , ,137,Use STRING or '' as suffix for msgstr entries
+xgettext, ,h,help, , ,138,Display this help and exit
+xgettext, ,V,version, , ,139,Output version information and exit

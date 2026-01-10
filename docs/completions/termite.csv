@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+termite, ,h,help, , ,101,Display help message
+termite, ,v,version, , ,102,Display version information
+termite, ,e,exec, ,@r,103,Tell termite start <cmd> instead of the shell
+termite, ,r,role, ,@f @r,104,The role to set the termite window to report itself with
+termite, ,t,title, ,@f @r,105,Set the termite window's title
+termite, ,d,directory, ,@r,106,Tell termite to change to <dir> when launching
+termite, , ,geometry, ,@f @r,107,Override the window geometry in pixels
+termite, , ,hold, , ,108,Keep termite open after the child process exits
+termite, , ,display, ,@f @r,109,Launch on <disp> X display
+termite, ,c,config, ,@r,110,Config file to use
+termite, , ,name, ,@f @r,111,Set the windows name part of WM_CLASS property
+termite, , ,class, ,@f @r,112,Set the windows class part of the WM_CLASS property

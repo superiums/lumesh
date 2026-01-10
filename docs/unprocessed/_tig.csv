@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tig, contains -- -- (commandline -xpc) && $subcommands, , ,'show, ,100, 
+tig, contains -- -- (commandline -xpc), ,stdin, , ,101,Read git commit IDs from stdin
+tig, contains -- -- (commandline -xpc), ,pretty=raw, , ,102,Read git log output from stdin
+tig, contains -- -- (commandline -xpc),C, , ,@r,103,Run as if Tig was started in this directory
+tig, contains -- -- (commandline -xpc),v,version, , ,104,Show version and exit
+tig, contains -- -- (commandline -xpc),h,help, , ,105,Show help message and exit
+tig, contains -- -- (commandline -xpc), , , ,@f,106, 

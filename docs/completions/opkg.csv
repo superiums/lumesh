@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+opkg, ,V,verbosity, , ,127,Set verbosity level to <level>
+opkg, ,f,conf, , ,128,Use <conf_file> as the opkg configuration file
+opkg, , ,cache, , ,129,Use a package cache
+opkg, ,d,dest, , ,130,Use <dest_name> as the root directory
+opkg, ,o,offline-root, , ,131,Use <dir> as the root directory for offline
+opkg, , ,add-arch, , ,132,Register architecture with given priority
+opkg, , ,add-dest, , ,133,Register destination with given path
+opkg, , ,force-depends, , ,134,Install/remove despite failed dependencies
+opkg, , ,force-maintainer, , ,135,Overwrite preexisting config files
+opkg, , ,force-reinstall, , ,136,Reinstall package(s)
+opkg, , ,force-overwrite, , ,137,Overwrite files from other package(s)
+opkg, , ,force-downgrade, , ,138,Allow opkg to downgrade packages
+opkg, , ,force-space, , ,139,Disable free space checks
+opkg, , ,force-postinstall, , ,140,Run postinstall scripts even in offline mode
+opkg, , ,force-remove, , ,141,Remove package even if prerm script fails
+opkg, , ,force-checksum, , ,142,Don't fail on checksum mismatches
+opkg, , ,noaction, , ,143,No action -- test only
+opkg, , ,download-only, , ,144,No action -- download only
+opkg, , ,nodeps, , ,145,Do not follow dependencies
+opkg, , ,nocase, , ,146,Perform case insensitive pattern matching
+opkg, , ,size, , ,147,Print package size when listing available packages
+opkg, , ,force-removal-of-dependent-packages, , ,148,Remove package and all dependencies
+opkg, , ,autoremove, , ,149,Remove automatically installed packages
+opkg, ,t,tmp-dir, , ,150,Specify tmp-dir.
+opkg, ,l,lists-dir, , ,151,Specify lists-dir.

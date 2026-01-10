@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+paste, ,d,delimiters, , ,101,reuse characters from LIST instead of TABs
+paste, ,s,serial, , ,102,paste one file at a time instead of in parallel
+paste, ,z,zero-terminated, , ,103,"line delimiter is NUL, not newline"
+paste, , ,help, , ,104,display this help and exit
+paste, , ,version, , ,105,output version information and exit AUTHOR Written by David M

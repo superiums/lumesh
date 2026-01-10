@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mono, , ,aot,'(__fish_append, ,103, 
+mono, , ,debugger-agent,'(__fish_append, ,109, 
+mono, ,o,optimize,'(__fish_append, ,120, 
+mono, , ,debug,'(__fish_append, ,126, 

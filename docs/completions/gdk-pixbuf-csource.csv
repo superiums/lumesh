@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdk-pixbuf-csource, , ,stream, , ,101,Generate pixbuf data stream: a single string containing a serialized GdkPixda…
+gdk-pixbuf-csource, , ,struct, , ,102,"Generate GdkPixdata structure; your code needs the GdkPixdata structure defin…"
+gdk-pixbuf-csource, , ,macros, , ,103,"Generate *_ROWSTRIDE, *_WIDTH, *_HEIGHT, *_BYTES_PER_PIXEL and *_RLE_PIXEL_DA…"
+gdk-pixbuf-csource, , ,rle, , ,104,Enables run-length encoding for the generated pixel data (default)
+gdk-pixbuf-csource, , ,raw, , ,105,Disables run-length encoding for the generated pixel data
+gdk-pixbuf-csource, , ,extern, , ,106,Generate extern symbols
+gdk-pixbuf-csource, , ,static, , ,107,Generate static symbols (default)
+gdk-pixbuf-csource, , ,decoder, , ,108,"Provide a *_RUN_LENGTH_DECODE(image_buf, rle_data, size, bpp) macro definitio…"
+gdk-pixbuf-csource, , ,name, , ,109,Specifies the identifier name (prefix) for the generated variables or macros …
+gdk-pixbuf-csource, , ,build-list, , ,110,"Enables (name, image) pair parsing mode"
+gdk-pixbuf-csource, ,h,help, , ,111,Prints a brief help and exit
+gdk-pixbuf-csource, ,v,version, , ,112,Prints the tool version and exit
+gdk-pixbuf-csource, , ,g-fatal-warnings, , ,113,"Makes warnings fatal, and causes the program to abort.  SEE ALSO"

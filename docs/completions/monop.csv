@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+monop, ,k,search, , ,101,Searches through all known assemblies for types containing 'class'
+monop, , ,refs, , ,102,Print a list of the referenced assemblies for an assembly.
+monop, ,f,filter-obsolete, , ,103,Do not show obsolete types and members
+monop, ,d,declared-only, , ,104,Only show members declared in the type
+monop, ,p,private, , ,105,Show private members
+monop, , ,runtime-version, , ,106,Print runtime version

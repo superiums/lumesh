@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tshark, ,P,print, , ,102,Decode and display packet summary or details
+tshark, , ,color, , ,104,Enable coloring of packets according to standard Wireshark color filters
+tshark, , ,no-duplicate-keys, , ,105,Merge duplicate keys in json output
+tshark, , ,elastic-mapping-filter, ,@f @r,106,Only put specified protocols in an ElasticSearch mapping file
+tshark, , ,export-objects, ,@f @r,107,Export all objects within a protocol into directory given destination directory

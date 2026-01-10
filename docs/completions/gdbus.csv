@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdbus, introspect monitor call emit wait,y,system, ,@f,107,Connect to the system bus
+gdbus, introspect monitor call emit wait,e,session, ,@f,108,Connect to the session bus
+gdbus, introspect monitor call emit wait,a,address, ,@f @r,109,Connect to given D-Bus address
+gdbus, introspect monitor call emit,d,dest, ,@f @r,110,Destination name
+gdbus, introspect monitor call emit,o,object-path, ,@f @r,111,Object path
+gdbus, introspect monitor call emit wait,h,help, ,@f,112,Prints help
+gdbus, introspect,x,xml, ,@f,113,Print XML
+gdbus, introspect,r,recurse, ,@f,114,Introspect children
+gdbus, introspect,p,only-properties, ,@f,115,Only print properties
+gdbus, call,m,method, ,@f @r,116,Method and interface name
+gdbus, call,t,timeout, ,@f @r,117,Timeout in seconds
+gdbus, emit,s,signal, ,@f @r,118,Signal and interface name
+gdbus, wait,a,activate, ,@f @r,119,Service to activate
+gdbus, wait,t,timeout, ,@f @r,120,Timeout to wait

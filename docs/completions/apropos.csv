@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apropos, ,?,help, ,@f,101,Display help and exit
+apropos, , ,usage, ,@f,102,Display short usage message
+apropos, ,d,debug, ,@f,103,Print debugging info
+apropos, ,v,verbose, ,@f,104,Verbose mode
+apropos, ,r,regex, ,@f,105,Keyword as regex (default)
+apropos, ,w,wildcard, ,@f,106,Keyword as wildcards
+apropos, ,e,exact, ,@f,107,Keyword as exactly match
+apropos, ,m,system, ,@f @r,108,Search for other system
+apropos, ,M,manpath, ,@D @f @r,109,Manpath
+apropos, ,C,config-file, ,@r,110,Specify a configuration file
+apropos, ,V,version, ,@f,111,Display version and exit
+apropos, ,a,and, ,@f,112,Match all keywords
+apropos, ,l,long, ,@f,113,Do not trim output to terminal width
+apropos, ,s,section, ,@f @r,114,Search only these sections (colon-separated)
+apropos, ,L,locale, ,@f @r,115,Set locale
+apropos, ,s, , ,@f @r,116,specify manual section
+apropos, ,-d, , , ,117, 
+apropos, ,-d, , , ,118, 
+apropos, ,-d, , , ,119, 
+apropos, ,-d, , , ,120, 
+apropos, ,-d, , , ,121, 
+apropos, ,-d, , , ,122, 
+apropos, ,-d, , , ,123, 
+apropos, ,-d, , , ,124, 
+apropos, ,-d, , , ,125, 

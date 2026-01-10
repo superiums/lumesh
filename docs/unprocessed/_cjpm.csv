@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cjpm, __fish_use_subcommand, , ,init,@f,103,Init a new cangjie module
+cjpm, __fish_use_subcommand, , ,check,@f,104,Check the dependencies
+cjpm, __fish_use_subcommand, , ,update,@f,105,Update cjpm.lock
+cjpm, __fish_use_subcommand, , ,tree,@f,106,Display the package dependencies in the source code
+cjpm, __fish_use_subcommand, , ,build,@f,107,Compile the current module
+cjpm, __fish_use_subcommand, , ,run,@f,108,Compile and run an executable product
+cjpm, __fish_use_subcommand, , ,test,@f,109,Unittest a local package or module
+cjpm, __fish_use_subcommand, , ,bench,@f,110,Run benchmarks in a local package or module
+cjpm, __fish_use_subcommand, , ,clean,@f,111,Clean up the target directory
+cjpm, __fish_use_subcommand, , ,install,@f,112,Install a cangjie binary
+cjpm, __fish_use_subcommand, , ,uninstall,@f,113,Uninstall a cangjie binary

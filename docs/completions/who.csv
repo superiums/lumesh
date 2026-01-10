@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+who, ,a,all, , ,101,Same as -b -d --login -p -r -t -T -u
+who, ,b,boot, , ,102,Print time of last boot
+who, ,d,dead, , ,103,Print dead processes
+who, ,H,heading, , ,104,Print line of headings
+who, ,i,idle, , ,105,Print idle time
+who, ,l,login, , ,106,Print login process
+who, , ,lookup, , ,107,Canonicalize hostnames via DNS
+who, ,p,process, , ,108,Print active processes spawned by init
+who, ,q,count, , ,109,Print all login names and number of users logged on
+who, ,r,runlevel, , ,110,Print current runlevel
+who, ,s,short, , ,111,"Print name, line, and time"
+who, ,t,time, , ,112,Print last system clock change
+who, ,T,mesg, , ,113,"Print users message status as +, - or ?"
+who, ,w,writable, , ,114,"Print users message status as +, - or ?"
+who, , ,message, , ,115,"Print users message status as +, - or ?"
+who, ,u,users, , ,116,List users logged in
+who, , ,help, , ,117,Display help and exit
+who, , ,version, , ,118,Display version and exit

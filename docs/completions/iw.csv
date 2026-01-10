@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iw, , , , ,@f,101, 
+iw, , , , ,@f,102, 
+iw, event,t, , ,@f,103,Print timestamp
+iw, event,r, , ,@f,104,Print relative timestamp
+iw, event,f, , ,@f,105,Print full frame for auth/assoc
+iw, reg, , ,reload,@f,106,Reload the kernel's regulatory database
+iw, reg, , ,get,@f,107,Print the kernel's current regulatory domain information
+iw, reg, , ,set,@f,108,Notify the kernel about the current regulatory domain

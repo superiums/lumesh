@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-realpath, , ,relative-to, , ,101,print the resolved path relative to DIR
+uu-realpath, , ,relative-base, , ,102,print absolute paths unless paths below DIR
+uu-realpath, ,q,quiet, , ,103,Do not print warnings for invalid paths
+uu-realpath, ,s,no-symlinks, , ,104,"Only strip '.' and '..' components, but don't resolve symbolic links"
+uu-realpath, ,z,zero, , ,105,Separate output filenames with \\0 rather than newline
+uu-realpath, ,L,logical, , ,106,resolve '..' components before symlinks
+uu-realpath, ,P,physical, , ,107,resolve symlinks as encountered (default)
+uu-realpath, ,E,canonicalize, , ,108,all but the last component must exist (default)
+uu-realpath, ,e,canonicalize-existing, , ,109,"canonicalize by following every symlink in every component of the given name recursively, all components must exist"
+uu-realpath, ,m,canonicalize-missing, , ,110,"canonicalize by following every symlink in every component of the given name recursively, without requirements on components existence"
+uu-realpath, ,h,help, , ,111,Print help
+uu-realpath, ,V,version, , ,112,Print version

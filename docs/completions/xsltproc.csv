@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xsltproc, , ,catalogs, , ,101,Use the SGML catalog specified in SGML_CATALOG_FILES to resolve the location …
+xsltproc, , ,debug, , ,102,Output an XML tree of the transformed document for debugging purposes
+xsltproc, , ,dumpextensions, , ,103,Dumps the list of all registered extensions on stdout
+xsltproc, , ,html, , ,104,The input document is an HTML file
+xsltproc, , ,load-trace, , ,105,Display all the documents loaded during the processing to stderr
+xsltproc, , ,maxdepth, , ,106,Adjust the maximum depth of the template stack before libxslt(3) concludes it…
+xsltproc, , ,maxvars, , ,107,Maximum number of variables.  The default is 15000
+xsltproc, , ,huge, , ,108,Relax hardcoded limits of the XML parser by setting the XML_PARSE_HUGE parser…
+xsltproc, , ,seed-rand, , ,109,Initialize pseudo random number generator with specific seed
+xsltproc, , ,nodtdattr, , ,110,Do not apply default attributes from the document\\*(Aqs DTD
+xsltproc, , ,nomkdir, , ,111,Refuses to create directories
+xsltproc, , ,nonet, , ,112,"Do not use the Internet to fetch DTDs, entities or documents"
+xsltproc, , ,noout, , ,113,Do not output the result
+xsltproc, , ,novalid, , ,114,Skip loading the document\\*(Aqs DTD
+xsltproc, , ,nowrite, , ,115,Refuses to write to any file or resource
+xsltproc, ,o,output, , ,116,Direct output to the given FILE
+xsltproc, , ,encoding, , ,117,Allow to specify the encoding for the input
+xsltproc, , ,param, , ,118,Pass a parameter of name PARAMNAME and value PARAMVALUE to the stylesheet
+xsltproc, , ,path, , ,119,Use the (space- or colon-separated) list of filesystem paths specified by PAT…
+xsltproc, , ,norman, , ,120,Output profiling information detailing the amount of time spent in each part …
+xsltproc, , ,repeat, , ,121,Run the transformation 20 times.  Used for timing tests
+xsltproc, , ,stringparam, , ,122,Pass a parameter of name PARAMNAME and value PARAMVALUE where PARAMVALUE is a…
+xsltproc, , ,timing, , ,123,"Display the time used for parsing the stylesheet, parsing the document and ap…"
+xsltproc, ,v,verbose, , ,124,Output each step taken by xsltproc in processing the stylesheet and the docum…
+xsltproc, ,V,version, , ,125,Show the version of libxml(3) and libxslt(3) used
+xsltproc, , ,writesubtree, , ,126,Allow file write only within the PATH subtree
+xsltproc, , ,xinclude, , ,127,Process the input document using the XInclude specification
+xsltproc, , ,xincludestyle, , ,128,Process the stylesheet with XInclude

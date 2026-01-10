@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+set_color, , , , ,@f @r,101,Color
+set_color, ,b,background, ,@f @r,102,Change background color
+set_color, ,b,underline-color, ,@f @r,103,Change underline color
+set_color, ,o,bold, , ,104,Make font bold
+set_color, ,i,italics, , ,105,Italicise
+set_color, ,d,dim, , ,106,Dim text
+set_color, ,r,reverse, , ,107,Reverse color text
+set_color, ,u,underline,single double curly dotted dashed, ,108,Underline style
+set_color, ,h,help, , ,109,Display help and exit
+set_color, ,c,print-colors, , ,110,Print a list of all accepted color names

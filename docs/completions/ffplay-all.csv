@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ffplay-all, ,?,help, , ,101,"X Item '-h, -?, -help, --help [arg]' Show help"
+ffplay-all, , ,enable-libxevd, , ,102, 
+ffplay-all, , ,extra-cflags, , ,103, 
+ffplay-all, , ,extra-ldflags, , ,104,model 4

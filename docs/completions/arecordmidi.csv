@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+arecordmidi, ,h,help, , ,101,Prints a list of options
+arecordmidi, ,V,version, , ,102,Prints the current version
+arecordmidi, ,l,list, , ,103,Prints a list of possible input ports
+arecordmidi, ,p,port, , ,104,Sets the sequencer port(s) from which events are recorded
+arecordmidi, ,b,bpm, , ,105,"Sets the musical tempo of the MIDI file, in beats per minute"
+arecordmidi, ,f,fps, , ,106,"Sets the SMPTE resolution, in frames per second"
+arecordmidi, ,t,ticks, , ,107,"Sets the resolution of timestamps (ticks) in the MIDI file, in ticks per beat…"
+arecordmidi, ,s,split-channels, , ,108,Specifies that the data for each MIDI channel should be written to a separate…
+arecordmidi, ,m,metronome, , ,109,Plays a metronome signal on the specified sequencer port
+arecordmidi, ,i,timesig, , ,110,Sets the time signature for the MIDI file and metronome

@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mtr, , , , ,@f @r,101, 
+mtr, ,h,help, , ,102,Display help and exit
+mtr, ,v,version, , ,103,Output version information and exit
+mtr, ,F,filename, , ,104,Read hostname(s) from a file
+mtr, ,r,report, , ,105,Output a statistic report
+mtr, ,w,report-wide, , ,106,Output report with full hostnames
+mtr, ,x,xml, , ,107,Output xml format
+mtr, ,t,curses, , ,108,Use curses terminal interface
+mtr, , ,displaymode,\,@f @r,109,Select initial display mode
+mtr, ,g,gtk, , ,110,Use the GTK+ interface (if available)
+mtr, ,l,raw, , ,111,Output raw format
+mtr, ,C,csv, , ,112,Output csv format
+mtr, ,j,json, , ,113,Output json format
+mtr, ,p,split, , ,114,Split output
+mtr, ,n,no-dns, , ,115,Do not resolve host names
+mtr, ,b,show-ips, , ,116,Show IP numbers and host names
+mtr, ,o,order, , ,117,Select output fields
+mtr, ,y,ipinfo,\,@f @r,118,Select IP information in output
+mtr, ,z,aslookup, , ,119,Display AS number
+mtr, ,i,interval, , ,120,ICMP echo request interval (sec)
+mtr, ,c,report-cycles, , ,121,Set the number of pings sent
+mtr, ,s,psize, , ,122,Set the packet size used for probing (bytes)
+mtr, ,B,bitpattern, ,@f @r,123,Set bit pattern to use in payload
+mtr, ,G,gracetime, , ,124,Number of seconds to wait for responses
+mtr, ,Q,tos, ,@f @r,125,Type of service field in IP header
+mtr, ,e,mpls, , ,126,Display information from ICMP extensions
+mtr, ,I,interface, , ,127,Use named network interface
+mtr, ,a,address, , ,128,Bind the outgoing socket to ADDRESS
+mtr, ,f,first-ttl, , ,129,Set the TTL start number
+mtr, ,m,max-ttl, , ,130,Maximum number of hops
+mtr, ,U,max-unknown, , ,131,Maximum number of unknown host
+mtr, ,u,udp, , ,132,use UDP instead of ICMP echo
+mtr, ,T,tcp, , ,133,use TCP instead of ICMP echo
+mtr, ,S,sctp, , ,134,Use Stream Control Transmission instead of ICMP echo
+mtr, ,P,port, , ,135,Target port number for TCP SCTP or UDP
+mtr, ,L,localport, , ,136,Source port number for UDP
+mtr, ,Z,timeout, , ,137,Seconds to keep probe sockets open
+mtr, ,M,mark, , ,138,Mark each sent packet

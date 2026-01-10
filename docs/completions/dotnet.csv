@@ -1,0 +1,270 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dotnet, ,d,diagnostics, ,@f,107,Enable diagnostic output
+dotnet, ,h,help, ,@f,108,Show help
+dotnet, nuget && add && client-cert source, , ,client-cert,@f,131,Add a client certificate configuration
+dotnet, nuget && add && client-cert source, , ,source,@f,131,Add a NuGet source
+dotnet, nuget && disable && source, , ,source,@f,131,Disable a NuGet source
+dotnet, nuget && enable && source, , ,source,@f,131,Enable a NuGet source
+dotnet, nuget && list && client-cert source, , ,client-cert,@f,131,List all the client certificates in the configuration
+dotnet, nuget && list && client-cert source, , ,source,@f,131,List all configured NuGet sources
+dotnet, nuget && remove && client-cert source, , ,client-cert,@f,131,Remove the client certificate configuration
+dotnet, nuget && remove && client-cert source, , ,source,@f,131,Remove a NuGet source
+dotnet, nuget && update && client-cert source, , ,client-cert,@f,131,Update the client certificate configuration
+dotnet, nuget && update && client-cert source, , ,source,@f,131,Update a NuGet source
+dotnet, add && package,v,version, ,@f @r,132,Version of the package to add
+dotnet, add && package,f,framework, ,@f @r,133,Add the reference only when targeting a specific framework
+dotnet, add && package,n,no-restore, ,@f,134,Add the reference without performing restore preview and compatibility check
+dotnet, add && package,s,source, ,@f,135,NuGet package source to use during the restore
+dotnet, add && package, ,package-directory, ,@f,136,Directory to restore packages
+dotnet, add && package, ,interactive, ,@f,137,Allow interactive input/action
+dotnet, add && package, ,prerelease, ,@f,138,Allow prerelease packages to be installed
+dotnet, add && reference,f,framework, ,@f @r,139,Add the reference only when targeting a specific framework
+dotnet, add && reference, ,interactive, ,@f,140,Allow interactive input/action
+dotnet, build,o,output, ,@f,141,Output directory to place built artifacts
+dotnet, build,f,framework, ,@f @r,142,Target framework to build
+dotnet, build,c,configuration,$build_configurations,@f @r,143,Configuration to use
+dotnet, build,r,runtime, ,@f @r,144,Target runtime to build
+dotnet, build, ,version-suffix, ,@f @r,145,Set the value of the \$(VersionSuffix) property to use
+dotnet, build, ,no-incremental, ,@f,146,Don't use incremental building
+dotnet, build, ,no-dependencies, ,@f,147,Don't build P2P references
+dotnet, build, ,nologo, ,@f,148,Don't display the startup banner or the copyright message
+dotnet, build, ,no-restore, ,@f,149,Don't restore the project before building
+dotnet, build, ,interactive, ,@f,150,Allow interactive input/action
+dotnet, build,v,verbosity,$msbuild_verbosity_levels,@f @r,151,Set the MSBuild verbosity level
+dotnet, build, ,force, ,@f,152,Force all dependencies to be resolved
+dotnet, build-server && shutdown, , ,shutdown,@f,152,Shutdown build servers
+dotnet, build-server && shutdown, ,msbuild, ,@f,153,Shutdown the MSBuild build server
+dotnet, build-server && shutdown, ,vbcscompiler, ,@f,154,Shutdown the VB/C# compiler build server
+dotnet, build-server && shutdown, ,razor, ,@f,155,Shutdown the Razor build server
+dotnet, clean,o,output, ,@f,156,Directory containing the build artifacts to clean
+dotnet, clean, ,nologo, ,@f,157,Don't display the startup banner or the copyright message
+dotnet, clean,f,framework, ,@f @r,158,Target framework to clean
+dotnet, clean,r,runtime, ,@f @r,159,Target runtime to clean
+dotnet, clean,c,configuration,$build_configurations,@f @r,160,Configuration to clean
+dotnet, clean, ,interactive, ,@f,161,Allow interactive input/action
+dotnet, clean,v,verbosity,$msbuild_verbosity_levels,@f @r,162,Set the MSBuild verbosity level
+dotnet, list && package, ,outdated, ,@f,163,List packages that have newer versions
+dotnet, list && package, ,deprecated, ,@f,164,List packages that have been deprecated
+dotnet, list && package, ,framework, ,@f @r,165,Choose a framework to show its packages
+dotnet, list && package, ,include-transitive, ,@f,166,List transitive and top-level packages
+dotnet, list && package, ,include-prerelease, ,@f,167,Consider packages with prerelease versions
+dotnet, list && package, ,highest-patch, ,@f,168,Consider only the packages with a matching major and minor version numbers
+dotnet, list && package, ,highest-minor, ,@f,169,Consider only the packages with a matching major version number
+dotnet, list && package, ,config, ,@f,170,Path to the NuGet config file to use
+dotnet, list && package, ,source, ,@f,171,NuGet sources to use
+dotnet, list && package, ,interactive, ,@f,172,Allow interactive input/action
+dotnet, list && package,v,verbosity,$msbuild_verbosity_levels,@f @r,173,Set the MSBuild verbosity level
+dotnet, new,l,list, ,@f,174,List templates containing the specified name
+dotnet, new,n,name, ,@f,175,Name for the output being created
+dotnet, new,o,output, ,@f,176,Location to place the generated output
+dotnet, new,i,install, ,@f,177,Install a template pack
+dotnet, new,u,uninstall, ,@f,178,Uninstall a template pack
+dotnet, new, ,interactive, ,@f,179,Allow interactive input/action
+dotnet, new, ,nuget-source, ,@f,180,Specify a NuGet source to use during install
+dotnet, new, ,type,project item,@f @r,181,Filter templates based on available types
+dotnet, new, ,dry-run, ,@f,182,Dry run
+dotnet, new, ,force, ,@f,183,Force content to be generated
+dotnet, new, ,language,C# F# VB,@f @r,184,Language of the template to create
+dotnet, new, ,update-check, ,@f,185,Check the currently installed template packs for updates
+dotnet, new, ,update-apply, ,@f,186,Check the currently installed template packs for updates and installs them
+dotnet, nuget && add && client-cert,s,package-source, ,@f,187,Package source name
+dotnet, nuget && add && client-cert, ,path, ,@f,188,Path to certificate file
+dotnet, nuget && add && client-cert, ,password, ,@f @r,189,Password for the certificate
+dotnet, nuget && add && client-cert, ,store-password-in-clear-text, ,@f,190,Enable storing password for the certificate
+dotnet, nuget && add && client-cert, ,store-location, ,@f,191,Certificate store location
+dotnet, nuget && add && client-cert, ,store-name, ,@f,192,Certificate store name
+dotnet, nuget && add && client-cert, ,find-by, ,@f,193,Search method to find certificate in certificate store
+dotnet, nuget && add && client-cert, ,find-value, ,@f,194,Search the certificate store for the supplied value
+dotnet, nuget && add && client-cert,f,force, ,@f,195,Skip certificate validation
+dotnet, nuget && add && client-cert, ,configfile, ,@f,196,NuGet configuration file
+dotnet, nuget && add && source,n,name, ,@f,197,Name of the source
+dotnet, nuget && add && source,u,username, ,@f @r,198,Username to be used
+dotnet, nuget && add && source,p,password, ,@f @r,199,Password to be used
+dotnet, nuget && add && source, ,store-password-in-clear-text, ,@f,200,Enable storing portable package source credentials
+dotnet, nuget && add && source, ,valid-authentication-types, ,@f,201,Comma-separated list of valid authentication types
+dotnet, nuget && add && source, ,configfile, ,@f,202,NuGet configuration file
+dotnet, nuget && delete, ,force-english-output, ,@f,203,Run the application with locale set to English
+dotnet, nuget && delete,s,source, ,@f,204,Package source to use
+dotnet, nuget && delete, ,non-interactive, ,@f,205,Don't prompt for user input or confirmations
+dotnet, nuget && delete,k,api-key, ,@f @r,206,API key for the server
+dotnet, nuget && delete, ,no-service-endpoint, ,@f,207,Doesn't append 'api/v2/package' to the source URL
+dotnet, nuget && delete, ,interactive, ,@f,208,Allow interactive input/action
+dotnet, nuget && disable && source, ,configfile, ,@f,209,NuGet configuration file
+dotnet, nuget && enable && source, ,configfile, ,@f,210,NuGet configuration file
+dotnet, nuget && list && client-cert, ,configfile, ,@f,211,NuGet configuration file
+dotnet, nuget && list && source, ,format, ,@f @r,212,Format of the list command output
+dotnet, nuget && list && source, ,configfile, ,@f,213,NuGet configuration file
+dotnet, nuget && locals, ,force-english-output, ,@f,214,Run the application with locale set to English
+dotnet, nuget && locals,c,clear, ,@f,215,Clear the selected local resources or cache location
+dotnet, nuget && locals,l,list, ,@f,216,List the selected local resources or cache location
+dotnet, nuget && push, ,force-english-output, ,@f,217,Run the application with locale set to English
+dotnet, nuget && push,s,source, ,@f,218,Package source to use
+dotnet, nuget && push, ,symbol-source, ,@f,219,Symbol server URL to use
+dotnet, nuget && push,t,timeout, ,@f @r,220,Timeout for pushing to a server
+dotnet, nuget && push,k,api-key, ,@f @r,221,API key for the server
+dotnet, nuget && push, ,symbol-api-key, ,@f @r,222,API key for the symbol server
+dotnet, nuget && push,d,disable-buffering, ,@f,223,Disable buffering when pushing to an HTTP server
+dotnet, nuget && push,n,no-symbols, ,@f,224,Doesn't push symbols
+dotnet, nuget && push, ,no-service-endpoint, ,@f,225,Doesn't append 'api/v2/package' to the source URL
+dotnet, nuget && push, ,interactive, ,@f,226,Allow interactive input/action
+dotnet, nuget && push, ,skip-duplicate, ,@f,227,Treat any 409 Conflict response as a warning
+dotnet, nuget && remove && client-cert,s,package-source, ,@f,228,Package source name
+dotnet, nuget && remove && client-cert, ,configfile, ,@f,229,NuGet configuration file
+dotnet, nuget && remove && source, ,configfile, ,@f,230,NuGet configuration file
+dotnet, nuget && update && client-cert,s,package-source, ,@f,231,Package source name
+dotnet, nuget && update && client-cert, ,path, ,@f,232,Path to certificate file
+dotnet, nuget && update && client-cert, ,password, ,@f @r,233,Password for the certificate
+dotnet, nuget && update && client-cert, ,store-password-in-clear-text, ,@f,234,Enable storing password for the certificate
+dotnet, nuget && update && client-cert, ,store-location, ,@f,235,Certificate store location
+dotnet, nuget && update && client-cert, ,store-name, ,@f,236,Certificate store name
+dotnet, nuget && update && client-cert, ,find-by, ,@f,237,Search method to find certificate in certificate store
+dotnet, nuget && update && client-cert, ,find-value, ,@f,238,Search the certificate store for the supplied value
+dotnet, nuget && update && client-cert,f,force, ,@f,239,Skip certificate validation
+dotnet, nuget && update && client-cert, ,configfile, ,@f,240,NuGet configuration file
+dotnet, nuget && update && source,s,source, ,@f,241,Path to the package source
+dotnet, nuget && update && source,u,username, ,@f @r,242,Username to be used
+dotnet, nuget && update && source,p,password, ,@f @r,243,Password to be used
+dotnet, nuget && update && source, ,store-password-in-clear-text, ,@f,244,Enable storing portable package source credentials
+dotnet, nuget && update && source, ,valid-authentication-types, ,@f,245,Comma-separated list of valid authentication types
+dotnet, nuget && update && source, ,configfile, ,@f,246,NuGet configuration file
+dotnet, nuget && verify, ,all, ,@f,247,Specify that all verifications possible should be performed
+dotnet, nuget && verify, ,certificate-fingerprint, ,@f @r,248,Verify that the certificate matches with the fingerprints
+dotnet, nuget && verify,v,verbosity,$msbuild_verbosity_levels,@f @r,249,Set the verbosity level
+dotnet, pack,o,output, ,@f,250,Output directory to place built packages
+dotnet, pack, ,no-build, ,@f,251,Don't build the project before packing
+dotnet, pack, ,include-symbols, ,@f,252,Include packages with symbols in output directory
+dotnet, pack, ,include-source, ,@f,253,Include PDBs and source files
+dotnet, pack,c,configuration,$build_configurations,@f @r,254,Configuration to use
+dotnet, pack, ,version-suffix, ,@f @r,255,Set the value of the \$(VersionSuffix) property to use
+dotnet, pack,s,serviceable, ,@f,256,Set the serviceable flag in the package
+dotnet, pack, ,nologo, ,@f,257,Don't display the startup banner or the copyright message
+dotnet, pack, ,interactive, ,@f,258,Allow interactive input/action
+dotnet, pack, ,no-restore, ,@f,259,Don't restore the project before building
+dotnet, pack,v,verbosity,$msbuild_verbosity_levels,@f,260,Set the MSBuild verbosity level
+dotnet, pack, ,runtime, ,@f @r,261,Target runtime to restore packages
+dotnet, pack, ,no-dependencies, ,@f,262,Don't build P2P references
+dotnet, pack, ,force, ,@f,263,Force all dependencies to be resolved
+dotnet, publish,o,output, ,@f,264,Output directory to place the published artifacts
+dotnet, publish,f,framework, ,@f @r,265,Target framework to publish
+dotnet, publish,r,runtime, ,@f @r,266,Target runtime to publish
+dotnet, publish,c,configuration,$build_configurations,@f @r,267,Configuration to publish
+dotnet, publish, ,version-suffix, ,@f @r,268,Set the value of the \$(VersionSuffix) property to use
+dotnet, publish, ,manifest, ,@f,269,Path to a target manifest file
+dotnet, publish, ,no-build, ,@f,270,Don't build the project before publishing
+dotnet, publish, ,self-contained, ,@f @r,271,Publish the .NET runtime with your application
+dotnet, publish, ,no-self-contained, ,@f,272,Publish your application as a framework dependent application
+dotnet, publish, ,nologo, ,@f,273,Don't display the startup banner or the copyright message
+dotnet, publish, ,interactive, ,@f,274,Allow interactive input/action
+dotnet, publish, ,no-restore, ,@f,275,Don't restore the project before building
+dotnet, publish,v,verbosity,$msbuild_verbosity_levels,@f @r,276,Set the MSBuild verbosity level
+dotnet, publish, ,no-dependencies, ,@f,277,Don't restore P2P references
+dotnet, publish, ,force, ,@f,278,Force all dependencies to be resolved
+dotnet, remove && package, ,interactive, ,@f,279,Allow interactive input/action
+dotnet, remove && reference,f,framework, ,@f @r,280,Remove the reference only when targeting a specific framework
+dotnet, restore && tool,s,source, ,@f,280,NuGet package source to use for the restore
+dotnet, restore && tool,r,runtime, ,@f @r,280,Target runtime to restore packages
+dotnet, restore && tool, ,packages, ,@f,280,Directory to restore packages
+dotnet, restore && tool, ,disable-parallel, ,@f,280,Prevent restoring multiple projects in parallel
+dotnet, restore && tool, ,configfile, ,@f,280,NuGet configuration file to use
+dotnet, restore && tool, ,no-cache, ,@f,280,Don't cache packages and HTTP requests
+dotnet, restore && tool, ,ignore-failed-sources, ,@f,280,Treat package source failures as warnings
+dotnet, restore && tool, ,no-dependencies, ,@f,280,Don't restore P2P references
+dotnet, restore && tool,f,force, ,@f,280,Force all dependencies to be resolved
+dotnet, restore && tool,v,verbosity,$msbuild_verbosity_levels,@f @r,280,Set the MSBuild verbosity level
+dotnet, restore && tool, ,interactive, ,@f,280,Allow interactive input/action
+dotnet, restore && tool, ,use-lock-file, ,@f,280,Enable project lock file to be generated
+dotnet, restore && tool, ,locked-mode, ,@f,280,Don't allow updating project lock file
+dotnet, restore && tool, ,lock-file-path, ,@f,280,Output location where project lock file is written
+dotnet, restore && tool, ,force-evaluate, ,@f,280,Force restore to reevaluate all dependencies
+dotnet, run && tool,c,configuration,$build_configurations,@f @r,280,Configuration to run
+dotnet, run && tool,f,framework, ,@f @r,280,Target framework to run
+dotnet, run && tool,r,runtime, ,@f @r,280,Target runtime to run
+dotnet, run && tool,p,project, ,@f,280,Path to the project file to run
+dotnet, run && tool, ,launch-profile, ,@f @r,280,Name of the launch profile to use
+dotnet, run && tool, ,no-launch-profile, ,@f,280,Don't attempt to use launchSettings.json
+dotnet, run && tool, ,no-build, ,@f,280,Don't build the project before running
+dotnet, run && tool, ,interactive, ,@f,280,Allow interactive input/action
+dotnet, run && tool, ,no-restore, ,@f,280,Don't restore the project before building
+dotnet, run && tool,v,verbosity,$msbuild_verbosity_levels,@f @r,280,Set the MSBuild verbosity level
+dotnet, run && tool, ,no-dependencies, ,@f,280,Don't restore P2P references
+dotnet, run && tool, ,force, ,@f,280,Force all dependencies to be resolved
+dotnet, sln && add, ,in-root, ,@f,281,Place project in root of the solution
+dotnet, sln && add,s,solution-folder, ,@f,282,Destination solution folder path to add the projects
+dotnet, store,m,manifest, ,@f,283,XML file that contains the list of packages to be stored
+dotnet, store,f,framework, ,@f @r,284,Target framework to store packages
+dotnet, store, ,framework-version, ,@f @r,285,Specify the .NET SDK version
+dotnet, store,r,runtime, ,@f @r,286,Target runtime to store packages
+dotnet, store,o,output, ,@f,287,Output directory to store the given assemblies
+dotnet, store,w,working-dir, ,@f,288,Working directory used by the command
+dotnet, store, ,skip-optimization, ,@f,289,Skip the optimization phase
+dotnet, store, ,skip-symbols, ,@f,290,Skip creating symbol files
+dotnet, store,v,verbosity,$msbuild_verbosity_levels,@f @r,291,Set the MSBuild verbosity level
+dotnet, test,s,settings, ,@f,292,Settings file to use
+dotnet, test,t,list-tests, ,@f,293,List the discovered tests
+dotnet, test, ,filter, ,@f @r,294,Run tests that match the given expression
+dotnet, test,a,test-adapter-path, ,@f,295,Path to the custom adapters to use
+dotnet, test,l,logger, ,@f @r,296,Logger to use for test results
+dotnet, test,c,configuration,$build_configurations,@f @r,297,Configuration to use
+dotnet, test,f,framework, ,@f @r,298,Target framework to run tests
+dotnet, test, ,runtime, ,@f @r,299,Target runtime to test
+dotnet, test,o,output, ,@f,300,Output directory to place built artifacts
+dotnet, test,d,diag, ,@f,301,Enable verbose logging to the specified file
+dotnet, test, ,no-build, ,@f,302,Don't build the project before testing
+dotnet, test,r,results-directory, ,@f,303,Directory where the test results will be placed
+dotnet, test, ,collect, ,@f @r,304,Enable data collector for the test run
+dotnet, test, ,blame, ,@f,305,Run the tests in blame mode
+dotnet, test, ,blame-crash, ,@f,306,Run the tests in blame mode and enables collecting crash dump
+dotnet, test, ,blame-crash-dump-type, ,@f @r,307,Type of crash dump to be collected
+dotnet, test, ,blame-crash-collect-always, ,@f,308,Enable collecting crash dump on expected
+dotnet, test, ,blame-hang, ,@f,309,Run the tests in blame mode and enables collecting hang dump
+dotnet, test, ,blame-hang-dump-type, ,@f @r,310,Type of crash dump to be collected
+dotnet, test, ,blame-hang-timeout, ,@f @r,311,Per-test timeout
+dotnet, test, ,nologo, ,@f,312,Run tests without displaying the Microsoft TestPlatform banner
+dotnet, test, ,no-restore, ,@f,313,Don't restore the project before building
+dotnet, test, ,interactive, ,@f,314,Allow interactive input/action
+dotnet, test,v,verbosity,$msbuild_verbosity_levels,@f @r,315,Set the MSBuild verbosity level
+dotnet, tool && install,g,global, ,@f,316,Specify that the installation is user-wide
+dotnet, tool && install, ,local, ,@f,317,Specify a local tool installation
+dotnet, tool && install, ,tool-path, ,@f,318,Directory where the tool will be installed
+dotnet, tool && install, ,version, ,@f @r,319,Version of the tool to install
+dotnet, tool && install, ,configfile, ,@f,320,NuGet configuration file to use
+dotnet, tool && install, ,tool-manifest, ,@f,321,Path to the manifest file
+dotnet, tool && install, ,add-source, ,@f,322,Add an additional NuGet package source to use during installation
+dotnet, tool && install, ,framework, ,@f @r,323,Target framework to install the tool
+dotnet, tool && install, ,disable-parallel, ,@f,324,Prevent restoring multiple projects in parallel
+dotnet, tool && install, ,ignore-failed-sources, ,@f,325,Treat package source failures as warnings
+dotnet, tool && install, ,no-cache, ,@f,326,Don't cache packages and HTTP requests
+dotnet, tool && install, ,interactive, ,@f,327,Allow interactive input/action
+dotnet, tool && install,v,verbosity,$msbuild_verbosity_levels,@f @r,328,Set the MSBuild verbosity level
+dotnet, tool && uninstall,g,global, ,@f,329,Specify that the tool to be removed is from a user-wide installation
+dotnet, tool && uninstall, ,local, ,@f,330,Specify that the tool to be removed is a local tool
+dotnet, tool && uninstall, ,tool-path, ,@f,331,Directory containing the tool to uninstall
+dotnet, tool && uninstall, ,tool-manifest, ,@f,332,Path to the manifest file
+dotnet, tool && update,g,global, ,@f,333,Specify that the update is for a user-wide tool
+dotnet, tool && update, ,tool-path, ,@f,334,Directory containing the tool to update
+dotnet, tool && update, ,local, ,@f,335,Specify that the tool to be updated is a local tool
+dotnet, tool && update, ,configfile, ,@f,336,NuGet configuration file to use
+dotnet, tool && update, ,add-source, ,@f,337,Add an additional NuGet package source to use during the update
+dotnet, tool && update, ,framework, ,@f @r,338,Target framework to update the tool
+dotnet, tool && update, ,version, ,@f @r,339,Version range of the tool package to update
+dotnet, tool && update, ,tool-manifest, ,@f,340,Path to the manifest file
+dotnet, tool && update, ,disable-parallel, ,@f,341,Prevent restoring multiple projects in parallel
+dotnet, tool && update, ,ignore-failed-sources, ,@f,342,Treat package source failures as warnings
+dotnet, tool && update, ,no-cache, ,@f,343,Don't cache packages and HTTP requests
+dotnet, tool && update, ,interactive, ,@f,344,Allow interactive input/action
+dotnet, tool && update,v,verbosity,$msbuild_verbosity_levels,@f @r,345,Set the MSBuild verbosity level
+dotnet, tool && list,g,global, ,@f,346,List user-wide global tools
+dotnet, tool && list, ,local, ,@f,347,List local tools
+dotnet, tool && list, ,tool-path, ,@f,348,Directory containing the tools to list
+dotnet, tool && search, ,detail, ,@f,349,Show detail result of the query
+dotnet, tool && search, ,skip, ,@f @r,350,Specify the number of query results to skip
+dotnet, tool && search, ,take, ,@f @r,351,Specify the number of query results to show
+dotnet, tool && search, ,prerelease, ,@f,352,Include pre-release packages
+dotnet, tool && restore, ,configfile, ,@f,353,NuGet configuration file to use
+dotnet, tool && restore, ,add-source, ,@f,354,Add an additional NuGet package source to use during installation
+dotnet, tool && restore, ,tool-manifest, ,@f,355,Path to the manifest file
+dotnet, tool && restore, ,disable-parallel, ,@f,356,Prevent restoring multiple projects in parallel
+dotnet, tool && restore, ,ignore-failed-sources, ,@f,357,Treat package source failures as warnings
+dotnet, tool && restore, ,no-cache, ,@f,358,Don't cache packages and HTTP requests
+dotnet, tool && restore, ,interactive, ,@f,359,Allow interactive input/action
+dotnet, tool && restore,v,verbosity,$msbuild_verbosity_levels,@f @r,360,Set the MSBuild verbosity level

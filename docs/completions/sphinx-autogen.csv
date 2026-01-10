@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sphinx-autogen, ,h,help, , ,101,Display usage summary
+sphinx-autogen, , ,version, , ,102,Display Sphinx version
+sphinx-autogen, ,s,suffix, , ,103,Default suffix for files
+sphinx-autogen, ,t,templates, , ,104,Custom template directory
+sphinx-autogen, ,i,imported-members, , ,105,Document imported members

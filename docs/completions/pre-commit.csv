@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pre-commit, autoupdate, ,bleeding-edge, , ,107,Update to the bleeding edge of `HEAD`
+pre-commit, autoupdate, ,freeze, , ,108,Store frozen hashes in `rev`
+pre-commit, autoupdate, ,repo, , ,109,Only update this repository
+pre-commit, help, , ,$commands, ,113,Command
+pre-commit, init-templatedir, ,no-allow-missing-config, , ,115,Assume cloned repos should have a config
+pre-commit, init-templatedir,t,hook-type,$hook_types, ,116,Type of hook to install
+pre-commit, init-templatedir, , , ,@D,117,Directory to write scripts
+pre-commit, install, ,allow-missing-config, , ,119,Allow missing config file
+pre-commit, install, ,install-hooks, , ,120,Install hook environments
+pre-commit, install,t,hook-type,$hook_types, ,121,Type of hook to install
+pre-commit, install,f,overwrite, , ,122,Overwrite existing hooks
+pre-commit, run try-repo, ,checkout-type,0 1, ,127,Indicate either branch or file checkout
+pre-commit, run try-repo, ,commit-msg-filename, ,@r,128,Filename to check when running during `commit-msg`
+pre-commit, run try-repo, ,commit-object-name, , ,129,Commit object name
+pre-commit, run try-repo, ,files, ,@r,130,Filenames to run hooks on
+pre-commit, run try-repo, ,hook-stage,$hook_stages, ,131,The stage during which the hook is fired
+pre-commit, run try-repo, ,is-squash-merge, , ,132,Whether the merge was a squash merge
+pre-commit, run try-repo, ,local-branch, , ,133,Local branch ref used by `git push`
+pre-commit, run try-repo, ,prepare-commit-message-source, , ,134,Source of the commit message
+pre-commit, run try-repo, ,remote-branch, , ,135,Remote branch ref used by `git push`
+pre-commit, run try-repo, ,remote-name, , ,136,Remote name used by `git push`
+pre-commit, run try-repo, ,remote-url, , ,137,Remote url used by `git push`
+pre-commit, run try-repo, ,rewrite-command, , ,138,The command that invoked the rewrite
+pre-commit, run try-repo, ,show-diff-on-failure, , ,139,Show `git diff` on hook failure
+pre-commit, run try-repo,a,all-files, , ,140,Run on all the files in the repo
+pre-commit, run try-repo,s,from-ref, , ,141,Original ref
+pre-commit, run try-repo,o,to-ref, , ,142,Destination ref
+pre-commit, run try-repo,v,verbose, , ,143,Verbose
+pre-commit, try-repo, ,rev, , ,144,Ref to run against
+pre-commit, uninstall,t,hook-type,$hook_types, ,147,Type of hook to uninstall

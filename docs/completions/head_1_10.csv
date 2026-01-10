@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+head, ,c,bytes, , ,101,"print the first NUM bytes of each file; with the leading '-', print all but t…"
+head, ,n,lines, , ,102,"print the first NUM lines instead of the first 10; with the leading '-', prin…"
+head, ,q,silent, , ,103,never print headers giving file names
+head, ,v,verbose, , ,104,always print headers giving file names
+head, ,z,zero-terminated, , ,105,"line delimiter is NUL, not newline"
+head, , ,help, , ,106,display this help and exit
+head, , ,version, , ,107,output version information and exit

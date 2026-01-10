@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+glib-gettextize, , ,no-changelog, , ,101,OPTIONS
+glib-gettextize, , ,help, , ,102,Print help and exit
+glib-gettextize, , ,version, , ,103,Print version information and exit
+glib-gettextize, ,c,copy, , ,104,Copy files instead of making symlinks
+glib-gettextize, ,f,force, , ,105,Force writing of new files even if old ones exist.  SEE ALSO

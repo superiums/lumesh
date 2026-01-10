@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-pinky, , ,lookup, , ,101,attempt to canonicalize hostnames via DNS
+uu-pinky, , ,help, , ,102,Print help information
+uu-pinky, ,V,version, , ,103,Print version

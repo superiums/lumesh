@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ip-link, ,j,set-class, , ,101,and this '4' priority can be used in the egress qos mapping to set VLAN prio …

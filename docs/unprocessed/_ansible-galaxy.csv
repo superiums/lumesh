@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ansible-galaxy, __fish_use_subcommand, ,version, , ,101,Show version and config
+ansible-galaxy, __fish_use_subcommand,v,verbose, , ,103,"Verbose mode (-vvv for more, -vvvv for connection debugging)"
+ansible-galaxy, __fish_use_subcommand, , ,collection, ,104, 

@@ -1,0 +1,55 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xmllint, , ,auto, , ,101,Generate a small document for testing purposes
+xmllint, , ,catalogs, , ,102,Use the SGML catalog(s) from SGML_CATALOG_FILES
+xmllint, , ,compress, , ,103,Turn on gzip(1) compression of output
+xmllint, , ,copy, , ,104,Test the internal copy implementation
+xmllint, , ,c14n, , ,105,Use the W3C XML Canonicalisation (C14N) to serialize the result of parsing to…
+xmllint, , ,dtdvalid, , ,106,Use the DTD specified by an URL for validation
+xmllint, , ,dtdvalidfpi, , ,107,"Use the DTD specified by a Formal Public Identifier FPI for validation, note …"
+xmllint, , ,debug, , ,108,Parse a file and output an annotated tree of the in-memory version of the doc…
+xmllint, , ,debugent, , ,109,Debug the entities defined in the document
+xmllint, , ,dropdtd, , ,110,Remove DTD from output
+xmllint, , ,dtdattr, , ,111,Fetch external DTD and populate the tree with inherited attributes
+xmllint, , ,encode, , ,112,Output in the given encoding
+xmllint, , ,format, , ,113,Reformat and reindent the output
+xmllint, , ,help, , ,114,Print out a short usage summary for xmllint
+xmllint, , ,html, , ,115,Use the HTML parser
+xmllint, , ,htmlout, , ,116,Output results as an HTML file
+xmllint, , ,insert, , ,117,Test for valid insertions
+xmllint, , ,loaddtd, , ,118,Fetch an external DTD
+xmllint, , ,load-trace, , ,119,Display all the documents loaded during the processing to stderr
+xmllint, , ,max-ampl, , ,120,Set the maximum amplification factor which protects against exponential entit…
+xmllint, , ,maxmem, , ,121,Test the parser memory support
+xmllint, , ,memory, , ,122,Parse from memory
+xmllint, , ,noblanks, , ,123,Drop ignorable blank spaces
+xmllint, , ,nocatalogs, , ,124,Do not use any catalogs
+xmllint, , ,nocdata, , ,125,Substitute CDATA section by equivalent text nodes
+xmllint, , ,nodict, , ,126,Don\\*(Aqt use dictionaries (parser option XML_PARSE_NODICT)
+xmllint, , ,noent, , ,127,Substitute entity values for entity references
+xmllint, , ,nonet, , ,128,Do not use the Internet to fetch DTDs or entities
+xmllint, , ,noout, , ,129,"Suppress output.  By default, xmllint outputs the result tree"
+xmllint, , ,nowarning, , ,130,Do not emit warnings from the parser and/or validator
+xmllint, , ,nowrap, , ,131,Do not output HTML doc wrapper
+xmllint, , ,noxincludenode, , ,132,Do XInclude processing but do not generate XInclude start and end nodes
+xmllint, , ,nsclean, , ,133,Remove redundant namespace declarations
+xmllint, , ,output, , ,134,Define a file path where xmllint will save the result of parsing
+xmllint, , ,path, , ,135,Use the (space- or colon-separated) list of filesystem paths specified by PAT…
+xmllint, , ,pattern, , ,136,"Used to exercise the pattern recognition engine, which can be used with the r…"
+xmllint, , ,pedantic, , ,137,Enable additional warnings
+xmllint, , ,postvalid, , ,138,Validate after parsing has completed
+xmllint, , ,push, , ,139,Use the push mode of the parser
+xmllint, , ,quiet, , ,140,Don\\*(Aqt print informational messages to stderr
+xmllint, , ,recover, , ,141,Output any parsable portions of an invalid document
+xmllint, , ,relaxng, , ,142,Use RelaxNG file named SCHEMA for validation
+xmllint, , ,repeat, , ,143,"Repeat 100 times, for timing or profiling"
+xmllint, , ,schema, , ,144,Use a W3C XML Schema file named SCHEMA for validation
+xmllint, , ,shell, , ,145,Run a navigating shell
+xmllint, , ,xpath, , ,146,Run an XPath expression given as argument and print the result
+xmllint, , ,stream, , ,147,Use streaming API - useful when used in combination with --relaxng or --valid…
+xmllint, , ,testIO, , ,148,Test user input/output support
+xmllint, , ,timing, , ,149,Output information about the time it takes xmllint to perform the various ste…
+xmllint, , ,valid, , ,150,Determine if the document is a valid instance of the included Document Type D…
+xmllint, , ,version, , ,151,Display the version of libxml(3) used
+xmllint, , ,walker, , ,152,"Test the walker module, which is a reader interface but for a document tree, …"
+xmllint, , ,xinclude, , ,153,Do XInclude processing
+xmllint, , ,xmlout, , ,154,Used in conjunction with --html

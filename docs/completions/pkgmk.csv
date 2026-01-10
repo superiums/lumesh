@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkgmk, , ,install, ,@f,101,Install with pkgadd after build
+pkgmk, , ,upgrade, ,@f,102,Upgrade with pkgadd after build
+pkgmk, , ,recursive, ,@f,103,Search and build packages recursively
+pkgmk, , ,download, ,@f,104,Download the sources
+pkgmk, , ,download-only, ,@f,105,Only download the sources
+pkgmk, , ,up-to-date, ,@f,106,Check if the package is uptodate
+pkgmk, , ,update-footprint, ,@f,107,Update footprint
+pkgmk, , ,ignore-footprint, ,@f,108,Ignore footprint
+pkgmk, , ,update-md5sum, ,@f,109,Update md5sum
+pkgmk, , ,ignore-md5sum, ,@f,110,Ignore md5sum
+pkgmk, , ,no-strip, ,@f,111,Do not strip executables
+pkgmk, , ,force, ,@f,112,Force rebuild
+pkgmk, , ,clean, ,@f,113,Remove package and sources
+pkgmk, , ,keep-work, ,@f,114,Keep working dir
+pkgmk, , ,config-file, ,@f @r,115,Use another config
+pkgmk, , ,version, ,@f,116,Print version
+pkgmk, , ,help, ,@f,117,Print help

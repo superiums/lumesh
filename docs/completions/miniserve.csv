@@ -1,0 +1,50 @@
+cmd,conds,short,long,params,dirs,pri,desc
+miniserve, , ,temp-directory, ,@r,101,The path to where file uploads will be written to before being moved to their correct location. It's wise to make sure that this directory will be written to disk and not into memory
+miniserve, , ,index, ,@r,102,"The name of a directory index file to serve, like 'index.html'"
+miniserve, ,p,port, , ,103,Port to use
+miniserve, ,i,interfaces, , ,104,Interface to listen on
+miniserve, ,a,auth, , ,105,Set authentication
+miniserve, , ,auth-file, ,@r,106,Read authentication values from a file
+miniserve, , ,route-prefix, , ,107,Use a specific route prefix
+miniserve, ,S,default-sorting-method,name,@f @r,108,Default sorting method for file list
+miniserve, ,O,default-sorting-order,asc,@f @r,109,Default sorting order for file list
+miniserve, ,c,color-scheme,squirrel,@f @r,110,Default color scheme
+miniserve, ,d,color-scheme-dark,squirrel,@f @r,111,Default color scheme
+miniserve, ,u,upload-files, ,@r,112,Enable file uploading (and optionally specify for which directory)
+miniserve, , ,web-upload-files-concurrency, , ,113,Configure amount of concurrent uploads when visiting the website. Must have upload-files option enabled for this setting to matter
+miniserve, , ,chmod, , ,114,Set unix file permissions of uploaded files
+miniserve, ,m,media-type,image,@f @r,115,Specify uploadable media types
+miniserve, ,M,raw-media-type, , ,116,Directly specify the uploadable media type expression
+miniserve, ,o,on-duplicate-files,error,@f @r,117,What to do if existing files with same name is present during file upload
+miniserve, ,R,rm-files, ,@D @f @r,118,Enable file and directory deletion (and optionally specify for which directory)
+miniserve, ,t,title, , ,119,Shown instead of host in page title and heading
+miniserve, , ,header, , ,120,Inserts custom headers into the responses. Specify each header as a 'Header:Value' pair. This parameter can be used multiple times to add multiple headers
+miniserve, , ,print-completions,bash,@f @r,121,Generate completion file for a shell
+miniserve, , ,tls-cert, ,@r,122,TLS certificate to use
+miniserve, , ,tls-key, ,@r,123,TLS private key to use
+miniserve, , ,size-display,human,@f @r,124,Show served file size in exact bytes
+miniserve, , ,file-external-url, , ,125,"Optional external URL (e.g., 'http://external.example.com:8081') prepended to file links in listings"
+miniserve, ,v,verbose, , ,126,"Be verbose, includes emitting access logs"
+miniserve, , ,spa, , ,127,Activate SPA (Single Page Application) mode
+miniserve, , ,pretty-urls, , ,128,Activate Pretty URLs mode
+miniserve, , ,random-route, , ,129,Generate a random 6-hexdigit route
+miniserve, ,P,no-symlinks, , ,130,Hide symlinks in listing and prevent them from being followed
+miniserve, ,H,hidden, , ,131,Show hidden files
+miniserve, ,q,qrcode, , ,132,Enable QR code display
+miniserve, , ,directory-size, , ,133,Enable recursive directory size calculation
+miniserve, ,U,mkdir, , ,134,Enable creating directories
+miniserve, ,r,enable-tar, , ,135,Enable uncompressed tar archive generation
+miniserve, ,g,enable-tar-gz, , ,136,Enable gz-compressed tar archive generation
+miniserve, ,z,enable-zip, , ,137,Enable zip archive generation
+miniserve, ,C,compress-response, , ,138,Compress response
+miniserve, ,D,dirs-first, , ,139,List directories first
+miniserve, ,l,show-symlink-info, , ,140,Visualize symlinks in directory listing
+miniserve, ,F,hide-version-footer, , ,141,Hide version footer
+miniserve, , ,hide-theme-selector, , ,142,Hide theme selector
+miniserve, ,W,show-wget-footer, , ,143,"If enabled, display a wget command to recursively download the current directory"
+miniserve, , ,print-manpage, , ,144,Generate man page
+miniserve, , ,readme, , ,145,Enable README.md rendering in directories
+miniserve, ,I,disable-indexing, , ,146,Disable indexing
+miniserve, , ,enable-webdav, , ,147,Enable read-only WebDAV support (PROPFIND requests)
+miniserve, ,h,help, , ,148,Print help (see more with '--help')
+miniserve, ,V,version, , ,149,Print version

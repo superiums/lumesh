@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+modprobe, ,v,verbose, , ,101,Print messages about what the program is doing
+modprobe, ,C,config, , ,102,Configuration file
+modprobe, ,c,showconfig, , ,103,Dump configuration file
+modprobe, ,n,dry-run, , ,104,Do not actually insert/remove module
+modprobe, ,i,ignore-install, , ,105,Ignore install and remove commands in configuration file
+modprobe, , ,ignore-remove, , ,106,Ignore install and remove commands in configuration file
+modprobe, ,q,quiet, , ,107,Ignore bogus module names
+modprobe, ,r,remove, , ,108,Remove modules
+modprobe, ,V,version, , ,109,Display version and exit
+modprobe, ,f,force, , ,110,Ignore all version information
+modprobe, , ,force-vermagic, , ,111,Ignore version magic information
+modprobe, , ,force-modversion, , ,112,Ignore module interface version
+modprobe, ,l,list, , ,113,List all modules matching the given wildcard
+modprobe, ,a,all, , ,114,Insert modules matching the given wildcard
+modprobe, ,t,type, , ,115,Restrict wildcards to specified directory
+modprobe, ,s,syslog, , ,116,Send error messages through syslog
+modprobe, , ,set-version, , ,117,Specify kernel version
+modprobe, , ,show-depends, , ,118,List dependencies of module
+modprobe, ,o,name, , ,119,Rename module
+modprobe, , ,first-time, , ,120,Fail if inserting already loaded module

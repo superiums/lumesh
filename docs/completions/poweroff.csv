@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+poweroff, , ,help, , ,101,Show help
+poweroff, , ,halt, , ,102,Halt the machine
+poweroff, ,p,poweroff, , ,103,Switch off the machine
+poweroff, , ,reboot, , ,104,Reboot the machine
+poweroff, ,f,force, , ,105,Force immediate halt/power-off/reboot
+poweroff, ,w,wtmp-only, , ,106,Just write wtmp record
+poweroff, ,d,no-wtmp, , ,107,Don't write wtmp record
+poweroff, , ,no-wall, , ,108,Don't send wall message

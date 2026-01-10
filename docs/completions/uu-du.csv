@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-du, ,B,block-size, , ,101,"scale sizes by SIZE before printing them. E.g., '-BM' prints sizes in units of 1,048,576 bytes. See SIZE format below."
+uu-du, ,d,max-depth, , ,102,"print the total for a directory (or file, with --all) only if it is N or fewer levels below the command line argument;  --max-depth=0 is the same as --summarize"
+uu-du, ,t,threshold, , ,103,"exclude entries smaller than SIZE if positive, or entries greater than SIZE if negative"
+uu-du, , ,exclude, , ,104,exclude files that match PATTERN
+uu-du, ,X,exclude-from, ,@r,105,exclude files that match any pattern in FILE
+uu-du, , ,files0-from, ,@r,106,"summarize device usage of the NUL-terminated file names specified in file F; if F is -, then read names from standard input"
+uu-du, , ,time,atime,@f @r,107,"show time of the last modification of any file in the directory, or any of its subdirectories. If WORD is given, show time as WORD instead of modification time: atime, access, use, ctime, status, birth or creation"
+uu-du, , ,time-style, , ,108,"show times using style STYLE: full-iso, long-iso, iso, +FORMAT FORMAT is interpreted like 'date'"
+uu-du, , ,help, , ,109,Print help information.
+uu-du, ,a,all, , ,110,"write counts for all files, not just directories"
+uu-du, , ,apparent-size, , ,111,"print apparent sizes, rather than disk usage although the apparent size is usually smaller, it may be larger due to holes in ('sparse') files, internal fragmentation, indirect blocks, and the like"
+uu-du, ,b,bytes, , ,112,equivalent to '--apparent-size --block-size=1'
+uu-du, ,c,total, , ,113,produce a grand total
+uu-du, ,h,human-readable, , ,114,"print sizes in human readable format (e.g., 1K 234M 2G)"
+uu-du, , ,inodes, , ,115,list inode usage information instead of block usage like --block-size=1K
+uu-du, ,l,count-links, , ,116,count sizes many times if hard linked
+uu-du, ,L,dereference, , ,117,follow all symbolic links
+uu-du, ,H,dereference-args, , ,118,follow only symlinks that are listed on the command line
+uu-du, ,P,no-dereference, , ,119,don't follow any symbolic links (this is the default)
+uu-du, ,0,null, , ,120,end each output line with 0 byte rather than newline
+uu-du, ,S,separate-dirs, , ,121,do not include size of subdirectories
+uu-du, ,s,summarize, , ,122,display only a total for each argument
+uu-du, , ,si, , ,123,"like -h, but use powers of 1000 not 1024"
+uu-du, ,x,one-file-system, , ,124,skip directories on different file systems
+uu-du, ,v,verbose, , ,125,verbose mode (option not present in GNU/Coreutils)
+uu-du, ,V,version, , ,126,Print version

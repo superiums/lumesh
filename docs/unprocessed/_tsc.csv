@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tsc, , ,locale,(,@f @r,138, 
+tsc, , ,newLine,(,@f @r,143, 
+tsc, ,t,target,(,@f @r,179, 

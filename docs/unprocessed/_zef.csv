@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zef, __fish_is_first_token,h,help, ,@f,101,Display help text
+zef, __fish_is_first_token, ,version, ,@f,102,Detailed version information
+zef, __fish_is_first_token, ,config-path, ,@F @r,103,Load a specific Zef config file
+zef, __fish_is_first_token, ,error, , ,104,Verbosity level
+zef, __fish_is_first_token, ,warn, , ,105,Verbosity level
+zef, __fish_is_first_token, ,info, , ,106,Verbosity level (default)
+zef, __fish_is_first_token,v,verbose, , ,107,Verbosity level
+zef, __fish_is_first_token, ,debug, , ,108,Verbosity level
+zef, __fish_use_subcommand, , ,install, ,109,Install specific distributions by name or path
+zef, __fish_use_subcommand, , ,uninstall,@f,110,Uninstall specific distributions
+zef, __fish_use_subcommand, , ,test, ,111,Run tests on a given module's path
+zef, __fish_use_subcommand, , ,fetch, ,112,Fetch and extract module's source
+zef, __fish_use_subcommand, , ,build, ,113,Run the Build.pm in a given module's path
+zef, __fish_use_subcommand, , ,look,@f @r,114,Download a single module and change into its directory
+zef, __fish_use_subcommand, , ,update, ,115,Update package indexes for repositories
+zef, __fish_use_subcommand, , ,upgrade, ,116,Upgrade specific distributions (or all if no arguments)
+zef, __fish_use_subcommand, , ,search, ,117,Show a list of possible distribution candidates for the given terms
+zef, __fish_use_subcommand, , ,info, ,118,Show detailed distribution information
+zef, __fish_use_subcommand, , ,browse, ,119,Browse support urls (bugtracker etc)
+zef, __fish_use_subcommand, , ,list, ,120,List available distributions
+zef, __fish_use_subcommand, , ,depends, ,121,List full dependencies for a given identity
+zef, __fish_use_subcommand, , ,rdepends, ,122,List all distributions directly depending on a given identity
+zef, __fish_use_subcommand, , ,locate, ,123,"Lookup installed module information by short-name, name-path, sha1"
+zef, __fish_use_subcommand, , ,smoke, ,124,Run smoke testing on available modules
+zef, __fish_use_subcommand, , ,nuke, ,125,Delete directory/prefix containing matching configuration path or CURLI name

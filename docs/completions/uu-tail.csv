@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-tail, ,c,bytes, , ,101,Number of bytes to print
+uu-tail, ,f,follow,descriptor,@f @r,102,Print the file as it grows
+uu-tail, ,n,lines, , ,103,Number of lines to print
+uu-tail, , ,pid, , ,104,"With -f, terminate after process ID, PID dies"
+uu-tail, ,s,sleep-interval, , ,105,Number of seconds to sleep between polling the file when running with -f
+uu-tail, , ,max-unchanged-stats, , ,106,"Reopen a FILE which has not changed size after N (default 5) iterations to see if it has been unlinked or renamed (this is the usual case of rotated log files); This option is meaningful only when polling (i.e., with --use-polling) and when --follow=name"
+uu-tail, ,q,silent, , ,107,Never output headers giving file names
+uu-tail, ,v,verbose, , ,108,Always output headers giving file names
+uu-tail, ,z,zero-terminated, , ,109,"Line delimiter is NUL, not newline"
+uu-tail, , ,use-polling, , ,110,Disable 'inotify' support and use polling instead
+uu-tail, , ,retry, , ,111,Keep trying to open a file if it is inaccessible
+uu-tail, , ,presume-input-pipe, , ,112, 
+uu-tail, ,h,help, , ,113,Print help
+uu-tail, ,V,version, , ,114,Print version

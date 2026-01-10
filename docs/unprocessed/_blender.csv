@@ -1,0 +1,89 @@
+cmd,conds,short,long,params,dirs,pri,desc
+blender, __blender_player, ,help, , ,101,Show help
+blender, __blender_player, ,version, , ,102,Show version
+blender, __blender_player, ,background, , ,103,Hide UI
+blender, __blender_player, ,render-anim, , ,104,Render animation
+blender," __blender_player; and test -e (__blender_echo_input_file_name)", ,scene, , ,105,Specify scene
+blender, __blender_player, ,render-frame, , ,106,Render specified frame(s)
+blender, __blender_player, ,frame-start, , ,107,Specify start frame
+blender, __blender_player, ,frame-end, , ,108,Specify end frame
+blender, __blender_player, ,frame-jump, , ,109,Skip frame count
+blender, __blender_player, ,render-output, , ,110,Specify render output
+blender, __blender_player, ,engine, , ,111,Render engine
+blender, __blender_player, ,threads, , ,112,Specify thread count
+blender, __blender_player, ,render-format,'TGA, ,113, 
+blender, __blender_player, ,use-extension,'0, ,114, 
+blender, __blender_player, , , ,@f @r,115,Specify position and size
+blender, __blender_player, , , ,@f @r,116,Specify FPS to start with
+blender, __blender_player, , , ,@f @r,117,Specify frame step
+blender, __blender_player, , , ,@f @r,118,Specify start frame
+blender, __blender_player, , , ,@f @r,119,Specify end frame
+blender, __blender_player, , , ,@f @r,120,Memory in MB for cache
+blender, __blender_player, ,window-border, , ,121,Show window borders
+blender, __blender_player, ,window-fullscreen, , ,122,Show in fullscreen
+blender, __blender_player, ,window-geometry, , ,123,Specify position and size
+blender, __blender_player, ,window-maximized, , ,124,Maximize window
+blender, __blender_player, ,start-console, , ,125,Open console
+blender, __blender_player, ,no-native-pixels, , ,126,Do not use native pixel size
+blender, __blender_player, ,no-window-focus, , ,127,Open unfocused
+blender, __blender_player, ,enable-autoexec, , ,128,Enable Python scripts automatic execution
+blender, __blender_player, ,disable-autoexec, , ,129,Disable Python scripts automatic execution
+blender, __blender_player, ,python, , ,130,Specify Python script
+blender," __blender_player; and test -e (__blender_echo_input_file_name)", ,python-text, , ,131,Specify Python text block
+blender, __blender_player, ,python-expr, , ,132,Specify Python expression
+blender, __blender_player, ,python-console, , ,133,Open interactive console
+blender, __blender_player, ,python-exit-code, , ,134,Specify Python exit code on exception
+blender, __blender_player, ,python-use-system-env, , ,135,Use system env vars and user site-packages
+blender, __blender_player, ,addons, , ,136,Specify addons
+blender, __blender_player, ,log, , ,137,Enable logging categories
+blender, __blender_player, ,log-level, , ,138,Specify log level
+blender, __blender_player, ,log-show-basename, , ,139,Hide file leading path
+blender, __blender_player, ,log-show-backtrace, , ,140,Show backtrace
+blender, __blender_player, ,log-show-timestamp, , ,141,Show timestamp
+blender, __blender_player, ,log-file, , ,142,Specify log file
+blender, __blender_player, ,debug, , ,143,Enable debugging
+blender, __blender_player, ,debug-value, , ,144,Specify debug value
+blender, __blender_player, ,debug-events, , ,145,Enable debug messages from the event system
+blender, __blender_player, ,debug-ffmpeg, , ,146,Enable debug messages from FFmpeg library
+blender, __blender_player, ,debug-handlers, , ,147,Enable debug messages for event handling
+blender, __blender_player, ,debug-libmv, , ,148,Enable debug messages for libmv library
+blender, __blender_player, ,debug-cycles, , ,149,Enable debug messages for Cycles
+blender, __blender_player, ,debug-memory, , ,150,Enable fully guarded memory allocation and debugging
+blender, __blender_player, ,debug-jobs, , ,151,Enable time profiling for background jobs
+blender, __blender_player, ,debug-python, , ,152,Enable debug messages for Python
+blender, __blender_player, ,debug-depsgraph, , ,153,Enable all debug messages for dependency graph
+blender, __blender_player, ,debug-depsgraph-eval, , ,154,Enable debug messages for dependency graph related on evaluation
+blender, __blender_player, ,debug-depsgraph-build, , ,155,Enable debug messages for dependency graph related on its construction
+blender, __blender_player, ,debug-depsgraph-tag, , ,156,Enable debug messages for dependency graph related on tagging
+blender, __blender_player, ,debug-depsgraph-no-threads, , ,157,Enable single treaded evaluation for dependency graph
+blender, __blender_player, ,debug-depsgraph-time, , ,158,Enable debug messages for dependency graph related on timing
+blender, __blender_player, ,debug-depsgraph-pretty, , ,159,Enable colors for dependency graph debug messages
+blender, __blender_player, ,debug-depsgraph-uuid, , ,160,Enable virefication for dependency graph session-wide identifiers
+blender, __blender_player, ,debug-ghost, , ,161,Enable debug messages for Ghost
+blender, __blender_player, ,debug-wintab, , ,162,Enable debug messages for Wintab
+blender, __blender_player, ,debug-gpu, , ,163,Enable GPU debug context and information for OpenGL
+blender, __blender_player, ,debug-gpu-force-workarounds, , ,164,Enable workarounds for typical GPU issues
+blender, __blender_player, ,debug-wm, , ,165,Enable debug messages for window manager
+blender, __blender_player, ,debug-xr, , ,166,Enable debug messages for virtual reality contexts
+blender, __blender_player, ,debug-xr-time, , ,167,Enable debug messages for virtual reality frame rendering times
+blender, __blender_player, ,debug-all, , ,168,Enable all debug messages
+blender, __blender_player, ,debug-io, , ,169,Enable debug for I/O
+blender, __blender_player, ,debug-fpe, , ,170,Enable floating point exceptions
+blender, __blender_player, ,debug-exit-on-error, , ,171,Exit on internal error
+blender, __blender_player, ,debug-freestyle, , ,172,Enable debug messages for Freestyle
+blender, __blender_player, ,disable-crash-handler, , ,173,Disable crash handler
+blender, __blender_player, ,disable-abort-handler, , ,174,Disable abort handler
+blender, __blender_player, ,verbose, , ,175,Specify logging verbosity level
+blender, __blender_player, ,gpu-backend,vulkan metal opengl, ,176,Specify GPU backend
+blender, __blender_player, ,open-last, , ,177,Open the most recent .blend file
+blender, __blender_player, ,app-template,default, ,178,Specify app template
+blender, __blender_player, ,factory-startup, , ,179,Do not read startup.blend
+blender, __blender_player, ,enable-event-simulate, , ,180,Enable event simulation
+blender, __blender_player, ,env-system-datafiles, , ,181,Set BLENDER_SYSTEM_DATAFILES variable
+blender, __blender_player, ,env-system-scripts, , ,182,Set BLENDER_SYSTEM_SCRIPTS variable
+blender, __blender_player, ,env-system-python, , ,183,Set BLENDER_SYSTEM_PYTHON variable
+blender, __blender_player, , ,None SDL OpenAL CoreAudio JACK PulseAudio WASAPI, ,184,Specify sound device
+blender, __blender_player, ,register, , ,185,Register .blend extension for current user
+blender, __blender_player, ,register-allusers, , ,186,Register .blend extension for all users
+blender, __blender_player, ,unregister, , ,187,Unregister .blend extension for current user
+blender, __blender_player, ,unregister-allusers, , ,188,Unregister .blend extension for all users

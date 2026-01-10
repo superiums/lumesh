@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-probe, ,d,device, , ,101,"given argument is a system device, not a path"
+grub-probe, ,m,device-map, , ,102,use FILE as the device map [default=//boot/grub/device. map]
+grub-probe, ,t,target, , ,103,"print TARGET available targets: abstraction, arc_hints, baremetal_hints, bios…"
+grub-probe, ,v,verbose, , ,104,print verbose messages (pass twice to enable debug printing)
+grub-probe, ,?,help, , ,105,give this help list
+grub-probe, , ,usage, , ,106,give a short usage message
+grub-probe, ,V,version, , ,107,print program version

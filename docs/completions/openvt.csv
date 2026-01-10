@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+openvt, ,c,console, , ,101,Use the given VT number and not the first available
+openvt, ,f,force, , ,102,Force opening a VT without checking whether it is already in use
+openvt, ,e,exec, , ,103,"Directly execute the given command, without forking"
+openvt, ,s,switch, , ,104,Switch to the new VT when starting the command
+openvt, ,u,user, , ,105,"Figure out the owner of the current VT, and run login as that user"
+openvt, ,l,login, , ,106,Make the command a login shell
+openvt, ,v,verbose, , ,107,Be a bit more verbose
+openvt, ,w,wait, , ,108,wait for command to complete
+openvt, ,V,version, , ,109,print program version and exit
+openvt, ,h,help, , ,110,show this text and exit

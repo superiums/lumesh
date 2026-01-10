@@ -1,0 +1,204 @@
+cmd,conds,short,long,params,dirs,pri,desc
+firewall-cmd, ,h,help, , ,101,Prints a short help text and exits
+firewall-cmd, ,V,version, , ,102,Print the version string of firewalld
+firewall-cmd, ,q,quiet, , ,103,Do not print status messages
+firewall-cmd, , ,state, , ,104,Check whether the firewalld daemon is active
+firewall-cmd, , ,reload, , ,105,Reload firewall rules and keep state information
+firewall-cmd, , ,complete-reload, , ,106,"Reload firewall completely, even netfilter kernel modules"
+firewall-cmd, , ,runtime-to-permanent, , ,107,Save active runtime configuration and overwrite permanent configuration
+firewall-cmd, , ,check-config, , ,108,Run checks on the permanent configuration
+firewall-cmd, , ,get-log-denied, , ,109,Print the log denied setting
+firewall-cmd, , ,set-log-denied,all unicast broadcast multicast off, ,110,Add logging rules right before reject and drop rules
+firewall-cmd, , ,permanent, , ,111,Set options permanently
+firewall-cmd, , ,get-default-zone, , ,112,Print default zone for connections and interfaces
+firewall-cmd, , ,set-default-zone, , ,113,Set default zone for connections and interfaces
+firewall-cmd, , ,get-active-zones, , ,114,Print currently active zones altogether with interfaces and sources
+firewall-cmd, , ,get-zones, , ,115,Print predefined zones
+firewall-cmd, , ,get-services, , ,116,Print predefined services
+firewall-cmd, , ,get-icmptypes, , ,117,Print predefined icmptypes
+firewall-cmd, , ,get-zone-of-interface, , ,118,Print the name of the zone the interface is bound to
+firewall-cmd, , ,get-zone-of-source, ,@f @r,119,Print the name of the zone the source is bound to
+firewall-cmd, , ,info-zone, , ,120,Print information about the zone
+firewall-cmd, , ,list-all-zones, , ,121,List everything added for or enabled in all zones
+firewall-cmd, , ,new-zone, ,@f @r,122,Add a new permanent and empty zone
+firewall-cmd, , ,new-zone-from-file, ,@F,123,Add a new permanent zone from a prepared zone file
+firewall-cmd, , ,delete-zone, , ,124,Delete an existing permanent zone
+firewall-cmd, , ,load-zone-defaults, , ,125,Load zone default settings
+firewall-cmd, , ,path-zone, , ,126,Print path of the zone configuration file
+firewall-cmd, , ,get-policies, , ,127,Print predefined policies
+firewall-cmd, , ,info-policy, , ,128,Print information about the policy
+firewall-cmd, , ,list-all-policies, , ,129,List everything added for or enabled in all policies
+firewall-cmd, , ,new-policy, ,@f @r,130,Add a new permanent policy
+firewall-cmd, , ,new-policy-from-file, ,@F,131,Add a new permanent policy from a prepared policy file
+firewall-cmd, , ,path-policy, , ,132,Print path of the policy configuration file
+firewall-cmd, , ,delete-policy, , ,133,Delete an existing permanent policy
+firewall-cmd, , ,load-policy-defaults, , ,134,Load the shipped defaults for a policy
+firewall-cmd, , ,zone, , ,135,Apply option to this zone
+firewall-cmd, , ,policy, , ,136,Apply option to this policy
+firewall-cmd, , ,get-target, , ,137,Get the target
+firewall-cmd, , ,set-target,default CONTINUE ACCEPT DROP REJECT, ,138,Set the target
+firewall-cmd, , ,list-all, , ,139,List everything added for or enabled
+firewall-cmd, , ,list-services, , ,140,List services added
+firewall-cmd, , ,add-service, , ,141,Add a service
+firewall-cmd, , ,remove-service, , ,142,Remove a service
+firewall-cmd, , ,query-service, , ,143,Return whether service has been added
+firewall-cmd, , ,list-ports, , ,144,List ports added
+firewall-cmd, , ,list-protocols, , ,145,List protocols added
+firewall-cmd, , ,list-source-ports, , ,146,List source ports added
+firewall-cmd, , ,list-icmp-blocks, , ,147,List ICMPs type blocks added
+firewall-cmd, , ,add-icmp-block, , ,148,Add an ICMP block for icmptype
+firewall-cmd, , ,remove-icmp-block, , ,149,Remove the ICMP block for icmptype
+firewall-cmd, , ,query-icmp-block, , ,150,Return whether an ICMP block for icmptype has been added
+firewall-cmd, , ,list-forward-ports, , ,151,List IPv4 forward ports added
+firewall-cmd, , ,add-forward-port, ,@f @r,152,Add the IPv4 forward port
+firewall-cmd, , ,remove-forward-port, ,@f @r,153,Remove the IPv4 forward port
+firewall-cmd, , ,query-forward-port, ,@f @r,154,Return whether the IPv4 forward port has been added
+firewall-cmd, , ,add-masquerade, , ,155,Enable IPv4 masquerade
+firewall-cmd, , ,remove-masquerade, , ,156,Disable IPv4 masquerade
+firewall-cmd, , ,query-masquerade, , ,157,Return whether IPv4 masquerading has been enabled
+firewall-cmd, , ,list-rich-rules, , ,158,List rich language rules added
+firewall-cmd, , ,add-rich-rule, ,@f @r,159,Add rich language rule
+firewall-cmd, , ,remove-rich-rule, ,@f @r,160,Remove rich language rule
+firewall-cmd, , ,query-rich-rule, ,@f @r,161,Return whether the rich language rule has been added
+firewall-cmd, , ,timeout, ,@f @r,162,The rule will be active for the specified amount of time
+firewall-cmd, , ,add-icmp-block-inversion, , ,163,Enable ICMP block inversion
+firewall-cmd, , ,remove-icmp-block-inversion, , ,164,Disable ICMP block inversion
+firewall-cmd, , ,query-icmp-block-inversion, , ,165,Return whether ICMP block inversion is enabled
+firewall-cmd, , ,add-forward, , ,166,Enable intra zone forwarding
+firewall-cmd, , ,remove-forward, , ,167,Disable intra zone forwarding
+firewall-cmd, , ,query-forward, , ,168,Return whether intra zone forwarding is enabled
+firewall-cmd, , ,get-priority, , ,169,Get the priority
+firewall-cmd, , ,set-priority, ,@f @r,170,Set the priority
+firewall-cmd, , ,list-ingress-zones, , ,171,List ingress zones added
+firewall-cmd, , ,add-ingress-zone, , ,172,Add an ingress zone
+firewall-cmd, , ,remove-ingress-zone, , ,173,Remove an ingress zone
+firewall-cmd, , ,query-ingress-zone, , ,174,Return whether zone has been added
+firewall-cmd, , ,list-egress-zones, , ,175,List egress zones added
+firewall-cmd, , ,add-egress-zone, , ,176,Add an egress zone
+firewall-cmd, , ,remove-egress-zone, , ,177,Remove an egress zone
+firewall-cmd, , ,query-egress-zone, , ,178,Return whether zone has been added
+firewall-cmd, , ,list-interfaces, , ,179,List interfaces that are bound to zone
+firewall-cmd, , ,add-interface, , ,180,Bind interface to zone
+firewall-cmd, , ,change-interface, , ,181,Change to which zone interface is bound
+firewall-cmd, , ,query-interface, , ,182,Query whether interface is bound to zone
+firewall-cmd, , ,remove-interface, , ,183,Remove binding of interface from zone
+firewall-cmd, , ,list-sources, , ,184,List sources that are bound to zone
+firewall-cmd, , ,add-source, ,@f @r,185,Bind the source to zone
+firewall-cmd, , ,change-source, ,@f @r,186,Change zone the source is bound to
+firewall-cmd, , ,query-source, ,@f @r,187,Query whether the source is bound to the zone
+firewall-cmd, , ,remove-source, ,@f @r,188,Remove binding of the source from zone
+firewall-cmd, , ,get-ipset-types, , ,189,Print the supported ipset types
+firewall-cmd, , ,new-ipset, ,@f @r,190,Add a new permanent and empty ipset
+firewall-cmd, , ,type, ,@f @r,191,Specify ipset type
+firewall-cmd, , ,option, ,@f @r,192,Options for new ipset
+firewall-cmd, , ,new-ipset-from-file, ,@F,193,Add a new permanent ipset from a prepared ipset file
+firewall-cmd, , ,delete-ipset, ,@f @r,194,Delete an existing permanent ipset
+firewall-cmd, , ,load-ipset-defaults, ,@f @r,195,Load ipset default settings
+firewall-cmd, , ,info-ipset, ,@f @r,196,Print information about the ipset
+firewall-cmd, , ,get-ipsets, , ,197,Print predefined ipsets
+firewall-cmd, , ,ipset, ,@f @r,198,Apply settings to this ipset
+firewall-cmd, , ,add-entry, ,@f @r,199,Add a new entry to the ipset
+firewall-cmd, , ,remove-entry, ,@f @r,200,Remove an entry from the ipset
+firewall-cmd, , ,query-entry, ,@f @r,201,Return whether the entry has been added to an ipset
+firewall-cmd, , ,get-entries, , ,202,List all entries of the ipset
+firewall-cmd, , ,add-entries-from-file, ,@F,203,Add new entries to the ipset from the file
+firewall-cmd, , ,remove-entries-from-file, ,@F,204,Remove existing entries from the ipset from the file
+firewall-cmd, , ,path-ipset, , ,205,Print path of the ipset configuration file
+firewall-cmd, , ,info-service, , ,206,Print information about the service
+firewall-cmd, , ,new-service, ,@f @r,207,Add a new permanent and empty service
+firewall-cmd, , ,new-service-from-file, ,@F,208,Add a new permanent service from a prepared service file
+firewall-cmd, , ,delete-service, , ,209,Delete an existing permanent service
+firewall-cmd, , ,load-service-defaults, , ,210,Load service default settings
+firewall-cmd, , ,path-service, , ,211,Print path of the service configuration file
+firewall-cmd, , ,service, , ,212,Apply settings to this service
+firewall-cmd, , ,get-protocols, , ,213,List protocols added to the permanent service
+firewall-cmd, , ,get-source-ports, , ,214,List source ports added to the permanent service
+firewall-cmd, , ,add-helper, , ,215,Add a new helper to the permanent service
+firewall-cmd, , ,remove-helper, , ,216,Remove a helper from the permanent service
+firewall-cmd, , ,query-helper, , ,217,Return whether the helper has been added to the permanent service
+firewall-cmd, , ,get-service-helpers, , ,218,List helpers added to the permanent service
+firewall-cmd, , ,set-destination, ,@f @r,219,Set destination for ipv to address[/mask] in the permanent service
+firewall-cmd, , ,add-include, , ,220,Add a new include to the permanent service
+firewall-cmd, , ,remove-include, , ,221,Remove a include from the permanent service
+firewall-cmd, , ,query-include, , ,222,Return whether the include has been added to the permanent service
+firewall-cmd, , ,get-includes, , ,223,List includes added to the permanent service
+firewall-cmd, , ,info-helper, , ,224,Print information about the helper
+firewall-cmd, , ,new-helper, ,@f @r,225,Add a new permanent helper
+firewall-cmd, , ,module, ,@f @r,226,Specify module for new helper
+firewall-cmd, , ,new-helper-from-file, ,@F,227,Add a new permanent helper from a prepared helper file
+firewall-cmd, , ,delete-helper, , ,228,Delete an existing permanent helper
+firewall-cmd, , ,load-helper-defaults, , ,229,Load helper default settings
+firewall-cmd, , ,path-helper, , ,230,Print path of the helper configuration file
+firewall-cmd, , ,get-helpers, , ,231,Print predefined helpers as a space separated list
+firewall-cmd, , ,helper, , ,232,Apply settings to this helper
+firewall-cmd, , ,set-module, ,@f @r,233,Set module description for helper
+firewall-cmd, , ,get-module, , ,234,Print module description for helper
+firewall-cmd, , ,set-family, ,@f @r,235,Set family description for helper
+firewall-cmd, , ,get-family, , ,236,Print family description of helper
+firewall-cmd, , ,info-icmptype, , ,237,Print information about the icmptype
+firewall-cmd, , ,new-icmptype, ,@f @r,238,Add a new permanent and empty icmptype
+firewall-cmd, , ,new-icmptype-from-file, ,@F,239,Add a new permanent icmptype from a prepared icmptype file
+firewall-cmd, , ,delete-icmptype, , ,240,Delete an existing permanent icmptype
+firewall-cmd, , ,load-icmptype-defaults, , ,241,Load icmptype default settings
+firewall-cmd, , ,icmptype, , ,242,Apply settings to this icmptype
+firewall-cmd, , ,add-destination,ipv4 ipv6, ,243,Enable destination for ipv in permanent icmptype
+firewall-cmd, , ,path-icmptype, , ,244,Print path of the icmptype configuration file
+firewall-cmd, , ,direct, , ,245,Give a more direct access to the firewall
+firewall-cmd, , ,get-all-chains, , ,246,Get all chains added to all tables
+firewall-cmd, , ,get-chains,ipv4 ipv6 eb, ,247,Get all chains added to table
+firewall-cmd, , ,add-chain,ipv4 ipv6 eb, ,248,Add a new chain to table
+firewall-cmd, , ,remove-chain,ipv4 ipv6 eb, ,249,Remove chain from table
+firewall-cmd, , ,query-chain,ipv4 ipv6 eb, ,250,Return whether the chain with given name exists in table
+firewall-cmd, , ,get-all-rules, , ,251,Get all rules added to all chains in all tables
+firewall-cmd, , ,get-rules,ipv4 ipv6 eb, ,252,Get all rules added to chain in table
+firewall-cmd, , ,add-rule,ipv4 ipv6 eb, ,253,Add a rule to chain in table
+firewall-cmd, , ,remove-rule,ipv4 ipv6 eb, ,254,Remove a rule from chain in table
+firewall-cmd, , ,remove-rules,ipv4 ipv6 eb, ,255,Remove all rules in the chain in table
+firewall-cmd, , ,query-rule,ipv4 ipv6 eb, ,256,Return whether the rule exists in chain in table
+firewall-cmd, , ,passthrough,ipv4 ipv6 eb, ,257,Pass a command through to the firewall
+firewall-cmd, , ,get-all-passthroughs, , ,258,Get all passthrough rules
+firewall-cmd, , ,get-passthroughs,ipv4 ipv6 eb, ,259,Get all passthrough rules for the ipv value
+firewall-cmd, , ,add-passthrough,ipv4 ipv6 eb, ,260,Add a passthrough rule
+firewall-cmd, , ,remove-passthrough,ipv4 ipv6 eb, ,261,Remove a passthrough rule
+firewall-cmd, , ,query-passthrough,ipv4 ipv6 eb, ,262,Return whether the passthrough rule exists
+firewall-cmd, , ,lockdown-on, , ,263,Enable lockdown
+firewall-cmd, , ,lockdown-off, , ,264,Disable lockdown
+firewall-cmd, , ,query-lockdown, , ,265,Query whether lockdown is enabled
+firewall-cmd, , ,list-lockdown-whitelist-commands, , ,266,List all command lines that are on the whitelist
+firewall-cmd, , ,add-lockdown-whitelist-command, ,@f @r,267,Add the command to the whitelist
+firewall-cmd, , ,remove-lockdown-whitelist-command, ,@f @r,268,Remove the command from the whitelist
+firewall-cmd, , ,query-lockdown-whitelist-command, ,@f @r,269,Query whether the command is on the whitelist
+firewall-cmd, , ,list-lockdown-whitelist-contexts, , ,270,List all contexts that are on the whitelist
+firewall-cmd, , ,add-lockdown-whitelist-context, ,@f @r,271,Add the context to the whitelist
+firewall-cmd, , ,remove-lockdown-whitelist-context, ,@f @r,272,Remove the context from the whitelist
+firewall-cmd, , ,query-lockdown-whitelist-context, ,@f @r,273,Query whether the context is on the whitelist
+firewall-cmd, , ,list-lockdown-whitelist-uids, , ,274,List all user ids that are on the whitelist
+firewall-cmd, , ,add-lockdown-whitelist-uid, ,@f @r,275,Add the user id to the whitelist
+firewall-cmd, , ,remove-lockdown-whitelist-uid, ,@f @r,276,Remove the user id from the whitelist
+firewall-cmd, , ,query-lockdown-whitelist-uid, ,@f @r,277,Query whether the user id is on the whitelist
+firewall-cmd, , ,list-lockdown-whitelist-users, , ,278,List all user names that are on the whitelist
+firewall-cmd, , ,add-lockdown-whitelist-user, , ,279,Add the user to the whitelist
+firewall-cmd, , ,remove-lockdown-whitelist-user, , ,280,Remove the user from the whitelist
+firewall-cmd, , ,query-lockdown-whitelist-user, , ,281,Query whether the user is on the whitelist
+firewall-cmd, , ,panic-on, , ,282,Enable panic mode
+firewall-cmd, , ,panic-off, , ,283,Disable panic mode
+firewall-cmd, , ,query-panic, , ,284,"Returns 0 if panic mode is enabled, 1 otherwise"
+firewall-cmd, , ,set-description, ,@f @r,285,Set new description for zone|policy|ipset|service|helper|icmptype
+firewall-cmd, , ,get-description, , ,286,Print description of zone|policy|ipset|service|helper|icmptype
+firewall-cmd, , ,set-short, ,@f @r,287,Set short description for zone|policy|ipset|service|helper|icmptype
+firewall-cmd, , ,get-short, , ,288,Print short description of zone|policy|ipset|service|helper|icmptype
+firewall-cmd, , ,name, ,@f @r,289,Name for new zone|policy|ipset|service|helper|icmptype
+firewall-cmd, , ,add-port, ,@f @r,290,Add the port to zone|policy|service|helper
+firewall-cmd, , ,remove-port, ,@f @r,291,Remove the port from zone|policy|service|helper
+firewall-cmd, , ,query-port, ,@f @r,292,Return whether the port has been added for zone|policy|service|helper
+firewall-cmd, , ,add-protocol, , ,293,Add the protocol to zone|policy|service
+firewall-cmd, , ,remove-protocol, , ,294,Remove the protocol from zone|policy|service
+firewall-cmd, , ,query-protocol, , ,295,Return whether the protocol has been added to zone|policy|service
+firewall-cmd, , ,add-source-port, ,@f @r,296,Add the source port to zone|policy|service
+firewall-cmd, , ,remove-source-port, ,@f @r,297,Remove the source port from zone|policy|service
+firewall-cmd, , ,query-source-port, ,@f @r,298,Return whether the source port has been added for zone|policy|service
+firewall-cmd, , ,get-ports, , ,299,List ports added to the permanent service|helper
+firewall-cmd, , ,remove-destination,ipv4 ipv6, ,300,Disable destination for ipv in permanent service|icmptype
+firewall-cmd, , ,query-destination,ipv4 ipv6, ,301,Return whether destination for ipv is enabled in permanent service|icmptype
+firewall-cmd, , ,get-destinations, , ,302,List destinations in permanent service|icmptype
+firewall-cmd, , ,family, ,@f @r,303,Inet family

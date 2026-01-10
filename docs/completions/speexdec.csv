@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+speexdec, , ,enh, , ,101,Enable perceptual enhancement (default)
+speexdec, , ,no-enh, , ,102,Disable perceptual enhancement
+speexdec, , ,force-nb, , ,103,Force decoding in narrowband
+speexdec, , ,force-wb, , ,104,Force decoding in wideband
+speexdec, , ,force-uwb, , ,105,Force decoding in ultra-wideband
+speexdec, , ,mono, , ,106,Force decoding in mono
+speexdec, , ,stereo, , ,107,Force decoding in stereo
+speexdec, , ,rate, , ,108,Force decoding at sampling rate n Hz
+speexdec, , ,packet-loss, , ,109,Simulate n % random packet loss
+speexdec, ,h,help, , ,110,This help
+speexdec, ,v,version, , ,111,Version information
+speexdec, , ,pf, , ,112,"Deprecated, use --enh instead"
+speexdec, , ,no-pf, , ,113,"Deprecated, use --no-enh instead"

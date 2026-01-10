@@ -1,0 +1,52 @@
+cmd,conds,short,long,params,dirs,pri,desc
+climate, __fish_climate_has_no_argument, , ,help,@f,101,Show help
+climate, __fish_climate_has_no_argument, , ,update,@f,102,Update your climate install
+climate, __fish_climate_has_no_argument, , ,uninstall,@f,103,uninstall climate
+climate, __fish_climate_has_no_argument, , ,version,@f,104,Show climate version
+climate, __fish_climate_has_no_argument, , ,weather,@f,105,Get the weather
+climate, __fish_climate_has_no_argument, , ,battery,@f,106,Display remaining battery
+climate, __fish_climate_has_no_argument, , ,sleep,@f,107,Display remaining battery
+climate, __fish_climate_has_no_argument, , ,lock,@f,108,Lock computer
+climate, __fish_climate_has_no_argument, , ,shutdown,@f,109,Shutdown the computer
+climate, __fish_climate_has_no_argument, , ,restart,@f,110,Restart the computer
+climate, __fish_climate_has_no_argument, , ,time,@f,111,Show the time
+climate, __fish_climate_has_no_argument, , ,clock,@f,112,Put a console clock in the top right corner
+climate, __fish_climate_has_no_argument, , ,countdown,@f,113,A countdown timer
+climate, __fish_climate_has_no_argument, , ,stopwatch,@f,114,A stopwatch
+climate, __fish_climate_has_no_argument, , ,ix,@f,115,Pipe output to ix.io
+climate, __fish_climate_has_no_argument, , ,biggest-files, ,116,Find the biggest files recursively
+climate, __fish_climate_has_no_argument, , ,biggest-dirs, ,117,Find the biggest directories
+climate, __fish_climate_has_no_argument, , ,dir-size, ,118,Find directory size
+climate, __fish_climate_has_no_argument, , ,remove-empty-dirs, ,119,Remove empty directories
+climate, __fish_climate_has_no_argument, , ,extract, ,120,Extract any given archive
+climate, __fish_climate_has_no_argument, , ,find-duplicates, ,121,Report duplicate files in a directory
+climate, __fish_climate_has_no_argument, , ,count, ,122,Count the number of occurrences
+climate, __fish_climate_has_no_argument, , ,monitor, ,123,Monitor file for changes
+climate, __fish_climate_has_no_argument, , ,grep,@f,124,Search for the given pattern recursively
+climate, __fish_climate_has_no_argument, , ,replace,@f,125,Replace all occurrences
+climate, __fish_climate_has_no_argument, , ,ramfs,@f,126,Create a ramfs of size (in MB) at path
+climate, __fish_climate_has_no_argument, , ,speedtest,@f,127,Test your network speed
+climate, __fish_climate_has_no_argument, , ,local-ip,@f,128,Retrieve your local ip address
+climate, __fish_climate_has_no_argument, , ,is-online,@f,129,Verify if you're online
+climate, __fish_climate_has_no_argument, , ,public-ip,@f,130,Retrieve your public ip address
+climate, __fish_climate_has_no_argument, , ,ports,@f,131,List open ports
+climate, __fish_climate_has_no_argument, , ,hosts,@f,132,Edit the hosts file
+climate, __fish_climate_has_no_argument, , ,http-server,@f,133,http-server serving the current directory
+climate, __fish_climate_has_no_argument, , ,is-up,@f,134,Determine if server is up
+climate, __fish_climate_has_no_argument, , ,download-file,@f,135,Download file from server
+climate, __fish_climate_has_no_argument, , ,download-dir,@f,136,Download dir from server
+climate, __fish_climate_has_no_argument, , ,upload, ,137,Upload to server
+climate, __fish_climate_has_no_argument, , ,ssh-mount,@f,138,Mount a remote path
+climate, __fish_climate_has_no_argument, , ,ssh-unmount, ,139,Unmount a ssh mount
+climate," __fish_is_git_repository; and __fish_climate_has_no_argument", , ,undo-commit,@f,140,Undo the latest commit
+climate," __fish_is_git_repository; and __fish_climate_has_no_argument", , ,reset-locel,@f,141,Reset local repo to match remote
+climate," __fish_is_git_repository; and __fish_climate_has_no_argument", , ,pull-latest,@f,142,Seset local repo to match remote
+climate," __fish_is_git_repository; and __fish_climate_has_no_argument", , ,list-branches,@f,143,List all branches
+climate," __fish_is_git_repository; and __fish_climate_has_no_argument", , ,repo-size,@f,144,Calculate the repo size
+climate," __fish_is_git_repository; and __fish_climate_has_no_argument", , ,user-stats,@f,145,Calculate total contribution for a user
+climate, __fish_climate_has_no_argument, , ,overview,@f,146,Display a performance overview
+climate, __fish_climate_has_no_argument, , ,memory,@f,147,Find memory used
+climate, __fish_climate_has_no_argument, , ,disk,@f,148,Find disk used
+climate, __fish_climate_has_no_argument, , ,get-pids,@f,149,Get all PIDs for a process name
+climate, __fish_climate_has_no_argument, , ,trash-size,@f,150,Find the trash size
+climate, __fish_climate_has_no_argument, , ,empty,@f,151,Empty the trash

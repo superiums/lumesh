@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mount, ,L, , ,@f @r,101,Mount partition with specified label
+mount, ,U, , ,@f @r,102,Mount partition with specified UID
+mount, ,O, , ,@f @r,103,Exclude file systems
+mount, , ,bind, ,@f,104,Remount a subtree to a second position
+mount, , ,move, ,@f,105,Move a subtree to a new position
+mount, ,t, , ,@F @f @r,106,File system
+mount, ,o, , ,@f @r,107,Mount option

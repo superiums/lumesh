@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mdadm, ,h,help, , ,108,Display help
+mdadm, , ,help-options, , ,109,Display more detailed help
+mdadm, ,V,version, , ,110,Print version information
+mdadm, ,v,verbose, , ,111,Be more verbose
+mdadm, ,q,quiet, , ,112,Be quiet
+mdadm, ,f,force, , ,113,Force operation
+mdadm, ,c,config, ,@r,114,Specify config file or directory
+mdadm, ,s,scan, , ,115,Scan for missing information
+mdadm, , ,homehost, ,@f @r,117,Provide home host identity
+mdadm, , ,prefer, ,@f @r,118,Give name format preference
+mdadm, , ,home-cluster, ,@f @r,119,Give cluster name
+mdadm, , ,wait-clean, , ,174,Mark array as clean ASAP

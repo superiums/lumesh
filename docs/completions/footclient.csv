@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+footclient, , , , ,@f @r,101, 
+footclient, ,t,term, ,@f @r,102,value to set the environment variable TERM to (foot)
+footclient, ,T,title, ,@f @r,103,initial window title
+footclient, ,a,app-id, ,@f @r,104,value to set the app-id property on the Wayland window to (foot)
+footclient, ,m,maximized, , ,105,start in maximized mode
+footclient, ,F,fullscreen, , ,106,start in fullscreen mode
+footclient, ,L,login-shell, , ,107,start shell as a login shell
+footclient, ,D,working-directory, ,@F,108,initial working directory for the client application (CWD)
+footclient, ,w,window-size-pixels, ,@f @r,109,"window WIDTHxHEIGHT, in pixels (700x500)"
+footclient, ,W,window-size-chars, ,@f @r,110,"window WIDTHxHEIGHT, in characters (not set)"
+footclient, ,s,server-socket, ,@F,111,override the default path to the foot server socket ($XDG_RUNTIME_DIR/foot-$WAYLAND_DISPLAY.sock)
+footclient, ,H,hold, , ,112,remain open after child process exits
+footclient, ,N,no-wait, , ,113,"detach the client process from the running terminal, exiting immediately"
+footclient, ,o,override, ,@f @r,114,"configuration option to override, in form SECTION.KEY=VALUE"
+footclient, ,E,client-environment, , ,115,"child process inherits footclient's environment, instead of the server's"
+footclient, ,d,log-level,info warning error none,@f @r,116,log-level (info)
+footclient, ,l,log-colorize,always never auto,@f @r,117,enable or disable colorization of log output on stderr
+footclient, ,v,version, , ,118,show the version number and quit
+footclient, ,h,help, , ,119,show help message and quit

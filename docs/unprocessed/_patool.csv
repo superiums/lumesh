@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+patool, __fish_no_arguments,v,verbose, ,@f,102,Be verbose
+patool, __fish_no_arguments, ,non-interactive, ,@f,103,Run in batch mode
+patool, __fish_use_subcommand, , ,extract,@f,104,Extract archive(s)
+patool, __fish_use_subcommand, , ,list,@f,105,List files in archive(s)
+patool, __fish_use_subcommand, , ,create,@f,106,Create archive
+patool, __fish_use_subcommand, , ,test,@f,107,Test archive(s)
+patool, __fish_use_subcommand, , ,repack,@f,108,Repackage archive to different format
+patool, __fish_use_subcommand, , ,recompress,@f,109,Recompress archive to smaller
+patool, __fish_use_subcommand, , ,diff,@f,110,Differences between two archives
+patool, __fish_use_subcommand, , ,search,@f,111,Search contents of archive
+patool, __fish_use_subcommand, , ,formats,@f,112,Show supported formats

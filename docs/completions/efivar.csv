@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+efivar, ,A,attributes, ,@f @r,101,Attributes to use on append
+efivar, ,l,list, , ,102,List current variables
+efivar, ,p,print, , ,103,Print variable specified by --name
+efivar, ,D,dmpstore, , ,104,Use DMPSTORE format when exporting
+efivar, ,d,print-decimal, , ,105,Print variable in decimal format values
+efivar, ,n,name, , ,106,Variable to manipulate
+efivar, ,a,append, , ,107,Append to variable specified by --name
+efivar, ,f,datafile, ,@F,108,Load or save variable contents from file
+efivar, ,e,export, ,@F,109,Export variable to file
+efivar, ,i,import, ,@F,110,Import variable from file
+efivar, ,L,list-guids, , ,111,Show internal guid list
+efivar, ,w,write, , ,112,Write to variable specified by --name
+efivar, ,\?,help, , ,113,Show help message
+efivar, , ,usage, , ,114,Display brief usage message

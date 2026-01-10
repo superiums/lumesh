@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rakudo, __fish_is_first_token, , ,-,@F,101,Read program source from STDIN or start REPL if a TTY

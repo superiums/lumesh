@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fgconsole, ,n,next-available, , ,101,Will show the next unallocated virtual terminal
+fgconsole, ,C,console, , ,102,the console device to be used
+fgconsole, ,V,version, , ,103,print version number
+fgconsole, ,h,help, , ,104,print this usage message

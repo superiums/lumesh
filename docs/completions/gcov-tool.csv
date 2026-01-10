@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gcov-tool, , ,help, , ,101,X Item '--help' 
+gcov-tool, , ,version, , ,102,X Item '--version' 
+gcov-tool, , ,output, , ,103,X Item '--output directory' . PD Set the output profile directory
+gcov-tool, , ,verbose, , ,104,X Item '--verbose' . PD Set the verbose mode
+gcov-tool, , ,weight, , ,105,"X Item '--weight w1,w2' "
+gcov-tool, , ,normalize, , ,106,X Item '--normalize <long_long_value>' . PD Normalize the profile
+gcov-tool, , ,scale, , ,107,X Item '--scale float_or_simple-frac_value' . PD Scale the profile counters
+gcov-tool, , ,function, , ,108,X Item '--function' . PD Print function level overlap score
+gcov-tool, , ,fullname, , ,109,X Item '--fullname' . PD Print full gcda filename
+gcov-tool, , ,hotonly, , ,110,X Item '--hotonly' . PD Only print info for hot objects/functions
+gcov-tool, , ,object, , ,111,X Item '--object' . PD Print object level overlap score
+gcov-tool, , ,hot_threshold, , ,112,X Item '--hot_threshold <float>' . PD Set the threshold for hot counter value

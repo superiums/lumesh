@@ -1,0 +1,36 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rbenv, __fish_rbenv_needs_command, , ,commands,@f,101,List all available rbenv commands
+rbenv, __fish_rbenv_using_command commands, , ,--sh --no-sh,@f,102, 
+rbenv, __fish_rbenv_needs_command, , ,completions,@f,103, 
+rbenv, __fish_rbenv_needs_command, , ,exec,@f,104, 
+rbenv, __fish_rbenv_using_command exec, , , ,@f,105, 
+rbenv, __fish_rbenv_needs_command, , ,global,@f,106,Set or show the global Ruby version
+rbenv, __fish_rbenv_using_command global, , , ,@f,107, 
+rbenv, __fish_rbenv_needs_command, , ,help,@f,108, 
+rbenv, __fish_rbenv_needs_command, , ,hooks,@f,109,List hook scripts for a given rbenv command
+rbenv, __fish_rbenv_needs_command, , ,init,@f,110,Configure the shell environment for rbenv
+rbenv, __fish_rbenv_needs_command, , ,install,@f,111,Install a Ruby version
+rbenv, __fish_rbenv_using_command install, , , ,@f,112, 
+rbenv, __fish_rbenv_needs_command, , ,uninstall,@f,113,Uninstall a Ruby version
+rbenv, __fish_rbenv_using_command uninstall, , , ,@f,114, 
+rbenv, __fish_rbenv_needs_command, , ,local,@f,115,Set or show the local application-specific Ruby version
+rbenv, __fish_rbenv_using_command local, , , ,@f,116, 
+rbenv, __fish_rbenv_needs_command, , ,prefix,@f,117,Display the directory where a Ruby version is installed
+rbenv, __fish_rbenv_using_command prefix, , , ,@f,118, 
+rbenv, __fish_rbenv_needs_command, , ,rehash,@f,119,Rehash rbenv shims (run this after installing executables)
+rbenv, __fish_rbenv_needs_command, , ,root,@f,120,Display the root directory where versions and shims are kept
+rbenv, __fish_rbenv_needs_command, , ,shell,@f,121,Set or show the shell-specific Ruby version
+rbenv, __fish_rbenv_using_command shell, , ,--unset (__fish_rbenv_installed_rubies),@f,122, 
+rbenv, __fish_rbenv_needs_command, , ,shims,@f,123,List existing rbenv shims
+rbenv, __fish_rbenv_using_command shims, , ,--short,@f,124, 
+rbenv, __fish_rbenv_needs_command, , ,version,@f,125,Show the current Ruby version & how it was selected
+rbenv, __fish_rbenv_needs_command, , ,version-file,@f,126,Detect the file that sets the current rbenv version
+rbenv, __fish_rbenv_needs_command, , ,version-file-read,@f,127, 
+rbenv, __fish_rbenv_needs_command, , ,version-file-write,@f,128, 
+rbenv, __fish_rbenv_needs_command, , ,version-name,@f,129,Show the current Ruby version
+rbenv, __fish_rbenv_needs_command, , ,version-origin,@f,130,Explain how the current Ruby version is set
+rbenv, __fish_rbenv_needs_command, , ,versions,@f,131,List all Ruby versions known by rbenv
+rbenv, __fish_rbenv_needs_command, , ,whence,@f,132,List all Ruby versions that contain the given executable
+rbenv, __fish_rbenv_using_command whence, , ,--path,@f,133, 
+rbenv, __fish_rbenv_needs_command, , ,which,@f,134,Show the full path for the given Ruby executable
+rbenv, __fish_rbenv_using_command which, , , ,@f,135, 

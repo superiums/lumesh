@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mapscrn, ,o,output, , ,101,"save the old map to the \\,FILE\\/"
+mapscrn, ,C,console, , ,102,the console device to be used
+mapscrn, ,v,verbose, , ,103,be more verbose
+mapscrn, ,V,version, , ,104,print version number
+mapscrn, ,h,help, , ,105,print this usage message.  FILES

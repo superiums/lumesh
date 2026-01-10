@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sysctl, ,n,values, , ,101,Only print values
+sysctl, ,e,ignore, , ,102,Ignore errors about unknown keys
+sysctl, ,N,names, , ,103,Only print names
+sysctl, ,q,quiet, , ,104,Be quiet when setting values
+sysctl, ,w,write, , ,105,Write value
+sysctl, ,p,load, , ,106,Load in sysctl settings from the file specified or /etc/sysctl
+sysctl, ,a,all, , ,107,Display all values currently available
+sysctl, , ,deprecated, , ,108,Include deprecated parameters too
+sysctl, ,b,binary, , ,109,Print value without new line
+sysctl, , ,system, , ,110,Load settings from all system configuration files
+sysctl, ,r,pattern, , ,111,Only apply settings that match pattern
+sysctl, ,h,help, , ,112,Display help text and exit.
+sysctl, ,V,version, , ,113,Display version information and exit.

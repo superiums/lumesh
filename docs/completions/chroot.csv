@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chroot, , ,groups, , ,101,"specify supplementary groups as g1,g2,. ,gN"
+chroot, , ,userspec, , ,102,specify user and group (ID or name) to use
+chroot, , ,skip-chdir, , ,103,do not change working directory to '/'
+chroot, , ,help, , ,104,display this help and exit
+chroot, , ,version, , ,105,output version information and exit 

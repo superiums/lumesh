@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+odt2txt, , ,width, , ,101,Wrap text lines after WIDTH characters
+odt2txt, , ,output, , ,102,Write output to FILE and not to standard output
+odt2txt, , ,subst, , ,103,Select which non-ascii characters shall be replaced by ascii look-a-likes
+odt2txt, , ,encoding, , ,104,"Do not try to autodetect the terminal encoding, but convert the document to e…"
+odt2txt, , ,raw, , ,105,Print raw XML
+odt2txt, , ,raw-input, , ,106,"Input file is a raw XML (fodt, fods, . )"
+odt2txt, , ,version, , ,107,"Show version and copyright information COPYRIGHT Copyright © 2006,2007 Dennis…"

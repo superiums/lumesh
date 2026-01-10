@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+broadwayd, , ,port, , ,101,"Use PORT as the HTTP port, instead of the default 8080 + (DISPLAY - 1)"
+broadwayd, , ,address, , ,102,"Use ADDRESS as the HTTP address, instead of the default http://127. 0. 0"
+broadwayd, , ,unixsocket, , ,103,Use ADDRESS as the unix domain socket address

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xzfgrep, , ,recursive, , ,101, 4
+xzfgrep, , ,dereference-recursive, , ,102, 4
+xzfgrep, , ,directories, , ,103, 4
+xzfgrep, , ,null, , ,104, 4
+xzfgrep, , ,null-data, , ,105, 4
+xzfgrep, , ,include, , ,106, 4
+xzfgrep, , ,exclude, , ,107, 4
+xzfgrep, , ,exclude-from, , ,108, 4
+xzfgrep, , ,exclude-dir, , ,109, 

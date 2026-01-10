@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_agent2, ,c,config, , ,101,Specify an alternate config-file.
+zabbix_agent2, ,R,runtime-control,$runtime,@f @r,102,Perform administrative functions.
+zabbix_agent2, ,p,print, ,@f,103,Print known items and exit.
+zabbix_agent2, ,t,test, ,@f,104,Test single item and exit.
+zabbix_agent2, ,h,help, ,@f,105,Display this help and exit.
+zabbix_agent2, ,V,version, ,@f,106,Output version information and exit.

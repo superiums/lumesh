@@ -1,0 +1,860 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$sfdx_looking, , , ,commands, ,101,list all the commands
+sfdx, __fish_sfdx_using_command commands,h,help, , ,102,show CLI help
+sfdx, __fish_sfdx_using_command commands,j,json, , ,103,output in json format
+sfdx, __fish_sfdx_using_command commands, ,hidden, , ,104,also show hidden commands
+$sfdx_looking, , , ,force, ,105,tools for the Salesforce developer
+sfdx, __fish_sfdx_using_command force, ,json, , ,106,format output as json
+sfdx, __fish_sfdx_using_command force, ,loglevel,$sfdx_loglevels, ,107,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:alias, ,108,manage username aliases
+$sfdx_looking, , , ,force:alias:list, ,109,list username aliases for the Salesforce CLI
+sfdx, __fish_sfdx_using_command force:alias:list, ,json, , ,110,format output as json
+sfdx, __fish_sfdx_using_command force:alias:list, ,loglevel,$sfdx_loglevels, ,111,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:alias:set, ,112,set username aliases for the Salesforce CLI
+sfdx, __fish_sfdx_using_command force:alias:set, ,json, , ,113,format output as json
+sfdx, __fish_sfdx_using_command force:alias:set, ,loglevel,$sfdx_loglevels, ,114,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:apex, ,115,work with Apex code
+$sfdx_looking, , , ,force:apex:execute, ,116,execute anonymous Apex code
+sfdx, __fish_sfdx_using_command force:apex:execute,f,apexcodefile, , ,117,path to a local file containing Apex code
+sfdx, __fish_sfdx_using_command force:apex:execute,u,targetusername, , ,118,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:apex:execute, ,apiversion, , ,119,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:apex:execute, ,json, , ,120,format output as json
+sfdx, __fish_sfdx_using_command force:apex:execute, ,loglevel,$sfdx_loglevels, ,121,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:apex:class, ,122,create an Apex class
+$sfdx_looking, , , ,force:apex:class:create, ,123,create an Apex class
+sfdx, __fish_sfdx_using_command force:apex:class:create,a,apiversion, , ,124,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:apex:class:create,d,outputdir, , ,125,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:apex:class:create,n,classname, , ,126,(required) name of the generated Apex class
+sfdx, __fish_sfdx_using_command force:apex:class:create,t,template,DefaultApexClass ApexException ApexUnitTest InboundEmailService, ,127,[default: DefaultApexClass] template to use for file creation
+sfdx, __fish_sfdx_using_command force:apex:class:create, ,json, , ,128,format output as json
+sfdx, __fish_sfdx_using_command force:apex:class:create, ,loglevel,$sfdx_loglevels, ,129,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:apex:log, ,130,work with Apex logs
+$sfdx_looking, , , ,force:apex:log:get, ,131,fetch the last debug log
+sfdx, __fish_sfdx_using_command force:apex:log:get,c,color, , ,132,colorize noteworthy log lines
+sfdx, __fish_sfdx_using_command force:apex:log:get,i,logid, , ,133,ID of the log to display
+sfdx, __fish_sfdx_using_command force:apex:log:get,n,number, , ,134,number of most recent logs to display
+sfdx, __fish_sfdx_using_command force:apex:log:get,u,targetusername, , ,135,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:apex:log:get, ,apiversion, , ,136,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:apex:log:get, ,json, , ,137,format output as json
+sfdx, __fish_sfdx_using_command force:apex:log:get, ,loglevel,$sfdx_loglevels, ,138,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:apex:log:list, ,139,list debug logs
+sfdx, __fish_sfdx_using_command force:apex:log:list,u,targetusername, , ,140,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:apex:log:list, ,apiversion, , ,141,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:apex:log:list, ,json, , ,142,format output as json
+sfdx, __fish_sfdx_using_command force:apex:log:list, ,loglevel,$sfdx_loglevels, ,143,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:apex:log:tail, ,144,start debug logging and display logs
+sfdx, __fish_sfdx_using_command force:apex:log:tail,c,color, , ,145,colorize noteworthy log lines
+sfdx, __fish_sfdx_using_command force:apex:log:tail,d,debuglevel, , ,146,debug level for trace flag
+sfdx, __fish_sfdx_using_command force:apex:log:tail,s,skiptraceflag, , ,147,skip trace flag setup
+sfdx, __fish_sfdx_using_command force:apex:log:tail,u,targetusername, , ,148,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:apex:log:tail, ,json, , ,149,format output as json
+sfdx, __fish_sfdx_using_command force:apex:log:tail, ,loglevel,$sfdx_loglevels, ,150,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:apex:test, ,151,work with Apex tests
+$sfdx_looking, , , ,force:apex:test:report, ,152,display test results
+sfdx, __fish_sfdx_using_command force:apex:test:report,c,codecoverage, , ,153,retrieve code coverage results
+sfdx, __fish_sfdx_using_command force:apex:test:report,d,outputdir, , ,154,directory to store test run files
+sfdx, __fish_sfdx_using_command force:apex:test:report,i,testrunid, , ,155,(required) ID of test run
+sfdx, __fish_sfdx_using_command force:apex:test:report,r,resultformat,human tap junit json, ,156,"[default: human] result format emitted to stdout; --json flag overrides this parameter"
+sfdx, __fish_sfdx_using_command force:apex:test:report,u,targetusername, , ,157,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:apex:test:report,w,wait, , ,158,[default: 6 minutes] the streaming client socket timeout (in minutes)
+sfdx, __fish_sfdx_using_command force:apex:test:report, ,apiversion, , ,159,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:apex:test:report, ,json, , ,160,format output as json
+sfdx, __fish_sfdx_using_command force:apex:test:report, ,loglevel,$sfdx_loglevels, ,161,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:apex:test:report, ,verbose, , ,162,display Apex test processing details
+$sfdx_looking, , , ,force:apex:test:run, ,163,invoke Apex tests
+sfdx, __fish_sfdx_using_command force:apex:test:run,c,codecoverage, , ,164,retrieve code coverage results
+sfdx, __fish_sfdx_using_command force:apex:test:run,d,outputdir, , ,165,directory to store test run files
+sfdx, __fish_sfdx_using_command force:apex:test:run,l,testlevel,RunLocalTests RunAllTestsInOrg RunSpecifiedTests, ,166,testlevel enum value
+sfdx, __fish_sfdx_using_command force:apex:test:run,n,classnames, , ,167,comma-separated list of Apex test class names to run
+sfdx, __fish_sfdx_using_command force:apex:test:run,r,resultformat,human tap junit json, ,168,"result format emitted to stdout; --json flag overrides this parameter"
+sfdx, __fish_sfdx_using_command force:apex:test:run,s,suitenames, , ,169,comma-separated list of Apex test suite names to run
+sfdx, __fish_sfdx_using_command force:apex:test:run,t,tests, , ,170,"comma-separated list of Apex test class names or IDs and, if applicable, test methods to run"
+sfdx, __fish_sfdx_using_command force:apex:test:run,u,targetusername, , ,171,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:apex:test:run,w,wait, , ,172,the streaming client socket timeout (in minutes)
+sfdx, __fish_sfdx_using_command force:apex:test:run,y,synchronous, , ,173,run tests from a single class synchronously
+sfdx, __fish_sfdx_using_command force:apex:test:run, ,apiversion, , ,174,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:apex:test:run, ,json, , ,175,format output as json
+sfdx, __fish_sfdx_using_command force:apex:test:run, ,loglevel,$sfdx_loglevels, ,176,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:apex:test:run, ,verbose, , ,177,display Apex test processing details
+$sfdx_looking, , , ,force:apex:trigger, ,178,create an Apex trigger
+$sfdx_looking, , , ,force:apex:trigger:create, ,179,create an Apex trigger
+sfdx, __fish_sfdx_using_command force:apex:trigger:create,a,apiversion, , ,180,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:apex:trigger:create,d,outputdir, , ,181,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:apex:trigger:create,e,triggerevents, , ,182,events that fire trigger
+sfdx, __fish_sfdx_using_command force:apex:trigger:create,n,triggername, , ,183,(required) name of the generated Apex trigger
+sfdx, __fish_sfdx_using_command force:apex:trigger:create,s,sobject, , ,184,[default: SOBJECT] sObject to create a trigger on
+sfdx, __fish_sfdx_using_command force:apex:trigger:create,t,template, , ,185,[default: ApexTrigger] template to use for file creation
+sfdx, __fish_sfdx_using_command force:apex:trigger:create, ,json, , ,186,format output as json
+sfdx, __fish_sfdx_using_command force:apex:trigger:create, ,loglevel,$sfdx_loglevels, ,187,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:auth, ,188,authorize an org for use with the Salesforce
+$sfdx_looking, , , ,force:auth:list, ,189,list auth connection information
+sfdx, __fish_sfdx_using_command force:auth:list, ,json, , ,190,format output as json
+sfdx, __fish_sfdx_using_command force:auth:list, ,loglevel,$sfdx_loglevels, ,191,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:auth:logout, ,192,log out from authorized orgs
+sfdx, __fish_sfdx_using_command force:auth:logout,a,all, , ,193,include all authenticated orgs
+sfdx, __fish_sfdx_using_command force:auth:logout,p,noprompt, , ,194,do not prompt for confirmation
+sfdx, __fish_sfdx_using_command force:auth:logout,u,targetusername, , ,195,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:auth:logout, ,apiversion, , ,196,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:auth:logout, ,json, , ,197,format output as json
+sfdx, __fish_sfdx_using_command force:auth:logout, ,loglevel,$sfdx_loglevels, ,198,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:auth:jwt, ,199,authorize an org using JWT
+$sfdx_looking, , , ,force:auth:jwt:grant, ,200,authorize an org using the JWT flow
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant,a,setalias, , ,201,set an alias for the authenticated org
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant,d,setdefaultdevhubusername, , ,202,set the authenticated org as the default dev hub org for scratch org creation
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant,f,jwtkeyfile, , ,203,(required) path to a file containing the private key
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant,i,clientid, , ,204,(required) OAuth client ID (sometimes called the consumer key)
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant,r,instanceurl, , ,205,the login URL of the instance the org lives on
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant,s,setdefaultusername, , ,206,set the authenticated org as the default username that all commands run against
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant,u,username, , ,207,(required) authentication username
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant, ,json, , ,208,format output as json
+sfdx, __fish_sfdx_using_command force:auth:jwt:grant, ,loglevel,$sfdx_loglevels, ,209,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:auth:sfdxurl, ,210,authorize an org using sfdxurl
+$sfdx_looking, , , ,force:auth:sfdxurl:store, ,211,authorize an org using an SFDX auth URL
+sfdx, __fish_sfdx_using_command force:auth:sfdxurl:store,a,setalias, , ,212,set an alias for the authenticated org
+sfdx, __fish_sfdx_using_command force:auth:sfdxurl:store,d,setdefaultdevhubusername, , ,213,set the authenticated org as the default dev hub org for scratch org creation
+sfdx, __fish_sfdx_using_command force:auth:sfdxurl:store,f,sfdxurlfile, , ,214,(required) path to a file containing the sfdx url
+sfdx, __fish_sfdx_using_command force:auth:sfdxurl:store,s,setdefaultusername, , ,215,set the authenticated org as the default username that all commands run against
+sfdx, __fish_sfdx_using_command force:auth:sfdxurl:store, ,json, , ,216,format output as json
+sfdx, __fish_sfdx_using_command force:auth:sfdxurl:store, ,loglevel,$sfdx_loglevels, ,217,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:auth:web, ,218,authorize an org using a web browser
+$sfdx_looking, , , ,force:auth:web:login, ,219,authorize an org using the web login flow
+sfdx, __fish_sfdx_using_command force:auth:web:login,a,setalias, , ,220,set an alias for the authenticated org
+sfdx, __fish_sfdx_using_command force:auth:web:login,d,setdefaultdevhubusername, , ,221,set the authenticated org as the default dev hub org for scratch org creation
+sfdx, __fish_sfdx_using_command force:auth:web:login,i,clientid, , ,222,(required) OAuth client ID (sometimes called the consumer key)
+sfdx, __fish_sfdx_using_command force:auth:web:login,r,instanceurl, , ,223,the login URL of the instance the org lives on
+sfdx, __fish_sfdx_using_command force:auth:web:login,s,setdefaultusername, , ,224,set the authenticated org as the default username that all commands run against
+sfdx, __fish_sfdx_using_command force:auth:web:login, ,json, , ,225,format output as json
+sfdx, __fish_sfdx_using_command force:auth:web:login, ,loglevel,$sfdx_loglevels, ,226,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:config, ,227,configure the Salesforce CLI
+$sfdx_looking, , , ,force:config:get, ,228,get config var values for given names
+sfdx, __fish_sfdx_using_command force:config:get, ,json, , ,229,format output as json
+sfdx, __fish_sfdx_using_command force:config:get, ,loglevel,$sfdx_loglevels, ,230,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:config:get, ,verbose, , ,231,emit additional command output to stdout
+$sfdx_looking, , , ,force:config:list, ,232,list config vars for the Salesforce CLI
+sfdx, __fish_sfdx_using_command force:config:list, ,json, , ,233,format output as json
+sfdx, __fish_sfdx_using_command force:config:list, ,loglevel,$sfdx_loglevels, ,234,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:config:set, ,235,set config vars for the Salesforce CLI
+sfdx, __fish_sfdx_using_command force:config:set,g,global, , ,236,set config var globally (to be used from any directory)
+sfdx, __fish_sfdx_using_command force:config:set, ,json, , ,237,format output as json
+sfdx, __fish_sfdx_using_command force:config:set, ,loglevel,$sfdx_loglevels, ,238,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:data, ,239,manipulate records in your org
+$sfdx_looking, , , ,force:data:bulk, ,240,manipulate records using the bulk API
+$sfdx_looking, , , ,force:data:bulk:delete, ,241,bulk delete records from a csv file
+sfdx, __fish_sfdx_using_command force:data:bulk:delete,f,csvfile, , ,242,(required) the path to the CSV file containing the ids of the records to delete
+sfdx, __fish_sfdx_using_command force:data:bulk:delete,s,sobjecttype, , ,243,(required) the sObject type of the records you’re deleting
+sfdx, __fish_sfdx_using_command force:data:bulk:delete,u,targetusername, , ,244,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:bulk:delete,w,wait, , ,245,number of minutes to wait for the command to complete
+sfdx, __fish_sfdx_using_command force:data:bulk:delete, ,apiversion, , ,246,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:bulk:delete, ,json, , ,247,format output as json
+sfdx, __fish_sfdx_using_command force:data:bulk:delete, ,loglevel,$sfdx_loglevels, ,248,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:data:bulk:status, ,249,view the status of a bulk data load job or batch
+sfdx, __fish_sfdx_using_command force:data:bulk:status,b,batchid, , ,250,the ID of the batch whose status you want to view
+sfdx, __fish_sfdx_using_command force:data:bulk:status,i,jobid, , ,251,(required) the ID of the job you want to view or of the job whose batch you want to view
+sfdx, __fish_sfdx_using_command force:data:bulk:status,u,targetusername, , ,252,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:bulk:status, ,apiversion, , ,253,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:bulk:status, ,json, , ,254,format output as json
+sfdx, __fish_sfdx_using_command force:data:bulk:status, ,loglevel,$sfdx_loglevels, ,255,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:data:bulk:upsert, ,256,bulk upsert records from a CSV file
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert,f,csvfile, , ,257,(required) the path to the CSV file that defines the records to upsert
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert,i,externalid, , ,258,(required) the column name of the external ID
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert,s,sobjecttype, , ,259,(required) the sObject type of the records you want to upsert
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert,u,targetusername, , ,260,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert,w,wait, , ,261,number of minutes to wait for the command to complete
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert, ,apiversion, , ,262,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert, ,json, , ,263,format output as json
+sfdx, __fish_sfdx_using_command force:data:bulk:upsert, ,loglevel,$sfdx_loglevels, ,264,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:data:record, ,265,manipulate records using the enterprise API
+$sfdx_looking, , , ,force:data:record:create, ,266,create a record
+sfdx, __fish_sfdx_using_command force:data:record:create,s,sobjecttype, , ,267,(required) the type of the record you’re creating
+sfdx, __fish_sfdx_using_command force:data:record:create,t,usetoolingapi, , ,268,create the record with tooling api
+sfdx, __fish_sfdx_using_command force:data:record:create,u,targetusername, , ,269,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:record:create,v,values, , ,270,(required) the <fieldName>=<value> pairs you’re creating
+sfdx, __fish_sfdx_using_command force:data:record:create, ,apiversion, , ,271,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:record:create, ,json, , ,272,format output as json
+sfdx, __fish_sfdx_using_command force:data:record:create, ,loglevel,$sfdx_loglevels, ,273,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:data:record:create, ,perflog, , ,274,get API performance data
+$sfdx_looking, , , ,force:data:record:delete, ,275,delete a record
+sfdx, __fish_sfdx_using_command force:data:record:delete,i,sobjectid, , ,276,the ID of the record you’re deleting
+sfdx, __fish_sfdx_using_command force:data:record:delete,s,sobjecttype, , ,277,(required) the type of the record you’re creating
+sfdx, __fish_sfdx_using_command force:data:record:delete,t,usetoolingapi, , ,278,create the record with tooling api
+sfdx, __fish_sfdx_using_command force:data:record:delete,u,targetusername, , ,279,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:record:delete,w,where, , ,280,a list of <fieldName>=<value> pairs to search for
+sfdx, __fish_sfdx_using_command force:data:record:delete, ,apiversion, , ,281,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:record:delete, ,json, , ,282,format output as json
+sfdx, __fish_sfdx_using_command force:data:record:delete, ,loglevel,$sfdx_loglevels, ,283,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:data:record:delete, ,perflog, , ,284,get API performance data
+$sfdx_looking, , , ,force:data:record:get, ,285,view a record
+sfdx, __fish_sfdx_using_command force:data:record:get,i,sobjectid, , ,286,the ID of the record you’re deleting
+sfdx, __fish_sfdx_using_command force:data:record:get,s,sobjecttype, , ,287,(required) the type of the record you’re creating
+sfdx, __fish_sfdx_using_command force:data:record:get,t,usetoolingapi, , ,288,create the record with tooling api
+sfdx, __fish_sfdx_using_command force:data:record:get,u,targetusername, , ,289,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:record:get,w,where, , ,290,a list of <fieldName>=<value> pairs to search for
+sfdx, __fish_sfdx_using_command force:data:record:get, ,apiversion, , ,291,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:record:get, ,json, , ,292,format output as json
+sfdx, __fish_sfdx_using_command force:data:record:get, ,loglevel,$sfdx_loglevels, ,293,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:data:record:get, ,perflog, , ,294,get API performance data
+$sfdx_looking, , , ,force:data:record:update, ,295,update a record
+sfdx, __fish_sfdx_using_command force:data:record:update,i,sobjectid, , ,296,the ID of the record you’re deleting
+sfdx, __fish_sfdx_using_command force:data:record:update,s,sobjecttype, , ,297,(required) the type of the record you’re creating
+sfdx, __fish_sfdx_using_command force:data:record:update,t,usetoolingapi, , ,298,create the record with tooling api
+sfdx, __fish_sfdx_using_command force:data:record:update,u,targetusername, , ,299,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:record:update,w,where, , ,300,a list of <fieldName>=<value> pairs to search for
+sfdx, __fish_sfdx_using_command force:data:record:update, ,apiversion, , ,301,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:record:update, ,json, , ,302,format output as json
+sfdx, __fish_sfdx_using_command force:data:record:update, ,loglevel,$sfdx_loglevels, ,303,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:data:record:update, ,perflog, , ,304,get API performance data
+$sfdx_looking, , , ,force:data:soql, ,305,fetch records using SOQL
+$sfdx_looking, , , ,force:data:soql:query, ,306,execute a SOQL query
+sfdx, __fish_sfdx_using_command force:data:soql:query,q,query, , ,307,(required) SOQL query to execute
+sfdx, __fish_sfdx_using_command force:data:soql:query,r,resultformat,human csv json, ,308,"[default: human] result format emitted to stdout; --json flag overrides this parameter"
+sfdx, __fish_sfdx_using_command force:data:soql:query,t,usetoolingapi, , ,309,execute query with Tooling API
+sfdx, __fish_sfdx_using_command force:data:soql:query,u,targetusername, , ,310,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:soql:query, ,apiversion, , ,311,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:soql:query, ,json, , ,312,format output as json
+sfdx, __fish_sfdx_using_command force:data:soql:query, ,loglevel,$sfdx_loglevels, ,313,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:data:soql:query, ,perflog, , ,314,get API performance data
+$sfdx_looking, , , ,force:data:tree, ,315,manipulate records using the tree API
+$sfdx_looking, , , ,force:data:tree:export, ,316,export data from an org into sObject tree format for force:data:tree:import consumption
+sfdx, __fish_sfdx_using_command force:data:tree:export,d,outputdir, , ,317,directory to store files
+sfdx, __fish_sfdx_using_command force:data:tree:export,p,plan, , ,318,generate multiple sobject tree files and a plan definition file for aggregated import
+sfdx, __fish_sfdx_using_command force:data:tree:export,q,query, , ,319,"(required) soql query, or filepath of file containing a soql query, to retrieve records"
+sfdx, __fish_sfdx_using_command force:data:tree:export,u,targetusername, , ,320,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:tree:export,x,prefix, , ,321,prefix of generated files
+sfdx, __fish_sfdx_using_command force:data:tree:export, ,apiversion, , ,322,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:tree:export, ,json, , ,323,format output as json
+sfdx, __fish_sfdx_using_command force:data:tree:export, ,loglevel,$sfdx_loglevels, ,324,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:data:tree:import, ,325,import data into an org using SObject Tree Save API
+sfdx, __fish_sfdx_using_command force:data:tree:import,f,sobjecttreefiles, , ,326,"comma-delimited, ordered paths of json files containing collection of record trees to insert"
+sfdx, __fish_sfdx_using_command force:data:tree:import,p,plan, , ,327,path to plan to insert multiple data files that have master-detail relationships
+sfdx, __fish_sfdx_using_command force:data:tree:import,u,targetusername, , ,328,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:data:tree:import, ,confighelp, , ,329,display schema information for the --plan configuration file to stdout
+sfdx, __fish_sfdx_using_command force:data:tree:import, ,apiversion, , ,330,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:data:tree:import, ,json, , ,331,format output as json
+sfdx, __fish_sfdx_using_command force:data:tree:import, ,loglevel,$sfdx_loglevels, ,332,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:doc, ,333,display help for force commands
+$sfdx_looking, , , ,force:doc:commands, ,334,display help for force commands
+$sfdx_looking, , , ,force:doc:commands:display, ,335,display help for force commands
+sfdx, __fish_sfdx_using_command force:doc:commands:display, ,json, , ,336,format output as json
+sfdx, __fish_sfdx_using_command force:doc:commands:display, ,loglevel,$sfdx_loglevels, ,337,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:doc:commands:list, ,338,list the force commands
+sfdx, __fish_sfdx_using_command force:doc:commands:list,u,usage, , ,339,list only docopt usage strings
+sfdx, __fish_sfdx_using_command force:doc:commands:list, ,json, , ,340,format output as json
+sfdx, __fish_sfdx_using_command force:doc:commands:list, ,loglevel,$sfdx_loglevels, ,341,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:lightning, ,342,create Aura components and Lightning web
+$sfdx_looking, , , ,force:lightning:lint, ,343,analyze (lint) Aura component code
+sfdx, __fish_sfdx_using_command force:lightning:lint,i,ignore, , ,344,pattern used to ignore some folders
+sfdx, __fish_sfdx_using_command force:lightning:lint, ,config, , ,345,path to a custom ESLint configuration file
+sfdx, __fish_sfdx_using_command force:lightning:lint, ,exit, , ,346,exit with error code 1 if there are lint issues
+sfdx, __fish_sfdx_using_command force:lightning:lint, ,files, , ,347,pattern used to include specific files
+sfdx, __fish_sfdx_using_command force:lightning:lint, ,json, , ,348,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:lint, ,loglevel,$sfdx_loglevels, ,349,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:lightning:lint, ,verbose, , ,350,report warnings in addition to errors
+$sfdx_looking, , , ,force:lightning:app, ,351,create a Lightning app
+$sfdx_looking, , , ,force:lightning:app:create, ,352,create a Lightning app
+sfdx, __fish_sfdx_using_command force:lightning:app:create,a,apiversion, , ,353,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:lightning:app:create,d,outputdir, , ,354,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:lightning:app:create,n,appname, , ,355,(required) name of the generated Lightning app
+sfdx, __fish_sfdx_using_command force:lightning:app:create,t,template, , ,356,[default: DefaultLightningApp] template to use for file creation
+sfdx, __fish_sfdx_using_command force:lightning:app:create, ,json, , ,357,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:app:create, ,loglevel,$sfdx_loglevels, ,358,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:lightning:component, ,359,create a bundle for an Aura component or a Lightning web component
+$sfdx_looking, , , ,force:lightning:component:create, ,360,create a bundle for an Aura component or a Lightning web component
+sfdx, __fish_sfdx_using_command force:lightning:component:create,a,apiversion, , ,361,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:lightning:component:create,d,outputdir, , ,362,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:lightning:component:create,n,componentname, , ,363,(required) name of the generated Lightning component
+sfdx, __fish_sfdx_using_command force:lightning:component:create,t,template, , ,364,[default: DefaultLightningCmp] template to use for file creation
+sfdx, __fish_sfdx_using_command force:lightning:component:create, ,json, , ,365,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:component:create, ,loglevel,$sfdx_loglevels, ,366,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:lightning:component:create, ,type,aura lwc, ,367,[default: aura] type of the Lightning component
+$sfdx_looking, , , ,force:lightning:event, ,368,create a Lightning event
+$sfdx_looking, , , ,force:lightning:event:create, ,369,create a Lightning event
+sfdx, __fish_sfdx_using_command force:lightning:event:create,a,apiversion, , ,370,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:lightning:event:create,d,outputdir, , ,371,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:lightning:event:create,n,eventname, , ,372,(required) name of the generated Lightning event
+sfdx, __fish_sfdx_using_command force:lightning:event:create,t,template, , ,373,[default: DefaultLightningEvt] template to use for file creation
+sfdx, __fish_sfdx_using_command force:lightning:event:create, ,json, , ,374,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:event:create, ,loglevel,$sfdx_loglevels, ,375,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:lightning:interface, ,376,create a Lightning interface
+$sfdx_looking, , , ,force:lightning:interface:create, ,377,create a Lightning interface
+sfdx, __fish_sfdx_using_command force:lightning:interface:create,a,apiversion, , ,378,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:lightning:interface:create,d,outputdir, , ,379,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:lightning:interface:create,n,interfacename, , ,380,(required) name of the generated Lightning interface
+sfdx, __fish_sfdx_using_command force:lightning:interface:create,t,template, , ,381,[default: DefaultLightningIntf] template to use for file creation
+sfdx, __fish_sfdx_using_command force:lightning:interface:create, ,json, , ,382,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:interface:create, ,loglevel,$sfdx_loglevels, ,383,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:lightning:test, ,384,test Aura components
+$sfdx_looking, , , ,force:lightning:test:create, ,385,create a Lightning test
+sfdx, __fish_sfdx_using_command force:lightning:test:create,d,outputdir, , ,386,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:lightning:test:create,n,testname, , ,387,(required) name of the generated Lightning test
+sfdx, __fish_sfdx_using_command force:lightning:test:create,t,template, , ,388,[default: DefaultLightningTest] template to use for file creation
+sfdx, __fish_sfdx_using_command force:lightning:test:create, ,json, , ,389,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:test:create, ,loglevel,$sfdx_loglevels, ,390,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:lightning:test:install, ,391,install Lightning Testing Service unmanaged package in your org
+sfdx, __fish_sfdx_using_command force:lightning:test:install,r,releaseversion, , ,392,[default: latest] release version of Lightning Testing Service
+sfdx, __fish_sfdx_using_command force:lightning:test:install,t,packagetype,jasmine mocha full, ,393,"[default: full] type of unmanaged package. 'full' option contains both jasmine and mocha, plus examples"
+sfdx, __fish_sfdx_using_command force:lightning:test:install,u,targetusername, , ,394,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:lightning:test:install,w,wait, , ,395,number of minutes to wait for installation status (default 2)
+sfdx, __fish_sfdx_using_command force:lightning:test:install, ,apiversion, , ,396,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:lightning:test:install, ,json, , ,397,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:test:install, ,loglevel,$sfdx_loglevels, ,398,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:lightning:test:run, ,399,invoke Aura component tests
+sfdx, __fish_sfdx_using_command force:lightning:test:run,a,appname, , ,400,name of your Lightning test application
+sfdx, __fish_sfdx_using_command force:lightning:test:run,d,outputdir, , ,401,"directory path to store test run artifacts: for example, log files and test results"
+sfdx, __fish_sfdx_using_command force:lightning:test:run,f,configfile, , ,402,path to config file for the test
+sfdx, __fish_sfdx_using_command force:lightning:test:run,o,leavebrowseropen, , ,403,leave browser open
+sfdx, __fish_sfdx_using_command force:lightning:test:run,r,resultformat,human tap junit json, ,404,"[default: human] result format emitted to stdout; --json flag overrides this parameter"
+sfdx, __fish_sfdx_using_command force:lightning:test:run,t,timeout, , ,405,[default: 60000] time (ms) to wait for results element in dom
+sfdx, __fish_sfdx_using_command force:lightning:test:run,u,targetusername, , ,406,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:lightning:test:run, ,apiversion, , ,407,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:lightning:test:run, ,json, , ,408,format output as json
+sfdx, __fish_sfdx_using_command force:lightning:test:run, ,loglevel,$sfdx_loglevels, ,409,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:limits, ,410,view your org’s limits
+$sfdx_looking, , , ,force:limits:api, ,411,view your org’s API limits
+$sfdx_looking, , , ,force:limits:api:display, ,412,display current org’s limits
+sfdx, __fish_sfdx_using_command force:limits:api:display,u,targetusername, , ,413,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:limits:api:display, ,apiversion, , ,414,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:limits:api:display, ,json, , ,415,format output as json
+sfdx, __fish_sfdx_using_command force:limits:api:display, ,loglevel,$sfdx_loglevels, ,416,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:mdapi, ,417,retrieve and deploy metadata using Metadata
+$sfdx_looking, , , ,force:mdapi:convert, ,418,convert metadata from the Metadata API format into the source format
+sfdx, __fish_sfdx_using_command force:mdapi:convert,d,outputdir, , ,419,the output directory to store the source–formatted files
+sfdx, __fish_sfdx_using_command force:mdapi:convert,r,rootdir, , ,420,(required) the root directory containing the Metadata API–formatted metadata
+sfdx, __fish_sfdx_using_command force:mdapi:convert, ,json, , ,421,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:convert, ,loglevel,$sfdx_loglevels, ,422,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:mdapi:deploy, ,423,deploy metadata using Metadata API
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,c,checkonly, , ,424,validate deploy but don’t save to the org
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,d,deploydir, , ,425,root of directory tree of files to deploy
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,f,zipfile, , ,426,path to .zip file of metadata to deploy
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,g,ignorewarnings, , ,427,whether a warning will allow a deployment to complete successfully
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,l,testlevel,NoTestRun RunSpecifiedTests RunLocalTests RunAllTestsInOrg, ,428,deployment testing level
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,o,ignoreerrors, , ,429,ignore any errors and do not roll back deployment
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,q,validateddeployrequestid, , ,430,request ID of the validated deployment to run a Quick Deploy
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,r,runtests, , ,431,tests to run if --testlevel RunSpecifiedTests
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,u,targetusername, , ,432,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:mdapi:deploy,w,wait, , ,433,wait time for command to finish in minutes (default: 0)
+sfdx, __fish_sfdx_using_command force:mdapi:deploy, ,apiversion, , ,434,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:mdapi:deploy, ,json, , ,435,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:deploy, ,loglevel,$sfdx_loglevels, ,436,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:mdapi:deploy, ,verbose, , ,437,verbose output of deploy results
+$sfdx_looking, , , ,force:mdapi:deploy:cancel, ,438,cancel a metadata deployment
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:cancel,i,jobid, , ,439,job ID of the deployment you want to cancel (default: most recent CLI deployment)
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:cancel,u,targetusername, , ,440,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:cancel,w,wait, , ,441,[default: 33 minutes] wait time for command to finish in minutes 33
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:cancel, ,apiversion, , ,442,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:cancel, ,json, , ,443,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:cancel, ,loglevel,$sfdx_loglevels, ,444,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:mdapi:deploy:report, ,445,check the status of a metadata deployment
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:report,i,jobid, , ,446,job ID of the deployment you want to cancel (default: most recent CLI deployment)
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:report,u,targetusername, , ,447,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:report,w,wait, , ,448,[default: 33 minutes] wait time for command to finish in minutes 33
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:report, ,apiversion, , ,449,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:report, ,json, , ,450,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:report, ,loglevel,$sfdx_loglevels, ,451,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:mdapi:deploy:report, ,verbose, , ,452,verbose output of deploy results
+$sfdx_looking, , , ,force:mdapi:describemetadata, ,453,display the metadata types enabled for your org
+sfdx, __fish_sfdx_using_command force:mdapi:describemetadata,a,apiversion, , ,454,API version to use (the default is 46.0)
+sfdx, __fish_sfdx_using_command force:mdapi:describemetadata,f,resultfile, , ,455,filter metadata known by the CLI
+sfdx, __fish_sfdx_using_command force:mdapi:describemetadata,u,targetusername, , ,456,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:mdapi:describemetadata, ,json, , ,457,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:describemetadata, ,loglevel,$sfdx_loglevels, ,458,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:mdapi:listmetadata, ,459,display properties of metadata components of a specified type
+sfdx, __fish_sfdx_using_command force:mdapi:listmetadata,a,apiversion, , ,460,API version to use (the default is 46.0)
+sfdx, __fish_sfdx_using_command force:mdapi:listmetadata,f,resultfile, , ,461,path to the file where results are stored
+sfdx, __fish_sfdx_using_command force:mdapi:listmetadata,m,metadatatype, , ,462,(required) metadata type to be retrieved
+sfdx, __fish_sfdx_using_command force:mdapi:listmetadata,u,targetusername, , ,463,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:mdapi:listmetadata, ,folder, , ,464,folder associated with the component
+sfdx, __fish_sfdx_using_command force:mdapi:listmetadata, ,json, , ,465,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:listmetadata, ,loglevel,$sfdx_loglevels, ,466,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:mdapi:retrieve, ,467,retrieve metadata using Metadata API
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,a,apiversion, , ,468,target API version for the retrieve (default 46.0)
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,d,sourcedir, , ,469,source dir to use instead of the default package dir in sfdx-project.json
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,k,unpackaged, , ,470,file path of manifest of components to retrieve
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,p,packagenames, , ,471,a comma-separated list of packages to retrieve
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,r,retrievetargetdir, , ,472,(required) directory root for the retrieved files
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,s,singlepackage, , ,473,a single-package retrieve (default: false)
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,u,targetusername, , ,474,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve,w,wait, , ,475,wait time for command to finish in minutes (default: -1 (no limit))
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve, ,json, , ,476,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve, ,loglevel,$sfdx_loglevels, ,477,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve, ,verbose, , ,478,verbose output of retrieve result
+$sfdx_looking, , , ,force:mdapi:retrieve:report, ,479,check the status of a metadata retrieval
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report,i,jobid, , ,480,job ID of the retrieve you want to check
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report,r,retrievetargetdir, , ,481,directory root for the retrieved files
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report,u,targetusername, , ,482,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report,w,wait, , ,483,wait time for command to finish in minutes (default: -1 (no limit))
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report, ,apiversion, , ,484,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report, ,json, , ,485,format output as json
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report, ,loglevel,$sfdx_loglevels, ,486,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:mdapi:retrieve:report, ,verbose, , ,487,verbose output of retrieve result
+$sfdx_looking, , , ,force:org, ,488,manage your orgs
+$sfdx_looking, , , ,force:org:clone, ,489,clone a sandbox org
+sfdx, __fish_sfdx_using_command force:org:clone,a,setalias, , ,490,alias for the created org
+sfdx, __fish_sfdx_using_command force:org:clone,f,definitionfile, , ,491,path to an org definition file
+sfdx, __fish_sfdx_using_command force:org:clone,s,setdefaultusername, , ,492,set the created org as the default username
+sfdx, __fish_sfdx_using_command force:org:clone,t,type,sandbox, ,493,(required) type of org to create
+sfdx, __fish_sfdx_using_command force:org:clone,u,targetusername, , ,494,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:clone,w,wait, , ,495,[default: 6 minutes] the streaming client socket timeout (in minutes)
+sfdx, __fish_sfdx_using_command force:org:clone, ,apiversion, , ,496,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:clone, ,json, , ,497,format output as json
+sfdx, __fish_sfdx_using_command force:org:clone, ,loglevel,$sfdx_loglevels, ,498,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:create, ,499,create a scratch or sandbox org
+sfdx, __fish_sfdx_using_command force:org:create,a,setalias, , ,500,alias for the created org
+sfdx, __fish_sfdx_using_command force:org:create,c,noancestors, , ,501,do not include second-generation package ancestors in the scratch org
+sfdx, __fish_sfdx_using_command force:org:create,d,durationdays, , ,502,"duration of the scratch org (in days) (default:7, min:1, max:30)"
+sfdx, __fish_sfdx_using_command force:org:create,f,definitionfile, , ,503,path to an org definition file
+sfdx, __fish_sfdx_using_command force:org:create,i,clientid, , ,504,connected app consumer key
+sfdx, __fish_sfdx_using_command force:org:create,n,nonamespace, , ,505,create the scratch org with no namespace
+sfdx, __fish_sfdx_using_command force:org:create,s,setdefaultusername, , ,506,set the created org as the default username
+sfdx, __fish_sfdx_using_command force:org:create,t,type,scratch sandbox, ,507,[default: scratch] type of org to create
+sfdx, __fish_sfdx_using_command force:org:create,u,targetusername, , ,508,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:create,v,targetdevhubusername, , ,509,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:org:create,w,wait, , ,510,[default: 6 minutes] the streaming client socket timeout (in minutes)
+sfdx, __fish_sfdx_using_command force:org:create, ,apiversion, , ,511,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:create, ,json, , ,512,format output as json
+sfdx, __fish_sfdx_using_command force:org:create, ,loglevel,$sfdx_loglevels, ,513,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:delete, ,514,mark a scratch org for deletion
+sfdx, __fish_sfdx_using_command force:org:delete,p,noprompt, , ,515,no prompt to confirm deletion
+sfdx, __fish_sfdx_using_command force:org:delete,u,targetusername, , ,516,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:delete,v,targetdevhubusername, , ,517,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:org:delete, ,apiversion, , ,518,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:delete, ,json, , ,519,format output as json
+sfdx, __fish_sfdx_using_command force:org:delete, ,loglevel,$sfdx_loglevels, ,520,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:display, ,521,get org description
+sfdx, __fish_sfdx_using_command force:org:display,u,targetusername, , ,522,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:display, ,apiversion, , ,523,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:display, ,json, , ,524,format output as json
+sfdx, __fish_sfdx_using_command force:org:display, ,loglevel,$sfdx_loglevels, ,525,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:org:display, ,verbose, , ,526,emit additional command output to stdout
+$sfdx_looking, , , ,force:org:list, ,527,list all orgs you’ve created or authenticated to
+sfdx, __fish_sfdx_using_command force:org:list,p,noprompt, , ,528,do not prompt for confirmation
+sfdx, __fish_sfdx_using_command force:org:list, ,all, , ,529,"include expired, deleted, and unknown-status scratch orgs"
+sfdx, __fish_sfdx_using_command force:org:list, ,clean, , ,530,remove all local org authorizations for non-active orgs
+sfdx, __fish_sfdx_using_command force:org:list, ,json, , ,531,format output as json
+sfdx, __fish_sfdx_using_command force:org:list, ,loglevel,$sfdx_loglevels, ,532,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:org:list, ,verbose, , ,533,list more information about each org
+$sfdx_looking, , , ,force:org:open, ,534,open an org in your browser
+sfdx, __fish_sfdx_using_command force:org:open,p,path, , ,535,navigation URL path
+sfdx, __fish_sfdx_using_command force:org:open,r,urlonly, , ,536,"display navigation URL, but don’t launch browser"
+sfdx, __fish_sfdx_using_command force:org:open,u,targetusername, , ,537,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:open, ,apiversion, , ,538,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:open, ,json, , ,539,format output as json
+sfdx, __fish_sfdx_using_command force:org:open, ,loglevel,$sfdx_loglevels, ,540,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:status, ,541,report sandbox org creation status and headlessly authenticate to org
+sfdx, __fish_sfdx_using_command force:org:status,a,setalias, , ,542,alias for the created org
+sfdx, __fish_sfdx_using_command force:org:status,n,sandboxname, , ,543,(required) name of the sandbox org to check status for
+sfdx, __fish_sfdx_using_command force:org:status,s,setdefaultusername, , ,544,set the created org as the default username
+sfdx, __fish_sfdx_using_command force:org:status,u,targetusername, , ,545,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:status,w,wait, , ,546,number of minutes to wait while polling for status (default 6)
+sfdx, __fish_sfdx_using_command force:org:status, ,apiversion, , ,547,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:status, ,json, , ,548,format output as json
+sfdx, __fish_sfdx_using_command force:org:status, ,loglevel,$sfdx_loglevels, ,549,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:shape, ,550,manage org shape
+$sfdx_looking, , , ,force:org:shape:create, ,551,"create a snapshot of org edition, features, and licenses"
+sfdx, __fish_sfdx_using_command force:org:shape:create,u,targetusername, , ,552,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:shape:create, ,apiversion, , ,553,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:shape:create, ,json, , ,554,format output as json
+sfdx, __fish_sfdx_using_command force:org:shape:create, ,loglevel,$sfdx_loglevels, ,555,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:shape:delete, ,556,delete all org shapes for a target org
+sfdx, __fish_sfdx_using_command force:org:shape:delete,p,noprompt, , ,557,do not prompt for confirmation
+sfdx, __fish_sfdx_using_command force:org:shape:delete,u,targetusername, , ,558,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:org:shape:delete, ,apiversion, , ,559,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:shape:delete, ,json, , ,560,format output as json
+sfdx, __fish_sfdx_using_command force:org:shape:delete, ,loglevel,$sfdx_loglevels, ,561,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:shape:list, ,562,list all org shapes you’ve created
+sfdx, __fish_sfdx_using_command force:org:shape:list, ,json, , ,563,format output as json
+sfdx, __fish_sfdx_using_command force:org:shape:list, ,loglevel,$sfdx_loglevels, ,564,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:org:shape:list, ,verbose, , ,565,list more information about each org shape
+$sfdx_looking, , , ,force:org:snapshot, ,566,snapshot a scratch org
+$sfdx_looking, , , ,force:org:snapshot:create, ,567,snapshot a scratch org
+sfdx, __fish_sfdx_using_command force:org:snapshot:create,d,description, , ,568,description of snapshot
+sfdx, __fish_sfdx_using_command force:org:snapshot:create,n,snapshotname, , ,569,(required) unique name of snapshot
+sfdx, __fish_sfdx_using_command force:org:snapshot:create,o,sourceorg, , ,570,(required) ID or locally authenticated username or alias of scratch org to snapshot
+sfdx, __fish_sfdx_using_command force:org:snapshot:create,v,targetdevhubusername, , ,571,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:org:snapshot:create, ,apiversion, , ,572,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:snapshot:create, ,json, , ,573,format output as json
+sfdx, __fish_sfdx_using_command force:org:snapshot:create, ,loglevel,$sfdx_loglevels, ,574,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:snapshot:delete, ,575,delete a scratch org snapshot
+sfdx, __fish_sfdx_using_command force:org:snapshot:delete,s,snapshot, , ,576,(required) name or ID of snapshot to delete
+sfdx, __fish_sfdx_using_command force:org:snapshot:delete,v,targetdevhubusername, , ,577,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:org:snapshot:delete, ,apiversion, , ,578,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:snapshot:delete, ,json, , ,579,format output as json
+sfdx, __fish_sfdx_using_command force:org:snapshot:delete, ,loglevel,$sfdx_loglevels, ,580,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:snapshot:get, ,581,get details about a scratch org snapshot
+sfdx, __fish_sfdx_using_command force:org:snapshot:get,s,snapshot, , ,582,(required) name or ID of snapshot to retrieve
+sfdx, __fish_sfdx_using_command force:org:snapshot:get,v,targetdevhubusername, , ,583,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:org:snapshot:get, ,apiversion, , ,584,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:snapshot:get, ,json, , ,585,format output as json
+sfdx, __fish_sfdx_using_command force:org:snapshot:get, ,loglevel,$sfdx_loglevels, ,586,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:org:snapshot:list, ,587,list scratch org snapshots
+sfdx, __fish_sfdx_using_command force:org:snapshot:list,v,targetdevhubusername, , ,588,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:org:snapshot:list, ,apiversion, , ,589,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:org:snapshot:list, ,json, , ,590,format output as json
+sfdx, __fish_sfdx_using_command force:org:snapshot:list, ,loglevel,$sfdx_loglevels, ,591,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package, ,592,develop and install packages
+$sfdx_looking, , , ,force:package:create, ,593,create a package
+sfdx, __fish_sfdx_using_command force:package:create,d,description, , ,594,package description
+sfdx, __fish_sfdx_using_command force:package:create,e,nonamespace, , ,595,creates the package with no namespace
+sfdx, __fish_sfdx_using_command force:package:create,n,name, , ,596,(required) package name
+sfdx, __fish_sfdx_using_command force:package:create,r,path, , ,597,(required) path to directory that contains the contents of the package
+sfdx, __fish_sfdx_using_command force:package:create,t,packagetype,Managed Unlocked, ,598,(required) package type
+$sfdx_looking, , , ,force:package:install, ,599,install packages
+sfdx, __fish_sfdx_using_command force:package:create,a,apexcompile,all package, ,600,"[default: all] compile all Apex in the org and package, or only Apex in the package"
+sfdx, __fish_sfdx_using_command force:package:create,b,publishwait, , ,601,number of minutes to wait for subscriber package version ID to become available
+sfdx, __fish_sfdx_using_command force:package:create,k,installationkey, , ,602,installation key for key-protected package (default: null)
+sfdx, __fish_sfdx_using_command force:package:create,p,package, , ,603,ID (starts with 04t) or alias of the package version to install
+sfdx, __fish_sfdx_using_command force:package:create,r,noprompt, , ,604,do not prompt for confirmation
+sfdx, __fish_sfdx_using_command force:package:create,s,securitytype,AllUsers AdminsOnly, ,605,[default: AllUsers] security access type for the installed package
+sfdx, __fish_sfdx_using_command force:package:create,t,upgradetype,DeprecateOnly Mixed Delete, ,606,[default: Mixed] the upgrade type for the package installation
+sfdx, __fish_sfdx_using_command force:package:create,u,targetusername, , ,607,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:create,w,wait, , ,608,number of minutes to wait for installation status
+$sfdx_looking, , , ,force:package:list, ,609,list all packages in the Dev Hub org
+sfdx, __fish_sfdx_using_command force:package:list,v,targetdevhubusername, , ,610,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:package:list, ,apiversion, , ,611,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:list, ,json, , ,612,format output as json
+sfdx, __fish_sfdx_using_command force:package:list, ,loglevel,$sfdx_loglevels, ,613,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:package:list, ,verbose, , ,614,display extended package detail
+$sfdx_looking, , , ,force:package:uninstall, ,615,uninstall packages
+sfdx, __fish_sfdx_using_command force:package:uninstall,p,package, , ,616,ID (starts with 04t) or alias of the package version to uninstall
+sfdx, __fish_sfdx_using_command force:package:uninstall,u,targetusername, , ,617,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:uninstall,w,wait, , ,618,number of minutes to wait for uninstall status
+sfdx, __fish_sfdx_using_command force:package:uninstall, ,apiversion, , ,619,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:uninstall, ,json, , ,620,format output as json
+sfdx, __fish_sfdx_using_command force:package:uninstall, ,loglevel,$sfdx_loglevels, ,621,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:update, ,622,update package details
+sfdx, __fish_sfdx_using_command force:package:update,d,description, , ,623,new package description
+sfdx, __fish_sfdx_using_command force:package:update,n,name, , ,624,new package name
+sfdx, __fish_sfdx_using_command force:package:update,p,package, , ,625,(required) ID (starts with 0Ho) or alias of the package to update
+sfdx, __fish_sfdx_using_command force:package:update,v,targetdevhubusername, , ,626,username or alias for the dev hub org
+sfdx, __fish_sfdx_using_command force:package:update, ,apiversion, , ,627,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:update, ,json, , ,628,format output as json
+sfdx, __fish_sfdx_using_command force:package:update, ,loglevel,$sfdx_loglevels, ,629,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:hammertest, ,630,run ISV Hammer tests
+$sfdx_looking, , , ,force:package:hammertest:list, ,631,list the statuses of running and completed ISV Hammer tests
+sfdx, __fish_sfdx_using_command force:package:hammertest:list,i,packageversionid, , ,632,ID of the package version to list results for
+sfdx, __fish_sfdx_using_command force:package:hammertest:list,u,targetusername, , ,633,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:hammertest:list, ,apiversion, , ,634,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:hammertest:list, ,json, , ,635,format output as json
+sfdx, __fish_sfdx_using_command force:package:hammertest:list, ,loglevel,$sfdx_loglevels, ,636,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:hammertest:report, ,637,display the status or results of a ISV Hammer test
+sfdx, __fish_sfdx_using_command force:package:hammertest:report,i,requestid, , ,638,(required) ID of the hammer request to report on
+sfdx, __fish_sfdx_using_command force:package:hammertest:report,s,summary, , ,639,report only a results summary (hide Apex test failures)
+sfdx, __fish_sfdx_using_command force:package:hammertest:report,u,targetusername, , ,640,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:hammertest:report, ,apiversion, , ,641,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:hammertest:report, ,json, , ,642,format output as json
+sfdx, __fish_sfdx_using_command force:package:hammertest:report, ,loglevel,$sfdx_loglevels, ,643,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:hammertest:run, ,644,run ISV Hammer
+sfdx, __fish_sfdx_using_command force:package:hammertest:run,d,scheduledrundatetime, , ,645,"earliest date/time to run the package upgrade test (YYYY-MM-DD HH:mm:ss, in GMT)"
+sfdx, __fish_sfdx_using_command force:package:hammertest:run,f,subscriberfile, , ,646,"file with list of subscriber orgs IDs, one per line"
+sfdx, __fish_sfdx_using_command force:package:hammertest:run,i,packageversionids, , ,647,(required) comma-separated list of package version IDs to test
+sfdx, __fish_sfdx_using_command force:package:hammertest:run,p,preview, , ,648,run the package hammer test in the Salesforce preview version
+sfdx, __fish_sfdx_using_command force:package:hammertest:run,s,subscriberorgs, , ,649,comma-separated list of subscriber org IDs
+sfdx, __fish_sfdx_using_command force:package:hammertest:run,t,apextests, , ,650,"after package upgrade validation, run the package's Apex tests in the subscriber org"
+sfdx, __fish_sfdx_using_command force:package:hammertest:run,u,targetusername, , ,651,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:hammertest:run, ,apiversion, , ,652,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:hammertest:run, ,json, , ,653,format output as json
+sfdx, __fish_sfdx_using_command force:package:hammertest:run, ,loglevel,$sfdx_loglevels, ,654,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:install, ,655,install packages
+sfdx, __fish_sfdx_using_command force:package:install,a,apexcompile,all package, ,656,"[default: all] compile all Apex in the org and package, or only Apex in the package"
+sfdx, __fish_sfdx_using_command force:package:install,b,publishwait, , ,657,number of minutes to wait for subscriber package version ID to become available
+sfdx, __fish_sfdx_using_command force:package:install,k,installationkey, , ,658,installation key for key-protected package (default: null)
+sfdx, __fish_sfdx_using_command force:package:install,p,package, , ,659,ID (starts with 04t) or alias of the package version to install
+sfdx, __fish_sfdx_using_command force:package:install,r,noprompt, , ,660,do not prompt for confirmation
+sfdx, __fish_sfdx_using_command force:package:install,s,securitytype,AllUsers AdminsOnly, ,661,[default: AllUsers] security access type for the installed package
+sfdx, __fish_sfdx_using_command force:package:install,t,upgradetype,DeprecateOnly Mixed Delete, ,662,[default: Mixed] the upgrade type for the package installation
+sfdx, __fish_sfdx_using_command force:package:install,u,targetusername, , ,663,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:install,w,wait, , ,664,number of minutes to wait for installation status
+$sfdx_looking, , , ,force:package:install:report, ,665,retrieve the status of a package installation request
+sfdx, __fish_sfdx_using_command force:package:install:report,i,requestid, , ,666,(required) ID of the package install request you want to check
+sfdx, __fish_sfdx_using_command force:package:install:report,u,targetusername, , ,667,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:install:report, ,apiversion, , ,668,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:install:report, ,json, , ,669,format output as json
+sfdx, __fish_sfdx_using_command force:package:install:report, ,loglevel,$sfdx_loglevels, ,670,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:installed, ,671,list installed packages
+$sfdx_looking, , , ,force:package:installed:list, ,672,list the org’s installed packages
+sfdx, __fish_sfdx_using_command force:package:installed:list,u,targetusername, , ,673,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:installed:list, ,apiversion, , ,674,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:installed:list, ,json, , ,675,format output as json
+sfdx, __fish_sfdx_using_command force:package:installed:list, ,loglevel,$sfdx_loglevels, ,676,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:uninstall, ,677,uninstall packages
+sfdx, __fish_sfdx_using_command force:package:uninstall,p,package, , ,678,ID (starts with 04t) or alias of the package version to uninstall
+sfdx, __fish_sfdx_using_command force:package:uninstall,u,targetusername, , ,679,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:uninstall,w,wait, , ,680,number of minutes to wait for uninstall status
+sfdx, __fish_sfdx_using_command force:package:uninstall, ,apiversion, , ,681,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:uninstall, ,json, , ,682,format output as json
+sfdx, __fish_sfdx_using_command force:package:uninstall, ,loglevel,$sfdx_loglevels, ,683,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:uninstall:report, ,684,retrieve status of package uninstall request
+sfdx, __fish_sfdx_using_command force:package:uninstall:report,i,requestid, , ,685,(required) ID of the package uninstall request you want to check
+sfdx, __fish_sfdx_using_command force:package:uninstall:report,u,targetusername, , ,686,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package:uninstall:report, ,apiversion, , ,687,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package:uninstall:report, ,json, , ,688,format output as json
+sfdx, __fish_sfdx_using_command force:package:uninstall:report, ,loglevel,$sfdx_loglevels, ,689,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package:version, ,690,develop package versions
+$sfdx_looking, , , ,force:package1, ,691,develop first-generation managed and
+$sfdx_looking, , , ,force:package1:version, ,692,develop package versions
+$sfdx_looking, , , ,force:package1:version:create, ,693,report on created package versions
+sfdx, __fish_sfdx_using_command force:package1:version:create,d,description, , ,694,package version description
+sfdx, __fish_sfdx_using_command force:package1:version:create,i,packageid, , ,695,(required) ID of the metadata package (starts with 033) of which you’re creating a new version
+sfdx, __fish_sfdx_using_command force:package1:version:create,k,installationkey, , ,696,installation key for key-protected package (default: null)
+sfdx, __fish_sfdx_using_command force:package1:version:create,m,managedreleased, , ,697,create a managed package version
+sfdx, __fish_sfdx_using_command force:package1:version:create,n,name, , ,698,(required) package version name
+sfdx, __fish_sfdx_using_command force:package1:version:create,p,postinstallurl, , ,699,post install URL
+sfdx, __fish_sfdx_using_command force:package1:version:create,r,releasenotesurl, , ,700,release notes URL
+sfdx, __fish_sfdx_using_command force:package1:version:create,u,targetusername, , ,701,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package1:version:create,v,version, , ,702,"package version in major.minor format, for example, 3.2"
+sfdx, __fish_sfdx_using_command force:package1:version:create,w,wait, , ,703,minutes to wait for the package version to be created (default: 2 minutes)
+sfdx, __fish_sfdx_using_command force:package1:version:create, ,apiversion, , ,704,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package1:version:create, ,json, , ,705,format output as json
+sfdx, __fish_sfdx_using_command force:package1:version:create, ,loglevel,$sfdx_loglevels, ,706,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package1:version:display, ,707,display details about a first-generation package version
+sfdx, __fish_sfdx_using_command force:package1:version:display,i,packageversionid, , ,708,(required) metadata package version ID (starts with 04t)
+sfdx, __fish_sfdx_using_command force:package1:version:display,u,targetusername, , ,709,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package1:version:display, ,apiversion, , ,710,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package1:version:display, ,json, , ,711,format output as json
+sfdx, __fish_sfdx_using_command force:package1:version:display, ,loglevel,$sfdx_loglevels, ,712,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package1:version:list, ,713,list package versions for the specified first-generation package or for the org
+sfdx, __fish_sfdx_using_command force:package1:version:list,i,packageid, , ,714,metadata package ID (starts with 033)
+sfdx, __fish_sfdx_using_command force:package1:version:list,u,targetusername, , ,715,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package1:version:list, ,apiversion, , ,716,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package1:version:list, ,json, , ,717,format output as json
+sfdx, __fish_sfdx_using_command force:package1:version:list, ,loglevel,$sfdx_loglevels, ,718,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package1:version:create, ,719,report on created package versions
+sfdx, __fish_sfdx_using_command force:package1:version:create,d,description, , ,720,package version description
+sfdx, __fish_sfdx_using_command force:package1:version:create,i,packageid, , ,721,(required) ID of the metadata package (starts with 033) of which you’re creating a new version
+sfdx, __fish_sfdx_using_command force:package1:version:create,k,installationkey, , ,722,installation key for key-protected package (default: null)
+sfdx, __fish_sfdx_using_command force:package1:version:create,m,managedreleased, , ,723,create a managed package version
+sfdx, __fish_sfdx_using_command force:package1:version:create,n,name=name, , ,724,(required) package version name
+sfdx, __fish_sfdx_using_command force:package1:version:create,p,postinstallurl, , ,725,post install URL
+sfdx, __fish_sfdx_using_command force:package1:version:create,r,releasenotesurl, , ,726,release notes URL
+sfdx, __fish_sfdx_using_command force:package1:version:create,u,targetusername, , ,727,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package1:version:create,v,version, , ,728,"package version in major.minor format, for example, 3.2"
+sfdx, __fish_sfdx_using_command force:package1:version:create,w,wait, , ,729,minutes to wait for the package version to be created (default: 2 minutes)
+sfdx, __fish_sfdx_using_command force:package1:version:create, ,apiversion, , ,730,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package1:version:create, ,json, , ,731,format output as json
+sfdx, __fish_sfdx_using_command force:package1:version:create, ,loglevel,$sfdx_loglevels, ,732,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:package1:version:create:get, ,733,retrieve the status of a package version creation request
+sfdx, __fish_sfdx_using_command force:package1:version:create:get,i,requestid, , ,734,(required) PackageUploadRequest ID
+sfdx, __fish_sfdx_using_command force:package1:version:create:get,u,targetusername, , ,735,username or alias for the target org
+sfdx, __fish_sfdx_using_command force:package1:version:create:get, ,apiversion, , ,736,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:package1:version:create:get, ,json, , ,737,format output as json
+sfdx, __fish_sfdx_using_command force:package1:version:create:get, ,loglevel,$sfdx_loglevels, ,738,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:project, ,739,set up a Salesforce DX project
+$sfdx_looking, , , ,force:project:create, ,740,create a Salesforce DX project
+sfdx, __fish_sfdx_using_command force:project:create,d,outputdir, , ,741,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:project:create,n,projectname, , ,742,(required) name of the generated project
+sfdx, __fish_sfdx_using_command force:project:create,p,defaultpackagedir, , ,743,[default: force-app] default package directory name
+sfdx, __fish_sfdx_using_command force:project:create,s,namespace, , ,744,project associated namespace
+sfdx, __fish_sfdx_using_command force:project:create,t,template, , ,745,[default: standard] template to use for project creation
+sfdx, __fish_sfdx_using_command force:project:create,x,manifest, , ,746,generate a manifest (package.xml) for change-set-based development
+sfdx, __fish_sfdx_using_command force:project:create, ,json, , ,747,format output as json
+sfdx, __fish_sfdx_using_command force:project:create, ,loglevel,$sfdx_loglevels, ,748,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:project:upgrade, ,749,update project config files to the latest format
+sfdx, __fish_sfdx_using_command force:project:upgrade,f,forceupgrade, , ,750,run all upgrades even if project has already been upgraded
+sfdx, __fish_sfdx_using_command force:project:upgrade, ,json, , ,751,format output as json
+sfdx, __fish_sfdx_using_command force:project:upgrade, ,loglevel,$sfdx_loglevels, ,752,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:schema, ,753,view standard and custom objects
+$sfdx_looking, , , ,force:schema:sobject, ,754,view standard and custom objects
+$sfdx_looking, , , ,force:schema:sobject:describe, ,755,describe an object
+sfdx, __fish_sfdx_using_command force:schema:sobject:describe,s,sobjecttype, , ,756,(required) the API name of the object to describe
+sfdx, __fish_sfdx_using_command force:schema:sobject:describe,t,usetoolingapi, , ,757,execute with Tooling API
+sfdx, __fish_sfdx_using_command force:schema:sobject:describe,u,targetusername, , ,758,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:schema:sobject:describe, ,apiversion, , ,759,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:schema:sobject:describe, ,json, , ,760,format output as json
+sfdx, __fish_sfdx_using_command force:schema:sobject:describe, ,loglevel,$sfdx_loglevels, ,761,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:schema:sobject:list, ,762,list all objects of a specified category
+sfdx, __fish_sfdx_using_command force:schema:sobject:list,c,sobjecttypecategory, , ,763,(required) the type of objects to list (all|custom|standard)
+sfdx, __fish_sfdx_using_command force:schema:sobject:list,u,targetusername, , ,764,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:schema:sobject:list, ,apiversion, , ,765,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:schema:sobject:list, ,json, , ,766,format output as json
+sfdx, __fish_sfdx_using_command force:schema:sobject:list, ,loglevel,$sfdx_loglevels, ,767,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source, ,768,sync your project with your orgs
+$sfdx_looking, , , ,force:source:convert, ,769,convert source into Metadata API format
+sfdx, __fish_sfdx_using_command force:source:conevrt,d,outputdir, , ,770,output directory to store the Metadata API–formatted files in
+sfdx, __fish_sfdx_using_command force:source:conevrt,n,packagename, , ,771,name of the package to associate with the metadata-formatted files
+sfdx, __fish_sfdx_using_command force:source:conevrt,r,rootdir, , ,772,a source directory other than the default package to convert
+sfdx, __fish_sfdx_using_command force:schema:convert, ,json, , ,773,format output as json
+sfdx, __fish_sfdx_using_command force:schema:convert, ,loglevel,$sfdx_loglevels, ,774,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source:delete, ,775,delete source from your project and from a non-source-tracked org
+sfdx, __fish_sfdx_using_command force:source:delete,m,metadata, , ,776,comma-separated list of names of metadata components to delete
+sfdx, __fish_sfdx_using_command force:source:delete,p,sourcepath, , ,777,comma-separated list of paths to the local metadata to delete
+sfdx, __fish_sfdx_using_command force:source:delete,r,noprompt, , ,778,do not prompt for delete confirmation
+sfdx, __fish_sfdx_using_command force:source:delete,u,targetusername, , ,779,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:delete,w,wait, , ,780,[default: 33 minutes] wait time for command to finish in minutes 33
+sfdx, __fish_sfdx_using_command force:source:delete, ,apiversion, , ,781,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:delete, ,json, , ,782,format output as json
+sfdx, __fish_sfdx_using_command force:source:delete, ,loglevel,$sfdx_loglevels, ,783,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source:deploy, ,784,deploy source to an org
+sfdx, __fish_sfdx_using_command force:source:deploy,c,checkonly, , ,785,validate deploy but don’t save to the org
+sfdx, __fish_sfdx_using_command force:source:deploy,g,ignorewarnings, , ,786,whether a warning will allow a deployment to complete successfully
+sfdx, __fish_sfdx_using_command force:source:deploy,l,testlevel,NoTestRun RunSpecifiedTests RunLocalTests RunAllTestsInOrg, ,787,deployment testing level
+sfdx, __fish_sfdx_using_command force:source:deploy,m,metadata, , ,788,comma-separated list of metadata component names
+sfdx, __fish_sfdx_using_command force:source:deploy,o,ignoreerrors, , ,789,ignore any errors and do not roll back deployment
+sfdx, __fish_sfdx_using_command force:source:deploy,p,sourcepath, , ,790,comma-separated list of paths to the local source files to deploy
+sfdx, __fish_sfdx_using_command force:source:deploy,q,validateddeployrequestid, , ,791,request ID of the validated deployment to run a Quick Deploy
+sfdx, __fish_sfdx_using_command force:source:deploy,r,runtests, , ,792,tests to run if --testlevel RunSpecifiedTests
+sfdx, __fish_sfdx_using_command force:source:deploy,u,targetusername, , ,793,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:deploy,w,wait, , ,794,[default: 33 minutes] wait time for command to finish in minutes
+sfdx, __fish_sfdx_using_command force:source:deploy,x,manifest, , ,795,file path for manifest (package.xml) of components to deploy
+sfdx, __fish_sfdx_using_command force:source:deploy, ,apiversion, , ,796,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:deploy, ,json, , ,797,format output as json
+sfdx, __fish_sfdx_using_command force:source:deploy, ,loglevel,$sfdx_loglevels, ,798,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:source:deploy, ,verbose, , ,799,display Apex test processing details
+$sfdx_looking, , , ,force:source:open, ,800,edit a Lightning Page with Lightning App Builder
+sfdx, __fish_sfdx_using_command force:source:open,f,sourcefile, , ,801,(required) file to edit
+sfdx, __fish_sfdx_using_command force:source:open,r,urlonly, , ,802,"generate a navigation URL; don’t launch the editor"
+sfdx, __fish_sfdx_using_command force:source:open,u,targetusername, , ,803,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:open, ,apiversion, , ,804,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:open, ,json, , ,805,format output as json
+sfdx, __fish_sfdx_using_command force:source:open, ,loglevel,$sfdx_loglevels, ,806,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source:pull, ,807,pull source from the scratch org to the project
+sfdx, __fish_sfdx_using_command force:source:pull,f,forceoverwrite, , ,808,ignore conflict warnings and overwrite changes to the project
+sfdx, __fish_sfdx_using_command force:source:pull,u,targetusername, , ,809,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:pull,w,wait, , ,810,[default: 33 minutes] wait time for command to finish in minutes (default: 33)
+sfdx, __fish_sfdx_using_command force:source:pull, ,apiversion, , ,811,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:pull, ,json, , ,812,format output as json
+sfdx, __fish_sfdx_using_command force:source:pull, ,loglevel,$sfdx_loglevels, ,813,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source:push, ,814,push source to a scratch org from the project
+sfdx, __fish_sfdx_using_command force:source:push,f,forceoverwrite, , ,815,ignore conflict warnings and overwrite changes to scratch org
+sfdx, __fish_sfdx_using_command force:source:push,g,ignorewarnings, , ,816,deploy changes even if warnings are generated
+sfdx, __fish_sfdx_using_command force:source:push,u,targetusername, , ,817,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:push,w,wait, , ,818,[default: 33 minutes] wait time for command to finish in minutes (default: 33)
+sfdx, __fish_sfdx_using_command force:source:push, ,apiversion, , ,819,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:push, ,json, , ,820,format output as json
+sfdx, __fish_sfdx_using_command force:source:push, ,loglevel,$sfdx_loglevels, ,821,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source:retrieve, ,822,retrieve source from an org
+sfdx, __fish_sfdx_using_command force:source:retrieve,a,apiversion, , ,823,target API version for the retrieve (default 46.0)
+sfdx, __fish_sfdx_using_command force:source:retrieve,m,metadata, , ,824,comma-separated list of metadata component names
+sfdx, __fish_sfdx_using_command force:source:retrieve,n,packagenames, , ,825,a comma-separated list of packages to retrieve
+sfdx, __fish_sfdx_using_command force:source:retrieve,p,sourcepath, , ,826,comma-separated list of source file paths to retrieve
+sfdx, __fish_sfdx_using_command force:source:retrieve,u,targetusername, , ,827,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:retrieve,w,wait, , ,828,[default: 33 minutes] wait time for command to finish in minutes
+sfdx, __fish_sfdx_using_command force:source:retrieve,x,manifest, , ,829,file path for manifest (package.xml) of components to retrieve
+sfdx, __fish_sfdx_using_command force:source:retrieve, ,json, , ,830,format output as json
+sfdx, __fish_sfdx_using_command force:source:retrieve, ,loglevel,$sfdx_loglevels, ,831,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:source:retrieve, ,verbose, , ,832,verbose output of retrieve result
+$sfdx_looking, , , ,force:source:status, ,833,list local changes and/or changes in a scratch org
+sfdx, __fish_sfdx_using_command force:source:status,a,all, , ,834,list all the changes that have been made
+sfdx, __fish_sfdx_using_command force:source:status,l,local, , ,835,list the changes that have been made locally
+sfdx, __fish_sfdx_using_command force:source:status,r,remote, , ,836,list the changes that have been made in the scratch org
+sfdx, __fish_sfdx_using_command force:source:status,u,targetusername, , ,837,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:status, ,apiversion, , ,838,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:status, ,json, , ,839,format output as json
+sfdx, __fish_sfdx_using_command force:source:status, ,loglevel,$sfdx_loglevels, ,840,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source:deploy, ,841,deploy source to an org
+sfdx, __fish_sfdx_using_command force:source:deploy,c,checkonly, , ,842,validate deploy but don’t save to the org
+sfdx, __fish_sfdx_using_command force:source:deploy,g,ignorewarnings, , ,843,whether a warning will allow a deployment to complete successfully
+sfdx, __fish_sfdx_using_command force:source:deploy,l,testlevel,NoTestRun RunSpecifiedTests RunLocalTests RunAllTestsInOrg, ,844,deployment testing level
+sfdx, __fish_sfdx_using_command force:source:deploy,m,metadata, , ,845,comma-separated list of metadata component names
+sfdx, __fish_sfdx_using_command force:source:deploy,o,ignoreerrors, , ,846,ignore any errors and do not roll back deployment
+sfdx, __fish_sfdx_using_command force:source:deploy,p,sourcepath, , ,847,comma-separated list of paths to the local source files to deploy
+sfdx, __fish_sfdx_using_command force:source:deploy,q,validateddeployrequestid, , ,848,request ID of the validated deployment to run a Quick Deploy
+sfdx, __fish_sfdx_using_command force:source:deploy,r,runtests, , ,849,tests to run if --testlevel RunSpecifiedTests
+sfdx, __fish_sfdx_using_command force:source:deploy,u,targetusername, , ,850,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:deploy,w,wait, , ,851,[default: 33 minutes] wait time for command to finish in minutes
+sfdx, __fish_sfdx_using_command force:source:deploy,x,manifest, , ,852,file path for manifest (package.xml) of components to deploy
+sfdx, __fish_sfdx_using_command force:source:deploy, ,apiversion, , ,853,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:deploy, ,json, , ,854,format output as json
+sfdx, __fish_sfdx_using_command force:source:deploy, ,loglevel,$sfdx_loglevels, ,855,[default: warn] logging level for this command invocation
+sfdx, __fish_sfdx_using_command force:source:deploy, ,verbose, , ,856,display Apex test processing details
+$sfdx_looking, , , ,force:source:deploy:cancel, ,857,cancel a source deployment
+sfdx, __fish_sfdx_using_command force:source:deploy:cancel,i,jobid, , ,858,job ID of the deployment you want to cancel (default: most recent CLI deployment)
+sfdx, __fish_sfdx_using_command force:source:deploy:cancel,u,targetusername, , ,859,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:deploy:cancel,w,wait, , ,860,[default: 33 minutes] wait time for command to finish in minutes 33
+sfdx, __fish_sfdx_using_command force:source:deploy:cancel, ,apiversion, , ,861,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:deploy:cancel, ,json, , ,862,format output as json
+sfdx, __fish_sfdx_using_command force:source:deploy:cancel, ,loglevel,$sfdx_loglevels, ,863,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:source:deploy:report, ,864,check the status of a metadata deployment
+sfdx, __fish_sfdx_using_command force:source:deploy:report,i,jobid, , ,865,job ID of the deployment you want to check (default: most recent CLI deployment)
+sfdx, __fish_sfdx_using_command force:source:deploy:report,u,targetusername, , ,866,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:source:deploy:report,w,wait, , ,867,[default: 33 minutes] wait time for command to finish in minutes 33
+sfdx, __fish_sfdx_using_command force:source:deploy:report, ,apiversion, , ,868,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:source:deploy:report, ,json, , ,869,format output as json
+sfdx, __fish_sfdx_using_command force:source:deploy:report, ,loglevel,$sfdx_loglevels, ,870,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:user, ,871,perform user-related admin tasks
+$sfdx_looking, , , ,force:user:create, ,872,create a user for a scratch org
+sfdx, __fish_sfdx_using_command force:user:create,a,setalias, , ,873,set an alias for the created username to reference within the CLI
+sfdx, __fish_sfdx_using_command force:user:create,f,definitionfile, , ,874,file path to a user definition
+sfdx, __fish_sfdx_using_command force:user:create,u,targetusername, , ,875,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:user:create,v,targetdevhubusername, , ,876,"username or alias for the dev hub org; overrides default dev hub org"
+sfdx, __fish_sfdx_using_command force:user:create, ,apiversion, , ,877,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:user:create, ,loglevel,$sfdx_loglevels, ,878,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:user:display, ,879,displays information about a user of a scratch org
+sfdx, __fish_sfdx_using_command force:user:display,u,targetusername, , ,880,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:user:display,v,targetdevhubusername, , ,881,"username or alias for the dev hub org; overrides default dev hub org"
+sfdx, __fish_sfdx_using_command force:user:display, ,apiversion, , ,882,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:user:display, ,json, , ,883,format output as json
+sfdx, __fish_sfdx_using_command force:user:display, ,loglevel,$sfdx_loglevels, ,884,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:user:list, ,885,lists all users of a scratch org
+sfdx, __fish_sfdx_using_command force:user:list,u,targetusername, , ,886,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:user:list,v,targetdevhubusername, , ,887,"username or alias for the dev hub org; overrides default dev hub org"
+sfdx, __fish_sfdx_using_command force:user:list, ,apiversion, , ,888,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:user:list, ,json, , ,889,format output as json
+sfdx, __fish_sfdx_using_command force:user:list, ,loglevel,$sfdx_loglevels, ,890,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:user:password, ,891,perform password-related admin tasks
+$sfdx_looking, , , ,force:user:password:generate, ,892,generate a password for scratch org users
+sfdx, __fish_sfdx_using_command force:user:password:generate,o,onbehalfof, , ,893,comma-separated list of usernames for which to generate passwords
+sfdx, __fish_sfdx_using_command force:user:password:generate,u,targetusername, , ,894,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:user:password:generate,v,targetdevhubusername, , ,895,"username or alias for the dev hub org; overrides default dev hub org"
+sfdx, __fish_sfdx_using_command force:user:password:generate, ,apiversion, , ,896,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:user:password:generate, ,json, , ,897,format output as json
+sfdx, __fish_sfdx_using_command force:user:password:generate, ,loglevel,$sfdx_loglevels, ,898,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:user:permset, ,899,perform permset-related admin tasks
+$sfdx_looking, , , ,force:user:permset:assign, ,900,assign a permission set to one or more users of an org
+sfdx, __fish_sfdx_using_command force:user:permset:assign,n,permsetname, , ,901,(required) the name of the permission set to assign
+sfdx, __fish_sfdx_using_command force:user:permset:assign,o,onbehalfof, , ,902,comma-separated list of usernames or aliases to assign the permission set to
+sfdx, __fish_sfdx_using_command force:user:permset:assign,u,targetusername, , ,903,"username or alias for the target org; overrides default target org"
+sfdx, __fish_sfdx_using_command force:user:permset:assign, ,apiversion, , ,904,override the api version used for api requests made by this command
+sfdx, __fish_sfdx_using_command force:user:permset:assign, ,json, , ,905,format output as json
+sfdx, __fish_sfdx_using_command force:user:permset:assign, ,loglevel,$sfdx_loglevels, ,906,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:visualforce, ,907,create and edit Visualforce files
+$sfdx_looking, , , ,force:visualforce:component, ,908,create a Visualforce component
+$sfdx_looking, , , ,force:visualforce:component:create, ,909,create a Visualforce component
+sfdx, __fish_sfdx_using_command force:visualforce:component:create, ,apiversion, , ,910,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:visualforce:component:create, ,outputdir, , ,911,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:visualforce:component:create, ,label, , ,912,(required) Visualforce component label
+sfdx, __fish_sfdx_using_command force:visualforce:component:create, ,componentname, , ,913,(required) name of the generated Visualforce component
+sfdx, __fish_sfdx_using_command force:visualforce:component:create, ,template, , ,914,[default: DefaultVFComponent] template to use for file creation
+sfdx, __fish_sfdx_using_command force:visualforce:component:create, ,json, , ,915,format output as json
+sfdx, __fish_sfdx_using_command force:visualforce:component:create, ,loglevel,$sfdx_loglevels, ,916,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,force:visualforce:page, ,917,create a Visualforce page
+$sfdx_looking, , , ,force:visualforce:page:create, ,918,create a Visualforce page
+sfdx, __fish_sfdx_using_command force:visualforce:page:create, ,apiversion, , ,919,[default: 46.0] API version number
+sfdx, __fish_sfdx_using_command force:visualforce:page:create, ,outputdir, , ,920,folder for saving the created files
+sfdx, __fish_sfdx_using_command force:visualforce:page:create, ,label, , ,921,(required) Visualforce page label
+sfdx, __fish_sfdx_using_command force:visualforce:page:create, ,componentname, , ,922,(required) name of the generated Visualforce page
+sfdx, __fish_sfdx_using_command force:visualforce:page:create, ,template, , ,923,[default: DefaultVFPage] template to use for file creation
+sfdx, __fish_sfdx_using_command force:visualforce:page:create, ,json, , ,924,format output as json
+sfdx, __fish_sfdx_using_command force:visualforce:page:create, ,loglevel,$sfdx_loglevels, ,925,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,help, ,926,display help for sfdx
+$sfdx_looking, , , ,plugins, ,927,add/remove/create CLI plug-ins
+sfdx, __fish_sfdx_using_command plugins, ,core, , ,928,show core plugins
+$sfdx_looking, , , ,plugins:install, ,929,installs a plugin into the CLI
+sfdx, __fish_sfdx_using_command plugins:install,f,force, , ,930,yarn install with force flag
+sfdx, __fish_sfdx_using_command plugins:install,h,help, , ,931,show CLI help
+sfdx, __fish_sfdx_using_command plugins:install,v,verbose, , ,932, 
+$sfdx_looking, , , ,plugins:link, ,933,links a plugin into the CLI for development
+sfdx, __fish_sfdx_using_command plugins:link,h,help, , ,934,show CLI help
+sfdx, __fish_sfdx_using_command plugins:link,v,verbose, , ,935, 
+$sfdx_looking, , , ,plugins:uninstall, ,936,removes a plugin from the CLI
+sfdx, __fish_sfdx_using_command plugins:uninstall,h,help, , ,937,show CLI help
+sfdx, __fish_sfdx_using_command plugins:uninstall,v,verbose, , ,938, 
+$sfdx_looking, , , ,plugins:update, ,939,update installed plugins
+sfdx, __fish_sfdx_using_command plugins:update,h,help, , ,940,show CLI help
+sfdx, __fish_sfdx_using_command plugins:update,v,verbose, , ,941, 
+$sfdx_looking, , , ,plugins:generate, ,942,create a new sfdx-cli plugin
+sfdx, __fish_sfdx_using_command plugins:generate,h,help, , ,943,show CLI help
+sfdx, __fish_sfdx_using_command plugins:generate, ,defaults, , ,944,use defaults for every setting
+sfdx, __fish_sfdx_using_command plugins:generate, ,force, , ,945,overwrite existing files
+$sfdx_looking, , , ,plugins:trust, ,946,pack an npm package and produce a tgz file along with a corresponding digital signature
+$sfdx_looking, , , ,plugins:trust:sign, ,947,pack an npm package and produce a tgz file along with a corresponding digital signature
+sfdx, __fish_sfdx_using_command plugins:trust:sign,k,privatekeypath, , ,948,(required) the local file path for the private key.
+sfdx, __fish_sfdx_using_command plugins:trust:sign,p,publickeyurl, , ,949,(required) the url where the public key/certificate will be hosted.
+sfdx, __fish_sfdx_using_command plugins:trust:sign,s,signatureurl, , ,950,(required) the url where the signature will be hosted minus name of signature file
+sfdx, __fish_sfdx_using_command plugins:trust:sign, ,json, , ,951,format output as json
+sfdx, __fish_sfdx_using_command plugins:trust:sign, ,loglevel,$sfdx_loglevels, ,952,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,plugins:trust:verify, ,953,For an npm validate the associated digital signature if it exits.
+sfdx, __fish_sfdx_using_command plugins:trust:verify,n,npm, , ,954,(required) Specify the npm name. This can include a tag/version
+sfdx, __fish_sfdx_using_command plugins:trust:verify,r,registry, , ,955,The registry name. the behavior is the same as npm.
+sfdx, __fish_sfdx_using_command plugins:trust:verify, ,json, , ,956,format output as json
+sfdx, __fish_sfdx_using_command plugins:trust:verify, ,loglevel,$sfdx_loglevels, ,957,[default: warn] logging level for this command invocation
+$sfdx_looking, , , ,update, ,958,update the sfdx CLI
+$sfdx_looking, , , ,which, ,959,show which plugin a command is in

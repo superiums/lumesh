@@ -1,0 +1,38 @@
+cmd,conds,short,long,params,dirs,pri,desc
+systemctl, ,t,type, ,@f,101,List of unit types
+systemctl, , ,state, ,@f,102,List of unit states
+systemctl, ,p,property, ,@f,103, 
+systemctl, ,a,all, ,@f,104,Show all units or properties
+systemctl, ,r,recursive, ,@f,105,Show also units of local containers
+systemctl, , ,reverse, ,@f,106,Show reverse dependencies between units
+systemctl, list-dependencies, ,after, ,@f,107,Show units ordered before specified unit
+systemctl, list-dependencies, ,before, ,@f,108,Show units ordered after specified unit
+systemctl, ,l,full, ,@f,109,Do not ellipsize anything
+systemctl, , ,show-types, ,@f,110,Show the type of the socket
+systemctl, , ,job-mode,fail replace replace-irreversibly isolate ignore-dependencies ignore-requirements flush,@f,111,How to deal with queued jobs
+systemctl, ,i,ignore-inhibitors, ,@f,112,Ignore inhibitor locks on shutdown or sleep
+systemctl, ,q,quiet, ,@f,113,Suppress output to STDOUT
+systemctl, , ,no-block, ,@f,114,Do not wait for the requested operation to finish
+systemctl, , ,no-legend, ,@f,115,Do not print header and footer
+systemctl, , ,failed, , ,118,List units in failed state
+systemctl, , ,no-wall, ,@f,120,Do not send wall message before halt
+systemctl, , ,no-reload, ,@f,121,Do not reload daemon configuration
+systemctl, , ,no-ask-password, ,@f,122,Disable asking for password
+systemctl, , ,kill-who,main control all,@f,123,Send signal to which process
+systemctl, ,s,signal,SIGTERM SIGINT SIGSTOP SIGKILL SIGHUP SIGCONT,@f,124,Which signal to send
+systemctl, ,f,force, ,@f,125,Overwrite conflicting existing symlinks
+systemctl, , ,root, ,@r,126,Use alternative root path
+systemctl, , ,runtime, ,@f,127,Make changes only temporarily
+systemctl, ,n,lines, ,@f @r,128,Number of journal lines to show
+systemctl, ,o,output,short short-monotonic verbose export json json-pretty json-sse cat,@f,129,Control journal formatting
+systemctl, , ,plain, ,@f,130,"list-dependencies flat, not as tree"
+systemctl, ,H,host, ,@f,131,Execute the operation on a remote host
+systemctl, ,M,machine, ,@f @r,132,Execute operation on a VM or container
+systemctl, ,h,help, ,@f,133,Print a short help and exit
+systemctl, , ,version, ,@f,134,Print a short version and exit
+systemctl, , ,no-pager, ,@f,135,Do not pipe output into a pager
+systemctl, reboot, ,firmware-setup, ,@f,136,Reboot to EFI setup
+systemctl, enable, ,now, ,@f,137,Also start unit
+systemctl, disable mask, ,now, ,@f,138,Also stop unit
+systemctl, halt poweroff reboot, ,boot-loader-entry, ,@f @r,139,Boot into a specific boot loader entry on next boot
+systemctl, halt poweroff reboot, ,boot-loader-menu, ,@f @r,140,Boot into boot loader menu on next boot

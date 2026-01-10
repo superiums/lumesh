@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+free, ,b,bytes, , ,101,Display the amount of memory in bytes
+free, ,k,kibi, , ,102,Display the amount of memory in kibibytes.   This is the default
+free, ,m,mebi, , ,103,Display the amount of memory in mebibytes
+free, ,g,gibi, , ,104,Display the amount of memory in gibibytes
+free, , ,tebi, , ,105,Display the amount of memory in tebibytes
+free, , ,pebi, , ,106,Display the amount of memory in pebibytes
+free, , ,kilo, , ,107,Display the amount of memory in kilobytes.  Implies --si
+free, , ,mega, , ,108,Display the amount of memory in megabytes.  Implies --si
+free, , ,giga, , ,109,Display the amount of memory in gigabytes.  Implies --si
+free, , ,tera, , ,110,Display the amount of memory in terabytes.  Implies --si
+free, , ,peta, , ,111,Display the amount of memory in petabytes.  Implies --si
+free, ,h,human, , ,112,Show all output fields automatically scaled to shortest three digit unit and …
+free, ,w,wide, , ,113,Switch to the wide mode
+free, ,c,count, , ,114,Display the result  count times.   Requires the  -s option
+free, ,l,lohi, , ,115,Show detailed low and high memory statistics
+free, ,L,line, , ,116,"Show output on a single line, often used with the  -s option to show memory s…"
+free, ,s,seconds, , ,117,Continuously display the result delay  seconds apart
+free, , ,si, , ,118,"Use kilo, mega, giga etc (power of 1000) instead of kibi, mebi, gibi (power o…"
+free, ,t,total, , ,119,Display a line showing the column totals
+free, ,v,committed, , ,120,Display a line showing the memory commit limit and amount of committed/uncomm…
+free, , ,help, , ,121,Print help
+free, ,V,version, , ,122,Display version information.  FILES

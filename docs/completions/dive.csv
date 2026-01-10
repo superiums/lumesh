@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dive, , ,ci, , ,101,Skip the interactive TUI and validate against CI rules
+dive, , ,ci-config, ,@F @r,102,"If CI=true in the environment, use the given yaml to drive validation rules"
+dive, , ,config, ,@F @r,103,Config file
+dive, ,h,help, , ,104,Help for dive
+dive, ,i,ignore-errors, , ,107,Ignore image parsing errors and run the analysis anyway
+dive, ,j,json, ,@r,108,Skip the interactive TUI and write the layer analysis statistics to a given file
+dive, , ,lowestEfficiency, ,@r,109,Lowest allowable image efficiency
+dive, , ,source,docker podman docker-archive, ,110,The container engine to fetch the image from
+dive, ,v,version, , ,111,Display version number
+dive, , , ,build help version, ,112, 
+dive, help, , ,build help version, ,116, 

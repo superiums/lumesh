@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alternatives, __fish_contains_opt install, ,slave, ,@r,108,Add a slave link to the new group
+alternatives, __fish_contains_opt install, ,initscript, ,@F,109,Add an initscript for the new group
+alternatives, __fish_contains_opt install, ,family, ,@f @r,110,Set a family for the new group

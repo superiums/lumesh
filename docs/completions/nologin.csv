@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nologin, ,c,command, , ,101, 
+nologin, , ,init-file, , ,102, 
+nologin, ,i,interactive, , ,103, 
+nologin, ,l,login, , ,104, 
+nologin, , ,noprofile, , ,105, 
+nologin, , ,norc, , ,106, 
+nologin, , ,posix, , ,107, 
+nologin, , ,rcfile, , ,108, 
+nologin, ,r,restricted, , ,109, 
+nologin, ,h,help, , ,110, 
+nologin, ,V,version, , ,111, 

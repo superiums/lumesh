@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+swaybg, ,h,help, , ,101,Show help message and quit
+swaybg, ,i,image, , ,102,Set the background image
+swaybg, ,m,mode, , ,103,"Scaling mode for images: stretch, fill, fit, center, or tile.  Use"
+swaybg, ,o,output, , ,104,Select an output to configure.  Subsequent appearance options will only
+swaybg, ,v,version, , ,105,Show the version number and quit

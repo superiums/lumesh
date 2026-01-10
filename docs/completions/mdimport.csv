@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mdimport, ,g, , ,@r,101,Import files using the listed plugin
+mdimport, ,V, , ,@f,102,Print timing information for this run
+mdimport, ,A, , ,@f,103,Print out the list of all of the attributes and exit
+mdimport, ,X, , ,@f,104,Print out the schema file and exit
+mdimport, ,r, , ,@f,105,Ask the server to reimport files for UTIs claimed by the listed plugin
+mdimport, ,p, , ,@f,106,Print out performance information gathered during the run
+mdimport, ,L, , ,@f,107,Print the list of installed importers and exit
+mdimport, ,d, ,1 2 3 4,@f @r,108,Print debugging information
+mdimport, ,n, , ,@f,109,Dont send the imported attributes to the data store
+mdimport, ,w, , ,@f @r,110,Wait for the specified interval between scanning files
+mdimport, ,o, , ,@r,111,Write the imported attributes to a file

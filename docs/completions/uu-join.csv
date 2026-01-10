@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-join, ,a, ,1,@f @r,101,"also print unpairable lines from file FILENUM, where FILENUM is 1 or 2, corresponding to FILE1 or FILE2"
+uu-join, ,v, ,1,@f @r,102,"like -a FILENUM, but suppress joined output lines"
+uu-join, ,i,ignore-case, , ,103,ignore differences in case when comparing fields
+uu-join, , ,check-order, , ,104,"check that the input is correctly sorted, even if all input lines are pairable"
+uu-join, , ,nocheck-order, , ,105,do not check that the input is correctly sorted
+uu-join, , ,header, , ,106,"treat the first line in each file as field headers, print them without trying to pair them"
+uu-join, ,z,zero-terminated, , ,107,"line delimiter is NUL, not newline"
+uu-join, ,h,help, , ,108,Print help
+uu-join, ,V,version, , ,109,Print version

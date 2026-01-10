@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mktemp, ,d,directory, , ,101,"create a directory, not a file"
+mktemp, ,u,dry-run, , ,102,"do not create anything; merely print a name (unsafe)"
+mktemp, ,q,quiet, , ,103,suppress diagnostics about file/dir-creation failure
+mktemp, , ,suffix, ,@r,104,append SUFF to TEMPLATE
+mktemp, , ,tmpdir, , ,105,interpret TEMPLATE relative to DIR
+mktemp, , ,help, , ,106,display this help and exit
+mktemp, , ,version, , ,107,output version information and exit
+mktemp, ,t, , ,@r,108,generate a template using PREFIX and TMPDIR (if set)

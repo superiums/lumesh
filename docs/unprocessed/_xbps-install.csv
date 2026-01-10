@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, , , ,$listall, ,101, 
+$progname, ,C, , ,@D,102,Use this XBPS configuration directory.
+$progname, ,c, , ,@D,103,Use this cache directory to store binary packages
+$progname, ,R, , ,@D,104,Enable repository mode
+$progname, , ,repository, ,@D,105,Append the specified repository to the top of the list
+$progname, ,r, , ,@D,106,Use this target root directory

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dbus-uuidgen, , ,get, , ,101,"If a filename is not given, defaults to localstatedir/lib/dbus/machine-id (lo…"
+dbus-uuidgen, , ,ensure, , ,102,"If a filename is not given, defaults to localstatedir/lib/dbus/machine-id (lo…"
+dbus-uuidgen, , ,version, , ,103,Print the version of dbus-uuidgen

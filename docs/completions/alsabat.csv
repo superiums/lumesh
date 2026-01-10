@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsabat, ,h,help, , ,101,Help: show syntax
+alsabat, , ,log, , ,102,Write stderr and stdout output to this log file
+alsabat, , ,file, , ,103,Input WAV file for playback
+alsabat, , ,saveplay, , ,104,Target WAV file to save capture test content
+alsabat, , ,local, , ,105,Internal loopback mode
+alsabat, , ,standalone, , ,106,Add support for standalone mode where ALSABAT will run on a different machine…
+alsabat, , ,roundtriplatency, , ,107,Round trip latency test
+alsabat, , ,snr-db, , ,108,Noise detection threshold in SNR (dB).  26dB indicates 5% noise in amplitude
+alsabat, , ,snr-pc, , ,109,Noise detection threshold in percentage of noise amplitude (%)

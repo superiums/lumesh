@@ -1,0 +1,57 @@
+cmd,conds,short,long,params,dirs,pri,desc
+emerge, , ,check-news, , ,101, 
+emerge, , ,clean, , ,102, 
+emerge, , ,config, , ,103, 
+emerge, ,c,depclean, , ,104, 
+emerge, , ,deselect, , ,105, 
+emerge, ,h,help, , ,106, 
+emerge, , ,info, , ,107, 
+emerge, , ,list-sets, , ,108, 
+emerge, , ,metadata, , ,109, 
+emerge, ,P,prune, , ,110, 
+emerge, , ,regen, , ,111, 
+emerge, ,r,resume, , ,112, 
+emerge, ,s,search, , ,113, 
+emerge, ,S,searchdesc, , ,114, 
+emerge, , ,sync, , ,115, 
+emerge, ,C,unmerge, , ,116, 
+emerge, ,V,version, , ,117, 
+emerge, ,A,alert, , ,118,Add a terminal bell character ('\a') to all interactive prompts
+emerge, ,a,ask, , ,119,Prompt the user before performing the merge
+emerge, , ,backtrack, , ,120, 
+emerge, ,b,buildpkg, , ,121,Build a binary pkg additionally
+emerge, ,B,buildpkgonly, , ,122,Only build a binary pkg
+emerge, ,U,changed-use, , ,123, 
+emerge, ,l,changelog, , ,124,Show changelog of pkg. Use with --pretend
+emerge, , ,color, , ,125,Colorized output
+emerge, , ,columns, , ,126,Align output. Use with --pretend
+emerge, , ,complete-graph, , ,127, 
+emerge, ,d,debug, , ,128,Run in debug mode
+emerge, ,D,deep, , ,129,Consider the whole dependency tree
+emerge, ,e,emptytree, , ,130,Reinstall all world pkgs
+emerge, , ,exclude, , ,131, 
+emerge, ,f,fetchonly, , ,132,Only download the pkgs but don't install them
+emerge, ,F,fetch-all-uri, , ,133,Same as --fetchonly and grab all potential files
+emerge, ,g,getbinpkg, , ,134,Download infos from each binary pkg. Implies -k
+emerge, ,G,getbinpkgonly, , ,135,As -g but don't use local infos
+emerge, , ,ignore-default-opts, , ,136,Ignore EMERGE_DEFAULT_OPTS
+emerge, , ,jobs, , ,137, 
+emerge, , ,keep-going, , ,138, 
+emerge, ,N,newuse, , ,139,Include installed pkgs with changed USE flags
+emerge, , ,noconfmem, , ,140,Disregard merge records
+emerge, ,O,nodeps, , ,141,Don't merge dependencies
+emerge, ,n,noreplace, , ,142,Skip already installed pkgs
+emerge, , ,nospinner, , ,143,Disable the spinner
+emerge, ,1,oneshot, , ,144,Don't add pkgs to world
+emerge, ,o,onlydeps, , ,145,Only merge dependencies
+emerge, ,p,pretend, , ,146,Display what would be done without doing it
+emerge, ,q,quiet, , ,147,Use a condensed output
+emerge, ,w,select, , ,148, 
+emerge, , ,skipfirst, , ,149,Remove first pkg in resume list. Use with --resume
+emerge, ,t,tree, , ,150,Show the dependency tree
+emerge, ,u,update, , ,151, 
+emerge, ,k,usepkg, , ,152,Use binary pkg if available
+emerge, ,K,usepkgonly, , ,153,Only use binary pkgs
+emerge, ,v,verbose, , ,154,Run in verbose mode
+emerge, , ,verbose-conflicts, , ,155,Verbose slot conflicts
+emerge, , ,with-bdeps, , ,156,Pull in build time dependencies

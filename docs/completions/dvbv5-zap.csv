@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dvbv5-zap, ,c,channels, , ,101,Read channels list from 'file'.  Defaults to ~/. tzap/channels. conf
+dvbv5-zap, ,3,dvbv3, , ,102,Force dvbv5-zap to use DVBv3 only
+dvbv5-zap, ,a,adapter, , ,103,Use the given adapter.  Default value: 0
+dvbv5-zap, ,A,audio_pid, , ,104,Select a different audio Packet ID (PID)
+dvbv5-zap, ,C,cc, , ,105,"Set the default country to be used by the MPEG-TS parsers, in ISO 3166-1 two …"
+dvbv5-zap, ,d,demux, , ,106,Use the given demux.  Default value: 0
+dvbv5-zap, ,f,frontend, , ,107,Use the given frontend.  Default value: 0
+dvbv5-zap, ,I,input-format, , ,108,Format of the input file.  Please notice that caps is ignored
+dvbv5-zap, ,l,lnbf, , ,109,Type of LNBf to use 'help' lists the available ones
+dvbv5-zap, ,L,search, , ,110,Search/look for a string inside the traffic.  Used only on monitor mode
+dvbv5-zap, ,m,monitor, , ,111,Enable monitor mode
+dvbv5-zap, ,o,output, , ,112,Output filename
+dvbv5-zap, ,p,pat, , ,113,Add PAT and PMT MPEG-TS tables to TS recording (implies -r)
+dvbv5-zap, ,P,all-pids, , ,114,"Don't filter any pids.  Instead, outputs all of them"
+dvbv5-zap, ,r,record, , ,115,Sets up the /dev/dvb/adapteradapter#/dvr0 for MPEG-TS record
+dvbv5-zap, ,s,silence, , ,116,Increases silence (can be used more than once)
+dvbv5-zap, ,S,sat_number, , ,117,Satellite number.  Used only on satellite delivery systems
+dvbv5-zap, ,t,timeout, , ,118,Amount of seconds to keep the tool running for zapping and for recording
+dvbv5-zap, ,U,freq_bpf, , ,119,"SCR/Unicable band-pass filter frequency to use, in kHz"
+dvbv5-zap, ,v,verbose, , ,120,Be verbose.  Useful to check if the MPEG-TS is happenning fine
+dvbv5-zap, ,V,video_pid, , ,121,video pid program to use (default 0)
+dvbv5-zap, ,w,lna, , ,122,"Enable, disable or put LNA power in auto mode.  Not all frontends support it"
+dvbv5-zap, ,W,wait, , ,123,Adds additional wait time for DISEqC command completion
+dvbv5-zap, ,x,exit, , ,124,Exit after tuning
+dvbv5-zap, ,X,low_traffic, , ,125,Also shows DVB traffic with less than 1 packet per second
+dvbv5-zap, ,?,help, , ,126,Outputs the usage help
+dvbv5-zap, , ,usage, , ,127,Gives a short usage message
+dvbv5-zap, , ,version, , ,128,"Prints program version.  EXIT STATUS On success, it returns 0.  EXAMPLES"

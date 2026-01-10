@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+coredumpctl, $commands, , ,list, ,100,List available coredumps
+coredumpctl, $commands, , ,info, ,100,Show detailed information about coredump(s)
+coredumpctl, $commands, , ,dump, ,100,Print first matching coredump to stdout
+coredumpctl, $commands, , ,debug, ,100,Start a debugger for the first matching coredump

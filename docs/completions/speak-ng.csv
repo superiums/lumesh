@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+speak-ng, ,h,help, , ,101,Show summary of options
+speak-ng, , ,version, , ,102,Prints the espeak library version and the location of the espeak voice data
+speak-ng, , ,stdin, , ,103,Read text input from stdin instead of a file
+speak-ng, , ,split, , ,104,Used with -w to split the audio output into <minutes> recorded chunks
+speak-ng, , ,stdout, , ,105,Write speech output to stdout
+speak-ng, , ,compile, , ,106,Compile the pronunciation rules and dictionary in the current directory
+speak-ng, , ,compile-debug, , ,107,Compile the pronunciation rules and dictionary in the current directory as ab…
+speak-ng, , ,ipa, , ,108,Write phonemes to stdout using International Phonetic Alphabet
+speak-ng, , ,tie, , ,109,The character to use to join multi-letter phonemes in -x and --ipa output
+speak-ng, , ,path, , ,110,Specifies the directory containing the espeak-ng-data directory
+speak-ng, , ,pho, , ,111,Write mbrola phoneme data (. pho) to stdout or to the file in --phonout
+speak-ng, , ,phonout, , ,112,Write output from -x -X commands and mbrola phoneme data to this file
+speak-ng, , ,punct, , ,113,Speak the names of punctuation characters during speaking
+speak-ng, , ,sep, , ,114,The character to separate phonemes from the -x and --ipa output
+speak-ng, , ,voices, , ,115,Lists the available voices

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-rdepends, , ,help, , ,101,Display help and exit
+apt-rdepends, ,b,build-depends, ,@f,102,Show build dependencies
+apt-rdepends, ,d,dotty, ,@f,103,Generate a dotty graph
+apt-rdepends, ,p,print-state, ,@f,104,Show state of dependencies
+apt-rdepends, ,r,reverse, ,@f,105,List packages depending on
+apt-rdepends, ,f,follow, ,@f @r,106,Comma-separated list of dependency types to follow recursively
+apt-rdepends, ,s,show, ,@f @r,107,Comma-separated list of dependency types to show
+apt-rdepends, , ,state-follow, ,@f @r,108,Comma-separated list of package installation states to follow recursively
+apt-rdepends, , ,state-show, ,@f @r,109,Comma-separated list of package installation states to show
+apt-rdepends, , ,man, ,@f,110,Display man page
+apt-rdepends, , ,version, ,@f,111,Display version and exit

@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgcat, ,f,files-from, , ,101,get list of input files from FILE
+msgcat, ,D,directory, , ,102,add DIRECTORY to list for input files search 
+msgcat, ,o,output-file, , ,103,write output to specified file 
+msgcat, ,<,less-than, , ,104,"print messages with less than this many definitions, defaults to infinite if …"
+msgcat, ,>,more-than, , ,105,"print messages with more than this many definitions, defaults to 0 if not set"
+msgcat, ,u,unique, , ,106,"shorthand for --less-than=\\,2\\/, requests that only unique messages be printe…"
+msgcat, ,P,properties-input, , ,107,input files are in Java . properties syntax
+msgcat, , ,stringtable-input, , ,108,input files are in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msgcat, ,t,to-code, , ,109,encoding for output
+msgcat, , ,use-first, , ,110,"use first available translation for each message, don't merge several transla…"
+msgcat, , ,lang, , ,111,set 'Language' field in the header entry
+msgcat, , ,color, , ,112,use colors and other text attributes always
+msgcat, , ,style, , ,113,specify CSS style rule file for --color
+msgcat, ,e,no-escape, , ,114,do not use C escapes in output (default)
+msgcat, ,E,escape, , ,115,"use C escapes in output, no extended chars"
+msgcat, , ,force-po, , ,116,write PO file even if empty
+msgcat, ,i,indent, , ,117,write the . po file using indented style
+msgcat, , ,no-location, , ,118,do not write '#: filename:line' lines
+msgcat, ,n,add-location, , ,119,generate '#: filename:line' lines (default)
+msgcat, , ,strict, , ,120,write out strict Uniforum conforming . po file
+msgcat, ,p,properties-output, , ,121,write out a Java . properties file
+msgcat, , ,stringtable-output, , ,122,write out a NeXTstep/GNUstep . strings file
+msgcat, ,w,width, , ,123,set output page width
+msgcat, , ,no-wrap, , ,124,"do not break long message lines, longer than the output page width, into seve…"
+msgcat, ,s,sort-output, , ,125,generate sorted output
+msgcat, ,F,sort-by-file, , ,126,sort output by file location . SS 'Informative output:'
+msgcat, ,h,help, , ,127,display this help and exit
+msgcat, ,V,version, , ,128,output version information and exit AUTHOR Written by Bruno Haible

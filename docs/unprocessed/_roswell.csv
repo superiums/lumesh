@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ros, __fish_use_subcommand, , ,run,@f,101,Run repl
+ros, __fish_use_subcommand, , ,install,@f,102,Install a given implementation or a system for roswell environment
+ros, __fish_use_subcommand, , ,update,@f,103,Update installed systems.
+ros, __fish_use_subcommand, , ,build,@f,104,Make executable from script.
+ros, __fish_use_subcommand, , ,use,@f,105,Change default implementation.
+ros, __fish_use_subcommand, , ,init,@f,106,"Creates a new ros script, optionally based on a template."
+ros, __fish_use_subcommand, , ,fmt,@f,107,Indent lisp source.
+ros, __fish_use_subcommand, , ,list,@f,108,List Information
+ros, __fish_use_subcommand, , ,template,@f,109,Manage templates
+ros, __fish_use_subcommand, , ,delete,@f,110,Delete installed implementations
+ros, __fish_use_subcommand, , ,config,@f,111,Get and set options
+ros, __fish_use_subcommand, , ,version,@f,112,Show the roswell version information
+ros, __fish_use_subcommand, , ,help,@f,113,Use 'ros help [command]' for more information about a command.
+ros, help, , ,$__roswell_helps, ,114, 
+ros, list, , ,$__roswell_lists, ,139, 

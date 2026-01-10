@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cargo, , ,version, , ,101, 
+cargo, , ,list, , ,102, 
+cargo, , ,explain, , ,103, 
+cargo, , ,verbose, , ,104, 
+cargo, , ,quiet, , ,105, 
+cargo, , ,color, , ,106, 
+cargo, , ,locked, , ,107, 
+cargo, , ,offline, , ,108, 
+cargo, , ,frozen, , ,109, 
+cargo, , ,config, , ,110, 
+cargo, , ,help, , ,111, 

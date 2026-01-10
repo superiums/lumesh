@@ -1,0 +1,51 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gio, cat copy info list mkdir monitor mount move open rename remove save set trash tree, , ,$scheme, ,101,Scheme
+gio, help, , ,version cat copy info list mime mkdir monitor mount move open rename remove save set trash tree,@f,120,Command
+gio, mime, , , ,@f,121,MIME type
+gio, copy move,T,no-target-directory, ,@f,122,No target directory
+gio, copy move,p,progress, ,@f,123,Show progress
+gio, copy move,i,interactive, ,@f,124,Prompt before overwrite
+gio, copy move save,b,backup, ,@f,125,Backup existing destination files
+gio, info list,a,attributes, ,@f @r,126,The attributes to get
+gio, info list set,n,nofollow-symlinks, ,@f,127,Don't follow symbolic links
+gio, list tree,h,hidden, ,@f,128,Show hidden files
+gio, remove trash,f,force, ,@f,129,Ignore nonexistent files
+gio, copy, ,preserve, ,@f,130,Preserve all attributes
+gio, copy,P,no-dereference, ,@f,131,Never follow symbolic links
+gio, copy, ,default-permissions, ,@f,132,Use default permissions
+gio, info,w,query-writable, ,@f,133,List writable attributes
+gio, info,f,filesystem, ,@f,134,Get file system info
+gio, list,l,long, ,@f,135,Use a long listing format
+gio, list,d,print-display-names, ,@f,136,Print display names
+gio, list,u,print-uris, ,@f,137,Print full URIs
+gio, mkdir,p,parent, ,@f,138,Create parent directories
+gio, monitor,d,dir, ,@r,139,Monitor a directory
+gio, monitor,f,file, ,@r,140,Monitor a file
+gio, monitor,D,direct, ,@r,141,Monitor a file directly
+gio, monitor,s,silent, ,@r,142,Monitors a file directly without reporting changes
+gio, monitor,n,no-moves, ,@f,143,Don't report move events
+gio, monitor,m,mounts, ,@f,144,Watch for mount events
+gio, mount,m,mountable, ,@f,145,Mount as mountable
+gio, mount,d,device, ,@f @r,146,Mount volume
+gio, mount,u,unmount, ,@f,147,Unmount
+gio, mount,e,eject, ,@f,148,Eject
+gio, mount,t,stop, ,@f @r,149,Stop drive
+gio, mount,s,unmount-scheme,$supported_schemes,@f @r,150,Unmount all mounts with the given scheme
+gio, mount,f,force, ,@f,151,Ignore outstanding file operations
+gio, mount,a,anonymous, ,@f,152,Use an anonymous user
+gio, mount,l,list, ,@f,153,List
+gio, mount,o,monitor, ,@f,154,Monitor events
+gio, mount,i,detail, ,@f,155,Show extra information
+gio, mount, ,tcrypt-pim, ,@f @r,156,The numeric PIM when unlocking a VeraCrypt volume
+gio, mount, ,tcrypt-hidden, ,@f,157,Mount a TCRYPT hidden volume
+gio, mount, ,tcrypt-system, ,@f,158,Mount a TCRYPT system volume
+gio, move,C,no-copy-fallback, ,@f,159,Don't use copy and delete fallback
+gio, save,c,create, ,@f,160,Only create if not existing
+gio, save,a,append, ,@f,161,Append to end of file
+gio, save,p,private, ,@f,162,Restrict access to the current user
+gio, save,u,unlink, ,@f,163,Replace as if the destination didn't exist
+gio, save,v,print-etag, ,@f,164,Print new etag at end
+gio, save,e,etag, ,@f @r,165,The etag of the file being overwritten
+gio, set,t,type, ,@f @r,166,Type of the attribute
+gio, trash, ,empty, ,@f,167,Empty the trash
+gio, tree,l,follow-symlinks, ,@f,168,Follow symbolic links

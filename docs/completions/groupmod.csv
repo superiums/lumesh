@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+groupmod, ,a,append, , ,101,"If group members are specified with -U, append them to the existing member li…"
+groupmod, ,g,gidGID, , ,102,The group ID of the given GROUP will be changed to GID
+groupmod, ,h,help, , ,103,Display help message and exit
+groupmod, ,n,new-nameNEW_GROUP, , ,104,The name of the group will be changed from GROUP to NEW_GROUP name
+groupmod, ,o,non-unique, , ,105,"When used with the -g option, allow to change the group GID to a non-unique v…"
+groupmod, ,p,passwordPASSWORD, , ,106,"The encrypted password, as returned by crypt(3)"
+groupmod, ,R,rootCHROOT_DIR, , ,107,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+groupmod, ,P,prefixPREFIX_DIR, , ,108,Apply changes in the PREFIX_DIR directory and use the configuration files fro…
+groupmod, ,U,users, , ,109,A comma-separated list of usernames to add as members of the group
+groupmod, , ,gid, , ,110, 
+groupmod, , ,new-name, , ,111, 
+groupmod, , ,password, , ,112, 
+groupmod, , ,root, , ,113, 
+groupmod, , ,prefix, , ,114, 

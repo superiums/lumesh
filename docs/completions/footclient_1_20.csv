@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+footclient, ,T,title, , ,101,Initial window title.  Default: foot
+footclient, ,a,app-id, , ,102,Value to set the app-id property on the Wayland window
+footclient, ,w,window-size-pixels, , ,103,"Set initial window width and height, in pixels.  Default: 700x500"
+footclient, ,W,window-size-chars, , ,104,"Set initial window width and height, in characters.  Default: not set"
+footclient, ,m,maximized, , ,105,Start in maximized mode.  If both --maximized and --fullscreen
+footclient, ,F,fullscreen, , ,106,Start in fullscreen mode.  If both --maximized and --fullscreen
+footclient, ,L,login-shell, , ,107,"Start a login shell, by prepending a '-' to argv[0]"
+footclient, ,D,working-directory, , ,108,Initial working directory for the client application.  Default:
+footclient, ,s,server-socket, , ,109,Connect to PATH instead of
+footclient, ,H,hold, , ,110,Remain open after child process exits
+footclient, ,N,no-wait, , ,111,"Detach the client process from the running terminal, exiting"
+footclient, ,o,override, , ,112,Override an option set in the configuration file.  If SECTION is not
+footclient, ,E,client-environment, , ,113,The child process in the new terminal instance will use
+footclient, ,d,log-level, , ,114,"Log level, used both for log output on stderr as well as"
+footclient, ,l,log-colorize, , ,115,Enables or disables colorization of log output on stderr
+footclient, ,v,version, , ,116,Show the version number and quit

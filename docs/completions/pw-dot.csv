@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-dot, ,r,remote, , ,101,The name the remote instance to connect to
+pw-dot, ,h,help, , ,102,Show help
+pw-dot, , ,version, , ,103,Show version information
+pw-dot, ,a,all, , ,104,Show all object types
+pw-dot, ,s,smart, , ,105,Show linked objects only
+pw-dot, ,d,detail, , ,106,Show all object properties
+pw-dot, ,o,output, , ,107,Output file name (Default pw. dot).  Use - for stdout
+pw-dot, ,L,lr, , ,108,"Lay the graph from left to right, instead of dot's default top to bottom"
+pw-dot, ,9,90, , ,109,Lay the graph using 90-degree angles in edges

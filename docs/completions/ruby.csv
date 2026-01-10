@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ruby, ,d,debug, , ,101,Debugger
+ruby, ,e, , ,@f @r,102,Execute command
+ruby, ,h,help, , ,103,Display help and exit
+ruby, ,r, , ,@r,104,Require file
+ruby, ,v,verbose, , ,105,Verbose mode
+ruby, , ,version, , ,106,Display version and exit
+ruby, ,X, , ,@D @f @r,107,Directory
+ruby, ,y,yydebug, , ,108,Compiler debug mode

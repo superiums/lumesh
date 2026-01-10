@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dive, __fish_seen_argument -l ci, ,highestUserWastedPercent, ,@r,105,Highest allowable percentage of bytes wasted
+dive, __fish_seen_argument -l ci, ,highestWastedBytes, ,@r,106,Highest allowable bytes wasted
+dive, __fish_use_subcommand, , ,build, ,113,Build and analyze a Docker image from a Dockerfile
+dive, __fish_use_subcommand, , ,help, ,114,Help about any command
+dive, __fish_use_subcommand, , ,version, ,115,Print the version number and exit

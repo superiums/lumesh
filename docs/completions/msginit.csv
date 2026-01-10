@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msginit, ,i,input, , ,101,input POT file 
+msginit, ,o,output-file, , ,102,write output to specified PO file 
+msginit, ,P,properties-input, , ,103,input file is in Java . properties syntax
+msginit, , ,stringtable-input, , ,104,input file is in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msginit, ,l,locale, , ,105,set target locale
+msginit, , ,no-translator, , ,106,assume the PO file is automatically generated
+msginit, , ,color, , ,107,use colors and other text attributes always
+msginit, , ,style, , ,108,specify CSS style rule file for --color
+msginit, ,p,properties-output, , ,109,write out a Java . properties file
+msginit, , ,stringtable-output, , ,110,write out a NeXTstep/GNUstep . strings file
+msginit, ,w,width, , ,111,set output page width
+msginit, , ,no-wrap, , ,112,"do not break long message lines, longer than the output page width, into seve…"
+msginit, ,h,help, , ,113,display this help and exit
+msginit, ,V,version, , ,114,output version information and exit AUTHOR Written by Bruno Haible

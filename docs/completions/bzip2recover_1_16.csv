@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bzip2recover, ,c,stdout, , ,101,Compress or decompress to standard output
+bzip2recover, ,d,decompress, , ,102,Force decompression
+bzip2recover, ,z,compress, , ,103,"The complement to -d: forces compression, regardless of the invocation name"
+bzip2recover, ,t,test, , ,104,"Check integrity of the specified file(s), but don't decompress them"
+bzip2recover, ,f,force, , ,105,Force overwrite of output files
+bzip2recover, ,k,keep, , ,106,Keep (don't delete) input files during compression or decompression
+bzip2recover, ,s,small, , ,107,"Reduce memory usage, for compression, decompression and testing"
+bzip2recover, ,q,quiet, , ,108,Suppress non-essential warning messages
+bzip2recover, ,v,verbose, , ,109,Verbose mode -- show the compression ratio for each file processed
+bzip2recover, ,V,version, , ,110,"Display the software version, license terms and conditions"
+bzip2recover, ,9,best, , ,111,"Set the block size to 100 k, 200 k .   900 k when compressing"
+bzip2recover, , ,repetitive-best, , ,112,These flags are redundant in versions 0. 9. 5 and above

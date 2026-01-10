@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+v4l2-compliance, ,d,device, , ,101,Use device <dev> as the video device
+v4l2-compliance, ,V,vbi-device, , ,102,Use device <dev> as the vbi device
+v4l2-compliance, ,r,radio-device, , ,103,Use device <dev> as the radio device
+v4l2-compliance, ,S,sdr-device, , ,104,Use device <dev> as the SDR device
+v4l2-compliance, ,t,touch-device, , ,105,Use device <dev> as the touch device
+v4l2-compliance, ,u,subdev-device, , ,106,Use device <dev> as the v4l-subdevX device
+v4l2-compliance, ,z,media-bus-info, , ,107,Find the media device with the given bus info string
+v4l2-compliance, ,m,media-device, , ,108,Use device <dev> as the media controller device
+v4l2-compliance, ,M,media-device-only, , ,109,Use device <dev> as the media controller device
+v4l2-compliance, , ,stream-from-hdr, , ,110,Use the contents of the file to fill in output buffers
+v4l2-compliance, ,s,streaming, , ,111,Enable the streaming tests
+v4l2-compliance, ,f,stream-all-formats, , ,112,Test whether all available formats can be streamed
+v4l2-compliance, ,c,stream-all-color, , ,113,"For all supported, non-compressed formats stream <skip + 1> frames"
+v4l2-compliance, ,a,stream-all-io, , ,114,"Do the -s, -c and -f streaming tests for all inputs or outputs instead of jus…"
+v4l2-compliance, ,E,exit-on-fail, , ,115,Exit this application when the first failure occurs instead of continuing wit…
+v4l2-compliance, ,C,color, , ,116,Highlight OK/warn/fail/FAIL strings with colors
+v4l2-compliance, ,n,no-warnings, , ,117,Turn off warning messages
+v4l2-compliance, ,P,no-progress, , ,118,Turn off progress messages.  Useful when redirecting the output to a file
+v4l2-compliance, ,T,trace, , ,119,Trace all called ioctls
+v4l2-compliance, ,v,verbose, , ,120,Turn on verbose reporting
+v4l2-compliance, , ,version, , ,121,Show version information
+v4l2-compliance, ,w,wrapper, , ,122,Use the libv4l2 wrapper library for all V4L2 device accesses
+v4l2-compliance, ,W,exit-on-warn, , ,123,Exit this application when the first warning occurs instead of continuing
+v4l2-compliance, ,e,exp-buf-device, , ,124,Use device <dev> as the video device used to export DMABUFfers for doing DMAB…
+v4l2-compliance, , ,expbuf-device, , ,125, 
+v4l2-compliance, ,h,help, , ,126,"Prints the help message.  EXIT STATUS On success, it returns 0"

@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chage, ,d,lastdayLAST_DAY, , ,101,"Set the number of days since January 1st, 1970 when the password was last cha…"
+chage, ,E,expiredateEXPIRE_DATE, , ,102,"Set the date or number of days since January 1, 1970 on which the user\\*(Aqs …"
+chage, ,h,help, , ,103,Display help message and exit
+chage, ,i,iso8601, , ,104,"When printing dates, use YYYY-MM-DD format"
+chage, ,I,inactiveINACTIVE, , ,105,Set the number of days of inactivity after a password has expired before the …
+chage, ,l,list, , ,106,Show account aging information
+chage, ,m,mindaysMIN_DAYS, , ,107,Set the minimum number of days between password changes to MIN_DAYS
+chage, ,M,maxdaysMAX_DAYS, , ,108,Set the maximum number of days during which a password is valid
+chage, ,R,rootCHROOT_DIR, , ,109,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+chage, ,P,prefixPREFIX_DIR, , ,110,Apply changes to configuration files under the root filesystem found under th…
+chage, ,W,warndaysWARN_DAYS, , ,111,Set the number of days of warning before a password change is required
+chage, , ,lastday, , ,112, 
+chage, , ,expiredate, , ,113, 
+chage, , ,inactive, , ,114, 
+chage, , ,mindays, , ,115, 
+chage, , ,maxdays, , ,116, 
+chage, , ,root, , ,117, 
+chage, , ,prefix, , ,118, 
+chage, , ,warndays, , ,119, 

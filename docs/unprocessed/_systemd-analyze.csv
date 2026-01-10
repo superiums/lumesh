@@ -1,0 +1,34 @@
+cmd,conds,short,long,params,dirs,pri,desc
+systemd-analyze, __fish_contains_opt system user global, ,system, , ,101,Operates on the system systemd instance
+systemd-analyze, __fish_contains_opt system user global, ,user, , ,102,Operates on the user systemd instance
+systemd-analyze, __fish_contains_opt system user global, ,global, , ,103,Operates on the system-wide configuration for user systemd instance
+systemd-analyze, __fish_contains_opt order require, ,order, , ,104,dot: show only After and Before dependencies
+systemd-analyze, __fish_contains_opt order require, ,require, , ,105,"dot: show only Requires, Requisite, Wants and Conflicts dependencies"
+systemd-analyze, __fish_use_subcommand, , ,time, ,128,Print timing statistics
+systemd-analyze, __fish_use_subcommand, , ,blame, ,129,Print list of running units ordered by time to init
+systemd-analyze, __fish_use_subcommand, , ,critical-chain, ,130,Print a tree of the time critical chain of units
+systemd-analyze, __fish_use_subcommand, , ,dump, ,131,Output serialization of server state
+systemd-analyze, __fish_use_subcommand, , ,malloc, ,132,Output internal memory state of D-Bus service
+systemd-analyze, __fish_use_subcommand, , ,plot, ,133,Output SVG graphic showing service initialization
+systemd-analyze, __fish_use_subcommand, , ,dot, ,134,Output dependency graph in dot(1) format
+systemd-analyze, __fish_use_subcommand, , ,unit-paths, ,135,List all directories from which unit files may be loaded
+systemd-analyze, __fish_use_subcommand, , ,exit-status, ,136,List exit statuses along with their class
+systemd-analyze, __fish_use_subcommand, , ,capability, ,137,List Linux capabilities along with their numeric IDs
+systemd-analyze, __fish_use_subcommand, , ,condition, ,138,Evaluate Condition and Assert assignments
+systemd-analyze, __fish_use_subcommand, , ,syscall-filter, ,139,List system calls contained in the specified system call set
+systemd-analyze, __fish_use_subcommand, , ,filesystems, ,140,List filesystems
+systemd-analyze, __fish_use_subcommand, , ,calendar, ,141,Normalize repetitive calendar events and calculate when they elapse next
+systemd-analyze, __fish_use_subcommand, , ,timestamp, ,142,Parse timestamp and output the normalized form
+systemd-analyze, __fish_use_subcommand, , ,timespan, ,143,Parse time span and output the normalized form
+systemd-analyze, __fish_use_subcommand, , ,cat-config, ,144,Show contents of a config file
+systemd-analyze, __fish_use_subcommand, , ,compare-versions, ,145,Compare two version strings
+systemd-analyze, __fish_use_subcommand, , ,verify, ,146,Check unit files for correctness
+systemd-analyze, __fish_use_subcommand, , ,security, ,147,Analyze security settings of specified service units
+systemd-analyze, __fish_use_subcommand, , ,inspect-elf, ,148,Parse and print ELF object packaging metadata
+systemd-analyze, __fish_use_subcommand, , ,fdstore, ,149,List contents of service unit's file descriptor store
+systemd-analyze, __fish_use_subcommand, , ,image-policy, ,150,Analyze image policy string
+systemd-analyze, __fish_use_subcommand, , ,has-tpm2, ,151,Report TPM2 support
+systemd-analyze, __fish_use_subcommand, , ,pcrs, ,152,Show known TPM2 PCRs
+systemd-analyze, __fish_use_subcommand, , ,srk, ,153,Read Storage Root Key from TPM2 device
+systemd-analyze, __fish_use_subcommand, , ,architectures, ,154,List known CPU architectures
+systemd-analyze, __fish_use_subcommand, , ,smbios11, ,155,Show SMBIOS Type #11 strings passed to the system

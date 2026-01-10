@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lastlog, ,b,beforeDAYS, , ,101,Print only lastlog records older than DAYS
+lastlog, ,C,clear, , ,102,Clear lastlog record of a user
+lastlog, ,h,help, , ,103,Display help message and exit
+lastlog, ,R,rootCHROOT_DIR, , ,104,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+lastlog, ,S,set, , ,105,Set lastlog record of a user to the current time
+lastlog, ,t,timeDAYS, , ,106,Print the lastlog records more recent than DAYS
+lastlog, ,u,userLOGIN, , ,107,Print the lastlog record of the specified user(s)
+lastlog, , ,before, , ,108, 
+lastlog, , ,root, , ,109, 
+lastlog, , ,time, , ,110, 
+lastlog, , ,user, , ,111, 

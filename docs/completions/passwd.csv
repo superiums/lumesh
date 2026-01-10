@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+passwd, ,d,delete, ,@f,102,Delete user password
+passwd, ,e,expire, ,@f,103,Immediately obsolete user password
+passwd, ,h,help, ,@f,104,Display help and exit
+passwd, ,i,inactive, ,@f @r,105,Schedule account inactivation after password expiration
+passwd, ,k,keep-tokens, ,@f,106,Wait tokens expiration before changing password
+passwd, ,l,lock, ,@f,107,Lock password
+passwd, ,n,mindays, ,@f @r,108,Define minimum delay between password changes
+passwd, ,q,quiet, ,@f,109,Be quiet
+passwd, ,r,repository, ,@r,110,Update given repository
+passwd, ,R,root, ,@r,111,Use given directory as working directory
+passwd, ,S,status, ,@f,112,Display account status
+passwd, ,u,unlock, ,@f,113,Unlock password
+passwd, ,w,warndays, ,@f @r,114,Define warning period before mandatory password change
+passwd, ,w,warndays, ,@f @r,115,Define maximum period of password validity
+passwd, , , , ,@f,117,Account to be altered
+passwd, ,i, , ,@f @r,118,Directory system to apply the update to
+passwd, ,l, , ,@f @r,119,Location to be updated on chosen directory system
+passwd, ,u, , ,@f @r,120,User name to use on chosen directory system
+passwd, ,l, , ,@f,121,"Update locally, not in Kerberos"
+passwd, , , , ,@f,122,Account to be altered
+passwd, , , , ,@f,123,Account to be altered

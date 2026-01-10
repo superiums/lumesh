@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+inetcat, ,u,udid, , ,101,Target specific device by UDID
+inetcat, ,n,network, , ,102,Connect to network device
+inetcat, ,l,local, , ,103,Connect to USB device.  This is the default if no option is passed
+inetcat, ,h,help, , ,104,Prints usage information
+inetcat, ,d,debug, , ,105,Increase debug level

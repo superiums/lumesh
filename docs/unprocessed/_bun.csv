@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bun, $bun_builtin_cmds (__fish__get_bun_bins) (__fish__get_bun_scripts), , ,$bun_builtin_cmds, ,100, 

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cat, ,A,show-all, , ,101,equivalent to -vET
+cat, ,b,number-nonblank, , ,102,"number nonempty output lines, overrides -n"
+cat, ,E,show-ends, , ,103,display $ at end of each line
+cat, ,n,number, , ,104,number all output lines
+cat, ,s,squeeze-blank, , ,105,suppress repeated empty output lines
+cat, ,T,show-tabs, , ,106,display TAB characters as ^I
+cat, ,v,show-nonprinting, , ,107,"use ^ and M- notation, except for LFD and TAB"
+cat, , ,help, , ,108,display this help and exit
+cat, , ,version, , ,109,output version information and exit EXAMPLES

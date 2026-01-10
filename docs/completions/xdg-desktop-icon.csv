@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-desktop-icon, , ,novendor, , ,101,"Normally, xdg-desktop-icon checks to ensure that a *"
+xdg-desktop-icon, , ,help, , ,102,Show command synopsis
+xdg-desktop-icon, , ,manual, , ,103,Show this manual page
+xdg-desktop-icon, , ,version, , ,104,Show the xdg-utils version information

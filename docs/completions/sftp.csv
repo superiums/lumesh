@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sftp, , , , ,@f @r,101, 
+sftp, ,B, , ,@f @r,102,Size of the buffer when transferring files
+sftp, ,b, , ,@F,103,Reads a series of commands from an input batchfile
+sftp, ,D, , ,@f @r,104,Connect directly to a local SFTP server
+sftp, ,l, , ,@f @r,105,Limits the used bandwidth (Kbit/s)
+sftp, ,P, , ,@f @r,106,Port to connect to on the remote host
+sftp, ,R, , ,@f @r,107,How many requests may be outstanding
+sftp, ,S, , ,@r,108,Program to use for the encrypted connection
+sftp, ,s, , ,@f @r,109,The SSH2 subsystem or the path for an sftp server

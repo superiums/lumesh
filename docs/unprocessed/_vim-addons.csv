@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vim-addons, __fish_vim-addons_subcommand, , ,list,@f,101,list the names of the addons available in the system
+vim-addons, __fish_vim-addons_subcommand, , ,status,@f,102,show the status of the addons available in the system
+vim-addons, __fish_vim-addons_subcommand, , ,install,@f @r,103,install one or more addons under ~/.vim
+vim-addons, __fish_vim-addons_subcommand, , ,remove,@f @r,104,remove one or more addons from ~/.vim
+vim-addons, __fish_vim-addons_subcommand, , ,disable,@f @r,105,disable  one  or more addons to be used by the current user
+vim-addons, __fish_vim-addons_subcommand, , ,amend,@f @r,106,undo the effects of a previous disable command
+vim-addons, __fish_vim-addons_subcommand, , ,files,@f @r,107,"list, one per line, the files composing the specified addons"
+vim-addons, __fish_vim-addons_subcommand, , ,show,@f @r,108,displays detailed information about the specified addons

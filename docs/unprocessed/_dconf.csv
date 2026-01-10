@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dconf, $commands, , ,read,@f,101,Read the value of a key
+dconf, $commands, , ,list,@f,101,List the sub-keys and sub-directories of a directory
+dconf, $commands, , ,write,@f,101,Write a new value to a key
+dconf, $commands, , ,reset,@f,101,Delete a key or an entire directory
+dconf, $commands, , ,compile,@f,101,Compile a binary database from keyfiles
+dconf, $commands, , ,update,@f,101,Update the system dconf databases
+dconf, $commands, , ,watch,@f,101,Watch a key or directory for changes
+dconf, $commands, , ,dump,@f,101,Dump an entire subpath to stdout
+dconf, $commands, , ,load,@f,101,Populate a subpath from stdin
+dconf, $commands, , ,help,@f,101,Display help and exit

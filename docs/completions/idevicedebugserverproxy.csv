@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicedebugserverproxy, ,u,udid, , ,101,target specific device by UDID
+idevicedebugserverproxy, ,n,network, , ,102,connect to network device
+idevicedebugserverproxy, ,l,lldb, , ,103,Enable lldb support
+idevicedebugserverproxy, ,d,debug, , ,104,enable communication debugging
+idevicedebugserverproxy, ,h,help, , ,105,prints usage information
+idevicedebugserverproxy, ,v,version, , ,106,prints version information

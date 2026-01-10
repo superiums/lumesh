@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pactl, , , , ,@f,101, 
+pactl, list, , ,modules sinks sources sink-inputs source-outputs clients samples cards,@f,102, 
+pactl, list, , ,short,@f,103,Show shorter output
+pactl, play-sample remove-sample, , , ,@f,104, 
+pactl, unload-module, , , ,@f,105, 
+pactl, load-module, , , ,@f,106, 
+pactl, set-default-sink, , , ,@f,117, 
+pactl, , ,version, ,@f,118,Print a short version and exit
+pactl, ,h,help, ,@f,119,Print help text and exit

@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+asciinema, ,h,help, , ,101,Show this help message and exit
+asciinema, rec, ,stdin, , ,104,Enable stdin recording
+asciinema, rec, ,append, , ,105,Append to existing recording
+asciinema, rec, ,raw, , ,106,Save only raw stdout output
+asciinema, rec, ,overwrite, , ,107,Overwrite the file if it already exists
+asciinema, rec,c,command, , ,108,Command to record
+asciinema, rec,e,env, , ,109,List of environment variables to capture
+asciinema, rec,t,title, , ,110,Title of the asciicast
+asciinema, rec,i,idle-time-limit, , ,111,Limit recorded idle time to given number of seconds
+asciinema, rec, ,cols, , ,112,Override terminal columns for recorded process
+asciinema, rec, ,rows, , ,113,Override terminal rows for recorded process
+asciinema, rec,y,yes, , ,114,Answer 'yes' to all prompts
+asciinema, rec,q,quiet, , ,115,"Be quiet, suppress all notices/warnings"
+asciinema, play,i,idle-time-limit, , ,117,Limit idle time during playback to given number of seconds
+asciinema, play,s,speed, , ,118,Playback speedup

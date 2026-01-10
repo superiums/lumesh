@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+udev-hwdb, , ,usr, , ,101,Generate in /usr/lib/udev instead of /etc/udev. sp Added in version 219
+udev-hwdb, ,r,root, , ,102,Alternate root path in the filesystem. sp Added in version 219
+udev-hwdb, ,s,strict, , ,103,"When updating, return non-zero exit value on any parsing error"
+udev-hwdb, ,h,help, , ,104,Print a short help text and exit

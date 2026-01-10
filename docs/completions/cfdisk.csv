@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cfdisk, ,h,help, , ,101, 
+cfdisk, ,V,version, , ,102, 
+cfdisk, ,L,color, , ,103, 
+cfdisk, , ,lock, , ,104, 
+cfdisk, ,r,read-only, , ,105, 
+cfdisk, ,z,zero, , ,106, 

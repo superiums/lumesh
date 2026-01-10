@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avahi-autoipd, ,D,daemonize, , ,101,Daemonize after startup.  Implies --syslog
+avahi-autoipd, ,k,kill, , ,102,Kill an already running avahi-autoipd on the specified network interface
+avahi-autoipd, ,r,refresh, , ,103,Tell an already running avahi-autoipd to re-announce the acquired IP address …
+avahi-autoipd, ,c,check, , ,104,Return 0 as return code if avahi-autoipd is already running for the specified…
+avahi-autoipd, ,s,syslog, , ,105,Log to syslog instead of STDERR.  Implied by --daemonize
+avahi-autoipd, , ,debug, , ,106,Enable verbose mode
+avahi-autoipd, , ,no-drop-root, , ,107,Don't drop root privileges after startup
+avahi-autoipd, , ,no-chroot, , ,108,Don't chroot(2) the daemon
+avahi-autoipd, ,S,start, , ,109,"Try to acquire the specified IP address, which must be from the IPv4LL range …"
+avahi-autoipd, ,w,wait, , ,110,Wait until a IP address has been successfully acquired before detaching
+avahi-autoipd, , ,force-bind, , ,111,"Acquire an IPv4LL address, even if a routable address has been configured on …"
+avahi-autoipd, , ,no-proc-title, , ,112,Don't change the process name while running
+avahi-autoipd, ,h,help, , ,113,Show help
+avahi-autoipd, ,v,version, , ,114,Show version information.  FILES /etc/avahi/avahi-autoipd

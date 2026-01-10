@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+update-ca-trust, ,o,output, , ,101, 

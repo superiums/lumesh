@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ansible-vault, __fish_ansible_vault_no_subcommand, , ,decrypt, ,109,Decrypt encrypted file or stdin
+ansible-vault, __fish_ansible_vault_no_subcommand, , ,encrypt, ,110,Encrypt a file or stdin
+ansible-vault, __fish_ansible_vault_no_subcommand, , ,create, ,111,Create encrypted file
+ansible-vault, __fish_ansible_vault_no_subcommand, , ,edit, ,112,Edit encrypted file
+ansible-vault, __fish_ansible_vault_no_subcommand, , ,rekey, ,113,Rekey encrypted file
+ansible-vault, __fish_ansible_vault_no_subcommand, , ,view, ,114,View contents of something encrypted
+ansible-vault, __fish_ansible_vault_no_subcommand, , ,encrypt_string,@f,115,Encrypt string
+ansible-vault, __fish_ansible_vault_using_command encrypt encrypt_string, ,stdin-name, ,@f @r,116,Specify the variable name for stdin
+ansible-vault, __fish_ansible_vault_using_command encrypt encrypt_string,n,name, ,@f @r,117,Specify the variable name
+ansible-vault, __fish_ansible_vault_using_command encrypt encrypt_string,p,prompt, , ,118,Prompt for the string to encrypt
+ansible-vault, __fish_ansible_vault_using_command encrypt encrypt_string rekey edit create, ,encrypt-vault-id, ,@r,119,the vault id used to encrypt (required if more than vault-id is provided)
+ansible-vault, __fish_ansible_vault_using_command encrypt encrypt_string decrypt, ,output, ,@r,120,"Output file name for encrypt or decrypt; use - for stdout"

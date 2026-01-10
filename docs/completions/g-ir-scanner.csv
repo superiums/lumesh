@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+g-ir-scanner, , ,help, , ,101,Show help options
+g-ir-scanner, , ,quiet, , ,102,"If passed, do not print details of normal operation"
+g-ir-scanner, , ,warn-all, , ,103,Display warnings for public API which is not introspectable
+g-ir-scanner, , ,warn-error, , ,104,Make warnings be fatal errors
+g-ir-scanner, , ,strict, , ,105,Display warnings for strict introspectable API
+g-ir-scanner, , ,format, , ,106,This parameters decides which the resulting format will be used
+g-ir-scanner, , ,include, , ,107,Add the specified introspection dependency to the scanned namespace
+g-ir-scanner, , ,include-uninstalled, , ,108,Add the specified introspection dependency to the scanned namespace
+g-ir-scanner, , ,add-include-path, , ,109,Add a directory to the path which the scanner uses to find GIR files
+g-ir-scanner, ,i,library, , ,110,Specifies a library that will be introspected
+g-ir-scanner, ,L,library-path, , ,111,Include this directory when searching for a library
+g-ir-scanner, , ,c-include, , ,112,Headers which should be included in C programs
+g-ir-scanner, ,n,namespace, , ,113,The namespace name
+g-ir-scanner, , ,no-libtool, , ,114,Disable usage of libtool for compiling stub introspection binary
+g-ir-scanner, , ,libtool, , ,115,Full path to libtool executable.  Typically used for Automake systems
+g-ir-scanner, , ,nsversion, , ,116,The namespace version.  For instance 1. 0
+g-ir-scanner, ,p,program, , ,117,Specifies a binary that will be introspected
+g-ir-scanner, , ,program-arg, , ,118,Additional argument to pass to program for introspection
+g-ir-scanner, , ,identifier-prefix, , ,119,This option may be specified multiple times
+g-ir-scanner, , ,symbol-prefix, , ,120,This option may be specified multiple times
+g-ir-scanner, , ,accept-unprefixed, , ,121,"If specified, the scanner will accept identifiers and symbols which do not ma…"
+g-ir-scanner, , ,output, , ,122,Name of the file to output.  Normally namespace + format extension
+g-ir-scanner, , ,pkg, , ,123,List of pkg-config packages to get compiler and linker flags from
+g-ir-scanner, , ,pkg-export, , ,124,List of pkg-config packages that are provided by the generated gir
+g-ir-scanner, , ,compiler, , ,125,The C compiler to be used internally by g-ir-scanner when introspecting the r…
+g-ir-scanner, , ,verbose, , ,126,"Be verbose, include some debugging information"

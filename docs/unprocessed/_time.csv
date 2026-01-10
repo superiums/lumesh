@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+time, __fish_no_arguments,f,format, , ,101,Specify output format
+time, __fish_no_arguments,p,portable, , ,102,Use the portable output format
+time, __fish_no_arguments,o,output, , ,103,"Do not send the results to stderr, but overwrite the specified file"
+time, __fish_no_arguments,a,append, , ,104,(Used together with -o) Do not overwrite but append
+time, __fish_no_arguments,v,verbose, , ,105,Verbose mode
+time, __fish_no_arguments, ,help, , ,106,Display help and exit
+time, __fish_no_arguments,V,version, , ,107,Display version and exit

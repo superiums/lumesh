@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lscpu, ,a,all, , ,101,Print both online and offline CPUs
+lscpu, ,b,online, , ,102,Print online CPUs only
+lscpu, ,c,offline, , ,103,Print offline CPUs only
+lscpu, ,e,extended, ,@f @r,104,Print out an extended readable format
+lscpu, ,p,parse, ,@f @r,105,Print out a parseble format
+lscpu, ,s,sysroot, ,@r,106,Use specified directory as system root
+lscpu, ,x,hex, , ,107,Print hexadecimal masks rather thans lists of CPUs
+lscpu, ,h,help, , ,108,Display help
+lscpu, ,V,version, , ,109,Display version

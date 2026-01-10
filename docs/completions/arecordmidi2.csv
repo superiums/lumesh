@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+arecordmidi2, ,h,help, , ,101,Prints a list of options
+arecordmidi2, ,V,version, , ,102,Prints the current version
+arecordmidi2, ,p,port, , ,103,Sets the sequencer port(s) from which events are recorded
+arecordmidi2, ,b,bpm, , ,104,"Sets the musical tempo of the MIDI file, in beats per minute"
+arecordmidi2, ,t,ticks, , ,105,"Sets the resolution of timestamps (ticks) in the MIDI file, in ticks per beat"
+arecordmidi2, ,i,timesig, , ,106,Sets the time signature for the MIDI file
+arecordmidi2, ,n,num-events, , ,107,Stops the recording after receiving the given number of events
+arecordmidi2, ,u,ump, , ,108,Sets the UMP MIDI protocol version.  Either 1 or 2 has to be given for MIDI 1
+arecordmidi2, ,r,interactive, , ,109,Run in the interactive mode
+arecordmidi2, ,s,silent, , ,110,Don't print messages to stdout
+arecordmidi2, ,P,profile, , ,111,Read the UMP data from the given file and put them into the configuration sec…
+arecordmidi2, , ,composer, , ,112, 
+arecordmidi2, , ,publisher, , ,113, 
+arecordmidi2, , ,location, , ,114,Put the given meta data text in the configuration section

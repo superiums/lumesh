@@ -1,0 +1,34 @@
+cmd,conds,short,long,params,dirs,pri,desc
+toot, __fish_is_first_token, , ,activate, ,101,Switch between accounts.
+toot, __fish_is_first_token, , ,auth, ,102,Show logged in accounts and instances
+toot, __fish_is_first_token, , ,instance, ,103,Display instance details
+toot, __fish_is_first_token, , ,login, ,104,Log in using your browser
+toot, __fish_is_first_token, , ,login_cli, ,105,Log in from the console
+toot, __fish_is_first_token, , ,logout, ,106,Log out
+toot, __fish_is_first_token, , ,notifications, ,107,Show notifications
+toot, __fish_is_first_token, , ,post, ,108,Post a status text
+toot, __fish_is_first_token, , ,search, ,109,Search for users or hashtags
+toot, __fish_is_first_token, , ,thread, ,110,Show toot thread items
+toot, __fish_is_first_token, , ,timeline, ,111,Show recent items
+toot, __fish_is_first_token, , ,tui, ,112,Toot terminal user interface
+toot, __fish_is_first_token, , ,upload, ,113,Upload a file
+toot, __fish_is_first_token, , ,whoami, ,114,Display user details
+toot, __fish_is_first_token, , ,whois, ,115,Display account details
+toot, __fish_is_first_token, , ,delete, ,116,Delete a status
+toot, __fish_is_first_token, , ,favourite, ,117,Favourite a status
+toot, __fish_is_first_token, , ,pin, ,118,Pin a status
+toot, __fish_is_first_token, , ,reblog, ,119,Reblog a status
+toot, __fish_is_first_token, , ,reblogged_by, ,120,Show rebloggers of status
+toot, __fish_is_first_token, , ,unfavourite, ,121,Unfavourite a status
+toot, __fish_is_first_token, , ,unpin, ,122,Unpin a status
+toot, __fish_is_first_token, , ,unreblog, ,123,Unreblog a status
+toot, __fish_is_first_token, , ,follow, ,124,Follow an account
+toot, __fish_is_first_token, , ,unfollow, ,125,Unfollow an account
+toot, __fish_is_first_token, , ,mute, ,126,Mute an account
+toot, __fish_is_first_token, , ,unmute, ,127,Unmute an account
+toot, __fish_is_first_token, , ,block, ,128,Block an account
+toot, __fish_is_first_token, , ,unblock, ,129,Unblock an account
+toot, $_sub_commands, ,debug, , ,130,show debug log
+toot, $_sub_commands, ,no-color, , ,131,no colors in output
+toot, $_sub_commands, ,quiet, , ,132,don't write to stdout on success
+toot, $_sub_commands,h,help, , ,133,show help message

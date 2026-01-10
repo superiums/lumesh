@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpgrt-config, , ,libdir, , ,101,Parent directory path of pkgconfig file search path.  e. g
+gpgrt-config, , ,exists, , ,102,Test whether the pkg-config file 'module
+gpgrt-config, , ,modversion, , ,103,Print the currently installed version of module on the standard output
+gpgrt-config, , ,libs, , ,104,Print the linker flags that are necessary to link a program using the module
+gpgrt-config, , ,cflags, , ,105,Print the compiler flags that are necessary to compile a program using the mo…
+gpgrt-config, , ,static, , ,106,Modifies output if linking statically instead of dynamically
+gpgrt-config, , ,variable, , ,107,Output variable VARNAME from the module's pkg-config file

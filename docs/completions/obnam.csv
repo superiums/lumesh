@@ -1,0 +1,51 @@
+cmd,conds,short,long,params,dirs,pri,desc
+obnam, --condition, , ,add-key, ,101,Add a key to the repository
+obnam, --condition, , ,backup, ,102,Backup data to repository
+obnam, --condition, , ,client-keys, ,103,List clients and their keys in the repository
+obnam, --condition, , ,clients, ,104,List clients using the repository
+obnam, --condition, , ,diff, ,105,Show difference between two generations
+obnam, --condition, , ,dump-repo, ,106,Dump (some) data structures from a repository
+obnam, --condition, , ,force-lock, ,107,Force a locked repository to be open
+obnam, --condition, , ,forget, ,108,Forget (remove) specified backup generations
+obnam, --condition, , ,fsck, ,109,Verify internal consistency of backup repository
+obnam, --condition, , ,generations, ,110,List backup generations for client
+obnam, --condition, , ,genids, ,111,List generation ids for client
+obnam, --condition, , ,help, ,112,Print help
+obnam, --condition, , ,help-all, ,113,"Print help, including hidden subcommands"
+obnam, --condition, , ,kdirstat, ,114,List contents of a generation in kdirstat cache format
+obnam, --condition, , ,list-errors, ,115,List error codes and explanations
+obnam, --condition, , ,list-formats, ,116,List available repository formats
+obnam, --condition, , ,list-keys, ,117,List keys and repository toplevels they are used in
+obnam, --condition, , ,list-toplevels, ,118,List repository toplevel directories and their keys
+obnam, --condition, , ,ls, ,119,List contents of a generation
+obnam, --condition, , ,mount, ,120,Mount a backup repository as a FUSE filesystem
+obnam, --condition, , ,nagios-last-backup-age, ,121,Check if the most recent generation is recent enough
+obnam, --condition, , ,remove-client, ,122,Remove client and its key from repository
+obnam, --condition, , ,remove-key, ,123,Remove a key from the repository
+obnam, --condition, , ,restore, ,124,Restore some or all files from a generation
+obnam, --condition, , ,verify, ,125,Verify that live data and backed up data match
+obnam, -l, , ,sha512 sha224 sha256 sha384, ,126,Use CHECKSUM algorithm
+obnam, -l, , ,$hostname, ,127,Name of client
+obnam, -l, , ,none deflate, ,128,Compress repository with
+obnam, -s, ,help, , ,129,Show this help message and exit
+obnam, , ,output, , ,130,Write output to FILE instead of STDOUT
+obnam, -l, ,no-act, , ,131,Do not actually change anything
+obnam, -l, ,no-no-act, , ,132,Actually commit changes
+obnam, ,r,repository, , ,133,Name of backup repository
+obnam, -l, , ,6 green-albatross-20160813, ,134,Use FORMAT for new repositories
+obnam, , ,to, , ,135,Where to restore / mount to
+obnam, , ,warn-age, , ,136,For nagios-last-backup-age: maximum age
+obnam, -l, , ,fatalist never verify, ,137,Deduplicate mode
+obnam, , ,exclude, , ,138,REGEXP for pathnames to exclude
+obnam, , ,exclude-from, , ,139,Read exclude patterns from FILE
+obnam, , ,root, , ,140,What to backup
+obnam, , ,config, , ,141,Add FILE to config files
+obnam, , ,trace, , ,142,FILENAME pattern for trace debugging
+obnam, , ,gnupghome, , ,143,Home directory for GPG
+obnam, , ,log,syslog, ,144,Write log to FILE or syslog
+obnam, -l, , ,debug info warning error critical fatal, ,145,Log at LEVEL
+obnam, -l, , ,none simple meliae heapy, ,146,Make memory profiling dumps using METHOD
+obnam, , ,ssh-command, , ,147,Executable to be used instead of 'ssh'
+obnam, -l, , ,no yes ask ssh-config, ,148,ssh host key check
+obnam, , ,ssh-key, , ,149,Use FILENAME as the ssh RSA key
+obnam, , ,ssh-known-hosts,\\~/.ssh/known_hosts, ,150,FILENAME of the known_hosts file

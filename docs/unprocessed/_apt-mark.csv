@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-mark, __fish_apt_no_subcommand, , ,auto,@f,102,Mark a package as automatically installed
+apt-mark, __fish_apt_no_subcommand, , ,manual,@f,103,Mark a package as manually installed
+apt-mark, __fish_apt_no_subcommand, , ,minimize-manual,@f,104,Mark all dependencies of meta packages as auto
+apt-mark, __fish_apt_no_subcommand, , ,hold,@f,105,"Hold a package, prevent automatic installation or removal"
+apt-mark, __fish_apt_no_subcommand, , ,unhold,@f,106,Cancel a hold on a package
+apt-mark, __fish_apt_no_subcommand, , ,showauto,@f,107,Show automatically installed packages
+apt-mark, __fish_apt_no_subcommand, , ,showmanual,@f,108,Show manually installed packages
+apt-mark, __fish_apt_no_subcommand, , ,showhold,@f,109,Show held packages

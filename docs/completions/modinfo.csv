@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+modinfo, ,a,author, , ,101,Print only 'author'
+modinfo, ,d,description, , ,102,Print only 'description'
+modinfo, ,l,license, , ,103,Print only 'license'
+modinfo, ,p,parameters, , ,104,Print only 'parm'
+modinfo, ,n,filename, , ,105,Print only 'filename'
+modinfo, ,0,null, , ,106,Use \\0 instead of \\n
+modinfo, ,F,field,author description license parm depends alias intree vermagic vermagic,@f @r,107,Print only provided FIELD
+modinfo, ,k,set-version, ,@f @r,108,Use VERSION instead of `uname -r`
+modinfo, ,b,basedir, ,@r,109,Use DIR as filesystem root for /lib/modules
+modinfo, ,V,version, , ,110,Show version
+modinfo, ,h,help, , ,111,Show help

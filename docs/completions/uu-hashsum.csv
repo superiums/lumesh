@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-hashsum, , ,bits, , ,101,set the size of the output (only for SHAKE)
+uu-hashsum, ,b,binary, , ,102,read in binary mode
+uu-hashsum, ,c,check, , ,103,read hashsums from the FILEs and check them
+uu-hashsum, , ,tag, , ,104,create a BSD-style checksum
+uu-hashsum, ,t,text, , ,105,read in text mode (default)
+uu-hashsum, ,q,quiet, , ,106,don't print OK for each successfully verified file
+uu-hashsum, ,s,status, , ,107,"don't output anything, status code shows success"
+uu-hashsum, , ,strict, , ,108,exit non-zero for improperly formatted checksum lines
+uu-hashsum, , ,ignore-missing, , ,109,don't fail or report status for missing files
+uu-hashsum, ,w,warn, , ,110,warn about improperly formatted checksum lines
+uu-hashsum, ,z,zero, , ,111,"end each output line with NUL, not newline"
+uu-hashsum, , ,no-names, , ,112,Omits filenames in the output (option not present in GNU/Coreutils)
+uu-hashsum, , ,md5, , ,113,work with MD5
+uu-hashsum, , ,sha1, , ,114,work with SHA1
+uu-hashsum, , ,sha224, , ,115,work with SHA224
+uu-hashsum, , ,sha256, , ,116,work with SHA256
+uu-hashsum, , ,sha384, , ,117,work with SHA384
+uu-hashsum, , ,sha512, , ,118,work with SHA512
+uu-hashsum, , ,sha3, , ,119,work with SHA3
+uu-hashsum, , ,sha3-224, , ,120,work with SHA3-224
+uu-hashsum, , ,sha3-256, , ,121,work with SHA3-256
+uu-hashsum, , ,sha3-384, , ,122,work with SHA3-384
+uu-hashsum, , ,sha3-512, , ,123,work with SHA3-512
+uu-hashsum, , ,shake128, , ,124,work with SHAKE128 using BITS for the output size
+uu-hashsum, , ,shake256, , ,125,work with SHAKE256 using BITS for the output size
+uu-hashsum, , ,b2sum, , ,126,work with BLAKE2
+uu-hashsum, , ,b3sum, , ,127,work with BLAKE3
+uu-hashsum, ,h,help, , ,128,Print help
+uu-hashsum, ,V,version, , ,129,Print version

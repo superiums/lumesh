@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_delta, ,c,no-completions, , ,102,Ignore completions
+fish_delta, ,f,no-functions, , ,103,Ignore function files
+fish_delta, ,C,no-config, , ,104,Ignore config files
+fish_delta, ,d,no-diff, , ,105,Don't display the full diff
+fish_delta, ,n,new, , ,106,Include new files
+fish_delta, ,V,vendor,ignore user default, ,107,Choose how to count vendor files

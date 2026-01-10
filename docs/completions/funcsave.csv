@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+funcsave, ,d,directory,$fish_function_path, ,101,dir to save function(s) into

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gprofng-display-html, , ,version, , ,101,X Item '--version' Print the version number and exit
+gprofng-display-html, , ,help, , ,102,X Item '--help' Print usage information and exit
+gprofng-display-html, , ,verbose, , ,103,X Item '--verbose' Enable verbose mode to show diagnostic messages about the …
+gprofng-display-html, ,d,debug, , ,104,"X Item '-d [db-vol-size], --debug[=db-vol-size]' Control the printing of run …"
+gprofng-display-html, , ,highlight-percentage, , ,105,X Item '--highlight-percentage=value' Set a percentage value in the interval …
+gprofng-display-html, ,o,output, , ,106,"X Item '-o dirname, --output=dirname' Use dirname as the directory name to st…"
+gprofng-display-html, ,O,overwrite, , ,107,"X Item '-O dirname, --overwrite=dirname' Use dirname as the directory name to…"
+gprofng-display-html, ,q,quiet, , ,108,"X Item '-q, --quiet' Disable the display of all warning, debug, verbose and a…"
+gprofng-display-html, , ,nowarnings, , ,109, 

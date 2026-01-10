@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-rmdir, , ,ignore-fail-on-non-empty, , ,101,ignore each failure that is solely because a directory is non-empty
+uu-rmdir, ,p,parents, , ,102,"remove DIRECTORY and its ancestors; e.g., 'rmdir -p a/b/c' is similar to rmdir a/b/c a/b a"
+uu-rmdir, ,v,verbose, , ,103,output a diagnostic for every directory processed
+uu-rmdir, ,h,help, , ,104,Print help
+uu-rmdir, ,V,version, , ,105,Print version

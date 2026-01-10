@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-device, ,K,nodiscard, , ,101,do not perform discard (TRIM) by default
+btrfs-device, ,f,force, , ,102,force overwrite of existing filesystem on the given disk(s)
+btrfs-device, , ,enqueue, , ,103,"wait if there's another exclusive operation running, otherwise continue remov…"
+btrfs-device, ,d,all-devices, , ,104,"Enumerate and register all devices, use as a fallback in case blkid is not av…"
+btrfs-device, ,u,forget, , ,105,"Unregister a given device or all stale devices if no path is given, the devic…"
+btrfs-device, ,z,reset, , ,106,Print the stats and reset the values to zero afterwards
+btrfs-device, ,c,check, , ,107,Check if the stats are all zeros and return 0 if it is so
+btrfs-device, ,b,raw, , ,108,"raw numbers in bytes, without the B suffix"
+btrfs-device, ,h,human-readable, , ,109,"print human friendly numbers, base 1024, this is the default"
+btrfs-device, , ,iec, , ,110,"select the 1024 base for the following options, according to the IEC standard"
+btrfs-device, , ,si, , ,111,"select the 1000 base for the following options, according to the SI standard"
+btrfs-device, ,k,kbytes, , ,112,"show sizes in KiB, or kB with --si"
+btrfs-device, ,m,mbytes, , ,113,"show sizes in MiB, or MB with --si"
+btrfs-device, ,g,gbytes, , ,114,"show sizes in GiB, or GB with --si"
+btrfs-device, ,t,tbytes, , ,115,"show sizes in TiB, or TB with --si If conflicting options are passed, the las…"

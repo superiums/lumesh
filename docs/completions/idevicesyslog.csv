@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicesyslog, ,u,udid, , ,101,target specific device by UDID
+idevicesyslog, ,n,network, , ,102,connect to network device
+idevicesyslog, ,x,exit, , ,103,exit when device disconnects
+idevicesyslog, ,d,debug, , ,104,enable communication debugging
+idevicesyslog, ,h,help, , ,105,prints usage information
+idevicesyslog, ,v,version, , ,106,prints version information
+idevicesyslog, , ,no-colors, , ,107,disable colored output
+idevicesyslog, ,m,match, , ,108,only print messages that contain STRING
+idevicesyslog, ,t,trigger, , ,109,start logging when matching STRING
+idevicesyslog, ,T,untrigger, , ,110, 
+idevicesyslog, ,p,process, , ,111,only print messages from matching process(es)
+idevicesyslog, ,e,exclude, , ,112,print all messages except matching process(es)
+idevicesyslog, ,q,quiet, , ,113,set a filter to exclude common noisy processes
+idevicesyslog, , ,quiet-list, , ,114,prints the list of processes for --quiet and exits
+idevicesyslog, ,k,kernel, , ,115,only print kernel messages
+idevicesyslog, ,K,no-kernel, , ,116,suppress kernel messages

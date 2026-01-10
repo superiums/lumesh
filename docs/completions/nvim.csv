@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nvim, ,c, , ,@r,101,Execute Ex command after the first file has been read
+nvim, ,S, , ,@r,102,Source file after the first file has been read
+nvim, , ,cmd, ,@r,103,Execute Ex command before loading any vimrc
+nvim, ,i, , ,@r,104,Set the shada file location
+nvim, ,q, , ,@r,105,Start in quickFix mode
+nvim, ,r, , ,@r,106,Use swap files for recovery
+nvim, ,u, , ,@r,107,Use alternative vimrc
+nvim, ,w, , ,@r,108,Record all typed characters
+nvim, ,W, , ,@r,109,Record all typed characters (overwrite file)
+nvim, ,h,help, , ,110,Print help message and exit
+nvim, , ,noplugin, , ,111,Skip loading plugins
+nvim, ,v,version, , ,112,Print version information and exit
+nvim, , ,clean, , ,113,"Factory defaults: skip vimrc, plugins, shada"
+nvim, , ,startuptime, ,@r,114,Write startup timing messages to <file>
+nvim, ,l, , ,@r,115,Execute Lua script
+nvim, ,ll, , ,@r,116,Execute Lua script in uninitialized editor
+nvim, ,es, , , ,117,"Start in Ex script mode, execute stdin as Ex commands"
+nvim, ,Es, , , ,118,"Start in Ex script mode, read stdin as text into buffer 1"
+nvim, ,s, , ,@r,119,Execute script file as normal-mode input
+nvim, , ,api-info, , ,120,Write msgpack-encoded API metadata to stdout
+nvim, , ,embed, , ,121,Use stdin/stdout as a msgpack-rpc channel
+nvim, , ,headless, , ,122,Don't start a user interface
+nvim, , ,listen, ,@r,123,Serve RPC API from this address (e.g. 127.0.0.1:6000)
+nvim, , ,server, ,@r,124,Specify RPC server to send commands to
+nvim, , ,remote, , ,125,Edit files on nvim server specified with --server
+nvim, , ,remote-expr, , ,126,Evaluate expr on nvim server specified with --server
+nvim, , ,remote-send, , ,127,Send keys to nvim server specified with --server
+nvim, , ,remote-silent, , ,128,Edit files on nvim server specified with --server

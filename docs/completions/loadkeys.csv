@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+loadkeys, ,C,console, ,@f @r,101,Console device to use
+loadkeys, ,a,ascii, , ,102,Force conversion to ASCII
+loadkeys, ,b,bkeymap, , ,103,Output binary keymap
+loadkeys, ,c,clearcompose, , ,104,Clear kernel compose table
+loadkeys, ,d,default, , ,105,Load default keymap
+loadkeys, ,m,mktable, , ,106,Output a 'defkeymap.c'
+loadkeys, ,p,parse, , ,107,Only search and parse keymap
+loadkeys, ,s,clearstrings, , ,108,Clear kernel string table
+loadkeys, ,u,unicode, , ,109,Force conversion to Unicode
+loadkeys, ,q,quiet, , ,110,Suppress all normal output
+loadkeys, ,v,verbose, , ,111,Be more verbose
+loadkeys, ,V,version, , ,112,Print version number
+loadkeys, ,h,help, , ,113,Print help

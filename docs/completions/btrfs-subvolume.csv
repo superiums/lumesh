@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-subvolume, ,p,parents, , ,101,Create any missing parent directories for each argument (like mkdir -p)
+btrfs-subvolume, ,c,commit-after, , ,102,wait for transaction commit at the end of the operation
+btrfs-subvolume, ,C,commit-each, , ,103,wait for transaction commit after deleting each subvolume
+btrfs-subvolume, , ,subvolid, , ,104,subvolume id to be removed instead of the <path> that should point to the fil…
+btrfs-subvolume, ,R,recursive, , ,105,delete subvolumes beneath each subvolume recursively
+btrfs-subvolume, ,v,verbose, , ,106,(deprecated) alias for global -v option find-new <subvolume> <last_gen> List …
+btrfs-subvolume, , ,sort, , ,107,list subvolumes in order by specified items
+btrfs-subvolume, , ,rootid, , ,108,"show details about subvolume with root ID, looked up in path"
+btrfs-subvolume, , ,uuid, , ,109,"show details about subvolume with the given UUID, looked up in path snapshot …"

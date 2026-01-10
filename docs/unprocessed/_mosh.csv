@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mosh, test (__fish_number_of_cmd_args_wo_opts) -ge 2, , , ,@f @r,103,Command to run

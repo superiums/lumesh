@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+complete, ,c,command, , ,101,Command to add completion to
+complete, ,p,path, , ,102,Path to add completion to
+complete, ,s,short-option, , ,103,POSIX-style short option to complete
+complete, ,l,long-option, , ,104,GNU-style long option to complete
+complete, ,o,old-option, , ,105,Old style long option to complete
+complete, ,f,no-files, , ,106,Don't use file completion
+complete, ,F,force-files, , ,107,Always use file completion
+complete, ,r,require-parameter, , ,108,Require parameter
+complete, ,x,exclusive, , ,109,Require parameter and don't use file completion
+complete, ,a,arguments, , ,110,Space-separated list of possible arguments
+complete, ,d,description, , ,111,Description of completion
+complete, ,e,erase, , ,112,Remove completion
+complete, ,h,help, , ,113,Display help and exit
+complete, ,C,do-complete, , ,114,Print completions for a commandline specified as a parameter
+complete, , ,escape, , ,115,Make -C escape special characters
+complete, ,n,condition, , ,116,Completion only used if command has zero exit status
+complete, ,w,wraps, , ,117,Inherit completions from specified command
+complete, ,k,keep-order, , ,118,Keep order of arguments instead of sorting alphabetically

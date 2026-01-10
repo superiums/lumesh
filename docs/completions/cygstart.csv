@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cygstart, ,a,action,open explore edit find print,@r,101,Use specified action instead of default
+cygstart, ,o,open, , ,102,Short for: --action open
+cygstart, ,x,explore, , ,103,Short for: --action explore
+cygstart, ,e,edit, , ,104,Short for: --action edit
+cygstart, ,f,find, , ,105,Short for: --action find
+cygstart, ,p,print, , ,106,Short for: --action print
+cygstart, ,d,directory, ,@r,107,Set working directory
+cygstart, , ,hide, , ,108,Hide window and activates another window
+cygstart, , ,maximize, , ,109,Maximize the specified window
+cygstart, , ,minimize, , ,110,Minimize the specified window
+cygstart, , ,restore, , ,111,Activate and display window
+cygstart, , ,show, , ,112,Activate window and display in current size and position
+cygstart, , ,showmaximized, , ,113,Activate and maximize window
+cygstart, , ,showminimized, , ,114,Activate and minimize window
+cygstart, , ,showminnoactive, , ,115,Display window minimized
+cygstart, , ,showna, , ,116,Display window in current state
+cygstart, , ,shownoactivate, , ,117,Display a window in most recent size and position
+cygstart, , ,shownormal, , ,118,Activate and display a window
+cygstart, ,w,wait, , ,119,Wait until the application terminates before exiting
+cygstart, ,v,verbose, , ,120,Show the actual ShellExecute call made
+cygstart, ,?,help, , ,121,Show this help message
+cygstart, , ,usage, , ,122,Display brief usage message
+cygstart, , ,version, , ,123,Display version information
+cygstart, , ,license, , ,124,Display licensing information
+cygstart, , ,reference, , ,125,Open MSDN reference for ShellExecute

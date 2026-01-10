@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+src, __fish_use_subcommand, , ,help,@f,101,Displays help for commands
+src, __fish_use_subcommand, , ,commit, ,103,Enters a commit for the specified files
+src, __fish_use_subcommand, , ,amend,@r,106,Amends the stored comment for a specified revision
+src, __fish_use_subcommand, , ,checkout,@r,109,Refresh working copy from history
+src, __fish_use_subcommand, , ,cat,@r,110,Send the specified revision of the files to standard output
+src, __fish_use_subcommand, , ,status,@r,111,Show status of files
+src, __fish_use_subcommand, , ,tag,@r,112,List/create/delete tags
+src, __fish_use_subcommand, , ,branch,@r,118,List/create/delete branches
+src, __fish_use_subcommand, , ,rename,@r,124,Rename tag/branch
+src, __fish_use_subcommand, , ,list,@r,125,List information about commits
+src, __fish_use_subcommand, , ,log,@r,128,List information about commits
+src, __fish_use_subcommand, , ,diff,@r,132,Print diff
+src, __fish_use_subcommand, , ,ls,@r,133,List all registered files
+src, __fish_use_subcommand, , ,visualize,@r,134,Emit DOT visualization
+src, __fish_use_subcommand, , ,move,@r,135,Rename a workfile and its history
+src, __fish_use_subcommand, , ,copy,@r,136,Copy a file and its master
+src, __fish_use_subcommand, , ,fast-export,@r,137,Export as a Git fast-import stream
+src, __fish_use_subcommand, , ,fast-import,@r,138,Parse a git-fast-import stream from stdin
+src, __fish_use_subcommand, , ,release,@r,139,Release locks on files

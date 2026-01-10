@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+block, ,h,help, , ,101,Display help and exit
+block, ,e,erase, , ,102,Remove the topmost global event block
+block, ,l,local, , ,103,Create a local (automatically erased) event block
+block, ,g,global, , ,104,Create a global (manually erased) event block

@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsactl, $commands, , ,store, ,100,Save current driver state
+alsactl, $commands, , ,restore, ,100,Load driver state
+alsactl, $commands, , ,nrestore, ,100,Restore and rescan for available soundcards
+alsactl, $commands, , ,init, ,104,Initialize all devices to a default state
+alsactl, $commands, , ,daemon, ,104,Periodically save state
+alsactl, $commands, , ,rdaemon, ,104,Restore state and then periodically save it
+alsactl, $commands, , ,kill, ,104,Notify daemon to do an operation
+alsactl, $commands, , ,monitor, ,104,Monitor events

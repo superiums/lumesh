@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+reg, , , , ,@f,101, 
+reg, , , , ,@f,102, 
+reg, , , , ,@f,103, 
+reg, , , , ,@f,104, 
+reg, , , , ,@f,105, 
+reg, , , , ,@f,106, 
+reg, , , , ,@f,107, 
+reg, , , , ,@f,108, 
+reg, , , , ,@f,109, 
+reg, , , , ,@f,110, 
+reg, , , , ,@f,111, 
+reg, , , , ,@f,112, 

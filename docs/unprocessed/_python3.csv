@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+python3, __fish_python_no_arg,c, , ,@f @r,101,Execute argument as command
+python3, __fish_python_no_arg,?,help, , ,102,Display help and exit
+python3, __fish_python_no_arg,V,version, , ,103,Display version and exit
+python3, __fish_python_no_arg,W, ,ignore default all module once error,@f @r,104,Warning control
+python3, __fish_python_no_arg, , , ,@k,105, 
+python3, __fish_python_no_arg,X, ,faulthandler showrefcount tracemalloc showalloccount importtime dev utf8 pycache_prefix=PATH:,@f @r,106,Set implementation-specific option
+python3, __fish_python_no_arg, ,check-hash-based-pycs,default always never, ,107,Set pyc hash check mode

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+which, ,a,all, , ,101,"Print all matching executables in PATH, not just the first"
+which, ,i,read-alias, , ,102,"Read aliases from stdin, reporting matching ones on stdout"
+which, , ,skip-alias, , ,103,Ignore option '--read-alias'
+which, , ,read-functions, , ,104,"Read shell function definitions from stdin, reporting matching ones on stdout"
+which, , ,skip-functions, , ,105,Ignore option '--read-functions'
+which, , ,skip-dot, , ,106,Skip dirs in PATH that start with a dot
+which, , ,skip-tilde, , ,107,Skip dirs in PATH that start with tilde and executables in \$HOME
+which, , ,show-dot, , ,108,"For matches in PATH dirs that start with a dot, print './programname'"
+which, , ,show-tilde, , ,109,Output a tilde when a dir matches the \$HOME
+which, , ,tty-only, , ,110,Stop processing options on the right if not on tty
+which, ,V,version, , ,111,Display version and exit
+which, , ,help, , ,112,Display help and exit

@@ -1,0 +1,37 @@
+cmd,conds,short,long,params,dirs,pri,desc
+create_ap, ,h,help, , ,101,Show help
+create_ap, , ,version, , ,102,Print version number
+create_ap, ,c, , ,@f @r,103,Channel number
+create_ap, ,w, ,1 2 1+2,@f @r,104,WPA version to use
+create_ap, ,m, ,nat bridge none,@f @r,105,Method for Internet sharing
+create_ap, , ,psk, , ,106,Use 64 hex digits pre-shared-key
+create_ap, , ,hidden, , ,107,Make the Access Point hidden
+create_ap, , ,mac-filter, , ,108,Enable MAC address filtering
+create_ap, , ,mac-filter-accept, , ,109,Location of MAC address filter list
+create_ap, , ,redirect-to-localhost, , ,110,Redirect every web request to localhost
+create_ap, , ,hostapd-debug, ,@f @r,111,Hostapd debug level
+create_ap, , ,isolate-clients, , ,112,Disable communication between clients
+create_ap, , ,ieee80211n, , ,113,Enable IEEE 802.11n
+create_ap, , ,ieee80211ac, , ,114,Enable IEEE 802.11ac
+create_ap, , ,ht_capab, ,@f @r,115,HT capabilities
+create_ap, , ,vht_capab, ,@f @r,116,VHT capabilities
+create_ap, , ,country, ,@f @r,117,Set two-letter country code
+create_ap, , ,freq-band,2.4 5,@f @r,118,Set frequency band
+create_ap, , ,driver, , ,119,Choose your WiFi adapter driver
+create_ap, , ,no-virt, , ,120,Do not create virtual interface
+create_ap, , ,no-haveged, , ,121,Do not run 'haveged' automatically when needed
+create_ap, , ,fix-unmanaged, , ,122,Fix NetworkManager showing interface as unmanaged
+create_ap, , ,mac, ,@f @r,123,Set MAC address
+create_ap, , ,dhcp-dns, ,@f @r,124,Set DNS returned by DHCP
+create_ap, , ,daemon, , ,125,Run create_ap in the background
+create_ap, , ,pidfile, ,@F,126,Save daemon PID to file
+create_ap, , ,logfile, ,@F,127,Save daemon messages to file
+create_ap, , ,stop, ,@f @r,128,Send stop command to an already running create_ap
+create_ap, , ,list-running, , ,129,Show already running create_ap processes
+create_ap, , ,list-clients, ,@f @r,130,List clients connected to create_ap instance with given pid
+create_ap, , ,mkconfig, ,@F,131,Store configs in file
+create_ap, , ,config, ,@F,132,Load configs from file
+create_ap, , ,no-dns, , ,133,Disable dnsmasq DNS server
+create_ap, , ,no-dnsmasq, , ,134,Disable dnsmasq server completely
+create_ap, ,g, , ,@f @r,135,IPv4 Gateway for the Access Point
+create_ap, ,e, , ,@F,136,DNS server will consider additional hosts file

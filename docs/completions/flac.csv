@@ -1,0 +1,77 @@
+cmd,conds,short,long,params,dirs,pri,desc
+flac, ,v,version, , ,101,Show the flac version number
+flac, ,h,help, , ,102,Show this screen
+flac, ,H,explain, , ,103,Show detailed explanation of usage and options
+flac, ,d,decode, , ,104,Decode (the default behavior is to encode)
+flac, ,t,test, , ,105,Same as -d except no decoded file is written
+flac, ,a,analyze, , ,106,Same as -d except an analysis file is written
+flac, ,c,stdout, , ,107,Write output to stdout
+flac, ,s,silent, , ,108,Do not write runtime encode/decode statistics
+flac, , ,totally-silent, , ,109,Do not print anything including errors
+flac, ,f,force, , ,110,Force overwriting of output files
+flac, ,o,output-name, ,@r,111,Force the output file name
+flac, , ,output-prefix, , ,112,Prepend STRING to output names
+flac, , ,delete-input-file, , ,113,Deletes after a successful encode/decode
+flac, , ,skip, , ,114,Skip the given initial samples for each input {#|mm:ss.ss}
+flac, , ,until, , ,115,Stop at the given sample for each input file {#|[+|-]mm:ss.ss}
+flac, , ,ogg, , ,116,Use Ogg as transport layer
+flac, , ,serial-number, , ,117,Serial number to use for the FLAC stream
+flac, , ,residual-text, , ,118,Include residual signal in text output
+flac, , ,residual-gnuplot, , ,119,Generate gnuplot files of residual distribution
+flac, ,F,decode-through-errors, , ,120,Continue decoding through stream errors
+flac, , ,cue, , ,121,Set the beginning and ending cuepoints to decode [#.#][-[#.#]]
+flac, ,V,verify, , ,122,Verify a correct encoding
+flac, , ,lax, , ,123,Allow encoder to generate non-Subset files
+flac, , ,sector-align, , ,124,Align multiple files on sector boundaries
+flac, , ,replay-gain, , ,125,Calculate ReplayGain & store in Vorbis comments
+flac, , ,cuesheet, , ,126,Import cuesheet and store in CUESHEET block
+flac, ,T,tag, ,@f @r,127,"Add a Vorbis comment FIELD=VALUE; may appear multiple times"
+flac, ,T,tag-from-file, ,@f @r,128,Read tags from file
+flac, ,S,seekpoint, ,@f @r,129,Add seek point(s) {#|X|#x|#s}
+flac, ,P,padding, ,@f @r,130,Write a PADDING block of length #
+flac, ,0,compression-level-0, , ,131,Synonymous with -l 0 -b 1152 -r 22
+flac, , ,fast, , ,132,Synonymous with -l 0 -b 1152 -r 22
+flac, ,1,compression-level-1, , ,133,"Synonymous with -l 0 -b 1152 -M -r 2,2"
+flac, ,2,compression-level-2, , ,134,Synonymous with -l 0 -b 1152 -m -r 3
+flac, ,3,compression-level-3, , ,135,"Synonymous with -l 6 -b 4608 -r 3,3"
+flac, ,4,compression-level-4, , ,136,"Synonymous with -l 8 -b 4608 -M -r 3,3"
+flac, ,5,compression-level-5, , ,137,"Synonymous with -l 8 -b 4608 -m -r 3,3"
+flac, ,6,compression-level-6, , ,138,Synonymous with -l 8 -b 4608 -m -r 4
+flac, ,7,compression-level-7, , ,139,Synonymous with -l 8 -b 4608 -m -e -r 6
+flac, ,8,compression-level-8, , ,140,Synonymous with -l 12 -b 4608 -m -e -r 6
+flac, , ,best, , ,141,Synonymous with -l 12 -b 4608 -m -e -r 6
+flac, ,b,blocksize, ,@f @r,142,Specify blocksize in samples
+flac, ,m,mid-side, , ,143,Try mid-side coding for each frame
+flac, ,M,adaptive-mid-side, , ,144,Adaptive mid-side coding for all frames
+flac, ,e,exhaustive-model-search, , ,145,Do exhaustive model search (expensive!)
+flac, ,l,max-lpc-order, ,@f @r,146,"Max LPC order; 0 => only fixed predictors"
+flac, ,p,qlp-coeff-precision-search, , ,147,Exhaustively search LP coeff quantization
+flac, ,q,qlp-coeff-precision, ,@f @r,148,Specify precision in bits
+flac, ,r,rice-partition-order, ,@f @r,149,"Set [min,]max residual partition order"
+flac, , ,endian=big, , ,150,Set byte order for samples
+flac, , ,endian=little, , ,151,Set byte order for samples
+flac, , ,channels, , ,152,Number of channels
+flac, , ,bps, , ,153,Number of bits per sample
+flac, , ,sample-rate, , ,154,Sample rate in Hz
+flac, , ,sign=unsigned, , ,155,Sign of samples
+flac, , ,sign=signed, , ,156,Sign of samples
+flac, , ,input-size, , ,157,Size of the raw input in bytes
+flac, , ,force-aiff-format, , ,158,Force decoding to AIFF format
+flac, , ,force-raw-format, , ,159,Treat input or output as raw samples
+flac, , ,no-adaptive-mid-side, , ,160,No adaptive mid-side coding for all frames
+flac, , ,no-decode-through-errors, , ,161,Don't continue decoding through stream errors
+flac, , ,no-delete-input-file, , ,162,Don't delete after a successful encode/decode
+flac, , ,no-exhaustive-model-search, , ,163,No exhaustive model search
+flac, , ,no-lax, , ,164,Don't allow encoder to generate non-Subset files
+flac, , ,no-mid-side, , ,165,Don't try mid-side coding for each frame
+flac, , ,no-ogg, , ,166,Don't use Ogg as transport layer
+flac, , ,no-padding, , ,167,Don't write a PADDING block of length #
+flac, , ,no-qlp-coeff-prec-search, , ,168,Don't exhaustively search LP coeff quantization
+flac, , ,no-replay-gain, , ,169,Don't calculate ReplayGain & store in Vorbis comments
+flac, , ,no-residual-gnuplot, , ,170,Don't generate gnuplot files of residual distribution
+flac, , ,no-residual-text, , ,171,Don't include residual signal in text output
+flac, , ,no-sector-align, , ,172,Don't align multiple files on sector boundaries
+flac, , ,no-seektable, , ,173, 
+flac, , ,no-silent, , ,174,Write runtime encode/decode statistics
+flac, , ,no-force, , ,175,Don't force overwriting of output files
+flac, , ,no-verify, , ,176,Don't verify a correct encoding

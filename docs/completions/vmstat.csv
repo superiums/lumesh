@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vmstat, ,a,active, , ,101,"Display active and  inactive memory, given a 2. 5. 41 kernel or better"
+vmstat, ,f,forks, , ,102,The  -f switch displays the number of forks since boot
+vmstat, ,m,slabs, , ,103,Displays slabinfo
+vmstat, ,n,one-header, , ,104,Display the header only once rather than periodically
+vmstat, ,s,stats, , ,105,Displays a table of various event counters and memory statistics
+vmstat, ,d,disk, , ,106,Report disk statistics (2. 5. 70 or above required)
+vmstat, ,D,disk-sum, , ,107,Report some summary statistics about disk activity
+vmstat, ,p,partition, , ,108,Detailed statistics about partition (2. 5. 70 or above required)
+vmstat, ,S,unit, , ,109,"Switches outputs between 1000 . RI ( k ), 1024 . RI ( K ), 1000000 "
+vmstat, ,t,timestamp, , ,110,Append timestamp to each line
+vmstat, ,w,wide, , ,111,"Wide output mode (useful for systems with higher amount of memory, where the …"
+vmstat, ,y,no-first, , ,112,Omits first report with statistics since system boot
+vmstat, ,V,version, , ,113,Display version information and exit
+vmstat, ,h,help, , ,114,Display help and exit.  FIELD DESCRIPTION FOR VM MODE Procs

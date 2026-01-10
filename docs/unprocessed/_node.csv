@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+node, __fish_not_contain_opt -s p -s i -s e eval print interactive,v,version, ,@f @r,101,Print node's version
+node, __fish_not_contain_opt -s v -s p -s i version print interactive,e,eval, ,@r,102,Evaluate script
+node, __fish_not_contain_opt -s v -s e -s i version eval interactive,p,print, ,@r,103,Print result of --eval
+node, __fish_not_contain_opt -s v -s p -s e version print eval,i,interactive, , ,104,Always enter the REPL even if stdin does not appear to be a terminal

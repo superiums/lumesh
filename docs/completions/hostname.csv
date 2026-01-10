@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hostname, ,a,aliases, , ,101,alias names
+hostname, ,d,domain, , ,102,DNS domain name
+hostname, ,f,long, , ,103,DNS host name or FQDN
+hostname, ,F,file, , ,104,set host name or NIS domain name from FILE
+hostname, ,i,ip-addresses, , ,105,addresses for the host name
+hostname, ,s,short, , ,106,short host name
+hostname, ,y,nis, , ,107,NIS/YP domain name
+hostname, ,?,help, , ,108,give this help list
+hostname, , ,usage, , ,109,give a short usage message
+hostname, ,V,version, , ,110,print program version

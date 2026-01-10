@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+flock, ,c,command, , ,101, 
+flock, ,E,conflict-exit-code, , ,102, 
+flock, ,F,no-fork, , ,103, 
+flock, ,x,exclusive, , ,104, 
+flock, ,n,nonblock, , ,105, 
+flock, ,o,close, , ,106, 
+flock, ,s,shared, , ,107, 
+flock, ,u,unlock, , ,108, 
+flock, ,w,timeout, , ,109, 
+flock, , ,verbose, , ,110, 
+flock, ,h,help, , ,111, 
+flock, ,V,version, , ,112, 

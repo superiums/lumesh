@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+usbhid-dump, ,h,help, , ,101,Output a help message and exit
+usbhid-dump, ,v,version, , ,102,Output version information and exit
+usbhid-dump, ,a,address, , ,103,"Limit interfaces by bus number and device address.  Both 1-255, decimal"
+usbhid-dump, ,m,model, , ,104,"Limit interfaces by device vendor and product IDs.  Both 1-FFFF, hexadecimal"
+usbhid-dump, ,i,interface, , ,105,"Limit interfaces by number (0-254), decimal.  255 matches any interface"
+usbhid-dump, ,e,entity, , ,106,"The entity to dump: either 'descriptor', 'stream' or 'all'"
+usbhid-dump, ,t,stream-timeout, , ,107,"Stream interrupt transfer timeout, ms.  Zero means infinity"
+usbhid-dump, ,p,stream-paused, , ,108,Start with the stream dump output paused
+usbhid-dump, ,f,stream-feedback, , ,109,Enable stream dumping feedback: print a dot to stderr for every transfer dump…

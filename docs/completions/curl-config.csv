@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+curl-config, , ,ca, , ,101,Displays the built-in path to the CA cert bundle this libcurl uses
+curl-config, , ,cc, , ,102,Displays the compiler used to build libcurl
+curl-config, , ,cflags, , ,103,Set of compiler options (CFLAGS) to use when compiling files that use libcurl
+curl-config, , ,checkfor, , ,104,"Specify the oldest possible libcurl version string you want, and this script …"
+curl-config, , ,configure, , ,105,Displays the arguments given to configure when building curl
+curl-config, , ,feature, , ,106,Lists what particular main features the installed libcurl was built with
+curl-config, , ,help, , ,107,Displays the available options
+curl-config, , ,libs, , ,108,Shows the complete set of libs and other linker options you need in order to …
+curl-config, , ,prefix, , ,109,This is the prefix used when libcurl was installed
+curl-config, , ,protocols, , ,110,Lists what particular protocols the installed libcurl was built to support
+curl-config, , ,ssl-backends, , ,111,Lists the SSL backends that were enabled when libcurl was built
+curl-config, , ,static-libs, , ,112,Shows the complete set of libs and other linker options you need in order to …
+curl-config, , ,version, , ,113,Outputs version information about the installed libcurl
+curl-config, , ,vernum, , ,114,"Outputs version information about the installed libcurl, in numerical mode"

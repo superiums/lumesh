@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pidof, ,o, ,%PPID (__fish_complete_pids), ,101,Exclude processes with PID

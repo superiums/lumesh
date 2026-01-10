@@ -1,0 +1,52 @@
+cmd,conds,short,long,params,dirs,pri,desc
+equery, ,h,help, , ,101,Displays a help message
+equery, ,q,quiet, , ,102,Minimal output
+equery, ,C,no-color, , ,103,Turns off colors
+equery, ,N,no-pipe, , ,104,Turns off pipe detection
+equery, ,V,version, , ,105,Display version information
+equery, b belongs,f,full-regex, , ,120,Query is a regex
+equery, b belongs,e,early-out, , ,121,Stop after first match
+equery, b belongs,n,name-only, , ,122,Omit version
+equery, c changes,l,latest, , ,123,Display only latest ChangeLog entry
+equery, c changes,f,full, , ,124,Display full ChangeLog
+equery, c changes, ,limit, , ,125,Limit number of entries displayed (with --full)
+equery, k check,f,full-regex, , ,126,Query is a regex
+equery, k check,o,only-failures, , ,127,Only display pkgs that do not pass
+equery, d depends,a,all-packages, , ,128,Include dependencies that are not installed (slow)
+equery, d depends,D,indirect, , ,129,Search both direct and indirect dependencies
+equery, d depends, ,depth, , ,130,Limit indirect dependency tree to specified depth
+equery, g depgraph,A,no-atom, , ,131,Don't show dependency atom
+equery, g depgraph,M,no-mask, , ,132,Don't show masking status
+equery, g depgraph,U,no-useflags, , ,133,Don't show USE flags
+equery, g depgraph,l,linear, , ,134,Don't indent dependencies
+equery, g depgraph, ,depth, , ,135,Limit dependency graph to specified depth
+equery, f files,m,md5sum, , ,136,Include MD5 sum in output
+equery, f files,s,timestamp, , ,137,Include timestamp in output
+equery, f files,t,type, , ,138,Include file type in output
+equery, f files, ,tree, , ,139,Display results in a tree
+equery, f files,f,filter, , ,140,Filter output by file type
+equery, a has h hasuse,I,exclude-installed, , ,141,Exclude installed pkgs from search path
+equery, a has h hasuse,o,overlay-tree, , ,142,Include overlays in search path
+equery, a has h hasuse,p,portage-tree, , ,143,Include entire portage tree in search path
+equery, l list,d,duplicates, , ,144,List only installed duplicate pkgs
+equery, l list,b,binpkgs-missing, , ,145,List only installed pkgs without a corresponding binary pkg
+equery, l list,f,full-regex, , ,146,Query is a regex
+equery, l list,m,mask-reason, , ,147,Include reason for pkg mask
+equery, l list,I,exclude-installed, , ,148,Exclude installed pkgs from output
+equery, l list,o,overlay-tree, , ,149,List pkgs in overlays
+equery, l list,p,portage-tree, , ,150,List pkgs in the main portage tree
+equery, m meta,d,description, , ,151,Show extended pkg description
+equery, m meta,H,herd, , ,152,Show pkg's herd(s)
+equery, m meta,k,keywords, , ,153,Show keywords for all matching pkg versions
+equery, m meta,l,license, , ,154,Show licenses for the best matching version
+equery, m meta,m,maintainer, , ,155,Show the maintainer(s) for the pkg
+equery, m meta,S,stablreq, , ,156,Show STABLEREQ arches (cc's) for all matching pkg versions
+equery, m meta,u,useflags, , ,157,Show per-pkg USE flag descriptions
+equery, m meta,U,upstream, , ,158,Show pkg's upstream information
+equery, m meta,x,xml, , ,159,Show the plain metadata.xml file
+equery, s size,b,bytes, , ,160,Report size in bytes
+equery, s size,f,full-regex, , ,161,Query is a regex
+equery, u uses,a,all, , ,162,Include all pkg versions
+equery, u uses,i,ignore-l10n, , ,163,Don't show l10n USE flags
+equery, w which,m,include-masked, , ,164,Return highest version ebuild available
+equery, w which,e,ebuild, , ,165,Print the ebuild

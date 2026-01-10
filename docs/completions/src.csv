@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+src, help, , ,intro revisions commands commit amend checkout cat status log list diff fast-export fast-import ignores,@f,102, 
+src, commit,m, , ,@f @r,104,Enter commit message as a string
+src, commit,f, , ,@r,105,Enter file containing commit message
+src, amend,m, , ,@f @r,107,Enter commit message as a string
+src, amend,f, , ,@r,108,Enter file containing commit message
+src, tag, , ,list, ,113,List tags
+src, tag, , ,create,@r,114,Create tag
+src, tag,c, , ,@r,115,Create tag
+src, tag, , ,delete,@r,116,Delete tag
+src, tag,d, , ,@r,117,Delete tag
+src, branch, , ,list, ,119,List branches
+src, branch, , ,create,@r,120,Create branch
+src, branch,c, , ,@r,121,Create branch
+src, branch, , ,delete,@r,122,Delete branch
+src, branch,d, , ,@r,123,Delete branch
+src, list,l, , ,@f @r,126,Limit per-file commit count
+src, list,f, , ,@f @r,127,Specify format string
+src, log,v, , ,@f @r,129,Be more verbose
+src, log,l, , ,@f @r,130,Limit per-file log entries
+src, log,u,patch, , ,131,Print unified-format diff
+src, ,S, , ,@r,140,Set repository directory

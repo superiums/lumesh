@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vercmp, ,h,help, , ,101,Display summary of the available return codes

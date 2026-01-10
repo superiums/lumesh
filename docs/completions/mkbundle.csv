@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkbundle, , ,config, ,@r,101,Bundle DLLMAP Mono config file
+mkbundle, , ,config-dir, ,@r,102,Use MONO_CFG_DIR environment variable as config dir
+mkbundle, , ,deps, , ,103, 
+mkbundle, , ,env, ,@f @r,104,Specify value for the environment variable
+mkbundle, , ,fetch-target, ,@f @r,105, 
+mkbundle, , ,i18n, ,@f @r,106,Use encoding tables to ship with the executable
+mkbundle, ,L, , ,@r,107,Use path for look for assemblies
+mkbundle, , ,library, ,@r,108,Embed the dynamic library file
+mkbundle, , ,lists-targets, , ,109,Show all of the available remote cross compilation targets
+mkbundle, , ,local-targets, , ,110,Show all of the available local cross compilation targets
+mkbundle, , ,cil-strip, ,@r,111,Use a CIL stripper that mkbundle will use if able to
+mkbundle, , ,in-tree, ,@r,112, 
+mkbundle, , ,managed-linker, ,@r,113, 
+mkbundle, , ,machine-config, ,@r,114, 
+mkbundle, , ,no-config, , ,115, 
+mkbundle, , ,nodeps, , ,116, 
+mkbundle, ,o, , ,@r,117,Use output file name
+mkbundle, , ,options, ,@r,118,Specify configuration options to the Mono runtime
+mkbundle, , ,target-server, ,@r,119,Use a different server to provide cross-compiled runtimes
+mkbundle, , ,mono-api-struct-path, ,@r,120, 
+mkbundle, , , , ,@r,121, 
+mkbundle, , ,keeptemp, , ,122, 
+mkbundle, , ,nomain, , ,123,Generate the host stub without a main() function
+mkbundle, , ,static, , ,124,Statically link to mono and glib
+mkbundle, , ,aot-runtime, ,@r,125, 
+mkbundle, , ,aot-dedup, , ,126, 
+mkbundle, , ,aot-mode, ,@f @r,127, 

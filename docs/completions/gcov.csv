@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gcov, , ,all-blocks, , ,101,X Item '--all-blocks' 
+gcov, , ,branch-probabilities, , ,102,X Item '--branch-probabilities' 
+gcov, , ,branch-counts, , ,103,X Item '--branch-counts' 
+gcov, , ,conditions, , ,104,X Item '--conditions' 
+gcov, , ,display-progress, , ,105,X Item '--display-progress' . PD Display the progress on the standard output
+gcov, , ,function-summaries, , ,106,X Item '--function-summaries' 
+gcov, , ,help, , ,107,X Item '--help' 
+gcov, , ,json-format, , ,108,X Item '--json-format' 
+gcov, , ,human-readable, , ,109,X Item '--human-readable' . PD Write counts in human readable format (like 24
+gcov, , ,use-colors, , ,110,X Item '--use-colors' 
+gcov, , ,long-file-names, , ,111,X Item '--long-file-names' 
+gcov, , ,demangled-names, , ,112,X Item '--demangled-names' . PD Display demangled function names in output
+gcov, , ,no-output, , ,113,X Item '--no-output' . PD Do not create the gcov output file
+gcov, , ,object-directory, , ,114,X Item '--object-directory directory'
+gcov, , ,object-file, , ,115,X Item '--object-file file' 
+gcov, , ,preserve-paths, , ,116,X Item '--preserve-paths' 
+gcov, , ,use-hotness-colors, , ,117,X Item '--use-hotness-colors' 
+gcov, , ,relative-only, , ,118,X Item '--relative-only' 
+gcov, , ,source-prefix, , ,119,X Item '--source-prefix directory' 
+gcov, , ,stdout, , ,120,X Item '--stdout' . PD Output to standard output instead of output files
+gcov, , ,unconditional-branches, , ,121,X Item '--unconditional-branches' 
+gcov, , ,version, , ,122,X Item '--version' 
+gcov, , ,verbose, , ,123,X Item '--verbose' 
+gcov, , ,hash-filenames, , ,124,"When using --preserve-paths, gcov uses the full pathname of the source files …"
+gcov, , ,coverage, , ,125,"other GCC options; but if you want to prove that every single line in your pr…"
+gcov, , ,dynamic-list-data, , ,126, 

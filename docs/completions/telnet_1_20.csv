@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+telnet, ,4,ipv4, , ,101,use only IPv4
+telnet, ,6,ipv6, , ,102,use only IPv6
+telnet, ,8,binary, , ,103,use an 8-bit data transmission
+telnet, ,a,login, , ,104,attempt automatic login
+telnet, ,b,bind, , ,105,bind to specific local ADDRESS
+telnet, ,c,no-rc, , ,106,do not read the user's . telnetrc file
+telnet, ,d,debug, , ,107,turn on debugging
+telnet, ,e,escape, , ,108,use CHAR as an escape character
+telnet, ,E,no-escape, , ,109,use no escape character
+telnet, ,K,no-login, , ,110,do not automatically login to the remote system
+telnet, ,l,user, , ,111,attempt automatic login as USER
+telnet, ,L,binary-output, , ,112,use an 8-bit data transmission for output only
+telnet, ,n,trace, , ,113,record trace information into FILE
+telnet, ,r,rlogin, , ,114,use a user-interface similar to rlogin
+telnet, ,?,help, , ,115,give this help list
+telnet, , ,usage, , ,116,give a short usage message
+telnet, ,V,version, , ,117,print program version

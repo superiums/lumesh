@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, , ,compression,$modes, ,101,Set the repodata compression format (default: zstd)
+$progname, , ,signedby, , ,102,Name and email of person signing the repository
+$progname, , ,privkey, , ,103,Path to the private RSA key to sign the repository. Defaults to ~/.ssh/id_rsa
+$progname, ,a, , ,@k,104,Register the binary package into the local repository
+$progname, ,c, , ,@D,105,Remove obsolete entries found in the local repository
+$progname, ,r, , ,@D,106,Remove obsolete and currently unregistered packages from the local repository
+$progname, ,s, , ,@D,107,Initialize a signed repository with your specified RSA key
+$progname, ,S, , ,@k,108,Sign a binary package archive with your specified RSA key

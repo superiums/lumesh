@@ -1,0 +1,44 @@
+cmd,conds,short,long,params,dirs,pri,desc
+adb, install, ,algo, , ,137,Algorithm name
+adb, install, ,key, , ,138,Hex-encoded key
+adb, install, ,iv, , ,139,Hex-encoded iv
+adb, uninstall, , , ,@f,140, 
+adb, disconnect, , , ,@f @r,141,Device to disconnect
+adb, backup, , , ,@f,142,Package(s) to backup
+adb, reboot, , ,bootloader recovery fastboot,@f @r,143, 
+adb, forward, ,list, , ,144,List all forward socket connections
+adb, forward, ,no-rebind, , ,145,Fails the forward if local is already forwarded
+adb, forward, ,remove, , ,146,Remove a specific forward socket connection
+adb, forward, ,remove-all, , ,147,Remove all forward socket connections
+adb, sideload, , , ,@k,148, 
+adb, reconnect, , ,device,@f @r,149,Kick current connection from device side and make it reconnect.
+adb, exec-out, , , ,@F @f,150,File on device
+adb, shell, , , ,@F @f,151,File on device
+adb, pull, , , ,@F,152,File on device
+adb, push, , , ,@F,153,File on device
+adb, push, , , ,@F,154, 
+adb, logcat,L,last, , ,155,Dump logs from prior to last reboot from pstore
+adb, logcat,b,buffer, , ,156, Request alternate ring buffer(s)
+adb, logcat,c,clear, , ,157,Clear (flush) the entire log and exit
+adb, logcat, ,pid, , ,158,Only print the logs for the given PID
+adb, logcat, ,wrap, , ,159,Sleep for 2 hours or when buffer about to wrap whichever comes first
+adb, logcat,v,format, brief help long process raw tag thread threadtime time color descriptive epoch monotonic printable uid usec UTC year zone, ,160,Sets log print format verb and adverbs
+adb, logcat,D,dividers, , ,161,Print dividers between each log buffer
+adb, logcat,B,binary, , ,162,Output the log in binary
+adb, logcat,f,file, , ,163,Log to file instead of stdout
+adb, logcat,r,rotate-kbytes, , ,164,"Rotate log every kbytes, requires -f"
+adb, logcat,n,rotate-count, , ,165,"Sets number of rotated logs to keep, default 4"
+adb, logcat, ,id, , ,166,"If the given signature for logging changes, clear the associated files"
+adb, logcat,g,buffer-size, , ,167,Get the size of the ring buffers within logd
+adb, logcat,G,buffer-size, , ,168,Set size of a ring buffer in logd
+adb, logcat,S,statistics, , ,169,Output statistics
+adb, logcat,p,prune, , ,170,Print prune rules
+adb, logcat,P,prune, , ,171,Set prune rules
+adb, logcat,e,regex, , ,172,Only print lines where the log message matches
+adb, logcat,m,max-count, , ,173,Quit after print <count> lines
+adb, logcat, ,print, , ,174,"Print all message even if they do not matches, requires --regex and --max-count"
+adb, logcat, ,uid, , ,175,Only display log messages from UIDs present in the comma separate list <uids>
+adb, exec-out, , , ,@f,176,Command on device
+adb, shell, , , ,@f,177,Command on device
+adb, setprop, , , ,@f,178,Property to set
+adb, getprop, , , ,@f,179,Property to get

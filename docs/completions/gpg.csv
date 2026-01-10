@@ -1,0 +1,364 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpg, , ,default-key, , ,101,Use name as the default key to sign with
+gpg, , ,default-recipient, , ,102,Use name as default recipient if option --recipient is not used and don't ask…
+gpg, , ,default-recipient-self, , ,103,Use the default key as default recipient if option --recipient is not used an…
+gpg, , ,no-default-recipient, , ,104,Reset --default-recipient and --default-recipient-self
+gpg, ,v,verbose, , ,105,Give more information during processing
+gpg, , ,no-verbose, , ,106,Reset verbose level to 0.   Should not be used in an option file
+gpg, ,q,quiet, , ,107,Try to be as quiet as possible.   Should not be used in an option file
+gpg, , ,batch, , ,108,TQ   --no-batch Use batch mode
+gpg, , ,no-tty, , ,109,Make sure that the TTY (terminal) is never used for any output
+gpg, , ,yes, , ,110,Assume 'yes' on most questions.   Should not be used in an option file
+gpg, , ,no, , ,111,Assume 'no' on most questions.   Should not be used in an option file
+gpg, , ,proc-all-sigs, , ,112,This option overrides the behaviour of the --batch option to stop signature v…
+gpg, , ,list-filter, , ,113,A list filter can be used to output only certain keys during key listing comm…
+gpg, , ,list-options, , ,114,This is a space or comma delimited string that gives options used when listin…
+gpg, , ,verify-options, , ,115,This is a space or comma delimited string that gives options used when verify…
+gpg, , ,enable-large-rsa, , ,116,"TQ   --disable-large-rsa With --generate-key and --batch, enable the creation…"
+gpg, , ,enable-dsa2, , ,117,TQ   --disable-dsa2 Enable hash truncation for all DSA keys even for old DSA …
+gpg, , ,photo-viewer, , ,118,This is the command line that should be run to view a photo ID
+gpg, , ,exec-path, , ,119,Sets a list of directories to search for photo viewers If not provided photo …
+gpg, , ,keyring, , ,120,Add file to the current list of keyrings
+gpg, , ,primary-keyring, , ,121,This is a varian of --keyring and designates file as the primary public keyri…
+gpg, , ,secret-keyring, , ,122,This is an obsolete option and ignored
+gpg, , ,trustdb-name, , ,123,Use file instead of the default trustdb
+gpg, , ,homedir, , ,124,Set the name of the home directory to dir
+gpg, , ,display-charset, , ,125,Set the name of the native character set
+gpg, , ,utf8-strings, , ,126,TQ   --no-utf8-strings Assume that command line arguments are given as UTF-8 …
+gpg, , ,options, , ,127,Read options from file and do not try to read them from the default options f…
+gpg, , ,no-options, , ,128,Shortcut for --options /dev/null
+gpg, , ,bzip2-decompress-lowmem, , ,129,Use a different decompression method for BZIP2 compressed files
+gpg, , ,mangle-dos-filenames, , ,130,TQ   --no-mangle-dos-filenames Older version of Windows cannot handle filenam…
+gpg, , ,ask-cert-level, , ,131,"TQ   --no-ask-cert-level When making a key signature, prompt for a certificat…"
+gpg, , ,default-cert-level, , ,132,The default to use for the check level when signing a key
+gpg, , ,min-cert-level, , ,133,"When building the trust database, treat any signatures with a certification l…"
+gpg, , ,trusted-key, , ,134,Assume that the specified key (which should be given as fingerprint) is as tr…
+gpg, , ,add-desig-revoker, , ,135,Add the key specified by fingerprint as a designated revoker to newly created…
+gpg, , ,default-new-key-adsk, , ,136,Add the subkey specified by fingerprint as an Additional Decryption Subkey (A…
+gpg, , ,trust-model, , ,137,Set what trust model GnuPG should follow.  The models are:  . RS
+gpg, , ,always-trust, , ,138,Identical to --trust-model always
+gpg, , ,assert-signer, , ,139,This option checks whether at least one valid signature on a file has been ma…
+gpg, , ,assert-pubkey-algo, , ,140,During data signature verification this options checks whether the used publi…
+gpg, , ,auto-key-locate, , ,141,TQ   --no-auto-key-locate GnuPG can automatically locate and retrieve keys as…
+gpg, , ,auto-key-import, , ,142,TQ   --no-auto-key-import This is an offline mechanism to get a missing key f…
+gpg, , ,auto-key-retrieve, , ,143,TQ   --no-auto-key-retrieve These options enable or disable the automatic ret…
+gpg, , ,keyid-format, , ,144,Select how to display key IDs
+gpg, , ,keyserver, , ,145,This option is deprecated - please use the --keyserver in 'dirmngr
+gpg, , ,keyserver-options, , ,146,This is a space or comma delimited string that gives options for the keyserver
+gpg, , ,completes-needed, , ,147,Number of completely trusted users to introduce a new key signer (defaults to…
+gpg, , ,marginals-needed, , ,148,Number of marginally trusted users to introduce a new key signer (defaults to…
+gpg, , ,tofu-default-policy, , ,149,The default TOFU policy (defaults to auto)
+gpg, , ,max-cert-depth, , ,150,Maximum depth of a certification chain (default is 5)
+gpg, , ,no-sig-cache, , ,151,Do not cache the verification status of key signatures
+gpg, , ,auto-check-trustdb, , ,152,TQ   --no-auto-check-trustdb If GnuPG feels that its information about the We…
+gpg, , ,use-agent, , ,153,TQ   --no-use-agent This is dummy option.  gpg always requires the agent
+gpg, , ,gpg-agent-info, , ,154,This is dummy option.  It has no effect when used with gpg
+gpg, , ,agent-program, , ,155,Specify an agent program to be used for secret key operations
+gpg, , ,dirmngr-program, , ,156,Specify a dirmngr program to be used for keyserver access
+gpg, , ,disable-dirmngr, , ,157,Entirely disable the use of the Dirmngr
+gpg, , ,no-autostart, , ,158,Do not start the gpg-agent or the dirmngr if it has not yet been started and …
+gpg, , ,lock-once, , ,159,Lock the databases the first time a lock is requested and do not release the …
+gpg, , ,lock-multiple, , ,160,Release the locks every time a lock is no longer needed
+gpg, , ,lock-never, , ,161,Disable locking entirely
+gpg, , ,exit-on-status-write-error, , ,162,This option will cause write errors on the status FD to immediately terminate…
+gpg, , ,limit-card-insert-tries, , ,163,With n greater than 0 the number of prompts asking to insert a smartcard gets…
+gpg, , ,no-random-seed-file, , ,164,GnuPG uses a file to store its internal random pool over invocations
+gpg, , ,no-greeting, , ,165,Suppress the initial copyright message
+gpg, , ,no-secmem-warning, , ,166,Suppress the warning about 'using insecure memory'
+gpg, , ,no-permission-warning, , ,167,Suppress the warning about unsafe file and home directory (--homedir) permiss…
+gpg, , ,require-secmem, , ,168,TQ   --no-require-secmem Refuse to run if GnuPG cannot get secure memory
+gpg, , ,require-cross-certification, , ,169,TQ   --no-require-cross-certification When verifying a signature made from a …
+gpg, , ,expert, , ,170,TQ   --no-expert Allow the user to do certain nonsensical or 'silly' things l…
+gpg, , ,recipient, , ,171,TQ   -r Encrypt for user id name
+gpg, , ,hidden-recipient, , ,172,"TQ   -R Encrypt for user ID name, but hide the key ID of this user's key"
+gpg, , ,recipient-file, , ,173,TQ   -f This option is similar to --recipient except that it encrypts to a ke…
+gpg, , ,hidden-recipient-file, , ,174,TQ   -F This option is similar to --hidden-recipient except that it encrypts …
+gpg, , ,encrypt-to, , ,175,Same as --recipient but this one is intended for use in the options file and …
+gpg, , ,hidden-encrypt-to, , ,176,Same as --hidden-recipient but this one is intended for use in the options fi…
+gpg, , ,no-encrypt-to, , ,177,Disable the use of all --encrypt-to and --hidden-encrypt-to keys
+gpg, , ,group, , ,178,"Sets up a named group, which is similar to aliases in email programs"
+gpg, , ,ungroup, , ,179,Remove a given entry from the --group list
+gpg, , ,no-groups, , ,180,Remove all entries from the --group list
+gpg, , ,local-user, , ,181,TQ   -u Use name as the key to sign with
+gpg, , ,sender, , ,182,This option has two purposes
+gpg, , ,try-secret-key, , ,183,For hidden recipients GPG needs to know the keys to use for trial decryption
+gpg, , ,try-all-secrets, , ,184,Don't look at the key ID as stored in the message but try all secret keys in …
+gpg, , ,skip-hidden-recipients, , ,185,TQ   --no-skip-hidden-recipients During decryption skip all anonymous recipie…
+gpg, , ,armor, , ,186,TQ   -a Create ASCII armored output
+gpg, , ,no-armor, , ,187,Assume the input data is not in ASCII armored format
+gpg, , ,output, , ,188,TQ   -o file Write output to file.   To write to stdout use - as the filename
+gpg, , ,max-output, , ,189,This option sets a limit on the number of bytes that will be generated when p…
+gpg, , ,chunk-size, , ,190,The AEAD encryption mode encrypts the data in chunks so that a receiving side…
+gpg, , ,input-size-hint, , ,191,This option can be used to tell GPG the size of the input data in bytes
+gpg, , ,key-origin, , ,192,gpg can track the origin of a key.  Certain origins are implicitly known (e
+gpg, , ,import-options, , ,193,This is a space or comma delimited string that gives options for importing ke…
+gpg, , ,import-filter, , ,194,TQ   --export-filter {name=expr} These options define an import/export filter…
+gpg, , ,export-options, , ,195,This is a space or comma delimited string that gives options for exporting ke…
+gpg, , ,with-colons, , ,196,Print key listings delimited by colons
+gpg, , ,fixed-list-mode, , ,197,Do not merge primary user ID and primary key in --with-colon listing mode and…
+gpg, , ,legacy-list-mode, , ,198,Revert to the pre-2. 1 public key list mode
+gpg, , ,with-fingerprint, , ,199,Same as the command --fingerprint but changes only the format of the output a…
+gpg, , ,with-subkey-fingerprint, , ,200,"If a fingerprint is printed for the primary key, this option forces printing …"
+gpg, , ,with-v5-fingerprint, , ,201,In a colon mode listing emit 'fp2' lines for version 4 OpenPGP keys having a …
+gpg, , ,with-icao-spelling, , ,202,Print the ICAO spelling of the fingerprint in addition to the hex digits
+gpg, , ,with-keygrip, , ,203,Include the keygrip in the key listings
+gpg, , ,with-key-origin, , ,204,Include the locally held information on the origin and last update of a key i…
+gpg, , ,with-wkd-hash, , ,205,Print a Web Key Directory identifier along with each user ID in key listings
+gpg, , ,with-secret, , ,206,Include info about the presence of a secret key in public key listings done w…
+gpg, , ,force-ocb, , ,207,TQ   --force-aead Force the use of AEAD encryption over MDC encryption
+gpg, , ,force-mdc, , ,208,TQ   --disable-mdc These options are obsolete and have no effect since GnuPG 2
+gpg, , ,disable-signer-uid, , ,209,By default the user ID of the signing key is embedded in the data signature
+gpg, , ,include-key-block, , ,210,TQ   --no-include-key-block This option is used to embed the actual signing k…
+gpg, , ,personal-cipher-preferences, , ,211,Set the list of personal cipher preferences to string
+gpg, , ,personal-digest-preferences, , ,212,Set the list of personal digest preferences to string
+gpg, , ,personal-compress-preferences, , ,213,Set the list of personal compression preferences to string
+gpg, , ,s2k-cipher-algo, , ,214,Use name as the cipher algorithm for symmetric encryption with a passphrase i…
+gpg, , ,s2k-digest-algo, , ,215,Use name as the digest algorithm used to mangle the passphrases for symmetric…
+gpg, , ,s2k-mode, , ,216,Selects how passphrases for symmetric encryption are mangled
+gpg, , ,s2k-count, , ,217,Specify how many times the passphrases mangling for symmetric encryption is r…
+gpg, , ,gnupg, , ,218,Use standard GnuPG behavior
+gpg, , ,openpgp, , ,219,"Reset all packet, cipher and digest options to strict OpenPGP behavior"
+gpg, , ,rfc4880, , ,220,"Reset all packet, cipher and digest options to strict RFC-4880 behavior"
+gpg, , ,rfc4880bis, , ,221,"Reset all packet, cipher and digest options to strict according to the propos…"
+gpg, , ,rfc2440, , ,222,"Reset all packet, cipher and digest options to strict RFC-2440 behavior"
+gpg, , ,pgp6, , ,223,"This option is obsolete; it is handled as an alias for --pgp7"
+gpg, , ,pgp7, , ,224,Set up all options to be as PGP 7 compliant as possible
+gpg, , ,pgp8, , ,225,Set up all options to be as PGP 8 compliant as possible
+gpg, , ,compliance, , ,226,This option can be used instead of one of the options above
+gpg, , ,min-rsa-length, , ,227,This option adjusts the compliance mode 'de-vs' for stricter key size require…
+gpg, , ,require-compliance, , ,228,To check that data has been encrypted according to the rules of the current c…
+gpg, , ,list-only, , ,229,Changes the behaviour of some commands
+gpg, , ,compatibility-flags, , ,230,Set compatibility flags to work around problems due to non-compliant keys or …
+gpg, , ,debug-level, , ,231,Select the debug level for investigating problems
+gpg, , ,debug, , ,232,Set debug flags.   All flags are or-ed and flags may be given in C syntax (e
+gpg, , ,debug-all, , ,233,Set all useful debugging flags
+gpg, , ,debug-iolbf, , ,234,Set stdout into line buffered mode
+gpg, , ,debug-set-iobuf-size, , ,235,Change the buffer size of the IOBUFs to n kilobyte
+gpg, , ,debug-allow-large-chunks, , ,236,To facilitate software tests and experiments this option allows one to specif…
+gpg, , ,debug-ignore-expiration, , ,237,This option tries to override certain key expiration dates
+gpg, , ,faked-system-time, , ,238,"This option is only useful for testing; it sets the system time back or forth…"
+gpg, , ,full-timestrings, , ,239,Change the format of printed creation and expiration times from just the date…
+gpg, , ,enable-progress-filter, , ,240,Enable certain PROGRESS status outputs
+gpg, , ,status-fd, , ,241,Write special status strings to the file descriptor n
+gpg, , ,status-file, , ,242,"Same as --status-fd, except the status data is written to file file"
+gpg, , ,logger-fd, , ,243,Write log output to file descriptor n and not to STDERR
+gpg, , ,log-file, , ,244,"TQ   --logger-file file Same as --logger-fd, except the logger data is writte…"
+gpg, , ,log-time, , ,245,Prefix all log output with a timestamp even if no log file is used
+gpg, , ,attribute-fd, , ,246,Write attribute subpackets to the file descriptor n
+gpg, , ,attribute-file, , ,247,"Same as --attribute-fd, except the attribute data is written to file file"
+gpg, , ,comment, , ,248,TQ   --no-comments Use string as a comment string in cleartext signatures and…
+gpg, , ,emit-version, , ,249,TQ   --no-emit-version Force inclusion of the version string in ASCII armored…
+gpg, , ,sig-notation, , ,250,TQ   --cert-notation {name=value} 
+gpg, , ,known-notation, , ,251,Adds name to a list of known critical signature notations
+gpg, , ,sig-policy-url, , ,252,TQ   --cert-policy-url string 
+gpg, , ,sig-keyserver-url, , ,253,Use string as a preferred keyserver URL for data signatures
+gpg, , ,set-filename, , ,254,Use string as the filename which is stored inside messages
+gpg, , ,for-your-eyes-only, , ,255,TQ   --no-for-your-eyes-only Set the `for your eyes only' flag in the message
+gpg, , ,use-embedded-filename, , ,256,TQ   --no-use-embedded-filename Try to create a file with a name as embedded …
+gpg, , ,cipher-algo, , ,257,Use name as cipher algorithm
+gpg, , ,digest-algo, , ,258,Use name as the message digest algorithm
+gpg, , ,compress-algo, , ,259,Use compression algorithm name.  'zlib' is RFC-1950 ZLIB compression
+gpg, , ,cert-digest-algo, , ,260,Use name as the message digest algorithm used when signing a key
+gpg, , ,disable-cipher-algo, , ,261,Never allow the use of name as cipher algorithm
+gpg, , ,disable-pubkey-algo, , ,262,Never allow the use of name as public key algorithm
+gpg, , ,throw-keyids, , ,263,TQ   --no-throw-keyids Do not put the recipient key IDs into encrypted messag…
+gpg, , ,not-dash-escaped, , ,264,This option changes the behavior of cleartext signatures so that they can be …
+gpg, , ,escape-from-lines, , ,265,TQ   --no-escape-from-lines Because some mailers change lines starting with '…
+gpg, , ,passphrase-repeat, , ,266,Specify how many times gpg will request a new passphrase be repeated
+gpg, , ,passphrase-fd, , ,267,Read the passphrase from file descriptor n
+gpg, , ,passphrase-file, , ,268,Read the passphrase from file file
+gpg, , ,passphrase, , ,269,Use string as the passphrase
+gpg, , ,pinentry-mode, , ,270,Set the pinentry mode to mode.   Allowed values for mode are: . RS
+gpg, , ,no-symkey-cache, , ,271,Disable the passphrase cache used for symmetrical en- and decryption
+gpg, , ,request-origin, , ,272,Tell gpg to assume that the operation ultimately originated at origin
+gpg, , ,command-fd, , ,273,This is a replacement for the deprecated shared-memory IPC mode
+gpg, , ,command-file, , ,274,"Same as --command-fd, except the commands are read out of file file"
+gpg, , ,allow-non-selfsigned-uid, , ,275,TQ   --no-allow-non-selfsigned-uid Allow the import and use of keys with user…
+gpg, , ,allow-freeform-uid, , ,276,Disable all checks on the form of the user ID while generating a new one
+gpg, , ,ignore-time-conflict, , ,277,GnuPG normally checks that the timestamps associated with keys and signatures…
+gpg, , ,ignore-valid-from, , ,278,GnuPG normally does not select and use subkeys created in the future
+gpg, , ,ignore-crc-error, , ,279,The ASCII armor used by OpenPGP is protected by a CRC checksum against transm…
+gpg, , ,ignore-mdc-error, , ,280,This option changes a MDC integrity protection failure into a warning
+gpg, , ,allow-old-cipher-algos, , ,281,"Old cipher algorithms like 3DES, IDEA, or CAST5 encrypt data using blocks of …"
+gpg, , ,allow-weak-digest-algos, , ,282,Signatures made with known-weak digest algorithms are normally rejected with …
+gpg, , ,weak-digest, , ,283,Treat the specified digest algorithm as weak
+gpg, , ,allow-weak-key-signatures, , ,284,To avoid a minor risk of collision attacks on third-party key signatures made…
+gpg, , ,override-compliance-check, , ,285,This was a temporary introduced option and has no more effect
+gpg, , ,no-default-keyring, , ,286,Do not add the default keyring to the list of keyrings
+gpg, , ,no-keyring, , ,287,Do not use any keyring at all
+gpg, , ,skip-verify, , ,288,Skip the signature verification step
+gpg, , ,with-key-data, , ,289,Print key listings delimited by colons (like --with-colons) and print the pub…
+gpg, , ,list-signatures, , ,290,"TQ   --list-sigs Same as --list-keys, but the signatures are listed too"
+gpg, , ,fast-list-mode, , ,291,"Changes the output of the list commands to work faster; this is achieved by l…"
+gpg, , ,no-literal, , ,292,This is not for normal use
+gpg, , ,set-filesize, , ,293,This is not for normal use
+gpg, , ,show-session-key, , ,294,Display the session key used for one message
+gpg, , ,override-session-key, , ,295,TQ   --override-session-key-fd fd Don't use the public key but the session ke…
+gpg, , ,ask-sig-expire, , ,296,"TQ   --no-ask-sig-expire When making a data signature, prompt for an expirati…"
+gpg, , ,default-sig-expire, , ,297,The default expiration time to use for signature expiration
+gpg, , ,ask-cert-expire, , ,298,"TQ   --no-ask-cert-expire When making a key signature, prompt for an expirati…"
+gpg, , ,default-cert-expire, , ,299,The default expiration time to use for key signature expiration
+gpg, , ,default-new-key-algo, , ,300,This option can be used to change the default algorithms for key generation
+gpg, , ,no-auto-trust-new-key, , ,301,When creating a new key the ownertrust of the new key is set to ultimate
+gpg, , ,force-sign-key, , ,302,"This option modifies the behaviour of the commands --quick-sign-key, --quick-…"
+gpg, , ,forbid-gen-key, , ,303,This option is intended for use in the global config file to disallow the use…
+gpg, , ,allow-secret-key-import, , ,304,This is an obsolete option and is not used anywhere
+gpg, , ,no-allow-multiple-messages, , ,305,"These are obsolete options; they have no more effect since GnuPG 2. 2. 8"
+gpg, , ,enable-special-filenames, , ,306,"This option enables a mode in which filenames of the form '-&n', where n is a…"
+gpg, , ,no-expensive-trust-checks, , ,307,Experimental use only
+gpg, , ,preserve-permissions, , ,308,Don't change the permissions of a secret keyring back to user read/write only
+gpg, , ,default-preference-list, , ,309,Set the list of default preferences to string
+gpg, , ,default-keyserver-url, , ,310,Set the default keyserver URL to name
+gpg, , ,list-config, , ,311,Display various internal configuration parameters of GnuPG
+gpg, , ,list-gcrypt-config, , ,312,Display various internal configuration parameters of Libgcrypt
+gpg, , ,gpgconf-list, , ,313,This command is similar to --list-config but in general only internally used …
+gpg, , ,gpgconf-test, , ,314,This is more or less dummy action
+gpg, , ,chuid, , ,315,Change the current user to uid which may either be a number or a name
+gpg, ,t,textmode, , ,316,TQ   --no-textmode Treat input files as text and store them in the OpenPGP ca…
+gpg, , ,force-v3-sigs, , ,317,TQ   --no-force-v3-sigs
+gpg, , ,force-v4-certs, , ,318,TQ   --no-force-v4-certs These options are obsolete and have no effect since …
+gpg, , ,show-photos, , ,319,"TQ   --no-show-photos Causes --list-keys, --list-signatures, --list-public-ke…"
+gpg, , ,show-keyring, , ,320,Display the keyring name at the head of key listings to show which keyring a …
+gpg, , ,show-notation, , ,321,TQ   --no-show-notation Show signature notations in the --list-signatures or …
+gpg, , ,show-policy-url, , ,322,TQ   --no-show-policy-url Show policy URLs in the --list-signatures or --chec…
+gpg, , ,personal-aead-preferences, , ,323,This option is deprecated and has no more effect since version 2. 3. 9
+gpg, , ,version, , ,324,Print the program version and licensing information
+gpg, , ,help, , ,325, 
+gpg, , ,warranty, , ,326,Print warranty information
+gpg, , ,dump-options, , ,327,Print a list of all available options and commands
+gpg, , ,sign, , ,328, 
+gpg, , ,symmetric, , ,329,decrypted using a secret key or a passphrase)
+gpg, , ,clear-sign, , ,330, 
+gpg, , ,clearsign, , ,331,Make a cleartext signature
+gpg, , ,detach-sign, , ,332, 
+gpg, , ,encrypt, , ,333, 
+gpg, , ,store, , ,334,Store only (make a simple literal data packet)
+gpg, , ,decrypt, , ,335, 
+gpg, , ,verify, , ,336,Assume that the first argument is a signed file and verify it without generat…
+gpg, , ,multifile, , ,337,This modifies certain other commands to accept multiple files for processing …
+gpg, , ,verify-files, , ,338,Identical to --multifile --verify
+gpg, , ,encrypt-files, , ,339,Identical to --multifile --encrypt
+gpg, , ,decrypt-files, , ,340,Identical to --multifile --decrypt
+gpg, , ,list-keys, , ,341, 
+gpg, , ,list-public-keys, , ,342,List the specified keys
+gpg, , ,list-secret-keys, , ,343, 
+gpg, , ,check-signatures, , ,344, 
+gpg, , ,check-sigs, , ,345,"Same as --list-keys, but the key signatures are verified and listed too"
+gpg, , ,locate-keys, , ,346, 
+gpg, , ,locate-external-keys, , ,347,Locate the keys given as arguments
+gpg, , ,show-keys, , ,348,This commands takes OpenPGP keys as input and prints information about them i…
+gpg, , ,fingerprint, , ,349,List all keys (or the specified ones) along with their fingerprints
+gpg, , ,list-packets, , ,350,List only the sequence of packets
+gpg, , ,edit-card, , ,351, 
+gpg, , ,card-edit, , ,352,Present a menu to work with a smartcard
+gpg, , ,card-status, , ,353,Show the content of the smart card
+gpg, , ,change-pin, , ,354,Present a menu to allow changing the PIN of a smartcard
+gpg, , ,delete-keys, , ,355,Remove key from the public keyring
+gpg, , ,delete-secret-keys, , ,356,Remove key from the secret keyring
+gpg, , ,delete-secret-and-public-key, , ,357,"Same as --delete-key, but if a secret key exists, it will be removed first"
+gpg, , ,export, , ,358,Either export all keys from all keyrings (default keyring and those registere…
+gpg, , ,send-keys, , ,359,Similar to --export but sends the keys to a keyserver
+gpg, , ,export-secret-keys, , ,360, 
+gpg, , ,export-secret-subkeys, , ,361,"Same as --export, but exports the secret keys instead"
+gpg, , ,export-ssh-key, , ,362,This command is used to export a key in the OpenSSH public key format
+gpg, , ,import, , ,363, 
+gpg, , ,fast-import, , ,364,Import/merge keys.  This adds the given keys to the keyring
+gpg, , ,receive-keys, , ,365, 
+gpg, , ,recv-keys, , ,366,Import the keys with the given keyIDs from a keyserver
+gpg, , ,refresh-keys, , ,367,Request updates from a keyserver for keys that already exist on the local key…
+gpg, , ,search-keys, , ,368,Search the keyserver for the given names
+gpg, , ,fetch-keys, , ,369,Retrieve keys located at the specified URIs
+gpg, , ,update-trustdb, , ,370,Do trust database maintenance
+gpg, , ,edit-key, , ,371, 
+gpg, , ,check-trustdb, , ,372,Do trust database maintenance without user interaction
+gpg, , ,export-ownertrust, , ,373,Send the ownertrust values to STDOUT
+gpg, , ,import-ownertrust, , ,374,Update the trustdb with the ownertrust values stored in files (or STDIN if no…
+gpg, , ,rebuild-keydb-caches, , ,375,When updating from version 1. 0. 6 to 1. 0
+gpg, , ,print-md, , ,376, 
+gpg, , ,print-mds, , ,377,Print message digest of algorithm algo for all given files or STDIN
+gpg, , ,gen-random, , ,378,"Emit count random bytes of the given quality level 0, 1 or 2"
+gpg, , ,gen-prime, , ,379,"Use the source, Luke :-)"
+gpg, , ,enarmor, , ,380, 
+gpg, , ,dearmor, , ,381,Pack or unpack an arbitrary input into/from an OpenPGP ASCII armor
+gpg, , ,unwrap, , ,382,This option modifies the command --decrypt to output the original message wit…
+gpg, , ,tofu-policy, , ,383,Set the TOFU policy for all the bindings associated with the specified keys
+gpg, , ,quick-generate-key, , ,384, 
+gpg, , ,quick-gen-key, , ,385,This is a simple command to generate a standard key with one user id
+gpg, , ,quick-add-key, , ,386,"``cert'' which can be used to create a certification only primary key; the de…"
+gpg, , ,quick-set-expire, , ,387,"With two arguments given, directly set the expiration time of the primary key…"
+gpg, , ,quick-add-adsk, , ,388,Directly add an Additional Decryption Subkey to the key identified by the fin…
+gpg, , ,generate-key, , ,389, 
+gpg, , ,gen-key, , ,390,Generate a new key pair using the current default parameters
+gpg, , ,full-generate-key, , ,391, 
+gpg, , ,full-gen-key, , ,392,Generate a new key pair with dialogs for all options
+gpg, , ,generate-revocation, , ,393, 
+gpg, , ,gen-revoke, , ,394,Generate a revocation certificate for the complete key
+gpg, , ,generate-designated-revocation, , ,395, 
+gpg, , ,desig-revoke, , ,396,Generate a designated revocation certificate for a key
+gpg, , ,cert-notation, , ,397,"'none' removes all notations, setting a notation prefixed with a minus sign (…"
+gpg, , ,sign-key, , ,398,Signs a public key with your secret key
+gpg, , ,lsign-key, , ,399,Signs a public key with your secret key but marks it as non-exportable
+gpg, , ,quick-sign-key, , ,400, 
+gpg, , ,quick-lsign-key, , ,401,Directly sign a key from the passphrase without any further user interaction
+gpg, , ,quick-add-uid, , ,402,This command adds a new user id to an existing key
+gpg, , ,quick-revoke-uid, , ,403,This command revokes a user ID on an existing key
+gpg, , ,quick-revoke-sig, , ,404,This command revokes the key signatures made by signing-fpr from the key spec…
+gpg, , ,quick-set-primary-uid, , ,405,This command sets or updates the primary user ID flag on an existing key
+gpg, , ,quick-update-pref, , ,406,This command updates the preference list of the key to the current default va…
+gpg, , ,quick-set-ownertrust, , ,407,This command sets the ownertrust of a key and can also be used to set the dis…
+gpg, , ,change-passphrase, , ,408, 
+gpg, , ,passwd, , ,409,Change the passphrase of the secret key belonging to the certificate specifie…
+gpg, , ,no-batch, , ,410,"Use batch mode.   Never ask, do not allow interactive commands"
+gpg, , ,disable-large-rsa, , ,411,"With --generate-key and --batch, enable the creation of RSA secret keys as la…"
+gpg, , ,disable-dsa2, , ,412,Enable hash truncation for all DSA keys even for old DSA Keys up to 1024 bit
+gpg, , ,recv-from, , ,413,keyring
+gpg, , ,no-utf8-strings, , ,414,Assume that command line arguments are given as UTF-8 strings
+gpg, , ,compress-level, , ,415, 
+gpg, , ,bzip2-compress-level, , ,416, 
+gpg, , ,no-compress, , ,417,Set compression level to n for the ZIP and ZLIB compression algorithms
+gpg, , ,"no-compress;", , ,418,option z with another compression level than the default as indicated by -1
+gpg, , ,no-mangle-dos-filenames, , ,419,Older version of Windows cannot handle filenames with more than one dot
+gpg, , ,no-ask-cert-level, , ,420,"When making a key signature, prompt for a certification level"
+gpg, , ,no-auto-key-locate, , ,421,GnuPG can automatically locate and retrieve keys as needed using this option
+gpg, , ,locate-external-key, , ,422,actually a shortcut for the mechanism `ldap' using only 'ldap:///' as the key…
+gpg, , ,no-auto-key-import, , ,423,This is an offline mechanism to get a missing key for signature verification …
+gpg, , ,no-auto-key-retrieve, , ,424,These options enable or disable the automatic retrieving of keys from a keyse…
+gpg, , ,no-auto-check-trustdb, , ,425,"If GnuPG feels that its information about the Web of Trust has to be updated,…"
+gpg, , ,no-use-agent, , ,426,This is dummy option.  gpg always requires the agent
+gpg, , ,no-require-secmem, , ,427,Refuse to run if GnuPG cannot get secure memory.  Defaults to no (i. e
+gpg, , ,no-require-cross-certification, , ,428,"When verifying a signature made from a subkey, ensure that the cross certific…"
+gpg, , ,no-expert, , ,429,Allow the user to do certain nonsensical or 'silly' things like signing an ex…
+gpg, , ,no-skip-hidden-recipients, , ,430,During decryption skip all anonymous recipients
+gpg, , ,export-filter, , ,431,These options define an import/export filter which are applied to the importe…
+gpg, , ,force-aead, , ,432,Force the use of AEAD encryption over MDC encryption
+gpg, , ,disable-mdc, , ,433,These options are obsolete and have no effect since GnuPG 2. 2. 8
+gpg, , ,no-include-key-block, , ,434,This option is used to embed the actual signing key into a data signature
+gpg, , ,include-certs, , ,435,to reply encrypted to the sender without using any online directories to look…
+gpg, , ,dry-run, , ,436,Don't make any changes (this is not completely implemented)
+gpg, , ,interactive, , ,437,Prompt before overwriting any files
+gpg, , ,logger-file, , ,438,"Same as --logger-fd, except the logger data is written to file file"
+gpg, , ,no-comments, , ,439,Use string as a comment string in cleartext signatures and ASCII armored mess…
+gpg, , ,no-emit-version, , ,440,Force inclusion of the version string in ASCII armored output
+gpg, ,N,set-notation, , ,441,Put the name value pair into the signature as notation data
+gpg, , ,cert-policy-url, , ,442, 
+gpg, , ,set-policy-url, , ,443,Use string as a Policy URL for signatures (rfc4880:5. 2. 3. 20)
+gpg, , ,no-for-your-eyes-only, , ,444,Set the `for your eyes only' flag in the message
+gpg, , ,no-use-embedded-filename, , ,445,Try to create a file with a name as embedded in the data
+gpg, , ,no-throw-keyids, , ,446,Do not put the recipient key IDs into encrypted messages
+gpg, , ,no-escape-from-lines, , ,447,Because some mailers change lines starting with 'From ' to '>From ' it is goo…
+gpg, , ,no-allow-non-selfsigned-uid, , ,448,Allow the import and use of keys with user IDs which are not self-signed
+gpg, , ,list-sigs, , ,449,"Same as --list-keys, but the signatures are listed too"
+gpg, , ,with-sig-list, , ,450, 
+gpg, , ,override-session-key-fd, , ,451,Don't use the public key but the session key string respective the session ke…
+gpg, , ,no-ask-sig-expire, , ,452,"When making a data signature, prompt for an expiration time"
+gpg, , ,no-ask-cert-expire, , ,453,"When making a key signature, prompt for an expiration time"
+gpg, , ,allow-multiple-messages, , ,454, 
+gpg, , ,no-textmode, , ,455,Treat input files as text and store them in the OpenPGP canonical text form w…
+gpg, , ,no-force-v3-sigs, , ,456, 
+gpg, , ,no-force-v4-certs, , ,457,These options are obsolete and have no effect since GnuPG 2. 1
+gpg, , ,no-show-photos, , ,458,"Causes --list-keys, --list-signatures,"
+gpg, , ,no-show-notation, , ,459,Show signature notations in the --list-signatures or --check-signatures listi…
+gpg, , ,no-show-policy-url, , ,460,Show policy URLs in the --list-signatures or --check-signatures listings as w…
+gpg, , ,aead-algo, , ,461,This option is deprecated and has no more effect since version 2. 3. 9
+gpg, , ,dump-cert, , ,462,&D75F22C3F86E355877348498CDC92BD21010A480 By substring match
+gpg, , ,-----------------------------, , ,463,sec   dsa1024 2016-12-16 [SCA]       768E895903FC1C44045C8CB95EEBDB71E9E849D0…

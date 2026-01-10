@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+namei, ,h,help, , ,101,displays this help text
+namei, ,V,version, , ,102,output version information and exit
+namei, ,x,mountpoints, , ,103,show mount point directories with a 'D'
+namei, ,m,modes, , ,104,show the mode bits of each file
+namei, ,o,owners, , ,105,show owner and group name of each file
+namei, ,l,long, , ,106,use a long listing format (-m -o -v)
+namei, ,n,nosymlinks, , ,107,don't follow symlinks
+namei, ,v,vertical, , ,108,vertical align of modes and owners

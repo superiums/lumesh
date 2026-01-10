@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+swaylock, ,d,debug, , ,101,Enable debugging output
+swaylock, ,e,ignore-empty-password, , ,102,"When an empty password is provided, do not validate it"
+swaylock, ,F,show-failed-attempts, , ,103,Show current count of failed authentication attempts
+swaylock, ,f,daemonize, , ,104,Detach from the controlling terminal after locking
+swaylock, ,R,ready-fd, , ,105,File descriptor to send readiness notifications to
+swaylock, ,h,help, , ,106,Show help message and quit
+swaylock, ,v,version, , ,107,Show the version number and quit

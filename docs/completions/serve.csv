@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+serve, ,h,help, ,@f @r,101,Shows help message
+serve, ,v,version, ,@f @r,102,Displays the current version of serve
+serve, ,l,listen, ,@f @r,103,Specify a URI endpoint on which to listen
+serve, ,d,debug, ,@f @r,104,Show debugging information
+serve, ,s,single, ,@f @r,105,Rewrite all not-found requests to `index.html`
+serve, ,c,config, ,@f @r,106,Specify custom path to `serve.json`
+serve, ,n,no-clipboard, ,@f @r,107,Do not copy the local address to the clipboard

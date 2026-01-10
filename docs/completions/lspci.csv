@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lspci, , ,version, , ,101,Shows  lspci version.  This option should be used stand-alone

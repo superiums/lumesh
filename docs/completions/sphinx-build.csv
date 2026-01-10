@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sphinx-build, ,h,help, , ,101,Display usage summary
+sphinx-build, , ,version, , ,102,Display Sphinx version
+sphinx-build, ,b, ,html dirhtml singlehtml htmlhelp qthelp devhelp epub applehelp latex man texinfo text gettext doctest linkcheck xml pseudoxml,@f @r,103,Builder to use
+sphinx-build, ,M, ,latexpdf info,@f @r,104,Alternative to -b
+sphinx-build, , ,keep-going, , ,105,Keep going when getting warnings

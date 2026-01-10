@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicebtlogger, ,u,udid, , ,101,target specific device by UDID
+idevicebtlogger, ,n,network, , ,102,connect to network device
+idevicebtlogger, ,f,format, , ,103,"set log format: PacketLogger (default), or pcap"
+idevicebtlogger, ,x,exit, , ,104,exit when device disconnects
+idevicebtlogger, ,d,debug, , ,105,enable communication debugging
+idevicebtlogger, ,h,help, , ,106,prints usage information
+idevicebtlogger, ,v,version, , ,107,prints version information

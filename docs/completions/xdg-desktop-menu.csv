@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-desktop-menu, , ,noupdate, , ,101,Postpone updating the menu system
+xdg-desktop-menu, , ,novendor, , ,102,"Normally, xdg-desktop-menu checks to ensure that any *. directory and *"
+xdg-desktop-menu, , ,mode, , ,103,mode can be user or system
+xdg-desktop-menu, , ,help, , ,104,Show command synopsis
+xdg-desktop-menu, , ,manual, , ,105,Show this manual page
+xdg-desktop-menu, , ,version, , ,106,Show the xdg-utils version information

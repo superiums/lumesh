@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+trash-put, ,h,help, ,@f,101,show help message
+trash-put, , ,print-completion,bash zsh tcsh,@f,102,print shell completion script
+trash-put, ,d,directory, ,@f,103,ignored (for GNU rm compatibility)
+trash-put, ,f,force, ,@f,104,silently ignore nonexistent files
+trash-put, ,i,interactive, ,@f,105,prompt before every removal
+trash-put, ,R,recursive, ,@f,106,ignored (for GNU rm compatibility)
+trash-put, , ,trash-dir, ,@F,107,specify trash folder
+trash-put, ,v,verbose, ,@f,108,be verbose
+trash-put, , ,version, ,@f,109,show version number

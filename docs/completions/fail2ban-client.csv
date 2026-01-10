@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fail2ban-client, ,c,conf, , ,101,Configuration dir
+fail2ban-client, ,s,socket, , ,102,Socket path
+fail2ban-client, ,p,pidfile, , ,103,Pidfile path
+fail2ban-client, , ,pname, , ,104,Name of the process
+fail2ban-client, , ,loglevel,CRITICAL ERROR WARNING NOTICE INFO DEBUG TRACEDEBUG HEAVYDEBUG, ,105,loglevel of client
+fail2ban-client, , ,logtarget,stdout stderr syslog sysout, ,106,Logging target
+fail2ban-client, , ,logtarget,auto, ,107,Syslogsocket
+fail2ban-client, , ,dump-pretty, , ,108,Dump configuration (pretty)
+fail2ban-client, ,t,test, , ,109,Test configuration
+fail2ban-client, , ,str2sec, , ,110,Convert time abbr format to secs
+fail2ban-client, ,h,help, , ,111,Display help message
+fail2ban-client, ,V,version, , ,112,Display client version
+fail2ban-client, restart, ,unban, , ,127, 
+fail2ban-client, reload, ,if-exists, , ,128, 
+fail2ban-client, restart, ,restart, , ,129, 
+fail2ban-client, reload, ,unban, , ,130, 
+fail2ban-client, reload, ,all, , ,131, 
+fail2ban-client, reload, ,if-exists, , ,132, 
+fail2ban-client, unban, ,all, , ,133, 

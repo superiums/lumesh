@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sum, ,s,sysv, , ,101,"use System V sum algorithm, use 512 bytes blocks"
+sum, , ,help, , ,102,display this help and exit
+sum, , ,version, , ,103,output version information and exit AUTHOR Written by Kayvan Aghaiepour and D…

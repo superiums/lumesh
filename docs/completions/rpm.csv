@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rpm, ,?,help, , ,101,Display help and exit
+rpm, , ,version, , ,102,Display version and exit
+rpm, , ,quiet, , ,103,Quiet mode
+rpm, , ,rcfile, , ,104,List of rpm configuration files
+rpm, , ,pipe, , ,105,Pipe output through specified command
+rpm, , ,dbpath,, ,106,Specify directory for rpm database
+rpm, , ,root,, ,107,Specify root directory for rpm operations
+rpm, , , , ,@k,197, 

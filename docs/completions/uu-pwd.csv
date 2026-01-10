@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-pwd, ,L,logical, , ,101,"use PWD from environment, even if it contains symlinks"
+uu-pwd, ,P,physical, , ,102,avoid all symlinks
+uu-pwd, ,h,help, , ,103,Print help
+uu-pwd, ,V,version, , ,104,Print version

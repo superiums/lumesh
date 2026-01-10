@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+modutil, , ,dbprefix, , ,101,"Specify the prefix used on the database files, such as my_ for my_cert9. db"
+modutil, , ,--------------------------------------------, , ,102, 
+modutil, , ,---------------------------------------------------------, , ,103,  1

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wajig, ,q,quiet, , ,101,Do system commands everything quietly.
+wajig, ,n,noauth, , ,102,Allow packages from unauthenticated archives.
+wajig, ,s,simulate, , ,103,Trace but don't execute the sequence of underlying commands.
+wajig, ,t,teaching, , ,104,Trace the sequence of commands performed.
+wajig, ,y,yes, , ,105,Assume yes for any questions asked.

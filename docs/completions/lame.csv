@@ -1,0 +1,59 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lame, , ,bitwidth, , ,101,Input bit width per sample
+lame, , ,signed, , ,102,Instructs LAME that the samples from the input are signed (the default for 16…
+lame, , ,unsigned, , ,103,Instructs LAME that the samples from the input are unsigned (the default for …
+lame, , ,little-endian, , ,104,Instructs LAME that the samples from the input are in little-endian form
+lame, , ,big-endian, , ,105,Instructs LAME that the samples from the input are in big-endian form
+lame, , ,mp1input, , ,106,Assume the input file is a MPEG Layer I (ie MP1) file
+lame, , ,mp2input, , ,107,Assume the input file is a MPEG Layer II (ie MP2) file
+lame, , ,mp3input, , ,108,Assume the input file is a MP3 file
+lame, , ,nogap, , ,109,gapless encoding for a set of contiguous files
+lame, , ,nogapout, , ,110,output dir for gapless encoding (must precede --nogap)
+lame, , ,out-dir, , ,111,"If no explicit output file is specified, a file will be written at given path"
+lame, , ,freeformat, , ,112,Produces a free format bitstream
+lame, , ,decode, , ,113,Uses LAME for decoding to a wav file
+lame, , ,comp, , ,114,"Instead of choosing bitrate, using this option, user can choose compression r…"
+lame, , ,scale-r, , ,115,"Scales input (every channel, only left channel or only right channel) by  n"
+lame, , ,replaygain-fast, , ,116,Compute ReplayGain fast but slightly inaccurately
+lame, , ,replaygain-accurate, , ,117,Compute ReplayGain more accurately and find the peak sample
+lame, , ,noreplaygain, , ,118,Disable ReplayGain analysis.   By default ReplayGain analysis is enabled
+lame, , ,clipdetect, , ,119,Clipping detection
+lame, , ,preset, , ,120,Use one of the built-in presets.   Have a look at the PRESETS section below
+lame, , ,noasm, , ,121,Disable specific assembly optimizations (  mmx /  3dnow /  sse )
+lame, , ,disptime, , ,122,Set the delay in seconds between two display updates
+lame, , ,nohist, , ,123,"By default, LAME will display a bitrate histogram while producing VBR mp3 fil…"
+lame, , ,quiet, , ,124,Do not print anything on the screen. PD
+lame, , ,verbose, , ,125,Print a lot of information on the screen
+lame, , ,help, , ,126,Display a list of available options
+lame, , ,cbr, , ,127,enforce use of constant bitrate
+lame, , ,abr, , ,128,"Turns on encoding with a targeted average bitrate of n kbits, allowing to use…"
+lame, , ,vbr-old, , ,129,"Invokes the oldest, most tested VBR algorithm"
+lame, , ,vbr-new, , ,130,Invokes the newest VBR algorithm.  During the development of version 3
+lame, , ,nores, , ,131,Disable the bit reservoir
+lame, , ,strictly-enforce-ISO, , ,132,"With this option, LAME will enforce the 7680 bit limitation on total frame si…"
+lame, , ,lowpass, , ,133,Set a lowpass filtering frequency in kHz
+lame, , ,lowpass-width, , ,134,Set the width of the lowpass filter
+lame, , ,highpass, , ,135,Set an highpass filtering frequency in kHz
+lame, , ,highpass-width, , ,136,Set the width of the highpass filter in kHz
+lame, , ,resample, , ,137,"sfreq = 8, 11. 025, 12, 16, 22. 05, 24, 32, 44. 1, 48 "
+lame, , ,tt, , ,138,audio/song title (max 30 chars for version 1 tag)
+lame, , ,ta, , ,139,audio/song artist (max 30 chars for version 1 tag)
+lame, , ,tl, , ,140,audio/song album (max 30 chars for version 1 tag)
+lame, , ,ty, , ,141,audio/song year of issue (1 to 9999)
+lame, , ,tc, , ,142,"user-defined text (max 30 chars for v1 tag, 28 for v1. 1)"
+lame, , ,tn, , ,143,audio/song track number and (optionally) the total number of tracks on the or…
+lame, , ,tg, , ,144,audio/song genre (name or number in list)
+lame, , ,tv, , ,145,Text or URL frame specified by id and value (v2. 3 tag).  User defined frame
+lame, , ,add-id3v2, , ,146,force addition of version 2 tag
+lame, , ,id3v1-only, , ,147,add only a version 1 tag
+lame, , ,id3v2-only, , ,148,add only a version 2 tag
+lame, , ,id3v2-latin1, , ,149,add following options in ISO-8859-1 text encoding
+lame, , ,id3v2-utf16, , ,150,add following options in unicode text encoding
+lame, , ,space-id3v1, , ,151,pad version 1 tag with spaces instead of nulls
+lame, , ,pad-id3v2, , ,152,same as --pad-id3v2-size 128
+lame, , ,pad-id3v2-size, , ,153,"adds version 2 tag, pad with extra 'num' bytes"
+lame, , ,genre-list, , ,154,print alphabetically sorted ID3 genre list and exit
+lame, , ,ignore-tag-errors, , ,155,"ignore errors in values passed for tags, use defaults in case an error occurs…"
+lame, , ,scale, , ,156, 
+lame, , ,scale-l, , ,157, 
+lame, , ,silent, , ,158, 

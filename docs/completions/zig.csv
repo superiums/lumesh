@@ -1,0 +1,58 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zig, env help targets version zen,h,help, ,@f @r,100,Print command-specific usage
+zig, build,p,prefix, ,@r,129,Where to install files (default: zig-out)
+zig, build, ,prefix-lib-dir, ,@r,130,Where to install libraries
+zig, build, ,prefix-exe-dir, ,@r,131,Where to install executables
+zig, build, ,prefix-include-dir, ,@r,132,Where to install C header files
+zig, build, ,release,fast safe small,@f @r,133,Request release mode
+zig, build, , , ,@f,134,Integrate with system-installed Darling
+zig, build, , , ,@f,135,Don't integrate with system-installed Darling (default)
+zig, build, , , ,@f,136,Integrate with system-installed QEMU
+zig, build, , , ,@f,137,Don't integrate with system-installed QEMU (default)
+zig, build, ,glibc-runtimes, ,@r,138,Enhances QEMU integration
+zig, build, , , ,@f,139,Rely on Rosetta
+zig, build, , , ,@f,140,Don't rely on Rosetta (default)
+zig, build, , , ,@f,141,Integrate with system-installed Wasmtime
+zig, build, , , ,@f,142,Don't integrate with system-installed Wasmtime (default)
+zig, build, , , ,@f,143,Integrate with system-installed Wine
+zig, build, , , ,@f,144,Don't integrate with system-installed Wine (default)
+zig, build,l,list-steps, ,@f,145,Print available steps
+zig, build, ,verbose, ,@f,146,Print commands before executing them
+zig, build, ,color,auto off on,@f @r,147,Enable/Disable colored error messages
+zig, build, ,prominent-compile-errors, ,@f,148,Output human-readable compile errors
+zig, build, ,summary,,@f @r,149,Control the printing of the build summary
+zig, build,j, , ,@f,150,Limit concurrent jobs (default is to use all CPU cores)
+zig, build, ,maxrss, ,@f,151,Limit memory usage (default is to use available memory)
+zig, build, ,skip-oom-steps, ,@f,152,skip steps that would exceed --maxrss
+zig, build, ,fetch, ,@f,153,Exit after fetching dependency tree
+zig, build, , , ,@f @r,154,Specify the compilation target
+zig, build, , , ,@f @r,155,Specify CPU features to add/subtract
+zig, build, , , ,@r,156,Path to interpreter on the target system
+zig, build, , ,Debug ReleaseSafe ReleaseFast ReleaseSmall,@f @r,157,Optimizations on and safety on
+zig, build, ,search-prefix, ,@r,158,"Add a path to look for binaries, libraries, headers"
+zig, build, ,sysroot, ,@r,159,Set the system root directory (usually /)
+zig, build, ,libc, ,@r,160,Provide a file which specifies libc paths
+zig, build, ,system, ,@r,161,"Disable package fetching; enable all integrations"
+zig, build, , , ,@f @r,162,lines of reference trace shown per compile error
+zig, build, , , ,@f,163,Disable reference trace
+zig, build, ,build-file, ,@r,164,Override path to `build.zig`
+zig, build, ,cache-dir, ,@r,165,Override path to zig cache directory
+zig, build, ,global-cache-dir, ,@r,166,Override path to global Zig cache directory
+zig, build, ,zig-lib-dir, ,@r,167,Override path to Zig lib directory
+zig, build, ,build-runner, ,@r,168,Override path to build runner
+zig, build, ,seed, ,@f @r,169,For shuffling dependency traversal order (default: random)
+zig, build, ,debug-log, ,@f @r,170,Enable debugging the compiler
+zig, build, ,debug-pkg-config, ,@f,171,Fail if unknown pkg-config flags encountered
+zig, build, ,verbose-link, ,@f,172,Enable compiler debug output for linking
+zig, build, ,verbose-air, ,@f,173,Enable compiler debug output for Zig AIR
+zig, build, ,verbose-llvm-ir, ,@f,174,Enable compiler debug output for LLVM IR
+zig, build, ,verbose-llvm-bc, ,@f,175,Enable compiler debug output for LLVM BC
+zig, build, ,verbose-cimport, ,@f,176,Enable compiler debug output for C imports
+zig, build, ,verbose-cc, ,@f,177,Enable compiler debug output for C compilation
+zig, build, ,verbose-llvm-cpu-features, ,@f,178,Enable compiler debug output for LLVM CPU features
+zig, ast-check, ,color,auto off on,@f @r,179,Enable/Disable colored error messages
+zig, fmt, ,color,auto off on,@f @r,253,Enable/Disable colored error messages
+zig, fmt, ,stdin, , ,254,Use stdin and stdout for I/O
+zig, fmt, ,check, , ,255,Check if the input is formatted
+zig, fmt, ,ast-check, , ,256,Run `zig ast-check` on every file
+zig, libc, , , ,@f @r,257,Specify the compilation target

@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-src, ,h,help, , ,101,Display help and exit
+apt-src, , , ,update,@f,102,Update list of source packages
+apt-src, , , ,install,@f,103,Install source packages
+apt-src, , , ,upgrade,@f,104,Upgrade source packages
+apt-src, , , ,remove,@f,105,Remove source packages
+apt-src, , , ,build,@f,106,Build source packages
+apt-src, , , ,clean,@f,107,Clean source packages
+apt-src, , , ,import,@f,108,Detect known source tree
+apt-src, , , ,list,@f,109,List installed source package\(s\)
+apt-src, , , ,location,@f,110,Root source tree
+apt-src, , , ,version,@f,111,Version of source package
+apt-src, , , ,name,@f,112,Name of the source package
+apt-src, ,b,build, ,@f,113,Build source packages
+apt-src, ,i,installdebs, ,@f,114,Install after build
+apt-src, ,p,patch, ,@f,115,Patch local changes
+apt-src, ,l,location, ,@r,116,Specify a dir
+apt-src, ,c,here, , ,117,Run on current dir
+apt-src, , ,upstream-version, ,@f,118,Omit debian version
+apt-src, ,k,keep-built, ,@f,119,Do not del built files
+apt-src, ,n,no-delete-source, ,@f,120,Do not del source files
+apt-src, , ,version, ,@f,121,Source tree version
+apt-src, ,q,quiet, ,@f,122,Output to /dev/null
+apt-src, ,t,trace, ,@f,123,Output trace

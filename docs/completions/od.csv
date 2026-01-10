@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+od, ,A,address-radix, , ,101,"output format for file offsets; RADIX is one of [doxn], for Decimal, Octal, H…"
+od, , ,endian, , ,102,swap input bytes according the specified order
+od, ,j,skip-bytes, , ,103,skip BYTES input bytes first
+od, ,N,read-bytes, , ,104,limit dump to BYTES input bytes
+od, ,S,strings, , ,105,show only NUL terminated strings of at least BYTES (3) printable characters
+od, ,t,format, , ,106,select output format or formats
+od, ,v,output-duplicates, , ,107,do not use * to mark line suppression
+od, ,w,width, , ,108,"output BYTES bytes per output line; 32 is implied when BYTES is not specified"
+od, , ,traditional, , ,109,accept arguments in third form above
+od, , ,help, , ,110,display this help and exit
+od, , ,version, , ,111,output version information and exit 

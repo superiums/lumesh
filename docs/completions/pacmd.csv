@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pacmd, , , , ,@f,101, 
+pacmd, , , , ,@f,102, 
+pacmd, describe-module, , , ,@f,103, 
+pacmd, kill-client, , , ,@f,104, 
+pactl, suspend, , ,0 false off,@f,106,Resume
+pactl, suspend, , ,1 true on,@f,107,Suspend

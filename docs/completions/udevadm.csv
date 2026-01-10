@@ -1,0 +1,43 @@
+cmd,conds,short,long,params,dirs,pri,desc
+udevadm, ,h,help, , ,102,Show help
+udevadm, ,V,version, , ,103,Show version info
+udevadm, info,q,query,$query_type, ,104,Query device information
+udevadm, info,p,path, , ,105,sysfs device path
+udevadm, info,n,name, , ,106,Node or symlink name
+udevadm, info,r,root, , ,107,Prepend dev directory
+udevadm, info,a,attribute-walk, , ,108,Print all key matches
+udevadm, info,d,device-id-of-file, , ,109,Print major:minor of device containing FILE
+udevadm, info,x,export, , ,110,Export key/value pairs
+udevadm, info,P,export-prefix, , ,111,Export key name with prefix
+udevadm, info,e,export-db, , ,112,Export content of udev database
+udevadm, info,c,cleanup-db, , ,113,Clean up the udev database
+udevadm, trigger,v,verbose, , ,114,Print device paths while running
+udevadm, trigger,n,dry-run, , ,115,Do not actually trigger
+udevadm, trigger,t,type,devices subsystems, ,116,Type of events to trigger
+udevadm, trigger,c,action, , ,117,Event action value [change]
+udevadm, trigger,s,subsystem-match, , ,118,Trigger devices matching subsystem
+udevadm, trigger,S,subsystem-nomatch, , ,119,Exclude devices matching subsystem
+udevadm, trigger,a,attr-match, , ,120,Trigger devices matching attribute
+udevadm, trigger,A,attr-nomatch, , ,121,Exclude devices matching attribute
+udevadm, trigger,p,property-match, , ,122,Trigger devices matching property
+udevadm, trigger,g,tag-match, , ,123,Trigger devices matching property
+udevadm, trigger,y,sysname-match, , ,124,Trigger devices matching /sys path
+udevadm, trigger, ,name-match, , ,125,Trigger devices matching /dev path
+udevadm, trigger,b,parent-match, , ,126,Trigger devices with parent device
+udevadm, settle,t,timeout, , ,127,Maximum time in seconds to wait
+udevadm, settle,E,exit-if-exists, , ,128,Stop waiting if FILE exists
+udevadm, control,e,exit, , ,129,Exit the daemon
+udevadm, control,l,log-priority, , ,130,Set udev daemon log level
+udevadm, control,s,stop-exec-queue, , ,131,Queue but do not execute events
+udevadm, control,S,start-exec-queue, , ,132,"Execute events, flush queue"
+udevadm, control,R,reload, , ,133,Reload rules and database
+udevadm, control,p,property, , ,134,Set property globally
+udevadm, control,m,children-max, , ,135,Max num of children
+udevadm, control,t,timeout, , ,136,Max seconds to block for reply
+udevadm, monitor,p,property, , ,137,Print event properties
+udevadm, monitor,k,kernel, , ,138,Print kernel uevents
+udevadm, monitor,u,udev, , ,139,Print udev events
+udevadm, monitor,s,subsystem-match, , ,140,Filter events by subsystem
+udevadm, monitor,t,tag-match, , ,141,Filter events by tag
+udevadm, test,a,action, , ,142,Set action string
+udevadm, test,N,resolve-names,early late never, ,143,When to resolve names

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-mknod, ,m,mode, , ,101,"set file permission bits to MODE, not a=rw - umask"
+uu-mknod, , ,context, , ,102,"like -Z, or if CTX is specified then set the SELinux or SMACK security context to CTX"
+uu-mknod, ,h,help, , ,103,Print help
+uu-mknod, ,V,version, , ,104,Print version

@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dscacheutil, , , , ,@f,101,Directory Service cache utility

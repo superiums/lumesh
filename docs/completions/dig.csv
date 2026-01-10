@@ -1,0 +1,52 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dig, ,4, , ,@f,101,Use IPv4 query transport only
+dig, ,6, , ,@f,102,Use IPv6 query transport only
+dig, ,m, , ,@f,103,Enable memory usage debugging
+dig, ,b, , ,@f @r,104,Bind to source address/port
+dig, ,f, , ,@r,105,Specify batch mode file
+dig, ,c, ,IN CH HS QCLASS,@f @r,106,Specify query class
+dig, ,k, , ,@r,107,Specify TSIG key file
+dig, ,y, , ,@f @r,108,specify named base64 TSIG key
+dig, ,p, , ,@f @r,109,Specify port number
+dig, ,q, , ,@f @r,110,Specify query name
+dig, ,t, ,A AAAA AFSDB APL CAA CDNSKEY CDS CERT CNAME DHCID DLV DNAME DNSKEY DS HIP IPSECKEY KEY KX LOC MX NAPTR NS NSEC NSEC3 NSEC3PARAM PTR RRSIG RP SIG SOA SRV SSHFP TA TKEY TLSA TSIG TXT URI,@f @r,111,Specify query type
+dig, ,x, , ,@f @r,112,Reverse lookup
+dig, ,h, , ,@f,113,Print help and exit
+dig, ,v, , ,@f,114,Print version and exit
+dig, , , ,+vc +novc,@f,115,TCP mode
+dig, , , ,+tcp +notcp,@f,116,"TCP mode, alternate syntax"
+dig, , , ,+search +nosearch,@f,117,Set whether to use searchlist
+dig, , , ,+showsearch +noshowsearch,@f,118,Search with intermediate results
+dig, , , ,+defname +nodefname,@f,119,"Deprecated, treated as a synonym for +[no]search"
+dig, , , ,+recurse +norecurse,@f,120,Recursive mode
+dig, , , ,+ignore +noignore,@f,121,Dont revert to TCP for TC responses.
+dig, , , ,+fail +nofail,@f,122,Dont try next server on SERVFAIL
+dig, , , ,+besteffort +nobesteffort,@f,123,Try to parse even illegal messages
+dig, , , ,+aaonly +noaaonly,@f,124,Set AA flag in query (+[no]aaflag)
+dig, , , ,+adflag +noadflag,@f,125,Set AD flag in query
+dig, , , ,+cdflag +nocdflag,@f,126,Set CD flag in query
+dig, , , ,+cl +nocl,@f,127,Control display of class in records
+dig, , , ,+cmd +nocmd,@f,128,Control display of command line
+dig, , , ,+comments +nocomments,@f,129,Control display of comment lines
+dig, , , ,+question +noquestion,@f,130,Control display of question
+dig, , , ,+answer +noanswer,@f,131,Control display of answer
+dig, , , ,+authority +noauthority,@f,132,Control display of authority
+dig, , , ,+additional +noadditional,@f,133,Control display of additional
+dig, , , ,+stats +nostats,@f,134,Control display of statistics
+dig, , , ,+short +noshort,@f,135,Disable everything except short form of answer
+dig, , , ,+ttlid +nottlid,@f,136,Control display of ttls in records
+dig, , , ,+all +noall,@f,137,Set or clear all display flags
+dig, , , ,+qr +noqr,@f,138,Print question before sending
+dig, , , ,+nssearch +nonssearch,@f,139,Search all authoritative nameservers
+dig, , , ,+identify +noidentify,@f,140,ID responders in short answers
+dig, , , ,+trace +notrace,@f,141,Trace delegation down from root
+dig, , , ,+dnssec +nodnssec,@f,142,Request DNSSEC records
+dig, , , ,+nsid +nonsid,@f,143,Request Name Server ID
+dig, , , ,+multiline +nomultiline,@f,144,Print records in an expanded format
+dig, , , ,+onesoa +noonesoa,@f,145,AXFR prints only one soa record
+dig, , , ,+tries=,@f,146,Set number of UDP attempts
+dig, , , ,+retry=,@f,147,Set number of UDP retries
+dig, , , ,+time=,@f,148,Set query timeout
+dig, , , ,+bufsize=,@f,149,Set EDNS0 Max UDP packet size
+dig, , , ,+ndots=,@f,150,Set NDOTS value
+dig, , , ,+edns=,@f,151,Set EDNS version

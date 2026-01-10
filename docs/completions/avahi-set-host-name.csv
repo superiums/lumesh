@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avahi-set-host-name, ,v,verbose, , ,101,Enable verbose mode
+avahi-set-host-name, ,h,help, , ,102,Show help
+avahi-set-host-name, ,V,version, , ,103,Show version information

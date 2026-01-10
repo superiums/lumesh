@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+loadkeys, , ,console, , ,101,) option.  RESET TO DEFAULT If the
+loadkeys, , ,default, , ,102,") option is given, loadkeys loads a default keymap, probably the file defkeym…"
+loadkeys, , ,clearcompose, , ,103,") option is given, in which case the kernel accent table is emptied"
+loadkeys, , ,clearstrings, , ,104,) clears the kernel string table
+loadkeys, , ,mktable, , ,105,) option is given loadkeys prints to the standard output a file that may be u…
+loadkeys, , ,bkeymap, , ,106,) option is given loadkeys prints to the standard output a file that may be u…
+loadkeys, , ,unicode, , ,107,switch forces loadkeys to convert all keymaps to Unicode
+loadkeys, ,a,ascii, , ,108,Force conversion to ASCII
+loadkeys, ,h,help, , ,109,loadkeys prints its version number and a short usage message to the programs …
+loadkeys, ,p,parse, , ,110,loadkeys searches and parses keymap without action
+loadkeys, ,q,quiet, , ,111,loadkeys suppresses all normal output
+loadkeys, ,V,version, , ,112,loadkeys prints version number and exits

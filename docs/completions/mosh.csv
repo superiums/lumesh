@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mosh, , , , ,@f @r,101,Hostname
+mosh, , , ,,@f @r,102,User
+mosh, , ,client, , ,104,Path to client helper on local machine (default: 'mosh-client')
+mosh, , ,server, , ,105,Command to run server helper on remote machine (default: 'mosh-server')
+mosh, , ,ssh, , ,106,SSH command to run when setting up session (example: 'ssh -p 2222') (default: 'ssh')
+mosh, , ,predict,adaptive always never experimental,@f,107,Controls use of speculative local echo
+mosh, ,p,port, , ,108,Use a particular server-side UDP port or port range

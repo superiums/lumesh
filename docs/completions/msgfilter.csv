@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgfilter, ,i,input, , ,101,input PO file
+msgfilter, ,D,directory, , ,102,add DIRECTORY to list for input files search 
+msgfilter, ,o,output-file, , ,103,write output to specified file 
+msgfilter, , ,newline, , ,104,add a newline at the end of input and remove a newline from the end of output 
+msgfilter, ,e,expression, , ,105,add SCRIPT to the commands to be executed
+msgfilter, ,f,file, , ,106,add the contents of SCRIPTFILE to the commands to be executed
+msgfilter, ,n,silent, , ,107,suppress automatic printing of pattern space . SS 'Input file syntax:'
+msgfilter, ,P,properties-input, , ,108,input file is in Java . properties syntax
+msgfilter, , ,stringtable-input, , ,109,input file is in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msgfilter, , ,color, , ,110,use colors and other text attributes always
+msgfilter, , ,style, , ,111,specify CSS style rule file for --color
+msgfilter, , ,no-escape, , ,112,do not use C escapes in output (default)
+msgfilter, ,E,escape, , ,113,"use C escapes in output, no extended chars"
+msgfilter, , ,force-po, , ,114,write PO file even if empty
+msgfilter, , ,indent, , ,115,indented output style
+msgfilter, , ,keep-header, , ,116,"keep header entry unmodified, don't filter it"
+msgfilter, , ,no-location, , ,117,suppress '#: filename:line' lines
+msgfilter, , ,add-location, , ,118,preserve '#: filename:line' lines (default)
+msgfilter, , ,strict, , ,119,strict Uniforum output style
+msgfilter, ,p,properties-output, , ,120,write out a Java . properties file
+msgfilter, , ,stringtable-output, , ,121,write out a NeXTstep/GNUstep . strings file
+msgfilter, ,w,width, , ,122,set output page width
+msgfilter, , ,no-wrap, , ,123,"do not break long message lines, longer than the output page width, into seve…"
+msgfilter, ,s,sort-output, , ,124,generate sorted output
+msgfilter, ,F,sort-by-file, , ,125,sort output by file location . SS 'Informative output:'
+msgfilter, ,h,help, , ,126,display this help and exit
+msgfilter, ,V,version, , ,127,output version information and exit AUTHOR Written by Bruno Haible

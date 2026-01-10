@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsamixer, ,h,help, , ,101,Show help
+alsamixer, ,c,card, ,@f @r,102,Soundcard number or id to use
+alsamixer, ,D,device, ,@f @r,103,Mixer device to control
+alsamixer, ,V,view,playback capture all,@f @r,104,Starting view mode
+alsamixer, ,g,no-color, , ,105,Toggle the using of colors
+alsamixer, ,a,abstraction,none basic,@f @r,106,Mixer abstraction level

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sendiso, ,l,loop, , ,101,Send dump file COUNT times.   Defaults to 1
+sendiso, ,i,infinite, , ,102,Send dump file in an endless loop
+sendiso, ,s,speed, , ,103,"Send packets at speed SPEED, which can be given as 100, 200 and 400 (in Mbit/…"
+sendiso, ,p,port, , ,104,Choose port PORT for sending
+sendiso, ,h,help, , ,105,Show help text and exit

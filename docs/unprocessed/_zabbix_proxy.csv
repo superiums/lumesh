@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_proxy, __fish_string_in_command log_level_increase,R,runtime-control, ,@f @r,106, 
+zabbix_proxy, __fish_string_in_command log_level_decrease,R,runtime-control, ,@f @r,107, 
+zabbix_proxy, __fish_string_in_command diaginfo,R,runtime-control, ,@f @r,108, 

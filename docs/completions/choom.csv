@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+choom, ,p,pid, , ,101, 
+choom, ,n,adjust, , ,102, 
+choom, ,h,help, , ,103, 
+choom, ,V,version, , ,104, 

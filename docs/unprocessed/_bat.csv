@@ -1,0 +1,57 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$bat, __fish_is_first_arg, ,acknowledgements, , ,101,Print acknowledgements
+$bat, __bat_no_excl_args, ,binary,no-printing as-text,@f @r,102,How to treat binary content
+$bat, __fish_is_first_arg, ,cache-dir, ,@f,103,Show bat's cache directory
+$bat, __bat_no_excl_args,c,chop-long-lines, , ,104,Truncate all lines longer than screen width
+$bat, __bat_no_excl_args, ,color,$color_opts,@f @r,105,When to use colored output
+$bat, __fish_is_first_arg, ,completion,bash fish zsh ps1,@f @r,106,Show shell completion for a certain shell
+$bat, __fish_is_first_arg, ,config-dir, ,@f,107,Display location of configuration directory
+$bat, __fish_is_first_arg, ,config-file, ,@f,108,Display location of configuration file
+$bat, __bat_no_excl_args, ,decorations,$decorations_opts,@f @r,109,When to use --style decorations
+$bat, __fish_is_first_arg, ,diagnostic, , ,110,Print diagnostic info for bug reports
+$bat, __bat_no_excl_args,d,diff, , ,111,Only show lines with Git changes
+$bat, __fish_seen_argument -s d -l diff, ,diff-context, ,@f @r,112,Show N context lines around Git changes
+$bat, __fish_is_first_arg, ,generate-config-file, ,@f,113,Generates a default configuration file
+$bat, __bat_no_excl_args, ,file-name, ,@f @r,114,Specify the display name
+$bat, __bat_no_excl_args,f,force-colorization, , ,115,Force color and decorations
+$bat, __fish_is_first_arg, ,help, ,@f,116,Print all help information
+$bat, __bat_no_excl_args,H,highlight-line, ,@f @r,117,Highlight line(s) N[:M]
+$bat, __bat_no_excl_args, ,ignored-suffix, ,@f @r,118,Ignore extension
+$bat, __bat_no_excl_args, ,italic-text,$italic_text_opts,@f @r,119,When to use italic text in the output
+$bat, __bat_no_excl_args,l,language, ,@f @k @r,120,Set the syntax highlighting language
+$bat, __fish_is_first_arg, ,lessopen, , ,121,Enable the $LESSOPEN preprocessor
+$bat, __bat_no_excl_args,r,line-range, ,@f @r,122,Only print lines [M]:[N] (either optional)
+$bat, __fish_is_first_arg, ,list-languages, ,@f,123,List syntax highlighting languages
+$bat, __fish_is_first_arg, ,list-themes, ,@f,124,List syntax highlighting themes
+$bat, __bat_no_excl_args,m,map-syntax, ,@f @r,125,Map <glob pattern>:<language syntax>
+$bat, , ,no-config, , ,126,Do not use the configuration file
+$bat, , ,no-custom-assets, , ,127,Do not load custom assets
+$bat, , ,no-lessopen, , ,128,Disable the $LESSOPEN preprocessor if enabled (overrides --lessopen)
+$bat, __bat_no_excl_args, ,nonprintable-notation,unicode caret,@f @r,129,Set notation for non-printable characters
+$bat, __bat_no_excl_args,n,number, , ,130,"Only show line numbers, no other decorations"
+$bat, __bat_no_excl_args, ,no-paging, , ,131,Alias for --paging=never
+$bat, __bat_no_excl_args, ,pager,$pager_opts,@f @r,132,Which pager to use
+$bat, __bat_no_excl_args, ,paging,$paging_opts,@f @r,133,When to use the pager
+$bat, __bat_no_excl_args,p,plain, , ,134,Show plain style
+$bat, __bat_no_excl_args, ,set-terminal-title, , ,135,Sets terminal title to filenames when using a pager
+$bat, __bat_no_excl_args,A,show-all, , ,136,Show non-printable characters
+$bat, __bat_no_excl_args,s,squeeze-blank, , ,137,Squeeze consecutive empty lines into a single empty line
+$bat, __bat_no_excl_args, ,squeeze-limit, ,@f @r,138,Set the maximum number of consecutive empty lines to be printed
+$bat, __bat_no_excl_args, ,strip-ansi,auto never always,@f @r,139,Specify when to strip ANSI escape sequences from the input
+$bat, __bat_no_excl_args,p,plain, , ,140,Disable decorations
+$bat, __bat_no_excl_args, ,style, ,@f @k @r,141,Specify which non-content elements to display
+$bat, __bat_no_excl_args, ,tabs,$tabs_opts,@f @r,142,Set tab width
+$bat, __bat_no_excl_args, ,terminal-width, ,@f @r,143,"Set terminal <width>, +<offset>, or -<offset>"
+$bat, __bat_no_excl_args, ,theme,$special_themes(command $bat --list-themes | command cat),@f @r,144,Set the syntax highlighting theme
+$bat, __bat_no_excl_args, ,theme-dark, ,@f @r,145,Set the syntax highlighting theme for dark backgrounds
+$bat, __bat_no_excl_args, ,theme-light, ,@f @r,146,Set the syntax highlighting theme for light backgrounds
+$bat, __bat_no_excl_args,u,unbuffered, , ,147,This option exists for POSIX-compliance reasons
+$bat, __fish_is_first_arg,V,version, ,@f,148,Show version information
+$bat, __bat_no_excl_args, ,wrap,$wrap_opts,@f @r,149,Text-wrapping mode
+$bat, __bat_cache_no_excl, ,build, ,@f,150,Parse new definitions into cache
+$bat, __bat_cache_no_excl, ,clear, ,@f,151,Reset definitions to defaults
+$bat," __bat_cache_subcommand; and __fish_seen_argument -l clear", ,blank, ,@f,151,Create new data instead of appending
+$bat," __bat_cache_subcommand; and __fish_seen_argument -l clear", ,source, ,@D @f @r,151,Load syntaxes and themes from DIR
+$bat, __bat_cache_subcommand, ,target, ,@D @f @r,152,Store cache in DIR
+$bat, __bat_cache_no_excl, ,acknowledgements, , ,153,Build acknowledgements.bin
+$bat, __bat_cache_no_excl, ,help, ,@f,154,Print all $bat-cache help

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+desktop-file-validate, , ,no-hints, , ,101,Do not output hints about things that might be improved in the desktop file
+desktop-file-validate, , ,no-warn-deprecated, , ,102,Do not warn about usage of deprecated items that were defined in previous ver…
+desktop-file-validate, , ,warn-kde, , ,103,Warn about usage of KDE extensions to the specification

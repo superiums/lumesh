@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dirname, ,z,zero, , ,101,"end each output line with NUL, not newline"
+dirname, , ,help, , ,102,display this help and exit
+dirname, , ,version, , ,103,output version information and exit EXAMPLES

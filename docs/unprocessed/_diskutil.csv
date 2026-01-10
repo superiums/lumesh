@@ -1,0 +1,67 @@
+cmd,conds,short,long,params,dirs,pri,desc
+diskutil, __fish_use_subcommand, , ,list,@f,101,List disks
+diskutil, __fish_diskutil_using_not_subcommand list, , , ,@f,102,Return a property list
+diskutil, __fish_diskutil_using_not_subcommand list, , , ,@f,103, 
+diskutil, __fish_use_subcommand, , ,info,@f,104,Get detailed information about a specific whole disk or partition
+diskutil, __fish_diskutil_using_not_subcommand info, , , ,@f,105,Return a property list
+diskutil, __fish_diskutil_using_not_subcommand info, , , ,@f,106, 
+diskutil, __fish_diskutil_using_not_subcommand info, , , ,@f,107,Process all disks
+diskutil, __fish_use_subcommand, , ,activity,@f,108,Continuously display system-wide disk manipulation activity
+diskutil, __fish_use_subcommand, , ,listFilesystems,@f,109,Show the file system personalities available
+diskutil, __fish_diskutil_using_not_subcommand listFilesystems, , , ,@f,110,Return a property list
+diskutil, __fish_use_subcommand, , ,umount,@f,111,Unmount a single volume
+diskutil, __fish_diskutil_using_not_subcommand umount, , , ,@f,112, 
+diskutil, __fish_use_subcommand, , ,umountDisk,@f,113,Unmount an entire disk (all volumes)
+diskutil, __fish_diskutil_using_not_subcommand umountDisk, , , ,@f,114, 
+diskutil, __fish_use_subcommand, , ,eject,@f,115,Eject a volume or disk
+diskutil, __fish_diskutil_using_not_subcommand eject, , , ,@f,116, 
+diskutil, __fish_use_subcommand, , ,mount,@f,117,Mount a single volume
+diskutil, __fish_diskutil_using_not_subcommand mount, , , ,@r,118,Specify mount point
+diskutil, __fish_diskutil_using_not_subcommand mount, , , ,@f,119, 
+diskutil, __fish_use_subcommand, , ,mountDisk,@f,120,Mount an entire disk (all mountable volumes)
+diskutil, __fish_diskutil_using_not_subcommand mountDisk, , , ,@f,121, 
+diskutil, __fish_use_subcommand, , ,rename,@f,122,Rename a volume
+diskutil, __fish_diskutil_using_not_subcommand rename, , , ,@f,123, 
+diskutil, __fish_use_subcommand, , ,enableJournal,@f,124,Enable journaling on an HFS+ volume
+diskutil, __fish_diskutil_using_not_subcommand enableJournal, , , ,@f,125, 
+diskutil, __fish_use_subcommand, , ,disableJournal,@f,126,Disable journaling on an HFS+ volume
+diskutil, __fish_diskutil_using_not_subcommand disableJournal, , , ,@f,127, 
+diskutil, __fish_use_subcommand, , ,moveJournal,@f,128,Create a 512MB Apple_Journal partition
+diskutil, __fish_diskutil_using_not_subcommand moveJournal, , , ,@f,129, 
+diskutil, __fish_use_subcommand, , ,enableOwnership,@f,130,Enable ownership of a volume
+diskutil, __fish_diskutil_using_not_subcommand enableOwnership, , , ,@f,131, 
+diskutil, __fish_use_subcommand, , ,disableOwnership,@f,132,Disable ownership of a volume
+diskutil, __fish_diskutil_using_not_subcommand disableOwnership, , , ,@f,133, 
+diskutil, __fish_use_subcommand, , ,verifyVolume,@f,134,Verify the file system data structures of a volume
+diskutil, __fish_diskutil_using_not_subcommand verifyVolume, , , ,@f,135, 
+diskutil, __fish_use_subcommand, , ,repairVolume,@f,136,Repair the file system data structures of a volume
+diskutil, __fish_diskutil_using_not_subcommand repairVolume, , , ,@f,137, 
+diskutil, __fish_use_subcommand, , ,verifyDisk,@f,138,Verify the partition map layout of a whole disk
+diskutil, __fish_diskutil_using_not_subcommand verifyDisk, , , ,@f,139, 
+diskutil, __fish_use_subcommand, , ,repairDisk,@f,140,Repair the partition map layout of a whole disk
+diskutil, __fish_diskutil_using_not_subcommand repairDisk, , , ,@f,141, 
+diskutil, __fish_use_subcommand, , ,eraseDisk,@f,142,Erase an existing disk
+diskutil, __fish_diskutil_using_not_subcommand eraseDisk, , , ,@f,143, 
+diskutil, __fish_use_subcommand, , ,verifyDisk,@f,144,Write out a new empty file system volume
+diskutil, __fish_diskutil_using_not_subcommand verifyDisk, , , ,@f,145, 
+diskutil, __fish_use_subcommand, , ,reformat,@f,146,Erase an existing volume by writing out a new empty file system
+diskutil, __fish_diskutil_using_not_subcommand reformat, , , ,@f,147, 
+diskutil, __fish_use_subcommand, , ,eraseOptical,@f,148,"Erase optical media (CD/RW, DVD/RW, etc.)"
+diskutil, __fish_diskutil_using_not_subcommand eraseOptical, , , ,@f,149, 
+diskutil, __fish_use_subcommand, , ,zeroDisk,@f,150,"Erase a device, writing zeros to the media"
+diskutil, __fish_diskutil_using_not_subcommand zeroDisk, , , ,@f,151, 
+diskutil, __fish_use_subcommand, , ,randomDisk,@f,152,"Erase a whole disk, writing random data to the media"
+diskutil, __fish_diskutil_using_not_subcommand randomDisk, , , ,@f,153, 
+diskutil, __fish_use_subcommand, , ,secureErase,@f,154,"Erase, using a secure method"
+diskutil, __fish_diskutil_using_not_subcommand secureErase, , , ,@f,155, 
+diskutil, __fish_use_subcommand, , ,partitionDisk,@f,156,"(re)Partition a disk, removing all volumes"
+diskutil, __fish_diskutil_using_not_subcommand partitionDisk, , , ,@f,157, 
+diskutil, __fish_use_subcommand, , ,resizeVolume,@f,158,Non-destructively resize a volume (partition)
+diskutil, __fish_diskutil_using_not_subcommand resizeVolume, , , ,@f,159, 
+diskutil, __fish_use_subcommand, , ,splitPartition,@f,160,Destructively split a volume into multiple partitions
+diskutil, __fish_diskutil_using_not_subcommand splitPartition, , , ,@f,161, 
+diskutil, __fish_use_subcommand, , ,mergePartitions,@f,162,Merge two or more partitions on a disk
+diskutil, __fish_diskutil_using_not_subcommand mergePartitions, , , ,@f,163, 
+diskutil, __fish_use_subcommand, , ,apfs,@f,164,Merge two or more partitions on a disk
+diskutil, __fish_use_subcommand, , ,appleRAID,@f,183,"Create, manipulate and destroy AppleRAID volumes"
+diskutil, __fish_use_subcommand, , ,coreStorage,@f,192,"Create, manipulate and destroy CoreStorage volumes"

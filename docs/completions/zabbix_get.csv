@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_get, ,s,host, ,@f,101,Specify host name or IP address of a host.
+zabbix_get, ,p,port, ,@f,102,Specify port number of agent running on the host.
+zabbix_get, ,I,source-address, ,@f,103,Specify source IP address.
+zabbix_get, ,t,timeout, ,@f,104,Specify timeout.
+zabbix_get, ,k,key, ,@f,105,Specify key of item to retrieve value for.
+zabbix_get, ,h,help, ,@f,106,Display this help and exit.
+zabbix_get, ,V,version, ,@f,107,Output version information and exit.
+zabbix_get, , ,tls-connect,unencrypted psk cert,@f @r,108,How to connect to agent.
+zabbix_get, , ,tls-ca-file, ,@F,109,Full path of a file with the top-level CA(s).
+zabbix_get, , ,tls-crl-file, ,@F,110, Full path of a file with revoked certificates.
+zabbix_get, , ,tls-agent-cert-issuer, ,@f,111,Allowed agent certificate issuer.
+zabbix_get, , ,tls-agent-cert-subject, ,@f,112,Allowed agent certificate subject.
+zabbix_get, , ,tls-cert-file, , ,113,Full path the certificate or certificate chain.
+zabbix_get, , ,tls-key-file, , ,114,Full path of a file with the private key.
+zabbix_get, , ,tls-psk-identity, ,@f,115,PSK-identity string.
+zabbix_get, , ,tls-psk-file, , ,116,Full path of a file with the pre-shared key.
+zabbix_get, , ,tls-cipher13, ,@f,117,Cipher string for OpenSSL.
+zabbix_get, , ,tls-cipher, ,@f,118,GnuTLS priority string.

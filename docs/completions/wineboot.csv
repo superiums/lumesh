@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wineboot, ,h,help, , ,101,Show help and exit
+wineboot, ,e,end-session, , ,102,End current session cleanly
+wineboot, ,f,force, , ,103,Force exit processes don't exit cleanly
+wineboot, ,i,init, , ,104,Perform initialization for first Wine instance
+wineboot, ,k,kill, , ,105,Kill processes without cleanup
+wineboot, ,r,restart, , ,106,Restart
+wineboot, ,s,shutdown, , ,107,Shutdown
+wineboot, ,u,update, , ,108,Update wineprefix directory

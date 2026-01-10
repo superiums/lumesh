@@ -1,0 +1,697 @@
+cmd,conds,short,long,params,dirs,pri,desc
+darcs, contains setpref (commandline -pxc), , ,test predist boringfile binariesfile, ,101,Set the specified option
+darcs, __fish_use_subcommand, , ,help,@f @r,102,Display help about darcs and darcs commands
+darcs, __fish_use_subcommand, , ,add,@f @r,103,Add new files to version control
+darcs, __fish_use_subcommand, , ,remove,@f @r,104,Remove files from version control
+darcs, __fish_use_subcommand, , ,move,@f @r,105,Move or rename files
+darcs, __fish_use_subcommand, , ,replace,@f @r,106,Substitute one word for another
+darcs, __fish_use_subcommand, , ,revert,@f @r,107,Discard unrecorded changes
+darcs, __fish_use_subcommand, , ,unrevert,@f @r,108,Undo the last revert
+darcs, __fish_use_subcommand, , ,whatsnew,@f @r,109,List unrecorded changes in the working tree
+darcs, __fish_use_subcommand, , ,record,@f @r,110,Create a patch from unrecorded changes
+darcs, __fish_use_subcommand, , ,unrecord,@f @r,111,Remove recorded patches without changing the working tree
+darcs, __fish_use_subcommand, , ,amend,@f @r,112,Improve a patch before it leaves your repository
+darcs, __fish_use_subcommand, , ,mark-conflicts,@f @r,113,"Mark unresolved conflicts in working tree, for manual resolution"
+darcs, __fish_use_subcommand, , ,tag,@f @r,114,Name the current repository state for future reference
+darcs, __fish_use_subcommand, , ,setpref,@f @r,115,"Set a preference (test, predist, boringfile or binariesfile)"
+darcs, __fish_use_subcommand, , ,diff,@f @r,116,Create a diff between two versions of the repository
+darcs, __fish_use_subcommand, , ,log,@f @r,117,List patches in the repository
+darcs, __fish_use_subcommand, , ,annotate,@f @r,118,Annotate lines of a file with the last patch that modified it
+darcs, __fish_use_subcommand, , ,dist,@f @r,119,Create a distribution archive
+darcs, __fish_use_subcommand, , ,show,@f @r,120,Show information about the given repository
+darcs, __fish_use_subcommand, , ,pull,@f @r,121,Copy and apply patches from another repository to this one
+darcs, __fish_use_subcommand, , ,obliterate,@f @r,122,Delete selected patches from the repository
+darcs, __fish_use_subcommand, , ,rollback,@f @r,123,Apply the inverse of recorded changes to the working tree
+darcs, __fish_use_subcommand, , ,push,@f @r,124,Copy and apply patches from this repository to another one
+darcs, __fish_use_subcommand, , ,send,@f @r,125,Prepare a bundle of patches to be applied to some target repository
+darcs, __fish_use_subcommand, , ,apply,@f @r,126,Apply a patch bundle created by `darcs send'
+darcs, __fish_use_subcommand, , ,clone,@f @r,127,Make a copy of an existing repository
+darcs, __fish_use_subcommand, , ,initialize,@f @r,128,Create an empty repository
+darcs, __fish_use_subcommand, , ,optimize,@f @r,129,Optimize the repository
+darcs, __fish_use_subcommand, , ,repair,@f @r,130,Repair a corrupted repository
+darcs, __fish_use_subcommand, , ,convert,@f @r,131,Convert repositories between various formats
+darcs, __fish_darcs_use_show_command, , ,contents,@f @r,132,Outputs a specific version of a file
+darcs, __fish_darcs_use_show_command, , ,dependencies,@f @r,133,Generate the graph of dependencies
+darcs, __fish_darcs_use_show_command, , ,files,@f @r,134,Show version-controlled files in the working tree
+darcs, __fish_darcs_use_show_command, , ,index,@f @r,135,Dump contents of working tree index
+darcs, __fish_darcs_use_show_command, , ,pristine,@f @r,136,Dump contents of pristine cache
+darcs, __fish_darcs_use_show_command, , ,repo,@f @r,137,Show repository summary information
+darcs, __fish_darcs_use_show_command, , ,authors,@f @r,138,List authors by patch count
+darcs, __fish_darcs_use_show_command, , ,tags,@f @r,139,Show all tags in the repository
+darcs, __fish_darcs_use_show_command, , ,patch-index,@f @r,140,Check integrity of patch index
+darcs, __fish_darcs_use_optimize_command, , ,clean,@f @r,141,"Garbage collect pristine, inventories and patches"
+darcs, __fish_darcs_use_optimize_command, , ,http,@f @r,142,Optimize repository for getting over network
+darcs, __fish_darcs_use_optimize_command, , ,reorder,@f @r,143,Reorder the patches in the repository
+darcs, __fish_darcs_use_optimize_command, , ,enable-patch-index,@f @r,144,Enable patch index
+darcs, __fish_darcs_use_optimize_command, , ,disable-patch-index,@f @r,145,Disable patch index
+darcs, __fish_darcs_use_optimize_command, , ,compress,@f @r,146,Compress patches and inventories
+darcs, __fish_darcs_use_optimize_command, , ,uncompress,@f @r,147,Uncompress patches and inventories
+darcs, __fish_darcs_use_optimize_command, , ,relink,@f @r,148,Relink random internal data to a sibling
+darcs, __fish_darcs_use_optimize_command, , ,pristine,@f @r,149,Optimize hashed pristine layout
+darcs, __fish_darcs_use_optimize_command, , ,upgrade,@f @r,150,Upgrade repository to latest compatible format
+darcs, __fish_darcs_use_optimize_command, , ,cache,@f @r,151,Garbage collect global cache
+darcs, contains 'add' (commandline -pxc), ,boring, , ,170,Don't skip boring files
+darcs, contains 'add' (commandline -pxc), ,no-boring, , ,171,Skip boring files [DEFAULT]
+darcs, contains 'add' (commandline -pxc), ,case-ok, , ,172,Don't refuse to add files differing only in case
+darcs, contains 'add' (commandline -pxc), ,no-case-ok, , ,173,Refuse to add files whose name differ only in case [DEFAULT]
+darcs, contains 'add' (commandline -pxc), ,reserved-ok, , ,174,Don't refuse to add files with Windows-reserved names
+darcs, contains 'add' (commandline -pxc), ,no-reserved-ok, , ,175,Refuse to add files with Windows-reserved names [DEFAULT]
+darcs, contains 'add' (commandline -pxc),r,recursive, , ,176,Recurse into subdirectories
+darcs, contains 'add' (commandline -pxc), ,not-recursive, , ,177,Don't recurse into subdirectories [DEFAULT]
+darcs, contains 'add' (commandline -pxc), ,no-recursive, , ,178,Don't recurse into subdirectories [DEFAULT]
+darcs, contains 'add' (commandline -pxc), ,repodir, ,@D @f @r,179,Specify the repository directory in which to run
+darcs, contains 'add' (commandline -pxc), ,dry-run, , ,180,Don't actually take the action
+darcs, contains 'add' (commandline -pxc), ,umask, , ,181,Specify umask to use when writing
+darcs, contains 'remove' (commandline -pxc), ,repodir, ,@D @f @r,182,Specify the repository directory in which to run
+darcs, contains 'remove' (commandline -pxc),r,recursive, , ,183,Recurse into subdirectories
+darcs, contains 'remove' (commandline -pxc), ,not-recursive, , ,184,Don't recurse into subdirectories [DEFAULT]
+darcs, contains 'remove' (commandline -pxc), ,no-recursive, , ,185,Don't recurse into subdirectories [DEFAULT]
+darcs, contains 'remove' (commandline -pxc), ,umask, , ,186,Specify umask to use when writing
+darcs, contains 'move' (commandline -pxc), ,case-ok, , ,187,Don't refuse to add files differing only in case
+darcs, contains 'move' (commandline -pxc), ,no-case-ok, , ,188,Refuse to add files whose name differ only in case [DEFAULT]
+darcs, contains 'move' (commandline -pxc), ,reserved-ok, , ,189,Don't refuse to add files with Windows-reserved names
+darcs, contains 'move' (commandline -pxc), ,no-reserved-ok, , ,190,Refuse to add files with Windows-reserved names [DEFAULT]
+darcs, contains 'move' (commandline -pxc), ,repodir, ,@D @f @r,191,Specify the repository directory in which to run
+darcs, contains 'move' (commandline -pxc), ,umask, , ,192,Specify umask to use when writing
+darcs, contains 'replace' (commandline -pxc), ,token-chars, , ,193,Define token to contain these characters
+darcs, contains 'replace' (commandline -pxc),f,force, , ,194,Proceed with replace even if 
+darcs, contains 'replace' (commandline -pxc), ,no-force, , ,195,Don't force the replace if it looks scary [DEFAULT]
+darcs, contains 'replace' (commandline -pxc), ,repodir, ,@D @f @r,196,Specify the repository directory in which to run
+darcs, contains 'replace' (commandline -pxc), ,ignore-times, , ,197,Don't trust the file modification times
+darcs, contains 'replace' (commandline -pxc), ,no-ignore-times, , ,198,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'replace' (commandline -pxc), ,umask, , ,199,Specify umask to use when writing
+darcs, contains 'revert' (commandline -pxc),a,all, , ,200,Answer yes to all patches
+darcs, contains 'revert' (commandline -pxc), ,no-interactive, , ,201,Answer yes to all patches
+darcs, contains 'revert' (commandline -pxc),i,interactive, , ,202,Prompt user interactively
+darcs, contains 'revert' (commandline -pxc), ,repodir, ,@D @f @r,203,Specify the repository directory in which to run
+darcs, contains 'revert' (commandline -pxc),u,unified, , ,204,Output changes in a darcs-specific format similar to diff -u
+darcs, contains 'revert' (commandline -pxc), ,no-unified, , ,205,Output changes in darcs' usual format [DEFAULT]
+darcs, contains 'revert' (commandline -pxc), ,myers, , ,206,Use myers diff algorithm
+darcs, contains 'revert' (commandline -pxc), ,patience, , ,207,Use patience diff algorithm [DEFAULT]
+darcs, contains 'revert' (commandline -pxc), ,ignore-times, , ,208,Don't trust the file modification times
+darcs, contains 'revert' (commandline -pxc), ,no-ignore-times, , ,209,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'revert' (commandline -pxc), ,umask, , ,210,Specify umask to use when writing
+darcs, contains 'unrevert' (commandline -pxc), ,ignore-times, , ,211,Don't trust the file modification times
+darcs, contains 'unrevert' (commandline -pxc), ,no-ignore-times, , ,212,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'unrevert' (commandline -pxc),a,all, , ,213,Answer yes to all patches
+darcs, contains 'unrevert' (commandline -pxc), ,no-interactive, , ,214,Answer yes to all patches
+darcs, contains 'unrevert' (commandline -pxc),i,interactive, , ,215,Prompt user interactively
+darcs, contains 'unrevert' (commandline -pxc), ,repodir, ,@D @f @r,216,Specify the repository directory in which to run
+darcs, contains 'unrevert' (commandline -pxc),u,unified, , ,217,Output changes in a darcs-specific format similar to diff -u
+darcs, contains 'unrevert' (commandline -pxc), ,no-unified, , ,218,Output changes in darcs' usual format [DEFAULT]
+darcs, contains 'unrevert' (commandline -pxc), ,myers, , ,219,Use myers diff algorithm
+darcs, contains 'unrevert' (commandline -pxc), ,patience, , ,220,Use patience diff algorithm [DEFAULT]
+darcs, contains 'unrevert' (commandline -pxc), ,umask, , ,221,Specify umask to use when writing
+darcs, contains 'whatsnew' (commandline -pxc),s,summary, , ,222,Summarize changes
+darcs, contains 'whatsnew' (commandline -pxc), ,no-summary, , ,223,Don't summarize changes
+darcs, contains 'whatsnew' (commandline -pxc),u,unified, , ,224,Output changes in a darcs-specific format similar to diff -u
+darcs, contains 'whatsnew' (commandline -pxc), ,no-unified, , ,225,Output changes in darcs' usual format [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,human-readable, , ,226,Give human-readable output [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,machine-readable, , ,227,Give machine-readable output
+darcs, contains 'whatsnew' (commandline -pxc),-l,look-for-adds, , ,228,Look for (non-boring) files that could be added
+darcs, contains 'whatsnew' (commandline -pxc), ,dont-look-for-adds, , ,229,Don't look for any files that could be added [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,no-look-for-adds, , ,230,Don't look for any files that could be added [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,look-for-replaces, , ,231,Look for replaces that could be marked
+darcs, contains 'whatsnew' (commandline -pxc), ,dont-look-for-replaces, , ,232,Don't look for any replaces [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,no-look-for-replaces, , ,233,Don't look for any replaces [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,look-for-moves, , ,234,Look for files that may be moved/renamed
+darcs, contains 'whatsnew' (commandline -pxc), ,dont-look-for-moves, , ,235,Don't look for any files that could be moved/renamed [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,no-look-for-moves, , ,236,Don't look for any files that could be moved/renamed [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,myers, , ,237,Use myers diff algorithm
+darcs, contains 'whatsnew' (commandline -pxc), ,patience, , ,238,Use patience diff algorithm [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,repodir, ,@D @f @r,239,Specify the repository directory in which to run
+darcs, contains 'whatsnew' (commandline -pxc),a,all, , ,240,Answer yes to all patches
+darcs, contains 'whatsnew' (commandline -pxc), ,no-interactive, , ,241,Answer yes to all patches
+darcs, contains 'whatsnew' (commandline -pxc),i,interactive, , ,242,Prompt user interactively
+darcs, contains 'whatsnew' (commandline -pxc), ,ignore-times, , ,243,Don't trust the file modification times
+darcs, contains 'whatsnew' (commandline -pxc), ,no-ignore-times, , ,244,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'whatsnew' (commandline -pxc), ,boring, , ,245,Don't skip boring files
+darcs, contains 'whatsnew' (commandline -pxc), ,no-boring, , ,246,Skip boring files [DEFAULT]
+darcs, contains 'record' (commandline -pxc),m,name, , ,247,Name of patch
+darcs, contains 'record' (commandline -pxc),A,author, , ,248,Specify author id
+darcs, contains 'record' (commandline -pxc), ,test, , ,249,Run the test script
+darcs, contains 'record' (commandline -pxc), ,no-test, , ,250,Don't run the test script [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,leave-test-directory, , ,251,Don't remove the test directory [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,remove-test-directory, , ,252,Remove the test directory
+darcs, contains 'record' (commandline -pxc),a,all, , ,253,Answer yes to all patches
+darcs, contains 'record' (commandline -pxc), ,no-interactive, , ,254,Answer yes to all patches
+darcs, contains 'record' (commandline -pxc),i,interactive, , ,255,Prompt user interactively
+darcs, contains 'record' (commandline -pxc), ,pipe, , ,256,Ask user interactively for the patch metadata
+darcs, contains 'record' (commandline -pxc), ,ask-deps, , ,257,Manually select dependencies
+darcs, contains 'record' (commandline -pxc), ,no-ask-deps, , ,258,Automatically select dependencies [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,edit-long-comment, , ,259,Edit the long comment by default
+darcs, contains 'record' (commandline -pxc), ,skip-long-comment, , ,260,Don't give a long comment
+darcs, contains 'record' (commandline -pxc), ,prompt-long-comment, , ,261,Prompt for whether to edit the long comment
+darcs, contains 'record' (commandline -pxc),l,look-for-adds, , ,262,Look for (non-boring) files that could be added
+darcs, contains 'record' (commandline -pxc), ,dont-look-for-adds, , ,263,Don't look for any files that could be added [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,no-look-for-adds, , ,264,Don't look for any files that could be added [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,look-for-replaces, , ,265,Look for replaces that could be marked
+darcs, contains 'record' (commandline -pxc), ,dont-look-for-replaces, , ,266,Don't look for any replaces [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,no-look-for-replaces, , ,267,Don't look for any replaces [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,look-for-moves, , ,268,Look for files that may be moved/renamed
+darcs, contains 'record' (commandline -pxc), ,dont-look-for-moves, , ,269,Don't look for any files that could be moved/renamed [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,no-look-for-moves, , ,270,Don't look for any files that could be moved/renamed [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,repodir, ,@D @f @r,271,Specify the repository directory in which to run
+darcs, contains 'record' (commandline -pxc),u,unified, , ,272,Output changes in a darcs-specific format similar to diff -u
+darcs, contains 'record' (commandline -pxc), ,no-unified, , ,273,Output changes in darcs' usual format [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,myers, , ,274,Use myers diff algorithm
+darcs, contains 'record' (commandline -pxc), ,patience, , ,275,Use patience diff algorithm [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,logfile, , ,276,Give patch name and comment in file
+darcs, contains 'record' (commandline -pxc), ,delete-logfile, , ,277,Delete the logfile when done
+darcs, contains 'record' (commandline -pxc), ,no-delete-logfile, , ,278,Keep the logfile when done [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,compress, , ,279,Compress patch data [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,dont-compress, , ,280,Don't compress patch data
+darcs, contains 'record' (commandline -pxc), ,no-compress, , ,281,Don't compress patch data
+darcs, contains 'record' (commandline -pxc), ,ignore-times, , ,282,Don't trust the file modification times
+darcs, contains 'record' (commandline -pxc), ,no-ignore-times, , ,283,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,umask, , ,284,Specify umask to use when writing
+darcs, contains 'record' (commandline -pxc), ,set-scripts-executable, , ,285,Make scripts executable
+darcs, contains 'record' (commandline -pxc), ,dont-set-scripts-executable, , ,286,Don't make scripts executable [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,no-set-scripts-executable, , ,287,Don't make scripts executable [DEFAULT]
+darcs, contains 'record' (commandline -pxc), ,boring, , ,288,Don't skip boring files
+darcs, contains 'record' (commandline -pxc), ,no-boring, , ,289,Skip boring files [DEFAULT]
+darcs, contains 'unrecord' (commandline -pxc), ,not-in-remote, , ,290,Select all patches not in the default push/pull repository or at location URL/PATH
+darcs, contains 'unrecord' (commandline -pxc), ,from-match, , ,291,Select changes starting with a patch matching PATTERN
+darcs, contains 'unrecord' (commandline -pxc), ,from-patch, , ,292,Select changes starting with a patch matching REGEXP
+darcs, contains 'unrecord' (commandline -pxc), ,from-hash, , ,293,Select changes starting with a patch with HASH
+darcs, contains 'unrecord' (commandline -pxc), ,from-tag, , ,294,Select changes starting with a tag matching REGEXP
+darcs, contains 'unrecord' (commandline -pxc), ,last, , ,295,Select the last NUMBER patches
+darcs, contains 'unrecord' (commandline -pxc), ,matches, , ,296,Select patches matching PATTERN
+darcs, contains 'unrecord' (commandline -pxc),p,patches, , ,297,Select patches matching REGEXP
+darcs, contains 'unrecord' (commandline -pxc),t,tags, , ,298,Select tags matching REGEXP
+darcs, contains 'unrecord' (commandline -pxc),h,hash, , ,299,Select a single patch with HASH
+darcs, contains 'unrecord' (commandline -pxc), ,no-deps, , ,300,Don't automatically fulfill dependencies
+darcs, contains 'unrecord' (commandline -pxc), ,auto-deps, , ,301,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'unrecord' (commandline -pxc), ,dont-prompt-for-dependencies, , ,302,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'unrecord' (commandline -pxc), ,prompt-deps, , ,303,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'unrecord' (commandline -pxc), ,prompt-for-dependencies, , ,304,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'unrecord' (commandline -pxc),a,all, , ,305,Answer yes to all patches
+darcs, contains 'unrecord' (commandline -pxc), ,no-interactive, , ,306,Answer yes to all patches
+darcs, contains 'unrecord' (commandline -pxc),i,interactive, , ,307,Prompt user interactively
+darcs, contains 'unrecord' (commandline -pxc), ,repodir, ,@D @f @r,308,Specify the repository directory in which to run
+darcs, contains 'unrecord' (commandline -pxc), ,compress, , ,309,Compress patch data [DEFAULT]
+darcs, contains 'unrecord' (commandline -pxc), ,dont-compress, , ,310,Don't compress patch data
+darcs, contains 'unrecord' (commandline -pxc), ,no-compress, , ,311,Don't compress patch data
+darcs, contains 'unrecord' (commandline -pxc), ,umask, , ,312,Specify umask to use when writing
+darcs, contains 'unrecord' (commandline -pxc), ,reverse, , ,313,Show/consider changes in reverse order
+darcs, contains 'unrecord' (commandline -pxc), ,no-reverse, , ,314,Show/consider changes in the usual order [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,unrecord, , ,315,Remove changes from the patch
+darcs, contains 'amend' (commandline -pxc), ,record, , ,316,Add more changes to the patch [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,match, , ,317,Select a single patch matching PATTERN
+darcs, contains 'amend' (commandline -pxc),p,patch, , ,318,Select a single patch matching REGEXP
+darcs, contains 'amend' (commandline -pxc),h,hash, , ,319,Select a single patch with HASH
+darcs, contains 'amend' (commandline -pxc), ,test, , ,320,Run the test script
+darcs, contains 'amend' (commandline -pxc), ,no-test, , ,321,Don't run the test script [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,leave-test-directory, , ,322,Don't remove the test directory [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,remove-test-directory, , ,323,Remove the test directory
+darcs, contains 'amend' (commandline -pxc),a,all, , ,324,Answer yes to all patches
+darcs, contains 'amend' (commandline -pxc), ,no-interactive, , ,325,Answer yes to all patches
+darcs, contains 'amend' (commandline -pxc),i,interactive, , ,326,Prompt user interactively
+darcs, contains 'amend' (commandline -pxc),A,author, , ,327,Specify author id
+darcs, contains 'amend' (commandline -pxc), ,select-author, , ,328,Select author id from a menu
+darcs, contains 'amend' (commandline -pxc),m,name, , ,329,Name of patch
+darcs, contains 'amend' (commandline -pxc), ,ask-deps, , ,330,Manually select dependencies
+darcs, contains 'amend' (commandline -pxc), ,no-ask-deps, , ,331,Automatically select dependencies [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,edit-long-comment, , ,332,Edit the long comment by default
+darcs, contains 'amend' (commandline -pxc), ,skip-long-comment, , ,333,Don't give a long comment
+darcs, contains 'amend' (commandline -pxc), ,prompt-long-comment, , ,334,Prompt for whether to edit the long comment
+darcs, contains 'amend' (commandline -pxc), ,keep-date, , ,335,Keep the date of the original patch
+darcs, contains 'amend' (commandline -pxc), ,no-keep-date, , ,336,Use the current date for the amended patch [DEFAULT]
+darcs, contains 'amend' (commandline -pxc),l,look-for-adds, , ,337,Look for (non-boring) files that could be added
+darcs, contains 'amend' (commandline -pxc), ,dont-look-for-adds, , ,338,Don't look for any files that could be added [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,no-look-for-adds, , ,339,Don't look for any files that could be added [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,look-for-replaces, , ,340,Look for replaces that could be marked
+darcs, contains 'amend' (commandline -pxc), ,dont-look-for-replaces, , ,341,Don't look for any replaces [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,no-look-for-replaces, , ,342,Don't look for any replaces [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,look-for-moves, , ,343,Look for files that may be moved/renamed
+darcs, contains 'amend' (commandline -pxc), ,dont-look-for-moves, , ,344,Don't look for any files that could be moved/renamed [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,no-look-for-moves, , ,345,Don't look for any files that could be moved/renamed [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,repodir, ,@D @f @r,346,Specify the repository directory in which to run
+darcs, contains 'amend' (commandline -pxc),u,unified, , ,347,Output changes in a darcs-specific format similar to diff -u
+darcs, contains 'amend' (commandline -pxc), ,no-unified, , ,348,Output changes in darcs' usual format [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,myers, , ,349,Use myers diff algorithm
+darcs, contains 'amend' (commandline -pxc), ,patience, , ,350,Use patience diff algorithm [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,compress, , ,351,Compress patch data [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,dont-compress, , ,352,Don't compress patch data
+darcs, contains 'amend' (commandline -pxc), ,no-compress, , ,353,Don't compress patch data
+darcs, contains 'amend' (commandline -pxc), ,ignore-times, , ,354,Don't trust the file modification times
+darcs, contains 'amend' (commandline -pxc), ,no-ignore-times, , ,355,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,umask, , ,356,Specify umask to use when writing
+darcs, contains 'amend' (commandline -pxc), ,set-scripts-executable, , ,357,Make scripts executable
+darcs, contains 'amend' (commandline -pxc), ,dont-set-scripts-executable, , ,358,Don't make scripts executable [DEFAULT]
+darcs, contains 'amend' (commandline -pxc), ,no-set-scripts-executable, , ,359,Don't make scripts executable [DEFAULT]
+darcs, contains 'mark-conflicts' (commandline -pxc), ,ignore-times, , ,360,Don't trust the file modification times
+darcs, contains 'mark-conflicts' (commandline -pxc), ,no-ignore-times, , ,361,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'mark-conflicts' (commandline -pxc), ,repodir, ,@D @f @r,362,Specify the repository directory in which to run
+darcs, contains 'mark-conflicts' (commandline -pxc), ,myers, , ,363,Use myers diff algorithm
+darcs, contains 'mark-conflicts' (commandline -pxc), ,patience, , ,364,Use patience diff algorithm [DEFAULT]
+darcs, contains 'mark-conflicts' (commandline -pxc), ,dry-run, , ,365,Don't actually take the action
+darcs, contains 'mark-conflicts' (commandline -pxc), ,xml-output, , ,366,Generate XML formatted output
+darcs, contains 'mark-conflicts' (commandline -pxc), ,umask, , ,367,Specify umask to use when writing
+darcs, contains 'tag' (commandline -pxc),m,name, , ,368,Name of patch
+darcs, contains 'tag' (commandline -pxc),A,author, , ,369,Specify author id
+darcs, contains 'tag' (commandline -pxc), ,pipe, , ,370,Ask user interactively for the patch metadata
+darcs, contains 'tag' (commandline -pxc), ,edit-long-comment, , ,371,Edit the long comment by default
+darcs, contains 'tag' (commandline -pxc), ,skip-long-comment, , ,372,Don't give a long comment
+darcs, contains 'tag' (commandline -pxc), ,prompt-long-comment, , ,373,Prompt for whether to edit the long comment
+darcs, contains 'tag' (commandline -pxc), ,ask-deps, , ,374,Manually select dependencies
+darcs, contains 'tag' (commandline -pxc), ,no-ask-deps, , ,375,Automatically select dependencies [DEFAULT]
+darcs, contains 'tag' (commandline -pxc), ,repodir, ,@D @f @r,376,Specify the repository directory in which to run
+darcs, contains 'tag' (commandline -pxc), ,compress, , ,377,Compress patch data [DEFAULT]
+darcs, contains 'tag' (commandline -pxc), ,dont-compress, , ,378,Don't compress patch data
+darcs, contains 'tag' (commandline -pxc), ,no-compress, , ,379,Don't compress patch data
+darcs, contains 'tag' (commandline -pxc), ,umask, , ,380,Specify umask to use when writing
+darcs, contains 'setpref' (commandline -pxc), ,repodir, ,@D @f @r,381,Specify the repository directory in which to run
+darcs, contains 'setpref' (commandline -pxc), ,umask, , ,382,Specify umask to use when writing
+darcs, contains 'diff' (commandline -pxc), ,to-match, , ,383,Select changes up to a patch matching PATTERN
+darcs, contains 'diff' (commandline -pxc), ,to-patch, , ,384,Select changes up to a patch matching REGEXP
+darcs, contains 'diff' (commandline -pxc), ,to-hash, , ,385,Select changes up to a patch with HASH
+darcs, contains 'diff' (commandline -pxc), ,to-tag, , ,386,Select changes up to a tag matching REGEXP
+darcs, contains 'diff' (commandline -pxc), ,from-match, , ,387,Select changes starting with a patch matching PATTERN
+darcs, contains 'diff' (commandline -pxc), ,from-patch, , ,388,Select changes starting with a patch matching REGEXP
+darcs, contains 'diff' (commandline -pxc), ,from-hash, , ,389,Select changes starting with a patch with HASH
+darcs, contains 'diff' (commandline -pxc), ,from-tag, , ,390,Select changes starting with a tag matching REGEXP
+darcs, contains 'diff' (commandline -pxc), ,match, , ,391,Select a single patch matching PATTERN
+darcs, contains 'diff' (commandline -pxc),p,patch, , ,392,Select a single patch matching REGEXP
+darcs, contains 'diff' (commandline -pxc),h,hash, , ,393,Select a single patch with HASH
+darcs, contains 'diff' (commandline -pxc), ,last, , ,394,Select the last NUMBER patches
+darcs, contains 'diff' (commandline -pxc),n,index, , ,395,Select a range of patches
+darcs, contains 'diff' (commandline -pxc), ,diff-command, , ,396,Specify diff command (ignores --diff-opts)
+darcs, contains 'diff' (commandline -pxc), ,diff-opts, , ,397,Options to pass to diff
+darcs, contains 'diff' (commandline -pxc),u,unified, , ,398,Pass -u option to diff [DEFAULT]
+darcs, contains 'diff' (commandline -pxc), ,no-unified, , ,399,Output patch in diff's dumb format
+darcs, contains 'diff' (commandline -pxc), ,repodir, ,@D @f @r,400,Specify the repository directory in which to run
+darcs, contains 'diff' (commandline -pxc), ,store-in-memory, , ,401,Do patch application in memory rather than on disk
+darcs, contains 'diff' (commandline -pxc), ,no-store-in-memory, , ,402,Do patch application on disk [DEFAULT]
+darcs, contains 'diff' (commandline -pxc), ,pause-for-gui, , ,403,Pause for an external diff or merge command to finish [DEFAULT]
+darcs, contains 'diff' (commandline -pxc), ,no-pause-for-gui, , ,404,Return immediately after external diff or merge command finishes
+darcs, contains 'log' (commandline -pxc), ,to-match, , ,405,Select changes up to a patch matching PATTERN
+darcs, contains 'log' (commandline -pxc), ,to-patch, , ,406,Select changes up to a patch matching REGEXP
+darcs, contains 'log' (commandline -pxc), ,to-hash, , ,407,Select changes up to a patch with HASH
+darcs, contains 'log' (commandline -pxc), ,to-tag, , ,408,Select changes up to a tag matching REGEXP
+darcs, contains 'log' (commandline -pxc), ,from-match, , ,409,Select changes starting with a patch matching PATTERN
+darcs, contains 'log' (commandline -pxc), ,from-patch, , ,410,Select changes starting with a patch matching REGEXP
+darcs, contains 'log' (commandline -pxc), ,from-hash, , ,411,Select changes starting with a patch with HASH
+darcs, contains 'log' (commandline -pxc), ,from-tag, , ,412,Select changes starting with a tag matching REGEXP
+darcs, contains 'log' (commandline -pxc), ,last, , ,413,Select the last NUMBER patches
+darcs, contains 'log' (commandline -pxc),n,index, , ,414,Select a range of patches
+darcs, contains 'log' (commandline -pxc), ,matches, , ,415,Select patches matching PATTERN
+darcs, contains 'log' (commandline -pxc),p,patches, , ,416,Select patches matching REGEXP
+darcs, contains 'log' (commandline -pxc),t,tags, , ,417,Select tags matching REGEXP
+darcs, contains 'log' (commandline -pxc),h,hash, , ,418,Select a single patch with HASH
+darcs, contains 'log' (commandline -pxc), ,max-count, , ,419,Return only NUMBER results
+darcs, contains 'log' (commandline -pxc), ,only-to-files, , ,420,Show only changes to specified files
+darcs, contains 'log' (commandline -pxc), ,no-only-to-files, , ,421,Show changes to all files [DEFAULT]
+darcs, contains 'log' (commandline -pxc), ,context, , ,422,Give output suitable for clone --context
+darcs, contains 'log' (commandline -pxc), ,xml-output, , ,423,Generate XML formatted output
+darcs, contains 'log' (commandline -pxc), ,human-readable, , ,424,Give human-readable output
+darcs, contains 'log' (commandline -pxc), ,machine-readable, , ,425,Give machine-readable output
+darcs, contains 'log' (commandline -pxc), ,number, , ,426,Number the changes
+darcs, contains 'log' (commandline -pxc), ,count, , ,427,Output count of changes
+darcs, contains 'log' (commandline -pxc),s,summary, , ,428,Summarize changes
+darcs, contains 'log' (commandline -pxc), ,no-summary, , ,429,Don't summarize changes
+darcs, contains 'log' (commandline -pxc), ,reverse, , ,430,Show/consider changes in reverse order
+darcs, contains 'log' (commandline -pxc), ,no-reverse, , ,431,Show/consider changes in the usual order [DEFAULT]
+darcs, contains 'log' (commandline -pxc), ,repo, , ,432,Specify the repository URL
+darcs, contains 'log' (commandline -pxc), ,repodir, ,@D @f @r,433,Specify the repository directory in which to run
+darcs, contains 'log' (commandline -pxc),a,all, , ,434,Answer yes to all patches
+darcs, contains 'log' (commandline -pxc), ,no-interactive, , ,435,Answer yes to all patches
+darcs, contains 'log' (commandline -pxc),i,interactive, , ,436,Prompt user interactively
+darcs, contains 'log' (commandline -pxc), ,no-http-pipelining, , ,437,Disable HTTP pipelining
+darcs, contains 'log' (commandline -pxc), ,remote-darcs, , ,438,Name of the darcs executable on the remote server
+darcs, contains 'log' (commandline -pxc), ,with-patch-index, , ,439,Build patch index [DEFAULT]
+darcs, contains 'log' (commandline -pxc), ,no-patch-index, , ,440,Don't build patch index
+darcs, contains 'annotate' (commandline -pxc), ,human-readable, , ,441,Give human-readable output [DEFAULT]
+darcs, contains 'annotate' (commandline -pxc), ,machine-readable, , ,442,Give machine-readable output
+darcs, contains 'annotate' (commandline -pxc), ,match, , ,443,Select a single patch matching PATTERN
+darcs, contains 'annotate' (commandline -pxc),p,patch, , ,444,Select a single patch matching REGEXP
+darcs, contains 'annotate' (commandline -pxc),h,hash, , ,445,Select a single patch with HASH
+darcs, contains 'annotate' (commandline -pxc),t,tag, , ,446,Select tag matching REGEXP
+darcs, contains 'annotate' (commandline -pxc),n,index, , ,447,Select one patch
+darcs, contains 'annotate' (commandline -pxc), ,repodir, ,@D @f @r,448,Specify the repository directory in which to run
+darcs, contains 'annotate' (commandline -pxc), ,with-patch-index, , ,449,Build patch index [DEFAULT]
+darcs, contains 'annotate' (commandline -pxc), ,no-patch-index, , ,450,Don't build patch index
+darcs, contains 'dist' (commandline -pxc),d,dist-name, , ,451,Name of version
+darcs, contains 'dist' (commandline -pxc), ,zip, , ,452,Generate zip archive instead of gzip'ed tar
+darcs, contains 'dist' (commandline -pxc), ,repodir, ,@D @f @r,453,Specify the repository directory in which to run
+darcs, contains 'dist' (commandline -pxc), ,match, , ,454,Select a single patch matching PATTERN
+darcs, contains 'dist' (commandline -pxc),p,patch, , ,455,Select a single patch matching REGEXP
+darcs, contains 'dist' (commandline -pxc),h,hash, , ,456,Select a single patch with HASH
+darcs, contains 'dist' (commandline -pxc),t,tag, , ,457,Select tag matching REGEXP
+darcs, contains 'dist' (commandline -pxc),n,index, , ,458,Select one patch
+darcs, contains 'dist' (commandline -pxc), ,set-scripts-executable, , ,459,Make scripts executable
+darcs, contains 'dist' (commandline -pxc), ,dont-set-scripts-executable, , ,460,Don't make scripts executable [DEFAULT]
+darcs, contains 'dist' (commandline -pxc), ,no-set-scripts-executable, , ,461,Don't make scripts executable [DEFAULT]
+darcs, contains 'dist' (commandline -pxc), ,store-in-memory, , ,462,Do patch application in memory rather than on disk
+darcs, contains 'dist' (commandline -pxc), ,no-store-in-memory, , ,463,Do patch application on disk [DEFAULT]
+darcs, contains 'show' (commandline -pxc) && contains 'contents' (commandline -pxc), ,match, , ,464,Select a single patch matching PATTERN
+darcs, contains 'show' (commandline -pxc) && contains 'contents' (commandline -pxc),p,patch, , ,465,Select a single patch matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'contents' (commandline -pxc),h,hash, , ,466,Select a single patch with HASH
+darcs, contains 'show' (commandline -pxc) && contains 'contents' (commandline -pxc),t,tag, , ,467,Select tag matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'contents' (commandline -pxc),n,index, , ,468,Select one patch
+darcs, contains 'show' (commandline -pxc) && contains 'contents' (commandline -pxc), ,repodir, ,@D @f @r,469,Specify the repository directory in which to run
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc), ,from-match, , ,470,Select changes starting with a patch matching PATTERN
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc), ,from-patch, , ,471,Select changes starting with a patch matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc), ,from-hash, , ,472,Select changes starting with a patch with HASH
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc), ,from-tag, , ,473,Select changes starting with a tag matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc), ,last, , ,474,Select the last NUMBER patches
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc), ,matches, , ,475,Select patches matching PATTERN
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc),p,patches, , ,476,Select patches matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc),t,tags, , ,477,Select tags matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'dependencies' (commandline -pxc),h,hash, , ,478,Select a single patch with HASH
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,files, , ,479,Include files in output [DEFAULT]
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,no-files, , ,480,Don't include files in output
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,directories, , ,481,Include directories in output [DEFAULT]
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,no-directories, , ,482,Don't include directories in output
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,pending, , ,483,Reflect pending patches in output [DEFAULT]
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,no-pending, , ,484,Only include recorded patches in output
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc),0,null, , ,485,Separate file names by NUL characters
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,match, , ,486,Select a single patch matching PATTERN
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc),p,patch, , ,487,Select a single patch matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc),h,hash, , ,488,Select a single patch with HASH
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc),t,tag, , ,489,Select tag matching REGEXP
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc),n,index, , ,490,Select one patch
+darcs, contains 'show' (commandline -pxc) && contains 'files' (commandline -pxc), ,repodir, ,@D @f @r,491,Specify the repository directory in which to run
+darcs, contains 'show' (commandline -pxc) && contains 'index' (commandline -pxc),0,null, , ,492,Separate file names by NUL characters
+darcs, contains 'show' (commandline -pxc) && contains 'index' (commandline -pxc), ,repodir, ,@D @f @r,493,Specify the repository directory in which to run
+darcs, contains 'show' (commandline -pxc) && contains 'pristine' (commandline -pxc),0,null, , ,494,Separate file names by NUL characters
+darcs, contains 'show' (commandline -pxc) && contains 'pristine' (commandline -pxc), ,repodir, ,@D @f @r,495,Specify the repository directory in which to run
+darcs, contains 'show' (commandline -pxc) && contains 'repo' (commandline -pxc), ,repodir, ,@D @f @r,496,Specify the repository directory in which to run
+darcs, contains 'show' (commandline -pxc) && contains 'repo' (commandline -pxc), ,xml-output, , ,497,Generate XML formatted output
+darcs, contains 'show' (commandline -pxc) && contains 'repo' (commandline -pxc), ,enum-patches, , ,498,Include statistics requiring enumeration of patches [DEFAULT]
+darcs, contains 'show' (commandline -pxc) && contains 'repo' (commandline -pxc), ,no-enum-patches, , ,499,Don't include statistics requiring enumeration of patches
+darcs, contains 'show' (commandline -pxc) && contains 'authors' (commandline -pxc), ,repodir, ,@D @f @r,500,Specify the repository directory in which to run
+darcs, contains 'show' (commandline -pxc) && contains 'tags' (commandline -pxc), ,repo, , ,501,Specify the repository URL
+darcs, contains 'show' (commandline -pxc) && contains 'patch-index' (commandline -pxc),0,null, , ,502,Separate file names by NUL characters
+darcs, contains 'show' (commandline -pxc) && contains 'patch-index' (commandline -pxc), ,repodir, ,@D @f @r,503,Specify the repository directory in which to run
+darcs, contains 'pull' (commandline -pxc), ,matches, , ,504,Select patches matching PATTERN
+darcs, contains 'pull' (commandline -pxc),p,patches, , ,505,Select patches matching REGEXP
+darcs, contains 'pull' (commandline -pxc),t,tags, , ,506,Select tags matching REGEXP
+darcs, contains 'pull' (commandline -pxc),h,hash, , ,507,Select a single patch with HASH
+darcs, contains 'pull' (commandline -pxc), ,reorder-patches, , ,508,Reorder the patches in the repository
+darcs, contains 'pull' (commandline -pxc), ,no-reorder-patches, , ,509,Don't reorder the patches in the repository [DEFAULT]
+darcs, contains 'pull' (commandline -pxc),a,all, , ,510,Answer yes to all patches
+darcs, contains 'pull' (commandline -pxc), ,no-interactive, , ,511,Answer yes to all patches
+darcs, contains 'pull' (commandline -pxc),i,interactive, , ,512,Prompt user interactively
+darcs, contains 'pull' (commandline -pxc), ,mark-conflicts, , ,513,Mark conflicts [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,allow-conflicts, , ,514,"Allow conflicts, but don't mark them"
+darcs, contains 'pull' (commandline -pxc), ,dont-allow-conflicts, , ,515,Fail if there are patches that would create conflicts
+darcs, contains 'pull' (commandline -pxc), ,no-allow-conflicts, , ,516,Fail if there are patches that would create conflicts
+darcs, contains 'pull' (commandline -pxc), ,no-resolve-conflicts, , ,517,Fail if there are patches that would create conflicts
+darcs, contains 'pull' (commandline -pxc), ,skip-conflicts, , ,518,Filter out any patches that would create conflicts
+darcs, contains 'pull' (commandline -pxc), ,external-merge, , ,519,Use external tool to merge conflicts
+darcs, contains 'pull' (commandline -pxc), ,test, , ,520,Run the test script
+darcs, contains 'pull' (commandline -pxc), ,no-test, , ,521,Don't run the test script [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,dry-run, , ,522,Don't actually take the action
+darcs, contains 'pull' (commandline -pxc), ,xml-output, , ,523,Generate XML formatted output
+darcs, contains 'pull' (commandline -pxc),s,summary, , ,524,Summarize changes
+darcs, contains 'pull' (commandline -pxc), ,no-summary, , ,525,Don't summarize changes
+darcs, contains 'pull' (commandline -pxc), ,no-deps, , ,526,Don't automatically fulfill dependencies
+darcs, contains 'pull' (commandline -pxc), ,auto-deps, , ,527,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'pull' (commandline -pxc), ,dont-prompt-for-dependencies, , ,528,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'pull' (commandline -pxc), ,prompt-deps, , ,529,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,prompt-for-dependencies, , ,530,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,set-default, , ,531,Set default repository
+darcs, contains 'pull' (commandline -pxc), ,no-set-default, , ,532,Don't set default repository
+darcs, contains 'pull' (commandline -pxc), ,repodir, ,@D @f @r,533,Specify the repository directory in which to run
+darcs, contains 'pull' (commandline -pxc), ,ignore-unrelated-repos, , ,534,Do not check if repositories are unrelated
+darcs, contains 'pull' (commandline -pxc), ,myers, , ,535,Use myers diff algorithm
+darcs, contains 'pull' (commandline -pxc), ,patience, , ,536,Use patience diff algorithm [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,intersection, , ,537,Take intersection of all repositories
+darcs, contains 'pull' (commandline -pxc), ,union, , ,538,Take union of all repositories [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,complement, , ,539,Take complement of repositories (in order listed)
+darcs, contains 'pull' (commandline -pxc), ,compress, , ,540,Compress patch data [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,dont-compress, , ,541,Don't compress patch data
+darcs, contains 'pull' (commandline -pxc), ,no-compress, , ,542,Don't compress patch data
+darcs, contains 'pull' (commandline -pxc), ,ignore-times, , ,543,Don't trust the file modification times
+darcs, contains 'pull' (commandline -pxc), ,no-ignore-times, , ,544,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,remote-repo, , ,545,Specify the remote repository URL to work with
+darcs, contains 'pull' (commandline -pxc), ,set-scripts-executable, , ,546,Make scripts executable
+darcs, contains 'pull' (commandline -pxc), ,dont-set-scripts-executable, , ,547,Don't make scripts executable [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,no-set-scripts-executable, , ,548,Don't make scripts executable [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,umask, , ,549,Specify umask to use when writing
+darcs, contains 'pull' (commandline -pxc), ,restrict-paths, , ,550,Don't allow darcs to touch external files or repo metadata [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,dont-restrict-paths, , ,551,Allow darcs to modify any file or directory (unsafe)
+darcs, contains 'pull' (commandline -pxc), ,no-restrict-paths, , ,552,Allow darcs to modify any file or directory (unsafe)
+darcs, contains 'pull' (commandline -pxc), ,reverse, , ,553,Show/consider changes in reverse order
+darcs, contains 'pull' (commandline -pxc), ,no-reverse, , ,554,Show/consider changes in the usual order [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,pause-for-gui, , ,555,Pause for an external diff or merge command to finish [DEFAULT]
+darcs, contains 'pull' (commandline -pxc), ,no-pause-for-gui, , ,556,Return immediately after external diff or merge command finishes
+darcs, contains 'pull' (commandline -pxc), ,no-http-pipelining, , ,557,Disable HTTP pipelining
+darcs, contains 'pull' (commandline -pxc), ,remote-darcs, , ,558,Name of the darcs executable on the remote server
+darcs, contains 'obliterate' (commandline -pxc), ,not-in-remote, , ,559,Select all patches not in the default push/pull repository or at location URL/PATH
+darcs, contains 'obliterate' (commandline -pxc), ,from-match, , ,560,Select changes starting with a patch matching PATTERN
+darcs, contains 'obliterate' (commandline -pxc), ,from-patch, , ,561,Select changes starting with a patch matching REGEXP
+darcs, contains 'obliterate' (commandline -pxc), ,from-hash, , ,562,Select changes starting with a patch with HASH
+darcs, contains 'obliterate' (commandline -pxc), ,from-tag, , ,563,Select changes starting with a tag matching REGEXP
+darcs, contains 'obliterate' (commandline -pxc), ,last, , ,564,Select the last NUMBER patches
+darcs, contains 'obliterate' (commandline -pxc), ,matches, , ,565,Select patches matching PATTERN
+darcs, contains 'obliterate' (commandline -pxc),p,patches, , ,566,Select patches matching REGEXP
+darcs, contains 'obliterate' (commandline -pxc),t,tags, , ,567,Select tags matching REGEXP
+darcs, contains 'obliterate' (commandline -pxc),h,hash, , ,568,Select a single patch with HASH
+darcs, contains 'obliterate' (commandline -pxc), ,no-deps, , ,569,Don't automatically fulfill dependencies
+darcs, contains 'obliterate' (commandline -pxc), ,auto-deps, , ,570,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'obliterate' (commandline -pxc), ,dont-prompt-for-dependencies, , ,571,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'obliterate' (commandline -pxc), ,prompt-deps, , ,572,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'obliterate' (commandline -pxc), ,prompt-for-dependencies, , ,573,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'obliterate' (commandline -pxc),a,all, , ,574,Answer yes to all patches
+darcs, contains 'obliterate' (commandline -pxc), ,no-interactive, , ,575,Answer yes to all patches
+darcs, contains 'obliterate' (commandline -pxc),i,interactive, , ,576,Prompt user interactively
+darcs, contains 'obliterate' (commandline -pxc), ,repodir, ,@D @f @r,577,Specify the repository directory in which to run
+darcs, contains 'obliterate' (commandline -pxc),s,summary, , ,578,Summarize changes
+darcs, contains 'obliterate' (commandline -pxc), ,no-summary, , ,579,Don't summarize changes
+darcs, contains 'obliterate' (commandline -pxc),o,output, , ,580,Specify output filename
+darcs, contains 'obliterate' (commandline -pxc),O,output-auto-name, , ,581,"Output to automatically named file in DIRECTORY, default: current directory"
+darcs, contains 'obliterate' (commandline -pxc), ,minimize, , ,582,Minimize context of patch bundle [DEFAULT]
+darcs, contains 'obliterate' (commandline -pxc), ,no-minimize, , ,583,Don't minimize context of patch bundle
+darcs, contains 'obliterate' (commandline -pxc), ,myers, , ,584,Use myers diff algorithm
+darcs, contains 'obliterate' (commandline -pxc), ,patience, , ,585,Use patience diff algorithm [DEFAULT]
+darcs, contains 'obliterate' (commandline -pxc), ,dry-run, , ,586,Don't actually take the action
+darcs, contains 'obliterate' (commandline -pxc), ,xml-output, , ,587,Generate XML formatted output
+darcs, contains 'obliterate' (commandline -pxc), ,compress, , ,588,Compress patch data [DEFAULT]
+darcs, contains 'obliterate' (commandline -pxc), ,dont-compress, , ,589,Don't compress patch data
+darcs, contains 'obliterate' (commandline -pxc), ,no-compress, , ,590,Don't compress patch data
+darcs, contains 'obliterate' (commandline -pxc), ,ignore-times, , ,591,Don't trust the file modification times
+darcs, contains 'obliterate' (commandline -pxc), ,no-ignore-times, , ,592,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'obliterate' (commandline -pxc), ,umask, , ,593,Specify umask to use when writing
+darcs, contains 'obliterate' (commandline -pxc), ,reverse, , ,594,Show/consider changes in reverse order
+darcs, contains 'obliterate' (commandline -pxc), ,no-reverse, , ,595,Show/consider changes in the usual order [DEFAULT]
+darcs, contains 'rollback' (commandline -pxc), ,from-match, , ,596,Select changes starting with a patch matching PATTERN
+darcs, contains 'rollback' (commandline -pxc), ,from-patch, , ,597,Select changes starting with a patch matching REGEXP
+darcs, contains 'rollback' (commandline -pxc), ,from-hash, , ,598,Select changes starting with a patch with HASH
+darcs, contains 'rollback' (commandline -pxc), ,from-tag, , ,599,Select changes starting with a tag matching REGEXP
+darcs, contains 'rollback' (commandline -pxc), ,last, , ,600,Select the last NUMBER patches
+darcs, contains 'rollback' (commandline -pxc), ,matches, , ,601,Select patches matching PATTERN
+darcs, contains 'rollback' (commandline -pxc),p,patches, , ,602,Select patches matching REGEXP
+darcs, contains 'rollback' (commandline -pxc),t,tags, , ,603,Select tags matching REGEXP
+darcs, contains 'rollback' (commandline -pxc),h,hash, , ,604,Select a single patch with HASH
+darcs, contains 'rollback' (commandline -pxc),a,all, , ,605,Answer yes to all patches
+darcs, contains 'rollback' (commandline -pxc), ,no-interactive, , ,606,Answer yes to all patches
+darcs, contains 'rollback' (commandline -pxc),i,interactive, , ,607,Prompt user interactively
+darcs, contains 'rollback' (commandline -pxc), ,repodir, ,@D @f @r,608,Specify the repository directory in which to run
+darcs, contains 'rollback' (commandline -pxc), ,myers, , ,609,Use myers diff algorithm
+darcs, contains 'rollback' (commandline -pxc), ,patience, , ,610,Use patience diff algorithm [DEFAULT]
+darcs, contains 'rollback' (commandline -pxc), ,umask, , ,611,Specify umask to use when writing
+darcs, contains 'push' (commandline -pxc), ,matches, , ,612,Select patches matching PATTERN
+darcs, contains 'push' (commandline -pxc),p,patches, , ,613,Select patches matching REGEXP
+darcs, contains 'push' (commandline -pxc),t,tags, , ,614,Select tags matching REGEXP
+darcs, contains 'push' (commandline -pxc),h,hash, , ,615,Select a single patch with HASH
+darcs, contains 'push' (commandline -pxc), ,no-deps, , ,616,Don't automatically fulfill dependencies
+darcs, contains 'push' (commandline -pxc), ,auto-deps, , ,617,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'push' (commandline -pxc), ,dont-prompt-for-dependencies, , ,618,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'push' (commandline -pxc), ,prompt-deps, , ,619,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'push' (commandline -pxc), ,prompt-for-dependencies, , ,620,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'push' (commandline -pxc),a,all, , ,621,Answer yes to all patches
+darcs, contains 'push' (commandline -pxc), ,no-interactive, , ,622,Answer yes to all patches
+darcs, contains 'push' (commandline -pxc),i,interactive, , ,623,Prompt user interactively
+darcs, contains 'push' (commandline -pxc), ,sign, , ,624,Sign the patch with your gpg key
+darcs, contains 'push' (commandline -pxc), ,sign-as, , ,625,Sign the patch with a given keyid
+darcs, contains 'push' (commandline -pxc), ,sign-ssl, , ,626,Sign the patch using openssl with a given private key
+darcs, contains 'push' (commandline -pxc), ,dont-sign, , ,627,Don't sign the patch [DEFAULT]
+darcs, contains 'push' (commandline -pxc), ,no-sign, , ,628,Don't sign the patch [DEFAULT]
+darcs, contains 'push' (commandline -pxc), ,dry-run, , ,629,Don't actually take the action
+darcs, contains 'push' (commandline -pxc), ,xml-output, , ,630,Generate XML formatted output
+darcs, contains 'push' (commandline -pxc),s,summary, , ,631,Summarize changes
+darcs, contains 'push' (commandline -pxc), ,no-summary, , ,632,Don't summarize changes
+darcs, contains 'push' (commandline -pxc), ,repodir, ,@D @f @r,633,Specify the repository directory in which to run
+darcs, contains 'push' (commandline -pxc), ,set-default, , ,634,Set default repository
+darcs, contains 'push' (commandline -pxc), ,no-set-default, , ,635,Don't set default repository
+darcs, contains 'push' (commandline -pxc), ,ignore-unrelated-repos, , ,636,Do not check if repositories are unrelated
+darcs, contains 'push' (commandline -pxc), ,apply-as, , ,637,Apply patch as another user using sudo
+darcs, contains 'push' (commandline -pxc), ,no-apply-as, , ,638,Don't use sudo to apply as another user [DEFAULT]
+darcs, contains 'push' (commandline -pxc), ,remote-repo, , ,639,Specify the remote repository URL to work with
+darcs, contains 'push' (commandline -pxc), ,reverse, , ,640,Show/consider changes in reverse order
+darcs, contains 'push' (commandline -pxc), ,no-reverse, , ,641,Show/consider changes in the usual order [DEFAULT]
+darcs, contains 'push' (commandline -pxc), ,compress, , ,642,Compress patch data [DEFAULT]
+darcs, contains 'push' (commandline -pxc), ,dont-compress, , ,643,Don't compress patch data
+darcs, contains 'push' (commandline -pxc), ,no-compress, , ,644,Don't compress patch data
+darcs, contains 'push' (commandline -pxc), ,no-http-pipelining, , ,645,Disable HTTP pipelining
+darcs, contains 'push' (commandline -pxc), ,remote-darcs, , ,646,Name of the darcs executable on the remote server
+darcs, contains 'send' (commandline -pxc), ,matches, , ,647,Select patches matching PATTERN
+darcs, contains 'send' (commandline -pxc),p,patches, , ,648,Select patches matching REGEXP
+darcs, contains 'send' (commandline -pxc),t,tags, , ,649,Select tags matching REGEXP
+darcs, contains 'send' (commandline -pxc),h,hash, , ,650,Select a single patch with HASH
+darcs, contains 'send' (commandline -pxc), ,no-deps, , ,651,Don't automatically fulfill dependencies
+darcs, contains 'send' (commandline -pxc), ,auto-deps, , ,652,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'send' (commandline -pxc), ,dont-prompt-for-dependencies, , ,653,Don't ask about patches that are depended on by matched patches (with --match or --patch)
+darcs, contains 'send' (commandline -pxc), ,prompt-deps, , ,654,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'send' (commandline -pxc), ,prompt-for-dependencies, , ,655,Prompt about patches that are depended on by matched patches [DEFAULT]
+darcs, contains 'send' (commandline -pxc),a,all, , ,656,Answer yes to all patches
+darcs, contains 'send' (commandline -pxc), ,no-interactive, , ,657,Answer yes to all patches
+darcs, contains 'send' (commandline -pxc),i,interactive, , ,658,Prompt user interactively
+darcs, contains 'send' (commandline -pxc), ,to, , ,659,Specify destination email
+darcs, contains 'send' (commandline -pxc), ,cc, , ,660,Mail results to additional EMAIL(s)
+darcs, contains 'send' (commandline -pxc), ,from, , ,661,Specify email address
+darcs, contains 'send' (commandline -pxc), ,subject, , ,662,Specify mail subject
+darcs, contains 'send' (commandline -pxc), ,in-reply-to, , ,663,Specify in-reply-to header
+darcs, contains 'send' (commandline -pxc),A,author, , ,664,Specify author id
+darcs, contains 'send' (commandline -pxc), ,charset, , ,665,Specify mail charset
+darcs, contains 'send' (commandline -pxc), ,mail, , ,666,Send patch using sendmail
+darcs, contains 'send' (commandline -pxc), ,sendmail-command, , ,667,Specify sendmail command
+darcs, contains 'send' (commandline -pxc),o,output, , ,668,Specify output filename
+darcs, contains 'send' (commandline -pxc),O,output-auto-name, , ,669,"Output to automatically named file in DIRECTORY, default: current directory"
+darcs, contains 'send' (commandline -pxc), ,sign, , ,670,Sign the patch with your gpg key
+darcs, contains 'send' (commandline -pxc), ,sign-as, , ,671,Sign the patch with a given keyid
+darcs, contains 'send' (commandline -pxc), ,sign-ssl, , ,672,Sign the patch using openssl with a given private key
+darcs, contains 'send' (commandline -pxc), ,dont-sign, , ,673,Don't sign the patch [DEFAULT]
+darcs, contains 'send' (commandline -pxc), ,no-sign, , ,674,Don't sign the patch [DEFAULT]
+darcs, contains 'send' (commandline -pxc), ,dry-run, , ,675,Don't actually take the action
+darcs, contains 'send' (commandline -pxc), ,xml-output, , ,676,Generate XML formatted output
+darcs, contains 'send' (commandline -pxc),s,summary, , ,677,Summarize changes
+darcs, contains 'send' (commandline -pxc), ,no-summary, , ,678,Don't summarize changes
+darcs, contains 'send' (commandline -pxc), ,edit-description, , ,679,Edit the patch bundle description [DEFAULT]
+darcs, contains 'send' (commandline -pxc), ,dont-edit-description, , ,680,Don't edit the patch bundle description
+darcs, contains 'send' (commandline -pxc), ,no-edit-description, , ,681,Don't edit the patch bundle description
+darcs, contains 'send' (commandline -pxc), ,set-default, , ,682,Set default repository
+darcs, contains 'send' (commandline -pxc), ,no-set-default, , ,683,Don't set default repository
+darcs, contains 'send' (commandline -pxc), ,repodir, ,@D @f @r,684,Specify the repository directory in which to run
+darcs, contains 'send' (commandline -pxc), ,minimize, , ,685,Minimize context of patch bundle [DEFAULT]
+darcs, contains 'send' (commandline -pxc), ,no-minimize, , ,686,Don't minimize context of patch bundle
+darcs, contains 'send' (commandline -pxc), ,ignore-unrelated-repos, , ,687,Do not check if repositories are unrelated
+darcs, contains 'send' (commandline -pxc), ,logfile, , ,688,Give patch name and comment in file
+darcs, contains 'send' (commandline -pxc), ,delete-logfile, , ,689,Delete the logfile when done
+darcs, contains 'send' (commandline -pxc), ,no-delete-logfile, , ,690,Keep the logfile when done [DEFAULT]
+darcs, contains 'send' (commandline -pxc), ,remote-repo, , ,691,Specify the remote repository URL to work with
+darcs, contains 'send' (commandline -pxc), ,context, , ,692,Send to context stored in FILENAME
+darcs, contains 'send' (commandline -pxc), ,reverse, , ,693,Show/consider changes in reverse order
+darcs, contains 'send' (commandline -pxc), ,no-reverse, , ,694,Show/consider changes in the usual order [DEFAULT]
+darcs, contains 'send' (commandline -pxc), ,no-http-pipelining, , ,695,Disable HTTP pipelining
+darcs, contains 'send' (commandline -pxc), ,remote-darcs, , ,696,Name of the darcs executable on the remote server
+darcs, contains 'apply' (commandline -pxc), ,verify, , ,697,Verify that the patch was signed by a key in PUBRING
+darcs, contains 'apply' (commandline -pxc), ,verify-ssl, , ,698,Verify using openSSL with authorized keys from file KEYS
+darcs, contains 'apply' (commandline -pxc), ,no-verify, , ,699,Don't verify patch signature [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,reorder-patches, , ,700,Reorder the patches in the repository
+darcs, contains 'apply' (commandline -pxc), ,no-reorder-patches, , ,701,Don't reorder the patches in the repository [DEFAULT]
+darcs, contains 'apply' (commandline -pxc),a,all, , ,702,Answer yes to all patches
+darcs, contains 'apply' (commandline -pxc), ,no-interactive, , ,703,Answer yes to all patches
+darcs, contains 'apply' (commandline -pxc),i,interactive, , ,704,Prompt user interactively
+darcs, contains 'apply' (commandline -pxc), ,dry-run, , ,705,Don't actually take the action
+darcs, contains 'apply' (commandline -pxc), ,xml-output, , ,706,Generate XML formatted output
+darcs, contains 'apply' (commandline -pxc), ,matches, , ,707,Select patches matching PATTERN
+darcs, contains 'apply' (commandline -pxc),p,patches, , ,708,Select patches matching REGEXP
+darcs, contains 'apply' (commandline -pxc),t,tags, , ,709,Select tags matching REGEXP
+darcs, contains 'apply' (commandline -pxc),h,hash, , ,710,Select a single patch with HASH
+darcs, contains 'apply' (commandline -pxc), ,mark-conflicts, , ,711,Mark conflicts
+darcs, contains 'apply' (commandline -pxc), ,allow-conflicts, , ,712,"Allow conflicts, but don't mark them"
+darcs, contains 'apply' (commandline -pxc), ,dont-allow-conflicts, , ,713,Fail if there are patches that would create conflicts [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,no-allow-conflicts, , ,714,Fail if there are patches that would create conflicts [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,no-resolve-conflicts, , ,715,Fail if there are patches that would create conflicts [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,skip-conflicts, , ,716,Filter out any patches that would create conflicts
+darcs, contains 'apply' (commandline -pxc), ,external-merge, , ,717,Use external tool to merge conflicts
+darcs, contains 'apply' (commandline -pxc), ,test, , ,718,Run the test script
+darcs, contains 'apply' (commandline -pxc), ,no-test, , ,719,Don't run the test script [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,leave-test-directory, , ,720,Don't remove the test directory [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,remove-test-directory, , ,721,Remove the test directory
+darcs, contains 'apply' (commandline -pxc), ,repodir, , ,722,Specify the repository directory in which to run
+darcs, contains 'apply' (commandline -pxc), ,myers, , ,723,Use myers diff algorithm
+darcs, contains 'apply' (commandline -pxc), ,patience, , ,724,Use patience diff algorithm [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,reply, , ,725,Reply to email-based patch using FROM address
+darcs, contains 'apply' (commandline -pxc), ,cc, , ,726,Mail results to additional EMAIL(s). Requires --reply
+darcs, contains 'apply' (commandline -pxc), ,happy-forwarding, , ,727,Forward unsigned messages without extra header
+darcs, contains 'apply' (commandline -pxc), ,no-happy-forwarding, , ,728,Don't forward unsigned messages without extra header [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,mail, , ,729,Send patch using sendmail
+darcs, contains 'apply' (commandline -pxc), ,sendmail-command, , ,730,Specify sendmail command
+darcs, contains 'apply' (commandline -pxc), ,ignore-times, , ,731,Don't trust the file modification times
+darcs, contains 'apply' (commandline -pxc), ,no-ignore-times, , ,732,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,compress, , ,733,Compress patch data [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,dont-compress, , ,734,Don't compress patch data
+darcs, contains 'apply' (commandline -pxc), ,no-compress, , ,735,Don't compress patch data
+darcs, contains 'apply' (commandline -pxc), ,set-scripts-executable, , ,736,Make scripts executable
+darcs, contains 'apply' (commandline -pxc), ,dont-set-scripts-executable, , ,737,Don't make scripts executable [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,no-set-scripts-executable, , ,738,Don't make scripts executable [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,umask, , ,739,Specify umask to use when writing
+darcs, contains 'apply' (commandline -pxc), ,restrict-paths, , ,740,Don't allow darcs to touch external files or repo metadata [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,dont-restrict-paths, , ,741,Allow darcs to modify any file or directory (unsafe)
+darcs, contains 'apply' (commandline -pxc), ,no-restrict-paths, , ,742,Allow darcs to modify any file or directory (unsafe)
+darcs, contains 'apply' (commandline -pxc), ,reverse, , ,743,Show/consider changes in reverse order
+darcs, contains 'apply' (commandline -pxc), ,no-reverse, , ,744,Show/consider changes in the usual order [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,pause-for-gui, , ,745,Pause for an external diff or merge command to finish [DEFAULT]
+darcs, contains 'apply' (commandline -pxc), ,no-pause-for-gui, , ,746,Return immediately after external diff or merge command finishes
+darcs, contains 'clone' (commandline -pxc), ,repo-name, , ,747,Path of output directory
+darcs, contains 'clone' (commandline -pxc), ,repodir, ,@D @f @r,748,Path of output directory
+darcs, contains 'clone' (commandline -pxc), ,lazy, , ,749,Get patch files only as needed
+darcs, contains 'clone' (commandline -pxc), ,complete, , ,750,Get a complete copy of the repository
+darcs, contains 'clone' (commandline -pxc), ,to-match, , ,751,Select changes up to a patch matching PATTERN
+darcs, contains 'clone' (commandline -pxc), ,to-patch, , ,752,Select changes up to a patch matching REGEXP
+darcs, contains 'clone' (commandline -pxc), ,to-hash, , ,753,Select changes up to a patch with HASH
+darcs, contains 'clone' (commandline -pxc),t,tag, , ,754,Select tag matching REGEXP
+darcs, contains 'clone' (commandline -pxc), ,context, , ,755,Version specified by the context in FILENAME
+darcs, contains 'clone' (commandline -pxc), ,set-default, , ,756,Set default repository
+darcs, contains 'clone' (commandline -pxc), ,no-set-default, , ,757,Don't set default repository
+darcs, contains 'clone' (commandline -pxc), ,set-scripts-executable, , ,758,Make scripts executable
+darcs, contains 'clone' (commandline -pxc), ,dont-set-scripts-executable, , ,759,Don't make scripts executable [DEFAULT]
+darcs, contains 'clone' (commandline -pxc), ,no-set-scripts-executable, , ,760,Don't make scripts executable [DEFAULT]
+darcs, contains 'clone' (commandline -pxc), ,with-working-dir, , ,761,Create a working tree (normal repository) [DEFAULT]
+darcs, contains 'clone' (commandline -pxc), ,no-working-dir, , ,762,Do not create a working tree (bare repository)
+darcs, contains 'clone' (commandline -pxc), ,packs, , ,763,Use repository packs [DEFAULT]
+darcs, contains 'clone' (commandline -pxc), ,no-packs, , ,764,Don't use repository packs
+darcs, contains 'clone' (commandline -pxc), ,with-patch-index, , ,765,Build patch index
+darcs, contains 'clone' (commandline -pxc), ,no-patch-index, , ,766,Don't build patch index [DEFAULT]
+darcs, contains 'clone' (commandline -pxc), ,no-http-pipelining, , ,767,Disable HTTP pipelining
+darcs, contains 'clone' (commandline -pxc), ,remote-darcs, , ,768,Name of the darcs executable on the remote server
+darcs, contains 'initialize' (commandline -pxc), ,darcs-2, , ,769,Standard darcs patch format [DEFAULT]
+darcs, contains 'initialize' (commandline -pxc), ,darcs-1, , ,770,Older patch format (for compatibility)
+darcs, contains 'initialize' (commandline -pxc), ,with-working-dir, , ,771,Create a working tree (normal repository) [DEFAULT]
+darcs, contains 'initialize' (commandline -pxc), ,no-working-dir, , ,772,Do not create a working tree (bare repository)
+darcs, contains 'initialize' (commandline -pxc), ,repodir, ,@D @f @r,773,Specify the repository directory in which to run
+darcs, contains 'initialize' (commandline -pxc), ,with-patch-index, , ,774,Build patch index
+darcs, contains 'initialize' (commandline -pxc), ,no-patch-index, , ,775,Don't build patch index [DEFAULT]
+darcs, contains 'initialize' (commandline -pxc), ,hashed, , ,776,"Deprecated, use --darcs-1 instead"
+darcs, contains 'optimize' (commandline -pxc), ,repodir, ,@D @f @r,777,Specify the repository directory in which to run
+darcs, contains 'optimize' (commandline -pxc), ,umask, , ,778,Specify umask to use when writing
+darcs, contains 'optimize' (commandline -pxc) && contains 'relink' (commandline -pxc), ,sibling, , ,779,Specify a sibling directory
+darcs, contains 'repair' (commandline -pxc), ,repodir, ,@D @f @r,780,Specify the repository directory in which to run
+darcs, contains 'repair' (commandline -pxc), ,ignore-times, , ,781,Don't trust the file modification times
+darcs, contains 'repair' (commandline -pxc), ,no-ignore-times, , ,782,Trust modification times to find modified files [DEFAULT]
+darcs, contains 'repair' (commandline -pxc), ,myers, , ,783,Use myers diff algorithm
+darcs, contains 'repair' (commandline -pxc), ,patience, , ,784,Use patience diff algorithm [DEFAULT]
+darcs, contains 'repair' (commandline -pxc), ,dry-run, , ,785,Don't actually take the action
+darcs, contains 'repair' (commandline -pxc), ,umask, , ,786,Specify umask to use when writing
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,repo-name, , ,787,Path of output directory
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,repodir, ,@D @f @r,788,Path of output directory
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,set-scripts-executable, , ,789,Make scripts executable
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,dont-set-scripts-executable, , ,790,Don't make scripts executable [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,no-set-scripts-executable, , ,791,Don't make scripts executable [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,with-working-dir, , ,792,Create a working tree (normal repository) [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,no-working-dir, , ,793,Do not create a working tree (bare repository)
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,no-http-pipelining, , ,794,Disable HTTP pipelining
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,remote-darcs, , ,795,Name of the darcs executable on the remote server
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,with-patch-index, , ,796,Build patch index
+darcs, contains 'convert' (commandline -pxc) && contains 'darcs-2' (commandline -pxc), ,no-patch-index, , ,797,Don't build patch index [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'export' (commandline -pxc), ,repo-name, , ,798,Path of output directory
+darcs, contains 'convert' (commandline -pxc) && contains 'export' (commandline -pxc), ,repodir, ,@D @f @r,799,Path of output directory
+darcs, contains 'convert' (commandline -pxc) && contains 'export' (commandline -pxc), ,read-marks, , ,800,"Continue conversion, previously checkpointed by --write-marks"
+darcs, contains 'convert' (commandline -pxc) && contains 'export' (commandline -pxc), ,write-marks, , ,801,Checkpoint conversion to continue it later
+darcs, contains 'convert' (commandline -pxc) && contains 'export' (commandline -pxc), ,no-http-pipelining, , ,802,Disable HTTP pipelining
+darcs, contains 'convert' (commandline -pxc) && contains 'export' (commandline -pxc), ,remote-darcs, , ,803,Name of the darcs executable on the remote server
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,repo-name, , ,804,Path of output directory
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,repodir, ,@D @f @r,805,Path of output directory
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,set-scripts-executable, , ,806,Make scripts executable
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,dont-set-scripts-executable, , ,807,Don't make scripts executable [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,no-set-scripts-executable, , ,808,Don't make scripts executable [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,darcs-2, , ,809,Standard darcs patch format [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,darcs-1, , ,810,Older patch format (for compatibility)
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,with-working-dir, , ,811,Create a working tree (normal repository) [DEFAULT]
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,no-working-dir, , ,812,Do not create a working tree (bare repository)
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,with-patch-index, , ,813,Build patch index
+darcs, contains 'convert' (commandline -pxc) && contains 'import' (commandline -pxc), ,no-patch-index, , ,814,Don't build patch index [DEFAULT]

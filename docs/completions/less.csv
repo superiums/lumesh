@@ -1,0 +1,68 @@
+cmd,conds,short,long,params,dirs,pri,desc
+less, ,\?,help, , ,101,Display help and exit
+less, ,a,search-skip-screen, , ,102,Search after end of screen
+less, ,b,buffers, ,@r,103,Buffer space
+less, ,B,auto-buffers, , ,104,Disable automatic buffer allocation
+less, ,c,clear-screen, , ,105,Repaint from top
+less, ,C,CLEAR-SCREEN, , ,106,Clear and repaint from top
+less, ,d,dumb, , ,107,Suppress error for lacking terminal capability
+less, ,e,quit-at-eof, , ,108,Exit on second EOF
+less, ,E,QUIT-AT-EOF, , ,109,Exit on EOF
+less, ,f,force, , ,110,Open non-regular files
+less, ,F,quit-if-one-screen, , ,111,Quit if file shorter than one screen
+less, ,g,hilite-search, , ,112,Highlight one search target
+less, ,G,HILITE-SEARCH, , ,113,No search highlighting
+less, ,h,max-back-scroll,1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19,@r,114,Maximum backward scroll
+less, ,i,ignore-case, , ,115,Search ignores lowercase case
+less, ,I,IGNORE-CASE, , ,116,Search ignores all case
+less, ,j,jump-target,0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 -1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12 -13 -14 -15 -16 -17 -18 -19,@r,117,Target line
+less, ,J,status-column, , ,118,Display status column
+less, ,k,lesskey-file, ,@F,119,Specify key bindings binary file
+less, , ,lesskey-src, ,@F,120,Specify key bindings source file
+less, ,K,quit-on-intr, , ,121,Quit with status 2 if interrupt keys pressed
+less, ,L,no-lessopen, , ,122,Ignore $LESSOPEN
+less, ,m,long-prompt, , ,123,Prompt with percentage
+less, ,M,LONG-PROMPT, , ,124,Verbose prompt
+less, ,n,line-numbers, , ,125,Display line number
+less, ,N,LINE-NUMBERS, , ,126,Display line number for each line
+less, , ,log-file, , ,127,Log input to file
+less, , ,LOG-FILE, , ,128,"Log to file, overwrite"
+less, , ,pattern, , ,129,Start at first occurrence of pattern
+less, , ,prompt, , ,130,Prompt string
+less, ,q,quiet, , ,131,Silent mode
+less, , ,silent, , ,132,Silent mode
+less, ,Q,QUIET, , ,133,Completely silent mode
+less, , ,SILENT, , ,134,Completely silent mode
+less, ,r,raw-control-chars, , ,135,Display control chars
+less, ,R,RAW-CONTROL-CHARS, , ,136,"Display control chars, guess screen appearance"
+less, ,s,squeeze-blank-lines, , ,137,Multiple blank lines sqeezed
+less, ,S,chop-long-lines, , ,138,Do not fold long lines
+less, , ,tag, , ,139,Edit tag
+less, , ,tag-file, , ,140,Set tag file
+less, ,u,underline-special, , ,141,Allow backspace and carriage return
+less, ,U,UNDERLINE-SPECIAL, , ,142,"Allow backspace, tab and carriage return"
+less, ,V,version, , ,143,Display version and exit
+less, ,w,hilite-unread, , ,144,Highlight first unread line on new page
+less, ,W,HILITE-UNREAD, , ,145,Highlight first unread line on any movement
+less, ,x,tabs,1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16,@r,146,Set tab stops
+less, ,X,no-init, , ,147,No termcap init
+less, , ,no-keypad, , ,148,No keypad init
+less, ,y,max-forw-scroll,1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19,@r,149,Maximum forward scroll
+less, , ,window,1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19,@r,150,Max scroll window
+less, ,',quotes, , ,151,Set quote char
+less, ,\~,tilde, , ,152,Lines after EOF are blank
+less, ,\#,shift,0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19, ,153,Characters to scroll on left/right arrows
+less, , ,file-size, , ,154,Determine the size of the file immediately after opening
+less, , ,follow-name, , ,155,Periodically reopen file by name
+less, , ,incsearch, , ,156,Incremental search commands
+less, , ,line-num-width, , ,157,Set minimum width of line number field
+less, , ,mouse, , ,158,Enables mouse input
+less, , ,MOUSE, , ,159,Enables mouse input with reversed scroll direction
+less, , ,no-histdups, , ,160,No duplicates in search history
+less, , ,rscroll, , ,161,Changes the character used to mark truncated lines
+less, , ,save-marks, , ,162,Save marks in the history file
+less, , ,status-col-width, , ,163,Sets the width of the status column when the -J option is in effect
+less, , ,use-backslash, , ,164,Escape characters with backslashes in the options string
+less, , ,use-color, , ,165,Enables colored text
+less, , ,wheel-lines, , ,166,Number of lines scrolled by mouse wheel
+less, , ,quotes, , ,167,Changes the filename quoting character

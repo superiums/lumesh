@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+slabtop, ,d,delay, , ,101,Refresh the display every  n in seconds
+slabtop, ,s,sort, , ,102,"Sort by S, where S is one of the sort criteria"
+slabtop, ,o,once, , ,103,Display the output once and then exit
+slabtop, , ,human, , ,104,Show slab sizes automatically scaled to shortest three digit unit and display…
+slabtop, ,V,version, , ,105,Display version information and exit
+slabtop, ,h,help, , ,106,Display usage information and exit

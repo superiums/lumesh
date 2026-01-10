@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+plistutil, ,i,infile, , ,101,Input FILE to convert from
+plistutil, ,o,outfile, , ,102,Output FILE to convert to
+plistutil, ,f,format, , ,103,"Force output format, regardless of input type"
+plistutil, ,p,print, , ,104,Print PList in human-readable format
+plistutil, ,c,compact, , ,105,JSON and OpenStep only: Print output in compact form
+plistutil, ,s,sort, , ,106,Sort all dictionary nodes lexicographically by key before converting to the o…
+plistutil, ,h,help, , ,107,Prints usage information
+plistutil, ,d,debug, , ,108,Enabled extended debug output
+plistutil, ,v,version, , ,109,Print version information EXAMPLES

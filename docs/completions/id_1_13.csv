@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+id, ,Z,context, , ,101,print only the security context of the process
+id, ,g,group, , ,102,print only the effective group ID
+id, ,G,groups, , ,103,print all group IDs
+id, ,n,name, , ,104,"print a name instead of a number, for -ugG"
+id, ,r,real, , ,105,"print the real ID instead of the effective ID, with -ugG"
+id, ,u,user, , ,106,print only the effective user ID
+id, ,z,zero, , ,107,"delimit entries with NUL characters, not whitespace; P not permitted in defau…"
+id, , ,help, , ,108,display this help and exit
+id, , ,version, , ,109,output version information and exit

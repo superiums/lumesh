@@ -1,0 +1,115 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hashcat, ,m,hash-type, , ,101,Hash-type
+hashcat, ,a,attack-mode,, ,102,Attack-mode
+hashcat, ,V,version, , ,103,Print version
+hashcat, ,h,help, , ,104,Print help
+hashcat, , ,quiet, , ,105,Suppress output
+hashcat, , ,hex-charset, , ,106,Assume charset is given in hex
+hashcat, , ,hex-salt, , ,107,Assume salt is given in hex
+hashcat, , ,hex-wordlist, , ,108,Assume words in wordlist are given in hex
+hashcat, , ,force, , ,109,Ignore warnings
+hashcat, , ,deprecated-check-disable, , ,110,Enable deprecated plugins
+hashcat, , ,status, , ,111,Enable automatic update of the status screen
+hashcat, , ,status-json, , ,112,Enable JSON format for status output
+hashcat, , ,status-timer, ,@f @r,113,Sets seconds between status screen updates
+hashcat, , ,stdin-timeout-abort, ,@f @r,114,Abort if there is no input from stdin for X seconds
+hashcat, , ,machine-readable, , ,115,Display the status view in a machine-readable format
+hashcat, , ,keep-guessing, , ,116,Keep guessing the hash after it has been cracked
+hashcat, , ,self-test-disable, , ,117,Disable self-test functionality on startup
+hashcat, , ,loopback, , ,118,Add new plains to induct directory
+hashcat, , ,markov-hcstat2, ,@F,119,Specify hcstat2 file to use
+hashcat, , ,markov-disable, , ,120,"Disables markov-chains, emulates classic brute-force"
+hashcat, , ,markov-classic, , ,121,"Enables classic markov-chains, no per-position"
+hashcat, , ,markov-inverse, , ,122,"Enables inverse markov-chains, no per-position"
+hashcat, ,t,markov-threshold, ,@f @r,123,Threshold when to stop accepting new markov-chains
+hashcat, , ,runtime, ,@f @r,124,Abort session after X seconds of runtime
+hashcat, , ,session, ,@f @r,125,Define specific session name
+hashcat, , ,restore, , ,126,Restore session from --session
+hashcat, , ,restore-disable, , ,127,Do not write restore file
+hashcat, , ,restore-file-path, ,@F,128,Specific path to restore file
+hashcat, ,o,outfile, ,@F,129,Define outfile for recovered hash
+hashcat, , ,outfile-format, , ,130,Outfile formats to use
+hashcat, , ,outfile-autohex-disable, , ,131,Disable the use of \$HEX[] in output plains
+hashcat, , ,outfile-check-timer, ,@f @r,132,Sets seconds between outfile checks
+hashcat, , ,wordlist-autohex-disable, , ,133,Disable the conversion of \$HEX[] from the wordlist
+hashcat, ,p,separator, ,@f @r,134,Separator char for hashlists and outfile
+hashcat, , ,stdout, , ,135,"Do not crack a hash, instead print candidates only"
+hashcat, , ,show, , ,136,"Compare hashlist with potfile; show cracked hashes"
+hashcat, , ,left, , ,137,"Compare hashlist with potfile; show uncracked hashes"
+hashcat, , ,username, , ,138,Enable ignoring of usernames in hashfile
+hashcat, , ,remove, , ,139,Enable removal of hashes once they are cracked
+hashcat, , ,remove-timer, ,@f @r,140,Update input hash file each X seconds
+hashcat, , ,potfile-disable, , ,141,Do not write potfile
+hashcat, , ,potfile-path, ,@F,142,Specific path to potfile
+hashcat, , ,encoding-from, ,@f @r,143,Force internal wordlist encoding from X
+hashcat, , ,encoding-to, ,@f @r,144,Force internal wordlist encoding to X
+hashcat, , ,debug-mode,, ,145,Defines the debug mode
+hashcat, , ,debug-file, ,@F,146,Output file for debugging rules
+hashcat, , ,induction-dir, ,@D,147,Specify the induction directory to use for loopback
+hashcat, , ,outfile-check-dir, ,@D,148,Specify the outfile directory to monitor for plains
+hashcat, , ,logfile-disable, , ,149,Disable the logfile
+hashcat, , ,hccapx-message-pair, ,@f @r,150,Load only message pairs from hccapx matching X
+hashcat, , ,nonce-error-corrections, ,@f @r,151,The BF size range to replace AP's nonce last bytes
+hashcat, , ,keyboard-layout-mapping, ,@F,152,Keyboard layout mapping table for special hash-modes
+hashcat, , ,truecrypt-keyfiles, ,@F,153,Keyfiles to use
+hashcat, , ,veracrypt-keyfiles, ,@F,154,Keyfiles to use
+hashcat, , ,veracrypt-pim-start, ,@f @r,155,VeraCrypt personal iterations multiplier start
+hashcat, , ,veracrypt-pim-stop, ,@f @r,156,VeraCrypt personal iterations multiplier stop
+hashcat, ,b,benchmark, , ,157,Run benchmark of selected hash-modes
+hashcat, , ,benchmark-all, , ,158,Run benchmark of all hash-modes (requires -b)
+hashcat, , ,speed-only, , ,159,"Return expected speed of the attack, then quit"
+hashcat, , ,progress-only, , ,160,Return ideal progress step size and time to process
+hashcat, ,c,segment-size, ,@f @r,161,Sets size in MB to cache from the wordfile
+hashcat, , ,bitmap-min, ,@f @r,162,Sets minimum bits allowed for bitmaps
+hashcat, , ,bitmap-max, ,@f @r,163,Sets maximum bits allowed for bitmaps
+hashcat, , ,cpu-affinity, ,@f @r,164,Locks to CPU devices
+hashcat, , ,hook-threads, ,@f @r,165,Sets number of threads for a hook (per compute unit)
+hashcat, , ,hash-info, , ,166,Show information for each hash-mode
+hashcat, , ,example-hashes, , ,167,Alias of --hash-info
+hashcat, , ,backend-ignore-cuda, , ,168,Do not try to open CUDA interface on startup
+hashcat, , ,backend-ignore-hip, , ,169,Do not try to open HIP interface on startup
+hashcat, , ,backend-ignore-metal, , ,170,Do not try to open Metal interface on startup
+hashcat, , ,backend-ignore-opencl, , ,171,Do not try to open OpenCL interface on startup
+hashcat, ,I,backend-info, , ,172,Show info about detected backend API devices
+hashcat, ,d,backend-devices, ,@f @r,173,Backend devices to use
+hashcat, ,D,opencl-device-types, , ,174,OpenCL device-types to use
+hashcat, ,O,optimized-kernel-enable, , ,175,Enable optimized kernels (limits password length)
+hashcat, ,M,multiply-accel-disable, , ,176,Disable multiply kernel-accel with processor count
+hashcat, ,w,workload-profile,, ,177,Enable a specific workload profile
+hashcat, ,n,kernel-accel, ,@f @r,178,"Manual workload tuning, set outerloop step size"
+hashcat, ,u,kernel-loops, ,@f @r,179,"Manual workload tuning, set innerloop step size"
+hashcat, ,T,kernel-threads, ,@f @r,180,"Manual workload tuning, set thread count"
+hashcat, , ,backend-vector-width, ,@f @r,181,Manually override backend vector-width
+hashcat, , ,spin-damp, ,@f @r,182,"Use CPU for device synchronization, in percent"
+hashcat, , ,hwmon-disable, , ,183,Disable temperature and fanspeed reads and triggers
+hashcat, , ,hwmon-temp-abort, ,@f @r,184,Abort if temperature reaches X degrees Celsius
+hashcat, , ,scrypt-tmto, ,@f @r,185,Manually override TMTO value for scrypt to X
+hashcat, ,s,skip, ,@f @r,186,Skip X words from the start
+hashcat, ,l,limit, ,@f @r,187,Limit X words from the start + skipped words
+hashcat, , ,keyspace, , ,188,Show keyspace base:mod values and quit
+hashcat, ,j,rule-left, ,@f @r,189,Single rule applied to each word from left wordlist
+hashcat, ,k,rule-right, ,@f @r,190,Single rule applied to each word from right wordlist
+hashcat, ,r,rules-file, ,@F,191,Multiple rules applied to each word from wordlists
+hashcat, ,g,generate-rules, ,@f @r,192,Generate X random rules
+hashcat, , ,generate-rules-func-min, ,@f @r,193,Force min X functions per rule
+hashcat, , ,generate-rules-func-max, ,@f @r,194,Force max X functions per rule
+hashcat, , ,generate-rules-func-sel, ,@f @r,195,Pool of rule operators valid for random rule engine
+hashcat, , ,generate-rules-seed, ,@f @r,196,Force RNG seed set to X
+hashcat, ,1,custom-charset1, ,@f @r,197,User-defined charset ?1
+hashcat, ,2,custom-charset2, ,@f @r,198,User-defined charset ?2
+hashcat, ,3,custom-charset3, ,@f @r,199,User-defined charset ?3
+hashcat, ,4,custom-charset4, ,@f @r,200,User-defined charset ?4
+hashcat, ,i,identify, , ,201,Shows all supported algorithms for input hashes
+hashcat, ,i,increment, , ,202,Enable mask increment mode
+hashcat, , ,increment-min, ,@f @r,203,Start mask incrementing at X
+hashcat, , ,increment-max, ,@f @r,204,Stop mask incrementing at X
+hashcat, ,S,slow-candidates, , ,205,Enable slower (but advanced) candidate generators
+hashcat, , ,brain-server, , ,206,Enable brain server
+hashcat, , ,brain-server-timer, ,@f @r,207,Update the brain server dump each X seconds (min:60)
+hashcat, ,z,brain-client, , ,208,"Enable brain client, activates -S"
+hashcat, , ,brain-client-features,, ,209,Define brain client features
+hashcat, , ,brain-host, , ,210,Brain server host (IP or domain)
+hashcat, , ,brain-port, ,@f @r,211,Brain server port
+hashcat, , ,brain-password, ,@f @r,212,Brain server authentication password
+hashcat, , ,brain-session, ,@f @r,213,Overrides automatically calculated brain session
+hashcat, , ,brain-session-whitelist, ,@f @r,214,Allow given sessions only

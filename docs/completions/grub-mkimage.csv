@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mkimage, ,c,config, , ,101,embed FILE as an early config
+grub-mkimage, ,C,compression, , ,102,choose the compression to use for core image
+grub-mkimage, , ,disable-cli, , ,103,disable command line interface access
+grub-mkimage, , ,disable-shim-lock, , ,104,disable shim_lock verifier
+grub-mkimage, ,d,directory, , ,105,use images and modules under DIR [default=/usr/lib/grub/<platform>]
+grub-mkimage, ,D,dtb, , ,106,embed FILE as a device tree (DTB)
+grub-mkimage, ,k,pubkey, , ,107,embed FILE as public key for signature checking
+grub-mkimage, ,m,memdisk, , ,108,embed FILE as a memdisk image 
+grub-mkimage, ,n,note, , ,109,add NOTE segment for CHRP IEEE1275
+grub-mkimage, ,o,output, , ,110,output a generated image to FILE [default=stdout]
+grub-mkimage, ,O,format, , ,111,"generate an image in FORMAT available formats: i386-coreboot, i386-multiboot,…"
+grub-mkimage, ,p,prefix, , ,112,set prefix directory
+grub-mkimage, ,s,sbat, , ,113,SBAT metadata
+grub-mkimage, ,v,verbose, , ,114,print verbose messages
+grub-mkimage, ,?,help, , ,115,give this help list
+grub-mkimage, , ,usage, , ,116,give a short usage message
+grub-mkimage, ,V,version, , ,117,print program version

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chsh, ,s,shell, ,@f @r,101,Specify your login shell
+chsh, ,u,help, , ,102,Display help and exit	
+chsh, ,v,version, , ,103,Display version and exit
+chsh, , , , ,@f @r,104, 
+chsh, ,l,list-shells, ,@f,105,List available shells and exit

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-seq, ,s,separator, , ,101,Separator character (defaults to \\n)
+uu-seq, ,t,terminator, , ,102,Terminator character (defaults to \\n)
+uu-seq, ,f,format, , ,103,use printf style floating-point FORMAT
+uu-seq, ,w,equal-width, , ,104,Equalize widths of all numbers by padding with zeros
+uu-seq, ,h,help, , ,105,Print help
+uu-seq, ,V,version, , ,106,Print version

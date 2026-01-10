@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chgrp, ,c,changes, , ,101,Output diagnostic for changed files
+chgrp, , ,dereference, , ,102,Dereference symlinks
+chgrp, ,h,no-dereference, , ,103,Don't dereference symlinks
+chgrp, , ,from, , ,104,Change from owner/group
+chgrp, ,f,silent, , ,105,Suppress errors
+chgrp, , ,reference, , ,106,Use same owner/group as file
+chgrp, ,R,recursive, , ,107,Operate recursively
+chgrp, ,v,verbose, , ,108,Output diagnostic for every file
+chgrp, , ,help, , ,109,Display help and exit
+chgrp, , ,version, , ,110,Display version and exit

@@ -1,0 +1,56 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fd, , ,and, , ,101,Additional search patterns that need to be matched
+fd, ,d,max-depth, , ,102,Set maximum search depth (default: none)
+fd, , ,min-depth, , ,103,Only show search results starting at the given depth.
+fd, , ,exact-depth, , ,104,Only show search results at the exact given depth
+fd, ,E,exclude, , ,105,Exclude entries that match the given glob pattern
+fd, ,t,type,file,@f @r,106,"Filter by type: file (f), directory (d/dir), symlink (l), executable (x), empty (e), socket (s), pipe (p), char-device (c), block-device (b)"
+fd, ,e,extension, , ,107,Filter by file extension
+fd, ,S,size, , ,108,Limit results based on the size of files
+fd, , ,changed-within, , ,109,Filter by file modification time (newer than)
+fd, , ,changed-before, , ,110,Filter by file modification time (older than)
+fd, ,o,owner, , ,111,Filter by owning user and/or group
+fd, , ,format, , ,112,Print results according to template
+fd, ,x,exec, , ,113,Execute a command for each search result
+fd, ,X,exec-batch, , ,114,Execute a command with all search results at once
+fd, , ,batch-size, , ,115,Max number of arguments to run as a batch size with -X
+fd, , ,ignore-file, ,@r,116,Add a custom ignore-file in '.gitignore' format
+fd, ,c,color,auto,@f @r,117,When to use colors
+fd, , ,hyperlink,auto,@f @r,118,Add hyperlinks to output paths
+fd, ,j,threads, , ,119,Set number of threads to use for searching & executing (default: number of available CPU cores)
+fd, , ,max-buffer-time, , ,120,Milliseconds to buffer before streaming search results to console
+fd, , ,max-results, , ,121,Limit the number of search results
+fd, , ,base-directory, ,@r,122,Change current working directory
+fd, , ,path-separator, , ,123,Set path separator when printing file paths
+fd, , ,search-path, ,@r,124,Provides paths to search as an alternative to the positional <path> argument
+fd, , ,strip-cwd-prefix,auto,@f @r,125,"By default, relative paths are prefixed with './' when -x/--exec, -X/--exec-batch, or -0/--print0 are given, to reduce the risk of a path starting with '-' being treated as a command line option. Use this flag to change this behavior. If this flag is used without a value, it is equivalent to passing 'always'"
+fd, , ,gen-completions,bash,@f @r,126, 
+fd, ,H,hidden, , ,127,Search hidden files and directories
+fd, , ,no-hidden, , ,128,Overrides --hidden
+fd, ,I,no-ignore, , ,129,Do not respect .(git|fd)ignore files
+fd, , ,ignore, , ,130,Overrides --no-ignore
+fd, , ,no-ignore-vcs, , ,131,Do not respect .gitignore files
+fd, , ,ignore-vcs, , ,132,Overrides --no-ignore-vcs
+fd, , ,no-require-git, , ,133,"Do not require a git repository to respect gitignores. By default, fd will only respect global gitignore rules, .gitignore rules, and local exclude rules if fd detects that you are searching inside a git repository. This flag allows you to relax this restriction such that fd will respect all git related ignore rules regardless of whether you're searching in a git repository or not"
+fd, , ,require-git, , ,134,Overrides --no-require-git
+fd, , ,no-ignore-parent, , ,135,Do not respect .(git|fd)ignore files in parent directories
+fd, , ,no-global-ignore-file, , ,136,Do not respect the global ignore file
+fd, ,u,unrestricted, , ,137,"Unrestricted search, alias for '--no-ignore --hidden'"
+fd, ,s,case-sensitive, , ,138,Case-sensitive search (default: smart case)
+fd, ,i,ignore-case, , ,139,Case-insensitive search (default: smart case)
+fd, ,g,glob, , ,140,Glob-based search (default: regular expression)
+fd, , ,regex, , ,141,Regular-expression based search (default)
+fd, ,F,fixed-strings, , ,142,Treat pattern as literal string stead of regex
+fd, ,a,absolute-path, , ,143,Show absolute instead of relative paths
+fd, , ,relative-path, , ,144,Overrides --absolute-path
+fd, ,l,list-details, , ,145,Use a long listing format with file metadata
+fd, ,L,follow, , ,146,Follow symbolic links
+fd, , ,no-follow, , ,147,Overrides --follow
+fd, ,p,full-path, , ,148,Search full abs. path (default: filename only)
+fd, ,0,print0, , ,149,Separate search results by the null character
+fd, , ,prune, , ,150,"Do not traverse into directories that match the search criteria. If you want to exclude specific directories, use the '--exclude=…' option"
+fd, ,q,quiet, , ,151,"Print nothing, exit code 0 if match found, 1 otherwise"
+fd, , ,show-errors, , ,152,Show filesystem errors
+fd, , ,one-file-system, , ,153,"By default, fd will traverse the file system tree as far as other options dictate. With this flag, fd ensures that it does not descend into a different file system than the one it started in. Comparable to the -mount or -xdev filters of find(1)"
+fd, ,h,help, , ,154,Print help (see more with '--help')
+fd, ,V,version, , ,155,Print version

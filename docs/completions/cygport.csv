@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cygport, ,4,32, , ,101,Build for 32-bit Cygwin
+cygport, ,8,64, , ,102,Build for 64-bit Cygwin
+cygport, , ,debug, , ,103,Enable debugging messages

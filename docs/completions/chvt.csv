@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chvt, ,C,console, , ,101,the console device to be used
+chvt, ,V,version, , ,102,print version number
+chvt, ,h,help, , ,103,print this usage message.  AUTHORS Andries Brouwer <aeb@cwi

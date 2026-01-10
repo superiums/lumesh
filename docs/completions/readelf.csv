@@ -1,0 +1,68 @@
+cmd,conds,short,long,params,dirs,pri,desc
+readelf, ,a,all, , ,101,Equivalent to -h -l -S -s -r -d -V -A -I
+readelf, ,h,file-header, , ,102,Display the ELF file header
+readelf, ,l,segments, , ,103,Display the program headers
+readelf, ,S,sections, , ,104,Display the sections' header
+readelf, ,g,section-groups, , ,105,Display the section groups
+readelf, ,t,section-details, , ,106,Display the section details
+readelf, ,e,headers, , ,107,Equivalent to -h -l -S
+readelf, ,s,symbols, , ,108,Display the symbol table
+readelf, , ,dyn-syms, , ,109,Display the dynamic symbol table
+readelf, , ,lto-syms, , ,110,Display LTO symbol tables
+readelf, , ,sym-base,0 8 10 16, ,111,Force base for symbol sizes
+readelf, ,C,demangle,none auto gnu-v3 java gnat dlang rust, ,112,Decode mangled/processed symbol names
+readelf, , ,no-demangle, , ,113,Don't demangle low-level symbol names
+readelf, , ,recurse-limit, , ,114,Enable a demangling recursion limit
+readelf, , ,no-recurse-limit, , ,115,Disable a demangling recursion limit
+readelf, ,U,unicode,d l e x h i, ,116,Controls the display of non-ASCII characters in identifier names
+readelf, ,n,notes, , ,117,Display the core notes
+readelf, ,r,relocs, , ,118,Display the relocations
+readelf, ,u,unwind, , ,119,Display the unwind info
+readelf, ,d,dynamic, , ,120,Display the dynamic section
+readelf, ,V,version-info, , ,121,Display the version sections
+readelf, ,A,arch-specific, , ,122,Display architecture specific information
+readelf, ,c,archive-index, , ,123,Display the symbol/file index in an archive
+readelf, ,D,use-dynamic, , ,124,Use the dynamic section info when displaying symbols
+readelf, ,L,enable-checks, , ,125,Display warning messages for possible problems
+readelf, ,x,hex-dump,$sections, ,126,Dump the contents of specified section as bytes
+readelf, ,p,string-dump,$sections, ,127,Dump the contents of specified section as strings
+readelf, ,R,relocated-dump,$sections, ,128,Dump the relocated contents of of specified section
+readelf, ,z,decompress, , ,129,Decompress section before dumping it
+readelf, , ,debug-dump, , ,130,Display the contents of DWARF debug sections
+readelf, , ,debug-dump=abbrev, , ,131,Displays the contents of the .debug_abbrev section
+readelf, , ,debug-dump=addr, , ,132,Displays the contents of the .debug_addr section
+readelf, , ,debug-dump=cu_index, , ,133,Displays the contents of the .debug_cu_index and/or .debug_tu_index sections
+readelf, , ,debug-dump=frames, , ,134,Display the raw contents of a .debug_frame section
+readelf, , ,debug-dump=frames-interp, , ,135,Display the interpreted contents of a .debug_frame section
+readelf, , ,debug-dump=gdb_index, , ,136, Displays the contents of the .gdb_index and/or .debug_names sections
+readelf, , ,debug-dump=info, , ,137,Displays the contents of the .debug_info section
+readelf, , ,debug-dump=links, , ,138,Display the contents of sections that link to separate debuginfo files
+readelf, , ,debug-dump=follow-links, , ,139,Follow links to separate debug info files
+readelf, , ,debug-dump=no-follow-links, , ,140,Don't follow links to separate debug info files
+readelf, , ,debug-dump=use-debuginfod, , ,141,"When following links, also query debuginfod servers"
+readelf, , ,debug-dump=do-not-use-debuginfod, , ,142,"When following links, don't query debuginfod servers"
+readelf, , ,debug-dump=rawline, , ,143,Displays the contents of the .debug_line section in a raw format
+readelf, , ,debug-dump=decodedline, , ,144,Displays the interpreted contents of the .debug_line section
+readelf, , ,debug-dump=macro, , ,145,Displays the contents of the .debug_macro and/or .debug_macinfo sections
+readelf, , ,debug-dump=loc, , ,146,Displays the contents of the .debug_loc and/or .debug_loclists sections
+readelf, , ,debug-dump=str-offsets, , ,147,Displays the contents of the .debug_str_offsets section
+readelf, , ,debug-dump=pubnames, , ,148,Displays the contents of the .debug_pubnames and/or .debug_gnu_pubnames sections
+readelf, , ,debug-dump=aranges, , ,149,Displays the contents of the .debug_aranges section
+readelf, , ,debug-dump=Ranges, , ,150,Displays the contents of the .debug_ranges and/or .debug_rnglists sections
+readelf, , ,debug-dump=str, , ,151,"Displays the contents of the .debug_str, .debug_line_str and/or .debug_str_offsets sections"
+readelf, , ,debug-dump=pubtype, , ,152,Displays the contents of the .debug_pubtypes and/or .debug_gnu_pubtypes sections
+readelf, , ,debug-dump=trace_aranges, , ,153,Displays the contents of the .trace_aranges section
+readelf, , ,debug-dump=trace_abbrev, , ,154,Displays the contents of the .trace_abbrev section
+readelf, , ,debug-dump=trace_info, , ,155,Displays the contents of the .trace_info section
+readelf, ,P,process-links, , ,156,Display the contents of non-debug sections in separate debuginfo files
+readelf, , ,dwarf-depth, , ,157,Don't display DIEs at greater than specified depth
+readelf, , ,dwarf-start, , ,158,Display DIEs starting at specified offset
+readelf, , ,ctf, , ,159,Display CTF info from specified section
+readelf, , ,ctf-parent, , ,160,Use specified CTF archive member as the CTF parent
+readelf, , ,ctf-symbols, , ,161,Use specified section as the CTF external symtab
+readelf, , ,ctf-strings, , ,162,Use specified section as the CTF external strtab
+readelf, ,I,histogram, , ,163,Display histogram of bucket list lengths
+readelf, ,W,wide, , ,164,Allow output width to exceed 80 characters
+readelf, ,T,silent-truncation, , ,165,"If a symbol name is truncated, don't add [...] suffix"
+readelf, ,H,help, , ,166,Display this information
+readelf, ,v,version, , ,167,Display the version number of readelf

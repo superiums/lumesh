@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgfmt, ,D,directory, ,@D @f @r,101,Add specified directory to list for input files search
+msgfmt, ,o,output-file, , ,108,Write output to specified file
+msgfmt, , ,strict, , ,109,Enable strict Uniforum mode
+msgfmt, ,P,properties-input, , ,113,Input files are in Java .properties syntax
+msgfmt, , ,stringtable-input, , ,114,Input files are in NeXTstep/GNUstep .strings syntax
+msgfmt, ,c,check, , ,115,"Perform all the checks implied by --check-format, --check-header, --check-domain"
+msgfmt, , ,check-format, , ,116,Check language dependent format strings
+msgfmt, , ,chack-header, , ,117,Verify presence and contents of the header entry
+msgfmt, , ,check-domain, , ,118,Check for conflicts between domain directives and the --output-file option
+msgfmt, ,C,check-compatibility, , ,119,Check that GNU msgfmt behaves like X/Open msgfmt
+msgfmt, , ,check-accelerators, , ,120,Check presence of keyboard accelerators for menu items
+msgfmt, ,f,use-fuzzy, , ,121,Use fuzzy entries in output
+msgfmt, ,a,alignment, , ,122,Alignment
+msgfmt, , ,no-hash, , ,123,Binary file will not include the hash table
+msgfmt, ,h,help, , ,124,Display help and exit
+msgfmt, ,V,version, , ,125,Display version and exit
+msgfmt, , ,statistics, , ,126,Print statistics about translations
+msgfmt, , ,verbose, , ,127,Increase verbosity level

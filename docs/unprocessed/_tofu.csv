@@ -1,0 +1,47 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tofu, __fish_tofu_needs_command, , , ,@f,101,Print version information
+tofu, __fish_tofu_needs_command, , ,apply,@f,103,Build or change infrastructure
+tofu, __fish_tofu_needs_command, , ,destroy,@f,104,Destroy infrastructure
+tofu, $apply, , , ,@f,105,Skip interactive approval
+tofu, $apply, , , ,@r,106,Path to backup the existing state file
+tofu, $apply, , , ,@f,107,Show only error summaries
+tofu, $apply, , , ,@f,108,Don't hold a state lock
+tofu, $apply, , , ,@f,109,Duration to retry a state lock
+tofu, $apply, , , ,@f,110,Ask for input for variables if not directly set
+tofu, $apply, , , ,@f,111,"If specified, output won't contain any color"
+tofu, $apply, , , ,@f,112,Limit the number of concurrent operations
+tofu, $apply, , , ,@r,113,Path to a OpenTofu state file
+tofu, $apply, , , ,@r,114,Path to write state
+tofu, __fish_tofu_needs_command, , ,console,@f,115,Interactive console for OpenTofu interpolations
+tofu, __fish_tofu_needs_command, , ,fmt,@f,119,Rewrite config files to canonical format
+tofu, __fish_tofu_needs_command, , ,get,@f,126,Download and install modules for the configuration
+tofu, __fish_tofu_needs_command, , ,graph,@f,129,Create a visual graph of OpenTofu resources
+tofu, __fish_tofu_needs_command, , ,import,@f,137,Import existing infrastructure into OpenTofu
+tofu, __fish_tofu_needs_command, , ,init,@f,149,Initialize a new or existing OpenTofu configuration
+tofu, __fish_tofu_needs_command, , ,login,@f,167,Retrieves auth token for the given hostname
+tofu, __fish_tofu_needs_command, , ,logout,@f,169,Removes auth token for the given hostname
+tofu, __fish_tofu_needs_command, , ,output,@f,171,Read an output from a state file
+tofu, __fish_tofu_needs_command, , ,plan,@f,176,Generate and show an execution plan
+tofu, $plan, , , ,@f,186,Select 'destroy' planning mode
+tofu, $plan, , , ,@f,187,Select 'refresh only' planning mode
+tofu, $plan, , , ,@f,188,Skip checking for external changes
+tofu, $plan, , , ,@f,189,Force replacement of resource using its address
+tofu, $plan, , , ,@f,190,Resource to target
+tofu, $plan, , , ,@f,191,Resource to ignore during plan
+tofu, $plan, , , ,@f,192,Set a variable in the OpenTofu configuration
+tofu, $plan, , , ,@r,193,Set variables from a file
+tofu, __fish_tofu_needs_command, , ,providers,@f,194,Print tree of modules with their provider requirements
+tofu, __fish_tofu_needs_command, , ,refresh,@f,196,Update local state file against real resources
+tofu, $apply, , , ,@f,197,Show only error summaries
+tofu, __fish_tofu_needs_command, , ,show,@f,208,Inspect OpenTofu state or plan
+tofu, __fish_tofu_needs_command, , ,state,@r,211,Advanced state management
+tofu, __fish_tofu_needs_command, , ,taint,@f,222,Manually mark a resource for recreation
+tofu, __fish_tofu_needs_command, , ,test,@f,230,Runs automated test of shared modules
+tofu, __fish_tofu_needs_command, , ,untaint,@f,234,Manually unmark a resource as tainted
+tofu, __fish_tofu_needs_command, , ,validate,@f,242,Validate the OpenTofu files
+tofu, __fish_tofu_needs_command, , ,version,@f,245,Print the OpenTofu version
+tofu, __fish_tofu_needs_command, , ,workspace,@f,246,Workspace management
+tofu, workspace && $workspace_commands, , ,list,@f,246,List workspaces
+tofu, workspace && $workspace_commands, , ,select,@f,246,Select an workspace
+tofu, workspace && $workspace_commands, , ,new,@f,246,Create a new workspace
+tofu, workspace && $workspace_commands, , ,delete,@f,246,Delete an existing workspace

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ts_test_mt, ,r,rotate, , ,101,Rotate the screen
+ts_test_mt, ,v,verbose, , ,102,Print the input samples' values to the console
+ts_test_mt, ,j,slots, , ,103,Override the number of concurrent touch contacts to allocate
+ts_test_mt, ,i,idev, , ,104,Explicitly choose the original input event device for tslib to use
+ts_test_mt, ,n,samples, , ,105,Automatically exit after having read n samples
+ts_test_mt, ,a,altcross, , ,106,Show an alternative crosshair symbol at the touch points.  SEE ALSO

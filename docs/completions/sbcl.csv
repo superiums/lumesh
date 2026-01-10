@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sbcl, , ,help, , ,101,Print this message and exit.
+sbcl, , ,version, , ,102,Print version information and exit.
+sbcl, , ,core, , ,103,Use the specified core file instead of the default.
+sbcl, , ,dynamic-space-size, , ,104,Size of reserved dynamic space in megabytes.
+sbcl, , ,control-stack-size, , ,105,Size of reserved control stack in megabytes.
+sbcl, , ,tls-limit, , ,106,Maximum number of thread-local symbols.
+sbcl, , ,sysinit, , ,107,System-wide init-file to use instead of default.
+sbcl, , ,userinit, , ,108,Per-user init-file to use instead of default.
+sbcl, , ,no-sysinit, , ,109,Inhibit processing of any system-wide init-file.
+sbcl, , ,no-userinit, , ,110,Inhibit processing of any per-user init-file.
+sbcl, , ,disable-debugger, , ,111,Invoke sb-ext:disable-debugger.
+sbcl, , ,noprint, , ,112,Run a Read-Eval Loop without printing results.
+sbcl, , ,script, , ,113,"Skip #! line, disable debugger, avoid verbosity."
+sbcl, , ,quit, , ,114,Exit with code 0 after option processing.
+sbcl, , ,non-interactive, , ,115,Sets both --quit and --disable-debugger.
+sbcl, , ,eval, , ,116,Form to eval when processing this option.
+sbcl, , ,load, , ,117,File to load when processing this option.

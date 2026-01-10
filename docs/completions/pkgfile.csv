@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkgfile, , ,version, , ,101,show program's version number and exit
+pkgfile, ,h,help, , ,102,show this help message and exit
+pkgfile, ,b,binaries, , ,103,"only show files in a {s}bin/ directory. Works with -s, -l"
+pkgfile, ,c,case-sensitive, , ,104,make searches case sensitive
+pkgfile, ,g,glob, , ,105,allow the use of * and ? as wildcards
+pkgfile, ,r,regex, , ,106,allow the use of regex in searches
+pkgfile, ,R,repo, , ,107,search only in the specified repository
+pkgfile, ,v,verbose, , ,108,enable verbose output
+pkgfile, ,i,info, , ,109,provides information about the package owning a file
+pkgfile, ,l,list, , ,110,"list files of a given package; similar to 'pacman -Ql'"
+pkgfile, ,s,search, , ,111,search which package owns a file
+pkgfile, ,u,update, , ,112,update to the latest filelist. This requires write permission to /var/cache/pkgtools/lists

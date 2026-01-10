@@ -1,0 +1,119 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cvs, __fish_use_subcommand,T, , ,@f @r,101,Use 'tmpdir' for temporary files.
+cvs, __fish_use_subcommand,e, , ,@f @r,102,Use 'editor' for editing log information.
+cvs, __fish_use_subcommand,d, , ,@f @r,103,Overrides $CVSROOT as the root of the CVS tree.
+cvs, __fish_use_subcommand,z, , ,@f @r,104,Request compression level '#' for net traffic.
+cvs, __fish_use_subcommand,s, , ,@f @r,105,Set CVS user variable.
+cvs, __fish_use_subcommand, , ,add,@f @r,106,Add a new file/directory to the repository
+cvs, __fish_use_subcommand, , ,admin,@f @r,107,Administration front end for rcs
+cvs, __fish_use_subcommand, , ,annotate,@f @r,108,Show last revision where each line was modified
+cvs, __fish_use_subcommand, , ,checkout,@f @r,109,Checkout sources for editing
+cvs, __fish_use_subcommand, , ,commit,@f @r,110,Check files into the repository
+cvs, __fish_use_subcommand, , ,diff,@f @r,111,Show differences between revisions
+cvs, __fish_use_subcommand, , ,edit,@f @r,112,Get ready to edit a watched file
+cvs, __fish_use_subcommand, , ,editors,@f @r,113,See who is editing a watched file
+cvs, __fish_use_subcommand, , ,export,@f @r,114,"Export sources from CVS, similar to checkout"
+cvs, __fish_use_subcommand, , ,history,@f @r,115,Show repository access history
+cvs, __fish_use_subcommand, , ,import,@f @r,116,"Import sources into CVS, using vendor branches"
+cvs, __fish_use_subcommand, , ,init,@f @r,117,Create a CVS repository if it doesn't exist
+cvs, __fish_use_subcommand, , ,kserver,@f @r,118,Kerberos server mode
+cvs, __fish_use_subcommand, , ,log,@f @r,119,Print out history information for files
+cvs, __fish_use_subcommand, , ,login,@f @r,120,Prompt for password for authenticating server
+cvs, __fish_use_subcommand, , ,logout,@f @r,121,Removes entry in .cvspass for remote repository
+cvs, __fish_use_subcommand, , ,ls,@f @r,122,List files available from CVS
+cvs, __fish_use_subcommand, , ,pserver,@f @r,123,Password server mode
+cvs, __fish_use_subcommand, , ,rannotate,@f @r,124,Show last revision where each line of module was modified
+cvs, __fish_use_subcommand, , ,rdiff,@f @r,125,Create 'patch' format diffs between releases
+cvs, __fish_use_subcommand, , ,release,@f @r,126,Indicate that a Module is no longer in use
+cvs, __fish_use_subcommand, , ,remove,@f @r,127,Remove an entry from the repository
+cvs, __fish_use_subcommand, , ,rlog,@f @r,128,Print out history information for a module
+cvs, __fish_use_subcommand, , ,rls,@f @r,129,List files in a module
+cvs, __fish_use_subcommand, , ,rtag,@f @r,130,Add a symbolic tag to a module
+cvs, __fish_use_subcommand, , ,server,@f @r,131,Server mode
+cvs, __fish_use_subcommand, , ,status,@f @r,132,Display status information on checked out files
+cvs, __fish_use_subcommand, , ,tag,@f @r,133,Add a symbolic tag to checked out version of files
+cvs, __fish_use_subcommand, , ,unedit,@f @r,134,Undo an edit command
+cvs, __fish_use_subcommand, , ,update,@f @r,135,Bring work tree in sync with repository
+cvs, __fish_use_subcommand, , ,version,@f @r,136,Show current CVS version(s)
+cvs, __fish_use_subcommand, , ,watch,@f @r,137,Set watches
+cvs, __fish_use_subcommand, , ,watchers,@f @r,138,See who is watching a file
+cvs, contains 'add' (commandline -pxc),k, , ,@f @r,139,Use 'rcs-kflag' to add the file with the specified
+cvs, contains 'add' (commandline -pxc),m, , ,@f @r,140,Use 'message' for the creation log.
+cvs, contains 'admin' (commandline -pxc),a, , ,@f @r,141,Append (comma-separated) user names to access list.
+cvs, contains 'admin' (commandline -pxc),A, , ,@f @r,142,Append another file's access list.
+cvs, contains 'admin' (commandline -pxc),c, , ,@f @r,143,Set comment leader.
+cvs, contains 'admin' (commandline -pxc),k, , ,@f @r,144,Set keyword substitution mode:
+cvs, contains 'admin' (commandline -pxc),m, , ,@f @r,145,Replace revision's log message.
+cvs, contains 'admin' (commandline -pxc),n, , ,@f @r,146,"Tag branch or revision.  If :rev is omitted,"
+cvs, contains 'admin' (commandline -pxc),N, , ,@f @r,147,Same as -n except override existing tag.
+cvs, contains 'admin' (commandline -pxc),o, , ,@f @r,148,Delete (outdate) specified range of revisions:
+cvs, contains 'admin' (commandline -pxc),s, , ,@f @r,149,"Set revision state (latest revision on branch,"
+cvs, contains 'annotate' (commandline -pxc),r, , ,@f @r,150,Annotate file as of specified revision/tag.
+cvs, contains 'annotate' (commandline -pxc),D, , ,@f @r,151,Annotate file as of specified date.
+cvs, contains 'checkout' (commandline -pxc),r, , ,@f @r,152,Check out revision or tag. (implies -P) (is sticky)
+cvs, contains 'checkout' (commandline -pxc),D, , ,@f @r,153,Check out revisions as of date. (implies -P) (is sticky)
+cvs, contains 'checkout' (commandline -pxc),d, , ,@D @f @r,154,Check out into dir instead of module name.
+cvs, contains 'checkout' (commandline -pxc),k, , ,@f @r,155,Use RCS kopt -k option on checkout. (is sticky)
+cvs, contains 'checkout' (commandline -pxc),j, , ,@f @r,156,Merge in changes made between current revision and rev.
+cvs, contains 'commit' (commandline -pxc),F, , ,@f @r,157,Read the log message from file.
+cvs, contains 'commit' (commandline -pxc),m, , ,@f @r,158,Log message.
+cvs, contains 'commit' (commandline -pxc),r, , ,@f @r,159,Commit to this branch or trunk revision.
+cvs, contains 'diff' (commandline -pxc),k, , ,@f @r,160,Specify keyword expansion mode.
+cvs, contains 'diff' (commandline -pxc),D, , ,@f @r,161,Diff revision for date against working file.
+cvs, contains 'diff' (commandline -pxc),D, , ,@f @r,162,Diff rev1/date1 against date2.
+cvs, contains 'diff' (commandline -pxc),r, , ,@f @r,163,Diff revision for rev1 against working file.
+cvs, contains 'diff' (commandline -pxc),r, , ,@f @r,164,Diff rev1/date1 against rev2.
+cvs, contains 'diff' (commandline -pxc),I, , ,@f @r,165,--ignore-matching-lines=RE  Ignore changes whose lines all match RE.
+cvs, contains 'diff' (commandline -pxc),L, , ,@f @r,166,--label LABEL  Use LABEL instead of file name.
+cvs, contains 'diff' (commandline -pxc),F, , ,@f @r,167,--show-function-line=RE  Show the most recent line matching RE.
+cvs, contains 'diff' (commandline -pxc),W, , ,@f @r,168,--width=NUM  Output at most NUM (default 130) characters per line.
+cvs, contains 'export' (commandline -pxc),r, , ,@f @r,169,Export tagged revisions.
+cvs, contains 'export' (commandline -pxc),D, , ,@f @r,170,Export revisions as of date.
+cvs, contains 'export' (commandline -pxc),d, , ,@D @f @r,171,Export into dir instead of module name.
+cvs, contains 'export' (commandline -pxc),k, , ,@f @r,172,Use RCS kopt -k option on checkout.
+cvs, contains 'history' (commandline -pxc),m, , ,@f @r,173,Look for specified module (repeatable)
+cvs, contains 'history' (commandline -pxc),x, , ,@f @r,174,Extract by record type
+cvs, contains 'history' (commandline -pxc),D, , ,@f @r,175,Since date (Many formats)
+cvs, contains 'history' (commandline -pxc),b, , ,@f @r,176,Back to record with str in module/file/repos field
+cvs, contains 'history' (commandline -pxc),f, , ,@r,177,Specified file (same as command line) (repeatable)
+cvs, contains 'history' (commandline -pxc),n, , ,@f @r,178,In module (repeatable)
+cvs, contains 'history' (commandline -pxc),p, , ,@f @r,179,In repository (repeatable)
+cvs, contains 'history' (commandline -pxc),r, , ,@f @r,180,Since rev or tag (looks inside RCS files!)
+cvs, contains 'history' (commandline -pxc),t, , ,@f @r,181,Since tag record placed in history file (by anyone).
+cvs, contains 'history' (commandline -pxc),u, , ,@f @r,182,For user name (repeatable)
+cvs, contains 'history' (commandline -pxc),z, , ,@f @r,183,Output for time zone <tz> (e.g. -z -0700)
+cvs, contains 'import' (commandline -pxc),k, , ,@f @r,184,Set default RCS keyword substitution mode.
+cvs, contains 'import' (commandline -pxc),I, , ,@f @r,185,More files to ignore (! to reset).
+cvs, contains 'import' (commandline -pxc),b, , ,@f @r,186,Vendor branch id.
+cvs, contains 'import' (commandline -pxc),m, , ,@f @r,187,Log message.
+cvs, contains 'import' (commandline -pxc),W, , ,@f @r,188,Wrappers specification line.
+cvs, contains 'log' (commandline -pxc),t, , ,@f @r,189,This option.
+cvs, contains 'log' (commandline -pxc),d, , ,@f @r,190,A semicolon-separated list of dates
+cvs, contains 'log' (commandline -pxc),s, , ,@f @r,191,Only list revisions with specified states.
+cvs, contains 'ls' (commandline -pxc),r, , ,@f @r,192,Show files with revision or tag.
+cvs, contains 'ls' (commandline -pxc),D, , ,@f @r,193,Show files from date.
+cvs, contains 'pserver' (commandline -pxc),c, , ,@f @r,194,Path to an alternative CVS config file.
+cvs, contains 'rannotate' (commandline -pxc),r, , ,@f @r,195,Annotate file as of specified revision/tag.
+cvs, contains 'rannotate' (commandline -pxc),D, , ,@f @r,196,Annotate file as of specified date.
+cvs, contains 'rdiff' (commandline -pxc),r, , ,@f @r,197,Date [-r rev2 | -D date2] modules…
+cvs, contains 'rdiff' (commandline -pxc),V, , ,@f @r,198,Use RCS Version 'vers' for keyword expansion.
+cvs, contains 'rdiff' (commandline -pxc),k, , ,@f @r,199,Specify keyword expansion mode.
+cvs, contains 'rdiff' (commandline -pxc),D, , ,@f @r,200,Date.
+cvs, contains 'rdiff' (commandline -pxc),r, , ,@f @r,201,Revision - symbolic or numeric.
+cvs, contains 'rlog' (commandline -pxc),t, , ,@f @r,202,This option.
+cvs, contains 'rlog' (commandline -pxc),d, , ,@f @r,203,A semicolon-separated list of dates
+cvs, contains 'rlog' (commandline -pxc),s, , ,@f @r,204,Only list revisions with specified states.
+cvs, contains 'rls' (commandline -pxc),r, , ,@f @r,205,Show files with revision or tag.
+cvs, contains 'rls' (commandline -pxc),D, , ,@f @r,206,Show files from date.
+cvs, contains 'rtag' (commandline -pxc),r, , ,@f @r,207,Existing revision/tag.
+cvs, contains 'server' (commandline -pxc),c, , ,@f @r,208,Path to an alternative CVS config file.
+cvs, contains 'tag' (commandline -pxc),r, , ,@f @r,209,Existing revision/tag.
+cvs, contains 'update' (commandline -pxc),k, , ,@f @r,210,Use RCS kopt -k option on checkout. (is sticky)
+cvs, contains 'update' (commandline -pxc),r, , ,@f @r,211,Update using specified revision/tag (is sticky).
+cvs, contains 'update' (commandline -pxc),D, , ,@f @r,212,Set date to update from (is sticky).
+cvs, contains 'update' (commandline -pxc),j, , ,@f @r,213,Merge in changes made between current revision and rev.
+cvs, contains 'update' (commandline -pxc),I, , ,@f @r,214,More files to ignore (! to reset).
+cvs, contains 'update' (commandline -pxc),W, , ,@f @r,215,Wrappers specification line.
+cvs, contains 'watch' (commandline -pxc),l, ,on off add remove,@f @r,216,"Local directory only, not recursive."
+cvs, contains 'watch' (commandline -pxc),R, ,on off add remove,@f @r,217,Process directories recursively (default).
+cvs, contains 'watch' (commandline -pxc),a, ,add remove,@f @r,218,"Specify what actions, one of: `edit', `unedit',"

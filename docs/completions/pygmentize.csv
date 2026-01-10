@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pygmentize, ,l, , ,@f @r,101,Set lexer
+pygmentize, ,f, , ,@f @r,102,Set formatter
+pygmentize, ,F, , ,@f @r,103,Set filter
+pygmentize, ,S, , ,@f @r,104,Print style definition for given style
+pygmentize, ,L, ,lexers formatters styles filters,@f @r,105,"List lexers, formatters, styles or filters"
+pygmentize, ,H, ,lexer formatter filter,@f @r,106,Print detailed help

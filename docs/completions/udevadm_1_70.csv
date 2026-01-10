@@ -1,0 +1,59 @@
+cmd,conds,short,long,params,dirs,pri,desc
+udevadm, ,d,debug, , ,101,Print debug messages to standard error
+udevadm, ,h,help, , ,102,Print a short help text and exit
+udevadm, ,q,query, , ,103,Query the database for the specified type of device data
+udevadm, , ,property, , ,104,"When showing device properties using the --query=property option, limit displ…"
+udevadm, , ,value, , ,105,"When showing device properties using the --query=property option, print only …"
+udevadm, ,p,path, , ,106,"The /sys/ path of the device to query, e. g.  [/sys/]/class/block/sda"
+udevadm, ,n,name, , ,107,"The name of the device node or a symlink to query, e. g.  [/dev/]/sda"
+udevadm, ,r,root, , ,108,Print absolute paths in name or symlink query
+udevadm, ,a,attribute-walk, , ,109,Print all sysfs properties of the specified device that can be used in udev r…
+udevadm, ,t,tree, , ,110,Display a sysfs tree
+udevadm, ,x,export, , ,111,Print output as key/value pairs.  Values are enclosed in single quotes
+udevadm, ,P,export-prefix, , ,112,Add a prefix to the key name of exported values.  This implies --export
+udevadm, , ,device-id-of-file, , ,113,"Print major/minor numbers of the underlying device, where the file lives on"
+udevadm, ,e,export-db, , ,114,Export the content of the udev database
+udevadm, ,c,cleanup-db, , ,115,Cleanup the udev database
+udevadm, ,w,wait-for-initialization, , ,116,Wait for device to be initialized
+udevadm, , ,subsystem-nomatch, , ,117,"When used with --export-db, only show devices of or not of the given subsyste…"
+udevadm, , ,attr-nomatch, , ,118,"When used with --export-db, only show devices matching or not matching the gi…"
+udevadm, , ,property-match, , ,119,"When used with --export-db, only show devices matching the given property and…"
+udevadm, , ,tag-match, , ,120,"When used with --export-db, only show devices with the given tag"
+udevadm, , ,sysname-match, , ,121,"When used with --export-db, only show devices with the given '/sys' path"
+udevadm, , ,name-match, , ,122,"When used with --export-db, only show devices with the given name in '/dev'"
+udevadm, , ,parent-match, , ,123,"When used with --export-db, only show devices with the given parent device"
+udevadm, , ,initialized-nomatch, , ,124,"When used with --export-db, only show devices that are initialized or not ini…"
+udevadm, , ,json, , ,125,Shows output formatted as JSON
+udevadm, , ,no-pager, , ,126,Do not pipe output into a pager
+udevadm, ,v,verbose, , ,127,Print the list of devices which will be triggered
+udevadm, , ,dry-run, , ,128,Do not actually trigger the event
+udevadm, , ,quiet, , ,129,Suppress error logging in triggering events. sp Added in version 248
+udevadm, , ,type, , ,130,Trigger a specific type of devices
+udevadm, , ,action, , ,131,Type of event to be triggered
+udevadm, , ,prioritized-subsystem, , ,132,Takes a comma separated list of subsystems
+udevadm, , ,settle, , ,133,"Apart from triggering events, also waits for those events to finish"
+udevadm, , ,uuid, , ,134,"Trigger the synthetic device events, and associate a randomized UUID with each"
+udevadm, , ,wait-daemon, , ,135,"Before triggering uevents, wait for systemd-udevd daemon to be initialized"
+udevadm, , ,timeout, , ,136,Maximum number of seconds to wait for the event queue to become empty
+udevadm, ,E,exit-if-exists, , ,137,Stop waiting if file exists
+udevadm, , ,exit, , ,138,Signal and wait for systemd-udevd to exit
+udevadm, ,l,log-level, , ,139,Set the internal log level of systemd-udevd
+udevadm, , ,stop-exec-queue, , ,140,Signal systemd-udevd to stop executing new events
+udevadm, , ,start-exec-queue, , ,141,Signal systemd-udevd to enable the execution of events
+udevadm, ,R,reload, , ,142,Signal systemd-udevd to reload the rules files and other databases like the k…
+udevadm, ,m,children-max, , ,143,"Set the maximum number of events, systemd-udevd will handle at the same time"
+udevadm, , ,ping, , ,144,Send a ping message to systemd-udevd and wait for the reply
+udevadm, ,k,kernel, , ,145,Print the kernel uevents
+udevadm, ,u,udev, , ,146,Print the udev event after the rule processing
+udevadm, ,N,resolve-names, , ,147,Specify when udevadm should resolve names of users and groups
+udevadm, , ,version, , ,148,Print a short version string and exit
+udevadm, , ,no-summary, , ,149,Do not show summary. sp Added in version 254
+udevadm, , ,no-style, , ,150,Ignore style issues
+udevadm, , ,initialized, , ,151,Check if systemd-udevd initialized devices.  Defaults to true
+udevadm, , ,removed, , ,152,"When specified, the command wait for devices being removed instead of created…"
+udevadm, , ,device, , ,153,Takes a path to a device node of the device to lock
+udevadm, , ,backing, , ,154,"If a path to a device node is specified, identical to --device="
+udevadm, , ,print, , ,155,"Instead of locking the specified devices and executing a command, just print …"
+udevadm, , ,seq, , ,156,switch. )
+udevadm, , ,load-credentials, , ,157, 
+udevadm, , ,lock, , ,158,switch

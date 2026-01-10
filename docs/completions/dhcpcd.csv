@@ -1,0 +1,61 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dhcpcd, , , , ,@f,101, 
+dhcpcd, ,b,background, , ,102,Background immediately
+dhcpcd, ,c,script, ,@F @r,103,Use given script instead of default hook
+dhcpcd, ,D,duid, , ,104,Use a DHCP Unique Identifier
+dhcpcd, ,d,debug, , ,105,Echo debug messages to stderr & syslog
+dhcpcd, ,E,lastlease, , ,106,Use last acquired lease if cannot obtain one
+dhcpcd, , ,lastleaseextend, , ,107,Use last acquired lease if cannot obtain one even if expired
+dhcpcd, ,e,env, ,@f @r,108,Push given value to environment for hooks
+dhcpcd, ,g,reconfigure, , ,109,Reapply configuration for each interface
+dhcpcd, ,F,fqdn,disable none ptr both, ,110,Request DHCP server to update DNS using FQDN instead of hostname
+dhcpcd, ,f,config, ,@F @r,111,Specify config to load instead of /etc/dhcpcd.conf
+dhcpcd, ,h,hostname, ,@f @r,112,Send hostname to DHCP server
+dhcpcd, ,I,clientid, ,@f @r,113,Send given clientid
+dhcpcd, ,i,vendorclassid, ,@f @r,114,Override DHCPv4 vendorclassid field sent
+dhcpcd, ,j,logfile, ,@F @r,115,Write to specified log file
+dhcpcd, ,k,release, , ,116,Release lease and de-configure interface
+dhcpcd, ,l,leasetime, ,@f @r,117,Request specific lease time in secs
+dhcpcd, ,M,manager, , ,118,Start dhcpcd in Manager mode
+dhcpcd, ,m,metric, ,@f @r,119,Set preferred interface based on given rank (lowest wins)
+dhcpcd, ,n,rebind, , ,120,Reload config and rebind specified interface
+dhcpcd, ,N,renew, , ,121,Renew existing addresses on specified interface
+dhcpcd, ,o,option, ,@f @r,122,Request DHCP option
+dhcpcd, ,p,persistent, , ,123,Keep configuration even when dhcpcd exits
+dhcpcd, ,r,request, ,@f @r,124,Request given address in DHCP DISCOVER message
+dhcpcd, ,s,inform, ,@f @r,125,Request given address in DHCP INFORM message
+dhcpcd, , ,inform6, , ,126,Perform DHCPv6 Information Request
+dhcpcd, ,S,static, ,@f @r,127,Configure static DHCP value
+dhcpcd, ,t,timeout,0 30,@f @r,128,Timeout after seconds
+dhcpcd, ,u,userclass, ,@f @r,129,Tag DHCPv4 message with given userclass
+dhcpcd, ,v,vendor, ,@f @r,130,Add encapsulated vendor option
+dhcpcd, , ,version, , ,131,Show version and exit
+dhcpcd, , ,waitip,4 6,@f @r,132,Wait for address to be assigned before forking to background
+dhcpcd, ,x,exit, , ,133,Exit dhcpcd process linked to given interface
+dhcpcd, ,y,reboot, ,@f @r,134,Allow reboot after secs
+dhcpcd, ,1,oneshot, , ,135,Exit after configuring an interface
+dhcpcd, ,4,ipv4only, , ,136,Configure IPv4 only
+dhcpcd, ,6,ipv6only, , ,137,Configure IPv6 only
+dhcpcd, ,A,noarp, , ,138,Don't request or claim the address by ARP
+dhcpcd, ,B,nobackground, , ,139,Don't run in the background
+dhcpcd, ,C,nohook, ,@F @r,140,Don't run this hook script
+dhcpcd, ,G,nogateway, , ,141,Don't set any default routes
+dhcpcd, ,H,xidhwaddr, , ,142,Use last four bytes of the MAC as the DHCP xid
+dhcpcd, ,J,broadcast, , ,143,Instructs DHCP server to broadcast replies back to the client
+dhcpcd, ,K,nolink, , ,144,Don't receive link messages for carrier status
+dhcpcd, ,L,noipv4ll, , ,145,Don't use IPv4LL
+dhcpcd, ,O,nooption, ,@f @r,146,Remove given option from the DHCP message
+dhcpcd, ,P,printpidfile, , ,147,Print the pidfile dhcpcd will use to stdout
+dhcpcd, ,Q,require, ,@f @r,148,Requires the option to be present in all DHCP messages
+dhcpcd, ,q,quiet, , ,149,Only warnings and errors will be displayed
+dhcpcd, ,T,test, , ,150,Call hooks with TEST reason to print DHCP variables
+dhcpcd, ,U,dumplease, , ,151,Dump current lease for the interface to stdout
+dhcpcd, ,V,variables, , ,152,Display hook variables
+dhcpcd, ,W,whitelist, ,@f @r,153,Only accept packets from given address
+dhcpcd, ,X,blacklist, , ,154,Ignore all packets from given address
+dhcpcd, ,Z,denyinterfaces, ,@f @r,155,Interface name must not match pattern
+dhcpcd, ,z,allowinterfaces, ,@f @r,156,Interface name must match pattern
+dhcpcd, , ,inactive, , ,157,Don't start any interfaces other than those specified
+dhcpcd, , ,configure, , ,158,Allows dhcpcd to configure the system
+dhcpcd, , ,noconfigure, , ,159,dhcpcd will not configure the system at all
+dhcpcd, , ,nodev, , ,160,Don't load any /dev management modules

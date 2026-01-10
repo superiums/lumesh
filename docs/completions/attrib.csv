@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+attrib, , , , ,@f,101, 
+attrib, , , ,+,@f,104,Set the file attribute
+attrib, , , ,-,@f,105,Clear the file attribute
+attrib, , , ,/s,@f,106, 
+attrib, , , ,/?,@f,107,Show help

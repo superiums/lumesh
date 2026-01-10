@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-uniq, ,D,all-repeated,none,@f @r,101,print all duplicate lines. Delimiting is done with blank lines. [default: none]
+uu-uniq, , ,group,separate,@f @r,102,"show all items, separating groups with an empty line. [default: separate]"
+uu-uniq, ,w,check-chars, , ,103,compare no more than N characters in lines
+uu-uniq, ,s,skip-chars, , ,104,avoid comparing the first N characters
+uu-uniq, ,f,skip-fields, , ,105,avoid comparing the first N fields
+uu-uniq, ,c,count, , ,106,prefix lines by the number of occurrences
+uu-uniq, ,i,ignore-case, , ,107,ignore differences in case when comparing
+uu-uniq, ,d,repeated, , ,108,only print duplicate lines
+uu-uniq, ,u,unique, , ,109,only print unique lines
+uu-uniq, ,z,zero-terminated, , ,110,"end lines with 0 byte, not newline"
+uu-uniq, ,h,help, , ,111,Print help
+uu-uniq, ,V,version, , ,112,Print version

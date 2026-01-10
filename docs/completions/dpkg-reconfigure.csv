@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dpkg-reconfigure, , , , ,@f,101,Package
+dpkg-reconfigure, ,h,help, ,@f @r,102,Display help
+dpkg-reconfigure, ,f,frontend,dialog readline noninteractive gnome kde editor web,@f @r,103,Set configuration frontend
+dpkg-reconfigure, ,p,priority,low medium high critical,@f @r,104,Set priority threshold
+dpkg-reconfigure, , ,default-priority, ,@f,105,Use current default priority threshold
+dpkg-reconfigure, ,u,unseen-only, ,@f,106,Show only unseen question
+dpkg-reconfigure, , ,force, ,@f,107,Reconfigure also inconsistent packages
+dpkg-reconfigure, , ,no-reload, ,@f,108,Prevent reloading templates

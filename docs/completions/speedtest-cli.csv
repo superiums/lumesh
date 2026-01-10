@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+speedtest-cli, ,h,help, , ,101,Display help and exit
+speedtest-cli, , ,no-download, , ,102,Do not perform download test
+speedtest-cli, , ,no-upload, , ,103,Do not perform upload test
+speedtest-cli, , ,single, , ,104,Only use a single connection. Simulates typical file transfer
+speedtest-cli, , ,bytes, , ,105,Display values in bytes. Ignored by JSON or CSV output
+speedtest-cli, , ,share, , ,106,Generate a URL to the speedtest.net share results image
+speedtest-cli, , ,simple, , ,107,Suppress verbose output
+speedtest-cli, , ,csv, , ,108,Only show basic information in CSV format (bits/s)
+speedtest-cli, , ,csv-delimiter,_ _ _, ,109,Single character delimiter to use in CSV output
+speedtest-cli, , ,csv-header, , ,110,Print CSV headers
+speedtest-cli, , ,json, , ,111,Only show basic information in JSON format (bits/s)
+speedtest-cli, , ,list, , ,112,Display a list of speedtest.net servers sorted by distance
+speedtest-cli, , ,server, , ,113,Specify a server ID to test against
+speedtest-cli, , ,exclude, , ,114,Exclude a server from selection
+speedtest-cli, , ,mini, , ,115,URL of the Speedtest Mini server
+speedtest-cli, , ,source, , ,116,Source IP address to bind to
+speedtest-cli, , ,timeout, , ,117,HTTP timeout in seconds
+speedtest-cli, , ,secure, , ,118,Use HTTPS instead of HTTP with speedtest.net operated servers
+speedtest-cli, , ,no-pre-allocate, , ,119,Do not pre allocate upload data
+speedtest-cli, , ,version, , ,120,Show the version number and exit

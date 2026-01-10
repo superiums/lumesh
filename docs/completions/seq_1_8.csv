@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+seq, ,f,format, , ,101,use printf style floating-point FORMAT
+seq, ,s,separator, , ,102,use STRING to separate numbers (default: n)
+seq, ,w,equal-width, , ,103,equalize width by padding with leading zeroes
+seq, , ,help, , ,104,display this help and exit
+seq, , ,version, , ,105,output version information and exit

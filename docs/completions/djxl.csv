@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+djxl, ,V,version, , ,101,Print version number
+djxl, , ,num_reps, ,@f @r,102, 
+djxl, , ,use_sjpeg, , ,103,Use sjpeg instead of libjpeg
+djxl, , ,jpeg_quality, ,@f @r,104,JPEG output quality
+djxl, , ,num_threads, ,@f @r,105,The number of threads to use
+djxl, , ,print_profile,0 1,@f @r,106,Print timing information
+djxl, , ,print_info,0 1,@f @r,107,Print AuxOut
+djxl, , ,bits_per_sample, ,@f @r,108, 
+djxl, , ,color_space, ,@f @r,109, 
+djxl, ,s,downsampling,1 2 4 8 16,@f @r,110,Maximum permissible downsampling factor
+djxl, , ,allow_partial_files, , ,111,Allow decoding of truncated files
+djxl, , ,allow_more_progressive_steps, , ,112,Allow decoding more progressive steps
+djxl, ,j,jpeg, , ,113,Decode directly to JPEG
+djxl, , ,print_read_bytes, , ,114,Print total number of decoded bytes
+djxl, ,h,help, , ,115,Print help message

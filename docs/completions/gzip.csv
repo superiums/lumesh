@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gzip, ,c,stdout, , ,101,Compress to stdout
+gzip, ,d,decompress, ,@f @k @r,102,Decompress
+gzip, ,f,force, , ,103,Overwrite
+gzip, ,h,help, , ,104,Display help and exit
+gzip, ,k,keep, , ,105,Keep input files
+gzip, ,l,list, , ,106,List compression information
+gzip, ,L,license, , ,107,Print license
+gzip, ,n,no-name, , ,108,Do not save/restore filename
+gzip, ,N,name, , ,109,Save/restore filename
+gzip, ,q,quiet, , ,110,Suppress warnings
+gzip, ,r,recursive, , ,111,Recurse directories
+gzip, ,S,suffix, ,@r,112,Suffix
+gzip, ,t,test, , ,113,Check integrity
+gzip, ,v,verbose, , ,114,Display compression ratios
+gzip, ,V,version, , ,115,Display version and exit
+gzip, ,1,fast, , ,116,Use fast setting
+gzip, ,9,best, , ,117,Use high compression setting

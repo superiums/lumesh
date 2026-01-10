@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zoxide-remove, ,h,help, , ,101,Print help information

@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsaloop, ,h,help, , ,101,Prints the help information
+alsaloop, ,g,config, , ,102,Use given configuration file
+alsaloop, ,d,daemonize, , ,103,Daemonize the main process and use syslog for messages
+alsaloop, ,P,pdevice, , ,104,Use given playback device
+alsaloop, ,C,cdevice, , ,105,Use given capture device
+alsaloop, ,X,pctl, , ,106,Use given CTL device for playback
+alsaloop, ,Y,cctl, , ,107,Use given CTL device for capture
+alsaloop, ,x,prateshift, , ,108,Specify ctl ascii name for playshift sync mode (see the Examples section)
+alsaloop, ,l,latency, , ,109,Requested latency in frames
+alsaloop, ,t,tlatency, , ,110,Requested latency in usec (1/1000000sec)
+alsaloop, ,f,format, , ,111,Format specification (usually S16_LE S32_LE).  Use -h to list all formats
+alsaloop, ,c,channels, , ,112,Channel count specification.  Default value is 2
+alsaloop, ,r,rate, , ,113,Rate specification.  Default value is 48000 (Hz)
+alsaloop, ,n,resample, , ,114,Allow rate resampling using alsa-lib
+alsaloop, ,A,samplerate, , ,115,Use libsamplerate and choose a converter:    0 or sincbest     - best quality…
+alsaloop, ,B,buffer, , ,116,Buffer size in frames
+alsaloop, ,E,period, , ,117,Period size in frames
+alsaloop, ,s,seconds, , ,118,Duration of loop in seconds
+alsaloop, ,b,nblock, , ,119,Non-block mode (very early process wakeup).  Eats more CPU
+alsaloop, ,S,sync, , ,120,Sync mode specification for capture to playback stream:   0 or none       - d…
+alsaloop, ,T,thread, , ,121,Thread number (-1 means create a unique thread)
+alsaloop, ,m,mixer, , ,122,Redirect mixer control from the playback card to the capture card
+alsaloop, ,O,ossmixer, , ,123,Redirect mixer control from the OSS Mixer emulation layer (capture card) to t…
+alsaloop, ,v,verbose, , ,124,Verbose mode.  Use multiple times to increase verbosity
+alsaloop, ,U,xrun, , ,125,Verbose xrun profiling
+alsaloop, ,W,wake, , ,126, 

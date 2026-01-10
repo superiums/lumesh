@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-top, ,h,help, , ,101,Show help
+pw-top, ,b,batch-mode, , ,102,"Run in non-interactive batch mode, similar to top\\'s batch mode"
+pw-top, ,n,iterations, , ,103,Exit after NUMBER of batch iterations.  Only used in batch mode
+pw-top, ,r,remote, , ,104,The name the remote instance to monitor
+pw-top, ,V,version, , ,105,Show version information

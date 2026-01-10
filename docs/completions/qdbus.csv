@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+qdbus, , ,system, , ,101,connect to the system bus
+qdbus, , ,bus, ,@r,102,connect to a custom bus
+qdbus, , ,literal, , ,103,print replies literally
+qdbus, , ,help, , ,104,print usage

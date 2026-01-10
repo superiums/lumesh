@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+piconv.1perl, ,f,from, , ,101, 
+piconv.1perl, ,t,to, , ,102, 
+piconv.1perl, ,s,string, , ,103, 
+piconv.1perl, ,l,list, , ,104, 
+piconv.1perl, ,r,resolve, , ,105, 
+piconv.1perl, ,C,check, , ,106, 
+piconv.1perl, ,p,perlqq, , ,107, 
+piconv.1perl, , ,htmlcref, , ,108, 
+piconv.1perl, , ,xmlcref, , ,109, 
+piconv.1perl, ,h,help, , ,110, 
+piconv.1perl, ,D,debug, , ,111, 
+piconv.1perl, ,S,scheme, , ,112, 

@@ -1,0 +1,45 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vdir, ,a,all, , ,101,do not ignore entries starting with 
+vdir, ,A,almost-all, , ,102,do not list implied .  and 
+vdir, , ,author, , ,103,"with -l, print the author of each file"
+vdir, ,b,escape, , ,104,print C-style escapes for nongraphic characters
+vdir, , ,block-size, , ,105,"with -l, scale sizes by SIZE when printing them; e. g"
+vdir, ,B,ignore-backups, , ,106,do not list implied entries ending with ~
+vdir, , ,color, , ,107,"color the output WHEN; more info below"
+vdir, ,d,directory, , ,108,"list directories themselves, not their contents"
+vdir, ,D,dired, , ,109,generate output designed for Emacs' dired mode
+vdir, ,F,classify, , ,110,append indicator (one of */=>@|) to entries WHEN
+vdir, , ,file-type, , ,111,"likewise, except do not append '*'"
+vdir, , ,format, , ,112,"across -x, commas -m, horizontal -x, long -l, single-column -1, verbose -l, v…"
+vdir, , ,full-time, , ,113,"like -l --time-style=\\,full-iso\\/"
+vdir, , ,group-directories-first, , ,114,group directories before files
+vdir, ,G,no-group, , ,115,"in a long listing, don't print group names"
+vdir, ,h,human-readable, , ,116,"with -l and -s, print sizes like 1K 234M 2G etc"
+vdir, , ,si, , ,117,"likewise, but use powers of 1000 not 1024"
+vdir, ,H,dereference-command-line, , ,118,follow symbolic links listed on the command line
+vdir, , ,dereference-command-line-symlink-to-dir, , ,119,follow each command line symbolic link that points to a directory
+vdir, , ,hide, , ,120,do not list implied entries matching shell PATTERN (overridden by -a or -A)
+vdir, , ,hyperlink, , ,121,hyperlink file names WHEN
+vdir, , ,indicator-style, , ,122,"append indicator with style WORD to entry names: none (default), slash (-p), …"
+vdir, ,i,inode, , ,123,print the index number of each file
+vdir, ,I,ignore, , ,124,do not list implied entries matching shell PATTERN
+vdir, ,k,kibibytes, , ,125,"default to 1024-byte blocks for file system usage; used only with -s and per …"
+vdir, ,L,dereference, , ,126,"when showing file information for a symbolic link, show information for the f…"
+vdir, ,n,numeric-uid-gid, , ,127,"like -l, but list numeric user and group IDs"
+vdir, ,N,literal, , ,128,print entry names without quoting
+vdir, ,q,hide-control-chars, , ,129,print ? instead of nongraphic characters
+vdir, , ,show-control-chars, , ,130,"show nongraphic characters as-is (the default, unless program is 'ls' and out…"
+vdir, ,Q,quote-name, , ,131,enclose entry names in double quotes
+vdir, , ,quoting-style, , ,132,"use quoting style WORD for entry names: literal, locale, shell, shell-always,…"
+vdir, ,r,reverse, , ,133,reverse order while sorting
+vdir, ,R,recursive, , ,134,list subdirectories recursively
+vdir, ,s,size, , ,135,"print the allocated size of each file, in blocks"
+vdir, , ,sort, , ,136,"change default 'name' sort to WORD: none (-U), size (-S), time (-t), version …"
+vdir, , ,time, , ,137,"select which timestamp used to display or sort; access time (-u): atime, acce…"
+vdir, , ,time-style, , ,138,"time/date format with -l; see TIME_STYLE below"
+vdir, ,T,tabsize, , ,139,assume tab stops at each COLS instead of 8
+vdir, ,w,width, , ,140,set output width to COLS.   0 means no limit
+vdir, ,Z,context, , ,141,print any security context of each file
+vdir, , ,zero, , ,142,"end each output line with NUL, not newline"
+vdir, , ,help, , ,143,display this help and exit
+vdir, , ,version, , ,144,output version information and exit 

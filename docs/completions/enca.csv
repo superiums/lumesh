@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+enca, ,c,auto-convert, , ,101,Equivalent to calling Enca as enconv
+enca, ,g,guess, , ,102,Equivalent to calling Enca as enca
+enca, ,d,details, , ,103,"It used to print a few pages of details about the guessing process, but since…"
+enca, ,e,enca-name, , ,104,"Prints Enca's nice name of the charset, i. e"
+enca, ,f,human-readable, , ,105,Prints verbal description of the detected charset and surfaces--something a h…
+enca, ,i,iconv-name, , ,106,Prints how iconv(3) (and/or iconv(1)) calls the detected charset
+enca, ,r,rfc1345-name, , ,107,Prints RFC\\~1345 charset name
+enca, ,m,mime-name, , ,108,Prints preferred MIME name of detected charset
+enca, ,s,cstocs-name, , ,109,Prints how cstocs(1) calls the detected charset
+enca, ,n,name, , ,110,Prints charset (encoding) name selected by WORD (can be abbreviated as long a…
+enca, ,x,convert-to, , ,111,Converts file to encoding ENC. sp The optional `
+enca, ,L,language, , ,112,Sets language of input files to LANG
+enca, ,C,try-converters, , ,113,Appends comma separated LIST to the list of converters that will be tried whe…
+enca, ,E,external-converter-program, , ,114,Sets external converter program name to PATH
+enca, ,p,with-filename, , ,115,Forces Enca to prefix each result with corresponding file name
+enca, ,P,no-filename, , ,116,Forces Enca to not prefix results with file names
+enca, ,V,verbose, , ,117,Increases verbosity level (each use increases it by one)
+enca, ,h,help, , ,118,Prints brief usage help
+enca, ,G,license, , ,119,"Prints full Enca license (through a pager, if possible)"
+enca, ,l,list, , ,120,Prints list specified by WORD (can be abbreviated as long as it is unambiguou…

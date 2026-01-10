@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+git-sizer, , ,help, ,@f,101,Display help for Git Sizer
+git-sizer, ,v,verbose, ,@f,102,Report all statistics
+git-sizer, , ,threshold, ,@f @r,103,Minimum level of concern
+git-sizer, , ,critical, ,@f,104,Only report critical statistics
+git-sizer, , ,names,,@f @r,105,How to display names of large objects
+git-sizer, ,j,json, ,@f,106,Output results in JSON format
+git-sizer, , ,json-version,1 2,@f @r,107,JSON format version to use
+git-sizer, , ,progress, ,@f,108,Report progress to stderr
+git-sizer, , ,no-progress, ,@f,109,Don't report progress to stderr
+git-sizer, , ,version, ,@f,110,Output git-sizer version
+git-sizer, , ,branches, ,@f @r,111,Process branches
+git-sizer, , ,tags, ,@f @r,112,Process tags
+git-sizer, , ,remotes, ,@f @r,113,Process remote refs
+git-sizer, , ,include, ,@f @r,114,Process refs with specified PREFIX
+git-sizer, , ,exclude, ,@f @r,115,Don't process refs with specified PREFIX
+git-sizer, , ,include-regexp, ,@f @r,116,Process refs matching specified regex
+git-sizer, , ,exclude-regexp, ,@f @r,117,Don't process refs matching specified regex
+git-sizer, , ,show-refs, ,@f,118,Show refs which are being included/excluded

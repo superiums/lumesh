@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-cache, ,h,help, , ,101,Display help and exit
+apt-cache, , , ,gencaches,@f,102,Build apt cache
+apt-cache, , , ,showpkg,@f @r,103,Show package info
+apt-cache, , , ,stats,@f,104,Show cache statistics
+apt-cache, , , ,showsrc,@f @r,105,Show source package
+apt-cache, , , ,dump,@f,106,Show packages in cache
+apt-cache, , , ,dumpavail,@f,107,Print available list
+apt-cache, , , ,unmet,@f,108,List unmet dependencies in cache
+apt-cache, , , ,show,@f @r,109,Display package record
+apt-cache, , , ,search,@f @r,110,Search packagename by REGEX
+apt-cache, , ,full,search, ,111,Search full package name
+apt-cache, , ,names-only,search,@f @r,112,Search packagename only
+apt-cache, , , ,depends,@f @r,113,List dependencies for the package
+apt-cache, , , ,rdepends,@f @r,114,List reverse dependencies for the package
+apt-cache, , , ,pkgnames,@f @r,115,Print package name by prefix
+apt-cache, , , ,dotty,@f @r,116,Generate dotty output for packages
+apt-cache, , , ,policy,@f @r,117,Debug preferences file
+apt-cache, ,p,pkg-cache, ,@r,118,Select file to store package cache
+apt-cache, ,s,src-cache, ,@r,119,Select file to store source cache
+apt-cache, ,q,quiet, ,@f,120,Quiet mode
+apt-cache, ,i,important, ,@f,121,Print important dependencies
+apt-cache, ,a,all-versions, ,@f,122,Print full records
+apt-cache, ,g,generate, ,@f,123,Auto-gen package cache
+apt-cache, , ,all-names, ,@f,124,Print all names
+apt-cache, , ,recurse, ,@f,125,Dep and rdep recursive
+apt-cache, , ,installed, ,@f,126,Limit to installed
+apt-cache, ,v,version, ,@f,127,Display version and exit
+apt-cache, ,c,config-file, ,@r,128,Specify config file
+apt-cache, ,o,option, ,@f @r,129,Specify options

@@ -1,0 +1,48 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zef, install test build, , , ,@k,126, 
+zef, install upgrade smoke, ,fetch, , ,127, 
+zef, install upgrade smoke, ,build, , ,128, 
+zef, install upgrade smoke, ,/build, , ,129,Skip the building phase
+zef, install upgrade smoke, ,test, , ,130, 
+zef, install upgrade smoke, ,/test, , ,131,Skip the testing phase
+zef, install upgrade smoke depends rdepends, ,depends, , ,132, 
+zef, install upgrade smoke depends rdepends, ,/depends, , ,133,Do not fetch runtime dependencies
+zef, install upgrade smoke depends rdepends, ,build-depends, , ,134, 
+zef, install upgrade smoke depends rdepends, ,/build-depends, , ,135,Do not fetch build dependencies
+zef, install upgrade smoke depends rdepends, ,test-depends, , ,136, 
+zef, install upgrade smoke depends rdepends, ,/test-depends, , ,137,Do not fetch test dependencies
+zef, install upgrade smoke test fetch build, ,force, , ,138,Ignore errors
+zef, install upgrade smoke, ,force-resolve, , ,139,Ignore errors
+zef, install upgrade smoke fetch, ,force-fetch, , ,140,Ignore errors
+zef, install upgrade smoke, ,force-extract, , ,141,Ignore errors
+zef, install upgrade smoke build, ,force-build, , ,142,Ignore errors
+zef, install upgrade smoke test, ,force-test, , ,143,Ignore errors
+zef, install upgrade smoke, ,force-install, , ,144,Ignore errors
+zef, install upgrade smoke test fetch build, ,timeout, ,@f @r,145,Set a timeout (in seconds)
+zef, install upgrade smoke fetch, ,fetch-timeout, ,@f @r,146,Set a timeout (in seconds)
+zef, install upgrade smoke, ,extract-timeout, ,@f @r,147,Set a timeout (in seconds)
+zef, install upgrade smoke build, ,build-timeout, ,@f @r,148,Set a timeout (in seconds)
+zef, install upgrade smoke test, ,test-timeout, ,@f @r,149,Set a timeout (in seconds)
+zef, install upgrade smoke, ,install-timeout, ,@f @r,150,Set a timeout (in seconds)
+zef, install upgrade smoke test fetch, ,degree, ,@f @r,151,Number of simultaneous jobs to process
+zef, install upgrade smoke fetch, ,fetch-degree, ,@f @r,152,Number of simultaneous jobs to process
+zef, install upgrade smoke test, ,test-degree, ,@f @r,153,Number of simultaneous jobs to process
+zef, install upgrade smoke, ,dry, , ,154,Run all phases except the actual installations
+zef, install upgrade smoke, ,serial, , ,155,Install each dependency after passing testing and before building/testing the next dependency
+zef, install upgrade smoke fetch search info list, ,update, , ,156,Force a refresh for all module indexes or a specific ecosystem
+zef, install upgrade smoke fetch search info list, ,/update, , ,157,Skip refreshing all module indexes or a specific ecosystem
+zef, install upgrade smoke, ,exclude, , ,158, 
+zef, install upgrade smoke, ,to, ,@F @r,159,Short name or spec of CompUnit::Repository to install to
+zef, install upgrade smoke, ,install-to, ,@F @r,160,Short name or spec of CompUnit::Repository to install to
+zef, install, ,upgrade, , ,161, 
+zef, install, ,deps-only, , ,162,Install only the dependency chains of the requested distributions
+zef, install, ,contained, , ,163,Install dependencies regardless if they are already installed globally
+zef, uninstall, ,from, , ,164, 
+zef, uninstall, ,uninstall-from, , ,165, 
+zef, search info, ,wrap, ,@f @r,166, 
+zef, browse, ,open, , ,167, 
+zef, browse, ,/open, , ,168, 
+zef, list, ,max, ,@f @r,169, 
+zef, list,i,installed, , ,170, 
+zef, locate, ,sha1, , ,171, 
+zef, locate, ,confirm, , ,172, 

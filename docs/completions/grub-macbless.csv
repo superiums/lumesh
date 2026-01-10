@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-macbless, ,p,ppc, , ,101,bless for ppc-based macs
+grub-macbless, ,v,verbose, , ,102,print verbose messages
+grub-macbless, ,x,x86, , ,103,bless for x86-based macs
+grub-macbless, ,?,help, , ,104,give this help list
+grub-macbless, , ,usage, , ,105,give a short usage message
+grub-macbless, ,V,version, , ,106,print program version REPORTING BUGS Report bugs to <bug-grub@gnu. org>

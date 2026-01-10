@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+request-key, , ,version, , ,101,Print the program version and exit

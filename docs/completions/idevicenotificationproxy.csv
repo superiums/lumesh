@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicenotificationproxy, ,u,udid, , ,101,target specific device by UDID
+idevicenotificationproxy, ,n,network, , ,102,connect to network device
+idevicenotificationproxy, ,d,debug, , ,103,enable communication debugging
+idevicenotificationproxy, ,h,help, , ,104,prints usage information
+idevicenotificationproxy, ,v,version, , ,105,prints version information

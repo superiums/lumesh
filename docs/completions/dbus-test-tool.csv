@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dbus-test-tool, , ,session, , ,101,Connect to the session bus.  This is the default
+dbus-test-tool, , ,system, , ,102,Connect to the system bus
+dbus-test-tool, , ,name, , ,103,"Before proceeding, request ownership of the well-known bus name NAME, for exa…"
+dbus-test-tool, , ,no-read, , ,104,Do not read from the D-Bus socket
+dbus-test-tool, , ,sleep-ms, , ,105,Block for MS milliseconds before replying to a method call
+dbus-test-tool, , ,dest, , ,106,Send method calls to the well-known or unique bus name NAME
+dbus-test-tool, , ,count, , ,107,Send N method calls in total.  The default is 1
+dbus-test-tool, , ,queue, , ,108,"Send N method calls before waiting for any replies, then send one new call pe…"
+dbus-test-tool, , ,flood, , ,109,"Send all messages without waiting for a reply, equivalent to --queue with an …"
+dbus-test-tool, , ,no-reply, , ,110,Set the 'no reply desired' flag on the messages
+dbus-test-tool, , ,messages-per-conn, , ,111,"If given, send N method calls on the same connection, then disconnect and rec…"
+dbus-test-tool, , ,string, , ,112,The payload of each message is a UTF-8 string.  This is the default
+dbus-test-tool, , ,bytes, , ,113,The payload of each message is a byte-array
+dbus-test-tool, , ,empty, , ,114,The messages have no payload
+dbus-test-tool, , ,payload, , ,115,Use S as the --string or --bytes in the messages
+dbus-test-tool, , ,stdin, , ,116,"Read from standard input until end-of-file is reached, and use that as the --…"
+dbus-test-tool, , ,message-stdin, , ,117,"Read a complete binary D-Bus method call message from standard input, and use…"
+dbus-test-tool, , ,random-size, , ,118,"Read whitespace-separated ASCII decimal numbers from standard input, choose o…"
+dbus-test-tool, , ,seed, , ,119,"Use SEED as the seed for the pseudorandom number generator, to have somewhat …"

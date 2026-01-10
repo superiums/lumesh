@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pcscd, ,a,apdu, , ,101,log APDUs and SW using the debug method (see  --debug )
+pcscd, ,c,config, , ,102,Specifies the directory dir as an alternate location for R /etc/reader. conf
+pcscd, ,f,foreground, , ,103,Runs pcscd in the foreground and sends log messages to stderr instead of sysl…
+pcscd, ,T,color, , ,104,force use of colored logs
+pcscd, ,d,debug, , ,105,use the lowest log level
+pcscd, , ,info, , ,106,use info log level.  This is the default log level
+pcscd, ,e,error, , ,107,use error log level
+pcscd, ,C,critical, , ,108,use critical log level
+pcscd, , ,force-reader-polling, , ,109,ignore the IFD_GENERATE_HOTPLUG reader capability
+pcscd, ,t,max-thread, , ,110,maximum number of threads (default 200)
+pcscd, ,s,max-card-handle-per-thread, , ,111,maximum number of card handle per thread (default: 200)
+pcscd, ,r,max-card-handle-per-reader, , ,112,maximum number of card handle per reader (default: 200)  This is the maximum …
+pcscd, ,h,help, , ,113,Displays information about the pcscd command line
+pcscd, ,v,version, , ,114,Displays the program version number
+pcscd, ,H,hotplug, , ,115,Ask pcscd to re-read the  /etc/reader. conf. d/my_reader
+pcscd, ,x,auto-exit, , ,116,pcscd will quit after 60 seconds of inactivity after the release of the last …
+pcscd, ,S,reader-name-no-serial, , ,117,Do not include the USB serial number in the reader name
+pcscd, ,I,reader-name-no-interface, , ,118,Do not include the USB interface name in the reader name
+pcscd, , ,disable-polkit, , ,119,Ignore polkit rules.  All accesses are allowed

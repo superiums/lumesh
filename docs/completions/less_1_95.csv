@@ -1,0 +1,90 @@
+cmd,conds,short,long,params,dirs,pri,desc
+less, ,?,help, , ,101,This option displays a summary of the commands accepted by  less (the same as…
+less, ,a,search-skip-screen, , ,102,"By default, forward searches start at the top of the displayed screen and bac…"
+less, ,A,SEARCH-SKIP-SCREEN, , ,103,Causes all forward searches (not just non-repeated searches) to start just af…
+less, , ,buffers, , ,104,"Specifies the amount of buffer space  less will use for each file, in units o…"
+less, ,B,auto-buffers, , ,105,"By default, when data is read from a pipe, buffers are allocated automaticall…"
+less, ,c,clear-screen, , ,106,Causes full screen repaints to be painted from the top line down
+less, ,C,CLEAR-SCREEN, , ,107,"Same as -c, for compatibility with older versions of  less "
+less, ,d,dumb, , ,108,The -d option suppresses the error message normally displayed if the terminal…
+less, , ,color, , ,109,Changes the color of different parts of the displayed text
+less, ,e,quit-at-eof, , ,110,Causes  less to automatically exit the second time it reaches end-of-file
+less, ,E,QUIT-AT-EOF, , ,111,Causes  less to automatically exit the first time it reaches end-of-file
+less, ,f,force, , ,112,Forces non-regular files to be opened
+less, ,F,quit-if-one-screen, , ,113,Causes  less to automatically exit if the entire file can be displayed on the…
+less, ,g,hilite-search, , ,114,"Normally,  less will highlight ALL strings which match the last search command"
+less, ,G,HILITE-SEARCH, , ,115,The -G option suppresses all highlighting of strings found by search commands
+less, , ,max-back-scroll, , ,116,Specifies a maximum number of lines to scroll backward
+less, ,i,ignore-case, , ,117,"Causes searches to ignore case; that is, uppercase and lowercase are consider…"
+less, ,I,IGNORE-CASE, , ,118,"Like -i, but searches ignore case even if the pattern contains uppercase lett…"
+less, , ,jump-target, , ,119,Specifies a line on the screen where the 'target' line is to be positioned
+less, ,J,status-column, , ,120,Displays a status column at the left edge of the screen
+less, , ,lesskey-file, , ,121,Causes  less to open and interpret the named file as a  lesskey (1) binary fi…
+less, , ,lesskey-src, , ,122,Causes  less to open and interpret the named file as a   lesskey (1) source f…
+less, , ,lesskey-content, , ,123,Causes less to interpret the specified text as the contents of a  lesskey (1)…
+less, ,K,quit-on-intr, , ,124,Causes  less to exit immediately (with status 2) when an interrupt character …
+less, ,L,no-lessopen, , ,125,Ignore the LESSOPEN environment variable (see the INPUT PREPROCESSOR section …
+less, ,m,long-prompt, , ,126,"Causes  less to prompt verbosely (like   more (1)), with the percent into the…"
+less, ,M,LONG-PROMPT, , ,127,Causes  less to prompt even more verbosely than  more (1)
+less, ,n,line-numbers, , ,128,Suppresses line numbers
+less, ,N,LINE-NUMBERS, , ,129,Causes a line number to be displayed at the beginning of each line in the dis…
+less, , ,log-file, , ,130,Causes  less to copy its input to the named file as it is being viewed
+less, , ,LOG-FILE, , ,131,"The -O option is like -o, but it will overwrite an existing file without aski…"
+less, , ,pattern, , ,132,"The -p option on the command line is equivalent to specifying +/pattern; that…"
+less, , ,prompt, , ,133,Provides a way to tailor the three prompt styles to your own preference
+less, ,q,silent, , ,134,Causes moderately 'quiet' operation: the terminal bell is not rung if an atte…
+less, ,Q,SILENT, , ,135,Causes totally 'quiet' operation: the terminal bell is never rung
+less, ,r,raw-control-chars, , ,136,Causes 'raw' control characters to be displayed
+less, ,R,RAW-CONTROL-CHARS, , ,137,"Like -r, but only ANSI 'color' escape sequences and OSC 8 hyperlink sequences…"
+less, ,s,squeeze-blank-lines, , ,138,Causes consecutive blank lines to be squeezed into a single blank line
+less, ,S,chop-long-lines, , ,139,Causes lines longer than the screen width to be chopped (truncated) rather th…
+less, , ,tag, , ,140,"The -t option, followed immediately by a TAG, will edit the file containing t…"
+less, , ,tag-file, , ,141,Specifies a tags file to be used instead of 'tags'
+less, ,u,underline-special, , ,142,"Causes backspaces and carriage returns to be treated as printable characters;…"
+less, ,U,UNDERLINE-SPECIAL, , ,143,"Causes backspaces, tabs, carriage returns and 'formatting characters' (as def…"
+less, ,V,version, , ,144,Displays the version number of  less 
+less, ,w,hilite-unread, , ,145,Temporarily highlights the first 'new' line after a forward movement of a ful…
+less, ,W,HILITE-UNREAD, , ,146,"Like -w, but temporarily highlights the first new line after any forward move…"
+less, , ,tabs, , ,147,Sets tab stops
+less, ,X,no-init, , ,148,Disables sending the termcap initialization and deinitialization strings to t…
+less, , ,max-forw-scroll, , ,149,Specifies a maximum number of lines to scroll forward
+less, , ,window, , ,150,Changes the default scrolling window size to n lines
+less, , ,tilde, , ,151,Normally lines after end of file are displayed as a single tilde (\\(ti)
+less, ,#,shift, , ,152,Specifies the default number of positions to scroll horizontally in the RIGHT…
+less, , ,exit-follow-on-close, , ,153,"When using the 'F' command on a pipe,  less will automatically stop waiting f…"
+less, , ,file-size, , ,154,"If --file-size is specified,  less will determine the size of the file  immed…"
+less, , ,follow-name, , ,155,"Normally, if the input file is renamed while an F command is executing,  less…"
+less, , ,header, , ,156,RS Sets the number of header lines and columns displayed on the screen
+less, , ,incsearch, , ,157,"Subsequent search commands will be 'incremental'; that is,  less will advance…"
+less, , ,intr, , ,158,Use the character c instead of \\(haX to interrupt a read when the 'Waiting fo…
+less, , ,line-num-width, , ,159,Sets the minimum width of the line number field when the -N option is in effe…
+less, , ,match-shift, , ,160,"When -S is in effect, if a search match is not visible because it is shifted …"
+less, , ,modelines, , ,161,"RS Before displaying a file,  less  will read the first n lines to try to fin…"
+less, , ,mouse, , ,162,Enables mouse input: scrolling the mouse wheel down moves forward in the file…
+less, , ,MOUSE, , ,163,"Like --mouse, except the direction scrolled on mouse wheel movement is revers…"
+less, , ,no-keypad, , ,164,Disables sending the keypad initialization and deinitialization strings to th…
+less, , ,no-histdups, , ,165,This option changes the behavior so that if a search string or file name is t…
+less, , ,no-number-headers, , ,166,Header lines (defined via the --header option) are not assigned line numbers
+less, , ,no-search-header-lines, , ,167,"Searches do not include header lines, but still include header columns"
+less, , ,no-search-header-columns, , ,168,"Searches do not include header columns, but still include header lines"
+less, , ,no-search-headers, , ,169,Searches do not include header lines or header columns
+less, , ,no-vbell, , ,170,Disables the terminal's visual bell
+less, , ,proc-backspace, , ,171,"If set, backspaces are handled as if neither the -u option  nor the -U option…"
+less, , ,PROC-BACKSPACE, , ,172,"If set, backspaces are handled as if the -U option were set; that is backspac…"
+less, , ,proc-return, , ,173,"If set, carriage returns are handled as if neither the -u option  nor the -U …"
+less, , ,PROC-RETURN, , ,174,"If set, carriage returns are handled as if the -U option were set; that is ca…"
+less, , ,proc-tab, , ,175,"If set, tabs are handled as if the -U option were not set"
+less, , ,PROC-TAB, , ,176,"If set, tabs are handled as if the -U option were set; that is tabs are treat…"
+less, , ,redraw-on-quit, , ,177,"When quitting, after sending the terminal deinitialization string, redraws th…"
+less, , ,rscroll, , ,178,This option changes the character used to mark truncated lines
+less, , ,save-marks, , ,179,"Save marks in the history file, so marks are retained across different invoca…"
+less, , ,search-options, , ,180,Sets default search modifiers
+less, , ,show-preproc-errors, , ,181,"If a preprocessor produces data,  then exits with a non-zero exit code,  less…"
+less, , ,status-col-width, , ,182,Sets the width of the status column when the -J option is in effect
+less, , ,status-line, , ,183,"If a line is marked, the entire line (rather than just the status column) is …"
+less, , ,use-backslash, , ,184,This option changes the interpretations of options which follow this one
+less, , ,use-color, , ,185,Enables colored text in various places
+less, , ,wheel-lines, , ,186,Set the number of lines to scroll when the mouse wheel is scrolled and the --…
+less, , ,wordwrap, , ,187,"When the -S option is not in use, wrap each line at a space or tab if possibl…"
+less, , ,qui, , ,188,"Some long option names are in uppercase, such as --QUIT-AT-EOF, as distinct f…"
+less, , ,quotes, , ,189,Changes the filename quoting character

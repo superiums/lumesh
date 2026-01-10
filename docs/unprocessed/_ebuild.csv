@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ebuild, __fish_seen_ebuild_arg, , ,help, ,106,Show help
+ebuild, __fish_seen_ebuild_arg, , ,pretend, ,107,Run pkg_pretend()
+ebuild, __fish_seen_ebuild_arg, , ,setup, ,108,Run setup and system checks
+ebuild, __fish_seen_ebuild_arg, , ,clean, ,109,Clean build dir
+ebuild, __fish_seen_ebuild_arg, , ,fetch, ,110,Fetches all files from SRC_URI
+ebuild, __fish_seen_ebuild_arg, , ,manifest, ,111,Update pkg manifest
+ebuild, __fish_seen_ebuild_arg, , ,unpack, ,112,Extracts sources
+ebuild, __fish_seen_ebuild_arg, , ,prepare, ,113,Run src_prepare()
+ebuild, __fish_seen_ebuild_arg, , ,configure, ,114,Run src_configure()
+ebuild, __fish_seen_ebuild_arg, , ,compile, ,115,Run src_compile()
+ebuild, __fish_seen_ebuild_arg, , ,test, ,116,Run tests
+ebuild, __fish_seen_ebuild_arg, , ,preinst, ,117,Run pkg_preinst()
+ebuild, __fish_seen_ebuild_arg, , ,install, ,118,Run src_install()
+ebuild, __fish_seen_ebuild_arg, , ,postinst, ,119,Run pkg_postinst()
+ebuild, __fish_seen_ebuild_arg, , ,qmerge, ,120,Install files to live filesystem
+ebuild, __fish_seen_ebuild_arg, , ,merge, ,121,"Run fetch, unpack, compile, install and qmerge"
+ebuild, __fish_seen_ebuild_arg, , ,unmerge, ,122,Uninstall files from live filesystem
+ebuild, __fish_seen_ebuild_arg, , ,prerm, ,123,Run pkg_prerm()
+ebuild, __fish_seen_ebuild_arg, , ,postrm, ,124,Run pkg_postrm()
+ebuild, __fish_seen_ebuild_arg, , ,config, ,125,Run post-install configuration
+ebuild, __fish_seen_ebuild_arg, , ,package, ,126,Create a binpkg in PKGDIR
+ebuild, __fish_seen_ebuild_arg, , ,rpm, ,127,Builds a RedHat RPM pkg

@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+userdbctl, ,h,help, , ,101,Show help
+userdbctl, , ,version, , ,102,Show version
+userdbctl, , ,no-pager, , ,103,Do not pipe output into a pager
+userdbctl, , ,no-legend, , ,104,Do not show the headers and footers
+userdbctl, , ,output,classic friendly table json, ,105,Select output mode
+userdbctl, ,s,service,$services, ,106,Query the specified service
+userdbctl, , ,with-nss,yes no, ,107,Control whether to include glibc NSS data
+userdbctl, , ,synthesize,yes no, ,108,Synthesize root/nobody user

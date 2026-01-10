@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-list-devices, , ,help, , ,101,Print help NOTES

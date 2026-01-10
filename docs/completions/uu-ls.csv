@@ -1,0 +1,46 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-ls, , ,format,long,@f @r,101,Set the display format.
+uu-ls, ,T,tabsize, , ,102,Assume tab stops at each COLS instead of 8
+uu-ls, , ,hyperlink,always,@f @r,103,hyperlink file names WHEN
+uu-ls, , ,quoting-style,literal,@f @r,104,Set quoting style.
+uu-ls, , ,time,atime,@f @r,105,"Show time in <field>: access time (-u): atime, access, use; change time (-t): ctime, status. modification time: mtime, modification. birth time: birth, creation;"
+uu-ls, , ,hide, , ,106,do not list implied entries matching shell PATTERN (overridden by -a or -A)
+uu-ls, ,I,ignore, , ,107,do not list implied entries matching shell PATTERN
+uu-ls, , ,sort,name,@f @r,108,"Sort by <field>: name, none (-U), time (-t), size (-S), extension (-X) or width"
+uu-ls, , ,block-size, , ,109,scale sizes by BLOCK_SIZE when printing them
+uu-ls, ,w,width, , ,110,Assume that the terminal is COLS columns wide.
+uu-ls, , ,color,always,@f @r,111,Color output based on file type.
+uu-ls, , ,indicator-style,none,@f @r,112,"Append indicator with style WORD to entry names: none (default),  slash (-p), file-type (--file-type), classify (-F)"
+uu-ls, ,F,classify,always,@f @r,113,"Append a character to each file name indicating the file type. Also, for regular files that are executable, append '*'. The file type indicators are '/' for directories, '@' for symbolic links, '|' for FIFOs, '=' for sockets, '>' for doors, and nothing for regular files. when may be omitted, or one of:     none - Do not classify. This is the default.     auto - Only classify if standard output is a terminal.     always - Always classify. Specifying --classify and no when is equivalent to --classify=always. This will not follow symbolic links listed on the command line unless the --dereference-command-line (-H), --dereference (-L), or --dereference-command-line-symlink-to-dir options are specified."
+uu-ls, , ,time-style, , ,114,"time/date format with -l; see TIME_STYLE below"
+uu-ls, , ,help, , ,115,Print help information.
+uu-ls, ,l,long, , ,116,Display detailed information.
+uu-ls, , ,zero, , ,117,List entries separated by ASCII NUL characters.
+uu-ls, ,D,dired, , ,118,generate output designed for Emacs' dired (Directory Editor) mode
+uu-ls, ,n,numeric-uid-gid, , ,119,-l with numeric UIDs and GIDs.
+uu-ls, ,N,literal, , ,120,Use literal quoting style. Equivalent to `--quoting-style=literal`
+uu-ls, ,b,escape, , ,121,Use escape quoting style. Equivalent to `--quoting-style=escape`
+uu-ls, ,Q,quote-name, , ,122,Use C quoting style. Equivalent to `--quoting-style=c`
+uu-ls, ,q,hide-control-chars, , ,123,Replace control characters with '?' if they are not escaped.
+uu-ls, , ,show-control-chars, , ,124,Show control characters 'as is' if they are not escaped.
+uu-ls, ,B,ignore-backups, , ,125,Ignore entries which end with ~.
+uu-ls, ,L,dereference, , ,126,"When showing file information for a symbolic link, show information for the file the link references rather than the link itself."
+uu-ls, , ,dereference-command-line-symlink-to-dir, , ,127,Do not follow symlinks except when they link to directories and are given as command line arguments.
+uu-ls, ,H,dereference-command-line, , ,128,Do not follow symlinks except when given as command line arguments.
+uu-ls, ,G,no-group, , ,129,Do not show group in long format.
+uu-ls, , ,author, , ,130,"Show author in long format. On the supported platforms, the author always matches the file owner."
+uu-ls, ,a,all, , ,131,Do not ignore hidden files (files with names that start with '.').
+uu-ls, ,A,almost-all, , ,132,"In a directory, do not ignore all file names that start with '.', only ignore '.' and '..'."
+uu-ls, ,d,directory, , ,133,"Only list the names of directories, rather than listing directory contents. This will not follow symbolic links unless one of `--dereference-command-line (-H)`, `--dereference (-L)`, or `--dereference-command-line-symlink-to-dir` is specified."
+uu-ls, ,h,human-readable, , ,134,Print human readable file sizes (e.g. 1K 234M 56G).
+uu-ls, ,k,kibibytes, , ,135,"default to 1024-byte blocks for file system usage; used only with -s and per directory totals"
+uu-ls, , ,si, , ,136,Print human readable file sizes using powers of 1000 instead of 1024.
+uu-ls, ,i,inode, , ,137,print the index number of each file
+uu-ls, ,r,reverse, , ,138,"Reverse whatever the sorting method is e.g., list files in reverse alphabetical order, youngest first, smallest first, or whatever."
+uu-ls, ,R,recursive, , ,139,List the contents of all directories recursively.
+uu-ls, ,s,size, , ,140,"print the allocated size of each file, in blocks"
+uu-ls, , ,file-type, , ,141,"Same as --classify, but do not append '*'"
+uu-ls, , ,full-time, , ,142,like -l --time-style=full-iso
+uu-ls, ,Z,context, , ,143,print any security context of each file
+uu-ls, , ,group-directories-first, , ,144,"group directories before files; can be augmented with a --sort option, but any use of --sort=none (-U) disables grouping"
+uu-ls, ,V,version, , ,145,Print version

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+efisecdb, ,i,infile, , ,101,Read EFI Security Database from file
+efisecdb, , ,owner-guid, , ,102,Use the specified GUID or symbolic refrence (i. e
+efisecdb, ,r,remove, , ,103,Select add or remove for forthcoming operations
+efisecdb, ,t,hash-type, , ,104,Select hash-type for forthcoming addition and removal operations (default sha…
+efisecdb, , ,hash, , ,105,Add or remove the specified hash
+efisecdb, , ,certificate, , ,106,Add or remove the specified certificate
+efisecdb, ,d,dump, , ,107,Produce a hex dump of the output
+efisecdb, ,A,annotate, , ,108,Annotate the hex dump produced by --dump
+efisecdb, ,o,outfile, , ,109,Write EFI Security Database to file
+efisecdb, ,L,list-guids, , ,110,List the well known guids
+efisecdb, , ,2020-06-04, , ,111,Resolving www. microsoft. com (www. microsoft. com)

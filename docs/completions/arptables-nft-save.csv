@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+arptables-nft-save, ,M,modprobe, , ,101,Specify the path to the modprobe program
+arptables-nft-save, ,c,counters, , ,102,Include the current values of all packet and byte counters in the output
+arptables-nft-save, ,V,version, , ,103,Print version information and exit

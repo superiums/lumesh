@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bsdcpio, , ,insecure, , ,101,(i and p mode only) Disable security checks during extraction or copying
+bsdcpio, , ,lrzip, , ,102,(o mode only) Compress the resulting archive with lrzip 1
+bsdcpio, , ,lz4, , ,103,(o mode only) Compress the archive with lz4-compatible compression before wri…
+bsdcpio, , ,zstd, , ,104,(o mode only) Compress the archive with zstd-compatible compression before wr…
+bsdcpio, , ,lzma, , ,105,(o mode only) Compress the file with lzma-compatible compression before writi…
+bsdcpio, , ,lzop, , ,106,(o mode only) Compress the resulting archive with lzop 1
+bsdcpio, , ,passphrase, , ,107,The passphrase is used to extract or create an encrypted archive
+bsdcpio, , ,no-preserve-owner, , ,108,(i mode only) Do not attempt to restore file ownership
+bsdcpio, , ,preserve-owner, , ,109,(i mode only) Restore file ownership
+bsdcpio, , ,quiet, , ,110,Suppress unnecessary messages
+bsdcpio, , ,version, , ,111,Print the program version information and exit

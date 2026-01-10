@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-fold, ,w,width, , ,101,set WIDTH as the maximum line width rather than 80
+uu-fold, ,b,bytes, , ,102,count using bytes rather than columns (meaning control characters such as newline are not treated specially)
+uu-fold, ,s,spaces, , ,103,break lines at word boundaries rather than a hard cut-off
+uu-fold, ,h,help, , ,104,Print help
+uu-fold, ,V,version, , ,105,Print version

@@ -1,0 +1,80 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fuzzel, ,c,config, ,@r,101,path to configuration file (XDG_CONFIG_HOME/fuzzel/fuzzel.ini)
+fuzzel, , ,cache, ,@r,102,file to load most recently launched applications from (XDG_CACHE_HOME/fuzzel)
+fuzzel, ,n,namespace, ,@f @r,103,layer shell surface namespace (launcher)
+fuzzel, , ,check-config, , ,104,"verify configuration and exit with 0 if ok, otherwise exit with 1"
+fuzzel, ,f,font, ,@f @r,105,font name and style in fontconfig format (monospace)
+fuzzel, , ,use-bold, , ,106,allow fuzzel to use bold fonts
+fuzzel, ,o,output, ,@f @r,107,output (monitor) do display on (none)
+fuzzel, ,D,dpi-aware,no yes auto,@f @r,108,scale fonts using the monitor's DPI (auto)
+fuzzel, , ,gamma-correct, , ,109,do gamma-correct blending
+fuzzel, , ,icon-theme, ,@f @r,110,icon theme name (default)
+fuzzel, ,I,no-icons, , ,111,do not render any icons
+fuzzel, , ,hide-before-typing, , ,112,hide application list until something is typed
+fuzzel, ,F,fields,filename name generic exec categories keywords comment,@f @r,113,comma separated list of XDG Desktop entry fields to match
+fuzzel, ,p,prompt, ,@f @r,114,string to use as input prompt ('> ')
+fuzzel, , ,prompt-only, ,@f @r,115,"same as prompt, and implies --lines=0"
+fuzzel, , ,hide-prompt, , ,116,hide the prompt line
+fuzzel, , ,placeholder, ,@f @r,117,placeholder text in input box
+fuzzel, , ,search, ,@f @r,118,initial search/filter string
+fuzzel, , ,password,, ,119,"render all input using either '*', or the specified character"
+fuzzel, ,T,terminal, ,@f @r,120,"terminal command, with arguments ($TERMINAL -e)"
+fuzzel, ,a,anchor,top-left top top-right left center right bottom-left bottom bottom-right,@f @r,121,set window anchor (center)
+fuzzel, , ,x-margin, ,@f @r,122,horizontal margin away from the anchor point in pixels (0)
+fuzzel, , ,y-margin, ,@f @r,123,vertical margin away from the anchor point in pixels (0)
+fuzzel, , ,select, ,@f @r,124,select the first entry that matches the given string
+fuzzel, , ,auto-select, , ,125,automatically select when only one match remains
+fuzzel, , ,select-index, ,@f @r,126,select the entry at index
+fuzzel, ,l,lines, ,@f @r,127,maximum number of matches to displayh (15)
+fuzzel, , ,minimal-lines, , ,128,adjust lines to minimum of --lines and input lines (dmenu mode only)
+fuzzel, ,w,width, ,@f @r,129,"window width, in characters (30)"
+fuzzel, ,x,horizontal-pad, ,@f @r,130,"horizontal padding, in pixels (40)"
+fuzzel, ,y,vertical-pad, ,@f @r,131,"vertical padding, in pixels (8)"
+fuzzel, ,P,inner-pad, ,@f @r,132,"vertical padding between prompt and matches, in pixels (0)"
+fuzzel, ,b,background, ,@f @r,133,background color (fdf6e3ff)
+fuzzel, ,t,text-color, ,@f @r,134,text color (657b83ff)
+fuzzel, , ,prompt-color, ,@f @r,135,color of the prompt text (586e75ff)
+fuzzel, , ,placeholder-color, ,@f @r,136,color of the placeholder text (93a1a1ff)
+fuzzel, , ,input-color, ,@f @r,137,color of the input string (657b83ff)
+fuzzel, ,m,match-color, ,@f @r,138,color of matched substring (cb4b16ff)
+fuzzel, ,s,selection-color, ,@f @r,139,background color of selected item (eee8d5ff)
+fuzzel, ,S,selection-text-color, ,@f @r,140,text color of selected item (586e75ff)
+fuzzel, ,M,selection-match-color, ,@f @r,141,color of matched substring of selected item (cb4b16ff)
+fuzzel, , ,selection-radius, ,@f @r,142,amount of corner 'roundness' for the selected entry (0)
+fuzzel, , ,counter-color, ,@f @r,143,color of the match count (93a1a1ff)
+fuzzel, ,B,border-width, ,@f @r,144,"width of border, in pixels (1)"
+fuzzel, ,r,border-radius, ,@f @r,145,amount of corner 'roundness' (10)
+fuzzel, ,C,border-color, ,@f @r,146,border color (002b36ff)
+fuzzel, , ,show-actions, , ,147,include desktop actions (e.g. 'New Window') in the list
+fuzzel, , ,match-mode,exact fzf fuzzy,@f @r,148,how to match what you type against the entries
+fuzzel, , ,no-sort, , ,149,do not sort the result
+fuzzel, , ,counter, , ,150,display the match count
+fuzzel, , ,filter-desktop, , ,151,filter desktop entries based on XDG_CURRENT_DESKTOP
+fuzzel, , ,list-executables-in-path, , ,152,list executables present in the path environment variable
+fuzzel, , ,fuzzy-min-length, ,@f @r,153,search strings shorter than this will not be fuzzy matched (3)
+fuzzel, , ,fuzzy-max-length-discrepancy, ,@f @r,154,maximum allowed length difference between the search string and a fuzzy match (2)
+fuzzel, , ,fuzzy-max-distance, ,@f @r,155,maximum allowed levenshtein distance between the search string and a fuzzy match (1)
+fuzzel, , ,line-height, ,@f @r,156,"override the line height from font metrics, in points or pixels"
+fuzzel, , ,letter-spacing, ,@f @r,157,"additional letter spacing, in points or pixels"
+fuzzel, , ,layer,top overlay,@f @r,158,which layer to render the fuzzel window on (top)
+fuzzel, , ,keyboard-focus,exclusive on-demand,@f @r,159,keyboard focus mode (exclusive)
+fuzzel, , ,launch-prefix, ,@r,160,prefix to add before argv of executed program
+fuzzel, , ,render-workers, ,@f @r,161,number of render worker threads
+fuzzel, , ,match-workers, ,@f @r,162,number of match worker threads
+fuzzel, , ,delayed-filter-ms, ,@f @r,163,time in milliseconds to delay refiltering when there are lots of matches
+fuzzel, , ,delayed-filter-limit, ,@f @r,164,switch to delayed refiltering when there are more matches than this
+fuzzel, , ,scaling-filter,none nearest bilinear box linear cubic lanczos2 lanczos3 lanczos3-stretched,@f @r,165,filter to use when down scaling PNGs
+fuzzel, ,d,dmenu, , ,166,"dmenu compatibility mode; entries are read from stdin, newline separated"
+fuzzel, , ,dmenu0, , ,167,"dmenu compatibility mode; entries are read from stdin, NUL separated"
+fuzzel, , ,index, , ,168,print selected entry's index instead of its text (dmenu mode only)
+fuzzel, , ,with-nth, ,@f @r,169,display the N:th column (tab separated by default) of each input line (dmenu only)
+fuzzel, , ,accept-nth, ,@f @r,170,output the N:th column (tab separated by default) of each input line (dmenu only)
+fuzzel, , ,nth-delimiter, ,@f @r,171,field delimiter for --with-nth and --accept-nth
+fuzzel, ,R,no-run-if-empty, , ,172,exit immediately without showing the UI if stdin is empty (dmenu mode only)
+fuzzel, ,d,log-level,info warning error none,@f @r,173,log-level (warning)
+fuzzel, ,l,log-colorize,always never auto,@f @r,174,enable or disable colorization of log output on stderr
+fuzzel, ,S,log-no-syslog, , ,175,disable syslog logging
+fuzzel, , ,no-mouse, , ,176,disable mouse input
+fuzzel, ,v,version, , ,177,show the version number and quit
+fuzzel, , ,print-timing-info, , ,178,"print timing information, to help debug performance issues"
+fuzzel, ,h,help, , ,179,show help message and quit

@@ -1,0 +1,51 @@
+cmd,conds,short,long,params,dirs,pri,desc
+diff, , ,normal, , ,101,output a normal diff (the default)
+diff, ,q,brief, , ,102,report only when files differ
+diff, ,s,report-identical-files, , ,103,report when two files are the same
+diff, ,C,context, , ,104,output NUM (default 3) lines of copied context
+diff, ,U,unified, , ,105,output NUM (default 3) lines of unified context
+diff, ,e,ed, , ,106,output an ed script
+diff, ,n,rcs, , ,107,output an RCS format diff
+diff, ,y,side-by-side, , ,108,output in two columns
+diff, ,W,width, , ,109,output at most NUM (default 130) print columns
+diff, , ,left-column, , ,110,output only the left column of common lines
+diff, , ,suppress-common-lines, , ,111,do not output common lines
+diff, ,p,show-c-function, , ,112,show which C function each change is in
+diff, ,F,show-function-line, , ,113,show the most recent line matching RE
+diff, , ,label, , ,114,use LABEL instead of file name and timestamp (can be repeated)
+diff, ,t,expand-tabs, , ,115,expand tabs to spaces in output
+diff, ,T,initial-tab, , ,116,make tabs line up by prepending a tab
+diff, , ,tabsize, , ,117,tab stops every NUM (default 8) print columns
+diff, , ,suppress-blank-empty, , ,118,suppress space or tab before empty output lines
+diff, ,l,paginate, , ,119,pass output through 'pr' to paginate it
+diff, ,r,recursive, , ,120,recursively compare any subdirectories found
+diff, , ,no-dereference, , ,121,don't follow symbolic links
+diff, ,N,new-file, , ,122,treat absent files as empty
+diff, , ,unidirectional-new-file, , ,123,treat absent first files as empty
+diff, , ,ignore-file-name-case, , ,124,ignore case when comparing file names
+diff, , ,no-ignore-file-name-case, , ,125,consider case when comparing file names
+diff, ,x,exclude, , ,126,exclude files that match PAT
+diff, ,X,exclude-from, , ,127,exclude files that match any pattern in FILE
+diff, ,S,starting-file, , ,128,start with FILE when comparing directories
+diff, , ,from-file, , ,129,"compare FILE1 to all operands; FILE1 can be a directory"
+diff, , ,to-file, , ,130,"compare all operands to FILE2; FILE2 can be a directory"
+diff, ,i,ignore-case, , ,131,ignore case differences in file contents
+diff, ,E,ignore-tab-expansion, , ,132,ignore changes due to tab expansion
+diff, ,Z,ignore-trailing-space, , ,133,ignore white space at line end
+diff, ,b,ignore-space-change, , ,134,ignore changes in the amount of white space
+diff, ,w,ignore-all-space, , ,135,ignore all white space
+diff, ,B,ignore-blank-lines, , ,136,ignore changes where lines are all blank
+diff, ,I,ignore-matching-lines, , ,137,ignore changes where all lines match RE
+diff, ,a,text, , ,138,treat all files as text
+diff, , ,strip-trailing-cr, , ,139,strip trailing carriage return on input
+diff, ,D,ifdef, , ,140,output merged file with '#ifdef NAME' diffs
+diff, , ,GTYPE-group-format, , ,141,format GTYPE input groups with GFMT
+diff, , ,line-format, , ,142,format all input lines with LFMT
+diff, , ,LTYPE-line-format, , ,143,format LTYPE input lines with LFMT P These format options provide fine-graine…
+diff, ,d,minimal, , ,144,try hard to find a smaller set of changes
+diff, , ,horizon-lines, , ,145,keep NUM lines of the common prefix and suffix
+diff, , ,speed-large-files, , ,146,assume large files and many scattered small changes
+diff, , ,color, , ,147,"color output; WHEN is 'never', 'always', or 'auto'; plain --color means --col…"
+diff, , ,palette, , ,148,"the colors to use when --color is active; PALETTE is a colon-separated list o…"
+diff, , ,help, , ,149,display this help and exit
+diff, ,v,version, , ,150,output version information and exit

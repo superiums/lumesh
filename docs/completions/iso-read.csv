@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iso-read, ,d,debug, , ,101,Set debugging to LEVEL
+iso-read, ,i,image, , ,102,Read from ISO-9660 image.  This option is mandatory
+iso-read, ,e,extract, , ,103,Extract FILE from ISO-9660 image.  This option is mandatory
+iso-read, ,k,ignore, , ,104,"Ignore read error(s), i. e.  keep going"
+iso-read, , ,no-header, , ,105,Don't display header and copyright (for regression testing)
+iso-read, ,o,output-file, , ,106,Output file.  This option is mandatory
+iso-read, ,U,udf, , ,107,Contents are in UDF format
+iso-read, ,V,version, , ,108,display version and copyright information and exit . SS 'Help options:'
+iso-read, ,?,help, , ,109,Show this help message
+iso-read, , ,usage, , ,110,Display brief usage message AUTHOR Rocky Bernstein <rocky@gnu

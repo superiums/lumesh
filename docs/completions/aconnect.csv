@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aconnect, ,d,disconnect, , ,101,Disconnect the given subscription
+aconnect, ,e,exclusive, , ,102,Connect ports with exclusive mode
+aconnect, ,r,real, , ,103,Convert time-stamps of event packets to the current value of the given  real-…
+aconnect, ,t,tick, , ,104,"Like  -r option, but  time-stamps are converted to the current value of the g…"
+aconnect, ,i,input, , ,105,List existing input (readable) ports.  This option is exclusive to  -o
+aconnect, ,o,output, , ,106,List existing output (writable) ports.  This option is exclusive to  -i
+aconnect, ,a,all, , ,107,"List inactive ports, too"
+aconnect, ,l,list, , ,108,List the current connection status
+aconnect, , ,removeall, , ,109,Remove all exported connections

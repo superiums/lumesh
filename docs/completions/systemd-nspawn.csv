@@ -1,0 +1,38 @@
+cmd,conds,short,long,params,dirs,pri,desc
+systemd-nspawn, ,D,directory, , ,101,Directory to use as file system root for the container
+systemd-nspawn, , ,template, , ,102,Directory or btrfs subvolume to use as template
+systemd-nspawn, ,x,ephemeral, , ,103,Run container with a temporary btrfs snapshot (Only on btrfs)
+systemd-nspawn, ,i,image, , ,104,Disk image to mount the root directory for the container from
+systemd-nspawn, ,b,boot, , ,105,Invoke init in the container
+systemd-nspawn, ,u,user, , ,106,Change to user in the container
+systemd-nspawn, ,M,machine, , ,107,Sets the machine name for this container
+systemd-nspawn, , ,uuid, , ,108,Set the specified UUID for the container.
+systemd-nspawn, , ,slice, , ,109,Make the container part of the specified slice
+systemd-nspawn, , ,property, , ,110,Set a unit property on the scope unit
+systemd-nspawn, , ,private-users, , ,111,Enables user namespacing
+systemd-nspawn, , ,private-network, , ,112,Disconnect networking of the container from the host
+systemd-nspawn, , ,network-interface, , ,113,Assign the specified network interface to the container
+systemd-nspawn, , ,network-macvlan, , ,114,Create a 'macvlan' interface of the specified Ethernet interface
+systemd-nspawn, , ,network-ipvlan, , ,115,Create an 'ipvlan' interface of the specified Ethernet interface
+systemd-nspawn, ,n,network-veth, , ,116,Create a virtual Ethernet link ('veth') between host and container
+systemd-nspawn, , ,network-bridge, , ,117,Adds the host side of the Ethernet link created to the specified bridge
+systemd-nspawn, ,p,port, , ,118,Map an ip port from the host to the container
+systemd-nspawn, ,Z,selinux-context, , ,119,Sets the SELinux security context
+systemd-nspawn, ,L,selinux-apifs-context, , ,120,Sets the SELinux security context for files in the API filesystems
+systemd-nspawn, , ,capability, , ,121,Grant additional capabilities to the container
+systemd-nspawn, , ,drop-capability, , ,122,Drop capabilities from the container
+systemd-nspawn, , ,kill-signal, , ,123,Signal to send to the container's PID1 when nspawn receives SIGTERM
+systemd-nspawn, , ,link-journal,no host try-host guest try-guest auto, ,124,Set container journal visibility
+systemd-nspawn, , ,read-only, , ,125,Mount the root file system read-only for the container
+systemd-nspawn, , ,bind-ro, , ,126,Bind mount a file or directory from the host in the container
+systemd-nspawn, , ,tmpfs, , ,127,Mount a tmpfs file system into the container
+systemd-nspawn, , ,overlay-ro, , ,128,Mount directories as overlayfs in the container
+systemd-nspawn, , ,setenv, , ,129,Pass environment variables to init in the container
+systemd-nspawn, , ,share-system, , ,130,Share the system with the host [See Man Page]
+systemd-nspawn, , ,register,yes no, ,131,Register container with systemd-machined
+systemd-nspawn, , ,keep-unit, , ,132,Only register the unit with systemd-machined
+systemd-nspawn, , ,personality, , ,133,The architecture reported by uname in the container
+systemd-nspawn, ,q,quiet, , ,134,Turns off any status output by the tool itself
+systemd-nspawn, , ,volatile, , ,135,Boots the container in volatile mode
+systemd-nspawn, ,h,help, , ,136,Print a short help text and exit
+systemd-nspawn, , ,version, , ,137,Print a short version string and exit

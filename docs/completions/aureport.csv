@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aureport, , ,auth, , ,101,Report about authentication attempts
+aureport, ,a,avc, , ,102,Report about avc messages
+aureport, , ,comm, , ,103,Report about commands run
+aureport, ,c,config, , ,104,Report about config changes
+aureport, , ,crypto, , ,105,Report about crypto events
+aureport, , ,debug, , ,106,Write malformed events that are skipped to stderr
+aureport, , ,eoe-timeout, , ,107,Set the end of event parsing timeout.  See end_of_event_timeout in auditd
+aureport, ,e,event, , ,108,Report about events
+aureport, , ,escape, , ,109,This option determines if the output is escaped to make the content safer for…
+aureport, ,f,file, , ,110,Report about files and af_unix sockets
+aureport, , ,failed, , ,111,Only select failed events for processing in the reports
+aureport, ,h,host, , ,112,Report about hosts
+aureport, , ,help, , ,113,Print brief command summary
+aureport, ,i,interpret, , ,114,Interpret  numeric  entities into text
+aureport, , ,input, , ,115,Use the given file or directory instead of the logs
+aureport, , ,input-logs, , ,116,Use the log file location from auditd. conf as input for analysis
+aureport, , ,integrity, , ,117,Report about integrity events
+aureport, ,k,key, , ,118,Report about audit rule keys
+aureport, ,l,login, , ,119,Report about logins
+aureport, ,m,mods, , ,120,Report about account modifications
+aureport, , ,mac, , ,121,Report about Mandatory Access Control (MAC) events
+aureport, ,n,anomaly, , ,122,Report about anomaly events
+aureport, , ,node, , ,123,Only select events originating from node name string for processing in the re…
+aureport, , ,no-config, , ,124,Do not include the CONFIG_CHANGE event
+aureport, ,p,pid, , ,125,Report about processes
+aureport, ,r,response, , ,126,Report about responses to anomaly events
+aureport, ,s,syscall, , ,127,Report about syscalls
+aureport, , ,success, , ,128,Only select successful events for processing in the reports
+aureport, , ,summary, , ,129,Run the summary report that gives a total of the elements of the main report
+aureport, ,t,log, , ,130,This option will output a report of the start and end times for each log
+aureport, , ,tty, , ,131,Report about tty keystrokes
+aureport, , ,end, , ,132,Search for events with time stamps equal to or before the given end time
+aureport, , ,terminal, , ,133,Report about terminals
+aureport, , ,start, , ,134,Search for events with time stamps equal to or after the given end time
+aureport, ,u,user, , ,135,Report about users
+aureport, ,v,version, , ,136,Print the version and exit
+aureport, , ,virt, , ,137,Report about Virtualization events
+aureport, ,x,executable, , ,138,Report about executables

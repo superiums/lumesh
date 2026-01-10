@@ -1,0 +1,743 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mvn, , , ,pre-clean clean post-clean validate initialize generate-sources process-sources generate-resources process-resources compile process-classes generate-test-sources process-test-sources generate-test-resources process-test-resources test-compile process-test-classes testprepare-package package pre-integration-test integration-test post-integration-test verify install deploy pre-site site post-site site-deploy,@f,101, 
+mvn, , ,also-make, ,@f,102,"If project list is specified, also build projects required by the list"
+mvn, , ,also-make-dependents, ,@f,103,"If project list is specified, also build projects that depend on projects on the list"
+mvn, , ,batch-mode, ,@f,104,Run in non-interactive (batch) mode
+mvn, , ,builder, ,@f @r,105,The id of the build strategy to use
+mvn, , ,strict-checksums, ,@f,106,Fail the build if checksums don't match
+mvn, , ,lax-checksums, ,@f,107,Warn if checksums don't match
+mvn, , ,check-plugin-updates, ,@f,108,"Ineffective, only kept for backward compatibility"
+mvn, , ,define, ,@f,109,Define a system property
+mvn, , , , ,@f,110, 
+mvn, , ,errors, ,@f,111,Produce execution error messages
+mvn, , ,encrypt-master-password, ,@f,112,Encrypt master security password
+mvn, , ,encrypt-password, ,@f,113,Encrypt server password
+mvn, , ,file, ,@r,114,Force the use of an alternate POM file (or directory with pom.xml)
+mvn, , ,fail-at-end, ,@f,115,"Only fail the build afterwards; allow all non-impacted builds to continue"
+mvn, , ,fail-fast, ,@f,116,Stop at first failure in reactorized builds
+mvn, , ,fail-never, ,@f,117,"NEVER fail the build, regardless of project result"
+mvn, , ,global-settings, ,@r,118,Alternate path for the global settings file
+mvn, , ,help, ,@f,119,Display help information
+mvn, , ,log-file, ,@r,120,Log file to where all build output will go
+mvn, , ,legacy-local-repository, ,@f,121,"Use Maven 2 Legacy Local Repository behaviour, ie no use of _remote.repositories"
+mvn, , ,non-recursive, ,@f,122,Do not recurse into sub-projects
+mvn, , ,no-plugin-registry, ,@f,123,"Ineffective, only kept for backward compatibility"
+mvn, , ,no-plugin-updates, ,@f,124,"Ineffective, only kept for backward compatibility"
+mvn, , ,no-snapshot-updates, ,@f,125,Suppress SNAPSHOT updates
+mvn, , ,offline, ,@f,126,Work offline
+mvn, , ,projects, ,@f @r,127,Comma-delimited list of specified reactor projects to build instead of all projects
+mvn, , ,quiet, ,@f,128,Quiet output - only show errors
+mvn, , ,resume-from, ,@f @r,129,Resume reactor from specified project
+mvn, , ,settings, ,@r,130,Alternate path for the user settings file
+mvn, , ,threads, ,@f @r,131,"Thread count, for instance 2.0C where C is core multiplied"
+mvn, , ,toolchains, ,@r,132,Alternate path for the user toolchains file
+mvn, , ,update-snapshots, ,@f,133,Forces a check for missing releases and updated snapshots on remote repositories
+mvn, , ,update-plugins, ,@f,134,"Ineffective, only kept for backward compatibility"
+mvn, , ,show-version, ,@f,135,Display version information WITHOUT stopping build
+mvn, , ,version, ,@f,136,Display version information
+mvn, , ,debug, ,@f,137,Produce execution debug output
+mvn, , ,activate-profiles, ,@F @f @r,138,Comma-delimited list of profiles to activate
+mvn, , ,projects, ,@f @r,139,Projects to build
+mvn, , , ,clean:clean, ,140,Clean the build
+mvn, , , ,clean:help, ,141,Display help information on maven-clean-plugin
+mvn, , , ,compiler:compile, ,142,Compiles application sources
+mvn, , , ,compiler:help, ,143,Display help information on maven-compiler-plugin
+mvn, , , ,compiler:testCompile, ,144,Compiles application test sources
+mvn, , , ,deploy:help, ,145,Display help information on maven-deploy-plugin
+mvn, , , ,deploy:deploy-file, ,146,Installs the artifact in the remote repository
+mvn, , , ,deploy:deploy, ,147,Deploys an artifact to remote repository
+mvn, , , ,failsafe:help, ,148,Display help information on maven-failsafe-plugin
+mvn, , , ,failsafe:integration-test, ,149,Run integration tests using Surefire
+mvn, , , ,failsafe:verify, ,150,Verify integration tests ran using Surefire
+mvn, , , ,install:install, ,151,"Installs the project's main artifact, and any other artifacts attached by other plugins in the lifecycle, to the local repository"
+mvn, , , ,install:help, ,152,Display help information on maven-install-plugin
+mvn, , , ,install:install-file, ,153,Installs a file in the local repository
+mvn, , , ,resources:testResources, ,154,Copy resources for the test source code to the test output directory
+mvn, , , ,resources:copy-resources, ,155,Copy resources of the configured plugin attribute resources
+mvn, , , ,resources:help, ,156,Display help information on maven-resources-plugin
+mvn, , , ,resources:resources, ,157,Copy resources for the main source code to the main output directory
+mvn, , , ,site:attach-descriptor, ,158,Adds the site descriptor (site.xml) to the list of files to be installed/deployed
+mvn, , , ,site:deploy, ,159,Deploys the generated site
+mvn, , , ,site:effective-site, ,160,Displays the effective site descriptor
+mvn, , , ,site:help, ,161,Display help information on maven-site-plugin
+mvn, , , ,site:jar, ,162,Bundle the site output into a JAR to deploy
+mvn, , , ,site:run, ,163,"Start the site up, rendering documents as requested for faster editing (with Jetty web server)"
+mvn, , , ,site:site, ,164,Generates the site for a single project
+mvn, , , ,site:stage, ,165,Deploys the generated site to a local staging or mock directory
+mvn, , , ,site:stage-deploy, ,166,Deploys the generated site to a staging or mock URL
+mvn, , , ,surefire:help, ,167,Display help information on maven-surefire-plugin
+mvn, , , ,surefire:test, ,168,Run tests using Surefire
+mvn, , , ,verifier:help, ,169,Display help information on maven-verifier-plugin
+mvn, , , ,verifier:verify, ,170,Verify the existence of files and optionally check content against a regex
+mvn, , , ,ear:ear, ,171,Builds J2EE Enterprise Archive (EAR) files
+mvn, , , ,ear:generate-application-xml, ,172,Generates the EAR deployment descriptor file(s)
+mvn, , , ,ear:help, ,173,Display help information on maven-ear-plugin
+mvn, , , ,ejb:ejb, ,174,Build an EJB (and optional client) from the current project
+mvn, , , ,ejb:help, ,175,Display help information on maven-ejb-plugin
+mvn, , , ,jar:help, ,176,Display help information on maven-jar-plugin
+mvn, , , ,jar:jar, ,177,Build a JAR from the current project
+mvn, , , ,jar:test-jar, ,178,Build a JAR of the test classes for the current project
+mvn, , , ,rar:help, ,179,Display help information on maven-rar-plugin
+mvn, , , ,rar:rar, ,180,Builds J2EE Resource Adapter Archive (RAR) files
+mvn, , , ,shade:help, ,181,Display help information on maven-shade-plugin
+mvn, , , ,shade:shade, ,182,Mojo that performs shading delegating to the Shader component
+mvn, , , ,source:aggregate, ,183,Aggregate sources for all modules in an aggregator project
+mvn, , , ,source:jar, ,184,This plugin bundles all the sources into a jar archive
+mvn, , , ,source:test-jar-no-fork, ,185,Bundle all the test sources into a jar archive (goal)
+mvn, , , ,source:test-jar, ,186,Bundle all the test sources into a jar archive (plugin)
+mvn, , , ,source:generated-test-jar, ,187,This plugin bundles all the test sources into a jar archive
+mvn, , , ,source:help, ,188,Display help information on maven-source-plugin
+mvn, , , ,source:jar-no-fork, ,189,This goal bundles all the sources into a jar archive
+mvn, , , ,changelog:changelog, ,190,Generate a changelog report
+mvn, , , ,changelog:file-activity, ,191,Generate a file activity report
+mvn, , , ,changelog:dev-activity, ,192,Generate a developer activity report
+mvn, , , ,changelog:help, ,193,Display help information on maven-changelog-plugin
+mvn, , , ,changes:changes-validate, ,194,Goal which validate the changes.xml file
+mvn, , , ,changes:changes-check, ,195,Check that changes.xml has the necessary data for a release announcement
+mvn, , , ,changes:github-report, ,196,Goal which downloads issues from GitHub and generates a report
+mvn, , , ,changes:announcement-generate, ,197,Goal which generate an announcement from the announcement template
+mvn, , , ,changes:trac-report, ,198,Goal which downloads issues from the Issue Tracking System and generates a report
+mvn, , , ,changes:changes-report, ,199,Goal which creates a nicely formatted Changes Report in html format from a changes.xml file
+mvn, , , ,changes:announcement-mail, ,200,Goal which sends an announcement through email
+mvn, , , ,changes:jira-report, ,201,Goal which downloads issues from the Issue Tracking System and generates a report
+mvn, , , ,changes:help, ,202,Display help information on maven-changes-plugin
+mvn, , , ,checkstyle:check, ,203,Perform Checkstyle analysis
+mvn, , , ,checkstyle:checkstyle, ,204,Perform Checkstyle analysis and generate an HTML report
+mvn, , , ,checkstyle:checkstyle-aggregate, ,205,Perform Checkstyle analysis and generate an aggregate HTML report
+mvn, , , ,checkstyle:help, ,206,Display help information on maven-checkstyle-plugin
+mvn, , , ,doap:generate, ,207,Generate a Description of a Project (DOAP) file
+mvn, , , ,doap:help, ,208,Display help information on maven-doap-plugin
+mvn, , , ,docck:check, ,209,Checks a plugin's documentation for the standard minimums
+mvn, , , ,docck:help, ,210,Display help information on maven-docck-plugin
+mvn, , , ,javadoc:aggregate, ,211,Generates documentation for the Java code in an aggregator project
+mvn, , , ,javadoc:aggregate-jar, ,212,Bundles Javadoc for main Java code into a jar
+mvn, , , ,javadoc:fix, ,213,Fix Javadoc documentation and tags for the Java code for the project
+mvn, , , ,javadoc:help, ,214,Display help information on maven-javadoc-plugin
+mvn, , , ,javadoc:jar, ,215,Bundle the Javadoc into a jar
+mvn, , , ,javadoc:javadoc, ,216,Generate documentation
+mvn, , , ,javadoc:javadoc-no-fork, ,217,Generate documentation
+mvn, , , ,javadoc:resource-bundle, ,218,Bundle AbstractJavadocMojo.javadocDirectory
+mvn, , , ,javadoc:test-aggregate, ,219,Generates documentation for the Java Test code
+mvn, , , ,javadoc:test-aggregate-jar, ,220,Bundle documentation for Java Test Code into a jar
+mvn, , , ,javadoc:test-fix, ,221,Fix Javadoc documentation and tags for the Test Java code
+mvn, , , ,javadoc:test-jar, ,222,Bundles the Javadoc documentation for test Java code into a jar
+mvn, , , ,javadoc:test-javadoc, ,223,Generates documentation for the Java Test code
+mvn, , , ,javadoc:test-javadoc-no-fork, ,224,Generate documentation for the Java Test code
+mvn, , , ,javadoc:test-resource-bundle, ,225,Bundle TestJavadocJar.testJavadocDirectory
+mvn, , , ,jxr:aggregate, ,226,Generates a combined JXR report in an aggregating project
+mvn, , , ,jxr:help, ,227,Display help information on maven-jxr-plugin
+mvn, , , ,jxr:jxr, ,228,"Creates an html-based, cross referenced version of Java source code for a project"
+mvn, , , ,jxr:test-aggregate, ,229,Generates a combined JXR report for test code in an aggregating project
+mvn, , , ,jxr:test-jxr, ,230,"Creates an html-based, cross referenced version of Java source code for a project's test sources"
+mvn, , , ,linkcheck:linkcheck, ,231,Generates a Linkcheck report
+mvn, , , ,linkcheck:help, ,232,Display help information on maven-linkcheck-plugin
+mvn, , , ,pmd:check, ,233,Fail the build if there were any PMD violations in the source code
+mvn, , , ,pmd:cpd, ,234,Creates a report for PMD's CPD tool. See http://pmd.sourceforge.net/cpd.html for more detail
+mvn, , , ,pmd:cpd-check, ,235,Fail the build if there were any CPD violations in the source code
+mvn, , , ,pmd:help, ,236,Display help information on maven-pmd-plugin
+mvn, , , ,pmd:pmd, ,237,Creates a PMD report
+mvn, , , ,project-info-reports:cim, ,238,Generates the Project Continuous Integration System report
+mvn, , , ,project-info-reports:dependencies, ,239,Generates the Project Dependencies report
+mvn, , , ,project-info-reports:dependency-convergence, ,240,Generates the Dependency Convergence report for reactor builds
+mvn, , , ,project-info-reports:dependency-info, ,241,Generates code snippets to be added to build tools
+mvn, , , ,project-info-reports:dependency-management, ,242,Generates the Project Dependency Management report
+mvn, , , ,project-info-reports:distribution-management, ,243,Generates the Project Distribution Management report
+mvn, , , ,project-info-reports:help, ,244,Display help information on maven-project-info-reports-plugin
+mvn, , , ,project-info-reports:index, ,245,Generates the project index page
+mvn, , , ,project-info-reports:issue-tracking, ,246,Generates the Project Issue Tracking report
+mvn, , , ,project-info-reports:license, ,247,Generates the Project License report
+mvn, , , ,project-info-reports:mailing-list, ,248,Generates the Mailing List report
+mvn, , , ,project-info-reports:modules, ,249,Generates the Project Modules report
+mvn, , , ,project-info-reports:plugin-management, ,250,Generates the Project Plugin Management report
+mvn, , , ,project-info-reports:plugins, ,251,Generates the Project Plugins report
+mvn, , , ,project-info-reports:project-team, ,252,Generates the Project Team report
+mvn, , , ,project-info-reports:scm, ,253,Generates the Project Source Code Management (SCM) report
+mvn, , , ,project-info-reports:summary, ,254,Generates the project information reports summary
+mvn, , , ,surefire-report:failsafe-report-only, ,255,Create Failsafe Test Report html 
+mvn, , , ,surefire-report:help, ,256,Display help information on maven-surefire-report-plugin
+mvn, , , ,surefire-report:report, ,257,Create Surefire Test Report html
+mvn, , , ,surefire-report:report-only, ,258,Create Surefire Test Report html
+mvn, , , ,ant:ant, ,259,Generate Ant build files
+mvn, , , ,ant:clean, ,260,Clean all Ant build files
+mvn, , , ,ant:help, ,261,Display help information on maven-ant-plugin
+mvn, , , ,antrun:help, ,262,Display help information on maven-antrun-plugin
+mvn, , , ,antrun:run, ,263,Maven AntRun Mojo
+mvn, , , ,archetype:crawl, ,264,"Crawl a Maven repository (filesystem, not HTTP) and creates a catalog file"
+mvn, , , ,archetype:create, ,265,Retrieve an archetype from the remote repository
+mvn, , , ,archetype:create-from-project, ,266,Creates an archetype project from the current project
+mvn, , , ,archetype:generate, ,267,"Generate new project from an archetype, or update project if using a partial archetype"
+mvn, , , ,archetype:help, ,268,Display help information on maven-archetype-plugin
+mvn, , , ,archetype:integration-test, ,269,Execute the archetype integration tests
+mvn, , , ,archetype:jar, ,270,Build a JAR from the current Archetype project
+mvn, , , ,archetype:update-local-catalog, ,271,Updates the local catalog
+mvn, , , ,assembly:assembly, ,272,Assemble an application bundle or distribution
+mvn, , , ,assembly:attached, ,273,Assemble an application bundle or distribution from an assembly descriptor
+mvn, , , ,assembly:directory, ,274,Assemble an application bundle or distribution
+mvn, , , ,assembly:directory-inline, ,275,"Like assembly:attached, but ignore the <formats/> section"
+mvn, , , ,assembly:directory-single, ,276,Assemble an application bundle or distribution from an assembly descriptor
+mvn, , , ,assembly:help, ,277,Display help information on maven-assembly-plugin
+mvn, , , ,assembly:single, ,278,Assemble an application bundle or distribution from an assembly descriptor
+mvn, , , ,assembly:unpack, ,279,Unpack project dependencies. Currently supports dependencies of type jar and zip
+mvn, , , ,dependency:analyze, ,280,Analyzes the dependencies of this project
+mvn, , , ,dependency:analyze-dep-mgt, ,281,Look for dependency mismatches in your dependencyManagement section
+mvn, , , ,dependency:analyze-duplicate, ,282,Determine duplicate dependencies
+mvn, , , ,dependency:analyze-only, ,283,Analyze the dependencies of this project
+mvn, , , ,dependency:analyze-report, ,284,Analyze the dependencies of this project and produce a report
+mvn, , , ,dependency:build-classpath, ,285,Output a classpath string of dependencies from the local repository to a file or log
+mvn, , , ,dependency:copy, ,286,Copy a list of artifacts from the repository to defined locations
+mvn, , , ,dependency:copy-dependencies, ,287,Copy the project dependencies from the repository to a defined location
+mvn, , , ,dependency:display-ancestors, ,288,Displays all ancestor POMs of the project
+mvn, , , ,dependency:get, ,289,"Resolves a single artifact, eventually transitively, from the specified remote repositories"
+mvn, , , ,dependency:go-offline, ,290,Resolve all project dependencies
+mvn, , , ,dependency:help, ,291,Display help information on maven-dependency-plugin
+mvn, , , ,dependency:list, ,292,Displays the list of dependencies for this project
+mvn, , , ,dependency:list-repositories, ,293,Resolve all project dependencies and then lists the repositories used
+mvn, , , ,dependency:properties, ,294,Set a property pointing to the artifact file for each project dependency
+mvn, , , ,dependency:purge-local-repository, ,295,"Remove the project dependencies from the local repository, and optionally re-resolve them"
+mvn, , , ,dependency:resolve, ,296,Resolve project dependencies
+mvn, , , ,dependency:resolve-plugins, ,297,Resolve all project plugins and reports and their dependencies
+mvn, , , ,dependency:sources, ,298,Resolve the project source dependencies from the repository
+mvn, , , ,dependency:tree, ,299,Displays the dependency tree for this project
+mvn, , , ,dependency:unpack, ,300,Retrieve a list of artifacts from the repository and unpacks them in a defined location
+mvn, , , ,dependency:unpack-dependencies, ,301,Unpack the project dependencies from the repository to a defined location
+mvn, , , ,enforcer:display-info, ,302,Display the current platform information
+mvn, , , ,enforcer:enforce, ,303,Execute the defined enforcer-rules once per module
+mvn, , , ,enforcer:help, ,304,Display help information on maven-enforcer-plugin
+mvn, , , ,gpg:help, ,305,Display help information on maven-gpg-plugin
+mvn, , , ,gpg:sign, ,306,"Sign project artifact, the POM, and attached artifacts with GnuPG for deployment"
+mvn, , , ,gpg:sign-and-deploy-file, ,307,Signs artifacts and installs the artifact in the remote repository
+mvn, , , ,help:expressions, ,308,Displays the supported Plugin expressions used by Maven
+mvn, , , ,help:active-profiles, ,309,Displays a list of the profiles which are currently active for this build
+mvn, , , ,help:effective-settings, ,310,Displays the calculated settings as XML for this project
+mvn, , , ,help:system, ,311,Displays a list of the platform details like system properties and environment variables
+mvn, , , ,help:effective-pom, ,312,"Displays the effective POM as an XML for this build, with the active profiles factored in"
+mvn, , , ,help:help, ,313,Display help information on maven-help-plugin
+mvn, , , ,help:all-profiles, ,314,Displays a list of available profiles under the current project
+mvn, , , ,help:describe, ,315,Displays the attributes for a Maven Plugin / goals (aka Mojo - Maven plain Old Java Object)
+mvn, , , ,help:evaluate, ,316,Evaluates Maven expressions given by the user in an interactive mode
+mvn, , , ,invoker:help, ,317,Display help information on maven-invoker-plugin
+mvn, , , ,invoker:install, ,318,Installs the project artifacts of the main build into the local repository
+mvn, , , ,invoker:integration-test, ,319,"Execute integration test Maven projects, collecting a log in the project directory"
+mvn, , , ,invoker:report, ,320,Generate a report based on the results of the Maven invocations
+mvn, , , ,invoker:run, ,321,"Execute integration test Maven projects, collect a log, and output the results"
+mvn, , , ,invoker:verify, ,322,Check the results of maven-invoker-plugin integration tests
+mvn, , , ,jarsigner:help, ,323,Display help information on maven-jarsigner-plugin
+mvn, , , ,jarsigner:sign, ,324,Signs a project artifact and attachments using jarsigner
+mvn, , , ,jarsigner:verify, ,325,Checks the signatures of a project artifact and attachments using jarsigner
+mvn, , , ,patch:apply, ,326,Apply one or more patches to project sources
+mvn, , , ,patch:help, ,327,Display help information on maven-patch-plugin
+mvn, , , ,pdf:help, ,328,Display help information on maven-pdf-plugin
+mvn, , , ,pdf:pdf, ,329,Generates a PDF document for a project
+mvn, , , ,plugin:updateRegistry, ,330,Update the user plugin registry (if it's in use) to reflect the version we're installing
+mvn, , , ,plugin:report, ,331,Generates the Plugin's documentation report
+mvn, , , ,plugin:xdoc, ,332,Generate Xdoc files for the project mojos or goals
+mvn, , , ,plugin:addPluginArtifactMetadata, ,333,"Inject any plugin-specific artifact metadata to the project's artifact, for subsequent installation and deployment"
+mvn, , , ,plugin:help, ,334,Display help information on maven-plugin-plugin
+mvn, , , ,plugin:helpmojo, ,335,Generates a HelpMojo class
+mvn, , , ,plugin:descriptor, ,336,Generate a plugin descriptor
+mvn, , , ,release:perform, ,337,Perform a release from SCM
+mvn, , , ,release:rollback, ,338,Rollback changes made by a previous release
+mvn, , , ,release:prepare-with-pom, ,339,"Prepare for a release in SCM, fully resolving dependencies for the purpose of producing a 'release POM'"
+mvn, , , ,release:stage, ,340,Perform a release from SCM to a staging repository
+mvn, , , ,release:update-versions, ,341,Update the POM versions for a project
+mvn, , , ,release:prepare, ,342,Prepare for a release in SCM
+mvn, , , ,release:clean, ,343,Clean up after a release preparation
+mvn, , , ,release:help, ,344,Display help information on maven-release-plugin
+mvn, , , ,release:branch, ,345,Branch a project in SCM
+mvn, , , ,remote-resources:process, ,346,Pull down resourceBundles and process them
+mvn, , , ,remote-resources:help, ,347,Display help information on maven-remote-resources-plugin
+mvn, , , ,remote-resources:bundle, ,348,Bundle up resources that should be considered as a remote-resource
+mvn, , , ,repository:bundle-create, ,349,Goal which creates an upload bundle for a project built with Maven
+mvn, , , ,repository:bundle-pack, ,350,Packs artifacts already available in a local repository in a bundle for an upload requests
+mvn, , , ,repository:help, ,351,Display help information on maven-repository-plugin
+mvn, , , ,scm:status, ,352,Display the modification status of the files in the configured scm url
+mvn, , , ,scm:branch, ,353,Branch the project
+mvn, , , ,scm:validate, ,354,Validate scm connection string
+mvn, , , ,scm:checkin, ,355,Commit changes to the configured scm url
+mvn, , , ,scm:diff, ,356,Display the difference of the working copy with the latest copy in the configured scm url
+mvn, , , ,scm:update, ,357,Update the local working copy with the latest source from the configured scm url
+mvn, , , ,scm:add, ,358,Add a file set to the project
+mvn, , , ,scm:remove, ,359,Mark a set of files for deletion
+mvn, , , ,scm:unedit, ,360,Unedit/unlock a set of files
+mvn, , , ,scm:bootstrap, ,361,Pull the project source from the configured scm and execute the configured goals
+mvn, , , ,scm:checkout, ,362,Get a fresh copy of the latest source from the configured scm url
+mvn, , , ,scm:tag, ,363,Tag the project
+mvn, , , ,scm:edit, ,364,Edit/lock a set of files
+mvn, , , ,scm:check-local-modification, ,365,This mojo will fail the build if there is any local modifications
+mvn, , , ,scm:list, ,366,Get the list of project files
+mvn, , , ,scm:changelog, ,367,Dump changelog contents to console. It is mainly used to test maven-scm-api's changelog command
+mvn, , , ,scm:help, ,368,Display help information on maven-scm-plugin
+mvn, , , ,scm:export, ,369,Get a fresh exported copy of the latest source from the configured scm url
+mvn, , , ,scm:update-subprojects, ,370,Updates all projects in a multi project build
+mvn, , , ,scm-publish:publish-scm, ,371,Publish a content to scm
+mvn, , , ,scm-publish:help, ,372,Display help information on maven-scm-publish-plugin
+mvn, , , ,scm-publish:scmpublish, ,373,"Empty goal, provided only to set loose the lifecycle"
+mvn, , , ,stage:copy, ,374,Copies artifacts from one repository to another repository
+mvn, , , ,stage:help, ,375,Display help information on maven-stage-plugin
+mvn, , , ,toolchains:help, ,376,Display help information on maven-toolchains-plugin
+mvn, , , ,toolchains:toolchain, ,377,Check that toolchains requirements are met by currently configured toolchains
+mvn, , , ,eclipse:clean, ,378,"Deletes the .project, .classpath, .wtpmodules files and .settings folder used by Eclipse"
+mvn, , , ,eclipse:configure-workspace, ,379,Configure Eclipse Workspace features
+mvn, , , ,eclipse:eclipse, ,380,Generate Eclipse configuration files
+mvn, , , ,eclipse:help, ,381,Display help information on maven-eclipse-plugin
+mvn, , , ,eclipse:install-plugins, ,382,Install plugins resolved from the Maven repository system into an Eclipse instance
+mvn, , , ,eclipse:myeclipse, ,383,Generates MyEclipse configuration files
+mvn, , , ,eclipse:myeclipse-clean, ,384,Deletes configuration files used by MyEclipse
+mvn, , , ,eclipse:rad, ,385,Generates the rad-6 configuration files
+mvn, , , ,eclipse:rad-clean, ,386,Deletes the config files used by Rad-6. the files .j2ee and the file .websettings
+mvn, , , ,eclipse:remove-cache, ,387,Removes the not-available marker files from the repository
+mvn, , , ,eclipse:resolve-workspace-dependencies, ,388,For the entire workspace: resolve references to the M2_REPO classpath variable
+mvn, , , ,eclipse:to-maven, ,389,Add eclipse artifacts from an eclipse installation to the local repo
+mvn, , , ,jboss-packaging:har-exploded, ,390,Builds a deployable JBoss Hibernate exploded Archive
+mvn, , , ,jboss-packaging:esb, ,391,Builds a deployable JBoss ESB Archive
+mvn, , , ,jboss-packaging:esb-exploded, ,392,Builds a deployable JBoss ESB exploded Archive
+mvn, , , ,jboss-packaging:aop, ,393,Builds a deployable JBoss AOP Archive
+mvn, , , ,jboss-packaging:spring, ,394,Builds a deployable JBoss Spring Archive
+mvn, , , ,jboss-packaging:har, ,395,Builds a deployable JBoss Hibernate Archive
+mvn, , , ,jboss-packaging:help, ,396,Display help information on jboss-packaging-maven-plugin
+mvn, , , ,jboss-packaging:par, ,397,Builds a deployable JBoss Process Archive
+mvn, , , ,jboss-packaging:sar, ,398,Builds a deployable JBoss Service Archive
+mvn, , , ,jboss-packaging:sar-inplace, ,399,Builds a deployable JBoss Service in place exploded Archive
+mvn, , , ,jboss-packaging:sar-exploded, ,400,Builds a deployable JBoss Service exploded Archive
+mvn, , , ,was6:wsAdmin, ,401,Execute the WebSphere command-line administration tool with the specified arguments
+mvn, , , ,was6:wsListApps, ,402,Lists all the applications installed on a WebSphere Server or Cell
+mvn, , , ,was6:wsStartServer, ,403,Starts a standalone server instance
+mvn, , , ,was6:wsStartApp, ,404,Start an application on a WebSphere Server or in a WebSphere Cell
+mvn, , , ,was6:clean, ,405,Cleans out temporary resources and generated sources
+mvn, , , ,was6:wsStopServer, ,406,Stop a standalone server instance
+mvn, , , ,was6:wsStopApp, ,407,Stop an application on a WebSphere Server or in a WebSphere Cell
+mvn, , , ,was6:servicedeploy, ,408,"Executes ServiceDeploy command on archive (Ear, Zip or Jar), produce a deployable ear file"
+mvn, , , ,was6:installApp, ,409,Installs an EAR into WebSphere Application Server
+mvn, , , ,was6:wsDefaultBindings, ,410,Generate default IBM WebSphere Bindings for the specified EAR file
+mvn, , , ,was6:endpointEnabler, ,411,Executes the endpoint enabler ant task on the EAR archive
+mvn, , , ,was6:wsdl2java, ,412,Creates Java classes and deployment descriptor templates from a WSDL file
+mvn, , , ,was6:help, ,413,Display help information on was6-maven-plugin
+mvn, , , ,was6:ejbdeploy, ,414,Generates EJB RMIC stub sources
+mvn, , , ,was6:wsUninstallApp, ,415,Uninstall an existing application from a WebSphere Server or Cell
+mvn, , , ,weblogic:stop, ,416,Stop an artifact on Weblogic server(s) or cluster(s)
+mvn, , , ,weblogic:start, ,417,Start an artifact on Weblogic server(s) or cluster(s)
+mvn, , , ,weblogic:undeploy, ,418,Undeploy artifacts from Weblogic server(s) or cluster(s)
+mvn, , , ,weblogic:appc, ,419,Run the weblogic appc compiler against an artifact
+mvn, , , ,weblogic:clientgen9, ,420,Runs Client Gen on a given WSDL
+mvn, , , ,weblogic:listapps, ,421,List the artifacts on Weblogic server(s) or cluster(s)
+mvn, , , ,weblogic:help, ,422,Display help information on weblogic-maven-plugin
+mvn, , , ,weblogic:wsdlgen, ,423,This class generates wsdl from ear/war package
+mvn, , , ,weblogic:redeploy, ,424,Redeploy artifact on Weblogic server(s) or cluster(s)
+mvn, , , ,weblogic:jwsc, ,425,Runs the JWSC compiler task for web service enabled code
+mvn, , , ,weblogic:servicegen, ,426,Runs Service Gen on a given WSDL
+mvn, , , ,weblogic:deploy, ,427,Deploy an artifact to Weblogic servers(s) or cluster(s)
+mvn, , , ,antlr:help, ,428,Display help information on antlr-maven-plugin
+mvn, , , ,antlr:html, ,429,Generates Antlr documentation from grammar files
+mvn, , , ,antlr:generate, ,430,Generates files based on grammar files with Antlr tool
+mvn, , , ,aspectj:aspectj-report, ,431,Creates an AspectJ HTML report using the ajdoc tool and format
+mvn, , , ,aspectj:compile, ,432,Weaves all main classes
+mvn, , , ,aspectj:EclipseAjcMojo, ,433,Create eclipse configuration of aspectJ
+mvn, , , ,aspectj:help, ,434,Display help information on aspectj-maven-plugin
+mvn, , , ,aspectj:test-compile, ,435,Weaves all test classes
+mvn, , , ,axistools:java2wsdl, ,436,A Plugin for generating WSDL files using Axis Java2WSDL
+mvn, , , ,axistools:help, ,437,Display help information on axistools-maven-plugin
+mvn, , , ,axistools:wsdl2java, ,438,A Plugin for generating stubs for WSDL files using Axis WSDL2Java
+mvn, , , ,axistools:admin, ,439,Utility for turning xml into Axis deployment operations (wraps org.apache.axis.utils.Admin)
+mvn, , , ,castor:help, ,440,Display help information on castor-maven-plugin
+mvn, , , ,castor:mappings, ,441,Use Castor MappingTool to generate mapping files from a set of Classes
+mvn, , , ,castor:mapping, ,442,Use Castor MappingTool to generate mapping files from a single Class
+mvn, , , ,castor:generate, ,443,A mojo that uses Castor to generate a collection of javabeans from an XSD
+mvn, , , ,commons-attributes:compile, ,444,Commons-attributes compiler
+mvn, , , ,commons-attributes:test-compile, ,445,Commons-attributes compiler for tests
+mvn, , , ,gwt:debug, ,446,Runs the project with a debugger port hook (optionally suspended)
+mvn, , , ,gwt:mergewebxml, ,447,Merges GWT servlet elements into deployment descriptor (and non GWT servlets into shell)
+mvn, , , ,gwt:help, ,448,Display help information on gwt-maven-plugin
+mvn, , , ,gwt:compile, ,449,Invokes the GWT Compiler
+mvn, , , ,gwt:source-jar, ,450,Add GWT java source code and module descriptor as resources to project jar
+mvn, , , ,gwt:resources, ,451,Copy GWT java source code and module descriptor as resources in the build outputDirectory
+mvn, , , ,gwt:compile-report, ,452,see http://code.google.com/webtoolkit/doc/latest/DevGuideCompileReport.html#Usage
+mvn, , , ,gwt:css, ,453,Creates CSS interfaces for css files
+mvn, , , ,gwt:run-codeserver, ,454,Runs GWT modules with Super Dev Mode
+mvn, , , ,gwt:eclipseTest, ,455,Goal which creates Eclipse lauch configurations for GWTTestCases
+mvn, , , ,gwt:test, ,456,"Mimic surefire to run GWTTestCases during integration-test phase, until SUREFIRE-508 is fixed"
+mvn, , , ,gwt:clean, ,457,Cleanup the webapp directory for GWT module compilation output
+mvn, , , ,gwt:generateAsync, ,458,Goal which generate Async interface
+mvn, , , ,gwt:i18n, ,459,Creates I18N interfaces for constants and messages files
+mvn, , , ,gwt:run, ,460,Runs the project in the GWT (Classic or Super) Dev Mode for development
+mvn, , , ,gwt:eclipse, ,461,Goal which creates Eclipse lauch configurations for GWT modules
+mvn, , , ,hibernate3:hbm2doc, ,462,'hbm2doc' generates html documentation a'la javadoc for the database schema
+mvn, , , ,hibernate3:hbm2hbmxml, ,463,Generate a set of .hbm files
+mvn, , , ,hibernate3:hbm2dao, ,464,Generate a set of DAOs
+mvn, , , ,hibernate3:query, ,465,Execute a HQL query statements
+mvn, , , ,hibernate3:instrument, ,466,Goal for 'cglib' or 'javassist' instrumentation
+mvn, , , ,hibernate3:run, ,467,'AntRun' wrapper
+mvn, , , ,hibernate3:hbmtemplate, ,468,'hbmtemplate' generic exporter that can be controlled by a user provided template or class
+mvn, , , ,hibernate3:hbm2cfgxml, ,469,'hbm2cfgxml' generates a hibernate.cfg.xml
+mvn, , , ,hibernate3:hbm2ddl, ,470,'hbm2ddl' lets you run schemaexport and schemaupdate which generates the appropriate SQL DDL
+mvn, , , ,hibernate3:help, ,471,Display help information on hibernate3-maven-plugin
+mvn, , , ,hibernate3:hbmlint, ,472,'hbmlint' scans mappings for errors
+mvn, , , ,hibernate3:hbm2java, ,473,'hbm2java' is a java code generator
+mvn, , , ,idlj:generate-test, ,474,Process CORBA IDL test files in IDLJ
+mvn, , , ,idlj:help, ,475,Display help information on idlj-maven-plugin
+mvn, , , ,idlj:generate, ,476,Process CORBA IDL files in IDLJ
+mvn, , , ,javacc:jjtree, ,477,Parse a JJTree grammar file (*.jjt) and transform it to source files and a JavaCC grammar file
+mvn, , , ,javacc:jtb, ,478,Parses a JTB file and transforms it into source for an AST and a JavaCC grammar
+mvn, , , ,javacc:jjdoc, ,479,JJDoc takes a JavaCC parser specification and produces documentation for the BNF grammar
+mvn, , , ,javacc:jtb-javacc, ,480,Preprocess *.jtb grammar files and generate a parser with parse tree actions
+mvn, , , ,javacc:help, ,481,Display help information on javacc-maven-plugin
+mvn, , , ,javacc:jjtree-javacc, ,482,Preprocess decorated grammar files (*.jjt) and generate a parser with parse tree actions
+mvn, , , ,javacc:javacc, ,483,Parse a JavaCC grammar file (*.jj) and transform it to Java source files
+mvn, , , ,jaxb2:help, ,484,Display help information on jaxb2-maven-plugin
+mvn, , , ,jaxb2:schemagen, ,485,Mojo that creates XML schema(s) from compile-scope Java sources or binaries
+mvn, , , ,jaxb2:testSchemagen, ,486,Mojo that creates XML schema(s) from test-scope Java testSources or binaries
+mvn, , , ,jaxb2:testXjc, ,487,Mojo that creates test-scope Java source or binaries from XML schema
+mvn, , , ,jaxb2:xjc, ,488,Mojo that creates compile-scope Java source or binaries from XML schema
+mvn, , , ,jpox:enhance, ,489, 
+mvn, , , ,jpox:schema-create, ,490,Generates the Schema from the JDO mappings and the enhanced class files
+mvn, , , ,jpox:schema-dbinfo, ,491,Provides detailed information about the database - limits and datatypes support
+mvn, , , ,jpox:schema-delete, ,492,Deletes all database tables required for a set of JDO MetaData files from the database schema
+mvn, , , ,jpox:schema-info, ,493,Provides a detailed information about the database schema
+mvn, , , ,jpox:schema-validate, ,494,Validates database tables required for a set of JDO MetaData files for correct structure
+mvn, , , ,jslint:test-jslint, ,495,Goal which reports on the test source files using JSLint
+mvn, , , ,jslint:jslint, ,496,Goal which reports on the source files using JSLint
+mvn, , , ,jslint:help, ,497,Display help information on jslint-maven-plugin
+mvn, , , ,js-import:test-generate-html, ,498,Test goal implementation of the generate html mojo
+mvn, , , ,js-import:generate-html, ,499,Main goal implementation of the generate html mojo
+mvn, , , ,js-import:test-import-js, ,500,Test goal implementation of the import mojo
+mvn, , , ,js-import:import-js, ,501,Main goal implementation of the import mojo
+mvn, , , ,js-import:help, ,502,Display help information on js-import-maven-plugin
+mvn, , , ,jspc:compile, ,503, 
+mvn, , , ,jspc:testCompile, ,504, 
+mvn, , , ,openjpa:test-enhance, ,505,Processes Application model classes and enhances them by running Open JPA Enhancer tool
+mvn, , , ,openjpa:help, ,506,Display help information on openjpa-maven-plugin
+mvn, , , ,openjpa:enhance, ,507,Processes Application model classes and enhances them by running Open JPA Enhancer tool
+mvn, , , ,openjpa:schema, ,508,Executes the schema generation via the OpenJPA MappingTool
+mvn, , , ,openjpa:sql, ,509,Executes the SQL generation via the OpenJPA MappingTool
+mvn, , , ,rmic:help, ,510,Display help information on rmic-maven-plugin
+mvn, , , ,rmic:test-rmic, ,511,Compiles rmi stubs and skeleton classes from a remote implementation class
+mvn, , , ,rmic:rmic, ,512,Compiles rmi stubs and skeleton classes from a remote implementation class
+mvn, , , ,rmic:package, ,513,Creates a jar containing the rmic generated classes
+mvn, , , ,sablecc:generate, ,514,A plugin for processing grammar files in SableCC
+mvn, , , ,sqlj:sqlj, ,515,Translates SQLJ source code using the SQLJ Translator
+mvn, , , ,sqlj:clean, ,516,Cleans out generated stale resources
+mvn, , , ,sqlj:help, ,517,Display help information on sqlj-maven-plugin
+mvn, , , ,xdoclet:help, ,518,Display help information on xdoclet-maven-plugin
+mvn, , , ,xdoclet:xdoclet, ,519,Runs XDoclet
+mvn, , , ,xmlbeans:xmlbeans-test, ,520,Parse xsd files and produces a corresponding object model based on the Apache XML Beans parser
+mvn, , , ,xmlbeans:help, ,521,Display help information on xmlbeans-maven-plugin
+mvn, , , ,xmlbeans:xmlbeans, ,522,Parse xsd files and produces a corresponding object model based on the Apache XML Beans parser
+mvn, , , ,nbm:autoupdate, ,523,Create the NetBeans auto update site definition
+mvn, , , ,nbm:branding, ,524,Package branding resources for NetBeans platform/IDE based application
+mvn, , , ,nbm:build-installers, ,525,Build installers for Mavenized NetBeans application
+mvn, , , ,nbm:cluster, ,526,Create the NetBeans module clusters from reactor
+mvn, , , ,nbm:cluster-app, ,527,Create the NetBeans module clusters/application for the 'nbm-application' packaging projects
+mvn, , , ,nbm:help, ,528,Display help information on nbm-maven-plugin
+mvn, , , ,nbm:manifest, ,529,Generate NetBeans module system specific manifest entries
+mvn, , , ,nbm:nbm, ,530,"Create the NetBeans module artifact (nbm file), part of 'nbm' lifecycle/packaging"
+mvn, , , ,nbm:run-ide, ,531,"Run NetBeans with additional module clusters, to be used with nbm:cluster"
+mvn, , , ,nbm:run-platform, ,532,Run a branded application on top of NetBeans Platform
+mvn, , , ,nbm:standalone-zip, ,533,Create a standalone application out of the composed clusters of nbm-application
+mvn, , , ,nbm:webstart-app, ,534,Create webstartable binaries for a 'nbm-application'
+mvn, , , ,clirr:clirr, ,535,Generate a report from the Clirr output
+mvn, , , ,clirr:check-arbitrary, ,536,Check for compatibility between two arbitrary artifact sets
+mvn, , , ,clirr:help, ,537,Display help information on clirr-maven-plugin
+mvn, , , ,clirr:check, ,538,Check for compatibility with previous version
+mvn, , , ,clirr:check-no-fork, ,539,Check for compatibility with previous version without forking the project
+mvn, , , ,cobertura:check, ,540,Check the coverage for unit tests from last instrumentation
+mvn, , , ,cobertura:check-integration-test, ,541,Check the coverage for unit and integration tests from last instrumentation
+mvn, , , ,cobertura:clean, ,542,Clean up the files that Cobertura Maven Plugin has created during instrumentation
+mvn, , , ,cobertura:cobertura, ,543,Generate Cobertura report on unit tests
+mvn, , , ,cobertura:cobertura-integration-test, ,544,Generate Cobertura report on unit and integration tests
+mvn, , , ,cobertura:dump-datafile, ,545,Output the contents of Cobertura's data file to the command line
+mvn, , , ,cobertura:help, ,546,Display help information on cobertura-maven-plugin
+mvn, , , ,cobertura:instrument, ,547,Instrument the compiled classes
+mvn, , , ,scmchangelog:report, ,548,Goal which produces a changelog report based on the Subversion logs
+mvn, , , ,scmchangelog:help, ,549,Display help information on scmchangelog-maven-plugin
+mvn, , , ,sonar:help, ,550,Display help information on sonar-maven-plugin
+mvn, , , ,sonar:sonar, ,551,Analyze project
+mvn, , , ,taglist:taglist, ,552,Scans the source files for tags and generates a report on their occurrences
+mvn, , , ,taglist:help, ,553,Display help information on taglist-maven-plugin
+mvn, , , ,javancss:check, ,554,Check the build if for any Method with a ccn greater than a limit in the source code
+mvn, , , ,javancss:help, ,555,Display help information on javancss-maven-plugin
+mvn, , , ,javancss:report, ,556,Generates a JavaNCSS report based on this module's source code
+mvn, , , ,jdepend:generate-no-fork, ,557,Run JDepend and generate a site report
+mvn, , , ,jdepend:help, ,558,Display help information on jdepend-maven-plugin
+mvn, , , ,jdepend:generate, ,559,Run JDepend and generate a site report
+mvn, , , ,codenarc:codenarc, ,560,Create a CodeNarc Report
+mvn, , , ,codenarc:help, ,561,Display help information on codenarc-maven-plugin
+mvn, , , ,findbugs:check, ,562, 
+mvn, , , ,findbugs:findbugs, ,563, 
+mvn, , , ,findbugs:gui, ,564,Open the findbugs GUI to browse the report
+mvn, , , ,findbugs:help, ,565,Display help information on findbugs-maven-plugin
+mvn, , , ,fitnesse:remotecall, ,566,Use fitnesse.runner.TestRunner to get result of a remote FitNesse web page execution
+mvn, , , ,fitnesse:help, ,567,Display help information on fitnesse-maven-plugin
+mvn, , , ,fitnesse:run, ,568,Use fitnesse.runner.TestRunner to call a remote FitNesse web page and run the tests locally
+mvn, , , ,fitnesse:fitnesse, ,569,Generates a FitNesse report from a FitNesse web server
+mvn, , , ,selenium:start-server, ,570,Start the Selenium server
+mvn, , , ,selenium:xvfb, ,571,Starts an Xvfb instance suitable for handling X11 displays for headless systems
+mvn, , , ,selenium:stop-server, ,572,Stop the Selenium server
+mvn, , , ,selenium:selenese, ,573,Run a suite of HTML Selenese tests
+mvn, , , ,selenium:help, ,574,Display help information on selenium-maven-plugin
+mvn, , , ,webtest:help, ,575,Display help information on webtest-maven-plugin
+mvn, , , ,webtest:verify-filecontent, ,576,Grep through a set of files to find text strings and fail build if matches are found
+mvn, , , ,webtest:clean, ,577,Remove temporary data from running the Canoo WebTests
+mvn, , , ,webtest:test, ,578,Runs a Canoo WebTest defined in an ANT script
+mvn, , , ,webtest:loop, ,579,Runs a Canoo WebTest in a loop until an error or failure occurs
+mvn, , , ,webtest:info, ,580,Prints the configuration settings
+mvn, , , ,webtest:report, ,581,Creates the HTML report for a test run based on XSLT
+mvn, , , ,webtest:verify-result, ,582,Check webtest result file for test failures
+mvn, , , ,chronos-jmeter:jmeter, ,583,Invokes JMeter
+mvn, , , ,chronos-jmeter:check, ,584,Checks the latest performancetests to verify that performance targets have been met
+mvn, , , ,chronos-jmeter:jmetergui, ,585,Invokes the JMeter gui
+mvn, , , ,chronos-jmeter:jmeteroutput, ,586,Analyzes output from JMeter
+mvn, , , ,chronos-jmeter:help, ,587,Display help information on chronos-jmeter-maven-plugin
+mvn, , , ,chronos-jmeter:savehistory, ,588,Save a snapshot of the currently executed test to enable later historic reports
+mvn, , , ,chronos-surefire:help, ,589,Display help information on chronos-surefire-maven-plugin
+mvn, , , ,chronos-surefire:collect, ,590,"Collect the execution of each performed unittest, and compare to previous times"
+mvn, , , ,chronos-report:historyreport, ,591,Creates a historic report of performance test results
+mvn, , , ,chronos-report:report, ,592,Creates a report of the currently executed performancetest in html format
+mvn, , , ,chronos-report:help, ,593,Display help information on chronos-report-maven-plugin
+mvn, , , ,animal-sniffer:build, ,594,"Generate API Signature from at least one of: java runtime, module dependencies/module classes"
+mvn, , , ,animal-sniffer:check, ,595,Checks the classes compiled by this module
+mvn, , , ,animal-sniffer:help, ,596,Display help information on animal-sniffer-maven-plugin
+mvn, , , ,appassembler:generate-daemons, ,597,Generates JSW based daemon wrappers
+mvn, , , ,appassembler:assemble, ,598,Assembles the artifacts and generates bin scripts for the configured applications
+mvn, , , ,appassembler:create-repository, ,599,Creates an appassembler repository
+mvn, , , ,appassembler:help, ,600,Display help information on appassembler-maven-plugin
+mvn, , , ,build-helper:parse-version, ,601,Parse a version string and set properties containing the component parts of the version
+mvn, , , ,build-helper:bsh-property, ,602,Define one or many properties as a result of a Beanshell script invocation
+mvn, , , ,build-helper:add-resource, ,603,Add more resource directories to the POM
+mvn, , , ,build-helper:maven-version, ,604,Store the maven core version in a property maven.version
+mvn, , , ,build-helper:attach-artifact, ,605,Attach additional artifacts to be installed and deployed
+mvn, , , ,build-helper:add-test-source, ,606,Add test source directories to the POM
+mvn, , , ,build-helper:released-version, ,607,Resolve the latest released version of this project
+mvn, , , ,build-helper:local-ip, ,608,Retrieve current host IP address and place it under a configurable project property
+mvn, , , ,build-helper:reserve-network-port, ,609,Reserve a list of random not in use network ports and place them in project properties
+mvn, , , ,build-helper:remove-project-artifact, ,610,Remove project's artifacts from local repository
+mvn, , , ,build-helper:add-source, ,611,Add more source directories to the POM
+mvn, , , ,build-helper:add-test-resource, ,612,Add more test resource directories to the POM
+mvn, , , ,build-helper:cpu-count, ,613,"Get number of CPUs, place it under a configurable project property"
+mvn, , , ,build-helper:timestamp-property, ,614,Sets a property based on the current date and time
+mvn, , , ,build-helper:regex-properties, ,615,Sets a property by applying a regex replacement rule to a supplied value
+mvn, , , ,build-helper:regex-property, ,616,Sets a property by applying a regex replacement rule to a supplied value
+mvn, , , ,build-helper:help, ,617,Display help information on build-helper-maven-plugin
+mvn, , , ,buildnumber:create-timestamp, ,618,Give a timestamp available through one or more properties
+mvn, , , ,buildnumber:create, ,619,Create a build number
+mvn, , , ,buildnumber:help, ,620,Display help information on buildnumber-maven-plugin
+mvn, , , ,buildnumber:hgchangeset, ,621,Set project properties for changeSet/changeSetDate from the current hg repository
+mvn, , , ,cassandra:help, ,622,Display help information on cassandra-maven-plugin
+mvn, , , ,cassandra:load, ,623,Loads a cassandra-cli bscript into a Cassandra instance
+mvn, , , ,cassandra:delete, ,624,Deletes the Cassandra home directory that we create for running Cassandra
+mvn, , , ,cassandra:start-cluster, ,625,Starts a Cassandra instance in the background
+mvn, , , ,cassandra:cu-load, ,626,Loads a CassandraUnit DataSet into a Cassandra instance
+mvn, , , ,cassandra:stop-cluster, ,627,Stops a background Cassandra instance
+mvn, , , ,cassandra:repair, ,628,Runs nodetool repair on a Cassandra instance
+mvn, , , ,cassandra:cql-exec, ,629,Executes cql statements from maven
+mvn, , , ,cassandra:stop, ,630,Stops a background Cassandra instance
+mvn, , , ,cassandra:flush, ,631,Runs nodetool flush on a Cassandra instance
+mvn, , , ,cassandra:run, ,632,Runs Cassandra in the foreground
+mvn, , , ,cassandra:start, ,633,Starts a Cassandra instance in the background
+mvn, , , ,cassandra:cleanup, ,634,Runs nodetool cleanup on a Cassandra instance
+mvn, , , ,cassandra:compact, ,635,Runs nodetool compact on a Cassandra instance
+mvn, , , ,ditaot:help, ,636,Display help information on ditaot-maven-plugin
+mvn, , , ,ditaot:version, ,637,Display DITA Open Toolkit's built-in version
+mvn, , , ,ditaot:eclipse, ,638,Generate http://www.dita-op.org's Eclipse configuration to allow editing
+mvn, , , ,ditaot:print-help, ,639,Display DITA Open Toolkit's common Ant properties usage
+mvn, , , ,ditaot:chm2web, ,640,"Convert DITA Open Toolkit's Microsoft CHM output file, produced by htmlhelp transtype, to pure HTML set of files"
+mvn, , , ,ditaot:run, ,641,Execute DITA Open Toolkit's Ant command line to transform DITA files to desired output format
+mvn, , , ,exec:exec, ,642,A Plugin for executing external programs
+mvn, , , ,exec:help, ,643,Display help information on exec-maven-plugin
+mvn, , , ,exec:java, ,644,Executes the supplied java class in the current VM with the enclosing project's dependencies as classpath
+mvn, , , ,keytool:clean, ,645,A Mojo that deletes a generated keystore file
+mvn, , , ,keytool:exportCertificate, ,646,To export a certificate from a keystore
+mvn, , , ,keytool:changeKeyPassword, ,647,To change the key password of an entry of a keystore
+mvn, , , ,keytool:generateSecretKey, ,648,To generate a secret key into a keystore
+mvn, , , ,keytool:importKeystore, ,649,To import all entries of a keystore to another keystore
+mvn, , , ,keytool:changeStorePassword, ,650,To change the store password of a keystore
+mvn, , , ,keytool:importCertificate, ,651,To import a certificate into a keystore
+mvn, , , ,keytool:generateCertificateRequest, ,652,To generate certificate request
+mvn, , , ,keytool:list, ,653,To list entries in a keystore
+mvn, , , ,keytool:printCertificateRequest, ,654,To print the content of a certificate request
+mvn, , , ,keytool:printCertificate, ,655,To print the content of a certificate
+mvn, , , ,keytool:deleteAlias, ,656,To delete an entry alias from a keystore
+mvn, , , ,keytool:help, ,657,Display help information on keytool-maven-plugin
+mvn, , , ,keytool:generateKeyPair, ,658,To generate a key pair into a keystore
+mvn, , , ,keytool:changeAlias, ,659,To change an entry alias into a keystore
+mvn, , , ,keytool:printCRLFile, ,660,To print the content of a CRL file
+mvn, , , ,keytool:generateCertificate, ,661,To generate certificate from a certificate request from a keystore
+mvn, , , ,latex:help, ,662,Display help information on latex-maven-plugin
+mvn, , , ,latex:latex, ,663,LaTeX documents building goal
+mvn, , , ,license:third-party-report, ,664,Generates a report of all third-parties detected in the module
+mvn, , , ,license:check-file-header, ,665,The goal to check if the state of header on project source files
+mvn, , , ,license:add-third-party, ,666,Goal to generate the third-party license file
+mvn, , , ,license:update-project-license, ,667,Updates (or creates) the license file according to the licenseName
+mvn, , , ,license:help, ,668,Display help information on license-maven-plugin
+mvn, , , ,license:aggregate-add-third-party, ,669,Fork executions of add-third-party for the leaf projects of the module tree
+mvn, , , ,license:license-list, ,670,Display all available licenses
+mvn, , , ,license:comment-style-list, ,671,Displays all the available comment style to box file headers
+mvn, , , ,license:update-file-header, ,672,The goal to update (or add) the header on project source files
+mvn, , , ,license:download-licenses, ,673,"Download the license files of all the current project's dependencies, and generate a summary file containing a list of all dependencies and their licenses"
+mvn, , , ,ounce:report, ,674,Generate the scan results as part of the site
+mvn, , , ,ounce:application, ,675,Generate an Ounce application file
+mvn, , , ,ounce:scan, ,676,Allows an on demand scan of an application and the optional publishing of the results
+mvn, , , ,ounce:project-only, ,677,This mojo generates an Ounce project file
+mvn, , , ,ounce:project, ,678,This mojo generates an Ounce project file
+mvn, , , ,ounce:help, ,679,Display help information on ounce-maven-plugin
+mvn, , , ,rpm:attached-rpm, ,680,Construct the RPM file and attaches it as a secondary artifact
+mvn, , , ,rpm:help, ,681,Display help information on rpm-maven-plugin
+mvn, , , ,rpm:rpm, ,682,Construct the RPM file
+mvn, , , ,rpm:version, ,683,Makes the rpm version and release attributes available as properties
+mvn, , , ,siteskinner:skin, ,684,Call mvn siteskinner:skin on a maven project
+mvn, , , ,siteskinner:help, ,685,Display help information on siteskinner-maven-plugin
+mvn, , , ,sql:help, ,686,Display help information on sql-maven-plugin
+mvn, , , ,sql:execute, ,687,Executes SQL against a database
+mvn, , , ,truezip:list, ,688,List all files in the archive
+mvn, , , ,truezip:ls, ,689,Display an archive's list to console
+mvn, , , ,truezip:cp, ,690,Copy an archive/directory to another archive/directory
+mvn, , , ,truezip:remove, ,691,Remove a set of files from an existing archive
+mvn, , , ,truezip:copy, ,692,Copy a set of files in and out of an existing archive
+mvn, , , ,truezip:move, ,693,Move a single file or multiple files (via FileSet) between archives or directories
+mvn, , , ,truezip:help, ,694,Display help information on truezip-maven-plugin
+mvn, , , ,truezip:update, ,695,"Update open archives immediately, flush cached data to disk"
+mvn, , , ,versions:commit, ,696,"Removes the initial backup of the pom, thereby accepting the changes"
+mvn, , , ,versions:compare-dependencies, ,697,Compare dependency versions of current project to another
+mvn, , , ,versions:dependency-updates-report, ,698,Generates a report of available updates for the dependencies of a project
+mvn, , , ,versions:display-dependency-updates, ,699,Displays all dependencies that have newer versions available
+mvn, , , ,versions:display-parent-updates, ,700,Displays any updates of the project's parent project
+mvn, , , ,versions:display-plugin-updates, ,701,Displays all plugins that have newer versions available
+mvn, , , ,versions:display-property-updates, ,702,Displays properties that are linked to artifact versions and have updates available
+mvn, , , ,versions:force-releases, ,703,"Replace -SNAPSHOT versions with a release version, downgrading if necessary"
+mvn, , , ,versions:help, ,704,Display help information on versions-maven-plugin
+mvn, , , ,versions:lock-snapshots, ,705,Resolve unlocked snapshot dependencies to the locked timestamp versions
+mvn, , , ,versions:plugin-updates-report, ,706,Generates a report of available updates for the plugins of a project
+mvn, , , ,versions:property-updates-report, ,707,Generates a report of available updates for properties of a project
+mvn, , , ,versions:resolve-ranges, ,708,Resolve dependency version ranges to the specific version being used in the build
+mvn, , , ,versions:revert, ,709,Restores the pom from the initial backup
+mvn, , , ,versions:set, ,710,Sets the current project's version and based on that change propagates that change onto any child modules as necessary
+mvn, , , ,versions:unlock-snapshots, ,711,Resolve unlocked snapshot dependencies to the locked timestamp versions
+mvn, , , ,versions:update-child-modules, ,712,"Scan the current projects child modules, and update versions"
+mvn, , , ,versions:update-parent, ,713,Sets the parent version to the latest parent version
+mvn, , , ,versions:update-properties, ,714,Sets properties to the latest versions of specific artifacts
+mvn, , , ,versions:update-property, ,715,Sets a property to the latest version in a given range of associated artifacts
+mvn, , , ,versions:use-latest-releases, ,716,Replaces any release versions with the latest release version
+mvn, , , ,versions:use-latest-snapshots, ,717,Replaces any release versions with the latest snapshot version (if it has been deployed)
+mvn, , , ,versions:use-latest-versions, ,718,Replaces any version with the latest version
+mvn, , , ,versions:use-next-releases, ,719,Replaces any release versions with the next release version (if it has been released)
+mvn, , , ,versions:use-next-snapshots, ,720,Replaces any release versions with the next snapshot version (if it has been deployed)
+mvn, , , ,versions:use-next-versions, ,721,Replaces any version with the latest version
+mvn, , , ,versions:use-reactor, ,722,Replaces any versions with the corresponding version from the reactor
+mvn, , , ,versions:use-releases, ,723,Replaces any -SNAPSHOT versions with the corresponding release version
+mvn, , , ,vfs:copy, ,724,Copy files from one VFS to another VFS
+mvn, , , ,vfs:help, ,725,Display help information on vfs-maven-plugin
+mvn, , , ,vfs:list, ,726,Display file list of a virtual file system
+mvn, , , ,vfs:merge-maven-repositories, ,727,Merge Maven repository from one VFS to another VFS
+mvn, , , ,vfs:move, ,728,Move files from a virtual file system to another
+mvn, , , ,vfs:remove, ,729,Remove files from a virtual file system
+mvn, , , ,xml:validate, ,730,The ValidatorMojo's task is the validation of XML files against a given schema
+mvn, , , ,xml:help, ,731,Display help information on xml-maven-plugin
+mvn, , , ,xml:transform, ,732,The TransformMojo is used for transforming a set of files using a common stylesheet
+mvn, , , ,nexus-staging:rc-release, ,733,Release a closed Nexus staging repo into a permanent Nexus repo for general consumption
+mvn, , , ,nexus-staging:close, ,734,Closes a Nexus staging repository
+mvn, , , ,nexus-staging:deploy, ,735,"Alternative deploy mojo, that will select proper DeployStrategy to perform deploys"
+mvn, , , ,nexus-staging:promote, ,736,Promotes a closed Nexus staging repository into a Nexus Build Promotion Profile
+mvn, , , ,nexus-staging:deploy-staged, ,737,Deploy locally staged artifacts from nexus-staging repository
+mvn, , , ,nexus-staging:rc-drop, ,738,Drops a Nexus staging repository that is either open or closed
+mvn, , , ,nexus-staging:rc-promote, ,739,Promotes a closed Nexus staging repository into a Nexus Build Promotion Profile
+mvn, , , ,nexus-staging:help, ,740,Display help information on nexus-staging-maven-plugin
+mvn, , , ,nexus-staging:drop, ,741,Drops a Nexus staging repository that is either open or closed
+mvn, , , ,nexus-staging:deploy-staged-repository, ,742,Deploy staged artifacts from local repository
+mvn, , , ,nexus-staging:release, ,743,Release a closed Nexus staging repo into a permanent Nexus repo for general consumption
+mvn, , , ,nexus-staging:rc-list, ,744,Lists staging repositories accessible by current user available on Nexus
+mvn, , , ,nexus-staging:rc-list-profiles, ,745,Lists staging profiles accessible by current user available on Nexus
+mvn, , , ,nexus-staging:rc-close, ,746,Closes a Nexus staging repository
+mvn, , , ,appengine:vacuum_indexes, ,747,Delete unused indexes from application
+mvn, , , ,appengine:devserver_start, ,748,Starts the App Engine development server and does not wait
+mvn, , , ,appengine:backends_start, ,749,Start the specified backend
+mvn, , , ,appengine:devserver_stop, ,750,Stops the App Engine development server
+mvn, , , ,appengine:backends_rollback, ,751,Roll back a previously in-progress update
+mvn, , , ,appengine:start_module_version, ,752,Start the specified module version
+mvn, , , ,appengine:migrate_traffic, ,753,"Change the default version, but more gently than set_default_version"
+mvn, , , ,appengine:update_dispatch, ,754,Update application dispatch.xml
+mvn, , , ,appengine:endpoints_get_client_lib, ,755,App Engine endpoints get-client-lib … command
+mvn, , , ,appengine:debug, ,756,Debug the specified VM Runtime instance
+mvn, , , ,appengine:set_default_version, ,757,Set the default serving version
+mvn, , , ,appengine:enhance, ,758,Runs the datanucleus enhancer
+mvn, , , ,appengine:update, ,759,Create or update an app version
+mvn, , , ,appengine:create-property, ,760,"Maven project version is dot based, e.g '1.9.15' , whereas appengine-web.xml is dash based, e.g"
+mvn, , , ,appengine:backends_configure, ,761,Configure the specified backend
+mvn, , , ,appengine:update_cron, ,762,Update application cron jobs
+mvn, , , ,appengine:devserver, ,763,Runs the App Engine development server
+mvn, , , ,appengine:backends_delete, ,764,Delete the specified backend
+mvn, , , ,appengine:backends_update, ,765,Update the specified backend or all backends
+mvn, , , ,appengine:update_indexes, ,766,Update application indexes
+mvn, , , ,appengine:update_queues, ,767,Update application task queue definitions
+mvn, , , ,appengine:stop_module_version, ,768,Stop the specified module version
+mvn, , , ,appengine:rollback, ,769,Rollback an in-progress update
+mvn, , , ,appengine:update_dos, ,770,Update application DoS protection configuration
+mvn, , , ,appengine:endpoints_get_discovery_doc, ,771,App Engine endpoints get-discovery-doc command
+mvn, , , ,appengine:backends_stop, ,772,Stop the specified backend
+mvn, , , ,android:aar, ,773,Creates an Android Archive (aar) file
+mvn, , , ,android:apk, ,774,Creates the apk file
+mvn, , , ,android:apklib, ,775,Creates the apklib file
+mvn, , , ,android:clean, ,776, 
+mvn, , , ,android:connect, ,777,Connect external IP addresses to the ADB server
+mvn, , , ,android:deploy, ,778,Deploys the apk(s) of the current project(s) to all attached devices and emulators
+mvn, , , ,android:deploy-apk, ,779,Deploys a specified Android application apk to attached devices and emulators
+mvn, , , ,android:deploy-dependencies, ,780,Deploys all directly declared dependencies of <type>apk</type> in this project's pom
+mvn, , , ,android:devices, ,781,DevicesMojo lists all attached devices and emulators found with the android debug bridge
+mvn, , , ,android:dex, ,782,Converts compiled Java classes to the Android dex format
+mvn, , , ,android:disconnect, ,783,Disconnect external IP addresses from the ADB server
+mvn, , , ,android:emma, ,784,After compiled Java classes use emma tool
+mvn, , , ,android:emulator-start, ,785,EmulatorStartMojo can start the Android Emulator with a specified Android Virtual Device (avd)
+mvn, , , ,android:emulator-stop, ,786,EmulatorStartMojo can stop the Android Emulator with a specified Android Virtual Device (avd)
+mvn, , , ,android:emulator-stop-all, ,787,EmulatorStopeAllMojo will stop all attached devices
+mvn, , , ,android:generate-sources, ,788,Generates R.java based on resources specified by the resources configuration parameter
+mvn, , , ,android:help, ,789,Display help information on android-maven-plugin
+mvn, , , ,android:instrument, ,790,Runs the instrumentation apk on device
+mvn, , , ,android:internal-integration-test, ,791,Internal
+mvn, , , ,android:internal-pre-integration-test, ,792,Internal
+mvn, , , ,android:lint, ,793,LintMojo can run the lint command against the project
+mvn, , , ,android:manifest-merger, ,794,Manifest Merger V2 AndroidManifest.xml file
+mvn, , , ,android:manifest-update, ,795,Updates various version attributes present in the AndroidManifest.xml file
+mvn, , , ,android:monkey, ,796,Execute tests using UI/Application Exerciser Monkey
+mvn, , , ,android:monkeyrunner, ,797,Execute monkey runner programs
+mvn, , , ,android:ndk-build, ,798, 
+mvn, , , ,android:proguard, ,799,"Use ProGuard byte code obfuscator, minimzer, and optimizer"
+mvn, , , ,android:publish-apk, ,800, 
+mvn, , , ,android:publish-listing, ,801, 
+mvn, , , ,android:pull, ,802,Copy file or directory from all the attached (or specified) devices/emulators
+mvn, , , ,android:push, ,803,Copy file to all the attached (or specified) devices/emulators
+mvn, , , ,android:redeploy, ,804,Undeploys and the deploys the apks of the current projects to attached devices and emulators
+mvn, , , ,android:redeploy-apk, ,805,Reploys a specified Android application apk to attached devices and emulators
+mvn, , , ,android:run, ,806,Runs the first Activity shown in the top-level launcher as determined by its Intent filters
+mvn, , , ,android:uiautomator, ,807,Can execute tests using ui uiautomator
+mvn, , , ,android:undeploy, ,808,Undeploys the apk(s) of the current project(s) to all attached devices and emulators
+mvn, , , ,android:undeploy-apk, ,809,Undeploys a specified Android application apk from attached devices and emulators
+mvn, , , ,android:unpack, ,810,Unpack libraries code and dependencies into target
+mvn, , , ,android:zipalign, ,811,ZipalignMojo can run the zipalign command against the apk
+mvn, , , ,liquibase:releaseLocks, ,812,Removes any Liquibase updater locks from the current database
+mvn, , , ,liquibase:tag, ,813,Writes a Liquibase tag to the database
+mvn, , , ,liquibase:dropAll, ,814,Drops all database objects in the configured schema(s)
+mvn, , , ,liquibase:updateSQL, ,815,Generate SQL to update the database to the current version
+mvn, , , ,liquibase:listLocks, ,816,Lists all Liquibase updater locks on the current database
+mvn, , , ,liquibase:migrate, ,817,Liquibase Migration Maven plugin
+mvn, , , ,liquibase:changelogSync, ,818,Marks all unapplied changes to the database as applied in the change log
+mvn, , , ,liquibase:clearCheckSums, ,819,"Clears all checksums in the current changelog, so they will be recalculated next update"
+mvn, , , ,liquibase:dbDoc, ,820,Generates dbDocs against the database
+mvn, , , ,liquibase:rollbackSQL, ,821,"Generates SQL to rollback the database to the specified pointing attributes 'rollbackCount', 'rollbackTag'"
+mvn, , , ,liquibase:status, ,822,Prints which changesets need to be applied to the database
+mvn, , , ,liquibase:changelogSyncSQL, ,823,Generates SQL that marks all unapplied changes as applied
+mvn, , , ,liquibase:updateTestingRollback, ,824,"Applies the DatabaseChangeLogs to the database, testing rollback"
+mvn, , , ,liquibase:help, ,825,Display help information on liquibase-maven-plugin
+mvn, , , ,liquibase:rollback, ,826,Invokes Liquibase rollbacks on a database
+mvn, , , ,liquibase:futureRollbackSQL, ,827,Generates SQL to rollback the database to current state after the next update
+mvn, , , ,liquibase:diff, ,828,Generates a diff between the specified database and the reference database
+mvn, , , ,liquibase:update, ,829,Applies the DatabaseChangeLogs to the database
+mvn, , , ,liquibase:generateChangeLog, ,830,Generates SQL that marks all unapplied changes as applied
+mvn, , , ,liquibase:migrateSQL, ,831,Creates an SQL migration script using the provided DatabaseChangeLog(s)
+mvn, , , ,jgitflow:feature-deploy, ,832, 
+mvn, , , ,jgitflow:release-finish, ,833,Finishes a release
+mvn, , , ,jgitflow:hotfix-start, ,834,Starts a hotfix
+mvn, , , ,jgitflow:hotfix-finish, ,835,Finishes a hotfix
+mvn, , , ,jgitflow:feature-finish, ,836,Finishes a feature branch
+mvn, , , ,jgitflow:build-number, ,837,Updates the pom versions in the current branch by adding a build number label
+mvn, , , ,jgitflow:release-start, ,838,Starts a release
+mvn, , , ,jgitflow:feature-start, ,839,Starts a feature branch
+mvn, , , ,spring-boot:help, ,840,Display help information on spring-boot-maven-plugin
+mvn, , , ,spring-boot:repackage, ,841,Repackage JAR and WAR for use with java -jar
+mvn, , , ,spring-boot:run, ,842,Run an executable archive application

@@ -1,0 +1,44 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kexec, , ,hotplug, , ,101,Setup kexec segments such that kernel can safely update them on CPU/Memory ho…
+kexec, , ,mem-min, , ,102,Specify the lowest memory address  addr to load code into
+kexec, , ,mem-max, , ,103,Specify the highest memory address  addr to load code into
+kexec, , ,entry, , ,104,Specify the jump back address
+kexec, , ,load-preserve-context, , ,105,Load the new kernel and preserve context of current kernel during kexec
+kexec, , ,load-jump-back-helper, , ,106,Load a helper image to jump back to original kernel
+kexec, , ,reuseinitrd, , ,107,Reuse initrd from first boot
+kexec, , ,append, , ,108, 
+kexec, , ,initrd, , ,109,where kernel-image is the kernel file that you intend to reboot to
+kexec, ,d,debug, , ,110,Enable debugging messages
+kexec, ,S,status, , ,111,"Return 1 if the type (by default crash) is loaded, 0 if not"
+kexec, , ,exec, , ,112,Run the currently loaded kernel
+kexec, ,f,force, , ,113,"Force an immediate kexec call, do not call shutdown (8) (contrary to the defa…"
+kexec, ,h,help, , ,114,Open a help file for kexec 
+kexec, ,i,no-checks, , ,115,"Fast reboot, no memory integrity checks"
+kexec, , ,load, , ,116,Load the specified kernel into the current kernel
+kexec, ,p,load-panic, , ,117,Load the new kernel for use on panic
+kexec, ,t,type, , ,118,Specify that the new kernel is of this type
+kexec, ,s,kexec-file-syscall, , ,119,Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively
+kexec, ,c,kexec-syscall, , ,120,Specify that the old KEXEC_LOAD syscall should be used exclusively
+kexec, ,a,kexec-syscall-auto, , ,121,Try the new KEXEC_FILE_LOAD syscall first and when it is not supported or the…
+kexec, ,u,unload, , ,122,Unload the current kexec target kernel
+kexec, ,v,version, , ,123,Return the version number of the installed utility
+kexec, ,x,no-ifdown, , ,124,"Shut down the running kernel, but restore the interface on reload"
+kexec, ,y,no-sync, , ,125,"Shut down the running kernel, but skip syncing the filesystems"
+kexec, , ,print-ckr-size, , ,126,"Print crash kernel region size, if available"
+kexec, , ,args-elf, , ,127,Pass ELF boot notes
+kexec, , ,args-linux, , ,128,Pass Linux kernel style options
+kexec, , ,real-mode, , ,129,Use the kernel's real mode entry point.  elf-x86
+kexec, , ,command-line, , ,130,Set the kernel command line to string 
+kexec, , ,reuse-cmdline, , ,131,Use the command line from the running system
+kexec, , ,ramdisk, , ,132,Use file as the kernel's initial ramdisk.  bzImage-x86
+kexec, , ,module, , ,133,Load module mod with command-line arguments arg1 arg2 
+kexec, , ,devicetreeblob, , ,134,Specify device tree blob file
+kexec, , ,dtb, , ,135,Specify device tree blob file
+kexec, , ,console-serial, , ,136,Enable the serial console
+kexec, , ,console-vga, , ,137,Enable the VGA console
+kexec, , ,elf32-core-headers, , ,138,Prepare core headers in ELF32 format
+kexec, , ,elf64-core-headers, , ,139,Prepare core headers in ELF64 format
+kexec, , ,reset-vga, , ,140,Attempt to reset a standard VGA device
+kexec, , ,serial, , ,141,Specify the serial port for debug output
+kexec, , ,serial-baud, , ,142,Specify the baud rate of the serial port
+kexec, , ,dt-no-old-root, , ,143,Do not reuse old kernel root=<device> param while creating flatten device tree

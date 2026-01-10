@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+exif, ,-l, , ,@f @r,102,$description
+exif, ,-l, ,0 1 EXIF GPS Interoperability,@f @r,103,$description
+exif, ,-l, , , ,104,$description
+exif, ,-l, , , ,105,$description
+exif, ,-l, , , ,106,$description

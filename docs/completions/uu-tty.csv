@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-tty, ,s,quiet, , ,101,"print nothing, only return an exit status"
+uu-tty, ,h,help, , ,102,Print help
+uu-tty, ,V,version, , ,103,Print version

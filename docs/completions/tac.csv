@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tac, ,b,before, , ,101,attach the separator before instead of after
+tac, ,r,regex, , ,102,interpret the separator as a regular expression
+tac, ,s,separator, , ,103,use STRING as the separator instead of newline
+tac, , ,help, , ,104,display this help and exit
+tac, , ,version, , ,105,output version information and exit AUTHOR Written by Jay Lepreau and David M…

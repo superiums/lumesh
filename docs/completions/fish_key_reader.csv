@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_key_reader, ,h,help, , ,101,Display help and exit
+fish_key_reader, ,v,version, , ,102,Display version and exit
+fish_key_reader, ,c,continuous, , ,103,Start a continuous session
+fish_key_reader, ,V,verbose, , ,104,Output timing and explain sequence

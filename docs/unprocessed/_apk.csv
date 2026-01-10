@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apk, __fish_use_subcommand, , ,add,@f,131,Add packages
+apk, __fish_use_subcommand, , ,del,@f,132,Remove packages
+apk, __fish_use_subcommand, , ,fix,@f,133,Repair package
+apk, __fish_use_subcommand, , ,update,@f,134,Update repository indexes
+apk, __fish_use_subcommand, , ,info,@f,135,Give detailed information about packages
+apk, __fish_use_subcommand, , ,list,@f,136,List packages
+apk, __fish_use_subcommand, , ,search,@f,137,Search package
+apk, __fish_use_subcommand, , ,upgrade,@f,138,Upgrade installed packages
+apk, __fish_use_subcommand, , ,cache,@f,139,Manage local package cache
+apk, __fish_use_subcommand, , ,version,@f,140,Compare package versions
+apk, __fish_use_subcommand, , ,index,@f,141,Create repository index file
+apk, __fish_use_subcommand, , ,fetch,@f,142,Download packages
+apk, __fish_use_subcommand, , ,audit,@f,143,Audit the directories for changes
+apk, __fish_use_subcommand, , ,verify,@f,144,Verify package integrity and signature
+apk, __fish_use_subcommand, , ,dot,@f,145,Generate graphviz graphs
+apk, __fish_use_subcommand, , ,policy,@f,146,Show repository policy for packages
+apk, __fish_use_subcommand, , ,stats,@f,147,Show statistics about repositories and installations
+apk, __fish_use_subcommand, , ,manifest,@f,148,Show checksums of package contents

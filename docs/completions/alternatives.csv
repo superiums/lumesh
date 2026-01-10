@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alternatives, , ,verbose, , ,101,Generate more comments about what alternatives is doing
+alternatives, , ,help, , ,102,Give some usage information
+alternatives, , ,version, , ,103,Tell which version of alternatives this is
+alternatives, , ,keep-missing, , ,104,"If new variant doesn't provide some files, keep previous links"
+alternatives, , ,altdir, ,@D,105,Specifies the alternatives directory
+alternatives, , ,admindir, ,@D,106,Specifies the administrative directory
+alternatives, , ,install, ,@r,107,Add a group of alternatives to the system
+alternatives, , ,remove, , ,111,Remove an alternative and all of its associated slave links
+alternatives, , ,set, , ,112,Set link group to given path
+alternatives, , ,config, , ,113,Open menu to configure link group
+alternatives, , ,auto, , ,114,Switch the master symlink name to automatic mode
+alternatives, , ,display, , ,115,Display information about the link group
+alternatives, , ,list, ,@f,116,Display information about all link groups
+alternatives, , ,remove-all, , ,117,Remove the whole link group name
+alternatives, , ,add-slave, , ,118,Add a slave link to an existing alternative
+alternatives, , ,remove-slave, , ,119,Remove slave from an existing alternative

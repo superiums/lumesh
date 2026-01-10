@@ -1,0 +1,34 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-install, , ,compress,no xz gz lzo,@f @r,101,Compress GRUB files
+grub-install, ,d,directory, , ,102,Use image and modules under given directory
+grub-install, , ,fonts, , ,103,Install given fonts
+grub-install, , ,install-modules, , ,104,Install only given modules and their dependencies
+grub-install, ,k,pubkey, , ,105,Embed given file as public key for signature checking
+grub-install, , ,locale-directory, , ,106,Use translations under given directory
+grub-install, , ,locales, , ,107,Install only given locales
+grub-install, , ,modules, , ,108,Preload specified modules
+grub-install, , ,themes, , ,109,Install given theme
+grub-install, ,v,verbose, , ,110,Verbose mode
+grub-install, , ,allow-floppy, , ,111,Make drive also bootable as floppy
+grub-install, , ,boot-directory, , ,112,Install GRUB images under DIR/grub
+grub-install, , ,bootloader-id, , ,113,Set bootloader ID
+grub-install, , ,core-compress,none xz auto,@f @r,114,Choose compression to use for core image
+grub-install, , ,disk-module, , ,115,Set disk module to use
+grub-install, , ,efi-directory, , ,116,Use given directory as the EFI System Partition root
+grub-install, , ,force, , ,117,Install even if problems are detected
+grub-install, , ,force-file-id, , ,118,Use identifier file even if UUID is available
+grub-install, , ,label-bgcolor, , ,119,Use given color for label background
+grub-install, , ,label-color, , ,120,Use given color for label
+grub-install, , ,label-font, , ,121,Use given file for label
+grub-install, , ,macppc-directory, , ,122,Use given directory for PPC Mac install
+grub-install, , ,no-bootsector, , ,123,Do not install bootsector
+grub-install, , ,no-nvram, , ,124,Don't update the boot-device/Boot* NVRAM variables
+grub-install, , ,no-rs-codes, , ,125,Don't apply any reed-solomon codes when embedding core.img
+grub-install, , ,product-version, , ,126,Set product version
+grub-install, , ,recheck, , ,127,Delete device map if it already exists
+grub-install, , ,removable, , ,128,The installation is removable
+grub-install, ,s,skip-fs-probe, , ,129,Do not probe for filesystems
+grub-install, , ,target,arm-efi arm-uboot arm64-efi i386-coreboot i386-efi i386-ieee1275 i386-multiboot i386-pc i386-qemu i386-xen ia64-efi mips-arc mips-qemu_mips mipsel-arc mipsel-loongson mipsel-qemu_mips powerpc-ieee1275 sparc64-ieee1275 x86_64-efi x86_64-xen, ,130,Install GRUB for given platform
+grub-install, ,?,help, , ,131,Show help
+grub-install, , ,usage, , ,132,Show usage
+grub-install, , ,version, , ,133,Show version

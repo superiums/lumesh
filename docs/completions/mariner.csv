@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mariner, config,s,show, ,@f,116,Show the configuration
+mariner, download,p,path, ,@r,117,Path to download torrent files to
+mariner, search,a,all, ,@f,118,Search all available trackers
+mariner, search,A,anime, ,@f,119,Search trackers with anime content only
+mariner, search,f,filter,anime legal,@f,120,Filter trackers that should be searched
+mariner, search,L,legal, ,@f,121,Search trackers with legal content only
+mariner, search,l,limit, ,@f @r,122,Limit the number of results shown. Default is 50
+mariner, search,n,newest, ,@f,123,Sort results by newest
+mariner, search,t,trackers, ,@f @r,124,Trackers that should be searched

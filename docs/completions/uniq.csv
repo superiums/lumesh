@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uniq, ,c,count, , ,101,Print number of occurrences
+uniq, ,d,repeated, , ,102,Only print duplicates
+uniq, ,D,all-repeated,,@f @r,103,Remove non-duplicate lines
+uniq, ,f,skip-fields, , ,104,Avoid comparing first N fields
+uniq, ,i,ignore-case, , ,105,Case insensitive
+uniq, ,s,skip-chars, , ,106,Avoid comparing first N characters
+uniq, ,u,unique, , ,107,Only print unique lines
+uniq, ,w,check-chars, , ,108,Compare only specified number of characters
+uniq, , ,help, , ,109,Display help and exit
+uniq, , ,version, , ,110,Display version and exit

@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-chgrp, , ,reference, ,@r,101,use RFILE's group rather than specifying GROUP values
+uu-chgrp, , ,from, , ,102,change the group only if its current group matches GROUP
+uu-chgrp, , ,help, , ,103,Print help information.
+uu-chgrp, ,c,changes, , ,104,like verbose but report only when a change is made
+uu-chgrp, ,f,silent, , ,105, 
+uu-chgrp, , ,quiet, , ,106,suppress most error messages
+uu-chgrp, ,v,verbose, , ,107,output a diagnostic for every file processed
+uu-chgrp, , ,preserve-root, , ,108,fail to operate recursively on '/'
+uu-chgrp, , ,no-preserve-root, , ,109,do not treat '/' specially (the default)
+uu-chgrp, ,R,recursive, , ,110,operate on files and directories recursively
+uu-chgrp, , ,dereference, , ,111,"affect the referent of each symbolic link (this is the default), rather than the symbolic link itself"
+uu-chgrp, ,h,no-dereference, , ,112,affect symbolic links instead of any referenced file (useful only on systems that can change the ownership of a symlink)
+uu-chgrp, ,V,version, , ,113,Print version

@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yadm, $__fish_yadm_subcommands, , , ,@f,100, 
+yadm, __fish_yadm_needs_command, , ,version,@f,107,Print yadm version
+yadm, __fish_yadm_needs_command, , ,init,@f,108,Initialize new repository for tracking dotfiles
+yadm, __fish_yadm_needs_command, , ,config,@f,109,Manage configuration for yadm
+yadm, __fish_yadm_needs_command, , ,list,@f,110,Print list of files managed by yadm
+yadm, __fish_yadm_needs_command, , ,bootstrap,@f,111,Execute bootstrap script
+yadm, __fish_yadm_needs_command, , ,encrypt,@f,112,Encrypt files matched by encrypt spec file
+yadm, __fish_yadm_needs_command, , ,decrypt,@f,113,Decrypt files matched by encrypt spec file
+yadm, __fish_yadm_needs_command, , ,alt,@f,114,Setup and process alternate files
+yadm, __fish_yadm_needs_command, , ,perms,@f,115,Update permissions
+yadm, __fish_yadm_needs_command, , ,enter,@f,116,Run sub-shell with all git variables set
+yadm, __fish_yadm_needs_command, , ,git-crypt,@f,117,Pass options to git-crypt if installed
+yadm, __fish_yadm_needs_command, , ,gitconfig,@f,118,Pass options to the git config command
+yadm, __fish_yadm_needs_command, , ,upgrade,@f,119,Migrate from v1 to v2
+yadm, __fish_yadm_needs_command, , ,introspect,@f,120,Report internal yadm data
+yadm, __fish_yadm_needs_command, , ,clone,@f,121,Clone remote repository for tracking dotfiles
+yadm, __fish_yadm_using_command init,f, , ,@f,122,Overwrite existing repository
+yadm, __fish_yadm_using_command init,w, , ,@D @f @r,123,Override work-tree
+yadm, __fish_yadm_using_command clone,f, , ,@f,124,Overwrite existing repository
+yadm, __fish_yadm_using_command clone,w, , ,@D @f @r,125,Override work-tree
+yadm, __fish_yadm_using_command clone,b, , ,@f,126,Use another branch
+yadm, __fish_yadm_using_command clone, ,bootstrap, ,@f,127,Force run the bootstrap script
+yadm, __fish_yadm_using_command clone, ,no-bootstrap, ,@f,128,Do not execute bootstrap script
+yadm, __fish_yadm_using_command list,a, , ,@f,129,List all files
+yadm, __fish_yadm_using_command decrypt,l, , ,@f,130,List files without extracting
+yadm, __fish_yadm_using_command introspect, , ,commands configs repo switches,@f @r,131, 
+yadm, __fish_yadm_using_command gitconfig, , , ,@f,132, 
+yadm," __fish_yadm_using_command config; and __fish_seen_argument -l get -l get-all -l replace-all -l unset -l unset-all", , , ,@f,132, 
+yadm, __fish_yadm_using_command config, ,get, ,@f @r,133,Get config with name
+yadm, __fish_yadm_using_command config, ,get-all, ,@f,134,Get all values matching key
+yadm, __fish_yadm_using_command config, ,replace-all, ,@f @r,135,Replace all matching variables
+yadm, __fish_yadm_using_command config, ,unset, ,@f,136,Remove a variable
+yadm, __fish_yadm_using_command config, ,unset-all, ,@f,137,Remove matching variables
+yadm," __fish_yadm_using_command config; and __fish_is_nth_token 3", , , ,@f,138, 

@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-nl, ,b,body-numbering, , ,101,use STYLE for numbering body lines
+uu-nl, ,d,section-delimiter, , ,102,use CC for separating logical pages
+uu-nl, ,f,footer-numbering, , ,103,use STYLE for numbering footer lines
+uu-nl, ,h,header-numbering, , ,104,use STYLE for numbering header lines
+uu-nl, ,i,line-increment, , ,105,line number increment at each line
+uu-nl, ,l,join-blank-lines, , ,106,group of NUMBER empty lines counted as one
+uu-nl, ,n,number-format,ln,@f @r,107,insert line numbers according to FORMAT
+uu-nl, ,s,number-separator, , ,108,add STRING after (possible) line number
+uu-nl, ,v,starting-line-number, , ,109,first line number on each logical page
+uu-nl, ,w,number-width, , ,110,use NUMBER columns for line numbers
+uu-nl, , ,help, , ,111,Print help information.
+uu-nl, ,p,no-renumber, , ,112,do not reset line numbers at logical pages
+uu-nl, ,V,version, , ,113,Print version

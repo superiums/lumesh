@@ -1,0 +1,266 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rpm-ostree, apply-live, ,target, , ,101,Target provided commit
+rpm-ostree, apply-live, ,reset, , ,102,Reset back to booted commit
+rpm-ostree, apply-live, ,allow-replacement, , ,103,Allow replacement of packages/files
+rpm-ostree, cancel, ,sysroot, ,@r,104,=SYSROOT Use system root
+rpm-ostree, cancel, ,peer, , ,105,Force peer-to-peer connection
+rpm-ostree, cleanup, ,os, , ,106,=OSNAME Operate on provided OSNAME
+rpm-ostree, cleanup,b,base, , ,107,"Clear temporary files; will not change deployments"
+rpm-ostree, cleanup,p,pending, , ,108,Remove pending deployment
+rpm-ostree, cleanup,r,rollback, , ,109,Remove rollback deployment
+rpm-ostree, cleanup,m,repomd, , ,110,Delete cached rpm repo metadata
+rpm-ostree, cleanup, ,sysroot, ,@r,111,=SYSROOT Use system root
+rpm-ostree, cleanup, ,peer, , ,112,Force peer-to-peer connection
+rpm-ostree," compose; and commit", ,unified-core, , ,113,Use new unified core codepath
+rpm-ostree," compose; and commit",r,repo, , ,114,=REPO Path to OSTree repo
+rpm-ostree," compose; and commit", ,layer-repo, , ,115,=REPO Path to OSTree repo for ostree-layers & ostree-override-layers
+rpm-ostree," compose; and commit", ,add-metadata-string, , ,116,=KEY=VALUE Append given key=value to metadata
+rpm-ostree," compose; and commit", ,add-metadata-from-json, , ,117,=JSON Append given JSON file to ostree commit
+rpm-ostree," compose; and commit", ,write-commitid-to, , ,118,=FILE Write composed CommitID to file
+rpm-ostree," compose; and commit", ,write-composejson-to, , ,119,=FIlE Write compose run info to JSON file
+rpm-ostree," compose; and commit", ,no-parent, , ,120,Always commit without a parent
+rpm-ostree," compose; and commit", ,parent, , ,121,=REV Commit with specific parent revision
+rpm-ostree," compose; and commit", , , ,@F @r,122, 
+rpm-ostree," compose; and container-encapsulate", ,repo, ,@r,123,=REPO Path to repo
+rpm-ostree," compose; and container-encapsulate",l,label, , ,124,Additional labels for container
+rpm-ostree," compose; and container-encapsulate", ,copymeta, , ,125,Propagate OSTree key to container label
+rpm-ostree," compose; and container-encapsulate", ,copymeta-opt, , ,126,Propagate opt OSTree key to container label
+rpm-ostree," compose; and container-encapsulate", ,cmd, , ,127,Matches dockerfile CMD instruction
+rpm-ostree," compose; and container-encapsulate", ,max-layers, , ,128,Maximum number of container image layers
+rpm-ostree," compose; and container-encapsulate", ,format-version, , ,129,"0 or 1; encapsulated container format version"
+rpm-ostree," compose; and container-encapsulate", ,write-contentmeta-json, ,@r,130,Output content metadata as JSON
+rpm-ostree," compose; and container-encapsulate", ,compare-with-build, , ,131,Compare current OCI layers with another imgref
+rpm-ostree," compose; and container-encapsulate", ,previous-build-manifest, , ,132,Preserve pack structure with prior metadata
+rpm-ostree," compose; and extensions", ,unified-core, , ,133,Use new unified core codepath
+rpm-ostree," compose; and extensions",r,repo, , ,134,=REPO Path to OSTree repo
+rpm-ostree," compose; and extensions", ,layer-repo, , ,135,=REPO Repo for ostree-layers & ostree-override-layers
+rpm-ostree," compose; and extensions", ,output-dir, , ,136,=PATH Path to extensions output dir
+rpm-ostree," compose; and extensions", ,base-rev, , ,137,=REV Base OSTree revision
+rpm-ostree," compose; and extensions", ,cachedir, , ,138,=CACHEDIR Cached state dir
+rpm-ostree," compose; and extensions", ,rootfs, , ,139,=ROOTFS Path to existing rootfs
+rpm-ostree," compose; and extensions", ,touch-if-changed, , ,140,=FILE Update mod time on file
+rpm-ostree," compose; and extensions", , , ,@r,141, 
+rpm-ostree," compose; and image", ,cachedir, , ,142,Set cache directory for packages and data
+rpm-ostree," compose; and image", ,authfile, , ,143,Container authentication file
+rpm-ostree," compose; and image", ,layer-repo, , ,144,Specify repository for ostree layers and ostree-override-layers
+rpm-ostree," compose; and image",i,initialize, , ,145,Skip previous image query for first build
+rpm-ostree," compose; and image", ,format, , ,146,Choose format (ociarchive oci registry)
+rpm-ostree," compose; and image", ,force-nocache, , ,147,Force a build
+rpm-ostree," compose; and image", ,offline, , ,148,"Operate on cached data, no network repo access"
+rpm-ostree," compose; and image", ,lockfile, , ,149,Specify JSON-formatted lockfile
+rpm-ostree," compose; and image",l,label, , ,150,Add labels (KEY=VALUE) to the container image
+rpm-ostree," compose; and image", ,touch-if-changed, , ,151,Update file timestamp on changes
+rpm-ostree," compose; and image", ,copy-retry-times, , ,152,Set number of copy retries to remote destination
+rpm-ostree," compose; and image", , , ,@r,153, 
+rpm-ostree," compose; and install", ,unified-core, , ,154,Use new unified core codepath
+rpm-ostree," compose; and install",r,repo, , ,155,=REPO Path to OSTree repo
+rpm-ostree," compose; and install", ,layer-repo, , ,156,=REPO Repo for ostree-layers & ostree-override-layers
+rpm-ostree," compose; and install", ,force-nocache, , ,157,Always create new OSTree commit
+rpm-ostree," compose; and install", ,cache-only, , ,158,"Assume cache present, no updates"
+rpm-ostree," compose; and install", ,cachedir, , ,159,=CACHEDIR Cached state dir
+rpm-ostree," compose; and install", ,download-only, , ,160,Dry-run but download & import RPMs
+rpm-ostree," compose; and install", ,download-only-rpms, , ,161,"Dry-run but download RPMs; need --cachedir"
+rpm-ostree," compose; and install", ,proxy, , ,162,=PROXY HTTP proxy
+rpm-ostree," compose; and install", ,dry-run, , ,163,Print transaction and exit
+rpm-ostree," compose; and install", ,print-only, , ,164,Expand includes and print treefile
+rpm-ostree," compose; and install", ,touch-if-changed, , ,165,=FILE Update FILE's mod time if new commit
+rpm-ostree," compose; and install", ,previous-commit, , ,166,=COMMIT for change detection
+rpm-ostree," compose; and install", ,previous-inputhash, , ,167,=DIGEST Use input hash for change detect
+rpm-ostree," compose; and install", ,previous-version, , ,168,=VERSION for auto version numbering
+rpm-ostree," compose; and install", ,workdir, , ,169,=WORKDIR Working directory
+rpm-ostree," compose; and install", ,ex-write-lockfile-to, , ,170,=FILE Write lockfile to FILE
+rpm-ostree," compose; and install", ,ex-lockfile, , ,171,=FILE Read lockfile from FILE
+rpm-ostree," compose; and install", ,ex-lockfile-strict, , ,172,Only allow installing locked packages with --ex-lockfile
+rpm-ostree," compose; and install", , , ,@r,173, 
+rpm-ostree," compose; and postprocess", ,unified-core, , ,174,Use new unified core codepath
+rpm-ostree," compose; and tree", ,unified-core, , ,175,Use new unified core codepath
+rpm-ostree," compose; and tree",r,repo, , ,176,=REPO Path to OSTree repos
+rpm-ostree," compose; and tree", ,layer-repo, , ,177,=REPO Repo for ostree-layers & ostree-override-layers
+rpm-ostree," compose; and tree", ,force-nocache, , ,178,Always create new OSTree commit
+rpm-ostree," compose; and tree", ,cache-only, , ,179,"Assume cache present, no updates"
+rpm-ostree," compose; and tree", ,cachedir, , ,180,=CACHEDIR Specify cached state dir
+rpm-ostree," compose; and tree", ,download-only, , ,181,Dry-run but download & import RPMs
+rpm-ostree," compose; and tree", ,download-only-rpms, , ,182,"Dry-run but download RPMs; need --cachedir"
+rpm-ostree," compose; and tree", ,proxy, , ,183,=PROXY HTTP proxy
+rpm-ostree," compose; and tree", ,dry-run, , ,184,Print transaction and exit
+rpm-ostree," compose; and tree", ,print-only, , ,185,Expand includes and print treefile
+rpm-ostree," compose; and tree", ,touch-if-changed, , ,186,=FILE Update FILE's mod time if new commit
+rpm-ostree," compose; and tree", ,previous-commit, , ,187,=COMMIT for change detection
+rpm-ostree," compose; and tree", ,previous-inputhash, , ,188,=DIGEST Use input hash for change detect
+rpm-ostree," compose; and tree", ,previous-version, , ,189,=VERSION for auto version numbering
+rpm-ostree," compose; and tree", ,workdir, , ,190,=WORKDIR Working directory
+rpm-ostree," compose; and tree", ,ex-write-lockfile-to, , ,191,=FILE Write lockfile to FILE
+rpm-ostree," compose; and tree", ,ex-lockfile, , ,192,=FILE Read lockfile from FILE
+rpm-ostree," compose; and tree", ,ex-lockfile-strict, , ,193,Only allow installing locked packages with --ex-lockfile
+rpm-ostree," compose; and tree", ,add-metadata-string, , ,194,=KEY=VALUE Append key=value to metadata
+rpm-ostree," compose; and tree", ,add-metadata-from-json, , ,195,=JSON Append JSON to OSTree commit
+rpm-ostree," compose; and tree", ,write-commitid-to, , ,196,"=FILE Write commitid to FILE, not ref"
+rpm-ostree," compose; and tree", ,write-composejson-to, , ,197,=FILE Write compose run info json to FILE
+rpm-ostree," compose; and tree", ,no-parent, , ,198,Always Commit without a parent
+rpm-ostree," compose; and tree", ,parent, , ,199,=REV Commit with specific parent revision
+rpm-ostree," compose; and tree", , , ,@r,200, 
+rpm-ostree," db; and diff",r,repo, ,@r,201,=REPO Path to OSTree repo
+rpm-ostree," db; and diff", ,format, , ,202,=FORMAT Choose output format (block diff json)
+rpm-ostree," db; and diff",c,changelogs, , ,203,Include RPM changelogs
+rpm-ostree," db; and diff", ,sysroot, ,@r,204,=SYSROOT Use system root
+rpm-ostree," db; and diff", ,base, , ,205,Diff against deployments' base
+rpm-ostree," db; and diff",a,advisories, , ,206,Include new advisories
+rpm-ostree," db; and list",r,repo, ,@r,207,=PATH Path to OSTree repo
+rpm-ostree," db; and list",a,advisories, , ,208,Include new advisories
+rpm-ostree," db; and version",r,repo, ,@r,209,=REPO Path to OSTree repo
+rpm-ostree, deploy, ,os, , ,210,=OSNAME Operate on provided OSNAME
+rpm-ostree, deploy,r,reboot, , ,211,Reboot after operation complete
+rpm-ostree, deploy, ,preview, , ,212,Preview package differences
+rpm-ostree, deploy,C,cache-only, , ,213,No latest ostree and RPM download
+rpm-ostree, deploy, ,download-only, , ,214,"Download latest ostree and RPM data, don't deploy"
+rpm-ostree, deploy, ,skip-branch-check, , ,215,Don't check if commit belongs on the same branch
+rpm-ostree, deploy, ,disallow-downgrade, , ,216,Forbid deployment of older trees
+rpm-ostree, deploy, ,unchanged-exit-77, , ,217,"If no new deployment made, exit 77"
+rpm-ostree, deploy, ,register-driver, , ,218,=DRIVERNAME Register agent as driver for updates
+rpm-ostree, deploy, ,bypass-driver, , ,219,Force deploy even if updates driver is registered
+rpm-ostree, deploy, ,sysroot, ,@r,220,=SYSROOT Use system root
+rpm-ostree, deploy, ,peer, , ,221,Force peer-to-peer connection
+rpm-ostree, deploy, ,install, , ,222,=PKG Overlay additional package
+rpm-ostree, deploy, ,uninstall, , ,223,=PKG Remove overlayed additional package
+rpm-ostree, initramfs, ,os, , ,224,=OSNAME Operate on provided OSNAME
+rpm-ostree, initramfs, ,enable, , ,225,Enable regenerating initramfs locally using dracut
+rpm-ostree, initramfs, ,arg, , ,226,=ARG Append ARG to the dracut arguments
+rpm-ostree, initramfs, ,disable, , ,227,Disable regenerating initramfs locally
+rpm-ostree, initramfs,r,reboot, , ,228,Reboot after operation complete
+rpm-ostree, initramfs, ,sysroot, ,@r,229,=SYSROOT Use system root
+rpm-ostree, initramfs, ,peer, , ,230,Force peer-to-peer connection
+rpm-ostree, initramfs-etc, ,os, , ,231,=OSNAME Operate on provided OSNAME
+rpm-ostree, initramfs-etc, ,force-sync, , ,232,Deploy a new tree with the latest tracked /etc files
+rpm-ostree, initramfs-etc, ,track, ,@r,233,=FILE Track root /etc file
+rpm-ostree, initramfs-etc, ,untrack, ,@r,234,=FILE Untrack root /etc file
+rpm-ostree, initramfs-etc, ,untrack-all, , ,235,Untrack all root /etc files
+rpm-ostree, initramfs-etc,r,reboot, , ,236,Reboot after operation complete
+rpm-ostree, initramfs-etc, ,unchanged-exit-77, , ,237,Exit with 77 if no new deployment made
+rpm-ostree, initramfs-etc, ,sysroot, ,@r,238,=SYSROOT Use system root
+rpm-ostree, initramfs-etc, ,peer, , ,239,Force peer-to-peer connection
+rpm-ostree," install; and compose", ,uninstall, , ,239,=PKG Remove overlayed additional package
+rpm-ostree," install; and compose",C,cache-only, , ,239,Skip downloading latest ostree/RPM data
+rpm-ostree," install; and compose", ,download-only, , ,239,"Download latest ostree & RPM data, skip deploy"
+rpm-ostree," install; and compose",A,apply-live, , ,239,Apply changes to pending & live filesystem
+rpm-ostree," install; and compose", ,force-replacefiles, , ,239,Allow package to replace files from others' pkgs
+rpm-ostree," install; and compose", ,os, , ,239,=OSNAME Operate on provided OSNAME
+rpm-ostree," install; and compose",r,reboot, , ,239,Initiate a reboot post-operation
+rpm-ostree," install; and compose",n,dry-run, , ,239,Exit after printing the transaction
+rpm-ostree," install; and compose",y,assumeyes, , ,239,Auto-confirm non-security prompts
+rpm-ostree," install; and compose", ,allow-inactive, , ,239,Allow inactive package requests
+rpm-ostree," install; and compose", ,idempotent, , ,239,No action if pkg already (un)installed
+rpm-ostree," install; and compose", ,unchanged-exit-77, , ,239,"If no overlays were changed, exit 77"
+rpm-ostree," install; and compose", ,enablerepo, , ,239,Enable repo based on its ID
+rpm-ostree," install; and compose", ,disablerepo, , ,239,Only disabling all (*) repo is supported
+rpm-ostree," install; and compose", ,releasever, , ,239,Set the releasever
+rpm-ostree," install; and compose", ,sysroot, ,@r,239,=SYSROOT Use system root
+rpm-ostree," install; and compose", ,peer, , ,239,Force peer-to-peer connection
+rpm-ostree, kargs, ,os, , ,240,=OSNAME Operation on provided OSNAME
+rpm-ostree, kargs, ,deploy-index, , ,241,=INDEX Modify kernel args of a deployment by index
+rpm-ostree, kargs, ,reboot, , ,242,Initiate a reboot after operation
+rpm-ostree, kargs, ,append, , ,243,=KEY=VALUE Append kernel argument
+rpm-ostree, kargs, ,replace, , ,244,=KEY=VALUE=NEWVALUE Replace kernel argument
+rpm-ostree, kargs, ,delete, , ,245,=KEY=VALUE Delete kernel argument pair
+rpm-ostree, kargs, ,append-if-missing, , ,246,=KEY=VALUE Append kernel arg if missing
+rpm-ostree, kargs, ,delete-if-present, , ,247,=KEY=VALUE Delete kernel arg if present
+rpm-ostree, kargs, ,unchanged-exit-77, , ,248,Exit 77 if no kernel args changed
+rpm-ostree, kargs, ,import-proc-cmdline, , ,249,Modify args from the booted deployment
+rpm-ostree, kargs, ,editor, , ,250,Use editor to modify kernel arguments
+rpm-ostree, kargs, ,sysroot, ,@r,251,=SYSROOT Use system root
+rpm-ostree, kargs, ,peer, , ,252,Force peer-to-peer connection
+rpm-ostree," override; and remove", ,replace, , ,253,=RPM Replace a package
+rpm-ostree," override; and remove", ,os, , ,254,=OSNAME Operate on provided OSNAME
+rpm-ostree," override; and remove",r,reboot, , ,255,Initiate a reboot after operation
+rpm-ostree," override; and remove",n,dry-run, , ,256,Exit after printing transaction
+rpm-ostree," override; and remove",C,cache-only, , ,257,Only operate on cached data
+rpm-ostree," override; and remove", ,sysroot, ,@r,258,=SYSROOT Use system root
+rpm-ostree," override; and remove", ,peer, , ,259,Force peer-to-peer connection
+rpm-ostree," override; and remove", ,install, , ,260,=PKG Overlay additional package
+rpm-ostree," override; and remove", ,uninstall, , ,261,=PKG Remove overlayed package
+rpm-ostree," override; and replace", ,remove, , ,262,=PKG Remove a package
+rpm-ostree," override; and replace", ,os, , ,263,=OSNAME Operate on provided OSNAME
+rpm-ostree," override; and replace", ,reboot, , ,264,Initiate a reboot after operation
+rpm-ostree," override; and replace",n,dry-run, , ,265,Exit after printing transaction
+rpm-ostree," override; and replace",C,cache-only, , ,266,Only operate on cached data
+rpm-ostree," override; and replace", ,sysroot, ,@r,267,=SYSROOT Use system root
+rpm-ostree," override; and replace", ,peer, , ,268,Force peer-to-peer connection
+rpm-ostree," override; and replace", ,install, , ,269,=PKG Overlay additional package
+rpm-ostree," override; and replace", ,uninstall, , ,270,=PKG Remove overlayed package
+rpm-ostree," override; and reset",a,all, , ,271,Reset all active overrides
+rpm-ostree," override; and reset", ,os, , ,272,=OSNAME Operate on provided OSNAME
+rpm-ostree," override; and reset",r,reboot, , ,273,Initiate a reboot after operation
+rpm-ostree," override; and reset",n,dry-run, , ,274,Exit after printing transaction
+rpm-ostree," override; and reset",C,cache-only, , ,275,Only operate on cached data
+rpm-ostree," override; and reset", ,sysroot, ,@r,276,=SYSROOT Use system root 
+rpm-ostree," override; and reset", ,peer, , ,277,Force peer-to-peer connection
+rpm-ostree," override; and reset", ,install, , ,278,=PKG Overlay additional package
+rpm-ostree," override; and reset", ,uninstall, , ,279,=PKG Remove overlayed package
+rpm-ostree, rebase, ,os, , ,280,=OSNAME Operate on provided OSNAME
+rpm-ostree, rebase,b,branch, ,@f @r,281,=BRANCH Rebase to branch BRANCH
+rpm-ostree, rebase,m,remote, ,@f @r,282,=REMOTE Rebase to current branch name using REMOTE
+rpm-ostree, rebase,r,reboot, , ,283,Initiate a reboot after operation
+rpm-ostree, rebase, ,skip-purge, , ,284,Keep previous refspec after rebase
+rpm-ostree, rebase,C,cache-only, , ,285,Don't download latest ostree/RPM data
+rpm-ostree, rebase, ,download-only, , ,286,"Download ostree & RPM data, don't deploy"
+rpm-ostree, rebase, ,custom-origin-description, , ,287,Human-readable description of custom origin
+rpm-ostree, rebase, ,custom-origin-url, , ,288,Machine-readable description of custom origin
+rpm-ostree, rebase, ,experimental, , ,289,Enable experimental features
+rpm-ostree, rebase, ,disallow-downgrade, , ,290,Forbid older trees deployment
+rpm-ostree, rebase, ,bypass-driver, , ,291,Force rebase despite updates driver is registered
+rpm-ostree, rebase, ,sysroot, ,@r,292,=SYSROOT Use system root
+rpm-ostree, rebase, ,peer, , ,293,Force peer-to-peer connection
+rpm-ostree, rebase, ,install, , ,294,=PKG Overlay additional package
+rpm-ostree, rebase, ,uninstall, , ,295,=PKG Remove overlayed package
+rpm-ostree, refresh-md, ,os, , ,296,=OSNAME Operate on provided OSNAME
+rpm-ostree, refresh-md, ,force, , ,297,Expire current cache
+rpm-ostree, refresh-md, ,sysroot, ,@r,298,=SYSROOT Use system root
+rpm-ostree, refresh-md, ,peer, , ,299,Force peer-to-peer connection
+rpm-ostree, reload, ,sysroot, ,@r,300,=SYSROOT Use system root
+rpm-ostree, refresh-md, ,peer, , ,301,Force peer-to-peer connection
+rpm-ostree," reset; and override", ,os, , ,301,=OSNAME Operate on provided OSNAME
+rpm-ostree," reset; and override",r,reboot, , ,301,Reboot after transaction
+rpm-ostree," reset; and override",l,overlays, , ,301,Remove all overlayed packages
+rpm-ostree," reset; and override",o,overrides, , ,301,Remove all overrides
+rpm-ostree," reset; and override",i,initramfs, , ,301,Stop regenerating initramfs
+rpm-ostree," reset; and override", ,sysroot, ,@r,301,=SYSROOT Use system root
+rpm-ostree," reset; and override", ,peer, , ,301,Force peer-to-peer connection
+rpm-ostree," reset; and override", ,install, , ,301,=PKG Overlay additional package
+rpm-ostree," reset; and override", ,uninstall, , ,301,=PKG Remove overlayed package
+rpm-ostree, rollback,r,reboot, , ,302,Reboot after transaction
+rpm-ostree, rollback, ,sysroot, ,@r,303,=SYSROOT Use system root
+rpm-ostree, rollback, ,peer, , ,304,Force peer-to-peer connection
+rpm-ostree, status,v,verbose, , ,305,Print additional fields
+rpm-ostree, status,a,advisories, , ,306,Expand advisories listing
+rpm-ostree, status, ,json, , ,307,Output JSON
+rpm-ostree, status,J,jsonpath, , ,308,=EXPRESSION Filter JSONPath expression
+rpm-ostree, status,b,booted, , ,309,Only print booted deployment
+rpm-ostree, status, ,pending-exit-77, , ,310,"If pending deployment available, exit 77"
+rpm-ostree, status, ,sysroot, ,@r,311,=SYSROOT Use system root
+rpm-ostree, status, ,peer, , ,312,Force peer-to-peer connection
+rpm-ostree," uninstall remove; and override", ,install, , ,312,=PKG Overlay additional package
+rpm-ostree," uninstall remove; and override", ,all, , ,312,Remove all overlayed packages
+rpm-ostree," uninstall remove; and override", ,os, , ,312,=OSNAME Operate on provided OSNAME
+rpm-ostree," uninstall remove; and override",r,reboot, , ,312,Reboot after operation
+rpm-ostree," uninstall remove; and override",n,dry-run, , ,312,"Print transaction, don't execute"
+rpm-ostree," uninstall remove; and override",y,assumeyes, , ,312,Auto-confirm non-security prompts
+rpm-ostree," uninstall remove; and override", ,allow-inactive, , ,312,Allow inactive package requests
+rpm-ostree," uninstall remove; and override", ,idempotent, , ,312,Skip if pkg already (un)installed
+rpm-ostree," uninstall remove; and override", ,unchanged-exit-77, , ,312,Exit 77 if no overlays changed
+rpm-ostree," uninstall remove; and override", ,enablerepo, , ,312,Enable repo by id
+rpm-ostree," uninstall remove; and override", ,disablerepo, , ,312,Disable all (*) repositories
+rpm-ostree," uninstall remove; and override", ,releasever, , ,312,Set the release version
+rpm-ostree," uninstall remove; and override", ,sysroot, ,@r,312,=SYSROOT Use system root
+rpm-ostree," uninstall remove; and override", ,peer, , ,312,Force peer-to-peer connection
+rpm-ostree, update upgrade, ,os, , ,313,=OSNAME Operate on provided OSNAME
+rpm-ostree, update upgrade,r,reboot, , ,314,Reboot after operation
+rpm-ostree, update upgrade, ,allow-downgrade, , ,315,Allow older trees deployment
+rpm-ostree, update upgrade, ,preview, , ,316,Preview pkg differences
+rpm-ostree, update upgrade, ,check, , ,317,Check upgrade availability
+rpm-ostree, update upgrade,C,cache-only, , ,318,Don't download OSTree & RPM data
+rpm-ostree, update upgrade, ,download-only, , ,319,"Download OSTree & RPM data, don't deploy"
+rpm-ostree, update upgrade, ,unchanged-exit-77, , ,320,Exit 77 if no deployment
+rpm-ostree, update upgrade, ,bypass-driver, , ,321,Force upgrade even if updates driver is registered
+rpm-ostree, update upgrade, ,sysroot, ,@r,322,=SYSROOT Use system root
+rpm-ostree, update upgrade, ,peer, , ,323,Force peer-to-peer connection
+rpm-ostree, update upgrade, ,install, , ,324,=PKG Overlay additional package
+rpm-ostree, update upgrade, ,uninstall, , ,325,=PKG Remove overlayed package

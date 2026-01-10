@@ -1,0 +1,48 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mocha, ,h,help, , ,101,Show help
+mocha, ,V,version, , ,102,output the version number
+mocha, ,A,async-only, , ,103,force all tests to take a callback (async) or return a promise
+mocha, ,c,colors, , ,104,force enabling of colors
+mocha, ,C,no-colors, , ,105,force disabling of colors
+mocha, ,G,growl, , ,106,enable growl notification support
+mocha, ,O,reporter-options, , ,107,"<k=v,k2=v2,...>  reporter-specific options"
+mocha, ,R,reporter, ,@f @r,108,specify the reporter to use
+mocha, ,S,sort, , ,109,sort test files
+mocha, ,b,bail, , ,110,bail after first test failure
+mocha, ,d,debug, , ,111,"enable node's debugger, synonym for node --debug"
+mocha, ,g,grep, ,@f @r,112,only run tests matching <pattern>
+mocha, ,f,fgrep, ,@f @r,113,only run tests containing <string>
+mocha, ,g,expose-gc, , ,114,expose gc extension
+mocha, ,i,invert, , ,115,inverts --grep and --fgrep matches
+mocha, ,r,require, ,@r,116,require the given module
+mocha, ,s,slow, ,@f @r,117,'slow' test threshold in milliseconds [75]
+mocha, ,t,timeout, ,@f @r,118,set test-case timeout in milliseconds [2000]
+mocha, ,u,ui, ,@f @r,119,specify user-interface (bdd|tdd|qunit|exports)
+mocha, ,w,watch, , ,120,watch files for changes
+mocha, , ,check-leaks, , ,121,check for global variable leaks
+mocha, , ,full-trace, , ,122,display the full stack trace
+mocha, , ,compilers, ,@f @r,123,use the given module(s) to compile files
+mocha, , ,debug-brk, , ,124,enable node's debugger breaking on thefirst line
+mocha, , ,globals, ,@f @r,125,allow the given comma-delimited global[names]
+mocha, , ,es_staging, , ,126,enable all staged features
+mocha, , ,harmony, , ,127,all node --harmony* flags are available
+mocha, , ,preserve-symlinks, , ,128,Preserve symbolic links when loading modules
+mocha, , ,icu-data-dir, , ,129,include ICU data
+mocha, , ,inline-diffs, , ,130,display actual/expected differences inline within each string
+mocha, , ,interfaces, , ,131,display available interfaces
+mocha, , ,no-deprecation, , ,132,silence deprecation warnings
+mocha, , ,no-exit, , ,133,require a clean shutdown of the event loop: mocha will not call process.exit
+mocha, , ,no-timeouts, , ,134,"disables timeouts, given implicitly with --debug"
+mocha, , ,opts, , ,135,specify opts path
+mocha, , ,perf-basic-prof, , ,136,enable perf linux profiler (basic support)
+mocha, , ,prof, , ,137,log statistical profiling information
+mocha, , ,log-timer-events, , ,138,Time events including external callbacks
+mocha, , ,recursive, , ,139,include sub directories
+mocha, , ,reporters, , ,140,display available reporters
+mocha, , ,retries, , ,141,set numbers of time to retry a failed test case
+mocha, , ,throw-deprecation, , ,142,throw an exception anytime a deprecated function is used
+mocha, , ,trace, , ,143,trace function calls
+mocha, , ,trace-deprecation, , ,144,show stack traces on deprecations
+mocha, , ,use_strict, , ,145,enforce strict mode
+mocha, , ,watch-extensions, , ,146,additional extensions to monitor with --watch
+mocha, , ,delay, , ,147,wait for async suite definition

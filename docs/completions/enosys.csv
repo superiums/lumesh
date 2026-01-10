@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+enosys, ,s,syscall, , ,101, 
+enosys, ,i,ioctl, , ,102, 
+enosys, ,l,list, , ,103, 
+enosys, ,m,list-ioctl, , ,104, 
+enosys, ,h,help, , ,105, 
+enosys, ,V,version, , ,106, 

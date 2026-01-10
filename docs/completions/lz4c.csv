@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lz4c, ,z,compress, , ,101,Compress
+lz4c, ,d,uncompress, , ,102,Decompress
+lz4c, ,t,test, , ,103,Test the integrity of compressed . lz4 files
+lz4c, , ,list, , ,104,List information about . lz4 files
+lz4c, , ,fast, , ,105,Switch to ultra-fast compression levels
+lz4c, , ,best, , ,106,Set highest compression level.  Same as -12
+lz4c, , ,threads, , ,107,Use # threads for compression
+lz4c, , ,favor-decSpeed, , ,108,Generate compressed data optimized for decompression speed
+lz4c, ,f,force, , ,109,This option has several effects: 
+lz4c, ,c,to-stdout, , ,110,"Force write to standard output, even if it is the console"
+lz4c, ,m,multiple, , ,111,Multiple input files.  Compressed file names will be appended a . lz4 suffix
+lz4c, , ,frame-crc, , ,112,Select frame checksum (default:enabled) 
+lz4c, , ,no-crc, , ,113,Disable both frame and block checksums 
+lz4c, , ,content-size, , ,114,Header includes original size (default:not present) 
+lz4c, , ,sparse, , ,115,"Sparse mode support (default:enabled on file, disabled on stdout) "
+lz4c, ,v,verbose, , ,116,Verbose mode 
+lz4c, ,q,quiet, , ,117,"Suppress warnings and real-time statistics; specify twice to suppress errors …"
+lz4c, ,H,help, , ,118,Display help/long help and exit 
+lz4c, ,V,version, , ,119,Display Version number and exit 
+lz4c, ,k,keep, , ,120,Preserve source files (default behavior) 
+lz4c, , ,rm, , ,121,Delete source files on successful compression or decompression 

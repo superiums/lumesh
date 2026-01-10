@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+groupmems, ,a,adduser_name, , ,101,Add a user to the group membership list
+groupmems, ,d,deleteuser_name, , ,102,Delete a user from the group membership list
+groupmems, ,g,groupgroup_name, , ,103,The superuser can specify which group membership list to modify
+groupmems, ,h,help, , ,104,Display help message and exit
+groupmems, ,l,list, , ,105,List the group membership list
+groupmems, ,p,purge, , ,106,Purge all users from the group membership list
+groupmems, ,R,rootCHROOT_DIR, , ,107,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+groupmems, , ,add, , ,108, 
+groupmems, , ,delete, , ,109, 
+groupmems, , ,group, , ,110, 
+groupmems, , ,root, , ,111, 

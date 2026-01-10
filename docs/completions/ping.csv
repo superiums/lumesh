@@ -1,0 +1,32 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ping, ,M, ,do want dont, ,101,Select Path MTU Discovery strategy
+ping, ,T, ,tsonly tsandaddr tsprespec, ,102,Set IP timestamp options (IPv4 only)
+ping, , ,mask, , ,103,Send ICMP_ADDRESS packets
+ping, , ,echo, , ,104,Send ICMP_ECHO packets
+ping, , ,timestamp, , ,105,Send ICMP_TIMESTAMP packets
+ping, ,t,type, , ,106,Set packet type
+ping, ,c,count, , ,107,Set number of packets to send
+ping, ,d,debug, , ,108,Set the SO_DEBUG option
+ping, ,i,interval, , ,109,Set seconds to wait between sending each packet
+ping, ,n,numeric, , ,110,Do not resolve host addresses
+ping, ,r,ignore-routing, , ,111,Send directly to a host on an attached network
+ping, , ,ttl, , ,112,Set time-to-live
+ping, ,T,tos, , ,113,Set type of service
+ping, ,v,verbose, , ,114,Verbose output
+ping, ,w,timeout, , ,115,Stop after N seconds
+ping, ,W,linger, , ,116,Number of seconds to wait for response
+ping, ,f,flood, , ,117,Flood ping
+ping, , ,ip-timestamp,tsonly tsaddr, ,118,Set IP timestamp type
+ping, ,l,preload, , ,119,Send number of packets as fast as possible
+ping, ,p,pattern, , ,120,Fill ICMP packet with given pattern
+ping, ,q,quiet, , ,121,Quiet output
+ping, ,R,route, , ,122,Record route
+ping, ,s,size, , ,123,Set number of data octets
+ping, ,\?,help, , ,124,Show help
+ping, , ,usage, , ,125,Short usage message
+ping, ,V,version, , ,126,Print program version
+ping, ,M, ,mask time, ,127,Use ICMP_MASKREQ or ICMP_TSTAMP instead of ICMP_ECHO
+ping, ,k, ,BK_SYS BK BE RD OAM AV RV VI VO CTL, ,128,Traffic class to use for sending ICMP packets
+ping, ,K, ,BK_SYS BK BE RV AV RD OAM VI SIG VO, ,129,Network service type to use for sending ICMP packets
+ping, , ,apple-connect, , ,130,Connects the socket to the destination address
+ping, , ,apple-time, , ,131,Prints the time a packet was received

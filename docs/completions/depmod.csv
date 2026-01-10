@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+depmod, ,A,quick, , ,101,This option scans to see if any modules are newer than the
+depmod, ,b,basedir, , ,102,Override the base directory <BASEDIR> where modules are located
+depmod, ,m,moduledir, , ,103,"Override the module directory <MODULEDIR>, which defaults to"
+depmod, ,o,outdir, , ,104,Set the output directory where depmod will store any generated file
+depmod, ,C,config, , ,105,This option overrides the default configuration files.  See
+depmod, ,e,errsyms, , ,106,"When combined with the -F option, this reports any symbols which a"
+depmod, ,E,symvers, , ,107,"When combined with the -e option, this reports any symbol versions"
+depmod, ,F,filesyms, , ,108,"Supplied with the System. map produced when the kernel was built, this"
+depmod, ,h,help, , ,109,Print the help message and exit
+depmod, ,n,dry-run, , ,110,This sends the resulting modules. dep and the various map files to
+depmod, ,v,verbose, , ,111,"In verbose mode, depmod will print (to stdout) all the symbols each"
+depmod, ,V,version, , ,112,Show version of program and exit.  See below for caveats when run on

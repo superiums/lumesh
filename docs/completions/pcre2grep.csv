@@ -1,0 +1,63 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pcre2grep, ,A,after-context, , ,101,Output up to number lines of context after each matching line
+pcre2grep, ,a,text, , ,102,Treat binary files as text.  This is equivalent to --binary-files=text
+pcre2grep, , ,allow-lookaround-bsk, , ,103,"PCRE2 now forbids the use of K in lookarounds by default, in line with Perl"
+pcre2grep, ,B,before-context, , ,104,Output up to number lines of context before each matching line
+pcre2grep, , ,binary-files, , ,105,Specify how binary files are to be processed
+pcre2grep, , ,buffer-size, , ,106,Set the parameter that controls how much memory is obtained at the start of p…
+pcre2grep, ,C,context, , ,107,Output number lines of context both before and after each matching line
+pcre2grep, ,c,count, , ,108,"Do not output lines from the files that are being scanned; instead output the…"
+pcre2grep, , ,color, , ,109,"If this option is given without any data, it is equivalent to '--colour=auto'"
+pcre2grep, ,D,devices, , ,110,"If an input path is not a regular file or a directory, 'action' specifies how…"
+pcre2grep, ,d,directories, , ,111,"If an input path is a directory, 'action' specifies how it is to be processed"
+pcre2grep, , ,depth-limit, , ,112,See --match-limit below
+pcre2grep, ,E,case-restrict, , ,113,"When case distinctions are being ignored in Unicode mode, two ASCII letters (…"
+pcre2grep, ,e,regexp, , ,114,Specify a pattern to be matched
+pcre2grep, , ,exclude, , ,115,Files (but not directories) whose names match the pattern are skipped without…
+pcre2grep, , ,exclude-from, , ,116,Treat each non-empty line of the file as the data for an --exclude option
+pcre2grep, , ,exclude-dir, , ,117,Directories whose names match the pattern are skipped without being processed…
+pcre2grep, ,F,fixed-strings, , ,118,"Interpret each data-matching pattern as a list of fixed strings, separated by…"
+pcre2grep, ,f,file, , ,119,"Read patterns from the file, one per line"
+pcre2grep, , ,file-list, , ,120,Read a list of files and/or directories that are to be scanned from the given…
+pcre2grep, , ,file-offsets, , ,121,"Instead of showing lines or parts of lines that match, show each match as an …"
+pcre2grep, , ,group-separator, , ,122,Output this text string instead of two hyphens between groups of lines when -…
+pcre2grep, ,H,with-filename, , ,123,Force the inclusion of the file name at the start of output lines when search…
+pcre2grep, ,h,no-filename, , ,124,Suppress the output file names when searching multiple files
+pcre2grep, , ,heap-limit, , ,125,See --match-limit below
+pcre2grep, , ,help, , ,126,"Output a help message, giving brief details of the command options and file t…"
+pcre2grep, ,i,ignore-case, , ,127,Ignore upper/lower case distinctions when pattern matching
+pcre2grep, , ,include, , ,128,"If any --include patterns are specified, the only files that are processed ar…"
+pcre2grep, , ,include-from, , ,129,Treat each non-empty line of the file as the data for an --include option
+pcre2grep, , ,include-dir, , ,130,"If any --include-dir patterns are specified, the only directories that are pr…"
+pcre2grep, ,L,files-without-match, , ,131,"Instead of outputting lines from the files, just output the names of the file…"
+pcre2grep, ,l,files-with-matches, , ,132,"Instead of outputting lines from the files, just output the names of the file…"
+pcre2grep, , ,label, , ,133,This option supplies a name to be used for the standard input when file names…
+pcre2grep, , ,line-buffered, , ,134,"When this option is given, non-compressed input is read and processed line by…"
+pcre2grep, , ,line-offsets, , ,135,"Instead of showing lines or parts of lines that match, show each match as a l…"
+pcre2grep, , ,locale, , ,136,This option specifies a locale to be used for pattern matching
+pcre2grep, ,M,multiline, , ,137,Allow patterns to match more than one line
+pcre2grep, ,m,max-count, , ,138,"Stop processing after finding number matching lines, or non-matching lines if…"
+pcre2grep, , ,match-limit, , ,139,Processing some regular expression patterns may take a very long time to sear…
+pcre2grep, , ,max-buffer-size, , ,140,"This limits the expansion of the processing buffer, whose initial size can be…"
+pcre2grep, ,N,newline, , ,141,Six different conventions for indicating the ends of lines in scanned files a…
+pcre2grep, ,n,line-number, , ,142,"Precede each output line by its line number in the file, followed by a colon …"
+pcre2grep, , ,no-group-separator, , ,143,"Do not output a separator between groups of lines when -A, -B, or -C is in use"
+pcre2grep, , ,no-jit, , ,144,If the PCRE2 library is built with support for just-in-time compiling (which …
+pcre2grep, ,O,output, , ,145,"When there is a match, instead of outputting the line that matched, output ju…"
+pcre2grep, ,o,only-matching, , ,146,Show only the part of the line that matched a pattern instead of the whole li…
+pcre2grep, , ,om-capture, , ,147,Set the number of capturing parentheses that can be accessed by -o
+pcre2grep, , ,om-separator, , ,148,Specify a separating string for multiple occurrences of -o
+pcre2grep, ,P,no-ucp, , ,149,Starting from release 10
+pcre2grep, , ,posix-pattern-file, , ,150,"When patterns are provided with the -f option, do not trim trailing spaces or…"
+pcre2grep, ,q,quiet, , ,151,"Work quietly, that is, display nothing except error messages"
+pcre2grep, ,r,recursive, , ,152,"If any given path is a directory, recursively scan the files it contains, tak…"
+pcre2grep, , ,recursion-limit, , ,153,This is an obsolete synonym for --depth-limit
+pcre2grep, ,s,no-messages, , ,154,Suppress error messages about non-existent or unreadable files
+pcre2grep, ,t,total-count, , ,155,This option is useful when scanning more than one file
+pcre2grep, ,u,utf, , ,156,Operate in UTF/Unicode mode
+pcre2grep, ,U,utf-allow-invalid, , ,157,"As --utf, but in addition subject lines may contain invalid UTF-8 code unit s…"
+pcre2grep, ,V,version, , ,158,Write the version numbers of pcre2grep and the PCRE2 library to the standard …
+pcre2grep, ,v,invert-match, , ,159,"Invert the sense of the match, so that lines which do not match any of the pa…"
+pcre2grep, ,w,word-regexp, , ,160,Force the patterns only to match 'words'
+pcre2grep, ,x,line-regexp, , ,161,"Force the patterns to start matching only at the beginnings of lines, and in …"
+pcre2grep, ,Z,null, , ,162,Terminate files names in the regular output with a zero byte (the NUL charact…

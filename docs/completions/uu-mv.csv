@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-mv, , ,backup, , ,101,make a backup of each existing destination file
+uu-mv, ,S,suffix, , ,102,override the usual backup suffix
+uu-mv, , ,update,none,@f @r,103,move only when the SOURCE file is newer than the destination file or when the destination file is missing
+uu-mv, ,t,target-directory, ,@D @f @r,104,move all SOURCE arguments into DIRECTORY
+uu-mv, , ,context, , ,105,"like -Z, or if CTX is specified then set the SELinux security context to CTX"
+uu-mv, ,f,force, , ,106,do not prompt before overwriting
+uu-mv, ,i,interactive, , ,107,prompt before override
+uu-mv, ,n,no-clobber, , ,108,do not overwrite an existing file
+uu-mv, , ,strip-trailing-slashes, , ,109,remove any trailing slashes from each SOURCE argument
+uu-mv, ,T,no-target-directory, , ,110,treat DEST as a normal file
+uu-mv, ,v,verbose, , ,111,explain what is being done
+uu-mv, ,g,progress, , ,112,Display a progress bar. Note: this feature is not supported by GNU coreutils.
+uu-mv, , ,debug, , ,113,explain how a file is copied. Implies -v
+uu-mv, ,h,help, , ,114,Print help
+uu-mv, ,V,version, , ,115,Print version

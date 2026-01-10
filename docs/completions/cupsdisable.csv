@@ -1,0 +1,3 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cupsdisable, , ,hold, , ,101,Holds remaining jobs on the named printer
+cupsdisable, , ,release, , ,102,Releases pending jobs for printing

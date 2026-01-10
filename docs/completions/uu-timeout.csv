@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-timeout, ,k,kill-after, , ,101,also send a KILL signal if COMMAND is still running this long after the initial signal was sent
+uu-timeout, ,s,signal, , ,102,"specify the signal to be sent on timeout; SIGNAL may be a name like 'HUP' or a number; see 'kill -l' for a list of signals"
+uu-timeout, ,f,foreground, , ,103,"when not running timeout directly from a shell prompt, allow COMMAND to read from the TTY and get TTY signals; in this mode, children of COMMAND will not be timed out"
+uu-timeout, ,p,preserve-status, , ,104,"exit with the same status as COMMAND, even when the command times out"
+uu-timeout, ,v,verbose, , ,105,diagnose to stderr any signal sent upon timeout
+uu-timeout, ,h,help, , ,106,Print help
+uu-timeout, ,V,version, , ,107,Print version

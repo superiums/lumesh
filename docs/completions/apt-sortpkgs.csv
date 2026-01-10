@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-sortpkgs, ,h,help, , ,101,Display help and exit
+apt-sortpkgs, ,s,source, ,@f,102,Use source index field
+apt-sortpkgs, ,v,version, ,@f,103,Display version and exit
+apt-sortpkgs, ,c,conf-file, ,@r,104,Specify conffile
+apt-sortpkgs, ,o,option, ,@f @r,105,Set config options

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkpasswd, ,S,salt, ,@f @r,101,Use given string as salt
+mkpasswd, ,R,rounds, ,@f @r,102,Use given number of rounds
+mkpasswd, ,m,method, , ,103,Compute the password using the given method
+mkpasswd, ,P,password-fd, ,@f @r,104,Read the password from the given file descriptor
+mkpasswd, ,s,stdin, , ,105,Read the password from stdin

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dbus-send, , ,dest, , ,101,Specify the name of the connection to receive the message
+dbus-send, , ,print-reply, , ,102,"Block for a reply to the message sent, and print any reply received in a huma…"
+dbus-send, , ,reply-timeout, , ,103,Wait for a reply for up to MSEC milliseconds
+dbus-send, , ,system, , ,104,Send to the system message bus
+dbus-send, , ,session, , ,105,Send to the session message bus.  (This is the default. )
+dbus-send, , ,bus, , ,106,"Register on a message bus at ADDRESS, typically a dbus-daemon"
+dbus-send, , ,peer, , ,107,Send to a non-message-bus D-Bus server at ADDRESS
+dbus-send, , ,sender, , ,108,Request ownership of name NAME before sending the message
+dbus-send, , ,type, , ,109,Specify method_call or signal (defaults to 'signal')

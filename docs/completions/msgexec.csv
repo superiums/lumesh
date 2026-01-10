@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgexec, , ,newline, , ,101,add newline at the end of input 
+msgexec, ,i,input, , ,102,input PO file
+msgexec, ,D,directory, , ,103,add DIRECTORY to list for input files search 
+msgexec, ,P,properties-input, , ,104,input file is in Java . properties syntax
+msgexec, , ,stringtable-input, , ,105,input file is in NeXTstep/GNUstep . strings syntax . SS 'Informative output:'
+msgexec, ,h,help, , ,106,display this help and exit
+msgexec, ,V,version, , ,107,output version information and exit AUTHOR Written by Bruno Haible

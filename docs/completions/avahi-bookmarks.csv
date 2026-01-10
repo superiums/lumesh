@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avahi-bookmarks, ,p,port, , ,101,Specify a TCP port number to listen on.  If omitted defaults to 8080
+avahi-bookmarks, ,a,address, , ,102,Specify an IP address to listen on.  If omitted defaults to 127. 0. 0. 1
+avahi-bookmarks, ,H,host-names, , ,103,Create links pointing to mDNS host names instead of resolved IP addresses
+avahi-bookmarks, ,A,addresses, , ,104,Create links pointing to numeric IP addresses instead of mDNS host names
+avahi-bookmarks, ,d,domain, , ,105,The domain to browse for services in
+avahi-bookmarks, ,h,help, , ,106,Show help AUTHORS The Avahi Developers <avahi (at) lists (dot) freedesktop (d…

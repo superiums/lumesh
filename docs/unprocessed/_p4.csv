@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+p4, __fish_p4_not_in_command, , ,$argv[1], ,101, 
+p4, __fish_p4_not_in_command,b, , ,@f @r,102,Number of arguments when using -x flag
+p4, __fish_p4_not_in_command,c, , ,@f @r,103,Overrides P4CLIENT settings
+p4, __fish_p4_not_in_command,d, , ,@r,104,Overrides PWD settings
+p4, __fish_p4_not_in_command,H, , ,@f @r,105,Overrides P4HOST settings
+p4, __fish_p4_not_in_command,p, , ,@f @r,106,Overrides P4PORT settings
+p4, __fish_p4_not_in_command,P, , ,@f @r,107,Overrides P4PASSWD settings
+p4, __fish_p4_not_in_command,r, , ,@f @r,108,Number of retry attempts
+p4, __fish_p4_not_in_command,u, , ,@f @r,109,Overrides P4USER/USER/USERNAME settings
+p4, __fish_p4_not_in_command,x, , ,@r,110,Read arguments from file
+p4, __fish_p4_not_in_command,C, , ,@f @r,111,Overrides P4CHARSET settings
+p4, __fish_p4_not_in_command,Q, , ,@f @r,112,Overrides P4COMMANDCHARSET settings
+p4, __fish_p4_not_in_command,L, , ,@f @r,113,Feature reserved for system integrators
+p4, __fish_p4_not_in_command,z, , ,@f @r,114,fstat output

@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+read, ,h,help, , ,101,Display help and exit
+read, ,p,prompt, , ,102,Set prompt command
+read, ,P,prompt-str, , ,103,Set prompt using provided string
+read, ,x,export, , ,104,Export variable to subprocess
+read, ,g,global, , ,105,Make variable scope global
+read, ,l,local, , ,106,Make variable scope local
+read, ,f,function, , ,107,Make variable function-scoped
+read, ,U,universal, , ,108,Share variable with all the users fish processes on the computer
+read, ,u,unexport, , ,109,Do not export variable to subprocess
+read, ,c,command, , ,110,Initial contents of read buffer when reading interactively
+read, ,S,shell, , ,111,Read like the shell would
+read, ,s,silent, , ,112,Mask input with ●
+read, ,n,nchars, , ,113,Read the specified number of characters
+read, ,a,array, , ,114,Store the results as an array
+read, ,R,right-prompt, , ,115,Set right-hand prompt command
+read, ,z,null, , ,116,Use NUL character as line terminator
+read, ,L,line, , ,117,Read each line into its own variable
+read, ,d,delimiter, , ,118,Set string to use as delimiter
+read, ,t,tokenize, , ,119,Use shell tokenization rules when splitting

@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+toot, login login_cli instance, ,disable-https, , ,134,disable HTTPS
+toot, login login_cli timeline,i,instance, ,@f @r,135,mastodon instance
+toot, tui whoami whois notifications search thread timeline post upload delete favourite unfavourite reblog unreblog pin unpin follow unfollow mute unmute block unblock,u,using, ,@f @r,136,account to use
+toot, notifications timeline,r,reverse, ,@f @r,137,reverse order of output
+toot, post upload,d,description, ,@f @r,138,alt text for media file
+toot, login_cli,e,email, ,@f @r,139,email address
+toot, notifications, ,clear, , ,140,delete all notifications
+toot, notifications,m,mentions, ,@f @r,141,only print mentions
+toot, search,r,resolve, ,@f @r,142,resolve non-local accounts
+toot, timeline,p,public, , ,143,show public timeline
+toot, timeline,t,tag, ,@f @r,144,show hastag timeline
+toot, timeline,l,local, , ,145,show only statuses from local instance
+toot, timeline, ,list, ,@f @r,146,show timeline for given list
+toot, timeline,c,count, ,@f @r,147,number of toots per page
+toot, timeline,1,once, , ,148,do not prompt to continue
+toot, post,m,media, ,@F @r,149,path to the media file
+toot, post,v,visibility,public unlisted private direct,@f @r,150,post visibility
+toot, post,s,sensitive, , ,151,mark as NSFW
+toot, post,p,spoiler-text, ,@f @r,152,warning text before content
+toot, post,r,reply-to, ,@f @r,153,ID of the status to reply to
+toot, post,l,language, ,@f @r,154,language code of the toot
+toot, post,e,editor, ,@f @r,155,editor to compose toot
+toot, post, ,scheduled-at, ,@f @r,156,datetime at which to schedule
+toot, post,t,content-type, ,@f @r,157,MIME type

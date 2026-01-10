@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+timeout, , ,foreground, , ,101,Run COMMAND in the foreground
+timeout, ,k,kill-after, , ,102,Send a KILL signal after DURATION
+timeout, , ,preserve-status, , ,104,Exit with same status as COMMAND
+timeout, , , , ,@r,105,Specify which command to run
+timeout, , ,help, , ,106,Display this help and exit
+timeout, , ,version, , ,107,Output version and exit
+timeout, ,v,verbose, , ,108,Send diagnostic info to stderr

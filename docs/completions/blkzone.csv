@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+blkzone, ,o,offset, , ,101, 
+blkzone, ,l,length, , ,102, 
+blkzone, ,c,count, , ,103, 
+blkzone, ,f,force, , ,104, 
+blkzone, ,v,verbose, , ,105, 
+blkzone, ,h,help, , ,106, 
+blkzone, ,V,version, , ,107, 

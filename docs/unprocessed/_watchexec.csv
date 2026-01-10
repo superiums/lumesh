@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+watchexec, __fish_watchexec_at_argfile, , , ,@f @r,101, 
+watchexec, __fish_watchexec_print_remaining_args,-lwatch, , ,@r,103,Watch a specific file or directory
+-lclear, __fish_watchexec_print_remaining_args, , ,reset, ,104,Clear screen before running command
+watchexec, __fish_watchexec_print_remaining_args,-lon-busy-update, ,queue do-nothinig restart signal,@r,105,What to do when receiving events while the command is running
+watchexec, __fish_watchexec_print_remaining_args,-lrestart, , , ,106,Restart the process if it's still running
+watchexec, __fish_watchexec_print_remaining_args,-lsignal, , ,@f @r,107,Send a signal to the process when it's still running
+watchexec,__fish_watchexec_print_remaining_args -r, , , ,@f,108,Signal to send to sstop the command
+watchexec, __fish_watchexec_print_remaining_args,-r, , ,@f,109,Time to wait for the command to exit gracefully
+watchexec, __fish_watchexec_print_remaining_args, , , ,@f @r,110,Time to wait for new events before taking action
+watchexec, __fish_watchexec_print_remaining_args,-lpostpone, , , ,111,Wait until first change before running command
+watchexec,__fish_watchexec_print_remaining_args -r, , , ,@f,112,Sleep before running the command
+watchexec, __fish_watchexec_print_remaining_args, ,-r, ,@f,113,Poll for filesystem changes
+watchexec, __fish_watchexec_print_remaining_args,-r, , , ,114,Use a different shell
+watchexec,__fish_watchexec_print_remaining_args -r, , ,environment stdin file json-stdin json-file none, ,115,Configure event emission
+watchexec, __fish_watchexec_print_remaining_args,-lenv, , ,@f @r,116,Add env vars to the command
+watchexec, __fish_watchexec_print_remaining_args,-lnotify, , , ,117,Alert when commands start and end
+-r, __fish_watchexec_print_remaining_args, , , ,@D,118,Set the project origin
+watchexec, __fish_watchexec_print_remaining_args, , , ,@D,119,Set the working directory
+watchexec, __fish_watchexec_print_remaining_args,-lexts, , ,@f @r,120,Filename extensions to filter to
+watchexec, __fish_watchexec_print_remaining_args,-lfilter, , ,@f @r,121,Filename patterns to filter to
+watchexec, __fish_watchexec_print_remaining_args, ,-r, , ,122,Files to load filters from
+watchexec, __fish_watchexec_print_remaining_args,-lignore, , ,@f @r,123,Filename patterns to filter out
+watchexec,__fish_watchexec_print_remaining_args -r, , ,access create remove rename modify metadata, ,124,Filesystem events to filter to
+watchexec, __fish_watchexec_print_remaining_args,-lverbose, , , ,125,Set diagnostic log level
+watchexec, __fish_watchexec_print_remaining_args, ,-r, , ,126,Write diagnostic logs to a file
+watchexec, __fish_watchexec_print_remaining_args,-lhelp, , , ,127,Print help (see a summary with '-h')
+watchexec, __fish_watchexec_print_remaining_args,-lversion, , , ,128,Print version

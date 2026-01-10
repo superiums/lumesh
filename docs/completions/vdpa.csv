@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vdpa, ,V,Version, , ,101,Print the version of the  vdpa utility and exit
+vdpa, ,j,json, , ,102,Generate JSON output
+vdpa, ,p,pretty, , ,103,When combined with -j generate a pretty JSON output. SS  OBJECT

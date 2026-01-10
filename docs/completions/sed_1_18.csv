@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sed, , ,help, , ,101,display this help and exit
+sed, ,n,silent, , ,102,suppress automatic printing of pattern space
+sed, , ,debug, , ,103,annotate program execution
+sed, ,e,expression, , ,104,add the script to the commands to be executed
+sed, ,f,file, , ,105,add the contents of script-file to the commands to be executed
+sed, , ,follow-symlinks, , ,106,follow symlinks when processing in place
+sed, ,i,in-place, , ,107,edit files in place (makes backup if SUFFIX supplied)
+sed, ,l,line-length, , ,108,specify the desired line-wrap length for the `l' command
+sed, , ,posix, , ,109,disable all GNU extensions
+sed, ,r,regexp-extended, , ,110,use extended regular expressions in the script (for portability use POSIX -E)
+sed, ,s,separate, , ,111,"consider files as separate rather than as a single, continuous long stream"
+sed, , ,sandbox, , ,112,operate in sandbox mode (disable e/r/w commands)
+sed, ,u,unbuffered, , ,113,load minimal amounts of data from the input files and flush the output buffer…
+sed, ,z,null-data, , ,114,separate lines by NUL characters
+sed, , ,version, , ,115,output version information and exit

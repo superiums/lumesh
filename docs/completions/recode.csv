@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+recode, ,l,list, , ,101,list one or all known charsets and aliases
+recode, ,k,known, , ,102,restrict charsets according to known PAIRS list
+recode, ,h,header, , ,103,"write table NAME on stdout using LN, then exit"
+recode, ,T,find-subsets, , ,104,report all charsets being subset of others
+recode, ,C,copyright, , ,105,display Copyright and copying conditions
+recode, , ,help, , ,106,display this help and exit
+recode, , ,version, , ,107,output version information and exit . SS 'Operation modes:'
+recode, ,v,verbose, , ,108,explain sequence of steps and report progress
+recode, ,q,silent, , ,109,inhibit messages about irreversible recodings
+recode, ,f,force, , ,110,force recodings even when not reversible
+recode, ,t,touch, , ,111,touch the recoded files after replacement
+recode, ,p,sequence, , ,112,ignored for backwards compatibility . SS 'Fine tuning:'
+recode, ,s,strict, , ,113,"use strict mappings; discard untranslatable characters"
+recode, ,d,diacritics, , ,114,convert only diacritics and special characters for HTML/LaTeX/BibTeX
+recode, ,S,source, , ,115,limit recoding to strings and comments as for LN
+recode, ,c,colons, , ,116,use colons instead of double quotes for diaeresis
+recode, ,g,graphics, , ,117,approximate IBMPC rulers by ASCII graphics
+recode, ,x,ignore, , ,118,ignore CHARSET while choosing a recoding path

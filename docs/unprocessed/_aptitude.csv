@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aptitude, __fish_apt_no_subcommand, , ,autoclean,@f,102,Remove any cached packages which can no longer be downloaded
+aptitude, __fish_apt_no_subcommand, , ,clean,@f,103,Remove all downloaded .deb files from the package cache directory
+aptitude, __fish_apt_no_subcommand, , ,forget-new,@f,104,Forget all internal information about what packages are 'new'
+aptitude, __fish_apt_no_subcommand, , ,keep-all,@f,105,Cancel all scheduled actions on all packages
+aptitude, __fish_apt_no_subcommand, , ,update,@f,106,Update the list of available packages from the apt sources
+aptitude, __fish_apt_no_subcommand, , ,safe-upgrade,@f,107,Upgrade installed packages to their most recent version
+aptitude, __fish_apt_no_subcommand, , ,changelog,@f,108,Download and displays the Debian changelog for the packages
+aptitude, __fish_apt_no_subcommand, , ,full-upgrade,@f,109,"Upgrade, removing or installing packages as necessary"
+aptitude, __fish_apt_no_subcommand, , ,download,@f,110,Download the packages to the current directory
+aptitude, __fish_apt_no_subcommand, , ,forbid-version,@f,111,Forbid the upgrade to a particular version
+aptitude, __fish_apt_no_subcommand, , ,hold,@f,112,Ignore the packages by future upgrade commands
+aptitude, __fish_apt_no_subcommand, , ,install,@f,113,Install the packages
+aptitude, __fish_apt_no_subcommand, , ,keep,@f,114,Cancel any scheduled actions on the packages
+aptitude, __fish_apt_no_subcommand, , ,markauto,@f,115,Mark packages as automatically installed
+aptitude, __fish_apt_no_subcommand, , ,purge,@f,116,Remove and delete all associated configuration and data files
+aptitude, __fish_apt_no_subcommand, , ,reinstall,@f,117,Reinstall the packages
+aptitude, __fish_apt_no_subcommand, , ,remove,@f,118,Remove the packages
+aptitude, __fish_apt_no_subcommand, , ,showsrc,@f,119,Display detailed information about the source packages (apt wrapper)
+aptitude, __fish_apt_no_subcommand, , ,show,@f,120,Display detailed information about the packages
+aptitude, __fish_apt_no_subcommand, , ,unhold,@f,121,Consider the packages by future upgrade commands
+aptitude, __fish_apt_no_subcommand, , ,unmarkauto,@f,122,Mark packages as manually installed
+aptitude, __fish_apt_no_subcommand, , ,search,@f,123,Search for packages matching one of the patterns
+aptitude, __fish_apt_no_subcommand, , ,help,@f,124,Display brief summary of the available commands and options
+aptitude, __fish_apt_no_subcommand, , ,why,@f,125,Explain why a particular package should be installed
+aptitude, __fish_apt_no_subcommand, , ,why-not,@f,126,Explain why a particular package cannot be installed
+aptitude, __fish_apt_no_subcommand, , ,versions,@f,127,Displays the versions of specified packages

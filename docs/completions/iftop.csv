@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iftop, ,m, , ,@f @r,101,Set the upper limit for the bandwidth scale
+iftop, ,f, , ,@f @r,102,Use filter code to select the packets to count
+iftop, ,F, , ,@f @r,103,Filter to only specified IPv4 network
+iftop, ,G, , ,@f @r,104,Filter to only specified IPv6 network
+iftop, ,c, , ,@r,105,Use specified config file
+iftop, ,L, , ,@f @r,106,Number of lines to print with -t
+iftop, ,s, , ,@f @r,107,"With -t, print single output after specific number of seconds"

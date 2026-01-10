@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rpm-ostree, $options,h,help, , ,100,Show help options
+rpm-ostree, options $options $no_quiet,q,quiet, , ,100,Print minimal informational messages
+rpm-ostree, $options $no_version, ,version, , ,100,Print version info and exit
+rpm-ostree, $subcommands --version --quiet -q, , ,apply-live, ,100,Apply pending changes to booted deployment
+rpm-ostree, $subcommands, , ,cancel, ,100,Cancel an active transaction
+rpm-ostree, $subcommands, , ,cleanup, ,100,Clear cached/pending data
+rpm-ostree, $subcommands, , ,compose, ,100,Commands to compose a tree
+rpm-ostree, $subcommands, , ,db, ,100,Commands to query the RPM database
+rpm-ostree, $subcommands, , ,deploy, ,100,Deploy a specific commit
+rpm-ostree, $subcommands, , ,initramfs, ,100,Toggle local initramfs regeneration
+rpm-ostree, $subcommands, , ,initramfs-etc, ,100,Add files to the initramfs
+rpm-ostree, $subcommands, , ,install, ,100,Overlay additional packages
+rpm-ostree, $subcommands, , ,kargs, ,100,Query or modify kernel arguments
+rpm-ostree, $subcommands, , ,override, ,100,Manage base package overrides
+rpm-ostree, $subcommands, , ,rebase, ,100,Switch to a different tree
+rpm-ostree, $subcommands, , ,refresh-md, ,100,Generate rpm repo metadata
+rpm-ostree, $subcommands, , ,reload, ,100,Reload configuration
+rpm-ostree, $subcommands, , ,reset, ,100,Remove all mutations
+rpm-ostree, $subcommands, , ,rollback, ,100,Revert to previously booted tree
+rpm-ostree, $subcommands, , ,status, ,100,Get booted system version
+rpm-ostree, $subcommands, , ,uninstall, ,100,Remove overlayed additional packages
+rpm-ostree, $subcommands, , ,remove, ,100,Remove overlayed additional packages
+rpm-ostree, $subcommands, , ,upgrade, ,100,Perform system upgrade
+rpm-ostree, $subcommands, , ,update, ,100,Alias for upgrade
+rpm-ostree, $subcommands -, , ,usroverlay, ,100,Apply transient overlayfs to /usr
+rpm-ostree," compose; and $compose_subcommands", , ,commit, ,112,Commit target path to an OSTree repo
+rpm-ostree," compose; and $compose_subcommands --quiet -q --version", , ,container-encapsulate, ,112,Create Chunked Container image from OSTree Commit
+rpm-ostree," compose; and $compose_subcommands", , ,extensions, ,112,Download Depsolved RPMs for Base OSTree
+rpm-ostree," compose; and $compose_subcommands --quiet -q --version", , ,image, ,112,Create reproducible Chunked Image from Treefile
+rpm-ostree," compose; and $compose_subcommands", , ,install,@r,112,Install packages into a target path
+rpm-ostree," compose; and $compose_subcommands", , ,postprocess, ,112,Final postprocessing on an installation root
+rpm-ostree," compose; and $compose_subcommands", , ,tree, ,112,Process a treefile
+rpm-ostree," db; and $db_subcommands", , ,diff, ,200,Show package changes between two commits
+rpm-ostree," db; and $db_subcommands", , ,list, ,200,List packages within commits
+rpm-ostree," db; and $db_subcommands", , ,version, ,200,Show rpmdb version of packages within the commits
+rpm-ostree," override; and $override_subcommands", , ,remove, ,252,Remove packages from the base layer
+rpm-ostree," override; and $override_subcommands", , ,replace, ,252,Replace packages in the base layer
+rpm-ostree," override; and $override_subcommands", , ,reset, ,252,Reset active package overrides

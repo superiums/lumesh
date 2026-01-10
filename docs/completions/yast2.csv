@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yast2, , , , ,@f,101,Module
+yast2, ,h,help, ,@f,102,Show help
+yast2, ,l,list, ,@f,103,List all available modules
+yast2, , ,qt, ,@f,104,Use the QT graphical user interface
+yast2, , ,gtk, ,@f,105,Use the GTK graphical user interface
+yast2, , ,ncurses, ,@f,106,Use the NCURSES text-mode user interface
+yast2, ,g,geometry, ,@f,107,Default window size (qt only)
+yast2, , ,noborder, ,@f,108,No window manager border for main window
+yast2, , ,fullscreen, ,@f,109,Use full screen

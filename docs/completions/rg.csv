@@ -1,0 +1,105 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rg, ,e,regexp, ,@r,101,A pattern to search for.
+rg, ,f,file, ,@r,102,Search for patterns from the given file.
+rg, ,A,after-context, ,@r,103,Show NUM lines after each match.
+rg, ,B,before-context, ,@r,104,Show NUM lines before each match.
+rg, , ,binary, , ,105,Search binary files.
+rg, , ,block-buffered, , ,107,Force block buffering.
+rg, ,b,byte-offset, , ,109,Print the byte offset for each matching line.
+rg, ,s,case-sensitive, , ,111,Search case sensitively (default).
+rg, , ,color,never auto always ansi,@f @r,112,When to use color.
+rg, , ,colors, ,@r,113,Configure color settings and styles.
+rg, , ,column, , ,114,Show column numbers.
+rg, ,C,context, ,@r,116,Show NUM lines before and after each match.
+rg, , ,context-separator, ,@r,117,Set the separator for contextual chunks.
+rg, ,c,count, , ,119,Show count of matching lines for each file.
+rg, , ,count-matches, , ,120,Show count of every match for each file.
+rg, , ,crlf, , ,121,Use CRLF line terminators (nice for Windows).
+rg, , ,debug, , ,123,Show debug messages.
+rg, , ,dfa-size-limit, ,@r,124,The upper size limit of the regex DFA.
+rg, ,E,encoding,'#,@f @r,125,Specify the text encoding of files to search.
+rg, , ,engine,default pcre2 auto,@f @r,127,Specify which regex engine to use.
+rg, , ,field-context-separator, ,@r,128,Set the field context separator.
+rg, , ,field-match-separator, ,@r,129,Set the field match separator.
+rg, , ,files, , ,130,Print each file that would be searched.
+rg, ,l,files-with-matches, , ,131,Print the paths with at least one match.
+rg, , ,files-without-match, , ,132,Print the paths that contain zero matches.
+rg, ,F,fixed-strings, , ,133,Treat all patterns as literals.
+rg, ,L,follow, , ,135,Follow symbolic links.
+rg, , ,generate,man complete-bash complete-zsh complete-fish complete-powershell,@f @r,137,Generate man pages and completion scripts.
+rg, ,g,glob, ,@r,138,Include or exclude file paths.
+rg, , ,glob-case-insensitive, , ,139,Process all glob patterns case insensitively.
+rg, , ,heading, , ,141,Print matches grouped by each file.
+rg, ,h,help, , ,143,Show help output.
+rg, ,.,hidden, , ,144,Search hidden files and directories.
+rg, , ,hostname-bin, ,@f @r,146,Run a program to get this system's hostname.
+rg, , ,hyperlink-format,default none cursor file grep+ kitty macvim textmate vscode vscode-insiders vscodium,@f @r,147,Set the format of hyperlinks.
+rg, , ,iglob, ,@r,148,Include/exclude paths case insensitively.
+rg, ,i,ignore-case, , ,149,Case insensitive search.
+rg, , ,ignore-file, ,@r,150,Specify additional ignore files.
+rg, , ,ignore-file-case-insensitive, , ,151,Process ignore files case insensitively.
+rg, , ,include-zero, , ,153,Include zero matches in summary output.
+rg, ,v,invert-match, , ,155,Invert matching.
+rg, , ,json, , ,157,Show search results in a JSON Lines format.
+rg, , ,line-buffered, , ,159,Force line buffering.
+rg, ,n,line-number, , ,161,Show line numbers.
+rg, ,N,no-line-number, , ,162,Suppress line numbers.
+rg, ,x,line-regexp, , ,163,Show matches surrounded by line boundaries.
+rg, ,M,max-columns, ,@r,164,Omit lines longer than this limit.
+rg, , ,max-columns-preview, , ,165,Show preview for lines exceeding the limit.
+rg, ,m,max-count, ,@r,167,Limit the number of matching lines.
+rg, ,d,max-depth, ,@r,168,Descend at most NUM directories.
+rg, , ,max-filesize, ,@r,169,Ignore files larger than NUM in size.
+rg, , ,mmap, , ,170,Search with memory maps when possible.
+rg, ,U,multiline, , ,172,Enable searching across multiple lines.
+rg, , ,multiline-dotall, , ,174,Make '.' match line terminators.
+rg, , ,no-config, , ,176,Never read configuration files.
+rg, , ,no-ignore, , ,177,Don't use ignore files.
+rg, , ,no-ignore-dot, , ,179,Don't use .ignore or .rgignore files.
+rg, , ,no-ignore-exclude, , ,181,Don't use local exclusion files.
+rg, , ,no-ignore-files, , ,183,Don't use --ignore-file arguments.
+rg, , ,no-ignore-global, , ,185,Don't use global ignore files.
+rg, , ,no-ignore-messages, , ,187,Suppress gitignore parse error messages.
+rg, , ,no-ignore-parent, , ,189,Don't use ignore files in parent directories.
+rg, , ,no-ignore-vcs, , ,191,Don't use ignore files from source control.
+rg, , ,no-messages, , ,193,Suppress some error messages.
+rg, , ,no-require-git, , ,195,Use .gitignore outside of git repositories.
+rg, , ,no-unicode, , ,197,Disable Unicode mode.
+rg, ,0,null, , ,199,Print a NUL byte after file paths.
+rg, , ,null-data, , ,200,Use NUL as a line terminator.
+rg, , ,one-file-system, , ,201,Skip directories on other file systems.
+rg, ,o,only-matching, , ,203,Print only matched parts of a line.
+rg, , ,path-separator, ,@r,204,Set the path separator for printing paths.
+rg, , ,passthru, , ,205,Print both matching and non-matching lines.
+rg, ,P,pcre2, , ,206,Enable PCRE2 matching.
+rg, , ,pcre2-version, , ,208,Print the version of PCRE2 that ripgrep uses.
+rg, , ,pre, ,@f @r,209,Search output of COMMAND for each PATH.
+rg, , ,pre-glob, ,@r,211,Include or exclude files from a preprocessor.
+rg, ,p,pretty, , ,212,"Alias for colors, headings and line numbers."
+rg, ,q,quiet, , ,213,Do not print anything to stdout.
+rg, , ,regex-size-limit, ,@r,214,The size limit of the compiled regex.
+rg, ,r,replace, ,@r,215,Replace matches with the given text.
+rg, ,z,search-zip, , ,216,Search in compressed files.
+rg, ,S,smart-case, , ,218,Smart case search.
+rg, , ,sort,none path modified accessed created,@f @r,219,Sort results in ascending order.
+rg, , ,sortr,none path modified accessed created,@f @r,220,Sort results in descending order.
+rg, , ,stats, , ,221,Print statistics about the search.
+rg, , ,stop-on-nonmatch, , ,223,Stop searching after a non-match.
+rg, ,a,text, , ,224,Search binary files as if they were text.
+rg, ,j,threads, ,@r,226,Set the approximate number of threads to use.
+rg, , ,trace, , ,227,Show trace messages.
+rg, , ,trim, , ,228,Trim prefix whitespace from matches.
+rg, ,t,type, ,@f @r,230,Only search files matching TYPE.
+rg, ,T,type-not, ,@f @r,231,Do not search files matching TYPE.
+rg, , ,type-add, ,@r,232,Add a new glob for a file type.
+rg, , ,type-clear, ,@r,233,Clear globs for a file type.
+rg, , ,type-list, , ,234,Show all supported file types.
+rg, ,u,unrestricted, , ,235,Reduce the level of 'smart' filtering.
+rg, ,V,version, , ,236,Print ripgrep's version.
+rg, , ,vimgrep, , ,237,Print results in a vim compatible format.
+rg, ,H,with-filename, , ,238,Print the file path with each matching line.
+rg, ,I,no-filename, , ,239,Never print the path with each matching line.
+rg, ,w,word-regexp, , ,240,Show matches surrounded by word boundaries.
+rg, , ,auto-hybrid-regex, , ,241,(DEPRECATED) Use PCRE2 if appropriate.
+rg, , ,no-pcre2-unicode, , ,243,(DEPRECATED) Disable Unicode mode for PCRE2.
+rg, , ,sort-files, , ,245,(DEPRECATED) Sort results by file path.

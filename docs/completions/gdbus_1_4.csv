@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdbus, , ,activate, , ,101,"be the same as the bus name being waited for, or different"

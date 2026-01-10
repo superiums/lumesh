@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+coredumpctl, ,h,help, , ,101,Show this help
+coredumpctl, , ,version, , ,102,Print version string
+coredumpctl, , ,no-pager, , ,103,Do not pipe output into a pager
+coredumpctl, , ,no-legend, , ,104,Do not print the column headers
+coredumpctl, , ,json,pretty short off, ,105,JSON output format
+coredumpctl, , ,debugger, ,@f @r,106,Use the given DEBUGGER
+coredumpctl, ,A,debugger-arguments, ,@f @r,107,Pass the given arguments to the debugger
+coredumpctl, ,n, , ,@f @r,108,Show maximum number of rows
+coredumpctl, ,S,since, ,@f @r,109,Only print coredumps since the DATE
+coredumpctl, ,U,until, ,@f @r,110,Only print coredumps until the DATE
+coredumpctl, ,r,reverse, , ,111,Show the newest entries first
+coredumpctl, ,F,field, ,@f @r,112,List all values a certain FIELD takes
+coredumpctl, ,o,output, ,@r,113,Write output to FILE
+coredumpctl, , ,file, ,@r,114,Use journal FILE
+coredumpctl, ,D,directory, ,@r,115,Use journal files from DIRECTORY
+coredumpctl, ,q,quiet, , ,116,Do not show info messages and privilege warning

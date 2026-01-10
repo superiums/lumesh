@@ -1,0 +1,38 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-install, , ,compress, , ,101,compress GRUB files [optional]
+grub-install, , ,disable-cli, , ,102,disabled command line interface access
+grub-install, , ,disable-shim-lock, , ,103,disable shim_lock verifier
+grub-install, , ,dtb, , ,104,embed a specific DTB
+grub-install, ,d,directory, , ,105,use images and modules under DIR [default=/usr/lib/grub/<platform>]
+grub-install, , ,fonts, , ,106,install FONTS [default=unicode]
+grub-install, , ,install-modules, , ,107,install only MODULES and their dependencies [default=all]
+grub-install, ,k,pubkey, , ,108,embed FILE as public key for signature checking
+grub-install, , ,locale-directory, , ,109,[default=/usr/share/locale]
+grub-install, , ,locales, , ,110,install only LOCALES [default=all]
+grub-install, , ,modules, , ,111,pre-load specified modules MODULES
+grub-install, , ,sbat, , ,112,SBAT metadata
+grub-install, , ,themes, , ,113,install THEMES [default=starfield]
+grub-install, ,v,verbose, , ,114,print verbose messages
+grub-install, , ,allow-floppy, , ,115,make the drive also bootable as floppy (default for fdX devices)
+grub-install, , ,boot-directory, , ,116,"install GRUB images under the directory DIR/grub instead of the \\,/boot/grub\\…"
+grub-install, , ,bootloader-id, , ,117,the ID of bootloader.  This option is only available on EFI and Macs
+grub-install, , ,core-compress, , ,118,choose the compression to use for core image
+grub-install, , ,disk-module, , ,119,disk module to use (biosdisk or native)
+grub-install, , ,efi-directory, , ,120,use DIR as the EFI System Partition root
+grub-install, , ,force, , ,121,install even if problems are detected
+grub-install, , ,force-file-id, , ,122,use identifier file even if UUID is available
+grub-install, , ,label-bgcolor, , ,123,use COLOR for label background
+grub-install, , ,label-color, , ,124,use COLOR for label
+grub-install, , ,label-font, , ,125,use FILE as font for label 
+grub-install, , ,no-bootsector, , ,126,do not install bootsector
+grub-install, , ,no-nvram, , ,127,don't update the `boot-device'/`Boot*' NVRAM variables
+grub-install, , ,no-rs-codes, , ,128,Do not apply any reed-solomon codes when embedding core. img
+grub-install, , ,product-version, , ,129,use STRING as product version
+grub-install, , ,recheck, , ,130,delete device map if it already exists
+grub-install, , ,removable, , ,131,the installation device is removable.  This option is only available on EFI
+grub-install, ,s,skip-fs-probe, , ,132,do not probe for filesystems in DEVICE
+grub-install, , ,target, , ,133,"install GRUB for TARGET platform [default=i386-pc]; available targets: arm-co…"
+grub-install, ,?,help, , ,134,give this help list
+grub-install, , ,usage, , ,135,give a short usage message
+grub-install, , ,macppc-directory, , ,136, 
+grub-install, ,V,version, , ,137,print program version

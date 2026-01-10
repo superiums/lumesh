@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+asn1Parser, ,c,check, , ,101,checks the syntax only
+asn1Parser, ,o,output, , ,102,output file
+asn1Parser, ,n,name, , ,103,array name
+asn1Parser, ,h,help, , ,104,display this help and exit
+asn1Parser, ,v,version, , ,105,output version information and exit AUTHOR Written by Fabio Fiorina

@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+eix, ,h,help, , ,101,Show a help screen and exit
+eix, ,V,version, , ,102,Show version and exit
+eix, , ,dump, , ,103,Dump variables to stdout
+eix, , ,dump-defaults, , ,104,Dump default values of variables to stdout
+eix, ,t,test-non-matching, , ,105,Print non-matching entries first
+eix, ,Q,quick, , ,106,Don't read unguessable slots of installed packages (toggle)
+eix, , ,care, , ,107,Always read slots of installed packages
+eix, ,q,quiet, , ,108,(no) output (toggle)
+eix, ,n,nocolor, , ,109,Don't use ANSI color codes
+eix, ,F,force-color, , ,110,Force colorful output
+eix, ,c,compact, , ,111,Compact search results (toggle)
+eix, ,v,verbose, , ,112,Verbose search results (toggle)
+eix, ,x,versionsort, , ,113,Sort output by slots/versions (toggle)
+eix, ,l,versionlines, , ,114,Print available versions line-by-line (toggle)
+eix, , ,format, , ,115,Format string for normal output
+eix, , ,format-compact, , ,116,Format string for compact output
+eix, , ,format-verbose, , ,117,Format string for verbose output
+eix, ,I,installed, , ,118,Next expression only matches installed packages
+eix, ,i,multi-installed, , ,119,Match packages installed in several versions
+eix, ,d,dup-packages, , ,120,Match duplicated packages
+eix, ,D,dup-versions, , ,121,Match packages with duplicated versions
+eix, ,1,slotted, , ,122,Match packages with a nontrivial slot
+eix, ,2,slots, , ,123,Match packages with two different slots
+eix, ,u,update, , ,124,Match packages without best slotted version
+eix, ,o,overlay, , ,125,Match packages from overlays
+eix, ,T,test-obsolete, , ,126,Match packages with obsolete entries
+eix, ,!,not, , ,127,Invert the expression (toggle)
+eix, ,|,pipe, , ,128,Use input from pipe of emerge -pv
+eix, ,S,description, , ,129,Search the description field
+eix, ,A,category-name, , ,130,Search the category and name fields
+eix, ,C,category, , ,131,Search the category field
+eix, ,s,name, , ,132,Search the name field (default)
+eix, ,H,homepage, , ,133,Search the homepage field
+eix, ,L,license, , ,134,Search the license field
+eix, ,P,provides, , ,135,Search the provides field
+eix, ,r,regex, , ,136,Pattern is a regexp (default)
+eix, ,e,exact, , ,137,Pattern is the exact string
+eix, ,p,pattern, , ,138,Pattern is a wildcards-pattern
+eix, ,f,fuzzy, , ,139,Use fuzzy-search with the given max. levenshtein-distance (default: 2)

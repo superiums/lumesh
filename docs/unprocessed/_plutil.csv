@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+plutil, __fish_seen_argument -s convert,o, , ,@r,102,Alternate path for conversion result
+plutil, __fish_seen_argument -s convert,e, , ,@f @r,103,Alternate extension for converted files
+plutil," __fish_seen_argument -o insert; or __fish_seen_argument -o replace", , ,-bool -integer -float -string -date -data -xml -json, ,106, 

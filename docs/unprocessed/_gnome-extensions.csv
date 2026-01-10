@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gnome-extensions, $commands, , ,help, ,101,Print help
+gnome-extensions, $commands, , ,version, ,101,Print version
+gnome-extensions, $commands, , ,enable, ,101,Enable extension
+gnome-extensions, $commands, , ,disable, ,101,Disable extension
+gnome-extensions, $commands, , ,reset, ,101,Reset extension
+gnome-extensions, $commands, , ,uninstall, ,101,Uninstall extension
+gnome-extensions, $commands, , ,list, ,101,List extensions
+gnome-extensions, $commands, , ,info show, ,101,Show extension info
+gnome-extensions, $commands, , ,prefs, ,101,Open extension preferences
+gnome-extensions, $commands, , ,create, ,101,Create extension
+gnome-extensions, $commands, , ,pack, ,101,Package extension
+gnome-extensions, $commands, , ,install, ,101,Install extension bundle
+gnome-extensions, help && $commands_without_help, , ,$commands, ,101, 
+gnome-extensions, create && __fish_seen_argument -l uuid, ,uuid, ,@f @r,108,The unique identifier of the new extension
+gnome-extensions, create && __fish_seen_argument -l name, ,name, ,@f @r,108,The user-visible name of the new extension
+gnome-extensions, create && __fish_seen_argument -l description, ,description, ,@f @r,108,A short description of what the extension does
+gnome-extensions, create && __fish_seen_argument -l template, ,template, ,@f @r,108,The template to use for the new extension
+gnome-extensions, create && __fish_seen_argument -s i -l interactive,i,interactive, , ,108,Enter extension information interactively
+gnome-extensions, pack && __fish_seen_argument -l extra-source, ,extra-source, ,@f @r,108,Additional source to include in the bundle
+gnome-extensions, pack && __fish_seen_argument -l schema, ,schema, ,@f @r,108,A GSettings schema that should be included
+gnome-extensions, pack && __fish_seen_argument -l podir, ,podir, ,@f @r,108,The directory where translations are found
+gnome-extensions, pack && __fish_seen_argument -l gettext-domain, ,gettext-domain, ,@f @r,108,The gettext domain to use for translations
+gnome-extensions, pack && __fish_seen_argument -s f -l force,f,force, , ,108,Overwrite an existing pack
+gnome-extensions, pack && __fish_seen_argument -s o -l out-dir,o,out-dir, , ,108,The directory where the pack should be created
+gnome-extensions, install && __fish_seen_argument -s f,f,force, , ,109,Overwrite an existing extension
+gnome-extensions, $commands_with_quiet,q,quiet, , ,111,Do not print error messages

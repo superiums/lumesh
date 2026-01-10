@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lslocks, ,b,bytes, , ,101, 
+lslocks, ,H,list-columns, , ,102, 
+lslocks, ,i,noinaccessible, , ,103, 
+lslocks, ,J,json, , ,104, 
+lslocks, ,n,noheadings, , ,105, 
+lslocks, ,o,output, , ,106, 
+lslocks, , ,output-all, , ,107, 
+lslocks, ,p,pid, , ,108, 
+lslocks, ,r,raw, , ,109, 
+lslocks, ,u,notruncate, , ,110, 
+lslocks, ,h,help, , ,111, 
+lslocks, ,V,version, , ,112, 

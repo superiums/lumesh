@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+castnow, , ,tomp4, , ,101,Convert file to mp4 during playback
+castnow, , ,device, , ,102,Specify name of Chromecast device to be used
+castnow, , ,address, , ,103,Specify IP or hostname of Chromecast device
+castnow, , ,subtitles, ,@f @k @r,104,Path or URL to SRT or VTT file
+castnow, , ,subtitles-scale, , ,105,Set subtitles font scale
+castnow, , ,subtitles-color, , ,106,Set subtitles font RGBA color
+castnow, , ,subtitles-port, , ,107,Specify port to be used for serving subtitles
+castnow, , ,myip, , ,108,Set local IP
+castnow, , ,quiet, , ,109,No output
+castnow, , ,type, , ,110,Explicitly set the mime-type
+castnow, , ,bypass-srt-encoding, , ,111,Disable automatic UTF-8 encoding of SRT subtitles
+castnow, , ,seek, , ,112,Seek to specified time (format: [hh:]mm:ss)
+castnow, , ,loop, , ,113,"Loop over playlist, or file"
+castnow, , ,shuffle, , ,114,Play in random order
+castnow, , ,recursive, , ,115,List all files in directories recursively
+castnow, , ,volume-step, , ,116,Set at which the volume changes
+castnow, , ,localfile-port, , ,117,Specify port to be used for serving local file
+castnow, , ,transcode-port, , ,118,Specify port to be used for serving transcoded file
+castnow, , ,torrent-port, , ,119,Specify port to be used for serving torrented file
+castnow, , ,stdin-port, , ,120,Specify port to be used for serving file read from stdin
+castnow, , ,command, ,@f @r,121,Execute key command(s)
+castnow, , ,exit, , ,122,Exit when playback begins or --command completes
+castnow, , ,help, , ,123,Display help

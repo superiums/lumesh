@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+whatis, ,d,debug, , ,101,Debug
+whatis, ,v,verbose, , ,102,Verbose
+whatis, ,r,regex, , ,103,Interpret each keyword as a regex
+whatis, ,w,wildcard, , ,104,Allow wildcards
+whatis, ,l,long, , ,105,Do not trim output to terminal width
+whatis, ,C,config-file, , ,106,Configuration file
+whatis, ,L,locale, , ,107,Set locale
+whatis, ,m,systems, , ,108,Set system
+whatis, ,M,manpath, ,@D,109,Manpath
+whatis, ,s,section, , ,110,Search only these sections (colon-separated)
+whatis, ,?,usage, , ,111,Display help and exit
+whatis, ,V,version, , ,112,Print program version

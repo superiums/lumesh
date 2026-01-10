@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-zip-inst, ,h,help, , ,101,Display help and exit
+apt-zip-inst, ,V,version, ,@f,102,Display version and exit
+apt-zip-inst, ,m,medium, , ,103,Removable medium
+apt-zip-inst, ,a,aptgetaction,dselect-upgrade upgrade dist-upgrade,@f,104,Select an action
+apt-zip-inst, ,p,packages, , ,105,List of packages to install
+apt-zip-inst, ,f,fix-broken, ,@f,106,Fix broken option
+apt-zip-inst, , ,skip-mount, , ,107,Specify a non-mountpoint dir

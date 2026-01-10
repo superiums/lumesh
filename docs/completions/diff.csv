@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+diff, ,i,ignore-case, , ,101,Ignore case differences
+diff, , ,ignore-file-name-case, , ,102,Ignore case when comparing file names
+diff, , ,no-ignore-file-name-case, , ,103,Consider case when comparing file names
+diff, ,E,ignore-tab-expansion, , ,104,Ignore changes due to tab expansion
+diff, ,b,ignore-space-change, , ,105,Ignore changes in the amount of white space
+diff, ,w,ignore-all-space, , ,106,Ignore all white space
+diff, ,B,ignore-blank-lines, , ,107,Ignore changes whose lines are all blank
+diff, ,I,ignore-matching-lines, ,@f @r,108,Ignore changes whose lines match the REGEX
+diff, ,a,text, , ,109,Treat all files as text
+diff, ,r,recursive, , ,110,Recursively compare subdirectories
+diff, ,N,new-file, , ,111,Treat absent files as empty
+diff, ,C,context, ,@f @r,112,Output NUM lines of copied context
+diff, ,U, , ,@f @r,113,Output NUM lines of unified context
+diff, ,u,unified, , ,114,Output NUM lines of unified context (default 3)
+diff, ,q,brief, , ,115,Output only whether the files differ
+diff, , ,normal, , ,116,Output a normal diff
+diff, ,y,side-by-side, , ,117,Output in two columns
+diff, ,W,width, ,@f @r,118,Output at most NUM print columns
+diff, ,d,minimal, , ,119,Try to find a smaller set of changes
+diff, , ,from-file, ,@r,120,Compare FILE1 to all operands
+diff, , ,to-file, ,@r,121,Compare FILE2 to all operands
+diff, ,l,paginate, , ,122,Pass the output through 'pr'
+diff, ,v,version, , ,123,Display version and exit
+diff, , ,help, , ,124,Display help and exit
+diff, , ,color, , ,125,Colorize the output

@@ -1,0 +1,96 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$heroku_looking, , , ,addons, ,101,list installed addons
+$heroku_looking, , , ,apps, ,102,"manage apps (create, destroy)"
+$heroku_looking, , , ,auth, ,103,"authentication (login, logout)"
+$heroku_looking, , , ,config, ,104,manage app config vars
+$heroku_looking, , , ,domains, ,105,manage custom domains
+$heroku_looking, , , ,logs, ,106,display logs for an app
+$heroku_looking, , , ,ps, ,107,"manage dynos (dynos, workers)"
+$heroku_looking, , , ,releases, ,108,manage app releases
+$heroku_looking, , , ,run, ,109,"run one-off commands (console, rake)"
+$heroku_looking, , , ,sharing, ,110,manage collaborators on an app
+$heroku_looking, , , ,certs, ,111,manage ssl endpoints for an app
+$heroku_looking, , , ,drains, ,112,display syslog drains for an app
+$heroku_looking, , , ,features, ,113,manage optional features
+$heroku_looking, , , ,fork, ,114,clone an existing app
+$heroku_looking, , , ,help, ,115,list commands and display help
+$heroku_looking, , , ,keys, ,116,manage authentication keys
+$heroku_looking, , , ,labs, ,117,manage optional features
+$heroku_looking, , , ,maintenance, ,118,manage maintenance mode for an app
+$heroku_looking, , , ,members, ,119,manage membership in organization accounts
+$heroku_looking, , , ,orgs, ,120,manage organization accounts
+$heroku_looking, , , ,pg, ,121,manage heroku-postgresql databases
+$heroku_looking, , , ,plugins, ,122,manage plugins to the heroku gem
+$heroku_looking, , , ,regions, ,123,list available regions
+$heroku_looking, , , ,stack, ,124,manage the stack for an app
+$heroku_looking, , , ,status, ,125,check status of heroku platform
+$heroku_looking, , , ,update, ,126,update the heroku client
+$heroku_looking, , , ,version, ,127,display version
+$heroku_looking, , , ,git:clone, ,128,clones heroku application to machine at DIRECTORY. defaults to app name.
+$heroku_looking, , , ,git:remote, ,129,adds a git remote to an app repo (-a APP)
+$heroku_looking, , , ,addons:add, ,130,install an addon
+$heroku_looking, , , ,addons:docs, ,131,open an addon's documentation in your browser
+$heroku_looking, , , ,addons:downgrade, ,132,downgrade an existing addon
+$heroku_looking, , , ,addons:list, ,133,list all available addons
+$heroku_looking, , , ,addons:open, ,134,open an addon's dashboard in your browser
+$heroku_looking, , , ,addons:remove, ,135,uninstall one or more addons
+$heroku_looking, , , ,addons:upgrade, ,136,upgrade an existing addon
+heroku, __fish_heroku_using_command apps,o,ORG, , ,137,the org to list the apps for
+heroku, __fish_heroku_using_command apps,A,all, , ,138,list all apps in the org. Not just joined apps
+heroku, __fish_heroku_using_command apps,p,personal, , ,139,list apps in personal account when a default org is set
+$heroku_looking, , , ,apps:create, ,140,create a new app (takes name)
+$heroku_looking, , , ,apps:destroy, ,141, permanently destroy an app (--app APP)
+heroku, __fish_heroku_using_command apps:destroy,a,app, , ,142, 
+$heroku_looking, , , ,apps:info, ,143,show detailed app information
+$heroku_looking, , , ,apps:join, ,144, add yourself to an organization app (--app APP)
+heroku, __fish_heroku_using_command apps:join,a,app, , ,145, 
+$heroku_looking, , , ,apps:leave, ,146, remove yourself from an organization app (--app APP)
+heroku, __fish_heroku_using_command apps:leave,a,app, , ,147, 
+$heroku_looking, , , ,apps:lock, ,148, lock an organization app to restrict access
+heroku, __fish_heroku_using_command apps:lock,a,app, , ,149, 
+$heroku_looking, , , ,apps:open, ,150, open the app in a web browser
+heroku, __fish_heroku_using_command apps:open,a,app, , ,151, 
+$heroku_looking, , , ,apps:rename, ,152, rename the app (apps:rename newname --app oldname)
+heroku, __fish_heroku_using_command apps:rename,a,app, , ,153, 
+$heroku_looking, , , ,apps:unlock, ,154, unlock an organization app so that any org member can join it
+heroku, __fish_heroku_using_command apps:unlock,a,app, , ,155, 
+$heroku_looking, , , ,auth:login, ,156,log in with your heroku credentials
+$heroku_looking, , , ,auth:logout, ,157,clear local authentication credentials
+$heroku_looking, , , ,auth:token, ,158,display your api token
+$heroku_looking, , , ,auth:whoami, ,159,display your heroku email address
+heroku, __fish_heroku_using_command config,s,shell, , ,160,output config vars in shell format
+$heroku_looking, , , ,config:get, ,161,display a config value for an app
+$heroku_looking, , , ,config:set, ,162,set one or more config vars (KEY=VALUE)
+$heroku_looking, , , ,config:unset, ,163,unset one or more config vars
+$heroku_looking, , , ,domains:add, ,164,add a custom domain to an app
+$heroku_looking, , , ,domains:clear, ,165,remove all custom domains from an app
+$heroku_looking, , , ,domains:remove, ,166,remove a custom domain from an app
+heroku, __fish_heroku_using_command logs,n,NUM, , ,167,the number of lines to display
+heroku, __fish_heroku_using_command logs,p,PS, , ,168,only display logs from the given process
+heroku, __fish_heroku_using_command logs,s,SOURCE, , ,169,only display logs from the given source
+heroku, __fish_heroku_using_command logs,t,tail, , ,170,continually stream logs
+$heroku_looking, , , ,pg:backups, ,171,manage backups of heroku postgresql databases
+$heroku_looking, , , ,pg:backups:cancel, ,172,cancel an in-progress backup or restore (default newest)
+$heroku_looking, , , ,pg:backups:capture, ,173,capture a new backup
+$heroku_looking, , , ,pg:backups:delete, ,174,delete a backup
+$heroku_looking, , , ,pg:backups:download, ,175,downloads database backup
+$heroku_looking, , , ,pg:backups:info, ,176,get information about a specific backup
+$heroku_looking, , , ,pg:backups:restore, ,177,restore a backup (default latest) to a database
+$heroku_looking, , , ,pg:backups:schedule, ,178,schedule daily backups for given database
+$heroku_looking, , , ,pg:backups:schedules, ,179,list backup schedule
+$heroku_looking, , , ,pg:backups:unschedule, ,180,stop daily backups
+$heroku_looking, , , ,pg:backups:url, ,181,get secret but publicly accessible URL of a backup
+$heroku_looking, , , ,ps:resize, ,182,resize dynos to the given size (DYNO1=1X|2X|PX)
+$heroku_looking, , , ,ps:restart, ,183,restart an app dyno
+$heroku_looking, , , ,ps:scale, ,184,scale dynos by the given amount (DYNO1=AMOUNT1)
+$heroku_looking, , , ,ps:stop, ,185,stop an app dyno
+heroku, __fish_heroku_using_command releases,n,NUM, , ,186,"number of releases to show, maximum 50"
+$heroku_looking, , , ,releases:info, ,187,view detailed information for a release
+$heroku_looking, , , ,releases:rollback, ,188,roll back to an older release
+heroku, __fish_heroku_using_command run,s,SIZE, , ,189,specify dyno size
+$heroku_looking, , , ,run:console, ,190,open a remote console session (with optional COMMAND)
+$heroku_looking, , , ,run:detached, ,191,"run a detached dyno, where output is sent to your logs"
+heroku, __fish_heroku_using_command run:detached,t,tail, , ,192,stream logs for the dyno
+$heroku_looking, , , ,sharing:add, ,193,add a collaborator to an app
+$heroku_looking, , , ,sharing:remove, ,194,remove a collaborator from an app
+$heroku_looking, , , ,sharing:transfer, ,195,transfers an app to another user or an organization.

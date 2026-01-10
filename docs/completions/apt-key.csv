@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-key, , , ,add,@r,101,Add a new key
+apt-key, , , ,del,@f,102,Remove a key
+apt-key, , , ,list,@f,103,List trusted keys

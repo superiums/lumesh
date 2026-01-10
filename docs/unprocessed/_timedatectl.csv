@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+timedatectl, $commands, , ,status, ,100,Show current time settings
+timedatectl, $commands, , ,show, ,100,Show properties of systemd-timedated
+timedatectl, $commands, , ,set-time, ,100,Set system time
+timedatectl, $commands, , ,set-timezone, ,100,Set system time zone
+timedatectl, $commands, , ,list-timezones, ,100,Show known time zones
+timedatectl, $commands, , ,set-local-rtc, ,100,Control whether RTC is in local time
+timedatectl, $commands, , ,set-ntp, ,101,Control network time sync
+timedatectl, $commands, , ,timesync-status, ,102,Show status of systemd-timesyncd
+timedatectl, $commands, , ,show-timesync, ,102,Show properties of systemd-timesyncd

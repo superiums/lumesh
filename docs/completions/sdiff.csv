@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sdiff, ,o,output, , ,101,"operate interactively, sending output to FILE"
+sdiff, ,i,ignore-case, , ,102,consider upper- and lower-case to be the same
+sdiff, ,E,ignore-tab-expansion, , ,103,ignore changes due to tab expansion
+sdiff, ,Z,ignore-trailing-space, , ,104,ignore white space at line end
+sdiff, ,b,ignore-space-change, , ,105,ignore changes in the amount of white space
+sdiff, ,W,ignore-all-space, , ,106,ignore all white space
+sdiff, ,B,ignore-blank-lines, , ,107,ignore changes whose lines are all blank
+sdiff, ,I,ignore-matching-lines, , ,108,ignore changes all whose lines match RE
+sdiff, , ,strip-trailing-cr, , ,109,strip trailing carriage return on input
+sdiff, ,a,text, , ,110,treat all files as text
+sdiff, ,w,width, , ,111,output at most NUM (default 130) print columns
+sdiff, ,l,left-column, , ,112,output only the left column of common lines
+sdiff, ,s,suppress-common-lines, , ,113,do not output common lines
+sdiff, ,t,expand-tabs, , ,114,expand tabs to spaces in output
+sdiff, , ,tabsize, , ,115,tab stops at every NUM (default 8) print columns
+sdiff, ,d,minimal, , ,116,try hard to find a smaller set of changes
+sdiff, ,H,speed-large-files, , ,117,"assume large files, many scattered small changes"
+sdiff, , ,diff-program, , ,118,use PROGRAM to compare files
+sdiff, , ,help, , ,119,display this help and exit
+sdiff, ,v,version, , ,120,output version information and exit

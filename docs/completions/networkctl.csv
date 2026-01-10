@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+networkctl, ,h,help, , ,103,Show help
+networkctl, , ,version, , ,104,Show version
+networkctl, , ,no-pager, , ,105,Do not pipe output into a pager
+networkctl, , ,no-legend, , ,106,Do not show the headers and footers
+networkctl, , ,no-ask-password, , ,107,Do no prompt for password
+networkctl, ,a,all, , ,108,Show status for all links
+networkctl, ,s,stats, , ,109,Show detailed link statics
+networkctl, ,l,full, , ,110,Do not ellipsize output
+networkctl, ,n,lines, , ,111,Number of journal entries to show
+networkctl, , ,json,pretty short off, ,112,Generate JSON output
+networkctl, , ,no-reload, , ,113,Do not reload systemd-networkd or systemd-udevd
+networkctl, , ,drop-in, , ,114,Edit specified drop-in instead of main file
+networkctl, , ,runtime, , ,115,Edit runtime config file
+networkctl, , ,stdin, , ,116,Read new contents of edited file from stdin

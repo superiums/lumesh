@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ssh-keygen, ,a, , ,@f @r,101,number of KDF rounds used [default 16]
+ssh-keygen, ,b, , ,@f @r,102,number of bits in the key
+ssh-keygen, ,N, , ,@f @r,103,provide the new passphrase
+ssh-keygen, ,P, , ,@f @r,104,provide the (old) passphrase
+ssh-keygen, ,f, , ,@r,105,filename of key file
+ssh-keygen, ,C, , ,@f @r,106,comment of the generated key
+ssh-keygen, ,t, ,dsa ecdsa ecdsa-sk ed25519 ed25519-sk rsa,@f @r,107,type of key to create
+ssh-keygen, ,A, , ,@f,108,"generate host keys of all default key types (rsa, ecdsa, and ed25519)"
+ssh-keygen, ,B, , ,@f,109,show the bubblebabble digest of specified key file
+ssh-keygen, ,D, , ,@f,110,download the public keys provided by shared library pkcs11
+ssh-keygen, ,E, ,md5 sha256,@f @r,111,hash algorithm used when displaying key fingerprints
+ssh-keygen, ,F, , ,@f @r,112,find hashed host names or addresses in a known_hosts file
+ssh-keygen, ,I, , ,@r,113,specify the key identity when signing a public key
+ssh-keygen, ,M, , generate  screen,@r,114,candidate Diffie-Hellman Group Exchange (DH-GEX) parameters
+ssh-keygen, ,m, ,RFC4716 PKCS8 PEM,@r,115,"key format for key generation, for -i, -e and -p flag"
+ssh-keygen, ,n, , ,@r,116,specify principals (user or host names) to be included in a certificate when signing a key
+ssh-keygen, ,R, , ,@f @r,117,removes all keys belonging to the specified hostname from a known_hosts file
+ssh-keygen, ,r, , ,@f @r,118,print the SSHFP fingerprint resource record named hostname
+ssh-keygen, ,s, , ,@r,119,sign a public key using the specified CA key
+ssh-keygen, ,V, , ,@f @r,120,specify a validity interval when signing a certificate
+ssh-keygen, ,w, , ,@r,121,path to a needed library when creating FIDO authenticator-hosted keys
+ssh-keygen, ,Y, ,\,@f @r,122, 
+ssh-keygen, ,Z, , ,@f @r,123,cipher kind used for encryption an OpenSSH-format private key file
+ssh-keygen, ,z, , ,@f @r,124,serial number embedded in the certificate

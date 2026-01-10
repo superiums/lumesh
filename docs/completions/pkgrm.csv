@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkgrm, , , , ,@f,101,Package to remove
+pkgrm, , ,root, , ,102,Alternative installation root
+pkgrm, , ,version, ,@f,103,Print version
+pkgrm, , ,help, ,@f,104,Print help

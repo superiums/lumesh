@@ -1,0 +1,120 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hugo, __fish_hugo_using_main_like_command,b,baseURL, ,@r,108,Hostname and path to the root
+hugo, __fish_hugo_using_main_like_command,B,buildDrafts, ,@f,109,Include content marked as draft
+hugo, __fish_hugo_using_main_like_command,E,buildExpired, ,@f,110,Include expired content
+hugo, __fish_hugo_using_main_like_command,F,buildFuture, ,@f,111,Include content with publishdate in the future
+hugo, __fish_hugo_using_main_like_command, ,cacheDir, ,@D @f,112,Cache directory
+hugo, __fish_hugo_using_main_like_command, ,canonifyURLs, ,@f,113,Canonicalize all relative URLs using baseurl
+hugo, __fish_hugo_using_main_like_command, ,cleanDestinationDir, ,@f,114,Remove files from destination not found in static directories
+hugo, __fish_hugo_using_main_like_command,c,contentDir, ,@D @f,115,Content directory
+hugo, __fish_hugo_using_main_like_command,d,destination, ,@D @f,116,Destination directory
+hugo, __fish_hugo_using_main_like_command, ,disable404, ,@f,117,Do not build 404 page
+hugo, __fish_hugo_using_main_like_command, ,disableKinds, ,@r,118,Disable different kinds of pages
+hugo, __fish_hugo_using_main_like_command, ,disableRSS, ,@f,119,Do not build RSS files
+hugo, __fish_hugo_using_main_like_command, ,disableSitemap, ,@f,120,Do not build sitemap files
+hugo, __fish_hugo_using_main_like_command, ,enableGitInfo, ,@f,121,"Add Git revision, date and author info to the pages"
+hugo, __fish_hugo_using_main_like_command, ,forceSyncStatic, ,@f,122,Copy all files when static is changed
+hugo, __fish_hugo_using_main_like_command,h,help, ,@f,123,Help for hugo
+hugo, __fish_hugo_using_main_like_command, ,i18n-warnings, ,@f,124,Print missing translations
+hugo, __fish_hugo_using_main_like_command, ,ignoreCache, ,@f,125,Ignore the cache directory
+hugo, __fish_hugo_using_main_like_command,l,layoutDir, ,@D @f,126,Layout directory
+hugo, __fish_hugo_using_main_like_command, ,noChmod, ,@f,127,Do not sync permission mode of files
+hugo, __fish_hugo_using_main_like_command, ,noTimes, ,@f,128,Do not sync modification time of files
+hugo, __fish_hugo_using_main_like_command, ,pluralizeListTitles, ,@f,129,Pluralize titles in lists using inflect
+hugo, __fish_hugo_using_main_like_command, ,preserveTaxonomyNames, ,@f,130,Preserve taxonomy names as written
+hugo, __fish_hugo_using_main_like_command, ,renderToMemory, ,@f,131,Render to memory
+hugo, __fish_hugo_using_main_like_command,s,source, ,@D @f,132,Source directory
+hugo, __fish_hugo_using_main_like_command, ,stepAnalysis, ,@f,133,Display memory and timing of different steps of the program
+hugo, __fish_hugo_using_main_like_command, ,templateMetrics, ,@f,134,Display metrics about template executions
+hugo, __fish_hugo_using_main_like_command, ,templateMetricsHints, ,@f,135,Calculate some improvement hints when combined with --templateMetrics
+hugo, __fish_hugo_using_main_like_command,t,theme, ,@r,136,Theme to use
+hugo, __fish_hugo_using_main_like_command, ,themesDir, ,@D @f,137,Themes directory
+hugo, __fish_hugo_using_main_like_command, ,uglyURLs, ,@f,138,Use /filename.html instead of /filename/
+hugo, __fish_hugo_using_main_like_command,w,watch, ,@f,139,Watch filesystem for changes and recreate as needed
+hugo, __fish_hugo_command, , ,benchmark,@f,140,Benchmark Hugo by building the site a number of times
+hugo, __fish_hugo_using_command benchmark,n,count, ,@f,141,Number of times to build the site
+hugo, __fish_hugo_using_command benchmark, ,cpuprofile, ,@r,142,CPU profile file
+hugo, __fish_hugo_using_command benchmark,h,help, ,@f,143,Help for benchmark
+hugo, __fish_hugo_using_command benchmark, ,memprofile, ,@r,144,Memory profile file
+hugo, __fish_hugo_using_command benchmark, ,renderToMemory, ,@f,145,Render to memory
+hugo, __fish_hugo_using_command benchmark, ,stepAnalysis, ,@f,146,Display memory and timing of different steps of the program
+hugo, __fish_hugo_using_command benchmark, ,templateMetrics, ,@f,147,Display metrics about template executions
+hugo, __fish_hugo_using_command benchmark, ,templateMetricsHints, ,@f,148,Calculate some improvement hints when combined with --templateMetrics
+hugo, __fish_hugo_command, , ,check,@f,149,Perform some verification checks
+hugo, __fish_hugo_using_command check,h,help, ,@f,150,Help for check
+hugo, __fish_hugo_using_command check, , ,ulimit,@f,151,Check system ulimit settings
+hugo, __fish_hugo_using_command check ulimit,h,help, ,@f,152,Help for ulimit
+hugo, __fish_hugo_command, , ,config,@f,153,Print the site configuration
+hugo, __fish_hugo_using_command config,h,help, ,@f,154,Help for config
+hugo, __fish_hugo_command, , ,convert,@f,155,Convert the content to different formats
+hugo, __fish_hugo_using_command convert,h,help, ,@f,156,Help for convert
+hugo, __fish_hugo_using_command convert,o,output, ,@D @f,157,Output directory
+hugo, __fish_hugo_using_command convert,s,source, ,@D @f,158,Source directory
+hugo, __fish_hugo_using_command convert, ,unsafe, ,@f,159,Enable less safe operations
+hugo, __fish_hugo_using_command convert, , ,toJSON,@f,160,Convert front matter to JSON
+hugo, __fish_hugo_using_command convert toJSON,h,help, ,@f,161,Help for toJSON
+hugo, __fish_hugo_using_command convert, , ,toTOML,@f,162,Convert front matter to TOML
+hugo, __fish_hugo_using_command convert toTOML,h,help, ,@f,163,Help for toTOML
+hugo, __fish_hugo_using_command convert, , ,toYAML,@f,164,Convert front matter to YAML
+hugo, __fish_hugo_using_command convert toYAML,h,help, ,@f,165,Help for toYAML
+hugo, __fish_hugo_command, , ,env,@f,166,Print Hugo version and environment info
+hugo, __fish_hugo_using_command env,h,help, ,@f,167,Help for env
+hugo, __fish_hugo_command, , ,gen,@f,168,Collection of several useful generators
+hugo, __fish_hugo_using_command gen,h,help, ,@f,169,Help for gen
+hugo, __fish_hugo_using_command gen, , ,autocomplete,@f,170,Generate shell autocompletion script for Hugo
+hugo, __fish_hugo_using_command gen autocomplete, ,completionfile, ,@r,171,Autocompletion file
+hugo, __fish_hugo_using_command gen autocomplete,h,help, ,@f,172,Help for autocomplete
+hugo, __fish_hugo_using_command gen autocomplete, ,type,bash,@f,173,Autocompletion type
+hugo, __fish_hugo_using_command gen, , ,chromastyles,@f,174,Generate CSS stylesheet for the Chroma code highlighter
+hugo, __fish_hugo_using_command gen chromastyles,h,help, ,@f,175,Help for chromastyles
+hugo, __fish_hugo_using_command gen chromastyles, ,highlightStyle, ,@r,176,Style used for highlighting lines
+hugo, __fish_hugo_using_command gen chromastyles, ,lineStyle, ,@r,177,Style used for line numbers
+hugo, __fish_hugo_using_command gen chromastyles, ,style, ,@r,178,Highlighter style
+hugo, __fish_hugo_using_command gen, , ,doc,@f,179,Generate Markdown documentation for the Hugo CLI
+hugo, __fish_hugo_using_command gen doc, ,dir, ,@D @f,180,Doc directory
+hugo, __fish_hugo_using_command gen doc,h,help, ,@f,181,Help for doc
+hugo, __fish_hugo_using_command gen, , ,man,@f,182,Generate man pages for the Hugo CLI
+hugo, __fish_hugo_using_command gen man, ,dir, ,@D @f,183,Man pages directory
+hugo, __fish_hugo_using_command gen man,h,help, ,@f,184,Help for man
+hugo, __fish_hugo_command, , ,import,@f,185,Import your site from others
+hugo, __fish_hugo_using_command import,h,help, ,@f,186,Help for import
+hugo, __fish_hugo_using_command import, , ,jekyll,@f,187,Import from Jekyll
+hugo, __fish_hugo_using_command import jekyll, ,force, ,@f,188,Allow import into non-empty target directory
+hugo, __fish_hugo_using_command import jekyll,h,help, ,@f,189,Help for jekyll
+hugo, __fish_hugo_command, , ,list,@f,190,List various types of content
+hugo, __fish_hugo_using_command list,h,help, ,@f,191,Help for list
+hugo, __fish_hugo_using_command list,s,source, ,@D @f,192,Source directory
+hugo, __fish_hugo_using_command list, , ,drafts,@f,193,List all drafts
+hugo, __fish_hugo_using_command list drafts,h,help, ,@f,194,Help for drafts
+hugo, __fish_hugo_using_command list, , ,expired,@f,195,List all expired posts
+hugo, __fish_hugo_using_command list expired,h,help, ,@f,196,Help for expired
+hugo, __fish_hugo_using_command list, , ,future,@f,197,List all posts dated in the future
+hugo, __fish_hugo_using_command list future,h,help, ,@f,198,Help for future
+hugo, __fish_hugo_command, , ,new,@f,199,Create new content
+hugo, __fish_hugo_using_command new, ,editor, ,@r,200,Editor to use
+hugo, __fish_hugo_using_command new,h,help, ,@f,201,Help for new
+hugo, __fish_hugo_using_command new,k,kind, ,@r,202,Content type to create
+hugo, __fish_hugo_using_command new,s,source, ,@D @f,203,Source directory
+hugo, __fish_hugo_using_command new, , ,site,@f,204,Create a new site
+hugo, __fish_hugo_using_command new site, ,force, ,@f,205,Create site inside non-empty directory
+hugo, __fish_hugo_using_command new site,f,format, ,@r,206,Config and front matter format
+hugo, __fish_hugo_using_command new site,h,help, ,@f,207,Help for site
+hugo, __fish_hugo_using_command new, , ,theme,@f,208,Create a new theme
+hugo, __fish_hugo_using_command new theme,h,help, ,@f,209,Help for theme
+hugo, __fish_hugo_command, , ,server,@f,210,Start high performance web server
+hugo, __fish_hugo_using_command server, ,appendPort, ,@f,211,Append port to baseurl
+hugo, __fish_hugo_using_command server, ,bind, ,@r,212,Interface to which the server will bind
+hugo, __fish_hugo_using_command server, ,disableFastRender, ,@f,213,Enable full re-renders on changes
+hugo, __fish_hugo_using_command server, ,disableLiveReload, ,@f,214,Watch without enabling live browser reload on rebuild
+hugo, __fish_hugo_using_command server,h,help, ,@f,215,Help for server
+hugo, __fish_hugo_using_command server, ,liveReloadPort, ,@r,216,Port for live reloading
+hugo, __fish_hugo_using_command server, ,meminterval, ,@f,217,Interval to poll memory usage
+hugo, __fish_hugo_using_command server, ,memstats, ,@f,218,Memory usage log file
+hugo, __fish_hugo_using_command server, ,navigateToChanged, ,@f,219,Navigate to changed content file on live browser reload
+hugo, __fish_hugo_using_command server, ,noHTTPCache, ,@f,220,Prevent HTTP caching
+hugo, __fish_hugo_using_command server,p,port, ,@r,221,Port on which the server will listen
+hugo, __fish_hugo_using_command server, ,renderToDisk, ,@r,222,Render to destination directory
+hugo, __fish_hugo_command, , ,undraft,@f,223,Reset the content draft status
+hugo, __fish_hugo_using_command undraft,h,help, ,@f,224,Help for undraft
+hugo, __fish_hugo_command, , ,version,@f,225,Print the version number of Hugo
+hugo, __fish_hugo_using_command version,h,help, ,@f,226,Help for version

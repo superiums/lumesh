@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-split, ,b,bytes, , ,101,put SIZE bytes per output file
+uu-split, ,C,line-bytes, , ,102,put at most SIZE bytes of lines per output file
+uu-split, ,l,lines, , ,103,put NUMBER lines/records per output file
+uu-split, ,n,number, , ,104,"generate CHUNKS output files; see explanation below"
+uu-split, , ,additional-suffix, , ,105,additional SUFFIX to append to output file names
+uu-split, , ,filter, ,@f @r,106,"write to shell COMMAND; file name is $FILE (Currently not implemented for Windows)"
+uu-split, , ,numeric-suffixes, , ,107,"same as -d, but allow setting the start value"
+uu-split, , ,hex-suffixes, , ,108,"same as -x, but allow setting the start value"
+uu-split, ,a,suffix-length, , ,109,generate suffixes of length N (default 2)
+uu-split, ,t,separator, , ,110,"use SEP instead of newline as the record separator; '\\\\0' (zero) specifies the NUL character"
+uu-split, , ,io-blksize, , ,111, 
+uu-split, ,e,elide-empty-files, , ,112,do not generate empty output files with '-n'
+uu-split, , ,verbose, , ,113,print a diagnostic just before each output file is opened
+uu-split, ,h,help, , ,114,Print help
+uu-split, ,V,version, , ,115,Print version

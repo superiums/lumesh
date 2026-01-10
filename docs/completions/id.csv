@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+id, ,Z,context, , ,101,Print security context
+id, ,z,zero, , ,102,Delimit entries with NUL
+id, ,n,name, , ,103,"Print name, not number"
+id, ,g,group, , ,104,Print effective group ID
+id, ,G,groups, , ,105,Print all group ids
+id, ,r,real, , ,106,"Print real ID, not effective"
+id, ,u,user, , ,107,Print effective user ID
+id, , ,help, , ,108,Display help and exit
+id, , ,version, , ,109,Display version and exit

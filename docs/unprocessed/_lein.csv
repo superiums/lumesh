@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lein, __fish_lein_needs_command, , ,check,@f,101,Check syntax and warn on reflection.
+lein, __fish_lein_needs_command, , ,classpath,@f,102,Write the classpath of the current project to output-file.
+lein, __fish_lein_needs_command, , ,clean,@f,103,Remove all files from project's target-path.
+lein, __fish_lein_needs_command, , ,compile,@f,104,Compile Clojure source into .class files.
+lein, __fish_lein_needs_command, , ,deploy,@f,105,Build jar and deploy to remote repository.
+lein, __fish_lein_needs_command, , ,deps,@f,106,Show details about dependencies.
+lein, __fish_lein_needs_command, , ,do,@f,107,Higher-order task to perform other tasks in succession.
+lein, __fish_lein_needs_command, , ,help,@f,108,Display a list of tasks or help for a given task or subtask.
+lein, __fish_lein_needs_command, , ,install,@f,109,Install current project to the local repository.
+lein, __fish_lein_needs_command, , ,jar,@f,110,Package up all the project's files into a jar file.
+lein, __fish_lein_needs_command, , ,javac,@f,111,Compile Java source files.
+lein, __fish_lein_needs_command, , ,light,@f,112,Start a Light Table client for this project
+lein, __fish_lein_needs_command, , ,new,@f,113,Generate scaffolding for a new project based on a template.
+lein, __fish_lein_needs_command, , ,plugin,@f,114,DEPRECATED. Please use the :user profile instead.
+lein, __fish_lein_needs_command, , ,pom,@f,115,Write a pom.xml file to disk for Maven interoperability.
+lein, __fish_lein_needs_command, , ,repl,@f,116,Start a repl session either with the current project or standalone.
+lein, __fish_lein_needs_command, , ,retest,@f,117,Run only the test namespaces which failed last time around.
+lein, __fish_lein_needs_command, , ,run,@f,118,Run the project's -main function.
+lein, __fish_lein_needs_command, , ,search,@f,119,Search remote maven repositories for matching jars.
+lein, __fish_lein_needs_command, , ,show-profiles,@f,120,List all available profiles or display one if given an argument.
+lein, __fish_lein_needs_command, , ,test,@f,121,Run the project's tests.
+lein, __fish_lein_needs_command, , ,trampoline,@f,122,Run a task without nesting the project's JVM inside Leiningen's.
+lein, __fish_lein_needs_command, , ,uberjar,@f,123,Package up the project files and all dependencies into a jar file.
+lein, __fish_lein_needs_command, , ,update-in,@f,124,Perform arbitrary transformations on your project map.
+lein, __fish_lein_needs_command, , ,upgrade,@f,125,Upgrade Leiningen to specified version or latest stable.
+lein, __fish_lein_needs_command, , ,version,@f,126,Print version for Leiningen and the current JVM.
+lein, __fish_lein_needs_command, , ,with-profile,@f,127,Apply the given task with the profile(s) specified.

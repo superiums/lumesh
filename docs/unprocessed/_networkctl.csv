@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+networkctl, $commands, , ,list, ,100,List links
+networkctl, $commands, , ,status, ,100,Show link status
+networkctl, $commands, , ,lldp, ,100,Show LLDP neighbors
+networkctl, $commands, , ,label, ,100,Show current address label
+networkctl, $commands, , ,delete, ,100,Delete virtual netdevs
+networkctl, $commands, , ,up, ,100,Bring devices up
+networkctl, $commands, , ,down, ,100,Bring devices down
+networkctl, $commands, , ,renew, ,100,Renew dynamic configurations
+networkctl, $commands, , ,forcerenew, ,100,Trigger DHCP reconfiguration of all connected clients
+networkctl, $commands, , ,reconfigure, ,100,Reconfigure interfaces
+networkctl, $commands, , ,reload, ,100,Reload .network and .netdev files
+networkctl, $commands, , ,edit, ,100,Edit network configuration files
+networkctl, $commands, , ,cat, ,100,Show network configuration files
+networkctl, $commands, , ,mask, ,100,Mask network configuration files
+networkctl, $commands, , ,unmask, ,100,Unmask network configuration files
+networkctl, $command_with_devices, , ,$devices, ,101, 
+networkctl, $command_with_config_files, , , ,@F,102, 

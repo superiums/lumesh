@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+netctl, , ,help, ,@f,101,Display help
+netctl, , ,version, ,@f,102,Display version
+netctl, start stop restart switch-to status enable disable reenable is-enabled edit, , , ,@F @f,103,Profile

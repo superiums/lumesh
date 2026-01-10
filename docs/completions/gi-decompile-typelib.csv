@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gi-decompile-typelib, , ,help, , ,101,Show help options
+gi-decompile-typelib, ,o,output, , ,102,Save the resulting output in FILENAME
+gi-decompile-typelib, , ,includedir, , ,103,Add DIRECTORY to the search path for typelibs
+gi-decompile-typelib, , ,all, , ,104,Show all available information
+gi-decompile-typelib, , ,version, , ,105,Show programâs version number and exit

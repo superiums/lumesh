@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpg-wks-client, , ,send, , ,101,Directly send created mails using the sendmail command
+gpg-wks-client, , ,with-colons, , ,102,This option has currently only an effect on the --supported command
+gpg-wks-client, , ,output, , ,103,TQ   -o Write the created mail to file instead of stdout
+gpg-wks-client, , ,status-fd, , ,104,Write special status strings to the file descriptor n
+gpg-wks-client, , ,blacklist, , ,105,This option is used to exclude certain mail addresses from a mirror operation
+gpg-wks-client, , ,add-revocs, , ,106,TQ   --no-add-revocs If enabled append revocation certificates for the same a…
+gpg-wks-client, , ,verbose, , ,107,Enable extra informational output
+gpg-wks-client, , ,quiet, , ,108,Disable almost all informational output
+gpg-wks-client, , ,version, , ,109,Print version of the program and exit
+gpg-wks-client, , ,create, , ,110, 
+gpg-wks-client, , ,remove-key, , ,111,argument is a user-id
+gpg-wks-client, , ,directory, , ,112,Use dir as top level directory for the commands
+gpg-wks-client, , ,install-key, , ,113,The default is `openpgpkey'
+gpg-wks-client, , ,no-add-revocs, , ,114,If enabled append revocation certificates for the same addrspec as used in th…
+gpg-wks-client, , ,help, , ,115,Display a brief help page and exit.  EXAMPLES

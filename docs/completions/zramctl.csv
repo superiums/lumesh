@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zramctl, ,a,algorithm, , ,101, 
+zramctl, ,f,find, , ,102, 
+zramctl, ,n,noheadings, , ,103, 
+zramctl, ,o,output, , ,104, 
+zramctl, , ,output-all, , ,105, 
+zramctl, , ,raw, , ,106, 
+zramctl, ,r,reset, , ,107, 
+zramctl, ,s,size, , ,108, 
+zramctl, ,t,streams, , ,109, 
+zramctl, ,h,help, , ,110, 
+zramctl, ,V,version, , ,111, 

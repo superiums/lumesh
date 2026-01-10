@@ -1,0 +1,44 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zoxide, __fish_zoxide_needs_command,h,help, , ,101,Print help
+zoxide, __fish_zoxide_needs_command,V,version, , ,102,Print version
+zoxide, __fish_zoxide_needs_command, , ,add,@f,103,Add a new directory or increment its rank
+zoxide, __fish_zoxide_needs_command, , ,edit,@f,104,Edit the database
+zoxide, __fish_zoxide_needs_command, , ,import,@f,105,Import entries from another application
+zoxide, __fish_zoxide_needs_command, , ,init,@f,106,Generate shell configuration
+zoxide, __fish_zoxide_needs_command, , ,query,@f,107,Search for a directory in the database
+zoxide, __fish_zoxide_needs_command, , ,remove,@f,108,Remove a directory from the database
+zoxide, __fish_zoxide_using_subcommand add,s,score, , ,109,The rank to increment the entry if it exists or initialize it with if it doesn't
+zoxide, __fish_zoxide_using_subcommand add,h,help, , ,110,Print help
+zoxide, __fish_zoxide_using_subcommand add,V,version, , ,111,Print version
+zoxide," __fish_zoxide_using_subcommand edit; and decrement delete increment reload",h,help, , ,111,Print help
+zoxide," __fish_zoxide_using_subcommand edit; and decrement delete increment reload",V,version, , ,111,Print version
+zoxide," __fish_zoxide_using_subcommand edit; and decrement delete increment reload", , ,decrement,@f,111, 
+zoxide," __fish_zoxide_using_subcommand edit; and decrement delete increment reload", , ,delete,@f,111, 
+zoxide," __fish_zoxide_using_subcommand edit; and decrement delete increment reload", , ,increment,@f,111, 
+zoxide," __fish_zoxide_using_subcommand edit; and decrement delete increment reload", , ,reload,@f,111, 
+zoxide," __fish_zoxide_using_subcommand edit; and decrement",h,help, , ,112,Print help
+zoxide," __fish_zoxide_using_subcommand edit; and decrement",V,version, , ,113,Print version
+zoxide," __fish_zoxide_using_subcommand edit; and delete",h,help, , ,114,Print help
+zoxide," __fish_zoxide_using_subcommand edit; and delete",V,version, , ,115,Print version
+zoxide," __fish_zoxide_using_subcommand edit; and increment",h,help, , ,116,Print help
+zoxide," __fish_zoxide_using_subcommand edit; and increment",V,version, , ,117,Print version
+zoxide," __fish_zoxide_using_subcommand edit; and reload",h,help, , ,118,Print help
+zoxide," __fish_zoxide_using_subcommand edit; and reload",V,version, , ,119,Print version
+zoxide, __fish_zoxide_using_subcommand import, ,from,autojump,@f @r,120,Application to import from
+zoxide, __fish_zoxide_using_subcommand import, ,merge, , ,121,Merge into existing database
+zoxide, __fish_zoxide_using_subcommand import,h,help, , ,122,Print help
+zoxide, __fish_zoxide_using_subcommand import,V,version, , ,123,Print version
+zoxide, __fish_zoxide_using_subcommand init, ,cmd, , ,124,Changes the prefix of the `z` and `zi` commands
+zoxide, __fish_zoxide_using_subcommand init, ,hook,none,@f @r,125,Changes how often zoxide increments a directory's score
+zoxide, __fish_zoxide_using_subcommand init, ,no-cmd, , ,126,Prevents zoxide from defining the `z` and `zi` commands
+zoxide, __fish_zoxide_using_subcommand init,h,help, , ,127,Print help
+zoxide, __fish_zoxide_using_subcommand init,V,version, , ,128,Print version
+zoxide, __fish_zoxide_using_subcommand query, ,exclude, ,@D @f @r,129,Exclude the current directory
+zoxide, __fish_zoxide_using_subcommand query,a,all, , ,130,Show unavailable directories
+zoxide, __fish_zoxide_using_subcommand query,i,interactive, , ,131,Use interactive selection
+zoxide, __fish_zoxide_using_subcommand query,l,list, , ,132,List all matching directories
+zoxide, __fish_zoxide_using_subcommand query,s,score, , ,133,Print score with results
+zoxide, __fish_zoxide_using_subcommand query,h,help, , ,134,Print help
+zoxide, __fish_zoxide_using_subcommand query,V,version, , ,135,Print version
+zoxide, __fish_zoxide_using_subcommand remove,h,help, , ,136,Print help
+zoxide, __fish_zoxide_using_subcommand remove,V,version, , ,137,Print version

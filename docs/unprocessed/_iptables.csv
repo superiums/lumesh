@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iptables," __fish_contains_opt -s A -s C -s D append check delete; and __fish_iptables_has_chain",j,jump, ,@f,104,Specify the target of a rule
+iptables," __fish_contains_opt -s A -s C -s D append check delete; and __fish_iptables_has_chain",m,match, , ,105,Specify a match to use
+iptables, __fish_iptables_has_chain, , ,ACCEPT DROP RETURN, ,106, 
+iptables, ,t,table,$__fish_iptables_tables, ,130,The table to operate on

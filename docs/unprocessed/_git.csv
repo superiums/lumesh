@@ -1,0 +1,107 @@
+cmd,conds,short,long,params,dirs,pri,desc
+git,fetch __fish_git_branch_for_remote, , , ,@f,189,Remote
+git,fetch __fish_git_branch_for_remote, , , ,@f,190, 
+git,remote $remotecommands, , , ,@f,233, 
+git,remote $remotecommands,v,verbose, ,@f,233,Be verbose
+git,remote $remotecommands, , ,add,@f,233,Adds a new remote
+git,remote $remotecommands, , ,rm,@f,233,Removes a remote
+git,remote $remotecommands, , ,remove,@f,233,Removes a remote
+git,remote $remotecommands, , ,show,@f,233,Shows a remote
+git,remote $remotecommands, , ,prune,@f,233,Deletes all stale tracking branches
+git,remote $remotecommands, , ,update,@f,233,Fetches updates
+git,remote $remotecommands, , ,rename,@f,233,Renames a remote
+git,remote $remotecommands, , ,set-head,@f,233,Sets the default branch for a remote
+git,remote $remotecommands, , ,set-url,@f,233,Changes URLs for a remote
+git,remote $remotecommands, , ,get-url,@f,233,Retrieves URLs for a remote
+git,remote $remotecommands, , ,set-branches,@f,233,Changes the list of branches tracked by a remote
+git,show contains -- -- (commandline -xpc), , , ,@f,248, 
+git,__fish_git_needs_rev_files contains -- -- (commandline -xpc), , , ,@F @f,249, 
+git,show contains -- -- (commandline -xpc), , , ,@F,250, 
+git," add; and test '$(__fish_git config --get bash.showUntrackedFiles)' != 0", , , ,@F @f,290, 
+git," add; and test '$(__fish_git config --get bash.showUntrackedFiles)' = 0", , , ,@F,291, 
+git,checkout contains -- -- (commandline -xpc), , , ,@F,322, 
+git,sparse-checkout $sparse_co_commands, , ,set,@f,335,Enable the necessary sparse-checkout config settings
+git,sparse-checkout $sparse_co_commands, , ,list,@f,335,Describe the directories or patterns in the sparse-checkout file
+git,sparse-checkout $sparse_co_commands, , ,add,@f @r,335,Add directories (in cone mode) or patterns (in non-cone mode)
+git,sparse-checkout $sparse_co_commands, , ,reapply,@f,335,Reapply the sparsity pattern rules in case of merge-conflict
+git,sparse-checkout $sparse_co_commands, , ,disable,@f,335,"Disable sparse-checkout, and restore the working directory to include all files"
+git,sparse-checkout $sparse_co_commands, , ,check-rules,@f,335,Check whether sparsity rules match one or more paths
+git,bisect __fish_prev_arg_in bisect, , ,,@f,372, 
+git,bisect start contains -- -- (commandline -xpc), , , ,@f,377, 
+git,bundle $bundlecommands, , ,create,@f,404, 
+git,cherry-pick __fish_git_possible_commithash, , , ,@f,416, 
+git, commit && string match -rq -- '^(--fixup\b|--squash\b|-C|-c)' (commandline -xpc)[-1], , , ,@F @f,468, 
+git,commit string match -rq -- '^(--fixup\b|--squash\b|-C|-c|--reuse-message\b|--reedit-message\b)' (commandline -xpc)[-1], , , ,@f,481, 
+git,diff cached staged, , ,'(,@k,544, 
+git, difftool, , ,'(,@f,548, 
+git,notes $notescommands, , ,list,@f,828,List notes for given object
+git,notes $notescommands, , ,add,@f,828,Add notes for a given object
+git,notes $notescommands, , ,copy,@f,828,Copy notes from object1 to object2
+git,notes $notescommands, , ,append,@f,828,Append to the notes of existing object
+git,notes $notescommands, , ,edit,@f,828,Edit notes for a given object
+git,notes $notescommands, , ,show,@f,828,Show notes for given object
+git,notes $notescommands, , ,merge,@f,828,Merge the given notes ref to current notes ref
+git,notes $notescommands, , ,remove,@f,828,Remove notes for given object
+git,notes $notescommands, , ,prune,@f,828,Remove notes for non-existing/unreachable objects
+git,notes $notescommands, , ,get-ref,@f,828,Print current notes ref
+git,notes $notescommands, , , ,@f,829, 
+git,pull __fish_git_branch_for_remote, , , ,@f,857,Remote alias
+git,pull __fish_git_branch_for_remote, , , ,@f,858, 
+git,push __fish_git_branch_for_remote, , , ,@f,889,Remote alias
+git,push __fish_git_branch_for_remote string match -q '+*' -- (commandline -ct), , ,+(__fish_git_branches | string replace -r  ),@f,890,Force-push branch
+git,push __fish_git_branch_for_remote string match -q ':*' -- (commandline -ct), , ,:(__fish_git_branch_for_remote | string replace -r  ),@f,891,Delete remote branch
+git,push __fish_git_branch_for_remote string match -q '+*:*' -- (commandline -ct), , , ,@f,892,Force-push local branch to remote branch
+git,push __fish_git_branch_for_remote string match -q '*:*' -- (commandline -ct), , , ,@f,893,Push local branch to remote branch
+git,rebase __fish_git_is_rebasing, ,continue, ,@f,910,Restart the rebasing process
+git,rebase __fish_git_is_rebasing, ,abort, ,@f,911,Abort the rebase operation
+git,rebase __fish_git_is_rebasing, ,edit-todo, ,@f,912,Edit the todo list
+git,rebase __fish_git_is_rebasing, ,skip, ,@f,913,Restart the rebasing process by skipping the current patch
+git,reflog $reflogcommands, , ,$reflogcommands,@f,940, 
+git,reset contains -- -- (commandline -xpc), , , ,@F @f,945, 
+git,reset contains -- -- (commandline -xpc), , , ,@F,946, 
+git,reset contains -- -- (commandline -xpc), , , ,@f,947,Reflog
+git,worktree $git_worktree_commands, , ,add,@f,1063,Create a working tree
+git,worktree $git_worktree_commands, , ,list,@f,1063,List details of each worktree
+git,worktree $git_worktree_commands, , ,lock,@f,1063,Lock a working tree
+git,worktree $git_worktree_commands, , ,move,@f,1063,Move a working tree to a new location
+git,worktree $git_worktree_commands, , ,prune,@f,1063,Prune working tree information in $GIT_DIR/worktrees
+git,worktree $git_worktree_commands, , ,remove,@f,1063,Remove a working tree
+git,worktree $git_worktree_commands, , ,unlock,@f,1063,Unlock a working tree
+git,worktree move __fish_any_arg_in (__fish_git_complete_worktrees), , , ,@D @f @r,1079,Worktree
+git,worktree move __fish_any_arg_in (__fish_git_complete_worktrees), , , ,@D @f @r,1080, 
+git,stash __fish_git_stash_not_using_subcommand, , ,list,@f,1087,List stashes
+git,stash __fish_git_stash_not_using_subcommand, , ,show,@f,1088,Show the changes recorded in the stash
+git,stash __fish_git_stash_not_using_subcommand, , ,pop,@f,1089,Apply and remove a single stashed state
+git,stash __fish_git_stash_not_using_subcommand, , ,apply,@f,1090,Apply a single stashed state
+git,stash __fish_git_stash_not_using_subcommand, , ,clear,@f,1091,Remove all stashed states
+git,stash __fish_git_stash_not_using_subcommand, , ,drop,@f,1092,Remove a single stashed state from the stash list
+git,stash __fish_git_stash_not_using_subcommand, , ,create,@f,1093,Create a stash
+git,stash __fish_git_stash_not_using_subcommand, , ,save,@f,1094,Save a new stash
+git,stash __fish_git_stash_not_using_subcommand, , ,branch,@f,1095,Create a new branch from a stash
+git,stash __fish_git_stash_not_using_subcommand, , ,push,@f,1096,Create a new stash with given files
+git,stash __fish_git_stash_using_command apply branch drop pop show, , , ,@f,1097, 
+git,stash __fish_git_stash_using_command push, , , ,@F @f,1098, 
+git,stash __fish_git_stash_using_command push,a,all, ,@f,1099,Stash ignored and untracked files
+git,stash __fish_git_stash_using_command push,k,keep-index, ,@f,1100,Keep changes in index intact
+git,stash __fish_git_stash_using_command push,p,patch, ,@f,1101,Interactively select hunks
+git,stash __fish_git_stash_using_command push,m,message, ,@f,1102,Add a description
+git,stash __fish_git_stash_using_command push, ,no-keep-index, ,@f,1103,Don't keep changes in index intact
+git,stash __fish_git_stash_using_command push,S,staged, ,@f,1104,Stash only staged changes
+git,stash __fish_git_stash_using_command push,u,include-untracked, ,@f,1105,Stash untracked files
+git,submodule $submodulecommands, , ,add,@f,1135,Add a submodule
+git,submodule $submodulecommands, , ,status,@f,1135,Show submodule status
+git,submodule $submodulecommands, , ,init,@f,1135,Initialize all submodules
+git,submodule $submodulecommands, , ,deinit,@f,1135,Unregister the given submodules
+git,submodule $submodulecommands, , ,update,@f,1135,Update all submodules
+git,submodule $submodulecommands, , ,set-branch,@f @r,1135,Set the default remote tracking branch
+git,submodule $submodulecommands, , ,set-url,@f,1135,Sets the URL of the specified submodule
+git,submodule $submodulecommands, , ,summary,@f,1135,Show commit summary
+git,submodule $submodulecommands, , ,foreach,@f,1135,Run command on each submodule
+git,submodule $submodulecommands, , ,sync,@f,1135,Sync submodules' URL with .gitmodules
+git,submodule $submodulecommands, , ,absorbgitdirs,@f,1135,Move submodule's git directory to current .git/module directory
+git,submodule $submodulecommands,q,quiet, ,@f,1135,Only print error messages
+git,submodule deinit contains -- -- (commandline -xpc), , , ,@f,1147,Submodule
+git,submodule status contains -- -- (commandline -xpc), , , ,@f,1151,Submodule
+git,config __fish_seen_argument get, ,default, ,@f,1271,Use default value when missing entry
+git, $sortcommands, ,sort, ,@f,1344,Sort results by
+git, $cmd, , , ,@f,1345, 

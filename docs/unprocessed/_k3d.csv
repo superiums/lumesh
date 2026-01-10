@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+k3d, __fish_k3d_no_subcommand,h,help, ,@f,101,More information about a command
+k3d, __fish_k3d_no_subcommand, ,version, ,@f,102,Show k3d and default k3s version
+k3d, __fish_k3d_no_subcommand, , ,cluster,@f,103,Manage cluster(s)
+k3d, __fish_k3d_no_subcommand, , ,version,@f,104,Show k3d and default k3s version
+k3d, __fish_k3d_no_subcommand, , ,image,@f,105,Handle container images
+k3d, __fish_k3d_no_subcommand, , ,kubeconfig,@f,106,Manage kubeconfig(s)
+k3d, __fish_k3d_no_subcommand, , ,node,@f,107,Manage node(s)

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+realpath, ,e,canonicalize-existing, , ,101,all components of the path must exist
+realpath, ,m,canonicalize-missing, , ,102,no path components need exist or be a directory
+realpath, ,L,logical, , ,103,resolve '. ' components before symlinks
+realpath, ,P,physical, , ,104,resolve symlinks as encountered (default)
+realpath, ,q,quiet, , ,105,suppress most error messages
+realpath, , ,relative-to, , ,106,print the resolved path relative to DIR
+realpath, , ,relative-base, , ,107,print absolute paths unless paths below DIR
+realpath, ,s,no-symlinks, , ,108,don't expand symlinks
+realpath, ,z,zero, , ,109,"end each output line with NUL, not newline"
+realpath, , ,help, , ,110,display this help and exit
+realpath, , ,version, , ,111,output version information and exit AUTHOR Written by Padraig Brady

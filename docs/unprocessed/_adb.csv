@@ -1,0 +1,37 @@
+cmd,conds,short,long,params,dirs,pri,desc
+adb, __fish_adb_no_subcommand, , , ,@f @r,101,Use device with given serial
+adb, __fish_adb_no_subcommand, , ,connect,@f,102,Connect to device
+adb, __fish_adb_no_subcommand, , ,disconnect,@f,103,Disconnect from device
+adb, __fish_adb_no_subcommand, , ,devices,@f,104,List all connected devices
+adb, __fish_adb_no_subcommand, , ,push,@f,105,Copy file to device
+adb, __fish_adb_no_subcommand, , ,pull,@f,106,Copy file from device
+adb, __fish_adb_no_subcommand, , ,sync,@f,107,Copy host->device only if changed
+adb, __fish_adb_no_subcommand, , ,shell,@f,108,Run remote shell [command]
+adb, __fish_adb_no_subcommand, , ,emu,@f,109,Run emulator console command
+adb, __fish_adb_no_subcommand, , ,logcat,@f,110,View device log
+adb, __fish_adb_no_subcommand, , ,install,@f,111,Install package
+adb, __fish_adb_no_subcommand, , ,uninstall,@f,112,Uninstall package
+adb, __fish_adb_no_subcommand, , ,jdwp,@f,113,List PIDs of processes hosting a JDWP transport
+adb, __fish_adb_no_subcommand, , ,forward,@f,114,Port forwarding
+adb, __fish_adb_no_subcommand, , ,bugreport,@f,115,Return bugreport information
+adb, __fish_adb_no_subcommand, , ,backup,@f,116,Perform device backup
+adb, __fish_adb_no_subcommand, , ,restore,@f,117,Restore device from backup
+adb, __fish_adb_no_subcommand, , ,version,@f,118,Show adb version
+adb, __fish_adb_no_subcommand, , ,help,@f,119,Show adb help
+adb, __fish_adb_no_subcommand, , ,wait-for-device,@f,120,Block until device is online
+adb, __fish_adb_no_subcommand, , ,start-server,@f,121,Ensure that there is a server running
+adb, __fish_adb_no_subcommand, , ,kill-server,@f,122,Kill the server if it is running
+adb, __fish_adb_no_subcommand, , ,remount,@f,123,Remounts the /system partition on the device read-write
+adb, __fish_adb_no_subcommand, , ,reboot,@f,124,"Reboots the device, optionally into the bootloader or recovery program"
+adb, __fish_adb_no_subcommand, , ,get-state,@f,125,Prints state of the device
+adb, __fish_adb_no_subcommand, , ,get-serialno,@f,126,Prints serial number of the device
+adb, __fish_adb_no_subcommand, , ,get-devpath,@f,127,Prints device path
+adb, __fish_adb_no_subcommand, , ,status-window,@f,128,Continuously print the device status
+adb, __fish_adb_no_subcommand, , ,root,@f,129,Restart the adbd daemon with root permissions
+adb, __fish_adb_no_subcommand, , ,unroot,@f,130,Restart the adbd daemon without root permissions
+adb, __fish_adb_no_subcommand, , ,usb,@f,131,Restart the adbd daemon listening on USB
+adb, __fish_adb_no_subcommand, , ,tcpip,@f,132,Restart the adbd daemon listening on TCP
+adb, __fish_adb_no_subcommand, , ,ppp,@f,133,Run PPP over USB
+adb, __fish_adb_no_subcommand, , ,sideload,@f,134,Sideloads the given package
+adb, __fish_adb_no_subcommand, , ,reconnect,@f,135,Kick current connection from host side and make it reconnect.
+adb, __fish_adb_no_subcommand, , ,exec-out,@f,136,Execute a command on the device and send its stdout back

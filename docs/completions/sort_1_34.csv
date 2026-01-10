@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sort, ,b,ignore-leading-blanks, , ,101,ignore leading blanks
+sort, ,d,dictionary-order, , ,102,consider only blanks and alphanumeric characters
+sort, ,f,ignore-case, , ,103,fold lower case to upper case characters
+sort, ,g,general-numeric-sort, , ,104,compare according to general numerical value
+sort, ,i,ignore-nonprinting, , ,105,consider only printable characters
+sort, ,M,month-sort, , ,106,compare (unknown) < 'JAN' < .  < 'DEC'
+sort, ,h,human-numeric-sort, , ,107,"compare human readable numbers (e. g. , 2K 1G)"
+sort, ,n,numeric-sort, , ,108,"compare according to string numerical value; see full documentation for suppo…"
+sort, ,R,random-sort, , ,109,"shuffle, but group identical keys.   See shuf(1)"
+sort, , ,random-source, , ,110,get random bytes from FILE
+sort, ,r,reverse, , ,111,reverse the result of comparisons
+sort, , ,sort, , ,112,"sort according to WORD: general-numeric -g, human-numeric -h, month -M, numer…"
+sort, ,V,version-sort, , ,113,natural sort of (version) numbers within text . PP Other options:
+sort, , ,batch-size, , ,114,"merge at most NMERGE inputs at once; for more use temp files"
+sort, ,c,check, , ,115,"check for sorted input; do not sort"
+sort, , ,compress-program, , ,116,"compress temporaries with PROG; decompress them with PROG -d"
+sort, , ,debug, , ,117,"annotate the part of the line used to sort, and warn about questionable usage…"
+sort, , ,files0-from, , ,118,"read input from the files specified by NUL-terminated names in file F; If F i…"
+sort, ,k,key, , ,119,"sort via a key; KEYDEF gives location and type"
+sort, ,m,merge, , ,120,"merge already sorted files; do not sort"
+sort, ,o,output, , ,121,write result to FILE instead of standard output
+sort, ,s,stable, , ,122,stabilize sort by disabling last-resort comparison
+sort, ,S,buffer-size, , ,123,use SIZE for main memory buffer
+sort, ,t,field-separator, , ,124,use SEP instead of non-blank to blank transition
+sort, ,T,temporary-directory, , ,125,"use DIR for temporaries, not $TMPDIR or \\,/tmp\\/; multiple options specify mu…"
+sort, , ,parallel, , ,126,change the number of sorts run concurrently to N
+sort, ,u,unique, , ,127,"with -c, check for strict ordering; without -c, output only the first of an e…"
+sort, ,z,zero-terminated, , ,128,"line delimiter is NUL, not newline"
+sort, , ,help, , ,129,display this help and exit
+sort, , ,version, , ,130,output version information and exit

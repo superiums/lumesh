@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ansible-galaxy, ,h,help, , ,102,Show help message
+ansible-galaxy, collection, , ,download, ,105, 
+ansible-galaxy, role, , ,init, ,106, 

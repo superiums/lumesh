@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+basename, ,a,multiple, , ,101,support multiple arguments and treat each as a NAME
+basename, ,s,suffix, , ,102,"remove a trailing SUFFIX; implies -a"
+basename, ,z,zero, , ,103,"end each output line with NUL, not newline"
+basename, , ,help, , ,104,display this help and exit
+basename, , ,version, , ,105,output version information and exit EXAMPLES

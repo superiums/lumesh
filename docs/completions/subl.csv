@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+subl, project, , ,-d, ,101, 
+subl, command, , ,-d, ,102, 
+subl,a add, , ,-d, ,103, 

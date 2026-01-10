@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+magento, ,h,help, ,@f @r,102,Show help for a command
+magento, ,q,quiet, ,@f @r,103,Do not output any message
+magento, ,v,verbose, ,@f @r,104,"Increase verbosity: 1 for normal, 2 for verbose and 3 for debug"
+magento, , , , ,@f @r,105, 
+magento, , , , ,@f @r,106, 
+magento, ,V,version, ,@f @r,107,Show version
+magento, , ,ansi, ,@f @r,108,Force colored output
+magento, , ,no-ansi, ,@f @r,109,Disable colored output
+magento, ,n,no-interaction, ,@f @r,110,Don't ask any interactive question

@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+htop, ,d,delay, , ,101,Update interval
+htop, ,C,no-color, , ,102,Start htop in monochrome mode
+htop, , ,no-colour, , ,103,Start htop in monochrome mode
+htop, ,F,filter, , ,104,Filter processes by terms matching the commands
+htop, ,h,help, , ,105,Show help and exit
+htop, ,p,pid, , ,106,Show only given PIDs
+htop, ,s,sort-key, , ,107,Sort column
+htop, ,u,user, , ,108,Monitor given user
+htop, ,U,no-unicode, , ,109,Do not use unicode but ASCII characters for graph meters
+htop, ,M,no-mouse, , ,110,Disable support of mouse control
+htop, , ,readonly, , ,111,Disable all system and process changing features
+htop, ,V,version, , ,112,Show version and exit
+htop, ,t,tree, , ,113,Show processes in tree view
+htop, ,H,highlight-changes, , ,114,Highlight new and old processes
+htop, , ,drop-capabilities,, ,115,Drop unneeded Linux capabilities (Requires libpcap support)

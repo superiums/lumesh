@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_js, ,s,script, , ,101,Specify the file name of the script to execute.
+zabbix_js, ,p,param, ,@f,102,Specify the input parameter.
+zabbix_js, ,i,input, , ,103,Specify the file name of the input parameter.
+zabbix_js, ,l,loglevel, ,@f,104,Specify the log level.
+zabbix_js, ,t,timeout, ,@f,105,Specify the timeout in seconds.
+zabbix_js, ,h,help, ,@f,106,Display this help and exit.
+zabbix_js, ,V,version, ,@f,107,Output version information and exit.

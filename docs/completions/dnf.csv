@@ -1,0 +1,142 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dnf, alias, , ,add, ,102,Add a new alias
+dnf, alias, , ,list, ,103,Lists all defined aliases
+dnf, alias, , ,delete, ,104,Delete an alias
+dnf, check, ,dependencies, , ,107,Checks dependencies
+dnf, check, ,duplicates, , ,108,Checks duplicates
+dnf, check, ,obsoleted, , ,109,Checks obsoleted
+dnf, check, ,provides, , ,110,Checks provides
+dnf, check-update, ,changelogs, , ,112, 
+dnf, clean, , ,dbcache, ,114,Removes the database cache
+dnf, clean, , ,expire-cache, ,115,Marks the repository metadata expired
+dnf, clean, , ,metadata, ,116,Removes repository metadata
+dnf, clean, , ,packages, ,117,Removes any cached packages
+dnf, clean, , ,all, ,118,Removes all cache
+dnf," group; and mark", , ,summary, ,121,Display overview of installed and available groups
+dnf," group; and mark", , ,info, ,121,Display package list of a group
+dnf," group; and mark", , ,install, ,121,Install group
+dnf," group; and install", ,with-optional, , ,122,Include optional packages
+dnf," group; and mark", , ,list, ,122,List groups
+dnf," group; and list", ,installed, , ,123,List installed groups
+dnf," group; and list", ,available, , ,124,List available groups
+dnf," group; and list", ,hidden, , ,125,List hidden groups
+dnf," group; and mark", , ,remove, ,125,Remove group
+dnf," group; and remove", ,with-optional, , ,126,Include optional packages
+dnf," group; and mark", , ,upgrade, ,126,Upgrade group
+dnf," group; and mark", , ,mark, ,126,Marks group without manipulating packages
+dnf," group; and mark", , ,install, ,127,Mark group installed without installing packages
+dnf," group; and mark", , ,remove, ,128,Mark group removed without removing packages
+dnf, history, , ,list, ,131,Lists all transactions
+dnf, history, , ,info, ,132,Describe the given transactions
+dnf, history, , ,redo, ,133,Redoes the specified transaction
+dnf, history, , ,rollback, ,134,Undo all transactions performed after the specified transaction
+dnf, history, , ,undo, ,135,Undoes the specified transaction
+dnf, history, , ,userinstalled, ,136,Lists all user installed packages
+dnf," info; and history", , , ,@k,137, 
+dnf, install, , , ,@k,139, 
+dnf, list, ,all, , ,141,Lists all packages
+dnf, list, ,installed, , ,142,Lists installed packages
+dnf, list, ,available, , ,143,Lists available packages
+dnf, list, ,extras, , ,144,Lists installed packages that are not in any known repository
+dnf, list, ,obsoletes, , ,145,List installed obsoleted packages
+dnf, list, ,recent, , ,146,List recently added packages
+dnf, list, ,upgrades, , ,147,List available upgrades
+dnf, list, ,autoremove, , ,148,List packages which will be removed by autoremove
+dnf, makecache, ,timer, , ,150,Instructs DNF to be more resource-aware
+dnf, mark, , ,install, ,152,Mark package installed
+dnf, mark, , ,remove, ,153,Unmarks installed package
+dnf, mark, , ,group, ,154,Mark installed by group
+dnf, module, , ,install, ,156,Install module
+dnf, module, , ,update, ,157,Update modules
+dnf, module, , ,remove, ,158,Remove module
+dnf, module, , ,enable, ,159,Enable a module
+dnf, module, , ,disable, ,160,Disable a module
+dnf, module, , ,reset, ,161,Reset module state
+dnf, module, , ,list, ,162,List modules
+dnf," module; and list", ,all, , ,163,Lists all module 
+dnf," module; and list", ,enabled, , ,164,Lists enabled module
+dnf," module; and list", ,disabled, , ,165,Lists disabled module
+dnf," module; and list", ,installed, , ,166,List  installed modules
+dnf, module, , ,info, ,167,Print module information
+dnf," module; and info", ,profile, , ,168,Print module profiles information
+dnf, offline-distrosync, , ,download, ,170,Download updates for offline upgrade
+dnf, offline-distrosync, , ,clean, ,171,Remove cached packages
+dnf, offline-distrosync, , ,reboot, ,172,Reboot and install packages
+dnf, offline-distrosync, , ,upgrade, ,173,Install cached packages without reboot
+dnf, offline-distrosync, , ,log, ,174,Show logs of upgrade attempts
+dnf, offline-upgrade, , ,download, ,176,Download updates for offline upgrade
+dnf, offline-upgrade, , ,clean, ,177,Remove cached packages
+dnf, offline-upgrade, , ,reboot, ,178,Reboot and install packages
+dnf, offline-upgrade, , ,log, ,179,Show logs of upgrade attempts
+dnf, remove, ,duplicates, , ,183,Removes older version of duplicated packages
+dnf, remove, ,oldinstallonly, , ,184,Removes old installonly packages
+dnf, repoquery, ,querytags, , ,191,Provides the list of tags
+dnf, repoquery,a,all, , ,192, 
+dnf, repoquery, ,enabled, , ,193, 
+dnf, repoquery, ,archlist, , ,194, 
+dnf, repoquery, ,duplicates, , ,195, 
+dnf, repoquery, ,unneeded, , ,196, 
+dnf, repoquery, ,available, , ,197, 
+dnf, repoquery, ,extras, , ,198, 
+dnf, repoquery,f,file, , ,199, 
+dnf, repoquery, ,installed, , ,200, 
+dnf, repoquery, ,installonly, , ,201, 
+dnf, repoquery, ,latest-limit, , ,202, 
+dnf, repoquery, ,recent, , ,203, 
+dnf, repoquery, ,repo, , ,204, 
+dnf, repoquery, ,unsatisfied, , ,205, 
+dnf, repoquery, ,upgrades, , ,206, 
+dnf, repoquery, ,userinstalled, , ,207, 
+dnf, repoquery, ,whatdepends, , ,208, 
+dnf, repoquery, ,whatconflicts, , ,209, 
+dnf, repoquery, ,whatenhances, , ,210, 
+dnf, repoquery, ,whatobsoletes, , ,211, 
+dnf, repoquery, ,whatprovides, , ,212, 
+dnf, repoquery, ,whatrecommends, , ,213, 
+dnf, repoquery, ,whatrequires, , ,214, 
+dnf, repoquery, ,whatsuggests, , ,215, 
+dnf, repoquery, ,whatsupplements, , ,216, 
+dnf, repoquery, ,alldeps, , ,217, 
+dnf, repoquery, ,exactdeps, , ,218, 
+dnf, repoquery, ,srpm, , ,219, 
+dnf, system-upgrade, , ,download, ,221,Download updates for offline upgrade
+dnf, system-upgrade, , ,clean, ,222,Remove cached packages
+dnf, system-upgrade, , ,reboot, ,223,Reboot and install packages
+dnf, system-upgrade, , ,upgrade, ,224,Install cached packages without reboot
+dnf, system-upgrade, , ,log, ,225,Show logs of upgrade attempts
+dnf, repoquery,i,info, , ,226,Show detailed information about the package
+dnf, repoquery,l,list, , ,227,Show the list of files in the package
+dnf, repoquery,s,source, , ,228,Show the package source RPM name
+dnf, repoquery, ,changelogs, , ,229,Print the package changelogs
+dnf, repoquery, ,conflicts, , ,230,Display capabilities that the package conflicts with
+dnf, repoquery, ,depends, , ,231,Display capabilities that the package depends on
+dnf, repoquery, ,enhances, , ,232,Display capabilities enhanced by the package
+dnf, repoquery, ,location, , ,233,Show a location where the package could be downloaded from
+dnf, repoquery, ,obsoletes, , ,234,Display capabilities that the package obsoletes
+dnf, repoquery, ,provides, , ,235,Display capabilities provided by the package
+dnf, repoquery, ,recommends, , ,236,Display capabilities recommended by the package
+dnf, repoquery, ,requires, , ,237,Display capabilities that the package depends on
+dnf, repoquery, ,requires-pre, , ,238,Display capabilities that the package depends on
+dnf, repoquery, ,suggests, , ,239,Display capabilities suggested by the package
+dnf, repoquery, ,supplements, , ,240,Display capabilities supplemented by the package
+dnf, repoquery, ,tree, , ,241,Display a recursive tree of packages
+dnf, repoquery, ,deplist, , ,242,Produce a list of all dependencies
+dnf, repoquery, ,nvr, , ,243,Format like name-version-release
+dnf, repoquery, ,nevra, , ,244,Format like name-epoch:version-release.architecture
+dnf, repoquery, ,envra, , ,245,Format like epoch:name-version-release.architecture
+dnf, repoquery, ,queryformat, , ,246,Custom display format
+dnf, repoquery, ,recursive, , ,247,Query packages recursively
+dnf, repoquery, ,resolve, , ,248,Resolve capabilities to originating packages
+dnf, search, ,all, , ,251,Lists packages that match at least one of the keys
+dnf, updateinfo, ,summary, , ,255,Displays the summary
+dnf, updateinfo, ,list, , ,256,List of advisories
+dnf, updateinfo, ,info, , ,257,Detailed information
+dnf, updateinfo, ,all, , ,258, 
+dnf, updateinfo, ,available, , ,259, 
+dnf, updateinfo, ,installed, , ,260, 
+dnf, updateinfo, ,updates, , ,261, 
+dnf, versionlock, , ,add, ,265,Add  a versionlock for all available packages matching the spec
+dnf, versionlock, , ,exclude, ,266,Add an exclude (within  versionlock) for the available packages matching the spec
+dnf, versionlock, , ,delete, ,267,Remove any matching versionlock entries
+dnf, versionlock, , ,list, ,268,List the current versionlock entries
+dnf, versionlock, , ,clear, ,269,Remove all versionlock entries

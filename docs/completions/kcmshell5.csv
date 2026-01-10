@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kcmshell5, , ,list, ,@f,101,List available modules
+kcmshell5, , ,author, ,@f,102,Show author information
+kcmshell5, , ,license, ,@f,103,Show license information
+kcmshell5, , ,lang, ,@f,104,Set a language
+kcmshell5, , ,silent, ,@f,105,Don't show main window
+kcmshell5, , ,args, ,@f,106,Arguments to the module
+kcmshell5, , ,icon, ,@f,107,Icon for the module
+kcmshell5, , ,caption, ,@f,108,Title for the window
+kcmshell5, ,v,version, ,@f,109,Show version information and exit
+kcmshell5, ,h,help, ,@f,110,Show help information and exit
+kcmshell5, , , , ,@f,111, 

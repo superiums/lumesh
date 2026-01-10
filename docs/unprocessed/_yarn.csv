@@ -1,0 +1,55 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yarn," remove; and __fish_is_switch", , , ,@f,101, 
+yarn," add; and __fish_is_switch", , , ,@f,102, 
+yarn, __fish_use_subcommand, , ,help,@f,103,Show available commands and flags
+yarn, __fish_use_subcommand, , ,add,@f,104,Add packages
+yarn, __fish_use_subcommand, , ,bin,@f,110,Show location of Yarn `bin` folder
+yarn, __fish_use_subcommand, , ,cache,@f,111,Manage Yarn cache
+yarn, __fish_use_subcommand, , ,config,@f,113,Manage Yarn configuration
+yarn, __fish_use_subcommand, , ,exec,@f,115,Run binaries
+yarn, __fish_use_subcommand, , ,info,@f,116,Show information about a package
+yarn, __fish_use_subcommand, , ,init,@f,117,Interactively create or update `package.json`
+yarn, __fish_use_subcommand, , ,install,@f,119,Install packages
+yarn, __fish_use_subcommand, , ,link,@f,120,Symlink a package
+yarn, __fish_use_subcommand, , ,list,@f,121,List installed packages
+yarn, __fish_use_subcommand, , ,node,@f,123,Run Node with the hook already setup
+yarn, __fish_use_subcommand, , ,pack,@f,124,Create compressed archive of packages
+yarn, __fish_use_subcommand, , ,remove,@f,125,Remove packages
+yarn, __fish_use_subcommand, , ,run,@f,126,Run a defined package script
+yarn, __fish_use_subcommand, , ,unlink,@f,127,Unlink a previously created symlink
+yarn, __fish_use_subcommand, , ,unplug,@f,128,Force unpack packages
+yarn, __fish_use_subcommand, , ,up,@f,129,Upgrade packages
+yarn, __fish_use_subcommand, , ,upgrade-interactive,@f,130,Upgrade packages interactively
+yarn, __fish_use_subcommand, , ,version,@f,131,Update the package version
+yarn, __fish_use_subcommand, , ,why,@f,135,Show why a package is installed
+yarn, __fish_use_subcommand, , ,workspace,@f,136,Manage workspace packages
+yarn, __fish_use_subcommand, , ,workspaces,@f,137,Show workspaces information
+yarn, $yarn_cmds,h,help, , ,138,output usage information
+yarn, $yarn_cmds,V,version, , ,139,output the version number
+yarn, $yarn_cmds, ,verbose, , ,140,output verbose messages on internal operations
+yarn, $yarn_cmds, ,offline, , ,141,trigger an error if any required dependencies are not available in local cache
+yarn, $yarn_cmds, ,prefer-offline, , ,142,use network only if dependencies are not available in local cache
+yarn, $yarn_cmds, ,strict-semver, , ,143, 
+yarn, $yarn_cmds, ,json, , ,144, 
+yarn, $yarn_cmds, ,ignore-scripts, , ,145,don't run lifecycle scripts
+yarn, $yarn_cmds, ,har, , ,146,save HAR output of network traffic
+yarn, $yarn_cmds, ,ignore-platform, , ,147,ignore platform checks
+yarn, $yarn_cmds, ,ignore-engines, , ,148,ignore engines check
+yarn, $yarn_cmds, ,ignore-optional, , ,149,ignore optional dependencies
+yarn, $yarn_cmds, ,force, , ,150,ignore all caches
+yarn, $yarn_cmds, ,no-bin-links, , ,151,don't generate bin links when setting up packages
+yarn, $yarn_cmds, ,flat, , ,152,only allow one version of a package
+yarn, $yarn_cmds, ,prod production, , ,153, 
+yarn, $yarn_cmds, ,no-lockfile, , ,154,don't read or generate a lockfile
+yarn, $yarn_cmds, ,pure-lockfile, , ,155,don't generate a lockfile
+yarn, $yarn_cmds, ,frozen-lockfile, , ,156,don't generate a lockfile and fail if an update is needed
+yarn, $yarn_cmds, ,global-folder, , ,157, 
+yarn, $yarn_cmds, ,modules-folder, , ,158,install modules here instead of node_modules
+yarn, $yarn_cmds, ,cache-folder, , ,159,specify a custom folder to store the yarn cache
+yarn, $yarn_cmds, ,mutex, , ,160,use a mutex to ensure only one yarn instance is executing
+yarn, $yarn_cmds, ,mutex,file network, ,161, 
+yarn, $yarn_cmds, ,no-emoji, , ,162,disable emoji in output
+yarn, $yarn_cmds, ,proxy, , ,163, 
+yarn, $yarn_cmds, ,https-proxy, , ,164, 
+yarn, $yarn_cmds, ,no-progress, , ,165,disable progress bar
+yarn, $yarn_cmds, ,network-concurrency, , ,166,maximum number of concurrent network requests

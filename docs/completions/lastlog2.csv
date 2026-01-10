@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lastlog2, ,b,before, , ,101, 
+lastlog2, ,C,clear, , ,102, 
+lastlog2, ,u,user*, , ,103, 
+lastlog2, ,h,help, , ,104, 
+lastlog2, ,i,import, , ,105, 
+lastlog2, ,r,rename, , ,106, 
+lastlog2, ,s,servive, , ,107, 
+lastlog2, ,S,set, , ,108, 
+lastlog2, ,t,time, , ,109, 
+lastlog2, , ,users, , ,110, 
+lastlog2, ,v,version, , ,111, 

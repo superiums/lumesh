@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+brightnessctl, test (__fish_number_of_cmd_args_wo_opts) = 1, , ,info, ,102,Get device info
+brightnessctl, test (__fish_number_of_cmd_args_wo_opts) = 1, , ,get, ,103,Get current brightness of device
+brightnessctl, test (__fish_number_of_cmd_args_wo_opts) = 1, , ,set, ,104,Get maximum brightness of device
+brightnessctl, test (__fish_number_of_cmd_args_wo_opts) = 1, , ,max, ,105,Set brightness of device

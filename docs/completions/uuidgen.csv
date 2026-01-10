@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uuidgen, ,r,random, , ,101, 
+uuidgen, ,t,time, , ,102, 
+uuidgen, ,h,help, , ,103, 
+uuidgen, ,V,version, , ,104, 
+uuidgen, ,m,md5, , ,105, 
+uuidgen, ,s,sha1, , ,106, 
+uuidgen, ,n,namespace, , ,107, 
+uuidgen, ,N,name, , ,108, 
+uuidgen, ,C,count, , ,109, 
+uuidgen, ,x,hex, , ,110, 

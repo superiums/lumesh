@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-stdbuf, ,i,input, , ,101,adjust standard input stream buffering
+uu-stdbuf, ,o,output, , ,102,adjust standard output stream buffering
+uu-stdbuf, ,e,error, , ,103,adjust standard error stream buffering
+uu-stdbuf, ,h,help, , ,104,Print help
+uu-stdbuf, ,V,version, , ,105,Print version

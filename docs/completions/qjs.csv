@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+qjs, ,h,help, , ,101,list options
+qjs, ,e,eval, ,@r,102,evaluate EXPR
+qjs, ,i,interactive, , ,103,go to interactive mode
+qjs, ,m,module, , ,104,load as ES6 module (default=autodetect)
+qjs, , ,script, , ,105,load as ES6 module (default=autodetect)
+qjs, ,I,include, ,@r,106,include an additional file
+qjs, , ,std, , ,107,make 'std' and 'os' available to the loaded script
+qjs, , ,bignum, , ,108,"enable the bignum extensions (BigFloat, BigDecimal)"
+qjs, , ,qjscalc, , ,109,load the QJSCalc runtime (default if invoked as qjscalc)
+qjs, ,T,trace, , ,110,trace memory allocation
+qjs, , ,dump, , ,111,dump the memory usage stats
+qjs, , ,memory-limit, ,@r,112,limit the memory usage to 'n' bytes
+qjs, , ,stack-size, ,@r,113,limit the stack size to 'n' bytes
+qjs, , ,unhandled-rejection, , ,114,dump unhandled promise rejections
+qjs, ,q,quit, , ,115,just instantiate the interpreter and quit

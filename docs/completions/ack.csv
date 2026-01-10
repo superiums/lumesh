@@ -1,0 +1,67 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ack, ,i,ignore-case, , ,101,Ignore case
+ack, , ,smart-case, , ,102,Ignore case when pattern contains no uppercase
+ack, , ,no-smart-case, , ,103,Don't ignore case
+ack, ,v,invert-match, , ,104,Invert match
+ack, ,w,word-regexp, , ,105,Match only whole words
+ack, ,Q,literal, , ,106,Quote all metacharacters
+ack, , ,lines, , ,107,Only print line(s) NUM of each file
+ack, ,l,files-with-matches, , ,108,Only print filenames containing matches
+ack, ,L,files-without-matches, , ,109,Only print filenames with no matches
+ack, , ,output, , ,110,Output the evaluation of Perl expression for each line
+ack, , ,passthru, , ,111,Print all lines
+ack, , ,match, , ,112,Specify pattern explicitly
+ack, ,m,max-count, , ,113,Stop searching in each file after NUM matches
+ack, ,H,with-filename, , ,114,Print the filename for each match
+ack, ,h,no-filename, , ,115,Suppress the prefixing filename on output
+ack, ,c,count, , ,116,Show number of lines matching per file
+ack, , ,column, , ,117,Show column number of first match
+ack, , ,no-column, , ,118,Don't show column number of first match
+ack, ,A,after-context, ,@f @r,119,Print NUM lines of trailing context
+ack, ,B,before-context, ,@f @r,120,Print NUM lines of leading context
+ack, ,C,context, ,@f @r,121,Print NUM lines of context
+ack, , ,print0, , ,122,Print null byte as separator between filenames
+ack, , ,pager, , ,123,Pipes all ack output through command
+ack, , ,no-pager, , ,124,Do not send output through a pager
+ack, , ,heading, , ,125,Prints a filename heading above file's results
+ack, , ,no-heading, , ,126,Don't print a filename heading above file's results
+ack, , ,break, , ,127,Print a break between results
+ack, , ,no-break, , ,128,Don't print a break between results
+ack, , ,group, , ,129,Filename heading and line break between results
+ack, , ,no-group, , ,130,No filename heading and no line breaks between results
+ack, , ,color, , ,131,Highlight the matching text
+ack, , ,no-colour, , ,132,Don't highlight the matching text
+ack, , ,color-filename, , ,133,Set the color for filenames
+ack, , ,color-match, , ,134,Set the color for matches
+ack, , ,color-lineno, , ,135,Set the color for line numbers
+ack, , ,flush, , ,136,Flush output immediately
+ack, , ,sort-files, , ,137,Sort the found files lexically
+ack, , ,show-types, , ,138,Show which types each file has
+ack, , ,files-from, , ,139,Read the list of files to search from file
+ack, , ,ignore-directory, , ,140,Ignore directory
+ack, , ,no-ignore-directory, , ,141,Don't ignore directory
+ack, , ,ignore-file, , ,142,Add filter for ignoring files
+ack, ,R,recurse, , ,143,Recurse into subdirectories
+ack, ,n,no-recurse, , ,144,No descending into subdirectories
+ack, , ,follow, , ,145,Follow symlinks
+ack, , ,no-follow, , ,146,Don't follow symlinks
+ack, ,k,known-types, , ,147,Include only recognized files
+ack, , ,type, , ,148,Include only X files
+ack, , ,type-set, , ,149,Replaces definition of type
+ack, , ,type-add, , ,150,Specify definition of type
+ack, , ,type-del, , ,151,Removes all filters associated with type
+ack, , ,no-env, , ,152,Ignores environment variables and ackrc files
+ack, , ,ackrc, , ,153,Specifies location of ackrc file
+ack, , ,ignore-ack-defaults, , ,154,Ignore default definitions ack includes
+ack, , ,create-ackrc, , ,155,Outputs default ackrc
+ack, ,\?,help, , ,156,Shows help
+ack, , ,help-types, , ,157,Shows all known types
+ack, , ,dump, , ,158,Dump information on which options are loaded
+ack, , ,filter, , ,159,Forces ack to treat input as a pipe
+ack, , ,no-filter, , ,160,Forces ack to treat input as tty
+ack, , ,man, , ,161,Shows man page
+ack, , ,version, , ,162,Displays version and copyright
+ack, , ,thpppt, , ,163,Bill the Cat
+ack, , ,bar, , ,164,The warning admiral
+ack, , ,$type, , ,165,Allow $type file type
+ack, , ,no-$type, , ,166,Don't allow $type file type

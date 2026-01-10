@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+v4l2-tracer, ,c,compact, , ,101,Write minimal whitespace in JSON file
+v4l2-tracer, ,g,debug, , ,102,Turn on verbose reporting plus additional debug info
+v4l2-tracer, ,h,help, , ,103,Display this message
+v4l2-tracer, ,r,raw, , ,104,Write decoded video frame data to JSON file
+v4l2-tracer, ,v,verbose, , ,105,Turn on verbose reporting
+v4l2-tracer, ,y,yuv, , ,106,Write decoded video frame data to yuv file. SS Retrace Options
+v4l2-tracer, ,d,device, , ,107,Use a different video device than specified in the trace file
+v4l2-tracer, ,m,media, , ,108,Use a different media device than specified in the trace file

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wl-clipboard, ,p,primary, , ,101,Use the 'primary' clipboard instead of the regular clipboard
+wl-clipboard, ,o,paste-once, , ,102,Only serve one paste request and then exit
+wl-clipboard, ,f,foreground, , ,103,"By default, wl-copy forks and serves data requests in the background; this op…"
+wl-clipboard, ,c,clear, , ,104,"Instead of copying anything, clear the clipboard so that nothing is copied"
+wl-clipboard, ,n,trim-newline, , ,105,Do not copy the trailing newline character if it is present in the input file
+wl-clipboard, , ,no-newline, , ,106,Do not append a newline character after the pasted clipboard content
+wl-clipboard, ,t,type, , ,107,Override the automatically selected MIME type
+wl-clipboard, ,s,seat, , ,108,Specify which seat wl-copy and wl-paste should work with
+wl-clipboard, ,l,list-types, , ,109,"Instead of pasting the selection, output the list of MIME types it is offered…"
+wl-clipboard, ,w,watch, , ,110,"Instead of pasting once and exiting, continuously watch the clipboard for cha…"
+wl-clipboard, ,v,version, , ,111,Display the version of wl-clipboard and some short info about its license
+wl-clipboard, ,h,help, , ,112,Display a short help message listing the available options.  ENVIRONMENT

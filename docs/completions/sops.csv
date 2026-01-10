@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sops, ,h,help, ,@F,150,Show help

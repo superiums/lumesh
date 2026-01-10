@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+git," subtree; and push split; and __fish_contains_opt rejoin", ,squash, ,@f,115,Merge subtree changes as a single commit
+git," subtree; and push split; and __fish_contains_opt rejoin", ,no-squash, ,@f,116,Do not merge subtree changes as a single commit
+git," subtree; and push split; and __fish_contains_opt rejoin",m,message, ,@f,117,Use the given message as the commit message for the merge commit

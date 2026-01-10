@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+plutil, , , ,xml1 binary1 json swift objc, ,101,Rewrite file in FORMAT
+plutil, , , , ,@f @r,104,Insert VALUE into the plist
+plutil, , , , ,@f @r,105,Overwrite existing VALUE in the plist
+plutil, , , , ,@f @r,107,Removes the value at KEYPATH
+plutil, , , , ,@f @r,108,Outputs the value at KEYPATH as a new plist

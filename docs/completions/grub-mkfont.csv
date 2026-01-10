@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mkfont, ,a,force-autohint, , ,101,force autohint
+grub-mkfont, ,b,bold, , ,102,convert to bold font
+grub-mkfont, ,c,asce, , ,103,set font ascent
+grub-mkfont, ,d,desc, , ,104,set font descent
+grub-mkfont, ,i,index, , ,105,select face index
+grub-mkfont, , ,no-bitmap, , ,106,ignore bitmap strikes when loading
+grub-mkfont, , ,no-hinting, , ,107,disable hinting
+grub-mkfont, ,n,name, , ,108,set font family name
+grub-mkfont, ,o,output, , ,109,save output in FILE [required]
+grub-mkfont, ,r,range, , ,110,set font range
+grub-mkfont, ,s,size, , ,111,set font size
+grub-mkfont, ,v,verbose, , ,112,print verbose messages
+grub-mkfont, ,?,help, , ,113,give this help list
+grub-mkfont, , ,usage, , ,114,give a short usage message
+grub-mkfont, ,V,version, , ,115,print program version

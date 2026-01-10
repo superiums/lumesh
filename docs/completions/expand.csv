@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+expand, ,i,initial, , ,101,do not convert tabs after non blanks
+expand, ,t,tabs, ,@f @r,102,"have tabs NUMBER characters apart, not 8"
+expand, ,t,tabs, ,@f @r,103,use comma separated list of explicit tab positions
+expand, , ,help, , ,104,display this help and exit
+expand, , ,version, , ,105,output version information and exit

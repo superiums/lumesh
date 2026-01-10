@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_config, __fish_use_subcommand, , ,prompt, ,101,View and pick from the sample prompts
+fish_config, __fish_use_subcommand, , ,browse, ,102,Open the web-based UI
+fish_config, __fish_use_subcommand, , ,theme, ,103,View and pick from the sample themes

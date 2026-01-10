@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+help, __fish_is_first_arg, , ,'(,@f @r,101, 

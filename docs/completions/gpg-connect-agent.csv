@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpg-connect-agent, , ,dirmngr, , ,101,Connect to a running directory manager (keyserver client) instead of to the g…
+gpg-connect-agent, , ,keyboxd, , ,102,Connect to a running keybox daemon instead of to the gpg-agent
+gpg-connect-agent, , ,raw-socket, , ,103,Connect to socket name assuming this is an Assuan style server
+gpg-connect-agent, , ,exec, , ,104,Take the rest of the command line as a program and it's arguments and execute…
+gpg-connect-agent, , ,verbose, , ,105,Output additional information while running
+gpg-connect-agent, , ,quiet, , ,106,Try to be as quiet as possible
+gpg-connect-agent, , ,homedir, , ,107,Set the name of the home directory to dir
+gpg-connect-agent, , ,chuid, , ,108,Change the current user to uid which may either be a number or a name
+gpg-connect-agent, , ,no-ext-connect, , ,109,"When using -S or --exec, gpg-connect-agent connects to the Assuan server in e…"
+gpg-connect-agent, , ,no-autostart, , ,110,Do not start the gpg-agent or the dirmngr if it has not yet been started
+gpg-connect-agent, , ,no-history, , ,111,In interactive mode the command line history is usually saved and restored to…
+gpg-connect-agent, , ,agent-program, , ,112,Specify the agent program to be started if none is running
+gpg-connect-agent, , ,dirmngr-program, , ,113,Specify the directory manager (keyserver client) program to be started if non…
+gpg-connect-agent, , ,keyboxd-program, , ,114,Specify the keybox daemon program to be started if none is running
+gpg-connect-agent, , ,run, , ,115,Run the commands from file at startup and then continue with the regular inpu…
+gpg-connect-agent, , ,subst, , ,116,Run the command /subst at startup
+gpg-connect-agent, , ,hex, , ,117,Print data lines in a hex format and the ASCII representation of non-control …
+gpg-connect-agent, , ,decode, , ,118,Decode data lines
+gpg-connect-agent, , ,unbuffered, , ,119,Set stdin and stdout into unbuffered I/O mode

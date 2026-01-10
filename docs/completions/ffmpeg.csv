@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ffmpeg, ,?,help, ,@f @r,102,Show help
+ffmpeg, ,v, , ,@f @r,103, 
+ffmpeg, , , ,1 2 3,@f @r,105,Select the pass number
+ffmpeg, , , , ,@f @r,106, 

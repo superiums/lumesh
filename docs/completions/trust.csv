@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+trust, ,v,verbose, , ,101, 
+trust, ,q,quiet, , ,102, 
+trust, , ,filter, , ,103, 
+trust, , ,purpose, , ,104, 
+trust, , ,store, , ,105,or
+trust, , ,remove, , ,106,operations.  If no operation is specified then
+trust, , ,format, , ,107,arguments should be specified
+trust, , ,comment, , ,108, 
+trust, , ,overwrite, , ,109, 

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rename, ,s,symlink, , ,101, 
+rename, ,v,verbose, , ,102, 
+rename, ,n,no-act, , ,103, 
+rename, ,a,all, , ,104, 
+rename, ,l,last, , ,105, 
+rename, ,o,no-overwrite, , ,106, 
+rename, ,i,interactive, , ,107, 
+rename, ,h,help, , ,108, 
+rename, ,V,version, , ,109, 

@@ -1,0 +1,193 @@
+cmd,conds,short,long,params,dirs,pri,desc
+arc, __fish_arc_needs_command, ,trace, ,@f,101,Debugging command
+arc, __fish_arc_needs_command, ,no-ansi, ,@f,102,Don't use color or style for output
+arc, __fish_arc_needs_command, ,ansi, ,@f,103,Always use formatting
+arc, __fish_arc_needs_command, ,no-ansi, ,@f,104,Don't use color or style for output
+arc, __fish_arc_needs_command, ,load-phutil-library, ,@f,105,Specify which libraries to load
+arc, __fish_arc_needs_command, ,conduit-uri, ,@f,106,Specify the Conduit URI
+arc, __fish_arc_needs_command, ,conduit-token, ,@f,107,Specify the Conduit token
+arc, __fish_arc_needs_command, ,conduit-version, ,@f,108,Force a version
+arc, __fish_arc_needs_command, ,conduit-timeout, ,@f,109,Sets the timeout
+arc, __fish_arc_needs_command, ,config, ,@f,110,Sets a config
+arc, __fish_arc_needs_command, ,skip-arcconfig, ,@f,111,Skip the working copy configuration file
+arc, __fish_arc_needs_command, ,arcrc-file, , ,112,Use provided file instead of ~/.arcrc
+arc, __fish_arc_needs_command, , ,shell-complete,@f,113,Implements shell completion
+arc, __fish_arc_using_command shell-complete, ,current, ,@f,114,Current term in the argument list being completed
+arc, __fish_arc_needs_command, , ,get-config,@f,115,Reads an arc configuration option
+arc, __fish_arc_using_command get-config, ,verbose, ,@f,116,Show detailed information about options
+arc, __fish_arc_needs_command, , ,download,@f,117,Download a file to local disk
+arc, __fish_arc_using_command download, ,as, , ,118,Save the file with a specific name rather than the default
+arc, __fish_arc_using_command download, ,show, ,@f,119,Write file to stdout instead of to disk
+arc, __fish_arc_needs_command, , ,list,@f,120,List your open Differential revisions
+arc, __fish_arc_needs_command, , ,lint,@f,121,Run static analysis on changes to check for mistakes
+arc, __fish_arc_using_command lint, ,engine, ,@f,122,Override configured lint engine for this project
+arc, __fish_arc_using_command lint, ,apply-patches, ,@f,123,Apply patches suggested by lint to the working copy
+arc, __fish_arc_using_command lint, ,severity, ,@f,124,Set minimum message severity
+arc, __fish_arc_using_command lint, ,never-apply-patches, ,@f,125,Never apply patches suggested by lint
+arc, __fish_arc_using_command lint, ,rev, ,@f,126,Lint changes since a specific revision
+arc, __fish_arc_using_command lint, ,outfile, , ,127,Output the linter results to a file
+arc, __fish_arc_using_command lint, ,lintall, ,@f,128,"Show all lint warnings, not just those on changed lines"
+arc, __fish_arc_using_command lint, ,amend-all, ,@f,129,"When linting git repositories, amend HEAD with all patches"
+arc, __fish_arc_using_command lint, ,everything, ,@f,130,Lint all files in the project
+arc, __fish_arc_using_command lint, ,output, ,@f,131,Specify how results will be displayed
+arc, __fish_arc_using_command lint, ,only-new, ,@f,132,Display only messages not present in the original code
+arc, __fish_arc_using_command lint, ,only-changed, ,@f,133,Show lint warnings just on changed lines
+arc, __fish_arc_using_command lint, ,amend-autofixes, ,@f,134,"When linting git repositories, amend HEAD with autofix"
+arc, __fish_arc_needs_command, , ,flag,@f,135,"In the first form, list objects you've flagged"
+arc, __fish_arc_using_command flag, ,edit, ,@f,136,Edit the flag on an object
+arc, __fish_arc_using_command flag, ,color, ,@f,137,Set the color of a flag
+arc, __fish_arc_using_command flag, ,clear, ,@f,138,Delete the flag on an object
+arc, __fish_arc_using_command flag, ,note, ,@f,139,Set the note on a flag
+arc, __fish_arc_needs_command, , ,export, ,140,Export the local changeset to a file
+arc, __fish_arc_using_command export, ,unified, ,@f,141,Export change as a unified patch
+arc, __fish_arc_using_command export, ,git, ,@f,142,Export change as a git patch
+arc, __fish_arc_using_command export, ,encoding, ,@f,143,Attempt to convert non UTF-8 patch into specified encoding
+arc, __fish_arc_using_command export, ,arcbundle, ,@f,144,Export change as an arc bundle
+arc, __fish_arc_using_command export, ,diff, ,@f,145,Export from Differential diff
+arc, __fish_arc_using_command export, ,revision, ,@f,146,Export from a Differential revision
+arc, __fish_arc_needs_command, , ,browse, ,147,Open a file or object in your web browser
+arc, __fish_arc_using_command browse, ,force, ,@f,148,"Open arguments as paths, even if they do not exist in the working copy"
+arc, __fish_arc_using_command browse, ,branch, ,@f,149,Default branch name to view on server
+arc, __fish_arc_needs_command, , ,todo,@f,150,Quickly create a task for yourself
+arc, __fish_arc_using_command todo, ,cc, ,@f,151,Other users to CC on the new task
+arc, __fish_arc_using_command todo, ,project, ,@f,152,Projects to assign to the task
+arc, __fish_arc_using_command todo, ,browse, ,@f,153,"After creating the task, open it in a web browser"
+arc, __fish_arc_needs_command, , ,linters,@f,154,what they do and which versions are installed
+arc, __fish_arc_using_command linters, ,search, ,@f,155,Search for linters
+arc, __fish_arc_using_command linters, ,verbose, ,@f,156,"Show detailed information, including options"
+arc, __fish_arc_needs_command, , ,time,@f,157,Show what you're currently tracking in Phrequent
+arc, __fish_arc_needs_command, , ,stop,@f,158,Stop tracking work in Phrequent
+arc, __fish_arc_using_command stop, ,note, ,@f,159,A note to attach to the tracked time
+arc, __fish_arc_needs_command, , ,alias,@f,160,Create an alias
+arc, __fish_arc_needs_command, , ,set-config,@f,161,Sets an arc configuration option
+arc, __fish_arc_using_command set-config, ,local, ,@f,162,Set a local config value instead of a user one
+arc, __fish_arc_needs_command, , ,start,@f,163,Start tracking work in Phrequent
+arc, __fish_arc_needs_command, , ,close,@f,164,Close a task or otherwise update its status
+arc, __fish_arc_using_command close, ,message, ,@f,165,Provide a comment with your status change
+arc, __fish_arc_using_command close, ,list-statuses, ,@f,166,Show available status options and exit
+arc, __fish_arc_needs_command, , ,land,@f,167,Publish an accepted revision after review
+arc, __fish_arc_using_command land, ,preview, ,@f,168,Prints the commits that would be landed
+arc, __fish_arc_using_command land, ,remote, ,@f,169,Push to a remote other than the default
+arc, __fish_arc_using_command land, ,delete-remote, ,@f,170,Delete the feature branch in the remote after landing it
+arc, __fish_arc_using_command land, ,update-with-rebase, ,@f,171,"When updating the feature branch, use rebase instead of merge"
+arc, __fish_arc_using_command land, ,squash, ,@f,172,Use squash strategy
+arc, __fish_arc_using_command land, ,keep-branch, ,@f,173,Keep the feature branch
+arc, __fish_arc_using_command land, ,merge, ,@f,174,Use merge strategy
+arc, __fish_arc_using_command land, ,update-with-merge, ,@f,175,"When updating the feature branch, use merge instead of rebase"
+arc, __fish_arc_using_command land, ,hold, ,@f,176,"Prepare the change to be pushed, but do not actually push it"
+arc, __fish_arc_using_command land, ,onto, ,@f,177,Land feature branch onto a branch other than the default
+arc, __fish_arc_using_command land, ,revision, ,@f,178,Use the message from a specific revision
+arc, __fish_arc_needs_command, , ,which,@f,179,Show which commits will be selected
+arc, __fish_arc_using_command which, ,show-base, ,@f,180,Print base commit only and exit
+arc, __fish_arc_using_command which, ,base, ,@f,181,Additional rules for determining base revision
+arc, __fish_arc_using_command which, ,head, ,@f,182,Specify the end of the commit range to select
+arc, __fish_arc_using_command which, ,any-status, ,@f,183,Show committed and abandoned revisions
+arc, __fish_arc_needs_command, , ,bookmark,@f,184,Alias for arc feature
+arc, __fish_arc_needs_command, , ,amend,@f,185,Amend the working copy
+arc, __fish_arc_using_command amend, ,revision, ,@f,186,Use the message from a specific revision
+arc, __fish_arc_using_command amend, ,show, ,@f,187,Show the amended commit message
+arc, __fish_arc_needs_command, , ,upgrade,@f,188,Upgrade arcanist and libphutil to the latest versions
+arc, __fish_arc_needs_command, , ,help,@f,189,Shows the help
+arc, __fish_arc_using_command help, ,full, ,@f,190,Print detailed information about each command
+arc, __fish_arc_needs_command, , ,paste,@f,191,Share and grab text using the Paste application
+arc, __fish_arc_using_command paste, ,lang, ,@f,192,Language for syntax highlighting
+arc, __fish_arc_using_command paste, ,json, ,@f,193,Output in JSON format
+arc, __fish_arc_using_command paste, ,title, ,@f,194,Title for the paste
+arc, __fish_arc_needs_command, , ,commit,@f,195,Commit a revision which has been accepted by a reviewer
+arc, __fish_arc_using_command commit, ,revision, ,@f,196,Commit a specific revision
+arc, __fish_arc_using_command commit, ,show, ,@f,197,Show the command which would be issued
+arc, __fish_arc_needs_command, , ,patch,@f,198,Apply changes to the working copy
+arc, __fish_arc_using_command patch, ,force, ,@f,199,Do not run any sanity checks
+arc, __fish_arc_using_command patch, ,encoding, ,@f,200,Attempt to convert non UTF-8 patch into specified encoding
+arc, __fish_arc_using_command patch, ,nocommit, ,@f,201,Do not commit the changes
+arc, __fish_arc_using_command patch, ,update, ,@f,202,Update the local working copy before applying the patch
+arc, __fish_arc_using_command patch, ,patch, , ,203,Apply changes from a git patch file or unified patch file
+arc, __fish_arc_using_command patch, ,arcbundle, ,@f,204,Apply changes from an arc bundlej
+arc, __fish_arc_using_command patch, ,skip-dependencies, ,@f,205,Do not apply dependencies
+arc, __fish_arc_using_command patch, ,diff, ,@f,206,Apply changes from a Differential diff
+arc, __fish_arc_using_command patch, ,nobranch, ,@f,207,Do not create a branch
+arc, __fish_arc_using_command patch, ,revision, ,@f,208,Apply changes from a Differential revision
+arc, __fish_arc_needs_command, , ,install-certificate,@f,209,Installs Conduit credentials into your ~/.arcc
+arc, __fish_arc_needs_command, , ,revert,@f,210,Please use backout instead
+arc, __fish_arc_needs_command, , ,upload, ,211,Upload a file from local disk
+arc, __fish_arc_using_command upload, ,json, ,@f,212,Output upload information in JSON format
+arc, __fish_arc_using_command upload, ,temporary, ,@f,213,Mark the file as temporary
+arc, __fish_arc_needs_command, , ,branch,@f,214,Alias for arc feature
+arc, __fish_arc_needs_command, , ,anoid,@f,215,There's only one way to find out
+arc, __fish_arc_needs_command, , ,cover,@f,216,Show blame for the lines you changed
+arc, __fish_arc_using_command cover, ,rev, ,@f,217,Cover changes since a specific revision
+arc, __fish_arc_needs_command, , ,close-revision,@f,218,Close a revision
+arc, __fish_arc_using_command close-revision, ,quiet, ,@f,219,Do not print a success message
+arc, __fish_arc_using_command close-revision, ,finalize, ,@f,220,Close only if the repository is untracked and the revision is accepted
+arc, __fish_arc_needs_command, , ,tasks,@f,221,View all assigned tasks
+arc, __fish_arc_using_command tasks, ,status, ,@f,222,"Show tasks that are open or closed, default is open"
+arc, __fish_arc_using_command tasks, ,owner, ,@f,223,"Only show tasks assigned to the given username,"
+arc, __fish_arc_using_command tasks, ,unassigned, ,@f,224,Only show tasks that are not assigned
+arc, __fish_arc_using_command tasks, ,limit, ,@f,225,"Limit the amount of tasks outputted, default is all"
+arc, __fish_arc_using_command tasks, ,order, ,@f,226,"Arrange tasks based on priority, created, or modified,"
+arc, __fish_arc_needs_command, , ,feature,@f,227,A wrapper on 'git branch' or 'hg bookmark
+arc, __fish_arc_using_command feature, ,output, ,@f,228,Specify the output format
+arc, __fish_arc_using_command feature, ,view-all, ,@f,229,Include closed and abandoned revisions
+arc, __fish_arc_using_command feature, ,by-status, ,@f,230,Sort branches by status instead of time
+arc, __fish_arc_needs_command, , ,unit,@f,231,Run unit tests that cover specified paths
+arc, __fish_arc_using_command unit, ,engine, ,@f,232,Override configured unit engine for this project
+arc, __fish_arc_using_command unit, ,detailed-coverage, ,@f,233,Show a detailed coverage report on the CLI
+arc, __fish_arc_using_command unit, ,target, ,@f,234,Record a copy of the test results on the specified build target
+arc, __fish_arc_using_command unit, ,ugly, ,@f,235,Use uglier formatting
+arc, __fish_arc_using_command unit, ,rev, ,@f,236,Run unit tests covering changes since a specific revision
+arc, __fish_arc_using_command unit, ,everything, ,@f,237,Run every test
+arc, __fish_arc_using_command unit, ,json, ,@f,238,Report results in JSON format
+arc, __fish_arc_using_command unit, ,coverage, ,@f,239,Always enable coverage information
+arc, __fish_arc_using_command unit, ,output, ,@f,240,Specify the output format
+arc, __fish_arc_using_command unit, ,no-coverage, ,@f,241,Always disable coverage information
+arc, __fish_arc_needs_command, , ,backout,@f,242,Backouts on a previous commit
+arc, __fish_arc_needs_command, , ,call-conduit,@f,243,Make a raw Conduit method call
+arc, __fish_arc_needs_command, , ,diff,@f,244,Generate a Differential diff or revision from local changes
+arc, __fish_arc_using_command diff, ,raw-command, ,@f,245,Generate diff by executing a specified command
+arc, __fish_arc_using_command diff, ,encoding, ,@f,246,Attempt to convert non UTF-8 hunks into specified encoding
+arc, __fish_arc_using_command diff, ,cc, ,@f,247,"When creating a revision, add CCs"
+arc, __fish_arc_using_command diff, ,reviewers, ,@f,248,"When creating a revision, add reviewers"
+arc, __fish_arc_using_command diff, ,skip-staging, ,@f,249,Do not copy changes to the staging area
+arc, __fish_arc_using_command diff, ,raw, ,@f,250,Read diff from stdin
+arc, __fish_arc_using_command diff, ,uncommitted, ,@f,251,Suppress warning about uncommitted changes
+arc, __fish_arc_using_command diff, ,message-file, , ,252,Read revision information from file
+arc, __fish_arc_using_command diff, ,nolint, ,@f,253,Do not run lint
+arc, __fish_arc_using_command diff, ,message, ,@f,254,Use the specified message when updating a revision
+arc, __fish_arc_using_command diff, ,plan-changes, ,@f,255,Create or update a revision without requesting a code review
+arc, __fish_arc_using_command diff, ,browse, ,@f,256,"After creating a diff or revision, open it in a web browser"
+arc, __fish_arc_using_command diff, ,create, ,@f,257,Always create a new revision
+arc, __fish_arc_using_command diff, ,cache, ,@f,258,Disable lint cache
+arc, __fish_arc_using_command diff, ,use-commit-message, ,@f,259,Read revision information from a specific commit
+arc, __fish_arc_using_command diff, ,only, ,@f,260,"Only generate a diff, without running lint, unit tests, or other"
+arc, __fish_arc_using_command diff, ,skip-binaries, ,@f,261,Do not upload binaries
+arc, __fish_arc_using_command diff, ,preview, ,@f,262,only create a diff
+arc, __fish_arc_using_command diff, ,amend-autofixes, ,@f,263,"When linting git repositories, amend HEAD with autofix"
+arc, __fish_arc_using_command diff, ,apply-patches, ,@f,264,Apply patches suggested by lint
+arc, __fish_arc_using_command diff, ,head, ,@f,265,Specify the end of the commit range
+arc, __fish_arc_using_command diff, ,verbatim, ,@f,266,"When creating a revision, try to use the working copy commit"
+arc, __fish_arc_using_command diff, ,less-context, ,@f,267,Create a diff with a few lines of context.
+arc, __fish_arc_using_command diff, ,advice, ,@f,268,Require excuse for lint advice in addition to lint warnings and errors
+arc, __fish_arc_using_command diff, ,json, ,@f,269,Emit machine-readable JSON
+arc, __fish_arc_using_command diff, ,update, ,@f,270,Always update a specific revision
+arc, __fish_arc_using_command diff, ,ignore-unsound-tests, ,@f,271,Ignore unsound test failures without prompting
+arc, __fish_arc_using_command diff, ,excuse, ,@f,272,Provide a prepared in advance excuse for any lints/tests
+arc, __fish_arc_using_command diff, ,base, ,@f,273,Additional rules for determining base revision
+arc, __fish_arc_using_command diff, ,no-amend, ,@f,274,Never amend commits in the working copy with lint patches
+arc, __fish_arc_using_command diff, ,add-all, ,@f,275,Automatically add all unstaged and uncommitted
+arc, __fish_arc_using_command diff, ,never-apply-patches, ,@f,276,Never apply patches suggested by lint
+arc, __fish_arc_using_command diff, ,edit, ,@f,277,Edit revision information
+arc, __fish_arc_using_command diff, ,nounit, ,@f,278,Do not run unit tests
+arc, __fish_arc_using_command diff, ,lintall, ,@f,279,Raise all lint warnings
+arc, __fish_arc_using_command diff, ,amend-all, ,@f,280,"When linting git repositories, amend HEAD with all patches"
+arc, __fish_arc_using_command diff, ,no-diff, ,@f,281,Only run lint and unit tests
+arc, __fish_arc_using_command diff, ,allow-untracked, ,@f,282,Skip checks for untracked files in the working copy
+arc, __fish_arc_using_command diff, ,only-new, ,@f,283,Display only new lint messages
+arc, __fish_arc_using_command diff, ,no-coverage, ,@f,284,Always disable coverage information
+arc, __fish_arc_needs_command, , ,liberate,@f,285,Create or update a libphutil library
+arc, __fish_arc_using_command liberate, ,remap, ,@f,286,Run the remap step of liberation
+arc, __fish_arc_using_command liberate, ,upgrade, ,@f,287,Upgrade library to v2
+arc, __fish_arc_using_command liberate, ,verify, ,@f,288,Run the verify step of liberation
+arc, __fish_arc_using_command liberate, ,all, ,@f,289,Drop the module cache before liberating
+arc, __fish_arc_using_command liberate, ,force-update, ,@f,290,Force the library map to be updated
+arc, __fish_arc_using_command liberate, ,library-name, ,@f,291,Set the library name
+arc, __fish_arc_needs_command, , ,version,@f,292,Shows the current version of arcanist

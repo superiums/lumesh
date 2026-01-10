@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+captree, , ,help, , ,101,Displays usage information and exits
+captree, , ,verbose, , ,102,"Displays capability sets and IAB tuples even when they are empty, or redundant"
+captree, , ,depth, , ,103,Displays the process tree to a depth of R n 
+captree, , ,color, , ,104,"Colo[u]rs the targeted PIDs, if stdout is a TTY, in red"

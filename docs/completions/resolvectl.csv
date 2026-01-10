@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+resolvectl, ,i,interface, , ,101,Interface to execute the query on
+resolvectl, ,p,protocol, , ,102,Network protocol for the query
+resolvectl, ,t,type, , ,103,DNS RR type for query
+resolvectl, ,c,class, , ,104,DNS class for query
+resolvectl, , ,service-address,true false, ,105,Resolve address for SRV record
+resolvectl, , ,service-txt,true false, ,106,Resolve TXT records for services
+resolvectl, , ,cname,true false, ,107,Follow CNAME redirects
+resolvectl, , ,validate,true false, ,108,Allow DNSSEC validation
+resolvectl, , ,synthesize,true false, ,109,Allow synthetic response
+resolvectl, , ,cache,true false, ,110,Allow response from cache
+resolvectl, , ,stale-data,true false, ,111,Allow response from cache with stale data
+resolvectl, , ,relax-single-label,true false, ,112,Allow single label lookups to go upstream
+resolvectl, , ,zone,true false, ,113,Allow response from locally registered mDNS/LLMNR records
+resolvectl, , ,trust-anchor,true false, ,114,Use local trust anchors
+resolvectl, , ,network,true false, ,115,Allow response from network
+resolvectl, , ,search,true false, ,116,Use search domains for single-label names
+resolvectl, , ,raw,payload packet, ,117,Dump answer as binary data
+resolvectl, , ,legend,true false, ,118,Print headers and meta info
+resolvectl, , ,json,short pretty off, ,119,Output as JSON in specified mode
+resolvectl, ,h,help, , ,120,Show help
+resolvectl, , ,version, , ,121,Show version
+resolvectl, , ,no-pager, , ,122,Do not pipe output into a pager

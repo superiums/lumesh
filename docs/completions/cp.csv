@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cp, ,a,archive, , ,101,Same as -dpR
+cp, , ,attributes-only, , ,102,Copy just the attributes
+cp, ,b,backup,none off numbered t existing nil simple never, ,103,Make backup of each existing destination file
+cp, , ,copy-contents, , ,104,Copy contents of special files when recursive
+cp, ,f,force, , ,105,Do not prompt before overwriting
+cp, ,i,interactive, , ,106,Prompt before overwrite
+cp, ,l,link, , ,107,Link files instead of copying
+cp, , ,strip-trailing-slashes, , ,108,Remove trailing slashes from source
+cp, ,S,suffix, ,@r,109,Backup suffix
+cp, ,t,target-directory, ,@D @f @r,110,Target directory
+cp, ,u,update, , ,111,Do not overwrite newer files
+cp, ,v,verbose, , ,112,Verbose mode
+cp, , ,help, , ,113,Display help and exit
+cp, , ,version, , ,114,Display version and exit
+cp, ,L,dereference, , ,115,Always follow symbolic links
+cp, ,n,no-clobber, , ,116,Do not overwrite an existing file
+cp, ,P,no-dereference, , ,117,Never follow symbolic links
+cp, , ,preserve,mode ownership timestamps links all,@f,118,Preserve ATTRIBUTES if possible
+cp, , ,no-preserve,mode ownership timestamps links all,@f @r,119,Don't preserve ATTRIBUTES
+cp, , ,parents, , ,120,Use full source file name under DIRECTORY
+cp, ,R,recursive, , ,121,Copy directories recursively
+cp, , ,reflink,always auto never, ,122,Control clone/CoW copies
+cp, , ,remove-destination, , ,123,First remove existing destination files
+cp, , ,sparse,always auto never,@f @r,124,Control creation of sparse files
+cp, ,s,symbolic-link, , ,125,Make symbolic links instead of copying
+cp, ,T,no-target-directory, , ,126,Treat DEST as a normal file
+cp, ,x,one-file-system, , ,127,Stay on this file system
+cp, ,X,context, ,@r,128,Set SELinux context of copy to CONTEXT

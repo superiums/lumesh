@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rm, ,f,force, , ,101,"ignore nonexistent files and arguments, never prompt"
+rm, , ,interactive, , ,102,"prompt according to WHEN: never, once (-I), or always (-i); without WHEN, pro…"
+rm, , ,one-file-system, , ,103,"when removing a hierarchy recursively, skip any directory that is on a file s…"
+rm, , ,no-preserve-root, , ,104,do not treat '/' specially
+rm, , ,preserve-root, , ,105,"do not remove '/' (default); with 'all', reject any command line argument on …"
+rm, ,R,recursive, , ,106,remove directories and their contents recursively
+rm, ,d,dir, , ,107,remove empty directories
+rm, ,v,verbose, , ,108,explain what is being done
+rm, , ,help, , ,109,display this help and exit
+rm, , ,version, , ,110,output version information and exit 

@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gojq, ,c,compact-output, , ,101,"Compact output, no pretty-print"
+gojq, ,r,raw-output, , ,102,Output raw strings without quotes
+gojq, ,j,join-output, , ,103,Stop printing a newline after each output
+gojq, ,0,nul-output, , ,104,Print NUL after each output
+gojq, ,C,color-output, , ,105,Colorize output even if piped
+gojq, ,M,monochrome-output, , ,106,Stop colorizing output
+gojq, , ,yaml-output, , ,107,Output as YAML
+gojq, , ,indent, ,@f @r,108,Number of spaces for indentation
+gojq, , ,tab, , ,109,Use tabs for indentation
+gojq, ,n,null-input, , ,110,Use null as input value
+gojq, ,R,raw-input, , ,111,Read input as raw strings
+gojq, ,s,slurp, , ,112,Read all inputs into an array
+gojq, , ,stream, , ,113,Parse input in stream fashion
+gojq, , ,yaml-input, , ,114,Read input as YAML
+gojq, ,f,from-file, ,@F,115,Load query from file
+gojq, ,L, , ,@D,116,Directory to search modules from
+gojq, , ,arg, ,@f @r,117,Set variable to string value
+gojq, , ,argjson, ,@f @r,118,Set variable to JSON value
+gojq, , ,slurpfile, ,@f @r,119,Set variable to the JSON contents of the file
+gojq, , ,rawfile, ,@f @r,120,Set variable to the contents of the file
+gojq, , ,args, , ,121,Consume remaining arguments as positional string values
+gojq, , ,jsonargs, , ,122,Consume remaining arguments as positional JSON values
+gojq, ,e,exit-status, , ,123,Exit 1 when the last value is false or null
+gojq, ,v,version, , ,124,Print gojq version
+gojq, ,h,help, , ,125,Print help

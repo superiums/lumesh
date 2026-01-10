@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tmuxp, ,h,help, , ,101,Help
+tmuxp, ,V,version, , ,102,Version
+tmuxp, , ,log-level,debug info warning error critical,@f @r,103,Log level
+tmuxp, load,L, , ,@F @r,112,Passthru to tmux -L
+tmuxp, load,S, , ,@F @r,113,Passthru to tmux -S
+tmuxp, load,f, , ,@F @r,114,Passthru to tmux -f
+tmuxp, load,s, , ,@r,115,Session name
+tmuxp, load,a, , ,@r,116,Attach current windows to session
+tmuxp, load,y,yes, , ,117,Always answer yes
+tmuxp, load, ,log-file, ,@F @r,118,Log file path
+tmuxp, import, , ,teamocil tmuxinator, ,119, 
+tmuxp, convert,y,yes, , ,120,Always answer yes
+tmuxp, convert, , , ,@r,121, 
+tmuxp, freeze,L, , ,@F @r,122,Passthru to tmux -L
+tmuxp, freeze,S, , ,@F @r,123,Passthru to tmux -S
+tmuxp, freeze,f,worskpace-format,json yaml,@f @r,124,File format
+tmuxp, freeze,o,save-to, ,@F @r,125,Output file
+tmuxp, freeze,y,yes, , ,126,Always answer yes
+tmuxp, freeze,q,quiet, , ,127,Do not prompt for confirmation
+tmuxp, freeze, ,force, , ,128,Overwrite existing file
+tmuxp, shell,L, , ,@F @r,129,Passthru to tmux -L
+tmuxp, shell,S, , ,@F @r,130,Passthru to tmux -S
+tmuxp, shell,c, , ,@r,131,Run code and exit
+tmuxp, shell, ,best, , ,132,Use best shell available
+tmuxp, shell, ,pdb, , ,133,Use pdb
+tmuxp, shell, ,code, , ,134,Use code.interact()
+tmuxp, shell, ,ptipython, , ,135,Use ptpython+ipython
+tmuxp, shell, ,ptpython, , ,136,Use ptpython
+tmuxp, shell, ,ipython, , ,137,Use ipython
+tmuxp, shell, ,bpython, , ,138,Use bpython
+tmuxp, shell, ,use-pythonrc, , ,139,Load ~/.pythonrc.py
+tmuxp, shell, ,no-startup, , ,140,Do not load ~/.pythonrc.py
+tmuxp, shell, ,use-vi-mode, , ,141,Use vi input mode
+tmuxp, shell, ,no-vi-mode, , ,142,Do not use vi input mode

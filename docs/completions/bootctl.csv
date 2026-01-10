@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bootctl, reboot-to-firmware, , ,true false, ,101, 
+bootctl, set-default set-oneshot, , , ,@f @r,102, 
+bootctl, ,h,help, , ,103,Show this help
+bootctl, , ,version, , ,104,Print version
+bootctl, , ,esp-path, ,@r,105,Path to the EFI System Partition (ESP)
+bootctl, , ,boot-path, ,@r,106,Path to the $BOOT partition
+bootctl, ,p,print-esp-path, , ,107,Print path to the EFI System Partition
+bootctl, ,x,print-boot-path, , ,108,Print path to the $BOOT partition
+bootctl, , ,no-variables, , ,109,Do not touch EFI variables
+bootctl, , ,no-pager, , ,110,Do not pipe output into a pager
+bootctl, , ,graceful, , ,111,Do not print fail

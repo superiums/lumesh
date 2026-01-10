@@ -1,0 +1,69 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kitchen, __fish_kitchen_no_command, , ,help,@f,101,Describe available commands or one specific command
+kitchen, __fish_kitchen_using_command help, , ,help,@f,102,Describe available commands or one specific command
+kitchen, __fish_kitchen_no_command, , ,list,@f,103,Lists one or more instances
+kitchen, __fish_kitchen_using_command list,b,bare, ,@f,104,"List the name of each instance only, one per line"
+kitchen, __fish_kitchen_using_command list,l,log_level, ,@f,105,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command help, , ,list,@f,106,Lists one or more instances
+kitchen, __fish_kitchen_using_command list, , , ,@f,107, 
+kitchen, __fish_kitchen_no_command, , ,diagnose,@f,108,Show computed diagnostic configuration
+kitchen, __fish_kitchen_using_command diagnose,l,log_level, ,@f,109,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command diagnose, ,loader, ,@f,110,Include data loader diagnostics
+kitchen, __fish_kitchen_using_command diagnose, ,instances, ,@f,111,Include instances diagnostics
+kitchen, __fish_kitchen_using_command diagnose, ,all, ,@f,112,Include all diagnostics
+kitchen, __fish_kitchen_using_command help, , ,diagnose,@f,113,Show computed diagnostic configuration
+kitchen, __fish_kitchen_using_command diagnose, , , ,@f,114, 
+kitchen, __fish_kitchen_no_command, , ,create,@f,115,Change instance state to create. Start one or more instances
+kitchen, __fish_kitchen_using_command create,c,concurrency, ,@f,116,"Run concurrently, give number for max instances"
+kitchen, __fish_kitchen_using_command create,l,log_level, ,@f,117,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command help, , ,create,@f,118,Change instance state to create. Start one or more instances
+kitchen, __fish_kitchen_using_command create, , , ,@f,119, 
+kitchen, __fish_kitchen_no_command, , ,converge,@f,120,Change instance state to converge. Use a provisioner to configure one or more instances
+kitchen, __fish_kitchen_using_command converge,c,concurrency, ,@f,121,"Run converge concurrently, give number for max instances"
+kitchen, __fish_kitchen_using_command converge,l,log_level, ,@f,122,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command help, , ,converge,@f,123,Change instance state to converge. Use a provisioner to configure one or more instances
+kitchen, __fish_kitchen_using_command converge, , , ,@f,124, 
+kitchen, __fish_kitchen_no_command, , ,setup,@f,125,Change instance state to setup. Prepare to run automated tests. Install busser
+kitchen, __fish_kitchen_using_command setup,c,concurrency, ,@f,126,"Run concurrently, give number for max instances"
+kitchen, __fish_kitchen_using_command setup,l,log_level, ,@f,127,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command help, , ,setup,@f,128,Change instance state to setup. Prepare to run automated tests. Install busser
+kitchen, __fish_kitchen_using_command setup, , , ,@f,129, 
+kitchen, __fish_kitchen_no_command, , ,verify,@f,130,Change instance state to verify. Run automated tests
+kitchen, __fish_kitchen_using_command verify,c,concurrency, ,@f,131,"Run concurrently, give number for max instances"
+kitchen, __fish_kitchen_using_command verify,l,log_level, ,@f,132,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command help, , ,verify,@f,133,Change instance state to verify. Run automated tests
+kitchen, __fish_kitchen_using_command verify, , , ,@f,134, 
+kitchen, __fish_kitchen_no_command, , ,destroy,@f,135,Change instance state to destroy. Delete all information for one or more instances
+kitchen, __fish_kitchen_using_command destroy,c,concurrency, ,@f,136,"Run concurrently, give number for max instances"
+kitchen, __fish_kitchen_using_command destroy,l,log_level, ,@f,137,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command help, , ,destroy,@f,138,Change instance state to destroy. Delete all information for one or more instances
+kitchen, __fish_kitchen_using_command destroy, , , ,@f,139, 
+kitchen, __fish_kitchen_no_command, , ,test,@f,140,"Test (destroy, create, converge, setup, verify and destroy) one or more instances"
+kitchen, __fish_kitchen_using_command test,c,concurrency, ,@f,141,"Run concurrently, give number for max instances"
+kitchen, __fish_kitchen_using_command test,l,log_level, ,@f,142,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command test,d,destroy, ,@f,143,"Destroy strategy to use after testing (passing, always, never)."
+kitchen, __fish_kitchen_using_command test, ,auto_init, ,@f,144,Invoke init command if .kitchen.yml is missing
+kitchen, __fish_kitchen_using_command help, , ,test,@f,145,"Test (destroy, create, converge, setup, verify and destroy) one or more instances"
+kitchen, __fish_kitchen_using_command test, , , ,@f,146, 
+kitchen, __fish_kitchen_no_command, , ,login,@f,147,Log in to one instance
+kitchen, __fish_kitchen_using_command login,l,log_level, ,@f,148,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command help, , ,login,@f,149,Log in to one instance
+kitchen, __fish_kitchen_using_command login, , , ,@f,150, 
+kitchen, __fish_kitchen_no_command, , ,exec,@f,151,Execute command on one or more instance
+kitchen, __fish_kitchen_using_command exec,l,log_level, ,@f,152,"Set the log level (debug, info, warn, error, fatal)"
+kitchen, __fish_kitchen_using_command exec,c,command, ,@f,153,execute via ssh
+kitchen, __fish_kitchen_using_command help, , ,exec,@f,154,Execute command on one or more instance
+kitchen, __fish_kitchen_using_command exec, , , ,@f,155, 
+kitchen, __fish_kitchen_no_command, , ,version,@f,156,Print Kitchen's version information
+kitchen, __fish_kitchen_using_command help, , ,version,@f,157,Print Kitchen's version information
+kitchen, __fish_kitchen_no_command, , ,sink,@f,158,Show the Kitchen sink!
+kitchen, __fish_kitchen_using_command help, , ,sink,@f,159,Show the Kitchen sink!
+kitchen, __fish_kitchen_no_command, , ,console,@f,160,Kitchen Console!
+kitchen, __fish_kitchen_using_command help, , ,console,@f,161,Kitchen Console!
+kitchen, __fish_kitchen_no_command, , ,init,@f,162,Adds some configuration to your cookbook so Kitchen can rock
+kitchen, __fish_kitchen_using_command init,D,driver, ,@f,163,One or more Kitchen Driver gems to be installed or added to a Gemfile 
+kitchen, __fish_kitchen_using_command init,P,provisioner, ,@f,164,The default Kitchen Provisioner to use 
+kitchen, __fish_kitchen_using_command init, ,create_gemfile, ,@f,165,Whether or not to create a Gemfile if one does not exist. Default: false 
+kitchen, __fish_kitchen_using_command help, , ,init,@f,166,Add some configuration to your cookbook
+kitchen, __fish_kitchen_no_command, , ,driver,@f,167,Driver subcommands
+kitchen, __fish_kitchen_using_command help, , ,driver,@f,168,Driver subcommands

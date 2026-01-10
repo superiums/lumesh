@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+totem, , ,usage, , ,101,Output a brief synopsis of command options then quit
+totem, ,?,help, , ,102,Output  a longer help message then quit
+totem, , ,version, , ,103,Output version information then quit
+totem, , ,play-pause, , ,104,Tell any running totem instance: Toggle between play and pause
+totem, , ,play, , ,105,Tell any running totem instance: Play
+totem, , ,pause, , ,106,Tell any running totem instance: Pause
+totem, , ,next, , ,107,Tell any running totem instance: Skip to next
+totem, , ,previous, , ,108,Tell any running totem instance: Skip to previous
+totem, , ,seek-fwd, , ,109,Tell any running totem instance: Seek forwards 15 sec
+totem, , ,seek-bwd, , ,110,Tell any running totem instance: Seek backwards 15 sec
+totem, , ,volume-up, , ,111,Tell any running totem instance: Raise volume by 8%
+totem, , ,volume-down, , ,112,Tell any running totem instance: Lower volume by 8%
+totem, , ,fullscreen, , ,113,Tell any running totem instance: Toggle fullscreen
+totem, , ,quit, , ,114,Tell any running totem instance: Quit
+totem, , ,enqueue, ,@r,115,Tell any running totem instance: Add to playlist
+totem, , ,replace, ,@r,116,Tell any running totem instance: Play from playlist

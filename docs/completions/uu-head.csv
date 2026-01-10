@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-head, ,c,bytes, , ,101,"print the first NUM bytes of each file; with the leading '-', print all but the last NUM bytes of each file"
+uu-head, ,n,lines, , ,102,"print the first NUM lines instead of the first 10; with the leading '-', print all but the last NUM lines of each file"
+uu-head, ,q,silent, , ,103,never print headers giving file names
+uu-head, ,v,verbose, , ,104,always print headers giving file names
+uu-head, , ,presume-input-pipe, , ,105, 
+uu-head, ,z,zero-terminated, , ,106,"line delimiter is NUL, not newline"
+uu-head, ,h,help, , ,107,Print help
+uu-head, ,V,version, , ,108,Print version

@@ -1,0 +1,112 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aura, $noopt,A,aursync, ,@f,101,Synchronize AUR packages
+aura, $noopt,B,save, ,@f,102,Save and restore package state
+aura, $noopt,C,downgrade, ,@f,103,Package cache actions
+aura, $noopt,D,database, ,@f,104,Modify the package database
+aura, $noopt,L,viewlog, ,@f,105,Pacman log actions
+aura, $noopt,O,orphans, ,@f,106,Operate on orphan packages
+aura, $noopt,Q,query, ,@f,107,Query the package database
+aura, $noopt,R,remove, ,@f,108,Remove packages from the system
+aura, $noopt,S,sync, ,@f,109,Synchronize packages
+aura, $noopt,T,deptest, ,@f,110,Check dependencies
+aura, $noopt,U,upgrade, ,@f,111,Upgrade or add a local package
+aura, $noopt, ,check, , ,112,Validate your system
+aura, $noopt, ,conf, , ,113,View various configuration settings and files
+aura, $noopt, ,deps, , ,114,Output a dependency graph
+aura, $noopt, ,free, , ,115,State of Free Software install on the system
+aura, $noopt, ,stats, , ,116,View statistics about your machine or about Aura itself
+aura, $noopt, ,thanks, , ,117,The people behind Aura
+aura, $$condition,d,nodeps, , ,122,Skip [all] dependency checks
+aura, $$condition, ,dbonly, , ,123,Modify database entry only
+aura, $$condition, ,noprogressbar, , ,124,Do not display progress bar
+aura, $$condition, ,noscriptlet, , ,125,Do not execute install script
+aura, $$condition,p,print, , ,126,"Dry run, only print targets"
+aura, $$condition, ,print-format, ,@f @r,127,Specify printf-like format
+aura, $$condition, ,asdeps, , ,128,Mark PACKAGE as dependency
+aura, $$condition, ,asexplicit, , ,129,Mark PACKAGE as explicitly installed
+aura, $$condition,f,force, , ,130,Bypass file conflict checks
+aura, $$condition, ,ignore,$listinstalled, ,131,Ignore upgrade of PACKAGE
+aura, $$condition, ,ignoregroup,$listgroups, ,132,Ignore upgrade of GROUP
+aura, $$condition, ,needed, , ,133,Do not reinstall up-to-date targets
+aura, $$condition, ,recursive, , ,134,Recursively reinstall all dependencies
+aura, $$condition,g,groups,$listgroups, ,135,Display all packages in GROUP
+aura, $$condition,i,info, , ,136,Display information on PACKAGE
+aura, $$condition,q,quiet, , ,137,Show less information
+aura, $$condition,s,search, ,@r,138,Search packages for regexp
+aura, $$condition,a,delmakedeps, , ,139,Remove packages only needed during installation
+aura, $$condition,c,clean, , ,140,Clear the build directory after a package is built
+aura, $$condition,d,dryrun, , ,141,"Show available upgrades, but do not perform them"
+aura, $$condition,k,diff, , ,142,Show PKGBUILD diffs
+aura, $$condition, ,git, , ,143,Include -git/-svn/etc packages
+aura, $aur,i,info, , ,144,View package information
+aura, $aur,o,open, , ,145,Open a given package's AUR package
+aura, $aur,p,pkgbuild, , ,146,View the packages's PKGBUILD
+aura, $aur,s,search, ,@r,147,Search the AUR for matching terms
+aura, $aur,u,sysupgrade, , ,148,Upgrade all installed AUR packages
+aura, $aur,v,provides, , ,149,Search for packages that 'provide' some package identity
+aura, $aur,w,clone, , ,150,Download the source tarball
+aura, $aur,y,refresh, , ,151,Pull the latest changes for every local package clone
+aura, $aur, ,build, ,@r,152,Specify a build location
+aura, $aur, ,builduser, ,@r,153,User to build as
+aura, $aur, ,hotedit, , ,154,Prompt for PKGBUILD editing
+aura, $aur, ,ignore, ,@r,155,Ignore a package upgrade
+aura, $aur, ,nocheck, , ,156,Do not run the check() function of the PKGBUILD
+aura, $aur, ,shellcheck, , ,157,Run shellcheck on PKGBUILDs before building
+aura, $aur, ,skipdepcheck, , ,158,Perform no dependency resolution
+aura, $aur, ,skipinteg, , ,159,Do not perform any verification checks on source files
+aura, $aur, ,skippgpcheck, , ,160,Do not verify source files with PGP signatures
+aura," $aur; and $search", ,abc, , ,161,Sort alphabetically
+aura," $aur; and $search", ,limit, , ,162,Limit the results to N results
+aura," $aur; and $search",r,reverse, , ,163,Reverse the search results
+aura," $aur; and $search",q,quiet, , ,164,Only print matching package names
+aura, $save,c,clean, , ,165,Remove all but the given number of backups
+aura, $save,l,list, , ,166,Show all saved package snapshot filenames
+aura, $save,r,restore, , ,167,Restores a record kept with -B
+aura, $downgrade,b,backup, , ,168,Backup to directory
+aura, $downgrade,c,clean, , ,169,Save this many versions
+aura, $downgrade,i,info, , ,170,Look up specific packages for info on their cache entries
+aura, $downgrade,l,list, , ,171,Print the contents of the package cache
+aura, $downgrade,m,missing, , ,172,Display packages that don't have a tarball in the cache
+aura, $downgrade,n,notsaved, , ,173,Delete only those tarballs which aren't present in a snapshot
+aura, $downgrade,s,search, ,@r,174,Search via regex
+aura, $downgrade,t,invalid, ,@r,175,Delete invalid tarballs from the cache
+aura, $downgrade,y,refresh, ,@r,176,Download missing tarballs of installed packages
+aura, $logfile,i,info, , ,177,Show package history
+aura, $logfile,s,search, ,@r,178,Search via regex
+aura, $orphans,a,adopt, , ,179,Mark a package as being explicitly installed
+aura, $orphans,e,elderly, , ,180,"Display all explicitly installed, top-level packages"
+aura, $orphans,j,abandon, , ,181,Uninstall orphan packages
+aura, $query,c,changelog, , ,182,View the change log of PACKAGE
+aura, $query,d,deps, , ,183,List only non-explicit packages (dependencies)
+aura, $query,e,explicit, , ,184,List only explicitly installed packages
+aura, $query,k,check, , ,185,Check if all files owned by PACKAGE are present
+aura, $query,l,list, , ,186,List all files owned by PACKAGE
+aura, $query,m,foreign, , ,187,List all packages not in the database
+aura, $query,o,owns, ,@r,188,Search for the package that owns FILE
+aura, $query,p,file, , ,189,"Apply the query to a package file, not package"
+aura, $query,t,unrequired, , ,190,List only unrequired packages
+aura, $query,u,upgrades, , ,191,List only out-of-date packages
+aura," $query; and $argument", , ,$listinstalled, ,192,Installed package
+aura, $remove,c,cascade, , ,193,Also remove packages depending on PACKAGE
+aura, $remove,n,nosave, , ,194,Ignore file backup designations
+aura, $remove,s,recursive, , ,195,Also remove dependencies of PACKAGE
+aura, $remove,u,unneeded, , ,196,Only remove targets not required by PACKAGE
+aura," $remove; and $argument", , ,$listinstalled, ,197,Installed package
+aura, $sync,c,clean, , ,198,Remove [all] packages from cache
+aura, $sync,l,list,$listrepos, ,199,List all packages in REPOSITORY
+aura, $sync,u,sysupgrade, , ,200,Upgrade all packages that are out of date
+aura, $sync,w,downloadonly, , ,201,Only download the target packages
+aura, $sync,y,refresh, , ,202,Download fresh copy of the package list
+aura," $sync; and $argument", , ,$listall $listgroups, ,203, 
+aura," $upgrade; and $argument", , , ,@k,204,Package file
+aura, $conf,a,aura, , ,205,View the contents of your Aura config
+aura, $conf,g,gen, , ,206,Output your full current config as legal TOML
+aura, $conf,m,makepkg, , ,207,View the Makepkg conf
+aura, $conf,p,pacman, , ,208,View the Pacman conf
+aura, $deps,l,limit, , ,209,The number of layers up or down to allow
+aura, $deps,o,optional, , ,210,Include optional dependencies
+aura, $deps,r,reverse, , ,211,Display packages that depend on the given args
+aura, $deps, ,open, , ,212,Open the output image automatically
+aura, $deps, ,raw, , ,213,Print the raw DOT output
+aura, $free, ,copyleft, , ,214,Consider only Copyleft licenses
+aura, $free, ,lenient, , ,215,Allow FOSS-derived custom licenses

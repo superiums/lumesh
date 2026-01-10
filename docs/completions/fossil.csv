@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fossil, , ,help, , ,403,Print help

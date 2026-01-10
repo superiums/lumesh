@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setvtrgb, ,C,console, , ,101,the console device to be used
+setvtrgb, ,h,help, , ,102,Prints usage message and exits
+setvtrgb, ,V,version, , ,103,Prints version number and exists

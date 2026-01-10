@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xzgrep, , ,recursive, , ,101, 4
+xzgrep, , ,dereference-recursive, , ,102, 4
+xzgrep, , ,directories, , ,103, 4
+xzgrep, , ,null, , ,104, 4
+xzgrep, , ,null-data, , ,105, 4
+xzgrep, , ,include, , ,106, 4
+xzgrep, , ,exclude, , ,107, 4
+xzgrep, , ,exclude-from, , ,108, 4
+xzgrep, , ,exclude-dir, , ,109, 

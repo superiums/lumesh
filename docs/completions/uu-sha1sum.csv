@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-sha1sum, ,b,binary, , ,101,read in binary mode
+uu-sha1sum, ,c,check, , ,102,read hashsums from the FILEs and check them
+uu-sha1sum, , ,tag, , ,103,create a BSD-style checksum
+uu-sha1sum, ,t,text, , ,104,read in text mode (default)
+uu-sha1sum, ,q,quiet, , ,105,don't print OK for each successfully verified file
+uu-sha1sum, ,s,status, , ,106,"don't output anything, status code shows success"
+uu-sha1sum, , ,strict, , ,107,exit non-zero for improperly formatted checksum lines
+uu-sha1sum, , ,ignore-missing, , ,108,don't fail or report status for missing files
+uu-sha1sum, ,w,warn, , ,109,warn about improperly formatted checksum lines
+uu-sha1sum, ,z,zero, , ,110,"end each output line with NUL, not newline"
+uu-sha1sum, ,h,help, , ,111,Print help
+uu-sha1sum, ,V,version, , ,112,Print version

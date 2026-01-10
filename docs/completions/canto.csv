@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+canto, ,h,help, ,@f,101,Show Help
+canto, ,v,version, ,@f,102,Show version
+canto, ,u,update, ,@f,103,Update before running
+canto, ,l,list, ,@f,104,List feeds
+canto, ,a,checkall, ,@f,105,Show number of new items
+canto, ,n,checknew, ,@f,106,Show number of new items for feed
+canto, ,o,opml, , ,108,Print conf as OPML
+canto, ,i,import, , ,109,Import from OPML
+canto, ,r,url, ,@f,110,Add feed
+canto, ,D,dir, , ,111,Set configuration directory
+canto, ,C,conf, , ,112,Set configuration file
+canto, ,L,log, , ,113,Set client log file
+canto, ,F,fdir, , ,114,Set feed directory
+canto, ,S,sdir, , ,115,Set script directory

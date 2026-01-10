@@ -1,0 +1,38 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tcpdump, ,B,buffer-size, ,@f @r,101,Set the operating system capture buffer size (in KiB)
+tcpdump, ,c, , ,@f @r,102,Exit after receiving count packets
+tcpdump, , ,count, , ,103,Print only packet count when reading capture files
+tcpdump, ,C, , ,@f @r,104,Maximum size per savefile (in MB)
+tcpdump, ,D,list-interfaces, , ,105,Print the list of the network interfaces
+tcpdump, ,E, , ,@f @r,106,Set options for decrypting IPsec ESP packets
+tcpdump, ,F, , ,@F,107,Use file as input for the filter expression
+tcpdump, ,G, , ,@f @r,108,Rotate the dump file every rotate_seconds seconds
+tcpdump, ,h,help, , ,109,Print version strings and a usage message
+tcpdump, , ,version, , ,110,Print the tcpdump and libpcap version strings
+tcpdump, ,i,interface, ,@f @r,111, 
+tcpdump, ,I,monitor-mode, , ,112,Put the interface in monitor mode
+tcpdump, , ,immediate-mode, , ,113,Capture in immediate mode
+tcpdump, ,j,time-stamp-type,host host_lowprec host_hiprec adapter adapter_unsynced,@f @r,114,Set the time stamp type for the capture
+tcpdump, ,J,list-time-stamp-types, , ,115,List the supported time stamp types for the interface
+tcpdump, , ,time-stamp-precision,micro nano,@f @r,116,Set the time stamp precision for the capture
+tcpdump, , ,micro, , ,117,Set time stamp precision to microseconds
+tcpdump, , ,nano, , ,118,Set time stamp precision to nanoseconds
+tcpdump, ,K,dont-verify-checksums, , ,119,"Don't attempt to verify IP, TCP, or UDP checksums"
+tcpdump, ,L,list-data-link-types, , ,120,List the known data link types for the interface
+tcpdump, ,m, , ,@F,121,Load SMI MIB module definitions from file
+tcpdump, ,M, , ,@f @r,122,Use a shared secret for validating digests with the TCP-MD5 option
+tcpdump, ,\#,number, , ,123,Print an optional packet number
+tcpdump, ,O,no-optimize, , ,124,Do not run the packet-matching code optimizer
+tcpdump, ,p,no-promiscuous-mode, , ,125,Don't put the interface into promiscuous mode
+tcpdump, , ,print, , ,126,Print parsed packet output
+tcpdump, ,Q,direction,in out inout,@f @r,127,Choose direction for which packets should be captured
+tcpdump, ,r, , ,@F,128,Read packets from file
+tcpdump, ,S,absolute-tcp-sequence-numbers, , ,129,Print absolute TCP sequence numbers
+tcpdump, ,s,snapshot-length, ,@f @r,130,Snarf snaplen bytes of data from each packet
+tcpdump, ,T, , ,@f @r,131,Force packets to be interpreted the specified type
+tcpdump, ,U,packet-buffered, , ,132,Make the packet output packet-buffered
+tcpdump, ,V, , ,@F,133,Read a list of filenames from file
+tcpdump, ,w, , ,@F,134,Write the raw packets to file
+tcpdump, ,y,linktype, ,@f @r,135,Set the data link type to use while capturing packets
+tcpdump, ,z, , ,@f @r,136,Make tcpdump run 'postrotate-command file'
+tcpdump, ,Z,relinquish-privileges, ,@f @r,137,Change user ID before opening any savefiles for output

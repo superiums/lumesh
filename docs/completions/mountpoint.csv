@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mountpoint, ,d,fs-devno, , ,101, 
+mountpoint, ,q,quiet, , ,102, 
+mountpoint, , ,nofollow, , ,103, 
+mountpoint, ,x,devno, , ,104, 
+mountpoint, ,h,help, , ,105, 
+mountpoint, ,V,version, , ,106, 

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cpupower, $subcommands help, , ,help, ,102,Show manpage for subcommands
+cpupower, $subcommands help, , ,frequency-info, ,102,Retrieve cpufreq kernel information
+cpupower, $subcommands help, , ,frequency-set, ,102,Modify cpufreq settings
+cpupower, $subcommands help, , ,idle-info, ,102,Retrieve cpu idle kernel information
+cpupower, $subcommands help, , ,idle-set, ,102,Set cpu idle state specific kernel options
+cpupower, $subcommands help, , ,set, ,102,Set processor power related kernel or hardware config
+cpupower, $subcommands help, , ,info, ,102,Show processor power related kernel or hardware config
+cpupower, $subcommands help, , ,monitor, ,102,Report processor frequency and idle statistics
+cpupower, help && $subcommands, , ,frequency-info frequency-set idle-info idle-set set info monitor,@f @r,102, 

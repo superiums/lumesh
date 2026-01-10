@@ -1,0 +1,34 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pyenv, __fish_pyenv_needs_command, , ,commands,@f,101,List all available pyenv commands
+pyenv, __fish_pyenv_using_command commands, , ,--sh --no-sh,@f,102, 
+pyenv, __fish_pyenv_needs_command, , ,completions,@f,103, 
+pyenv, __fish_pyenv_needs_command, , ,exec,@f,104, 
+pyenv, __fish_pyenv_using_command exec, , , ,@f,105, 
+pyenv, __fish_pyenv_needs_command, , ,global,@f,106,Set or show the global Python version
+pyenv, __fish_pyenv_using_command global, , , ,@f,107, 
+pyenv, __fish_pyenv_needs_command, , ,help,@f,108, 
+pyenv, __fish_pyenv_needs_command, , ,hooks,@f,109,List hook scripts for a given pyenv command
+pyenv, __fish_pyenv_needs_command, , ,init,@f,110,Configure the shell environment for pyenv
+pyenv, __fish_pyenv_needs_command, , ,install,@f,111,Install a Python version
+pyenv, __fish_pyenv_using_command install, , , ,@f,112, 
+pyenv, __fish_pyenv_needs_command, , ,local,@f,113,Set or show the local application-specific Python version
+pyenv, __fish_pyenv_using_command local, , , ,@f,114, 
+pyenv, __fish_pyenv_needs_command, , ,prefix,@f,115,Display the directory where a Python version is installed
+pyenv, __fish_pyenv_using_command prefix, , , ,@f,116, 
+pyenv, __fish_pyenv_needs_command, , ,rehash,@f,117,Rehash pyenv shims (run this after installing executables)
+pyenv, __fish_pyenv_needs_command, , ,root,@f,118,Display the root directory where versions and shims are kept
+pyenv, __fish_pyenv_needs_command, , ,shell,@f,119,Set or show the shell-specific Python version
+pyenv, __fish_pyenv_using_command shell, , ,--unset (__fish_pyenv_installed_versions),@f,120, 
+pyenv, __fish_pyenv_needs_command, , ,shims,@f,121,List existing pyenv shims
+pyenv, __fish_pyenv_using_command shims, , ,--short,@f,122, 
+pyenv, __fish_pyenv_needs_command, , ,version,@f,123,Show the current Python version & how it was selected
+pyenv, __fish_pyenv_needs_command, , ,version-file,@f,124,Detect the file that sets the current pyenv version
+pyenv, __fish_pyenv_needs_command, , ,version-file-read,@f,125, 
+pyenv, __fish_pyenv_needs_command, , ,version-file-write,@f,126, 
+pyenv, __fish_pyenv_needs_command, , ,version-name,@f,127,Show the current Python version
+pyenv, __fish_pyenv_needs_command, , ,version-origin,@f,128,Explain how the current Python version is set
+pyenv, __fish_pyenv_needs_command, , ,versions,@f,129,List all Python versions known by pyenv
+pyenv, __fish_pyenv_needs_command, , ,whence,@f,130,List all Python versions that contain the given executable
+pyenv, __fish_pyenv_using_command whence, , ,--path,@f,131, 
+pyenv, __fish_pyenv_needs_command, , ,which,@f,132,Show the full path for the given Python executable
+pyenv, __fish_pyenv_using_command which, , , ,@f,133, 

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+factor, ,h,exponents, , ,101,print repeated factors in form p^e unless e is 1
+factor, , ,help, , ,102,display this help and exit
+factor, , ,version, , ,103,"output version information and exit AUTHOR Written by Paul Rubin, Torbjorn Gr…"

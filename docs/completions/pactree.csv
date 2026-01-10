@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pactree, ,b,dbpath, ,@D,101,Set an alternate database location
+pactree, ,c,color, , ,102,Colorize output
+pactree, ,d,depth, , ,103,Limit the depth of recursion
+pactree, ,g,graph, , ,104,Generate output for graphviz's dot
+pactree, ,h,help, , ,105,Display this help message
+pactree, ,l,linear, , ,106,Enable linear output
+pactree, ,r,reverse, , ,107,Show reverse dependencies
+pactree, ,s,sync, , ,108,Search sync DBs instead of local
+pactree, ,u,unique, , ,109,Show dependencies with no duplicates (implies -l)
+pactree, , ,config, , ,110,Set an alternate configuration file

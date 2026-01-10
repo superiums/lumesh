@@ -1,0 +1,55 @@
+cmd,conds,short,long,params,dirs,pri,desc
+string, test (count (commandline -xpc)) -le 2,h,help, ,@f,102,Display help and exit
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] escape collect pad,q,quiet, ,@f,103,Do not print output
+string, test (count (commandline -xpc)) -lt 2, , ,lower,@f,104, 
+string, test (count (commandline -xpc)) -lt 2, , ,upper,@f,105, 
+string, test (count (commandline -xpc)) -lt 2, , ,length,@f,106, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] length,V,visible, ,@f,107,"Use the visible width, excluding escape sequences"
+string, test (count (commandline -xpc)) -lt 2, , ,sub,@f,108, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] sub,s,start, ,@f @r,109,Specify start index
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] sub,e,end, ,@f @r,110,Specify end index
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] sub,l,length, ,@f @r,111,Specify substring length
+string, test (count (commandline -xpc)) -lt 2, , ,split,@f,112, 
+string, test (count (commandline -xpc)) -lt 2, , ,split0,@f,113, 
+string,test (count (commandline -xpc)) -ge 2 string match -qr split0\?\$ -- (commandline -xpc)[2],m,max, ,@f @r,114,Specify maximum number of splits
+string,test (count (commandline -xpc)) -ge 2 string match -qr split0\?\$ -- (commandline -xpc)[2],f,fields, ,@f @r,115,Specify fields
+string,test (count (commandline -xpc)) -ge 2 string match -qr split0\?\$ -- (commandline -xpc)[2],r,right, ,@f,116,Split right-to-left
+string,test (count (commandline -xpc)) -ge 2 string match -qr split0\?\$ -- (commandline -xpc)[2],n,no-empty, ,@f,117,Empty results excluded
+string, test (count (commandline -xpc)) -lt 2, , ,collect,@f,118, 
+string,test (count (commandline -xpc)) -ge 2 string match -qr collect\$ -- (commandline -xpc)[2],N,no-trim-newlines, ,@f,119,Don't trim trailing newlines
+string,test (count (commandline -xpc)) -ge 2 string match -qr collect\$ -- (commandline -xpc)[2],a,allow-empty, ,@f,120,Always print empty argument
+string, test (count (commandline -xpc)) -lt 2, , ,join,@f,121, 
+string, test (count (commandline -xpc)) -lt 2, , ,join0,@f,122, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] join,n,no-empty, ,@f,123,Empty strings excluded
+string, test (count (commandline -xpc)) -lt 2, , ,trim,@f,124, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] trim,l,left, ,@f,125,Trim only leading chars
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] trim,r,right, ,@f,126,Trim only trailing chars
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] trim,c,chars, ,@f,127,Specify the chars to trim (default: whitespace)
+string, test (count (commandline -xpc)) -lt 2, , ,escape,@f,128, 
+string, test (count (commandline -xpc)) -lt 2, , ,unescape,@f,129, 
+string,"test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] escape; or contains -- (commandline -xpc)[2] unescape",n,no-quoted, ,@f,130,Escape with \\ instead of quotes
+string,"test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] escape; or contains -- (commandline -xpc)[2] unescape", ,style,,@f @r,131,Specify escaping style
+string, test (count (commandline -xpc)) -lt 2, , ,match,@f,132, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] match,n,index, ,@f,133,"Report index, length of match"
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] match,v,invert, ,@f,134,Report only non-matches
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] match,e,entire, ,@f,135,Show entire matching lines
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] match,g,groups-only, ,@f,136,Only report capturing groups
+string, test (count (commandline -xpc)) -lt 2, , ,replace,@f,137, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] replace,f,filter, ,@f,138,Report only actual replacements
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] match replace,a,all, ,@f,139,Report every match
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] match replace,i,ignore-case, ,@f,140,Case insensitive
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] match replace,r,regex, ,@f,141,Use regex instead of globs
+string, test (count (commandline -xpc)) -lt 2, , ,repeat,@f,142, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] repeat,n,count, ,@f @r,143,Repetition count
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] repeat,m,max, ,@f @r,144,Maximum number of printed chars
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] repeat,N,no-newline, ,@f,145,Remove newline
+string, test (count (commandline -xpc)) -lt 2, , ,pad,@f,146, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] pad,r,right, ,@f @r,147,Pad right instead of left
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] pad,r,center, ,@f @r,148,Pad both left and right
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] pad,c,char, ,@f @r,149,Character to use for padding
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] pad,w,width, ,@f @r,150,"Integer width of the result, default is maximum width of inputs"
+string, test (count (commandline -xpc)) -lt 2, , ,shorten,@f,151, 
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] shorten,l,left, ,@f @r,152,Remove from the left on
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] shorten,c,char, ,@f @r,153,Characters to use as ellipsis
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] shorten,m,max, ,@f @r,154,"Integer width of the result, default is minimum non-zero width of inputs"
+string,test (count (commandline -xpc)) -ge 2 contains -- (commandline -xpc)[2] shorten,N,no-newline, ,@f,155,Only keep one line of each input

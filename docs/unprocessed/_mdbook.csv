@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mdbook, $cmds, , ,build, ,102,Build book from markdown files
+mdbook, $cmds, , ,help, ,102,Prints help
+mdbook, $cmds, , ,init, ,102,Create boilerplate structure and files in directory
+mdbook, $cmds, , ,serve, ,104,Serve book at http://localhost:3000
+mdbook, $cmds, , ,test, ,106,Test that code samples compile
+mdbook, $cmds, , ,watch, ,106,Watch file changes

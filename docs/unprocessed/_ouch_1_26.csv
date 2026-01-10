@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+not __fish_seen_subcommand_from $commands, , , , ,@f,101, 

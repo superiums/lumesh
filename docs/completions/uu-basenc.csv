@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-basenc, ,w,wrap, , ,101,"wrap encoded lines after COLS character (default 76, 0 to disable wrapping)"
+uu-basenc, ,D,decode, , ,102,decode data
+uu-basenc, ,i,ignore-garbage, , ,103,"when decoding, ignore non-alphabetic characters"
+uu-basenc, , ,base64, , ,104,same as 'base64' program
+uu-basenc, , ,base64url, , ,105,file- and url-safe base64
+uu-basenc, , ,base32, , ,106,same as 'base32' program
+uu-basenc, , ,base32hex, , ,107,extended hex alphabet base32
+uu-basenc, , ,base16, , ,108,hex encoding
+uu-basenc, , ,base2lsbf, , ,109,bit string with least significant bit (lsb) first
+uu-basenc, , ,base2msbf, , ,110,bit string with most significant bit (msb) first
+uu-basenc, , ,z85, , ,111,"ascii85-like encoding; when encoding, input length must be a multiple of 4; when decoding, input length must be a multiple of 5"
+uu-basenc, , ,base58, , ,112,visually unambiguous base58 encoding
+uu-basenc, ,h,help, , ,113,Print help
+uu-basenc, ,V,version, , ,114,Print version

@@ -1,0 +1,52 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xgettext, ,f,files-from, , ,101,get list of input files from FILE
+xgettext, ,D,directory, , ,102,add DIRECTORY to list for input files search 
+xgettext, ,d,default-domain, , ,103,use NAME. po for output (instead of messages. po)
+xgettext, ,o,output, , ,104,write output to specified file
+xgettext, ,p,output-dir, , ,105,output files will be placed in directory DIR 
+xgettext, ,L,language, , ,106,"recognise the specified language (C, C++, ObjectiveC, PO, Python, Java, JavaP…"
+xgettext, ,C,c++, , ,107,"shorthand for --language=\\,C\\/++ "
+xgettext, , ,from-code, , ,108,"encoding of input files (except for Python, Tcl, Glade) "
+xgettext, ,j,join-existing, , ,109,join messages with existing file
+xgettext, ,x,exclude-file, , ,110,entries from FILE. po are not extracted
+xgettext, , ,add-comments, , ,111,place comment blocks starting with TAG and preceding keyword lines in output …
+xgettext, , ,check, , ,112,"perform syntax check on messages (ellipsis-unicode, space-ellipsis, P quote-u…"
+xgettext, , ,sentence-end, , ,113,"type describing the end of sentence (single-space, which is the default, P or…"
+xgettext, ,a,extract-all, , ,114,"extract all strings (only languages C, C++, ObjectiveC, Python, Java, C#, Jav…"
+xgettext, , ,keyword, , ,115,look for WORD as an additional keyword
+xgettext, , ,flag, , ,116,additional flag for strings inside the argument number ARG of keyword WORD
+xgettext, , ,tag, , ,117,defines the behaviour of tagged template literals with tag WORD P (only langu…
+xgettext, ,T,trigraphs, , ,118,"understand ANSI C trigraphs for input (deprecated; only languages C, C++, Obj…"
+xgettext, , ,its, , ,119,apply ITS rules from FILE (only XML based languages)
+xgettext, , ,qt, , ,120,recognize Qt format strings (only language C++)
+xgettext, , ,kde, , ,121,recognize KDE 4 format strings (only language C++)
+xgettext, , ,boost, , ,122,recognize Boost format strings (only language C++)
+xgettext, , ,debug, , ,123,more detailed formatstring recognition result . SS 'Output details:'
+xgettext, , ,color, , ,124,use colors and other text attributes always
+xgettext, , ,style, , ,125,specify CSS style rule file for --color
+xgettext, ,e,no-escape, , ,126,do not use C escapes in output (default)
+xgettext, ,E,escape, , ,127,"use C escapes in output, no extended chars"
+xgettext, , ,force-po, , ,128,write PO file even if empty
+xgettext, ,i,indent, , ,129,write the . po file using indented style
+xgettext, , ,no-location, , ,130,do not write '#: filename:line' lines
+xgettext, ,n,add-location, , ,131,generate '#: filename:line' lines (default)
+xgettext, , ,strict, , ,132,write out strict Uniforum conforming . po file
+xgettext, , ,properties-output, , ,133,write out a Java . properties file
+xgettext, , ,stringtable-output, , ,134,write out a NeXTstep/GNUstep . strings file
+xgettext, , ,itstool, , ,135,write out itstool comments
+xgettext, ,w,width, , ,136,set output page width
+xgettext, , ,no-wrap, , ,137,"do not break long message lines, longer than the output page width, into seve…"
+xgettext, ,s,sort-output, , ,138,generate sorted output (deprecated)
+xgettext, ,F,sort-by-file, , ,139,sort output by file location
+xgettext, , ,omit-header, , ,140,don't write header with 'msgid ''' entry
+xgettext, , ,copyright-holder, , ,141,set copyright holder in output
+xgettext, , ,foreign-user, , ,142,omit FSF copyright in output for foreign user
+xgettext, , ,package-name, , ,143,set package name in output
+xgettext, , ,package-version, , ,144,set package version in output
+xgettext, , ,msgid-bugs-address, , ,145,set report address for msgid bugs
+xgettext, , ,reference, , ,146,Declares that the output depends on the contents of the given FILE
+xgettext, ,m,msgstr-prefix, , ,147,use STRING or '' as prefix for msgstr values
+xgettext, ,M,msgstr-suffix, , ,148,use STRING or '' as suffix for msgstr values . SS 'Informative output:'
+xgettext, ,h,help, , ,149,display this help and exit
+xgettext, ,V,version, , ,150,output version information and exit
+xgettext, ,v,verbose, , ,151,increase verbosity level AUTHOR Written by Ulrich Drepper

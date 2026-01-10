@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vlock, , ,all, , ,101,Lock all console sessions and disable VC switching
+vlock, ,c,current, , ,102,Lock the current session (this is the default)
+vlock, ,h,help, , ,103,Print a brief help message
+vlock, ,v,version, , ,104,Print the version number of vlock

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+getfattr, ,n,name, , ,101,Dump the value of the named extended attribute
+getfattr, ,d,dump, , ,102,Dump the values of all matched extended attributes
+getfattr, ,e,encoding, , ,103,Encode values after retrieving them
+getfattr, ,h,no-dereference, , ,104,Do not dereference symlinks
+getfattr, ,m,match, , ,105,Only include attributes with names matching the regular expression R pattern 
+getfattr, , ,absolute-names, , ,106,Do not strip leading slash characters ('/')
+getfattr, , ,only-values, , ,107,Dump out the raw extended attribute value(s) without encoding them
+getfattr, ,R,recursive, , ,108,List the attributes of all files and directories recursively
+getfattr, ,L,logical, , ,109,"Logical walk, follow symbolic links to directories"
+getfattr, ,P,physical, , ,110,"Physical walk, do not follow symbolic links to directories"
+getfattr, , ,version, , ,111,Print the version of  getfattr and exit
+getfattr, , ,help, , ,112,Print help explaining the command line options

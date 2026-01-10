@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-icon-resource, , ,noupdate, , ,101,Postpone updating the desktop icon system
+xdg-icon-resource, , ,novendor, , ,102,"Normally, xdg-icon-resource checks to ensure that an icon file to be installe…"
+xdg-icon-resource, , ,theme, , ,103,Installs or removes the icon file as part of theme
+xdg-icon-resource, , ,context, , ,104,Specifies the context for the icon
+xdg-icon-resource, , ,size, , ,105,Specifies the size of the icon.  All icons must be square
+xdg-icon-resource, , ,mode, , ,106,mode can be user or system
+xdg-icon-resource, , ,help, , ,107,Show command synopsis
+xdg-icon-resource, , ,manual, , ,108,Show this manual page
+xdg-icon-resource, , ,version, , ,109,Show the xdg-utils version information

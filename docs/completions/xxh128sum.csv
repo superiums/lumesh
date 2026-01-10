@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xxh128sum, ,V,version, , ,101,Displays xxhsum version and exits 
+xxh128sum, , ,binary, , ,102,Read in binary mode
+xxh128sum, , ,tag, , ,103,Output in the BSD style
+xxh128sum, , ,little-endian, , ,104,Set output hexadecimal checksum value as little endian convention
+xxh128sum, ,h,help, , ,105,Displays help and exits 
+xxh128sum, ,c,check, , ,106,Read xxHash sums from FILE and check them 
+xxh128sum, ,q,quiet, , ,107,Don't print OK for each successfully verified file 
+xxh128sum, , ,strict, , ,108,"Return an error code if any line in the file is invalid, not just if some che…"
+xxh128sum, , ,status, , ,109,Don't output anything.  Status code shows success
+xxh128sum, ,w,warn, , ,110,Emit a warning message about each improperly formatted checksum line

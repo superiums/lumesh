@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uname, ,a,all, , ,101,"print all information, in the following order, except omit -p and -i if unkno…"
+uname, ,s,kernel-name, , ,102,print the kernel name
+uname, ,n,nodename, , ,103,print the network node hostname
+uname, ,r,kernel-release, , ,104,print the kernel release
+uname, ,v,kernel-version, , ,105,print the kernel version
+uname, ,m,machine, , ,106,print the machine hardware name
+uname, ,p,processor, , ,107,print the processor type (non-portable)
+uname, ,i,hardware-platform, , ,108,print the hardware platform (non-portable)
+uname, ,o,operating-system, , ,109,print the operating system
+uname, , ,help, , ,110,display this help and exit
+uname, , ,version, , ,111,output version information and exit AUTHOR Written by David MacKenzie

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kill, ,s,signal, , ,101, 
+kill, ,l,list, , ,102, 
+kill, ,L,table, , ,103, 
+kill, ,a,all, , ,104, 
+kill, ,p,pid, , ,105, 
+kill, ,r,require-handler, , ,106, 
+kill, , ,verbose, , ,107, 
+kill, ,q,queue, , ,108, 
+kill, , ,timeout, , ,109, 

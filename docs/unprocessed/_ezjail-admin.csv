@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ezjail-admin, __fish_use_subcommand, , ,archive, ,101,create a backup of one or several jails
+ezjail-admin, __fish_use_subcommand, , ,config, ,102,manage specific jails
+ezjail-admin, __fish_use_subcommand, , ,console, ,103,attach your console to a running jail
+ezjail-admin, __fish_use_subcommand, , ,create, ,104,installs a new jail inside ezjail's scope
+ezjail-admin, __fish_use_subcommand, , ,delete, ,105,removes a jail from ezjail's config
+ezjail-admin, __fish_use_subcommand, , ,freeze, ,106,dump diffs between jail initialisation and freeze time into a flavour
+ezjail-admin, __fish_use_subcommand, , ,install, ,107,create the basejail from binary packages
+ezjail-admin, __fish_use_subcommand, , ,list, ,108,list all jails
+ezjail-admin, __fish_use_subcommand, , ,restart, ,109,restart a running jail
+ezjail-admin, __fish_use_subcommand, , ,restore, ,110,create new jails from archived versions
+ezjail-admin, __fish_use_subcommand, , ,snapshot, ,111,create a snapshot of a jail
+ezjail-admin, __fish_use_subcommand, , ,start, ,112,start a jail
+ezjail-admin, __fish_use_subcommand, , ,stop, ,113,stop a running jail
+ezjail-admin, __fish_use_subcommand, , ,troubleshoot, ,114,check for reasons for the jails to fail
+ezjail-admin, __fish_use_subcommand, , ,update, ,115,create or update the basejail from source

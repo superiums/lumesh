@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chfn, ,f,full-name, , ,101, 
+chfn, ,o,office, , ,102, 
+chfn, ,p,office-phone, , ,103, 
+chfn, ,h,home-phone, , ,104, 
+chfn, ,u,help, , ,105, 
+chfn, ,V,version, , ,106, 

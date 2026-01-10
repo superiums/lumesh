@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-mon, ,r,remote, , ,101,The name the remote instance to monitor
+pw-mon, ,h,help, , ,102,Show help
+pw-mon, , ,version, , ,103,Show version information
+pw-mon, ,N,color, , ,104,"Whether to use color, one of 'never', 'always', or 'auto'"

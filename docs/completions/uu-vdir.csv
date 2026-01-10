@@ -1,0 +1,46 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-vdir, , ,format,long,@f @r,101,ls-help-set-display-format
+uu-vdir, ,T,tabsize, , ,102,ls-help-assume-tab-stops
+uu-vdir, , ,hyperlink,always,@f @r,103,ls-help-hyperlink-filenames
+uu-vdir, , ,quoting-style,literal,@f @r,104,ls-help-set-quoting-style
+uu-vdir, , ,time,atime,@f @r,105,ls-help-show-time-field
+uu-vdir, , ,hide, , ,106,ls-help-hide-pattern
+uu-vdir, ,I,ignore, , ,107,ls-help-ignore-pattern
+uu-vdir, , ,sort,name,@f @r,108,ls-help-sort-by-field
+uu-vdir, , ,block-size, , ,109,ls-help-block-size
+uu-vdir, ,w,width, , ,110,ls-help-terminal-width
+uu-vdir, , ,color,always,@f @r,111,ls-help-color-output
+uu-vdir, , ,indicator-style,none,@f @r,112,ls-help-indicator-style
+uu-vdir, ,F,classify,always,@f @r,113,ls-help-classify
+uu-vdir, , ,time-style, , ,114,ls-help-time-style
+uu-vdir, , ,help, , ,115,ls-help-print-help
+uu-vdir, ,l,long, , ,116,ls-help-display-detailed-info
+uu-vdir, , ,zero, , ,117,ls-help-list-entries-nul
+uu-vdir, ,D,dired, , ,118,ls-help-generate-dired-output
+uu-vdir, ,n,numeric-uid-gid, , ,119,ls-help-long-numeric-uid-gid
+uu-vdir, ,N,literal, , ,120,ls-help-literal-quoting-style
+uu-vdir, ,b,escape, , ,121,ls-help-escape-quoting-style
+uu-vdir, ,Q,quote-name, , ,122,ls-help-c-quoting-style
+uu-vdir, ,q,hide-control-chars, , ,123,ls-help-replace-control-chars
+uu-vdir, , ,show-control-chars, , ,124,ls-help-show-control-chars
+uu-vdir, ,B,ignore-backups, , ,125,ls-help-ignore-backups
+uu-vdir, ,L,dereference, , ,126,ls-help-dereference-all
+uu-vdir, , ,dereference-command-line-symlink-to-dir, , ,127,ls-help-dereference-dir-args
+uu-vdir, ,H,dereference-command-line, , ,128,ls-help-dereference-args
+uu-vdir, ,G,no-group, , ,129,ls-help-no-group
+uu-vdir, , ,author, , ,130,ls-help-author
+uu-vdir, ,a,all, , ,131,ls-help-all-files
+uu-vdir, ,A,almost-all, , ,132,ls-help-almost-all
+uu-vdir, ,d,directory, , ,133,ls-help-directory
+uu-vdir, ,h,human-readable, , ,134,ls-help-human-readable
+uu-vdir, ,k,kibibytes, , ,135,ls-help-kibibytes
+uu-vdir, , ,si, , ,136,ls-help-si
+uu-vdir, ,i,inode, , ,137,ls-help-print-inode
+uu-vdir, ,r,reverse, , ,138,ls-help-reverse-sort
+uu-vdir, ,R,recursive, , ,139,ls-help-recursive
+uu-vdir, ,s,size, , ,140,ls-help-allocation-size
+uu-vdir, , ,file-type, , ,141,ls-help-file-type
+uu-vdir, , ,full-time, , ,142,ls-help-full-time
+uu-vdir, ,Z,context, , ,143,ls-help-context
+uu-vdir, , ,group-directories-first, , ,144,ls-help-group-directories-first
+uu-vdir, ,V,version, , ,145,Print version

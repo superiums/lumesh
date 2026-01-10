@@ -1,0 +1,47 @@
+cmd,conds,short,long,params,dirs,pri,desc
+metaflac, , ,output-name, , ,101,Output to a new file instead of changing or rewriting the input file
+metaflac, , ,preserve-modtime, , ,102,Preserve the original modification time in spite of edits
+metaflac, , ,with-filename, , ,103,Prefix each output line with the FLAC file name (the default if more than one…
+metaflac, , ,export-tags-to, , ,104, 
+metaflac, , ,no-filename, , ,105,Do not prefix each output line with the FLAC file name (the default if only o…
+metaflac, , ,no-utf8-convert, , ,106,"Do not convert tags from UTF-8 to local charset, or vice versa"
+metaflac, , ,dont-use-padding, , ,107,By default metaflac tries to use padding where possible to avoid rewriting th…
+metaflac, , ,show-md5sum, , ,108,Show the MD5 signature from the STREAMINFO block
+metaflac, , ,show-min-blocksize, , ,109,Show the minimum block size from the STREAMINFO block
+metaflac, , ,show-max-blocksize, , ,110,Show the maximum block size from the STREAMINFO block
+metaflac, , ,show-min-framesize, , ,111,Show the minimum frame size from the STREAMINFO block
+metaflac, , ,show-max-framesize, , ,112,Show the maximum frame size from the STREAMINFO block
+metaflac, , ,show-sample-rate, , ,113,Show the sample rate from the STREAMINFO block
+metaflac, , ,show-channels, , ,114,Show the number of channels from the STREAMINFO block
+metaflac, , ,show-bps, , ,115,Show the # of bits per sample from the STREAMINFO block
+metaflac, , ,show-total-samples, , ,116,Show the total # of samples from the STREAMINFO block
+metaflac, , ,show-vendor-tag, , ,117,Show the vendor string from the VORBIS_COMMENT block
+metaflac, , ,show-tag, , ,118,Show all tags where the field name matches `name'
+metaflac, , ,show-all-tags, , ,119,Show all tags.  This is an alias for --export-tags-to=-
+metaflac, , ,remove-tag, , ,120,Remove all tags whose field name is `name'
+metaflac, , ,remove-first-tag, , ,121,Remove first tag whose field name is `name'
+metaflac, , ,remove-all-tags, , ,122,"Remove all tags, leaving only the vendor string"
+metaflac, , ,remove-all-tags-except, , ,123,"Remove all tags, except the vendor string and the tag names specified"
+metaflac, , ,set-tag, , ,124,Add a tag
+metaflac, , ,set-tag-from-file, , ,125,"Like --set-tag, except the VALUE is a filename whose contents will be read ve…"
+metaflac, , ,import-tags-from, , ,126,Import tags from a file.  Use `-' for stdin
+metaflac, , ,import-cuesheet-from, , ,127,Import a cuesheet from a file.  Use `-' for stdin
+metaflac, , ,export-cuesheet-to, , ,128,"Export CUESHEET block to a cuesheet file, suitable for use by CD authoring so…"
+metaflac, , ,import-picture-from, , ,129,Import a picture and store it in a PICTURE metadata block
+metaflac, , ,export-picture-to, , ,130,Export PICTURE block to a file.  Use `-' for stdout
+metaflac, , ,add-replay-gain, , ,131,Calculates the title and album gains/peaks of the given FLAC files as if all …
+metaflac, , ,scan-replay-gain, , ,132,"Like --add-replay-gain, but only analyzes the files rather than writing them …"
+metaflac, , ,remove-replay-gain, , ,133,Removes the ReplayGain tags
+metaflac, , ,add-seekpoint, , ,134,Add seek points to a SEEKTABLE block
+metaflac, , ,add-padding, , ,135,Add a padding block of the given length (in bytes)
+metaflac, , ,list, , ,136,List the contents of one or more metadata blocks to stdout
+metaflac, , ,remove, , ,137,Remove one or more metadata blocks from the metadata
+metaflac, , ,block-number, , ,138,An optional comma-separated list of block numbers to display
+metaflac, , ,block-type, , ,139, 
+metaflac, , ,except-block-type, , ,140,An optional comma-separated list of block types to be included or ignored wit…
+metaflac, , ,application-data-format, , ,141,If the application block you are displaying contains binary data but your --d…
+metaflac, , ,data-format, , ,142,For use with --list
+metaflac, , ,append, , ,143,Insert a metadata block from a file
+metaflac, , ,remove-all, , ,144,Remove all metadata blocks (except the STREAMINFO block) from the metadata
+metaflac, , ,merge-padding, , ,145,Merge adjacent PADDING blocks into single blocks
+metaflac, , ,sort-padding, , ,146,Move all PADDING blocks to the end of the metadata and merge them into a sing…

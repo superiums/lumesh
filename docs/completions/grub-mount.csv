@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mount, ,C,crypto, , ,101,Mount crypto devices
+grub-mount, ,d,debug, , ,102,Set debug environment variable
+grub-mount, ,K,zfs-key, , ,103,Load zfs crypto key
+grub-mount, ,r,root, , ,104,Set root device
+grub-mount, ,v,verbose, , ,105,print verbose messages
+grub-mount, ,?,help, , ,106,give this help list
+grub-mount, , ,usage, , ,107,give a short usage message
+grub-mount, ,V,version, , ,108,print program version

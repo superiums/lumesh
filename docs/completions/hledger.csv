@@ -1,0 +1,53 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hledger, ,h,help, ,@f @r,127,Show help for this command
+hledger, , ,debug,$debug_opts,@f @r,128,Show debug output
+hledger, , ,version, ,@f @r,129,Show version information
+hledger, add, ,no-new-accounts, ,@f,131,Don’t allow creating new accounts
+hledger, import, ,dry-run, ,@f,133,Just show the transactions to be imported
+hledger, check-dates, ,strict, ,@f,135,Makes date comparing strict
+hledger, close, ,opening, ,@f,138,Show just opening transaction
+hledger, close, ,closing, ,@f,139,Show just closing transaction
+hledger, rewrite, ,add-posting, ,@f,141,Add a posting to account
+hledger, rewrite, ,diff, ,@f,142,Generate diff suitable for patch(1)
+hledger, roi, ,cashflow, ,@f,163,Show all amounts that were used to compute returns
+hledger, roi, ,investment, ,@f @r,164,Query to select investment transactions
+hledger, roi, ,pnl, ,@f @r,165,Query to select profit-and-loss or appreciation/valuation transactions
+hledger, accounts, ,declared, ,@f,167,Show account names declared with account directives
+hledger, accounts, ,used, ,@f,168,Show account names referenced by transactions
+hledger, accounts, ,tree, ,@f,169,Show short account names as a tree
+hledger, accounts, ,flat, ,@f,170,Show short account names as a list
+hledger, accounts, ,drop, ,@f @r,171,Omit N leading account name parts in flat mode
+hledger, balance, ,change, ,@f,174,Show balance change in each period
+hledger, balance, ,cumulative, ,@f,175,Show balance change accumulated across periods
+hledger, balance,H,historical, ,@f,176,Show historical ending balance in each period
+hledger, balance, ,tree, ,@f,177,Show accounts as a tree
+hledger, balance, ,flat, ,@f,178,Show accounts as a list
+hledger, balance,A,average, ,@f,179,Show a row average column in multicolumn reports
+hledger, balance,T,row-total, ,@f,180,Show a row total column in multicolumn reports
+hledger, balance,N,no-total, ,@f,181,Omit the final row
+hledger, balance, ,drop, ,@f @r,182,Omit N leading account name parts in flat mode
+hledger, balance, ,no-elide, ,@f,183,Don’t squash boring parent accounts in tree mode
+hledger, balance, ,format, ,@f @r,184,Use a custom line format in multicolumn reports
+hledger, balance, ,pretty-tables, ,@f,185,Use Unicode when displaying tables
+hledger, balance,S,sort-amount, ,@f,186,Sort by amount instead of account code/name
+hledger, balance, ,budget, ,@f,187,Show performance compared to budget goals defined by periodic transactions
+hledger, balance, ,invert, ,@f,188,Display all amounts with reversed sign
+hledger, balance, ,transpose, ,@f,189,Transpose rows and columns
+hledger, balance,O,output-format,txt csv html,@f @r,190,Select an output format
+hledger, balance,o,output-file, ,@r,191,"Write output to given file; extension selects format"
+hledger, prices, ,costs, ,@f,195,Print transaction prices from postings
+hledger, prices, ,inverted-costs, ,@f,196,Print transaction inverted prices from postings also
+hledger, print txns print-unique,m,match, ,@f @r,199,Show the most-recent transaction most similar to STR
+hledger, print txns print-unique,x,explicit, ,@f,200,Show all amounts explicitly
+hledger, print txns print-unique, ,new, ,@f,201,Show only newer-dated transactions added in each file since last run
+hledger, print txns print-unique,O,output-format,txt csv html,@f @r,202,Select an output format
+hledger, print txns print-unique,o,output-file, ,@r,203,"Write output to given file; extension selects format"
+hledger, register, ,cumulative, ,@f,205,Show running total from report start date
+hledger, register,H,historical, ,@f,206,Show historical running total/balance
+hledger, register,A,average, ,@f,207,Show running average of posting amounts instead of total (implies --empty)
+hledger, register,r,related, ,@f,208,Show postings’ siblings instead
+hledger, register, ,invert, ,@f,209,Display all amounts with reversed sign
+hledger, register,w,width, ,@f @r,210,Set output width (defaults to terminal width or $COLUMNS)
+hledger, register,O,output-format,txt csv html,@f @r,211,Select an output format
+hledger, register,o,output-file, ,@r,212,"Write output to given file; extension selects format"
+hledger, stats,o,output-file, ,@r,215,"Write output to given file; extension selects format"

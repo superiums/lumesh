@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+oggenc, ,Q,quiet, ,@f,101,Produce no output to stderr
+oggenc, ,h,help, ,@f,102,Print this help text
+oggenc, ,v,version, ,@f,103,Print the version number
+oggenc, ,r,raw, ,@f,104,Raw mode. Input files are read directly as PCM data
+oggenc, ,B,raw-bits, ,@f @r,105,Set bits/sample for raw input (default 16)
+oggenc, ,C,raw-chan, ,@f @r,106,Set number of channels for raw input
+oggenc, ,R,raw-rate, ,@f @r,107,Set samples/sec for raw input
+oggenc, , ,raw-endianness, ,@f,108,"1 for bigendian, 0 for little (default 0)"
+oggenc, ,b,bitrate, ,@f @r,109,Choose a nominal bitrate to encode at
+oggenc, , ,managed, ,@f,110,Enable the bitrate management engine
+oggenc, ,m,min-bitrate, ,@f @r,111,Specify a minimum bitrate in kbps
+oggenc, ,M,max-bitrate, ,@f @r,112,Specify a maximum bitrate in kbps
+oggenc, , ,advanced-encode-option, ,@f @r,113,option=value Set an advanced encoder option to the given value
+oggenc, ,q,quality, ,@f @r,114,Specify quality
+oggenc, , ,resample, ,@f @r,115,Resample input data to sampling rate n (Hz)
+oggenc, , ,downmix, ,@f,116,Downmix stereo to mono
+oggenc, ,s,serial, ,@f @r,117,Specify a serial number for the stream
+oggenc, , ,discard-comments, ,@f,118,Don't copy comments to the output file
+oggenc, ,o,output, ,@f @r,119,Write file to fn (only valid in single-file mode)
+oggenc, ,n,names, ,@f @r,120,Produce filenames as this string
+oggenc, ,X,name-remove=, ,@f @r,121,Remove the specified characters from parameters
+oggenc, ,P,name-replace=, ,@f @r,122,Replace characters removed by --name-remove
+oggenc, ,c,comment, ,@f @r,123,Add the given string as an extra comment
+oggenc, ,d,date, ,@f @r,124,Date for track
+oggenc, ,N,tracknum, ,@f @r,125,Track number
+oggenc, ,t,title, ,@f @r,126,Title of track
+oggenc, ,l,album, ,@f @r,127,Name of album
+oggenc, ,a,artist, ,@f @r,128,Name of artist
+oggenc, ,G,genre, ,@f @r,129,Genre of track

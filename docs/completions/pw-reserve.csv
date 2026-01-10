@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-reserve, ,r,release, , ,101,"Request any client currently holding the device to release it, and try to res…"
+pw-reserve, ,n,name, , ,102, 
+pw-reserve, ,a,appname, , ,103, 
+pw-reserve, ,p,priority, , ,104, 
+pw-reserve, ,m,monitor, , ,105, 
+pw-reserve, ,h,help, , ,106, 
+pw-reserve, , ,version, , ,107, 

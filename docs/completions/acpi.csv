@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+acpi, ,b,battery, , ,101,Show battery information
+acpi, ,B,without-battery, , ,102,Suppress battery information
+acpi, ,t,thermal, , ,103,Show thermal information
+acpi, ,T,without-thermal, , ,104,Suppress thermal information
+acpi, ,a,ac-adapter, , ,105,Show ac adapter information
+acpi, ,A,without-ac-adapter, , ,106,Suppress ac-adapter information
+acpi, ,V,everything, , ,107,"Show every device, overrides above options"
+acpi, ,s,show-empty, , ,108,Show non-operational devices
+acpi, ,S,hide-empty, , ,109,Hide non-operational devices
+acpi, ,c,cooling, , ,110,Show cooling device information
+acpi, ,f,fahrenheit, , ,111,Use fahrenheit as the temperature unit
+acpi, ,k,kelvin, , ,112,Use kelvin as the temperature unit
+acpi, ,d,directory, , ,113,<dir> path to ACPI info (/proc/acpi)
+acpi, ,h,help, , ,114,Display help and exit
+acpi, ,v,version, , ,115,Output version information and exit

@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xsel, ,a,append, , ,101,Append input to selection
+xsel, ,f,follow, , ,102,Append to selection as input grows
+xsel, ,i,input, , ,103,Read into selection
+xsel, ,o,output, , ,104,Write selection
+xsel, ,c,clear, , ,105,Clear selection
+xsel, ,d,delete, , ,106,Delete selection
+xsel, ,p,primary, , ,107,Use primary selection
+xsel, ,s,secondary, , ,108,Use secondary selection
+xsel, ,b,clipboard, , ,109,Use clipboard selection
+xsel, ,k,keep, , ,110,Make current selections persistent after program exit
+xsel, ,x,exchange, , ,111,Exchange primary and secondary selections
+xsel, , ,display, ,@f @r,112,X server display
+xsel, ,t,selectionTimeout, , ,113,Timeout for retrieving selection
+xsel, ,l,logfile, ,@f,114,Error log
+xsel, ,n,nodetach, , ,115,Do not detach from the controlling terminal
+xsel, ,h,help, , ,116,Display help and exit
+xsel, ,v,verbose, , ,117,Print informative messages
+xsel, , ,version, , ,118,Display version and exit

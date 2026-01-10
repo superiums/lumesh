@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-hostname, ,d,domain, , ,101,Display the name of the DNS domain if possible
+uu-hostname, ,i,ip-address, , ,102,Display the network address(es) of the host
+uu-hostname, ,f,fqdn, , ,103,Display the FQDN (Fully Qualified Domain Name) (default)
+uu-hostname, ,s,short, , ,104,Display the short hostname (the portion before the first dot) if possible
+uu-hostname, ,h,help, , ,105,Print help
+uu-hostname, ,V,version, , ,106,Print version

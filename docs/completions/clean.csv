@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+clean, , , ,all,@f,101,Specify that each and every sector on the disk is set to zero

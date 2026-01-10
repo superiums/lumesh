@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nhlt-dmic-info, ,h,help, , ,101,Prints the help information
+nhlt-dmic-info, ,f,file, , ,102,Input file with the binary ACPI NHLT table (default is /sys/firmware/acpi/tab…
+nhlt-dmic-info, ,o,output, , ,103, 

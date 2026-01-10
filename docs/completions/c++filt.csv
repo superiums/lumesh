@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+c++filt, , ,strip-underscore, , ,101,X Item '--strip-underscore' 
+c++filt, , ,no-strip-underscore, , ,102,X Item '--no-strip-underscore' . PD Do not remove the initial underscore
+c++filt, , ,no-params, , ,103,X Item '--no-params' 
+c++filt, , ,types, , ,104,X Item '--types' . PD Attempt to demangle types as well as function names
+c++filt, , ,no-verbose, , ,105,X Item '--no-verbose' 
+c++filt, , ,recurse-limit, , ,106,X Item '--recurse-limit'
+c++filt, , ,no-recurse-limit, , ,107,X Item '--no-recurse-limit'
+c++filt, , ,recursion-limit, , ,108,X Item '--recursion-limit'
+c++filt, , ,no-recursion-limit, , ,109,X Item '--no-recursion-limit' 
+c++filt, , ,format, , ,110,X Item '--format=format' 
+c++filt, , ,help, , ,111,X Item '--help' Print a summary of the options to c++filt and exit
+c++filt, , ,version, , ,112,X Item '--version' Print the version number of c++filt and exit

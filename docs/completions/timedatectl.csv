@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+timedatectl, set-local-rtc, , ,true false, ,101, 
+timedatectl, set-ntp, , ,true false, ,102, 
+timedatectl, ,h,help, , ,103,Show this help message
+timedatectl, , ,version, , ,104,Show package version
+timedatectl, , ,no-pager, , ,105,Do not pipe output into a pager
+timedatectl, , ,no-ask-password, , ,106,Do not prompt for password
+timedatectl, ,H,host, ,@r,107,Operate on remote HOST
+timedatectl, ,M,machine, ,@r,108,Operate on local CONTAINER
+timedatectl, , ,adjust-system-clock, , ,109,Adjust system clock when changing local RTC mode
+timedatectl, , ,monitor, , ,110,Monitor status of systemd-timesyncd
+timedatectl, ,p,property, ,@r,111,Show only properties by this NAME
+timedatectl, ,a,all, , ,112,Show all properties
+timedatectl, , ,value, , ,113,Only show properties with values

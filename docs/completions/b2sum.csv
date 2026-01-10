@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+b2sum, ,b,binary, , ,101,read in binary mode
+b2sum, ,c,check, , ,102,read checksums from the FILEs and check them
+b2sum, ,l,length, , ,103,"digest length in bits; must not exceed the max for the blake2 algorithm and m…"
+b2sum, , ,tag, , ,104,create a BSD-style checksum
+b2sum, ,t,text, , ,105,read in text mode (default)
+b2sum, ,z,zero, , ,106,"end each output line with NUL, not newline, and disable file name escaping "
+b2sum, , ,ignore-missing, , ,107,don't fail or report status for missing files
+b2sum, , ,quiet, , ,108,don't print OK for each successfully verified file
+b2sum, , ,status, , ,109,"don't output anything, status code shows success"
+b2sum, , ,strict, , ,110,exit non-zero for improperly formatted checksum lines
+b2sum, ,w,warn, , ,111,warn about improperly formatted checksum lines
+b2sum, , ,help, , ,112,display this help and exit
+b2sum, , ,version, , ,113,output version information and exit

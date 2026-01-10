@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nvram, ,x, , ,@f,101,Use  XML  format  for  reading  and  writing variables
+nvram, ,p, , ,@f,102,Print all of the firmware variables
+nvram, ,f, , ,@r,103,Set firmware variables from a text file
+nvram, ,d, , ,@f @r,104,Deletes the named firmware variable
+nvram, ,c, , ,@f,105,Delete all of the firmware variable
+nvram, , , , ,@f @r,106, 

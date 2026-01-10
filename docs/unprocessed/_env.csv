@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+env," __fish_env_defining_vars; and string match -eq = -- (commandline -ct)", , , ,@f,101,Redefine variable
+env," __fish_env_defining_vars; and string match -eq = -- (commandline -ct)", , , ,@f,102,Historical
+env, __fish_env_not_yet_vars,i,ignore-environment, , ,103,Start with an empty environment
+env, __fish_env_not_yet_vars,u,unset, ,@f @r,104,Unset environment variable
+env, __fish_env_not_yet_vars, ,help, , ,105,Display help and exit
+env, __fish_env_not_yet_vars, ,version, , ,106,Display version and exit
+env, __fish_env_not_yet_vars,u, , ,@f @r,107,Unset environment variable

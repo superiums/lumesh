@@ -1,0 +1,104 @@
+cmd,conds,short,long,params,dirs,pri,desc
+s3cmd, ,h,help, , ,143,Show help and exit
+s3cmd, , ,configure, , ,144,Run interactive (re)configuration tool
+s3cmd, ,c,config, , ,145,Config file (default: $HOME/.s3cfg)
+s3cmd, , ,dump-config, , ,146,Dump current configuration
+s3cmd, , ,access_key, , ,147,AWS Access Key
+s3cmd, , ,secret_key, , ,148,AWS Secret Key
+s3cmd, , ,access_token, , ,149,AWS Access Token
+s3cmd, ,n,dry-run, , ,150,"Dry run, test only"
+s3cmd, ,s,ssl, , ,151,Use HTTPS (default)
+s3cmd, , ,no-ssl, , ,152,Don't use HTTPS
+s3cmd, ,e,encrypt, , ,153,Encrypt files before uploading
+s3cmd, , ,no-encrypt, , ,154,Don't encrypt files
+s3cmd, ,f,force, , ,155,Force overwrite
+s3cmd, get, ,continue, , ,156,Resume partially downloaded file
+s3cmd, , ,continue-put, , ,157,Resume partially uploaded files
+s3cmd, , ,upload-id, , ,158,Resume multipart upload by UploadId
+s3cmd, get sync, ,skip-existing, , ,159,Skip existing files at destination
+s3cmd, ,r,recursive, , ,160,Upload/download/delete recursively
+s3cmd, sync, ,check-md5, , ,161,Check MD5 sums (default)
+s3cmd, sync, ,no-check-md5, , ,162,Skip MD5 sum check
+s3cmd, ,P,acl-public, , ,163,Store with ACL read for all
+s3cmd, , ,acl-private, , ,164,Store with private ACL
+s3cmd, , ,acl-grant, , ,165,Grant permission to named user
+s3cmd, , ,acl-revoke, , ,166,Revoke permission to named user
+s3cmd, ,D,restore-days, , ,167,Days to keep restored file
+s3cmd, , ,restore-priority, , ,168,S3 glacier restore priority
+s3cmd, sync, ,delete-removed, , ,169,Delete objects not found locally
+s3cmd, , ,no-delete-removed, , ,170,Don't delete dest objects
+s3cmd, sync, ,delete-after, , ,171,Delete after upload
+s3cmd, del sync, ,max-delete, , ,172,Delete no more than NUM files
+s3cmd, ls la, ,limit, , ,173,Max objects per response
+s3cmd, , ,add-destination, , ,174,Additional parallel upload
+s3cmd, get sync, ,delete-after-fetch, , ,175,Delete remotely after fetch
+s3cmd, ,p,preserve, , ,176,Preserve FS attributes
+s3cmd, , ,no-preserve, , ,177,Don't store FS attributes
+s3cmd, , ,exclude, , ,178,Exclude GLOB matches
+s3cmd, , ,exclude-from, , ,179,--exclude GLOBs from FILE
+s3cmd, , ,rexclude, , ,180,Exclude REGEXP matches
+s3cmd, , ,rexclude-from, , ,181,Read --rexclude REGEXPs from FILE
+s3cmd, , ,include, , ,182,Include GLOB matches even if previously excluded
+s3cmd, , ,include-from, , ,183,Read --include GLOBs from FILE
+s3cmd, , ,rinclude, , ,184,Include REGEXP matches even if preiously excluded
+s3cmd, , ,rinclude-from, , ,185,Read --rinclude REGEXPs from FILE
+s3cmd, , ,files-from, , ,186,Read source-file names from FILE
+s3cmd, , ,bucket-location, , ,187,Create bucket in region
+s3cmd, , ,host, , ,188,S3 endpoint (default: s3.amazonaws.com)
+s3cmd, , ,host-bucket, , ,189,DNS-style bucket+hostname:port template for bucket
+s3cmd, put cp mv, ,rr, , ,190,Store with reduced redundancy
+s3cmd, put cp mv, ,no-rr, , ,191,Store without reduced redundancy
+s3cmd, , ,storage-class, , ,192,"Store with STANDARD, STANDARD_IA, or REDUCED_REDUNDANCY"
+s3cmd, cfmodify accesslog, ,access-logging-target-prefix, , ,193,Prefix for access logs
+s3cmd, cfmodify accesslog, ,no-access-logging, , ,194,Disable access logging
+s3cmd, , ,default-mime-type, , ,195,Default MIME-type for objects
+s3cmd, ,M,guess-mime-type, , ,196,Guess MIME-type
+s3cmd, , ,no-guess-mime-type, , ,197,"Don't guess MIME-type, use default"
+s3cmd, , ,no-mime-magic, , ,198,Don't use mime magic when guessing
+s3cmd, ,m,mime-type, , ,199,Force MIME-type
+s3cmd, , ,add-header, , ,200,Add HTTP header
+s3cmd, , ,remove-header, , ,201,Remove HTTP header
+s3cmd, , ,server-side-encryption, , ,202,Use server-side encryption for upload
+s3cmd, , ,server-side-encryption-kms-id, , ,203,Encrypt with specified AWS KMS-managed key
+s3cmd, , ,encoding, , ,204,Use specified encoding
+s3cmd, , ,add-encoding-exts, , ,205,Add encoding to CSV extension list
+s3cmd, , ,verbatim, , ,206,Use S3 name as-is
+s3cmd, , ,disable-multipart, , ,207,No multipart on files larger than --multipart-chunk-size-mb
+s3cmd, , ,multipart-chunk-size-mb, , ,208,Multipart upload chunk size
+s3cmd, ls, ,list-md5, , ,209,Include MD5 sums in bucket listings
+s3cmd, ,H,human-readable-sizes, , ,210,Print sizes in human-readable form
+s3cmd, ws-create, ,ws-index, , ,211,Name of index-document
+s3cmd, ws-create, ,ws-error, , ,212,Name of error-document
+s3cmd, expire, ,expiry-date, , ,213,When expiration rule takes effect
+s3cmd, expire, ,expiry-days, , ,214,Days to expire
+s3cmd, expire, ,expiry-prefix, , ,215,Apply expiry to objects matching prefix
+s3cmd, , ,progress, , ,216,Show progress (default on TTY)
+s3cmd, , ,no-progress, , ,217,Don't show progress meter (default if non-TTY)
+s3cmd, , ,stats, , ,218,Show file transfer stats
+s3cmd, cfmodify, ,enable, , ,219,Enable CloudFront distribution
+s3cmd, cfmodify, ,disable, , ,220,Disable CloudFront distribution
+s3cmd, cfmodify, ,cf-invalidate, , ,221,Invalidate CloudFront file
+s3cmd, cfmodify, ,cf-invalidate-default-index, , ,222,Invalidate default index
+s3cmd, cfmodify, ,cf-no-invalidate-default-index-root, , ,223,Don't invalidate default index
+s3cmd, cfcreate cfmodify, ,cf-add-cname, , ,224,Add CNAME to CloudFront distribution
+s3cmd, cfmodify, ,cf-remove-cname, , ,225,Remove CNAME from CloudFront distribution
+s3cmd, cfcreate cfmodify, ,cf-comment, , ,226,Set COMMENT for CloudFront distribution
+s3cmd, cfcreate cfmodify, ,cf-default-root-object, , ,227,Set default root object
+s3cmd, ,v,verbose, , ,228,Verbose output
+s3cmd, ,d,debug, , ,229,Debug output
+s3cmd, , ,version, , ,230,Show version
+s3cmd, ,F,follow-symlinks, , ,231,Follow symlinks
+s3cmd, , ,cache-file, , ,232,Cache FILE containing MD5 values
+s3cmd, ,q,quiet, , ,233,Silence stdout output
+s3cmd, , ,ca-certs, , ,234,Path to SSL CA certificate FILE
+s3cmd, , ,check-certificate, , ,235,Validate SSL certificate
+s3cmd, , ,no-check-certificate, , ,236,Don't validate SSL certificate
+s3cmd, , ,check-hostname, , ,237,Validate SSL hostname
+s3cmd, , ,no-check-hostname, , ,238,Don't validate SSL hostname
+s3cmd, , ,signature-v2, , ,239,Use AWS Signature version 2
+s3cmd, , ,limit-rate, , ,240,Limit upload or download speed (bytes/sec)
+s3cmd, , ,requester-pays, , ,241,Set REQUESTER PAYS for operations
+s3cmd, ls,l,long-listing, , ,242,Produce long listing
+s3cmd, , ,stop-on-error, , ,243,Stop on error in transfer
+s3cmd, , ,content-disposition, , ,244,Provide Content-Disposition for signed URLs
+s3cmd, , ,content-type, , ,245,Provide Content-Type for signed URLs

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mv, , ,backup, ,@r,101,Backup each existing destination file
+mv, ,f,force, , ,102,Don't prompt to overwrite
+mv, ,i,interactive, , ,103,Prompt to overwrite
+mv, ,n,no-clobber, , ,104,Don't overwrite existing
+mv, , ,strip-trailing-slashes, , ,105,Remove trailing '/' from source args
+mv, ,S,suffix, ,@f @r,106,Override default backup suffix
+mv, ,t,target-directory, , ,107,Move all source args into DIR
+mv, ,T,no-target-directory, , ,108,Treat DEST as a normal file
+mv, ,u,update, , ,109,Don't overwrite newer
+mv, ,v,verbose, , ,110,Print filenames as it goes
+mv, , ,help, , ,111,Print help and exit
+mv, , ,version, , ,112,Print version and exit

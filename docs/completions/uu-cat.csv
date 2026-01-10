@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-cat, ,A,show-all, , ,101,equivalent to -vET
+uu-cat, ,b,number-nonblank, , ,102,"number nonempty output lines, overrides -n"
+uu-cat, ,E,show-ends, , ,103,display $ at end of each line
+uu-cat, ,n,number, , ,104,number all output lines
+uu-cat, ,s,squeeze-blank, , ,105,suppress repeated empty output lines
+uu-cat, ,T,show-tabs, , ,106,display TAB characters at ^I
+uu-cat, ,v,show-nonprinting, , ,107,"use ^ and M- notation, except for LF (\\n) and TAB (\\t)"
+uu-cat, ,h,help, , ,108,Print help
+uu-cat, ,V,version, , ,109,Print version

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-extracttemplates, ,h,help, , ,101,Display help and exit
+apt-extracttemplates, ,t, , ,@r,102,Set temp dir
+apt-extracttemplates, ,c, , ,@r,103,Specify config file
+apt-extracttemplates, ,o, , ,@r,104,Specify options

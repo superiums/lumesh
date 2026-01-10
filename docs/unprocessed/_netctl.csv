@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+netctl, $cmds, , ,list,@f,102,List available profiles
+netctl, $cmds, , ,store,@f,102,Save which profiles are active
+netctl, $cmds, , ,restore,@f,102,Load saved profiles
+netctl, $cmds, , ,stop-all,@f,102,Stops all profiles
+netctl, $cmds, , ,start,@f,102,Start a profile
+netctl, $cmds, , ,stop,@f,102,Stop a profile
+netctl, $cmds, , ,restart,@f,102,Restart a profile
+netctl, $cmds, , ,switch-to,@f,102,Switch to a profile
+netctl, $cmds, , ,status,@f,102,Show runtime status of a profile
+netctl, $cmds, , ,enable,@f,102,Enable the systemd unit for a profile
+netctl, $cmds, , ,disable,@f,102,Disable the systemd unit for a profile
+netctl, $cmds, , ,reenable,@f,102,Reenable the systemd unit for a profile
+netctl, $cmds, , ,is-enabled,@f,102,Check whether the unit is enabled
+netctl, $cmds, , ,edit,@f,102,Open the specified profile in an editor

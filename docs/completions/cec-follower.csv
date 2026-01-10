@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cec-follower, ,d,device, , ,101,Use device <dev> as the CEC device
+cec-follower, ,D,driver, , ,102,"Use a cec device that has driver name <drv>, as returned by the CEC_ADAP_G_CA…"
+cec-follower, ,a,adapter, , ,103,"Use a cec device that has adapter name <adap-name>, as returned by the CEC_AD…"
+cec-follower, ,v,verbose, , ,104,Turn on verbose reporting
+cec-follower, , ,version, , ,105,Show version information
+cec-follower, ,w,wall-clock, , ,106,Show timestamps as wall-clock time.  This also turns on verbose reporting
+cec-follower, ,T,trace, , ,107,Trace all called ioctls.  Useful for debugging
+cec-follower, ,h,help, , ,108,Prints the help message
+cec-follower, ,n,no-warnings, , ,109,Turn off warning messages
+cec-follower, ,e,exclusive, , ,110,"If specified, then the follower uses exclusive mode (CEC_MODE_EXCL_FOLLOWER)"
+cec-follower, ,m,show-msgs, , ,111,Show received messages
+cec-follower, ,s,show-state, , ,112,Show state changes from the emulated device
+cec-follower, , ,service-by-dig-id, , ,113,Report digital services by digital ID instead of by channel
+cec-follower, , ,standby, , ,114,Start the follower in the Standby status
+cec-follower, , ,toggle-power-status, , ,115,Toggle the power status every <secs> seconds
+cec-follower, ,i,ignore, , ,116,Ignore messages from logical address <la> and opcode <opcode>
+cec-follower, , ,ignore-standby, , ,117,Ignore every <n>th received Standby message
+cec-follower, , ,ignore-view-on, , ,118,Ignore every <n>th received Image/Text View On message

@@ -1,0 +1,44 @@
+cmd,conds,short,long,params,dirs,pri,desc
+useradd, , ,badname, , ,101,Allow names that do not conform to standards
+useradd, ,b,base-dirBASE_DIR, , ,102,The default base directory for the system if -dHOME_DIR is not specified
+useradd, ,c,commentCOMMENT, , ,103,Any text string
+useradd, ,d,home-dirHOME_DIR, , ,104,The new user will be created using HOME_DIR as the value for the user\\*(Aqs l…
+useradd, ,D,defaults, , ,105,"See below, the subsection 'Changing the default values'"
+useradd, ,e,expiredateEXPIRE_DATE, , ,106,The date on which the user account will be disabled
+useradd, ,f,inactiveINACTIVE, , ,107,defines the number of days after the password exceeded its maximum age where …
+useradd, ,F,add-subids-for-system, , ,108,Update /etc/subuid and /etc/subgid even when creating a system account with -…
+useradd, ,g,gidGROUP, , ,109,The name or the number of the user\\*(Aqs primary group
+useradd, ,G,groupsGROUP1, , ,110,A list of supplementary groups which the user is also a member of
+useradd, ,h,help, , ,111,Display help message and exit
+useradd, ,k,skelSKEL_DIR, , ,112,"The skeleton directory, which contains files and directories to be copied in …"
+useradd, ,K,keyKEY, , ,113,Overrides /etc/login
+useradd, ,l,no-log-init, , ,114,Do not add the user to the lastlog and faillog databases
+useradd, ,m,create-home, , ,115,Create the user\\*(Aqs home directory if it does not exist
+useradd, ,M,no-create-home, , ,116,"Do not create the user\\*(Aqs home directory, even if the system wide setting …"
+useradd, ,N,no-user-group, , ,117,"Do not create a group with the same name as the user, but add the user to the…"
+useradd, ,o,non-unique, , ,118,allows the creation of an account with an already existing UID
+useradd, ,p,passwordPASSWORD, , ,119,defines an initial password for the account
+useradd, ,r,system, , ,120,Create a system account
+useradd, ,R,rootCHROOT_DIR, , ,121,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+useradd, ,P,prefixPREFIX_DIR, , ,122,Apply changes to configuration files under the root filesystem found under th…
+useradd, ,s,shellSHELL, , ,123,sets the path to the user\\*(Aqs login shell
+useradd, ,u,uidUID, , ,124,The numerical value of the user\\*(Aqs ID
+useradd, ,U,user-group, , ,125,"Create a group with the same name as the user, and add the user to this group"
+useradd, ,Z,selinux-userSEUSER, , ,126,defines the SELinux user for the new account
+useradd, , ,selinux-rangeSERANGE, , ,127,defines the SELinux MLS range for the new account
+useradd, , ,base-dir, , ,128, 
+useradd, , ,comment, , ,129, 
+useradd, , ,home-dir, , ,130, 
+useradd, , ,expiredate, , ,131, 
+useradd, , ,inactive, , ,132, 
+useradd, , ,gid, , ,133, 
+useradd, , ,groups, , ,134, 
+useradd, , ,skel, , ,135, 
+useradd, , ,key, , ,136, 
+useradd, , ,password, , ,137, 
+useradd, , ,root, , ,138, 
+useradd, , ,prefix, , ,139, 
+useradd, , ,shell, , ,140, 
+useradd, , ,uid, , ,141, 
+useradd, , ,selinux-user, , ,142, 
+useradd, , ,selinux-range, , ,143, 

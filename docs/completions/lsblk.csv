@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsblk, ,a,all, , ,101,print all devices
+lsblk, ,b,bytes, , ,102,print SIZE in bytes rather than in human readable format
+lsblk, ,d,nodeps, , ,103,don't print slaves or holders
+lsblk, ,D,discard, , ,104,print discard capabilities
+lsblk, ,e,exclude, , ,105,exclude devices by major number (default: RAM disks)
+lsblk, ,f,fs, , ,106,output info about filesystems
+lsblk, ,h,help, , ,107,usage information (this)
+lsblk, ,i,ascii, , ,108,use ascii characters only
+lsblk, ,m,perms, , ,109,output info about permissions
+lsblk, ,n,noheadings, , ,110,don't print headings
+lsblk, ,o,output, , ,111,output columns
+lsblk, ,P,pairs, , ,112,use key='value' output format
+lsblk, ,r,raw, , ,113,use raw output format
+lsblk, ,t,topology, , ,114,output info about topology
+lsblk, ,l,list, , ,115,use list format output

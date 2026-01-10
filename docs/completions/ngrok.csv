@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ngrok, , , ,authtoken,@f,101,Save authtoken to configuration file
+ngrok, , , ,credits,@f,102,Prints author and licensing information
+ngrok, , , ,http,@f,103,Start an HTTP tunnel
+ngrok, , , ,start,@f,104,Start tunnels by name from the configuration file
+ngrok, , , ,tcp,@f,105,Start a TCP tunnel
+ngrok, , , ,tls,@f,106,Start a TLS tunnel
+ngrok, , , ,update,@f,107,Update ngrok to the latest version
+ngrok, , , ,version,@f,108,Print the version string
+ngrok, , , ,help,@f,109,Shows a list of commands or help for one command
+ngrok, , ,help, , ,110, 
+ngrok, , ,authtoken, ,@r,111,ngrok.com authtoken identifying a user
+ngrok, , ,config, ,@r,112,"path to config files; they are merged if multiple"
+ngrok, , ,log,false stderr stdout,@f @r,113,"path to log file, 'stdout', 'stderr' or 'false'"
+ngrok, , ,log-format,term logfmt json,@f @r,114,"log record format: 'term', 'logfmt', 'json'"
+ngrok, , ,log-level,info,@r,115,logging level
+ngrok, , ,region,us eu au ap,@f @r,116,"ngrok server region [us , eu, au, ap] (default: us)"
+ngrok, , ,hostname, ,@r,117,host tunnel on custom hostname (requires DNS CNAME)
+ngrok, , ,subdomain, ,@r,118,host tunnel on a custom subdomain
+ngrok, , ,auth, ,@r,119,"enforce basic auth on tunnel endpoint, 'user:password'"
+ngrok, , ,bind-tls,both https http,@f @r,120,"listen for http, https or both: true/false/both"
+ngrok, , ,host-header, ,@r,121,"set Host header; if 'rewrite' use local address hostname"
+ngrok, , ,inspect, , ,122,enable/disable http introspection
+ngrok, , ,client-cas, ,@r,123,path to TLS certificate authority to verify client certs
+ngrok, , ,crt, ,@r,124,path to a TLS certificate for TLS termination
+ngrok, , ,key, ,@r,125,path to a TLS key for TLS termination
+ngrok, , ,all, , ,126,start all tunnels in the configuration file
+ngrok, , ,none, , ,127,start running no tunnels
+ngrok, , ,remote-addr, ,@r,128,bind remote address (requires you reserve an address)
+ngrok, , ,channel,stable beta,@f @r,129,"update channel (stable, beta)"

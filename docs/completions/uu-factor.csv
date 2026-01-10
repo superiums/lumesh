@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-factor, ,h,exponents, , ,101,Print factors in the form p^e
+uu-factor, , ,help, , ,102,Print help information.
+uu-factor, ,V,version, , ,103,Print version

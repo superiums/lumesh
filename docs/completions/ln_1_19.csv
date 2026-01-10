@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ln, , ,backup, , ,101,make a backup of each existing destination file
+ln, ,F,directory, , ,102,allow the superuser to attempt to hard link directories (this will probably f…
+ln, ,f,force, , ,103,remove existing destination files
+ln, ,i,interactive, , ,104,prompt whether to remove destinations
+ln, ,L,logical, , ,105,dereference TARGETs that are symbolic links
+ln, ,n,no-dereference, , ,106,treat LINK_NAME as a normal file if it is a symbolic link to a directory
+ln, ,P,physical, , ,107,make hard links directly to symbolic links
+ln, ,r,relative, , ,108,"with -s, create links relative to link location"
+ln, ,s,symbolic, , ,109,make symbolic links instead of hard links
+ln, ,S,suffix, , ,110,override the usual backup suffix
+ln, ,t,target-directory, , ,111,specify the DIRECTORY in which to create the links
+ln, ,T,no-target-directory, , ,112,treat LINK_NAME as a normal file always
+ln, ,v,verbose, , ,113,print name of each linked file
+ln, , ,help, , ,114,display this help and exit
+ln, , ,version, , ,115,output version information and exit 

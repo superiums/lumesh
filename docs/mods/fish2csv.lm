@@ -1,0 +1,214 @@
+#!/usr/bin/env lume
+##### fish2csv.lm - 将fish completion文件转换为CSV格式
+# ======directive=======
+# @n not contains any listed condition
+#    @n apply to empty list, means require at least one arg provided
+# @t always return true while checking condition. allows have or not have subcmd.
+# @m multi, allow options to be used multi-times.
+# @D Directory complete
+# @F File complete
+# -----following means as same as fish complete
+# @f no file
+# @r required
+# @x no file and required
+# @k keep
+# ======================
+#
+
+
+## 检查参数
+# if len(argv) < 1 {
+#     print("用法: fish2csv.lm <fish_completion_file> [output_dir]")
+#     exit(1)
+# }
+
+
+## CSV转义函数
+fn escape_csv(text) {
+    text = text.replace("\"", "'").replace("\\'", "'")
+    if text.contains(",") || text.contains(";") || text.contains("\"") || text.contains("\n") || text.contains("\r") {
+        text = "\"" + text + "\""
+    }
+    return text
+}
+
+# let input_file = argv[0]
+# let output_dir = argv[1] ?: '/tmp/'
+let orderi=0
+
+fn trans(input_file,output_dir='/tmp'){
+    println 'input:' input_file
+
+    if !input_file { return }
+    orderi += 1
+    let file_base = Fs.base_name(True,input_file).at(0)
+    let suc_dir =  Fs.join(output_dir,'completions')
+    let deel_dir =  Fs.join(output_dir,'unprocessed')
+    let output_file = Fs.join(suc_dir, file_base + '.csv')
+    let deel_file = Fs.join(deel_dir, '_' + file_base + '.csv')
+    # println deel_file
+
+    # 检查输入文件是否存在
+    if !Fs.exists(input_file) {
+        print("错误: 输入文件不存在: ", input_file)
+        exit(1)
+    }
+    
+   # 读取并解析fish completion文件
+    let content = Fs.read(input_file)
+    let lines = content.lines()
+
+    if Fs.exists(output_file){
+        print("Already have one",output_file)
+        output_file = Fs.join(suc_dir, file_base+'_'+ orderi +'_'+lines.len()+ '.csv')
+        
+    }
+    if Fs.exists(deel_file){
+        deel_file = Fs.join(deel_dir, '_'+file_base+'_'+ orderi +'_'+lines.len()+ '.csv')
+        
+    }
+
+    if !Fs.exists(suc_dir) { Fs.mkdir(suc_dir) }
+    if !Fs.exists(deel_dir) { Fs.mkdir(deel_dir) }
+    # CSV头部
+    # let csv_header = "命令,条件列表,短选项,长选项,参数列表,指令列表,优先级,描述"
+    let csv_header = "cmd,conds,short,long,params,dirs,pri,desc"
+    Fs.write(output_file, csv_header + "\n")
+    Fs.write(deel_file, csv_header + "\n")
+
+    let priority = 100  # 默认优先级
+    let processed_lines =0
+    let unprocessed_lines =0
+
+    let rp_n = [
+            ['__fish_git_needs_command',''],
+            ['__fish_git_using_command ',''],
+            ['__fish_git_contains_opt ',''],
+            ['__fish_seen_subcommand_from ',''],
+            ['not ','']
+        ]
+
+    for line in lines {
+    # 解析complete命令
+        let prioff = False
+        line=line.trim()
+        if line.starts_with("complete") {
+            # println line
+            let parts = line.words_quoted()
+            let cmd,condition,description,short,long,argument=" "
+            let directive = []
+            # println parts "\n"
+
+            # 解析命令名称
+            let i = 1
+            let second=parts[1] ?+
+            if !second.starts_with('-'){
+                cmd = second
+                i += 1
+            }
+
+            # 解析参数
+            while i < len(parts) - 1 {
+                let part = parts[i]
+                let args = parts[i + 1]
+                if part.starts_with('-'){
+                    match part {
+                        r'c' => {i += 2; cmd=args}
+                        r'n' => {
+                            i += 2;
+                            if args ~: 'not ' { directive + "@n"}
+                            if args ~: '__fish_git_needs_command' { directive + "@n"}
+                            if args ~: 'not __fish_seen' { prioff= True }
+                            for rp in rp_n {
+                                args = args.replace(rp[0],rp[1])
+                            }
+                            condition = condition.trim() + ' ' + args
+                        }
+                        r'd' => {i += 2; description = args }
+                        r's' => {i += 2; short = args }
+                        r'l' => {i += 2; long = args }
+                        r'a' => {
+                            i += 2;
+                            if args.starts_with('('){
+                                if args ~: '__fish_complete_directories' || args ~: 'worktree'{
+                                    directive = directive + '@D'
+                                }else if args ~: 'files'{
+                                    directive= directive + '@F'
+                                }
+                                # discard others
+                             }else{
+                                argument = Regex.replace(`(".+?")|('.+?')|(\\\s)`,'_',args).split(' ').map(x -> x.split('\t').first().replace('"','')).join(' ')
+                             }
+                        }
+                        r'f' => {i += 1; directive = directive + "@f" }
+                        r'F' => {i += 1; directive = directive + "@F" }
+                        r'r' => {i += 1; directive = directive + "@r" }
+                        r'x' => {i += 1; directive = directive + "@r" + "@f"}
+                        r'k' => {i += 1; directive = directive + "@k" }
+                        # r'f' => i += 1;
+                        _ => { i += 1; print i ':' part args }
+                    }
+                }else{
+                    i += 1; print '  ' i ':' part
+                }
+            }
+
+            # 转换为CSV行
+            if cmd && (short.len()+long.len()+argument.len() > 3 || directive.len() > 0){
+                # 转义CSV中的特殊字符   cmd = escape_csv(cmd)
+                condition = escape_csv(condition)
+                short = escape_csv(short)
+                long = escape_csv(long)
+                # argument = escape_csv(argument)
+                description = escape_csv(description)
+
+                priority += prioff ? 0 : 1
+                directive = directive.sort().unique()
+                let directive_str = directive.len() ? directive.join(' ') : ' '
+
+                # 合并补全内容
+                let csv_line = cmd + "," + condition + "," + short +"," + long + "," + argument + "," + directive_str + "," + priority + "," + description + "\n"
+
+                # 写入CSV行
+                if cmd ~: '$' || condition ~: '(' || condition ~: '$' || condition ~: '__' || argument ~: '(' ||  argument ~: '__' || argument ~: '\t' {
+                    unprocessed_lines += 1
+                    Fs.append(deel_file, csv_line)
+                }else{
+                    processed_lines += 1
+                    Fs.append(output_file, csv_line)
+
+                }
+            }
+        }
+    }
+
+    if unprocessed_lines {
+        print('需要人工干预的行：'.bold(), unprocessed_lines, deel_file.yellow())
+    }else{
+        Fs.rm(deel_file)
+    }
+    if !processed_lines{
+        Fs.rm(output_file)
+    }
+    print("转换完成: ".bold() , input_file + " -> " + output_file.green())
+
+}
+
+# trans(input_file,output_dir)
+
+let dirs = [
+    '~/.config/fish/completions',
+    '/etc/fish/completions',
+    '~/.local/share/fish/vendor_completions.d',
+    '/usr/share/fish/vendor_completions.d',
+    '/usr/share/fish/completions',
+    '~/.cache/fish/generated_completions'
+]
+
+
+for dir in dirs {
+    println dir.green()
+    let arr = (dir | Fs.ls() ?! | .map(f -> Fs.join(dir, f.name)))
+    arr |> trans()
+}
+

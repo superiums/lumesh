@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tinysparql-endpoint, ,b,dbus-service, , ,101,Service name to use on the endpoint
+tinysparql-endpoint, ,d,database-path, , ,102,The path where the database will be stored
+tinysparql-endpoint, ,o,ontology, , ,103,The name of an ontology in $datadir/tracker/ontologies to use on the construc…
+tinysparql-endpoint, ,p,ontology-path, , ,104,Full path to an ontology to use on the constructed database
+tinysparql-endpoint, , ,session, , ,105,Use the session bus.  This is the default
+tinysparql-endpoint, , ,system, , ,106,Use the system bus
+tinysparql-endpoint, ,l,list, , ,107,List all SPARQL endpoints available in DBus
+tinysparql-endpoint, ,L,list-http, , ,108,List network-local HTTP SPARQL endpoints
+tinysparql-endpoint, , ,http-port, , ,109,Creates a HTTP endpoint that listens in the specified port
+tinysparql-endpoint, , ,loopback, , ,110,Allows only HTTP connections in the loopback device

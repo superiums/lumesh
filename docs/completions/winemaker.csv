@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+winemaker, , ,nobanner, , ,101,Don't use banner
+winemaker, , ,backup, , ,102,Use backup
+winemaker, , ,nobackup, , ,103,Don't use backup
+winemaker, , ,nosource-fix, , ,104,Perform source fixing
+winemaker, , ,lower-all, , ,105,Transform everything to lowercase
+winemaker, , ,lower-uppercase, , ,106,Transform uppercase to lowercase
+winemaker, , ,lower-none, , ,107,Don't transform uppercase to lowercase
+winemaker, , ,lower-include, , ,108,Transform uppercase to lowercase when no referenced file found
+winemaker, , ,nolower-include, , ,109,Don't transform uppercase to lowercase when no referenced file found
+winemaker, , ,guiexe, , ,110,Treat unknown app as GUI app
+winemaker, , ,windows, , ,111,Treat unknown app as GUI app
+winemaker, , ,cuiexe, , ,112,Treat unknown app as console app
+winemaker, , ,console, , ,113,Treat unknown app as console app
+winemaker, , ,dll, , ,114,Treat unknown app as library
+winemaker, , ,nodlls, , ,115,Don't use standard libraries
+winemaker, , ,mfc, , ,116,Use MFC based targets
+winemaker, , ,nomfc, , ,117,Use MFC based targets
+winemaker, , ,nomsvcrt, , ,118,Don't use msvcrt compilation
+winemaker, , , , ,@r,119,Add macro
+winemaker, , , , ,@r,120,Add to include path
+winemaker, , , , ,@r,121,Add to dll path
+winemaker, , , , ,@r,122,Add to library path
+winemaker, , , , ,@r,123,Link library
+winemaker, , ,interactive, , ,124,Use interactive mode
+winemaker, , ,single-target, ,@r,125,Use single target name
+winemaker, , ,generated-files, , ,126,Generate Makefile
+winemaker, , ,nogenerated-files, , ,127,Don't generate Makefile
+winemaker, , ,wine32, , ,128,Use 32-bit target

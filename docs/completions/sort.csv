@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sort, ,b,ignore-leading-blanks, , ,101,Ignore leading blanks
+sort, ,d,dictionary-order, , ,102,Consider only blanks and alphanumerics
+sort, ,f,ignore-case, , ,103,Ignore case
+sort, ,g,general-numeric-sort, , ,104,Compare general numeric value
+sort, ,i,ignore-nonprinting, , ,105,Consider only printable
+sort, ,h,human-numeric-sort, , ,106,Compare human readable numbers [2K 1G]
+sort, ,M,month-sort, , ,107,Compare month names
+sort, ,n,numeric-sort, , ,108,Compare string numerical value
+sort, ,R,random-sort, , ,109,Sort by random hash of keys
+sort, , ,random-source, , ,110,Get random bytes from FILE
+sort, ,r,reverse, , ,111,Reverse results
+sort, ,c,check, , ,112,Only check if sorted
+sort, ,k,key, , ,113,Define key
+sort, ,m,merge, , ,114,Merge sorted files
+sort, ,o,output, ,@f,115,Write to file
+sort, ,s,stable, , ,116,Stabilize sort
+sort, ,S,buffer-size, ,@r,117,Set memory buffer size
+sort, ,t,field-separator, , ,118,Field separator
+sort, ,T,temporary-directory, ,@r,119,Set temporary directory
+sort, ,u,unique, , ,120,Output only first of equal lines
+sort, ,z,zero-terminated, , ,121,Lines end with 0 byte
+sort, , ,help, , ,122,Display help and exit
+sort, , ,version, , ,123,Display version and exit

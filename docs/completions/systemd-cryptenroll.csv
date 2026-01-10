@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+systemd-cryptenroll, , ,password, , ,101,Enroll a regular password
+systemd-cryptenroll, , ,recovery-key, , ,102,Enroll an auto-generated recovery key
+systemd-cryptenroll, , ,pkcs11-token-uri, , ,103,Enroll a PKCS#11 security token or smartcard
+systemd-cryptenroll, , ,fido2-device, , ,104,Enroll a FIDO2 security token
+systemd-cryptenroll, , ,fido2-with-client-pin,yes no, ,105,Require to enter a PIN when unlocking the volume
+systemd-cryptenroll, , ,fido2-with-user-presence,yes no, ,106,Require to verify presence when unlocking the volume
+systemd-cryptenroll, , ,fido2-with-user-verification,yes no, ,107,Require user verification when unlocking the volume
+systemd-cryptenroll, , ,tpm2-device, , ,108,Enroll a TPM2 security chip
+systemd-cryptenroll, , ,tpm2-pcrs, ,@f @r,109,Bind the enrollment of TPM2 device to specified PCRs
+systemd-cryptenroll, , ,wipe-slot, , ,110,Wipes one or more LUKS2 key slots
+systemd-cryptenroll, ,h,help, , ,111,Print a short help
+systemd-cryptenroll, , ,version, , ,112,Print a short version string

@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dbus-daemon, , ,config-file, , ,101,Use the given configuration file
+dbus-daemon, , ,fork, , ,102,"Force the message bus to fork and become a daemon, even if the configuration …"
+dbus-daemon, , ,nofork, , ,103,"Force the message bus not to fork and become a daemon, even if the configurat…"
+dbus-daemon, , ,print-address, , ,104,"Print the address of the message bus to standard output, or to the given file…"
+dbus-daemon, , ,print-pid, , ,105,"Print the process ID of the message bus to standard output, or to the given f…"
+dbus-daemon, , ,session, , ,106,Use the standard configuration file for the per-login-session message bus
+dbus-daemon, , ,system, , ,107,Use the standard configuration file for the systemwide message bus
+dbus-daemon, , ,version, , ,108,Print the version of the daemon
+dbus-daemon, , ,introspect, , ,109,Print the introspection information for all D-Bus internal interfaces
+dbus-daemon, , ,address, , ,110,Set the address to listen on
+dbus-daemon, , ,systemd-activation, , ,111,Enable systemd-style service activation
+dbus-daemon, , ,nopidfile, , ,112,Don\\*(Aqt write a PID file even if one is configured in the configuration fil…
+dbus-daemon, , ,syslog, , ,113,"Force the message bus to use the system log for messages, in addition to writ…"
+dbus-daemon, , ,syslog-only, , ,114,"Force the message bus to use the system log for messages, and not duplicate t…"
+dbus-daemon, , ,nosyslog, , ,115,"Force the message bus to use only standard error for messages, even if the co…"
+dbus-daemon, , ,ready-event-handle, , ,116,"With this option, the dbus daemon raises an event when it is ready to process…"

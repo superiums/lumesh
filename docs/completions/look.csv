@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+look, ,a,alternative, , ,101, 
+look, ,d,alphanum, , ,102, 
+look, ,f,ignore-case, , ,103, 
+look, ,t,terminate, , ,104, 
+look, ,h,help, , ,105, 
+look, ,V,version, , ,106, 

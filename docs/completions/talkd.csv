@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+talkd, ,a,acl, , ,101,read site-wide ACLs from FILE
+talkd, ,d,debug, , ,102,enable debugging 
+talkd, ,l,logging, , ,103,enable more syslog reporting
+talkd, ,r,request-ttl, , ,104,set request time-to-live value to SECONDS
+talkd, ,S,strict-policy, , ,105,apply strict ACL policy
+talkd, ,t,timeout, , ,106,set timeout value to SECONDS
+talkd, ,?,help, , ,107,give this help list
+talkd, , ,usage, , ,108,give a short usage message
+talkd, ,i,idle-timeout, , ,109, 
+talkd, ,V,version, , ,110,print program version

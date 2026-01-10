@@ -1,0 +1,52 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fd, ,H,hidden, , ,101,Include hidden files and directories in the search results (default: hidden f…
+fd, , ,no-ignore-vcs, , ,102,is also used
+fd, ,u,unrestricted, , ,103,"Perform an unrestricted search, including ignored and hidden files"
+fd, , ,no-require-git, , ,104,Do not require a git repository to respect gitignores
+fd, , ,no-ignore-parent, , ,105,Show search results from files and directories that would otherwise be ignore…
+fd, ,s,case-sensitive, , ,106,Perform a case-sensitive search
+fd, ,i,ignore-case, , ,107,Perform a case-insensitive search
+fd, ,g,glob, , ,108,Perform a glob-based search instead of a regular expression search
+fd, , ,regex, , ,109,Perform a regular-expression based search (default)
+fd, ,F,fixed-strings, , ,110,Treat the pattern as a literal string instead of a regular expression
+fd, , ,and, , ,111,"Add additional required search patterns, all of which must be matched"
+fd, ,a,absolute-path, , ,112,Shows the full path starting from the root as opposed to relative paths
+fd, ,l,list-details, , ,113,Use a detailed listing format like 'ls -l'
+fd, ,L,follow, , ,114,"By default, fd does not descend into symlinked directories"
+fd, ,p,full-path, , ,115,"By default, the search pattern is only matched against the filename (or direc…"
+fd, ,0,print0, , ,116,Separate search results by the null character (instead of newlines)
+fd, , ,max-results, , ,117,Limit the number of search results to 'count' and quit immediately
+fd, ,q,quiet, , ,118,"When the flag is present, the program does not print anything and will instea…"
+fd, , ,show-errors, , ,119,Enable the display of filesystem errors for situations such as insufficient p…
+fd, , ,strip-cwd-prefix, , ,120,"By default, relative paths are prefixed with '"
+fd, , ,xdev, , ,121,"By default, fd will traverse the file system tree as far as other options dic…"
+fd, ,h,help, , ,122,Print help information
+fd, ,V,version, , ,123,Print version information
+fd, ,d,max-depth, , ,124,Limit directory traversal to at most  d levels of depth
+fd, , ,min-depth, , ,125,Only show search results starting at the given depth
+fd, , ,exact-depth, , ,126,Only show search results at the exact given depth
+fd, , ,prune, , ,127,Do not traverse into matching directories
+fd, ,t,type, , ,128,Filter search by type: . RS
+fd, ,e,extension, , ,129,Filter search results by file extension R ext 
+fd, ,E,exclude, , ,130,Exclude files/directories that match the given glob pattern
+fd, , ,ignore-file, , ,131,Add a custom ignore-file in '. gitignore' format
+fd, ,c,color, , ,132,Declare  when to colorize search results: . RS
+fd, , ,hyperlink, , ,133,Specify whether the output should use terminal escape codes to indicate a hyp…
+fd, ,j,threads, , ,134,Set number of threads to use for searching & executing (default: number of av…
+fd, ,S,size, , ,135,Limit results based on the size of files using the format  <+-><NUM><UNIT> 
+fd, , ,changed-within, , ,136,Filter results based on the file modification time
+fd, , ,changed-before, , ,137,Filter results based on the file modification time
+fd, ,o,owner, , ,138,Filter files by their user and/or group.  Format: [(user|uid)][:(group|gid)]
+fd, , ,base-directory, , ,139,Change the current working directory of fd to the provided path
+fd, , ,path-separator, , ,140,Set the path separator to use when printing file paths
+fd, , ,search-path, , ,141,Provide paths to search as an alternative to the positional path argument
+fd, , ,format, , ,142,Specify a template string that is used for printing a line for each file found
+fd, ,x,exec, , ,143,RS Execute  command for each search result in parallel (use --threads=1 for s…
+fd, ,X,exec-batch, , ,144,"RS Execute  command once, with all search results as arguments"
+fd, , ,has-results, , ,145,can be used as an alias
+fd, , ,change-newer-than, , ,146, 
+fd, , ,newer, , ,147,or
+fd, , ,changed-after, , ,148,can be used as aliases
+fd, , ,change-older-than, , ,149,or
+fd, , ,older, , ,150,can be used as aliases
+fd, , ,batch-size, , ,151,Maximum number of arguments to pass to the command given with -X

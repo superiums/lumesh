@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-loopback, ,h,help, , ,101,Show help
+pw-loopback, ,r,remote, , ,102,The name of the remote instance to connect to
+pw-loopback, ,n,name, , ,103,Name of the loopback node
+pw-loopback, ,g,group, , ,104,Name of the loopback node group
+pw-loopback, ,c,channels, , ,105,Number of channels to provide
+pw-loopback, ,m,channel-map, , ,106,"Channel map (default [ FL, FR ])"
+pw-loopback, ,l,latency, , ,107,Desired latency in ms
+pw-loopback, ,d,delay, , ,108,Added delay in seconds (floating point allowed)
+pw-loopback, ,C,capture, , ,109,Target device to capture from
+pw-loopback, ,P,playback, , ,110,Target device to play to
+pw-loopback, , ,capture-props, , ,111,Wanted properties of capture node (in JSON)
+pw-loopback, , ,playback-props, , ,112,Wanted properties of capture node (in JSON)

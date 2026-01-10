@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tlp, $tlp_commands, , ,start, ,100,Start tlp and apply power saving profile for the actual power source
+tlp, $tlp_commands, , ,bat, ,100,Apply battery profile and enter manual mode
+tlp, $tlp_commands, , ,ac, ,100,Apply AC profile and enter manual mode
+tlp, $tlp_commands, , ,usb, ,100,Enable autosuspend for all USB devices except excluded
+tlp, $tlp_commands, , ,bayoff, ,100,Turn off optical drive in UltraBay/MediaBay
+tlp, $tlp_commands, , ,setcharge, ,100,Change charge thresholds temporarily
+tlp, $tlp_commands, , ,fullcharge, ,100,Charge battery to full capacity
+tlp, $tlp_commands, , ,chargeonce, ,100,Charge battery to the stop charge threshold once (ThinkPads only)
+tlp, $tlp_commands, , ,discharge, ,100,Force a complete discharge of the battery (ThinkPads only)
+tlp, $tlp_commands, , ,recalibrate, ,100,Perform a battery recalibration (ThinkPads only)
+tlp, $tlp_commands, , ,diskid, ,100,Print disk ids for configured drives
+tlp, $tlp_commands, ,version, , ,100,Print TLP version
+tlp, $tlp_commands[6..10] && $bats, , ,$bats, ,100, 
+$current_command, $tlp_rf_devices_commands, , ,on, ,100,Switch device on
+$current_command, $tlp_rf_devices_commands, , ,off, ,100,Switch device off
+$current_command, $tlp_rf_devices_commands, , ,toggle, ,100,Toggle device state
+$current_command, $tlp_rf_devices_commands, ,version, , ,100,Print TLP version

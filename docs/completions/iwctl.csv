@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ , , , , ,@f,101, 
+iwctl, ,h,help, , ,102, 
+iwctl, ,p,password, , ,103, 
+iwctl, ,u,username, , ,104, 
+iwctl, ,P,passphrase, , ,105, 
+iwctl, ,v,dont-ask, , ,106,Don't ask for missing credentials

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+man, ,M, , ,@D,102,Manpath
+man, ,F,preformat, , ,103,Format only
+man, ,w,path, , ,104,Only print locations
+man, ,l,local-file, , ,105,Local file

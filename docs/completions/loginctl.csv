@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+loginctl, , ,no-ask-password, , ,101,Do not query the user for authentication for privileged operations
+loginctl, ,p,property, , ,102,"When showing session/user/seat properties, limit display to certain propertie…"
+loginctl, , ,value, , ,103,"When showing session/user/seat properties, only print the value, and skip the…"
+loginctl, ,a,all, , ,104,"When showing session/user/seat properties, show all properties regardless of …"
+loginctl, ,l,full, , ,105,Do not ellipsize process tree entries. sp Added in version 198
+loginctl, , ,kill-whom, , ,106,"When used with kill-session, choose which processes to kill"
+loginctl, ,s,signal, , ,107,"When used with kill-session or kill-user, choose which signal to send to sele…"
+loginctl, ,o,output, , ,108,"When used with user-status and session-status, controls the formatting of the…"
+loginctl, ,i,ignore-inhibitors, , ,109,"When system shutdown or a sleep state is requested, ignore inhibitor locks"
+loginctl, , ,dry-run, , ,110,Just print what would be done
+loginctl, , ,no-wall, , ,111,"Do not send wall messages before halt, power-off and reboot"
+loginctl, , ,no-pager, , ,112,Do not pipe output into a pager
+loginctl, , ,no-legend, , ,113,"Do not print the legend, i. e.  column headers and the footer with hints"
+loginctl, ,h,help, , ,114,Print a short help text and exit
+loginctl, , ,version, , ,115,Print a short version string and exit
+loginctl, , ,firmware-setup, , ,116,"is given, indicate to the systems firmware to reboot into the firmware setup …"

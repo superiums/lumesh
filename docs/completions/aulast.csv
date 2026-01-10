@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aulast, , ,bad, , ,101,Report on the bad logins
+aulast, , ,debug, , ,102,Print debug messages to stderr
+aulast, , ,extract, , ,103,Write raw audit records used to create the displayed report into a file aulast
+aulast, , ,proof, , ,104,Print out the audit event serial numbers used to determine the preceding line…
+aulast, , ,stdin, , ,105,Take audit records from stdin.  The audit events must be in the raw format
+aulast, , ,tty, , ,106,Limit the report to a specific tty's activity
+aulast, , ,user, , ,107,Limit the report to a specific user

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fc-cache, ,E,error-on-no-fonts, , ,101,Raise an error if there are no fonts in dir or directories in the configurati…
+fc-cache, ,f,force, , ,102,"Force re-generation of apparently up-to-date cache files, overriding the time…"
+fc-cache, ,r,really-force, , ,103,Erase all existing cache files and rescan
+fc-cache, ,s,system-only, , ,104,"Only scan system-wide directories, omitting the places located in the user's …"
+fc-cache, ,v,verbose, , ,105,Display status information while busy
+fc-cache, ,h,help, , ,106,Show summary of options
+fc-cache, ,V,version, , ,107,Show version of the program and exit

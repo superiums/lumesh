@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+unzstd, ,z,compress, , ,101,Compress
+unzstd, ,d,uncompress, , ,102,Decompress
+unzstd, ,t,test, , ,103,Test the integrity of compressed files
+unzstd, , ,train, , ,104,Use FILES as a training set to create a dictionary
+unzstd, ,l,list, , ,105,"Display information related to a zstd compressed file, such as size, ratio, a…"
+unzstd, ,n,no-name, , ,106,do not store the original filename and timestamps when compressing a file

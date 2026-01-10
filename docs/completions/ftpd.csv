@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ftpd, ,4,ipv4, , ,101,restrict daemon to IPv4
+ftpd, ,6,ipv6, , ,102,restrict daemon to IPv6
+ftpd, ,a,auth, , ,103,use AUTH for authentication
+ftpd, ,A,anonymous-only, , ,104,server configured for anonymous service only
+ftpd, ,d,debug, , ,105,debug mode
+ftpd, ,D,daemon, , ,106,start the ftpd standalone
+ftpd, ,l,logging, , ,107,increase verbosity of syslog messages
+ftpd, , ,non-rfc2577, , ,108,neglect RFC 2577 by giving info on missing users
+ftpd, ,p,pidfile, , ,109,change default location of pidfile
+ftpd, ,q,no-version, , ,110,do not display version in banner
+ftpd, ,t,timeout, , ,111,set default idle timeout
+ftpd, ,T,max-timeout, , ,112,set maximum value of timeout allowed
+ftpd, ,u,umask, , ,113,set default umask P AUTH can be one of the following:
+ftpd, ,?,help, , ,114,give this help list
+ftpd, , ,usage, , ,115,give a short usage message
+ftpd, ,V,version, , ,116,print program version

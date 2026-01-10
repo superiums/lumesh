@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-ftparchive, ,h,help, , ,101,Display help and exit
+apt-ftparchive, , , ,packages,@f,102,Generate package from source
+apt-ftparchive, , , ,sources,@f,103,Generate source index file
+apt-ftparchive, , , ,contents,@f,104,Generate contents file
+apt-ftparchive, , , ,release,@f,105,Generate release file
+apt-ftparchive, , , ,clean,@f,106,Remove records
+apt-ftparchive, , ,md5, ,@f,107,Generate MD5 sums
+apt-ftparchive, ,d,db, ,@f,108,Use a binary db
+apt-ftparchive, ,q,quiet, ,@f,109,Quiet mode
+apt-ftparchive, , ,delink, ,@f,110,Perform delinking
+apt-ftparchive, , ,contents, ,@f,111,Perform contents generation
+apt-ftparchive, ,s,source-override, , ,112,Use source override
+apt-ftparchive, , ,readonly, ,@f,113,Make caching db readonly
+apt-ftparchive, ,v,version, ,@f,114,Display version and exit
+apt-ftparchive, ,c,config-file, ,@r,115,Use config file
+apt-ftparchive, ,o,option, ,@r,116,Set config options

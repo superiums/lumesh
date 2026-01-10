@@ -1,0 +1,57 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bsdtar, , ,acls, , ,101,"(c, r, u, x modes only) Archive or extract POSIX. 1e or NFSv4 ACLs"
+bsdtar, , ,chroot, , ,102,(x mode only) chroot to the current directory after processing any C options …
+bsdtar, , ,clear-nochange-fflags, , ,103,"(x mode only) Before removing file system objects to replace them, clear plat…"
+bsdtar, , ,exclude, , ,104,Do not process files or directories that match the specified pattern
+bsdtar, , ,exclude-vcs, , ,105,Do not process files or directories internally used by the version control sy…
+bsdtar, , ,fflags, , ,106,"(c, r, u, x modes only) Archive or extract platform-specific file attributes …"
+bsdtar, , ,format, , ,107,"(c, r, u mode only) Use the specified format for the created archive"
+bsdtar, , ,gid, , ,108,Use the provided group id number
+bsdtar, , ,gname, , ,109,Use the provided group name
+bsdtar, , ,group, , ,110,"Use the provided group, if gid is not provided, name can be either a group na…"
+bsdtar, , ,help, , ,111,Show usage
+bsdtar, , ,hfsCompression, , ,112,(x mode only) Mac OS X specific (v10. 6 or later)
+bsdtar, , ,ignore-zeros, , ,113,An alias of options Cm read_concatenated_archives for compatibility with GNU …
+bsdtar, , ,include, , ,114,Process only files or directories that match the specified pattern
+bsdtar, , ,keep-newer-files, , ,115,(x mode only) Do not overwrite existing files that are newer than the version…
+bsdtar, , ,lrzip, , ,116,(c mode only) Compress the resulting archive with lrzip 1
+bsdtar, , ,lz4, , ,117,(c mode only) Compress the archive with lz4-compatible compression before wri…
+bsdtar, , ,zstd, , ,118,(c mode only) Compress the archive with zstd-compatible compression before wr…
+bsdtar, , ,lzma, , ,119,(c mode only) Compress the resulting archive with the original LZMA algorithm
+bsdtar, , ,lzop, , ,120,(c mode only) Compress the resulting archive with lzop 1
+bsdtar, , ,mac-metadata, , ,121,"(c, r, u and x mode only) Mac OS X specific"
+bsdtar, , ,newer, , ,122,"(c, r, u modes only) Only include files and directories newer than the specif…"
+bsdtar, , ,newer-mtime, , ,123,"(c, r, u modes only) Like newer, except it compares mtime entries instead of …"
+bsdtar, , ,newer-than, , ,124,"(c, r, u modes only) Only include files and directories newer than the specif…"
+bsdtar, , ,newer-mtime-than, , ,125,"(c, r, u modes only) Like newer-than, except it compares mtime entries instea…"
+bsdtar, , ,nodump, , ,126,(c and r modes only) Honor the nodump file flag by skipping this file
+bsdtar, , ,nopreserveHFSCompression, , ,127,(x mode only) Mac OS X specific (v10. 6 or later)
+bsdtar, , ,null, , ,128,"(use with I or T ) Filenames or patterns are separated by null characters, no…"
+bsdtar, , ,no-acls, , ,129,"(c, r, u, x modes only) Do not archive or extract POSIX. 1e or NFSv4 ACLs"
+bsdtar, , ,no-fflags, , ,130,"(c, r, u, x modes only) Do not archive or extract file attributes or file fla…"
+bsdtar, , ,no-mac-metadata, , ,131,(x mode only) Mac OS X specific
+bsdtar, , ,no-read-sparse, , ,132,"(c, r, u modes only) Do not read sparse file information from disk"
+bsdtar, , ,no-safe-writes, , ,133,(x mode only) Do not create temporary files and use rename 2 to replace the o…
+bsdtar, , ,no-same-owner, , ,134,(x mode only) Do not extract owner and group IDs
+bsdtar, , ,no-same-permissions, , ,135,"(x mode only) Do not extract full permissions (SGID, SUID, sticky bit, file a…"
+bsdtar, , ,no-xattrs, , ,136,"(c, r, u, x modes only) Do not archive or extract extended file attributes"
+bsdtar, , ,numeric-owner, , ,137,This is equivalent to uname Qq gname 
+bsdtar, , ,older, , ,138,"(c, r, u modes only) Only include files and directories older than the specif…"
+bsdtar, , ,older-mtime, , ,139,"(c, r, u modes only) Like older, except it compares mtime entries instead of …"
+bsdtar, , ,older-than, , ,140,"(c, r, u modes only) Only include files and directories older than the specif…"
+bsdtar, , ,older-mtime-than, , ,141,"(c, r, u modes only) Like older-than, except it compares mtime entries instea…"
+bsdtar, , ,one-file-system, , ,142,"(c, r, and u modes) Do not cross mount points"
+bsdtar, , ,options, , ,143,Select optional behaviors for particular modules
+bsdtar, , ,passphrase, , ,144,The passphrase is used to extract or create an encrypted archive
+bsdtar, , ,posix, , ,145,"(c, r, u mode only) Synonym for format Ar pax"
+bsdtar, , ,read-sparse, , ,146,"(c, r, u modes only) Read sparse file information from disk"
+bsdtar, , ,safe-writes, , ,147,(x mode only) Extract files atomically
+bsdtar, , ,same-owner, , ,148,(x mode only) Extract owner and group IDs
+bsdtar, , ,strip-components, , ,149,Remove the specified number of leading path elements
+bsdtar, , ,totals, , ,150,"(c, r, u modes only) After archiving all files, print a summary to stderr"
+bsdtar, , ,uid, , ,151,Use the provided user id number and ignore the user name from the archive
+bsdtar, , ,uname, , ,152,Use the provided user name
+bsdtar, , ,use-compress-program, , ,153,Pipe the input (in x or t mode) or the output (in c mode) through program ins…
+bsdtar, , ,owner, , ,154,"Use the provided user, if uid is not provided, name can be either an username…"
+bsdtar, , ,version, , ,155,"Print version of bsdtar and bsdtar libarchive, and exit"
+bsdtar, , ,xattrs, , ,156,"(c, r, u, x modes only) Archive or extract extended file attributes"

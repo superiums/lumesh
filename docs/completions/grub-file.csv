@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-file, , ,is-i386-xen-pae-domu, , ,101,Check if FILE can be booted as i386 PAE Xen unprivileged guest kernel
+grub-file, , ,is-x86, , ,102,Check if given file can be booted as x86_64 Xen unprivileged guest kernel
+grub-file, , ,is-x86-xen-dom0, , ,103,Check if given file can be used as Xen x86 privileged guest kernel
+grub-file, , ,is-x86-multiboot, , ,104,Check if given file can be used as x86 multiboot kernel
+grub-file, , ,is-x86-multiboot2, , ,105,Check if given file can be used as x86 multiboot2 kernel
+grub-file, , ,is-arm-linux, , ,106,Check if given file is ARM Linux
+grub-file, , ,is-arm64-linux, , ,107,Check if given file is ARM64 Linux
+grub-file, , ,is-ia64-linux, , ,108,Check if given file is IA64 Linux
+grub-file, , ,is-mips-linux, , ,109,Check if given file is MIPS Linux
+grub-file, , ,is-mipsel-linux, , ,110,Check if given file is MIPSEL Linux
+grub-file, , ,is-sparc64-linux, , ,111,Check if given file is SPARC64 Linux
+grub-file, , ,is-powerpc-linux, , ,112,Check if given file is POWERPC Linux
+grub-file, , ,is-x86-linux, , ,113,Check if given file is x86 Linux
+grub-file, , ,is-x86-linux32, , ,114,Check if given file is x86 Linux supporting 32-bit protocol
+grub-file, , ,is-x86-kfreebsd, , ,115,Check if given file is x86 kFreeBSD
+grub-file, , ,is-i386-kfreebsd, , ,116,Check if given file is i386 kFreeBSD
+grub-file, , ,is-x86, , ,117,Check if given file is x86_64 kFreeBSD
+grub-file, , ,is-x86-knetbsd, , ,118,Check if given file is x86 kNetBSD
+grub-file, , ,is-i386-knetbsd, , ,119,Check if given file is i386 kNetBSD
+grub-file, , ,is-x86, , ,120,Check if given file is x86_64 kNetBSD
+grub-file, , ,is-i386-efi, , ,121,Check if given file is i386 EFI file
+grub-file, , ,is-x86, , ,122,Check if given file is x86_64 EFI file
+grub-file, , ,is-ia64-efi, , ,123,Check if given file is IA64 EFI file
+grub-file, , ,is-arm64-efi, , ,124,Check if given file is ARM64 EFI file
+grub-file, , ,is-arm-efi, , ,125,Check if given file is ARM EFI file
+grub-file, , ,is-hibernated-hiberfil, , ,126,Check if given file is hiberfil.sys in hibernated state
+grub-file, , ,is-x86, , ,127,Check if given file is x86_64 XNU (Mac OS X kernel)
+grub-file, , ,is-i386-xnu, , ,128,Check if given file is i386 XNU (Mac OS X kernel)
+grub-file, , ,is-xnu-hibr, , ,129,Check if given file is XNU (Mac OS X kernel) hibernated image
+grub-file, , ,is-x86-bios-bootsector, , ,130,Check if given file is BIOS bootsector
+grub-file, ,h,help, , ,131,Display help and exit
+grub-file, ,u,usage, , ,132,Display usage and exit

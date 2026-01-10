@@ -1,0 +1,93 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bundle, __fish_bundle_no_command, ,help, ,@f,104,Display a help page
+bundle, __fish_bundle_no_command, , ,install,@f,106,Install the gems specified by the Gemfile or Gemfile.lock
+bundle, __fish_bundle_using_command install, ,gemfile, ,@f,107,The location of the Gemfile bundler should use
+bundle, __fish_bundle_using_command install, ,path, ,@f,108,The location to install the gems in the bundle to
+bundle, __fish_bundle_using_command install, ,system, ,@f,109,Installs the gems in the bundle to the system location
+bundle, __fish_bundle_using_command install, ,without, ,@f,110,A space-separated list of groups to skip installing
+bundle, __fish_bundle_using_command install, ,local, ,@f,111,Use cached gems instead of connecting to rubygems.org
+bundle, __fish_bundle_using_command install, ,deployment, ,@f,112,Switches bundler's defaults into deployment mode.
+bundle, __fish_bundle_using_command install, ,binstubs, ,@f,113,Create a directory containing executables that run in the context of the bundle
+bundle, __fish_bundle_using_command install, ,shebang, ,@f,114,Specify a ruby executable to use with generated binstubs
+bundle, __fish_bundle_using_command install, ,standalone, ,@f,115,Make a bundle that can work without RubyGems or Bundler at run-time
+bundle, __fish_bundle_using_command install,P,trust-policy, ,@f,116,"Apply a RubyGems security policy: {High,Medium,Low,No}Security"
+bundle, __fish_bundle_using_command install,j,jobs, ,@f,117,Install gems parallelly by starting size number of parallel workers
+bundle, __fish_bundle_using_command install, ,no-cache, ,@f,118,Do not update the cache in vendor/cache with the newly bundled gems
+bundle, __fish_bundle_using_command install, ,quiet, ,@f,119,Do not print progress information to stdout
+bundle, __fish_bundle_using_command install, ,clean, ,@f,120,Run bundle clean automatically after install
+bundle, __fish_bundle_using_command install, ,full-index, ,@f,121,Use the rubygems modern index instead of the API endpoint
+bundle, __fish_bundle_using_command install, ,no-prune, ,@f,122,Do not remove stale gems from the cache
+bundle, __fish_bundle_using_command install, ,frozen, ,@f,123,Do not allow the Gemfile.lock to be updated after this install
+bundle, __fish_bundle_no_command, , ,update,@f,124,Update dependencies to their latest versions
+bundle, __fish_bundle_using_command update, ,source, ,@f,125,The name of a :git or :path source used in the Gemfile
+bundle, __fish_bundle_using_command update, ,local, ,@f,126,Do not attempt to fetch gems remotely and use the gem cache instead
+bundle, __fish_bundle_using_command update, ,quiet, ,@f,127,Only output warnings and errors
+bundle, __fish_bundle_using_command update, ,full-index, ,@f,128,Use the rubygems modern index instead of the API endpoint
+bundle, __fish_bundle_using_command update,j,jobs, ,@f,129,Specify the number of jobs to run in parallel
+bundle, __fish_bundle_using_command update,g,group, ,@f,130,Update a specific group
+bundle, __fish_bundle_using_command update, , , ,@f,131, 
+bundle, __fish_bundle_no_command, , ,package,@f,132,Package the .gem files into vendor/cache directory
+bundle, __fish_bundle_no_command, , ,binstubs,@f,133,Install the binstubs of the listed gem
+bundle, __fish_bundle_using_command binstubs, ,path, ,@f,134,Binstub destination directory (default bin)
+bundle, __fish_bundle_using_command binstubs, ,force, ,@f,135,Overwrite existing binstubs if they exist
+bundle, __fish_bundle_using_command binstubs, , , ,@f,136, 
+bundle, __fish_bundle_no_command, , ,exec,@f,137,Execute a script in the context of the current bundle
+bundle, __fish_bundle_using_command exec, ,keep-file-descriptors, ,@f,138,"Exec runs a command, providing it access to the gems in the bundle"
+bundle, __fish_bundle_no_command, , ,help,@f,139,Describe available tasks or one specific task
+bundle, __fish_bundle_using_command help, , ,install,@f,140,Install the gems specified by the Gemfile or Gemfile.lock
+bundle, __fish_bundle_using_command help, , ,update,@f,141,Update dependencies to their latest versions
+bundle, __fish_bundle_using_command help, , ,package,@f,142,Package .gem files into the vendor/cache directory
+bundle, __fish_bundle_using_command help, , ,exec,@f,143,Execute a script in the context of the current bundle
+bundle, __fish_bundle_using_command help, , ,config,@f,144,Specify and read configuration options for bundler
+bundle, __fish_bundle_using_command help, , ,check,@f,145,Check bundler requirements for your application
+bundle, __fish_bundle_using_command help, , ,list,@f,146,Show all of the gems in the current bundle
+bundle, __fish_bundle_using_command help, , ,show,@f,147,Show the source location of a particular gem in the bundle
+bundle, __fish_bundle_using_command help, , ,outdated,@f,148,Show all of the outdated gems in the current bundle
+bundle, __fish_bundle_using_command help, , ,console,@f,149,Start an IRB session in the context of the current bundle
+bundle, __fish_bundle_using_command help, , ,open,@f,150,Open an installed gem in your $EDITOR
+bundle, __fish_bundle_using_command help, , ,viz,@f,151,Generate a visual representation of your dependencies
+bundle, __fish_bundle_using_command help, , ,init,@f,152,Generate a simple Gemfile
+bundle, __fish_bundle_using_command help, , ,gem,@f,153,"Create a simple gem, suitable for development with bundler"
+bundle, __fish_bundle_using_command help, , ,platform,@f,154,Displays platform compatibility information
+bundle, __fish_bundle_using_command help, , ,cleanup,@f,155,Cleans up unused gems in your bundler directory
+bundle, __fish_bundle_no_command, , ,check,@f,156,Check if the requirements are installed and available to bundler
+bundle, __fish_bundle_using_command check, ,gemfile, ,@f,157,The location of the Gemfile bundler should use
+bundle, __fish_bundle_using_command check, ,path, ,@f,158,Specify a path other than the system default (BUNDLE_PATH or GEM_HOME)
+bundle, __fish_bundle_using_command check, ,dry-run, ,@f,159,Lock the Gemfile
+bundle, __fish_bundle_no_command, , ,list,@f,160,Show lists the names and versions of all gems that are required by your Gemfile
+bundle, __fish_bundle_using_command list, ,paths, ,@f,161,List the paths of all gems required by your Gemfile
+bundle, __fish_bundle_using_command list, , , ,@f,162, 
+bundle, __fish_bundle_no_command, , ,show,@f,163,Show lists the names and versions of all gems that are required by your Gemfile
+bundle, __fish_bundle_using_command show, ,paths, ,@f,164,List the paths of all gems required by your Gemfile
+bundle, __fish_bundle_using_command show, , , ,@f,165, 
+bundle, __fish_bundle_no_command, , ,outdated,@f,166,Show all of the outdated gems in the current bundle
+bundle, __fish_bundle_using_command outdated, ,pre, ,@f,167,Check for newer pre-release gems
+bundle, __fish_bundle_using_command outdated, ,source, ,@f,168,Check against a specific source
+bundle, __fish_bundle_using_command outdated, ,local, ,@f,169,Use cached gems instead of attempting to fetch gems remotely
+bundle, __fish_bundle_using_command outdated, ,strict, ,@f,170,Only list newer versions allowed by your Gemfile requirements
+bundle, __fish_bundle_using_command outdated, , , ,@f,171, 
+bundle, __fish_bundle_no_command, , ,console,@f,172,Start an IRB session in the context of the current bundle
+bundle, __fish_bundle_no_command, , ,open,@f,173,Open an installed gem in your $EDITOR
+bundle, __fish_bundle_using_command open, , , ,@f,174, 
+bundle, __fish_bundle_no_command, , ,viz,@f,175,Generate a visual representation of your dependencies
+bundle, __fish_bundle_using_command viz,f,file, ,@f,176,The name to use for the generated file (see format option)
+bundle, __fish_bundle_using_command viz,v,version, ,@f,177,Show each gem version
+bundle, __fish_bundle_using_command viz,r,requirements, ,@f,178,Show the version of each required dependency
+bundle, __fish_bundle_using_command viz,F,format, ,@f,179,"Output a specific format (png, jpg, svg, dot, …)"
+bundle, __fish_bundle_no_command, , ,init,@f,180,"Generate a simple Gemfile, placed in the current directory"
+bundle, __fish_bundle_using_command init, ,gemspec, ,@f,181,Use a specified .gemspec to create the Gemfile
+bundle, __fish_bundle_no_command, , ,gem,@f,182,"Create a simple gem, suitable for development with bundler"
+bundle, __fish_bundle_using_command gem,b,bin, ,@f,183,Generate a binary for your library
+bundle, __fish_bundle_using_command gem,t,test, ,@f,184,Generate a test directory for your library (rspec or minitest)
+bundle, __fish_bundle_using_command gem,e,edit, ,@f,185,Path to your editor
+bundle, __fish_bundle_using_command gem, ,ext, ,@f,186,Generate the boilerplate for C extension code
+bundle, __fish_bundle_no_command, , ,platform,@f,187,Displays platform compatibility information
+bundle, __fish_bundle_using_command platform, ,ruby, ,@f,188,Only display Ruby directive information
+bundle, __fish_bundle_no_command, , ,clean,@f,189,Cleans up unused gems in your bundler directory
+bundle, __fish_bundle_using_command clean, ,dry-run, ,@f,190,"Only print out changes, do not actually clean gems"
+bundle, __fish_bundle_using_command clean, ,force, ,@f,191,Forces clean even if --path is not set
+bundle, __fish_bundle_no_command, , ,cache,@f,192,Cache all the gems to vendor/cache
+bundle, __fish_bundle_using_command cache, ,no-prune, ,@f,193,Do not remove stale gems from the cache
+bundle, __fish_bundle_using_command cache, ,all, ,@f,194,Include all sources (including path and git)
+bundle, __fish_bundle_no_command, , ,licenses,@f,195,Prints the license of all gems in the bundle
+bundle, __fish_bundle_no_command, , ,env,@f,196,Print information about the environment Bundler is running under

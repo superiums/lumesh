@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msggrep, ,D,directory, , ,101,add DIRECTORY to list for input files search 
+msggrep, ,o,output-file, , ,102,write output to specified file 
+msggrep, ,N,location, , ,103,select messages extracted from SOURCEFILE
+msggrep, ,M,domain, , ,104,select messages belonging to domain DOMAINNAME
+msggrep, ,J,msgctxt, , ,105,start of patterns for the msgctxt
+msggrep, ,K,msgid, , ,106,start of patterns for the msgid
+msggrep, ,T,msgstr, , ,107,start of patterns for the msgstr
+msggrep, ,C,comment, , ,108,start of patterns for the translator's comment
+msggrep, ,X,extracted-comment, , ,109,start of patterns for the extracted comment
+msggrep, ,E,extended-regexp, , ,110,PATTERN is an extended regular expression
+msggrep, ,F,fixed-strings, , ,111,PATTERN is a set of newline-separated strings
+msggrep, ,e,regexp, , ,112,use PATTERN as a regular expression
+msggrep, ,f,file, , ,113,obtain PATTERN from FILE
+msggrep, ,i,ignore-case, , ,114,ignore case distinctions
+msggrep, ,v,invert-match, , ,115,output only the messages that do not match any selection criterion 
+msggrep, ,P,properties-input, , ,116,input file is in Java . properties syntax
+msggrep, , ,stringtable-input, , ,117,input file is in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msggrep, , ,color, , ,118,use colors and other text attributes always
+msggrep, , ,style, , ,119,specify CSS style rule file for --color
+msggrep, , ,no-escape, , ,120,do not use C escapes in output (default)
+msggrep, , ,escape, , ,121,"use C escapes in output, no extended chars"
+msggrep, , ,force-po, , ,122,write PO file even if empty
+msggrep, , ,indent, , ,123,indented output style
+msggrep, , ,no-location, , ,124,suppress '#: filename:line' lines
+msggrep, ,n,add-location, , ,125,preserve '#: filename:line' lines (default)
+msggrep, , ,strict, , ,126,strict Uniforum output style
+msggrep, ,p,properties-output, , ,127,write out a Java . properties file
+msggrep, , ,stringtable-output, , ,128,write out a NeXTstep/GNUstep . strings file
+msggrep, ,w,width, , ,129,set output page width
+msggrep, , ,no-wrap, , ,130,"do not break long message lines, longer than the output page width, into seve…"
+msggrep, , ,sort-output, , ,131,generate sorted output
+msggrep, , ,sort-by-file, , ,132,sort output by file location . SS 'Informative output:'
+msggrep, ,h,help, , ,133,display this help and exit
+msggrep, ,V,version, , ,134,output version information and exit AUTHOR Written by Bruno Haible

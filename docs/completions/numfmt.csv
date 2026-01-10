@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+numfmt, , ,debug, , ,101,print warnings about invalid input
+numfmt, ,d,delimiter, , ,102,use X instead of whitespace for field delimiter
+numfmt, , ,field, , ,103,"replace the numbers in these input fields (default=1); see FIELDS below"
+numfmt, , ,format, , ,104,"use printf style floating-point FORMAT; see FORMAT below for details"
+numfmt, , ,from, , ,105,"auto-scale input numbers to UNITs; default is 'none'; see UNIT below"
+numfmt, , ,from-unit, , ,106,specify the input unit size (instead of the default 1)
+numfmt, , ,grouping, , ,107,"use locale-defined grouping of digits, e. g"
+numfmt, , ,header, , ,108,"print (without converting) the first N header lines; N defaults to 1 if not s…"
+numfmt, , ,invalid, , ,109,"failure mode for invalid numbers: MODE can be: abort (default), fail, warn, i…"
+numfmt, , ,padding, , ,110,"pad the output to N characters; positive N will right-align; negative N will …"
+numfmt, , ,round, , ,111,"use METHOD for rounding when scaling; METHOD can be: up, down, from-zero (def…"
+numfmt, , ,suffix, , ,112,"add SUFFIX to output numbers, and accept optional SUFFIX in input numbers"
+numfmt, , ,to, , ,113,"auto-scale output numbers to UNITs; see UNIT below"
+numfmt, , ,to-unit, , ,114,the output unit size (instead of the default 1)
+numfmt, ,z,zero-terminated, , ,115,"line delimiter is NUL, not newline"
+numfmt, , ,help, , ,116,display this help and exit
+numfmt, , ,version, , ,117,output version information and exit . SS 'UNIT options:'

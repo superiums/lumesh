@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+start-stop-daemon, , ,ready, , ,101,"Open file descriptor num as a pipe, and waits until the daemon writes a newli…"
+start-stop-daemon, , ,oom-score-adj, , ,102,Modifies the OOM score adjustment of the daemon
+start-stop-daemon, , ,scheduler, , ,103,Sets the scheduling policy of the daemon
+start-stop-daemon, , ,scheduler-priority, , ,104,Sets the priority parameter of the scheduling policy of the daemon
+start-stop-daemon, , ,capabilities, , ,105,"Start the daemon with the listed inheritable, ambient and bounding capabiliti…"
+start-stop-daemon, , ,secbits, , ,106,Set the security-bits for the program
+start-stop-daemon, , ,no-new-privs, , ,107,Set the No New Privs flag for the program.  See PR_SET_NO_NEW_PRIVS prctl(2)

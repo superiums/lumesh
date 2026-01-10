@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pr, , ,pages, , ,101,begin [stop] printing with page FIRST_[LAST_]PAGE
+pr, , ,columns, , ,102,"output COLUMN columns and print columns down, unless -a is used"
+pr, ,a,across, , ,103,"print columns across rather than down, used together with -COLUMN"
+pr, ,c,show-control-chars, , ,104,use hat notation (^G) and octal backslash notation
+pr, ,d,double-space, , ,105,double space the output
+pr, ,D,date-format, , ,106,use FORMAT for the header date
+pr, ,e,expand-tabs, , ,107,expand input CHARs (TABs) to tab WIDTH (8)
+pr, ,f,form-feed, , ,108,use form feeds instead of newlines to separate pages (by a 3-line page header…
+pr, ,h,header, , ,109,"use a centered HEADER instead of filename in page header, -h '' prints a blan…"
+pr, ,i,output-tabs, , ,110,replace spaces with CHARs (TABs) to tab WIDTH (8)
+pr, ,J,join-lines, , ,111,"merge full lines, turns off -W line truncation, no column alignment, --sep-st…"
+pr, ,l,length, , ,112,set the page length to PAGE_LENGTH (66) lines (default number of lines of tex…
+pr, ,m,merge, , ,113,"print all files in parallel, one in each column, truncate lines, but join lin…"
+pr, ,n,number-lines, , ,114,"number lines, use DIGITS (5) digits, then SEP (TAB), default counting starts …"
+pr, ,N,first-line-number, , ,115,start counting with NUMBER at 1st line of first page printed (see +FIRST_PAGE)
+pr, ,o,indent, , ,116,"offset each line with MARGIN (zero) spaces, do not affect -w or -W, MARGIN wi…"
+pr, ,r,no-file-warnings, , ,117,omit warning when a file cannot be opened
+pr, ,s,separator, , ,118,"separate columns by a single character, default for CHAR is the <TAB> charact…"
+pr, ,S,sep-string, , ,119,"separate columns by STRING, without -S: Default separator <TAB> with -J and <…"
+pr, ,t,omit-header, , ,120,"omit page headers and trailers; implied if PAGE_LENGTH <= 10"
+pr, ,T,omit-pagination, , ,121,"omit page headers and trailers, eliminate any pagination by form feeds set in…"
+pr, ,v,show-nonprinting, , ,122,use octal backslash notation
+pr, ,w,width, , ,123,set page width to PAGE_WIDTH (72) characters for multiple text-column output …
+pr, ,W,page-width, , ,124,"set page width to PAGE_WIDTH (72) characters always, truncate lines, except -…"
+pr, , ,help, , ,125,display this help and exit
+pr, , ,version, , ,126,output version information and exit AUTHOR Written by Pete TerMaat and Roland…

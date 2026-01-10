@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hwinfo, , ,$i, ,@f,101,Probe the specified HARDWARE_ITEM
+hwinfo, , ,short, ,@f,102,Show only a summary
+hwinfo, , ,listmd, ,@f,103,Report RAID devices
+hwinfo, , ,only, ,@f,104,Show only entries in the device list matching DEVNAME
+hwinfo, , ,save-config, ,@f,105,Store config for a particular device
+hwinfo, , ,show-config, ,@f,106,Show saved config data
+hwinfo, , ,map, ,@f,107,Prints a list of disk name mappings
+hwinfo, , ,debug, ,@f,108,Set debug level
+hwinfo, , ,verbose, ,@f,109,Increase verbosity
+hwinfo, , ,log, ,@f,110,Write log
+hwinfo, , ,dump-db, ,@f,111,Dump hardware database
+hwinfo, , ,version, ,@f,112,Show libhd version
+hwinfo, , ,help, ,@f,113,Show help message

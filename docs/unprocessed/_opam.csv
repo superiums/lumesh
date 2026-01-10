@@ -1,0 +1,72 @@
+cmd,conds,short,long,params,dirs,pri,desc
+opam, __fish_opam_needs_command, ,color,always never auto,@f,103,Colorize the output
+opam, __fish_opam_needs_command, ,compat-mode-1.0, ,@f,104,Compatibility mode with OPAM 1.0
+opam, __fish_opam_needs_command, ,debug, ,@f,105,Print debug message on stdout
+opam, __fish_opam_needs_command, ,git-version, ,@f,106,Print the git version if it exists and exit
+opam, __fish_opam_needs_command, ,no-aspcud, ,@f,107,"Do not use the external aspcud solver, even if available"
+opam, __fish_opam_needs_command, ,no-base-packages, ,@f,108,Do not install base packages
+opam, __fish_opam_needs_command,q,quiet, ,@f,109,Be quiet when installing a new compiler
+opam, __fish_opam_needs_command,r,root, ,@f,110,Use ROOT as the current root path
+opam, __fish_opam_needs_command, ,strict, ,@f,111,Fail whenever an error is found in a package definition or a configuration file
+opam, __fish_opam_needs_command, ,switch, ,@f,112,Use SWITCH as the current compiler switch
+opam, __fish_opam_needs_command,v,verbose, ,@f,113,Be more verbose
+opam, __fish_opam_needs_command,y,yes, ,@f,114,Disable interactive mode and answer yes to all questions
+opam, __fish_opam_needs_command, , ,config,@f,115,Display configuration options for packages
+opam, __fish_opam_using_command config,a,all, ,@f,116,Enable all the global and user configuration options
+opam, __fish_opam_using_command config, ,csh, ,@f,117,Use csh-compatible mode for configuring OPAM
+opam, __fish_opam_using_command config, ,dot-profile, ,@f,118,Name of the configuration file to update instead of ~/
+opam, __fish_opam_using_command config,e, , ,@f,119,"Backward-compatible option, equivalent to opam config env"
+opam, __fish_opam_using_command config, ,fish, ,@f,120,Use fish-compatible mode for configuring OPAM
+opam, __fish_opam_using_command config,g,global, ,@f,121,Enable all the global configuration options
+opam, __fish_opam_using_command config,l,list, ,@f,122,List the current configuration
+opam, __fish_opam_using_command config, ,no-complete, ,@f,123,Do not load the auto-completion scripts in the environment
+opam, __fish_opam_using_command config, ,no-switch-eval, ,@f,124,Do not install `opam-switch-eval`
+opam, __fish_opam_using_command config, ,ocamlinit, ,@f,125,Modify ~/
+opam, __fish_opam_using_command config, ,profile, ,@f,126,Modify ~/. profile
+opam, __fish_opam_using_command config,R,rec, ,@f,127,Recursive query
+opam, __fish_opam_using_command config, ,sexp, ,@f,128,Display environment variables as an s-expression
+opam, __fish_opam_using_command config, ,sh, ,@f,129,Use sh-compatible mode for configuring OPAM
+opam, __fish_opam_using_command config,u,user, ,@f,130,Enable all the user configuration options
+opam, __fish_opam_using_command config, ,zsh, ,@f,131,Use zsh-compatible mode for configuring OPAM.  DOMAINS
+opam, __fish_opam_using_command config, , ,env,@f,132,"Return PATH, MANPATH, OCAML_TOPLEVEL_PATH and CAML_LD_LIBRARY_PATH for compiler"
+opam, __fish_opam_using_command config, , ,setup,@f,133,Configure global and user parameters for OPAM
+opam, __fish_opam_using_command config, , ,exec,@f,134,Execute the shell script given in parameter with the correct environment variables
+opam, __fish_opam_using_command config, , ,var,@f,135,Return the value associated with the given variable
+opam, __fish_opam_using_command config, , ,list,@f,136,Return the list of all variables defined in the listed packages
+opam, __fish_opam_using_command config, , ,subst,@f,137,Substitute %{var}% variables
+opam, __fish_opam_using_command config, , ,includes,@f,138,returns include options
+opam, __fish_opam_using_command config, , ,bytecomp,@f,139,returns bytecode compile options
+opam, __fish_opam_using_command config, , ,asmcomp,@f,140,returns assembly compile options
+opam, __fish_opam_using_command config, , ,bytelink,@f,141,returns bytecode linking options
+opam, __fish_opam_using_command config, , ,report,@f,142,"Prints a summary of your setup, useful for bug-reports"
+opam, __fish_opam_needs_command, , ,help,@f,143,Display help about OPAM and OPAM commands
+opam, __fish_opam_needs_command, , ,init,@f,144,Initialize OPAM state
+opam, __fish_opam_needs_command, , ,install,@f,145,Install a list of packages
+opam, __fish_opam_needs_command, , ,list,@f,146,Display the list of available packages
+opam, __fish_opam_needs_command, , ,pin,@f,147,Pin a given package to a specific version
+opam, __fish_opam_needs_command, , ,reinstall,@f,148,Reinstall a list of packages
+opam, __fish_opam_needs_command, , ,remove uninstall,@f,149,Remove a list of packages
+opam, __fish_opam_needs_command, , ,repository remote,@f,150,Manage OPAM repositories
+opam, __fish_opam_needs_command, , ,search,@f,151,Search into the package list
+opam, __fish_opam_needs_command, , ,show info,@f,152,Display information about specific packages
+opam, __fish_opam_needs_command, , ,switch,@f,153,Manage multiple installation of compilers
+opam, __fish_opam_needs_command, , ,update,@f,154,Update the list of available packages
+opam, __fish_opam_needs_command, , ,upgrade,@f,155,Upgrade the installed package to latest version
+opam, __fish_opam_needs_command, , ,admin,@f,156,Administration tool for local repositories
+opam, __fish_opam_using_command admin, ,help, , ,157,"Show this help in format FMT (pager, plain or groff)"
+opam, __fish_opam_using_command admin, ,version, , ,158,Show version information
+opam, __fish_opam_using_command admin, , ,check,@f,159,Check a local repo for errors
+opam, __fish_opam_using_command admin, , ,depexts,@f,160,Add external dependencies
+opam, __fish_opam_using_command admin, , ,make,@f,161,Initialize a repo for serving files
+opam, __fish_opam_using_command admin, , ,stats,@f,162,Compute statistics
+opam," switch; and $switchcommands", , ,create,@f,162,"Create a new switch, and install the given compiler there"
+opam," switch; and $switchcommands", , ,set,@f,162,Set the currently active switch
+opam," switch; and $switchcommands", , ,remove,@f,162,Remove the given switch from disk
+opam," switch; and $switchcommands", , ,export, ,162,Save the current switch state to a file
+opam," switch; and $switchcommands", , ,import, ,162,Import a saved switch state
+opam," switch; and $switchcommands", , ,reinstall,@f,162,Reinstall the given compiler switch and all its packages
+opam," switch; and $switchcommands", , ,list,@f,162,Lists installed switches
+opam," switch; and $switchcommands", , ,list-available,@f,162,Lists base packages that can be used to create a new switch
+opam," switch; and $switchcommands", , ,show,@f,162,Prints the name of the current switch
+opam," switch; and $switchcommands", , ,set-base,@f,162,Sets the packages forming the immutable base for the selected switch
+opam," switch; and $switchcommands", , ,link,@f,162,Sets a local alias for a given switch

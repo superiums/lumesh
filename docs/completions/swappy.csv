@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+swappy, ,v,version, , ,101,Show version and quit
+swappy, ,f,file, , ,102,An image file to load for editing
+swappy, ,o,output-file, , ,103,Print the final surface to <file> when exiting the application

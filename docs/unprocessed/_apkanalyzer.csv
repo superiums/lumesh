@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apkanalyzer, $subcommands, , ,apk,@f,100,Analyze APK file attributes
+apkanalyzer, $subcommands, , ,files,@f,100,Analyze the files inside the APK file
+apkanalyzer, $subcommands, , ,manifest,@f,100,Analyze the contents of the manifest file
+apkanalyzer, $subcommands, , ,dex,@f,100,Analyze the DEX files inside the APK file
+apkanalyzer, $subcommands, , ,resources,@f,100,"View text, image and string resources"
+apkanalyzer, $apk_subcommands $files_subcommands $manifest_subcommands $dex_subcommands $resources_subcommands,h,human-readable, , ,100,Human-readable output
+apkanalyzer," apk; and $apk_subcommands", , ,summary,@f,100,"Prints the application ID, version code, and version name"
+apkanalyzer," apk; and $apk_subcommands", , ,file-size,@f,100,Prints the total file size of the APK
+apkanalyzer," apk; and $apk_subcommands", , ,download-size,@f,100,Prints an estimate of the download size of the APK
+apkanalyzer," apk; and $apk_subcommands", , ,features,@f,100,Prints features used by the APK that trigger Play Store filtering
+apkanalyzer," apk; and $apk_subcommands", , ,compare,@f,100,Compares the sizes of apk-file and apk-file
+apkanalyzer," files; and $apk_subcommands", , ,list,@f,104,Lists all files in the APK
+apkanalyzer," files; and $apk_subcommands", , ,cat,@f,104,Prints out the file contents
+apkanalyzer," manifest; and $manifest_subcommands", , ,print,@f,105,Prints the APK manifest in XML format
+apkanalyzer," manifest; and $manifest_subcommands", , ,application-id,@f,105,Prints the application ID value
+apkanalyzer," manifest; and $manifest_subcommands", , ,version-name,@f,105,Prints the version name value
+apkanalyzer," manifest; and $manifest_subcommands", , ,version-code,@f,105,Prints the version code value
+apkanalyzer," manifest; and $manifest_subcommands", , ,min-sdk,@f,105,Prints the minimum SDK version
+apkanalyzer," manifest; and $manifest_subcommands", , ,target-sdk,@f,105,Prints the target SDK version
+apkanalyzer," manifest; and $manifest_subcommands", , ,permissions,@f,105,Prints the list of permissions
+apkanalyzer," manifest; and $manifest_subcommands", , ,debuggable,@f,105,Prints whether the APK is debuggable
+apkanalyzer," dex; and $dex_subcommands", , ,list,@f,105,Prints a list of the DEX files in the APK
+apkanalyzer," dex; and $dex_subcommands", , ,references,@f,105,Prints the number of method references in the specified DEX files
+apkanalyzer," dex; and $dex_subcommands", , ,packages,@f,105,Prints the class tree from DEX
+apkanalyzer," dex; and $dex_subcommands", , ,code,@f,105,Prints the bytecode of a class or method in smali format
+apkanalyzer," resources; and $resources_subcommands", , ,packages,@f,115,Prints a list of the packages that are defined in the resources table
+apkanalyzer," resources; and $resources_subcommands", , ,configs,@f,115,Prints a list of configurations for the specified type
+apkanalyzer," resources; and $resources_subcommands", , ,value,@f,115,"Prints the value of the resource specified by config, name, and type"
+apkanalyzer," resources; and $resources_subcommands", , ,names,@f,115,Prints a list of resource names for a configuration and type
+apkanalyzer," resources; and $resources_subcommands", , ,xml,@f,115,Prints the human-readable form of a binary XML file

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+heif-enc, , ,qualityQUALITY, , ,101,Defines quality level between 0 and 100 for the generated output file
+heif-enc, ,L,lossless, , ,102,Generate lossless output (-q has no effect)
+heif-enc, , ,thumbSIZE, , ,103,Generate thumbnail with maximum size SIZE pixels (default: off)
+heif-enc, , ,no-alpha, , ,104,Do not save alpha channel
+heif-enc, , ,no-thumb-alpha, , ,105,Do not save alpha channel in thumbnail image
+heif-enc, , ,outputFILENAME, , ,106,Output filename (optional)
+heif-enc, , ,verbose, , ,107,Enable logging output (more will increase logging level)
+heif-enc, ,P,params, , ,108,Show all encoder parameters and exit.  Input file is not required or used
+heif-enc, ,q,quality, , ,109,Defines quality level between 0 and 100 for the generated output file
+heif-enc, ,t,thumb, , ,110,Generate thumbnail with maximum size SIZE pixels (default: off)
+heif-enc, ,o,output, , ,111,Output filename (optional)

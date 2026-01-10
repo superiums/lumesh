@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aplaymidi, ,h,help, , ,101,Prints a list of options
+aplaymidi, ,V,version, , ,102,Prints the current version
+aplaymidi, ,l,list, , ,103,Prints a list of possible output ports
+aplaymidi, ,p,port, , ,104,Sets the sequencer port(s) to which the events in the MIDI file(s) are sent
+aplaymidi, ,u,ump, , ,105,Changes the sequencer client to the given MIDI version and outputs via the UM…
+aplaymidi, ,d,delay, , ,106,"Specifies how long to wait after the end of each MIDI file, to allow the last…"

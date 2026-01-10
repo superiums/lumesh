@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rsvg-convert, ,f,format, , ,101,Output format for the rendered document.  Default is png
+rsvg-convert, ,o,output, , ,102,"Specify the output filename.  If unspecified, outputs to standard output"
+rsvg-convert, ,v,version, , ,103,Display what version of rsvg-convert you are running
+rsvg-convert, , ,help, , ,104,Display a summary of usage and options
+rsvg-convert, , ,page-height, , ,105,"Page size of the output document; both options must be used together"
+rsvg-convert, , ,top, , ,106,Distance between top edge of the page and the rendered image.  Default is 0
+rsvg-convert, , ,left, , ,107,Distance between left edge of the page and the rendered image.  Default is 0
+rsvg-convert, ,w,width, , ,108,Width of the rendered image
+rsvg-convert, ,h,height, , ,109,Height of the rendered image
+rsvg-convert, ,a,keep-aspect-ratio, , ,110,"Specify that the aspect ratio is to be preserved, i. e"
+rsvg-convert, ,d,dpi-x, , ,111,Set the X resolution of the image in pixels per inch.  Default is 96 DPI
+rsvg-convert, ,p,dpi-y, , ,112,Set the Y resolution of the image in pixels per inch.  Default is 96 DPI
+rsvg-convert, ,x,x-zoom, , ,113,Horizontal scaling factor.  Default is 1. 0
+rsvg-convert, ,y,y-zoom, , ,114,Vertical factor factor.  Default is 1. 0
+rsvg-convert, ,z,zoom, , ,115,Horizontal and vertical scaling factor.  Default is 1. 0
+rsvg-convert, ,b,background-color, , ,116,Specify the background color
+rsvg-convert, ,s,stylesheet, , ,117,Filename of a custom CSS stylesheet
+rsvg-convert, ,l,accept-language, , ,118,Specify which languages will be used for SVG documents with multiple languages
+rsvg-convert, , ,keep-image-data, , ,119,"For SVG documents that reference PNG or JPEG images, include the original, co…"
+rsvg-convert, , ,no-keep-image-data, , ,120,"Do not include the original, compressed images but instead embed uncompressed…"
+rsvg-convert, ,i,export-id, , ,121,Allows to specify an SVG object that should be exported based on its XML id a…
+rsvg-convert, ,u,unlimited, , ,122,The XML parser has some guards designed to mitigate large CPU or memory consu…
+rsvg-convert, , ,testing, , ,123,For developers only: render images for librsvg's test suite
+rsvg-convert, , ,completion, , ,124,Generate a script for a shell's Tab completion

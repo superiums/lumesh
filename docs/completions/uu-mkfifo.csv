@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-mkfifo, ,m,mode, , ,101,file permissions for the fifo
+uu-mkfifo, , ,context, , ,102,"like -Z, or if CTX is specified then set the SELinux or SMACK security context to CTX"
+uu-mkfifo, ,h,help, , ,103,Print help
+uu-mkfifo, ,V,version, , ,104,Print version

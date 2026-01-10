@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pmap, ,x,extended, , ,101,Show the extended format
+pmap, ,d,device, , ,102,Show the device format
+pmap, ,q,quiet, , ,103,Do not display some header or footer lines
+pmap, ,A,range, , ,104,Limit results to the given range to  low and  high address range
+pmap, ,p,show-path, , ,105,Show full path to files in the mapping column
+pmap, ,c,read-rc, , ,106,Read the default configuration
+pmap, ,C,read-rc-from, , ,107,Read the configuration from file
+pmap, ,n,create-rc, , ,108,Create new default configuration
+pmap, ,N,create-rc-to, , ,109,Create new configuration to file
+pmap, ,h,help, , ,110,Display help text and exit
+pmap, ,V,version, , ,111,Display version information and exit.  EXIT STATUS 0 Success

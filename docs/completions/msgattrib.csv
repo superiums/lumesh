@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgattrib, ,D,directory, , ,101,add DIRECTORY to list for input files search 
+msgattrib, ,o,output-file, , ,102,write output to specified file 
+msgattrib, , ,translated, , ,103,"keep translated, remove untranslated messages"
+msgattrib, , ,untranslated, , ,104,"keep untranslated, remove translated messages"
+msgattrib, , ,no-fuzzy, , ,105,remove 'fuzzy' marked messages
+msgattrib, , ,only-fuzzy, , ,106,keep 'fuzzy' marked messages
+msgattrib, , ,no-obsolete, , ,107,remove obsolete #~ messages
+msgattrib, , ,only-obsolete, , ,108,keep obsolete #~ messages . SS 'Attribute manipulation:'
+msgattrib, , ,set-fuzzy, , ,109,set all messages 'fuzzy'
+msgattrib, , ,clear-fuzzy, , ,110,set all messages non-'fuzzy'
+msgattrib, , ,set-obsolete, , ,111,set all messages obsolete
+msgattrib, , ,clear-obsolete, , ,112,set all messages non-obsolete
+msgattrib, , ,previous, , ,113,"when setting 'fuzzy', keep previous msgids of translated messages"
+msgattrib, , ,clear-previous, , ,114,remove the 'previous msgid' from all messages
+msgattrib, , ,empty, , ,115,"when removing 'fuzzy', also set msgstr empty"
+msgattrib, , ,only-file, , ,116,manipulate only entries listed in FILE. po
+msgattrib, , ,ignore-file, , ,117,manipulate only entries not listed in FILE. po
+msgattrib, , ,fuzzy, , ,118,synonym for --only-fuzzy --clear-fuzzy
+msgattrib, , ,obsolete, , ,119,synonym for --only-obsolete --clear-obsolete . SS 'Input file syntax:'
+msgattrib, ,P,properties-input, , ,120,input file is in Java . properties syntax
+msgattrib, , ,stringtable-input, , ,121,input file is in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msgattrib, , ,color, , ,122,use colors and other text attributes always
+msgattrib, , ,style, , ,123,specify CSS style rule file for --color
+msgattrib, ,e,no-escape, , ,124,do not use C escapes in output (default)
+msgattrib, ,E,escape, , ,125,"use C escapes in output, no extended chars"
+msgattrib, , ,force-po, , ,126,write PO file even if empty
+msgattrib, ,i,indent, , ,127,write the . po file using indented style
+msgattrib, , ,no-location, , ,128,do not write '#: filename:line' lines
+msgattrib, ,n,add-location, , ,129,generate '#: filename:line' lines (default)
+msgattrib, , ,strict, , ,130,write out strict Uniforum conforming . po file
+msgattrib, ,p,properties-output, , ,131,write out a Java . properties file
+msgattrib, , ,stringtable-output, , ,132,write out a NeXTstep/GNUstep . strings file
+msgattrib, ,w,width, , ,133,set output page width
+msgattrib, , ,no-wrap, , ,134,"do not break long message lines, longer than the output page width, into seve…"
+msgattrib, ,s,sort-output, , ,135,generate sorted output
+msgattrib, ,F,sort-by-file, , ,136,sort output by file location . SS 'Informative output:'
+msgattrib, ,h,help, , ,137,display this help and exit
+msgattrib, ,V,version, , ,138,output version information and exit AUTHOR Written by Bruno Haible

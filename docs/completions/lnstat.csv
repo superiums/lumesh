@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lnstat, ,h,help, , ,101,Show summary of options
+lnstat, ,V,version, , ,102,Show version of program
+lnstat, ,c,count, , ,103,Print <count> number of intervals
+lnstat, ,d,dump, , ,104,Dump list of available files/keys
+lnstat, ,f,file, , ,105,"Statistics file to use, may be specified multiple times"
+lnstat, ,i,interval, , ,106,Set interval to 'intv' seconds
+lnstat, ,j,json, , ,107,Display results in JSON format
+lnstat, ,k,keys, , ,108,Display only keys specified.  Each key k is of the form [file:]key
+lnstat, ,s,subject, , ,109,Specify display of subject/header
+lnstat, ,w,width, , ,110,Width for each field.  USAGE EXAMPLES

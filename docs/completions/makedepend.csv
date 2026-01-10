@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+makedepend, ,D, , ,@r,101,Define
+makedepend, ,I, , ,@r,102,Include directory
+makedepend, ,Y, , ,@r,103,Replace include directories
+makedepend, ,f, , ,@r,104,Specify makefile
+makedepend, , , , ,@r,105,Prepend file to input
+makedepend, ,o, , ,@r,106,Object file suffix
+makedepend, ,p, , ,@r,107,Object file prefix
+makedepend, ,s, , ,@r,108,Starting string delimiter
+makedepend, ,w, , ,@r,109,Line width

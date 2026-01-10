@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+krita, ,h,help, , ,101,show help
+krita, , ,help-all, , ,102,show help with Qt options
+krita, ,v,version, , ,103,show version
+krita, , ,export, , ,104,export file as image
+krita, , ,export-pdf, , ,105,export file as PDF
+krita, , ,export-sequence, , ,106,export animation as sequence
+krita, --export --export-pdf --export-sequence, ,export-filename, , ,107,exported filename
+krita, , ,template, , ,108,open template
+krita, , ,nosplash, , ,109,hide splash screen
+krita, , ,canvasonly, , ,110,open with canvasonly mode
+krita, , ,fullscreen, , ,111,open with fullscreen mode
+krita, , ,workspace, , ,112,open with workspace
+krita, , ,file-layer, , ,113,open with file-layer
+krita, , ,resource-location, , ,114,open with resource
+krita, , ,new-image, , ,115,open with new image

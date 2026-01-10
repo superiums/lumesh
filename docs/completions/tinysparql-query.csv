@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tinysparql-query, ,b,dbus-service, , ,101,Connects to a SPARQL endpoint at a D-Bus name
+tinysparql-query, ,d,database-path, , ,102,Connects to a database by location in the filesystem
+tinysparql-query, ,r,remote-service, , ,103,Connects to a HTTP SPARQL endpoint
+tinysparql-query, ,f,file, , ,104,Use a file with SPARQL content to query or update
+tinysparql-query, ,u,update, , ,105,This has to be used with --query
+tinysparql-query, ,a,arg, , ,106,Provides an argument for a parameter declared in the SPARQL query string
+tinysparql-query, , ,query, , ,107, 

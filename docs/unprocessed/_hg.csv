@@ -1,0 +1,681 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hg, __fish_hg_needs_command, , , ,@f @r,119, 
+hg, __fish_hg_using_command add, , , ,@f,120, 
+hg, __fish_hg_using_command add,I,include, ,@f @r,121,include names matching the given patterns
+hg, __fish_hg_using_command add,X,exclude, ,@f @r,122,exclude names matching the given patterns
+hg, __fish_hg_using_command add,S,subrepos, , ,123,recurse into subrepositories
+hg, __fish_hg_using_command add,n,dry-run, , ,124,"do not perform actions, just print output"
+hg," __fish_hg_using_command add; and __fish_hg_mq_enabled", ,mq, , ,125,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,126, 
+hg, __fish_hg_using_command $cmd,s,similarity, ,@f @r,127,guess renamed files by similarity (0<=s<=100)
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,128,recurse into subrepositories
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,129,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,130,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,131,"do not perform actions, just print output"
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,132,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,133, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,134,annotate the specified revision
+hg, __fish_hg_using_command $cmd, ,no-follow, , ,135,don't follow copies and renames
+hg, __fish_hg_using_command $cmd,a,text, , ,136,treat all files as text
+hg, __fish_hg_using_command $cmd,u,user, , ,137,list the author (long with -v)
+hg, __fish_hg_using_command $cmd,f,file, , ,138,list the filename
+hg, __fish_hg_using_command $cmd,d,date, , ,139,list the date (short with -q)
+hg, __fish_hg_using_command $cmd,n,number, , ,140,list the revision number (default)
+hg, __fish_hg_using_command $cmd,c,changeset, , ,141,list the changeset
+hg, __fish_hg_using_command $cmd,l,line-number, , ,142,show line number at the first appearance
+hg, __fish_hg_using_command $cmd,w,ignore-all-space, , ,143,ignore white space when comparing lines
+hg, __fish_hg_using_command $cmd,b,ignore-space-change, , ,144,ignore changes in the amount of white space
+hg, __fish_hg_using_command $cmd,B,ignore-blank-lines, , ,145,ignore changes whose lines are all blank
+hg, __fish_hg_using_command $cmd,Z,ignore-space-at-eol, , ,146,ignore changes in whitespace at EOL
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,147,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,148,exclude names matching the given patterns
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,149,operate on patch repository
+hg, __fish_hg_using_command $cmd, ,no-decode, , ,150,do not pass files through decoders
+hg, __fish_hg_using_command $cmd,p,prefix, ,@f @r,151,directory prefix for files in archive
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,152,revision to distribute
+hg, __fish_hg_using_command $cmd,t,type,files tar tbz2 tgz uzip zip,@f @r,153,type of distribution to create
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,154,recurse into subrepositories
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,155,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,156,exclude names matching the given patterns
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,157,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,158, 
+hg, __fish_hg_using_command $cmd, ,merge, , ,159,merge with old dirstate parent after backout
+hg, __fish_hg_using_command $cmd, ,no-commit, , ,160,do not commit
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,161,revision to backout
+hg, __fish_hg_using_command $cmd,e,edit, , ,162,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd,t,tool, ,@f @r,163,specify merge tool
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,164,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,165,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,166,use text as commit message
+hg, __fish_hg_using_command $cmd,l,logfile, ,@r,167,read commit message from file
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,168,record the specified date as commit date
+hg, __fish_hg_using_command $cmd,u,user, ,@f @r,169,record the specified user as committer
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,170,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,171, 
+hg, __fish_hg_using_command $cmd,r,reset, , ,172,reset bisect state
+hg, __fish_hg_using_command $cmd,g,good, , ,173,mark changeset good
+hg, __fish_hg_using_command $cmd,b,bad, , ,174,mark changeset bad
+hg, __fish_hg_using_command $cmd,s,skip, , ,175,skip testing changeset
+hg, __fish_hg_using_command $cmd,e,extend, , ,176,extend the bisect range
+hg, __fish_hg_using_command $cmd,c,command, ,@f @r,177,use command to check changeset state
+hg, __fish_hg_using_command $cmd,U,noupdate, , ,178,do not update to target
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,179,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,180, 
+hg, __fish_hg_using_command $cmd,f,force, , ,181,force
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,182,revision for bookmark action
+hg, __fish_hg_using_command $cmd,d,delete, , ,183,delete a given bookmark
+hg, __fish_hg_using_command $cmd,m,rename, ,@f @r,184,rename a given bookmark
+hg, __fish_hg_using_command $cmd,i,inactive, , ,185,mark a bookmark inactive
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,186,operate on patch repository
+hg, __fish_hg_using_command branch, , , ,@f,187, 
+hg, __fish_hg_using_command branch,f,force, , ,188,set branch name even if it shadows an existing branch
+hg, __fish_hg_using_command branch,C,clean, , ,189,reset branch name to parent branch name
+hg," __fish_hg_using_command branch; and __fish_hg_mq_enabled", ,mq, , ,190,operate on patch repository
+hg, __fish_hg_using_command $cmd,c,closed, , ,191,show normal and closed branches
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,192,operate on patch repository
+hg, __fish_hg_using_command $cmd,f,force, , ,193,run even when the destination is unrelated
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,194,a changeset intended to be added to the destination
+hg, __fish_hg_using_command $cmd,b,branch, ,@f @r,195,a specific branch you would like to bundle
+hg, __fish_hg_using_command $cmd, ,base, ,@f @r,196,a base changeset assumed to be available at the destination
+hg, __fish_hg_using_command $cmd,a,all, , ,197,bundle all changesets in the repository
+hg, __fish_hg_using_command $cmd,t,type, ,@f @r,198,bundle compression type to use (default: bzip2)
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,199,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,200,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,201,do not verify server certificate (ignoring web.cacerts config)
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,202,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,203, 
+hg, __fish_hg_using_command $cmd,o,output, ,@f @r,204,print output to file with formatted name
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,205,print the given revision
+hg, __fish_hg_using_command $cmd, ,decode, , ,206,apply any matching decode filter
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,207,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,208,exclude names matching the given patterns
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,209,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@r,210, 
+hg, __fish_hg_using_command $cmd,U,noupdate, , ,211,the clone will include an empty working directory (only a repository)
+hg, __fish_hg_using_command $cmd,u,updaterev, ,@f @r,212,"revision, tag, or branch to check out"
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,213,"do not clone everything, but include this changeset and its ancestors"
+hg, __fish_hg_using_command $cmd,b,branch, ,@f @r,214,"do not clone everything, but include this branch's changesets and their ancestors"
+hg, __fish_hg_using_command $cmd, ,pull, , ,215,use pull protocol to copy metadata
+hg, __fish_hg_using_command $cmd, ,stream, , ,216,clone with minimal data processing
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,217,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,218,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,219,do not verify server certificate (ignoring web.cacerts config)
+hg, __fish_hg_using_command $cmd, , , ,@f,220, 
+hg, __fish_hg_using_command $cmd,A,addremove, , ,221,mark new/missing files as added/removed before committing
+hg, __fish_hg_using_command $cmd, ,close-branch, , ,222,mark a branch head as closed
+hg, __fish_hg_using_command $cmd, ,amend, , ,223,amend the parent of the working directory
+hg, __fish_hg_using_command $cmd,s,secret, , ,224,use the secret phase for committing
+hg, __fish_hg_using_command $cmd,e,edit, , ,225,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd,i,interactive, , ,226,use interactive mode
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,227,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,228,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,229,use text as commit message
+hg, __fish_hg_using_command $cmd,l,logfile, ,@r,230,read commit message from file
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,231,record the specified date as commit date
+hg, __fish_hg_using_command $cmd,u,user, ,@f @r,232,record the specified user as committer
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,233,recurse into subrepositories
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,234,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,235, 
+hg, __fish_hg_using_command $cmd,u,untrusted, , ,236,show untrusted configuration options
+hg, __fish_hg_using_command $cmd,e,edit, , ,237,edit user config
+hg, __fish_hg_using_command $cmd,l,local, , ,238,edit repository config
+hg, __fish_hg_using_command $cmd,g,global, , ,239,edit global config
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,240,operate on patch repository
+hg, __fish_hg_using_command $cmd,s,source-type,hg cvs darcs git svn mtn gnuarch bzr p4,@f @r,241,source repository type
+hg, __fish_hg_using_command $cmd,d,dest-type,hg svn,@f @r,242,destination repository type
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,243,import up to this source revision
+hg, __fish_hg_using_command $cmd,A,authormap, ,@r,244,remap usernames using this file
+hg, __fish_hg_using_command $cmd, ,filemap, ,@r,245,remap file names using contents of file
+hg, __fish_hg_using_command $cmd, ,full, , ,246,apply filemap changes by converting all files again
+hg, __fish_hg_using_command $cmd, ,splicemap, ,@r,247,splice synthesized history into place
+hg, __fish_hg_using_command $cmd, ,branchmap, ,@r,248,change branch names while converting
+hg, __fish_hg_using_command $cmd, ,branchsort, , ,249,try to sort changesets by branches
+hg, __fish_hg_using_command $cmd, ,datesort, , ,250,try to sort changesets by date
+hg, __fish_hg_using_command $cmd, ,sourcesort, , ,251,preserve source changesets order
+hg, __fish_hg_using_command $cmd, ,closesort, , ,252,try to reorder closed revisions
+hg, __fish_hg_using_command $cmd, , , ,@f @r,253, 
+hg, __fish_hg_using_command $cmd,A,after, , ,254,record a copy that has already occurred
+hg, __fish_hg_using_command $cmd,f,force, , ,255,forcibly copy over an existing managed file
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,256,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,257,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,258,"do not perform actions, just print output"
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,259,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,260, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,261,revision
+hg, __fish_hg_using_command $cmd,c,change, ,@f @r,262,change made by revision
+hg, __fish_hg_using_command $cmd,a,text, , ,263,treat all files as text
+hg, __fish_hg_using_command $cmd,g,git, , ,264,use git extended diff format
+hg, __fish_hg_using_command $cmd, ,binary, , ,265,generate binary diffs in git mode (default)
+hg, __fish_hg_using_command $cmd, ,nodates, , ,266,omit dates from diff headers
+hg, __fish_hg_using_command $cmd, ,noprefix, , ,267,omit a/ and b/ prefixes from filenames
+hg, __fish_hg_using_command $cmd,p,show-function, , ,268,show which function each change is in
+hg, __fish_hg_using_command $cmd, ,reverse, , ,269,produce a diff that undoes the changes
+hg, __fish_hg_using_command $cmd,w,ignore-all-space, , ,270,ignore white space when comparing lines
+hg, __fish_hg_using_command $cmd,b,ignore-space-change, , ,271,ignore changes in the amount of white space
+hg, __fish_hg_using_command $cmd,B,ignore-blank-lines, , ,272,ignore changes whose lines are all blank
+hg, __fish_hg_using_command $cmd,Z,ignore-space-at-eol, , ,273,ignore changes in whitespace at EOL
+hg, __fish_hg_using_command $cmd,U,unified, ,@f @r,274,number of lines of context to show
+hg, __fish_hg_using_command $cmd, ,stat, , ,275,output diffstat-style summary of changes
+hg, __fish_hg_using_command $cmd, ,root, ,@f @r,276,produce diffs relative to subdirectory
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,277,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,278,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,279,recurse into subrepositories
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,280,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,281, 
+hg, __fish_hg_using_command $cmd,g,git, , ,282,use git extended diff format
+hg, __fish_hg_using_command $cmd, ,plain, , ,283,omit hg patch header
+hg, __fish_hg_using_command $cmd,o,outgoing, , ,284,send changes not found in the target repository
+hg, __fish_hg_using_command $cmd,b,bundle, , ,285,send changes not in target as a binary bundle
+hg, __fish_hg_using_command $cmd,B,bookmark, ,@f @r,286,send changes only reachable by given bookmark
+hg, __fish_hg_using_command $cmd, ,bundlename, ,@f @r,287,name of the bundle attachment file
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,288,a revision to send
+hg, __fish_hg_using_command $cmd, ,force, , ,289,run even when remote repository is unrelated (with -b/--bundle)
+hg, __fish_hg_using_command $cmd, ,base, ,@f @r,290,a base changeset to specify instead of a destination (with -b/--bundle)
+hg, __fish_hg_using_command $cmd, ,intro, , ,291,send an introduction email for a single patch
+hg, __fish_hg_using_command $cmd, ,body, , ,292,send patches as inline message text (default)
+hg, __fish_hg_using_command $cmd,a,attach, , ,293,send patches as attachments
+hg, __fish_hg_using_command $cmd,i,inline, , ,294,send patches as inline attachments
+hg, __fish_hg_using_command $cmd, ,bcc, ,@f @r,295,email addresses of blind carbon copy recipients
+hg, __fish_hg_using_command $cmd,c,cc, ,@f @r,296,email addresses of copy recipients
+hg, __fish_hg_using_command $cmd, ,confirm, , ,297,ask for confirmation before sending
+hg, __fish_hg_using_command $cmd,d,diffstat, , ,298,add diffstat output to messages
+hg, __fish_hg_using_command $cmd, ,date, ,@f @r,299,use the given date as the sending date
+hg, __fish_hg_using_command $cmd, ,desc, ,@f @r,300,use the given file as the series description
+hg, __fish_hg_using_command $cmd,f,from, ,@f @r,301,email address of sender
+hg, __fish_hg_using_command $cmd,n,test, , ,302,print messages that would be sent
+hg, __fish_hg_using_command $cmd,m,mbox, ,@r,303,write messages to mbox file instead of sending them
+hg, __fish_hg_using_command $cmd, ,reply-to, ,@f @r,304,email addresses replies should be sent to
+hg, __fish_hg_using_command $cmd,s,subject, ,@f @r,305,subject of first message (intro or single patch)
+hg, __fish_hg_using_command $cmd, ,in-reply-to, ,@f @r,306,message identifier to reply to
+hg, __fish_hg_using_command $cmd, ,flag, ,@f @r,307,flags to add in subject prefixes
+hg, __fish_hg_using_command $cmd,t,to, ,@f @r,308,email addresses of recipients
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,309,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,310,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,311,do not verify server certificate (ignoring web.cacerts config)
+hg, __fish_hg_using_command $cmd, , , ,@f,312, 
+hg, __fish_hg_using_command $cmd,B,bookmark, ,@f @r,313,export changes only reachable by given bookmark
+hg, __fish_hg_using_command $cmd,o,output, ,@f @r,314,print output to file with formatted name
+hg, __fish_hg_using_command $cmd, ,switch-parent, , ,315,diff against the second parent
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,316,revisions to export
+hg, __fish_hg_using_command $cmd,a,text, , ,317,treat all files as text
+hg, __fish_hg_using_command $cmd,g,git, , ,318,use git extended diff format
+hg, __fish_hg_using_command $cmd, ,binary, , ,319,generate binary diffs in git mode (default)
+hg, __fish_hg_using_command $cmd, ,nodates, , ,320,omit dates from diff headers
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,321,operate on patch repository
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,322,search the repository as it is in REV
+hg, __fish_hg_using_command $cmd,0,print0, , ,323,"end filenames with NUL, for use with xargs"
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,324,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,325,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,326,recurse into subrepositories
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,327,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,328, 
+hg, __fish_hg_using_command $cmd,i,interactive, , ,329,use interactive mode
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,330,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,331,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,332,"do not perform actions, just print output"
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,333,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,334, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,335,revisions to graft
+hg, __fish_hg_using_command $cmd,c,continue, , ,336,resume interrupted graft
+hg, __fish_hg_using_command $cmd, ,stop, , ,337,stop interrupted graft
+hg, __fish_hg_using_command $cmd, ,abort, , ,338,abort interrupted graft
+hg, __fish_hg_using_command $cmd,e,edit, , ,339,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd, ,log, , ,340,append graft info to log message
+hg, __fish_hg_using_command $cmd, ,no-commit, , ,341,"don't commit, just apply the changes in working directory"
+hg, __fish_hg_using_command $cmd,f,force, , ,342,force graft
+hg, __fish_hg_using_command $cmd,D,currentdate, , ,343,record the current date as commit date
+hg, __fish_hg_using_command $cmd,U,currentuser, , ,344,record the current user as committer
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,345,record the specified date as commit date
+hg, __fish_hg_using_command $cmd,u,user, ,@f @r,346,record the specified user as committer
+hg, __fish_hg_using_command $cmd,t,tool, ,@f @r,347,specify merge tool
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,348,"do not perform actions, just print output"
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,349,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,350, 
+hg, __fish_hg_using_command $cmd,0,print0, , ,351,end fields with NUL
+hg, __fish_hg_using_command $cmd, ,all, , ,352,print all revisions that match
+hg, __fish_hg_using_command $cmd, ,diff, , ,353,print all revisions when the term was introduced or removed
+hg, __fish_hg_using_command $cmd,a,text, , ,354,treat all files as text
+hg, __fish_hg_using_command $cmd,f,follow, , ,355,"follow changeset history, or file history across copies and renames"
+hg, __fish_hg_using_command $cmd,i,ignore-case, , ,356,ignore case when matching
+hg, __fish_hg_using_command $cmd,l,files-with-matches, , ,357,print only filenames and revisions that match
+hg, __fish_hg_using_command $cmd,n,line-number, , ,358,print matching line numbers
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,359,only search files changed within revision range
+hg, __fish_hg_using_command $cmd,u,user, , ,360,list the author (long with -v)
+hg, __fish_hg_using_command $cmd,d,date, , ,361,list the date (short with -q)
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,362,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,363,exclude names matching the given patterns
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,364,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,365, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,366,show only heads which are descendants of STARTREV
+hg, __fish_hg_using_command $cmd,t,topo, , ,367,show topological heads only
+hg, __fish_hg_using_command $cmd,c,closed, , ,368,show normal and closed branch heads
+hg, __fish_hg_using_command $cmd,T,template, ,@f @r,369,display with template
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,370,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,371, 
+hg, __fish_hg_using_command $cmd,e,extension, , ,372,show only help for extensions
+hg, __fish_hg_using_command $cmd,c,command, , ,373,show only help for commands
+hg, __fish_hg_using_command $cmd,k,keyword, , ,374,show topics matching keyword
+hg, __fish_hg_using_command $cmd,s,system, ,@f @r,375,show help for specific platform(s)
+hg, __fish_hg_using_command $cmd, , , ,@f @r,376, 
+hg, __fish_hg_using_command $cmd, ,commands, ,@r,377,read history edits from the specified file
+hg, __fish_hg_using_command $cmd,c,continue, , ,378,continue an edit already in progress
+hg, __fish_hg_using_command $cmd, ,edit-plan, , ,379,edit remaining actions list
+hg, __fish_hg_using_command $cmd,k,keep, , ,380,don't strip old nodes after edit is complete
+hg, __fish_hg_using_command $cmd, ,abort, , ,381,abort an edit in progress
+hg, __fish_hg_using_command $cmd,o,outgoing, , ,382,changesets not found in destination
+hg, __fish_hg_using_command $cmd,f,force, , ,383,force outgoing even for unrelated repositories
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,384,first revision to be edited
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,385,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,386, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,387,identify the specified revision
+hg, __fish_hg_using_command $cmd,n,num, , ,388,show local revision number
+hg, __fish_hg_using_command $cmd,i,id, , ,389,show global revision id
+hg, __fish_hg_using_command $cmd,b,branch, , ,390,show branch
+hg, __fish_hg_using_command $cmd,t,tags, , ,391,show tags
+hg, __fish_hg_using_command $cmd,B,bookmarks, , ,392,show bookmarks
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,393,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,394,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,395,do not verify server certificate (ignoring web.cacerts config)
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,396,operate on patch repository
+hg, __fish_hg_using_command $cmd,p,strip, ,@f @r,397,directory strip option for patch
+hg, __fish_hg_using_command $cmd,e,edit, , ,398,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd, ,no-commit, , ,399,"don't commit, just update the working directory"
+hg, __fish_hg_using_command $cmd, ,bypass, , ,400,apply patch without touching the working directory
+hg, __fish_hg_using_command $cmd, ,partial, , ,401,commit even if some hunks fail
+hg, __fish_hg_using_command $cmd, ,exact, , ,402,abort if patch would apply lossily
+hg, __fish_hg_using_command $cmd, ,prefix, ,@r,403,apply patch to subdirectory
+hg, __fish_hg_using_command $cmd, ,import-branch, , ,404,use any branch information in patch (implied by --exact)
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,405,use text as commit message
+hg, __fish_hg_using_command $cmd,l,logfile, ,@r,406,read commit message from file
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,407,record the specified date as commit date
+hg, __fish_hg_using_command $cmd,u,user, ,@f @r,408,record the specified user as committer
+hg, __fish_hg_using_command $cmd,s,similarity, ,@f @r,409,guess renamed files by similarity (0<=s<=100)
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,410,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,411, 
+hg, __fish_hg_using_command $cmd,f,force, , ,412,run even if remote repository is unrelated
+hg, __fish_hg_using_command $cmd,n,newest-first, , ,413,show newest record first
+hg, __fish_hg_using_command $cmd, ,bundle, ,@r,414,file to store the bundles into
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,415,a remote changeset intended to be added
+hg, __fish_hg_using_command $cmd,B,bookmarks, , ,416,compare bookmarks
+hg, __fish_hg_using_command $cmd,b,branch, ,@f @r,417,a specific branch you would like to pull
+hg, __fish_hg_using_command $cmd,p,patch, , ,418,show patch
+hg, __fish_hg_using_command $cmd,g,git, , ,419,use git extended diff format
+hg, __fish_hg_using_command $cmd,l,limit, ,@f @r,420,limit number of changes displayed
+hg, __fish_hg_using_command $cmd,M,no-merges, , ,421,do not show merges
+hg, __fish_hg_using_command $cmd, ,stat, , ,422,output diffstat-style summary of changes
+hg, __fish_hg_using_command $cmd,G,graph, , ,423,show the revision DAG
+hg, __fish_hg_using_command $cmd,T,template, ,@f @r,424,display with template
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,425,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,426,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,427,do not verify server certificate (ignoring web.cacerts config)
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,428,recurse into subrepositories
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,429,operate on patch repository
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,430,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,431,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,432,do not verify server certificate (ignoring web.cacerts config)
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,433,operate on patch repository
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,434,search the repository as it is in REV
+hg, __fish_hg_using_command $cmd,0,print0, , ,435,"end filenames with NUL, for use with xargs"
+hg, __fish_hg_using_command $cmd,f,fullpath, , ,436,print complete paths from the filesystem root
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,437,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,438,exclude names matching the given patterns
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,439,operate on patch repository
+hg, __fish_hg_using_command , , , ,@f,440, 
+hg, __fish_hg_using_command ,f,follow, , ,441,"follow changeset history, or file history across copies and renames"
+hg, __fish_hg_using_command ,d,date, ,@f @r,442,show revisions matching date spec
+hg, __fish_hg_using_command ,C,copies, , ,443,show copied files
+hg, __fish_hg_using_command ,k,keyword, ,@f @r,444,do case-insensitive search for a given text
+hg, __fish_hg_using_command ,r,rev, ,@f @r,445,show the specified revision or revset
+hg, __fish_hg_using_command , ,removed, , ,446,include revisions where files were removed
+hg, __fish_hg_using_command ,u,user, ,@f @r,447,revisions committed by user
+hg, __fish_hg_using_command ,b,branch, ,@f @r,448,show changesets within the given named branch
+hg, __fish_hg_using_command ,P,prune, ,@f @r,449,do not display revision or any of its ancestors
+hg, __fish_hg_using_command ,p,patch, , ,450,show patch
+hg, __fish_hg_using_command ,g,git, , ,451,use git extended diff format
+hg, __fish_hg_using_command ,l,limit, ,@f @r,452,limit number of changes displayed
+hg, __fish_hg_using_command ,M,no-merges, , ,453,do not show merges
+hg, __fish_hg_using_command , ,stat, , ,454,output diffstat-style summary of changes
+hg, __fish_hg_using_command ,G,graph, , ,455,show the revision DAG
+hg, __fish_hg_using_command ,T,template, ,@f @r,456,display with template
+hg, __fish_hg_using_command ,I,include, ,@f @r,457,include names matching the given patterns
+hg, __fish_hg_using_command ,X,exclude, ,@f @r,458,exclude names matching the given patterns
+hg, __fish_hg_using_command , ,mq, , ,459,operate on patch repository
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,460,revision to display
+hg, __fish_hg_using_command $cmd, ,all, , ,461,list files from all revisions
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,462,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,463, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,464,revision to merge
+hg, __fish_hg_using_command $cmd,P,preview, , ,465,review revisions to merge (no merge is performed)
+hg, __fish_hg_using_command $cmd, ,abort, , ,466,abort the ongoing merge
+hg, __fish_hg_using_command $cmd,t,tool, ,@f @r,467,specify merge tool
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,468,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,469, 
+hg, __fish_hg_using_command $cmd,f,force, , ,470,run even when the destination is unrelated
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,471,a changeset intended to be included in the destination
+hg, __fish_hg_using_command $cmd,n,newest-first, , ,472,show newest record first
+hg, __fish_hg_using_command $cmd,B,bookmarks, , ,473,compare bookmarks
+hg, __fish_hg_using_command $cmd,b,branch, ,@f @r,474,a specific branch you would like to push
+hg, __fish_hg_using_command $cmd,p,patch, , ,475,show patch
+hg, __fish_hg_using_command $cmd,g,git, , ,476,use git extended diff format
+hg, __fish_hg_using_command $cmd,l,limit, ,@f @r,477,limit number of changes displayed
+hg, __fish_hg_using_command $cmd,M,no-merges, , ,478,do not show merges
+hg, __fish_hg_using_command $cmd, ,stat, , ,479,output diffstat-style summary of changes
+hg, __fish_hg_using_command $cmd,G,graph, , ,480,show the revision DAG
+hg, __fish_hg_using_command $cmd,T,template, ,@f @r,481,display with template
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,482,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,483,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,484,do not verify server certificate (ignoring web.cacerts config)
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,485,recurse into subrepositories
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,486,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,487, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,488,show parents of the specified revision
+hg, __fish_hg_using_command $cmd,T,template, ,@f @r,489,display with template
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,490,operate on patch repository
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,491,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,492, 
+hg, __fish_hg_using_command $cmd,p,public, , ,493,set changeset phase to public
+hg, __fish_hg_using_command $cmd,d,draft, , ,494,set changeset phase to draft
+hg, __fish_hg_using_command $cmd,s,secret, , ,495,set changeset phase to secret
+hg, __fish_hg_using_command $cmd,f,force, , ,496,allow to move boundary backward
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,497,target revision
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,498,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@r,499, 
+hg, __fish_hg_using_command $cmd,u,update, , ,500,update to new branch head if new descendants were pulled
+hg, __fish_hg_using_command $cmd,f,force, , ,501,run even when remote repository is unrelated
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,502,a remote changeset intended to be added
+hg, __fish_hg_using_command $cmd,B,bookmark, ,@f @r,503,bookmark to pull
+hg, __fish_hg_using_command $cmd,b,branch, ,@f @r,504,a specific branch you would like to pull
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,505,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,506,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,507,do not verify server certificate (ignoring web.cacerts config)
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,508,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@r,509, 
+hg, __fish_hg_using_command $cmd,f,force, , ,510,force push
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,511,a changeset intended to be included in the destination
+hg, __fish_hg_using_command $cmd,B,bookmark, ,@f @r,512,bookmark to push
+hg, __fish_hg_using_command $cmd,b,branch, ,@f @r,513,a specific branch you would like to push
+hg, __fish_hg_using_command $cmd, ,new-branch, , ,514,allow pushing a new branch
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,515,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,516,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,517,do not verify server certificate (ignoring web.cacerts config)
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,518,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,519, 
+hg, __fish_hg_using_command $cmd,1,last, , ,520,show only the preceding applied patch
+hg, __fish_hg_using_command $cmd,s,summary, , ,521,print first line of patch header
+hg, __fish_hg_using_command $cmd, , , ,@r,522, 
+hg, __fish_hg_using_command $cmd, ,pull, , ,523,use pull protocol to copy metadata
+hg, __fish_hg_using_command $cmd,U,noupdate, , ,524,do not update the new working directories
+hg, __fish_hg_using_command $cmd, ,uncompressed, , ,525,use uncompressed transfer (fast over LAN)
+hg, __fish_hg_using_command $cmd,p,patches, , ,526,location of source patch repository
+hg, __fish_hg_using_command $cmd,e,ssh, ,@f @r,527,specify ssh command to use
+hg, __fish_hg_using_command $cmd, ,remotecmd, ,@f @r,528,specify hg command to run on the remote side
+hg, __fish_hg_using_command $cmd, ,insecure, , ,529,do not verify server certificate (ignoring web.cacerts config)
+hg, __fish_hg_using_command $cmd, , , ,@f @r,530, 
+hg, __fish_hg_using_command $cmd,k,keep, , ,531,keep patch file
+hg, __fish_hg_using_command $cmd, , , ,@f,532, 
+hg, __fish_hg_using_command $cmd,a,text, , ,533,treat all files as text
+hg, __fish_hg_using_command $cmd,g,git, , ,534,use git extended diff format
+hg, __fish_hg_using_command $cmd, ,binary, , ,535,generate binary diffs in git mode (default)
+hg, __fish_hg_using_command $cmd, ,nodates, , ,536,omit dates from diff headers
+hg, __fish_hg_using_command $cmd, ,noprefix, , ,537,omit a/ and b/ prefixes from filenames
+hg, __fish_hg_using_command $cmd,p,show-function, , ,538,show which function each change is in
+hg, __fish_hg_using_command $cmd, ,reverse, , ,539,produce a diff that undoes the changes
+hg, __fish_hg_using_command $cmd,w,ignore-all-space, , ,540,ignore white space when comparing lines
+hg, __fish_hg_using_command $cmd,b,ignore-space-change, , ,541,ignore changes in the amount of white space
+hg, __fish_hg_using_command $cmd,B,ignore-blank-lines, , ,542,ignore changes whose lines are all blank
+hg, __fish_hg_using_command $cmd,Z,ignore-space-at-eol, , ,543,ignore changes in whitespace at EOL
+hg, __fish_hg_using_command $cmd,U,unified, ,@f @r,544,number of lines of context to show
+hg, __fish_hg_using_command $cmd, ,stat, , ,545,output diffstat-style summary of changes
+hg, __fish_hg_using_command $cmd, ,root, ,@f @r,546,produce diffs relative to subdirectory
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,547,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,548,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd, , , ,@f @r,549, 
+hg, __fish_hg_using_command $cmd,a,applied, , ,550,finish all applied changesets
+hg, __fish_hg_using_command $cmd, , , ,@f @r,551, 
+hg, __fish_hg_using_command $cmd,e,edit, , ,552,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd,k,keep, , ,553,keep folded patch files
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,554,use text as commit message
+hg, __fish_hg_using_command $cmd,l,logfile, ,@r,555,read commit message from file
+hg, __fish_hg_using_command $cmd, , , ,@f @r,556, 
+hg, __fish_hg_using_command $cmd, ,keep-changes, , ,557,tolerate non-conflicting local changes
+hg, __fish_hg_using_command $cmd,f,force, , ,558,overwrite any local changes
+hg, __fish_hg_using_command $cmd, ,no-backup, , ,559,do not save backup copies of files
+hg, __fish_hg_using_command $cmd, , , ,@f @r,560, 
+hg, __fish_hg_using_command $cmd,l,list, , ,561,list all patches and guards
+hg, __fish_hg_using_command $cmd,n,none, , ,562,drop all guards
+hg, __fish_hg_using_command $cmd, , , ,@f @r,563, 
+hg, __fish_hg_using_command $cmd,e,existing, , ,564,import file in patch directory
+hg, __fish_hg_using_command $cmd,n,name, ,@f @r,565,name of patch file
+hg, __fish_hg_using_command $cmd,f,force, , ,566,overwrite existing files
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,567,place existing revisions under mq control
+hg, __fish_hg_using_command $cmd,g,git, , ,568,use git extended diff format
+hg, __fish_hg_using_command $cmd,P,push, , ,569,qpush after importing
+hg, __fish_hg_using_command qnew,e,edit, , ,570,invoke editor on commit messages
+hg, __fish_hg_using_command qnew,g,git, , ,571,use git extended diff format
+hg, __fish_hg_using_command qnew,U,currentuser, , ,572,add 'From: <current user>' to patch
+hg, __fish_hg_using_command qnew,u,user, ,@f @r,573,add 'From: <USER>' to patch
+hg, __fish_hg_using_command qnew,D,currentdate, , ,574,add 'Date: <current date>' to patch
+hg, __fish_hg_using_command qnew,d,date, ,@f @r,575,add 'Date: <DATE>' to patch
+hg, __fish_hg_using_command qnew,I,include, ,@f @r,576,include names matching the given patterns
+hg, __fish_hg_using_command qnew,X,exclude, ,@f @r,577,exclude names matching the given patterns
+hg, __fish_hg_using_command qnew,m,message, ,@f @r,578,use text as commit message
+hg, __fish_hg_using_command qnew,l,logfile, ,@r,579,read commit message from file
+hg, __fish_hg_using_command qnew,i,interactive, , ,580,interactively record a new patch
+hg, __fish_hg_using_command $cmd,s,summary, , ,581,print first line of patch header
+hg, __fish_hg_using_command $cmd, , , ,@f,582, 
+hg, __fish_hg_using_command $cmd,a,all, , ,583,pop all patches
+hg, __fish_hg_using_command $cmd, ,keep-changes, , ,584,tolerate non-conflicting local changes
+hg, __fish_hg_using_command $cmd,f,force, , ,585,forget any local changes to patched files
+hg, __fish_hg_using_command $cmd, ,no-backup, , ,586,do not save backup copies of files
+hg, __fish_hg_using_command $cmd,s,summary, , ,587,print first line of patch header
+hg, __fish_hg_using_command $cmd, , , ,@f,588, 
+hg, __fish_hg_using_command $cmd, ,keep-changes, , ,589,tolerate non-conflicting local changes
+hg, __fish_hg_using_command $cmd,f,force, , ,590,apply on top of local changes
+hg, __fish_hg_using_command $cmd,e,exact, , ,591,apply the target patch to its recorded parent
+hg, __fish_hg_using_command $cmd,l,list, , ,592,list patch name in commit text
+hg, __fish_hg_using_command $cmd,a,all, , ,593,apply all patches
+hg, __fish_hg_using_command $cmd, ,move, , ,594,reorder patch series and apply only the patch
+hg, __fish_hg_using_command $cmd, ,no-backup, , ,595,do not save backup copies of files
+hg, __fish_hg_using_command $cmd, , , ,@f @r,596, 
+hg, __fish_hg_using_command $cmd,l,list, , ,597,list all available queues
+hg, __fish_hg_using_command $cmd, ,active, , ,598,print name of active queue
+hg, __fish_hg_using_command $cmd,c,create, , ,599,create new queue
+hg, __fish_hg_using_command $cmd, ,rename, , ,600,rename active queue
+hg, __fish_hg_using_command $cmd, ,delete, , ,601,delete reference to queue
+hg, __fish_hg_using_command $cmd, ,purge, , ,602,"delete queue, and remove patch dir"
+hg, __fish_hg_using_command $cmd, , , ,@f,603, 
+hg, __fish_hg_using_command $cmd,e,edit, , ,604,edit commit message
+hg, __fish_hg_using_command $cmd,g,git, , ,605,use git extended diff format
+hg, __fish_hg_using_command $cmd,U,currentuser, , ,606,add 'From: <current user>' to patch
+hg, __fish_hg_using_command $cmd,u,user, ,@f @r,607,add 'From: <USER>' to patch
+hg, __fish_hg_using_command $cmd,D,currentdate, , ,608,add 'Date: <current date>' to patch
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,609,add 'Date: <DATE>' to patch
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,610,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,611,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,612,use text as commit message
+hg, __fish_hg_using_command $cmd,l,logfile, ,@f @r,613,read commit message from file
+hg, __fish_hg_using_command $cmd,w,ignore-all-space, , ,614,ignore white space when comparing lines
+hg, __fish_hg_using_command $cmd,b,ignore-space-change, , ,615,ignore changes in the amount of white space
+hg, __fish_hg_using_command $cmd,B,ignore-blank-lines, , ,616,ignore changes whose lines are all blank
+hg, __fish_hg_using_command $cmd, , , ,@f,617, 
+hg, __fish_hg_using_command $cmd,e,edit, , ,618,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd,g,git, , ,619,use git extended diff format
+hg, __fish_hg_using_command $cmd,s,short, , ,620,refresh only files already in the patch and specified files
+hg, __fish_hg_using_command $cmd,U,currentuser, , ,621,add/update author field in patch with current user
+hg, __fish_hg_using_command $cmd,u,user, ,@f @r,622,add/update author field in patch with given user
+hg, __fish_hg_using_command $cmd,D,currentdate, , ,623,add/update date field in patch with current date
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,624,add/update date field in patch with given date
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,625,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,626,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,627,use text as commit message
+hg, __fish_hg_using_command $cmd,l,logfile, ,@r,628,read commit message from file
+hg, __fish_hg_using_command $cmd,i,interactive, , ,629,interactively select changes to refresh
+hg, __fish_hg_using_command $cmd, , , ,@f @r,630, 
+hg, __fish_hg_using_command $cmd,n,none, , ,631,disable all guards
+hg, __fish_hg_using_command $cmd,s,series, , ,632,list all guards in series file
+hg, __fish_hg_using_command $cmd, ,pop, , ,633,pop to before first guarded applied patch
+hg, __fish_hg_using_command $cmd, ,reapply, , ,634,"pop, then reapply patches"
+hg, __fish_hg_using_command $cmd,m,missing, , ,635,print patches not in series
+hg, __fish_hg_using_command $cmd,s,summary, , ,636,print first line of patch header
+hg, __fish_hg_using_command $cmd,s,summary, , ,637,print first line of patch header
+hg, __fish_hg_using_command $cmd, , , ,@f @r,638, 
+hg, __fish_hg_using_command $cmd,1,first, , ,639,show only the preceding applied patch
+hg, __fish_hg_using_command $cmd,s,summary, , ,640,print first line of patch header
+hg, __fish_hg_using_command $cmd,s,source, ,@f @r,641,rebase the specified changeset and descendants
+hg, __fish_hg_using_command $cmd,b,base, ,@f @r,642,rebase everything from branching point of specified changeset
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,643,rebase these revisions
+hg, __fish_hg_using_command $cmd,d,dest, ,@f @r,644,rebase onto the specified changeset
+hg, __fish_hg_using_command $cmd, ,collapse, , ,645,collapse the rebased changesets
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,646,use text as collapse commit message
+hg, __fish_hg_using_command $cmd,e,edit, , ,647,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd,l,logfile, ,@r,648,read collapse commit message from file
+hg, __fish_hg_using_command $cmd,k,keep, , ,649,keep original changesets
+hg, __fish_hg_using_command $cmd, ,keepbranches, , ,650,keep original branch names
+hg, __fish_hg_using_command $cmd,t,tool, ,@f @r,651,specify merge tool
+hg, __fish_hg_using_command $cmd,c,continue, , ,652,continue an interrupted rebase
+hg, __fish_hg_using_command $cmd,a,abort, , ,653,abort an interrupted rebase
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,654,"do not perform actions, just print output"
+hg, __fish_hg_using_command $cmd, ,confirm, , ,655,ask before applying actions
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,656,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,657, 
+hg, __fish_hg_using_command $cmd,A,addremove, , ,658,mark new/missing files as added/removed before committing
+hg, __fish_hg_using_command $cmd, ,close-branch, , ,659,"mark a branch as closed, hiding it from the branch list"
+hg, __fish_hg_using_command $cmd, ,amend, , ,660,amend the parent of the working dir
+hg, __fish_hg_using_command $cmd,s,secret, , ,661,use the secret phase for committing
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,662,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,663,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,664,use text as commit message
+hg, __fish_hg_using_command $cmd,l,logfile, ,@f @r,665,read commit message from file
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,666,record the specified date as commit date
+hg, __fish_hg_using_command $cmd,u,user, ,@f @r,667,record the specified user as committer
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,668,recurse into subrepositories
+hg, __fish_hg_using_command $cmd,w,ignore-all-space, , ,669,ignore white space when comparing lines
+hg, __fish_hg_using_command $cmd,b,ignore-space-change, , ,670,ignore changes in the amount of white space
+hg, __fish_hg_using_command $cmd,B,ignore-blank-lines, , ,671,ignore changes whose lines are all blank
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,672,operate on patch repository
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,673,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,674, 
+hg, __fish_hg_using_command $cmd,A,after, , ,675,record delete for missing files
+hg, __fish_hg_using_command $cmd,f,force, , ,676,"forget added files, delete modified files"
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,677,recurse into subrepositories
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,678,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,679,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,680,"do not perform actions, just print output"
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,681,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@r,682, 
+hg, __fish_hg_using_command $cmd,A,after, , ,683,record a rename that has already occurred
+hg, __fish_hg_using_command $cmd,f,force, , ,684,forcibly copy over an existing managed file
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,685,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,686,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,687,"do not perform actions, just print output"
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,688,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,689, 
+hg, __fish_hg_using_command $cmd,a,all, , ,690,select all unresolved files
+hg, __fish_hg_using_command $cmd,l,list, , ,691,list state of files needing merge
+hg, __fish_hg_using_command $cmd,m,mark, ,@f @r,692,mark files as resolved
+hg, __fish_hg_using_command $cmd,u,unmark, ,@f @r,693,mark files as unresolved
+hg, __fish_hg_using_command $cmd,n,no-status, , ,694,hide status prefix
+hg, __fish_hg_using_command $cmd,t,tool, ,@f @r,695,specify merge tool
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,696,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,697,exclude names matching the given patterns
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,698,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f,699, 
+hg, __fish_hg_using_command $cmd,a,all, , ,700,revert all changes when no arguments given
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,701,tipmost revision matching date
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,702,revert to the specified revision
+hg, __fish_hg_using_command $cmd,C,no-backup, , ,703,do not save backup copies of files
+hg, __fish_hg_using_command $cmd,i,interactive, , ,704,interactively select the changes
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,705,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,706,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,n,dry-run, , ,707,"do not perform actions, just print output"
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,708,operate on patch repository
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,709,operate on patch repository
+hg, __fish_hg_using_command $cmd,A,accesslog, ,@r,710,name of access log file to write to
+hg, __fish_hg_using_command $cmd,d,daemon, , ,711,run server in background
+hg, __fish_hg_using_command $cmd, ,daemon-postexec, ,@f @r,712,used internally by daemon mode
+hg, __fish_hg_using_command $cmd,E,errorlog, ,@r,713,name of error log file to write to
+hg, __fish_hg_using_command $cmd,p,port, ,@f @r,714,port to listen on (default: 8000)
+hg, __fish_hg_using_command $cmd,a,address, ,@f @r,715,address to listen on (default: all interfaces)
+hg, __fish_hg_using_command $cmd, ,prefix, ,@f @r,716,prefix path to serve from (default: server root)
+hg, __fish_hg_using_command $cmd,n,name, ,@f @r,717,name to show in web pages (default: working directory)
+hg, __fish_hg_using_command $cmd, ,web-conf, ,@r,718,name of the hgweb config file (see 'hg help hgweb')
+hg, __fish_hg_using_command $cmd, ,pid-file, ,@r,719,name of file to write process ID to
+hg, __fish_hg_using_command $cmd, ,stdio, , ,720,for remote clients
+hg, __fish_hg_using_command $cmd, ,cmdserver, ,@f @r,721,for remote clients
+hg, __fish_hg_using_command $cmd,t,templates, ,@f @r,722,web templates to use
+hg, __fish_hg_using_command $cmd, ,style, ,@f @r,723,template style to use
+hg, __fish_hg_using_command $cmd,6,ipv6, , ,724,use IPv6 in addition to IPv4
+hg, __fish_hg_using_command $cmd, ,certificate, ,@r,725,SSL certificate file
+hg, __fish_hg_using_command $cmd, ,print-url, , ,726,start and print only the URL
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,727,recurse into subrepositories
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,728,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,729, 
+hg, __fish_hg_using_command $cmd,A,addremove, , ,730,mark new/missing files as added/removed before shelving
+hg, __fish_hg_using_command $cmd,u,unknown, , ,731,store unknown files in the shelve
+hg, __fish_hg_using_command $cmd, ,cleanup, , ,732,delete all shelved changes
+hg, __fish_hg_using_command $cmd, ,date, ,@f @r,733,shelve with the specified commit date
+hg, __fish_hg_using_command $cmd,d,delete, , ,734,delete the named shelved change(s)
+hg, __fish_hg_using_command $cmd,e,edit, , ,735,invoke editor on commit messages
+hg, __fish_hg_using_command $cmd,l,list, , ,736,list current shelves
+hg, __fish_hg_using_command $cmd,m,message, ,@f @r,737,use text as shelve message
+hg, __fish_hg_using_command $cmd,n,name, ,@f @r,738,use the given name for the shelved commit
+hg, __fish_hg_using_command $cmd,p,patch, , ,739,output patches for changes (provide the names of the shelved changes as positional arguments)
+hg, __fish_hg_using_command $cmd,i,interactive, , ,740,"interactive mode, only works while creating a shelve"
+hg, __fish_hg_using_command $cmd, ,stat, , ,741,output diffstat-style summary of changes
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,742,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,743,exclude names matching the given patterns
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,744,operate on patch repository
+hg, __fish_hg_using_command $cmd,A,all, , ,745,show status of all files
+hg, __fish_hg_using_command $cmd,m,modified, , ,746,show only modified files
+hg, __fish_hg_using_command $cmd,a,added, , ,747,show only added files
+hg, __fish_hg_using_command $cmd,r,removed, , ,748,show only removed files
+hg, __fish_hg_using_command $cmd,d,deleted, , ,749,show only deleted (but tracked) files
+hg, __fish_hg_using_command $cmd,c,clean, , ,750,show only files without changes
+hg, __fish_hg_using_command $cmd,u,unknown, , ,751,show only unknown (not tracked) files
+hg, __fish_hg_using_command $cmd,i,ignored, , ,752,show only ignored files
+hg, __fish_hg_using_command $cmd,n,no-status, , ,753,hide status prefix
+hg, __fish_hg_using_command $cmd,C,copies, , ,754,show source of copied files
+hg, __fish_hg_using_command $cmd,0,print0, , ,755,"end filenames with NUL, for use with xargs"
+hg, __fish_hg_using_command $cmd, ,rev, ,@f @r,756,show difference from revision
+hg, __fish_hg_using_command $cmd, ,change, ,@f @r,757,list the changed files of a revision
+hg, __fish_hg_using_command $cmd,I,include, ,@f @r,758,include names matching the given patterns
+hg, __fish_hg_using_command $cmd,X,exclude, ,@f @r,759,exclude names matching the given patterns
+hg, __fish_hg_using_command $cmd,S,subrepos, , ,760,recurse into subrepositories
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,761,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,762, 
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,763,strip specified revision
+hg, __fish_hg_using_command $cmd,f,force, , ,764,"force removal of changesets, discard uncommitted changes (no backup)"
+hg, __fish_hg_using_command $cmd, ,no-backup, , ,765,do not save backup bundle
+hg, __fish_hg_using_command $cmd,k,keep, , ,766,do not modify working directory during strip
+hg, __fish_hg_using_command $cmd,B,bookmark, ,@f @r,767,remove revs only reachable from given bookmark
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,768,operate on patch repository
+hg, __fish_hg_using_command $cmd, ,remote, , ,769,check for push and pull
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,770,operate on patch repository
+hg, __fish_hg_using_command tag,f,force, , ,771,force tag
+hg, __fish_hg_using_command tag,l,local, , ,772,make the tag local
+hg, __fish_hg_using_command tag,r,rev, ,@f @r,773,revision to tag
+hg, __fish_hg_using_command tag, ,remove, , ,774,remove a tag
+hg, __fish_hg_using_command tag,e,edit, , ,775,invoke editor on commit messages
+hg, __fish_hg_using_command tag,m,message, ,@f @r,776,use <text> as commit message
+hg, __fish_hg_using_command tag,d,date, ,@f @r,777,record the specified date as commit date
+hg, __fish_hg_using_command tag,u,user, ,@f @r,778,record the specified user as committer
+hg," __fish_hg_using_command tag; and __fish_hg_mq_enabled", ,mq, , ,779,operate on patch repository
+hg," __fish_hg_using_command tags; and __fish_hg_mq_enabled", ,mq, , ,780,operate on patch repository
+hg, __fish_hg_using_command $cmd,u,update, , ,781,update to new branch head if changesets were unbundled
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,782,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,783, 
+hg, __fish_hg_using_command $cmd,a,abort, , ,784,abort an incomplete unshelve operation
+hg, __fish_hg_using_command $cmd,c,continue, , ,785,continue an incomplete unshelve operation
+hg, __fish_hg_using_command $cmd,k,keep, , ,786,keep shelve after unshelving
+hg, __fish_hg_using_command $cmd,n,name, ,@f @r,787,restore shelved change with given name
+hg, __fish_hg_using_command $cmd,t,tool, ,@f @r,788,specify merge tool
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,789,operate on patch repository
+hg, __fish_hg_using_command $cmd, , , ,@f @r,790, 
+hg, __fish_hg_using_command $cmd,C,clean, , ,791,discard uncommitted changes (no backup)
+hg, __fish_hg_using_command $cmd,c,check, , ,792,require clean working directory
+hg, __fish_hg_using_command $cmd,m,merge, , ,793,merge uncommitted changes
+hg, __fish_hg_using_command $cmd,d,date, ,@f @r,794,tipmost revision matching date
+hg, __fish_hg_using_command $cmd,r,rev, ,@f @r,795,revision
+hg, __fish_hg_using_command $cmd,t,tool, ,@f @r,796,specify merge tool
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,797,operate on patch repository
+hg," __fish_hg_using_command $cmd; and __fish_hg_mq_enabled", ,mq, , ,798,operate on patch repository

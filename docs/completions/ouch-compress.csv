@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ouch-compress, ,l,level, , ,101,"Compression level, applied to all formats"
+ouch-compress, , ,fast, , ,102,"Fastest compression level possible, conflicts with --level and --slow"
+ouch-compress, , ,slow, , ,103,"Slowest (and best) compression level possible, conflicts with --level and --f…"
+ouch-compress, ,h,help, , ,104,Print help

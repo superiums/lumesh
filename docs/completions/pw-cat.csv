@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-cat, ,h,help, , ,101,Show help
+pw-cat, , ,version, , ,102,Show version information
+pw-cat, ,v,verbose, , ,103,Verbose operation
+pw-cat, ,R,remote, , ,104,The name the remote instance to connect to
+pw-cat, ,p,playback, , ,105,"Playback mode.  Read data from the specified file, and play it back"
+pw-cat, ,r,record, , ,106,Recording mode.  Capture data and write it to the specified file
+pw-cat, ,m,midi, , ,107,MIDI mode.  FILE is a MIDI file
+pw-cat, ,d,dsd, , ,108,DSD mode.  FILE is a DSF file
+pw-cat, , ,media-type, , ,109,Set the media type property (default Audio/Midi depending on mode)
+pw-cat, , ,media-category, , ,110,Set the media category property (default Playback/Capture depending on mode)
+pw-cat, , ,media-role, , ,111,Set the media role property (default Music)
+pw-cat, , ,target, , ,112, 
+pw-cat, , ,latency, , ,113, 
+pw-cat, ,P,properties, , ,114, 
+pw-cat, ,q,quality, , ,115, 
+pw-cat, , ,rate, , ,116, 
+pw-cat, , ,channels, , ,117, 
+pw-cat, , ,channel-map, , ,118, 
+pw-cat, , ,format, , ,119, 
+pw-cat, , ,volume, , ,120, 

@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+m4, , ,help, , ,101,Display this help and exit
+m4, , ,version, , ,102,Output version information and exit
+m4, ,E,fatal-warnings, , ,103,"Once: warnings become errors, twice: stop execution at first error"
+m4, ,i,interactive, , ,104,"Unbuffer output, ignore interrupts"
+m4, ,P,prefix-builtins, , ,105,Force a 'm4_' prefix to all builtins
+m4, ,Q,silent, , ,106,Suppress some warnings for builtins
+m4, , ,warn-macro-sequence, , ,107,"Warn if macro definition matches REGEXP, default \$\({[^}]*}\|[0-9][0-9]+\)"
+m4, ,D,define, , ,108,"Define NAME as having VALUE, or empty"
+m4, ,I,include, , ,109,Append DIRECTORY to include path
+m4, ,s,synclines, , ,110,Generate '#line NUM 'FILE'' lines
+m4, ,U,undefine, , ,111,Undefine NAME
+m4, ,G,traditional, , ,112,Suppress all GNU extensions
+m4, ,H,hashsize, , ,113,Set symbol lookup hash table size [509]
+m4, ,L,nesting-limit, , ,114,Change artificial nesting limit [1024]
+m4, ,F,freeze-state, , ,115,Produce a frozen state on FILE at end
+m4, ,R,reload-state, , ,116,Reload a frozen state from FILE at start
+m4, ,d,debug, , ,117,Set debug level (no FLAGS implies 'aeq')
+m4, , ,debugfile, , ,118,Redirect debug and trace output
+m4, ,l,arglength, , ,119,Restrict macro tracing size
+m4, ,t,trace, , ,120,Trace NAME when it is defined

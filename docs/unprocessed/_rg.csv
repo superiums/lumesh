@@ -1,0 +1,43 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rg, __rg_contains_opt binary , ,no-binary, , ,106,Search binary files.
+rg, __rg_contains_opt block-buffered , ,no-block-buffered, , ,108,Force block buffering.
+rg, __rg_contains_opt byte-offset b, ,no-byte-offset, , ,110,Print the byte offset for each matching line.
+rg, __rg_contains_opt column , ,no-column, , ,115,Show column numbers.
+rg, __rg_contains_opt context-separator , ,no-context-separator, , ,118,Set the separator for contextual chunks.
+rg, __rg_contains_opt crlf , ,no-crlf, , ,122,Use CRLF line terminators (nice for Windows).
+rg, __rg_contains_opt encoding E, ,no-encoding, , ,126,Specify the text encoding of files to search.
+rg, __rg_contains_opt fixed-strings F, ,no-fixed-strings, , ,134,Treat all patterns as literals.
+rg, __rg_contains_opt follow L, ,no-follow, , ,136,Follow symbolic links.
+rg, __rg_contains_opt glob-case-insensitive , ,no-glob-case-insensitive, , ,140,Process all glob patterns case insensitively.
+rg, __rg_contains_opt heading , ,no-heading, , ,142,Print matches grouped by each file.
+rg, __rg_contains_opt hidden ., ,no-hidden, , ,145,Search hidden files and directories.
+rg, __rg_contains_opt ignore-file-case-insensitive , ,no-ignore-file-case-insensitive, , ,152,Process ignore files case insensitively.
+rg, __rg_contains_opt include-zero , ,no-include-zero, , ,154,Include zero matches in summary output.
+rg, __rg_contains_opt invert-match v, ,no-invert-match, , ,156,Invert matching.
+rg, __rg_contains_opt json , ,no-json, , ,158,Show search results in a JSON Lines format.
+rg, __rg_contains_opt line-buffered , ,no-line-buffered, , ,160,Force line buffering.
+rg, __rg_contains_opt max-columns-preview , ,no-max-columns-preview, , ,166,Show preview for lines exceeding the limit.
+rg, __rg_contains_opt mmap , ,no-mmap, , ,171,Search with memory maps when possible.
+rg, __rg_contains_opt multiline U, ,no-multiline, , ,173,Enable searching across multiple lines.
+rg, __rg_contains_opt multiline-dotall , ,no-multiline-dotall, , ,175,Make '.' match line terminators.
+rg, __rg_contains_opt no-ignore , ,ignore, , ,178,Don't use ignore files.
+rg, __rg_contains_opt no-ignore-dot , ,ignore-dot, , ,180,Don't use .ignore or .rgignore files.
+rg, __rg_contains_opt no-ignore-exclude , ,ignore-exclude, , ,182,Don't use local exclusion files.
+rg, __rg_contains_opt no-ignore-files , ,ignore-files, , ,184,Don't use --ignore-file arguments.
+rg, __rg_contains_opt no-ignore-global , ,ignore-global, , ,186,Don't use global ignore files.
+rg, __rg_contains_opt no-ignore-messages , ,ignore-messages, , ,188,Suppress gitignore parse error messages.
+rg, __rg_contains_opt no-ignore-parent , ,ignore-parent, , ,190,Don't use ignore files in parent directories.
+rg, __rg_contains_opt no-ignore-vcs , ,ignore-vcs, , ,192,Don't use ignore files from source control.
+rg, __rg_contains_opt no-messages , ,messages, , ,194,Suppress some error messages.
+rg, __rg_contains_opt no-require-git , ,require-git, , ,196,Use .gitignore outside of git repositories.
+rg, __rg_contains_opt no-unicode , ,unicode, , ,198,Disable Unicode mode.
+rg, __rg_contains_opt one-file-system , ,no-one-file-system, , ,202,Skip directories on other file systems.
+rg, __rg_contains_opt pcre2 P, ,no-pcre2, , ,207,Enable PCRE2 matching.
+rg, __rg_contains_opt pre , ,no-pre, , ,210,Search output of COMMAND for each PATH.
+rg, __rg_contains_opt search-zip z, ,no-search-zip, , ,217,Search in compressed files.
+rg, __rg_contains_opt stats , ,no-stats, , ,222,Print statistics about the search.
+rg, __rg_contains_opt text a, ,no-text, , ,225,Search binary files as if they were text.
+rg, __rg_contains_opt trim , ,no-trim, , ,229,Trim prefix whitespace from matches.
+rg, __rg_contains_opt auto-hybrid-regex , ,no-auto-hybrid-regex, , ,242,(DEPRECATED) Use PCRE2 if appropriate.
+rg, __rg_contains_opt no-pcre2-unicode , ,pcre2-unicode, , ,244,(DEPRECATED) Disable Unicode mode for PCRE2.
+rg, __rg_contains_opt sort-files , ,no-sort-files, , ,246,(DEPRECATED) Sort results by file path.

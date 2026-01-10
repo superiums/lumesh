@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yadm, ,Y,yadm-dir, ,@D @F @r,101,Override the yadm directory
+yadm, , ,yadm-repo, ,@F @r,102,Override location of yadm repository
+yadm, , ,yadm-config, ,@F @r,103,Override location of yadm configuration file
+yadm, , ,yadm-encrypt, ,@F @r,104,Override location of yadm encryption configuration
+yadm, , ,yadm-archive, ,@F @r,105,Override location of yadm encrypted files archive
+yadm, , ,yadm-bootstrap, ,@F @r,106,Override location of yadm bootstrap program

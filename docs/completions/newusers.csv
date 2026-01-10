@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+newusers, , ,badname, , ,101,Allow names that do not conform to standards
+newusers, ,h,help, , ,102,Display help message and exit
+newusers, ,r,system, , ,103,Create a system account
+newusers, ,R,rootCHROOT_DIR, , ,104,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+newusers, , ,root, , ,105, 

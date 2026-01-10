@@ -1,0 +1,165 @@
+cmd,conds,short,long,params,dirs,pri,desc
+meson, __fish_meson_needs_command, , , ,@D,102, 
+meson, __fish_meson_needs_command, , ,wrap, ,103,Manage WrapDB dependencies
+meson," __fish_meson_using_command wrap; and $wrap_cmds", ,allow-insecure, , ,104,Allow insecure server connections
+meson," __fish_meson_using_command wrap; and update", ,force, , ,105,Update wraps that does not seems to come from WrapDB
+meson," __fish_meson_using_command wrap; and update", ,sourcedir, ,@D,106,Source directory
+meson," __fish_meson_using_command wrap; and update", ,types, ,@f @r,107,Comma-separated list of subproject types
+meson," __fish_meson_using_command wrap; and update", ,num-processes, ,@f @r,108,How many parallel processes to use
+meson," __fish_meson_using_command wrap; and update", ,allow-insecure, ,@f @r,109,Allow insecure server connections
+meson," __fish_meson_using_command wrap; and promote", , , ,@D,110,Project path
+meson, __fish_meson_needs_command, , ,test, ,111,Run tests for the project
+meson, __fish_meson_using_command test,h,help, , ,112,Show help
+meson, __fish_meson_using_command test,C, , ,@D,113,Directory to cd into before running
+meson, __fish_meson_using_command test, ,maxfail, ,@f @r,114,Number of failing tests before aborting the test run
+meson, __fish_meson_using_command test, ,repeat, ,@f @r,115,Number of times to run the tests
+meson, __fish_meson_using_command test, ,no-rebuild, , ,116,Do not rebuild before running tests
+meson, __fish_meson_using_command test, ,gdb, , ,117,Run test under gdb
+meson, __fish_meson_using_command test, ,gdb-path, ,@r,118,Run test under gdb
+meson, __fish_meson_using_command test, ,list, , ,119,List available tests
+meson, __fish_meson_using_command test, ,wrapper, ,@r,120,Wrapper to run tests with (e.g. valgrind)
+meson, __fish_meson_using_command test, ,suite, , ,121,Only run tests belonging to the given suite
+meson, __fish_meson_using_command test, ,no-suite, , ,122,Do not run tests belonging to the given suite
+meson, __fish_meson_using_command test, ,no-stdsplit, , ,123,Do not split stderr and stdout in test logs
+meson, __fish_meson_using_command test, ,print-errorlogs, , ,124,Print logs of failing tests
+meson, __fish_meson_using_command test, ,benchmark, , ,125,Run benchmarks instead of tests
+meson, __fish_meson_using_command test, ,logbase, ,@f @r,126,Base name for log file
+meson, __fish_meson_using_command test, ,num-processes, ,@f @r,127,How many parallel processes to use
+meson, __fish_meson_using_command test,v,verbose, , ,128,Do not redirect stdout and stderr
+meson, __fish_meson_using_command test,q,quiet, , ,129,Produce less output to the terminal
+meson, __fish_meson_using_command test,t,timeout-multiplier, ,@f @r,130,Multiplier for test timeout
+meson, __fish_meson_using_command test, ,setup, ,@f @r,131,Which test setup to use
+meson, __fish_meson_using_command test, ,test-args, ,@f @r,132,Arguments to pass to the test(s)
+meson, __fish_meson_needs_command, , ,subprojects, ,133,Manage subprojects
+meson," __fish_meson_using_command subprojects; and $subprojects_cmds", ,sourcedir, ,@D,134,Path to source directory
+meson," __fish_meson_using_command subprojects; and $subprojects_cmds", ,types,file git hg svn, ,135,Comma-separated list of subproject types
+meson," __fish_meson_using_command subprojects; and $subprojects_cmds", ,num-processes, ,@f @r,136,How many parallel processes to use
+meson," __fish_meson_using_command subprojects; and $subprojects_cmds", ,allow-insecure, ,@f @r,137,Allow insecure server connections
+meson," __fish_meson_using_command subprojects; and update", ,reset, , ,138,Checkout wrap's revision and hard reset to that commit
+meson," __fish_meson_using_command subprojects; and purge", ,include-cache, , ,139,Remove the package cache as well
+meson," __fish_meson_using_command subprojects; and purge", ,confirm, , ,140,Confirm the removal of subproject artifacts
+meson," __fish_meson_using_command subprojects; and packagefiles", ,apply, , ,141,Apply packagefiles to the subproject
+meson," __fish_meson_using_command subprojects; and packagefiles", ,save, , ,142,Save packagefiles from the subproject
+meson, __fish_meson_needs_command, , ,setup, ,143,Configure a build directory
+meson, __fish_meson_using_command setup, , , ,@D,144, 
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,prefix, ,@D,145,Installation prefix
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,bindir, ,@D,146,Executable directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,datadir, ,@D,147,Data file directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,includedir, ,@D,148,Header file directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,infodir, ,@D,149,Info page directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,libdir, ,@D,150,Library directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,licensedir, ,@D,151,Licenses directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,libexecdir, ,@D,152,Library executable directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,localedir, ,@D,153,Locale data directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,localstatedir, ,@D,154,Localstate data directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,mandir, ,@D,155,Manual page directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,sbindir, ,@D,156,System executable directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,sharedstatedir, ,@D,157,Architecture-independent data directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,sysconfdir, ,@D,158,Sysconf data directory
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,auto-features,enabled disabled auto, ,159,Override value of all 'auto' features
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,backend,ninja vs vs2010 vs2012 vs2013 vs2015 vs2017 vs2019 vs2022 xcode, ,160,Backend to use
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,buildtype,plain debug debugoptimized release minsize custom, ,161,Build type to use
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,debug, , ,162,Enable debug symbols and other info
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,default-library,shared static both, ,163,Default library type
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,errorlogs, , ,164,Print the logs from failing tests
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,install-umask, ,@f @r,165,Default umask to apply on permissions of installed files
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,layout,mirror flat, ,166,Build directory layout
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,optimization,plain 0 g 1 2 3 s, ,167,Optimization level
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,prefer-static, , ,168,Try static linking before shared linking
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,stdsplit, , ,169,Split stdout and stderr in test logs
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,strip, , ,170,Strip targets on install
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,unity,on off subprojects, ,171,Unity build
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,unity-size, ,@f @r,172,Unity block size
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,warnlevel,0 1 2 3 everything, ,173,Compiler warning level to use
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,werror, , ,174,Treat warnings as errors
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,wrap-mode,default nofallback nodownload forcefallback nopromote, ,175,Wrap mode
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,force-fallback-for, ,@f @r,176,Force fallback for those subprojects
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,pkgconfig.relocatable, , ,177,Generate pkgconfig files as relocatable
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,python.install-env,auto prefix system venv, ,178,Which python environment to install to
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,python.platlibdir, ,@f @r,179,"Directory for site-specific, platform-specific files"
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,python.purelibdir, ,@f @r,180,"Directory for site-specific, non-platform-specific files"
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,pkg-config-path, ,@f @r,181,Additional paths for pkg-config (for host machine)
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,build.pkg-config-path, ,@f @r,182,Additional paths for pkg-config (for build machine)
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,cmake-prefix-path, ,@f @r,183,Additional prefixes for cmake (for host machine)
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure, ,build.cmake-prefix-path, ,@f @r,184,Additional prefixes for cmake (for build machine)
+meson, __fish_meson_needs_command || __fish_meson_using_command setup configure,D, , ,@f @r,185,Set the value of an option
+meson, __fish_meson_needs_command || __fish_meson_using_command setup, ,native-file, ,@r,186,File with overrides for native compilation environment
+meson, __fish_meson_needs_command || __fish_meson_using_command setup, ,cross-file, ,@r,187,File describing cross compilation environment
+meson, __fish_meson_needs_command || __fish_meson_using_command setup, ,vsenv, , ,188,Force setup of Visual Studio environment
+meson, __fish_meson_needs_command || __fish_meson_using_command setup,v,version, , ,189,Show version number and exit
+meson, __fish_meson_needs_command || __fish_meson_using_command setup, ,fatal-meson-warnings, , ,190,Make all Meson warnings fatal
+meson, __fish_meson_needs_command || __fish_meson_using_command setup, ,reconfigure, , ,191,Set options and reconfigure the project
+meson, __fish_meson_needs_command || __fish_meson_using_command setup, ,wipe, , ,192,Wipe build directory and reconfigure
+meson, __fish_meson_needs_command, , ,rewrite, ,193,Modify the project
+meson," __fish_meson_using_command rewrite; and $rewrite_cmds",s,sourcedir, ,@D,193,Path to source directory
+meson," __fish_meson_using_command rewrite; and $rewrite_cmds",V,verbose, , ,193,Enable verbose output
+meson," __fish_meson_using_command rewrite; and $rewrite_cmds",S,skip-errors, , ,193,Skip errors instead of aborting
+meson," __fish_meson_using_command rewrite; and target",s,subdir, ,@D,194,Subdirectory of the new target
+meson," __fish_meson_using_command rewrite; and target", ,type, , ,195,Type of the target to add
+meson," __fish_meson_using_command rewrite; and kwargs; and __fish_is_nth_token 3", , ,set delete add remove remove_regex info, ,196,Action to execute
+meson," __fish_meson_using_command rewrite; and kwargs; and __fish_is_nth_token 4", , ,dependency target project, ,197,Function type to modify
+meson," __fish_meson_using_command rewrite; and default-options; and __fish_is_nth_token 3", , ,set delete, ,198,Action to execute
+meson, __fish_meson_needs_command, , ,introspect, ,199,Display info about a project
+meson, __fish_meson_using_command introspect, , , ,@D,200, 
+meson, __fish_meson_using_command introspect, ,ast, , ,201,Dump the AST of the meson file
+meson, __fish_meson_using_command introspect, ,benchmarks, , ,202,List all benchmarks
+meson, __fish_meson_using_command introspect, ,buildoptions, , ,203,List all build options
+meson, __fish_meson_using_command introspect, ,buildsystem-files, , ,204,List files that make up the build system
+meson, __fish_meson_using_command introspect, ,dependencies, , ,205,List external dependencies
+meson, __fish_meson_using_command introspect, ,scan-dependencies, , ,206,Scan for dependencies used in the meson.build file
+meson, __fish_meson_using_command introspect, ,installed, , ,207,List all installed files and directories
+meson, __fish_meson_using_command introspect, ,install-plan, , ,208,List all installed files and directories with their details
+meson, __fish_meson_using_command introspect, ,projectinfo, , ,209,Information about projects
+meson, __fish_meson_using_command introspect, ,targets, , ,210,List top level targets
+meson, __fish_meson_using_command introspect, ,tests, , ,211,List all unit tests
+meson, __fish_meson_using_command introspect, ,backend,ninja vs vs2010 vs2012 vs2013 vs2015 vs2017 vs2019 vs2022 xcode, ,212,The backend to use for the --buildoptions introspection
+meson, __fish_meson_using_command introspect,a,all, , ,213,Print all available information
+meson, __fish_meson_using_command introspect,i,indent, , ,214,Enable pretty printed JSON
+meson, __fish_meson_using_command introspect,f,force-object-output, , ,215,Always use the new JSON format for multiple entries
+meson, __fish_meson_needs_command, , ,install, ,216,Install the project
+meson, __fish_meson_using_command install,C, , ,@D,217,Directory to cd into before running
+meson, __fish_meson_using_command install, ,no-rebuild, , ,218,Do not rebuild before installing
+meson, __fish_meson_using_command install, ,only-changed, , ,219,Only overwrite files that are older than the copied file
+meson, __fish_meson_using_command install, ,quiet, , ,220,Do not print every file that was installed
+meson, __fish_meson_using_command install, ,destdir, ,@r,221,Sets or overrides DESTDIR environment
+meson, __fish_meson_using_command install,n,dry-run, , ,222,"Do not actually install, but print logs"
+meson, __fish_meson_using_command install, ,skip-subprojects, , ,223,Do not install files from given subprojects
+meson, __fish_meson_using_command install, ,tags, ,@f @r,224,Install only targets having one of the given tags
+meson, __fish_meson_using_command install, ,strip, , ,225,Strip targets even if strip option was not set during configure
+meson, __fish_meson_needs_command, , ,init, ,226,Create a project from template
+meson, __fish_meson_using_command init,C, , ,@D,227,Directory to cd into before running
+meson, __fish_meson_using_command init,n,name, ,@f @r,228,Project name
+meson, __fish_meson_using_command init,e,executable, ,@f @r,229,Executable name
+meson, __fish_meson_using_command init,d,deps, ,@f @r,230,"Dependencies, comma-separated"
+meson, __fish_meson_using_command init,l,language,c cpp cs cuda d fortran java objc objcpp rust vala, ,231,Project language
+meson, __fish_meson_using_command init,b,build, , ,232,Build after generation
+meson, __fish_meson_using_command init, ,builddir, ,@r,233,Directory for build
+meson, __fish_meson_using_command init,f,force, , ,234,Force overwrite of existing files and directories
+meson, __fish_meson_using_command init, ,type,executable library, ,235,Project type
+meson, __fish_meson_using_command init, ,version, ,@f @r,236,Project version
+meson, __fish_meson_needs_command, , ,help, ,237,Show help for a command
+meson, __fish_meson_needs_command, , ,dist, ,238,Generate a release archive
+meson, __fish_meson_using_command dist,C, , ,@D,239,Directory to cd into before running
+meson, __fish_meson_using_command dist, ,allow-dirty, , ,240,Allow even when repository contains uncommitted changes
+meson, __fish_meson_using_command dist, ,formats,xztar gztar zip, ,241,Comma separated list of archive types to create
+meson, __fish_meson_using_command dist, ,include-subprojects, , ,242,Include source code of subprojects
+meson, __fish_meson_using_command dist, ,no-tests, , ,243,Do not build and test generated packages
+meson, __fish_meson_needs_command, , ,devenv, ,244,Run a command from the build directory
+meson, __fish_meson_using_command devenv,h,help, , ,245,Show help
+meson, __fish_meson_using_command devenv,C, , ,@D,246,Path to build directory
+meson, __fish_meson_using_command devenv,w,workdir, ,@D,247,Directory to cd into before running
+meson, __fish_meson_using_command devenv, ,dump, , ,248,Only print required environment
+meson, __fish_meson_using_command devenv, ,dump-format,sh export vscode, ,249,Format used with --dump
+meson, __fish_meson_needs_command, , ,configure, ,250,Change project options
+meson, __fish_meson_using_command configure, , , ,@D,251, 
+meson, __fish_meson_using_command configure, ,clearcache, , ,252,Clear cached state
+meson, __fish_meson_using_command configure, ,no-pager, , ,253,Do not redirect output to a pager
+meson, __fish_meson_needs_command, , ,compile, ,254,Build the configured project
+meson, __fish_meson_using_command compile, ,clean, , ,255,Clean the build directory
+meson, __fish_meson_using_command compile,C, , ,@r,256,Directory to cd into before running
+meson, __fish_meson_using_command compile,j,jobs, ,@f @r,257,The number of worker jobs to run
+meson, __fish_meson_using_command compile,l,load-average, ,@f @r,258,The system load average to try to maintain
+meson, __fish_meson_using_command compile,v,verbose, , ,259,Show more verbose output
+meson, __fish_meson_using_command compile, ,ninja-args, ,@f @r,260,Arguments to pass to `ninja`
+meson, __fish_meson_using_command compile, ,vs-args, ,@f @r,261,Arguments to pass to `msbuild`
+meson, __fish_meson_using_command compile, ,xcode-args, ,@f @r,262,Arguments to pass to `xcodebuild`

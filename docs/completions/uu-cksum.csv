@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-cksum, ,a,algorithm,sysv,@f @r,101,select the digest type to use. See DIGEST below
+uu-cksum, ,l,length, , ,102,"digest length in bits; must not exceed the max for the blake2 algorithm and must be a multiple of 8"
+uu-cksum, , ,untagged, , ,103,"create a reversed style checksum, without digest type"
+uu-cksum, , ,tag, , ,104,"create a BSD style checksum, undo --untagged (default)"
+uu-cksum, , ,raw, , ,105,"emit a raw binary digest, not hexadecimal"
+uu-cksum, , ,strict, , ,106,exit non-zero for improperly formatted checksum lines
+uu-cksum, ,c,check, , ,107,read hashsums from the FILEs and check them
+uu-cksum, , ,base64, , ,108,"emit a base64 digest, not hexadecimal"
+uu-cksum, ,t,text, , ,109, 
+uu-cksum, ,b,binary, , ,110, 
+uu-cksum, ,w,warn, , ,111,warn about improperly formatted checksum lines
+uu-cksum, , ,status, , ,112,"don't output anything, status code shows success"
+uu-cksum, , ,quiet, , ,113,don't print OK for each successfully verified file
+uu-cksum, , ,ignore-missing, , ,114,don't fail or report status for missing files
+uu-cksum, ,z,zero, , ,115,"end each output line with NUL, not newline, and disable file name escaping"
+uu-cksum, ,h,help, , ,116,Print help
+uu-cksum, ,V,version, , ,117,Print version

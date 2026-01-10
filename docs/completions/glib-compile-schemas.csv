@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+glib-compile-schemas, ,h,help, , ,101,Print help and exit
+glib-compile-schemas, , ,version, , ,102,Print program version and exit
+glib-compile-schemas, , ,targetdir, , ,103,Store gschemas. compiled in the TARGET directory instead of DIRECTORY
+glib-compile-schemas, , ,strict, , ,104,Abort on any errors in schemas
+glib-compile-schemas, , ,dry-run, , ,105,Donât write gschemas. compiled.  This option can be used to check . gschema
+glib-compile-schemas, , ,allow-any-name, , ,106,Do not enforce restrictions on key names

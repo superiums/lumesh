@@ -1,0 +1,47 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xterm, string match '+*' -- (commandline -ct), , ,+ah, ,101,Never highlight the text cursor
+xterm, string match '+*' -- (commandline -ct), , ,+ai, ,102,Enable active icon support
+xterm, string match '+*' -- (commandline -ct), , ,+aw, ,103,Disallow auto wraparound
+xterm, string match '+*' -- (commandline -ct), , ,+bc, ,104,Turn off cursor blinking
+xterm, string match '+*' -- (commandline -ct), , ,+bdc, ,105,Enable the display of bold characters
+xterm, string match '+*' -- (commandline -ct), , ,+cb, ,106,Set the vt100 resource cutToBeginningOfLine to 'true'
+xterm, string match '+*' -- (commandline -ct), , ,+cjk_width, ,107,Set the cjkWidth resource to 'false'
+xterm, string match '+*' -- (commandline -ct), , ,+cm, ,108,Enable recognition of ANSI color-change escape sequences
+xterm, string match '+*' -- (commandline -ct), , ,+cn, ,109,Cut newlines in line-mode selections
+xterm, string match '+*' -- (commandline -ct), , ,+cu, ,110,Don't workaround the bug in more(1)
+xterm, string match '+*' -- (commandline -ct), , ,+dc, ,111,Disable dynamic color changing
+xterm, string match '+*' -- (commandline -ct), , ,+fbb, ,112,Don't ensure compatibility between normal and bold fonts bounding boxes
+xterm, string match '+*' -- (commandline -ct), , ,+fbx, ,113,Normal and bold fonts have VT100 line-drawing characters
+xterm, string match '+*' -- (commandline -ct), , ,+hf, ,114,Don't generate HP Function Key escape codes for function keys
+xterm, string match '+*' -- (commandline -ct), , ,+hold, ,115,Close xterm's window after the shell exits
+xterm, string match '+*' -- (commandline -ct), , ,+ie, ,116,Don't use pseudo-terminal's sense of the stty erase value
+xterm, string match '+*' -- (commandline -ct), , ,+im, ,117,Don't force insert mode
+xterm, string match '+*' -- (commandline -ct), , ,+j, ,118,Don't use jump scrolling
+xterm, string match '+*' -- (commandline -ct), , ,+k8, ,119,Don't treat C1 control characters as printable
+xterm, string match '+*' -- (commandline -ct), , ,+l, ,120,Turn off logging
+xterm, string match '+*' -- (commandline -ct), , ,+lc, ,121,Turn off support for encodings according the locale setting
+xterm, string match '+*' -- (commandline -ct), , ,+ls, ,122,The shell in xterm's window will not be login shell
+xterm, string match '+*' -- (commandline -ct), , ,+mb, ,123,Don't ring bell if the user types near the end of line
+xterm, string match '+*' -- (commandline -ct), , ,+mesg, ,124,Allow write access to the terminal
+xterm, string match '+*' -- (commandline -ct), , ,+mk_width, ,125,Don't use builtin version for the wide-character calculation
+xterm, string match '+*' -- (commandline -ct), , ,+nul, ,126,Enable underlining
+xterm, string match '+*' -- (commandline -ct), , ,+pc, ,127,Disable PC style bold colors
+xterm, string match '+*' -- (commandline -ct), , ,+pob, ,128,Don't raise window on Control-G
+xterm, string match '+*' -- (commandline -ct), , ,+rvc, ,129,Enable characters with reverse attribute as color
+xterm, string match '+*' -- (commandline -ct), , ,+rw, ,130,Disable reverse-wraparound
+xterm, string match '+*' -- (commandline -ct), , ,+s, ,131,Turn off asynchronous scrolling
+xterm, string match '+*' -- (commandline -ct), , ,+samename, ,132,Send title/icon change requests always
+xterm, string match '+*' -- (commandline -ct), , ,+sb, ,133,Don't display scrollbar
+xterm, string match '+*' -- (commandline -ct), , ,+sf, ,134,Don't generate Sun Function Key escape codes for function keys
+xterm, string match '+*' -- (commandline -ct), , ,+si, ,135,Move the screen to the bottom on input
+xterm, string match '+*' -- (commandline -ct), , ,+sk, ,136,Don't move the screen to the bottom on key press while scrolling
+xterm, string match '+*' -- (commandline -ct), , ,+sm, ,137,Don't setup session manager callbacks
+xterm, string match '+*' -- (commandline -ct), , ,+sp, ,138,Don't assume Sun/PC keyboard
+xterm, string match '+*' -- (commandline -ct), , ,+t, ,139,VT102 mode
+xterm, string match '+*' -- (commandline -ct), , ,+tb, ,140,Don't display toolbar or menubar
+xterm, string match '+*' -- (commandline -ct), , ,+u8, ,141,Don't use UTF-8
+xterm, string match '+*' -- (commandline -ct), , ,+ulc, ,142,Display characters with underline attribute as color
+xterm, string match '+*' -- (commandline -ct), , ,+ut, ,143,Write to the system utmp log file
+xterm, string match '+*' -- (commandline -ct), , ,+vb, ,144,Don't use visual bell instead of audio bell
+xterm, string match '+*' -- (commandline -ct), , ,+wc, ,145,Don't use wide characters
+xterm, string match '+*' -- (commandline -ct), , ,+wf, ,146,Don't wait the first time for the window to be mapped

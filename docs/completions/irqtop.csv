@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+irqtop, ,o,output, , ,101, 
+irqtop, ,c,cpu-stat, , ,102, 
+irqtop, ,C,cpu-list, , ,103, 
+irqtop, ,d,delay, , ,104, 
+irqtop, ,s,sort, , ,105, 
+irqtop, ,S,softirq, , ,106, 
+irqtop, ,h,help, , ,107, 
+irqtop, ,V,version, , ,108, 

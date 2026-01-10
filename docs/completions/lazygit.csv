@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lazygit, , , ,status branch log stash, ,101, 
+lazygit, ,h,help, , ,102,Display help
+lazygit, ,v,version, , ,103,Print version
+lazygit, ,p,path, ,@D,104,Path of git repo
+lazygit, ,c,config, , ,105,Print the default config
+lazygit, , ,print-config-dir, , ,106,Print the config directory
+lazygit, , ,use-config-dir, , ,107,Override default config directory with provided directory
+lazygit, , ,use-config-file, , ,108,Comma separated list to custom config file(s)
+lazygit, ,f,filter, , ,109,Path to filter on in `git log -- <path>`
+lazygit, ,g,git-dir, , ,110,Equivalent of the --git-dir git argument
+lazygit, ,w,work-tree, ,@D,111,Equivalent of the --work-tree git argument
+lazygit, ,d,debug, , ,112,Run in debug mode with logging
+lazygit, ,l,logs, , ,113,"Tail lazygit logs; used with --debug"
+lazygit, , ,profile, , ,114,Start the profiler and serve it on http port 6060

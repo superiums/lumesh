@@ -1,0 +1,47 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grep, , ,help, , ,101,Output a usage message and exit
+grep, ,V,version, , ,102,Output the version number of  grep and exit. SS 'Pattern Syntax'
+grep, ,E,extended-regexp, , ,103,"Interpret  PATTERNS as extended regular expressions (EREs, see below)"
+grep, ,F,fixed-strings, , ,104,"Interpret  PATTERNS as fixed strings, not regular expressions"
+grep, ,G,basic-regexp, , ,105,"Interpret  PATTERNS as basic regular expressions (BREs, see below)"
+grep, ,P,perl-regexp, , ,106,Interpret  PATTERNS as Perl-compatible regular expressions (PCREs)
+grep, ,e,regexp, , ,107,Use  PATTERNS as the patterns
+grep, ,f,file, , ,108,"Obtain patterns from R FILE , one per line"
+grep, ,i,ignore-case, , ,109,"Ignore case distinctions in patterns and input data, so that characters that …"
+grep, , ,no-ignore-case, , ,110,Do not ignore case distinctions in patterns and input data
+grep, ,v,invert-match, , ,111,"Invert the sense of matching, to select non-matching lines"
+grep, ,w,word-regexp, , ,112,Select only those lines containing matches that form whole words
+grep, ,x,line-regexp, , ,113,Select only those matches that exactly match the whole line
+grep, ,c,count, , ,114,"Suppress normal output; instead print a count of matching lines for each inpu…"
+grep, , ,colour, , ,115,"Surround the matched (non-empty) strings, matching lines, context lines, file…"
+grep, ,L,files-without-match, , ,116,"Suppress normal output; instead print the name of each input file from which …"
+grep, ,l,files-with-matches, , ,117,"Suppress normal output; instead print the name of each input file from which …"
+grep, ,m,max-count, , ,118,Stop reading a file after  NUM matching lines
+grep, ,o,only-matching, , ,119,"Print only the matched (non-empty) parts of a matching line, with each such p…"
+grep, ,q,silent, , ,120,"Quiet; do not write anything to standard output"
+grep, ,s,no-messages, , ,121,Suppress error messages about nonexistent or unreadable files
+grep, ,b,byte-offset, , ,122,Print the 0-based byte offset within the input file before each line of output
+grep, ,H,with-filename, , ,123,Print the file name for each match
+grep, ,h,no-filename, , ,124,Suppress the prefixing of file names on output
+grep, , ,label, , ,125,Display input actually coming from standard input as input coming from file R…
+grep, ,n,line-number, , ,126,Prefix each line of output with the 1-based line number within its input file
+grep, ,T,initial-tab, , ,127,"Make sure that the first character of actual line content lies on a tab stop,…"
+grep, ,Z,null, , ,128,Output a zero byte (the ASCII  NUL character) instead of the character that n…
+grep, ,A,after-context, , ,129,Print  NUM lines of trailing context after matching lines
+grep, ,B,before-context, , ,130,Print  NUM lines of leading context before matching lines
+grep, ,C,context, , ,131,Print  NUM lines of output context
+grep, , ,group-separator, , ,132,"When  -A ,  -B , or  -C are in use, print  SEP instead of  -- between groups …"
+grep, , ,no-group-separator, , ,133,"When  -A ,  -B , or  -C are in use, do not print a separator between groups o…"
+grep, ,a,text, , ,134,"Process a binary file as if it were text; this is equivalent to the  --binary…"
+grep, , ,binary-files, , ,135,"If a file's data or metadata indicate that the file contains binary data, ass…"
+grep, ,D,devices, , ,136,"If an input file is a device, FIFO or socket, use  ACTION to process it"
+grep, ,d,directories, , ,137,"If an input file is a directory, use  ACTION to process it"
+grep, , ,exclude, , ,138,Skip any command-line file with a name suffix that matches the pattern R GLOB…
+grep, , ,exclude-from, , ,139,Skip files whose base name matches any of the file-name globs read from  FILE…
+grep, , ,exclude-dir, , ,140,Skip any command-line directory with a name suffix that matches the pattern R…
+grep, , ,include, , ,141,Search only files whose base name matches  GLOB (using wildcard matching as d…
+grep, ,r,recursive, , ,142,"Read all files under each directory, recursively, following symbolic links on…"
+grep, ,R,dereference-recursive, , ,143,"Read all files under each directory, recursively"
+grep, , ,line-buffered, , ,144,Use line buffering on output.  This can cause a performance penalty
+grep, ,U,binary, , ,145,Treat the file(s) as binary
+grep, , ,null-data, , ,146,"Treat input and output data as sequences of lines, each terminated by a zero …"

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+clockdiff, ,T,time-format, , ,101,Print time stamp in output either ISO-8601 format or classical ctime format
+clockdiff, ,h,help, , ,102,Print help and exit
+clockdiff, ,V,version, , ,103,Print version and exit

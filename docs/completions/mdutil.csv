@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mdutil, ,p, , ,@f,101,Publish metadata
+mdutil, ,i, ,on off,@f,102,Turn indexing on or off
+mdutil, ,d, , ,@f,103,Disable Spotlight activity for volume
+mdutil, ,E, , ,@f,104,Erase and rebuild index
+mdutil, ,s, , ,@f,105,Print indexing status
+mdutil, ,t, , ,@f @r,106,Resolve files from file id with an optional volume path or device id
+mdutil, ,a, , ,@f,107,Apply command to all volumes
+mdutil, ,V, , ,@f @r,108,Apply command to all stores on the specified volume
+mdutil, ,v, , ,@f,109,Display verbose information
+mdutil, , , , ,@f @r,110, 

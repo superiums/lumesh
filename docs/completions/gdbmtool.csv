@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdbmtool, ,b,block-size, , ,101,Set block size
+gdbmtool, ,c,cache-size, , ,102,Set cache size
+gdbmtool, ,f,file, , ,103,"Read commands from FILE, instead of from the standard input"
+gdbmtool, ,l,no-lock, , ,104,Disable file locking
+gdbmtool, ,m,no-mmap, , ,105,Do not use  mmap (2)
+gdbmtool, ,n,newdb, , ,106,"Create the database, truncating it if it already exists"
+gdbmtool, ,q,quiet, , ,107,Don't print initial banner
+gdbmtool, ,r,read-only, , ,108,Open database in read-only mode
+gdbmtool, ,s,synchronize, , ,109,Synchronize to disk after each write
+gdbmtool, ,h,help, , ,110,Print a short usage summary
+gdbmtool, , ,usage, , ,111,Print a list of available options
+gdbmtool, ,V,version, , ,112,Print program version SHELL COMMANDS

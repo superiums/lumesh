@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgmerge, ,D,directory, , ,101,add DIRECTORY to list for input files search
+msgmerge, ,C,compendium, , ,102,"additional library of message translations, may be specified more than once "
+msgmerge, ,U,update, , ,103,"update def. po, do nothing if def. po already up to date "
+msgmerge, ,o,output-file, , ,104,write output to specified file 
+msgmerge, , ,backup, , ,105,make a backup of def. po
+msgmerge, , ,suffix, , ,106,override the usual backup suffix 
+msgmerge, ,m,multi-domain, , ,107,apply ref. pot to each of the domains in def. po
+msgmerge, , ,for-msgfmt, , ,108,"produce output for 'msgfmt', not for a translator"
+msgmerge, ,N,no-fuzzy-matching, , ,109,do not use fuzzy matching
+msgmerge, , ,previous, , ,110,keep previous msgids of translated messages . SS 'Input file syntax:'
+msgmerge, ,P,properties-input, , ,111,input files are in Java . properties syntax
+msgmerge, , ,stringtable-input, , ,112,input files are in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msgmerge, , ,lang, , ,113,set 'Language' field in the header entry
+msgmerge, , ,color, , ,114,use colors and other text attributes always
+msgmerge, , ,style, , ,115,specify CSS style rule file for --color
+msgmerge, ,e,no-escape, , ,116,do not use C escapes in output (default)
+msgmerge, ,E,escape, , ,117,"use C escapes in output, no extended chars"
+msgmerge, , ,force-po, , ,118,write PO file even if empty
+msgmerge, ,i,indent, , ,119,indented output style
+msgmerge, , ,no-location, , ,120,suppress '#: filename:line' lines
+msgmerge, ,n,add-location, , ,121,preserve '#: filename:line' lines (default)
+msgmerge, , ,strict, , ,122,strict Uniforum output style
+msgmerge, ,p,properties-output, , ,123,write out a Java . properties file
+msgmerge, , ,stringtable-output, , ,124,write out a NeXTstep/GNUstep . strings file
+msgmerge, ,w,width, , ,125,set output page width
+msgmerge, , ,no-wrap, , ,126,"do not break long message lines, longer than the output page width, into seve…"
+msgmerge, ,s,sort-output, , ,127,generate sorted output (deprecated)
+msgmerge, ,F,sort-by-file, , ,128,sort output by file location . SS 'Informative output:'
+msgmerge, ,h,help, , ,129,display this help and exit
+msgmerge, ,V,version, , ,130,output version information and exit
+msgmerge, ,v,verbose, , ,131,increase verbosity level
+msgmerge, ,q,silent, , ,132,suppress progress indicators AUTHOR Written by Peter Miller

@@ -1,0 +1,77 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpg-agent, , ,options, , ,101,Reads configuration from file instead of from the default per-user configurat…
+gpg-agent, , ,homedir, , ,102,Set the name of the home directory to dir
+gpg-agent, , ,batch, , ,103,Don't invoke a pinentry or do any other thing requiring human interaction
+gpg-agent, , ,faked-system-time, , ,104,"This option is only useful for testing; it sets the system time back or forth…"
+gpg-agent, , ,debug-level, , ,105,Select the debug level for investigating problems
+gpg-agent, , ,debug, , ,106,Set debug flags.   All flags are or-ed and flags may be given in C syntax (e
+gpg-agent, , ,debug-all, , ,107,Same as --debug=0xffffffff
+gpg-agent, , ,debug-wait, , ,108,"When running in server mode, wait n seconds before entering the actual proces…"
+gpg-agent, , ,debug-quick-random, , ,109,This option inhibits the use of the very secure random quality level (Libgcry…
+gpg-agent, , ,debug-pinentry, , ,110,This option enables extra debug information pertaining to the Pinentry
+gpg-agent, , ,no-detach, , ,111,Don't detach the process from the console
+gpg-agent, , ,steal-socket, , ,112,"In --daemon mode, gpg-agent detects an already running gpg-agent and does not…"
+gpg-agent, , ,grab, , ,113,TQ   --no-grab Tell the pinentry to grab the keyboard and mouse
+gpg-agent, , ,log-file, , ,114,Append all logging output to file
+gpg-agent, , ,no-allow-mark-trusted, , ,115,"Do not allow clients to mark keys as trusted, i. e"
+gpg-agent, , ,no-user-trustlist, , ,116,Entirely ignore the user trust list and consider only the global trustlist ('…
+gpg-agent, , ,sys-trustlist-name, , ,117,Changes the default name for the global trustlist from 'trustlist
+gpg-agent, , ,allow-preset-passphrase, , ,118,This option allows the use of gpg-preset-passphrase to seed the internal cach…
+gpg-agent, , ,allow-loopback-pinentry, , ,119,"Disallow or allow clients to use the loopback pinentry features; see the opti…"
+gpg-agent, , ,no-allow-external-cache, , ,120,Tell Pinentry not to enable features which use an external cache for passphra…
+gpg-agent, , ,allow-emacs-pinentry, , ,121,Tell Pinentry to allow features to divert the passphrase entry to a running E…
+gpg-agent, , ,ignore-cache-for-signing, , ,122,This option will let gpg-agent bypass the passphrase cache for all signing op…
+gpg-agent, , ,default-cache-ttl, , ,123,Set the time a cache entry is valid to n seconds
+gpg-agent, , ,default-cache-ttl-ssh, , ,124,Set the time a cache entry used for SSH keys is valid to n seconds
+gpg-agent, , ,max-cache-ttl, , ,125,Set the maximum time a cache entry is valid to n seconds
+gpg-agent, , ,max-cache-ttl-ssh, , ,126,Set the maximum time a cache entry used for SSH keys is valid to n seconds
+gpg-agent, , ,enforce-passphrase-constraints, , ,127,Enforce the passphrase constraints by not allowing the user to bypass them us…
+gpg-agent, , ,min-passphrase-len, , ,128,Set the minimal length of a passphrase
+gpg-agent, , ,min-passphrase-nonalpha, , ,129,Set the minimal number of digits or special characters required in a passphra…
+gpg-agent, , ,check-passphrase-pattern, , ,130,TQ   --check-sym-passphrase-pattern file Check the passphrase against the pat…
+gpg-agent, , ,max-passphrase-days, , ,131,Ask the user to change the passphrase if n days have passed since the last ch…
+gpg-agent, , ,enable-passphrase-history, , ,132,This option does nothing yet
+gpg-agent, , ,pinentry-invisible-char, , ,133,This option asks the Pinentry to use char for displaying hidden characters
+gpg-agent, , ,pinentry-timeout, , ,134,This option asks the Pinentry to timeout after n seconds with no user input
+gpg-agent, , ,pinentry-formatted-passphrase, , ,135,This option asks the Pinentry to enable passphrase formatting when asking the…
+gpg-agent, , ,pinentry-program, , ,136,Use program filename as the PIN entry
+gpg-agent, , ,pinentry-touch-file, , ,137,By default the filename of the socket gpg-agent is listening for requests is …
+gpg-agent, , ,scdaemon-program, , ,138,Use program filename as the Smartcard daemon
+gpg-agent, , ,disable-scdaemon, , ,139,Do not make use of the scdaemon tool
+gpg-agent, , ,disable-check-own-socket, , ,140,gpg-agent employs a periodic self-test to detect a stolen socket
+gpg-agent, , ,use-standard-socket, , ,141,TQ   --no-use-standard-socket . TQ   --use-standard-socket-p Since GnuPG 2
+gpg-agent, , ,display, , ,142,TQ   --ttyname string . TQ   --ttytype string . TQ   --lc-ctype string 
+gpg-agent, , ,keep-tty, , ,143,TQ   --keep-display Ignore requests to change the current tty or X window sys…
+gpg-agent, , ,listen-backlog, , ,144,Set the size of the queue for pending connections.   The default is 64
+gpg-agent, , ,extra-socket, , ,145,"The extra socket is created by default, you may use this option to change the…"
+gpg-agent, , ,enable-extended-key-format, , ,146,TQ   --disable-extended-key-format These options are obsolete and have no eff…
+gpg-agent, , ,enable-ssh-support, , ,147,TQ   --enable-win32-openssh-support 
+gpg-agent, , ,ssh-fingerprint-digest, , ,148,Select the digest algorithm used to compute ssh fingerprints that are communi…
+gpg-agent, , ,auto-expand-secmem, , ,149,Allow Libgcrypt to expand its secure memory area as required
+gpg-agent, , ,s2k-calibration, , ,150,Change the default calibration time to milliseconds
+gpg-agent, , ,version, , ,151,Print the program version and licensing information
+gpg-agent, , ,help, , ,152, 
+gpg-agent, , ,dump-options, , ,153,Print a list of all available options and commands
+gpg-agent, , ,server, , ,154,Run in server mode and wait for commands on the stdin
+gpg-agent, , ,daemon, , ,155,"Start the gpg-agent as a daemon; that is, detach it from the console and run …"
+gpg-agent, , ,supervised, , ,156,"Run in the foreground, sending logs by default to stderr, and listening on pr…"
+gpg-agent, , ,verbose, , ,157,Outputs additional information while running
+gpg-agent, , ,quiet, , ,158,Try to be as quiet as possible
+gpg-agent, , ,sh, , ,159, 
+gpg-agent, , ,csh, , ,160,Format the info output in daemon mode for use with the standard Bourne shell …
+gpg-agent, , ,no-grab, , ,161,Tell the pinentry to grab the keyboard and mouse
+gpg-agent, , ,no-allow-loopback-pinentry, , ,162, 
+gpg-agent, , ,check-sym-passphrase-pattern, , ,163,Check the passphrase against the pattern given in file
+gpg-agent, , ,no-use-standard-socket, , ,164, 
+gpg-agent, , ,use-standard-socket-p, , ,165,Since GnuPG 2. 1 the standard socket is always used
+gpg-agent, , ,ttyname, , ,166, 
+gpg-agent, , ,ttytype, , ,167, 
+gpg-agent, , ,lc-ctype, , ,168, 
+gpg-agent, , ,lc-messages, , ,169, 
+gpg-agent, , ,xauthority, , ,170,These options are used with the server mode to pass localization information
+gpg-agent, , ,keep-display, , ,171,Ignore requests to change the current tty or X window system's DISPLAY variab…
+gpg-agent, , ,disable-extended-key-format, , ,172,These options are obsolete and have no effect
+gpg-agent, , ,enable-win32-openssh-support, , ,173, 
+gpg-agent, , ,enable-putty-support, , ,174, 
+gpg-agent, , ,reload, , ,175, 
+gpg-agent, , ,s2k-count, , ,176,Specify the iteration count used to protect the passphrase

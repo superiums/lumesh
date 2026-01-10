@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pdffonts, , ,help, , ,101,are equivalent. ) EXIT CODES The Xpdf tools use the following exit codes:

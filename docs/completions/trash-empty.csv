@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+trash-empty, ,h,help, ,@f,101,show help message
+trash-empty, , ,print-completion,bash zsh tcsh,@f,102,print shell completion script
+trash-empty, , ,version, ,@f,103,show version number
+trash-empty, ,v,verbose, ,@f,104,list files that will be deleted
+trash-empty, , ,trash-dir, ,@F,105,specify trash directory
+trash-empty, , ,all-users, ,@f,106,empty trashcan of all users
+trash-empty, ,i,interactive, ,@f,107,prompt before emptying
+trash-empty, ,f, , ,@f,108,don't ask before emptying
+trash-empty, , ,dry-run, ,@f,109,show which files would have been removed

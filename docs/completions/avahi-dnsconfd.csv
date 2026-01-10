@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avahi-dnsconfd, ,D,daemonize, , ,101,Daemonize after startup and redirect log messages to syslog
+avahi-dnsconfd, ,s,syslog, , ,102,Log to syslog instead of STDERR.  Implied by --daemonize
+avahi-dnsconfd, ,k,kill, , ,103,Kill an already running avahi-dnsconfd.  (equivalent to sending a SIGTERM)
+avahi-dnsconfd, ,r,refresh, , ,104,Tell an already running avahi-dnsconfd to refresh the DNS server data
+avahi-dnsconfd, ,c,check, , ,105,Return 0 as return code when avahi-dnsconfd is already running
+avahi-dnsconfd, ,h,help, , ,106,Show help
+avahi-dnsconfd, ,v,version, , ,107,Show version information  FILES /etc/avahi/avahi-dnsconfd

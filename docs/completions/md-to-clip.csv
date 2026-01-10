@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+md-to-clip, ,h,help, , ,101,Display help
+md-to-clip, ,v,version, , ,102,Display version
+md-to-clip, ,a,author, , ,103,Display author
+md-to-clip, ,e,email, , ,104,Display author email
+md-to-clip, , ,no-file-save, , ,105,Whether to display conversion result in stdout instead of writing it to a file
+md-to-clip, , ,output-directory, , ,106,Directory where conversion result will be written
+md-to-clip, , ,special-placeholder-config, , ,107,Config with special placeholders

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tail, ,c,bytes, , ,101,"output the last NUM bytes; or use -c +NUM to output starting with byte NUM of…"
+tail, ,f,follow, , ,102,"output appended data as the file grows; P an absent option argument means 'de…"
+tail, ,n,lines, , ,103,"output the last NUM lines, instead of the last 10; or use -n +NUM to skip NUM…"
+tail, , ,max-unchanged-stats, , ,104,"with --follow=\\,name\\/, reopen a FILE which has not P changed size after N (d…"
+tail, , ,pid, , ,105,"with -f, terminate after process ID, PID dies; can be repeated to watch multi…"
+tail, ,q,silent, , ,106,never output headers giving file names
+tail, , ,retry, , ,107,keep trying to open a file if it is inaccessible
+tail, ,s,sleep-interval, , ,108,"with -f, sleep for approximately N seconds (default 1"
+tail, ,v,verbose, , ,109,always output headers giving file names
+tail, ,z,zero-terminated, , ,110,"line delimiter is NUL, not newline"
+tail, , ,help, , ,111,display this help and exit
+tail, , ,version, , ,112,output version information and exit

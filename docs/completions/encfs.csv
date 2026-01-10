@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+encfs, ,i,idle, , ,101,Unmount when idle for specified MINUTES
+encfs, ,v,verbose, , ,102,Verbose messages when run foreground
+encfs, ,d,fuse-debug, , ,103,Enables debugging within the FUSE library
+encfs, , ,forcedecode, , ,104,Return data even from corrupted files
+encfs, , ,public, , ,105,Make files public to all other users
+encfs, , ,ondemand, , ,106,Mount the filesystem on-demand
+encfs, , ,reverse, , ,107,Produce encrypted view of plain files
+encfs, , ,standard, , ,108,Use standard options when creating filesystem
+encfs, , ,no-default-flags, , ,109,Don't use the default FUSE flags
+encfs, , ,extpass, , ,110,Get password from an external program
+encfs, ,S,stdinpass, , ,111,Read password from standard input
+encfs, , ,anykey, , ,112,Turn off key validation checking

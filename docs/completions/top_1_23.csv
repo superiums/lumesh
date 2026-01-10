@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+top, ,b,batch, , ,101,"Starts topfrom topIn this mode, toplimit you've set with the [oq]-n[cq]  or u…"
+top, ,c,cmdline-toggle, , ,102,"Starts topThus, if topnames, and vice versa"
+top, ,d,delay, , ,103,"Specifies the delay between screen updates, and overrides the corresponding v…"
+top, ,E,scale-summary-mem, , ,104,Instructs top    k - kibibytes    m - mebibytes    g - gibibytes    t - tebib…
+top, ,e,scale-task-mem, , ,105,Instructs top    k - kibibytes    m - mebibytes    g - gibibytes    t - tebib…
+top, ,H,threads-show, , ,106,Instructs topWithout this  a summation of all threads in each process is shown
+top, ,h,help, , ,107,"Display usage help text, then quit"
+top, ,i,idle-toggle, , ,108,Starts topWhen this toggle is Offlast update will not be displayed
+top, ,n,iterations, , ,109,"Specifies the maximum number of iterations, or frames, topproduce before endi…"
+top, ,O,list-fields, , ,110,This option acts as a form of help for the -o option shown below
+top, ,o,sort-override, , ,111,"Specifies the name of the field on which tasks will be sorted, independent of…"
+top, ,p,pid, , ,112,"(as: 1,2,3, .  or"
+top, ,S,accum-time-toggle, , ,113,Starts topWhen Cumulative time mode is Ontime that it and its dead children h…
+top, ,s,secure-mode, , ,114,Starts topThis mode is far better controlled through a system  ( 6.  FILES)
+top, ,U,filter-any-user, , ,115,Display only processes with a user id or user name matching that given
+top, ,u,filter-only-euser, , ,116,Display only processes with a user id or user name matching that given
+top, ,V,version, , ,117,"Display version information, then quit"
+top, ,w,width, , ,118,"In Batch mode, when used without an argument topoutput using the COLUMNS= and…"
+top, ,1,single-cpu-toggle, , ,119,Starts topEither all cpueach cpu ([oq]2[cq])

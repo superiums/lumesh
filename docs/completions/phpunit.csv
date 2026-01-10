@@ -1,0 +1,77 @@
+cmd,conds,short,long,params,dirs,pri,desc
+phpunit, , ,coverage-clover, ,@f @r,101,Generate code coverage report in Clover XML format
+phpunit, , ,coverage-crap4j, ,@f @r,102,Generate code coverage report in Crap4J XML format
+phpunit, , ,coverage-html, ,@f @r,103,Generate code coverage report in HTML format
+phpunit, , ,coverage-php, ,@f @r,104,Export PHP_CodeCoverage object to file
+phpunit, , ,coverage-text, ,@f @r,105,Generate code coverage report in text format
+phpunit, , ,coverage-xml, ,@f @r,106,Generate code coverage report in PHPUnit XML format
+phpunit, , ,whitelist, ,@f @r,107,Whitelist <dir> for code coverage analysis
+phpunit, , ,disable-coverage-ignore, ,@f,108,Disable annotations for ignoring code coverage
+phpunit, , ,no-coverage, ,@f,109,Ignore code coverage configuration
+phpunit, , ,dump-xdebug-filter, ,@f @r,110,Generate script to set Xdebug code coverage filter
+phpunit, , ,log-junit, ,@f @r,111,Log test execution in JUnit XML format to file
+phpunit, , ,log-teamcity, ,@f @r,112,Log test execution in TeamCity format to file
+phpunit, , ,testdox-html, ,@f @r,113,Write agile documentation in HTML format to file
+phpunit, , ,testdox-text, ,@f @r,114,Write agile documentation in Text format to file
+phpunit, , ,testdox-xml, ,@f @r,115,Write agile documentation in XML format to file
+phpunit, , ,reverse-list, ,@f,116,Print defects in reverse order
+phpunit, , ,filter, ,@f @r,117,Filter which tests to run
+phpunit, , ,testsuite, ,@f @r,118,Filter which testsuite to run
+phpunit, , ,group, ,@f @r,119,Only runs tests from the specified group(s)
+phpunit, , ,exclude-group, ,@f,120,Exclude tests from the specified group(s)
+phpunit, , ,list-groups, ,@f,121,List available test groups
+phpunit, , ,list-suites, ,@f,122,List available test suites
+phpunit, , ,list-tests, ,@f,123,List available tests
+phpunit, , ,list-tests-xml, ,@f @r,124,List available tests in XML format
+phpunit, , ,test-suffix, ,@f @r,125,"Only search for test in files with specified suffix(es). Default: Test.php,.phpt"
+phpunit, , ,dont-report-useless-tests, ,@f,126,Do not report tests that do not test anything
+phpunit, , ,strict-coverage, ,@f,127,Be strict about @covers annotation usage
+phpunit, , ,strict-global-state, ,@f,128,Be strict about changes to global state
+phpunit, , ,disallow-test-output, ,@f,129,Be strict about output during tests
+phpunit, , ,disallow-resource-usage, ,@f,130,Be strict about resource usage during small tests
+phpunit, , ,enforce-time-limit, ,@f,131,Enforce time limit based on test size
+phpunit, , ,default-time-limit, ,@f,132,"Timeout in seconds for tests without @small, @medium or @large"
+phpunit, , ,disallow-todo-tests, ,@f,133,Disallow @todo-annotated tests
+phpunit, , ,process-isolation, ,@f,134,Run each test in a separate PHP process
+phpunit, , ,globals-backup, ,@f,135,Backup and restore $GLOBALS for each test
+phpunit, , ,static-backup, ,@f,136,Backup and restore static attributes for each test
+phpunit, , ,colors,never auto always,@f,137,Use colors in output
+phpunit, , ,columns,max,@f @r,138,Number of columns to use for progress output
+phpunit, , ,stderr, ,@f,139,Write to STDERR instead of STDOUT
+phpunit, , ,stop-on-defect, ,@f,140,Stop execution upon first not-passed test
+phpunit, , ,stop-on-error, ,@f,141,Stop execution upon first error
+phpunit, , ,stop-on-failure, ,@f,142,Stop execution upon first error or failure
+phpunit, , ,stop-on-warning, ,@f,143,Stop execution upon first warning
+phpunit, , ,stop-on-risky, ,@f,144,Stop execution upon first risky test
+phpunit, , ,stop-on-skipped, ,@f,145,Stop execution upon first skipped test
+phpunit, , ,stop-on-incomplete, ,@f,146,Stop execution upon first incomplete test
+phpunit, , ,fail-on-warning, ,@f,147,Treat tests with warnings as failures
+phpunit, , ,fail-on-risky, ,@f,148,Treat risky tests as failures
+phpunit, ,v,verbose, ,@f,149,Output more verbose information
+phpunit, , ,debug, ,@f,150,Display debugging information
+phpunit, , ,loader, ,@f @r,151,TestSuiteLoader implementation to use
+phpunit, , ,repeat, ,@f @r,152,Runs the test(s) repeatedly
+phpunit, , ,teamcity, ,@f,153,Report test execution progress in TeamCity format
+phpunit, , ,testdox, ,@f,154,Report test execution progress in TestDox format
+phpunit, , ,testdox-group, ,@f,155,Only include tests from the specified group(s)
+phpunit, , ,testdox-exclude-group, ,@f,156,Exclude tests from the specified group(s)
+phpunit, , ,no-interaction, ,@f @r,157,Disable TestDox progress animation
+phpunit, , ,printer, ,@f @r,158,TestListener implementation to use
+phpunit, , ,order-by,default defects duration no-depends random reverse size,@f @r,159,Run tests in order
+phpunit, , ,random-order-seed, ,@f @r,160,Use a specific random seed for random order
+phpunit, , ,cache-result, ,@f,161,Write test results to cache file
+phpunit, , ,do-not-cache-result, ,@f,162,Do not write test results to cache file
+phpunit, , ,prepend, ,@f @r,163,A PHP script that is included as early as possible
+phpunit, , ,bootstrap, ,@f @r,164,A PHP script that is included before the tests run
+phpunit, ,c,configuration, ,@f @k @r,165,Read configuration from XML file
+phpunit, , ,no-configuration, ,@f,166,Ignore default configuration file (phpunit.xml)
+phpunit, , ,no-logging, ,@f,167,Ignore logging configuration
+phpunit, , ,no-extensions, ,@f,168,Do not load PHPUnit extensions
+phpunit, , ,include-path, ,@f,169,Prepend PHP's include_path with given path(s)
+phpunit, ,d, , ,@f @r,170,Sets a php.ini value in the format key[=value]
+phpunit, , ,generate-configuration, ,@f,171,Generate configuration file with suggested settings
+phpunit, , ,cache-result-file, ,@f @r,172,Specify result cache path and filename
+phpunit, ,h,help, ,@f,173,Prints usage information
+phpunit, , ,version, ,@f,174,Prints the version and exits
+phpunit, , ,atleast-version, ,@f @r,175,Checks that version is greater than min and exits
+phpunit, , ,check-version, ,@f,176,Check whether PHPUnit is the latest version

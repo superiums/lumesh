@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+atool, , , , ,@r,101,Manage file archives of various types
+atool, ,l,list, , ,102,list files in archive (als)
+atool, ,x,extract, , ,103,extract files from archive (aunpack)
+atool, ,X,extract-to, ,@r,104,extract archive to specified directory
+atool, ,a,add, , ,105,create archive (apack)
+atool, ,c,cat, , ,106,extract file to standard out (acat)
+atool, ,d,diff, , ,107,generate a diff between two archives (adiff)
+atool, ,r,repack, , ,108,repack archives to a different format (arepack)
+atool, , ,help, , ,109,display this help and exit
+atool, , ,version, , ,110,output version information and exit
+atool, ,e,each, , ,111,execute command above for each file specified
+atool, ,F,format, , ,112,override archive format (see below)
+atool, ,O,format-option, ,@f @r,113,give specific options to the archiver
+atool, ,D,subdir, , ,114,always create subdirectory when extracting
+atool, ,f,force, , ,115,allow overwriting of local files
+atool, ,q,quiet, , ,116,decrease verbosity level by one
+atool, ,v,verbose, , ,117,increase verbosity level by one
+atool, ,V,verbosity, , ,118,"specify verbosity (0, 1 or 2)"
+atool, ,p,page, , ,119,send output through pager
+atool, ,0,null, , ,120,filenames from standard in are null-byte separated
+atool, ,E,explain, , ,121,explain what is being done by atool
+atool, ,S,simulate, , ,122,simulation mode - no filesystem changes are made
+atool, ,o,option, ,@f @r,123,override a configuration option (KEY=VALUE)
+atool, , ,config, ,@r,124,load configuration defaults from file

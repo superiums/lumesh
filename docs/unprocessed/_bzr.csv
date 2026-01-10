@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bzr, __fish_use_subcommand, , ,help,@f,101,Show help
+bzr, __fish_use_subcommand, , ,init,@f,108,Makes this directory a versioned branch
+bzr, __fish_use_subcommand, , ,branch,@f,112,Make a copy of another branch
+bzr, __fish_use_subcommand, , ,add,@f,120,Make files or directories versioned
+bzr, __fish_use_subcommand, , ,ignore,@f,122,Ignore a file or pattern
+bzr, __fish_use_subcommand, , ,mv,@f,124,Move or rename a versioned file
+bzr, __fish_use_subcommand, , ,status,@f,127,Summarize changes in working copy
+bzr, __fish_use_subcommand, , ,diff,@f,133,Show detailed diffs
+bzr, __fish_use_subcommand, , ,merge,@f,134,Pull in changes from another branch
+bzr, __fish_use_subcommand, , ,commit,@f,146,Save some or all changes
+bzr, __fish_use_subcommand, , ,send,@f,158,Send changes via email
+bzr, __fish_use_subcommand, , ,log,@f,166,Show history of changes
+bzr, __fish_use_subcommand, , ,check,@f,167,Validate storage
+bzr, $cmds, ,usage, ,@f,171,Show usage message and options
+bzr, $cmds,h,help, ,@f,172,Show help message
+bzr, $cmds,q,quiet, ,@f,173,Only displays errors and warnings
+bzr, $cmds,v,verbose, ,@f,174,Display more information

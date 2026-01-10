@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ps, , ,deselect, , ,101,Select all processes except those that fulfill the specified conditions (nega…
+ps, , ,pid, , ,102, 
+ps, , ,sid, , ,103, 
+ps, , ,group, , ,104,options
+ps, , ,Group, , ,105,Select by real group ID (RGID) or name.   Identical to
+ps, , ,ppid, , ,106,Select by parent process ID
+ps, , ,quick-pid, , ,107, 
+ps, , ,tty, , ,108,but can also be used with an empty ttylist to indicate the terminal associate…
+ps, , ,user, , ,109, 
+ps, , ,User, , ,110,Select by real user ID (RUID) or name.   Identical to
+ps, , ,context, , ,111,Display security context format (for SELinux)
+ps, , ,format, , ,112,user-defined format.   Identical to
+ps, , ,sort, , ,113,"When used as a formatting option, it is identical to"
+ps, , ,cols, , ,114,Set screen width
+ps, , ,columns, , ,115,Set screen width
+ps, , ,cumulative, , ,116,Include some dead child process data (as a sum with the parent)
+ps, , ,date-format, , ,117,Identical to -D
+ps, , ,forest, , ,118,ASCII art process tree
+ps, , ,headers, , ,119,and
+ps, , ,no-headers, , ,120,"to enable printing headers each page or disable headers entirely, respectively"
+ps, , ,lines, , ,121,Set screen height
+ps, , ,no-heading, , ,122,is an alias for this option
+ps, , ,rows, , ,123,Set screen height
+ps, , ,signames, , ,124,Show signal masks using abbreviated signal names and expands the collumn
+ps, , ,width, , ,125,Set screen width.  THREAD DISPLAY
+ps, , ,help, , ,126,Print a help message
+ps, , ,info, , ,127,Print debugging info
+ps, , ,version, , ,128,Print the procps-ng version

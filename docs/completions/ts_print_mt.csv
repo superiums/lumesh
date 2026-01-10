@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ts_print_mt, ,i,idev, , ,101,Explicitly choose the original input event device for tslib to use
+ts_print_mt, ,r,raw, , ,102,Don't use the filters.  This uses ts_read_raw_mt() instead of ts_read_mt()
+ts_print_mt, ,n,non-blocking, , ,103,Opens the input device in non-blocking mode and indefinitely prints the error…
+ts_print_mt, ,s,samples, , ,104,Number of samples tslib should read before returning
+ts_print_mt, ,j,slots, , ,105,Override the number of concurrent touch contacts to allocate
+ts_print_mt, ,h,help, , ,106, 

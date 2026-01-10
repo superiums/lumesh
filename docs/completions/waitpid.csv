@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+waitpid, ,v,verbose, , ,101, 
+waitpid, ,t,timeout, , ,102, 
+waitpid, ,e,exited, , ,103, 
+waitpid, ,c,count, , ,104, 
+waitpid, ,h,help, , ,105, 
+waitpid, ,V,version, , ,106, 

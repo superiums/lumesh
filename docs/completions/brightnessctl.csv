@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ , , , , ,@f,101, 
+brightnessctl, ,h,help, , ,106,Print help and exit
+brightnessctl, ,l,list, , ,107,List devices with available brightness controls
+brightnessctl, ,q,quiet, , ,108,Suppress output
+brightnessctl, ,p,pretend, , ,109,Do not perform write operations
+brightnessctl, ,m,machine-readable, , ,110,Produce machine-readable output
+brightnessctl, ,n,min-value, ,@f @r,111,Set minimum brightness when using delta values
+brightnessctl, ,e,exponent, ,@f @r,112,Set exponent for exponential scaling curve
+brightnessctl, ,s,save, , ,113,Save state in a temporary file
+brightnessctl, ,r,restore, , ,114,Restore previously-saved state
+brightnessctl, ,d,device, , ,115,Device Name
+brightnessctl, ,c,class,backlight leds, ,116,Specify device class
+brightnessctl, ,v,version, ,@f @r,117,Print version and exit

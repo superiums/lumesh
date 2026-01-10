@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ionice, ,c,class, , ,101, 
+ionice, ,n,classdata, , ,102, 
+ionice, ,p,pid, , ,103, 
+ionice, ,P,pgid, , ,104, 
+ionice, ,t,ignore, , ,105, 
+ionice, ,u,uid, , ,106, 
+ionice, ,h,help, , ,107, 
+ionice, ,V,version, , ,108, 

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicebackup2, ,u,udid, , ,101,target specific device by UDID
+idevicebackup2, ,s,source, , ,102,use backup data from device specified by UDID
+idevicebackup2, ,i,interactive, , ,103,request passwords interactively on the command line
+idevicebackup2, ,n,network, , ,104,connect to network device
+idevicebackup2, ,d,debug, , ,105,enable communication debugging
+idevicebackup2, ,h,help, , ,106,prints usage information
+idevicebackup2, ,v,version, , ,107,prints version information

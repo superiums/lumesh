@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bison, ,b,file-prefix, , ,101,Specify a prefix to use for all output file names
+bison, ,d,defines, , ,102,Generate file with macro definitions for token type names
+bison, ,g,graph, , ,103,Output a VCG definition of the LALR(1) grammar automaton
+bison, ,k,token-table, , ,104,This switch causes the name
+bison, ,l,no-lines, , ,105,Dont put any #line preprocessor commands in the parser file
+bison, ,n,no-parser, , ,106,"Generate only declarations, not parser code"
+bison, ,o,output, , ,107,Specify the name outfile for the parser file
+bison, ,p,name-prefix, , ,108,External symbols start with prefix instead of yy
+bison, ,t,debug, , ,109,Enable debugging facilities on compilation
+bison, ,v,verbose, , ,110,Generate file with descriptions of the parser states
+bison, ,V,version, , ,111,Print version number
+bison, ,h,help, , ,112,Print summary of the options
+bison, ,y,fixed-output-files, , ,113,Equivalent to -o y.tab.c

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ollama, __fish_use_subcommand, , ,serve, ,102,Start ollama
+ollama, __fish_use_subcommand, , ,create, ,103,Create a model from a Modelfile
+ollama, __fish_use_subcommand, , ,show, ,104,Show information for a model
+ollama, __fish_use_subcommand, , ,run, ,105,Run a model
+ollama, __fish_use_subcommand, , ,stop, ,106,Stop a running model.
+ollama, __fish_use_subcommand, , ,pull, ,107,Pull a model from a registry
+ollama, __fish_use_subcommand, , ,push, ,108,Push a model to a registry
+ollama, __fish_use_subcommand, , ,list, ,109,List models
+ollama, __fish_use_subcommand, , ,cp, ,110,Copy a model
+ollama, __fish_use_subcommand, , ,rm, ,111,Remove a model
+ollama, __fish_use_subcommand, , ,help, ,112,Help about any command

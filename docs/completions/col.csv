@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+col, ,b,no-backspaces, , ,101, 
+col, ,f,fine, , ,102, 
+col, ,h,tabs, , ,103, 
+col, ,l,lines, , ,104, 
+col, ,p,pass, , ,105, 
+col, ,x,spaces, , ,106, 
+col, ,H,help, , ,107, 
+col, ,V,version, , ,108, 

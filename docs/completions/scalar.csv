@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scalar, , ,full-clone, , ,101,"git sparse-checkout set to expand the set of directories you want to see, or …"
+scalar, ,b,branch, , ,102, 
+scalar, , ,single-branch, , ,103, 
+scalar, , ,src, , ,104, 
+scalar, , ,no-src, , ,105,to place the cloned repository directly in the <enlistment> directory
+scalar, , ,tags, , ,106, 
+scalar, , ,no-tags, , ,107,to avoid fetching tags in scalar clone and to configure the repository to avo…

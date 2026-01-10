@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+repo-add, ,q,quiet, , ,101, 
+repo-add, ,s,sign, , ,102, 
+repo-add, ,k,key, , ,103, 
+repo-add, ,v,verify, , ,104, 
+repo-add, , ,nocolor, , ,105, 
+repo-add, ,n,new, , ,106, 
+repo-add, ,R,remove, , ,107, 
+repo-add, , ,include-sigs, , ,108, 

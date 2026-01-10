@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-test-suite, , ,filter-test, , ,101,A glob limiting the tests to run
+libinput-test-suite, , ,filter-device, , ,102,A glob limiting the devices to run tests for
+libinput-test-suite, , ,filter-group, , ,103,A glob limiting the tests to (arbitrarily named) groups
+libinput-test-suite, , ,filter-deviceless, , ,104,FOR INTERNAL USE ONLY
+libinput-test-suite, ,h,help, , ,105,Print help
+libinput-test-suite, ,j,jobs, , ,106,Number of parallel processes to run.  Default: 8
+libinput-test-suite, , ,list, , ,107,List all test cases and the devices they are run for
+libinput-test-suite, , ,verbose, , ,108,"Enable verbose output, including libinput debug messages"

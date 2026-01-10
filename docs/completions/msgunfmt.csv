@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgunfmt, ,j,java, , ,101,Java mode: input is a Java ResourceBundle class
+msgunfmt, , ,csharp, , ,102,C# mode: input is a . NET . dll file
+msgunfmt, , ,csharp-resources, , ,103,C# resources mode: input is a . NET . resources file
+msgunfmt, , ,tcl, , ,104,Tcl mode: input is a tcl/msgcat . msg file . SS 'Input file location:'
+msgunfmt, ,r,resource, , ,105,resource name
+msgunfmt, ,l,locale, , ,106,"locale name, either language or language_COUNTRY "
+msgunfmt, ,o,output-file, , ,107,write output to specified file 
+msgunfmt, , ,color, , ,108,use colors and other text attributes always
+msgunfmt, , ,style, , ,109,specify CSS style rule file for --color
+msgunfmt, ,e,no-escape, , ,110,do not use C escapes in output (default)
+msgunfmt, ,E,escape, , ,111,"use C escapes in output, no extended chars"
+msgunfmt, , ,force-po, , ,112,write PO file even if empty
+msgunfmt, ,i,indent, , ,113,write indented output style
+msgunfmt, , ,strict, , ,114,write strict uniforum style
+msgunfmt, ,p,properties-output, , ,115,write out a Java . properties file
+msgunfmt, , ,stringtable-output, , ,116,write out a NeXTstep/GNUstep . strings file
+msgunfmt, ,w,width, , ,117,set output page width
+msgunfmt, , ,no-wrap, , ,118,"do not break long message lines, longer than the output page width, into seve…"
+msgunfmt, ,s,sort-output, , ,119,generate sorted output . SS 'Informative output:'
+msgunfmt, ,h,help, , ,120,display this help and exit
+msgunfmt, ,V,version, , ,121,output version information and exit
+msgunfmt, ,v,verbose, , ,122,increase verbosity level AUTHOR Written by Ulrich Drepper

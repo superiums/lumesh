@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+emaint, __fish_use_subcommand, , ,all, ,106,Perform all supported commands
+emaint, __fish_use_subcommand, , ,binhost, ,107,Scan and generate metadata indexes for binary pkgs
+emaint, __fish_use_subcommand, , ,cleanconfmem, ,108,Check and clean the config tracker list for uninstalled pkgs
+emaint, __fish_use_subcommand, , ,cleanresume, ,109,Discard emerge --resume merge lists
+emaint, __fish_use_subcommand, , ,logs, ,110,Check and clean old logs in the PORT_LOGDIR
+emaint, __fish_use_subcommand, , ,merges, ,111,Scan for failed merges and fix them
+emaint, __fish_use_subcommand, , ,movebin, ,112,Perform pkg move updates for binary pkgs
+emaint, __fish_use_subcommand, , ,moveinst, ,113,Perform pkg move updates for installed and binary pkgs
+emaint, __fish_use_subcommand, , ,sync, ,114,Check repos.conf settings and sync repositories
+emaint, __fish_use_subcommand, , ,world, ,115,Check and fix problems in the world file

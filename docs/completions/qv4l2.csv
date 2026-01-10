@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+qv4l2, ,d,device, , ,101,Use device <dev> as the video device
+qv4l2, ,V,vbi-device, , ,102,Use device <dev> as the vbi device
+qv4l2, ,r,radio-device, , ,103,Use device <dev> as the radio device
+qv4l2, ,S,sdr-device, , ,104,Use device <dev> as the SDR device
+qv4l2, ,R,raw, , ,105,"Open device in raw mode, i. e.  without using the libv4l2 wrapper functions"
+qv4l2, ,h,help, , ,106,Prints the help message.  HOTKEYS Main Window

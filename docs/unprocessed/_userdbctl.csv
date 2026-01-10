@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+userdbctl, $commands, , ,user, ,100,Inspect user
+userdbctl, $commands, , ,group, ,100,Inspect group
+userdbctl, $commands, , ,users-in-group, ,100,Show users that are members of specified group(s)
+userdbctl, $commands, , ,groups-of-user, ,100,Show groups the specified user(s) is a member of
+userdbctl, $commands, , ,services, ,100,Show enabled database services

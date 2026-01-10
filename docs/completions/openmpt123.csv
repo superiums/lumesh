@@ -1,0 +1,53 @@
+cmd,conds,short,long,params,dirs,pri,desc
+openmpt123, ,h,help, , ,101,Show help
+openmpt123, , ,help-keyboard, , ,102,Show keyboard hotkeys in ui mode
+openmpt123, ,q,quiet, , ,103,Suppress non-error screen output
+openmpt123, ,v,verbose, , ,104,Show more screen output
+openmpt123, , ,version, , ,105,Show version information and exit
+openmpt123, , ,short-version, , ,106,Show version number and nothing else
+openmpt123, , ,long-version, , ,107,Show long version information and exit
+openmpt123, , ,credits, , ,108,Show elaborate contributors list
+openmpt123, , ,license, , ,109,Show license
+openmpt123, , ,probe, , ,110,Probe each file whether it is a supported file format
+openmpt123, , ,info, , ,111,Display information about each file
+openmpt123, , ,ui, , ,112,Interactively play each file
+openmpt123, , ,batch, , ,113,Play each file
+openmpt123, , ,render, , ,114,Render each file to individual PCM data files
+openmpt123, , ,banner, , ,115,"openmpt123 banner style [0=hide,1=show,2=verbose] [default: 1]"
+openmpt123, , ,assume-terminal, , ,116,"Skip checking whether stdin/stderr are a terminal, and always allow UI [defau…"
+openmpt123, , ,terminal-width, , ,117,Assume terminal is n characters wide [default: 72]
+openmpt123, , ,terminal-height, , ,118,Assume terminal is n characters high [default: 23]
+openmpt123, , ,progress, , ,119,Show playback progress [default: 1]
+openmpt123, , ,meters, , ,120,Show peak meters [default: 1]
+openmpt123, , ,channel-meters, , ,121,Show channel peak meters (EXPERIMENTAL) [default: 0]
+openmpt123, , ,pattern, , ,122,Show pattern (EXPERIMENTAL) [default: 0]
+openmpt123, , ,details, , ,123,Show song details [default: 1]
+openmpt123, , ,message, , ,124,Show song message [default: 0]
+openmpt123, , ,update, , ,125,Set output update interval to n ms [default: -1]
+openmpt123, , ,samplerate, , ,126,Set samplerate to n Hz [default: 48000]
+openmpt123, , ,channels, , ,127,"use n [1,2,4] output channels [default: 2]"
+openmpt123, , ,float, , ,128,Output 32bit floating point instead of 16bit integer [default: 1]
+openmpt123, , ,gain, , ,129,Set output gain to n dB [default: 0]
+openmpt123, , ,stereo, , ,130,Set stereo separation to n % [default: 100]
+openmpt123, , ,filter, , ,131,"Set interpolation filter taps to n [1,2,4,8] [default: 8]"
+openmpt123, , ,ramping, , ,132,Set volume ramping strength n [0. 5] [default: -1]
+openmpt123, , ,tempo, , ,133,Set tempo factor f [default: 1]
+openmpt123, , ,pitch, , ,134,Set pitch factor f [default: 1]
+openmpt123, , ,dither, , ,135,"Dither type to use (if applicable for selected output format): [0=off,1=auto,…"
+openmpt123, , ,playlist, , ,136,Load playlist from file
+openmpt123, , ,randomize, , ,137,Randomize playlist [default: 0]
+openmpt123, , ,shuffle, , ,138,Shuffle through playlist [default: 0]
+openmpt123, , ,restart, , ,139,Restart playlist when finished [default: 0]
+openmpt123, , ,subsong, , ,140,Select subsong n (-1 means play all subsongs consecutively) [default: -1]
+openmpt123, , ,repeat, , ,141,Repeat song n times (-1 means forever) [default: 0]
+openmpt123, , ,seek, , ,142,Seek to n seconds on start [default: 0]
+openmpt123, , ,end-time, , ,143,Play until position is n seconds (0 means until the end) [default: 0]
+openmpt123, , ,ctl, , ,144,Set libopenmpt ctl c to value v
+openmpt123, , ,driver, , ,145,"Set output driver [default: default],"
+openmpt123, , ,device, , ,146,"Set output device [default: default], use --device help to show available dev…"
+openmpt123, , ,buffer, , ,147,Set output buffer size to n ms [default: -1]
+openmpt123, , ,period, , ,148,Set output period size to n ms [default: -1]
+openmpt123, , ,stdout, , ,149,Write raw audio data to stdout [default: 0]
+openmpt123, , ,output-type, , ,150,Use output format t when writing to a individual PCM files (only applies to -…
+openmpt123, ,o,output, , ,151,Write PCM output to file f instead of streaming to audio device (only applies…
+openmpt123, , ,force, , ,152,Force overwriting of output file [default: 0]

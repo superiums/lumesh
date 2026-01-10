@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dbus-run-session, , ,config-file, , ,101,"Pass --config-file=FILENAME to the bus daemon, instead of passing it the --se…"
+dbus-run-session, , ,dbus-daemon, , ,102,"Run BINARY as dbus-daemon(1), instead of searching the PATH in the usual way …"
+dbus-run-session, , ,help, , ,103,Print usage information and exit
+dbus-run-session, , ,version, , ,104,Print the version of dbus-run-session and exit
+dbus-run-session, , ,session, , ,105,argument.  See dbus-daemon(1)

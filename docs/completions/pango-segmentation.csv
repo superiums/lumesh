@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pango-segmentation, ,h,help, , ,101,Show help options
+pango-segmentation, , ,version, , ,102,Print the command's version and exit.  APPLICATION OPTIONS
+pango-segmentation, , ,text, , ,103,Text to display (instead of FILE)
+pango-segmentation, , ,kind, , ,104,The boundary to show

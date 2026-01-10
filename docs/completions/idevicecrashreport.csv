@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicecrashreport, ,u,udid, , ,101,target specific device by UDID
+idevicecrashreport, ,n,network, , ,102,connect to network device
+idevicecrashreport, ,e,extract, , ,103,extract raw crash report into separate '. crash' files
+idevicecrashreport, ,k,keep, , ,104,copy but do not remove crash reports from device
+idevicecrashreport, ,d,debug, , ,105,enable communication debugging
+idevicecrashreport, ,f,filter, , ,106,filter crash reports by NAME (case sensitive)
+idevicecrashreport, ,h,help, , ,107,prints usage information
+idevicecrashreport, ,v,version, , ,108,prints version information

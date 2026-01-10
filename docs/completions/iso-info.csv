@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iso-info, ,d,debug, , ,101,Set debugging to LEVEL
+iso-info, ,i,input, , ,102,Filename to read ISO-9960 image from
+iso-info, ,l,iso9660, , ,103,output similar to 'ls -lR' for an ISO 9660 fs
+iso-info, ,U,udf, , ,104,output similar to 'ls -lR' for a UDF fs
+iso-info, , ,no-header, , ,105,Don't display header and copyright (for regression
+iso-info, , ,no-joliet, , ,106,Don't use Joliet-extension information
+iso-info, , ,no-rock-ridge, , ,107,Don't use Rock-Ridge-extension information
+iso-info, , ,no-xa, , ,108,Don't use XA-extension information
+iso-info, ,r,show-rock-ridge, , ,109,A maximum of UINT files will be considered.  Use 0 for all files
+iso-info, ,q,quiet, , ,110,Don't produce warning output
+iso-info, ,V,version, , ,111,display version and copyright information and exit . SS 'Help options:'
+iso-info, ,?,help, , ,112,Show this help message
+iso-info, , ,usage, , ,113,Display brief usage message AUTHOR Rocky Bernstein <rocky@gnu

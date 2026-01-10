@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pydf, , , , ,@r,101,Report colourised filesystem disk space usage
+pydf, , ,help, , ,102,show this help message
+pydf, ,v,version, , ,103,show version
+pydf, ,a,all, , ,104,include filesystems having 0 blocks
+pydf, ,h,human-readable, , ,105,"print sizes in human readable format (e.g., 1K 234M 2G)"
+pydf, ,H,si, , ,106,"likewise, but use powers of 1000 not 1024"
+pydf, ,b,block-size, ,@f @r,107,use BLOCKSIZE-byte blocks
+pydf, ,l,local, , ,108,limit listing to local filesystems
+pydf, ,k,kilobytes, , ,109,like --block-size=1024
+pydf, ,m,megabytes, , ,110,like --block-size=1048576
+pydf, ,g,gigabytes, , ,111,like --block-size=1073741824
+pydf, , ,blocks, , ,112,use filesystem native block size
+pydf, , ,bw, , ,113,do not use colours
+pydf, , ,mounts, ,@r,114,file to get mount information from
+pydf, ,B,show-binds, , ,115,show 'mount --bind' mounts
+pydf, ,i,inodes, , ,116,show inode instead of block usage

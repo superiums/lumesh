@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sphinx-quickstart, ,q,quiet, , ,101,Quiet mode
+sphinx-quickstart, ,h,help, , ,102,Display usage summary
+sphinx-quickstart, , ,version, , ,103,Display Sphinx version
+sphinx-quickstart, , ,sep, , ,104,Separate source and build directories
+sphinx-quickstart, , ,dot, , ,105,Replacement for dot in _templates etc
+sphinx-quickstart, ,p,project, , ,106,Project name
+sphinx-quickstart, ,a,author, , ,107,Author names
+sphinx-quickstart, ,r,release, , ,108,Release of project
+sphinx-quickstart, ,l,language, , ,109,Document language
+sphinx-quickstart, , ,suffix, , ,110,Source file suffix
+sphinx-quickstart, , ,master, , ,111,Master document name
+sphinx-quickstart, , ,ext-autodoc, , ,112,Enable autodoc extension
+sphinx-quickstart, , ,ext-doctest, , ,113,Enable doctest extension
+sphinx-quickstart, , ,ext-intersphinx, , ,114,Enable intersphinx extension
+sphinx-quickstart, , ,ext-todo, , ,115,Enable todo extension
+sphinx-quickstart, , ,ext-coverage, , ,116,Enable coverage extension
+sphinx-quickstart, , ,ext-imgmath, , ,117,Enable imgmath extension
+sphinx-quickstart, , ,ext-mathjax, , ,118,Enable mathjax extension
+sphinx-quickstart, , ,ext-ifconfig, , ,119,Enable ifconfig extension
+sphinx-quickstart, , ,ext-viewcode, , ,120,Enable viewcode extension
+sphinx-quickstart, , ,ext-githubpages, , ,121,Enable githubpages extension
+sphinx-quickstart, , ,extensions, , ,122,Enable arbitrary extensions
+sphinx-quickstart, ,m,use-make-mode, , ,123,Use make-mode
+sphinx-quickstart, ,M,no-use-make-mode, , ,124,Not use make-mode
+sphinx-quickstart, , ,makefile, , ,125,Create makefile
+sphinx-quickstart, , ,no-makefile, , ,126,Not create makefile
+sphinx-quickstart, , ,batchfile, , ,127,Create batchfile
+sphinx-quickstart, , ,no-batchfile, , ,128,Not create batchfile
+sphinx-quickstart, ,t,templatedir, , ,129,Template directory for template files

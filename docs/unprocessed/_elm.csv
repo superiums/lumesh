@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+elm, $commands, , ,repl, ,100,Open up an interactive programming session
+elm, $commands, , ,reactor, ,102,Compile code with a click
+elm, $commands, , ,make, ,103,Compiles Elm code in JS or HTML
+elm, $commands, , ,init, ,107,Start an Elm project
+elm, $commands, , ,install, ,107,Fetches packages from Elm repository
+elm, $commands, , ,bump, ,107,Figures out the next version number based on API changes
+elm, $commands, , ,diff, ,107,See what changed in a package between different versions
+elm, $commands, , ,publish, ,107,Publishes your package on package.elm-lang.org so anyone in the community can use it

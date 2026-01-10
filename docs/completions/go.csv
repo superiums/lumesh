@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+go, env,u, , ,@r,121,set NAME to default values
+go, env,w, , ,@r,122,set default values for config variables
+go, help, , ,bug, ,128,start a bug report
+go, help, , ,build, ,129,compile packages and dependencies
+go, help, , ,clean, ,130,remove object files and cached files
+go, help, , ,doc, ,131,show documentation for package or symbol
+go, help, , ,env, ,132,print Go environment information
+go, help, , ,fix, ,133,update packages to use new APIs
+go, help, , ,fmt, ,134,gofmt (reformat) package sources
+go, help, , ,generate, ,135,generate Go files by processing source
+go, help, , ,get, ,136,download and install packages and dependencies
+go, help, , ,install, ,137,compile and install packages and dependencies
+go, help, , ,list, ,138,list packages or modules
+go, help, , ,mod, ,139,module maintenance
+go, help, , ,run, ,140,compile and run Go program
+go, help, , ,test, ,141,test packages
+go, help, , ,tool, ,142,run specified go tool
+go, help, , ,version, ,143,print Go version
+go, help, , ,vet, ,144,report likely mistakes in packages
+go, help, , ,buildmode, ,145,build modes
+go, help, , ,cache, ,146,build and test caching
+go, help, , ,environment, ,147,environment variables
+go, help, , ,filetype, ,148,file types
+go, help, , ,go.mod, ,149,the go.mod file
+go, help, , ,gopath, ,150,GOPATH environment variable
+go, help, , ,gopath-get, ,151,legacy GOPATH go get
+go, help, , ,goproxy, ,152,module proxy protocol
+go, help, , ,importpath, ,153,import path syntax
+go, help, , ,modules, ,154,"modules, module versions, and more"
+go, help, , ,module-get, ,155,module-aware go get
+go, help, , ,module-auth, ,156,module authentication using go.sum
+go, help, , ,module-private, ,157,module configuration for non-public modules
+go, help, , ,packages, ,158,package lists and patterns
+go, help, , ,testflag, ,159,testing flags
+go, help, , ,testfunc, ,160,testing functions
+go, list,f, , ,@r,163,pass in template for formatting
+go, list, , , ,@r,164,list of build tags
+go, test,c, , ,@r,167,compile the test binary to pkg.test but do not run it
+go, tool, , ,addr2line api asm cgo compile dist fix link nm objdump pack pprof prof vet yacc, ,169,target tool
+go, version, , , ,@f,171, 
+go, mod, , ,download,@f,174,download modules to local cache
+go, mod, , ,edit,@f,175,edit go.mod from tools or scripts
+go, mod, , ,graph,@f,176,print module requirement graph
+go, mod, , ,init,@f,177,initialize new module in current directory
+go, mod, , ,tidy,@f,178,add missing and remove unused modules
+go, mod, , ,vendor,@f,179,make vendored copy of dependencies
+go, mod, , ,verify,@f,180,verify dependencies have expected content
+go, mod, , ,why,@f,181,explain why packages or modules are needed

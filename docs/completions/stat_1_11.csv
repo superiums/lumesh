@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+stat, ,L,dereference, , ,101,follow links
+stat, ,f,file-system, , ,102,display file system status instead of file status
+stat, , ,cached, , ,103,"specify how to use cached attributes; useful on remote file systems"
+stat, ,c,format, , ,104,"use the specified FORMAT instead of the default; output a newline after each …"
+stat, , ,printf, , ,105,"like --format, but interpret backslash escapes, and do not output a mandatory…"
+stat, ,t,terse, , ,106,print the information in terse form
+stat, , ,help, , ,107,display this help and exit
+stat, , ,version, , ,108,output version information and exit 

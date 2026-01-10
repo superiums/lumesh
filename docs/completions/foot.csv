@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+foot, , , , ,@f @r,101, 
+foot, ,c,config, ,@r,102,path to configuration file (XDG_CONFIG_HOME/foot/foot.ini)
+foot, ,C,check-config, , ,103,"verify configuration and exit with 0 if ok, otherwise exit with 1"
+foot, ,o,override, ,@f @r,104,"configuration option to override, in form SECTION.KEY=VALUE"
+foot, ,f,font, ,@f @r,105,font name and style in fontconfig format (monospace)
+foot, ,t,term, ,@f @r,106,value to set the environment variable TERM to (foot)
+foot, ,T,title, ,@f @r,107,initial window title
+foot, ,a,app-id, ,@f @r,108,value to set the app-id property on the Wayland window to (foot)
+foot, ,m,maximized, , ,109,start in maximized mode
+foot, ,F,fullscreen, , ,110,start in fullscreen mode
+foot, ,L,login-shell, , ,111,start shell as a login shell
+foot, ,D,working-directory, ,@F,112,initial working directory for the client application (CWD)
+foot, ,w,window-size-pixels, ,@f @r,113,"window WIDTHxHEIGHT, in pixels (700x500)"
+foot, ,W,window-size-chars, ,@f @r,114,"window WIDTHxHEIGHT, in characters (not set)"
+foot, ,s,server, ,@F,115,"run as server; open terminals by running footclient"
+foot, ,H,hold, , ,116,remain open after child process exits
+foot, ,p,print-pid, ,@r,117,print PID to this file or FD when up and running (server mode only)
+foot, ,d,log-level,info warning error none,@f @r,118,log-level (warning)
+foot, ,l,log-colorize,always never auto,@f @r,119,enable or disable colorization of log output on stderr
+foot, ,S,log-no-syslog, , ,120,disable syslog logging (server mode only)
+foot, , ,pty, ,@r,121,display an existing pty instead of creating one
+foot, ,v,version, , ,122,show the version number and quit
+foot, ,h,help, , ,123,show help message and quit

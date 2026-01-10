@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nl, ,b,body-numbering, , ,101,use STYLE for numbering body lines
+nl, ,d,section-delimiter, , ,102,use CC for logical page delimiters
+nl, ,f,footer-numbering, , ,103,use STYLE for numbering footer lines
+nl, ,h,header-numbering, , ,104,use STYLE for numbering header lines
+nl, ,i,line-increment, , ,105,line number increment at each line
+nl, ,l,join-blank-lines, , ,106,group of NUMBER empty lines counted as one
+nl, ,n,number-format, , ,107,insert line numbers according to FORMAT
+nl, ,p,no-renumber, , ,108,do not reset line numbers for each section
+nl, ,s,number-separator, , ,109,add STRING after (possible) line number
+nl, ,v,starting-line-number, , ,110,first line number for each section
+nl, ,w,number-width, , ,111,use NUMBER columns for line numbers
+nl, , ,help, , ,112,display this help and exit
+nl, , ,version, , ,113,output version information and exit 

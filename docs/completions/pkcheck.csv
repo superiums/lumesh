@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkcheck, , ,process, , ,101,(see below) or
+pkcheck, , ,system-bus-name, , ,102,action.  The
+pkcheck, , ,detail, , ,103,option can be used zero or more times to pass details about action.  If
+pkcheck, , ,allow-user-interaction, , ,104,"is passed, pkcheck blocks while waiting for authentication"
+pkcheck, , ,enable-internal-agent, , ,105,is passed.  AUTHOR

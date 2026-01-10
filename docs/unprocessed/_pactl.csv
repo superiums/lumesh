@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pactl, $commands, , ,$ctlcommands,@f,101, 
+pactl, $commands, , ,stat,@f,101,Show statistics about memory usage
+pactl, $commands, , ,info,@f,101,Show info about the daemon
+pactl, $commands, , ,list,@f,101,Show all loaded things of the specified type
+pactl, $commands, , ,exit,@f,103,Ask the daemon to exit
+pactl, $commands, , ,upload-sample, ,103,Upload a file to the sample cache
+pactl, $commands, , ,play-sample,@f,103,Play a sample from the cache
+pactl, $commands, , ,remove-sample,@f,103,Remove a sample from the cache
+pactl," move-sink-input; and (__fish_pa_print_type sink-inputs)", , , ,@f,106, 
+pactl," move-sink-input; and (__fish_pa_print_type sink-inputs)", , , ,@f,107, 
+pactl," move-source-output; and (__fish_pa_print_type source-outputs)", , , ,@f,107, 
+pactl," move-source-output; and (__fish_pa_print_type source-outputs)", , , ,@f,108, 
+pactl," suspend-$t; and (__fish_pa_print_type ", , , ,@f,108, 
+pactl," suspend-$t; and (__fish_pa_print_type ", , , ,@f,109, 
+pactl," suspend-$t; and (__fish_pa_print_type ", , , ,@f,110, 
+pactl," set-$t-port; and (__fish_pa_print_type ", , , ,@f,110, 
+pactl," set-$t-port; and (__fish_pa_print_type ", , , ,@f,111, 
+pactl," set-$t-volume; and (__fish_pa_print_type ", , , ,@f,111, 
+pactl," set-$t-volume; and (__fish_pa_print_type ", , , ,@f,112, 
+pactl," set-$t-mute; and (__fish_pa_print_type ", , , ,@f,112, 
+pactl," set-$t-mute; and (__fish_pa_print_type ", , , ,@f,113, 
+pactl," set-$t-mute; and (__fish_pa_print_type ", , , ,@f,114, 
+pactl," set-$t-mute; and (__fish_pa_print_type ", , , ,@f,115, 
+pactl," set-card-profile; and (__fish_pa_print_type cards)", , , ,@f,115, 
+pactl," set-card-profile; and (__fish_pa_print_type cards)", , , ,@f,116, 

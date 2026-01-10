@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+clrunimap, ,C,console, , ,101,the console device to be used
+clrunimap, ,V,version, , ,102,print version number
+clrunimap, ,h,help, , ,103,print this usage message

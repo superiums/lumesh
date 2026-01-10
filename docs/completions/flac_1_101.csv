@@ -1,0 +1,93 @@
+cmd,conds,short,long,params,dirs,pri,desc
+flac, , ,tag\\f, , ,101,"Add a FLAC tag.  The comment must adhere to the Vorbis comment spec; i. e"
+flac, ,8,best, , ,102,actually are just synonyms for different groups of specific encoding options …
+flac, ,v,version, , ,103,"Show the flac version number, and quit"
+flac, ,h,help, , ,104,"Show basic usage and a list of all options, and quit"
+flac, , ,decode, , ,105,Decode (the default behavior is to encode)
+flac, , ,test, , ,106,Test a flac encoded file
+flac, , ,analyze, , ,107,Analyze a FLAC encoded file
+flac, ,c,stdout, , ,108,Write output to stdout
+flac, , ,force, , ,109,Force overwriting of output files
+flac, , ,delete-input-file, , ,110,Automatically delete the input file after a successful encode or decode
+flac, , ,output-name, , ,111,Force the output file name (usually flac just changes the extension)
+flac, , ,output-prefix, , ,112,Prefix each output file name with the given string
+flac, , ,preserve-modtime, , ,113,(Enabled by default
+flac, , ,keep-foreign-metadata, , ,114,"If encoding, save WAVE, RF64, or AIFF non-audio chunks in FLAC metadata"
+flac, , ,keep-foreign-metadata-if-present, , ,115,"Like --keep-foreign-metadata, but without throwing an error if foreign metada…"
+flac, , ,skip, , ,116,Skip the first number of samples of the input
+flac, , ,until, , ,117,Stop at the given sample number (which is not included)
+flac, , ,no-utf8-convert, , ,118,Do not convert tags from local charset to UTF-8
+flac, ,s,silent, , ,119,Silent mode (do not write runtime encode/decode statistics to stderr)
+flac, , ,totally-silent, , ,120,"Do not print anything of any kind, including warnings or errors"
+flac, ,w,warnings-as-errors, , ,121,Treat all warnings as errors (which cause flac to terminate with a non-zero e…
+flac, ,F,decode-through-errors, , ,122,By default flac stops decoding with an error message and removes the partiall…
+flac, , ,cue, , ,123,Set the beginning and ending cuepoints to decode
+flac, , ,apply-replaygain-which-is-not-lossless, , ,124,Applies ReplayGain values while decoding.  WARNING: THIS IS NOT LOSSLESS
+flac, ,V,verify, , ,125,Verify a correct encoding by decoding the output in parallel and comparing to…
+flac, ,0,compression-level-0, , ,126,Fastest compression preset.  Currently synonymous with
+flac, ,r,no-mid-side, , ,127, 
+flac, ,1,compression-level-1, , ,128,Currently synonymous with -l 0 -b 1152 -M -r 3
+flac, ,2,compression-level-2, , ,129,Currently synonymous with -l 0 -b 1152 -m -r 3
+flac, , ,compression-level-3, , ,130,Currently synonymous with
+flac, ,4,compression-level-4, , ,131,Currently synonymous with -l 8 -b 4096 -M -r 4
+flac, ,5,compression-level-5, , ,132,Currently synonymous with -l 8 -b 4096 -m -r 5
+flac, ,6,compression-level-6, , ,133,Currently synonymous with
+flac, ,7,compression-level-7, , ,134,Currently synonymous with
+flac, , ,compression-level-8, , ,135,Currently synonymous with
+flac, , ,max-lpc-order, , ,136,Specifies the maximum LPC order.  This number must be <= 32
+flac, , ,blocksize, , ,137,Specify the blocksize in samples
+flac, , ,mid-side, , ,138,"Try mid-side coding for each frame (stereo only, otherwise ignored)"
+flac, ,M,adaptive-mid-side, , ,139,"Adaptive mid-side coding for all frames (stereo only, otherwise ignored)"
+flac, , ,rice-partition-order, , ,140,"Set the [min,]max residual partition order (0. 15)"
+flac, , ,apodization, , ,141,Window audio data with given apodization function
+flac, ,e,exhaustive-model-search, , ,142,Do exhaustive model search (expensive!)
+flac, ,q,qlp-coeff-precision, , ,143,Precision of the quantized linear-predictor coefficients
+flac, ,p,qlp-coeff-precision-search, , ,144,Do exhaustive search of LP coefficient quantization (expensive!)
+flac, , ,lax, , ,145,Allow encoder to generate non-Subset files
+flac, , ,limit-min-bitrate, , ,146,Limit minimum bitrate by not allowing frames consisting of only constant subf…
+flac, ,j,threads, , ,147,Try to set a maximum number of threads to use for encoding
+flac, , ,ignore-chunk-sizes, , ,148,"When encoding to flac, ignore the file size headers in WAV and AIFF files to …"
+flac, , ,replay-gain, , ,149,"Calculate ReplayGain values and store them as FLAC tags, similar to vorbisgain"
+flac, , ,cuesheet, , ,150,Import the given cuesheet file and store it in a CUESHEET metadata block
+flac, , ,picture, , ,151,Import a picture and store it in a PICTURE metadata block
+flac, ,S,seekpoint, , ,152,"Specifies point(s) to include in SEEKTABLE, to override the encoder[cq]s defa…"
+flac, ,P,padding, , ,153,"(Default: 8192 bytes, although 65536 for input above 20 minutes"
+flac, ,T,tag, , ,154,"Add a FLAC tag.  The comment must adhere to the Vorbis comment spec; i. e"
+flac, , ,tag-from-file, , ,155,"Like --tag, except FILENAME is a file whose contents will be read verbatim to…"
+flac, , ,ogg, , ,156,"When encoding, generate Ogg FLAC output instead of native FLAC"
+flac, , ,serial-number, , ,157,"When used with --ogg, specifies the serial number to use for the first Ogg FL…"
+flac, , ,force-aiff-format, , ,158, 
+flac, , ,force-rf64-format, , ,159, 
+flac, , ,force-wave64-format, , ,160,"output format and force output to AIFF/RF64/WAVE64, respectively"
+flac, , ,force-legacy-wave-format, , ,161, 
+flac, , ,force-extensible-wave-format, , ,162,output a WAVE file with WAVE_FORMAT_PCM and WAVE_FORMAT_EXTENSIBLE respective…
+flac, , ,force-aiff-c-none-format, , ,163, 
+flac, , ,force-aiff-c-sowt-format, , ,164,output an AIFF-C file with format NONE and sowt respectively
+flac, , ,force-raw-format, , ,165,Force input (when encoding) or output (when decoding) to be treated as raw sa…
+flac, , ,sign, , ,166,Specify the sign of samples
+flac, , ,endian, , ,167,Specify the byte order for samples
+flac, , ,channels, , ,168,(Input only) specify number of channels
+flac, , ,bps, , ,169,(Input only) specify bits per sample (per channel: 16 for CDDA. )
+flac, , ,sample-rate, , ,170,(Input only) specify sample rate (in Hz.  Only integers supported. )
+flac, , ,input-size, , ,171,(Input only) specify the size of the raw input in bytes
+flac, , ,residual-text, , ,172,Includes the residual signal in the analysis file
+flac, , ,residual-gnuplot, , ,173,"Generates a gnuplot file for every subframe; each file will contain the resid…"
+flac, , ,no-adaptive-mid-side, , ,174, 
+flac, , ,no-cued-seekpoints, , ,175, 
+flac, , ,no-decode-through-errors, , ,176, 
+flac, , ,no-delete-input-file, , ,177, 
+flac, , ,no-preserve-modtime, , ,178, 
+flac, , ,no-keep-foreign-metadata, , ,179, 
+flac, , ,no-exhaustive-model-search, , ,180, 
+flac, , ,no-force, , ,181, 
+flac, , ,no-lax, , ,182, 
+flac, , ,no-ogg, , ,183, 
+flac, , ,no-padding, , ,184, 
+flac, , ,no-qlp-coeff-prec-search, , ,185, 
+flac, , ,no-replay-gain, , ,186, 
+flac, , ,no-residual-gnuplot, , ,187, 
+flac, , ,no-residual-text, , ,188, 
+flac, , ,no-seektable, , ,189, 
+flac, , ,no-silent, , ,190, 
+flac, , ,no-verify, , ,191, 
+flac, , ,no-warnings-as-errors, , ,192,ReplayGain application specification The option

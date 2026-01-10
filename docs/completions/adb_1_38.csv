@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+adb, , ,one-device, , ,101,"will only connect to one USB device, specified by a SERIAL number or USB devi…"
+adb, , ,exit-on-write-error, , ,102,GENERAL COMMANDS:
+adb, , ,remove-all, , ,103, 
+adb, , ,list, , ,104, 
+adb, , ,remove, , ,105,socket connection
+adb, , ,abi, , ,106,ABI
+adb, , ,instant, , ,107,ephemeral install app
+adb, , ,no-streaming, , ,108,Package Manager as separate steps
+adb, , ,streaming, , ,109,Manager
+adb, , ,fastdeploy, , ,110, 
+adb, , ,version-check-agent, , ,111,local version has different version code and using fast deploy
+adb, , ,local-agent, , ,112,build (instead of SDK location).  See also adb shell pm help for more options

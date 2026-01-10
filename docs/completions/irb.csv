@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+irb, ,r, , ,@f,101,Load LIB using require
+irb, ,I, , ,@D,102,Specify \$LOAD_PATH directory
+irb, ,E,encoding, , ,103,Specify default text encoding
+irb, ,W, ,0 1 2, ,104,Set warning level
+irb, , ,context-mode,0 1 2 3, ,105,Create Binding Object
+irb, , ,echo, , ,106,Show result
+irb, , ,noecho, , ,107,Don't show result
+irb, , ,inspect, , ,108,Use 'inspect' for output
+irb, , ,noinspect, , ,109,Don't use 'inspect' for output
+irb, , ,readline, , ,110,Use Readline extension module
+irb, , ,noreadline, , ,111,Don't use Readline extension module
+irb, , ,prompt,default simple xmp inf-ruby, ,112,Switch prompt mode
+irb, , ,prompt-mode,default simple xmp inf-ruby, ,113,Switch prompt mode
+irb, , ,inf-ruby-mode, , ,114,Use prompt for emacs inf-ruby-mode
+irb, , ,sample-book-mode, , ,115,Simple prompt mode
+irb, , ,simple-prompt, , ,116,Simple prompt mode
+irb, , ,noprompt, , ,117,No prompt mode
+irb, , ,single-irb, , ,118,Share self with sub-irb
+irb, , ,tracer, , ,119,Displays trace for each execution of commands
+irb, , ,back-trace-limit, ,@f @r,120,"Displays backtrace, top N and tail N"
+irb, , ,irb_debug, ,@f @r,121,Sets internal debug level to N
+irb, , ,verbose, , ,122,Show details
+irb, , ,noverbose, , ,123,Don't show details
+irb, ,v,version, , ,124,Print the version of irb
+irb, ,h,help, , ,125,Print a summary of options

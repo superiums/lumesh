@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+swaynag, ,B,button-no-terminal, , ,101,Create a button with the text text that executes action when pressed
+swaynag, ,z,button-dismiss, , ,102,"Create a button with the text text that executes action when pressed,"
+swaynag, ,Z,button-dismiss-no-terminal, , ,103,"Create a button with the text text that executes action when pressed,"
+swaynag, ,c,config, , ,104,"The config file to use.  By default, the following paths are checked:"
+swaynag, ,d,debug, , ,105,Enable debugging
+swaynag, ,e,edge, , ,106,Set the edge to use
+swaynag, ,y,layer, , ,107,Set the layer to use
+swaynag, ,f,font, , ,108,Set the font to use
+swaynag, ,h,help, , ,109,Show help message and quit
+swaynag, ,l,detailed-message, , ,110,Read a detailed message from stdin.  A button to toggle details will be
+swaynag, ,L,detailed-button, , ,111,Set the text for the button that toggles details.  This has no effect if
+swaynag, ,m,message, , ,112,Set the message text
+swaynag, ,o,output, , ,113,Set the output to use.  This should be the name of a xdg_output
+swaynag, ,s,dismiss-button, , ,114,Sets the text for the dismiss nagbar button.  The default is X
+swaynag, ,t,type, , ,115,Set the message type.  Two types are created by default error and
+swaynag, ,v,version, , ,116,Show the version number and quit

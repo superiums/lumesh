@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+p11tool, , ,sec-param, , ,101,to the acceptable security levels with the new versions of gnutls

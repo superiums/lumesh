@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+timeout, ,v,verbose, , ,101,diagnose to stderr any signal sent upon timeout
+timeout, , ,help, , ,102,display this help and exit
+timeout, , ,version, , ,103,output version information and exit 
+timeout, ,f,foreground, , ,104,"when not running timeout directly from a shell prompt, allow COMMAND to read …"
+timeout, ,k,kill-after, , ,105,also send a KILL signal if COMMAND is still running this long after the initi…
+timeout, ,p,preserve-status, , ,106,"exit with the same status as COMMAND, even when the command times out"
+timeout, ,s,signal, , ,107,"specify the signal to be sent on timeout; SIGNAL may be a name like 'HUP' or …"

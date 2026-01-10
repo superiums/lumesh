@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xreader, ,h,help, , ,101,Show help and exit
+xreader, , ,version, , ,102,Show version and exit
+xreader, , ,help-all, , ,103,Show all options and exit
+xreader, ,p,page-label, , ,104,Page label
+xreader, ,i,page-index, , ,105,Page number
+xreader, ,f,fullscreen, , ,106,Use fullscreen mode
+xreader, ,s,presentation, , ,107,Use presentation mode
+xreader, ,w,preview, , ,108,Use preview mode
+xreader, , ,display, , ,109,X display

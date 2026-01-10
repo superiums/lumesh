@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pod2man.1perl, ,c,center, , ,101,"X Item '-c string, --center=string' [1"
+pod2man.1perl, ,d,date, , ,102,"X Item '-d string, --date=string' [4"
+pod2man.1perl, ,e,encoding, , ,103,"X Item '-e encoding, --encoding=encoding' [5"
+pod2man.1perl, , ,errors, , ,104,X Item '--errors=style' [2. 5. 0] Set the error handling style
+pod2man.1perl, , ,fixed, , ,105,X Item '--fixed=font' [1
+pod2man.1perl, , ,fixedbold, , ,106,X Item '--fixedbold=font' [1. 0] Bold version of the fixed-width font
+pod2man.1perl, , ,fixeditalic, , ,107,X Item '--fixeditalic=font' [1
+pod2man.1perl, , ,fixedbolditalic, , ,108,X Item '--fixedbolditalic=font' [1
+pod2man.1perl, , ,guesswork, , ,109,"X Item '--guesswork=rule[,rule. ]' [5"
+pod2man.1perl, ,h,help, , ,110,"X Item '-h, --help' [1. 00] Print out usage information"
+pod2man.1perl, ,l,lax, , ,111,"X Item '-l, --lax' [1. 00] No longer used"
+pod2man.1perl, , ,language, , ,112,X Item '--language=language' [5
+pod2man.1perl, , ,lquote, , ,113,X Item '--lquote=quote'
+pod2man.1perl, , ,rquote, , ,114,X Item '--rquote=quote' . PD [4
+pod2man.1perl, ,n,name, , ,115,"X Item '-n name, --name=name' [4"
+pod2man.1perl, , ,nourls, , ,116,X Item '--nourls' [2. 5
+pod2man.1perl, ,o,official, , ,117,"X Item '-o, --official' [1"
+pod2man.1perl, ,q,quotes, , ,118,"X Item '-q quotes, --quotes=quotes' [4"
+pod2man.1perl, ,r,release, , ,119,"X Item '-r version, --release=version' [1"
+pod2man.1perl, ,s,section, , ,120,"X Item '-s string, --section=string' [1"
+pod2man.1perl, , ,stderr, , ,121,X Item '--stderr' [2. 1
+pod2man.1perl, ,u,utf8, , ,122,"X Item '-u, --utf8' [2. 1"
+pod2man.1perl, ,v,verbose, , ,123, 

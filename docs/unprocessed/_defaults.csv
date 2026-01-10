@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+defaults, __fish_use_subcommand, , ,read,@f,103,Shows defaults entire given domain
+defaults, __fish_use_subcommand, , ,write,@f,106,Writes domain or or a key in the domain
+defaults, __fish_use_subcommand, , ,read-type,@f,117,"Shows the type for the given domain, key"
+defaults, __fish_use_subcommand, , ,rename,@f,118,Renames old_key to new_key
+defaults, __fish_use_subcommand, , ,delete,@f,119,Deletes domain or a key in the domain
+defaults, __fish_use_subcommand, , ,domains,@f,120,Prints the names of all domains in the users defaults system
+defaults, __fish_use_subcommand, , ,find,@f,121,"Searches for word in domain names, keys, and values"
+defaults, __fish_use_subcommand, , ,help,@f,122,Prints a list of possible command formats

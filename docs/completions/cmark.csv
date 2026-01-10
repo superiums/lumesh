@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cmark, , , , ,@f @k @r,101, 
+cmark, ,t,to,html man xml latex commonmark,@f @r,102,Output format
+cmark, , ,width, , ,103,Wrap width
+cmark, , ,hardbreaks, , ,104,Treat newlines as hard line breaks
+cmark, , ,nobreaks, , ,105,Render soft line breaks as spaces
+cmark, , ,sourcepos, , ,106,Include source position attribute
+cmark, , ,validate-utf8, , ,107,Validate UTF-8
+cmark, , ,smart, , ,108,Use smart punctuation
+cmark, , ,unsafe, , ,109,Render raw HTML and dangerous URLs
+cmark, , ,help, , ,110,Print usage information
+cmark, , ,version, , ,111,Print version

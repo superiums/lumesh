@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+openocd, , , , ,@f,101, 
+openocd, ,h,help, , ,102,display help
+openocd, ,v,version, , ,103,display version info
+openocd, ,f,file, ,@k,104, 
+openocd, ,d,debug, , ,105,run under debug level 3
+openocd, ,d,debug, , ,106,run under debug level n
+openocd, ,l,log_output, , ,107,redirect output to file
+openocd, ,c,command, , ,108,run command
+openocd, ,s,search, ,@D,109,search path for config files and scripts

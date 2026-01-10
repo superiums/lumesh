@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+status, ,h,help, , ,101,Display help and exit
+status, test-feature, , , ,@f,102, 
+status, test-terminal-feature, , ,scroll-content-up,@f,103, 
+status, job-control, , ,full,@f,104,Set all jobs under job control
+status, job-control, , ,interactive,@f,105,Set only interactive jobs under job control
+status, job-control, , ,none,@f,106,Set no jobs under job control
+status, get-file, , , ,@F @f,107, 
+status, list-files, , , ,@F @f,108, 

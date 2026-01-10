@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+jhipster, __fish_prog_needs_command,d,debug, ,@f,101,Enable debugger
+jhipster, __fish_prog_needs_command,h,help, ,@f,102,Output usage information
+jhipster, __fish_prog_needs_command,V,version, ,@f,103,Output version number
+jhipster, __fish_prog_needs_command, , ,app,@f,104,Create a new JHipster application
+jhipster, __fish_prog_needs_command, , ,aws,@f,105,Deploy the current application to AWS
+jhipster, __fish_prog_needs_command, , ,ci-cd,@f,106,Create pipeline scripts for popular CI tools
+jhipster, __fish_prog_needs_command, , ,client,@f,107,Create a new JHipster client-side application
+jhipster, __fish_prog_needs_command, , ,cloudfoundry,@f,108,Prepare Cloud Foundry deployment
+jhipster, __fish_prog_needs_command, , ,docker-compose,@f,109,Create required Docker deployment configs for applications
+jhipster, __fish_prog_needs_command, , ,entity,@f @r,110,"Create a new JHipster entity: JPA, Spring & Angular components"
+jhipster, __fish_prog_needs_command, , ,export-jdl,@f @r,111,Create a JDL file from the existing entities
+jhipster, __fish_prog_needs_command, , ,heroku,@f,112,Deploy the current application to Heroku
+jhipster, __fish_prog_needs_command, , ,import-jdl,@f @r,113,Create entities from the JDL file passed in argument
+jhipster, __fish_prog_needs_command, , ,info,@f,114,Display information about your current project and system
+jhipster, __fish_prog_needs_command, , ,kubernetes,@f,115,Deploy the current application to Kubernetes
+jhipster, __fish_prog_needs_command, , ,languages,@f @r,116,Copy i18n files for selected languages to /webapp/i18n
+jhipster, __fish_prog_needs_command, , ,openshift,@f,117,Deploy the current application to OpenShift
+jhipster, __fish_prog_needs_command, , ,rancher-compose,@f,118,Deploy the current application to Rancher
+jhipster, __fish_prog_needs_command, , ,server,@f,119,Create a new JHipster server-side application
+jhipster, __fish_prog_needs_command, , ,service,@f @r,120,Create a new Spring service bean
+jhipster, __fish_prog_needs_command, , ,upgrade,@f,121,Upgrade the JHipster and the generated application
+jhipster, __fish_prog_needs_command, , ,completion,@f,122,Print command completion script

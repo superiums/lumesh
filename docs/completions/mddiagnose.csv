@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mddiagnose, ,h, , ,@f,101,Display help
+mddiagnose, ,d, , ,@f,102,Ignore unknown options
+mddiagnose, ,n, , ,@f,103,Do not reveal the resulting package in the Finder
+mddiagnose, ,r, , ,@f,104,Avoid restricted operations such as heap
+mddiagnose, ,s, , ,@f,105,Skip gathering system.log
+mddiagnose, ,v, , ,@f,106,Prints version of mddiagnose
+mddiagnose, ,m, , ,@f,107,Minimal report
+mddiagnose, ,e, , ,@r,108,Evaluate indexing information for path
+mddiagnose, ,p, , ,@r,109,Evaluate permissions information for path
+mddiagnose, ,f, , ,@r,110,Write the diagnostic to the specified path

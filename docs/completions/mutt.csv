@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mutt, , , , ,@f,101, 
+mutt, ,c, , ,@f @r,102,Specify a carbon-copy (CC) recipient
+mutt, ,b, , ,@f @r,103,Specify a blind-carbon-copy (BCC) recipient
+mutt, ,A, , ,@r,104,An expanded version of the given alias is passed to stdout
+mutt, ,a, , ,@r,105,Attach a file to your message using MIME
+mutt, ,b, , ,@r,106,Specify a blind-carbon-copy (BCC) recipient
+mutt, ,c, , ,@r,107,Specify a carbon-copy (CC) recipient
+mutt, ,e, , ,@r,108,Run command after processing of initialization files
+mutt, ,f, , ,@r,109,Specify which mailbox to load
+mutt, ,F, , ,@r,110,Specify an initialization file to read instead of ~/.muttrc
+mutt, ,H, , ,@r,111,Specify a draft file containing header and body for the message
+mutt, ,i, , ,@r,112,Specify a file to include into the body of a message
+mutt, ,m, , ,@r,113,Specify a default mailbox type
+mutt, ,Q, , ,@r,114,Query a configuration variables value
+mutt, ,s, , ,@r,115,Specify the subject of the message

@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nl-qdisc-add, ,h,help, , ,101,Print help text to console and exit
+nl-qdisc-add, ,v,version, , ,102,Print versioning information to console and exit
+nl-qdisc-add, ,q,quiet, , ,103,Do not print informal notifications about actions taken to the console
+nl-qdisc-add, ,d,dev, , ,104,Network device the qdisc is attached to
+nl-qdisc-add, ,p,parent, , ,105,Identifier of the parent qdisc/class this qdisc is attached to
+nl-qdisc-add, ,i,id, , ,106,Identifier of qdisc.  It can be specified as classid or name
+nl-qdisc-add, , ,update, , ,107,"Update qdisc if it already exists, otherwise attempting to add a qdisc which …"
+nl-qdisc-add, , ,replace, , ,108,Replace or update qdisc if it already exists
+nl-qdisc-add, , ,update-only, , ,109,Update an existing qdisc but do not create it if it does not exist
+nl-qdisc-add, , ,replace-only, , ,110,Update or replace an existing qdisc but do not create it if it does exist
+nl-qdisc-add, , ,interactive, , ,111,The interactive mode requires confirmation by the user for each qdisc deleted
+nl-qdisc-add, , ,yes, , ,112,Make the default answer for interactive prompts be 'y'es
+nl-qdisc-add, ,k,kind, , ,113,Only delete qdiscs of this type. SS nl-qdisc-list Options
+nl-qdisc-add, , ,details, , ,114,Show detailed information for each qdisc listed
+nl-qdisc-add, , ,stats, , ,115,Show statistics information for each qdisc listed
+nl-qdisc-add, ,r,recursive, , ,116,List all TC objects recurisvely attached to all qdiscs matching the filter

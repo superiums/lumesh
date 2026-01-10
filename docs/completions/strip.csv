@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+strip, , ,target, , ,101,X Item '--target=bfdname' 
+strip, , ,help, , ,102,X Item '--help' Show a summary of the options to strip and exit
+strip, , ,info, , ,103,X Item '--info' Display a list showing all architectures and object formats a…
+strip, , ,input-target, , ,104,X Item '--input-target=bfdname' 
+strip, , ,output-target, , ,105,X Item '--output-target=bfdname' 
+strip, , ,remove-section, , ,106,X Item '--remove-section=sectionname' 
+strip, , ,keep-section, , ,107,X Item '--keep-section=sectionpattern' When removing sections from the output…
+strip, , ,remove-relocations, , ,108,X Item '--remove-relocations=sectionpattern' Remove relocations from the outp…
+strip, , ,strip-section-headers, , ,109,X Item '--strip-section-headers' Strip section headers
+strip, , ,strip-all, , ,110,X Item '--strip-all' . PD Remove all symbols
+strip, , ,strip-debug, , ,111,X Item '--strip-debug' . PD Remove debugging symbols only
+strip, , ,strip-dwo, , ,112,X Item '--strip-dwo' Remove the contents of all DWARF 
+strip, , ,strip-unneeded, , ,113,X Item '--strip-unneeded' Remove all symbols that are not needed for relocati…
+strip, , ,keep-symbol, , ,114,X Item '--keep-symbol=symbolname' 
+strip, , ,merge-notes, , ,115,X Item '--merge-notes'
+strip, , ,no-merge-notes, , ,116,X Item '--no-merge-notes' 
+strip, , ,strip-symbol, , ,117,X Item '--strip-symbol=symbolname' 
+strip, , ,preserve-dates, , ,118,X Item '--preserve-dates' 
+strip, , ,enable-deterministic-archives, , ,119,X Item '--enable-deterministic-archives' . PD Operate in deterministic mode
+strip, , ,disable-deterministic-archives, , ,120,X Item '--disable-deterministic-archives' 
+strip, , ,wildcard, , ,121,X Item '--wildcard' 
+strip, , ,discard-all, , ,122,X Item '--discard-all' . PD Remove non-global symbols
+strip, , ,discard-locals, , ,123,X Item '--discard-locals' . PD Remove compiler-generated local symbols
+strip, , ,keep-section-symbols, , ,124,"X Item '--keep-section-symbols' When stripping a file, perhaps with --strip-d…"
+strip, , ,keep-file-symbols, , ,125,"X Item '--keep-file-symbols' When stripping a file, perhaps with --strip-debu…"
+strip, , ,only-keep-debug, , ,126,"X Item '--only-keep-debug' Strip a file, emptying the contents of any section…"
+strip, , ,add-gnu-debuglink, , ,127,el
+strip, , ,version, , ,128,X Item '--version' . PD Show the version number for strip
+strip, , ,verbose, , ,129,X Item '--verbose' . PD Verbose output: list all object files modified

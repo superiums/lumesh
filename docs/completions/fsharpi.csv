@@ -1,0 +1,47 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fsharpi, , ,use:, , ,101,Use the given file on startup
+fsharpi, , ,load:, , ,102,#load the given file on startup
+fsharpi, , ,reference:, , ,103,Reference an assembly
+fsharpi, ,g,debug+, , ,104,Emit debug information
+fsharpi, , ,debug-, , ,105,Disable --debug
+fsharpi, , ,debug:$arguments, , ,106,Specify debugging type
+fsharpi, ,O,optimize+, , ,107,Enable optimizations
+fsharpi, , ,optimize-, , ,108,Disable --optimize
+fsharpi, , ,tailcalls+, , ,109,Enable or disable tailcalls
+fsharpi, , ,tailcalls-, , ,110,Disable --tailcalls
+fsharpi, , ,deterministic+, , ,111,Produce a deterministic assembly
+fsharpi, , ,deterministic-, , ,112,Disable --deterministic
+fsharpi, , ,crossoptimize+, , ,113,Enable or disable cross-module optimizations
+fsharpi, , ,crossoptimize-, , ,114,Disable --crossoptimize
+fsharpi, , ,warnaserror+, , ,115,Report all warnings as errors
+fsharpi, , ,warnaserror-, , ,116,Disable --warnaserror
+fsharpi, , ,warnaserror+:, , ,117,Report specific warnings as errors
+fsharpi, , ,warnaserror-:, , ,118,Disable --warnaserror:
+fsharpi, , ,warn:$warning_level, , ,119,Set a warning level to $warning_level
+fsharpi, , ,nowarn:, , ,120,Disable specific warning messages
+fsharpi, , ,warnon:, , ,121,Enable specific warnings that may be off by default
+fsharpi, , ,consolecolors+, , ,122,Output warning and error messages in color
+fsharpi, , ,consolecolors-, , ,123,Disable --consolecolors
+fsharpi, , ,checked+, , ,124,Generate overflow checks
+fsharpi, , ,checked-, , ,125,Disable --checked
+fsharpi, , ,define:, , ,126,Define conditional compilation symbols
+fsharpi, , ,mlcompatibility, , ,127,Ignore ML compatibility warnings
+fsharpi, , ,nologo, , ,128,Suppress compiler copyright message
+fsharpi, ,?,help, , ,129,Display this usage message
+fsharpi, , ,codepage:, , ,130,Specify the codepage used to read source files
+fsharpi, , ,utf8output, , ,131,Output messages in UTF-8 encoding
+fsharpi, , ,fullpaths, , ,132,Output messages with fully qualified paths
+fsharpi, , ,lib:, , ,133,Specify a dir for the include path for source files and assemblies
+fsharpi, , ,simpleresolution, , ,134,Resolve assembly references using directory-based rules
+fsharpi, , ,targetprofile:, , ,135,"Specify target framework profile: mscorlib, netcore or netstandard"
+fsharpi, , ,noframework, , ,136,Do not reference the default CLI assemblies by default
+fsharpi, , ,exec, , ,137,Exit fsi after loading files or running the .fsx script
+fsharpi, , ,gui+, , ,138,Execute interactions on a Windows Forms event loop
+fsharpi, , ,gui-, , ,139,Disable --gui
+fsharpi, , ,quiet, , ,140,Suppress fsi writing to stdout
+fsharpi, , ,readline+, , ,141,Support TAB completion in console
+fsharpi, , ,readline-, , ,142,Disable --readline
+fsharpi, , ,quotations-debug+, , ,143,Emit debug information in quotations
+fsharpi, , ,quotations-debug-, , ,144,Disable --quotations-debug
+fsharpi, , ,shadowcopyreferences+, , ,145,Prevents references being locked by the F# Interactive process
+fsharpi, , ,shadowcopyreferences-, , ,146,Disable --shadowcopyreferences

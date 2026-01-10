@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hjson, __fish_should_complete_switches,j,json, , ,101,output formatted json
+hjson, __fish_should_complete_switches,c,compact, , ,102,output condensed json
+hjson, __fish_should_complete_switches, , ,-sl, ,103,output the opening brace on the same line
+hjson, __fish_should_complete_switches, , ,-quote, ,104,quote all strings
+hjson, __fish_should_complete_switches, , ,-quote=all, ,105,quote all strings and keys
+hjson, __fish_should_complete_switches, , ,-js, ,106,output in JSON-compatible format
+hjson, __fish_should_complete_switches, , ,-rt, ,107,round trip comments
+hjson, __fish_should_complete_switches, , ,-nocol, ,108,disable color output
+hjson, __fish_should_complete_switches, , ,-cond=, ,109,set condense option [default 60]

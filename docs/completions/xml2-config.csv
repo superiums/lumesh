@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xml2-config, , ,version, , ,101,Print the currently installed version of libxml2 on the standard output
+xml2-config, , ,libs, , ,102,Print the linker flags that are necessary to link a libxml2 program
+xml2-config, , ,cflags, , ,103,Print the compiler flags that are necessary to compile a libxml2 program
+xml2-config, , ,prefix, , ,104,"If specified, use PREFIX instead of the installation prefix that libxml2 was …"

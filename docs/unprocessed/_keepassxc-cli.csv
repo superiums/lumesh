@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+keepassxc-cli, __fish_use_subcommand, , ,add,@f,108,Add a new entry
+keepassxc-cli, __fish_use_subcommand, , ,analyze,@f,109,Analyze password for weakness and problem
+keepassxc-cli, __fish_use_subcommand, , ,clip,@f,110,Copy an entry's password to the clipboard
+keepassxc-cli, __fish_use_subcommand, , ,close,@f,111,Close the currently opened database
+keepassxc-cli, __fish_use_subcommand, , ,create,@f,112,Create new database
+keepassxc-cli, __fish_use_subcommand, , ,diceware,@f,113,Generate a new random diceware passphrase
+keepassxc-cli, __fish_use_subcommand, , ,edit,@f,114,Edit an entry
+keepassxc-cli, __fish_use_subcommand, , ,estimate,@f,115,Estimate the entropy of a password
+keepassxc-cli, __fish_use_subcommand, , ,exit,@f,116,Exit interactive mode
+keepassxc-cli, __fish_use_subcommand, , ,export,@f,117,Export the contents to stdout
+keepassxc-cli, __fish_use_subcommand, , ,generate,@f,118,Generate a new password
+keepassxc-cli, __fish_use_subcommand, , ,help,@f,119,Show command help
+keepassxc-cli, __fish_use_subcommand, , ,import,@f,120,Import the contents
+keepassxc-cli, __fish_use_subcommand, , ,locate,@f,121,Find entries quickly
+keepassxc-cli, __fish_use_subcommand, , ,ls,@f,122,List database entries
+keepassxc-cli, __fish_use_subcommand, , ,merge,@f,123,Merge two databases
+keepassxc-cli, __fish_use_subcommand, , ,mkdir,@f,124,Add a new group
+keepassxc-cli, __fish_use_subcommand, , ,mv,@f,125,Move an entry
+keepassxc-cli, __fish_use_subcommand, , ,open,@f,126,Open a database
+keepassxc-cli, __fish_use_subcommand, , ,quit,@f,127,Exit interactive mode
+keepassxc-cli, __fish_use_subcommand, , ,rm,@f,128,Remove an entry
+keepassxc-cli, __fish_use_subcommand, , ,rmdir,@f,129,Remove a group
+keepassxc-cli, __fish_use_subcommand, , ,show,@f,130,Show an entry's info

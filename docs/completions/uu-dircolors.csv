@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-dircolors, ,b,bourne-shell, , ,101,output Bourne shell code to set LS_COLORS
+uu-dircolors, ,c,c-shell, , ,102,output C shell code to set LS_COLORS
+uu-dircolors, ,p,print-database, , ,103,print the byte counts
+uu-dircolors, , ,print-ls-colors, , ,104,output fully escaped colors for display
+uu-dircolors, ,h,help, , ,105,Print help
+uu-dircolors, ,V,version, , ,106,Print version

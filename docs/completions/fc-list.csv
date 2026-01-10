@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fc-list, ,v,verbose, , ,101,"Print verbose output of the whole font pattern for each match, or elements if…"
+fc-list, ,f,format, , ,102,Format output according to the format specifier format
+fc-list, ,q,quiet, , ,103,Suppress all normal output.  returns 1 as the error code if no fonts matched
+fc-list, ,V,version, , ,104,Show version of the program and exit
+fc-list, ,h,help, , ,105,Show summary of options

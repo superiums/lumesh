@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$command, ,h,help, , ,101,Show help
+$command, ,V,version, , ,102,Show version
+$command, , ,country, ,@f,103,Specify the country code
+$command, ,f,force, , ,104, 
+$command, , ,gui, , ,105,Show gui diagnostics
+$command, , ,isolate, , ,106,Use the separate bottles for applications
+$command, , ,self-update, , ,107,Update to the latest version
+$command, , ,update-rollback, , ,108,Rollback the latest self-update
+$command, ,k,keep_isos, , ,109,Cache ISOs
+$command, , ,no-clean, , ,110,Don't delete temporary directories
+$command, ,q,unattended, , ,111,Don't show any prompts
+$command, ,r,ddrescue, , ,112, 
+$command, ,t,torify, , ,113,Run downloads through torify
+$command, , ,virefy, , ,114,Test verbs automaitally
+$command, ,v,verbose, , ,115,Show commands
+$command, $root_condition, , ,$subcommands_with_descriptions, ,116, 
+$command, , , ,list, ,117, 
+$command, , , ,list, ,118, 
+$command, , , ,list, ,119, 

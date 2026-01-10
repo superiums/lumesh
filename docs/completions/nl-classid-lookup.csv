@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nl-classid-lookup, ,h,help, , ,101,Print help text to console and exit
+nl-classid-lookup, ,v,version, , ,102,Print versioning information to console and exit
+nl-classid-lookup, ,r,reverse, , ,103,Do a reverse lookup.  Lookup a classid and print its name
+nl-classid-lookup, , ,raw, , ,104,"Print the raw classid in hexadecimal format, do not pretty print it"

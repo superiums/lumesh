@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apm, ,V,version, ,@f,191,Display version and exit
+apm, ,v,verbose, ,@f,192,Print APM info
+apm, ,m,minutes, ,@f,193,Print time remaining
+apm, ,M,monitor, ,@f,194,Monitor status info
+apm, ,S,standby, ,@f,195,Request APM standby mode
+apm, ,s,suspend, ,@f,196,Request APM suspend mode
+apm, ,d,debug, ,@f,197,APM status debugging info

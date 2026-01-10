@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+psl, , ,is-public-suffix, , ,101,check if domains are public suffixes.  [default]
+psl, , ,is-cookie-domain-acceptable, , ,102,check if cookie-domain is acceptable for domains
+psl, , ,print-unreg-domain, , ,103,Returned data: the longest public suffix part for each domain
+psl, , ,print-reg-domain, , ,104,Returned data: the shortest private suffix part for each domain
+psl, , ,version, , ,105,show library version information
+psl, , ,print-info, , ,106,"print info about library builtin data PUBLIC SUFFIX DATA By default, `psl' wi…"
+psl, , ,use-latest-data, , ,107,use the latest available PSL data [default]
+psl, , ,use-builtin-data, , ,108,use the builtin PSL data
+psl, , ,load-psl-file, , ,109,load PSL data from file SEE ALSO https://publicsuffix. org/ https://github

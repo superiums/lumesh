@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-shred, ,n,iterations, , ,101,overwrite N times instead of the default (3)
+uu-shred, ,s,size, , ,102,"shred this many bytes (suffixes like K, M, G accepted)"
+uu-shred, , ,remove,unlink,@f @r,103,"like -u but give control on HOW to delete;  See below"
+uu-shred, , ,random-source, ,@r,104,take random bytes from FILE
+uu-shred, ,f,force, , ,105,change permissions to allow writing if necessary
+uu-shred, ,v,verbose, , ,106,show progress
+uu-shred, ,x,exact, , ,107,"do not round file sizes up to the next full block; this is the default for non-regular files"
+uu-shred, ,z,zero, , ,108,add a final overwrite with zeros to hide shredding
+uu-shred, ,h,help, , ,109,Print help
+uu-shred, ,V,version, , ,110,Print version

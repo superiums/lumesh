@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_add_path, ,a,append, , ,101,Add path to the end
+fish_add_path, ,p,prepend, , ,102,Add path to the front (default)
+fish_add_path, ,g,global, , ,103,Use a global $fish_user_paths
+fish_add_path, ,U,universal, , ,104,Use a universal $fish_user_paths (default)
+fish_add_path, ,P,path, , ,105,Update $PATH directly
+fish_add_path, ,m,move, , ,106,Move path to the front or back
+fish_add_path, ,v,verbose, , ,107,Print the set command used
+fish_add_path, ,n,dry-run, , ,108,Print the set command without executing it
+fish_add_path, ,h,help, , ,109,Display help and exit

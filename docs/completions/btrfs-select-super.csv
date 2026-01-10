@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-select-super, ,s,super, , ,101,"use Nth superblock copy, valid values are 0 1 or 2 if the respective superblo…"

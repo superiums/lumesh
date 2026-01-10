@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xsv, ,h,help, , ,122,Display xsv help
+xsv, , ,version, , ,123,Display xsv version info
+xsv, , ,list, , ,124,List all xsv commands

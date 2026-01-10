@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkfs, ,t,type, , ,101, 
+mkfs, ,V,verbose, , ,102, 
+mkfs, ,h,help, , ,103, 
+mkfs, , ,version, , ,104, 

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgfmt, $cond,j,java, , ,102,Generate a Java ResourceBundle class
+msgfmt, $cond, ,java2, , ,103,"Like --java, and assume Java2 (JDK 1.2 or higher)"
+msgfmt, $cond, ,csharp, , ,104,Generate a .NET .dll file
+msgfmt, $cond, ,csharp-resources, , ,105,Generate a .NET .resources file
+msgfmt, $cond, ,tcl, , ,106,Generate a tcl/msgcat .msg file
+msgfmt, $cond, ,qt, , ,107,Generate a Qt .qm file
+msgfmt, $cond,r,resource, , ,110,Resource name
+msgfmt, $cond,l,locale, , ,111,"Locale name, either language or language_COUNTRY"
+msgfmt, $cond,d, , ,@D @f @r,112,Base directory for output

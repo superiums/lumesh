@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+krb5-config, , ,help, , ,101,prints a usage message
+krb5-config, , ,all, , ,102,"prints the version, vendor, prefix, and exec-prefix"
+krb5-config, , ,version, , ,103,prints the version number of the Kerberos installation
+krb5-config, , ,vendor, , ,104,prints the name of the vendor of the Kerberos installation
+krb5-config, , ,prefix, , ,105,prints the prefix for which the Kerberos installation was built
+krb5-config, , ,exec-prefix, , ,106,prints the prefix for executables for which the Kerberos installation was bui…
+krb5-config, , ,defccname, , ,107,prints the built-in default credentials cache location
+krb5-config, , ,defktname, , ,108,prints the built-in default keytab location
+krb5-config, , ,defcktname, , ,109,prints the built-in default client (initiator) keytab location
+krb5-config, , ,cflags, , ,110,prints the compilation flags used to build the Kerberos installation
+krb5-config, , ,libs, , ,111,prints the compiler options needed to link against library

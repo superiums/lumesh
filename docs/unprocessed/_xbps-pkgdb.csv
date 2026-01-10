@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, ,C, , ,@D,101,Specifies a path to the XBPS configuration directory.
+$progname, ,m, ,$modes, ,102,Set mode of PKGNAME
+$progname, ,r, , ,@D,103,Specifies a full path for the target root directory.

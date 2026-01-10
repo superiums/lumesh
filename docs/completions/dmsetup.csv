@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dmsetup, , ,addnodeoncreate, , ,101,Ensure /dev/mapper node exists after dmsetup create
+dmsetup, , ,addnodeonresume, , ,102,Ensure /dev/mapper node exists after dmsetupresume (default with udev)
+dmsetup, , ,checks, , ,103,Perform additional checks on the operations requested and report potential pr…
+dmsetup, ,C,columns, , ,104,Display output in columns rather than as Field: Value lines
+dmsetup, , ,count, , ,105,Specify the number of times to repeat a report
+dmsetup, ,f,force, , ,106,Try harder to complete operation
+dmsetup, ,h,help, , ,107,"Outputs a summary of the commands available, optionally including the list of…"
+dmsetup, , ,inactive, , ,108,When returning any table information from the kernel report on the inactive t…
+dmsetup, , ,interval, , ,109,Specify the interval in seconds between successive iterations for repeating r…
+dmsetup, , ,manglename, , ,110,Mangle any character not on a whitelist using mangling_mode when processing d…
+dmsetup, ,j,major, , ,111,Specify the major number
+dmsetup, ,m,minor, , ,112,Specify the minor number
+dmsetup, ,n,notable, , ,113,"When creating a device, don't load any table"
+dmsetup, , ,nameprefixes, , ,114,Add a 'DM_' prefix plus the field name to the output
+dmsetup, , ,noheadings, , ,115,Suppress the headings line when using columnar output
+dmsetup, , ,headings, , ,116,Type of headings line to use for columnar output.  none or 0: No headings
+dmsetup, , ,noflush, , ,117,"Do not flush outstanding I/O when suspending a device, or do not commit thin-…"
+dmsetup, , ,nolockfs, , ,118,"Do not attempt to synchronize filesystem eg, when suspending a device"
+dmsetup, , ,noopencount, , ,119,Tell the kernel not to supply the open reference count for the device
+dmsetup, , ,noudevrules, , ,120,Do not allow udev to manage nodes for devices in device-mapper directory
+dmsetup, , ,noudevsync, , ,121,"Do not synchronize with udev when creating, renaming or removing devices"
+dmsetup, ,o,options, , ,122,Specify which fields to display
+dmsetup, , ,readahead, , ,123,Specify read ahead size in units of sectors
+dmsetup, ,r,readonly, , ,124,Set the table being loaded read-only
+dmsetup, ,S,select, , ,125,Process only items that match selection criteria
+dmsetup, , ,table, , ,126,Specify a one-line table directly on the command line
+dmsetup, , ,udevcookie, , ,127,Use cookie for udev synchronization
+dmsetup, ,u,uuid, , ,128,Specify the uuid
+dmsetup, ,y,yes, , ,129,Answer yes to all prompts automatically
+dmsetup, ,v,verbose, , ,130,Produce additional output
+dmsetup, , ,verifyudev, , ,131,"If udev synchronization is enabled, verify that udev operations get performed…"
+dmsetup, , ,version, , ,132,Display the library and kernel driver version
+dmsetup, , ,tree, , ,133,It accepts a comma-separate list of options
+dmsetup, , ,deferred, , ,134,will be removed when the last user closes it

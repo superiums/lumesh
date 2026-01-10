@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ts_test, ,r,rotate, , ,101,Rotate the screen

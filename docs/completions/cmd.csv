@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cmd, , , , ,@f,101, 
+cmd, , , ,/s,@f,102,Modify the treatment of string after /c or /k
+cmd, , , ,/q,@f,103,Turn the echo off
+cmd, , , ,/d,@f,104,Disable execution of AutoRun commands
+cmd, , , ,/t,@f,105,Set the background and foreground color
+cmd, , , ,/e,@f,106,Manage command extensions
+cmd, , , ,/f,@f,107,Manage file and directory name completion
+cmd, , , ,/v,@f,108,Manage delayed environment variable expansion
+cmd, , , ,/?,@f,109,Show help

@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pod2text.1perl, ,a,alt, , ,101,"X Item '-a, --alt' [1"
+pod2text.1perl, , ,code, , ,102,X Item '--code' [1
+pod2text.1perl, ,c,color, , ,103,"X Item '-c, --color' [1"
+pod2text.1perl, ,e,encoding, , ,104,"X Item '-e encoding, --encoding=encoding' [5"
+pod2text.1perl, , ,errors, , ,105,X Item '--errors=style' [2. 5. 0] Set the error handling style
+pod2text.1perl, , ,guesswork, , ,106,"X Item '--guesswork=rule[,rule. ]' [5"
+pod2text.1perl, ,i,indent, , ,107,"X Item '-i indent, --indent=indent' [1"
+pod2text.1perl, ,h,help, , ,108,"X Item '-h, --help' [1. 00] Print out usage information and exit"
+pod2text.1perl, ,l,loose, , ,109,"X Item '-l, --loose' [1"
+pod2text.1perl, ,m,margin, , ,110,"X Item '-m width, --left-margin=width, --margin=width' [1"
+pod2text.1perl, , ,nourls, , ,111,X Item '--nourls' [2. 5
+pod2text.1perl, ,o,overstrike, , ,112,"X Item '-o, --overstrike' [1. 06] Format the output with overstrike printing"
+pod2text.1perl, ,q,quotes, , ,113,"X Item '-q quotes, --quotes=quotes' [4"
+pod2text.1perl, ,s,sentence, , ,114,"X Item '-s, --sentence' [1"
+pod2text.1perl, , ,stderr, , ,115,X Item '--stderr' [2. 1
+pod2text.1perl, ,t,termcap, , ,116,"X Item '-t, --termcap' [1"
+pod2text.1perl, ,u,utf8, , ,117,"X Item '-u, --utf8' [2. 2. 0] Set the output encoding to UTF-8"
+pod2text.1perl, ,w,width, , ,118, 

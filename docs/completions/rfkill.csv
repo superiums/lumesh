@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rfkill, block unblock list event help, , ,block unblock list event help, ,100, 
+rfkill, ,V,version, , ,102,Print version
+rfkill, ,h,help, , ,103,Print help
+rfkill, ,J,json, , ,104,JSON output
+rfkill, ,r,raw, , ,105,Raw output
+rfkill, ,n,noheadings, , ,106,Don't print headings
+rfkill, ,o,output,DEVICE ID TYPE TYPE-DESC SOFT HARD, ,107,Columns to output
+rfkill, , ,output-all, , ,108,Output all columns

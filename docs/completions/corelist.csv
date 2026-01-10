@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+corelist.1perl, , ,diff, , ,101,"X Item '--diff' Given two versions of perl, this prints a human-readable tabl…"
+corelist.1perl, , ,utils, , ,102,X Item '--utils' lists the first version of perl each named utility program w…
+corelist.1perl, ,f,feature, , ,103,"X Item '--feature, -f' lists the first version bundle of each named feature g…"
+corelist.1perl, ,u,upstream, , ,104, 

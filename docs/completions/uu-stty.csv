@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-stty, ,F,file, ,@r,101,open and use the specified DEVICE instead of stdin
+uu-stty, ,a,all, , ,102,print all current settings in human-readable form
+uu-stty, ,g,save, , ,103,print all current settings in a stty-readable form
+uu-stty, ,h,help, , ,104,Print help
+uu-stty, ,V,version, , ,105,Print version

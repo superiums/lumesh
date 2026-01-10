@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wicd-cli, ,h,help, , ,101,Print help and exit
+wicd-cli, ,S,scan, , ,102,Scan for networks
+wicd-cli, ,l,list-networks, , ,103,List networks
+wicd-cli, ,d,network-details, , ,104,Show network details
+wicd-cli, ,x,disconnect, , ,105,Disconnect
+wicd-cli, ,c,connect, , ,106,Connect
+wicd-cli, ,e,list-encryption-types, , ,107,List encryption types
+wicd-cli, ,y,wireless, , ,108,Perform operation on wireless network
+wicd-cli, ,z,wired, , ,109,Perform operation on wired network
+wicd-cli, ,w,save, , ,110,Save profile
+wicd-cli, ,o,load-profile, , ,111,Load profile
+wicd-cli, ,m,name, , ,112,Set name for profile to save/load
+wicd-cli, ,p,network-property, ,@r,113,Get or set network property
+wicd-cli, ,s,set-to, ,@r,114,Set network property to
+wicd-cli, ,n,network, , ,115,Set the network

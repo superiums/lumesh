@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tox, , ,version, , ,101,Report version information to stdout
+tox, ,h,help, , ,102,Show help about options
+tox, , ,hi, , ,103,Show help about ini-names
+tox, ,v,verbose, , ,104,Increase verbosity of reporting output
+tox, ,q,quiet, , ,105,Progressively silence reporting output
+tox, , ,showconfig, , ,106,Show live configuration
+tox, ,l,listenvs, , ,107,Show list of test environments
+tox, ,a,listenvs-all, , ,108,Show list of all defined environments
+tox, ,c, , ,@F @r,109,Config file name or directory with 'tox.ini' file
+tox, ,e, , ,@f @r,110,Work against specified environments
+tox, , ,devenv, ,@F @r,111,Sets up a development environment at ENVIDR
+tox, , ,notest, , ,112,Skip invoking test commands
+tox, , ,sdistonly, , ,113,Only perform the sdist packaging activity
+tox, , ,skip-pkg-install, , ,114,Skip package installation for this run
+tox, ,p,parallel, ,@f @r,115,Run tox environments in parallel
+tox, ,o,parallel-live, , ,116,Connect to stdout while running environments
+tox, , ,installpkg, ,@F @r,117,"Use specified package for installation into venv, instead of creating an sdist"
+tox, , ,develop, , ,118,Install package in the venv using 'setup.py develop' via 'pip -e .'
+tox, ,i,index-url, ,@r,119,Set indexserver url
+tox, , ,pre, , ,120,Install pre-releases and development versions of dependencies
+tox, ,r,recreate, , ,121,Force recreation of virtual environments
+tox, , ,result-json, ,@r,122,Write commands and results to this JSON file
+tox, , ,discover, ,@r,123,For python discovery first try the python executables under these paths
+tox, , ,hashseed, ,@r,124,Set PYTHONHASHSEED to SEED before running commands
+tox, , ,force-dep, ,@r,125,Force dependency version
+tox, , ,sitepackages, , ,126,Override sitepackages setting to True in all envs
+tox, , ,alwayscopy, , ,127,Override alwayscopy setting to True in all envs
+tox, , ,no-provision, , ,128,Do not perform provision but write JSON metadata to this file
+tox, ,s,skip-missing-interpreters,config true false,@f @r,129,Don't fail tests for missing interpreters
+tox, , ,workdir, ,@r,130,Tox working directory

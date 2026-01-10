@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kbdinfo, ,C,console, , ,101,the console device to be used
+kbdinfo, ,V,version, , ,102,print version number
+kbdinfo, ,h,help, , ,103,print this usage message.  AUTHORS Written by Alexey Gladkov

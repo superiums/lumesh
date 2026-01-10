@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+derb, ,?,help, , ,101,Print help about usage and exit
+derb, ,V,version, , ,102,Print the version of  derb and exit
+derb, ,v,verbose, , ,103,Display extra informative messages during execution
+derb, ,A,suppressAliases, , ,104,Don't follow aliases when producing output
+derb, ,e,encoding, , ,105,Set the encoding used to write output files to R encoding 
+derb, , ,bom, , ,106,Write a byte order mark (BOM) at the beginning of the file
+derb, ,l,locale, , ,107,"Set the  locale for the resource bundle, which is used both in the generated …"
+derb, ,t,truncate, , ,108,Truncate individual resources (strings or binary data) to  size bytes
+derb, ,s,sourcedir, , ,109,Set the source directory to R source 
+derb, ,d,destdir, , ,110,Set the destination directory to R destination 
+derb, ,i,icudatadir, , ,111,Look for any necessary ICU data files in R directory 
+derb, ,c,to-stdout, , ,112,"option is used, however, the text will be written on the standard output"

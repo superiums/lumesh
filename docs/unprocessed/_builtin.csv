@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+builtin, test (count (commandline -xpc)) -eq 1,h,help, , ,101,Display help and exit
+builtin, test (count (commandline -xpc)) -eq 1,n,names, , ,102,Print names of all existing builtins
+builtin, test (count (commandline -xpc)) -eq 1,q,query, , ,103,Tests if builtin exists

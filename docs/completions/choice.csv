@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+choice, , , ,/c,@f,101,Specify the list of choices to be created
+choice, , , ,/n,@f,102,Hide the list of choices
+choice, , , ,/cs,@f,103,Specify that the choices are case-sensitive
+choice, , , ,/t,@f,104,Specify the number of seconds
+choice, , , ,/d,@f,105,Specify the default choice
+choice, , , ,/m,@f,106,Specify a message
+choice, , , ,/?,@f,107,Show help

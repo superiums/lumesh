@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-reboot, ,h,help, , ,101,print this message and exit
+grub-reboot, ,V,version, , ,102,print the version information and exit
+grub-reboot, , ,boot-directory, , ,103,"expect GRUB images under the directory DIR/grub instead of the ,/boot/grub/ d…"

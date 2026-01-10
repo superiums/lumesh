@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+python2, ,c, , ,@f @r,101,Execute argument as command
+python2, ,h,help, , ,102,Display help and exit
+python2, ,W, ,ignore default all module once error,@f @r,103,Warning control
+python2, ,Q, ,old new warn warnall,@f @r,106,Division control

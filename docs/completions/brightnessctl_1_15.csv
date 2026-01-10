@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+brightnessctl, ,h,help, , ,101, 
+brightnessctl, ,l,list, , ,102, 
+brightnessctl, ,q,quiet, , ,103, 
+brightnessctl, ,p,pretend, , ,104, 
+brightnessctl, ,m,machine-readable, , ,105, 
+brightnessctl, ,n,min-value, , ,106, 
+brightnessctl, ,e,exponent, , ,107, 
+brightnessctl, ,s,save, , ,108, 
+brightnessctl, ,r,restore, , ,109, 
+brightnessctl, ,d,device, , ,110, 
+brightnessctl, ,c,class, , ,111, 
+brightnessctl, ,v,version, , ,112, 

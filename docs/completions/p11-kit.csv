@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+p11-kit, ,v,verbose, , ,101, 
+p11-kit, ,q,quiet, , ,102, 
+p11-kit, , ,only-uris, , ,103, 
+p11-kit, , ,provider, , ,104, 
+p11-kit, , ,login, , ,105, 
+p11-kit, , ,file, , ,106, 
+p11-kit, , ,label, , ,107, 
+p11-kit, , ,id, , ,108, 
+p11-kit, , ,type, , ,109, 
+p11-kit, , ,bits, , ,110, 
+p11-kit, , ,curve, , ,111, 
+p11-kit, , ,profile, , ,112, 

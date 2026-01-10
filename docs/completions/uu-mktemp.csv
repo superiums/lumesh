@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-mktemp, , ,suffix, , ,101,"append SUFFIX to TEMPLATE; SUFFIX must not contain a path separator. This option is implied if TEMPLATE does not end with X."
+uu-mktemp, ,p, , ,@D @f @r,102,short form of --tmpdir
+uu-mktemp, , ,tmpdir, ,@D @f @r,103,"interpret TEMPLATE relative to DIR; if DIR is not specified, use $TMPDIR ($TMP on windows) if set, else /tmp. With this option, TEMPLATE must not be an absolute name; unlike with -t, TEMPLATE may contain slashes, but mktemp creates only the final component"
+uu-mktemp, ,d,directory, , ,104,Make a directory instead of a file
+uu-mktemp, ,u,dry-run, , ,105,"do not create anything; merely print a name (unsafe)"
+uu-mktemp, ,q,quiet, , ,106,Fail silently if an error occurs.
+uu-mktemp, ,h,help, , ,107,Print help
+uu-mktemp, ,V,version, , ,108,Print version

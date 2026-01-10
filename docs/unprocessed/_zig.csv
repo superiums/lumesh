@@ -1,0 +1,102 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zig, __fish_use_subcommand, , ,build,@f @r,101,Build project from build.zig
+zig, __fish_use_subcommand, , ,fetch,@f @r,102,Copy a package into global cache and print its hash
+zig, __fish_use_subcommand, , ,init,@f @r,103,Initialize a Zig package in the current directory
+zig, __fish_use_subcommand, , ,build-exe,@f @r,104,Create executable from source or object files
+zig, __fish_use_subcommand, , ,build-lib,@f @r,105,Create library from source or object files
+zig, __fish_use_subcommand, , ,build-obj,@f @r,106,Create object from source or object files
+zig, __fish_use_subcommand, , ,test,@f @r,107,Perform unit testing
+zig, __fish_use_subcommand, , ,run,@f @r,108,Create executable and run immediately
+zig, __fish_use_subcommand, , ,ast-check,@f @r,109,Look for simple compile errors in any set of files
+zig, __fish_use_subcommand, , ,fmt,@f @r,110,Reformat Zig source into canonical form
+zig, __fish_use_subcommand, , ,reduce,@f @r,111,Minimize a bug report
+zig, __fish_use_subcommand, , ,translate-c,@f @r,112,Convert C code to Zig code
+zig, __fish_use_subcommand, , ,ar,@f @r,113,Use Zig as a drop-in archiver
+zig, __fish_use_subcommand, , ,cc,@f @r,114,Use Zig as a drop-in C compiler
+zig, __fish_use_subcommand, , ,c++,@f @r,115,Use Zig as a drop-in C++ compiler
+zig, __fish_use_subcommand, , ,dlltool,@f @r,116,Use Zig as a drop-in dlltool.exe
+zig, __fish_use_subcommand, , ,lib,@f @r,117,Use Zig as a drop-in lib.exe
+zig, __fish_use_subcommand, , ,ranlib,@f @r,118,Use Zig as a drop-in ranlib
+zig, __fish_use_subcommand, , ,objcopy,@f @r,119,Use Zig as a drop-in objcopy
+zig, __fish_use_subcommand, , ,rc,@f @r,120,Use Zig as a drop-in rc.exe
+zig, __fish_use_subcommand, , ,env,@f @r,121,"Print lib path, std path, cache directory, and version"
+zig, __fish_use_subcommand, , ,help,@f @r,122,Print help for `zig`
+zig, __fish_use_subcommand, , ,std,@f @r,123,View standard library documentation in a browser
+zig, __fish_use_subcommand, , ,libc,@f @r,124,Display native libc paths file or validate one
+zig, __fish_use_subcommand, , ,targets,@f @r,125,List available compilation targets
+zig, __fish_use_subcommand, , ,version,@f @r,126,Print version number
+zig, __fish_use_subcommand, , ,zen,@f @r,127,Print Zen of Zig
+zig, build && __fish_prev_arg_in build, , ,,@f @r,128, 
+zig, $zig_build_generic_commands, ,watch, , ,180,Enable compiler REPL
+zig, $zig_build_generic_commands, ,color,auto off on,@f @r,181,Enable/Disable colored error messages
+zig, $zig_build_generic_commands, , , ,@r,182,Output machine code (default)
+zig, $zig_build_generic_commands, , , ,@r,183,Output assembly code
+zig, $zig_build_generic_commands, , , ,@r,184,Produce a file containing LLVM IR
+zig, $zig_build_generic_commands, , , ,@r,185,Produce a file containing LLVM bitcode
+zig, $zig_build_generic_commands, , , ,@r,186,Generate a C header file
+zig, $zig_build_generic_commands, , , ,@r,187,Create the documentation
+zig, $zig_build_generic_commands, , , ,@r,188,Write analysis JSON file
+zig, $zig_build_generic_commands, , , ,@r,189,Produce an import library file (default)
+zig, $zig_build_generic_commands, ,show-builtin, , ,190,Output the source of `@import('builtin')`
+zig, $zig_build_generic_commands, ,cache-dir, ,@r,191,Override the local cache directory
+zig, $zig_build_generic_commands, ,global-cache-dir, ,@r,192,Override the global cache directory
+zig, $zig_build_generic_commands, ,zig-lib-dir, ,@r,193,Override path to Zig installation lib directory
+zig, $zig_build_generic_commands, ,enable-cache, , ,194,Output to cache directory
+zig, $zig_build_generic_commands, , , ,@f @r,195,Specify the compilation target
+zig, $zig_build_generic_commands, , , ,@f @r,196,Specify target CPU and feature set
+zig, $zig_build_generic_commands, , ,default tiny small kernel medium large,@f @r,197,Limit range of code and data virtual addresses
+zig, $zig_build_generic_commands, , , ,@f @r,198,Execution model (WASI)
+zig, $zig_build_generic_commands, ,name, ,@f @r,199,Override root name
+zig, $zig_build_generic_commands,O, ,,@f @r,200, 
+zig, $zig_build_generic_commands, ,pkg-begin, ,@f @r,201,Make pkg available to import and push current pkg
+zig, $zig_build_generic_commands, ,pkg-end, , ,202,Pop current pkg
+zig, $zig_build_generic_commands, ,main-pkg-path, , ,203,Set the directory of the root package
+zig, $zig_build_generic_commands, ,strip, , ,204,Omit debug symbols
+zig, $zig_build_generic_commands, , ,,@f @r,205, 
+zig, $zig_build_generic_commands, , , ,@r,206,Add directory to AFTER include search path
+zig, $zig_build_generic_commands, , , ,@r,207,Add directory to SYSTEM include search path
+zig, $zig_build_generic_commands,I, , ,@r,208,Add directory to include search path
+zig, $zig_build_generic_commands,D, , ,@f @r,209,Define the C macro
+zig, $zig_build_generic_commands, ,libc, ,@r,210,Provide a file which specifies libc paths
+zig, $zig_build_generic_commands, , , ,@f @r,211,Set extra flags for the next positional C source files
+zig, $zig_build_generic_commands,l,library, ,@f @r,212,Link against system library (only if actually used)
+zig, $zig_build_generic_commands, ,needed-library, ,@f @r,213,Link against system library (even if unused)
+zig, $zig_build_generic_commands,L,library-directory, ,@r,214,Add a directory to the library search path
+zig, $zig_build_generic_commands,T,script, ,@r,215,Use a custom linker script
+zig, $zig_build_generic_commands, ,version-script, ,@r,216,Provide a version .map file
+zig, $zig_build_generic_commands, ,dynamic-linker, ,@r,217,Set the dynamic interpreter path
+zig, $zig_build_generic_commands, ,sysroot, ,@r,218,Set the system root directory
+zig, $zig_build_generic_commands, ,version, ,@f @r,219,Dynamic library semver
+zig, $zig_build_generic_commands, ,entry, ,@f @r,220,Set the entrypoint symbol name
+zig, $zig_build_generic_commands, , , ,@f @r,221,Override the default SONAME value
+zig, $zig_build_generic_commands, , , ,@r,222,Add directory to the runtime library search path
+zig, $zig_build_generic_commands, ,eh-frame-hdr, , ,223,Enable C++ exception handling by passing `--eh-frame-hdr` to linker
+zig, $zig_build_generic_commands, ,emit-relocs, , ,224,Enable output of relocation sections for post build tools
+zig, $zig_build_generic_commands,z, ,,@f @r,225, 
+zig, $zig_build_generic_commands, ,subsystem,,@f @r,226, 
+zig, $zig_build_generic_commands, ,stack, ,@f @r,227,Override default stack size
+zig, $zig_build_generic_commands, ,image-base, ,@f @r,228,Set base address for executable image
+zig, $zig_build_generic_commands, , , ,@f @r,229,Link against framework (Darwin)
+zig, $zig_build_generic_commands,F, , ,@r,230,Add search path for frameworks (Darwin)
+zig, $zig_build_generic_commands, , , ,@f @r,231,Add dylib's install name (Darwin)
+zig, $zig_build_generic_commands, ,import-memory, , ,232,Import memory from the environment (Wasm)
+zig, $zig_build_generic_commands, ,initial-memory, ,@f @r,233,Initial size of the linear memory (Wasm)
+zig, $zig_build_generic_commands, ,max-memory, ,@f @r,234,Maximum size of the linear memory (Wasm)
+zig, $zig_build_generic_commands, ,global-base, ,@f @r,235,Where to start to place global data (Wasm)
+zig, $zig_build_generic_commands, ,export, ,@f @r,236,Force a symbol to be exported (Wasm)
+zig, $zig_build_generic_commands, ,test-filter, ,@f @r,237,Skip tests that do not match filter
+zig, $zig_build_generic_commands, ,test-name-prefix, ,@f @r,238,Add prefix to all tests
+zig, $zig_build_generic_commands, ,test-cmd, ,@f @r,239,Specify test execution command
+zig, $zig_build_generic_commands, ,test-cmd-bin, , ,240,Appends test binary path to `--test-cmd`
+zig, $zig_build_generic_commands, ,test-evented-io, , ,241,Runs the test in evented I/O mode
+zig, $zig_build_generic_commands, ,test-no-exec, , ,242,Compiles test binary without running it
+zig, $zig_build_generic_commands, ,verbose-link, , ,243,Display linker invocations
+zig, $zig_build_generic_commands, ,verbose-cc, , ,244,Display C compiler invocations
+zig, $zig_build_generic_commands, ,verbose-air, , ,245,Enable compiler debug output for Zig AIR
+zig, $zig_build_generic_commands, ,verbose-mir, , ,246,Enable compiler debug output for Zig MIR
+zig, $zig_build_generic_commands, ,verbose-llvm-ir, , ,247,Enable compiler debug output for LLVM IR
+zig, $zig_build_generic_commands, ,verbose-cimport, , ,248,Enable compiler debug output for C imports
+zig, $zig_build_generic_commands, ,verbose-llvm-cpu-features, , ,249,Enable compiler debug output for LLVM CPU features
+zig, $zig_build_generic_commands, ,debug-log, ,@f @r,250,Enable printing debug/info log messages for scope
+zig, $zig_build_generic_commands, ,debug-compile-errors, , ,251,Crash with helpful diagnostics at the first compile error
+zig, $zig_build_generic_commands, ,debug-link-snapshot, , ,252,Enable dumping of the linker's state in JSON

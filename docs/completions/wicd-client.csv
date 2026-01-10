@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wicd-client, ,t,tray, , ,101,Run the wicd tray icon only.
+wicd-client, ,n,no-tray, , ,102,Run wicd without the tray icon.
+wicd-client, ,h,help, , ,103,Print this help information.
+wicd-client, ,a,no-animate, , ,104,Run the tray without network traffic tray animations.
+wicd-client, ,o,only-notifications, , ,105,Don't display anything except notifications.

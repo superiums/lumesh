@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+figlet, ,f, , ,@f @r,101,Select font
+figlet, ,C, , ,@k,102,Add given control file
+figlet, ,I, ,0 1 2 3 4 5,@f @r,103,Print information given infocode

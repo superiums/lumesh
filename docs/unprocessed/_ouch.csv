@@ -1,0 +1,109 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ouch, __fish_ouch_needs_command,f,format, , ,101,Specify the format of the archive
+ouch, __fish_ouch_needs_command,p,password, , ,102,Decompress or list with password
+ouch, __fish_ouch_needs_command,c,threads, , ,103,Concurrent working threads
+ouch, __fish_ouch_needs_command,y,yes, , ,104,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_needs_command,n,no, , ,105,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_needs_command,A,accessible, , ,106,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_needs_command,H,hidden, , ,107,Ignore hidden files
+ouch, __fish_ouch_needs_command,q,quiet, , ,108,Silence output
+ouch, __fish_ouch_needs_command,g,gitignore, , ,109,Ignore files matched by git's ignore files
+ouch, __fish_ouch_needs_command,h,help, , ,110,Print help (see more with '--help')
+ouch, __fish_ouch_needs_command,V,version, , ,111,Print version
+ouch, __fish_ouch_needs_command, , ,compress,@f,112,Compress one or more files into one output file
+ouch, __fish_ouch_needs_command, , ,c,@f,113,Compress one or more files into one output file
+ouch, __fish_ouch_needs_command, , ,decompress,@f,114,"Decompresses one or more files, optionally into another folder"
+ouch, __fish_ouch_needs_command, , ,d,@f,115,"Decompresses one or more files, optionally into another folder"
+ouch, __fish_ouch_needs_command, , ,list,@f,116,List contents of an archive
+ouch, __fish_ouch_needs_command, , ,l,@f,117,List contents of an archive
+ouch, __fish_ouch_needs_command, , ,ls,@f,118,List contents of an archive
+ouch, __fish_ouch_needs_command, , ,help,@f,119,Print this message or the help of the given subcommand(s)
+ouch, __fish_ouch_using_subcommand compress,l,level, , ,120,"Compression level, applied to all formats"
+ouch, __fish_ouch_using_subcommand compress,f,format, , ,121,Specify the format of the archive
+ouch, __fish_ouch_using_subcommand compress,p,password, , ,122,Decompress or list with password
+ouch, __fish_ouch_using_subcommand compress,c,threads, , ,123,Concurrent working threads
+ouch, __fish_ouch_using_subcommand compress, ,fast, , ,124,"Fastest compression level possible, conflicts with --level and --slow"
+ouch, __fish_ouch_using_subcommand compress, ,slow, , ,125,"Slowest (and best) compression level possible, conflicts with --level and --fast"
+ouch, __fish_ouch_using_subcommand compress,S,follow-symlinks, , ,126,Archive target files instead of storing symlinks (supported by `tar` and `zip`)
+ouch, __fish_ouch_using_subcommand compress,y,yes, , ,127,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_using_subcommand compress,n,no, , ,128,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_using_subcommand compress,A,accessible, , ,129,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_using_subcommand compress,H,hidden, , ,130,Ignore hidden files
+ouch, __fish_ouch_using_subcommand compress,q,quiet, , ,131,Silence output
+ouch, __fish_ouch_using_subcommand compress,g,gitignore, , ,132,Ignore files matched by git's ignore files
+ouch, __fish_ouch_using_subcommand compress,h,help, , ,133,Print help
+ouch, __fish_ouch_using_subcommand c,l,level, , ,134,"Compression level, applied to all formats"
+ouch, __fish_ouch_using_subcommand c,f,format, , ,135,Specify the format of the archive
+ouch, __fish_ouch_using_subcommand c,p,password, , ,136,Decompress or list with password
+ouch, __fish_ouch_using_subcommand c,c,threads, , ,137,Concurrent working threads
+ouch, __fish_ouch_using_subcommand c, ,fast, , ,138,"Fastest compression level possible, conflicts with --level and --slow"
+ouch, __fish_ouch_using_subcommand c, ,slow, , ,139,"Slowest (and best) compression level possible, conflicts with --level and --fast"
+ouch, __fish_ouch_using_subcommand c,S,follow-symlinks, , ,140,Archive target files instead of storing symlinks (supported by `tar` and `zip`)
+ouch, __fish_ouch_using_subcommand c,y,yes, , ,141,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_using_subcommand c,n,no, , ,142,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_using_subcommand c,A,accessible, , ,143,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_using_subcommand c,H,hidden, , ,144,Ignore hidden files
+ouch, __fish_ouch_using_subcommand c,q,quiet, , ,145,Silence output
+ouch, __fish_ouch_using_subcommand c,g,gitignore, , ,146,Ignore files matched by git's ignore files
+ouch, __fish_ouch_using_subcommand c,h,help, , ,147,Print help
+ouch, __fish_ouch_using_subcommand decompress,d,dir, ,@r,148,Place results in a directory other than the current one
+ouch, __fish_ouch_using_subcommand decompress,f,format, , ,149,Specify the format of the archive
+ouch, __fish_ouch_using_subcommand decompress,p,password, , ,150,Decompress or list with password
+ouch, __fish_ouch_using_subcommand decompress,c,threads, , ,151,Concurrent working threads
+ouch, __fish_ouch_using_subcommand decompress,r,remove, , ,152,Remove the source file after successful decompression
+ouch, __fish_ouch_using_subcommand decompress,y,yes, , ,153,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_using_subcommand decompress,n,no, , ,154,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_using_subcommand decompress,A,accessible, , ,155,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_using_subcommand decompress,H,hidden, , ,156,Ignore hidden files
+ouch, __fish_ouch_using_subcommand decompress,q,quiet, , ,157,Silence output
+ouch, __fish_ouch_using_subcommand decompress,g,gitignore, , ,158,Ignore files matched by git's ignore files
+ouch, __fish_ouch_using_subcommand decompress,h,help, , ,159,Print help
+ouch, __fish_ouch_using_subcommand d,d,dir, ,@r,160,Place results in a directory other than the current one
+ouch, __fish_ouch_using_subcommand d,f,format, , ,161,Specify the format of the archive
+ouch, __fish_ouch_using_subcommand d,p,password, , ,162,Decompress or list with password
+ouch, __fish_ouch_using_subcommand d,c,threads, , ,163,Concurrent working threads
+ouch, __fish_ouch_using_subcommand d,r,remove, , ,164,Remove the source file after successful decompression
+ouch, __fish_ouch_using_subcommand d,y,yes, , ,165,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_using_subcommand d,n,no, , ,166,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_using_subcommand d,A,accessible, , ,167,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_using_subcommand d,H,hidden, , ,168,Ignore hidden files
+ouch, __fish_ouch_using_subcommand d,q,quiet, , ,169,Silence output
+ouch, __fish_ouch_using_subcommand d,g,gitignore, , ,170,Ignore files matched by git's ignore files
+ouch, __fish_ouch_using_subcommand d,h,help, , ,171,Print help
+ouch, __fish_ouch_using_subcommand list,f,format, , ,172,Specify the format of the archive
+ouch, __fish_ouch_using_subcommand list,p,password, , ,173,Decompress or list with password
+ouch, __fish_ouch_using_subcommand list,c,threads, , ,174,Concurrent working threads
+ouch, __fish_ouch_using_subcommand list,t,tree, , ,175,Show archive contents as a tree
+ouch, __fish_ouch_using_subcommand list,y,yes, , ,176,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_using_subcommand list,n,no, , ,177,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_using_subcommand list,A,accessible, , ,178,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_using_subcommand list,H,hidden, , ,179,Ignore hidden files
+ouch, __fish_ouch_using_subcommand list,q,quiet, , ,180,Silence output
+ouch, __fish_ouch_using_subcommand list,g,gitignore, , ,181,Ignore files matched by git's ignore files
+ouch, __fish_ouch_using_subcommand list,h,help, , ,182,Print help
+ouch, __fish_ouch_using_subcommand l,f,format, , ,183,Specify the format of the archive
+ouch, __fish_ouch_using_subcommand l,p,password, , ,184,Decompress or list with password
+ouch, __fish_ouch_using_subcommand l,c,threads, , ,185,Concurrent working threads
+ouch, __fish_ouch_using_subcommand l,t,tree, , ,186,Show archive contents as a tree
+ouch, __fish_ouch_using_subcommand l,y,yes, , ,187,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_using_subcommand l,n,no, , ,188,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_using_subcommand l,A,accessible, , ,189,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_using_subcommand l,H,hidden, , ,190,Ignore hidden files
+ouch, __fish_ouch_using_subcommand l,q,quiet, , ,191,Silence output
+ouch, __fish_ouch_using_subcommand l,g,gitignore, , ,192,Ignore files matched by git's ignore files
+ouch, __fish_ouch_using_subcommand l,h,help, , ,193,Print help
+ouch, __fish_ouch_using_subcommand ls,f,format, , ,194,Specify the format of the archive
+ouch, __fish_ouch_using_subcommand ls,p,password, , ,195,Decompress or list with password
+ouch, __fish_ouch_using_subcommand ls,c,threads, , ,196,Concurrent working threads
+ouch, __fish_ouch_using_subcommand ls,t,tree, , ,197,Show archive contents as a tree
+ouch, __fish_ouch_using_subcommand ls,y,yes, , ,198,"Skip [Y/n] questions, default to yes"
+ouch, __fish_ouch_using_subcommand ls,n,no, , ,199,"Skip [Y/n] questions, default to no"
+ouch, __fish_ouch_using_subcommand ls,A,accessible, , ,200,"Activate accessibility mode, reducing visual noise"
+ouch, __fish_ouch_using_subcommand ls,H,hidden, , ,201,Ignore hidden files
+ouch, __fish_ouch_using_subcommand ls,q,quiet, , ,202,Silence output
+ouch, __fish_ouch_using_subcommand ls,g,gitignore, , ,203,Ignore files matched by git's ignore files
+ouch, __fish_ouch_using_subcommand ls,h,help, , ,204,Print help
+ouch," __fish_ouch_using_subcommand help; and compress decompress list help", , ,compress,@f,204,Compress one or more files into one output file
+ouch," __fish_ouch_using_subcommand help; and compress decompress list help", , ,decompress,@f,204,"Decompresses one or more files, optionally into another folder"
+ouch," __fish_ouch_using_subcommand help; and compress decompress list help", , ,list,@f,204,List contents of an archive
+ouch," __fish_ouch_using_subcommand help; and compress decompress list help", , ,help,@f,204,Print this message or the help of the given subcommand(s)

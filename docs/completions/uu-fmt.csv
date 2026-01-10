@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-fmt, ,p,prefix, , ,101,"Reformat only lines beginning with PREFIX, reattaching PREFIX to reformatted lines. Unless -x is specified, leading whitespace will be ignored when matching PREFIX."
+uu-fmt, ,P,skip-prefix, , ,102,"Do not reformat lines beginning with PSKIP. Unless -X is specified, leading whitespace will be ignored when matching PSKIP"
+uu-fmt, ,w,width, , ,103,"Fill output lines up to a maximum of WIDTH columns, default 75. This can be specified as a negative number in the first argument."
+uu-fmt, ,g,goal, , ,104,"Goal width, default of 93% of WIDTH. Must be less than or equal to WIDTH."
+uu-fmt, ,T,tab-width, , ,105,"Treat tabs as TABWIDTH spaces for determining line length, default 8. Note that this is used only for calculating line lengths; tabs are preserved in the output."
+uu-fmt, ,c,crown-margin, , ,106,"First and second line of paragraph may have different indentations, in which case the first line's indentation is preserved, and each subsequent line's indentation matches the second line."
+uu-fmt, ,t,tagged-paragraph, , ,107,"Like -c, except that the first and second line of a paragraph *must* have different indentation or they are treated as separate paragraphs."
+uu-fmt, ,m,preserve-headers, , ,108,Attempt to detect and preserve mail headers in the input. Be careful when combining this flag with -p.
+uu-fmt, ,s,split-only, , ,109,"Split lines only, do not reflow."
+uu-fmt, ,u,uniform-spacing, , ,110,"Insert exactly one space between words, and two between sentences. Sentence breaks in the input are detected as [?!.] followed by two spaces or a newline; other punctuation is not interpreted as a sentence break."
+uu-fmt, ,x,exact-prefix, , ,111,PREFIX must match at the beginning of the line with no preceding whitespace.
+uu-fmt, ,X,exact-skip-prefix, , ,112,PSKIP must match at the beginning of the line with no preceding whitespace.
+uu-fmt, ,q,quick, , ,113,Break lines more quickly at the expense of a potentially more ragged appearance.
+uu-fmt, ,h,help, , ,114,Print help
+uu-fmt, ,V,version, , ,115,Print version

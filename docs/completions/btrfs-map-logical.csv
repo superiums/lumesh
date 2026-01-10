@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-map-logical, ,l,logical, , ,101,Logical extent to map
+btrfs-map-logical, ,c,copy, , ,102,Copy of the extent to read(usually 1 or 2)
+btrfs-map-logical, ,o,output, , ,103,Output file to hold the extent
+btrfs-map-logical, ,b,bytes, , ,104,Number of bytes to read

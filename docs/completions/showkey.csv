@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+showkey, ,h,help, , ,101,"showkey prints to the standard error output its version number, a compile opt…"
+showkey, ,s,scancodes, , ,102,Starts  showkey in scan code dump mode
+showkey, ,k,keycodes, , ,103,Starts  showkey in keycode dump mode
+showkey, ,a,ascii, , ,104,Starts  showkey in `ascii' dump mode
+showkey, ,V,version, , ,105,showkey prints version number and exits.  2. 6 KERNELS In 2

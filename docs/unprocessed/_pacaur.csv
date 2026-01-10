@@ -1,0 +1,100 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, $noopt, , ,-D, ,101,Modify the package database
+$progname, $noopt, , ,-Q, ,102,Query the package database
+$progname, $noopt, , ,-C, ,103,Manage .pac* files
+$progname, $noopt,D,database, ,@f,104,Modify the package database
+$progname, $noopt,Q,query, ,@f,105,Query the package database
+$progname, $noopt,R,remove, ,@f,106,Remove packages from the system
+$progname, $noopt,S,sync, ,@f,107,Synchronize packages
+$progname, $noopt,T,deptest, ,@f,108,Check dependencies
+$progname, $noopt,U,upgrade, ,@f,109,Upgrade or add a local package
+$progname, $noopt,F,files, ,@f,110,Query the files database
+$progname, ,V,version, ,@f,111,Display version and exit
+$progname, ,h,help, ,@f,112,Display help
+$progname, $noopt,s,search, , ,113,(AUR) Search for packages
+$progname, $noopt,i,info, , ,114,(AUR) Show info for packages
+$progname, $noopt,m,makepkg, , ,115,(AUR) Clone the packages' build files and build them
+$progname, $noopt,y,sync, , ,116,"(AUR) Clone build files, build and install packages"
+$progname, $noopt,k,check, , ,117,(AUR) Check foreign packages for updates
+$progname, $noopt,u,update, , ,118,(AUR) Update foreign packages
+$progname," $noopt; and __fish_contains_opt -s d download",d,download, , ,119,(AUR) Clone the packages' build files
+$progname," $noopt; and __fish_contains_opt -s d download",d,download, , ,120,Download dependencies recursively
+$progname, $noopt,b,dbpath, ,@D,121,Alternative database location
+$progname, $hasopt,r,root, , ,122,Alternative installation root
+$progname, $hasopt,v,verbose, , ,123,Output more status messages
+$progname, $hasopt, ,arch, , ,124,Alternate architecture
+$progname, $hasopt, ,cachedir, , ,125,Alternative package cache location
+$progname, $hasopt, ,config, , ,126,Alternate config file
+$progname, $hasopt, ,debug, , ,127,Display debug messages
+$progname, $hasopt, ,gpgdir, , ,128,GPG directory to verify signatures
+$progname, $hasopt, ,hookdir, , ,129,Hook file directory
+$progname, $hasopt, ,logfile, , ,130,Specify alternative log file
+$progname, $hasopt, ,noconfirm, , ,131,Bypass any question
+$progname, $hasopt,a,aur, , ,132,Apply only for AUR targets
+$progname, $hasopt,r,repo, , ,133,Apply only for specified repo
+$progname, $hasopt,r,edit, , ,134,Edit build files
+$progname, $hasopt, ,noedit, , ,135,Do not edit build files
+$progname, $hasopt, ,rebuild, , ,136,Always rebuild packages
+$progname, $hasopt, ,silent, , ,137,Redirect output to the log in the clone directory
+$progname, $hasopt, ,domain, ,@f @r,138,Point at a domain other than the default aur.archlinux.org
+$progname, $hasopt, ,devel, , ,139,Use devel packages
+$progname, $hasopt, ,ignore-ood, , ,140,Ignore all results marked as out of date
+$progname, $hasopt, ,no-ignore-ood, , ,141,Do not ignore all results marked as out of date
+$progname, $hasopt, ,sort,name votes popularity, ,142,Sort ascending by key
+$progname, $hasopt, ,rsort,name votes popularity, ,143,Sort descending by key
+$progname, $hasopt, ,by,name name-desc maintainer, ,144,Search by field
+$progname, $$condition,d,nodeps, , ,145,Skip [all] dependency checks
+$progname, $$condition, ,dbonly, , ,146,Modify database entry only
+$progname, $$condition, ,noprogressbar, , ,147,Do not display progress bar
+$progname, $$condition, ,noscriptlet, , ,148,Do not execute install script
+$progname, $$condition,p,print, , ,149,"Dry run, only print targets"
+$progname, $$condition, ,print-format, ,@f @r,150,Specify printf-like format
+$progname, $$condition, ,asdeps, , ,151,Mark PACKAGE as dependency
+$progname, $$condition, ,asexplicit, , ,152,Mark PACKAGE as explicitly installed
+$progname, $$condition, ,force, , ,153,Bypass file conflict checks
+$progname, $$condition, ,ignore,$listinstalled, ,154,Ignore upgrade of PACKAGE
+$progname, $$condition, ,ignoregroup,$listgroups, ,155,Ignore upgrade of GROUP
+$progname, $$condition, ,needed, , ,156,Do not reinstall up-to-date targets
+$progname, $$condition, ,recursive, , ,157,Recursively reinstall all dependencies
+$progname, $$condition,g,groups,$listgroups, ,158,Display all packages in GROUP
+$progname, $$condition,i,info, , ,159,Display information on PACKAGE
+$progname, $$condition,q,quiet, , ,160,Show less information
+$progname, $$condition,s,search, ,@r,161,Search packages for regexp
+$progname, $query,c,changelog, , ,162,View the change log of PACKAGE
+$progname, $query,d,deps, , ,163,List only non-explicit packages (dependencies)
+$progname, $query,e,explicit, , ,164,List only explicitly installed packages
+$progname, $query,k,check, , ,165,Check if all files owned by PACKAGE are present
+$progname, $query,l,list, , ,166,List all files owned by PACKAGE
+$progname, $query,m,foreign, , ,167,List all packages not in the database
+$progname, $query,o,owns,,@r,168,Search for the package that owns FILE
+$progname, $query,p,file,, ,169,"Apply the query to a package file, not package"
+$progname, $query,t,unrequired, , ,170,List only unrequired packages
+$progname, $query,u,upgrades, , ,171,List only out-of-date packages
+$progname, $query, , ,$listinstalled, ,172,Installed package
+$progname, $remove,c,cascade, , ,173,Also remove packages depending on PACKAGE
+$progname, $remove,n,nosave, , ,174,Ignore file backup designations
+$progname, $remove,s,recursive, , ,175,Also remove dependencies of PACKAGE
+$progname, $remove,u,unneeded, , ,176,Only remove targets not required by PACKAGE
+$progname, $remove, , ,$listinstalled, ,177,Installed package
+$progname, $sync,c,clean, , ,178,Remove [all] packages from cache
+$progname, $sync,l,list,$listrepos, ,179,List all packages in REPOSITORY
+$progname," $sync; and __fish_contains_opt -s u sysupgrade",u,sysupgrade, , ,180,Upgrade all packages that are out of date
+$progname," $sync; and __fish_contains_opt -s u sysupgrade",u,sysupgrade, , ,181,Also downgrade packages
+$progname, $sync,w,downloadonly, , ,182,Only download the target packages
+$progname, $sync,y,refresh, , ,183,Download fresh copy of the package list
+$progname, $sync, , ,$listall $listgroups, ,184, 
+$progname," $database; and $has_db_opt", , ,--asdeps, ,185,Mark PACKAGE as dependency
+$progname," $database; and $has_db_opt", , ,--asexplicit, ,186,Mark PACKAGE as explicitly installed
+$progname," $database; and $has_db_opt",k,check, , ,187,Check database validity
+$progname," $has_db_opt; and $database", , ,$listinstalled, ,188, 
+$progname," $files; and $has_file_opt", , ,--list, ,189,List files owned by given packages
+$progname," $files; and $has_file_opt", , ,-l, ,190,List files owned by given packages
+$progname," $files; and $has_file_opt", , ,--search, ,191,Search packages for matching files
+$progname," $files; and $has_file_opt", , ,-s, ,192,Search packages for matching files
+$progname, $files,y,refresh, , ,193,Refresh the files database
+$progname, $files,l,list,$listall, ,194,List files owned by given packages
+$progname, $files,s,search, , ,195,Search packages for matching files
+$progname, $files,o,owns, , ,196,Search for packages that include the given files
+$progname, $files,q,quiet, , ,197,Show less information
+$progname, $files, ,machinereadable, , ,198,Show in machine readable format
+$progname, $upgrade, , , ,@k,199,Package file

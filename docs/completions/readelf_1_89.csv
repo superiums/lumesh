@@ -1,0 +1,55 @@
+cmd,conds,short,long,params,dirs,pri,desc
+readelf, , ,all, , ,101,X Item '--all' 
+readelf, , ,file-header, , ,102,X Item '--file-header' 
+readelf, , ,program-headers, , ,103,X Item '--program-headers'
+readelf, , ,segments, , ,104,X Item '--segments' 
+readelf, , ,quiet, , ,105,X Item '--quiet' Suppress 'no symbols' diagnostic
+readelf, , ,sections, , ,106,X Item '--sections'
+readelf, , ,section-headers, , ,107,X Item '--section-headers' 
+readelf, , ,section-groups, , ,108,X Item '--section-groups' 
+readelf, , ,section-details, , ,109,X Item '--section-details' . PD Displays the detailed section information
+readelf, , ,symbols, , ,110,X Item '--symbols'
+readelf, , ,syms, , ,111,X Item '--syms' 
+readelf, , ,dyn-syms, , ,112,X Item '--dyn-syms' Displays the entries in dynamic symbol table section of t…
+readelf, , ,lto-syms, , ,113,X Item '--lto-syms' Displays the contents of any LTO symbol tables in the file
+readelf, , ,sym-base, , ,114,X Item '--sym-base=[0|8|10|16]' Forces the size field of the symbol table to …
+readelf, , ,demangle, , ,115,X Item '--demangle[=style]' 
+readelf, , ,no-demangle, , ,116,X Item '--no-demangle' Do not demangle low-level symbol names
+readelf, , ,recurse-limit, , ,117,X Item '--recurse-limit'
+readelf, , ,no-recurse-limit, , ,118,X Item '--no-recurse-limit'
+readelf, , ,recursion-limit, , ,119,X Item '--recursion-limit'
+readelf, , ,no-recursion-limit, , ,120,X Item '--no-recursion-limit' 
+readelf, , ,unicode, , ,121,X Item '--unicode=[default|invalid|locale|escape|hex|highlight]' 
+readelf, , ,extra-sym-info, , ,122,X Item '--extra-sym-info' 
+readelf, , ,no-extra-sym-info, , ,123,X Item '--no-extra-sym-info' Disables the effect of the --extra-sym-info opti…
+readelf, , ,headers, , ,124,X Item '--headers' . PD Display all the headers in the file
+readelf, , ,notes, , ,125,X Item '--notes' 
+readelf, , ,relocs, , ,126,X Item '--relocs' 
+readelf, , ,unwind, , ,127,X Item '--unwind' 
+readelf, , ,dynamic, , ,128,X Item '--dynamic' 
+readelf, , ,version-info, , ,129,X Item '--version-info' 
+readelf, , ,arch-specific, , ,130,X Item '--arch-specific' 
+readelf, , ,use-dynamic, , ,131,X Item '--use-dynamic' 
+readelf, , ,lint, , ,132,X Item '--lint'
+readelf, , ,enable-checks, , ,133,X Item '--enable-checks' 
+readelf, , ,hex-dump, , ,134,X Item '--hex-dump=<number or name>' 
+readelf, , ,relocated-dump, , ,135,X Item '--relocated-dump=<number or name>' 
+readelf, , ,string-dump, , ,136,X Item '--string-dump=<number or name>' 
+readelf, , ,display-section, , ,137,X Item '--display-section' 
+readelf, , ,decompress, , ,138,X Item '--decompress' 
+readelf, , ,archive-index, , ,139,X Item '--archive-index' 
+readelf, , ,debug-dump, , ,140,"X Item '--debug-dump[=rawline,=decodedline,=info,=abbrev,=pubnames,=aranges,=…"
+readelf, , ,dwarf-depth, , ,141,X Item '--dwarf-depth=n' Limit the dump of the \\f(CW\\*(C`
+readelf, , ,dwarf-start, , ,142,X Item '--dwarf-start=n' Print only DIEs beginning with the DIE numbered n
+readelf, , ,process-links, , ,143,X Item '--process-links' 
+readelf, , ,ctf, , ,144,X Item '--ctf[=section]' Display the contents of the specified CTF section
+readelf, , ,ctf-parent, , ,145,X Item '--ctf-parent=member' If the CTF section contains ambiguously-defined …
+readelf, , ,ctf-parent-section, , ,146,X Item '--ctf-parent-section=section' This option lets you pick a completely …
+readelf, , ,ctf-symbols, , ,147,X Item '--ctf-symbols=section'
+readelf, , ,ctf-strings, , ,148,X Item '--ctf-strings=section' 
+readelf, , ,histogram, , ,149,X Item '--histogram' 
+readelf, , ,version, , ,150,X Item '--version' . PD Display the version number of readelf
+readelf, , ,wide, , ,151,X Item '--wide' . PD Don't break output lines to fit into 80 columns
+readelf, , ,silent-truncation, , ,152,X Item '--silent-truncation' 
+readelf, , ,help, , ,153,X Item '--help' . PD Display the command-line options understood by readelf
+readelf, , ,enable-follow-debug-links, , ,154, 

@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wlogout, , , , ,@f,101, 
+wlogout, ,h,help, , ,102,Show help message and stop
+wlogout, ,v,version, , ,103,Show version number and stop
+wlogout, ,l,layout, ,@r,104,Specify a layout file
+wlogout, ,C,css, ,@r,105,Specify a css file
+wlogout, ,b,buttons-per-row, ,@r,106,Set the number of buttons per row
+wlogout, ,m,margin, ,@r,107,Set margin around buttons
+wlogout, ,L,margin-left, ,@r,108,Set margin for left of buttons
+wlogout, ,R,margin-right, ,@r,109,Set margin for right of buttons
+wlogout, ,T,margin-top, ,@r,110,Set margin for top of buttons
+wlogout, ,B,margin-bottom, ,@r,111,Set margin for bottom of buttons
+wlogout, ,r,row-spacing, ,@r,112,Set space between buttons rows
+wlogout, ,c,column-spacing, ,@r,113,Set space between buttons columns
+wlogout, ,p,protocol, ,@r,114,Use layer-shell or xdg protocol
+wlogout, ,n,no-span, , ,115,Stops from spanning across multiple monitors
+wlogout, ,P,primary-monitor, ,@r,116,Set the monitor that buttons appear on

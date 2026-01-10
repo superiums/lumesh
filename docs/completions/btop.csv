@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btop, , ,low-color, , ,101,"Disable truecolor, converts 24-bit colors to 256-color"
+btop, ,t,tty_on, , ,102,"Force (ON) tty mode, max 16 colors and tty-friendly graph symbols"
+btop, , ,tty_off, , ,103,Force (OFF) tty mode
+btop, ,p,preset, , ,104,"Start with preset, integer value between 0-9"
+btop, , ,utf-force, , ,105,Force start even if no UTF-8 locale was detected
+btop, , ,debug, , ,106,Start in DEBUG mode: shows microsecond timer for information collect and scre…
+btop, ,h,help, , ,107,Show summary of options
+btop, ,v,version, , ,108,Show version of program

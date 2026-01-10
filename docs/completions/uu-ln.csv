@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-ln, , ,backup, , ,101,make a backup of each existing destination file
+uu-ln, ,S,suffix, , ,102,override the usual backup suffix
+uu-ln, ,t,target-directory, ,@D @f @r,103,specify the DIRECTORY in which to create the links
+uu-ln, ,f,force, , ,104,remove existing destination files
+uu-ln, ,i,interactive, , ,105,prompt whether to remove existing destination files
+uu-ln, ,n,no-dereference, , ,106,treat LINK_NAME as a normal file if it is a symbolic link to a directory
+uu-ln, ,L,logical, , ,107,follow TARGETs that are symbolic links
+uu-ln, ,P,physical, , ,108,make hard links directly to symbolic links
+uu-ln, ,s,symbolic, , ,109,make symbolic links instead of hard links
+uu-ln, ,T,no-target-directory, , ,110,treat LINK_NAME as a normal file always
+uu-ln, ,r,relative, , ,111,create symbolic links relative to link location
+uu-ln, ,v,verbose, , ,112,print name of each linked file
+uu-ln, ,h,help, , ,113,Print help
+uu-ln, ,V,version, , ,114,Print version

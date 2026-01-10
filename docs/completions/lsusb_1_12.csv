@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsusb.py, ,h,help, , ,101,Displays options supported by  lsusb (1)
+lsusb.py, ,i,interfaces, , ,102,"Display information about the interfaces of each device, excluding hubs"
+lsusb.py, ,I,hub-interfaces, , ,103,"Display information about the interfaces of each device, including hubs"
+lsusb.py, ,u,hide-empty-hubs, , ,104,Suppress information about hubs that have no devices connected
+lsusb.py, ,U,hide-hubs, , ,105,"Suppress information about hubs, even if they have devices connected"
+lsusb.py, ,c,color, , ,106,Use color
+lsusb.py, ,C,no-color, , ,107,Don't use color
+lsusb.py, ,e,endpoints, , ,108,"Include information about device (and interface, with  -i ) endpoints"
+lsusb.py, ,f,usbids-path, , ,109,Overrides the path of the usb. ids file

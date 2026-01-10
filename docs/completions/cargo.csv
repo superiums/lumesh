@@ -1,0 +1,692 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cargo, r run t test b build debug c check clippy,p,package, , ,108, 
+cargo, bench, ,bin, , ,154,Benchmark only the specified binary
+cargo, bench, ,example, , ,155,Benchmark only the specified example
+cargo, bench, ,test, , ,156,Benchmark only the specified test target
+cargo, bench, ,bench, , ,157,Benchmark only the specified bench target
+cargo, bench,p,package, , ,158,Package to run benchmarks for
+cargo, bench, ,exclude, , ,159,Exclude packages from the benchmark
+cargo, bench,j,jobs, , ,160,"Number of parallel jobs, defaults to # of CPUs"
+cargo, bench, ,features, , ,161,Space or comma separated list of features to activate
+cargo, bench, ,target, , ,162,Build for the target triple
+cargo, bench, ,target-dir, , ,163,Directory for all generated artifacts
+cargo, bench, ,manifest-path, , ,164,Path to Cargo.toml
+cargo, bench, ,message-format, , ,165,Error format
+cargo, bench, ,color, , ,166,"Coloring: auto, always, never"
+cargo, bench, ,config, , ,167,Override a configuration value (unstable)
+cargo, bench,q,quiet, , ,168,No output printed to stdout
+cargo, bench, ,lib, , ,169,Benchmark only this package's library
+cargo, bench, ,bins, , ,170,Benchmark all binaries
+cargo, bench, ,examples, , ,171,Benchmark all examples
+cargo, bench, ,tests, , ,172,Benchmark all tests
+cargo, bench, ,benches, , ,173,Benchmark all benches
+cargo, bench, ,all-targets, , ,174,Benchmark all targets
+cargo, bench, ,no-run, , ,175,"Compile, but don't run benchmarks"
+cargo, bench, ,workspace, , ,176,Benchmark all packages in the workspace
+cargo, bench, ,all-features, , ,177,Activate all available features
+cargo, bench, ,no-default-features, , ,178,Do not activate the `default` feature
+cargo, bench, ,ignore-rust-version, , ,179,Ignore `rust-version` specification in packages (unstable)
+cargo, bench, ,no-fail-fast, , ,180,Run all benchmarks regardless of failure
+cargo, bench, ,unit-graph, , ,181,Output build graph in JSON (unstable)
+cargo, bench,h,help, , ,182,Prints help information
+cargo, bench,V,version, , ,183,Prints version information
+cargo, bench,v,verbose, , ,184,Use verbose output (-vv very verbose/build.rs output)
+cargo, bench, ,frozen, , ,185,Require Cargo.lock and cache are up to date
+cargo, bench, ,locked, , ,186,Require Cargo.lock is up to date
+cargo, bench, ,offline, , ,187,Run without accessing the network
+cargo, b build,p,package, , ,188,Package to build (see `cargo help pkgid`)
+cargo, b build, ,exclude, , ,189,Exclude packages from the build
+cargo, b build,j,jobs, , ,190,"Number of parallel jobs, defaults to # of CPUs"
+cargo, b build, ,bin, , ,191,Build only the specified binary
+cargo, b build, ,example, , ,192,Build only the specified example
+cargo, b build, ,test, , ,193,Build only the specified test target
+cargo, b build, ,bench, , ,194,Build only the specified bench target
+cargo, b build, ,profile, , ,195,Build artifacts with the specified profile
+cargo, b build, ,features, , ,196,Space or comma separated list of features to activate
+cargo, b build, ,target, , ,197,Build for the target triple
+cargo, b build, ,target-dir, , ,198,Directory for all generated artifacts
+cargo, b build, ,out-dir, , ,199,Copy final artifacts to this directory (unstable)
+cargo, b build, ,manifest-path, , ,200,Path to Cargo.toml
+cargo, b build, ,message-format, , ,201,Error format
+cargo, b build, ,color, , ,202,"Coloring: auto, always, never"
+cargo, b build, ,config, , ,203,Override a configuration value (unstable)
+cargo, b build,q,quiet, , ,204,No output printed to stdout
+cargo, b build, ,workspace, , ,205,Build all packages in the workspace
+cargo, b build, ,lib, , ,206,Build only this package's library
+cargo, b build, ,bins, , ,207,Build all binaries
+cargo, b build, ,examples, , ,208,Build all examples
+cargo, b build, ,tests, , ,209,Build all tests
+cargo, b build, ,benches, , ,210,Build all benches
+cargo, b build, ,all-targets, , ,211,Build all targets
+cargo, b build, ,release, , ,212,"Build artifacts in release mode, with optimizations"
+cargo, b build, ,all-features, , ,213,Activate all available features
+cargo, b build, ,no-default-features, , ,214,Do not activate the `default` feature
+cargo, b build, ,ignore-rust-version, , ,215,Ignore `rust-version` specification in packages (unstable)
+cargo, b build, ,build-plan, , ,216,Output the build plan in JSON (unstable)
+cargo, b build, ,unit-graph, , ,217,Output build graph in JSON (unstable)
+cargo, b build, ,future-incompat-report, , ,218,Output a future incompatibility report after build (unstable)
+cargo, b build,h,help, , ,219,Prints help information
+cargo, b build,V,version, , ,220,Prints version information
+cargo, b build,v,verbose, , ,221,Use verbose output (-vv very verbose/build.rs output)
+cargo, b build, ,frozen, , ,222,Require Cargo.lock and cache are up to date
+cargo, b build, ,locked, , ,223,Require Cargo.lock is up to date
+cargo, b build, ,offline, , ,224,Run without accessing the network
+cargo, c check,p,package, , ,225,Package(s) to check
+cargo, c check, ,exclude, , ,226,Exclude packages from the check
+cargo, c check,j,jobs, , ,227,"Number of parallel jobs, defaults to # of CPUs"
+cargo, c check, ,bin, , ,228,Check only the specified binary
+cargo, c check, ,example, , ,229,Check only the specified example
+cargo, c check, ,test, , ,230,Check only the specified test target
+cargo, c check, ,bench, , ,231,Check only the specified bench target
+cargo, c check, ,profile, , ,232,Check artifacts with the specified profile
+cargo, c check, ,features, , ,233,Space or comma separated list of features to activate
+cargo, c check, ,target, , ,234,Check for the target triple
+cargo, c check, ,target-dir, , ,235,Directory for all generated artifacts
+cargo, c check, ,manifest-path, , ,236,Path to Cargo.toml
+cargo, c check, ,message-format, , ,237,Error format
+cargo, c check, ,color, , ,238,"Coloring: auto, always, never"
+cargo, c check, ,config, , ,239,Override a configuration value (unstable)
+cargo, c check,q,quiet, , ,240,No output printed to stdout
+cargo, c check, ,workspace, , ,241,Check all packages in the workspace
+cargo, c check, ,lib, , ,242,Check only this package's library
+cargo, c check, ,bins, , ,243,Check all binaries
+cargo, c check, ,examples, , ,244,Check all examples
+cargo, c check, ,tests, , ,245,Check all tests
+cargo, c check, ,benches, , ,246,Check all benches
+cargo, c check, ,all-targets, , ,247,Check all targets
+cargo, c check, ,release, , ,248,"Check artifacts in release mode, with optimizations"
+cargo, c check, ,all-features, , ,249,Activate all available features
+cargo, c check, ,no-default-features, , ,250,Do not activate the `default` feature
+cargo, c check, ,ignore-rust-version, , ,251,Ignore `rust-version` specification in packages (unstable)
+cargo, c check, ,unit-graph, , ,252,Output build graph in JSON (unstable)
+cargo, c check, ,future-incompat-report, , ,253,Output a future incompatibility report after build (unstable)
+cargo, c check,h,help, , ,254,Prints help information
+cargo, c check,V,version, , ,255,Prints version information
+cargo, c check,v,verbose, , ,256,Use verbose output (-vv very verbose/build.rs output)
+cargo, c check, ,frozen, , ,257,Require Cargo.lock and cache are up to date
+cargo, c check, ,locked, , ,258,Require Cargo.lock is up to date
+cargo, c check, ,offline, , ,259,Run without accessing the network
+cargo, clean,p,package, , ,260,Package to clean artifacts for
+cargo, clean, ,manifest-path, , ,261,Path to Cargo.toml
+cargo, clean, ,target, , ,262,Target triple to clean output for
+cargo, clean, ,target-dir, , ,263,Directory for all generated artifacts
+cargo, clean, ,profile, , ,264,Clean artifacts of the specified profile
+cargo, clean, ,color, , ,265,"Coloring: auto, always, never"
+cargo, clean, ,config, , ,266,Override a configuration value (unstable)
+cargo, clean,q,quiet, , ,267,No output printed to stdout
+cargo, clean, ,release, , ,268,Whether or not to clean release artifacts
+cargo, clean, ,doc, , ,269,Whether or not to clean just the documentation directory
+cargo, clean,h,help, , ,270,Prints help information
+cargo, clean,V,version, , ,271,Prints version information
+cargo, clean,v,verbose, , ,272,Use verbose output (-vv very verbose/build.rs output)
+cargo, clean, ,frozen, , ,273,Require Cargo.lock and cache are up to date
+cargo, clean, ,locked, , ,274,Require Cargo.lock is up to date
+cargo, clean, ,offline, , ,275,Run without accessing the network
+cargo, complete, ,color, , ,276,"Coloring: auto, always, never"
+cargo, complete, ,config, , ,277,Override a configuration value (unstable)
+cargo, complete,h,help, , ,278,Prints help information
+cargo, complete,V,version, , ,279,Prints version information
+cargo, complete,v,verbose, , ,280,Use verbose output (-vv very verbose/build.rs output)
+cargo, complete, ,frozen, , ,281,Require Cargo.lock and cache are up to date
+cargo, complete, ,locked, , ,282,Require Cargo.lock is up to date
+cargo, complete, ,offline, , ,283,Run without accessing the network
+cargo, d doc,p,package, , ,284,Package to document
+cargo, d doc, ,exclude, , ,285,Exclude packages from the build
+cargo, d doc,j,jobs, , ,286,"Number of parallel jobs, defaults to # of CPUs"
+cargo, d doc, ,bin, , ,287,Document only the specified binary
+cargo, d doc, ,profile, , ,288,Build artifacts with the specified profile
+cargo, d doc, ,features, , ,289,Space or comma separated list of features to activate
+cargo, d doc, ,target, , ,290,Build for the target triple
+cargo, d doc, ,target-dir, , ,291,Directory for all generated artifacts
+cargo, d doc, ,manifest-path, , ,292,Path to Cargo.toml
+cargo, d doc, ,message-format, , ,293,Error format
+cargo, d doc, ,color, , ,294,"Coloring: auto, always, never"
+cargo, d doc, ,config, , ,295,Override a configuration value (unstable)
+cargo, d doc,q,quiet, , ,296,No output printed to stdout
+cargo, d doc, ,open, , ,297,Opens the docs in a browser after the operation
+cargo, d doc, ,workspace, , ,298,Document all packages in the workspace
+cargo, d doc, ,no-deps, , ,299,Don't build documentation for dependencies
+cargo, d doc, ,document-private-items, , ,300,Document private items
+cargo, d doc, ,lib, , ,301,Document only this package's library
+cargo, d doc, ,bins, , ,302,Document all binaries
+cargo, d doc, ,release, , ,303,"Build artifacts in release mode, with optimizations"
+cargo, d doc, ,all-features, , ,304,Activate all available features
+cargo, d doc, ,no-default-features, , ,305,Do not activate the `default` feature
+cargo, d doc, ,ignore-rust-version, , ,306,Ignore `rust-version` specification in packages (unstable)
+cargo, d doc, ,unit-graph, , ,307,Output build graph in JSON (unstable)
+cargo, d doc,h,help, , ,308,Prints help information
+cargo, d doc,V,version, , ,309,Prints version information
+cargo, d doc,v,verbose, , ,310,Use verbose output (-vv very verbose/build.rs output)
+cargo, d doc, ,frozen, , ,311,Require Cargo.lock and cache are up to date
+cargo, d doc, ,locked, , ,312,Require Cargo.lock is up to date
+cargo, d doc, ,offline, , ,313,Run without accessing the network
+cargo, fetch, ,manifest-path, , ,314,Path to Cargo.toml
+cargo, fetch, ,target, , ,315,Fetch dependencies for the target triple
+cargo, fetch, ,color, , ,316,"Coloring: auto, always, never"
+cargo, fetch, ,config, , ,317,Override a configuration value (unstable)
+cargo, fetch,q,quiet, , ,318,No output printed to stdout
+cargo, fetch,h,help, , ,319,Prints help information
+cargo, fetch,V,version, , ,320,Prints version information
+cargo, fetch,v,verbose, , ,321,Use verbose output (-vv very verbose/build.rs output)
+cargo, fetch, ,frozen, , ,322,Require Cargo.lock and cache are up to date
+cargo, fetch, ,locked, , ,323,Require Cargo.lock is up to date
+cargo, fetch, ,offline, , ,324,Run without accessing the network
+cargo, fix,p,package, , ,325,Package(s) to fix
+cargo, fix, ,exclude, , ,326,Exclude packages from the fixes
+cargo, fix,j,jobs, , ,327,"Number of parallel jobs, defaults to # of CPUs"
+cargo, fix, ,bin, , ,328,Fix only the specified binary
+cargo, fix, ,example, , ,329,Fix only the specified example
+cargo, fix, ,test, , ,330,Fix only the specified test target
+cargo, fix, ,bench, , ,331,Fix only the specified bench target
+cargo, fix, ,profile, , ,332,Build artifacts with the specified profile
+cargo, fix, ,features, , ,333,Space or comma separated list of features to activate
+cargo, fix, ,target, , ,334,Fix for the target triple
+cargo, fix, ,target-dir, , ,335,Directory for all generated artifacts
+cargo, fix, ,manifest-path, , ,336,Path to Cargo.toml
+cargo, fix, ,message-format, , ,337,Error format
+cargo, fix, ,color, , ,338,"Coloring: auto, always, never"
+cargo, fix, ,config, , ,339,Override a configuration value (unstable)
+cargo, fix,q,quiet, , ,340,No output printed to stdout
+cargo, fix, ,workspace, , ,341,Fix all packages in the workspace
+cargo, fix, ,lib, , ,342,Fix only this package's library
+cargo, fix, ,bins, , ,343,Fix all binaries
+cargo, fix, ,examples, , ,344,Fix all examples
+cargo, fix, ,tests, , ,345,Fix all tests
+cargo, fix, ,benches, , ,346,Fix all benches
+cargo, fix, ,all-targets, , ,347,Fix all targets (default)
+cargo, fix, ,release, , ,348,"Fix artifacts in release mode, with optimizations"
+cargo, fix, ,all-features, , ,349,Activate all available features
+cargo, fix, ,no-default-features, , ,350,Do not activate the `default` feature
+cargo, fix, ,broken-code, , ,351,Fix code even if it already has compiler errors
+cargo, fix, ,edition, , ,352,Fix in preparation for the next edition
+cargo, fix, ,edition-idioms, , ,353,Fix warnings to migrate to the idioms of an edition
+cargo, fix, ,allow-no-vcs, , ,354,Fix code even if a VCS was not detected
+cargo, fix, ,allow-dirty, , ,355,Fix code even if the working directory is dirty
+cargo, fix, ,allow-staged, , ,356,Fix code even if the working directory has staged changes
+cargo, fix, ,ignore-rust-version, , ,357,Ignore `rust-version` specification in packages (unstable)
+cargo, fix,h,help, , ,358,Prints help information
+cargo, fix,V,version, , ,359,Prints version information
+cargo, fix,v,verbose, , ,360,Use verbose output (-vv very verbose/build.rs output)
+cargo, fix, ,frozen, , ,361,Require Cargo.lock and cache are up to date
+cargo, fix, ,locked, , ,362,Require Cargo.lock is up to date
+cargo, fix, ,offline, , ,363,Run without accessing the network
+cargo, generate-lockfile, ,manifest-path, , ,364,Path to Cargo.toml
+cargo, generate-lockfile, ,color, , ,365,"Coloring: auto, always, never"
+cargo, generate-lockfile, ,config, , ,366,Override a configuration value (unstable)
+cargo, generate-lockfile,q,quiet, , ,367,No output printed to stdout
+cargo, generate-lockfile,h,help, , ,368,Prints help information
+cargo, generate-lockfile,V,version, , ,369,Prints version information
+cargo, generate-lockfile,v,verbose, , ,370,Use verbose output (-vv very verbose/build.rs output)
+cargo, generate-lockfile, ,frozen, , ,371,Require Cargo.lock and cache are up to date
+cargo, generate-lockfile, ,locked, , ,372,Require Cargo.lock is up to date
+cargo, generate-lockfile, ,offline, , ,373,Run without accessing the network
+cargo, git-checkout, ,color, , ,374,"Coloring: auto, always, never"
+cargo, git-checkout, ,config, , ,375,Override a configuration value (unstable)
+cargo, git-checkout,h,help, , ,376,Prints help information
+cargo, git-checkout,V,version, , ,377,Prints version information
+cargo, git-checkout,v,verbose, , ,378,Use verbose output (-vv very verbose/build.rs output)
+cargo, git-checkout, ,frozen, , ,379,Require Cargo.lock and cache are up to date
+cargo, git-checkout, ,locked, , ,380,Require Cargo.lock is up to date
+cargo, git-checkout, ,offline, , ,381,Run without accessing the network
+cargo, init, ,registry, , ,382,Registry to use
+cargo, init, ,vcs,git hg pijul fossil none,@f @r,383,Initialize a new repository for the given version control system
+cargo, init, ,edition,2015 2018 2021,@f @r,384,Edition to set for the crate generated
+cargo, init, ,name, , ,385,"Set the resulting package name, defaults to the directory name"
+cargo, init, ,color, , ,386,"Coloring: auto, always, never"
+cargo, init, ,config, , ,387,Override a configuration value (unstable)
+cargo, init,q,quiet, , ,388,No output printed to stdout
+cargo, init, ,bin, , ,389,Use a binary (application) template [default]
+cargo, init, ,lib, , ,390,Use a library template
+cargo, init,h,help, , ,391,Prints help information
+cargo, init,V,version, , ,392,Prints version information
+cargo, init,v,verbose, , ,393,Use verbose output (-vv very verbose/build.rs output)
+cargo, init, ,frozen, , ,394,Require Cargo.lock and cache are up to date
+cargo, init, ,locked, , ,395,Require Cargo.lock is up to date
+cargo, init, ,offline, , ,396,Run without accessing the network
+cargo, install, ,version, , ,397,Specify a version to install
+cargo, install, ,git, , ,398,Git URL to install the specified crate from
+cargo, install, ,branch, , ,399,Branch to use when installing from git
+cargo, install, ,tag, , ,400,Tag to use when installing from git
+cargo, install, ,rev, , ,401,Specific commit to use when installing from git
+cargo, install, ,path, , ,402,Filesystem path to local crate to install
+cargo, install,j,jobs, , ,403,"Number of parallel jobs, defaults to # of CPUs"
+cargo, install, ,features, , ,404,Space or comma separated list of features to activate
+cargo, install, ,profile, , ,405,Install artifacts with the specified profile
+cargo, install, ,bin, , ,406,Install only the specified binary
+cargo, install, ,example, , ,407,Install only the specified example
+cargo, install, ,target, , ,408,Build for the target triple
+cargo, install, ,target-dir, , ,409,Directory for all generated artifacts
+cargo, install, ,root, , ,410,Directory to install packages into
+cargo, install, ,index, , ,411,Registry index to install from
+cargo, install, ,registry, , ,412,Registry to use
+cargo, install, ,color, , ,413,"Coloring: auto, always, never"
+cargo, install, ,config, , ,414,Override a configuration value (unstable)
+cargo, install,q,quiet, , ,415,No output printed to stdout
+cargo, install, ,list, , ,416,list all installed packages and their versions
+cargo, install,f,force, , ,417,Force overwriting existing crates or binaries
+cargo, install, ,no-track, , ,418,Do not save tracking information
+cargo, install, ,all-features, , ,419,Activate all available features
+cargo, install, ,no-default-features, , ,420,Do not activate the `default` feature
+cargo, install, ,debug, , ,421,Build in debug mode instead of release mode
+cargo, install, ,bins, , ,422,Install all binaries
+cargo, install, ,examples, , ,423,Install all examples
+cargo, install,h,help, , ,424,Prints help information
+cargo, install,v,verbose, , ,425,Use verbose output (-vv very verbose/build.rs output)
+cargo, install, ,frozen, , ,426,Require Cargo.lock and cache are up to date
+cargo, install, ,locked, , ,427,Require Cargo.lock is up to date
+cargo, install, ,offline, , ,428,Run without accessing the network
+cargo, locate-project, ,manifest-path, , ,429,Path to Cargo.toml
+cargo, locate-project, ,message-format, , ,430,"Output representation [possible values: json, plain]"
+cargo, locate-project, ,color, , ,431,"Coloring: auto, always, never"
+cargo, locate-project, ,config, , ,432,Override a configuration value (unstable)
+cargo, locate-project,q,quiet, , ,433,No output printed to stdout
+cargo, locate-project, ,workspace, , ,434,Locate Cargo.toml of the workspace root
+cargo, locate-project,h,help, , ,435,Prints help information
+cargo, locate-project,V,version, , ,436,Prints version information
+cargo, locate-project,v,verbose, , ,437,Use verbose output (-vv very verbose/build.rs output)
+cargo, locate-project, ,frozen, , ,438,Require Cargo.lock and cache are up to date
+cargo, locate-project, ,locked, , ,439,Require Cargo.lock is up to date
+cargo, locate-project, ,offline, , ,440,Run without accessing the network
+cargo, login, ,host, , ,441,Host to set the token for
+cargo, login, ,registry, , ,442,Registry to use
+cargo, login, ,color, , ,443,"Coloring: auto, always, never"
+cargo, login, ,config, , ,444,Override a configuration value (unstable)
+cargo, login,q,quiet, , ,445,No output printed to stdout
+cargo, login,h,help, , ,446,Prints help information
+cargo, login,V,version, , ,447,Prints version information
+cargo, login,v,verbose, , ,448,Use verbose output (-vv very verbose/build.rs output)
+cargo, login, ,frozen, , ,449,Require Cargo.lock and cache are up to date
+cargo, login, ,locked, , ,450,Require Cargo.lock is up to date
+cargo, login, ,offline, , ,451,Run without accessing the network
+cargo, logout, ,registry, , ,452,Registry to use
+cargo, logout, ,color, , ,453,"Coloring: auto, always, never"
+cargo, logout, ,config, , ,454,Override a configuration value (unstable)
+cargo, logout,q,quiet, , ,455,No output printed to stdout
+cargo, logout,h,help, , ,456,Prints help information
+cargo, logout,V,version, , ,457,Prints version information
+cargo, logout,v,verbose, , ,458,Use verbose output (-vv very verbose/build.rs output)
+cargo, logout, ,frozen, , ,459,Require Cargo.lock and cache are up to date
+cargo, logout, ,locked, , ,460,Require Cargo.lock is up to date
+cargo, logout, ,offline, , ,461,Run without accessing the network
+cargo, metadata, ,features, , ,462,Space or comma separated list of features to activate
+cargo, metadata, ,filter-platform, , ,463,Only include resolve dependencies matching the given target-triple
+cargo, metadata, ,manifest-path, , ,464,Path to Cargo.toml
+cargo, metadata, ,format-version,1,@f @r,465,Format version
+cargo, metadata, ,color, , ,466,"Coloring: auto, always, never"
+cargo, metadata, ,config, , ,467,Override a configuration value (unstable)
+cargo, metadata,q,quiet, , ,468,Do not print cargo log messages
+cargo, metadata, ,all-features, , ,469,Activate all available features
+cargo, metadata, ,no-default-features, , ,470,Do not activate the `default` feature
+cargo, metadata, ,no-deps, , ,471,Describe the workspace members without fetching dependencies
+cargo, metadata,h,help, , ,472,Prints help information
+cargo, metadata,V,version, , ,473,Prints version information
+cargo, metadata,v,verbose, , ,474,Use verbose output (-vv very verbose/build.rs output)
+cargo, metadata, ,frozen, , ,475,Require Cargo.lock and cache are up to date
+cargo, metadata, ,locked, , ,476,Require Cargo.lock is up to date
+cargo, metadata, ,offline, , ,477,Run without accessing the network
+cargo, new, ,registry, , ,478,Registry to use
+cargo, new, ,vcs,git hg pijul fossil none,@f @r,479,Initialize a new repository for the given version control system
+cargo, new, ,edition,2015 2018 2021,@f @r,480,Edition to set for the crate generated
+cargo, new, ,name, , ,481,"Set the resulting package name, defaults to the directory name"
+cargo, new, ,color, , ,482,"Coloring: auto, always, never"
+cargo, new, ,config, , ,483,Override a configuration value (unstable)
+cargo, new,q,quiet, , ,484,No output printed to stdout
+cargo, new, ,bin, , ,485,Use a binary (application) template [default]
+cargo, new, ,lib, , ,486,Use a library template
+cargo, new,h,help, , ,487,Prints help information
+cargo, new,V,version, , ,488,Prints version information
+cargo, new,v,verbose, , ,489,Use verbose output (-vv very verbose/build.rs output)
+cargo, new, ,frozen, , ,490,Require Cargo.lock and cache are up to date
+cargo, new, ,locked, , ,491,Require Cargo.lock is up to date
+cargo, new, ,offline, , ,492,Run without accessing the network
+cargo, owner,a,add, , ,493,Name of a user or team to invite as an owner
+cargo, owner,r,remove, , ,494,Name of a user or team to remove as an owner
+cargo, owner, ,index, , ,495,Registry index to modify owners for
+cargo, owner, ,token, , ,496,API token to use when authenticating
+cargo, owner, ,registry, , ,497,Registry to use
+cargo, owner, ,color, , ,498,"Coloring: auto, always, never"
+cargo, owner, ,config, , ,499,Override a configuration value (unstable)
+cargo, owner,q,quiet, , ,500,No output printed to stdout
+cargo, owner,l,list, , ,501,List owners of a crate
+cargo, owner,h,help, , ,502,Prints help information
+cargo, owner,V,version, , ,503,Prints version information
+cargo, owner,v,verbose, , ,504,Use verbose output (-vv very verbose/build.rs output)
+cargo, owner, ,frozen, , ,505,Require Cargo.lock and cache are up to date
+cargo, owner, ,locked, , ,506,Require Cargo.lock is up to date
+cargo, owner, ,offline, , ,507,Run without accessing the network
+cargo, package, ,target, , ,508,Build for the target triple
+cargo, package, ,target-dir, , ,509,Directory for all generated artifacts
+cargo, package, ,features, , ,510,Space or comma separated list of features to activate
+cargo, package, ,manifest-path, , ,511,Path to Cargo.toml
+cargo, package,j,jobs, , ,512,"Number of parallel jobs, defaults to # of CPUs"
+cargo, package, ,color, , ,513,"Coloring: auto, always, never"
+cargo, package, ,config, , ,514,Override a configuration value (unstable)
+cargo, package,q,quiet, , ,515,No output printed to stdout
+cargo, package,l,list, , ,516,Print files included in a package without making one
+cargo, package, ,no-verify, , ,517,Don't verify the contents by building them
+cargo, package, ,no-metadata, , ,518,Ignore warnings about a lack of human-usable metadata
+cargo, package, ,allow-dirty, , ,519,Allow dirty working directories to be packaged
+cargo, package, ,all-features, , ,520,Activate all available features
+cargo, package, ,no-default-features, , ,521,Do not activate the `default` feature
+cargo, package,h,help, , ,522,Prints help information
+cargo, package,V,version, , ,523,Prints version information
+cargo, package,v,verbose, , ,524,Use verbose output (-vv very verbose/build.rs output)
+cargo, package, ,frozen, , ,525,Require Cargo.lock and cache are up to date
+cargo, package, ,locked, , ,526,Require Cargo.lock is up to date
+cargo, package, ,offline, , ,527,Run without accessing the network
+cargo, pkgid,p,package, , ,528,Argument to get the package ID specifier for
+cargo, pkgid, ,manifest-path, , ,529,Path to Cargo.toml
+cargo, pkgid, ,color, , ,530,"Coloring: auto, always, never"
+cargo, pkgid, ,config, , ,531,Override a configuration value (unstable)
+cargo, pkgid,q,quiet, , ,532,No output printed to stdout
+cargo, pkgid,h,help, , ,533,Prints help information
+cargo, pkgid,V,version, , ,534,Prints version information
+cargo, pkgid,v,verbose, , ,535,Use verbose output (-vv very verbose/build.rs output)
+cargo, pkgid, ,frozen, , ,536,Require Cargo.lock and cache are up to date
+cargo, pkgid, ,locked, , ,537,Require Cargo.lock is up to date
+cargo, pkgid, ,offline, , ,538,Run without accessing the network
+cargo, publish, ,index, , ,539,Registry index URL to upload the package to
+cargo, publish, ,token, , ,540,Token to use when uploading
+cargo, publish, ,target, , ,541,Build for the target triple
+cargo, publish, ,target-dir, , ,542,Directory for all generated artifacts
+cargo, publish, ,manifest-path, , ,543,Path to Cargo.toml
+cargo, publish, ,features, , ,544,Space or comma separated list of features to activate
+cargo, publish,j,jobs, , ,545,"Number of parallel jobs, defaults to # of CPUs"
+cargo, publish, ,registry, , ,546,Registry to publish to
+cargo, publish, ,color, , ,547,"Coloring: auto, always, never"
+cargo, publish, ,config, , ,548,Override a configuration value (unstable)
+cargo, publish,q,quiet, , ,549,No output printed to stdout
+cargo, publish, ,no-verify, , ,550,Don't verify the contents by building them
+cargo, publish, ,allow-dirty, , ,551,Allow dirty working directories to be packaged
+cargo, publish, ,all-features, , ,552,Activate all available features
+cargo, publish, ,no-default-features, , ,553,Do not activate the `default` feature
+cargo, publish, ,dry-run, , ,554,Perform all checks without uploading
+cargo, publish,h,help, , ,555,Prints help information
+cargo, publish,V,version, , ,556,Prints version information
+cargo, publish,v,verbose, , ,557,Use verbose output (-vv very verbose/build.rs output)
+cargo, publish, ,frozen, , ,558,Require Cargo.lock and cache are up to date
+cargo, publish, ,locked, , ,559,Require Cargo.lock is up to date
+cargo, publish, ,offline, , ,560,Run without accessing the network
+cargo, read-manifest, ,manifest-path, , ,561,Path to Cargo.toml
+cargo, read-manifest, ,color, , ,562,"Coloring: auto, always, never"
+cargo, read-manifest, ,config, , ,563,Override a configuration value (unstable)
+cargo, read-manifest,q,quiet, , ,564,No output printed to stdout
+cargo, read-manifest,h,help, , ,565,Prints help information
+cargo, read-manifest,V,version, , ,566,Prints version information
+cargo, read-manifest,v,verbose, , ,567,Use verbose output (-vv very verbose/build.rs output)
+cargo, read-manifest, ,frozen, , ,568,Require Cargo.lock and cache are up to date
+cargo, read-manifest, ,locked, , ,569,Require Cargo.lock is up to date
+cargo, read-manifest, ,offline, , ,570,Run without accessing the network
+cargo, r run, ,bin, , ,571,Name of the bin target to run
+cargo, r run, ,example, , ,572,Name of the example target to run
+cargo, r run,p,package, , ,573,Package with the target to run
+cargo, r run,j,jobs, , ,574,"Number of parallel jobs, defaults to # of CPUs"
+cargo, r run, ,profile, , ,575,Build artifacts with the specified profile
+cargo, r run, ,features, , ,576,Space or comma separated list of features to activate
+cargo, r run, ,target, , ,577,Build for the target triple
+cargo, r run, ,target-dir, , ,578,Directory for all generated artifacts
+cargo, r run, ,manifest-path, , ,579,Path to Cargo.toml
+cargo, r run, ,message-format, , ,580,Error format
+cargo, r run, ,color, , ,581,"Coloring: auto, always, never"
+cargo, r run, ,config, , ,582,Override a configuration value (unstable)
+cargo, r run,q,quiet, , ,583,No output printed to stdout
+cargo, r run, ,release, , ,584,"Build artifacts in release mode, with optimizations"
+cargo, r run, ,all-features, , ,585,Activate all available features
+cargo, r run, ,no-default-features, , ,586,Do not activate the `default` feature
+cargo, r run, ,unit-graph, , ,587,Output build graph in JSON (unstable)
+cargo, r run, ,ignore-rust-version, , ,588,Ignore `rust-version` specification in packages (unstable)
+cargo, r run,h,help, , ,589,Prints help information
+cargo, r run,V,version, , ,590,Prints version information
+cargo, r run,v,verbose, , ,591,Use verbose output (-vv very verbose/build.rs output)
+cargo, r run, ,frozen, , ,592,Require Cargo.lock and cache are up to date
+cargo, r run, ,locked, , ,593,Require Cargo.lock is up to date
+cargo, r run, ,offline, , ,594,Run without accessing the network
+cargo, rustc,p,package, , ,595,Package to build
+cargo, rustc,j,jobs, , ,596,"Number of parallel jobs, defaults to # of CPUs"
+cargo, rustc, ,bin, , ,597,Build only the specified binary
+cargo, rustc, ,example, , ,598,Build only the specified example
+cargo, rustc, ,test, , ,599,Build only the specified test target
+cargo, rustc, ,bench, , ,600,Build only the specified bench target
+cargo, rustc, ,profile, , ,601,Build artifacts with the specified profile
+cargo, rustc, ,features, , ,602,Space or comma separated list of features to activate
+cargo, rustc, ,target, , ,603,Target triple which compiles will be for
+cargo, rustc, ,print, , ,604,Output compiler information without compiling
+cargo, rustc, ,target-dir, , ,605,Directory for all generated artifacts
+cargo, rustc, ,manifest-path, , ,606,Path to Cargo.toml
+cargo, rustc, ,message-format, , ,607,Error format
+cargo, rustc, ,color, , ,608,"Coloring: auto, always, never"
+cargo, rustc, ,config, , ,609,Override a configuration value (unstable)
+cargo, rustc,q,quiet, , ,610,No output printed to stdout
+cargo, rustc, ,lib, , ,611,Build only this package's library
+cargo, rustc, ,bins, , ,612,Build all binaries
+cargo, rustc, ,examples, , ,613,Build all examples
+cargo, rustc, ,tests, , ,614,Build all tests
+cargo, rustc, ,benches, , ,615,Build all benches
+cargo, rustc, ,all-targets, , ,616,Build all targets
+cargo, rustc, ,release, , ,617,"Build artifacts in release mode, with optimizations"
+cargo, rustc, ,all-features, , ,618,Activate all available features
+cargo, rustc, ,no-default-features, , ,619,Do not activate the `default` feature
+cargo, rustc, ,unit-graph, , ,620,Output build graph in JSON (unstable)
+cargo, rustc, ,ignore-rust-version, , ,621,Ignore `rust-version` specification in packages (unstable)
+cargo, rustc, ,future-incompat-report, , ,622,Outputs a future incompatibility report at the end of the build (unstable)
+cargo, rustc,h,help, , ,623,Prints help information
+cargo, rustc,V,version, , ,624,Prints version information
+cargo, rustc,v,verbose, , ,625,Use verbose output (-vv very verbose/build.rs output)
+cargo, rustc, ,frozen, , ,626,Require Cargo.lock and cache are up to date
+cargo, rustc, ,locked, , ,627,Require Cargo.lock is up to date
+cargo, rustc, ,offline, , ,628,Run without accessing the network
+cargo, rustdoc,p,package, , ,629,Package to document
+cargo, rustdoc,j,jobs, , ,630,"Number of parallel jobs, defaults to # of CPUs"
+cargo, rustdoc, ,bin, , ,631,Build only the specified binary
+cargo, rustdoc, ,example, , ,632,Build only the specified example
+cargo, rustdoc, ,test, , ,633,Build only the specified test target
+cargo, rustdoc, ,bench, , ,634,Build only the specified bench target
+cargo, rustdoc, ,profile, , ,635,Build artifacts with the specified profile
+cargo, rustdoc, ,features, , ,636,Space or comma separated list of features to activate
+cargo, rustdoc, ,target, , ,637,Build for the target triple
+cargo, rustdoc, ,target-dir, , ,638,Directory for all generated artifacts
+cargo, rustdoc, ,manifest-path, , ,639,Path to Cargo.toml
+cargo, rustdoc, ,message-format, , ,640,Error format
+cargo, rustdoc, ,color, , ,641,"Coloring: auto, always, never"
+cargo, rustdoc, ,config, , ,642,Override a configuration value (unstable)
+cargo, rustdoc,q,quiet, , ,643,No output printed to stdout
+cargo, rustdoc, ,open, , ,644,Opens the docs in a browser after the operation
+cargo, rustdoc, ,lib, , ,645,Build only this package's library
+cargo, rustdoc, ,bins, , ,646,Build all binaries
+cargo, rustdoc, ,examples, , ,647,Build all examples
+cargo, rustdoc, ,tests, , ,648,Build all tests
+cargo, rustdoc, ,benches, , ,649,Build all benches
+cargo, rustdoc, ,all-targets, , ,650,Build all targets
+cargo, rustdoc, ,release, , ,651,"Build artifacts in release mode, with optimizations"
+cargo, rustdoc, ,all-features, , ,652,Activate all available features
+cargo, rustdoc, ,no-default-features, , ,653,Do not activate the `default` feature
+cargo, rustdoc, ,unit-graph, , ,654,Output build graph in JSON (unstable)
+cargo, rustdoc, ,ignore-rust-version, , ,655,Ignore `rust-version` specification in packages (unstable)
+cargo, rustdoc,h,help, , ,656,Prints help information
+cargo, rustdoc,V,version, , ,657,Prints version information
+cargo, rustdoc,v,verbose, , ,658,Use verbose output (-vv very verbose/build.rs output)
+cargo, rustdoc, ,frozen, , ,659,Require Cargo.lock and cache are up to date
+cargo, rustdoc, ,locked, , ,660,Require Cargo.lock is up to date
+cargo, rustdoc, ,offline, , ,661,Run without accessing the network
+cargo, search, ,index, , ,662,Registry index URL to upload the package to
+cargo, search, ,limit, , ,663,"Limit the number of results (default: 10, max: 100)"
+cargo, search, ,registry, , ,664,Registry to use
+cargo, search, ,color, , ,665,"Coloring: auto, always, never"
+cargo, search, ,config, , ,666,Override a configuration value (unstable)
+cargo, search,q,quiet, , ,667,No output printed to stdout
+cargo, search,h,help, , ,668,Prints help information
+cargo, search,V,version, , ,669,Prints version information
+cargo, search,v,verbose, , ,670,Use verbose output (-vv very verbose/build.rs output)
+cargo, search, ,frozen, , ,671,Require Cargo.lock and cache are up to date
+cargo, search, ,locked, , ,672,Require Cargo.lock is up to date
+cargo, search, ,offline, , ,673,Run without accessing the network
+cargo, t test, ,bin, , ,674,Test only the specified binary
+cargo, t test, ,example, , ,675,Test only the specified example
+cargo, t test, ,test, , ,676,Test only the specified test target
+cargo, t test, ,bench, , ,677,Test only the specified bench target
+cargo, t test,p,package, , ,678,Package to run tests for
+cargo, t test, ,exclude, , ,679,Exclude packages from the test
+cargo, t test,j,jobs, , ,680,"Number of parallel jobs, defaults to # of CPUs"
+cargo, t test, ,profile, , ,681,Build artifacts with the specified profile
+cargo, t test, ,features, , ,682,Space or comma separated list of features to activate
+cargo, t test, ,target, , ,683,Build for the target triple
+cargo, t test, ,target-dir, , ,684,Directory for all generated artifacts
+cargo, t test, ,manifest-path, , ,685,Path to Cargo.toml
+cargo, t test, ,message-format, , ,686,Error format
+cargo, t test, ,color, , ,687,"Coloring: auto, always, never"
+cargo, t test, ,config, , ,688,Override a configuration value (unstable)
+cargo, t test,q,quiet, , ,689,Display one character per test instead of one line
+cargo, t test, ,lib, , ,690,Test only this package's library unit tests
+cargo, t test, ,bins, , ,691,Test all binaries
+cargo, t test, ,examples, , ,692,Test all examples
+cargo, t test, ,tests, , ,693,Test all tests
+cargo, t test, ,benches, , ,694,Test all benches
+cargo, t test, ,all-targets, , ,695,Test all targets
+cargo, t test, ,doc, , ,696,Test only this library's documentation
+cargo, t test, ,no-run, , ,697,"Compile, but don't run tests"
+cargo, t test, ,no-fail-fast, , ,698,Run all tests regardless of failure
+cargo, t test, ,workspace, , ,699,Test all packages in the workspace
+cargo, t test, ,release, , ,700,"Build artifacts in release mode, with optimizations"
+cargo, t test, ,all-features, , ,701,Activate all available features
+cargo, t test, ,no-default-features, , ,702,Do not activate the `default` feature
+cargo, t test, ,ignore-rust-version, , ,703,Ignore `rust-version` specification in packages (unstable)
+cargo, t test, ,unit-graph, , ,704,Output build graph in JSON (unstable)
+cargo, t test, ,future-incompat-report, , ,705,Outputs a future incompatibility report at the end of the build (unstable)
+cargo, t test,h,help, , ,706,Prints help information
+cargo, t test,V,version, , ,707,Prints version information
+cargo, t test,v,verbose, , ,708,Use verbose output (-vv very verbose/build.rs output)
+cargo, t test, ,frozen, , ,709,Require Cargo.lock and cache are up to date
+cargo, t test, ,locked, , ,710,Require Cargo.lock is up to date
+cargo, t test, ,offline, , ,711,Run without accessing the network
+cargo, tree, ,manifest-path, , ,712,Path to Cargo.toml
+cargo, tree,p,package, , ,713,Package to be used as the root of the tree
+cargo, tree, ,exclude, , ,714,Exclude specific workspace members
+cargo, tree, ,features, , ,715,Space or comma separated list of features to activate
+cargo, tree, ,target, , ,716,Filter dependencies matching the given target-triple (or `all` for all targets)
+cargo, tree,e,edges,features normal build dev all no-dev no-build no-normal, ,717,The kinds of dependencies to display
+cargo, tree,i,invert, , ,718,Invert the tree direction and focus on the given package
+cargo, tree, ,prefix,depth indent none,@f @r,719,Change the prefix (indentation) of how each entry is displayed
+cargo, tree, ,charset,utf8 ascii,@f @r,720,"Character set to use in output: utf8, ascii"
+cargo, tree,f,format, , ,721,Format string used for printing dependencies
+cargo, tree, ,color, , ,722,"Coloring: auto, always, never"
+cargo, tree, ,config, , ,723,Override a configuration value (unstable)
+cargo, tree,q,quiet, , ,724,Suppress status messages
+cargo, tree, ,workspace, , ,725,Display the tree for all packages in the workspace
+cargo, tree,a,all, , ,726, 
+cargo, tree, ,all-targets, , ,727, 
+cargo, tree, ,all-features, , ,728,Activate all available features
+cargo, tree, ,no-default-features, , ,729,Do not activate the `default` feature
+cargo, tree, ,no-dev-dependencies, , ,730, 
+cargo, tree, ,no-indent, , ,731, 
+cargo, tree, ,prefix-depth, , ,732, 
+cargo, tree, ,no-dedupe, , ,733,Do not de-duplicate (repeats all shared dependencies)
+cargo, tree,d,duplicates, , ,734,Show only dependencies which come in multiple versions (implies -i)
+cargo, tree,V,version, , ,735, 
+cargo, tree,h,help, , ,736,Prints help information
+cargo, tree,v,verbose, , ,737,Use verbose output (-vv very verbose/build.rs output)
+cargo, tree, ,frozen, , ,738,Require Cargo.lock and cache are up to date
+cargo, tree, ,locked, , ,739,Require Cargo.lock is up to date
+cargo, tree, ,offline, , ,740,Run without accessing the network
+cargo, uninstall,p,package, , ,741,Package to uninstall
+cargo, uninstall, ,bin, , ,742,Only uninstall the binary NAME
+cargo, uninstall, ,root, , ,743,Directory to uninstall packages from
+cargo, uninstall, ,color, , ,744,"Coloring: auto, always, never"
+cargo, uninstall, ,config, , ,745,Override a configuration value (unstable)
+cargo, uninstall,q,quiet, , ,746,No output printed to stdout
+cargo, uninstall,h,help, , ,747,Prints help information
+cargo, uninstall,V,version, , ,748,Prints version information
+cargo, uninstall,v,verbose, , ,749,Use verbose output (-vv very verbose/build.rs output)
+cargo, uninstall, ,frozen, , ,750,Require Cargo.lock and cache are up to date
+cargo, uninstall, ,locked, , ,751,Require Cargo.lock is up to date
+cargo, uninstall, ,offline, , ,752,Run without accessing the network
+cargo, update,p,package, , ,753,Package to update
+cargo, update, ,precise, , ,754,Update a single dependency to exactly PRECISE when used with -p
+cargo, update, ,manifest-path, , ,755,Path to Cargo.toml
+cargo, update, ,color, , ,756,"Coloring: auto, always, never"
+cargo, update, ,config, , ,757,Override a configuration value (unstable)
+cargo, update,q,quiet, , ,758,No output printed to stdout
+cargo, update,w,workspace, , ,759,Only update the workspace packages
+cargo, update, ,aggressive, , ,760,Force updating all dependencies of SPEC as well when used with -p
+cargo, update, ,dry-run, , ,761,Don't actually write the lockfile
+cargo, update,h,help, , ,762,Prints help information
+cargo, update,V,version, , ,763,Prints version information
+cargo, update,v,verbose, , ,764,Use verbose output (-vv very verbose/build.rs output)
+cargo, update, ,frozen, , ,765,Require Cargo.lock and cache are up to date
+cargo, update, ,locked, , ,766,Require Cargo.lock is up to date
+cargo, update, ,offline, , ,767,Run without accessing the network
+cargo, update, ,ignore-rust-version, , ,768,Ignore MSRV when checking updates
+cargo, vendor, ,manifest-path, , ,769,Path to Cargo.toml
+cargo, vendor,s,sync, , ,770,Additional `Cargo.toml` to sync and vendor
+cargo, vendor, ,color, , ,771,"Coloring: auto, always, never"
+cargo, vendor, ,config, , ,772,Override a configuration value (unstable)
+cargo, vendor,q,quiet, , ,773,No output printed to stdout
+cargo, vendor, ,no-delete, , ,774,Don't delete older crates in the vendor directory
+cargo, vendor, ,respect-source-config, , ,775,Respect `[source]` config in `.cargo/config`
+cargo, vendor, ,versioned-dirs, , ,776,Always include version in subdir name
+cargo, vendor, ,no-merge-sources, , ,777, 
+cargo, vendor, ,relative-path, , ,778, 
+cargo, vendor, ,only-git-deps, , ,779, 
+cargo, vendor, ,disallow-duplicates, , ,780, 
+cargo, vendor,h,help, , ,781,Prints help information
+cargo, vendor,V,version, , ,782,Prints version information
+cargo, vendor,v,verbose, , ,783,Use verbose output (-vv very verbose/build.rs output)
+cargo, vendor, ,frozen, , ,784,Require Cargo.lock and cache are up to date
+cargo, vendor, ,locked, , ,785,Require Cargo.lock is up to date
+cargo, vendor, ,offline, , ,786,Run without accessing the network
+cargo, verify-project, ,manifest-path, , ,787,Path to Cargo.toml
+cargo, verify-project, ,color, , ,788,"Coloring: auto, always, never"
+cargo, verify-project, ,config, , ,789,Override a configuration value (unstable)
+cargo, verify-project,q,quiet, , ,790,No output printed to stdout
+cargo, verify-project,h,help, , ,791,Prints help information
+cargo, verify-project,V,version, , ,792,Prints version information
+cargo, verify-project,v,verbose, , ,793,Use verbose output (-vv very verbose/build.rs output)
+cargo, verify-project, ,frozen, , ,794,Require Cargo.lock and cache are up to date
+cargo, verify-project, ,locked, , ,795,Require Cargo.lock is up to date
+cargo, verify-project, ,offline, , ,796,Run without accessing the network
+cargo, version, ,color, , ,797,"Coloring: auto, always, never"
+cargo, version, ,config, , ,798,Override a configuration value (unstable)
+cargo, version,q,quiet, , ,799,No output printed to stdout
+cargo, version,h,help, , ,800,Prints help information
+cargo, version,V,version, , ,801,Prints version information
+cargo, version,v,verbose, , ,802,Use verbose output (-vv very verbose/build.rs output)
+cargo, version, ,frozen, , ,803,Require Cargo.lock and cache are up to date
+cargo, version, ,locked, , ,804,Require Cargo.lock is up to date
+cargo, version, ,offline, , ,805,Run without accessing the network
+cargo, yank, ,vers, , ,806,The version to yank or un-yank
+cargo, yank, ,index, , ,807,Registry index to yank from
+cargo, yank, ,token, , ,808,API token to use when authenticating
+cargo, yank, ,registry, , ,809,Registry to use
+cargo, yank, ,color, , ,810,"Coloring: auto, always, never"
+cargo, yank, ,config, , ,811,Override a configuration value (unstable)
+cargo, yank,q,quiet, , ,812,No output printed to stdout
+cargo, yank, ,undo, , ,813,"Undo a yank, putting a version back into the index"
+cargo, yank,h,help, , ,814,Prints help information
+cargo, yank,V,version, , ,815,Prints version information
+cargo, yank,v,verbose, , ,816,Use verbose output (-vv very verbose/build.rs output)
+cargo, yank, ,frozen, , ,817,Require Cargo.lock and cache are up to date
+cargo, yank, ,locked, , ,818,Require Cargo.lock is up to date
+cargo, yank, ,offline, , ,819,Run without accessing the network
+cargo, help, ,color, , ,820,"Coloring: auto, always, never"
+cargo, help, ,config, , ,821,Override a configuration value (unstable)
+cargo, help,h,help, , ,822,Prints help information
+cargo, help,V,version, , ,823,Prints version information
+cargo, help,v,verbose, , ,824,Use verbose output (-vv very verbose/build.rs output)
+cargo, help, ,frozen, , ,825,Require Cargo.lock and cache are up to date
+cargo, help, ,locked, , ,826,Require Cargo.lock is up to date
+cargo, help, ,offline, , ,827,Run without accessing the network
+cargo, asm, ,comments, , ,828,Print asm comments
+cargo, asm, ,debug-info, , ,829,Generate asm w/ debug info even if not required
+cargo, asm, ,debug-mode, , ,830,Print output useful for debugging
+cargo, asm, ,directives, , ,831,Print asm directives
+cargo, asm,h,help, , ,832,Print cargo-asm help info
+cargo, asm, ,json, , ,833,Serialize asm AST to JSON
+cargo, asm, ,lib, , ,834,Build only the lib target
+cargo, asm, ,no-color, , ,835,Disable color output
+cargo, asm, ,no-default-features, , ,836,Disable all cargo features on build
+cargo, asm, ,rust, , ,837,Interleave asm output w/ rust code
+cargo, asm,V,version, , ,838,Print cargo-asm version info
+cargo, asm, ,target, , ,839,Build for target
+cargo, asm, ,asm-style,intel att, ,840,ASM style (default: intel)
+cargo, asm, ,build-type,debug release, ,841,Build type (default: release)
+cargo, asm, ,features, , ,842,Cargo features to enable
+cargo, asm, ,manifest-path, , ,843,Run cargo-asm in a different directory

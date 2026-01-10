@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-ptx, ,F,flag-truncation, , ,101,use STRING for flagging line truncations
+uu-ptx, ,M,macro-name, , ,102,macro name to use instead of 'xx'
+uu-ptx, , ,format,roff,@f @r,103, 
+uu-ptx, ,S,sentence-regexp, , ,104,for end of lines or end of sentences
+uu-ptx, ,W,word-regexp, , ,105,use REGEXP to match each keyword
+uu-ptx, ,b,break-file, ,@r,106,word break characters in this FILE
+uu-ptx, ,g,gap-size, , ,107,gap size in columns between output fields
+uu-ptx, ,i,ignore-file, ,@r,108,read ignore word list from FILE
+uu-ptx, ,o,only-file, ,@r,109,read only word list from this FILE
+uu-ptx, ,w,width, , ,110,"output width in columns, reference excluded"
+uu-ptx, ,A,auto-reference, , ,111,output automatically generated references
+uu-ptx, ,G,traditional, , ,112,behave more like System V 'ptx'
+uu-ptx, ,R,right-side-refs, , ,113,"put references at right, not counted in -w"
+uu-ptx, ,f,ignore-case, , ,114,fold lower case to upper case for sorting
+uu-ptx, ,r,references, , ,115,first field of each line is a reference
+uu-ptx, ,h,help, , ,116,Print help
+uu-ptx, ,V,version, , ,117,Print version

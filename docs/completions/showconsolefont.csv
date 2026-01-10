@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+showconsolefont, ,i,info, , ,101,"don't print out the font table, just show: ROWSxCOLSxCOUNT and exit"
+showconsolefont, ,C,console, , ,102,the console device to be used
+showconsolefont, ,v,verbose, , ,103,be more verbose
+showconsolefont, ,V,version, , ,104,print version number
+showconsolefont, ,h,help, , ,105,print this usage message

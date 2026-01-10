@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+md5sum, ,b,binary, , ,101,read in binary mode
+md5sum, ,c,check, , ,102,read checksums from the FILEs and check them
+md5sum, , ,tag, , ,103,create a BSD-style checksum
+md5sum, ,t,text, , ,104,read in text mode (default)
+md5sum, ,z,zero, , ,105,"end each output line with NUL, not newline, and disable file name escaping "
+md5sum, , ,ignore-missing, , ,106,don't fail or report status for missing files
+md5sum, , ,quiet, , ,107,don't print OK for each successfully verified file
+md5sum, , ,status, , ,108,"don't output anything, status code shows success"
+md5sum, , ,strict, , ,109,exit non-zero for improperly formatted checksum lines
+md5sum, ,w,warn, , ,110,warn about improperly formatted checksum lines
+md5sum, , ,help, , ,111,display this help and exit
+md5sum, , ,version, , ,112,output version information and exit

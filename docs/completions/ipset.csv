@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ipset, --condition, , ,create, ,101,Create a set identified with SETNAME
+ipset, --condition, , ,add, ,102,Add a given entry to a SET
+ipset, --condition, , ,del, ,103,Delete an entry from a SET
+ipset, --condition, , ,test, ,104,Test whether an entry is in a set
+ipset, --condition, , ,destroy, ,105,Destroy the specified set or all sets
+ipset, --condition, , ,list, ,106,a
+ipset, -s, , ,plain save xml, ,107,Output format to the list command

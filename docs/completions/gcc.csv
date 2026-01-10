@@ -1,0 +1,38 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gcc, , , ,',@f @r,101,Standard mode
+gcc, , , ,0 1, ,102,Use specified version of the C++ ABI
+gcc, , ,sysroot, ,@D @f @r,103,Use dir as the root directory for headers and libraries
+gcc, , ,help, , ,104,Print help
+gcc, , ,target-help, , ,105,Print a description of target specific options for each tool
+gcc, , ,version, , ,106,Display the version number and copyrights
+gcc, , , ,80,@f @r,107,Try to format error messages so that they fit on lines of this number of characters
+gcc, , , ,once, ,108,Only meaningful in line-wrapping mode
+gcc, , , ,none id nfc nfkc,@f @r,109,Warn about identifiers that are not normalized
+gcc, , ,coverage, , ,110,Used to compile and link code instrumented for coverage analysis
+gcc, , , ,1 2 3 4 5,@f @r,111,Controls the amount of debugging output the vectorizer prints
+gcc, , , ,1 2 3 4 5,@f @r,112,Control the amount of debugging output the scheduler prints
+gcc, , , , ,@r,113,Print the full absolute name of the library file library that would be used when linking
+gcc, , , , ,@r,114,"Like -print-file-name, but searches for a program such as cpp"
+gcc, , , ,1 2 3 4 5,@f @r,115,"By default, GCC limits the size of functions that can be inlined"
+gcc, , ,param, , ,116,"In some places, GCC uses various constants to control the amount of optimization that is done"
+gcc, ,x, ,'c, ,117,Specify the source language
+gcc, , , ,M D N I U,@f @r,118,Make debug dumps according to these arguments
+gcc, , ,help, , ,119,Print text describing all the command line options instead of preprocessing anything
+gcc, , ,target-help, , ,120,Print text describing all the command line options instead of preprocessing anything
+gcc, , ,version, , ,121,Print out GNU CPP’s version number
+gcc, , , , ,@D,122,Add header search directory
+gcc, , , , ,@D,123,Add header search directory for #include 'file'
+gcc, , , , ,@r,124,Process file after the compiler reads in the standard specs file
+gcc, , ,sysroot, ,@D @f @r,125,Use dir as the logical root directory for headers and libraries
+gcc, , , , ,@f @r,126,Round size of structs and unions up to multiple of this number of bits
+gcc, , , , ,@f @r,127,Specify the register to be used for PIC addressing
+gcc, , , , ,@f @r,128,Specify the access model for the thread local storage pointer
+gcc, , , , ,@f @r,129,Specify ATMEL AVR instruction set or MCU type
+gcc, , , , ,@f @r,130,Specify the initial stack address (symbol or numeric value)
+gcc, , , , ,@f @r,131,Specified the identification number of the ID based shared library being compiled
+gcc, , , ,small medium large, ,132, 
+gcc, , , ,'none, ,133, 
+gcc, , , ,no all true_store_to_load store_to_load, ,134,Which dependences are considered costly by the target during instruction scheduling
+gcc, , , ,no pad regroup_exact, ,135,Which nop insertion scheme to use during the second scheduling pass
+gcc, , , ,'medlow, ,136, 
+gcc, , , ,default internal hidden protected, ,137,Set the default ELF image symbol visibility

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yajsv, ,h,help, , ,101,Show help
+yajsv, ,b, , ,@r,102,Allow BOM in JSON files
+yajsv, ,l, , ,@r,103,Validate the JSON documents from newline separated paths and/or globs in a text file
+yajsv, ,q, , ,@r,104,Hide everything except errors
+yajsv, ,r, , ,@r,105,The referenced schema
+yajsv, ,s, , ,@r,106,The JSON schema to validate against

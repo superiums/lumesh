@@ -1,0 +1,41 @@
+cmd,conds,short,long,params,dirs,pri,desc
+qvidcap, ,d,device, , ,101,"Use device <dev> as the video device if <dev> is a number, then /dev/video<de…"
+qvidcap, ,f,file, , ,102,Read from the file <file> for the raw frame data
+qvidcap, ,p,port, , ,103,Listen for a network connection on the given port.  The default port is 8362
+qvidcap, ,T,tpg, , ,104,Use the test pattern generator
+qvidcap, ,c,count, , ,105,Stop after <cnt> captured frames
+qvidcap, ,b,buffers, , ,106,Request <bufs> buffers (default 4) when streaming from a video device
+qvidcap, ,s,single-step, , ,107,"Starting with frame <frm> (default 1), pause after displaying each frame unti…"
+qvidcap, ,C,colorspace, , ,108,Override colorspace
+qvidcap, ,X,xfer-func, , ,109,Override transfer function
+qvidcap, ,Y,ycbcr-enc, , ,110,Override Y'CbCr encoding
+qvidcap, ,Q,quant, , ,111,Override quantization
+qvidcap, ,P,pixelformat, , ,112,For video devices: set the format to this pixel format
+qvidcap, ,l,list-formats, , ,113,Display all supported formats
+qvidcap, ,h,help, , ,114,Display this help message
+qvidcap, ,t,timings, , ,115,Report frame render timings
+qvidcap, ,v,verbose, , ,116,Be more verbose
+qvidcap, ,R,raw, , ,117,Open device in raw mode
+qvidcap, , ,opengl, , ,118,Force openGL to display the video
+qvidcap, , ,opengles, , ,119,Force openGL ES to display the video
+qvidcap, ,W,width, , ,120,Set width
+qvidcap, ,H,height, , ,121,Set frame (not field!) height
+qvidcap, ,A,padding, , ,122,set additional horizontal padding (after width)
+qvidcap, , ,fps, , ,123,Set frames-per-second (default is 30)
+qvidcap, ,F,field, , ,124,Override field setting
+qvidcap, , ,list-patterns, , ,125,List available patterns for use with --pattern
+qvidcap, , ,pattern, , ,126,"Choose output test pattern, the default is 0"
+qvidcap, , ,square, , ,127,Show a square in the middle of the output test pattern
+qvidcap, , ,border, , ,128,Show a border around the pillar/letterboxed video
+qvidcap, , ,sav, , ,129,Insert an SAV code in every line
+qvidcap, , ,eav, , ,130,Insert an EAV code in every line
+qvidcap, , ,pixel-aspect, , ,131,"Select a pixel aspect ratio, the default is to autodetect"
+qvidcap, , ,video-aspect, , ,132,"Select a video aspect ratio, the default is to use the frame ratio"
+qvidcap, , ,alpha, , ,133,"Value to use for the alpha component, range 0-255, the default is 0"
+qvidcap, , ,alpha-red-only, , ,134,"Only use the --alpha value for the red colors, for all others use 0"
+qvidcap, , ,rgb-lim-range, , ,135,Encode RGB values as limited [16-235] instead of full range
+qvidcap, , ,hor-speed, , ,136,"Choose speed for horizontal movement, the default is 0 and the range is [-3"
+qvidcap, , ,vert-speed, , ,137,"Choose speed for vertical movement, the default is 0 and the range is [-3. 3]"
+qvidcap, , ,perc-fill, , ,138,Percentage of the frame to actually fill.  the default is 100%
+qvidcap, , ,test, , ,139,"Test all formats, each test generates <count> frames"
+qvidcap, , ,test-mask, , ,140,Mask which tests are performed.  <mask> is a bit mask with these values:

@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nodeenv, ,h,help, , ,101,Show this help message and exit
+nodeenv, , ,version, , ,102,Show nodeenv's version number and exit
+nodeenv, ,n,node, ,@r,103,The Node.js version to use
+nodeenv, , ,mirror, ,@r,104,The mirror of nodejs.org to download from
+nodeenv, ,j,jobs, ,@r,105,The number of compile jobs to run in parallel
+nodeenv, , ,load-average, ,@r,106,The maximum load average during parallel compilation.
+nodeenv, , ,without-ssl, , ,107,Build Node.js without SSL support
+nodeenv, , ,debug, , ,108,Enable debug build of Node.js
+nodeenv, , ,profile, , ,109,Enable profiling of Node.js
+nodeenv, ,m,make, ,@r,110,Path to make command
+nodeenv, , ,source, , ,111,Install Node.js from source
+nodeenv, ,v,verbose, , ,112,Verbose mode
+nodeenv, ,q,quiet, , ,113,Quiet mode
+nodeenv, ,C,config-file, ,@r,114,Config file to use instead of ~/.nodeenvrc
+nodeenv, ,r,requirements, ,@r,115,Install all Node.js packages listed in this file
+nodeenv, , ,prompt, ,@r,116,Set a custom prompt prefix for this environment
+nodeenv, ,l,list, , ,117,List available Node.js versions
+nodeenv, , ,update, , ,118,Install npm packages from file without Node.js
+nodeenv, , ,with-npm, , ,119,Build without installing npm into the new virtual environment
+nodeenv, , ,npm, ,@r,120,The npm version to use
+nodeenv, , ,no-npm-clean, , ,121,Skip the npm 0.x cleanup
+nodeenv, ,p,python-virtualenv, , ,122,Use the currently-active Python virtualenv
+nodeenv, ,c,clean-src, , ,123,Remove 'src' directory after installation
+nodeenv, , ,force, , ,124,Force installation to an existing directory
+nodeenv, , ,prebuilt, , ,125,Install Node.js from a prebuilt package (default)
+nodeenv, , ,ignore_ssl_certs, , ,126,UNSAFE! Ignore SSL certs for package downloads

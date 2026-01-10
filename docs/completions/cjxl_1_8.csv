@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cjxl, ,h,help, , ,101,Displays the options that cjxl supports
+cjxl, ,v,verbose, , ,102,Increases verbosity
+cjxl, ,d,distance, , ,103,The preferred way to specify quality
+cjxl, ,q,quality, , ,104,Alternative way to indicate the desired quality
+cjxl, ,e,effort, , ,105,Controls the amount of effort that goes into producing an 'optimal' file in t…

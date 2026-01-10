@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-record, , ,help, , ,101,Print help
+libinput-record, , ,all, , ,102,Record all /dev/input/event* devices available on the system
+libinput-record, , ,autorestart, , ,103,Terminate the current recording after  s seconds of device inactivity
+libinput-record, , ,output-file, , ,104,Specifies the output file to use
+libinput-record, , ,grab, , ,105,Exclusively grab all opened devices
+libinput-record, , ,show-keycodes, , ,106,Show keycodes as-is in the recording
+libinput-record, , ,with-libinput, , ,107,Record libinput events alongside device events
+libinput-record, , ,with-hidraw, , ,108,Record hidraw events alongside device events.  DO NOT TYPE SENSITIVE DATA
+libinput-record, , ,multiple, , ,109, 

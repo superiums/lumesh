@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cascadia, ,h,help, , ,101,Show help
+cascadia, ,i,in, , ,102,Specify the html/xml file to read from or stdin
+cascadia, ,o,out, , ,103,Specify the output file or stdout
+cascadia, ,c,css, , ,104,Specify the CSS selectors
+cascadia, ,t,text, , ,105,Specify the text output for none-block selection mode
+cascadia, ,R,Raw, , ,106,Use the raw text output
+cascadia, ,p,piece, , ,107,Specify CSS sub-selectors within --css to split that block up
+cascadia, ,d,delimiter, , ,108,Specify the delimiter for pieces csv output
+cascadia, ,w,wrap-html, , ,109,Wrap up the output with html tags
+cascadia, ,y,style, , ,110,Style component within the wrapped html head
+cascadia, ,b,base, , ,111,Specify the base href tag used in the wrapped up html
+cascadia, ,q,quiet, , ,112,Do not show any output

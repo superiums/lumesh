@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xz, ,z,compress, , ,101,Compress
+xz, ,d,uncompress, ,@f @k @r,102,Decompress
+xz, ,t,test, , ,103,Test the integrity of compressed files
+xz, ,l,list, , ,104,Print information about compressed files
+xz, ,k,keep, , ,105,Don't delete the input files
+xz, ,f,force, , ,106, 
+xz, ,c,to-stdout, , ,107,Write to stdout instead of file
+xz, , ,single-stream, , ,108,Decompress only the first .xz stream
+xz, , ,no-sparse, , ,109,Disable creation of sparse files
+xz, ,S,suffix, , ,110,Use SUFFIX as the suffix for target file
+xz, , ,files, , ,111,Read the filenames to process from file
+xz, , ,files0, , ,112,Identical to --files but filenames terminate with \\0
+xz, ,F,format,auto xz lzma alone raw,@f @r,113,Specify file format to compress/decompress
+xz, ,C,check,none crc32 crc64 sha256,@f @r,114,Specify type of integrity check
+xz, , ,ignore-check, , ,115,Don't verify the integrity check
+xz, ,$level, , , ,116,Select compression level
+xz, ,e,extreme, , ,117,Use slower variant
+xz, , ,fast, , ,118,Alias of -0
+xz, , ,best, , ,119,Alias of -9
+xz, , ,block-size, , ,120,Set block size
+xz, , ,block-list, , ,121,Set block sizes list
+xz, , ,flush-timeout, , ,122,Force flush if encoder did not fush after TIMEOUT ms
+xz, , ,memlimit-compress, , ,123,Set memory usage limit for compression
+xz, , ,memlimit-decompress, , ,124,Set memory usage limit for decompression
+xz, ,M,memory, , ,125,Set a memory usage for compression/decompression
+xz, , ,no-adjust, , ,126,Display error and exit if exceed memory usage limit
+xz, ,T,threads, , ,127,Specify the number of worker threads to use
+xz, , ,lsam1, , ,128,Add LZMA1 filter to filter chain
+xz, , ,lzma2, , ,129,Add LZMA2 filter to filter chain
+xz, , ,$op, , ,130,Add a branch/call/jump filter to filter chain
+xz, , ,delta, , ,131,Add Delta filter to filter chain
+xz, ,q,quiet, , ,132,Suppress warnings/notices
+xz, ,v,verbose, , ,133,Be verbose
+xz, ,Q,no-warn, , ,134,Don't set the exit status to 2
+xz, , ,robot, , ,135,Print messages in a machine-parsable format
+xz, , ,info-memory, , ,136,"Display memory informations (physical, usage limits)"
+xz, ,h,help, , ,137,Display help
+xz, ,H,long-help, , ,138,Display long help
+xz, ,V,version, , ,139,Display version

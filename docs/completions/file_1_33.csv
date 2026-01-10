@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+file, , ,apple, , ,101,Causes the file command to output the file type and creator code as used by o…
+file, , ,exclude-quiet, , ,102,Like exclude but ignore tests that file does not know about
+file, , ,extension, , ,103,Print a slash-separated list of valid extensions for the file type found
+file, , ,mime-type, , ,104,"Like i, but print only the specified element(s)"
+file, , ,help, , ,105,Print a help message and exit

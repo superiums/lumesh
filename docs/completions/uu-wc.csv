@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-wc, , ,files0-from, ,@r,101,"read input from the files specified by NUL-terminated names in file F; If F is - then read names from standard input"
+uu-wc, , ,total,auto,@f @r,102,"when to print a line with total counts; WHEN can be: auto, always, only, never"
+uu-wc, ,c,bytes, , ,103,print the byte counts
+uu-wc, ,m,chars, , ,104,print the character counts
+uu-wc, ,l,lines, , ,105,print the newline counts
+uu-wc, ,L,max-line-length, , ,106,print the length of the longest line
+uu-wc, ,w,words, , ,107,print the word counts
+uu-wc, ,h,help, , ,108,Print help
+uu-wc, ,V,version, , ,109,Print version

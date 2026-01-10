@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+micro, , , , ,@D,101,Custom location for the configuration directory

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+date, ,d,date, , ,101,"display time described by STRING, not 'now'"
+date, , ,debug, , ,102,"annotate the parsed date, and warn about questionable usage to stderr"
+date, ,f,file, , ,103,"like --date; once for each line of DATEFILE"
+date, ,I,iso-8601, , ,104,output date/time in ISO 8601 format
+date, , ,resolution, , ,105,output the available resolution of timestamps Example: 0. 000000001
+date, ,R,rfc-email, , ,106,output date and time in RFC 5322 format
+date, , ,rfc-3339, , ,107,output date/time in RFC 3339 format
+date, ,r,reference, , ,108,display the last modification time of FILE
+date, ,s,set, , ,109,set time described by STRING
+date, ,u,universal, , ,110,print or set Coordinated Universal Time (UTC)
+date, , ,help, , ,111,display this help and exit
+date, , ,version, , ,112,output version information and exit 

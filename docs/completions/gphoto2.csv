@@ -1,0 +1,68 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gphoto2, ,?,help, , ,101,Print complete help message on program usage
+gphoto2, , ,usage, , ,102,Print short message on program usage
+gphoto2, , ,debug, , ,103,Turn on debugging
+gphoto2, , ,debug-logfile, ,@r,104,Name of file to write debug info to
+gphoto2, , ,quiet, , ,105,Quiet output (default=verbose)
+gphoto2, , ,hook-script, ,@r,106,"Hook script to call after downloads, captures, etc."
+gphoto2, , ,stdout, , ,107,Send file to stdout
+gphoto2, , ,stdout-size, , ,108,Print filesize before data
+gphoto2, , ,auto-detect, , ,109,List auto-detected cameras
+gphoto2, , ,show-exif, ,@r,110,Show EXIF information
+gphoto2, , ,show-info, ,@r,111,Show info
+gphoto2, , ,summary, , ,112,Show summary
+gphoto2, , ,manual, , ,113,Show camera driver manual
+gphoto2, , ,about, , ,114,About the camera driver manual
+gphoto2, , ,storage-info, , ,115,Show storage information
+gphoto2, , ,shell, , ,116,gPhoto shell
+gphoto2, ,v,version, , ,117,Display version and exit
+gphoto2, , ,list-cameras, , ,118,List supported camera models
+gphoto2, , ,list-ports, , ,119,List supported port devices
+gphoto2, ,a,abilities, , ,120,Display camera/driver abilities
+gphoto2, , ,port, ,@r,121,Specify device port
+gphoto2, , ,speed, ,@r,122,Specify serial transfer speed
+gphoto2, , ,camera, ,@r,123,Specify camera model
+gphoto2, , ,usbid, ,@r,124,(expert only) Override USB IDs
+gphoto2, , ,list-config, , ,125,List configuration tree
+gphoto2, , ,list-all-config, , ,126,Dump full configuration tree
+gphoto2, , ,get-config, ,@r,127,Get configuration value
+gphoto2, , ,set-config, ,@r,128,Set configuration value or index in choices
+gphoto2, , ,set-config-index, ,@r,129,Set configuration value index in choices
+gphoto2, , ,set-config-value, ,@r,130,Set configuration value
+gphoto2, , ,wait-event, , ,131,Wait for event(s) from camera
+gphoto2, , ,wait-event-and-download, , ,132,Wait for event(s) from the camera and download new images
+gphoto2, , ,capture-preview, , ,133,Capture a quick preview
+gphoto2, ,B,bulb, ,@r,134,Set bulb exposure time in seconds
+gphoto2, ,F,frames, ,@r,135,Set number of frames to capture (default=infinite)
+gphoto2, ,I,interval, ,@r,136,Set capture interval in seconds
+gphoto2, , ,reset-interval, , ,137,Reset capture interval on signal (default=no)
+gphoto2, , ,capture-image, , ,138,Capture an image
+gphoto2, , ,capture-image-and-download, , ,139,Capture an image and download it
+gphoto2, , ,capture-movie, , ,140,Capture a movie
+gphoto2, , ,capture-sound, , ,141,Capture an audio clip
+gphoto2, , ,capture-tethered, , ,142,Wait for shutter release on the camera and download
+gphoto2, ,l,list-folders, , ,143,List folders in folder
+gphoto2, ,L,list-files, , ,144,List files in folder
+gphoto2, ,m,mkdir, ,@r,145,Create a directory
+gphoto2, ,r,rmdir, ,@r,146,Remove a directory
+gphoto2, ,n,num-files, , ,147,Display number of files
+gphoto2, ,p,get-file, ,@r,148,Get files given in range
+gphoto2, ,P,get-all-files, , ,149,Get all files from folder
+gphoto2, ,t,get-thumbnail, ,@r,150,Get thumbnails given in range
+gphoto2, ,T,get-all-thumbnails, , ,151,Get all thumbnails from folder
+gphoto2, , ,get-metadata, ,@r,152,Get metadata given in range
+gphoto2, , ,get-all-metadata, , ,153,Get all metadata from folder
+gphoto2, , ,upload-metadata, ,@r,154,Upload metadata for file
+gphoto2, , ,get-raw-data, ,@r,155,Get raw data given in range
+gphoto2, , ,get-all-raw-data, , ,156,Get all raw data from folder
+gphoto2, , ,get-audio-data, ,@r,157,Get audio data given in range
+gphoto2, , ,get-all-audio-data, , ,158,Get all audio data from folder
+gphoto2, ,d,delete-file, ,@r,159,Delete files given in range
+gphoto2, ,D,delete-all-files, , ,160,Delete all files in folder (--no-recurse by default)
+gphoto2, ,u,upload-file, ,@r,161,Upload a file to camera
+gphoto2, , ,filename, ,@r,162,Specify a filename or filename pattern
+gphoto2, ,f,folder, ,@r,163,Specify camera folder (default='/')
+gphoto2, ,R,recurse, , ,164,Recursion (default for download)
+gphoto2, , ,no-recurse, , ,165,No recursion (default for deletion)
+gphoto2, , ,new, , ,166,Process new files only
+gphoto2, , ,force-overwrite, , ,167,Overwrite files without asking

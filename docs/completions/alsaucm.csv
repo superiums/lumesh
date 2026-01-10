@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsaucm, ,h,help, , ,101,this help
+alsaucm, ,c,card, , ,102,open card NAME
+alsaucm, ,i,interactive, , ,103,interactive mode
+alsaucm, ,b,batch, , ,104,batch mode (use '-' for the stdin input)
+alsaucm, ,n,no-open, , ,105,do not open first card found

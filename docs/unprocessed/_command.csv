@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+command, test (count (commandline -xpc)) -eq 1,h,help, , ,101,Display help and exit
+command, test (count (commandline -xpc)) -eq 1,a,all, , ,102,Print all external commands by the given name
+command, test (count (commandline -xpc)) -eq 1,q,query, , ,103,"Do not print anything, only set exit status"
+command, test (count (commandline -xpc)) -eq 1,v,search, , ,104,Print the file that would be executed

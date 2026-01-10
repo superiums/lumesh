@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+amixer, ,h,help, , ,101,this help
+amixer, ,c,card, ,@r,102,select the card
+amixer, ,D,device, ,@r,103,"select the device, default 'default'"
+amixer, ,d,debug, , ,104,debug mode
+amixer, ,n,nocheck, , ,105,do not perform range checking
+amixer, ,v,version, , ,106,print version of this program
+amixer, ,q,quiet, , ,107,be quiet
+amixer, ,i,inactive, , ,108,show also inactive controls
+amixer, ,a,abstract,none basic, ,109,select abstraction level
+amixer, ,s,stdin, , ,110,Read and execute commands from stdin sequentially

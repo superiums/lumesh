@@ -1,0 +1,3 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, , , ,$actions (__fish_print_xbps_packages -i),@f,101, 
+$progname, ,r, , ,@D,102,Path to rootdir.

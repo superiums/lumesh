@@ -1,0 +1,37 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgfmt, ,D,directory, , ,101,add DIRECTORY to list for input files search 
+msgfmt, ,j,java, , ,102,Java mode: generate a Java ResourceBundle class
+msgfmt, , ,java2, , ,103,"like --java, and assume Java2 (JDK 1. 2 or higher)"
+msgfmt, , ,csharp, , ,104,C# mode: generate a . NET . dll file
+msgfmt, , ,csharp-resources, , ,105,C# resources mode: generate a . NET . resources file
+msgfmt, , ,tcl, , ,106,Tcl mode: generate a tcl/msgcat . msg file
+msgfmt, , ,qt, , ,107,Qt mode: generate a Qt . qm file
+msgfmt, , ,desktop, , ,108,Desktop Entry mode: generate a . desktop file
+msgfmt, , ,xml, , ,109,XML mode: generate XML file . SS 'Output file location:'
+msgfmt, ,o,output-file, , ,110,write output to specified file
+msgfmt, , ,strict, , ,111,enable strict Uniforum mode 
+msgfmt, ,r,resource, , ,112,resource name
+msgfmt, ,l,locale, , ,113,"locale name, either language or language_COUNTRY"
+msgfmt, , ,source, , ,114,"produce a . java file, instead of a . class file"
+msgfmt, , ,template, , ,115,a . desktop file used as a template
+msgfmt, , ,keyword, , ,116,look for WORD as an additional keyword
+msgfmt, ,L,language, , ,117,recognise the specified XML language
+msgfmt, , ,replace-text, , ,118,"output XML with translated text replacing the original text, not augmenting t…"
+msgfmt, ,P,properties-input, , ,119,input files are in Java . properties syntax
+msgfmt, , ,stringtable-input, , ,120,input files are in NeXTstep/GNUstep . strings syntax 
+msgfmt, ,c,check, , ,121,"perform all the checks implied by --check-format, --check-header, --check-dom…"
+msgfmt, , ,check-format, , ,122,check language dependent format strings
+msgfmt, , ,check-header, , ,123,verify presence and contents of the header entry
+msgfmt, , ,check-domain, , ,124,check for conflicts between domain directives and the --output-file option
+msgfmt, ,C,check-compatibility, , ,125,check that GNU msgfmt behaves like X/Open msgfmt
+msgfmt, , ,check-accelerators, , ,126,check presence of keyboard accelerators for menu items
+msgfmt, ,f,use-fuzzy, , ,127,use fuzzy entries in output . SS 'Output details:'
+msgfmt, , ,no-convert, , ,128,don't convert the messages to UTF-8 encoding
+msgfmt, , ,no-redundancy, , ,129,don't pre-expand ISO C 99 <inttypes. h> format string directive macros
+msgfmt, ,a,alignment, , ,130,align strings to NUMBER bytes (default: 1)
+msgfmt, , ,endianness, , ,131,"write out 32-bit numbers in the given byte order (big or little, default depe…"
+msgfmt, , ,no-hash, , ,132,binary file will not include the hash table . SS 'Informative output:'
+msgfmt, ,h,help, , ,133,display this help and exit
+msgfmt, ,V,version, , ,134,output version information and exit
+msgfmt, , ,statistics, , ,135,print statistics about translations
+msgfmt, ,v,verbose, , ,136,increase verbosity level AUTHOR Written by Ulrich Drepper

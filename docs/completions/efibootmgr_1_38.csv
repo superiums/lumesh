@@ -1,0 +1,36 @@
+cmd,conds,short,long,params,dirs,pri,desc
+efibootmgr, ,a,active, , ,101,Set bootnum active
+efibootmgr, ,A,inactive, , ,102,Set bootnum inactive
+efibootmgr, ,b,bootnum, , ,103,Modify BootXXXX (hex)
+efibootmgr, ,B,delete-bootnum, , ,104,Delete bootnum
+efibootmgr, ,c,create, , ,105,Create new variable bootnum and add to bootorder
+efibootmgr, ,C,create-only, , ,106,Create new variable bootnum and and do not add to bootorder
+efibootmgr, ,d,disk, , ,107,The disk containing the loader (defaults to /dev/sda)
+efibootmgr, ,D,remove-dups, , ,108,Remove duplicated entries from BootOrder
+efibootmgr, ,e,edd, , ,109,Force EDD 1. 0 or 3. 0 creation variables
+efibootmgr, ,E,edd-device, , ,110,EDD 1. 0 device number (defaults to 0x80).   See --edd
+efibootmgr, , ,full-dev-path, , ,111,"Force creation of boot entries use a full UEFI device path, starting at the P…"
+efibootmgr, , ,file-dev-path, , ,112,Force creation of boot entries use an abbreviated UEFI device path which star…
+efibootmgr, ,f,reconnect, , ,113,Re-connect devices after driver is loaded
+efibootmgr, ,F,do-not-reconnect, , ,114,Do not reconnect devices after driver is loaded
+efibootmgr, ,g,gpt, , ,115,Force disk with invalid PMBR to be treated as GPT
+efibootmgr, ,i,iface, , ,116,Create a netboot entry for the named interface
+efibootmgr, ,k,keep, , ,117,Keep old entries when adjusting order
+efibootmgr, ,l,loader, , ,118,Specify a loader (defaults to \\\\EFI\\\\arch\\\\grub. efi)
+efibootmgr, ,L,label, , ,119,Boot manager display label (defaults to 'Linux')
+efibootmgr, ,m,mirror-below-4G, , ,120,Set t if you want to mirror memory below 4GB
+efibootmgr, ,M,mirror-above-4G, , ,121,X percentage memory to mirror above 4GB
+efibootmgr, ,n,bootnext, , ,122,Set BootNext to XXXX (hex)
+efibootmgr, ,N,delete-bootnext, , ,123,Delete BootNext
+efibootmgr, ,o,bootorder, , ,124,Explicitly set BootOrder (hex)
+efibootmgr, ,O,delete-bootorder, , ,125,Delete BootOrder
+efibootmgr, ,p,part, , ,126,Partition number containing the bootloader (defaults to 1)
+efibootmgr, ,q,quiet, , ,127,Quiet mode - suppresses output
+efibootmgr, ,r,driver, , ,128,Operate on Driver#### variables instead of Boot#### variables
+efibootmgr, ,t,timeout, , ,129,"Boot Manager timeout, in seconds"
+efibootmgr, ,T,delete-timeout, , ,130,Delete Timeout variable
+efibootmgr, ,u,UCS-2, , ,131,Handle extra command line arguments as UCS-2 (default is ASCII)
+efibootmgr, ,v,verbose, , ,132,Verbose mode - prints additional information
+efibootmgr, ,V,version, , ,133,Just print version string and exit
+efibootmgr, ,w,write-signature, , ,134,Write unique signature to the MBR if needed
+efibootmgr, ,y,sysprep, , ,135,Operate on SysPrep#### variables instead of Boot#### variables

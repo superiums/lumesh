@@ -1,0 +1,52 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ethtool, ,h,help, , ,101,Shows help message
+ethtool, , ,version, , ,102,Shows ethtool version
+ethtool, , ,debug, ,@f @r,103,Turns on debugging messages
+ethtool, , ,json, , ,104,Output results in JSON
+ethtool, ,I,include-statistics, , ,105,Include statistics in output
+ethtool, ,a,show-pause, , ,106,Shows pause parameters
+ethtool, ,A,pause, , ,107,Changes pause parameters
+ethtool, ,c,show-coalesce, , ,108,Shows coalescing information
+ethtool, ,C,coalesce, , ,109,Changes coalescing settings
+ethtool, ,g,show-ring, , ,110,Shows rx/tx ring parameters
+ethtool, ,G,set-ring, , ,111,Changes rx/tx ring parameters
+ethtool, ,i,driver, , ,112,Shows associated driver information
+ethtool, ,d,register-dump, , ,113,Prints a register dump
+ethtool, ,e,eeprom-dump, , ,114,Prints an EEPROM dump
+ethtool, ,E,change-eeprom, , ,115,Changes EEPROM byte
+ethtool, ,k,show-offload, , ,116,Shows state of protocol offload and features
+ethtool, ,K,offload, , ,117,Changes offload parameters and features
+ethtool, ,p,identify, , ,118,Initiate identify action (blinking)
+ethtool, ,P,show-permaddr, , ,119,Shows permanent hardware address
+ethtool, ,r,negotiate, , ,120,Restarts auto-negotiation
+ethtool, ,S,statistics, , ,121,Shows statistics
+ethtool, , ,phy-statistics, , ,122,Shows PHY specific statistics
+ethtool, ,t,test, , ,123,Executes adapter selftest
+ethtool, ,s,change, , ,124,Changes settings
+ethtool, ,u,show-ntuple, , ,125,Shows rx flow classification options or rules
+ethtool, ,U,config-ntuple, , ,126,Sets rx flow classification options or rules
+ethtool, ,w,get-dump, , ,127,Prints firmware dump
+ethtool, ,W,set-dump, , ,128,Sets dump flag
+ethtool, ,T,show-time-stamping, , ,129,Show time stamping capabilities and PTP hardware clock
+ethtool, ,x,show-rxfh, , ,130,Shows rx flow hash indirection table / RSS hash key
+ethtool, ,X,rxfh, , ,131,Configures rx flow hash indirection table / RSS hash key
+ethtool, ,f,flash, , ,132,Write a firmware image
+ethtool, ,l,show-channels, , ,133,Shows numbers of channels
+ethtool, ,L,set-channels, , ,134,Changes the numbers of channels
+ethtool, ,m,module-info, , ,135,Shows EEPROM from plugin modules
+ethtool, , ,show-priv-flags, , ,136,Shows private flags
+ethtool, , ,set-priv-flags, , ,137,Sets private flags
+ethtool, , ,show-eee, , ,138,Shows support of Energy-Efficient Ethernet
+ethtool, , ,set-eee, , ,139,Sets EEE behaviour
+ethtool, , ,set-phy-tunable, , ,140,Sets PHY tunable parameters
+ethtool, , ,get-phy-tunable, , ,141,Gets PHY tunable parameters
+ethtool, , ,get-tunable, , ,142,Get tunable parameters
+ethtool, , ,set-tunable, , ,143,Set tunable parameters
+ethtool, , ,reset, , ,144,Reset hardware components
+ethtool, , ,show-fec, , ,145,Shows support of Forward Error Correction
+ethtool, , ,set-fec, , ,146,Configures Forward Error Correction
+ethtool, ,Q,per-queue, , ,147,Applies provided sub command to specific queues
+ethtool, , ,cable-test, , ,148,Perform a cable test and report results
+ethtool, , ,cable-test-tdr, , ,149,Perform a cable test and report raw Time Domain Reflectometer data
+ethtool, , ,monitor, , ,150,Listens to netlink notification and displays them
+ethtool, , ,show-tunnels, , ,151,Show tunnel-related capabilities and state

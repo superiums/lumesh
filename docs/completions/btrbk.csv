@@ -1,0 +1,32 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrbk, , ,format,table long raw,@f @r,101,Change output format
+btrbk, ,l,loglevel,error warn info debug trace,@f @r,102,Set logging level
+btrbk, , ,exclude, ,@f @r,103,Exclude configured sections
+btrbk, , ,override, ,@f @r,104,Globally override a configuration option
+btrbk, ,c,config, ,@r,105,Specify configuration file
+btrbk, , ,lockfile, ,@r,106,Create and check lockfile
+btrbk, ,h,help, , ,107,Display this help message
+btrbk, , ,version, , ,108,Display version information
+btrbk, ,n,dry-run, , ,109,Perform a trial run with no changes made
+btrbk, ,p,preserve, , ,110,Preserve all (do not delete anything)
+btrbk, , ,preserve-snapshots, , ,111,Preserve snapshots (do not delete snapshots)
+btrbk, , ,preserve-backups, , ,112,Preserve backups (do not delete backups)
+btrbk, , ,wipe, , ,113,Delete all but latest snapshots
+btrbk, ,v,verbose, , ,114,Be more verbose (increase logging level)
+btrbk, ,q,quiet, , ,115,Be quiet (do not print backup summary)
+btrbk, ,t,table, , ,116,Change output to table format
+btrbk, ,L,long, , ,117,Change output to long format
+btrbk, ,S,print-schedule, , ,118,Print scheduler details (for the 'run' command)
+btrbk, , ,progress, , ,119,Show progress bar on send-receive operation
+btrbk, ,1,single-column, , ,120,Print output as a single column
+btrbk, , ,pretty, , ,121,Print pretty table output with lowercase and underlined column headings
+btrbk, , ,raw, , ,122,Create raw targets for archive command
+btrbk, list, , ,all,@f,137,List all snapshots and backups
+btrbk, list, , ,snapshots,@f,138,List snapshots only
+btrbk, list, , ,backups,@f,139,List backups and correlated snapshots
+btrbk, list, , ,latest,@f,140,List most recent snapshots and backups
+btrbk, list, , ,config,@f,141,List configured source/snapshot/target relations
+btrbk, list, , ,source,@f,142,List configured source/snapshot relations
+btrbk, list, , ,volume,@f,143,List configured volume sections
+btrbk, list, , ,target,@f,144,List configured targets
+btrbk, run dryrun snapshot resume prune clean, , , ,@f @r,145, 

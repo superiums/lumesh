@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lz4cat, , , ,,@f @k @r,101, 
+lz4cat, ,t,test, , ,102,Test the integrity
+lz4cat, , ,list, , ,103,List information about .lz4 file(s)
+lz4cat, ,D, , ,@r,104,Use specified file as dictionary
+lz4cat, , ,sparse, , ,105,Enable sparse mode
+lz4cat, , ,no-sparse, , ,106,Disable sparse mode
+lz4cat, ,v,verbose, , ,107,Be verbose
+lz4cat, ,q,quiet, , ,108,Suppress warnings
+lz4cat, ,h,help, , ,109,Show help
+lz4cat, ,V,version, , ,110,Show version

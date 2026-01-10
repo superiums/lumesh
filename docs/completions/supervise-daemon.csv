@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+supervise-daemon, , ,ready, , ,101,"Open file descriptor num as a pipe, and waits until the daemon writes a newli…"
+supervise-daemon, , ,oom-score-adj, , ,102,Modifies the OOM score adjustment of the daemon
+supervise-daemon, , ,stdout-logger, , ,103,Run cmd as a child process redirecting the standard output to the standard in…
+supervise-daemon, , ,stderr-logger, , ,104,Run cmd as a child process and Redirect the standard error of the process to …
+supervise-daemon, , ,capabilities, , ,105,"Start the daemon with the listed inheritable, ambient and bounding capabiliti…"
+supervise-daemon, , ,secbits, , ,106,Set the security-bits for the program
+supervise-daemon, , ,no-new-privs, , ,107,Set the No New Privs flag for the program.  See PR_SET_NO_NEW_PRIVS prctl(2)

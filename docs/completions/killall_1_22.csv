@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+killall, ,e,exact, , ,101,Require an exact match for very long names
+killall, ,I,ignore-case, , ,102,Do case insensitive process name match
+killall, ,g,process-group, , ,103,Kill the process group to which the process belongs
+killall, ,i,interactive, , ,104,Interactively ask for confirmation before killing
+killall, ,l,list, , ,105,List all known signal names
+killall, ,n,ns, , ,106,Match against the PID namespace of the given PID
+killall, ,o,older-than, , ,107,Match only processes that are older (started before) the time specified
+killall, ,q,quiet, , ,108,Do not complain if no processes were killed
+killall, ,r,regexp, , ,109,"Interpret process name pattern as a POSIX extended regular expression, per  r…"
+killall, ,s,signal, , ,110,Send this signal instead of SIGTERM
+killall, ,u,user, , ,111,Kill only processes the specified user owns.   Command names are optional
+killall, ,v,verbose, , ,112,Report if the signal was successfully sent
+killall, ,V,version, , ,113,Display version information
+killall, ,w,wait, , ,114,Wait for all killed processes to die
+killall, ,y,younger-than, , ,115,Match only processes that are younger (started after) the time specified
+killall, ,Z,context, , ,116,Specify security context: kill only processes having security context that ma…

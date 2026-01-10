@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsof, ,A, , ,@r,101,Use alternative name list file
+lsof, ,d, , ,@r,102,specifies a list of file descriptors to exclude or include in the output listing
+lsof, ,D, ,'\?, ,103,use of device cache file

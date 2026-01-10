@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+connman, ,v,version, , ,101,Print the ConnMan software version and exit
+connman, ,h,help, , ,102,Print ConnMan's available options and exit
+connman, ,c,config, , ,103,Specify configuration file to set up various settings for ConnMan
+connman, ,d,debug, , ,104,Sets how much information ConnMan sends to the log destination (usually syslo…
+connman, , ,device, , ,105,Only manage these network interfaces
+connman, , ,nodevice, , ,106,Never manage these network interfaces
+connman, ,p,plugin, , ,107,Load these plugins only
+connman, ,P,noplugin, , ,108,Never load these plugins
+connman, ,W,wifi, , ,109,Wifi driver that WiFi/Supplicant should use
+connman, ,n,nobacktrace, , ,110,Don't print out backtrace information
+connman, , ,nodaemon, , ,111,Do not daemonize
+connman, ,r,nodnsproxy, , ,112,Do not act as a DNS proxy or support external DNS resolving

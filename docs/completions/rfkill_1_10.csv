@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rfkill, ,J,json, , ,101, 
+rfkill, ,n,noheadings, , ,102, 
+rfkill, ,o,output, , ,103, 
+rfkill, , ,output-all, , ,104, 
+rfkill, ,r,raw, , ,105, 
+rfkill, ,h,help, , ,106, 
+rfkill, ,V,version, , ,107, 

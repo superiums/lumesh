@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iptables-save, ,M,modprobe, , ,101,Specify the path to the modprobe(8) program
+iptables-save, ,f,file, , ,102,Specify a filename to log the output to
+iptables-save, ,c,counters, , ,103,Include the current values of all packet and byte counters in the output
+iptables-save, ,t,table, , ,104,Restrict output to only one table

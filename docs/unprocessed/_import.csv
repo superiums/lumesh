@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+import, , , ,root (__fish_print_xwindows), ,101,Select window with this id or name [id]

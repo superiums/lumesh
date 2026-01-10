@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkdir, , ,version, , ,101,Output version
+mkdir, ,m,mode, , ,102,Set file mode (as in chmod)
+mkdir, ,p,parents, , ,103,Make parent directories as needed
+mkdir, ,v,verbose, , ,104,Print a message for each created directory
+mkdir, , ,help, , ,105,Display help
+mkdir, ,Z,context, , ,106,Set SELinux security context of each created directory to the default type

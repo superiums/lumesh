@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pix, , ,help, , ,101,Show help and exit
+pix, , ,version, , ,102,Show version and exit
+pix, ,f,fullscreen, , ,103,Use fullscreen mode
+pix, ,s,slideshow, , ,104,Use slideshow mode
+pix, , ,import-photos, , ,105,Automatically import digital camera photos

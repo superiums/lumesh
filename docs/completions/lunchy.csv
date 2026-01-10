@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lunchy, ,v,verbose, ,@f,101,Show command executions

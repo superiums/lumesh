@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpg-preset-passphrase, , ,preset, , ,101,Preset a passphrase.  This is what you usually will use
+gpg-preset-passphrase, , ,forget, , ,102,Flush the passphrase for the given cache ID from the cache
+gpg-preset-passphrase, , ,max-cache-ttl, , ,103,this passphrase presetting by starting gpg-agent with the
+gpg-preset-passphrase, , ,allow-preset-passphrase, , ,104,gpg-preset-passphrase is invoked this way: gpg-preset-passphrase [options] [c…
+gpg-preset-passphrase, , ,verbose, , ,105,Output additional information while running
+gpg-preset-passphrase, , ,passphrase, , ,106,"Instead of reading the passphrase from stdin, use the supplied string as pass…"

@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+unrar, __fish_use_subcommand, , ,e,@f @r,101,Extract files to current directory
+unrar, __fish_use_subcommand, , ,l,@f @r,102,List archive
+unrar, __fish_use_subcommand, , ,lt,@f @r,103,List archive (technical)
+unrar, __fish_use_subcommand, , ,lb,@f @r,104,List archive (bare)
+unrar, __fish_use_subcommand, , ,p,@f @r,105,Print file to stdout
+unrar, __fish_use_subcommand, , ,t,@f @r,106,Test archive files
+unrar, __fish_use_subcommand, , ,v,@f @r,107,Verbosely list archive
+unrar, __fish_use_subcommand, , ,vt,@f @r,108,Verbosely list archive (technical)
+unrar, __fish_use_subcommand, , ,vb,@f @r,109,Verbosely list archive (bare)
+unrar, __fish_use_subcommand, , ,x,@f @r,110,Extract files with full path

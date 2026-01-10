@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xpdf, , , , ,@f @k @r,101, 
+xpdf, , , ,yes no, ,102,Enable or disable t1lib (Default: yes)
+xpdf, , , ,yes no, ,103,Enable or disable FreeType (Default: yes)
+xpdf, , , ,yes no, ,104,Enable or disable font anti-aliasing (Default: yes)
+xpdf, , , ,letter legal A4 A3 match, ,105,Set the paper size
+xpdf, , , ,unix dos mac, ,106,Sets the end-of-line convention to use

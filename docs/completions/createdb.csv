@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+createdb, ,D,tablespace, ,@f @r,101,Default tablespace for the database
+createdb, ,e,echo, , ,102,Show the commands being sent to the server
+createdb, ,E,encoding, ,@f @r,103,Encoding for the database
+createdb, ,l,locale, ,@f @r,104,Locale settings for the database
+createdb, , ,lc-collate, ,@f @r,105,LC_COLLATE setting for the database
+createdb, , ,lc-ctype, ,@f @r,106,LC_CTYPE setting for the database
+createdb, ,O,owner, ,@f @r,107,Database user to own the new database
+createdb, ,T,template, ,@f @r,108,Template database to copy
+createdb, ,V,version, , ,109,"Output version information, then exit"
+createdb, ,?,help, , ,110,"Show help, then exit"
+createdb, ,h,host, ,@f @r,111,Database server host or socket directory
+createdb, ,p,port, ,@f @r,112,Database server port
+createdb, ,U,username, ,@f @r,113,User name to connect as
+createdb, ,w,no-password, , ,114,Never prompt for password
+createdb, ,W,password, , ,115,Force password prompt
+createdb, , ,maintenance-db, ,@f @r,116,Alternate maintenance database

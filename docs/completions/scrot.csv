@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scrot, ,h,help, , ,101,Display help and exit
+scrot, ,v,version, , ,102,Display version information and exit
+scrot, ,b,border, , ,103,"When selecting a window, grab wm border too"
+scrot, ,c,count, , ,104,Display a countdown when used with delay
+scrot, ,d,delay, , ,105,Wait NUMBER of seconds before taking a shot
+scrot, ,e,exec, , ,106,Execute APPLICATION on the saved image
+scrot, ,q,quality, , ,107,Image quality [1-100]
+scrot, ,m,multidisp, , ,108,Grab shot from multiple heads
+scrot, ,s,select, , ,109,Select a window or rectangle with the mouse
+scrot, ,t,thumb, , ,110,Generate thumbnail PERCENT of original

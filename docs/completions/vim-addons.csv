@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vim-addons, ,h,help, , ,109,show this usage message and exit
+vim-addons, ,q,query, , ,110,be quiet and make the output more parseable
+vim-addons, ,r,registry-dir, , ,111,set the registry directory
+vim-addons, ,s,source-dir, , ,112,set the addons source directory
+vim-addons, ,t,target-dir, , ,113,set the addons target directory
+vim-addons, ,v,verbose, , ,114,increase verbosity
+vim-addons, ,y,system-dir, , ,115,set the system-wide target directory
+vim-addons, ,w,system-wide, , ,116,set target directory to the system-wide one

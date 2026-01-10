@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+typst, ,h,help, ,@f,104,Print help
+typst, help, , ,$commands,@f @r,106, 
+typst, compile c watch w query, , , ,@f @r,113,Input file
+typst, compile c watch w query, ,root, ,@D @f @r,114,Project root (for absolute paths)
+typst, compile c watch w query, ,input, ,@f @r,115,String key-value pair for `sys.inputs`
+typst, compile c watch w query fonts, ,font-path, ,@D @f @r,116,Additional directories to search for fonts
+typst, compile c watch w query, ,diagnostic-format,human short,@f @r,117,Format to emit diagnostics in
+typst, compile c watch w,f,format,pdf png svg,@f @r,118,Format of the output file
+typst, compile c watch w, ,open, , ,119,Open output file after compilation
+typst, compile c watch w, ,ppi, ,@f @r,120,Pixels per inch for PNG export
+typst, compile c watch w, ,timings, , ,121,Produce performance timings
+typst, query, ,field, ,@f @r,124,Extract just one field
+typst, query, ,one, ,@f,125,Retrieve exactly one element
+typst, query, ,format,json yaml,@f @r,126,Format to serialize in
+typst, fonts, ,variants, ,@f,127,List style variants of each family
+typst, update, ,force, ,@f,128,Force a downgrade to an older version
+typst, update, ,revert, ,@f,129,Revert to the version from before the last update

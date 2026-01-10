@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gresource, __fish_use_subcommand, , ,list,@f,102,List resource sections
+gresource, __fish_use_subcommand, , ,details,@f,103,List resources with details
+gresource, __fish_use_subcommand, , ,extract,@f,104,Extract a resource
+gresource, __fish_not_contain_opt section && __fish_use_subcommand, , ,sections,@f,105,List resource sections
+gresource, __fish_not_contain_opt section && __fish_use_subcommand, , ,help,@f,106,Prints help

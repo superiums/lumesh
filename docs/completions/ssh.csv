@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ssh, , , , ,@k,101,Remote
+ssh, ,e, ,\^ none, ,102,Escape character
+ssh, ,l, , ,@f @r,103,User

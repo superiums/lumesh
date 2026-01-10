@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdbm_dump, ,H,format, , ,101,Select dump format
+gdbm_dump, ,h,help, , ,102,Print a short usage summary
+gdbm_dump, , ,usage, , ,103,Print a list of available options
+gdbm_dump, ,V,version, , ,104,"Print program version SEE ALSO gdbm_load (1), gdbmtool (1), gdbm (3)"

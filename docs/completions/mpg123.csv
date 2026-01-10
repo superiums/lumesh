@@ -1,0 +1,88 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mpg123, ,k,skip, , ,101,Skip first num frames.   By default the decoding starts at the first frame
+mpg123, ,n,frames, , ,102,Decode only num frames.   By default the complete stream is decoded
+mpg123, , ,fuzzy, , ,103,Enable fuzzy seeks (guessing byte offsets or using approximate seek points fr…
+mpg123, ,y,no-resync, , ,104,Do NOT try to resync and continue decoding if an error occurs in the input fi…
+mpg123, ,F,no-frankenstein, , ,105,Disable support for Frankenstein streams
+mpg123, , ,network, , ,106,"Select network  backend (helper program), choices are usually auto, wget, and…"
+mpg123, , ,resync-limit, , ,107,"Set number of bytes to search for valid MPEG data once lost in stream; <0 mea…"
+mpg123, ,u,auth, , ,108,HTTP authentication to use when receiving files via HTTP
+mpg123, , ,auth-file, , ,109,Provide the authentication info via given file instead of command line direct…
+mpg123, , ,ignore-mime, , ,110,Ignore MIME types given by HTTP server
+mpg123, , ,no-icy-meta, , ,111,Do not accept ICY meta data
+mpg123, , ,streamdump, , ,112,Dump a copy of the input data (as read by libmpg123) to the given file
+mpg123, , ,icy-interval, , ,113,This setting enables you to play a stream dump containing ICY metadata at the…
+mpg123, , ,no-seekbuffer, , ,114,Disable the default micro-buffering of non-seekable streams that gives the pa…
+mpg123, ,@,list, , ,115,Read filenames and/or URLs of MPEG audio streams from the specified file in a…
+mpg123, ,l,listentry, , ,116,"Of the playlist, play specified entry only"
+mpg123, , ,continue, , ,117,Enable playlist continuation mode
+mpg123, , ,loop, , ,118,"for looping track(s) a certain number of times, < 0 means infinite loop (not …"
+mpg123, , ,keep-open, , ,119,For remote control mode: Keep loaded file open after reaching end
+mpg123, , ,timeout, , ,120,"Timeout in (integer) seconds before declaring a stream dead (if <= 0, wait fo…"
+mpg123, ,z,shuffle, , ,121,Shuffle play
+mpg123, ,Z,random, , ,122,Continuous random play
+mpg123, ,i,index, , ,123,Index / scan through the track before playback
+mpg123, , ,index-size, , ,124,Set the number of entries in the seek frame index table
+mpg123, , ,preframes, , ,125,Set the number of frames to be read as lead-in before a seeked-to position
+mpg123, ,o,output, , ,126,Select audio output module
+mpg123, , ,list-modules, , ,127,List the available modules
+mpg123, , ,list-devices, , ,128,List the available output devices for given output module
+mpg123, ,a,audiodevice, , ,129,Specify the audio device to use
+mpg123, ,s,stdout, , ,130,"The decoded audio samples are written to standard output, instead of playing …"
+mpg123, ,O,outfile, , ,131,Write raw output into a file (instead of simply redirecting standard output t…
+mpg123, ,w,wav, , ,132,Write output as WAV file
+mpg123, , ,au, , ,133,and
+mpg123, , ,cdr, , ,134,"for AU and CDR format, respectively"
+mpg123, , ,reopen, , ,135,Forces reopen of the audiodevice after ever song
+mpg123, , ,cpu, , ,136,"Selects a certain decoder (optimized for specific CPU), for example i586 or M…"
+mpg123, , ,test-cpu, , ,137,Tests your CPU and prints a list of possible choices for --cpu
+mpg123, , ,list-cpu, , ,138,"Lists all available decoder choices, regardless of support by your CPU"
+mpg123, ,g,gain, , ,139,[DEPRECATED] Set audio hardware output gain (default: don't change)
+mpg123, ,f,scale, , ,140,Change scale factor (default: 32768)
+mpg123, , ,rva-radio, , ,141,Enable RVA (relative volume adjustment) using the values stored for ReplayGai…
+mpg123, , ,rva-audiophile, , ,142,Enable RVA (relative volume adjustment) using the values stored for ReplayGai…
+mpg123, ,1,single1, , ,143,"Decode only channel 0 (left) or channel 1 (right), respectively"
+mpg123, ,m,singlemix, , ,144,Mix both channels / decode mono
+mpg123, , ,stereo, , ,145,Force stereo output
+mpg123, ,r,rate, , ,146,Set sample rate (default: automatic)
+mpg123, , ,resample, , ,147,Set resampling method to employ if forcing an output rate
+mpg123, ,4,4to1, , ,148,Performs a downsampling of ratio 2:1 (22 kHz from 44
+mpg123, , ,pitch, , ,149,"Set a pitch change (speedup/down, 0 is neutral; 0. 05 is 5% speedup)"
+mpg123, , ,8bit, , ,150,Forces 8bit output
+mpg123, , ,float, , ,151,Forces f32 encoding
+mpg123, ,e,encoding, , ,152,Choose output sample encoding
+mpg123, ,d,doublespeed, , ,153,Only play every n 'th frame
+mpg123, , ,halfspeed, , ,154,option to play 3 out of 4 frames etc
+mpg123, ,E,equalizer, , ,155,"Enables equalization, taken from file "
+mpg123, , ,gapless, , ,156,"Enable code that cuts (junk) samples at beginning and end of tracks, enabling…"
+mpg123, , ,no-gapless, , ,157,Disable the gapless code
+mpg123, , ,no-infoframe, , ,158,"Do not parse the Xing/Lame/VBR/Info frame, decode it instead just like a stup…"
+mpg123, ,D,delay, , ,159,Insert a delay of n seconds before each track
+mpg123, , ,headphones, , ,160,"Direct audio output to the headphone connector (some hardware only; AIX, HP, …"
+mpg123, , ,speaker, , ,161,"Direct audio output to the speaker  (some hardware only; AIX, HP, SUN)"
+mpg123, , ,lineout, , ,162,"Direct audio output to the line-out connector (some hardware only; AIX, HP, S…"
+mpg123, ,b,buffer, , ,163,Use an audio output buffer of size Kbytes
+mpg123, , ,preload, , ,164,Wait for the buffer to be filled to fraction before starting playback (fracti…
+mpg123, , ,devbuffer, , ,165,"Set device buffer in seconds; <= 0 means default value"
+mpg123, , ,smooth, , ,166,"Keep buffer over track boundaries -- meaning, do not empty the buffer between…"
+mpg123, ,t,test, , ,167,"Test mode.   The audio stream is decoded, but no output occurs"
+mpg123, ,c,check, , ,168,"Check for filter range violations (clipping), and report them for each frame …"
+mpg123, ,v,verbose, , ,169,Increase the verbosity level
+mpg123, ,q,quiet, , ,170,Quiet.   Suppress diagnostic messages
+mpg123, ,C,control, , ,171,Enable terminal control keys
+mpg123, , ,no-control, , ,172,Disable terminal control even if terminal is detected
+mpg123, , ,title, , ,173,"In an xterm, rxvt, screen, iris-ansi (compatible, TERM environment variable i…"
+mpg123, , ,pauseloop, , ,174,"Set the length of the loop interval in terminal control fixed looping mode, a…"
+mpg123, , ,name, , ,175,"Set the name of this instance, possibly used in various places"
+mpg123, , ,long-tag, , ,176,"Display ID3 tag info always in long format with one line per item (artist, ti…"
+mpg123, , ,utf8, , ,177,"Regardless of environment, print metadata in UTF-8 (otherwise, when not using…"
+mpg123, ,R,remote, , ,178,Activate generic control interface
+mpg123, , ,remote-err, , ,179,"Print responses for generic control mode to standard error, not standard out"
+mpg123, , ,fifo, , ,180,Create a fifo / named pipe on the given path and use that for reading command…
+mpg123, , ,aggressive, , ,181,Tries to get higher priority
+mpg123, ,T,realtime, , ,182,Tries to gain realtime priority
+mpg123, ,?,help, , ,183,Shows short usage instructions
+mpg123, , ,longhelp, , ,184,Shows long usage instructions
+mpg123, , ,version, , ,185,Print the version string
+mpg123, , ,libversion, , ,186,"Print version information on the mpg123 libraries being used (libmpg123, libo…"
+mpg123, , ,proxy, , ,187,option that mpg123 before 1. 30

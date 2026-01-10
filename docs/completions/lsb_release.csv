@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsb_release, ,a,all, , ,101,Show all information
+lsb_release, ,i,short, , ,102,Show distributor ID
+lsb_release, ,d,description, , ,103,Show description of distribution
+lsb_release, ,r,release, , ,104,Show release number
+lsb_release, ,c,codename, , ,105,Show code name
+lsb_release, ,h,help, , ,106,Show help message
+lsb_release, ,v,version, , ,107,Show LSB modules supported
+lsb_release, ,s,short, , ,108,Show in short format

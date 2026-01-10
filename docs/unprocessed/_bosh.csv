@@ -1,0 +1,79 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bosh, __fish_use_subcommand, , ,add-blob,@f,101,Add blob
+bosh, __fish_use_subcommand, , ,alias-env,@f,102,Alias environment to save URL and CA certificate
+bosh, __fish_use_subcommand, , ,attach-disk,@f,103,Attaches disk to an instance
+bosh, __fish_use_subcommand, , ,blobs,@f,104,List blobs
+bosh, __fish_use_subcommand, , ,cancel-task,@f,105,Cancel task at its next checkpoint
+bosh, __fish_use_subcommand, , ,clean-up,@f,106,"Clean up releases, stemcells, disks, etc."
+bosh, __fish_use_subcommand, , ,cloud-check,@f,107,Cloud consistency check and interactive repair
+bosh, __fish_use_subcommand, , ,cloud-config,@f,108,Show current cloud config
+bosh, __fish_use_subcommand, , ,config,@f,109,Show current config
+bosh, __fish_use_subcommand, , ,configs,@f,110,List configs
+bosh, __fish_use_subcommand, , ,cpi-config,@f,111,Show current CPI config
+bosh, __fish_use_subcommand, , ,create-env,@f,112,Create or update BOSH environment
+bosh, __fish_use_subcommand, , ,create-release,@f,113,Create release
+bosh, __fish_use_subcommand, , ,delete-config,@f,114,Delete config
+bosh, __fish_use_subcommand, , ,delete-deployment,@f,115,Delete deployment
+bosh, __fish_use_subcommand, , ,delete-disk,@f,116,Delete disk
+bosh, __fish_use_subcommand, , ,delete-env,@f,117,Delete BOSH environment
+bosh, __fish_use_subcommand, , ,delete-release,@f,118,Delete release
+bosh, __fish_use_subcommand, , ,delete-snapshot,@f,119,Delete snapshot
+bosh, __fish_use_subcommand, , ,delete-snapshots,@f,120,Delete all snapshots in a deployment
+bosh, __fish_use_subcommand, , ,delete-stemcell,@f,121,Delete stemcell
+bosh, __fish_use_subcommand, , ,delete-vm,@f,122,Delete VM
+bosh, __fish_use_subcommand, , ,deploy,@f,123,Update deployment
+bosh, __fish_use_subcommand, , ,deployment,@f,124,Show deployment information
+bosh, __fish_use_subcommand, , ,deployments,@f,125,List deployments
+bosh, __fish_use_subcommand, , ,diff-config,@f,126,Diff two configs by ID
+bosh, __fish_use_subcommand, , ,disks,@f,127,List disks
+bosh, __fish_use_subcommand, , ,environment,@f,128,Show environment
+bosh, __fish_use_subcommand, , ,environments,@f,129,List environments
+bosh, __fish_use_subcommand, , ,errands,@f,130,List errands
+bosh, __fish_use_subcommand, , ,event,@f,131,Show event details
+bosh, __fish_use_subcommand, , ,events,@f,132,List events
+bosh, __fish_use_subcommand, , ,export-release,@f,133,Export the compiled release to a tarball
+bosh, __fish_use_subcommand, , ,finalize-release,@f,134,Create final release from dev release tarball
+bosh, __fish_use_subcommand, , ,generate-job,@f,135,Generate job
+bosh, __fish_use_subcommand, , ,generate-package,@f,136,Generate package
+bosh, __fish_use_subcommand, , ,help,@f,137,Show this help message
+bosh, __fish_use_subcommand, , ,ignore,@f,138,Ignore an instance
+bosh, __fish_use_subcommand, , ,init-release,@f,139,Initialize release
+bosh, __fish_use_subcommand, , ,inspect-release,@f,140,List release contents such as jobs
+bosh, __fish_use_subcommand, , ,instances,@f,141,List all instances in a deployment
+bosh, __fish_use_subcommand, , ,interpolate,@f,142,Interpolates variables into a manifest
+bosh, __fish_use_subcommand, , ,locks,@f,143,List current locks
+bosh, __fish_use_subcommand, , ,log-in,@f,144,Log in
+bosh, __fish_use_subcommand, , ,log-out,@f,145,Log out
+bosh, __fish_use_subcommand, , ,logs,@f,146,Fetch logs from instance(s)
+bosh, __fish_use_subcommand, , ,manifest,@f,147,Show deployment manifest
+bosh, __fish_use_subcommand, , ,orphan-disk,@f,148,Orphan disk
+bosh, __fish_use_subcommand, , ,recreate,@f,149,Recreate instance(s)
+bosh, __fish_use_subcommand, , ,releases,@f,150,List releases
+bosh, __fish_use_subcommand, , ,remove-blob,@f,151,Remove blob
+bosh, __fish_use_subcommand, , ,repack-stemcell,@f,152,Repack stemcell
+bosh, __fish_use_subcommand, , ,reset-release,@f,153,Reset release
+bosh, __fish_use_subcommand, , ,restart,@f,154,Restart instance(s)
+bosh, __fish_use_subcommand, , ,run-errand,@f,155,Run errand
+bosh, __fish_use_subcommand, , ,runtime-config,@f,156,Show current runtime config
+bosh, __fish_use_subcommand, , ,scp,@f,157,SCP to/from instance(s)
+bosh, __fish_use_subcommand, , ,snapshots,@f,158,List snapshots
+bosh, __fish_use_subcommand, , ,ssh,@f,159,SSH into instance(s)
+bosh, __fish_use_subcommand, , ,start,@f,160,Start instance(s)
+bosh, __fish_use_subcommand, , ,stemcells,@f,161,List stemcells
+bosh, __fish_use_subcommand, , ,stop,@f,162,Stop instance(s)
+bosh, __fish_use_subcommand, , ,sync-blobs,@f,163,Sync blobs
+bosh, __fish_use_subcommand, , ,take-snapshot,@f,164,Take snapshot
+bosh, __fish_use_subcommand, , ,task,@f,165,Show task status and start tracking its output
+bosh, __fish_use_subcommand, , ,tasks,@f,166,List running or recent tasks
+bosh, __fish_use_subcommand, , ,unignore,@f,167,Unignore an instance
+bosh, __fish_use_subcommand, , ,update-cloud-config,@f,168,Update current cloud config
+bosh, __fish_use_subcommand, , ,update-config,@f,169,Update config
+bosh, __fish_use_subcommand, , ,update-cpi-config,@f,170,Update current CPI config
+bosh, __fish_use_subcommand, , ,update-resurrection,@f,171,Enable/disable resurrection
+bosh, __fish_use_subcommand, , ,update-runtime-config,@f,172,Update current runtime config
+bosh, __fish_use_subcommand, , ,upload-blobs,@f,173,Upload blobs
+bosh, __fish_use_subcommand, , ,upload-release,@f,174,Upload release
+bosh, __fish_use_subcommand, , ,upload-stemcell,@f,175,Upload stemcell
+bosh, __fish_use_subcommand, , ,variables,@f,176,List variables
+bosh, __fish_use_subcommand, , ,vendor-package,@f,177,Vendor package
+bosh, __fish_use_subcommand, , ,vms,@f,178,List all VMs in all deployments

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tmuxinator, __fish_tmuxinator_using_command start, , , ,@f,103, 
+tmuxinator, __fish_tmuxinator_using_command open, , , ,@f,104, 
+tmuxinator, __fish_tmuxinator_using_command copy, , , ,@f,105, 
+tmuxinator, __fish_tmuxinator_using_command delete, , , ,@f,106, 

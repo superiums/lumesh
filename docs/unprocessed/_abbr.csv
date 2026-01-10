@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+abbr, $__fish_abbr_not_add_cond,a,add, ,@f,101,Add abbreviation
+abbr, $__fish_abbr_not_add_cond,q,query, ,@f,102,Check if an abbreviation exists
+abbr, $__fish_abbr_not_add_cond, ,rename, ,@f,103,Rename an abbreviation
+abbr, $__fish_abbr_not_add_cond,e,erase, ,@f,104,Erase abbreviation
+abbr, $__fish_abbr_not_add_cond,s,show, ,@f,105,Print all abbreviations
+abbr, $__fish_abbr_not_add_cond,l,list, ,@f,106,Print all abbreviation names
+abbr, $__fish_abbr_not_add_cond,h,help, ,@f,107,Help
+abbr, $__fish_abbr_add_cond,p,position,command anywhere,@f,108,"Expand only as a command, or anywhere"
+abbr, $__fish_abbr_add_cond,f,function, ,@f,109,Treat expansion argument as a fish function
+abbr, $__fish_abbr_add_cond,r,regex, ,@f,110,Match a regular expression
+abbr, $__fish_abbr_add_cond, ,set-cursor, ,@f,111,Position the cursor at % post-expansion

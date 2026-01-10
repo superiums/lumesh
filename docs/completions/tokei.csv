@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tokei, ,f,files, , ,101,Print out statistics for individual files
+tokei, ,h,help, ,@f,102,Print help information
+tokei, , ,hidden, , ,103,"Count hidden files, too"
+tokei, ,l,languages, ,@f,104,Print out supported languages
+tokei, , ,no-ignore, , ,105,Don’t respect ignore files
+tokei, , ,no-ignore-parent, , ,106,Don’t respect ignore files in parent directories
+tokei, , ,no-ignore-vcs, , ,107,Don’t respect version-control ignore files
+tokei, ,V,version, ,@f,108,Print version information
+tokei, ,v,verbose, , ,109,Increase log output level
+tokei, ,c,columns, ,@f @r,110,Set column width for terminal output
+tokei, ,e,exclude, ,@f @r,111,Ignore all files and directories containing this word
+tokei, ,i,input, ,@r,112,Gives statistics from a previous Tokei run
+tokei, ,o,output, ,@f @r,113,Choose output format
+tokei, ,s,sort,files lines code comments blanks,@f @r,114,Sort languages based on column
+tokei, ,t,type, ,@f @r,115,"Filters output by language type, comma-separated"

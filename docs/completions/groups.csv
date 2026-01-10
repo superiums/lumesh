@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+groups, , , , ,@f @r,101, 
+groups, , ,help, , ,102,Display help message
+groups, , ,version, , ,103,Display version information

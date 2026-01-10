@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sass, ,I,load-path, ,@r,101,Specify a import path
+sass, ,r,require, ,@f @r,102,Require a Ruby library before running
+sass, , ,compass, , ,103,Enable Compass imports and load project configuration
+sass, ,t,style,nested compact compressed expanded,@f @r,104,Output style
+sass, ,h,help, ,@f,105,Show help message
+sass, ,v,version, ,@f,106,Print the version
+sass, , ,watch, , ,107,Watch files or directories for changes
+sass, , ,poll, , ,108,"Check for file changes manually, don't rely on OS"
+sass, , ,update, , ,109,Compile files or directories to CSS
+sass, ,f,force, , ,110,"Recompile every Sass file, even if the CSS file is newer"
+sass, , ,stop-on-error, , ,111,"If a file fails to compile, exit immediately"
+sass, , ,scss, , ,112,Use the CSS-superset SCSS syntax.
+sass, , ,sourcemap,auto,@f @r,113, 
+sass, ,s,stdin, , ,114,Read input from standard input instead of an input file
+sass, ,E,default-encoding, ,@f @r,115,Specify the default encoding for input files
+sass, , ,unix-newlines, , ,116,Use Unix-style newlines in written files
+sass, ,g,debug-info, , ,117,Emit output that can be used by the FireSass Firebug plugin
+sass, ,l,line-comments, , ,118,Indicate corresponding source line with comments
+sass, ,i,interactive, , ,119,Run an interactive SassScript shell
+sass, ,c,check, , ,120,"Just check syntax, don't evaluate"
+sass, , ,precision, ,@f @r,121,Set precision when outputting decimal numbers
+sass, , ,cache-location, ,@r,122,The path to save parsed Sass files
+sass, ,C,no-cache, , ,123,Don't cache parsed Sass files
+sass, , ,trace, , ,124,Show a full Ruby stack trace on error
+sass, ,q,quiet, , ,125,Silence warnings and status messages during compilation

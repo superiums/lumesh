@@ -1,0 +1,50 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ncdu, ,h,help, , ,101,Print help
+ncdu, ,q,slow-ui-updates, , ,102,Quiet mode. Refresh interval 2 seconds
+ncdu, , ,fast-ui-updates, , ,103,Refresh interval 10 per second
+ncdu, ,V,version, , ,104,Print version
+ncdu, ,x,one-file-system, , ,105,Same filesystem
+ncdu, , ,cross-file-system, , ,106,Cross filesystems
+ncdu, ,e,extended, , ,107,Enable extended information
+ncdu, , ,no-extended, , ,108,Disable extended information
+ncdu, , ,si, , ,109,Use base 10 prefixes
+ncdu, , ,no-si, , ,110,Use base 2 prefixes
+ncdu, , ,exclude, , ,111,Exclude files that match pattern
+ncdu, ,X,exclude-from, , ,112,Exclude files that match any pattern in file
+ncdu, ,L,follow-symlinks, , ,113,Follow symlinks (excluding dirs)
+ncdu, , ,no-follow-symlinks, , ,114,Do not follow symlinks (excluding dirs)
+ncdu, , ,exclude-caches, , ,115,Exclude dirs containing CACHEDIR.TAG
+ncdu, , ,include-caches, , ,116,Include dirs containing CACHEDIR.TAG
+ncdu, , ,confirm-quit, , ,117,Prompt before exiting ncdu
+ncdu, , ,no-confirm-quit, , ,118,No confirmation before exiting ncdu
+ncdu, , ,color,off dark dark-bg, ,119,Set color scheme
+ncdu, , ,ignore-config, , ,120,Do not load any configuration files
+ncdu, , ,include-kernfs, , ,121,Include Linux pseudo filesystems
+ncdu, , ,exclude-kernfs, , ,122,Exclude Linux pseudo filesystems
+ncdu, , ,enable-shell, , ,123,Enable shell spawning
+ncdu, , ,disable-shell, , ,124,Disable shell spawning
+ncdu, , ,enable-delete, , ,125,Enable built-in file deletion
+ncdu, , ,disable-delete, , ,126,Disable built-in file deletion
+ncdu, , ,enable-refresh, , ,127,Enable directory refreshing
+ncdu, , ,disable-refresh, , ,128,Disable directory refreshing
+ncdu, , ,disk-usage, , ,129,Show disk usage of files
+ncdu, , ,apparent-size, , ,130,Show apparent size of files
+ncdu, , ,show-hidden, , ,131,Show hidden and excluded files
+ncdu, , ,hide-hidden, , ,132,Hide hidden and excluded files
+ncdu, , ,show-itemcount, , ,133,Show the item counts column
+ncdu, , ,hide-itemcount, , ,134,Hide the item counts column
+ncdu, , ,show-mtime, , ,135,Show last modification time column
+ncdu, , ,hide-mtime, , ,136,Hide last modification time column
+ncdu, , ,show-graph, , ,137,Show the relative size bar column
+ncdu, , ,hide-graph, , ,138,Hide the relative size bar column
+ncdu, , ,show-percent, , ,139,Show the relative size percent column
+ncdu, , ,hide-percent, , ,140,Hide the relative size percent column
+ncdu, , ,graph-style,hash half-block eighth-block, ,141,Relative size bar column style
+ncdu, , ,shared-column,off shared unique, ,142,Show/hide hard link shared sizes
+ncdu, , ,sort,disk-usage disk-usage-desc name name-desc apparent-size apparent-size-desc itemcount itemcount-desc mtime mtime-desc, ,143,Column to sort on
+ncdu, , ,enable-natsort, , ,144,Enable natural sort
+ncdu, , ,disable-natsort, , ,145,Disable natural sort
+ncdu, , ,group-directories-first, , ,146,Sort directories before files
+ncdu, , ,no-group-directories-first, , ,147,Do not sort directories before files
+ncdu, , ,confirm-delete, , ,148,Require a confirmation before deleting
+ncdu, , ,no-confirm-delete, , ,149,Do not require a confirmation before deleting

@@ -1,0 +1,156 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tar, , ,check-device, , ,101,Check device numbers when creating incremental archives (default)
+tar, ,g,listed-incremental, , ,102,Handle new GNU-format incremental backups
+tar, , ,hole-detection, , ,103,Use METHOD to detect holes in sparse files.   This option implies --sparse
+tar, ,G,incremental, , ,104,Handle old GNU-format incremental backups
+tar, , ,ignore-failed-read, , ,105,Do not exit with nonzero on unreadable files
+tar, , ,level, , ,106,Set dump level for a created listed-incremental archive
+tar, ,n,seek, , ,107,Assume the archive is seekable
+tar, , ,no-check-device, , ,108,Do not check device numbers when creating incremental archives
+tar, , ,no-seek, , ,109,Assume the archive is not seekable
+tar, , ,occurrence, , ,110,Process only the Nth occurrence of each file in the archive
+tar, , ,restrict, , ,111,Disable the use of some potentially harmful options
+tar, , ,sparse-version, , ,112,Set which version of the sparse format to use
+tar, ,S,sparse, , ,113,Handle sparse files efficiently
+tar, ,k,keep-old-files, , ,114,Don't replace existing files when extracting
+tar, , ,keep-newer-files, , ,115,Don't replace existing files that are newer than their archive copies
+tar, , ,keep-directory-symlink, , ,116,Don't replace existing symlinks to directories when extracting
+tar, , ,no-overwrite-dir, , ,117,Preserve metadata of existing directories
+tar, , ,one-top-level, , ,118,"Extract all files into DIR, or, if used without argument, into a subdirectory…"
+tar, , ,overwrite, , ,119,Overwrite existing files when extracting
+tar, , ,overwrite-dir, , ,120,Overwrite metadata of existing directories when extracting (default)
+tar, , ,recursive-unlink, , ,121,Recursively remove all files in the directory prior to extracting it
+tar, , ,remove-files, , ,122,Remove files from disk after adding them to the archive
+tar, , ,skip-old-files, , ,123,"Don't replace existing files when extracting, silently skip over them"
+tar, ,U,unlink-first, , ,124,Remove each file prior to extracting over it
+tar, ,W,verify, , ,125,Verify the archive after writing it. SS Output stream selection
+tar, , ,ignore-command-error, , ,126,Ignore subprocess exit codes
+tar, , ,no-ignore-command-error, , ,127,Treat non-zero exit codes of children as error (default)
+tar, ,O,to-stdout, , ,128,Extract files to standard output
+tar, , ,to-command, , ,129,Pipe extracted files to COMMAND
+tar, , ,atime-preserve, , ,130,"Preserve access times on dumped files, either by restoring the times after re…"
+tar, , ,delay-directory-restore, , ,131,Delay setting modification times and permissions of extracted directories unt…
+tar, , ,group, , ,132,Force NAME as group for added files
+tar, , ,group-map, , ,133,Read group translation map from FILE.   Empty lines are ignored
+tar, , ,mode, , ,134,Force symbolic mode CHANGES for added files
+tar, , ,mtime, , ,135,Set mtime for added files
+tar, ,m,touch, , ,136,Don't extract file modified time
+tar, , ,no-delay-directory-restore, , ,137,Cancel the effect of the prior --delay-directory-restore option
+tar, , ,no-same-owner, , ,138,Extract files as yourself (default for ordinary users)
+tar, , ,no-same-permissions, , ,139,Apply the user's umask when extracting permissions from the archive (default …
+tar, , ,numeric-owner, , ,140,Always use numbers for user/group names
+tar, , ,owner, , ,141,Force NAME as owner for added files
+tar, , ,owner-map, , ,142,Read owner translation map from FILE.   Empty lines are ignored
+tar, ,p,same-permissions, , ,143,Set permissions of extracted files to those recorded in the archive (default …
+tar, , ,same-owner, , ,144,Try extracting files with the same ownership as exists in the archive (defaul…
+tar, ,s,same-order, , ,145,Tell tar that the list of file names to process is sorted in the same order a…
+tar, , ,sort, , ,146,"When creating an archive, sort directory entries according to ORDER, which is…"
+tar, , ,acls, , ,147,Enable POSIX ACLs support
+tar, , ,no-acls, , ,148,Disable POSIX ACLs support
+tar, , ,selinux, , ,149,Enable SELinux context support
+tar, , ,no-selinux, , ,150,Disable SELinux context support
+tar, , ,xattrs, , ,151,Enable extended attributes support
+tar, , ,no-xattrs, , ,152,Disable extended attributes support
+tar, , ,xattrs-exclude, , ,153,Specify the exclude pattern for xattr keys
+tar, , ,xattrs-include, , ,154,Specify the include pattern for xattr keys.   PATTERN is a globbing pattern
+tar, ,f,file, , ,155,Use archive file or device ARCHIVE
+tar, , ,force-local, , ,156,Archive file is local even if it has a colon
+tar, ,F,new-volume-script, , ,157,Run COMMAND at the end of each tape (implies -M)
+tar, ,L,tape-length, , ,158,Change tape after writing Nx1024 bytes
+tar, ,M,multi-volume, , ,159,Create/list/extract multi-volume archive
+tar, , ,rmt-command, , ,160,Use COMMAND instead of rmt when accessing remote archives
+tar, , ,rsh-command, , ,161,Use COMMAND instead of rsh when accessing remote archives
+tar, , ,volno-file, , ,162,"When this option is used in conjunction with  --multi-volume ,  tar will keep…"
+tar, ,b,blocking-factor, , ,163,Set record size to BLOCKSx512 bytes
+tar, ,B,read-full-records, , ,164,"When listing or extracting, accept incomplete input records after end-of-file…"
+tar, ,i,ignore-zeros, , ,165,Ignore zeroed blocks in archive
+tar, , ,record-size, , ,166,Set record size.   NUMBER is the number of bytes per record
+tar, ,H,format, , ,167,Create archive of the given format.   Valid formats are: . RS
+tar, , ,portability, , ,168,Same as --format=v7
+tar, , ,pax-option, , ,169,Control pax keywords when creating PAX archives (-H pax)
+tar, , ,posix, , ,170,Same as --format=posix
+tar, ,V,label, , ,171,Create archive with volume name TEXT
+tar, ,a,auto-compress, , ,172,Use archive suffix to determine the compression program
+tar, ,I,use-compress-program, , ,173,Filter data through COMMAND
+tar, ,j,bzip2, , ,174,Filter the archive through  bzip2 (1)
+tar, ,J,xz, , ,175,Filter the archive through  xz (1)
+tar, , ,lzip, , ,176,Filter the archive through  lzip (1)
+tar, , ,lzma, , ,177,Filter the archive through  lzma (1)
+tar, , ,lzop, , ,178,Filter the archive through  lzop (1)
+tar, , ,no-auto-compress, , ,179,Do not use archive suffix to determine the compression program
+tar, ,z,ungzip, , ,180,Filter the archive through  gzip (1)
+tar, ,Z,uncompress, , ,181,Filter the archive through  compress (1)
+tar, , ,zstd, , ,182,Filter the archive through  zstd (1). SS Local file selection
+tar, , ,add-file, , ,183,Add FILE to the archive (useful if its name starts with a dash)
+tar, , ,backup, , ,184,Backup before removal
+tar, ,C,directory, , ,185,Change to DIR before performing any operations
+tar, , ,exclude, , ,186,"Exclude files matching PATTERN, a  glob (3)-style wildcard pattern"
+tar, , ,exclude-backups, , ,187,Exclude backup and lock files
+tar, , ,exclude-caches, , ,188,Exclude contents of directories containing file CACHEDIR
+tar, , ,exclude-caches-all, , ,189,Exclude directories containing file CACHEDIR. TAG and the file itself
+tar, , ,exclude-caches-under, , ,190,Exclude everything under directories containing CACHEDIR. TAG
+tar, , ,exclude-ignore, , ,191,"Before dumping a directory, see if it contains FILE"
+tar, , ,exclude-ignore-recursive, , ,192,"Same as --exclude-ignore, except that patterns from FILE affect both the dire…"
+tar, , ,exclude-tag, , ,193,"Exclude contents of directories containing FILE, except for FILE itself"
+tar, , ,exclude-tag-all, , ,194,Exclude directories containing FILE
+tar, , ,exclude-tag-under, , ,195,Exclude everything under directories containing FILE
+tar, , ,exclude-vcs, , ,196,Exclude version control system directories
+tar, , ,exclude-vcs-ignores, , ,197,Exclude files that match patterns read from VCS-specific ignore files
+tar, ,h,dereference, , ,198,"Follow symlinks; archive and dump the files they point to"
+tar, , ,hard-dereference, , ,199,"Follow hard links; archive and dump the files they refer to"
+tar, ,K,starting-file, , ,200,Begin at the given member in the archive
+tar, , ,newer-mtime, , ,201,Work on files whose data changed after the DATE.   If DATE starts with / or 
+tar, , ,no-null, , ,202,Disable the effect of the previous --null option
+tar, , ,no-recursion, , ,203,Avoid descending automatically in directories
+tar, , ,no-unquote, , ,204,Do not unquote input file or member names
+tar, , ,no-verbatim-files-from, , ,205,Treat each line read from a file list as if it were supplied in the command l…
+tar, , ,null, , ,206,Instruct subsequent -T options to read null-terminated names verbatim (disabl…
+tar, ,N,after-date, , ,207,Only store files newer than DATE.   If DATE starts with / or 
+tar, , ,one-file-system, , ,208,Stay in local file system when creating archive
+tar, ,P,absolute-names, , ,209,Don't strip leading slashes from file names when creating archives
+tar, , ,recursion, , ,210,Recurse into directories (default)
+tar, , ,suffix, , ,211,"Backup before removal, override usual suffix"
+tar, ,T,files-from, , ,212,Get names to extract or create from FILE
+tar, , ,unquote, , ,213,Unquote file or member names (default)
+tar, , ,verbatim-files-from, , ,214,"Treat each line obtained from a file list as a file name, even if it starts w…"
+tar, ,X,exclude-from, , ,215,Exclude files matching patterns listed in FILE. SS  File name transformations
+tar, , ,strip-components, , ,216,Strip NUMBER leading components from file names on extraction
+tar, , ,xform, , ,217,Use sed replace EXPRESSION to transform file names
+tar, , ,anchored, , ,218,Patterns match file name start
+tar, , ,ignore-case, , ,219,Ignore case
+tar, , ,no-anchored, , ,220,Patterns match after any / (default for exclusion)
+tar, , ,no-ignore-case, , ,221,Case sensitive matching (default)
+tar, , ,no-wildcards, , ,222,Verbatim string matching
+tar, , ,no-wildcards-match-slash, , ,223,Wildcards do not match /
+tar, , ,wildcards, , ,224,Use wildcards (default for exclusion)
+tar, , ,wildcards-match-slash, , ,225,Wildcards match / (default for exclusion). SS Informative output
+tar, , ,checkpoint, , ,226,Display progress messages every Nth record (default 10)
+tar, , ,checkpoint-action, , ,227,Run ACTION on each checkpoint
+tar, , ,clamp-mtime, , ,228,Only set time when the file is more recent than what was given with --mtime
+tar, , ,full-time, , ,229,Print file time to its full resolution
+tar, , ,index-file, , ,230,Send verbose output to FILE
+tar, ,l,check-links, , ,231,Print a message if not all links are dumped
+tar, , ,no-quote-chars, , ,232,Disable quoting for characters from STRING
+tar, , ,quote-chars, , ,233,Additionally quote characters from STRING
+tar, , ,quoting-style, , ,234,Set quoting style for file and member names
+tar, ,R,block-number, , ,235,Show block number within archive with each message
+tar, , ,show-omitted-dirs, , ,236,"When listing or extracting, list each directory that does not match search cr…"
+tar, , ,show-stored-names, , ,237,Show file or archive names after transformation by --strip and --transform op…
+tar, , ,totals, , ,238,Print total bytes after processing the archive
+tar, , ,utc, , ,239,Print file modification times in UTC
+tar, ,v,verbose, , ,240,Verbosely list files processed
+tar, , ,warning, , ,241,Enable or disable warning messages identified by KEYWORD
+tar, ,w,confirmation, , ,242,Ask for confirmation for every action. SS Compatibility options
+tar, ,A,concatenate, , ,243,Append archives to the end of another archive
+tar, ,c,create, , ,244,Create a new archive
+tar, ,d,compare, , ,245,Find differences between archive and file system
+tar, , ,delete, , ,246,Delete from the archive
+tar, ,r,append, , ,247,Append files to the end of an archive
+tar, ,t,list, , ,248,List the contents of an archive.   Arguments are optional
+tar, , ,test-label, , ,249,Test the archive volume label and exit
+tar, ,u,update, , ,250,Append files which are newer than the corresponding copy in the archive
+tar, ,x,get, , ,251,Extract files from an archive.   Arguments are optional
+tar, , ,show-defaults, , ,252,Show built-in defaults for various tar options and exit
+tar, ,?,help, , ,253,Display a short option summary and exit
+tar, , ,usage, , ,254,Display a list of available options and exit
+tar, , ,version, , ,255,Print program version and copyright information and exit

@@ -1,0 +1,90 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nmap, , , , ,@f,101, 
+nmap, , , , ,@F,102,Input target from file
+nmap, , , , ,@f @r,103,Choose random targets
+nmap, , ,exclude, ,@f @r,104,Exclude hosts/networks
+nmap, , ,excludefile, ,@r,105,Exclude list from file
+nmap, , , , ,@f @r,106,Probe: TCP Syn Ping
+nmap, , , , ,@f @r,107,Probe: TCP ACK Ping
+nmap, , , , ,@f @r,108,Probe: UDP Ping
+nmap, , , , ,@f @r,109,Probe: SCTP INIT Ping
+nmap, , , , ,@f @r,110,Probe: IP Protocol Ping
+nmap, , ,disable-arp-ping, , ,111,No ARP or ND Ping
+nmap, , ,traceroute, , ,112,Trace path to host
+nmap, , ,system-dns, , ,113,Use system DNS resolver
+nmap, , ,dns-servers, ,@f @r,114,Servers to use for reverse DNS queries
+nmap, , ,scanflags, , ,115,Custom TCP scan flags
+nmap, -d, , , ,@f @r,116, 
+nmap, -d,b, , ,@f @r,117, 
+nmap, , ,exclude-ports, , ,118,Exclude the specified ports from scanning
+nmap, , ,port-ratio, ,@f @r,119,Scan ports with ratio greater then
+nmap, , ,top-ports, ,@f @r,120,Scan the n highest-ratio ports
+nmap, , ,allports, , ,121,Don't exclude any ports from version detection
+nmap, , ,version-intensity, ,@f @r,122,Set version scan intensity
+nmap, , ,version-light, , ,123,Enable light mode
+nmap, , ,version-all, , ,124,Try every single probe
+nmap, , ,version-trace, , ,125,Trace version scan activity
+nmap, , ,osscan-limit, , ,126,Limit OS detection to promising targets
+nmap, , ,osscan-guess, , ,127,Guess OS detection results
+nmap, , ,fuzzy, , ,128,Guess OS detection results
+nmap, , ,max-os-tries, , ,129,Set the maximum number of OS detection tries against a target
+nmap, , ,script, ,@r,130, 
+nmap, , ,script, ,@r,131,Runs a script scan
+nmap, , ,script-args, , ,132,provide arguments to NSE scripts
+nmap, , ,script-args-file, ,@r,133,load arguments to NSE scripts from a file
+nmap, , ,script-help, ,@r,134, 
+nmap, , ,script-help, ,@r,135,Shows help about scripts
+nmap, , ,script-trace, , ,136, 
+nmap, , ,script-updatedb, , ,137, 
+nmap, , ,max-hostgroup, ,@f @r,138,Adjust parallel scan group size
+nmap, , ,max-parallelism, ,@f @r,139,Adjust probe parallelization
+nmap, , ,initial-rtt-timeout, ,@f @r,140,Adjust probe timeouts
+nmap, , ,max-retries, ,@f @r,141,Specify the maximum number of port scan probe retransmissions
+nmap, , ,host-timeout, , ,142,to skip slow hosts
+nmap, , ,script-timeout, , ,143, 
+nmap, , ,max-scan-delay, ,@f @r,144,Adjust delay between probes
+nmap, , ,max-rate, ,@f @r,145,Directly control the scanning rate
+nmap, , ,defeat-rst-ratelimit, , ,146,ignore ICMP-RST rate limits
+nmap, , ,defeat-icmp-ratelimit, , ,147,ignore ICMP unreachable in UDP
+nmap, , ,nsock-engine,epoll kqueue poll select,@f @r,148,Enforce use of a given nsock IO multiplexing engine
+nmap, ,T, , ,@f @r,149,Set a timing template
+nmap, ,D, , ,@f @r,151,Cloak a scan with decoys
+nmap, ,S, , ,@f @r,152,Spoof source address
+nmap, ,e, , ,@f @r,153,Use specified interface
+nmap, ,g,source-port, ,@f @r,154,Spoof source port number
+nmap, , ,data, ,@f @r,155,Append custom binary data to sent packets
+nmap, , ,data-string, ,@f @r,156,Append custom string to sent packets
+nmap, , ,data-length, ,@f @r,157,Append random data to sent packets
+nmap, , ,ip-options, ,@f @r,158,Send packets with specified ip options
+nmap, , ,ttl, ,@f @r,159,Set IP time-to-live field
+nmap, , ,randomize-hosts, , ,160,Randomize target host order
+nmap, , ,spoof-mac, ,@f @r,161,Spoof MAC address
+nmap, , ,proxies, ,@f @r,162,Relay TCP connections through a chain of proxies
+nmap, , ,badsum, , ,163,Send packets with bogus TCP/UDP checksums
+nmap, , ,adler32, , ,164,Use deprecated Adler32 instead of CRC32C for SCTP checksums
+nmap, , , , ,@r,165,normal output
+nmap, , , , ,@r,166,XML output
+nmap, , , , ,@r,167,ScRipT KIdd|3 oUTpuT
+nmap, , , , ,@r,168,grepable output
+nmap, , , , ,@r,169,Output in the three major formats
+nmap, ,d, ,0 1 2 3 4 5 6 7 8 9, ,170,Increase/Set debugging level
+nmap, , ,reason, , ,171,Host and port state reasons
+nmap, , ,stats-every, ,@f @r,172,Print periodic timing stats
+nmap, , ,packet-trace, , ,173,Trace packets and data sent and received
+nmap, , ,open, , ,174,Show only open (or possibly open) ports
+nmap, , ,iflist, , ,175,List interfaces and routes
+nmap, , ,append-output, , ,176,Append to rather than clobber output files
+nmap, , ,resume, ,@r,177,Resume aborted scan
+nmap, , ,stylesheet, ,@r,178,Set XSL stylesheet to transform XML output
+nmap, , ,webxml, , ,179,Load stylesheet from Nmap.Org
+nmap, , ,no-stylesheet, , ,180,Omit XSL stylesheet declaration from XML
+nmap, , ,datadir, ,@D @f @r,181,Specify custom Nmap data file location
+nmap, , ,servicedb, ,@r,182,Specify custom services file
+nmap, , ,versiondb, ,@r,183,Specify custom service probes file
+nmap, , ,send-eth, , ,184,Use raw ethernet sending
+nmap, , ,send-ip, , ,185,Send at raw IP level
+nmap, , ,privileged, , ,186,Assume that the user is fully privileged
+nmap, , ,unprivileged, , ,187,Assume that the user lacks raw socket privileges
+nmap, , ,release-memory, , ,188,Release memory before quitting
+nmap, ,V,version, , ,189,Print version number
+nmap, ,h,help, , ,190,Print help summary page

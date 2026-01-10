@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aplaymidi2, ,h,help, , ,101,Prints a list of options
+aplaymidi2, ,V,version, , ,102,Prints the current version
+aplaymidi2, ,p,port, , ,103,Sets the sequencer port(s) to which the events in the MIDI Clip file(s) are s…
+aplaymidi2, ,d,delay, , ,104,"Specifies how long to wait after the end of each MIDI Clip file, to allow the…"
+aplaymidi2, ,s,silent, , ,105,Don't show message texts
+aplaymidi2, ,a,passall, , ,106,Pass all UMP packets as is

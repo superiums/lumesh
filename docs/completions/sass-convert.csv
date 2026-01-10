@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sass-convert, ,F,from,css scss sass,@f @r,101,The format to convert from
+sass-convert, ,T,to,scss sass,@f @r,102,The format to convert to
+sass-convert, ,i,in-place, , ,103,Convert a file to its own syntax
+sass-convert, ,R,recursive, , ,104,Convert all the files in a directory
+sass-convert, ,h,help, ,@f,105,Show help message
+sass-convert, ,v,version, ,@f,106,Print the Sass version
+sass-convert, , ,dasherize, , ,107,Convert underscores to dashes
+sass-convert, , ,indent, ,@f @r,108,How many spaces to use for each level of indentation
+sass-convert, , ,old, , ,109,Output the old-style ':prop val' property syntax
+sass-convert, ,s,stdin, , ,110,Read input from standard input instead of an input file
+sass-convert, ,E,default-encoding, ,@f @r,111,Specify the default encoding for input files
+sass-convert, , ,unix-newlines, , ,112,Use Unix-style newlines in written files
+sass-convert, , ,cache-location, ,@r,113,The path to save parsed Sass files
+sass-convert, ,C,no-cache, , ,114,Don't cache to sassc files
+sass-convert, , ,trace, , ,115,Show a full Ruby stack trace on error

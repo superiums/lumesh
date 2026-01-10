@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cmdkey, , , , ,@f,101, 
+cmdkey, , , ,/delete:,@f,103,Specify the user or account name
+cmdkey, , , ,/delete,@f,104,Specify the user or account name
+cmdkey, , , ,/list:,@f,105,Display the list of stored user names and credentials
+cmdkey, , , ,/?,@f,106,Show help

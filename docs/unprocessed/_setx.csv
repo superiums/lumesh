@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setx, __fish_seen_argument -w s, , ,/u,@f,102, 
+setx, __fish_seen_argument -w u, , ,/p,@f,103, 
+setx, __fish_seen_argument -w a -w r -w x, , ,/a,@f,103, 
+setx, __fish_seen_argument -w a -w r -w x, , ,/r,@f,103, 
+setx, __fish_seen_argument -w a -w r -w x, , ,/x,@f,103, 
+setx, __fish_seen_argument -w a -w r, , ,/m,@f,104, 

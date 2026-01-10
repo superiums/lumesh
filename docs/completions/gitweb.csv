@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gitweb, , ,export-all, , ,101,option is used) allows pulling only for those repositories that have git-daem…

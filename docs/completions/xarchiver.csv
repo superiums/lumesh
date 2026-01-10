@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xarchiver, ,a,add, , ,101,add to archive by asking which files and quit
+xarchiver, ,c,compress, , ,102,add the given files by asking the name of the archive and quit
+xarchiver, ,d,ensure-directory, , ,103,extract archive to a containing directory and quit
+xarchiver, ,e,extract, , ,104,extract archive by asking the extraction directory and quit
+xarchiver, ,m,multi-extract, , ,105,extract multiple archives by asking the extraction directory and quit
+xarchiver, ,x,extract-to, , ,106,extract archive to the destination directory and quit
+xarchiver, ,i,info, , ,107,show found command-line programs to be used and exit
+xarchiver, ,v,version, , ,108,show version and exit
+xarchiver, , ,display, , ,109,X display to use
+xarchiver, ,h,help, , ,110,show help options
+xarchiver, , ,help-gtk, , ,111,show GTK+ options
+xarchiver, , ,help-all, , ,112,"show all help options AUTHOR Ingo Br[:u]ckl, (Giuseppe Torelli until 2014) RE…"

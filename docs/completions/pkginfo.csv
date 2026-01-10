@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkginfo, ,h,help, ,@f,101,Print help
+pkginfo, ,m,metadata-version, ,@f @r,102,Override metadata version
+pkginfo, ,f,field, ,@f @r,103,Specify an output field (repeatable)
+pkginfo, ,d,download-url-prefix, ,@f @r,104,Download URL prefix
+pkginfo, , ,simple, ,@f,105,Output as simple key-value pairs
+pkginfo, ,s,skip, ,@f,106,Skip missing values in simple output
+pkginfo, ,S,no-skip, ,@f,107,Do not skip missing values in simple output
+pkginfo, , ,single, ,@f,108,Output delimited values
+pkginfo, , ,item-delim, ,@f @r,109,Delimiter for fields in single-line output
+pkginfo, , ,sequence-delim, ,@f @r,110,Delimiter for multi-valued fields
+pkginfo, , ,csv, ,@f,111,Output as CSV
+pkginfo, , ,ini, ,@f,112,Output as INI
+pkginfo, , ,json, ,@f,113,Output as JSON
+pkginfo, , ,installed, ,@f,114,List installed packages
+pkginfo, , ,list, ,@f @r,115,Package whose files to list
+pkginfo, , ,owner, ,@f,116,Print the package owning file matching pattern
+pkginfo, , ,footprint, ,@f,117,Print footprint for file
+pkginfo, , ,root, ,@f,118,Specify alternative installation root
+pkginfo, , ,version, ,@f,119,Print version of pkgutils
+pkginfo, , ,help, ,@f,120,Print help

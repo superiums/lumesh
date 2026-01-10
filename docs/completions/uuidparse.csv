@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uuidparse, ,J,json, , ,101, 
+uuidparse, ,n,noheadings, , ,102, 
+uuidparse, ,o,output, , ,103, 
+uuidparse, ,r,raw, , ,104, 
+uuidparse, ,h,help, , ,105, 
+uuidparse, ,V,version, , ,106, 

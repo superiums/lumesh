@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+7z, __fish_use_subcommand, , ,a,@f,101,Add
+7z, __fish_use_subcommand, , ,b,@f,102,Benchmark
+7z, __fish_use_subcommand, , ,d,@f,103,Delete
+7z, __fish_use_subcommand, , ,e,@f,104,Extract
+7z, __fish_use_subcommand, , ,h,@f,105,Hash
+7z, __fish_use_subcommand, , ,i,@f,106,Show information about supported formats
+7z, __fish_use_subcommand, , ,l,@f,107,List
+7z, __fish_use_subcommand, , ,rn,@f,108,Rename
+7z, __fish_use_subcommand, , ,t,@f,109,Test
+7z, __fish_use_subcommand, , ,u,@f,110,Update
+7z, __fish_use_subcommand, , ,x,@f,111,Extract with full paths

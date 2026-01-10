@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aseqsend, ,h,help, , ,101,Prints a list of options
+aseqsend, ,V,version, , ,102,Prints the current version
+aseqsend, ,l,list\\FP, , ,103,Prints a list of possible output ports
+aseqsend, ,v,verbose, , ,104,Prints number of bytes actually sent
+aseqsend, ,p,port, , ,105,Target port by number or name
+aseqsend, ,s,file, , ,106,Send raw binary data from given file name
+aseqsend, ,i,interval, , ,107,Interval between SysEx messages in milliseconds
+aseqsend, , ,listFP, , ,108,Prints a list of possible output ports
+aseqsend, ,u,ump, , ,109,Specify the MIDI version.  0 for the legacy MIDI 1

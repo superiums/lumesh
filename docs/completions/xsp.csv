@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xsp, , ,help, , ,101,Show help
+xsp, , ,version, , ,102,Show version
+xsp, , ,address, ,@f @r,103,Use the IP address to listen on
+xsp, , ,port, ,@f @r,104,Use the port where the XSP server will listen to requests
+xsp, , ,backlog, ,@f @r,105,Use the backlog of connections to set on the listener socket
+xsp, , ,minThreads, ,@f @r,106,Specify minimum number of threads the threadpool allocates
+xsp, , ,filename, ,@r,107,Use unix socket file name to listen on
+xsp, , ,root, ,@r,108,Use root directory for XSP
+xsp, , ,appconfigfile, ,@r,109,Add application definitions from the XML configuration file
+xsp, , ,appconfigdir, ,@r,110, 
+xsp, , ,applications, ,@r,111, 
+xsp, , ,master, , ,112,Use this instance by mod_mono to create ASP.NET applications on demand
+xsp, , ,no-hidden, , ,113,Do not protect hidden files/directories from being accessed by clients
+xsp, , ,https, , ,114,Enable HTTPS support on the server
+xsp, , ,https-client-accept, , ,115,Like --https enable HTTPS support on the server
+xsp, , ,https-client-require, , ,116,Like --https enable HTTPS support on the server
+xsp, , ,p12file, ,@r,117,Use to specify the PKCS#12 file to use
+xsp, , ,cert, ,@r,118,Use to specify the server X.509 certificate file
+xsp, , ,pkpwd, ,@r,119,Use password to decode the private key
+xsp, , ,protocol, , ,120, 
+xsp, , ,terminate, , ,121,Gracefully terminates a running mod-mono-server instance
+xsp, , ,verbose, , ,122,Show more messages
+xsp, , ,pidfile, ,@r,123,Redirect xsp4 PID output in stdout to file

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rm, ,d,directory, , ,101,Unlink directories
+rm, ,f,force, , ,102,Never prompt for removal
+rm, ,i,interactive, , ,103,Prompt for removal
+rm, ,r,recursive, , ,104,Recursively remove subdirs
+rm, ,v,verbose, , ,105,Explain what is done
+rm, ,h,help, , ,106,Display help
+rm, , ,version, , ,107,Display rm version

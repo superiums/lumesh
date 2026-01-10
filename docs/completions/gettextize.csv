@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gettextize, , ,help, , ,101,print this help and exit
+gettextize, , ,version, , ,102,print version information and exit
+gettextize, ,f,force, , ,103,force writing of new files even if old exist
+gettextize, , ,po-dir, , ,104,specify directory with PO files
+gettextize, , ,no-changelog, , ,105,don't update or create ChangeLog files
+gettextize, , ,symlink, , ,106,make symbolic links instead of copying files
+gettextize, ,n,dry-run, , ,107,print modifications but don't perform them AUTHOR Written by Ulrich Drepper R…

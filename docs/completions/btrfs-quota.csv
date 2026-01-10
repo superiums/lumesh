@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-quota, ,s,simple, , ,101,use simple quotas (squotas) instead of full qgroup accounting rescan [options…
+btrfs-quota, , ,status, , ,102,show status of a running rescan operation
+btrfs-quota, ,w,wait, , ,103,start rescan and wait for it to finish (can be already in progress)
+btrfs-quota, ,W,wait-norescan, , ,104,wait for rescan to finish without starting it EXIT STATUS

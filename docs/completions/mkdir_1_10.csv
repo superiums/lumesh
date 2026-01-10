@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkdir, ,m,mode, , ,101,"set file mode (as in chmod), not a=rwx - umask"
+mkdir, ,p,parents, , ,102,"no error if existing, make parent directories as needed, with their file mode…"
+mkdir, ,v,verbose, , ,103,print a message for each created directory
+mkdir, , ,context, , ,104,"like -Z, or if CTX is specified then set the SELinux or SMACK security contex…"
+mkdir, , ,help, , ,105,display this help and exit
+mkdir, , ,version, , ,106,output version information and exit AUTHOR Written by David MacKenzie

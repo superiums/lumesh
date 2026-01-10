@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rustup," show;", , ,$rustup_show, ,113, 
+rustup, doc, , , ,@f,115, 
+rustup, doc, , , ,@f,116, 
+rustup, doc, , , ,@f,117, 
+rustup, doc, , , ,@f,118, 

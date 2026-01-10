@@ -1,0 +1,108 @@
+cmd,conds,short,long,params,dirs,pri,desc
+keybase, $ends keybase, ,api-dump-unsafe, ,@f,101,Dump API call internals (may leak secrets)
+keybase, $ends keybase, ,api-timeout, ,@f,102,Set the HTTP timeout for API calls to the keybase API server
+keybase, $ends keybase, ,api-uri-path-prefix, ,@f,103,Specify an alternate API URI path prefix
+keybase, $ends keybase, ,app-start-mode, ,@f,104,"Specify 'service' to auto-start UI app, or anything else to disable"
+keybase, $ends keybase, ,auto-fork, ,@f,105,Enable auto-fork of background service
+keybase, $ends keybase, ,bg-identifier-disabled, ,@f,106,Supply to disable the BG identifier loop
+keybase, $ends keybase, ,chat-db, ,@f,107,Specify an alternate local Chat DB location
+keybase, $ends keybase, ,code-signing-kids, ,@f,108,Set of code signing key IDs (colon-separated)
+keybase, $ends keybase,c,config-file, ,@f,109,Specify an (alternate) master config file
+keybase, $ends keybase, ,db, ,@f,110,Specify an alternate local DB location
+keybase, $ends keybase,d,debug, ,@f,111,Enable debugging mode
+keybase, $ends keybase, ,debug-journeycard, ,@f,112,Enable experimental journey cards
+keybase, $ends keybase, ,disable-bg-conv-loader, ,@f,113,Disable background conversation loading
+keybase, $ends keybase, ,disable-cert-pinning, ,@f,114,WARNING: Do not use unless necessary!
+keybase, $ends keybase, ,disable-merkle-auditor, ,@f,115,Disable background probabilistic merkle audit
+keybase, $ends keybase, ,disable-search-indexer, ,@f,116,Disable chat search background indexer
+keybase, $ends keybase, ,disable-team-auditor, ,@f,117,Disable auditing of teams
+keybase, $ends keybase, ,disable-team-box-auditor, ,@f,118,Disable box auditing of teams
+keybase, $ends keybase, ,display-raw-untrusted-output, ,@f,119,Display output from users without escaping terminal codes
+keybase, $ends keybase, ,ek-log-file, ,@f,120,Specify a log file for the keybase ephemeral key log
+keybase, $ends keybase, ,enable-bot-lite-mode, ,@f,121,Enable bot lite mode. Disables non-critical background services
+keybase, $ends keybase, ,extra-net-logging, ,@f,122,Do additional debug logging during network requests
+keybase, $ends keybase, ,features, ,@f,123,Specify experimental feature flags
+keybase, $ends keybase, ,force-linux-keyring, ,@f,124,Require the use of the OS keyring
+keybase, $ends keybase, ,generate-bash-completion, ,@f,125,
+keybase, $ends keybase, ,gpg, ,@f,126,Path to GPG client (optional for exporting keys)
+keybase, $ends keybase, ,gpg-options, ,@f,127,Options to use when calling GPG
+keybase, $ends keybase, ,gpgdir, ,@f,128,Specify a PGP directory (default is ~/.gnupg)
+keybase, $ends keybase, ,gui-config-file, ,@f,129,Specify a path to the GUI config file
+keybase, $ends keybase,h,help, ,@f,130,Show help
+keybase, $ends keybase,H,home, ,@f,131,Specify an (alternate) home directory
+keybase, $ends keybase, ,leveldb-num-files, ,@f,132,Specify the max number of files LevelDB may open
+keybase, $ends keybase, ,local-rpc-debug-unsafe, ,@f,133,Use to debug local RPC (may leak secrets)
+keybase, $ends keybase, ,log-file, ,@f,134,Specify a log file for the keybase service
+keybase, $ends keybase, ,log-format, ,@f,135,"Log format (default, plain, file, fancy)"
+keybase, $ends keybase, ,log-prefix, ,@f,136,Specify a prefix for a unique log file name
+keybase, $ends keybase, ,merkle-kids, ,@f,137,Set of admissible Merkle Tree fingerprints (colon-separated)
+keybase, $ends keybase,F,no-auto-fork, ,@f,138,Disable auto-fork of background service
+keybase, $ends keybase, ,no-debug, ,@f,139,"Suppress debugging mode; takes precedence over --debug"
+keybase, $ends keybase, ,paramproof-kit, ,@f,140,Specify an alternate local parameterized proof kit file location
+keybase, $ends keybase, ,pgpdir, ,@f,141,Specify a PGP directory (default is ~/.gnupg)
+keybase, $ends keybase, ,pid-file, ,@f,142,Location of the keybased pid-file (to ensure only one running daemon)
+keybase, $ends keybase, ,pinentry, ,@f,143,Specify a path to find a pinentry program
+keybase, $ends keybase, ,proof-cache-size, ,@f,144,Number of proof entries to cache
+keybase, $ends keybase, ,prove-bypass, ,@f,145,Prove even disabled proof services
+keybase, $ends keybase, ,proxy, ,@f,146,Specify a proxy to ship all Web requests over
+keybase, $ends keybase, ,proxy-type, ,@f,147,"Set the proxy type; One of: socks,http_connect"
+keybase, $ends keybase, ,push-disabled, ,@f,148,Disable push server connection (which is on by default)
+keybase, $ends keybase, ,push-save-interval, ,@f,149,Set the interval between saves of the push cache (in seconds)
+keybase, $ends keybase, ,push-server-uri, ,@f,150,Specify a URI for contacting the Keybase push server
+keybase, $ends keybase, ,pvl-kit, ,@f,151,Specify an alternate local PVL kit file location
+keybase, $ends keybase, ,read-deleted-sigchain, ,@f,152,Allow admins to read deleted sigchains for debugging
+keybase, $ends keybase, ,remember-passphrase, ,@f,153,Remember keybase passphrase
+keybase, $ends keybase, ,run-mode, ,@f,154,"Run mode (devel, staging, prod)"
+keybase, $ends keybase, ,scraper-timeout, ,@f,155,Set the HTTP timeout for external proof scrapers
+keybase, $ends keybase, ,secret-keyring, ,@f,156,Location of the Keybase secret-keyring (P3SKB-encoded)
+keybase, $ends keybase,s,server, ,@f,157,Specify server API
+keybase, $ends keybase, ,session-file, ,@f,158,Specify an alternate session data file
+keybase, $ends keybase, ,slow-gregor-conn, ,@f,159,Slow responses from gregor for testing
+keybase, $ends keybase, ,socket-file, ,@f,160,Location of the keybased socket-file
+keybase, $ends keybase, ,standalone, ,@f,161,Use the client without any daemon support
+keybase, $ends keybase, ,timers, ,@f,162,"Specify 'a' for API; 'r' for RPCs; and 'x' for eXternal API calls"
+keybase, $ends keybase, ,tor-hidden-address, ,@f,163,Set TOR address of keybase server
+keybase, $ends keybase, ,tor-mode, ,@f,164,"Set TOR mode to be 'leaky', 'none', or 'strict'"
+keybase, $ends keybase, ,tor-proxy, ,@f,165,"Set TOR proxy; when Tor mode is on; defaults to localhost:9050"
+keybase, $ends keybase, ,updater-config-file, ,@f,166,Specify a path to the updater config file
+keybase, $ends keybase, ,use-default-log-file, ,@f,167,"Log to the default log file in $XDG_CACHE_HOME, or ~/.cache if unset"
+keybase, $ends keybase, ,use-root-config-file, ,@f,168,Use the default root config on Linux only
+keybase, $ends keybase, ,user-cache-size, ,@f,169,Number of User entries to cache
+keybase, $ends keybase, ,vdebug, ,@f,170,"Verbose debugging; takes a comma-joined list of levels and tags"
+keybase, $ends keybase,v,version, ,@f,171,Print the version
+keybase, $ends keybase, , , ,@f,172, 
+keybase, $ends keybase, , ,$keybase,@f,173, 
+keybase, $ends keybase account, , ,$keybase_account,@f,174, 
+keybase, $ends keybase audit, , ,$keybase_audit,@f,175, 
+keybase, $ends keybase base62, , ,$keybase_base62,@f,176, 
+keybase, $ends keybase blocks, , ,$keybase_blocks,@f,177, 
+keybase, $ends keybase bot, , ,$keybase_bot,@f,178, 
+keybase, $ends keybase chat, , ,$keybase_chat,@f,179, 
+keybase, $ends keybase config, , ,$keybase_config,@f,180, 
+keybase, $ends keybase ctl, , ,$keybase_ctl,@f,181, 
+keybase, $ends keybase currency, , ,$keybase_currency,@f,182, 
+keybase, $ends keybase db, , ,$keybase_db,@f,183, 
+keybase, $ends keybase device, , ,$keybase_device,@f,184, 
+keybase, $ends keybase fs, , ,$keybase_fs,@f,185, 
+keybase, $ends keybase git, , ,$keybase_git,@f,186, 
+keybase, $ends keybase h, , ,$keybase_help,@f,187, 
+keybase, $ends keybase help, , ,$keybase_help,@f,188, 
+keybase, $ends keybase kvstore, , ,$keybase_kvstore,@f,189, 
+keybase, $ends keybase log, , ,$keybase_log,@f,190, 
+keybase, $ends keybase passphrase, , ,$keybase_passphrase,@f,191, 
+keybase, $ends keybase pgp, , ,$keybase_pgp,@f,192, 
+keybase, $ends keybase pprof, , ,$keybase_pprof,@f,193, 
+keybase, $ends keybase rekey, , ,$keybase_rekey,@f,194, 
+keybase, $ends keybase sigs, , ,$keybase_sigs,@f,195, 
+keybase, $ends keybase team, , ,$keybase_team,@f,196, 
+keybase, $ends keybase update, , ,$keybase_update,@f,197, 
+keybase, $ends keybase wallet, , ,$keybase_wallet,@f,198, 
+keybase, $ends keybase wot, , ,$keybase_wot,@f,199, 
+keybase, $ends keybase account email, , ,$keybase_account_email,@f,200, 
+keybase, $ends keybase account phonenumber, , ,$keybase_account_phonenumber,@f,201, 
+keybase, $ends keybase bot token, , ,$keybase_bot_token,@f,202, 
+keybase, $ends keybase fs archive, , ,$keybase_fs_archive,@f,203, 
+keybase, $ends keybase fs debug, , ,$keybase_fs_debug,@f,204, 
+keybase, $ends keybase fs sync, , ,$keybase_fs_sync,@f,205, 
+keybase, $ends keybase account upload-avatar,s,skip-chat-message, ,@f,206, 
+keybase, $ends keybase account upload-avatar, ,team, ,@f,207, 

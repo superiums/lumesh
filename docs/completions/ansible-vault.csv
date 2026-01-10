@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ansible-vault, , ,version, , ,101,Display version and exit
+ansible-vault, ,h,help, ,@f,102,Show help message and exit
+ansible-vault, ,v,verbose, , ,103,"Verbose mode (-vvv for more, -vvvv to enable connection debugging)"
+ansible-vault, , ,ask-vault-pass, ,@f,104,Ask for vault password
+ansible-vault, , ,new-vault-id, ,@r,105,the new vault identity to use for rekey
+ansible-vault, , ,new-vault-password-file, ,@r,106,New vault password file for rekey
+ansible-vault, , ,vault-id, ,@r,107,the vault identity to use
+ansible-vault, , ,vault-password-file, ,@r,108,Vault password file

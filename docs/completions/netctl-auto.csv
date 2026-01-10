@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+netctl-auto, switch-to, , , ,@f,101,Profile
+netctl-auto, enable, , , ,@f,102,Profile
+netctl-auto, disable, , , ,@f,103,Profile
+netctl-auto, start stop, , , ,@f,104, 
+netctl-auto, is-enabled is-active, , , ,@f @r,105, 

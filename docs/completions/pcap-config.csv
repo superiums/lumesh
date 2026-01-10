@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pcap-config, , ,help, , ,101,Produce a help message and exit
+pcap-config, , ,version, , ,102,Produce libpcap version and exit
+pcap-config, , ,cflags, , ,103,Produce the  -I compiler flag required to include libpcap's header files
+pcap-config, , ,libs, , ,104,"Produce the  -L and  -l linker flags required to link with libpcap, including…"
+pcap-config, , ,additional-libs, , ,105,"Produce the  -L and  -l linker flags for libraries required by libpcap, but n…"
+pcap-config, , ,static, , ,106,This option causes  --libs and  --additional-libs to produce linker flags app…
+pcap-config, , ,static-pcap-only, , ,107,This option causes

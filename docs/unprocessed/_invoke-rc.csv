@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+invoke-rc.d, __fish_invoke_rcd_has_service, , , ,@f,101, 
+invoke-rc.d, __fish_invoke_rcd_has_service, , ,start,@f,102,Start the service
+invoke-rc.d, __fish_invoke_rcd_has_service, , ,stop,@f,103,Stop the service
+invoke-rc.d, __fish_invoke_rcd_has_service, , ,restart,@f,104,Restart the service
+invoke-rc.d, __fish_invoke_rcd_has_service, , ,reload,@f,105,Reload Configuration
+invoke-rc.d, __fish_invoke_rcd_has_service, , ,force-reload,@f,106,Force reloading configuration
+invoke-rc.d, __fish_invoke_rcd_has_service, , ,status,@f,107,Print the status of the service

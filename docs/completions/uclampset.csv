@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uclampset, ,a,all-tasks, , ,101, 
+uclampset, ,p,pid, , ,102, 
+uclampset, ,s,system, , ,103, 
+uclampset, ,R,reset-on-fork, , ,104, 
+uclampset, ,v,verbose, , ,105, 
+uclampset, ,h,help, , ,106, 
+uclampset, ,V,version, , ,107, 

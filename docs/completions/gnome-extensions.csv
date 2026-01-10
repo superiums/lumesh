@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gnome-extensions, , , , ,@f,101, 
+gnome-extensions, list, ,user, , ,102,Show user-installed extensions
+gnome-extensions, list, ,system, , ,103,Show system-installed extensions
+gnome-extensions, list, ,enabled, , ,104,Show enabled extensions
+gnome-extensions, list, ,disabled, , ,105,Show disabled extensions
+gnome-extensions, list, ,prefs, , ,106,Show extensions with preferences
+gnome-extensions, list, ,updates, , ,107,Show extensions with updates
+gnome-extensions, list,d,details, , ,108,Print extension details
+gnome-extensions, pack, , , ,@D,109,Source directory
+gnome-extensions, install, , , ,@F,110,Extension bundle

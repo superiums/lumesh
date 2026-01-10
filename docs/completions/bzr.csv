@@ -1,0 +1,59 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bzr, help, , ,topics,@f,102,List all help topics
+bzr, help, , ,commands,@f,103,List all commands
+bzr, help, , ,formats,@f,104,Help about supported formats
+bzr, help, , ,current-formats,@f,105,Help about current supported formats
+bzr, help, , ,revisionspec,@f,106,How to specify revisions in bzr
+bzr, help, , ,bugs,@f,107,Show bug tracker settings in bzr
+bzr, init, ,create-prefix, ,@f,109,Create the path leading up to the branch if it does not already exists
+bzr, init, ,no-tree, ,@f,110,Create a branch without a working tree
+bzr, init, ,append-revisions-only, ,@f,111,Never change revnos or the existing log. Append revisions to it only
+bzr, branch, ,use-existing-dir, ,@f,113,Proceed even if directory exits
+bzr, branch, ,stacked, ,@f,114,Create a stacked branch referring to the source branch
+bzr, branch, ,standalone, ,@f,115,"Do not use a shared repository, even if available"
+bzr, branch, ,switch, ,@f,116,Switch the checkout in the current directory to the new branch
+bzr, branch, ,hardlink, ,@f,117,Hard-link working tree files where possible
+bzr, branch, ,bind, ,@f,118,Bind new branch to from location
+bzr, branch, ,no-tree, ,@f,119,Create a branch without a working-tree
+bzr, add,N,no-recurse, ,@f,121,Don't recursively add the contents of directories
+bzr, ignore, ,default-rules, ,@f,123,Display the default ignore rules that bzr uses
+bzr, mv, ,auto, ,@f,125,Automatically guess renames
+bzr, mv, ,after, ,@f,126,"Move only the bzr identifier of the file, because the file has already been moved"
+bzr, status,S,short, ,@f,128,Use short status indicators
+bzr, status,V,versioned, ,@f,129,Only show versioned files
+bzr, status, ,no-pending, ,@f,130,Don't show pending merges
+bzr, status, ,no-classify, ,@f,131,Do not mark object type using indicator
+bzr, status, ,show-ids, ,@f,132,Show internal object ids
+bzr, merge, ,pull, ,@f,135,"If destination is already merged, pull rather than merging"
+bzr, merge, ,remember, ,@f,136,Remember the specified location as a default
+bzr, merge, ,force, ,@f,137,Merge even if the destination tree has uncommitted changes
+bzr, merge, ,reprocess, ,@f,138,Reprocess to reduce spurious conflicts
+bzr, merge, ,uncommitted, ,@f,139,"Apply uncommitted changes from a working copy, instead of branch changes"
+bzr, merge, ,show-base, ,@f,140,Show base revision text in conflicts
+bzr, merge, ,preview, ,@f,141,"Instead of merging, show a diff of the merge"
+bzr, merge,i,interactive, ,@f,142,Select changes interactively
+bzr, merge,d,directory, ,@f,143,"Branch to merge into, rather than the one containing the working directory"
+bzr, merge,c,change, ,@f,144,Select changes introduced by the specified revision
+bzr, merge,r,revision, ,@f,145,Select changes introduced by the specified revision
+bzr, commit,p,show-diff, ,@f,147,"When no message is supplied, show diff along with status summary in message editor"
+bzr, commit,F,file, ,@f,148,Take commit message from this file
+bzr, commit,x,exclude, ,@f,149,Do not consider changes made to a given path
+bzr, commit,m,message, ,@f,150,Description of the new revision
+bzr, commit, ,author, ,@f,151,"Set the author's name, if it's different from the committer"
+bzr, commit, ,commit-time, ,@f,152,Manually set a commit time using commit date format
+bzr, commit, ,unchanged, ,@f,153,Commit even if nothing has changed
+bzr, commit, ,fixes, ,@f,154,Mark a bug as being fixed by this revision
+bzr, commit, ,strict, ,@f,155,Refuse to commit if there are unknown files in the working tree
+bzr, commit, ,lossy, ,@f,156,When committing to a foreign vcs do not push data that can not be natively represented
+bzr, commit, ,local, ,@f,157,Perform a local commit in a bound branch (pushed to master on normal commit)
+bzr, send, ,body, ,@f,159,Body for the email
+bzr, send, ,remember, ,@f,160,Remember submit and public branch
+bzr, send, ,mail-to, ,@f,161,Mail the request to this address
+bzr, send, ,format, ,@f,162,Use the specified output format
+bzr, send, ,no-bundle, ,@f,163,Do not include a bundle in the merge directive
+bzr, send, ,strict, ,@f,164,Refuse to send if there are uncommitted changes in the working tree
+bzr, send, ,no-patch, ,@f,165,Do not include a preview patch in the merge directive
+bzr, check, ,tree, ,@f,168,Check the working tree related to the current directory
+bzr, check, ,repo, ,@f,169,Check the repository related to the current directory
+bzr, check, ,branch, ,@f,170,Check the branch related to the current directory
+bzr, add mv, ,dry-run, ,@f,175,Show what would be done

@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+touch, ,B,backward, ,@f @r,101,set date back
+touch, ,c,no-create, , ,102,don't create file if it doesn't exist
+touch, ,d,date, ,@f @r,103,set to specified YYYY-MM-DDThh:mm:SS[.frac][tz]
+touch, ,f,forward, ,@f @r,104,set date forward
+touch, ,r,reference, , ,105,use times from specified reference file
+touch, , ,time,\,@f @r,106,change specified kind of timestamp
+touch, , ,help, , ,107,display help
+touch, , ,version, , ,108,display version

@@ -1,0 +1,189 @@
+cmd,conds,short,long,params,dirs,pri,desc
+node, , ,no-deprecation, , ,105,Silence deprecation warnings
+node, , ,trace-deprecation, , ,106,Show stack traces on deprecations
+node, , ,throw-deprecation, , ,107,Throw errors on deprecations
+node, , ,v8-options, , ,108,Print v8 command line options
+node, , ,max-stack-size, , ,109,Set max v8 stack size (bytes)
+node, , ,use_strict, , ,110,enforce strict mode
+node, , ,es5_readonly, , ,111,activate correct semantics for inheriting readonliness
+node, , ,es52_globals, , ,112,activate new semantics for global var declarations
+node, , ,harmony_typeof, , ,113,enable harmony semantics for typeof
+node, , ,harmony_scoping, , ,114,enable harmony block scoping
+node, , ,harmony_modules, , ,115,enable harmony modules (implies block scoping)
+node, , ,harmony_proxies, , ,116,enable harmony proxies
+node, , ,harmony_collections, , ,117,"enable harmony collections (sets, maps, and weak maps)"
+node, , ,harmony, , ,118,enable all harmony features (except typeof)
+node, , ,packed_arrays, , ,119,optimizes arrays that have no holes
+node, , ,smi_only_arrays, , ,120,tracks arrays with only smi values
+node, , ,clever_optimizations, , ,121,"Optimize object size, Array shift, DOM strings and string +"
+node, , ,unbox_double_arrays, , ,122,automatically unbox arrays of doubles
+node, , ,string_slices, , ,123,use string slices
+node, , ,crankshaft, , ,124,use crankshaft
+node, , ,hydrogen_filter, , ,125,optimization filter
+node, , ,use_range, , ,126,use hydrogen range analysis
+node, , ,eliminate_dead_phis, , ,127,eliminate dead phis
+node, , ,use_gvn, , ,128,use hydrogen global value numbering
+node, , ,use_canonicalizing, , ,129,use hydrogen instruction canonicalizing
+node, , ,use_inlining, , ,130,use function inlining
+node, , ,max_inlined_source_size, , ,131,max source size in bytes considered for single inlining
+node, , ,max_inlined_nodes, , ,132,max number of AST nodes considered for single inlining
+node, , ,max_inlined_nodes_cumulative, , ,133,max cumulative number of AST nodes considered for inlining
+node, , ,loop_invariant_code_motion, , ,134,loop invariant code motion
+node, , ,collect_megamorphic_maps_from_stub_cache, , ,135,crankshaft harvests type feedback from stub cache
+node, , ,hydrogen_stats, , ,136,print statistics for hydrogen
+node, , ,trace_hydrogen, , ,137,trace generated hydrogen to file
+node, , ,trace_phase, , ,138,trace generated IR for specified phases
+node, , ,trace_inlining, , ,139,trace inlining decisions
+node, , ,trace_alloc, , ,140,trace register allocator
+node, , ,trace_all_uses, , ,141,trace all use positions
+node, , ,trace_range, , ,142,trace range analysis
+node, , ,trace_gvn, , ,143,trace global value numbering
+node, , ,trace_representation, , ,144,trace representation types
+node, , ,stress_pointer_maps, , ,145,pointer map for every instruction
+node, , ,stress_environments, , ,146,environment for every instruction
+node, , ,deopt_every_n_times, , ,147,deoptimize every n times a deopt point is passed
+node, , ,trap_on_deopt, , ,148,put a break point before deoptimizing
+node, , ,deoptimize_uncommon_cases, , ,149,deoptimize uncommon cases
+node, , ,polymorphic_inlining, , ,150,polymorphic inlining
+node, , ,use_osr, , ,151,use on-stack replacement
+node, , ,array_bounds_checks_elimination, , ,152,perform array bounds checks elimination
+node, , ,array_index_dehoisting, , ,153,perform array index dehoisting
+node, , ,trace_osr, , ,154,trace on-stack replacement
+node, , ,stress_runs, , ,155,number of stress runs
+node, , ,optimize_closures, , ,156,optimize closures
+node, , ,inline_construct, , ,157,inline constructor calls
+node, , ,inline_arguments, , ,158,inline functions with arguments object
+node, , ,loop_weight, , ,159,loop weight for representation inference
+node, , ,optimize_for_in, , ,160,optimize functions containing for-in loops
+node, , ,experimental_profiler, , ,161,enable all profiler experiments
+node, , ,watch_ic_patching, , ,162,profiler considers IC stability
+node, , ,frame_count, , ,163,number of stack frames inspected by the profiler
+node, , ,self_optimization, , ,164,primitive functions trigger their own optimization
+node, , ,direct_self_opt, , ,165,call recompile stub directly when self-optimizing
+node, , ,retry_self_opt, , ,166,re-try self-optimization if it failed
+node, , ,count_based_interrupts, , ,167,trigger profiler ticks based on counting instead of timing
+node, , ,interrupt_at_exit, , ,168,insert an interrupt check at function exit
+node, , ,weighted_back_edges, , ,169,weight back edges by jump distance for interrupt triggering
+node, , ,interrupt_budget, , ,170,execution budget before interrupt is triggered
+node, , ,type_info_threshold, , ,171,% of ICs that must have type info to allow optimization
+node, , ,self_opt_count, , ,172,call count before self-optimization
+node, , ,trace_opt_verbose, , ,173,extra verbose compilation tracing
+node, , ,debug_code, , ,174,generate extra code (assertions) for debugging
+node, , ,code_comments, , ,175,emit comments in code disassembly
+node, , ,enable_sse2, , ,176,enable use of SSE2 instructions if available
+node, , ,enable_sse3, , ,177,enable use of SSE3 instructions if available
+node, , ,enable_sse4_1, , ,178,enable use of SSE4
+node, , ,enable_cmov, , ,179,enable use of CMOV instruction if available
+node, , ,enable_rdtsc, , ,180,enable use of RDTSC instruction if available
+node, , ,enable_sahf, , ,181,enable use of SAHF instruction if available (X64 only)
+node, , ,enable_vfp3, , ,182,enable use of VFP3 instructions if available (ARM only)
+node, , ,enable_armv7, , ,183,enable use of ARMv7 instructions if available (ARM only)
+node, , ,enable_fpu, , ,184,enable use of MIPS FPU instructions if available (MIPS only)
+node, , ,expose_natives_as, , ,185,expose natives in global object
+node, , ,expose_debug_as, , ,186,expose debug in global object
+node, , ,expose_gc, , ,187,expose gc extension
+node, , ,expose_externalize_string, , ,188,expose externalize string extension
+node, , ,stack_trace_limit, , ,189,number of stack frames to capture
+node, , ,builtins_in_stack_traces, , ,190,show built-in functions in stack traces
+node, , ,disable_native_files, , ,191,disable builtin natives files
+node, , ,inline_new, , ,192,use fast inline allocation
+node, , ,stack_trace_on_abort, , ,193,print a stack trace if an assertion failure occurs
+node, , ,trace, , ,194,trace function calls
+node, , ,mask_constants_with_cookie, , ,195,use random jit cookie to mask large constants
+node, , ,lazy, , ,196,use lazy compilation
+node, , ,trace_opt, , ,197,trace lazy optimization
+node, , ,trace_opt_stats, , ,198,trace lazy optimization statistics
+node, , ,opt, , ,199,use adaptive optimizations
+node, , ,always_opt, , ,200,always try to optimize functions
+node, , ,prepare_always_opt, , ,201,prepare for turning on always opt
+node, , ,sparkplug, , ,202,use non-optimizing sparkplug compiler
+node, , ,always_sparkplug, , ,203,always use non-optimizing sparkplug compiler
+node, , ,trace_deopt, , ,204,trace deoptimization
+node, , ,min_preparse_length, , ,205,minimum length for automatic enable preparsing
+node, , ,always_full_compiler, , ,206,try to use the dedicated run-once backend for all code
+node, , ,trace_bailout, , ,207,print reasons for falling back to the classic V8 backend
+node, , ,compilation_cache, , ,208,enable compilation cache
+node, , ,cache_prototype_transitions, , ,209,cache prototype transitions
+node, , ,trace_debug_json, , ,210,trace debugging JSON request/response
+node, , ,debugger_auto_break, , ,211,autoset debug break flag when debugger commands are in queue
+node, , ,enable_liveedit, , ,212,enable liveedit experimental feature
+node, , ,break_on_abort, , ,213,always cause a debug break before aborting
+node, , ,stack_size, , ,214,default size of stack region v8 is allowed to use (in kBs)
+node, , ,max_stack_trace_source_length, , ,215,max length of function source code printed in stack trace
+node, , ,always_inline_smi_code, , ,216,always inline smi code in non-opt code
+node, , ,max_new_space_size, , ,217,max size of the new generation (in kBytes)
+node, , ,max_old_space_size, , ,218,max size of the old generation (in Mbytes)
+node, , ,max_executable_size, , ,219,max size of executable memory (in Mbytes)
+node, , ,gc_global, , ,220,always perform global GCs
+node, , ,gc_interval, , ,221,garbage collect after <n> allocations
+node, , ,trace_gc, , ,222,print 1 trace line following each garbage collection
+node, , ,trace_gc_nvp, , ,223,print 1 full trace(w/ name=value) after garbage collections
+node, , ,print_cumulative_gc_stat, , ,224,print cumulative GC statistics(w/ name=value) on exit
+node, , ,trace_gc_verbose, , ,225,print more details following each garbage collection
+node, , ,trace_fragmentation, , ,226,report fragmentation for old pointer and data pages
+node, , ,collect_maps, , ,227,garbage collect maps from which no objects can be reached
+node, , ,flush_code, , ,228,flush code that we expect not to use again before full gc
+node, , ,incremental_marking, , ,229,use incremental marking
+node, , ,incremental_marking_steps, , ,230,do incremental marking steps
+node, , ,trace_incremental_marking, , ,231,trace progress of the incremental marking
+node, , ,use_idle_notification, , ,232,Use idle notification to reduce memory footprint
+node, , ,send_idle_notification, , ,233,Send idle notification between stress runs
+node, , ,use_ic, , ,234,use inline caching
+node, , ,native_code_counters, , ,235,generate extra code for manipulating stats counters
+node, , ,always_compact, , ,236,Perform compaction on every full GC
+node, , ,lazy_sweeping, , ,237,Use lazy sweeping for old pointer and data spaces
+node, , ,never_compact, , ,238,Never perform compaction on full GC - testing only
+node, , ,compact_code_space, , ,239,Compact code space on full non-incremental collections
+node, , ,cleanup_code_caches_at_gc, , ,240,Flush inline/code caches prior to mark compact collection/cycle
+node, , ,random_seed, , ,241,Default seed for random generator init(0:default-sys random)
+node, , ,use_verbose_printer, , ,242,allows verbose printing
+node, , ,allow_natives_syntax, , ,243,allow natives syntax
+node, , ,trace_sim, , ,244,Trace simulator execution
+node, , ,check_icache, , ,245,Check icache flushes in ARM and MIPS simulator
+node, , ,stop_sim_at, , ,246,Simulator stop after x number of instructions
+node, , ,sim_stack_alignment, , ,247,"Stack alignment in bytes in simulator (4/8, 8 is default)"
+node, , ,trace_exception, , ,248,print stack trace when throwing exceptions
+node, , ,preallocate_message_memory, , ,249,preallocate some memory to build stack traces
+node, , ,randomize_hashes, , ,250,randomize hashes(w/ snapshots cannot override baked-in seed)
+node, , ,hash_seed, , ,251,Fix seed to hash prop. key(w/ snapshots no BI seed overr.)
+node, , ,preemption, , ,252,activate a 100ms timer that switches between V8 threads
+node, , ,regexp_optimization, , ,253,generate optimized regexp code
+node, , ,testing_bool_flag, , ,254,testing_bool_flag
+node, , ,testing_int_flag, , ,255,testing_int_flag
+node, , ,testing_float_flag, , ,256,float-flag
+node, , ,testing_string_flag, , ,257,string-flag
+node, , ,testing_prng_seed, , ,258,Seed used for threading test randomness
+node, , ,testing_serialization_file, , ,259,file in which to serialize heap
+node, , ,help, , ,260,"Print usage message, including flags, on console"
+node, , ,dump_counters, , ,261,Dump counters on exit
+node, , ,debugger, , ,262,Enable JavaScript debugger
+node, , ,remote_debugger, , ,263,Connect JS debugger to the debugger agent in another process
+node, , ,debugger_agent, , ,264,Enable debugger agent
+node, , ,debugger_port, , ,265,Port to use for remote debugging
+node, , ,map_counters, , ,266,Map counters to a file
+node, , ,js_arguments, , ,267,Pass all remaining arguments to the script
+node, , ,debug_compile_events, , ,268,Enable debugger compile events
+node, , ,debug_script_collected_events, , ,269,Enable debugger script collected events
+node, , ,gdbjit, , ,270,enable GDBJIT interface (disables compacting GC)
+node, , ,gdbjit_full, , ,271,enable GDBJIT interface for all code objects
+node, , ,gdbjit_dump, , ,272,dump elf objects with debug info to disk
+node, , ,gdbjit_dump_filter, , ,273,dump only objects containing this substring
+node, , ,force_marking_deque_overflows, , ,274,force overflow of marking deque by reducing size to 64 words
+node, , ,stress_compaction, , ,275,stress the GC compactor to flush out bugs
+node, , ,log, , ,276,"Minimal logging (no API,code,GC,suspect,or handles samples)"
+node, , ,log_all, , ,277,Log all events to the log file
+node, , ,log_runtime, , ,278,Activate runtime system %Log call
+node, , ,log_api, , ,279,Log API events to the log file
+node, , ,log_code, , ,280,Log code events to the log file without profiling
+node, , ,log_gc, , ,281,Log heap samples on garbage collection for the hp2ps tool
+node, , ,log_handles, , ,282,Log global handle events
+node, , ,log_snapshot_positions, , ,283,log positions of (de)serialized objects in the snapshot
+node, , ,log_suspect, , ,284,Log suspect operations
+node, , ,prof, , ,285,Log statistical profiling information (implies --log-code)
+node, , ,prof_auto, , ,286,"Used w/ --prof,starts profiling automatically)"
+node, , ,prof_lazy, , ,287,"Used w/ --prof,only samples and logs w/ active profiler"
+node, , ,prof_browser_mode, , ,288,"Used w/ --prof,set on browser-compatible mode for profiling"
+node, , ,log_regexp, , ,289,Log regular expression execution
+node, , ,sliding_state_window, , ,290,Update sliding state window counters
+node, , ,logfile, , ,291,Specify the name of the log file
+node, , ,ll_prof, , ,292,Enable low-level linux profiler

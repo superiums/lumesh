@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+colcrt, , ,no-underlining, , ,101, 
+colcrt, ,2,half-lines, , ,102, 
+colcrt, ,h,help, , ,103, 
+colcrt, ,V,version, , ,104, 

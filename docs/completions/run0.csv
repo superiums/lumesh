@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+run0, ,h,help, , ,101,Show help
+run0, ,V,version, , ,102,Show version
+run0, ,u,user, , ,103,Switches to the specified user instead of root
+run0, ,g,group, , ,104,Switches to the specified group instead of root
+run0, , ,no-ask-password, , ,105,Do not query the user for authentication for privileged operations
+run0, , ,machine, , ,106,Execute operation on a local container
+run0, , ,property, , ,107,Sets a property on the service unit that is created
+run0, , ,description, , ,108,Description for unit
+run0, , ,slice, , ,109,"Make the new .service unit part of the specified slice, instead of user.slice."
+run0, , ,slice-inherit, , ,110,Make the new .service unit part of the slice the run0 itself has been invoked in
+run0, , ,nice, , ,111,Runs the invoked session with the specified nice level
+run0, ,D,chdir, ,@D,112,Set working directory
+run0, , ,setenv, , ,113,Runs the invoked session with the specified environment variable set
+run0, , ,background, , ,114,Change the terminal background color to the specified ANSI color
+run0, , ,pty, , ,115,Request allocation of a pseudo TTY for stdio
+run0, , ,pipe, , ,116,Request redirect pipe for stdio
+run0, , ,shell-prompt-prefix, , ,117,Set a shell prompt prefix string

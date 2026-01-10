@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsactl, ,h,help, , ,101,Help: show available flags and commands
+alsactl, ,d,debug, , ,102,Use debug mode: a bit more verbose
+alsactl, ,v,version, , ,103,Print alsactl version number
+alsactl, ,f,file, , ,104,Select the configuration file to use.  The default is /var/lib/alsa/asound
+alsactl, ,a,config-dir, , ,105,Select the boot / hotplug ALSA configuration directory to use
+alsactl, ,l,lock, , ,106,Use the file locking to serialize the concurrent access to the state file (th…
+alsactl, ,L,no-lock, , ,107,Do not use the file locking to serialize the concurrent access to the state f…
+alsactl, ,O,lock-state-file, , ,108,Select the state lock file path
+alsactl, ,F,force, , ,109,Used with restore command
+alsactl, ,g,ignore, , ,110,"Used with store, restore and init commands"
+alsactl, ,P,pedantic, , ,111,Used with restore command.   Don't restore mismatching control elements
+alsactl, ,I,no-init-fallback, , ,112,Don't initialize cards if restore fails.   Since version 1. 0
+alsactl, ,r,runstate, , ,113,Save restore and init state to this file.  The file will contain only errors
+alsactl, ,R,remove, , ,114,Remove runstate file at first
+alsactl, ,E,env, , ,115,Set environment variable (useful for init action or you may override ALSA_CON…
+alsactl, ,i,initfile, , ,116,The configuration file for init
+alsactl, ,p,period, , ,117,The store period in seconds for the daemon command
+alsactl, ,e,pid-file, , ,118,The pathname to store the process-id file in the HDB UUCP format (ASCII)
+alsactl, ,b,background, , ,119,Run the task in background
+alsactl, ,s,syslog, , ,120,Use syslog for messages
+alsactl, ,n,nice, , ,121,Set the process priority (see 'man nice')
+alsactl, ,c,sched-idle, , ,122,Set the process scheduling policy to idle (SCHED_IDLE)
+alsactl, ,D,ucm-defaults, , ,123,Execute also the 'defaults' section from the UCM configuration
+alsactl, ,U,no-ucm, , ,124,Skip the UCM init even if available

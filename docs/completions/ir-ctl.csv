@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ir-ctl, ,d,device, , ,101,"lirc device to control, /dev/lirc0 by default"
+ir-ctl, ,f,features, , ,102,List the features of the lirc device
+ir-ctl, ,r,receive, , ,103,"Receive IR and print to standard output if no file is specified, else save to…"
+ir-ctl, ,s,send, , ,104,Send IR in text file.  It must be in the format described below
+ir-ctl, ,S,scancode, , ,105,Send the IR scancode in the protocol specified
+ir-ctl, ,K,keycode, , ,106,Send the KEYCODE from the keymap which must be specified with --keymap
+ir-ctl, ,k,keymap, , ,107,The rc keymap file in toml format
+ir-ctl, ,1,oneshot, , ,108,"When receiving, stop receiving after the first message, i. e"
+ir-ctl, , ,mode2, , ,109,"When receiving, output IR in mode2 format.  One line per space or pulse"
+ir-ctl, ,w,wideband, , ,110,Use the wideband receiver if available on the hardware
+ir-ctl, ,n,narrowband, , ,111,"Switches back to the normal, narrowband receiver if the wideband receiver was…"
+ir-ctl, ,R,carrier-range, , ,112,Set the accepted carrier range for the narrowband receiver
+ir-ctl, ,m,measure-carrier, , ,113,"If the hardware supports it, report what the carrier frequency is on receiving"
+ir-ctl, ,M,no-measure-carrier, , ,114,Disable reporting of the carrier frequency
+ir-ctl, ,t,timeout, , ,115,"Set the length of a space at which the receiver goes idle, specified in micro…"
+ir-ctl, ,c,carrier, , ,116,Sets the send carrier frequency
+ir-ctl, ,D,duty-cycle, , ,117,Set the duty cycle for sending in percent if the hardware support it
+ir-ctl, ,e,emitters, , ,118,Comma separated list of emitters to use for sending
+ir-ctl, ,g,gap, , ,119,Set the gap between scancodes or the gap between files when multiple files ar…
+ir-ctl, ,?,help, , ,120,Prints the help message
+ir-ctl, , ,usage, , ,121,Give a short usage message
+ir-ctl, ,v,verbose, , ,122,"Verbose output; this prints the IR before sending"
+ir-ctl, ,V,version, , ,123,print the v4l2-utils version

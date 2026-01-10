@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rename, ! __fish_seen_argument -s n -l no-act,v,verbose, , ,102,Show which files were renamed
+rename, __fish_seen_argument -s n -l no-act,v,verbose, , ,103,Show which files would be renamed
+rename, ! __fish_seen_argument -s s -l symlink,o,no-overwrite, , ,107,Don't overwrite existing files
+rename, __fish_seen_argument -s s -l symlink,o,no-overwrite, , ,108,Don't overwrite symlink targets
+rename, ! __fish_seen_argument -s d -l filename -l nopath -l nofullpath, ,fullpath, , ,116,Rename any directory component
+rename, ! __fish_seen_argument -l path -l fullpath,d,nofullpath, , ,117,Rename only filename component
+rename, ! __fish_seen_argument -s L -l hardlink,l,symlink, , ,131,Symlink instead of renaming
+rename, ! __fish_seen_argument -s l -l symlink,L,hardlink, , ,132,Hardlink instead of renaming

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, , , ,$listinstalled, ,101, 
+$progname, ,C, , ,@D,102,Specifies a path to the XBPS configuration directory.
+$progname, __fish_contains_opt -s a,i, ,$listinstalled, ,103,"Ignore PKG when configuring all packages, can be specified multiple times."
+$progname, ,r, , ,@D,104,Specifies a path for the target root directory.

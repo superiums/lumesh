@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_opt,v validate, , ,--description, ,101, 

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+icupkg, ,?,help, , ,101,Print help about usage and exit
+icupkg, , ,type, , ,102,Output for little-endian/ASCII charset family
+icupkg, ,c,copyright, , ,103,Include the ICU copyright notice in the resulting data
+icupkg, ,C,comment, , ,104,Include the specified  comment in the resulting data instead of the ICU copyr…
+icupkg, ,a,add, , ,105,Add items from the  list to the package
+icupkg, ,r,remove, , ,106,Remove items from the  list from the package
+icupkg, ,x,extract, , ,107,Extract items from the  list from the package
+icupkg, ,m,matchmode, , ,108,Set the matching mode for item names with wildcards
+icupkg, ,s,sourcedir, , ,109,Set the source directory to R source 
+icupkg, ,d,destdir, , ,110,Set the destination directory to R destination 
+icupkg, ,w,writepkg, , ,111,option is set
+icupkg, ,l,list, , ,112,List the package items to stdout (after modifying the package)

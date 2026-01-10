@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xsv, __fish_is_nth_token 1, , ,cat, ,101,Concatenate by row or column
+xsv, __fish_is_nth_token 1, , ,count, ,102,Count records
+xsv, __fish_is_nth_token 1, , ,fixlengths, ,103,Makes all records have same length
+xsv, __fish_is_nth_token 1, , ,flatten, ,104,Show one field per line
+xsv, __fish_is_nth_token 1, , ,fmt, ,105,Format CSV output (change field delimiter)
+xsv, __fish_is_nth_token 1, , ,frequency, ,106,Show frequency tables
+xsv, __fish_is_nth_token 1, , ,headers, ,107,Show header names
+xsv, __fish_is_nth_token 1, , ,help, ,108,Show this usage message.
+xsv, __fish_is_nth_token 1, , ,index, ,109,Create CSV index for faster access
+xsv, __fish_is_nth_token 1, , ,input, ,110,Read CSV data with special quoting rules
+xsv, __fish_is_nth_token 1, , ,join, ,111,Join CSV files
+xsv, __fish_is_nth_token 1, , ,sample, ,112,Randomly sample CSV data
+xsv, __fish_is_nth_token 1, , ,search, ,113,Search CSV data with regexes
+xsv, __fish_is_nth_token 1, , ,select, ,114,Select columns from CSV
+xsv, __fish_is_nth_token 1, , ,slice, ,115,Slice records from CSV
+xsv, __fish_is_nth_token 1, , ,sort, ,116,Sort CSV data
+xsv, __fish_is_nth_token 1, , ,split, ,117,Split CSV data into many files
+xsv, __fish_is_nth_token 1, , ,stats, ,118,Compute basic statistics
+xsv, __fish_is_nth_token 1, , ,table, ,119,Align CSV data into columns
+xsv, __fish_is_nth_token 1, , , ,@k,120, 
+xsv, __fish_is_nth_token 1,h,help, , ,121,Display help for this xsv command

@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-restore, ,s,snapshots, , ,101,get also snapshots that are skipped by default
+btrfs-restore, ,x,xattr, , ,102,get extended attributes
+btrfs-restore, ,m,metadata, , ,103,"restore owner, mode and times for files and directories"
+btrfs-restore, ,S,symlinks, , ,104,restore symbolic links as well as normal files
+btrfs-restore, ,i,ignore-errors, , ,105,ignore errors during restoration and continue
+btrfs-restore, ,o,overwrite, , ,106,"overwrite directories/files in path, e. g.  for repeated runs"
+btrfs-restore, ,u,super, , ,107,"use given superblock mirror identified by <mirror>, it can be 0,1 or 2"
+btrfs-restore, ,r,root, , ,108,only restore files that are under a specified subvolume whose objectid is roo…
+btrfs-restore, ,l,list-roots, , ,109,"list subvolume tree roots, can be used as argument for -r"
+btrfs-restore, ,D,dry-run, , ,110,dry run (only list files that would be recovered)
+btrfs-restore, , ,path-regex, , ,111,restore only filenames matching a regular expression (\\X'tty: link https://ma…
+btrfs-restore, ,v,verbose, , ,112,(deprecated) alias for global -v option

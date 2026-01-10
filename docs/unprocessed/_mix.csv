@@ -1,0 +1,211 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mix, __fish_mix_needs_command, , ,app.start,@f,101,Starts all registered apps
+mix, __fish_mix_needs_command, , ,archive,@f,102,Lists all archives
+mix, __fish_mix_needs_command, , ,archive.build,@f,103,Archives this project into a .ez file
+mix, __fish_mix_needs_command, , ,archive.install, ,104,Installs an archive locally
+mix, __fish_mix_needs_command, , ,archive.uninstall, ,105,Uninstalls archives
+mix, __fish_mix_needs_command, , ,clean,@f,106,Deletes generated application files
+mix, __fish_mix_needs_command, , ,cmd,@f,107,Executes the given command
+mix, __fish_mix_needs_command, , ,compile,@f,108,Compiles source files
+mix, __fish_mix_needs_command, , ,compile.phoenix,@f,109,Compiles Phoenix source files that support code reloading
+mix, __fish_mix_needs_command, , ,deps,@f,110,Lists dependencies and their status
+mix, __fish_mix_needs_command, , ,deps.clean,@f,111,Deletes the given dependencies' files
+mix, __fish_mix_needs_command, , ,deps.compile,@f,112,Compiles dependencies
+mix, __fish_mix_needs_command, , ,deps.get,@f,113,Gets all out of date dependencies
+mix, __fish_mix_needs_command, , ,deps.unlock,@f,114,Unlocks the given dependencies
+mix, __fish_mix_needs_command, , ,deps.update,@f,115,Updates the given dependencies
+mix, __fish_mix_needs_command, , ,do,@f,116,Executes the tasks separated by comma
+mix, __fish_mix_needs_command, , ,escript.build,@f,117,Builds an escript for the project
+mix, __fish_mix_needs_command, , ,help,@f,118,Prints help information for tasks
+mix, __fish_mix_needs_command, , ,loadconfig, ,119,Loads and persists the given configuration
+mix, __fish_mix_needs_command, , ,local,@f,120,Lists local tasks
+mix, __fish_mix_needs_command, , ,local.hex,@f,121,Installs Hex locally
+mix, __fish_mix_needs_command, , ,local.public_keys,@f,122,Manages public keys
+mix, __fish_mix_needs_command, , ,local.rebar,@f,123,Installs rebar locally
+mix, __fish_mix_needs_command, , ,local.phx,@f,124,Updates the Phoenix project generator locally
+mix, __fish_mix_needs_command, , ,new, ,125,Creates a new Elixir project
+mix, __fish_mix_needs_command, , ,profile.fprof, ,126,Profiles the given file or expression with fprof
+mix, __fish_mix_needs_command, , ,phx,@f,127,Prints Phoenix tasks and their information.
+mix, __fish_mix_needs_command, , ,phx.digest,@f,128,Digests and compresses static files
+mix, __fish_mix_needs_command, , ,phx.digest.clean,@f,129,Removes old versions of static assets.
+mix, __fish_mix_needs_command, , ,phx.gen,@f,130,Lists all available Phoenix generators
+mix, __fish_mix_needs_command, , ,phx.gen.auth,@f,131,Generates authentication logic for a resource
+mix, __fish_mix_needs_command, , ,phx.gen.cert,@f,132,Generates a self-signed certificate for HTTPS testing
+mix, __fish_mix_needs_command, , ,phx.gen.channel,@f,133,Generates a Phoenix channel
+mix, __fish_mix_needs_command, , ,phx.gen.context,@f,134,Generates a context with functions around an Ecto schema
+mix, __fish_mix_needs_command, , ,phx.gen.embedded,@f,135,Generates an embedded Ecto schema file
+mix, __fish_mix_needs_command, , ,phx.gen.html,@f,136,Generates context and controller for an HTML resource
+mix, __fish_mix_needs_command, , ,phx.gen.json,@f,137,Generates context and controller for a JSON resource
+mix, __fish_mix_needs_command, , ,phx.gen.live,@f,138,"Generates LiveView, templates, and context for a resource"
+mix, __fish_mix_needs_command, , ,phx.gen.notifier,@f,139,Generates a notifier that delivers emails by default
+mix, __fish_mix_needs_command, , ,phx.gen.presence,@f,140,Generates a Presence tracker
+mix, __fish_mix_needs_command, , ,phx.gen.release,@f,141,Generates release files and optional Dockerfile for release-based deployments
+mix, __fish_mix_needs_command, , ,phx.gen.schema,@f,142,Generates an Ecto schema and migration file
+mix, __fish_mix_needs_command, , ,phx.gen.secret,@f,143,Generates a secret
+mix, __fish_mix_needs_command, , ,phx.gen.socket,@f,144,Generates a Phoenix socket handler
+mix, __fish_mix_needs_command, , ,phx.new,@f,145,Creates a new Phoenix application
+mix, __fish_mix_needs_command, , ,phx.new.ecto,@f,146,Creates a new Ecto project within an umbrella project
+mix, __fish_mix_needs_command, , ,phx.new.web,@f,147,Creates a new Phoenix web project within an umbrella project
+mix, __fish_mix_needs_command, , ,phx.routes,@f,148,Prints all routes
+mix, __fish_mix_needs_command, , ,phx.server,@f,149,Starts applications and their servers
+mix, __fish_mix_needs_command, , ,run,@f,150,Runs the given file or expression
+mix, __fish_mix_needs_command, , ,test,@f,151,Runs a project's tests
+mix, __fish_mix_using_command archive.build,o, , ,@f,152,Specify output file name
+mix, __fish_mix_using_command archive.build, ,no-compile, ,@f,153,Skip compilation
+mix, __fish_mix_using_command clean, ,all, ,@f,154,"Clean everything, including dependencies"
+mix, __fish_mix_using_command escript.build, ,force, ,@f,155,Forces compilation regardless of modification times
+mix, __fish_mix_using_command escript.build, ,no-compile, ,@f,156,Skips compilation to .beam files
+mix, __fish_mix_using_command new, ,sup, ,@f,157,Generate an OTP application skeleton with a supervision tree
+mix, __fish_mix_using_command new, ,umbrella, ,@f,158,Can be given to generate an umbrella project
+mix, __fish_mix_using_command new, ,app, ,@f,159,Can be given in order to name the OTP application
+mix, __fish_mix_using_command new, ,module, ,@f,160,Can be given in order to name the modules in the generated code skeleton
+mix, __fish_mix_using_command run,c,config, , ,161,Loads the given configuration file
+mix, __fish_mix_using_command run,e,eval, , ,162,Evaluates the given code
+mix, __fish_mix_using_command run,r,require, , ,163,Requires pattern before running the command
+mix, __fish_mix_using_command run,pr,parallel-require, , ,164,Requires pattern in parallel
+mix, __fish_mix_using_command run, ,no-compile, , ,165,Does not compile even if files require compilation
+mix, __fish_mix_using_command run, ,no-deps-check, , ,166,Does not check dependencies
+mix, __fish_mix_using_command run, ,no-halt, , ,167,Does not halt the system after running the command
+mix, __fish_mix_using_command run, ,no-start, , ,168,Does not start applications after compilation
+mix, __fish_mix_using_command test, ,trace, , ,169,"Run tests with detailed reporting; automatically sets `--max-cases` to 1"
+mix, __fish_mix_using_command test, ,max-cases, , ,170,Set the maximum number of cases running async
+mix, __fish_mix_using_command test, ,cover, , ,171,The directory to include coverage results
+mix, __fish_mix_using_command test, ,force, , ,172,Forces compilation regardless of modification times
+mix, __fish_mix_using_command test, ,no-compile, , ,173,"Do not compile, even if files require compilation"
+mix, __fish_mix_using_command test, ,no-start, , ,174,Do not start applications after compilation
+mix, __fish_mix_using_command test, ,no-color, , ,175,Disable color in the output
+mix, __fish_mix_using_command test, ,color, , ,176,Enable color in the output
+mix, __fish_mix_using_command test, ,include, , ,177,Include tests that match the filter
+mix, __fish_mix_using_command test, ,exclude, , ,178,Exclude tests that match the filter
+mix, __fish_mix_using_command test, ,only, , ,179,Run only tests that match the filter
+mix, __fish_mix_using_command test, ,seed, , ,180,Seeds the random number generator used to randomize test order
+mix, __fish_mix_using_command test, ,timeout, , ,181,Set the timeout for the tests
+mix, __fish_mix_using_command phx, ,version, ,@f,182,Prints the Phoenix version
+mix, __fish_mix_using_command phx.digest, ,no-vsn, ,@f,183,digest the stylesheet asset references without the query string `?vsn=d`
+mix, __fish_mix_using_command phx.digest.clean,o,output, , ,184,The path to your compiled assets directory. Defaults to priv/static
+mix, __fish_mix_using_command phx.digest.clean, ,age, ,@f,185,Maximum age (in seconds) for assets
+mix, __fish_mix_using_command phx.digest.clean, ,keep, ,@f,186,How many previous versions of assets to keep
+mix, __fish_mix_using_command phx.digest.clean, ,all, ,@f,187,Specifies that all compiled assets (including the manifest) will be removed
+mix, __fish_mix_using_command phx.gen.auth, ,web, ,@f,188,Customize the web module namespace
+mix, __fish_mix_using_command phx.gen.auth, ,binary-id, ,@f,189,Uses `binary_id` for schema's primary key and its references
+mix, __fish_mix_using_command phx.gen.auth, ,table, ,@f,190,Specify the the table name for the migration and schema
+mix, __fish_mix_using_command phx.gen.cert,o,output, ,@f,191,The path and base filename for the certificate and key
+mix, __fish_mix_using_command phx.gen.cert,n,name, ,@f,192,The Common Name value in certificate's subject
+mix, __fish_mix_using_command phx.gen.context, ,binary-id, ,@f,193,Uses `binary_id` for schema's primary key and its references
+mix, __fish_mix_using_command phx.gen.context, ,table, ,@f,194,Specify the the table name for the migration and schema
+mix, __fish_mix_using_command phx.gen.context, ,merge-with-existing-context, ,@f,195,Skips prompt and automatically merge the new schema access functions and tests
+mix, __fish_mix_using_command phx.gen.context, ,no-merge-with-existing-context, ,@f,196,Skips prompt and prevents changes to an existing context
+mix, __fish_mix_using_command phx.gen.html, ,context-app, ,@f,197,Specifies the context app
+mix, __fish_mix_using_command phx.gen.html, ,web, ,@f,198,Customize the web module namespace
+mix, __fish_mix_using_command phx.gen.html, ,no-context, ,@f,199,Omits context internal implementation
+mix, __fish_mix_using_command phx.gen.html, ,no-schema, ,@f,200,Omits schema internal implementation
+mix, __fish_mix_using_command phx.gen.html, ,binary-id, ,@f,201,Uses `binary_id` for schema's primary key and its references
+mix, __fish_mix_using_command phx.gen.html, ,table, ,@f,202,Specify the the table name for the migration and schema
+mix, __fish_mix_using_command phx.gen.json, ,context-app, ,@f,203,Specifies the context app
+mix, __fish_mix_using_command phx.gen.json, ,web, ,@f,204,Customize the web module namespace
+mix, __fish_mix_using_command phx.gen.json, ,no-context, ,@f,205,Omits context internal implementation
+mix, __fish_mix_using_command phx.gen.json, ,no-schema, ,@f,206,Omits schema internal implementation
+mix, __fish_mix_using_command phx.gen.json, ,binary-id, ,@f,207,Uses `binary_id` for schema's primary key and its references
+mix, __fish_mix_using_command phx.gen.json, ,table, ,@f,208,Specify the the table name for the migration and schema
+mix, __fish_mix_using_command phx.gen.live, ,context-app, ,@f,209,Specifies the context app
+mix, __fish_mix_using_command phx.gen.live, ,web, ,@f,210,Customize the web module namespace
+mix, __fish_mix_using_command phx.gen.live, ,no-context, ,@f,211,Omits context internal implementation
+mix, __fish_mix_using_command phx.gen.live, ,no-schema, ,@f,212,Omits schema internal implementation
+mix, __fish_mix_using_command phx.gen.live, ,binary-id, ,@f,213,Uses `binary_id` for schema's primary key and its references
+mix, __fish_mix_using_command phx.gen.live, ,table, ,@f,214,Specify the the table name for the migration and schema
+mix, __fish_mix_using_command phx.gen.notifier, ,context-app, ,@f,215,Specifies the context app
+mix, __fish_mix_using_command phx.gen.release, ,docker, ,@f,216,Generates a Docker and .dockerignore file
+mix, __fish_mix_using_command phx.gen.release, ,no-ecto, ,@f,217,Skip migration-related file generation
+mix, __fish_mix_using_command phx.gen.release, ,ecto, ,@f,218,Force migration-related file generation
+mix, __fish_mix_using_command phx.gen.schema, ,no-migration, ,@f,219,Omits migration file
+mix, __fish_mix_using_command phx.gen.schema, ,context-app, ,@f,220,Specifies the context app
+mix, __fish_mix_using_command phx.gen.schema, ,table, ,@f,221,Specify the the table name for the migration and schema
+mix, __fish_mix_using_command phx.gen.schema, ,binary-id, ,@f,222,Uses `binary_id` for schema's primary key and its references
+mix, __fish_mix_using_command phx.gen.schema, ,no-binary-id, ,@f,223,Use normal ids despite the default configuration
+mix, __fish_mix_using_command phx.gen.schema, ,prefix, ,@f,224,Specifies a prefix
+mix, __fish_mix_using_command phx.gen.schema, ,migration, ,@f,225,Force generation of the migration
+mix, __fish_mix_using_command phx.new, ,umbrella, ,@f,226,"Generate an umbrella project (one app for your domain, a second app for web interface)"
+mix, __fish_mix_using_command phx.new, ,app, ,@f,227,The name of the OTP application
+mix, __fish_mix_using_command phx.new, ,module, ,@f,228,The name of the base module in the generated skeleton
+mix, __fish_mix_using_command phx.new, ,database,postgres mysql mssql sqlite3,@f @r,229,Specify the database adapter for Ecto
+mix, __fish_mix_using_command phx.new, ,no-assets, ,@f,230,Do not generate the assets folder
+mix, __fish_mix_using_command phx.new, ,no-ecto, ,@f,231,Do not generate Ecto files
+mix, __fish_mix_using_command phx.new, ,no-html, ,@f,232,Do not generate HTML views
+mix, __fish_mix_using_command phx.new, ,no-gettext, ,@f,233,Do not generate gettext files
+mix, __fish_mix_using_command phx.new, ,no-dashboard, ,@f,234,Do not include Phoenix.LiveDashboard
+mix, __fish_mix_using_command phx.new, ,no-live, ,@f,235,Comment out LiveView socket setup in assets/js/app.js
+mix, __fish_mix_using_command phx.new, ,no-mailer, ,@f,236,Do not generate Swoosh mailer files
+mix, __fish_mix_using_command phx.new, ,no-esbuild, ,@f,237,Do not include esbuild dependencies and assets
+mix, __fish_mix_using_command phx.new, ,no-tailwind, ,@f,238,Do not include tailwind dependencies and assets
+mix, __fish_mix_using_command phx.new, ,binary-id, ,@f,239,Use binary_id as primary key type in Ecto schemas
+mix, __fish_mix_using_command phx.new, ,verbose, ,@f,240,Use verbose output
+mix, __fish_mix_using_command phx.new,v,version, ,@f,241,Prints the Phoenix installer version
+mix, __fish_mix_using_command phx.new, ,no-context, ,@f,242,Omits context internal implementation
+mix, __fish_mix_using_command phx.new, ,no-install, ,@f,243,Disable prompt to install dependencies
+mix, __fish_mix_using_command phx.new, ,install, ,@f,244,Force prompt to install dependencies
+mix, __fish_mix_using_command phx.new.ecto, ,app, ,@f,245,The name of the OTP application
+mix, __fish_mix_using_command phx.new.ecto, ,module, ,@f,246,The name of the base module in the generated skeleton
+mix, __fish_mix_using_command phx.new.ecto, ,database, ,@f,247,Specify the database adapter for Ecto
+mix, __fish_mix_using_command phx.new.ecto, ,binary-id, ,@f,248,Use binary_id as primary key type in Ecto schemas
+mix, __fish_mix_using_command phx.new.web, ,app, ,@f,249,The name of the OTP application
+mix, __fish_mix_using_command phx.new.web, ,module, ,@f,250,The name of the base module in the generated skeleton
+mix, __fish_mix_using_command phx.routes, ,info, ,@f,251,Locate the controller function definition called by the given url
+mix, __fish_mix_using_command phx.server, ,open, ,@f,252,Open browser window for each started endpoint
+mix, __fish_mix_using_command phx.server,c,config, ,@f,253,Loads the given configuration file
+mix, __fish_mix_using_command phx.server,e,eval, ,@f,254,Evaluates the given code
+mix, __fish_mix_using_command phx.server,r,require, ,@f,255,Requires pattern before running the command
+mix, __fish_mix_using_command phx.server,pr,parallel-require, ,@f,256,Requires pattern in parallel
+mix, __fish_mix_using_command phx.server, ,no-compile, ,@f,257,Does not compile even if files require compilation
+mix, __fish_mix_using_command phx.server, ,no-deps-check, ,@f,258,Does not check dependencies
+mix, __fish_mix_using_command phx.server, ,no-halt, ,@f,259,Does not halt the system after running the command
+mix, __fish_mix_using_command phx.server, ,no-start, ,@f,260,Does not start applications after compilation
+mix, __fish_mix_using_command help, , ,app.start,@f,261,Starts all registered apps
+mix, __fish_mix_using_command help, , ,archive,@f,262,Lists all archives
+mix, __fish_mix_using_command help, , ,archive.build,@f,263,Archives this project into a .ez file
+mix, __fish_mix_using_command help, , ,archive.install,@f,264,Installs an archive locally
+mix, __fish_mix_using_command help, , ,archive.uninstall,@f,265,Uninstalls archives
+mix, __fish_mix_using_command help, , ,clean,@f,266,Deletes generated application files
+mix, __fish_mix_using_command help, , ,cmd,@f,267,Executes the given command
+mix, __fish_mix_using_command help, , ,compile,@f,268,Compiles source files
+mix, __fish_mix_using_command help, , ,compile.phoenix,@f,269,Compiles Phoenix source files that support code reloading
+mix, __fish_mix_using_command help, , ,deps,@f,270,Lists dependencies and their status
+mix, __fish_mix_using_command help, , ,deps.clean,@f,271,Deletes the given dependencies' files
+mix, __fish_mix_using_command help, , ,deps.compile,@f,272,Compiles dependencies
+mix, __fish_mix_using_command help, , ,deps.get,@f,273,Gets all out of date dependencies
+mix, __fish_mix_using_command help, , ,deps.unlock,@f,274,Unlocks the given dependencies
+mix, __fish_mix_using_command help, , ,deps.update,@f,275,Updates the given dependencies
+mix, __fish_mix_using_command help, , ,do,@f,276,Executes the tasks separated by comma
+mix, __fish_mix_using_command help, , ,escript.build,@f,277,Builds an escript for the project
+mix, __fish_mix_using_command help, , ,help,@f,278,Prints help information for tasks
+mix, __fish_mix_using_command help, , ,loadconfig,@f,279,Loads and persists the given configuration
+mix, __fish_mix_using_command help, , ,local,@f,280,Lists local tasks
+mix, __fish_mix_using_command help, , ,local.hex,@f,281,Installs Hex locally
+mix, __fish_mix_using_command help, , ,local.public_keys,@f,282,Manages public keys
+mix, __fish_mix_using_command help, , ,local.rebar,@f,283,Installs rebar locally
+mix, __fish_mix_using_command help, , ,new,@f,284,Creates a new Elixir project
+mix, __fish_mix_using_command help, , ,profile.fprof,@f,285,Profiles the given file or expression with fprof
+mix, __fish_mix_using_command help, , ,phx,@f,286,Prints Phoenix tasks and their information.
+mix, __fish_mix_using_command help, , ,phx.digest,@f,287,Digests and compresses static files
+mix, __fish_mix_using_command help, , ,phx.digest.clean,@f,288,Removes old versions of static assets.
+mix, __fish_mix_using_command help, , ,phx.gen,@f,289,Lists all available Phoenix generators
+mix, __fish_mix_using_command help, , ,phx.gen.auth,@f,290,Generates authentication logic for a resource
+mix, __fish_mix_using_command help, , ,phx.gen.cert,@f,291,Generates a self-signed certificate for HTTPS testing
+mix, __fish_mix_using_command help, , ,phx.gen.channel,@f,292,Generates a Phoenix channel
+mix, __fish_mix_using_command help, , ,phx.gen.context,@f,293,Generates a context with functions around an Ecto schema
+mix, __fish_mix_using_command help, , ,phx.gen.embedded,@f,294,Generates an embedded Ecto schema file
+mix, __fish_mix_using_command help, , ,phx.gen.html,@f,295,Generates context and controller for an HTML resource
+mix, __fish_mix_using_command help, , ,phx.gen.json,@f,296,Generates context and controller for a JSON resource
+mix, __fish_mix_using_command help, , ,phx.gen.live,@f,297,"Generates LiveView, templates, and context for a resource"
+mix, __fish_mix_using_command help, , ,phx.gen.notifier,@f,298,Generates a notifier that delivers emails by default
+mix, __fish_mix_using_command help, , ,phx.gen.presence,@f,299,Generates a Presence tracker
+mix, __fish_mix_using_command help, , ,phx.gen.release,@f,300,Generates release files and optional Dockerfile for release-based deployments
+mix, __fish_mix_using_command help, , ,phx.gen.schema,@f,301,Generates an Ecto schema and migration file
+mix, __fish_mix_using_command help, , ,phx.gen.secret,@f,302,Generates a secret
+mix, __fish_mix_using_command help, , ,phx.gen.socket,@f,303,Generates a Phoenix socket handler
+mix, __fish_mix_using_command help, , ,phx.new,@f,304,Creates a new Phoenix application
+mix, __fish_mix_using_command help, , ,phx.new.ecto,@f,305,Creates a new Ecto project within an umbrella project
+mix, __fish_mix_using_command help, , ,phx.new.web,@f,306,Creates a new Phoenix web project within an umbrella project
+mix, __fish_mix_using_command help, , ,phx.routes,@f,307,Prints all routes
+mix, __fish_mix_using_command help, , ,phx.server,@f,308,Starts applications and their servers
+mix, __fish_mix_using_command help, , ,run,@f,309,Runs the given file or expression
+mix, __fish_mix_using_command help, , ,test,@f,310,Runs a project's tests

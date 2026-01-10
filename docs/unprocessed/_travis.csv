@@ -1,0 +1,43 @@
+cmd,conds,short,long,params,dirs,pri,desc
+travis, __fish_travis_needs_command, , ,accounts,@f,101,Displays accounts and their subscription status
+travis, __fish_travis_needs_command, , ,branches,@f,102,Displays the most recent build for each branch
+travis, __fish_travis_needs_command, , ,cache,@f,103,Lists or deletes repository caches
+travis, __fish_travis_needs_command, , ,cancel,@f,104,Cancels a job or build
+travis, __fish_travis_needs_command, , ,console,@f,105,Interactive shell
+travis, __fish_travis_needs_command, , ,disable,@f,106,Disables a project
+travis, __fish_travis_needs_command, , ,enable,@f,107,Enables a project
+travis, __fish_travis_needs_command, , ,encrypt,@f,108,Encrypts values for the .travis.yml
+travis, __fish_travis_needs_command, , ,encrypt-file,@f,109,Encrypts a file and adds decryption steps to .travis.yml
+travis, __fish_travis_needs_command, , ,endpoint,@f,110,Displays or changes the API endpoint
+travis, __fish_travis_needs_command, , ,env,@f,111,Show or modify build environment variables
+travis, __fish_travis_needs_command, , ,help,@f,112,Helps you out when in dire need of information
+travis, __fish_travis_needs_command, , ,history,@f,113,Displays a projects build history
+travis, __fish_travis_needs_command, , ,init,@f,114,Generates a .travis.yml and enables the project
+travis, __fish_travis_needs_command, , ,lint,@f,115,Display warnings for a .travis.yml
+travis, __fish_travis_needs_command, , ,login,@f,116,Authenticates against the API and stores the token
+travis, __fish_travis_needs_command, , ,logout,@f,117,Deletes the stored API token
+travis, __fish_travis_needs_command, , ,logs,@f,118,Streams test logs
+travis, __fish_travis_needs_command, , ,monitor,@f,119,Live monitor for what's going on
+travis, __fish_travis_needs_command, , ,open,@f,120,Opens a build or job in the browser
+travis, __fish_travis_needs_command, , ,pubkey,@f,121,Prints out a repository's public key
+travis, __fish_travis_needs_command, , ,raw,@f,122,Makes an (authenticated) API call and prints out the result
+travis, __fish_travis_needs_command, , ,report,@f,123,Generates a report useful for filing issues
+travis, __fish_travis_needs_command, , ,repos,@f,124,Lists repositories the user has certain permissions on
+travis, __fish_travis_needs_command, , ,requests,@f,125,Lists recent requests
+travis, __fish_travis_needs_command, , ,restart,@f,126,Restarts a build or job
+travis, __fish_travis_needs_command, , ,settings,@f,127,Access repository settings
+travis, __fish_travis_needs_command, , ,setup,@f,128,Sets up an addon or deploy target
+travis, __fish_travis_needs_command, , ,show,@f,129,Displays a build or job
+travis, __fish_travis_needs_command, , ,sshkey,@f,130,"Checks, updates or deletes an SSH key"
+travis, __fish_travis_needs_command, , ,status,@f,131,Checks status of the latest build
+travis, __fish_travis_needs_command, , ,sync,@f,132,Triggers a new sync with GitHub
+travis, __fish_travis_needs_command, , ,token,@f,133,Outputs the secret API token
+travis, __fish_travis_needs_command, , ,version,@f,134,Outputs the client version
+travis, __fish_travis_needs_command, , ,whatsup,@f,135,Lists most recent builds
+travis, __fish_travis_needs_command, , ,whoami,@f,136,Outputs the current user
+travis, __fish_travis_needs_command,i,interactive, ,@f,138,Be interactive and colorful
+travis, __fish_travis_needs_command, ,no-interactive, ,@f,139,Don't be interactive and colorful
+travis, __fish_travis_needs_command,E,explode, ,@f,140,Don't rescue exceptions
+travis, __fish_travis_needs_command, ,no-explode, ,@f,141,Rescue exceptions
+travis, __fish_travis_needs_command, ,skip-version-check, ,@f,142,Don't check if travis client is up to date
+travis, __fish_travis_needs_command, ,skip-completion-check, ,@f,143,Don't check if auto-completion is set up

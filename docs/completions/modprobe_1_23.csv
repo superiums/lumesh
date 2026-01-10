@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+modprobe, ,b,use-blacklist, , ,101,This option causes modprobe to apply the blacklist commands in the
+modprobe, ,C,config, , ,102,This option overrides the default configuration directory.  See
+modprobe, ,c,showconfig, , ,103,Dump out the effective configuration from the config directory and exit
+modprobe, , ,dump-modversions, , ,104,Print out a list of module versioning information required by a module
+modprobe, ,d,dirname, , ,105,"Root directory for modules, / by default"
+modprobe, , ,first-time, , ,106,"Normally, modprobe will succeed (and do nothing) if told to insert a"
+modprobe, , ,force-vermagic, , ,107,"Every module contains a small string containing important information,"
+modprobe, , ,force-modversion, , ,108,"When modules are compiled with CONFIG_MODVERSIONS set, a section"
+modprobe, ,f,force, , ,109,Try to strip any versioning information from the module which might
+modprobe, ,i,ignore-remove, , ,110,This option causes modprobe to ignore install and remove commands
+modprobe, ,n,show, , ,111,This option does everything but actually insert or delete the modules
+modprobe, ,q,quiet, , ,112,"With this flag, modprobe won't print an error message if you try to"
+modprobe, ,R,resolve-alias, , ,113,Print all module names matching an alias.  This can be useful for
+modprobe, ,r,remove, , ,114,This option causes modprobe to remove rather than insert a module.  If
+modprobe, ,w,wait, , ,115,This option causes modprobe -r to continue trying to remove a module
+modprobe, ,S,set-version, , ,116,"Set the kernel version, rather than using uname(2) to decide on the"
+modprobe, , ,show-depends, , ,117,"List the dependencies of a module (or alias), including the module"
+modprobe, ,s,syslog, , ,118,This option causes any error messages to go through the syslog mechanism
+modprobe, ,V,version, , ,119,Show version of program and exit
+modprobe, ,v,verbose, , ,120,Print messages about what the program is doing.  Usually modprobe only

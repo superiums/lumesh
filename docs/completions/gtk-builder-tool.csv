@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gtk-builder-tool, , ,replace, , ,101, 
+gtk-builder-tool, , ,id, , ,102, 
+gtk-builder-tool, , ,css, , ,103, 

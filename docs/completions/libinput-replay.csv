@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-replay, , ,help, , ,101,Print help
+libinput-replay, , ,once, , ,102,"Only replay the recording once, then exit"
+libinput-replay, , ,replay-after, , ,103,Replay the recording after waiting for s seconds

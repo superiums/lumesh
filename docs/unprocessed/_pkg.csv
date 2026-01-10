@@ -1,0 +1,84 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pkg, __fish_pkg_subcommand,v,version, , ,101,Display version and exit
+pkg, __fish_pkg_subcommand,d,debug, , ,102,Show debug information
+pkg, __fish_pkg_subcommand,l,list, , ,103,List subcommands
+pkg, __fish_pkg_subcommand,o,option, ,@f @r,104,Set configuration option
+pkg, __fish_pkg_subcommand,j,jail, ,@f @r,105,Run package manager within jail
+pkg, __fish_pkg_subcommand,c,chroot, ,@r,106,Run package manager within chroot
+pkg, __fish_pkg_subcommand,r,rootdir, ,@r,107,Install packages in specified root
+pkg, __fish_pkg_subcommand,C,config, ,@r,108,Use configuration file
+pkg, __fish_pkg_subcommand,R,repo-conf-dir, ,@r,109,Set repository configuration directory
+pkg, __fish_pkg_subcommand, , ,add, ,110,Install package file
+pkg, __fish_pkg_subcommand, , ,alias, ,111,List the command line aliases
+pkg, __fish_pkg_subcommand, , ,annotate, ,112,Modify annotations on packages
+pkg, __fish_pkg_subcommand, , ,audit, ,113,Audit installed packages
+pkg, __fish_pkg_subcommand, , ,autoremove, ,114,Delete unneeded packages
+pkg, __fish_pkg_subcommand, , ,backup, ,115,Dump package database
+pkg, __fish_pkg_subcommand, , ,bootstrap, ,116,Install pkg(8) from remote repository
+pkg, __fish_pkg_subcommand, , ,check, ,117,Check installed packages
+pkg, __fish_pkg_subcommand, , ,clean, ,118,Clean local cache
+pkg, __fish_pkg_subcommand, , ,convert, ,119,Convert package from pkg_add format
+pkg, __fish_pkg_subcommand, , ,create, ,120,Create a package
+pkg, __fish_pkg_subcommand, , ,delete, ,121,Remove a package
+pkg, __fish_pkg_subcommand, , ,fetch, ,122,Download a remote package
+pkg, __fish_pkg_subcommand, , ,help, ,123,Display help for command
+pkg, __fish_pkg_subcommand, , ,info, ,124,List installed packages
+pkg, __fish_pkg_subcommand, , ,install, ,125,Install packages
+pkg, __fish_pkg_subcommand, , ,list, ,126,List files belonging to package(s)
+pkg, __fish_pkg_subcommand, , ,lock, ,127,Prevent package modification
+pkg, __fish_pkg_subcommand, , ,plugins, ,128,List package manager plugins
+pkg, __fish_pkg_subcommand, , ,query, ,129,Query installed packages
+pkg, __fish_pkg_subcommand, , ,register, ,130,Register a package in a database
+pkg, __fish_pkg_subcommand, , ,remove, ,131,Remove a package
+pkg, __fish_pkg_subcommand, , ,repo, ,132,Create package repository
+pkg, __fish_pkg_subcommand, , ,rquery, ,133,Query information for remote repositories
+pkg, __fish_pkg_subcommand, , ,search, ,134,Find packages
+pkg, __fish_pkg_subcommand, , ,set, ,135,Modify package information in database
+pkg, __fish_pkg_subcommand, , ,shell, ,136,Open a SQLite shell
+pkg, __fish_pkg_subcommand, , ,shlib, ,137,Display packages linking to shared library
+pkg, __fish_pkg_subcommand, , ,show, ,138,Show information about package(s)
+pkg, __fish_pkg_subcommand, , ,stats, ,139,Display package statistics
+pkg, __fish_pkg_subcommand, , ,unlock, ,140,Stop preventing package modification
+pkg, __fish_pkg_subcommand, , ,update, ,141,Update remote repositories
+pkg, __fish_pkg_subcommand, , ,updating, ,142,Display UPDATING entries
+pkg, __fish_pkg_subcommand, , ,upgrade, ,143,Upgrade packages
+pkg, __fish_pkg_subcommand, , ,version, ,144,Show package versions
+pkg, __fish_pkg_subcommand, , ,which, ,145,Check which package provides a file
+pkg, __fish_pkg_is add install,A,automatic, , ,146,Mark packages as automatic
+pkg, __fish_pkg_is add bootstrap install,f,force, , ,147,Force installation even when installed
+pkg, __fish_pkg_is add,I,no-scripts, , ,148,Disable installation scripts
+pkg, __fish_pkg_is add,M,accept-missing, , ,149,Force installation with missing dependencies
+pkg, __fish_pkg_is add alias autoremove clean delete remove install update,q,quiet, , ,150,Force quiet output
+pkg, __fish_pkg_is alias,l,list, , ,151,Print all aliases without their pkg(8) arguments
+pkg, __fish_pkg_is autoremove clean delete remove install upgrade,n,dry-run, , ,152,Do not make changes
+pkg, __fish_pkg_is autoremove clean delete remove install,y,yes, , ,153,Assume yes when asked for confirmation
+pkg," __fish_pkg_is check; and $has_check_opt", , ,-B -d -s -r, ,154, 
+pkg," __fish_pkg_is check; and $has_check_opt",B,shlibs, , ,155,Regenerate library dependency metadata
+pkg," __fish_pkg_is check; and $has_check_opt",d,dependencies, , ,156,Check for and install missing dependencies
+pkg," __fish_pkg_is check; and $has_check_opt",r,recompute, , ,157,Recalculate and set the checksums of installed packages
+pkg," __fish_pkg_is check; and $has_check_opt",s,checksums, , ,158,Detect installed packages with invalid checksums
+pkg," __fish_pkg_is check; and $has_check_opt",n,dry-run, , ,159,Do not make changes
+pkg," __fish_pkg_is check; and $has_check_opt",q,quiet, , ,160,Force quiet output
+pkg," __fish_pkg_is check; and $has_check_opt",v,verbose, , ,161,Provide verbose output
+pkg," __fish_pkg_is check; and $has_check_opt",y,yes, , ,162,Assume yes when asked for confirmation
+pkg," __fish_pkg_is check; and $has_check_opt; and $has_all_opt",a,all, , ,163,Process all packages
+pkg," __fish_pkg_is check; and $has_check_opt; and $has_all_opt",C,case-sensitive, , ,164,Case sensitive packages
+pkg," __fish_pkg_is check; and $has_check_opt; and $has_all_opt",g,glob, , ,165,Treat the package name as shell glob
+pkg," __fish_pkg_is check; and $has_check_opt; and $has_all_opt",i,case-insensitive, , ,166,Case insensitive packages
+pkg," __fish_pkg_is check; and $has_check_opt; and $has_all_opt",x,regex, , ,167,Treat the package name as regular expression
+pkg, __fish_pkg_is clean,a,all, , ,168,Delete all cached packages
+pkg, __fish_pkg_is delete remove,a,all, , ,169,Delete all installed packages
+pkg, __fish_pkg_is delete remove install upgrade,C,case-sensitive, , ,170,Case sensitive packages
+pkg, __fish_pkg_is delete remove,D,no-deinstall-script, , ,171,Disable deinstallation scripts
+pkg, __fish_pkg_is delete remove,f,force, , ,172,Force package removal
+pkg, __fish_pkg_is delete remove install upgrade,g,glob, , ,173,Treat the package name as shell glob
+pkg, __fish_pkg_is delete remove install upgrade,i,case-insensitive, , ,174,Case insensitive packages
+pkg, __fish_pkg_is delete remove,R,recursive, , ,175,Remove recursively
+pkg, __fish_pkg_is delete remove install upgrade,x,regex, , ,176,Treat the package name as regular expression
+pkg, __fish_pkg_is install,I,no-install-scripts, , ,177,Disable installation scripts
+pkg, __fish_pkg_is install,M,ignore-missing, , ,178,Force installation with missing dependencies
+pkg, __fish_pkg_is install upgrade,F,fetch-only, , ,179,Do not perform actual installation
+pkg, __fish_pkg_is install,R,from-root, , ,180,Reinstall packages required by this package
+pkg, __fish_pkg_is install update,r,repository, ,@f @r,181,Use only a given repository
+pkg, __fish_pkg_is install upgrade,U,no-repo-update, , ,182,Do not automatically update database
+pkg, __fish_pkg_is add update,f,force, , ,183,Force a full download of a repository

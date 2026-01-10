@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+smerge, ,n,new-window, , ,101,Open a new window
+smerge, , ,launch-or-new-window, , ,102,Open new window only if app is running
+smerge, ,b,background, , ,103,Don't activate the application
+smerge, , ,safe-mode, , ,104,Launch in a sandboxed environment
+smerge, ,h,help, , ,105,Show help (this message) and exit
+smerge, ,v,version, , ,106,Show version and exit
+smerge, , , ,search,@f @r,107,Search for commits in the current repository
+smerge, , , ,blame,@r,108,Blame the given file in the current repo
+smerge, , , ,log,@r,109,Show the file history in the current repo
+smerge, , , ,mergetool,@F,110,Open the merge tool for the given files
+smerge, mergetool, ,no-wait, , ,111,Don't wait for the application to close
+smerge, mergetool,o, , ,@F,112,Merged output file

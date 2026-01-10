@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-basename, ,s,suffix, , ,101,"remove a trailing SUFFIX; implies -a"
+uu-basename, ,a,multiple, , ,102,support multiple arguments and treat each as a NAME
+uu-basename, ,z,zero, , ,103,"end each output line with NUL, not newline"
+uu-basename, ,h,help, , ,104,Print help
+uu-basename, ,V,version, , ,105,Print version

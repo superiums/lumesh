@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cygport, __fish_is_nth_token 1, , ,*.cygport,@f,104,Cygport file
+cygport, __fish_is_nth_token 1, , ,downloadall fetchall wgetall getall,@f,105,Download all sources
+cygport, __fish_is_nth_token 1, , ,download fetch wget get,@f,106,Download missing sources
+cygport, __fish_is_nth_token 1, , ,prep unpack,@f,107,Prepare source directory
+cygport, __fish_is_nth_token 1, , ,compile build make,@f,108,Build software
+cygport, __fish_is_nth_token 1, , ,check test,@f,109,Run test suite
+cygport, __fish_is_nth_token 1, , ,inst install,@f,110,Install into DESTDIR and run post-installation steps
+cygport, __fish_is_nth_token 1, , ,postinst,@f,111,Run post-installation steps
+cygport, __fish_is_nth_token 1, , ,list,@f,112,List package files
+cygport, __fish_is_nth_token 1, , ,listdebug listdbg,@f,113,List debug package files
+cygport, __fish_is_nth_token 1, , ,dep,@f,114,Show dependencies
+cygport, __fish_is_nth_token 1, , ,info,@f,115,Show packaging info
+cygport, __fish_is_nth_token 1, , ,homepage web www,@f,116,Show project homepage URL
+cygport, __fish_is_nth_token 1, , ,package-test pkg-test,@f,117,"Create packages, marked as test"
+cygport, __fish_is_nth_token 1, , ,package pkg,@f,118,Create packages
+cygport, __fish_is_nth_token 1, , ,diff mkdiff mkpatch,@f,119,Create source patches
+cygport, __fish_is_nth_token 1, , ,upload up,@f,120,Upload finished packages
+cygport, __fish_is_nth_token 1, , ,stage,@f,121,Upload packages without marking !ready
+cygport, __fish_is_nth_token 1, , ,announce,@f,122,Send announcement email
+cygport, __fish_is_nth_token 1, , ,clean finish,@f,123,Delete working directory
+cygport, __fish_is_nth_token 1, , ,almostall all,@f,124,Same as prep build inst pkg
+cygport, __fish_is_nth_token 1, , ,help,@f,125,Show help
+cygport, __fish_is_nth_token 1, , ,version,@f,126,Show version

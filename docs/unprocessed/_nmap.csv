@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nmap, __fish_contains_opt -s f, ,mtu, , ,150,use specified mtu

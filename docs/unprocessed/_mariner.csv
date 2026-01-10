@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mariner, __fish_use_subcommand, , ,complete,@f,101,Print bash completion command
+mariner, __fish_use_subcommand, , ,config,@f,102,Show or update configuration
+mariner, __fish_use_subcommand, , ,details,@f,103,Show details about torrent with given ID
+mariner, __fish_use_subcommand, , ,download,@f,104,Download torrent with given ID
+mariner, __fish_use_subcommand, , ,help,@f,105,Print detailed help for another command
+mariner, __fish_use_subcommand, , ,magnet,@f,106,Copy magnet link with given ID to clipboard
+mariner, __fish_use_subcommand, , ,open,@f,107,Open torrent in the default torrent application
+mariner, __fish_use_subcommand, , ,search,@f,108,Search for torrents
+mariner, __fish_use_subcommand, ,version, ,@f,109,Show program's version number and exit
+mariner, __fish_use_subcommand,v,verbose, ,@f,110,Increase verbosity of output. Can be repeated
+mariner, __fish_use_subcommand,q,quiet, ,@f,111,Suppress output except warnings and errors
+mariner, __fish_use_subcommand,h,help, ,@f,112,Show help message and exit
+mariner, __fish_use_subcommand, ,debug, ,@f,113,Show tracebacks on errors
+mariner, __fish_use_subcommand, ,log-file, ,@r,114,Specify a file to log output. Default ~/.local/share/mariner/mariner.log
+mariner, __fish_use_subcommand, ,config-file, ,@r,115,Path to config file. Default ~/.config/mariner/config.yaml

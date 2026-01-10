@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+speexenc, ,n,narrowband, , ,101,Narrowband (8 kHz) input file
+speexenc, ,w,wideband, , ,102,Wideband (16 kHz) input file 
+speexenc, , ,quality, , ,103,"Encoding quality (0-10), default 8"
+speexenc, , ,bitrate, , ,104,Encoding bit-rate (use bit-rate n or lower)
+speexenc, , ,vbr, , ,105,Enable variable bit-rate (VBR)
+speexenc, , ,abr, , ,106,Enable average bit-rate (ABR) at rate bps
+speexenc, , ,vad, , ,107,Enable voice activity detection (VAD)
+speexenc, , ,dtx, , ,108,Enable file-based discontinuous transmission (DTX)
+speexenc, , ,comp, , ,109,"Set encoding complexity (0-10), default 3"
+speexenc, , ,nframes, , ,110,"Number of frames per Ogg packet (1-10), default 1"
+speexenc, , ,comment, , ,111,Add the given string as an extra comment.  This may be used multiple times
+speexenc, , ,author, , ,112,Author of this track
+speexenc, , ,title, , ,113,Title for this track
+speexenc, ,h,help, , ,114,This help
+speexenc, ,v,version, , ,115,Version information
+speexenc, , ,rate, , ,116,Sampling rate for raw input
+speexenc, , ,stereo, , ,117,Consider raw input as stereo
+speexenc, , ,le, , ,118,Raw input is little-endian
+speexenc, , ,be, , ,119,Raw input is big-endian
+speexenc, , ,8bit, , ,120,Raw input is 8-bit unsigned
+speexenc, ,u,ultra-wideband, , ,121, 
+speexenc, , ,16bit, , ,122,Raw input is 16-bit signed

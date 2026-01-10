@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pdftotext, , , ,unix dos mac, ,101,Sets the end-of-line convention

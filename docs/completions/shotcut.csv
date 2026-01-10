@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+shotcut, ,h,help, , ,101,Displays this help
+shotcut, ,v,version, , ,102,Displays version information
+shotcut, , ,fullscreen, , ,103,Fill the screen with the Shotcut window
+shotcut, , ,noupgrade, , ,104,Hide upgrade prompt and menu item
+shotcut, , ,glaxnimate, , ,105,Run Glaxnimate instead of Shotcut
+shotcut, , ,gpu, , ,106,Use GPU processing
+shotcut, , ,clear-recent, , ,107,Clear Recent on Exit
+shotcut, , ,appdata, , ,108,The directory for app configuration and data
+shotcut, , ,QT_SCALE_FACTOR, , ,109,The scale factor for a high-DPI screen
+shotcut, , ,QT_SCREEN_SCALE_FACTORS, , ,110,A semicolon-separated list of scale factors for each screen
+shotcut, , ,QT_SCALE_FACTOR_ROUNDING_POLICY, , ,111,"How to handle a fractional display scale: Round, Ceil, Floor, RoundPreferFloo…"
+shotcut, , ,SDL_AUDIODRIVER, , ,112,"Which operating system audio API to use: alsa, arts, dsp, esd, jack, pipewire…"

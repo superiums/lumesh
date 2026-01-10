@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dirmngr-client, , ,version, , ,101,Print the program version and licensing information
+dirmngr-client, ,h,help, , ,102,Print a usage message summarizing the most useful command-line options
+dirmngr-client, ,q,quiet, , ,103,Make the output extra brief by suppressing any informational messages
+dirmngr-client, , ,verbose, , ,104,Outputs additional information while running
+dirmngr-client, , ,pem, , ,105,Assume that the given certificate is in PEM (armored) format
+dirmngr-client, , ,ocsp, , ,106,Do the check using the OCSP protocol and ignore any CRLs
+dirmngr-client, , ,force-default-responder, , ,107,"When checking using the OCSP protocol, force the use of the default OCSP resp…"
+dirmngr-client, , ,ping, , ,108,Check whether the dirmngr daemon is up and running
+dirmngr-client, , ,cache-cert, , ,109,Put the given certificate into the cache of a running dirmngr
+dirmngr-client, , ,validate, , ,110,Validate the given certificate using dirmngr's internal validation code
+dirmngr-client, , ,load-crl, , ,111,This command expects a list of filenames with DER encoded CRL files
+dirmngr-client, , ,lookup, , ,112,Take the remaining arguments and run a lookup command on each of them
+dirmngr-client, , ,url, , ,113,TQ   -u Modify the lookup and load-crl commands to take an URL
+dirmngr-client, , ,local, , ,114,TQ   -l Let the lookup command only search the local cache
+dirmngr-client, , ,squid-mode, , ,115,Run dirmngr-client in a mode suitable as a helper program for Squid's externa…

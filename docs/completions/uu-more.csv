@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-more, ,n,lines, , ,101,The number of lines per screen full
+uu-more, , ,number, , ,102,Same as --lines option argument
+uu-more, ,F,from-line, , ,103,Start displaying each file at line number
+uu-more, ,P,pattern, , ,104,The string to be searched in each file before starting to display it
+uu-more, ,d,silent, , ,105,Display help instead of ringing bell when an illegal key is pressed
+uu-more, ,l,logical, , ,106,Do not pause after any line containing a ^L (form feed)
+uu-more, ,e,exit-on-eof, , ,107,Exit on End-Of-File
+uu-more, ,f,no-pause, , ,108,"Count logical lines, rather than screen lines"
+uu-more, ,p,print-over, , ,109,"Do not scroll, clear screen and display text"
+uu-more, ,c,clean-print, , ,110,"Do not scroll, display text and clean line ends"
+uu-more, ,s,squeeze, , ,111,Squeeze multiple blank lines into one
+uu-more, ,u,plain, , ,112,Suppress underlining
+uu-more, ,h,help, , ,113,Print help
+uu-more, ,V,version, , ,114,Print version

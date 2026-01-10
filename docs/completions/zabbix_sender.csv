@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_sender, ,c,config, ,@F,101,Zabbix Agent configuration file.
+zabbix_sender, ,z,zabbix-server, ,@f,102,Hostname or IP address of Zabbix server.
+zabbix_sender, ,p,port, ,@f,103,Specify port number of agent running on the host.
+zabbix_sender, ,I,source-address, ,@f,104,Source IP address.
+zabbix_sender, ,t,timeout, ,@f,105,Specify timeout.
+zabbix_sender, ,s,host, ,@f,106,Specify host name the item belongs to.
+zabbix_sender, ,k,key, ,@f,107,Specify item key to send value to.
+zabbix_sender, ,o,value, ,@f,108,Specify item value.
+zabbix_sender, ,i,input-file, , ,109,Load values from input file.
+zabbix_sender, ,h,help, ,@f,110,Display this help and exit.
+zabbix_sender, ,V,version, ,@f,111,Output version information and exit.
+zabbix_sender, ,T,with-timestamps, , ,112,Input file contains timestamps
+zabbix_sender, ,N,with-ns, , ,113,Timestamps have nanosecond portion.
+zabbix_sender, ,r,real-time, , ,114,Send values as soon as they are received.
+zabbix_sender, ,v,verbose, , ,115,"Verbose mode, -vv for more details."
+zabbix_sender, , ,tls-connect,unencrypted psk cert,@f @r,116,How to connect to agent.
+zabbix_sender, , ,tls-ca-file, ,@F,117,Full path of a with the top-level CA(s).
+zabbix_sender, , ,tls-crl-file, ,@F,118,Full path of a file with revoked certificates.
+zabbix_sender, , ,tls-server-cert-issuer, ,@f,119,Allowed server certificate issuer.
+zabbix_sender, , ,tls-server-cert-subject, ,@f,120,Allowed server certificate subject.
+zabbix_sender, , ,tls-cert-file, , ,121,Full path of the certificate or certificate chain.
+zabbix_sender, , ,tls-key-file, , ,122,Full path of  the private key.
+zabbix_sender, , ,tls-psk-identity, ,@f,123,PSK-identity string.
+zabbix_sender, , ,tls-psk-file, , ,124,Full path of a file with the pre-shared key.
+zabbix_sender, , ,tls-cipher13, ,@f,125,Cipher string for OpenSSL.
+zabbix_sender, , ,tls-cipher, ,@f,126,GnuTLS priority string.

@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avifdec, ,h,help, , ,101,Show syntax help
+avifdec, ,V,version, , ,102,Show the version number
+avifdec, ,j,jobs, , ,103,"Number of jobs (worker threads), or `all' to potentially use as many cores as…"
+avifdec, ,c,codec, , ,104,Codec to use
+avifdec, ,d,depth, , ,105,"Output depth, either 8 or 16"
+avifdec, ,q,quality, , ,106,"Output quality in 0. 100.  (JPEG only, default: 90)"
+avifdec, , ,png-compress, , ,107,"PNG compression level in 0. 9 (PNG only; 0=none, 9=max)"
+avifdec, ,u,upsampling, , ,108,Chroma upsampling (for 420/422)
+avifdec, ,r,raw-color, , ,109,Output raw RGB values instead of multiplying by alpha when saving to opaque f…
+avifdec, , ,index, , ,110,"When decoding an image sequence or progressive image, specify which frame ind…"
+avifdec, , ,progressive, , ,111,Enable progressive AVIF processing
+avifdec, , ,no-strict, , ,112,"Disable strict decoding, which disables strict validation checks and errors"
+avifdec, ,i,info, , ,113,Decode all frames and display all image information instead of saving to disk
+avifdec, , ,icc, , ,114,Provide an ICC profile payload (implies --ignore-icc)
+avifdec, , ,ignore-icc, , ,115,"If the input file contains an embedded ICC profile, ignore it (no-op if absen…"
+avifdec, , ,size-limit, , ,116,Maximum image size (in total pixels) that should be tolerated
+avifdec, , ,dimension-limit, , ,117,Maximum image dimension (width or height) that should be tolerated

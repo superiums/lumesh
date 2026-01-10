@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sphinx-apidoc, ,h,help, , ,101,Display usage summary
+sphinx-apidoc, , ,version, , ,102,Display Sphinx version
+sphinx-apidoc, ,f,force, , ,103,Overwrite existing files
+sphinx-apidoc, ,l,follow-links, , ,104,Follow symbolic links
+sphinx-apidoc, ,n,dry-run, , ,105,Run the script without creating files
+sphinx-apidoc, , ,tocfile, , ,106,Filename of table of contents
+sphinx-apidoc, ,T,no-toc, , ,107,Do not create a table of contents file
+sphinx-apidoc, ,F,full, , ,108,Generate a full Sphinx project
+sphinx-apidoc, ,e,separate, , ,109,Put doc for each module on its own page
+sphinx-apidoc, ,E,no-headings, , ,110,Do not create headings
+sphinx-apidoc, ,P,private, , ,111,Include _private modules
+sphinx-apidoc, , ,implicit-namespaces, , ,112,Interpret module paths according to PEP-0420
+sphinx-apidoc, ,M,module-first, , ,113,Put module doc before submodule doc
+sphinx-apidoc, ,t,templatedir, , ,114,Template directory for template files

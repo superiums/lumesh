@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ng, , , , ,@f,101,The Angular CLI

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hugo, , ,config, ,@f,101,Configuration file
+hugo, , ,debug, ,@f,102,Debug output
+hugo, , ,log, ,@f,103,Enable logging
+hugo, , ,logFile, ,@r,104,Log file
+hugo, , ,quiet, ,@f,105,Quiet mode
+hugo, ,v,verbose, ,@f,106,Verbose output
+hugo, , ,verboseLog, ,@f,107,Verbose logging

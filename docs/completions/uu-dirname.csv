@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-dirname, ,z,zero, , ,101,separate output with NUL rather than newline
+uu-dirname, ,h,help, , ,102,Print help
+uu-dirname, ,V,version, , ,103,Print version

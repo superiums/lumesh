@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish, ,c,command, , ,101,"Evaluate the specified commands instead of reading from the commandline, pass…"
+fish, ,C,init-command, , ,102,Evaluate specified commands after reading the configuration but before execut…
+fish, ,d,debug, , ,103,Enables debug output and specify a pattern for matching debug categories
+fish, ,o,debug-output, , ,104,"Specifies a file path to receive the debug output, including categories and \\…"
+fish, ,i,interactive, , ,105,The shell is interactive
+fish, , ,install, , ,106,"When built as self-installable (via cargo), this will unpack fish's data file…"
+fish, ,l,login, , ,107,Act as if invoked as a login shell
+fish, ,N,no-config, , ,108,Do not read configuration files
+fish, ,n,no-execute, , ,109,"Do not execute any commands, only perform syntax checking"
+fish, ,p,profile, , ,110,"when fish exits, output timing information on all executed commands to the sp…"
+fish, , ,profile-startup, , ,111,Will write timing for fish startup to specified file
+fish, ,P,private, , ,112,Enables \\%private mode: fish will not access old or store new history
+fish, , ,print-rusage-self, , ,113,"When fish exits, output stats from getrusage"
+fish, , ,print-debug-categories, , ,114,"Print all debug categories, and then exit"
+fish, ,v,version, , ,115,Print version and exit
+fish, ,f,features, , ,116,Enables one or more comma-separated %feature flags

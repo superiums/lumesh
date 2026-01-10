@@ -1,0 +1,141 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rsync, ,v,verbose, , ,101,Increase verbosity
+rsync, , ,info,, ,102,Fine-grained informational verbosity
+rsync, , ,debug,, ,103,Fine-grained debug verbosity
+rsync, , ,stderr,errors all client, ,104,"change stderr output mode, default: errors"
+rsync, ,q,quiet, , ,105,Suppress non-error messages
+rsync, , ,no-motd, , ,106,Suppress daemon-mode MOTD
+rsync, ,c,checksum, , ,107,"Skip based on checksum, not mod-time & size"
+rsync, ,a,archive, , ,108,"Archive mode; same as -rlptgoD (no -H)"
+rsync, ,r,recursive, , ,109,Recurse into directories
+rsync, ,R,relative, , ,110,Use relative path names
+rsync, , ,no-implied-dirs, , ,111,Don’t send implied dirs with --relative
+rsync, ,b,backup, , ,112,Make backups (see --suffix & --backup-dir)
+rsync, , ,backup-dir, ,@D,113,Make backups into hierarchy based in DIR
+rsync, , ,suffix, , ,114,Backup suffix (default ~ w/o --backup-dir)
+rsync, ,u,update, , ,115,Skip files that are newer on the receiver
+rsync, , ,inplace, , ,116,Update destination files in-place
+rsync, , ,append, , ,117,Append data onto shorter files without verifying old content
+rsync, , ,append-verify, , ,118,"Append with full file checksum, including old data"
+rsync, ,d,dirs, , ,119,Transfer directories without recursing
+rsync, , ,mkpath, , ,120,Create the destination's path component
+rsync, ,l,links, , ,121,Copy symlinks as symlinks
+rsync, ,L,copy-links, , ,122,Transform symlink into referent file/dir
+rsync, , ,copy-unsafe-links, , ,123,Only 'unsafe' symlinks are transformed
+rsync, , ,safe-links, , ,124,Ignore symlinks that point outside the tree
+rsync, , ,munge-links, , ,125,Munge symlinks to make them safe & unusable
+rsync, ,k,copy-dirlinks, , ,126,Transform symlink to dir into referent dir
+rsync, ,K,keep-dirlinks, , ,127,Treat symlinked dir on receiver as dir
+rsync, ,H,hard-links, , ,128,Preserve hard links
+rsync, ,p,perms, , ,129,Preserve permissions
+rsync, ,E,executability, , ,130,Preserve executability
+rsync, , ,chmod, , ,131,Change destination permissions
+rsync, ,A,acls, , ,132,Preserve ACLs (implies -p) [non-standard]
+rsync, ,X,xattrs, , ,133,Preserve extended attrs (implies -p) [n.s.]
+rsync, ,o,owner, , ,134,Preserve owner (super-user only)
+rsync, ,g,group, , ,135,Preserve group
+rsync, , ,devices, , ,136,Preserve device files (super-user only)
+rsync, , ,specials, , ,137,Preserve special files
+rsync, ,t,times, , ,138,Preserve modification times
+rsync, ,U,atimes, , ,139,Preserve access (use) times
+rsync, , ,open-noatime, , ,140,Avoid changing the atime on opened files
+rsync, , ,crtimes, , ,141,Preserve creation (birth) times
+rsync, ,O,omit-dir-times, , ,142,Omit directories when preserving times
+rsync, ,J,omit-link-times, , ,143,Omit symlinks when preserving times
+rsync, , ,super, , ,144,Receiver attempts super-user activities
+rsync, , ,fake-super, , ,145,Store/recover privileged attrs using xattrs
+rsync, ,S,sparse, , ,146,Handle sparse files efficiently
+rsync, , ,preallocate, , ,147,Allocate dest files before writing them
+rsync, , ,write-devices, , ,148,Write to devices as files (implies --inplace)
+rsync, ,n,dry-run, , ,149,Show what would have been transferred
+rsync, ,W,whole-file, , ,150,Copy files whole (without rsync algorithm)
+rsync, , ,checksum-choice,xxh128 xxh3 xxh64 md5 md4 none, ,151,Choose the checksum algorithm
+rsync, ,x,one-file-system, , ,152,Don’t cross filesystem boundaries
+rsync, ,B,block-size, ,@f @r,153,Force a fixed checksum block-size
+rsync, ,e,rsh, ,@f @r,154,Specify the remote shell to use
+rsync, , ,rsync-path, ,@f @r,155,Specify the rsync to run on remote machine
+rsync, , ,existing, , ,156,Ignore non-existing files on receiving side
+rsync, , ,ignore-existing, , ,157,Ignore files that already exist on receiver
+rsync, , ,remove-sent-files, , ,158,Sent files/symlinks are removed from sender
+rsync, , ,remove-source-files, , ,159,Remove all synced files from source/sender
+rsync, , ,del, , ,160,An alias for --delete-during
+rsync, , ,delete, , ,161,Delete files that don’t exist on sender
+rsync, , ,delete-before, , ,162,Receiver deletes before transfer (default)
+rsync, , ,delete-during, , ,163,"Receiver deletes during xfer, not before"
+rsync, , ,delete-delay, , ,164,"Find deletions during, delete after"
+rsync, , ,delete-after, , ,165,"Receiver deletes after transfer, not before"
+rsync, , ,delete-excluded, , ,166,Also delete excluded files on receiver
+rsync, , ,ignore-missing-args, , ,167,Ignore missing source args without error
+rsync, , ,delete-missing-args, , ,168,Delete missing source args from destination
+rsync, , ,ignore-errors, , ,169,Delete even if there are I/O errors
+rsync, , ,force, , ,170,Force deletion of dirs even if not empty
+rsync, , ,max-delete, , ,171,Don’t delete more than NUM files
+rsync, , ,max-size, , ,172,Don’t transfer any file larger than SIZE
+rsync, , ,min-size, , ,173,Don’t transfer any file smaller than SIZE
+rsync, , ,max-alloc, , ,174,Change process memory allocation limit
+rsync, , ,partial, , ,175,Keep partially transferred files
+rsync, , ,partial-dir, ,@D,176,Put a partially transferred file into DIR
+rsync, , ,delay-updates, , ,177,Put all updated files into place at end
+rsync, ,m,prune-empty-dirs, , ,178,Prune empty directory chains from file-list
+rsync, , ,numeric-ids, , ,179,Don’t map uid/gid values by user/group name
+rsync, , ,usermap, , ,180,Custom username mapping
+rsync, , ,groupmap, , ,181,Custom username mapping
+rsync, , ,chown, , ,182,Combined username/groupname mapping
+rsync, , ,timeout, , ,183,Set I/O timeout in seconds
+rsync, , ,cotimeout, , ,184,Set daemon connection timeout in seconds
+rsync, ,I,ignore-times, , ,185,Don’t skip files that match size and time
+rsync, , ,size-only, , ,186,Skip files that match in size
+rsync, , ,modify-window, , ,187,Compare NUM mod-times with reduced accuracy
+rsync, ,T,temp-dir, ,@D,188,Create temporary files in directory DIR
+rsync, ,y,fuzzy, , ,189,Find similar file for basis if no dest file
+rsync, , ,compare-dest, ,@D,190,Also compare received files relative to DIR
+rsync, , ,copy-dest, ,@D,191,Like compare-dest but also copies unchanged files
+rsync, , ,link-dest, ,@D,192,Hardlink to files in DIR when unchanged
+rsync, ,z,compress, , ,193,Compress file data during the transfer
+rsync, , ,compress-choice,zstd lz4 zlibx zlib none, ,194,Choose the compression algorithm
+rsync, , ,compress-level, ,@f @r,195,Explicitly set compression level (aka --zl)
+rsync, , ,skip-compress, ,@f @r,196,Skip compressing files with suffix in LIST
+rsync, ,C,cvs-exclude, , ,197,Auto-ignore files in the same way CVS does
+rsync, ,f,filter, , ,198,Add a file-filtering RULE
+rsync, , ,exclude, , ,199,Exclude files matching PATTERN
+rsync, , ,exclude-from, , ,200,Read exclude patterns from FILE
+rsync, , ,include, , ,201,Don’t exclude files matching PATTERN
+rsync, , ,include-from, ,@r,202,Read include patterns from FILE
+rsync, , ,files-from, ,@r,203,Read list of source-file names from FILE
+rsync, ,0,from0, , ,204,All *from/filter files are delimited by 0s
+rsync, ,s,protect-args, , ,205,"No space-splitting; wildcard chars only"
+rsync, , ,copy-as, , ,206,Specify user & optional group for the copy
+rsync, , ,address, , ,207,Bind address for outgoing socket to daemon
+rsync, , ,port, , ,208,Specify double-colon alternate port number
+rsync, , ,sockopts, , ,209,Specify custom TCP options
+rsync, , ,blocking-io, , ,210,Use blocking I/O for the remote shell
+rsync, , ,outbuf,N L B, ,211,"Set out buffering to None, Line, or Block"
+rsync, , ,stats, , ,212,Give some file-transfer stats
+rsync, ,8,8-bit-output, , ,213,Leave high-bit chars unescaped in output
+rsync, ,h,human-readable, , ,214,Output numbers in a human-readable format
+rsync, , ,progress, , ,215,Show progress during transfer
+rsync, ,i,itemize-changes, , ,216,Output a change-summary for all updates
+rsync, ,M,remote-option, , ,217,Send OPTION to the remote side only
+rsync, , ,out-format, ,@f @r,218,Output updates using the specified FORMAT
+rsync, , ,log-file, , ,219,log what we're doing to the specified FILE
+rsync, , ,log-file-format, ,@f @r,220,log updates using the specified FMT
+rsync, , ,password-file, ,@r,221,Read password from FILE
+rsync, , ,early-input, , ,222,Use FILE for daemon's early exec input
+rsync, , ,list-only, , ,223,List the files instead of copying them
+rsync, , ,bwlimit, , ,224,"Limit I/O bandwidth; optional unit (KB/s default)"
+rsync, , ,stop-after, ,@f @r,225,Stop rsync after MINS minutes have elapsed
+rsync, , ,stop-at, ,@f @r,226,Stop rsync at the specified point in time
+rsync, , ,write-batch, ,@r,227,Write a batched update to FILE
+rsync, , ,only-write-batch, , ,228,Like --write-batch but w/o updating dest
+rsync, , ,read-batch, ,@r,229,Read a batched update from FILE
+rsync, , ,protocol, ,@f @r,230,Force an older protocol version to be used
+rsync, , ,iconv, ,@f @r,231,Request charset conversion of filenames
+rsync, , ,checksum-seed, ,@f @r,232,Set block/file checksum seed (advanced)
+rsync, ,4,ipv4, , ,233,Prefer IPv4
+rsync, ,6,ipv6, , ,234,Prefer IPv6
+rsync, , ,daemon, , ,235,Run as an rsync daemon
+rsync, , ,config, ,@r,236,Specify alternate rsyncd.conf file
+rsync, , ,dparam, ,@f @r,237,Override global daemon config parameter
+rsync, , ,no-detach, ,@f @r,238,Do not detach from the parent
+rsync, ,V,version, , ,239,Display version and feature info
+rsync, ,h,help, , ,240,Display help and exit

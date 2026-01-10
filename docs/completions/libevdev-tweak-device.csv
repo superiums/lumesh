@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libevdev-tweak-device, , ,abs, , ,101,"Change the given named ABS_ kernel axis, e. g.  ABS_X"
+libevdev-tweak-device, , ,min, , ,102,Set the absinfo minimum to the value v
+libevdev-tweak-device, , ,max, , ,103,Set the absinfo maximum to the value v
+libevdev-tweak-device, , ,res, , ,104,Set the absinfo resolution to the value v
+libevdev-tweak-device, , ,fuzz, , ,105,Set the absinfo fuzz to the value v
+libevdev-tweak-device, , ,flat, , ,106,Set the absinfo flat to the value v . PP . SS Changing the x/y resolution
+libevdev-tweak-device, , ,resolution, , ,107,"Changes the resolution of the ABS_X, ABS_MT_POSITION_X, ABS_Y, and ABS_MT_POS…"
+libevdev-tweak-device, , ,led, , ,108,"Change the given LED, e. g.  LED_NUML.  For a full list, see linux/input. h"
+libevdev-tweak-device, , ,on, , ,109,Change the LED state to on
+libevdev-tweak-device, , ,off, , ,110,Change the LED state to off NOTES

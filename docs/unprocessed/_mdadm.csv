@@ -1,0 +1,76 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,A,assemble, , ,101,Assemble a pre-existing array
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,B,build, , ,102,Build a legacy array without superblocks
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,C,create, , ,103,Create a new array
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,F,monitor, , ,104,Select monitor mode
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,G,grow, , ,105,Change the size or shape of an active array
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,I,incremental, , ,106,"Manage devices in array, and possibly start it"
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,auto-detect, , ,107,Start all auto-detected arrays
+mdadm, ,e,metadata,__fish_mdadm_metadata_options,@f @r,116,Set metadata style to use
+mdadm," __fish_contains_opt -s B build -s C create -s G grow; or __fish_not_contain_opt -s A assemble -s F follow monitor -s I incremental auto-detect",n,raid-devices, ,@f @r,120,Specify the number of active devices
+mdadm, __fish_contains_opt -s B build -s C create -s G grow,x,spare-devices, ,@f @r,121,Specify the number of spare devices
+mdadm, __fish_contains_opt -s B build -s C create -s G grow,z,size, ,@f @r,122,Specify the space to use from each drive
+mdadm, __fish_contains_opt -s G grow,Z,array-size, ,@f @r,123,Specify the size made available on the array
+mdadm, __fish_contains_opt -s B build -s C create -s G grow,c,chunk, ,@f @r,124,Specify the chunk size
+mdadm, __fish_contains_opt -s B build -s C create -s G grow, ,rounding, ,@f @r,125,Specify rounding factor
+mdadm, __fish_contains_opt -s B build -s C create -s G grow,l,level,__fish_mdadm_level_options,@f @r,126,Specify RAID level
+mdadm, __fish_contains_opt -s B build -s C create -s G grow,p,parity,__fish_mdadm_layout_options,@f @r,127,Specify data layout
+mdadm, __fish_contains_opt -s A assemble -s B build -s C create -s G grow,b,bitmap, ,@r,128,Specify file for write-intent bitmap
+mdadm, __fish_contains_opt -s B build -s C create -s G grow, ,bitmap-chunk, ,@f @r,129,Specify chunksize of bitmap
+mdadm, __fish_contains_opt -s B build -s C create -s G grow -s a add,W,write-mostly, , ,130,Prefer reading from other devices than these
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,readwrite, , ,131,Enable writes on array or device
+mdadm," __fish_contains_opt -s B build -s C create; or __fish_not_contain_opt -s A assemble -s F follow monitor -s G grow -s I incremental",o,readonly, , ,132,Disable writes on array
+mdadm, __fish_contains_opt -s B build -s C create -s G grow, ,write-behind, ,@f @r,133,Enable write-behind mode
+mdadm, __fish_contains_opt -s B build -s C create -s G grow, ,assume-clean, , ,134,Assume the array is clean
+mdadm, __fish_contains_opt -s A assemble -s G grow, ,backup-file, ,@r,135,Use this file as a backup
+mdadm, __fish_contains_opt -s B build -s C create -s G grow, ,data-offset, ,@f @r,136,Specify start of array data
+mdadm, __fish_contains_opt -s G grow, ,continue, , ,137,Resume frozen --grow command
+mdadm, __fish_contains_opt -s A assemble -s B build -s C create,N,name, ,@f @r,138,Set array name
+mdadm," __fish_contains_opt -s A assemble -s B build -s C create -s I incremental; or __fish_not_contain_opt -s F follow monitor -s G grow",R,run, , ,139,Run array despite warnings
+mdadm, __fish_contains_opt -s A assemble -s B build -s C create,a,level,__fish_mdadm_level_options,@f @r,140,Give instruction for device file
+mdadm, __fish_contains_opt -s A assemble -s G grow,a,add, , ,141,Add devices to array
+mdadm, __fish_contains_opt -s B build -s C create -s G grow, ,nodes, , ,142,Specify max nodes in the cluster
+mdadm, __fish_contains_opt -s B build -s C create -s G grow, ,write-journal, , ,143,Specify journal device for RAID-4/5/6 array
+mdadm, __fish_contains_opt -s A assemble,u,uuid, ,@f @r,144,UUID of array to assemble
+mdadm, __fish_contains_opt -s A assemble,m,super-minor, ,@f @r,145,Minor number of array device
+mdadm," __fish_contains_opt -s A assemble; and __fish_contains_opt -s s scan", ,no-degraded, , ,146,Refuse to start without all drives
+mdadm, __fish_contains_opt -s A assemble, ,invalid-backup, , ,147,"Do not ask for backup file, unavailable"
+mdadm, __fish_contains_opt -s A assemble,U,update,__fish_mdadm_update_options,@f @r,148,Update superblock properties
+mdadm, __fish_contains_opt -s A assemble, ,freeze-reshape, , ,149,Freeze --grow command
+mdadm," __fish_contains_opt -s F follow monitor; or __fish_not_contain_opt -s A assemble -s B build -s C create -s G grow -s I incremental auto-detect",t,test, , ,150,Test mode
+mdadm," __fish_contains_opt -s G grow; or __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s I incremental auto-detect",a,add, , ,151,Hot-add listed devices
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,re-add, , ,152,Re-add a previously removed device
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,add-spare, , ,153,Hot-add listed devices as spare
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,r,remove, , ,154,Remove listed inactive devices
+mdadm," __fish_contains_opt -s I incremental; or __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow auto-detect",f,set-faulty, , ,155,Mark listed devices as faulty
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,replace, , ,156,Mark listed devices as requiring replacement
+mdadm, __fish_contains_opt replace, ,with, , ,157,Give devices as replacement
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,cluster-confirm, , ,158,Confirm existence of device
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,Q,query, , ,159,Examine device for md use
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,D,detail, , ,160,Print details on array
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,detail-platform, , ,161,Print details on platform capabilities
+mdadm," __fish_contains_opt -s I incremental; or __fish_contains_opt -s D detail; or __fish_contains_opt detail-platform; or __fish_contains_opt -s E examine",Y,export, , ,162,Format data output as key=value pairs
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,E,examine, , ,163,Print content of device metadata
+mdadm," __fish_contains_opt -s E examine; or __fish_contains_opt -s A assemble", ,sparc2.2, , ,164,Fix examination for buggy SPARC 2.2 kernel RAID
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,X,examine-bitmap, , ,165,Print report about bitmap
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,examine-badblocks, , ,166,List recorded bad blocks
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,dump, ,@r,167,Dump metadata to directory
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,restore, ,@r,168,Restore metadata from directory
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,S,stop, , ,169,Deactivate array
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,zero-superblock, , ,170,Erase possible superblock
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,kill-subarray, ,@r,171,Delete subarray
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,update-subarray, ,@r,172,Update subarray
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect,W,wait, , ,173,Wait for pending operations
+mdadm, __fish_not_contain_opt -s A assemble -s B build -s C create -s F follow monitor -s G grow -s I incremental auto-detect, ,action,__fish_mdadm_action_options,@f @r,175,Set sync action for md devices
+mdadm, __fish_contains_opt -s I incremental,r,rebuild-map, , ,176,Rebuild /run/mdadm/map
+mdadm," __fish_contains_opt -s I incremental; and __fish_contains_opt -s f fail set-faulty", ,path, ,@r,177,Automatically add eventually appearing device to array
+mdadm, __fish_contains_opt -s F follow monitor,m,mail, ,@f @r,178,Mail address to send alerts to
+mdadm, __fish_contains_opt -s F follow monitor,p,alert, ,@f @r,179,Program to run in case of an event
+mdadm, __fish_contains_opt -s F follow monitor,y,syslog, , ,180,Record events in syslog
+mdadm, __fish_contains_opt -s F follow monitor,d,delay, ,@f @r,181,Polling interval
+mdadm, __fish_contains_opt -s F follow monitor,r,increment, ,@f @r,182,Generate RebuildNN events each given percentage
+mdadm, __fish_contains_opt -s F follow monitor,f,daemonise, , ,183,Run monitor mode as a daemon
+mdadm," __fish_contains_opt -s F follow monitor; and __fish_contains_opt -s 1 oneshot",i,pid-file, ,@r,184,Write PID file when running as a daemon
+mdadm, __fish_contains_opt -s F follow monitor,1,oneshot, , ,185,Check arrays only once
+mdadm, __fish_contains_opt -s F follow monitor, ,no-sharing, , ,186,Do not move spares between arrays
+mdadm," __fish_contains_opt -s D detail; or __fish_contains_opt -s E examine",b,brief, , ,187,Be more concise

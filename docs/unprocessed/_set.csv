@@ -1,0 +1,37 @@
+cmd,conds,short,long,params,dirs,pri,desc
+set, __fish_is_nth_token 1,e,erase, , ,101,Erase variable
+set, __fish_is_nth_token 1,x,export, , ,102,Export variable to subprocess
+set, __fish_is_nth_token 1,u,unexport, , ,103,Do not export variable to subprocess
+set, __fish_is_nth_token 1,f,function, , ,104,Make variable function-scoped
+set, __fish_is_nth_token 1,g,global, , ,105,Make variable scope global
+set, __fish_is_nth_token 1,l,local, , ,106,Make variable scope local
+set, __fish_is_nth_token 1,L,long, , ,107,Do not truncate long lines
+set, __fish_is_nth_token 1,U,universal, , ,108,Share variable persistently across sessions
+set, __fish_is_nth_token 1,q,query, , ,109,Test if variable is defined
+set, __fish_is_nth_token 1,h,help, , ,110,Display help and exit
+set, __fish_is_nth_token 1,n,names, , ,111,"List the names of the variables, but not their value"
+set, __fish_is_nth_token 1,a,append, , ,112,Append value to a list
+set, __fish_is_nth_token 1,p,prepend, , ,113,Prepend value to a list
+set, __fish_is_nth_token 1,S,show, , ,114,Show variable
+set, __fish_is_nth_token 1, ,path, , ,115,Make variable as a path variable
+set, __fish_is_nth_token 1, ,unpath, , ,116,Make variable not as a path variable
+set, __fish_is_nth_token 1, ,no-event, , ,117,Don't emit an event
+set," __fish_is_nth_token 1; and __fish_seen_argument -s e -l erase", , , ,@f @r,117, 
+set," __fish_is_nth_token 1; and __fish_seen_argument -s e -l erase", , , ,@f @r,117, 
+set," __fish_is_nth_token 1; and __fish_seen_argument -s e -l erase", , , ,@f @r,117, 
+set," __fish_is_nth_token 1; and __fish_seen_argument -s e -l erase", , , ,@f @r,117, 
+set," __fish_seen_argument -s e -l erase; and __fish_seen_argument -s l -s U -s g -l local -l global -l Universal", , , ,@f,117, 
+set," __fish_seen_argument -s e -l erase; and __fish_seen_argument -s l -s U -s g -l local -l global -l Universal", , , ,@f,117, 
+set," __fish_seen_argument -s e -l erase; and __fish_seen_argument -s l -s U -s g -l local -l global -l Universal", , , ,@f,117, 
+set," __fish_seen_argument -s e -l erase; and __fish_seen_argument -s U -l universal", , , ,@f,118, 
+set," __fish_seen_argument -s e -l erase; and __fish_seen_argument -s g -l global", , , ,@f,119, 
+set," __fish_seen_argument -s e -l erase; and __fish_seen_argument -s l -l local", , , ,@f,120, 
+set, __fish_set_is_color true false, , , ,@f @r,121,text color
+set, __fish_set_is_color false true, , ,--background=(set_color --print-colors), ,122, 
+set, __fish_set_is_color false true, , ,--underline-color=(set_color --print-colors), ,123, 
+set, __fish_set_is_color true false, , ,--bold, ,124, 
+set, __fish_set_is_color true false, , ,--dim, ,125, 
+set, __fish_set_is_color true false, , ,--italics, ,126, 
+set, __fish_set_is_color true true, , ,--reverse, ,127, 
+set, __fish_set_is_color true false, , ,--underline, ,128, 
+set," __fish_set_is_locale; and __fish_seen_argument -s e -l erase", , , ,@f @r,128,Locale

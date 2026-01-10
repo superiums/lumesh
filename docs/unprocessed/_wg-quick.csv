@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wg-quick, $valid_subcmds, , ,up, ,100,Add and set up an interface
+wg-quick, $valid_subcmds, , ,down, ,100,Tear down and remove an interface
+wg-quick, $valid_subcmds, , ,strip, ,100,Output config for use with wg
+wg-quick, $valid_subcmds, , ,save, ,100,Saves the configuration of an existing interface

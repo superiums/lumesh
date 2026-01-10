@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+path, test (count (commandline -xpc)) -le 2,h,help, ,@f,101,Display help and exit
+path, test (count (commandline -xpc)) -lt 2, , ,basename,@f,102,Give basename for given paths
+path, test (count (commandline -xpc)) -lt 2, , ,dirname,@f,103,Give dirname for given paths
+path, test (count (commandline -xpc)) -lt 2, , ,extension,@f,104,Give extension for given paths
+path, test (count (commandline -xpc)) -lt 2, , ,change-extension,@f,105,Change extension for given paths
+path, test (count (commandline -xpc)) -lt 2, , ,mtime,@f,106,Show modification time
+path, test (count (commandline -xpc)) -lt 2, , ,normalize,@f,107,"Normalize given paths (remove ./, resolve ../ against other components..)"
+path, test (count (commandline -xpc)) -lt 2, , ,resolve,@f,108,Normalize given paths and resolve symlinks
+path, test (count (commandline -xpc)) -lt 2, , ,filter,@f,109,Print paths that match a filter
+path, test (count (commandline -xpc)) -lt 2, , ,is,@f,110,Return true if any path matched a filter
+path, test (count (commandline -xpc)) -lt 2, , ,sort,@f,111,Sort paths
+path, test (count (commandline -xpc)) -ge 2,q,quiet, ,@f,112,"Only return status, no output"
+path, test (count (commandline -xpc)) -ge 2,z,null-in, ,@f,113,Handle NULL-delimited input
+path, test (count (commandline -xpc)) -ge 2,Z,null-out, ,@f,114,Print NULL-delimited output
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] basename",E,no-extension, ,@f,115,Remove the extension
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",v,invert, ,@f,116,Invert meaning of filters
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",t,type, ,@f @r,117,Filter by type
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",f, , ,@f,118,Filter files
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",d, , ,@f,119,Filter directories
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",l, , ,@f,120,Filter symlinks
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",p,perm, ,@f @r,121,Filter by permission
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",r, , ,@f,122,Filter readable paths
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",w, , ,@f,123,Filter writable paths
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] filter is",x, , ,@f,124,Filter executable paths
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] mtime",R,relative, ,@f,125,Show seconds since the modification time
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] sort", , , ,@f,126, 
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] sort",u,unique, ,@f,127,Only leave the first of each run with the same key
+path," test (count (commandline -xpc)) -ge 2; and contains -- (commandline -xpc)[2] sort",r,reverse, ,@f,128,Reverse the order
+path, test (count (commandline -xpc)) -ge 2, , , ,@F,129, 

@@ -1,0 +1,45 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avifenc, ,h,help, , ,101,Show syntax help
+avifenc, ,V,version, , ,102,Show the version number.  BASIC OPTIONS
+avifenc, ,q,qcolor, , ,103,Quality for color in 0. 100 where 100 is lossless
+avifenc, , ,qalpha, , ,104,Quality for alpha in 0. 100 where 100 is lossless
+avifenc, ,s,speed, , ,105,"Encoder speed in 0. 10 where 0 is the slowest, 10 is the fastest"
+avifenc, ,j,jobs, , ,106,"Number of jobs (worker threads), or `all' to potentially use as many cores as…"
+avifenc, , ,no-overwrite, , ,107,Never overwrite existing output file
+avifenc, ,o,output, , ,108,"Instead of using the last filename given as output, use this filename"
+avifenc, ,l,lossless, , ,109,"Set all defaults to encode losslessly, and emit warnings when settings/input …"
+avifenc, ,d,depth, , ,110,"Output depth, one of 8, 10 or 12"
+avifenc, ,y,yuv, , ,111,"Output format, one of `auto' (default), 444, 422, 420 or 400"
+avifenc, ,p,premultiply, , ,112,Premultiply color by the alpha channel and signal this in the AVIF
+avifenc, , ,sharpyuv, , ,113,Use sharp RGB to YUV420 conversion (if supported)
+avifenc, , ,stdin, , ,114,"Read y4m frames from stdin instead of files; no input filenames allowed, must…"
+avifenc, , ,nclx, , ,115,"Set CICP values (nclx colr box) (3 raw numbers, use -r to set range flag)"
+avifenc, ,r,range, , ,116,"YUV range, one of `limited' or `l', `full' or `f'"
+avifenc, , ,target-size, , ,117,Set target file size in bytes (up to 7 times slower)
+avifenc, , ,progressive, , ,118,EXPERIMENTAL: Auto set parameters to encode a simple layered image supporting…
+avifenc, , ,layered, , ,119,EXPERIMENTAL: Encode a layered AVIF
+avifenc, ,g,grid, , ,120,Encode a single-image grid AVIF with M cols & N rows
+avifenc, ,c,codec, , ,121,Codec to use
+avifenc, , ,exif, , ,122,Provide an Exif metadata payload to be associated with the primary item (impl…
+avifenc, , ,xmp, , ,123,Provide an XMP metadata payload to be associated with the primary item (impli…
+avifenc, , ,icc, , ,124,Provide an ICC profile payload to be associated with the primary item (implie…
+avifenc, , ,fps, , ,125,Timescale for image sequences
+avifenc, ,k,keyframe, , ,126,Maximum keyframe interval for image sequences (any set of INTERVAL consecutiv…
+avifenc, , ,ignore-exif, , ,127,"If the input file contains embedded Exif metadata, ignore it (no-op if absent)"
+avifenc, , ,ignore-xmp, , ,128,"If the input file contains embedded XMP metadata, ignore it (no-op if absent)"
+avifenc, , ,ignore-icc, , ,129,"If the input file contains an embedded color profile, ignore it (no-op if abs…"
+avifenc, , ,ignore-gain-map, , ,130,"If the input file contains an embedded gain map, ignore it (no-op if absent)"
+avifenc, , ,qgain-map, , ,131,Quality for the gain map in 0. 100 where 100 is lossless
+avifenc, , ,pasp, , ,132,"Add pasp property (aspect ratio).  H=horizontal spacing, V=vertical spacing"
+avifenc, , ,crop, , ,133,"Add clap property (clean aperture), but calculated from a crop rectangle"
+avifenc, , ,clap, , ,134,Add clap property (clean aperture)
+avifenc, , ,irot, , ,135,Add irot property (rotation) in 0. 3
+avifenc, , ,imir, , ,136,"Add imir property (mirroring).  0=top-to-bottom, 1=left-to-right"
+avifenc, , ,clli, , ,137,Add clli property (content light level information)
+avifenc, , ,repetition-count, , ,138,"Number of times an animated image sequence will be repeated, or `infinite' fo…"
+avifenc, , ,tilerowslog2, , ,139,log2 of number of tile rows in 0. 6.  (Default: 0)
+avifenc, , ,tilecolslog2, , ,140,log2 of number of tile columns in 0. 6.  (Default: 0)
+avifenc, , ,autotiling, , ,141,Set --tilerowslog2 and --tilecolslog2 automatically
+avifenc, , ,scaling-mode, , ,142,EXPERIMENTAL: Set frame (layer) scaling mode as given fraction
+avifenc, , ,duration, , ,143,Frame durations (in timescales) (default: 1)
+avifenc, ,a,advanced, , ,144,"Pass an advanced, codec-specific key/value string pair directly to the codec"

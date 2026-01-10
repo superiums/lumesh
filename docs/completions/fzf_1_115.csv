@@ -1,0 +1,111 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fzf, , ,no-, , ,101,SS SEARCH
+fzf, ,x,extended, , ,102,Extended-search mode.  Enabled by default
+fzf, ,e,exact, , ,103,Enable exact-match
+fzf, ,i,ignore-case, , ,104,Case-insensitive match (default: smart-case match)
+fzf, , ,no-ignore-case, , ,105,Case-sensitive match
+fzf, , ,smart-case, , ,106,Smart-case match (default)
+fzf, , ,literal, , ,107,Do not normalize latin script letters for matching
+fzf, , ,scheme, , ,108,Choose scoring scheme tailored for different types of input. RS  default 
+fzf, , ,algo, , ,109,Fuzzy matching algorithm (default: v2)  
+fzf, ,n,nth, , ,110,Comma-separated list of field index expressions for limiting search scope
+fzf, , ,with-nth, , ,111,Transform the presentation of each line using the field index expressions
+fzf, , ,accept-nth, , ,112,Define which fields to print on accept
+fzf, , ,no-sort, , ,113,Do not sort the result
+fzf, ,d,delimiter, , ,114,"Field delimiter regex for --nth, --with-nth, and field index expressions (def…"
+fzf, , ,tail, , ,115,Maximum number of items to keep in memory
+fzf, , ,disabled, , ,116,Do not perform search
+fzf, , ,tiebreak, , ,117,Comma-separated list of sort criteria to apply when the scores are tied. br  
+fzf, , ,read0, , ,118,Read input delimited by ASCII NUL characters instead of newline characters
+fzf, , ,print0, , ,119,Print output delimited by ASCII NUL characters instead of newline characters
+fzf, , ,ansi, , ,120,Enable processing of ANSI color codes
+fzf, , ,sync, , ,121,Synchronous search for multi-staged filtering
+fzf, , ,style, , ,122,Apply a style preset [default|minimal|full[:BORDER_STYLE]]
+fzf, , ,color, , ,123,Color configuration
+fzf, , ,no-color, , ,124,Disable colors
+fzf, , ,no-bold, , ,125,Do not use bold text
+fzf, , ,black, , ,126,Use black background  . SS DISPLAY MODE
+fzf, , ,height, , ,127,Display fzf window below the cursor with the given height instead of using th…
+fzf, , ,min-height, , ,128,Minimum height when --height is given as a percentage
+fzf, , ,tmux, , ,129,"Start fzf in a tmux popup (default center,50%).  Requires tmux 3. 3 or later"
+fzf, , ,layout, , ,130,Choose the layout (default: default)  
+fzf, , ,reverse, , ,131,A synonym for --layout=reverse
+fzf, , ,margin, , ,132,Comma-separated expression for margins around the finder. br  . br 
+fzf, , ,padding, , ,133,Comma-separated expression for padding inside the border
+fzf, , ,border, , ,134,Draw border around the finder  
+fzf, , ,border-label, , ,135,Label to print on the horizontal border line
+fzf, , ,border-label-pos, , ,136,Position of the border label on the border line
+fzf, ,m,multi, , ,137,Enable multi-select with tab/shift-tab
+fzf, , ,no-multi, , ,138,Disable multi-select
+fzf, , ,highlight-line, , ,139,Highlight the whole current line
+fzf, , ,cycle, , ,140,Enable cyclic scroll
+fzf, , ,wrap, , ,141,Enable line wrap
+fzf, , ,wrap-sign, , ,142,Indicator for wrapped lines
+fzf, , ,no-multi-line, , ,143,Disable multi-line display of items when using --read0
+fzf, , ,track, , ,144,Make fzf track the current selection when the result list is updated
+fzf, , ,tac, , ,145,Reverse the order of the input  . RS e. g
+fzf, , ,gap, , ,146,Render empty lines between each item
+fzf, , ,gap-line, , ,147,The given string will be repeated to draw a horizontal line on each gap (defa…
+fzf, , ,keep-right, , ,148,Keep the right end of the line visible when it's too long
+fzf, , ,scroll-off, , ,149,Number of screen lines to keep above or below when scrolling to the top or to…
+fzf, , ,no-hscroll, , ,150,Disable horizontal scroll
+fzf, , ,hscroll-off, , ,151,Number of screen columns to keep to the right of the highlighted substring (d…
+fzf, , ,jump-labels, , ,152,Label characters for jump mode
+fzf, , ,pointer, , ,153,Pointer to the current line (default: 'â' or '>' depending on --no-unicode)
+fzf, , ,marker, , ,154,Multi-select marker (default: 'â' or '>' depending on --no-unicode)
+fzf, , ,marker-multi-line, , ,155,Multi-select marker for multi-line entries
+fzf, , ,ellipsis, , ,156,Ellipsis to show when line is truncated (default: 'Â·Â·')
+fzf, , ,tabstop, , ,157,Number of spaces for a tab character (default: 8)
+fzf, , ,scrollbar, , ,158,Use the given character to render scrollbar
+fzf, , ,no-scrollbar, , ,159,Do not display scrollbar.  A synonym for --scrollbar=''
+fzf, , ,list-border, , ,160,Draw border around the list section
+fzf, , ,list-label, , ,161,Label to print on the list border
+fzf, , ,list-label-pos, , ,162,Position of the list label  . SS INPUT SECTION
+fzf, , ,no-input, , ,163,Disable and hide the input section.  You can no longer type in queries
+fzf, , ,prompt, , ,164,Input prompt (default: '> ')
+fzf, , ,info, , ,165,Determines the display style of the finder info.  (e. g
+fzf, , ,info-command, , ,166,Command to generate the finder info line
+fzf, , ,no-info, , ,167,A synonym for --info=hidden
+fzf, , ,separator, , ,168,The given string will be repeated to form the horizontal separator on the inf…
+fzf, , ,no-separator, , ,169,Do not display horizontal separator on the info line
+fzf, , ,filepath-word, , ,170,Make word-wise movements and actions respect path separators
+fzf, , ,input-border, , ,171,Draw border around the input section
+fzf, , ,input-label, , ,172,Label to print on the input border
+fzf, , ,input-label-pos, , ,173,Position of the input label  . SS PREVIEW WINDOW
+fzf, , ,preview, , ,174,Execute the given command for the current line and display the result on the …
+fzf, , ,preview-border, , ,175,Short for --preview-window=border-STYLE
+fzf, , ,preview-label, , ,176,Label to print on the horizontal border line of the preview window
+fzf, , ,preview-label-pos, , ,177,Position of the border label on the border line of the preview window
+fzf, , ,preview-window, , ,178,RS  POSITION: (default: right)     up     down     left     right  Determines…
+fzf, , ,header, , ,179,The given string will be printed as the sticky header
+fzf, , ,header-lines, , ,180,The first N lines of the input are treated as the sticky header
+fzf, , ,header-first, , ,181,Print header before the prompt line
+fzf, , ,header-border, , ,182,Draw border around the header section
+fzf, , ,header-label, , ,183,Label to print on the header border
+fzf, , ,header-label-pos, , ,184,Position of the header label
+fzf, , ,header-lines-border, , ,185,Display header from --header-lines with a separate border
+fzf, ,q,query, , ,186,Start the finder with the given query
+fzf, ,1,select-1, , ,187,"If there is only one match for the initial query (--query), do not start inte…"
+fzf, ,0,exit-0, , ,188,"If there is no match for the initial query (--query), do not start interactiv…"
+fzf, ,f,filter, , ,189,Filter mode.  Do not start interactive finder
+fzf, , ,print-query, , ,190,Print query as the first line
+fzf, , ,expect, , ,191,Comma-separated list of keys that can be used to complete fzf in addition to …
+fzf, , ,no-clear, , ,192,Do not clear finder interface on exit
+fzf, , ,bind, , ,193,Comma-separated list of custom key/event bindings
+fzf, , ,with-shell, , ,194,Shell command and flags to start child processes with
+fzf, , ,listen-unsafe, , ,195,Start HTTP server and listen on the given address
+fzf, , ,walker, , ,196,Determines the behavior of the built-in directory walker that is used when $F…
+fzf, , ,walker-root, , ,197,List of directory names to start the built-in directory walker
+fzf, , ,walker-skip, , ,198,Comma-separated list of directory names to skip during the directory walk
+fzf, , ,history, , ,199,Load search history from the specified file and update the file on completion
+fzf, , ,history-size, , ,200,Maximum number of entries in the history file (default: 1000)
+fzf, , ,bash, , ,201,Print script to set up Bash shell integration  e. g.  eval '$(fzf --bash)'
+fzf, , ,zsh, , ,202,Print script to set up Zsh shell integration  e. g.  source <(fzf --zsh)
+fzf, , ,fish, , ,203,Print script to set up Fish shell integration  e. g.  fzf --fish | source  
+fzf, , ,no-mouse, , ,204,Disable mouse
+fzf, , ,no-unicode, , ,205,"Use ASCII characters instead of Unicode drawing characters to draw borders, t…"
+fzf, , ,ambidouble, , ,206,Set this option if your terminal displays ambiguous width characters (e. g
+fzf, , ,version, , ,207,Display version information and exit
+fzf, , ,help, , ,208,Show help message
+fzf, , ,no-extended, , ,209, 
+fzf, , ,man, , ,210,Show man page

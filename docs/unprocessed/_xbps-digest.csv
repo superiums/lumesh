@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, ,m, ,$modes, ,101,"Sets the message digest mode. If unset, defaults to sha256"

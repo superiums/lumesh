@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-analyze-per-slot-delta, , ,help, , ,101,Print help
+libinput-analyze-per-slot-delta, , ,ignore-below, , ,102,Ignore any movement below the given threshold
+libinput-analyze-per-slot-delta, , ,threshold, , ,103,Color any movement above this threshold in red
+libinput-analyze-per-slot-delta, , ,use-mm, , ,104,Print data in mm instead of device units
+libinput-analyze-per-slot-delta, , ,use-st, , ,105,Use the single-touch ABS_X/ABS_Y instead of the multitouch axes
+libinput-analyze-per-slot-delta, , ,use-absolute, , ,106,"Print absolute coordinates, not deltas OUTPUT An example output for a single …"
+libinput-analyze-per-slot-delta, , ,----, , ,107,indicates the finger has lifted

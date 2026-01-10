@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkfs.bfs, ,N,inodes, , ,101, 
+mkfs.bfs, ,V,vname, , ,102, 
+mkfs.bfs, ,F,fname, , ,103, 
+mkfs.bfs, , ,lock, , ,104, 
+mkfs.bfs, ,v,verbose, , ,105, 
+mkfs.bfs, ,h,help, , ,106, 
+mkfs.bfs, , ,version, , ,107, 

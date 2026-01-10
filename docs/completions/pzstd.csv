@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pzstd, ,d,decompress,,@f @k @r,101,Decompress
+pzstd, ,t,test, , ,102,Test the integrity
+pzstd, , ,ultra, , ,103,Enable compression level beyond 19
+pzstd, ,p,processes, ,@f @r,104,De/compress using NUM working threads
+pzstd, ,o, , ,@r,105,Specify file to save
+pzstd, ,f,force, , ,106,Overwrite without prompting
+pzstd, ,c,stdout, , ,107,Force write to stdout
+pzstd, , ,rm, , ,108,Remove input file(s) after de/compression
+pzstd, ,k,keep, , ,109,Keep input file(s) (default)
+pzstd, ,h,help, , ,110,Show help
+pzstd, ,V,version, , ,111,Show version
+pzstd, ,v,verbose, , ,112,Be verbose
+pzstd, ,q,quiet, , ,113,Suppress warnings
+pzstd, , ,no-check, , ,114,Disable integrity check

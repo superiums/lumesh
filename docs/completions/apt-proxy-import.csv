@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-proxy-import, ,h,help, , ,101,Display help and exit
+apt-proxy-import, ,V,version, ,@f,102,Display version and exit
+apt-proxy-import, ,v,verbose, ,@f,103,Verbose mode
+apt-proxy-import, ,q,quiet, ,@f,104,No message to STDOUT
+apt-proxy-import, ,r,recursive, ,@f,105,Recurse into subdir
+apt-proxy-import, ,i,import-dir, ,@r,106,Dir to import
+apt-proxy-import, ,u,user, ,@r,107,Change to user
+apt-proxy-import, ,d,debug, ,@r,108,Debug level[default 0]

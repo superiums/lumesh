@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdbm_load, ,b,block-size, , ,101,Sets block size
+gdbm_load, ,c,cache-size, , ,102,Sets cache size
+gdbm_load, ,M,mmap, , ,103,Use memory mapping
+gdbm_load, ,m,mode, , ,104,Set database file mode (octal number)
+gdbm_load, ,n,no-meta, , ,105,Do not attempt to restore database meta-data (mode and ownership)
+gdbm_load, ,r,replace, , ,106,Replace existing keys
+gdbm_load, ,U,update, , ,107,Update an existing database
+gdbm_load, ,u,user, , ,108,Set file ownership
+gdbm_load, ,h,help, , ,109,Print a short usage summary
+gdbm_load, , ,usage, , ,110,Print a list of available options
+gdbm_load, ,V,version, , ,111,"Print program version SEE ALSO gdbm_dump (1), gdbmtool (1), gdbm (3)"

@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rlogin, ,4,ipv4, , ,101,use only IPv4
+rlogin, ,6,ipv6, , ,102,use only IPv6
+rlogin, ,8,8-bit, , ,103,allows an eight-bit input data path at all times
+rlogin, ,d,debug, , ,104,set the SO_DEBUG option
+rlogin, ,e,escape, , ,105,"allows user specification of the escape character, which is ``~'' by default"
+rlogin, ,E,no-escape, , ,106,stops any character from being recognized as an escape character
+rlogin, ,l,user, , ,107,run as USER on the remote system
+rlogin, ,?,help, , ,108,give this help list
+rlogin, , ,usage, , ,109,give a short usage message
+rlogin, ,V,version, , ,110,print program version

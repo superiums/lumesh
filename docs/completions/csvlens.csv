@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+csvlens, ,d,delimiter, ,@r,101,Delimiter character (comma by default) or 'auto' to auto-detect the delimiter
+csvlens, ,t,tab-separated, , ,102,Use tab separation. Shortcut for -d '\t'
+csvlens, , ,no-headers, , ,103,Do not interpret the first row as headers
+csvlens, , ,columns, ,@r,104,Use this regex to select columns to display by default
+csvlens, , ,filter, ,@r,105,Use this regex to filter rows to display by default
+csvlens, , ,find, ,@r,106,Use this regex to find and highlight matches by default
+csvlens, ,i,ignore-case, , ,107,Searches ignore case. Ignored if any uppercase letters are present in the search string
+csvlens, , ,echo-column, ,@r,108,Print the value of this column to stdout for the selected row
+csvlens, , ,debug, , ,109,Show stats for debugging
+csvlens, ,h,help, ,@f,110,Print help
+csvlens, ,V,version, ,@f,111,Print version

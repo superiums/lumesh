@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+blueman-sendto, , ,device, , ,101,Address of the device to send to AUTHOR

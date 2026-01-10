@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cwebp, __fish_cwebp_is_first_arg_or_its_value -preset, , ,$preset_opts,@f @r,105,Preset setting

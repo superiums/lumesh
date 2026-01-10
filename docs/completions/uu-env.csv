@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-env, ,C,chdir, ,@D @f @r,101,change working directory to DIR
+uu-env, ,f,file, ,@r,102,read and set variables from a '.env'-style configuration file (prior to any unset and/or set)
+uu-env, ,u,unset, , ,103,remove variable from the environment
+uu-env, ,S,split-string, , ,104,"process and split S into separate arguments; used to pass multiple arguments on shebang lines"
+uu-env, ,a,argv0, , ,105,Override the zeroth argument passed to the command being executed. Without this option a default value of `command` is used.
+uu-env, , ,ignore-signal, , ,106,set handling of SIG signal(s) to do nothing
+uu-env, ,i,ignore-environment, , ,107,start with an empty environment
+uu-env, ,0,null, , ,108,end each output line with a 0 byte rather than a newline (only valid when printing the environment)
+uu-env, ,v,debug, , ,109,print verbose information for each processing step
+uu-env, ,h,help, , ,110,Print help
+uu-env, ,V,version, , ,111,Print version

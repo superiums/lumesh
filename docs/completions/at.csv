@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+at, ,V, , ,@f,101,Display version and exit
+at, ,q, , ,@f,102,Use specified queue
+at, ,m, , ,@f,103,Send mail to user
+at, ,f, , ,@f @k @r,104,Read job from file
+at, ,l, , ,@f,105,Alias for atq
+at, ,d, , ,@f,106,Alias for atrm
+at, ,v, , ,@f,107,Show the time
+at, ,c, , ,@f,108,Print the jobs listed

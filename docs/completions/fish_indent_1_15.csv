@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_indent, ,w,write, , ,101,Indents a specified file and immediately writes to that file
+fish_indent, ,i,no-indent, , ,102,"Do not indent commands; only reformat to one job per line"
+fish_indent, , ,only-indent, , ,103,"Do not reformat, only indent each line"
+fish_indent, , ,only-unindent, , ,104,"Do not reformat, only unindent each line"
+fish_indent, ,c,check, , ,105,"Do not indent, only return 0 if the code is already indented as fish_indent w…"
+fish_indent, ,v,version, , ,106,Displays the current fish version and then exits
+fish_indent, , ,ansi, , ,107,"Colorizes the output using ANSI escape sequences, appropriate for the current…"
+fish_indent, , ,html, , ,108,"Outputs HTML, which supports syntax highlighting if the appropriate CSS is de…"
+fish_indent, ,d,debug, , ,109,Enable debug output and specify a pattern for matching debug categories
+fish_indent, ,o,debug-output, , ,110,"Specify a file path to receive the debug output, including categories and fis…"
+fish_indent, , ,dump-parse-tree, , ,111,Dumps information about the parsed statements to standard error
+fish_indent, ,h,help, , ,112,Displays help about using this command

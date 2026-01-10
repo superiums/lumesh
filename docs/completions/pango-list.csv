@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pango-list, ,h,help, , ,101,Show help options
+pango-list, , ,version, , ,102,Print the command's version and exit.  APPLICATION OPTIONS
+pango-list, , ,verbose, , ,103,Print verbose information
+pango-list, , ,metrics, , ,104,Print font metrics
+pango-list, , ,variations, , ,105,Print font variations

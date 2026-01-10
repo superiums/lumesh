@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+eg, ,v,version, , ,101,Show version and exit
+eg, ,f,config-file, , ,102,A path to a .egrc file
+eg, ,e,edit, , ,103,Edit custom examples for a specific command
+eg, , ,examples-dir, , ,104,A location to examples/ directory
+eg, ,c,custom-dir, , ,105,A path to a directory with user-defined examples
+eg, ,p,pager-cmd, , ,106,A pager
+eg, ,l,list, , ,107,Show all the programs with eg entries
+eg, , ,color, , ,108,Colorize output
+eg, , ,no-color, , ,109,Do not colorize output

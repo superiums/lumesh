@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lpadmin, ,P, , ,@k,101,Specify a PDD file to use with the printer
+lpadmin, ,o, ,cupsIPPSupplies=true, ,102,Specify if IPP supply level values should be reported
+lpadmin, ,o, ,cupsIPPSupplies=false, ,103,Specify if IPP supply level values should be reported
+lpadmin, ,o, ,cupsSNMPSupplies=true, ,104,Specify if SNMP supply level values should be reported
+lpadmin, ,o, ,cupsSNMPSupplies=false, ,105,Specify if SNMP supply level values should be reported
+lpadmin, ,o, ,job-k-limit=, ,106,Sets the kilobyte limit for per-user quotas
+lpadmin, ,o, ,job-page-limit=, ,107,Sets the page limit for per-user quotas (int) 
+lpadmin, ,o, ,job-quota-period=, ,108,Sets the accounting period for per-user quotas (sec)
+lpadmin, ,o, ,job-sheets-default=, ,109,Sets the default banner page(s) to use for print jobs
+lpadmin, ,o, ,port-monitor=none port-monitor=bcp port-monitor=tbcp, ,110,Set the binary communications program to use
+lpadmin, ,o, ,printer-error-policy=abort-job printer-error-policy=retry-job printer-error-policy=retry-current-job printer-error-policy=stop-printer, ,111,Set error policy if printer backend can't send job
+lpadmin, ,o, ,printer-is-shared=true, ,112,Sets dest to shared/published or unshared/unpublished
+lpadmin, ,o, ,printer-is-shared=false, ,113,Sets dest to shared/published or unshared/unpublished

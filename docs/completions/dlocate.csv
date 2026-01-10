@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dlocate, ,S, , ,@f @r,101,List records that match filenames

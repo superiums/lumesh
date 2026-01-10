@@ -1,0 +1,85 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cec-ctl, ,d,device, , ,101,Use device <dev> as the CEC device
+cec-ctl, ,D,driver, , ,102,"Use a cec device that has driver name <drv>, as returned by the CEC_ADAP_G_CA…"
+cec-ctl, ,a,adapter, , ,103,"Use a cec device that has adapter name <adap-name>, as returned by the CEC_AD…"
+cec-ctl, ,v,verbose, , ,104,Turn on verbose reporting
+cec-ctl, , ,version, , ,105,Show version information
+cec-ctl, ,w,wall-clock, , ,106,Show timestamps as wall-clock time.  This also turns on verbose reporting
+cec-ctl, ,h,help, , ,107,Prints the help message
+cec-ctl, ,p,phys-addr, , ,108,Use this physical address.  The address can be a number (e. g
+cec-ctl, ,e,phys-addr-from-edid, , ,109,Parse the given EDID file (in raw binary format) and extract the physical add…
+cec-ctl, ,E,phys-addr-from-edid-poll, , ,110,Parse the given EDID file (in raw binary format) and extract the physical add…
+cec-ctl, ,o,osd-name, , ,111,Use this OSD name.  The maximum length is 14 characters
+cec-ctl, ,V,vendor-id, , ,112,Use this vendor ID.  The vendor ID is a number from 0x0 to 0xffffff
+cec-ctl, ,l,logical-address, , ,113,Show first configured logical address or nothing if the device is unconfigured
+cec-ctl, ,L,logical-addresses, , ,114,Show all configured logical addresses or nothing if the device is unconfigured
+cec-ctl, ,C,clear, , ,115,"Clear all logical addresses, leaving the CEC device unconfigured"
+cec-ctl, ,n,no-reply, , ,116,By default when sending a CEC message that expects a reply this utility will …
+cec-ctl, ,N,non-blocking, , ,117,Transmit messages in non-blocking mode
+cec-ctl, ,t,to, , ,118,Send the message to the given logical address (0-15)
+cec-ctl, ,f,from, , ,119,Send message from the given logical address
+cec-ctl, ,r,show-raw, , ,120,Show the raw CEC message in hex
+cec-ctl, ,s,skip-info, , ,121,Skip the Driver Info output section
+cec-ctl, ,S,show-topology, , ,122,"Show the CEC topology, detecting which other CEC devices are on the CEC bus"
+cec-ctl, ,P,poll, , ,123,Send a poll message
+cec-ctl, ,T,trace, , ,124,Trace all called ioctls.  Useful for debugging
+cec-ctl, , ,cec-version-1.4, , ,125,Use CEC Version 1. 4 instead of 2. 0 (the default)
+cec-ctl, , ,allow-unreg-fallback, , ,126,Allow fallback to Unregistered if all logical addresses are claimed
+cec-ctl, , ,no-rc-passthrough, , ,127,Disable the RC passthrough
+cec-ctl, , ,reply-to-followers, , ,128,The reply will be sent to followers as well
+cec-ctl, , ,timeout, , ,129,Set the reply timeout in milliseconds (default is 1000 ms)
+cec-ctl, , ,tv, , ,130,Configure the CEC adapter as a TV
+cec-ctl, , ,record, , ,131,Configure the CEC adapter as a recording and playback device
+cec-ctl, , ,tuner, , ,132,Configure the CEC adapter as a tuner device
+cec-ctl, , ,playback, , ,133,Configure the CEC adapter as a playback device
+cec-ctl, , ,audio, , ,134,Configure the CEC adapter as an audio system device
+cec-ctl, , ,processor, , ,135,Configure the CEC adapter as a processor device
+cec-ctl, , ,switch, , ,136,Configure the CEC adapter as a pure CEC switch
+cec-ctl, , ,cdc-only, , ,137,Configure the CEC adapter as a CDC-only device
+cec-ctl, , ,unregistered, , ,138,Configure the CEC adapter as an unregistered device
+cec-ctl, , ,feat-record-tv-screen, , ,139,Signal the Record TV Screen feature
+cec-ctl, , ,feat-set-osd-string, , ,140,Signal the Set OSD String feature
+cec-ctl, , ,feat-deck-control, , ,141,Signal the Deck Control feature
+cec-ctl, , ,feat-set-audio-rate, , ,142,Signal the Set Audio Rate feature
+cec-ctl, , ,feat-sink-has-arc-tx, , ,143,Signal the sink ARC Tx feature
+cec-ctl, , ,feat-source-has-arc-rx, , ,144,Signal the source ARC Rx feature
+cec-ctl, , ,rc-tv-profile-1, , ,145,Signal RC TV Profile 1
+cec-ctl, , ,rc-tv-profile-2, , ,146,Signal RC TV Profile 2
+cec-ctl, , ,rc-tv-profile-3, , ,147,Signal RC TV Profile 3
+cec-ctl, , ,rc-tv-profile-4, , ,148,Signal RC TV Profile 4
+cec-ctl, , ,rc-src-dev-root, , ,149,Signal that the RC source has a Dev Root Menu
+cec-ctl, , ,rc-src-dev-setup, , ,150,Signal that the RC source has a Dev Setup Menu
+cec-ctl, , ,rc-src-contents, , ,151,Signal that the RC source has a Contents Menu
+cec-ctl, , ,rc-src-media-top, , ,152,Signal that the RC source has a Media Top Menu
+cec-ctl, , ,rc-src-media-context, , ,153,Signal that the RC source has a Media Context Menu
+cec-ctl, ,m,monitor, , ,154,Start monitoring CEC traffic
+cec-ctl, ,M,monitor-all, , ,155,Start monitoring all CEC traffic
+cec-ctl, , ,monitor-pin, , ,156,Start monitoring and analyzing the low-level CEC pin transitions
+cec-ctl, , ,monitor-time, , ,157,"Monitor for the given number of seconds, then exit"
+cec-ctl, , ,ignore, , ,158,Ignore messages from logical address <la> and opcode <opcode> when monitoring
+cec-ctl, , ,store-pin, , ,159,Store the CEC pin events to the given file
+cec-ctl, , ,analyze-pin, , ,160,Read and analyze the CEC pin events from the given file
+cec-ctl, , ,test-standby-wakeup-cycle, , ,161,This option tests the standby-wakeup cycle behavior of the display
+cec-ctl, , ,stress-test-standby-wakeup-cycle, , ,162,This option performs a stress test for a display: it cycles the display <coun…
+cec-ctl, , ,stress-test-random-standby-wakeup-cycle, , ,163,This option performs a stress test for a display: it cycles the display <coun…
+cec-ctl, , ,help-all, , ,164,Prints the help message for all options
+cec-ctl, , ,help-audio-rate-control, , ,165,Show help for the Audio Rate Control feature
+cec-ctl, , ,help-audio-return-channel-control, , ,166,Show help for the Audio Return Channel Control feature
+cec-ctl, , ,help-capability-discovery-and-control, , ,167,Show help for the Capability Discovery and Control feature
+cec-ctl, , ,help-deck-control, , ,168,Show help for the Deck Control feature
+cec-ctl, , ,help-device-menu-control, , ,169,Show help for the Device Menu Control feature
+cec-ctl, , ,help-device-osd-transfer, , ,170,Show help for the Device OSD Transfer feature
+cec-ctl, , ,help-dynamic-audio-lipsync, , ,171,Show help for the Dynamic Audio Lipsync feature
+cec-ctl, , ,help-htng, , ,172,Show help for the Hospitality Profile Next Generation feature
+cec-ctl, , ,help-osd-display, , ,173,Show help for the OSD Display feature
+cec-ctl, , ,help-one-touch-play, , ,174,Show help for the One Touch Play feature
+cec-ctl, , ,help-one-touch-record, , ,175,Show help for the One Touch Record feature
+cec-ctl, , ,help-power-status, , ,176,Show help for the Power Status feature
+cec-ctl, , ,help-remote-control-passthrough, , ,177,Show help for the Remote Control Passthrough feature
+cec-ctl, , ,help-routing-control, , ,178,Show help for the Routing Control feature
+cec-ctl, , ,help-standby, , ,179,Show help for the Standby feature
+cec-ctl, , ,help-system-audio-control, , ,180,Show help for the System Audio Control feature
+cec-ctl, , ,help-system-information, , ,181,Show help for the System Information feature
+cec-ctl, , ,help-timer-programming, , ,182,Show help for the Timer Programming feature
+cec-ctl, , ,help-tuner-control, , ,183,Show help for the Tuner Control feature
+cec-ctl, , ,help-vendor-specific-commands, , ,184,Show help for the Vendor Specific Commands feature

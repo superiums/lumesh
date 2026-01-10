@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ranger, ,d,debug, , ,101,Activate debug mode
+ranger, ,c,clean, , ,102,Activate clean mode
+ranger, ,r,confdir, , ,103,Change configuration directory
+ranger, , ,copy-config,all commands commands_full rc rifle scope,@f @r,104,Create copies of the default configuration
+ranger, , ,choosefile, ,@r,105,Pick file with ranger
+ranger, , ,choosefiles, ,@r,106,Pick multiple files with ranger
+ranger, , ,choosedir, ,@r,107,Pick directory
+ranger, , ,selectfile, ,@r,108,Open ranger with given file selected
+ranger, , ,list-unused-keys, , ,109,List common keys which are not bound
+ranger, , ,list-tagged-files, ,@f,110,List all tagged files with given tag (default *)
+ranger, , ,profile, , ,111,Print statistics of CPU usage on exit
+ranger, , ,cmd, ,@r,112,Execute command after configuration file read
+ranger, , ,version, , ,113,Print version
+ranger, ,h,help, , ,114,Print help

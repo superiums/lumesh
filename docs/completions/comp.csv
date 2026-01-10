@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+comp, , , ,/d,@f,101,Display differences in decimal format
+comp, , , ,/a,@f,102,Display differences as characters
+comp, , , ,/l,@f,103,Displays the number of the line where a difference occurs
+comp, , , ,/n,@f,104,Compare only the number of lines that are specified for each file
+comp, , , ,/c,@f,105,Perform a comparison that is not case-sensitive
+comp, , , ,/off,@f,106,Process files with the offline attribute set
+comp, , , ,/offline,@f,107,Process files with the offline attribute set
+comp, , , ,/?,@f,108,Show help

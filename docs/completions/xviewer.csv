@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xviewer, ,h,help, , ,101,Show help and exit
+xviewer, , ,version, , ,102,Show version and exit
+xviewer, , ,usage, , ,103,Show help and exit
+xviewer, , ,disable-sound, , ,104,Do not use sound server
+xviewer, , ,enable-sound, , ,105,Use sound server
+xviewer, , ,espeaker, , ,106,Host:port on which sound
+xviewer, , ,gdk-debug, , ,107,Enabled Gdk flags
+xviewer, , ,gdk-no-debug, , ,108,Disabled Gdk flags
+xviewer, , ,display, , ,109,X display
+xviewer, , ,sync, , ,110,Synchronize X calls
+xviewer, , ,no-xshm, , ,111,Do not use X shared memory extension
+xviewer, , ,name, , ,112,Program name
+xviewer, , ,class, , ,113,Program class
+xviewer, , ,gxid_host, , ,114, 
+xviewer, , ,gxid_port, , ,115, 
+xviewer, , ,xim-preedit, , ,116, 
+xviewer, , ,xim-status, , ,117, 
+xviewer, , ,gtk-debug, , ,118,Enabled Gtk+ flags
+xviewer, , ,gtk-no-debug, , ,119,Disabled Gtk+ flags
+xviewer, , ,g-fatal, , ,120,Treat warnings as fatal errors
+xviewer, , ,gtk-module, , ,121,Additional Gtk module
+xviewer, , ,disable-crash-dialog, , ,122, 
+xviewer, , ,sm-client-id, , ,123,Session management ID
+xviewer, , ,sm-config-prefix, , ,124,Prefix of saved configuration
+xviewer, , ,sm-disable, , ,125,Disable connection to session manager

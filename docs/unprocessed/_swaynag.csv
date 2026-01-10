@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+The config file to use. Default: $HOME/.swaynag/config, $XDG_CONFIG_HOME/swaynag/config, and SYSCONFDIR/swaynag/config., ,C,config, ,@r,102, 

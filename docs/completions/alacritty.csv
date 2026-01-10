@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alacritty, ,e,command, , ,101,PP
+alacritty, , ,config-file, , ,102,PP
+alacritty, ,o,option, , ,103,PP
+alacritty, , ,socket, , ,104,PP
+alacritty, ,T,title, , ,105,PP

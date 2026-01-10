@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+g-ir-doc-tool, , ,help, , ,101,Show help options
+g-ir-doc-tool, , ,output, , ,102,Save the resulting output in DIRECTORY
+g-ir-doc-tool, , ,format, , ,103,"Output format.  One of devdocs, mallard or sections"
+g-ir-doc-tool, , ,language, , ,104,"Output language.  One of c, python, or gjs"
+g-ir-doc-tool, , ,add-include-path, , ,105,Adds a directory which will be used to find includes inside the GIR format
+g-ir-doc-tool, , ,version, , ,106,Show program's version number and exit
+g-ir-doc-tool, , ,write-sections-file, , ,107,Backwards-compatible equivalent to -f sections

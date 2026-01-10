@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ , , , , ,@f,101, 
+tuned-adm, ,h,help, ,@k,104,show this help message and exit
+tuned-adm, ,v,version, ,@k,105,show program's version number and exit
+tuned-adm, ,d,debug, ,@k,106,show debug messages
+tuned-adm, ,a,async, ,@k,107,with dbus do not wait on commands completion and return immediately
+tuned-adm, ,t,timeout, ,@k,108,with sync operation use specific timeout instead of the default 600 second(s)
+tuned-adm, ,l,loglevel, ,@k,109,level of log messages to capture

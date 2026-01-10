@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pacman-key, , ,config, , ,101,Use an alternate configuration file instead of the /etc/pacman. conf default
+pacman-key, , ,gpgdir, , ,102,Set an alternate home directory for GnuPG
+pacman-key, , ,keyserver, , ,103,Use the specified keyserver if the operation requires one
+pacman-key, ,a,add, , ,104, 
+pacman-key, ,d,delete, , ,105, 
+pacman-key, ,e,export, , ,106, 
+pacman-key, , ,edit-key, , ,107, 
+pacman-key, ,f,finger, , ,108, 
+pacman-key, ,h,help, , ,109, 
+pacman-key, , ,import, , ,110, 
+pacman-key, , ,import-trustdb, , ,111, 
+pacman-key, , ,init, , ,112, 
+pacman-key, ,l,list-keys, , ,113, 
+pacman-key, , ,list-sigs, , ,114, 
+pacman-key, , ,lsign-key, , ,115, 
+pacman-key, , ,nocolor, , ,116, 
+pacman-key, ,r,recv-keys, , ,117, 
+pacman-key, , ,refresh-keys, , ,118, 
+pacman-key, , ,populate, , ,119, 
+pacman-key, ,u,updatedb, , ,120, 
+pacman-key, , ,check-trustdb, , ,121,in GnuPG.  This operation can be specified with other operations
+pacman-key, ,V,version, , ,122, 
+pacman-key, ,v,verify, , ,123, 

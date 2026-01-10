@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lpinfo, , ,device-id, ,@f @r,101,Specifies the IEEE-1284 device ID to match when listing drivers with the -m option
+lpinfo, , ,exclude-schemes, ,@f @r,102,comma-separated list of device or PPD schemes that should be excluded from the results
+lpinfo, , ,include-schemes, ,@f @r,103,comma-separated list of device or PPD schemes that should be included in the results
+lpinfo, , ,language, ,@f @r,104,Specifies the language to match when listing drivers with the -m option
+lpinfo, , ,make-and-model, ,@f @r,105,Specifies the make and model to match when listing drivers with the -m option
+lpinfo, , ,product, ,@f @r,106,Specifies the product to match when listing drivers with the -m option
+lpinfo, , ,timeout, ,@f @r,107,Specifies the timeout when listing devices with the -v option (sec)

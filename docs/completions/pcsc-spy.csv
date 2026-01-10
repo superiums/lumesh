@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pcsc-spy, ,d,diffable, , ,101,"X Item '-d, --diffable' Remove the variable parts (like handler values) from …"
+pcsc-spy, ,h,help, , ,102,"X Item '-h, --help' Display a short help text"
+pcsc-spy, ,n,nocolor, , ,103,"X Item '-n, --nocolor' Disable the output colorization (if you want redirect …"
+pcsc-spy, ,v,version, , ,104,"X Item '-v, --version' Print the version of the pcsc-spy program plus a copyr…"
+pcsc-spy, ,t,thread, , ,105, 

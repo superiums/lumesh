@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+horcrux, $subcommand_show_condition, , ,bind,@f,101,Bind directory
+horcrux, $subcommand_show_condition, , ,split,@f,102,Split file
+horcrux, $split_option_show_condition,n, , ,@r,103,Count of horcruxes to make
+horcrux, $split_option_show_condition,t, , ,@r,104,Count of horcruxes required to resurrect the original file

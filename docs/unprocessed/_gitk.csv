@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gitk, contains -- -- (commandline -xpc), ,all, , ,101,"Show all refs (branches, tags, etc.)"
+gitk, contains -- -- (commandline -xpc), ,since=YYYY-MM-DD, ,@f @r,102,Show commits more recent that a specific date
+gitk, contains -- -- (commandline -xpc), ,until=YYYY-MM-DD, ,@f @r,103,Show commits older than a specific date
+gitk, contains -- -- (commandline -xpc), ,date-order, , ,104,Sort commits by date when possible
+gitk, contains -- -- (commandline -xpc), ,merge, , ,105,"On a merge conflict, show commits that modify conflicting files"
+gitk, contains -- -- (commandline -xpc), ,left-right, , ,106,Mark which side of a symmetric difference a commit is reachable from
+gitk, contains -- -- (commandline -xpc), ,full-history, , ,107,"When filtering history with -- path..., do not prune some history"
+gitk, contains -- -- (commandline -xpc), ,simplify-merges, , ,108,Hide needless merges from history
+gitk, contains -- -- (commandline -xpc), ,ancestry-path, , ,109,Only display commits that exist directly on the ancestry chain between the range
+gitk, contains -- -- (commandline -xpc), ,argscmd=, , ,110,Command to be run to determine th revision range to show
+gitk, contains -- -- (commandline -xpc), ,select-commit=, , ,111,"Select the specified commit after loading the graph, instead of HEAD"
+gitk, contains -- -- (commandline -xpc), ,select-commit=HEAD, , ,112,"Select the specified commit after loading the graph, instead of HEAD"
+gitk, contains -- -- (commandline -xpc),n,max-count, ,@f @r,113,Limit the number of commits to output
+gitk, contains -- -- (commandline -xpc), , ,-L1, ,114,"-L<start>,<end>:<file> trace the evolution of a line range"
+gitk, contains -- -- (commandline -xpc), , ,-L., ,115,-L<funcname>:<file> trace the evolution of a function name regex
+gitk, contains -- -- (commandline -xpc) && string match -rq -- '^-L[^:]*': (commandline -ct), , ,'(, ,116, 
+gitk, contains -- -- (commandline -xpc), , , ,@f,117, 
+gitk, contains -- -- (commandline -xpc), , , ,@F,118, 

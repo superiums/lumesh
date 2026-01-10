@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+yarn, add,D,dev, ,@f,105, 
+yarn, add,P,peer, ,@f,106, 
+yarn, add,O,O, ,@f,107, 
+yarn, add,E,exact, ,@f,108, 
+yarn, add,T,tilde, ,@f,109, 
+yarn, cache, , ,clean,@f,112, 
+yarn, config, , ,set get delete list,@f,114, 
+yarn, init,y,yes, ,@f,118, 
+yarn, list, ,depth, ,@f,122, 
+yarn, version, ,new-version, ,@f,132, 
+yarn, version, ,message, ,@f,133, 
+yarn, version, ,no-git-tag-version, ,@f,134, 

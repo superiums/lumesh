@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt, install, ,no-install-recommends, , ,105,Do not install recommended packages
+apt, install, ,no-install-suggests, , ,106,Do not install suggested packages
+apt, install,d,download-only, , ,107,Download Only
+apt, install,f,fix-broken, , ,108,Correct broken dependencies
+apt, install,m,fix-missing, , ,109,Ignore missing packages
+apt, install, ,no-download, , ,110,Disable downloading packages
+apt, install,q,quiet, , ,111,Quiet mode
+apt, install,s,no-act, , ,112,Perform a simulation
+apt, install,y,assume-yes, , ,113,Automatic yes to prompts
+apt, install, ,assume-no, , ,114,Automatic no to prompts
+apt, install, ,install-recommends, , ,115,Install recommended packages
+apt, install, ,install-suggests, , ,116,Install suggested packages
+apt, upgrade, ,with-new-pkgs, , ,117, 
+apt, ,h,help, ,@f,118,Display help
+apt, ,v,version, ,@f,119,Display version and exit
+apt, ,o,option, ,@f @r,120,Set a configuration option
+apt, ,c,config-file, ,@r,121,Configuration file
+apt, ,t, , ,@f @r,122,Install from specific repository

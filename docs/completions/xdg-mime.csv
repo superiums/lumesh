@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-mime, query default install uninstall, , ,query default install uninstall, ,100, 
+xdg-mime," query; and filetype default", , ,filetype default, ,100,Query information
+xdg-mime, , ,help, , ,104,Display help
+xdg-mime, , ,manual, , ,105,Display long help
+xdg-mime, , ,version, , ,106,Print version

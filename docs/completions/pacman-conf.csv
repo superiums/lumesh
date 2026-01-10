@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pacman-conf, ,c,config, , ,101,Specify an alternate configuration file
+pacman-conf, ,R,rootdir, , ,102,Specify an alternate installation root (default is /)
+pacman-conf, ,r,repo, , ,103,Query options for a specific repository
+pacman-conf, ,v,verbose, , ,104,Always shown directive names
+pacman-conf, ,l,repo-list, , ,105,List configured repositories
+pacman-conf, ,h,help, , ,106,Output syntax and command line options
+pacman-conf, ,V,version, , ,107,Display version and exit

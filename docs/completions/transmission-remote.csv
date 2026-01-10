@@ -1,0 +1,79 @@
+cmd,conds,short,long,params,dirs,pri,desc
+transmission-remote, ,a,add, , ,101,Add torrents to transmission
+transmission-remote, ,b,debug, , ,102,Enable debugging mode
+transmission-remote, , ,alt-speed, , ,103,Use the alternate Limits
+transmission-remote, , ,no-alt-speed, , ,104,Don't use the alternate Limits
+transmission-remote, , ,alt-speed-downlimit, , ,105,Limit the alternate download speed
+transmission-remote, , ,alt-speed-uplimit, , ,106,Limit the alternate upload speed
+transmission-remote, , ,alt-speed-scheduler, , ,107,Use the scheduled on/off times
+transmission-remote, , ,no-alt-speed-scheduler, , ,108,Don't use the scheduled on/off times
+transmission-remote, , ,alt-speed-time-begin, , ,109,Time to start using the alt speed limits (in)
+transmission-remote, , ,alt-speed-time-end, , ,110,Time to stop using the alt speed limits (hhmm)
+transmission-remote, , ,alt-speed-days, , ,111,Number of days to enable the speed scheduler
+transmission-remote, , ,torrent-done-script, , ,112,Script to run each time a torrent finishes
+transmission-remote, , ,no-torrent-done-script, , ,113,Don't run any script when a torrent finishes
+transmission-remote, ,c,incomplete-dir, , ,114,Directory for incomplete downloads
+transmission-remote, ,C,no-incomplete-dir, , ,115,Don't store incomplete torrents in a different directory
+transmission-remote, ,d,downlimit, , ,116,Limit the maximum download speed to limit
+transmission-remote, ,D,no-downlimit, , ,117,Disable download speed limits
+transmission-remote, ,e,cache, , ,118,Set the session's maximum memory cache size (MiB)
+transmission-remote, , ,encryption-required, , ,119,Encrypt all peer connections
+transmission-remote, , ,encryption-preferred, , ,120,Prefer encrypted peer connections
+transmission-remote, , ,encryption-tolerated, , ,121,Prefer unencrypted peer connections
+transmission-remote, , ,exit, , ,122,Tell the Transmission to initiate a shutdown
+transmission-remote, ,f,files, , ,123,Get a file list for the current torrent(s)
+transmission-remote, ,g,get, , ,124,Mark file(s) for download
+transmission-remote, ,G,no-get, , ,125,Mark file(s) for not downloading
+transmission-remote, , ,global-seedratio, , ,126,Ratio All torrents should seed
+transmission-remote, , ,no-global-seedratio, , ,127,All torrents should seed regardless of ratio
+transmission-remote, ,h,help, , ,128,Print command-line option descriptions
+transmission-remote, ,i,info, , ,129,Show details of the current torrent(s)
+transmission-remote, , ,session-info, , ,130,List session information from the server
+transmission-remote, , ,session-stats, , ,131,List statistical information from the server
+transmission-remote, ,l,list, , ,132,List all torrents
+transmission-remote, ,m,portmap, , ,133,Enable portmapping via NAT-PMP or UPnP
+transmission-remote, ,M,no-portmap, , ,134,Disable portmapping
+transmission-remote, ,n,auth, , ,135,Set the username:password for authentication
+transmission-remote, , ,authenv, , ,136,Set the authentication information from $TR_AUTH
+transmission-remote, ,N,netrc, , ,137,Set authentication information from a netrc file
+transmission-remote, ,o,dht, , ,138,Enable distributed hash table (DHT)
+transmission-remote, ,O,no-dht, , ,139,Disable distributed hash table (DHT)
+transmission-remote, ,p,port, , ,140,Set the port to use when listening
+transmission-remote, , ,bandwidth-high, , ,141,Give this torrent high bandwidth
+transmission-remote, , ,bandwidth-normal, , ,142,Give this torrent normal bandwidth
+transmission-remote, , ,bandwidth-low, , ,143,Give this torrent low bandwidth
+transmission-remote, , ,priority-high, , ,144,Try to download the specified files first
+transmission-remote, , ,priority-normal, , ,145,Try to download the specified files normally
+transmission-remote, , ,priority-low, , ,146,Try to download the specified files last
+transmission-remote, , ,peers, , ,147,Set the maximum number of peers
+transmission-remote, ,r,remove, , ,148,Remove the current torrents
+transmission-remote, , ,remove-and-delete, , ,149,Remove the current torrents and delete data
+transmission-remote, , ,reannounce, , ,150,Reannounce the current torrents
+transmission-remote, , ,move, , ,151,Move the current torrents' data to another directory
+transmission-remote, , ,find, , ,152,Where to look for the current torrents' data
+transmission-remote, , ,seedratio, , ,153,Current torrents seed until a specific ratio
+transmission-remote, , ,no-seedratio, , ,154,Current torrents seed regardless of ratio
+transmission-remote, , ,seedratio-default, , ,155,Current torrents use global seedratio
+transmission-remote, , ,tracker-add, , ,156,Add a tracker to a torrent
+transmission-remote, , ,tracker-remove, , ,157,Remove a tracker from a torrent
+transmission-remote, ,s,start, , ,158,Start the current torrents
+transmission-remote, ,S,stop, , ,159,Stop the current torrents
+transmission-remote, , ,start-paused, , ,160,Start added torrents paused
+transmission-remote, , ,no-start-paused, , ,161,Start added torrents unpaused
+transmission-remote, ,t,torrent, , ,162,Set torrents as current for subsequent options
+transmission-remote, , ,trash-torrent, , ,163,Delete torrents after adding
+transmission-remote, , ,no-trash-torrent, , ,164,Do not delete torrents after adding
+transmission-remote, , ,honor-session, , ,165,Current torrents honor session limits
+transmission-remote, , ,no-honor-session, , ,166,Make the current torrent(s) not honor the session limits
+transmission-remote, ,u,uplimit, , ,167,Limit the maximum upload speed (KiB/s)
+transmission-remote, ,U,no-uplimit, , ,168,Disable upload speed limits
+transmission-remote, , ,utp, , ,169,Enable uTP for peer connections
+transmission-remote, , ,no-utp, , ,170,Disable uTP for peer connections
+transmission-remote, ,v,verify, , ,171,Verify the current torrents
+transmission-remote, ,V,version, , ,172,Show version number and exit
+transmission-remote, ,w,download-dir, , ,173,Use directory as default for new downloads
+transmission-remote, ,x,pex, , ,174,Enable peer exchange (PEX)
+transmission-remote, ,X,no-pex, , ,175,Disable peer exchange (PEX)
+transmission-remote, ,y,lds, , ,176,Enable local peer discovery (LPD)
+transmission-remote, ,Y,no-lds, , ,177,Disable local peer discovery (LPD)
+transmission-remote, , ,peer-info, , ,178,List the current torrent's connected peers

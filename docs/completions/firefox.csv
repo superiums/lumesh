@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+firefox, , ,display, ,@r,101,X display to use
+firefox, , ,sync, , ,102,Make X calls synchronous
+firefox, , ,g-fatal-warnings, , ,103,Make all warnings fatal
+firefox, ,h,help, , ,104,Print this message
+firefox, ,v,version, , ,105,Print Firefox version
+firefox, , ,full-version, , ,106,"Print Firefox version, build and platform build ids"
+firefox, ,P, , ,@F @r,107,Start this profile
+firefox, , ,profile, ,@r,108,Start with profile at <path>
+firefox, , ,migration, , ,109,Start with migration wizard
+firefox, , ,ProfileManager, , ,110,Start with ProfileManager
+firefox, , ,no-remote, , ,111,Do not accept or send remote commands implies --new-instance
+firefox, , ,new-instance, , ,112,"Open new instance, not a new window in running instance"
+firefox, , ,safe-mode, , ,113,Disables extensions and themes for this session
+firefox, , ,allow-downgrade, , ,114,Allows downgrading a profile
+firefox, , ,MOZ_LOG, ,@f,115,"Treated as MOZ_LOG=<modules> environment variable, overrides it"
+firefox, , ,MOZ_LOG_FILE, ,@r,116,"Treated as MOZ_LOG_FILE=<file> environment variable, overrides it"
+firefox, , ,headless, , ,117,Run without a GUI
+firefox, , ,jsdebugger, , ,118,Open the Browser Toolbox
+firefox, , ,wait-for-jsdebugger, , ,119,Spin event loop until JS debugger connects
+firefox, , ,start-debugger-server, , ,120,Start the devtools server on a TCP port or Unix domain socket path
+firefox, , ,browser, , ,121,Open a browser window
+firefox, , ,new-window, ,@r,122,Open <url> in a new window
+firefox, , ,new-tab, ,@r,123,Open <url> in a new tab
+firefox, , ,private-window, ,@r,124,Open <url> in a new private window
+firefox, , ,preferences, , ,125,Open Preferences dialog
+firefox, , ,screenshot, , ,126,Save screenshot to <path> or in working directory
+firefox, , ,window-size, ,@f,127,Width and optionally height of screenshot
+firefox, , ,search, ,@r,128,Search <term> with your default search engine
+firefox, , ,setDefaultBrowser, , ,129,Set this app as the default browser
+firefox, , ,first-startup, , ,130,Run post-install actions before opening a new window
+firefox, , ,kiosk, , ,131,Start the browser in kiosk mode
+firefox, , ,disable-pinch, , ,132,Disable touch-screen and touch-pad pinch gestures
+firefox, , ,jsconsole, , ,133,Open the Browser Console
+firefox, , ,devtools, , ,134,Open DevTools on initial load
+firefox, , ,marionette, , ,135,Enable remote control server
+firefox, , ,remote-debugging-port, ,@f,136,Start the Firefox Remote Agent
+firefox, , ,remote-allow-hosts, ,@f @r,137,Values of the Host header to allow for incoming requests
+firefox, , ,remote-allow-origins, ,@f @r,138,Values of the Origin header to allow for incoming requests

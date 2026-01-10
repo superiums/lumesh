@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idn2, ,h,help, , ,101,Print help and exit
+idn2, ,V,version, , ,102,Print version and exit
+idn2, ,d,decode, , ,103,Decode (punycode) domain name
+idn2, ,l,lookup, , ,104,Lookup domain name (default)
+idn2, ,r,register, , ,105,Register label
+idn2, ,T,tr46t, , ,106,Enable TR46 transitional processing
+idn2, ,N,tr46nt, , ,107,Enable TR46 non-transitional processing
+idn2, , ,no-tr46, , ,108,Disable TR46 processing
+idn2, , ,usestd3asciirules, , ,109,Enable STD3 ASCII rules
+idn2, , ,no-alabelroundtrip, , ,110,Disable A-label roundtrip for lookups
+idn2, , ,debug, , ,111,Print debugging information
+idn2, , ,quiet, , ,112,"Silent operation AUTHOR Written by Simon Josefsson, Tim Ruehsen"

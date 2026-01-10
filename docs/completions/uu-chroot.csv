@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-chroot, , ,groups, , ,101,Comma-separated list of groups to switch to
+uu-chroot, , ,userspec, , ,102,Colon-separated user and group to switch to.
+uu-chroot, , ,skip-chdir, , ,103,"Use this option to not change the working directory to / after changing the root directory to newroot, i.e., inside the chroot."
+uu-chroot, ,h,help, , ,104,Print help
+uu-chroot, ,V,version, , ,105,Print version

@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wg, $commands, , ,$commands,@f @r,100, 
+wg, $commands, , ,show, ,100,Shows the current configuration and device information
+wg, $commands, , ,showconf, ,100,Shows the current configuration of an interface
+wg, $commands, , ,set, ,100,Change the current configuration
+wg, $commands, , ,setconf, ,100,Applies a configuration to an interface
+wg, $commands, , ,addconf, ,100,Appends a configuration to an interface
+wg, $commands, , ,syncconf, ,100,Synchronizes a configuration to an interface
+wg, $commands, , ,genkey, ,100,Generates a new private key
+wg, $commands, , ,genpsk, ,100,Generates a new preshared key
+wg, $commands, , ,pubkey, ,100,Computes public key given a private key
+wg, $commands, ,help, ,@f @r,101,View usage of the subcommand
+wg," addconf syncconf setconf; and __fish_is_nth_token 2", , , ,@f,102,Wireguard Interface
+wg," addconf syncconf setconf; and __fish_is_nth_token 3", , , ,@F,103,Configuration file
+wg," showconf; and __fish_is_nth_token 2", , , ,@f,104,Wireguard Interface
+wg," show; and __fish_is_nth_token 2", , ,interfaces,@f @r,105,Shows a list of interfaces
+wg," show; and __fish_is_nth_token 2", , ,all,@f,106,Shows information for all interfaces
+wg," show; and __fish_is_nth_token 2", , , ,@f,107,Wireguard Interface
+wg," show; and __fish_is_nth_token 3", , ,public-key private-key listen-port fwmark peers preshared-keys endpoints allowed-ips latest-handshakes transfer persistent-keepalive dump,@f,108, 
+wg," set; and __fish_is_nth_token 2", , , ,@f,109,Wireguard Interface
+wg," set; and __fish_prev_arg_in $settables_kw; and __fish_is_nth_token 2", , ,$settables,@f,110, 
+wg," set; and __fish_prev_arg_in peer", , ,remove preshared key, ,111, 

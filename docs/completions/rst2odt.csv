@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rst2odt, , ,stylesheet, , ,101,Specify a stylesheet
+rst2odt, , ,odf-config-file, , ,102,Specify additional ODF options
+rst2odt, , ,cloak-email-addresses, , ,103,Enable obfuscate email addresses
+rst2odt, , ,no-cloak-email-addresses, , ,104,Disable obfuscate email addresses
+rst2odt, , ,table-border-thickness, , ,105,Specify the thickness of table borders
+rst2odt, , ,add-syntax-highlighting, , ,106,Enable syntax highlighting
+rst2odt, , ,no-syntax-highlighting, , ,107,Disable syntax highlighting
+rst2odt, , ,create-sections, , ,108,Create sections
+rst2odt, , ,no-sections, , ,109,Don't create sections
+rst2odt, , ,create-links, , ,110,Create links
+rst2odt, , ,no-links, , ,111,Don't create links
+rst2odt, , ,endnotes-end-doc, , ,112,Generate endnotes
+rst2odt, , ,no-endnotes-end-doc, , ,113,Generate footnotes
+rst2odt, , ,generate-list-toc, , ,114,Generate a bullet list TOC
+rst2odt, , ,generate-oowriter-toc, , ,115,Generate an ODF TOC
+rst2odt, , ,custom-odt-header, , ,116,Specify a custom header
+rst2odt, , ,custom-odt-footer, , ,117,Specify a custom footer

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, , , ,$listinstalled, ,101, 
+$progname, __fish_contains_opt -s R, , ,$listall, ,102, 
+$progname, ,C, , ,@D,103,Use this XBPS configuration directory
+$progname, ,c, , ,@D,104,Use this cache directory to store binary packages
+$progname, , ,repository, , ,105,Append the specified repository to the top of the list
+$progname, , ,regex, , ,106,Use Extended Regular Expressions
+$progname, , ,fulldeptree, , ,107,Print a full dependency tree in the show dependencies mode
+$progname, ,r, , ,@D,108,Use this path for the target root directory
+$progname, ,X, ,$listinstalled, ,109,Show the reverse dependencies for PKG
+$progname, __fish_contains_opt -s R,X, ,$listall,@f @r,110,Show the reverse dependencies for PKG
+$progname, , ,cat, , ,111,Prints the file FILE stored in binary package PKG to stdout

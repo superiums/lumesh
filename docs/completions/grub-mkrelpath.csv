@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mkrelpath, ,?,help, , ,101,give this help list
+grub-mkrelpath, , ,usage, , ,102,give a short usage message
+grub-mkrelpath, ,V,version, , ,103,print program version REPORTING BUGS Report bugs to <bug-grub@gnu. org>

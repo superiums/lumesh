@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+travis, ,h,help, ,@f,137,Display help

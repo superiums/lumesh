@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+readprofile, ,a,all, , ,101, 
+readprofile, ,b,histbin, , ,102, 
+readprofile, ,i,info, , ,103, 
+readprofile, ,m,mapfile, , ,104, 
+readprofile, ,M,multiplier, , ,105, 
+readprofile, ,p,profile, , ,106, 
+readprofile, ,r,reset, , ,107, 
+readprofile, ,s,counters, , ,108, 
+readprofile, ,v,verbose, , ,109, 
+readprofile, ,h,help, , ,110, 
+readprofile, ,V,version, , ,111, 

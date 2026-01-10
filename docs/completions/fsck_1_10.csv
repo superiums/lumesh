@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fsck.cramfs, ,v,verbose, , ,101, 
+fsck.cramfs, ,b,blocksize, , ,102, 
+fsck.cramfs, , ,extract, , ,103, 
+fsck.cramfs, ,h,help, , ,104, 
+fsck.cramfs, ,V,version, , ,105, 

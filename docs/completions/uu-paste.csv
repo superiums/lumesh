@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-paste, ,d,delimiters, , ,101,reuse characters from LIST instead of TABs
+uu-paste, ,s,serial, , ,102,paste one file at a time instead of in parallel
+uu-paste, ,z,zero-terminated, , ,103,"line delimiter is NUL, not newline"
+uu-paste, ,h,help, , ,104,Print help
+uu-paste, ,V,version, , ,105,Print version

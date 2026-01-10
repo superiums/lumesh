@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+makepkg-template, ,p,input, , ,101,Read the package script build script instead of the default
+makepkg-template, ,o,output, , ,102,Write the updated file to build script instead of overwriting the input file
+makepkg-template, ,n,newest, , ,103,Always use the newest available template file
+makepkg-template, , ,template-dir, , ,104,Change the dir where we are looking for template files

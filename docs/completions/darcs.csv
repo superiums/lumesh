@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+darcs, , ,help, , ,152,Show a brief description of the command and its options
+darcs, , ,list-options, , ,153,"Show plain list of available options and commands, for auto-completion"
+darcs, , ,run-posthook, , ,154,Run posthook command without prompting [DEFAULT]
+darcs, , ,prompt-posthook, , ,155,Prompt before running posthook
+darcs, , ,no-posthook, , ,156,Don't run posthook command [DEFAULT]
+darcs, , ,posthook, ,@f @r,157,Specify command to run after this darcs command
+darcs, , ,run-prehook, , ,158,Run prehook command without prompting [DEFAULT]
+darcs, , ,prompt-prehook, , ,159,Prompt before running prehook
+darcs, , ,no-prehook, , ,160,Don't run prehook command [DEFAULT]
+darcs, , ,prehook, ,@f @r,161,Specify command to run before this darcs command
+darcs, , ,disable, , ,162,Disable this command
+darcs, , ,debug, , ,163,Give only debug output
+darcs, , ,debug-http, , ,164,Debug output from libcurl
+darcs, ,q,quiet, , ,165,Suppress informational output
+darcs, , ,standard-verbosity, , ,166,Neither verbose nor quiet output [DEFAULT]
+darcs, ,v,verbose, , ,167,Give verbose output
+darcs, , ,timings, , ,168,Provide debugging timings information
+darcs, , ,no-cache, , ,169,Don't use patch caches

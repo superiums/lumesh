@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+expiry, ,c,check, , ,101,Check the password expiration of the current user
+expiry, ,f,force, , ,102,Force a password change if the current user has an expired password
+expiry, ,h,help, , ,103,Display help message and exit

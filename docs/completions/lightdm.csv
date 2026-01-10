@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lightdm, ,h,help, ,@f @r,101,Show help options
+lightdm, ,c,config, ,@F @r,102,Use configuration file
+lightdm, ,d,debug, , ,103,Print debugging messages
+lightdm, , ,test-mode, , ,104,Skip things requiring root access
+lightdm, , ,pid-file, ,@F @r,105,File to write PID into
+lightdm, , ,xsessions-dir, ,@F @r,106,Directory to load X sessions from
+lightdm, , ,xgreeters-dir, ,@F @r,107,Directory to load X greeters from
+lightdm, , ,log-dir, ,@F @r,108,Directory to write logs to
+lightdm, , ,run-dir, ,@F @r,109,Directory to store running state
+lightdm, , ,cache-dir, ,@F @r,110,Directory to cache information
+lightdm, ,v,version, ,@f @r,111,Show release version

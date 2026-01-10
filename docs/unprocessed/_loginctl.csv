@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+loginctl, $seen $commands, , ,$commands,@f @r,101, 
+loginctl, $seen $commands,a,all, ,@f,102,"Show all properties, including empty ones"
+loginctl, $seen $commands,l,full, ,@f,103,Do not ellipsize output
+loginctl, $seen $commands,h,help, ,@f,104,Show this help
+loginctl, $seen $commands,H,host, ,@f @r,105,Operate on remote host
+loginctl, $seen $commands, ,kill-who, ,@f @r,106,Who to send signal to
+loginctl, $seen $commands,n,lines, ,@f @r,107,Number of journal entries to show
+loginctl, $seen $commands,M,machine, ,@f @r,108,Operate on local container
+loginctl, $seen $commands, ,no-ask-password, ,@f,109,Don't prompt for password
+loginctl, $seen $commands, ,no-legend, ,@f,110,Do not show the headers and footers
+loginctl, $seen $commands, ,no-pager, ,@f,111,Do not pipe output into a pager
+loginctl, $seen $commands,o,output,$output,@f @r,112,Change journal output mode
+loginctl, $seen $commands,p,property, ,@f @r,113,Show only properties by this name
+loginctl, $seen $commands,P, , ,@f @r,114,Equivalent to --value --property
+loginctl, $seen $commands,s,signal, ,@f @r,115,Which signal to send
+loginctl, $seen $commands, ,value, ,@f,116,"When showing properties, only print the value"
+loginctl, $seen $commands, ,version, ,@f,117,Show package version

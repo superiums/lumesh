@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ng, __fish_use_subcommand, , ,add, ,102,Add dependency
+ng, __fish_use_subcommand, , ,analytics, ,103,Configure analytics
+ng, __fish_use_subcommand, , ,build, ,104,Compile Angular app
+ng, __fish_use_subcommand, , ,config, ,105,get/set config vars
+ng, __fish_use_subcommand, , ,deploy, ,106,Deploy builder
+ng, __fish_use_subcommand, , ,doc, ,107,Search documentation
+ng, __fish_use_subcommand, , ,e2e, ,108,Run e2e tests
+ng, __fish_use_subcommand, , ,extract-i18n, ,109,Extracts i18n
+ng, __fish_use_subcommand, , ,make-this-awesome, ,110,
+ng, __fish_use_subcommand, , ,generate, ,111,Create <schematic>
+ng, __fish_use_subcommand, , ,help, ,112,Display help
+ng, __fish_use_subcommand, , ,lint, ,113,Run linter
+ng, __fish_use_subcommand, , ,new, ,114,New workspace
+ng, __fish_use_subcommand, , ,run, ,115,Run Architect
+ng, __fish_use_subcommand, , ,serve, ,116,Start dev server
+ng, __fish_use_subcommand, , ,test, ,117,Run unit tests
+ng, __fish_use_subcommand, , ,update, ,118,Update deps
+ng, __fish_use_subcommand, , ,version, ,119,Display version

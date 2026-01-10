@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nm, ,a,debug-syms, , ,101,Display debugger-only symbols
+nm, ,A,print-file-name, , ,102,Print name of the input file before every symbol
+nm, , ,no-demangle, , ,103,Do not demangle low-level symbol names
+nm, ,D,dynamic, , ,104,Display dynamic symbols instead of normal symbols
+nm, , ,defined-only, , ,105,Display only defined symbols
+nm, ,f,format,bsd sysv posix, ,106,Use the output format FORMAT. The default is 'bsd'
+nm, ,g,extern-only, , ,107,Display only external symbols
+nm, ,l,line-numbers, , ,108,Use debugging information to find a filename and line number for each symbol
+nm, ,n,numeric-sort, , ,109,Sort symbols numerically by address
+nm, ,p,no-sort, , ,110,Do not sort the symbols
+nm, ,P,portability, , ,111,Same as --format=posix
+nm, ,r,reverse-sort, , ,112,Reverse the sense of the sort
+nm, , ,plugin, , ,113,Load the specified plugin
+nm, ,S,print-size, , ,114,Print size of defined symbols
+nm, ,s,print-armap, , ,115,Include index for symbols from archive members
+nm, , ,size-sort, , ,116,Sort symbols by size
+nm, , ,special-syms, , ,117,Include special symbols in the output
+nm, , ,synthetic, , ,118,Display synthetic symbols as well
+nm, ,t,radix, , ,119,Use RADIX for printing symbol values
+nm, , ,target, , ,120,Specify the target object format as BFDNAME
+nm, ,u,undefined-only, , ,121,Display only undefined symbols
+nm, ,h,help, , ,122,Display this information
+nm, ,V,version, , ,123,Display this program's version number

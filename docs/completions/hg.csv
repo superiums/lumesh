@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+hg, ,R,repository, ,@f @r,101,repository root directory or name of overlay bundle file
+hg, , ,cwd, ,@D @f @r,102,change working directory
+hg, ,y,noninteractive, , ,103,"do not prompt, automatically pick the first choice for all prompts"
+hg, ,q,quiet, , ,104,suppress output
+hg, ,v,verbose, , ,105,enable additional output
+hg, , ,config, ,@f @r,106,set/override config option
+hg, , ,debug, , ,107,enable debugging output
+hg, , ,debugger, , ,108,start debugger
+hg, , ,encoding, ,@f @r,109,set the charset encoding
+hg, , ,encodingmode, ,@f @r,110,set the charset encoding mode
+hg, , ,traceback, , ,111,always print a traceback on exception
+hg, , ,time, , ,112,time how long the command takes
+hg, , ,profile, , ,113,print command execution profile
+hg, , ,version, , ,114,output version information and exit
+hg, ,h,help, , ,115,display help and exit
+hg, , ,hidden, , ,116,consider hidden changesets
+hg, , ,color,true false always auto never debug,@f @r,117,when to colorize
+hg, , ,pager,true false always auto never,@f @r,118,when to paginate

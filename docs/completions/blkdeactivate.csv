@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+blkdeactivate, ,d,dmoptions, , ,101,Comma separated list of device-mapper specific options
+blkdeactivate, ,e,errors, , ,102,Show errors reported from tools called by blkdeactivate
+blkdeactivate, ,h,help, , ,103,Display the help text
+blkdeactivate, ,l,lvmoptions, , ,104,Comma-separated list of LVM specific options: . RS
+blkdeactivate, ,r,mdraidoptions, , ,105,Comma-separated list of MD RAID specific options: . RS
+blkdeactivate, ,m,mpathoptions, , ,106,Comma-separated list of device-mapper multipath specific options: . RS
+blkdeactivate, ,o,vdooptions, , ,107,Comma-separated list of VDO specific options: . RS
+blkdeactivate, ,u,umount, , ,108,Unmount a mounted device before trying to deactivate it
+blkdeactivate, ,v,verbose, , ,109,Run in verbose mode.  Use -vv for even more verbose mode

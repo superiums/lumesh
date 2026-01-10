@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ideviceenterrecovery, ,d,debug, , ,101,enable communication debugging
+ideviceenterrecovery, ,h,help, , ,102,prints usage information
+ideviceenterrecovery, ,v,version, , ,103,prints version information

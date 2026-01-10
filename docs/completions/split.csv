@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+split, ,a,suffix-length, , ,101,generate suffixes of length N (default 2)
+split, , ,additional-suffix, , ,102,append an additional SUFFIX to file names
+split, ,b,bytes, , ,103,put SIZE bytes per output file
+split, ,C,line-bytes, , ,104,put at most SIZE bytes of records per output file
+split, , ,numeric-suffixes, , ,105,"same as -d, but allow setting the start value"
+split, , ,hex-suffixes, , ,106,"same as -x, but allow setting the start value"
+split, ,e,elide-empty-files, , ,107,do not generate empty output files with '-n'
+split, , ,filter, , ,108,"write to shell COMMAND; file name is $FILE"
+split, ,l,lines, , ,109,put NUMBER lines/records per output file
+split, ,n,number, , ,110,"generate CHUNKS output files; see explanation below"
+split, ,t,separator, , ,111,"use SEP instead of newline as the record separator; '0' (zero) specifies the …"
+split, ,u,unbuffered, , ,112,immediately copy input to output with '-n r/. '
+split, , ,verbose, , ,113,print a diagnostic just before each output file is opened
+split, , ,help, , ,114,display this help and exit
+split, , ,version, , ,115,output version information and exit 

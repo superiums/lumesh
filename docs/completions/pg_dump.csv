@@ -1,0 +1,54 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pg_dump, ,f,file, ,@r,101,Output file or directory name
+pg_dump, ,F,format,p c d t,@f @r,102,Output file format
+pg_dump, ,j,jobs, ,@f @r,103,Number of parallel jobs to dump
+pg_dump, ,v,verbose, , ,104,Verbose mode
+pg_dump, ,V,version, , ,105,Output version information
+pg_dump, ,Z,compress, ,@f @r,106,Compression level for compressed formats
+pg_dump, , ,lock-wait-timeout, ,@f @r,107,Fail after waiting TIMEOUT for a table lock
+pg_dump, , ,no-sync, , ,108,Do not wait for changes to be written safely to disk
+pg_dump, ,?,help, , ,109,Show this help
+pg_dump, ,a,data-only, , ,110,"Dump only the data, not the schema"
+pg_dump, ,b,blobs, , ,111,Include large objects in dump
+pg_dump, ,B,no-blobs, , ,112,Exclude large objects in dump
+pg_dump, ,c,clean, , ,113,Clean (drop) database objects before recreating
+pg_dump, ,C,create, , ,114,Include commands to create database in dump
+pg_dump, ,E,encoding, ,@f @r,115,Dump the data in encoding ENCODING
+pg_dump, ,n,schema, ,@f @r,116,Dump the named schemas only
+pg_dump, ,N,exclude-schema, ,@f @r,117,Do NOT dump the named schemas
+pg_dump, ,o,oids, , ,118,Include OIDs in dump
+pg_dump, ,O,no-owner, , ,119,Skip restoration of object ownership in plain-text format
+pg_dump, ,s,schema-only, , ,120,"Dump only the schema, no data"
+pg_dump, ,S,superuser, ,@f @r,121,Superuser user name to use in plain-text format
+pg_dump, ,t,table, ,@f @r,122,Dump the named tables only
+pg_dump, ,T,exclude-table, ,@f @r,123,Do NOT dump the named tables
+pg_dump, ,x,no-privileges, , ,124,Do not dump privileges (grant/revoke)
+pg_dump, , ,binary-upgrade, , ,125,For use by upgrade utilities only
+pg_dump, , ,column-inserts, , ,126,Dump data as INSERT commands with column names
+pg_dump, , ,disable-dollar-quoting, , ,127,"Disable dollar quoting, use SQL standard quoting"
+pg_dump, , ,disable-triggers, , ,128,Disable triggers during data-only restore
+pg_dump, , ,enable-row-security, , ,129,Enable row security (dump only content user has access to)
+pg_dump, , ,exclude-table-data, ,@f @r,130,Do NOT dump data for the named tables
+pg_dump, , ,if-exists, , ,131,Use IF EXISTS when dropping objects
+pg_dump, , ,inserts, , ,132,"Dump data as INSERT commands, rather than COPY"
+pg_dump, , ,load-via-partition-root, , ,133,Load partitions via the root table
+pg_dump, , ,no-comments, , ,134,Do not dump comments
+pg_dump, , ,no-publications, , ,135,Do not dump publications
+pg_dump, , ,no-security-labels, , ,136,Do not dump security label assignments
+pg_dump, , ,no-subscriptions, , ,137,Do not dump subscriptions
+pg_dump, , ,no-synchronized-snapshots, , ,138,Do not use synchronized snapshots in parallel jobs
+pg_dump, , ,no-tablespaces, , ,139,Do not dump tablespace assignments
+pg_dump, , ,no-unlogged-table-data, , ,140,Do not dump unlogged table data
+pg_dump, , ,quote-all-identifiers, , ,141,"Quote all identifiers, even if not key words"
+pg_dump, , ,section,pre-data data post-data,@f @r,142,"Dump named section (pre-data, data, or post-data)"
+pg_dump, , ,serializable-deferrable, , ,143,Wait until the dump can run without anomalies
+pg_dump, , ,snapshot, ,@f @r,144,Use given snapshot for the dump
+pg_dump, , ,strict-names, , ,145,Require table/schema include patterns to match entities
+pg_dump, , ,use-set-session-authorization, , ,146,Use SET SESSION AUTHORIZATION instead of ALTER OWNER
+pg_dump, ,d,dbname, ,@f @r,147,Database to dump
+pg_dump, ,h,host, ,@f @r,148,Database server host or socket directory
+pg_dump, ,p,port, ,@f @r,149,Database server port number
+pg_dump, ,U,username, ,@f @r,150,Connect as specified database user
+pg_dump, ,w,no-password, , ,151,Never prompt for password
+pg_dump, ,W,password, , ,152,Force password prompt (should happen automatically)
+pg_dump, , ,role, ,@f @r,153,Do SET ROLE before dump

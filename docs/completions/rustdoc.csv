@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rustdoc, ,r,input-format, , ,101,rust
+rustdoc, ,w,output-format, , ,102,html
+rustdoc, ,o,output, , ,103,where to place the output (default: doc/ for html)
+rustdoc, , ,passes, , ,104,space\\[hy]separated list of passes to run (default: '')
+rustdoc, , ,no-defaults, , ,105,don't run the default passes
+rustdoc, , ,plugins, , ,106,space-separated list of plugins to run (default: '')
+rustdoc, , ,plugin-path, , ,107,directory to load plugins from (default: /tmp/rustdoc_ng/plugins)
+rustdoc, , ,target, , ,108,target triple to document
+rustdoc, , ,crate-name, , ,109,specify the name of this crate
+rustdoc, ,L,library-path, , ,110,directory to add to crate search path
+rustdoc, , ,cfg, , ,111,pass a --cfg to rustc
+rustdoc, , ,extern, , ,112,pass an --extern to rustc
+rustdoc, , ,test, , ,113,run code examples as tests
+rustdoc, , ,test-args, , ,114,pass arguments to the test runner
+rustdoc, , ,html-in-header, , ,115,file to add to <head>
+rustdoc, , ,html-before-content, , ,116,files to include inline between <body> and the content of a rendered Markdown…
+rustdoc, , ,markdown-before-content, , ,117,files to include inline between <body> and the content of a rendered Markdown…
+rustdoc, , ,html-after-content, , ,118,files to include inline between the content and </body> of a rendered Markdow…
+rustdoc, , ,markdown-after-content, , ,119,files to include inline between the content and </body> of a rendered Markdow…
+rustdoc, , ,markdown-css, , ,120,CSS files to include via <link> in a rendered Markdown file Markdown file or …
+rustdoc, , ,markdown-playground-url, , ,121,URL to send code snippets to
+rustdoc, , ,markdown-no-toc, , ,122,don't include table of contents
+rustdoc, ,h,extend-css, , ,123,to redefine some css rules with a given file to generate doc with your own th…
+rustdoc, ,V,version, , ,124,Print rustdoc's version

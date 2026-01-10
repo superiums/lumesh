@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+qutebrowser, ,h,help, , ,101,show this help message and exit
+qutebrowser, ,B,basedir, , ,102,Base directory for all storage
+qutebrowser, ,C,config-py, , ,103,Path to config. py
+qutebrowser, ,V,version, , ,104,Show version and quit
+qutebrowser, ,s,set, , ,105,Set a temporary setting for this session
+qutebrowser, ,r,restore, , ,106,Restore a named session
+qutebrowser, ,R,override-restore, , ,107,Don't restore a session even if one would be restored
+qutebrowser, , ,target, , ,108,How URLs should be opened if there is already a qutebrowser instance running
+qutebrowser, , ,backend, , ,109,Which backend to use
+qutebrowser, , ,qt-wrapper, , ,110,Which Qt wrapper to use
+qutebrowser, , ,desktop-file-name, , ,111,Set the base name of the desktop entry for this application
+qutebrowser, , ,untrusted-args, , ,112,"Mark all following arguments as untrusted, which enforces that they are URLs/…"
+qutebrowser, ,l,loglevel, , ,113,Override the configured console loglevel
+qutebrowser, , ,logfilter, , ,114,Comma-separated list of things to be logged to the debug log on stdout
+qutebrowser, , ,loglines, , ,115,How many lines of the debug log to keep in RAM (-1: unlimited)
+qutebrowser, ,d,debug, , ,116,Turn on debugging options
+qutebrowser, , ,json-logging, , ,117,Output log lines in JSON format (one object per line)
+qutebrowser, , ,nocolor, , ,118,Turn off colored logging
+qutebrowser, , ,force-color, , ,119,Force colored logging
+qutebrowser, , ,nowindow, , ,120,Don't show the main window
+qutebrowser, ,T,temp-basedir, , ,121,Use a temporary basedir
+qutebrowser, , ,no-err-windows, , ,122,Don't show any error windows (used for tests/smoke. py)
+qutebrowser, , ,qt-arg, , ,123,Pass an argument with a value to Qt
+qutebrowser, , ,qt-flag, , ,124,Pass an argument to Qt as flag
+qutebrowser, ,D,debug-flag, , ,125,Pass name of debugging feature to be turned on

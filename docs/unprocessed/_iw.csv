@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iw, $iw_commands, , ,$iw_commands,@f,102, 
+iw, $iw_commands, ,debug, ,@f,102,Enable netlink message debugging
+iw, $iw_commands, ,version, ,@f,102,Print the version

@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ttx, , , , ,@f @k,101, 
+ttx, ,h, , ,@f,103,help
+ttx, , ,version, ,@f,104,version
+ttx, ,d, , ,@D @f @r,105,output
+ttx, ,o, , ,@k @r,106,output
+output, ,f, , ,@f,107, 
+ttx, ,v, , ,@f,108,output'
+ttx, ,q, , ,@f,109,mode'
+ttx, ,a, , ,@f,110,virtual
+ttx, ,l, , ,@f,111,table
+ttx, ,t, ,$table_names,@f @r,112,named
+named, ,x, ,$table_names,@f @r,113, 
+ttx, ,s, , ,@f,114,tables'
+ttx, ,g, , ,@f,115,glyf
+ttx, ,i, , ,@f,116,NOT
+ttx, ,z, ,$formats,@f @r,117,FORMAT
+ttx, ignore,e, , ,@f,118, 
+font, ,y, , ,@f @r,119, 
+ttx, , ,unicodedata, ,@f @k @r,120,database
+ttx, , ,newline,$line_endings,@f @r,121,EOL
+ttx, ,m, , ,@f @k @r,122,named
+ttx, recalculate,b, , ,@f,123, 
+ttx, , ,recalc-timestamp, ,@f,124,font
+ttx, , ,flavor,$woff_fmts,@f @r,125,WOFF
+ttx, , ,with-zopfli, ,@f,126,with

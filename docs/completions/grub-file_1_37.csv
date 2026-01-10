@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-file, , ,is-i386-xen-pae-domu, , ,101,Check if FILE can be booted as i386 PAE Xen unprivileged guest kernel
+grub-file, , ,is-x86_64-xen-domu, , ,102,Check if FILE can be booted as x86_64 Xen unprivileged guest kernel
+grub-file, , ,is-x86-xen-dom0, , ,103,Check if FILE can be used as Xen x86 privileged guest kernel
+grub-file, , ,is-x86-multiboot, , ,104,Check if FILE can be used as x86 multiboot kernel 
+grub-file, , ,is-arm-linux, , ,105,Check if FILE is ARM Linux
+grub-file, , ,is-arm64-linux, , ,106,Check if FILE is ARM64 Linux
+grub-file, , ,is-ia64-linux, , ,107,Check if FILE is IA64 Linux
+grub-file, , ,is-mips-linux, , ,108,Check if FILE is MIPS Linux
+grub-file, , ,is-mipsel-linux, , ,109,Check if FILE is MIPSEL Linux
+grub-file, , ,is-sparc64-linux, , ,110,Check if FILE is SPARC64 Linux
+grub-file, , ,is-powerpc-linux, , ,111,Check if FILE is POWERPC Linux
+grub-file, , ,is-x86-linux, , ,112,Check if FILE is x86 Linux
+grub-file, , ,is-x86-linux32, , ,113,Check if FILE is x86 Linux supporting 32-bit protocol
+grub-file, , ,is-x86-kfreebsd, , ,114,Check if FILE is x86 kFreeBSD
+grub-file, , ,is-i386-kfreebsd, , ,115,Check if FILE is i386 kFreeBSD
+grub-file, , ,is-x86_64-kfreebsd, , ,116,Check if FILE is x86_64 kFreeBSD
+grub-file, , ,is-x86-knetbsd, , ,117,Check if FILE is x86 kNetBSD
+grub-file, , ,is-i386-knetbsd, , ,118,Check if FILE is i386 kNetBSD 
+grub-file, , ,is-i386-efi, , ,119,Check if FILE is i386 EFI file
+grub-file, , ,is-x86_64-efi, , ,120,Check if FILE is x86_64 EFI file
+grub-file, , ,is-ia64-efi, , ,121,Check if FILE is IA64 EFI file
+grub-file, , ,is-arm64-efi, , ,122,Check if FILE is ARM64 EFI file
+grub-file, , ,is-arm-efi, , ,123,Check if FILE is ARM EFI file
+grub-file, , ,is-riscv32-efi, , ,124,Check if FILE is RISC-V 32bit EFI file
+grub-file, , ,is-riscv64-efi, , ,125,Check if FILE is RISC-V 64bit EFI file
+grub-file, , ,is-hibernated-hiberfil, , ,126,Check if FILE is hiberfil. sys in hibernated state
+grub-file, , ,is-x86_64-xnu, , ,127,Check if FILE is x86_64 XNU (Mac OS X kernel)
+grub-file, , ,is-i386-xnu, , ,128,Check if FILE is i386 XNU (Mac OS X kernel)
+grub-file, , ,is-xnu-hibr, , ,129,Check if FILE is XNU (Mac OS X kernel) hibernated image
+grub-file, , ,is-x86-multiboot2, , ,130, 
+grub-file, , ,is-x86_64-knetbsd, , ,131, 
+grub-file, , ,is-x86-bios-bootsector, , ,132,Check if FILE is BIOS bootsector
+grub-file, ,h,help, , ,133, 
+grub-file, ,u,usage, , ,134,SEE ALSO The full documentation for grub-file is maintained as a Texinfo manu…

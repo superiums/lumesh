@@ -1,0 +1,51 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chronyc, __fish_use_subcommand, , ,tracking,@f,112,Show system time info
+chronyc, __fish_use_subcommand, , ,makestep,@f,113,Correct the clock by stepping
+chronyc, __fish_use_subcommand, , ,maxupdateskew,@f,114,Modify max valid skew to update frequency
+chronyc, __fish_use_subcommand, , ,waitsync,@f,115,Wait until synced in specified limits
+chronyc, __fish_use_subcommand, , ,sources,@f,116,Show info about current sources
+chronyc, __fish_use_subcommand, , ,sourcestats,@f,118,Show statistics about collected measurements
+chronyc, __fish_use_subcommand, , ,reselect,@f,120,Force reselecting sync source
+chronyc, __fish_use_subcommand, , ,reselectdist,@f,121,Modify reselection distance
+chronyc, __fish_use_subcommand, , ,activity,@f,122,Check how many NTP sources are online/offline
+chronyc, __fish_use_subcommand, , ,ntpdata,@f,123,Show info about last valid measurement
+chronyc, __fish_use_subcommand, , ,add,@f,124, 
+chronyc, __fish_use_subcommand, , ,delete,@f,127,Remove server/peer
+chronyc, __fish_use_subcommand, , ,burst,@f,128,Start rapid set of measurements
+chronyc, __fish_use_subcommand, , ,maxdelay,@f,129,Modify max valid sample delay
+chronyc, __fish_use_subcommand, , ,maxdelaydevratio,@f,130,Modify max valid delay/deviation ratio
+chronyc, __fish_use_subcommand, , ,maxdelayratio,@f,131,Modify max valid delay/min ratio
+chronyc, __fish_use_subcommand, , ,maxpoll,@f,132,Modify max polling interval
+chronyc, __fish_use_subcommand, , ,minpoll,@f,133,Modify min polling interval
+chronyc, __fish_use_subcommand, , ,minstratum,@f,134,Modify min stratum
+chronyc, __fish_use_subcommand, , ,offline,@f,135,Set sources in subnet to offline status
+chronyc, __fish_use_subcommand, , ,online,@f,136,Set sources in subnet to online status
+chronyc, __fish_use_subcommand, , ,onoffline,@f,137,Set all sources to online/offline status according to network config
+chronyc, __fish_use_subcommand, , ,polltarget,@f,138,Modify poll target
+chronyc, __fish_use_subcommand, , ,refresh,@f,139,Refresh IP address
+chronyc, __fish_use_subcommand, , ,manual,@f,140, 
+chronyc, __fish_use_subcommand, , ,settime,@f,146,Set daemon time
+chronyc, __fish_use_subcommand, , ,accheck,@f,147,Check whether address is allowed
+chronyc, __fish_use_subcommand, , ,clients,@f,148,Report on clients that have accessed the server
+chronyc, __fish_use_subcommand, , ,serverstats,@f,149,Show statistics of the server
+chronyc, __fish_use_subcommand, , ,allow,@f,150,Allow access to subnet as a default
+chronyc, __fish_use_subcommand, , ,deny,@f,152,Deny access to subnet as a default
+chronyc, __fish_use_subcommand, , ,local,@f,154,Serve time even when not synced
+chronyc, __fish_use_subcommand, , ,smoothing,@f,156,Show current time smoothing state
+chronyc, __fish_use_subcommand, , ,smoothtime,@f,157, 
+chronyc, __fish_use_subcommand, , ,cmdaccheck,@f,160,Check whether address is allowed
+chronyc, __fish_use_subcommand, , ,cmdallow,@f,161,Allow access to subnet as a default
+chronyc, __fish_use_subcommand, , ,cmddeny,@f,163,Deny access to subnet as a default
+chronyc, __fish_use_subcommand, , ,rtcdata,@f,165,Print current RTC performance parameters
+chronyc, __fish_use_subcommand, , ,trimrtc,@f,166,Correct RTC relative to system clock
+chronyc, __fish_use_subcommand, , ,writertc,@f,167,Save RTC performance parameters to file
+chronyc, __fish_use_subcommand, , ,cyclelogs,@f,168,Close and reopen log files
+chronyc, __fish_use_subcommand, , ,dump,@f,169,Dump all measurements to save files
+chronyc, __fish_use_subcommand, , ,rekey,@f,170,Reread keys from key file
+chronyc, __fish_use_subcommand, , ,shutdown,@f,171,Stop daemon
+chronyc, __fish_use_subcommand, , ,dns,@f,172,Configure how hostname and IP address are resolved
+chronyc, __fish_use_subcommand, , ,timeout,@f,173,Set initial response timeout
+chronyc, __fish_use_subcommand, , ,retries,@f,174,Set max number of retries
+chronyc, __fish_use_subcommand, , ,keygen,@f,175,Generate key for key file
+chronyc, __fish_use_subcommand, , ,exit quit,@f,176,Leave the program
+chronyc, __fish_use_subcommand, , ,help,@f,177,Show help message

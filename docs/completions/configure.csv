@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+configure, ,h,help,short recursive,@f @r,101,Display help and exit
+configure, ,V,version, , ,102,Display version and exit
+configure, ,q,quiet, , ,103,Quiet mode
+configure, , ,cache-file, ,@f,104,Cache test results in specified file
+configure, ,C,config-cache, , ,105,Cache test results in file config.cache
+configure, ,n,no-create, , ,106,Do not create output files
+configure, , ,srcdir, ,@D,107,Set source directory
+configure, , ,prefix, ,@D,108,Architecture-independent install directory
+configure, , ,exec-prefix, ,@D,109,Architecture-dependent install directory
+configure, , ,build, , ,110,Configure for building on BUILD
+configure, , ,host, , ,111,Cross-compile to build programs to run on HOST
+configure, , ,target, , ,112,Configure for building compilers for TARGET

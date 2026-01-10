@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fincore, ,n,noheadings, , ,101, 
+fincore, ,b,bytes, , ,102, 
+fincore, ,o,output, , ,103, 
+fincore, , ,output-all, , ,104, 
+fincore, ,r,raw, , ,105, 
+fincore, ,J,json, , ,106, 
+fincore, ,h,help, , ,107, 
+fincore, ,V,version, , ,108, 

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uname, ,a,all, , ,101,Print all information
+uname, ,s,kernel-name, , ,102,Print kernel name
+uname, ,n,nodename, , ,103,Print network node hostname
+uname, ,r,kernel-release, , ,104,Print kernel release
+uname, ,v,kernel-version, , ,105,Print kernel version
+uname, ,m,machine, , ,106,Print machine name
+uname, ,p,processor, , ,107,Print processor
+uname, ,i,hardware-platform, , ,108,Print hardware platform
+uname, ,o,operating-system, , ,109,Print operating system
+uname, , ,help, , ,110,Display help and exit
+uname, , ,version, , ,111,Display version and exit

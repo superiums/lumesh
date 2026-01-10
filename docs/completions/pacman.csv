@@ -1,0 +1,64 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pacman, ,b,dbpath, , ,101,Specify an alternative database location (the default is /var/lib/pacman)
+pacman, ,r,root, , ,102,Specify an alternative installation root (default is /)
+pacman, ,v,verbose, , ,103,"Output paths such as the Root, Conf File, DB Path, Cache Dirs, etc"
+pacman, , ,arch, , ,104,Specify an alternate architecture
+pacman, , ,cachedir, , ,105,Specify an alternative package cache location (the default is /var/cache/pacm…
+pacman, , ,color, , ,106,"Specify when to enable coloring.  Valid options are always, never, or auto"
+pacman, , ,config, , ,107,Specify an alternate configuration file
+pacman, , ,debug, , ,108,Display debug messages
+pacman, , ,gpgdir, , ,109,Specify a directory of files used by GnuPG to verify package signatures (the …
+pacman, , ,hookdir, , ,110,Specify a alternative directory containing hook files (the default is /etc/pa…
+pacman, , ,logfile, , ,111,Specify an alternate log file
+pacman, , ,noconfirm, , ,112,Bypass any and all 'Are you sure?' messages
+pacman, , ,confirm, , ,113,Cancels the effects of a previous --noconfirm
+pacman, , ,disable-download-timeout, , ,114,Disable defaults for low speed limit and timeout on downloads
+pacman, , ,sysroot, , ,115,Specify an alternative system root
+pacman, , ,disable-sandbox, , ,116,Disable the default sandbox applied to the process downloading files on Linux…
+pacman, ,D,database, , ,117, 
+pacman, ,Q,query, , ,118, 
+pacman, ,R,remove, , ,119, 
+pacman, , ,nosave, , ,120,option is used.  See Remove Options below
+pacman, ,S,sync, , ,121, 
+pacman, ,T,deptest, , ,122, 
+pacman, ,U,upgrade, , ,123, 
+pacman, ,F,files, , ,124, 
+pacman, ,V,version, , ,125, 
+pacman, ,h,help, , ,126, 
+pacman, ,d,nodeps, , ,127, 
+pacman, , ,assume-installed, , ,128, 
+pacman, , ,dbonly, , ,129, 
+pacman, , ,noprogressbar, , ,130, 
+pacman, , ,noscriptlet, , ,131, 
+pacman, ,p,print, , ,132, 
+pacman, , ,print-format, , ,133,to specify how targets are displayed
+pacman, ,w,downloadonly, , ,134, 
+pacman, , ,asdeps, , ,135, 
+pacman, , ,asexplicit, , ,136, 
+pacman, , ,recursive, , ,137,remove operation
+pacman, , ,ignore, , ,138, 
+pacman, , ,ignoregroup, , ,139, 
+pacman, , ,needed, , ,140, 
+pacman, , ,overwrite, , ,141, 
+pacman, ,c,changelog, , ,142, 
+pacman, , ,deps, , ,143, 
+pacman, ,e,explicit, , ,144, 
+pacman, ,g,groups, , ,145, 
+pacman, ,i,info, , ,146, 
+pacman, ,k,check, , ,147, 
+pacman, ,l,list, , ,148, 
+pacman, ,m,foreign, , ,149, 
+pacman, ,n,native, , ,150, 
+pacman, ,o,owns, , ,151, 
+pacman, , ,file, , ,152, 
+pacman, ,q,quiet, , ,153, 
+pacman, ,s,search, , ,154, 
+pacman, , ,unrequired, , ,155, 
+pacman, ,u,upgrades, , ,156, 
+pacman, , ,cascade, , ,157, 
+pacman, , ,unneeded, , ,158, 
+pacman, , ,clean, , ,159, 
+pacman, , ,sysupgrade, , ,160, 
+pacman, ,y,refresh, , ,161, 
+pacman, ,x,regex, , ,162, 
+pacman, , ,machinereadable, , ,163,instead

@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-file, ,h,help, , ,101,Display help and exit
+apt-file, , , ,update,@f @r,102,Resync package contents from source
+apt-file, , , ,search,@r,103,Search package containing pattern
+apt-file, , , ,list,@r,104,List contents of a package matching pattern
+apt-file, , , ,purge,@f @r,105,Remove all gz files from cache
+apt-file, ,c,cache, ,@r,106,Set cache dir
+apt-file, ,v,verbose, ,@f,107,Verbose mode
+apt-file, ,d,cdrom-mount, , ,108,Use cdrom-mount-point
+apt-file, ,i,ignore-case, ,@f,109,Do not expand pattern
+apt-file, ,x,regexp, ,@f,110,Pattern is regexp
+apt-file, ,V,version, ,@f,111,Display version and exit
+apt-file, ,a,architecture, ,@f,112,Set arch
+apt-file, ,s,sources-list, ,@F @r,113,Set sources.list file
+apt-file, ,l,package-only, ,@f,114,Only display package name
+apt-file, ,F,fixed-string, ,@f,115,Do not expand pattern
+apt-file, ,y,dummy, ,@f,116,Run in dummy mode

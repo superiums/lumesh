@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setpgid, ,f,foreground, , ,101, 
+setpgid, ,h,help, , ,102, 
+setpgid, ,V,version, , ,103, 

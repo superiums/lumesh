@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vi, ,r, , ,@r,101,Recover file after crash
+vi, ,t, , ,@r,102,Edit the file containing a tag
+t, , , , ,@r,103,Begin editing by executing the specified  editor command

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mkpasswd-pbkdf2, ,c,iteration-count, , ,101,Number of PBKDF2 iterations
+grub-mkpasswd-pbkdf2, ,l,buflen, , ,102,Length of generated hash
+grub-mkpasswd-pbkdf2, ,s,salt, , ,103,Length of salt
+grub-mkpasswd-pbkdf2, ,?,help, , ,104,give this help list
+grub-mkpasswd-pbkdf2, , ,usage, , ,105,give a short usage message
+grub-mkpasswd-pbkdf2, ,V,version, , ,106,print program version

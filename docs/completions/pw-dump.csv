@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-dump, ,h,help, , ,101,Show help
+pw-dump, ,r,remote, , ,102,The name of the remote instance to dump
+pw-dump, ,m,monitor, , ,103,"Monitor PipeWire state changes, and output JSON arrays describing changes"
+pw-dump, ,N,no-colors, , ,104,Disable color output
+pw-dump, ,C,color, , ,105,"Whether to enable color support.  WHEN is never, always, or auto"

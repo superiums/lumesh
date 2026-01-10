@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+evince, ,p,page-label, , ,101,The page of the document to display
+evince, ,f,fullscreen, , ,102,Run evince in fullscreen mode
+evince, ,s,presentation, , ,103,Run evince in presentation mode
+evince, ,w,preview, , ,104,Run evince as a previewer
+evince, , ,display, , ,105,X display to use

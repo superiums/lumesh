@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+telnetd, ,D,debug, , ,101,set debugging level
+telnetd, ,E,exec-login, , ,102,"set program to be executed instead of \\,/usr/bin/login\\/"
+telnetd, ,h,no-hostinfo, , ,103,do not print host information before login has been completed
+telnetd, ,l,linemode, , ,104,set line mode
+telnetd, ,n,no-keepalive, , ,105,disable TCP keep-alives
+telnetd, ,U,reverse-lookup, , ,106,refuse connections from addresses that cannot be mapped back into a symbolic …
+telnetd, ,?,help, , ,107,give this help list
+telnetd, , ,usage, , ,108,give a short usage message
+telnetd, ,V,version, , ,109,print program version

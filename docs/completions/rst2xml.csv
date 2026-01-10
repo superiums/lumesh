@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rst2xml, , ,newlines, , ,101,Generate XML with newlines
+rst2xml, , ,indents, , ,102,Generate XML with indents
+rst2xml, , ,no-xml-declaration, , ,103,Omit the XML declaration
+rst2xml, , ,no-doctype, , ,104,Omit the DOCTYPE

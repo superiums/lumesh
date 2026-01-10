@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+useradd, ,c,comment, , ,101,A comment about this user
+useradd, ,d,home, ,@D @f @r,102,Home directory for the new user
+useradd, ,G,groups, , ,103,Supplementary groups
+useradd, ,h,help, , ,104,Display help message and exit
+useradd, ,m,create-home, , ,105,The user's home directory will be created if it does not exist
+useradd, ,K,key, , ,106,Overrides default key/value pairs from /etc/login
+useradd, ,o,non-unique, , ,107,Allow user account with a duplicate UID
+useradd, ,p,password, , ,108,"The encrypted password, as returned by crypt(3)"
+useradd, ,u,uid, , ,109,The numerical value of the user's ID
+useradd, ,b,base-dir, ,@D @r,110,The initial path prefix for a new user's home directory
+useradd, ,e,expiredate, , ,111,The date on which the user account is disabled
+useradd, ,f,inactive, , ,112,Number of days to disable account after password expiration
+useradd, ,g,gid, ,@f @r,113,The group name or ID for a new user's initial group
+useradd, ,s,shell, ,@f @r,114,Name of the new user's login shell

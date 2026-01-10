@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+konsole, ,h,help, , ,101,Show help and exit
+konsole, , ,help-all, , ,102,Show all options and exit
+konsole, ,v,version, , ,103,Show version and exit
+konsole, , ,author, , ,104,Show author info and exit
+konsole, , ,license, , ,105,Show license info and exit
+konsole, , ,desktopfile, , ,106,Base file name of desktop entry
+konsole, , ,profile, ,@F,107,Name of profile to use
+konsole, , ,layout, ,@r,108,json layoutfile to be loaded
+konsole, , ,builtin-profile, , ,109,Use the built-in profile
+konsole, , ,workdir, ,@D,110,Set initial working dir
+konsole, , ,noclose, , ,111,Do not close when command exists
+konsole, , ,new-tab, , ,112,Create a new tab
+konsole, , ,tabs-from-file, ,@r,113,Create tabs from tabs config
+konsole, , ,background-mode, , ,114,Start Konsole in the background
+konsole, , ,nofork, , ,115,Run in a separate process
+konsole, , ,show-menubar, , ,116,Show the menubar
+konsole, , ,hide-menubar, , ,117,Hide the menubar
+konsole, , ,show-tabbar, , ,118,Show the tabbar
+konsole, , ,hide-tabbar, , ,119,Hide the tabbar
+konsole, , ,fullscreen, , ,120,Start Konsole in fullscreen mode
+konsole, , ,notransparency, , ,121,Disable transparent backgrounds
+konsole, , ,list-profiles, , ,122,List the available profiles
+konsole, , ,list-profile-properties, , ,123,List all the profile properties
+konsole, , ,force-reuse, , ,124,Force re-using existing instance

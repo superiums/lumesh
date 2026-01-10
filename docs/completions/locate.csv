@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+locate, ,A,all, , ,101,Match all non-option arguments
+locate, ,b,basename, , ,102,Match against the base name of the file
+locate, ,c,count, , ,103,Print only the number of matches found
+locate, ,d,database, ,@r,104,Use different DATABASE file[s]
+locate, ,e,existing, , ,105,Match only existing files
+locate, ,L,follow, , ,106,Consider broken symbolic links to be non-existing files
+locate, ,P,nofollow, , ,107,Treat broken symbolic links as if they were existing
+locate, ,H,nofollow, , ,108,Treat broken symbolic links as if they were existing
+locate, ,i,ignore-case, , ,109,Ignore case distinctions
+locate, ,l,limit, ,@r,110,Limit  the number of matches
+locate, ,0,null, , ,111,Use ASCII NUL as a separator
+locate, ,S,statistics, , ,112,Print statistics about databases and exit
+locate, ,w,wholename, , ,113,Match against the whole name of the file
+locate, ,r,regex, , ,114,The pattern is a regular expression
+locate, ,h,help, , ,115,Print a summary of the options and exit
+locate, ,V,version, , ,116,Print the version number and exit

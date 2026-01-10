@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+defaults, , , , ,@f,101,Restricts preferences operations to the current logged-in host
+defaults, , , , ,@f,102,Restricts preferences operations to hostname
+defaults, read read-type write rename delete, , , ,@f,104, 
+defaults, read read-type write rename delete, , , ,@f,105, 
+defaults, write, , , ,@f,107,String as the value for the given key
+defaults, write, , , ,@f,108,Raw data bytes for given key
+defaults, write, , , ,@f,109,Integer as the value for the given key
+defaults, write, , , ,@f,110,Floating point number as the value for the given key
+defaults, write, , , ,@f,111,Boolean as the value for the given key
+defaults, write, , , ,@f,112,Date as the value for the given key
+defaults, write, , , ,@f,113,Array as the value for the given key
+defaults, write, , , ,@f,114,Add new elements to the end of an array
+defaults, write, , , ,@f,115,Add a dictionary to domain
+defaults, write, , , ,@f,116,Add new key/value pairs to a dictionary

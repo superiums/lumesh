@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gio, __fish_use_subcommand, , ,help,@f,102,Print help
+gio, __fish_use_subcommand, , ,version,@f,103,Print version
+gio, __fish_use_subcommand, , ,cat,@f,104,Concatenate files to stdout
+gio, __fish_use_subcommand, , ,copy,@f,105,Copy files
+gio, __fish_use_subcommand, , ,info,@f,106,Show information about locations
+gio, __fish_use_subcommand, , ,list,@f,107,List the contents of locations
+gio, __fish_use_subcommand, , ,mime,@f,108,Get or set the handler
+gio, __fish_use_subcommand, , ,mkdir,@f,109,Create directories
+gio, __fish_use_subcommand, , ,monitor,@f,110,Monitor files
+gio, __fish_use_subcommand, , ,mount,@f,111,Mount or unmount the locations
+gio, __fish_use_subcommand, , ,move,@f,112,Move files
+gio, __fish_use_subcommand, , ,open,@f,113,Open files
+gio, __fish_use_subcommand, , ,rename,@f,114,Rename a file
+gio, __fish_use_subcommand, , ,remove,@f,115,Delete files
+gio, __fish_use_subcommand, , ,save,@f,116,Read from stdin and save
+gio, __fish_use_subcommand, , ,set,@f,117,Set a file attribute
+gio, __fish_use_subcommand, , ,trash,@f,118,Move files to the trash
+gio, __fish_use_subcommand, , ,tree,@f,119,Lists the contents of locations in a tree

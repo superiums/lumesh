@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ifconfig, , , ,down,@f @r,101,Stop interface
+ifconfig, , , ,up,@f @r,102,Start interface
+ifconfig, , , ,,@f @r,103, 
+ifconfig, , , , ,@f @r,104,Network interface

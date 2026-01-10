@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zstd, ,z,compress, , ,101,Compress (default)
+zstd, ,d,uncompress,,@f @k @r,102,Decompress
+zstd, ,t,test, , ,103,Test the integrity
+zstd, , ,train, ,@r,104,Create a dictionary from specified file(s)
+zstd, ,l,list, , ,105,List information about .zst file(s)
+zstd, , ,fast, , ,106,Ultra-fast compression
+zstd, , ,ultra, , ,107,Enable compression level beyond 19
+zstd, , ,long, , ,108,Enable long distance matching with specified windowLog
+zstd, , ,threads=0, , ,109,Compress using as many threads as there are CPU cores on the system
+zstd, , ,single-thread, , ,110,Single-thread mode
+zstd, , ,adapt, , ,111,Dynamically adapt compression level to I/O conditions
+zstd, , ,stream-size, , ,112,Optimize compression parameters for streaming input of specified bytes
+zstd, , ,size-hint, , ,113,Optimize compression parameters for streaming input of approximately this size
+zstd, , ,rsyncable, , ,114,Compress using a rsync-friendly method
+zstd, ,D, , ,@r,115,Use specified file as dictionary
+zstd, , ,no-dictID, , ,116,Do not write dictID into header
+zstd, ,o, , ,@r,117,Specify file to save
+zstd, ,f,force, , ,118,Overwrite without prompting
+zstd, ,c,stdout, , ,119,Force write to stdout
+zstd, , ,sparse, , ,120,Enable sparse mode
+zstd, , ,no-sparse, , ,121,Disable sparse mode
+zstd, , ,rm, , ,122,Remove input file(s) after de/compression
+zstd, ,k,keep, , ,123,Keep input file(s) (default)
+zstd, , ,filelist, , ,124,Read a list of files
+zstd, , ,output-dir-flat, , ,125,Specify a directory to output all files
+zstd, , ,format='$format', , ,126,Specify the format to use for compression
+zstd, ,h,help, , ,127,Show help
+zstd, ,V,version, , ,128,Show version
+zstd, ,v,verbose, , ,129,Be verbose
+zstd, ,q,quiet, , ,130,Suppress warnings
+zstd, , ,no-progress, , ,131,Do not show the progress bar
+zstd, , ,no-check, , ,132,Disable integrity check

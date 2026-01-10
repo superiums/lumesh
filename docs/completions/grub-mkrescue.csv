@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mkrescue, , ,compress,no xz gz lzo,@f @r,101,Compress GRUB files
+grub-mkrescue, , ,dtb, ,@r,102,Embed a specific DTB
+grub-mkrescue, ,d,directory, ,@r,103,Use images and modules under given directory
+grub-mkrescue, , ,fonts, ,@r,104,Install given fonts
+grub-mkrescue, , ,install-modules, ,@r,105,Install only the given modules
+grub-mkrescue, ,k,pubkey, ,@r,106,Embed given file as public key for signature checking
+grub-mkrescue, , ,locale-directory, ,@r,107,Use translation under given directory
+grub-mkrescue, , ,locales, ,@r,108,Install only given locales
+grub-mkrescue, , ,modules, ,@r,109,Pre-load specified modules
+grub-mkrescue, , ,theme, ,@r,110,Install given theme
+grub-mkrescue, ,v,verbose, , ,111,Print verbose messages
+grub-mkrescue, , ,arcs-boot, , ,112,Enable ARCS boot
+grub-mkrescue, , ,core-compress,xz none auto,@f @r,113,Choose compression to use for core image
+grub-mkrescue, , ,label-gbcolor, ,@f @r,114,Use given color for label background
+grub-mkrescue, , ,label-color, ,@f @r,115,Use given color for label
+grub-mkrescue, , ,label-font, ,@r,116,Use given file font for label
+grub-mkrescue, ,o,output, ,@r,117,Save output in given file
+grub-mkrescue, , ,product-name, ,@f @r,118,Use given string as product name
+grub-mkrescue, , ,product-version, ,@f @r,119,Use given string as product version
+grub-mkrescue, , ,rom-directory, ,@r,120,Save ROM image in given directory
+grub-mkrescue, , ,sparc-boot, , ,121,Enable sparc boot
+grub-mkrescue, , ,xorriso, ,@r,122,Use given file as xorriso
+grub-mkrescue, ,?,help, , ,123,Show help
+grub-mkrescue, , ,usage, , ,124,Show short usage message
+grub-mkrescue, ,V,version, , ,125,Show program version

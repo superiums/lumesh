@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-get, __fish_apt_no_subcommand, , ,update,@f,102,Update sources
+apt-get, __fish_apt_no_subcommand, , ,upgrade,@f,103,Upgrade or install newest packages
+apt-get, __fish_apt_no_subcommand, , ,dselect-upgrade,@f,104,Use with dselect front-end
+apt-get, __fish_apt_no_subcommand, , ,dist-upgrade,@f,105,Distro upgrade
+apt-get, __fish_apt_no_subcommand, , ,install,@f,106,Install one or more packages
+apt-get, __fish_apt_no_subcommand, , ,changelog,@f,107,Display changelog of one or more packages
+apt-get, __fish_apt_no_subcommand, , ,purge,@f,108,Remove and purge one or more packages
+apt-get, __fish_apt_no_subcommand, , ,remove,@f,109,Remove one or more packages
+apt-get, __fish_apt_no_subcommand, , ,source,@f,110,Fetch source packages
+apt-get, __fish_apt_no_subcommand, , ,build-dep,@f,111,Install/remove packages for dependencies
+apt-get, __fish_apt_no_subcommand, , ,check,@f,112,Update cache and check dependencies
+apt-get, __fish_apt_no_subcommand, , ,clean,@f,113,Clean local caches and packages
+apt-get, __fish_apt_no_subcommand, , ,autoclean,@f,114,Clean packages no longer be downloaded
+apt-get, __fish_apt_no_subcommand, , ,autoremove,@f,115,Remove packages no longer needed as dependencies
+apt-get, __fish_apt_no_subcommand, , ,autopurge,@f,116,Remove packages no longer needed as dependencies and delete their config files

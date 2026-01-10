@@ -1,0 +1,240 @@
+cmd,conds,short,long,params,dirs,pri,desc
+virsh, $cmds,-x,connect, , ,100,Specify hypervisor connection URI
+virsh, $cmds,d,debug,0 1 2 3 4,@f @r,100,Specify debug level (0-4)
+virsh, $cmds,h,help, , ,100,Show help and exit
+virsh, $cmds,k,keepalive-interval,0,@f @r,100,Set keepalive interval (secs)
+virsh, $cmds,K,keepalive-count, ,@f @r,100,Set number of possible missed keepalive messages
+virsh, $cmds,l,log, ,@r,100,Output logging to file
+virsh, $cmds,q,quiet, , ,100,Quiet mode
+virsh, $cmds,r,readonly, , ,100,Connect readonly
+virsh, $cmds,t,timing, , ,100,Show timing information
+virsh, $cmds, ,version,short long, ,100,Show version
+virsh, $cmds, , ,attach-device, ,100,Attach device from an XML file
+virsh, $cmds, , ,attach-disk, ,104,Attach disk device
+virsh, $cmds, , ,attach-interface, ,123,Attach network interface
+virsh, $cmds, , ,autostart, ,135,Autostart a domain
+virsh, $cmds, , ,blkdeviotune, ,136,Set or query a block device I/O tuning parameters
+virsh, $cmds, , ,blkiotune, ,159,Get or set blkio parameters
+virsh, $cmds, , ,blockcommit, ,168,Start a block commit operation
+virsh, $cmds, , ,blockcopy, ,182,Start a block copy operation
+virsh, $cmds, , ,blockjob, ,199,Manage active block operations
+virsh, $cmds, , ,blockpull, ,206,Populate a disk from its backing image
+virsh, $cmds, , ,blockresize, ,214,Resize block device of domain
+virsh, $cmds, , ,change-media, ,214,Change media of CD or floppy drive
+virsh, $cmds, , ,console, ,224,Connect to the guest console
+virsh, $cmds, , ,cpu-baseline, ,227,Compute baseline CPU
+virsh, $cmds, , ,cpu-compare, ,229,Compare host CPU with a CPU described by an XML file
+virsh, $cmds, , ,cpu-stats, ,230,Show domain cpu statistics
+virsh, $cmds, , ,create, ,233,Create a domain from an XML file
+virsh, $cmds, , ,define, ,238,Define (but don't start) a domain
+virsh, $cmds, , ,desc, ,239,Show or set domain's description or title
+virsh, $cmds, , ,destroy, ,244,Destroy (stop) a domain
+virsh, $cmds, , ,detach-device, ,245,Detach device from an XML file
+virsh, $cmds, , ,detach-disk, ,249,Detach disk device
+virsh, $cmds, , ,detach-interface, ,253,Detach network interface
+virsh, $cmds, , ,domdisplay, ,258,Domain display connection URI
+virsh, $cmds, , ,domfsfreeze, ,261,Freeze domain's mounted filesystems
+virsh, $cmds, , ,domfsthaw, ,261,Thaw domain's mounted filesystems
+virsh, $cmds, , ,domfsinfo, ,261,Get information of domain's mounted filesystems
+virsh, $cmds, , ,domfstrim, ,261,Invoke fstrim on domain's mounted filesystems
+virsh, $cmds, , ,domhostname, ,263,Print the domain's hostname
+virsh, $cmds, , ,domid, ,263,Convert a domain name or UUID to domain id
+virsh, $cmds, , ,domif-setlink, ,263,Set link state of a virtual interface
+virsh, $cmds, , ,domiftune, ,264,Get/set parameters of a virtual interface
+virsh, $cmds, , ,domjobabort, ,269,Abort active domain job
+virsh, $cmds, , ,domjobinfo, ,269,Domain job information
+virsh, $cmds, , ,domname, ,270,Convert a domain id or UUID to domain name
+virsh, $cmds, , ,domrename, ,270,Rename a domain
+virsh, $cmds, , ,dompmsuspend, ,270,Suspend a domain gracefully using power management functions
+virsh, $cmds, , ,dompmwakeup, ,271,Wakeup a domain from pmsuspended state
+virsh, $cmds, , ,domuuid, ,271,Convert a domain name or id to domain UUID
+virsh, $cmds, , ,domxml-from-native, ,271,Convert native config to domain XML
+virsh, $cmds, , ,domxml-to-native, ,271,Convert domain XML to native config
+virsh, $cmds, , ,dump, ,273,Dump the core of a domain to a file for analysis
+virsh, $cmds, , ,dumpxml, ,280,Domain information in XML
+virsh, $cmds, , ,edit, ,284,Edit XML configuration for a domain
+virsh, $cmds, , ,event, ,285,Domain Events
+virsh, $cmds, , ,inject-nmi, ,292,Inject NMI to the guest
+virsh, $cmds, , ,iothreadinfo, ,292,View domain IOThreads
+virsh, $cmds, , ,iothreadpin, ,295,Control domain IOThread affinity
+virsh, $cmds, , ,iothreadadd, ,298,Add an IOThread to the guest domain
+virsh, $cmds, , ,iothreaddel, ,301,Delete an IOThread from the guest domain
+virsh, $cmds, , ,send-key, ,304,Send keycodes to the guest
+virsh, $cmds, , ,send-process-signal, ,306,Send signals to processes
+virsh, $cmds, , ,lxc-enter-namespace, ,306,LXC Guest Enter Namespace
+virsh, $cmds, , ,managedsave, ,307,Managed save of a domain state
+virsh, $cmds, , ,managedsave-remove, ,311,Remove managed save of a domain
+virsh, $cmds, , ,managedsave-edit, ,311,Edit XML for a domain's managed save state file
+virsh, $cmds, , ,managedsave-dumpxml, ,313,Domain information of managed save state file in XML
+virsh, $cmds, , ,managedsave-define, ,314,Redefine the XML for a domain's managed save state file
+virsh, $cmds, , ,memtune, ,316,Get or set memory parameters
+virsh, $cmds, , ,perf, ,323,Get or set perf event
+virsh, $cmds, , ,metadata, ,328,Show or set domain's custom XML metadata
+virsh, $cmds, , ,migrate, ,335,Migrate domain to another host
+virsh, $cmds, , ,migrate-setmaxdowntime, ,373,Set maximum tolerable downtime
+virsh, $cmds, , ,migrate-getmaxdowntime, ,373,Get maximum tolerable downtime
+virsh, $cmds, , ,migrate-compcache, ,373,Get/set compression cache size
+virsh, $cmds, , ,migrate-setspeed, ,374,Set the maximum migration bandwidth
+virsh, $cmds, , ,migrate-getspeed, ,374,Get the maximum migration bandwidth
+virsh, $cmds, , ,migrate-postcopy, ,374,Switch running migration from pre-copy to post-copy
+virsh, $cmds, , ,numatune, ,374,Get or set numa parameters
+virsh, $cmds, , ,qemu-attach, ,379,QEMU Attach
+virsh, $cmds, , ,qemu-monitor-command, ,379,QEMU Monitor Command
+virsh, $cmds, , ,qemu-monitor-event, ,381,QEMU Monitor Events
+virsh, $cmds, , ,qemu-agent-command, ,389,QEMU Guest Agent Command
+virsh, $cmds, , ,reboot, ,393,Reboot a domain
+virsh, $cmds, , ,reset, ,394,Reset a domain
+virsh, $cmds, , ,restore, ,394,Restore a domain from a saved state in a file
+virsh, $cmds, , ,resume, ,398,Resume a domain
+virsh, $cmds, , ,save, ,398,Save a domain state to a file
+virsh, $cmds, , ,save-image-define, ,403,Redefine the XML for a domain's saved state file
+virsh, $cmds, , ,save-image-dumpxml, ,405,Saved state domain information in XML
+virsh, $cmds, , ,save-image-edit, ,406,Edit XML for a domain's saved state file
+virsh, $cmds, , ,schedinfo, ,408,Show/set scheduler parameters
+virsh, $cmds, , ,screenshot, ,413,Take a screenshot of a current domain console and store it into a file
+virsh, $cmds, , ,set-lifecycle-action, ,415,Change lifecycle actions
+virsh, $cmds, , ,set-user-password, ,418,Set the user password inside the domain
+virsh, $cmds, , ,setmaxmem, ,419,Change maximum memory limit
+virsh, $cmds, , ,setmem, ,422,Change memory allocation
+virsh, $cmds, , ,setvcpus, ,425,Change number of virtual CPUs
+virsh, $cmds, , ,shutdown, ,431,Gracefully shutdown a domain
+virsh, $cmds, , ,start, ,432,Start a (previously defined) inactive domain
+virsh, $cmds, , ,suspend, ,438,Suspend a domain
+virsh, $cmds, , ,ttyconsole, ,438,TTY console
+virsh, $cmds, , ,undefine, ,438,Undefine a domain
+virsh, $cmds, , ,update-device, ,446,Update device from an XML file
+virsh, $cmds, , ,vcpucount, ,451,Domain vcpu counts
+virsh, $cmds, , ,vcpuinfo, ,457,Detailed domain vcpu information
+virsh, $cmds, , ,vcpupin, ,458,Control or query domain vcpu affinity
+virsh, $cmds, , ,emulatorpin, ,463,Control or query domain emulator affinity
+virsh, $cmds, , ,vncdisplay, ,467,Vnc display
+virsh, $cmds, , ,guestvcpus, ,467,Query or modify state of vcpu in the guest (via agent)
+virsh, $cmds, , ,setvcpu, ,470,Attach/detach vcpu or groups of threads
+virsh, $cmds, , ,domblkthreshold, ,475,Set the threshold for block-threshold event
+virsh, $cmds, , ,domblkerror, ,475,Show errors on block devices
+virsh, $cmds, , ,domblkinfo, ,475,Domain block device size information
+virsh, $cmds, , ,domblklist, ,476,List all domain blocks
+virsh, $cmds, , ,domblkstat, ,478,Get device block stats for a domain
+virsh, $cmds, , ,domcontrol, ,480,Domain control interface state
+virsh, $cmds, , ,domif-getlink, ,480,Get link state of a virtual interface
+virsh, $cmds, , ,domifaddr, ,481,Get network interfaces' addresses for a running domain
+virsh, $cmds, , ,domiflist, ,484,List all domain virtual interfaces
+virsh, $cmds, , ,domifstat, ,485,Get network interface stats for a domain
+virsh, $cmds, , ,dominfo, ,485,Domain information
+virsh, $cmds, , ,dommemstat, ,485,Get memory statistics for a domain
+virsh, $cmds, , ,domstate, ,489,Domain state
+virsh, $cmds, , ,domstats, ,490,Get statistics about one or multiple domains
+virsh, $cmds, , ,domtime, ,508,Domain time
+virsh, $cmds, , ,list, ,512,List domains
+virsh, $cmds, , ,allocpages, ,531,Manipulate pages pool size
+virsh, $cmds, , ,capabilities, ,534,Capabilities
+virsh, $cmds, , ,cpu-models, ,534,CPU models
+virsh, $cmds, , ,domcapabilities, ,534,Domain capabilities
+virsh, $cmds, , ,freecell, ,538,NUMA free memory
+virsh, $cmds, , ,freepages, ,540,NUMA free pages
+virsh, $cmds, , ,hostname, ,543,Print the hypervisor hostname
+virsh, $cmds, , ,maxvcpus, ,543,Connection vcpu maximum
+virsh, $cmds, , ,node-memory-tune, ,544,Get or set node memory parameters
+virsh, $cmds, , ,nodecpumap, ,547,Node cpu map
+virsh, $cmds, , ,nodecpustats, ,548,Prints cpu stats of the node
+virsh, $cmds, , ,nodeinfo, ,550,Node information
+virsh, $cmds, , ,nodememstats, ,550,Prints memory stats of the node
+virsh, $cmds, , ,nodesuspend, ,551,Suspend the host node for a given time duration
+virsh, $cmds, , ,sysinfo, ,551,Print the hypervisor sysinfo
+virsh, $cmds, , ,uri, ,551,Print the hypervisor canonical URI
+virsh, $cmds, , ,version, ,551,Show version
+virsh, $cmds, , ,iface-begin, ,552,Create a snapshot of current interfaces settings
+virsh, $cmds, , ,iface-bridge, ,552,Create a bridge device and attach an existing network device to it
+virsh, $cmds, , ,iface-commit, ,555,Commit changes made since iface-begin and free restore point
+virsh, $cmds, , ,iface-define, ,555,Define or modify an inactive persistent physical host interface
+virsh, $cmds, , ,iface-destroy, ,555,Destroy a physical host interface
+virsh, $cmds, , ,iface-dumpxml, ,555,Interface information in XML
+virsh, $cmds, , ,iface-edit, ,556,Edit XML configuration for a physical host interface
+virsh, $cmds, , ,iface-list, ,556,List physical host interfaces
+virsh, $cmds, , ,iface-mac, ,558,Convert an interface name to interface MAC address
+virsh, $cmds, , ,iface-name, ,558,Convert an interface MAC address to interface name
+virsh, $cmds, , ,iface-rollback, ,558,Rollback to previous saved configuration created via iface-begin
+virsh, $cmds, , ,iface-start, ,558,Start a physical host interface
+virsh, $cmds, , ,iface-unbridge, ,558,Undefine a bridge device after detaching its slave device
+virsh, $cmds, , ,iface-undefine, ,559,Undefine a physical host interface
+virsh, $cmds, , ,nwfilter-define, ,559,Define or update a network filter
+virsh, $cmds, , ,nwfilter-dumpxml, ,559,Network filter information in XML
+virsh, $cmds, , ,nwfilter-edit, ,559,Edit XML configuration for a network filter
+virsh, $cmds, , ,nwfilter-list, ,559,List network filters
+virsh, $cmds, , ,nwfilter-undefine, ,559,Undefine a network filter
+virsh, $cmds, , ,net-autostart, ,559,Autostart a network
+virsh, $cmds, , ,net-create, ,561,Create a network from an XML file
+virsh, $cmds, , ,net-define, ,561,Define or modify an inactive persistent virtual network
+virsh, $cmds, , ,net-destroy, ,561,Destroy (stop) a network
+virsh, $cmds, , ,net-dhcp-leases, ,562,Print lease info for a given network
+virsh, $cmds, , ,net-dumpxml, ,564,Network information in XML
+virsh, $cmds, , ,net-edit, ,566,Edit XML configuration for a network
+virsh, $cmds, , ,net-event, ,567,Network Events
+virsh, $cmds, , ,net-info, ,573,Network information
+virsh, $cmds, , ,net-list, ,574,List networks
+virsh, $cmds, , ,net-name, ,583,Convert a network UUID to network name
+virsh, $cmds, , ,net-start, ,583,Start a (previously defined) inactive network
+virsh, $cmds, , ,net-undefine, ,584,Undefine a persistent network
+virsh, $cmds, , ,net-update, ,585,Update parts of an existing network's configuration
+virsh, $cmds, , ,net-uuid, ,590,Convert a network name to network UUID
+virsh, $cmds, , ,nodedev-create, ,591,Create a device defined by an XML file on the node
+virsh, $cmds, , ,nodedev-destroy, ,591,Destroy (stop) a device on the node
+virsh, $cmds, , ,nodedev-detach, ,591,Detach node device from its device driver
+virsh, $cmds, , ,nodedev-dumpxml, ,592,Node device details in XML
+virsh, $cmds, , ,nodedev-list, ,592,Enumerate devices on this host
+virsh, $cmds, , ,nodedev-reattach, ,594,Reattach node device to its device driver
+virsh, $cmds, , ,nodedev-reset, ,594,Reset node device
+virsh, $cmds, , ,nodedev-event, ,594,Node Device Events
+virsh, $cmds, , ,secret-define, ,600,Define or modify a secret
+virsh, $cmds, , ,secret-dumpxml, ,600,Secret attributes in XML
+virsh, $cmds, , ,secret-event, ,600,Secret Events
+virsh, $cmds, , ,secret-get-value, ,606,Output a secret value
+virsh, $cmds, , ,secret-list, ,606,List secrets
+virsh, $cmds, , ,secret-set-value, ,610,Set a secret value
+virsh, $cmds, , ,secret-undefine, ,610,Undefine a secret
+virsh, $cmds, , ,snapshot-create, ,610,Create a snapshot from XML
+virsh, $cmds, , ,snapshot-create-as, ,620,Create a snapshot from a set of args
+virsh, $cmds, , ,snapshot-current, ,631,Get or set the current snapshot
+virsh, $cmds, , ,snapshot-delete, ,634,Delete a domain snapshot
+virsh, $cmds, , ,snapshot-dumpxml, ,639,Dump XML for a domain snapshot
+virsh, $cmds, , ,snapshot-edit, ,640,Edit XML for a snapshot
+virsh, $cmds, , ,snapshot-info, ,644,Snapshot information
+virsh, $cmds, , ,snapshot-list, ,646,List snapshots for a domain
+virsh, $cmds, , ,snapshot-parent, ,662,Get the name of the parent of a snapshot
+virsh, $cmds, , ,snapshot-revert, ,664,Revert a domain to a snapshot
+virsh, $cmds, , ,find-storage-pool-sources-as, ,669,Find potential storage pool sources
+virsh, $cmds, , ,find-storage-pool-sources, ,672,Discover potential storage pool sources
+virsh, $cmds, , ,pool-autostart, ,673,Autostart a pool
+virsh, $cmds, , ,pool-build, ,674,Build a pool
+virsh, $cmds, , ,pool-create-as, ,676,Create a pool from a set of args
+virsh, $cmds, , ,pool-create, ,694,Create a pool from an XML file
+virsh, $cmds, , ,pool-define-as, ,697,Define a pool from a set of args
+virsh, $cmds, , ,pool-define, ,712,Define or modify an inactive persistent storage pool
+virsh, $cmds, , ,pool-delete, ,712,Delete a pool
+virsh, $cmds, , ,pool-destroy, ,712,Destroy (stop) a pool
+virsh, $cmds, , ,pool-dumpxml, ,712,Pool information in XML
+virsh, $cmds, , ,pool-edit, ,713,Edit XML configuration for a storage pool
+virsh, $cmds, , ,pool-info, ,713,Storage pool information
+virsh, $cmds, , ,pool-list, ,714,List pools
+virsh, $cmds, , ,pool-name, ,724,Convert a pool UUID to pool name
+virsh, $cmds, , ,pool-refresh, ,724,Refresh a pool
+virsh, $cmds, , ,pool-start, ,724,Start a (previously defined) inactive pool
+virsh, $cmds, , ,pool-undefine, ,727,Undefine an inactive pool
+virsh, $cmds, , ,pool-uuid, ,727,Convert a pool name to pool UUID
+virsh, $cmds, , ,pool-event, ,727,Storage Pool Events
+virsh, $cmds, , ,vol-clone, ,733,Clone a volume
+virsh, $cmds, , ,vol-create-as, ,736,Create a volume from a set of args
+virsh, $cmds, , ,vol-create, ,742,Create a vol from an XML file
+virsh, $cmds, , ,vol-create-from, ,743,"Create a vol, using another volume as input"
+virsh, $cmds, , ,vol-delete, ,746,Delete a vol
+virsh, $cmds, , ,vol-download, ,748,Download volume contents to a file
+virsh, $cmds, , ,vol-dumpxml, ,752,Vol information in XML
+virsh, $cmds, , ,vol-info, ,753,Storage vol information
+virsh, $cmds, , ,vol-key, ,756,Returns the volume key for a given volume name or path
+virsh, $cmds, , ,vol-list, ,757,List vols
+virsh, $cmds, , ,vol-name, ,758,Returns the volume name for a given volume key or path
+virsh, $cmds, , ,vol-path, ,758,Returns the volume path for a given volume name or key
+virsh, $cmds, , ,vol-pool, ,759,Returns the storage pool for a given volume key or path
+virsh, $cmds, , ,vol-resize, ,760,Resize a vol
+virsh, $cmds, , ,vol-upload, ,764,Upload file contents to a volume
+virsh, $cmds, , ,vol-wipe, ,768,Wipe a vol

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tee, ,a,append, , ,101,"append to the given FILEs, do not overwrite"
+tee, ,i,ignore-interrupts, , ,102,ignore interrupt signals
+tee, , ,help, , ,103,display this help and exit
+tee, , ,version, , ,104,output version information and exit

@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+systemctl, $commands, , ,$commands,@f,100, 
+systemctl, $commands, , ,start,@f,100,Start one or more units
+systemctl, $commands, , ,stop,@f,100,Stop one or more units
+systemctl, $commands, , ,restart,@f,100,Restart one or more units
+systemctl, $commands, , ,reload-or-restart,@f,100,Reload units if supported or restart them
+systemctl, $commands, , ,try-reload-or-restart,@f,100,"Reload units if supported or restart them, if running"
+systemctl, $commands, , ,status,@f,100,Runtime status about one or more units
+systemctl, $commands, , ,enable,@f,100,Enable one or more units
+systemctl, $commands, , ,disable,@f,100,Disable one or more units
+systemctl, $commands, , ,isolate,@f,100,Start a unit and dependencies and disable all others
+systemctl, $commands, , ,set-default,@f,100,Set the default target to boot into
+systemctl, $commands, , ,get-default,@f,100,Show the default target to boot into
+systemctl, $commands, , ,set-property,@f,100,Sets one or more properties of a unit
+systemctl, $commands, , ,list-automounts,@f,100,List automount units
+systemctl, $commands, , ,is-system-running,@f,100,Return if system is running/starting/degraded
+systemctl, $commands, , ,freeze,@f,100,Freeze units with the cgroup freezer
+systemctl, $commands, , ,thaw,@f,100,Unfreeze frozen units
+systemctl, $commands, , ,clean,@f,100,Remove config/state/logs for the given units
+systemctl, __fish_contains_opt system, ,user, ,@f,116,Talk to the service manager of the calling user
+systemctl, __fish_contains_opt system global, ,system, ,@f,117,Talk to the service manager of the system.
+systemctl, __fish_contains_opt system, ,global, ,@f,119,Enable or disable for all users

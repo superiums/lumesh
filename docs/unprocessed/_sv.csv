@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sv, $commands, , , ,@f,101, 
+sv, $no_comm, , ,check, ,102,Check if the service is in it's requested state
+sv, $no_comm, , ,try-restart, ,103,"Run term, cont, and  up, report status"
+sv, $no_comm, , ,force-shutdown, ,104,"Run exit, report status or kill on timeout"
+sv, $no_comm, , ,force-restart, ,105,"Run term, cont and up, report status"
+sv, $no_comm, , ,force-reload, ,106,"Run term and  cont, report status"
+sv, $no_comm, , ,force-stop, ,107,"Run down, report status or kill on timeout"
+sv, $no_comm, , ,shutdown, ,108,"Run exit, report status"
+sv, $no_comm, , ,restart, ,109,"Run term, cont, and  up, report status using ./check"
+sv, $no_comm, , ,reload, ,110,"Run hup, report status"
+sv, $no_comm, , ,stop, ,111,"Run down, report status"
+sv, $no_comm, , ,start, ,112,"Run up, report status"
+sv, $no_comm, , ,exit, ,113,"Send TERM, and CONT, report status"
+sv, $no_comm, , ,kill, ,114,Send SIGKILL
+sv, $no_comm, , ,term, ,115,Send SIGTERM
+sv, $no_comm, , ,quit, ,116,Send SIGQUIT
+sv, $no_comm, , ,interrupt, ,117,Send SIGINT
+sv, $no_comm, , ,alarm, ,118,Send SIGALRM
+sv, $no_comm, , ,hup, ,119,Send SIGHUP
+sv, $no_comm, , ,cont, ,120,Send SIGCONT
+sv, $no_comm, , ,pause, ,121,Send SIGSTOP
+sv, $no_comm, , ,once, ,122,"Start service, but don't restart it"
+sv, $no_comm, , ,down, ,123,Send it the TERM signal
+sv, $no_comm, , ,up, ,124,Start a service
+sv, $no_comm, , ,status, ,125,Report the current status of the service

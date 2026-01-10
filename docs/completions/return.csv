@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+return, ,h,help, , ,101,Display help and exit
+return, , , ,0,@f @r,102,Return from function with normal exit status
+return, , , ,1,@f @r,103,Return from function with abnormal exit status

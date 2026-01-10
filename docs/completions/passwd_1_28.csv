@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+passwd, ,a,all, , ,101,This option can be used only with -S and causes show status for all users
+passwd, ,d,delete, , ,102,Delete a user\\*(Aqs password (make it empty)
+passwd, ,e,expire, , ,103,Immediately expire an account\\*(Aqs password
+passwd, ,h,help, , ,104,Display help message and exit
+passwd, ,i,inactiveINACTIVE, , ,105,This option is used to disable an account after the password has been expired…
+passwd, ,k,keep-tokens, , ,106,Indicate password change should be performed only for expired authentication …
+passwd, ,l,lock, , ,107,Lock the password of the named account
+passwd, ,n,mindaysMIN_DAYS, , ,108,Set the minimum number of days between password changes to MIN_DAYS
+passwd, ,q,quiet, , ,109,Quiet mode
+passwd, ,r,repositoryREPOSITORY, , ,110,change password in REPOSITORY repository
+passwd, ,R,rootCHROOT_DIR, , ,111,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+passwd, ,P,prefixPREFIX_DIR, , ,112,Apply changes to configuration files under the root filesystem found under th…
+passwd, ,S,status, , ,113,Display account status information
+passwd, ,u,unlock, , ,114,Unlock the password of the named account
+passwd, ,w,warndaysWARN_DAYS, , ,115,Set the number of days of warning before a password change is required
+passwd, ,x,maxdaysMAX_DAYS, , ,116,Set the maximum number of days a password remains valid
+passwd, ,s,stdin, , ,117,This option is used to indicate that passwd should read the new password from…
+passwd, , ,inactive, , ,118, 
+passwd, , ,mindays, , ,119, 
+passwd, , ,repository, , ,120, 
+passwd, , ,root, , ,121, 
+passwd, , ,prefix, , ,122, 
+passwd, , ,warndays, , ,123, 
+passwd, , ,maxdays, , ,124, 

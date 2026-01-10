@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-glue-efi, ,3,input32, , ,101,set input filename for 32-bit part
+grub-glue-efi, ,6,input64, , ,102,set input filename for 64-bit part
+grub-glue-efi, ,o,output, , ,103,set output filename.  Default is STDOUT
+grub-glue-efi, ,v,verbose, , ,104,print verbose messages
+grub-glue-efi, ,?,help, , ,105,give this help list
+grub-glue-efi, , ,usage, , ,106,give a short usage message
+grub-glue-efi, ,V,version, , ,107,print program version

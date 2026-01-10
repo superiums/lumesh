@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zoxide-import, , ,from, , ,101,"The format of the database being imported: . TS tab(|); l l"
+zoxide-import, ,h,help, , ,102,Print help information
+zoxide-import, , ,merge, , ,103,"By default, the import fails if the current database is not already empty"

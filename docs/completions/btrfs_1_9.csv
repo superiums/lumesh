@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs, , ,format, , ,101,"if supported by the command, print subcommand output in that format (text, js…"
+btrfs, ,v,verbose, , ,102,increase verbosity of the subcommand
+btrfs, ,q,quiet, , ,103,print only errors
+btrfs, , ,log, , ,104,"set log level (default, info, verbose, debug, quiet) The remaining options ar…"
+btrfs, , ,help, , ,105,print condensed help for all subcommands
+btrfs, , ,version, , ,106,print version string

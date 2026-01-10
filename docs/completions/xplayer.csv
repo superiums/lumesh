@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xplayer, ,?,help, , ,101,Show help and exit
+xplayer, , ,version, , ,102,Show version and exit
+xplayer, , ,play-pause, , ,103,'Toggle
+xplayer, , ,play, , ,104,Play
+xplayer, , ,pause, , ,105,Pause
+xplayer, , ,next, , ,106,Skip to the next movie or chapter in the playlist
+xplayer, , ,previous, , ,107,Return to the previous movie or chapter in the playlist
+xplayer, , ,seek-fwd, , ,108,Seek forwards 15 seconds
+xplayer, , ,seek-bwd, , ,109,Seek backwards 15 seconds
+xplayer, , ,volume-up, , ,110,Raise the volume by 8%
+xplayer, , ,volume-down, , ,111,Lower the volume by 8%
+xplayer, , ,mute, , ,112,Toggle between muted and unmuted audio
+xplayer, , ,fullscreen, , ,113,Toggle fullscreen mode
+xplayer, , ,toggle-controls, , ,114,Toggle showing the controls
+xplayer, , ,quit, , ,115,Quit
+xplayer, , ,enqueue, , ,116,Add a new stream to the playlist
+xplayer, , ,replace, , ,117,Play from the playlist

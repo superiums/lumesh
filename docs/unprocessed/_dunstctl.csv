@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dunstctl, __fish_use_subcommand, , ,action,@f,101,"Perform the default action, or open the context menu of the notification at the given position"
+dunstctl, __fish_use_subcommand, , ,close,@f,102,Close the last notification or optionally the notification with given ID
+dunstctl, __fish_use_subcommand, , ,close-all,@f,103,Close all the notifications
+dunstctl, __fish_use_subcommand, , ,context,@f,104,Open context menu
+dunstctl, __fish_use_subcommand, , ,count,@f,105,Show the number of notifications
+dunstctl, __fish_use_subcommand, , ,history,@f,106,Display notification history (in JSON)
+dunstctl, __fish_use_subcommand, , ,history-clear,@f,107,Delete all notifications from history
+dunstctl, __fish_use_subcommand, , ,history-pop,@f,108,Pop the latest notification from history or optionally the notification with given ID
+dunstctl, __fish_use_subcommand, , ,history-rm,@f,109,Remove the notification from history with given ID
+dunstctl, __fish_use_subcommand, , ,is-paused,@f,110,Check if pause level is greater than 0
+dunstctl, __fish_use_subcommand, , ,set-paused,@f,111,Set the pause status
+dunstctl, __fish_use_subcommand, , ,get-pause-level,@f,112,Get the current pause level
+dunstctl, __fish_use_subcommand, , ,set-pause-level,@f,113,Set the pause level
+dunstctl, __fish_use_subcommand, , ,rules,@f,114,Displays configured rules (optionally in JSON)
+dunstctl, __fish_use_subcommand, , ,rule,@f,115,Enable or disable a rule by its name
+dunstctl, __fish_use_subcommand, , ,reload,@f,116,"Reload the settings of the running instance, optionally with specific configuration files"
+dunstctl, __fish_use_subcommand, , ,debug,@f,117,Print debugging information
+dunstctl, __fish_use_subcommand, , ,help,@f,118,Show help

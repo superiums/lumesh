@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tail, ,c,bytes, ,@f @r,101,"output the last K bytes; with +K output bytes starting with the Kth"
+tail, ,f,follow,name descriptor, ,102,output appended data as the file grows
+tail, ,n,lines, ,@f @r,103,"output the last K lines; with +K output lines starting with the Kth"
+tail, , ,max-unchanged-stats, ,@f @r,104,"with --follow=name, reopen a FILE which has not changed size after N iterations"
+tail, , ,pid, , ,105,"with -f, terminate after process ID, PID dies"
+tail, ,q,silent, , ,106,never output headers giving file names
+tail, , ,retry, , ,107,"keep trying to open a file even when it is inaccessible; useful with --follow=name"
+tail, ,s,sleep-interval, ,@f @r,108,"with -f, sleep for approximately N seconds (default 1.0) between iterations"
+tail, ,v,verbose, , ,109,always output headers giving file names
+tail, , ,help, ,@f @r,110,display this help and exit
+tail, , ,version, ,@f @r,111,output version information and exit
+tail, ,b, , ,@f @r,112,output last K 512 byte blocks
+tail, ,c, , ,@f @r,113,output the last K bytes or only K bytes with -r
+tail, ,n, , ,@f @r,114,"output the last K lines, instead of the last 10 - or only K lines with -r"

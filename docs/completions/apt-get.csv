@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-get, ,h,help, , ,101,Display help and exit
+apt-get, , ,no-install-recommends, , ,117,Do not install recommended packages
+apt-get, , ,no-install-suggests, , ,118,Do not install suggested packages
+apt-get, ,d,download-only, , ,119,Download Only
+apt-get, ,f,fix-broken, , ,120,Correct broken dependencies
+apt-get, ,m,fix-missing, , ,121,Ignore missing packages
+apt-get, , ,no-download, , ,122,Disable downloading packages
+apt-get, ,q,quiet, , ,123,Quiet mode
+apt-get, ,s,no-act, , ,124,Perform a simulation
+apt-get, ,y,assume-yes, , ,125,Automatic yes to prompts
+apt-get, , ,assume-no, , ,126,Automatic no to prompts
+apt-get, ,u,show-upgraded, , ,127,Show upgraded packages
+apt-get, ,V,verbose-versions, , ,128,Show full versions for packages
+apt-get, ,b,build, , ,129,Compile source packages
+apt-get, , ,install-recommends, , ,130,Install recommended packages
+apt-get, , ,install-suggests, , ,131,Install suggested packages
+apt-get, , ,ignore-hold, , ,132,Ignore package Holds
+apt-get, , ,no-upgrade, , ,133,Do not upgrade packages
+apt-get, , ,force-yes, , ,134,Force yes
+apt-get, , ,print-uris, , ,135,Print the URIs
+apt-get, , ,purge, , ,136,Use purge instead of remove
+apt-get, , ,reinstall, , ,137,Reinstall packages
+apt-get, , ,list-cleanup, , ,138,Erase obsolete files
+apt-get, ,t,default-release, , ,139,Control default input to the policy engine
+apt-get, , ,trivial-only, , ,140,Only perform operations that are trivial
+apt-get, , ,no-remove, , ,141,Abort if any packages are to be removed
+apt-get, , ,only-source, , ,142,Only accept source packages
+apt-get, , ,diff-only, , ,143,Download only diff file
+apt-get, , ,tar-only, , ,144,Download only tar file
+apt-get, , ,arch-only, , ,145,Only process arch-dependent build-dependencies
+apt-get, , ,allow-unauthenticated, , ,146,Ignore non-authenticated packages
+apt-get, ,v,version, , ,147,Display version and exit
+apt-get, ,c,config-file, ,@r,148,Specify a config file
+apt-get, ,o,option, ,@r,149,Set a config option

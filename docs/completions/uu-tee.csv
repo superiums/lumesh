@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-tee, , ,output-error,warn,@f @r,101,set write error behavior
+uu-tee, ,h,help, , ,102,Print help
+uu-tee, ,a,append, , ,103,"append to the given FILEs, do not overwrite"
+uu-tee, ,i,ignore-interrupts, , ,104,ignore interrupt signals (ignored on non-Unix platforms)
+uu-tee, ,V,version, , ,105,Print version

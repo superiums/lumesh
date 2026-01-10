@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gi-inspect-typelib, , ,print-shlibs, , ,101,Show the shared libraries that implement the NAMESPACE
+gi-inspect-typelib, , ,print-typelibs, , ,102,Show the other typelibs that the NAMESPACE depends on
+gi-inspect-typelib, , ,typelib-version, , ,103,"The version of each NAMESPACE to inspect.  For example, the version of Gio-2"

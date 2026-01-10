@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+asciidoctor, , , , ,@f @k @r,101, 
+asciidoctor, ,B,base-dir, , ,102,Base directory containing the document
+asciidoctor, ,S,safe-mode,unsafe safe server secure,@f @r,103,Set safe mode level
+asciidoctor, , ,safe, , ,104,Set safe mode level to safe
+asciidoctor, ,a,attribute, , ,105,Define a document attribute
+asciidoctor, ,b,backend,html5 docbook5 manpage,@f @r,106,Backend output file format
+asciidoctor, ,d,doctype,article book manpage inline,@f @r,107,Document type
+asciidoctor, ,D,destination-dir, , ,108,Destination output directory
+asciidoctor, ,E,template-engine, , ,109,Template engine to use
+asciidoctor, , ,eruby,erb erubis,@f @r,110,eRuby implementation to use
+asciidoctor, ,I,load-path, , ,111,Add a directory to the load path
+asciidoctor, ,n,section-numbers, , ,112,Auto-number section titles
+asciidoctor, ,o,out-file, , ,113,Output file
+asciidoctor, ,R,source-dir, , ,114,Source directory
+asciidoctor, ,r,require, , ,115,Require the specified library
+asciidoctor, ,s,no-header-footer, , ,116,Output an embedded document
+asciidoctor, ,T,template-dir, , ,117,A directory containing custom converter templates
+asciidoctor, , ,failure-level,WARN ERROR INFO,@f @r,118,Minimum logging level
+asciidoctor, ,q,quiet, , ,119,Be quiet
+asciidoctor, , ,trace, , ,120,Include backtrace information
+asciidoctor, ,v,verbose, , ,121,Be verbose
+asciidoctor, ,w,warnings, , ,122,Turn on script warnings
+asciidoctor, ,t,timings, , ,123,Print timings report
+asciidoctor, ,h,help,manpage,@f @r,124,Print a help message
+asciidoctor, ,V,version, , ,125,Print program version

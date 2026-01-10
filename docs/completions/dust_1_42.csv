@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dust, ,d,depth, , ,101,Depth to show
+dust, ,T,threads, , ,102,Number of threads to use
+dust, , ,config, , ,103,Specify a config file to use
+dust, ,n,number-of-lines, , ,104,Number of lines of output to show.  (Default is terminal_height - 10)
+dust, ,p,full-paths, , ,105,Subdirectories will not have their path shortened
+dust, ,X,ignore-directory, , ,106,Exclude any file or directory with this path
+dust, ,I,ignore-all-in-file, , ,107,"Exclude any file or directory with a regex matching that listed in this file,…"
+dust, ,L,dereference-links, , ,108,dereference sym links - Treat sym links as directories and go into them
+dust, ,x,limit-filesystem, , ,109,Only count the files and directories on the same filesystem as the supplied d…
+dust, ,s,apparent-size, , ,110,Use file length instead of blocks
+dust, ,r,reverse, , ,111,Print tree upside down (biggest highest)
+dust, ,c,no-colors, , ,112,No colors will be printed (Useful for commands like: watch)
+dust, ,C,force-colors, , ,113,Force colors print
+dust, ,b,no-percent-bars, , ,114,No percent bars or percentages will be displayed
+dust, ,B,bars-on-right, , ,115,percent bars moved to right side of screen
+dust, ,z,min-size, , ,116,Minimum size file to include in output
+dust, ,R,screen-reader, , ,117,For screen readers.  Removes bars
+dust, , ,skip-total, , ,118,No total row will be displayed
+dust, ,f,filecount, , ,119,Directory \\*(Aqsize\\*(Aq is number of child files instead of disk size
+dust, ,i,ignore_hidden, , ,120,Do not display hidden files
+dust, ,v,invert-filter, , ,121,Exclude filepaths matching this regex.  To ignore png files type: -v '\\
+dust, ,e,filter, , ,122,Only include filepaths matching this regex.  For png files type: -e '\\. png$'
+dust, ,t,file_types, , ,123,show only these file types
+dust, ,w,terminal_width, , ,124,Specify width of output overriding the auto detection of terminal width
+dust, ,P,no-progress, , ,125,Disable the progress indication
+dust, , ,print-errors, , ,126,Print path with errors
+dust, ,D,only-dir, , ,127,Only directories will be displayed
+dust, ,F,only-file, , ,128,Only files will be displayed.  (Finds your largest files)
+dust, ,o,output-format, , ,129,Changes output display size.  si will print sizes in powers of 1000
+dust, ,S,stack-size, , ,130,Specify memory to use as stack size - use if you see: \\*(Aqfatal runtime erro…
+dust, ,j,output-json, , ,131,Output the directory tree as json to the current directory
+dust, ,M,mtime, , ,132,"+/-n matches files modified more/less than n days ago , and n matches files m…"
+dust, ,A,atime, , ,133,"just like -mtime, but based on file access time"
+dust, ,y,ctime, , ,134,"just like -mtime, but based on file change time"
+dust, , ,files0-from, , ,135,"run dust on NUL-terminated file names specified in file; if argument is -, th…"
+dust, , ,collapse, , ,136,Keep these directories collapsed
+dust, ,m,filetime, , ,137,Directory \\*(Aqsize\\*(Aq is max filetime of child files instead of disk size
+dust, ,h,help, , ,138,Print help
+dust, ,V,version, , ,139,Print version

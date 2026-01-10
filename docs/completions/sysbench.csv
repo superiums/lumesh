@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sysbench, , , ,run,@f,101, 
+sysbench, , ,num-threads, ,@f @r,102,The total number of worker threads to create (default: 1)
+sysbench, , ,max-requests, ,@f @r,103,Limit for total number of requests. 0 means unlimited (default: 10000)
+sysbench, , ,max-time, ,@f @r,104,Limit for total execution time in seconds. 0 means unlimited (default: 0)
+sysbench, , ,thread-stack-size, ,@f @r,105,Size of stack for each thread (default: 32K)
+sysbench, , ,init-rng,on off,@f,106,Specifies if random numbers generator should be initialized from timer (default: off)
+sysbench, , ,test,,@f @r,107,Name of the test mode to run(required)
+sysbench, , ,debug,on off,@f,108,Print more debug info (default: off)
+sysbench, , ,validate,on off,@f,109,Perform validation of test results where possible (default: off)
+sysbench, , ,help, , ,110,Print help on general syntax
+sysbench, , ,version, , ,111,Show version of program
+sysbench, , ,percentile, ,@f @r,112,A percentile rank of query execution times to count (default: 95)
+sysbench, , ,batch,on off,@f,113,Dump current results periodically (default: off)
+sysbench, , ,batch-delay, ,@f @r,114,Delay between batch dumps in seconds (default: 300)

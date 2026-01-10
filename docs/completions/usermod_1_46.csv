@@ -1,0 +1,44 @@
+cmd,conds,short,long,params,dirs,pri,desc
+usermod, ,a,append, , ,101,Add the user to the supplementary group(s).  Use only with the -G option
+usermod, ,b,badname, , ,102,Allow names that do not conform to standards
+usermod, ,c,commentCOMMENT, , ,103,"update the comment field of the user in /etc/passwd, which is normally modifi…"
+usermod, ,d,homeHOME_DIR, , ,104,The user\\*(Aqs new login directory
+usermod, ,e,expiredateEXPIRE_DATE, , ,105,The date on which the user account will be disabled
+usermod, ,f,inactiveINACTIVE, , ,106,defines the number of days after the password exceeded its maximum age during…
+usermod, ,g,gidGROUP, , ,107,The name or numerical ID of the user\\*(Aqs new primary group
+usermod, ,G,groupsGROUP1, , ,108,A list of supplementary groups which the user is also a member of
+usermod, ,l,loginNEW_LOGIN, , ,109,The name of the user will be changed from LOGIN to NEW_LOGIN
+usermod, ,L,lock, , ,110,Lock a user\\*(Aqs password
+usermod, ,m,move-home, , ,111,moves the content of the user\\*(Aqs home directory to the new location
+usermod, ,o,non-unique, , ,112,allows to change the user ID to a non-unique value
+usermod, ,p,passwordPASSWORD, , ,113,defines a new password for the user
+usermod, ,r,remove, , ,114,Remove the user from named supplementary group(s)
+usermod, ,R,rootCHROOT_DIR, , ,115,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+usermod, ,P,prefixPREFIX_DIR, , ,116,Apply changes within the directory tree starting with PREFIX_DIR and use as w…
+usermod, ,s,shellSHELL, , ,117,changes the user\\*(Aqs login shell
+usermod, ,u,uidUID, , ,118,The new value of the user\\*(Aqs ID
+usermod, ,U,unlock, , ,119,Unlock a user\\*(Aqs password
+usermod, ,v,add-subuidsFIRST-LAST, , ,120,Add a range of subordinate uids to the user\\*(Aqs account
+usermod, ,V,del-subuidsFIRST-LAST, , ,121,Remove a range of subordinate uids from the user\\*(Aqs account
+usermod, ,w,add-subgidsFIRST-LAST, , ,122,Add a range of subordinate gids to the user\\*(Aqs account
+usermod, ,W,del-subgidsFIRST-LAST, , ,123,Remove a range of subordinate gids from the user\\*(Aqs account
+usermod, ,Z,selinux-userSEUSER, , ,124,defines the SELinux user to be mapped with LOGIN
+usermod, , ,selinux-rangeSERANGE, , ,125,defines the SELinux MLS range for the new account
+usermod, , ,comment, , ,126, 
+usermod, , ,home, , ,127, 
+usermod, , ,expiredate, , ,128, 
+usermod, , ,inactive, , ,129, 
+usermod, , ,gid, , ,130, 
+usermod, , ,groups, , ,131, 
+usermod, , ,login, , ,132, 
+usermod, , ,password, , ,133, 
+usermod, , ,root, , ,134, 
+usermod, , ,prefix, , ,135, 
+usermod, , ,shell, , ,136, 
+usermod, , ,uid, , ,137, 
+usermod, , ,add-subuids, , ,138, 
+usermod, , ,del-subuids, , ,139, 
+usermod, , ,add-subgids, , ,140, 
+usermod, , ,del-subgids, , ,141, 
+usermod, , ,selinux-user, , ,142, 
+usermod, , ,selinux-range, , ,143, 

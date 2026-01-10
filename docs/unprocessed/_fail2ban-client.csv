@@ -1,0 +1,36 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fail2ban-client, __fish_is_first_token, , ,start, ,113,Start fail2ban server or jail
+fail2ban-client, __fish_is_first_token, , ,restart, ,114,Restart server or jail
+fail2ban-client, __fish_is_first_token, , ,reload, ,115,Reload server configuration
+fail2ban-client, __fish_is_first_token, , ,stop, ,116,Stop fail2ban server or jail
+fail2ban-client, __fish_is_first_token, , ,unban, ,117,Unban ip address(es)
+fail2ban-client, __fish_is_first_token, , ,banned, ,118,List jails w/ their banned IPs
+fail2ban-client, __fish_is_first_token, , ,status, ,119,Get server or jail status
+fail2ban-client, __fish_is_first_token, , ,ping, ,120,Check if server is alive
+fail2ban-client, __fish_is_first_token, , ,help, ,121,Prints usage synopsis
+fail2ban-client, __fish_is_first_token, , ,version, ,122,Prints server version
+fail2ban-client, __fish_is_first_token, , ,set, ,123, 
+fail2ban-client, __fish_is_first_token, , ,get, ,124, 
+fail2ban-client, __fish_is_first_token, , ,flushlogs, ,125,Flushes log files and reopens
+fail2ban-client, __fish_is_first_token, , ,add, ,126, 
+fail2ban-client,get __fish_prev_arg_in get, , ,loglevel, ,134,Get server log level
+fail2ban-client,set __fish_prev_arg_in set, , ,loglevel, ,135,Change server log level
+fail2ban-client,set __fish_prev_arg_in loglevel, , ,CRITICAL ERROR WARNING NOTICE INFO DEBUG TRACEDEBUG HEAVYDEBUG, ,136, 
+fail2ban-client,get __fish_prev_arg_in get, , ,logtarget, ,137,Get server log output
+fail2ban-client,set __fish_prev_arg_in set, , ,logtarget, ,138,Change server log output
+fail2ban-client,set __fish_prev_arg_in logtarget, , ,STDOUT STDERR SYSLOG SYSTEMD-JOURNAL, ,139, 
+fail2ban-client,get __fish_prev_arg_in get, , ,syslogsocket, ,140,Get server syslog socket
+fail2ban-client,set __fish_prev_arg_in set, , ,syslogsocket, ,141,Change server syslog socket
+fail2ban-client,set __fish_prev_arg_in syslogsocket, , ,auto, ,142, 
+fail2ban-client,get __fish_prev_arg_in get, , ,dbfile, ,143,Get server db path
+fail2ban-client,set __fish_prev_arg_in set, , ,dbfile, ,144,Change server db path
+fail2ban-client,set __fish_prev_arg_in dbfile, , ,None, ,145, 
+fail2ban-client,get __fish_prev_arg_in get, , ,dbmaxmatches, ,146,Get max matches stored per ticket
+fail2ban-client,set __fish_prev_arg_in set, , ,dbmaxmatches, ,147,Set max matches stored per ticket
+fail2ban-client,get __fish_prev_arg_in get, , ,dbpurgeage, ,148,Get secs ban history will be kept
+fail2ban-client,set __fish_prev_arg_in set, , ,dbpurgeage, ,149,Set secs ban history will be kept
+fail2ban-client,set __fish_is_nth_token 3, , ,idle ignoreself addignoreip delignoreip ignorecommand ignorecache addlogpath dellogpath logencoding addjournalmatch deljournalmatch addfailregex delfailregex bantime datepattern usedns attempt banip unbanip maxretry maxmatches maxlines addaction delaction action, ,150, 
+fail2ban-client,get __fish_is_nth_token 3, , ,banned logpath logencoding journalmatch ignoreself ignoreip ignorecommand failregex ignoreregex findtime bantime datepattern usedns banip maxretry maxmatches maxlines actions action actionproperties actionmethods action, ,151, 
+fail2ban-client,get set action __fish_is_nth_token 5, , ,actionstart actionstop actioncheck actionban actionunban timeout, ,152, 
+fail2ban-client,get set __fish_prev_arg_in idle, , ,on off, ,153, 
+fail2ban-client,get set __fish_prev_arg_in ignoreself, , ,true false, ,154, 

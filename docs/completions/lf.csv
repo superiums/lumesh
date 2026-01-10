@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lf, , , , ,@r,101,command to execute on client initialization
+lf, , , , ,@r,102,path to the config file (instead of the usual paths)
+lf, , , , ,@r,103,path to the file to write the CPU profile
+lf, , , , ,@r,104,path to the file to write the last dir on exit (to use for cd)
+lf, , , , ,@r,105,path to the log file to write messages
+lf, , , , ,@r,106,path to the file to write the memory profile
+lf, , , , ,@f @r,107,send remote command to server
+lf, , , , ,@r,108,path to the file to write selected files on open (to use as open file dialog)

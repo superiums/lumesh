@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-editenv, ,?,help, , ,101,give this help list
+grub-editenv, , ,usage, , ,102,give a short usage message
+grub-editenv, ,v,verbose, , ,103,print verbose messages
+grub-editenv, ,V,version, , ,104,print program version

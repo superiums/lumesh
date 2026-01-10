@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lunchy, __fish_lunchy_needs_command, , ,install,@f,102,Installs [file] to ~/Library/LaunchAgents or /Library/LaunchAgents
+lunchy, __fish_lunchy_needs_command, , ,ls list,@f,103,Show the list of installed agents
+lunchy, __fish_lunchy_needs_command, , ,start,@f,104,Start the first matching agent
+lunchy, __fish_lunchy_needs_command, , ,stop,@f,105,Stop the first matching agent
+lunchy, __fish_lunchy_needs_command, , ,restart,@f,106,Stop and start the first matching agent
+lunchy, __fish_lunchy_needs_command, , ,status,@f,107,Show the PID and label for all agents
+lunchy, __fish_lunchy_needs_command, , ,edit,@f,108,Opens the launchctl daemon file in the default editor
+lunchy, __fish_lunchy_using_command ls list start stop restart status edit, , , ,@f,109,Service
+lunchy, __fish_lunchy_using_command start,w,write, ,@f,110,Persist command
+lunchy, __fish_lunchy_using_command start,F,force, ,@f,111,Force start (disabled) agents
+lunchy, __fish_lunchy_using_command stop,w,write, ,@f,112,Persist command

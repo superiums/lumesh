@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cd-drive, ,d,debug, , ,101,Set debugging to LEVEL
+cd-drive, ,i,cdrom-device, , ,102,show only info about CD-ROM device
+cd-drive, ,q,quiet, , ,103,Don't produce warning output
+cd-drive, ,V,version, , ,104,display version and copyright information and exit . SS 'Help options:'
+cd-drive, ,?,help, , ,105,Show this help message
+cd-drive, , ,usage, , ,106,Display brief usage message AUTHOR Rocky Bernstein rocky@gnu

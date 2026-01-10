@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+emaint, ,h,help, , ,101,Show this help message and exit
+emaint, ,c,check, , ,102,Check for problems
+emaint, , ,version, , ,103,Show program's version number and exit
+emaint, ,f,fix, , ,104,Attempt to fix problems
+emaint, ,P,purge, , ,105,Remove the list of failed merges
+emaint, logs,t,time, , ,116,Delete logs older than NUM days
+emaint, logs,p,pretend, , ,117,Output logs that would be deleted
+emaint, logs,C,clean, , ,118,Cleans out logs more than 7 days old
+emaint, sync,a,auto, , ,119,Sync auto-sync enabled repos only
+emaint, sync,A,allrepos, , ,120,Sync all repos that have a sync-url defined
+emaint, sync,r,repo, , ,121,Sync the specified repo
+emaint, sync, ,sync-submodule, , ,122,Restrict sync to the specified submodule(s)

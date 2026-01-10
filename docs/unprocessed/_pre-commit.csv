@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pre-commit, __fish_use_subcommand,h,help, , ,101,Show help message and exit
+pre-commit, __fish_use_subcommand,V,version, , ,102,Show version number and exit
+pre-commit, $commands, ,color,auto always never, ,103,Whether to use color in output
+pre-commit, $commands,c,config, ,@r,104,Path to alternate config file
+pre-commit, $commands,h,help, , ,105,Show help message and exit
+pre-commit, __fish_use_subcommand, , ,autoupdate, ,106,Auto-update config
+pre-commit, __fish_use_subcommand, , ,clean, ,110,Clean out files
+pre-commit, __fish_use_subcommand, , ,gc, ,111,Clean unused cached repos
+pre-commit, __fish_use_subcommand, , ,help, ,112,Show help for a specific command
+pre-commit, __fish_use_subcommand, , ,init-templatedir, ,114,Install hook script in a directory
+pre-commit, __fish_use_subcommand, , ,install, ,118,Install the pre-commit script
+pre-commit, __fish_use_subcommand, , ,install-hooks, ,123,Install all hook environments
+pre-commit, __fish_use_subcommand, , ,migrate-config, ,124,Migrate to newer config
+pre-commit, __fish_use_subcommand, , ,run, ,125,Run hooks
+pre-commit, __fish_use_subcommand, , ,try-repo, ,126,Try the hooks in a repository
+pre-commit, __fish_use_subcommand, , ,sample-config, ,145,Produce sample config file
+pre-commit, __fish_use_subcommand, , ,uninstall, ,146,Uninstall the pre-commit script
+pre-commit, __fish_use_subcommand, , ,validate-config, ,148,Validate .pre-commit-config.yaml files
+pre-commit, __fish_use_subcommand, , ,validate-manifest, ,149,Validate .pre-commit-hooks.yaml files

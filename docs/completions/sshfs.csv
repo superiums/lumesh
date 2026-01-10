@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sshfs, , , , ,@f @r,101,Hostname
+sshfs, , , , ,@D @f @r,102, 
+sshfs, ,p, , ,@f @r,103,Port
+sshfs, ,o, , ,@f @r,104,Mount options

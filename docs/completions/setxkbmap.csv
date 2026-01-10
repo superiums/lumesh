@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setxkbmap, , , , ,@D,101,Add <dir> to list of directories to be used

@@ -1,0 +1,67 @@
+cmd,conds,short,long,params,dirs,pri,desc
+prt-get, __fish_prt_use_package, , , ,@f,101,Package
+prt-get, __fish_prt_use_port, , , ,@f,102,Port
+prt-get, __fish_prt_no_subcommand, , ,install,@f,103,Install listed ports
+prt-get, __fish_prt_no_subcommand, , ,depinst,@f,104,Install listed ports and their deps
+prt-get, __fish_prt_no_subcommand, , ,grpinst,@f,105,"Install listed ports, stop if one fails"
+prt-get, __fish_prt_no_subcommand, , ,update,@f,106,Update listed packages
+prt-get, __fish_prt_no_subcommand, , ,remove,@f,107,Remove listed packages
+prt-get, __fish_prt_no_subcommand, , ,sysup,@f,108,Update all outdated installed packages
+prt-get, __fish_prt_no_subcommand, , ,lock,@f,109,Do not update this in sysup
+prt-get, __fish_prt_no_subcommand, , ,unlock,@f,110,Remove this from lock
+prt-get, __fish_prt_no_subcommand, , ,diff,@f,111,Print differences between installed packages and ports in the port tree
+prt-get, __fish_prt_no_subcommand, , ,search,@f,112,Search for an expr in port names
+prt-get, __fish_prt_no_subcommand, , ,dsearch,@f,113,Search for an expr in port names and descriptions
+prt-get, __fish_prt_no_subcommand, , ,info,@f,114,Print info on a port
+prt-get, __fish_prt_no_subcommand, , ,fsearch,@f,115,Search for a pattern in the footprints in the ports tree
+prt-get, __fish_prt_no_subcommand, , ,path,@f,116,Print the path of a port
+prt-get, __fish_prt_no_subcommand, , ,readme,@f,117,Print the eventual README of a port
+prt-get, __fish_prt_no_subcommand, , ,depends,@f,118,Print a list of deps for the listed ports
+prt-get, __fish_prt_no_subcommand, , ,quickdeo,@f,119,Print a simple list of deps for the listed ports
+prt-get, __fish_prt_no_subcommand, , ,deptree,@f,120,Print a deptree for the port
+prt-get, __fish_prt_no_subcommand, , ,dup,@f,121,List ports in multiple directories
+prt-get, __fish_prt_no_subcommand, , ,list,@f,122,List all the ports
+prt-get, __fish_prt_no_subcommand, , ,printf,@f,123,Print formatted list of ports
+prt-get, __fish_prt_no_subcommand, , ,listinst,@f,124,List installed packages
+prt-get, __fish_prt_no_subcommand, , ,listorphans,@f,125,List installed packages which have no dependent packages
+prt-get, __fish_prt_no_subcommand, , ,isinst,@f,126,Check if a port is installed
+prt-get, __fish_prt_no_subcommand, , ,current,@f,127,Print the version of an installed package
+prt-get, __fish_prt_no_subcommand, , ,ls,@f,128,Print the listing of the directory of a port
+prt-get, __fish_prt_no_subcommand, , ,cat,@f,129,Print a file in a port to stdout
+prt-get, __fish_prt_no_subcommand, , ,edit,@f,130,Edit a file in a port
+prt-get, __fish_prt_no_subcommand, , ,help,@f,131,Shows a help screen
+prt-get, __fish_prt_no_subcommand, , ,dumpconfig,@f,132,Print the configuration of prt-get
+prt-get, __fish_prt_no_subcommand, , ,version,@f,133,Show the current version of prt-get
+prt-get, __fish_prt_no_subcommand, , ,cache,@f,134,Create a cache for prt-get
+prt-cache, __fish_prt_use_package, , , ,@f,153,Port
+prt-cache, __fish_prt_use_port, , , ,@f,154,Package
+prt-cache, __fish_prt_no_subcommand, , ,install,@f,155,Install listed ports
+prt-cache, __fish_prt_no_subcommand, , ,depinst,@f,156,Install listed ports and their deps
+prt-cache, __fish_prt_no_subcommand, , ,grpinst,@f,157,"Install listed ports, stop if one fails"
+prt-cache, __fish_prt_no_subcommand, , ,update,@f,158,Update listed packages
+prt-cache, __fish_prt_no_subcommand, , ,remove,@f,159,Remove listed packages
+prt-cache, __fish_prt_no_subcommand, , ,sysup,@f,160,Update all outdated installed packages
+prt-cache, __fish_prt_no_subcommand, , ,lock,@f,161,Do not update this in sysup
+prt-cache, __fish_prt_no_subcommand, , ,unlock,@f,162,Remove this from lock
+prt-cache, __fish_prt_no_subcommand, , ,diff,@f,163,Print differences between installed packages and ports in the port tree
+prt-cache, __fish_prt_no_subcommand, , ,search,@f,164,Search for an expr in port names
+prt-cache, __fish_prt_no_subcommand, , ,dsearch,@f,165,Search for an expr in port names and descriptions
+prt-cache, __fish_prt_no_subcommand, , ,info,@f,166,Print info on a port
+prt-cache, __fish_prt_no_subcommand, , ,fsearch,@f,167,Search for a pattern in the footprints in the ports tree
+prt-cache, __fish_prt_no_subcommand, , ,path,@f,168,Print the path of a port
+prt-cache, __fish_prt_no_subcommand, , ,readme,@f,169,Print the eventual README of a port
+prt-cache, __fish_prt_no_subcommand, , ,depends,@f,170,Print a list of deps for the listed ports
+prt-cache, __fish_prt_no_subcommand, , ,quickdeo,@f,171,Print a simple list of deps for the listed ports
+prt-cache, __fish_prt_no_subcommand, , ,deptree,@f,172,Print a deptree for the port
+prt-cache, __fish_prt_no_subcommand, , ,list,@f,173,List all the ports
+prt-cache, __fish_prt_no_subcommand, , ,printf,@f,174,Print formatted list of ports
+prt-cache, __fish_prt_no_subcommand, , ,listinst,@f,175,List installed packages
+prt-cache, __fish_prt_no_subcommand, , ,listorphans,@f,176,List installed packages which have no dependent packages
+prt-cache, __fish_prt_no_subcommand, , ,current,@f,177,Print the version of an installed package
+prt-cache, __fish_prt_no_subcommand, , ,ls,@f,178,Print the listing of the directory of a port
+prt-cache, __fish_prt_no_subcommand, , ,cat,@f,179,Print a file in a port to stdout
+prt-cache, __fish_prt_no_subcommand, , ,edit,@f,180,Edit a file in a port
+prt-cache, __fish_prt_no_subcommand, , ,help,@f,181,Shows a help screen
+prt-cache, __fish_prt_no_subcommand, , ,dumpconfig,@f,182,Print the configuration of prt-get
+prt-cache, __fish_prt_no_subcommand, , ,version,@f,183,Show the current version of prt-get
+prt-cache, __fish_prt_no_subcommand, , ,cache,@f,184,Create a cache for prt-get

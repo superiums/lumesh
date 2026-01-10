@@ -1,0 +1,80 @@
+cmd,conds,short,long,params,dirs,pri,desc
+feh, ,A,action, ,@f @r,101,Specify a shell command as action to perform on image
+feh, , ,action$i, ,@f @r,102,Extra action triggered with number key 
+feh, ,Z,auto-zoom, , ,103,Zoom pictures to screen size
+feh, ,x,borderless, , ,104,Create borderless window
+feh, ,P,cache-thumbnails, , ,105,Enable thumbnail caching
+feh, ,K,caption-path, ,@r,106,Path to directory with image caption
+feh, ,L,customlist, ,@f @r,107,Print image info according to given format
+feh, , ,cycle-once, , ,108,Exit feh after one loop through slideshow
+feh, ,G,draw-actions, , ,109,Draw defined actions
+feh, , ,draw-exif, , ,110,Display EXIF information
+feh, ,d,draw-filename, , ,111,Draw filename
+feh, , ,draw-tinted, , ,112,Show overlay texts on semi-transparent background
+feh, ,f,filelist, , ,113, 
+feh, ,e,font, ,@f @r,114,Set global font
+feh, ,C,fontpath, ,@r,115,Search for fonts in directory
+feh, , ,force-aliasing, , ,116,Disable antialiasing
+feh, ,I,fullindex, , ,117, 
+feh, ,F,fullscreen, , ,118,Make window fullscreen
+feh, ,g,geometry, ,@f @r,119,Limit window size
+feh, ,Y,hide-pointer, , ,120,Hide pointer
+feh, ,B,image-bg,checks white black,@f @r,121,Use style as background for transparent image parts
+feh, ,i,index, , ,122,Enable index mode
+feh, , ,index-info, ,@f @r,123,Show image information based on given format
+feh, , ,info, ,@f @r,124,Execute given command line and display output
+feh, ,k,keep-http, , ,125,Keep files fetched using HTTP
+feh, , ,insecure, , ,126,Disable strict hostname and peer checking with HTTPS
+feh, , ,keep-zoom-vp, , ,127,"When switching images, keep zoom and viewport settings"
+feh, ,l,list, , ,128,Don't display images. Display an ls style listing
+feh, ,U,loadable, , ,129,Print out image names
+feh, , ,magick-timeout, ,@f @r,130,Stop trying to convert unloadable files after timeout
+feh, , ,max-dimension, ,@f @r,131,Only show images which are smaller than given size
+feh, ,M,menu-font, ,@f @r,132,Use font as menu font
+feh, , ,min-dimension, ,@f @r,133,Only show image which are larger than given size
+feh, ,m,montage, , ,134,Enable montage mode
+feh, ,w,multiwindow, , ,135,Disable slideshow mode
+feh, , ,no-jump-on-resort, , ,136,Don't jump to first image after resorting filelist
+feh, ,N,no-menus, , ,137,Don't load or show any menus
+feh, , ,no-screen-clip, , ,138,Don't limit window to screen size
+feh, , ,no-xinerama, , ,139,Disable Xinerama support
+feh, ,j,output-dir, ,@r,140,Save files to directory
+feh, ,p,preload, , ,141,Preload images
+feh, ,q,quiet, , ,142,Don't report non-fatal errors
+feh, ,z,randomize, , ,143,Randomize file list before displaying
+feh, ,r,recursive, , ,144,Recursively expand directory
+feh, , ,no-recursive, , ,145,Don't recursively expand directory
+feh, ,R,reload, ,@f @r,146,Reload filelist after given seconds
+feh, ,n,reverse, , ,147,Reverse sort order
+feh, ,.,scale-down, , ,148,Scale image to fit window geometry
+feh, , ,scroll-step, ,@f @r,149,Scroll given number of pixels when using scrolling keys
+feh, ,D,slideshow-delay, ,@f @r,150,Set delay in second between changing slides
+feh, ,S,sort,name filename dirname mtime width height pixels size format,@f @r,151,Sort file list with given parameter
+feh, ,l,start-at, ,@f @r,152,Start filelist at given filename
+feh, ,T,theme, ,@f @r,153,Load options from given config file
+feh, ,t,thumbnails, , ,154, 
+feh, ,~,thumb-title, ,@f @r,155,Set title for window opened from thumbnail mode
+feh, ,^,title, ,@f @r,156,Set window title
+feh, ,u,unloadable, , ,157,Print names of images that can't be loaded by imlib2
+feh, ,V,verbose, , ,158,Verbose mode
+feh, ,v,version, , ,159,Print version and exit
+feh, , ,xinerama-index, , ,160, 
+feh, , ,zoom,max fill,@f @r,161,Zoom images by given percent when in fullscreen
+feh, ,a,alpha, ,@f @r,162,Set thumbnail transparency (0-255)
+feh, ,b,bg,trans,@r,163,Use given file as background for montage
+feh, ,X,ignore-aspect, , ,164,Don't retain thumbnails' aspect ratios
+feh, ,W,limit-height, ,@f @r,165,Limit montage's height
+feh, ,W,limit-width, ,@f @r,166,Limit montage's width
+feh, ,o,output, ,@r,167,Save created montage to file
+feh, ,O,output-only, ,@r,168,Save created montage to file
+feh, ,s,stretch, , ,169,Enlarge if image smaller than given thumbnail size
+feh, ,E,thumb-height, ,@f @r,170,Set thumbnail height
+feh, ,y,thumb-width, ,@f @r,171,Set thumbnail width
+feh, ,J,thumb-redraw, ,@f @r,172,Redraw thumbnail window every n images
+feh, ,@,title-font, ,@f @r,173,Set font to print title on index
+feh, , ,bg-center, , ,174,Center file on background
+feh, , ,bg-fill, , ,175,Set as background by zooming until image fits
+feh, , ,bg-max, , ,176,Set as background by zooming with black borders on one side
+feh, , ,bg-scale, , ,177,"Set as background without tiling, trimming or borders"
+feh, , ,bg-tile, , ,178,Tile image if too small for screen
+feh, , ,no-fehbg, , ,179,Do not write a ~/.fehbg file

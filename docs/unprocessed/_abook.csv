@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+abook, $convert, ,informat, , ,107,Input file format
+abook, $convert, ,outformat, , ,108,Output file format
+abook, $convert, ,infile, ,@r,109,Input file (default: stdin)
+abook, $convert, ,outfile, ,@r,110,Output file (default: stdout)

@@ -1,0 +1,37 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tmutil, __fish_use_subcommand, , ,status, ,101,Display Time Machine status
+tmutil, __fish_use_subcommand, , ,addexclusion,@f,103,Add an exclusion not to back up a file
+tmutil, __fish_use_subcommand, , ,associatedisk,@r,106,Bind a snapshot volume directory to the specified local disk
+tmutil, __fish_use_subcommand, , ,calculatedrift,@r,107,Determine the amount of change between snapshots
+tmutil, __fish_use_subcommand, , ,compare,@r,108,Perform a backup diff
+tmutil, __fish_use_subcommand, , ,delete,@r,125,Delete one or more snapshots
+tmutil, __fish_use_subcommand, , ,deletelocalsnapshots,@r,129,Delete all local Time Machine snapshots for the specified date (formatted YYYY-MM-DD-HHMMSS)
+tmutil, __fish_use_subcommand, , ,deleteinprogress,@r,130,Delete all in-progress backups for a machine directory
+tmutil, __fish_use_subcommand, , ,destinationinfo,@f,131,Print information about destinations
+tmutil, __fish_use_subcommand, , ,disable,@f,132,Turn off automatic backups
+tmutil, __fish_use_subcommand, , ,disablelocal,@f,133,Turn off local Time Machine snapshots
+tmutil, __fish_use_subcommand, , ,enable,@f,134,Turn on automatic backups
+tmutil, __fish_use_subcommand, , ,enablelocal,@f,135,Turn on local Time Machine snapshots
+tmutil, __fish_use_subcommand, , ,inheritbackup,@r,136,Claim a machine directory or sparsebundle for use by the current machine
+tmutil, __fish_use_subcommand, , ,isexcluded,@r,137,"Determine if a file, directory, or volume are excluded from backups"
+tmutil, __fish_use_subcommand, , ,latestbackup,@f,138,Print the path to the latest snapshot
+tmutil, __fish_use_subcommand, , ,listlocalsnapshotdates,@f,139,List the creation dates of all local Time Machine snapshots
+tmutil, __fish_use_subcommand, , ,listlocalsnapshots,@r,140,List local Time Machine snapshots of the specified volume
+tmutil, __fish_use_subcommand, , ,listbackups,@f,141,Print paths for all snapshots
+tmutil, __fish_use_subcommand, , ,localsnapshot,@f,142,Create new local Time Machine snapshot of APFS volume in TM backup
+tmutil, __fish_use_subcommand, , ,machinedirectory,@f,143,Print the path to the current machine directory
+tmutil, __fish_use_subcommand, , ,removedestination,@f,144,Removes a backup destination
+tmutil, removedestination, , ,$(__fish_tmutil_destination_ids),@f,145, 
+tmutil, __fish_use_subcommand, , ,removeexclusion,@f,146,Remove an exclusion
+tmutil, __fish_use_subcommand, , ,restore,@f,149,Restore an item
+tmutil, __fish_use_subcommand, , ,setdestination,@r,151,Set a backup destination
+tmutil, __fish_use_subcommand, , ,snapshot,@f,154,Create new local Time Machine snapshot
+tmutil, __fish_use_subcommand, , ,startbackup,@f,155,Begin a backup if one is not already running
+tmutil, startbackup,d,destination,$(__fish_tmutil_destination_ids),@f @r,159,Backup destination
+tmutil, __fish_use_subcommand, , ,stopbackup,@f,160,Cancel a backup currently in progress
+tmutil, __fish_use_subcommand, , ,thinlocalsnapshots,@r,161,Thin local Time Machine snapshots for the specified volume
+tmutil, __fish_use_subcommand, , ,uniquesize,@r,162,Analyze the specified path and determine its unique size
+tmutil, __fish_use_subcommand, , ,verifychecksums,@r,163,Verify snapshot
+tmutil, __fish_use_subcommand, , ,version,@f,164,Print version
+tmutil, __fish_use_subcommand, , ,setquota,@f,165,Set the quota for the destination in gigabytes
+tmutil, setquota, , ,$(__fish_tmutil_destination_ids),@f @r,166, 

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+jnv, ,e,edit-mode,insert overwrite, ,101,Edit mode for the interface. [default: insert]
+jnv, ,i,indent, ,@r,102,Number of spaces used for indentation in the visualized data. [default: 2]
+jnv, ,n,no-hint, , ,103,Disables the display of hints.
+jnv, ,d,expand-depth, ,@r,104,Initial depth to which JSON nodes are expanded in the visualization. [default: 3]
+jnv, ,l,suggestion-list-length, ,@r,105,Number of suggestions visible in the list. [default: 3]
+jnv, ,h,help, ,@f,106,Print help (see a summary with '-h')
+jnv, ,V,version, ,@f,107,Print version

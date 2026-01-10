@@ -1,0 +1,34 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pgrep, ,c,count, , ,101,"Suppress normal output; instead print a count of matching processes"
+pgrep, ,d,delimiter, , ,102,Sets the string used to delimit each process ID in the output (by default a n…
+pgrep, ,e,echo, , ,103,Display name and PID of the process being killed. RB ( pkill only. )
+pgrep, ,f,full, , ,104,The  pattern is normally only matched against the process name
+pgrep, ,g,pgroup, , ,105,Only match processes in the process group IDs listed
+pgrep, ,G,group, , ,106,Only match processes whose real group ID is listed
+pgrep, ,i,ignore-case, , ,107,Match processes case-insensitively
+pgrep, ,l,list-name, , ,108,List the process name as well as the process ID. RB ( pgrep only. )
+pgrep, ,a,list-full, , ,109,List the full command line as well as the process ID. RB ( pgrep only. )
+pgrep, ,n,newest, , ,110,Select only the newest (most recently started) of the matching processes
+pgrep, ,o,oldest, , ,111,Select only the oldest (least recently started) of the matching processes
+pgrep, ,O,older, , ,112,Select processes older than secs
+pgrep, ,P,parent, , ,113,Only match processes whose parent process ID is listed
+pgrep, ,s,session, , ,114,Only match processes whose process session ID is listed
+pgrep, ,t,terminal, , ,115,Only match processes whose controlling terminal is listed
+pgrep, ,u,euid, , ,116,Only match processes whose effective user ID is listed
+pgrep, ,U,uid, , ,117,Only match processes whose real user ID is listed
+pgrep, ,v,inverse, , ,118,Negates the matching
+pgrep, ,w,lightweight, , ,119,Shows all thread ids instead of pids in  pgrep 's or  pidwait 's context
+pgrep, ,x,exact, , ,120,Only match processes whose names (or command lines if -f is specified)  exact…
+pgrep, ,F,pidfile, , ,121,Read PIDs from file
+pgrep, ,L,logpidfile, , ,122,Fail if pidfile (see -F) not locked
+pgrep, ,r,runstates, , ,123,Match only processes which match the process state
+pgrep, ,A,ignore-ancestors, , ,124,"Ignore all ancestors of  pgrep ,  pkill , or  pidwait "
+pgrep, ,H,require-handler, , ,125,Only match processes with a userspace signal handler present for the signal t…
+pgrep, , ,cgroup, , ,126,Match on provided control group (cgroup) v2 name.  See  cgroups (8)
+pgrep, , ,env, , ,127,Match on process that have these environment variables
+pgrep, , ,ns, , ,128,Match processes that belong to the same namespaces
+pgrep, , ,nslist, , ,129,Match only the provided namespaces
+pgrep, ,q,queue, , ,130,Use  sigqueue (3) rather than  kill (2) and the value argument is used to spe…
+pgrep, ,V,version, , ,131,Display version information and exit
+pgrep, , ,signal, , ,132,Defines the signal to send to each matched process
+pgrep, ,h,help, , ,133,Display help and exit.  OPERANDS

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+realpath, ,e,canonicalize-existing, , ,101,all components of the path must exist
+realpath, ,m,canonicalize-missing, , ,102,no components of the path need exist
+realpath, ,L,logical, , ,103,resolve '..' components before symlinks
+realpath, ,P,physical, , ,104,resolve symlinks as encountered (default)
+realpath, ,q,quiet, , ,105,suppress most error messages
+realpath, , ,relative-to, ,@r,106,print the resolved path relative to FILE
+realpath, , ,relative-base, ,@r,107,print absolute paths unless paths below FILE
+realpath, ,s,no-symlinks, , ,108,don't expand symlinks
+realpath, ,z,zero, , ,109,separate output with NUL rather than newline
+realpath, , ,help, , ,110,display this help and exit
+realpath, , ,version, , ,111,output version information and exit

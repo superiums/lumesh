@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+actionlint, , , , ,@r,101,path to config file
+actionlint, , , , ,@f @r,102,custom template to format error messages
+actionlint, , , , ,@f @r,103,regex matching to error messages you want to ignore
+actionlint, , , , ,@f @r,104,command name or path of `pyflakes`
+actionlint, , , , ,@f @r,105,command name or path of `shellcheck`
+actionlint, , , , ,@r,106,filename when reading input from stdin

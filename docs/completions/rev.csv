@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rev, ,h,help, , ,101, 
+rev, ,V,version, , ,102, 
+rev, ,0,zero, , ,103, 

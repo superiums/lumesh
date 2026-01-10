@@ -1,0 +1,123 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ebtables-nft, , ,table, , ,101, 
+ebtables-nft, ,A,append, , ,102,Append a rule to the end of the selected chain
+ebtables-nft, ,D,delete, , ,103,Delete the specified rule or rules from the selected chain
+ebtables-nft, , ,Ln, , ,104,to list the rules with their rule number)
+ebtables-nft, ,C,change-counters, , ,105,Change the counters of the specified rule or rules from the selected chain
+ebtables-nft, , ,insert, , ,106,Insert the specified rule into the selected chain at the specified rule number
+ebtables-nft, , ,policy, , ,107,Set the policy for the chain to the given target
+ebtables-nft, ,F,flush, , ,108,Flush the selected chain
+ebtables-nft, , ,zero, , ,109,Set the counters of the selected chain to zero
+ebtables-nft, , ,list, , ,110,List all rules in the selected chain
+ebtables-nft, , ,Lx, , ,111, 
+ebtables-nft, , ,Lc, , ,112, 
+ebtables-nft, , ,Lmac2, , ,113, 
+ebtables-nft, , ,new-chain, , ,114,Create a new user-defined chain with the given name
+ebtables-nft, ,X,delete-chain, , ,115,Delete the specified user-defined chain
+ebtables-nft, ,E,rename-chain, , ,116,Rename the specified chain to a new name
+ebtables-nft, , ,init-table, , ,117,Replace the current table data by the initial table data
+ebtables-nft, ,v,verbose, , ,118,Verbose mode
+ebtables-nft, ,V,version, , ,119,Show the version of the ebtables userspace program
+ebtables-nft, ,h,help, , ,120,Give a brief description of the command syntax
+ebtables-nft, ,j,jump, , ,121,The target of the rule
+ebtables-nft, ,M,modprobe, , ,122,"When talking to the kernel, use this program to try to automatically load mis…"
+ebtables-nft, , ,concurrent, , ,123,Use a file lock to support concurrent scripts updating the ebtables kernel ta…
+ebtables-nft, ,p,protocol, , ,124,The protocol that was responsible for creating the frame
+ebtables-nft, , ,proto, , ,125,is an alias for this option
+ebtables-nft, ,i,in-interface, , ,126,The interface (bridge port) via which a frame is received (this option is use…
+ebtables-nft, , ,in-if, , ,127,is an alias for this option
+ebtables-nft, , ,logical-in, , ,128,The (logical) bridge interface via which a frame is received (this option is …
+ebtables-nft, ,o,out-interface, , ,129,The interface (bridge port) via which a frame is going to be sent (this optio…
+ebtables-nft, , ,out-if, , ,130,is an alias for this option
+ebtables-nft, , ,logical-out, , ,131,The (logical) bridge interface via which a frame is going to be sent (this op…
+ebtables-nft, ,s,source, , ,132,The source MAC address
+ebtables-nft, , ,src, , ,133,is an alias for this option
+ebtables-nft, ,d,destination, , ,134,The destination MAC address.  See
+ebtables-nft, , ,dst, , ,135,is an alias for this option
+ebtables-nft, ,c,set-counter, , ,136,If used with
+ebtables-nft, , ,802_3-sap, , ,137,DSAP and SSAP are two one byte 802. 3 fields
+ebtables-nft, , ,802_3-type, , ,138,If the 802
+ebtables-nft, , ,among-dst, , ,139,Compare the MAC destination to the given list
+ebtables-nft, , ,among-src, , ,140,Compare the MAC source to the given list
+ebtables-nft, , ,among-dst-file, , ,141,Same as
+ebtables-nft, , ,among-src-file, , ,142,Same as
+ebtables-nft, , ,arp-opcode, , ,143,"The (R)ARP opcode (decimal or a string, for more details see ebtables -h arp )"
+ebtables-nft, , ,arp-htype, , ,144,"The hardware type, this can be a decimal or the string Ethernet (which sets t…"
+ebtables-nft, , ,arp-ptype, , ,145,The protocol type for which the (r)arp is used (hexadecimal or the string IPv…
+ebtables-nft, , ,arp-ip-src, , ,146,The (R)ARP IP source address specification
+ebtables-nft, , ,arp-ip-dst, , ,147,The (R)ARP IP destination address specification
+ebtables-nft, , ,arp-mac-src, , ,148,The (R)ARP MAC source address specification
+ebtables-nft, , ,arp-mac-dst, , ,149,The (R)ARP MAC destination address specification
+ebtables-nft, , ,ip-source, , ,150,The source IP address.  The flag
+ebtables-nft, , ,ip-src, , ,151,is an alias for this option
+ebtables-nft, , ,ip-destination, , ,152,The destination IP address.  The flag
+ebtables-nft, , ,ip-dst, , ,153,is an alias for this option
+ebtables-nft, , ,ip-tos, , ,154,"The IP type of service, in hexadecimal numbers.  IPv4 "
+ebtables-nft, , ,ip-protocol, , ,155,The IP protocol.  The flag
+ebtables-nft, , ,ip-proto, , ,156,is an alias for this option
+ebtables-nft, , ,ip-source-port, , ,157,"The source port or port range for the IP protocols 6 (TCP), 17 (UDP), 33 (DCC…"
+ebtables-nft, , ,ip-sport, , ,158,is an alias for this option
+ebtables-nft, , ,ip-destination-port, , ,159,"The destination port or port range for ip protocols 6 (TCP), 17 (UDP), 33 (DC…"
+ebtables-nft, , ,ip-dport, , ,160,is an alias for this option.  ip6 Specify IPv6 fields
+ebtables-nft, , ,ip6-source, , ,161,The source IPv6 address.  The flag
+ebtables-nft, , ,ip6-src, , ,162,is an alias for this option
+ebtables-nft, , ,ip6-destination, , ,163,The destination IPv6 address.  The flag
+ebtables-nft, , ,ip6-dst, , ,164,is an alias for this option
+ebtables-nft, , ,ip6-tclass, , ,165,"The IPv6 traffic class, in hexadecimal numbers"
+ebtables-nft, , ,ip6-protocol, , ,166,The IP protocol.  The flag
+ebtables-nft, , ,ip6-proto, , ,167,is an alias for this option
+ebtables-nft, , ,ip6-source-port, , ,168,"The source port or port range for the IPv6 protocols 6 (TCP), 17 (UDP), 33 (D…"
+ebtables-nft, , ,ip6-sport, , ,169,is an alias for this option
+ebtables-nft, , ,ip6-destination-port, , ,170,"The destination port or port range for IPv6 protocols 6 (TCP), 17 (UDP), 33 (…"
+ebtables-nft, , ,ip6-dport, , ,171,is an alias for this option
+ebtables-nft, , ,ip6-icmp-type, , ,172,Specify ipv6-icmp type and code to match
+ebtables-nft, , ,log, , ,173,"watcher to give limited logging, for example"
+ebtables-nft, , ,limit, , ,174,"Maximum average matching rate: specified as a number, with an optional /secon…"
+ebtables-nft, , ,limit-burst, , ,175,Maximum initial number of packets to match: this number gets recharged by one…
+ebtables-nft, , ,mark, , ,176,Matches frames with the given unsigned mark value
+ebtables-nft, , ,pkttype-type, , ,177,"Matches on the Ethernet 'class' of the frame, which is determined by the gene…"
+ebtables-nft, , ,stp-type, , ,178,"The BPDU type (0-255), recognized non-numerical types are config , denoting a…"
+ebtables-nft, , ,stp-flags, , ,179,"The BPDU flag (0-255), recognized non-numerical flags are topology-change , d…"
+ebtables-nft, , ,stp-root-prio, , ,180,The root priority (0-65535) range
+ebtables-nft, , ,stp-root-addr, , ,181,"The root mac address, see the option"
+ebtables-nft, , ,stp-root-cost, , ,182,The root path cost (0-4294967295) range
+ebtables-nft, , ,stp-sender-prio, , ,183,The BPDU's sender priority (0-65535) range
+ebtables-nft, , ,stp-sender-addr, , ,184,"The BPDU's sender mac address, see the option"
+ebtables-nft, , ,stp-port, , ,185,The port identifier (0-65535) range
+ebtables-nft, , ,stp-msg-age, , ,186,The message age timer (0-65535) range
+ebtables-nft, , ,stp-max-age, , ,187,The max age timer (0-65535) range
+ebtables-nft, , ,stp-hello-time, , ,188,The hello time timer (0-65535) range
+ebtables-nft, , ,stp-forward-delay, , ,189,The forward delay timer (0-65535) range.  vlan Specify 802
+ebtables-nft, , ,vlan-id, , ,190,The VLAN identifier field (VID).  Decimal number from 0 to 4095
+ebtables-nft, , ,vlan-prio, , ,191,"The user priority field, a decimal number from 0 to 7"
+ebtables-nft, , ,vlan-encap, , ,192,The encapsulated Ethernet frame type/length
+ebtables-nft, , ,log-level, , ,193, 
+ebtables-nft, , ,log-prefix, , ,194, 
+ebtables-nft, , ,log-ip, , ,195, 
+ebtables-nft, , ,log-ip6, , ,196, 
+ebtables-nft, , ,log-arp, , ,197, 
+ebtables-nft, , ,nflog, , ,198, 
+ebtables-nft, , ,nflog-group, , ,199, 
+ebtables-nft, , ,nflog-prefix, , ,200, 
+ebtables-nft, , ,nflog-range, , ,201, 
+ebtables-nft, , ,nflog-threshold, , ,202, 
+ebtables-nft, , ,ulog, , ,203, 
+ebtables-nft, , ,ulog-prefix, , ,204, 
+ebtables-nft, , ,ulog-nlgroup, , ,205, 
+ebtables-nft, , ,ulog-cprange, , ,206, 
+ebtables-nft, , ,ulog-qthreshold, , ,207, 
+ebtables-nft, , ,arpreply-mac, , ,208,Specifies the MAC address to reply with: the Ethernet source MAC and the ARP …
+ebtables-nft, , ,arpreply-target, , ,209,Specifies the standard target
+ebtables-nft, , ,to-destination, , ,210, 
+ebtables-nft, , ,to-dst, , ,211,is an alias for this option
+ebtables-nft, , ,dnat-target, , ,212, 
+ebtables-nft, , ,mark-set, , ,213, 
+ebtables-nft, , ,mark-or, , ,214, 
+ebtables-nft, , ,mark-and, , ,215, 
+ebtables-nft, , ,mark-xor, , ,216, 
+ebtables-nft, , ,mark-target, , ,217, 
+ebtables-nft, , ,redirect-target, , ,218, 
+ebtables-nft, , ,to-source, , ,219, 
+ebtables-nft, , ,to-src, , ,220,is an alias for this option
+ebtables-nft, , ,snat-target, , ,221, 
+ebtables-nft, , ,snat-arp, , ,222, 

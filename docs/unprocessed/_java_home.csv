@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+java_home, __fish_not_contain_opt -s h exec , ,exec, , ,101, 
+java_home, __fish_not_contain_opt -s h exec ,v,version, , ,102,Filter versions (as if JAVA_VERSION had been set in the environment).
+java_home, __fish_not_contain_opt -s h exec ,a,arch,arm64 x86_64, ,103,Filter architecture (as if JAVA_ARCH had been set in the environment).
+java_home, __fish_not_contain_opt -s h exec ,h,help, , ,104,Usage information.
+java_home, __fish_not_contain_opt -s h exec ,F,failfast, , ,105,"Fail when filters return no JVMs, do not continue with default."
+java_home, __fish_not_contain_opt -s h exec ,X,xml, , ,106,Print full JVM list and additional data as XML plist.
+java_home, __fish_not_contain_opt -s h exec ,V,verbose, , ,107,Print full JVM list with architectures.

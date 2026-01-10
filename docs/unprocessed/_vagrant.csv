@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vagrant, __fish_vagrant_need_command, , ,box, ,101,"Manage boxes: installation, removal, etc."
+vagrant," __fish_vagrant_using_command box; and __fish_vagrant_box_need_command", , ,$box_commands, ,102, 
+vagrant, __fish_vagrant_need_command, , ,cloud, ,103,Manage Vagrant Cloud
+vagrant," __fish_vagrant_using_command cloud; and __fish_vagrant_cloud_need_command", , ,$cloud_commands, ,104, 
+vagrant, __fish_vagrant_need_command, , ,connect, ,105, 
+vagrant, __fish_vagrant_need_command, , ,destroy, ,106,Stop and delete all traces of the vagrant machine
+vagrant, __fish_vagrant_need_command, , ,docker-exec, ,107, 
+vagrant, __fish_vagrant_need_command, , ,docker-logs, ,108, 
+vagrant, __fish_vagrant_need_command, , ,docker-run, ,109, 
+vagrant, __fish_vagrant_need_command, , ,global-status, ,110,Show status Vagrant environments for this user
+vagrant, __fish_vagrant_need_command, , ,halt, ,111,Stop a machine
+vagrant, __fish_vagrant_need_command, , ,help, ,112,Show help for a subcommand
+vagrant, __fish_vagrant_need_command, , ,init, ,113,Initialize a new Vagrant env by creating a Vagrantfile
+vagrant, __fish_vagrant_need_command, , ,list-commands, ,114, 
+vagrant, __fish_vagrant_need_command, , ,login, ,115, 
+vagrant, __fish_vagrant_need_command, , ,package, ,116,Package a running vagrant environment into a box
+vagrant, __fish_vagrant_need_command, , ,plugin, ,117,"Manages plugins: install, uninstall, update, etc."
+vagrant, __fish_vagrant_need_command, , ,provision, ,118, 
+vagrant, __fish_vagrant_need_command, , ,push, ,119, 
+vagrant, __fish_vagrant_need_command, , ,rdp, ,120, 
+vagrant, __fish_vagrant_need_command, , ,reload, ,121, 
+vagrant, __fish_vagrant_need_command, , ,resume, ,122, 
+vagrant, __fish_vagrant_need_command, , ,rsync, ,123, 
+vagrant, __fish_vagrant_need_command, , ,rsync-auto, ,124, 
+vagrant, __fish_vagrant_need_command, , ,share, ,125, 
+vagrant, __fish_vagrant_need_command, , ,snapshot, ,126, 
+vagrant, __fish_vagrant_need_command, , ,ssh, ,127,Connect to a machine via SSH
+vagrant, __fish_vagrant_need_command, , ,ssh-config, ,128,Print ssh config to connect to machine
+vagrant, __fish_vagrant_need_command, , ,status, ,129,Print status of a machine
+vagrant, __fish_vagrant_need_command, , ,suspend, ,130,Suspend a machine
+vagrant, __fish_vagrant_need_command, , ,up, ,131,Start and provision the environment
+vagrant, __fish_vagrant_need_command, , ,version, ,132,Print current and latest version

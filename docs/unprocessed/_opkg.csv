@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+opkg, __fish_opkg_no_subcommand, , ,update,@f,101,Update list of available packages
+opkg, __fish_opkg_no_subcommand, , ,upgrade,@f,102,Upgrade packages
+opkg, __fish_opkg_no_subcommand, , ,install,@f,103,Install package(s)
+opkg, __fish_opkg_no_subcommand, , ,configure,@f,104,Configure unpacked package(s)
+opkg, __fish_opkg_no_subcommand, , ,remove,@f,105,Remove package(s)
+opkg, __fish_opkg_no_subcommand, , ,flag,@f,106,Flag package(s)
+opkg, __fish_opkg_no_subcommand, , ,list,@f,107,List available packages
+opkg, __fish_opkg_no_subcommand, , ,list-installed,@f,108,List installed packages
+opkg, __fish_opkg_no_subcommand, , ,list-upgradable,@f,109,List installed and upgradable packages
+opkg, __fish_opkg_no_subcommand, , ,list-changed-conffiles,@f,110,List user modified configuration files
+opkg, __fish_opkg_no_subcommand, , ,files,@f,111,List files belonging to <pkg>
+opkg, __fish_opkg_no_subcommand, , ,search,@f,112,List package providing <file>
+opkg, __fish_opkg_no_subcommand, , ,find,@f,113,List packages whose name or description matches <regexp>
+opkg, __fish_opkg_no_subcommand, , ,info,@f,114,Display all info for <pkg>
+opkg, __fish_opkg_no_subcommand, , ,status,@f,115,Display all status for <pkg>
+opkg, __fish_opkg_no_subcommand, , ,download,@f,116,Download <pkg> to current directory
+opkg, __fish_opkg_no_subcommand, , ,compare-versions,@f,117,compare versions using <= < > >= = << >>
+opkg, __fish_opkg_no_subcommand, , ,print-architecture,@f,118,List installable package architectures
+opkg, __fish_opkg_no_subcommand, , ,depends,@f,119,list depends
+opkg, __fish_opkg_no_subcommand, , ,whatdepends,@f,120,list whatdepends
+opkg, __fish_opkg_no_subcommand, , ,whatdependsrec,@f,121,list whatdepends recursively
+opkg, __fish_opkg_no_subcommand, , ,whatrecommends,@f,122,list whatrecommends
+opkg, __fish_opkg_no_subcommand, , ,whatsuggests,@f,123,list whatsuggests
+opkg, __fish_opkg_no_subcommand, , ,whatprovides,@f,124,list whatprovides
+opkg, __fish_opkg_no_subcommand, , ,whatconflicts,@f,125,list whatconflicts
+opkg, __fish_opkg_no_subcommand, , ,whatreplaces,@f,126,list whatreplaces

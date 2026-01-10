@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gsettings, $valid_commands, ,version, ,@f,101,Print the version information
+gsettings, $valid_commands, ,schemadir, ,@D,101,Specify a custom schemas directory
+gsettings, $valid_commands, , ,get,@f,101,Get the value of a key
+gsettings, $valid_commands, , ,writable,@f,101,Determine if a key is writable
+gsettings, $valid_commands, , ,range,@f,101,Determine the valid value range of a key
+gsettings, $valid_commands, , ,describe,@f,101,Print the description of a key
+gsettings, $valid_commands, , ,set,@f,101,Set the value of a key
+gsettings, $valid_commands, , ,reset,@f,101,Reset a key to its default value
+gsettings, $valid_commands, , ,reset-recursively,@f,101,Reset all keys under the given schema
+gsettings, $valid_commands, , ,list-schemas,@f,101,"List all installed, non-relocatable schemas"
+gsettings, $valid_commands, , ,list-relocatable-schemas,@f,101,"List all installed, relocatable schemas"
+gsettings, $valid_commands, , ,list-keys,@f,101,List all keys in a schema
+gsettings, $valid_commands, , ,list-children,@f,101,List all children of a schema
+gsettings, $valid_commands, , ,list-recursively,@f,101,"List keys and values, recursively"
+gsettings, $valid_commands, , ,help,@f,101,Print help
+gsettings, $valid_commands, , , ,@f,102, 

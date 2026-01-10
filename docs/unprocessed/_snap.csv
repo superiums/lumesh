@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+snap, __fish_snap_no_subcommand, , ,$subcommand,@f,101, 
+snap, __fish_snap_using_subcommand $subcommand, , , ,@f,102, 
+snap," __fish_snap_using_subcommand known; and __fish_snap_no_assertion", , ,$assertion,@f,103, 
+snap, __fish_snap_using_assertion $assertion, , , ,@f,104, 
+snap, __fish_snap_using_subcommand interfaces, , , ,@f,107,Snap

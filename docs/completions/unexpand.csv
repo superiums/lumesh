@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+unexpand, ,a,all, , ,101,"convert all blanks, instead of just initial blanks"
+unexpand, , ,first-only, , ,102,convert only leading sequences of blanks (overrides -a)
+unexpand, ,t,tabs, ,@f @r,103,have tabs N characters apart instead of 8 (enables -a)
+unexpand, ,t,tabs, ,@f @r,104,use comma separated LIST of tab positions (enables -a)
+unexpand, , ,help, , ,105,display this help and exit
+unexpand, , ,version, , ,106,output version information and exit

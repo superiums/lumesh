@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+trash-list, ,h,help, ,@f,101,show help message
+trash-list, , ,print-completion,bash zsh tcsh,@f,102,print completion script
+trash-list, , ,version, ,@f,103,show version number
+trash-list, , ,trash-dirs, ,@f,104,list trash dirs
+trash-list, , ,trash-dir, ,@f,105,specify trash directory
+trash-list, , ,all-users, ,@f,106,list trashcans of all users

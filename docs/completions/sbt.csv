@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sbt, ,h, , ,@f,104,Print options help message
+sbt, ,v, , ,@f,105,Print more details
+sbt, ,d, , ,@f,106,Set log level to debug
+sbt, , , , ,@f,107,Disable ANSI color codes
+sbt, , , , ,@f,108,Launch even if there's no sbt project
+sbt, , , , ,@f,109,Use all local caches
+sbt, , , , ,@f,110,"Use global caches, but not global ~/.sbt directory"
+sbt, , , , ,@f,111,Disable interactive mode
+sbt, , , , ,@r,112,Specify path to global settings/plugins
+sbt, , , , ,@r,113,Specify path to shared boot directory
+sbt, , , , ,@r,114,Specify path to local Ivy repository
+-XX:MaxPermSize=256m), ,-Xmx1024m, , ,@f @r,115,Set memory options
+sbt, , , , ,@r,116,"Turn on JVM debugging, open at the given port"
+sbt, , , , ,@r,118,Use specified jar as the sbt launcher
+sbt, , , , ,@r,119,Alternate JAVA_HOME
+sbt, , , , ,@f @r,120,Pass -D option directly to the Java runtime
+sbt, , , , ,@f @r,121,Pass -X option directly to the Java runtime
+sbt, , , , ,@f @r,122,Pass -X option to sbt's scalacOptions

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zed, ,w,wait, , ,101,Wait for all of the given paths to be opened/closed before exiting
+zed, ,a,add, , ,102,Add files to the currently open workspace
+zed, ,n,new, , ,103,Create a new workspace
+zed, ,v,version, , ,104,Print Zed's version and the app path
+zed, , ,foreground, , ,105,Run zed in the foreground (useful for debugging)
+zed, , ,zed, , ,106,Custom path to Zed.app or the zed binary
+zed, , ,dev-server-token, , ,107,Run zed in dev-server mode
+zed, , ,uninstall, , ,108,Uninstall Zed from user system
+zed, ,h,help, , ,109,Print help (see a summary with '-h')

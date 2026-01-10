@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iptables-restore, ,c,counters, , ,101,Restore the values of all packet and byte counters
+iptables-restore, ,h,help, , ,102,Print a short option summary
+iptables-restore, ,n,noflush, , ,103,Don't flush the previous contents of the table
+iptables-restore, ,t,test, , ,104,"Only parse and construct the ruleset, but do not commit it"
+iptables-restore, ,v,verbose, , ,105,Print additional debug info during ruleset processing
+iptables-restore, ,V,version, , ,106,Print the program version number
+iptables-restore, ,w,wait, , ,107,Wait for the xtables lock
+iptables-restore, ,M,modprobe, , ,108,Specify the path to the modprobe(8) program
+iptables-restore, ,T,table, , ,109,Restore only the named table even if the input stream contains other ones

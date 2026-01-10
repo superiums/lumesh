@@ -1,0 +1,86 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tmux, __fish_use_subcommand, , ,$cmdnames, ,101, 
+tmux, $cmdnames,$split_item[1], , , ,102,$split_item[2]
+tmux, $cmdnames,$char, , , ,103, 
+tmux, __fish_use_subcommand, , ,$attach, ,104,attach to existing session
+tmux, __fish_use_subcommand, , ,$detach, ,105,detach current client
+tmux, __fish_use_subcommand, , ,$has, ,106,report error and exit with 1 if the session does not exist
+tmux, __fish_use_subcommand, , ,$killserver, ,107,"kill tmux server, clients, and sessions"
+tmux, __fish_use_subcommand, , ,$killsession, ,108,"destroy session, close its windows, and detach all its clients"
+tmux, __fish_use_subcommand, , ,$lsc, ,109,list all attached clients
+tmux, __fish_use_subcommand, , ,$lscm, ,110,list syntax for all tmux commands
+tmux, __fish_use_subcommand, , ,$ls, ,111,list all sessions
+tmux, __fish_use_subcommand, , ,$lockc, ,112,lock client
+tmux, __fish_use_subcommand, , ,$locks, ,113,lock session
+tmux, __fish_use_subcommand, , ,$new, ,114,create a new session with name session-name
+tmux, __fish_use_subcommand, , ,$refresh, ,115,refresh client
+tmux, __fish_use_subcommand, , ,$rename, ,116,rename session
+tmux, __fish_use_subcommand, , ,$showmsgs, ,117,save msgs in status bar in per-client msg log
+tmux, __fish_use_subcommand, , ,$source, ,118,execute commands from path
+tmux, __fish_use_subcommand, , ,$start, ,119,"start tmux server if not running; do not create a session"
+tmux, __fish_use_subcommand, , ,$suspendc, ,120,send SIGTSTP signal to client (tty stop)
+tmux, __fish_use_subcommand, , ,$switchc, ,121,Switch the current session for client target-client to target-session
+tmux, $new , , , ,@f @r,122, 
+tmux, __fish_use_subcommand, , ,$breakp, ,123,break pane off into a new window
+tmux, __fish_use_subcommand, , ,$capturep, ,124,capture contents of a pane into a buffer
+tmux, __fish_use_subcommand, , ,$chooseclient, ,125,interactively choose client
+tmux, __fish_use_subcommand, , ,$choosetree, ,126,interactively choose session/window/pane
+tmux, __fish_use_subcommand, , ,$customizemode, ,127,interactively customize settings
+tmux, __fish_use_subcommand, , ,$displayp, ,128,display a visible indicator for each pane
+tmux, __fish_use_subcommand, , ,$findw, ,129,interactively choose window matching pattern
+tmux, __fish_use_subcommand, , ,$joinp, ,130,split destination pane and move source pane into one of the halves
+tmux, __fish_use_subcommand, , ,$killp, ,131,destroy a pane
+tmux, __fish_use_subcommand, , ,$killw, ,132,destroy a window
+tmux, __fish_use_subcommand, , ,$lastp, ,133,select the previously selected pane
+tmux, __fish_use_subcommand, , ,$lastw, ,134,select the previously selected window
+tmux, __fish_use_subcommand, , ,$linkw, ,135,link source window to destination window
+tmux, __fish_use_subcommand, , ,$lsp, ,136,list panes
+tmux, __fish_use_subcommand, , ,$lsw, ,137,list windows
+tmux, __fish_use_subcommand, , ,$movew, ,138,move window
+tmux, __fish_use_subcommand, , ,$neww, ,139,create a new window
+tmux, __fish_use_subcommand, , ,$nextl, ,140,rearrange panes in a window according to the next layout
+tmux, __fish_use_subcommand, , ,$next, ,141,move to the next window in the session
+tmux, __fish_use_subcommand, , ,$pipep, ,142,pipe output from pane to a shell command
+tmux, __fish_use_subcommand, , ,$prevl, ,143,rearrange panes in a window according to the previous layout
+tmux, __fish_use_subcommand, , ,$prev, ,144,move to the previous window in the session
+tmux, __fish_use_subcommand, , ,$renamew, ,145,rename a window
+tmux, __fish_use_subcommand, , ,$resizep, ,146,resize a pane
+tmux, __fish_use_subcommand, , ,$resizew, ,147,resize a window
+tmux, __fish_use_subcommand, , ,$respawnp, ,148,reactivate a pane where a command exited
+tmux, __fish_use_subcommand, , ,$respawnw, ,149,reactivate a window where a command exited
+tmux, __fish_use_subcommand, , ,$rotatew, ,150,rotate panes within a window
+tmux, __fish_use_subcommand, , ,$selectl, ,151,rearrange panes according to a given layout
+tmux, $selectl, , ,$layouts,@f @r,152,predefined layout
+tmux, __fish_use_subcommand, , ,$selectp, ,153,activate specific pane
+tmux, __fish_use_subcommand, , ,$selectw, ,154,activate specific window
+tmux, __fish_use_subcommand, , ,$splitw, ,155,create a new pane by splitting target-pane
+tmux, __fish_use_subcommand, , ,$swapp, ,156,swap two panes
+tmux, __fish_use_subcommand, , ,$swapw, ,157,swap two windows
+tmux, __fish_use_subcommand, , ,$unlinkw, ,158,unlink target-window
+tmux, $neww $pipep $respawnp $respawnw $splitw, , , ,@f @r,159, 
+tmux, __fish_use_subcommand, , ,$bind, ,160,bind key to command
+tmux, __fish_use_subcommand, , ,$lsk, ,161,list all key bindings
+tmux, __fish_use_subcommand, , ,$send, ,162,send key or event
+tmux, __fish_use_subcommand, , ,$sendprefix, ,163,send the prefix key
+tmux, __fish_use_subcommand, , ,$unbind, ,164,unbind the command bound to key
+tmux, $bind $unbind $lsk,T, ,$key_table, ,165,key table
+tmux, $switchc,T, ,$key_table, ,166,switch client key table
+tmux, __fish_use_subcommand, , ,$setoption, ,167,Set or unset option
+tmux, __fish_use_subcommand, , ,$showoptions, ,168,Show set options
+tmux, $setoption $showoptions,t, , ,@f @r,169,-a
+tmux," $setoption $showoptions; and $options", , ,$options, ,169, 
+tmux, __fish_use_subcommand, , ,$setenv, ,170,Set or unset an environment variable
+tmux, __fish_use_subcommand, , ,$showenv, ,171,bind key to command
+tmux, __fish_use_subcommand, , ,$commandprompt, ,172,Open the command prompt in a client
+tmux, $commandprompt,I, , ,@f @r,173,Comma-separated list of initial text for each prompt
+tmux, $commandprompt,p, , ,@f @r,174,Comma-separated list of prompts
+tmux, __fish_use_subcommand, , ,$display, ,175,Display a message
+tmux, __fish_use_subcommand, , ,$choosebuffer, ,176,interactively choose buffer
+tmux, __fish_use_subcommand, , ,$clearhist, ,177,forget history for a pane
+tmux, __fish_use_subcommand, , ,$deleteb, ,178,delete buffer
+tmux, __fish_use_subcommand, , ,$lsb, ,179,list buffers
+tmux, __fish_use_subcommand, , ,$loadb, ,180,"load buffer from path, use - for stdin"
+tmux, __fish_use_subcommand, , ,$pasteb, ,181,paste buffer to pane
+tmux, __fish_use_subcommand, , ,$saveb, ,182,save buffer to path
+tmux, __fish_use_subcommand, , ,$setb, ,183,set buffer to value
+tmux, __fish_use_subcommand, , ,$showb, ,184,print buffer to stdout

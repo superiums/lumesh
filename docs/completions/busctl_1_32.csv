@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+busctl, , ,address, , ,101,Connect to the bus specified by ADDRESS instead of using suitable defaults fo…
+busctl, , ,show-machine, , ,102,"When showing the list of peers, show a column containing the names of contain…"
+busctl, , ,unique, , ,103,"When showing the list of peers, show only 'unique' names (of the form ':number"
+busctl, , ,acquired, , ,104,The opposite of --unique \\(em only 'well-known' names will be shown
+busctl, , ,activatable, , ,105,"When showing the list of peers, show only peers which have actually not been …"
+busctl, , ,match, , ,106,"When showing messages being exchanged, show only the subset matching MATCH"
+busctl, , ,size, , ,107,"When used with the capture command, specifies the maximum bus message size to…"
+busctl, , ,list, , ,108,"When used with the tree command, shows a flat list of object paths instead of…"
+busctl, ,q,quiet, , ,109,"When used with the call command, suppresses display of the response message p…"
+busctl, , ,verbose, , ,110,"When used with the call or get-property command, shows output in a more verbo…"
+busctl, , ,xml-interface, , ,111,"When used with the introspect call, dump the XML description received from th…"
+busctl, , ,json, , ,112,"When used with the call or get-property command, shows output formatted as JS…"
+busctl, , ,expect-reply, , ,113,"When used with the call command, specifies whether busctl shall wait for comp…"
+busctl, , ,auto-start, , ,114,"When used with the call or emit command, specifies whether the method call sh…"
+busctl, , ,allow-interactive-authorization, , ,115,"When used with the call command, specifies whether the services may enforce i…"
+busctl, , ,timeout, , ,116,"When used with the call command, specifies the maximum time to wait for metho…"
+busctl, , ,augment-creds, , ,117,Controls whether credential data reported by list or status shall be augmente…
+busctl, , ,watch-bind, , ,118,Controls whether to wait for the specified AF_UNIX bus socket to appear in th…
+busctl, , ,destination, , ,119,Takes a service name
+busctl, , ,user, , ,120,"Talk to the service manager of the calling user, rather than the service mana…"
+busctl, , ,system, , ,121,Talk to the service manager of the system.  This is the implied default
+busctl, ,H,host, , ,122,Execute the operation remotely
+busctl, ,M,machine, , ,123,Execute operation on a local container
+busctl, ,l,full, , ,124,Do not ellipsize the output in list command. sp Added in version 245
+busctl, , ,no-pager, , ,125,Do not pipe output into a pager
+busctl, , ,no-legend, , ,126,"Do not print the legend, i. e.  column headers and the footer with hints"
+busctl, ,h,help, , ,127,Print a short help text and exit
+busctl, , ,version, , ,128,Print a short version string and exit

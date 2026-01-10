@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xmlcatalog, , ,add, , ,101,Add an entry to CATALOGFILE.  TYPE indicates the type of entry
+xmlcatalog, , ,convert, , ,102,Convert SGML catalog to XML
+xmlcatalog, , ,create, , ,103,Create a new XML catalog
+xmlcatalog, , ,del, , ,104,Remove entries from CATALOGFILE matching VALUE(S)
+xmlcatalog, , ,noout, , ,105,Save output to the named file rather than outputting to stdout
+xmlcatalog, , ,no-super-update, , ,106,Do not update the SGML super catalog
+xmlcatalog, , ,shell, , ,107,Run a shell allowing interactive queries on catalog file CATALOGFILE
+xmlcatalog, , ,sgml, , ,108,Uses SGML super catalogs for --add and --del options
+xmlcatalog, ,v,verbose, , ,109,Output debugging information

@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-inspect-internal, ,f,full, , ,101,"print full superblock information, including the system chunk array and backu…"
+btrfs-inspect-internal, ,a,all, , ,102,print information about all present superblock copies (cannot be used togethe…
+btrfs-inspect-internal, , ,bytenr, , ,103,"specify offset to a superblock in a non-standard location at bytenr, useful f…"
+btrfs-inspect-internal, ,F,force, , ,104,"attempt to print the superblock even if a valid BTRFS signature is not found;…"
+btrfs-inspect-internal, ,s,super, , ,105,(see compatibility note above)
+btrfs-inspect-internal, ,e,extents, , ,106,print only extent-related information: extent and device trees
+btrfs-inspect-internal, ,d,device, , ,107,"print only device-related information: tree root, chunk and device trees"
+btrfs-inspect-internal, ,r,roots, , ,108,"print only short root node information, i. e.  the root tree keys"
+btrfs-inspect-internal, ,R,backups, , ,109,"same as --roots plus print backup root info, i. e"
+btrfs-inspect-internal, ,u,uuid, , ,110,"print only the uuid tree information, empty output if the tree does not exist"
+btrfs-inspect-internal, , ,follow, , ,111,"use with -b, print all children tree blocks of <block_num>"
+btrfs-inspect-internal, , ,dfs, , ,112,(default up to 5. 2)
+btrfs-inspect-internal, , ,bfs, , ,113,(default since 5. 3)
+btrfs-inspect-internal, , ,hide-names, , ,114,"print a placeholder HIDDEN instead of various names, useful for developers to…"
+btrfs-inspect-internal, , ,csum-headers, , ,115,print b-tree node checksums stored in headers (metadata)
+btrfs-inspect-internal, , ,csum-items, , ,116,print checksums stored in checksum items (data)
+btrfs-inspect-internal, , ,noscan, , ,117,do not automatically scan the system for other devices from the same filesyst…
+btrfs-inspect-internal, , ,----, , ,118,    1       1       Data/single   1. 00MiB  84. 00MiB  85. 00MiB      68 191
+btrfs-inspect-internal, , ,sort, , ,119,sort by a column (ascending):
+btrfs-inspect-internal, , ,raw, , ,120,"raw numbers in bytes, without the B suffix"
+btrfs-inspect-internal, , ,human-readable, , ,121,"print human friendly numbers, base 1024, this is the default"
+btrfs-inspect-internal, , ,iec, , ,122,"select the 1024 base for the following options, according to the IEC standard"
+btrfs-inspect-internal, , ,si, , ,123,"select the 1000 base for the following options, according to the SI standard"
+btrfs-inspect-internal, , ,kbytes, , ,124,"show sizes in KiB, or kB with --si"
+btrfs-inspect-internal, , ,mbytes, , ,125,"show sizes in MiB, or MB with --si"
+btrfs-inspect-internal, , ,gbytes, , ,126,"show sizes in GiB, or GB with --si"
+btrfs-inspect-internal, , ,tbytes, , ,127,"show sizes in TiB, or TB with --si map-swapfile [options] <file> (needs root …"
+btrfs-inspect-internal, , ,resume-offset, , ,128,print only the value suitable as resume offset for file /sys/power/resume_off…
+btrfs-inspect-internal, , ,id, , ,129,"specify the device id to query, default is 1 if this option is not used rooti…"

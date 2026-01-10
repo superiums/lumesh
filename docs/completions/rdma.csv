@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rdma, ,d,details, , ,101,Output detailed information
+rdma, ,r,raw, , ,102,Output includes driver-specific details in raw format
+rdma, ,p,pretty, , ,103,When combined with -j generate a pretty JSON output
+rdma, ,j,json, , ,104,Generate JSON output

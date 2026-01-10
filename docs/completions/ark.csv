@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ark, ,d,dialog, , ,101,Show a dialog with options
+ark, ,m,mimetypes, , ,102,List all supported MIME types
+ark, ,o,destination, , ,103,Specify an extraction directory
+ark, ,c,add, , ,104,Add files and directories to an archive interactively
+ark, ,t,add-to, , ,105,Add files and directories to an archive
+ark, ,p,changetofirstpath, , ,106,Use a first argument as input path
+ark, ,f,autofilename, , ,107,Specify suffix for automatically chosen filename
+ark, ,b,batch, , ,108,Use a batch interface
+ark, ,e,autodestination, , ,109,Use a first argument as output path
+ark, ,a,autosubfolder, , ,110,Create subfolder automatically for multiple archives
+ark, ,O,opendestination, , ,111,Open upon extraction completion

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, , , , ,@D @f,101, 
+$progname, , ,build-options, , ,102,A string containing the build options used in package
+$progname, , ,compression,$modes, ,103,Set the binary package compression format (default: zstd)
+$progname, , ,shlib-provides, , ,104,"Provided shared libraries, separated by whitespace"
+$progname, , ,shlib-requires, , ,105,"Required shared libraries, separated by whitespace"
+$progname, , ,alternatives, , ,106,"Alternatives provided by this package, separated by whitespace"

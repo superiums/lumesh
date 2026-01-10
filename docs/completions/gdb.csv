@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gdb, ,d, , ,@D @f @r,101,Add directory with source files
+gdb, , , , ,@D @f @r,102,Set GDB's working directory
+gdb, , ,args, , ,103,Pass arguments to the program after its name

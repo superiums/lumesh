@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dropdb, ,e,echo, , ,101,Show the commands being sent to the server
+dropdb, ,i,interactive, , ,102,Prompt before deleting anything
+dropdb, ,V,version, , ,103,"Output version information, then exit"
+dropdb, , ,if-exists, , ,104,Don't report error if database doesn't exist
+dropdb, ,?,help, , ,105,"Show help, then exit"
+dropdb, ,h,host, ,@f @r,106,Database server host or socket directory
+dropdb, ,p,port, ,@f @r,107,Database server port
+dropdb, ,U,username, ,@f @r,108,User name to connect as
+dropdb, ,w,no-password, , ,109,Never prompt for password
+dropdb, ,W,password, , ,110,Force password prompt
+dropdb, , ,maintenance-db, ,@f @r,111,Alternate maintenance database

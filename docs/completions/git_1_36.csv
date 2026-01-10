@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+git, ,v,version, , ,101,Prints the Git suite version that the git program came from
+git, ,h,help, , ,102,Prints the synopsis and a list of the most commonly used commands
+git, , ,config-env, , ,103,"Like -c <name>=<value>, give configuration variable <name> a value, where <en…"
+git, , ,exec-path, , ,104,Path to wherever your core Git programs are installed
+git, , ,html-path, , ,105,"Print the path, without trailing slash, where Git's HTML documentation is ins…"
+git, , ,man-path, , ,106,Print the manpath (see man(1)) for the man pages for this version of Git and …
+git, , ,info-path, , ,107,Print the path where the Info files documenting this version of Git are insta…
+git, ,p,paginate, , ,108,"Pipe all output into less (or if set, $PAGER) if standard output is a terminal"
+git, ,P,no-pager, , ,109,Do not pipe Git output into a pager
+git, , ,git-dir, , ,110,Set the path to the repository ('. git' directory)
+git, , ,work-tree, , ,111,Set the path to the working tree
+git, , ,namespace, , ,112,Set the Git namespace.  See gitnamespaces(7) for more details
+git, , ,bare, , ,113,Treat the repository as a bare repository
+git, , ,no-replace-objects, , ,114,Do not use replacement refs to replace Git objects
+git, , ,no-lazy-fetch, , ,115,Do not fetch missing objects from the promisor remote on demand
+git, , ,no-optional-locks, , ,116,Do not perform optional operations that require locks
+git, , ,no-advice, , ,117,Disable all advice hints from being printed
+git, , ,literal-pathspecs, , ,118,"Treat pathspecs literally (i. e.  no globbing, no pathspec magic)"
+git, , ,glob-pathspecs, , ,119,Add 'glob' magic to all pathspec
+git, , ,noglob-pathspecs, , ,120,Add 'literal' magic to all pathspec
+git, , ,icase-pathspecs, , ,121,Add 'icase' magic to all pathspec
+git, , ,list-cmds, , ,122,List commands by group
+git, , ,attr-source, , ,123,Read gitattributes from <tree-ish> instead of the worktree
+git, , ,all, , ,124,or
+git, , ,type, , ,125,will convert to false
+git, , ,object-format, , ,126,in git-init(1).  GIT_DEFAULT_REF_FORMAT
+git, , ,ref-format, , ,127,in git-init(1)
+git, , ,trace-ascii, , ,128,on the command line.  See GIT_TRACE for available trace output options
+git, , ,raw, , ,129,"diff output, etc).  GIT_GLOB_PATHSPECS"

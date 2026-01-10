@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-debug-events, , ,device, , ,101,Use the given device(s) with the path backend
+libinput-debug-events, , ,grab, , ,102,Exclusively grab all opened devices
+libinput-debug-events, , ,help, , ,103,Print help
+libinput-debug-events, , ,quiet, , ,104,"Only print libinput messages, don't print anything from this tool"
+libinput-debug-events, , ,show-keycodes, , ,105,Key events shown by this tool are partially obfuscated to avoid passwords and…
+libinput-debug-events, , ,udev, , ,106,Use the udev backend to listen for device notifications on the given seat
+libinput-debug-events, , ,verbose, , ,107,Use verbose output . SS libinput configuration options
+libinput-debug-events, , ,apply-to, , ,108,Configuration options are only applied where the device name matches the patt…
+libinput-debug-events, , ,disable-sendevents, , ,109,Set the send-events option to disabled for the devices matching patterns
+libinput-debug-events, , ,disable-drag, , ,110,Enable or disable tap-and-drag
+libinput-debug-events, , ,disable-drag-lock, , ,111,Enable (in timeout mode) or disable drag-lock  --enable-drag-lock=[sticky|tim…
+libinput-debug-events, , ,disable-dwt, , ,112,Enable or disable disable-while-typing
+libinput-debug-events, , ,disable-dwtp, , ,113,Enable or disable disable-while-trackpointing
+libinput-debug-events, , ,disable-left-handed, , ,114,Enable or disable left handed button configuration
+libinput-debug-events, , ,disable-middlebutton, , ,115,Enable or disable middle button emulation
+libinput-debug-events, , ,disable-natural-scrolling, , ,116,Enable or disable natural scrolling
+libinput-debug-events, , ,disable-scroll-button-lock, , ,117,Enable or disable the scroll button lock
+libinput-debug-events, , ,disable-tap, , ,118,Enable or disable tap-to-click
+libinput-debug-events, , ,set-area, , ,119,Set the tablet area to the rectangle described by the two points x1/y1 and x2…
+libinput-debug-events, , ,set-calibration, , ,120,Set the first 6 elements of a 3x3 matrix to use for calibration
+libinput-debug-events, , ,set-click-method, , ,121,Set the desired click method
+libinput-debug-events, , ,set-clickfinger-map, , ,122,Set button mapping for clickfinger
+libinput-debug-events, , ,set-custom-points, , ,123,Sets the n points defining a custom acceleration function The points are defi…
+libinput-debug-events, , ,set-custom-step, , ,124,"Sets the distance along the x-axis between each point, starting from 0"
+libinput-debug-events, , ,set-custom-type, , ,125,Sets the type of the custom acceleration function.  Defaults to fallback
+libinput-debug-events, , ,set-pressure-range, , ,126,Set the tablet tool pressure range to min:max
+libinput-debug-events, , ,set-profile, , ,127,Set pointer acceleration profile
+libinput-debug-events, , ,set-rotation-angle, , ,128,Set the rotation angle in degrees (0 to 360)
+libinput-debug-events, , ,set-scroll-button, , ,129,Set the button to the given button code
+libinput-debug-events, , ,set-scroll-method, , ,130,Set the desired scroll method
+libinput-debug-events, , ,set-speed, , ,131,"Set pointer acceleration speed.  The allowed range is [-1, 1]"
+libinput-debug-events, , ,set-tap-map, , ,132,Set button mapping for tapping NOTES

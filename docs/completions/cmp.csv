@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cmp, ,b,print-bytes, , ,101,print differing bytes
+cmp, ,i,ignore-initial, , ,102,skip first SKIP bytes of both inputs
+cmp, ,l,verbose, , ,103,output byte numbers and differing byte values
+cmp, ,n,bytes, , ,104,compare at most LIMIT bytes
+cmp, ,s,silent, , ,105,suppress all normal output
+cmp, , ,help, , ,106,display this help and exit
+cmp, ,v,version, , ,107,output version information and exit

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alacritty-msg, ,s,socket, , ,101,Path for IPC socket communication.  MESSAGES
+alacritty-msg, , ,hold, , ,102,Remain open after child process exits.  OPTIONS
+alacritty-msg, , ,working-directory, , ,103,Start the shell in the specified working directory
+alacritty-msg, ,T,title, , ,104,Defines the window title
+alacritty-msg, , ,class, , ,105,Defines window class/app_id on X11/Wayland
+alacritty-msg, ,o,option, , ,106,Override configuration file options
+alacritty-msg, ,e,command, , ,107,Command and args to execute (must be last argument)
+alacritty-msg, ,r,reset, , ,108,Clear all runtime configuration changes.  OPTIONS
+alacritty-msg, ,w,window-id, , ,109,Window ID for the new config

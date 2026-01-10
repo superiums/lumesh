@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+archlinux-java, __fish_use_subcommand, , ,status, ,101,List installed Java environments and enabled one
+archlinux-java, __fish_use_subcommand, , ,set, ,102,Force <JAVA_ENV> as default
+archlinux-java, __fish_use_subcommand, , ,unset, ,103,Unset current default Java environment
+archlinux-java, __fish_use_subcommand, , ,get, ,104,Return the short name of the Java environment set as default
+archlinux-java, __fish_use_subcommand, , ,fix, ,105,Fix an invalid/broken default Java environment configuration
+archlinux-java, __fish_use_subcommand, , ,help, ,106,Show help

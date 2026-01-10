@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zoxide-init, , ,cmd, , ,101,Changes the prefix of the z and zi commands
+zoxide-init, ,h,help, , ,102,Print help information
+zoxide-init, , ,hook, , ,103,"Changes how often zoxide increments a directory's score: . TS tab(|); l l"
+zoxide-init, , ,no-cmd, , ,104,Prevents zoxide from defining the z and zi commands

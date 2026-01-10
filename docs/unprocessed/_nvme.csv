@@ -1,0 +1,101 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nvme, $cmds, , ,list,@f,100,List all NVMe devices and namespaces on machine
+nvme, $cmds, , ,list-subsys,@f,101,List nvme subsystems
+nvme, $cmds, , ,id-ctrl,@f,101,Send NVMe Identify Controller
+nvme, $cmds, , ,id-ns,@f,101,Send NVMe Identify Namespace
+nvme, $cmds, , ,id-ns-granularity,@f,101,Send NVMe Identify Namespace Granularity List
+nvme, $cmds, , ,id-ns-lba-format,@f,101,Send NVMe Identify Namespace for the specified LBA Format index
+nvme, $cmds, , ,list-ns,@f,101,Send NVMe Identify List
+nvme, $cmds, , ,list-ctrl,@f,101,Send NVMe Identify Controller List
+nvme, $cmds, , ,nvm-id-ctrl,@f,101,Send NVMe Identify Controller NVM Command Set
+nvme, $cmds, , ,nvm-id-ns,@f,101,Send NVMe Identify Namespace NVM Command Set
+nvme, $cmds, , ,nvm-id-ns-lba-format,@f,101,Send NVMe Identify Namespace NVM Command Set for the specified LBA Format index
+nvme, $cmds, , ,primary-ctrl-caps,@f,101,Send NVMe Identify Primary Controller Capabilities
+nvme, $cmds, , ,list-secondary,@f,101,List Secondary Controllers associated with a Primary Controller
+nvme, $cmds, , ,cmdset-ind-id-ns,@f,101,I/O Command Set Independent Identify Namespace
+nvme, $cmds, , ,ns-descs,@f,101,Send NVMe Namespace Descriptor List
+nvme, $cmds, , ,id-nvmset,@f,101,Send NVMe Identify NVM Set List
+nvme, $cmds, , ,id-uuid,@f,101,Send NVMe Identify UUID List
+nvme, $cmds, , ,id-iocs,@f,101,Send NVMe Identify I/O Command Set
+nvme, $cmds, , ,id-domain,@f,101,Send NVMe Identify Domain List
+nvme, $cmds, , ,list-endgrp,@f,101,Send NVMe Identify Endurance Group List
+nvme, $cmds, , ,create-ns,@f,101,Creates a namespace with the provided parameters
+nvme, $cmds, , ,delete-ns,@f,101,Deletes a namespace from the controller
+nvme, $cmds, , ,attach-ns,@f,101,Attaches a namespace to requested controller(s)
+nvme, $cmds, , ,detach-ns,@f,101,Detaches a namespace from requested controller(s)
+nvme, $cmds, , ,get-ns-id,@f,101,Retrieve the namespace ID of opened block device
+nvme, $cmds, , ,get-log,@f,101,"Generic NVMe get log, returns log in raw format"
+nvme, $cmds, , ,telemetry-log,@f,101,Retrieve FW Telemetry log write to file
+nvme, $cmds, , ,fw-log,@f,101,Retrieve FW Log
+nvme, $cmds, , ,changed-ns-list-log,@f,101,Retrieve Changed Namespace List
+nvme, $cmds, , ,smart-log,@f,101,Retrieve SMART Log
+nvme, $cmds, , ,ana-log,@f,101,Retrieve ANA Log
+nvme, $cmds, , ,error-log,@f,101,Retrieve Error Log
+nvme, $cmds, , ,effects-log,@f,101,Retrieve Command Effects Log
+nvme, $cmds, , ,endurance-log,@f,101,Retrieve Endurance Group Log
+nvme, $cmds, , ,predictable-lat-log,@f,101,Retrieve Predictable Latency per Nvmset Log
+nvme, $cmds, , ,pred-lat-event-agg-log,@f,101,Retrieve Predictable Latency Event Aggregate Log
+nvme, $cmds, , ,persistent-event-log,@f,101,Retrieve Persistent Event Log
+nvme, $cmds, , ,endurance-event-agg-log,@f,101,Retrieve Endurance Group Event Aggregate Log
+nvme, $cmds, , ,lba-status-log,@f,101,Retrieve LBA Status Information Log
+nvme, $cmds, , ,resv-notif-log,@f,101,Retrieve Reservation Notification Log
+nvme, $cmds, , ,boot-part-log,@f,101,Retrieve Boot Partition Log
+nvme, $cmds, , ,get-feature,@f,101,Get feature and show the resulting value
+nvme, $cmds, , ,device-self-test,@f,101,Perform the necessary tests to observe the performance
+nvme, $cmds, , ,self-test-log,@f,101,Retrieve the SELF-TEST Log
+nvme, $cmds, , ,supported-log-pages,@f,101,Retrieve the Supported Log pages details
+nvme, $cmds, , ,fid-support-effects-log,@f,101,Retrieve FID Support and Effects log
+nvme, $cmds, , ,mi-cmd-support-effects-log,@f,101,Retrieve MI Command Support and Effects log
+nvme, $cmds, , ,media-unit-stat-log,@f,101,Retrieve the configuration and wear of media units
+nvme, $cmds, , ,supported-cap-config-log,@f,101,Retrieve the list of Supported Capacity Configuration Descriptors
+nvme, $cmds, , ,set-feature,@f,101,Set a feature and show the resulting value
+nvme, $cmds, , ,set-property,@f,101,Set a property and show the resulting value
+nvme, $cmds, , ,get-property,@f,101,Get a property and show the resulting value
+nvme, $cmds, , ,format,@f,101,Format namespace with new block format
+nvme, $cmds, , ,fw-commit,@f,101,Verify and commit firmware to a specific slot
+nvme, $cmds, , ,fw-download,@f,101,Download new firmware
+nvme, $cmds, , ,admin-passthru,@f,101,Submit an arbitrary admin command
+nvme, $cmds, , ,io-passthru,@f,101,Submit an arbitrary IO command
+nvme, $cmds, , ,security-send,@f,101,Submit a Security Send command
+nvme, $cmds, , ,security-recv,@f,101,Submit a Security Receive command
+nvme, $cmds, , ,get-lba-status,@f,101,Submit a Get LBA Status command
+nvme, $cmds, , ,capacity-mgmt,@f,101,Submit Capacity Management Command
+nvme, $cmds, , ,resv-acquire,@f,101,Submit a Reservation Acquire
+nvme, $cmds, , ,resv-register,@f,101,Submit a Reservation Register
+nvme, $cmds, , ,resv-release,@f,101,Submit a Reservation Release
+nvme, $cmds, , ,resv-report,@f,101,Submit a Reservation Report
+nvme, $cmds, , ,dsm,@f,101,Submit a Data Set Management command
+nvme, $cmds, , ,copy,@f,101,Submit a Simple Copy command
+nvme, $cmds, , ,flush,@f,101,Submit a Flush command
+nvme, $cmds, , ,compare,@f,101,Submit a Compare command
+nvme, $cmds, , ,read,@f,101,Submit a read command
+nvme, $cmds, , ,write,@f,101,Submit a write command
+nvme, $cmds, , ,write-zeroes,@f,101,Submit a write zeroes command
+nvme, $cmds, , ,write-uncor,@f,101,Submit a write uncorrectable command
+nvme, $cmds, , ,verify,@f,101,Submit a verify command
+nvme, $cmds, , ,sanitize,@f,101,Submit a sanitize command
+nvme, $cmds, , ,sanitize-log,@f,101,Retrieve sanitize log
+nvme, $cmds, , ,reset,@f,101,Resets the controller
+nvme, $cmds, , ,subsystem-reset,@f,101,Resets the subsystem
+nvme, $cmds, , ,ns-rescan,@f,101,Rescans the NVME namespaces
+nvme, $cmds, , ,show-regs,@f,101,Shows the controller registers or properties
+nvme, $cmds, , ,discover,@f,101,Discover NVMeoF subsystems
+nvme, $cmds, , ,connect-all,@f,101,Discover and Connect to NVMeoF subsystems
+nvme, $cmds, , ,connect,@f,101,Connect to NVMeoF subsystem
+nvme, $cmds, , ,disconnect,@f,101,Disconnect from NVMeoF subsystem
+nvme, $cmds, , ,disconnect-all,@f,101,Disconnect from all connected NVMeoF subsystems
+nvme, $cmds, , ,config,@f,101,Configuration of NVMeoF subsystems
+nvme, $cmds, , ,gen-hostnqn,@f,101,Generate NVMeoF host NQN
+nvme, $cmds, , ,show-hostnqn,@f,101,Show NVMeoF host NQN
+nvme, $cmds, , ,gen-dhchap-key,@f,101,Generate NVMeoF DH-HMAC-CHAP host key
+nvme, $cmds, , ,check-dhchap-key,@f,101,Validate NVMeoF DH-HMAC-CHAP host key
+nvme, $cmds, , ,gen-tls-key,@f,101,Generate NVMeoF TLS PSK
+nvme, $cmds, , ,check-tls-key,@f,101,Validate NVMeoF TLS PSK
+nvme, $cmds, , ,dir-receive,@f,101,Submit a Directive Receive command
+nvme, $cmds, , ,dir-send,@f,101,Submit a Directive Send command
+nvme, $cmds, , ,virt-mgmt,@f,101,Manage Flexible Resources between Primary and Secondary Controller 
+nvme, $cmds, , ,rpmb,@f,101,Replay Protection Memory Block commands
+nvme, $cmds, , ,lockdown,@f,101,Submit Lockdown command
+nvme, $cmds, , ,dim,@f,101,Send Discovery Information Management command to a Discovery Controller
+nvme, $cmds, , ,version,@f,101,Show  version
+nvme, $cmds, , ,help,@f,101,Display help

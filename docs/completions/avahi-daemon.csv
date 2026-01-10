@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avahi-daemon, ,f,file, , ,101,Specify the configuration file to read.  (default: /etc/avahi/avahi-daemon
+avahi-daemon, ,D,daemonize, , ,102,Daemonize after startup.  Implies --syslog
+avahi-daemon, ,s,syslog, , ,103,Log to syslog instead of STDERR.  Implied by --daemonize
+avahi-daemon, , ,debug, , ,104,Increase verbosity to debug level
+avahi-daemon, , ,no-rlimits, , ,105,Don't enforce resource limits as specified in the configuration file
+avahi-daemon, , ,no-drop-root, , ,106,Don't drop root privileges after startup and don't require daemon to be start…
+avahi-daemon, , ,no-chroot, , ,107,Don't chroot(2) the daemon
+avahi-daemon, , ,no-proc-title, , ,108,Don't change the process name while running
+avahi-daemon, ,k,kill, , ,109,Kill an already running avahi-daemon.  (equivalent to sending a SIGTERM)
+avahi-daemon, ,r,reload, , ,110,Tell an already running avahi-daemon to reread /etc/resolv
+avahi-daemon, ,c,check, , ,111,Return 0 as return code when avahi-daemon is already running
+avahi-daemon, ,h,help, , ,112,Show help
+avahi-daemon, ,v,version, , ,113,Show version information  FILES /etc/avahi/avahi-daemon

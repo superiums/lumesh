@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mkdocs, ,h,help, ,@f,101,Show help and exit
+mkdocs, ,v,verbose, ,@f,102,Enable verbose output
+mkdocs, ,q,quiet, ,@f,103,Silence warnings
+mkdocs, build gh-deploy new serve,V,version, ,@f,103,Show the version and exit
+mkdocs, build gh-deploy new serve, , ,build,@f,103,Build the MkDocs documentation
+mkdocs, build gh-deploy new serve, , ,gh-deploy,@f,109,Deploy your documentation to GitHub Pages
+mkdocs, build gh-deploy new serve, , ,new,@f @r,115,Create a new MkDocs project
+mkdocs, build gh-deploy new serve, , ,serve,@f,115,Run the builtin development server

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tinysparql-export, ,o,output-format, , ,101,Choose which RDF format to use to output results
+tinysparql-export, ,g,show-graphs, , ,102,Deprecated.  Does the same than --output-format trig
+tinysparql-export, , ,2to3, , ,103,Helper for migrating data from Tracker 2. x databases
+tinysparql-export, , ,keyfile, , ,104,Outputs the data in a key file format.  Only may be used with --2to3

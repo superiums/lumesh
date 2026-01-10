@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+amidi, ,h,help, , ,101,Help: prints a list of options
+amidi, ,V,version, , ,102,Prints the current version
+amidi, ,l,list-devices, , ,103,Prints a list of all hardware MIDI ports
+amidi, ,L,list-rawmidis, , ,104,Prints all RawMIDI definitions.  (used when debugging configuration files)
+amidi, ,p,port, , ,105,Sets the name of the ALSA RawMIDI port to use
+amidi, ,s,send, , ,106,Sends the contents of the specified file to the MIDI port
+amidi, ,r,receive, , ,107,Writes data received from the MIDI port into the specified file
+amidi, ,S,send-hex, , ,108,Sends the bytes specified as hexadecimal numbers to the MIDI port
+amidi, ,d,dump, , ,109,Prints data received from the MIDI port as hexadecimal bytes
+amidi, ,t,timeout, , ,110,Stops receiving data when no data has been received for the specified amount …
+amidi, ,a,active-sensing, , ,111,Does not ignore Active Sensing bytes (FEh) when saving or printing received M…
+amidi, ,c,clock, , ,112,Does not ignore Clock bytes (F8h) when saving or printing received MIDI comma…
+amidi, ,i,sysex-interval, , ,113,Adds a delay in between each SysEx message sent to a device

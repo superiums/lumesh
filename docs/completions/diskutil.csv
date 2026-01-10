@@ -1,0 +1,43 @@
+cmd,conds,short,long,params,dirs,pri,desc
+diskutil, apfs, , ,list,@f,165,Show status of all current APFS Containers
+diskutil, apfs, , ,convert,@f,166,Nondestructively convert from HFS to APFS
+diskutil, apfs, , ,create,@f,167,Create a new APFS Container with one APFS Volume
+diskutil, apfs, , ,createContainer,@f,168,Create a new empty APFS Container
+diskutil, apfs, , ,deleteContainer,@f,169,Delete an APFS Container and reformat disks to HFS
+diskutil, apfs, , ,resizeContainer,@f,170,Resize an APFS Container and its disk space usage
+diskutil, apfs, , ,addVolume,@f,171,Export a new APFS Volume from an APFS Container
+diskutil, apfs, , ,deleteVolume,@f,172,Remove an APFS Volume from its APFS Container
+diskutil, apfs, , ,eraseVolume,@f,173,"Erase contents of, but keep, an APFS Volume"
+diskutil, apfs, , ,changeVolumeRole,@f,174,Change the Role metadata bits of an APFS Volume
+diskutil, apfs, , ,unlockVolume,@f,175,Unlock an encrypted APFS Volume which is locked
+diskutil, apfs, , ,lockVolume,@f,176,Lock an encrypted APFS Volume (diskutil unmount)
+diskutil, apfs, , ,listCryptoUsers,@f,177,List cryptographic users of encrypted APFS Volume
+diskutil, apfs, , ,changePassphrase,@f,178,Change the passphrase of a cryptographic user
+diskutil, apfs, , ,setPassphraseHint,@f,179,Set or clear passphrase hint of a cryptographic user
+diskutil, apfs, , ,encryptVolume,@f,180,Start async encryption of an unencrypted APFS Volume
+diskutil, apfs, , ,decryptVolume,@f,181,Start async decryption of an encrypted APFS Volume
+diskutil, apfs, , ,updatePreboot,@f,182,Update the APFS Volume's related APFS Preboot Volume
+diskutil, appleRAID, , ,list,@f,184,Display the current status of RAID sets
+diskutil, appleRAID, , ,create,@f,185,Create a RAID set on multiple disks
+diskutil, appleRAID, , ,delete,@f,186,Delete an existing RAID set
+diskutil, appleRAID, , ,repairMirror,@f,187,Repair a damaged RAID mirror set
+diskutil, appleRAID, , ,add,@f,188,Add a spare or member disk to an existing RAID
+diskutil, appleRAID, , ,remove,@f,189,Remove a spare or member disk from an existing RAID
+diskutil, appleRAID, , ,enable,@f,190,Convert a volume into a single disk RAID set
+diskutil, appleRAID, , ,update,@f,191,Update the settings of an existing RAID
+diskutil, coreStorage, , ,list,@f,193,Show status of CoreStorage volumes
+diskutil, coreStorage, , ,info,@f,194,Get CoreStorage information by UUID or disk
+diskutil, coreStorage, , ,convert,@f,195,Convert a volume into a CoreStorage volume
+diskutil, coreStorage, , ,revert,@f,196,Revert a CoreStorage volume to its native type
+diskutil, coreStorage, , ,create,@f,197,Create a new CoreStorage logical volume group
+diskutil, coreStorage, , ,delete,@f,198,Delete a CoreStorage logical volume group
+diskutil, coreStorage, , ,rename,@f,199,Rename a CoreStorage logical volume group
+diskutil, coreStorage, , ,createVolume,@f,200,Create a new CoreStorage logical volume
+diskutil, coreStorage, , ,deleteVolume,@f,201,Delete a volume from a logical volume group
+diskutil, coreStorage, , ,encryptVolume,@f,202,Start encrypting a CoreStorage logical volume
+diskutil, coreStorage, , ,decryptVolume,@f,203,Start decrypting a CoreStorage logical volume
+diskutil, coreStorage, , ,unlockVolume,@f,204,Attach/mount a locked CoreStorage logical volume
+diskutil, coreStorage, , ,changeVolumePassphrase,@f,205,Change a CoreStorage logical volume's passphrase
+diskutil, coreStorage, , ,resizeVolume,@f,206,Resize a CoreStorage volume
+diskutil, coreStorage, , ,resizeDisk,@f,207,Resize a CoreStorage physical volume disk
+diskutil, coreStorage, , ,resizeStack,@f,208,Resize a CoreStorage logical/physical volume set

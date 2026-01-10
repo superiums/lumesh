@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+etmpfiles, , ,create, , ,101, 
+etmpfiles, , ,remove, , ,102, 
+etmpfiles, , ,clean, , ,103, 
+etmpfiles, , ,replace, , ,104,"is specified, arguments specified on the command line are used instead of the…"
+etmpfiles, , ,purge, , ,105, 
+etmpfiles, , ,dry-run, , ,106,(see below) to verify which files and directories will be deleted
+etmpfiles, , ,user, , ,107, 
+etmpfiles, , ,boot, , ,108, 
+etmpfiles, , ,graceful, , ,109, 
+etmpfiles, , ,prefix, , ,110, 
+etmpfiles, , ,exclude-prefix, , ,111, 
+etmpfiles, , ,root, , ,112, 
+etmpfiles, , ,image, , ,113, 
+etmpfiles, , ,image-policy, , ,114, 
+etmpfiles, , ,cat-config, , ,115, 
+etmpfiles, , ,tldr, , ,116, 
+etmpfiles, , ,no-pager, , ,117, 
+etmpfiles, ,h,help, , ,118, 
+etmpfiles, , ,version, , ,119, 

@@ -1,0 +1,67 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dirmngr, , ,options, , ,101,Reads configuration from file instead of from the default per-user configurat…
+dirmngr, , ,homedir, , ,102,Set the name of the home directory to dir
+dirmngr, , ,verbose, , ,103,Outputs additional information while running
+dirmngr, , ,log-file, , ,104,Append all logging output to file
+dirmngr, , ,compatibility-flags, , ,105,Set compatibility flags to work around certain problems or to emulate bugs
+dirmngr, , ,faked-system-time, , ,106,"This option is only useful for testing; it sets the system time back or forth…"
+dirmngr, , ,debug-level, , ,107,Select the debug level for investigating problems
+dirmngr, , ,debug, , ,108,Set debug flags.   All flags are or-ed and flags may be given in C syntax (e
+dirmngr, , ,debug-all, , ,109,Same as --debug=0xffffffff
+dirmngr, , ,tls-debug, , ,110,Enable debugging of the TLS layer at level
+dirmngr, , ,debug-wait, , ,111,"When running in server mode, wait n seconds before entering the actual proces…"
+dirmngr, , ,disable-check-own-socket, , ,112,On some platforms dirmngr is able to detect the removal of its socket file an…
+dirmngr, , ,force, , ,113,"Enabling this option forces loading of expired CRLs; this is only useful for …"
+dirmngr, , ,use-tor, , ,114,TQ   --no-use-tor The option --use-tor switches Dirmngr and thus GnuPG into `…
+dirmngr, , ,standard-resolver, , ,115,This option forces the use of the system's standard DNS resolver code
+dirmngr, , ,recursive-resolver, , ,116,When possible use a recursive resolver instead of a stub resolver
+dirmngr, , ,resolver-timeout, , ,117,Set the timeout for the DNS resolver to N seconds
+dirmngr, , ,connect-quick-timeout, , ,118,Set the timeout for HTTP and generic TCP connection attempts to N seconds
+dirmngr, , ,listen-backlog, , ,119,Set the size of the queue for pending connections.   The default is 64
+dirmngr, , ,allow-version-check, , ,120,Allow Dirmngr to connect to https://versions. gnupg
+dirmngr, , ,keyserver, , ,121,Use name as your keyserver
+dirmngr, , ,nameserver, , ,122,In ``Tor mode'' Dirmngr uses a public resolver via Tor to resolve DNS names
+dirmngr, , ,disable-ipv6, , ,123,Disable the use of all IPv4 or IPv6 addresses
+dirmngr, , ,disable-ldap, , ,124,Entirely disables the use of LDAP
+dirmngr, , ,disable-http, , ,125,Entirely disables the use of HTTP
+dirmngr, , ,ignore-http-dp, , ,126,"When looking for the location of a CRL, the to be tested certificate usually …"
+dirmngr, , ,ignore-ldap-dp, , ,127,This is similar to --ignore-http-dp but ignores entries using the LDAP scheme
+dirmngr, , ,ignore-ocsp-service-url, , ,128,Ignore all OCSP URLs contained in the certificate
+dirmngr, , ,honor-http-proxy, , ,129,"If the environment variable 'http_proxy' has been set, use its value to acces…"
+dirmngr, , ,http-proxy, , ,130,Use host and port to access HTTP servers
+dirmngr, , ,ldap-proxy, , ,131,Use host and port to connect to LDAP servers
+dirmngr, , ,only-ldap-proxy, , ,132,Never use anything else but the LDAP 'proxy' as configured with --ldap-proxy
+dirmngr, , ,ldapserverlist-file, , ,133,Read the list of LDAP servers to consult for CRLs and X
+dirmngr, , ,ldapserver, , ,134,This is an alternative way to specify LDAP servers for CRL and X
+dirmngr, , ,ldaptimeout, , ,135,Specify the number of seconds to wait for an LDAP query before timing out
+dirmngr, , ,add-servers, , ,136,This option makes dirmngr add any servers it discovers when validating certif…
+dirmngr, , ,allow-ocsp, , ,137,This option enables OCSP support if requested by the client
+dirmngr, , ,ocsp-responder, , ,138,Use url as the default OCSP Responder if the certificate does not contain inf…
+dirmngr, , ,ocsp-signer, , ,139,Use the certificate with the fingerprint fpr to check the responses of the de…
+dirmngr, , ,ocsp-max-clock-skew, , ,140,The number of seconds a skew between the OCSP responder and them local clock …
+dirmngr, , ,ocsp-max-period, , ,141,Seconds a response is at maximum considered valid after the time given in the…
+dirmngr, , ,ocsp-current-period, , ,142,The number of seconds an OCSP response is considered valid after the time giv…
+dirmngr, , ,max-replies, , ,143,Do not return more that n items in one query.   The default is 10
+dirmngr, , ,ignore-cert-extension, , ,144,Add oid to the list of ignored certificate extensions
+dirmngr, , ,ignore-crl-extension, , ,145,Add oid to the list of ignored CRL extensions
+dirmngr, , ,ignore-cert, , ,146,Entirely ignore certificates with the fingerprint fpr
+dirmngr, , ,version, , ,147,Print the program version and licensing information
+dirmngr, ,h,help, , ,148,Print a usage message summarizing the most useful command-line options
+dirmngr, , ,dump-options, , ,149,Print a list of all available options and commands
+dirmngr, , ,server, , ,150,Run in server mode and wait for commands on the stdin
+dirmngr, , ,daemon, , ,151,Run in background daemon mode and listen for commands on a socket
+dirmngr, , ,supervised, , ,152,"Run in the foreground, sending logs to stderr, and listening on file descript…"
+dirmngr, , ,list-crls, , ,153,List the contents of the CRL cache on stdout
+dirmngr, , ,load-crl, , ,154,"This command requires a filename as additional argument, and it will make Dir…"
+dirmngr, , ,fetch-crl, , ,155,"This command requires an URL as additional argument, and it will make dirmngr…"
+dirmngr, , ,shutdown, , ,156,This commands shuts down an running instance of Dirmngr
+dirmngr, , ,flush, , ,157,This command removes all CRLs from Dirmngr's cache
+dirmngr, , ,sh, , ,158, 
+dirmngr, , ,csh, , ,159,Format the info output in daemon mode for use with the standard Bourne shell …
+dirmngr, , ,no-use-tor, , ,160,The option --use-tor switches Dirmngr and thus GnuPG into ``Tor mode'' to rou…
+dirmngr, , ,connect-timeout, , ,161, 
+dirmngr, , ,quick, , ,162,value is capped at the value of the regular connect timeout
+dirmngr, , ,query-swdb, , ,163,details
+dirmngr, , ,keyserver-options, , ,164,particular keyserver
+dirmngr, , ,disable-ipv4, , ,165, 
+dirmngr, , ,hkp-cacert, , ,166,Use the root certificates in file for verification of the TLS certificates us…

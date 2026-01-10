@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+desktop-file-install, , ,dir, , ,101,Install desktop files to the DIR directory
+desktop-file-install, ,m,mode, , ,102,Set the permissions of the destination files to MODE
+desktop-file-install, , ,vendor, , ,103,Add a vendor prefix to the desktop files
+desktop-file-install, , ,delete-original, , ,104,"Delete the source desktop files, leaving only the target files"
+desktop-file-install, , ,rebuild-mime-info-cache, , ,105,Rebuild the MIME types application database after installing the desktop files
+desktop-file-install, , ,set-key, , ,106,Set the KEY key to the value passed to the next --set-value option
+desktop-file-install, , ,set-value, , ,107,Set the key specified with the previous --set-key option to VALUE
+desktop-file-install, , ,set-name, , ,108,Set the name (key Name) to NAME
+desktop-file-install, , ,copy-name-to-generic-name, , ,109,Copy the value of the Name key to the GenericName key
+desktop-file-install, , ,set-generic-name, , ,110,Set the generic name (key GenericName) to GENERIC-NAME
+desktop-file-install, , ,copy-generic-name-to-name, , ,111,"Copy the value of the GenericName key to the Name key, if the GenericName key…"
+desktop-file-install, , ,set-comment, , ,112,Set the comment (key Comment) to COMMENT
+desktop-file-install, , ,set-icon, , ,113,Set the icon (key Icon) to ICON
+desktop-file-install, , ,add-category, , ,114,Add CATEGORY to the list of categories (key Categories)
+desktop-file-install, , ,remove-category, , ,115,Remove CATEGORY from the list of categories (key Categories)
+desktop-file-install, , ,add-mime-type, , ,116,Add MIME-TYPE to the list of MIME types (key MimeType)
+desktop-file-install, , ,remove-mime-type, , ,117,Remove MIME-TYPE from the list of MIME types (key MimeType)
+desktop-file-install, , ,add-only-show-in, , ,118,Add ENVIRONMENT to the list of desktop environments where the desktop files s…
+desktop-file-install, , ,remove-only-show-in, , ,119,Remove ENVIRONMENT from the list of desktop environments where the desktop fi…
+desktop-file-install, , ,add-not-show-in, , ,120,Add ENVIRONMENT to the list of desktop environments where the desktop files s…
+desktop-file-install, , ,remove-not-show-in, , ,121,Remove ENVIRONMENT from the list of desktop environments where the desktop fi…
+desktop-file-install, , ,remove-key, , ,122,"Remove the KEY key from the desktop files, if present"

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+heif-info, ,d,dump-boxes, , ,101,Show a low-level dump of all MP4 file boxes
+heif-info, ,h,help, , ,102,Show help.  A filename is not required or used
+heif-info, ,v,version, , ,103,"Show version information for the tool, library version, and the plugin path"

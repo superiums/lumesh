@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xinput, $cmds, , ,$cmds,@f,100, 
+xinput," __fish_is_nth_token 2; and list get-feedbacks set-pointer set-mode set-ptr-feedback set-integer-feedback set-button-map query-state list-props set-int-prop set-float-prop set-prop watch-props", , , ,@f,101, 
+xinput," list set-int-prop set-float-prop set-prop watch-props; and __fish_is_nth_token 2", , , ,@f,102, 

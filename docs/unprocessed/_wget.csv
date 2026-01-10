@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wget, __fish_contains_opt -s r recursive,l,level, , ,178,Specify recursion maximum depth

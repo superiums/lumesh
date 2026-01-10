@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+golint, , ,min_confidence, , ,101,Minimum confidence of a problem to print it
+golint, , ,set_exit_status, , ,102,Set exit status to 1 if any issues are found
+golint, ,h,help, , ,103,Show help

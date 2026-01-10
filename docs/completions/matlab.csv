@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+matlab, ,h,help, , ,101,Show help
+matlab, , , , ,@f @r,102,Send X commands to X Window Server display xDisp
+matlab, , , , ,@r,103,Set the folder
+matlab, , , , ,@r,104,Copy Command Window output into filename
+matlab, ,Dgdb, , ,@f @r,105,Start in debug mode
+matlab, ,Dlldb, , ,@f @r,106,Start in debug mode
+matlab, ,Ddbx, , ,@f @r,107,Start in debug mode
+matlab, , , , ,@f @r,108,Enable use of the Java debugger
+matlab, ,c, , ,@r,111,Use the specified license file

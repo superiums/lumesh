@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gencnval, ,?,help, , ,101,Print help about usage and exit
+gencnval, ,v,verbose, , ,102,Display verbose output
+gencnval, ,c,copyright, , ,103,Include a copyright notice in the binary data
+gencnval, ,s,sourcedir, , ,104,Set the source directory to R source 
+gencnval, ,d,destdir, , ,105,Set the destination directory to destination 

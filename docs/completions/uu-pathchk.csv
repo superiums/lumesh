@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-pathchk, , ,portability, , ,101,check for all POSIX systems (equivalent to -p -P)
+uu-pathchk, ,h,help, , ,102,Print help
+uu-pathchk, ,V,version, , ,103,Print version

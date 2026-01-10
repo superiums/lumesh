@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+enconv, ,c,auto-convert, , ,101,Equivalent to calling Enca as enconv
+enconv, ,g,guess, , ,102,Equivalent to calling Enca as enca
+enconv, ,d,details, , ,103,"It used to print a few pages of details about the guessing process, but since…"
+enconv, ,e,enca-name, , ,104,"Prints Enca's nice name of the charset, i. e"
+enconv, ,f,human-readable, , ,105,Prints verbal description of the detected charset and surfaces--something a h…
+enconv, ,i,iconv-name, , ,106,Prints how iconv(3) (and/or iconv(1)) calls the detected charset
+enconv, ,r,rfc1345-name, , ,107,Prints RFC\\~1345 charset name
+enconv, ,m,mime-name, , ,108,Prints preferred MIME name of detected charset
+enconv, ,s,cstocs-name, , ,109,Prints how cstocs(1) calls the detected charset
+enconv, ,n,name, , ,110,Prints charset (encoding) name selected by WORD (can be abbreviated as long a…
+enconv, ,x,convert-to, , ,111,Converts file to encoding ENC. sp The optional `
+enconv, ,L,language, , ,112,Sets language of input files to LANG
+enconv, ,C,try-converters, , ,113,Appends comma separated LIST to the list of converters that will be tried whe…
+enconv, ,E,external-converter-program, , ,114,Sets external converter program name to PATH
+enconv, ,p,with-filename, , ,115,Forces Enca to prefix each result with corresponding file name
+enconv, ,P,no-filename, , ,116,Forces Enca to not prefix results with file names
+enconv, ,V,verbose, , ,117,Increases verbosity level (each use increases it by one)
+enconv, ,h,help, , ,118,Prints brief usage help
+enconv, ,G,license, , ,119,"Prints full Enca license (through a pager, if possible)"
+enconv, ,l,list, , ,120,Prints list specified by WORD (can be abbreviated as long as it is unambiguou…

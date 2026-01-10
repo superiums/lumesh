@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ranlib, , ,help, , ,101,X Item '--help' . PD Show usage information for ranlib
+ranlib, , ,version, , ,102,X Item '--version' . PD Show the version number of ranlib
+ranlib, , ,enable-deterministic-archives, , ,103,"default.   It can be disabled with the -U option, described below"

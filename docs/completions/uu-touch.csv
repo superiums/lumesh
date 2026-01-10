@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-touch, ,d,date, , ,101,parse argument and use it instead of current time
+uu-touch, ,r,reference, ,@r,102,use this file's times instead of the current time
+uu-touch, , ,time,atime,@f @r,103,"change only the specified time: 'access', 'atime', or 'use' are equivalent to -a; 'modify' or 'mtime' are equivalent to -m"
+uu-touch, , ,help, , ,104,Print help information.
+uu-touch, ,c,no-create, , ,105,do not create any files
+uu-touch, ,h,no-dereference, , ,106,affect each symbolic link instead of any referenced file (only for systems that can change the timestamps of a symlink)
+uu-touch, ,V,version, , ,107,Print version

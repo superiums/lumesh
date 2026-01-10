@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+localectl, set-locale, , ,$locales, ,101, 
+localectl, , ,no-ask-password, , ,102,Don't ask for password
+localectl, , ,no-convert, , ,103,Don't convert keymap from console to X11 and vice-versa
+localectl, ,H,host, , ,104,Execute the operation on a remote host
+localectl, ,h,help, , ,105,Print a short help text and exit
+localectl, , ,version, , ,106,Print a short version string and exit
+localectl, , ,no-pager, , ,107,Do not pipe output into a pager

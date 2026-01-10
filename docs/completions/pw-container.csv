@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-container, ,P,properties, , ,101,Set extra context properties as a JSON object
+pw-container, ,r,remote, , ,102,The name the remote instance to connect to
+pw-container, ,h,help, , ,103,Show help
+pw-container, , ,version, , ,104,Show version information

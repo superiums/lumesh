@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fuser, ,a,all, , ,101,Show all files specified on the command line
+fuser, ,k,kill, , ,102,"Kill processes, accessing the file"
+fuser, ,l,list-signals, , ,103,List all known signal names
+fuser, ,m,mount, , ,104,All processes accessing files on that file system are listed
+fuser, ,M,ismountpoint, , ,105,Request will be fulfilled if -m specifies a mountpoint
+fuser, ,n,namespace, , ,106,Select a different namespace
+fuser, ,s,silent, , ,107,Silent operation
+fuser, ,u,user, , ,108,Append the user name of the process owner to each PID
+fuser, ,v,verbose, , ,109,Verbose mode
+fuser, ,4,ipv4, , ,110,Search only for IPv4 sockets
+fuser, ,6,ip64, , ,111,Search only for IPv6 sockets

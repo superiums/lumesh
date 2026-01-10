@@ -1,0 +1,26 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msguniq, ,D,directory, , ,101,add DIRECTORY to list for input files search 
+msguniq, ,o,output-file, , ,102,write output to specified file 
+msguniq, ,d,repeated, , ,103,print only duplicates
+msguniq, ,u,unique, , ,104,"print only unique messages, discard duplicates . SS 'Input file syntax:'"
+msguniq, ,P,properties-input, , ,105,input file is in Java . properties syntax
+msguniq, , ,stringtable-input, , ,106,input file is in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msguniq, ,t,to-code, , ,107,encoding for output
+msguniq, , ,use-first, , ,108,"use first available translation for each message, don't merge several transla…"
+msguniq, , ,color, , ,109,use colors and other text attributes always
+msguniq, , ,style, , ,110,specify CSS style rule file for --color
+msguniq, ,e,no-escape, , ,111,do not use C escapes in output (default)
+msguniq, ,E,escape, , ,112,"use C escapes in output, no extended chars"
+msguniq, , ,force-po, , ,113,write PO file even if empty
+msguniq, ,i,indent, , ,114,write the . po file using indented style
+msguniq, , ,no-location, , ,115,do not write '#: filename:line' lines
+msguniq, ,n,add-location, , ,116,generate '#: filename:line' lines (default)
+msguniq, , ,strict, , ,117,write out strict Uniforum conforming . po file
+msguniq, ,p,properties-output, , ,118,write out a Java . properties file
+msguniq, , ,stringtable-output, , ,119,write out a NeXTstep/GNUstep . strings file
+msguniq, ,w,width, , ,120,set output page width
+msguniq, , ,no-wrap, , ,121,"do not break long message lines, longer than the output page width, into seve…"
+msguniq, ,s,sort-output, , ,122,generate sorted output
+msguniq, ,F,sort-by-file, , ,123,sort output by file location . SS 'Informative output:'
+msguniq, ,h,help, , ,124,display this help and exit
+msguniq, ,V,version, , ,125,output version information and exit AUTHOR Written by Bruno Haible

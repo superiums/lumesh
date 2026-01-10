@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+readlink, ,f,canonicalize, , ,101,canonicalize by following every symlink in every component of the given name …
+readlink, ,e,canonicalize-existing, , ,102,canonicalize by following every symlink in every component of the given name …
+readlink, ,m,canonicalize-missing, , ,103,canonicalize by following every symlink in every component of the given name …
+readlink, ,n,no-newline, , ,104,"do not output the trailing delimiter . HP -q, --quiet"
+readlink, ,s,silent, , ,105,suppress most error messages (on by default)
+readlink, ,v,verbose, , ,106,report error messages
+readlink, ,z,zero, , ,107,"end each output line with NUL, not newline"
+readlink, , ,help, , ,108,display this help and exit
+readlink, ,q,quiet, , ,109, 
+readlink, , ,version, , ,110,output version information and exit AUTHOR Written by Dmitry V.  Levin

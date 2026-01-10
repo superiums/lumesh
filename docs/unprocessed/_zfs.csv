@@ -1,0 +1,197 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zfs, __fish_zfs_needs_command,?, ,?,@f,101,Display a help message
+zfs, __fish_zfs_needs_command, , ,create,@f,102,Create a volume or filesystem
+zfs, __fish_zfs_needs_command, , ,destroy,@f,103,Destroy a dataset
+zfs, __fish_zfs_needs_command, , ,snapshot snap,@f,104,Create a snapshot
+zfs, __fish_zfs_needs_command, , ,rollback,@f,105,Roll back a filesystem to a previous snapshot
+zfs, __fish_zfs_needs_command, , ,clone,@f,106,Create a clone of a snapshot
+zfs, __fish_zfs_needs_command, , ,promote,@f,107,Promotes a clone file system to no longer be dependent on its 'origin' snapshot
+zfs, __fish_zfs_needs_command, , ,rename,@f,108,Rename a dataset
+zfs, __fish_zfs_needs_command, , ,list,@f,109,List dataset properties
+zfs, __fish_zfs_needs_command, , ,set,@f,110,Set a dataset property
+zfs, __fish_zfs_needs_command, , ,get,@f,111,Get one or several dataset properties
+zfs, __fish_zfs_needs_command, , ,inherit,@f,112,Set a dataset property to be inherited
+zfs, __fish_zfs_needs_command, , ,upgrade,@f,113,"List upgradeable datasets, or upgrade one"
+zfs, __fish_zfs_needs_command, , ,userspace,@f,114,Get dataset space consumed by each user
+zfs, __fish_zfs_needs_command, , ,groupspace,@f,115,Get dataset space consumed by each user group
+zfs, __fish_zfs_needs_command, , ,mount,@f,116,Mount a filesystem
+zfs, __fish_zfs_needs_command, , ,unmount umount,@f,117,Unmount a filesystem
+zfs, __fish_zfs_needs_command, , ,share,@f,118,"Share a given filesystem, or all of them"
+zfs, __fish_zfs_needs_command, , ,unshare,@f,119,"Stop sharing a given filesystem, or all of them"
+zfs, __fish_zfs_needs_command, , ,bookmark,@f,120,Create a bookmark for a snapshot
+zfs, __fish_zfs_needs_command, , ,send,@f,121,Output a stream representation of a dataset
+zfs, __fish_zfs_needs_command, , ,receive recv,@f,122,Write on disk a dataset from the stream representation given on standard input
+zfs, __fish_zfs_needs_command, , ,allow,@f,123,"Delegate, or display delegations of, rights on a dataset to (groups of) users"
+zfs, __fish_zfs_needs_command, , ,unallow,@f,124,Revoke delegations of rights on a dataset from (groups of) users
+zfs, __fish_zfs_needs_command, , ,hold,@f,125,Put a named hold on a snapshot
+zfs, __fish_zfs_needs_command, , ,holds,@f,126,List holds on a snapshot
+zfs, __fish_zfs_needs_command, , ,release,@f,127,Remove a named hold from a snapshot
+zfs, __fish_zfs_needs_command, , ,diff,@f,128,"List changed files between a snapshot, and a filesystem or a previous snapshot"
+zfs, __fish_zfs_needs_command, , ,program,@f,129,Execute a ZFS Channel Program
+zfs, __fish_zfs_needs_command, , ,load-key,@f,130,Load encryption key for dataset
+zfs, __fish_zfs_needs_command, , ,unload-key,@f,131,Unload encryption key for dataset
+zfs, __fish_zfs_needs_command, , ,change-key,@f,132,Change wrapper encryption key for dataset
+zfs, __fish_zfs_using_command create,p, , ,@f,133,Create all needed non-existing parent datasets
+zfs, __fish_zfs_using_command create,o, , ,@f @r,134,Dataset property
+zfs, __fish_zfs_using_command create,o, , ,@f @r,135,Dataset property
+zfs, __fish_zfs_using_command create,V, , ,@f @r,136,Volume size
+zfs," __fish_zfs_using_command create; and __fish_contains_opt -s V",s, , ,@f,137,Create a sparse volume
+zfs," __fish_zfs_using_command create; and __fish_contains_opt -s V",b, , ,@f @r,138,Blocksize
+zfs, __fish_zfs_using_command create, , , ,@F @f @r,139, 
+zfs, __fish_zfs_using_command destroy,r, , ,@f,140,Recursively destroy children
+zfs, __fish_zfs_using_command destroy,R, , ,@f,141,Recursively destroy all dependents
+zfs, __fish_zfs_using_command destroy,f, , ,@f,142,Force unmounting
+zfs, __fish_zfs_using_command destroy,n, , ,@f,143,Dry run
+zfs, __fish_zfs_using_command destroy,p, , ,@f,144,Print machine-parsable verbose information
+zfs, __fish_zfs_using_command destroy,v, , ,@f,145,Verbose mode
+zfs, __fish_zfs_using_command destroy,d, , ,@f,146,Defer snapshot deletion
+zfs, __fish_zfs_using_command destroy, , , ,@F @f @r,147,Dataset to destroy
+zfs," __fish_zfs_using_command snapshot; or __fish_zfs_using_command snap",r, , ,@f,148,Recursively snapshot children
+zfs," __fish_zfs_using_command snapshot; or __fish_zfs_using_command snap",o, , ,@f @r,149,Snapshot property
+zfs," __fish_zfs_using_command snapshot; or __fish_zfs_using_command snap",o, , ,@f @r,150,Snapshot property
+zfs," __fish_zfs_using_command snapshot; or __fish_zfs_using_command snap", , , ,@F @f @r,151,Dataset to snapshot
+zfs, __fish_zfs_using_command rollback,r, , ,@f,152,Destroy later snapshot and bookmarks
+zfs, __fish_zfs_using_command rollback,R, , ,@f,153,"Recursively destroy later snapshot, bookmarks and clones"
+zfs," __fish_zfs_using_command rollback; and __fish_contains_opt -s R",f, , ,@f,154,Force unmounting of clones
+zfs, __fish_zfs_using_command rollback, , , ,@f @r,155,Snapshot to roll back to
+zfs, __fish_zfs_using_command clone,p, , ,@f,156,Create all needed non-existing parent datasets
+zfs, __fish_zfs_using_command clone,o, , ,@f @r,157,Clone property
+zfs, __fish_zfs_using_command clone,o, , ,@f @r,158,Clone property
+zfs, __fish_zfs_using_command clone, , , ,@f @r,159,Snapshot to clone
+zfs, __fish_zfs_using_command promote, , , ,@F @f @r,160,Clone to promote
+zfs, __fish_zfs_using_command rename,p, , ,@f,161,Create all needed non-existing parent datasets
+zfs, __fish_zfs_using_command rename,r, , ,@f,162,Recursively rename children snapshots
+zfs, __fish_zfs_using_command rename,f, , ,@f,163,Force unmounting if needed
+zfs, __fish_zfs_using_command rename,u, , ,@f,164,Do not remount filesystems during rename
+zfs, __fish_zfs_using_command rename, , , ,@F @f @r,165,Dataset to rename
+zfs, __fish_zfs_using_command list,H, , ,@f,166,Print output in a machine-parsable format
+zfs, __fish_zfs_using_command list,r, , ,@f,167,Operate recursively on datasets
+zfs," __fish_zfs_using_command list; and __fish_contains_opt -s r",d, , ,@f @r,168,Maximum recursion depth
+zfs, __fish_zfs_using_command list,o, , ,@f @r,169,Property to list
+zfs, __fish_zfs_using_command list,p, , ,@f,170,Print parsable (exact) values for numbers
+zfs," __fish_zfs_using_command list; and __fish_not_contain_opt -s S",s, , ,@f @r,171,Property to use for sorting output by ascending order
+zfs," __fish_zfs_using_command list; and __fish_not_contain_opt -s s",S, , ,@f @r,172,Property to use for sorting output by descending order
+zfs, __fish_zfs_using_command list,t, , ,@f @r,173,Dataset type
+zfs, __fish_zfs_using_command list, , , ,@F @f @r,174,Dataset whose properties to list
+zfs," __fish_zfs_using_command set; and __fish_is_nth_token 2", , , ,@f @r,175,Property to set
+zfs," __fish_zfs_using_command set; and __fish_is_nth_token 3", , , ,@F @f @r,176,Dataset whose property to set
+zfs," __fish_zfs_using_command set; and __fish_is_nth_token 2", , , ,@f @r,177, 
+zfs, __fish_zfs_using_command get,r, , ,@f,178,Operate recursively on datasets
+zfs," __fish_zfs_using_command get; and __fish_contains_opt -s r",d, , ,@f @r,179,Maximum recursion depth
+zfs, __fish_zfs_using_command get,H, , ,@f,180,Print output in a machine-parsable format
+zfs, __fish_zfs_using_command get,o, , ,@f @r,181,Fields to display
+zfs, __fish_zfs_using_command get,s, , ,@f @r,182,Property source to display
+zfs, __fish_zfs_using_command get,p, , ,@f,183,Print parsable (exact) values for numbers
+zfs, __fish_zfs_using_command get,t, , ,@f @r,184,Dataset type
+zfs, __fish_zfs_using_command get, , , ,@f @r,185,Property to get
+zfs, __fish_zfs_using_command get, , , ,@F @f @r,186,Dataset whose property to get
+zfs, __fish_zfs_using_command inherit,r, , ,@f,187,Operate recursively on datasets
+zfs, __fish_zfs_using_command inherit,S, , ,@f,188,Revert to the received value if available
+zfs, __fish_zfs_using_command inherit, , , ,@F @f @r,189,Dataset whose properties are to be inherited
+zfs," __fish_zfs_using_command upgrade; and __fish_not_contain_opt -s a -s r -s V",v, , ,@f,190,Verbose mode
+zfs," __fish_zfs_using_command upgrade; and __fish_not_contain_opt -s v",a, , ,@f,191,Upgrade all eligible filesystems
+zfs," __fish_zfs_using_command upgrade; and __fish_not_contain_opt -s v",r, , ,@f,192,Operate recursively on datasets
+zfs," __fish_zfs_using_command upgrade; and __fish_not_contain_opt -s v",V, , ,@f @r,193,Upgrade to the specified version
+zfs," __fish_zfs_using_command upgrade; and __fish_not_contain_opt -s a", , , ,@F @f @r,194,Filesystem to upgrade
+zfs, __fish_zfs_using_command userspace,n, , ,@f,195,Print UID instead of user name
+zfs, __fish_zfs_using_command groupspace,n, , ,@f,196,Print GID instead of group name
+zfs," __fish_zfs_using_command userspace; or __fish_zfs_using_command groupspace",H, , ,@f,197,Print output in a machine-parsable format
+zfs," __fish_zfs_using_command userspace; or __fish_zfs_using_command groupspace",p, , ,@f,198,Print parsable (exact) values for numbers
+zfs," __fish_zfs_using_command userspace; or __fish_zfs_using_command groupspace",o, , ,@f @r,199,Field to display
+zfs," __fish_zfs_using_command userspace; or __fish_zfs_using_command groupspace; and __fish_not_contain_opt -s S",s, ,__fish_zfs_list_space_fields,@f @r,200,Property to use for sorting output by ascending order
+zfs," __fish_zfs_using_command userspace; or __fish_zfs_using_command groupspace; and __fish_not_contain_opt -s s",S, ,__fish_zfs_list_space_fields,@f @r,201,Property to use for sorting output by descending order
+zfs, __fish_zfs_using_command userspace,t, , ,@f @r,202,Identity types to display
+zfs, __fish_zfs_using_command groupspace,t, , ,@f @r,203,Identity types to display
+zfs," __fish_zfs_using_command userspace; or __fish_zfs_using_command groupspace",i, , ,@f,204,Translate S(amba)ID to POSIX ID
+zfs," __fish_zfs_using_command userspace; or __fish_zfs_using_command groupspace", , , ,@F @f @r,205,Dataset whose space usage to get
+zfs, __fish_zfs_using_command mount,o, , ,@f @r,206,Temporary mount point property
+zfs, __fish_zfs_using_command mount,o, , ,@f @r,207,Temporary mount point property
+zfs, __fish_zfs_using_command mount,v, , ,@f,208,Report progress
+zfs, __fish_zfs_using_command mount,a, , ,@f,209,Mount all available ZFS filesystems
+zfs, __fish_zfs_using_command mount,O, , ,@f,210,Overlay mount
+zfs," __fish_zfs_using_command mount; and __fish_not_contain_opt -s a", , , ,@F @f @r,211,Filesystem to mount
+zfs," __fish_zfs_using_command unmount; or __fish_zfs_using_command umount",f, , ,@f,212,Force unmounting if needed
+zfs," __fish_zfs_using_command unmount; or __fish_zfs_using_command umount",a, , ,@f,213,Unmount all available ZFS filesystems
+zfs," __fish_zfs_using_command unmount; or __fish_zfs_using_command umount; and __fish_not_contain_opt -s a", , , ,@F @f @r,214,Filesystem to unmount
+zfs, __fish_zfs_using_command share,a, , ,@f,215,Share all eligible ZFS filesystems
+zfs," __fish_zfs_using_command share; and __fish_not_contain_opt -s a", , , ,@F @f @r,216,Filesystem to share
+zfs, __fish_zfs_using_command unshare,a, , ,@f,217,Unshare all shared ZFS filesystems
+zfs," __fish_zfs_using_command unshare; and __fish_not_contain_opt -s a", , , ,@F @f @r,218,Filesystem to unshare
+zfs, __fish_zfs_using_command bookmark, , , ,@f @r,219,Snapshot to bookmark
+zfs, __fish_zfs_using_command send,i, , ,@f @r,220,Generate incremental stream from snapshot
+zfs, __fish_zfs_using_command send,I, , ,@f @r,221,"Generate incremental stream from snapshot, even with intermediary snapshots"
+zfs, __fish_zfs_using_command send,R,replicate, ,@f,222,Include children in replication stream
+zfs, __fish_zfs_using_command send,D,dedup, ,@f,223,Generate a deduplicated stream
+zfs," __fish_zfs_using_command send; and __fish_is_zfs_feature_enabled 'feature@large_blocks'",L,large-block, ,@f,224,Allow the presence of larger blocks than 128 kiB
+zfs," __fish_zfs_using_command send; and __fish_is_zfs_feature_enabled 'feature@embedded_data'",e,embed, ,@f,225,Generate a more compact stream by using WRITE_EMBEDDED records
+zfs, __fish_zfs_using_command send,P,parsable, ,@f,226,Print verbose information about the stream in a machine-parsable format
+zfs, __fish_zfs_using_command send,c,compressed, ,@f,227,Generate compressed stream
+zfs, __fish_zfs_using_command send,n,dryrun, ,@f,228,Dry run
+zfs," __fish_zfs_using_command send; and __fish_not_contain_opt -s R",p,props, ,@f,229,Include dataset properties
+zfs, __fish_zfs_using_command send,v,verbose, ,@f,230,Print verbose information about the stream
+zfs, __fish_zfs_using_command send,R, , ,@f,231,Include children in replication stream
+zfs, __fish_zfs_using_command send,D, , ,@f,232,Generate a deduplicated stream
+zfs," __fish_zfs_using_command send; and __fish_is_zfs_feature_enabled 'feature@large_blocks'",L, , ,@f,233,Allow the presence of larger blocks than 128 kiB
+zfs," __fish_zfs_using_command send; and __fish_is_zfs_feature_enabled 'feature@embedded_data'",e, , ,@f,234,Generate a more compact stream by using WRITE_EMBEDDED records
+zfs, __fish_zfs_using_command send,P, , ,@f,235,Print verbose information about the stream in a machine-parsable format
+zfs, __fish_zfs_using_command send,n, , ,@f,236,Dry run
+zfs," __fish_zfs_using_command send; and __fish_not_contain_opt -s R",p, , ,@f,237,Include dataset properties
+zfs, __fish_zfs_using_command send,v, , ,@f,238,Print verbose information about the stream
+zfs, __fish_zfs_using_command send, , , ,@f @r,239,Dataset to send
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv",v, , ,@f,240,Print verbose information about the stream and the time spent processing it
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv",n, , ,@f,241,Dry run: do not actually receive the stream
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv",F, , ,@f,242,Force rollback to the most recent snapshot
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv",u, , ,@f,243,Unmount the target filesystem
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv; and __fish_not_contain_opt -s e",d, , ,@f,244,Discard the first element of the path of the sent snapshot
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv; and __fish_not_contain_opt -s d",e, , ,@f,245,Discard all but the last element of the path of the sent snapshot
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv",o, ,origin,@f @r,246,Force the stream to be received as a clone of the given snapshot
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv",s, , ,@f,247,"On transfer interruption, store a receive_resume_token for resumption"
+zfs," __fish_zfs_using_command receive; or __fish_zfs_using_command recv", , , ,@F @f @r,248,Dataset to receive
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s d",l, , ,@f,249,Delegate permissions only on the specified dataset
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s l",d, , ,@f,250,Delegate permissions only on the descendents dataset
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s e",u, , ,@f @r,251,User to delegate permissions to
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s e",g, , ,@f @r,252,Group to delegate permissions to
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s u -s g -s e", , ,everyone,@f,253,Delegate permission to everyone
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s u -s g everyone",e, , ,@f @r,254,Delegate permission to everyone
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s l -s d -s e -s g -s u -s s",c, , ,@f @r,255,Delegate permissions only to the creator of later descendent datasets
+zfs," __fish_zfs_using_command allow; and __fish_not_contain_opt -s l -s d -s e -s g -s u -s c",s, , ,@f @r,256,Create a permission set or add permissions to an existing one
+zfs, __fish_zfs_using_command allow, , , ,@F @f @r,257,Dataset on which delegation is to be applied
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s d",l, , ,@f,258,Remove permissions only on the specified dataset
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s l",d, , ,@f,259,Remove permissions only on the descendents dataset
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s e",u, , ,@f @r,260,User to remove permissions from
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s e",g, , ,@f @r,261,Group to remove permissions from
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s u -s g everyone",e, , ,@f @r,262,Remove permission from everyone
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s l -s d -s e -s g -s u -s s",c, , ,@f @r,263,Remove permissions only on later created descendent datasets
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s l -s d -s e -s g -s u -s c",s, , ,@f @r,264,Remove a permission set or remove permissions from an existing one
+zfs, __fish_zfs_using_command unallow,r, , ,@f,265,Remove permissions recursively
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s u -s g -s e", , ,everyone,@f,266,Remove permission from everyone
+zfs," __fish_zfs_using_command unallow; and __fish_not_contain_opt -s u -s g -s e", , ,everyone,@f,267,Remove permission from everyone
+zfs, __fish_zfs_using_command unallow, , , ,@F @f @r,268,Dataset on which delegation is to be removed
+zfs, __fish_zfs_using_command hold,r, , ,@f,269,Apply hold recursively
+zfs, __fish_zfs_using_command hold, , , ,@f @r,270,Snapshot on which hold is to be applied
+zfs, __fish_zfs_using_command holds,r, , ,@f,271,List holds recursively
+zfs, __fish_zfs_using_command holds, , , ,@f @r,272,Snapshot whose holds are to be listed
+zfs, __fish_zfs_using_command release,r, , ,@f,273,Release hold recursively
+zfs, __fish_zfs_using_command release, , , ,@f @r,274,Snapshot from which hold is to be removed
+zfs, __fish_zfs_using_command diff,F, , ,@f,275,Display file type (à la ls -F)
+zfs, __fish_zfs_using_command diff,H, , ,@f,276,Print output in a machine-parsable format
+zfs, __fish_zfs_using_command diff,t, , ,@f,277,Display inode change time
+zfs, __fish_zfs_using_command diff, , , ,@f @r,278,Source snapshot for the diff
+zfs, __fish_zfs_using_command program,t, , ,@f @r,279,Execution timeout
+zfs, __fish_zfs_using_command program,t, , ,@f @r,280,Execution memory limit
+zfs, __fish_zfs_using_command program, , , ,@f @r,281,Pool program will be executed on
+zfs, __fish_zfs_using_command load-key,n, , ,@f,282,"Dry run; checks but doesn't load"
+zfs, __fish_zfs_using_command load-key,r, , ,@f,283,Recursively load key for child datasets
+zfs, __fish_zfs_using_command load-key,a, , ,@f,284,Load keys for all imported pools
+zfs, __fish_zfs_using_command load-key, , , ,@F,285,Dataset to load key for
+zfs, __fish_zfs_using_command unload-key,r, , ,@f,286,Recursively unload key for child datasets
+zfs, __fish_zfs_using_command unload-key,a, , ,@f,287,Unload keys for all imported pools
+zfs, __fish_zfs_using_command unload-key, , , ,@F,288,Dataset to unload key for
+zfs, __fish_zfs_using_command change-key,l, , ,@f,289,Ensure key is loaded before changing key
+zfs, __fish_zfs_using_command change-key,i, , ,@f,290,Inherit key from its parent
+zfs, __fish_zfs_using_command change-key,o, ,keylocation=file:///,@f,291,Absolute path to key
+zfs, __fish_zfs_using_command change-key,o, ,keylocation=prompt,@f,292,Obtain key from stdin
+zfs, __fish_zfs_using_command change-key,o, ,keyformat=hex keyformat=raw keyformat=passphrase,@f,293, 
+zfs, __fish_zfs_using_command change-key,o, ,keyformat=hex keyformat=raw keyformat=passphrase,@f,294, 
+zfs, __fish_zfs_using_command change-key,o, ,pbkdf2iters=,@f,295,Specify PBKDF2 iteration count
+zfs, __fish_zfs_using_command change-key, , , ,@F @f,296,Dataset to change wrapper key for

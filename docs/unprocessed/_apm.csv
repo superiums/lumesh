@@ -1,0 +1,91 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apm, __fish_apm_needs_command,h,help, ,@f,101,Display help
+apm, __fish_apm_needs_command, , ,help,@f,102,Display help
+apm, __fish_apm_using_command clean config dedupe deinstall delete dev develop docs erase featured home init install link linked links list ln lns login ls open outdated publish rebuild rebuild-module-cache remove rm search show star starred stars test uninstall unlink unpublish unstar update upgrade view,h,help, ,@f,103,Display help
+apm, __fish_apm_needs_command,v,version, ,@f,104,Display version
+apm, __fish_apm_needs_command, ,color, ,@f,105,Enable colored output
+apm, __fish_apm_needs_command, ,no-color, ,@f,106,Disable colored output
+apm, __fish_apm_needs_command, , ,clean,@f,107,'Deletes
+apm, __fish_apm_needs_command, , ,config,@f,108,Modify or list configuration items
+apm," __fish_apm_using_command config; and __fish_apm_includes_subcommand $config_subcommands", , ,set,@f @r,109,Set config item
+apm," __fish_apm_using_command config; and __fish_apm_includes_subcommand $config_subcommands", , ,get,@f @r,110,Get config item
+apm," __fish_apm_using_command config; and __fish_apm_includes_subcommand $config_subcommands", , ,delete,@f @r,111,Delete config item
+apm," __fish_apm_using_command config; and __fish_apm_includes_subcommand $config_subcommands", , ,list,@f @r,112,List config items
+apm," __fish_apm_using_command config; and __fish_apm_includes_subcommand $config_subcommands", , ,edit,@f @r,113,Edit config items
+apm," __fish_apm_using_command config set get delete; and __fish_apm_includes_subcommand set get delete", , , ,@f @r,114, 
+apm, __fish_apm_needs_command, , ,dedupe,@f,115,Reduce duplication in node_modules in current directory
+apm, __fish_apm_needs_command, , ,$uninstall_commands,@f,116,Delete installed package(s) from ~/.atom/packages
+apm, __fish_apm_using_command $uninstall_commands, , , ,@f,117, 
+apm, __fish_apm_using_command $uninstall_commands, ,hard, ,@f,118,Unlink package from ~/.atom/packages and ~/.atom/dev/packages
+apm, __fish_apm_using_command $uninstall_commands,d,dev, ,@f,119,Unlink package from ~/.atom/dev/packages
+apm, __fish_apm_needs_command, , ,$dev_commands,@f,120,Clone install dependencies and link a package for development
+apm, __fish_apm_using_command $dev_commands, , , ,@f,121, 
+apm, __fish_apm_needs_command, , ,$open_commands,@f,122,Open a package's homepage in the default browser
+apm, __fish_apm_using_command $open_commands,p,print, ,@f,123,Print URL instead of opening
+apm, __fish_apm_using_command $open_commands, , , ,@f,124, 
+apm, __fish_apm_needs_command, , ,featured,@f,125,'List
+apm, __fish_apm_using_command featured, ,json, ,@f,126,Output featured packages as JSON array
+apm, __fish_apm_using_command featured,t,themes, ,@f,127,Only list themes
+apm, __fish_apm_using_command featured,c,compatible, ,@f @r,128,Only list packages/themes compatible with specified Atom version
+apm, __fish_apm_needs_command, , ,init,@f,129,Generates code scaffolding for theme or package
+apm, __fish_apm_using_command init, ,template, ,@r,130,Path to the package or theme template
+apm, __fish_apm_using_command init,p,package, ,@f @r,131,Generates a basic package
+apm, __fish_apm_using_command init,t,theme, ,@f @r,132,Generates a basic theme
+apm, __fish_apm_using_command init,l,language, ,@f @r,133,Generates a basic language package
+apm, __fish_apm_using_command init,c,convert, ,@r,134,Convert TextMate bundle/theme
+apm, __fish_apm_needs_command, , ,install,@f,135,Install Atom package to ~/.atom/packages/<package_name>
+apm, __fish_apm_using_command install, ,check, ,@f,136,Check native build tools are installed
+apm, __fish_apm_using_command install, ,verbose, ,@f,137,Show verbose debug information
+apm, __fish_apm_using_command install, ,packages-file, ,@r,138,Specify text file containing packages to install
+apm, __fish_apm_using_command install, ,production, ,@f,139,Do not install dev dependencies
+apm, __fish_apm_using_command install,c,compatible, ,@f @r,140,Only install packages/themes compatible with specified Atom version
+apm, __fish_apm_using_command install,s,silent, ,@f,141,Set npm log level to silent
+apm, __fish_apm_using_command install,q,quiet, ,@f,142,Set npm log level to quiet
+apm, __fish_apm_needs_command, , ,$link_commands,@f,143,Create a symlink for the package in ~/.atom/packages
+apm, __fish_apm_using_command $link_commands,d,dev, ,@f,144,Link to ~/.atom/dev/packages
+apm, __fish_apm_needs_command, , ,$linked_commands,@f,145,'List
+apm, __fish_apm_needs_command, , ,$list_commands,@f,146,List all installed and bundled packages
+apm, __fish_apm_using_command $list_commands,b,bare, ,@f,147,Print packages one per line with no formatting
+apm, __fish_apm_using_command $list_commands,d,dev, ,@f,148,Include dev packages
+apm, __fish_apm_using_command $list_commands,i,installed, ,@f,149,Only list installed packages/themes
+apm, __fish_apm_using_command $list_commands,j,json, ,@f,150,Output all packages as a JSON object
+apm, __fish_apm_using_command $list_commands,l,links, ,@f,151,Include linked packages
+apm, __fish_apm_using_command $list_commands,t,themes, ,@f,152,Only list themes
+apm, __fish_apm_using_command $list_commands,p,packages, ,@f,153,Only list packages
+apm, __fish_apm_needs_command, , ,login,@f,154,Save Atom API token to keychain
+apm, __fish_apm_using_command login, ,token, ,@f @r,155,Specify API token
+apm, __fish_apm_needs_command, , ,$upgrade_commands,@f,156,Upgrade out of date packages
+apm, __fish_apm_using_command $upgrade_commands, ,json, ,@f,157,Output outdated packages as JSON array
+apm, __fish_apm_using_command $upgrade_commands, ,compatible, ,@f @r,158,Only install packages/themes compatible with specified Atom version
+apm, __fish_apm_using_command $upgrade_commands, ,verbose, ,@f,159,Show verbose debug information
+apm, __fish_apm_using_command $upgrade_commands,c,confirm, ,@f,160,Confirm before installing updates
+apm, __fish_apm_using_command $upgrade_commands,l,list, ,@f,161,List but don't install the outdated packages
+apm, __fish_apm_needs_command, , ,publish,@f,162,Publish new version of package in current working directory
+apm," __fish_apm_using_command publish; and __fish_apm_includes_subcommand $publish_subcommands", , ,$publish_subcommands,@f,163,Semantic version category for new version
+apm, __fish_apm_using_command publish,t,tag, ,@f @r,164,Specify a tag to publish
+apm, __fish_apm_using_command publish,r,rename, ,@f @r,165,Specify a new name for the package
+apm, __fish_apm_needs_command, , ,rebuild,@f,166,Rebuild modules installed in node_modules in current working directory
+apm, __fish_apm_needs_command, , ,rebuild-module-cache,@f,167,Rebuild module cache for installed packages
+apm, __fish_apm_needs_command, , ,search,@f,168,Search for Atom packages/themes in the atom.io registry
+apm, __fish_apm_using_command search, ,json, ,@f,169,Output matching packages as JSON array
+apm, __fish_apm_using_command search,p,packages, ,@f,170,Search only non-theme packages
+apm, __fish_apm_using_command search,t,themes, ,@f,171,Search only themes
+apm, __fish_apm_needs_command, , ,$show_commands,@f,172,View information about package/theme in the atom.io registry
+apm, __fish_apm_using_command $show_commands, ,json, ,@f,173,Output as JSON array
+apm, __fish_apm_using_command $show_commands, ,compatible, ,@f @r,174,Show latest version compatible with specified Atom version
+apm, __fish_apm_needs_command, , ,star,@f,175,Star the given packages on https://atom.io
+apm, __fish_apm_using_command star, ,installed, ,@f,176,Star all packages in ~/.atom/packages
+apm, __fish_apm_needs_command, , ,$stars_commands,@f,177,List or install starred Atom packages and themes
+apm, __fish_apm_using_command $stars_commands, ,json, ,@f,178,Output packages as JSON array
+apm, __fish_apm_using_command $stars_commands,i,install, ,@f,179,Install the starred packages
+apm, __fish_apm_using_command $stars_commands,t,themes, ,@f,180,Only list themes
+apm, __fish_apm_using_command $stars_commands,u,user, ,@f @r,181,GitHub username to show starred packages for
+apm, __fish_apm_needs_command, , ,test,@f,182,Runs the package's tests contained within the spec directory
+apm, __fish_apm_using_command test,p,path, ,@r,183,Path to atom command
+apm, __fish_apm_needs_command, , ,unlink,@f,184,Delete the symlink in ~/.atom/packages for the package
+apm, __fish_apm_using_command unlink, ,hard, ,@f,185,Unlink package from ~/.atom/packages and ~/.atom/dev/packages
+apm, __fish_apm_using_command unlink,d,dev, ,@f,186,Unlink package from ~/.atom/dev/packages
+apm, __fish_apm_using_command unlink,a,all, ,@f,187,Unlink all packages in ~/.atom/packages and ~/.atom/dev/packages
+apm, __fish_apm_needs_command, , ,unpublish,@f,188,Remove published package or version from the atom.io registry
+apm, __fish_apm_using_command unpublish,f,force, ,@f,189,Do not prompt for confirmation
+apm, __fish_apm_needs_command, , ,unstar,@f,190,Unstar given packages on https://atom.io

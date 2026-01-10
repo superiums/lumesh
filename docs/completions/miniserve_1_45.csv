@@ -1,0 +1,43 @@
+cmd,conds,short,long,params,dirs,pri,desc
+miniserve, ,v,verbose, , ,101,"Be verbose, includes emitting access logs "
+miniserve, , ,index, , ,102,"The name of a directory index file to serve, like 'index"
+miniserve, , ,spa, , ,103,Activate SPA (Single Page Application) mode  This will cause the file given b…
+miniserve, , ,pretty-urls, , ,104,Activate Pretty URLs mode  This will cause the server to serve the equivalent…
+miniserve, ,p,port, , ,105,Port to use 
+miniserve, ,i,interfaces, , ,106,Interface to listen on 
+miniserve, ,a,auth, , ,107,"Set authentication  Currently supported formats: username:password, username:…"
+miniserve, , ,auth-file, , ,108,Read authentication values from a file  Example file content:  joe:123 bob:sh…
+miniserve, , ,route-prefix, , ,109,Use a specific route prefix 
+miniserve, , ,random-route, , ,110,Generate a random 6-hexdigit route 
+miniserve, ,P,no-symlinks, , ,111,Hide symlinks in listing and prevent them from being followed 
+miniserve, ,H,hidden, , ,112,Show hidden files 
+miniserve, ,S,default-sorting-method, , ,113,Default sorting method for file list . br  . br Possible values: . RS 14
+miniserve, ,O,default-sorting-order, , ,114,Default sorting order for file list . br  . br Possible values: . RS 14
+miniserve, ,c,color-scheme, , ,115,Default color scheme . br  
+miniserve, ,d,color-scheme-dark, , ,116,Default color scheme . br  
+miniserve, ,q,qrcode, , ,117,Enable QR code display 
+miniserve, ,u,upload-files, , ,118,Enable file uploading (and optionally specify for which directory)  The provi…
+miniserve, ,U,mkdir, , ,119,Enable creating directories 
+miniserve, ,m,media-type, , ,120,Specify uploadable media types . br  
+miniserve, ,M,raw-media-type, , ,121,Directly specify the uploadable media type expression 
+miniserve, ,o,overwrite-files, , ,122,Enable overriding existing files during file upload 
+miniserve, ,r,enable-tar, , ,123,Enable uncompressed tar archive generation 
+miniserve, ,g,enable-tar-gz, , ,124,Enable gz-compressed tar archive generation 
+miniserve, ,z,enable-zip, , ,125,Enable zip archive generation  WARNING: Zipping large directories can result …
+miniserve, ,C,compress-response, , ,126,Compress response  WARNING: Enabling this option may slow down transfers due …
+miniserve, ,D,dirs-first, , ,127,List directories first 
+miniserve, ,t,title, , ,128,Shown instead of host in page title and heading 
+miniserve, , ,header, , ,129,Inserts custom headers into the responses
+miniserve, ,l,show-symlink-info, , ,130,Visualize symlinks in directory listing 
+miniserve, ,F,hide-version-footer, , ,131,Hide version footer 
+miniserve, , ,hide-theme-selector, , ,132,Hide theme selector 
+miniserve, ,W,show-wget-footer, , ,133,"If enabled, display a wget command to recursively download the current direct…"
+miniserve, , ,print-completions, , ,134,Generate completion file for a shell . br  
+miniserve, , ,print-manpage, , ,135,Generate man page
+miniserve, , ,tls-cert, , ,136,TLS certificate to use 
+miniserve, , ,tls-key, , ,137,TLS private key to use 
+miniserve, , ,readme, , ,138,Enable README. md rendering in directories 
+miniserve, ,I,disable-indexing, , ,139,Disable indexing  This will prevent directory listings from being generated a…
+miniserve, , ,enable-webdav, , ,140,Enable read-only WebDAV support (PROPFIND requests)  Currently incompatible w…
+miniserve, ,h,help, , ,141,Print help (see a summary with \\*(Aq-h\\*(Aq)
+miniserve, ,V,version, , ,142,Print version

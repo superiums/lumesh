@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+watch, ,b,beep, , ,101,Beep if command has a non-zero exit
+watch, ,c,color, , ,102,Interpret ANSI color sequences
+watch, ,d,differences, , ,103,Highlight changes between updates
+watch, ,d,differences=permanent, , ,104,Highlight changes between updates
+watch, ,e,errexit, , ,105,Exit if command has a non-zero exit
+watch, ,g,chgexit, , ,106,Exit when output from command changes
+watch, ,n,interval, , ,107,Seconds to wait between updates
+watch, ,p,precise, , ,108,Attempt run command in precise intervals
+watch, ,t,no-title, , ,109,Turn off header
+watch, ,x,exec, , ,110,Pass command to exec instead of 'sh -c'
+watch, ,h,help, , ,111,Display this help and exit
+watch, ,v,version, , ,112,Output version information and exit

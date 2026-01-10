@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rmmod, , , , ,@f @r,101, 
+rmmod, ,h,help, , ,102,Prints the help text
+rmmod, ,s,syslog, , ,103,Send errors to syslog instead of standard error
+rmmod, ,v,verbose, , ,104,Print messages about what the program is doing
+rmmod, ,V,version, , ,105,Show version of program and exit
+rmmod, ,f,force, , ,106,"remove being used, unsafe or not-for-removal modules"

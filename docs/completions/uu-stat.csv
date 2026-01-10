@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-stat, ,c,format, , ,101,"use the specified FORMAT instead of the default; output a newline after each use of FORMAT"
+uu-stat, , ,printf, , ,102,"like --format, but interpret backslash escapes, and do not output a mandatory trailing newline; if you want a newline, include \\n in FORMAT"
+uu-stat, ,L,dereference, , ,103,follow links
+uu-stat, ,f,file-system, , ,104,display file system status instead of file status
+uu-stat, ,t,terse, , ,105,print the information in terse form
+uu-stat, ,h,help, , ,106,Print help
+uu-stat, ,V,version, , ,107,Print version

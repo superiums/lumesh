@@ -1,0 +1,64 @@
+cmd,conds,short,long,params,dirs,pri,desc
+port, $subcommands, , , ,@f,101,Package
+port, __fish_use_subcommand, , ,activate,@f,102,Set  version of a port to active
+port, __fish_use_subcommand, , ,archive,@f,103,Create image for port without installing
+port, __fish_use_subcommand, , ,build,@f,104,Run build phase of a port
+port, __fish_use_subcommand, , ,cat,@f,105,Print the Portfile of the given port(s)
+port, __fish_use_subcommand, , ,cd,@f,106,Change directory to that containing portname
+port, __fish_use_subcommand, , ,checksum,@f,107,Compute checksums of distribution files
+port, __fish_use_subcommand, , ,clean,@f,108,Remove temporary files used to build a port
+port, __fish_use_subcommand, , ,configure,@f,109,Run configure phase of a port
+port, __fish_use_subcommand, , ,contents,@f,110,List the files installed by a given port
+port, __fish_use_subcommand, , ,deactivate,@f,111,Set the status of a port to inactive
+port, __fish_use_subcommand, , ,dependents,@f,112,List ports that depend on a given port
+port, __fish_use_subcommand, , ,deps,@f,113,Display a dependency listing for given port(s)
+port, __fish_use_subcommand, , ,destroot,@f,114,Run destroot phase of a port
+port, __fish_use_subcommand, , ,dir,@f,115,print directory with Portfile for port expression
+port, __fish_use_subcommand, , ,distcheck,@f,116,Check if port can be fetched from all mirrors
+port, __fish_use_subcommand, , ,dmg,@f,117,Create binary archives of a port
+port, __fish_use_subcommand, , ,echo,@f,118,Print the list of ports the argument expands to
+port, __fish_use_subcommand, , ,edit,@f,119,Open the Portfile in an editor
+port, __fish_use_subcommand, , ,extract,@f,120,Run extract phase of a port
+port, __fish_use_subcommand, , ,fetch,@f,121,Run fetch phase of a port
+port, __fish_use_subcommand, , ,file,@f,122,Display the path to the Portfile for portname
+port, __fish_use_subcommand, , ,help,@f,123,Get help on MacPorts commands
+port, __fish_use_subcommand, , ,gohome,@f,124,Load home page for given portname in web browser
+port, __fish_use_subcommand, , ,info,@f,125,Return information about the given ports
+port, __fish_use_subcommand, , ,install,@f,126,Install a new port
+port, __fish_use_subcommand, , ,installed,@f,127,List installed versions (of port)
+port, __fish_use_subcommand, , ,lint,@f,128,Verifies Portfile for portname
+port, __fish_use_subcommand, , ,list,@f,129,List latest available version for given ports
+port, __fish_use_subcommand, , ,livecheck,@f,130,Check if new version of software is available
+port, __fish_use_subcommand, , ,location,@f,131,Print location of archive used for (de)activation
+port, __fish_use_subcommand, , ,load,@f,132,load a port's daemon
+port, __fish_use_subcommand, , ,log,@f,133,Parse and show log files for portname
+port, __fish_use_subcommand, , ,logfile,@f,134,Display the path to the log file for portname
+port, __fish_use_subcommand, , ,mirror,@f,135,Create/update local mirror of distfiles
+port, __fish_use_subcommand, , ,mdmg,@f,136,Create disk image of portname and dependencies
+port, __fish_use_subcommand, , ,mpkg,@f,137,Create binary archives of a port
+port, __fish_use_subcommand, , ,notes,@f,138,Displays notes for portname
+port, __fish_use_subcommand, , ,outdated,@f,139,List outdated ports
+port, __fish_use_subcommand, , ,patch,@f,140,Run patch phase of a port
+port, __fish_use_subcommand, , ,pkg,@f,141,Create binary archives of a port
+port, __fish_use_subcommand, , ,provides,@f,142,Find the port that installed a file
+port, __fish_use_subcommand, , ,rdependents,@f,143,Recursively list ports depending on given port
+port, __fish_use_subcommand, , ,rdeps,@f,144,Display a recursive dependency listing of port(s)
+port, __fish_use_subcommand, , ,reload,@f,145,reload a port's daemon
+port, __fish_use_subcommand, , ,rev-upgrade,@f,146,Rebuild ports containing broken binaries
+port, __fish_use_subcommand, , ,search,@f,147,Search for a port using keywords
+port, __fish_use_subcommand, , ,select,@f,148,Selects a version to be the default
+port, __fish_use_subcommand, , ,selfupdate,@f,149,Upgrade MacPorts and update list of ports
+port, __fish_use_subcommand, , ,setrequested,@f,150,Mark portname as requested
+port, __fish_use_subcommand, , ,setunrequested,@f,151,Mark portname as unrequested
+port, __fish_use_subcommand, , ,sync,@f,152,Update the port definition files
+port, __fish_use_subcommand, , ,test,@f,153,Run test phase of a port
+port, __fish_use_subcommand, , ,unarchive,@f,154,Extract destroot of given ports from archive
+port, __fish_use_subcommand, , ,uninstall,@f,155,Remove a previously installed port
+port, __fish_use_subcommand, , ,unload,@f,156,Unload a port's daemon
+port, __fish_use_subcommand, , ,unsetrequested,@f,157,Mark portname as unrequested
+port, __fish_use_subcommand, , ,upgrade,@f,158,Upgrade a port to the latest version
+port, __fish_use_subcommand, , ,url,@f,159,Display URL for path of given portname
+port, __fish_use_subcommand, , ,usage,@f,160,Displays a condensed usage summary
+port, __fish_use_subcommand, , ,variants,@f,161,Print list of variants with descriptions
+port, __fish_use_subcommand, , ,version,@f,162,Print the MacPorts version
+port, __fish_use_subcommand, , ,work,@f,163,Displays path to work directory for portname

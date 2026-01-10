@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+portmaster, , ,force-config, , ,101,run 'make config' for all ports (overrides -G).
+portmaster, , ,no-confirm, , ,102,do not ask the user to confirm the list of port… [See Man Page]
+portmaster, , ,no-term-title, , ,103,do not update the xterm title bar.
+portmaster, , ,no-index-fetch, , ,104,skip fetching the INDEX file.
+portmaster, , ,index, , ,105,use INDEX-[7-9] exclusively to check if a port is up to date.
+portmaster, , ,index-first, , ,106,"use the INDEX for status, but double-check with the port."
+portmaster, , ,index-only, , ,107,do not try to use /usr/ports.
+portmaster, , ,delete-build-only, , ,108,delete ports that are build-only dependencies a… [See Man Page]
+portmaster, , ,update-if-newer, , ,109,(only for multiple ports listed on the command … [See Man Page]
+portmaster, ,P,packages, , ,110,"use packages, but build port if not available."
+portmaster, , ,packages-only, , ,111,fail if no package is available.
+portmaster, , ,packages-build, , ,112,use packages for all build dependencies.
+portmaster, , ,packages-if-newer, , ,113,use package if newer than installed even if the… [See Man Page]
+portmaster, , ,always-fetch, , ,114,fetch package even if it already exists locally.
+portmaster, , ,local-packagedir, , ,115,"where local packages can be found, will fall ba… [See Man Page]"
+portmaster, , ,packages-local, , ,116,use packages from -local-packagedir only.
+portmaster, , ,delete-packages, , ,117,"after installing from a package, delete it El P… [See Man Page]"
+portmaster, , ,show-work, , ,118,"show what dependent ports are, and are not inst… [See Man Page]"
+portmaster, , ,list-origins, , ,119,list directories from /usr/ports for root and leaf ports.
+portmaster, ,h,help, , ,120,display help message.
+portmaster, , ,version, , ,121,display the version number El ENVIRONMENT The d… [See Man Page]
+portmaster, , , ,,@f,122,Ports Directory
+portmaster, , , , ,@f,123,Installed package

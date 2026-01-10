@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setfacl, ,b,remove-all, , ,101,Remove all extended ACL entries
+setfacl, ,k,remove-default, , ,102,"Remove the Default ACL.  If no Default ACL exists, no warnings are issued"
+setfacl, ,n,no-mask, , ,103,Do not recalculate the effective rights mask
+setfacl, , ,mask, , ,104,"Do recalculate the effective rights mask, even if an ACL mask entry was expli…"
+setfacl, ,d,default, , ,105,All operations apply to the Default ACL
+setfacl, , ,restore, , ,106,Restore a permission backup created by `getfacl -R' or similar
+setfacl, , ,test, , ,107,Test mode
+setfacl, ,R,recursive, , ,108,Apply operations to all files and directories recursively
+setfacl, ,L,logical, , ,109,"Logical walk, follow symbolic links to directories"
+setfacl, ,P,physical, , ,110,"Physical walk, do not follow symbolic links to directories"
+setfacl, ,v,version, , ,111,Print the version of setfacl and exit
+setfacl, ,h,help, , ,112,Print help explaining the command line options
+setfacl, , ,set-file, , ,113,options set the ACL of a file or a directory.  The previous ACL is replaced
+setfacl, , ,modify-file, , ,114,options modify the ACL of a file or directory
+setfacl, , ,remove-file, , ,115,options remove ACL entries

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gapplication, __fish_use_subcommand, , ,help,@f,101,Print help
+gapplication, __fish_use_subcommand, , ,version,@f,102,Print version
+gapplication, __fish_use_subcommand, , ,list-apps,@f,103,List applications
+gapplication, __fish_use_subcommand, , ,launch,@f,104,Launch an application
+gapplication, __fish_use_subcommand, , ,list-actions,@f,105,List available actions
+gapplication, __fish_use_subcommand, , ,action,@f,106,Activate an action

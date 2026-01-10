@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+web-ext, ,h,help, , ,101,Show help
+web-ext, , ,version, , ,102,Show version
+web-ext, , , ,build, ,103,Create the extension package from source
+web-ext, , , ,dump-config, ,104,Run the config discovery and dump the resulting config data as JSON
+web-ext, , , ,sign, ,105,Sign the extension so it can be installed in Firefox
+web-ext, , , ,run, ,106,Run the extension
+web-ext, , , ,lint, ,107,Validate the extension source
+web-ext, , , ,docs, ,108,Show help in the browser
+web-ext, ,s,source-dir, , ,109,Set the extension source directory
+web-ext, ,a,artifacts-dir, , ,110,Set the directory where artifacts will be saved
+web-ext, ,v,verbose, , ,111,Show verbose output
+web-ext, ,i,ignore-files, , ,112,List glob patterns to define which files should be ignored
+web-ext, , ,no-input, , ,113,Disable all features that require standard input
+web-ext, ,c,config, , ,114,Set the path to a CommonJS config file to set option defaults
+web-ext, , ,config-discovery, , ,115,Discover the config files in home directory and working directory

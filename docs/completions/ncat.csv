@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ncat, , , , ,@f,101, 
+ncat, ,U,unixsock, , ,102,Use Unix domain sockets
+ncat, ,u,udp, , ,103,Use UDP
+ncat, , ,sctp, , ,104,Use SCTP
+ncat, , ,vsock, , ,105,Use AF_VSOCK sockets
+ncat, ,g, , ,@f @r,106,Loose source routing
+ncat, ,G, , ,@f @r,107,Set source routing pointer
+ncat, ,p,source-port, ,@f @r,108,Specify source port
+ncat, ,s,source, ,@f @r,109,Specify source address
+ncat, ,l,listen, , ,110,Listen for connections
+ncat, ,m,max-conns, ,@f @r,111,Specify maximum number of connections
+ncat, ,k,keep-open, , ,112,Accept multiple connections
+ncat, , ,broker, , ,113,Connection brokering
+ncat, , ,chat, , ,114,Ad-hoc 'chat server'
+ncat, , ,ssl, , ,115,Use SSL
+ncat, , ,ssl-verify, , ,116,Verify server certificates
+ncat, , ,ssl-cert, ,@r,117,Specify SSL certificate
+ncat, , ,ssl-key, ,@r,118,Specify SSL private key
+ncat, , ,ssl-trustfile, ,@r,119,List trusted certificates
+ncat, , ,ssl-ciphers, ,@f @r,120,Specify SSL ciphersuites
+ncat, , ,ssl-servername, ,@f @r,121,Request distinct server name
+ncat, , ,ssl-alpn, ,@f @r,122,Specify ALPN protocol list
+ncat, , ,proxy, ,@f @r,123,Specify proxy address
+ncat, , ,proxy-type,http socks4 socks5,@f @r,124,Specify proxy protocol
+ncat, , ,proxy-auth, ,@f @r,125,Specify proxy credentials
+ncat, , ,proxy-dns,local remote both none,@f @r,126,Specify where to resolve proxy destination
+ncat, ,e,exec, ,@r,127,Execute command
+ncat, ,c,sh-exec, ,@r,128,Execute command via sh
+ncat, , ,lua-exec, ,@r,129,Execute a .lua script
+ncat, , ,allow, ,@f @r,130,Allow connections
+ncat, , ,allowfile, ,@r,131,Allow connections from file
+ncat, , ,deny, ,@f @r,132,Deny connections
+ncat, , ,denyfile, ,@r,133,Deny connections from file
+ncat, ,d,delay, ,@f @r,134,Specify line delay
+ncat, ,i,idle-timeout, ,@f @r,135,Specify idle timeout
+ncat, ,w,wait, ,@f @r,136,Specify connect timeout
+ncat, ,o,output, ,@r,137,Save session data
+ncat, ,x,hex-dump, ,@r,138,Save session data in hex
+ncat, , ,append-output, , ,139,Append output
+ncat, ,v,verbose, , ,140,Be verbose
+ncat, ,C,crlf, , ,141,Use CRLF as EOL
+ncat, ,h,help, , ,142,Help screen
+ncat, , ,recv-only, , ,143,Only receive data
+ncat, , ,send-only, , ,144,Only send data
+ncat, , ,no-shutdown, , ,145,Do not shutdown into half-duplex mode
+ncat, ,n,nodns, , ,146,Do not resolve hostnames
+ncat, ,t,telnet, , ,147,Answer Telnet negotiations
+ncat, , ,version, , ,148,Display version

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setfattr, ,n,name, , ,101,Specifies the name of the extended attribute to set
+setfattr, ,v,value, , ,102,Specifies the new value of the extended attribute
+setfattr, ,x,remove, , ,103,Remove the named extended attribute entirely
+setfattr, ,h,no-dereference, , ,104,Do not follow symlinks
+setfattr, , ,restore, , ,105,Restores extended attributes from file
+setfattr, , ,raw, , ,106,Do not decode the attribute value
+setfattr, , ,version, , ,107,Print the version of  setfattr and exit
+setfattr, , ,help, , ,108,Print help explaining the command line options
+setfattr, , ,dump, , ,109,option.  If a dash (c

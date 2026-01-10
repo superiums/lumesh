@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xdg-email, , ,utf8, , ,101,Indicates that all command line options that follow are in utf8
+xdg-email, , ,cc, , ,102,Specify a recipient to be copied on the e-mail
+xdg-email, , ,bcc, , ,103,Specify a recipient to be blindly copied on the e-mail
+xdg-email, , ,subject, , ,104,Specify a subject for the e-mail
+xdg-email, , ,body, , ,105,Specify a body for the e-mail
+xdg-email, , ,attach, , ,106,Specify an attachment for the e-mail.  file must point to an existing file
+xdg-email, , ,help, , ,107,Show command synopsis
+xdg-email, , ,manual, , ,108,Show this manual page
+xdg-email, , ,version, , ,109,Show the xdg-utils version information

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rmdir, , ,ignore-fail-on-non-empty, , ,101,ignore each failure to remove a non-empty directory
+rmdir, ,p,parents, , ,102,"remove DIRECTORY and its ancestors; e. g"
+rmdir, ,v,verbose, , ,103,output a diagnostic for every directory processed
+rmdir, , ,help, , ,104,display this help and exit
+rmdir, , ,version, , ,105,output version information and exit AUTHOR Written by David MacKenzie

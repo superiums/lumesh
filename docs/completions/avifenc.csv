@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avifenc, ,h,help, , ,101,Show syntax help
+avifenc, ,V,version, , ,102,Show the version number
+avifenc, ,j,jobs, ,@f @r,103,Number of jobs
+avifenc, ,o,output, ,@r,104,Filename of the output file
+avifenc, ,l,lossless, , ,105,Set all defaults to encode losslessly
+avifenc, ,d,depth,8 10 12,@f @r,106,Output depth
+avifenc, ,y,yuv,444 422 420 400,@f @r,107,Output format
+avifenc, , ,stdin, , ,108,Read y4m frames from stdin
+avifenc, , ,nclx, ,@f @r,109,Set CICP values
+avifenc, ,r,range, ,@f @r,110,YUV range
+avifenc, , ,min, ,@f @r,111,Set min quantizer for color
+avifenc, , ,max, ,@f @r,112,Set max quantizer for color
+avifenc, , ,minalpha, ,@f @r,113,Set min quantizer for alpha
+avifenc, , ,maxalpha, ,@f @r,114,Set max quantizer for alpha
+avifenc, , ,tilerowslog2, ,@f @r,115,Set log2 of number of tile rows
+avifenc, , ,tilecolslog2, ,@f @r,116,Set log2 of number of tile columns
+avifenc, ,s,speed,,@f @r,117, 
+avifenc, ,c,codec,,@f @r,118, 
+avifenc, , ,exif, ,@r,119,Filename of the associated Exif metadata
+avifenc, , ,xmp, ,@r,120,Filename of the associated XMP metadata
+avifenc, , ,icc, ,@r,121,Filename of the associated ICC profile
+avifenc, ,a,advanced, ,@f @r,122,Pass a codec-specific key/value pair to the codec
+avifenc, , ,duration, ,@f @r,123,Set all following frame durations
+avifenc, , ,fps, ,@f @r,124,Set the timescale
+avifenc, ,k,keyframe, ,@f @r,125,Set the forced keyframe interval
+avifenc, , ,ignore-icc, , ,126,Ignore an embedded ICC profile
+avifenc, , ,pasp, ,@f @r,127,Add pasp property
+avifenc, , ,clap, ,@f @r,128,Add clap property
+avifenc, , ,irot, ,@f @r,129,Add irot property
+avifenc, , ,imir, ,@f @r,130,Add imir property

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avifdec, ,h,help, , ,101,Show syntax help
+avifdec, ,V,version, , ,102,Show the version number
+avifdec, ,j,jobs, ,@f @r,103,Number of jobs
+avifdec, ,c,codec,,@f @r,104, 
+avifdec, ,d,depth,8 16,@f @r,105,Output depth
+avifdec, ,q,quality, ,@f @r,106,Output quality
+avifdec, ,u,upsampling,automatic fastest best nearest bilinear,@f @r,107,Chroma upsampling
+avifdec, ,i,info, , ,108,Display all image information
+avifdec, , ,ignore-icc, , ,109,Ignore an embedded ICC profile

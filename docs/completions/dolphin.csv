@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dolphin, , ,help, , ,101,Show help and exit
+dolphin, ,v,version, , ,102,Show version and exit
+dolphin, , ,help-qt, , ,103,Show Qt specific options and exit
+dolphin, , ,help-kde, , ,104,Show KDE specific options and exit
+dolphin, , ,help-all, , ,105,Show all options and exit
+dolphin, , ,author, , ,106,Show author information and exit
+dolphin, , ,license, , ,107,Show license information and exit

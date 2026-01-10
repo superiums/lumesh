@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+usermod, ,a,append, , ,101,Append groups (use with -G)
+usermod, ,c,comment, , ,102,Change user's password file comment
+usermod, ,d,home, , ,103,Change user's login directory
+usermod, ,e,expiredate, , ,104,Date (YYYY-MM-DD) on which the user account will be disabled
+usermod, ,f,inactive, , ,105,Number of days after a password expires until the account is locked
+usermod, ,g,gid, , ,106,Group name or number of the user's new initial login group
+usermod, ,G,groups, , ,107,List of groups which the user is also a member of
+usermod, ,l,login, , ,108,Change user's name
+usermod, ,L,lock, , ,109,Lock user's password
+usermod, ,m,move-home, , ,110,Move the content of the user's home directory to the new location
+usermod, ,o,non-unique, , ,111,Allow non-unique UID
+usermod, ,p,password, , ,112,"The encrypted password, as returned by crypt(3)"
+usermod, ,R,root, , ,113,Apply changes in this directory
+usermod, ,P,prefix, , ,114,Apply changes in the PREFIX_DIR
+usermod, ,s,shell, , ,115,The name of the user's new login shell
+usermod, ,u,uid, , ,116,The new numerical value of the user's ID
+usermod, ,U,unlock, , ,117,Unlock a users password
+usermod, ,v,add-subuids, , ,118,Add a range of subordinate uids to the user's account
+usermod, ,V,del-subuids, , ,119,Remove a range of subordinate uids from the user's account
+usermod, ,w,add-subgids, , ,120,Add a range of subordinate gids to the user's account
+usermod, ,W,del-subgids, , ,121,Remove a range of subordinate gids from the user's account
+usermod, ,Z,selinux-user, , ,122,The new SELinux user for the user's login

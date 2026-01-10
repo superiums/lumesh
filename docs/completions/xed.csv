@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xed, ,h,help, , ,101,Show help and exit
+xed, , ,version, , ,102,Show version and exit
+xed, , ,help-all, , ,103,Show all options and exit
+xed, , ,display, , ,104,X display
+xed, , ,encoding, , ,105,Encoding
+xed, , ,new-window, , ,106,Create a new window
+xed, , ,new-document, , ,107,Create a new document
+xed, , ,list-encodings, , ,108,List encodings

@@ -1,0 +1,46 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iwctl, __iwctl_match_subcoms ad-hoc, , ,list, ,107,List devices in Ad-Hoc mode
+iwctl,__iwctl_match_subcoms 'ad-hoc *' __iwctl_match_subcoms ad-hoc list, , ,start, ,108,Start or join an Ad-Hoc network
+iwctl,__iwctl_match_subcoms 'ad-hoc *' __iwctl_match_subcoms ad-hoc list, , ,start_open, ,109,Start of join an open Ad-Hoc network
+iwctl,__iwctl_match_subcoms 'ad-hoc *' __iwctl_match_subcoms ad-hoc list, , ,stop, ,110,Leave an Ad-Hoc network
+iwctl, __iwctl_match_subcoms adapter, , ,list, ,111,List adapters
+iwctl,__iwctl_match_subcoms 'adapter *' __iwctl_match_subcoms adapter list, , ,show, ,112,Show adapter info
+iwctl,__iwctl_match_subcoms 'adapter *' __iwctl_match_subcoms adapter list, , ,set-property, ,113,Set property
+iwctl, __iwctl_match_subcoms ap, , ,list, ,114,List devices in AP mode
+iwctl,__iwctl_match_subcoms 'ap *' __iwctl_match_subcoms ap list, , ,start, ,115,Start an access point
+iwctl,__iwctl_match_subcoms 'ap *' __iwctl_match_subcoms ap list, , ,start-profile, ,116,Start an access point based on a disk profile
+iwctl,__iwctl_match_subcoms 'ap *' __iwctl_match_subcoms ap list, , ,stop, ,117,Stop a started access point
+iwctl,__iwctl_match_subcoms 'ap *' __iwctl_match_subcoms ap list, , ,show, ,118,Show AP info
+iwctl,__iwctl_match_subcoms 'ap *' __iwctl_match_subcoms ap list, , ,get-networks, ,119,Get network list after scanning
+iwctl, __iwctl_match_subcoms 'debug *', , ,connect, ,120,Connect to a specific BSS
+iwctl, __iwctl_match_subcoms 'debug *', , ,roam, ,121,Roam to a BSS
+iwctl, __iwctl_match_subcoms 'debug *', , ,get-networks, ,122,Get networks
+iwctl, __iwctl_match_subcoms 'debug *', , ,autoconnect, ,123,Set autoconnect property
+iwctl, __iwctl_match_subcoms 'debug * autoconnect', , ,on off, ,124,Set autoconnect property
+iwctl, __iwctl_match_subcoms device, , ,list, ,125,List devices
+iwctl,__iwctl_match_subcoms 'device *' __iwctl_match_subcoms device list, , ,show, ,126,Show device info
+iwctl,__iwctl_match_subcoms 'device *' __iwctl_match_subcoms device list, , ,set-property, ,127,Set property
+iwctl, __iwctl_match_subcoms dpp, , ,list, ,128,List DPP-capable devices
+iwctl,__iwctl_match_subcoms 'dpp *' __iwctl_match_subcoms dpp list, , ,start-enrollee, ,129,Starts a DPP Enrollee
+iwctl,__iwctl_match_subcoms 'dpp *' __iwctl_match_subcoms dpp list, , ,start-configurator, ,130,Starts a DPP Configurator
+iwctl,__iwctl_match_subcoms 'dpp *' __iwctl_match_subcoms dpp list, , ,stop, ,131,Aborts a DPP operations
+iwctl,__iwctl_match_subcoms 'dpp *' __iwctl_match_subcoms dpp list, , ,show, ,132,Show the DPP state
+iwctl, __iwctl_match_subcoms known-networks, , ,list, ,133,List known networks
+iwctl,__iwctl_match_subcoms 'known-networks *' __iwctl_match_subcoms known-networks list, , ,forget, ,134,Forget a known network
+iwctl,__iwctl_match_subcoms 'known-networks *' __iwctl_match_subcoms known-networks list, , ,show, ,135,Show known network
+iwctl,__iwctl_match_subcoms 'known-networks *' __iwctl_match_subcoms known-networks list, , ,set-property, ,136,Set property
+iwctl, __iwctl_match_subcoms station, , ,list, ,137,List devices in Station mode
+iwctl,__iwctl_match_subcoms 'station *' __iwctl_match_subcoms station list, , ,connect, ,138,Connect to network
+iwctl,__iwctl_match_subcoms 'station *' __iwctl_match_subcoms station list, , ,connect-hidden, ,139,Connect to hidden network
+iwctl,__iwctl_match_subcoms 'station *' __iwctl_match_subcoms station list, , ,disconnect, ,140,Disconnect
+iwctl,__iwctl_match_subcoms 'station *' __iwctl_match_subcoms station list, , ,get-networks, ,141,Get networks
+iwctl, __iwctl_match_subcoms 'station * get-networks', , ,rssi-dbms rssi-bars, ,142, 
+iwctl,__iwctl_match_subcoms 'station *' __iwctl_match_subcoms station list, , ,get-hidden-access-points, ,143,Get hidden APs
+iwctl, __iwctl_match_subcoms 'station * get-hidden-access-points', , ,rssi-dbms, ,144, 
+iwctl,__iwctl_match_subcoms 'station *' __iwctl_match_subcoms station list, , ,scan, ,145,Scan for networks
+iwctl,__iwctl_match_subcoms 'station *' __iwctl_match_subcoms station list, , ,show, ,146,Show station info
+iwctl, __iwctl_match_subcoms wsc, , ,list, ,147,List WSC-capable devices
+iwctl,__iwctl_match_subcoms 'wsc *' __iwctl_match_subcoms wsc list, , ,push-button, ,148,PushButton Mode
+iwctl,__iwctl_match_subcoms 'wsc *' __iwctl_match_subcoms wsc list, , ,start-user-pin, ,149,PIN mode
+iwctl,__iwctl_match_subcoms 'wsc *' __iwctl_match_subcoms wsc list, , ,start-pin, ,150,PIN mode with generated PIN
+iwctl,__iwctl_match_subcoms 'wsc *' __iwctl_match_subcoms wsc list, , ,cancel, ,151,Aborts WSC operations

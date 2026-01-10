@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+octave, __fish_seen_argument --long gui --long no-gui --long no-line-editing, ,gui, , ,110,Start the graphical user interface
+octave, __fish_seen_argument --long line-editing --long no-line-editing, ,line-editing, , ,115,Force readline use for command-line editing
+octave, __fish_seen_argument --long gui --long no-gui, ,no-gui, , ,115,Disable the graphical user interface
+octave, __fish_seen_argument --long line-editing --long no-line-editing --long gui, ,no-line-editing, , ,118,Don't use readline for command-line editing

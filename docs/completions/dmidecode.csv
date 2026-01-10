@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dmidecode, ,d,dev-mem, ,@r,101,Memory device file
+dmidecode, ,q,quiet, , ,102,Be less verbose
+dmidecode, , ,no-quirks, , ,103,Decode everything exactly as it is
+dmidecode, ,s,string, , ,104,Only display specified value
+dmidecode, ,t,type, , ,105,Only display entries of specified type
+dmidecode, ,H,handle, ,@f @r,106,Only display specified handle
+dmidecode, ,u,dump, , ,107,Do not decode the entries
+dmidecode, , ,dump-bin, ,@r,108,Dump DMI data to a file
+dmidecode, , ,from-dump, ,@r,109,Read DMI data generated using --dump-bin
+dmidecode, , ,no-sysfs, , ,110,Do not attempt to read DMI data from sysfs files
+dmidecode, , ,oem-string, ,@f @r,111,Only display the value of the OEM string number N
+dmidecode, ,h,help, , ,112,Display usage information and exit
+dmidecode, ,V,version, , ,113,Display the version and exit

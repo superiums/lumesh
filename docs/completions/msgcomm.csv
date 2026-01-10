@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgcomm, ,f,files-from, , ,101,get list of input files from FILE
+msgcomm, ,D,directory, , ,102,add DIRECTORY to list for input files search 
+msgcomm, ,o,output-file, , ,103,write output to specified file 
+msgcomm, ,<,less-than, , ,104,"print messages with less than this many definitions, defaults to infinite if …"
+msgcomm, ,>,more-than, , ,105,"print messages with more than this many definitions, defaults to 1 if not set"
+msgcomm, ,u,unique, , ,106,"shorthand for --less-than=\\,2\\/, requests that only unique messages be printe…"
+msgcomm, ,P,properties-input, , ,107,input files are in Java . properties syntax
+msgcomm, , ,stringtable-input, , ,108,input files are in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msgcomm, , ,color, , ,109,use colors and other text attributes always
+msgcomm, , ,style, , ,110,specify CSS style rule file for --color
+msgcomm, ,e,no-escape, , ,111,do not use C escapes in output (default)
+msgcomm, ,E,escape, , ,112,"use C escapes in output, no extended chars"
+msgcomm, , ,force-po, , ,113,write PO file even if empty
+msgcomm, ,i,indent, , ,114,write the . po file using indented style
+msgcomm, , ,no-location, , ,115,do not write '#: filename:line' lines
+msgcomm, ,n,add-location, , ,116,generate '#: filename:line' lines (default)
+msgcomm, , ,strict, , ,117,write out strict Uniforum conforming . po file
+msgcomm, ,p,properties-output, , ,118,write out a Java . properties file
+msgcomm, , ,stringtable-output, , ,119,write out a NeXTstep/GNUstep . strings file
+msgcomm, ,w,width, , ,120,set output page width
+msgcomm, , ,no-wrap, , ,121,"do not break long message lines, longer than the output page width, into seve…"
+msgcomm, ,s,sort-output, , ,122,generate sorted output
+msgcomm, ,F,sort-by-file, , ,123,sort output by file location
+msgcomm, , ,omit-header, , ,124,don't write header with 'msgid ''' entry . SS 'Informative output:'
+msgcomm, ,h,help, , ,125,display this help and exit
+msgcomm, ,V,version, , ,126,output version information and exit AUTHOR Written by Peter Miller

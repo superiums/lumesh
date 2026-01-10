@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-send, , ,no-data, , ,101,send in NO_FILE_DATA mode 
+btrfs-send, , ,proto, , ,102,use send protocol version N 
+btrfs-send, , ,compressed-data, , ,103,send data that is compressed on the filesystem directly without decompressing…
+btrfs-send, ,q,quiet, , ,104,(deprecated) alias for global -q option
+btrfs-send, ,v,verbose, , ,105,(deprecated) alias for global -v option . UNINDENT 

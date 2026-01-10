@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avahi-publish, ,s,service, , ,101,Register a service.  avahi-publish-service is equivalent to avahi-publish -s
+avahi-publish, ,a,address, , ,102,Register an address/host name mapping
+avahi-publish, ,v,verbose, , ,103,Enable verbose mode
+avahi-publish, ,H,host, , ,104,"Specify a host name for this service, in case it doesn't reside on the local …"
+avahi-publish, ,d,domain, , ,105,Publish the service in the specified domain
+avahi-publish, , ,subtype, , ,106,Register the service with an additional subtype in addition to the main type
+avahi-publish, ,R,no-reverse, , ,107,Do not publish reverse entry with address
+avahi-publish, ,f,no-fail, , ,108,Don't fail if the daemon is not found running
+avahi-publish, ,h,help, , ,109,Show help
+avahi-publish, ,V,version, , ,110,Show version information

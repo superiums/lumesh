@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setlogcons, ,C,console, , ,101,the console device to be used
+setlogcons, ,V,version, , ,102,print version number
+setlogcons, ,h,help, , ,103,print this usage message

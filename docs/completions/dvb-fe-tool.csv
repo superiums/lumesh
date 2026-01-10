@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dvb-fe-tool, ,3,dvbv3, , ,101,Use DVBv3 only
+dvb-fe-tool, ,a,adapter, , ,102,Digital TV adapter to use.  Default: 0
+dvb-fe-tool, ,A,acoustical, , ,103,beeps if signal quality is good.  Also enables femon mode
+dvb-fe-tool, ,d,set-delsys, , ,104,Sets delivery system to the one specified at PARAMS
+dvb-fe-tool, ,f,frontend, , ,105,Digital TV frontend to use.  Default: 0
+dvb-fe-tool, ,g,get, , ,106,Gets frontend parameters
+dvb-fe-tool, ,m,femon, , ,107,Monitors the frontend locking status and the available statistics for a front…
+dvb-fe-tool, ,v,verbose, , ,108,Enables debug messages
+dvb-fe-tool, ,?,help, , ,109,Outputs the usage help
+dvb-fe-tool, , ,usage, , ,110,Gives a short usage message
+dvb-fe-tool, ,V,version, , ,111,"Prints program version.  EXIT STATUS On success, it returns 0.  EXAMPLES"

@@ -1,0 +1,43 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pg_restore, ,d,dbname, ,@f @r,101,Connect to database name
+pg_restore, ,f,file,-,@r,102,Output file name (- for stdout)
+pg_restore, ,F,format,c d t,@f @r,103,Backup file format (should be automatic)
+pg_restore, ,l,list, , ,104,Print summarized TOC of the archive
+pg_restore, ,v,verbose, , ,105,Verbose mode
+pg_restore, ,V,version, , ,106,Output version information
+pg_restore, ,?,help, , ,107,Show help
+pg_restore, ,a,data-only, , ,108,"Restore only the data, no schema"
+pg_restore, ,c,clean, , ,109,Clean (drop) database objects before recreating
+pg_restore, ,C,create, , ,110,Create the target database
+pg_restore, ,e,exit-on-error, , ,111,"Exit on error, default is to continue"
+pg_restore, ,I,index, ,@f @r,112,Restore named index
+pg_restore, ,j,jobs, ,@f @r,113,Number of parallel jobs to restore
+pg_restore, ,L,use-list, ,@r,114,Use table of contents from this file
+pg_restore, ,n,schema, ,@f @r,115,Restore only objects in this schema
+pg_restore, ,N,exclude-schema, ,@f @r,116,Do not restore objects in this schema
+pg_restore, ,O,no-owner, , ,117,Skip restoration of object ownership
+pg_restore, ,P,function, ,@f @r,118,Restore named function
+pg_restore, ,s,schema-only, , ,119,"Restore only the schema, no data"
+pg_restore, ,S,superuser, ,@f @r,120,Superuser user name to use for disabling triggers
+pg_restore, ,t,table, ,@f @r,121,"Restore named relation (table, view, etc.)"
+pg_restore, ,T,trigger, ,@f @r,122,Restore named trigger
+pg_restore, ,x,no-privileges, , ,123,Skip restoration of access privileges (grant/revoke)
+pg_restore, ,1,single-transaction, , ,124,Restore as a single transaction
+pg_restore, , ,disable-triggers, , ,125,Disable triggers during data-only restore
+pg_restore, , ,enable-row-security, , ,126,Enable row security
+pg_restore, , ,if-exists, , ,127,Use IF EXISTS when dropping objects
+pg_restore, , ,no-comments, , ,128,Do not restore comments
+pg_restore, , ,no-data-for-failed-tables, , ,129,Don't restore data of tables that could not be created
+pg_restore, , ,no-publications, , ,130,Do not restore publications
+pg_restore, , ,no-security-labels, , ,131,Do not restore security labels
+pg_restore, , ,no-subscriptions, , ,132,Do not restore subscriptions
+pg_restore, , ,no-tablespaces, , ,133,Do not restore tablespace assignments
+pg_restore, , ,section, ,@f @r,134,"Restore named section (pre-data, data, or post-data)"
+pg_restore, , ,strict-names, , ,135,Require table/schema include patterns to match entities
+pg_restore, , ,use-set-session-authorization, , ,136,Use SET SESSION AUTHORIZATION instead of ALTER OWNER
+pg_restore, ,h,host, ,@f @r,137,Database server host or socket directory
+pg_restore, ,p,port, ,@f @r,138,Database server port number
+pg_restore, ,U,username, ,@f @r,139,Connect as specified database user
+pg_restore, ,w,no-password, , ,140,Never prompt for password
+pg_restore, ,W,password, , ,141,Force password prompt (should happen automatically)
+pg_restore, , ,role, ,@f @r,142,Do SET ROLE before restore

@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scdaemon, , ,options, , ,101,Reads configuration from file instead of from the default per-user configurat…
+scdaemon, , ,homedir, , ,102,Set the name of the home directory to dir
+scdaemon, , ,verbose, , ,103,Outputs additional information while running
+scdaemon, , ,debug-level, , ,104,Select the debug level for investigating problems
+scdaemon, , ,debug, , ,105,Set debug flags.   All flags are or-ed and flags may be given in C syntax (e
+scdaemon, , ,debug-all, , ,106,Same as --debug=0xffffffff
+scdaemon, , ,debug-wait, , ,107,"When running in server mode, wait n seconds before entering the actual proces…"
+scdaemon, , ,debug-ccid-driver, , ,108,Enable debug output from the included CCID driver for smartcards
+scdaemon, , ,debug-disable-ticker, , ,109,This option disables all ticker functions like checking for card insertions
+scdaemon, , ,debug-allow-core-dump, , ,110,For security reasons we won't create a core dump when the process aborts
+scdaemon, , ,debug-log-tid, , ,111,This option appends a thread ID to the PID in the log output
+scdaemon, , ,debug-assuan-log-cats, , ,112,Changes the active Libassuan logging categories to cats
+scdaemon, , ,no-detach, , ,113,Don't detach the process from the console
+scdaemon, , ,listen-backlog, , ,114,Set the size of the queue for pending connections.   The default is 64
+scdaemon, , ,log-file, , ,115,Append all logging output to file
+scdaemon, , ,pcsc-shared, , ,116,Use shared mode to access the card via PC/SC
+scdaemon, , ,pcsc-driver, , ,117,Use library to access the smartcard reader
+scdaemon, , ,disable-ccid, , ,118,The integrated CCID driver for CCID compliant devices can be available when l…
+scdaemon, , ,reader-port, , ,119,This option may be used to specify the port of the card terminal
+scdaemon, , ,card-timeout, , ,120,This option is deprecated.   In GnuPG 2
+scdaemon, , ,enable-pinpad-varlen, , ,121,Please specify this option when the card reader supports variable length inpu…
+scdaemon, , ,disable-pinpad, , ,122,"Even if a card reader features a pinpad, do not try to use it"
+scdaemon, , ,deny-admin, , ,123,This option disables the use of admin class commands for card applications wh…
+scdaemon, , ,disable-application, , ,124,This option disables the use of the card application named name
+scdaemon, , ,version, , ,125,Print the program version and licensing information
+scdaemon, ,h,help, , ,126,Print a usage message summarizing the most useful command-line options
+scdaemon, , ,dump-options, , ,127,Print a list of all available options and commands
+scdaemon, , ,server, , ,128,Run in server mode and wait for commands on the stdin
+scdaemon, , ,multi-server, , ,129,Run in server mode and wait for commands on the stdin as well as on an additi…
+scdaemon, , ,daemon, , ,130,Run the program in the background
+scdaemon, , ,allow-admin, , ,131,commands
+scdaemon, , ,application-priority, , ,132,This option allows one to change the order in which applications of a card a …

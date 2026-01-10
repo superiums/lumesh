@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+otool, , ,version, ,@f,101,print the version

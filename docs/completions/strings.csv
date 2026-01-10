@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+strings, , ,all, , ,101,X Item '--all'
+strings, , ,data, , ,102,X Item '--data' 
+strings, , ,print-file-name, , ,103,X Item '--print-file-name' . PD Print the name of the file before each string
+strings, , ,help, , ,104,X Item '--help' Print a summary of the program usage on the standard output a…
+strings, , ,bytes, , ,105,X Item '--bytes=min-len' 
+strings, , ,radix, , ,106,X Item '--radix=radix' 
+strings, , ,encoding, , ,107,X Item '--encoding=encoding' 
+strings, , ,unicode, , ,108,X Item '--unicode=[default|invalid|locale|escape|hex|highlight]' 
+strings, , ,target, , ,109,X Item '--target=bfdname' 
+strings, , ,version, , ,110,X Item '--version' 
+strings, , ,include-all-whitespace, , ,111,X Item '--include-all-whitespace' 
+strings, , ,output-separator, , ,112,X Item '--output-separator' 

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+trietool-0.2, ,p,path, , ,101,Set trie directory to dir [default=`. ']
+trietool-0.2, ,h,help, , ,102,Show summary of options
+trietool-0.2, ,e,encoding, , ,103,"Specify character encoding of the list-file contents, such as `UTF-8'"
+trietool-0.2, ,V,version, , ,104,Show version of program

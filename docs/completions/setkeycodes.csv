@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setkeycodes, ,C,console, , ,101,the console device to be used
+setkeycodes, ,V,version, , ,102,print version number
+setkeycodes, ,h,help, , ,103,print this usage message

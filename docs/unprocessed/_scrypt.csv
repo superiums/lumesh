@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scrypt, __fish_use_subcommand, , ,enc,@f @r,101,Encrypt file
+scrypt, __fish_use_subcommand, , ,dec,@f @r,102,Decrypt file
+scrypt, __fish_use_subcommand, , ,info,@f @r,103,Print information about the encryption parameters

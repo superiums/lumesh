@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+a2enconf, ,q,quiet, , ,101,Don't show informative messages

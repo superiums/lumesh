@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+devlink, ,V,Version, , ,101,Print the version of the  devlink utility and exit
+devlink, ,n,no-nice-names, , ,102,"Turn off printing out nice names, for example netdevice ifnames instead of de…"
+devlink, ,j,json, , ,103,Generate JSON output
+devlink, ,p,pretty, , ,104,When combined with -j generate a pretty JSON output
+devlink, ,v,verbose, , ,105,Turn on verbose output
+devlink, ,s,statistics, , ,106,Output statistics
+devlink, ,i,iec, , ,107,Print human readable rates in IEC units (e. g.  1Ki = 1024)
+devlink, ,x,hex, , ,108,Print dump numbers in hexadecimal format. SS  OBJECT

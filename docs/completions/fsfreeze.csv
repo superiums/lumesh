@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fsfreeze, ,f,freeze, , ,101, 
+fsfreeze, ,u,unfreeze, , ,102, 
+fsfreeze, ,h,help, , ,103, 
+fsfreeze, ,V,version, , ,104, 

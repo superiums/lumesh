@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dbus-monitor, , ,system, , ,101,Monitor the system message bus
+dbus-monitor, , ,session, , ,102,Monitor the session message bus.  (This is the default. )
+dbus-monitor, , ,address, , ,103,Monitor an arbitrary message bus given at ADDRESS
+dbus-monitor, , ,profile, , ,104,Use the profiling output format
+dbus-monitor, , ,monitor, , ,105,Use the monitoring output format.  (This is the default. )
+dbus-monitor, , ,binary, , ,106, 
+dbus-monitor, , ,pcap, , ,107, 

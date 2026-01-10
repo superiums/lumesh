@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gunzip, ,c,stdout, , ,101,Compress to stdout
+gunzip, , , , ,@f @k @r,102, 
+gunzip, ,f,force, , ,103,Overwrite
+gunzip, ,h,help, , ,104,Display help and exit
+gunzip, ,k,keep, , ,105,Keep input files
+gunzip, ,l,list, , ,106,List compression information
+gunzip, ,L,license, , ,107,Print license
+gunzip, ,n,no-name, , ,108,Do not save/restore filename
+gunzip, ,N,name, , ,109,Save/restore filename
+gunzip, ,q,quiet, , ,110,Suppress warnings
+gunzip, ,r,recursive, , ,111,Recurse directories
+gunzip, ,S,suffix, ,@r,112,Suffix
+gunzip, ,t,test, , ,113,Check integrity
+gunzip, ,v,verbose, , ,114,Display compression ratios
+gunzip, ,V,version, , ,115,Display version and exit

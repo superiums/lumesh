@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-sparc64-setup, ,a,allow-floppy, , ,101,make the drive also bootable as floppy (default for fdX devices)
+grub-sparc64-setup, ,b,boot-image, , ,102,use FILE as the boot image [default=boot. img]
+grub-sparc64-setup, ,c,core-image, , ,103,use FILE as the core image [default=core. img]
+grub-sparc64-setup, ,d,directory, , ,104,use GRUB files in the directory DIR [default=//boot/grub]
+grub-sparc64-setup, ,f,force, , ,105,install even if problems are detected
+grub-sparc64-setup, ,m,device-map, , ,106,use FILE as the device map [default=//boot/grub/device. map]
+grub-sparc64-setup, , ,no-rs-codes, , ,107,Do not apply any reed-solomon codes when embedding core. img
+grub-sparc64-setup, ,s,skip-fs-probe, , ,108,do not probe for filesystems in DEVICE
+grub-sparc64-setup, ,v,verbose, , ,109,print verbose messages
+grub-sparc64-setup, ,?,help, , ,110,give this help list
+grub-sparc64-setup, , ,usage, , ,111,give a short usage message
+grub-sparc64-setup, ,V,version, , ,112,print program version

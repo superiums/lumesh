@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mesg, ,v,verbose, , ,101, 
+mesg, ,h,help, , ,102, 
+mesg, ,V,version, , ,103, 

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+blkpr, ,c,command, , ,101, 
+blkpr, ,k,key, , ,102, 
+blkpr, ,K,oldkey, , ,103, 
+blkpr, ,f,flag, , ,104, 
+blkpr, ,t,type, , ,105, 
+blkpr, ,V,version, , ,106, 
+blkpr, ,h,help, , ,107, 

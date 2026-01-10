@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-chmod, , ,reference, ,@r,101,use RFILE's mode instead of MODE values
+uu-chmod, , ,help, , ,102,Print help information.
+uu-chmod, ,c,changes, , ,103,like verbose but report only when a change is made
+uu-chmod, ,f,silent, , ,104,suppress most error messages
+uu-chmod, ,v,verbose, , ,105,output a diagnostic for every file processed
+uu-chmod, , ,no-preserve-root, , ,106,do not treat '/' specially (the default)
+uu-chmod, , ,preserve-root, , ,107,fail to operate recursively on '/'
+uu-chmod, ,R,recursive, , ,108,change files and directories recursively
+uu-chmod, , ,dereference, , ,109,"affect the referent of each symbolic link (this is the default), rather than the symbolic link itself"
+uu-chmod, ,h,no-dereference, , ,110,affect symbolic links instead of any referenced file (useful only on systems that can change the ownership of a symlink)
+uu-chmod, ,V,version, , ,111,Print version

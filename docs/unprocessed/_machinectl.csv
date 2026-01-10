@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+machinectl, $commands, , ,list,@f,108,List running machines
+machinectl, $commands, , ,list-images,@f,108,List startable machine images
+machinectl, $commands, , ,status,@f,109,Show information about machine
+machinectl, $commands, , ,show,@f,112,Show properties of machines
+machinectl, $commands, , ,start,@f,114,Start machine
+machinectl, $commands, , ,login,@f,114,Login to a machine
+machinectl, $commands, , ,enable,@f,114,Enable machine to start at boot
+machinectl, $commands, , ,disable,@f,114,Disable machine from starting at boot
+machinectl, $commands, , ,poweroff,@f,114,Poweroff machine
+machinectl, $commands, , ,reboot,@f,114,Reboot machine
+machinectl, $commands, , ,terminate,@f,114,Terminate machine (without shutting down)
+machinectl, $commands, , ,kill,@f,114,Send signal to process in a machine
+machinectl, kill,s,signal,$__kill_signals,@f @r,116,Signal to send
+machinectl, $commands, , ,bind,@f,116,Bind-mount a directory to a machine
+machinectl, $commands, , ,copy-to,@f,118,Copy file or directory to a machine
+machinectl, $commands, , ,copy-from,@f,118,Copy file or directory from a machine
+machinectl, $commands, , ,shell,@f,118,Open a shell on a machine
+machinectl, $commands, , ,list-images,@f,118,Show a list of locally installed machines
+machinectl, $commands, , ,image-status,@f,118,Show information about machine images (human-readable)
+machinectl, $commands, , ,show-image,@f,118,Show properties of machine images (machine-readable)
+machinectl, $commands, , ,clone,@f,118,Clone a machine image
+machinectl, $commands, , ,rename,@f,118,Rename a machine image
+machinectl, $commands, , ,read-only,@f,118,Mark or unmark machine image as read-only
+machinectl, $commands, , ,remove,@f,118,Remove machine images
+machinectl, $commands, , ,set-limit,@f,118,Set size limit for machine image
+machinectl, $commands, , ,pull-tar,@f,118,Download a .tar container image
+machinectl, $commands, , ,pull-raw,@f,118,Download a .raw container image
+machinectl, $commands, , ,pull-dkr,@f,118,Download a .dkr container image
+machinectl, $commands, , ,import-tar,@f,118,Import a .tar container image
+machinectl, $commands, , ,import-raw,@f,118,Import a .raw container image
+machinectl, $commands, , ,export-tar,@f,118,Export a .tar container image
+machinectl, $commands, , ,export-raw,@f,118,Export a .raw container image
+machinectl, $commands, , ,list-transfers,@f,119,"Show running downloads, imports and exports"
+machinectl, $commands, , ,cancel-transfers,@f,119,"Abort running downloads, imports or exports"
+machinectl," login bind copy-to copy-from; and __fish_systemd_has_machine", , , ,@f,126, 
+machinectl," login bind copy-to copy-from shell; and __fish_systemd_has_machine", , , ,@f,127, 
+machinectl," shell; and __fish_systemd_has_machine (commandline -xpc | cut -d", , , ,@f,128, 
+machinectl," read-only; and __fish_systemd_has_machine_image", , , ,@f,129, 
+machinectl," read-only; and __fish_systemd_has_machine_image", , ,yes no,@f,130, 

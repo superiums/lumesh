@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dhclient, , , , ,@f,101, 
+dhclient, , , , ,@f @r,102,Participate in the DHCPv4 over DHCPv6 protocol
+dhclient, ,e, , ,@f @r,103,Define additional environment variables
+dhclient, ,p, , ,@f @r,104,The UDP port number on which the DHCP client should listen
+dhclient, ,s, , ,@f @r,105,Specify the server IP address
+dhclient, ,g, , ,@f @r,106,Set the giaddr field
+dhclient, , ,decline-wait-time, ,@f @r,107,Wait time (in secs) between declining an address and issuing discover
+dhclient, , ,version, , ,108,Print version number
+dhclient, ,D, ,LL LLT,@f @r,109,Override the default when selecting the type of DUID to use
+dhclient, , ,address-prefix-len, ,@f @r,110,Specify the length of the prefix for IPv6 addresses
+dhclient, , ,dad-wait-time, ,@f @r,111,Maximum time (in seconds) that the client should wait for the DAD to complete on an interface
+dhclient, , ,prefix-len-hint, ,@f @r,112,Direct the client to use the given length when requesting new prefixes
+dhclient, , , , ,@F,113,Path to the client configuration file
+dhclient, , , , ,@F,114,Path to a secondary lease file
+dhclient, , , , ,@F,115,Path to the lease database file
+dhclient, , , , ,@F,116,Path to the process ID file
+dhclient, , ,no-pid, , ,117,Disable writing pid files
+dhclient, , , , ,@F,118,Path to the network configuration script
+dhclient, ,C, , ,@f @r,119,DHCP client identifier
+dhclient, ,H, , ,@f @r,120,Hostname
+dhclient, ,F, , ,@f @r,121,FQDN
+dhclient, ,V, , ,@f @r,122,Vendor class identifier
+dhclient, , ,request-options, ,@f @r,123,Request option list
+dhclient, , ,timeout, ,@f @r,124,Timeout

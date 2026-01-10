@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+faked, , ,debug, , ,101,Print debugging information on stderr
+faked, , ,foreground, , ,102,Don't fork into the background
+faked, , ,cleanup, , ,103,Cleanup the semaphores
+faked, , ,key, , ,104,"Don't allocate a new communication channel, but use channel specified by key"
+faked, , ,save-file, , ,105,Save the environment to save-file on exit
+faked, , ,load, , ,106,Load a previously saved environment from the standard input
+faked, , ,unknown-is-real, , ,107,Use real ownership of previously-unknown files instead of setting them to roo…
+faked, , ,port, , ,108,Use TCP port tcp-port

@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cut, ,b,bytes, ,@f @r,101,Select byte positions
+cut, ,c,characters, ,@f @r,102,Select characters
+cut, ,d,delimiter, ,@f @r,103,Select field delimiter
+cut, ,f,fields, ,@f @r,104,Select fields
+cut, , ,complement, , ,105,"complement the set of selected bytes, characters or fields"
+cut, ,s,only-delimited, , ,106,Suppress lines without delimiter
+cut, , ,output-delimiter, ,@f @r,107,Select output delimiter
+cut, ,z,zero-terminated, , ,108,"line delimiter is NUL, not newline"
+cut, , ,help, , ,109,Display help and exit
+cut, , ,version, , ,110,Display version and exit
+cut, ,b, , ,@f @r,111,Select byte positions
+cut, ,c, , ,@f @r,112,Output character range
+cut, ,d, , ,@f @r,113,Delimiter instead of \t to use
+cut, ,f, , ,@f @r,114,Select fields

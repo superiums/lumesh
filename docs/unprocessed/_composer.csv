@@ -1,0 +1,218 @@
+cmd,conds,short,long,params,dirs,pri,desc
+composer, __fish_composer_needs_command, , , ,@f,101,User script
+composer, __fish_composer_using_command run-script, , , ,@f,102, 
+composer, __fish_composer_using_command run-script, ,timeout, ,@f,103,"Sets script timeout in seconds, or 0 for never"
+composer, __fish_composer_using_command run-script, ,dev, ,@f,104,Sets the dev mode
+composer, __fish_composer_using_command run-script, ,no-dev, ,@f,105,Disables the dev mode
+composer, __fish_composer_using_command run-script, ,list, ,@f,106,List scripts
+composer, __fish_composer_needs_command, , ,about,@f,107,Short information about Composer
+composer, __fish_composer_needs_command, , ,archive,@f,108,Create an archive of this composer package
+composer, __fish_composer_needs_command, , ,browse,@f,109,Opens the package's repository URL or homepage in your browser
+composer, __fish_composer_needs_command, , ,check-platform-reqs,@f,110,Check that platform requirements are satisfied
+composer, __fish_composer_needs_command, , ,clear-cache,@f,111,Clears composer's internal package cache
+composer, __fish_composer_needs_command, , ,config,@f,112,Set config options
+composer, __fish_composer_needs_command, , ,create-project,@f,113,Create new project from a package into given directory
+composer, __fish_composer_needs_command, , ,depends,@f,114,Shows which packages depend on the given package
+composer, __fish_composer_needs_command, , ,diagnose,@f,115,Diagnoses the system to identify common errors
+composer, __fish_composer_needs_command, , ,dump-autoload,@f,116,Dumps the autoloader
+composer, __fish_composer_needs_command, , ,exec,@f,117,Executes a vendored binary/script
+composer, __fish_composer_needs_command, , ,global,@f,118,Allows running commands in the global composer dir ($COMPOSER_HOME)
+composer, __fish_composer_needs_command, , ,help,@f,119,Displays help for a command
+composer, __fish_composer_needs_command, , ,home,@f,120,Opens the package's repository URL or homepage in your browser
+composer, __fish_composer_needs_command, , ,init,@f,121,Creates a basic composer.json file in current directory
+composer, __fish_composer_needs_command, , ,install,@f,122,Install dependencies from composer.lock or composer.json
+composer, __fish_composer_needs_command, , ,licenses,@f,123,Show information about licenses of dependencies
+composer, __fish_composer_needs_command, , ,list,@f,124,Lists commands
+composer, __fish_composer_needs_command, , ,outdated,@f,125,Shows a list of installed packages with available updates
+composer, __fish_composer_needs_command, , ,prohibits,@f,126,Shows which packages prevent the given package from being installed
+composer, __fish_composer_needs_command, , ,remove,@f,127,Removes a package from the require or require-dev
+composer, __fish_composer_needs_command, , ,require,@f,128,Adds required packages to your composer.json and installs them
+composer, __fish_composer_needs_command, , ,run-script,@f,129,Run the scripts defined in composer.json
+composer, __fish_composer_needs_command, , ,search,@f,130,Search for packages
+composer, __fish_composer_needs_command, , ,self-update,@f,131,Updates composer.phar to the latest version
+composer, __fish_composer_needs_command, , ,show,@f,132,Show information about packages
+composer, __fish_composer_needs_command, , ,status,@f,133,Show a list of locally modified packages
+composer, __fish_composer_needs_command, , ,suggests,@f,134,Shows package suggestions
+composer, __fish_composer_needs_command, , ,update,@f,135,"Update dependencies according to composer.json, and update composer.lock"
+composer, __fish_composer_needs_command, , ,validate,@f,136,Validates a composer.json
+composer, __fish_composer_needs_command, , ,why,@f,137,Shows which packages cause the given package to be installed
+composer, __fish_composer_needs_command, , ,why-not,@f,138,Shows which packages prevent the given package from being installed
+composer, __fish_composer_using_command archive, ,format, ,@f,139,Format of the resulting archive: tar or zip
+composer, __fish_composer_using_command archive, ,dir, ,@f,140,Write the archive to this directory
+composer, __fish_composer_using_command archive, ,file, ,@f,141,Write the archive with the given file name. Note that the format will be appended
+composer, __fish_composer_using_command archive, ,ignore-filters, ,@f,142,Ignore filters when saving package
+composer, __fish_composer_using_command browse, ,homepage, ,@f,143,Open the homepage instead of the repository URL
+composer, __fish_composer_using_command browse, ,show, ,@f,144,Only show the homepage or repository URL
+composer, __fish_composer_using_command check-platform-reqs, ,no-dev, ,@f,145,Disables checking of require-dev packages requirements
+composer, __fish_composer_using_command config, ,global, ,@f,146,Apply command to the global config file
+composer, __fish_composer_using_command config, ,editor, ,@f,147,Open editor
+composer, __fish_composer_using_command config, ,auth, ,@f,148,Affect auth config file (only used for --editor)
+composer, __fish_composer_using_command config, ,unset, ,@f,149,Unset the given setting-key
+composer, __fish_composer_using_command config, ,list, ,@f,150,List configuration settings
+composer, __fish_composer_using_command config, ,file, ,@f,151,If you want to choose a different composer.json or config.json
+composer, __fish_composer_using_command config, ,absolute, ,@f,152,Returns absolute paths when fetching *-dir config values instead of relative
+composer, __fish_composer_using_command create-project, ,stability, ,@f,153,Minimum-stability allowed (unless a version is specified)
+composer, __fish_composer_using_command create-project, ,prefer-source, ,@f,154,"Forces installation from package sources when possible, including VCS information"
+composer, __fish_composer_using_command create-project, ,prefer-dist, ,@f,155,Forces installation from package dist even for dev versions
+composer, __fish_composer_using_command create-project, ,repository, ,@f,156,Pick a different repository (as url or json config) to look for the package
+composer, __fish_composer_using_command create-project, ,repository-url, ,@f,157,DEPRECATED: Use --repository instead
+composer, __fish_composer_using_command create-project, ,dev, ,@f,158,"Enables installation of require-dev packages (enabled by default, only present for BC)"
+composer, __fish_composer_using_command create-project, ,no-dev, ,@f,159,Disables installation of require-dev packages
+composer, __fish_composer_using_command create-project, ,no-custom-installers, ,@f,160,DEPRECATED: Use no-plugins instead
+composer, __fish_composer_using_command create-project, ,no-scripts, ,@f,161,Whether to prevent execution of all defined scripts in the root package
+composer, __fish_composer_using_command create-project, ,no-progress, ,@f,162,Do not output download progress
+composer, __fish_composer_using_command create-project, ,no-secure-http, ,@f,163,Disable secure-http while installing the root package. (This is a BAD IDEA)
+composer, __fish_composer_using_command create-project, ,keep-vcs, ,@f,164,Whether to prevent deleting the vcs folder
+composer, __fish_composer_using_command create-project, ,remove-vcs, ,@f,165,Whether to force deletion of the vcs folder without prompting
+composer, __fish_composer_using_command create-project, ,no-install, ,@f,166,Whether to skip installation of the package dependencies
+composer, __fish_composer_using_command create-project, ,ignore-platform-reqs, ,@f,167,Ignore platform requirements (php & ext- packages)
+composer, __fish_composer_using_command depends, , , ,@f,168, 
+composer, __fish_composer_using_command depends, ,recursive, ,@f,169,Recursively resolves up to the root package
+composer, __fish_composer_using_command depends, ,tree, ,@f,170,Prints the results as a nested tree
+composer, __fish_composer_using_command dump-autoload, ,no-scripts, ,@f,171,Skips the execution of all scripts defined in composer.json file
+composer, __fish_composer_using_command dump-autoload, ,optimize, ,@f,172,"Optimizes PSR0 and PSR4 packages to be loaded with classmaps too, good for production"
+composer, __fish_composer_using_command dump-autoload, ,classmap-authoritative, ,@f,173,Autoload classes from the classmap only. Implicitly enables `--optimize`
+composer, __fish_composer_using_command dump-autoload, ,apcu, ,@f,174,Use APCu to cache found/not-found classes
+composer, __fish_composer_using_command dump-autoload, ,no-dev, ,@f,175,Disables autoload-dev rules
+composer, __fish_composer_using_command exec, ,list, ,@f,176, 
+composer, __fish_composer_using_command help, , ,$composer_cmds,@f,177, 
+composer, __fish_composer_using_command help, ,xml, ,@f,178,To output help as XML
+composer, __fish_composer_using_command help, ,format, ,@f,179,"The output format (txt, xml, json, or md)"
+composer, __fish_composer_using_command help, ,raw, ,@f,180,To output raw command help
+composer, __fish_composer_using_command init, ,name, ,@f,181,Name of the package
+composer, __fish_composer_using_command init, ,description, ,@f,182,Description of package
+composer, __fish_composer_using_command init, ,author, ,@f,183,Author name of package
+composer, __fish_composer_using_command init, ,type, ,@f,184,"Type of package (e.g. library, project, metapackage, composer-plugin)"
+composer, __fish_composer_using_command init, ,homepage, ,@f,185,Homepage of package
+composer, __fish_composer_using_command init, ,require, ,@f,186,"Package to require with a version constraint, e.g. foo/bar:1.0.0 or foo/bar=1.0.0 or 'foo/bar 1.0.0'"
+composer, __fish_composer_using_command init, ,require-dev, ,@f,187,"Package to require for development with a version constraint, e.g. foo/bar:1.0.0 or foo/bar=1.0.0 or 'foo/bar 1.0.0'"
+composer, __fish_composer_using_command init, ,stability, ,@f,188,"Minimum stability (empty or one of: stable, RC, beta, alpha, dev)"
+composer, __fish_composer_using_command init, ,license, ,@f,189,License of package
+composer, __fish_composer_using_command init, ,repository, ,@f,190,"Add custom repositories, either by URL or using JSON arrays"
+composer, __fish_composer_using_command install, ,prefer-source, ,@f,191,"Forces installation from package sources when possible, including VCS information"
+composer, __fish_composer_using_command install, ,prefer-dist, ,@f,192,Forces installation from package dist even for dev versions
+composer, __fish_composer_using_command install, ,dry-run, ,@f,193,Outputs the operations but will not execute anything (implicitly enables --verbose)
+composer, __fish_composer_using_command install, ,dev, ,@f,194,"Enables installation of require-dev packages (enabled by default, only present for BC)"
+composer, __fish_composer_using_command install, ,no-dev, ,@f,195,Disables installation of require-dev packages
+composer, __fish_composer_using_command install, ,no-custom-installers, ,@f,196,DEPRECATED: Use no-plugins instead
+composer, __fish_composer_using_command install, ,no-autoloader, ,@f,197,Skips autoloader generation
+composer, __fish_composer_using_command install, ,no-scripts, ,@f,198,Skips the execution of all scripts defined in composer.json file
+composer, __fish_composer_using_command install, ,no-progress, ,@f,199,Do not output download progress
+composer, __fish_composer_using_command install, ,no-suggest, ,@f,200,Do not show package suggestions
+composer, __fish_composer_using_command install, ,optimize-autoloader, ,@f,201,Optimize autoloader during autoloader dump
+composer, __fish_composer_using_command install, ,classmap-authoritative, ,@f,202,Autoload classes from the classmap only. Implicitly enables `--optimize-autoloader`
+composer, __fish_composer_using_command install, ,apcu-autoloader, ,@f,203,Use APCu to cache found/not-found classes
+composer, __fish_composer_using_command install, ,ignore-platform-reqs, ,@f,204,Ignore platform requirements (php & ext- packages)
+composer, __fish_composer_using_command licenses, ,format, ,@f,205,Format of the output: text or json
+composer, __fish_composer_using_command licenses, ,no-dev, ,@f,206,Disables search in require-dev packages
+composer, __fish_composer_using_command list, ,xml, ,@f,207,To output list as XML
+composer, __fish_composer_using_command list, ,raw, ,@f,208,To output raw command list
+composer, __fish_composer_using_command list, ,format, ,@f,209,"The output format (txt, xml, json, or md)"
+composer, __fish_composer_using_command outdated, ,outdated, ,@f,210,Show only packages that are outdated
+composer, __fish_composer_using_command outdated, ,all, ,@f,211,Show all installed packages with their latest versions
+composer, __fish_composer_using_command outdated, ,direct, ,@f,212,Shows only packages that are directly required by the root package
+composer, __fish_composer_using_command outdated, ,strict, ,@f,213,Return a non-zero exit code when there are outdated packages
+composer, __fish_composer_using_command outdated, ,minor-only, ,@f,214,Show only packages that have minor SemVer-compatible updates. Use with the --outdated option
+composer, __fish_composer_using_command outdated, ,format, ,@f,215,Format of the output: text or json
+composer, __fish_composer_using_command outdated, ,ignore, ,@f,216,Ignore specified package(s). Use it with the --outdated option if you don't want to be informed about new versions of some packages
+composer, __fish_composer_using_command prohibits, ,recursive, ,@f,217,Recursively resolves up to the root package
+composer, __fish_composer_using_command prohibits, ,tree, ,@f,218,Prints the results as a nested tree
+composer, __fish_composer_using_command remove, , , ,@f,219, 
+composer, __fish_composer_using_command remove, ,dev, ,@f,220,Removes a package from the require-dev section
+composer, __fish_composer_using_command remove, ,no-progress, ,@f,221,Do not output download progress
+composer, __fish_composer_using_command remove, ,no-update, ,@f,222,Disables the automatic update of the dependencies
+composer, __fish_composer_using_command remove, ,no-scripts, ,@f,223,Skips the execution of all scripts defined in composer.json file
+composer, __fish_composer_using_command remove, ,update-no-dev, ,@f,224,Run the dependency update with the --no-dev option
+composer, __fish_composer_using_command remove, ,update-with-dependencies, ,@f,225,Allow inherited dependencies to be updated with explicit dependencies (default)
+composer, __fish_composer_using_command remove, ,no-update-with-dependencies, ,@f,226,Disallow inherited dependencies to be updated with explicit dependencies
+composer, __fish_composer_using_command remove, ,ignore-platform-reqs, ,@f,227,Ignore platform requirements (php & ext- packages)
+composer, __fish_composer_using_command remove, ,optimize-autoloader, ,@f,228,Optimize autoloader during autoloader dump
+composer, __fish_composer_using_command remove, ,classmap-authoritative, ,@f,229,Autoload classes from the classmap only. Implicitly enables `--optimize-autoloader`
+composer, __fish_composer_using_command remove, ,apcu-autoloader, ,@f,230,Use APCu to cache found/not-found classes
+composer, __fish_composer_using_command require, ,dev, ,@f,231,Add requirement to require-dev
+composer, __fish_composer_using_command require, ,prefer-source, ,@f,232,"Forces installation from package sources when possible, including VCS information"
+composer, __fish_composer_using_command require, ,prefer-dist, ,@f,233,Forces installation from package dist even for dev versions
+composer, __fish_composer_using_command require, ,no-progress, ,@f,234,Do not output download progress
+composer, __fish_composer_using_command require, ,no-suggest, ,@f,235,Do not show package suggestions
+composer, __fish_composer_using_command require, ,no-update, ,@f,236,Disables the automatic update of the dependencies
+composer, __fish_composer_using_command require, ,no-scripts, ,@f,237,Skips the execution of all scripts defined in composer.json file
+composer, __fish_composer_using_command require, ,update-no-dev, ,@f,238,Run the dependency update with the --no-dev option
+composer, __fish_composer_using_command require, ,update-with-dependencies, ,@f,239,"Allows inherited dependencies to be updated, except those that are root requirements"
+composer, __fish_composer_using_command require, ,update-with-all-dependencies, ,@f,240,"Allows all inherited dependencies to be updated, including those that are root requirements"
+composer, __fish_composer_using_command require, ,ignore-platform-reqs, ,@f,241,Ignore platform requirements (php & ext- packages)
+composer, __fish_composer_using_command require, ,prefer-stable, ,@f,242,Prefer stable versions of dependencies
+composer, __fish_composer_using_command require, ,prefer-lowest, ,@f,243,Prefer lowest versions of dependencies
+composer, __fish_composer_using_command require, ,sort-packages, ,@f,244,Sorts packages when adding/updating a new dependency
+composer, __fish_composer_using_command require, ,optimize-autoloader, ,@f,245,Optimize autoloader during autoloader dump
+composer, __fish_composer_using_command require, ,classmap-authoritative, ,@f,246,Autoload classes from the classmap only. Implicitly enables `--optimize-autoloader`
+composer, __fish_composer_using_command require, ,apcu-autoloader, ,@f,247,Use APCu to cache found/not-found classes
+composer, __fish_composer_using_command search, ,only-name, ,@f,248,Search only in name
+composer, __fish_composer_using_command search, ,type, ,@f,249,Search for a specific package type
+composer, __fish_composer_using_command self-update, ,rollback, ,@f,250,Revert to an older installation of composer
+composer, __fish_composer_using_command self-update, ,clean-backups, ,@f,251,"Delete old backups during an update, leave only current version of composer"
+composer, __fish_composer_using_command self-update, ,no-progress, ,@f,252,Do not output download progress
+composer, __fish_composer_using_command self-update, ,update-keys, ,@f,253,Prompt user for a key update
+composer, __fish_composer_using_command self-update, ,stable, ,@f,254,Force an update to the stable channel
+composer, __fish_composer_using_command self-update, ,preview, ,@f,255,Force an update to the preview channel
+composer, __fish_composer_using_command self-update, ,snapshot, ,@f,256,Force an update to the snapshot channel
+composer, __fish_composer_using_command self-update, ,set-channel-only, ,@f,257,Only store the channel as the default one and then exit
+composer, __fish_composer_using_command show, , , ,@f,258, 
+composer, __fish_composer_using_command show, ,all, ,@f,259,List all packages
+composer, __fish_composer_using_command show, ,installed, ,@f,260,"List installed packages only (enabled by default, only present for BC)"
+composer, __fish_composer_using_command show, ,platform, ,@f,261,List platform packages only
+composer, __fish_composer_using_command show, ,available, ,@f,262,List available packages only
+composer, __fish_composer_using_command show, ,self, ,@f,263,Show the root package information
+composer, __fish_composer_using_command show, ,name-only, ,@f,264,List package names only
+composer, __fish_composer_using_command show, ,path, ,@f,265,Show package paths
+composer, __fish_composer_using_command show, ,tree, ,@f,266,List the dependencies as a tree
+composer, __fish_composer_using_command show, ,latest, ,@f,267,Show the latest version
+composer, __fish_composer_using_command show, ,outdated, ,@f,268,Show the latest version but only for packages that are outdated
+composer, __fish_composer_using_command show, ,ignore, ,@f,269,Ignore specified package(s). Use it with the --outdated option if you don't want to be informed about new versions of some packages
+composer, __fish_composer_using_command show, ,minor-only, ,@f,270,Show only packages that have minor SemVer-compatible updates. Use with the --outdated option
+composer, __fish_composer_using_command show, ,direct, ,@f,271,Shows only packages that are directly required by the root package
+composer, __fish_composer_using_command show, ,strict, ,@f,272,Return a non-zero exit code when there are outdated packages
+composer, __fish_composer_using_command show, ,format, ,@f,273,Format of the output: text or json
+composer, __fish_composer_using_command suggests, ,by-package, ,@f,274,Groups output by suggesting package
+composer, __fish_composer_using_command suggests, ,by-suggestion, ,@f,275,Groups output by suggested package
+composer, __fish_composer_using_command suggests, ,no-dev, ,@f,276,Exclude suggestions from require-dev packages
+composer, __fish_composer_using_command update, , , ,@f,277, 
+composer, __fish_composer_using_command update, ,prefer-source, ,@f,278,"Forces installation from package sources when possible, including VCS information"
+composer, __fish_composer_using_command update, ,prefer-dist, ,@f,279,Forces installation from package dist even for dev versions
+composer, __fish_composer_using_command update, ,dry-run, ,@f,280,Outputs the operations but will not execute anything (implicitly enables --verbose)
+composer, __fish_composer_using_command update, ,dev, ,@f,281,"Enables installation of require-dev packages (enabled by default, only present for BC)"
+composer, __fish_composer_using_command update, ,no-dev, ,@f,282,Disables installation of require-dev packages
+composer, __fish_composer_using_command update, ,lock, ,@f,283,Only updates the lock file hash to suppress warning about the lock file being out of date
+composer, __fish_composer_using_command update, ,no-custom-installers, ,@f,284,DEPRECATED: Use no-plugins instead
+composer, __fish_composer_using_command update, ,no-autoloader, ,@f,285,Skips autoloader generation
+composer, __fish_composer_using_command update, ,no-scripts, ,@f,286,Skips the execution of all scripts defined in composer.json file
+composer, __fish_composer_using_command update, ,no-progress, ,@f,287,Do not output download progress
+composer, __fish_composer_using_command update, ,no-suggest, ,@f,288,Do not show package suggestions
+composer, __fish_composer_using_command update, ,with-dependencies, ,@f,289,"Add deps of whitelisted packages to whitelist, except those defined in root package"
+composer, __fish_composer_using_command update, ,with-all-dependencies, ,@f,290,"Add deps of whitelisted packages to whitelist, including those defined in root package"
+composer, __fish_composer_using_command update,v,verbose, ,@f,291,Shows more details including new commits pulled in when updating packages
+composer, __fish_composer_using_command update,o,optimize-autoloader, ,@f,292,Optimize autoloader during autoloader dump
+composer, __fish_composer_using_command update,a,classmap-authoritative, ,@f,293,Autoload classes from the classmap only. Implicitly enables `--optimize-autoloader`
+composer, __fish_composer_using_command update, ,apcu-autoloader, ,@f,294,Use APCu to cache found/not-found classes
+composer, __fish_composer_using_command update, ,ignore-platform-reqs, ,@f,295,Ignore platform requirements (php & ext- packages)
+composer, __fish_composer_using_command update, ,prefer-stable, ,@f,296,Prefer stable versions of dependencies
+composer, __fish_composer_using_command update, ,prefer-lowest, ,@f,297,Prefer lowest versions of dependencies
+composer, __fish_composer_using_command update,i,interactive, ,@f,298,Interactive interface with autocompletion to select the packages to update
+composer, __fish_composer_using_command update, ,root-reqs, ,@f,299,Restricts the update to your first degree dependencies
+composer, __fish_composer_using_command validate, ,no-check-all, ,@f,300,Do not validate requires for overly strict/loose constraints
+composer, __fish_composer_using_command validate, ,no-check-lock, ,@f,301,Do not check if lock file is up to date
+composer, __fish_composer_using_command validate, ,no-check-publish, ,@f,302,Do not check for publish errors
+composer, __fish_composer_using_command validate, ,with-dependencies, ,@f,303,Also validate the composer.json of all installed dependencies
+composer, __fish_composer_using_command validate, ,strict, ,@f,304,Return a non-zero exit code for warnings as well as errors
+composer, __fish_composer_using_command why, , , ,@f,305, 
+composer, __fish_composer_using_command why-not, , , ,@f,306, 
+composer, __fish_composer_needs_command,h,help, , ,307,Displays composer's help
+composer, __fish_composer_needs_command,q,quiet, , ,308,Do not output any message
+composer, __fish_composer_needs_command,v,verbose, , ,309,Verbose mode (pass multiple times for even verboser mode)
+composer, __fish_composer_needs_command,V,version, , ,310,Display composer's application version
+composer, __fish_composer_needs_command, ,ansi, , ,311,Force ANSI output
+composer, __fish_composer_needs_command, ,no-ansi, , ,312,Disable ANSI output
+composer, __fish_composer_needs_command,n,no-interaction, , ,313,Do not ask any interactive question
+composer, __fish_composer_needs_command, ,profile, , ,314,Display timing and memory usage information
+composer, __fish_composer_needs_command, ,no-plugins, , ,315,Whether to disable plugins
+composer, __fish_composer_needs_command,d,working-dir, , ,316,"If specified, use the given directory as working directory"
+composer, __fish_composer_needs_command, ,no-cache, , ,317,Prevent use of the cache

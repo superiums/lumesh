@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cmdkey, __fish_seen_argument -w add: -w generic:, , ,/add:,@f,101, 
+cmdkey, __fish_seen_argument -w add: -w generic:, , ,/generic:,@f,101, 
+cmdkey, __fish_seen_argument -w smartcard -w user:, , ,/smartcard,@f,101, 
+cmdkey, __fish_seen_argument -w smartcard -w user:, , ,/user:,@f,101, 
+cmdkey, __fish_seen_argument -w user:, , ,/pass:,@f,102,Specify the password

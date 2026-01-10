@@ -1,0 +1,47 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cjxl, ,V,version, , ,101,Print version number
+cjxl, , ,quiet, , ,102,Be more silent
+cjxl, , ,container, , ,103,Encode using container format
+cjxl, , ,print_profile,0 1,@f @r,104,Print timing information
+cjxl, ,d,distance,,@f @r,105, 
+cjxl, , ,target_size, ,@f @r,106,Target file size (based on bytes)
+cjxl, , ,target_bpp, ,@f @r,107,Target file size (based on BPP)
+cjxl, ,q,quality,,@f @r,108, 
+cjxl, ,s,speed,,@f @r,109, 
+cjxl, ,p,progressive, , ,110,Enable progressive decoding
+cjxl, , ,middleout, , ,111,Put center groups first in the file
+cjxl, , ,progressive_ac, , ,112,Use the progressive mode for AC
+cjxl, , ,qprogressive_ac, , ,113,Use the progressive mode for AC
+cjxl, , ,progressive_dc, ,@f @r,114,Use progressive mode for DC
+cjxl, ,m,modular, , ,115,Use the modular mode
+cjxl, , ,use_new_heuristics, , ,116,Use new encoder heuristics
+cjxl, ,j,jpeg_transcode, , ,117,Do lossy transcode of input JPEG file
+cjxl, , ,num_threads, ,@f @r,118,Number of worker threads
+cjxl, , ,num_reps, ,@f @r,119,How many times to compress
+cjxl, , ,noise,,@f @r,120, 
+cjxl, , ,dots,,@f @r,121, 
+cjxl, , ,patches,,@f @r,122, 
+cjxl, , ,resampling,1 2 4 8,@f @r,123,Subsample all color channels
+cjxl, , ,epf, ,@f @r,124,Edge preserving filter level
+cjxl, , ,gaborish,0 1,@f @r,125,Force disable gaborish
+cjxl, , ,intensity_target, ,@f @r,126,Intensity target of monitor in nits
+cjxl, , ,saliency_num_progressive_steps, ,@f @r,127, 
+cjxl, , ,saliency_map_filename, ,@f @r,128, 
+cjxl, , ,saliency_threshold, ,@f @r,129, 
+cjxl, ,x,dec-hints, ,@f @r,130, 
+cjxl, , ,override_bitdepth,,@f @r,131, 
+cjxl, ,c,colortransform,,@f @r,132, 
+cjxl, ,Q,mquality, ,@f @r,133,Lossy quality
+cjxl, ,I,iterations, ,@f @r,134,Fraction of pixels used to learn MA trees
+cjxl, ,C,colorspace,,@f @r,135, 
+cjxl, ,g,group-size, ,@f @r,136,Set group size
+cjxl, ,P,predictor,,@f @r,137, 
+cjxl, ,E,extra-properties, ,@f @r,138,Number of extra MA tree properties
+cjxl, ,N,near-lossless, ,@f @r,139,Apply near-lossless preprocessing
+cjxl, , ,palette, ,@f @r,140,Use a palette
+cjxl, , ,lossy-palette, , ,141,Quantize to a lossy palette
+cjxl, ,X,pre-compact, ,@f @r,142,Compact channels (globally)
+cjxl, ,Y,post-compact, ,@f @r,143,Compact channels (per-group)
+cjxl, ,R,responsive,,@f @r,144, 
+cjxl, ,v,verbose, , ,145,Verbose output
+cjxl, ,h,help, , ,146,Print help message

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt, __fish_is_first_token, , ,$subcommand,@f,101, 
+apt, $subcommand, , , ,@f,102, 
+apt, $handle_file_pkg_subcmds, , , ,@k,103, 
+apt, $pkg_subcmds, , , ,@k,104, 

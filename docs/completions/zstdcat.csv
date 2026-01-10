@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zstdcat, , , ,,@f @k @r,101, 
+zstdcat, ,t,test, , ,102,Test the integrity
+zstdcat, ,l,list, , ,103,List information about .zst file(s)
+zstdcat, , ,long, , ,104,Enable long distance matching with specified windowLog
+zstdcat, , ,single-thread, , ,105,Single-thread mode
+zstdcat, ,D, , ,@r,106,Use specified file as dictionary
+zstdcat, , ,sparse, , ,107,Enable sparse mode
+zstdcat, , ,no-sparse, , ,108,Disable sparse mode
+zstdcat, , ,filelist, , ,109,Read a list of files
+zstdcat, , ,format='$format', , ,110,Specify the format to use for decompression
+zstdcat, ,h,help, , ,111,Show help
+zstdcat, ,V,version, , ,112,Show version
+zstdcat, ,v,verbose, , ,113,Be verbose
+zstdcat, ,q,quiet, , ,114,Suppress warnings
+zstdcat, , ,no-progress, , ,115,Do not show the progress bar

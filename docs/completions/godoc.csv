@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+godoc, , ,analysis, ,@f @r,101,Comma-separated list of analyses to perform
+godoc, , ,ex, , ,102,Show examples in command line mode
+godoc, , ,goroot, ,@r,103,Go root directory
+godoc, , ,html, , ,104,Print HTML in command-line mode
+godoc, , ,http, ,@f @r,105,HTTP service address
+godoc, , ,httptest.serve, , ,106,httptest.NewServer serves on this address and blocks
+godoc, , ,index, , ,107,Enable search index
+godoc, , ,index_files, , ,108,Glob pattern specifying index files
+godoc, , ,index_interval, ,@f @r,109,Interval of indexing
+godoc, , ,index_throttle, ,@f @r,110,Index throttle value
+godoc, , ,links, , ,111,Link identifiers to their declarations
+godoc, , ,maxresults, ,@f @r,112,Maximum number of full text search results shown
+godoc, , ,notes, ,@f @r,113,Regular expression matching note markers to show
+godoc, , ,play, , ,114,Enable playground in web interface
+godoc, , ,server, , ,115,Webserver address for command line searches
+godoc, , ,src, , ,116,Print (exported) source in command-line mode
+godoc, , ,tabwidth, ,@f @r,117,Tab width
+godoc, , ,templates, ,@r,118,Directory containing alternate template files
+godoc, , ,timestamps, , ,119,Show timestamps with directory listings
+godoc, , ,url, ,@r,120,Print HTML for named URL
+godoc, , ,write_index, ,@r,121,Write index to a file
+godoc, , ,zip, ,@r,122,Zip file providing the file system to serve
+godoc, ,h,help, , ,123,Show help

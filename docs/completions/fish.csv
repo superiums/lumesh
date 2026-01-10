@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish, ,c,command, ,@f @r,101,Run specified command instead of interactive session
+fish, ,C,init-command, ,@f @r,102,Run specified command before session
+fish, ,h,help, , ,103,Display help and exit
+fish, ,v,version, , ,104,Display version and exit
+fish, ,N,no-config, , ,105,Do not read configuration files
+fish, ,n,no-execute, , ,106,"Only parse input, do not execute"
+fish, ,i,interactive, , ,107,Run in interactive mode
+fish, ,l,login, , ,108,Run as a login shell
+fish, ,p,profile, , ,109,Output profiling information (excluding startup) to a file
+fish, , ,profile-startup, , ,110,Output startup profiling information to a file
+fish, ,d,debug, ,@f @r,111,Specify debug categories
+fish, ,o,debug-output, , ,112,Where to direct debug output to
+fish, ,P,private, , ,113,Do not persist history
+fish, ,f,features, , ,114,Run with comma-separated feature flags enabled
+fish, , ,print-rusage-self, , ,115,Print stats from getrusage at exit
+fish, , ,print-debug-categories, , ,116,Print the debug categories fish knows
+fish, , , , ,@f @k @r,117, 

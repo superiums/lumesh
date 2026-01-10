@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sylpheed, , ,exit, , ,101,Exit sylpheed
+sylpheed, , ,debug, , ,102,Debug mode
+sylpheed, , ,help, , ,103,Display help and exit
+sylpheed, , ,version, , ,104,Output version information and exit
+sylpheed, , ,compose, ,@r,105,Open composition window with address
+sylpheed, , ,attach, ,@r,106,Open composition window with attached files
+sylpheed, , ,receive, ,@r,107,Receive new messages
+sylpheed, , ,receive-all, ,@r,108,Receive new messages of all accounts
+sylpheed, , ,send, ,@r,109,Send all queued messages
+sylpheed, , ,status, ,@r,110,Show the total number of messages for folder
+sylpheed, , ,status-full, ,@r,111,Show the total number of messages for each folder
+sylpheed, , ,configdir, ,@r,112,Specify directory with configuration files

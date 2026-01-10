@@ -1,0 +1,45 @@
+cmd,conds,short,long,params,dirs,pri,desc
+launchctl, __fish_use_subcommand, , ,bootstrap, ,101,Bootstraps a domain or a service into a domain
+launchctl, __fish_use_subcommand, , ,bootout, ,102,Tears down a domain or removes a service from a domain
+launchctl, __fish_use_subcommand, , ,enable, ,103,Enables an existing service
+launchctl, __fish_use_subcommand, , ,disable, ,104,Disables an existing service
+launchctl, __fish_use_subcommand, , ,uncache, ,105,Removes the specified service name from the service cache
+launchctl, __fish_use_subcommand, , ,kickstart, ,106,Forces an existing service to start
+launchctl, __fish_use_subcommand, , ,attach, ,107,Attach the system's debugger to a service
+launchctl, __fish_use_subcommand, , ,debug, ,108,Configures the next invocation of a service for debugging
+launchctl, __fish_use_subcommand, , ,kill, ,109,Sends a signal to the service instance
+launchctl, __fish_use_subcommand, , ,blame, ,110,Prints the reason a service is running
+launchctl, __fish_use_subcommand, , ,print, ,111,Prints a description of a domain or service
+launchctl, __fish_use_subcommand, , ,print-cache, ,112,Prints information about the service cache
+launchctl, __fish_use_subcommand, , ,print-disabled, ,113,Prints which services are disabled
+launchctl, __fish_use_subcommand, , ,plist, ,114,Prints a property list embedded in a binary (targets the Info.plist by default)
+launchctl, __fish_use_subcommand, , ,procinfo, ,115,Prints port information about a process
+launchctl, __fish_use_subcommand, , ,hostinfo, ,116,Prints port information about the host
+launchctl, __fish_use_subcommand, , ,resolveport, ,117,Resolves a port name from a process to an endpoint in launchd
+launchctl, __fish_use_subcommand, , ,limit, ,118,Reads or modifies launchd's resource limits
+launchctl, __fish_use_subcommand, , ,runstats, ,119,Prints performance statistics for a service
+launchctl, __fish_use_subcommand, , ,examine, ,120,Runs the specified analysis tool against launchd in a non-reentrant manner
+launchctl, __fish_use_subcommand, , ,config, ,121,Modifies persistent configuration parameters for launchd domains
+launchctl, __fish_use_subcommand, , ,dumpstate, ,122,Dumps launchd state to stdout
+launchctl, __fish_use_subcommand, , ,dumpjpcategory, ,123,Dumps the jetsam properties category for all services
+launchctl, __fish_use_subcommand, , ,reboot, ,124,Initiates a system reboot of the specified type
+launchctl, __fish_use_subcommand, , ,bootshell, ,125,Brings the system up from single-user mode with a console shell
+launchctl, __fish_use_subcommand, , ,load, ,126,Bootstraps a service or directory of services
+launchctl, __fish_use_subcommand, , ,unload, ,127,Unloads a service or directory of services
+launchctl, __fish_use_subcommand, , ,remove, ,128,Unloads the specified service name
+launchctl, __fish_use_subcommand, , ,list, ,129,Lists information about services
+launchctl, __fish_use_subcommand, , ,start, ,130,Starts the specified service
+launchctl, __fish_use_subcommand, , ,stop, ,131,Stops the specified service if it is running
+launchctl, __fish_use_subcommand, , ,setenv, ,132,Sets the specified environment variables for all services within the domain
+launchctl, __fish_use_subcommand, , ,unsetenv, ,133,Unsets the specified environment variables for all services within the domain
+launchctl, __fish_use_subcommand, , ,getenv, ,134,Gets the value of an environment variable from within launchd
+launchctl, __fish_use_subcommand, , ,bsexec, ,135,Execute a program in another process' bootstrap context
+launchctl, __fish_use_subcommand, , ,asuser, ,136,Execute a program in the bootstrap context of a given user
+launchctl, __fish_use_subcommand, , ,submit, ,137,Submit a basic job from the command line
+launchctl, __fish_use_subcommand, , ,managerpid, ,138,Prints the PID of the launchd controlling the session
+launchctl, __fish_use_subcommand, , ,manageruid, ,139,Prints the UID of the current launchd session
+launchctl, __fish_use_subcommand, , ,managername, ,140,Prints the name of the current launchd session
+launchctl, __fish_use_subcommand, , ,error, ,141,Prints a description of an error
+launchctl, __fish_use_subcommand, , ,variant, ,142,Prints the launchd variant
+launchctl, __fish_use_subcommand, , ,version, ,143,Prints the launchd version
+launchctl, __fish_use_subcommand, , ,help, ,144,Prints the usage for a given subcommand

@@ -1,0 +1,77 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cjpm, ,h,help, , ,101,Help for cjpm
+cjpm, ,v,version, , ,102,Version for cjpm
+cjpm, init,h,help, ,@f,114,Help for init
+cjpm, init, ,workspace, ,@f,115,Initialize a workspace's default configuration file
+cjpm, init, ,name, ,@f,116,Specify root package name (default: current directory)
+cjpm, init, ,path, , ,117,Specify path to create the module (default: current directory)
+cjpm, init, ,type,executable static dynamic,@f @r,118,Define output type of current module
+cjpm, run, ,name, ,@f,119,Name of the executable product to run (default: main)
+cjpm, run, ,build-args, ,@f,120,Arguments to pass to the build process
+cjpm, run, ,skip-build, ,@f,121,"Skip compile, only run the executable product"
+cjpm, run, ,run-args, ,@f,122,Arguments to pass to the executable product
+cjpm, run, ,target-dir, , ,123,Specify target directory
+cjpm, run,g, , ,@f,124,Enable debug version
+cjpm, run,h,help, ,@f,125,Help for run
+cjpm, run,V,verbose, ,@f,126,Enable verbose
+cjpm, run, ,skip-script, ,@f,127,Disable script 'build.cj'
+cjpm, install,h,help, ,@f,128,Help for install
+cjpm, install,V,verbose, ,@f,129,Enable verbose
+cjpm, install,m,member, ,@f,130,Specify a member module of the workspace
+cjpm, install,g, , ,@f,131,Enable install debug version target
+cjpm, install, ,path, , ,132,Specify path of source module (default: current path)
+cjpm, install, ,root, , ,133,Specify path of installed binary
+cjpm, install, ,git, ,@f,134,Specify URL of installed git module
+cjpm, install, ,branch, ,@f,135,Specify branch of installed git module
+cjpm, install, ,tag, ,@f,136,Specify tag of installed git module
+cjpm, install, ,commit, ,@f,137,Specify commit ID of installed git module
+cjpm, install,j,jobs, ,@f,138,Number of jobs to spawn in parallel
+cjpm, install, ,cfg, ,@f,139,Enable the customized option 'cfg'
+cjpm, install, ,target-dir, , ,140,Specify target directory
+cjpm, install, ,name, ,@f,141,Specify product name to install (default: all)
+cjpm, install, ,skip-build, ,@f,142,Install binary in target directory without building
+cjpm, install, ,list, ,@f,143,List all installed modules and their versions
+cjpm, install, ,skip-script, ,@f,144,Disable script 'build.cj'
+cjpm, build,h,help, ,@f,145,Help for build
+cjpm, build,i,incremental, ,@f,146,Enable incremental compilation
+cjpm, build,j,jobs, ,@f,147,Number of jobs to spawn in parallel
+cjpm, build,V,verbose, ,@f,148,Enable verbose
+cjpm, build,g, , ,@f,149,Enable compile debug version target
+cjpm, build, ,coverage, ,@f,150,Enable coverage
+cjpm, build, ,cfg, ,@f,151,Enable the customized option 'cfg'
+cjpm, build,m,member, ,@f,152,Specify a member module of the workspace
+cjpm, build, ,target, ,@f,153,Generate code for the given target platform
+cjpm, build, ,target-dir, , ,154,Specify target directory
+cjpm, build,o,output, ,@f,155,Specify product name when compiling an executable file
+cjpm, build,l,lint, ,@f,156,Enable cjlint code check
+cjpm, build, ,mock, ,@f,157,Enable support of mocking classes in tests
+cjpm, build, ,skip-script, ,@f,158,Disable script 'build.cj'
+cjpm, test,h,help, ,@f,159,Help for test
+cjpm, test,j,jobs, ,@f,160,Number of jobs to spawn in parallel
+cjpm, test,V,verbose, ,@f,161,Enable verbose
+cjpm, test,g, , ,@f,162,Enable compile debug version tests
+cjpm, test,i,incremental, ,@f,163,Enable incremental compilation
+cjpm, test, ,no-run, ,@f,164,"Compile, but don't run tests"
+cjpm, test, ,skip-build, ,@f,165,"Skip compile, only run tests"
+cjpm, test, ,coverage, ,@f,166,Enable coverage
+cjpm, test, ,cfg, ,@f,167,Enable the customized option 'cfg'
+cjpm, test, ,module, ,@f,168,Specify modules to test (default: current module)
+cjpm, test,m,member, ,@f,169,Specify a member module of the workspace
+cjpm, test, ,target, ,@f,170,Unittest for the given target platform
+cjpm, test, ,target-dir, , ,171,Specify target directory
+cjpm, test, ,dry-run, ,@f,172,Print tests without execution
+cjpm, test, ,filter, ,@f,173,Enable filter test
+cjpm, test, ,include-tags, ,@f,174,Run tests with specified tags
+cjpm, test, ,exclude-tags, ,@f,175,Run tests without specified tags
+cjpm, test, ,no-color, ,@f,176,Enable colorless result output
+cjpm, test, ,random-seed, ,@f,177,Enable random seed
+cjpm, test, ,timeout-each, ,@f,178,Specify default timeout for test cases
+cjpm, test, ,parallel, ,@f,179,Number of workers running tests
+cjpm, test, ,show-all-output, ,@f,180,Show output for all test cases
+cjpm, test, ,no-capture-output, ,@f,181,Disable test output capturing
+cjpm, test, ,report-path, , ,182,Specify path to directory of report
+cjpm, test, ,report-format, ,@f,183,Specify format of report
+cjpm, test, ,skip-script, ,@f,184,Disable script 'build.cj'
+cjpm, test, ,no-progress, ,@f,185,Disable progress report
+cjpm, test, ,progress-brief, ,@f,186,Display brief progress report
+cjpm, test, ,progress-entries-limit, ,@f,187,Limit number of entries shown in progress report

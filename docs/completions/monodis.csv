@@ -1,0 +1,42 @@
+cmd,conds,short,long,params,dirs,pri,desc
+monodis, ,h,help, , ,101,Show help
+monodis, , ,output, ,@r,102,Redirect stdout to file
+monodis, , ,mscorlib, , ,103,Use 'mscorlib' as the assembly name for non-corlib assemblies
+monodis, , ,show-method-tokens, , ,104,Show tokens for disassembled methods
+monodis, , ,show-tokens, , ,105,"Show tokens for strings, types, methods, fields, ..."
+monodis, , ,assembly, , ,106,Include Assembly table contents
+monodis, , ,assemblyref, , ,107,Include AssemblyRef table contents
+monodis, , ,classlayout, , ,108,Include ClassLayout table contents
+monodis, , ,constant, , ,109,Include Constant table contents
+monodis, , ,customattr, , ,110,Include CustomAttribute table contents
+monodis, , ,declsec, , ,111,Include DeclSec table contents
+monodis, , ,event, , ,112,Include Event table contents
+monodis, , ,exported, , ,113,Include ExportedType table contents
+monodis, , ,fields, , ,114,Include Field table contents
+monodis, , ,file, , ,115,Include File table contents
+monodis, , ,forward-decls, , ,116,Include forward declarations for classes
+monodis, , ,genericpar, , ,117,Include GenericParam table contents
+monodis, , ,implmap, , ,118,Include ImplMap table contents
+monodis, , ,interface, , ,119,Include InterfaceImpl table contents
+monodis, , ,manifest, , ,120,Include ManifestResource table contents
+monodis, , ,marshal, , ,121,Include FieldMarshal table contents
+monodis, , ,numberref, , ,122,Include MemberRef table contents
+monodis, , ,method, , ,123,Include MethodRef table contents
+monodis, , ,methodimpl, , ,124,Include MethodImpl table contents
+monodis, , ,methodspec, , ,125,Include MethodSpec table contents
+monodis, , ,methodsem, , ,126,Include MethodSemantics table contents
+monodis, , ,module, , ,127,Include Module table contents
+monodis, , ,moduleref, , ,128,Include ModuleRef table contents
+monodis, , ,mresources, , ,129,Save all the managed resources embedded in the assembly into the current directory
+monodis, , ,presources, , ,130,Show offsets and names of manifest resources embedded in the assembly
+monodis, , ,nested, , ,131,Include NestedClass table contents
+monodis, , ,param, , ,132,Include Param table contents
+monodis, , ,parconst, , ,133,Include GenericParameterConstraint table contents
+monodis, , ,property, , ,134,Include Property table contents
+monodis, , ,propertymap, , ,135,Include PropertyMap table contents
+monodis, , ,standalonesig, , ,136,Include StandAloneSig table contents
+monodis, , ,typedef, , ,137,Include TypeDef table contents
+monodis, , ,typespec, , ,138,Include TypeRef table contents
+monodis, , ,blob, , ,139,Use hex for entire contents of the blob stream
+monodis, , ,strings, , ,140,Include Strings table contents
+monodis, , ,userstrings, , ,141,Include User-Strings heap contents

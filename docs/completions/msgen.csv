@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msgen, ,D,directory, , ,101,add DIRECTORY to list for input files search 
+msgen, ,o,output-file, , ,102,write output to specified file 
+msgen, ,P,properties-input, , ,103,input file is in Java . properties syntax
+msgen, , ,stringtable-input, , ,104,input file is in NeXTstep/GNUstep . strings syntax . SS 'Output details:'
+msgen, , ,lang, , ,105,set 'Language' field in the header entry
+msgen, , ,color, , ,106,use colors and other text attributes always
+msgen, , ,style, , ,107,specify CSS style rule file for --color
+msgen, ,e,no-escape, , ,108,do not use C escapes in output (default)
+msgen, ,E,escape, , ,109,"use C escapes in output, no extended chars"
+msgen, , ,force-po, , ,110,write PO file even if empty
+msgen, ,i,indent, , ,111,indented output style
+msgen, , ,no-location, , ,112,suppress '#: filename:line' lines
+msgen, ,n,add-location, , ,113,preserve '#: filename:line' lines (default)
+msgen, , ,strict, , ,114,strict Uniforum output style
+msgen, ,p,properties-output, , ,115,write out a Java . properties file
+msgen, , ,stringtable-output, , ,116,write out a NeXTstep/GNUstep . strings file
+msgen, ,w,width, , ,117,set output page width
+msgen, , ,no-wrap, , ,118,"do not break long message lines, longer than the output page width, into seve…"
+msgen, ,s,sort-output, , ,119,generate sorted output
+msgen, ,F,sort-by-file, , ,120,sort output by file location . SS 'Informative output:'
+msgen, ,h,help, , ,121,display this help and exit
+msgen, ,V,version, , ,122,output version information and exit AUTHOR Written by Bruno Haible

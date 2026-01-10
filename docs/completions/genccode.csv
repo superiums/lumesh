@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+genccode, ,?,help, , ,101,Print help about usage and exit
+genccode, ,a,assembly, , ,102,Output assembly code instead of C code
+genccode, ,d,destdir, , ,103,Set the destination directory to R destination 
+genccode, ,n,name, , ,104,Set the data name to  name instead of the default
+genccode, ,f,filename, , ,105,"Normally, an ICU data file such as mydata. icu will be turned into mydata_icu"
+genccode, ,e,entrypoint, , ,106,Set the data entry point (used for linking against the data in a shared libra…
+genccode, ,t,type, , ,107,"option).  VERSION 76. 1 COPYRIGHT Copyright (C) 2000-2004 IBM, Inc"

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gvim, ,f,nofork, , ,101,Don't fork when starting GUI
+gvim, , , , ,@f @r,102,Use <font> for normal text
+gvim, , , , ,@f @r,103,Use <geom> for initial geometry
+gvim, , ,display, ,@f @r,104,Run vim on <display>
+gvim, , ,role, ,@f @r,105,Set role for identifying the window in X11
+gvim, , ,socketid, ,@f @r,106,Open Vim inside another GTK widget
+gvim, , ,echo-wid, , ,107,Echo the Window ID on stdout

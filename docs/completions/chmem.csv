@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chmem, ,b,blocks, , ,101, 
+chmem, ,d,disable, , ,102, 
+chmem, ,e,enable, , ,103, 
+chmem, ,z,zone, , ,104, 
+chmem, ,v,verbose, , ,105, 
+chmem, ,h,help, , ,106, 
+chmem, ,V,version, , ,107, 

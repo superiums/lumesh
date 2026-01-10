@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gio, , ,no-target-directory, , ,101,Donât copy into DESTINATION even if it is a directory
+gio, ,p,progress, , ,102,Show progress
+gio, ,i,interactive, , ,103,Prompt for confirmation before overwriting files
+gio, , ,preserve, , ,104,Preserve all attributes of copied files
+gio, ,b,backup, , ,105,Create backups of existing destination files
+gio, ,P,no-dereference, , ,106,Never follow symbolic links
+gio, , ,default-permissions, , ,107,"Use the default permissions of the current process for the destination file, …"
+gio, ,w,query-writable, , ,108,List writable attributes
+gio, ,f,filesystem, , ,109,Show information about the filesystem that the given locations reside on
+gio, ,a,attributes, , ,110,The attributes to get
+gio, , ,nofollow-symlinks, , ,111,Donât follow symbolic links
+gio, ,h,hidden, , ,112,Show hidden files
+gio, ,l,long, , ,113,Use a long listing format
+gio, ,d,print-display-names, , ,114,Print display names
+gio, ,u,print-uris, , ,115,Print full URIs
+gio, , ,parent, , ,116,Create parent directories when necessary
+gio, , ,dir, , ,117,Monitor the given location as a directory
+gio, , ,file, , ,118,Monitor the given location as a file
+gio, ,D,direct, , ,119,Monitor the file directly
+gio, ,s,silent, , ,120,"Monitor the file directly, but donât report changes"
+gio, , ,no-moves, , ,121,Report moves and renames as simple deleted/created events
+gio, ,m,mounts, , ,122,Watch for mount events
+gio, , ,mountable, , ,123,Mount as mountable
+gio, , ,device, , ,124,"Mount volume with device file, or other identifier"
+gio, , ,unmount, , ,125,Unmount the location
+gio, ,e,eject, , ,126,Eject the location
+gio, ,t,stop, , ,127,Stop drive with device file
+gio, , ,unmount-scheme, , ,128,Unmount all mounts with the given scheme
+gio, , ,force, , ,129,Ignore outstanding file operations when unmounting or ejecting
+gio, , ,anonymous, , ,130,Use an anonymous user when authenticating
+gio, , ,list, , ,131,List all GIO mounts
+gio, ,o,monitor, , ,132,Monitor mount-related events
+gio, , ,detail, , ,133,Show extra information
+gio, , ,tcrypt-pim, , ,134,The numeric PIM when unlocking a VeraCrypt volume
+gio, , ,tcrypt-hidden, , ,135,Mount a TCRYPT hidden volume
+gio, , ,tcrypt-system, , ,136,Mount a TCRYPT system volume
+gio, ,C,no-copy-fallback, , ,137,Donât use copy and delete fallback
+gio, ,c,create, , ,138,Only create the destination if it doesnât exist yet
+gio, , ,append, , ,139,Append to the end of the file
+gio, , ,private, , ,140,"When creating, restrict access to the current user"
+gio, , ,unlink, , ,141,"When replacing, replace as if the destination did not exist"
+gio, ,v,print-etag, , ,142,Print the new ETag in the end
+gio, , ,etag, , ,143,The ETag of the file that is overwritten
+gio, , ,type, , ,144,Specifies the type of the attribute
+gio, , ,delete, , ,145,Unsets an attribute (same as setting its type to unset)
+gio, , ,empty, , ,146,Empty the trash
+gio, , ,restore, , ,147,Restore a file from trash to its original location
+gio, , ,follow-symlinks, , ,148,Follow symbolic links.  EXIT STATUS

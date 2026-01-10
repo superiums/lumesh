@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+getfacl, ,a,access, , ,101,Display the file access control list
+getfacl, ,d,default, , ,102,Display the default access control list
+getfacl, ,c,omit-header, , ,103,Do not display the comment header (the first three lines of each file's outpu…
+getfacl, ,e,all-effective, , ,104,"Print all effective rights comments, even if identical to the rights defined …"
+getfacl, ,E,no-effective, , ,105,Do not print effective rights comments
+getfacl, ,s,skip-base, , ,106,"Skip files that only have the base ACL entries (owner, group, others)"
+getfacl, ,R,recursive, , ,107,List the ACLs of all files and directories recursively
+getfacl, ,L,logical, , ,108,"Logical walk, follow symbolic links to directories"
+getfacl, ,P,physical, , ,109,"Physical walk, do not follow symbolic links to directories"
+getfacl, ,t,tabular, , ,110,Use an alternative tabular output format
+getfacl, ,p,absolute-names, , ,111,Do not strip leading slash characters (`/')
+getfacl, ,n,numeric, , ,112,List numeric user and group IDs
+getfacl, ,v,version, , ,113,Print the version of getfacl and exit
+getfacl, ,h,help, , ,114,Print help explaining the command line options

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ipcmk, ,M,shmem, , ,101, 
+ipcmk, ,Q,queue, , ,102, 
+ipcmk, ,S,semaphore, , ,103, 
+ipcmk, ,p,mode, , ,104, 
+ipcmk, ,h,help, , ,105, 
+ipcmk, ,V,version, , ,106, 

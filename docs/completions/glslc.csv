@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+glslc, ,h,help, , ,101, 
+glslc, , ,show-limits, , ,102, 
+glslc, , ,target-env, , ,103, 
+glslc, , ,target-spv, , ,104, 

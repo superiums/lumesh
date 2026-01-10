@@ -1,0 +1,43 @@
+cmd,conds,short,long,params,dirs,pri,desc
+s3cmd, __s3cmd_is_valid_remote_path, , , ,@f,101, 
+s3cmd, __s3cmd_is_remote_path, , , ,@f,102, 
+s3cmd, __fish_is_nth_token 1, , ,mb, ,103,Make bucket
+s3cmd, __fish_is_nth_token 1, , ,rb, ,104,Remove bucket
+s3cmd, __fish_is_nth_token 1, , ,ls, ,105,List objects or buckets
+s3cmd, __fish_is_nth_token 1, , ,la, ,106,List all object in all buckets
+s3cmd, __fish_is_nth_token 1, , ,put, ,107,Put file into bucket
+s3cmd, __fish_is_nth_token 1, , ,get, ,108,Get file from bucket
+s3cmd, __fish_is_nth_token 1, , ,del, ,109,Delete file from bucket
+s3cmd, __fish_is_nth_token 1, , ,rm, ,110,Delete file from bucket (alias for del)
+s3cmd, __fish_is_nth_token 1, , ,restore, ,111,Restore file from Glacier storage
+s3cmd, __fish_is_nth_token 1, , ,sync, ,112,Synchronize a directory tree to S3
+s3cmd, __fish_is_nth_token 1, , ,du, ,113,Disk usage by buckets
+s3cmd, __fish_is_nth_token 1, , ,info, ,114,Get various information about Buckets or Files
+s3cmd, __fish_is_nth_token 1, , ,cp, ,115,Copy object
+s3cmd, __fish_is_nth_token 1, , ,modify, ,116,Modify object metadata
+s3cmd, __fish_is_nth_token 1, , ,mv, ,117,Move object
+s3cmd, __fish_is_nth_token 1, , ,setacl, ,118,Modify Access control list for Bucket or Files
+s3cmd, __fish_is_nth_token 1, , ,setpolicy, ,119,Modify Bucket Policy
+s3cmd, __fish_is_nth_token 1, , ,delpolicy, ,120,Delete Bucket Policy
+s3cmd, __fish_is_nth_token 1, , ,setcors, ,121,Modify Bucket CORS
+s3cmd, __fish_is_nth_token 1, , ,delcors, ,122,Delete Bucket CORS
+s3cmd, __fish_is_nth_token 1, , ,payer, ,123,Modify Bucket Requester Pays policy
+s3cmd, __fish_is_nth_token 1, , ,multipart, ,124,Show multipart uploads
+s3cmd, __fish_is_nth_token 1, , ,abortmp, ,125,Abort a multipart upload
+s3cmd, __fish_is_nth_token 1, , ,listmp, ,126,List parts of a multipart upload
+s3cmd, __fish_is_nth_token 1, , ,accesslog, ,127,Enable/disable bucket access logging
+s3cmd, __fish_is_nth_token 1, , ,sign, ,128,Sign arbitrary string using the secret key
+s3cmd, __fish_is_nth_token 1, , ,signurl, ,129,Sign an S3 URL to provide limited public access with expiry
+s3cmd, __fish_is_nth_token 1, , ,fixbucket, ,130,Fix invalid file names in a bucket
+s3cmd, __fish_is_nth_token 1, , ,ws-create, ,131,Create Website from bucket
+s3cmd, __fish_is_nth_token 1, , ,ws-delete, ,132,Delete Website
+s3cmd, __fish_is_nth_token 1, , ,ws-info, ,133,Info about Website
+s3cmd, __fish_is_nth_token 1, , ,expire, ,134,Set or delete expiration rule for the bucket
+s3cmd, __fish_is_nth_token 1, , ,setlifecycle, ,135,Upload a lifecycle policy for the bucket
+s3cmd, __fish_is_nth_token 1, , ,dellifecycle, ,136,Remove a lifecycle policy for the bucket
+s3cmd, __fish_is_nth_token 1, , ,cflist, ,137,List CloudFront distribution points
+s3cmd, __fish_is_nth_token 1, , ,cfinfo, ,138,Display CloudFront distribution point parameters
+s3cmd, __fish_is_nth_token 1, , ,cfcreate, ,139,Create CloudFront distribution point
+s3cmd, __fish_is_nth_token 1, , ,cfdelete, ,140,Delete CloudFront distribution point
+s3cmd, __fish_is_nth_token 1, , ,cfmodify, ,141,Change CloudFront distribution point parameters
+s3cmd, __fish_is_nth_token 1, , ,cfinvalinfo, ,142,Display CloudFront invalidation request(s) status

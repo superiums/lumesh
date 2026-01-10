@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+connman-gtk, ,h,help, , ,101,Print ConnMan-GTK's available options and exit
+connman-gtk, , ,no-icon, , ,102,Disable status icon
+connman-gtk, , ,tray, , ,103,Launch to tray
+connman-gtk, , ,use-fsid, , ,104,Use the private key's fsid (see stat(1)) as they passphrase for private keys …

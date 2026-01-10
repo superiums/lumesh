@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pipesz, ,g,get, , ,101, 
+pipesz, ,s,set, , ,102, 
+pipesz, ,f,file, , ,103, 
+pipesz, ,n,fd, , ,104, 
+pipesz, ,i,stdin, , ,105, 
+pipesz, ,o,stdout, , ,106, 
+pipesz, ,e,stderr, , ,107, 
+pipesz, ,c,check, , ,108, 
+pipesz, ,q,quiet, , ,109, 
+pipesz, ,v,verbose, , ,110, 
+pipesz, ,h,help, , ,111, 
+pipesz, ,V,version, , ,112, 

@@ -1,0 +1,46 @@
+cmd,conds,short,long,params,dirs,pri,desc
+terraform, __fish_terraform_needs_command, , , ,@f,101,Print version information
+terraform, __fish_terraform_needs_command, , ,apply,@f,103,Build or change infrastructure
+terraform, __fish_terraform_needs_command, , ,destroy,@f,104,Destroy infrastructure
+terraform, $apply, , , ,@f,105,Skip interactive approval
+terraform, $apply, , , ,@r,106,Path to backup the existing state file
+terraform, $apply, , , ,@f,107,Show only error summaries
+terraform, $apply, , , ,@f,108,Don't hold a state lock
+terraform, $apply, , , ,@f,109,Duration to retry a state lock
+terraform, $apply, , , ,@f,110,Ask for input for variables if not directly set
+terraform, $apply, , , ,@f,111,"If specified, output won't contain any color"
+terraform, $apply, , , ,@f,112,Limit the number of concurrent operations
+terraform, $apply, , , ,@r,113,Path to a Terraform state file
+terraform, $apply, , , ,@r,114,Path to write state
+terraform, __fish_terraform_needs_command, , ,console,@f,115,Interactive console for Terraform interpolations
+terraform, __fish_terraform_needs_command, , ,fmt,@f,119,Rewrite config files to canonical format
+terraform, __fish_terraform_needs_command, , ,get,@f,126,Download and install modules for the configuration
+terraform, __fish_terraform_needs_command, , ,graph,@f,129,Create a visual graph of Terraform resources
+terraform, __fish_terraform_needs_command, , ,import,@f,136,Import existing infrastructure into Terraform
+terraform, __fish_terraform_needs_command, , ,init,@f,148,Initialize a new or existing Terraform configuration
+terraform, __fish_terraform_needs_command, , ,login,@f,165,Retrieves auth token for the given hostname
+terraform, __fish_terraform_needs_command, , ,logout,@f,167,Removes auth token for the given hostname
+terraform, __fish_terraform_needs_command, , ,output,@f,169,Read an output from a state file
+terraform, __fish_terraform_needs_command, , ,plan,@f,174,Generate and show an execution plan
+terraform, $plan, , , ,@f,184,Select 'destroy' planning mode
+terraform, $plan, , , ,@f,185,Select 'refresh only' planning mode
+terraform, $plan, , , ,@f,186,Skip checking for external changes
+terraform, $plan, , , ,@f,187,Force replacement of resource using its address
+terraform, $plan, , , ,@f,188,Resource to target
+terraform, $plan, , , ,@f,189,Set a variable in the Terraform configuration
+terraform, $plan, , , ,@r,190,Set variables from a file
+terraform, __fish_terraform_needs_command, , ,providers,@f,191,Print tree of modules with their provider requirements
+terraform, __fish_terraform_needs_command, , ,refresh,@f,193,Update local state file against real resources
+terraform, $apply, , , ,@f,194,Show only error summaries
+terraform, __fish_terraform_needs_command, , ,show,@f,205,Inspect Terraform state or plan
+terraform, __fish_terraform_needs_command, , ,state,@r,208,Advanced state management
+terraform, __fish_terraform_needs_command, , ,taint,@f,216,Manually mark a resource for recreation
+terraform, __fish_terraform_needs_command, , ,test,@f,224,Runs automated test of shared modules
+terraform, __fish_terraform_needs_command, , ,untaint,@f,228,Manually unmark a resource as tainted
+terraform, __fish_terraform_needs_command, , ,validate,@f,236,Validate the Terraform files
+terraform, __fish_terraform_needs_command, , ,version,@f,239,Print the Terraform version
+terraform, __fish_terraform_needs_command, , ,workspace,@f,240,Workspace management
+terraform, workspace && $workspace_commands, , ,list,@f,240,List workspaces
+terraform, workspace && $workspace_commands, , ,select,@f,240,Select an workspace
+terraform, workspace && $workspace_commands, , ,new,@f,240,Create a new workspace
+terraform, workspace && $workspace_commands, , ,delete,@f,240,Delete an existing workspace

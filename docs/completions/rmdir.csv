@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rmdir, , , , ,@D @f @r,101, 
+rmdir, , ,ignore-fail-on-non-empty, , ,102,Ignore errors from non-empty directories
+rmdir, ,p,parents, , ,103,Remove each component of path
+rmdir, ,v,verbose, , ,104,Verbose mode
+rmdir, , ,help, , ,105,Display help and exit
+rmdir, , ,version, , ,106,Display version and exit

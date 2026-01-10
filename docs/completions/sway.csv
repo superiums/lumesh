@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sway, , , , ,@f,101, 
+Show help message and quit., ,h,help, , ,102, 
+Specifies a config file., ,c,config, , ,103, 
+Check the validity of the config file, then exit., ,C,validate, , ,104, 
+Enables full logging, including debug information., ,d,debug, , ,105, 
+Show the version number and quit., ,v,version, , ,106, 
+Enables more verbose logging., ,V,verbose, , ,107, 
+Gets the IPC socket path and prints it, then exits., , ,get-socketpath, , ,108, 

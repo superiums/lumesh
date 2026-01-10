@@ -1,0 +1,31 @@
+cmd,conds,short,long,params,dirs,pri,desc
+firejail, , ,help, , ,101,Show help and exit
+firejail, , ,version, , ,102,Show version and exit
+firejail, , ,debug, , ,103,Print debug info
+firejail, , ,debug-blacklists, , ,104,Debug blacklisting
+firejail, , ,debug-whitelists, , ,105,Debug whitelisting
+firejail, , ,debug-caps, , ,106,Print known capabilities and exit
+firejail, , ,debug-errnos, , ,107,Print known error numbers and exit
+firejail, , ,debug-private-lib, , ,108,Debug --private-lib
+firejail, , ,debug-protocols, , ,109,Print known protocols and exit
+firejail, , ,debug-syscalls, , ,110,Print known syscalls and exit
+firejail, , ,debug-syscalls32, , ,111,Print known 32-bit syscalls and exit
+firejail, , ,list, , ,112,List all sandboxes
+firejail, , ,tree, , ,113,Print a tree of all sandboxes
+firejail, , ,top, , ,114,Monitor sandboxes (like `top`)
+firejail, , ,shutdown, , ,115,Show help and exit
+firejail, , ,profiles, ,@F,116,Load a custom security profile
+firejail, , ,join, , ,117,Join existing sandbox
+firejail, , ,hosts-file, ,@F,118,Show help and exit
+firejail, , ,chroot, ,@D,119,Chroot into this directory
+firejail, , ,tmpfs, ,@D,120,Mount tmpfs into sandbox
+firejail, , ,blacklist, , ,121,Blacklist dir or file
+firejail, , ,noblacklist, , ,122,Disable blacklist for dir or file
+firejail, , ,whitelist, , ,123,Whitelist dir or file
+firejail, , ,nowhitelist, , ,124,Disable whitelist for dir or file
+firejail, , ,read-only, , ,125,Set dir or file read-only
+firejail, , ,read-write, , ,126,Set dir or file read-write
+firejail, , ,bind, , ,127,Bind-mount file on top of another
+firejail, , ,private, , ,128,Mount temporary home directories and delete on exit
+firejail, , ,netfilter, , ,129,Enable firewall given by this file
+firejail, , ,net, , ,130,Enable network namespace connected to this interface

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+autopoint, , ,help, , ,101,print this help and exit
+autopoint, , ,version, , ,102,print version information and exit
+autopoint, ,f,force, , ,103,force overwriting of files that already exist
+autopoint, ,n,dry-run, , ,104,print modifications but don't perform them AUTHOR Written by Bruno Haible REP…

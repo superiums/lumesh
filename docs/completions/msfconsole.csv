@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+msfconsole, ,E,environment, ,@f @r,101,Set Rails environment
+msfconsole, ,M,migration-path, ,@D,102,Directory containing additional DB migrations
+msfconsole, ,n,no-database, , ,103,Disable database support
+msfconsole, ,y,yaml, ,@F,104,YAML file containing database settings
+msfconsole, ,c, , ,@F,105,Load the specified configuration file
+msfconsole, ,V,version, , ,106,Show version
+msfconsole, , ,defer-module-loads, , ,107,Defer module loading
+msfconsole, ,m,module-path, ,@D,108,Load an additional module path
+msfconsole, ,a,ask, , ,109,Ask before exiting Metasploit
+msfconsole, ,H,history-file, ,@F,110,Save command history to the specified file
+msfconsole, ,l,logger,Stdout Flatfile StdoutWithoutTimestamps TimestampColorlessFlatfile Stderr, ,111,Specify a logger to use
+msfconsole, ,L,real-readline, , ,112,Use the system Readline library
+msfconsole, ,o,output, ,@F,113,Output to the specified file
+msfconsole, ,p,plugin, ,@f @r,114,Load a plugin on startup
+msfconsole, ,q,quiet, , ,115,Do not print the banner on startup
+msfconsole, ,r,resource, ,@F,116,Execute the specified resource file
+msfconsole, ,x,execute-command, ,@f @r,117,Execute the specified console commands
+msfconsole, ,h,help, , ,118,Show help message

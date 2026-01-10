@@ -1,0 +1,38 @@
+cmd,conds,short,long,params,dirs,pri,desc
+keepassxc-cli, , ,debug-info, , ,101,Show debug info
+keepassxc-cli, ,k,key-file, ,@r,102,Specify a key file
+keepassxc-cli, , ,no-password, , ,103,Deactivate the password key
+keepassxc-cli, ,y,yubikey, ,@r,104,Specify a yubikey slot
+keepassxc-cli, ,q,quiet, ,@r,105,Be quiet
+keepassxc-cli, ,h,help, , ,106,Show help info
+keepassxc-cli, ,v,version, , ,107,Show version info
+keepassxc-cli, merge,d,dry-run, ,@r,131,Dry run
+keepassxc-cli, merge, ,key-file-from, ,@r,132,Key file to merge from
+keepassxc-cli, merge, ,no-password-from, , ,133,Deactivate the password key to merge from
+keepassxc-cli, merge, ,yubikey-from, , ,134,Yubikey slot for the second database
+keepassxc-cli, merge,s,same-credentials, , ,135,Use the same credentials for both databases
+keepassxc-cli, add edit,u,username, ,@f @r,136,Username for the entry
+keepassxc-cli, add edit, ,url, ,@f,137,URL for the entry
+keepassxc-cli, add edit, ,password-prompt, , ,138,Prompt for the entry's password
+keepassxc-cli, add edit,g,generate, , ,139,Generate a password for the entry
+keepassxc-cli, edit,t,title, ,@f @r,140,Title for the entry
+keepassxc-cli, estimate,a,advanced, , ,141,Perform advanced analysis on the password
+keepassxc-cli, analyze,H,hibp, ,@r,142,Check if any passwords have been publicly leaked
+keepassxc-cli, clip,t,totp, , ,143,Copy the current TOTP to the clipboard
+keepassxc-cli, show,a,attributes, ,@f @r,144,Names of the attributes to show
+keepassxc-cli, show,s,show-protected, , ,145,Show the protected attributes in clear text
+keepassxc-cli, show,t,totp, , ,146,Show the entry's current TOTP
+keepassxc-cli, diceware,W,words, ,@f @r,147,Word count for the diceware passphrase
+keepassxc-cli, diceware,w,word-list, ,@f @r,148,Wordlist for the diceware generator
+keepassxc-cli, export,f,format,xml csv,@f @r,149,Format to use when exporting
+keepassxc-cli, ls,R,recursive, , ,150,Recursively list the elements of the group
+keepassxc-cli, ls,f,flatten, , ,151,Flattens the output to single line
+keepassxc-cli, generate,L,length, ,@f @r,152,Length of the generated password
+keepassxc-cli, generate,l,lower, , ,153,Use lowercase chars
+keepassxc-cli, generate,U,upper, , ,154,Use uppercase chars
+keepassxc-cli, generate,n,numeric, , ,155,Use numbers
+keepassxc-cli, generate,s,special, , ,156,Use special chars
+keepassxc-cli, generate,e,extended, , ,157,Use extended ASCII
+keepassxc-cli, generate,x,exclude, ,@f @r,158,Exclude char set
+keepassxc-cli, generate, ,exclude-similar, , ,159,Exclude similar looking chars
+keepassxc-cli, generate, ,every-group, , ,160,Include chars from every selected group

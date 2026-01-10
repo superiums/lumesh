@@ -1,0 +1,96 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wget, ,V,version, , ,101,Display version and exit
+wget, ,h,help, , ,102,Display help and exit
+wget, ,b,background, , ,103,Go to background immediately after startup
+wget, ,e,execute, , ,104,Execute command as if part of .wgetrc
+wget, ,o,output-file, , ,105,Log all messages to logfile
+wget, ,a,append-output, , ,106,Append all messages to logfile
+wget, ,d,debug, , ,107,Turn on debug output
+wget, ,q,quiet, , ,108,Quiet mode
+wget, ,v,verbose, , ,109,Verbose mode
+wget, , ,non-verbose, , ,110,Turn off verbose without being completely quiet
+wget, ,i,input-file, , ,111,Read URLs from file
+wget, ,F,force-html, , ,112,Force input to be treated as HTML
+wget, ,B,base, , ,113,Prepend string to relative links
+wget, , ,bind-address, , ,114,Bind address on local machine
+wget, ,t,tries,0 1 2 4 8 16 32 64 128, ,115,Set number of retries to number
+wget, ,O,output-document, , ,116,Concatenate output to file
+wget, , ,no-clobber, , ,117,Never overwrite files with same name
+wget, ,c,continue, , ,118,Continue getting a partially-downloaded file
+wget, , ,progress,, ,119,Select progress meter type
+wget, ,N,timestamping, , ,120,Turn on time-stamping
+wget, ,S,server-response, , ,121,Print the headers/responses sent by servers
+wget, , ,spider, , ,122,"Do not download the pages, just check that they are there"
+wget, ,T,timeout, , ,123,Set the network timeout
+wget, , ,dns-timeout, , ,124,Set the DNS lookup timeout
+wget, , ,connect-timeout, , ,125,Set the connect timeout
+wget, , ,read-timeout, , ,126,Set the read (and write) timeout
+wget, , ,limit-rate, , ,127,Limit the download speed
+wget, ,w,wait, , ,128,Wait the specified number of seconds between the retrievals
+wget, , ,waitretry, , ,129,Wait time between retries
+wget, , ,random-wait, , ,130,Wait random amount of time between retrievals
+wget, ,Y,proxy,on off, ,131,Toggle proxy support
+wget, ,Q,quota, , ,132,Specify download quota for automatic retrievals
+wget, , ,dns-cache,off, ,133,Turn off caching of DNS lookups
+wget, , ,restrict-file-names,, ,134,Change which characters found in remote URLs may show up in local file names
+wget, , ,no-directories, , ,135,Do not create a hierarchy of directories
+wget, ,x,force-directories, , ,136,Force creation of a hierarchy of directories
+wget, , ,no-host-directories, , ,137,Disable generation of host-prefixed directories
+wget, , ,protocol-directories, , ,138,Use the protocol name as a directory component
+wget, , ,cut-dirs,1 2 3 4 5, ,139,Ignore specified number of directory components
+wget, ,P,directory-prefix, , ,140,Set directory prefix
+wget, ,E,html-extension, , ,141,Force html files to have html extension
+wget, , ,http-user, , ,142,Specify the http username
+wget, , ,http-passwd, , ,143,Specify the http password
+wget, , ,no-cache, , ,144,Disable server-side cache
+wget, , ,no-cookies, , ,145,Disable the use of cookies
+wget, , ,load-cookies, , ,146,Load cookies from file
+wget, , ,save-cookies, , ,147,Save cookies to file
+wget, , ,keep-session-cookies, , ,148,Save session cookies
+wget, , ,ignore-length, , ,149,Ignore 'Content-Length' header
+wget, , ,header, , ,150,Define an additional-header to be passed to the HTTP servers
+wget, , ,proxy-user, , ,151,Specify the proxy username
+wget, , ,proxy-password, , ,152,Specify the proxy password
+wget, , ,referer, , ,153,Set referer URL
+wget, , ,save-headers, , ,154,Save the headers sent by the HTTP server
+wget, ,U,user-agent, , ,155,Identify as agent-string
+wget, , ,post-data, , ,156,Use POST for all HTTP requests and send the specified data in the request body
+wget, , ,post-file, , ,157,Use POST for all HTTP requests and send the specified file in the request body
+wget, , ,no-http-keep-alive, , ,158,Turn off keep-alive for http downloads
+wget, , ,secure-protocol,auto SSLv2 SSLv3 TLSv1 PFS,@f @r,159,Choose secure protocol
+wget, , ,https-only, ,@f,160,Only follow secure HTTPS links
+wget, , ,no-check-certificate, ,@f,161,Don't validate the server's certificate
+wget, , ,certificate, ,@r,162,Client certificate file
+wget, PEM DER, ,certificate-type, ,@f @r,163,Client certificate type
+wget, , ,private-key, ,@r,164,Private key file
+wget, PEM DER, ,private-key-type, ,@f @r,165,Private key type
+wget, , ,ca-certificate, ,@r,166,File with the bundle of CAs
+wget, , ,ca-directory, ,@r,167,Directory where hash list of CAs is stored
+wget, , ,crl-file, ,@r,168,File with bundle of CRLs
+wget, , ,random-file, ,@r,169,File with random data for seeding the SSL PRNG
+wget, , ,egd-file, ,@r,170,File naming the EGD socket with random data
+wget, , ,no-hsts, ,@f,171,Disable HSTS
+wget, , ,hsts-file, , ,172,Path of HSTS database
+wget, , ,no-remove-listing, , ,173,Don't remove the temporary .listing files generated
+wget, , ,no-glob, , ,174,Turn off FTP globbing
+wget, , ,passive-ftp, , ,175,Use the passive FTP retrieval scheme
+wget, , ,retr-symlinks, , ,176,Traverse symlinks and retrieve pointed-to files
+wget, ,r,recursive, , ,177,Turn on recursive retrieving
+wget, , ,delete-after, , ,179,Delete every single file downloaded
+wget, ,k,convert-links, , ,180,Convert the links in the document to make them suitable for local viewing
+wget, ,K,backup-converted, , ,181,Back up the original version
+wget, ,m,mirror, , ,182,Turn on options suitable for mirroring
+wget, ,p,page-requisites, , ,183,Download all the files that are necessary to properly display a given HTML page
+wget, , ,strict-comments, , ,184,Turn on strict parsing of HTML comments
+wget, ,A,accept, , ,185,Comma-separated lists of file name suffixes or patterns to accept
+wget, ,R,reject, , ,186,Comma-separated lists of file name suffixes or patterns to reject
+wget, ,D,domains, , ,187,Set domains to be followed
+wget, , ,exclude-domains, , ,188,Specify the domains that are not to be followed
+wget, , ,follow-ftp, , ,189,Follow FTP links from HTML documents
+wget, , ,follow-tags, , ,190,HTML tags to follow
+wget, , ,ignore-tags, , ,191,HTML tags to ignore
+wget, ,H,span-hosts, , ,192,Enable spanning across hosts
+wget, ,L,relative, , ,193,Follow relative links only
+wget, ,I,include-directories, , ,194,Specify a comma-separated list of directories you wish to follow
+wget, ,X,exclude-directories, , ,195,Specify a comma-separated list of directories you wish to exclude
+wget, , ,no-parent, , ,196,Do not ever ascend to the parent directory

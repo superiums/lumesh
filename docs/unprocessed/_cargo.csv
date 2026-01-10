@@ -1,0 +1,53 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cargo, __fish_use_subcommand, , ,$__fish_cargo_subcommands,@f,101, 
+cargo, help, , ,$__fish_cargo_subcommands,@f @r,102, 
+cargo, $x, ,bench, ,@f @r,103, 
+cargo, $x, ,lib, , ,104,Only this package's library
+cargo, $x, ,test, ,@f @r,105, 
+cargo, $x, ,bin, ,@f @r,106, 
+cargo, $x, ,example, ,@f @r,107, 
+cargo, __fish_use_subcommand, ,explain, , ,109,Run `rustc --explain CODE`
+cargo, __fish_use_subcommand, ,color, , ,110,"Coloring: auto, always, never"
+cargo, __fish_use_subcommand, ,config, , ,111,Override a configuration value (unstable)
+cargo, __fish_use_subcommand,V,version, , ,112,Print version info and exit
+cargo, __fish_use_subcommand, ,list, , ,113,List installed commands
+cargo, __fish_use_subcommand,v,verbose, , ,114,Use verbose output (-vv very verbose/build.rs output)
+cargo, __fish_use_subcommand,q,quiet, , ,115,No output printed to stdout
+cargo, __fish_use_subcommand, ,frozen, , ,116,Require Cargo.lock and cache are up to date
+cargo, __fish_use_subcommand, ,locked, , ,117,Require Cargo.lock is up to date
+cargo, __fish_use_subcommand, ,offline, , ,118,Run without accessing the network
+cargo, __fish_use_subcommand,h,help, , ,119,Prints help information
+cargo, __fish_use_subcommand, , ,bench,@f,120,Execute all benchmarks of a local package
+cargo, __fish_use_subcommand, , ,build,@f,121,Compile a local package and all of its dependencies
+cargo, __fish_use_subcommand, , ,check,@f,122,Check a local package and all of its dependencies for errors
+cargo, __fish_use_subcommand, , ,clean,@f,123,Remove artifacts that cargo has generated in the past
+cargo, __fish_use_subcommand, , ,complete,@f,124,Generate completion file for a shell
+cargo, __fish_use_subcommand, , ,doc,@f,125,Build a package's documentation
+cargo, __fish_use_subcommand, , ,fetch,@f,126,Fetch dependencies of a package from the network
+cargo, __fish_use_subcommand, , ,fix,@f,127,Automatically fix lint warnings reported by rustc
+cargo, __fish_use_subcommand, , ,generate-lockfile,@f,128,Generate the lockfile for a package
+cargo, __fish_use_subcommand, , ,git-checkout,@f,129,This subcommand has been removed
+cargo, __fish_use_subcommand, , ,init,@f,130,Create a new cargo package in an existing directory
+cargo, __fish_use_subcommand, , ,install,@f,131,Install a Rust binary. Default location is $HOME/.cargo/bin
+cargo, __fish_use_subcommand, , ,locate-project,@f,132,Print a JSON representation of a Cargo.toml file's location
+cargo, __fish_use_subcommand, , ,login,@f,133,Save an API token from argument or stdin for authentication
+cargo, __fish_use_subcommand, , ,logout,@f,134,Remove an API token from the registry locally
+cargo, __fish_use_subcommand, , ,metadata,@f,135,Output the resolved dependencies of a package in machine-readable format
+cargo, __fish_use_subcommand, , ,new,@f,136,Create a new cargo package at <path>
+cargo, __fish_use_subcommand, , ,owner,@f,137,Manage the owners of a crate on the registry
+cargo, __fish_use_subcommand, , ,package,@f,138,Assemble the local package into a distributable tarball
+cargo, __fish_use_subcommand, , ,pkgid,@f,139,Print a fully qualified package specification
+cargo, __fish_use_subcommand, , ,publish,@f,140,Upload a package to the registry
+cargo, __fish_use_subcommand, , ,run,@f,141,Run a binary or example of the local package
+cargo, __fish_use_subcommand, , ,rustc,@f,142,"Compile a package, and pass extra options to the compiler"
+cargo, __fish_use_subcommand, , ,rustdoc,@f,143,"Build a package's documentation, using specified custom flags."
+cargo, __fish_use_subcommand, , ,search,@f,144,Search packages in crates.io
+cargo, __fish_use_subcommand, , ,test,@f,145,Execute all unit and integration tests and build examples of a local package
+cargo, __fish_use_subcommand, , ,tree,@f,146,Display a tree visualization of a dependency graph
+cargo, __fish_use_subcommand, , ,uninstall,@f,147,Remove a Rust binary
+cargo, __fish_use_subcommand, , ,update,@f,148,Update dependencies as recorded in the local lock file
+cargo, __fish_use_subcommand, , ,vendor,@f,149,Vendor all dependencies for a project locally
+cargo, __fish_use_subcommand, , ,verify-project,@f,150,Check correctness of crate manifest
+cargo, __fish_use_subcommand, , ,version,@f,151,Show version information
+cargo, __fish_use_subcommand, , ,yank,@f,152,Remove a pushed crate from the index
+cargo, __fish_use_subcommand, , ,help,@f,153,Prints this message or the help of the given subcommand(s)

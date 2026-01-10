@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+perl, $unicode,Ca, , , ,101,Debug UTF-8 cache
+perl, $unicode,CA, , , ,102,ARGV uses UTF-8
+perl, $unicode,CD, , , ,103,Opened filehandles are UTF-8
+perl, $unicode,CE, , , ,104,STDERR is UTF-8
+perl, $unicode,Ci, , , ,105,Filehandles that are read are UTF-8
+perl, $unicode,CI, , , ,106,STDIN is UTF-8
+perl, $unicode,CL, , , ,107,Enable Unicode conditionally
+perl, $unicode,Co, , , ,108,Filehandles written to are UTF-8
+perl, $unicode,CO, , , ,109,STDOUT is UTF-8
+perl, $unicode,CS, , , ,110,"STDOUT, STDIN, and STDERR are UTF-8"
+perl, commandline | string match -qr 'd\$',dt, , , ,111,"Debugger, with threads"
+perl, $noopt,D, , ,@f @r,112,Debug option
+perl, $noopt,e, , ,@f @r,113,Execute command
+perl, $noopt,E, , ,@f @r,114,"Execute command, enable optional features"
+perl, $noopt,F, , ,@f @r,115,Set regexp used to split input
+perl, $noopt,i, , ,@f @r,116,Edit files in-place
+perl, $noopt,I, , ,@r,117,Include path
+perl, $noopt,m, ,$modules,@f @r,118,Require module
+perl, $noopt,M, ,$modules,@f @r,119,Use module
+perl, $noopt,x, , ,@r,120,Extract script

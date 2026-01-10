@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wpctl, __wpctl_command_shape, , ,$commands, ,112, 
+wpctl,__wpctl_command_shape '*' get-volume inspect set-volume set-mute set-profile, , ,@DEFAULT_AUDIO_SOURCE@, ,113,Default Microphone
+wpctl,__wpctl_command_shape '*' get-volume inspect set-volume set-mute set-profile, , ,@DEFAULT_AUDIO_SINK@, ,114,Default Speakers
+wpctl,__wpctl_command_shape '*' inspect set-profile, , ,@DEFAULT_VIDEO_SOURCE@, ,115,Default Camera
+wpctl, __wpctl_command_shape set-mute '*', , ,0 1 toggle, ,116, 

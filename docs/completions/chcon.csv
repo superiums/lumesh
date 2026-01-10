@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chcon, , ,dereference, , ,101,"affect the referent of each symbolic link (this is the default), rather than …"
+chcon, ,h,no-dereference, , ,102,affect symbolic links instead of any referenced file
+chcon, ,u,user, , ,103,set user USER in the target security context
+chcon, ,r,role, , ,104,set role ROLE in the target security context
+chcon, ,t,type, , ,105,set type TYPE in the target security context
+chcon, ,l,range, , ,106,set range RANGE in the target security context
+chcon, , ,no-preserve-root, , ,107,do not treat '/' specially (the default)
+chcon, , ,preserve-root, , ,108,fail to operate recursively on '/'
+chcon, , ,reference, , ,109,use RFILE's security context rather than specifying a CONTEXT value
+chcon, ,R,recursive, , ,110,operate on files and directories recursively
+chcon, ,v,verbose, , ,111,output a diagnostic for every file processed 
+chcon, , ,help, , ,112,display this help and exit
+chcon, , ,version, , ,113,output version information and exit AUTHOR Written by Russell Coker and Jim M…

@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-cut, ,b,bytes, , ,101,filter byte columns from the input source
+uu-cut, ,c,characters, , ,102,alias for character mode
+uu-cut, ,d,delimiter, , ,103,specify the delimiter character that separates fields in the input source. Defaults to Tab.
+uu-cut, ,f,fields, , ,104,filter field columns from the input source
+uu-cut, , ,output-delimiter, , ,105,"in field mode, replace the delimiter in output lines with this option's argument"
+uu-cut, , ,complement, , ,106,"invert the filter - instead of displaying only the filtered columns, display all but those columns"
+uu-cut, ,s,only-delimited, , ,107,"in field mode, only print lines which contain the delimiter"
+uu-cut, ,z,zero-terminated, , ,108,"instead of filtering columns based on line, filter columns based on \\\\0 (NULL character)"
+uu-cut, ,h,help, , ,109,Print help
+uu-cut, ,V,version, , ,110,Print version

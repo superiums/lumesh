@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ffprobe, ,?,help, ,@f @r,101,Show help
+ffprobe, ,v, ,quiet panic fatal error warning info verbose debug trace,@f @r,102,Set logging level
+ffprobe, , , ,default compact csv flat ini json xml,@f @r,103,Set the output printing format
+ffprobe, , , ,default compact csv flat ini json xml,@f @r,104,Alias for -print_format

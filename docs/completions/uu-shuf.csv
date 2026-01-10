@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-shuf, ,i,input-range, , ,101,treat each number LO through HI as an input line
+uu-shuf, ,n,head-count, , ,102,output at most COUNT lines
+uu-shuf, ,o,output, ,@r,103,write result to FILE instead of standard output
+uu-shuf, , ,random-source, ,@r,104,get random bytes from FILE
+uu-shuf, ,e,echo, , ,105,treat each ARG as an input line
+uu-shuf, ,r,repeat, , ,106,output lines can be repeated
+uu-shuf, ,z,zero-terminated, , ,107,"line delimiter is NUL, not newline"
+uu-shuf, ,h,help, , ,108,Print help
+uu-shuf, ,V,version, , ,109,Print version

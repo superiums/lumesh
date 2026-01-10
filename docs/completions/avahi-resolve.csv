@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+avahi-resolve, ,n,name, , ,101,Translate one or more fully qualified host names into addresses
+avahi-resolve, ,a,address, , ,102,Translate one or more addresses into fully qualified host names
+avahi-resolve, ,v,verbose, , ,103,Enable verbose mode
+avahi-resolve, ,h,help, , ,104,Show help
+avahi-resolve, ,V,version, , ,105,Show version information

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ts_calibrate, ,r,rotate, , ,101,Rotate the screen
+ts_calibrate, ,t,min_interval, , ,102,The time in milliseconds that has to pass before a crosshair is pressed by th…
+ts_calibrate, ,c,validate, , ,103,Validate the calibration.  Make sure the linear module is configured in ts
+ts_calibrate, ,b,boundary, , ,104,Validation boundary in pixels.  Available only when --validate is used
+ts_calibrate, ,l,loops, , ,105,Number of loops in validation mode.  Available only when --validate is used

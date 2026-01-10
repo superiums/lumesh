@@ -1,0 +1,75 @@
+cmd,conds,short,long,params,dirs,pri,desc
+homectl, $commands, , ,list, ,100,List home areas
+homectl, $commands, , ,activate, ,100,Activate a home area
+homectl, $commands, , ,deactivate, ,100,Deactivate a home area
+homectl, $commands, , ,inspect, ,100,Inspect a home area
+homectl, $commands, , ,authenticate, ,100,Authenticate a home area
+homectl, $commands, , ,create, ,100,Create a home area
+homectl, $commands, , ,remove, ,100,Remove a home area
+homectl, $commands, , ,update, ,100,Update a home area
+homectl, $commands, , ,passwd, ,100,Change password of a home area
+homectl, $commands, , ,resize, ,100,Resize a home area
+homectl, $commands, , ,lock, ,100,Temporarily lock an active home area
+homectl, $commands, , ,unlock, ,100,Unlock a temporarily locked home area
+homectl, $commands, , ,lock-all, ,100,Lock all suitable home areas
+homectl, $commands, , ,with, ,100,Run shell or command with access to a home area
+homectl, $condition,c,real-name, , ,111,Real name for user
+homectl, $condition, ,realm, , ,112,Realm to create user in
+homectl, $condition, ,email-address, , ,113,Email address for user
+homectl, $condition, ,location, , ,114,Set location of user on earth
+homectl, $condition, ,icon-name, , ,115,Icon name for user
+homectl, $condition,d,home-dir, , ,116,Home directory
+homectl, $condition,u,uid, , ,117,Numeric UID for user
+homectl, $condition,G,member-of, , ,118,Add user to group
+homectl, $condition, ,skel, , ,119,Skeleton directory to use
+homectl, $condition, ,shell, , ,120,Shell for account
+homectl, $condition, ,setenv, , ,121,Set an environment variable at log-in
+homectl, $condition, ,timezone, , ,122,Set a time-zone
+homectl, $condition, ,language, , ,123,Set preferred language
+homectl, $condition, ,ssh-authorized-keys, , ,124,Specify SSH public keys
+homectl, $condition, ,pkcs11-token-uri, , ,125,URI to PKCS#11 security token
+homectl, $condition, ,fido2-device, , ,126,Path to FIDO2 hidraw device
+homectl, $condition, ,locked,yes no, ,127,Set locked account state
+homectl, $condition, ,not-before, , ,128,Do not allow logins before
+homectl, $condition, ,not-after, , ,129,Do not allow logins after
+homectl, $condition, ,rate-limit-interval, , ,130,Login rate-limit interval in seconds
+homectl, $condition, ,rate-limit-burst, , ,131,Login rate-limit attempts per interval
+homectl, $condition, ,password-hint, , ,132,Set Password hint
+homectl, $condition, ,enforce-password-policy,yes no, ,133,Control enforce password policy
+homectl, $condition, ,password-change-now,yes no, ,134,Require the password to be changed on next login
+homectl, $condition, ,password-change-min, , ,135,Require minimum time between password changes
+homectl, $condition, ,password-change-max, , ,136,Require maximum time between password changes
+homectl, $condition, ,password-change-warn, , ,137,How much time to warn before password expiry
+homectl, $condition, ,password-change-inactive, , ,138,How much time to block password after expiry
+homectl, $condition, ,disk-size, , ,139,Size to assign the user on disk
+homectl, $condition, ,access-mode, , ,140,User home directory access mode
+homectl, $condition, ,umask, , ,141,Umask for user when logging in
+homectl, $condition, ,nice, , ,142,Nice level for user
+homectl, $condition, ,rlimit, , ,143,Set resource limits
+homectl, $condition, ,tasks-max, , ,144,Set maximum number of per-user tasks
+homectl, $condition, ,memory-high, , ,145,Set high memory threshold in bytes
+homectl, $condition, ,memory-max, , ,146,Set maximum memory limit
+homectl, $condition, ,cpu-weight, , ,147,Set CPU weight
+homectl, $condition, ,io-weight, , ,148,Set IO weight
+homectl, $condition, ,storage,luks fscrypt directory subvolume cifs, ,149,Storage type to use
+homectl, $condition, ,image-path, , ,150,Path to image file/directory
+homectl, $condition, ,fs-type,ext4 xfs btrfs, ,151,File system type to use in case of luks storage
+homectl, $condition, ,luks-discard,yes no, ,152,Whether to use discard feature
+homectl, $condition, ,luks-offline-discard,yes no, ,153,Whether to trim file on logout
+homectl, $condition, ,luks-cipher, , ,154,Cipher to use for LUKS encryption
+homectl, $condition, ,luks-cipher-mode, , ,155,Cipher mode to use for LUKS encryption
+homectl, $condition, ,luks-volume-key-size, , ,156,Volume key size to use for LUKS encryption
+homectl, $condition, ,luks-pbkdf-type, , ,157,Password-based Key Derivation Function to use
+homectl, $condition, ,luks-pbkdf-hash-algorithm, , ,158,PBKDF hash algorithm to use
+homectl, $condition, ,luks-pbkdf-time-cost, , ,159,Time cost for PBKDF in seconds
+homectl, $condition, ,luks-pbkdf-memory-cost, , ,160,Memory cost for PBKDF in bytes
+homectl, $condition, ,luks-pbkdf-parallel-threads, , ,161,Number of parallel threads for PKBDF
+homectl, $condition, ,nosuid,yes no, ,162,Control the nosuid flag of the home mount
+homectl, $condition, ,nodev,yes no, ,163,Control the nodev flag of the home mount
+homectl, $condition, ,noexec,yes no, ,164,Control the noexec flag of the home mount
+homectl, $condition, ,cifs-domain, , ,165,CIFS (Windows) domain
+homectl, $condition, ,cifs-user-name, , ,166,CIFS (Windows) user name
+homectl, $condition, ,cifs-service, , ,167,CIFS (Windows) service to mount as home area
+homectl, $condition, ,stop-delay, , ,168,How long to leave user services running after logout
+homectl, $condition, ,kill-processes,yes no, ,169,Whether to kill user processes when sessions terminate
+homectl, $condition, ,auto-login,yes no, ,170,Try to log this user in automatically

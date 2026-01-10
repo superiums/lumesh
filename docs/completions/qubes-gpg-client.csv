@@ -1,0 +1,68 @@
+cmd,conds,short,long,params,dirs,pri,desc
+qubes-gpg-client, ,b,detach-sign, , ,101,Make a detached signature
+qubes-gpg-client, ,a,armor, , ,102,Create ASCII armored output
+qubes-gpg-client, ,c,symmetric, , ,103,Encrypt with a symmetric cipher using a passphrase
+qubes-gpg-client, , ,decrypt, , ,104,Decrypt specified file or stdin
+qubes-gpg-client, ,e,encrypt, , ,105,Encrypt data
+qubes-gpg-client, ,k,list-keys, , ,106,"List all keys from the public keyrings, or just the ones given on the command line"
+qubes-gpg-client, ,K,list-secret-keys, , ,107,"List all keys from the secret keyrings, or just the ones given on the command line"
+qubes-gpg-client, ,n,dry-run, , ,108,Don't make any changes (this is not completely implemented)
+qubes-gpg-client, ,o,output, ,@r,109,Write output to specified file
+qubes-gpg-client, ,q,quiet, , ,110,Quiet mode
+qubes-gpg-client, ,r,recipient, ,@f @r,111,Encrypt for specified user id
+qubes-gpg-client, ,R,hidden-recipient, ,@f @r,112,"Encrypt for specified user id, but hide the keyid of the key"
+qubes-gpg-client, ,s,sign, , ,113,Make a signature
+qubes-gpg-client, ,t,textmode, , ,114,Treat input files as text and store them in the OpenPGP canonical text form with standard 'CRLF' line endings
+qubes-gpg-client, ,u,local-user, ,@f @r,115,Use specified key as the key to sign with
+qubes-gpg-client, ,v,verbose, , ,116,Give more information during processing
+qubes-gpg-client, , ,always-trust, , ,117,Skip key validation and assume that used keys are always valid
+qubes-gpg-client, , ,batch, , ,118,Batch mode
+qubes-gpg-client, , ,cert-digest-algo, ,@f @r,119,Use specified message digest algorithm when signing a key
+qubes-gpg-client, , ,display-charset, iso-8859-1 iso-8859-2 iso-8859-15 koi8-r utf-8 , ,120,Set the native character set
+qubes-gpg-client, , ,cipher-algo, ,@f @r,121,Use specified cipher algorithm
+qubes-gpg-client, , ,clearsign, , ,122,Make a clear text signature
+qubes-gpg-client, , ,command-fd, ,@f @r,123,Read user input from specified file descriptor
+qubes-gpg-client, , ,comment, ,@f @r,124,Use specified string as comment string
+qubes-gpg-client, , ,compress-algo, ,@f @r,125,Use specified compression algorithm
+qubes-gpg-client, , ,digest-algo, ,@f @r,126,Use specified message digest algorithm
+qubes-gpg-client, , ,disable-cipher-algo, ,@f @r,127,Never allow the use of specified cipher algorithm
+qubes-gpg-client, , ,disable-mdc, , ,128,Disable the use of the modification detection code
+qubes-gpg-client, , ,disable-pubkey-algo, ,@f @r,129,Never allow the use of specified public key algorithm
+qubes-gpg-client, , ,emit-version, , ,130,Include the version string in ASCII armored output
+qubes-gpg-client, , ,export, ,@f @r,131,Export all or the given keys from all keyrings
+qubes-gpg-client, , ,fingerprint, , ,132,List all keys with their fingerprints
+qubes-gpg-client, , ,fixed-list-mode, , ,133,Do not merge primary user ID/key in --with-colons listing mode and make timestamps UNIX time
+qubes-gpg-client, , ,force-mdc, , ,134,Force the use of encryption with a modification detection code
+qubes-gpg-client, , ,force-v3-sigs, , ,135,Force v3 signatures for signatures on data
+qubes-gpg-client, , ,force-v4-certs, , ,136,Always use v4 key signatures even on v3 keys
+qubes-gpg-client, , ,gnupg, , ,137,Use standard GnuPG behavior
+qubes-gpg-client, , ,list-options, , ,138,Display various internal configuration parameters of GnuPG
+qubes-gpg-client, , ,list-only, , ,139,Changes the behaviour of some commands. This is like --dry-run but different
+qubes-gpg-client, , ,list-public-keys, ,@f @r,140,"List all keys from the public keyrings, or just the ones given on the command line"
+qubes-gpg-client, , ,list-sigs, , ,141,"Same as --list-keys, but the signatures are listed too"
+qubes-gpg-client, , ,max-output, ,@f @r,142,Sets a limit on the number of bytes that will be generated when processing a file
+qubes-gpg-client, , ,no-comments, , ,143,Don't use a comment string
+qubes-gpg-client, , ,no-emit-version, , ,144,Don't include the version string in ASCII armored output
+qubes-gpg-client, , ,no-force-v3-sigs, , ,145,Do not force v3 signatures for signatures on data
+qubes-gpg-client, , ,no-force-v4-certs, , ,146,Don't use v4 key signatures on v3 keys
+qubes-gpg-client, , ,no-greeting, , ,147,Suppress the initial copyright message
+qubes-gpg-client, , ,no-secmem-warning, , ,148,Suppress the warning about 'using insecure memory'
+qubes-gpg-client, , ,no-tty, , ,149,Never write output to terminal
+qubes-gpg-client, , ,no-verbose, , ,150,Reset verbose level to 0
+qubes-gpg-client, , ,openpgp, , ,151,"Reset all packet, cipher, and digest options to strict OpenPGP behavior"
+qubes-gpg-client, , ,personal-cipher-preferences, ,@f @r,152,Set the list of personal cipher preferences to the specified string
+qubes-gpg-client, , ,personal-compress-preferences, ,@f @r,153,Set the list of personal compression preferences to the specified string
+qubes-gpg-client, , ,personal-digest-preferences, ,@f @r,154,Set the list of personal digest preferences to the specified string
+qubes-gpg-client, , ,s2k-cipher-algo, ,@f @r,155,Use specified cipher algorithm to protect secret keys
+qubes-gpg-client, , ,s2k-digest-algo, ,@f @r,156,Use specified digest algorithm to mangle the passphrases
+qubes-gpg-client, , ,s2k-count, ,@f @r,157,Specify how many times the passphrase mangling for symmetric encryption is repeated
+qubes-gpg-client, , ,s2k-mode,0 1 3, ,158,Selects how passphrases are mangled
+qubes-gpg-client, , ,status-fd, ,@f @r,159,Write special status strings to the specified file descriptor
+qubes-gpg-client, , ,store, , ,160,Store only (make a simple RFC1991 packet)
+qubes-gpg-client, , ,trust-model,pgp classic direct always, ,161,Specify trust model
+qubes-gpg-client, , ,use-agent, , ,162,Try to use the GnuPG-Agent
+qubes-gpg-client, , ,verify, ,@r,163,Assume specified file or stdin is sigfile and verify it
+qubes-gpg-client, , ,version, , ,164,"Display version and supported algorithms, and exit"
+qubes-gpg-client, , ,with-colons, , ,165,Print key listings delimited by colons
+qubes-gpg-client, , ,with-fingerprint, , ,166,Like --fingerprint but only change the output format
+qubes-gpg-client, , ,with-keygrip, , ,167,Include the keygrip in the key listings

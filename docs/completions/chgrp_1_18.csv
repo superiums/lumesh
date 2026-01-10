@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chgrp, ,c,changes, , ,101,like verbose but report only when a change is made
+chgrp, ,f,quiet, , ,102,suppress most error messages
+chgrp, ,v,verbose, , ,103,output a diagnostic for every file processed
+chgrp, , ,dereference, , ,104,"affect the referent of each symbolic link (this is the default), rather than …"
+chgrp, ,h,no-dereference, , ,105,affect symbolic links instead of any referenced file (useful only on systems …
+chgrp, , ,from, , ,106,change the ownership of each file only if its current owner and/or group matc…
+chgrp, , ,no-preserve-root, , ,107,do not treat '/' specially (the default)
+chgrp, , ,preserve-root, , ,108,fail to operate recursively on '/'
+chgrp, , ,reference, , ,109,use RFILE's ownership rather than specifying values
+chgrp, ,R,recursive, , ,110,operate on files and directories recursively 
+chgrp, , ,help, , ,111,display this help and exit
+chgrp, , ,version, , ,112,output version information and exit EXAMPLES

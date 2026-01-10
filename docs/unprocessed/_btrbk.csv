@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrbk, __fish_use_subcommand, , ,run,@f,123,Run snapshot and backup operations
+btrbk, __fish_use_subcommand, , ,dryrun,@f,124,Show what would be executed without running btrfs commands
+btrbk, __fish_use_subcommand, , ,snapshot,@f,125,Run snapshot operations only
+btrbk, __fish_use_subcommand, , ,resume,@f,126,Run backup operations and delete snapshots
+btrbk, __fish_use_subcommand, , ,prune,@f,127,Only delete snapshots and backups
+btrbk, __fish_use_subcommand, , ,archive,@f,128,Recursively copy all subvolumes (src -> dst)
+btrbk, __fish_use_subcommand, , ,clean,@f,129,Delete incomplete (garbled) backups
+btrbk, __fish_use_subcommand, , ,stats,@f,130,Print snapshot/backup statistics
+btrbk, __fish_use_subcommand, , ,usage,@f,131,Print filesystem usage
+btrbk, __fish_use_subcommand, , ,ls,@f,132,List all btrfs subvolumes below a given path
+btrbk, __fish_use_subcommand, , ,origin,@f,133,Print origin information for a subvolume
+btrbk, __fish_use_subcommand, , ,diff,@f,134,List file changes between related subvolumes
+btrbk, __fish_use_subcommand, , ,extents,@f,135,Calculate accurate disk space usage for a path
+btrbk, __fish_use_subcommand, , ,list,@f,136,List snapshots and backups

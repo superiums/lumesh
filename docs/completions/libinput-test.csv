@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-test, , ,help, , ,101,Print help FEATURES Tests that can be run are

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+open, ,a, , ,@r,101,specify app name
+open, ,b, , ,@f @r,102,specify app bundle id
+open, , ,args, , ,103,pass remaining args to app

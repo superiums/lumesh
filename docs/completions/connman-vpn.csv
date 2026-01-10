@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+connman-vpn, ,v,version, , ,101,Print the ConnMan-VPN software version and exit
+connman-vpn, ,h,help, , ,102,Print ConnMan-VPN's available options and exit
+connman-vpn, ,c,config, , ,103,Specify configuration file to set up various settings for ConnMan
+connman-vpn, ,d,debug, , ,104,Sets how much information ConnMan-VPN sends to the log destination (usually s…
+connman-vpn, ,n,nodaemon, , ,105,Do not daemonize

@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wpctl, ,h,help, , ,101,Show help options
+wpctl, status,k,nick, , ,102,Display device and node nicknames instead of descriptions
+wpctl, status,n,name, , ,103,Display device and node names instead of descriptions
+wpctl, inspect,r,referenced, , ,104,Show objects that are referenced in properties
+wpctl, inspect,a,associated, , ,105,Show associated objects
+wpctl, set-volume,p,pid, , ,106,Selects all nodes associated to the given PID
+wpctl, set-volume,l,limit, , ,107,Limit volume to below this value
+wpctl, set-mute,p,pid, , ,108,Selects all nodes associated to the given PID
+wpctl, settings,d,delete, , ,109,Deletes the saved setting value
+wpctl, settings,s,save, , ,110,Saves the setting value
+wpctl, settings,r,reset, , ,111,Resets the saved setting to its default value

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+truncate, ,c,no-create, , ,101,do not create any files
+truncate, ,o,io-blocks, , ,102,treat SIZE as number of IO blocks instead of bytes
+truncate, ,r,reference, , ,103,base size on RFILE
+truncate, ,s,size, , ,104,set or adjust the file size by SIZE bytes
+truncate, , ,help, , ,105,display this help and exit
+truncate, , ,version, , ,106,output version information and exit

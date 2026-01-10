@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+groupadd, ,f,force, , ,101,This option causes the command to simply exit with success status if the spec…
+groupadd, ,g,gidGID, , ,102,The numerical value of the group\\*(Aqs ID
+groupadd, ,h,help, , ,103,Display help message and exit
+groupadd, ,K,keyKEY, , ,104,"Overrides /etc/login. defs defaults (GID_MIN, GID_MAX and others)"
+groupadd, ,o,non-unique, , ,105,permits the creation of a group with an already used numerical ID
+groupadd, ,p,passwordPASSWORD, , ,106,defines an initial password for the group account
+groupadd, ,r,system, , ,107,Create a system group
+groupadd, ,R,rootCHROOT_DIR, , ,108,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+groupadd, ,P,prefixPREFIX_DIR, , ,109,Apply changes to configuration files under the root filesystem found under th…
+groupadd, ,U,users, , ,110,A comma-separated list of usernames to add as members of the group
+groupadd, , ,gid, , ,111, 
+groupadd, , ,key, , ,112, 
+groupadd, , ,password, , ,113, 
+groupadd, , ,root, , ,114, 
+groupadd, , ,prefix, , ,115, 

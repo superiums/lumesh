@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ipcrm, ,a,all, , ,101, 
+ipcrm, ,M,shmem-key, , ,102, 
+ipcrm, ,m,shmem-id, , ,103, 
+ipcrm, ,Q,queue-key, , ,104, 
+ipcrm, ,q,queue-id, , ,105, 
+ipcrm, ,S,semaphore-key, , ,106, 
+ipcrm, ,s,semaphore-id, , ,107, 
+ipcrm, ,h,help, , ,108, 
+ipcrm, ,V,version, , ,109, 

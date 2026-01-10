@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-printenv, ,0,null, , ,101,end each output line with 0 byte rather than newline
+uu-printenv, ,h,help, , ,102,Print help
+uu-printenv, ,V,version, , ,103,Print version

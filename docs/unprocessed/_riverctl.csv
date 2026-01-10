@@ -1,0 +1,92 @@
+cmd,conds,short,long,params,dirs,pri,desc
+riverctl, __fish_riverctl_complete_arg 1, , ,close, ,101,Close the focued view
+riverctl, __fish_riverctl_complete_arg 1, , ,exit, ,102,"Exit the compositor, terminating the Wayland session"
+riverctl, __fish_riverctl_complete_arg 1, , ,focus-output, ,103,Focus the next or previous output
+riverctl, __fish_riverctl_complete_arg 1, , ,focus-view, ,104,Focus the next or previous view in the stack
+riverctl, __fish_riverctl_complete_arg 1, , ,input, ,105,Create a configuration rule for an input device
+riverctl, __fish_riverctl_complete_arg 1, , ,list-inputs, ,106,List all input devices
+riverctl, __fish_riverctl_complete_arg 1, , ,list-input-configs, ,107,List all input configurations
+riverctl, __fish_riverctl_complete_arg 1, , ,move, ,108,Move the focused view in the specified direction
+riverctl, __fish_riverctl_complete_arg 1, , ,resize, ,109,Resize the focused view along the given axis
+riverctl, __fish_riverctl_complete_arg 1, , ,snap, ,110,Snap the focused view to the specified screen edge
+riverctl, __fish_riverctl_complete_arg 1, , ,send-to-output, ,111,Send the focused view to the next/previous output
+riverctl, __fish_riverctl_complete_arg 1, , ,spawn, ,112,Run shell_command using /bin/sh -c
+riverctl, __fish_riverctl_complete_arg 1, , ,swap, ,113,Swap the focused view with the next/previous visible non-floating view
+riverctl, __fish_riverctl_complete_arg 1, , ,toggle-float, ,114,Toggle the floating state of the focused view
+riverctl, __fish_riverctl_complete_arg 1, , ,toggle-fullscreen, ,115,Toggle the fullscreen state of the focused view
+riverctl, __fish_riverctl_complete_arg 1, , ,zoom, ,116,Bump the focused view to the top of the layout stack
+riverctl, __fish_riverctl_complete_arg 1, , ,default-layout, ,117,Set the layout namespace to be used by all outputs by default
+riverctl, __fish_riverctl_complete_arg 1, , ,output-layout, ,118,Set the layout namespace of currently focused output
+riverctl, __fish_riverctl_complete_arg 1, , ,send-layout-cmd, ,119,Send command to the layout generator on the currently focused output with the given namespace
+riverctl, __fish_riverctl_complete_arg 1, , ,set-focused-tags, ,120,Show views with tags corresponding to the set bits of tags
+riverctl, __fish_riverctl_complete_arg 1, , ,set-view-tags, ,121,Assign the currently focused view the tags corresponding to the set bits of tags
+riverctl, __fish_riverctl_complete_arg 1, , ,toggle-focused-tags, ,122,Toggle visibility of views with tags corresponding to the set bits of tags
+riverctl, __fish_riverctl_complete_arg 1, , ,toggle-view-tags, ,123,Toggle the tags of the currently focused view
+riverctl, __fish_riverctl_complete_arg 1, , ,spawn-tagmask, ,124,Set a tagmask to filter the tags assigned to newly spawned views on the focused output
+riverctl, __fish_riverctl_complete_arg 1, , ,focus-previous-tags, ,125,Sets tags to their previous value on the focused output
+riverctl, __fish_riverctl_complete_arg 1, , ,send-to-previous-tags, ,126,Assign the currently focused view the previous tags of the focused output
+riverctl, __fish_riverctl_complete_arg 1, , ,declare-mode, ,127,Create a new mode
+riverctl, __fish_riverctl_complete_arg 1, , ,enter-mode, ,128,Switch to given mode if it exists
+riverctl, __fish_riverctl_complete_arg 1, , ,map, ,129,Run command when key is pressed while modifiers are held down and in the specified mode
+riverctl, __fish_riverctl_complete_arg 1, , ,map-pointer, ,130,Move or resize views or run command when button and modifers are held down while in the specified mode
+riverctl, __fish_riverctl_complete_arg 1, , ,map-switch , ,131,Run command when river receives a switch event in the specified mode
+riverctl, __fish_riverctl_complete_arg 1, , ,unmap, ,132,Remove the mapping defined by the arguments
+riverctl, __fish_riverctl_complete_arg 1, , ,unmap-pointer, ,133,Remove the pointer mapping defined by the arguments
+riverctl, __fish_riverctl_complete_arg 1, , ,unmap-switch, ,134,Remove the switch mapping defined by the arguments
+riverctl, __fish_riverctl_complete_arg 1, , ,rule-add, ,135,Apply an action to matching views
+riverctl, __fish_riverctl_complete_arg 1, , ,rule-del, ,136,Delete a rule added with rule-add
+riverctl, __fish_riverctl_complete_arg 1, , ,list-rules, ,137,Print rules in a given list
+riverctl, __fish_riverctl_complete_arg 1, , ,default-attach-mode, ,138,Set the attach mode to be used by all outputs by default
+riverctl, __fish_riverctl_complete_arg 1, , ,output-attach-mode, ,139,Set the attach mode of the currently focused output
+riverctl, __fish_riverctl_complete_arg 1, , ,background-color, ,140,Set the background color
+riverctl, __fish_riverctl_complete_arg 1, , ,border-color-focused, ,141,Set the border color of focused views
+riverctl, __fish_riverctl_complete_arg 1, , ,border-color-unfocused, ,142,Set the border color of unfocused views
+riverctl, __fish_riverctl_complete_arg 1, , ,border-color-urgent, ,143,Set the border color of urgent views
+riverctl, __fish_riverctl_complete_arg 1, , ,border-width, ,144,Set the border width to pixels
+riverctl, __fish_riverctl_complete_arg 1, , ,focus-follows-cursor, ,145,Configure the focus behavior when moving cursor
+riverctl, __fish_riverctl_complete_arg 1, , ,hide-cursor, ,146,Hide cursor when typing or after inactivity
+riverctl, __fish_riverctl_complete_arg 1, , ,set-repeat, ,147,Set the keyboard repeat rate and repeat delay
+riverctl, __fish_riverctl_complete_arg 1, , ,set-cursor-warp, ,148,Set the cursor warp mode
+riverctl, __fish_riverctl_complete_arg 1, , ,xcursor-theme, ,149,Set the xcursor theme
+riverctl, __fish_riverctl_complete_arg 1, , ,keyboard-layout, ,150,Set the keyboard layout
+riverctl, __fish_riverctl_complete_arg 1, , ,keyboard-layout-file, ,151,Set the keyboard layout from a file.
+riverctl,focus-output send-to-output __fish_riverctl_complete_arg 2, , ,next previous up right down left, ,152, 
+riverctl,focus-view swap __fish_riverctl_complete_arg 2, , ,next previous up down left right, ,153, 
+riverctl,move snap __fish_riverctl_complete_arg 2, , ,up down left right, ,154, 
+riverctl,resize __fish_riverctl_complete_arg 2, , ,horizontal vertical, ,155, 
+riverctl,default-attach-mode __fish_riverctl_complete_arg 2, , ,top bottom above below after, ,156, 
+riverctl,output-attach-mode __fish_riverctl_complete_arg 2, , ,top bottom above below after, ,157, 
+riverctl,focus-follows-cursor __fish_riverctl_complete_arg 2, , ,disabled normal always, ,158, 
+riverctl,set-cursor-warp __fish_riverctl_complete_arg 2, , ,disabled on-output-change on-focus-change, ,159, 
+riverctl,list-rules __fish_riverctl_complete_arg 2, , ,float ssd tags output position dimensions fullscreen, ,160, 
+riverctl,rule-add rule-del $rule_actions test (math (count (commandline -opc)) % 2) -eq 0, , ,$rule_actions, ,160, 
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,events, ,161,Configure whether the input device's events will be used
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,accel-profile, ,162,Set the pointer acceleration profile
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,pointer-accel, ,163,Set the pointer acceleration factor
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,click-method, ,164,Set the click method
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,drag, ,165,Enable or disable the tap-and-drag functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,drag-lock, ,166,Enable or disable the drag lock functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,disable-while-typing, ,167,Enable or disable the disable-while-typing functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,disable-while-trackpointing, ,168,Enable or disable the disable-while-trackpointing functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,middle-emulation, ,169,Enable or disable the middle-emulation functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,natural-scroll, ,170,Enable or disable the natural-scroll functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,scroll-factor, ,171,Set the scroll factor
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,left-handed, ,172,Enable or disable the left handed mode
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,tap, ,173,Enable or disable the tap functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,tap-button-map, ,174,Configure the button mapping for tapping
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,scroll-method, ,175,Set the scroll method
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,scroll-button, ,176,Set the scroll button
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,scroll-button-lock, ,177,Enable or disable the scroll button lock functionality
+riverctl," input; and __fish_riverctl_complete_arg 3", , ,map-to-output, ,178,Map to a given output
+riverctl," input; and __fish_riverctl_complete_arg 4; and drag drag-lock disable-while-typing disable-while-trackpointing middle-emulation natural-scroll left-handed tap scroll-button-lock", , ,enabled disabled, ,179, 
+riverctl," input; and __fish_riverctl_complete_arg 4; and events", , ,enabled disabled disabled-on-external-mouse, ,180, 
+riverctl," input; and __fish_riverctl_complete_arg 4; and accel-profile", , ,none flat adaptive, ,181, 
+riverctl," input; and __fish_riverctl_complete_arg 4; and click-method", , ,none button-areas clickfinger, ,182, 
+riverctl," input; and __fish_riverctl_complete_arg 4; and tap-button-map", , ,left-right-middle left-middle-right, ,183, 
+riverctl," input; and __fish_riverctl_complete_arg 4; and scroll-method", , ,none, ,184,No scrolling
+riverctl," input; and __fish_riverctl_complete_arg 4; and scroll-method", , ,two-finger, ,185,Scroll by swiping with two fingers simultaneously
+riverctl," input; and __fish_riverctl_complete_arg 4; and scroll-method", , ,edge, ,186,Scroll by swiping along the edge
+riverctl," input; and __fish_riverctl_complete_arg 4; and scroll-method", , ,button, ,187,Scroll with pointer movement while holding down a button
+riverctl," hide-cursor; and __fish_riverctl_complete_arg 2", , ,timeout, ,188,"Hide cursor if it wasn't moved in the last X millisecond, until it is moved again"
+riverctl," hide-cursor; and __fish_riverctl_complete_arg 2", , ,when-typing, ,189,Enable or disable whether the cursor should be hidden when pressing any non-modifier key
+riverctl," hide-cursor; and __fish_riverctl_complete_arg 3; and when-typing", , ,enabled disabled, ,190, 

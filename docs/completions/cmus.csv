@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cmus, , ,listen, , ,101, 
+cmus, , ,plugins, , ,102, 
+cmus, , ,show-cursor, , ,103, 
+cmus, , ,help, , ,104, 
+cmus, , ,version, , ,105, 

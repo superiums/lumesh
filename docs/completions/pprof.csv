@@ -1,0 +1,27 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pprof, , ,cum, , ,101,Sort by cumulative data
+pprof, , ,base, , ,102,Subtract <base> from <profile> before display . SS 'Reporting Granularity:'
+pprof, , ,addresses, , ,103,Report at address level
+pprof, , ,lines, , ,104,Report at source line level
+pprof, , ,functions, , ,105,Report at function level [default]
+pprof, , ,files, , ,106,Report at source file level . SS 'Output type:'
+pprof, , ,text, , ,107,Generate text report [default]
+pprof, , ,gv, , ,108,Generate Postscript and display
+pprof, , ,list, , ,109,Generate source listing of matching routines
+pprof, , ,disasm, , ,110,Generate disassembly of matching routines
+pprof, , ,dot, , ,111,Generate DOT file to stdout
+pprof, , ,ps, , ,112,Generate Postscript to stdout
+pprof, , ,pdf, , ,113,Generate PDF to stdout
+pprof, , ,gif, , ,114,Generate GIF to stdout . SS 'Heap-Profile Options:'
+pprof, , ,inuse_space, , ,115,Display in-use (mega)bytes [default]
+pprof, , ,inuse_objects, , ,116,Display in-use objects
+pprof, , ,alloc_space, , ,117,Display allocated (mega)bytes
+pprof, , ,alloc_objects, , ,118,Display allocated objects
+pprof, , ,show_bytes, , ,119,Display space in bytes
+pprof, , ,drop_negative, , ,120,Ignore negaive differences . SS 'Call-graph Options:'
+pprof, , ,nodecount, , ,121,Show at most so many nodes [default=80]
+pprof, , ,nodefraction, , ,122,Hide nodes below <f>*total [default=. 005]
+pprof, , ,edgefraction, , ,123,Hide edges below <f>*total [default=. 001]
+pprof, , ,focus, , ,124,Focus on nodes matching <regexp>
+pprof, , ,ignore, , ,125,Ignore nodes matching <regexp>
+pprof, , ,scale, , ,126,Set GV scaling [default=0] EXAMPLES

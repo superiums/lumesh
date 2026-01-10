@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gettext, ,d,domain, , ,101,retrieve translated messages from TEXTDOMAIN
+gettext, ,c,context, , ,102,specify context for MSGID
+gettext, ,h,help, , ,103,display this help and exit
+gettext, ,V,version, , ,104,display version information and exit

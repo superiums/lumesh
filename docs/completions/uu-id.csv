@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-id, ,a,ignore, , ,101,"ignore, for compatibility with other versions"
+uu-id, ,u,user, , ,102,Display only the effective user ID as a number.
+uu-id, ,g,group, , ,103,Display only the effective group ID as a number
+uu-id, ,G,groups, , ,104,"Display only the different group IDs as white-space separated numbers, in no particular order."
+uu-id, ,n,name, , ,105,"Display the name of the user or group ID for the -G, -g and -u options instead of the number. If any of the ID numbers cannot be mapped into names, the number will be displayed as usual."
+uu-id, ,r,real, , ,106,"Display the real ID for the -G, -g and -u options instead of the effective ID."
+uu-id, ,z,zero, , ,107,"delimit entries with NUL characters, not whitespace; not permitted in default format"
+uu-id, ,Z,context, , ,108,print only the security context of the process (not enabled)
+uu-id, ,h,help, , ,109,Print help
+uu-id, ,V,version, , ,110,Print version

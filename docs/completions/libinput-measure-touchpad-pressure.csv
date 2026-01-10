@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-measure-touchpad-pressure, , ,help, , ,101,Print help
+libinput-measure-touchpad-pressure, , ,touch-thresholds, , ,102,"Set the logical touch pressure thresholds to  down and  up, respectively"
+libinput-measure-touchpad-pressure, , ,palm-threshold, , ,103,Assume a palm threshold of  N
+libinput-measure-touchpad-pressure, , ,thumb-threshold, , ,104,Assume a thumb threshold of N

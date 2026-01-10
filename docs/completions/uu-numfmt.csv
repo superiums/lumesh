@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-numfmt, ,d,delimiter, , ,101,use X instead of whitespace for field delimiter
+uu-numfmt, , ,field, , ,102,"replace the numbers in these input fields; see FIELDS below"
+uu-numfmt, , ,format, , ,103,"use printf style floating-point FORMAT; see FORMAT below for details"
+uu-numfmt, , ,from, , ,104,"auto-scale input numbers to UNITs; see UNIT below"
+uu-numfmt, , ,from-unit, , ,105,specify the input unit size
+uu-numfmt, , ,to, , ,106,"auto-scale output numbers to UNITs; see UNIT below"
+uu-numfmt, , ,to-unit, , ,107,the output unit size
+uu-numfmt, , ,padding, , ,108,"pad the output to N characters; positive N will right-align; negative N will left-align; padding is ignored if the output is wider than N; the default is to automatically pad if a whitespace is found"
+uu-numfmt, , ,header, , ,109,"print (without converting) the first N header lines; N defaults to 1 if not specified"
+uu-numfmt, , ,round,up,@f @r,110,use METHOD for rounding when scaling
+uu-numfmt, , ,suffix, , ,111,"print SUFFIX after each formatted number, and accept inputs optionally ending with SUFFIX"
+uu-numfmt, , ,invalid,abort,@f @r,112,set the failure mode for invalid input
+uu-numfmt, ,z,zero-terminated, , ,113,"line delimiter is NUL, not newline"
+uu-numfmt, ,h,help, , ,114,Print help
+uu-numfmt, ,V,version, , ,115,Print version

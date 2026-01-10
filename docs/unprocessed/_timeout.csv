@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+timeout, ,s,signal,$__kill_signals, ,103,Specify the signal to be sent

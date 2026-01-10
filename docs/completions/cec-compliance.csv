@@ -1,0 +1,44 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cec-compliance, ,d,device, , ,101,Use device <dev> as the CEC device
+cec-compliance, ,D,driver, , ,102,"Use a cec device that has driver name <drv>, as returned by the CEC_ADAP_G_CA…"
+cec-compliance, ,a,adapter, , ,103,"Use a cec device that has adapter name <adap-name>, as returned by the CEC_AD…"
+cec-compliance, ,E,exit-on-fail, , ,104,Exit this application when the first failure occurs instead of continuing wit…
+cec-compliance, ,l,list-tests, , ,105,List all tests and the possible test results
+cec-compliance, ,e,expect, , ,106,"-n, --expect-with-no-warnings <test>=<result> Fail if the test gave a differe…"
+cec-compliance, ,v,verbose, , ,107,Turn on verbose reporting
+cec-compliance, , ,version, , ,108,Show version information
+cec-compliance, ,w,wall-clock, , ,109,Show timestamps as wall-clock time
+cec-compliance, ,S,show-timestamp, , ,110,"For each test, show the timestamp of when the test started"
+cec-compliance, ,T,trace, , ,111,Trace all called ioctls.  Useful for debugging
+cec-compliance, ,h,help, , ,112,Prints the help message
+cec-compliance, ,W,exit-on-warn, , ,113,Exit this application when the first warning occurs instead of continuing
+cec-compliance, ,s,skip-info, , ,114,Skip the Driver Info output section
+cec-compliance, ,C,color, , ,115,Highlight OK/warn/fail/FAIL strings with colors
+cec-compliance, ,N,no-warnings, , ,116,Turn off warning messages
+cec-compliance, ,r,remote, , ,117,As initiator test the remote logical address <la> or all LAs if no LA was giv…
+cec-compliance, ,i,interactive, , ,118,Interactive mode when doing remote tests
+cec-compliance, ,R,reply-threshold, , ,119,Warn if replies take longer than this threshold (default 1000ms)
+cec-compliance, ,t,timeout, , ,120,Set the standby/resume timeout to the given number of seconds
+cec-compliance, ,A,test-adapter, , ,121,Test the CEC adapter API
+cec-compliance, ,F,test-fuzzing, , ,122,Test the remote CEC adapter by randomly creating CEC messages
+cec-compliance, , ,test-core, , ,123,Test the core functionality
+cec-compliance, , ,test-audio-rate-control, , ,124,Test the Audio Rate Control feature
+cec-compliance, , ,test-audio-return-channel-control, , ,125,Test the Audio Return Channel Control feature
+cec-compliance, , ,test-capability-discovery-and-control, , ,126,Test the Capability Discovery and Control feature
+cec-compliance, , ,test-deck-control, , ,127,Test the Deck Control feature
+cec-compliance, , ,test-device-menu-control, , ,128,Test the Device Menu Control feature
+cec-compliance, , ,test-device-osd-transfer, , ,129,Test the Device OSD Transfer feature
+cec-compliance, , ,test-dynamic-audio-lipsync, , ,130,Test the Dynamic Audio Lipsync feature
+cec-compliance, , ,test-osd-display, , ,131,Test the OSD Display feature
+cec-compliance, , ,test-one-touch-play, , ,132,Test the One Touch Play feature
+cec-compliance, , ,test-one-touch-record, , ,133,Test the One Touch Record feature
+cec-compliance, , ,test-power-status, , ,134,Test the Power Status feature
+cec-compliance, , ,test-remote-control-passthrough, , ,135,Test the Remote Control Passthrough feature
+cec-compliance, , ,test-routing-control, , ,136,Test the Routing Control feature
+cec-compliance, , ,test-system-audio-control, , ,137,Test the System Audio Control feature
+cec-compliance, , ,test-system-information, , ,138,Test the System Information feature
+cec-compliance, , ,test-timer-programming, , ,139,Test the Timer Programming feature
+cec-compliance, , ,test-tuner-control, , ,140,Test the Tuner Control feature
+cec-compliance, , ,test-vendor-specific-commands, , ,141,Test the Vendor Specific Commands feature
+cec-compliance, ,n,expect-with-no-warnings, , ,142,Fail if the test gave a different result
+cec-compliance, , ,test-standby-resume, , ,143,Test standby and resume functionality

@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pbget, , ,abs, , ,101,Use the ABS tree
+pbget, , ,arch, , ,102,Set the desired package architecture
+pbget, , ,aur, , ,103,Search the AUR
+pbget, , ,aur-only, , ,104,Only search the AUR
+pbget, , ,dir, , ,105,Set the output directory
+pbget, , ,help, , ,106,Display this message
+pbget, , ,upgradable, , ,107,Search for upgradable packages
+pbget, , ,testing, , ,108,Search the ABS testing branches

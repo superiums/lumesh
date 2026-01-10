@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+df, ,a,all, , ,101,Include empty file systems
+df, ,B,block-size, ,@r,102,Block size
+df, ,H,si, , ,103,"Human readable sizes, powers of 1000"
+df, , ,no-sync, , ,104,Do not sync before getting usage info
+df, , ,sync, , ,105,Sync before getting usage info
+df, ,T,print-type, , ,106,Print file system type
+df, ,x,exclude-type, ,@F @f @r,107,Excluded file system type
+df, , ,help, , ,108,Display help and exit
+df, , ,version, , ,109,Display version and exit

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kbdrate, ,r,rate, , ,101,Change the keyboard repeat rate to  NUMBER cps
+kbdrate, ,d,delay, , ,102,Change the delay to  NUMBER milliseconds
+kbdrate, ,s,silent, , ,103,Silent.  No messages are printed
+kbdrate, ,h,help, , ,104,Display a help text
+kbdrate, ,V,version, , ,105,Display a version number and exit

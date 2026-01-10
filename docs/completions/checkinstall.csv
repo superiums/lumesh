@@ -1,0 +1,58 @@
+cmd,conds,short,long,params,dirs,pri,desc
+checkinstall, , ,type,slackware rpm debian,@f @r,101,Choose packaging system
+checkinstall, , , , ,@f,102,Build a Slackware package
+checkinstall, , , , ,@f,103,Build an RPM package
+checkinstall, , , , ,@f,104,Build a Debian package
+checkinstall, , ,install,$yn,@f @r,105,Toggle created package installation
+checkinstall, , ,fstrans,$yn,@f @r,106,Enable/disable the filesystem translation code
+checkinstall, , ,default, ,@f,107,Accept default answers to all questions
+checkinstall, , ,pkgname, ,@f @r,108,Set name
+checkinstall, , ,pkgversion, ,@f @r,109,Set version
+checkinstall, , ,pkgarch, ,@f @r,110,Set architecture
+checkinstall, , ,pkgrelease, ,@f @r,111,Set release
+checkinstall, , ,pkglicense, ,@f @r,112,Set license
+checkinstall, , ,pkggroup, ,@f @r,113,Set software group
+checkinstall, , ,pkgsource, ,@f @r,114,Set source location
+checkinstall, , ,pkgalitsource, ,@f @r,115,Set alternate source location
+checkinstall, , ,pakdir, ,@D @F @r,116,The new package will be saved here
+checkinstall, , ,maintainer, ,@f @r,117,The package maintainer (.deb)
+checkinstall, , ,provides, ,@f @r,118,Features provided by this package
+checkinstall, , ,requires, ,@f @r,119,Features required by this package
+checkinstall, , ,recommends, ,@f @r,120,Features recommended by this package
+checkinstall, , ,sggests, ,@f @r,121,Features suggested by this package
+checkinstall, , ,conflicts, ,@f @r,122,Packages that this package cannot be installed with (.deb)
+checkinstall, , ,replaces, ,@f @r,123,Packages that this package replaces (.deb)
+checkinstall, , ,rpmflags, ,@f @r,124,Pass these flags to the rpm installer
+checkinstall, , ,rpmi, ,@f,125,Use the -i flag for rpm when installing a .rpm
+checkinstall, , ,rpmu, ,@f,126,Use the -U flag for rpm when installing a .rpm
+checkinstall, , ,dpkgflags, ,@f @r,127,Pass these flags to the dpkg installer
+checkinstall, , ,spec, ,@f @r,128,.spec file location
+checkinstall, , ,nodoc, ,@f,129,Do not include documentation files
+checkinstall, , , ,0 1 2,@f @r,130,Set debug level
+checkinstall, , , , ,@f,131,Run an interactive install command
+checkinstall, , ,showinstall,$yn,@f @r,132,Toggle interactive install command
+checkinstall, , , , ,@f,133,Run an interactive Slackware installation script
+checkinstall, , ,showslack,$yn,@f @r,134,Toggle interactive Slackware installation script
+checkinstall, , ,autodoinst,$yn,@f @r,135,Toggle the creation of a doinst.sh script
+checkinstall, , ,strip,$yn,@f @r,136,Strip any ELF binaries found inside the package
+checkinstall, , ,stripso,$yn,@f @r,137,Strop any ELF binary libraries (.so files)
+checkinstall, , ,addso,$yn,@f @r,138,Search for ant shared libs and add them to /etc/ld.so.conf
+checkinstall, , ,reset-uids,$yn,@f @r,139,Reset perms for all files
+checkinstall, , ,gzman,$yn,@f @r,140,Compress any man pages found inside the package
+checkinstall, , ,docdir, ,@D @f @r,141,Where to put documentation files
+checkinstall, , ,umask, ,@f @r,142,Set the umask value
+checkinstall, , ,exclude, ,@f @r,143,Exclude these files/directories from the package
+checkinstall, , ,include, ,@F @r,144,Include file/directories in this file in the package
+checkinstall, , ,inspect, ,@f,145,Inspect the package's file list
+checkinstall, , ,review-spec, ,@f,146,Review the dpec file before creating a .rpm
+checkinstall, , ,review-control, ,@f,147,Review the control file before creating a .deb
+checkinstall, , ,newslack, ,@f,148,Use the new (8.1+) Slackware description format
+checkinstall, , ,with-tar, ,@F,149,Manually set the path to the tar binary
+checkinstall, , ,deldoc,$yn,@f @r,150,Delete doc-pak upon termination
+checkinstall, , ,deldesc,$yn,@f @r,151,Delete description-pak upon termination
+checkinstall, , ,delspec,$yn,@f @r,152,Delete spec file upon termination
+checkinstall, , ,bk, ,@f,153,Backup any overwritten files
+checkinstall, , ,backup,$yn,@f @r,154,Toggle backup
+checkinstall, , ,help, ,@f,155,Show help
+checkinstall, , ,copyright, ,@f,156,Show Copyright information
+checkinstall, , ,version, ,@f,157,Show version information

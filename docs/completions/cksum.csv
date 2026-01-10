@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cksum, ,a,algorithm, , ,101,select the digest type to use.   See DIGEST below
+cksum, , ,base64, , ,102,"emit base64-encoded digests, not hexadecimal"
+cksum, ,c,check, , ,103,read checksums from the FILEs and check them
+cksum, ,l,length, , ,104,"digest length in bits; must not exceed the max for the blake2 algorithm and m…"
+cksum, , ,raw, , ,105,"emit a raw binary digest, not hexadecimal"
+cksum, , ,tag, , ,106,create a BSD-style checksum (the default)
+cksum, , ,untagged, , ,107,"create a reversed style checksum, without digest type"
+cksum, ,z,zero, , ,108,"end each output line with NUL, not newline, and disable file name escaping "
+cksum, , ,ignore-missing, , ,109,don't fail or report status for missing files
+cksum, , ,quiet, , ,110,don't print OK for each successfully verified file
+cksum, , ,status, , ,111,"don't output anything, status code shows success"
+cksum, , ,strict, , ,112,exit non-zero for improperly formatted checksum lines
+cksum, ,w,warn, , ,113,warn about improperly formatted checksum lines
+cksum, , ,debug, , ,114,indicate which implementation used
+cksum, , ,help, , ,115,display this help and exit
+cksum, , ,version, , ,116,output version information and exit 

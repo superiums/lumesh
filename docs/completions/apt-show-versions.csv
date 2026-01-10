@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-show-versions, ,h,help, , ,101,Display help and exit
+apt-show-versions, ,p,packages, ,@r,102,Print PKG versions
+apt-show-versions, ,r,regex, ,@f,103,Using regex
+apt-show-versions, ,u,upgradeable, ,@f,104,Print only upgradeable packages
+apt-show-versions, ,a,allversions, ,@f,105,Print all versions
+apt-show-versions, ,b,brief, ,@f,106,Print package name/distro
+apt-show-versions, ,v,verbose, ,@f,107,Print verbose info
+apt-show-versions, ,i,initialize, ,@f,108,Init or update cache only
+apt-show-versions, , ,status-file, ,@r,109,Read package from file
+apt-show-versions, , , , ,@r,110,Read package from file
+apt-show-versions, , ,list-dir, ,@r,111,Specify APT list dir
+apt-show-versions, , , , ,@r,112,Specify APT list dir

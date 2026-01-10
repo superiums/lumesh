@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+k3d, cluster, , ,create,@f,108,Create a new cluster
+k3d, cluster, , ,list,@f,109,List cluster(s)
+k3d, cluster, , ,delete,@f,110,Delete cluster(s)
+k3d, cluster, , ,start,@f,111,Start existing k3d cluster(s)
+k3d, cluster, , ,stop,@f,112,Stop existing k3d cluster(s)
+k3d," cluster; and delete start stop", , , ,@f,113,Cluster
+k3d, cluster,h,help, ,@f,114,Print usage
+k3d, image, , ,import,@f,115,Import image(s) from docker into k3d cluster(s)
+k3d, image, , ,help,@f,116,Print usage
+k3d, image,h,help, ,@f,117,Print usage
+k3d, kubeconfig, , ,get,@f,118,Get kubeconfig from cluster(s)
+k3d, kubeconfig, , ,merge,@f,119,Merge/write kubeconfig(s) from cluster(s) into existing kubeconfig/file
+k3d, kubeconfig get merge, , , ,@f,120,Cluster
+k3d, kubeconfig get merge,a,all, ,@f,121,Get kubeconfig from all existing clusters
+k3d, kubeconfig,h,help, ,@f,122,Print usage
+k3d, node, , ,create,@f,123,Create a new k3s node in docker
+k3d, node, , ,delete,@f,124,Delete node(s)
+k3d, node, , ,list,@f,125,List node(s)
+k3d, node, , ,start,@f,126,Start an existing k3d node
+k3d, node, , ,stop,@f,127,Stop an existing k3d node
+k3d," node; and delete start stop", , , ,@f,128,Node
+k3d, node,h,help, ,@f,129,Print usage

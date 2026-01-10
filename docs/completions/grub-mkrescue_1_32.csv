@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-mkrescue, , ,compress, , ,101,compress GRUB files [optional]
+grub-mkrescue, , ,disable-cli, , ,102,disabled command line interface access
+grub-mkrescue, , ,disable-shim-lock, , ,103,disable shim_lock verifier
+grub-mkrescue, , ,dtb, , ,104,embed a specific DTB
+grub-mkrescue, ,d,directory, , ,105,use images and modules under DIR [default=/usr/lib/grub/<platform>]
+grub-mkrescue, , ,fonts, , ,106,install FONTS [default=unicode]
+grub-mkrescue, , ,install-modules, , ,107,install only MODULES and their dependencies [default=all]
+grub-mkrescue, ,k,pubkey, , ,108,embed FILE as public key for signature checking
+grub-mkrescue, , ,locale-directory, , ,109,[default=/usr/share/locale]
+grub-mkrescue, , ,locales, , ,110,install only LOCALES [default=all]
+grub-mkrescue, , ,modules, , ,111,pre-load specified modules MODULES
+grub-mkrescue, , ,sbat, , ,112,SBAT metadata
+grub-mkrescue, , ,themes, , ,113,install THEMES [default=starfield]
+grub-mkrescue, ,v,verbose, , ,114,print verbose messages
+grub-mkrescue, , ,arcs-boot, , ,115,"enable ARCS (big-endian mips machines, mostly SGI) boot"
+grub-mkrescue, , ,core-compress, , ,116,choose the compression to use for core image
+grub-mkrescue, , ,label-bgcolor, , ,117,use COLOR for label background
+grub-mkrescue, , ,label-color, , ,118,use COLOR for label
+grub-mkrescue, , ,label-font, , ,119,use FILE as font for label
+grub-mkrescue, ,o,output, , ,120,save output in FILE [required]
+grub-mkrescue, , ,product-name, , ,121,use STRING as product name
+grub-mkrescue, , ,product-version, , ,122,use STRING as product version
+grub-mkrescue, , ,rom-directory, , ,123,save ROM images in DIR [optional]
+grub-mkrescue, , ,sparc-boot, , ,124,enable sparc boot
+grub-mkrescue, , ,xorriso, , ,125,use FILE as xorriso [optional]
+grub-mkrescue, ,?,help, , ,126,give this help list
+grub-mkrescue, , ,usage, , ,127,give a short usage message
+grub-mkrescue, ,V,version, , ,128,print program version

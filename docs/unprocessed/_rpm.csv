@@ -1,0 +1,90 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$rpm_install, , ,aid, , ,108,Add suggested packages to the transaction set when needed
+$rpm_install, , ,allfiles, , ,109,"Install all files in package, even those not needed (missingok)"
+$rpm_install, , ,badreloc, , ,110,Allow path relocations not included in package hints (requires --relocate)
+$rpm_install, , ,excludepath, ,@D,111,Don't install files whose name begins with specified path
+$rpm_install, , ,excludedocs, , ,112,Don't install any files which are marked as documentation
+$rpm_install, , ,force, , ,113,"Same as using --replacepkgs, --replacefiles, and --oldpackage"
+$rpm_install, ,h,hash, , ,114,Print 50 hash marks as the package archive is unpacked
+$rpm_install, , ,ignoresize, , ,115,Don't check for sufficient disk space before installation
+$rpm_install, , ,ignorearch, , ,116,Ignore host and package architecture mismatch
+$rpm_install, , ,ignoreos, , ,117,Ignore host and package OS mismatch
+$rpm_install, , ,includedocs, , ,118,Install documentation files (default)
+$rpm_install, , ,justdb, , ,119,"Update only the database, not the filesystem"
+$rpm_install, , ,nodigest, , ,120,Don't verify package or header digests when reading
+$rpm_install, , ,nosignature, , ,121,Don't verify package or header signatures when reading
+$rpm_install, , ,nodeps, , ,122,Don't perform a dependency check
+$rpm_install, , ,nosuggest, , ,123,Don't suggest package(s) that provide a missing dependency
+$rpm_install, , ,noorder, , ,124,Don't change the package installation order
+$rpm_install, , ,noscripts, , ,125,Don't execute scripts
+$rpm_install, , ,nopre, , ,126,Don't execute pre scripts
+$rpm_install, , ,nopost, , ,127,Don't execute post scripts
+$rpm_install, , ,nopreun, , ,128,Don't execute preun scripts
+$rpm_install, , ,nopostun, , ,129,Don't execute postun scripts
+$rpm_install, , ,notriggers, , ,130,Don't execute trigger scriptlets
+$rpm_install, , ,notriggerin, , ,131,Don't execute triggerin scriptlets
+$rpm_install, , ,notriggerun, , ,132,Don't execute triggerun scriptlets
+$rpm_install, , ,notriggerpostun, , ,133,Don't execute triggerpostun scriptlets
+$rpm_install, , ,oldpackage, , ,134,Allow an upgrade to replace a newer package with an older one
+$rpm_install, , ,percent, , ,135,Output percentages as files are unpacked from the package archive
+$rpm_install, , ,prefix, ,@D,136,Replace path prefix for relocatable binary packages with NEWPATH
+$rpm_install, , ,relocate, ,@f @r,137,Replace OLDPATH prefixes for relocatable packages with NEWPATH
+$rpm_install, , ,repackage, , ,138,Re-package the files before erasing
+$rpm_install, , ,replacefiles, , ,139,Install packages even if they replace files from other installed packages
+$rpm_install, , ,replacepkgs, , ,140,Install packages even if they are already installed
+$rpm_install, , ,test, , ,141,"Don't install, only check and report potential conflicts"
+$rpm_query, , ,changelog, , ,142,Display change information for the package
+$rpm_query, ,c,configfiles, , ,143,List only configuration files (implies -l)
+$rpm_query, ,d,docfiles, , ,144,List only documentation files (implies -l)
+$rpm_query, , ,dump, , ,145,"Dump file information. Requires at least one of -l, -c, -d"
+$rpm_query, , ,filesbypkg, , ,146,List all the files in each selected package
+$rpm_query, ,i,info, , ,147,"Display package details, uses --queryformat if specified"
+$rpm_query, , ,last, , ,148,Orders the package listing by install time
+$rpm_query, ,l,list, , ,149,List files in package
+$rpm_query, , ,provides, , ,150,List capabilities this package provides
+$rpm_query, ,R,requires, , ,151,List packages on which this package depends
+$rpm_query, , ,scripts, , ,152,List the package specific scriptlets
+$rpm_query, ,s,state, , ,153,Display the states of files in the package
+$rpm_query, , ,triggers, , ,154,Display the trigger scripts contained in the package
+$rpm_query, , ,triggerscripts, , ,155,Display the trigger scripts contained in the package
+$rpm_select, ,a,all, , ,156,Query all installed packages
+$rpm_select, ,f,file, , ,157,Query package owning specified file
+$rpm_select, , ,fileid, , ,158,Query package that contains a given file identifier
+$rpm_select, ,g,group, , ,159,Query packages with the specified group
+$rpm_select, , ,hdrid, , ,160,Query package that contains a given header identifier
+$rpm_select, ,p,package, ,@k,161,Query an (uninstalled) package in specified file
+$rpm_select, , ,pkgid, , ,162,Query package that contains a given package identifier
+$rpm_select, , ,specfile, ,@k,163,Parse and query specified spec-file as if it were a package
+$rpm_select, , ,tid, , ,164,Query package(s) that have the specified TID (transaction identifier)
+$rpm_select, , ,triggeredby, ,@f @r,165,Query packages that are triggered by the specified packages
+$rpm_select, , ,whatprovides, , ,166,Query all packages that provide the specified capability
+$rpm_select, , ,whatrequires, , ,167,Query all packages that require the specified capability
+$rpm_verify, , ,nodeps, , ,168,Don't verify dependencies of packages
+$rpm_verify, , ,nodigest, , ,169,Don't verify package or header digests when reading
+$rpm_verify, , ,nofiles, , ,170,Don't verify any attributes of package files
+$rpm_verify, , ,noscripts, , ,171,Don't execute the %verifyscript scriptlet
+$rpm_verify, , ,nosignature, , ,172,Don't verify package or header signatures when reading
+$rpm_verify, , ,nolinkto, , ,173,Don't verify linkto attribute
+$rpm_verify, , ,nomd5, , ,174,Don't verify md5 attribute
+$rpm_verify, , ,nosize, , ,175,Don't verify size attribute
+$rpm_verify, , ,nouser, , ,176,Don't verify user attribute
+$rpm_verify, , ,nogroup, , ,177,Don't verify group attribute
+$rpm_verify, , ,nomtime, , ,178,Don't verify time attribute
+$rpm_verify, , ,nomode, , ,179,Don't verify mode attribute
+$rpm_verify, , ,nordev, , ,180,Don't verify dev attribute
+$rpm_erase, , ,allmatches, , ,181,Remove all versions of the package which match specified string
+$rpm_erase, , ,nodeps, , ,182,Don't check dependencies before uninstalling the packages
+$rpm_erase, , ,noscripts, , ,183,Don't execute scriplets
+$rpm_erase, , ,nopreun, , ,184,Don't execute preun scriptlet
+$rpm_erase, , ,nopostun, , ,185,Don't execute postun scriptlet
+$rpm_erase, , ,notriggers, , ,186,Don't execute trigger scriptlets
+$rpm_erase, , ,notriggerun, , ,187,Don't execute triggerun scriptlets
+$rpm_erase, , ,notriggerpostun, , ,188,Don't execute triggerpostun scriptlets
+$rpm_erase, , ,repackage, , ,189,Re-package the files before erasing
+$rpm_erase, , ,test, , ,190,Don't really uninstall anything
+$rpm_mode, ,i,install, , ,191,Install new package
+$rpm_mode, ,U,upgrade, , ,192,Upgrade existing package
+$rpm_mode, ,F,freshen, , ,193,Upgrade package if already installed
+$rpm_mode, ,q,query, , ,194,Query installed packages
+$rpm_mode, ,V,verify, , ,195,Verify package integrity
+$rpm_mode, ,e,erase, , ,196,Erase package

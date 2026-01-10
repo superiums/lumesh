@@ -1,0 +1,103 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sops, __fish_is_first_token, , ,exec-env,@F,101,Execute a command with decrypted values inserted into the environment
+sops, __fish_is_first_token, , ,exec-file,@F,102,Execute a command with decrypted contents as a temporary file
+sops, __fish_is_first_token, , ,publish,@F,103,Publish sops file or directory to a configured destination
+sops, __fish_is_first_token, , ,keyservice,@F,104,Start a SOPS key kervice server
+sops, __fish_is_first_token, , ,groups,@F,105,Modify the groups on a SOPS file
+sops, __fish_is_first_token, , ,updatekeys,@F,106,Update the keys of a SOPS file using the config file
+sops, __fish_is_first_token, , ,help,@F,107,Shows a list of commands or help for one command
+sops, __fish_is_first_token, , ,h,@F,108,Shows a list of commands or help for one command
+sops, __fish_sops_no_subcommand,d,decrypt, ,@F,109,Decrypt a file and output the result to stdout
+sops, __fish_sops_no_subcommand,e,encrypt, ,@F,110,Encrypt a file and output the result to stdout
+sops, __fish_sops_no_subcommand,r,rotate, ,@F,111,Generate new encryption key & reencrypt with the new key
+sops, __fish_sops_no_subcommand,i,in-place, ,@F,112,Write output back to the same file instead of stdout
+sops, __fish_sops_no_subcommand,s,show-master-keys, ,@F,113,Display master encryption keys in the file during editing
+sops, __fish_sops_no_subcommand, ,extract, ,@F,114,Extract a specific key or branch from decrypted input document
+sops, __fish_sops_no_subcommand, ,ignore-mac, ,@F,115,Ignore Message Authentication Code during decryption
+sops, __fish_sops_no_subcommand, ,verbose, ,@F,116,Enable verbose logging output
+sops, __fish_sops_no_subcommand, ,enable-local-keyservice, ,@F,117,Use local key service
+sops, __fish_sops_no_subcommand,v,version, ,@F,118,Print the version
+sops, __fish_sops_no_subcommand,k,kms, ,@f @r,119,Comma separated list of KMS ARNs
+sops, __fish_sops_no_subcommand,p,pgp, ,@f @r,120,Comma separated list of PGP fingerprints
+sops, __fish_sops_no_subcommand,a,age, ,@f @r,121,Comma separated list of age recipients
+sops, __fish_sops_no_subcommand, ,gcp-kms, ,@f @r,122,Comma separated list of GCP KMS resource IDs
+sops, __fish_sops_no_subcommand, ,aws-profile, ,@f @r,123,The AWS profile to use for requests to AWS
+sops, __fish_sops_no_subcommand, ,azure-kv, ,@f @r,124,Comma separated list of Azure Key Vault URLs
+sops, __fish_sops_no_subcommand, ,hc-vault-transit, ,@f @r,125,Comma separated list of Vault's key URI
+sops, __fish_sops_no_subcommand, ,input-type, ,@f @r,126,"Currently json, yaml, dotenv and binary are supported."
+sops, __fish_sops_no_subcommand, ,output-type, ,@f @r,127,"Currently json, yaml, dotenv and binary are supported."
+sops, __fish_sops_no_subcommand, ,add-gcp-kms, ,@f @r,128,Comma-separated list of GCP KMS key resource IDs
+sops, __fish_sops_no_subcommand, ,rm-gcp-kms, ,@f @r,129,Remove comma-separated list of GCP KMS key resource IDs
+sops, __fish_sops_no_subcommand, ,add-azure-kv, ,@f @r,130,Add comma-separated list of Azure Key Vault key URLs
+sops, __fish_sops_no_subcommand, ,rm-azure-kv, ,@f @r,131,Remove comma-separated list of Azure Key Vault key URLs
+sops, __fish_sops_no_subcommand, ,add-kms, ,@f @r,132,Add comma-separated list of KMS ARNs
+sops, __fish_sops_no_subcommand, ,rm-kms, ,@f @r,133,Remove comma-separated list of KMS ARNs
+sops, __fish_sops_no_subcommand, ,add-hc-vault-transit, ,@f @r,134,Add comma-separated list of Vault's URI key
+sops, __fish_sops_no_subcommand, ,rm-hc-vault-transit, ,@f @r,135,Remove comma-separated list of Vault's URI key
+sops, __fish_sops_no_subcommand, ,add-age, ,@f @r,136,Add comma-separated list of age recipients fingerprints
+sops, __fish_sops_no_subcommand, ,rm-age, ,@f @r,137,Remove comma-separated list of age recipients fingerprints
+sops, __fish_sops_no_subcommand, ,add-pgp, ,@f @r,138,Add comma-separated list of PGP fingerprints
+sops, __fish_sops_no_subcommand, ,rm-pgp, ,@f @r,139,Remove comma-separated list of PGP fingerprints
+sops, __fish_sops_no_subcommand, ,unencrypted-suffix, ,@f @r,140,Override the unencrypted key suffix
+sops, __fish_sops_no_subcommand, ,encrypted-suffix, ,@f @r,141,Override the encrypted key suffix
+sops, __fish_sops_no_subcommand, ,unencrypted-regex, ,@f @r,142,Set the unencrypted key suffix
+sops, __fish_sops_no_subcommand, ,encrypted-regex, ,@f @r,143,Set the encrypted key suffix
+sops, __fish_sops_no_subcommand, ,config, ,@r,144,Path to sops' config file
+sops, __fish_sops_no_subcommand, ,encryption-context, ,@f @r,145,Comma separated list of KMS encryption context key:value pairs
+sops, __fish_sops_no_subcommand, ,set, ,@f @r,146,Set a specific key or branch in the input document (edit mode)
+sops, __fish_sops_no_subcommand, ,shamir-secret-sharing-threshold, ,@f @r,147,Number of master keys required to retrieve the data key with shamir
+sops, __fish_sops_no_subcommand, ,output, ,@r,148,Save the output after encryption or decryption to file
+sops, __fish_sops_no_subcommand, ,keyservice, ,@f @r,149,Specify key services to use in addition to the local one
+sops, __fish_sops_commands exec-env, ,background, ,@F,151,Background the process and don't wait for it to complete
+sops, __fish_sops_commands exec-env, ,user, ,@f @r,152,The user to run the command as
+sops, __fish_sops_commands exec-env, ,enable-local-keyservice, ,@F,153,Use local key service
+sops, __fish_sops_commands exec-env, ,keyservice, ,@f @r,154,Specify key services to use in addition to the local one
+sops, __fish_sops_commands exec-file, ,background, ,@F,155,Background the process and don't wait for it to complete
+sops, __fish_sops_commands exec-file, ,no-fifo, ,@F,156,Use a regular file instead of a fifo to temporarily hold the decrypted contents
+sops, __fish_sops_commands exec-file, ,user, ,@f @r,157,The user to run the command as
+sops, __fish_sops_commands exec-file, ,input-type,json yaml dotenv binary,@f @r,158,"Currently json, yaml, dotenv and binary are supported"
+sops, __fish_sops_commands exec-file, ,output-type,json yaml dotenv binary,@f @r,159,"Currently json, yaml, dotenv and binary are supported"
+sops, __fish_sops_commands exec-file, ,filename, ,@F,160,Filename for the temporarily file (default: tmp-file)
+sops, __fish_sops_commands exec-file, ,enable-local-keyservice, ,@F,161,Use local key service
+sops, __fish_sops_commands exec-file, ,keyservice, ,@f @r,162,Specify key services to use in addition to the local one
+sops, __fish_sops_commands publish,y,yes, ,@F,163,Pre-approve all changes and run non-interactively
+sops, __fish_sops_commands publish, ,omit-extensions, ,@F,164,Omit file extensions in destination path when publishing sops file
+sops, __fish_sops_commands publish, ,recursive, ,@F,165,"If source path is a directory, publish all its content recursively"
+sops, __fish_sops_commands publish, ,verbose, ,@F,166,Enable verbose logging output
+sops, __fish_sops_commands publish, ,enable-local-keyservice, ,@F,167,use local key service
+sops, __fish_sops_commands publish, ,keyservice, ,@f @r,168,Specify key services to use in addition to the local one
+sops, __fish_sops_commands keyservice, ,net,tcp;unix,@f @r,169,Network to listen on (default: 'tcp')
+sops, __fish_sops_commands keyservice, ,addr, ,@f @r,170,Address to listen on (default: '127.0.0.1:5000')
+sops, __fish_sops_commands keyservice, ,prompt, ,@F,171,Prompt user to confirm every incoming request
+sops, __fish_sops_commands keyservice, ,verbose, ,@F,172,Enable verbose logging output
+sops," __fish_sops_commands groups; and __fish_prev_arg_in groups", , ,add,@f @r,173,Add a new group to a SOPS file
+sops," __fish_sops_commands groups; and __fish_prev_arg_in groups", , ,delete,@f @r,174,Delete a key group from a SOPS file
+sops," __fish_sops_commands groups; and __fish_prev_arg_in add", , , ,@f @r,175, 
+sops," __fish_sops_commands groups; and __fish_prev_arg_in delete", , , ,@f @r,176, 
+sops," __fish_sops_commands groups; and add",f,file, ,@F,177,The file to add the group to
+sops," __fish_sops_commands groups; and add",i,in-place, ,@F,178,Write output back to the same file instead of stdout
+sops," __fish_sops_commands groups; and add", ,pgp, ,@f @r,179,The PGP fingerprints the new group should contain
+sops," __fish_sops_commands groups; and add", ,kms, ,@f @r,180,The KMS ARNs the new group should contain
+sops," __fish_sops_commands groups; and add", ,aws-profile, ,@f @r,181,The AWS profile to use for requests to AWS
+sops," __fish_sops_commands groups; and add", ,gcp-kms, ,@f @r,182,The GCP KMS Resource ID the new group should contain
+sops," __fish_sops_commands groups; and add", ,azure-kv, ,@f @r,183,The Azure Key Vault key URL the new group should contain
+sops," __fish_sops_commands groups; and add", ,hc-vault-transit, ,@f @r,184,The full vault path to the key used to encrypt/decrypt
+sops," __fish_sops_commands groups; and add", ,age, ,@f @r,185,The age recipient the new group should contain. Can be specified more than once
+sops," __fish_sops_commands groups; and add", ,shamir-secret-sharing-threshold, ,@f @r,186,Number of master keys required to retrieve data key with shamir
+sops," __fish_sops_commands groups; and add", ,encryption-context, ,@f @r,187,Comma separated list of KMS encryption context key:value pairs
+sops," __fish_sops_commands groups; and add", ,enable-local-keyservice, ,@f @r,188,Use local key service
+sops," __fish_sops_commands groups; and add", ,keyservice, ,@f @r,189,Specify key services to use in addition to the local one
+sops," __fish_sops_commands groups; and delete",f,file, ,@F,190,The file to add the group to
+sops," __fish_sops_commands groups; and delete",i,in-place, ,@F,191,Write output back to the same file instead of stdout
+sops," __fish_sops_commands groups; and delete", ,shamir-secret-sharing-threshold, ,@f @r,192,Number of master keys required to retrieve data key with shamir
+sops," __fish_sops_commands groups; and delete", ,enable-local-keyservice, ,@f @r,193,Use local key service
+sops," __fish_sops_commands groups; and delete", ,keyservice, ,@f @r,194,Specify key services to use in addition to the local one
+sops, __fish_sops_commands updatekeys,y,yes, ,@F,195,Pre-approve all changes and run non-interactively
+sops, __fish_sops_commands updatekeys, ,enable-local-keyservice, ,@F,196,Use local key service
+sops, __fish_sops_commands updatekeys, ,keyservice, ,@f @r,197,Specify key services to use in addition to the local one
+sops," __fish_sops_commands help; or __fish_sops_commands h", , ,exec-env,@f @r,198,Execute a command with decrypted values inserted into the environment
+sops," __fish_sops_commands help; or __fish_sops_commands h", , ,exec-file,@f @r,199,Execute a command with decrypted contents as a temporary file
+sops," __fish_sops_commands help; or __fish_sops_commands h", , ,publish,@f @r,200,Publish sops file or directory to a configured destination
+sops," __fish_sops_commands help; or __fish_sops_commands h", , ,keyservice,@f @r,201,Start a SOPS key kervice server
+sops," __fish_sops_commands help; or __fish_sops_commands h", , ,groups,@f @r,202,Modify the groups on a SOPS file
+sops," __fish_sops_commands help; or __fish_sops_commands h", , ,updatekeys,@f @r,203,Update the keys of a SOPS file using the config file

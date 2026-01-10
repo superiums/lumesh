@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+rtacct, ,V,version, , ,101,Print version
+rtacct, ,z,zeros, , ,102,Dump zero counters too.  By default they are not shown
+rtacct, ,r,reset, , ,103,Reset history
+rtacct, ,n,nooutput, , ,104,"Do not display anything, only update history"
+rtacct, ,a,ignore, , ,105,Dump absolute values of counters
+rtacct, ,s,noupdate, , ,106,"Do not update history, so that the next time you will see counters including …"
+rtacct, ,j,json, , ,107,Display results in JSON format
+rtacct, ,p,pretty, , ,108,"When combined with  --json , pretty print the output"
+rtacct, ,d,scan, , ,109,Run in daemon mode collecting statistics
+rtacct, ,h,help, , ,110,Print help
+rtacct, ,t,interval, , ,111,Time interval to average rates.  Default value is 60 seconds

@@ -1,0 +1,47 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ss, ,h,help, , ,101,Show summary of options
+ss, ,V,version, , ,102,Output version information
+ss, ,H,no-header, , ,103,Suppress header line
+ss, ,Q,no-queues, , ,104,Suppress sending and receiving queue columns
+ss, ,O,oneline, , ,105,Print each socket's data on a single line
+ss, ,n,numeric, , ,106,Do not try to resolve service names
+ss, ,r,resolve, , ,107,Try to resolve numeric address/ports
+ss, ,a,all, , ,108,Display both listening and non-listening (for TCP this means established conn…
+ss, ,l,listening, , ,109,Display only listening sockets (these are omitted by default)
+ss, ,B,bound-inactive, , ,110,"Display only TCP bound but inactive (not listening, connecting, etc"
+ss, ,o,options, , ,111,"Show timer information.  For TCP protocol, the output format is: . RS "
+ss, ,e,extended, , ,112,Show detailed socket information.  The output format is: . RS 
+ss, ,m,memory, , ,113,Show socket memory usage.  The output format is: . RS 
+ss, ,p,processes, , ,114,Show process using socket
+ss, ,T,threads, , ,115,Show thread using socket.  Implies  -p 
+ss, ,i,info, , ,116,Show internal TCP information.  Below fields may appear: . RS . P
+ss, , ,tos, , ,117,Show ToS and priority information.  Below fields may appear: . RS . P
+ss, , ,cgroup, , ,118,Show cgroup information.  Below fields may appear: . RS . P
+ss, , ,tipcinfo, , ,119,Show internal tipc socket information
+ss, ,K,kill, , ,120,Attempts to forcibly close sockets
+ss, ,s,summary, , ,121,Print summary statistics
+ss, ,E,events, , ,122,Continually display sockets as they are destroyed
+ss, ,Z,context, , ,123,As the  -p option but also shows process security context
+ss, ,z,contexts, , ,124,As the  -Z option but also shows the socket context
+ss, ,N,net, , ,125,Switch to the specified network namespace name
+ss, ,b,bpf, , ,126,Show socket classic BPF filters (only administrators are allowed to get these…
+ss, ,4,ipv4, , ,127,Display only IP version 4 sockets (alias for -f inet)
+ss, ,6,ipv6, , ,128,Display only IP version 6 sockets (alias for -f inet6)
+ss, ,0,packet, , ,129,Display PACKET sockets (alias for -f link)
+ss, ,t,tcp, , ,130,Display TCP sockets
+ss, ,u,udp, , ,131,Display UDP sockets
+ss, ,d,dccp, , ,132,Display DCCP sockets
+ss, ,w,raw, , ,133,Display RAW sockets
+ss, ,x,unix, , ,134,Display Unix domain sockets (alias for -f unix)
+ss, ,S,sctp, , ,135,Display SCTP sockets
+ss, , ,tipc, , ,136,Display tipc sockets (alias for -f tipc)
+ss, , ,vsock, , ,137,Display vsock sockets (alias for -f vsock)
+ss, , ,xdp, , ,138,Display XDP sockets (alias for -f xdp)
+ss, ,M,mptcp, , ,139,Display MPTCP sockets
+ss, , ,inet-sockopt, , ,140,Display inet socket options
+ss, ,f,family, , ,141,Display sockets of type FAMILY
+ss, ,A,socket, , ,142,"List of socket tables to dump, separated by commas"
+ss, ,D,diag, , ,143,"Do not display anything, just dump raw information about TCP sockets to FILE …"
+ss, ,F,filter, , ,144,Read filter information from FILE
+ss, , ,bpf-maps, , ,145,Pretty-print all the BPF socket-local data entries for each socket
+ss, , ,bpf-map-id, , ,146,Pretty-print the BPF socket-local data entries for the requested map ID

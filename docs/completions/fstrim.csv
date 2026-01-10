@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fstrim, ,A,fstab, , ,101, 
+fstrim, ,a,all, , ,102, 
+fstrim, ,n,dry-run, , ,103, 
+fstrim, ,o,offset, , ,104, 
+fstrim, ,l,length, , ,105, 
+fstrim, ,I,listed-in, , ,106, 
+fstrim, ,m,minimum, , ,107, 
+fstrim, ,t,types, , ,108, 
+fstrim, ,v,verbose, , ,109, 
+fstrim, , ,quiet-unsupported, , ,110, 
+fstrim, ,h,help, , ,111, 
+fstrim, ,V,version, , ,112, 

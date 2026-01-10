@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sha384sum, ,b,binary, , ,101,read in binary mode
+sha384sum, ,c,check, , ,102,read checksums from the FILEs and check them
+sha384sum, , ,tag, , ,103,create a BSD-style checksum
+sha384sum, ,t,text, , ,104,read in text mode (default)
+sha384sum, ,z,zero, , ,105,"end each output line with NUL, not newline, and disable file name escaping "
+sha384sum, , ,ignore-missing, , ,106,don't fail or report status for missing files
+sha384sum, , ,quiet, , ,107,don't print OK for each successfully verified file
+sha384sum, , ,status, , ,108,"don't output anything, status code shows success"
+sha384sum, , ,strict, , ,109,exit non-zero for improperly formatted checksum lines
+sha384sum, ,w,warn, , ,110,warn about improperly formatted checksum lines
+sha384sum, , ,help, , ,111,display this help and exit
+sha384sum, , ,version, , ,112,output version information and exit

@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+killall, ,e,exact, , ,101,Require an exact match for very long names
+killall, ,I,ignore-case, , ,102,Do case insensitive process name match
+killall, ,g,process-group, , ,103,Kill the process group to which the process belongs with one signal
+killall, ,i,interactive, , ,104,Interactively ask for confirmation before killing
+killall, ,u,user, ,@f @r,105,Kill only processes the specified user owns. Command names are optional
+killall, ,w,wait, , ,106,Wait for all killed processes to die
+killall, ,v,version, , ,107,Print version
+killall, ,u, , ,@f @r,108,kill given user's processes
+killall, ,c, , ,@f @r,109,Limit to processes matching pattern

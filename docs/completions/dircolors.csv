@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dircolors, ,b,bourne-shell, , ,101,output Bourne shell code to set LS_COLORS
+dircolors, ,c,c-shell, , ,102,output C shell code to set LS_COLORS
+dircolors, ,p,print-database, , ,103,output defaults
+dircolors, , ,print-ls-colors, , ,104,output fully escaped colors for display
+dircolors, , ,help, , ,105,display this help and exit
+dircolors, , ,version, , ,106,output version information and exit

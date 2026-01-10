@@ -1,0 +1,25 @@
+cmd,conds,short,long,params,dirs,pri,desc
+kdeconnect-cli, ,l,list-devices, , ,101,List all devices
+kdeconnect-cli, ,a,list-available, , ,102,List available (paired and reachable) devices
+kdeconnect-cli, , ,id-only, , ,103,"Make --list-devices or --list-available print the devices id, to ease scripting"
+kdeconnect-cli, , ,refresh, , ,104,Search for devices in the network and re-establish connections
+kdeconnect-cli, , ,pair, , ,105,Request pairing to a said device
+kdeconnect-cli, , ,ring, , ,106,Find the said device by ringing it.
+kdeconnect-cli, , ,unpair, , ,107,Stop pairing to a said device
+kdeconnect-cli, , ,ping, , ,108,Sends a ping to said device
+kdeconnect-cli, , ,ping-msg, ,@f @r,109,Same as ping but you can set the message to display
+kdeconnect-cli, , ,share, ,@r,110,Share a file to a said device
+kdeconnect-cli, , ,list-notifications, , ,111,Display the notifications on a said device
+kdeconnect-cli, , ,lock, , ,112,Lock the specified device
+kdeconnect-cli, , ,send-sms, ,@f @r,113,Sends an SMS. Requires destination
+kdeconnect-cli, , ,destination, ,@f @r,114,Phone number to send the message
+kdeconnect-cli, ,d,device, ,@f @r,115, 
+kdeconnect-cli, ,n,name, ,@f @r,116,Device Name
+kdeconnect-cli, , ,encryption-info, , ,117,Get encryption info about said device
+kdeconnect-cli, , ,list-commands, , ,118,Lists remote commands and their ids
+kdeconnect-cli, , ,execute-command, ,@f @r,119,Executes a remote command by id
+kdeconnect-cli, ,h,help, , ,120,Displays this help.
+kdeconnect-cli, ,v,version, , ,121,Displays version information.
+kdeconnect-cli, , ,author, , ,122,Show author information.
+kdeconnect-cli, , ,license, , ,123,Show license information.
+kdeconnect-cli, , ,desktopfile, ,@r,124,The base file name of the desktop entry for this application.

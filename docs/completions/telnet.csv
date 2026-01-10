@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+telnet, , , , ,@f @r,101,Hostname
+telnet, ,e, , ,@f @r,102,Set escape character
+telnet, ,l, , ,@f @r,103,User login
+telnet, ,n, , ,@f @r,104,Log to tracefile
+telnet, ,S, , ,@f @r,105,Sets IP TOS
+telnet, ,k, , ,@f @r,106,Use Kerberos realm for authentication
+telnet, ,X, , ,@f @r,107,Disables specified type of authentication
+telnet, ,B, , ,@f @r,108,Set baudrate
+telnet, ,s, , ,@f @r,109,Set source IP address
+telnet, ,P, , ,@f @r,110,Set IPsec policy specification
+telnet, ,V, , ,@f @r,111,Set routing table
+telnet, ,b, , ,@f @r,112,Local address to bind to
+telnet, ,?,help, , ,113,Print help and exit
+telnet, , ,usage, , ,114,Print short usage and exit
+telnet, ,V,version, , ,115,Print program version

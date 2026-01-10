@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chsh, ,s,shell, , ,101, 
+chsh, ,l,list-shells, , ,102, 
+chsh, ,h,help, , ,103, 
+chsh, ,V,version, , ,104, 

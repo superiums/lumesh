@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+capsh, , ,help, , ,101,Display the list of commands supported by  capsh 
+capsh, , ,print, , ,102,Display prevailing capability and related state
+capsh, , ,current, , ,103,"Display prevailing capability state, 1e capabilities and IAB vector"
+capsh, , ,caps, , ,104,Set the prevailing process capabilities to those specified by R cap-set 
+capsh, , ,drop, , ,105,Remove the listed capabilities from the prevailing bounding set
+capsh, , ,inh, , ,106,Set the inheritable set of capabilities for the current process to equal thos…
+capsh, , ,user, , ,107,Assume the identity of the named user
+capsh, , ,mode, , ,108,Display the prevailing libcap mode as guessed by the  cap_get_mode (3) functi…
+capsh, , ,modes, , ,109,Lists all of the libcap modes supported by  --mode= <mode>
+capsh, , ,inmode, , ,110,"Confirm that the prevailing mode is that specified in R <mode> , or exit with…"
+capsh, , ,uid, , ,111,Force all UID values to equal  id using the  setuid (2) system call
+capsh, , ,cap-uid, , ,112,use the  cap_setuid (3) function to set the UID of the current process
+capsh, , ,is-uid, , ,113,Exit with status 1 unless the current UID equals R <id> 
+capsh, , ,gid, , ,114,Force all GID values to equal  id using the  setgid (2) system call
+capsh, , ,is-gid, , ,115,Exit with status 1 unless the current GIQ equals R <id> 
+capsh, , ,groups, , ,116,Set the supplementary groups to the numerical list provided
+capsh, , ,keep, , ,117,"In a non-pure capability mode, the kernel provides liberal privilege to the s…"
+capsh, , ,secbits, , ,118,Set the security-bits for the program
+capsh, , ,chroot, , ,119,Execute the  chroot (2) system call with the new root-directory (/) equal to …
+capsh, , ,forkfor, , ,120,This command causes the program to fork a child process for so many seconds
+capsh, , ,killit, , ,121,This commands causes a  --forkfor child to be  kill (2)d with the specified s…
+capsh, , ,explain, , ,122,Give a brief textual description of what privileges the specified capability …
+capsh, , ,shell, , ,123,This option changes the shell that is invoked when the argument == is encount…
+capsh, , ,strict, , ,124,This option toggles the suppression of subsequent attempts to fixup --caps= a…
+capsh, , ,suggest, , ,125,"Scan each of the textual descriptions of capabilities, known to capsh, and di…"
+capsh, , ,decode, , ,126,This is a convenience feature
+capsh, , ,supports, , ,127,"As the kernel evolves, more capabilities are added"
+capsh, , ,has-p, , ,128,Exit with status 1 unless the  permitted vector has capability  xxx raised
+capsh, , ,has-ambient, , ,129,Performs a check to see if the running kernel supports ambient capabilities
+capsh, , ,has-a, , ,130,Exit with status 1 unless the  ambient vector has capability  xxx raised
+capsh, , ,has-b, , ,131,Exit with status 1 unless the  bounding vector has capability  xxx in its (de…
+capsh, , ,iab, , ,132,Attempts to set the IAB tuple of inheritable capability vectors
+capsh, , ,addamb, , ,133,Adds the specified ambient capability to the running process
+capsh, , ,delamb, , ,134,Removes the specified ambient capability from the running process
+capsh, , ,noamb, , ,135,Drops all ambient capabilities from the running process
+capsh, , ,noenv, , ,136,Suppresses overriding of the HOME and USER environment variables when a subse…
+capsh, , ,mode*, , ,137,commandline arguments
+capsh, , ,quiet, , ,138,This argument is ignored unless it is the first one

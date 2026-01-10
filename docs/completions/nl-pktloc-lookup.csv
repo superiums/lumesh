@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nl-pktloc-lookup, ,h,help, , ,101,Print help text to console and exit
+nl-pktloc-lookup, ,v,version, , ,102,Print versioning information to console and exit
+nl-pktloc-lookup, ,l,list, , ,103,List all packet location definitions
+nl-pktloc-lookup, , ,u32, , ,104,Prints the packet location definition in a special format that is understood …

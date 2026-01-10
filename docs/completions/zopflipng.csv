@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zopflipng, , , , ,@f @k @r,101, 
+zopflipng, , ,prefix, , ,102,Add prefix
+zopflipng, , ,lossy_transparent, , ,103,Remove colors behind alpha channel 0
+zopflipng, , ,lossy_8bit, , ,104,Convert PNG16 to PNG8
+zopflipng, , ,always_zopflify, , ,105,For benchmarking the algorithm
+zopflipng, , ,iterations, , ,106,Number of iterations
+zopflipng, , ,splitting, , ,107,Left for backwards compatibility
+zopflipng, , ,filters,0 1 2 3 4 m e p b,@f @r,108,Filter strategies
+zopflipng, , ,keepchunks, , ,109,Keep metadata chunks
+zopflipng, ,h,help, , ,110,Show help

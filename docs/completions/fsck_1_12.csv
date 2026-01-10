@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fsck.minix, ,l,list, , ,101, 
+fsck.minix, ,r,repair, , ,102, 
+fsck.minix, ,a,auto, , ,103, 
+fsck.minix, ,v,verbose, , ,104, 
+fsck.minix, ,s,super, , ,105, 
+fsck.minix, ,m,uncleared, , ,106, 
+fsck.minix, ,f,force, , ,107, 
+fsck.minix, ,h,help, , ,108, 
+fsck.minix, ,V,version, , ,109, 

@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+getunimap, ,s,sort, , ,101,sort and merge elements
+getunimap, ,C,console, , ,102,the console device to be used
+getunimap, ,V,version, , ,103,print version number
+getunimap, ,h,help, , ,104,print this usage message

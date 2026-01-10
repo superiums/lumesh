@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+stow, ,d,dir, ,@r,101,"Set stow dir, default $STOW_DIR or current dir"
+stow, ,t,target, ,@r,102,"Set target dir, default parent of stow dir"
+stow, , ,ignore, ,@f @r,103,Ignore files ending in this Perl regex
+stow, , ,defer, ,@f @r,104,Don't stow files beginning with this Perl regex if already stowed
+stow, , ,override, ,@f @r,105,Force stowing files beginning with this Perl regex if already stowed
+stow, , ,no-folding, , ,106,Create dirs instead of symlinks to whole dirs
+stow, , ,adopt, , ,107,Move existing files into stow dir if target exists (AND OVERWRITE!)
+stow, ,n,simulate, , ,108,Don't modify the file system
+stow, ,v,verbose, , ,109,Increase verbosity by 1 (levels are from 0 to 5)
+stow, , ,verbose,0 1 2 3 4 5, ,110,Increase verbosity by 1 or set it with verbose=N [0..5]
+stow, ,p,compat, , ,111,Use legacy algorithm for unstowing
+stow, ,V,version, , ,112,Show stow version number
+stow, ,h,help, , ,113,Show help
+stow, , ,dotfiles, , ,114,Stow dot-file_or_dir_name as .file_or_dir_name
+stow, ,D,delete, ,@r,115,Unstow the package names that follow this option
+stow, ,S,stow, ,@r,116,Stow the package names that follow this option
+stow, ,R,restow, ,@r,117,Restow: delete and then stow again

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsmod, ,v,verbose, , ,101,Print messages about what the program is doing.  Usually lsmod prints
+lsmod, ,V,version, , ,102,Show version of program and exit
+lsmod, ,h,help, , ,103,Print the help message and exit

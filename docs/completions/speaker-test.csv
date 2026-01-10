@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+speaker-test, ,c,channels, , ,101,NUM channels in stream
+speaker-test, ,D,device, , ,102,PCM device name NAME
+speaker-test, ,f,frequency, , ,103,sine wave of FREQ Hz
+speaker-test, , ,help, , ,104,Print usage help
+speaker-test, ,b,buffer, , ,105,Use buffer size of TIME microseconds
+speaker-test, ,p,period, , ,106,Use period size of TIME microseconds
+speaker-test, ,P,nperiods, , ,107,Use number of periods.   The default value is 4
+speaker-test, ,r,rate, , ,108,stream of RATE Hz
+speaker-test, ,t,test, , ,109,-t pink means use pink noise (default)
+speaker-test, ,l,nloops, , ,110,Specifies the number of loops.   Zero means to run infinitely
+speaker-test, ,s,speaker, , ,111,Do a single-shot speaker test for the given channel
+speaker-test, ,w,wavfile, , ,112,Use the given WAV file for the playback instead of pre-defined WAV files
+speaker-test, ,W,wavdir, , ,113,Specify the directory containing WAV files for playback
+speaker-test, ,m,chmap, , ,114,Pass the channel map to override
+speaker-test, ,X,force-frequency, , ,115,Allow supplied FREQ to be outside the default range of 30-8000Hz

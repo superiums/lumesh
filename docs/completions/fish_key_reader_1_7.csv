@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fish_key_reader, ,c,continuous, , ,101,Begins a session where multiple key sequences can be inspected
+fish_key_reader, ,h,help, , ,102,Displays help about using this command
+fish_key_reader, ,V,verbose, , ,103,Explain what sequence was received in addition to the decoded key
+fish_key_reader, ,v,version, , ,104,Displays the current fish version and then exits

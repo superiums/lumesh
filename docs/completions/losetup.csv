@@ -1,0 +1,24 @@
+cmd,conds,short,long,params,dirs,pri,desc
+losetup, ,a,all, , ,101,List all used devices
+losetup, ,d,detach, ,@f @r,102,Detach one or more devices
+losetup, ,D,detach-all, , ,103,Detach all used devices
+losetup, ,f,find, , ,104,Find first unused device
+losetup, ,c,set-capacity, ,@f @r,105,Resize the device
+losetup, ,j,associated, ,@r,106,List all devices associated with given file
+losetup, ,L,nooverlap, , ,107,Avoid possible conflict between devices
+losetup, ,o,offset, ,@f @r,108,Start at given offset into file
+losetup, , ,sizelimit, ,@f @r,109,Device is limited to give bytes of the file
+losetup, ,b,sector-size, ,@f @r,110,Set the logical sector size
+losetup, ,P,partscan, , ,111,Create a partitioned loop device
+losetup, ,r,read-only, , ,112,Set up a read-only loop device
+losetup, , ,direct-io,on off,@f @r,113,open backing file with O_DIRECT
+losetup, , ,show, , ,114,Print device name after setup
+losetup, ,v,verbose, , ,115,Verbose mode
+losetup, ,J,json, , ,116,Use JSON --list output format
+losetup, ,l,list, , ,117,List info about all or specified
+losetup, ,n,noheadings, , ,118,Don't print headings for --list output
+losetup, ,O,output, ,@f @r,119,Specify columns to output for --list
+losetup, , ,output-all, , ,120,Output all columns
+losetup, , ,raw, , ,121,Use raw --list output format
+losetup, ,h,help, , ,122,Display help
+losetup, ,V,version, , ,123,Display version

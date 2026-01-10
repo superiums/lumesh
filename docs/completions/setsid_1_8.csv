@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+setsid, ,c,ctty, , ,101, 
+setsid, ,f,fork, , ,102, 
+setsid, ,w,wait, , ,103, 
+setsid, ,V,version, , ,104, 
+setsid, ,h,help, , ,105, 

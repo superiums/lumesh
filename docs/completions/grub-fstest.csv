@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-fstest, ,c,diskcount, , ,101,Specify the number of input files
+grub-fstest, ,C,crypto, , ,102,Mount crypto devices
+grub-fstest, ,d,debug, , ,103,Set debug environment variable
+grub-fstest, ,K,zfs-key, , ,104,Load zfs crypto key
+grub-fstest, ,n,length, , ,105,Handle N bytes in output file
+grub-fstest, ,r,root, , ,106,Set root device
+grub-fstest, ,s,skip, , ,107,Skip N bytes from output file
+grub-fstest, ,u,uncompress, , ,108,Uncompress data
+grub-fstest, ,v,verbose, , ,109,print verbose messages
+grub-fstest, ,?,help, , ,110,give this help list
+grub-fstest, , ,usage, , ,111,give a short usage message
+grub-fstest, ,V,version, , ,112,print program version

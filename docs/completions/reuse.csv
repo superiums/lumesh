@@ -1,0 +1,29 @@
+cmd,conds,short,long,params,dirs,pri,desc
+reuse, ,h,help, , ,101,show help message
+reuse, annotate,c,copyright, ,@f @r,115,copyright statement
+reuse, annotate,l,license, ,@f @r,116,SPDX Identifier
+reuse, annotate, ,contributor, ,@f @r,117,file contributor
+reuse, annotate,y,year, ,@f @r,118,year of copyright statement
+reuse, annotate,s,style,$comment_styles,@f @r,119,comment style to use
+reuse, annotate, ,copyright-style,$copyright_styles,@f @r,120,copyright style to use
+reuse, annotate,t,template, ,@f @r,121,name of template to use
+reuse, annotate, ,exclude-year, , ,122,do not include year in statement
+reuse, annotate, ,merge-copyrights, , ,123,merge copyright lines if copyright statements are identical
+reuse, annotate, ,single-line, , ,124,force single-line comment style
+reuse, annotate, ,multi-line, , ,125,force multi-line comment style
+reuse, annotate,r,recursive, , ,126,annotate all files recursively
+reuse, annotate, ,no-replace, , ,127,do not replace the first header in the file
+reuse, annotate, ,force-dot-license, , ,128,always write a .license file
+reuse, annotate, ,fallback-dot-license, , ,129,write a .license file to files with unrecognised comment styles
+reuse, annotate, ,skip-unrecognised, , ,130,skip files with unrecognised comment styles
+reuse, annotate, ,skip-existing, , ,131,skip files that already contain REUSE information
+reuse, download, ,all, , ,132,download all missing licenses
+reuse, download,o,output, ,@r,133,output license to specified file
+reuse, download, ,source, ,@f @r,134,source from which to copy custom `LicenseRef-` licenses
+reuse, lint,q,quiet, , ,135,prevents output
+reuse, lint,j,json, , ,136,formats output as JSON
+reuse, lint,p,plain, , ,137,formats output as plain text
+reuse, spdx,o,output, ,@r,138,write the bill of materials to specified file
+reuse, spdx, ,add-license-concluded, , ,139,populate the LicenseConcluded field
+reuse, spdx, ,creator-person, ,@f @r,140,name of the person signing off on the SPDX report
+reuse, spdx, ,creator-organization, ,@f @r,141,name of the organization signing off on the SPDX report

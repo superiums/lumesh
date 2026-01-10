@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ebuild, , ,debug, , ,101,Run bash with the -x option
+ebuild, , ,color, , ,102,Enable color
+ebuild, , ,force, , ,103,Force regeneration of digests
+ebuild, , ,ignore-default-opts, , ,104,Ignore EBUILD_DEFAULT_OPTS
+ebuild, , ,skip-manifest, , ,105,Skip all manifest checks

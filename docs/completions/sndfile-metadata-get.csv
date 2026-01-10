@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sndfile-metadata-get, , ,all, , ,101,all metadata
+sndfile-metadata-get, , ,bext-description, , ,102,description
+sndfile-metadata-get, , ,bext-originator, , ,103,originator info
+sndfile-metadata-get, , ,bext-orig-ref, , ,104,originator reference
+sndfile-metadata-get, , ,bext-umid, , ,105,Unique Material Identifier
+sndfile-metadata-get, , ,bext-orig-date, , ,106,origination date
+sndfile-metadata-get, , ,bext-orig-time, , ,107,origination time
+sndfile-metadata-get, , ,bext-coding-hist, , ,108,coding history
+sndfile-metadata-get, , ,str-title, , ,109,title
+sndfile-metadata-get, , ,str-copyright, , ,110,copyright
+sndfile-metadata-get, , ,str-artist, , ,111,artist
+sndfile-metadata-get, , ,str-comment, , ,112,comment
+sndfile-metadata-get, , ,str-date, , ,113,creation date
+sndfile-metadata-get, , ,str-album, , ,114,album
+sndfile-metadata-get, , ,str-license, , ,115,license El sndfile-metadata-get sndfile-metadata-set sets bext and string met…
+sndfile-metadata-get, , ,bext-time-raf, , ,116,time reference
+sndfile-metadata-get, , ,bext-auto-time-date, , ,117,Set the BEXT time and date to current
+sndfile-metadata-get, , ,bext-auto-time, , ,118,Set the BEXT time to current
+sndfile-metadata-get, , ,bext-auto-date, , ,119,Set the BEXT date to current
+sndfile-metadata-get, , ,str-auto-date, , ,120,Set the string date to current

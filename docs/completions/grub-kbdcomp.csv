@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-kbdcomp, ,h,help, , ,101,print this message and exit
+grub-kbdcomp, ,V,version, , ,102,print the version information and exit
+grub-kbdcomp, ,o,output, , ,103,save output in FILE [required]

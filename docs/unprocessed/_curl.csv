@@ -1,0 +1,2 @@
+cmd,conds,short,long,params,dirs,pri,desc
+curl, string match -qr '^@' -- (commandline -ct), , , ,@k,101, 

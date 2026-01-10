@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bc, ,i,interactive, , ,101,Force interactive mode
+bc, ,l,mathlib, , ,102,Define math library
+bc, ,w,warn, , ,103,Give warnings for extensions to POSIX bc
+bc, ,s,standard, , ,104,Process exactly POSIX bc
+bc, ,q,quiet, , ,105,Do not print the GNU welcome
+bc, ,v,version, , ,106,Display version and exit
+bc, ,h,help, , ,107,Display help and exit

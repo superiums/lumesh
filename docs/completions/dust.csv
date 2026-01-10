@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dust, ,d,depth, , ,101,Depth to show
+dust, ,T,threads, , ,102,Number of threads to use
+dust, , ,config, ,@r,103,Specify a config file to use
+dust, ,n,number-of-lines, , ,104,Number of lines of output to show. (Default is terminal_height - 10)
+dust, ,X,ignore-directory, ,@r,105,Exclude any file or directory with this path
+dust, ,I,ignore-all-in-file, ,@r,106,"Exclude any file or directory with a regex matching that listed in this file, the file entries will be added to the ignore regexs provided by --invert_filter"
+dust, ,z,min-size, , ,107,Minimum size file to include in output
+dust, ,v,invert-filter, , ,108,Exclude filepaths matching this regex. To ignore png files type: -v '\\.png$'
+dust, ,e,filter, , ,109,Only include filepaths matching this regex. For png files type: -e '\\.png$'
+dust, ,w,terminal-width, , ,110,Specify width of output overriding the auto detection of terminal width
+dust, ,o,output-format,si,@f @r,111,Changes output display size. si will print sizes in powers of 1000. b k m g t kb mb gb tb will print the whole tree in that size
+dust, ,S,stack-size, , ,112,"Specify memory to use as stack size - use if you see: 'fatal runtime error: stack overflow' (default low memory=1048576, high memory=1073741824)"
+dust, ,M,mtime, , ,113,"+/-n matches files modified more/less than n days ago , and n matches files modified exactly n days ago, days are rounded down.That is +n => (−∞, curr−(n+1)), n => [curr−(n+1), curr−n), and -n => (𝑐𝑢𝑟𝑟−𝑛, +∞)"
+dust, ,A,atime, , ,114,"just like -mtime, but based on file access time"
+dust, ,y,ctime, , ,115,"just like -mtime, but based on file change time"
+dust, , ,files0-from, ,@r,116,"run dust on NUL-terminated file names specified in file; if argument is -, then read names from standard input"
+dust, , ,collapse, ,@r,117,Keep these directories collapsed
+dust, ,m,filetime,a,@f @r,118,Directory 'size' is max filetime of child files instead of disk size. while a/c/m for last accessed/changed/modified time
+dust, ,p,full-paths, , ,119,Subdirectories will not have their path shortened
+dust, ,L,dereference-links, , ,120,dereference sym links - Treat sym links as directories and go into them
+dust, ,x,limit-filesystem, , ,121,Only count the files and directories on the same filesystem as the supplied directory
+dust, ,s,apparent-size, , ,122,Use file length instead of blocks
+dust, ,r,reverse, , ,123,Print tree upside down (biggest highest)
+dust, ,c,no-colors, , ,124,No colors will be printed (Useful for commands like: watch)
+dust, ,C,force-colors, , ,125,Force colors print
+dust, ,b,no-percent-bars, , ,126,No percent bars or percentages will be displayed
+dust, ,B,bars-on-right, , ,127,percent bars moved to right side of screen
+dust, ,R,screen-reader, , ,128,For screen readers. Removes bars. Adds new column: depth level (May want to use -p too for full path)
+dust, , ,skip-total, , ,129,No total row will be displayed
+dust, ,f,filecount, , ,130,Directory 'size' is number of child files instead of disk size
+dust, ,i,ignore-hidden, , ,131,Do not display hidden files
+dust, ,t,file-types, , ,132,show only these file types
+dust, ,P,no-progress, , ,133,Disable the progress indication
+dust, , ,print-errors, , ,134,Print path with errors
+dust, ,D,only-dir, , ,135,Only directories will be displayed
+dust, ,F,only-file, , ,136,Only files will be displayed. (Finds your largest files)
+dust, ,j,output-json, , ,137,Output the directory tree as json to the current directory
+dust, ,h,help, , ,138,Print help (see more with '--help')
+dust, ,V,version, , ,139,Print version

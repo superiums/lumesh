@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+pw-config, ,h,help, , ,101, 
+pw-config, , ,version, , ,102, 
+pw-config, ,n,name, , ,103, 
+pw-config, ,p,prefix, , ,104, 
+pw-config, ,L,no-newline, , ,105, 
+pw-config, ,r,recurse, , ,106, 
+pw-config, ,N,no-colors, , ,107, 

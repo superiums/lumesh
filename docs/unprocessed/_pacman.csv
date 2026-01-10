@@ -1,0 +1,79 @@
+cmd,conds,short,long,params,dirs,pri,desc
+$progname, $noopt, , ,-D, ,101,Modify the package database
+$progname, $noopt, , ,-Q, ,102,Query the package database
+$progname, $noopt,D,database, ,@f,103,Modify the package database
+$progname, $noopt,Q,query, ,@f,104,Query the package database
+$progname, $noopt,R,remove, ,@f,105,Remove packages from the system
+$progname, $noopt,S,sync, ,@f,106,Synchronize packages
+$progname, $noopt,T,deptest, ,@f,107,Check dependencies
+$progname, $noopt,U,upgrade, , ,108,Upgrade or add a local package
+$progname, $noopt,F,files, ,@f,109,Query the files database
+$progname, ,V,version, ,@f,110,Display version and exit
+$progname, ,h,help, ,@f,111,Display help
+$progname, $noopt,b,dbpath, ,@D,112,Alternate database location
+$progname, $noopt,r,root, ,@D,113,Alternate installation root
+$progname, $noopt,v,verbose, , ,114,Output more status messages
+$progname, $noopt, ,arch, , ,115,Alternate architecture
+$progname, $noopt, ,cachedir, ,@D,116,Alternate package cache location
+$progname, $noopt, ,color,{auto,always,never}, ,117,Colorize the output
+$progname, $noopt, ,config, , ,118,Alternate config file
+$progname, $noopt, ,confirm, , ,119,Always ask for confirmation
+$progname, $noopt, ,debug, , ,120,Display debug messages
+$progname, $noopt, ,disable-download-timeout, , ,121,Use relaxed timeouts for download
+$progname, $noopt, ,gpgdir, ,@D,122,Alternate home directory for GnuPG
+$progname, $noopt, ,hookdir, ,@D,123,Alternate hook location
+$progname, $noopt, ,logfile, , ,124,Alternate log file
+$progname, $noopt, ,noconfirm, , ,125,Bypass any confirmation
+$progname, $noopt, ,sysroot, ,@D,126,Operate on a mounted guest system (root-only)
+$progname, $$condition,q,quiet, , ,127,Show less information
+$progname, $$condition,d,nodeps, , ,128,Skip [all] dependency checks
+$progname, $$condition,p,print, , ,129,"Dry run, only print targets"
+$progname, $$condition, ,assume-installed, , ,130,Add a virtual package to satisfy dependencies
+$progname, $$condition, ,dbonly, , ,131,Modify database entry only
+$progname, $$condition, ,noprogressbar, , ,132,Do not display progress bar
+$progname, $$condition, ,noscriptlet, , ,133,Do not execute install script
+$progname, $$condition, ,print-format, , ,134,Specify printf-like format
+$progname, $$condition,l,list, , ,135,List the files owned by PACKAGE
+$progname, $$condition,y,refresh, , ,136,Download fresh package databases [force]
+$progname, $$condition,g,groups,$listgroups, ,137,Display members of [all] package GROUP
+$progname, $$condition, ,asdeps, , ,138,Install packages as non-explicitly installed
+$progname, $$condition, ,asexplicit, , ,139,Install packages as explicitly installed
+$progname, $$condition, ,ignore,$listall, ,140,Ignore a package upgrade (can be used more than once)
+$progname, $$condition, ,ignoregroup,$listgroups, ,141,Ignore a group upgrade (can be used more than once)
+$progname, $$condition, ,needed, , ,142,Do not reinstall up to date packages
+$progname, $$condition, ,overwrite, , ,143,Overwrite conflicting files (can be used more than once)
+$progname," $database; and $has_db_opt",k,check, , ,144,Check database validity
+$progname, $database,q,quiet, , ,145,Suppress output of success messages
+$progname," $database; and $has_db_opt", ,asdeps, , ,146,Mark PACKAGE as dependency
+$progname," $database; and $has_db_opt", ,asexplicit, , ,147,Mark PACKAGE as explicitly installed
+$progname," $has_db_opt; and $database", , ,$listinstalled, ,148, 
+$progname, $files,x,regex, , ,149,Interpret each query as a regular expression
+$progname, $files, ,machinereadable, , ,150,Print each match in a machine readable output format
+$progname, $files, , ,$listall, ,151,Package
+$progname, $query,c,changelog, , ,152,View the change log of PACKAGE
+$progname, $query,d,deps, , ,153,List only non-explicit packages (dependencies)
+$progname, $query,e,explicit, , ,154,List only explicitly installed packages
+$progname, $query,i,info, , ,155,View PACKAGE [backup files] information
+$progname, $query,k,check, , ,156,Check that PACKAGE files exist
+$progname, $query,m,foreign, , ,157,List installed packages not found in sync database
+$progname, $query,n,native, , ,158,list installed packages only found in sync database
+$progname, $query,o,owns, , ,159,Query the package that owns FILE
+$progname, $query,p,file, , ,160,Query a package file instead of the database
+$progname, $query,s,search, , ,161,Search locally-installed packages for regexp
+$progname, $query,t,unrequired, , ,162,List only unrequired packages [and optdepends]
+$progname, $query,u,upgrades, , ,163,List only out-of-date packages
+$progname,$query $queryfile, , ,$listinstalled, ,164,Installed package
+$progname,$query $queryfile, , ,$listfiles,@k,165,Package file
+$progname, $remove,c,cascade, , ,166,Also remove packages depending on PACKAGE
+$progname, $remove,n,nosave, , ,167,Ignore file backup designations
+$progname, $remove,s,recursive, , ,168,Also remove dependencies of PACKAGE
+$progname, $remove,u,unneeded, , ,169,Only remove targets not required by PACKAGE
+$progname, $remove, , ,$listinstalled, ,170,Installed package
+$progname, $sync,c,clean, , ,171,Remove [all] packages from cache
+$progname, $sync,i,info, , ,172,View PACKAGE [extended] information
+$progname, $sync,l,list,$listrepos, ,173,List all packages in REPOSITORY
+$progname, $sync,s,search, , ,174,Search remote repositories for regexp
+$progname, $sync,u,sysupgrade, , ,175,Upgrade all packages that are out of date
+$progname, $sync,w,downloadonly, , ,176,Only download the target packages
+$progname, $sync, , ,$listall $listgroups, ,177, 
+$progname, $upgrade, , ,$listfiles,@k,178,Package file

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpasswd, ,a,add, , ,101,Add user to group
+gpasswd, ,d,delete, , ,102,Remove user from group
+gpasswd, ,h,help, , ,103,Print help
+gpasswd, ,r,remove-password, , ,104,Remove the GROUP's password
+gpasswd, ,R,restrict, , ,105,Restrict access to GROUP to its members
+gpasswd, ,M,members, , ,106,Set the list of members of GROUP
+gpasswd, ,A,administrators, , ,107,set the list of administrators for GROUP

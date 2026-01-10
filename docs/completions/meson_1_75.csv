@@ -1,0 +1,66 @@
+cmd,conds,short,long,params,dirs,pri,desc
+meson, , ,version, , ,101,print version number
+meson, , ,help, , ,102,print command line help
+meson, , ,allow-dirty, , ,103,Allow even when repository contains uncommitted changes
+meson, , ,formats, , ,104,Comma separated list of archive types to create
+meson, , ,include-subprojects, , ,105,Include source code of subprojects that have been used for the build
+meson, , ,no-tests, , ,106,Do not build and test generated packages
+meson, , ,no-rebuild, , ,107,Do not rebuild before installing
+meson, , ,only-changed, , ,108,Only overwrite files that are older than the copied file
+meson, , ,quiet, , ,109,Do not print every file that was installed
+meson, , ,destdir, , ,110,Sets or overrides DESTDIR environment.   (Since 0. 57. 0)
+meson, ,n,dry-run, , ,111,"Doesn't actually install, but print logs.  (Since 0. 57. 0)"
+meson, , ,skip-subprojects, , ,112,Do not install files from given subprojects.  (Since 0. 58. 0)
+meson, , ,tags, , ,113,Install only targets having one of the given tags.  (Since 0. 60. 0)
+meson, , ,strip, , ,114,Strip targets even if strip option was not set during configure.  (Since 0
+meson, , ,targets, , ,115,"print all top level targets (executables, libraries, etc)"
+meson, , ,target-files, , ,116,print the source files of the given target
+meson, , ,buildsystem-files, , ,117,"print all files that make up the build system (meson. build, meson"
+meson, , ,tests, , ,118,print all unit tests
+meson, , ,name, , ,119,project name.  default: name of current directory
+meson, ,e,executable, , ,120,executable name.  default: project name
+meson, ,d,deps, , ,121,"dependencies, comma-separated"
+meson, , ,language, , ,122,project language.  default: autodetected based on source files
+meson, ,b,build, , ,123,build after generation
+meson, , ,builddir, , ,124,directory for build
+meson, ,f,force, , ,125,force overwrite of existing files and directories
+meson, , ,type, , ,126,project type.  default: executable based project
+meson, , ,repeat, , ,127,run tests as many times as specified
+meson, , ,gdb, , ,128,run tests under gdb
+meson, , ,list, , ,129,list all available tests
+meson, , ,wrapper, , ,130,invoke all tests via the given wrapper (e. g.  valgrind)
+meson, , ,suite, , ,131,run tests in this suite
+meson, , ,no-suite, , ,132,do not run tests in this suite
+meson, , ,no-stdsplit, , ,133,do not split stderr and stdout in test logs
+meson, , ,benchmark, , ,134,run benchmarks instead of tests
+meson, , ,logbase, , ,135,base of file name to use for writing test logs
+meson, , ,num-processes, , ,136,how many parallel processes to use to run tests
+meson, , ,verbose, , ,137,do not redirect stdout and stderr
+meson, , ,setup, , ,138,use the specified test setup
+meson, ,s,sourcedir, , ,139,Path to source directory
+meson, ,S,skip-errors, , ,140,Skip errors instead of aborting
+meson, , ,clean, , ,141,Clean the build directory
+meson, ,j,jobs, , ,142,The number of worker jobs to run (if supported)
+meson, , ,load-average, , ,143,The system load average to try to maintain (if supported)
+meson, , ,ninja-args, , ,144,Arguments to pass to `ninja` (applied only on `ninja` backend)
+meson, , ,vs-args, , ,145,Arguments to pass to `msbuild` (applied only on `vs` backend)
+meson, , ,xcode-args, , ,146,Arguments to pass to `xcodebuild` (applied only on `xcode` backend)
+meson, ,w,workdir, , ,147,"Directory to cd into before running (default: builddir, Since 1. 0. 0)"
+meson, , ,dump, , ,148,Only print required environment (Since 0. 62
+meson, , ,dump-format, , ,149,Format used with --dump (Since 1. 1. 0)
+meson, , ,debarch, , ,150,The dpkg architecture to generate
+meson, , ,gccsuffix, , ,151,A particular gcc version suffix if necessary
+meson, , ,cross, , ,152,Generate a cross compilation file
+meson, , ,native, , ,153,Generate a native compilation file
+meson, , ,system, , ,154,Define system for cross compilation
+meson, , ,subsystem, , ,155,Define subsystem for cross compilation
+meson, , ,kernel, , ,156,Define kernel for cross compilation
+meson, , ,cpu, , ,157,Define cpu for cross compilation
+meson, , ,cpu-family, , ,158,Define cpu family for cross compilation
+meson, , ,endian, , ,159,Define endianness for cross compilation
+meson, ,q,check-only, , ,160,exit with 1 if files would be modified by meson format
+meson, ,i,inplace, , ,161,format files in-place
+meson, ,r,recursive, , ,162,recurse subdirs (requires --check-only or --inplace option)
+meson, ,c,configuration, , ,163,read configuration from meson. format
+meson, , ,editor-config, , ,164,try to read configuration from . editorconfig
+meson, , ,output, , ,165,output file (implies having exactly one input)

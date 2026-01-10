@@ -1,0 +1,30 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cpupower, ,h,help, , ,101,Show supported commands and general usage
+cpupower, ,c,cpu,all,@f @r,102,Only show or set values for specific cores
+cpupower, frequency-info,e,debug, , ,103,Prints out debug information
+cpupower, frequency-info,f,freq, , ,104,"Get frequency the CPU currently runs at, according to the cpufreq core"
+cpupower, frequency-info,w,hwfreq, , ,105,"Get frequency the CPU currently runs at, by reading it from hardware"
+cpupower, frequency-info,l,hwlimits, , ,106,Determine the minimum and maximum CPU frequency allowed
+cpupower, frequency-info,d,driver, , ,107,Determines the used cpufreq kernel driver
+cpupower, frequency-info,p,policy, , ,108,Gets the currently used cpufreq policy
+cpupower, frequency-info,g,governors, , ,109,Determines available cpufreq governors
+cpupower, frequency-info,s,stats, , ,110,Shows cpufreq statistics if available
+cpupower, frequency-info,y,latency, , ,111,Determines the maximum latency on CPU frequency changes
+cpupower, frequency-info,o,proc, , ,112,Prints out information like the old /proc/cpufreq
+cpupower, frequency-info,m,human, , ,113,"human-readable output for the -f, -w, -s and -y parameters"
+cpupower, frequency-info,n,no-rounding, , ,114,Output frequencies and latencies without rounding off values
+cpupower, frequency-info, ,related-cpus,Determines which CPUs run at the same hardware frequency, ,115, 
+cpupower, frequency-info,a,affected-cpus,Determines which CPUs need to have their frequency coordinated by software, ,116, 
+cpupower, frequency-set,d,min, ,@f @r,117,new minimum CPU frequency the governor may select
+cpupower, frequency-set,u,max, ,@f @r,118,new maximum CPU frequency the governor may select
+cpupower, frequency-set,g,governor, ,@f @r,119,new cpufreq governor
+cpupower, frequency-set,f,freq, ,@f @r,120,specific frequency to be set. Requires userspace governor to be available and loaded
+cpupower, frequency-set,r,related, , ,121,modify all hardware-related CPUs at the same time
+cpupower, idle-info,f,silent, , ,122,Only print a summary of all available C-states in the system
+cpupower, idle-set,d,disable,$idlestates,@f @r,123,Disable a specific processor sleep state
+cpupower, idle-set,e,enable,$idlestates,@f @r,124,Enable a specific processor sleep state
+cpupower, idle-set,D,disable-by-latency, ,@f @r,125,Disable all idle states with a equal or higher latency than <LATENCY>
+cpupower, idle-set,E,enable-all, , ,126,Enable all idle states if not enabled already
+cpupower, set,b,perf-bias, , ,127,Set relative importance of performance vs energy savings
+cpupower, info,b,perf-bias, , ,128,Get relative importance of performance vs energy savings
+cpupower, monitor,m, ,$monitors,@f @r,129,Only display this monitor

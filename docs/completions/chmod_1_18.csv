@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chmod, ,c,changes, , ,101,like verbose but report only when a change is made
+chmod, ,f,quiet, , ,102,suppress most error messages
+chmod, ,v,verbose, , ,103,output a diagnostic for every file processed
+chmod, , ,dereference, , ,104,"affect the referent of each symbolic link, rather than the symbolic link itse…"
+chmod, ,h,no-dereference, , ,105,"affect each symbolic link, rather than the referent"
+chmod, , ,no-preserve-root, , ,106,do not treat '/' specially (the default)
+chmod, , ,preserve-root, , ,107,fail to operate recursively on '/'
+chmod, , ,reference, , ,108,use RFILE's mode instead of specifying MODE values
+chmod, ,R,recursive, , ,109,change files and directories recursively 
+chmod, , ,help, , ,110,display this help and exit
+chmod, , ,version, , ,111,output version information and exit

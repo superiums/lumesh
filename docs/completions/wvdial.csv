@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wvdial, ,c,chat, , ,101,Run wvdial as chat replacement from within pppd
+wvdial, ,C,config, ,@r,102,Run wvdial with alternative config file
+wvdial, ,n,no-syslog, , ,103,Don't output debug information

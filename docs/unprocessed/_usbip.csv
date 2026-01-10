@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+usbip, __fish_usbip_no_subcommand, , ,attach,@f,102,Attach a USB device to the host
+usbip, __fish_usbip_no_subcommand, , ,detach,@f,103,Detach a USB device from the host
+usbip, __fish_usbip_no_subcommand, , ,list,@f,104,List USB devices on the host
+usbip, __fish_usbip_no_subcommand, , ,bind,@f,105,Bind a USB device to a driver
+usbip, __fish_usbip_no_subcommand, , ,unbind,@f,106,Unbind a USB device from a driver
+usbip, __fish_usbip_no_subcommand, , ,port,@f,107,List USB ports on the host

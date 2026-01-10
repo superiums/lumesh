@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tr, ,C,complement, , ,101,use the complement of SET1
+tr, ,d,delete, , ,102,"delete characters in SET1, do not translate"
+tr, ,s,squeeze-repeats, , ,103,replace each run of a character listed in SET1 with a single occurrence of that character
+tr, ,t,truncate-set1, , ,104,first truncate SET1 to length of SET2
+tr, , ,help, , ,105,display this help and exit
+tr, , ,version, , ,106,output version information and exit
+tr, , , ,[:alnum:], ,107,all letters and digits
+tr, , , ,[:alpha:], ,108,all letters
+tr, , , ,[:blank:], ,109,all horizontal whitespace
+tr, , , ,[:cntrl:], ,110,all control characters
+tr, , , ,[:digit:], ,111,all digits
+tr, , , ,[:graph:], ,112,"all printable characters, not including space"
+tr, , , ,[:lower:], ,113,all lower case letters
+tr, , , ,[:print:], ,114,"all printable characters, including space"
+tr, , , ,[:punct:], ,115,all punctuation characters
+tr, , , ,[:space:], ,116,all horizontal or vertical whitespace
+tr, , , ,[:upper:], ,117,all upper case letters
+tr, , , ,[:xdigit:], ,118,all hexadecimal digits
+tr, , , ,[:alnum:], ,119,alphanumeric characters
+tr, , , ,[:alpha:], ,120,alphabetic characters
+tr, , , ,[:blank:], ,121,whitespace characters
+tr, , , ,[:cntrl:], ,122,control characters
+tr, , , ,[:digit:], ,123,numeric characters
+tr, , , ,[:graph:], ,124,graphic characters
+tr, , , ,[:ideogram:], ,125,ideographic characters
+tr, , , ,[:lower:], ,126,lower-case alphabetic characters
+tr, , , ,[:phonogram:], ,127,phonographic characters
+tr, , , ,[:print:], ,128,printable characters
+tr, , , ,[:punct:], ,129,punctuation characters
+tr, , , ,[:rune:], ,130,valid characters
+tr, , , ,[:space:], ,131,space characters
+tr, , , ,[:special:], ,132,special characters
+tr, , , ,[:upper:], ,133,upper-case characters
+tr, , , ,[:xdigit:], ,134,hexadecimal characters

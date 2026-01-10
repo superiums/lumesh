@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tload, ,s,scale, , ,101,The scale option allows a vertical scale to be specified for the display (in …
+tload, ,d,delay, , ,102,The delay sets the delay between graph updates in R seconds 
+tload, ,h,help, , ,103,Display this help text
+tload, ,V,version, , ,104,Display version information and exit

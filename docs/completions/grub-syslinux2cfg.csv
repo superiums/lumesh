@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grub-syslinux2cfg, ,c,cwd, , ,101,current directory of syslinux [default is parent directory of input file]
+grub-syslinux2cfg, ,i,isolinux, , ,102,assume input is an isolinux configuration file
+grub-syslinux2cfg, ,o,output, , ,103,write output to FILE [default=stdout]
+grub-syslinux2cfg, ,p,pxelinux, , ,104,assume input is a pxelinux configuration file
+grub-syslinux2cfg, ,r,root, , ,105,root directory of the syslinux disk [default=/]
+grub-syslinux2cfg, ,s,syslinux, , ,106,assume input is a syslinux configuration file
+grub-syslinux2cfg, ,t,target-root, , ,107,root directory as it will be seen on runtime [default=/]
+grub-syslinux2cfg, ,T,target-cwd, , ,108,current directory of syslinux as it will be seen on runtime  [default is pare…
+grub-syslinux2cfg, ,v,verbose, , ,109,print verbose messages
+grub-syslinux2cfg, ,?,help, , ,110,give this help list
+grub-syslinux2cfg, , ,usage, , ,111,give a short usage message
+grub-syslinux2cfg, ,V,version, , ,112,print program version

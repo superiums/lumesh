@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-uname, ,a,all, , ,101,Behave as though all of the options -mnrsvo were specified.
+uu-uname, ,s,kernel-name, , ,102,print the kernel name.
+uu-uname, ,n,nodename, , ,103,print the nodename (the nodename may be a name that the system is known by to a communications network).
+uu-uname, ,r,kernel-release, , ,104,print the operating system release.
+uu-uname, ,v,kernel-version, , ,105,print the operating system version.
+uu-uname, ,m,machine, , ,106,print the machine hardware name.
+uu-uname, ,o,operating-system, , ,107,print the operating system name.
+uu-uname, ,p,processor, , ,108,print the processor type (non-portable)
+uu-uname, ,i,hardware-platform, , ,109,print the hardware platform (non-portable)
+uu-uname, ,h,help, , ,110,Print help
+uu-uname, ,V,version, , ,111,Print version

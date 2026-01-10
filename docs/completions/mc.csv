@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mc, ,a,stickchars, , ,101,No graphic chars for line drawing
+mc, ,b,nocolor, , ,102,Force black and white display
+mc, ,c,color, , ,103,Force color mode
+mc, ,C,colors, , ,104,Specify a different color set
+mc, ,d,nomouse, , ,105,Disable mouse support
+mc, ,e,edit, , ,106,Start the internal editor with FILE
+mc, ,f,datadir, , ,107,Display the compiled-in search paths
+mc, ,F,datadir-info, , ,108,Display extended info about compiled-in paths
+mc, , ,configure-options, , ,109,Display configure options
+mc, ,k,resetsoft, , ,110,Reset softkeys to their default
+mc, , ,nokeymap, , ,111,Use default hardcoded keys
+mc, ,l,ftplog, , ,112,Save the ftpfs dialog with the server in FILE
+mc, ,P,printwd, , ,113,Print the last working directory to FILE
+mc, ,t,termcap, , ,114,Use the TERMCAP variable for terminal info
+mc, ,u,nosubshell, , ,115,Disable use of the concurrent shell
+mc, ,U,subshell, , ,116,Enable use of the concurrent shell
+mc, ,v,view, , ,117,Start the internal viewer with FILE
+mc, ,V,version, , ,118,Display the version of the program
+mc, ,x,xterm, , ,119,Force xterm mode
+mc, ,g,oldmouse, , ,120,Force a 'normal tracking' mouse mode

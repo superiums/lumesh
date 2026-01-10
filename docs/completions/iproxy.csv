@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+iproxy, ,u,udid, , ,101,Target specific device by UDID
+iproxy, ,n,network, , ,102,Connect to network device
+iproxy, ,l,local, , ,103,Connect to USB device.  This is the default if no option is passed
+iproxy, ,s,source, , ,104,Allows setting a source address for the listening socket.  The default is 127
+iproxy, ,h,help, , ,105,Prints usage information
+iproxy, ,d,debug, , ,106,Increase debug level.  EXAMPLES

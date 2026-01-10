@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zabbix_web_service, ,c,config, , ,101,Use an alternate config-file.
+zabbix_web_service, ,h,help, , ,102,Display this help and exit.
+zabbix_web_service, ,V,version, , ,103,Output version information and exit.

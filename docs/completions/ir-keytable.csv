@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ir-keytable, ,a,auto-load, , ,101,"Auto-load keymaps, based on a configuration file.  Only works with --sysdev"
+ir-keytable, ,c,clear, , ,102,Clears the scancode to keycode mappings
+ir-keytable, ,D,delay, , ,103,Sets the delay before repeating a keystroke
+ir-keytable, ,k,set-key, , ,104,Set scancode to keycode mapping
+ir-keytable, ,p,protocol, , ,105,Comma separated list of kernel protocols or BPF protocol to enable
+ir-keytable, ,e,parameter, , ,106,Comma separated list of parameters for the BPF protocol
+ir-keytable, ,P,period\\, , ,107,Sets the period to repeat a keystroke
+ir-keytable, ,r,read, , ,108,Read and show the current scancode to keycode mapping
+ir-keytable, ,s,sysdev, , ,109,"rc device to control, defaults to rc0 if not specified"
+ir-keytable, ,t,test, , ,110,test if the rc device is generating events
+ir-keytable, ,v,verbose, , ,111,Enables debug messages
+ir-keytable, ,w,write, , ,112,"Reads the protocols and scancode to keycode mapping from the KEYMAP file, and…"
+ir-keytable, ,?,help, , ,113,Prints the help message
+ir-keytable, , ,usage, , ,114,Give a short usage message
+ir-keytable, ,V,version, , ,115,print the v4l2-utils version 
+ir-keytable, , ,period, , ,116,Sets the period to repeat a keystroke

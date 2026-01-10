@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-df, ,B,block-size, , ,101,"scale sizes by SIZE before printing them; e.g. '-BM' prints sizes in units of 1,048,576 bytes"
+uu-df, , ,output,source,@f @r,102,"use output format defined by FIELD_LIST, or print all fields if FIELD_LIST is omitted."
+uu-df, ,t,type, , ,103,limit listing to file systems of type TYPE
+uu-df, ,x,exclude-type, , ,104,limit listing to file systems not of type TYPE
+uu-df, , ,help, , ,105,Print help information.
+uu-df, ,a,all, , ,106,include dummy file systems
+uu-df, , ,total, , ,107,produce a grand total
+uu-df, ,h,human-readable, , ,108,"print sizes in human readable format (e.g., 1K 234M 2G)"
+uu-df, ,H,si, , ,109,"likewise, but use powers of 1000 not 1024"
+uu-df, ,i,inodes, , ,110,list inode information instead of block usage
+uu-df, ,l,local, , ,111,limit listing to local file systems
+uu-df, , ,no-sync, , ,112,do not invoke sync before getting usage info (default)
+uu-df, ,P,portability, , ,113,use the POSIX output format
+uu-df, , ,sync, , ,114,invoke sync before getting usage info (non-windows only)
+uu-df, ,T,print-type, , ,115,print file system type
+uu-df, ,V,version, , ,116,Print version

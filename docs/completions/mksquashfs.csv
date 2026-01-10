@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mksquashfs, , , ,gzip lzo lz4 xz zstd lzma, ,101,Selects the compression scheme
+mksquashfs, , , ,default filtered huffman_only run_length_encoded fixed, ,102,Strategy to use (gzip only)
+mksquashfs, , , ,lzo1x_1 lzo1x_1_11 lzo1x_1_12 lzo1x_1_15 lzo1x_999, ,103,Algorithm to use (lzo only)
+mksquashfs, , , ,x86 arm armthumb powerpc sparc ia64, ,104,Compress using filters in turn and choose the best compression (xz only)

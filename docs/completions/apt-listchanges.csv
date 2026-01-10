@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-listchanges, , ,help, , ,101,Display help and exit
+apt-listchanges, , ,apt, , ,102,Read filenames from pipe
+apt-listchanges, ,v,verbose, ,@f,103,Verbose mode
+apt-listchanges, ,f,frontend,pager browser xterm-pager xterm-browser text mail none,@f,104,Select frontend interface
+apt-listchanges, , ,email-address, ,@f @r,105,Specify email address
+apt-listchanges, ,c,confirm, ,@f,106,Ask confirmation
+apt-listchanges, ,a,all, ,@f,107,Display all changelogs
+apt-listchanges, , ,save-seen, ,@r,108,Avoid changelogs from db in named file
+apt-listchanges, , ,which,news changelogs both,@f @r,109,Select display
+apt-listchanges, ,h,headers, ,@f,110,Insert header
+apt-listchanges, , ,debug, ,@f,111,Display debug info
+apt-listchanges, , ,profile, ,@r,112,Select an option profile

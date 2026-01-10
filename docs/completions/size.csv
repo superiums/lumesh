@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+size, , ,format, , ,101,X Item '--format=compatibility' 
+size, , ,help, , ,102,X Item '--help'
+size, , ,radix, , ,103,X Item '--radix=number' 
+size, , ,common, , ,104,X Item '--common' Print total size of common symbols in each file
+size, , ,totals, , ,105,X Item '--totals' 
+size, , ,target, , ,106,X Item '--target=bfdname' Specify that the object-code format for objfile is …
+size, , ,version, , ,107,X Item '--version' . PD Display the version number of size

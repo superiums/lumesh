@@ -1,0 +1,88 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cryptsetup, , ,active-name, , ,102,Override device autodetection of dm device to be reencrypted
+cryptsetup, , ,align-payload, , ,103,Align payload at <n> sector boundaries - for luksFormat
+cryptsetup, , ,allow-discards, , ,104,Allow discards (aka TRIM) requests for device
+cryptsetup, ,q,batch-mode, , ,105,Do not ask for confirmation
+cryptsetup, ,c,cipher, , ,106,The cipher used to encrypt the disk (see /proc/crypto)
+cryptsetup, , ,debug, , ,107,Show debug messages
+cryptsetup, , ,debug-json, , ,108,Show debug messages including JSON metadata
+cryptsetup, , ,decrypt, , ,109,Decrypt LUKS2 device (remove encryption)
+cryptsetup, , ,deferred, , ,110,Device removal is deferred until the last user closes it
+cryptsetup, , ,device-size, , ,111,Use only specified device size (ignore rest of device) DANGEROUS!
+cryptsetup, , ,disable-keyring, , ,112,Disable loading volume keys via kernel keyring
+cryptsetup, , ,disable-locks, , ,113,Disable locking of on-disk metadata
+cryptsetup, , ,dump-master-key, , ,114,Dump volume (master) key instead of keyslots info
+cryptsetup, , ,encrypt, , ,115,Encrypt LUKS2 device (in-place encryption)
+cryptsetup, , ,force-password, , ,116,Disable password quality check (if enabled)
+cryptsetup, ,h,hash, , ,117,The hash used to create the encryption key from the passphrase
+cryptsetup, , ,header, , ,118,Device or file with separated LUKS header
+cryptsetup, , ,header-backup-file, , ,119,File with LUKS header and keyslots backup
+cryptsetup, ,?,help, , ,120,Show this help message
+cryptsetup, , ,hotzone-size, , ,121,Maximal reencryption hotzone size
+cryptsetup, , ,init-only, , ,122,Initialize LUKS2 reencryption in metadata only
+cryptsetup, ,I,integrity, , ,123,Data integrity algorithm (LUKS2 only)
+cryptsetup, , ,integrity-legacy-padding, , ,124,Use inefficient legacy padding (old kernels)
+cryptsetup, , ,integrity-no-journal, , ,125,Disable journal for integrity device
+cryptsetup, , ,integrity-no-wipe, , ,126,Do not wipe device after format
+cryptsetup, ,i,iter-time, , ,127,PBKDF iteration time for LUKS (in ms)
+cryptsetup, , ,iv-large-sectors, , ,128,Use IV counted in sector size (not in 512 bytes)
+cryptsetup, , ,json-file, , ,129,Read or write the json from or to a file
+cryptsetup, , ,key-description, , ,130,Key description
+cryptsetup, ,d,key-file, , ,131,Read the key from a file
+cryptsetup, ,s,key-size, , ,132,The size of the encryption key
+cryptsetup, ,S,key-slot, , ,133,Slot number for new key (default is first free)
+cryptsetup, , ,keyfile-offset, , ,134,Number of bytes to skip in keyfile
+cryptsetup, ,l,keyfile-size, , ,135,Limits the read from keyfile
+cryptsetup, , ,keyslot-cipher, , ,136,LUKS2 keyslot: The cipher used for keyslot encryption
+cryptsetup, , ,keyslot-key-size, , ,137,LUKS2 keyslot: The size of the encryption key
+cryptsetup, , ,label, , ,138,Set label for the LUKS2 device
+cryptsetup, , ,luks2-keyslots-size, , ,139,LUKS2 header keyslots area size
+cryptsetup, , ,luks2-metadata-size, , ,140,LUKS2 header metadata area size
+cryptsetup, , ,master-key-file, , ,141,Read the volume (master) key from file
+cryptsetup, , ,new-keyfile-offset, , ,142,Number of bytes to skip in newly added keyfile
+cryptsetup, , ,new-keyfile-size, , ,143,Limits the read from newly added keyfile
+cryptsetup, ,o,offset, , ,144,The start offset in the backend device
+cryptsetup, , ,pbkdf, , ,145,"PBKDF algorithm (for LUKS2): argon2i, argon2id, pbkdf2"
+cryptsetup, , ,pbkdf-force-iterations, , ,146,"PBKDF iterations cost (forced, disables benchmark)"
+cryptsetup, , ,pbkdf-memory, , ,147,PBKDF memory cost limit
+cryptsetup, , ,pbkdf-parallel, , ,148,PBKDF parallel cost
+cryptsetup, , ,perf-no_read_workqueue, , ,149,Bypass dm-crypt workqueue and process read requests synchronously
+cryptsetup, , ,perf-no_write_workqueue, , ,150,Bypass dm-crypt workqueue and process write requests synchronously
+cryptsetup, , ,perf-same_cpu_crypt, , ,151,Use dm-crypt same_cpu_crypt performance compatibility option
+cryptsetup, , ,perf-submit_from_crypt_cpus, , ,152,Use dm-crypt submit_from_crypt_cpus performance compatibility option
+cryptsetup, , ,persistent, , ,153,Set activation flags persistent for device
+cryptsetup, , ,priority, , ,154,"Keyslot priority: ignore, normal, prefer"
+cryptsetup, , ,progress-frequency, , ,155,Progress line update (in seconds)
+cryptsetup, ,r,readonly, , ,156,Create a readonly mapping
+cryptsetup, , ,reduce-device-size, , ,157,Reduce data device size (move data offset) DANGEROUS!
+cryptsetup, , ,refresh, , ,158,Refresh (reactivate) device with new parameters
+cryptsetup, , ,resilience, , ,159,"Reencryption hotzone resilience type (checksum,journal,none)"
+cryptsetup, , ,resilience-hash, , ,160,Reencryption hotzone checksums hash
+cryptsetup, , ,resume-only, , ,161,Resume initialized LUKS2 reencryption only
+cryptsetup, , ,sector-size, , ,162,Encryption sector size (default: 512 bytes)
+cryptsetup, , ,serialize-memory-hard-pbkdf, , ,163,Use global lock to serialize memory hard PBKDF (OOM workaround)
+cryptsetup, , ,shared, , ,164,Share device with another non-overlapping crypt segment
+cryptsetup, ,b,size, , ,165,The size of the device
+cryptsetup, ,p,skip, , ,166,How many sectors of the encrypted data to skip at the beginning
+cryptsetup, , ,subsystem, , ,167,Set subsystem label for the LUKS2 device
+cryptsetup, , ,tcrypt-backup, , ,168,Use backup (secondary) TCRYPT header
+cryptsetup, , ,tcrypt-hidden, , ,169,Use hidden header (hidden TCRYPT device)
+cryptsetup, , ,tcrypt-system, , ,170,Device is system TCRYPT drive (with bootloader)
+cryptsetup, , ,test-passphrase, , ,171,"Do not activate device, just check passphrase"
+cryptsetup, ,t,timeout, , ,172,Timeout for interactive passphrase prompt (in seconds)
+cryptsetup, , ,token-id, , ,173,Token number (default: any)
+cryptsetup, , ,token-only, , ,174,Do not ask for passphrase if activation by token fails
+cryptsetup, ,T,tries, , ,175,How often the input of the passphrase can be retried
+cryptsetup, ,M,type, , ,176,"Type of device metadata: luks, luks1, luks2, plain, loopaes, tcrypt, bitlk"
+cryptsetup, , ,unbound, , ,177,Create or dump unbound (no assigned data segment) LUKS2 keyslot
+cryptsetup, , ,usage, , ,178,Display brief usage
+cryptsetup, , ,use-random, , ,179,Use /dev/random for generating volume key
+cryptsetup, , ,use-urandom, , ,180,Use /dev/urandom for generating volume key
+cryptsetup, , ,uuid, , ,181,UUID for device to use
+cryptsetup, , ,veracrypt, , ,182,Scan also for VeraCrypt compatible device
+cryptsetup, , ,veracrypt-pim, , ,183,Personal Iteration Multiplier for VeraCrypt compatible device
+cryptsetup, , ,veracrypt-query-pim, , ,184,Query Personal Iteration Multiplier for VeraCrypt compatible device
+cryptsetup, ,v,verbose, , ,185,Shows more detailed error messages
+cryptsetup, ,y,verify-passphrase, , ,186,Verifies the passphrase by asking for it twice
+cryptsetup, ,V,version, , ,187,Print package version
+cryptsetup, close status resize, , , ,@f @r,188, 

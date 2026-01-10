@@ -1,0 +1,40 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dmstats, , ,alias, , ,101,Specify an alias name for a group
+dmstats, , ,alldevices, , ,102,If no device arguments are given allow operation on all devices when creating…
+dmstats, , ,allprograms, , ,103,Include regions from all program IDs for list and report operations
+dmstats, , ,allregions, , ,104,Include all present regions for commands that normally accept a single region…
+dmstats, , ,area, , ,105,"When performing a list or report, include objects of type area in the results"
+dmstats, , ,areas, , ,106,Specify the number of statistics areas to create within a new region
+dmstats, , ,clear, , ,107,"When printing statistics counters, also atomically reset them to zero"
+dmstats, , ,count, , ,108,Specify the iteration count for repeating reports
+dmstats, , ,group, , ,109,"When performing a list or report, include objects of type group in the results"
+dmstats, , ,filemap, , ,110,"Instead of creating regions on a device as specified by command line options,…"
+dmstats, , ,nomonitor, , ,111,Disable the dmfilemapd daemon when creating new file mapped groups
+dmstats, , ,follow, , ,112,Specify the dmfilemapd file following mode
+dmstats, , ,foreground, , ,113,Specify that the dmfilemapd daemon should run in the foreground
+dmstats, , ,groupid, , ,114,Specify the group to operate on
+dmstats, , ,bounds, , ,115,RB [ ns | us | ms | s ] Specify the boundaries of a latency histogram to be t…
+dmstats, , ,histogram, , ,116,When used with the report and list commands select default fields that emphas…
+dmstats, , ,interval, , ,117,Specify the interval in seconds between successive iterations for repeating r…
+dmstats, ,j,major, , ,118,Specify the major number
+dmstats, ,m,minor, , ,119,Specify the minor number
+dmstats, , ,nogroup, , ,120,"When creating regions mapping the extents of a file in the file system, do no…"
+dmstats, , ,nosuffix, , ,121,Suppress the suffix on output sizes
+dmstats, , ,notimesuffix, , ,122,Suppress the suffix on output time values
+dmstats, ,o,options, , ,123,Specify which report fields to display
+dmstats, ,O,sort, , ,124,Sort output according to the list of fields given
+dmstats, , ,precise, , ,125,Attempt to use nanosecond precision counters when creating new statistics reg…
+dmstats, , ,programid, , ,126,Specify a program ID string
+dmstats, , ,region, , ,127,"When performing a list or report, include objects of type region in the resul…"
+dmstats, , ,regionid, , ,128,Specify the region to operate on
+dmstats, , ,regions, , ,129,Specify a list of regions to group
+dmstats, , ,relative, , ,130,If displaying the histogram report show relative (percentage) values instead …
+dmstats, ,S,select, , ,131,Display only rows that match selection criteria
+dmstats, , ,segments, , ,132,"When used with create, create a new statistics region for each target contain…"
+dmstats, , ,units, , ,133,RI [ units ]\\c . RB [ h | H |\\c
+dmstats, , ,userdata, , ,134,Specify user data (a word) to be stored with a new region
+dmstats, ,u,uuid, , ,135,Specify the uuid
+dmstats, , ,areasize, , ,136, 
+dmstats, , ,length, , ,137, 
+dmstats, , ,start, , ,138, 
+dmstats, ,v,verbose, , ,139,Produce additional output

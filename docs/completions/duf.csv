@@ -1,0 +1,19 @@
+cmd,conds,short,long,params,dirs,pri,desc
+duf, , ,all, , ,101,"include pseudo, duplicate, inaccessible file systems"
+duf, , ,avail-threshold, , ,102,"specifies the coloring threshold (yellow, red) of the avail column, must be integer with optional SI prefixes (default '10G,1G')"
+duf, , ,hide, , ,103,"hide specific devices, separated with commas"
+duf, , ,hide-fs, , ,104,"hide specific filesystems, separated with commas"
+duf, , ,hide-mp, , ,105,"hide specific mount points, separated with commas (supports wildcards)"
+duf, , ,inodes, , ,106,list inode information instead of block usage
+duf, , ,json, , ,107,output all devices in JSON format
+duf, , ,only,local network fuse special loops binds, ,108,"show only specific devices, separated with commas"
+duf, , ,only-fs, , ,109,"only specific filesystems, separated with commas"
+duf, , ,only-mp, , ,110,"only specific mount points, separated with commas (supports wildcards)"
+duf, , ,output,mountpoint size used avail usage inodes inodes_used inodes_avail inodes_usage type filesystem, ,111,"output fields, separated with commas"
+duf, , ,sort,mountpoint size used avail usage inodes inodes_used inodes_avail inodes_usage type filesystem, ,112,sort output (default 'mountpoint')
+duf, , ,style,unicode ascii, ,113,style (default 'unicode')
+duf, , ,theme,dark light ansi, ,114,color themes (default 'light')
+duf, , ,usage-threshold, , ,115,"specifies the coloring threshold (yellow, red) of the usage bars as a floating point number from 0 to 1 (default '0.5,0.9')"
+duf, , ,version, , ,116,display version
+duf, , ,warnings, , ,117,output all warnings to STDERR
+duf, , ,width, , ,118,max output width

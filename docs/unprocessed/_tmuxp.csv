@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+tmuxp, __fish_use_subcommand, , ,load, ,104,Load tmuxp workspace
+tmuxp, __fish_use_subcommand, , ,shell, ,105,Launch python shell
+tmuxp, __fish_use_subcommand, , ,import, ,106,Import workspace
+tmuxp, __fish_use_subcommand, , ,convert, ,107,Convert workspace
+tmuxp, __fish_use_subcommand, , ,debug-info, ,108,Print diagnostics
+tmuxp, __fish_use_subcommand, , ,ls, ,109,List workspaces
+tmuxp, __fish_use_subcommand, , ,edit, ,110,Edit workspace
+tmuxp, __fish_use_subcommand, , ,freeze, ,111,Freeze session to worskpace

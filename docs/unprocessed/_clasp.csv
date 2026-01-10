@@ -1,0 +1,48 @@
+cmd,conds,short,long,params,dirs,pri,desc
+clasp, __fish_use_subcommand, , ,login, ,107,Log in to script.google.com
+clasp, __fish_use_subcommand, , ,logout, ,108,Log out
+clasp, __fish_use_subcommand, , ,create, ,109,Create a script
+clasp, __fish_use_subcommand, , ,clone, ,110,Clone a project
+clasp, __fish_use_subcommand, , ,pull, ,111,Fetch a remote project
+clasp, __fish_use_subcommand, , ,push, ,112,Update the remote project
+clasp, __fish_use_subcommand, , ,status, ,113,Lists files that will be pushed by 'push' subcommand
+clasp, __fish_use_subcommand, , ,open, ,114,Open a script
+clasp, __fish_use_subcommand, , ,deployments, ,115,List deployment IDs of a script
+clasp, __fish_use_subcommand, , ,deploy, ,116,Deploy a project
+clasp, __fish_use_subcommand, , ,undeploy, ,117,Undeploy a project
+clasp, __fish_use_subcommand, , ,version, ,118,Create an immutable version of a script
+clasp, __fish_use_subcommand, , ,versions, ,119,List versions of a script
+clasp, __fish_use_subcommand, , ,list, ,120,List projects
+clasp, __fish_use_subcommand, , ,logs, ,121,Show StackDriver logs
+clasp, __fish_use_subcommand, , ,run, ,122,Run a function in your Apps Scripts project
+clasp, __fish_use_subcommand, , ,apis, ,123,"List, enable, or disable APIs"
+clasp, __fish_use_subcommand, , ,help, ,124,Show help for a command
+clasp, $login_condition, ,no-localhost, , ,125,"Do not run a local server, manually enter code instead"
+clasp, $login_condition, ,creds, , ,126,Specify a relative path to credentials
+clasp, $login_condition, ,status, , ,127,Show who is logged in
+clasp, $create_condition, ,type,standalone docs sheets slides forms webapp api, ,128,A project type
+clasp, $create_condition, ,title, , ,129,A project title
+clasp, $create_condition, ,parentId, , ,130,A project container ID
+clasp, $create_condition, ,rootDir, , ,131,Path to a directory with project files
+clasp, $clone_condition, ,rootDir, , ,132,Path to a directory project files
+clasp, $push_condition,f,force, , ,134,Forcibly overwrite a remote manifest
+clasp, $push_condition,w,watch, , ,135,Watch for local changes in non-ignored files and push when they occur
+clasp, $open_condition, ,webapp, , ,137,Open a web application in a browser
+clasp, $open_condition, ,creds, , ,138,Open the URL to create credentials
+clasp, $open_condition, ,addon, , ,139,List parent IDs and open the URL of the first one
+clasp, $open_condition, ,deploymentId, , ,140,Use a custom deployment ID with a web application
+clasp, $deploy_condition,V,versionNumber, , ,141,A project version
+clasp, $deploy_condition,d,description, , ,142,A deployment description
+clasp, $deploy_condition,i,deploymentId, , ,143,A deployment ID to redeploy
+clasp, $undeploy_condition, ,all, , ,144,Undeploy all deployments
+clasp, $logs_condition, ,json, , ,146,Show logs in JSON form
+clasp, $logs_condition, ,open, , ,147,Open the StackDriver logs in a browser
+clasp, $logs_condition, ,setup, , ,148,Setup StackDriver logs
+clasp, $logs_condition, ,watch, , ,149,Watch and list new logs
+clasp, $logs_condition, ,simplified, , ,150,Hide timestamps with logs
+clasp, $run_condition, ,nondev, , ,151,Run a function in non-development mode
+clasp, $run_condition,p,params, , ,152,Specify parameters for a function as a JSON array
+clasp, $apis_condition, , ,list, ,153,List APIs
+clasp, $apis_condition, , ,enable, ,154,Enable APIs
+clasp, $apis_condition, , ,disable, ,155,Disable APIs
+clasp, $apis_condition, ,open, , ,156,Open API Console in a browser

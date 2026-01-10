@@ -1,0 +1,20 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gzip, ,a,ascii, , ,101,Ascii text mode: convert end-of-lines using local conventions
+gzip, ,c,to-stdout, , ,102,"Write output on standard output; keep original files unchanged"
+gzip, ,d,uncompress, , ,103,Decompress
+gzip, ,f,force, , ,104,Force compression or decompression even if the file has multiple links or the…
+gzip, ,h,help, , ,105,Display a help screen and quit
+gzip, ,k,keep, , ,106,Keep (don't delete) input files during compression or decompression
+gzip, ,l,list, , ,107,"For each compressed file, list the following fields:      compressed size: si…"
+gzip, ,L,license, , ,108,Display the  gzip license and quit
+gzip, ,n,no-name, , ,109,"When compressing, do not save the original file name and timestamp by default"
+gzip, ,N,name, , ,110,"When compressing, always save the original file name, and save the seconds pa…"
+gzip, ,q,quiet, , ,111,Suppress all warnings
+gzip, ,r,recursive, , ,112,Travel the directory structure recursively
+gzip, ,S,suffix, , ,113,"When compressing, use suffix . suf instead of . gz"
+gzip, , ,synchronous, , ,114,Use synchronous output
+gzip, ,t,test, , ,115,Test.  Check the compressed file integrity then quit
+gzip, ,v,verbose, , ,116,Verbose
+gzip, ,V,version, , ,117,Version.  Display the version number and compilation options then quit
+gzip, ,#,best, , ,118,"Regulate the speed of compression using the specified digit  # , where  -1 or…"
+gzip, , ,rsyncable, , ,119,"When you synchronize a compressed file between two computers, this option all…"

@@ -1,0 +1,22 @@
+cmd,conds,short,long,params,dirs,pri,desc
+valgrind, __fish_valgrind_skin memcheck, ,leak-check,no a leak summary_Describe memory leaks in detail', ,121,Check for memory leaks
+valgrind, __fish_valgrind_skin memcheck, ,show-reachable,yes no, ,122,Show reachable leaked memory
+valgrind, __fish_valgrind_skin memcheck, ,leak-resolution,low med high, ,123,Determines how willingly Memcheck considers different backtraces to be the same
+valgrind, __fish_valgrind_skin memcheck, ,freelist-vol, , ,124,Set size of freed memory pool
+valgrind, __fish_valgrind_skin memcheck, ,partial-loads-ok,yes no, ,125,How to handle loads of words that are partially addressable
+valgrind, __fish_valgrind_skin memcheck, ,avoid-strlen-errors,yes no, ,126,Whether to skip error reporting for the strlen function
+valgrind, __fish_valgrind_skin addrcheck, ,leak-check,no summary full, ,127,Check for memory leaks
+valgrind, __fish_valgrind_skin addrcheck, ,show-reachable,yes no, ,128,Show reachable leaked memory
+valgrind, __fish_valgrind_skin addrcheck, ,leak-resolution,low med high, ,129,Determines how willingly Addrcheck considers different backtraces to be the same
+valgrind, __fish_valgrind_skin addrcheck, ,freelist-vol, , ,130,Set size of freed memory pool
+valgrind, __fish_valgrind_skin addrcheck, ,partial-loads-ok,yes no, ,131,How to handle loads of words that are partially addressable
+valgrind, __fish_valgrind_skin addrcheck, ,avoid-strlen-errors,yes no, ,132,Whether to skip error reporting for the strlen function
+valgrind, __fish_valgrind_skin cachegrind, ,I1, , ,133,Type of L1 instruction cache
+valgrind, __fish_valgrind_skin cachegrind, ,D1, , ,134,Type of L1 data cache
+valgrind, __fish_valgrind_skin cachegrind, ,L2, , ,135,Type of L2 cache
+valgrind, __fish_valgrind_skin massif, ,alloc-fn, ,@f @r,136,Specify a function that allocates memory
+valgrind, __fish_valgrind_skin massif, ,heap,yes no,@f @r,137,Profile heap usage
+valgrind, __fish_valgrind_skin massif, ,heap-admin, ,@f @r,138,The number of bytes of heap overhead per allocation
+valgrind, __fish_valgrind_skin massif, ,stacks,yes no,@f @r,139,Profile stack usage
+valgrind, __fish_valgrind_skin massif, ,depth, ,@f @r,140,Depth of call chain
+valgrind, __fish_valgrind_skin massif, ,format,html text,@f @r,141,Profiling output format

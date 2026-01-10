@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+unlz4, , , ,,@f @k @r,101, 
+unlz4, ,t,test, , ,102,Test the integrity
+unlz4, , ,list, , ,103,List information about .lz4 file(s)
+unlz4, ,D, , ,@r,104,Use specified file as dictionary
+unlz4, ,f,force, , ,105,Overwrite without prompting
+unlz4, ,c,to-stdout, , ,106,Force write to stdout
+unlz4, ,m,multiple, , ,107,Multiple input files
+unlz4, , ,sparse, , ,108,Enable sparse mode
+unlz4, , ,no-sparse, , ,109,Disable sparse mode
+unlz4, ,v,verbose, , ,110,Be verbose
+unlz4, ,q,quiet, , ,111,Suppress warnings
+unlz4, ,h,help, , ,112,Show help
+unlz4, ,V,version, , ,113,Show version
+unlz4, ,k,keep, , ,114,Keep input file(s) (default)
+unlz4, , ,rm, , ,115,Remove input file(s) after decompression

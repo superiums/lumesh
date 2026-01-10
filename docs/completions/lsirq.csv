@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+lsirq, ,n,noheadings, , ,101, 
+lsirq, ,o,output, , ,102, 
+lsirq, ,s,sort, , ,103, 
+lsirq, ,J,json, , ,104, 
+lsirq, ,P,pairs, , ,105, 
+lsirq, ,S,softirq, , ,106, 
+lsirq, ,h,help, , ,107, 
+lsirq, ,V,version, , ,108, 

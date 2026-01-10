@@ -1,0 +1,33 @@
+cmd,conds,short,long,params,dirs,pri,desc
+status, $__fish_status_all_commands, , ,is-login,@f,101,Test if this is a login shell
+status, $__fish_status_all_commands, , ,is-interactive,@f,101,Test if this is an interactive shell
+status, $__fish_status_all_commands, , ,is-interactive-read,@f,101,Test if inside an interactive read builtin
+status, $__fish_status_all_commands, , ,is-command-substitution,@f,101,Test if a command substitution is currently evaluated
+status, $__fish_status_all_commands, , ,is-block,@f,101,Test if a code block is currently evaluated
+status, $__fish_status_all_commands, , ,is-breakpoint,@f,101,Test if a breakpoint is currently in effect
+status, $__fish_status_all_commands, , ,is-no-job-control,@f,101,Test if new jobs are never put under job control
+status, $__fish_status_all_commands, , ,is-interactive-job-control,@f,101,Test if only interactive new jobs are put under job control
+status, $__fish_status_all_commands, , ,is-full-job-control,@f,101,Test if all new jobs are put under job control
+status, $__fish_status_all_commands, , ,build-info,@f,101,Print information on how this version fish was built
+status, $__fish_status_all_commands, , ,current-command,@f,101,Print the name of the currently running command or function
+status, $__fish_status_all_commands, , ,current-commandline,@f,101,Print the currently running command with its arguments
+status, $__fish_status_all_commands, , ,current-filename,@f,101,Print the filename of the currently running script
+status, $__fish_status_all_commands, , ,filename,@f,101,Print the filename of the currently running script
+status, $__fish_status_all_commands, , ,basename,@f,101,Print the file name (without the path) of the currently running script
+status, $__fish_status_all_commands, , ,dirname,@f,101,Print the path (without the file name) of the currently running script
+status, $__fish_status_all_commands, , ,current-function,@f,101,Print the name of the current function
+status, $__fish_status_all_commands, , ,function,@f,101,Print the name of the current function
+status, $__fish_status_all_commands, , ,current-line-number,@f,101,Print the line number of the currently running script
+status, $__fish_status_all_commands, , ,line-number,@f,101,Print the line number of the currently running script
+status, $__fish_status_all_commands, , ,print-stack-trace,@f,101,Print a list of all function calls leading up to running the current command
+status, $__fish_status_all_commands, , ,stack-trace,@f,101,Print a list of all function calls leading up to running the current command
+status, $__fish_status_all_commands, , ,features,@f,101,List all feature flags
+status, $__fish_status_all_commands, , ,test-feature,@f,101,Test if a feature flag is enabled
+status, $__fish_status_all_commands, , ,fish-path,@f,102,Print the path to the current instance of fish
+status, $__fish_status_all_commands, , ,get-file,@f,102,Print an embedded file from the fish binary
+status, $__fish_status_all_commands, , ,list-files,@f,102,List embedded files contained in the fish binary
+status, $__fish_status_all_commands, , ,help-sections,@f,102,List section arguments for the 'help' command
+status, $__fish_status_all_commands, , ,fish-path,@f,102,Print the path to the current instance of fish
+status, $__fish_status_all_commands, , ,terminal,@f,102,Print name and version of the terminal fish is running in
+status, $__fish_status_all_commands, , ,test-terminal-feature,@f,102,Test if the terminal suports the given feature
+status, $__fish_status_all_commands, , ,job-control,@f,103,Set which jobs are under job control

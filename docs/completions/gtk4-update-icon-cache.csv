@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gtk4-update-icon-cache, ,f,force, , ,101,Overwrite an existing cache file even if it appears to be up-to-date
+gtk4-update-icon-cache, ,t,ignore-theme-index, , ,102,Don't check for the existence of index. theme in the icon theme directory
+gtk4-update-icon-cache, ,i,index-only, , ,103,Don't include image data in the cache
+gtk4-update-icon-cache, , ,include-image-data, , ,104,Include image data in the cache
+gtk4-update-icon-cache, ,c,source, , ,105,Output a C header file declaring a constant NAME with the contents of the ico…
+gtk4-update-icon-cache, ,q,quiet, , ,106,Turn off verbose output
+gtk4-update-icon-cache, ,v,validate, , ,107,Validate existing icon cache

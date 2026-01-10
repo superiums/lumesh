@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+readlink, ,f,canonicalize, , ,101,"Canonicalize, follow symlinks, last can be missing"
+readlink, ,e,canonicalize-existing, , ,102,"Canonicalize, follow symlinks, none can be missing"
+readlink, ,m,canonicalize-missing, , ,103,"Canonicalize, follow symlinks, all can be missing"
+readlink, ,n,no-newline, , ,104,Do not output the trailing newline
+readlink, ,s,silent, , ,105,Suppress most error messages
+readlink, ,v,verbose, , ,106,Report error messages
+readlink, , ,help, , ,107,Display this help and exit
+readlink, , ,version, , ,108,Output version information and exit

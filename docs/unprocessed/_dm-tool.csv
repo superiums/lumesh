@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dm-tool, $cmds,h,help, ,@f @r,100,Show help options
+dm-tool, $cmds,v,version, ,@f @r,100,Show release version
+dm-tool, $cmds, ,session-bus, , ,100,Connect using the session bus
+dm-tool, $cmds, , ,$cmds, ,100, 
+dm-tool," switch-to-user; and $has_user", , ,$session_users, ,101, 

@@ -1,0 +1,18 @@
+cmd,conds,short,long,params,dirs,pri,desc
+vips, ,l,list, , ,101,List objects
+vips, ,p,plugin, , ,102,Load PLUGIN
+vips, ,v,version, , ,103,Print version
+vips, , ,vips-concurrency, , ,104,Evaluate with N threads
+vips, , ,vips-progress, , ,105,Show progress feedback
+vips, , ,vips-leak, , ,106,Leak-check on exit
+vips, , ,vips-profile, , ,107,Profile and dump timing on exit
+vips, , ,vips-disc-threshold, , ,108,Decompress images larger than N
+vips, , ,vips-novector, , ,109,Disable vectorised operations
+vips, , ,vips-cache-max, , ,110,Cache at most N operations
+vips, , ,vips-cache-max-memory, , ,111,Cache at most N bytes in memory
+vips, , ,vips-cache-max-files, , ,112,Allow at most N open files
+vips, , ,vips-cache-trace, , ,113,Trace operation cache
+vips, , ,vips-cache-dump, , ,114,Dump operation cache on exit
+vips, , ,vips-version, , ,115,Print libvips version
+vips, , ,vips-config, , ,116,Print libvips config
+vips, , ,vips-pipe-read-limit, , ,117,Pipe read limit (bytes)

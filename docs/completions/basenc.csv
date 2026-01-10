@@ -1,0 +1,14 @@
+cmd,conds,short,long,params,dirs,pri,desc
+basenc, , ,base64, , ,101,same as 'base64' program (RFC4648 section 4)
+basenc, , ,base64url, , ,102,file- and url-safe base64 (RFC4648 section 5)
+basenc, , ,base32, , ,103,same as 'base32' program (RFC4648 section 6)
+basenc, , ,base32hex, , ,104,extended hex alphabet base32 (RFC4648 section 7)
+basenc, , ,base16, , ,105,hex encoding (RFC4648 section 8)
+basenc, , ,base2msbf, , ,106,bit string with most significant bit (msb) first
+basenc, , ,base2lsbf, , ,107,bit string with least significant bit (lsb) first
+basenc, ,d,decode, , ,108,decode data
+basenc, ,i,ignore-garbage, , ,109,"when decoding, ignore non-alphabet characters"
+basenc, ,w,wrap, , ,110,wrap encoded lines after COLS character (default 76)
+basenc, , ,z85, , ,111,"ascii85-like encoding (ZeroMQ spec:32/Z85); when encoding, input length must …"
+basenc, , ,help, , ,112,display this help and exit
+basenc, , ,version, , ,113,output version information and exit

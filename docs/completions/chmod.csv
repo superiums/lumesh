@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chmod, ,c,changes, , ,101,Like -v but report only changes
+chmod, , ,no-preserve-root, , ,102,Don't treat / special (default)
+chmod, , ,preserve-root, , ,103,Fail to operate recursively on /
+chmod, ,f,quiet, , ,104,Suppress most errors
+chmod, ,v,verbose, , ,105,Prints each file processed
+chmod, , ,reference, , ,106,Use RFILEs mode instead of MODE values
+chmod, ,R,recursive, , ,107,Operate recursively
+chmod, , ,help, , ,108,Display help and exit
+chmod, , ,version, , ,109,Display version and exit

@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpgme-json, , ,identify, , ,101,Identify the type of the data found in 'file' or standard input -
+gpgme-json, , ,debug, , ,102,Enable debug mode.  Logs are saved to to '~/. gnupg/S. gpgme-json. log'
+gpgme-json, , ,lib-version, , ,103,Print GPGME library version
+gpgme-json, , ,interactive, , ,104,Enable interactive mode.   Interactive mode also provides some online help
+gpgme-json, , ,single, , ,105,Enable single request mode
+gpgme-json, , ,help, , ,106,Print a usage message summarizing the most useful command-line options

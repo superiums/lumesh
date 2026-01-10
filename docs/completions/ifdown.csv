@@ -1,0 +1,3 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ifdown, , , , ,@f @r,101,Network interface
+ifdown, , ,force, , ,102,force

@@ -1,0 +1,9 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scriptlive, ,I,log-in, , ,101, 
+scriptlive, ,B,log-io, , ,102, 
+scriptlive, ,t,timing, , ,103, 
+scriptlive, ,T,log-timing, , ,104, 
+scriptlive, ,d,divisor, , ,105, 
+scriptlive, ,m,maxdelay, , ,106, 
+scriptlive, ,h,help, , ,107, 
+scriptlive, ,V,version, , ,108, 

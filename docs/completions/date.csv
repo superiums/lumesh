@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+date, , , , ,@f,101,display or set date and time
+date, ,d,date, , ,102,Display date described by string
+date, ,f,file, , ,103,Display date for each line in file
+date, ,I,iso-8601,date hours minutes seconds,@f @r,104,Use ISO 8601 output format
+date, ,s,set, , ,105,Set time
+date, ,R,rfc-2822, , ,106,Output in RFC 2822 format
+date, ,r,reference, , ,107,Display last modification time of file
+date, ,u,utc, , ,108,Print/set UTC time
+date, , ,universal, , ,109,Print/set UTC time
+date, ,h,help, , ,110,Display help and exit
+date, ,v,version, , ,111,Display version and exit
+date, ,I, ,date hours minutes seconds,@f @r,112,Use ISO 8601 output format

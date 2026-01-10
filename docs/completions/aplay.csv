@@ -1,0 +1,39 @@
+cmd,conds,short,long,params,dirs,pri,desc
+aplay, ,h,help, , ,101,Help: show syntax
+aplay, , ,version, , ,102,Print current version
+aplay, ,l,list-devices, , ,103,List all soundcards and digital audio devices
+aplay, ,L,list-pcms, , ,104,List all PCMs defined
+aplay, ,D,device, , ,105,Select PCM by name
+aplay, ,q,quiet, , ,106,Quiet mode.  Suppress messages (not sound :))
+aplay, ,t,file-type, , ,107,"File type (voc, wav, raw or au)"
+aplay, ,c,channels, , ,108,The number of channels.  The default is one channel
+aplay, ,f,format, , ,109,Sample format 
+aplay, ,r,rate, , ,110,Sampling rate in Hertz.  The default rate is 8000 Hertz
+aplay, ,d,duration, , ,111,Interrupt after # seconds.  A value of zero means infinity
+aplay, ,s,samples, , ,112,Interrupt after transmission of # PCM frames.  A value of zero means infinity
+aplay, ,M,mmap, , ,113,Use memory-mapped (mmap) I/O mode for the audio stream
+aplay, ,N,nonblock, , ,114,Open the audio device in non-blocking mode
+aplay, ,F,period-time, , ,115,Distance between interrupts is # microseconds
+aplay, ,B,buffer-time, , ,116,Buffer duration is # microseconds If no buffer time and no buffer size is giv…
+aplay, , ,period-size, , ,117,Distance between interrupts is # frames If no period size and no period time …
+aplay, , ,buffer-size, , ,118,Buffer duration is # frames If no buffer time and no buffer size is given the…
+aplay, ,A,avail-min, , ,119,Min available space for wakeup is # microseconds
+aplay, ,R,start-delay, , ,120,Delay for automatic PCM start is # microseconds  (relative to buffer size if …
+aplay, ,T,stop-delay, , ,121,Delay for automatic PCM stop is # microseconds from xrun
+aplay, ,v,verbose, , ,122,Show PCM structure and setup.  This option is accumulative
+aplay, ,V,vumeter, , ,123,"Specifies the VU-meter type, either stereo or mono"
+aplay, ,I,separate-channels, , ,124,One file for each channel
+aplay, ,i,interactive, , ,125,Allow interactive operation via stdin
+aplay, ,m,chmap, , ,126,Give the channel map to override or follow
+aplay, , ,disable-resample, , ,127,Disable automatic rate resample
+aplay, , ,disable-channels, , ,128,Disable automatic channel conversions
+aplay, , ,disable-format, , ,129,Disable automatic format conversions
+aplay, , ,disable-softvol, , ,130,Disable software volume control (softvol)
+aplay, , ,test-position, , ,131,Test ring buffer position
+aplay, , ,test-coef, , ,132,"Test coefficient for ring buffer position; default is 8"
+aplay, , ,test-nowait, , ,133,Do not wait for the ring buffer \\(hy eats the whole CPU
+aplay, , ,max-file-time, , ,134,"While recording, when the output file has been accumulating sound for this lo…"
+aplay, , ,process-id-file, , ,135,"aplay writes its process ID here, so other programs can send signals to it"
+aplay, , ,use-strftime, , ,136,"When recording, interpret %-codes in the file name parameter using the strfti…"
+aplay, , ,dump-hw-params, , ,137,Dump hw_params of the device preconfigured status to stderr
+aplay, , ,fatal-errors, , ,138,Disables recovery attempts when errors (e. g

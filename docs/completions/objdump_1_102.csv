@@ -1,0 +1,64 @@
+cmd,conds,short,long,params,dirs,pri,desc
+objdump, , ,archive-header, , ,101,X Item '--archive-header' 
+objdump, , ,adjust-vma, , ,102,"X Item '--adjust-vma=offset' When dumping information, first add offset to al…"
+objdump, , ,target, , ,103,X Item '--target=bfdname' 
+objdump, , ,demangle, , ,104,X Item '--demangle[=style]' 
+objdump, , ,recurse-limit, , ,105,X Item '--recurse-limit'
+objdump, , ,no-recurse-limit, , ,106,X Item '--no-recurse-limit'
+objdump, , ,recursion-limit, , ,107,X Item '--recursion-limit'
+objdump, , ,no-recursion-limit, , ,108,X Item '--no-recursion-limit' 
+objdump, , ,debugging, , ,109,X Item '--debugging' . PD Display debugging information
+objdump, , ,debugging-tags, , ,110,X Item '--debugging-tags' 
+objdump, , ,disassemble, , ,111,X Item '--disassemble'
+objdump, , ,disassemble-all, , ,112,X Item '--disassemble-all' 
+objdump, , ,no-addresses, , ,113,"X Item '--no-addresses' When disassembling, don't print addresses on each lin…"
+objdump, , ,prefix-addresses, , ,114,"X Item '--prefix-addresses' When disassembling, print the complete address on…"
+objdump, , ,endian, , ,115,X Item '--endian={big|little}' 
+objdump, , ,file-headers, , ,116,X Item '--file-headers' 
+objdump, , ,file-offsets, , ,117,X Item '--file-offsets' 
+objdump, , ,file-start-context, , ,118,X Item '--file-start-context' Specify that when displaying interlisted source…
+objdump, , ,section-headers, , ,119,X Item '--section-headers'
+objdump, , ,headers, , ,120,X Item '--headers' 
+objdump, , ,help, , ,121,X Item '--help' . PD Print a summary of the options to objdump and exit
+objdump, , ,info, , ,122,X Item '--info' 
+objdump, , ,section, , ,123,X Item '--section=name' . PD Display information for section name
+objdump, , ,process-links, , ,124,X Item '--process-links' 
+objdump, , ,line-numbers, , ,125,X Item '--line-numbers' 
+objdump, , ,architecture, , ,126,X Item '--architecture=machine' 
+objdump, , ,disassembler-options, , ,127,X Item '--disassembler-options=options' 
+objdump, , ,private-headers, , ,128,X Item '--private-headers' 
+objdump, , ,private, , ,129,X Item '--private=options' 
+objdump, , ,reloc, , ,130,X Item '--reloc' . PD Print the relocation entries of the file
+objdump, , ,dynamic-reloc, , ,131,X Item '--dynamic-reloc' 
+objdump, , ,full-contents, , ,132,X Item '--full-contents' 
+objdump, , ,source, , ,133,X Item '--source' 
+objdump, , ,show-all-symbols, , ,134,"X Item '--show-all-symbols' When disassembling, show all the symbols that mat…"
+objdump, , ,source-comment, , ,135,"X Item '--source-comment[=txt]' Like the -S option, but all source code lines…"
+objdump, , ,prefix, , ,136,X Item '--prefix=prefix' Specify prefix to add to the absolute paths when use…
+objdump, , ,prefix-strip, , ,137,X Item '--prefix-strip=level' Indicate how many initial directory names to st…
+objdump, , ,show-raw-insn, , ,138,"X Item '--show-raw-insn' When disassembling instructions, print the instructi…"
+objdump, , ,no-show-raw-insn, , ,139,"X Item '--no-show-raw-insn' When disassembling instructions, do not print the…"
+objdump, , ,insn-width, , ,140,X Item '--insn-width=width' Display width bytes on a single line when disasse…
+objdump, , ,visualize-jumps, , ,141,X Item '--visualize-jumps[=color|=extended-color|=off]' Visualize jumps that …
+objdump, , ,disassembler-color, , ,142,X Item '--disassembler-color=off'
+objdump, , ,dwarf, , ,143,"X Item '--dwarf[=rawline,=decodedline,=info,=abbrev,=pubnames,=aranges,=macro…"
+objdump, , ,dwarf-depth, , ,144,X Item '--dwarf-depth=n' Limit the dump of the \\f(CW\\*(C`
+objdump, , ,dwarf-start, , ,145,X Item '--dwarf-start=n' Print only DIEs beginning with the DIE numbered n
+objdump, , ,dwarf-check, , ,146,X Item '--dwarf-check' Enable additional checks for consistency of Dwarf info…
+objdump, , ,ctf, , ,147,X Item '--ctf[=section]' Display the contents of the specified CTF section
+objdump, , ,ctf-parent, , ,148,X Item '--ctf-parent=member' If the CTF section contains ambiguously-defined …
+objdump, , ,ctf-parent-section, , ,149,X Item '--ctf-parent-section=section' This option lets you pick a completely …
+objdump, , ,sframe, , ,150,X Item '--sframe[=section]' Display the contents of the specified SFrame sect…
+objdump, , ,stabs, , ,151,X Item '--stabs' . PD Display the full contents of any sections requested
+objdump, , ,start-address, , ,152,X Item '--start-address=address' Start displaying data at the specified addre…
+objdump, , ,stop-address, , ,153,X Item '--stop-address=address' Stop displaying data at the specified address
+objdump, , ,syms, , ,154,X Item '--syms' . PD Print the symbol table entries of the file
+objdump, , ,dynamic-syms, , ,155,X Item '--dynamic-syms' 
+objdump, , ,special-syms, , ,156,X Item '--special-syms' When displaying symbols include those which the targe…
+objdump, , ,unicode, , ,157,X Item '--unicode=[default|invalid|locale|escape|hex|highlight]' 
+objdump, , ,version, , ,158,X Item '--version' . PD Print the version number of objdump and exit
+objdump, , ,all-headers, , ,159,X Item '--all-headers' 
+objdump, , ,wide, , ,160,X Item '--wide' 
+objdump, , ,disassemble-zeroes, , ,161,X Item '--disassemble-zeroes' 
+objdump, , ,decompress, , ,162,X Item '--decompress' 
+objdump, , ,enable-follow-debug-links, , ,163, 

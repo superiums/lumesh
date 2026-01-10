@@ -1,0 +1,36 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpgtar, , ,create, , ,101,Put given files and directories into a vanilla ``ustar'' archive
+gpgtar, , ,extract, , ,102,Extract all files from a vanilla ``ustar'' archive
+gpgtar, , ,encrypt, , ,103,TQ   -e Encrypt given files and directories into an archive
+gpgtar, , ,decrypt, , ,104,TQ   -d Extract all files from an encrypted archive
+gpgtar, , ,sign, , ,105,TQ   -s Make a signed archive from the given files and directories
+gpgtar, , ,list-archive, , ,106,TQ   -t List the contents of the specified archive
+gpgtar, , ,symmetric, , ,107,TQ   -c Encrypt with a symmetric cipher using a passphrase
+gpgtar, , ,recipient, , ,108,TQ   -r user Encrypt for user id user.  For details see gpg
+gpgtar, , ,local-user, , ,109,TQ   -u user Use user as the key to sign with.   For details see gpg
+gpgtar, , ,output, , ,110,TQ   -o file Write the archive to the specified file file
+gpgtar, , ,verbose, , ,111,TQ   -v Enable extra informational output
+gpgtar, , ,quiet, , ,112,TQ   -q Try to be as quiet as possible
+gpgtar, , ,skip-crypto, , ,113,Skip all crypto operations and create or extract vanilla ``ustar'' archives
+gpgtar, , ,dry-run, , ,114,Do not actually output the extracted files
+gpgtar, , ,directory, , ,115,TQ   -C dir Extract the files into the directory dir
+gpgtar, , ,files-from, , ,116,"TQ   -T file Take the file names to work from the file file; one file per line"
+gpgtar, , ,null, , ,117,Modify option --files-from to use a binary nul instead of a linefeed to separ…
+gpgtar, , ,utf8-strings, , ,118,Assume that the file names read by --files-from are UTF-8 encoded
+gpgtar, , ,openpgp, , ,119,This option has no effect because OpenPGP encryption and signing is the defau…
+gpgtar, , ,cms, , ,120,This option is reserved and shall not be used
+gpgtar, , ,batch, , ,121,Use batch mode.   Never ask but use the default action
+gpgtar, , ,yes, , ,122,Assume 'yes' on most questions
+gpgtar, , ,no, , ,123,Assume 'no' on most questions.   This option is passed directly to gpg
+gpgtar, , ,require-compliance, , ,124,This option is passed directly to gpg
+gpgtar, , ,status-fd, , ,125,Write special status strings to the file descriptor n
+gpgtar, , ,with-log, , ,126,When extracting an encrypted tarball also write a log file with the gpg outpu…
+gpgtar, , ,set-filename, , ,127,Use the last component of file as the output directory
+gpgtar, , ,no-compress, , ,128,This option tells gpg to disable compression (i. e.  using option -z0)
+gpgtar, , ,gpg, , ,129,Use the specified command gpgcmd instead of gpg
+gpgtar, , ,gpg-args, , ,130,Pass the specified extra options to gpg
+gpgtar, , ,tar-args, , ,131,Assume args are standard options of the command tar and parse them
+gpgtar, , ,tar, , ,132,This is a dummy option for backward compatibility
+gpgtar, , ,version, , ,133,Print version of the program and exit
+gpgtar, , ,cipher-algo, , ,134, 
+gpgtar, , ,help, , ,135,Display a brief help page and exit.  EXAMPLES

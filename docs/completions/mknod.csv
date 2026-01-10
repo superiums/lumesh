@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mknod, ,m,mode, , ,101,"set file permission bits to MODE, not a=rw - umask"
+mknod, , ,context, , ,102,"like -Z, or if CTX is specified then set the SELinux or SMACK security contex…"
+mknod, , ,help, , ,103,display this help and exit
+mknod, , ,version, , ,104,output version information and exit 

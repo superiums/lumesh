@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+scp, commandline -ct | string match -e ':', , ,',@f,101,Remote Path
+scp, ,D, , ,@f @r,102,Connect directly to a local SFTP server
+scp, ,l, , ,@f @r,103,Bandwidth limit
+scp, ,P, , ,@f @r,104,Port

@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+nu, ,h,help, , ,101,Display help and exit
+nu, ,v,version, , ,102,Display version and exit
+nu, , ,stdin, , ,103,Redirect stdin
+nu, ,l,login, , ,104,Use login shell
+nu, ,i,interactive, , ,105,Use interactive mode
+nu, , ,testbin, , ,106,Run internal test binary and exit
+nu, ,c,commands, , ,107,Run commands and exit
+nu, , ,config, , ,108,Specify config
+nu, , ,env-config, , ,109,Specify environment config
+nu, , ,log-level,error warn info debug trace,@f @r,110,Specify log level
+nu, , ,log-target,stdout stderr,@f @r,111,Specify log output target
+nu, ,e,execute, , ,112,Run commands and exit and fall in interactive mode
+nu, ,t,threads, , ,113,Thread count for multithreading
+nu, ,m,table-mode, , ,114,Use table mode
+nu, , ,plugin-config, , ,115,Specify plugin signature file

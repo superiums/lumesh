@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-debug-gui, , ,device, , ,101,Use the given device with the path backend
+libinput-debug-gui, , ,grab, , ,102,Exclusively grab all opened devices
+libinput-debug-gui, , ,help, , ,103,Print help
+libinput-debug-gui, , ,udev, , ,104,Use the udev backend to listen for device notifications on the given seat
+libinput-debug-gui, , ,verbose, , ,105,Use verbose output

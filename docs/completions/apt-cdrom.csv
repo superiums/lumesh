@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apt-cdrom, ,h,help, , ,101,Display help and exit
+apt-cdrom, , , ,add,@r,102,Add new disc to source list
+apt-cdrom, , , ,ident,@f @r,103,Report identity of disc
+apt-cdrom, ,d,cdrom, ,@r,104,Mount point
+apt-cdrom, ,r,rename, ,@f,105,Rename a disc
+apt-cdrom, ,m,no-mount, ,@f,106,No mounting
+apt-cdrom, ,f,fast, ,@f,107,Fast copy
+apt-cdrom, ,a,thorough, ,@f,108,Thorough package scan
+apt-cdrom, ,n,no-act, ,@f,109,No changes
+apt-cdrom, ,v,version, ,@f,110,Display version and exit
+apt-cdrom, ,c,config-file, ,@r,111,Specify config file
+apt-cdrom, ,o,option, ,@f @r,112,Specify options

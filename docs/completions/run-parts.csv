@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+run-parts, , ,test, , ,101,"print the names of the scripts which would be run, but don't actually run them"
+run-parts, , ,list, , ,102,"print the names of the all matching files (not limited to executables), but d…"
+run-parts, ,v,verbose, , ,103,print the name of each script to stderr before running
+run-parts, , ,report, , ,104,"similar to  --verbose , but only prints the name of scripts which produce out…"
+run-parts, ,d,debug, , ,105,print to stderr which scripts get selected for running and which don't
+run-parts, , ,reverse, , ,106,reverse the scripts' execution order
+run-parts, , ,exit-on-error, , ,107,exit as soon as a script returns with a non-zero exit code
+run-parts, , ,lsbsysinit, , ,108,use LSB namespaces instead of classical behavior
+run-parts, , ,new-session, , ,109,run each script in a separate process session
+run-parts, , ,regex, , ,110,validate filenames against custom extended regular expression R RE 
+run-parts, ,u,umask, , ,111,sets the umask to  umask before running the scripts
+run-parts, ,a,arg, , ,112,pass  argument to the scripts
+run-parts, ,h,help, , ,113,display usage information and exit
+run-parts, ,V,version, , ,114,display version and copyright and exit

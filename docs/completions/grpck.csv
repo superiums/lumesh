@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+grpck, ,h,help, , ,101,Display help message and exit
+grpck, ,r,read-only, , ,102,Execute the grpck command in read-only mode
+grpck, ,R,rootCHROOT_DIR, , ,103,Apply changes in the CHROOT_DIR directory and use the configuration files fro…
+grpck, ,s,sort, , ,104,Sort entries in /etc/group and /etc/gshadow by GID
+grpck, ,S,silence-warnings, , ,105,"Suppress more controversial warnings, in particular warnings about inconsiste…"
+grpck, , ,root, , ,106, 

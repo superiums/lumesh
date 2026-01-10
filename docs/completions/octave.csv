@@ -1,0 +1,28 @@
+cmd,conds,short,long,params,dirs,pri,desc
+octave, , , , ,@f @r,101, 
+octave, ,h,help, , ,102,Show help
+octave, ,v,version, , ,103,Show version
+octave, , ,built-in-docstrings-file, ,@r,104,Use docs for built-ins
+octave, ,d,debug, , ,105,Enter parser debugging mode
+octave, , ,debug-jit, , ,106,Enable JIT compiler debugging/tracing
+octave, , ,doc-cache-file, ,@r,107,Use doc cache file
+octave, ,x,echo-commands, , ,108,Echo commands as they are executed
+octave, , ,eval, ,@f @r,109,Evaluate code
+octave, , ,exec-path, ,@r,110,Set path for executing subprograms
+octave, , ,image-path, ,@r,111,Add path to head of image search path
+octave, , ,info-file, ,@r,112,Use top-level info file
+octave, , ,info-program, ,@r,113,Specify program for reading info files
+octave, ,i,interactive, , ,114,Force interactive behavior
+octave, , ,jit-compiler, , ,115,Enable the JIT compiler
+octave, ,H,no-history, , ,116,Don't save commands to the history list
+octave, , ,no-init-file, , ,117,Don't read the ~/.octaverc or .octaverc files
+octave, , ,no-init-path, , ,118,Don't initialize function search path
+octave, , ,no-site-file, , ,119,Don't read the site-wide octaverc file
+octave, ,W,no-window-system, , ,120,"Disable window system, including graphics"
+octave, ,f,norc, , ,121,Don't read any initialization files
+octave, ,p,path, ,@r,122,Add path to head of function search path
+octave, , ,persist, , ,123,Go interactive after --eval or reading
+octave, silent,q,quiet, , ,124,Don't print message at startup
+octave, , ,texi-macros-file, ,@r,125,Use Texinfo macros for makeinfo command
+octave, , ,traditional, , ,126,Set variables for closer MATLAB compatibility
+octave, ,V,verbose, , ,127,Enable verbose output in some cases

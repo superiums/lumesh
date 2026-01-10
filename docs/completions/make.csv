@@ -1,0 +1,7 @@
+cmd,conds,short,long,params,dirs,pri,desc
+make, commandline -ct | string match -q '*=*', , , ,@f,101,Target
+make, ,C,directory, ,@D @f @r,102,Change directory
+make, ,I, , ,@D @f @r,103,Search directory for makefile
+make, ,j, , ,@f,104,Number of concurrent jobs (no argument means no limit)
+make, ,o, , ,@r,105,Ignore specified file
+make, ,W, , ,@r,106,Pretend file is modified

@@ -1,0 +1,23 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dvbv5-scan, ,3,dvbv3, , ,101,Force dvbv5-scan to use DVBv3 only
+dvbv5-scan, ,a,adapter, , ,102,Use the given adapter.  Default value: 0
+dvbv5-scan, ,C,cc, , ,103,"Set the default country to be used by the MPEG-TS parsers, in ISO 3166-1 two …"
+dvbv5-scan, ,d,demux, , ,104,Use the given demux.  Default value: 0
+dvbv5-scan, ,f,frontend, , ,105,Use the given frontend.  Default value: 0
+dvbv5-scan, ,F,file-freqs-only, , ,106,Don't use the other frequencies discovered during scan
+dvbv5-scan, ,G,get_frontend, , ,107,Use data from get_frontend on the output file
+dvbv5-scan, ,I,input-format, , ,108,Format of the input file.  Please notice that caps is ignored
+dvbv5-scan, ,l,lnbf, , ,109,Type of LNBf to use 'help' lists the available ones
+dvbv5-scan, ,N,nit, , ,110,Use data from NIT table on the output file
+dvbv5-scan, ,o,output, , ,111,output filename (default: dvb_channel. conf)
+dvbv5-scan, ,O,output-format, , ,112,"Output format: channel         - for dvb-apps compatible channel file;"
+dvbv5-scan, ,p,parse-other-nit, , ,113,Parse the other NIT/SDT tables that could be found mainly on some DVB-C carri…
+dvbv5-scan, ,S,sat_number, , ,114,Satellite number.  Used only on satellite delivery systems
+dvbv5-scan, ,T,timeout-multiply, , ,115,Multiply the scan lock wait time and MPEG-TS table parsing by this factor
+dvbv5-scan, ,U,freq_bpf, , ,116,"SCR/Unicable band-pass filter frequency to use, in kHz"
+dvbv5-scan, ,v,verbose, , ,117,Be (very) verbose.  Useful to check if the MPEG-TS is happenning fine
+dvbv5-scan, ,w,lna, , ,118,"Enable, disable or put LNA power in auto mode.  Not all frontends support it"
+dvbv5-scan, ,W,wait, , ,119,Adds additional wait time for DISEqC command completion
+dvbv5-scan, ,?,help, , ,120,Outputs the usage help
+dvbv5-scan, , ,usage, , ,121,Gives a short usage message
+dvbv5-scan, ,V,version, , ,122,Prints the program version

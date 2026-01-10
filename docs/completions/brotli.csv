@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+brotli, , ,rm, , ,101, 
+brotli, , ,decompress, , ,102,[bu] 2
+brotli, , ,test, , ,103,equivalent to [lq]--decompress --stdout[rq] except that the decompressed data…
+brotli, , ,suffix, , ,104, 
+brotli, ,c,stdout, , ,105,[bu] 2
+brotli, ,f,force, , ,106,[bu] 2
+brotli, ,h,help, , ,107,[bu] 2
+brotli, ,k,keep, , ,108,(1)-like behaviour [bu] 2
+brotli, ,n,no-copy-stat, , ,109,attributes [bu] 2
+brotli, ,o,output, , ,110,there is a single input entry [bu] 2
+brotli, ,q,quality, , ,111,"bigger values cause denser, but slower compression [bu] 2"
+brotli, ,v,verbose, , ,112,[bu] 2
+brotli, ,w,lgwin, , ,113,"(default: 24); window size is (pow(2, NUM) - 16); 0 lets compressor decide ov…"
+brotli, ,D,dictionary, , ,114,"dictionary; same dictionary MUST be used both for compression and decompressi…"
+brotli, ,V,version, , ,115,[bu] 2
+brotli, ,Z,best, , ,116,same as [lq]-q 11[rq] SEE ALSO

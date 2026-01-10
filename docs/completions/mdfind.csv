@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mdfind, , , , ,@f @r,101,Show given attribute
+mdfind, , , , ,@f,102,Print number of matches
+mdfind, , , , ,@D @f @r,103,Search within directory
+mdfind, , , , ,@f,104,Query should stay active
+mdfind, , , , ,@f @r,105,Search on file name only
+mdfind, , , , ,@f,106,Reprint -live results
+mdfind, ,s, , ,@f @r,107,List a smart folder
+mdfind, ,0, , ,@f,108,NUL path separators
+mdfind, , , , ,@f,109,Literal metadata query
+mdfind, , , , ,@f,110,Spotlight-like search

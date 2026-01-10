@@ -1,0 +1,57 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mpc, $subcommands, , ,consume, ,107,Toggle consume mode if state is not specified
+mpc, $subcommands, , ,crossfade, ,107,Get and set current amount of crossfading
+mpc, $subcommands, , ,queued, ,107,Show currently queued (next) song
+mpc, $subcommands, , ,mixrampdb, ,107,Get/set volume level at which songs with MixRamp tags will be overlapped
+mpc, $subcommands, , ,mixrampdelay, ,107,Get/set extra delay added computed from MixRamp tags
+mpc, $subcommands, , ,next, ,107,Start playing next song on queue
+mpc, $subcommands, , ,pause, ,107,Pause playing
+mpc, $subcommands, , ,play, ,107,Start playing song-number specified
+mpc, $subcommands, , ,prev, ,107,Start playing previous song
+mpc, $subcommands, , ,random, ,107,Toggle random mode if state (on or off) is not specified
+mpc, $subcommands, , ,repeat, ,107,Toggle repeat mode if state (on or off) is not specified
+mpc, $subcommands, , ,replaygain, ,107,Set replay gain mode
+mpc, $subcommands, , ,single, ,107,Toggle single mode if state (on or off) is not specified
+mpc, $subcommands, , ,seek, ,107,"Seek by hour, minute or seconds"
+mpc, $subcommands, , ,seekthrough, ,107,Seek relative to current position
+mpc, $subcommands, , ,stop, ,107,Stop playing
+mpc, $subcommands, , ,toggle, ,107,Toggle between play and pause
+mpc, $subcommands, , ,add, ,107,Add a song from music database to queue
+mpc, $subcommands, , ,insert, ,107,Add a song from music database to queue after current song
+mpc, $subcommands, , ,clear, ,107,Empty queue
+mpc, $subcommands, , ,crop, ,107,Remove all songs except for currently playing song
+mpc, $subcommands, , ,del, ,107,Remove a queue number from queue
+mpc, $subcommands, ,move,mv, ,107,Change position of song in queue
+mpc, $subcommands, , ,searchplay, ,107,Search queue for a matching song and play it
+mpc, $subcommands, , ,shuffle, ,107,Shuffle all songs on queue
+mpc, $subcommands, , ,load, ,107,Load a file as queue
+mpc, $subcommands, , ,lsplaylists, ,107,List available playlists
+mpc, $subcommands, , ,playlist, ,107,List all songs in playlist
+mpc, $subcommands, , ,rm, ,107,Delete a specific playlist
+mpc, $subcommands, , ,save, ,107,Save playlist as file
+mpc, $subcommands, , ,listall, ,107,List file from database
+mpc, $subcommands, , ,ls, ,107,List all files/folders in directory
+mpc, $subcommands, , ,search, ,107,Search for substrings in song tags
+mpc, $subcommands, , ,search, ,107, Search with a filter expression
+mpc, $subcommands, , ,find, ,107,Exact search with a filter expression
+mpc, $subcommands, , ,findadd, ,107,Find and add results to current queue
+mpc, $subcommands, , ,list, ,107,Return a list of all tags of given tag type
+mpc, $subcommands, , ,stats, ,107,Display statistics about MPD
+mpc, $subcommands, , ,mount, ,107,List all mounts
+mpc, $subcommands, , ,mount, ,107,Create a new mount
+mpc, $subcommands, , ,unmount, ,107,Remove a mount
+mpc, $subcommands, , ,outputs, ,107,List all available outputs
+mpc, $subcommands, , ,disable, ,107,Disable output(s)
+mpc, $subcommands, , ,enable, ,107,Enable output(s)
+mpc, $subcommands, , ,toggleoutput, ,107,Change status for given output(s)
+mpc, $subcommands, , ,channels, ,107,List channels that other clients have subscribed to
+mpc, $subcommands, , ,sendmessage, ,107,Send a message to specified channel
+mpc, $subcommands, , ,waitmessage, ,107,Wait for at least one message on specified channel
+mpc, $subcommands, , ,subscribe, ,107,Subscribe to specified channel and continuously receive messages
+mpc, $subcommands, , ,idle, ,107,Wait until an event occurs
+mpc, $subcommands, , ,idleloop, ,107,Keep waiting and printing events as they occur
+mpc, $subcommands, , ,version, ,107,Report version of MPD
+mpc, $subcommands, , ,volume, ,107,Set volume
+mpc, $subcommands, , ,update, ,107,Scan for updated files in music directory
+mpc, $subcommands, , ,rescan, ,107,"Like update, but also rescans unmodified files"
+mpc, $subcommands, , ,current, ,107,Show currently playing song

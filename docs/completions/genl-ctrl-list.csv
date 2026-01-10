@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+genl-ctrl-list, ,h,help, , ,101,Print help text to console and exit
+genl-ctrl-list, ,v,version, , ,102,Print versioning information to console and exit
+genl-ctrl-list, ,d,details, , ,103,Include additional detailed information for each Generic Netlink family that …

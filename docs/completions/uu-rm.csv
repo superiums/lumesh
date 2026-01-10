@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-rm, , ,interactive,always,@f @r,101,"prompt according to WHEN: never, once (-I), or always (-i). Without WHEN, prompts always"
+uu-rm, ,f,force, , ,102,"ignore nonexistent files and arguments, never prompt"
+uu-rm, , ,one-file-system, , ,103,"when removing a hierarchy recursively, skip any directory that is on a file system different from that of the corresponding command line argument (NOT IMPLEMENTED)"
+uu-rm, , ,no-preserve-root, , ,104,do not treat '/' specially
+uu-rm, , ,preserve-root, , ,105,do not remove '/' (default)
+uu-rm, ,R,recursive, , ,106,remove directories and their contents recursively
+uu-rm, ,d,dir, , ,107,remove empty directories
+uu-rm, ,v,verbose, , ,108,explain what is being done
+uu-rm, ,g,progress, , ,109,display a progress bar. Note: this feature is not supported by GNU coreutils.
+uu-rm, , ,presume-input-tty, , ,110, 
+uu-rm, ,h,help, , ,111,Print help
+uu-rm, ,V,version, , ,112,Print version

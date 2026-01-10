@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+touch, ,c,no-create, , ,101,do not create any files
+touch, ,d,date, , ,102,parse STRING and use it instead of current time
+touch, ,h,no-dereference, , ,103,affect each symbolic link instead of any referenced file (useful only on syst…
+touch, ,r,reference, , ,104,use this file's times instead of current time
+touch, , ,time, , ,105,"specify which time to change: access time (-a): 'access', 'atime', 'use'; mod…"
+touch, , ,help, , ,106,display this help and exit
+touch, , ,version, , ,107,output version information and exit DATE STRING

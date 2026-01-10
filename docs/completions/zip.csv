@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+zip, ,x, , ,@r,101,Exclude the following names
+zip, ,i, , ,@r,102,Include only the following names
+zip, ,n, , ,@r,103,Don't compress files with these suffixes

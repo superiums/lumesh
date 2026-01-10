@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+libinput-measure-touch-size, , ,help, , ,101,Print help
+libinput-measure-touch-size, , ,touch-thresholds, , ,102,"Set the logical touch size thresholds to  down and  up, respectively"
+libinput-measure-touch-size, , ,palm-threshold, , ,103,Assume a palm threshold of N

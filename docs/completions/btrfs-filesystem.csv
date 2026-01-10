@@ -1,0 +1,16 @@
+cmd,conds,short,long,params,dirs,pri,desc
+btrfs-filesystem, ,b,raw, , ,101,"raw numbers in bytes, without the B suffix"
+btrfs-filesystem, ,h,human-readable, , ,102,"print human friendly numbers, base 1024, this is the default"
+btrfs-filesystem, , ,iec, , ,103,"select the 1024 base for the following options, according to the IEC standard"
+btrfs-filesystem, , ,si, , ,104,"select the 1000 base for the following options, according to the SI standard"
+btrfs-filesystem, ,k,kbytes, , ,105,"show sizes in KiB, or kB with --si"
+btrfs-filesystem, ,m,mbytes, , ,106,"show sizes in MiB, or MB with --si"
+btrfs-filesystem, ,g,gbytes, , ,107,"show sizes in GiB, or GB with --si"
+btrfs-filesystem, ,t,tbytes, , ,108,"show sizes in TiB, or TB with --si If conflicting options are passed, the las…"
+btrfs-filesystem, , ,step, , ,109,Perform defragmentation in the range in SIZE steps and flush (-f) after each …
+btrfs-filesystem, , ,summarize, , ,110,display only a total for each argument
+btrfs-filesystem, , ,size, , ,111,Create swapfile of a given size SIZE (accepting k/m/g/e/p suffix)
+btrfs-filesystem, ,U,uuid, , ,112,"specify UUID to use, or a special value: clear (all zeros), random, time (tim…"
+btrfs-filesystem, , ,enqueue, , ,113,"wait if there's another exclusive operation running, otherwise continue show …"
+btrfs-filesystem, , ,mounted, , ,114,probe kernel for mounted BTRFS filesystems
+btrfs-filesystem, ,d,all-devices, , ,115,"scan all devices under /dev, otherwise the devices list is extracted from the…"

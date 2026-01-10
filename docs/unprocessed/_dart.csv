@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dart, __fish_use_subcommand, , ,analyze,@f,106,Analyze Dart code in a directory
+dart, __fish_use_subcommand, , ,compile,@f,107,Compile Dart to various formats
+dart, __fish_use_subcommand, , ,create,@f,108,Create a new Dart project
+dart, __fish_use_subcommand, , ,fix,@f,109,Apply automated fixes to Dart source code
+dart, __fish_use_subcommand, , ,format,@f,110,Idiomatically format Dart source code
+dart, __fish_use_subcommand, , ,migrate,@f,111,Perform null safety migration on a project
+dart, __fish_use_subcommand, , ,pub,@f,112,Work with packages
+dart, __fish_use_subcommand, , ,run,@f,113,Run a Dart program
+dart, __fish_use_subcommand, , ,test,@f,114,Run tests for a project

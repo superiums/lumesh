@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+dua, help,A,apparent-size, , ,100,Display apparent size instead of disk usage
+dua, help,f,format,,@f @r,100,The format with which to print byte counts
+dua, help,h,help, , ,100,Print help information
+dua, help,i,ignore-dirs, ,@F @r,100,One or more absolute directories to ignore
+dua, help,l,count-hard-links, , ,100,Count hard-linked files each time they are seen
+dua, help,t,threads, ,@f @r,100,The amount of threads to use
+dua, help,V,version, , ,100,Print version information
+dua, help,x,stay-on-filesystem, , ,100,"If set, we will not cross filesystems or traverse mount points"
+dua, a aggregate, ,no-sort, , ,101,Do not sort paths by their size in bytes
+dua, a aggregate, ,no-total, , ,102,Do not compute total column for multiple inputs
+dua, a aggregate, ,stats, , ,103,Print additional statistics about the file traversal to stderr

@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevicescreenshot, ,u,udid, , ,101,target specific device by UDID
+idevicescreenshot, ,n,network, , ,102,connect to network device
+idevicescreenshot, ,d,debug, , ,103,enable communication debugging
+idevicescreenshot, ,h,help, , ,104,prints usage information
+idevicescreenshot, ,v,version, , ,105,prints version information

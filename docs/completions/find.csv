@@ -1,0 +1,15 @@
+cmd,conds,short,long,params,dirs,pri,desc
+find, , ,help, , ,101,Display help and exit
+find, , , ,1 2 3 4 5 6 7 8 9, ,102,Maximum recursion depth
+find, , , ,1 2 3 4 5 6 7 8 9, ,103,Do not apply any tests or actions at levels less than specified level
+find, , , ,emacs posix-awk posix-basic posix-egrep posix-extended, ,104,Specify regular expression type
+find, , ,version, , ,105,Display version and exit
+find, ,D, ,exec opt rates search stat time tree all help,@f @r,106,Print diagnostic information.
+find, , , , ,@F,107,File is on filesystem of specified type
+find, , , , ,@f @r,108,Numeric group ID of file
+find, , , , ,@f @r,109,Group name of file
+find, , , ,1 2 3 4 5 6 7 8 9,@f @r,110,File has specified number of links
+find, , , ,$type_comp,@f @r,111,File is of specified type
+find, , , , ,@f @r,112,File's owner has specified numeric user ID
+find, , , , ,@f @r,113,File's owner
+find, , , ,$type_comp,@f @r,114,"Check type of file - in case of symlink, check the file that is not checked by -type"

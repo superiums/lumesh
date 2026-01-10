@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gprof, ,A,annotated-source, , ,101,Print annotated source
+gprof, ,b,brief, , ,102,Do not print explanations
+gprof, ,C,exec-counts, , ,103,Print tally
+gprof, ,i,file-info, , ,104,Display summary
+gprof, ,I,directory-path, , ,105,Search directories for source
+gprof, ,J,no-annotated-source, , ,106,No annotated source
+gprof, ,L,print-path, , ,107,Print full path of source
+gprof, ,p,flat-profile, , ,108,Print flat profile
+gprof, ,P,no-flat-profile, , ,109,No flat profile
+gprof, ,q,graph, , ,110,Print call graph
+gprof, ,Q,no-graph, , ,111,No call graph
+gprof, ,y,separate-files, , ,112,Annotate to file
+gprof, ,Z,no-exec-counts, , ,113,No tally
+gprof, , ,function-ordering, , ,114,Suggest function ordering
+gprof, , ,file-ordering, , ,115,Suggest file ordering
+gprof, ,T,traditional, , ,116,Traditional mode
+gprof, ,w,width, , ,117,Set width of output
+gprof, ,x,all-lines, , ,118,Annotate every line
+gprof, , ,demangle, , ,119,Set demangling style
+gprof, , ,no-demangle, , ,120,Turn of demangling
+gprof, ,a,no-static, , ,121,Suppress static functions
+gprof, ,c,static-call-graph, , ,122, 
+gprof, ,D,ignore-non-functions, , ,123,Ignore symbols not known to be functions
+gprof, ,k, , ,@r,124,Delete arcs from callgraph
+gprof, ,l,line, , ,125,Line by line profiling
+gprof, ,m,min-count, ,@r,126,Suppress output when executed less than specified times
+gprof, ,n,time, , ,127,Only propagate times for matching symbols
+gprof, ,N,no-time, , ,128,Do not propagate times for matching symbols
+gprof, ,z,display-unused-functions, , ,129,Mention unused functions in flat profile
+gprof, ,d,debug, , ,130,Specify debugging options
+gprof, ,h,help, , ,131,Display help and exit
+gprof, ,v,version, , ,132,Display version and exit
+gprof, ,O,file-format,auto bsd 4.4bsd magic prof,@f @r,133,Profile data format
+gprof, ,s,sum, , ,134,Print summary

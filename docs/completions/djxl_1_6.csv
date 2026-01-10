@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+djxl, ,h,help, , ,101,Displays the options that djxl supports
+djxl, ,j,pixels_to_jpeg, , ,102,"By default, if the input JPEG XL contains a recompressed JPEG file, djxl reco…"
+djxl, ,q,jpeg_quality, , ,103,"When decoding to . jpg, use this output quality"

@@ -1,0 +1,35 @@
+cmd,conds,short,long,params,dirs,pri,desc
+wofi, ,h,help, , ,101,Prints the help message and then exits
+wofi, ,f,fork, , ,102,Forks the menu so the terminal running it can be closed
+wofi, ,c,conf, , ,103,Specifies the config file to use
+wofi, ,s,style, , ,104,Specifies the CSS file to use as the stylesheet
+wofi, ,C,color, , ,105,Specifies the colors file to use
+wofi, ,d,dmenu, , ,106,Runs wofi in dmenu mode
+wofi, ,S,show, , ,107,Specifies the mode to run in.  A list of modes can be found in wofi(7)
+wofi, ,W,width, , ,108,"Specifies the menu width in pixels or percent of screen size, default is 50%"
+wofi, ,H,height, , ,109,"Specifies the menu height in pixels or percent of screen size, default is 40%"
+wofi, ,p,prompt, , ,110,"Sets the prompt to be display in the search box, default is the name of the m…"
+wofi, ,x,xoffset, , ,111,"Sets the x offset from the location in pixels, default is 0"
+wofi, ,y,yoffset, , ,112,"Sets the y offset from the location in pixels, default is 0"
+wofi, ,n,normal-window, , ,113,Runs wofi in a normal window instead of using wlr-layer-shell
+wofi, ,I,allow-images, , ,114,Allows image escape sequences to be processed and rendered
+wofi, ,m,allow-markup, , ,115,Allows pango markup to be processed and rendered
+wofi, ,k,cache-file, , ,116,"Specifies the cache file to load/store cache, default is $XDG_CACHE_HOME/wofi…"
+wofi, ,t,term, , ,117,Specifies the term to use when running a program in a terminal
+wofi, ,P,password, , ,118,Runs wofi in password mode with an optional password character to use
+wofi, ,e,exec-search, , ,119,Activiating a search with enter will execute the search not the first result
+wofi, ,b,hide-scroll, , ,120,Hides the scroll bars
+wofi, ,M,matching, , ,121,"Specifies the matching mode, it can be either contains, multi-contains, or fu…"
+wofi, ,i,insensitive, , ,122,Enables case insensitive search
+wofi, ,q,parse-search, , ,123,Parses out image escapes and pango preventing them from being used for search…
+wofi, ,v,version, , ,124,Prints the version and then exits
+wofi, ,l,location, , ,125,"Specifies the location.  See wofi(7) for more information, default is center"
+wofi, ,a,no-actions, , ,126,Disables multiple actions for modes that support it
+wofi, ,D,define, , ,127,Sets a config option
+wofi, ,L,lines, , ,128,Specifies the height in number of lines instead of pixels
+wofi, ,w,columns, , ,129,"Specifies the number of columns to display, default is 1"
+wofi, ,O,sort-order, , ,130,Specifies the default sort order
+wofi, ,G,gtk-dark, , ,131,"Instructs wofi to use the dark variant of the current GTK theme, if available"
+wofi, ,Q,search, , ,132,Specifies something to search for immediately on opening
+wofi, ,o,monitor, , ,133,Sets the monitor to open on
+wofi, ,r,pre-display-cmd, , ,134,"If set, the selectable entry won't be displayed as-is, but will instead be di…"

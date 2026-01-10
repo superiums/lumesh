@@ -1,0 +1,106 @@
+cmd,conds,short,long,params,dirs,pri,desc
+apk, info fetch dot, , , ,@f,101,Package
+apk, del fix version, , , ,@f,102,Package
+apk, ,h,help, ,@f,103,Show help
+apk, ,p,root, ,@r,104,Install packages to DIR
+apk, ,X,repository, ,@r,105,Use packages from REPO
+apk, ,q,quiet, ,@f,106,Print less information
+apk, ,v,verbose, ,@f,107,Print more information
+apk, ,i,interactive, ,@f,108,Ask confirmation for certain operations
+apk, ,V,version, ,@f,109,Print program version
+apk, , ,force-binary-stdout, ,@f,110,Continue even if binary data is to be output
+apk, , ,force-broken-world, ,@f,111,Continue even if 'world' cannot be satisfied
+apk, , ,force-non-repository, ,@f,112,Continue even if packages may be lost on reboot
+apk, , ,force-old-apk, ,@f,113,Continue even if packages use unsupported features
+apk, , ,force-overwrite, ,@f,114,Overwrite files in other packages
+apk, , ,force-refresh, ,@f,115,Don't use cached files
+apk, ,U,update-cache, ,@f,116,Alias for --cache-max-age 1
+apk, , ,progress, ,@f,117,Show a progress bar
+apk, , ,progress-fd, ,@f @r,118,Write progress to FD
+apk, , ,no-progress, ,@f,119,Disable progress bar even for TTYs
+apk, , ,purge, ,@f,120,Delete also modified configuration files and uninstalled packages from cache
+apk, , ,allow-untrusted, ,@f,121,Install packages with untrusted signature or no signature
+apk, , ,wait, ,@f @r,122,Wait for TIME seconds to get an exclusive repository lock before failing
+apk, , ,keys-dir, ,@r,123,Override directory of trusted keys
+apk, , ,repositories-file, ,@r,124,Override repositories file
+apk, , ,no-network, ,@f,125,Don't use network
+apk, , ,no-cache, ,@f,126,Don't use any local cache path
+apk, , ,cache-dir, ,@r,127,Override cache directory
+apk, , ,cache-max-age, ,@f @r,128,Maximum AGE for index in cache before refresh
+apk, , ,arch, ,@f @r,129,Use architecture with --root
+apk, , ,print-arch, ,@f,130,Print default architecture
+apk, add del fix upgrade,s,simulate, ,@f,149,Simulate the requested operation
+apk, add del fix upgrade, ,clean-protected, ,@f,150,Don't create .apk-new files
+apk, add del fix upgrade, ,overlay-from-stdin, ,@f,151,Read list of overlay files from stdin
+apk, add del fix upgrade, ,no-scripts, ,@f,152,Don't execute any scripts
+apk, add del fix upgrade, ,no-commit-hooks, ,@f,153,Skip pre/post hook scripts
+apk, add del fix upgrade, ,initramfs-diskless-boot, ,@f,154,Enables options for diskless initramfs boot
+apk, add, ,initdb, ,@f,155,Initialize database
+apk, add,u,upgrade, ,@f,156,Prefer to upgrade package
+apk, add,l,latest, ,@f,157,Select latest version of package
+apk, add,t,virtual, ,@f @r,158,Create virtual package
+apk, add, ,no-chown, ,@f,159,Don't change file owner or group
+apk, del,r,rdepends, ,@f,160,Remove unneeded dependencies too
+apk, fix,d,depends, ,@f,161,Fix all dependencies too
+apk, fix,r,reinstall, ,@f,162,Reinstall the package
+apk, fix,u,upgrade, ,@f,163,Prefer to upgrade package
+apk, fix,x,xattr, ,@f,164,Fix packages with broken xattrs
+apk, fix, ,directory-permissions, ,@f,165,Reset all directory permissions
+apk, info,L,contents, ,@f,166,List included files
+apk, info,e,installed, ,@f,167,Check PACKAGE installed status
+apk, info,W,who-owns, ,@r,168,Print who owns the file
+apk, info,R,depends, ,@f,169,List the dependencies
+apk, info,P,provides, ,@f,170,List virtual packages provided
+apk, info,r,rdepends, ,@f,171,List reverse dependencies
+apk, info, ,replaces, ,@f,172,List packages that PACKAGE might replace
+apk, info, ,install-if, ,@f,173,List install_if rule
+apk, info, ,rinstall-if, ,@f,174,List packages having install_if referencing PACKAGE
+apk, info,w,webpage, ,@f,175,Print the URL for the upstream
+apk, info,s,size, ,@f,176,Show installed size
+apk, info,d,description, ,@f,177,Print the description
+apk, info, ,license, ,@f,178,Print the license
+apk, info, ,triggers, ,@f,179,Print active triggers
+apk, info,a,all, ,@f,180,Print all information
+apk, list,I,installed, ,@f,181,List installed packages only
+apk, list,O,orphaned, ,@f,182,List orphaned packages only
+apk, list,a,available, ,@f,183,List available packages only
+apk, list,u,upgradable, ,@f,184,List upgradable packages only
+apk, list,o,origin, ,@f,185,List packages by origin
+apk, list,d,depends, ,@f,186,List packages by dependency
+apk, list,P,providers, ,@f,187,List packages by provider
+apk, search,a,all, ,@f,188,Show all package versions
+apk, search,d,description, ,@f,189,Search package descriptions
+apk, search,x,exact, ,@f,190,Require exact match
+apk, search,o,origin, ,@f,191,Print origin package name
+apk, search,r,rdepends, ,@f,192,Print reverse dependencies
+apk, search, ,has-origin, ,@f,193,List packages that have the given origin
+apk, upgrade,a,available, ,@f,194,Reset all packages to the provided versions
+apk, upgrade,l,latest, ,@f,195,Select latest version of package
+apk, upgrade, ,no-self-upgrade, ,@f,196,Don't do early upgrade of the apk
+apk, upgrade, ,self-upgrade-only, ,@f,197,Only do self-upgrade
+apk, upgrade, ,ignore, ,@f,198,Ignore the upgrade of PACKAGE
+apk, upgrade, ,prune, ,@f,199,Prune the WORLD by removing packages which are no longer available
+apk, cache,u,upgrade, ,@f,200,Prefer to upgrade package
+apk, cache,l,latest, ,@f,201,Select latest version of package
+apk, version,I,indexes, ,@f,202,Print description and versions of indexes
+apk, version,t,test, ,@f,203,Compare two given versions
+apk, version,c,check, ,@f,204,Check the given version strings
+apk, version,a,all, ,@f,205,Consider packages from all repository tags
+apk, version,l,limit, ,@f @r,206,Limit to packages with output matching given operand
+apk, index,o,output, ,@r,207,Write the generated index to FILE
+apk, index,x,index, ,@r,208,Read an existing index from INDEX
+apk, index,d,description, ,@f @r,209,Add a description to the index
+apk, index, ,rewrite-arch, ,@f @r,210,Use ARCH as architecture for all packages
+apk, index, ,no-warnings, ,@f,211,Disable the warning about missing dependencies
+apk, fetch,L,link, ,@f,212,Create hard links
+apk, fetch,R,recursive, ,@f,213,Fetch all dependencies too
+apk, fetch, ,simulate, ,@f,214,Simulate the requested operation
+apk, fetch,s,stdout, ,@f,215,Dump the .apk to stdout
+apk, fetch,o,output, ,@r,216,Write the downloaded files to DIR
+apk, audit, ,backup, ,@f,217,Audit configuration files only
+apk, audit, ,system, ,@f,218,Audit all system files
+apk, audit, ,check-permissions, ,@f,219,Check file permissions too
+apk, audit,r,recursive, ,@f,220,Descend into directories and audit them as well
+apk, audit, ,packages, ,@f,221,List only the changed packages
+apk, dot, ,errors, ,@f,222,Consider only packages with errors
+apk, dot, ,installed, ,@f,223,Consider only installed packages

@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ts_uinput, ,d,daemonize, , ,101,Start ts_uinput as a daemon and return
+ts_uinput, ,v,verbose, , ,102,Print debug information to stdout and stderr
+ts_uinput, ,n,name, , ,103,Set the name of the new input event device.  Default: ts_uinput
+ts_uinput, ,i,idev, , ,104,Explicitly choose the original input event device for tslib to use
+ts_uinput, ,f,fbdev, , ,105,Explicitly choose the framebuffer device to use
+ts_uinput, ,s,slots, , ,106,Explicitly set the possible concurrent touch contacts supported
+ts_uinput, ,b,nofb, , ,107,"Read the screen resolution values from the input device, not the framebuffer …"

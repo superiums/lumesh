@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+uu-kill, ,s,signal, , ,101,Sends given signal instead of SIGTERM
+uu-kill, ,l,list, , ,102,Lists signals
+uu-kill, ,t,table, , ,103,Lists table of signals
+uu-kill, ,h,help, , ,104,Print help
+uu-kill, ,V,version, , ,105,Print version

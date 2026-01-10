@@ -1,0 +1,13 @@
+cmd,conds,short,long,params,dirs,pri,desc
+fallocate, ,c,collapse-range, , ,101, 
+fallocate, ,d,dig-holes, , ,102, 
+fallocate, ,i,insert-range, , ,103, 
+fallocate, ,l,length, , ,104, 
+fallocate, ,n,keep-size, , ,105, 
+fallocate, ,o,offset, , ,106, 
+fallocate, ,p,punch-hole, , ,107, 
+fallocate, ,v,verbose, , ,108, 
+fallocate, ,x,posix, , ,109, 
+fallocate, ,z,zero-range, , ,110, 
+fallocate, ,h,help, , ,111, 
+fallocate, ,V,version, , ,112, 

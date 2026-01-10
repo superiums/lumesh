@@ -1,0 +1,54 @@
+cmd,conds,short,long,params,dirs,pri,desc
+xrandr, , ,verbose, , ,101,Be more verbose
+xrandr, , ,dryrun, , ,102,Make no changes
+xrandr, , ,nograb, , ,103,Apply modifications without grabbing the screen
+xrandr, , ,help, , ,104,Print out a summary of the usage and exit
+xrandr, ,v,version, , ,105,Print out the RandR version reported by the X server and exit
+xrandr, ,q,query, , ,106,Display the current state of the system
+xrandr, ,d,display, , ,107,Select X display to use
+xrandr, , ,screen, , ,108,Select which screen to manipulate
+xrandr, , ,q1, , ,109,Use RandR version 1.1 protocol
+xrandr, , ,q12, , ,110,Use RandR version 1.2 protocol
+xrandr, ,s,size, , ,111,Set the screen size (index or width x height)
+xrandr, ,r,refresh, , ,112,Set the refresh rate closest to the specified value
+xrandr, ,o,orientation,normal inverted left right, ,113,Specify the orientation of the screen
+xrandr, , ,listmonitors, , ,114,Print all defined monitors
+xrandr, , ,listactivemonitors, , ,115,Print all active monitors
+xrandr, , ,setmonitor, , ,116,Define new monitor
+xrandr, , ,delmonitor, , ,117,Delete monitor
+xrandr, , ,listproviders, , ,118,Print all available providers
+xrandr, , ,setprovideroutputsource, , ,119,Set source for a given provider
+xrandr, , ,setprovideroffloadsink, , ,120,Set provider for a given sink
+xrandr, , ,noprimary, , ,121,Don't define a primary output
+xrandr, , ,current, , ,122,Print current screen configuration
+xrandr, , ,panning, , ,123,Set panning parameters
+xrandr, , ,transform, , ,124,Set transformation matrix
+xrandr, , ,scale, , ,125,Set screen scale
+xrandr, , ,primary, , ,126,Set the output as primary
+xrandr, , ,filter,bilinear nearest, ,127,Set scaling filter method
+xrandr, , ,properties, , ,128,Display the contents of properties for each output
+xrandr, , ,fb, , ,129,Set screen size
+xrandr, , ,fbmm, , ,130,Set reported physical screen size
+xrandr, , ,dpi, , ,131,Set dpi to calculate reported physical screen size
+xrandr, , ,newmode, , ,132,Add new mode
+xrandr, , ,rmmode, , ,133,Removes a mode from the server
+xrandr, , ,addmode, , ,134,Add a mode to the set of valid modes for an output
+xrandr, , ,delmode, , ,135,Remove a mode from the set of valid modes for an output
+xrandr, , ,output, , ,136,Selects an output to reconfigure
+xrandr, , ,auto, , ,137,Enable connected but disabled outputs
+xrandr, , ,mode, , ,138,This selects a mode
+xrandr, , ,preferred, , ,139,"Select the same mode as --auto, but it do not automatically enable or disable the output"
+xrandr, , ,pos, , ,140,Set output position within the secreen in pixels
+xrandr, , ,rate, , ,141,Set refresh rate
+xrandr, , ,reflect,normal x y xy, ,142,Set reflection
+xrandr, , ,rotate,normal left right inverted, ,143,Set rotation
+xrandr, , ,left-of, , ,144,Set position relative to the output
+xrandr, , ,right-of, , ,145,Set position relative to the output
+xrandr, , ,above, , ,146,Set position relative to the output
+xrandr, , ,below, , ,147,Set position relative to the output
+xrandr, , ,same-as, , ,148,Set position relative to the output
+xrandr, , ,set, , ,149,Set the property value: --set <prop> <value>
+xrandr, , ,off, , ,150,Disables the output
+xrandr, , ,crtc, , ,151,Set the crtc
+xrandr, , ,gamma, , ,152,Set gamma correction [red:green:blue]
+xrandr, , ,brightness, , ,153,Set brightness. Multiplies gamma values by brightness value

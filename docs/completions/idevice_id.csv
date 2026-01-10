@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+idevice_id, ,l,list, , ,101,List UDIDs of all devices attached via USB
+idevice_id, ,n,network, , ,102,List UDIDs of all devices available via network
+idevice_id, ,d,debug, , ,103,Enable communication debugging
+idevice_id, ,h,help, , ,104,Prints usage information
+idevice_id, ,v,version, , ,105,Prints version information

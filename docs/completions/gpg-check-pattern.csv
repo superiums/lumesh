@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gpg-check-pattern, , ,verbose, , ,101,Enable extra informational output
+gpg-check-pattern, , ,check, , ,102,Run only a syntax check on the patternfile
+gpg-check-pattern, , ,null, , ,103,"Input is expected to be null delimited.  SEE ALSO gpg-agent(1),"

@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+top, ,u, , ,@f @r,101,Monitor effective UID
+top, ,U, , ,@f @r,102,Monitor user
+top, ,p, , ,@f @r,103,Monitor PID

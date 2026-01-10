@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+bluetoothd, ,v,version, , ,101,Print bluetoothd version and exit
+bluetoothd, ,h,help, , ,102,Print bluetoothd options and exit
+bluetoothd, ,n,nodetach, , ,103,Enable logging in foreground
+bluetoothd, ,f,configfile, , ,104,Specifies an explicit config file path instead of relying on the default path…
+bluetoothd, ,d,debug, , ,105,Sets how much information bluetoothd sends to the log destination (usually sy…
+bluetoothd, ,p,plugin, , ,106,Load these plugins only
+bluetoothd, ,P,noplugin, , ,107,Never load these plugins
+bluetoothd, ,C,compat, , ,108,Provide deprecated command line interfaces
+bluetoothd, ,E,experimental, , ,109,Enable D-Bus experimental interfaces
+bluetoothd, ,T,testing, , ,110,Enable D-Bus testing interfaces
+bluetoothd, ,K,kernel, , ,111,Enable Kernel experimental features

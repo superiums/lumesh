@@ -1,0 +1,49 @@
+cmd,conds,short,long,params,dirs,pri,desc
+objdump, ,a,archive-headers, , ,101,Display archive header information
+objdump, ,f,file-headers, , ,102,Display contents of the overall file header
+objdump, ,p,private-headers, , ,103,Display object format specific file header contents
+objdump, ,P,private, , ,104,Display object format specific contents
+objdump, ,h,header, , ,105,Display contents of section headers
+objdump, ,h,section-header, , ,106,Display content of section headers
+objdump, ,x,all-headers, , ,107,Display the contents of all headers
+objdump, ,d,disassemble, , ,108,Display assembler contents of executable sections
+objdump, ,D,disassemble-all, , ,109,Display assembler contents of all sections
+objdump, ,S,source, , ,110,Intermix source code with disassembly
+objdump, ,s,full-contents, , ,111,Display full contents of all sections requested
+objdump, ,g,debugging, , ,112,Display debug information in object file
+objdump, ,e,debugging-tags, , ,113,Display debug information using ctags style
+objdump, ,G,stabs, , ,114,Display (in raw form) any STABS info in file
+objdump, , ,dwarf,rawline decodedline info abbrev pubnames aranges macro frames frames-interp str loc Ranges pubtypes gdb_index trace_info trace_abbrev trace_aranges addr cu_index,@f @r,115,Display DWARF info in file
+objdump, ,t,syms, , ,116,Display contents of symbol table(s)
+objdump, ,T,dynamic-syms, , ,117,Display contents of dynamic symbol table
+objdump, ,r,reloc, , ,118,Display relocation entries in file
+objdump, ,R,dynamic-reloc, , ,119,Display dynamic relocation entries in file
+objdump, ,v,version, , ,120,Display version number
+objdump, ,i,info, , ,121,List object formats and architectures supported
+objdump, ,H,help, , ,122,Display help
+objdump, ,b,target,elf64-x86-64 elf32-i386 elf32-iamcu elf32-x86-64 a.out-i386-linux pei-i386 pei-x86-64 elf64-l1om elf64-k1om elf64-little elf64-big elf32-little elf32-big plugin srec symbolsrec verilog tekhex binary ihex,@f @r,123,Specify target object format
+objdump, ,m,architecture,i386 i386:x86-64 i386:x64-32 i8086 i386:intel i386:x86-64:intel i386:x64-32:intel i386:nacl i386:x86-64:nacl i386:x64-32:nacl iamcu iamcu:intel l1om l1om:intel k1om k1om:intel plugin,@f @r,124,Specify target architecture
+objdump, ,j,section, , ,125,Only display information for given section
+objdump, ,M,disassembler-options, , ,126,Pass given options on to disassembler
+objdump, , ,disassembler-color,off terminal on extended,@f @r,127,Control disassembler syntax highlighting style
+objdump, , ,endian,big little,@f @r,128,Set format endianness when disassembling
+objdump, , ,file-start-context, , ,129,Include context from start of file (with -S)
+objdump, ,I,include, ,@f,130,Add given directory to search list from source files
+objdump, ,l,line-numbers, , ,131,Include line numbers and filenames in output
+objdump, ,F,file-offsets, , ,132,Include file offsets when displaying information
+objdump, ,C,demangle,auto gnu lucid arm hp edg gnu-v3 java gnat,@f @r,133,Decode mangled/processed symbol names
+objdump, ,w,wide, , ,134,Format output for more than 80 columns
+objdump, ,z,disassemble-zeroes, , ,135,Do not skip blocks of zeroes when disassembling
+objdump, , ,start-address, , ,136,Only process data whose address is >= given address
+objdump, , ,stop-address, , ,137,Only process data whose address is <= given address
+objdump, , ,prefix-addresses, , ,138,Print complete address alongside disassembly
+objdump, , ,show-raw-insn, , ,139,Display hex alongside symbolic disassembly
+objdump, , ,no-show-raw-insn, , ,140,Don't display hex alongside symbolic disassembly
+objdump, , ,insn-width, ,@f @r,141,Display specified number of bytes on single line for -d
+objdump, , ,adjust-vma, ,@f @r,142,Add offset to all displayed section address
+objdump, , ,special-syms, , ,143,Include special symbols in symbol dumps
+objdump, , ,prefix, ,@f @r,144,Add given prefix to absolute paths for -S
+objdump, , ,prefix-strip, ,@f @r,145,Strip initial directory names for -S
+objdump, , ,dwarf-depth, ,@f @r,146,Do not display DIEs at given depth or greater
+objdump, , ,dwarf-start, ,@f @r,147,Display DIEs starting with given number
+objdump, , ,dwarf-check, , ,148,Make additional dwarf internal consistency checks

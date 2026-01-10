@@ -1,0 +1,10 @@
+cmd,conds,short,long,params,dirs,pri,desc
+mpv, replace, , , ,@f,101, 
+mpv, replace, , , ,@f,102, 
+mpv, , ,start, ,@f @r,103,"Seek to given position (%, s, hh:mm:ss)"
+mpv, , ,no-audio, , ,104,Disable audio
+mpv, , ,no-audio-display, , ,105,Hide attached picture for audio
+mpv, , ,no-video, , ,106,Disable video
+mpv, , ,fs, , ,107,Fullscreen playback
+mpv, , ,sub-file, ,@r,108,Specify subtitle file
+mpv, , ,playlist, ,@r,109,Specify playlist file

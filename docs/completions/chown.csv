@@ -1,0 +1,11 @@
+cmd,conds,short,long,params,dirs,pri,desc
+chown, ,c,changes, , ,101,Output diagnostic for changed files
+chown, , ,dereference, , ,102,Dereference symbolic links
+chown, ,h,no-dereference, , ,103,Do not dereference symbolic links
+chown, , ,from, , ,104,Change from owner/group
+chown, ,f,silent, , ,105,Suppress errors
+chown, , ,reference, , ,106,Use same owner/group as file
+chown, ,R,recursive, , ,107,Operate recursively
+chown, ,v,verbose, , ,108,Output diagnostic for every file
+chown, , ,help, , ,109,Display help and exit
+chown, , ,version, , ,110,Display version and exit

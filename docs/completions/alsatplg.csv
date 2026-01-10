@@ -1,0 +1,12 @@
+cmd,conds,short,long,params,dirs,pri,desc
+alsatplg, ,h,help, , ,101,this help
+alsatplg, ,V,version, , ,102,show the utility version and versions of used libraries
+alsatplg, ,c,compile, , ,103,source configuration file for the compilation
+alsatplg, ,d,decode, , ,104,source binary topology file for the decode
+alsatplg, ,n,normalize, , ,105,parse and save the configuration file in the normalized format
+alsatplg, ,u,dump, , ,106,parse and save the configuration file in the specified format
+alsatplg, ,o,output, , ,107,output file
+alsatplg, ,v,verbose, , ,108,set verbose level
+alsatplg, ,s,sort, , ,109,sort the configuration identifiers (set for normalization)
+alsatplg, ,x,nocheck, , ,110,save the configuration without additional integrity check
+alsatplg, ,z,dapm-nosort, , ,111,do not sort DAPM graph items (like in version 1. 2. 1-)

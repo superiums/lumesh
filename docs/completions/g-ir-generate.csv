@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+g-ir-generate, , ,help, , ,101,Show help options
+g-ir-generate, , ,shlib, , ,102,The shared library to read the symbols from
+g-ir-generate, , ,output, , ,103,Save the resulting output in FILENAME
+g-ir-generate, , ,version, , ,104,Show program's version number and exit

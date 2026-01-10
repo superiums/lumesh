@@ -1,0 +1,5 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sbt, , , ,'(string,@f,101, 
+sbt, test  (count (commandline -cpx)) = 1 , , ,new,@f,102,Create a new sbt project from the given template
+sbt, test  (count (commandline -cpx)) = 1 , , ,client,@f,103,Connect to a server with an interactive sbt prompt
+sbt, , , ,0.13.(seq 0 6),@f @r,117,Use specified version of sbt

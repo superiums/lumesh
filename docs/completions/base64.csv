@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+base64, ,d,decode, , ,101,Decode data
+base64, ,i,ignore-garbage, , ,102,"When decoding, ignore non-alphabet characters"
+base64, ,w,wrap, ,@f @r,103,Wrap output after N characters (default 76)
+base64, , ,help, , ,104,Display help
+base64, , ,version, , ,105,Display version

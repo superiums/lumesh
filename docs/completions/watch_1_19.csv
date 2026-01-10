@@ -1,0 +1,17 @@
+cmd,conds,short,long,params,dirs,pri,desc
+watch, ,b,beep, , ,101,Beep if command has a non-zero exit
+watch, ,c,color, , ,102,Interpret ANSI color and style sequences
+watch, ,C,no-color, , ,103,Do not interpret ANSI color and style sequences
+watch, ,d,differences, , ,104,Highlight the differences between successive updates
+watch, ,e,errexit, , ,105,"Freeze updates on command error, and exit after a key press"
+watch, ,g,chgexit, , ,106,Exit when the visible output of command changes
+watch, ,n,interval, , ,107,Specify update interval.  Values smaller than 0
+watch, ,p,precise, , ,108,"Execute command --interval seconds after its previous run started, instead of…"
+watch, ,q,equexit, , ,109,Exit when output of command does not change for the given number of cycles
+watch, ,r,no-rerun, , ,110,"Do not run the program on terminal resize, the output of the program will re-…"
+watch, ,s,shotsdir, , ,111,Directory to save screenshots into
+watch, ,t,no-title, , ,112,Turn off the header normally shown at the top of the screen
+watch, ,w,no-wrap, , ,113,Turn off line wrapping
+watch, ,x,exec, , ,114,Pass command to an  exec (3) call instead of sh -c
+watch, ,h,help, , ,115,Display help text and exit
+watch, ,v,version, , ,116,Display version information and exit.  KEY CONTROL

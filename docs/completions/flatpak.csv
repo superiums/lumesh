@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+flatpak, run, , , ,@f,101, 
+flatpak, info uninstall, , , ,@f,102, 
+flatpak, enter kill, , , ,@f,103, 
+flatpak, remote-info remote-ls remote-modify remote-delete, , , ,@f,104, 
+flatpak, ,h,help, ,@f,105, 

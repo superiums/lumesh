@@ -1,0 +1,8 @@
+cmd,conds,short,long,params,dirs,pri,desc
+sensors, ,c,config-file, , ,101,Specify a configuration file
+sensors, ,h,help, , ,102,Print a help text and exit
+sensors, ,s,set, , ,103,Evaluate all `set' statements in the configuration file and exit
+sensors, ,A,no-adapter, , ,104,Do not show the adapter for each chip
+sensors, ,v,version, , ,105,Print the program version and exit
+sensors, ,f,fahrenheit, , ,106,Print the temperatures in degrees Fahrenheit instead of Celsius
+sensors, , ,bus-list, , ,107,Generate bus statements suitable for using in sensors. conf

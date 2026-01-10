@@ -1,0 +1,21 @@
+cmd,conds,short,long,params,dirs,pri,desc
+icdiff, , ,version, , ,101,Display version and exit
+icdiff, ,h,help, , ,102,Display help and exit
+icdiff, , ,cols, , ,103,Specify the width of the screen
+icdiff, , ,encoding, , ,104,Specify file encoding
+icdiff, ,E,exclude-lines, , ,105,Ignore lines that match this regex
+icdiff, , ,head, , ,106,Consider only the first N lines of each file
+icdiff, ,H,highlight, , ,107,Use the background instead of foreground color for diff
+icdiff, ,L,label, , ,108,Override file label. Use twice for both files
+icdiff, ,N,line-numbers, , ,109,Show line numbers
+icdiff, , ,no-bold, , ,110,Use non-bold colors
+icdiff, , ,no-headers, , ,111,Don't show file labels
+icdiff, , ,output-encoding, , ,112,Specify output encoding
+icdiff, ,r,recursive, , ,113,Recursive search
+icdiff, ,s,report-identical-files, , ,114,Report when two files are same
+icdiff, , ,show-all-spaces, , ,115,Color non-matchining whitespace changes
+icdiff, , ,tabsize, , ,116,Tab stop spacing
+icdiff, ,U,numlines, , ,117,Print N lines of surrounding context
+icdiff, ,W,whole-file, , ,118,Show the whole file instead of just changes
+icdiff, , ,strip-trailing-cr, , ,119,Strip trailing carriage return at the end of an input line
+icdiff, , ,color-map, , ,120,Specify color map

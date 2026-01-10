@@ -1,0 +1,6 @@
+cmd,conds,short,long,params,dirs,pri,desc
+cygpath," __fish_seen_argument -s w -l windows; or __fish_seen_argument -s m -l mixed",l,long-name, , ,108,Print Windows long form
+cygpath," __fish_seen_argument -s w -l windows; or __fish_seen_argument -s m -l mixed",s,short-name, , ,111,Print DOS/short form
+cygpath," __fish_seen_argument -s d -l dos; or __fish_seen_argument -s w -l windows; or __fish_seen_argument -s m -l mixed",C,codepage,ANSI OEM UTF8,@r,112,Print pathname in CODEPAGE
+cygpath," __fish_seen_argument -s D -l desktop; or __fish_seen_argument -s O -l mydocs; or __fish_seen_argument -s P -l smprograms",A,allusers, , ,113,Use 'All Users' instead of current user
+cygpath, __fish_seen_argument -s f -l file,o,option, , ,122,Read options from FILE as well

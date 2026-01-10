@@ -1,0 +1,4 @@
+cmd,conds,short,long,params,dirs,pri,desc
+gprofng-collect-app, , ,version, , ,101,X Item '--version' Print the version number and exit
+gprofng-collect-app, , ,help, , ,102,X Item '--help' Print usage information and exit
+gprofng-collect-app, ,v,verbose, , ,103,"X Item '-v, --verbose' By default, verbose mode is disabled"

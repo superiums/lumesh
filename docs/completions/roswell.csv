@@ -1,0 +1,42 @@
+cmd,conds,short,long,params,dirs,pri,desc
+ros, run, ,load, , ,115,load lisp FILE while building
+ros, run, ,load, , ,116,load lisp FILE while building
+ros, run, ,source-registry, , ,117,override source registry of asdf systems
+ros, run, ,system, , ,118,load asdf SYSTEM while building
+ros, run, ,load-system, , ,119,same as above (buildapp compatibility)
+ros, run, ,package, , ,120,change current package to PACKAGE
+ros, run, ,system-package, , ,121, combination of -s SP and -p SP
+ros, run, ,eval, , ,122,evaluate FORM while building
+ros, run, ,require, , ,123,require MODULE while building
+ros, run, ,quit, , ,124,quit lisp here
+ros, run, ,restart, , ,125,restart from build by calling (FUNC)
+ros, run, ,entry, , ,126,restart from build by calling (FUNC argv)
+ros, run, ,init, , ,127,evaluate FORM after restart
+ros, run, ,print, , ,128,evaluate and princ FORM after restart
+ros, run, ,write, , ,129,evaluate and write FORM after restart
+ros, run, ,final, , ,130,evaluate FORM before dumping IMAGE
+ros, run, , ,+R, ,131,"skip /etc/rosrc, ~/.roswell/init.lisp"
+ros, run, ,no-rc, , ,132,"skip /etc/rosrc, ~/.roswell/init.lisp"
+ros, run, ,asdf, , ,133,use new asdf
+ros, run, , ,+Q, ,134,do not use quicklisp
+ros, run, ,noquicklisp, , ,135,do not use quicklisp
+ros, run, ,verbose, , ,136,be quite noisy while building
+ros, run, ,quiet, , ,137,be quite quiet while building (default)
+ros, run, ,test, , ,138,for test purpose
+ros, template, , ,init, ,140,Create new template
+ros, template, , ,deinit, ,141,Remove a template
+ros, template, , ,list, ,142,List the installed templates
+ros, template, , ,checkout, ,143,Checkout default template to edit.
+ros, template, , ,add, ,144,Add files to template.
+ros, template, , ,cat, ,145,Show file contents
+ros, template, , ,edit, ,146,Edit file contents
+ros, template, , ,rm, ,147,Remove (delete) files from template.
+ros, template, , ,delete, ,148,Remove (delete) files from template.
+ros, template, , ,type, ,149,Set template type for a file.
+ros, template, , ,chmod, ,150,Set mode for a file.
+ros, template, , ,rewrite, ,151,Set path rewrite rule for a file
+ros, template, , ,export, ,152,Export template to directory
+ros, template, , ,import, ,153,Import template
+ros, template, , ,help, ,154,Print usage and subcommands description
+ros, config, , ,show, ,155,show TARGET.
+ros, config, , ,set, ,156,set TARGET VALUE.

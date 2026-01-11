@@ -1310,15 +1310,47 @@ fn cfm_postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 
 fn cfm_operator(input: Input<'_>) -> TokenizationResult<'_> {
-    alt((long_operator, cfm_short_operator))(input)
+    alt((cfm_long_operator, cfm_short_operator))(input)
 }
 fn cfm_short_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("|"),  //standard io stream pipe
-        operator_tag("<"), // not followed by punct, allow space,symbol like.
-        operator_tag(">"),
+        keyword_tag("|"), //standard io stream pipe
+        // operator_tag("<"), // not followed by punct, allow space,symbol like.
+        // operator_tag(">"),
         // operator_tag("%"),
         // operator_tag("^"), //math power
         punctuation_tag("="), // allow all.
+    ))(input)
+}
+
+fn cfm_long_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    alt((
+        keyword_tag("=>"), //for match
+        alt((
+            // punctuation_tag("!="),
+            // punctuation_tag("=="), //to allow a==b
+            // punctuation_tag(">="),
+            // punctuation_tag("<="),
+            keyword_tag("!~:"),
+            keyword_tag("~:"),
+            keyword_tag("!~="),
+            keyword_tag("~="),
+        )),
+        keyword_tag("&&"),
+        keyword_tag("||"),
+        keyword_tag("|_"), //param pipe
+        keyword_tag("|>"), //dispatch pipe
+        keyword_tag("|^"), //pty pipe
+        keyword_tag("<<"),
+        keyword_tag(">!"),
+        keyword_tag(">>"),
+        // operator_tag("+="),
+        // operator_tag("-="),
+        // operator_tag("*="),
+        // operator_tag("/="),
+        keyword_tag(":="),
+        punctuation_tag("->"), // `->foo` is also a valid symbol
+        // punctuation_tag("~>"), // `~>foo` is also a valid symbol
+        catch_operator,
     ))(input)
 }

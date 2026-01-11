@@ -18,6 +18,9 @@
   
 - allow set completion style
 - match path first if no ignore file tag
+- disable mathmatic compare in CFM mode.
+in cfm mode, there's no number(as no dot), all is symbol, so disable it.
+
 
 ## [0.8.9]
 - optimize completion efficency

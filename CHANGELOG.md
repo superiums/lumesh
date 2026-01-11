@@ -1,7 +1,20 @@
 # Changelog
 ## [0.9.0]
 - fix completion install path
-- only parse single symbol as command when 
+- only parse single symbol as command when CFM enabled
+> in interactive repl(cfm enabled by default):
+  `ls` is a command.
+  `./my.sh` is a command.
+> in script mode:
+  `ls _` is needed if you want to trigger an command
+  `./my.sh _` is need too.
+  the `_` means blank argument for command.
+  as single symbol was not parsed as a command but a value, 
+  we can use it safetily in following functon:
+  ```shell
+  let a = if b>0 {c} else {d}    # c and d will never executed as a suprise.
+  ```
+  
 - allow set completion style
 - match path first if no ignore file tag
 

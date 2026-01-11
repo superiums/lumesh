@@ -572,7 +572,7 @@ impl Expression {
                         None => {
                             // 尝试内置方法
                             self.eval_module_method(
-                                "map".into(),
+                                "Map".into(),
                                 method,
                                 &call.args,
                                 current_base,

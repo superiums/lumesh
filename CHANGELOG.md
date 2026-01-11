@@ -8,6 +8,7 @@
 > in script mode:
   `ls _` is needed if you want to trigger an command
   `./my.sh _` is need too.
+  
   the `_` means blank argument for command.
   as single symbol was not parsed as a command but a value, 
   we can use it safetily in following functon:

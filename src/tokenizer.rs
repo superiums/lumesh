@@ -1232,7 +1232,14 @@ fn parse_command_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
                 tokens.push(token);
                 diagnostics.push(diagnostic);
             }
-            Err(_) => break,
+            Err(_) => {
+                let next = input.chars().next().unwrap();
+                let (new_input, range) = input.split_at(next.len_utf8());
+                input = new_input;
+                let token = Token::new(TokenKind::Symbol, range);
+                tokens.push(token);
+                diagnostics.push(Diagnostic::IllegalChar(range));
+            }
         }
     }
     // dbg!(&tokens);

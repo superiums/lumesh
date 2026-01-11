@@ -376,7 +376,6 @@ impl PrattParser {
                         })
                     }
                     // "`" => {
-                    //     // 数组字面量 [expr, ...]
                     //     parse_subcommand(input)
                     // }
                     "[" => {

@@ -247,7 +247,7 @@ pub fn run_repl(env: &mut Environment) {
                 continue;
             }
             Err(ReadlineError::Signal(sig)) => {
-                #[cfg(unix)]
+                // #[cfg(unix)]
                 if sig == rustyline::error::Signal::Interrupt {
                     println!("[Interrupt]");
                     if childman::kill_child() {

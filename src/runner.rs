@@ -2,7 +2,7 @@ use lumesh::parse_and_eval;
 use lumesh::runtime::{init_config, run_file};
 use lumesh::{Environment, Expression};
 use std::path::Path;
-use std::path::PathBuf;
+// use std::path::PathBuf;
 
 fn main() {
     // 获取所有命令行参数

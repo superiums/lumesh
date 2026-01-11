@@ -435,7 +435,7 @@ fn is_dir(path: &str) -> bool {
 
     #[cfg(windows)]
     {
-        return path.ends_with("\\") || pathstr.ends_with("/");
+        return path.ends_with("\\") || path.ends_with("/");
     }
 }
 fn extract_parent(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {

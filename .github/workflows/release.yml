@@ -91,6 +91,26 @@ jobs:
           asset_path: doc.zip
           asset_content_type: application/zip
 
+      - name: Upload install.sh
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: install.sh
+          asset_path: docs/install.sh
+          asset_content_type: application/x-sh
+
+      - name: Upload install.bat
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: install.bat
+          asset_path: docs/install.bat
+          asset_content_type: application/bat
+
   release_assets:
     name: Release assets
     needs: [create_release] # 修改点 2：保持与 create_release 的依赖

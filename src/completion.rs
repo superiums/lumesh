@@ -383,6 +383,11 @@ impl ParamCompleter {
             if !current_token.starts_with("-") && self.check_condition(entry, args, current_token) {
                 // 不满足本条opt，则匹配action，并带出长短选项
                 if !self.check_opt(entry, args, current_token) {
+                    // 无ignore file标记，则进行路径补全
+                    if !entry.directives.iter().any(|d| d == "@f") {
+                        return MatchType::File;
+                    }
+
                     if entry.args.iter().any(|x| x.starts_with(current_token)) {
                         if entry.long_opt.is_some() {
                             return MatchType::ArgumentWithLong; //长短皆可，默认？选择？
@@ -587,7 +592,7 @@ impl ParamCompleter {
                             if a.starts_with(current_token) {
                                 v.push(Pair {
                                     display: format!(
-                                        "{:<10} \x1b[96m{:>}\x1b[m\x1b[0m",
+                                        "{:<15} \x1b[96m{:>}\x1b[m\x1b[0m",
                                         a, entry.description
                                     ),
                                     // display: a.clone(),
@@ -687,15 +692,15 @@ fn format_opt(entry: &CompletionEntry) -> String {
 fn format_arg_opt(entry: &CompletionEntry, arg: &String) -> String {
     match (entry.short_opt.as_ref(), entry.long_opt.as_ref()) {
         (Some(s), Some(l)) => format!(
-            "-{:<4} --{:<18} {:10} \x1b[96m{:>}\x1b[m\x1b[0m",
+            "-{:<4} --{:<18} {:15} \x1b[96m{:>}\x1b[m\x1b[0m",
             s, l, arg, entry.description
         ),
         (_, Some(l)) => format!(
-            "      --{:<18} {:10} \x1b[96m{:>}\x1b[m\x1b[0m",
+            "      --{:<18} {:15} \x1b[96m{:>}\x1b[m\x1b[0m",
             l, arg, entry.description
         ),
         (Some(s), _) => format!(
-            "-{:<21} {:10} \x1b[96m{:>}\x1b[m\x1b[0m",
+            "-{:<21} {:15} \x1b[96m{:>}\x1b[m\x1b[0m",
             s, arg, entry.description
         ),
         _ => String::from(arg),

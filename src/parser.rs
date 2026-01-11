@@ -7,8 +7,8 @@ use std::{
 };
 
 use crate::{
-    Diagnostic, Expression, Int, MAX_SYNTAX_RECURSION, SliceParams, SyntaxErrorKind, Token,
-    TokenKind,
+    CFM_ENABLED, Diagnostic, Expression, Int, MAX_SYNTAX_RECURSION, SliceParams, SyntaxErrorKind,
+    Token, TokenKind,
     expression::{CatchType, ChainCall, DestructurePattern, FileSize},
     tokens::{Input, Tokens},
 };
@@ -1688,23 +1688,28 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
         ))),
     )(input)?;
     // if is_single_cmd && input.is_empty() {
-    match expr {
-        Expression::Symbol(s) => Ok((
-            input,
-            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-        )),
-        #[cfg(unix)]
-        Expression::String(s) if s.contains("/") => Ok((
-            input,
-            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-        )),
-        #[cfg(windows)]
-        Expression::String(s) if (s.contains(":\\") || s.contains(".\\")) => Ok((
-            input,
-            Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-        )),
-        _ => Ok((input, expr)),
+    unsafe {
+        if CFM_ENABLED {
+            return match expr {
+                Expression::Symbol(s) => Ok((
+                    input,
+                    Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+                )),
+                #[cfg(unix)]
+                Expression::String(s) if s.contains("/") => Ok((
+                    input,
+                    Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+                )),
+                #[cfg(windows)]
+                Expression::String(s) if (s.contains(":\\") || s.contains(".\\")) => Ok((
+                    input,
+                    Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+                )),
+                _ => Ok((input, expr)),
+            };
+        }
     }
+    Ok((input, expr))
 }
 
 // IF语句解析（支持else if链）

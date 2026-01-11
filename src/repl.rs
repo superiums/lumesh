@@ -57,8 +57,7 @@ pub fn run_repl(env: &mut Environment) {
         _ => println!("Welcome to Lumesh {}", env!("CARGO_PKG_VERSION")),
     }
 
-    // init_config(env);
-    //
+    // history
     let no_history = match env.get("LUME_NO_HISTORY") {
         Some(Expression::Boolean(t)) => {
             env.undefine("LUME_NO_HISTORY");
@@ -89,13 +88,13 @@ pub fn run_repl(env: &mut Environment) {
     // ai config
     let ai_config = env.get("LUME_AI_CONFIG");
     env.undefine("LUME_AI_CONFIG");
+
+    // vi
     let vi_mode = match env.get("LUME_VI_MODE") {
-        Some(Expression::Boolean(true)) => {
-            env.undefine("LUME_AI_CONFIG");
-            true
-        }
+        Some(Expression::Boolean(true)) => true,
         _ => false,
     };
+    env.undefine("LUME_VI_MODE");
 
     // theme
     let theme_base = env.get("LUME_THEME");
@@ -122,6 +121,11 @@ pub fn run_repl(env: &mut Environment) {
         _ => String::from("/usr/share/lumesh/completion"),
     };
     env.undefine("LUME_COMPLETION_DIR");
+    let completion_cycle = match env.get("LUME_COMPLETION_CYCLE") {
+        Some(Expression::Boolean(true)) => true,
+        _ => false,
+    };
+    env.undefine("LUME_COMPLETION_CYCLE");
 
     // 使用 Arc<Mutex> 保护编辑器
     let cfg = EditorConfig {
@@ -129,6 +133,7 @@ pub fn run_repl(env: &mut Environment) {
         vi_mode,
         theme: theme_merged,
         completion_dir,
+        completion_cycle,
     };
     let rl = Arc::new(Mutex::new(new_editor(cfg)));
 
@@ -312,11 +317,17 @@ struct EditorConfig {
     vi_mode: bool,
     theme: HashMap<String, String>,
     completion_dir: String,
+    completion_cycle: bool,
 }
 fn new_editor(cfg: EditorConfig) -> Editor<LumeHelper, FileHistory> {
+    let t = if cfg.completion_cycle {
+        CompletionType::Circular
+    } else {
+        CompletionType::List
+    };
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
-        .completion_type(CompletionType::List)
+        .completion_type(t)
         .edit_mode(if cfg.vi_mode {
             EditMode::Vi
         } else {
@@ -434,7 +445,7 @@ impl LumeHelper {
                     .get_completions_for_context(command, params, current_token);
 
             if trig_file {
-                return self.file_completer.complete(line, section_start, ctx);
+                return self.file_completer.complete(line, pos, ctx);
             }
             // Sort by priority and then by length
             candidates.sort_by(|a, b| a.replacement.cmp(&b.replacement));

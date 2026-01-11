@@ -1,4 +1,9 @@
 # Changelog
+## [0.9.0]
+- fix completion install path
+- allow set completion style
+- match path first if no ignore file tag
+
 ## [0.8.9]
 - optimize completion efficency
 - fix function call err for mod use

@@ -16,7 +16,7 @@ CODEBERG_REPO="santo/lumesh"
 GITHUB_REPO="superiums/lumesh"
 INSTALL_DIR="$HOME/.local/bin"  # Default to user installation
 CONFIG_DIR="$HOME/.config/lumesh"
-DOC_DIR="$HOME/.local/share/lumesh/doc"
+DOC_DIR="$HOME/.local/share/lumesh"
 SYSTEM_INSTALL_DIR="/usr/local/bin"
 # Use sudo for system installation if needed
 sudo_cmd=""

@@ -141,7 +141,7 @@ impl ParamCompleter {
             PathBuf::from("/usr/local/share/lumesh/vendor_completions.d"),
             PathBuf::from("/usr/local/share/lumesh/completions"),
             PathBuf::from("/usr/share/lumesh/vendor_completions.d"),
-            // PathBuf::from("/usr/share/lumesh/completions"),
+            PathBuf::from("/usr/share/lumesh/completions"),
         ];
 
         #[cfg(windows)]

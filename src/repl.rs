@@ -118,7 +118,7 @@ pub fn run_repl(env: &mut Environment) {
     // complition
     let completion_dir = match env.get("LUME_COMPLETION_DIR") {
         Some(Expression::String(c)) => c,
-        _ => String::from("/usr/share/lumesh/completion"),
+        _ => String::from("/usr/share/lumesh/completions"),
     };
     env.undefine("LUME_COMPLETION_DIR");
     let completion_cycle = match env.get("LUME_COMPLETION_CYCLE") {

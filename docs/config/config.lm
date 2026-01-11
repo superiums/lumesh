@@ -51,7 +51,7 @@ if IS_INTERACTIVE {
     # ====== history file
     # let LUME_HISTORY_FILE = '/tmp/lume_histroy'
 
-    let LUME_COMPLETION_DIR = '/tmp/'
+    let LUME_COMPLETION_DIR = '/usr/local/share/lumesh/completions'
 
     # ====== report compute result type and values. default True.
     # let LUME_PRINT_DIRECT= False

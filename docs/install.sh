@@ -32,15 +32,12 @@ ask_install_type() {
 
     case $choice in
         1)
-            INSTALL_DIR="$HOME/.local/bin"
-            CONFIG_DIR="$HOME/.config/lumesh"
-            DOC_DIR="$HOME/.local/share/lumesh/doc"
             echo -e "${GREEN}User installation selected${NC}"
             ;;
         2)
             INSTALL_DIR="$SYSTEM_INSTALL_DIR"
             CONFIG_DIR="/etc/lumesh"
-            DOC_DIR="/usr/local/share/lumesh/doc"
+            DOC_DIR="/usr/local/share/lumesh"
             echo -e "${GREEN}System installation selected${NC}"
             echo -e "${YELLOW}Note: This will require sudo privileges${NC}"
             if [ "$(id -u)" -ne 0 ]; then
@@ -53,9 +50,6 @@ ask_install_type() {
             ;;
         *)
             echo -e "${RED}Invalid choice. Defaulting to user installation.${NC}"
-            INSTALL_DIR="$HOME/.local/bin"
-            CONFIG_DIR="$HOME/.config/lumesh"
-            DOC_DIR="$HOME/.local/share/lumesh/doc"
             ;;
     esac
 }
@@ -380,7 +374,9 @@ main() {
     echo ""
     echo -e "${BLUE}For more information, see:${NC}"
     echo "  https://lumesh.codeberg.page/"
-    echo "Type 'doc' in lume to open doc."
+    echo "Type 'help doc' in lume to open doc."
+    echo " # to check new version"
+    echo "just type 'update()'"
 
 }
 

@@ -129,6 +129,7 @@ impl ParamCompleter {
     pub fn new(base_dir: String) -> Self {
         #[cfg(unix)]
         let base_dirs = vec![
+            PathBuf::from(base_dir),
             dirs::data_local_dir()
                 .unwrap_or_default()
                 .join("lumesh")
@@ -137,13 +138,15 @@ impl ParamCompleter {
                 .unwrap_or_default()
                 .join("lumesh")
                 .join("completions"),
+            PathBuf::from("/usr/local/share/lumesh/vendor_completions.d"),
+            PathBuf::from("/usr/local/share/lumesh/completions"),
             PathBuf::from("/usr/share/lumesh/vendor_completions.d"),
-            PathBuf::from("/usr/share/lumesh/completions"),
-            PathBuf::from(base_dir),
+            // PathBuf::from("/usr/share/lumesh/completions"),
         ];
 
         #[cfg(windows)]
         let base_dirs = vec![
+            PathBuf::from(base_dir),
             dirs::data_local_dir()
                 .unwrap_or_default()
                 .join("lumesh")
@@ -154,7 +157,6 @@ impl ParamCompleter {
                 .join("completions"),
             PathBuf::from("C:\\Program Files\\lumesh\\vendor_completions"),
             PathBuf::from("C:\\Program Files\\lumesh\\completions"),
-            PathBuf::from(base_dir),
         ];
         Self {
             // entries: HashMap::new(),

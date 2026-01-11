@@ -1,6 +1,7 @@
 # Changelog
 ## [0.9.0]
 - fix completion install path
+- only parse single symbol as command when 
 - allow set completion style
 - match path first if no ignore file tag
 

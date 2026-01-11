@@ -55,21 +55,21 @@ jobs:
 
       - name: Generate docs
         run: |
-          mkdir -p doc/install
-          cp CHANGELOG.md doc/
-          cp README.md doc/
-          cp docs/INS_README.md doc/
-          cp docs/RULE.md doc/
-          cp -r docs/config doc/
-          cp -r docs/unprocessed doc/
-          cp -r docs/mods doc/install
-          cp -r docs/completions doc/install
-          cp LICENSE doc/install
+          mkdir -p tmp/doc/install
+          cp CHANGELOG.md tmp/doc/
+          cp README.md tmp/doc/
+          cp docs/INS_README.md tmp/doc/
+          cp docs/RULE.md tmp/doc/
+          cp -r docs/config tmp/doc/
+          cp -r docs/unprocessed tmp/doc/
+          cp -r docs/mods tmp/doc/install
+          cp -r docs/completions tmp/doc/install
+          cp LICENSE tmp/doc/install
 
       - name: Create compressed files
         run: |
-          tar -czvf doc.tar.gz -C doc .
-          zip -r doc.zip doc/*
+          tar -czvf doc.tar.gz -C tmp doc
+          zip -r doc.zip tmp/doc/*
 
       - name: Upload docs
         uses: actions/upload-release-asset@v1

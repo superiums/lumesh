@@ -90,6 +90,7 @@ echo   Script execution: lume-se script.lm
 echo   Documentation: %DOC_DIR%
 echo.
 echo Online documentation: https://lumesh.codeberg.page
+echo Type 'doc' in lume to open doc.
 echo.
 echo Note: Add %INSTALL_DIR% to your PATH if not already present
 pause

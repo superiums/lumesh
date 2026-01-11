@@ -18,6 +18,8 @@ INSTALL_DIR="$HOME/.local/bin"  # Default to user installation
 CONFIG_DIR="$HOME/.config/lumesh"
 DOC_DIR="$HOME/.local/share/lumesh/doc"
 SYSTEM_INSTALL_DIR="/usr/local/bin"
+# Use sudo for system installation if needed
+sudo_cmd=""
 
 # Ask for installation type
 ask_install_type() {
@@ -41,6 +43,13 @@ ask_install_type() {
             DOC_DIR="/usr/local/share/lumesh/doc"
             echo -e "${GREEN}System installation selected${NC}"
             echo -e "${YELLOW}Note: This will require sudo privileges${NC}"
+            if [ "$(id -u)" -ne 0 ]; then
+                if command -v sudo >/dev/null 2>&1; then
+                    sudo_cmd="sudo"
+                elif command -v doas >/dev/null 2>&1; then
+                    sudo_cmd="doas"
+                fi
+            fi
             ;;
         *)
             echo -e "${RED}Invalid choice. Defaulting to user installation.${NC}"
@@ -113,11 +122,6 @@ download_from_codeberg() {
 
     echo -e "${BLUE}Downloading $binary_name from Codeberg...${NC}"
 
-    # Use sudo for system installation if needed
-    local sudo_cmd=""
-    if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ] && [ "$(id -u)" -ne 0 ]; then
-        sudo_cmd="sudo"
-    fi
 
     if command -v curl >/dev/null 2>&1; then
         $sudo_cmd curl -L -o "$INSTALL_DIR/$binary_name" "$download_url"
@@ -145,11 +149,6 @@ download_from_github() {
     echo -e "${BLUE}Downloading $binary_name from GitHub...${NC}"
 
     # Use sudo for system installation if needed
-    local sudo_cmd=""
-    if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ] && [ "$(id -u)" -ne 0 ]; then
-        sudo_cmd="sudo"
-    fi
-
     if command -v curl >/dev/null 2>&1; then
         $sudo_cmd curl -L -o "$INSTALL_DIR/$binary_name" "$download_url"
     elif command -v wget >/dev/null 2>&1; then
@@ -169,7 +168,7 @@ download_binaries() {
     if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ]; then
         if [ "$(id -u)" -ne 0 ]; then
             echo -e "${BLUE}Creating system directory with sudo...${NC}"
-            sudo mkdir -p "$INSTALL_DIR"
+            $sudo_cmd mkdir -p "$INSTALL_DIR"
         else
             mkdir -p "$INSTALL_DIR"
         fi
@@ -202,11 +201,6 @@ create_symlink() {
     local lumesh_link="$INSTALL_DIR/lumesh"
 
     # Use sudo for system installation if needed
-    local sudo_cmd=""
-    if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ] && [ "$(id -u)" -ne 0 ]; then
-        sudo_cmd="sudo"
-    fi
-
     # Remove existing link if it exists
     if [ -L "$lumesh_link" ]; then
         $sudo_cmd rm "$lumesh_link"
@@ -240,11 +234,6 @@ download_docs() {
     echo -e "${BLUE}Downloading documentation...${NC}"
 
     # Use sudo for system installation if needed
-    local sudo_cmd=""
-    if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ] && [ "$(id -u)" -ne 0 ]; then
-        sudo_cmd="sudo"
-    fi
-
     $sudo_cmd mkdir -p "$DOC_DIR"
     local doc_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/doc.tar.gz"
 
@@ -383,4 +372,16 @@ main() {
     echo -e "${GREEN}Installation completed successfully!${NC}"
     echo -e "${BLUE}Installation location: $INSTALL_DIR${NC}"
     echo -e "${BLUE}To start using Lumesh:${NC}"
-    echo "
+    echo "  # Start interactive shell"
+    echo "  lume"
+    echo ""
+    echo "  # Or execute a script"
+    echo "  lumesh script.lm"
+    echo ""
+    echo -e "${BLUE}For more information, see:${NC}"
+    echo "  https://lumesh.codeberg.page/"
+    echo "Type 'doc' in lume to open doc."
+
+}
+
+main "$@"

@@ -42,22 +42,22 @@ steps:
   build_docs:
     image: alpine:latest
     commands:
-      - mkdir -p doc/install
-      - cp CHANGELOG.md doc/
-      - cp README.md doc/
-      - cp docs/INS_README.md doc/
-      - cp docs/RULE.md doc/
-      - cp -r docs/config doc/
-      - cp -r docs/unprocessed doc/
-      - cp -r docs/mods doc/install
-      - cp -r docs/completions doc/install
-      - cp LICENSE doc/install
+      - mkdir -p tmp/doc/install
+      - cp CHANGELOG.md tmp/doc/
+      - cp README.md tmp/doc/
+      - cp docs/INS_README.md tmp/doc/
+      - cp docs/RULE.md tmp/doc/
+      - cp -r docs/config tmp/doc/
+      - cp -r docs/unprocessed tmp/doc/
+      - cp -r docs/mods tmp/doc/install
+      - cp -r docs/completions tmp/doc/install
+      - cp LICENSE tmp/doc/install
 
       - cp docs/install.sh .
       - cp docs/install.bat .
-      - tar -czvf doc.tar.gz -C doc .
+      - tar -czvf doc.tar.gz -C tmp doc
       # - apk add zip
-      # - zip -r doc.zip doc/*
+      # - zip -r doc.zip tmp/doc/*
     depends_on: [create_release]
 
   publish_doc:

@@ -246,9 +246,9 @@ pub fn run_repl(env: &mut Environment) {
                 // state::set_signal(); // 更新共享状态
                 continue;
             }
-            Err(ReadlineError::Signal(sig)) => {
-                // #[cfg(unix)]
-                if sig == rustyline::error::Signal::Interrupt {
+            Err(ReadlineError::Signal(_sig)) => {
+                #[cfg(unix)]
+                if _sig == rustyline::error::Signal::Interrupt {
                     println!("[Interrupt]");
                     if childman::kill_child() {
                         childman::clear_child();

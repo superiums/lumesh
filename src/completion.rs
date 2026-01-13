@@ -131,13 +131,11 @@ impl ParamCompleter {
         let base_dirs = vec![
             PathBuf::from(base_dir),
             dirs::data_local_dir()
-                .unwrap_or_default()
-                .join("lumesh")
-                .join("vendor_completions"),
+                .unwrap_or(PathBuf::from("~/.local/share"))
+                .join("lumesh/vendor_completions"),
             dirs::data_local_dir()
-                .unwrap_or_default()
-                .join("lumesh")
-                .join("completions"),
+                .unwrap_or(PathBuf::from("~/.local/share"))
+                .join("lumesh/completions"),
             PathBuf::from("/usr/local/share/lumesh/vendor_completions.d"),
             PathBuf::from("/usr/local/share/lumesh/completions"),
             PathBuf::from("/usr/share/lumesh/vendor_completions.d"),
@@ -149,12 +147,10 @@ impl ParamCompleter {
             PathBuf::from(base_dir),
             dirs::data_local_dir()
                 .unwrap_or_default()
-                .join("lumesh")
-                .join("vendor_completions"),
+                .join("lumesh\\vendor_completions"),
             dirs::data_local_dir()
                 .unwrap_or_default()
-                .join("lumesh")
-                .join("completions"),
+                .join("lumesh\\completions"),
             PathBuf::from("C:\\Program Files\\lumesh\\vendor_completions"),
             PathBuf::from("C:\\Program Files\\lumesh\\completions"),
         ];

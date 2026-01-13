@@ -17,8 +17,10 @@ pub enum RuntimeErrorKind {
     CannotApply(String, Expression),
     #[error("symbol `{0}` not defined")]
     SymbolNotDefined(String),
-    #[error("symbol `{0}` is not a module, but a `{1}` in {2}")]
-    SymbolNotModule(String, String, Cow<'static, str>),
+    #[error("symbol `{0}` not defined in module {1}\npath trace: {2}")]
+    SymbolNotDefinedInModule(String, String, String),
+    #[error("symbol `{0}` is not a module, but a `{1}` in {2}\npath trace: {3}")]
+    SymbolNotModule(String, String, Cow<'static, str>, String),
     #[error("command `{0}` failed with args:\n  {1:?}")]
     CommandFailed(String, Vec<Expression>),
     #[error("command `{0}` failed:\n  {1}")]
@@ -63,8 +65,10 @@ pub enum RuntimeErrorKind {
     MethodNotFound(Cow<'static, str>, Cow<'static, str>),
     // #[error("module `{0}` not found")]
     // ModuleNotFound(Cow<'static, str>),
+    #[error("module `{0}` not defined in `{1}`\npath trace: {2}")]
+    NoModuleDefined(String, String, String),
     #[error("no lib defined for {1} during {2}:\n `{0}`")]
-    NoModuleDefined(String, Cow<'static, str>, Cow<'static, str>),
+    NoLibDefined(String, Cow<'static, str>, Cow<'static, str>),
     #[error("not a callable function: `{0}`")]
     NotAFunction(String),
     #[error("type error, expected `{expected}`, found `{found}`:\n  {sym}")]

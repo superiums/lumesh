@@ -101,7 +101,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         String::from("import") => Expression::builtin("import", import, "evaluate file in new env", "<path>"),
 
         // Help system
-        String::from("help") => Expression::builtin("help", help, "display lib modules", "[module]")
+        String::from("help") => Expression::builtin("help", help, "display help", "[module]")
     }
 }
 fn help(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
@@ -119,8 +119,8 @@ fn help(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
                 pretty_printer(&Expression::from(m))?;
                 println!("\njust use them directly anywhere!");
             }
-            "libs" | "modules" => {
-                println!("Modules List\n");
+            "libs" => {
+                println!("Builtin Library List\n");
                 let m = super::get_builtin_map()
                     .iter()
                     .filter_map(|item| match item.1 {
@@ -133,9 +133,9 @@ fn help(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
                     })
                     .collect::<HashMap<String, Expression>>();
                 pretty_printer(&Expression::from(m))?;
-                println!("\ntype `help <module-name>` to list functions of the module.");
+                println!("\ntype `help <lib-name>` to list functions of the lib.");
                 println!("\n\nUsage:");
-                println!("\n    <module-name>.<function-name> params");
+                println!("\n    <lib-name>.<function-name> params");
                 println!("\nExample:");
                 println!("\n    String.green hi");
                 println!("\n    String.green(hi)");
@@ -148,11 +148,11 @@ fn help(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
                         .next()
                         .is_some_and(|f| f.1.is_ascii_uppercase())
                     {
-                        println!("Functions for module {mo}\n");
+                        println!("Functions for lib {mo}\n");
                         pretty_printer(m)?;
                         println!("\ntype `{mo}.<function-name>` to see details of the function");
-                        println!("\ntype `{mo}.<tab>`           to cycle functions in the module");
-                        println!("\ntype `{mo}. <tab>`          to popup functions in the module");
+                        println!("\ntype `{mo}.<tab>`           to cycle functions in the lib");
+                        println!("\ntype `{mo}. <tab>`          to popup functions in the lib");
                     } else {
                         pretty_printer(m)?; //for top funcs
                         println!("\nit's a top level function. just use it directly anywhere!");
@@ -165,13 +165,10 @@ fn help(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
             let mut stdout = std::io::stdout().lock();
             writeln!(&mut stdout, "\nWelcome to Lumesh help center")?;
             writeln!(&mut stdout, "=================\n")?;
+            writeln!(&mut stdout, "type `help libs`         to list libs.")?;
             writeln!(
                 &mut stdout,
-                "type `help libs/modules`         to list libs/modules."
-            )?;
-            writeln!(
-                &mut stdout,
-                "type `help <module-name>`        to list functions of the module."
+                "type `help <module-name>`        to list functions of the lib."
             )?;
             writeln!(
                 &mut stdout,

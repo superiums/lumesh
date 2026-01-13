@@ -169,7 +169,7 @@ impl Expression {
                 // // 使用别名或模块名作为键，存储为Map
                 // let module_name = alias.as_ref().unwrap_or(module_path);
                 // let module_map = Expression::HMap(Rc::new(module_info.functions));
-                let (module_name, module_map) = use_module(alias, module_path, env, 0)?;
+                let (module_name, module_map) = use_module(alias, module_path, env)?;
                 // dbg!(&module_map);
                 env.define(&module_name, module_map);
                 Ok(Expression::None)

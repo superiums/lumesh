@@ -12,23 +12,40 @@ pub fn use_module<'a>(
     alias: &'a Option<String>,
     module_path: &'a str,
     env: &mut Environment,
+) -> Result<(Cow<'a, str>, Expression), RuntimeError> {
+    // 获取基础路径
+    let base = match env.get("SCRIPT") {
+        Some(Expression::String(s)) => s,
+        _ => String::from("."),
+    };
+    let cwd = Path::new(&base);
+    use_module_wrap(alias, module_path, cwd, env, 0)
+}
+pub fn use_module_wrap<'a>(
+    alias: &'a Option<String>,
+    module_path: &'a str,
+    base: &Path,
+    env: &mut Environment,
     use_depth: usize,
 ) -> Result<(Cow<'a, str>, Expression), RuntimeError> {
-    let module_info = load_module(module_path, env)?;
+    let (module_info, parent_file) = load_module(module_path, base, env)?;
     let mut map = module_info.functions;
 
-    // 递归use语句
-    // let mut already = HashSet::new();
-    for (ua, up) in module_info.use_statements.iter() {
-        // 避免循环调用
-        if use_depth < MAX_USEMODE_RECURSION {
-            // if already.len() < MAX_USEMODE_RECURSION {
-            // 允许重复调用,但给出提示
-            // if !already.insert(ua){
-            //     eprintln!()
-            // }
-            let (na, np) = use_module(ua, up, env, use_depth + 1)?;
-            map.insert(na.into(), np);
+    if !module_info.use_statements.is_empty() {
+        let cwd = parent_file.parent().unwrap_or(base);
+        // 递归use语句
+        // let mut already = HashSet::new();
+        for (ua, up) in module_info.use_statements.iter() {
+            // 避免循环调用
+            if use_depth < MAX_USEMODE_RECURSION {
+                // if already.len() < MAX_USEMODE_RECURSION {
+                // 允许重复调用,但给出提示
+                // if !already.insert(ua){
+                //     eprintln!()
+                // }
+                let (na, np) = use_module_wrap(ua, up, cwd, env, use_depth + 1)?;
+                map.insert(na.into(), np);
+            }
         }
     }
 
@@ -36,25 +53,28 @@ pub fn use_module<'a>(
     let module_name = get_module_name_from_path(&alias, module_path)?;
     Ok((module_name, Expression::from(map)))
 }
-pub fn load_module(file_path: &str, env: &mut Environment) -> Result<ModuleInfo, RuntimeError> {
-    let mod_file = find_module_file(file_path, env)?;
-    read_module_file(mod_file, env)
+fn load_module(
+    file_path: &str,
+    cwd: &Path,
+    env: &mut Environment,
+) -> Result<(ModuleInfo, PathBuf), RuntimeError> {
+    let mod_file = find_module_file(file_path, cwd, env)?;
+    Ok((read_module_file(&mod_file, env)?, mod_file))
 }
-pub fn find_module_file(file_path: &str, env: &mut Environment) -> Result<PathBuf, RuntimeError> {
-    // 获取基础路径
-    let base = match env.get("SCRIPT") {
-        Some(Expression::String(script)) => script,
-        _ => ".".to_string(),
-    };
-    let cwd = Path::new(&base).parent().unwrap_or(Path::new("."));
-
+fn find_module_file(
+    file_path: &str,
+    cwd: &Path,
+    env: &mut Environment,
+) -> Result<PathBuf, RuntimeError> {
     // 构建文件名（统一处理扩展名和路径）
     let file = Path::new(expand_home(file_path).as_ref()).with_extension("lm");
 
     // 预构建所有候选路径
     let lib = match env.get("LUME_MODULES_PATH") {
         Some(Expression::String(mo)) => Path::new(&mo).to_path_buf(),
-        _ => dirs::data_local_dir().unwrap_or(Path::new(".").to_path_buf()),
+        _ => dirs::data_local_dir()
+            .unwrap_or(PathBuf::from("~/.local/share"))
+            .join("lumesh/mods"),
     };
 
     let candidate_paths = vec![
@@ -72,19 +92,19 @@ pub fn find_module_file(file_path: &str, env: &mut Environment) -> Result<PathBu
         })
         .ok_or_else(|| {
             RuntimeError::common(
-                format!("module `{file_path}` not found").into(),
+                format!("module `{file_path}` not found in:\n{:?}", candidate_paths).into(),
                 Expression::String(file.to_string_lossy().into()),
                 0,
             )
         })?;
     Ok(mod_file)
 }
-pub fn read_module_file(
-    mod_file: PathBuf,
+fn read_module_file(
+    mod_file: &PathBuf,
     _env: &mut Environment,
 ) -> Result<ModuleInfo, RuntimeError> {
     // 读取并解析模块文件
-    let module_content = match read_to_string(&mod_file) {
+    let module_content = match read_to_string(mod_file) {
         Ok(content) => content,
         Err(e) => {
             return Err(RuntimeError::from_io_error(

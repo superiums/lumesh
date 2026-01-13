@@ -118,37 +118,6 @@ if IS_INTERACTIVE {
     alias fdirname = Fs.dir_name()
     alias doc = xdg-open https://lumesh.codeberg.page
 
-    # ===== check update
-    fn update(){
-        println 'checking latest version...'
-        let url = 'https://codeberg.org/santo/lumesh/releases/latest'
-        let ver = (curl $url ?: eprintln 'network err' && exit |  Regex.find(r'\d[\d\.]+').found ?: '0')
-        let latest = ($ver.split('.').join('').to_int() ?: 0)
-        if $latest > 0 {
-          let current = (About | .get('version'))
-          current = $current.split('.').join('').to_int()
-          if $latest > $current {
-              print 'Found new version: ' $ver.green()
-              if Ui.confirm('download [normal edition for linux] now?') {
-                  let tmp = /tmp/lume
-                  curl -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
-                  chmod '+x' /tmp/lume
-                  let dest = About | .get('bin')
-                  bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`
-                  println 'finished'
-              } else {
-                  println 'you may download it manually:' $url
-              }
-          } else {
-              println 'Already newest'.yellow()
-          }
-        } else {
-          eprintln 'version check failed.'
-        }
-    }
-    # uncomment this if you want to check update automaticlly.
-    # update()
-
     fn set_as_login_shell(){
         let p = (About | .get('bin'))
         if Fs.read(/etc/shells) !~: $p {
@@ -168,7 +137,7 @@ if IS_INTERACTIVE {
 PATH = '~/.local/bin:' + $PATH
 # IFS affect: 0:never; 2:cmd args; 4:for; 8:string.split; 16:csv; 32:pick; 62:all
 let LUME_IFS_MODE=2
-# let LUME_MODULES_PATH=/tmp/mod
+# let LUME_MODULES_PATH=~/.local/share/lumesh/mods
 # let LUME_MAX_SYNTAX_RECURSION = 100
 # let LUME_MAX_RUNTIME_RECURSION = 800
 let concat = (x, y) -> (Into.str x) + (Into.str y)

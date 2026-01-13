@@ -303,6 +303,7 @@ impl Expression {
                             leading.to_string(),
                             x.type_name(),
                             "current module".into(),
+                            "".to_string(),
                         ),
                         self.clone(),
                         depth,
@@ -330,6 +331,7 @@ impl Expression {
                                 domain.to_string(),
                                 x.type_name(),
                                 domains[index].to_string().into(),
+                                domains.join("->"),
                             ),
                             self.clone(),
                             depth,
@@ -337,10 +339,11 @@ impl Expression {
                     }
                     _ => {
                         return Err(RuntimeError::new(
-                            RuntimeErrorKind::SymbolNotDefined(format!(
-                                "{} in module {}",
-                                leading, domains[index]
-                            )),
+                            RuntimeErrorKind::NoModuleDefined(
+                                domain.to_owned(),
+                                domains[index].to_string(),
+                                domains.join("->"),
+                            ),
                             self.clone(),
                             depth,
                         ));
@@ -356,11 +359,11 @@ impl Expression {
                 return Ok(func.clone());
             } else {
                 return Err(RuntimeError::new(
-                    RuntimeErrorKind::SymbolNotDefined(format!(
-                        "{} in module {}",
-                        name,
-                        domains.last().unwrap()
-                    )),
+                    RuntimeErrorKind::SymbolNotDefinedInModule(
+                        name.to_owned(),
+                        domains.last().unwrap().to_owned(),
+                        domains.join("->"),
+                    ),
                     self.clone(),
                     depth,
                 ));
@@ -669,7 +672,7 @@ impl Expression {
                         }
                         None => {
                             // 尝试内置方法
-                            self.eval_module_method(
+                            self.eval_lib_method(
                                 "Map".into(),
                                 method,
                                 &call.args,
@@ -702,7 +705,7 @@ impl Expression {
                         }
                         None => {
                             // 尝试内置方法
-                            self.eval_module_method(
+                            self.eval_lib_method(
                                 "Map".into(),
                                 method,
                                 &call.args,
@@ -715,8 +718,8 @@ impl Expression {
                     }
                 }
                 // 对于其他类型，查找内置方法
-                o => match o.get_module_name() {
-                    Some(mo_name) => self.eval_module_method(
+                o => match o.get_belong_lib_name() {
+                    Some(mo_name) => self.eval_lib_method(
                         mo_name,
                         method,
                         &call.args,
@@ -726,7 +729,7 @@ impl Expression {
                         depth,
                     ),
                     _ => Err(RuntimeError::new(
-                        RuntimeErrorKind::NoModuleDefined(
+                        RuntimeErrorKind::NoLibDefined(
                             current_base.to_string(),
                             current_base.type_name().into(),
                             "eval_chain".into(),
@@ -743,7 +746,7 @@ impl Expression {
     }
 
     #[inline]
-    pub fn eval_module_method(
+    pub fn eval_lib_method(
         &self,
         module: Cow<'static, str>,
         call_method: &str,
@@ -788,7 +791,7 @@ impl Expression {
             }
 
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::NoModuleDefined(
+                RuntimeErrorKind::NoLibDefined(
                     current_base.to_string(),
                     current_base.type_name().into(),
                     "eval_module_method".into(),

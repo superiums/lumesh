@@ -762,8 +762,8 @@ impl Expression {
                                 "|" => {
                                     return match rhs.as_ref() {
                                         Expression::PipeMethod(method, args) => {
-                                            match left_output.get_module_name() {
-                                                Some(mo_name) => self.eval_module_method(
+                                            match left_output.get_belong_lib_name() {
+                                                Some(mo_name) => self.eval_lib_method(
                                                     mo_name,
                                                     method,
                                                     args,
@@ -773,7 +773,7 @@ impl Expression {
                                                     depth,
                                                 ),
                                                 _ => Err(RuntimeError::new(
-                                                    RuntimeErrorKind::NoModuleDefined(
+                                                    RuntimeErrorKind::NoLibDefined(
                                                         left_output.to_string(),
                                                         left_output.type_name().into(),
                                                         "eval pipe".into(),

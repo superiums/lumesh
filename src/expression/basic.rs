@@ -722,7 +722,7 @@ impl Expression {
     }
 
     /// 类型名称
-    pub fn get_module_name(&self) -> Option<Cow<'static, str>> {
+    pub fn get_belong_lib_name(&self) -> Option<Cow<'static, str>> {
         match self {
             Self::List(_) | Self::Range(..) => Some("List".into()),
             Self::Map(_) | Self::HMap(_) => Some("Map".into()),

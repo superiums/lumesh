@@ -65,7 +65,7 @@ pub fn get_module_map() -> HashMap<String, Expression> {
         // Shell control
         String::from("exit") => Expression::builtin("exit", exit, "exit the shell", "[status]"),
         String::from("cd") => Expression::builtin("cd", cd, "change directories", "[path]"),
-        String::from("pwd") => Expression::builtin("pwd", pwd, "print working directory", ""),
+        String::from("cwd") => Expression::builtin("cwd", pwd, "print current working directory", ""),
         // env control
         String::from("set") => Expression::builtin("set", set_builtin, "define a variable in root environment", "<var> <val>"),
         String::from("unset") => Expression::builtin("unset", unset_builtin, "undefine a variable in root environment", "<var>"),

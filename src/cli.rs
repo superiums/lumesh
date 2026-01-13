@@ -1,4 +1,4 @@
-#![allow(clippy::wildcard_in_or_patterns)]
+// #![allow(clippy::wildcard_in_or_patterns)]
 
 // mod binary;
 use clap::Parser;

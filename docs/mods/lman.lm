@@ -1,4 +1,6 @@
-    # ===== check update
+    ##### lumesh manager
+
+    ### check update
     fn update(){
         println 'checking latest version...'
         let url = 'https://codeberg.org/santo/lumesh/releases/latest'
@@ -25,4 +27,14 @@
         } else {
           eprintln 'version check failed.'
         }
+    }
+
+    ### set as login shell
+    fn chsh(){
+        let p = (About | .get('bin'))
+        if Fs.read(/etc/shells) !~: $p {
+            sudo lume -c `Fs.append /etc/shells "\n$p"` ?: doas lume -c `Fs.append /etc/shells "\n$p"`
+        }
+        println `chsh -s $p`
+        chsh -s $p
     }

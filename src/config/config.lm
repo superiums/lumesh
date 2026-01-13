@@ -118,15 +118,6 @@ if IS_INTERACTIVE {
     alias fdirname = Fs.dir_name()
     alias doc = xdg-open https://lumesh.codeberg.page
 
-    fn set_as_login_shell(){
-        let p = (About | .get('bin'))
-        if Fs.read(/etc/shells) !~: $p {
-            sudo lume -c `Fs.append /etc/shells "\n$p"` ?: doas lume -c `Fs.append /etc/shells "\n$p"`
-        }
-        println `chsh -s $p`
-        chsh -s $p
-    }
-
 }
 # else {
 # ========== config for script mode ==========

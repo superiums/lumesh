@@ -151,19 +151,44 @@ impl PrattParser {
                 TokenKind::OperatorInfix => {
                     // 中缀运算符 (. .. @)
                     input = input.skip_n(1);
-                    let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX,depth)?;
-                    input = new_input;
+                    // let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX,depth)?;
+                    // input = new_input;
                     match operator {
-                        "@" => lhs = Expression::Index(Rc::new(lhs), Rc::new(rhs)),
-                        // "::" => lhs = {
-                        //     let (input,args) = parse_args(input, depth+1)?;
-                        //     Expression::ModuleCall(Rc::new(lhs), Rc::new(rhs),args)
-                        // },
+                        "@" => {
+                            let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX,depth)?;
+                        input = new_input;
+                        lhs = Expression::Index(Rc::new(lhs), Rc::new(rhs))},
+                        "::" =>  {
+                            match lhs {
+                                Expression::Symbol(name) => {
+                                    let (new_input, mut modes) = many0(terminated( parse_symbol_string,text("::")))(input)?;
+                                    // separated_list0(text("::"), parse_symbol_string)(input)?;
+                                    input=new_input;
+                                    // let func=modes.pop().ok_or(rhs);
+                                    modes.insert(0,name);
+                                    // funcname
+                                    let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX,depth)?;
+                                    input = new_input;
+                                   lhs= Expression::ModuleCall(modes, Rc::new(rhs)) ;
+                                }
+                                _ => {
+                                    return Err(SyntaxErrorKind::failure(
+                                        input.get_str_slice(),
+                                        "symbol",
+                                        Some(format!("{lhs:?}")),
+                                        Some("module name should be a symbol"),
+                                    ))
+                                }
+                            }
+
+                        },
 
                         // "..." => {
                         //     lhs = Expression::BinaryOp("...".into(), Rc::new(lhs), Rc::new(rhs))
                         // }
                         "..." | "...<" | ".." | "..<" => {
+                            let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX,depth)?;
+                            input = new_input;
                             let (nnew_input, exprs) = opt(preceded(
                                 text(":"),
                                 cut(alt((parse_symbol, parse_integer,parse_variable))),
@@ -232,7 +257,7 @@ impl PrattParser {
                     // dbg!(&lhs, operator, input);
                     // 后缀运算符 (函数调用、数组索引等)
                     (input, lhs) = Self::build_postfix_ast(lhs, operator.to_string(), input,depth)?;
-                    //dbg!(&input, &lhs);
+                    // dbg!(&input, &lhs);
                 }
                 TokenKind::Symbol
                 | TokenKind::StringLiteral
@@ -1791,12 +1816,6 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
     let branches = expr_map.into_iter().collect::<Vec<_>>();
     Ok((input, Expression::Match(Rc::new(target), Rc::new(branches))))
 }
-
-// ================== 条件运算符?: ==================
-
-// 条件运算符处理
-
-// 一元运算符具体实现
 
 // ================== 辅助函数 ==================
 // 动态识别块或表达式

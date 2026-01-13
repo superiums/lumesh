@@ -13,7 +13,7 @@ use std::io::Write;
 use std::rc::Rc;
 
 #[derive(Debug, Clone)]
-pub struct State(u8, Option<Expression>);
+pub struct State(u8, Option<Expression>, Vec<String>);
 
 impl Default for State {
     fn default() -> Self {
@@ -32,9 +32,9 @@ impl State {
     // 创建一个新的 State 实例
     pub fn new(strict: bool) -> Self {
         if strict {
-            State(State::STRICT, None)
+            State(State::STRICT, None, Vec::new())
         } else {
-            State(0, None)
+            State(0, None, Vec::new())
         }
     }
 
@@ -61,6 +61,26 @@ impl State {
         let p = self.1.clone();
         self.1 = None;
         p
+    }
+}
+
+impl State {
+    pub fn extend_lookup_domains(&mut self, domains: &Vec<String>) {
+        self.2.extend_from_slice(domains);
+    }
+    pub fn truncate_lookup_domains(&mut self, size: usize) {
+        self.2.truncate(self.2.len() - size);
+    }
+    // pub fn push_lookup_domain(&mut self, domain: String) {
+    //     self.2.push(domain);
+    // }
+
+    // pub fn pop_lookup_domain(&mut self) {
+    //     self.2.pop();
+    // }
+
+    pub fn get_lookup_domains(&self) -> &Vec<String> {
+        &self.2
     }
 }
 
@@ -158,10 +178,33 @@ impl Expression {
                     if state.contains(State::STRICT) {
                         return Ok(job.clone());
                     } else {
-                        return match env.get(name) {
-                            Some(expr) => Ok(expr),
-                            None => Ok(job.clone()),
-                        };
+                        return self.eval_symbo_with_domain(name, state, env, depth);
+                        // let domains = state.get_lookup_domains();
+                        // if domains.is_empty() {
+                        //     return match env.get(name) {
+                        //         Some(expr) => Ok(expr),
+                        //         None => Ok(job.clone()),
+                        //     };
+                        // } else {
+                        //     if let Some(Expression::HMap(root)) =
+                        //         env.get(domains.first().unwrap()).as_ref()
+                        //     {
+                        //         let mut node = root;
+                        //         // if let Expression::HMap(mut node) = nodeexp {
+                        //         for domain in domains.iter().skip(1) {
+                        //             if let Some(Expression::HMap(n)) = node.get(domain) {
+                        //                 // if let Expression::HMap(n) = n_exp {
+                        //                 node = n
+                        //                 // }
+                        //             }
+                        //         }
+                        //         return match node.get(name) {
+                        //             Some(expr) => Ok(expr.clone()),
+                        //             None => Ok(job.clone()),
+                        //         };
+                        //         // }
+                        //     }
+                        // }
                     }
                 }
                 Self::StringTemplate(template) => {

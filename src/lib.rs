@@ -50,6 +50,7 @@ pub mod utils;
 // pub use utils::abs;
 // pub use utils::canon;
 pub mod completion;
+pub mod modman;
 // pub mod excutor;
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -59,3 +60,4 @@ pub static mut CFM_ENABLED: bool = false;
 // pub static mut ENV: Environment = Environment::new();
 pub static mut MAX_RUNTIME_RECURSION: usize = 800;
 pub static mut MAX_SYNTAX_RECURSION: usize = 100;
+pub static MAX_USEMODE_RECURSION: usize = 100;

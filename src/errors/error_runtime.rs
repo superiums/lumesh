@@ -17,6 +17,8 @@ pub enum RuntimeErrorKind {
     CannotApply(String, Expression),
     #[error("symbol `{0}` not defined")]
     SymbolNotDefined(String),
+    #[error("symbol `{0}` is not a module, but a `{1}` in {2}")]
+    SymbolNotModule(String, String, Cow<'static, str>),
     #[error("command `{0}` failed with args:\n  {1:?}")]
     CommandFailed(String, Vec<Expression>),
     #[error("command `{0}` failed:\n  {1}")]
@@ -61,7 +63,7 @@ pub enum RuntimeErrorKind {
     MethodNotFound(Cow<'static, str>, Cow<'static, str>),
     // #[error("module `{0}` not found")]
     // ModuleNotFound(Cow<'static, str>),
-    #[error("no module defined for {1} during {2}:\n `{0}`")]
+    #[error("no lib defined for {1} during {2}:\n `{0}`")]
     NoModuleDefined(String, Cow<'static, str>, Cow<'static, str>),
     #[error("not a callable function: `{0}`")]
     NotAFunction(String),

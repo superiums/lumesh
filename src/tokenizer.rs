@@ -101,12 +101,12 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        infix_tag("..."),  //extend range
-        infix_tag("...<"), //extend range
-        infix_tag(".."),   //range
-        infix_tag("..<"),  //range
-        infix_tag("@"),    //index
-                           // infix_tag("::"),   //module call,becareful with a[1::2]
+        infix_tag("..."),     //extend range
+        infix_tag("...<"),    //extend range
+        infix_tag(".."),      //range
+        infix_tag("..<"),     //range
+        infix_tag("@"),       //index
+        word_infix_tag("::"), //module call,becareful with a[1::2]
     ))(input)
 }
 fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -1082,6 +1082,21 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
         input
             .strip_prefix(keyword)
             .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric()))
+            .ok_or(NOT_FOUND)
+    }
+}
+/// parse tag between words only
+fn word_infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input
+            .previous_char()
+            .is_none_or(|c| !c.is_ascii_alphabetic())
+        {
+            return Err(NOT_FOUND);
+        }
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphabetic()))
             .ok_or(NOT_FOUND)
     }
 }

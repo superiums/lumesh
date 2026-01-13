@@ -376,7 +376,12 @@ impl Mul for Expression {
             // string
             (Self::String(m), Self::Integer(n)) => {
                 // 将字符串重复 n 次
-                Ok(Self::String(m.repeat(n as usize)))
+                let nn = n as usize;
+                if nn > 0 && nn < usize::MAX {
+                    Ok(Self::String(m.repeat(nn)))
+                } else {
+                    Ok(Self::None)
+                }
             }
 
             // list

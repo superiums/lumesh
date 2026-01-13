@@ -283,7 +283,9 @@ impl Expression {
                         .join(" ")
                 )
             }
-
+            Self::ModuleCall(mo, func) => {
+                write!(f, "{}::{}", mo.join("::"), func)
+            }
             // 索引和切片
             Self::Index(l, r) => {
                 l.fmt_display_indent(f, 0)?;
@@ -440,6 +442,7 @@ impl Expression {
             Self::RegexDef(s) => write!(f, "RegexDef〈{s:?}〉"),
             Self::Regex(s) => write!(f, "Regex〈{:?}〉", s.regex.as_str()),
             Self::None => write!(f, "None"),
+            Self::ModuleCall(s, func) => write!(f, "ModuleCall〈{}::{}〉", s.join("::"), func),
 
             // 新增：字符串模板和字节数据
             Self::StringTemplate(s) => write!(f, "StringTemplate〈`{s}`〉"),
@@ -766,6 +769,7 @@ impl Expression {
             Self::Apply(_, _) => "Apply".into(),
             Self::Command(_, _) => "Command".into(),
             Self::CommandRaw(_, _) => "CommandRaw".into(),
+            Self::ModuleCall(_, _) => "ModuleCall".into(),
             Self::Lambda(..) => "Lambda".into(),
             // Self::Macro(_, _) => "Macro".into(),
             Self::Function(..) => "Function".into(),

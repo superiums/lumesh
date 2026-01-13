@@ -262,6 +262,14 @@ impl Expression {
                     }
                 }
             }
+            // 模块调用
+            Expression::ModuleCall(modules, function) => {
+                state.extend_lookup_domains(&modules);
+                let result = self.eval_apply(&function, args, state, env, depth + 1);
+                state.truncate_lookup_domains(modules.len());
+                return result;
+                // return self.eval_symbo_with_domain(module, function, args, state, env, depth + 1);
+            }
             // Expression::None => Ok(Expression::None),
             o => {
                 // dbg!(o.type_name());
@@ -272,6 +280,96 @@ impl Expression {
                 ))
             }
         }
+    }
+
+    pub fn eval_symbo_with_domain(
+        &self,
+        name: &String,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        // 获取当前查找域
+        let domains = state.get_lookup_domains();
+
+        // 在查找域中查找模块
+        if let Some(leading) = domains.first() {
+            let root = env.get(leading);
+            let mut parent = match root.as_ref() {
+                Some(Expression::HMap(m)) => m,
+                Some(x) => {
+                    return Err(RuntimeError::new(
+                        RuntimeErrorKind::SymbolNotModule(
+                            leading.to_string(),
+                            x.type_name(),
+                            "current module".into(),
+                        ),
+                        self.clone(),
+                        depth,
+                    ));
+                }
+                _ => {
+                    return Err(RuntimeError::new(
+                        RuntimeErrorKind::SymbolNotDefined(format!(
+                            "{} in current module",
+                            leading
+                        )),
+                        self.clone(),
+                        depth,
+                    ));
+                }
+            };
+            for (index, domain) in domains.iter().skip(1).enumerate() {
+                match parent.get(domain) {
+                    Some(Expression::HMap(m)) => {
+                        parent = m;
+                    }
+                    Some(x) => {
+                        return Err(RuntimeError::new(
+                            RuntimeErrorKind::SymbolNotModule(
+                                domain.to_string(),
+                                x.type_name(),
+                                domains[index].to_string().into(),
+                            ),
+                            self.clone(),
+                            depth,
+                        ));
+                    }
+                    _ => {
+                        return Err(RuntimeError::new(
+                            RuntimeErrorKind::SymbolNotDefined(format!(
+                                "{} in module {}",
+                                leading, domains[index]
+                            )),
+                            self.clone(),
+                            depth,
+                        ));
+                    }
+                }
+            }
+            // after got parent
+            if let Some(func) = parent.get(name) {
+                // state.push_lookup_domain(module);
+                // let result = self.eval_apply(func, args, state, env, depth + 1);
+                // state.pop_lookup_domain();
+                // return result;
+                return Ok(func.clone());
+            } else {
+                return Err(RuntimeError::new(
+                    RuntimeErrorKind::SymbolNotDefined(format!(
+                        "{} in module {}",
+                        name,
+                        domains.last().unwrap()
+                    )),
+                    self.clone(),
+                    depth,
+                ));
+            }
+        }
+        return match env.get(name) {
+            Some(expr) => Ok(expr),
+            None => Ok(self.clone()),
+        };
     }
 
     /// 执行

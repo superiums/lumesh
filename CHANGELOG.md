@@ -1,4 +1,9 @@
 # Changelog
+
+## [0.10.0]
+- add support for chained modules import.
+
+
 ## [0.9.0]
 - fix completion install path
 - only parse single symbol as command when CFM enabled

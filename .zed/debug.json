@@ -20,9 +20,9 @@
       "reveal_target": "dock",
       "hide": "never",
       "tags": [],
-      "shell": "system",
+      // "shell": "system",
       "show_summary": false,
-      "show_command": false
+      "show_command": true
     },
     "sourceLanguages": ["rust"]
   },

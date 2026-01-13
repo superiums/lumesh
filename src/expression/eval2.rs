@@ -3,11 +3,12 @@ use super::eval::State;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind,
     expression::DestructurePattern,
-    runtime::{IFS_FOR, ifs_contains, load_module},
+    modman::use_module,
+    runtime::{IFS_FOR, ifs_contains},
     utils::expand_home,
 };
 use glob::glob;
-use std::{borrow::Cow, collections::HashMap, path::Path, rc::Rc};
+use std::rc::Rc;
 
 // Expression求值2
 impl Expression {
@@ -162,17 +163,27 @@ impl Expression {
                     Err(e) => catch_error(e, typ, deeling, state, env, depth + 1),
                 }
             }
-
             Expression::Use(alias, module_path) => {
-                let mut loaded_modules = HashMap::new();
-                load_modules_to_map(&mut loaded_modules, alias, module_path, self, env, depth)?;
+                // let module_info = load_module(module_path, env)?;
 
-                for (module, functions) in loaded_modules.iter() {
-                    env.define(module, functions.clone());
-                }
-
+                // // 使用别名或模块名作为键，存储为Map
+                // let module_name = alias.as_ref().unwrap_or(module_path);
+                // let module_map = Expression::HMap(Rc::new(module_info.functions));
+                let (module_name, module_map) = use_module(alias, module_path, env, 0)?;
+                // dbg!(&module_map);
+                env.define(&module_name, module_map);
                 Ok(Expression::None)
             }
+            // Expression::Use(alias, module_path) => {
+            //     let mut loaded_modules = HashMap::new();
+            //     load_modules_to_map(&mut loaded_modules, alias, module_path, self, env, depth)?;
+
+            //     for (module, functions) in loaded_modules.iter() {
+            //         env.define(module, functions.clone());
+            //     }
+
+            //     Ok(Expression::None)
+            // }
 
             // 默认情况
             _ => {
@@ -382,72 +393,42 @@ where
     }
 }
 
-fn load_modules_to_map(
-    result: &mut HashMap<String, Expression>,
-    module_alias: &Option<String>,
-    module_path: &str,
-    // loaded_modules: &mut HashSet<String>,
-    context: &Expression,
-    env: &mut Environment,
-    depth: usize,
-) -> Result<(), RuntimeError> {
-    let module_name = get_module_name_from_path(module_alias, module_path, context, depth + 1)?;
-    if result.contains_key(module_name.as_ref()) {
-        return Err(RuntimeError::common(
-            "Circular module dependency".into(),
-            context.clone(),
-            depth,
-        ));
-    }
+// fn load_modules_to_map(
+//     result: &mut HashMap<String, Expression>,
+//     module_alias: &Option<String>,
+//     module_path: &str,
+//     // loaded_modules: &mut HashSet<String>,
+//     context: &Expression,
+//     env: &mut Environment,
+//     depth: usize,
+// ) -> Result<(), RuntimeError> {
+//     let module_name = get_module_name_from_path(module_alias, module_path, context, depth + 1)?;
+//     if result.contains_key(module_name.as_ref()) {
+//         return Err(RuntimeError::common(
+//             "Circular module dependency".into(),
+//             context.clone(),
+//             depth,
+//         ));
+//     }
 
-    // 读取模块文件
-    // let file_path = PathBuf::from(format!("{}.lm", module_path));
-    let module_info = load_module(module_path, env)?;
+//     // 读取模块文件
+//     // let file_path = PathBuf::from(format!("{}.lm", module_path));
+//     let module_info = load_module(module_path, env)?;
 
-    // 当前导入模块的函数
-    result.insert(module_name.into(), Expression::from(module_info.functions));
+//     // 当前导入模块的函数
+//     result.insert(module_name.into(), Expression::from(module_info.functions));
 
-    // 递归处理依赖的 use 语句
-    for (dep_alias, dep_path) in &module_info.use_statements {
-        load_modules_to_map(
-            result,
-            dep_alias,
-            dep_path,
-            &Expression::Use(dep_alias.clone(), dep_path.clone()),
-            env,
-            depth + 1,
-        )?;
-    }
+//     // 递归处理依赖的 use 语句
+//     for (dep_alias, dep_path) in &module_info.use_statements {
+//         load_modules_to_map(
+//             result,
+//             dep_alias,
+//             dep_path,
+//             &Expression::Use(dep_alias.clone(), dep_path.clone()),
+//             env,
+//             depth + 1,
+//         )?;
+//     }
 
-    Ok(())
-}
-
-fn get_module_name_from_path<'a>(
-    alias: &'a Option<String>,
-    module_path: &'a str,
-    context: &Expression,
-    depth: usize,
-) -> Result<Cow<'a, str>, RuntimeError> {
-    match alias {
-        Some(n) => Ok(n.into()),
-        _ => {
-            let path = Path::new(module_path);
-
-            // 获取文件名
-            match path.file_name() {
-                Some(name) => {
-                    let fname = name.to_string_lossy();
-                    Ok(match fname.split_once('.') {
-                        Some((n, _)) => n.to_string().into(),
-                        _ => fname.to_string().into(),
-                    })
-                }
-                None => Err(RuntimeError::common(
-                    "get filename failed".into(),
-                    context.clone(),
-                    depth,
-                )),
-            }
-        }
-    }
-}
+//     Ok(())
+// }

@@ -582,7 +582,8 @@ impl Expression {
                                     Ok(Expression::Boolean(!handle_contains(l, r, job, depth)?))
                                 }
 
-                                op if op.starts_with("_") => {
+                                // custom operator
+                                op if op.starts_with("..") => {
                                     if let Some(oper) = env.get(op) {
                                         let rs =
                                             Expression::Apply(Rc::new(oper), Rc::new(vec![l, r]));
@@ -607,8 +608,14 @@ impl Expression {
                 }
                 // RangeOP
                 Self::RangeOp(operator, lhs, rhs, step) => {
-                    let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
-                    let r = rhs.as_ref().eval_mut(state, env, depth + 1)?;
+                    let l = match &**lhs {
+                        Expression::Symbol(s) if s == "_" => lhs.as_ref().clone(),
+                        _ => lhs.as_ref().eval_mut(state, env, depth + 1)?,
+                    };
+                    let r = match &**rhs {
+                        Expression::Symbol(s) if s == "_" => rhs.as_ref().clone(),
+                        _ => rhs.as_ref().eval_mut(state, env, depth + 1)?,
+                    };
                     let st = match step {
                         Some(s) => match s.as_ref().eval_mut(state, env, depth + 1)? {
                             Expression::Integer(i) => i as usize,
@@ -627,21 +634,7 @@ impl Expression {
                         _ => 1,
                     };
                     return match operator.as_str() {
-                        "...<" => match (l, r) {
-                            (Expression::Integer(fr), Expression::Integer(t)) => {
-                                let v = (fr..t)
-                                    .step_by(st)
-                                    .map(Expression::from) // 将 i64 转换为 Expression
-                                    .collect::<Vec<_>>();
-                                Ok(Expression::from(v))
-                            }
-                            _ => Err(RuntimeError::new(
-                                RuntimeErrorKind::CustomError("not valid range option".into()),
-                                self.clone(),
-                                depth,
-                            )),
-                        },
-                        "..." => match (l, r) {
+                        "...=" => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 let v = (fr..=t)
                                     .step_by(st)
@@ -655,9 +648,26 @@ impl Expression {
                                 depth,
                             )),
                         },
-                        "..<" => match (l, r) {
+                        "..." => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
-                                Ok(Expression::Range(fr..t, st))
+                                let v = (fr..t)
+                                    .step_by(st)
+                                    .map(Expression::from) // 将 i64 转换为 Expression
+                                    .collect::<Vec<_>>();
+                                Ok(Expression::from(v))
+                            }
+                            _ => Err(RuntimeError::new(
+                                RuntimeErrorKind::CustomError("not valid range option".into()),
+                                self.clone(),
+                                depth,
+                            )),
+                        },
+                        "..=" => match (l, r) {
+                            (Expression::Integer(fr), Expression::Integer(t)) => {
+                                Ok(Expression::Range(fr..t + 1, st))
+                            }
+                            (Expression::Symbol(fr), Expression::Integer(t)) if &fr == "_" => {
+                                Ok(Expression::Range(Int::MIN..t + 1, st))
                             }
                             _ => Err(RuntimeError::new(
                                 RuntimeErrorKind::CustomError("not valid range option".into()),
@@ -667,7 +677,18 @@ impl Expression {
                         },
                         ".." => match (l, r) {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
-                                Ok(Expression::Range(fr..t + 1, st))
+                                Ok(Expression::Range(fr..t, st))
+                            }
+                            (Expression::Symbol(fr), Expression::Integer(t)) if &fr == "_" => {
+                                Ok(Expression::Range(Int::MIN..t, st))
+                            }
+                            (Expression::Integer(fr), Expression::Symbol(t)) if &t == "_" => {
+                                Ok(Expression::Range(fr..Int::MAX, st))
+                            }
+                            (Expression::Symbol(fr), Expression::Symbol(t))
+                                if &fr == "_" && &t == "_" =>
+                            {
+                                Ok(Expression::Range(Int::MIN..Int::MAX, st))
                             }
                             _ => Err(RuntimeError::new(
                                 RuntimeErrorKind::CustomError("not valid range option".into()),

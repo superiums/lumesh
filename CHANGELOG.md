@@ -1,7 +1,32 @@
 # Changelog
 
+## [0.10.1]
+- enhanced `cd`
+support `cd -` to last history; `cd` without param to go home
+
+- keep range as same as rust
+  `0..3` not contains 3.
+  `0..=3` contains 3.
+- allow unclosed range
+  `_..5` all int less than 5;
+  `1.._` all int greater than 0;
+  `_.._` all int;
+- change custom operator prefix from `_` to `..`
+
+```bash
+let ..+ = (x,y) -> x + y + x*y
+3 ..+ 5
+```
+
+
 ## [0.10.0]
 - add support for chained modules import.
+following is ok:
+`use b; b::call_c()` in a.lm
+`use c; c::echo()`   in b.lm
+
+also ok:
+`b::c::echo()`       in a.lm
 
 
 ## [0.9.0]

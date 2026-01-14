@@ -102,9 +102,9 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
 fn infix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         infix_tag("..."),     //extend range
-        infix_tag("...<"),    //extend range
+        infix_tag("...="),    //extend range
         infix_tag(".."),      //range
-        infix_tag("..<"),     //range
+        infix_tag("..="),     //range
         infix_tag("@"),       //index
         word_infix_tag("::"), //module call,becareful with a[1::2]
     ))(input)
@@ -169,6 +169,7 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("->"), // `->foo` is also a valid symbol
         // punctuation_tag("~>"), // `~>foo` is also a valid symbol
         catch_operator,
+        custom_tag(".."), //_* as custom postfix tag.
     ))(input)
 }
 fn catch_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -196,7 +197,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("="), // allow all.
         operator_tag("?"),
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
-        custom_tag("_"),      //_* as custom postfix tag.
+                              // custom_tag("_"),      //_* as custom postfix tag.
     ))(input)
 }
 
@@ -1070,18 +1071,18 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
             .ok_or(NOT_FOUND)
     }
 }
-/// parse a tag between letters/numbers.
+/// parse a tag between letters/numbers. allow [a,b]@0 _..b _.._
 fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .is_none_or(|c| !c.is_ascii_alphanumeric() && ![')', ']'].contains(&c))
+            .is_none_or(|c| !c.is_ascii_alphanumeric() && ![')', ']', '_'].contains(&c))
         {
             return Err(NOT_FOUND);
         }
         input
             .strip_prefix(keyword)
-            .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric()))
+            .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric() || c == '_'))
             .ok_or(NOT_FOUND)
     }
 }

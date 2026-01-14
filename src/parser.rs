@@ -186,7 +186,7 @@ impl PrattParser {
                         // "..." => {
                         //     lhs = Expression::BinaryOp("...".into(), Rc::new(lhs), Rc::new(rhs))
                         // }
-                        "..." | "...<" | ".." | "..<" => {
+                        "..." | "...=" | ".." | "..=" => {
                             let (new_input, rhs) = Self::parse_prefix(input, PREC_INDEX,depth)?;
                             input = new_input;
                             let (nnew_input, exprs) = opt(preceded(
@@ -579,9 +579,9 @@ impl PrattParser {
                 Some(OperatorInfo::new(op, PREC_CATCH, false))
             }
 
-            opa if opa.starts_with("_+") => Some(OperatorInfo::new(opa, PREC_ADD_SUB, false)),
-            ops if ops.starts_with("_*") => Some(OperatorInfo::new(ops, PREC_MUL_DIV, false)),
-            opo if opo.starts_with("_") => Some(OperatorInfo::new(opo, PREC_CUSTOM, false)),
+            opa if opa.starts_with("..+") => Some(OperatorInfo::new(opa, PREC_ADD_SUB, false)),
+            ops if ops.starts_with("..*") => Some(OperatorInfo::new(ops, PREC_MUL_DIV, false)),
+            opo if opo.starts_with("..") => Some(OperatorInfo::new(opo, PREC_CUSTOM, false)),
             _ => None,
         }
     }
@@ -800,7 +800,7 @@ impl PrattParser {
                 Rc::new(lhs),
                 Rc::new(rhs),
             )),
-            opx if opx.starts_with("_") => {
+            opx if opx.starts_with("..") => {
                 Ok(Expression::BinaryOp(opx.into(), Rc::new(lhs), Rc::new(rhs)))
             }
             "?:" => Ok(Expression::Catch(

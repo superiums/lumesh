@@ -323,7 +323,7 @@ impl Expression {
             }
 
             Self::Range(range, step) => {
-                write!(f, "{}..<{}", range.start, range.end)?;
+                write!(f, "{}..{}", range.start, range.end)?;
                 if *step != 1 {
                     write!(f, ":{step}")?;
                 }
@@ -436,7 +436,7 @@ impl Expression {
             Self::Boolean(s) => write!(f, "Boolean〈{s:?}〉"),
             Self::DateTime(s) => write!(f, "DateTime〈{s:?}〉"),
             Self::FileSize(s) => write!(f, "FileSize〈{s:?}〉"),
-            Self::Range(s, st) => write!(f, "Range〈{s:?},{st}〉"),
+            Self::Range(s, st) => write!(f, "Range〈{s:?}:{st}〉"),
             Self::Quote(inner) => write!(f, "Quote〈{inner:?}〉"),
             Self::TimeDef(s) => write!(f, "TimeDef〈{s:?}〉"),
             Self::RegexDef(s) => write!(f, "RegexDef〈{s:?}〉"),

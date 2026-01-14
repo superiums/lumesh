@@ -238,38 +238,41 @@ fn exit(args: &[Expression], env: &mut Environment) -> Result<Expression, LmErro
     }
 }
 fn cd(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    check_exact_args_len("cd", args, 1)?;
-
-    match args[0].eval(env)? {
-        Expression::Symbol(mut path) | Expression::String(mut path) => {
-            if path.starts_with("~") {
-                if let Some(home_dir) = dirs::home_dir() {
-                    path = path.replace("~", home_dir.to_string_lossy().as_ref());
-                }
-            }
-            std::env::set_current_dir(&path).map_err(|e| {
-                crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
-                    "PermissionDenied" => {
-                        format!("you don't have permission to read directory {:?}", &path)
-                    }
-                    "NotADirectory" => {
-                        format!("{:?} is not a directory", &path)
-                    }
-                    _ => format!("could not change directory to {:?}\n  reason: {}", &path, e),
-                })
-            })?;
-
-            // env.set_cwd(new_cwd.into_os_string().into_string().unwrap());
-            Ok(Expression::None)
+    let mut path = if args.len() == 0 {
+        "~".to_string()
+    } else {
+        match args[0].eval(env)? {
+            Expression::Symbol(path) | Expression::String(path) => path,
+            other => other.to_string(),
         }
+    };
+    if path == "-" {
+        path = env.get("LWD").map_or("~".to_string(), |x| x.to_string());
+    }
+    let _ = std::env::current_dir()
+        .and_then(|x| Ok(env.define("LWD", Expression::String(x.to_string_lossy().into()))));
 
-        other => {
-            // Try to convert the argument to a string
-            let path = other.to_string();
-            cd(&[Expression::String(path)], env)
+    if path.starts_with("~") {
+        if let Some(home_dir) = dirs::home_dir() {
+            path = path.replace("~", home_dir.to_string_lossy().as_ref());
         }
     }
+    std::env::set_current_dir(&path).map_err(|e| {
+        crate::LmError::CustomError(match format!("{:?}", e.kind()).as_str() {
+            "PermissionDenied" => {
+                format!("you don't have permission to read directory {:?}", &path)
+            }
+            "NotADirectory" => {
+                format!("{:?} is not a directory", &path)
+            }
+            _ => format!("could not change directory to {:?}\n  reason: {}", &path, e),
+        })
+    })?;
+
+    env.define_in_root("PWD", Expression::String(path));
+    Ok(Expression::None)
 }
+
 fn pwd(_: &[Expression], _: &mut Environment) -> Result<Expression, LmError> {
     let path = std::env::current_dir()?;
     // println!("{}", path.display());

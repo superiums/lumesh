@@ -169,7 +169,7 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("->"), // `->foo` is also a valid symbol
         // punctuation_tag("~>"), // `~>foo` is also a valid symbol
         catch_operator,
-        custom_tag(".."), //_* as custom postfix tag.
+        custom_tag(".."), //_* as custom op prefix tag.
     ))(input)
 }
 fn catch_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -197,7 +197,6 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("="), // allow all.
         operator_tag("?"),
         punctuation_tag(":"), // ?:, {k:v}, arry[a:b:c], allow arr[b:]
-                              // custom_tag("_"),      //_* as custom postfix tag.
     ))(input)
 }
 

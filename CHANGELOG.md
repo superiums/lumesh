@@ -13,6 +13,13 @@ support `cd -` to last history; `cd` without param to go home
   `_.._` all int;
 - change custom operator prefix from `_` to `..`
 
+- change slice operator to range.
+```bash
+let a = 1...10
+a[0..5:2]         #use .. to slice
+a[1.._:2]         #use _ to infinity
+```
+
 ```bash
 let ..+ = (x,y) -> x + y + x*y
 3 ..+ 5

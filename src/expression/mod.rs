@@ -50,7 +50,6 @@ pub enum Expression {
 
     // 索引和切片优化
     Index(Rc<Self>, Rc<Self>),
-    Slice(Rc<Self>, SliceParams),
 
     // 其他变体保持不变
     Del(String),
@@ -231,12 +230,6 @@ pub enum CatchType {
     PrintOver,
     Terminate,
     Deel,
-}
-#[derive(Debug, Clone, PartialEq)]
-pub struct SliceParams {
-    pub start: Option<Rc<Expression>>,
-    pub end: Option<Rc<Expression>>,
-    pub step: Option<Rc<Expression>>,
 }
 
 /// PartialOrd实现

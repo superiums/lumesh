@@ -9,6 +9,7 @@ use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
+use std::ops::Range;
 
 use std::rc::Rc;
 
@@ -983,54 +984,6 @@ impl Expression {
                     return Ok(Expression::from(evaluated));
                 }
 
-                // 其他复杂类型
-                Self::Slice(lis, slice_params) => {
-                    let listo = lis.eval(env)?;
-                    let start_int =
-                        Expression::eval_to_int_opt(&slice_params.start, state, env, depth + 1)?;
-                    let end_int =
-                        Expression::eval_to_int_opt(&slice_params.end, state, env, depth + 1)?;
-                    let step_int =
-                        Expression::eval_to_int_opt(&slice_params.step, state, env, depth + 1)?
-                            .unwrap_or(1); // 默认步长1
-
-                    // is string
-                    if let Expression::String(str) = listo {
-                        if step_int == 1 {
-                            let (start, end) =
-                                clamp(start_int, end_int, step_int, str.len() as Int);
-                            let res = str
-                                .chars()
-                                .skip(start as usize)
-                                .take((end - start) as usize)
-                                .collect();
-                            return Ok(Expression::String(res));
-                        } else {
-                            return Err(RuntimeError::common(
-                                "string slice step not supported.".into(),
-                                self.clone(),
-                                depth,
-                            ));
-                        }
-                    }
-                    // is list
-                    // return Self::slice(listo, start_int, end_int, step_int);
-                    let list = listo
-                        .as_list()
-                        .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?;
-                    let len = list.len() as Int;
-                    let (start, end) = clamp(start_int, end_int, step_int, len);
-
-                    let mut result = Vec::new();
-                    let mut i = start;
-                    while (step_int > 0 && i < end) || (step_int < 0 && i > end) {
-                        if let Some(item) = list.get(i as usize) {
-                            result.push(item.clone());
-                        }
-                        i += step_int;
-                    }
-                    return Ok(Self::from(result));
-                }
                 Self::Index(lhs, rhs) => break self.handle_index(lhs, rhs, state, env, depth + 1),
 
                 // 执行应用
@@ -1133,11 +1086,72 @@ impl Expression {
             (Self::Symbol(m), Self::Symbol(n)) => Ok(Self::String(format!("{m}.{n}"))),
             // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
             // _ => Err(RuntimeError::CustomError("not valid index option".into())),
+            (left, Self::Range(r, step)) => self.handle_slice(left, r, step, state, env, depth),
             (left, right) => Ok(Self::index_slm(left, right)
                 .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
         };
     }
     /// index and slim
+    fn handle_slice(
+        &self,
+        l: Expression,
+        r: Range<Int>,
+        step: usize,
+        _state: &mut State,
+        _env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        let start_int = if r.start == Int::MIN {
+            None
+        } else {
+            Some(r.start)
+        };
+        let end_int = if r.end == Int::MAX { None } else { Some(r.end) };
+
+        match l {
+            Expression::String(str) => {
+                if step == 1 {
+                    let (start, end) = clamp(start_int, end_int, step as Int, str.len() as Int);
+                    let res = str
+                        .chars()
+                        .skip(start as usize)
+                        .take((end - start) as usize)
+                        .collect();
+                    return Ok(Expression::String(res));
+                } else {
+                    return Err(RuntimeError::common(
+                        "string slice step not supported.".into(),
+                        self.clone(),
+                        depth,
+                    ));
+                }
+            }
+            Expression::List(list) => {
+                let len = list.len() as Int;
+                let step_int = step as Int;
+                let (start, end) = clamp(start_int, end_int, step_int, len);
+
+                let mut result = Vec::new();
+                let mut i = start;
+                while (step > 0 && i < end) || (step_int < 0 && i > end) {
+                    if let Some(item) = list.get(i as usize) {
+                        result.push(item.clone());
+                    }
+                    i += step_int;
+                }
+                return Ok(Self::from(result));
+            }
+            _ => Err(RuntimeError::new(
+                RuntimeErrorKind::TypeError {
+                    expected: "sliceable type (List/String)".into(),
+                    sym: l.to_string(),
+                    found: l.type_name(),
+                },
+                self.clone(),
+                depth,
+            )),
+        }
+    }
     fn index_slm(l: Expression, r: Expression) -> Result<Expression, RuntimeErrorKind> {
         match l {
             // 处理列表索引

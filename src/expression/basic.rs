@@ -294,23 +294,6 @@ impl Expression {
                 write!(f, "]")
             }
 
-            Self::Slice(l, params) => {
-                l.fmt_display_indent(f, 0)?;
-                write!(f, "[")?;
-                if let Some(start) = &params.start {
-                    start.fmt_display_indent(f, 0)?;
-                }
-                write!(f, ":")?;
-                if let Some(end) = &params.end {
-                    end.fmt_display_indent(f, 0)?;
-                }
-                if let Some(step) = &params.step {
-                    write!(f, ":")?;
-                    step.fmt_display_indent(f, 0)?;
-                }
-                write!(f, "]")
-            }
-
             // 其他构造
             Self::Return(expr) => {
                 write!(f, "{}return ", idt(i))?;
@@ -493,27 +476,6 @@ impl Expression {
                 write!(f, "\n{}[\n", idt(i))?;
                 index.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}]\n", idt(i))
-            }
-            Self::Slice(expr, params) => {
-                write!(f, "\n{}Slice\n", idt(i))?;
-                expr.fmt_indent(f, i + 1)?;
-                write!(
-                    f,
-                    "\n{}[{}:{}:{}]\n",
-                    idt(i),
-                    params
-                        .start
-                        .as_ref()
-                        .map_or(Cow::Borrowed(""), |s| Cow::Owned(format!("{s:?}"))),
-                    params
-                        .end
-                        .as_ref()
-                        .map_or(Cow::Borrowed(""), |s| Cow::Owned(format!("{s:?}"))),
-                    params
-                        .step
-                        .as_ref()
-                        .map_or(Cow::Borrowed(""), |s| Cow::Owned(format!("{s:?}"))),
-                )
             }
 
             // 新增：链式调用和管道方法
@@ -757,7 +719,7 @@ impl Expression {
             Self::UnaryOp(..) => "UnaryOp".into(),
             Self::Bytes(_) => "Bytes".into(),
             Self::Index(_, _) => "Index".into(),
-            Self::Slice(_, _) => "Slice".into(),
+            // Self::Slice(_, _) => "Slice".into(),
             Self::Del(_) => "Del".into(),
             Self::Declare(_, _) => "Declare".into(),
             Self::Assign(_, _) => "Assign".into(),

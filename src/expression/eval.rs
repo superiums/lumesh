@@ -178,13 +178,13 @@ impl Expression {
                     if state.contains(State::STRICT) {
                         return Ok(job.clone());
                     } else {
-                        return self.eval_symbo_with_domain(name, state, env, depth);
+                        // return self.eval_symbo_with_domain(name, state, env, depth);
                         // let domains = state.get_lookup_domains();
                         // if domains.is_empty() {
-                        //     return match env.get(name) {
-                        //         Some(expr) => Ok(expr),
-                        //         None => Ok(job.clone()),
-                        //     };
+                        return match env.get(name) {
+                            Some(expr) => Ok(expr),
+                            None => Ok(job.clone()),
+                        };
                         // } else {
                         //     if let Some(Expression::HMap(root)) =
                         //         env.get(domains.first().unwrap()).as_ref()
@@ -1010,24 +1010,7 @@ impl Expression {
                     }
                     return Ok(Self::from(result));
                 }
-                Self::Index(lhs, rhs) => {
-                    let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
-                    state.set(State::SKIP_BUILTIN_SEEK);
-                    let r = rhs.as_ref().eval_mut(state, env, depth + 1)?; //TODO: allow dynamic Key? x.log log=builtin@log
-                    state.clear(State::SKIP_BUILTIN_SEEK);
-
-                    return match (l, r) {
-                        // (Expression::List(m), Expression::Integer(n)) => {
-                        //     Self::index_slm(Expression::List(m), Expression::Integer(n))
-                        // }
-                        // (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
-                        (Self::Symbol(m), Self::Symbol(n)) => Ok(Self::String(format!("{m}.{n}"))),
-                        // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
-                        // _ => Err(RuntimeError::CustomError("not valid index option".into())),
-                        (left, right) => Ok(Self::index_slm(left, right)
-                            .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
-                    };
-                }
+                Self::Index(lhs, rhs) => break self.handle_index(lhs, rhs, state, env, depth + 1),
 
                 // 执行应用
                 Self::Apply(func, args) => {
@@ -1107,7 +1090,33 @@ impl Expression {
 }
 
 impl Expression {
-    /// 索引访问
+    /// index
+    pub fn handle_index(
+        &self,
+        lhs: &Rc<Expression>,
+        rhs: &Rc<Expression>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        let l = lhs.as_ref().eval_mut(state, env, depth)?;
+        state.set(State::SKIP_BUILTIN_SEEK);
+        let r = rhs.as_ref().eval_mut(state, env, depth)?; //TODO: allow dynamic Key? x.log log=builtin@log
+        state.clear(State::SKIP_BUILTIN_SEEK);
+
+        return match (l, r) {
+            // (Expression::List(m), Expression::Integer(n)) => {
+            //     Self::index_slm(Expression::List(m), Expression::Integer(n))
+            // }
+            // (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
+            (Self::Symbol(m), Self::Symbol(n)) => Ok(Self::String(format!("{m}.{n}"))),
+            // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
+            // _ => Err(RuntimeError::CustomError("not valid index option".into())),
+            (left, right) => Ok(Self::index_slm(left, right)
+                .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
+        };
+    }
+    /// index and slim
     fn index_slm(l: Expression, r: Expression) -> Result<Expression, RuntimeErrorKind> {
         match l {
             // 处理列表索引

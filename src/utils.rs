@@ -20,7 +20,25 @@ pub fn join_current_path(path: &str) -> PathBuf {
     get_current_path().join(path)
 }
 pub fn abs(path: &str) -> PathBuf {
-    get_current_path().join(expand_home(path).as_ref())
+    if path.starts_with("~") {
+        if let Some(home_dir) = dirs::home_dir() {
+            return PathBuf::from(path.replace("~", home_dir.to_string_lossy().as_ref()));
+        }
+    } else if path.starts_with("./") || path == "." {
+        return PathBuf::from(get_current_path().join(path));
+    }
+    PathBuf::from(path)
+}
+pub fn abs_check(path: &str) -> Result<PathBuf, RuntimeError> {
+    let abs = abs(path);
+    if abs.exists() {
+        return Ok(abs);
+    }
+    Err(RuntimeError::common(
+        "File not found".into(),
+        Expression::String(path.to_string()),
+        0,
+    ))
 }
 pub fn canon(p: &str) -> Result<PathBuf, RuntimeError> {
     let path = abs(p);

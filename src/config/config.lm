@@ -7,14 +7,10 @@ if IS_LOGIN {
 # ========== config for interactive mode ==========
 if IS_INTERACTIVE {
     let logo = '
-            ██╗     ██╗   ██╗███╗   ███╗███████╗
-            ██║     ██║   ██║████╗ ████║██╔════╝
-            ██║     ██║   ██║██╔████╔██║█████╗
-            ██║     ██║   ██║██║╚██╔╝██║██╔══╝
-            ███████╗╚██████╔╝██║ ╚═╝ ██║███████╗
-            ╚══════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
-    '
-    print logo.green().faint()
+    ⚡┓
+      ┃ ┓┏┏┳┓┏┓
+      ┗┛┗┻┛┗┗┗ '
+    print logo.green().faint() 'lightweight'.color('skyblue') 'ultimate'.color('olivedrab') 'modern'.color('tomato') 'efficient'.color('mediumpurple')
 
     # ====== base theme: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'

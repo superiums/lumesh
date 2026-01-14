@@ -14,11 +14,34 @@ English | [简体中文](README-cn.md)
 | [tree-sitter](https://github.com/superiums/tree-sitter-lumesh)
 
 - Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
-
-
+```
+     ⚡┓
+      ┃ ┓┏┏┳┓┏┓
+      ┗┛┗┻┛┗┗┗  lightweight ultimate modern efficient 
+```      
 **Write as js, works as Bash, run as light**
 
 Lumesh is a modern shell and scripting language, as a bash replacer, it was completely rewritten from Dune, designed for high performance and user-friendly experience.
+
+
+## The Origin of Lume's Name
+Lume [lʌmi] means 'light' and symbolizes lightness and speed.
+
+- Lightweight
+
+  Lume Shell is a lightweight shell with a clean design and minimal resource usage, ideal for scenarios requiring rapid startup and efficient operation.
+
+- Ultimate
+
+  Lume Shell is a powerful tool that delivers a comprehensive command-line experience for advanced users.
+
+- Modern
+
+  Lume Shell incorporates contemporary design philosophies and technologies, supporting the latest scripting language features and interactive methods.
+
+- Efficient
+
+  Lume Shell excels in command execution and script processing, delivering both high efficiency and rapid response.
 
 ## ⚑ Why Choose Lumesh?
 

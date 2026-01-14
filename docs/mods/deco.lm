@@ -1,0 +1,13 @@
+##### decorator functions
+
+### report periods a function takes
+fn timeit(){
+    fn wrapper(func_ti){
+        (args_ti) -> {
+            let start = Time.stamp_ms()
+            func_ti(args_ti)
+            let end = Time.stamp_ms()
+            print '>Time:'.green().bold() (end - start) 'ms'
+        }
+    }
+}

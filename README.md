@@ -25,21 +25,21 @@ Lumesh is a modern shell and scripting language, as a bash replacer, it was comp
 
 
 ## The Origin of Lume's Name
-Lume [lʌmi] means 'light' and symbolizes lightness and speed.
+**Lume** [lʌmi] means 'light' and symbolizes lightness and speed.
 
-- Lightweight
+- **L**ightweight
 
   Lume Shell is a lightweight shell with a clean design and minimal resource usage, ideal for scenarios requiring rapid startup and efficient operation.
 
-- Ultimate
+- **U**ltimate
 
   Lume Shell is a powerful tool that delivers a comprehensive command-line experience for advanced users.
 
-- Modern
+- **M**odern
 
   Lume Shell incorporates contemporary design philosophies and technologies, supporting the latest scripting language features and interactive methods.
 
-- Efficient
+- **E**fficient
 
   Lume Shell excels in command execution and script processing, delivering both high efficiency and rapid response.
 

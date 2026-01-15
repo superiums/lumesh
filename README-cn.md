@@ -25,21 +25,21 @@
 Lumesh 是一个现代化的 shell 和脚本语言, Bash替代者，完全重写自 Dune，专为高性能和用户友好体验而设计。
 
 ## Lume 的名称由来
-Lume [lʌmi] 有光的含义，代表轻盈、快速。
+**Lume** [lʌmi] 有光的含义，代表轻盈、快速。
 
-- Lightweight
+- **L**ightweight
 
   Lume Shell 是一个轻量级的 shell，设计简洁、资源占用少，适合需要快速启动和高效运行的场景。
 
-- Ultimate
+- **U**ltimate
 
   Lume Shell 是一个功能强大的工具，提供全面的命令行体验，满足高级用户的需求。
 
-- Modern
+- **M**odern
 
   Lume Shell 采用现代的设计理念和技术，支持最新的脚本语言特性和交互方式。
 
-- Efficient
+- **E**fficient
 
   Lume Shell 在执行命令、处理脚本等方面效率高、响应快。
 

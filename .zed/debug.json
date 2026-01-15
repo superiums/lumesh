@@ -30,9 +30,20 @@
     "label": "Build & Debug Lume",
     "build": {
       "command": "cargo",
-      "args": ["build"]
+      "args": ["build", "--target-dir", "/tmp/target"],
+      "cwd": "/opt/code/rust/lume",
+      "use_new_terminal": false,
+      "allow_concurrent_runs": false,
+      "reveal": "always",
+      "reveal_target": "dock",
+      "hide": "never",
+      "tags": [],
+      // "shell": "system",
+      "show_summary": false,
+      "show_command": true
     },
-    "program": "$ZED_WORKTREE_ROOT/target/debug/lume",
+    "program": "/tmp/target/debug/lume",
+    // "program": "$ZED_WORKTREE_ROOT/target/debug/lume",
     // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
     "use_new_terminal": true,
     "sourceLanguages": ["rust"],

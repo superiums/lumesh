@@ -86,6 +86,7 @@ pub enum Expression {
     DestructureAssign(Vec<DestructurePattern>, Rc<Expression>), // 解构赋值
     Use(Option<String>, String),
     ModuleCall(Vec<String>, Rc<Self>), //模块调用
+    Blank,
 }
 
 #[derive(Debug, Clone)]

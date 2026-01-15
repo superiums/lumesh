@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.10.2]
+- add `_` as blank expression
+this simplify unclosed ranges, mathes scentence, and positional pipe out.
+
+- support `_` to receive data piped out. both in `|` and `|>`
+
+  now you could pipeout to any subcmd or functon or mathmatic operation, nearly anywhere.
+  
+  if `_` is not provied, situation differs from the the expression on  pipe right:
+    + function apply : _ is injected to first arg.
+    + cmd : _ is not injected as argument, but stdio.
+    + chained method call: _ is injected to first arg of first chain call.
+    + alias : _ is not auto injected.
+  
+  if `_` is provied, the above injection will not affect.
+
+- remove `|_` and support position pipe in `|`
+
+
 ## [0.10.1]
 - enhanced `cd`
 support `cd -` to last history; `cd` without param to go home

@@ -563,7 +563,7 @@ impl PrattParser {
                 true, //important
             )),
             // ... 管道操作符 ...
-            "|" | "|_" | "|>" | "|^" => Some(OperatorInfo::new(
+            "|" | "|>" | "|^" => Some(OperatorInfo::new(
                 op, PREC_PIPE, // 例如设为 4（低于逻辑运算符）
                 false,
             )),
@@ -789,7 +789,7 @@ impl PrattParser {
             //             Expression::BinaryOp(base_op.into(), Box::new(lhs.clone()), Box::new(rhs));
             //         Ok(Expression::Assign(lhs.to_string(), Box::new(new_rhs)))
             //     }
-            "|" | "|_" | "|>" | "|^" => Ok(Expression::Pipe(
+            "|" | "|>" | "|^" => Ok(Expression::Pipe(
                 op.symbol.into(),
                 Rc::new(lhs),
                 Rc::new(rhs),
@@ -1441,9 +1441,10 @@ fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 fn parse_value_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     map(kind(TokenKind::ValueSymbol), |s| {
         match s.to_str(input.str) {
-            "None" => Expression::None,
             "True" => Expression::Boolean(true),
             "False" => Expression::Boolean(false),
+            "None" => Expression::None,
+            "_" => Expression::Blank,
             _ => Expression::None,
         }
     })(input)

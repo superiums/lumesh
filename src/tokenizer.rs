@@ -155,7 +155,6 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         )),
         keyword_tag("&&"),
         keyword_tag("||"),
-        keyword_tag("|_"), //param pipe
         keyword_tag("|>"), //dispatch pipe
         keyword_tag("|^"), //pty pipe
         keyword_tag("<<"),
@@ -586,6 +585,7 @@ fn value_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("True"),
         keyword_tag("False"),
         keyword_tag("None"),
+        among_punc_tag("_"),
     ))(input)
 }
 
@@ -1050,6 +1050,24 @@ fn operator_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<
             .ok_or(NOT_FOUND)
     }
 }
+/// pick tag which was surrounded with punctuation or blank
+fn among_punc_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
+    move |input: Input<'_>| {
+        if input
+            .previous_char()
+            .is_some_and(|c| c.is_ascii_alphabetic())
+        {
+            return Err(NOT_FOUND);
+        }
+        input
+            .strip_prefix(keyword)
+            .filter(|(rest, _)| {
+                rest.is_empty()
+                    || rest.starts_with(|c: char| c.is_whitespace() || c.is_ascii_punctuation())
+            })
+            .ok_or(NOT_FOUND)
+    }
+}
 /// parse a tag before letters/numbers.
 fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
@@ -1353,7 +1371,6 @@ fn cfm_long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         )),
         keyword_tag("&&"),
         keyword_tag("||"),
-        keyword_tag("|_"), //param pipe
         keyword_tag("|>"), //dispatch pipe
         keyword_tag("|^"), //pty pipe
         keyword_tag("<<"),

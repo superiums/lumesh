@@ -276,7 +276,7 @@ pub fn handle_command(
                 ls.iter().for_each(|a| cmd_args.push(format!("{a}")));
             }
             Expression::Bytes(b) => cmd_args.push(String::from_utf8_lossy(&b).to_string()),
-            Expression::None => continue,
+            Expression::None | Expression::Blank => continue,
             _ => cmd_args.push(format!("{e_arg}")),
         }
     }

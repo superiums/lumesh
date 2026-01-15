@@ -609,14 +609,8 @@ impl Expression {
                 }
                 // RangeOP
                 Self::RangeOp(operator, lhs, rhs, step) => {
-                    let l = match &**lhs {
-                        Expression::Symbol(s) if s == "_" => lhs.as_ref().clone(),
-                        _ => lhs.as_ref().eval_mut(state, env, depth + 1)?,
-                    };
-                    let r = match &**rhs {
-                        Expression::Symbol(s) if s == "_" => rhs.as_ref().clone(),
-                        _ => rhs.as_ref().eval_mut(state, env, depth + 1)?,
-                    };
+                    let l = lhs.as_ref().eval_mut(state, env, depth + 1)?;
+                    let r = rhs.as_ref().eval_mut(state, env, depth + 1)?;
                     let st = match step {
                         Some(s) => match s.as_ref().eval_mut(state, env, depth + 1)? {
                             Expression::Integer(i) => i as usize,
@@ -667,7 +661,7 @@ impl Expression {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 Ok(Expression::Range(fr..t + 1, st))
                             }
-                            (Expression::Symbol(fr), Expression::Integer(t)) if &fr == "_" => {
+                            (Expression::Blank, Expression::Integer(t)) => {
                                 Ok(Expression::Range(Int::MIN..t + 1, st))
                             }
                             _ => Err(RuntimeError::new(
@@ -680,15 +674,13 @@ impl Expression {
                             (Expression::Integer(fr), Expression::Integer(t)) => {
                                 Ok(Expression::Range(fr..t, st))
                             }
-                            (Expression::Symbol(fr), Expression::Integer(t)) if &fr == "_" => {
+                            (Expression::Blank, Expression::Integer(t)) => {
                                 Ok(Expression::Range(Int::MIN..t, st))
                             }
-                            (Expression::Integer(fr), Expression::Symbol(t)) if &t == "_" => {
+                            (Expression::Integer(fr), Expression::Blank) => {
                                 Ok(Expression::Range(fr..Int::MAX, st))
                             }
-                            (Expression::Symbol(fr), Expression::Symbol(t))
-                                if &fr == "_" && &t == "_" =>
-                            {
+                            (Expression::Blank, Expression::Blank) => {
                                 Ok(Expression::Range(Int::MIN..Int::MAX, st))
                             }
                             _ => Err(RuntimeError::new(
@@ -707,7 +699,7 @@ impl Expression {
                 // 管道
                 Self::Pipe(operator, lhs, rhs) => {
                     match operator.as_str() {
-                        "|" | "|_" | "|>" | "|^" => {
+                        "|" | "|>" | "|^" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
                             let left_func = lhs.ensure_fn_apply();
@@ -733,27 +725,22 @@ impl Expression {
                                     return r;
                                 }
 
-                                "|_" => {
-                                    return rhs
-                                        .as_ref()
-                                        .ensure_fn_apply()
-                                        .replace_or_append_arg(left_output)
-                                        .eval_mut(state, env, depth + 1);
-                                }
                                 "|>" => match left_output {
                                     Expression::List(ls) => {
                                         return ls
                                             .iter()
                                             .map(|item| {
+                                                state.pipe_in(item.clone());
                                                 rhs.as_ref()
                                                     .ensure_fn_apply()
-                                                    .replace_or_append_arg(item.clone())
+                                                    .ensure_has_receiver()
+                                                    // .replace_or_append_arg(item.clone())
                                                     .eval_mut(state, env, depth + 1)
                                             })
-                                            .filter(|x| {
-                                                x.as_ref()
-                                                    .is_ok_and(|r| !matches!(r, Expression::None))
-                                            })
+                                            // .filter(|x| {
+                                            //     x.as_ref()
+                                            //         .is_ok_and(|r| !matches!(r, Expression::None))
+                                            // })
                                             .collect::<Result<Vec<_>, _>>()
                                             .map(Expression::from);
                                     }
@@ -761,23 +748,27 @@ impl Expression {
                                         return ifs_split(&strls, env)
                                             .into_iter()
                                             .map(|item| {
+                                                state.pipe_in(Expression::String(item));
                                                 rhs.as_ref()
                                                     .ensure_fn_apply()
-                                                    .replace_or_append_arg(Expression::String(item))
+                                                    .ensure_has_receiver()
+                                                    // .replace_or_append_arg(Expression::String(item))
                                                     .eval_mut(state, env, depth + 1)
                                             })
-                                            .filter(|x| {
-                                                x.as_ref()
-                                                    .is_ok_and(|r| !matches!(r, Expression::None))
-                                            })
+                                            // .filter(|x| {
+                                            //     x.as_ref()
+                                            //         .is_ok_and(|r| !matches!(r, Expression::None))
+                                            // })
                                             .collect::<Result<Vec<_>, _>>()
                                             .map(Expression::from);
                                     }
                                     _ => {
+                                        state.pipe_in(left_output);
                                         return rhs
                                             .as_ref()
                                             .ensure_fn_apply()
-                                            .replace_or_append_arg(left_output)
+                                            .ensure_has_receiver()
+                                            // .replace_or_append_arg(left_output)
                                             .eval_mut(state, env, depth + 1);
                                     }
                                 },
@@ -785,8 +776,8 @@ impl Expression {
                                     return match rhs.as_ref() {
                                         Expression::PipeMethod(method, args) => {
                                             match left_output.get_belong_lib_name() {
-                                                Some(mo_name) => self.eval_lib_method(
-                                                    mo_name,
+                                                Some(lib) => self.eval_lib_method(
+                                                    lib,
                                                     method,
                                                     args,
                                                     left_output,
@@ -817,8 +808,12 @@ impl Expression {
                                                     );
                                                 }
                                                 r => {
-                                                    job = r;
-                                                    continue;
+                                                    // job = r;
+                                                    // continue;
+                                                    return r
+                                                        .ensure_fn_apply()
+                                                        .ensure_has_receiver()
+                                                        .eval_mut(state, env, depth + 1);
                                                 }
                                             }
                                         }
@@ -992,9 +987,9 @@ impl Expression {
                 }
                 Self::Command(cmd, args) => {
                     let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
-                    if args.len() == 1 && args[0].to_string().as_str() == "_" {
-                        break self.eval_command(eval_cmd, &vec![], state, env, depth + 1);
-                    }
+                    // if args.len() == 1 && &args[0] == &Expression::Blank {
+                    //     break self.eval_command(eval_cmd, &vec![], state, env, depth + 1);
+                    // }
                     break self.eval_command(eval_cmd, args.as_ref(), state, env, depth + 1);
                 }
                 Self::CommandRaw(cmd, args) => {
@@ -1055,6 +1050,7 @@ impl Expression {
                     })?;
                     return Ok(t);
                 }
+                Expression::Blank => return Ok(state.pipe_out().unwrap_or(job.clone())),
                 // 其他表达式处理...
                 _ => break job.eval_flows(state, env, depth + 1),
             };
@@ -1403,7 +1399,7 @@ impl Expression {
 /// match的比对
 fn matches_pattern(value: &Expression, pattern: &Vec<Expression>) -> bool {
     pattern.iter().any(|pat| match pat {
-        Expression::Symbol(s) if s == "_" => true,
+        Expression::Blank => true,
         Expression::Symbol(s) | Expression::String(s) => s == &value.to_string(),
         Expression::RegexDef(s) => {
             Regex::new(s).is_ok_and(|r| r.is_match(value.to_string().as_str()))

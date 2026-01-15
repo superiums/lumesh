@@ -379,6 +379,7 @@ impl Expression {
             Self::RegexDef(s) => write!(f, "r'{s}'"),
             Self::Regex(r) => write!(f, "r'{}'", r.regex.as_str()),
             Self::TimeDef(t) => write!(f, "t'{t}'"),
+            Self::Blank => write!(f, "_"),
         }
     }
 }
@@ -425,6 +426,7 @@ impl Expression {
             Self::RegexDef(s) => write!(f, "RegexDef〈{s:?}〉"),
             Self::Regex(s) => write!(f, "Regex〈{:?}〉", s.regex.as_str()),
             Self::None => write!(f, "None"),
+            Self::Blank => write!(f, "_"),
             Self::ModuleCall(s, func) => write!(f, "ModuleCall〈{}::{}〉", s.join("::"), func),
 
             // 新增：字符串模板和字节数据
@@ -755,6 +757,7 @@ impl Expression {
             Self::Regex(..) => "Regex".into(),
 
             Self::None => "None".into(),
+            Self::Blank => "Blank".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),
         }
     }
@@ -786,73 +789,73 @@ impl Expression {
         Self::Command(Rc::new(self.clone()), Rc::new(args))
     }
     // 参数合并方法
-    pub fn replace_or_append_arg(&self, arg: Expression) -> Expression {
-        let mut found = false;
-        match self {
-            Expression::Apply(f, existing_args) => {
-                let new_args = existing_args
-                    .iter()
-                    .map(|a| match a {
-                        Self::Symbol(inner) if inner == "_" => {
-                            found = true;
-                            arg.clone()
-                        }
-                        _ => a.clone(),
-                    })
-                    .collect();
-                if found {
-                    Expression::Apply(f.clone(), Rc::new(new_args))
-                } else {
-                    self.append_args(vec![arg])
-                }
-            }
-            Expression::Command(f, existing_args) => {
-                let new_args = existing_args
-                    .iter()
-                    .map(|a| match a {
-                        Self::Symbol(inner) if inner == "_" => {
-                            found = true;
-                            arg.clone()
-                        }
-                        _ => a.clone(),
-                    })
-                    .collect();
-                if found {
-                    Expression::Command(f.clone(), Rc::new(new_args))
-                } else {
-                    self.append_args(vec![arg])
-                }
-            }
-            Expression::Chain(base, calls) => {
-                if calls.is_empty() {
-                    Expression::Chain(base.clone(), calls.clone())
-                } else {
-                    let (call, others) = calls.split_at(1);
-                    let mut new_args: Vec<Expression> = call[0]
-                        .args
-                        .iter()
-                        .map(|a| match a {
-                            Self::Symbol(inner) if inner == "_" => {
-                                found = true;
-                                arg.clone()
-                            }
-                            _ => a.clone(),
-                        })
-                        .collect();
-                    if !found {
-                        new_args.push(arg);
-                    }
-                    let mut new_calls = vec![ChainCall {
-                        method: call[0].method.clone(),
-                        args: new_args,
-                    }];
-                    new_calls.extend_from_slice(others);
-                    Expression::Chain(base.clone(), new_calls)
-                }
-            }
-            _ => Expression::Command(Rc::new(self.clone()), Rc::new(vec![arg])), //report error?
-        }
-    }
+    // pub fn replace_or_append_arg(&self, arg: Expression) -> Expression {
+    //     let mut found = false;
+    //     match self {
+    //         Expression::Apply(f, existing_args) => {
+    //             let new_args = existing_args
+    //                 .iter()
+    //                 .map(|a| match a {
+    //                     Self::Blank => {
+    //                         found = true;
+    //                         arg.clone()
+    //                     }
+    //                     _ => a.clone(),
+    //                 })
+    //                 .collect();
+    //             if found {
+    //                 Expression::Apply(f.clone(), Rc::new(new_args))
+    //             } else {
+    //                 self.append_args(vec![arg])
+    //             }
+    //         }
+    //         Expression::Command(f, existing_args) => {
+    //             let new_args = existing_args
+    //                 .iter()
+    //                 .map(|a| match a {
+    //                     Self::Blank => {
+    //                         found = true;
+    //                         arg.clone()
+    //                     }
+    //                     _ => a.clone(),
+    //                 })
+    //                 .collect();
+    //             if found {
+    //                 Expression::Command(f.clone(), Rc::new(new_args))
+    //             } else {
+    //                 self.append_args(vec![arg])
+    //             }
+    //         }
+    //         Expression::Chain(base, calls) => {
+    //             if calls.is_empty() {
+    //                 Expression::Chain(base.clone(), calls.clone())
+    //             } else {
+    //                 let (call, others) = calls.split_at(1);
+    //                 let mut new_args: Vec<Expression> = call[0]
+    //                     .args
+    //                     .iter()
+    //                     .map(|a| match a {
+    //                         Self::Blank => {
+    //                             found = true;
+    //                             arg.clone()
+    //                         }
+    //                         _ => a.clone(),
+    //                     })
+    //                     .collect();
+    //                 if !found {
+    //                     new_args.push(arg);
+    //                 }
+    //                 let mut new_calls = vec![ChainCall {
+    //                     method: call[0].method.clone(),
+    //                     args: new_args,
+    //                 }];
+    //                 new_calls.extend_from_slice(others);
+    //                 Expression::Chain(base.clone(), new_calls)
+    //             }
+    //         }
+    //         _ => Expression::Command(Rc::new(self.clone()), Rc::new(vec![arg])), //report error?
+    //     }
+    // }
     /// please make sure only use with Apply/Command
     pub fn append_args(&self, args: Vec<Expression>) -> Expression {
         match self {
@@ -888,14 +891,110 @@ impl Expression {
             _ => unreachable!(), // _ => Expression::Command(Rc::new(self.clone()), Rc::new(args)), //report error?
         }
     }
-    pub fn ensure_fn_apply(&self) -> Expression {
+    /// please make sure only use with Apply/Command
+    // pub fn inject_arg(&self, arg: Expression) -> Expression {
+    //     match self {
+    //         //for func: add default receiver to at head if not exist
+    //         Expression::Apply(f, existing_args) => {
+
+    //                 let mut new_vec = Vec::with_capacity(existing_args.len() + 1);
+    //                 new_vec.push(arg);
+    //                 new_vec.extend_from_slice(existing_args);
+    //                 Expression::Apply(f.clone(), Rc::new(new_vec))
+
+    //         }
+    //         // for cmd: never add, default is pipeout to stdio
+    //         // only accept if user request
+    //         // Expression::Command(f, existing_args) => {
+    //         //     Cow::Borrowed(self)
+    //         // if existing_args.iter().any(|a| a == &Expression::Blank) {
+    //         // } else {
+    //         //     let mut new_vec = Vec::with_capacity(existing_args.len() + 1);
+    //         //     new_vec.push(Expression::Blank);
+    //         //     new_vec.extend_from_slice(existing_args);
+    //         //     Cow::Owned(Expression::Command(f.clone(), Rc::new(new_vec)))
+    //         // }
+    //         // }
+    //         // for chain: only add to head of first call if user not request.
+    //         Expression::Chain(base, calls) => {
+    //             if calls.is_empty() || calls[0].args.contains(&Expression::Blank) {
+    //                 Cow::Borrowed(self)
+    //             } else {
+    //                 let (call, others) = calls.split_at(1);
+
+    //                 let mut new_vec = Vec::with_capacity(call[0].args.len() + 1);
+    //                 new_vec.push(Expression::Blank);
+    //                 new_vec.extend_from_slice(&call[0].args);
+
+    //                 let mut new_calls = Vec::with_capacity(calls.len());
+    //                 new_calls.push(ChainCall {
+    //                     method: call[0].method.clone(),
+    //                     args: new_vec,
+    //                 });
+    //                 new_calls.extend_from_slice(others);
+    //                 Cow::Owned(Expression::Chain(base.clone(), new_calls))
+    //             }
+    //         }
+    //         _ => Cow::Borrowed(self), //others, like binop,group,pipe...
+    //     }
+    // }
+
+    pub fn ensure_fn_apply<'a>(&'a self) -> Cow<'a, Expression> {
         match self {
             Expression::Function(..) | Expression::Lambda(..) | Expression::Builtin(..) => {
-                self.apply(vec![])
+                Cow::Owned(self.apply(vec![]))
             }
             // symbol maybe alias, but also maybe var/string, so let user decide.
             // Expression::Symbol(_) => Expression::Command(Rc::new(self.clone()), Rc::new(vec![])),
-            _ => self.clone(), //others, like binop,group,pipe...
+            _ => Cow::Borrowed(self), //others, like binop,group,pipe...
+        }
+    }
+    pub fn ensure_has_receiver<'a>(&'a self) -> Cow<'a, Expression> {
+        match self {
+            //for func: add default receiver to at head if not exist
+            Expression::Apply(f, existing_args) => {
+                if existing_args.iter().any(|a| a == &Expression::Blank) {
+                    Cow::Borrowed(self)
+                } else {
+                    let mut new_vec = Vec::with_capacity(existing_args.len() + 1);
+                    new_vec.push(Expression::Blank);
+                    new_vec.extend_from_slice(existing_args);
+                    Cow::Owned(Expression::Apply(f.clone(), Rc::new(new_vec)))
+                }
+            }
+            // for cmd: never add, default is pipeout to stdio
+            // only accept if user request
+            // Expression::Command(f, existing_args) => {
+            //     Cow::Borrowed(self)
+            // if existing_args.iter().any(|a| a == &Expression::Blank) {
+            // } else {
+            //     let mut new_vec = Vec::with_capacity(existing_args.len() + 1);
+            //     new_vec.push(Expression::Blank);
+            //     new_vec.extend_from_slice(existing_args);
+            //     Cow::Owned(Expression::Command(f.clone(), Rc::new(new_vec)))
+            // }
+            // }
+            // for chain: only add to head of first call if user not request.
+            Expression::Chain(base, calls) => {
+                if calls.is_empty() || calls[0].args.contains(&Expression::Blank) {
+                    Cow::Borrowed(self)
+                } else {
+                    let (call, others) = calls.split_at(1);
+
+                    let mut new_vec = Vec::with_capacity(call[0].args.len() + 1);
+                    new_vec.push(Expression::Blank);
+                    new_vec.extend_from_slice(&call[0].args);
+
+                    let mut new_calls = Vec::with_capacity(calls.len());
+                    new_calls.push(ChainCall {
+                        method: call[0].method.clone(),
+                        args: new_vec,
+                    });
+                    new_calls.extend_from_slice(others);
+                    Cow::Owned(Expression::Chain(base.clone(), new_calls))
+                }
+            }
+            _ => Cow::Borrowed(self), //others, like binop,group,pipe...
         }
     }
 

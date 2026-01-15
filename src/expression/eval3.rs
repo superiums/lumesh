@@ -47,14 +47,14 @@ impl Expression {
             Expression::Builtin(bti) => self.eval_builtin(&bti, args, state, env, depth + 1),
             // Lambda 应用 - 完全求值的函数应用
             Expression::Lambda(params, body) => {
-                let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
+                // let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
                 // dbg!("2.--- applying lambda---", &params);
                 let mut current_env = env.fork();
 
                 // 批量参数绑定前先求值所有参数
                 let is_in_pipe = state.contains(State::IN_PIPE);
                 state.set(State::IN_PIPE);
-                let mut evaluated_args = args
+                let evaluated_args = args
                     .iter()
                     .map(|arg| arg.eval_mut(state, env, depth + 1))
                     .collect::<Result<Vec<_>, _>>()?;
@@ -62,9 +62,9 @@ impl Expression {
                     state.clear(State::IN_PIPE);
                 }
 
-                if let Some(p) = pipe_out {
-                    evaluated_args.push(p);
-                };
+                // if let Some(p) = pipe_out {
+                //     evaluated_args.push(p);
+                // };
 
                 match bind_arguments(&params, &evaluated_args, &mut current_env) {
                     // 完全应用：求值函数体
@@ -109,13 +109,14 @@ impl Expression {
                 // dbg!("2.--- applying function---", &name, &params, &decos);
                 // dbg!(&def_env);
                 // 参数数量校验
-                let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
-                let pipe_arg_len = match &pipe_out {
-                    Some(_) => 1,
-                    _ => 0,
-                };
+                // let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
+                // let pipe_arg_len = match &pipe_out {
+                //     Some(_) => 1,
+                //     _ => 0,
+                // };
 
-                if pc.is_none() && args.len() + pipe_arg_len > params.len() {
+                // if pc.is_none() && args.len() + pipe_arg_len > params.len() {
+                if pc.is_none() && args.len() > params.len() {
                     return Err(RuntimeError::new(
                         crate::RuntimeErrorKind::TooManyArguments {
                             name,
@@ -197,9 +198,9 @@ impl Expression {
                             state.clear(State::IN_PIPE);
                         }
 
-                        if let Some(p) = pipe_out {
-                            actual_args.push(p);
-                        };
+                        // if let Some(p) = pipe_out {
+                        //     actual_args.push(p);
+                        // };
 
                         // 填充默认值逻辑（新增）
                         for (i, (_, default)) in params.iter().enumerate() {
@@ -479,6 +480,7 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // dbg!("   3.--->applying Symbol:", &cmd_sym, &args);
+        // NOTE alias is a symbol, when appreared on right of pipe, the _ receiver is not injected
         match alias::get_alias(cmd_sym.as_str()) {
             // 别名
             Some(cmd_alias) => {
@@ -504,16 +506,25 @@ impl Expression {
                     Expression::Symbol(cmd_str) | Expression::String(cmd_str) if is_cmd_mode => {
                         handle_command(self, &cmd_str, args, state, env, depth + 1)
                     }
-                    // alias a=fmt.red()
+
+                    // -----need to inject _ receiver if on pipe right.
+                    // alias a=myfunc()
                     Expression::Apply(..) if !is_cmd_mode => cmd_alias
                         .append_args(args.to_vec())
+                        // .ensure_has_receiver()
                         .eval_mut(state, env, depth + 1),
-                    Expression::Chain(..) => {
-                        cmd_alias
-                            .append_args(args.to_vec())
-                            .eval_mut(state, env, depth + 1)
-                    }
-                    // alias a=fmt.red
+                    // alias a=String.red   a=myfunc
+                    Expression::Function(..) if !is_cmd_mode => cmd_alias
+                        .ensure_fn_apply()
+                        .append_args(args.to_vec())
+                        // .ensure_has_receiver()
+                        .eval_mut(state, env, depth + 1),
+                    // alias a=String.red()
+                    Expression::Chain(..) => cmd_alias
+                        .append_args(args.to_vec())
+                        // .ensure_has_receiver()
+                        .eval_mut(state, env, depth + 1),
+                    // alias a=String.red
                     // Expression::Index(..) => {
                     //     let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
                     //     return match cmdx {
@@ -584,18 +595,25 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // dbg!("   3.--->applying Builtin:", &bti.name, &args);
-        let pipe_out = state.pipe_out();
+        // let pipe_out = state.pipe_out();
 
         // 执行时机应由内置函数自己选择，如 where(size>0)
         // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
-        let rst = match pipe_out {
-            Some(p) => {
-                let mut appened_args = args.clone();
-                appened_args.push(p);
-                (bti.body)(appened_args.as_slice(), env)
-            }
-            _ => (bti.body)(args, env),
-        };
+        // let rst = match pipe_out {
+        //     Some(p) => {
+        // let mut appened_args = args.clone();
+        // appened_args.push(p);
+        let appened_args = args
+            .iter()
+            .map(|x| match x {
+                Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
+                o => o.clone(),
+            })
+            .collect::<Vec<_>>();
+        let rst = (bti.body)(appened_args.as_ref(), env);
+        //     }
+        //     _ => (bti.body)(args, env),
+        // };
 
         rst.map_err(|e| {
             RuntimeError::new(
@@ -758,7 +776,7 @@ impl Expression {
     #[inline]
     pub fn eval_lib_method(
         &self,
-        module: Cow<'static, str>,
+        lib: Cow<'static, str>,
         call_method: &str,
         call_args: &Vec<Expression>,
         current_base: Expression,
@@ -766,7 +784,7 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        match get_builtin(&module) {
+        match get_builtin(&lib) {
             // 顶级内置命令
             Some(Expression::HMap(hmap)) => {
                 let mut final_args = call_args
@@ -779,7 +797,7 @@ impl Expression {
                 let bti_expr = hmap.as_ref().get(call_method).ok_or(RuntimeError::new(
                     RuntimeErrorKind::MethodNotFound(
                         call_method.to_string().into(),
-                        module.to_owned(),
+                        lib.to_owned(),
                     ),
                     self.clone(),
                     depth,
@@ -792,7 +810,7 @@ impl Expression {
                     // chained bti, inner has child.
                     {
                         Err(RuntimeError::new(
-                            RuntimeErrorKind::CustomError(module),
+                            RuntimeErrorKind::CustomError(lib),
                             self.clone(),
                             depth,
                         ))

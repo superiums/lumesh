@@ -101,10 +101,18 @@ impl Add for Expression {
 
             // range
             (Self::Range(a, step), Self::Integer(b)) if b >= 0 => {
-                Ok(Expression::Range(a.start..a.end + b, step))
+                let end = a
+                    .end
+                    .checked_add(b)
+                    .ok_or_else(|| RuntimeErrorKind::Overflow(format!("{} + {b}", a.end)))?;
+                Ok(Expression::Range(a.start..end, step))
             }
             (Self::Range(a, step), Self::Integer(b)) => {
-                Ok(Expression::Range((a.start + b)..a.end, step))
+                let start = a
+                    .start
+                    .checked_add(b)
+                    .ok_or_else(|| RuntimeErrorKind::Overflow(format!("{} + {b}", a.start)))?;
+                Ok(Expression::Range(start..a.end, step))
             }
 
             // 列表合并

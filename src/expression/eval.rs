@@ -731,7 +731,7 @@ impl Expression {
                                         return ls
                                             .iter()
                                             .map(|item| {
-                                                match rhs.as_ref() {
+                                                return match rhs.as_ref() {
                                                     Expression::PipeMethod(method, args) => item
                                                         .handle_pipe_method(
                                                             method,
@@ -748,7 +748,7 @@ impl Expression {
                                                             // .replace_or_append_arg(item.clone())
                                                             .eval_mut(state, env, depth + 1)
                                                     }
-                                                }
+                                                };
                                             })
                                             // .filter(|x| {
                                             //     x.as_ref()
@@ -762,7 +762,7 @@ impl Expression {
                                             .into_iter()
                                             .map(|item| {
                                                 let item_expr = Expression::String(item);
-                                                match rhs.as_ref() {
+                                                return match rhs.as_ref() {
                                                     Expression::PipeMethod(method, args) => {
                                                         item_expr.handle_pipe_method(
                                                             method,
@@ -780,7 +780,7 @@ impl Expression {
                                                             // .replace_or_append_arg(Expression::String(item))
                                                             .eval_mut(state, env, depth + 1)
                                                     }
-                                                }
+                                                };
                                             })
                                             // .filter(|x| {
                                             //     x.as_ref()
@@ -1290,7 +1290,7 @@ impl Expression {
                 self.eval_lib_method(mo_name, method, args, self.clone(), state, env, depth)
             }
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::NoModuleDefined(
+                RuntimeErrorKind::NoLibDefined(
                     self.to_string(),
                     self.type_name().into(),
                     "eval pipe".into(),

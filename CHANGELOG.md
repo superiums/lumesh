@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.10.3]
+- add range support to match (not variable)
+
 ## [0.10.2]
 - add `_` as blank expression
 this simplify unclosed ranges, mathes scentence, and positional pipe out.

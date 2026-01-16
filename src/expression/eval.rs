@@ -1011,12 +1011,27 @@ impl Expression {
                     continue;
                 }
 
-                Self::Match(value, branches) => {
+                Self::Match(dest, branches) => {
                     // 模式匹配求值
-                    let val = value.as_ref().eval_mut(state, env, depth + 1)?;
+                    let value = dest.as_ref().eval_mut(state, env, depth + 1)?;
                     let mut matched = false;
-                    for (pat, expr) in branches.as_ref().iter() {
-                        if matches_pattern(&val, pat) {
+                    for (pattern, expr) in branches.iter() {
+                        if pattern.iter().any(|pat| match pat {
+                            Expression::Blank => true,
+                            Expression::Symbol(s) | Expression::String(s) => {
+                                s == &value.to_string()
+                            }
+                            Expression::RangeOp(..) => {
+                                pat.eval_mut(state, env, depth).is_ok_and(|r| {
+                                    handle_contains(r, value.clone(), job, depth).is_ok_and(|x| x)
+                                })
+                            }
+                            Expression::RegexDef(s) => {
+                                Regex::new(s).is_ok_and(|r| r.is_match(value.to_string().as_str()))
+                            }
+
+                            o => o == &value,
+                        }) {
                             job = expr;
                             matched = true;
                             break;
@@ -1026,7 +1041,7 @@ impl Expression {
                         continue;
                     }
                     return Err(RuntimeError::new(
-                        RuntimeErrorKind::NoMatchingBranch(val.to_string()),
+                        RuntimeErrorKind::NoMatchingBranch(dest.to_string()),
                         self.clone(),
                         depth,
                     ));
@@ -1394,19 +1409,6 @@ impl Expression {
             }),
         }
     }
-}
-
-/// match的比对
-fn matches_pattern(value: &Expression, pattern: &Vec<Expression>) -> bool {
-    pattern.iter().any(|pat| match pat {
-        Expression::Blank => true,
-        Expression::Symbol(s) | Expression::String(s) => s == &value.to_string(),
-        Expression::RegexDef(s) => {
-            Regex::new(s).is_ok_and(|r| r.is_match(value.to_string().as_str()))
-        }
-
-        o => o == value,
-    })
 }
 
 fn handle_contains(

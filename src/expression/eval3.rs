@@ -787,12 +787,21 @@ impl Expression {
         match get_builtin(&lib) {
             // 顶级内置命令
             Some(Expression::HMap(hmap)) => {
-                let mut final_args = call_args
-                    .iter()
-                    .map(|a| a.eval_mut(state, env, depth + 1))
-                    .collect::<Result<Vec<_>, _>>()?;
-                final_args.push(current_base);
+                // let mut final_args = call_args
+                //     .iter()
+                //     .map(|a| a.eval_mut(state, env, depth + 1))
+                //     .collect::<Result<Vec<_>, _>>()?;
+                // final_args.push(current_base);
 
+                let mut final_args = Vec::with_capacity(call_args.len() + 1);
+                final_args.push(current_base);
+                final_args.extend_from_slice(
+                    call_args
+                        .iter()
+                        .map(|a| a.eval_mut(state, env, depth + 1))
+                        .collect::<Result<Vec<_>, _>>()?
+                        .as_ref(),
+                );
                 //dbg!(&hmap);
                 let bti_expr = hmap.as_ref().get(call_method).ok_or(RuntimeError::new(
                     RuntimeErrorKind::MethodNotFound(

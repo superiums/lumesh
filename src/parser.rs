@@ -1443,11 +1443,20 @@ fn parse_value_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synt
         match s.to_str(input.str) {
             "True" => Expression::Boolean(true),
             "False" => Expression::Boolean(false),
-            "None" => Expression::None,
             "_" => Expression::Blank,
+            // "None" => Expression::None,
             _ => Expression::None,
         }
     })(input)
+}
+#[inline]
+fn parse_blank(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, v) = kind(TokenKind::ValueSymbol)(input)?;
+
+    if v.to_str(input.str) == "_" {
+        return Ok((input, Expression::Blank));
+    }
+    Err(nom::Err::Error(SyntaxErrorKind::NoExpression))
 }
 
 fn normalize_linebreaks(tokens: &mut Vec<Token>) {
@@ -2038,17 +2047,36 @@ fn parse_pattern(input: Tokens<'_>) -> IResult<Tokens<'_>, Vec<Expression>, Synt
     let (input, pat) = separated_list1(
         text(","),
         alt((
-            parse_integer,
-            parse_float,
+            parse_num_range,
             parse_string,
             parse_string_raw,
             parse_value_symbol,
             parse_symbol,
             parse_regex,
             parse_time,
+            parse_integer,
+            parse_float,
         )),
     )(input)?;
     Ok((input, pat))
+}
+fn parse_num_range(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, start) = alt((parse_integer, parse_blank))(input)?;
+    let (new_input, optoken) = alt((text("..="), text("..")))(input)?;
+    let operator = optoken.text(input);
+    let input = new_input;
+
+    let (input, stop) = alt((parse_integer, parse_blank))(input)?;
+    let (input, step) = opt(preceded(text(":"), cut(alt((parse_integer, parse_blank)))))(input)?;
+
+    let r = Expression::RangeOp(
+        operator.to_string(),
+        Rc::new(start),
+        Rc::new(stop),
+        step.map(Rc::new),
+    );
+
+    Ok((input, r))
 }
 // 自定义EOF解析器，返回StrSlice类型
 fn eof_slice(input: Tokens<'_>) -> IResult<Tokens<'_>, StrSlice, SyntaxErrorKind> {

@@ -1,7 +1,7 @@
 [package]
 name = "lumesh"
-version = "0.10.2"
-authors = ["Adam McDaniel; santo"]
+version = "0.10.3"
+authors = ["Adam McDaniel; Santo"]
 edition = "2024"
 license = "MIT"
 description = "a lighting shell ⚡ bash alternative"

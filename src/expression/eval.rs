@@ -385,7 +385,7 @@ impl Expression {
                             }
 
                             Err(RuntimeError::common(
-                                format!("custom operation {op:?} not defined").into(),
+                                format!("custom unary operator {op:?} not defined").into(),
                                 self.clone(),
                                 depth,
                             ))
@@ -592,7 +592,8 @@ impl Expression {
                                     }
 
                                     Err(RuntimeError::common(
-                                        format!("custom operation {op:?} not defined",).into(),
+                                        format!("custom binary operator {op:?} not defined",)
+                                            .into(),
                                         self.clone(),
                                         depth,
                                     ))
@@ -730,12 +731,24 @@ impl Expression {
                                         return ls
                                             .iter()
                                             .map(|item| {
-                                                state.pipe_in(item.clone());
-                                                rhs.as_ref()
-                                                    .ensure_fn_apply()
-                                                    .ensure_has_receiver()
-                                                    // .replace_or_append_arg(item.clone())
-                                                    .eval_mut(state, env, depth + 1)
+                                                match rhs.as_ref() {
+                                                    Expression::PipeMethod(method, args) => item
+                                                        .handle_pipe_method(
+                                                            method,
+                                                            args,
+                                                            state,
+                                                            env,
+                                                            depth + 1,
+                                                        ),
+                                                    _ => {
+                                                        state.pipe_in(item.clone());
+                                                        rhs.as_ref()
+                                                            .ensure_fn_apply()
+                                                            .ensure_has_receiver()
+                                                            // .replace_or_append_arg(item.clone())
+                                                            .eval_mut(state, env, depth + 1)
+                                                    }
+                                                }
                                             })
                                             // .filter(|x| {
                                             //     x.as_ref()
@@ -748,12 +761,26 @@ impl Expression {
                                         return ifs_split(&strls, env)
                                             .into_iter()
                                             .map(|item| {
-                                                state.pipe_in(Expression::String(item));
-                                                rhs.as_ref()
-                                                    .ensure_fn_apply()
-                                                    .ensure_has_receiver()
-                                                    // .replace_or_append_arg(Expression::String(item))
-                                                    .eval_mut(state, env, depth + 1)
+                                                let item_expr = Expression::String(item);
+                                                match rhs.as_ref() {
+                                                    Expression::PipeMethod(method, args) => {
+                                                        item_expr.handle_pipe_method(
+                                                            method,
+                                                            args,
+                                                            state,
+                                                            env,
+                                                            depth + 1,
+                                                        )
+                                                    }
+                                                    _ => {
+                                                        state.pipe_in(item_expr);
+                                                        rhs.as_ref()
+                                                            .ensure_fn_apply()
+                                                            .ensure_has_receiver()
+                                                            // .replace_or_append_arg(Expression::String(item))
+                                                            .eval_mut(state, env, depth + 1)
+                                                    }
+                                                }
                                             })
                                             // .filter(|x| {
                                             //     x.as_ref()
@@ -763,39 +790,30 @@ impl Expression {
                                             .map(Expression::from);
                                     }
                                     _ => {
-                                        state.pipe_in(left_output);
-                                        return rhs
-                                            .as_ref()
-                                            .ensure_fn_apply()
-                                            .ensure_has_receiver()
-                                            // .replace_or_append_arg(left_output)
-                                            .eval_mut(state, env, depth + 1);
+                                        return match rhs.as_ref() {
+                                            Expression::PipeMethod(method, args) => left_output
+                                                .handle_pipe_method(
+                                                    method,
+                                                    args,
+                                                    state,
+                                                    env,
+                                                    depth + 1,
+                                                ),
+                                            _ => {
+                                                state.pipe_in(left_output);
+                                                rhs.as_ref()
+                                                    .ensure_fn_apply()
+                                                    .ensure_has_receiver()
+                                                    // .replace_or_append_arg(left_output)
+                                                    .eval_mut(state, env, depth + 1)
+                                            }
+                                        };
                                     }
                                 },
                                 "|" => {
                                     return match rhs.as_ref() {
-                                        Expression::PipeMethod(method, args) => {
-                                            match left_output.get_belong_lib_name() {
-                                                Some(lib) => self.eval_lib_method(
-                                                    lib,
-                                                    method,
-                                                    args,
-                                                    left_output,
-                                                    state,
-                                                    env,
-                                                    depth,
-                                                ),
-                                                _ => Err(RuntimeError::new(
-                                                    RuntimeErrorKind::NoLibDefined(
-                                                        left_output.to_string(),
-                                                        left_output.type_name().into(),
-                                                        "eval pipe".into(),
-                                                    ),
-                                                    self.clone(),
-                                                    depth,
-                                                )),
-                                            }
-                                        }
+                                        Expression::PipeMethod(method, args) => left_output
+                                            .handle_pipe_method(method, args, state, env, depth),
 
                                         _ => {
                                             state.pipe_in(left_output);
@@ -1258,49 +1276,28 @@ impl Expression {
         }
     }
 
-    pub fn as_list(&self) -> Result<&Vec<Expression>, RuntimeErrorKind> {
-        match self {
-            Self::List(v) => Ok(v.as_ref()),
-            _ => Err(RuntimeErrorKind::TypeError {
-                expected: "list".into(),
-                sym: self.to_string(),
-                found: self.type_name(),
-            }),
-        }
-    }
-
-    /// 辅助方法：将表达式求值为整数选项
-    pub fn eval_to_int_opt(
-        expr_opt: &Option<Rc<Self>>,
+    // 在 impl Expression 块中添加
+    fn handle_pipe_method(
+        &self,
+        method: &str,
+        args: &[Expression],
         state: &mut State,
         env: &mut Environment,
         depth: usize,
-    ) -> Result<Option<Int>, RuntimeError> {
-        match expr_opt {
-            // 无表达式时返回 None
-            None => Ok(None),
-            // 有表达式时进行求值
-            Some(boxed_expr) => {
-                // 递归求值表达式
-                let evaluated = boxed_expr.as_ref().eval_mut(state, env, depth + 1)?;
-
-                // 转换为整数
-                match evaluated {
-                    Self::Integer(i) => Ok(Some(i)),
-                    // 处理隐式类型转换
-                    Self::Float(f) if f.fract() == 0.0 => Ok(Some(f as Int)),
-                    // 处理其他类型错误
-                    _ => Err(RuntimeError::new(
-                        RuntimeErrorKind::TypeError {
-                            expected: "Integer".into(),
-                            sym: evaluated.to_string(),
-                            found: evaluated.type_name(),
-                        },
-                        boxed_expr.as_ref().clone(),
-                        depth,
-                    )),
-                }
+    ) -> Result<Expression, RuntimeError> {
+        match self.get_belong_lib_name() {
+            Some(mo_name) => {
+                self.eval_lib_method(mo_name, method, args, self.clone(), state, env, depth)
             }
+            _ => Err(RuntimeError::new(
+                RuntimeErrorKind::NoModuleDefined(
+                    self.to_string(),
+                    self.type_name().into(),
+                    "eval pipe".into(),
+                ),
+                self.clone(),
+                depth,
+            )),
         }
     }
 }

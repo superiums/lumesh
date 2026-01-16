@@ -2,6 +2,7 @@
 
 ## [0.10.3]
 - add range support to match (not variable)
+- add pipemethod support to `|>`
 
 ## [0.10.2]
 - add `_` as blank expression

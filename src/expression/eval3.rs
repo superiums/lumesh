@@ -778,7 +778,7 @@ impl Expression {
         &self,
         lib: Cow<'static, str>,
         call_method: &str,
-        call_args: &Vec<Expression>,
+        call_args: &[Expression],
         current_base: Expression,
         state: &mut State,
         env: &mut Environment,

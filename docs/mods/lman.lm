@@ -16,6 +16,11 @@
                   curl -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
                   chmod '+x' /tmp/lume
                   let dest = About | .get('bin')
+                  if $dest.starts_with('/home'){
+                    cp -f $tmp $dest
+                  }else{
+                    bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`
+                  }
                   bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`
                   println 'finished'
               } else {

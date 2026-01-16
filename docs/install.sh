@@ -242,6 +242,8 @@ download_docs() {
     # Extract and move to final location
     cd /tmp
     tar -xzf "$temp_doc"
+    mkdir -p "~/.config/lumesh"
+    cp doc/config/config.lm "~/.config/lumesh/"
     $sudo_cmd cp -r doc/install/* "$DOC_DIR/"
     rm -rf doc "$temp_doc"
 

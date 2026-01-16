@@ -405,7 +405,9 @@ impl Expression {
                         "+=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
-                                left += rhs.eval(env)?;
+                                let right = rhs.eval(env)?;
+                                left = (left + right)
+                                    .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
                                 Ok(left)
                             }
@@ -426,7 +428,9 @@ impl Expression {
                         "-=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
-                                left -= rhs.eval(env)?;
+                                let right = rhs.eval(env)?;
+                                left = (left - right)
+                                    .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
                                 Ok(left)
                             }
@@ -447,7 +451,9 @@ impl Expression {
                         "*=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
-                                left *= rhs.eval(env)?;
+                                let right = rhs.eval(env)?;
+                                left = (left * right)
+                                    .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
                                 Ok(left)
                             }
@@ -469,14 +475,8 @@ impl Expression {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
                                 let right = rhs.eval(env)?;
-                                if !right.is_truthy() {
-                                    return Err(RuntimeError::common(
-                                        format!("can't divide {base} by zero").into(),
-                                        self.clone(),
-                                        depth,
-                                    ));
-                                };
-                                left /= right;
+                                left = (left / right)
+                                    .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
                                 Ok(left)
                             }

@@ -319,7 +319,12 @@ fn bit_shl(args: &[Expression], env: &mut Environment) -> Result<Expression, LmE
             )));
         }
     };
-
+    if a < 0 || a > 63 {
+        return Err(LmError::CustomError(format!(
+            "shift amount {} out of range (0-63)",
+            a
+        )));
+    }
     Ok(Expression::Integer(b << a))
 }
 
@@ -344,7 +349,12 @@ fn bit_shr(args: &[Expression], env: &mut Environment) -> Result<Expression, LmE
             )));
         }
     };
-
+    if a < 0 || a > 63 {
+        return Err(LmError::CustomError(format!(
+            "shift amount {} out of range (0-63)",
+            a
+        )));
+    }
     Ok(Expression::Integer(b >> a))
 }
 

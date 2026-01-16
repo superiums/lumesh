@@ -200,14 +200,6 @@ impl ParseError<Tokens<'_>> for SyntaxErrorKind {
         use SyntaxErrorKind::*;
 
         match (&self, &other) {
-            // InternalError 优先级最低，总是被其他错误替换
-            (InternalError(_), _) => other,
-            (_, InternalError(_)) => self,
-
-            // Expected 错误优先级较高，包含具体的期望信息
-            (Expected { .. }, NomError { .. }) => self,
-            (NomError { .. }, Expected { .. }) => other,
-
             // TokenizationErrors 是致命错误，优先级最高
             (TokenizationErrors(_), _) => self,
             (_, TokenizationErrors(_)) => other,
@@ -216,6 +208,10 @@ impl ParseError<Tokens<'_>> for SyntaxErrorKind {
             (RecursionDepth { .. }, _) => self,
             (_, RecursionDepth { .. }) => other,
 
+            // Expected 错误优先级较高，包含具体的期望信息
+            (Expected { .. }, NomError { .. }) => self,
+            (NomError { .. }, Expected { .. }) => other,
+
             // ArgumentMismatch 比一般错误更具体
             (ArgumentMismatch { .. }, NomError { .. }) => self,
             (NomError { .. }, ArgumentMismatch { .. }) => other,
@@ -223,6 +219,10 @@ impl ParseError<Tokens<'_>> for SyntaxErrorKind {
             // UnknownOperator 比 NoExpression 更具体
             (UnknownOperator(..), NoExpression) => self,
             (NoExpression, UnknownOperator(..)) => other,
+
+            // InternalError 优先级最低，总是被其他错误替换
+            (InternalError(_), _) => other,
+            (_, InternalError(_)) => self,
 
             // 对于相同类型的错误，选择包含更多上下文信息的
             (

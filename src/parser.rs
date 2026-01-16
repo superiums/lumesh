@@ -431,7 +431,10 @@ impl PrattParser {
                 first.text(input).to_string(),
                 input.get_str_slice(),
             ))),
-            _ => unreachable!(),
+            _ => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+                format!("Unexpected token kind: {:?}", first.kind),
+                input.get_str_slice(),
+            ))),
         }
     }
     // 后缀表达式构建
@@ -1725,20 +1728,59 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     unsafe {
         if CFM_ENABLED {
             return match expr {
-                Expression::Symbol(s) => Ok((
-                    input,
-                    Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-                )),
+                Expression::Symbol(s) => {
+                    // 验证符号不是数字或特殊字符
+                    if s.chars().any(|c| c.is_control() || c == '\0') {
+                        return Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+                            "Invalid characters in command".to_string(),
+                            input.get_str_slice(),
+                        )));
+                    }
+                    Ok((
+                        input,
+                        Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+                    ))
+                }
                 #[cfg(unix)]
-                Expression::String(s) if s.contains("/") => Ok((
-                    input,
-                    Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-                )),
+                Expression::String(s) if s.contains("/") => {
+                    if s.chars().any(|c| c.is_control() || c == '\0') {
+                        return Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+                            "Invalid characters in command".to_string(),
+                            input.get_str_slice(),
+                        )));
+                    }
+                    // 验证路径格式
+                    if s.contains("..") && !s.starts_with("../") {
+                        return Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+                            "Relative path must start with ./ or ../".to_string(),
+                            input.get_str_slice(),
+                        )));
+                    }
+                    Ok((
+                        input,
+                        Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+                    ))
+                }
                 #[cfg(windows)]
-                Expression::String(s) if (s.contains(":\\") || s.contains(".\\")) => Ok((
-                    input,
-                    Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
-                )),
+                Expression::String(s) if (s.contains(":\\") || s.contains(".\\")) => {
+                    if s.chars().any(|c| c.is_control() || c == '\0') {
+                        return Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+                            "Invalid characters in command".to_string(),
+                            input.get_str_slice(),
+                        )));
+                    }
+                    // 验证 Windows 路径格式
+                    if s.contains(":\\") && s.len() < 3 {
+                        return Err(nom::Err::Error(SyntaxErrorKind::CustomError(
+                            "Invalid Windows path format".to_string(),
+                            input.get_str_slice(),
+                        )));
+                    }
+                    Ok((
+                        input,
+                        Expression::Command(Rc::new(Expression::Symbol(s)), Rc::new(vec![])),
+                    ))
+                }
                 _ => Ok((input, expr)),
             };
         }

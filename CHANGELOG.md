@@ -3,7 +3,7 @@
 ## [0.10.3]
 - add range support to match (not variable)
 - add pipemethod support to `|>`
-- fix range add overflow
+- fix range add and simlar overflow
 
 ## [0.10.2]
 - add `_` as blank expression

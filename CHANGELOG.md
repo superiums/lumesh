@@ -4,6 +4,7 @@
 - add range support to match (not variable)
 - add pipemethod support to `|>`
 - fix range add and simlar overflow
+- move all lazy-staticto lazylock/oncelock
 
 ## [0.10.2]
 - add `_` as blank expression

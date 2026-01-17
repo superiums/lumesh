@@ -17,6 +17,8 @@ struct UnsafeStatic<T> {
 }
 unsafe impl<T> Sync for UnsafeStatic<T> {} // 手动标记为 Sync（单线程安全）
 
+pub static BULTIN_COMMANDS: LazyLock<HashSet<String>> = LazyLock::new(|| get_builtin_symbos());
+
 static BUILTIN: UnsafeStatic<LazyLock<HashMap<String, Expression>>> = UnsafeStatic {
     inner: LazyLock::new(bin::get_module_map),
 };
@@ -27,6 +29,7 @@ pub fn get_builtin(name: &str) -> Option<&Expression> {
 pub fn get_builtin_map() -> HashMap<String, Expression> {
     BUILTIN.inner.clone()
 }
+
 pub fn get_builtin_tips() -> HashSet<String> {
     let mut tips: HashSet<String> = HashSet::new();
     for (key, item) in get_builtin_map().into_iter() {
@@ -68,7 +71,8 @@ pub fn get_builtin_tips() -> HashSet<String> {
     }
     tips
 }
-pub fn get_builtin_symbos() -> HashSet<String> {
+
+fn get_builtin_symbos() -> HashSet<String> {
     let mut tips: HashSet<String> = HashSet::new();
 
     for (key, item) in get_builtin_map().iter() {

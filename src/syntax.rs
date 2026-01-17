@@ -1,16 +1,10 @@
 // 复用现有的高亮逻辑
 
 use common_macros::hash_map;
-use std::collections::{BTreeMap, HashMap, HashSet};
-use std::sync::Mutex;
+use std::collections::{BTreeMap, HashMap};
 
-use crate::modules::get_builtin_symbos;
-use crate::{Diagnostic, Expression, TokenKind, tokenize};
-use lazy_static::lazy_static;
+use crate::{Diagnostic, Expression, TokenKind, modules::BULTIN_COMMANDS, tokenize};
 
-lazy_static! {
-    static ref BULTIN_COMMANDS: Mutex<HashSet<String>> = Mutex::new(get_builtin_symbos());
-}
 const DEFAULT: &str = "";
 
 pub fn highlight_dark_theme(line: &str) -> String {
@@ -121,7 +115,7 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                     result.push_str(e.to_str(line));
                     is_colored = true;
                 } else {
-                    if BULTIN_COMMANDS.lock().unwrap().contains(l) {
+                    if BULTIN_COMMANDS.contains(l) {
                         // if matches!(l, "echo" | "exit" | "clear" | "cd" | "rm") {
                         result.push_str(get_color("builtin_cmd", theme));
                         is_colored = true;

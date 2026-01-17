@@ -1,8 +1,7 @@
 use super::Int;
 use crate::{Environment, Expression, LmError};
 use common_macros::hash_map;
-use lazy_static::lazy_static;
-use std::sync::RwLock;
+use std::sync::{LazyLock, RwLock};
 
 // 日志级别常量
 const NONE: Int = 0;
@@ -12,9 +11,12 @@ const INFO: Int = 3;
 const DEBUG: Int = 4;
 const TRACE: Int = 5;
 
-lazy_static! {
-    static ref LOG_LEVEL: RwLock<Int> = RwLock::new(INFO); // 默认INFO级别
-}
+// 使用 LazyLock 替代 lazy_static!
+static LOG_LEVEL: LazyLock<RwLock<Int>> = LazyLock::new(|| RwLock::new(INFO));
+
+// lazy_static! {
+//     static ref LOG_LEVEL: RwLock<Int> = RwLock::new(INFO); // 默认INFO级别
+// }
 
 // 检查日志级别是否启用
 fn is_log_level_enabled(level: Int) -> bool {

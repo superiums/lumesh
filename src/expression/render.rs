@@ -1,12 +1,11 @@
-use lazy_static::lazy_static;
 use regex_lite::{Captures, Regex};
 
 use crate::{Environment, parse};
+use std::sync::LazyLock;
 
 // 定义支持两种变量格式的正则表达式
-lazy_static! {
-    static ref VAR_REGEX: Regex = Regex::new(r"\$\{([^{}]+)\}|\$([\w.-]+)").unwrap();
-}
+static VAR_REGEX: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"\$\{([^{}]+)\}|\$([\w.-]+)").unwrap());
 
 pub fn render_template(template: &str, env: &mut Environment) -> String {
     VAR_REGEX

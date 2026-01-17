@@ -1,9 +1,9 @@
 use std::fs::read_to_string;
 use std::path::PathBuf;
+use std::sync::LazyLock;
 use std::sync::RwLock;
 use std::{collections::HashMap, sync::Arc};
 
-use lazy_static::lazy_static;
 use rustyline::completion::Pair;
 
 use crate::{Expression, RuntimeError};
@@ -20,9 +20,8 @@ impl CompletionDatabase {
     }
 }
 
-lazy_static! {
-    static ref COMPLETION_DB: RwLock<CompletionDatabase> = RwLock::new(CompletionDatabase::new());
-}
+static COMPLETION_DB: LazyLock<RwLock<CompletionDatabase>> =
+    LazyLock::new(|| RwLock::new(CompletionDatabase::new()));
 
 #[derive(Debug, Clone)]
 pub struct CompletionEntry {
@@ -475,6 +474,21 @@ impl ParamCompleter {
 
     fn get_entry_for_command(&self, command: &str) -> Option<Arc<Vec<CompletionEntry>>> {
         // 先尝试读锁
+        // match COMPLETION_DB.read().entries.get(command) {
+        //     Some(entry) => Some(Cow::Borrowed(entry)),
+        //     _ => {
+        //         let entry = self.load_entry(command).unwrap_or_default();
+        //         let arc_entry = Arc::new(entry);
+        //         COMPLETION_DB
+        //             .write()
+        //             .entries
+        //             .insert(command.to_string(), Arc::clone(&arc_entry));
+        //         if entry.is_empty() {
+        //             return None;
+        //         }
+        //         Some(Cow::Owned(arc_entry))
+        //     }
+        // }
         if let Ok(db) = COMPLETION_DB.read() {
             if let Some(entries) = db.entries.get(command) {
                 return Some(Arc::clone(entries));
@@ -483,11 +497,6 @@ impl ParamCompleter {
 
         // 如果不存在，获取写锁并插入
         if let Ok(mut db) = COMPLETION_DB.write() {
-            // 再次检查
-            if let Some(entries) = db.entries.get(command) {
-                return Some(Arc::clone(entries));
-            }
-
             // 插入新条目（用 Arc 包装）
             let entry = self.load_entry(command).unwrap_or_default();
             let arc_entry = Arc::new(entry);

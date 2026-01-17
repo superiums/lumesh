@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::sync::LazyLock;
 
 use super::from_module::parse_command_output;
 use super::into_module::{filesize, float, int};
@@ -16,8 +17,10 @@ use crate::{
     runtime::{IFS_STR, ifs_contains},
 };
 use common_macros::hash_map;
-use lazy_static::lazy_static;
 use regex_lite::Regex;
+
+static COLOR_MAP: LazyLock<HashMap<&'static str, (i64, i64, i64)>> =
+    LazyLock::new(|| init_color_map());
 
 pub fn get() -> Expression {
     (hash_map! {
@@ -896,8 +899,8 @@ fn parse_color_name(color: &str) -> Result<(i64, i64, i64), LmError> {
         .ok_or(LmError::CustomError("Invalid color name".into()))
 }
 
-lazy_static! {
-    static ref COLOR_MAP: HashMap<&'static str, (i64, i64, i64)> = hash_map! {
+fn init_color_map() -> HashMap<&'static str, (i64, i64, i64)> {
+    hash_map! {
         "aliceblue" => (240, 248, 255),
         "antiquewhite" => (250, 235, 215),
         "aqua" => (0, 255, 255),
@@ -1041,5 +1044,5 @@ lazy_static! {
         "whitesmoke" => (245, 245, 245),
         "yellow" => (255, 255, 0),
         "yellowgreen" => (154, 255, 50),
-    };
+    }
 }

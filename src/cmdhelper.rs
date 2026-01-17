@@ -1,5 +1,4 @@
 use common_macros::hash_set;
-use lazy_static::lazy_static;
 use std::collections::HashSet;
 
 #[cfg(unix)]
@@ -11,16 +10,22 @@ use std::path::Path;
 #[cfg(unix)]
 use std::path::PathBuf;
 use std::path::is_separator;
+use std::sync::OnceLock;
 
 use crate::expression::alias::get_alias_tips;
 use crate::modules::get_builtin_tips;
 
-lazy_static! {
-    pub static ref CMDS: HashSet<String> = get_cmds();
-    pub static ref PATH_COMMANDS: HashSet<String> = scan_cmds();
+static PATH_COMMANDS: OnceLock<HashSet<String>> = OnceLock::new();
+static LM_CMDS: OnceLock<HashSet<String>> = OnceLock::new();
+
+fn get_path_commands() -> &'static HashSet<String> {
+    PATH_COMMANDS.get_or_init(|| init_path_cmds())
+}
+fn get_lm_commands() -> &'static HashSet<String> {
+    LM_CMDS.get_or_init(|| init_lm_cmds())
 }
 
-fn get_cmds() -> HashSet<String> {
+fn init_lm_cmds() -> HashSet<String> {
     let mut cmds: HashSet<String> = hash_set! {
         "cd ./".into(),
         "ls -l --color ./".into(),
@@ -48,15 +53,16 @@ fn get_cmds() -> HashSet<String> {
 }
 
 pub fn is_valid_command(cmd: &str) -> bool {
-    PATH_COMMANDS.contains(cmd)
+    // PATH_COMMANDS.get().is_some_and(|m| m.contains(cmd))
+    get_path_commands().contains(cmd)
 }
 pub fn collect_command_with_prefix(prefix: &str) -> Vec<&String> {
-    let c1 = CMDS
+    let c1 = get_lm_commands()
         .iter()
         .filter(|x| x.starts_with(prefix))
         .collect::<Vec<_>>();
     if c1.is_empty() {
-        return PATH_COMMANDS
+        return get_path_commands()
             .iter()
             .filter(|x| x.starts_with(prefix))
             .collect::<Vec<_>>();
@@ -79,7 +85,7 @@ fn is_executable(path: &Path) -> bool {
 //     })
 // }
 #[cfg(unix)]
-fn scan_cmds() -> HashSet<String> {
+fn init_path_cmds() -> HashSet<String> {
     let path_var = env::var("PATH").unwrap_or_default();
     let path_separator = if cfg!(windows) { ";" } else { ":" };
 

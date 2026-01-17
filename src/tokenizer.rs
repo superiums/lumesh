@@ -1,5 +1,5 @@
-use crate::CFM_ENABLED;
 use crate::tokens::{Input, Token, TokenKind};
+use crate::with_cfm_enabled;
 use core::option::Option::None;
 use detached_str::StrSlice;
 use nom::{
@@ -1244,14 +1244,13 @@ pub fn tokenize(input: &str) -> (Vec<Token>, Vec<Diagnostic>) {
 
 /// CFM: command first mode
 fn is_cfm_mode(input: Input<'_>) -> bool {
-    // dbg!(&input);
-    unsafe {
-        CFM_ENABLED
+    with_cfm_enabled(|cfm_enabled| {
+        cfm_enabled
             && match input.starts_with(":") {
                 true => false,
                 false => !input.contains("\n"),
             }
-    }
+    })
 }
 
 fn parse_command_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {

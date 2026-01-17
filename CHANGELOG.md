@@ -5,6 +5,7 @@
 - add pipemethod support to `|>`
 - fix range add and simlar overflow
 - move all lazy-staticto lazylock/oncelock
+- move all unsafe static to thread local
 
 ## [0.10.2]
 - add `_` as blank expression

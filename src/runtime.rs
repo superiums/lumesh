@@ -1,9 +1,9 @@
 use crate::modules::pretty_printer;
+use crate::set_print_direct;
 use crate::utils::canon;
 use crate::utils::expand_home;
-use crate::{
-    Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, PRINT_DIRECT, SyntaxError,
-};
+use crate::with_print_direct;
+use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, SyntaxError};
 use crate::{SyntaxErrorKind, parse_script};
 use std::collections::HashSet;
 use std::fs::{create_dir, read_to_string, write};
@@ -80,8 +80,8 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                 {
                     let _ = pretty_printer(&m);
                 }
-                Ok(result) => unsafe {
-                    if PRINT_DIRECT {
+                Ok(result) => {
+                    if with_print_direct(|v| v) {
                         match result {
                             // skip function and lambda define PD
                             Expression::Function(_, _, _, _, _) => {}
@@ -90,7 +90,7 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                         };
                         let _ = io::stdout().flush();
                     }
-                },
+                }
                 Err(e) => {
                     let _ = io::stdout().flush();
                     eprintln!("\x1b[31m_____________\x1b[0m\n{e}");
@@ -153,17 +153,19 @@ pub fn init_config(env: &mut Environment) {
         eprintln!("Error while running introduction prelude");
     }
 
-    unsafe {
-        // turn PD off while in script mode.
-        PRINT_DIRECT = env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy())
-            && env.get("SCRIPT").is_none();
-        if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_RUNTIME_RECURSION") {
-            MAX_RUNTIME_RECURSION = run_rec as usize;
-        }
-        if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_SYNTAX_RECURSION") {
-            MAX_SYNTAX_RECURSION = run_rec as usize;
-        }
+    // turn PD off while in script mode.
+    let pd =
+        env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy()) && env.get("SCRIPT").is_none();
+    set_print_direct(pd);
+    if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_RUNTIME_RECURSION") {
+        // MAX_RUNTIME_RECURSION = run_rec as usize;
+        MAX_RUNTIME_RECURSION.with_borrow_mut(|v| *v = run_rec as usize)
     }
+    if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_SYNTAX_RECURSION") {
+        // MAX_SYNTAX_RECURSION = run_rec as usize;
+        MAX_SYNTAX_RECURSION.with_borrow_mut(|v| *v = run_rec as usize)
+    }
+
     // cmds
     init_cmds(env);
 }

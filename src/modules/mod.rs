@@ -17,12 +17,15 @@ struct UnsafeStatic<T> {
 }
 unsafe impl<T> Sync for UnsafeStatic<T> {} // 手动标记为 Sync（单线程安全）
 
-pub static BULTIN_COMMANDS: LazyLock<HashSet<String>> = LazyLock::new(|| get_builtin_symbos());
+// pub static BULTIN_COMMANDS: LazyLock<HashSet<String>> = LazyLock::new(|| get_builtin_symbos());
 
 static BUILTIN: UnsafeStatic<LazyLock<HashMap<String, Expression>>> = UnsafeStatic {
     inner: LazyLock::new(bin::get_module_map),
 };
 
+pub fn has_builtin(name: &str) -> bool {
+    BUILTIN.inner.contains_key(name)
+}
 pub fn get_builtin(name: &str) -> Option<&Expression> {
     BUILTIN.inner.get(name)
 }
@@ -72,32 +75,32 @@ pub fn get_builtin_tips() -> HashSet<String> {
     tips
 }
 
-fn get_builtin_symbos() -> HashSet<String> {
-    let mut tips: HashSet<String> = HashSet::new();
+// fn get_builtin_symbos() -> HashSet<String> {
+//     let mut tips: HashSet<String> = HashSet::new();
 
-    for (key, item) in get_builtin_map().iter() {
-        tips.insert(key.to_owned());
-        match item {
-            Expression::HMap(m) => {
-                for (k, v) in m.iter() {
-                    tips.insert(k.to_owned());
-                    if let Expression::HMap(mm) = v {
-                        for (mk, _) in mm.iter() {
-                            tips.insert(mk.to_owned());
-                        }
-                    }
-                }
-            }
-            Expression::Map(m) => {
-                for (k, _) in m.iter() {
-                    tips.insert(k.to_owned());
-                }
-            }
-            _ => {}
-        }
-    }
-    tips
-}
+//     for (key, item) in get_builtin_map().iter() {
+//         tips.insert(key.to_owned());
+//         match item {
+//             Expression::HMap(m) => {
+//                 for (k, v) in m.iter() {
+//                     tips.insert(k.to_owned());
+//                     if let Expression::HMap(mm) = v {
+//                         for (mk, _) in mm.iter() {
+//                             tips.insert(mk.to_owned());
+//                         }
+//                     }
+//                 }
+//             }
+//             Expression::Map(m) => {
+//                 for (k, _) in m.iter() {
+//                     tips.insert(k.to_owned());
+//                 }
+//             }
+//             _ => {}
+//         }
+//     }
+//     tips
+// }
 
 // use std::sync::OnceLock;
 

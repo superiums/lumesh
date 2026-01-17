@@ -130,14 +130,13 @@ impl Expression {
         depth: usize,
     ) -> Result<Self, RuntimeError> {
         // dbg!("1.--->eval_mut:", &self, &self.type_name(), &state);
-        unsafe {
-            if depth > MAX_RUNTIME_RECURSION {
-                return Err(RuntimeError::new(
-                    RuntimeErrorKind::RecursionDepth(self.clone()),
-                    self.clone(),
-                    depth,
-                ));
-            }
+
+        if MAX_RUNTIME_RECURSION.with(|v| depth > *v.borrow()) {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::RecursionDepth(self.clone()),
+                self.clone(),
+                depth,
+            ));
         }
         let mut job = self;
         loop {

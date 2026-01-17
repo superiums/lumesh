@@ -7,10 +7,10 @@ use std::{
 };
 
 use crate::{
-    CFM_ENABLED, Diagnostic, Expression, Int, MAX_SYNTAX_RECURSION, SyntaxErrorKind, Token,
-    TokenKind,
+    Diagnostic, Expression, Int, MAX_SYNTAX_RECURSION, SyntaxErrorKind, Token, TokenKind,
     expression::{CatchType, ChainCall, DestructurePattern, FileSize},
     tokens::{Input, Tokens},
+    with_cfm_enabled,
 };
 use detached_str::StrSlice;
 use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
@@ -122,13 +122,11 @@ impl PrattParser {
         loop {
             //dbg!(depth, &input.get_str_slice().to_str(input.str));
             depth += 1;
-            unsafe {
-                if depth > MAX_SYNTAX_RECURSION {
-                    return Err(nom::Err::Failure(SyntaxErrorKind::RecursionDepth {
-                        input: input.get_str_slice(),
-                        depth,
-                    }));
-                }
+            if MAX_SYNTAX_RECURSION.with(|v| depth > *v.borrow()) {
+                return Err(nom::Err::Failure(SyntaxErrorKind::RecursionDepth {
+                    input: input.get_str_slice(),
+                    depth,
+                }));
             }
             // 检查终止条件
             if input.is_empty() {
@@ -1725,8 +1723,9 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
         ))),
     )(input)?;
     // if is_single_cmd && input.is_empty() {
-    unsafe {
-        if CFM_ENABLED {
+
+    with_cfm_enabled(|cfm_enabled| {
+        if cfm_enabled {
             return match expr {
                 Expression::Symbol(s) => {
                     // 验证符号不是数字或特殊字符
@@ -1784,8 +1783,8 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
                 _ => Ok((input, expr)),
             };
         }
-    }
-    Ok((input, expr))
+        Ok((input, expr))
+    })
 }
 
 // IF语句解析（支持else if链）

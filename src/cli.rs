@@ -2,7 +2,6 @@
 
 // mod binary;
 use clap::Parser;
-use lumesh::CFM_ENABLED;
 use lumesh::parse_and_eval;
 use lumesh::repl;
 use lumesh::runtime::init_config;
@@ -11,6 +10,7 @@ use lumesh::runtime::init_config;
 // use lumesh::ENV;
 // use lumesh::STRICT;
 use lumesh::runtime::run_file;
+use lumesh::set_cfm_enabled;
 use lumesh::{Environment, Expression};
 use std::env;
 use std::path::Path;
@@ -183,7 +183,5 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
 
 fn set_cfm(cfm: bool, env: &mut Environment) {
     env.define("IS_CFM", Expression::Boolean(cfm));
-    unsafe {
-        CFM_ENABLED = cfm;
-    }
+    set_cfm_enabled(cfm);
 }

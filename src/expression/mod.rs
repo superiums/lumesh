@@ -75,7 +75,6 @@ pub enum Expression {
     Return(Rc<Self>),
     Break(Rc<Self>),
     Do(Rc<Vec<Self>>),
-    Builtin(Builtin),
     Quote(Rc<Self>),
     Catch(Rc<Self>, CatchType, Option<Rc<Self>>),
     Range(Range<Int>, usize),

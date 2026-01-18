@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
 // ============== 运行时错误部分 ==============
-use crate::{Expression, Int};
+use crate::{Expression, Int, LmError};
 use common_macros::b_tree_map;
 use thiserror::Error;
 
@@ -67,8 +67,8 @@ pub enum RuntimeErrorKind {
     // ModuleNotFound(Cow<'static, str>),
     #[error("module `{0}` not defined in `{1}`\npath trace: {2}")]
     NoModuleDefined(String, String, String),
-    #[error("no lib defined for {1} during {2}:\n `{0}`")]
-    NoLibDefined(String, Cow<'static, str>, Cow<'static, str>),
+    #[error("no lib function `{0}` defined for `{1}` during {2}:\n `{3}`")]
+    NoLibDefined(String, Cow<'static, str>, Cow<'static, str>, String),
     #[error("not a callable function: `{0}`")]
     NotAFunction(String),
     #[error("type error, expected `{expected}`, found `{found}`:\n  {sym}")]
@@ -98,6 +98,8 @@ pub enum RuntimeErrorKind {
     },
     #[error(transparent)]
     Io(#[from] std::io::Error),
+    #[error(transparent)]
+    Builtin(#[from] Box<LmError>),
 }
 
 impl RuntimeError {

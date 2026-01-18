@@ -52,6 +52,8 @@ pub mod utils;
 pub mod completion;
 pub mod modman;
 // pub mod excutor;
+pub mod libs;
+
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 // pub static mut STRICT: bool = false;

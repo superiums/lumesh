@@ -1,6 +1,7 @@
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
 use crate::expression::{LumeRegex, alias};
+use crate::libs::get_builtin_via_expr;
 use crate::utils::abs;
 use crate::utils::canon;
 use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
@@ -166,12 +167,12 @@ impl Expression {
                 Self::Symbol(name) => {
                     // dbg!("2.--->symbol----", &name);
                     // bultin
-                    if !state.contains(State::SKIP_BUILTIN_SEEK) {
-                        if let Some(b) = get_builtin(name) {
-                            // dbg!("found builtin:", &name, bti);
-                            return Ok(b.clone());
-                        };
-                    }
+                    // if !state.contains(State::SKIP_BUILTIN_SEEK) {
+                    //     if let Some(b) = get_builtin(name) {
+                    //         // dbg!("found builtin:", &name, bti);
+                    //         return Ok(b.clone());
+                    //     };
+                    // }
 
                     // var
 
@@ -737,6 +738,7 @@ impl Expression {
                                                             args,
                                                             state,
                                                             env,
+                                                            job,
                                                             depth + 1,
                                                         ),
                                                     _ => {
@@ -768,6 +770,7 @@ impl Expression {
                                                             args,
                                                             state,
                                                             env,
+                                                            job,
                                                             depth + 1,
                                                         )
                                                     }
@@ -796,6 +799,7 @@ impl Expression {
                                                     args,
                                                     state,
                                                     env,
+                                                    job,
                                                     depth + 1,
                                                 ),
                                             _ => {
@@ -812,7 +816,9 @@ impl Expression {
                                 "|" => {
                                     return match rhs.as_ref() {
                                         Expression::PipeMethod(method, args) => left_output
-                                            .handle_pipe_method(method, args, state, env, depth),
+                                            .handle_pipe_method(
+                                                method, args, state, env, job, depth,
+                                            ),
 
                                         _ => {
                                             state.pipe_in(left_output);
@@ -1282,22 +1288,36 @@ impl Expression {
         args: &[Expression],
         state: &mut State,
         env: &mut Environment,
+        context: &Expression,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        match self.get_belong_lib_name() {
-            Some(mo_name) => {
-                self.eval_lib_method(mo_name, method, args, self.clone(), state, env, depth)
-            }
+        match get_builtin_via_expr(self, method) {
+            Some(bfn) => bfn(self, args, env, context, depth),
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::NoLibDefined(
-                    self.to_string(),
+                    method.to_string(),
                     self.type_name().into(),
                     "eval pipe".into(),
+                    self.to_string(),
                 ),
                 self.clone(),
                 depth,
             )),
         }
+        // match self.get_belong_lib_name() {
+        //     Some(mo_name) => {
+        //         self.eval_lib_method(mo_name, method, args, self.clone(), state, env, depth)
+        //     }
+        //     _ => Err(RuntimeError::new(
+        //         RuntimeErrorKind::NoLibDefined(
+        //             self.to_string(),
+        //             self.type_name().into(),
+        //             "eval pipe".into(),
+        //         ),
+        //         self.clone(),
+        //         depth,
+        //     )),
+        // }
     }
 }
 

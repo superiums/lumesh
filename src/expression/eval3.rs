@@ -2,6 +2,7 @@ use super::Builtin;
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
+use crate::libs::get_builtin_via_expr;
 use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind, get_builtin};
 use std::borrow::Cow;
 
@@ -469,6 +470,7 @@ impl Expression {
         }
     }
 
+    // TODO remove param cmd_sym, use self.
     #[inline]
     pub fn eval_symbo(
         &self,
@@ -557,13 +559,22 @@ impl Expression {
                 }
             }
             _ => {
-                match get_builtin(cmd_sym.as_str()) {
-                    // 顶级内置命令
-                    Some(Expression::Builtin(bti)) => {
-                        // dbg!("branch to builtin:", &cmd, &bti);
-                        // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
-                        self.eval_builtin(bti, args, state, env, depth + 1)
+                match get_builtin_via_expr(&Expression::Blank, cmd_sym.as_str()) {
+                    Some(bfn) => {
+                        if let Some((base, args)) = args.split_first() {
+                            bfn(base, args, env, self, depth)
+                        } else {
+                            bfn(&Expression::Blank, &args, env, self, depth)
+                        }
                     }
+                    // }
+                    // match get_builtin(cmd_sym.as_str()) {
+                    //     // 顶级内置命令
+                    //     Some(Expression::Builtin(bti)) => {
+                    //         // dbg!("branch to builtin:", &cmd, &bti);
+                    //         // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
+                    //         self.eval_builtin(bti, args, state, env, depth + 1)
+                    //     }
                     // Some(exp) => {} //never here
                     _ => {
                         if is_cmd_mode {
@@ -663,179 +674,191 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // 首先求值基础表达式
-        let mut current_base = match &base {
-            // explain bultin
-            Expression::Symbol(sym) if sym.starts_with(char::is_uppercase) => {
-                match get_builtin(sym) {
-                    Some(b) => b.clone(),
-                    _ => base.eval_mut(state, env, depth + 1)?,
-                }
-            }
-            _ => base.eval_mut(state, env, depth + 1)?,
-        };
+        let mut current_base = base.eval_mut(state, env, depth + 1)?;
 
         // 依次执行每个链式调用
         for call in calls {
             let method = call.method.as_str();
 
-            // 构造方法调用表达式
-            let excuted = match &current_base {
-                Expression::HMap(map) => {
-                    match map.get(method) {
-                        Some(func) => {
-                            // 字典的键值是可执行对象
-                            match &func {
-                                Expression::Builtin(bti) => {
-                                    self.eval_builtin(bti, &call.args, state, env, depth + 1)
-                                }
-                                Expression::Lambda(..) | Expression::Function(..) => {
-                                    self.eval_apply(func, &call.args, state, env, depth)
-                                }
-                                s => Err(RuntimeError::new(
-                                    RuntimeErrorKind::NotAFunction(s.to_string()),
-                                    self.clone(),
-                                    depth,
-                                )),
-                            }
-                        }
-                        None => {
-                            // 尝试内置方法
-                            self.eval_lib_method(
-                                "Map".into(),
-                                method,
-                                &call.args,
-                                current_base,
-                                state,
-                                env,
-                                depth,
-                            )
-                        }
+            let bti_fo = get_builtin_via_expr(&current_base, method);
+            let excuted = match bti_fo {
+                Some(bfn) => {
+                    if let Some((base, args)) = call.args.split_first() {
+                        bfn(base, args, env, self, depth)
+                    } else {
+                        bfn(&Expression::Blank, &call.args, env, self, depth)
                     }
                 }
-                // 如果当前值是对象，尝试获取其方法
-                Expression::Map(map) => {
-                    match map.get(method) {
-                        Some(func) => {
-                            // 字典的键值是可执行对象
-                            match func {
-                                Expression::Lambda(..) | Expression::Function(..) => {
-                                    self.eval_apply(func, &call.args, state, env, depth)
-                                }
-                                Expression::Builtin(bti) => {
-                                    self.eval_builtin(bti, &call.args, state, env, depth + 1)
-                                }
-                                s => Err(RuntimeError::new(
-                                    RuntimeErrorKind::NotAFunction(s.to_string()),
-                                    self.clone(),
-                                    depth,
-                                )),
-                            }
-                        }
-                        None => {
-                            // 尝试内置方法
-                            self.eval_lib_method(
-                                "Map".into(),
-                                method,
-                                &call.args,
-                                current_base,
-                                state,
-                                env,
-                                depth,
-                            )
-                        }
-                    }
-                }
-                // 对于其他类型，查找内置方法
-                o => match o.get_belong_lib_name() {
-                    Some(mo_name) => self.eval_lib_method(
-                        mo_name,
-                        method,
-                        &call.args,
-                        current_base,
-                        state,
-                        env,
-                        depth,
+                _ => Err(RuntimeError::new(
+                    RuntimeErrorKind::NoLibDefined(
+                        method.to_string(),
+                        current_base.type_name().into(),
+                        "eval_chain".into(),
+                        current_base.to_string(),
                     ),
-                    _ => Err(RuntimeError::new(
-                        RuntimeErrorKind::NoLibDefined(
-                            current_base.to_string(),
-                            current_base.type_name().into(),
-                            "eval_chain".into(),
-                        ),
-                        self.clone(),
-                        depth,
-                    )),
-                },
+                    self.clone(),
+                    depth,
+                )),
             };
+            // 构造方法调用表达式
+            // let excuted = match &current_base {
+            //     Expression::HMap(map) => {
+            //         match map.get(method) {
+            //             Some(func) => {
+            //                 // 字典的键值是可执行对象
+            //                 match &func {
+            //                     Expression::Builtin(bti) => {
+            //                         self.eval_builtin(bti, &call.args, state, env, depth + 1)
+            //                     }
+            //                     Expression::Lambda(..) | Expression::Function(..) => {
+            //                         self.eval_apply(func, &call.args, state, env, depth)
+            //                     }
+            //                     s => Err(RuntimeError::new(
+            //                         RuntimeErrorKind::NotAFunction(s.to_string()),
+            //                         self.clone(),
+            //                         depth,
+            //                     )),
+            //                 }
+            //             }
+            //             None => {
+            //                 // 尝试内置方法
+            //                 self.eval_lib_method(
+            //                     "Map".into(),
+            //                     method,
+            //                     &call.args,
+            //                     current_base,
+            //                     state,
+            //                     env,
+            //                     depth,
+            //                 )
+            //             }
+            //         }
+            //     }
+            //     // 如果当前值是对象，尝试获取其方法
+            //     Expression::Map(map) => {
+            //         match map.get(method) {
+            //             Some(func) => {
+            //                 // 字典的键值是可执行对象
+            //                 match func {
+            //                     Expression::Lambda(..) | Expression::Function(..) => {
+            //                         self.eval_apply(func, &call.args, state, env, depth)
+            //                     }
+            //                     Expression::Builtin(bti) => {
+            //                         self.eval_builtin(bti, &call.args, state, env, depth + 1)
+            //                     }
+            //                     s => Err(RuntimeError::new(
+            //                         RuntimeErrorKind::NotAFunction(s.to_string()),
+            //                         self.clone(),
+            //                         depth,
+            //                     )),
+            //                 }
+            //             }
+            //             None => {
+            //                 // 尝试内置方法
+            //                 self.eval_lib_method(
+            //                     "Map".into(),
+            //                     method,
+            //                     &call.args,
+            //                     current_base,
+            //                     state,
+            //                     env,
+            //                     depth,
+            //                 )
+            //             }
+            //         }
+            //     }
+            //     // 对于其他类型，查找内置方法
+            //     o => match o.get_belong_lib_name() {
+            //         Some(mo_name) => self.eval_lib_method(
+            //             mo_name,
+            //             method,
+            //             &call.args,
+            //             current_base,
+            //             state,
+            //             env,
+            //             depth,
+            //         ),
+            //         _ => Err(RuntimeError::new(
+            //             RuntimeErrorKind::NoLibDefined(
+            //                 current_base.to_string(),
+            //                 current_base.type_name().into(),
+            //                 "eval_chain".into(),
+            //             ),
+            //             self.clone(),
+            //             depth,
+            //         )),
+            //     },
+            // };
             current_base = excuted?;
         }
 
         Ok(current_base)
     }
 
-    #[inline]
-    pub fn eval_lib_method(
-        &self,
-        lib: Cow<'static, str>,
-        call_method: &str,
-        call_args: &[Expression],
-        current_base: Expression,
-        state: &mut State,
-        env: &mut Environment,
-        depth: usize,
-    ) -> Result<Expression, RuntimeError> {
-        match get_builtin(&lib) {
-            // 顶级内置命令
-            Some(Expression::HMap(hmap)) => {
-                // let mut final_args = call_args
-                //     .iter()
-                //     .map(|a| a.eval_mut(state, env, depth + 1))
-                //     .collect::<Result<Vec<_>, _>>()?;
-                // final_args.push(current_base);
+    // #[inline]
+    // pub fn eval_lib_method(
+    //     &self,
+    //     lib: Cow<'static, str>,
+    //     call_method: &str,
+    //     call_args: &[Expression],
+    //     current_base: Expression,
+    //     state: &mut State,
+    //     env: &mut Environment,
+    //     depth: usize,
+    // ) -> Result<Expression, RuntimeError> {
+    //     match get_builtin(&lib) {
+    //         // 顶级内置命令
+    //         Some(Expression::HMap(hmap)) => {
+    //             // let mut final_args = call_args
+    //             //     .iter()
+    //             //     .map(|a| a.eval_mut(state, env, depth + 1))
+    //             //     .collect::<Result<Vec<_>, _>>()?;
+    //             // final_args.push(current_base);
 
-                let mut final_args = Vec::with_capacity(call_args.len() + 1);
-                final_args.push(current_base);
-                final_args.extend_from_slice(
-                    call_args
-                        .iter()
-                        .map(|a| a.eval_mut(state, env, depth + 1))
-                        .collect::<Result<Vec<_>, _>>()?
-                        .as_ref(),
-                );
-                //dbg!(&hmap);
-                let bti_expr = hmap.as_ref().get(call_method).ok_or(RuntimeError::new(
-                    RuntimeErrorKind::MethodNotFound(
-                        call_method.to_string().into(),
-                        lib.to_owned(),
-                    ),
-                    self.clone(),
-                    depth,
-                ))?;
-                match bti_expr {
-                    Expression::Builtin(bti) => {
-                        self.eval_builtin(bti, &final_args, state, env, depth + 1)
-                    }
-                    _ =>
-                    // chained bti, inner has child.
-                    {
-                        Err(RuntimeError::new(
-                            RuntimeErrorKind::CustomError(lib),
-                            self.clone(),
-                            depth,
-                        ))
-                    }
-                }
-            }
+    //             let mut final_args = Vec::with_capacity(call_args.len() + 1);
+    //             final_args.push(current_base);
+    //             final_args.extend_from_slice(
+    //                 call_args
+    //                     .iter()
+    //                     .map(|a| a.eval_mut(state, env, depth + 1))
+    //                     .collect::<Result<Vec<_>, _>>()?
+    //                     .as_ref(),
+    //             );
+    //             //dbg!(&hmap);
+    //             let bti_expr = hmap.as_ref().get(call_method).ok_or(RuntimeError::new(
+    //                 RuntimeErrorKind::MethodNotFound(
+    //                     call_method.to_string().into(),
+    //                     lib.to_owned(),
+    //                 ),
+    //                 self.clone(),
+    //                 depth,
+    //             ))?;
+    //             match bti_expr {
+    //                 Expression::Builtin(bti) => {
+    //                     self.eval_builtin(bti, &final_args, state, env, depth + 1)
+    //                 }
+    //                 _ =>
+    //                 // chained bti, inner has child.
+    //                 {
+    //                     Err(RuntimeError::new(
+    //                         RuntimeErrorKind::CustomError(lib),
+    //                         self.clone(),
+    //                         depth,
+    //                     ))
+    //                 }
+    //             }
+    //         }
 
-            _ => Err(RuntimeError::new(
-                RuntimeErrorKind::NoLibDefined(
-                    current_base.to_string(),
-                    current_base.type_name().into(),
-                    "eval_module_method".into(),
-                ),
-                self.clone(),
-                depth,
-            )),
-        }
-    }
+    //         _ => Err(RuntimeError::new(
+    //             RuntimeErrorKind::NoLibDefined(
+    //                 call_method.to_string(),
+    //                 current_base.type_name().into(),
+    //                 "eval_lib_method".into(),
+    //                 current_base.to_string(),
+    //             ),
+    //             self.clone(),
+    //             depth,
+    //         )),
+    //     }
+    // }
 }

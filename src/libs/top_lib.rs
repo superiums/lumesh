@@ -31,16 +31,14 @@ pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
 }
 
 fn cd(
-    base: &Expression,
     args: &[Expression],
     env: &mut Environment,
     contex: &Expression,
-    depth: usize,
 ) -> Result<Expression, RuntimeError> {
-    let mut path = if base == &Expression::Blank {
+    let mut path = if args.len() == 0 {
         "~".to_string()
     } else {
-        match base.eval(env)? {
+        match args[0].eval(env)? {
             Expression::Symbol(path) | Expression::String(path) => path,
             other => other.to_string(),
         }
@@ -57,21 +55,19 @@ fn cd(
         }
     }
     std::env::set_current_dir(&path)
-        .map_err(|e| RuntimeError::new(RuntimeErrorKind::from(e), contex.clone(), depth))?;
+        .map_err(|e| RuntimeError::new(RuntimeErrorKind::from(e), contex.clone(), 0))?;
 
     env.define_in_root("PWD", Expression::String(path));
     Ok(Expression::None)
 }
 
 fn pwd(
-    _: &Expression,
     _: &[Expression],
     _: &mut Environment,
     contex: &Expression,
-    depth: usize,
 ) -> Result<Expression, RuntimeError> {
     let path = std::env::current_dir()
-        .map_err(|e| RuntimeError::from_io_error(e, "pwd".into(), contex.clone(), depth))?;
+        .map_err(|e| RuntimeError::from_io_error(e, "pwd".into(), contex.clone(), 0))?;
     // println!("{}", path.display());
     Ok(Expression::String(path.to_string_lossy().into_owned()))
 }

@@ -1,8 +1,10 @@
+use std::borrow::Cow;
+
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
 use crate::libs::get_builtin_via_expr;
-use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind};
+use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, RuntimeErrorKind};
 
 /// 执行
 impl Expression {
@@ -16,15 +18,14 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        if depth > 400 {
-            //防止函数互相调用无限循环
+        //防止函数互相调用无限循环
+        if MAX_RUNTIME_RECURSION.with(|v| depth > *v.borrow()) {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::RecursionDepth(self.clone()),
                 self.clone(),
                 depth,
             ));
         }
-
         // println!();
         // dbg!("2.--->Applying:", depth, &func, &func.type_name(), &args);
 
@@ -39,9 +40,7 @@ impl Expression {
 
         match func_eval {
             // 顶级builtin，函数别名
-            Expression::Symbol(cmd_sym) => {
-                self.eval_symbo(cmd_sym, args, false, state, env, depth + 1)
-            }
+            Expression::Symbol(_) => func_eval.eval_symbo(args, false, state, env, depth + 1),
 
             // Lambda 应用 - 完全求值的函数应用
             Expression::Lambda(params, body) => {
@@ -388,7 +387,6 @@ impl Expression {
     #[inline]
     pub fn eval_command(
         &self,
-        eval_cmd: Expression,
         args: &Vec<Expression>,
         state: &mut State,
         env: &mut Environment,
@@ -401,7 +399,7 @@ impl Expression {
         //     &args,
         //     &state
         // );
-        match eval_cmd {
+        match self {
             Expression::String(cmdx_str) => {
                 // 空命令
                 if cmdx_str.is_empty() || cmdx_str == ":" {
@@ -440,9 +438,7 @@ impl Expression {
                 }
             }
             // 符号
-            Expression::Symbol(cmd_sym) => {
-                self.eval_symbo(cmd_sym, args, true, state, env, depth + 1)
-            }
+            Expression::Symbol(_) => self.eval_symbo(args, true, state, env, depth + 1),
             // 延迟赋值命令 let x := ls
             Expression::Command(cmd_sym, cmd_args) => {
                 let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
@@ -451,7 +447,7 @@ impl Expression {
                 handle_command(self, &cmd_sym.to_string(), &new_vec, state, env, depth + 1)
             }
             other => match args.is_empty() {
-                true => Ok(other), // 单个symbol或变量，直接返回
+                true => Ok(other.clone()), // 单个symbol或变量，直接返回
                 false => Err(RuntimeError::new(
                     RuntimeErrorKind::TypeError {
                         //非法命令
@@ -466,130 +462,157 @@ impl Expression {
         }
     }
 
-    // TODO remove param cmd_sym, use self.
     #[inline]
     pub fn eval_symbo(
         &self,
-        cmd_sym: String,
         args: &Vec<Expression>,
         is_cmd_mode: bool,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        // dbg!("   3.--->applying Symbol:", &cmd_sym, &args);
-        // NOTE alias is a symbol, when appreared on right of pipe, the _ receiver is not injected
-        match alias::get_alias(cmd_sym.as_str()) {
-            // 别名
-            Some(cmd_alias) => {
-                // dbg!(&cmd_alias.type_name());
+        match self {
+            Self::Symbol(cmd_sym) =>
+            // dbg!("   3.--->applying Symbol:", &cmd_sym, &args);
+            // NOTE alias is a symbol, when appreared on right of pipe, the _ receiver is not injected
+            {
+                match alias::get_alias(cmd_sym.as_str()) {
+                    // 别名
+                    Some(cmd_alias) => {
+                        // dbg!(&cmd_alias.type_name());
 
-                // 合并参数
-                match cmd_alias {
-                    // alias a=ls -l
-                    Expression::Command(cmd_name, cmd_args) if is_cmd_mode => {
-                        let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
-                        new_vec.extend_from_slice(&cmd_args);
-                        new_vec.extend_from_slice(args);
-                        handle_command(
-                            self,
-                            &cmd_name.as_ref().to_string(),
-                            &new_vec,
-                            state,
-                            env,
-                            depth + 1,
-                        )
-                    }
-                    // alias a=ls
-                    Expression::Symbol(cmd_str) | Expression::String(cmd_str) if is_cmd_mode => {
-                        handle_command(self, &cmd_str, args, state, env, depth + 1)
-                    }
+                        // 合并参数
+                        match cmd_alias {
+                            // alias a=ls -l
+                            Expression::Command(cmd_name, cmd_args) if is_cmd_mode => {
+                                let mut new_vec = Vec::with_capacity(cmd_args.len() + args.len());
+                                new_vec.extend_from_slice(&cmd_args);
+                                new_vec.extend_from_slice(args);
+                                handle_command(
+                                    self,
+                                    &cmd_name.as_ref().to_string(),
+                                    &new_vec,
+                                    state,
+                                    env,
+                                    depth + 1,
+                                )
+                            }
+                            // alias a=ls
+                            Expression::Symbol(cmd_str) | Expression::String(cmd_str)
+                                if is_cmd_mode =>
+                            {
+                                handle_command(self, &cmd_str, args, state, env, depth + 1)
+                            }
 
-                    // -----need to inject _ receiver if on pipe right.
-                    // alias a=myfunc()
-                    Expression::Apply(..) if !is_cmd_mode => cmd_alias
-                        .append_args(args.to_vec())
-                        // .ensure_has_receiver()
-                        .eval_mut(state, env, depth + 1),
-                    // alias a=String.red   a=myfunc
-                    Expression::Function(..) if !is_cmd_mode => cmd_alias
-                        .ensure_fn_apply()
-                        .append_args(args.to_vec())
-                        // .ensure_has_receiver()
-                        .eval_mut(state, env, depth + 1),
-                    // alias a=String.red()
-                    Expression::Chain(..) => cmd_alias
-                        .append_args(args.to_vec())
-                        // .ensure_has_receiver()
-                        .eval_mut(state, env, depth + 1),
-                    // alias a=String.red
-                    // Expression::Index(..) => {
-                    //     let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
-                    //     return match cmdx {
-                    //         Expression::Builtin(bti) => {
-                    //             self.eval_builtin(&bti, args, state, env, depth)
-                    //         }
-                    //         _ => Err(RuntimeError::new(
-                    //             RuntimeErrorKind::TypeError {
-                    //                 expected: "alias contains Builtin".into(),
-                    //                 sym: cmdx.to_string(),
-                    //                 found: cmdx.type_name(),
-                    //             },
-                    //             self.clone(),
-                    //             depth,
-                    //         )),
-                    //     };
-                    // }
-                    _ => Err(RuntimeError::new(
-                        RuntimeErrorKind::TypeError {
-                            expected: match is_cmd_mode {
-                                true => "alias for Command/Builtin".into(),
-                                false => "alias for Function/Builtin".into(),
-                            },
-                            sym: cmd_alias.to_string(),
-                            found: cmd_alias.type_name(),
-                        },
-                        self.clone(),
-                        depth,
-                    )),
-                }
-            }
-            _ => {
-                match get_builtin_via_expr(&Expression::Blank, cmd_sym.as_str()) {
-                    Some(bfn) => {
-                        if let Some((base, args)) = args.split_first() {
-                            bfn(base, args, env, self, depth)
-                        } else {
-                            bfn(&Expression::Blank, &args, env, self, depth)
-                        }
-                    }
-                    // }
-                    // match get_builtin(cmd_sym.as_str()) {
-                    //     // 顶级内置命令
-                    //     Some(Expression::Builtin(bti)) => {
-                    //         // dbg!("branch to builtin:", &cmd, &bti);
-                    //         // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
-                    //         self.eval_builtin(bti, args, state, env, depth + 1)
-                    //     }
-                    // Some(exp) => {} //never here
-                    _ => {
-                        if is_cmd_mode {
-                            // 三方命令
-                            handle_command(self, &cmd_sym, args, state, env, depth + 1)
-                        } else {
-                            Err(RuntimeError::new(
+                            // -----need to inject _ receiver if on pipe right.
+                            // alias a=myfunc()
+                            Expression::Apply(..) if !is_cmd_mode => cmd_alias
+                                .append_args(args.to_vec())
+                                // .ensure_has_receiver()
+                                .eval_mut(state, env, depth + 1),
+                            // alias a=String.red   a=myfunc
+                            Expression::Function(..) if !is_cmd_mode => cmd_alias
+                                .ensure_fn_apply()
+                                .append_args(args.to_vec())
+                                // .ensure_has_receiver()
+                                .eval_mut(state, env, depth + 1),
+                            // alias a=String.red()
+                            Expression::Chain(..) => cmd_alias
+                                .append_args(args.to_vec())
+                                // .ensure_has_receiver()
+                                .eval_mut(state, env, depth + 1),
+                            // alias a=String.red
+                            // Expression::Index(..) => {
+                            //     let cmdx = cmd_alias.eval_mut(state, env, depth + 1)?;
+                            //     return match cmdx {
+                            //         Expression::Builtin(bti) => {
+                            //             self.eval_builtin(&bti, args, state, env, depth)
+                            //         }
+                            //         _ => Err(RuntimeError::new(
+                            //             RuntimeErrorKind::TypeError {
+                            //                 expected: "alias contains Builtin".into(),
+                            //                 sym: cmdx.to_string(),
+                            //                 found: cmdx.type_name(),
+                            //             },
+                            //             self.clone(),
+                            //             depth,
+                            //         )),
+                            //     };
+                            // }
+                            _ => Err(RuntimeError::new(
                                 RuntimeErrorKind::TypeError {
-                                    expected: "symbol for Function/Builtin".into(),
-                                    sym: cmd_sym,
-                                    found: "Symbol with no meaning".to_string(),
+                                    expected: match is_cmd_mode {
+                                        true => "alias for Command/Builtin".into(),
+                                        false => "alias for Function/Builtin".into(),
+                                    },
+                                    sym: cmd_alias.to_string(),
+                                    found: cmd_alias.type_name(),
                                 },
                                 self.clone(),
                                 depth,
-                            ))
+                            )),
+                        }
+                    }
+                    _ => {
+                        match get_builtin_via_expr(&Expression::Blank, cmd_sym.as_str()) {
+                            Some(bfn) => {
+                                if args.contains(&Expression::Blank) {
+                                    let received_args = args
+                                        .iter()
+                                        .map(|x| match x {
+                                            Expression::Blank => {
+                                                state.pipe_out().unwrap_or(Expression::Blank)
+                                            }
+                                            o => o.clone(),
+                                        })
+                                        .collect::<Vec<_>>();
+                                    bfn(&received_args, env, self)
+                                } else {
+                                    bfn(&args, env, self)
+                                }
+                                // if let Some((base, args)) = args.split_first() {
+                                // } else {
+                                //     bfn(&Expression::Blank, &args, env, self, depth)
+                                // }
+                            }
+                            // }
+                            // match get_builtin(cmd_sym.as_str()) {
+                            //     // 顶级内置命令
+                            //     Some(Expression::Builtin(bti)) => {
+                            //         // dbg!("branch to builtin:", &cmd, &bti);
+                            //         // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
+                            //         self.eval_builtin(bti, args, state, env, depth + 1)
+                            //     }
+                            // Some(exp) => {} //never here
+                            _ => {
+                                if is_cmd_mode {
+                                    // 三方命令
+                                    handle_command(self, cmd_sym, args, state, env, depth + 1)
+                                } else {
+                                    Err(RuntimeError::new(
+                                        RuntimeErrorKind::TypeError {
+                                            expected: "symbol for Function/Builtin".into(),
+                                            sym: cmd_sym.to_string(),
+                                            found: "Symbol with no meaning".to_string(),
+                                        },
+                                        self.clone(),
+                                        depth,
+                                    ))
+                                }
+                            }
                         }
                     }
                 }
             }
+            other => Err(RuntimeError::new(
+                RuntimeErrorKind::TypeError {
+                    expected: "symbol".into(),
+                    sym: other.to_string(),
+                    found: other.type_name(),
+                },
+                self.clone(),
+                depth,
+            )),
         }
     }
     // #[inline]
@@ -679,10 +702,28 @@ impl Expression {
             let bti_fo = get_builtin_via_expr(&current_base, method);
             let excuted = match bti_fo {
                 Some(bfn) => {
-                    if let Some((base, args)) = call.args.split_first() {
-                        bfn(base, args, env, self, depth)
+                    // 替换接收器的值
+                    let received_args = if call.args.contains(&Expression::Blank) {
+                        &call
+                            .args
+                            .iter()
+                            .map(|x| match x {
+                                Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
+                                o => o.clone(),
+                            })
+                            .collect::<Vec<_>>()
                     } else {
-                        bfn(&Expression::Blank, &call.args, env, self, depth)
+                        &call.args
+                    };
+                    // 判断是String.red 还是 ‘xx'.red
+                    match &current_base {
+                        Expression::Symbol(_) => bfn(&received_args, env, self),
+                        val => {
+                            let mut combined_args = Vec::with_capacity(received_args.len() + 1);
+                            combined_args.push(val.clone());
+                            combined_args.extend_from_slice(&received_args);
+                            bfn(&combined_args, env, self)
+                        }
                     }
                 }
                 _ => Err(RuntimeError::new(

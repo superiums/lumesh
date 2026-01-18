@@ -316,7 +316,7 @@ impl Expression {
                     job = inner.as_ref();
                     if state.contains(State::IN_ASSIGN) {
                         if let Expression::Symbol(_) = job {
-                            return job.eval_command(job.clone(), &vec![], state, env, depth + 1);
+                            return job.eval_command(&vec![], state, env, depth + 1);
                         }
                     }
                     continue;
@@ -1008,16 +1008,10 @@ impl Expression {
                     // if args.len() == 1 && &args[0] == &Expression::Blank {
                     //     break self.eval_command(eval_cmd, &vec![], state, env, depth + 1);
                     // }
-                    break self.eval_command(eval_cmd, args.as_ref(), state, env, depth + 1);
+                    break eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
                 }
                 Self::CommandRaw(cmd, args) => {
-                    break self.eval_command(
-                        cmd.as_ref().clone(),
-                        args.as_ref(),
-                        state,
-                        env,
-                        depth + 1,
-                    );
+                    break cmd.eval_command(args.as_ref(), state, env, depth + 1);
                 }
                 // break Self::eval_command(self, env, depth+1),
                 // 简单控制流表达式
@@ -1283,13 +1277,18 @@ impl Expression {
         &self,
         method: &str,
         args: &[Expression],
-        state: &mut State,
+        _state: &mut State,
         env: &mut Environment,
         context: &Expression,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         match get_builtin_via_expr(self, method) {
-            Some(bfn) => bfn(self, args, env, context, depth),
+            Some(bfn) => {
+                let mut combined_args = Vec::with_capacity(args.len() + 1);
+                combined_args.push(self.clone());
+                combined_args.extend_from_slice(args);
+                bfn(&combined_args, env, context)
+            }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::NoLibDefined(
                     method.to_string(),

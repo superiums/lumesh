@@ -33,13 +33,8 @@ pub struct BuiltinInfo {
     pub descr: &'static str,
     pub hint: &'static str,
 }
-pub type BuiltinFunc = fn(
-    &Expression,
-    &[Expression],
-    &mut Environment,
-    contex: &Expression,
-    depth: usize,
-) -> Result<Expression, RuntimeError>;
+pub type BuiltinFunc =
+    fn(&[Expression], &mut Environment, contex: &Expression) -> Result<Expression, RuntimeError>;
 
 fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>> {
     let mut libs_info = HashMap::with_capacity(17);
@@ -79,29 +74,29 @@ pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<Builtin
     }
 }
 
-pub fn eval_builtin_optimized(
-    lib_name: &str,
-    fn_name: &str,
-    arg_base: &Expression,
-    args: &[Expression],
-    env: &mut Environment,
-    context: &Expression,
-    depth: usize,
-) -> (bool, Result<Expression, RuntimeError>) {
-    let fo = match lib_name {
-        // "Math" => MATH_MODULE.with(|m| m.borrow().get(function).cloned()),
-        "String" => STRING_MODULE.with(|m| m.get_function(fn_name)),
-        "" => TOP_MODULE.with(|m| m.borrow().get(fn_name).cloned()),
-        _ => None,
-    };
-    match fo.as_ref() {
-        Some(f) => {
-            let result = f(arg_base, args, env, context, depth);
-            (true, result)
-        }
-        _ => (false, Ok(Expression::None)),
-    }
-}
+// pub fn eval_builtin_optimized(
+//     lib_name: &str,
+//     fn_name: &str,
+//     arg_base: &Expression,
+//     args: &[Expression],
+//     env: &mut Environment,
+//     context: &Expression,
+//     depth: usize,
+// ) -> (bool, Result<Expression, RuntimeError>) {
+//     let fo = match lib_name {
+//         // "Math" => MATH_MODULE.with(|m| m.borrow().get(function).cloned()),
+//         "String" => STRING_MODULE.with(|m| m.get_function(fn_name)),
+//         "" => TOP_MODULE.with(|m| m.borrow().get(fn_name).cloned()),
+//         _ => None,
+//     };
+//     match fo.as_ref() {
+//         Some(f) => {
+//             let result = f(args, env, context);
+//             (true, result)
+//         }
+//         _ => (false, Ok(Expression::None)),
+//     }
+// }
 
 // 修改 get_module_map() 使用懒加载模块
 // pub fn get_module_map() -> HashMap<String, Expression> {

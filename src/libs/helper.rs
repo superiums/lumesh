@@ -6,7 +6,7 @@ use crate::{Environment, Expression, LmError};
 // 函数注册宏 - 自动推导函数名
 #[macro_export]
 macro_rules! reg_lazy {
-    ($module:expr, { $($func:ident => $desc:expr, $usage:expr);* $(;)? }) => {
+    ($module:expr, { $($func:ident);* $(;)? }) => {
         $(
             $module.register(stringify!($func), || {
                 std::rc::Rc::new($func)

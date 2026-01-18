@@ -8,7 +8,7 @@ use tabled::{
     },
 };
 
-use crate::{Expression};
+use crate::Expression;
 
 use regex_lite::Regex;
 pub fn strip_ansi_escapes(text: &str) -> String {
@@ -35,7 +35,7 @@ pub fn strip_ansi_escapes(text: &str) -> String {
     // 这个范围包括了常见的控制字符，如 A-Z, a-z, 0-9, 和一些符号。
 }
 
-pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::LmError> {
+pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::RuntimeError> {
     match arg {
         Expression::Map(exprs) => println!("{}", pprint_map(exprs.as_ref())),
         Expression::HMap(exprs) => println!("{}", pprint_hmap(exprs.as_ref())),

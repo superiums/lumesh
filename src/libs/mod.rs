@@ -1,10 +1,8 @@
+mod bin;
 mod helper;
 mod lazy_module;
 mod pprint;
-mod string_lib;
-mod top_lib;
 pub use pprint::pretty_printer;
-
 use std::{cell::RefCell, collections::HashMap, rc::Rc, sync::LazyLock};
 
 use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule};
@@ -16,11 +14,11 @@ thread_local! {
     //     math_module::get_all_functions() // 加载所有函数
     // });
     static TOP_MODULE: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
-        top_lib::regist_all()  // 加载所有函数
+        bin::top::regist_all()  // 加载所有函数
     });
 
     // 大型模块：函数级懒加载
-    static STRING_MODULE: LazyModule = string_lib::regist_lazy();
+    static STRING_MODULE: LazyModule = bin::string::regist_lazy();
 
     // 中型模块：模块级懒加载
     // static FS_MODULE: RefCell<Option<Expression>> = RefCell::new(None);
@@ -38,7 +36,7 @@ pub type BuiltinFunc =
 
 fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>> {
     let mut libs_info = HashMap::with_capacity(17);
-    libs_info.insert("String", string_lib::regist_info());
+    libs_info.insert("String", bin::string::regist_info());
     libs_info
 }
 

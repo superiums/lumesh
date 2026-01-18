@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};

@@ -1,6 +1,7 @@
 // Helper functions
 
-use crate::{Environment, Expression, LmError};
+use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind};
+
 // use std::rc::Rc;
 
 // 函数注册宏 - 自动推导函数名
@@ -39,35 +40,49 @@ macro_rules! reg_all {
 pub fn check_args_len(
     name: impl ToString,
     args: &[Expression],
-    expected_len: impl std::ops::RangeBounds<usize>,
-) -> Result<(), LmError> {
-    if expected_len.contains(&args.len()) {
+    expected: impl std::ops::RangeBounds<usize>,
+    ctx: &Expression,
+) -> Result<(), RuntimeError> {
+    if expected.contains(&args.len()) {
         Ok(())
     } else {
-        Err(LmError::CustomError(format!(
-            "mismatched count of arguments for function {}",
-            name.to_string()
-        )))
+        Err(RuntimeError::common(
+            format!(
+                "arguments for `{}` not match, expected {:?}..{:?}, found: {}",
+                name.to_string(),
+                expected.start_bound(),
+                expected.end_bound(),
+                args.len()
+            )
+            .into(),
+            ctx.clone(),
+            0,
+        ))
     }
 }
 
 pub fn check_exact_args_len(
     name: impl ToString,
     args: &[Expression],
-    expected_len: usize,
-) -> Result<(), LmError> {
-    if args.len() == expected_len {
+    expected: usize,
+    ctx: &Expression,
+) -> Result<(), RuntimeError> {
+    if args.len() == expected {
         Ok(())
     } else {
-        Err(LmError::ArgumentMismatch {
-            name: name.to_string(),
-            expected: expected_len,
-            received: args.len(),
-        })
+        Err(RuntimeError::new(
+            RuntimeErrorKind::ArgumentMismatch {
+                name: name.to_string(),
+                expected,
+                received: args.len(),
+            },
+            ctx.clone(),
+            0,
+        ))
     }
 }
 
-// pub fn get_list_arg(expr: Expression) -> Result<Rc<Vec<Expression>>, LmError> {
+// pub fn get_list_arg(expr: Expression) -> Result<Rc<Vec<Expression>>, RuntimeError> {
 //     match expr {
 //         Expression::List(s) => Ok(s),
 //         _ => Err(LmError::CustomError("expected string".to_string())),
@@ -77,46 +92,62 @@ pub fn check_exact_args_len(
 // pub fn get_list_args(
 //     args: &[Expression],
 //     env: &mut Environment,
-// ) -> Result<Vec<Rc<Vec<Expression>>>, LmError> {
+// ) -> Result<Vec<Rc<Vec<Expression>>>, RuntimeError> {
 //     args.iter()
 //         .map(|arg| get_list_arg(arg.eval(env)?))
 //         .collect()
 // }
 
-pub fn get_exact_string_arg(expr: Expression) -> Result<String, LmError> {
+pub fn get_exact_string_arg(expr: Expression, ctx: &Expression) -> Result<String, RuntimeError> {
     match expr {
         Expression::String(s) => Ok(s),
-        e => Err(LmError::TypeError {
-            expected: "String".to_string(),
-            found: e.type_name(),
-            sym: e.to_string(),
-        }),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "String".to_string(),
+                sym: e.to_string(),
+                found: e.type_name(),
+            },
+            ctx.clone(),
+            0,
+        )),
     }
 }
-pub fn get_string_arg(expr: Expression) -> Result<String, LmError> {
+pub fn get_string_arg(expr: Expression, ctx: &Expression) -> Result<String, RuntimeError> {
     match expr {
         Expression::Symbol(s) | Expression::String(s) => Ok(s),
-        e => Err(LmError::TypeError {
-            expected: "String".to_string(),
-            found: e.type_name(),
-            sym: e.to_string(),
-        }),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "String".to_string(),
+                sym: e.to_string(),
+                found: e.type_name(),
+            },
+            ctx.clone(),
+            0,
+        )),
     }
 }
 
-pub fn get_string_args(args: &[Expression], env: &mut Environment) -> Result<Vec<String>, LmError> {
+pub fn get_string_args(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Vec<String>, RuntimeError> {
     args.iter()
-        .map(|arg| get_string_arg(arg.eval(env)?))
+        .map(|arg| get_string_arg(arg.eval(env)?, ctx))
         .collect()
 }
 
-pub fn get_integer_arg(expr: Expression) -> Result<i64, LmError> {
+pub fn get_integer_arg(expr: Expression, ctx: &Expression) -> Result<i64, RuntimeError> {
     match expr {
         Expression::Integer(i) => Ok(i),
-        e => Err(LmError::TypeError {
-            expected: "Integer".to_string(),
-            found: e.type_name(),
-            sym: e.to_string(),
-        }),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "Integer".to_string(),
+                sym: e.to_string(),
+                found: e.type_name(),
+            },
+            ctx.clone(),
+            0,
+        )),
     }
 }

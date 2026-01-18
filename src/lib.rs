@@ -6,7 +6,6 @@ pub type Int = i64;
 mod expression;
 
 pub use expression::Expression;
-pub use expression::builtin::Builtin;
 pub use expression::eval;
 // mod expr2;
 // pub use expr2::*;
@@ -39,9 +38,6 @@ pub use syntax::highlight;
 pub mod ai;
 pub mod cmdhelper;
 pub mod prompt;
-
-pub mod modules;
-pub use modules::get_builtin;
 
 pub mod childman;
 pub mod keyhandler;

@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 use crate::{
-    Environment, Expression, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, RuntimeError,
+
     libs::{
         BuiltinInfo,
         helper::{check_exact_args_len, get_string_arg},

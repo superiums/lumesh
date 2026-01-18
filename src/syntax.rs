@@ -3,7 +3,7 @@
 use common_macros::hash_map;
 use std::collections::{BTreeMap, HashMap};
 
-use crate::{Diagnostic, Expression, TokenKind, modules::has_builtin, tokenize};
+use crate::{Diagnostic, Expression, TokenKind, libs::get_builtin_optimized, tokenize};
 
 const DEFAULT: &str = "";
 
@@ -115,7 +115,7 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                     result.push_str(e.to_str(line));
                     is_colored = true;
                 } else {
-                    if has_builtin(l) {
+                    if get_builtin_optimized("", l).is_some() {
                         // if matches!(l, "echo" | "exit" | "clear" | "cd" | "rm") {
                         result.push_str(get_color("builtin_cmd", theme));
                         is_colored = true;

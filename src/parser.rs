@@ -280,7 +280,7 @@ impl PrattParser {
                     // dbg!("--> Args: trying next loop", input.len(), PREC_CMD_ARG);
                     match &lhs {
                         Expression::Symbol(_)|Expression::Variable(_)| Expression::String(_)
-                        |Expression::Index(.. )|Expression::Builtin(..)=>{}
+                        |Expression::Index(.. )=>{}
                         _ => break()
                     }
                     if input.len() == 1 {

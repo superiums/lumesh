@@ -13,7 +13,7 @@ use std::path::is_separator;
 use std::sync::OnceLock;
 
 use crate::expression::alias::get_alias_tips;
-use crate::modules::get_builtin_tips;
+// use crate::modules::get_builtin_tips;
 
 static PATH_COMMANDS: OnceLock<HashSet<String>> = OnceLock::new();
 static LM_CMDS: OnceLock<HashSet<String>> = OnceLock::new();
@@ -46,7 +46,7 @@ fn init_lm_cmds() -> HashSet<String> {
         "del ".into(),
         "use ".into(),
     };
-    cmds.extend(get_builtin_tips());
+    // cmds.extend(get_builtin_tips());
     // cmds.extend(scan_cmds());
     cmds.extend(get_alias_tips());
     cmds

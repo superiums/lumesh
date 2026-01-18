@@ -1,13 +1,13 @@
 mod helper;
 mod lazy_module;
+mod pprint;
 mod string_lib;
 mod top_lib;
+pub use pprint::pretty_printer;
 
 use std::{cell::RefCell, collections::HashMap, rc::Rc, sync::LazyLock};
 
-use crate::{
-    Environment, Expression, RuntimeError, RuntimeErrorKind, libs::lazy_module::LazyModule,
-};
+use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule};
 
 // 对不同模块采用不同策略
 thread_local! {

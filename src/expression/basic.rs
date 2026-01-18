@@ -375,7 +375,6 @@ impl Expression {
                 cmd.fmt_display_indent(f, 0)
             }
 
-            Self::Builtin(builtin) => write!(f, "builtin@{}", builtin.name),
             Self::RegexDef(s) => write!(f, "r'{s}'"),
             Self::Regex(r) => write!(f, "r'{}'", r.regex.as_str()),
             Self::TimeDef(t) => write!(f, "t'{t}'"),
@@ -510,9 +509,6 @@ impl Expression {
                 write!(f, "\n{}AliasDef〈{}〉 =\n", idt(i), name)?;
                 cmd.fmt_indent(f, i + 1)
             }
-
-            // 新增：内置函数
-            Self::Builtin(builtin) => write!(f, "Builtin〈{builtin:?}〉"),
 
             // 新增：错误捕获
             Self::Catch(body, ctyp, deel) => {
@@ -740,7 +736,6 @@ impl Expression {
             Self::Return(_) => "Return".into(),
             Self::Break(_) => "Break".into(),
             Self::Do(_) => "Do".into(),
-            Self::Builtin(_) => "Builtin".into(),
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),
 
@@ -941,9 +936,7 @@ impl Expression {
 
     pub fn ensure_fn_apply<'a>(&'a self) -> Cow<'a, Expression> {
         match self {
-            Expression::Function(..) | Expression::Lambda(..) | Expression::Builtin(..) => {
-                Cow::Owned(self.apply(vec![]))
-            }
+            Expression::Function(..) | Expression::Lambda(..) => Cow::Owned(self.apply(vec![])),
             // symbol maybe alias, but also maybe var/string, so let user decide.
             // Expression::Symbol(_) => Expression::Command(Rc::new(self.clone()), Rc::new(vec![])),
             _ => Cow::Borrowed(self), //others, like binop,group,pipe...
@@ -1016,8 +1009,6 @@ impl Expression {
             Self::Range(exprs, _) => !exprs.is_empty(),
             Self::Lambda(..) => true,
             Self::DateTime(..) => true,
-            // Self::Macro(_, _) => true,
-            Self::Builtin(_) => true,
             _ => false,
         }
     }

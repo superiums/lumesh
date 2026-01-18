@@ -1,4 +1,6 @@
 # Changelog
+## [0.10.4]
+- refact builtin functions
 
 ## [0.10.3]
 - add range support to match (not variable)

@@ -5,7 +5,6 @@ use std::ops::Range;
 use std::rc::Rc;
 pub mod alias;
 pub mod basic;
-pub mod builtin;
 pub mod catcher;
 pub mod cmd_excutor;
 pub mod eval;
@@ -17,7 +16,6 @@ pub mod pty;
 pub mod render;
 pub mod terminal;
 
-use builtin::Builtin;
 use chrono::NaiveDateTime;
 use regex_lite::Regex;
 #[derive(Clone, PartialEq)]

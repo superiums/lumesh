@@ -8,7 +8,7 @@ use tabled::{
     },
 };
 
-use crate::{Builtin, Expression};
+use crate::{Expression};
 
 use regex_lite::Regex;
 pub fn strip_ansi_escapes(text: &str) -> String {
@@ -83,13 +83,13 @@ where
                     let formatted = format!("{val}");
                     textwrap::fill(&formatted, value_column_width)
                 }
-                Expression::Builtin(Builtin { help, .. }) => {
-                    format!(
-                        "{}\n{}",
-                        val,
-                        textwrap::fill(help.as_str(), value_column_width)
-                    )
-                }
+                // Expression::Builtin(Builtin { help, .. }) => {
+                //     format!(
+                //         "{}\n{}",
+                //         val,
+                //         textwrap::fill(help.as_str(), value_column_width)
+                //     )
+                // }
                 _ => {
                     let formatted = format!("{val}");
                     textwrap::fill(&formatted, value_column_width)

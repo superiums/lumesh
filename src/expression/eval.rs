@@ -4,8 +4,8 @@ use crate::expression::{LumeRegex, alias};
 use crate::libs::get_builtin_via_expr;
 use crate::utils::abs;
 use crate::utils::canon;
-use crate::{Environment, Expression, Int, RuntimeError, modules::get_builtin};
-use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind, modules::parse_time};
+use crate::{Environment, Expression, Int, RuntimeError};
+use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind};
 use core::option::Option::None;
 use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
@@ -158,12 +158,7 @@ impl Expression {
                     // dbg!("basic type");
                     return Ok(job.clone());
                 }
-                Self::Builtin(_) => {
-                    // dbg!("builtin type");
-                    return Ok(job.clone());
-                }
 
-                // 符号解析（错误处理优化）
                 Self::Symbol(name) => {
                     // dbg!("2.--->symbol----", &name);
                     // bultin
@@ -1083,9 +1078,11 @@ impl Expression {
                     return Ok(Expression::Regex(LumeRegex { regex }));
                 }
                 Expression::TimeDef(t) => {
-                    let t = parse_time(&[Expression::String(t.clone())], env).map_err(|e| {
-                        RuntimeError::common(e.to_string().into(), job.clone(), depth)
-                    })?;
+                    // TODO
+                    let t = Expression::String(t.clone());
+                    // let t = parse_time(&[Expression::String(t.clone())], env).map_err(|e| {
+                    //     RuntimeError::common(e.to_string().into(), job.clone(), depth)
+                    // })?;
                     return Ok(t);
                 }
                 Expression::Blank => return Ok(state.pipe_out().unwrap_or(job.clone())),

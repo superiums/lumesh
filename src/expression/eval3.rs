@@ -1,10 +1,8 @@
-use super::Builtin;
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
 use crate::libs::get_builtin_via_expr;
-use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind, get_builtin};
-use std::borrow::Cow;
+use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind};
 
 /// 执行
 impl Expression {
@@ -45,7 +43,6 @@ impl Expression {
                 self.eval_symbo(cmd_sym, args, false, state, env, depth + 1)
             }
 
-            Expression::Builtin(bti) => self.eval_builtin(&bti, args, state, env, depth + 1),
             // Lambda 应用 - 完全求值的函数应用
             Expression::Lambda(params, body) => {
                 // let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
@@ -405,7 +402,6 @@ impl Expression {
         //     &state
         // );
         match eval_cmd {
-            Expression::Builtin(bti) => self.eval_builtin(&bti, args, state, env, depth),
             Expression::String(cmdx_str) => {
                 // 空命令
                 if cmdx_str.is_empty() || cmdx_str == ":" {
@@ -596,44 +592,44 @@ impl Expression {
             }
         }
     }
-    #[inline]
-    pub fn eval_builtin(
-        &self,
-        bti: &Builtin,
-        args: &Vec<Expression>,
-        state: &mut State,
-        env: &mut Environment,
-        depth: usize,
-    ) -> Result<Expression, RuntimeError> {
-        // dbg!("   3.--->applying Builtin:", &bti.name, &args);
-        // let pipe_out = state.pipe_out();
+    // #[inline]
+    // pub fn eval_builtin(
+    //     &self,
+    //     bti: &Builtin,
+    //     args: &Vec<Expression>,
+    //     state: &mut State,
+    //     env: &mut Environment,
+    //     depth: usize,
+    // ) -> Result<Expression, RuntimeError> {
+    //     // dbg!("   3.--->applying Builtin:", &bti.name, &args);
+    //     // let pipe_out = state.pipe_out();
 
-        // 执行时机应由内置函数自己选择，如 where(size>0)
-        // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
-        // let rst = match pipe_out {
-        //     Some(p) => {
-        // let mut appened_args = args.clone();
-        // appened_args.push(p);
-        let appened_args = args
-            .iter()
-            .map(|x| match x {
-                Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
-                o => o.clone(),
-            })
-            .collect::<Vec<_>>();
-        let rst = (bti.body)(appened_args.as_ref(), env);
-        //     }
-        //     _ => (bti.body)(args, env),
-        // };
+    //     // 执行时机应由内置函数自己选择，如 where(size>0)
+    //     // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
+    //     // let rst = match pipe_out {
+    //     //     Some(p) => {
+    //     // let mut appened_args = args.clone();
+    //     // appened_args.push(p);
+    //     let appened_args = args
+    //         .iter()
+    //         .map(|x| match x {
+    //             Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
+    //             o => o.clone(),
+    //         })
+    //         .collect::<Vec<_>>();
+    //     let rst = (bti.body)(appened_args.as_ref(), env);
+    //     //     }
+    //     //     _ => (bti.body)(args, env),
+    //     // };
 
-        rst.map_err(|e| {
-            RuntimeError::new(
-                RuntimeErrorKind::BuiltinFailed(bti.name.clone(), e.to_string()),
-                self.clone(),
-                depth,
-            )
-        })
-    }
+    //     rst.map_err(|e| {
+    //         RuntimeError::new(
+    //             RuntimeErrorKind::BuiltinFailed(bti.name.clone(), e.to_string()),
+    //             self.clone(),
+    //             depth,
+    //         )
+    //     })
+    // }
 }
 /// 参数绑定辅助函数 - 将参数绑定到环境中
 ///

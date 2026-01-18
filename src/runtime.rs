@@ -1,4 +1,4 @@
-use crate::modules::pretty_printer;
+use crate::libs::pretty_printer;
 use crate::set_print_direct;
 use crate::utils::canon;
 use crate::utils::expand_home;
@@ -65,13 +65,13 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
             // dbg!(env.get("cd"));
             match val {
                 Ok(Expression::None) => {}
-                Ok(Expression::Builtin(b)) => {
-                    println!(
-                        "  >> [Builtin] {}\n\x1b[1;32mDescription\x1b[0m: {}\n\x1b[1;32mParams     \x1b[0m: {}\n",
-                        b.name, b.help, b.hint
-                    );
-                    let _ = io::stdout().flush();
-                }
+                // Ok(Expression::Builtin(b)) => {
+                //     println!(
+                //         "  >> [Builtin] {}\n\x1b[1;32mDescription\x1b[0m: {}\n\x1b[1;32mParams     \x1b[0m: {}\n",
+                //         b.name, b.help, b.hint
+                //     );
+                //     let _ = io::stdout().flush();
+                // }
                 Ok(m)
                     if matches!(
                         m,

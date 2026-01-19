@@ -1,4 +1,10 @@
 pub mod boolean_lib;
 pub mod list_lib;
+pub mod log_lib;
+pub mod map_lib;
+pub mod math_lib;
+pub mod rand_lib;
+pub mod reg_lib;
 pub mod string;
+pub mod time_lib;
 pub mod top;

@@ -12,43 +12,44 @@ use std::path::PathBuf;
 use std::path::is_separator;
 use std::sync::OnceLock;
 
-use crate::expression::alias::get_alias_tips;
-// use crate::modules::get_builtin_tips;
+// use crate::expression::alias::get_alias_tips;
+// use crate::libs::get_builtin_tips;
+use crate::libs::get_lib_completions;
 
 static PATH_COMMANDS: OnceLock<HashSet<String>> = OnceLock::new();
-static LM_CMDS: OnceLock<HashSet<String>> = OnceLock::new();
+static LM_CMDS: OnceLock<HashSet<&'static str>> = OnceLock::new();
 
 fn get_path_commands() -> &'static HashSet<String> {
     PATH_COMMANDS.get_or_init(|| init_path_cmds())
 }
-fn get_lm_commands() -> &'static HashSet<String> {
+fn get_lm_commands() -> &'static HashSet<&'static str> {
     LM_CMDS.get_or_init(|| init_lm_cmds())
 }
 
-fn init_lm_cmds() -> HashSet<String> {
-    let mut cmds: HashSet<String> = hash_set! {
-        "cd ./".into(),
-        "ls -l --color ./".into(),
-        "clear".into(),
-        "rm ".into(),
-        "cp -r".into(),
-        "let ".into(),
-        "fn ".into(),
-        "if ".into(),
-        "else {".into(),
-        "match ".into(),
-        "while (".into(),
-        "for i in ".into(),
-        "loop {\n".into(),
-        "break".into(),
-        "return".into(),
-        "history".into(),
-        "del ".into(),
-        "use ".into(),
+fn init_lm_cmds() -> HashSet<&'static str> {
+    let cmds: HashSet<&'static str> = hash_set! {
+        // "cd ./".into(),
+        // "ls -l --color ./".into(),
+        // "clear".into(),
+        // "rm ".into(),
+        // "cp -r",
+        "let ",
+        "fn ",
+        "if ",
+        "else {",
+        "match ",
+        "while (",
+        "for i in ",
+        "loop {\n",
+        "break",
+        "return",
+        "history",
+        "del ",
+        "use ",
     };
     // cmds.extend(get_builtin_tips());
     // cmds.extend(scan_cmds());
-    cmds.extend(get_alias_tips());
+    // cmds.extend(get_alias_tips());
     cmds
 }
 
@@ -56,16 +57,26 @@ pub fn is_valid_command(cmd: &str) -> bool {
     // PATH_COMMANDS.get().is_some_and(|m| m.contains(cmd))
     get_path_commands().contains(cmd)
 }
-pub fn collect_command_with_prefix(prefix: &str) -> Vec<&String> {
+pub fn collect_command_with_prefix(prefix: &str) -> Vec<&str> {
+    if prefix.is_empty() || !prefix.is_ascii() {
+        return Vec::new();
+    }
     let c1 = get_lm_commands()
         .iter()
         .filter(|x| x.starts_with(prefix))
+        .map(|x| *x)
         .collect::<Vec<_>>();
     if c1.is_empty() {
-        return get_path_commands()
-            .iter()
-            .filter(|x| x.starts_with(prefix))
-            .collect::<Vec<_>>();
+        match get_lib_completions(prefix) {
+            Some(lib) => return lib,
+            _ => {
+                return get_path_commands()
+                    .iter()
+                    .filter(|x| x.starts_with(prefix))
+                    .map(|x| x.as_ref())
+                    .collect::<Vec<_>>();
+            }
+        }
     }
     c1
 }

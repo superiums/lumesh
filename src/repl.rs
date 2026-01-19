@@ -574,7 +574,7 @@ impl Hinter for LumeHelper {
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {
             // 按权重排序匹配结果
-            let mut matches: Vec<_> = collect_command_with_prefix(&segment);
+            let mut matches = collect_command_with_prefix(&segment);
 
             // 权重降序, 较短的优先
             matches.sort_by(|a, b| a.len().cmp(&b.len()));

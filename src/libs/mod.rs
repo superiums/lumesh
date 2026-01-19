@@ -3,7 +3,12 @@ mod helper;
 mod lazy_module;
 mod pprint;
 pub use pprint::pretty_printer;
-use std::{cell::RefCell, collections::HashMap, rc::Rc, sync::LazyLock};
+use std::{
+    cell::RefCell,
+    collections::{HashMap, HashSet},
+    rc::Rc,
+    sync::LazyLock,
+};
 
 use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule};
 
@@ -23,8 +28,7 @@ thread_local! {
     // 中型模块：模块级懒加载
     // static FS_MODULE: RefCell<Option<Expression>> = RefCell::new(None);
 
-    static LIBS_INFO: LazyLock<HashMap<&'static str, HashMap<&'static str,BuiltinInfo>>> =LazyLock::new(||regist_all_info());
-
+    static LIBS_INFO: LazyLock<HashMap<&'static str, HashMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
 }
 
 pub struct BuiltinInfo {
@@ -34,8 +38,55 @@ pub struct BuiltinInfo {
 pub type BuiltinFunc =
     fn(&[Expression], &mut Environment, contex: &Expression) -> Result<Expression, RuntimeError>;
 
+pub fn get_builtin_tips() -> HashSet<String> {
+    let mut tips = HashSet::new();
+    LIBS_INFO.with(|h| {
+        h.iter().for_each(|(lib, funcs)| {
+            if lib.is_empty() {
+                for (name, info) in funcs {
+                    tips.insert(format!("{}    {}", name, info.hint));
+                }
+            } else {
+                for (name, info) in funcs {
+                    tips.insert(format!("{}.{}    {}", lib, name, info.hint));
+                }
+            }
+        })
+    });
+    tips
+}
+pub fn is_lib(name: &str) -> bool {
+    LIBS_INFO.with(|h| h.contains_key(name))
+}
+pub fn get_lib_completions(prefix: &str) -> Option<Vec<&str>> {
+    if prefix.is_empty() || !prefix.is_ascii() {
+        return None;
+    }
+    let top = TOP_MODULE.with(|h| {
+        h.borrow()
+            .iter()
+            .filter(|(k, _)| k.starts_with(prefix))
+            .map(|(k, _)| *k)
+            .collect::<Vec<_>>()
+    });
+    if !top.is_empty() {
+        return Some(top);
+    }
+    let lib = LIBS_INFO.with(|h| {
+        h.iter()
+            .filter(|(k, _)| k.starts_with(prefix))
+            .map(|(k, _)| *k)
+            .collect::<Vec<_>>()
+    });
+    if !lib.is_empty() {
+        return Some(lib);
+    }
+    None
+}
+
 fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>> {
     let mut libs_info = HashMap::with_capacity(17);
+    libs_info.insert("", bin::top::regist_info());
     libs_info.insert("String", bin::string::regist_info());
     libs_info
 }

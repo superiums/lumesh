@@ -16,9 +16,18 @@ pub fn get_alias(name: &str) -> Option<Expression> {
     ALIAS_MAP.with(|map| map.borrow().get(name).cloned())
 }
 
-pub fn get_alias_tips() -> HashSet<String> {
-    ALIAS_MAP.with(|map| map.borrow().keys().map(|k| k.to_owned()).collect())
-}
+// pub fn get_alias_tips() -> HashSet<String> {
+//     ALIAS_MAP.with(|map| map.borrow().keys().map(|k| k.to_string()).collect())
+// }
+// pub fn get_alias_completion(prefix: &str) -> Vec<String> {
+//     ALIAS_MAP.with(|map| {
+//         map.borrow()
+//             .keys()
+//             .filter(|m| m.starts_with(prefix))
+//             .map(|k| k.to_string())
+//             .collect::<Vec<_>>()
+//     })
+// }
 
 // fn remove_alias(name: &str) {
 //     ALIAS_MAP.with(|map| {

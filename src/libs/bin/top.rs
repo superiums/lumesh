@@ -11,59 +11,78 @@ use crate::{
         helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_arg},
         pretty_printer,
     },
-    parse_and_eval, reg_all,
+    parse_and_eval, reg_all, reg_info,
     utils::{canon, get_current_path},
 };
 
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
-    let mut module: HashMap<&'static str, Rc<BuiltinFunc>> = HashMap::with_capacity(10);
-
-    reg_all!(module, {
-        exit;
-        cd;
-        wd;
+    reg_all!({
+        exit, cd, wd,
+        tap, print, pprint, println, eprint, eprintln, debug, read,
+        get, len, insert, rev, flatten, r#where, select,
+        repeat, eval, exec, eval_str, exec_str, include, import,
+        help,
         // set;
         // unset;
-        tap;
-        print;
-        pprint;
-        println;
-        eprint;
-        eprintln;
-        debug;
-        read;
         // throw;
-        get;
         // typeof;
-        len;
-        insert;
-        rev;
-        flatten;
-        r#where;
-        select;
-        repeat;
-        eval;
-        exec;
-        eval_str;
-        exec_str;
-        include;
-        import;
-        help;
-    });
-    // module.insert("cd", Rc::new(cd));
-    // module.insert("cd", Rc::new(pwd));
-    module
+
+    })
 }
 
 pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
     let mut info = HashMap::with_capacity(100);
-    info.insert(
-        "cd",
-        BuiltinInfo {
-            descr: "cd",
-            hint: "<string>",
-        },
-    );
+    // info.insert(
+    //     "cd",
+    //     BuiltinInfo {
+    //         descr: "cd",
+    //         hint: "<string>",
+    //     },
+    // );
+
+    reg_info!(info,{
+        // console control
+        // Shell control
+        exit => "exit the shell", "[status]"
+        cd => "change directories", "[path]"
+        cwd => "print current working directory", ""
+        // env control
+        set => "define a variable in root environment", "<var> <val>"
+        unset => "undefine a variable in root environment", "<var>"
+
+        // I/O operations
+        tap => "print and return result", "<args>..."
+        print => "print arguments without newline", "<args>..."
+        pprint => "pretty print", "<list>|<map>"
+        println => "print arguments with newline", "<args>..."
+        eprint => "print to stderr without newline", "<args>..."
+        eprintln => "print to stderr with newline", "<args>..."
+        debug => "print debug representation", "<args>..."
+        read => "get user input", "[prompt]"
+        throw => "return a runtime error", "<msg>"
+
+        // Data manipulation
+        get => "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"
+        typeof => "get data type", "<value>"
+        len => "get length of expression", "<collection>"
+        insert => "insert item into collection", "<key/index> <value> <collection>"
+        rev => "reverse sequence", "<string|list|bytes>"
+        flatten => "flatten nested structure", "<collection>"
+        where => "filter rows by condition", "<condition> <list[map]> "
+        select => "select columns from list of maps", "<columns>...<list[map]>"
+
+        // Execution control
+        repeat => "evaluate without env change", "<expr>"
+        eval => "evaluate expression in current env", "<expr>"
+        exec => "execute expression in new env", "<expr>"
+        eval_str => "evaluate string in current env", "<expr>"
+        exec_str => "execute string in new env", "<string>"
+        include => "evaluate file in current env", "<path>"
+        import => "evaluate file in new env", "<path>"
+
+        // Help system
+        help => "display help", "[module]"
+    });
     info
 }
 

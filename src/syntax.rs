@@ -3,7 +3,11 @@
 use common_macros::hash_map;
 use std::collections::{BTreeMap, HashMap};
 
-use crate::{Diagnostic, Expression, TokenKind, libs::get_builtin_optimized, tokenize};
+use crate::{
+    Diagnostic, Expression, TokenKind,
+    libs::{get_builtin_optimized, is_lib},
+    tokenize,
+};
 
 const DEFAULT: &str = "";
 
@@ -119,6 +123,9 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                         // if matches!(l, "echo" | "exit" | "clear" | "cd" | "rm") {
                         result.push_str(get_color("builtin_cmd", theme));
                         is_colored = true;
+                    } else if is_lib(l) {
+                        result.push_str(get_color("builtin_lib", theme));
+                        is_colored = true;
                     } else if is_colored {
                         result.push_str(get_color("reset", theme));
                         is_colored = false;
@@ -217,6 +224,7 @@ pub fn get_dark_theme() -> HashMap<String, String> {
         // 符号和标识符
         String::from("symbol_none") => "\x1b[38;5;203m".to_string(),       // 粉红色
         String::from("builtin_cmd") => "\x1b[38;5;75m".to_string(),        // 蓝色 (#61AFEF)
+        String::from("builtin_lib") => "\x1b[38;5;78m".to_string(),        // 蓝色 (#61AFEF)
         String::from("symbol") => "\x1b[38;5;81m".to_string(),             // 天蓝色
 
         // 注释和标点

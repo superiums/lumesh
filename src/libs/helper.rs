@@ -7,35 +7,41 @@ use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind};
 // 函数注册宏 - 自动推导函数名
 #[macro_export]
 macro_rules! reg_lazy {
-    ($module:expr, { $($func:ident);* $(;)? }) => {
+    ({ $($func:ident),* $(,)? }) => {
+       {
+        let module = LazyModule::new();
         $(
-            $module.register(stringify!($func), || {
+            module.register(stringify!($func), || {
                 std::rc::Rc::new($func)
-                // Expression::builtin(stringify!($func), $func, $desc, $usage)
             });
         )*
+        module
+       }
     };
 }
 #[macro_export]
 macro_rules! reg_all {
-    ($module:expr, { $($func:ident);* $(;)? }) => {
+    ({ $($func:ident),* $(,)? }) => {
+        {
+            let mut module: HashMap<&'static str, Rc<BuiltinFunc>> = HashMap::with_capacity(10);
+            $(
+                module.insert(stringify!($func), std::rc::Rc::new($func));
+            )*
+            module
+        }
+    };
+}
+#[macro_export]
+macro_rules! reg_info {
+    ($module:expr, { $($func:ident => $desc:expr, $hint:expr)* $(;)? }) => {
         $(
-            $module.insert(stringify!($func), std::rc::Rc::new($func));
+            $module.insert(stringify!($func), BuiltinInfo {
+                descr: $desc,
+                hint: $hint
+            });
         )*
     };
 }
-
-// #[macro_export]
-// macro_rules! register_builtin_info {
-//     ($module:expr, { $($func:ident => $desc:expr, $usage:expr);* $(;)? }) => {
-//         $(
-//             $module.register(stringify!($func), || {
-//                 $func
-//                 // Expression::builtin(stringify!($func), $func, $desc, $usage)
-//             });
-//         )*
-//     };
-// }
 
 pub fn check_args_len(
     name: impl ToString,

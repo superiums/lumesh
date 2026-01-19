@@ -2,29 +2,21 @@ use std::collections::HashMap;
 
 use crate::{
     Environment, Expression, RuntimeError,
-    libs::{
-        BuiltinInfo,
-        helper::{check_exact_args_len, get_string_arg},
-        lazy_module::LazyModule,
-    },
+    libs::{BuiltinInfo, lazy_module::LazyModule},
     reg_lazy,
 };
 
 pub fn regist_lazy() -> LazyModule {
-    let module = LazyModule::new();
-
-    reg_lazy!(module, {
+    reg_lazy!({
         // split => "split a string on a given character", "[delimiter] <string>";
         // join => "join strings", "<string>...";
         // len => "get length of string", "<string>";
         // trim => "trim whitespace from a string", "<string>";
-        to_lower;
-        to_upper;
+        to_lower,
+        to_upper,
         // replace => "replace all instances of a substring", "<old> <new> <string>";
         // contains => "check if a string contains a given substring", "<substring> <string>";
-    });
-
-    module
+    })
 }
 
 pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {

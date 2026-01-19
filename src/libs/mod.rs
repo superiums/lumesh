@@ -41,7 +41,7 @@ thread_local! {
 
 
     // 大型模块：函数级懒加载
-    static STRING_MODULE: LazyModule = bin::string::regist_lazy();
+    static STRING_MODULE: LazyModule = bin::string_lib::regist_lazy();
     static LIST_MODULE: LazyModule = bin::list_lib::regist_lazy();
     static MAP_MODULE: LazyModule = bin::map_lib::regist_lazy();
     static TIME_MODULE: LazyModule = bin::time_lib::regist_lazy();
@@ -54,7 +54,7 @@ thread_local! {
 fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>> {
     let mut libs_info = HashMap::with_capacity(17);
     libs_info.insert("", bin::top::regist_info());
-    libs_info.insert("string", bin::string::regist_info());
+    libs_info.insert("string", bin::string_lib::regist_info());
     libs_info.insert("boolean", bin::boolean_lib::regist_info());
     libs_info.insert("list", bin::list_lib::regist_info());
     libs_info.insert("map", bin::map_lib::regist_info());

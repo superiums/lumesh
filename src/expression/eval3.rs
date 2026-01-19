@@ -613,44 +613,6 @@ impl Expression {
             )),
         }
     }
-    // #[inline]
-    // pub fn eval_builtin(
-    //     &self,
-    //     bti: &Builtin,
-    //     args: &Vec<Expression>,
-    //     state: &mut State,
-    //     env: &mut Environment,
-    //     depth: usize,
-    // ) -> Result<Expression, RuntimeError> {
-    //     // dbg!("   3.--->applying Builtin:", &bti.name, &args);
-    //     // let pipe_out = state.pipe_out();
-
-    //     // 执行时机应由内置函数自己选择，如 where(size>0)
-    //     // 注意：bultin args通过相同env环境执行，但未传递state参数，无法继续得知管道状态
-    //     // let rst = match pipe_out {
-    //     //     Some(p) => {
-    //     // let mut appened_args = args.clone();
-    //     // appened_args.push(p);
-    //     let appened_args = args
-    //         .iter()
-    //         .map(|x| match x {
-    //             Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
-    //             o => o.clone(),
-    //         })
-    //         .collect::<Vec<_>>();
-    //     let rst = (bti.body)(appened_args.as_ref(), env);
-    //     //     }
-    //     //     _ => (bti.body)(args, env),
-    //     // };
-
-    //     rst.map_err(|e| {
-    //         RuntimeError::new(
-    //             RuntimeErrorKind::BuiltinFailed(bti.name.clone(), e.to_string()),
-    //             self.clone(),
-    //             depth,
-    //         )
-    //     })
-    // }
 }
 /// 参数绑定辅助函数 - 将参数绑定到环境中
 ///
@@ -724,16 +686,44 @@ impl Expression {
                         }
                     }
                 }
-                _ => Err(RuntimeError::new(
-                    RuntimeErrorKind::NoLibDefined(
-                        method.to_string(),
-                        current_base.type_name().into(),
-                        "eval_chain".into(),
-                        current_base.to_string(),
-                    ),
-                    self.clone(),
-                    depth,
-                )),
+                // 非内置函数
+                None => {
+                    return match current_base {
+                        // 是自定义的Map内的func
+                        Expression::Map(map) => {
+                            match map.get(method) {
+                                Some(func) => {
+                                    // 字典的键值是可执行对象
+                                    match func {
+                                        Expression::Lambda(..) | Expression::Function(..) => {
+                                            self.eval_apply(func, &call.args, state, env, depth)
+                                        }
+                                        s => Err(RuntimeError::new(
+                                            RuntimeErrorKind::NotAFunction(s.to_string()),
+                                            self.clone(),
+                                            depth,
+                                        )),
+                                    }
+                                }
+                                None => Err(RuntimeError::new(
+                                    RuntimeErrorKind::KeyNotFound(method.into()),
+                                    self.clone(),
+                                    depth,
+                                )),
+                            }
+                        }
+                        _ => Err(RuntimeError::new(
+                            RuntimeErrorKind::NoLibDefined(
+                                method.to_string(),
+                                current_base.type_name().into(),
+                                "eval_chain".into(),
+                                current_base.to_string(),
+                            ),
+                            self.clone(),
+                            depth,
+                        )),
+                    };
+                }
             };
             // 构造方法调用表达式
             // let excuted = match &current_base {
@@ -771,36 +761,7 @@ impl Expression {
             //     }
             //     // 如果当前值是对象，尝试获取其方法
             //     Expression::Map(map) => {
-            //         match map.get(method) {
-            //             Some(func) => {
-            //                 // 字典的键值是可执行对象
-            //                 match func {
-            //                     Expression::Lambda(..) | Expression::Function(..) => {
-            //                         self.eval_apply(func, &call.args, state, env, depth)
-            //                     }
-            //                     Expression::Builtin(bti) => {
-            //                         self.eval_builtin(bti, &call.args, state, env, depth + 1)
-            //                     }
-            //                     s => Err(RuntimeError::new(
-            //                         RuntimeErrorKind::NotAFunction(s.to_string()),
-            //                         self.clone(),
-            //                         depth,
-            //                     )),
-            //                 }
-            //             }
-            //             None => {
-            //                 // 尝试内置方法
-            //                 self.eval_lib_method(
-            //                     "Map".into(),
-            //                     method,
-            //                     &call.args,
-            //                     current_base,
-            //                     state,
-            //                     env,
-            //                     depth,
-            //                 )
-            //             }
-            //         }
+
             //     }
             //     // 对于其他类型，查找内置方法
             //     o => match o.get_belong_lib_name() {

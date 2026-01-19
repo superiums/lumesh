@@ -1,4 +1,5 @@
 pub mod boolean_lib;
+pub mod console_lib;
 pub mod list_lib;
 pub mod log_lib;
 pub mod map_lib;

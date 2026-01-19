@@ -103,8 +103,3 @@ lto = true        # 链接时优化
 codegen-units = 1 # 减少代码生成单元
 panic = "abort"   # 使用abort而非unwind
 strip = true      # 移除调试符号
-
-[build]
-incremental = 1
-build-dir = "/tmp/lm_build"
-target-dir = "/tmp/lm_target"

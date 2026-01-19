@@ -23,7 +23,7 @@ macro_rules! reg_lazy {
 macro_rules! reg_all {
     ({ $($func:ident),* $(,)? }) => {
         {
-            let mut module: HashMap<&'static str, Rc<BuiltinFunc>> = HashMap::with_capacity(10);
+            let mut module: HashMap<&'static str, Rc<BuiltinFunc>> = HashMap::new();
             $(
                 module.insert(stringify!($func), std::rc::Rc::new($func));
             )*
@@ -33,13 +33,17 @@ macro_rules! reg_all {
 }
 #[macro_export]
 macro_rules! reg_info {
-    ($module:expr, { $($func:ident => $desc:expr, $hint:expr)* $(;)? }) => {
-        $(
-            $module.insert(stringify!($func), BuiltinInfo {
-                descr: $desc,
-                hint: $hint
-            });
-        )*
+    ({ $($func:ident => $desc:expr, $hint:expr)* $(;)? }) => {
+        {
+            let mut info :HashMap<&'static str, BuiltinInfo> = HashMap::new();
+            $(
+                info.insert(stringify!($func), BuiltinInfo {
+                    descr: $desc,
+                    hint: $hint
+                });
+            )*
+            info
+        }
     };
 }
 

@@ -1,6 +1,7 @@
 use common_macros::hash_set;
 use std::collections::HashSet;
 
+use crate::libs::get_lib_completions;
 #[cfg(unix)]
 use std::env;
 #[cfg(unix)]
@@ -11,11 +12,6 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::path::is_separator;
 use std::sync::OnceLock;
-
-use crate::libs::LIBS_INFO;
-// use crate::expression::alias::get_alias_tips;
-// use crate::libs::get_builtin_tips;
-use crate::libs::get_lib_completions;
 
 static PATH_COMMANDS: OnceLock<HashSet<String>> = OnceLock::new();
 static LM_CMDS: OnceLock<HashSet<&'static str>> = OnceLock::new();

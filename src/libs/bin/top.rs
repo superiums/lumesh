@@ -18,29 +18,19 @@ use crate::{
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
         exit, cd, wd,
-        tap, print, pprint, println, eprint, eprintln, debug, read,
+        tap, print, pprint, println, eprint, eprintln, debug, read,r#typeof,
         get, len, insert, rev, flatten, r#where, select,
         repeat, eval, exec, eval_str, exec_str, include, import,
         help,
         // set;
         // unset;
         // throw;
-        // typeof;
 
     })
 }
 
 pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
-    let mut info = HashMap::with_capacity(100);
-    // info.insert(
-    //     "cd",
-    //     BuiltinInfo {
-    //         descr: "cd",
-    //         hint: "<string>",
-    //     },
-    // );
-
-    reg_info!(info,{
+    reg_info!({
         // console control
         // Shell control
         exit => "exit the shell", "[status]"
@@ -82,14 +72,13 @@ pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
 
         // Help system
         help => "display help", "[module]"
-    });
-    info
+    })
 }
 
 fn help(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut s = std::io::stdout().lock();
     match args.is_empty() {
@@ -316,12 +305,16 @@ fn cd(
     Ok(Expression::None)
 }
 
-fn wd(_: &[Expression], _: &mut Environment, ctx: &Expression) -> Result<Expression, RuntimeError> {
+fn wd(
+    _: &[Expression],
+    _: &mut Environment,
+    _ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
     let path = get_current_path();
     Ok(Expression::String(path.to_string_lossy().into_owned()))
 }
 
-fn get_type(
+fn r#typeof(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
@@ -338,7 +331,7 @@ fn get_type(
 fn debug(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     for (i, arg) in args.iter().enumerate() {
         let x = arg.eval(env)?;
@@ -354,7 +347,7 @@ fn debug(
 fn tap(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stdout = std::io::stdout().lock();
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
@@ -377,7 +370,7 @@ fn tap(
 fn print(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
@@ -391,7 +384,7 @@ fn print(
 fn println(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
@@ -418,7 +411,7 @@ pub fn pprint(
 fn eprint(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stderr = std::io::stderr().lock();
     for (i, arg) in args.iter().enumerate() {
@@ -435,7 +428,7 @@ fn eprint(
 fn eprintln(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stderr = std::io::stderr().lock();
     for arg in args.iter() {

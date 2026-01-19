@@ -46,8 +46,8 @@ fn to_lower(
 
 fn to_upper(
     args: &[Expression],
-    env: &mut Environment,
-    contex: &Expression,
+    _env: &mut Environment,
+    _contex: &Expression,
 ) -> Result<Expression, RuntimeError> {
     // check_exact_args_len("to_upper", args, 1)?;
     // let text = get_string_arg(args[0].eval(env)?)?;

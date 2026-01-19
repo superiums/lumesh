@@ -1,6 +1,6 @@
 use super::Expression;
 use std::cell::RefCell;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 thread_local! {
     static ALIAS_MAP: RefCell<HashMap<String, Expression>> = RefCell::new(HashMap::new());

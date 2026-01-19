@@ -4,6 +4,7 @@ mod lazy_module;
 mod pprint;
 pub use pprint::pretty_printer;
 use std::{
+    borrow::Cow,
     cell::RefCell,
     collections::{HashMap, HashSet},
     rc::Rc,
@@ -14,21 +15,27 @@ use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule
 
 // 对不同模块采用不同策略
 thread_local! {
-    // 热模块：完全预加载
+    // 帮助信息，初次使用时加载
+    pub static LIBS_INFO: LazyLock<HashMap<&'static str, HashMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
+
+    // 热模块/小型模块：完全预加载
     // static MATH_MODULE: RefCell<HashMap<String, Expression>> = RefCell::new({
     //     math_module::get_all_functions() // 加载所有函数
     // });
     static TOP_MODULE: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
-        bin::top::regist_all()  // 加载所有函数
+        bin::boolean_lib::regist_all()
     });
-
-    // 大型模块：函数级懒加载
-    static STRING_MODULE: LazyModule = bin::string::regist_lazy();
+    static BOOL_MODULE: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
+        bin::top::regist_all()
+    });
 
     // 中型模块：模块级懒加载
     // static FS_MODULE: RefCell<Option<Expression>> = RefCell::new(None);
 
-    pub static LIBS_INFO: LazyLock<HashMap<&'static str, HashMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
+
+    // 大型模块：函数级懒加载
+    static STRING_MODULE: LazyModule = bin::string::regist_lazy();
+    static LIST_MODULE: LazyModule = bin::list_lib::regist_lazy();
 }
 
 pub struct BuiltinInfo {
@@ -38,23 +45,23 @@ pub struct BuiltinInfo {
 pub type BuiltinFunc =
     fn(&[Expression], &mut Environment, contex: &Expression) -> Result<Expression, RuntimeError>;
 
-pub fn get_builtin_tips() -> HashSet<String> {
-    let mut tips = HashSet::new();
-    LIBS_INFO.with(|h| {
-        h.iter().for_each(|(lib, funcs)| {
-            if lib.is_empty() {
-                for (name, info) in funcs {
-                    tips.insert(format!("{}  {}", name, info.hint));
-                }
-            } else {
-                for (name, info) in funcs {
-                    tips.insert(format!("{}.{}  {}", lib, name, info.hint));
-                }
-            }
-        })
-    });
-    tips
-}
+// pub fn get_builtin_tips() -> HashSet<String> {
+//     let mut tips = HashSet::new();
+//     LIBS_INFO.with(|h| {
+//         h.iter().for_each(|(lib, funcs)| {
+//             if lib.is_empty() {
+//                 for (name, info) in funcs {
+//                     tips.insert(format!("{}  {}", name, info.hint));
+//                 }
+//             } else {
+//                 for (name, info) in funcs {
+//                     tips.insert(format!("{}.{}  {}", lib, name, info.hint));
+//                 }
+//             }
+//         })
+//     });
+//     tips
+// }
 
 pub fn is_lib(name: &str) -> bool {
     LIBS_INFO.with(|h| h.contains_key(name))
@@ -89,17 +96,35 @@ pub fn get_lib_completions(prefix: &str) -> Option<Vec<&str>> {
 fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>> {
     let mut libs_info = HashMap::with_capacity(17);
     libs_info.insert("", bin::top::regist_info());
-    libs_info.insert("String", bin::string::regist_info());
+    libs_info.insert("string", bin::string::regist_info());
+    libs_info.insert("boolean", bin::boolean_lib::regist_info());
+    libs_info.insert("list", bin::list_lib::regist_info());
     libs_info
 }
 
+/// 类型名称
+fn get_belong_lib_name(exp: &Expression) -> Option<Cow<'static, str>> {
+    match exp {
+        Expression::List(_) | Expression::Range(..) => Some("list".into()),
+        Expression::Map(_) | Expression::HMap(_) => Some("map".into()),
+        Expression::String(_) | Expression::StringTemplate(_) | Expression::Bytes(_) => {
+            Some("string".into())
+        }
+        Expression::Integer(_) | Expression::Float(_) => Some("math".into()),
+        Expression::DateTime(_) => Some("time".into()),
+        Expression::Boolean(_) => Some("boolean".into()),
+        Expression::Regex(_) => Some("regex".into()),
+        Expression::FileSize(_) => Some("filesize".into()),
+        _ => None,
+    }
+}
 pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<Rc<BuiltinFunc>> {
     match expr {
         Expression::Blank => get_builtin_optimized("", fn_name),
         Expression::Symbol(x) => get_builtin_optimized(x.as_ref(), fn_name),
-        other => other
-            .get_belong_lib_name()
-            .and_then(|x| get_builtin_optimized(x.as_ref(), fn_name)),
+        other => {
+            get_belong_lib_name(other).and_then(|x| get_builtin_optimized(x.as_ref(), fn_name))
+        }
     }
 }
 /// lazy load builtin.
@@ -108,7 +133,9 @@ pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<Builtin
     match lib_name {
         // "Math" => MATH_MODULE.with(|m| m.borrow().get(function).cloned()),
         "" => TOP_MODULE.with(|m| m.borrow().get(fn_name).cloned()),
-        "String" => STRING_MODULE.with(|m| m.get_function(fn_name)),
+        "boolean" => BOOL_MODULE.with(|m| m.borrow().get(fn_name).cloned()),
+        "string" => STRING_MODULE.with(|m| m.get_function(fn_name)),
+        "list" => LIST_MODULE.with(|m| m.get_function(fn_name)),
         // "Fs" => FS_MODULE.with(|m| {
         //     if m.borrow().is_none() {
         //         *m.borrow_mut() = Some(fs_module::get());

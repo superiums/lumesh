@@ -23,10 +23,13 @@ use std::path::PathBuf;
 
 use crate::ai::{AIClient, MockAIClient, init_ai};
 use crate::cmdhelper::{
-    LumeCompletionType, collect_command_with_prefix, detect_completion_type, is_valid_command,
+    LumeCompletionType, collect_command_with_prefix, detect_completion_type, find_command_pos,
+    is_valid_command,
 };
 use crate::completion::ParamCompleter;
+use crate::expression::alias::get_alias_completion;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
+use crate::libs::LIBS_INFO;
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
 use crate::{Expression, childman};
 
@@ -409,6 +412,41 @@ impl LumeHelper {
                 }
             })
             .collect();
+        // search others
+        if candidates.is_empty() {
+            match prefix.split_once(".") {
+                // funcs of lib
+                Some((name, func)) => {
+                    if !name.is_empty() {
+                        let point = prefix.find(".").unwrap_or(0);
+                        LIBS_INFO.with(|h| {
+                            if let Some(lib) = h.get(&name) {
+                                candidates = lib
+                                    .iter()
+                                    .filter(|(f, _)| f.starts_with(func))
+                                    .map(|(cmd, _)| Pair {
+                                        display: format!("{cpl_color}{cmd}{RESET}"),
+                                        replacement: cmd.to_string(),
+                                    })
+                                    .collect::<Vec<_>>();
+                            }
+                        });
+                        candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+                        return Ok((section_start + point + 1, candidates));
+                    }
+                }
+                _ => {
+                    // alias
+                    candidates = get_alias_completion(prefix)
+                        .into_iter()
+                        .map(|cmd| Pair {
+                            display: format!("{cpl_color}{cmd}{RESET}"),
+                            replacement: cmd,
+                        })
+                        .collect();
+                }
+            }
+        }
         // 按显示名称的长度升序排序，较短的优先
         candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
 
@@ -551,31 +589,51 @@ impl Highlighter for LumeHelper {
 //         Some(&self.0)
 //     }
 // }
+// 扩展分隔符列表（根据需要调整）
+
 impl Hinter for LumeHelper {
     type Hint = String;
 
     fn hint(&self, line: &str, pos: usize, ctx: &rustyline::Context<'_>) -> Option<String> {
-        // 提取光标前的连续非分隔符片段
-        let mut segment = String::new();
-        if !line.is_empty() {
-            for (i, ch) in line.chars().enumerate() {
-                // 扩展分隔符列表（根据需要调整）
-                if matches!(ch, ';' | '|' | '(' | '{' | '`' | '\n') {
-                    segment.clear();
-                } else if segment.is_empty() && ch.is_ascii_whitespace() {
-                } else {
-                    segment.push(ch);
-                }
-                if i == pos {
-                    break;
-                }
-            }
-        }
+        let prefix = &line[..pos];
+        let p = find_command_pos(prefix);
+        let segment = &prefix[p..];
+
         // 仅当有有效片段时进行匹配
         if !segment.is_empty() {
             // 按权重排序匹配结果
             let mut matches = collect_command_with_prefix(&segment);
 
+            // search lib funcs
+            if matches.is_empty() {
+                match segment.split_once(".") {
+                    // funcs of lib
+                    Some((name, func)) => {
+                        if !name.is_empty() {
+                            let mut matches = LIBS_INFO.with(|h| {
+                                if let Some(lib) = h.get(&name) {
+                                    lib.iter()
+                                        .filter(|(f, _)| f.starts_with(func))
+                                        .map(|(f, info)| format!("{f} {}", info.hint))
+                                        .collect::<Vec<_>>()
+                                } else {
+                                    Vec::new()
+                                }
+                            });
+                            // 权重降序, 较短的优先
+                            matches.sort_by(|a, b| a.len().cmp(&b.len()));
+                            // dbg!(&matches);
+                            if let Some(matched) = matches.first() {
+                                let suffix = &matched[func.len()..];
+                                if !suffix.is_empty() {
+                                    return Some(suffix.to_string());
+                                }
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+            }
             // 权重降序, 较短的优先
             matches.sort_by(|a, b| a.len().cmp(&b.len()));
             // dbg!(&matches);

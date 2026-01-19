@@ -7,7 +7,7 @@ use std::{
 use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
     libs::{
-        BuiltinFunc, BuiltinInfo,
+        BuiltinFunc, BuiltinInfo, LIBS_INFO,
         helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_arg},
         pretty_printer,
     },
@@ -91,22 +91,20 @@ fn help(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
+    let mut s = std::io::stdout().lock();
     match args.is_empty() {
         false => match args[0].to_string().as_str() {
             "doc" => {
                 parse_and_eval("xdg-open https://lumesh.codeberg.page", env);
             }
-            "tops" => {
-                println!("Top level Functions List\n");
-                // let m = super::get_builtin_map()
-                //     .into_iter()
-                //     .filter(|item| matches!(item.1, Expression::Builtin(_)))
-                //     .collect::<HashMap<_, _>>();
-                // pretty_printer(&Expression::from(m))?;
-                println!("\njust use them directly anywhere!");
-            }
             "libs" => {
-                println!("Builtin Library List\n");
+                writeln!(s, "Builtin Library List\n").unwrap();
+                LIBS_INFO.with(|h| {
+                    for lib in h.keys() {
+                        writeln!(s, "\n\x1b[92m\x1b[1m{lib}\x1b[m\x1b[0m").unwrap();
+                    }
+                });
+                writeln!(s).unwrap();
                 // let m = super::get_builtin_map()
                 //     .iter()
                 //     .filter_map(|item| match item.1 {
@@ -119,68 +117,108 @@ fn help(
                 //     })
                 //     .collect::<HashMap<String, Expression>>();
                 // pretty_printer(&Expression::from(m))?;
-                println!("\ntype `help <lib-name>` to list functions of the lib.");
-                println!("\n\nUsage:");
-                println!("\n    <lib-name>.<function-name> params");
-                println!("\nExample:");
-                println!("\n    String.green hi");
-                println!("\n    String.green(hi)");
-                println!("\n    'hi'.green()");
-            } // mo => match super::get_builtin(mo) {
-            //     Some(m) => {
-            //         if mo
-            //             .char_indices()
-            //             .next()
-            //             .is_some_and(|f| f.1.is_ascii_uppercase())
-            //         {
-            //             println!("Functions for lib {mo}\n");
-            //             pretty_printer(m)?;
-            //             println!("\ntype `{mo}.<function-name>` to see details of the function");
-            //             println!("\ntype `{mo}.<tab>`           to cycle functions in the lib");
-            //             println!("\ntype `{mo}. <tab>`          to popup functions in the lib");
-            //         } else {
-            //             pretty_printer(m)?; //for top funcs
-            //             println!("\nit's a top level function. just use it directly anywhere!");
-            //         }
-            //     }
-            _ => {
-                return Err(RuntimeError::common(
-                    "no lib".into(),
-                    // format!("no lib named {mo}").into(),
-                    ctx.clone(),
-                    0,
-                ));
-            } // },
+                writeln!(s, "\ntype `help <lib-name>` to list functions of the lib.").unwrap();
+                writeln!(s, "\n\nUsage:").unwrap();
+                writeln!(s, "\n    <lib-name>.<function-name> params").unwrap();
+                writeln!(s, "\nExample:").unwrap();
+                writeln!(s, "\n    String.green hi").unwrap();
+                writeln!(s, "\n    String.green(hi)").unwrap();
+                writeln!(s, "\n    'hi'.green()").unwrap();
+            }
+            "tops" => {
+                writeln!(s, "Top level Functions List\n").unwrap();
+                LIBS_INFO.with(|h| match h.get("") {
+                    Some(map) => {
+                        writeln!(s, "Top Functions\n").unwrap();
+                        for (func, info) in map {
+                            writeln!(
+                                s,
+                                "\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",
+                                info.hint
+                            )
+                            .unwrap();
+                            writeln!(s, "\t{}", info.descr).unwrap();
+                        }
+                    }
+                    _ => {}
+                });
+                writeln!(s, "\njust use them directly anywhere!").unwrap();
+            }
+            name => {
+                match name.split_once(".") {
+                    Some((name, func)) => {
+                        LIBS_INFO.with(|h| match h.get(&name) {
+                            Some(map) => match map.get(func) {
+                                Some(info) => {
+                                    writeln!(s, "{name}.\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
+                                    writeln!(s, "\t{}", info.descr).unwrap();
+                                }
+                                _ => {
+                                    writeln!(s, "no function named `{func}` found in `{name}`\n")
+                                        .unwrap();
+                                }
+                            },
+                            _ => {
+                                writeln!(s, "no lib named `{name}` found\n").unwrap();
+                            }
+                        });
+                    }
+                    _ => {
+                        LIBS_INFO.with(|h| match h.get(&name) {
+                            Some(map) => {
+                                writeln!(s, "Functions for lib {name}\n").unwrap();
+                                for (func, info) in map {
+                                    writeln!(s, "{name}.\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
+                                    writeln!(s, "\t{}", info.descr).unwrap();
+                                }
+                                writeln!(
+                                    s,
+                                    "\ntype `help {name}.<function-name>` to see details of the function"
+                                ).unwrap();
+                                // writeln!(
+                                //     s,
+                                //     "\ntype `{name}.<tab>`           to cycle functions in the lib"
+                                // );
+                                // writeln!(
+                                //     s,
+                                //     "\ntype `{name}. <tab>`          to popup functions in the lib"
+                                // );
+                            }
+                            _ => {
+                                 writeln!(s, "no lib named `{name}` found\n").unwrap();
+                            }
+                        });
+                    }
+                }
+            }
         },
         true => {
-            let mut stdout = std::io::stdout().lock();
-            let _ = writeln!(&mut stdout, "\nWelcome to Lumesh help center");
-            let _ = writeln!(&mut stdout, "=================\n");
-            let _ = writeln!(&mut stdout, "type `help libs`         to list libs.");
+            let _ = writeln!(s, "\nWelcome to Lumesh help center");
+            let _ = writeln!(&mut s, "=================\n");
+            let _ = writeln!(&mut s, "type `help libs`         to list libs.");
             let _ = writeln!(
-                &mut stdout,
-                "type `help <module-name>`        to list functions of the lib."
+                &mut s,
+                "type `help <lib-name>`        to list functions of the lib."
             );
             let _ = writeln!(
-                &mut stdout,
+                &mut s,
                 "type `help tops`                 to list functions of the top level."
             );
             let _ = writeln!(
-                &mut stdout,
-                "type `help <func-name>`          to see the detail of top functions."
+                &mut s,
+                "type `<lib-name>.<func-name>` to see the detail of the function."
             );
             let _ = writeln!(
-                &mut stdout,
-                "type `<module-name>.<func-name>` to see the detail of the function."
+                &mut s,
+                "type `help .<func-name>`          to see the detail of top functions.note the DOT."
             );
             let _ = writeln!(
-                &mut stdout,
+                &mut s,
                 "type `help doc`                  to visit document on https://lumesh.codeberg.page"
             );
-
-            let _ = stdout.flush();
         }
     }
+    let _ = s.flush();
     Ok(Expression::None)
 }
 fn import(
@@ -272,7 +310,7 @@ fn cd(
     }
     std::env::set_current_dir(&path).map_err(|io_err| {
         RuntimeError::from_io_error(io_err, "set env path".into(), ctx.clone(), 0)
-    });
+    })?;
 
     env.define_in_root("PWD", Expression::String(path));
     Ok(Expression::None)

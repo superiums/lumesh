@@ -28,7 +28,7 @@ thread_local! {
     // 中型模块：模块级懒加载
     // static FS_MODULE: RefCell<Option<Expression>> = RefCell::new(None);
 
-    static LIBS_INFO: LazyLock<HashMap<&'static str, HashMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
+    pub static LIBS_INFO: LazyLock<HashMap<&'static str, HashMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
 }
 
 pub struct BuiltinInfo {
@@ -44,20 +44,22 @@ pub fn get_builtin_tips() -> HashSet<String> {
         h.iter().for_each(|(lib, funcs)| {
             if lib.is_empty() {
                 for (name, info) in funcs {
-                    tips.insert(format!("{}    {}", name, info.hint));
+                    tips.insert(format!("{}  {}", name, info.hint));
                 }
             } else {
                 for (name, info) in funcs {
-                    tips.insert(format!("{}.{}    {}", lib, name, info.hint));
+                    tips.insert(format!("{}.{}  {}", lib, name, info.hint));
                 }
             }
         })
     });
     tips
 }
+
 pub fn is_lib(name: &str) -> bool {
     LIBS_INFO.with(|h| h.contains_key(name))
 }
+
 pub fn get_lib_completions(prefix: &str) -> Option<Vec<&str>> {
     if prefix.is_empty() || !prefix.is_ascii() {
         return None;

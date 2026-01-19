@@ -12,6 +12,7 @@ use std::path::PathBuf;
 use std::path::is_separator;
 use std::sync::OnceLock;
 
+use crate::libs::LIBS_INFO;
 // use crate::expression::alias::get_alias_tips;
 // use crate::libs::get_builtin_tips;
 use crate::libs::get_lib_completions;
@@ -191,8 +192,9 @@ pub fn detect_completion_type(
     (LumeCompletionType::None, pos)
 }
 
+// const SEPARATORS: &[char] = &[';', '|', '(', '{', '`', '\n', '&', '>', '<'];
 // Shared function to extract command section after last separator
-fn find_command_pos(prefix: &str) -> usize {
+pub fn find_command_pos(prefix: &str) -> usize {
     // Find the last command separator position
     let pos = prefix
         .rfind(|c: char| matches!(c, '|' | '&' | '(' | ';' | '\n'))

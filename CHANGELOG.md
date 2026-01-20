@@ -1,7 +1,10 @@
 # Changelog
 ## [0.10.5]
 - optimized builtin functions seek
-- 
+- all lib named in lower case
+- value symbo comes to lower case: `true`, `false`,`none`
+- remove `!` postfix to call fn in cmd form, already supported builtin to call as cmd natively.
+
 
 ## [0.10.4]
 - refactor builtin functions

@@ -85,18 +85,18 @@ if IS_INTERACTIVE {
     }
 
     ### alias
-    alias int = Into.int()
-    alias str = Into.str()
-    alias each = List.map()
-    alias table = Into.table()
-    alias join = List.join()
-    alias open = Fs.read()
-    alias fls = Fs.ls('-l')
-    alias fmv = Fs.mv()
-    alias frm = Fs.rm()
-    alias fcp = Fs.cp()
-    alias fhead = Fs.head()
-    alias ftail = Fs.tail()
+    alias int = into.int()
+    alias str = into.str()
+    alias each = list.map()
+    alias table = into.table()
+    alias join = list.join()
+    alias open = fs.read()
+    alias fls = fs.ls('-l')
+    alias fmv = fs.mv()
+    alias frm = fs.rm()
+    alias fcp = fs.cp()
+    alias fhead = fs.head()
+    alias ftail = fs.tail()
     alias doc = xdg-open https://lumesh.codeberg.page
 
     ### ---ai---

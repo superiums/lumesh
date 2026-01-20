@@ -78,8 +78,8 @@ pub fn check_args_len(
             format!(
                 "arguments for `{}` not match, expected {:?}..{:?}, found: {}",
                 name.to_string(),
-                expected.start_bound(),
-                expected.end_bound(),
+                get_bounds(expected.start_bound()),
+                get_bounds(expected.end_bound()),
                 args.len()
             )
             .into(),
@@ -88,7 +88,13 @@ pub fn check_args_len(
         ))
     }
 }
-
+fn get_bounds(b: std::ops::Bound<&usize>) -> String {
+    match b {
+        std::ops::Bound::Included(&n) => n.to_string(),
+        std::ops::Bound::Excluded(&n) => (n + 1).to_string(),
+        std::ops::Bound::Unbounded => "_".to_string(),
+    }
+}
 pub fn check_exact_args_len(
     name: impl ToString,
     args: &[Expression],

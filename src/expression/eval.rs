@@ -1009,7 +1009,7 @@ impl Expression {
                         Expression::Index(base, method) => {
                             self.eval_builtin(base, method, args, state, env, depth)
                         }
-                        Expression::Variable(_) | Expression::Symbol(_) => {
+                        Expression::Variable(_) | Expression::Symbol(_) | Expression::String(_) => {
                             let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
                             break eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
                         }

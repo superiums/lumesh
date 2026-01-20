@@ -1,6 +1,7 @@
 # Changelog
 ## [0.10.5]
-
+- optimized builtin functions seek
+- 
 
 ## [0.10.4]
 - refactor builtin functions

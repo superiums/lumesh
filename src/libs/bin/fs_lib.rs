@@ -24,7 +24,7 @@ pub fn regist_lazy() -> LazyModule {
         mkdir, rmdir, mv, cp, rm,
         // check
         exists, is_dir, is_file,
-        // read/write
+        read, write,
         head, tail, read, write, append,
         // assist
         base_name, dir_name, join,

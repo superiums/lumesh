@@ -260,6 +260,9 @@ impl Expression {
                     }
                 }
             }
+            // 命令形式的内置函数调用如： fs.read! a
+            // 不用!,则进入eval_cmd中
+            // Expression::Index
             // 模块调用
             Expression::ModuleCall(modules, function) => {
                 state.extend_lookup_domains(&modules);

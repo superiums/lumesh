@@ -54,7 +54,7 @@ test_count += 1
 let arr = [10, "a", True]
 assert(arr@2, True, "列表基础索引", test_count)
 test_count += 1
-assert(arr[-1:], [True], "负数切片", test_count)
+assert(arr[(-1).._], [True], "负数切片", test_count)
 test_count += 1
 
 # --------------------------
@@ -86,10 +86,10 @@ assert(res, "A", "条件表达式", test_count)
 test_count += 1
 
 # 测试4.2 For循环范围
-for i in 0..<3 { "" + i + "\n" >> /tmp/tmp.txt }
-assert(len! String.lines(Fs.read! "/tmp/tmp.txt"), 3, "范围左闭右开", test_count) # 应输出0,1,2
+for i in 0..3 { "" + i + "\n" >> /tmp/tmp.txt }
+assert(len! string.lines(fs.read "/tmp/tmp.txt"), 3, "范围左闭右开", test_count) # 应输出0,1,2
 test_count += 1
-Fs.rm! /tmp/tmp.txt
+fs.rm /tmp/tmp.txt
 
 # --------------------------
 # 测试组5：函数

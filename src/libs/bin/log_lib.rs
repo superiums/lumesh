@@ -1,13 +1,7 @@
 use crate::{Environment, Expression};
-use common_macros::hash_map;
-use rand::distr::SampleString;
-use rand::prelude::*;
-use rand::{Rng, prelude::SliceRandom};
-use std::collections::HashMap;
-use std::rc::Rc;
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
+use crate::libs::helper::check_exact_args_len;
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
 
@@ -129,7 +123,7 @@ fn log_message(
     prefix: &str,
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     if !is_log_level_enabled(level) {
         return Ok(Expression::None);
@@ -209,7 +203,7 @@ fn trace(
 fn echo(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut output = String::new();
     let mut first_arg = true;

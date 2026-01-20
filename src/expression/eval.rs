@@ -1,7 +1,7 @@
 use crate::expression::eval2::ifs_split;
 use crate::expression::render::render_template;
 use crate::expression::{LumeRegex, alias};
-use crate::libs::get_builtin_via_expr;
+use crate::libs::{get_builtin_via_expr, time_parse};
 use crate::utils::abs;
 use crate::utils::canon;
 use crate::{Environment, Expression, Int, RuntimeError};
@@ -1072,12 +1072,7 @@ impl Expression {
                     return Ok(Expression::Regex(LumeRegex { regex }));
                 }
                 Expression::TimeDef(t) => {
-                    // TODO
-                    let t = Expression::String(t.clone());
-                    // let t = parse_time(&[Expression::String(t.clone())], env).map_err(|e| {
-                    //     RuntimeError::common(e.to_string().into(), job.clone(), depth)
-                    // })?;
-                    return Ok(t);
+                    return time_parse(&[Expression::String(t.to_string())], env, job);
                 }
                 Expression::Blank => return Ok(state.pipe_out().unwrap_or(job.clone())),
                 // 其他表达式处理...

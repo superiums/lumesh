@@ -1,4 +1,4 @@
-use crate::{Environment, Expression, LmError};
+use crate::{Environment, Expression};
 use chrono::{
     DateTime, Datelike, Duration as ChronoDuration, FixedOffset, Local, NaiveDate, NaiveDateTime,
     NaiveTime, TimeZone, Timelike, Utc,
@@ -6,7 +6,7 @@ use chrono::{
 use common_macros::hash_map;
 use std::{collections::BTreeMap, thread, time::Duration};
 
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
+use crate::libs::helper::{check_args_len, check_exact_args_len};
 use crate::libs::lazy_module::LazyModule;
 use crate::{RuntimeError, libs::BuiltinInfo, reg_info, reg_lazy};
 
@@ -231,7 +231,7 @@ fn sleep(
 }
 
 fn display(
-    args: &[Expression],
+    _args: &[Expression],
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -472,7 +472,7 @@ fn to_string(
     }
 }
 // Parsing and Creation Functions
-fn parse(
+pub fn parse(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
@@ -592,48 +592,54 @@ fn add(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("add", args, 1..=7, ctx)?;
-
-    let base_dt = if args.len() > 1 {
-        parse_datetime_arg(&args[1], env, ctx)?
-    } else {
-        Local::now().naive_local()
+    let (base_dt, rest) = match args.len() > 1 {
+        false => (Local::now().naive_local(), &args[1..]),
+        true => (parse_datetime_arg(&args[1], env, ctx)?, &args[1..]),
     };
 
-    // Parse duration
-    let duration = if let Expression::String(s) = args[0].eval(env)? {
-        let std_duration = parse_duration_string(&s, ctx)?;
-        ChronoDuration::from_std(std_duration).map_err(|e| {
-            RuntimeError::common(format!("Invalid duration: {e}").into(), ctx.clone(), 0)
-        })?
-    } else {
-        // Legacy: support separate time components
-        let mut duration = ChronoDuration::zero();
+    let duration = match rest.len() {
+        0 => ChronoDuration::zero(),
+        1 => match rest[0].eval(env)? {
+            Expression::String(dur) => {
+                let std_duration = parse_duration_string(&dur, ctx)?;
+                ChronoDuration::from_std(std_duration).map_err(|e| {
+                    RuntimeError::common(format!("Invalid duration: {e}").into(), ctx.clone(), 0)
+                })?
+            }
+            Expression::Integer(secs) => ChronoDuration::seconds(secs),
+            e => {
+                return Err(RuntimeError::common(
+                    format!("Invalid duration: {e}").into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        },
+        2.. => {
+            let mut duration = ChronoDuration::zero();
 
-        if args.len() > 1 {
-            if let Ok(Expression::Integer(secs)) = args[0].eval(env) {
+            if let Ok(Expression::Integer(secs)) = rest[0].eval(env) {
                 duration += ChronoDuration::seconds(secs);
             }
-        }
 
-        if args.len() > 2 {
-            if let Ok(Expression::Integer(mins)) = args[1].eval(env) {
+            if let Ok(Expression::Integer(mins)) = rest[1].eval(env) {
                 duration += ChronoDuration::minutes(mins);
             }
-        }
 
-        if args.len() > 3 {
-            if let Ok(Expression::Integer(hours)) = args[2].eval(env) {
-                duration += ChronoDuration::hours(hours);
+            if rest.len() > 2 {
+                if let Ok(Expression::Integer(hours)) = rest[2].eval(env) {
+                    duration += ChronoDuration::hours(hours);
+                }
             }
-        }
 
-        if args.len() > 4 {
-            if let Ok(Expression::Integer(days)) = args[3].eval(env) {
-                duration += ChronoDuration::days(days);
+            if rest.len() > 3 {
+                if let Ok(Expression::Integer(days)) = rest[3].eval(env) {
+                    duration += ChronoDuration::days(days);
+                }
             }
-        }
 
-        duration
+            duration
+        }
     };
 
     let result_dt = base_dt + duration;

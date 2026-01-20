@@ -1,11 +1,8 @@
 use crate::{
-    Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, Int, RuntimeError,
     libs::{
         BuiltinInfo,
-        helper::{
-            check_args_len, check_exact_args_len, get_exact_string_arg, get_integer_arg,
-            get_string_arg, get_string_args,
-        },
+        helper::{check_args_len, check_exact_args_len, get_string_arg},
         lazy_module::LazyModule,
     },
     reg_info, reg_lazy,
@@ -13,10 +10,10 @@ use crate::{
 };
 
 use crate::utils::{self, get_current_path, join_current_path};
+use std::ffi::OsStr;
 use std::io::Write;
 use std::path::Path;
 use std::{collections::BTreeMap, path::PathBuf};
-use std::{collections::HashMap, ffi::OsStr};
 // use super::fs_ls::list_directory_wrapper;
 use super::fs_ls::ls;
 
@@ -56,13 +53,13 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         is_file => "check if path is file", "<path>"
 
         // read/write
-        head => "read first N lines of file", "[n] <file>"
-        tail => "read last N lines of file", "[n] <file>"
+        head => "read first N lines of file", "<file> [n]"
+        tail => "read last N lines of file", "<file> [n]"
         read => "read file contents", "<file>"
-        write => "create/write to file", "<file> [content]"
-        append => "append to file", "<file> <content>"
+        write => "create/write to file", "[content] <file>"
+        append => "append to file", "<content> <file>"
         // assist
-        base_name => "extract base_name from path", "[split_ext?] <path>"
+        base_name => "extract base_name from path", "<path> [split_ext?]"
         dir_name => "extract dir_name from path", "<path>"
         join => "join paths", "<path>..."
     })
@@ -220,10 +217,10 @@ fn head(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("head", args, 1..=2, ctx)?;
-    let p = args.last().unwrap().eval(env)?.to_string();
+    let p = args[0].eval(env)?.to_string();
     let path = utils::canon(&p)?;
     let n = match args.len() {
-        2 => match args[0].eval(env)? {
+        2 => match args[1].eval(env)? {
             Expression::Integer(n) => n,
             _ => {
                 return Err(RuntimeError::common(
@@ -247,10 +244,10 @@ fn tail(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("tail", args, 1..=2, ctx)?;
-    let p = args.last().unwrap().eval(env)?.to_string();
+    let p = args[0].eval(env)?.to_string();
     let path = utils::canon(&p)?;
     let n = match args.len() {
-        2 => match args[0].eval(env)? {
+        2 => match args[1].eval(env)? {
             Expression::Integer(n) => n,
             _ => {
                 return Err(RuntimeError::common(
@@ -549,9 +546,9 @@ fn base_name(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("base_name", args, 1..=2, ctx)?;
-    let path = args.last().unwrap().eval(env)?.to_string();
+    let path = args[0].eval(env)?.to_string();
     let split_extension = args.len() > 1
-        && match args[0] {
+        && match args[1] {
             Expression::Boolean(b) => b,
             _ => false,
         };

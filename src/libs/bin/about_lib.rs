@@ -5,7 +5,7 @@ use crate::{
 };
 use common_macros::hash_map;
 use std::collections::BTreeMap;
-use std::{collections::HashMap, env::current_exe};
+use std::env::current_exe;
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -60,7 +60,7 @@ fn bin(
 fn prelude(
     _args: &[Expression],
     _env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     Ok(if let Some(c) = dirs::config_dir() {
         let prelude_path = c.join("lumesh").join("config.lm");

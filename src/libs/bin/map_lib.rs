@@ -1,5 +1,6 @@
-use std::{collections::HashMap, rc::Rc};
+use std::rc::Rc;
 
+use crate::libs::bin::top;
 use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
 use crate::libs::lazy_module::LazyModule;
 use crate::{
@@ -11,17 +12,17 @@ use std::collections::BTreeMap;
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         // pprint,
+        // from top
+        len, insert, flatten, get,
         // 检查操作
-        // len, insert, flatten,
         has,
         // 数据获取
-        // get,
         at, items, keys, values,
         // 查找
         find, filter,
         // 结构修改
+        set,
         remove,
-        // set,
         // 创建操作
         from_items,
         // 集合运算
@@ -32,26 +33,26 @@ pub fn regist_lazy() -> LazyModule {
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-        pprint => "pretty print", "<map>"
+        // pprint => "pretty print", "<map>"
 
         // 检查操作
         len => "get length of map", "<map>"
-        insert => "insert item into map", "<key> <value> <map>"
+        insert => "insert item into map", "<map> <key> <value>"
         flatten => "flatten nested structure", "<map>"
-        has => "check if a map has a key", "<key> <map>"
+        has => "check if a map has a key", "<map> <key>"
 
         // 数据获取
-        get => "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"
-        at => "get value from map", "<key> <map>"
+        get => "get value from nested map/list/range using dot notation path", "<map|list|range> <path>"
+        at => "get value from map", "<map> <key>"
         items => "get the items of a map or list", "<map>"
         keys => "get the keys of a map", "<map>"
         values => "get the values of a map", "<map>"
         // 查找
-        find => "find first key-value pair matching condition", "<predicate_fn> <map>"
-        filter => "filter map by condition", "<predicate_fn> <map>"
+        find => "find first key-value pair matching condition", "<map> <predicate_fn>"
+        filter => "filter map by condition", "<map> <predicate_fn>"
         // 结构修改
-        remove => "remove a key-value pair from a map", "<key> <map>"
-        set => "set value for existing key in map", "<key> <value> <map>"
+        remove => "remove a key-value pair from a map", "<map> <key>"
+        set => "set value for existing key in map", "<map> <key> <value>"
         // 创建操作
         from_items => "create a map from a list of key-value pairs", "<items>"
 
@@ -62,8 +63,38 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         merge => "recursively merge two or more maps", "<map1> <map2> [<map3> ...]"
 
         // 转换操作
-        map => "transform map keys and values with provided functions", "<key_fn> <val_fn> <map>"
+        map => "transform map keys and values with provided functions", "<map> <key_fn> <val_fn>"
     })
+}
+
+// ---from top---
+fn insert(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::insert(args, env, ctx)
+}
+fn len(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::len(args, env, ctx)
+}
+fn get(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::get(args, env, ctx)
+}
+fn flatten(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::flatten(args, env, ctx)
 }
 
 // Helper Functions

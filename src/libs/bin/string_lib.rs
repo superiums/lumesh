@@ -15,12 +15,12 @@ use crate::{
 use std::collections::BTreeMap;
 use std::sync::LazyLock;
 
-// use crate::libs::bin::into_module::strip_str;
+use crate::libs::bin::into_lib::{
+    filesize as to_filesize, float as to_float, int as to_int, striped as strip, table as to_table,
+    time as to_time,
+};
 
-use crate::libs::pprint::pretty_printer;
-use crate::runtime::{IFS_STR, ifs_contains};
 use common_macros::hash_map;
-use regex_lite::Regex;
 
 static COLOR_MAP: LazyLock<HashMap<&'static str, (i64, i64, i64)>> =
     LazyLock::new(|| init_color_map());
@@ -29,7 +29,7 @@ pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         // pprint,
         // 转换
-        // to_int, to_float, to_filesize, to_time, to_table,
+        to_int, to_float, to_filesize, to_time, to_table,
         // 基础检查
         is_empty, is_whitespace, is_alpha, is_alphanumeric, is_numeric, is_lower, is_upper, is_title, len,
         // 子串检查
@@ -40,8 +40,8 @@ pub fn regist_lazy() -> LazyModule {
         repeat, replace, substring, remove_prefix, remove_suffix, trim, trim_start, trim_end, to_lower, to_upper, to_title,
         // 高级操作
         get_width, grep,
-        // caesar,
-        // strip,
+        caesar,
+        strip,
         // 格式化
         pad_start, pad_end, center, wrap, format,
         // 样式
@@ -55,93 +55,92 @@ pub fn regist_lazy() -> LazyModule {
 
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-        pprint => "convert to table and pretty print", "[headers|header...]"
+       // pprint => "convert to table and pretty print", "[headers|header...]"
+       // 转换
+       to_int => "convert a float or string to an int", "<value>"
+       to_float => "convert an int or string to a float", "<value>"
+       to_filesize => "parse a string representing a file size into bytes", "<size_str>"
+       to_time => "convert a string to a datetime", "<datetime_str> [datetime_template]"
+       to_table => "convert third-party command output to a table", "<command_output>"
 
-        // 转换
-        to_int => "convert a float or string to an int", "<value>"
-        to_float => "convert an int or string to a float", "<value>"
-        to_filesize => "parse a string representing a file size into bytes", "<size_str>"
-        to_time => "convert a string to a datetime", "<datetime_str> [datetime_template]"
-        to_table => "convert third-party command output to a table", "<command_output>"
+       // 基础检查
+       is_empty => "is this string empty?", "<string>"
+       is_whitespace => "is this string whitespace?", "<string>"
+       is_alpha => "is this string alphabetic?", "<string>"
+       is_alphanumeric => "is this string alphanumeric?", "<string>"
+       is_numeric => "is this string numeric?", "<string>"
+       is_lower => "is this string lowercase?", "<string>"
+       is_upper => "is this string uppercase?", "<string>"
+       is_title => "is this string title case?", "<string>"
+       len => "get length of string", "<string>"
 
-        // 基础检查
-        is_empty => "is this string empty?", "<string>"
-        is_whitespace => "is this string whitespace?", "<string>"
-        is_alpha => "is this string alphabetic?", "<string>"
-        is_alphanumeric => "is this string alphanumeric?", "<string>"
-        is_numeric => "is this string numeric?", "<string>"
-        is_lower => "is this string lowercase?", "<string>"
-        is_upper => "is this string uppercase?", "<string>"
-        is_title => "is this string title case?", "<string>"
-        len => "get length of string", "<string>"
+       // 子串检查
+       starts_with => "check if a string starts with a given substring", "<string> <substring>"
+       ends_with => "check if a string ends with a given substring", "<string> <substring>"
+       contains => "check if a string contains a given substring", "<string> <substring>"
 
-        // 子串检查
-        starts_with => "check if a string starts with a given substring", "<substring> <string>"
-        ends_with => "check if a string ends with a given substring", "<substring> <string>"
-        contains => "check if a string contains a given substring", "<substring> <string>"
+       // 分割操作
+       split => "split a string on a given character", "<string> [delimiter]"
+       split_at => "split a string at a given index", "<string> <index>"
+       chars => "split a string into characters", "<string>"
+       words => "split a string into words", "<string>"
+       words_quoted => "split a string into words,quoted as one", "<string>"
+       lines => "split a string into lines", "<string>"
+       paragraphs => "split a string into paragraphs", "<string>"
+       concat => "concat strings", "<string>..."
 
-        // 分割操作
-        split => "split a string on a given character", "[delimiter] <string>"
-        split_at => "split a string at a given index", "<index> <string>"
-        chars => "split a string into characters", "<string>"
-        words => "split a string into words", "<string>"
-        words_quoted => "split a string into words,quoted as one", "<string>"
-        lines => "split a string into lines", "<string>"
-        paragraphs => "split a string into paragraphs", "<string>"
-        concat => "concat strings", "<string>..."
+       // 修改操作
+       repeat => "repeat string specified number of times", "<string> <count>"
+       replace => "replace all instances of a substring", "<string> <old> <new>"
+       substring => "get substring from start to end indices", "<string> <start> <end>"
+       remove_prefix => "remove prefix if present", "<string> <prefix>"
+       remove_suffix => "remove suffix if present", "<string> <suffix>"
+       trim => "trim whitespace from a string", "<string>"
+       trim_start => "trim whitespace from the start", "<string>"
+       trim_end => "trim whitespace from the end", "<string>"
+       to_lower => "convert a string to lowercase", "<string>"
+       to_upper => "convert a string to uppercase", "<string>"
+       to_title => "convert a string to title case", "<string>"
 
-        // 修改操作
-        repeat => "repeat string specified number of times", "<count> <string>"
-        replace => "replace all instances of a substring", "<old> <new> <string>"
-        substring => "get substring from start to end indices", "<start> <end> <string>"
-        remove_prefix => "remove prefix if present", "<prefix> <string>"
-        remove_suffix => "remove suffix if present", "<suffix> <string>"
-        trim => "trim whitespace from a string", "<string>"
-        trim_start => "trim whitespace from the start", "<string>"
-        trim_end => "trim whitespace from the end", "<string>"
-        to_lower => "convert a string to lowercase", "<string>"
-        to_upper => "convert a string to uppercase", "<string>"
-        to_title => "convert a string to title case", "<string>"
+       // 高级操作
+       caesar => "encrypt a string using a caesar cipher", "<string> <shift>"
+       get_width => "get the width of a string", "<string>"
+       grep => "find lines which contains the substring", "<string> <substring>"
+       strip => "remove all ANSI escape codes from string", "<string>"
 
-        // 高级操作
-        caesar => "encrypt a string using a caesar cipher", "<shift> <string>"
-        get_width => "get the width of a string", "<string>"
-        grep => "find lines which contains the substring", "<substring> <string>"
-        strip => "remove all ANSI escape codes from string", "<string>"
+       // 格式化
+       pad_start => "pad string to specified length at start", "<string> <length> [pad_char]"
+       pad_end => "pad string to specified length at end", "<string> <length> [pad_char]"
+       center => "center string by padding both ends", "<string> <length> [pad_char]"
+       wrap => "wrap text to fit in specific number of columns", "<string> <width>"
+       format => "format string using {} placeholders", "<format_string> <args>..."
 
-        // 格式化
-        pad_start => "pad string to specified length at start", "<length> [pad_char] <string>"
-        pad_end => "pad string to specified length at end", "<length> [pad_char] <string>"
-        center => "center string by padding both ends", "<length> [pad_char] <string>"
-        wrap => "wrap text to fit in specific number of columns", "<width> <string>"
-        format => "format string using {} placeholders", "<format_string> <args>..."
+       // 样式
+       href => "create terminal hyperlink", "<url> <text>"
+       bold => "apply bold styling", "<string>"
+       faint => "apply faint/dim styling", "<string>"
+       italics => "apply italic styling", "<string>"
+       underline => "apply underline styling", "<string>"
+       blink => "apply blinking effect", "<string>"
+       invert => "invert foreground/background colors", "<string>"
+       strike => "apply strikethrough styling", "<string>"
 
-        // 样式
-        href => "create terminal hyperlink", "<url> <text>"
-        bold => "apply bold styling", "<string>"
-        faint => "apply faint/dim styling", "<string>"
-        italics => "apply italic styling", "<string>"
-        underline => "apply underline styling", "<string>"
-        blink => "apply blinking effect", "<string>"
-        invert => "invert foreground/background colors", "<string>"
-        strike => "apply strikethrough styling", "<string>"
+       // 标准颜色
+       black => "apply black foreground", "<string>"
+       red => "apply red foreground", "<string>"
+       green => "apply green foreground", "<string>"
+       yellow => "apply yellow foreground", "<string>"
+       blue => "apply blue foreground", "<string>"
+       magenta => "apply magenta foreground", "<string>"
+       cyan => "apply cyan foreground", "<string>"
+       white => "apply white foreground", "<string>"
 
-        // 标准颜色
-        black => "apply black foreground", "<string>"
-        red => "apply red foreground", "<string>"
-        green => "apply green foreground", "<string>"
-        yellow => "apply yellow foreground", "<string>"
-        blue => "apply blue foreground", "<string>"
-        magenta => "apply magenta foreground", "<string>"
-        cyan => "apply cyan foreground", "<string>"
-        white => "apply white foreground", "<string>"
-
-        // 高级颜色
-        color256 => "apply color using 256-color code", "<color_spec> <string>"
-        color256_bg => "apply background color using 256-color code", "<color_spec> <string>"
-        color => "apply true color using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"
-        color_bg => "apply True Color background using RGB values or color_name", "<hex_color|color_name|r,g,b> <string>"
-        colors => "list all color_name for True Color", "[skip_colorized?]"
+       // 高级颜色
+       color256 => "apply color using 256-color code", "<string> <color_spec>"
+       color256_bg => "apply background color using 256-color code", "<string> <color_spec>"
+       color => "apply true color using RGB values or color_name", "<string> <hex_color|color_name|r,g,b>"
+       color_bg => "apply True Color background using RGB values or color_name", "<string> <hex_color|color_name|r,g,b>"
+       colors => "list all color_name for True Color", "[skip_colorized?]"
     })
 }
 
@@ -406,7 +405,7 @@ fn starts_with(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("starts_with", args, 2, ctx)?;
     let string_args = get_string_args(args, env, ctx)?;
-    let [prefix, text] = string_args.as_slice() else {
+    let [text, prefix] = string_args.as_slice() else {
         unreachable!()
     };
 
@@ -420,7 +419,7 @@ fn ends_with(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("ends_with", args, 2, ctx)?;
     let string_args = get_string_args(args, env, ctx)?;
-    let [suffix, text] = string_args.as_slice() else {
+    let [text, suffix] = string_args.as_slice() else {
         unreachable!()
     };
 
@@ -434,7 +433,7 @@ fn contains(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("contains", args, 2, ctx)?;
     let string_args = get_string_args(args, env, ctx)?;
-    let [substring, text] = string_args.as_slice() else {
+    let [text, substring] = string_args.as_slice() else {
         unreachable!()
     };
 
@@ -449,11 +448,11 @@ fn split(
     check_args_len("split", args, 1..=2, ctx)?;
 
     let string_args = get_string_args(args, env, ctx)?;
-    let text = string_args.last().unwrap().to_owned();
+    let text = string_args[0].to_owned();
 
     let ifs = env.get("IFS");
     let delimiter = if args.len() > 1 {
-        string_args.first()
+        Some(&string_args[1])
     } else {
         match (
             crate::runtime::ifs_contains(crate::runtime::IFS_STR, env),
@@ -484,8 +483,8 @@ fn split_at(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("split_at", args, 2, ctx)?;
-    let text = get_string_arg(args[1].eval(env)?, ctx)?;
-    let index = get_integer_arg(args[0].eval(env)?, ctx)? as usize;
+    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let index = get_integer_arg(args[1].eval(env)?, ctx)? as usize;
 
     if index > text.len() {
         return Ok(Expression::from(vec![
@@ -605,8 +604,8 @@ fn repeat(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("repeat", args, 2, ctx)?;
-    let count = get_integer_arg(args[0].eval(env)?, ctx)?;
-    let text = get_string_arg(args[1].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let count = get_integer_arg(args[1].eval(env)?, ctx)?;
 
     Ok(Expression::String(text.repeat(count.max(0) as usize)))
 }
@@ -618,7 +617,7 @@ fn replace(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("replace", args, 3, ctx)?;
     let string_args = get_string_args(args, env, ctx)?;
-    let [from, to, text] = string_args.as_slice() else {
+    let [text, from, to] = string_args.as_slice() else {
         unreachable!()
     };
 
@@ -631,9 +630,9 @@ fn substring(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("substring", args, 2..=3, ctx)?;
-    let text = get_string_arg(args.last().unwrap().eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval(env)?, ctx)?;
 
-    let start = get_integer_arg(args[0].eval(env)?, ctx)?;
+    let start = get_integer_arg(args[1].eval(env)?, ctx)?;
     let start_idx = if start < 0 {
         (text.len() as i64 + start).max(0) as usize
     } else {
@@ -641,7 +640,7 @@ fn substring(
     };
 
     let end_idx = if args.len() == 3 {
-        let end = get_integer_arg(args[1].eval(env)?, ctx)?;
+        let end = get_integer_arg(args[2].eval(env)?, ctx)?;
         if end < 0 {
             (text.len() as i64 + end).max(0) as usize
         } else {
@@ -670,7 +669,7 @@ fn remove_prefix(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("remove_prefix", args, 2, ctx)?;
     let string_args = get_string_args(args, env, ctx)?;
-    let [prefix, text] = string_args.as_slice() else {
+    let [text, prefix] = string_args.as_slice() else {
         unreachable!()
     };
 
@@ -686,7 +685,7 @@ fn remove_suffix(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("remove_suffix", args, 2, ctx)?;
     let string_args = get_string_args(args, env, ctx)?;
-    let [suffix, text] = string_args.as_slice() else {
+    let [text, suffix] = string_args.as_slice() else {
         unreachable!()
     };
 
@@ -778,11 +777,11 @@ fn pad_start(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("pad_start", args, 2..=3, ctx)?;
     let (length, pad_char) = match args.len() {
-        2 => (args[0].clone(), " ".to_string()),
-        3 => (args[0].clone(), args[1].clone().to_string()),
+        2 => (args[1].clone(), " ".to_string()),
+        3 => (args[1].clone(), args[2].clone().to_string()),
         _ => unreachable!(),
     };
-    let s_val = match args.last().unwrap().eval(env)? {
+    let s_val = match args[0].eval(env)? {
         Expression::Symbol(x) | Expression::String(x) => x,
         _ => {
             return Err(RuntimeError::common(
@@ -815,12 +814,12 @@ fn pad_end(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("pad_end", args, 2..=3, ctx)?;
     let (length, pad_char) = match args.len() {
-        2 => (args[0].clone(), " ".to_string()),
-        3 => (args[0].clone(), args[1].clone().to_string()),
+        2 => (args[1].clone(), " ".to_string()),
+        3 => (args[1].clone(), args[2].clone().to_string()),
         _ => unreachable!(),
     };
 
-    let s_val = match args.last().unwrap().eval(env)? {
+    let s_val = match args[0].eval(env)? {
         Expression::Symbol(x) | Expression::String(x) => x,
         _ => {
             return Err(RuntimeError::common(
@@ -853,12 +852,12 @@ fn center(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("center", args, 2..=3, ctx)?;
     let (length, pad_char) = match args.len() {
-        2 => (args[0].clone(), " ".to_string()),
-        3 => (args[0].clone(), args[1].clone().to_string()),
+        2 => (args[1].clone(), " ".to_string()),
+        3 => (args[1].clone(), args[2].clone().to_string()),
         _ => unreachable!(),
     };
 
-    let s_val = match args.last().unwrap().eval(env)? {
+    let s_val = match args[0].eval(env)? {
         Expression::Symbol(x) | Expression::String(x) => x,
         _ => {
             return Err(RuntimeError::common(
@@ -894,9 +893,9 @@ fn wrap(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("wrap", args, 2, ctx)?;
-    match args[0].eval(env)? {
+    match args[1].eval(env)? {
         Expression::Integer(columns) => {
-            Ok(textwrap::fill(&args[1].eval(env)?.to_string(), columns as usize).into())
+            Ok(textwrap::fill(&args[0].eval(env)?.to_string(), columns as usize).into())
         }
         otherwise => Err(RuntimeError::common(
             format!("expected number of columns in wrap, but got `{otherwise}`").into(),
@@ -939,8 +938,8 @@ fn href(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("href", args, 2, ctx)?;
-    let url = args[0].eval(env)?.to_string();
-    let text = args[1].eval(env)?.to_string();
+    let text = args[0].eval(env)?.to_string();
+    let url = args[1].eval(env)?.to_string();
     Ok(format!("\x1b]8;;{}\x1b\\{}\x1b]8;;\x1b\\", url, text).into())
 }
 
@@ -1085,8 +1084,8 @@ fn color256(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("color256", args, 2, ctx)?;
-    let color = args[0].eval(env)?.to_string();
-    let text = args[1].eval(env)?.to_string();
+    let text = args[0].eval(env)?.to_string();
+    let color = args[1].eval(env)?.to_string();
     Ok(format!("\x1b[38;5;{}m{}\x1b[m\x1b[0m", color, text).into())
 }
 
@@ -1096,8 +1095,8 @@ fn color256_bg(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("color256_bg", args, 2, ctx)?;
-    let color = args[0].eval(env)?.to_string();
-    let text = args[1].eval(env)?.to_string();
+    let text = args[0].eval(env)?.to_string();
+    let color = args[1].eval(env)?.to_string();
     Ok(format!("\x1b[48;5;{}m{}\x1b[m\x1b[0m", color, text).into())
 }
 
@@ -1120,7 +1119,7 @@ fn color_bg(
 fn colors(
     args: &[Expression],
     env: &mut Environment,
-    ctx: &Expression,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     if args.len() > 0 && !args[0].eval(env)?.is_truthy() {
         Ok(Expression::from(
@@ -1183,8 +1182,8 @@ fn true_color(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("true_color", args, 2, ctx)?;
-    let color_spec = args[0].eval(env)?.to_string();
-    let text = args[1].eval(env)?.to_string();
+    let text = args[0].eval(env)?.to_string();
+    let color_spec = args[1].eval(env)?.to_string();
 
     let color_code = if let Some((r, g, b)) = COLOR_MAP.get(&color_spec.as_str()) {
         format!("{};{};{}", r, g, b)
@@ -1222,7 +1221,7 @@ fn true_color(
 }
 
 // Additional Functions
-fn caesar_cipher(
+fn caesar(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
@@ -1269,8 +1268,8 @@ fn grep(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("grep", args, 2, ctx)?;
-    let pat = get_string_arg(args[0].eval(env)?, ctx)?;
-    let text = get_string_arg(args[1].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let pat = get_string_arg(args[1].eval(env)?, ctx)?;
 
     let lines = text
         .lines()

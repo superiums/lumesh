@@ -1,7 +1,5 @@
-use std::collections::HashMap;
-
 use crate::{
-    Environment, Expression, Int, LmError, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
     expression::FileSize,
     libs::{BuiltinInfo, helper::check_exact_args_len, lazy_module::LazyModule},
     reg_info, reg_lazy,

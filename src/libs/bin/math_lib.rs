@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
+use crate::libs::bin::into_lib::str as to_str;
+use crate::libs::helper::check_exact_args_len;
 use crate::libs::lazy_module::LazyModule;
 use crate::{Environment, Expression, Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
 use std::collections::BTreeMap;
@@ -9,7 +8,7 @@ use std::collections::BTreeMap;
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         // 数学常量（无参数）
-         // E  , PI , TAU, PHI,
+         e, pi, phi,
          // 基础数学函数
          max, min, sum, average, abs, clamp,
          // 位运算
@@ -28,17 +27,17 @@ pub fn regist_lazy() -> LazyModule {
          floor, ceil, round, trunc,
          // 其他函数
          isodd,
-         // to_str,
+         // from into lib:
+         to_str,
     })
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
 
         // 数学常量（无参数）
-         // E   => std::f64::consts::E.into(),
-         // PI  => std::f64::consts::PI.into(),
-         // TAU => std::f64::consts::TAU.into(),
-         // PHI => 1.618_033_988_749_895_f64.into(),
+         e => "Euler’s number (e)", ""
+         pi => "Archimedes’ constant (π)", ""
+         phi => "The golden ratio (φ)", ""
 
          // 基础数学函数
          max => "get max value in an array or multi args", "<num1> <num2> ... | <array>"
@@ -46,23 +45,23 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
          sum => "sum a list of numbers", "<num1> <num2> ... | <array>"
          average => "get the average of a list of numbers", "<num1> <num2> ... | <array>"
          abs => "get the absolute value of a number", "<number>"
-         clamp => "clamp a value between min and max", "<min> <max> <value>"
+         clamp => "clamp a value between min and max", "<value> <min> <max>"
 
          // 位运算
          bit_and => "bitwise AND operation", "<int1> <int2>"
          bit_or => "bitwise OR operation", "<int1> <int2>"
          bit_xor => "bitwise XOR operation", "<int1> <int2>"
          bit_not => "bitwise NOT operation", "<integer>"
-         bit_shl => "bitwise shift left", "<shift_bits> <integer>"
-         bit_shr => "bitwise shift right", "<shift_bits> <integer>"
+         bit_shl => "bitwise shift left", "<integer> <shift_bits>"
+         bit_shr => "bitwise shift right", "<integer> <shift_bits>"
 
          //逻辑运算
-         gt => "check if greater than", "<number> <number_base>"
-         ge => "check if greater than or equal", "<number> <number_base>"
-         lt => "check if lower than", "<number> <number_base>"
-         le => "check if lower than or equal", "<number> <number_base>"
-         eq => "check if equal", "<number> <number_base>"
-         ne => "check if NOT equal", "<number> <number_base>"
+         gt => "check if greater than", " <number_base> <number>"
+         ge => "check if greater than or equal", " <number_base> <number>"
+         lt => "check if lower than", " <number_base> <number>"
+         le => "check if lower than or equal", " <number_base> <number>"
+         eq => "check if equal", " <number_base> <number>"
+         ne => "check if NOT equal", " <number_base> <number>"
 
          // 三角函数（单位：弧度）
          sin => "get the sine of a number", "<radians>"
@@ -91,7 +90,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
          exp2 => "get 2 raised to the power of a number", "<exponent>"
          sqrt => "get the square root of a number", "<number>"
          cbrt => "get the cube root of a number", "<number>"
-         log => "get the log of a number using a given base", "<number> <base>"
+         log => "get the log of a number using a given base", "<base> <number>"
          log2 => "get the log base 2 of a number", "<number>"
          log10 => "get the log base 10 of a number", "<number>"
          ln => "natural logarithm", "<number>"
@@ -110,6 +109,15 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     })
 }
 
+fn e(_: &[Expression], _: &mut Environment, _: &Expression) -> Result<Expression, RuntimeError> {
+    Ok(Expression::Float(std::f64::consts::E))
+}
+fn pi(_: &[Expression], _: &mut Environment, _: &Expression) -> Result<Expression, RuntimeError> {
+    Ok(Expression::Float(std::f64::consts::PI))
+}
+fn phi(_: &[Expression], _: &mut Environment, _: &Expression) -> Result<Expression, RuntimeError> {
+    Ok(Expression::Float(1.618_033_988_749_895_f64.into()))
+}
 // Helper Functions
 // Helper function to evaluate arguments to f64
 fn eval_to_f64(

@@ -1,17 +1,13 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 
 use crate::{
-    Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, Int, RuntimeError,
     expression::FileSize,
     libs::{
         BuiltinInfo,
-        helper::{
-            check_args_len, check_exact_args_len, get_exact_string_arg, get_integer_arg,
-            get_string_arg, get_string_args,
-        },
+        bin::time_lib,
+        helper::{check_args_len, check_exact_args_len},
         lazy_module::LazyModule,
-
-        // bin::{from_module::parse_command_output, time_module::parse_time},
         pprint::strip_ansi_escapes,
     },
     reg_info, reg_lazy,
@@ -27,9 +23,8 @@ pub fn regist_lazy() -> LazyModule {
         // 类型转换函数（into库）
         str, int, float, boolean, filesize,
         // 时间解析（time库）
-        // time,
-        // 解析第三方命令输出（parse库）
-        // table,
+        time,
+        table,
         // 数据格式序列化
         toml, json, csv,
         highlighted, striped,
@@ -50,7 +45,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         time => "convert a string to a datetime", "<datetime_str> [datetime_template]"
 
         // 解析第三方命令输出（parse库）
-        table => "convert third-party command output to a table", "[headers|header...] <command_output>"
+        table => "convert third-party command output to a table", "<command_output> [headers|header...]"
 
         // 数据格式序列化
         toml => "parse lumesh expression into TOML", "<expr>"
@@ -60,6 +55,140 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         highlighted =>   "highlight script str with ANSI", "<script_string>"
         striped => "remove all ANSI escape codes from string", "<string>"
     })
+}
+
+pub fn time(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    time_lib::parse(args, env, ctx)
+}
+pub fn table(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("cmd", args, 1.., ctx)?;
+
+    let headers = match args.len() {
+        3.. => args[..args.len() - 1]
+            .iter()
+            .map(|a| a.to_string())
+            .collect::<Vec<_>>(),
+        2 => {
+            let a = args[1].eval(env)?;
+            if let Expression::List(list) = a {
+                list.as_ref()
+                    .iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<_>>()
+            } else {
+                vec![a.to_string()]
+            }
+        }
+
+        _ => Vec::new(),
+    };
+
+    let output = args[0].eval(env)?.to_string();
+    let mut lines: Vec<&str> = output.lines().collect();
+    if lines.is_empty() {
+        return Ok(Expression::from(Vec::<Expression>::new()));
+    } else {
+        // 检测已经是列表格式的：首行首尾都是相同的符号
+        let mut c = lines.first().unwrap().chars();
+        if let Some(first) = c.next() {
+            if first.is_ascii_punctuation() && Some(first) == c.last() {
+                return Ok(args.last().unwrap().clone());
+            }
+        }
+    }
+
+    // delimeter
+    // let delimiter = match env.get("IFS") {
+    //     Some(Expression::String(fs)) if fs != "\n" => fs,
+    //     _ => " ".to_string(), // 使用空格作为默认分隔符
+    // };
+
+    // filter too short tips lines
+    if lines.len() > 2 {
+        if lines[0].split_whitespace().collect::<Vec<&str>>().len()
+            < lines[1].split_whitespace().collect::<Vec<&str>>().len()
+        {
+            lines.remove(0);
+        }
+        if lines
+            .last()
+            .unwrap()
+            .split_whitespace()
+            .collect::<Vec<&str>>()
+            .len()
+            < lines[lines.len() - 2]
+                .split_whitespace()
+                .collect::<Vec<&str>>()
+                .len()
+        {
+            lines.pop();
+        }
+    }
+    // Try to detect if first line looks like headers
+    let (data_lines, detected_headers) = if headers.is_empty() {
+        let maybe_header = lines[0];
+        let looks_like_header = maybe_header
+            .split_whitespace()
+            .all(|s| s.chars().any(|c| c.is_uppercase() || !c.is_ascii()));
+
+        if looks_like_header {
+            let detected = maybe_header
+                .split_whitespace()
+                .map(|s| {
+                    s.replace(":", "_")
+                        .replace("\"", "")
+                        .replace("%", "")
+                        .replace("(", "_")
+                        .replace(")", "")
+                        .replace("$", "")
+                })
+                .collect();
+            (&lines[1..], detected)
+        } else {
+            // No headers detected, use column numbers
+            let cols = lines[0]
+                .split_whitespace()
+                .enumerate()
+                .map(|(i, _)| format!("C{i}"))
+                .collect();
+            (&lines[..], cols)
+        }
+    } else {
+        // Use provided headers
+        (&lines[..], headers)
+    };
+
+    let mut result = Vec::with_capacity(data_lines.len());
+    for line in data_lines {
+        if line.trim().is_empty() {
+            continue;
+        }
+
+        let slist = line.split_whitespace().collect::<Vec<_>>();
+
+        let mut row = BTreeMap::new();
+
+        for (i, header) in detected_headers.iter().enumerate() {
+            if let Some(&value) = slist.get(i) {
+                row.insert(header.clone(), Expression::String(value.to_string()));
+            } else {
+                row.insert(header.clone(), Expression::None);
+            }
+        }
+
+        if !row.is_empty() {
+            result.push(Expression::from(row));
+        }
+    }
+    Ok(Expression::from(result))
 }
 
 fn boolean(

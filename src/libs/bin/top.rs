@@ -17,14 +17,14 @@ use crate::{
 
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
-        exit, cd, wd,
-        tap, print, pprint, println, eprint, eprintln, debug, read,r#typeof,
+        exit, cd, cwd,
+        tap, print, pprint, println, eprint, eprintln, debug, read, r#typeof,
         get, len, insert, rev, flatten, r#where, select,
         repeat, eval, exec, eval_str, exec_str, include, import,
         help,
         // set;
         // unset;
-        // throw;
+        throw
 
     })
 }
@@ -34,11 +34,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         // console control
         // Shell control
         exit => "exit the shell", "[status]"
-        cd => "change directories", "[path]"
+        cd => "change current directory", "[path]"
         cwd => "print current working directory", ""
         // env control
-        set => "define a variable in root environment", "<var> <val>"
-        unset => "undefine a variable in root environment", "<var>"
+        // set => "define a variable in root environment", "<var> <val>"
+        // unset => "undefine a variable in root environment", "<var>"
 
         // I/O operations
         tap => "print and return result", "<args>..."
@@ -52,14 +52,14 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         throw => "return a runtime error", "<msg>"
 
         // Data manipulation
-        get => "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"
+        get => "get value from nested map/list/range using dot notation path", "<map|list|range> <path>"
         typeof => "get data type", "<value>"
         len => "get length of expression", "<collection>"
-        insert => "insert item into collection", "<key/index> <value> <collection>"
+        insert => "insert item into collection", "<collection> <key/index> <value>"
         rev => "reverse sequence", "<string|list|bytes>"
         flatten => "flatten nested structure", "<collection>"
-        where => "filter rows by condition", "<condition> <list[map]> "
-        select => "select columns from list of maps", "<columns>...<list[map]>"
+        where => "filter rows by condition", "<list[map]> <condition> "
+        select => "select columns from list of maps", "<list[map]> <columns>..."
 
         // Execution control
         repeat => "evaluate without env change", "<expr>"
@@ -89,11 +89,22 @@ fn help(
             "libs" => {
                 writeln!(s, "Builtin Library List\n").unwrap();
                 LIBS_INFO.with(|h| {
-                    for lib in h.keys() {
-                        writeln!(s, "\n\x1b[92m\x1b[1m{lib}\x1b[m\x1b[0m").unwrap();
+                    // let _ = pprint(
+                    //     &vec![Expression::from(
+                    //         h.keys()
+                    //             .map(|k| Expression::String(k.to_string()))
+                    //             .collect::<Vec<_>>(),
+                    //     )],
+                    //     env,
+                    //     _ctx,
+                    // );
+                    for (i, lib) in h.keys().enumerate() {
+                        write!(s, "\n\x1b[92m\x1b[1m{lib}\x1b[m\x1b[0m\t").unwrap();
+                        if i % 3 == 2 {
+                            writeln!(s, "\n").unwrap();
+                        }
                     }
                 });
-                writeln!(s).unwrap();
                 // let m = super::get_builtin_map()
                 //     .iter()
                 //     .filter_map(|item| match item.1 {
@@ -106,12 +117,12 @@ fn help(
                 //     })
                 //     .collect::<HashMap<String, Expression>>();
                 // pretty_printer(&Expression::from(m))?;
-                writeln!(s, "\ntype `help <lib-name>` to list functions of the lib.").unwrap();
+                writeln!(s, "\n\ntype `help <lib>` to list functions of the lib.").unwrap();
                 writeln!(s, "\n\nUsage:").unwrap();
-                writeln!(s, "\n    <lib-name>.<function-name> params").unwrap();
+                writeln!(s, "\n    <lib>.<func> params").unwrap();
                 writeln!(s, "\nExample:").unwrap();
-                writeln!(s, "\n    String.green hi").unwrap();
-                writeln!(s, "\n    String.green(hi)").unwrap();
+                writeln!(s, "\n    string.green hi").unwrap();
+                writeln!(s, "\n    string.green(hi)").unwrap();
                 writeln!(s, "\n    'hi'.green()").unwrap();
             }
             "tops" => {
@@ -139,7 +150,7 @@ fn help(
                             Some(map) => match map.get(func) {
                                 Some(info) => {
                                     writeln!(s, "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                    writeln!(s, "  {}\n", info.descr).unwrap();
+                                    writeln!(s, "\t{}\n", info.descr).unwrap();
                                 }
                                 _ => {
                                     writeln!(s, "no function named `{func}` found in `{name}`\n")
@@ -157,19 +168,19 @@ fn help(
                                 writeln!(s, "Functions for lib {name}\n").unwrap();
                                 for (func, info) in map {
                                     writeln!(s, "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                    writeln!(s, "  {}\n", info.descr).unwrap();
+                                    writeln!(s, "\t{}\n", info.descr).unwrap();
                                 }
                                 writeln!(
                                     s,
-                                    "\ntype `help {name}.<function-name>` to see details of the function"
+                                    "\ntype `help {name}.<func>` to see details of the function"
                                 ).unwrap();
                                 // writeln!(
                                 //     s,
-                                //     "\ntype `{name}.<tab>`           to cycle functions in the lib"
+                                //     "\ntype `{name}.<tab>`         : cycle functions in the lib"
                                 // );
                                 // writeln!(
                                 //     s,
-                                //     "\ntype `{name}. <tab>`          to popup functions in the lib"
+                                //     "\ntype `{name}. <tab>`        : popup functions in the lib"
                                 // );
                             }
                             _ => {
@@ -181,28 +192,28 @@ fn help(
             }
         },
         true => {
-            let _ = writeln!(s, "\nWelcome to Lumesh help center");
-            let _ = writeln!(&mut s, "=================\n");
-            let _ = writeln!(&mut s, "type `help libs`                 to list libs.");
+            let _ = writeln!(s, "\n\x1b[92m\x1b[1mWelcome to Lumesh help center");
+            let _ = writeln!(&mut s, "=============================\x1b[m\x1b[0m\n");
+            let _ = writeln!(&mut s, "help libs               : list libs.");
             let _ = writeln!(
                 &mut s,
-                "type `help <lib-name>`           to list functions of the lib."
+                "help <lib>              : list functions of the lib."
             );
             let _ = writeln!(
                 &mut s,
-                "type `help tops`                 to list functions of the top level."
+                "help tops               : list functions of the top level."
             );
             let _ = writeln!(
                 &mut s,
-                "type `<lib-name>.<func-name>`    to see the detail of the function."
+                "help <lib>.<func>       : see the detail of the function."
             );
             let _ = writeln!(
                 &mut s,
-                "type `help .<func-name>`         to see the detail of top functions.note the DOT."
+                "help .<func>            : see the detail of top functions."
             );
             let _ = writeln!(
                 &mut s,
-                "type `help doc`                  to visit document on https://lumesh.codeberg.page"
+                "help doc                : visit document on https://lumesh.codeberg.page"
             );
         }
     }
@@ -304,7 +315,7 @@ fn cd(
     Ok(Expression::None)
 }
 
-fn wd(
+fn cwd(
     _: &[Expression],
     _: &mut Environment,
     _ctx: &Expression,
@@ -792,7 +803,7 @@ fn select(
     Ok(Expression::from(result))
 }
 
-fn get(
+pub fn get(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
@@ -933,4 +944,14 @@ fn get(
     //         "get requires a map as last argument".to_string(),
     //     ));
     // }
+}
+
+pub fn throw(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("sys.error", args, 1, ctx)?;
+    let msg = args[0].eval(env)?;
+    Err(RuntimeError::common(msg.to_string().into(), ctx.clone(), 0))
 }

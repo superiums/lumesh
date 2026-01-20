@@ -1,6 +1,7 @@
 // use super::math_module::{average, max, min, sum};
-use std::{collections::HashMap, rc::Rc};
+use std::rc::Rc;
 
+use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
     check_args_len, check_exact_args_len, get_integer_arg, get_string_arg, get_string_args,
 };
@@ -32,9 +33,9 @@ pub fn regist_lazy() -> LazyModule {
         //打印
         // pprint,
         //数学统计
-        // max,min,sum,average,
+        max,min,sum,average,
         //读取操作
-        // get,len,insert,rev,flatten,
+        get,len,insert,rev,flatten,
         first,last,at,take,drop,
         //查找操作
         contains,find,find_last,
@@ -53,7 +54,7 @@ pub fn regist_lazy() -> LazyModule {
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // 打印
-        pprint => "pretty print", "<list>"
+        // pprint => "pretty print", "<list>"
 
         // 数学统计
         max => "get max value in an array or multi args", "<num1> <num2> ... | <array>"
@@ -62,61 +63,129 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         average => "get the average of a list of numbers", "<num1> <num2> ... | <array>"
 
         // 读取操作
-        get => "get value from nested map/list/range using dot notation path", "<path> <map|list|range>"
+        get => "get value from nested map/list/range using dot notation path", "<map|list|range> <path>"
         len => "get length of list", "<list>"
-        insert => "insert item into list", "<index> <value> <list>"
+        insert => "insert item into list", "<list> <index> <value>"
         rev => "reverse sequence", "<list>"
         flatten => "flatten nested structure", "<collection>"
 
         first => "get the first element of a list", "<list>"
         last => "get the last element of a list", "<list>"
-        at => "get the nth element of a list", "<index> <list>"
-        take => "take the first n elements of a list", "<count> <list>"
-        drop => "drop the first n elements of a list", "<count> <list>"
+        at => "get the nth element of a list", "<list> <index>"
+        take => "take the first n elements of a list", "<list> <count>"
+        drop => "drop the first n elements of a list", "<list> <count>"
         // 查找操作
-        contains => "check if list contains an item", "<item> <list>"
-        find => "find first index of matching element", "<item|fn> [start_index] <list>"
-        find_last => "find last index of item", "<item|fn> [start_index] <list>"
+        contains => "check if list contains an item", "<list> <item>"
+        find => "find first index of matching element", "<list> <item|fn> [start_index]"
+        find_last => "find last index of item", "<list> <item|fn> [start_index]"
 
         // 修改操作
-        append => "append an element to a list", "<element> <list>"
-        prepend => "prepend an element to a list", "<element> <list>"
+        append => "append an element to a list", "<list> <element>"
+        prepend => "prepend an element to a list", "<list> <element>"
         unique => "remove duplicates from a list while preserving order", "<list>"
-        split_at => "split a list at a given index", "<index> <list>"
+        split_at => "split a list at a given index", "<list> <index>"
         // splice => "change contents by removing/adding elements", "<start> <deleteCount> [items...] <list>"
-        sort => "sort a string/list, optionally with a key function or key_list", "[key_fn|key_list|keys...] <string|list>"
-        group => "group list elements by key function", "<key_fn|key> <list>"
-        remove_at => "remove n elements starting from index", "<index> [count] <list>"
-        remove => "remove first matching element", "<item> [all?] <list>"
-        set => "set element at existing index", "<index> <value> <list>"
+        sort => "sort a string/list, optionally with a key function or key_list", "<string|list> [key_fn|key_list|keys...]"
+        group => "group list elements by key function", "<list> <key_fn|key>"
+        remove_at => "remove n elements starting from index", "<list> <index> [count]"
+        remove => "remove first matching element", "<list> <item> [all?]"
+        set => "set element at existing index", "<list> <index> <value>"
         // 创建操作
         concat => "concatenate multiple lists into one", "<list1|item1> <list2|item2> ..."
         from => "create a list from a range", "<range|item...>"
 
         // 遍历操作
-        each => "execute function for each element", "<fn> <list>"
+        each => "execute function for each element", "<list> <fn>"
         items => "iterate over index-value pairs", "<list>"
-        map => "apply function to each element", "<fn> <list>"
-        filter => "filter elements by condition", "<fn> <list>"
-        filter_map => "filter and map in one pass", "<fn> <list>"
-        reduce => "reduce list with accumulator function", "<fn> <init> <list>"
-        any => "test if any element passes condition", "<fn> <list>"
-        all => "test if all elements pass condition", "<fn> <list>"
+        map => "apply function to each element", "<list> <fn>"
+        filter => "filter elements by condition", "<list> <fn>"
+        filter_map => "filter and map in one pass", "<list> <fn>"
+        reduce => "reduce list with accumulator function", "<list> <fn> <init>"
+        any => "test if any element passes condition", "<list> <fn>"
+        all => "test if all elements pass condition", "<list> <fn>"
 
         // 转换操作
-        join => "join string list with separator", "<separator> <list>"
-        to_map => "convert list to map using key function", "[key_fn] [val_fn] <list>"
+        join => "join string list with separator", "<list> <separator>"
+        to_map => "convert list to map using key function", "<list> [key_fn] [val_fn]"
 
         // 结构操作
         transpose => "transpose matrix (list of lists)", "<matrix>"
-        chunk => "split list into chunks of size n", "<size> <list>"
-        foldl => "fold list from left with function", "<fn> <init> <list>"
-        foldr => "fold list from right with function", "<fn> <init> <list>"
+        chunk => "split list into chunks of size n", "<list> <size>"
+        foldl => "fold list from left with function", "<list> <fn> <init>"
+        foldr => "fold list from right with function", "<list> <fn> <init>"
         zip => "zip two lists into list of pairs", "<list1> <list2>"
         unzip => "unzip list of pairs into two lists", "<list_of_pairs>"
     })
 }
 
+// ---from math---
+fn max(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    math_lib::max(args, env, ctx)
+}
+fn min(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    math_lib::min(args, env, ctx)
+}
+fn sum(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    math_lib::sum(args, env, ctx)
+}
+fn average(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    math_lib::average(args, env, ctx)
+}
+
+// ---from top---
+fn insert(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::insert(args, env, ctx)
+}
+fn len(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::len(args, env, ctx)
+}
+fn get(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::get(args, env, ctx)
+}
+fn rev(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::rev(args, env, ctx)
+}
+fn flatten(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    top::flatten(args, env, ctx)
+}
+
+// ---self---
 fn first(
     args: &[Expression],
     env: &mut Environment,

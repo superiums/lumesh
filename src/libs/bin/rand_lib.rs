@@ -1,15 +1,12 @@
 use crate::{Environment, Expression};
-use common_macros::hash_map;
 use rand::distr::SampleString;
 use rand::prelude::*;
 use rand::{Rng, prelude::SliceRandom};
-use std::collections::HashMap;
-use std::rc::Rc;
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
+use crate::libs::helper::check_exact_args_len;
 use crate::libs::lazy_module::LazyModule;
-use crate::{Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
+use crate::{RuntimeError, reg_info, reg_lazy};
 use std::collections::BTreeMap;
 
 pub fn regist_lazy() -> LazyModule {

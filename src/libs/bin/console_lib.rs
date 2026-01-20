@@ -4,9 +4,9 @@ use crate::{Environment, Expression};
 use std::collections::BTreeMap;
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
+use crate::libs::helper::check_exact_args_len;
 use crate::libs::lazy_module::LazyModule;
-use crate::{Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
+use crate::{Int, RuntimeError, reg_info, reg_lazy};
 use std::io::Write;
 
 pub fn regist_lazy() -> LazyModule {
@@ -321,9 +321,9 @@ fn read_line(
 }
 
 fn keys(
-    args: &[Expression],
-    env: &mut Environment,
-    ctx: &Expression,
+    _args: &[Expression],
+    _env: &mut Environment,
+    _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     Ok(Expression::from(hash_map! {
         String::from("enter") => Expression::String("\n".to_string()),

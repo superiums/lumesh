@@ -1,11 +1,8 @@
 use crate::{
-    Environment, Expression, Int, RuntimeError,
+    Environment, Expression, RuntimeError,
     libs::{
         BuiltinInfo,
-        helper::{
-            check_args_len, check_exact_args_len, get_exact_string_arg, get_integer_arg,
-            get_string_arg, get_string_args,
-        },
+        helper::{check_args_len, check_exact_args_len, get_string_arg},
         lazy_module::LazyModule,
     },
     reg_info, reg_lazy,
@@ -13,7 +10,7 @@ use crate::{
 
 // Refactored ui_module
 use std::collections::BTreeMap;
-use std::{collections::HashMap, rc::Rc};
+use std::rc::Rc;
 
 use inquire::{Confirm, CustomType, MultiSelect, Password, PasswordDisplayMode, Select, Text};
 
@@ -263,7 +260,7 @@ fn widget(
     let widget_height = if args.len() >= 4 {
         match args[3].eval(env)? {
             Expression::Integer(n) if n >= 3 => n as usize,
-            otherwise => {
+            _ => {
                 return Err(RuntimeError::common(
                     "widget height must be an integer".into(),
                     ctx.clone(),

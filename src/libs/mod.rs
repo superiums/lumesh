@@ -3,12 +3,13 @@ mod helper;
 mod lazy_module;
 mod pprint;
 use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule};
+pub use bin::time_lib::parse as time_parse;
 pub use bin::top::regist_info;
 pub use pprint::pretty_printer;
 use std::{
     borrow::Cow,
     cell::RefCell,
-    collections::{BTreeMap, HashMap, HashSet},
+    collections::{BTreeMap, HashMap},
     rc::Rc,
     sync::LazyLock,
 };
@@ -26,56 +27,58 @@ thread_local! {
     pub static LIBS_INFO: LazyLock<BTreeMap<&'static str, BTreeMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
 
     // 热模块/小型模块：完全预加载
-    // static MATH_MODULE: RefCell<HashMap<String, Expression>> = RefCell::new({
+    // static MATH_LIB: RefCell<HashMap<String, Expression>> = RefCell::new({
     //     math_module::get_all_functions() // 加载所有函数
     // });
-    static TOP_MODULE: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
+    static TOP_LIB: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
         bin::top::regist_all()
     });
-    static BOOL_MODULE: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
+    static BOOL_LIB: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
         bin::boolean_lib::regist_all()
     });
 
     // 中型模块：模块级懒加载
-    // static FS_MODULE: RefCell<Option<Expression>> = RefCell::new(None);
+    // static FS_LIB: RefCell<Option<Expression>> = RefCell::new(None);
 
 
     // 大型模块：函数级懒加载
-    static STRING_MODULE: LazyModule = bin::string_lib::regist_lazy();
-    static LIST_MODULE: LazyModule = bin::list_lib::regist_lazy();
-    static MAP_MODULE: LazyModule = bin::map_lib::regist_lazy();
-    static TIME_MODULE: LazyModule = bin::time_lib::regist_lazy();
-    static REGEX_MODULE: LazyModule = bin::reg_lib::regist_lazy();
-    static MATH_MODULE: LazyModule = bin::math_lib::regist_lazy();
-    static RAND_MODULE: LazyModule = bin::rand_lib::regist_lazy();
-    static LOG_MODULE: LazyModule = bin::log_lib::regist_lazy();
-    static FS_MODULE: LazyModule = bin::fs_lib::regist_lazy();
-    static UI_MODULE: LazyModule = bin::ui_lib::regist_lazy();
-    static INTO_MODULE: LazyModule = bin::into_lib::regist_lazy();
-    static SYS_MODULE: LazyModule = bin::sys_lib::regist_lazy();
-    static FILESIZE_MODULE: LazyModule = bin::filesize_lib::regist_lazy();
-    static FROM_MODULE: LazyModule = bin::from_lib::regist_lazy();
-    static ABOUT_MODULE: LazyModule = bin::about_lib::regist_lazy();
+    static STRING_LIB: LazyModule = bin::string_lib::regist_lazy();
+    static LIST_LIB: LazyModule = bin::list_lib::regist_lazy();
+    static MAP_LIB: LazyModule = bin::map_lib::regist_lazy();
+    static TIME_LIB: LazyModule = bin::time_lib::regist_lazy();
+    static REGEX_LIB: LazyModule = bin::reg_lib::regist_lazy();
+    static MATH_LIB: LazyModule = bin::math_lib::regist_lazy();
+    static RAND_LIB: LazyModule = bin::rand_lib::regist_lazy();
+    static LOG_LIB: LazyModule = bin::log_lib::regist_lazy();
+    static FS_LIB: LazyModule = bin::fs_lib::regist_lazy();
+    static UI_LIB: LazyModule = bin::ui_lib::regist_lazy();
+    static INTO_LIB: LazyModule = bin::into_lib::regist_lazy();
+    static SYS_LIB: LazyModule = bin::sys_lib::regist_lazy();
+    static FILESIZE_LIB: LazyModule = bin::filesize_lib::regist_lazy();
+    static FROM_LIB: LazyModule = bin::from_lib::regist_lazy();
+    static ABOUT_LIB: LazyModule = bin::about_lib::regist_lazy();
+    static CONSOLE_LIB: LazyModule = bin::console_lib::regist_lazy();
 }
 
 fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInfo>> {
     let mut libs_info = BTreeMap::new();
     libs_info.insert("", bin::top::regist_info());
-    libs_info.insert("string", bin::string_lib::regist_info());
     libs_info.insert("boolean", bin::boolean_lib::regist_info());
+    libs_info.insert("string", bin::string_lib::regist_info());
     libs_info.insert("list", bin::list_lib::regist_info());
     libs_info.insert("map", bin::map_lib::regist_info());
     libs_info.insert("time", bin::time_lib::regist_info());
     libs_info.insert("regex", bin::reg_lib::regist_info());
     libs_info.insert("math", bin::math_lib::regist_info());
     libs_info.insert("rand", bin::rand_lib::regist_info());
-    libs_info.insert("log", bin::log_lib::regist_info());
     libs_info.insert("fs", bin::fs_lib::regist_info());
-    libs_info.insert("ui", bin::ui_lib::regist_info());
-    libs_info.insert("into", bin::into_lib::regist_info());
-    libs_info.insert("sys", bin::sys_lib::regist_info());
     libs_info.insert("filesize", bin::filesize_lib::regist_info());
     libs_info.insert("from", bin::from_lib::regist_info());
+    libs_info.insert("into", bin::into_lib::regist_info());
+    libs_info.insert("sys", bin::sys_lib::regist_info());
+    libs_info.insert("ui", bin::ui_lib::regist_info());
+    libs_info.insert("console", bin::console_lib::regist_info());
+    libs_info.insert("log", bin::log_lib::regist_info());
     libs_info.insert("about", bin::about_lib::regist_info());
     libs_info
 }
@@ -83,26 +86,27 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
 /// note: this always clone builtin
 pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<BuiltinFunc>> {
     match lib_name {
-        // "Math" => MATH_MODULE.with(|m| m.borrow().get(function).cloned()),
-        "" => TOP_MODULE.with(|m| m.borrow().get(fn_name).cloned()),
-        "boolean" => BOOL_MODULE.with(|m| m.borrow().get(fn_name).cloned()),
-        "string" => STRING_MODULE.with(|m| m.get_function(fn_name)),
-        "list" => LIST_MODULE.with(|m| m.get_function(fn_name)),
-        "map" => MAP_MODULE.with(|m| m.get_function(fn_name)),
-        "time" => TIME_MODULE.with(|m| m.get_function(fn_name)),
-        "regex" => REGEX_MODULE.with(|m| m.get_function(fn_name)),
-        "math" => MATH_MODULE.with(|m| m.get_function(fn_name)),
-        "rand" => RAND_MODULE.with(|m| m.get_function(fn_name)),
-        "log" => LOG_MODULE.with(|m| m.get_function(fn_name)),
-        "fs" => FS_MODULE.with(|m| m.get_function(fn_name)),
-        "ui" => UI_MODULE.with(|m| m.get_function(fn_name)),
-        "into" => INTO_MODULE.with(|m| m.get_function(fn_name)),
-        "sys" => SYS_MODULE.with(|m| m.get_function(fn_name)),
-        "filesize" => FILESIZE_MODULE.with(|m| m.get_function(fn_name)),
-        "from" => FROM_MODULE.with(|m| m.get_function(fn_name)),
-        "about" => ABOUT_MODULE.with(|m| m.get_function(fn_name)),
+        // "Math" => MATH_LIB.with(|m| m.borrow().get(function).cloned()),
+        "" => TOP_LIB.with(|m| m.borrow().get(fn_name).cloned()),
+        "boolean" => BOOL_LIB.with(|m| m.borrow().get(fn_name).cloned()),
+        "string" => STRING_LIB.with(|m| m.get_function(fn_name)),
+        "list" => LIST_LIB.with(|m| m.get_function(fn_name)),
+        "map" => MAP_LIB.with(|m| m.get_function(fn_name)),
+        "time" => TIME_LIB.with(|m| m.get_function(fn_name)),
+        "regex" => REGEX_LIB.with(|m| m.get_function(fn_name)),
+        "math" => MATH_LIB.with(|m| m.get_function(fn_name)),
+        "rand" => RAND_LIB.with(|m| m.get_function(fn_name)),
+        "log" => LOG_LIB.with(|m| m.get_function(fn_name)),
+        "fs" => FS_LIB.with(|m| m.get_function(fn_name)),
+        "ui" => UI_LIB.with(|m| m.get_function(fn_name)),
+        "into" => INTO_LIB.with(|m| m.get_function(fn_name)),
+        "sys" => SYS_LIB.with(|m| m.get_function(fn_name)),
+        "filesize" => FILESIZE_LIB.with(|m| m.get_function(fn_name)),
+        "from" => FROM_LIB.with(|m| m.get_function(fn_name)),
+        "about" => ABOUT_LIB.with(|m| m.get_function(fn_name)),
+        "console" => CONSOLE_LIB.with(|m| m.get_function(fn_name)),
         // filesize from
-        // "Fs" => FS_MODULE.with(|m| {
+        // "Fs" => FS_LIB.with(|m| {
         //     if m.borrow().is_none() {
         //         *m.borrow_mut() = Some(fs_module::get());
         //     }
@@ -143,7 +147,7 @@ pub fn get_lib_completions(prefix: &str) -> Option<Vec<&str>> {
     if prefix.is_empty() || !prefix.is_ascii() {
         return None;
     }
-    let top = TOP_MODULE.with(|h| {
+    let top = TOP_LIB.with(|h| {
         h.borrow()
             .iter()
             .filter(|(k, _)| k.starts_with(prefix))
@@ -201,9 +205,9 @@ pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<Rc<Built
 //     depth: usize,
 // ) -> (bool, Result<Expression, RuntimeError>) {
 //     let fo = match lib_name {
-//         // "Math" => MATH_MODULE.with(|m| m.borrow().get(function).cloned()),
-//         "String" => STRING_MODULE.with(|m| m.get_function(fn_name)),
-//         "" => TOP_MODULE.with(|m| m.borrow().get(fn_name).cloned()),
+//         // "Math" => MATH_LIB.with(|m| m.borrow().get(function).cloned()),
+//         "String" => STRING_LIB.with(|m| m.get_function(fn_name)),
+//         "" => TOP_LIB.with(|m| m.borrow().get(fn_name).cloned()),
 //         _ => None,
 //     };
 //     match fo.as_ref() {

@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::{fs::OpenOptions, io::Write, rc::Rc};
 
 use crate::libs::BuiltinInfo;
@@ -7,22 +6,23 @@ use crate::{Environment, Expression, LmError, RuntimeError};
 use std::collections::BTreeMap;
 
 use crate::libs::lazy_module::LazyModule;
-use crate::{Int, RuntimeErrorKind, reg_info, reg_lazy};
+use crate::{reg_info, reg_lazy};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         env, set, unset,
         vars, has, defined,
         quote, ecodes_rt, ecodes_lm,
-        // throw, print_tty, discard,
-        // info,
+        print_tty, discard,
+        info,
+        // throw,
     })
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-            env => "get root environment as a map", ""
-            set => "define a variable in root environment", "<var> <val>"
-            unset => "undefine a variable in root environment", "<var>"
+        env => "get root environment as a map", ""
+        set => "define a variable in root environment", "<var> <val>"
+        unset => "undefine a variable in root environment", "<var>"
 
         vars => "get defined variables in current enviroment", ""
         has => "check if a variable is defined in current environment", "<var>"
@@ -31,7 +31,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         quote => "quote an expression", "<expr>"
         ecodes_rt => "display runtime error codes", ""
         ecodes_lm => "display Lmerror codes", ""
-        throw => "return a runtime error", "<msg>"
+        // throw => "return a runtime error", "<msg>"
         print_tty => "print control sequence to tty", "<arg>"
         discard => "send data to /dev/null", "<arg>"
 
@@ -162,14 +162,4 @@ fn ecodes_lm(
     _: &Expression,
 ) -> Result<Expression, RuntimeError> {
     Ok(LmError::codes())
-}
-
-pub fn throw(
-    args: &[Expression],
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("sys.error", args, 1, ctx)?;
-    let msg = args[0].eval(env)?;
-    Err(RuntimeError::common(msg.to_string().into(), ctx.clone(), 0))
 }

@@ -1,7 +1,5 @@
-use std::collections::HashMap;
-
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
+use crate::libs::helper::check_exact_args_len;
 use crate::libs::lazy_module::LazyModule;
 use crate::{Environment, Expression, RuntimeError, reg_info, reg_lazy};
 use regex_lite::Regex;
@@ -22,17 +20,17 @@ pub fn regist_lazy() -> LazyModule {
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // 匹配定位
-        find => "find first regex match with [start, end, text]", "<pattern> <text>"
-        find_all => "find all matches as [[start, end, text], ...]", "<pattern> <text>"
+        find => "find first regex match with [start, end, text]", "<text> <pattern>"
+        find_all => "find all matches as [[start, end, text], ...]", "<text> <pattern>"
         // 匹配验证
-        match => "check if entire text matches pattern", "<pattern> <text>"
+        match => "check if entire text matches pattern", "<text> <pattern>"
         // 捕获组操作
-        capture => "get first capture groups as [full, group1, group2, ...]", "<pattern> <text>"
-        captures => "get all captures as [[full, group1, ...], ...]", "<pattern> <text>"
-        capture_name => "get regex capture groups with names", "<pattern> <text>"
+        capture => "get first capture groups as [full, group1, group2, ...]", "<text> <pattern>"
+        captures => "get all captures as [[full, group1, ...], ...]", "<text> <pattern>"
+        capture_name => "get regex capture groups with names", "<text> <pattern>"
         // 文本处理
-        split => "split text by regex pattern", "<pattern> <text>"
-        replace => "replace all regex matches in text", "<pattern> <replacement> <text>"
+        split => "split text by regex pattern", "<text> <pattern>"
+        replace => "replace all regex matches in text", "<text> <pattern> <replacement>"
 
     })
 }

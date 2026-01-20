@@ -1007,7 +1007,14 @@ impl Expression {
                     // inject builtin cmd executor here, to invoid to influent other index eval.
                     return match cmd.as_ref() {
                         Expression::Index(base, method) => {
-                            self.eval_builtin(base, method, args, state, env, depth)
+                            return match self.eval_builtin(base, method, args, state, env, depth) {
+                                Ok(x) => Ok(x),
+                                _ => {
+                                    //fall back to normal cmds, like cmd.exe
+                                    let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
+                                    eval_cmd.eval_command(args.as_ref(), state, env, depth + 1)
+                                }
+                            };
                         }
                         Expression::Variable(_) | Expression::Symbol(_) | Expression::String(_) => {
                             let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;

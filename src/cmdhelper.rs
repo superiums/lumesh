@@ -6,7 +6,7 @@ use crate::libs::get_lib_completions;
 #[cfg(unix)]
 use std::ffi::OsStr;
 
-#[cfg(windows)]
+#[cfg(unix)]
 use std::path::Path;
 use std::path::PathBuf;
 use std::path::is_separator;

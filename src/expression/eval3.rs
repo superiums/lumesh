@@ -644,6 +644,45 @@ pub fn bind_arguments(
 }
 
 impl Expression {
+    pub fn eval_builtin(
+        &self,
+        base: &Expression,
+        method: &Expression,
+        args: &Vec<Expression>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        match get_builtin_via_expr(base, &method.to_string()) {
+            Some(bfn) => {
+                if args.contains(&Expression::Blank) {
+                    let received_args = args
+                        .iter()
+                        .map(|x| match x {
+                            Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
+                            o => o.clone(),
+                        })
+                        .collect::<Vec<_>>();
+                    bfn(&received_args, env, self)
+                } else {
+                    bfn(&args, env, self)
+                }
+            }
+            // 自定义Map不应以命令方式调用
+            _ => Err(RuntimeError::new(
+                RuntimeErrorKind::NoLibDefined(
+                    method.to_string(),
+                    base.type_name().into(),
+                    "eval_builtin_as cmd".into(),
+                    base.to_string(),
+                ),
+                self.clone(),
+                depth,
+            )),
+        }
+    }
+
+    /// chain call
     pub fn eval_chain(
         &self,
         base: &Expression,

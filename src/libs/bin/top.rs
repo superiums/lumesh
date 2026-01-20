@@ -99,8 +99,11 @@ fn help(
                     //     _ctx,
                     // );
                     for (i, lib) in h.keys().enumerate() {
-                        write!(s, "\n\x1b[92m\x1b[1m{lib}\x1b[m\x1b[0m\t").unwrap();
-                        if i % 3 == 2 {
+                        if lib.is_empty() {
+                            continue;
+                        }
+                        write!(s, "\x1b[92m\x1b[1m{lib}\x1b[m\x1b[0m\t\t").unwrap();
+                        if i % 3 == 0 {
                             writeln!(s, "\n").unwrap();
                         }
                     }
@@ -117,7 +120,16 @@ fn help(
                 //     })
                 //     .collect::<HashMap<String, Expression>>();
                 // pretty_printer(&Expression::from(m))?;
-                writeln!(s, "\n\ntype `help <lib>` to list functions of the lib.").unwrap();
+                writeln!(
+                    s,
+                    "\n\nhelp <lib>              : list functions of the lib."
+                )
+                .unwrap();
+                writeln!(
+                    s,
+                    "help <lib>.<func>       : to see details of the function"
+                )
+                .unwrap();
                 writeln!(s, "\n\nUsage:").unwrap();
                 writeln!(s, "\n    <lib>.<func> params").unwrap();
                 writeln!(s, "\nExample:").unwrap();
@@ -153,12 +165,12 @@ fn help(
                                     writeln!(s, "\t{}\n", info.descr).unwrap();
                                 }
                                 _ => {
-                                    writeln!(s, "no function named `{func}` found in `{name}`\n")
+                                    writeln!(s, "no function named `{func}` in `{name}`\n")
                                         .unwrap();
                                 }
                             },
                             _ => {
-                                writeln!(s, "no lib named `{name}` found\n").unwrap();
+                                writeln!(s, "no lib named `{name}`\n").unwrap();
                             }
                         });
                     }
@@ -170,10 +182,10 @@ fn help(
                                     writeln!(s, "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
                                     writeln!(s, "\t{}\n", info.descr).unwrap();
                                 }
-                                writeln!(
-                                    s,
-                                    "\ntype `help {name}.<func>` to see details of the function"
-                                ).unwrap();
+                                // writeln!(
+                                //     s,
+                                //     "\ntype `help {name}.<func>` to see details of the function"
+                                // ).unwrap();
                                 // writeln!(
                                 //     s,
                                 //     "\ntype `{name}.<tab>`         : cycle functions in the lib"

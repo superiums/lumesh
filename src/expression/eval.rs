@@ -1004,11 +1004,25 @@ impl Expression {
                     break self.eval_apply(func.as_ref(), args, state, env, depth + 1);
                 }
                 Self::Command(cmd, args) => {
-                    let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
-                    // if args.len() == 1 && &args[0] == &Expression::Blank {
-                    //     break self.eval_command(eval_cmd, &vec![], state, env, depth + 1);
-                    // }
-                    break eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
+                    // inject builtin cmd executor here, to invoid to influent other index eval.
+                    return match cmd.as_ref() {
+                        Expression::Index(base, method) => {
+                            self.eval_builtin(base, method, args, state, env, depth)
+                        }
+                        Expression::Variable(_) | Expression::Symbol(_) => {
+                            let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
+                            break eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
+                        }
+                        _ => Err(RuntimeError::new(
+                            RuntimeErrorKind::TypeError {
+                                expected: "Symbol".into(),
+                                sym: cmd.type_name(),
+                                found: cmd.to_string(),
+                            },
+                            job.clone(),
+                            depth,
+                        )),
+                    };
                 }
                 Self::CommandRaw(cmd, args) => {
                     break cmd.eval_command(args.as_ref(), state, env, depth + 1);
@@ -1094,9 +1108,9 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         let l = lhs.as_ref().eval_mut(state, env, depth)?;
-        state.set(State::SKIP_BUILTIN_SEEK);
-        let r = rhs.as_ref().eval_mut(state, env, depth)?; //TODO: allow dynamic Key? x.log log=builtin@log
-        state.clear(State::SKIP_BUILTIN_SEEK);
+        // state.set(State::SKIP_BUILTIN_SEEK);
+        let r = rhs.as_ref().eval_mut(state, env, depth)?;
+        // state.clear(State::SKIP_BUILTIN_SEEK);
 
         return match (l, r) {
             // (Expression::List(m), Expression::Integer(n)) => {

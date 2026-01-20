@@ -80,8 +80,6 @@ use std::io::{stdin, stdout};
 #[cfg(windows)]
 use std::os::windows::io::AsRawHandle;
 #[cfg(windows)]
-use std::sync::atomic::AtomicBool;
-#[cfg(windows)]
 use std::sync::atomic::{AtomicBool, Ordering};
 #[cfg(windows)]
 use std::sync::{Arc, LazyLock, Mutex};

@@ -2,13 +2,12 @@ use common_macros::hash_set;
 use std::collections::HashSet;
 
 use crate::libs::get_lib_completions;
-#[cfg(unix)]
-use std::env;
+
 #[cfg(unix)]
 use std::ffi::OsStr;
-#[cfg(unix)]
+
+#[cfg(windows)]
 use std::path::Path;
-#[cfg(unix)]
 use std::path::PathBuf;
 use std::path::is_separator;
 use std::sync::OnceLock;
@@ -92,8 +91,9 @@ fn is_executable(path: &Path) -> bool {
 //         ["exe", "bat", "cmd", "ps1"].contains(&ext.to_str().unwrap())
 //     })
 // }
+#[cfg(unix)]
 fn init_path_cmds() -> HashSet<String> {
-    let path_var = env::var("PATH").unwrap_or_default();
+    let path_var = std::env::var("PATH").unwrap_or_default();
     let path_separator = if cfg!(windows) { ";" } else { ":" };
 
     path_var
@@ -105,7 +105,7 @@ fn init_path_cmds() -> HashSet<String> {
         .collect()
 }
 #[cfg(windows)]
-fn scan_path_cmds() -> HashSet<String> {
+fn init_path_cmds() -> HashSet<String> {
     HashSet::new()
 }
 // 目录扫描函数（支持递归扩展）

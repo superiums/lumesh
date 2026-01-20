@@ -30,10 +30,10 @@ thread_local! {
     //     math_module::get_all_functions() // 加载所有函数
     // });
     static TOP_MODULE: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
-        bin::boolean_lib::regist_all()
+        bin::top::regist_all()
     });
     static BOOL_MODULE: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
-        bin::top::regist_all()
+        bin::boolean_lib::regist_all()
     });
 
     // 中型模块：模块级懒加载
@@ -49,6 +49,13 @@ thread_local! {
     static MATH_MODULE: LazyModule = bin::math_lib::regist_lazy();
     static RAND_MODULE: LazyModule = bin::rand_lib::regist_lazy();
     static LOG_MODULE: LazyModule = bin::log_lib::regist_lazy();
+    static FS_MODULE: LazyModule = bin::fs_lib::regist_lazy();
+    static UI_MODULE: LazyModule = bin::ui_lib::regist_lazy();
+    static INTO_MODULE: LazyModule = bin::into_lib::regist_lazy();
+    static SYS_MODULE: LazyModule = bin::sys_lib::regist_lazy();
+    static FILESIZE_MODULE: LazyModule = bin::filesize_lib::regist_lazy();
+    static FROM_MODULE: LazyModule = bin::from_lib::regist_lazy();
+    static ABOUT_MODULE: LazyModule = bin::about_lib::regist_lazy();
 }
 
 fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>> {
@@ -63,6 +70,13 @@ fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>
     libs_info.insert("math", bin::math_lib::regist_info());
     libs_info.insert("rand", bin::rand_lib::regist_info());
     libs_info.insert("log", bin::log_lib::regist_info());
+    libs_info.insert("fs", bin::fs_lib::regist_info());
+    libs_info.insert("ui", bin::ui_lib::regist_info());
+    libs_info.insert("into", bin::into_lib::regist_info());
+    libs_info.insert("sys", bin::sys_lib::regist_info());
+    libs_info.insert("filesize", bin::filesize_lib::regist_info());
+    libs_info.insert("from", bin::from_lib::regist_info());
+    libs_info.insert("about", bin::about_lib::regist_info());
     libs_info
 }
 /// lazy load builtin.
@@ -80,6 +94,14 @@ pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<Builtin
         "math" => MATH_MODULE.with(|m| m.get_function(fn_name)),
         "rand" => RAND_MODULE.with(|m| m.get_function(fn_name)),
         "log" => LOG_MODULE.with(|m| m.get_function(fn_name)),
+        "fs" => FS_MODULE.with(|m| m.get_function(fn_name)),
+        "ui" => UI_MODULE.with(|m| m.get_function(fn_name)),
+        "into" => INTO_MODULE.with(|m| m.get_function(fn_name)),
+        "sys" => SYS_MODULE.with(|m| m.get_function(fn_name)),
+        "filesize" => FILESIZE_MODULE.with(|m| m.get_function(fn_name)),
+        "from" => FROM_MODULE.with(|m| m.get_function(fn_name)),
+        "about" => ABOUT_MODULE.with(|m| m.get_function(fn_name)),
+        // filesize from
         // "Fs" => FS_MODULE.with(|m| {
         //     if m.borrow().is_none() {
         //         *m.borrow_mut() = Some(fs_module::get());

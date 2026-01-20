@@ -9,7 +9,7 @@ use chrono::{DateTime, NaiveDateTime};
 
 use crate::expression::FileSize;
 use crate::utils::abs;
-use crate::{Environment, Expression, LmError};
+use crate::{Environment, Expression, RuntimeError};
 
 #[derive(Default)]
 pub struct LsOptions {
@@ -24,7 +24,7 @@ pub struct LsOptions {
     pub show_path: bool,
 }
 
-pub fn parse_ls_args(args: &[Expression]) -> Result<(PathBuf, LsOptions), LmError> {
+pub fn parse_ls_args(args: &[Expression]) -> Result<(PathBuf, LsOptions), RuntimeError> {
     let mut options = LsOptions::default();
     let mut path = PathBuf::from(".");
     // dbg!(args);
@@ -53,12 +53,17 @@ pub fn get_file_expression(
     entry: &std::fs::DirEntry,
     options: &LsOptions,
     base_path: Option<&Path>,
-) -> Result<Expression, LmError> {
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
     let p = entry.path();
     let metadata = if options.follow_links {
-        entry.metadata()?
+        entry.metadata().map_err(|e| {
+            RuntimeError::from_io_error(e, "read file meta".into(), Expression::None, 0)
+        })?
     } else {
-        p.symlink_metadata()?
+        p.symlink_metadata().map_err(|e| {
+            RuntimeError::from_io_error(e, "read symlink".into(), Expression::None, 0)
+        })?
     };
 
     let name = entry.file_name().to_string_lossy().into_owned();
@@ -86,11 +91,13 @@ pub fn get_file_expression(
         map.insert("size".to_string(), size_expr);
 
         // 时间表达式
-        let modified = metadata.modified()?;
+        let modified = metadata.modified().map_err(|e| {
+            RuntimeError::from_io_error(e, "read mtime".into(), Expression::None, 0)
+        })?;
         let time_expr = if options.unix_time {
-            Expression::Integer(system_time_to_unix_duration(modified)?.as_secs() as i64)
+            Expression::Integer(system_time_to_unix_duration(modified, ctx)?.as_secs() as i64)
         } else {
-            Expression::DateTime(system_time_to_naive_datetime(modified)?)
+            Expression::DateTime(system_time_to_naive_datetime(modified, ctx)?)
             // Expression::String(format_system_time(modified))
         };
         map.insert("modified".to_string(), time_expr);
@@ -142,29 +149,40 @@ pub fn get_file_expression(
 
 // 辅助函数保持不变（detect_file_type, system_time_to_unix_seconds等）
 
-pub fn list_directory_wrapper(
+pub fn ls(
     args: &[Expression],
     _env: &mut Environment,
-) -> Result<Expression, LmError> {
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
     let (full_path, options) = parse_ls_args(args)?;
 
     if !full_path.exists() {
-        return Err(LmError::CustomError(format!(
-            "Path does not exist: {}",
-            full_path.display()
-        )));
+        return Err(RuntimeError::common(
+            format!("Path does not exist: {}", full_path.display()).into(),
+            ctx.clone(),
+            0,
+        ));
     }
 
     let mut entries = Vec::new();
-    for entry in std::fs::read_dir(&full_path)? {
-        let entry = entry?;
+    for entry in std::fs::read_dir(&full_path)
+        .map_err(|e| RuntimeError::from_io_error(e, "read dir".into(), Expression::None, 0))?
+    {
+        let entry = entry.map_err(|e| {
+            RuntimeError::from_io_error(e, "read entry".into(), Expression::None, 0)
+        })?;
         let file_name = entry.file_name();
 
         if !options.show_hidden && file_name.to_string_lossy().starts_with('.') {
             continue;
         }
 
-        entries.push(get_file_expression(&entry, &options, Some(&full_path))?);
+        entries.push(get_file_expression(
+            &entry,
+            &options,
+            Some(&full_path),
+            ctx,
+        )?);
     }
 
     Ok(Expression::List(Rc::new(entries)))
@@ -209,14 +227,20 @@ fn detect_file_type(metadata: &std::fs::Metadata) -> &'static str {
 }
 
 // 辅助函数：将 SystemTime 转换为 UNIX 时间戳的 Duration
-fn system_time_to_unix_duration(st: SystemTime) -> Result<std::time::Duration, LmError> {
+fn system_time_to_unix_duration(
+    st: SystemTime,
+    ctx: &Expression,
+) -> Result<std::time::Duration, RuntimeError> {
     st.duration_since(UNIX_EPOCH)
-        .map_err(|_| LmError::CustomError("SystemTime before UNIX EPOCH".to_string()))
+        .map_err(|_| RuntimeError::common("SystemTime before UNIX EPOCH".into(), ctx.clone(), 0))
 }
 
 // 辅助函数：将 SystemTime 转换为 NaiveDateTime
-fn system_time_to_naive_datetime(st: SystemTime) -> Result<NaiveDateTime, LmError> {
-    let duration = system_time_to_unix_duration(st)?;
+fn system_time_to_naive_datetime(
+    st: SystemTime,
+    ctx: &Expression,
+) -> Result<NaiveDateTime, RuntimeError> {
+    let duration = system_time_to_unix_duration(st, ctx)?;
     Ok(
         DateTime::from_timestamp(duration.as_secs() as i64, duration.subsec_nanos())
             .unwrap_or_default()

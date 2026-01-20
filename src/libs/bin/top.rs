@@ -118,7 +118,6 @@ fn help(
                 writeln!(s, "Top level Functions List\n").unwrap();
                 LIBS_INFO.with(|h| match h.get("") {
                     Some(map) => {
-                        writeln!(s, "Top Functions\n").unwrap();
                         for (func, info) in map {
                             writeln!(
                                 s,
@@ -139,8 +138,8 @@ fn help(
                         LIBS_INFO.with(|h| match h.get(&name) {
                             Some(map) => match map.get(func) {
                                 Some(info) => {
-                                    writeln!(s, "{name}.\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                    writeln!(s, "\t{}", info.descr).unwrap();
+                                    writeln!(s, "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
+                                    writeln!(s, "  {}\n", info.descr).unwrap();
                                 }
                                 _ => {
                                     writeln!(s, "no function named `{func}` found in `{name}`\n")
@@ -157,8 +156,8 @@ fn help(
                             Some(map) => {
                                 writeln!(s, "Functions for lib {name}\n").unwrap();
                                 for (func, info) in map {
-                                    writeln!(s, "{name}.\n\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
-                                    writeln!(s, "\t{}", info.descr).unwrap();
+                                    writeln!(s, "{name}.\x1b[92m\x1b[1m{func}\x1b[m\x1b[0m \x1b[2m{}\x1b[m\x1b[0m",info.hint).unwrap();
+                                    writeln!(s, "  {}\n", info.descr).unwrap();
                                 }
                                 writeln!(
                                     s,
@@ -184,10 +183,10 @@ fn help(
         true => {
             let _ = writeln!(s, "\nWelcome to Lumesh help center");
             let _ = writeln!(&mut s, "=================\n");
-            let _ = writeln!(&mut s, "type `help libs`         to list libs.");
+            let _ = writeln!(&mut s, "type `help libs`                 to list libs.");
             let _ = writeln!(
                 &mut s,
-                "type `help <lib-name>`        to list functions of the lib."
+                "type `help <lib-name>`           to list functions of the lib."
             );
             let _ = writeln!(
                 &mut s,
@@ -195,11 +194,11 @@ fn help(
             );
             let _ = writeln!(
                 &mut s,
-                "type `<lib-name>.<func-name>` to see the detail of the function."
+                "type `<lib-name>.<func-name>`    to see the detail of the function."
             );
             let _ = writeln!(
                 &mut s,
-                "type `help .<func-name>`          to see the detail of top functions.note the DOT."
+                "type `help .<func-name>`         to see the detail of top functions.note the DOT."
             );
             let _ = writeln!(
                 &mut s,

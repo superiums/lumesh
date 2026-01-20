@@ -1,45 +1,63 @@
-// use super::{get_list_arg, get_string_arg};
-use crate::{Environment, Expression, LmError, parse};
-use common_macros::hash_map;
+// use{get_list_arg, get_string_arg};
+use crate::{
+    Environment, Expression, RuntimeError,
+    libs::{
+        BuiltinInfo,
+        helper::{check_args_len, check_exact_args_len},
+        lazy_module::LazyModule,
+    },
+    parse, reg_info, reg_lazy,
+};
 use regex_lite::Regex;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use tinyjson::JsonValue;
 
-pub fn get() -> Expression {
-    (hash_map! {
+pub fn regist_lazy() -> LazyModule {
+    reg_lazy!({
         // 数据格式解析
-             String::from("toml") => Expression::builtin("toml", parse_toml,
-                 "parse TOML into lumesh expression", "<toml_string>"),
-             String::from("json") => Expression::builtin("json", parse_json,
-                 "parse JSON into lumesh expression", "<json_string>"),
-             String::from("csv") => Expression::builtin("csv", parse_csv,
-                 "parse CSV into lumesh expression", "<csv_string>"),
-
-             // 表达式解析
-             String::from("script") => Expression::builtin("script", parse_script,
-                 "parse script str to lumesh expression", "<script_string>"),
-
-             // 命令输出解析
-             String::from("cmd") => Expression::builtin("cmd", parse_command_output,
-                 "parse command output into structured data", "[headers|header...] <cmd_output_string>"),
-
-             // 数据查询
-             String::from("jq") => Expression::builtin("jq", jq,
-                 "Apply jq-like query to JSON or TOML data", "<query_string> <json_data>"),
+        toml, json, csv,
+        // 表达式解析
+        script,
+        // 命令输出解析
+        cmd,
+        // 数据查询
+        jq,
     })
-    .into()
+}
+pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+    reg_info!({
+
+        // 数据格式解析
+        toml => "parse TOML into lumesh expression", "<toml_string>"
+        json => "parse JSON into lumesh expression", "<json_string>"
+        csv => "parse CSV into lumesh expression", "<csv_string>"
+
+        // 表达式解析
+        script => "parse script str to lumesh expression", "<script_string>"
+
+        // 命令输出解析
+        cmd => "parse command output into structured data", "[headers|header...] <cmd_output_string>"
+
+        // 数据查询
+        jq => "Apply jq-like query to JSON or TOML data", "<query_string> <json_data>"
+
+    })
 }
 
 // TOML Parser Functions
 
-fn parse_toml(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("toml", args, 1)?;
+fn toml(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("toml", args, 1, ctx)?;
     let text = args[0].eval(env)?;
     let text_str = text.to_string();
 
-    toml::from_str(&text_str)
-        .map(toml_to_expr)
-        .map_err(|e| LmError::CustomError(format!("TOML parse error: {e}")))
+    toml::from_str(&text_str).map(toml_to_expr).map_err(|e| {
+        RuntimeError::common(format!("Toml parser error:\n{e}").into(), ctx.clone(), 0)
+    })
 }
 
 fn toml_to_expr(val: toml::Value) -> Expression {
@@ -62,8 +80,12 @@ fn toml_to_expr(val: toml::Value) -> Expression {
 
 // JSON Parser Functions
 
-fn parse_json(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("json", args, 1)?;
+fn json(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("json", args, 1, ctx)?;
     let text = args[0].eval(env)?;
     let text_str = text.to_string();
 
@@ -74,7 +96,9 @@ fn parse_json(args: &[Expression], env: &mut Environment) -> Result<Expression, 
     text_str
         .parse::<JsonValue>()
         .map(json_to_expr)
-        .map_err(|e| LmError::CustomError(format!("JSON parse error: {e}")))
+        .map_err(|e| {
+            RuntimeError::common(format!("Json parser error:\n{e}").into(), ctx.clone(), 0)
+        })
 }
 
 fn json_to_expr(val: JsonValue) -> Expression {
@@ -102,23 +126,30 @@ fn json_to_expr(val: JsonValue) -> Expression {
 
 // Expression Parser
 
-fn parse_script(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("script", args, 1)?;
+fn script(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("script", args, 1, ctx)?;
     let script = args[0].eval(env)?.to_string();
 
     if script.is_empty() {
         return Ok(Expression::None);
     }
 
-    Ok(parse(&script)?)
+    Ok(parse(&script).map_err(|e| {
+        RuntimeError::common(format!("Script parser error:\n{e}").into(), ctx.clone(), 0)
+    })?)
 }
 
 // Command Output Parser
-pub fn parse_command_output(
+pub fn cmd(
     args: &[Expression],
     env: &mut Environment,
-) -> Result<Expression, LmError> {
-    // super::check_args_len("parse_cmd", args, 1..)?;
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("cmd", args, 1.., ctx)?;
 
     let headers = match args.len() {
         3.. => args[..args.len() - 1]
@@ -137,8 +168,7 @@ pub fn parse_command_output(
             }
         }
 
-        1 => Vec::new(),
-        0 => return Err(LmError::CustomError("no cmd outoupt received".into())),
+        _ => Vec::new(),
     };
 
     let output = args.last().unwrap().eval(env)?.to_string();
@@ -242,8 +272,12 @@ pub fn parse_command_output(
 }
 
 // CSV Reader and Converter Functions
-fn parse_csv(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("csv", args, 1)?;
+fn csv(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("csv", args, 1, ctx)?;
     let text = args[0].eval(env)?.to_string();
 
     // 获取自定义分隔符
@@ -260,14 +294,18 @@ fn parse_csv(args: &[Expression], env: &mut Environment) -> Result<Expression, L
 
     let headers = rdr
         .headers()
-        .map_err(|e| LmError::CustomError(format!("CSV header error: {e}")))?
+        .map_err(|e| {
+            RuntimeError::common(format!("Csv header error:\n{e}").into(), ctx.clone(), 0)
+        })?
         .iter()
         .map(|s| s.to_string())
         .collect::<Vec<_>>();
 
     let mut result = Vec::new();
     for record in rdr.records() {
-        let record = record.map_err(|e| LmError::CustomError(format!("CSV parse error: {e}")))?;
+        let record = record.map_err(|e| {
+            RuntimeError::common(format!("Csv parser error:\n{e}").into(), ctx.clone(), 0)
+        })?;
         let mut row = BTreeMap::new();
         for (i, value) in record.iter().enumerate() {
             let key = headers.get(i).cloned().unwrap_or_else(|| format!("C{i}"));
@@ -287,16 +325,26 @@ enum JqStep {
     Function(String, String),
 }
 
-fn jq(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError> {
-    super::check_exact_args_len("jq", args, 2)?;
+fn jq(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("jq", args, 2, ctx)?;
     let query = args[0].eval(env)?;
     let input = args[1].eval(env)?;
 
     let json_value = match input {
-        Expression::String(s) => s
-            .parse::<JsonValue>()
-            .map_err(|_| LmError::CustomError("Invalid JSON string".into()))?,
-        _ => return Err(LmError::CustomError("Input must be a JSON string".into())),
+        Expression::String(s) => s.parse::<JsonValue>().map_err(|e| {
+            RuntimeError::common(format!("Json parser error:\n{e}").into(), ctx.clone(), 0)
+        })?,
+        _ => {
+            return Err(RuntimeError::common(
+                "input must be a json string".into(),
+                ctx.clone(),
+                0,
+            ));
+        }
     };
 
     let query_result = match query {
@@ -307,8 +355,10 @@ fn jq(args: &[Expression], env: &mut Environment) -> Result<Expression, LmError>
         }
 
         _ => {
-            return Err(LmError::CustomError(
+            return Err(RuntimeError::common(
                 "Query must be a string or function".into(),
+                ctx.clone(),
+                0,
             ));
         }
     };

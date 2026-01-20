@@ -2,16 +2,16 @@ mod bin;
 mod helper;
 mod lazy_module;
 mod pprint;
+use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule};
+pub use bin::top::regist_info;
 pub use pprint::pretty_printer;
 use std::{
     borrow::Cow,
     cell::RefCell,
-    collections::{HashMap, HashSet},
+    collections::{BTreeMap, HashMap, HashSet},
     rc::Rc,
     sync::LazyLock,
 };
-
-use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule};
 
 pub struct BuiltinInfo {
     pub descr: &'static str,
@@ -23,7 +23,7 @@ pub type BuiltinFunc =
 // 对不同模块采用不同策略
 thread_local! {
     // 帮助信息，初次使用时加载
-    pub static LIBS_INFO: LazyLock<HashMap<&'static str, HashMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
+    pub static LIBS_INFO: LazyLock<BTreeMap<&'static str, BTreeMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
 
     // 热模块/小型模块：完全预加载
     // static MATH_MODULE: RefCell<HashMap<String, Expression>> = RefCell::new({
@@ -58,8 +58,8 @@ thread_local! {
     static ABOUT_MODULE: LazyModule = bin::about_lib::regist_lazy();
 }
 
-fn regist_all_info() -> HashMap<&'static str, HashMap<&'static str, BuiltinInfo>> {
-    let mut libs_info = HashMap::with_capacity(17);
+fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInfo>> {
+    let mut libs_info = BTreeMap::new();
     libs_info.insert("", bin::top::regist_info());
     libs_info.insert("string", bin::string_lib::regist_info());
     libs_info.insert("boolean", bin::boolean_lib::regist_info());

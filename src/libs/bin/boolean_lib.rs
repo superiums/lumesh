@@ -5,6 +5,7 @@ use crate::{
     libs::{BuiltinFunc, BuiltinInfo, helper::check_exact_args_len},
     reg_all, reg_info,
 };
+use std::collections::BTreeMap;
 
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
@@ -12,7 +13,7 @@ pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     })
 }
 
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         and => "logic and", "<boolean1> <boolean2>"
         or => "logic or", "<boolean1> <boolean2>"

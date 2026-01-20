@@ -35,7 +35,8 @@ macro_rules! reg_all {
 macro_rules! reg_info {
     ({ $($func:ident => $desc:expr, $hint:expr)* $(;)? }) => {
         {
-            let mut info :HashMap<&'static str, BuiltinInfo> = HashMap::new();
+
+            let mut info :BTreeMap<&'static str, BuiltinInfo> = BTreeMap::new();
             $(
                 info.insert(stringify!($func), BuiltinInfo {
                     descr: $desc,

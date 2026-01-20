@@ -4,7 +4,6 @@ use chrono::{
     NaiveTime, TimeZone, Timelike, Utc,
 };
 use common_macros::hash_map;
-use std::collections::HashMap;
 use std::{collections::BTreeMap, thread, time::Duration};
 
 use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
@@ -25,7 +24,7 @@ pub fn regist_lazy() -> LazyModule {
         now, parse, add, diff, timezone, is_leap, from_map, to_string,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // 基本时间获取
         sleep => "sleep for a given number of milliseconds [ms] or duration string (e.g. '1s', '2m')", "<duration>"

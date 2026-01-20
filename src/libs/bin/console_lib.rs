@@ -1,7 +1,7 @@
 use common_macros::hash_map;
 
 use crate::{Environment, Expression};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::libs::BuiltinInfo;
 use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
@@ -24,7 +24,7 @@ pub fn regist_lazy() -> LazyModule {
         keys
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // Console information
         width => "get the width of the console", ""

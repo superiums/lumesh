@@ -50,7 +50,7 @@ pub fn regist_lazy() -> LazyModule {
         transpose,chunk,foldl,foldr,zip,unzip,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // 打印
         pprint => "pretty print", "<list>"

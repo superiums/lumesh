@@ -12,6 +12,7 @@ use crate::{
     },
     reg_info, reg_lazy,
 };
+use std::collections::BTreeMap;
 use std::sync::LazyLock;
 
 // use crate::libs::bin::into_module::strip_str;
@@ -52,7 +53,7 @@ pub fn regist_lazy() -> LazyModule {
     })
 }
 
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         pprint => "convert to table and pretty print", "[headers|header...]"
 

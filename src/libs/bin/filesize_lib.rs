@@ -6,7 +6,7 @@ use crate::{
     libs::{BuiltinInfo, helper::check_exact_args_len, lazy_module::LazyModule},
     reg_info, reg_lazy,
 };
-use common_macros::hash_map;
+use std::collections::BTreeMap;
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -14,15 +14,15 @@ pub fn regist_lazy() -> LazyModule {
         kb, mb, gb, tb,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-        from => "create a Filesize", "<size_str|byte_int>"
-        to_string => "Filesize to human readable string", "<filesize>"
-        b =>  "get btyes of a Filesize", "<filesize>"
-        kb => "get kb of a Filesize", "<filesize>"
-        mb => "get mb of a Filesize", "<filesize>"
-        gb => "get gb of a Filesize", "<filesize>"
-        tb => "get tb of a Filesize", "<filesize>"
+            from => "create a Filesize", "<size_str|byte_int>"
+            to_string => "Filesize to human readable string", "<filesize>"
+            b =>  "get btyes of a Filesize", "<filesize>"
+            kb => "get kb of a Filesize", "<filesize>"
+            mb => "get mb of a Filesize", "<filesize>"
+            gb => "get gb of a Filesize", "<filesize>"
+            tb => "get tb of a Filesize", "<filesize>"
 
     })
 }

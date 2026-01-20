@@ -1,7 +1,14 @@
 # Changelog
-## [0.10.4]
-- refact builtin functions
+## [0.10.5]
 
+
+## [0.10.4]
+- refactor builtin functions
+  + with lazy module loading
+  + with meta info splited from main functions, for more efficency
+  + with static str insteadof String in completion
+  + with more efficency completion lookup
+  
 ## [0.10.3]
 - add range support to match (not variable)
 - add pipemethod support to `|>`

@@ -4,7 +4,7 @@ use std::{fs::OpenOptions, io::Write, rc::Rc};
 use crate::libs::BuiltinInfo;
 use crate::libs::helper::{check_exact_args_len, get_string_arg};
 use crate::{Environment, Expression, LmError, RuntimeError};
-use common_macros::hash_map;
+use std::collections::BTreeMap;
 
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeErrorKind, reg_info, reg_lazy};
@@ -18,11 +18,11 @@ pub fn regist_lazy() -> LazyModule {
         // info,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-        env => "get root environment as a map", ""
-        set => "define a variable in root environment", "<var> <val>"
-        unset => "undefine a variable in root environment", "<var>"
+            env => "get root environment as a map", ""
+            set => "define a variable in root environment", "<var> <val>"
+            unset => "undefine a variable in root environment", "<var>"
 
         vars => "get defined variables in current enviroment", ""
         has => "check if a variable is defined in current environment", "<var>"

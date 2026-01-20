@@ -11,6 +11,7 @@ use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
 
+use std::collections::BTreeMap;
 use std::sync::{LazyLock, RwLock};
 
 pub fn regist_lazy() -> LazyModule {
@@ -23,7 +24,7 @@ pub fn regist_lazy() -> LazyModule {
         echo ,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // level =>
 

@@ -5,6 +5,7 @@ use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Environment, Expression, RuntimeError, reg_info, reg_lazy};
 use regex_lite::Regex;
+use std::collections::BTreeMap;
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -18,7 +19,7 @@ pub fn regist_lazy() -> LazyModule {
         split, replace,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // 匹配定位
         find => "find first regex match with [start, end, text]", "<pattern> <text>"

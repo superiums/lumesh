@@ -30,7 +30,7 @@ pub fn regist_lazy() -> LazyModule {
         map
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         pprint => "pretty print", "<map>"
 

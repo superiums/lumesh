@@ -12,6 +12,7 @@ use crate::{
 };
 
 // Refactored ui_module
+use std::collections::BTreeMap;
 use std::{collections::HashMap, rc::Rc};
 
 use inquire::{Confirm, CustomType, MultiSelect, Password, PasswordDisplayMode, Select, Text};
@@ -23,7 +24,7 @@ pub fn regist_lazy() -> LazyModule {
     })
 }
 
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         int => "read an int from input", "<msg>"
         float => "read a float from input", "<msg>"

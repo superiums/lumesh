@@ -10,6 +10,7 @@ use crate::libs::BuiltinInfo;
 use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
+use std::collections::BTreeMap;
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -25,7 +26,7 @@ pub fn regist_lazy() -> LazyModule {
          shuffle,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // 概率函数
          ratio => "get a bool with given probability", "<probability>"

@@ -29,7 +29,7 @@ pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     })
 }
 
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // console control
         // Shell control

@@ -24,7 +24,7 @@ pub fn regist_lazy() -> LazyModule {
         jq,
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
 
         // 数据格式解析

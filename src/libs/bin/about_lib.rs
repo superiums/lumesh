@@ -4,6 +4,7 @@ use crate::{
     reg_info, reg_lazy,
 };
 use common_macros::hash_map;
+use std::collections::BTreeMap;
 use std::{collections::HashMap, env::current_exe};
 
 pub fn regist_lazy() -> LazyModule {
@@ -14,7 +15,7 @@ pub fn regist_lazy() -> LazyModule {
         info
     })
 }
-pub fn regist_info() -> HashMap<&'static str, BuiltinInfo> {
+pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         version => "print version",""
         bin => "print bin path",""

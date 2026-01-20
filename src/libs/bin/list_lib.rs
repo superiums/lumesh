@@ -14,20 +14,6 @@ use crate::{
 use std::cmp::Ordering;
 use std::collections::BTreeMap;
 
-// 现在我需要重构List模块，做以下更改：
-// 1. 函数签名最后一个参数增加ctx: &Expression, 用于报错时作为context使用，如未使用请加下划线变成_ctx;
-// 完整的函数签名现在是：fn(&[Expression], &mut Environment, contex: &Expression) -> Result<Expression, RuntimeError>;
-// 2. 函数返回错误变为RuntimeError, 修改报错的类，如RuntimeErrorKind中不包含该类错误，则使用RuntimError::common.
-//  相关定义为：pub fn common(msg: Cow<'static, str>, context: Expression, depth: usize) -> Self {
-//         Self {
-//             kind: RuntimeErrorKind::CustomError(msg),
-//             context,
-//             depth,
-//         }
-//     }；其中depth直接使用0替代；
-// 3. 所有函数中，原来是把被操作List作为args的最后一个参数，现在全部改为args的第一个参数，修改相关代码完成这个转变，包括错误提示。
-// 4. 其他部分不做修改，如有需要优化的建议，可以以注释的形式添加。现在按list_module中的get函数中的注册顺序，重写list模块的函数（无需输出get函数本身和工具函数)。
-// 注意 get_list_arg(expr: Expression, ctx: &Expression) -> Result<Rc<Vec<Expression>>, RuntimeError> 这个工具函数的签名，包括其他get**arg函数都需要末尾传入ctx.
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         //打印

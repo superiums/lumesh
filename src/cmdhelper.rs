@@ -92,7 +92,6 @@ fn is_executable(path: &Path) -> bool {
 //         ["exe", "bat", "cmd", "ps1"].contains(&ext.to_str().unwrap())
 //     })
 // }
-#[cfg(unix)]
 fn init_path_cmds() -> HashSet<String> {
     let path_var = env::var("PATH").unwrap_or_default();
     let path_separator = if cfg!(windows) { ";" } else { ":" };
@@ -101,23 +100,23 @@ fn init_path_cmds() -> HashSet<String> {
         .split(path_separator)
         .flat_map(|dir| {
             let dir_path = PathBuf::from(dir);
-            scan_directory(&dir_path)
+            scan_path_cmds(&dir_path)
         })
         .collect()
 }
 #[cfg(windows)]
-fn scan_cmds() -> HashSet<String> {
+fn scan_path_cmds() -> HashSet<String> {
     HashSet::new()
 }
 // 目录扫描函数（支持递归扩展）
 #[cfg(unix)]
-fn scan_directory(dir: &Path) -> Vec<String> {
+fn scan_path_cmds(dir: &Path) -> Vec<String> {
     let mut commands = Vec::new();
     if let Ok(entries) = dir.read_dir() {
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_dir() {
-                commands.extend(scan_directory(&path));
+                commands.extend(scan_path_cmds(&path));
             } else if is_executable(&path) {
                 if let Some(stem) = path.file_stem().and_then(OsStr::to_str) {
                     commands.push(stem.to_string());

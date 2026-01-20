@@ -80,9 +80,11 @@ use std::io::{stdin, stdout};
 #[cfg(windows)]
 use std::os::windows::io::AsRawHandle;
 #[cfg(windows)]
+use std::sync::atomic::AtomicBool;
+#[cfg(windows)]
 use std::sync::atomic::{AtomicBool, Ordering};
 #[cfg(windows)]
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, LazyLock, Mutex};
 #[cfg(windows)]
 use winapi::shared::minwindef::BOOL;
 #[cfg(windows)]
@@ -94,6 +96,8 @@ use winapi::um::wincon::{
     CONSOLE_SCREEN_BUFFER_INFO, CTRL_BREAK_EVENT, CTRL_C_EVENT, CTRL_CLOSE_EVENT,
     ENABLE_ECHO_INPUT, ENABLE_LINE_INPUT, ENABLE_PROCESSED_INPUT, GetConsoleScreenBufferInfo,
 };
+#[cfg(windows)]
+static RUNNING_FLAG: LazyLock<Mutex<Option<Arc<AtomicBool>>>> = LazyLock::new(|| Mutex::new(None));
 
 #[cfg(windows)]
 impl TerminalOps for WindowsTerminal {
@@ -152,10 +156,6 @@ impl TerminalOps for WindowsTerminal {
     }
 
     fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeErrorKind> {
-        lazy_static::lazy_static! {
-            static ref RUNNING_FLAG: Mutex<Option<Arc<AtomicBool>>> = Mutex::new(None);
-        }
-
         *RUNNING_FLAG.lock().unwrap() = Some(running);
 
         unsafe extern "system" fn handler(ctrl_type: u32) -> BOOL {
@@ -180,7 +180,6 @@ impl TerminalOps for WindowsTerminal {
 
         Ok(())
     }
-
     fn get_terminal_size(&self) -> (u16, u16) {
         unsafe {
             let handle = stdout().as_raw_handle();

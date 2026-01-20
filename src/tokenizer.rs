@@ -582,9 +582,9 @@ fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
 
 fn value_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        keyword_tag("True"),
-        keyword_tag("False"),
-        keyword_tag("None"),
+        keyword_tag("true"),
+        keyword_tag("false"),
+        keyword_tag("none"),
         among_punc_tag("_"),
     ))(input)
 }

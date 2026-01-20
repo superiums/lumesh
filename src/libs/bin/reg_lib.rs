@@ -10,7 +10,7 @@ pub fn regist_lazy() -> LazyModule {
         // 匹配定位
         find, find_all,
         // 匹配验证
-        r#match,
+        r#match => "match",
         // 捕获组操作
         capture, captures, capture_name,
         // 文本处理

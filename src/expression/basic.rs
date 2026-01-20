@@ -65,7 +65,7 @@ impl Expression {
             Self::Float(n) => write!(f, "{n}"),
             Self::String(s) => write!(f, "{s}"),
             Self::StringTemplate(s) => write!(f, "`{s}`"),
-            Self::Boolean(b) => write!(f, "{}", if *b { "True" } else { "False" }),
+            Self::Boolean(b) => write!(f, "{}", if *b { "true" } else { "false" }),
             Self::Bytes(b) => write!(f, "b\"{}\"", String::from_utf8_lossy(b)),
             Self::DateTime(n) => write!(f, "{}", n.format("%Y-%m-%d %H:%M:%S")),
             Self::FileSize(fsz) => write!(f, "{}", fsz.to_human_readable()),

@@ -18,8 +18,9 @@ use crate::{
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
         exit, cd, cwd,
-        tap, print, pprint, println, eprint, eprintln, debug, read, r#typeof,
-        get, len, insert, rev, flatten, r#where, select,
+        tap, print, pprint, println, eprint, eprintln, debug, read,
+        r#typeof => "typeof",
+        get, len, insert, rev, flatten, r#where => "where", select,
         repeat, eval, exec, eval_str, exec_str, include, import,
         help,
         // set;

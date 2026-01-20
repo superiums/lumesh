@@ -67,7 +67,7 @@ pub enum RuntimeErrorKind {
     // ModuleNotFound(Cow<'static, str>),
     #[error("module `{0}` not defined in `{1}`\npath trace: {2}")]
     NoModuleDefined(String, String, String),
-    #[error("no lib function `{0}` defined for following {1} during {2}:\n `{3}`")]
+    #[error("no lib function `{0}` defined for {1} during {2}:\n `{3}`")]
     NoLibDefined(String, Cow<'static, str>, Cow<'static, str>, String),
     #[error("not a callable function: `{0}`")]
     NotAFunction(String),

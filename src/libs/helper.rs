@@ -7,28 +7,45 @@ use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind};
 // 函数注册宏 - 自动推导函数名
 #[macro_export]
 macro_rules! reg_lazy {
-    ({ $($func:ident),* $(,)? }) => {
+    ({ $($func:ident $( => $name:expr )? ),* $(,)? }) => {
        {
         let module = LazyModule::new();
         $(
-            module.register(stringify!($func), || {
-                std::rc::Rc::new($func)
-            });
+            reg_lazy!(@insert module, $func, $($name)?);
+            // module.register(stringify!($func), || {
+            //     std::rc::Rc::new($func)
+            // });
         )*
         module
        }
     };
+
+    (@insert $module:ident, $func:ident, $name:expr) => {
+        $module.register($name, ||{std::rc::Rc::new($func)});
+    };
+
+    (@insert $module:ident, $func:ident,) => {
+        $module.register(stringify!($func), ||{std::rc::Rc::new($func)});
+    };
 }
 #[macro_export]
 macro_rules! reg_all {
-    ({ $($func:ident),* $(,)? }) => {
+    ({ $($item:ident $( => $name:expr )? ),* $(,)? }) => {
         {
             let mut module: HashMap<&'static str, Rc<BuiltinFunc>> = HashMap::new();
             $(
-                module.insert(stringify!($func), std::rc::Rc::new($func));
+                reg_all!(@insert module, $item, $($name)?);
             )*
             module
         }
+    };
+
+    (@insert $module:ident, $func:ident, $name:expr) => {
+        $module.insert($name, std::rc::Rc::new($func));
+    };
+
+    (@insert $module:ident, $func:ident,) => {
+        $module.insert(stringify!($func), std::rc::Rc::new($func));
     };
 }
 #[macro_export]

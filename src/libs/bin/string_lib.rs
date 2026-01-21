@@ -39,7 +39,7 @@ pub fn regist_lazy() -> LazyModule {
         // 修改操作
         repeat, replace, substring, remove_prefix, remove_suffix, trim, trim_start, trim_end, to_lower, to_upper, to_title,
         // 高级操作
-        get_width, grep,
+        max_len, grep,
         caesar,
         strip,
         // 格式化
@@ -104,7 +104,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
        // 高级操作
        caesar => "encrypt a string using a caesar cipher", "<string> <shift>"
-       get_width => "get the width of a string", "<string>"
+       max_len => "get max length of lines", "<string>"
        grep => "find lines which contains the substring", "<string> <substring>"
        strip => "remove all ANSI escape codes from string", "<string>"
 
@@ -1251,12 +1251,12 @@ fn caesar(
     Ok(Expression::String(result))
 }
 
-fn get_width(
+fn max_len(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("get_width", args, 1, ctx)?;
+    check_exact_args_len("max_len", args, 1, ctx)?;
     let text = get_string_arg(args[0].eval(env)?, ctx)?;
 
     let max_width = text.lines().map(|line| line.len()).max().unwrap_or(0);

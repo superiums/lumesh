@@ -26,7 +26,7 @@ pub fn regist_lazy() -> LazyModule {
          // 舍入函数
          floor, ceil, round, trunc,
          // 其他函数
-         isodd,
+         is_odd,
          // from into lib:
          to_str,
     })
@@ -102,7 +102,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
          trunc => "truncate a number", "<number>"
 
          // 其他函数
-         isodd => "is a number odd?", "<integer>"
+         is_odd => "is a number odd?", "<integer>"
          to_str => "trans to String", "<number>"
 
 
@@ -761,7 +761,7 @@ fn trunc(
     }
 }
 
-fn isodd(
+fn is_odd(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,

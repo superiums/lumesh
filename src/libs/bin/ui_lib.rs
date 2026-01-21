@@ -6,6 +6,7 @@ use crate::{
         lazy_module::LazyModule,
     },
     reg_info, reg_lazy,
+    runtime::{IFS_PCK, ifs_contains},
 };
 
 // Refactored ui_module
@@ -153,21 +154,39 @@ fn pick(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("pick", args, 1.., ctx)?;
+    selector_wrapper(false, args, env, ctx)
+}
+fn multi_pick(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    selector_wrapper(true, args, env, ctx)
+}
 
-    let (msg, options) = if args.len() == 1 {
-        ("".to_string(), args[0].clone())
-    } else {
-        (get_string_arg(args[0].eval(env)?, ctx)?, args[1].clone())
+fn selector_wrapper(
+    multi: bool,
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    let ifs = env.get("IFS");
+    let delimiter = match (ifs_contains(IFS_PCK, env), &ifs) {
+        (true, Some(Expression::String(fs))) => fs,
+        _ => "\n",
     };
 
-    let options = match options.eval(env)? {
-        Expression::String(s) => s
-            .split_whitespace()
-            .map(|s| s.to_string())
-            .collect::<Vec<_>>(),
-        Expression::List(l) => l.as_ref().iter().map(|e| e.to_string()).collect::<Vec<_>>(),
-        _ => {
+    let (cfgs, options) = match args.len() {
+        1 => (None, extract_options(delimiter, args[0].eval(env)?, ctx)?),
+        2 => (
+            Some(extract_cfg(args[0].eval(env)?, ctx)?),
+            extract_options(delimiter, args[1].eval(env)?, ctx)?,
+        ),
+        3.. => (
+            Some(extract_cfg(args[0].eval(env)?, ctx)?),
+            args[1..].to_vec(),
+        ),
+        0 => {
             return Err(RuntimeError::common(
                 "pick requires a string or list as options".into(),
                 ctx.clone(),
@@ -176,8 +195,68 @@ fn pick(
         }
     };
 
-    match Select::new(&msg, options).prompt() {
-        Ok(s) => Ok(Expression::String(s)),
+    let msg = match &cfgs {
+        None => "your choice:".to_string(),
+        Some(m) => m
+            .get("msg")
+            .map(|v| v.to_string())
+            .unwrap_or("your choice:".to_string()),
+    };
+
+    match multi {
+        true => multi_select_wrapper(&msg, options, cfgs, ctx),
+        false => single_select_wrapper(&msg, options, cfgs, ctx),
+    }
+}
+
+fn single_select_wrapper(
+    msg: &str,
+    options: Vec<Expression>,
+    cfgs: Option<Rc<BTreeMap<String, Expression>>>,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    let mut ans = Select::new(msg, options);
+    if let Some(m) = cfgs {
+        let page_size = m.get("page_size");
+        if let Some(ps) = page_size {
+            match ps {
+                Expression::Integer(size) => {
+                    ans = ans.with_page_size(*size as usize);
+                }
+                _ => {
+                    return Err(RuntimeError::common(
+                        "page_size should be an Integer".into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            }
+        }
+        let starting_cursor = m.get("starting_cursor");
+        if let Some(c) = starting_cursor {
+            match c {
+                Expression::Integer(c) => {
+                    ans = ans.with_starting_cursor(*c as usize);
+                }
+                _ => {
+                    return Err(RuntimeError::common(
+                        "starting_cursor should be an Integer".into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            }
+        }
+        // let help = m.get("help");
+        // if let Some(h) = help {
+        //     if let Expression::String(h_msg) = h {
+        //         let hh: Cow<str> = Cow::Borrowed(h_msg); // 使用借用
+        //         ans = ans.with_help_message(&hh);
+        //     }
+        // }
+    }
+    match ans.prompt() {
+        Ok(choice) => Ok(choice),
         Err(e) => Err(RuntimeError::common(
             format!("ui.pick: {e}").into(),
             ctx.clone(),
@@ -185,41 +264,92 @@ fn pick(
         )),
     }
 }
-
-fn multi_pick(
-    args: &[Expression],
-    env: &mut Environment,
+fn multi_select_wrapper(
+    msg: &str,
+    options: Vec<Expression>,
+    cfgs: Option<Rc<BTreeMap<String, Expression>>>,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("multi_pick", args, 1.., ctx)?;
-
-    let (msg, options) = if args.len() == 1 {
-        ("".to_string(), args[0].clone())
-    } else {
-        (get_string_arg(args[0].eval(env)?, ctx)?, args[1].clone())
-    };
-
-    let options = match options.eval(env)? {
-        Expression::String(s) => s
-            .split_whitespace()
-            .map(|s| s.to_string())
-            .collect::<Vec<_>>(),
-        Expression::List(l) => l.as_ref().iter().map(|e| e.to_string()).collect::<Vec<_>>(),
-        _ => {
-            return Err(RuntimeError::common(
-                "multi_pick requires a string or list as options".into(),
-                ctx.clone(),
-                0,
-            ));
+    let mut ans = MultiSelect::new(msg, options);
+    if let Some(m) = cfgs {
+        let page_size = m.get("page_size");
+        if let Some(ps) = page_size {
+            match ps {
+                Expression::Integer(size) => {
+                    ans = ans.with_page_size(*size as usize);
+                }
+                _ => {
+                    return Err(RuntimeError::common(
+                        "page_size should be an Integer".into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            }
         }
-    };
-
-    match MultiSelect::new(&msg, options).prompt() {
-        Ok(s) => Ok(Expression::List(Rc::new(
-            s.into_iter().map(Expression::String).collect(),
-        ))),
+        let starting_cursor = m.get("starting_cursor");
+        if let Some(c) = starting_cursor {
+            match c {
+                Expression::Integer(c) => {
+                    ans = ans.with_starting_cursor(*c as usize);
+                }
+                _ => {
+                    return Err(RuntimeError::common(
+                        "starting_cursor should be an Integer".into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            }
+        }
+        // let help = m.get("help");
+        // if let Some(h) = help {
+        //     if let Expression::String(h_msg) = h {
+        //         ans = ans.with_help_message(h_msg.as_str());
+        //     }
+        // }
+    }
+    match ans.prompt() {
+        Ok(choice) => Ok(Expression::from(choice)),
         Err(e) => Err(RuntimeError::common(
-            format!("ui.multi_pick: {e}").into(),
+            format!("ui.pick: {e}").into(),
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+fn extract_options(
+    delimiter: &str,
+    expr: Expression,
+    ctx: &Expression,
+) -> Result<Vec<Expression>, RuntimeError> {
+    match expr {
+        Expression::List(list) => Ok(list.as_ref().clone()),
+        Expression::String(str) => Ok(str
+            .split_terminator(delimiter)
+            .map(|line| Expression::String(line.to_string()))
+            .collect::<Vec<_>>()),
+        _ => Err(RuntimeError::common(
+            "pick requires a list/string as options".into(),
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+fn extract_cfg(
+    expr: Expression,
+    ctx: &Expression,
+) -> Result<Rc<BTreeMap<String, Expression>>, RuntimeError> {
+    match expr {
+        Expression::Map(cfg) => Ok(cfg), // 返回引用
+        Expression::String(msg) | Expression::Symbol(msg) => {
+            // 创建一个新的 BTreeMap 并返回
+            let mut map = BTreeMap::new();
+            map.insert(String::from("msg"), Expression::String(msg));
+            Ok(Rc::new(map))
+        }
+        _ => Err(RuntimeError::common(
+            "cfg should be a string msg or map".into(),
             ctx.clone(),
             0,
         )),
@@ -366,14 +496,48 @@ fn joinx(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("joinx", args, 2, ctx)?;
 
-    let widget1 = args[0].eval(env)?;
-    let widget2 = args[1].eval(env)?;
+    let mut string_args = vec![];
+    let mut max_height = 0;
 
-    // Horizontal join implementation would go here
-    Ok(Expression::String(format!(
-        "Horizontal join: {} + {}",
-        widget1, widget2
-    )))
+    // 收集所有widget并找到最大高度
+    for arg in args.iter() {
+        match arg.eval(env)? {
+            Expression::String(s) => {
+                let lines = s.lines().map(ToString::to_string).collect::<Vec<String>>();
+                let lines_len = lines.len();
+                string_args.push(lines);
+                max_height = std::cmp::max(max_height, lines_len);
+            }
+            otherwise => {
+                return Err(RuntimeError::common(
+                    format!("expected string, but got {otherwise}").into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        }
+    }
+
+    // 将所有widget填充到相同高度
+    for widget_lines in &mut string_args {
+        while widget_lines.len() < max_height {
+            let width = widget_lines
+                .first()
+                .map(|line| line.chars().count())
+                .unwrap_or(0);
+            widget_lines.push(" ".repeat(width));
+        }
+    }
+
+    let mut result = String::new();
+    for line_n in 0..max_height {
+        for widget_lines in &string_args {
+            result += &widget_lines[line_n].replace('\r', "");
+        }
+        result += "\n";
+    }
+
+    Ok(result.into())
 }
 
 fn joiny(
@@ -383,14 +547,55 @@ fn joiny(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("joiny", args, 2, ctx)?;
 
-    let widget1 = args[0].eval(env)?;
-    let widget2 = args[1].eval(env)?;
+    let mut string_args = vec![];
+    let mut max_width = 0;
 
-    // Vertical join implementation would go here
-    Ok(Expression::String(format!(
-        "Vertical join: {} + {}",
-        widget1, widget2
-    )))
+    // 收集所有widget并找到最大宽度
+    for arg in args.iter() {
+        match arg.eval(env)? {
+            Expression::String(s) => {
+                let trimmed = s.trim().to_string();
+                let width = trimmed
+                    .lines()
+                    .map(|line| line.chars().count())
+                    .max()
+                    .unwrap_or(0);
+                max_width = std::cmp::max(max_width, width);
+                string_args.push(trimmed);
+            }
+            otherwise => {
+                return Err(RuntimeError::common(
+                    format!("expected string, but got {otherwise}").into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        }
+    }
+
+    // 将所有widget填充到相同宽度
+    let mut padded_widgets = vec![];
+    for widget in string_args {
+        let padded_lines: Vec<String> = widget
+            .lines()
+            .map(|line| {
+                let line_width = line.chars().count();
+                if line_width < max_width {
+                    format!("{}{}", line, " ".repeat(max_width - line_width))
+                } else {
+                    line.to_string()
+                }
+            })
+            .collect();
+        padded_widgets.push(padded_lines.join("\n"));
+    }
+
+    Ok(padded_widgets
+        .into_iter()
+        .map(|x| x.replace('\r', ""))
+        .collect::<Vec<_>>()
+        .join("\n")
+        .into())
 }
 
 fn join_flow(
@@ -401,24 +606,68 @@ fn join_flow(
     check_args_len("join_flow", args, 2.., ctx)?;
 
     let max_width = match args[0].eval(env)? {
-        Expression::Integer(w) => w as usize,
-        _ => {
+        Expression::Integer(w) if w > 0 => w as usize,
+        other => {
             return Err(RuntimeError::common(
-                "join_flow max_width must be an integer".into(),
+                format!("expected positive integer for max_width, got {other}").into(),
                 ctx.clone(),
                 0,
             ));
         }
     };
 
-    let widgets: Vec<String> = args[1..]
-        .iter()
-        .map(|w| w.eval(env).map(|e| e.to_string()))
-        .collect::<Result<Vec<_>, _>>()?;
+    let mut rows = vec![];
+    let mut current_row = vec![];
+    let mut current_width = 0;
 
-    // Flow layout implementation would go here
-    Ok(Expression::String(format!(
-        "Flow layout (width {}): {:?}",
-        max_width, widgets
-    )))
+    for arg in &args[1..] {
+        match arg.eval(env)? {
+            Expression::String(widget) => {
+                let widget_width = widget
+                    .lines()
+                    .map(|line| line.chars().count())
+                    .max()
+                    .unwrap_or(0);
+
+                // 如果当前行加上新widget会超过最大宽度，则开始新行
+                if !current_row.is_empty() && current_width + widget_width > max_width {
+                    rows.push(current_row);
+                    current_row = vec![];
+                    current_width = 0;
+                }
+
+                current_row.push(widget);
+                current_width += widget_width;
+            }
+            otherwise => {
+                return Err(RuntimeError::common(
+                    format!("expected string widget, got {otherwise}").into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        }
+    }
+
+    if !current_row.is_empty() {
+        rows.push(current_row);
+    }
+
+    // 将每行的widgets水平连接，然后将所有行垂直连接
+    let mut result_rows = vec![];
+    for row in rows {
+        if row.len() == 1 {
+            result_rows.push(row[0].clone());
+        } else {
+            // 使用现有的joinx逻辑
+            let row_expressions: Vec<Expression> =
+                row.into_iter().map(Expression::String).collect();
+            match joinx(&row_expressions, env, ctx)? {
+                Expression::String(joined) => result_rows.push(joined),
+                _ => return Err(RuntimeError::common("joinx failed".into(), ctx.clone(), 0)),
+            }
+        }
+    }
+
+    Ok(result_rows.join("\n").into())
 }

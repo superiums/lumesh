@@ -1,5 +1,6 @@
 # Changelog
 ## [0.11.0]
+**note** this version refactored all the libs.
 
 > from [0.10.6a]
 - allow cmd with dot
@@ -10,7 +11,6 @@
 - optimized builtin functions seek
 - all lib named in lower case
 - value symbo comes to lower case: `true`, `false`,`none`
-- remove `!` postfix to call fn in cmd form, already supported builtin to call as cmd natively.
 - removed the link of `pprint` to every module, it's enough to use the top level func.
 
 > from [0.10.4a]

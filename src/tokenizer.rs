@@ -123,8 +123,8 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        postfix_tag("."), //chaind call/index
-        // postfix_break_tag("!"), //func call as flat as cmd
+        postfix_tag("."),       //chaind call/index
+        postfix_break_tag("!"), //func call as flat as cmd
         postfix_break_tag("^"), //make symbo as cmd
         postfix_tag("("),       //func call
         postfix_tag("["),       //array index or slice
@@ -1334,7 +1334,7 @@ fn cfm_prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn cfm_postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         // postfix_tag("."), //chaind call/index
-        // postfix_tag("!"), //func call as flat as cmd
+        postfix_tag("!"), //func call as flat as cmd
         postfix_tag("^"), //make symbo as cmd
         postfix_tag("("), //func call
         postfix_tag("["), //array index or slice

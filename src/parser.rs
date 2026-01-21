@@ -453,17 +453,12 @@ impl PrattParser {
             }
             // .链式调用
             "." => parse_chaind_or_index(input, lhs, depth),
-            // "!" => {
-            //     // 函数调用
-            //     // let (input, args) =
-            //     //     terminated(separated_list0(text(","), parse_expr), text(")"))(input)?;
-
-            //     let (input, args) = many0(|inp| {
-            //         PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, depth + 1)
-            //     })(input.skip_n(1))?;
-            //     // dbg!(&lhs, &args);
-            //     Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
-            // }
+            "!" => {
+                let (input, args) = many0(|inp| {
+                    PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, depth + 1)
+                })(input.skip_n(1))?;
+                Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
+            }
             "^" => {
                 let (input, args) = many0(|inp| {
                     PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, depth + 1)

@@ -280,7 +280,7 @@ impl PrattParser {
                     // dbg!("--> Args: trying next loop", input.len(), PREC_CMD_ARG);
                     match &lhs {
                         Expression::Symbol(_)|Expression::Variable(_)| Expression::String(_)
-                        |Expression::Index(.. )=>{}
+                        |Expression::Index(.. ) | Expression::Property(..)=>{}
                         _ => break()
                     }
                     if input.len() == 1 {
@@ -452,7 +452,7 @@ impl PrattParser {
                 Ok((input, Expression::Apply(Rc::new(lhs), Rc::new(args))))
             }
             // .链式调用
-            "." => parse_chaind_or_index(input, lhs, depth),
+            "." => parse_chaind_call_or_property(input, lhs, depth),
             "!" => {
                 let (input, args) = many0(|inp| {
                     PrattParser::parse_expr_with_precedence(inp, PREC_CMD_ARG, depth + 1)
@@ -910,7 +910,7 @@ fn parse_pipe_method(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     }
 }
 
-fn parse_chaind_or_index(
+fn parse_chaind_call_or_property(
     input: Tokens<'_>,
     lhs: Expression,
     depth: usize,
@@ -949,7 +949,7 @@ fn parse_chaind_or_index(
             // 无参数的属性访问，转换为索引操作
             Ok((
                 input,
-                Expression::Index(Rc::new(lhs), Rc::new(Expression::String(method_name))),
+                Expression::Property(Rc::new(lhs), Rc::new(Expression::String(method_name))),
             ))
         }
     }

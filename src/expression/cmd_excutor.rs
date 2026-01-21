@@ -230,7 +230,8 @@ pub fn handle_command(
     let is_in_assign = state.contains(State::IN_ASSIGN);
     let pipe_out = is_in_assign || state.contains(State::IN_PIPE);
     let mut cmd_args = vec![];
-    state.set(State::SKIP_BUILTIN_SEEK | State::IN_ASSIGN);
+    // state.set(State::SKIP_BUILTIN_SEEK | State::IN_ASSIGN);
+    state.set(State::IN_ASSIGN);
 
     for arg in args {
         // for flattened_arg in Expression::flatten(vec![arg.eval_mut(env, depth + 1)?]) {
@@ -280,7 +281,7 @@ pub fn handle_command(
             _ => cmd_args.push(format!("{e_arg}")),
         }
     }
-    state.clear(State::SKIP_BUILTIN_SEEK);
+    // state.clear(State::SKIP_BUILTIN_SEEK);
     if !is_in_assign {
         state.clear(State::IN_ASSIGN);
     }

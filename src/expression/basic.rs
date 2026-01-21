@@ -293,6 +293,10 @@ impl Expression {
                 r.fmt_display_indent(f, 0)?;
                 write!(f, "]")
             }
+            Self::Property(l, r) => {
+                l.fmt_display_indent(f, 0)?;
+                write!(f, ".{}", r)
+            }
 
             // 其他构造
             Self::Return(expr) => {
@@ -477,6 +481,11 @@ impl Expression {
                 write!(f, "\n{}[\n", idt(i))?;
                 index.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}]\n", idt(i))
+            }
+            Self::Property(expr, index) => {
+                write!(f, "\n{}Property\n", idt(i))?;
+                expr.fmt_indent(f, i + 1)?;
+                write!(f, ".{}", index)
             }
 
             // 新增：链式调用和管道方法
@@ -703,7 +712,7 @@ impl Expression {
             Self::UnaryOp(..) => "UnaryOp".into(),
             Self::Bytes(_) => "Bytes".into(),
             Self::Index(_, _) => "Index".into(),
-            // Self::Slice(_, _) => "Slice".into(),
+            Self::Property(_, _) => "Property".into(),
             Self::Del(_) => "Del".into(),
             Self::Declare(_, _) => "Declare".into(),
             Self::Assign(_, _) => "Assign".into(),

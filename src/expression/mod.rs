@@ -48,6 +48,7 @@ pub enum Expression {
 
     // 索引和切片优化
     Index(Rc<Self>, Rc<Self>),
+    Property(Rc<Self>, Rc<Self>),
 
     // 其他变体保持不变
     Del(String),

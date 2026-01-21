@@ -6,6 +6,9 @@
 - allow cmd with dot
 - update config with new lib name and check update download
 - fix libs with compare new and old
+- split `Property` from `Index`
+now `a.b` is a property request, and `a[b]`  is a index request
+also `a.b()` is a chained call, and `a.b c` is a command which will search bultin and fallback to file `a.b`
 
 > from [0.10.5a]
 - optimized builtin functions seek

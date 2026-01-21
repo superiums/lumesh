@@ -25,7 +25,7 @@ impl Default for State {
 
 impl State {
     pub const STRICT: u8 = 1;
-    pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
+    // pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
     pub const PTY_MODE: u8 = 1 << 3; // 0b00001000
     pub const IN_ASSIGN: u8 = 1 << 4; // 0b00010000
@@ -998,6 +998,9 @@ impl Expression {
                 }
 
                 Self::Index(lhs, rhs) => break self.handle_index(lhs, rhs, state, env, depth + 1),
+                Self::Property(lhs, rhs) => {
+                    break self.handle_property(lhs, rhs, state, env, depth + 1);
+                }
 
                 // 执行应用
                 Self::Apply(func, args) => {
@@ -1006,7 +1009,7 @@ impl Expression {
                 Self::Command(cmd, args) => {
                     // inject builtin cmd executor here, to invoid to influent other index eval.
                     return match cmd.as_ref() {
-                        Expression::Index(base, method) => {
+                        Expression::Property(base, method) => {
                             return match self.eval_builtin(base, method, args, state, env, depth) {
                                 Ok(x) => Ok(x),
                                 _ => {
@@ -1105,6 +1108,45 @@ impl Expression {
 }
 
 impl Expression {
+    /// Property map.key, only for map property, key is not expanded.
+    /// fallback to string for filename case.
+    pub fn handle_property(
+        &self,
+        lhs: &Rc<Expression>,
+        rhs: &Rc<Expression>,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        let l = lhs.as_ref().eval_mut(state, env, depth)?;
+        // never eval rhs
+        return match (l, rhs.as_ref()) {
+            (Self::Symbol(m), Self::Symbol(n)) => Ok(Self::String(format!("{m}.{n}"))),
+            (Expression::Map(m), Expression::Symbol(n)) => {
+                let key = n.to_string();
+                m.as_ref().get(&key).cloned().ok_or(RuntimeError::new(
+                    RuntimeErrorKind::KeyNotFound(key),
+                    self.clone(),
+                    depth,
+                ))
+            }
+            (Expression::HMap(m), Expression::Symbol(n)) => {
+                let key = n.to_string();
+                m.as_ref().get(&key).cloned().ok_or(RuntimeError::new(
+                    RuntimeErrorKind::KeyNotFound(key),
+                    self.clone(),
+                    depth,
+                ))
+            }
+            _ => Err(RuntimeError::common(
+                "not valid property request".into(),
+                self.clone(),
+                depth,
+            )),
+            // (left, right) => Ok(Self::index_slm(left, right)
+            // .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
+        };
+    }
     /// index
     pub fn handle_index(
         &self,
@@ -1120,19 +1162,12 @@ impl Expression {
         // state.clear(State::SKIP_BUILTIN_SEEK);
 
         return match (l, r) {
-            // (Expression::List(m), Expression::Integer(n)) => {
-            //     Self::index_slm(Expression::List(m), Expression::Integer(n))
-            // }
-            // (Expression::Map(m), n) => Self::index_slm(Expression::Map(m), n),
-            (Self::Symbol(m), Self::Symbol(n)) => Ok(Self::String(format!("{m}.{n}"))),
-            // (Self::String(m), Self::String(n)) => Ok(Self::String(m + &n)),
-            // _ => Err(RuntimeError::CustomError("not valid index option".into())),
             (left, Self::Range(r, step)) => self.handle_slice(left, r, step, state, env, depth),
             (left, right) => Ok(Self::index_slm(left, right)
                 .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
         };
     }
-    /// index and slim
+    /// slice String/List by range
     fn handle_slice(
         &self,
         l: Expression,
@@ -1193,6 +1228,8 @@ impl Expression {
             )),
         }
     }
+
+    /// index String/List/Range/Map
     fn index_slm(l: Expression, r: Expression) -> Result<Expression, RuntimeErrorKind> {
         match l {
             // 处理列表索引
@@ -1267,21 +1304,8 @@ impl Expression {
                 }
             }
 
-            // symbol like: cmd.exe
-            Expression::Symbol(s) => {
-                if let Expression::Symbol(rs) | Expression::String(rs) = r {
-                    Ok(Expression::Symbol(s + "." + &rs))
-                } else {
-                    Err(RuntimeErrorKind::TypeError {
-                        expected: "Symbol".into(),
-                        sym: r.to_string(),
-                        found: r.type_name(),
-                    })
-                }
-            }
-
             _ => Err(RuntimeErrorKind::TypeError {
-                expected: "indexable type (List/Map/String)".into(),
+                expected: "indexable type (List/Range/Map/String)".into(),
                 sym: l.to_string(),
                 found: l.type_name(),
             }),

@@ -1,6 +1,20 @@
 # Changelog
 ## [0.11.0]
 **note** this version refactored all the libs.
+  + all lib name changes to **lower case**
+  + boolean value and `none` changes to **lower case**
+  + the base data param for lib funcs moves from last to **first**.
+  
+> from [0.10.7a]
+- 26586fc (HEAD -> main) fix cfm need 2 enter while type: f()
+- 8b5c12e allow subcmd capture in lib where neccessary
+- c90273a rename string.get_with to max_len. math.isodd to is_odd. fix ui funcs
+- 806e443 check fn arg in map.map/filter; remove LINENO from list.filter
+- 19a9634 remove list.each/reduce,keep map,improved foldl/r. check fn_arg in any/all/fold. improve - console.readpasswd
+- 361baa7 (origin/main, origin/HEAD) fix property call to fall back to file. fix slice clmap.
+- b3be63d split `Property` from `Index`
+- 8f7b61a restore ! postfix
+- f5ece52 update config with new lib name and check update download
 
 > from [0.10.6a]
 - allow cmd with dot

@@ -910,9 +910,9 @@ fn format(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("format", args, 1.., ctx)?;
+    check_args_len("format", args, 2.., ctx)?;
 
-    let format_str = match args[0].eval(env)? {
+    let template = match args[0].eval_in_assign(env)? {
         Expression::String(s) => s,
         _ => {
             return Err(RuntimeError::common(
@@ -923,10 +923,12 @@ fn format(
         }
     };
 
-    let mut result = format_str;
-    for (i, arg) in args.iter().enumerate().skip(1) {
-        let value = arg.eval(env)?.to_string();
-        result = result.replace(&format!("{{{}}}", i - 1), &value);
+    let placeholders = template.matches("{}").count();
+
+    let mut result = template.clone();
+    for arg in args.iter().skip(1).take(placeholders) {
+        let value = arg.eval_in_assign(env)?;
+        result = result.replacen("{}", &value.to_string(), 1);
     }
 
     Ok(Expression::String(result))

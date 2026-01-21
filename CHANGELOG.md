@@ -1,12 +1,19 @@
 # Changelog
-## [0.10.5]
+## [0.11.0]
+
+> from [0.10.6a]
+- allow cmd with dot
+- update config with new lib name and check update download
+- fix libs with compare new and old
+
+> from [0.10.5a]
 - optimized builtin functions seek
 - all lib named in lower case
 - value symbo comes to lower case: `true`, `false`,`none`
 - remove `!` postfix to call fn in cmd form, already supported builtin to call as cmd natively.
 - removed the link of `pprint` to every module, it's enough to use the top level func.
 
-## [0.10.4]
+> from [0.10.4a]
 - refactor builtin functions
   + with lazy module loading
   + with meta info splited from main functions, for more efficency

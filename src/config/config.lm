@@ -25,12 +25,12 @@ if IS_INTERACTIVE {
     }
     # template could be normal expression or func.
     # avaluable tmplate var: $CWD, $CWD_SHORT
-    # let LUME_PROMPT_TEMPLATE = (String.blue('$CWD_SHORT') + '>> '.bold().yellow())
+    # let LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
     # if template is lambda/func, it will be evaluated everytime.
     let LUME_PROMPT_TEMPLATE := x -> {
-        String.format '{} {}{}{} ' String.blue(x) '|'.green().bold() \
-        (if (Fs.exists '.git') {git branch --show-current | .cyan()} else '') \
-        '>'.green().bold()
+        string.blue(x) + ' |'.green().bold() + \
+        (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
+        + '> '.green().bold()
     }
 
     ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
@@ -54,7 +54,7 @@ if IS_INTERACTIVE {
 
     # == completion
     # let LUME_COMPLETION_DIR = '~/.local/share/lumesh/completions'
-    let LUME_COMPLETION_CYCLE = True
+    let LUME_COMPLETION_CYCLE = true
 
     ### report compute result type and values. default True.
     # let LUME_PRINT_DIRECT= False
@@ -69,10 +69,10 @@ if IS_INTERACTIVE {
     let LUME_HOT_MODIFIER = 4
     let LUME_HOT_KEYS = {
         q: 'exit',
-        h: "Fs.read ~/.cache/.lume_history | String.lines() | Ui.pick('select history:') ?! | exec_str()",
-        x: "Fs.read ~/.cache/lume_bookmark | String.lines() | Ui.pick('select bookmark:') ?! | exec_str()",
+        h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?! | exec_str()",
+        x: "fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') ?! | exec_str()",
         m: 'let cmd := "$CMD_CURRENT";let s = Into.str(cmd); if s {s+"\n" >> ~/.cache/lume_bookmark; println "\t[MARKED]"}',
-        e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=Fs.read($tc); if len($lmcode) && Ui.confirm("Execute it?"){exec_str($lmcode)}'
+        e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=fs.read($tc); if len($lmcode) && ui.confirm("Execute it?"){exec_str($lmcode)}'
     }
 
     ### abbreviations
@@ -115,24 +115,29 @@ if IS_INTERACTIVE {
     fn update(){
         println 'checking latest version...'
         let url = 'https://codeberg.org/santo/lumesh/releases/latest'
-        let ver = (curl $url ?: eprintln 'network err' && exit |  Regex.find(r'\d[\d\.]+').found ?: '0')
+        let ver = (curl $url ?: eprintln 'network err' && exit |  regex.find(r'\d[\d\.]+').found ?: '0')
         let latest = ($ver.split('.').join('').to_int() ?: 0)
         if $latest > 0 {
-          let current = (About | .get('version'))
+          let current = (about.version())
           current = $current.split('.').join('').to_int()
           if $latest > $current {
               print 'Found new version: ' $ver.green()
-              if Ui.confirm('download [normal edition for linux] now?') {
+              if ui.confirm('download [normal edition for linux] now?') {
                   let tmp = /tmp/lume
                   curl -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
-                  chmod '+x' /tmp/lume
-                  let dest = About | .get('bin')
-                  if $dest.starts_with('/home'){
-                    cp -f $tmp $dest
+                  if (file $tmp | .contains('ELF')){
+                      chmod '+x' $tmp
+                      let dest = about.bin()
+                      if $dest.starts_with('/home'){
+                        cp -f $tmp $dest
+                      }else{
+                        bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`
+                      }
+                      println 'finished'
                   }else{
-                    bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`
+                      println 'download fail'
+                      rm $tmp
                   }
-                  println 'finished'
               } else {
                   println 'you may download it manually:' $url
               }

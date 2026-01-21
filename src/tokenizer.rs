@@ -1201,7 +1201,6 @@ fn is_symbol_char(c: char) -> bool {
 pub(crate) fn parse_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
     // 检查是否为单行命令模式
     if is_cfm_mode(input) {
-        // println!("------------single----------");
         return parse_command_tokens(input);
     }
 
@@ -1287,11 +1286,11 @@ fn parse_command_token(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagn
     alt((
         map_valid_token(linebreak, TokenKind::LineBreak),
         string_literal,
-        map_valid_token(any_punctuation, TokenKind::Punctuation),
         map_valid_token(argument_symbol, TokenKind::StringRaw), //argument first to allow args such as = -
         map_valid_token(cfm_operator, TokenKind::Operator),
         map_valid_token(cfm_postfix_operator, TokenKind::OperatorPostfix),
         map_valid_token(cfm_prefix_operator, TokenKind::OperatorPrefix),
+        map_valid_token(any_punctuation, TokenKind::Punctuation),
         map_valid_token(any_keyword, TokenKind::Keyword),
         map_valid_token(whitespace, TokenKind::Whitespace),
         // number_literal,
@@ -1308,7 +1307,7 @@ fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnost
     let mut length = 0;
     // `=` is used for var asign: IFS='';xx
     while let Some(c) = chars.next() {
-        if c.is_ascii_whitespace() || "=;([^$!".contains(c) {
+        if c.is_ascii_whitespace() || "=([{^$!|;)]}".contains(c) {
             break;
         }
         length += c.len_utf8();

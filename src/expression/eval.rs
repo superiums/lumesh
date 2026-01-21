@@ -116,6 +116,8 @@ impl Expression {
         self.eval_mut(&mut State::new(strict), env, 0)
     }
     /// builtin args eval in pipe.
+    /// this call will capture the output of subcmd.
+    /// use this one where need to capture the subcmd output, like : ui.pick (ls -l)
     pub fn eval_in_assign(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         let strict = is_strict(env);
         let mut state = State::new(strict);
@@ -1009,7 +1011,7 @@ impl Expression {
                     break self.eval_apply(func.as_ref(), args, state, env, depth + 1);
                 }
                 Self::Command(cmd, args) => {
-                    break self.handle_command(cmd, args, state, env, depth + 1);
+                    break self.handle_builtin_n_normal_cmd(cmd, args, state, env, depth + 1);
                 }
                 Self::CommandRaw(cmd, args) => {
                     break cmd.eval_command(args.as_ref(), state, env, depth + 1);

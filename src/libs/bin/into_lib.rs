@@ -91,7 +91,7 @@ pub fn table(
         _ => Vec::new(),
     };
 
-    let output = args[0].eval(env)?.to_string();
+    let output = args[0].eval_in_assign(env)?.to_string();
     let mut lines: Vec<&str> = output.lines().collect();
     if lines.is_empty() {
         return Ok(Expression::from(Vec::<Expression>::new()));
@@ -341,7 +341,7 @@ pub fn toml(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("toml", args, 1, ctx)?;
-    let expr = &args[0].eval(env)?;
+    let expr = &args[0].eval_in_assign(env)?;
     let toml_str = expr_to_toml_string(expr, None);
     Ok(Expression::String(toml_str))
 }
@@ -420,7 +420,7 @@ pub fn json(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("json", args, 1, ctx)?;
-    let expr = &args[0].eval(env)?;
+    let expr = &args[0].eval_in_assign(env)?;
     let json_str = match expr {
         Expression::Map(map) => {
             let pairs: Vec<String> = map
@@ -463,7 +463,7 @@ pub fn csv(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("csv", args, 1, ctx)?;
-    let expr = &args[0].eval(env)?;
+    let expr = &args[0].eval_in_assign(env)?;
 
     // 获取自定义分隔符
     let ifs = env.get("IFS");
@@ -536,7 +536,7 @@ fn highlighted(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("highlighted", args, 1, ctx)?;
-    let script = args[0].eval(env)?.to_string();
+    let script = args[0].eval_in_assign(env)?.to_string();
 
     if script.is_empty() {
         return Ok(Expression::None);

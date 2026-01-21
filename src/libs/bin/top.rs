@@ -304,7 +304,7 @@ fn cd(
     let mut path = if args.len() == 0 {
         "~".to_string()
     } else {
-        match args[0].eval(env)? {
+        match args[0].eval_in_assign(env)? {
             Expression::Symbol(path) | Expression::String(path) => path,
             other => other.to_string(),
         }
@@ -344,7 +344,7 @@ fn r#typeof(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("typeof", args, 1, ctx)?;
     let rs = if matches!(args[0], Expression::Symbol(_) | Expression::Variable(_)) {
-        args[0].eval(env)?.type_name()
+        args[0].eval_in_assign(env)?.type_name()
     } else {
         args[0].type_name()
     };
@@ -357,7 +357,7 @@ fn debug(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval(env)?;
+        let x = arg.eval_in_assign(env)?;
         if i < args.len() - 1 {
             print!("{x:?} ")
         } else {
@@ -375,7 +375,7 @@ fn tap(
     let mut stdout = std::io::stdout().lock();
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
     for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval(env)?;
+        let x = arg.eval_in_assign(env)?;
         if i < args.len() - 1 {
             let _ = write!(&mut stdout, "{x} ");
         } else {
@@ -397,7 +397,7 @@ fn print(
 ) -> Result<Expression, RuntimeError> {
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
-        let x = arg.eval(env)?;
+        let x = arg.eval_in_assign(env)?;
         let _ = write!(&mut stdout, "{x} ");
     }
     let _ = writeln!(&mut stdout);
@@ -411,7 +411,7 @@ fn println(
 ) -> Result<Expression, RuntimeError> {
     let mut stdout = std::io::stdout().lock();
     for arg in args.iter() {
-        let x = arg.eval(env)?;
+        let x = arg.eval_in_assign(env)?;
         // println!("{}", x);
         let _ = writeln!(&mut stdout, "{x}");
     }
@@ -426,7 +426,7 @@ pub fn pprint(
     check_args_len("pprint", args, 1.., ctx)?;
     // let _ = args.iter().map(|a| pretty_printer(&a.eval(env)?));
     for arg in args.iter() {
-        let r = arg.eval(env)?;
+        let r = arg.eval_in_assign(env)?;
         pretty_printer(&r)?;
     }
     Ok(Expression::None)
@@ -438,7 +438,7 @@ fn eprint(
 ) -> Result<Expression, RuntimeError> {
     let mut stderr = std::io::stderr().lock();
     for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval(env)?;
+        let x = arg.eval_in_assign(env)?;
         if i < args.len() - 1 {
             let _ = write!(&mut stderr, "\x1b[38;5;9m{x} \x1b[m\x1b[0m");
         } else {
@@ -455,7 +455,7 @@ fn eprintln(
 ) -> Result<Expression, RuntimeError> {
     let mut stderr = std::io::stderr().lock();
     for arg in args.iter() {
-        let x = arg.eval(env)?;
+        let x = arg.eval_in_assign(env)?;
         let _ = writeln!(&mut stderr, "\x1b[38;5;9m{x}\x1b[m\x1b[0m");
     }
     let _ = stderr.flush();
@@ -645,7 +645,7 @@ fn repeat(
     check_exact_args_len("repeat", args, 2, ctx)?;
     let n = get_integer_arg(args[1].eval(env)?, ctx)?;
     let r = (0..n)
-        .map(|_| args[0].eval(env))
+        .map(|_| args[0].eval_in_assign(env))
         .collect::<Result<Vec<_>, _>>()?;
     Ok(Expression::from(r))
 }

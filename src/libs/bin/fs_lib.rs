@@ -24,7 +24,7 @@ pub fn regist_lazy() -> LazyModule {
         mkdir, rmdir, mv, cp, rm,
         // check
         exists, is_dir, is_file,
-        read, write,
+        // read and write,
         head, tail, read, write, append,
         // assist
         base_name, dir_name, join,
@@ -217,7 +217,7 @@ fn head(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("head", args, 1..=2, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::canon(&p)?;
     let n = match args.len() {
         2 => match args[1].eval(env)? {
@@ -244,7 +244,7 @@ fn tail(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("tail", args, 1..=2, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::canon(&p)?;
     let n = match args.len() {
         2 => match args[1].eval(env)? {
@@ -290,7 +290,7 @@ fn canon(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("canon", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let canon_path = utils::canon(&p)?;
     Ok(Expression::String(canon_path.to_string_lossy().into()))
 }
@@ -301,7 +301,7 @@ fn abs(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("abs", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let abs_path = utils::abs(&p);
     Ok(Expression::String(abs_path.to_string_lossy().into()))
 }
@@ -312,7 +312,7 @@ fn mkdir(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("mkdir", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
     std::fs::create_dir_all(&path).map_err(|e| {
         RuntimeError::from_io_error(e, "create directory".into(), args[0].clone(), 0)
@@ -326,7 +326,7 @@ fn rmdir(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("rmdir", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
     std::fs::remove_dir(&path).map_err(|e| {
         RuntimeError::from_io_error(e, "remove directory".into(), args[0].clone(), 0)
@@ -340,7 +340,7 @@ fn mv(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("mv", args, 2, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let src = utils::abs(&p);
     let dst_str = args[1].eval(env)?.to_string();
     let dst = if is_a_dir(&dst_str) {
@@ -361,7 +361,7 @@ fn cp(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cp", args, 2, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let src = utils::abs(&p);
 
     let dst_str = args[1].eval(env)?.to_string();
@@ -383,7 +383,7 @@ fn rm(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("rm", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
     remove_path(&path)?;
     Ok(Expression::None)
@@ -408,7 +408,7 @@ fn exists(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("exists", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
     Ok(Expression::Boolean(path.exists()))
 }
@@ -419,7 +419,7 @@ fn is_dir(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_dir", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
     Ok(Expression::Boolean(path.is_dir()))
 }
@@ -430,7 +430,7 @@ fn is_file(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_file", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
     Ok(Expression::Boolean(path.is_file()))
 }
@@ -441,7 +441,7 @@ fn read(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("read", args, 1, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::canon(&p)?;
 
     // First try to read as text
@@ -461,7 +461,7 @@ fn write(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("write", args, 1..=2, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
 
     // 只有一个参数时，创建空白文件（如果不存在）
@@ -490,9 +490,9 @@ fn append(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("append", args, 2, ctx)?;
-    let p = args[0].eval(env)?.to_string();
+    let p = args[0].eval_in_assign(env)?.to_string();
     let path = utils::abs(&p);
-    let contents = args[1].eval(env)?;
+    let contents = args[1].eval_in_assign(env)?;
 
     let mut file = std::fs::OpenOptions::new()
         .append(true)
@@ -546,7 +546,7 @@ fn base_name(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("base_name", args, 1..=2, ctx)?;
-    let path = args[0].eval(env)?.to_string();
+    let path = args[0].eval_in_assign(env)?.to_string();
     let split_extension = args.len() > 1
         && match args[1] {
             Expression::Boolean(b) => b,
@@ -581,7 +581,7 @@ fn dir_name(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("dir_name", args, 1, ctx)?;
-    let pathstr = get_string_arg(args[0].eval(env)?, ctx)?;
+    let pathstr = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     if is_a_dir(&pathstr) {
         return Ok(Expression::String(pathstr));
@@ -608,7 +608,7 @@ fn join(
     let mut final_path = PathBuf::new();
 
     for arg in args {
-        let path_str = arg.eval(env)?.to_string();
+        let path_str = arg.eval_in_assign(env)?.to_string();
         final_path = final_path.join(path_str);
     }
     let p = expand_home(final_path.to_str().unwrap_or("."));

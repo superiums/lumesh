@@ -650,7 +650,7 @@ pub fn bind_arguments(
 
 impl Expression {
     #[inline]
-    pub fn handle_command(
+    pub fn handle_builtin_n_normal_cmd(
         &self,
         cmd: &Expression,
         args: &Vec<Expression>,

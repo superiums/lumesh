@@ -41,7 +41,7 @@ fn get_r_args(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<(Regex, String), RuntimeError> {
-    match (args[0].eval(env)?, args[1].eval(env)?) {
+    match (args[0].eval_in_assign(env)?, args[1].eval_in_assign(env)?) {
         (Expression::Regex(r), Expression::String(t) | Expression::Symbol(t)) => Ok((r.regex, t)),
         (Expression::String(t) | Expression::Symbol(t), Expression::Regex(r)) => Ok((r.regex, t)),
         (
@@ -197,18 +197,30 @@ fn replace(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("replace", args, 3, ctx)?;
 
-    let first = args[0].eval(env)?;
-    let second = args[1].eval(env)?;
-    let last = args[2].eval(env)?;
-    let (replacement, text, regex) = match last {
-        Expression::Regex(regex) => (first.to_string(), second.to_string(), regex.regex),
-        Expression::String(text) => {
-            let (regex, replace) = get_r_args(args, env, ctx)?;
-            (replace, text, regex)
-        }
+    let first = args[0].eval_in_assign(env)?;
+    let second = args[1].eval_in_assign(env)?;
+    let last = args[2].eval_in_assign(env)?;
+    let (replacement, text, regex) = match first {
+        Expression::Regex(regex) => (last.to_string(), second.to_string(), regex.regex),
+        Expression::String(text) => match (second, last) {
+            (Expression::String(s) | Expression::Symbol(s), Expression::Regex(r)) => {
+                (s, text, r.regex)
+            }
+            (Expression::Regex(r), Expression::String(s) | Expression::Symbol(s)) => {
+                (s, text, r.regex)
+            }
+            _ => {
+                return Err(RuntimeError::common(
+                    "regex option requires a regex argument".into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        },
+
         _ => {
             return Err(RuntimeError::common(
-                "regex option requires text as last argument".into(),
+                "regex option requires text as first argument".into(),
                 ctx.clone(),
                 0,
             ));

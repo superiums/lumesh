@@ -167,7 +167,7 @@ pub fn get_string_args(
     ctx: &Expression,
 ) -> Result<Vec<String>, RuntimeError> {
     args.iter()
-        .map(|arg| get_string_arg(arg.eval(env)?, ctx))
+        .map(|arg| get_string_arg(arg.eval_in_assign(env)?, ctx))
         .collect()
 }
 

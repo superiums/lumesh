@@ -177,13 +177,16 @@ fn selector_wrapper(
     };
 
     let (cfgs, options) = match args.len() {
-        1 => (None, extract_options(delimiter, args[0].eval(env)?, ctx)?),
+        1 => (
+            None,
+            extract_options(delimiter, args[0].eval_in_assign(env)?, ctx)?,
+        ),
         2 => (
             Some(extract_cfg(args[0].eval(env)?, ctx)?),
-            extract_options(delimiter, args[1].eval(env)?, ctx)?,
+            extract_options(delimiter, args[1].eval_in_assign(env)?, ctx)?,
         ),
         3.. => (
-            Some(extract_cfg(args[0].eval(env)?, ctx)?),
+            Some(extract_cfg(args[0].eval_in_assign(env)?, ctx)?),
             args[1..].to_vec(),
         ),
         0 => {
@@ -366,7 +369,7 @@ fn widget(
 
     let title = args[0].eval(env)?.to_string();
     let title_len = title.chars().count();
-    let content = args[1].eval(env)?.to_string();
+    let content = args[1].eval_in_assign(env)?.to_string();
 
     // 自动计算宽度
     let auto_width = calculate_auto_width(&title, &content);

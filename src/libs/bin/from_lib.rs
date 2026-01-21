@@ -36,7 +36,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         cmd => "parse command output into structured data", "<cmd_output_string> [headers|header...]"
 
         // 数据查询
-        jq => "Apply jq-like query to JSON or TOML data", "<query_string> <json_data>"
+        jq => "Apply jq-like query to JSON or TOML data", "<json_data> <query_string>"
 
     })
 }
@@ -49,7 +49,7 @@ fn toml(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("toml", args, 1, ctx)?;
-    let text = args[0].eval(env)?;
+    let text = args[0].eval_in_assign(env)?;
     let text_str = text.to_string();
 
     toml::from_str(&text_str).map(toml_to_expr).map_err(|e| {
@@ -83,7 +83,7 @@ fn json(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("json", args, 1, ctx)?;
-    let text = args[0].eval(env)?;
+    let text = args[0].eval_in_assign(env)?;
     let text_str = text.to_string();
 
     if text_str.is_empty() {
@@ -129,7 +129,7 @@ fn script(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("script", args, 1, ctx)?;
-    let script = args[0].eval(env)?.to_string();
+    let script = args[0].eval_in_assign(env)?.to_string();
 
     if script.is_empty() {
         return Ok(Expression::None);
@@ -156,7 +156,7 @@ fn csv(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("csv", args, 1, ctx)?;
-    let text = args[0].eval(env)?.to_string();
+    let text = args[0].eval_in_assign(env)?.to_string();
 
     // 获取自定义分隔符
     let delimiter = match env.get("IFS") {
@@ -209,8 +209,8 @@ fn jq(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("jq", args, 2, ctx)?;
-    let query = args[0].eval(env)?;
-    let input = args[1].eval(env)?;
+    let query = args[1].eval(env)?;
+    let input = args[0].eval_in_assign(env)?;
 
     let json_value = match input {
         Expression::String(s) => s.parse::<JsonValue>().map_err(|e| {

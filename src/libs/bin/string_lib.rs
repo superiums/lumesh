@@ -299,7 +299,7 @@ fn is_empty(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_empty", args, 1, ctx)?;
-    let text = get_exact_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_exact_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     Ok(Expression::Boolean(text.is_empty()))
 }
 
@@ -382,7 +382,7 @@ fn len(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("len", args, 1, ctx)?;
-    match args[0].eval(env)? {
+    match args[0].eval_in_assign(env)? {
         Expression::Symbol(x) | Expression::String(x) => {
             Ok(Expression::Integer(x.chars().count() as Int))
         }
@@ -483,7 +483,7 @@ fn split_at(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("split_at", args, 2, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     let index = get_integer_arg(args[1].eval(env)?, ctx)? as usize;
 
     if index > text.len() {
@@ -506,7 +506,7 @@ fn chars(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("chars", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let chars = text
         .chars()
@@ -521,7 +521,7 @@ fn words(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("words", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let words = text
         .split_whitespace()
@@ -536,7 +536,7 @@ fn words_quoted(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("words_quoted", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let re = regex_lite::Regex::new(r#""((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+)"#).unwrap();
     let words = re
@@ -558,7 +558,7 @@ fn lines(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("lines", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let lines = text
         .lines()
@@ -573,7 +573,7 @@ fn paragraphs(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("paragraphs", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let paragraphs = text
         .split("\n\n")
@@ -588,7 +588,7 @@ fn concat(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("concat", args, 2.., ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     let others = args[1..]
         .iter()
         .map(|a| a.to_string())
@@ -630,7 +630,7 @@ fn substring(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("substring", args, 2..=3, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let start = get_integer_arg(args[1].eval(env)?, ctx)?;
     let start_idx = if start < 0 {
@@ -700,7 +700,7 @@ fn trim(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("trim", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     Ok(Expression::String(text.trim().to_string()))
 }
 
@@ -710,7 +710,7 @@ fn trim_start(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("trim_start", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     Ok(Expression::String(text.trim_start().to_string()))
 }
 
@@ -720,7 +720,7 @@ fn trim_end(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("trim_end", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     Ok(Expression::String(text.trim_end().to_string()))
 }
 
@@ -730,7 +730,7 @@ fn to_lower(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_lower", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     Ok(Expression::String(text.to_lowercase()))
 }
 
@@ -740,7 +740,7 @@ fn to_upper(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_upper", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     Ok(Expression::String(text.to_uppercase()))
 }
 
@@ -750,7 +750,7 @@ fn to_title(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_title", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let mut title = String::with_capacity(text.len());
     let mut capitalize = true;
@@ -1257,7 +1257,7 @@ fn max_len(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("max_len", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
 
     let max_width = text.lines().map(|line| line.len()).max().unwrap_or(0);
 
@@ -1270,7 +1270,7 @@ fn grep(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("grep", args, 2, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
     let pat = get_string_arg(args[1].eval(env)?, ctx)?;
 
     let lines = text

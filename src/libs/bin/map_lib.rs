@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use crate::libs::bin::top;
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_string_arg};
+use crate::libs::helper::{check_args_len, check_exact_args_len, check_fn_arg, get_string_arg};
 use crate::libs::lazy_module::LazyModule;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind, libs::BuiltinInfo, reg_info, reg_lazy,
@@ -265,8 +265,9 @@ fn filter(
     check_exact_args_len("map.filter", args, 2, ctx)?;
     let map = get_map_arg(args[0].eval(env)?, ctx)?;
     let predicate = args[1].eval(env)?;
-    let mut new_map = BTreeMap::new();
+    check_fn_arg(&predicate, 2, ctx)?;
 
+    let mut new_map = BTreeMap::new();
     for (k, v) in map.iter() {
         let result = Expression::Apply(
             Rc::new(predicate.clone()),
@@ -492,6 +493,8 @@ fn map(
 
     let key_func = args[1].eval(env)?;
     let val_func = args[2].eval(env)?;
+    check_fn_arg(&key_func, 1, ctx)?;
+    check_fn_arg(&val_func, 1, ctx)?;
 
     let mut new_map = BTreeMap::new();
 

@@ -3,7 +3,8 @@ use std::rc::Rc;
 
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
-    check_args_len, check_exact_args_len, get_integer_arg, get_string_arg, get_string_args,
+    check_args_len, check_exact_args_len, check_fn_arg, get_integer_arg, get_string_arg,
+    get_string_args,
 };
 use crate::libs::lazy_module::LazyModule;
 use crate::{
@@ -823,15 +824,11 @@ fn filter(
         Expression::Lambda(params, _) => params.len(),
         Expression::Function(_, params, _, _, _) => params.len(),
         _ => {
-            let mut row_env = env.fork();
-            row_env.define("LINES", Expression::Integer(list.len() as i64));
-            for (i, item) in list.as_ref().iter().enumerate() {
-                row_env.define("LINENO", Expression::Integer(i as i64));
-                if let Expression::Boolean(true) = args[1].eval(&mut row_env)? {
-                    result.push(item.clone())
-                }
-            }
-            return Ok(Expression::List(Rc::new(result)));
+            return Err(RuntimeError::common(
+                "expected a func/lambda as filter-function".into(),
+                ctx.clone(),
+                0,
+            ));
         }
     };
 
@@ -881,7 +878,7 @@ fn filter_map(
     check_fn_arg(&func, 1, ctx)?;
 
     let mut result = Vec::new();
-     for item in list.as_ref().iter() {
+    for item in list.as_ref().iter() {
         match Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)? {
             Expression::None => continue,
             val => result.push(val),
@@ -1101,27 +1098,6 @@ fn chunk(
     Ok(Expression::List(Rc::new(result)))
 }
 
-fn check_fn_arg(fn_arg: &Expression, size: usize, ctx: &Expression) -> Result<(), RuntimeError> {
-    let fn_arg_count = match fn_arg {
-        Expression::Lambda(params, _) => params.len(),
-        Expression::Function(_, params, _, _, _) => params.len(),
-        _ => {
-            return Err(RuntimeError::common(
-                "expect a func/lambda as 2nd param".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-    if fn_arg_count != size {
-        return Err(RuntimeError::common(
-            format!("your func/lambda should define {} param", size).into(),
-            ctx.clone(),
-            0,
-        ));
-    }
-    Ok(())
-}
 fn foldl(
     args: &[Expression],
     env: &mut Environment,

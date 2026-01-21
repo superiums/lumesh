@@ -185,3 +185,29 @@ pub fn get_integer_arg(expr: Expression, ctx: &Expression) -> Result<i64, Runtim
         )),
     }
 }
+
+pub fn check_fn_arg(
+    fn_arg: &Expression,
+    size: usize,
+    ctx: &Expression,
+) -> Result<(), RuntimeError> {
+    let fn_arg_count = match fn_arg {
+        Expression::Lambda(params, _) => params.len(),
+        Expression::Function(_, params, _, _, _) => params.len(),
+        _ => {
+            return Err(RuntimeError::common(
+                "expect a func/lambda as param".into(),
+                ctx.clone(),
+                0,
+            ));
+        }
+    };
+    if fn_arg_count != size {
+        return Err(RuntimeError::common(
+            format!("your func/lambda should define {} param", size).into(),
+            ctx.clone(),
+            0,
+        ));
+    }
+    Ok(())
+}

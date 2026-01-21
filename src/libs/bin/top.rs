@@ -718,7 +718,7 @@ fn r#where(
 
     let mut filtered = Vec::new();
 
-    let mut row_env = Environment::new();
+    let mut row_env = env.fork();
     row_env.define("LINES", Expression::Integer(data.len() as i64));
     for (i, row) in data.as_ref().iter().enumerate() {
         row_env.define("LINENO", Expression::Integer(i as i64));

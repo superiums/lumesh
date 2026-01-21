@@ -997,7 +997,9 @@ impl Expression {
                     return Ok(Expression::from(evaluated));
                 }
 
-                Self::Index(lhs, rhs) => break self.handle_index(lhs, rhs, state, env, depth + 1),
+                Self::Index(lhs, rhs) => {
+                    break self.handle_index_or_slice(lhs, rhs, state, env, depth + 1);
+                }
                 Self::Property(lhs, rhs) => {
                     break self.handle_property(lhs, rhs, state, env, depth + 1);
                 }
@@ -1007,32 +1009,7 @@ impl Expression {
                     break self.eval_apply(func.as_ref(), args, state, env, depth + 1);
                 }
                 Self::Command(cmd, args) => {
-                    // inject builtin cmd executor here, to invoid to influent other index eval.
-                    return match cmd.as_ref() {
-                        Expression::Property(base, method) => {
-                            return match self.eval_builtin(base, method, args, state, env, depth) {
-                                Ok(x) => Ok(x),
-                                _ => {
-                                    //fall back to normal cmds, like cmd.exe
-                                    let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
-                                    eval_cmd.eval_command(args.as_ref(), state, env, depth + 1)
-                                }
-                            };
-                        }
-                        Expression::Variable(_) | Expression::Symbol(_) | Expression::String(_) => {
-                            let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
-                            break eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
-                        }
-                        _ => Err(RuntimeError::new(
-                            RuntimeErrorKind::TypeError {
-                                expected: "Symbol".into(),
-                                sym: cmd.type_name(),
-                                found: cmd.to_string(),
-                            },
-                            job.clone(),
-                            depth,
-                        )),
-                    };
+                    break self.handle_command(cmd, args, state, env, depth + 1);
                 }
                 Self::CommandRaw(cmd, args) => {
                     break cmd.eval_command(args.as_ref(), state, env, depth + 1);
@@ -1148,7 +1125,7 @@ impl Expression {
         };
     }
     /// index
-    pub fn handle_index(
+    pub fn handle_index_or_slice(
         &self,
         lhs: &Rc<Expression>,
         rhs: &Rc<Expression>,
@@ -1163,7 +1140,7 @@ impl Expression {
 
         return match (l, r) {
             (left, Self::Range(r, step)) => self.handle_slice(left, r, step, state, env, depth),
-            (left, right) => Ok(Self::index_slm(left, right)
+            (left, right) => Ok(Self::handle_index(left, right)
                 .map_err(|ek| RuntimeError::new(ek, self.clone(), depth))?),
         };
     }
@@ -1230,7 +1207,7 @@ impl Expression {
     }
 
     /// index String/List/Range/Map
-    fn index_slm(l: Expression, r: Expression) -> Result<Expression, RuntimeErrorKind> {
+    fn handle_index(l: Expression, r: Expression) -> Result<Expression, RuntimeErrorKind> {
         match l {
             // 处理列表索引
             Expression::List(list) => {
@@ -1521,7 +1498,7 @@ fn handle_contains(
 
 fn clamp(start_int: Option<Int>, end_int: Option<Int>, step_int: Int, len: Int) -> (Int, Int) {
     // clamp
-    let clamp = |v: Int| if v < 0 { len + v } else { v }.clamp(0, len - 1);
+    let clamp = |v: Int| if v < 0 { len + v } else { v }.clamp(0, len);
 
     let (mut start, mut end) = (
         start_int.map(clamp).unwrap_or(0),

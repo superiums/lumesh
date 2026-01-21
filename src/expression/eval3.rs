@@ -378,7 +378,9 @@ impl Expression {
                 };
             }
             // may values as builtin
-            Self::Index(lhs, rhs) => return self.handle_index(lhs, rhs, state, env, depth),
+            Self::Index(lhs, rhs) => {
+                return self.handle_index_or_slice(lhs, rhs, state, env, depth);
+            }
             // for lambda/function/moduleCall them self.
             _ => Ok(self.clone()),
         }
@@ -647,18 +649,20 @@ pub fn bind_arguments(
 }
 
 impl Expression {
-    pub fn eval_builtin(
+    #[inline]
+    pub fn handle_command(
         &self,
-        base: &Expression,
-        method: &Expression,
+        cmd: &Expression,
         args: &Vec<Expression>,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        match get_builtin_via_expr(base, &method.to_string()) {
-            Some(bfn) => {
-                if args.contains(&Expression::Blank) {
+        // inject builtin cmd executor here, to invoid to influent other index eval.
+
+        if let Expression::Property(base, method) = cmd {
+            if let Some(bfn) = get_builtin_via_expr(base, &method.to_string()) {
+                return if args.contains(&Expression::Blank) {
                     let received_args = args
                         .iter()
                         .map(|x| match x {
@@ -669,23 +673,33 @@ impl Expression {
                     bfn(&received_args, env, self)
                 } else {
                     bfn(&args, env, self)
-                }
+                };
             }
-            // 自定义Map不应以命令方式调用
+            // 自定义Map不应以命令方式调用,但文件名可能以a.b的方式存在
+        }
+
+        return match cmd {
+            Expression::Variable(_)
+            | Expression::Symbol(_)
+            | Expression::String(_)
+            | Expression::Property(..) => {
+                let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
+                return eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
+            }
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::NoLibDefined(
-                    method.to_string(),
-                    base.type_name().into(),
-                    "eval_builtin_as cmd".into(),
-                    base.to_string(),
-                ),
+                RuntimeErrorKind::TypeError {
+                    expected: "Symbol".into(),
+                    sym: cmd.type_name(),
+                    found: cmd.to_string(),
+                },
                 self.clone(),
                 depth,
             )),
-        }
+        };
     }
 
     /// chain call
+    #[inline]
     pub fn eval_chain(
         &self,
         base: &Expression,

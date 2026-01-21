@@ -4,7 +4,7 @@ use crate::{Environment, Expression};
 use std::collections::BTreeMap;
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::check_exact_args_len;
+use crate::libs::helper::{check_args_len, check_exact_args_len};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, reg_info, reg_lazy};
 use std::io::Write;
@@ -361,34 +361,20 @@ fn read_password(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    match args.len() {
-        0 => {
-            let password = rpassword::prompt_password("").map_err(|e| {
-                RuntimeError::common(
-                    format!("Failed to read password: {e}").into(),
-                    ctx.clone(),
-                    0,
-                )
-            })?;
-            Ok(Expression::String(password))
-        }
-        1 => {
-            let prompt = args[0].eval(env)?.to_string();
-            let password = rpassword::prompt_password(&prompt).map_err(|e| {
-                RuntimeError::common(
-                    format!("Failed to read password: {e}").into(),
-                    ctx.clone(),
-                    0,
-                )
-            })?;
-            Ok(Expression::String(password))
-        }
-        _ => Err(RuntimeError::common(
-            "read_password expects 0 or 1 arguments".into(),
+    check_args_len("read_password", args, 0..1, ctx)?;
+    let rst = if args.len() > 0 {
+        rpassword::prompt_password(args[0].eval(env)?.to_string())
+    } else {
+        rpassword::prompt_password("")
+    };
+    let r = rst.map_err(|e| {
+        RuntimeError::common(
+            format!("Failed to read password: {e}").into(),
             ctx.clone(),
             0,
-        )),
-    }
+        )
+    })?;
+    Ok(Expression::String(r))
 }
 
 fn read_key(

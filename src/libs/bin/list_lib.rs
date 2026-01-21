@@ -30,7 +30,7 @@ pub fn regist_lazy() -> LazyModule {
         //创建操作
         concat,from,
         //遍历操作
-        each,items,map,filter,filter_map,reduce,any,all,
+        map,items,filter,filter_map,any,all,
         //转换操作
         join,to_map,
         //结构操作
@@ -81,12 +81,10 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         from => "create a list from a range", "<range|item...>"
 
         // 遍历操作
-        each => "execute function for each element", "<list> <fn>"
+        map => "apply function for each element", "<list> <fn>"
         items => "iterate over index-value pairs", "<list>"
-        map => "apply function to each element", "<list> <fn>"
         filter => "filter elements by condition", "<list> <fn>"
         filter_map => "filter and map in one pass", "<list> <fn>"
-        reduce => "reduce list with accumulator function", "<list> <fn> <init>"
         any => "test if any element passes condition", "<list> <fn>"
         all => "test if all elements pass condition", "<list> <fn>"
 
@@ -198,7 +196,13 @@ fn last(
         .cloned()
         .ok_or_else(|| RuntimeError::common("cannot get last of empty list".into(), ctx.clone(), 0))
 }
-
+fn clamp(n: Int, len: usize) -> usize {
+    if n < 0 {
+        (len + n as usize).max(0)
+    } else {
+        (n as usize).min(len)
+    }
+}
 fn at(
     args: &[Expression],
     env: &mut Environment,
@@ -208,24 +212,16 @@ fn at(
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let n = get_integer_arg(args[1].eval(env)?, ctx)?;
 
-    let index = if n < 0 {
-        (list.as_ref().len() as Int + n).max(0) as usize
-    } else {
-        n as usize
-    };
+    let index = clamp(n, list.len());
 
-    if index < list.as_ref().len() {
-        Ok(list.as_ref()[index].clone())
-    } else {
-        Err(RuntimeError::new(
-            RuntimeErrorKind::IndexOutOfBounds {
-                index: n,
-                len: list.as_ref().len(),
-            },
-            ctx.clone(),
-            0,
-        ))
-    }
+    list.get(index).cloned().ok_or(RuntimeError::new(
+        RuntimeErrorKind::IndexOutOfBounds {
+            index: n,
+            len: list.as_ref().len(),
+        },
+        ctx.clone(),
+        0,
+    ))
 }
 
 fn take(
@@ -237,11 +233,7 @@ fn take(
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let n = get_integer_arg(args[1].eval(env)?, ctx)?;
 
-    let count = if n < 0 {
-        (list.as_ref().len() as Int + n).max(0) as usize
-    } else {
-        (n as usize).min(list.as_ref().len())
-    };
+    let count = clamp(n, list.len());
 
     Ok(Expression::List(Rc::new(
         list.as_ref().iter().take(count).cloned().collect(),
@@ -257,11 +249,7 @@ fn drop(
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let n = get_integer_arg(args[1].eval(env)?, ctx)?;
 
-    let count = if n < 0 {
-        (list.as_ref().len() as Int + n).max(0) as usize
-    } else {
-        (n as usize).min(list.as_ref().len())
-    };
+    let count = clamp(n, list.len());
 
     Ok(Expression::List(Rc::new(
         list.as_ref().iter().skip(count).cloned().collect(),
@@ -706,8 +694,8 @@ fn set(
     check_exact_args_len("set", args, 3, ctx)?;
 
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let val = args[2].eval(env)?;
     let n = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let val = args[2].eval(env)?;
 
     let index = n as usize;
     if index < list.as_ref().len() {
@@ -743,7 +731,7 @@ fn from(
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
         0 => Err(RuntimeError::common(
-            "range requires a range (a..b) or some elements as arguments"
+            "requires a range (a..b) or some elements as arguments"
                 .to_string()
                 .into(),
             ctx.clone(),
@@ -763,7 +751,7 @@ fn from(
     }
 }
 // 遍历操作函数
-fn r#each(
+fn map(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
@@ -822,22 +810,6 @@ fn items(
     Ok(Expression::List(Rc::new(items)))
 }
 
-fn map(
-    args: &[Expression],
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("map", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let f = args[1].eval(env)?;
-
-    let mut result = Vec::with_capacity(list.as_ref().len());
-    for item in list.as_ref().iter() {
-        result.push(Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone()])).eval(env)?);
-    }
-    Ok(Expression::List(Rc::new(result)))
-}
-
 fn filter(
     args: &[Expression],
     env: &mut Environment,
@@ -855,7 +827,7 @@ fn filter(
             row_env.define("LINES", Expression::Integer(list.len() as i64));
             for (i, item) in list.as_ref().iter().enumerate() {
                 row_env.define("LINENO", Expression::Integer(i as i64));
-                if let Expression::Boolean(true) = args[0].eval(&mut row_env)? {
+                if let Expression::Boolean(true) = args[1].eval(&mut row_env)? {
                     result.push(item.clone())
                 }
             }
@@ -888,7 +860,7 @@ fn filter(
         }
         _ => {
             return Err(RuntimeError::common(
-                "expected 1..2 params for filter-fn".into(),
+                "expected 1..2 params for filter-function".into(),
                 ctx.clone(),
                 0,
             ));
@@ -906,9 +878,10 @@ fn filter_map(
     check_exact_args_len("filter_map", args, 2, ctx)?;
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let func = args[1].eval(env)?;
-    let mut result = Vec::new();
+    check_fn_arg(&func, 1, ctx)?;
 
-    for item in list.as_ref().iter() {
+    let mut result = Vec::new();
+     for item in list.as_ref().iter() {
         match Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)? {
             Expression::None => continue,
             val => result.push(val),
@@ -917,33 +890,33 @@ fn filter_map(
     Ok(Expression::List(Rc::new(result)))
 }
 
-fn reduce(
-    args: &[Expression],
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    if args.len() < 3 {
-        Ok(Expression::Apply(
-            Rc::new(
-                crate::parse("(f,acc,list) -> { for item in list { let acc = f acc item } acc }")
-                    .map_err(|e| RuntimeError::common(format!("{}", e).into(), ctx.clone(), 0))?,
-            ),
-            Rc::new(args.to_vec()),
-        )
-        .eval(env)?)
-    } else {
-        check_exact_args_len("reduce", args, 3, ctx)?;
-        let list = get_list_arg(args[0].eval(env)?, ctx)?;
-        let f = args[1].eval(env)?;
-        let mut acc = args[2].eval(env)?;
+// fn reduce(
+//     args: &[Expression],
+//     env: &mut Environment,
+//     ctx: &Expression,
+// ) -> Result<Expression, RuntimeError> {
+//     if args.len() < 3 {
+//         Ok(Expression::Apply(
+//             Rc::new(
+//                 crate::parse("(f,acc,list) -> { for item in list { let acc = f acc item } acc }")
+//                     .map_err(|e| RuntimeError::common(format!("{}", e).into(), ctx.clone(), 0))?,
+//             ),
+//             Rc::new(args.to_vec()),
+//         )
+//         .eval(env)?)
+//     } else {
+//         check_exact_args_len("reduce", args, 3, ctx)?;
+//         let list = get_list_arg(args[0].eval(env)?, ctx)?;
+//         let f = args[1].eval(env)?;
+//         let mut acc = args[2].eval(env)?;
 
-        for item in list.as_ref().iter() {
-            acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![acc, item.clone()]))
-                .eval(env)?;
-        }
-        Ok(acc)
-    }
-}
+//         for item in list.as_ref().iter() {
+//             acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![acc, item.clone()]))
+//                 .eval(env)?;
+//         }
+//         Ok(acc)
+//     }
+// }
 
 fn any(
     args: &[Expression],
@@ -953,6 +926,7 @@ fn any(
     check_exact_args_len("any", args, 2, ctx)?;
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let func = args[1].eval(env)?;
+    check_fn_arg(&func, 1, ctx)?;
 
     for item in list.as_ref().iter() {
         match Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)? {
@@ -972,6 +946,7 @@ fn all(
     check_exact_args_len("all", args, 2, ctx)?;
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let func = args[1].eval(env)?;
+    check_fn_arg(&func, 1, ctx)?;
 
     for item in list.as_ref().iter() {
         match Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)? {
@@ -1126,32 +1101,58 @@ fn chunk(
     Ok(Expression::List(Rc::new(result)))
 }
 
+fn check_fn_arg(fn_arg: &Expression, size: usize, ctx: &Expression) -> Result<(), RuntimeError> {
+    let fn_arg_count = match fn_arg {
+        Expression::Lambda(params, _) => params.len(),
+        Expression::Function(_, params, _, _, _) => params.len(),
+        _ => {
+            return Err(RuntimeError::common(
+                "expect a func/lambda as 2nd param".into(),
+                ctx.clone(),
+                0,
+            ));
+        }
+    };
+    if fn_arg_count != size {
+        return Err(RuntimeError::common(
+            format!("your func/lambda should define {} param", size).into(),
+            ctx.clone(),
+            0,
+        ));
+    }
+    Ok(())
+}
 fn foldl(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("foldl", args, 3, ctx)?;
+    check_args_len("foldl", args, 2..=3, ctx)?;
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let f = args[1].eval(env)?;
-    let mut acc = args[2].eval(env)?;
-
+    let mut acc = match args.get(2) {
+        Some(x) => x.eval(env)?,
+        _ => Expression::Integer(0),
+    };
+    check_fn_arg(&f, 2, ctx)?;
     for item in list.as_ref().iter() {
-        acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![acc, item.clone()])).eval(env)?;
+        acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
     }
     Ok(acc)
 }
-
 fn foldr(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("foldr", args, 3, ctx)?;
+    check_args_len("foldr", args, 2..=3, ctx)?;
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let f = args[1].eval(env)?;
-    let mut acc = args[2].eval(env)?;
-
+    let mut acc = match args.get(2) {
+        Some(x) => x.eval(env)?,
+        _ => Expression::Integer(0),
+    };
+    check_fn_arg(&f, 2, ctx)?;
     for item in list.as_ref().iter().rev() {
         acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
     }

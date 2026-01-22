@@ -757,7 +757,7 @@ fn map(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("each", args, 2, ctx)?;
+    check_exact_args_len("map", args, 2, ctx)?;
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let func = args[1].eval(env)?;
 
@@ -777,21 +777,26 @@ fn map(
         }
     };
 
+    let mut result = Vec::new();
     if need_index {
         for (index, item) in list.as_ref().iter().enumerate() {
-            Expression::Apply(
-                Rc::new(func.clone()),
-                Rc::new(vec![Expression::Integer(index as Int), item.clone()]),
-            )
-            .eval(env)?;
+            result.push(
+                Expression::Apply(
+                    Rc::new(func.clone()),
+                    Rc::new(vec![Expression::Integer(index as Int), item.clone()]),
+                )
+                .eval(env)?,
+            );
         }
     } else {
         for item in list.as_ref().iter() {
-            Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)?;
+            result.push(
+                Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)?,
+            );
         }
     }
 
-    Ok(Expression::None)
+    Ok(Expression::from(result))
 }
 
 fn items(

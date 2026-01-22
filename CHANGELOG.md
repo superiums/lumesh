@@ -2,6 +2,7 @@
 ## [0.11.2]
 - fix filename leading with `.` like `.config`
 for hidden filename compacity, fallback pipemethod to string if no () found.
+- add prompt theme `prompt_ka`
 
 ## [0.11.1]
 - support cmd complete after `:` in CFM

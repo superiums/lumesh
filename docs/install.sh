@@ -244,6 +244,7 @@ download_docs() {
     tar -xzf "$temp_doc"
     mkdir -p "~/.config/lumesh"
     cp doc/config/config.lm "~/.config/lumesh/"
+    cp doc/config/prompt* "~/.config/lumesh/"
     $sudo_cmd cp -r doc/install/* "$DOC_DIR/"
     rm -rf doc "$temp_doc"
 

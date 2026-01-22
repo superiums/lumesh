@@ -29,11 +29,12 @@ if IS_INTERACTIVE {
     # avaluable tmplate var: $CWD, $CWD_SHORT
     # let LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
     # if template is lambda/func, it will be evaluated everytime.
-    let LUME_PROMPT_TEMPLATE := x -> {
-        string.blue(x) + ' |'.green().bold() + \
-        (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
-        + '> '.green().bold()
-    }
+    # let LUME_PROMPT_TEMPLATE := x -> {
+    #     string.blue(x) + ' |'.green().bold() + \
+    #     (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
+    #     + '> '.green().bold()
+    # }
+    include ~/.config/lumesh/prompt_ka.lm
 
     ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'

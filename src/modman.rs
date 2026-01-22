@@ -37,8 +37,7 @@ pub fn use_module_wrap<'a>(
         // let mut already = HashSet::new();
         for (ua, up) in module_info.use_statements.iter() {
             // 避免循环调用
-            if use_depth < MAX_USEMODE_RECURSION {
-                // if already.len() < MAX_USEMODE_RECURSION {
+            if MAX_USEMODE_RECURSION.with_borrow(|v| &use_depth < v) {
                 // 允许重复调用,但给出提示
                 // if !already.insert(ua){
                 //     eprintln!()

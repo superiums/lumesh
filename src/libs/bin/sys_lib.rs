@@ -1,8 +1,11 @@
 use std::{fs::OpenOptions, io::Write, rc::Rc};
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_exact_args_len, get_string_arg};
-use crate::{Environment, Expression, LmError, RuntimeError};
+use crate::libs::helper::{check_exact_args_len, get_integer_arg, get_string_arg};
+use crate::{
+    Environment, Expression, Int, LmError, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION,
+    MAX_USEMODE_RECURSION, RuntimeError, set_cfm_enabled, set_print_direct,
+};
 use std::collections::BTreeMap;
 
 use crate::libs::lazy_module::LazyModule;
@@ -16,6 +19,11 @@ pub fn regist_lazy() -> LazyModule {
         print_tty, discard,
         info,
         // throw,
+        max_syntax,
+        max_runtime,
+        max_usemode,
+        set_cfm,
+        set_pdm,
     })
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
@@ -36,6 +44,12 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         discard => "send data to /dev/null", "<arg>"
 
         info => "get os info", ""
+
+        max_syntax => "get/set max syntax recursion","[int]"
+        max_runtime=> "get/set max runtime recursion","[int]"
+        max_usemode=> "get/set max use mode recursion","[int]"
+        set_cfm=> "enable/disable CFM","<boolean>"
+        set_pdm=> "enable/disable print direct mode","<boolean>"
 
     })
 }
@@ -162,4 +176,70 @@ fn ecodes_lm(
     _: &Expression,
 ) -> Result<Expression, RuntimeError> {
     Ok(LmError::codes())
+}
+
+fn max_syntax(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    if args.is_empty() {
+        return Ok(Expression::Integer(
+            MAX_SYNTAX_RECURSION.with_borrow(|x| x.clone() as Int),
+        ));
+    }
+    let i = get_integer_arg(args[0].eval(env)?, ctx)?;
+    // MAX_SYNTAX_RECURSION = run_rec as usize;
+    MAX_SYNTAX_RECURSION.with_borrow_mut(|v| *v = i as usize);
+    Ok(Expression::None)
+}
+fn max_runtime(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    if args.is_empty() {
+        return Ok(Expression::Integer(
+            MAX_RUNTIME_RECURSION.with_borrow(|x| x.clone() as Int),
+        ));
+    }
+    let i = get_integer_arg(args[0].eval(env)?, ctx)?;
+    // MAX_SYNTAX_RECURSION = run_rec as usize;
+    MAX_RUNTIME_RECURSION.with_borrow_mut(|v| *v = i as usize);
+    Ok(Expression::None)
+}
+fn max_usemode(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    if args.is_empty() {
+        return Ok(Expression::Integer(
+            MAX_USEMODE_RECURSION.with_borrow(|x| x.clone() as Int),
+        ));
+    }
+    let i = get_integer_arg(args[0].eval(env)?, ctx)?;
+    // MAX_SYNTAX_RECURSION = run_rec as usize;
+    MAX_USEMODE_RECURSION.with_borrow_mut(|v| *v = i as usize);
+    Ok(Expression::None)
+}
+fn set_cfm(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("set_cfm", args, 1, ctx)?;
+    let b = args[0].eval(env)?.is_truthy();
+    set_cfm_enabled(b);
+    Ok(Expression::None)
+}
+fn set_pdm(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("set_print_direct", args, 1, ctx)?;
+    let b = args[0].eval(env)?.is_truthy();
+    set_print_direct(b);
+    Ok(Expression::None)
 }

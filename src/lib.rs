@@ -58,7 +58,7 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 // // pub static mut ENV: Environment = Environment::new();
 // pub static mut MAX_RUNTIME_RECURSION: usize = 800;
 // pub static mut MAX_SYNTAX_RECURSION: usize = 100;
-pub static MAX_USEMODE_RECURSION: usize = 100;
+// pub static MAX_USEMODE_RECURSION: usize = 100;
 
 use std::cell::RefCell;
 
@@ -67,6 +67,7 @@ thread_local! {
     static CFM_ENABLED: RefCell<bool> = RefCell::new(false);
     static MAX_RUNTIME_RECURSION: RefCell<usize> = RefCell::new(800);
     static MAX_SYNTAX_RECURSION: RefCell<usize> = RefCell::new(100);
+    static MAX_USEMODE_RECURSION: RefCell<usize> = RefCell::new(100);
 }
 
 // 辅助函数

@@ -5,7 +5,7 @@ use std::{
 };
 
 use crate::{
-    Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, Int, RuntimeError, RuntimeErrorKind, VERSION,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
         bin::boolean_lib::not,
@@ -210,6 +210,7 @@ fn help(
         true => {
             let _ = writeln!(s, "\n\x1b[92m\x1b[1mWelcome to Lumesh help center");
             let _ = writeln!(&mut s, "=============================\x1b[m\x1b[0m\n");
+            let _ = writeln!(&mut s, "version: \x1b[92m{}\x1b[m\x1b[0m\n", VERSION);
             let _ = writeln!(&mut s, "help libs               : list libs.");
             let _ = writeln!(
                 &mut s,

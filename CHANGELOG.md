@@ -19,7 +19,8 @@ return false for each arg if evals fail.
 `'welcome'[-4.._]`
 - fix pty problem for `ssh`, `sftp`,`scp`
 - add mod path `mod_name/main.lm`
-this allow mod to be folden.
+this allow mod to be folden
+- add max recursion control and cfm, pdm control in sys lib
 
 ## [0.11.0]
 **note** this version refactored all the libs.

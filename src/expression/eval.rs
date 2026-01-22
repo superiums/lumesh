@@ -1310,12 +1310,15 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         match get_builtin_via_expr(self, method) {
-            Some(bfn) => {
-                let mut combined_args = Vec::with_capacity(args.len() + 1);
-                combined_args.push(self.clone());
-                combined_args.extend_from_slice(args);
-                bfn(&combined_args, env, context)
-            }
+            Some(bfn) => match args.contains(&Expression::Blank) {
+                true => bfn(args, env, context),
+                false => {
+                    let mut combined_args = Vec::with_capacity(args.len() + 1);
+                    combined_args.push(self.clone());
+                    combined_args.extend_from_slice(args);
+                    bfn(&combined_args, env, context)
+                }
+            },
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::NoLibDefined(
                     method.to_string(),

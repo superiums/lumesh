@@ -21,6 +21,9 @@ return false for each arg if evals fail.
 - add mod path `mod_name/main.lm`
 this allow mod to be folden
 - add max recursion control and cfm, pdm control in sys lib
+- fix pipemethod pushed again piped data if there's already a place holder
+- allow `use` in statement.
+- update help for top funcion
 
 ## [0.11.0]
 **note** this version refactored all the libs.

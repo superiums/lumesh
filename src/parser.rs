@@ -1638,7 +1638,8 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
     // }
     SyntaxErrorKind::empty_back(input)?;
     let (input, statement) = alt((
-        parse_fn_declare, // 函数声明（仅语句级）这里的作用是允许函数嵌套
+        parse_fn_declare,    // 函数声明（仅语句级）这里的作用是允许函数嵌套
+        parse_use_statement, //允许语句中间按需use
         // 1.声明语句
         parse_lets,
         parse_alias,

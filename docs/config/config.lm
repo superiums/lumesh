@@ -1,5 +1,5 @@
-##### config for login mode
 use lman
+##### config for login mode
 
 # only login mode need PATH, other mode will retrieve it from parent shell.
 if IS_LOGIN {

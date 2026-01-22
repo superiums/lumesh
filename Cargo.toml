@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.11.1"
+version = "0.11.3"
 authors = ["Adam McDaniel; Santo"]
 edition = "2024"
 license = "MIT"
@@ -98,7 +98,7 @@ name = "parser_benchmark"
 harness = false
 
 [profile.release]
-opt-level = "z"   # 优化体积而非速度
+opt-level = 3     # 3优化速度, "z"优化体积
 lto = true        # 链接时优化
 codegen-units = 1 # 减少代码生成单元
 panic = "abort"   # 使用abort而非unwind

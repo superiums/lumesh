@@ -1,4 +1,16 @@
 # Changelog
+## [0.11.3]
+- change compile optimize to be faster rather than smaller
+  + on smaller compile optimize (from 0.7.7):
+  filesize reduced from 6.7MB to 2.7MB
+  but the 1_000_000 times loop takes 1460ms
+  
+  + on faster compile optimize (from 0.11.3)
+  filesize comes to 3.9MB
+  but the 1_000_000 times loop takes only 385ms
+  
+  so i dicided to keep the faster compile
+  
 ## [0.11.2]
 - fix filename leading with `.` like `.config`
 for hidden filename compacity, fallback pipemethod to string if no () found.

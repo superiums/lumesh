@@ -8,6 +8,7 @@ use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
+        bin::boolean_lib::not,
         helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_arg},
         pretty_printer,
     },
@@ -21,11 +22,12 @@ pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
         tap, print, pprint, println, eprint, eprintln, debug, read,
         r#typeof => "typeof",
         get, len, insert, rev, flatten, r#where => "where", select,
+        not,
         repeat, eval, exec, eval_str, exec_str, include, import,
         help,
         // set;
         // unset;
-        throw
+        throw,
 
     })
 }
@@ -61,6 +63,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         flatten => "flatten nested structure", "<collection>"
         where => "filter rows by condition", "<list[map]> <condition> "
         select => "select columns from list of maps", "<list[map]> <columns>..."
+        not => "logic not", "<boolean1>..."
 
         // Execution control
         repeat => "evaluate without env change", "<expr>"
@@ -856,7 +859,7 @@ pub fn get(
                     .ok_or_else(|| {
                         RuntimeError::common(
                             format!(
-                                "path segment '{}' not found in Map `{:?}`",
+                                "path segment '{}' not found in Map:\n`{:?}`",
                                 segment,
                                 m.as_ref()
                             )
@@ -874,7 +877,7 @@ pub fn get(
                     .ok_or_else(|| {
                         RuntimeError::common(
                             format!(
-                                "path segment '{}' not found in HMap `{:?}`",
+                                "path segment '{}' not found in HMap:\n`{:?}`",
                                 segment,
                                 m.as_ref()
                             )
@@ -893,7 +896,7 @@ pub fn get(
                         .ok_or_else(|| {
                             RuntimeError::common(
                                 format!(
-                                    "path index '{}' not found in List `{:?}`",
+                                    "path index '{}' not found in List:\n`{:?}`",
                                     segment,
                                     m.as_ref()
                                 )

@@ -54,7 +54,7 @@ test_count += 1
 let arr = [10, "a", True]
 assert(arr@2, True, "列表基础索引", test_count)
 test_count += 1
-assert(arr[(-1).._], [True], "负数切片", test_count)
+assert(arr[-1.._], [True], "负数切片", test_count)
 test_count += 1
 
 # --------------------------

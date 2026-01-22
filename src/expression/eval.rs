@@ -1100,7 +1100,10 @@ impl Expression {
         let l = lhs.as_ref().eval_mut(state, env, depth)?;
         // never eval rhs
         return match (l, rhs.as_ref()) {
-            (Self::Symbol(m), Self::Symbol(n)) => Ok(Self::String(format!("{m}.{n}"))),
+            (
+                Expression::Symbol(m) | Expression::String(m),
+                Expression::Symbol(n) | Expression::String(n),
+            ) => Ok(Self::String(format!("{m}.{n}"))),
             (Expression::Map(m), Expression::Symbol(n)) => {
                 let key = n.to_string();
                 m.as_ref().get(&key).cloned().ok_or(RuntimeError::new(
@@ -1117,8 +1120,13 @@ impl Expression {
                     depth,
                 ))
             }
-            _ => Err(RuntimeError::common(
-                "not valid property request".into(),
+            (m, n) => Err(RuntimeError::common(
+                format!(
+                    "not valid property request: {}.{}",
+                    m.type_name(),
+                    n.type_name()
+                )
+                .into(),
                 self.clone(),
                 depth,
             )),

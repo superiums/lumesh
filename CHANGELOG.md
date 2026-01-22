@@ -1,4 +1,25 @@
 # Changelog
+## [0.11.1]
+- support cmd complete after `:` in CFM
+- support use `.` in CFM.
+  this means pipemethod, chaincall, lib call is allowed in CFM. `string.red 'lume'`
+- support use `+`,`?`,`:` in CFM. but must be surrounded by whiespace.
+  `+` can be used to join strings, like `'hello' + 'word' `
+  `? :` can be used like `condition ? true : false`
+  
+but still, number was not supported in CFM.
+all number is symbol in CFM, so `ping 1.1.1.1` also works well.
+now we can simply think that CFM and NORMAL mode is the same except there's ***NO number** and things about numbers like : math compute/compare, slice, index, range, custom operator, filesize.
+
+- support more conditions in boolean and/or/not
+return false for each arg if evals fail.
+
+- link `not` to top
+- support negtive slice now
+`'welcome'[-4.._]`
+- fix pty problem for `ssh`, `sftp`,`scp`
+
+
 ## [0.11.0]
 **note** this version refactored all the libs.
   + all lib name changes to **lower case**
@@ -6,15 +27,15 @@
   + the base data param for lib funcs moves from last to **first**.
   
 > from [0.10.7a]
-- 26586fc (HEAD -> main) fix cfm need 2 enter while type: f()
-- 8b5c12e allow subcmd capture in lib where neccessary
-- c90273a rename string.get_with to max_len. math.isodd to is_odd. fix ui funcs
-- 806e443 check fn arg in map.map/filter; remove LINENO from list.filter
-- 19a9634 remove list.each/reduce,keep map,improved foldl/r. check fn_arg in any/all/fold. improve - console.readpasswd
-- 361baa7 (origin/main, origin/HEAD) fix property call to fall back to file. fix slice clmap.
-- b3be63d split `Property` from `Index`
-- 8f7b61a restore ! postfix
-- f5ece52 update config with new lib name and check update download
+- fix CFM need 2 enter while type: f()
+- allow subcmd capture in lib where neccessary
+- rename string.get_with to max_len. math.isodd to is_odd. fix ui funcs
+- check fn arg in map.map/filter; remove LINENO from list.filter
+- remove list.each/reduce,keep map,improved foldl/r. check fn_arg in any/all/fold. improve console.read_passwd
+- (origin/main, origin/HEAD) fix property call to fall back to file. fix slice clmap.
+- split `Property` from `Index`
+- restore ! postfix
+- update config with new lib name and check update download
 
 > from [0.10.6a]
 - allow cmd with dot
@@ -102,7 +123,7 @@ also ok:
 ## [0.9.0]
 - fix completion install path
 - only parse single symbol as command when CFM enabled
-> in interactive repl(cfm enabled by default):
+> in interactive repl(CFM enabled by default):
   `ls` is a command.
   `./my.sh` is a command.
 > in script mode:
@@ -119,7 +140,7 @@ also ok:
 - allow set completion style
 - match path first if no ignore file tag
 - disable mathmatic compare in CFM mode.
-in cfm mode, there's no number(as no dot), all is symbol, so disable it.
+in CFM mode, there's no number(as no dot), all is symbol, so disable it.
 
 
 ## [0.8.9]

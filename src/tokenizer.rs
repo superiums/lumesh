@@ -123,8 +123,8 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 }
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        postfix_tag("."),       //chaind call/index
-        postfix_break_tag("!"), //func call as flat as cmd
+        postfix_tag("."),       //chaind call/property
+        postfix_break_tag("!"), //func call as flat as cmd, escape var eval
         postfix_break_tag("^"), //make symbo as cmd
         postfix_tag("("),       //func call
         postfix_tag("["),       //array index or slice
@@ -1099,7 +1099,11 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
         }
         input
             .strip_prefix(keyword)
-            .filter(|(rest, _)| rest.starts_with(|c: char| c.is_ascii_alphanumeric() || c == '_'))
+            .filter(|(rest, _)| {
+                rest.starts_with(|c: char| {
+                    c.is_ascii_alphanumeric() || ['_', '-', '('].contains(&c)
+                })
+            })
             .ok_or(NOT_FOUND)
     }
 }
@@ -1307,7 +1311,7 @@ fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnost
     let mut length = 0;
     // `=` is used for var asign: IFS='';xx
     while let Some(c) = chars.next() {
-        if c.is_ascii_whitespace() || "=([{^$!|;)]}".contains(c) {
+        if c.is_ascii_whitespace() || "=([{^$!|;)]}.".contains(c) {
             break;
         }
         length += c.len_utf8();
@@ -1324,7 +1328,7 @@ fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnost
 
 fn cfm_prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        // prefix_tag("."), //pipemethod
+        prefix_tag("."), //pipemethod
         prefix_tag("!"), //bool negtive
         prefix_tag("$"), //var
     ))(input)
@@ -1332,11 +1336,11 @@ fn cfm_prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn cfm_postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
-        // postfix_tag("."), //chaind call/index
+        postfix_tag("."), //chaind call/property
         postfix_tag("!"), //func call as flat as cmd
         postfix_tag("^"), //make symbo as cmd
         postfix_tag("("), //func call
-        postfix_tag("["), //array index or slice
+                          // postfix_tag("["), //array index or slice
     ))(input)
 }
 
@@ -1351,6 +1355,9 @@ fn cfm_short_operator(input: Input<'_>) -> TokenizationResult<'_> {
         // operator_tag("%"),
         // operator_tag("^"), //math power
         punctuation_tag("="), // allow all.
+        keyword_alone_tag("+"),
+        keyword_alone_tag("?"),
+        keyword_alone_tag(":"),
     ))(input)
 }
 

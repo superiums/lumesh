@@ -2,7 +2,7 @@ use std::{collections::HashMap, rc::Rc};
 
 use crate::{
     Environment, Expression, RuntimeError,
-    libs::{BuiltinFunc, BuiltinInfo, helper::check_exact_args_len},
+    libs::{BuiltinFunc, BuiltinInfo, helper::check_args_len},
     reg_all, reg_info,
 };
 use std::collections::BTreeMap;
@@ -15,9 +15,9 @@ pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
 
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-        and => "logic and", "<boolean1> <boolean2>"
-        or => "logic or", "<boolean1> <boolean2>"
-        not => "logic not", "<boolean1> <boolean2>"
+        and => "logic and", "<boolean1>..."
+        or => "logic or", "<boolean1>..."
+        not => "logic not", "<boolean1>..."
     })
 }
 
@@ -26,30 +26,31 @@ fn and(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("and", args, 2, ctx)?;
-    let a = args[0].eval(env)?;
-    let b = args[1].eval(env)?;
-
-    Ok(Expression::Boolean(a.is_truthy() && b.is_truthy()))
+    check_args_len("and", args, 2.., ctx)?;
+    let r = args
+        .iter()
+        .any(|x| !x.eval(env).map_or(false, |y| y.is_truthy()));
+    Ok(Expression::Boolean(r))
 }
 fn or(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("or", args, 2, ctx)?;
-    let a = args[0].eval(env)?;
-    let b = args[1].eval(env)?;
-
-    Ok(Expression::Boolean(a.is_truthy() || b.is_truthy()))
+    check_args_len("or", args, 2.., ctx)?;
+    let r = args
+        .iter()
+        .any(|x| x.eval(env).map_or(false, |y| y.is_truthy()));
+    Ok(Expression::Boolean(r))
 }
-fn not(
+pub fn not(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("not", args, 2, ctx)?;
-    let a = args[0].eval(env)?;
-
-    Ok(Expression::Boolean(!a.is_truthy()))
+    check_args_len("not", args, 2.., ctx)?;
+    let r = args
+        .iter()
+        .any(|x| !x.eval(env).map_or(false, |y| y.is_truthy()));
+    Ok(Expression::Boolean(!r))
 }

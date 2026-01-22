@@ -123,8 +123,9 @@ if IS_INTERACTIVE {
           if $latest > $current {
               print 'Found new version: ' $ver.green()
               if ui.confirm('download [normal edition for linux] now?') {
+                  println 'download...'
                   let tmp = /tmp/lume
-                  curl -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
+                  curl -s -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
                   if (file $tmp | .contains('ELF')){
                       chmod '+x' $tmp
                       let dest = about.bin()

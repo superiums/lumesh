@@ -68,7 +68,10 @@ fn find_module_file(
 ) -> Result<PathBuf, RuntimeError> {
     // 构建文件名（统一处理扩展名和路径）
     let file = Path::new(expand_home(file_path).as_ref()).with_extension("lm");
-
+    let modname = file
+        .file_prefix()
+        .and_then(|x| x.to_str())
+        .unwrap_or("uknown");
     // 预构建所有候选路径
     let lib = match env.get("LUME_MODULES_PATH") {
         Some(Expression::String(mo)) => Path::new(&mo).to_path_buf(),
@@ -79,8 +82,11 @@ fn find_module_file(
 
     let candidate_paths = vec![
         cwd.join("mods").join(&file),
+        cwd.join("mods").join(&modname).join("main.lm"),
         cwd.join(&file),
+        cwd.join(&modname).join("main.lm"),
         lib.join(&file),
+        lib.join(&modname).join("main.lm"),
     ];
 
     // 使用 iter() 和 find_map() 查找第一个有效路径

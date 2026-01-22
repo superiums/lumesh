@@ -18,7 +18,8 @@ return false for each arg if evals fail.
 - support negtive slice now
 `'welcome'[-4.._]`
 - fix pty problem for `ssh`, `sftp`,`scp`
-
+- add mod path `mod_name/main.lm`
+this allow mod to be folden.
 
 ## [0.11.0]
 **note** this version refactored all the libs.

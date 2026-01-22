@@ -371,11 +371,12 @@ main() {
     echo "  - To start interactive shell"
     echo -e "${GREEN}  lume${NC}"
     echo ""
-    echo -e "  - ${BLUE}For more information, see:${NC}"
-    echo "      Type 'help doc' in lume to open online doc."
+    echo "  - For more information, see:"
+    echo "   help doc"
     echo ""
     echo "  - To check new version:"
-    echo "${GREEN}  update()${NC}"
+    echo -e "${GREEN}  update()${NC}"
+    echo ""
     echo "good luck!"
 }
 

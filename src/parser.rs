@@ -911,7 +911,9 @@ fn parse_pipe_method(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     // 创建一个特殊的管道方法表达式
     match args_opt {
         Some(args) => Ok((input, Expression::PipeMethod(method_name, Rc::new(args)))),
-        _ => Ok((input, Expression::PipeMethod(method_name, Rc::new(vec![])))),
+        // _ => Ok((input, Expression::PipeMethod(method_name, Rc::new(vec![])))),
+        // fallback to string if no () found. for filename like .config
+        _ => Ok((input, Expression::String(format!(".{}", method_name)))),
     }
 }
 

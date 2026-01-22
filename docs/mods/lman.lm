@@ -4,18 +4,18 @@
     fn update(){
         println 'checking latest version...'
         let url = 'https://codeberg.org/santo/lumesh/releases/latest'
-        let ver = (curl $url ?: eprintln 'network err' && exit |  Regex.find(r'\d[\d\.]+').found ?: '0')
+        let ver = (curl -s $url ?: eprintln 'network err' && exit |  regex.find(r'\d[\d\.]+').found ?: '0')
         let latest = ($ver.split('.').join('').to_int() ?: 0)
         if $latest > 0 {
-          let current = (About | .get('version'))
+          let current = about.version()
           current = $current.split('.').join('').to_int()
           if $latest > $current {
               print 'Found new version: ' $ver.green()
-              if Ui.confirm('download [normal edition for linux] now?') {
+              if ui.confirm('download [normal edition for linux] now?') {
                   let tmp = /tmp/lume
                   curl -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
                   chmod '+x' /tmp/lume
-                  let dest = About | .get('bin')
+                  let dest = about.bin()
                   if $dest.starts_with('/home'){
                     cp -f $tmp $dest
                   }else{
@@ -36,8 +36,8 @@
 
     ### set as login shell
     fn chsh(){
-        let p = (About | .get('bin'))
-        if Fs.read(/etc/shells) !~: $p {
+        let p = about.bin()
+        if fs.read(/etc/shells) !~: $p {
             sudo lume -c `Fs.append /etc/shells "\n$p"` ?: doas lume -c `Fs.append /etc/shells "\n$p"`
         }
         println `chsh -s $p`

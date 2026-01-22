@@ -27,12 +27,12 @@ if IS_INTERACTIVE {
     }
     # template could be normal expression or func.
     # avaluable tmplate var: $CWD, $CWD_SHORT
-    # let LUME_PROMPT_TEMPLATE = (String.blue('$CWD_SHORT') + '>> '.bold().yellow())
+    # let LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
     # if template is lambda/func, it will be evaluated everytime.
     let LUME_PROMPT_TEMPLATE := x -> {
-        String.format '{} {}{}{} ' String.blue(x) '|'.green().bold() \
-        (if (Fs.exists '.git') {git branch --show-current | .cyan()} else '') \
-        '>'.green().bold()
+        string.blue(x) + ' |'.green().bold() + \
+        (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
+        + '> '.green().bold()
     }
 
     ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
@@ -56,7 +56,7 @@ if IS_INTERACTIVE {
 
     # == completion
     # let LUME_COMPLETION_DIR = '~/.local/share/lumesh/completions'
-    let LUME_COMPLETION_CYCLE = True
+    let LUME_COMPLETION_CYCLE = true
 
     ### report compute result type and values. default True.
     # let LUME_PRINT_DIRECT= False
@@ -71,10 +71,10 @@ if IS_INTERACTIVE {
     let LUME_HOT_MODIFIER = 4
     let LUME_HOT_KEYS = {
         q: 'exit',
-        h: "Fs.read ~/.cache/.lume_history | String.lines() | Ui.pick('select history:') ?! | exec_str()",
-        x: "Fs.read ~/.cache/lume_bookmark | String.lines() | Ui.pick('select bookmark:') ?! | exec_str()",
+        h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?! | exec_str()",
+        x: "fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') ?! | exec_str()",
         m: 'let cmd := "$CMD_CURRENT";let s = Into.str(cmd); if s {s+"\n" >> ~/.cache/lume_bookmark; println "\t[MARKED]"}',
-        e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=Fs.read($tc); if len($lmcode) && Ui.confirm("Execute it?"){exec_str($lmcode)}'
+        e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=fs.read($tc); if len($lmcode) && ui.confirm("Execute it?"){exec_str($lmcode)}'
     }
 
     ### abbreviations
@@ -87,18 +87,18 @@ if IS_INTERACTIVE {
     }
 
     ### alias
-    alias int = Into.int()
-    alias str = Into.str()
-    alias each = List.map()
-    alias table = Into.table()
-    alias join = List.join()
-    alias open = Fs.read()
-    alias fls = Fs.ls('-l')
-    alias fmv = Fs.mv()
-    alias frm = Fs.rm()
-    alias fcp = Fs.cp()
-    alias fhead = Fs.head()
-    alias ftail = Fs.tail()
+    alias int = into.int()
+    alias str = into.str()
+    alias each = list.map()
+    alias table = into.table()
+    alias join = list.join()
+    alias open = fs.read()
+    alias fls = fs.ls('-l')
+    alias fmv = fs.mv()
+    alias frm = fs.rm()
+    alias fcp = fs.cp()
+    alias fhead = fs.head()
+    alias ftail = fs.tail()
     alias doc = xdg-open https://lumesh.codeberg.page
 
     ### ---ai---
@@ -114,7 +114,9 @@ if IS_INTERACTIVE {
     # }
 
     ### ---update---
-    alias update = lman::update()
+    fn update(){
+        lman::update()
+    }
 
 }
 # else {

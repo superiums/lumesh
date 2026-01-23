@@ -14,8 +14,13 @@ use std::ops::Range;
 
 use std::rc::Rc;
 
-#[derive(Debug, Clone)]
-pub struct State(u8, Option<Expression>, Vec<String>);
+// #[derive(Debug, Clone)]
+pub struct State(
+    u8,
+    Option<Expression>,
+    Vec<String>,
+    Option<(String, Box<dyn Iterator<Item = Expression>>)>,
+);
 
 impl Default for State {
     fn default() -> Self {
@@ -34,9 +39,9 @@ impl State {
     // 创建一个新的 State 实例
     pub fn new(strict: bool) -> Self {
         if strict {
-            State(State::STRICT, None, Vec::new())
+            State(State::STRICT, None, Vec::new(), None)
         } else {
-            State(0, None, Vec::new())
+            State(0, None, Vec::new(), None)
         }
     }
 
@@ -67,6 +72,8 @@ impl State {
 }
 
 impl State {
+    pub const IN_DOMAINS: u8 = 1 << 6;
+
     pub fn extend_lookup_domains(&mut self, domains: &Vec<String>) {
         self.2.extend_from_slice(domains);
     }
@@ -83,6 +90,58 @@ impl State {
 
     pub fn get_lookup_domains(&self) -> &Vec<String> {
         &self.2
+    }
+}
+
+impl State {
+    pub const IN_FOR_LOOP: u8 = 1 << 7; // 新增循环状态标志
+
+    // 添加循环状态字段
+    pub fn set_loop_context(
+        &mut self,
+        var_name: String,
+        iterator: Box<dyn Iterator<Item = Expression>>,
+    ) {
+        self.3 = Some((var_name, iterator)); // 需要扩展State结构体
+    }
+
+    // pub fn get_loop_context(&mut self) -> Option<(String, &mut dyn Iterator<Item = Expression>)> {
+    //     self.3
+    // }
+
+    pub fn get_loop_context(
+        &mut self,
+        var: &String,
+    ) -> Option<&mut (dyn Iterator<Item = Expression> + 'static)> {
+        // dbg!(&var, &self.3.is_some());
+        if let Some((v, _)) = self.3.as_ref() {
+            if v == var {
+                return self.3.as_mut().map(|(_, iterator)| iterator.as_mut());
+            }
+        }
+        None
+
+        // if let Some((loop_var, &mut iterator)) = &self.3.as_mut() {
+        //     dbg!(&loop_var);
+        //     if var == loop_var {
+        //         // 从迭代器弹出下一个值
+        //         let r = Some(match iterator.next() {
+        //             Some(expr) => Ok(expr),
+        //             None => Err(RuntimeError::new(
+        //                 RuntimeErrorKind::IteratorExhausted(var.clone()),
+        //                 ctx.clone(),
+        //                 depth,
+        //             )),
+        //         });
+        //         dbg!(&r);
+        //         return r;
+        //     }
+        // }
+        // None
+    }
+
+    pub fn clear_loop_context(&mut self) {
+        self.3 = None;
     }
 }
 
@@ -162,64 +221,28 @@ impl Expression {
                 }
 
                 Self::Symbol(name) => {
-                    // dbg!("2.--->symbol----", &name);
-                    // bultin
-                    // if !state.contains(State::SKIP_BUILTIN_SEEK) {
-                    //     if let Some(b) = get_builtin(name) {
-                    //         // dbg!("found builtin:", &name, bti);
-                    //         return Ok(b.clone());
-                    //     };
-                    // }
-
-                    // var
-
                     if state.contains(State::STRICT) {
                         return Ok(job.clone());
                     } else {
-                        // return self.eval_symbo_with_domain(name, state, env, depth);
-                        // let domains = state.get_lookup_domains();
-                        // if domains.is_empty() {
-                        return match env.get(name) {
-                            Some(expr) => Ok(expr),
-                            None => Ok(job.clone()),
-                        };
-                        // } else {
-                        //     if let Some(Expression::HMap(root)) =
-                        //         env.get(domains.first().unwrap()).as_ref()
-                        //     {
-                        //         let mut node = root;
-                        //         // if let Expression::HMap(mut node) = nodeexp {
-                        //         for domain in domains.iter().skip(1) {
-                        //             if let Some(Expression::HMap(n)) = node.get(domain) {
-                        //                 // if let Expression::HMap(n) = n_exp {
-                        //                 node = n
-                        //                 // }
-                        //             }
-                        //         }
-                        //         return match node.get(name) {
-                        //             Some(expr) => Ok(expr.clone()),
-                        //             None => Ok(job.clone()),
-                        //         };
-                        //         // }
-                        //     }
-                        // }
+                        return job.handle_variable(name, true, state, env, depth);
                     }
                 }
                 Self::StringTemplate(template) => {
                     return Ok(Expression::String(render_template(template, env)));
                 }
-                Self::Variable(name) => {
-                    // dbg!("2.--->variable----", &name);
-                    // var
-                    return match env.get(name) {
-                        Some(expr) => Ok(expr),
-                        None => Err(RuntimeError::new(
-                            RuntimeErrorKind::UndeclaredVariable(name.clone()),
-                            self.clone(),
-                            depth,
-                        )),
-                    };
-                }
+                Self::Variable(name) => return job.handle_variable(name, false, state, env, depth),
+                // {
+                //     // dbg!("2.--->variable----", &name);
+                //     // var
+                //     return match env.get(name) {
+                //         Some(expr) => Ok(expr),
+                //         None => Err(RuntimeError::new(
+                //             RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                //             self.clone(),
+                //             depth,
+                //         )),
+                //     };
+                // }
 
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {
@@ -327,7 +350,7 @@ impl Expression {
 
                 // 一元运算
                 Self::UnaryOp(op, operand, _) => {
-                    let operand_eval = operand.eval(env)?;
+                    let operand_eval = operand.eval_mut(state, env, depth)?;
                     return match op.as_str() {
                         "!" => Ok(Expression::Boolean(!operand_eval.is_truthy())),
                         "-" => match operand_eval {
@@ -402,7 +425,7 @@ impl Expression {
                         "+=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
-                                let right = rhs.eval(env)?;
+                                let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left + right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
@@ -425,7 +448,7 @@ impl Expression {
                         "-=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
-                                let right = rhs.eval(env)?;
+                                let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left - right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
@@ -448,7 +471,7 @@ impl Expression {
                         "*=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
-                                let right = rhs.eval(env)?;
+                                let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left * right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
@@ -471,7 +494,7 @@ impl Expression {
                         "/=" => match lhs.as_ref() {
                             Expression::Symbol(base) => {
                                 let mut left = env.get(base).unwrap_or(Expression::Integer(0));
-                                let right = rhs.eval(env)?;
+                                let right = rhs.eval_mut(state, env, depth)?;
                                 left = (left / right)
                                     .map_err(|e| RuntimeError::new(e, self.clone(), depth))?;
                                 env.define(base, left.clone());
@@ -1299,7 +1322,42 @@ impl Expression {
         }
     }
 
-    // 在 impl Expression 块中添加
+    fn handle_variable(
+        &self,
+        name: &String,
+        allow_sym: bool,
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        // 优先检查是否在循环状态中
+        if state.contains(State::IN_FOR_LOOP) {
+            if let Some(iter) = state.get_loop_context(name) {
+                return match iter.next() {
+                    Some(expr) => Ok(expr),
+                    None => Err(RuntimeError::new(
+                        RuntimeErrorKind::IteratorExhausted(name.clone()),
+                        self.clone(),
+                        depth,
+                    )),
+                };
+            }
+        }
+
+        // 从环境读取
+        return match env.get(name) {
+            Some(expr) => Ok(expr),
+            None => match allow_sym {
+                false => Err(RuntimeError::new(
+                    RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                    self.clone(),
+                    depth,
+                )),
+                true => Ok(Expression::Symbol(name.to_string())),
+            },
+        };
+    }
+
     fn handle_pipe_method(
         &self,
         method: &str,

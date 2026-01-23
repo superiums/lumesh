@@ -39,6 +39,8 @@ pub enum RuntimeErrorKind {
     Redeclaration(String),
     #[error("undeclared variable: `{0}`")]
     UndeclaredVariable(String),
+    #[error("iterator exhausted: `{0}`")]
+    IteratorExhausted(String),
     #[error("no matching branch while evaluating `{0}`")]
     NoMatchingBranch(String),
     #[error("too many arguments for function `{name}`: max {max}, found {received}")]

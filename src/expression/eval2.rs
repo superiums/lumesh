@@ -214,7 +214,9 @@ impl Expression {
                 execute_iteration(var, iterator, body, state, env, depth)
             }
             Expression::List(items) => {
-                let iterator = items.iter().cloned();
+                let owned_items: Vec<Expression> = items.iter().cloned().collect();
+                let iterator = owned_items.into_iter();
+                // let iterator = items.iter().cloned();
                 execute_iteration(var, iterator, body, state, env, depth)
             }
             Expression::String(str) => {
@@ -356,41 +358,62 @@ fn execute_iteration<I>(
     depth: usize,
 ) -> Result<Expression, RuntimeError>
 where
-    I: Iterator<Item = Expression>,
+    I: Iterator<Item = Expression> + 'static,
 {
-    if state.contains(State::IN_ASSIGN) {
-        let mut results = Vec::new();
+    // 设置循环状态
+    state.set(State::IN_FOR_LOOP);
+    state.set_loop_context(var.clone(), Box::new(iterator));
 
-        for item in iterator {
-            env.define(var, item);
+    let r = if state.contains(State::IN_ASSIGN) {
+        let mut results = Vec::new();
+        loop {
             match body.as_ref().eval_mut(state, env, depth) {
-                Ok(result) => {
-                    // if !matches!(result, Expression::None) {
-                    results.push(result);
-                    // }
-                }
+                Ok(result) => results.push(result),
                 Err(RuntimeError {
                     kind: RuntimeErrorKind::EarlyBreak(v),
                     ..
-                }) => return Ok(v),
-                Err(e) => return Err(e),
+                }) => {
+                    results.push(v);
+                    break;
+                }
+                Err(RuntimeError {
+                    kind: RuntimeErrorKind::IteratorExhausted(_),
+                    ..
+                }) => break, // 循环正常结束
+                Err(e) => {
+                    state.clear(State::IN_FOR_LOOP);
+                    state.clear_loop_context();
+                    return Err(e);
+                }
             }
         }
         Ok(Expression::from(results))
     } else {
-        for item in iterator {
-            env.define(var, item);
+        loop {
             match body.as_ref().eval_mut(state, env, depth) {
                 Ok(_) => {}
                 Err(RuntimeError {
-                    kind: RuntimeErrorKind::EarlyBreak(v),
+                    kind: RuntimeErrorKind::EarlyBreak(_v),
                     ..
-                }) => return Ok(v),
-                Err(e) => return Err(e),
+                }) => break,
+                Err(RuntimeError {
+                    kind: RuntimeErrorKind::IteratorExhausted(_),
+                    ..
+                }) => break,
+                Err(e) => {
+                    state.clear(State::IN_FOR_LOOP);
+                    state.clear_loop_context();
+                    return Err(e);
+                }
             }
         }
         Ok(Expression::None)
-    }
+    };
+
+    // 清理循环状态
+    state.clear(State::IN_FOR_LOOP);
+    state.clear_loop_context();
+    r
 }
 
 // fn load_modules_to_map(

@@ -1,54 +1,65 @@
 # Changelog
+
+## [0.11.4]
+
+- optimize iteration in `for` loop.
+  now 1_000_000 times loop in `for`, only takes **114ms**, the previous edition is 385ms. reduced **70%** time cost!
+
 ## [0.11.3]
+
 - change compile optimize to be faster rather than smaller
-  + on smaller compile optimize (from 0.7.7):
-  filesize reduced from 6.7MB to 2.7MB
-  but the 1_000_000 times loop takes 1460ms
-  
-  + on faster compile optimize (from 0.11.3)
-  filesize comes to 3.9MB
-  but the 1_000_000 times loop takes only 385ms
-  
+  - on smaller compile optimize (from 0.7.7):
+    filesize reduced from 6.7MB to 2.7MB
+    but the 1_000_000 times loop takes 1460ms
+  - on faster compile optimize (from 0.11.3)
+    filesize comes to 3.9MB
+    but the 1_000_000 times loop takes only 385ms
+
   so i dicided to keep the faster compile
-  
+
 ## [0.11.2]
+
 - fix filename leading with `.` like `.config`
-for hidden filename compacity, fallback pipemethod to string if no () found.
+  for hidden filename compacity, fallback pipemethod to string if no () found.
 - add prompt theme `prompt_ka`
 
 ## [0.11.1]
+
 - support cmd complete after `:` in CFM
 - support use `.` in CFM.
   this means pipemethod, chaincall, lib call is allowed in CFM. `string.red 'lume'`
 - support use `+`,`?`,`:` in CFM. but must be surrounded by whiespace.
   `+` can be used to join strings, like `'hello' + 'word' `
   `? :` can be used like `condition ? true : false`
-  
+
 but still, number was not supported in CFM.
 all number is symbol in CFM, so `ping 1.1.1.1` also works well.
-now we can simply think that CFM and NORMAL mode is the same except there's ***NO number** and things about numbers like : math compute/compare, slice, index, range, custom operator, filesize.
+now we can simply think that CFM and NORMAL mode is the same except there's **\*NO number** and things about numbers like : math compute/compare, slice, index, range, custom operator, filesize.
 
 - support more conditions in boolean and/or/not
-return false for each arg if evals fail.
+  return false for each arg if evals fail.
 
 - link `not` to top
 - support negtive slice now
-`'welcome'[-4.._]`
+  `'welcome'[-4.._]`
 - fix pty problem for `ssh`, `sftp`,`scp`
 - add mod path `mod_name/main.lm`
-this allow mod to be folden
+  this allow mod to be folden
 - add max recursion control and cfm, pdm control in sys lib
 - fix pipemethod pushed again piped data if there's already a place holder
 - allow `use` in statement.
 - update help for top funcion
 
 ## [0.11.0]
+
 **note** this version refactored all the libs.
-  + all lib name changes to **lower case**
-  + boolean value and `none` changes to **lower case**
-  + the base data param for lib funcs moves from last to **first**.
-  
+
+- all lib name changes to **lower case**
+- boolean value and `none` changes to **lower case**
+- the base data param for lib funcs moves from last to **first**.
+
 > from [0.10.7a]
+
 - fix CFM need 2 enter while type: f()
 - allow subcmd capture in lib where neccessary
 - rename string.get_with to max_len. math.isodd to is_odd. fix ui funcs
@@ -60,27 +71,31 @@ this allow mod to be folden
 - update config with new lib name and check update download
 
 > from [0.10.6a]
+
 - allow cmd with dot
 - update config with new lib name and check update download
 - fix libs with compare new and old
 - split `Property` from `Index`
-now `a.b` is a property request, and `a[b]`  is a index request
-also `a.b()` is a chained call, and `a.b c` is a command which will search bultin and fallback to file `a.b`
+  now `a.b` is a property request, and `a[b]` is a index request
+  also `a.b()` is a chained call, and `a.b c` is a command which will search bultin and fallback to file `a.b`
 
 > from [0.10.5a]
+
 - optimized builtin functions seek
 - all lib named in lower case
 - value symbo comes to lower case: `true`, `false`,`none`
 - removed the link of `pprint` to every module, it's enough to use the top level func.
 
 > from [0.10.4a]
+
 - refactor builtin functions
-  + with lazy module loading
-  + with meta info splited from main functions, for more efficency
-  + with static str insteadof String in completion
-  + with more efficency completion lookup
-  
+  - with lazy module loading
+  - with meta info splited from main functions, for more efficency
+  - with static str insteadof String in completion
+  - with more efficency completion lookup
+
 ## [0.10.3]
+
 - add range support to match (not variable)
 - add pipemethod support to `|>`
 - fix range add and simlar overflow
@@ -88,27 +103,28 @@ also `a.b()` is a chained call, and `a.b c` is a command which will search bulti
 - move all unsafe static to thread local
 
 ## [0.10.2]
+
 - add `_` as blank expression
-this simplify unclosed ranges, mathes scentence, and positional pipe out.
+  this simplify unclosed ranges, mathes scentence, and positional pipe out.
 
 - support `_` to receive data piped out. both in `|` and `|>`
 
   now you could pipeout to any subcmd or functon or mathmatic operation, nearly anywhere.
-  
-  if `_` is not provied, situation differs from the the expression on  pipe right:
-    + function apply : _ is injected to first arg.
-    + cmd : _ is not injected as argument, but stdio.
-    + chained method call: _ is injected to first arg of first chain call.
-    + alias : _ is not auto injected.
-  
+
+  if `_` is not provied, situation differs from the the expression on pipe right:
+  - function apply : \_ is injected to first arg.
+  - cmd : \_ is not injected as argument, but stdio.
+  - chained method call: \_ is injected to first arg of first chain call.
+  - alias : \_ is not auto injected.
+
   if `_` is provied, the above injection will not affect.
 
 - remove `|_` and support position pipe in `|`
 
-
 ## [0.10.1]
+
 - enhanced `cd`
-support `cd -` to last history; `cd` without param to go home
+  support `cd -` to last history; `cd` without param to go home
 
 - keep range as same as rust
   `0..3` not contains 3.
@@ -120,6 +136,7 @@ support `cd -` to last history; `cd` without param to go home
 - change custom operator prefix from `_` to `..`
 
 - change slice operator to range.
+
 ```bash
 let a = 1...10
 a[0..5:2]         #use .. to slice
@@ -131,41 +148,39 @@ let ..+ = (x,y) -> x + y + x*y
 3 ..+ 5
 ```
 
-
 ## [0.10.0]
+
 - add support for chained modules import.
-following is ok:
-`use b; b::call_c()` in a.lm
-`use c; c::echo()`   in b.lm
+  following is ok:
+  `use b; b::call_c()` in a.lm
+  `use c; c::echo()` in b.lm
 
 also ok:
-`b::c::echo()`       in a.lm
-
+`b::c::echo()` in a.lm
 
 ## [0.9.0]
+
 - fix completion install path
 - only parse single symbol as command when CFM enabled
-> in interactive repl(CFM enabled by default):
-  `ls` is a command.
-  `./my.sh` is a command.
-> in script mode:
-  `ls _` is needed if you want to trigger an command
-  `./my.sh _` is need too.
-  
+  > in interactive repl(CFM enabled by default):
+  > `ls` is a command.
+  > `./my.sh` is a command.
+  > in script mode:
+  > `ls _` is needed if you want to trigger an command
+  > `./my.sh _` is need too.
   the `_` means blank argument for command.
-  as single symbol was not parsed as a command but a value, 
+  as single symbol was not parsed as a command but a value,
   we can use it safetily in following functon:
   ```shell
   let a = if b>0 {c} else {d}    # c and d will never executed as a suprise.
   ```
-  
 - allow set completion style
 - match path first if no ignore file tag
 - disable mathmatic compare in CFM mode.
-in CFM mode, there's no number(as no dot), all is symbol, so disable it.
-
+  in CFM mode, there's no number(as no dot), all is symbol, so disable it.
 
 ## [0.8.9]
+
 - optimize completion efficency
 - fix function call err for mod use
 - disable `Print_Direct` for script
@@ -175,31 +190,31 @@ in CFM mode, there's no number(as no dot), all is symbol, so disable it.
 - add `install.sh`
 
 ## [0.8.8]
+
 - support str slice
 - fix `::` token in slice
 - add `String.words_quoted`
 - add fish2csv script to prepare completion data
 - add support: **param completion**
 - optimize cmd and param completion trigger
-now support cmd part in pipe, logical and/or, subcomand in `()`
+  now support cmd part in pipe, logical and/or, subcomand in `()`
 
 - change ai trigger to **'leading space'**
 - add `LUME_COMPLETION_DIR` to add a custom completion dir.
-default includes:
+  default includes:
   > Linux
-  + ~/.local/share/lumesh/vendor_completions.d
-  + ~/.local/share/lumesh/completions.d
-  + /usr/share/lumesh/vendor_completions.d
-  + /usr/share/lumesh/completions
-  
+  - ~/.local/share/lumesh/vendor_completions.d
+  - ~/.local/share/lumesh/completions.d
+  - /usr/share/lumesh/vendor_completions.d
+  - /usr/share/lumesh/completions
   > Windows
-  + C:\Users\xx\AppData\Local\lumesh\vendor_completions
-  + C:\Users\xx\AppData\Local\lumesh\completions
-  + C:\ProgramData\lumesh\vendor_completions,
-  + C:\ProgramData\lumesh\completions,
-    
+  - C:\Users\xx\AppData\Local\lumesh\vendor_completions
+  - C:\Users\xx\AppData\Local\lumesh\completions
+  - C:\ProgramData\lumesh\vendor_completions,
+  - C:\ProgramData\lumesh\completions,
 
 ## [0.8.7]
+
 - add `IS_CFM` var
 - optimize import and include
 - fix config in set_as_login_shell
@@ -210,6 +225,7 @@ default includes:
 - update readme
 
 ## [0.8.6]
+
 - update default config
 - fix hot-key conflict with CFM
 - adjust `>>` and `>!` to compatible with bash, create if not exist.
@@ -224,14 +240,16 @@ default includes:
 - remove dark colors in String module.
 - remove `++` and `--`
 - require cmd/func raise followed by space.
-to better differ `2^3` and `cmd^ b c`
+  to better differ `2^3` and `cmd^ b c`
 
 ## [0.8.5]
+
 - fix `--` arguments for lf file manager
 
 ## [0.8.4]
+
 - add cli arg to control CFM
-CFM is enabled by default, disabled for script or '-m' arg.
+  CFM is enabled by default, disabled for script or '-m' arg.
 
 - add abs for fs.
 - fix canon check for fs funcs.
@@ -240,35 +258,42 @@ CFM is enabled by default, disabled for script or '-m' arg.
 - update readme
 
 ## [0.8.3]
+
 - fix argument in CFM;
 - fix cmd params with cannon.
-now works well with lf file-manager.
+  now works well with lf file-manager.
 
 ## [0.8.2]
+
 - rename lite edtion to lume-se
 
 ## [0.8.1]
+
 - fix canon of paths
 - update clap
 - update cli arguments for script file
 
 ## [0.8.0]
+
 - introduce CFM (command first mode)
-CFM is for daily usage, if there's only a single line, it will be parsed in CFM.
+  CFM is for daily usage, if there's only a single line, it will be parsed in CFM.
 
 in CFM, eg.
+
 - `ping 1.1.1.1` is ok
 - `chmod +x` is ok
-in NORMAL mode, you have to write:
+  in NORMAL mode, you have to write:
 - `ping '1.1.1.1'`
 - `chmod '+x'`
 
 if you have a single line code but what to enter NORMAL mode, just type `:` at head of the line.
 eg.
+
 - `:1+2`
 - `: a.b`
 
 ## [0.7.8]
+
 - optimize path regcognization, `..` and more
 - fix panic for invalid regex.
 - optimize help tips.
@@ -276,11 +301,13 @@ eg.
 - add `update script`.
 
 ## [0.7.7]
+
 - compile optimize
 - add childmanager
 - optimize errors for cmd and fn
 
 ## [0.7.6]
+
 - fix command like `cmd.exe`
 - allow blank argument `_` for command
 - ignore `About.tips` in windows
@@ -291,6 +318,7 @@ eg.
 - shutdown ai helper by default
 
 ## [0.7.5]
+
 - update rustyline to 17.0.
 - fix `hep About`
 - increase width for key.
@@ -302,14 +330,16 @@ eg.
 - fix path splitor for windows.
 
 ## [0.7.4]
+
 - link `strip` to String
-- add `color256`,  `color256_bg` and `color`,`color_bg` function for String
+- add `color256`, `color256_bg` and `color`,`color_bg` function for String
 - add `colors` fro String
 - fix prompt for windows
 - remove cmd scan for windows
 - give default `PATH` for lin/win
 
 ## [0.7.3]
+
 - fix suggestion module name
 - fix '\t' in linebreak
 - fix `PATH` not in root env
@@ -317,12 +347,14 @@ eg.
 - move `strip` to `Into` module
 
 ## [0.7.2]
+
 - allow pipemethod without pathens
 - auto pretty print map/list
 - allow convert '%' to float
 - filter None result in loop pipe
 
 ## [0.7.1]
+
 - rename `List.some` and `List.every` to `any` and `all`
 - fix test
 - fix func return in deco
@@ -332,6 +364,7 @@ eg.
 - expand home and keeps uniques in `PATH`
 
 ## [0.7.0]
+
 - fix long hint cover the screen
 - fix `.` at end of line requires more linebreak
 - link `throw` to top level
@@ -339,30 +372,29 @@ eg.
 - fix split with ifs;
 - fix match as cmd;
 - fix pprint modules hint.
-    type `String. ` to see pretty table hint.
+  type `String. ` to see pretty table hint.
 - add `Fs.dir_name`.
 - fix check None contains.
 - optimize `help` display
-    added `help libs`, `help top`
+  added `help libs`, `help top`
 
-    added ordered display.
+  added ordered display.
 
 - add raw command with could skip env seek:
-    ```bash
-    let id = 3
-    id -u          # error, id is integer
-    id^ -u         # ok, id is forced command
-    ```
-
-
-
+  ```bash
+  let id = 3
+  id -u          # error, id is integer
+  id^ -u         # ok, id is forced command
+  ```
 
 ## [0.6.9]
+
 - highlight builtin cmds;
 - add theme config
-    set theme via `LUME_THEME`
+  set theme via `LUME_THEME`
 
-    modify theme via `LUME_THEME_CONFIG`
+  modify theme via `LUME_THEME_CONFIG`
+
 - optimize `find/find_all` of regex to return map instead of list.
 - theme for complete and hint;
 - fix alt+j for space before /;
@@ -373,42 +405,45 @@ eg.
 - builtin args optimize
 
 ## [0.6.8]
+
 - add boolean module;
 - add concat to string module;
 - optimize capture_name for Regex;
 - add `gt/ge/lt/le/eq/ne` to math;
 - add a type `Regex`;
-now user could write regex like `r'\w'`
+  now user could write regex like `r'\w'`
 
 - optimize regex module;
-now user could hold one Regex expr and match it multi times.
+  now user could hold one Regex expr and match it multi times.
 
 - change regex match in match expr;
-now in match expr, only Regex expr was matched as regex, string expr keeps what it is.
+  now in match expr, only Regex expr was matched as regex, string expr keeps what it is.
 
 - add raw mode for type `DateTime`:
-now user could write time like `t'2025-7-10'`
+  now user could write time like `t'2025-7-10'`
 
 - add `Filesize` module.
 - add `set` for list/map.
 
 ## [0.6.7]
+
 - eval args for builtin in assign mode
-so user could call `String.red((ls))` and got the expected result.
+  so user could call `String.red((ls))` and got the expected result.
 - add `grep` for String module.
 - add `highlight` for Parse module.
 - pull down echo for function declare.
 - allow var after `!`/`=` like `!$x`, `=$x`
 - add `exit` to repl.
-while `exit [status]` used for script, `quit` used for repl.
+  while `exit [status]` used for script, `quit` used for repl.
 - expand home during `for`,`use` and in `Fs` functions.
 
 ## [0.6.6]
+
 - remove the following command warp, keep it as it was.
 
-> 3. ` (a)` single symbo in *group*
-> 4. `alias x = a` single symbo in *alias declaration*
-> 5. `let x := a` single symbo in *lasy declaration*
+> 3. ` (a)` single symbo in _group_
+> 4. `alias x = a` single symbo in _alias declaration_
+> 5. `let x := a` single symbo in _lasy declaration_
 
 - make use of IN_ASSIGN:
   - check IN_ASSIGN in Group, and convert single symbo to Command.
@@ -420,25 +455,26 @@ while `exit [status]` used for script, `quit` used for repl.
 - link some func from Math to List
 - link some fn from into/parse to String.
   such as:
-    to_int
-    to_float
-    to_filesize
-    to_time
-    to_table
+  to_int
+  to_float
+  to_filesize
+  to_time
+  to_table
 - rename some fn in List
 - link get to List/Map.
 - add at to Map.
 - link pprint to List/Map/String
-pprint in String accecpt headers define.
+  pprint in String accecpt headers define.
 - detailed contains err
 - fix map like `{a,}` and `{a:b}`
 - detaied err while no module;
 - reduce unkown module seek;
 - make range able to chain call most List funcs.
 - link to_str to Math
-so user could call `3 | .to_str()`
+  so user could call `3 | .to_str()`
 
 ## [0.6.5]
+
 - move os to sys;
 - move fmt to string;
 - move widget to ui;
@@ -452,43 +488,46 @@ so user could call `3 | .to_str()`
 - add find/filter to map module.
 
 ## [0.6.4]
+
 - allow set modules path with `LUME_MODULES_PATH`
 - pass only root env to cmd.
 - allow set strict mode in script.
+
 ```bash
 STRICT=True
 ```
+
 - strict fn redeclare;
 - strict param covers in deco.
 - add support to config max recursion
-via `LUME_MAX_SYNTAX_RECURSION` and `LUME_MAX_SYNTAX_RECURSION`
+  via `LUME_MAX_SYNTAX_RECURSION` and `LUME_MAX_SYNTAX_RECURSION`
 
 - add `^` to force a symbo to be a third part command
-`sort^` call cmd `sort` in your system insteadof lumesh function.
+  `sort^` call cmd `sort` in your system insteadof lumesh function.
 
 - stop wrap command as symbo after assign
-`x = a b; let x= a b` now keeps as command.
+  `x = a b; let x= a b` now keeps as command.
 
 - stop wrap symbo as command after lazy assign
-`x := a` now keeps as symbo.
-
+  `x := a` now keeps as symbo.
 
 now, the wraps action works as follow:
+
 1. `a` single symbo was warped as command.
 2. `./a` single path was warped as command.
-3. ` (a)` single symbo in *group* was warped as command.
-4. `alias x = a` single symbo in *alias declaration* was warped as commnd.
-5. `let x := a` single symbo in *lasy declaration* was warped as commnd.
-note this not include the lasy assign: `x := a`, which keeps as symbo.
-  and `eval x` or `x` or `x other_args` could launch it.
-
-
+3. ` (a)` single symbo in _group_ was warped as command.
+4. `alias x = a` single symbo in _alias declaration_ was warped as commnd.
+5. `let x := a` single symbo in _lasy declaration_ was warped as commnd.
+   note this not include the lasy assign: `x := a`, which keeps as symbo.
+   and `eval x` or `x` or `x other_args` could launch it.
 
 ## [0.6.3]
+
 - add decorator support
 - add `LUME_IFS_MODE` to control where to apply `IFS`
 
 with bit meanings:
+
 ```rust
 IFS_CMD: u8 = 1 << 1; // cmd str_arg
 IFS_FOR: u8 = 1 << 2; // for i in str; str |> do
@@ -499,34 +538,39 @@ IFS_PCK: u8 = 1 << 5; // ui.pick
 
 - allow `{k,}` as Map
 
-
 ## [0.6.2]
+
 **broken changes**
+
 - rename builtin modules with Uppercase
 
 normal changes
 
 - add dispatch pipe
+
 ```bash
     let add = (x,y) -> x+y
     0...5 |> add(_,10)
 
     # outpu: [10, 11, 12, 13, 14, 15]
 ```
+
 which means every item of the left list is dispatched to right, and runs right handside 6 times.
 this action is simlar as `xargs`
 
 - remove `report`
 
-
 ## [0.6.1]
+
 - optimize error report for pratt parser
 - optimize depth for pratt parser.
 - allow `|_` to chaincall. replace arg of first call with `_`
 - allow chaincall as alias.
 
 ## [0.6.0]
+
 **broken changes**
+
 - change `?!` to `?>` : return err map as result.
 - add `?!` as quiet terminate when err occurs, for pipes.
 - change `>>!` to `>!` : overwrite to file.
@@ -543,19 +587,24 @@ normal changes
 - fix unkonwn operator error report
 
 ## [0.5.9]
+
 - add chain call support
+
 ```bash
 "a b c".split(' ').join(',')
 ```
 
 - add chain pipe method support
+
 ```bash
 "a b c" | .split(' ')
 ```
+
 - dim syntax tree debug
 
 ## [0.5.8]
-- add |_ as position pipe
+
+- add |\_ as position pipe
 - add |^ as pty pipe
 - pretty print with tabled
 - fmt debug tree
@@ -563,16 +612,18 @@ normal changes
 - optimize with Cow
 
 ## [0.5.7]
-- more friendly runtime errors
-now display the expression context and ast, depth for runtime errors.
 
+- more friendly runtime errors
+  now display the expression context and ast, depth for runtime errors.
 
 ## [0.5.6]
+
 - tip early line end; remove IFS from parse.cmd
 - rewrite match to support regex.
 - optimize error showing.
 
 ## [0.5.5]
+
 - optimize cmd execute
 - support IFS in
   cmd args/for/str.spit/parse.cmd/csv/to_csv/ui.pick/mpick/
@@ -585,11 +636,12 @@ now display the expression context and ast, depth for runtime errors.
 - fix str arg parse without quote
 
 ## [0.5.4]
+
 - more ui component
 - fix highlight frequence
 - fix IN_PIPE covers last.
 - ansi code; pwd;
-- reorganize parse_string* ; more ansi seq.
+- reorganize parse_string\* ; more ansi seq.
 - add discard/base_name/join.
 - print_tty; rename err_codes/stamp_ms;
 - rename to fs.is_dir/is_file
@@ -605,33 +657,39 @@ now display the expression context and ast, depth for runtime errors.
 - filesize to boolean
 
 ## [0.5.3]
+
 - add fuzzy picker
 - add pretty print
 
 ## [0.5.2]
+
 - fix where condition executed too early
 - fix capture output of comand as args for builtin
-`fmt.red(lspci -k)`
+  `fmt.red(lspci -k)`
 
 - support args with cmd mode without file
-this is for compatible with `lf` file manager.
+  this is for compatible with `lf` file manager.
 
 - add `LINENO` and `LINES` for where/list.filter
-`fs.ls -l | where(LINENO>1)`
+  `fs.ls -l | where(LINENO>1)`
 
 - support string template render
-`a is $a or ${a}`
+  `a is $a or ${a}`
 
 ## [0.5.1]
+
 - enhanced get for mixed list/range and map path.
 - add range step.
-`0..8:2`
+  `0..8:2`
 - change range: closure as `..` and right open with `..<`
 
 ## [0.5.0]
+
 - fix max for only int
 - fix pipeout capture for builtin funcs.
+
 ## [0.4.9]
+
 - add func arg hint.
 - fix some func param position.
 - reorgnize console mode/cursor/keyboard.
@@ -640,7 +698,9 @@ this is for compatible with `lf` file manager.
 - prompt from func.
 - prompt template
 - use lm extention
+
 ## [0.4.8]
+
 - part choose for path.
 - only hint in cmd place.
 - alias hint
@@ -651,6 +711,7 @@ this is for compatible with `lf` file manager.
 - add filesize convert.
 
 ## [0.4.7]
+
 - add csv
 - add jq
 - add to_csv/to_json/to_toml
@@ -658,6 +719,7 @@ this is for compatible with `lf` file manager.
 - prompt settings.
 
 ## [0.4.6]
+
 - refactor sort function
 - optimize filesize, time display. optimize list.group.
 - add FileSize and cmp. add % as float.
@@ -667,36 +729,41 @@ this is for compatible with `lf` file manager.
 - fix history.
 - add vi mode.
 
-
 ## [0.4.5]
+
 - fix stdin read for third cmd
 - optimize io
 - fix combo keys in pty
 
-
 ## [0.4.4]
+
 - fix a lot in libs
 
 ## [0.4.3]
+
 - update libs to newest.
-except nom.
+  except nom.
 - enhance string loop
-support loop in string result now, we cut it to array via newline, witespace, `,`,`;`
+  support loop in string result now, we cut it to array via newline, witespace, `,`,`;`
 - fix pty for fish/vi
 - fix hotkey
 
 ## [0.4.2]
+
 - introduce pty
 
 ## [0.4.1]
+
 - optimize expr execution
 - fix break in while
 
 ## [0.4.0]
+
 - refactor pipes and redirect
 - introduce bmap back
 - enhance list and map display
 - support background cmd
+
 ```bash
 thunar &         # run in background, and shutdown stdout and stderr
 ls &-            # shutdown stdout
@@ -705,14 +772,15 @@ ls &.            # shutdown stdout and stderr
 ls &+            # try to append stderr to stdout
 
 ```
+
 - support output shutdown
 - enhance contains operator : `~:`
-now support : String/List/Map keys containning check.
+  now support : String/List/Map keys containning check.
 - support datetime expression
 - fix some issue
 
-
 ## [0.3.9]
+
 - add keybindings
 - fix parser for bare utf8 chars
 - redefine `>>` and `>>!`, `~=`,`~~`,`~:`
@@ -721,26 +789,29 @@ now support : String/List/Map keys containning check.
 - use btreemap in expr, but hashmap for performanc
 - enhanced libs, `fs.ls`, `parse.cmd`,`where`,`select`...
 
-
 ## [0.3.8]
+
 - add loop and break
 - change `?-` to `?+`, which means to merge errs to stdout.
-`6 / 0 ?-    # print err to stdout`
+  `6 / 0 ?-    # print err to stdout`
 - fix path for windows
 - add some config
 
 ## [0.3.7]
+
 - refactor expression and builtin, pipes with ref and reduce clone of expr
 
 after rebuild, it becomes 3 times faster than previous!
 Great!
 
 ## [0.3.6]
+
 - refactor expression with Rc.
-this makes expr clone runs 4 times faster than Box.
+  this makes expr clone runs 4 times faster than Box.
 - enhanced lib functions.
 
 ## [0.3.5]
+
 - enhance operator overload.
 - allow $var, allow blank line in block.
 - split alias from env, enhance cmd executor. fix fmt arg check. add parse recursdepth err.
@@ -755,18 +826,20 @@ this makes expr clone runs 4 times faster than Box.
 - support args collector
 
 ## [0.3.4]
+
 - enhance pipe to be more clever
-auto pass value or stdin;
-auto suite pipeout to stdout or param out.
+  auto pass value or stdin;
+  auto suite pipeout to stdout or param out.
 
 - error catch could be used in pipes
 - fix groups in pipes
 - print returns value for pipe use
 
-
 ## [0.3.3]
+
 - add local ai auto complete.
-you can config your local ai assistant like this:
+  you can config your local ai assistant like this:
+
 ```bash
 let LUME_AI_CONFIG = {
     host: "localhost:11434",
@@ -778,21 +851,24 @@ let LUME_AI_CONFIG = {
     system_prompt: "you're a lumesh shell helper",
 }
 ```
+
 - add alias
 - custom profile, no history mode.
 - read config
-default config in `$config_dir/lumesh/config.lm`
-or specify your own via `lume -c your/path`
+  default config in `$config_dir/lumesh/config.lm`
+  or specify your own via `lume -c your/path`
 - allow mutline map, and tailing with `,`
 - parse cmd after = as string/symbol.
-subcmd capture should use `()` or ````
+  subcmd capture should use `()` or ````
 - allow empty params def in lambda.
 - allow function in circle. fix env for function.
 - fix custom op define.
 
 ## [0.3.2]
+
 - add support for error handling.
-handling errs never have been so easy:
+  handling errs never have been so easy:
+
 ```bash
 
 6 / 0 ?.    # ignore err
@@ -809,13 +885,15 @@ fn divide(x,y){
 }?: e
 
 ```
+
 - fix chained conditional expr.
-chained exprs like `a?b:c?d:e` works well now.
+  chained exprs like `a?b:c?d:e` works well now.
 
 ## [0.3.1]
+
 - rewrite parser again
-pratt parser workflow.
-differ inner functions from system cmds.
+  pratt parser workflow.
+  differ inner functions from system cmds.
 - optimize builtin storage in hashmap.
 - fixed other lots.
 
@@ -834,22 +912,27 @@ fmt.red! "hello" 3 + 5
 ```
 
 ## [0.3.0]
+
 - rewrite parser
 - rewrite expr excutor
 - rewrite interactive repl
 - rewrite pipe and redirect
 
 ### break changes
+
 - lambda comes to : `(x,y) -> { x+y }`
 - ranges comes to : `3..9`
 
-
 ### other changes
+
 - allow `.` to be index of maps.
+
 ```bash
 fmt.red logo        # same as fmt@red
 ```
+
 - allow `[]` to be index of list, and slice supported.
+
 ```bash
 let ar = 2..8
 ar[2:5:2]           # [4,6]
@@ -858,16 +941,18 @@ ar[2:]           # [4,5,6,7]
 let i = -1
 ar[i]            # [7]
 ```
+
 - cmd completition supported.
 - error msg becomes more clear.
 - math power support.
 - pipe, redirect works more effient
 - pipe support 2 modes: stream pipe `|` and param pipe `|>`
-pipes to interactive programs like vi, less fixed.
+  pipes to interactive programs like vi, less fixed.
 - lambda and macros support particle apply
 
 - cmds never neeeds None param now
 - allow custom operators:
+
 ```bash
 # all custom operators starts with _
 # unary operators starts with __
@@ -887,25 +972,25 @@ let _* = (x,y) -> x + y
 ```
 
 ## [0.2.3] 2025-4-9
+
 - fix test usecase.
 - fix `-` in command string.
   as there're lots of cmds has `-`, eg :
   `connman-gtk`
 
   > in strict mode:
-  `a + 3` is pretty.
+  > `a + 3` is pretty.
 
   > in non-strict mode:
-  + `-` or `/` :
+  - `-` or `/` :
     when operate with vars, space around was recomended.
     for differ with strings. eg:
-    `a-a`, `a-3` was *string*;
+    `a-a`, `a-3` was _string_;
 
-    `3-a`, `8-3` was *plus*;
+    `3-a`, `8-3` was _plus_;
 
-  + other operaters:
+  - other operaters:
     `a*a` `a+3` `3-2` and all other operator will be recognized as math operate.
-
 
 - move default cmd after config. only load if no same config.
 
@@ -928,7 +1013,8 @@ let _* = (x,y) -> x + y
 `STRICT` implies wheather it was running in STRICT mode.
 
 ## [0.2.2] 2025-4-8
--  env vars:
+
+- env vars:
 
 use `SCRIPT` var to get the script file path.
 
@@ -936,7 +1022,7 @@ use `STRICT` var to know wheather in strict mode.
 
 use `argv` to receive vars parsed in.
 
--  apply strict mode.
+- apply strict mode.
 
 `lume -s` to start in strict mode.
 
@@ -946,27 +1032,27 @@ also, operator without space was not allowed.(act same as dune)
 
 in nonstrict mode, they are all allowed.
 
--  fix let a =6; a=9 report redclaration.
+- fix let a =6; a=9 report redclaration.
 
--  add more fs@dirs.
+- add more fs@dirs.
 
 such as `(fs@dirs)@config` is config dir.
 
 also `cache` for cache dir. `data` for data dir.
 
--  change all builtin `-` to `_` and remove ? after func name.simplify cursor move name.
+- change all builtin `-` to `_` and remove ? after func name.simplify cursor move name.
 
 this is because in nonstrict mode, `-` was recognized as decrease.
 
 so in vars symbol, `_` is better than `-`.
 
--  help as feather; fix list@head/tail to first/last; drop curry for take/drop.
+- help as feather; fix list@head/tail to first/last; drop curry for take/drop.
 
 this is done to reduce the size of binary.
 
 help docs will be published alone.
 
--  update os-info, chrono. reorganize and add functions for time_model.
+- update os-info, chrono. reorganize and add functions for time_model.
 
 now
 
@@ -974,23 +1060,23 @@ now
 
 was avaluable.
 
--  remove clap from runner.
+- remove clap from runner.
 
--  split repl and runner
+- split repl and runner
 
 a pure edition was added to parse script only.
 
 more efficient.
 
--  fix env influent in list, if, while, match.
+- fix env influent in list, if, while, match.
 
 now vars declared in these blocks, was only visible in.
 
 no influent to outer enviroment.
 
--  add fn define and return statement.
+- add fn define and return statement.
 
-```bash
+````bash
 fn myfunction(x, y=2) {
   let z = 0
   return x + y + z
@@ -1106,3 +1192,4 @@ such as `ls -l --color=auto /tmp`
 ### [0.2.0-lineclip] - 2025-3-29
 - use `\n` or `;` to split statement. which means you don't have to type `;` to every lineend.
 - use `\\n` to continue a line.
+````

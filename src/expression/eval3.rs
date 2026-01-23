@@ -265,9 +265,11 @@ impl Expression {
             // Expression::Index
             // 模块调用
             Expression::ModuleCall(modules, function) => {
+                state.set(State::IN_DOMAINS);
                 state.extend_lookup_domains(&modules);
                 let result = self.eval_apply(&function, args, state, env, depth + 1);
                 state.truncate_lookup_domains(modules.len());
+                state.clear(State::IN_DOMAINS);
                 return result;
                 // return self.eval_symbo_with_domain(module, function, args, state, env, depth + 1);
             }
@@ -292,49 +294,22 @@ impl Expression {
     ) -> Result<Expression, RuntimeError> {
         match self {
             Expression::Symbol(name) => {
-                // 获取当前查找域
-                let domains = state.get_lookup_domains();
+                if state.contains(State::IN_DOMAINS) {
+                    // 获取当前查找域
+                    let domains = state.get_lookup_domains();
 
-                // 在查找域中查找模块
-                if let Some(leading) = domains.first() {
-                    let root = env.get(leading);
-                    let mut parent = match root.as_ref() {
-                        Some(Expression::HMap(m)) => m,
-                        Some(x) => {
-                            return Err(RuntimeError::new(
-                                RuntimeErrorKind::SymbolNotModule(
-                                    leading.to_string(),
-                                    x.type_name(),
-                                    "current module".into(),
-                                    "".to_string(),
-                                ),
-                                self.clone(),
-                                depth,
-                            ));
-                        }
-                        _ => {
-                            return Err(RuntimeError::new(
-                                RuntimeErrorKind::SymbolNotDefined(format!(
-                                    "{} in current module",
-                                    leading
-                                )),
-                                self.clone(),
-                                depth,
-                            ));
-                        }
-                    };
-                    for (index, domain) in domains.iter().skip(1).enumerate() {
-                        match parent.get(domain) {
-                            Some(Expression::HMap(m)) => {
-                                parent = m;
-                            }
+                    // 在查找域中查找模块
+                    if let Some(leading) = domains.first() {
+                        let root = env.get(leading);
+                        let mut parent = match root.as_ref() {
+                            Some(Expression::HMap(m)) => m,
                             Some(x) => {
                                 return Err(RuntimeError::new(
                                     RuntimeErrorKind::SymbolNotModule(
-                                        domain.to_string(),
+                                        leading.to_string(),
                                         x.type_name(),
-                                        domains[index].to_string().into(),
-                                        domains.join("->"),
+                                        "current module".into(),
+                                        "".to_string(),
                                     ),
                                     self.clone(),
                                     depth,
@@ -342,34 +317,63 @@ impl Expression {
                             }
                             _ => {
                                 return Err(RuntimeError::new(
-                                    RuntimeErrorKind::NoModuleDefined(
-                                        domain.to_owned(),
-                                        domains[index].to_string(),
-                                        domains.join("->"),
-                                    ),
+                                    RuntimeErrorKind::SymbolNotDefined(format!(
+                                        "{} in current module",
+                                        leading
+                                    )),
                                     self.clone(),
                                     depth,
                                 ));
                             }
+                        };
+                        for (index, domain) in domains.iter().skip(1).enumerate() {
+                            match parent.get(domain) {
+                                Some(Expression::HMap(m)) => {
+                                    parent = m;
+                                }
+                                Some(x) => {
+                                    return Err(RuntimeError::new(
+                                        RuntimeErrorKind::SymbolNotModule(
+                                            domain.to_string(),
+                                            x.type_name(),
+                                            domains[index].to_string().into(),
+                                            domains.join("->"),
+                                        ),
+                                        self.clone(),
+                                        depth,
+                                    ));
+                                }
+                                _ => {
+                                    return Err(RuntimeError::new(
+                                        RuntimeErrorKind::NoModuleDefined(
+                                            domain.to_owned(),
+                                            domains[index].to_string(),
+                                            domains.join("->"),
+                                        ),
+                                        self.clone(),
+                                        depth,
+                                    ));
+                                }
+                            }
                         }
-                    }
-                    // after got parent
-                    if let Some(func) = parent.get(name) {
-                        // state.push_lookup_domain(module);
-                        // let result = self.eval_apply(func, args, state, env, depth + 1);
-                        // state.pop_lookup_domain();
-                        // return result;
-                        return Ok(func.clone());
-                    } else {
-                        return Err(RuntimeError::new(
-                            RuntimeErrorKind::SymbolNotDefinedInModule(
-                                name.to_owned(),
-                                domains.last().unwrap().to_owned(),
-                                domains.join("->"),
-                            ),
-                            self.clone(),
-                            depth,
-                        ));
+                        // after got parent
+                        if let Some(func) = parent.get(name) {
+                            // state.push_lookup_domain(module);
+                            // let result = self.eval_apply(func, args, state, env, depth + 1);
+                            // state.pop_lookup_domain();
+                            // return result;
+                            return Ok(func.clone());
+                        } else {
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::SymbolNotDefinedInModule(
+                                    name.to_owned(),
+                                    domains.last().unwrap().to_owned(),
+                                    domains.join("->"),
+                                ),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
                     }
                 }
                 return match env.get(name) {
@@ -378,8 +382,11 @@ impl Expression {
                 };
             }
             // may values as builtin
+            Self::Property(lhs, rhs) => {
+                return self.handle_property(lhs, rhs, state, env, depth + 1);
+            }
             Self::Index(lhs, rhs) => {
-                return self.handle_index_or_slice(lhs, rhs, state, env, depth);
+                return self.handle_index_or_slice(lhs, rhs, state, env, depth + 1);
             }
             // for lambda/function/moduleCall them self.
             _ => Ok(self.clone()),

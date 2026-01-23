@@ -1,7 +1,7 @@
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
-use crate::libs::get_builtin_via_expr;
+use crate::libs::{get_builtin_via_expr, is_lib};
 use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, RuntimeErrorKind};
 
 /// 执行
@@ -486,6 +486,20 @@ impl Expression {
             // dbg!("   3.--->applying Symbol:", &cmd_sym, &args);
             // NOTE alias is a symbol, when appreared on right of pipe, the _ receiver is not injected
             {
+                // top level builtin lib cmd, first of all, to invoid cmd to be covered by vars.
+
+                if let Some(btr) = handle_builtin(
+                    &Expression::Blank,
+                    cmd_sym.as_ref(),
+                    args,
+                    self,
+                    state,
+                    env,
+                    depth,
+                ) {
+                    return btr;
+                }
+
                 match alias::get_alias(cmd_sym.as_str()) {
                     // 别名
                     Some(cmd_alias) => {
@@ -563,55 +577,54 @@ impl Expression {
                             )),
                         }
                     }
+                    // _ => {
+                    //     match get_builtin_via_expr(&Expression::Blank, cmd_sym.as_str()) {
+                    //         Some(bfn) => {
+                    //             if args.contains(&Expression::Blank) {
+                    //                 let received_args = args
+                    //                     .iter()
+                    //                     .map(|x| match x {
+                    //                         Expression::Blank => {
+                    //                             state.pipe_out().unwrap_or(Expression::Blank)
+                    //                         }
+                    //                         o => o.clone(),
+                    //                     })
+                    //                     .collect::<Vec<_>>();
+                    //                 bfn(&received_args, env, self)
+                    //             } else {
+                    //                 bfn(&args, env, self)
+                    //             }
+                    //             // if let Some((base, args)) = args.split_first() {
+                    //             // } else {
+                    //             //     bfn(&Expression::Blank, &args, env, self, depth)
+                    //             // }
+                    //         }
+                    // }
+                    // match get_builtin(cmd_sym.as_str()) {
+                    //     // 顶级内置命令
+                    //     Some(Expression::Builtin(bti)) => {
+                    //         // dbg!("branch to builtin:", &cmd, &bti);
+                    //         // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
+                    //         self.eval_builtin(bti, args, state, env, depth + 1)
+                    //     }
+                    // Some(exp) => {} //never here
                     _ => {
-                        match get_builtin_via_expr(&Expression::Blank, cmd_sym.as_str()) {
-                            Some(bfn) => {
-                                if args.contains(&Expression::Blank) {
-                                    let received_args = args
-                                        .iter()
-                                        .map(|x| match x {
-                                            Expression::Blank => {
-                                                state.pipe_out().unwrap_or(Expression::Blank)
-                                            }
-                                            o => o.clone(),
-                                        })
-                                        .collect::<Vec<_>>();
-                                    bfn(&received_args, env, self)
-                                } else {
-                                    bfn(&args, env, self)
-                                }
-                                // if let Some((base, args)) = args.split_first() {
-                                // } else {
-                                //     bfn(&Expression::Blank, &args, env, self, depth)
-                                // }
-                            }
-                            // }
-                            // match get_builtin(cmd_sym.as_str()) {
-                            //     // 顶级内置命令
-                            //     Some(Expression::Builtin(bti)) => {
-                            //         // dbg!("branch to builtin:", &cmd, &bti);
-                            //         // bti.apply(args.to_vec()).eval_apply(state, env, depth+1)
-                            //         self.eval_builtin(bti, args, state, env, depth + 1)
-                            //     }
-                            // Some(exp) => {} //never here
-                            _ => {
-                                if is_cmd_mode {
-                                    // 三方命令
-                                    handle_command(self, cmd_sym, args, state, env, depth + 1)
-                                } else {
-                                    Err(RuntimeError::new(
-                                        RuntimeErrorKind::TypeError {
-                                            expected: "symbol for Function/Builtin".into(),
-                                            sym: cmd_sym.to_string(),
-                                            found: "Symbol with no meaning".to_string(),
-                                        },
-                                        self.clone(),
-                                        depth,
-                                    ))
-                                }
-                            }
+                        if is_cmd_mode {
+                            // 三方命令
+                            handle_command(self, cmd_sym, args, state, env, depth + 1)
+                        } else {
+                            Err(RuntimeError::new(
+                                RuntimeErrorKind::TypeError {
+                                    expected: "symbol for Function/Builtin".into(),
+                                    sym: cmd_sym.to_string(),
+                                    found: "Symbol with no meaning".to_string(),
+                                },
+                                self.clone(),
+                                depth,
+                            ))
                         }
-                    }
+                    } //     }
+                      // }
                 }
             }
             other => Err(RuntimeError::new(
@@ -655,6 +668,34 @@ pub fn bind_arguments(
     }
 }
 
+#[inline]
+pub fn handle_builtin(
+    base: &Expression,
+    method: &str,
+    args: &Vec<Expression>,
+    ctx: &Expression,
+    state: &mut State,
+    env: &mut Environment,
+    _depth: usize,
+) -> Option<Result<Expression, RuntimeError>> {
+    if let Some(bfn) = get_builtin_via_expr(base, method) {
+        let bt_result = if args.contains(&Expression::Blank) {
+            let received_args = args
+                .iter()
+                .map(|x| match x {
+                    Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
+                    o => o.clone(),
+                })
+                .collect::<Vec<_>>();
+            bfn(&received_args, env, ctx)
+        } else {
+            bfn(&args, env, ctx)
+        };
+        return Some(bt_result);
+    }
+    None
+}
+
 impl Expression {
     #[inline]
     pub fn handle_builtin_n_normal_cmd(
@@ -668,19 +709,10 @@ impl Expression {
         // inject builtin cmd executor here, to invoid to influent other index eval.
 
         if let Expression::Property(base, method) = cmd {
-            if let Some(bfn) = get_builtin_via_expr(base, &method.to_string()) {
-                return if args.contains(&Expression::Blank) {
-                    let received_args = args
-                        .iter()
-                        .map(|x| match x {
-                            Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
-                            o => o.clone(),
-                        })
-                        .collect::<Vec<_>>();
-                    bfn(&received_args, env, self)
-                } else {
-                    bfn(&args, env, self)
-                };
+            if let Some(btr) =
+                handle_builtin(base, &method.to_string(), args, self, state, env, depth)
+            {
+                return btr;
             }
             // 自定义Map不应以命令方式调用,但文件名可能以a.b的方式存在
         }
@@ -715,8 +747,14 @@ impl Expression {
         env: &mut Environment,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        // 首先求值基础表达式
-        let mut current_base = base.eval_mut(state, env, depth + 1)?;
+        // 首先求值基础表达式,但需要注意变量覆盖lib名
+        let mut current_base = match base {
+            Expression::Symbol(s) => match is_lib(s) {
+                true => base.clone(),
+                false => base.eval_mut(state, env, depth + 1)?,
+            },
+            _ => base.eval_mut(state, env, depth + 1)?,
+        };
 
         // 依次执行每个链式调用
         for call in calls {

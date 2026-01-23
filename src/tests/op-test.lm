@@ -87,7 +87,7 @@ test_count += 1
 
 # 测试4.2 For循环范围
 for i in 0..3 { "" + i + "\n" >> /tmp/tmp.txt }
-assert(len! string.lines(fs.read "/tmp/tmp.txt"), 3, "范围左闭右开", test_count) # 应输出0,1,2
+assert(len string.lines(fs.read "/tmp/tmp.txt"), 3, "范围左闭右开", test_count) # 应输出0,1,2
 test_count += 1
 fs.rm /tmp/tmp.txt
 

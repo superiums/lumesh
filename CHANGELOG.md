@@ -4,6 +4,7 @@
 
 - optimize iteration in `for` loop.
   now 1_000_000 times loop in `for`, only takes **114ms**, the previous edition is 385ms. reduced **70%** time cost!
+- fix chained call may be covered by var.
 
 ## [0.11.3]
 

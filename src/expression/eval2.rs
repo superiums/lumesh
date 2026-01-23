@@ -28,10 +28,16 @@ impl Expression {
             Self::While(cond, body) => {
                 // 循环求值直到条件为假
                 let mut last = Ok(Expression::None);
-                while cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy() {
+                let mut condition_result =
+                    cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy();
+
+                while condition_result {
                     last = body.as_ref().eval_mut(state, env, depth + 1);
                     match last {
-                        Ok(_) => {} //继续
+                        Ok(_) => {
+                            condition_result =
+                                cond.as_ref().eval_mut(state, env, depth + 1)?.is_truthy();
+                        } //todo maybe only eval when condition change
                         Err(RuntimeError {
                             kind: RuntimeErrorKind::EarlyBreak(v),
                             context: _,
@@ -211,23 +217,28 @@ impl Expression {
         match list_excuted {
             Expression::Range(range, step) => {
                 let iterator = range.step_by(step).map(Expression::Integer);
-                execute_iteration(var, iterator, body, state, env, depth)
+                let count = if state.contains(State::IN_ASSIGN) {
+                    iterator.clone().count() / step
+                } else {
+                    0
+                };
+                execute_iteration(var, iterator, count, body, state, env, depth)
             }
             Expression::List(items) => {
                 let owned_items: Vec<Expression> = items.iter().cloned().collect();
                 let iterator = owned_items.into_iter();
                 // let iterator = items.iter().cloned();
-                execute_iteration(var, iterator, body, state, env, depth)
+                execute_iteration(var, iterator, items.iter().count(), body, state, env, depth)
             }
             Expression::String(str) => {
                 let s = expand_home(str.as_ref());
                 if s.contains('*') {
                     // glob expansion logic
                     let iterator = glob_expand(&s).into_iter().map(Expression::String);
-                    execute_iteration(var, iterator, body, state, env, depth)
+                    execute_iteration(var, iterator, s.len(), body, state, env, depth)
                 } else {
                     let iterator = ifs_split(&s, env).into_iter().map(Expression::String);
-                    execute_iteration(var, iterator, body, state, env, depth)
+                    execute_iteration(var, iterator, s.len(), body, state, env, depth)
                 }
             }
             _ => Err(RuntimeError::new(
@@ -352,6 +363,7 @@ pub fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
 fn execute_iteration<I>(
     var: &String,
     iterator: I,
+    count: usize,
     body: &Rc<Expression>,
     state: &mut State,
     env: &mut Environment,
@@ -365,7 +377,7 @@ where
     state.set_loop_context(var.clone(), Box::new(iterator));
 
     let r = if state.contains(State::IN_ASSIGN) {
-        let mut results = Vec::new();
+        let mut results = Vec::with_capacity(count);
         loop {
             match body.as_ref().eval_mut(state, env, depth) {
                 Ok(result) => results.push(result),

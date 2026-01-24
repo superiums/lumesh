@@ -17,9 +17,10 @@ use std::rc::Rc;
 // #[derive(Debug, Clone)]
 pub struct State(
     u8,
-    Option<Expression>,
-    Vec<String>,
-    Option<(String, Box<dyn Iterator<Item = Expression>>)>,
+    Option<Expression>,                                     //pipe-data
+    Vec<String>,                                            //domains
+    HashMap<String, Expression>,                            //local-var
+    Option<(String, Box<dyn Iterator<Item = Expression>>)>, //loop-iter
 );
 
 impl Default for State {
@@ -39,9 +40,9 @@ impl State {
     // 创建一个新的 State 实例
     pub fn new(strict: bool) -> Self {
         if strict {
-            State(State::STRICT, None, Vec::new(), None)
+            State(State::STRICT, None, Vec::new(), HashMap::new(), None)
         } else {
-            State(0, None, Vec::new(), None)
+            State(0, None, Vec::new(), HashMap::new(), None)
         }
     }
 
@@ -97,51 +98,46 @@ impl State {
     pub const IN_FOR_LOOP: u8 = 1 << 7; // 新增循环状态标志
 
     // 添加循环状态字段
-    pub fn set_loop_context(
-        &mut self,
-        var_name: String,
-        iterator: Box<dyn Iterator<Item = Expression>>,
-    ) {
-        self.3 = Some((var_name, iterator)); // 需要扩展State结构体
+    pub fn set_iter(&mut self, var_name: String, iterator: Box<dyn Iterator<Item = Expression>>) {
+        self.4 = Some((var_name, iterator)); // 需要扩展State结构体
     }
 
-    // pub fn get_loop_context(&mut self) -> Option<(String, &mut dyn Iterator<Item = Expression>)> {
-    //     self.3
+    // pub fn get_loop_context(
+    //     &mut self,
+    //     var: &String,
+    // ) -> Option<&mut (dyn Iterator<Item = Expression> + 'static)> {
+    //     // dbg!(&var, &self.3.is_some());
+    //     if let Some((v, _)) = self.4.as_ref() {
+    //         if v == var {
+    //             return self.4.as_mut().map(|(_, iterator)| iterator.as_mut());
+    //         }
+    //     }
+    //     None
     // }
 
-    pub fn get_loop_context(
-        &mut self,
-        var: &String,
-    ) -> Option<&mut (dyn Iterator<Item = Expression> + 'static)> {
-        // dbg!(&var, &self.3.is_some());
-        if let Some((v, _)) = self.3.as_ref() {
-            if v == var {
-                return self.3.as_mut().map(|(_, iterator)| iterator.as_mut());
-            }
-        }
-        None
-
-        // if let Some((loop_var, &mut iterator)) = &self.3.as_mut() {
-        //     dbg!(&loop_var);
-        //     if var == loop_var {
-        //         // 从迭代器弹出下一个值
-        //         let r = Some(match iterator.next() {
-        //             Some(expr) => Ok(expr),
-        //             None => Err(RuntimeError::new(
-        //                 RuntimeErrorKind::IteratorExhausted(var.clone()),
-        //                 ctx.clone(),
-        //                 depth,
-        //             )),
-        //         });
-        //         dbg!(&r);
-        //         return r;
-        //     }
-        // }
-        // None
+    pub fn clear_loop_context(&mut self) {
+        self.4 = None;
     }
 
-    pub fn clear_loop_context(&mut self) {
-        self.3 = None;
+    pub fn set_local_var(&mut self, name: String, value: Expression) {
+        self.3.insert(name, value);
+    }
+    pub fn get_local_var(&self, name: &str) -> Option<&Expression> {
+        self.3.get(name)
+    }
+
+    pub fn pop_iter(&mut self) -> Result<bool, RuntimeErrorKind> {
+        match self.4.as_mut() {
+            Some((v, iter)) => {
+                if let Some(value) = iter.next() {
+                    self.3.insert(v.to_string(), value);
+                } else {
+                    return Err(RuntimeErrorKind::IteratorExhausted(v.clone()));
+                }
+                Ok(true)
+            }
+            None => Ok(false),
+        }
     }
 }
 
@@ -248,6 +244,11 @@ impl Expression {
                 Self::Declare(name, expr) => {
                     // dbg!("declare---->", &name, &expr.type_name());
 
+                    if state.contains(State::IN_FOR_LOOP) {
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                        state.set_local_var(name.to_string(), value);
+                        return Ok(Self::None);
+                    }
                     if state.contains(State::STRICT) && env.has(name) {
                         return Err(RuntimeError::new(
                             RuntimeErrorKind::Redeclaration(name.to_string()),
@@ -1332,15 +1333,16 @@ impl Expression {
     ) -> Result<Expression, RuntimeError> {
         // 优先检查是否在循环状态中
         if state.contains(State::IN_FOR_LOOP) {
-            if let Some(iter) = state.get_loop_context(name) {
-                return match iter.next() {
-                    Some(expr) => Ok(expr),
-                    None => Err(RuntimeError::new(
-                        RuntimeErrorKind::IteratorExhausted(name.clone()),
-                        self.clone(),
-                        depth,
-                    )),
-                };
+            if let Some(local_val) = state.get_local_var(name) {
+                return Ok(local_val.clone());
+                // return match iter.next() {
+                //     Some(expr) => Ok(expr),
+                //     None => Err(RuntimeError::new(
+                //         RuntimeErrorKind::IteratorExhausted(name.clone()),
+                //         self.clone(),
+                //         depth,
+                //     )),
+                // };
             }
         }
 
@@ -1362,21 +1364,30 @@ impl Expression {
         &self,
         method: &str,
         args: &[Expression],
-        _state: &mut State,
+        state: &mut State,
         env: &mut Environment,
         context: &Expression,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
+        let mut args_eval = Vec::with_capacity(args.len());
+        for arg in args.iter() {
+            match arg.eval_mut(state, env, depth) {
+                Ok(a) => args_eval.push(a),
+                Err(e) => return Err(e),
+            }
+        }
+        // 占位符_ 不应在管道方法中使用
         match get_builtin_via_expr(self, method) {
-            Some(bfn) => match args.contains(&Expression::Blank) {
-                true => bfn(args, env, context),
-                false => {
-                    let mut combined_args = Vec::with_capacity(args.len() + 1);
-                    combined_args.push(self.clone());
-                    combined_args.extend_from_slice(args);
-                    bfn(&combined_args, env, context)
-                }
-            },
+            Some(bfn) => {
+                // match args.contains(&Expression::Blank) {
+                //     true => bfn(&args_eval, env, context),
+                //     false => {
+                let mut combined_args = Vec::with_capacity(args_eval.len() + 1);
+                combined_args.push(self.clone());
+                combined_args.extend_from_slice(&args_eval);
+                bfn(&combined_args, env, context)
+                // }}
+            }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::NoLibDefined(
                     method.to_string(),

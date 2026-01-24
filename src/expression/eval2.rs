@@ -217,11 +217,7 @@ impl Expression {
         match list_excuted {
             Expression::Range(range, step) => {
                 let iterator = range.step_by(step).map(Expression::Integer);
-                let count = if state.contains(State::IN_ASSIGN) {
-                    iterator.clone().count() / step
-                } else {
-                    0
-                };
+                let count = iterator.clone().count().div_ceil(step.max(1));
                 execute_iteration(var, iterator, count, body, state, env, depth)
             }
             Expression::List(items) => {
@@ -374,11 +370,14 @@ where
 {
     // 设置循环状态
     state.set(State::IN_FOR_LOOP);
-    state.set_loop_context(var.clone(), Box::new(iterator));
+    state.set_iter(var.clone(), Box::new(iterator));
 
     let r = if state.contains(State::IN_ASSIGN) {
         let mut results = Vec::with_capacity(count);
-        loop {
+        for _ in 0..count {
+            if let Err(_) = state.pop_iter() {
+                break;
+            };
             match body.as_ref().eval_mut(state, env, depth) {
                 Ok(result) => results.push(result),
                 Err(RuntimeError {
@@ -401,7 +400,10 @@ where
         }
         Ok(Expression::from(results))
     } else {
-        loop {
+        for _ in 0..count {
+            if let Err(_) = state.pop_iter() {
+                break;
+            }
             match body.as_ref().eval_mut(state, env, depth) {
                 Ok(_) => {}
                 Err(RuntimeError {

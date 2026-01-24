@@ -9,11 +9,16 @@
   + `NAME` means function name.
   + `ARGS` means function args.
   + `RESULT` means function result.
+  
+- fix loop iter var could use only once.
+  now 1_000_000 times loop in `for`, only takes **224ms**
+  **41%** faster than 385ms.
+- add local vars.
 
 ## [0.11.4]
 
 - optimize iteration in `for` loop.
-  now 1_000_000 times loop in `for`, only takes **114ms**, the previous edition is 385ms. reduced **70%** time cost!
+  ~~now 1_000_000 times loop in `for`, only takes **114ms**, the previous edition is 385ms. reduced **70%** time cost!~~
 - fix chained call may be covered by var.
 
 ## [0.11.3]

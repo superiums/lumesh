@@ -701,22 +701,47 @@ pub fn handle_builtin(
     ctx: &Expression,
     state: &mut State,
     env: &mut Environment,
-    _depth: usize,
+    depth: usize,
 ) -> Option<Result<Expression, RuntimeError>> {
     if let Some(bfn) = get_builtin_via_expr(base, method) {
-        let bt_result = if args.contains(&Expression::Blank) {
-            let received_args = args
-                .iter()
-                .map(|x| match x {
-                    Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
-                    o => o.clone(),
-                })
-                .collect::<Vec<_>>();
-            bfn(&received_args, env, ctx)
-        } else {
-            bfn(&args, env, ctx)
+        // let bt_result = if args.contains(&Expression::Blank) {
+        //     let received_args = args
+        //         .iter()
+        //         .map(|x| match x {
+        //             Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
+        //             o => o.clone(),
+        //         })
+        //         .collect::<Vec<_>>();
+        //     bfn(&received_args, env, ctx)
+        // } else {
+        //     bfn(&args, env, ctx)
+        // };
+        // return Some(bt_result);
+        // TODO if eval first, btin should not eval again
+        // and the specail conditon for where : size>0
+        // not works well, should fix
+        // the resean to excute it here, is for local vars in loop,
+        // only current env knows the state.
+        let mut args_eval = Vec::with_capacity(args.len());
+        for arg in args.iter() {
+            match arg.eval_mut(state, env, depth) {
+                Ok(a) => args_eval.push(a),
+                Err(e) => return Some(Err(e)),
+            }
+        }
+
+        // 判断是String.red 还是 ‘xx'.red
+        let result = match base {
+            Expression::Symbol(_) | Expression::Blank => bfn(&args_eval, env, ctx),
+            val => {
+                let mut combined_args = Vec::with_capacity(args_eval.len() + 1);
+                combined_args.push(val.clone());
+                combined_args.extend_from_slice(&args_eval);
+                bfn(&combined_args, env, ctx)
+            }
         };
-        return Some(bt_result);
+
+        return Some(result);
     }
     None
 }
@@ -784,60 +809,37 @@ impl Expression {
         // 依次执行每个链式调用
         for call in calls {
             let method = call.method.as_str();
+            let lib_result =
+                handle_builtin(&current_base, method, &call.args, self, state, env, depth);
 
-            let bti_fo = get_builtin_via_expr(&current_base, method);
-            let excuted = match bti_fo {
-                Some(bfn) => {
-                    // 替换接收器的值
-                    let received_args = if call.args.contains(&Expression::Blank) {
-                        &call
-                            .args
-                            .iter()
-                            .map(|x| match x {
-                                Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
-                                o => o.clone(),
-                            })
-                            .collect::<Vec<_>>()
-                    } else {
-                        &call.args
-                    };
-                    // 判断是String.red 还是 ‘xx'.red
-                    match &current_base {
-                        Expression::Symbol(_) => bfn(&received_args, env, self),
-                        val => {
-                            let mut combined_args = Vec::with_capacity(received_args.len() + 1);
-                            combined_args.push(val.clone());
-                            combined_args.extend_from_slice(&received_args);
-                            bfn(&combined_args, env, self)
-                        }
-                    }
-                }
+            let executed = match lib_result {
+                Some(result) => result,
+
                 // 非内置函数
                 None => {
                     return match current_base {
                         // 是自定义的Map内的func
-                        Expression::Map(map) => {
-                            match map.get(method) {
-                                Some(func) => {
-                                    // 字典的键值是可执行对象
-                                    match func {
-                                        Expression::Lambda(..) | Expression::Function(..) => {
-                                            self.eval_apply(func, &call.args, state, env, depth)
-                                        }
-                                        s => Err(RuntimeError::new(
-                                            RuntimeErrorKind::NotAFunction(s.to_string()),
-                                            self.clone(),
-                                            depth,
-                                        )),
+                        Expression::Map(map) => match map.get(method) {
+                            Some(func) => {
+                                // 字典的键值是可执行对象
+                                match func {
+                                    Expression::Lambda(..) | Expression::Function(..) => {
+                                        self.eval_apply(func, &call.args, state, env, depth)
                                     }
+                                    s => Err(RuntimeError::new(
+                                        RuntimeErrorKind::NotAFunction(s.to_string()),
+                                        self.clone(),
+                                        depth,
+                                    )),
                                 }
-                                None => Err(RuntimeError::new(
-                                    RuntimeErrorKind::KeyNotFound(method.into()),
-                                    self.clone(),
-                                    depth,
-                                )),
                             }
-                        }
+                            None => Err(RuntimeError::new(
+                                RuntimeErrorKind::KeyNotFound(method.into()),
+                                self.clone(),
+                                depth,
+                            )),
+                        },
+
                         _ => Err(RuntimeError::new(
                             RuntimeErrorKind::NoLibDefined(
                                 method.to_string(),
@@ -911,7 +913,7 @@ impl Expression {
             //         )),
             //     },
             // };
-            current_base = excuted?;
+            current_base = executed?;
         }
 
         Ok(current_base)

@@ -128,8 +128,12 @@ impl Expression {
                 write!(f, "\n{}}}", idt(i))
             }
 
-            Self::For(name, list, body) => {
-                write!(f, "{}for {} in ", idt(i), name)?;
+            Self::For(name, index, list, body) => {
+                if let Some(ind) = index {
+                    write!(f, "{}for {},{} in ", idt(i), ind, name)?;
+                } else {
+                    write!(f, "{}for {} in ", idt(i), name)?;
+                }
                 list.fmt_display_indent(f, 0)?;
                 writeln!(f, " {{")?;
                 body.fmt_display_indent(f, i + 1)?;
@@ -607,8 +611,12 @@ impl Expression {
                 }
                 write!(f, "\n{}}}\n", idt(i))
             }
-            Self::For(name, list, body) => {
-                write!(f, "\n{}for {} in ", idt(i), name)?;
+            Self::For(name, index, list, body) => {
+                if let Some(ind) = index {
+                    write!(f, "{}for {},{} in ", idt(i), ind, name)?;
+                } else {
+                    write!(f, "{}for {} in ", idt(i), name)?;
+                }
                 list.fmt_indent(f, i + 1)?;
                 write!(f, "\n{}{{\n", idt(i))?;
                 body.fmt_indent(f, i + 1)?;
@@ -716,7 +724,7 @@ impl Expression {
             Self::Del(_) => "Del".into(),
             Self::Declare(_, _) => "Declare".into(),
             Self::Assign(_, _) => "Assign".into(),
-            Self::For(_, _, _) => "For".into(),
+            Self::For(..) => "For".into(),
             Self::While(_, _) => "While".into(),
             Self::Loop(_) => "Loop".into(),
             Self::Match(_, _) => "Match".into(),

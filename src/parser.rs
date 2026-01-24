@@ -1842,14 +1842,15 @@ fn parse_loop_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxE
 // FOR循环解析
 fn parse_for_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("for")(input)?;
-    let (input, pattern) = cut(parse_symbol_string)(input)?; // 或更复杂的模式匹配
+    let (input, pat_ind) = opt(terminated(parse_symbol_string, text(",")))(input)?;
+    let (input, pat_var) = cut(parse_symbol_string)(input)?;
     let (input, _) = cut(text("in"))(input)?;
     let (input, iterable) = cut(parse_expr)(input)?;
     let (input, body) = cut(parse_block)(input)?;
 
     Ok((
         input,
-        Expression::For(pattern, Rc::new(iterable), Rc::new(body)),
+        Expression::For(pat_var, pat_ind, Rc::new(iterable), Rc::new(body)),
     ))
 }
 

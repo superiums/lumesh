@@ -21,9 +21,15 @@ impl Expression {
         depth: usize,
     ) -> Result<Self, RuntimeError> {
         match self {
-            Self::For(var, list_expr, body) => {
-                self.handle_for(var, list_expr, body, state, env, depth + 1)
-            }
+            Self::For(var, index_name, list_expr, body) => self.handle_for(
+                var.clone(),
+                index_name.clone(),
+                list_expr,
+                body.as_ref(),
+                state,
+                env,
+                depth + 1,
+            ),
 
             Self::While(cond, body) => {
                 // 循环求值直到条件为假
@@ -204,9 +210,10 @@ impl Expression {
     #[inline]
     fn handle_for(
         &self,
-        var: &String,
+        var: String,
+        index_name: Option<String>,
         list_expr: &Rc<Expression>,
-        body: &Rc<Expression>,
+        body: &Expression,
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -218,23 +225,32 @@ impl Expression {
             Expression::Range(range, step) => {
                 let iterator = range.step_by(step).map(Expression::Integer);
                 let count = iterator.clone().count().div_ceil(step.max(1));
-                execute_iteration(var, iterator, count, body, state, env, depth)
+                execute_iteration(var, index_name, iterator, count, body, state, env, depth)
             }
             Expression::List(items) => {
                 let owned_items: Vec<Expression> = items.iter().cloned().collect();
                 let iterator = owned_items.into_iter();
                 // let iterator = items.iter().cloned();
-                execute_iteration(var, iterator, items.iter().count(), body, state, env, depth)
+                execute_iteration(
+                    var,
+                    index_name,
+                    iterator,
+                    items.iter().count(),
+                    body,
+                    state,
+                    env,
+                    depth,
+                )
             }
             Expression::String(str) => {
                 let s = expand_home(str.as_ref());
                 if s.contains('*') {
                     // glob expansion logic
                     let iterator = glob_expand(&s).into_iter().map(Expression::String);
-                    execute_iteration(var, iterator, s.len(), body, state, env, depth)
+                    execute_iteration(var, index_name, iterator, s.len(), body, state, env, depth)
                 } else {
                     let iterator = ifs_split(&s, env).into_iter().map(Expression::String);
-                    execute_iteration(var, iterator, s.len(), body, state, env, depth)
+                    execute_iteration(var, index_name, iterator, s.len(), body, state, env, depth)
                 }
             }
             _ => Err(RuntimeError::new(
@@ -356,11 +372,12 @@ pub fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
     }
 }
 
-fn execute_iteration<I>(
-    var: &String,
+pub fn execute_iteration<I>(
+    var_name: String,
+    index_name: Option<String>,
     iterator: I,
     count: usize,
-    body: &Rc<Expression>,
+    body: &Expression,
     state: &mut State,
     env: &mut Environment,
     depth: usize,
@@ -370,7 +387,7 @@ where
 {
     // 设置循环状态
     state.set(State::IN_FOR_LOOP);
-    state.set_iter(var.clone(), Box::new(iterator));
+    state.set_iter(var_name, index_name, Box::new(iterator));
 
     let r = if state.contains(State::IN_ASSIGN) {
         let mut results = Vec::with_capacity(count);
@@ -378,7 +395,7 @@ where
             if let Err(_) = state.pop_iter() {
                 break;
             };
-            match body.as_ref().eval_mut(state, env, depth) {
+            match body.eval_mut(state, env, depth) {
                 Ok(result) => results.push(result),
                 Err(RuntimeError {
                     kind: RuntimeErrorKind::EarlyBreak(v),
@@ -394,6 +411,7 @@ where
                 Err(e) => {
                     state.clear(State::IN_FOR_LOOP);
                     state.clear_loop_context();
+                    state.clear_local_var();
                     return Err(e);
                 }
             }
@@ -404,7 +422,7 @@ where
             if let Err(_) = state.pop_iter() {
                 break;
             }
-            match body.as_ref().eval_mut(state, env, depth) {
+            match body.eval_mut(state, env, depth) {
                 Ok(_) => {}
                 Err(RuntimeError {
                     kind: RuntimeErrorKind::EarlyBreak(_v),
@@ -417,6 +435,7 @@ where
                 Err(e) => {
                     state.clear(State::IN_FOR_LOOP);
                     state.clear_loop_context();
+                    state.clear_local_var();
                     return Err(e);
                 }
             }
@@ -427,6 +446,7 @@ where
     // 清理循环状态
     state.clear(State::IN_FOR_LOOP);
     state.clear_loop_context();
+    state.clear_local_var();
     r
 }
 

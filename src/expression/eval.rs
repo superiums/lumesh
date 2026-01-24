@@ -17,10 +17,10 @@ use std::rc::Rc;
 // #[derive(Debug, Clone)]
 pub struct State(
     u8,
-    Option<Expression>,                                     //pipe-data
-    Vec<String>,                                            //domains
-    HashMap<String, Expression>,                            //local-var
-    Option<(String, Box<dyn Iterator<Item = Expression>>)>, //loop-iter
+    Option<Expression>,          //pipe-data
+    Vec<String>,                 //domains
+    HashMap<String, Expression>, //local-var
+    Option<(String, Option<String>, Box<dyn Iterator<Item = Expression>>)>, //loop-iter
 );
 
 impl Default for State {
@@ -97,11 +97,6 @@ impl State {
 impl State {
     pub const IN_FOR_LOOP: u8 = 1 << 7; // 新增循环状态标志
 
-    // 添加循环状态字段
-    pub fn set_iter(&mut self, var_name: String, iterator: Box<dyn Iterator<Item = Expression>>) {
-        self.4 = Some((var_name, iterator)); // 需要扩展State结构体
-    }
-
     // pub fn get_loop_context(
     //     &mut self,
     //     var: &String,
@@ -115,22 +110,39 @@ impl State {
     //     None
     // }
 
-    pub fn clear_loop_context(&mut self) {
-        self.4 = None;
-    }
-
     pub fn set_local_var(&mut self, name: String, value: Expression) {
         self.3.insert(name, value);
     }
     pub fn get_local_var(&self, name: &str) -> Option<&Expression> {
         self.3.get(name)
     }
+    pub fn clear_local_var(&mut self) {
+        self.3.clear();
+    }
 
+    // 添加循环状态字段
+    pub fn set_iter(
+        &mut self,
+        var_name: String,
+        index_name: Option<String>,
+        iterator: Box<dyn Iterator<Item = Expression>>,
+    ) {
+        self.4 = Some((var_name, index_name, iterator)); // 需要扩展State结构体
+    }
     pub fn pop_iter(&mut self) -> Result<bool, RuntimeErrorKind> {
         match self.4.as_mut() {
-            Some((v, iter)) => {
+            Some((v, ind, iter)) => {
                 if let Some(value) = iter.next() {
                     self.3.insert(v.to_string(), value);
+                    if let Some(index) = ind {
+                        let old_index = self.3.get(index);
+                        match old_index {
+                            Some(Expression::Integer(s)) => {
+                                self.3.insert(index.to_string(), Expression::Integer(s + 1))
+                            }
+                            _ => self.3.insert(index.to_string(), Expression::Integer(0)),
+                        };
+                    };
                 } else {
                     return Err(RuntimeErrorKind::IteratorExhausted(v.clone()));
                 }
@@ -138,6 +150,9 @@ impl State {
             }
             None => Ok(false),
         }
+    }
+    pub fn clear_loop_context(&mut self) {
+        self.4 = None;
     }
 }
 

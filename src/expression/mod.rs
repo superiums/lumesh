@@ -54,7 +54,7 @@ pub enum Expression {
     Del(String),
     Declare(String, Rc<Self>),
     Assign(String, Rc<Self>),
-    For(String, Rc<Self>, Rc<Self>),
+    For(String, Option<String>, Rc<Self>, Rc<Self>),
     While(Rc<Self>, Rc<Self>),
     Loop(Rc<Self>),
     Match(Rc<Self>, Rc<Vec<(Vec<Self>, Self)>>),

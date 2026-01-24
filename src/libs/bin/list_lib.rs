@@ -2,6 +2,7 @@
 use std::rc::Rc;
 
 use crate::eval::{State, is_strict};
+use crate::expression::eval2::execute_iteration;
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
     check_args_len, check_exact_args_len, check_fn_arg, get_integer_arg, get_string_arg,
@@ -762,42 +763,41 @@ fn map(
     let list = get_list_arg(args[0].eval(env)?, ctx)?;
     let func = args[1].eval(env)?;
 
-    let need_index = match &func {
-        Expression::Function(_, p, c, _, _) => p.len() > 1 || c.is_some(),
-        Expression::Lambda(p, _) => p.len() > 1,
-        o => {
-            return Err(RuntimeError::new(
-                RuntimeErrorKind::TypeError {
-                    expected: "Function/Lambda".into(),
-                    sym: args[0].to_string(),
-                    found: o.type_name(),
-                },
-                ctx.clone(),
-                0,
-            ));
+    let (var_name, ind_name, body) = if check_fn_arg(&func, 2, ctx).is_ok() {
+        match &func {
+            Expression::Function(_, p, _, body, _) => (p[1].0.clone(), Some(p[0].0.clone()), body),
+            Expression::Lambda(p, body) => (p[1].clone(), Some(p[0].clone()), body),
+            _ => unreachable!(),
         }
-    };
-
-    let mut result = Vec::with_capacity(list.as_ref().len());
-    if need_index {
-        for (index, item) in list.as_ref().iter().enumerate() {
-            result.push(
-                Expression::Apply(
-                    Rc::new(func.clone()),
-                    Rc::new(vec![Expression::Integer(index as Int), item.clone()]),
-                )
-                .eval(env)?,
-            );
+    } else if check_fn_arg(&func, 1, ctx).is_ok() {
+        match &func {
+            Expression::Function(_, p, _, body, _) => (p[0].0.clone(), None, body),
+            Expression::Lambda(p, body) => (p[0].clone(), None, body),
+            _ => unreachable!(),
         }
     } else {
-        for item in list.as_ref().iter() {
-            result.push(
-                Expression::Apply(Rc::new(func.clone()), Rc::new(vec![item.clone()])).eval(env)?,
-            );
-        }
-    }
+        return Err(RuntimeError::common(
+            ("your func/lambda should define 1..2 param").into(),
+            ctx.clone(),
+            0,
+        ));
+    };
 
-    Ok(Expression::from(result))
+    // if !need_index {
+    let mut state = State::new(is_strict(env));
+    state.set(State::IN_ASSIGN);
+    let count = list.iter().count();
+    let iterator = list.as_ref().clone().into_iter();
+    execute_iteration(
+        var_name,
+        ind_name,
+        iterator,
+        count,
+        body.as_ref(),
+        &mut state,
+        env,
+        0,
+    )
 }
 
 fn items(
@@ -1117,12 +1117,26 @@ fn foldl(
         _ => Expression::Integer(0),
     };
     check_fn_arg(&f, 2, ctx)?;
-    let mut state = State::new(is_strict(env));
     for item in list.as_ref().iter() {
-        // acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
-        acc =
-            ctx.eval_function_with_deco(f.clone(), &vec![item.clone(), acc], &mut state, env, 0)?;
+        acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
     }
+    // let mut state = State::new(is_strict(env));
+    // match f {
+    //     Expression::Function(_, params, _, body, _) => {
+    //         let count = list.iter().count();
+    //         let iterator = list.as_ref().clone().into_iter();
+    //         return execute_iteration(
+    //             &params[0].0,
+    //             iterator,
+    //             count,
+    //             body.as_ref(),
+    //             &mut state,
+    //             env,
+    //             0,
+    //         );
+    //     }
+    //     _ => {}
+    // }
     Ok(acc)
 }
 fn foldr(

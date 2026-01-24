@@ -14,6 +14,10 @@
   now 1_000_000 times loop in `for`, only takes **224ms**
   **41%** faster than 385ms.
 - add local vars.
+- add index iter for `for` loop
+now support `for index,item in collection`
+- optimize `list.map` to use iter.
+
 
 ## [0.11.4]
 

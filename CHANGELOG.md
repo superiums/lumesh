@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.11.4]
+## [0.11.5]
 - refactor decorator realization
   now decorator changes to middleware like style.
   every decorator function should return a `[before,after]` list. each one is a function.
@@ -17,6 +17,7 @@
 - add index iter for `for` loop
 now support `for index,item in collection`
 - optimize `list.map` to use iter.
+- cmd sym lookup ahead of vars.
 
 
 ## [0.11.4]

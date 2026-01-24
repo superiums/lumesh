@@ -512,16 +512,19 @@ impl Expression {
             // NOTE alias is a symbol, when appreared on right of pipe, the _ receiver is not injected
             {
                 // top level builtin lib cmd, first of all, to invoid cmd to be covered by vars.
-
-                if let Some(btr) = handle_builtin(
-                    &Expression::Blank,
-                    cmd_sym.as_ref(),
-                    args,
-                    self,
-                    state,
-                    env,
-                    depth,
-                ) {
+                // cmd already checked before this function.
+                // this is only for func
+                if !is_cmd_mode
+                    && let Some(btr) = handle_builtin(
+                        &Expression::Blank,
+                        cmd_sym.as_ref(),
+                        args,
+                        self,
+                        state,
+                        env,
+                        depth,
+                    )
+                {
                     return btr;
                 }
 
@@ -767,6 +770,21 @@ impl Expression {
             // 自定义Map不应以命令方式调用,但文件名可能以a.b的方式存在
         }
 
+        if let Expression::Symbol(cmd_sym) = cmd {
+            if let Some(btr) = handle_builtin(
+                &Expression::Blank,
+                cmd_sym.as_ref(),
+                args,
+                self,
+                state,
+                env,
+                depth,
+            ) {
+                return btr;
+            }
+        }
+
+        // symbol和Property方式匹配失败后，允许其他含义，所以继续匹配
         return match cmd {
             Expression::Variable(_)
             | Expression::Symbol(_)

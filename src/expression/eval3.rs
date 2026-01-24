@@ -8,10 +8,189 @@ use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, Runtim
 impl Expression {
     // 函数应用
     #[inline]
+    pub fn eval_normal_function(
+        &self,
+        func: Expression,
+        args: &[Expression],
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        match func {
+            Expression::Function(name, params, pc, body, _decos) => {
+                // 1. 先检查参数数量上限
+                if pc.is_none() && args.len() > params.len() {
+                    return Err(RuntimeError::new(
+                        RuntimeErrorKind::TooManyArguments {
+                            name,
+                            max: params.len(),
+                            received: args.len(),
+                        },
+                        self.clone(),
+                        depth,
+                    ));
+                }
+
+                // 2. 求值实际参数
+                let is_in_pipe = state.contains(State::IN_ASSIGN);
+                state.set(State::IN_ASSIGN);
+                let mut actual_args = args
+                    .iter()
+                    .map(|a| a.eval_mut(state, env, depth + 1))
+                    .collect::<Result<Vec<_>, _>>()?;
+                if !is_in_pipe {
+                    state.clear(State::IN_ASSIGN);
+                }
+
+                // 3. 填充默认值（修正后）
+                for (i, (_, default)) in params.iter().enumerate() {
+                    if i >= actual_args.len() {
+                        if let Some(def_expr) = default {
+                            actual_args.push(def_expr.clone());
+                        } else {
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::ArgumentMismatch {
+                                    name,
+                                    expected: params.len(),
+                                    received: actual_args.len(),
+                                },
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+
+                // 4. 创建新作用域
+                let new_env = match state.contains(State::IN_DECO) {
+                    true => env,
+                    _ => &mut env.fork(),
+                };
+
+                // 5. 正确处理 collector
+                if let Some(collector) = pc {
+                    // collector 获取剩余参数
+                    new_env.define(
+                        collector.as_str(),
+                        Expression::from(actual_args[params.len()..].to_vec()),
+                    );
+                }
+
+                // 6. 绑定正式参数（只绑定定义的参数）
+                for ((param, _), arg) in params.iter().zip(actual_args.iter().take(params.len())) {
+                    new_env.define(param, arg.clone());
+                }
+
+                // 执行函数体
+                match body.as_ref().eval_mut(state, new_env, depth + 1) {
+                    Ok(v) => Ok(v),
+                    Err(RuntimeError {
+                        kind: RuntimeErrorKind::EarlyReturn(v),
+                        context: _,
+                        depth: _,
+                    }) => Ok(v),
+                    Err(e) => Err(e),
+                }
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn eval_function_with_deco(
+        &self,
+        func: Expression,
+        args: &[Expression],
+        state: &mut State,
+        env: &mut Environment,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        match &func {
+            Expression::Function(name, _params, _pc, _body, decos) => {
+                let mut decoders = Vec::with_capacity(decos.len());
+                for deco in decos.iter() {
+                    let deco_fo = env.get(deco.0.as_str());
+                    if let Some(deco_fn) = deco_fo {
+                        if matches!(deco_fn, Expression::Function(..) | Expression::Lambda(..)) {
+                            let deco_args = deco.1.clone().unwrap_or(vec![]);
+                            // dbg!("deco is func", &deco_fn, &deco_args, &last_fn);
+                            let wrapper =
+                                deco_fn.eval_apply(&deco_fn, &deco_args, state, env, depth + 1)?;
+                            let item = match wrapper {
+                                Expression::List(list) if list.len() == 2 => list,
+                                _ => {
+                                    return Err(RuntimeError::common(
+                                        "decoder not return a [before,after] list".into(),
+                                        wrapper,
+                                        depth,
+                                    ));
+                                }
+                            };
+                            decoders.push(item);
+                        } else {
+                            return Err(RuntimeError::common(
+                                "trying to apply non-function as decorator".into(),
+                                deco_fn,
+                                depth,
+                            ));
+                        }
+                    } else {
+                        return Err(RuntimeError::common(
+                            format!("decorator `{}` not defined", deco.0).into(),
+                            self.clone(),
+                            depth,
+                        ));
+                    }
+                }
+
+                // 装饰器的总环境
+                let mut env_deco = Environment::new();
+                env_deco.define("NAME", Expression::String(name.to_string()));
+                env_deco.define("ARGS", Expression::from(args.to_vec()));
+
+                // 为每个装饰器创建独立环境
+                // 每个装饰器的before，after共享一个单独的环境
+                // 用IN_DECO状态指示以后不再fork
+                let mut env_stack = Vec::new();
+                for _ in 0..decoders.len() {
+                    env_stack.push(env_deco.fork());
+                }
+
+                // 执行 before 函数
+                state.set(State::IN_DECO);
+                for (i, decoder) in decoders.iter().enumerate() {
+                    let before = decoder.get(0).unwrap();
+                    if !matches!(before, &Expression::None | &Expression::Blank) {
+                        before.eval_apply(before, &vec![], state, &mut env_stack[i], depth)?;
+                    }
+                }
+                state.clear(State::IN_DECO);
+
+                // 执行原函数
+                let result = self.eval_normal_function(func, args, state, env, depth)?;
+
+                // 执行 after 函数（逆序，使用对应环境）
+                state.set(State::IN_DECO);
+                for (i, decoder) in decoders.iter().rev().enumerate() {
+                    let after = decoder.get(1).unwrap();
+                    if !matches!(after, &Expression::None | &Expression::Blank) {
+                        let env_idx = decoders.len() - 1 - i;
+                        env_stack[env_idx].define("RESULT", result.clone());
+                        after.eval_apply(after, &vec![], state, &mut env_stack[env_idx], depth)?;
+                    }
+                }
+                state.clear(State::IN_DECO);
+
+                Ok(result)
+            }
+            _ => unreachable!(),
+        }
+    }
+
+    #[inline]
     pub fn eval_apply(
         &self,
         func: &Expression,
-        args: &Vec<Expression>,
+        args: &[Expression],
         state: &mut State,
         env: &mut Environment,
         depth: usize,
@@ -100,165 +279,11 @@ impl Expression {
             //         Some(remain) => Ok(Expression::Macro(remain, body)),
             //     }
             // }
-            Expression::Function(name, params, pc, body, mut decos) => {
-                // dbg!("2.--- applying function---", &name, &params, &decos);
-                // dbg!(&def_env);
-                // 参数数量校验
-                // let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
-                // let pipe_arg_len = match &pipe_out {
-                //     Some(_) => 1,
-                //     _ => 0,
-                // };
-
-                // if pc.is_none() && args.len() + pipe_arg_len > params.len() {
-                if pc.is_none() && args.len() > params.len() {
-                    return Err(RuntimeError::new(
-                        crate::RuntimeErrorKind::TooManyArguments {
-                            name,
-                            max: params.len(),
-                            received: args.len(),
-                        },
-                        self.clone(),
-                        depth,
-                    ));
-                }
-
-                let is_in_pipe = state.contains(State::IN_PIPE);
-                state.set(State::IN_PIPE);
-
-                // dbg!(&decos, "----");
-                // println!();
-                match decos.is_empty() {
-                    false => {
-                        // dbg!(&decov);
-                        let mut last_fn = Expression::Function(name, params, pc, body, vec![]);
-                        let mut env_deco = env.fork();
-                        state.set(State::IN_DECO);
-                        decos.reverse();
-                        for deco in decos {
-                            // dbg!(&deco);
-                            let deco_f = env.get(deco.0.as_str());
-                            if let Some(deco_fn) = deco_f {
-                                // let deco_symbo_type = deco_fn.type_name();
-                                // if "Function" == deco_symbo_type || "Labmda" == deco_symbo_type {
-                                if matches!(
-                                    deco_fn,
-                                    Expression::Function(..) | Expression::Lambda(..)
-                                ) {
-                                    let deco_args = deco.1.unwrap_or(vec![]);
-                                    // dbg!("deco is func", &deco_fn, &deco_args, &last_fn);
-                                    let evaled_deco = self.eval_apply(
-                                        &deco_fn,
-                                        &deco_args,
-                                        state,
-                                        &mut env_deco,
-                                        depth + 1,
-                                    )?;
-                                    // dbg!(&evaled_deco);
-                                    // 只构建装饰器链，不执行
-                                    last_fn = self.eval_apply(
-                                        &evaled_deco,
-                                        &vec![last_fn],
-                                        state,
-                                        &mut env_deco,
-                                        depth + 1,
-                                    )?;
-                                } else {
-                                    return Err(RuntimeError::common(
-                                        "trying to apply non-function as decorator".into(),
-                                        deco_fn,
-                                        depth,
-                                    ));
-                                }
-                            } else {
-                                return Err(RuntimeError::common(
-                                    "decorator not defined".into(),
-                                    self.clone(),
-                                    depth,
-                                ));
-                            }
-                        }
-                        last_fn =
-                            self.eval_apply(&last_fn, args, state, &mut env_deco, depth + 1)?;
-                        state.clear(State::IN_DECO);
-                        // 最后执行装饰过的函数
-                        Ok(last_fn)
-                    }
-                    _ => {
-                        let mut actual_args = args
-                            .iter()
-                            .map(|a| a.eval_mut(state, env, depth + 1))
-                            .collect::<Result<Vec<_>, _>>()?;
-                        if !is_in_pipe {
-                            state.clear(State::IN_PIPE);
-                        }
-
-                        // if let Some(p) = pipe_out {
-                        //     actual_args.push(p);
-                        // };
-
-                        // 填充默认值逻辑（新增）
-                        for (i, (_, default)) in params.iter().enumerate() {
-                            if i >= actual_args.len() {
-                                if let Some(def_expr) = default {
-                                    // 仅允许基本类型直接使用
-                                    actual_args.push(def_expr.clone());
-                                } else {
-                                    return Err(RuntimeError::new(
-                                        RuntimeErrorKind::ArgumentMismatch {
-                                            name,
-                                            expected: params.len(),
-                                            received: actual_args.len(),
-                                        },
-                                        self.clone(),
-                                        depth,
-                                    ));
-                                }
-                            }
-                        }
-
-                        // 创建新作用域并执行
-                        let new_env = match state.contains(State::IN_DECO) {
-                            true => env,
-                            _ => &mut env.fork(),
-                        };
-                        if let Some(collector) = pc {
-                            if state.contains(State::IN_DECO) && new_env.has(collector.as_str()) {
-                                return Err(RuntimeError::new(
-                                    RuntimeErrorKind::Redeclaration(collector),
-                                    self.clone(),
-                                    depth,
-                                ));
-                            }
-                            new_env.define(
-                                collector.as_str(),
-                                Expression::from(actual_args[params.len()..].to_vec()),
-                            );
-                        }
-                        for ((param, _), arg) in params.iter().zip(actual_args) {
-                            // 装饰器内，不允许各个装饰器中有重复的参数名
-                            if state.contains(State::IN_DECO) && new_env.has(param) {
-                                return Err(RuntimeError::new(
-                                    RuntimeErrorKind::Redeclaration(param.to_string()),
-                                    self.clone(),
-                                    depth,
-                                ));
-                            }
-                            new_env.define(param, arg);
-                        }
-
-                        match body.as_ref().eval_mut(state, new_env, depth + 1) {
-                            Ok(v) => Ok(v),
-                            // 捕获函数体内的return
-                            Err(RuntimeError {
-                                kind: RuntimeErrorKind::EarlyReturn(v),
-                                context: _,
-                                depth: _,
-                            }) => Ok(v),
-                            Err(e) => Err(e),
-                        }
-                    }
-                }
+            Expression::Function(.., ref decos) => {
+                return match decos.is_empty() {
+                    true => self.eval_normal_function(func_eval, args, state, env, depth),
+                    false => self.eval_function_with_deco(func_eval, args, state, env, depth),
+                };
             }
             // 命令形式的内置函数调用如： fs.read! a
             // 不用!,则进入eval_cmd中
@@ -475,7 +500,7 @@ impl Expression {
     #[inline]
     pub fn eval_symbo(
         &self,
-        args: &Vec<Expression>,
+        args: &[Expression],
         is_cmd_mode: bool,
         state: &mut State,
         env: &mut Environment,
@@ -672,7 +697,7 @@ pub fn bind_arguments(
 pub fn handle_builtin(
     base: &Expression,
     method: &str,
-    args: &Vec<Expression>,
+    args: &[Expression],
     ctx: &Expression,
     state: &mut State,
     env: &mut Environment,

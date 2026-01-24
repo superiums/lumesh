@@ -115,10 +115,10 @@ fn prefix_operator(input: Input<'_>) -> TokenizationResult<'_> {
         prefix_tag("!"), //bool negtive
         prefix_tag("$"), //var
         prefix_tag("-"),
-        // prefix_tag("@"), //var
-        // prefix_tag("++"),
-        // prefix_tag("--"),
-        // infix_tag("__"), custom prefix?
+        prefix_tag("@"), //deco
+                         // prefix_tag("++"),
+                         // prefix_tag("--"),
+                         // infix_tag("__"), custom prefix?
     ))(input)
 }
 fn postfix_operator(input: Input<'_>) -> TokenizationResult<'_> {
@@ -1311,7 +1311,7 @@ fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnost
     let mut length = 0;
     // `=` is used for var asign: IFS='';xx
     while let Some(c) = chars.next() {
-        if c.is_ascii_whitespace() || "=([{^$!|;)]}.".contains(c) {
+        if c.is_ascii_whitespace() || "=([{^$!|;)]}.,".contains(c) {
             break;
         }
         length += c.len_utf8();

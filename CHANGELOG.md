@@ -1,6 +1,16 @@
 # Changelog
 
 ## [0.11.4]
+- refactor decorator realization
+  now decorator changes to middleware like style.
+  every decorator function should return a `[before,after]` list. each one is a function.
+  the two function shares one env, which means var sharable. 
+  there're injected variables:
+  + `NAME` means function name.
+  + `ARGS` means function args.
+  + `RESULT` means function result.
+
+## [0.11.4]
 
 - optimize iteration in `for` loop.
   now 1_000_000 times loop in `for`, only takes **114ms**, the previous edition is 385ms. reduced **70%** time cost!

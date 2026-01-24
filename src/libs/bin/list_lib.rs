@@ -1,6 +1,7 @@
 // use super::math_module::{average, max, min, sum};
 use std::rc::Rc;
 
+use crate::eval::{State, is_strict};
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
     check_args_len, check_exact_args_len, check_fn_arg, get_integer_arg, get_string_arg,
@@ -777,7 +778,7 @@ fn map(
         }
     };
 
-    let mut result = Vec::new();
+    let mut result = Vec::with_capacity(list.as_ref().len());
     if need_index {
         for (index, item) in list.as_ref().iter().enumerate() {
             result.push(
@@ -1116,8 +1117,11 @@ fn foldl(
         _ => Expression::Integer(0),
     };
     check_fn_arg(&f, 2, ctx)?;
+    let mut state = State::new(is_strict(env));
     for item in list.as_ref().iter() {
-        acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
+        // acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
+        acc =
+            ctx.eval_function_with_deco(f.clone(), &vec![item.clone(), acc], &mut state, env, 0)?;
     }
     Ok(acc)
 }

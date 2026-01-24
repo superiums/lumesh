@@ -2,12 +2,33 @@
 
 ### report periods a function takes
 fn timeit(){
-    fn wrapper(func_ti){
-        (args_ti) -> {
-            let start = Time.stamp_ms()
-            func_ti(args_ti)
-            let end = Time.stamp_ms()
-            print '>Time:'.green().bold() (end - start) 'ms'
-        }
+    fn before(){
+        let start = time.stamp_ms()
     }
+    fn after(){
+        let end = time.stamp_ms()
+        print '>Time:'.green().bold() (end - start) 'ms'
+    }
+    [before,after]
+}
+
+
+fn logit(){
+    fn before(){
+        print "-->Excuting " $NAME.green()
+        print "   with args:" $ARGS
+    }
+    fn after(){
+        print "---Finished " $NAME
+        print "   with result:" $RESULT
+    }
+    [before,after]
+}
+
+
+fn tipit(){
+    fn before(){
+        print string.center($NAME, 40, '*')
+    }
+    [before,_]
 }

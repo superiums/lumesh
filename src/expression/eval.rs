@@ -145,7 +145,7 @@ impl State {
     }
 }
 
-fn is_strict(env: &mut Environment) -> bool {
+pub fn is_strict(env: &mut Environment) -> bool {
     match env.get("STRICT") {
         Some(Expression::Boolean(b)) => b,
         _ => false,

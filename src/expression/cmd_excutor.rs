@@ -220,7 +220,7 @@ fn exec_single_cmd(
 pub fn handle_command(
     job: &Expression,
     cmd: &String,
-    args: &Vec<Expression>,
+    args: &[Expression],
     state: &mut State,
     env: &mut Environment,
     depth: usize,

@@ -1143,7 +1143,7 @@ impl Expression {
                 Expression::Symbol(m) | Expression::String(m),
                 Expression::Symbol(n) | Expression::String(n),
             ) => Ok(Self::String(format!("{m}.{n}"))),
-            (Expression::Map(m), Expression::Symbol(n)) => {
+            (Expression::Map(m), Expression::Symbol(n) | Expression::String(n)) => {
                 let key = n.to_string();
                 m.as_ref().get(&key).cloned().ok_or(RuntimeError::new(
                     RuntimeErrorKind::KeyNotFound(key),
@@ -1151,7 +1151,7 @@ impl Expression {
                     depth,
                 ))
             }
-            (Expression::HMap(m), Expression::Symbol(n)) => {
+            (Expression::HMap(m), Expression::Symbol(n) | Expression::String(n)) => {
                 let key = n.to_string();
                 m.as_ref().get(&key).cloned().ok_or(RuntimeError::new(
                     RuntimeErrorKind::KeyNotFound(key),

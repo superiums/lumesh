@@ -115,7 +115,8 @@ if IS_INTERACTIVE {
     fn update(){
         println 'checking latest version...'
         let url = 'https://codeberg.org/santo/lumesh/releases/latest'
-        let ver = (curl $url ?: eprintln 'network err' && exit |  regex.find(r'\d[\d\.]+').found ?: '0')
+        let ver = (curl -s $url ?: eprintln 'network err' && exit |  regex.find(r'\d[\d\.]+') )
+        ver = ver[found]
         let latest = ($ver.split('.').join('').to_int() ?: 0)
         if $latest > 0 {
           let current = (about.version())

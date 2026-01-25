@@ -1444,8 +1444,8 @@ fn parse_float(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
 fn parse_value_symbol(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     map(kind(TokenKind::ValueSymbol), |s| {
         match s.to_str(input.str) {
-            "True" => Expression::Boolean(true),
-            "False" => Expression::Boolean(false),
+            "true" => Expression::Boolean(true),
+            "false" => Expression::Boolean(false),
             "_" => Expression::Blank,
             // "None" => Expression::None,
             _ => Expression::None,

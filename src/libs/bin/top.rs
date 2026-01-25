@@ -19,8 +19,8 @@ use crate::{
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
         exit, cd, cwd,
-        tap, print, pprint, println, eprint, eprintln, debug, read,
-        r#typeof => "typeof",
+        tap, print, pprint, println, eprint, eprintln, read,
+        r#typeof => "typeof", debug2, debug,
         get, len, insert, rev, flatten, r#where => "where", select,
         not,
         repeat, eval, exec, eval_str, exec_str, include, import,
@@ -51,6 +51,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         eprint => "print to stderr without newline", "<args>..."
         eprintln => "print to stderr with newline", "<args>..."
         debug => "print debug representation", "<args>..."
+        debug2 => "print debug representation", "<args>..."
         read => "get user input", "[prompt]"
         throw => "return a runtime error", "<msg>"
 
@@ -368,6 +369,22 @@ fn debug(
             print!("{x:?} ")
         } else {
             println!("{x:?}")
+        }
+    }
+    Ok(Expression::None)
+}
+
+fn debug2(
+    args: &[Expression],
+    env: &mut Environment,
+    _ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    for (i, arg) in args.iter().enumerate() {
+        let x = arg.eval_in_assign(env)?;
+        if i < args.len() - 1 {
+            print!("{x:#} ")
+        } else {
+            println!("{x:#}")
         }
     }
     Ok(Expression::None)

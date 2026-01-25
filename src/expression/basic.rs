@@ -58,23 +58,56 @@ impl fmt::Display for Expression {
 impl Expression {
     fn fmt_display_indent(&self, f: &mut fmt::Formatter, i: usize) -> fmt::Result {
         match self {
-            // 基础类型 - 无需缩进
-            Self::Symbol(name) => write!(f, "{name}"),
-            Self::Variable(name) => write!(f, "${name}"),
-            Self::Integer(i) => write!(f, "{i}"),
-            Self::Float(n) => write!(f, "{n}"),
-            Self::String(s) => write!(f, "{s}"),
-            Self::StringTemplate(s) => write!(f, "`{s}`"),
-            Self::Boolean(b) => write!(f, "{}", if *b { "true" } else { "false" }),
-            Self::Bytes(b) => write!(f, "b\"{}\"", String::from_utf8_lossy(b)),
-            Self::DateTime(n) => write!(f, "{}", n.format("%Y-%m-%d %H:%M:%S")),
-            Self::FileSize(fsz) => write!(f, "{}", fsz.to_human_readable()),
-            Self::None => Ok(()),
+            // 基础类型 - 支持缩进
+            Self::Symbol(name) => write!(f, "{}{name}", idt(i)),
+            Self::Variable(name) => write!(f, "{}${name}", idt(i)),
+            Self::Integer(it) => write!(f, "{}{it}", idt(i)),
+            Self::Float(n) => write!(f, "{}{n}", idt(i)),
+            Self::String(s) => write!(f, "{}{s}", idt(i)),
+            Self::StringTemplate(s) => write!(f, "{}`{s}`", idt(i)),
+            Self::Boolean(b) => write!(f, "{}{}", idt(i), if *b { "true" } else { "false" }),
+            Self::Bytes(b) => write!(f, "{}b\"{}\"", idt(i), String::from_utf8_lossy(b)),
+            Self::DateTime(n) => write!(f, "{}{}", idt(i), n.format("%Y-%m-%d %H:%M:%S")),
+            Self::FileSize(fsz) => write!(f, "{}{}", idt(i), fsz.to_human_readable()),
+            Self::None => write!(f, "{}", idt(i)),
 
+            Self::Sequence(exprs) => {
+                if f.alternate() {
+                    writeln!(f, "{}{{", idt(i))?;
+                    for expr in exprs.iter() {
+                        expr.fmt_display_indent(f, i + 1)?;
+                        writeln!(f)?;
+                    }
+                    write!(f, "{}}}", idt(i))
+                } else {
+                    write!(f, "{}{{ ", idt(i))?;
+                    for (i, expr) in exprs.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, "; ")?;
+                        }
+                        expr.fmt_display_indent(f, 0)?;
+                    }
+                    write!(f, " }}")
+                }
+            }
+            Self::SetParent(name, expr) => {
+                if f.alternate() {
+                    write!(f, "{}set {} = ", idt(i), name)?;
+                    expr.fmt_display_indent(f, i + 1)
+                } else {
+                    write!(f, "{}set {} = ", idt(i), name)?;
+                    expr.fmt_display_indent(f, 0)
+                }
+            }
             // 声明和赋值
             Self::Declare(name, expr) => {
-                write!(f, "{}let {} = ", idt(i), name)?;
-                expr.fmt_display_indent(f, 0)
+                if f.alternate() {
+                    write!(f, "{}let {} = ", idt(i), name)?;
+                    expr.fmt_display_indent(f, i + 1)
+                } else {
+                    write!(f, "{}let {} = ", idt(i), name)?;
+                    expr.fmt_display_indent(f, 0)
+                }
             }
             Self::DestructureAssign(pattern, expr) => {
                 write!(f, "{}let ", idt(i))?;
@@ -85,182 +118,324 @@ impl Expression {
                     write!(f, "{p}")?;
                 }
                 write!(f, " = ")?;
-                expr.fmt_display_indent(f, 0)
+                expr.fmt_display_indent(f, if f.alternate() { i + 1 } else { 0 })
             }
             Self::Assign(name, expr) => {
-                write!(f, "{}{} = ", idt(i), name)?;
-                expr.fmt_display_indent(f, 0)
+                if f.alternate() {
+                    write!(f, "{}{} = ", idt(i), name)?;
+                    expr.fmt_display_indent(f, i + 1)
+                } else {
+                    write!(f, "{}{} = ", idt(i), name)?;
+                    expr.fmt_display_indent(f, 0)
+                }
             }
 
-            // 引用和分组
+            // 引用和分组 - 修复括号对齐
             Self::Quote(inner) => {
-                write!(f, "'")?;
+                write!(f, "{}'", idt(i))?;
                 inner.fmt_display_indent(f, 0)
             }
             Self::Group(inner) => {
-                write!(f, "{}(", idt(i))?;
-                inner.fmt_display_indent(f, i + 1)?;
-                write!(f, "{})", idt(i))
+                if f.alternate() {
+                    write!(f, "{}(", idt(i))?;
+                    inner.fmt_display_indent(f, i + 1)?;
+                    write!(f, "\n{})", idt(i))
+                } else {
+                    write!(f, "{}(", idt(i))?;
+                    inner.fmt_display_indent(f, 0)?;
+                    write!(f, ")")
+                }
             }
 
-            // 控制流 - 使用缩进
+            // 控制流 - 修复括号对齐
             Self::If(cond, true_expr, false_expr) => {
-                write!(f, "{}if ", idt(i))?;
-                cond.fmt_display_indent(f, 0)?;
-                writeln!(f, " {{")?;
-                true_expr.fmt_display_indent(f, i + 1)?;
-                write!(f, "\n{}}} else {{\n", idt(i))?;
-                false_expr.fmt_display_indent(f, i + 1)?;
-                write!(f, "\n{}}}", idt(i))
+                if f.alternate() {
+                    write!(f, "{}if ", idt(i))?;
+                    cond.fmt_display_indent(f, 0)?;
+                    writeln!(f, " {{")?;
+                    true_expr.fmt_display_indent(f, i + 1)?;
+                    write!(f, "\n{}}} else {{\n", idt(i))?;
+                    false_expr.fmt_display_indent(f, i + 1)?;
+                    write!(f, "\n{}}}", idt(i))
+                } else {
+                    write!(f, "{}if ", idt(i))?;
+                    cond.fmt_display_indent(f, 0)?;
+                    write!(f, " {{ ")?;
+                    true_expr.fmt_display_indent(f, 0)?;
+                    write!(f, " }} else {{ ")?;
+                    false_expr.fmt_display_indent(f, 0)?;
+                    write!(f, " }}")
+                }
             }
 
             Self::While(cond, body) => {
-                write!(f, "{}while ", idt(i))?;
-                cond.fmt_display_indent(f, 0)?;
-                writeln!(f, " {{")?;
-                body.fmt_display_indent(f, i + 1)?;
-                write!(f, "\n{}}}", idt(i))
+                if f.alternate() {
+                    write!(f, "{}while ", idt(i))?;
+                    cond.fmt_display_indent(f, 0)?;
+                    writeln!(f, " {{")?;
+                    body.fmt_display_indent(f, i + 1)?;
+                    write!(f, "\n{}}}", idt(i))
+                } else {
+                    write!(f, "{}while ", idt(i))?;
+                    cond.fmt_display_indent(f, 0)?;
+                    write!(f, " {{ ")?;
+                    body.fmt_display_indent(f, 0)?;
+                    write!(f, " }}")
+                }
             }
 
             Self::Loop(body) => {
-                writeln!(f, "{}loop {{", idt(i))?;
-                body.fmt_display_indent(f, i + 1)?;
-                write!(f, "\n{}}}", idt(i))
+                if f.alternate() {
+                    writeln!(f, "{}loop {{", idt(i))?;
+                    body.fmt_display_indent(f, i + 1)?;
+                    write!(f, "\n{}}}", idt(i))
+                } else {
+                    write!(f, "{}loop {{ ", idt(i))?;
+                    body.fmt_display_indent(f, 0)?;
+                    write!(f, " }}")
+                }
             }
 
-            Self::For(name, index, list, body) => {
-                if let Some(ind) = index {
-                    write!(f, "{}for {},{} in ", idt(i), ind, name)?;
+            Self::For(name, ind, list, body) => {
+                if let Some(index) = ind {
+                    write!(f, "{}for {},{} in ", idt(i), index, name)?;
                 } else {
                     write!(f, "{}for {} in ", idt(i), name)?;
                 }
                 list.fmt_display_indent(f, 0)?;
                 writeln!(f, " {{")?;
-                body.fmt_display_indent(f, i + 1)?;
-                write!(f, "\n{}}}", idt(i))
+                if f.alternate() {
+                    body.fmt_display_indent(f, i + 1)?;
+                    write!(f, "\n{}}}", idt(i))
+                } else {
+                    body.fmt_display_indent(f, 0)?;
+                    write!(f, " }}")
+                }
             }
 
             Self::Match(value, branches) => {
-                write!(f, "{}match ", idt(i))?;
-                value.fmt_display_indent(f, 0)?;
-                writeln!(f, " {{")?;
-                for (pat, expr) in branches.iter() {
-                    write!(
-                        f,
-                        "{}{} => ",
-                        idt(i + 1),
-                        pat.iter()
-                            .map(|e| e.to_string())
-                            .collect::<Vec<String>>()
-                            .join(", ")
-                    )?;
-                    expr.fmt_display_indent(f, 0)?;
-                    writeln!(f, ",")?;
+                if f.alternate() {
+                    write!(f, "{}match ", idt(i))?;
+                    value.fmt_display_indent(f, 0)?;
+                    writeln!(f, " {{")?;
+                    for (pat, expr) in branches.iter() {
+                        write!(
+                            f,
+                            "{}{} => ",
+                            idt(i + 1),
+                            pat.iter()
+                                .map(|e| e.to_string())
+                                .collect::<Vec<String>>()
+                                .join(", ")
+                        )?;
+                        expr.fmt_display_indent(f, 0)?;
+                        writeln!(f, ",")?;
+                    }
+                    write!(f, "{}}}", idt(i))
+                } else {
+                    write!(f, "{}match ", idt(i))?;
+                    value.fmt_display_indent(f, 0)?;
+                    write!(f, " {{ ")?;
+                    for (i, (pat, expr)) in branches.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, ", ")?;
+                        }
+                        write!(
+                            f,
+                            "{} => ",
+                            pat.iter()
+                                .map(|e| e.to_string())
+                                .collect::<Vec<String>>()
+                                .join(", ")
+                        )?;
+                        expr.fmt_display_indent(f, 0)?;
+                    }
+                    write!(f, " }}")
                 }
-                write!(f, "{}}}", idt(i))
             }
 
-            // 函数定义
+            // 函数定义 - 修复括号对齐
             Self::Lambda(params, body, _) => {
-                write!(f, "{}({}) -> ", idt(i), params.join(", "))?;
-                if matches!(body.as_ref(), Self::Block(_)) {
-                    writeln!(f)?;
-                    body.fmt_display_indent(f, i + 1)
+                if f.alternate() {
+                    write!(f, "{}({}) -> ", idt(i), params.join(", "))?;
+                    if matches!(body.as_ref(), Self::Block(_)) {
+                        writeln!(f)?;
+                        body.fmt_display_indent(f, i + 1)
+                    } else {
+                        body.fmt_display_indent(f, i + 1)
+                    }
                 } else {
+                    write!(f, "{}({}) -> ", idt(i), params.join(", "))?;
                     body.fmt_display_indent(f, 0)
                 }
             }
 
             Self::Function(name, params, collector, body, _) => {
-                write!(f, "{}fn {}(", idt(i), name)?;
-                for (i, (param, default)) in params.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, ", ")?;
+                if f.alternate() {
+                    write!(f, "{}fn {}(", idt(i), name)?;
+                    for (i, (param, default)) in params.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, ", ")?;
+                        }
+                        write!(f, "{param}")?;
+                        if let Some(def) = default {
+                            write!(f, " = {def}")?;
+                        }
                     }
-                    write!(f, "{param}")?;
-                    if let Some(def) = default {
-                        write!(f, " = {def}")?;
+                    if let Some(coll) = collector {
+                        if !params.is_empty() {
+                            write!(f, ", ")?;
+                        }
+                        write!(f, "*{coll}")?;
                     }
+                    writeln!(f, ") {{")?;
+                    body.fmt_display_indent(f, i + 1)?;
+                    write!(f, "\n{}}}", idt(i))
+                } else {
+                    write!(f, "{}fn {}(", idt(i), name)?;
+                    for (i, (param, default)) in params.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, ", ")?;
+                        }
+                        write!(f, "{param}")?;
+                        if let Some(def) = default {
+                            write!(f, " = {def}")?;
+                        }
+                    }
+                    if let Some(coll) = collector {
+                        if !params.is_empty() {
+                            write!(f, ", ")?;
+                        }
+                        write!(f, "*{coll}")?;
+                    }
+                    write!(f, ") {{ ")?;
+                    body.fmt_display_indent(f, 0)?;
+                    write!(f, " }}")
                 }
-                if let Some(coll) = collector {
-                    if !params.is_empty() {
-                        write!(f, ", ")?;
-                    }
-                    write!(f, "*{coll}")?;
-                }
-                writeln!(f, ") {{")?;
-                body.fmt_display_indent(f, i + 1)?;
-                write!(f, "\n{}}}", idt(i))
             }
 
-            // 代码块
+            // 代码块 - 修复括号对齐和元素缩进
             Self::Block(exprs) => {
-                writeln!(f, "{}{{", idt(i))?;
-                for expr in exprs.iter() {
-                    expr.fmt_display_indent(f, i + 1)?;
-                    writeln!(f)?;
+                if f.alternate() {
+                    writeln!(f, "{}{{", idt(i))?;
+                    for expr in exprs.iter() {
+                        expr.fmt_display_indent(f, i + 1)?;
+                        writeln!(f)?;
+                    }
+                    write!(f, "{}}}", idt(i))
+                } else {
+                    write!(f, "{}{{ ", idt(i))?;
+                    for (i, expr) in exprs.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, "; ")?;
+                        }
+                        expr.fmt_display_indent(f, 0)?;
+                    }
+                    write!(f, " }}")
                 }
-                write!(f, "{}}}", idt(i))
-            }
-            Self::Sequence(exprs) => {
-                writeln!(f, "{}{{-", idt(i))?;
-                for expr in exprs.iter() {
-                    expr.fmt_display_indent(f, i + 1)?;
-                    writeln!(f)?;
-                }
-                write!(f, "{}-}}", idt(i))
             }
 
-            // 集合类型 - 紧凑格式
+            // 集合类型 - 修复缩进累积问题
             Self::List(exprs) => {
-                write!(f, "[")?;
-                for (i, expr) in exprs.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, ", ")?;
+                if f.alternate() {
+                    write!(f, "{}[\n", idt(i))?;
+                    for expr in exprs.iter() {
+                        expr.fmt_display_indent(f, i + 1)?;
+                        writeln!(f, ",")?;
                     }
-                    expr.fmt_display_indent(f, 0)?;
+                    write!(f, "{}]", idt(i))
+                } else {
+                    write!(f, "{}[", idt(i))?;
+                    for (i, expr) in exprs.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, ", ")?;
+                        }
+                        expr.fmt_display_indent(f, 0)?;
+                    }
+                    write!(f, "]")
                 }
-                write!(f, "]")
             }
 
             Self::Map(exprs) => {
-                write!(f, "{}{{", idt(i))?;
-                for (i, (k, v)) in exprs.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, ", ")?;
+                if f.alternate() {
+                    write!(f, "{}{{\n", idt(i))?;
+                    for (k, v) in exprs.iter() {
+                        write!(f, "{}{k}: ", idt(i + 1))?; // key 使用 i+1
+                        match v {
+                            Self::Symbol(_)
+                            | Self::Integer(_)
+                            | Self::Float(_)
+                            | Self::Boolean(_)
+                            | Self::String(_) => {
+                                v.fmt_display_indent(f, 0)?;
+                            }
+                            _ => {
+                                write!(f, "\n")?;
+                                v.fmt_display_indent(f, i + 2)?
+                            }
+                        }
+                        writeln!(f, ",")?;
                     }
-                    write!(f, "{k}: ")?;
-                    v.fmt_display_indent(f, 0)?;
+                    write!(f, "{}}}", idt(i))
+                } else {
+                    write!(f, "{}{{", idt(i))?;
+                    for (i, (k, v)) in exprs.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, ", ")?;
+                        }
+                        write!(f, "{k}: ")?;
+                        v.fmt_display_indent(f, 0)?;
+                    }
+                    write!(f, "}}")
                 }
-                write!(f, "{}}}", idt(i))
             }
+
             Self::HMap(exprs) => {
-                write!(f, "{{")?;
-                for (i, (k, v)) in exprs.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, ", ")?;
+                if f.alternate() {
+                    write!(f, "{}{{\n", idt(i))?;
+                    for (k, v) in exprs.iter() {
+                        write!(f, "{}{k}: ", idt(i + 1))?; // key 使用 i+1
+                        v.fmt_display_indent(f, 0)?;
+                        writeln!(f, ",")?;
                     }
-                    write!(f, "{k}: ")?;
-                    v.fmt_display_indent(f, 0)?;
+                    write!(f, "{}}}", idt(i))
+                } else {
+                    write!(f, "{}{{", idt(i))?;
+                    for (i, (k, v)) in exprs.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, ", ")?;
+                        }
+                        write!(f, "{k}: ")?;
+                        v.fmt_display_indent(f, 0)?;
+                    }
+                    write!(f, "}}")
                 }
-                write!(f, "}}")
             }
 
             // 操作符
             Self::BinaryOp(op, l, r) => {
-                write!(f, "{}{l} {op} {r}", idt(i))
+                write!(f, "{}", idt(i))?;
+                l.fmt_display_indent(f, 0)?;
+                write!(f, " {op} ")?;
+                r.fmt_display_indent(f, 0)
             }
 
             Self::UnaryOp(op, v, is_prefix) => {
                 if *is_prefix {
-                    write!(f, "{op}{v}")
+                    write!(f, "{}{op}", idt(i))?;
+                    v.fmt_display_indent(f, 0)
                 } else {
-                    write!(f, "{v}{op}")
+                    write!(f, "{}", idt(i))?;
+                    v.fmt_display_indent(f, 0)?;
+                    write!(f, "{op}")
                 }
             }
 
             Self::RangeOp(op, l, r, step) => {
-                write!(f, "{l}{op}{r}")?;
+                write!(f, "{}", idt(i))?;
+                l.fmt_display_indent(f, 0)?;
+                write!(f, "{op}")?;
+                r.fmt_display_indent(f, 0)?;
                 if let Some(st) = step {
                     write!(f, ":{st}")?;
                 }
@@ -268,61 +443,77 @@ impl Expression {
             }
 
             Self::Pipe(op, l, r) => {
-                write!(f, "{l} {op} {r}")
+                write!(f, "{}", idt(i))?;
+                l.fmt_display_indent(f, 0)?;
+                write!(f, " {op} ")?;
+                r.fmt_display_indent(f, 0)
             }
 
             // 函数调用
             Self::Apply(func, args) => {
-                write!(
-                    f,
-                    "\n{}{func}({})",
-                    idt(i),
-                    args.iter()
-                        .map(|x| x.to_string())
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                )
+                write!(f, "{}", idt(i))?;
+                func.fmt_display_indent(f, 0)?;
+                write!(f, "(")?;
+                for (i, arg) in args.iter().enumerate() {
+                    if i > 0 {
+                        write!(f, ", ")?;
+                    }
+                    arg.fmt_display_indent(f, 0)?;
+                }
+                write!(f, ")")
             }
 
             Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
-                write!(
-                    f,
-                    "\n{}{cmd} {}",
-                    idt(i),
-                    args.iter()
-                        .map(|x| x.to_string())
-                        .collect::<Vec<_>>()
-                        .join(" ")
-                )
+                write!(f, "{}", idt(i))?;
+                cmd.fmt_display_indent(f, 0)?;
+                for arg in args.iter() {
+                    write!(f, " ")?;
+                    arg.fmt_display_indent(f, 0)?;
+                }
+                Ok(())
             }
+
             Self::ModuleCall(mo, func) => {
-                write!(f, "{}::{}", mo.join("::"), func)
+                write!(f, "{}{}::{}", idt(i), mo.join("::"), func)
             }
+
             // 索引和切片
             Self::Index(l, r) => {
+                write!(f, "{}", idt(i))?;
                 l.fmt_display_indent(f, 0)?;
                 write!(f, "[")?;
                 r.fmt_display_indent(f, 0)?;
                 write!(f, "]")
             }
             Self::Property(l, r) => {
+                write!(f, "{}", idt(i))?;
                 l.fmt_display_indent(f, 0)?;
                 write!(f, ".{}", r)
             }
 
             // 其他构造
             Self::Return(expr) => {
-                write!(f, "{}return ", idt(i))?;
-                expr.fmt_display_indent(f, 0)
+                if f.alternate() {
+                    write!(f, "{}return ", idt(i))?;
+                    expr.fmt_display_indent(f, i + 1)
+                } else {
+                    write!(f, "{}return ", idt(i))?;
+                    expr.fmt_display_indent(f, 0)
+                }
             }
 
             Self::Break(expr) => {
-                write!(f, "{}break ", idt(i))?;
-                expr.fmt_display_indent(f, 0)
+                if f.alternate() {
+                    write!(f, "{}break ", idt(i))?;
+                    expr.fmt_display_indent(f, i + 1)
+                } else {
+                    write!(f, "{}break ", idt(i))?;
+                    expr.fmt_display_indent(f, 0)
+                }
             }
 
             Self::Range(range, step) => {
-                write!(f, "{}..{}", range.start, range.end)?;
+                write!(f, "{}{}..{}", idt(i), range.start, range.end)?;
                 if *step != 1 {
                     write!(f, ":{step}")?;
                 }
@@ -330,6 +521,7 @@ impl Expression {
             }
 
             Self::Chain(base, calls) => {
+                write!(f, "{}", idt(i))?;
                 base.fmt_display_indent(f, 0)?;
                 for call in calls {
                     write!(f, ".{}(", call.method)?;
@@ -345,7 +537,7 @@ impl Expression {
             }
 
             Self::PipeMethod(method, args) => {
-                write!(f, ".{method}(")?;
+                write!(f, "{}.{}(", idt(i), method)?;
                 for (i, arg) in args.iter().enumerate() {
                     if i > 0 {
                         write!(f, ", ")?;
@@ -356,6 +548,7 @@ impl Expression {
             }
 
             Self::Catch(body, ctyp, deel) => {
+                write!(f, "{}", idt(i))?;
                 body.fmt_display_indent(f, 0)?;
                 match ctyp {
                     CatchType::Ignore => write!(f, " ?."),
@@ -376,142 +569,309 @@ impl Expression {
             }
 
             Self::Use(name, path) => {
-                write!(
-                    f,
-                    "{}use {} as {}",
-                    idt(i),
-                    path,
-                    name.as_deref().unwrap_or("_")
-                )
+                if f.alternate() {
+                    write!(
+                        f,
+                        "{}use {} as {}",
+                        idt(i),
+                        path,
+                        name.as_deref().unwrap_or("_")
+                    )
+                } else {
+                    write!(
+                        f,
+                        "{}use {} as {}",
+                        idt(i),
+                        path,
+                        name.as_deref().unwrap_or("_")
+                    )
+                }
             }
 
             Self::Del(name) => write!(f, "{}del {}", idt(i), name),
-            Self::SetParent(name, exp) => {
-                write!(f, "{}set {} = ", idt(i), name)?;
-                exp.fmt_display_indent(f, 0)
-            }
+
             Self::AliasDef(name, cmd) => {
-                write!(f, "{}alias {} = ", idt(i), name)?;
-                cmd.fmt_display_indent(f, 0)
+                if f.alternate() {
+                    write!(f, "{}alias {} = ", idt(i), name)?;
+                    cmd.fmt_display_indent(f, i + 1)
+                } else {
+                    write!(f, "{}alias {} = ", idt(i), name)?;
+                    cmd.fmt_display_indent(f, 0)
+                }
             }
 
-            Self::RegexDef(s) => write!(f, "r'{s}'"),
-            Self::Regex(r) => write!(f, "r'{}'", r.regex.as_str()),
-            Self::TimeDef(t) => write!(f, "t'{t}'"),
-            Self::Blank => write!(f, "_"),
+            Self::RegexDef(s) => write!(f, "{}r'{s}'", idt(i)),
+            Self::Regex(r) => write!(f, "{}r'{}'", idt(i), r.regex.as_str()),
+            Self::TimeDef(t) => write!(f, "{}t'{t}'", idt(i)),
+            Self::Blank => write!(f, "{}_", idt(i)),
         }
     }
-}
-
-fn fmt_binary_op(
-    f: &mut fmt::Formatter,
-    op_name: &str,
-    op: &str,
-    left: &Expression,
-    right: &Expression,
-    step: &Option<Rc<Expression>>,
-    i: usize,
-) -> fmt::Result {
-    // let i = if f.alternate() { indent + 1 } else { indent };
-    write!(f, "\n{}{}〈{}〉\n", idt(i), op_name, op)?;
-    left.fmt_indent(f, i + 1)?;
-    writeln!(f)?;
-    right.fmt_indent(f, i + 1)?;
-    if let Some(step_expr) = step {
-        write!(f, "\n{}step:\n", idt(i + 1))?;
-        step_expr.fmt_indent(f, i + 2)?;
-    }
-    Ok(())
 }
 
 // Expression 辅助函数
 impl Expression {
     fn fmt_indent(&self, f: &mut fmt::Formatter, indent: usize) -> fmt::Result {
-        let i = if f.alternate() { indent + 1 } else { indent };
-        write!(f, "{}", idt(i))?;
+        let prefix = idt(indent);
         match &self {
-            // 基础类型 - 保持原有实现
-            Self::Symbol(s) => write!(f, "Symbol〈{s:?}〉"),
-            Self::Variable(s) => write!(f, "Variable〈{s:?}〉"),
-            Self::String(s) => write!(f, "String〈{s:?}〉"),
-            Self::Integer(s) => write!(f, "Integer〈{s:?}〉"),
-            Self::Float(s) => write!(f, "Float〈{s:?}〉"),
-            Self::Boolean(s) => write!(f, "Boolean〈{s:?}〉"),
-            Self::DateTime(s) => write!(f, "DateTime〈{s:?}〉"),
-            Self::FileSize(s) => write!(f, "FileSize〈{s:?}〉"),
-            Self::Range(s, st) => write!(f, "Range〈{s:?}:{st}〉"),
-            Self::Quote(inner) => write!(f, "Quote〈{inner:?}〉"),
-            Self::TimeDef(s) => write!(f, "TimeDef〈{s:?}〉"),
-            Self::RegexDef(s) => write!(f, "RegexDef〈{s:?}〉"),
-            Self::Regex(s) => write!(f, "Regex〈{:?}〉", s.regex.as_str()),
-            Self::None => write!(f, "None"),
-            Self::Blank => write!(f, "_"),
-            Self::ModuleCall(s, func) => write!(f, "ModuleCall〈{}::{}〉", s.join("::"), func),
+            // 基础类型 - 统一格式
+            Self::Symbol(s) => write!(f, "{}Symbol〈{s:?}〉", prefix),
+            Self::Variable(s) => write!(f, "{}Variable〈{s:?}〉", prefix),
+            Self::String(s) => write!(f, "{}String〈{s:?}〉", prefix),
+            Self::Integer(s) => write!(f, "{}Integer〈{s:?}〉", prefix),
+            Self::Float(s) => write!(f, "{}Float〈{s:?}〉", prefix),
+            Self::Boolean(s) => write!(f, "{}Boolean〈{s:?}〉", prefix),
+            Self::DateTime(s) => write!(f, "{}DateTime〈{s:?}〉", prefix),
+            Self::FileSize(s) => write!(f, "{}FileSize〈{s:?}〉", prefix),
+            Self::Range(s, st) => write!(f, "{}Range〈{s:?}:{st}〉", prefix),
+            Self::None => write!(f, "{}None", prefix),
+            Self::Blank => write!(f, "{}_", prefix),
 
-            // 新增：字符串模板和字节数据
-            Self::StringTemplate(s) => write!(f, "StringTemplate〈`{s}`〉"),
-            Self::Bytes(b) => write!(f, "Bytes〈{:?}〉", String::from_utf8_lossy(b)),
+            // 字符串相关
+            Self::StringTemplate(s) => write!(f, "{}StringTemplate〈`{s}`〉", prefix),
+            Self::Bytes(b) => write!(f, "{}Bytes〈{:?}〉", prefix, String::from_utf8_lossy(b)),
+            Self::RegexDef(s) => write!(f, "{}RegexDef〈{s:?}〉", prefix),
+            Self::Regex(s) => write!(f, "{}Regex〈{:?}〉", prefix, s.regex.as_str()),
+            Self::TimeDef(s) => write!(f, "{}TimeDef〈{s:?}〉", prefix),
 
+            // 复合表达式
             Self::Group(inner) => {
-                write!(f, "\n{}Group\n{}(", idt(i), idt(i + 1))?;
-                inner.fmt_indent(f, i + 2)?;
-                write!(f, "\n{})", idt(i + 1))
+                write!(f, "{}Group\n{}(", prefix, idt(indent + 1))?;
+                inner.fmt_indent(f, indent + 2)?;
+                write!(f, "\n{})", idt(indent + 1))
             }
 
-            // 新增：声明和赋值操作
+            Self::Quote(inner) => write!(f, "{}Quote〈{:?}〉", prefix, inner),
+
+            // 声明和赋值
             Self::Declare(name, expr) => {
-                write!(f, "\n{}Declare〈{}〉 =", idt(i), name)?;
-                expr.fmt_indent(f, i + 1)
+                write!(f, "{}Declare〈{}〉 = ", prefix, name)?;
+                expr.fmt_indent(f, indent + 1)
             }
             Self::DestructureAssign(pattern, expr) => {
-                write!(f, "\n{}DestructureAssign〈{:?}〉 =", idt(i), pattern)?;
-                expr.fmt_indent(f, i + 1)
+                write!(f, "{}DestructureAssign〈{:?}〉 = ", prefix, pattern)?;
+                expr.fmt_indent(f, indent + 1)
             }
             Self::Assign(name, expr) => {
-                write!(f, "\n{}Assign〈{}〉 =", idt(i), name)?;
-                expr.fmt_indent(f, i + 1)
+                write!(f, "{}Assign〈{}〉 = ", prefix, name)?;
+                expr.fmt_indent(f, indent + 1)
+            }
+            Self::SetParent(name, expr) => {
+                write!(f, "{}Set〈{}〉 = ", prefix, name)?;
+                expr.fmt_indent(f, indent + 1)
             }
 
-            // 新增：删除和控制流语句
-            Self::Del(name) => write!(f, "Del〈{name}〉"),
-            Self::Return(expr) => {
-                write!(f, "\n{}Return", idt(i))?;
-                expr.fmt_indent(f, i + 1)
+            // 控制流
+            Self::If(cond, true_expr, false_expr) => {
+                write!(f, "{}If\n", prefix)?;
+                cond.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}Then\n", idt(indent + 1))?;
+                true_expr.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}Else\n", idt(indent + 1))?;
+                false_expr.fmt_indent(f, indent + 1)
             }
-            Self::Break(expr) => {
-                write!(f, "\n{}Break", idt(i))?;
-                expr.fmt_indent(f, i + 1)
+            Self::While(cond, body) => {
+                write!(f, "{}While\n", prefix)?;
+                cond.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}Body\n", idt(indent + 1))?;
+                body.fmt_indent(f, indent + 1)
+            }
+            Self::Loop(body) => {
+                write!(f, "{}Loop\n", prefix)?;
+                body.fmt_indent(f, indent + 1)
+            }
+            Self::For(name, ind, list, body) => {
+                if let Some(index) = ind {
+                    write!(f, "{}For〈{},{}〉\n", prefix, index, name)?;
+                } else {
+                    write!(f, "{}For〈{}〉\n", prefix, name)?;
+                }
+                list.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}Body\n", idt(indent + 1))?;
+                body.fmt_indent(f, indent + 1)
+            }
+            Self::Match(value, branches) => {
+                write!(f, "{}Match\n", prefix)?;
+                value.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}Branches\n", idt(indent + 1))?;
+                for (pat, expr) in branches.iter() {
+                    write!(
+                        f,
+                        "{}{} =>\n",
+                        idt(indent + 2),
+                        pat.iter()
+                            .map(|e| e.to_string())
+                            .collect::<Vec<String>>()
+                            .join(",")
+                    )?;
+                    expr.fmt_indent(f, indent + 3)?;
+                }
+                Ok(())
             }
 
-            // 新增：操作符
+            // 函数相关
+            Self::Lambda(params, body, _) => {
+                write!(f, "{}Lambda〈{}〉\n", prefix, params.join(", "))?;
+                body.fmt_indent(f, indent + 1)
+            }
+            Self::Function(name, params, collector, body, decorators) => {
+                // 装饰器
+                for (deco, args) in decorators {
+                    write!(
+                        f,
+                        "{}@{}({})\n",
+                        prefix,
+                        deco,
+                        match args {
+                            Some(a) => a
+                                .iter()
+                                .map(|x| x.to_string())
+                                .collect::<Vec<_>>()
+                                .join(","),
+                            _ => String::new(),
+                        }
+                    )?;
+                }
+
+                let collector_str = match collector {
+                    Some(x) => format!(",*{}", x),
+                    _ => String::new(),
+                };
+
+                write!(
+                    f,
+                    "{}Function〈{}({}{})〉\n",
+                    prefix,
+                    name,
+                    params
+                        .iter()
+                        .map(|(p, v)| match v {
+                            Some(vv) => format!("{p}={vv}"),
+                            _ => p.to_string(),
+                        })
+                        .collect::<Vec<String>>()
+                        .join(","),
+                    collector_str
+                )?;
+                body.fmt_indent(f, indent + 1)
+            }
+
+            // 集合类型
+            Self::List(exprs) => {
+                write!(f, "{}List\n", prefix)?;
+                for expr in exprs.iter() {
+                    expr.fmt_indent(f, indent + 1)?;
+                    writeln!(f, ",")?;
+                }
+                Ok(())
+            }
+            Self::Map(exprs) => {
+                write!(f, "{}Map\n", prefix)?;
+                for (k, v) in exprs.iter() {
+                    write!(f, "{}{}:\n", idt(indent + 1), k)?;
+                    v.fmt_indent(f, indent + 2)?;
+                    writeln!(f)?;
+                }
+                Ok(())
+            }
+            Self::HMap(exprs) => {
+                write!(f, "{}HMap\n", prefix)?;
+                for (k, v) in exprs.iter() {
+                    write!(f, "{}{}:\n", idt(indent + 1), k)?;
+                    v.fmt_indent(f, indent + 2)?;
+                    writeln!(f)?;
+                }
+                Ok(())
+            }
+            Self::Block(exprs) => {
+                write!(f, "{}Block\n", prefix)?;
+                for expr in exprs.iter() {
+                    expr.fmt_indent(f, indent + 1)?;
+                    writeln!(f)?;
+                }
+                Ok(())
+            }
+            Self::Sequence(exprs) => {
+                write!(f, "{}Sequence\n", prefix)?;
+                for expr in exprs.iter() {
+                    expr.fmt_indent(f, indent + 1)?;
+                    writeln!(f)?;
+                }
+                Ok(())
+            }
+
+            // 操作符
+            Self::BinaryOp(op, l, r) => {
+                write!(f, "{}BinaryOp〈{}〉\n", prefix, op)?;
+                l.fmt_indent(f, indent + 1)?;
+                write!(f, "\n")?;
+                r.fmt_indent(f, indent + 1)
+            }
             Self::UnaryOp(op, expr, is_prefix) => {
-                write!(f, "\n{}UnaryOp〈{}, prefix:{}〉", idt(i), op, is_prefix)?;
-                expr.fmt_indent(f, i + 1)
+                write!(f, "{}UnaryOp〈{}, prefix:{}〉\n", prefix, op, is_prefix)?;
+                expr.fmt_indent(f, indent + 1)
             }
-            Self::RangeOp(op, l, r, step) => fmt_binary_op(f, "RangeOp", op, l, r, step, i),
+            Self::RangeOp(op, l, r, step) => {
+                write!(f, "{}RangeOp〈{}〉\n", prefix, op)?;
+                l.fmt_indent(f, indent + 1)?;
+                write!(f, "\n")?;
+                r.fmt_indent(f, indent + 1)?;
+                if let Some(step_expr) = step {
+                    write!(f, "\n{}Step\n", idt(indent + 1))?;
+                    step_expr.fmt_indent(f, indent + 2)?;
+                }
+                Ok(())
+            }
+            Self::Pipe(op, l, r) => {
+                write!(f, "{}Pipe〈{}〉\n", prefix, op)?;
+                l.fmt_indent(f, indent + 1)?;
+                write!(f, "\n")?;
+                r.fmt_indent(f, indent + 1)
+            }
 
-            // 新增：索引和切片操作
-            Self::Index(expr, index) => {
-                write!(f, "\n{}Index\n", idt(i))?;
-                expr.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}[\n", idt(i))?;
-                index.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}]\n", idt(i))
+            // 函数调用
+            Self::Apply(func, args) => {
+                write!(f, "{}Apply\n", prefix)?;
+                func.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}Args\n", idt(indent + 1))?;
+                for arg in args.iter() {
+                    arg.fmt_indent(f, indent + 2)?;
+                    writeln!(f)?;
+                }
+                Ok(())
             }
-            Self::Property(expr, index) => {
-                write!(f, "\n{}Property\n", idt(i))?;
-                expr.fmt_indent(f, i + 1)?;
-                write!(f, ".{}", index)
+            Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
+                write!(f, "{}Command\n", prefix)?;
+                cmd.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}Args\n", idt(indent + 1))?;
+                for arg in args.iter() {
+                    arg.fmt_indent(f, indent + 2)?;
+                    writeln!(f)?;
+                }
+                Ok(())
             }
 
-            // 新增：链式调用和管道方法
-            Self::Chain(expr, calls) => {
-                write!(f, "\n{}Chain\n", idt(i))?;
-                expr.fmt_indent(f, i + 1)?;
+            // 索引和属性
+            Self::Index(obj, index) => {
+                write!(f, "{}Index\n", prefix)?;
+                obj.fmt_indent(f, indent + 1)?;
+                write!(f, "\n{}[\n", idt(indent + 1))?;
+                index.fmt_indent(f, indent + 2)?;
+                write!(f, "\n{}]", idt(indent + 1))
+            }
+            Self::Property(obj, prop) => {
+                write!(f, "{}Property\n", prefix)?;
+                obj.fmt_indent(f, indent + 1)?;
+                write!(f, ".{}", prop)
+            }
+
+            // 链式调用
+            Self::Chain(base, calls) => {
+                write!(f, "{}Chain\n", prefix)?;
+                base.fmt_indent(f, indent + 1)?;
                 for call in calls {
-                    write!(f, "\n{}.{}(", idt(i + 1), call.method)?;
-                    for (idx, arg) in call.args.iter().enumerate() {
-                        if idx > 0 {
+                    write!(f, "\n{}.{}(", idt(indent + 1), call.method)?;
+                    for (i, arg) in call.args.iter().enumerate() {
+                        if i > 0 {
                             write!(f, ", ")?;
                         }
                         write!(f, "{arg:?}")?;
@@ -521,203 +881,48 @@ impl Expression {
                 Ok(())
             }
             Self::PipeMethod(method, args) => {
-                write!(f, "\n{}PipeMethod〈{}〉\n{}(\n", idt(i), method, idt(i))?;
-                args.iter().for_each(|e| {
-                    let _ = e.fmt_indent(f, i + 1);
-                    let _ = writeln!(f);
-                });
-                writeln!(f, "{})", idt(i))
-            }
-
-            // 新增：别名操作
-            Self::AliasDef(name, cmd) => {
-                write!(f, "\n{}AliasDef〈{}〉 =\n", idt(i), name)?;
-                cmd.fmt_indent(f, i + 1)
-            }
-            Self::SetParent(name, cmd) => {
-                write!(f, "\n{}set〈{}〉 =\n", idt(i), name)?;
-                cmd.fmt_indent(f, i + 1)
-            }
-
-            // 新增：错误捕获
-            Self::Catch(body, ctyp, deel) => {
-                write!(f, "\n{}Catch〈{:?}〉\n", idt(i), ctyp)?;
-                body.fmt_indent(f, i + 1)?;
-                if let Some(deel_expr) = deel {
-                    write!(f, "\n{}handler:\n", idt(i + 1))?;
-                    deel_expr.fmt_indent(f, i + 2)?;
+                write!(f, "{}PipeMethod〈{}〉\n", prefix, method)?;
+                for arg in args.iter() {
+                    arg.fmt_indent(f, indent + 1)?;
+                    writeln!(f)?;
                 }
                 Ok(())
             }
 
-            // 新增：模块相关
+            // 其他
+            Self::Return(expr) => {
+                write!(f, "{}Return\n", prefix)?;
+                expr.fmt_indent(f, indent + 1)
+            }
+            Self::Break(expr) => {
+                write!(f, "{}Break\n", prefix)?;
+                expr.fmt_indent(f, indent + 1)
+            }
+            Self::Catch(body, ctyp, deel) => {
+                write!(f, "{}Catch〈{:?}〉\n", prefix, ctyp)?;
+                body.fmt_indent(f, indent + 1)?;
+                if let Some(handler) = deel {
+                    write!(f, "\n{}Handler\n", idt(indent + 1))?;
+                    handler.fmt_indent(f, indent + 2)?;
+                }
+                Ok(())
+            }
+            Self::AliasDef(name, cmd) => {
+                write!(f, "{}AliasDef〈{}〉\n", prefix, name)?;
+                cmd.fmt_indent(f, indent + 1)
+            }
             Self::Use(name, path) => {
                 write!(
                     f,
-                    "Use〈{} as {}〉",
+                    "{}Use〈{} as {}〉",
+                    prefix,
                     path,
                     name.as_ref().map_or("_", |n| n.as_str())
                 )
             }
-
-            // 集合类型 - 保持原有实现
-            Self::List(exprs) => {
-                write!(f, "\n{}[\n", idt(i))?;
-                exprs.iter().for_each(|e| {
-                    let _ = e.fmt_indent(f, i + 1);
-                    let _ = writeln!(f, ",");
-                });
-                writeln!(f, "{}]", idt(i))
-            }
-            Self::HMap(exprs) => {
-                write!(f, "\n{}{{\n", idt(i))?;
-                exprs.iter().for_each(|(k, v)| {
-                    let _ = write!(f, "\n{}{:?}:", idt(i + 1), k);
-                    let _ = v.fmt_indent(f, i + 2);
-                    let _ = writeln!(f);
-                });
-                write!(f, "\n{}}}\n", idt(i))
-            }
-            Self::Map(exprs) => {
-                write!(f, "\n{}{{\n", idt(i))?;
-                exprs.iter().for_each(|(k, v)| {
-                    let _ = write!(f, "\n{}{:?}:", idt(i + 1), k);
-                    let _ = v.fmt_indent(f, i + 2);
-                    let _ = writeln!(f);
-                });
-                write!(f, "\n{}}}\n", idt(i))
-            }
-            Self::Block(exprs) => {
-                write!(f, "\n{}{{\n", idt(i))?;
-                exprs.iter().for_each(|e| {
-                    let _ = e.fmt_indent(f, i + 1);
-                    let _ = writeln!(f);
-                });
-                writeln!(f, "{}}}", idt(i))
-            }
-            Self::Sequence(exprs) => {
-                write!(f, "\n{}{{-\n", idt(i))?;
-                exprs.iter().for_each(|e| {
-                    let _ = e.fmt_indent(f, i + 1);
-                    let _ = writeln!(f);
-                });
-                writeln!(f, "{}-}}", idt(i))
-            }
-
-            // 二元操作 - 保持原有实现
-            Self::BinaryOp(op, l, r) => fmt_binary_op(f, "BinaryOp", op, l, r, &None, i),
-            Self::Pipe(op, l, r) => fmt_binary_op(f, "Pipe", op, l, r, &None, i),
-
-            // 控制流 - 保持原有实现
-            Self::If(cond, true_expr, false_expr) => {
-                write!(f, "\n{}if\n", idt(i))?;
-                cond.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}then\n", idt(i))?;
-                true_expr.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}else\n", idt(i))?;
-                false_expr.fmt_indent(f, i + 1)
-            }
-            Self::Match(value, branches) => {
-                write!(f, "\n{}match ", idt(i))?;
-                value.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}{{\n", idt(i))?;
-                for (pat, expr) in branches.iter() {
-                    write!(
-                        f,
-                        "\n{}{} =>\n",
-                        idt(i + 1),
-                        pat.iter()
-                            .map(|e| e.to_string())
-                            .collect::<Vec<String>>()
-                            .join(",")
-                    )?;
-                    expr.fmt_indent(f, i + 2)?;
-                }
-                write!(f, "\n{}}}\n", idt(i))
-            }
-            Self::For(name, index, list, body) => {
-                if let Some(ind) = index {
-                    write!(f, "{}for {},{} in ", idt(i), ind, name)?;
-                } else {
-                    write!(f, "{}for {} in ", idt(i), name)?;
-                }
-                list.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}{{\n", idt(i))?;
-                body.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}}}\n", idt(i))
-            }
-            Self::While(cond, body) => {
-                write!(f, "\n{}while", idt(i))?;
-                cond.fmt_indent(f, i + 1)?;
-                write!(f, "\n{}{{\n", idt(i))?;
-                body.as_ref().fmt_indent(f, i + 1)?;
-                write!(f, "\n{}}}\n", idt(i))
-            }
-            Self::Loop(body) => {
-                write!(f, "\n{}loop {{\n", idt(i))?;
-                body.as_ref().fmt_indent(f, i + 1)?;
-                write!(f, "\n{}}}\n", idt(i))
-            }
-
-            // 函数相关 - 保持原有实现
-            Self::Lambda(params, body, _) => {
-                write!(f, "\n{}Lambda ({}) ->", idt(i), params.to_vec().join(","))?;
-                body.as_ref().fmt_indent(f, i + 1)
-            }
-            Self::Function(name, param, pc, body, decos) => {
-                for (deco, args) in decos {
-                    write!(
-                        f,
-                        "\n{}@{}({})",
-                        idt(i),
-                        deco,
-                        match args {
-                            Some(a) => Cow::Owned(
-                                a.iter()
-                                    .map(|x| x.to_string())
-                                    .collect::<Vec<_>>()
-                                    .join(",")
-                            ),
-                            _ => Cow::Borrowed(""),
-                        }
-                    )?;
-                }
-
-                let collector = match pc {
-                    Some(x) => Cow::Owned(format!(",*{}", x)),
-                    _ => Cow::Borrowed(""),
-                };
-                write!(
-                    f,
-                    "\n{}fn {}({}{collector})\n",
-                    idt(i),
-                    name,
-                    param
-                        .iter()
-                        .map(|(p, v)| match v {
-                            Some(vv) => format!("{p}={vv}"),
-                            _ => p.to_string(),
-                        })
-                        .collect::<Vec<String>>()
-                        .join(","),
-                )?;
-                body.fmt_indent(f, i + 1)
-            }
-            Self::Apply(func, args) => {
-                write!(f, "\n{}Apply〈{}〉\n{}(\n", idt(i), func, idt(i))?;
-                args.iter().for_each(|e| {
-                    let _ = e.fmt_indent(f, i + 1);
-                    let _ = writeln!(f);
-                });
-                writeln!(f, "{})", idt(i))
-            }
-            Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
-                write!(f, "\n{}Command〈{}〉\n{}(\n", idt(i), cmd, idt(i))?;
-                args.iter().for_each(|e| {
-                    let _ = e.fmt_indent(f, i + 1);
-                    let _ = writeln!(f);
-                });
-                writeln!(f, "{})", idt(i))
+            Self::Del(name) => write!(f, "{}Del〈{}〉", prefix, name),
+            Self::ModuleCall(mo, func) => {
+                write!(f, "{}ModuleCall〈{}::{}〉", prefix, mo.join("::"), func)
             }
         }
     }
@@ -763,7 +968,7 @@ impl Expression {
             Self::Function(..) => "Function".into(),
             Self::Return(_) => "Return".into(),
             Self::Break(_) => "Break".into(),
-            Self::Block(_) => "Do".into(),
+            Self::Block(_) => "Block".into(),
             Self::Sequence(_) => "Sequence".into(),
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),

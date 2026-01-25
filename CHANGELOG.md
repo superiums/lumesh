@@ -28,8 +28,8 @@ print 'outer again:' i;
 # outer again: 4
 ```
 - add env capture for lambda, only for free vars
-
-
+- optimize debug printer for all expressions
+- fix boolean parser
 
 ## [0.11.5]
 - refactor decorator realization

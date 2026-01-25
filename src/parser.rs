@@ -727,7 +727,7 @@ impl PrattParser {
                 };
 
                 // 构建Lambda表达式
-                Ok(Expression::Lambda(params.unwrap(), Rc::new(body)))
+                Ok(Expression::Lambda(params.unwrap(), Rc::new(body), None))
             }
 
             "?" => {
@@ -1958,7 +1958,7 @@ fn parse_set(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     let (input, _) = cut(text("="))(input)?;
     let (input, expr) = cut(parse_expr)(input)?;
 
-    Ok((input, Expression::SetGlobal(name, Rc::new(expr))))
+    Ok((input, Expression::SetParent(name, Rc::new(expr))))
 }
 fn parse_lets(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("let")(input)?;

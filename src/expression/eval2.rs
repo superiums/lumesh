@@ -8,7 +8,10 @@ use crate::{
     utils::expand_home,
 };
 use glob::glob;
-use std::rc::Rc;
+use std::{
+    collections::{HashMap, HashSet},
+    rc::Rc,
+};
 
 // Expression求值2
 impl Expression {
@@ -74,6 +77,22 @@ impl Expression {
                 }
             }
 
+            Self::Lambda(params, body, _) => {
+                let free_vars = body.get_free_variables();
+
+                // 只捕获自由变量
+                let mut captured_env = HashMap::new();
+                for var in &free_vars {
+                    if let Some(value) = env.get(var) {
+                        captured_env.insert(var.to_string(), value);
+                    }
+                }
+                return Ok(Self::Lambda(
+                    params.clone(),
+                    body.clone(),
+                    Some(captured_env),
+                ));
+            }
             // 处理函数定义
             Self::Function(name, params, pc, body, decos) => {
                 // dbg!(&def_env);
@@ -355,6 +374,178 @@ impl Expression {
                 self.clone(),
                 depth,
             )),
+        }
+    }
+
+    pub fn get_free_variables(&self) -> HashSet<String> {
+        match self {
+            // 变量和符号 - 符号是自由变量，变量需要环境解析
+            Self::Symbol(name) | Self::Variable(name) => HashSet::from([name.clone()]),
+
+            // Lambda - 从body收集自由变量，然后移除参数
+            Self::Lambda(params, body, _) => {
+                let mut free_vars = body.get_free_variables();
+                for param in params {
+                    free_vars.remove(param);
+                }
+                free_vars
+            }
+
+            // 二元操作符 - 收集左右操作数
+            Self::BinaryOp(_, lhs, rhs) => {
+                let mut vars = lhs.get_free_variables();
+                vars.extend(rhs.get_free_variables());
+                vars
+            }
+
+            // 一元操作符 - 收集操作数
+            Self::UnaryOp(_, expr, _) => expr.get_free_variables(),
+
+            // 范围操作符 - 收集起始、结束和步长
+            Self::RangeOp(_, start, end, step) => {
+                let mut vars = start.get_free_variables();
+                vars.extend(end.get_free_variables());
+                if let Some(step_expr) = step {
+                    vars.extend(step_expr.get_free_variables());
+                }
+                vars
+            }
+
+            // 管道操作符 - 收集左右表达式
+            Self::Pipe(_, left, right) => {
+                let mut vars = left.get_free_variables();
+                vars.extend(right.get_free_variables());
+                vars
+            }
+
+            // 索引和属性访问 - 收集对象和索引/属性
+            Self::Index(obj, index) => {
+                let mut vars = obj.get_free_variables();
+                vars.extend(index.get_free_variables());
+                vars
+            }
+            Self::Property(obj, prop) => {
+                let mut vars = obj.get_free_variables();
+                vars.extend(prop.get_free_variables());
+                vars
+            }
+
+            // 集合类型 - 收集所有元素
+            Self::List(items) => items.iter().fold(HashSet::new(), |mut vars, item| {
+                vars.extend(item.get_free_variables());
+                vars
+            }),
+            Self::Map(items) => {
+                items.iter().fold(HashSet::new(), |mut vars, (_, value)| {
+                    // 键是字符串字面量，不是变量
+                    vars.extend(value.get_free_variables());
+                    vars
+                })
+            }
+            Self::HMap(items) => {
+                items.iter().fold(HashSet::new(), |mut vars, (_, value)| {
+                    // 键是字符串字面量，不是变量
+                    vars.extend(value.get_free_variables());
+                    vars
+                })
+            }
+
+            // 控制流结构
+            Self::If(cond, true_expr, false_expr) => {
+                let mut vars = cond.get_free_variables();
+                vars.extend(true_expr.get_free_variables());
+                vars.extend(false_expr.get_free_variables());
+                vars
+            }
+
+            Self::While(cond, body) => {
+                let mut vars = cond.get_free_variables();
+                vars.extend(body.get_free_variables());
+                vars
+            }
+
+            Self::Loop(body) => body.get_free_variables(),
+
+            Self::For(.., body) => body.get_free_variables(),
+
+            Self::Match(value, branches) => {
+                let mut vars = value.get_free_variables();
+                for (_, expr) in branches.iter() {
+                    vars.extend(expr.get_free_variables());
+                }
+                vars
+            }
+
+            // 函数和应用
+            Self::Apply(func, args) => {
+                let mut vars = func.get_free_variables();
+                for arg in args.iter() {
+                    vars.extend(arg.get_free_variables());
+                }
+                vars
+            }
+
+            Self::Command(cmd, args) | Self::CommandRaw(cmd, args) => {
+                let mut vars = cmd.get_free_variables();
+                for arg in args.iter() {
+                    vars.extend(arg.get_free_variables());
+                }
+                vars
+            }
+
+            Self::Function(_, params, _, body, decorators) => {
+                let mut vars = body.get_free_variables();
+                // 移除参数
+                for (param, _) in params {
+                    vars.remove(param);
+                }
+                // 收集装饰器中的自由变量
+                for (_, decorator_args) in decorators {
+                    if let Some(args) = decorator_args {
+                        for arg in args {
+                            vars.extend(arg.get_free_variables());
+                        }
+                    }
+                }
+                vars
+            }
+
+            // 链式调用
+            Self::Chain(base, calls) => {
+                let mut vars = base.get_free_variables();
+                for call in calls {
+                    vars.extend(call.args.iter().fold(HashSet::new(), |mut acc, arg| {
+                        acc.extend(arg.get_free_variables());
+                        acc
+                    }));
+                }
+                vars
+            }
+
+            Self::PipeMethod(_, args) => args.iter().fold(HashSet::new(), |mut vars, arg| {
+                vars.extend(arg.get_free_variables());
+                vars
+            }),
+
+            // 其他表达式
+            Self::Declare(_, expr) => expr.get_free_variables(),
+            Self::Assign(_, expr) => expr.get_free_variables(),
+            Self::DestructureAssign(_, expr) => expr.get_free_variables(),
+            Self::Return(expr) => expr.get_free_variables(),
+            Self::Break(expr) => expr.get_free_variables(),
+            Self::Block(exprs) => exprs.iter().fold(HashSet::new(), |mut vars, expr| {
+                vars.extend(expr.get_free_variables());
+                vars
+            }),
+
+            Self::Catch(expr, _, handler) => {
+                let mut vars = expr.get_free_variables();
+                if let Some(handler_expr) = handler {
+                    vars.extend(handler_expr.get_free_variables());
+                }
+                vars
+            }
+            _ => HashSet::new(), // Del是删除语句，没有自由变量
         }
     }
 }

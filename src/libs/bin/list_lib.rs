@@ -766,13 +766,13 @@ fn map(
     let (var_name, ind_name, body) = if check_fn_arg(&func, 2, ctx).is_ok() {
         match &func {
             Expression::Function(_, p, _, body, _) => (p[1].0.clone(), Some(p[0].0.clone()), body),
-            Expression::Lambda(p, body) => (p[1].clone(), Some(p[0].clone()), body),
+            Expression::Lambda(p, body,_) => (p[1].clone(), Some(p[0].clone()), body),
             _ => unreachable!(),
         }
     } else if check_fn_arg(&func, 1, ctx).is_ok() {
         match &func {
             Expression::Function(_, p, _, body, _) => (p[0].0.clone(), None, body),
-            Expression::Lambda(p, body) => (p[0].clone(), None, body),
+            Expression::Lambda(p, body,_) => (p[0].clone(), None, body),
             _ => unreachable!(),
         }
     } else {
@@ -827,7 +827,7 @@ fn filter(
 
     let mut result = Vec::new();
     let fn_arg_count = match args[1].clone() {
-        Expression::Lambda(params, _) => params.len(),
+        Expression::Lambda(params, ..) => params.len(),
         Expression::Function(_, params, _, _, _) => params.len(),
         _ => {
             return Err(RuntimeError::common(

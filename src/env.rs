@@ -70,8 +70,9 @@ impl Environment {
                 Expression::String(..)
                 | Expression::Symbol(..)
                 | Expression::Integer(..)
-                | Expression::Float(..)
-                | Expression::Boolean(..) => true,
+                // | Expression::Float(..)
+                // | Expression::Boolean(..)
+                => true,
                 _ => false,
             })
             .map(|(k, v)| (k, v.to_string()))

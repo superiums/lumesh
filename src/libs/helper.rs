@@ -192,7 +192,7 @@ pub fn check_fn_arg(
     ctx: &Expression,
 ) -> Result<(), RuntimeError> {
     let fn_arg_count = match fn_arg {
-        Expression::Lambda(params, _) => params.len(),
+        Expression::Lambda(params, ..) => params.len(),
         Expression::Function(_, params, _, _, _) => params.len(),
         _ => {
             return Err(RuntimeError::common(

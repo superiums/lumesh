@@ -54,7 +54,7 @@ pub enum Expression {
     Del(String),
     Declare(String, Rc<Self>),
     Assign(String, Rc<Self>),
-    SetGlobal(String, Rc<Expression>), // 全局变量设置
+    SetParent(String, Rc<Expression>), // 全局变量设置
     For(String, Option<String>, Rc<Self>, Rc<Self>),
     While(Rc<Self>, Rc<Self>),
     Loop(Rc<Self>),
@@ -64,7 +64,7 @@ pub enum Expression {
     Command(Rc<Self>, Rc<Vec<Self>>),
     CommandRaw(Rc<Self>, Rc<Vec<Self>>),
     AliasDef(String, Rc<Self>),
-    Lambda(Vec<String>, Rc<Self>),
+    Lambda(Vec<String>, Rc<Self>, Option<HashMap<String, Self>>),
     Function(
         String,
         Vec<(String, Option<Self>)>,

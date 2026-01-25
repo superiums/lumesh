@@ -161,7 +161,7 @@ impl Expression {
             }
 
             // 函数定义
-            Self::Lambda(params, body) => {
+            Self::Lambda(params, body, _) => {
                 write!(f, "{}({}) -> ", idt(i), params.join(", "))?;
                 if matches!(body.as_ref(), Self::Block(_)) {
                     writeln!(f)?;
@@ -248,7 +248,7 @@ impl Expression {
 
             // 操作符
             Self::BinaryOp(op, l, r) => {
-                write!(f, "{l} {op} {r}")
+                write!(f, "{}{l} {op} {r}", idt(i))
             }
 
             Self::UnaryOp(op, v, is_prefix) => {
@@ -386,7 +386,7 @@ impl Expression {
             }
 
             Self::Del(name) => write!(f, "{}del {}", idt(i), name),
-            Self::SetGlobal(name, exp) => {
+            Self::SetParent(name, exp) => {
                 write!(f, "{}set {} = ", idt(i), name)?;
                 exp.fmt_display_indent(f, 0)
             }
@@ -534,7 +534,7 @@ impl Expression {
                 write!(f, "\n{}AliasDef〈{}〉 =\n", idt(i), name)?;
                 cmd.fmt_indent(f, i + 1)
             }
-            Self::SetGlobal(name, cmd) => {
+            Self::SetParent(name, cmd) => {
                 write!(f, "\n{}set〈{}〉 =\n", idt(i), name)?;
                 cmd.fmt_indent(f, i + 1)
             }
@@ -660,7 +660,7 @@ impl Expression {
             }
 
             // 函数相关 - 保持原有实现
-            Self::Lambda(params, body) => {
+            Self::Lambda(params, body, _) => {
                 write!(f, "\n{}Lambda ({}) ->", idt(i), params.to_vec().join(","))?;
                 body.as_ref().fmt_indent(f, i + 1)
             }
@@ -747,7 +747,7 @@ impl Expression {
             Self::Property(_, _) => "Property".into(),
             Self::Del(_) => "Del".into(),
             Self::Declare(_, _) => "Declare".into(),
-            Self::SetGlobal(_, _) => "Set".into(),
+            Self::SetParent(_, _) => "Set".into(),
             Self::Assign(_, _) => "Assign".into(),
             Self::For(..) => "For".into(),
             Self::While(_, _) => "While".into(),

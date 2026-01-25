@@ -220,11 +220,16 @@ impl Expression {
             Expression::Symbol(_) => func_eval.eval_symbo(args, false, state, env, depth + 1),
 
             // Lambda 应用 - 完全求值的函数应用
-            Expression::Lambda(params, body) => {
+            Expression::Lambda(params, body, captured_env) => {
                 // let pipe_out = state.pipe_out(); //必须先取得pipeout，否则可能被参数取走
                 // dbg!("2.--- applying lambda---", &params);
                 let mut current_env = env.fork();
-
+                // 先应用已捕获的环境
+                if let Some(captured) = captured_env {
+                    for (key, value) in captured.iter() {
+                        current_env.define(key, value.clone());
+                    }
+                }
                 // 批量参数绑定前先求值所有参数
                 let is_in_pipe = state.contains(State::IN_PIPE);
                 state.set(State::IN_PIPE);
@@ -265,20 +270,14 @@ impl Expression {
                     }
 
                     // 部分应用：返回新的柯里化lambda
-                    Some(remain) => Ok(Expression::Lambda(remain, body)),
+                    Some(remain) => Ok(Expression::Lambda(
+                        remain,
+                        body,
+                        Some(current_env.get_bindings_map()),
+                    )),
                 }
             }
 
-            // Macro 应用 - 不自动求值参数的展开
-            // Expression::Macro(params, body) => {
-            //     match bind_arguments(params, args.to_owned(), env) {
-            //         // 完全应用：求值函数体
-            //         None => body.eval_mut(true, env, depth + 1),
-
-            //         // 部分应用：返回新的柯里化lambda
-            //         Some(remain) => Ok(Expression::Macro(remain, body)),
-            //     }
-            // }
             Expression::Function(.., ref decos) => {
                 return match decos.is_empty() {
                     true => self.eval_normal_function(func_eval, args, state, env, depth),

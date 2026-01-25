@@ -20,10 +20,15 @@ print 'outer again:' i k;
 }
 print 'outer again:' i;
 # ---output---
-# ourter: 5
-# inner 99 99
-# outer again: 5 k
+# ourter: 1
+# inner declared: 2 2
+# inner changed: 3 2
+# outer again: 1 k
+# change global: 4
+# outer again: 4
 ```
+- add env capture for lambda, only for free vars
+
 
 
 ## [0.11.5]

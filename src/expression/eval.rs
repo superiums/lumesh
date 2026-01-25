@@ -309,7 +309,7 @@ impl Expression {
 
                     return Ok(Self::None);
                 }
-                Self::SetGlobal(name, expr) => {
+                Self::SetParent(name, expr) => {
                     if env.has(name) {
                         state.set(State::IN_ASSIGN);
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;

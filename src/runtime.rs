@@ -84,8 +84,8 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                     if with_print_direct(|v| v) {
                         match result {
                             // skip function and lambda define PD
-                            Expression::Function(_, _, _, _, _) => {}
-                            Expression::Lambda(_, _) => {}
+                            Expression::Function(..) => {}
+                            Expression::Lambda(..) => {}
                             r => println!("\n  >> [{}] <<\n{}", r.type_name(), r),
                         };
                         let _ = io::stdout().flush();

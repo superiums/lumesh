@@ -1644,6 +1644,7 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         parse_use_statement, //允许语句中间按需use
         // 1.声明语句
         parse_lets,
+        parse_set,
         parse_alias,
         parse_del,
         // 2.控制流语句
@@ -1950,6 +1951,14 @@ fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     let (input, expr) = cut(parse_expr)(input)?;
     // dbg!(&expr);
     Ok((input, Expression::AliasDef(symbol, Rc::new(expr))))
+}
+fn parse_set(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("set")(input)?;
+    let (input, name) = cut(parse_symbol_string)(input)?;
+    let (input, _) = cut(text("="))(input)?;
+    let (input, expr) = cut(parse_expr)(input)?;
+
+    Ok((input, Expression::SetGlobal(name, Rc::new(expr))))
 }
 fn parse_lets(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("let")(input)?;

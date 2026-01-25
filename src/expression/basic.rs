@@ -386,6 +386,10 @@ impl Expression {
             }
 
             Self::Del(name) => write!(f, "{}del {}", idt(i), name),
+            Self::SetGlobal(name, exp) => {
+                write!(f, "{}set {} = ", idt(i), name)?;
+                exp.fmt_display_indent(f, 0)
+            }
             Self::AliasDef(name, cmd) => {
                 write!(f, "{}alias {} = ", idt(i), name)?;
                 cmd.fmt_display_indent(f, 0)
@@ -528,6 +532,10 @@ impl Expression {
             // 新增：别名操作
             Self::AliasDef(name, cmd) => {
                 write!(f, "\n{}AliasDef〈{}〉 =\n", idt(i), name)?;
+                cmd.fmt_indent(f, i + 1)
+            }
+            Self::SetGlobal(name, cmd) => {
+                write!(f, "\n{}set〈{}〉 =\n", idt(i), name)?;
                 cmd.fmt_indent(f, i + 1)
             }
 
@@ -739,6 +747,7 @@ impl Expression {
             Self::Property(_, _) => "Property".into(),
             Self::Del(_) => "Del".into(),
             Self::Declare(_, _) => "Declare".into(),
+            Self::SetGlobal(_, _) => "Set".into(),
             Self::Assign(_, _) => "Assign".into(),
             Self::For(..) => "For".into(),
             Self::While(_, _) => "While".into(),

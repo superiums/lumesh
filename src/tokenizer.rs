@@ -202,6 +202,7 @@ fn short_operator(input: Input<'_>) -> TokenizationResult<'_> {
 fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_alone_tag("let"),
+        keyword_alone_tag("set"),
         keyword_alone_tag("alias"),
         keyword_alone_tag("if"),
         // keyword_tag("then"),
@@ -217,8 +218,6 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_tag("return"),
         keyword_alone_tag("del"),
         keyword_alone_tag("use"),
-        // keyword_tag("type"),
-        // keyword_tag("None"),
     ))(input)
 }
 

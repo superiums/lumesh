@@ -1,12 +1,24 @@
 # Changelog
 
 ## [0.11.6]
+- introduce `set`
 - introduce local domain
 all variable declare in a block is local variable.
 include in bare `{}` or the body in `if`,`for`,`loop`,`while`,`match`...
 the optimized variable management is differ from traditional enviroment.
 ```bash
-let i = 5; print 'ourter:' i; { let i,k=99; print 'inner' i k; } print 'outer again:' i k;
+let i = 1; print 'ourter:' i; 
+{   let i,k=2;             # this declares the local var.
+    print 'inner declared:' i k; 
+    i=3;                    # this changes the local var.
+    print 'inner changed:' i k; 
+}
+print 'outer again:' i k;
+{ 
+    set i = 4;              # this changes the globar env.
+    print 'change global:' i
+}
+print 'outer again:' i;
 # ---output---
 # ourter: 5
 # inner 99 99

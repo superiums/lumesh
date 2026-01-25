@@ -54,6 +54,7 @@ pub enum Expression {
     Del(String),
     Declare(String, Rc<Self>),
     Assign(String, Rc<Self>),
+    SetGlobal(String, Rc<Expression>), // 全局变量设置
     For(String, Option<String>, Rc<Self>, Rc<Self>),
     While(Rc<Self>, Rc<Self>),
     Loop(Rc<Self>),

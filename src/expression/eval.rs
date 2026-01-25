@@ -114,6 +114,9 @@ impl State {
     pub fn set_local_var(&mut self, name: String, value: Expression) {
         self.3.insert(name, value);
     }
+    pub fn has_local_var(&mut self, name: &str) -> bool {
+        self.3.contains_key(name)
+    }
     pub fn get_local_var(&self, name: &str) -> Option<&Expression> {
         self.3.get(name)
     }
@@ -306,6 +309,41 @@ impl Expression {
 
                     return Ok(Self::None);
                 }
+                Self::SetGlobal(name, expr) => {
+                    if env.has(name) {
+                        state.set(State::IN_ASSIGN);
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                        state.clear(State::IN_ASSIGN);
+                        env.define(name, value);
+                    } else if env.is_defined(name) {
+                        // 向上层环境查找并修改
+                        let mut current_env = env.clone();
+                        while let Some(parent) = current_env.get_parent_mut() {
+                            if parent.has(name) {
+                                state.set(State::IN_ASSIGN);
+                                let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                                state.clear(State::IN_ASSIGN);
+                                parent.define(name, value);
+                                break;
+                            }
+                            current_env = parent.clone();
+                        }
+                    } else {
+                        if state.contains(State::STRICT) {
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                                job.clone(),
+                                depth,
+                            ));
+                        }
+                        state.set(State::IN_ASSIGN);
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                        state.clear(State::IN_ASSIGN);
+                        env.define(name, value);
+                    }
+
+                    return Ok(Self::None);
+                }
 
                 // Assign 优先修改子环境，未找到则修改父环境
                 Self::Assign(name, expr) => {
@@ -322,20 +360,21 @@ impl Expression {
                     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                     state.clear(State::IN_ASSIGN);
 
-                    // dbg!("assign---->", &name, &value.type_name());
-                    if env.has(name) {
+                    if state.contains(State::IN_LOCAL) {
+                        // if not exists, see if strict
+                        if state.contains(State::STRICT) && !state.has_local_var(&name) {
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::UndeclaredLocalVariable(name.clone()),
+                                job.clone(),
+                                depth,
+                            ));
+                        }
+                        // changes only exists
+                        state.set_local_var(name.to_string(), value);
+                        return Ok(Self::None);
+                    } else if env.has(name) {
                         env.define(name, value.clone());
                     } else {
-                        // 向上层环境查找并修改（根据语言设计需求）
-                        // let mut current_env = env.clone();
-                        // while let Some(parent) = current_env.get_parent_mut() {
-                        //     if parent.has(name) {
-                        //         parent.define(name, value.clone());
-                        //         return Ok(value);
-                        //     }
-                        //     current_env = parent.clone();
-                        // }
-
                         if state.contains(State::STRICT) {
                             return Err(RuntimeError::new(
                                 RuntimeErrorKind::UndeclaredVariable(name.clone()),

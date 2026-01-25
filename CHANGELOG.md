@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.11.6]
+- introduce local domain
+all variable declare in a block is local variable.
+include in bare `{}` or the body in `if`,`for`,`loop`,`while`,`match`...
+the optimized variable management is differ from traditional enviroment.
+```bash
+let i = 5; print 'ourter:' i; { let i,k=99; print 'inner' i k; } print 'outer again:' i k;
+# ---output---
+# ourter: 5
+# inner 99 99
+# outer again: 5 k
+```
+
+
 ## [0.11.5]
 - refactor decorator realization
   now decorator changes to middleware like style.

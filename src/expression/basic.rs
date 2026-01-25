@@ -163,7 +163,7 @@ impl Expression {
             // 函数定义
             Self::Lambda(params, body) => {
                 write!(f, "{}({}) -> ", idt(i), params.join(", "))?;
-                if matches!(body.as_ref(), Self::Do(_)) {
+                if matches!(body.as_ref(), Self::Block(_)) {
                     writeln!(f)?;
                     body.fmt_display_indent(f, i + 1)
                 } else {
@@ -194,13 +194,21 @@ impl Expression {
             }
 
             // 代码块
-            Self::Do(exprs) => {
+            Self::Block(exprs) => {
                 writeln!(f, "{}{{", idt(i))?;
                 for expr in exprs.iter() {
                     expr.fmt_display_indent(f, i + 1)?;
                     writeln!(f)?;
                 }
                 write!(f, "{}}}", idt(i))
+            }
+            Self::Sequence(exprs) => {
+                writeln!(f, "{}{{-", idt(i))?;
+                for expr in exprs.iter() {
+                    expr.fmt_display_indent(f, i + 1)?;
+                    writeln!(f)?;
+                }
+                write!(f, "{}-}}", idt(i))
             }
 
             // 集合类型 - 紧凑格式
@@ -571,13 +579,21 @@ impl Expression {
                 });
                 write!(f, "\n{}}}\n", idt(i))
             }
-            Self::Do(exprs) => {
+            Self::Block(exprs) => {
                 write!(f, "\n{}{{\n", idt(i))?;
                 exprs.iter().for_each(|e| {
                     let _ = e.fmt_indent(f, i + 1);
                     let _ = writeln!(f);
                 });
                 writeln!(f, "{}}}", idt(i))
+            }
+            Self::Sequence(exprs) => {
+                write!(f, "\n{}{{-\n", idt(i))?;
+                exprs.iter().for_each(|e| {
+                    let _ = e.fmt_indent(f, i + 1);
+                    let _ = writeln!(f);
+                });
+                writeln!(f, "{}-}}", idt(i))
             }
 
             // 二元操作 - 保持原有实现
@@ -738,7 +754,8 @@ impl Expression {
             Self::Function(..) => "Function".into(),
             Self::Return(_) => "Return".into(),
             Self::Break(_) => "Break".into(),
-            Self::Do(_) => "Do".into(),
+            Self::Block(_) => "Do".into(),
+            Self::Sequence(_) => "Sequence".into(),
             Self::Quote(_) => "Quote".into(),
             Self::Catch(..) => "Catch".into(),
 

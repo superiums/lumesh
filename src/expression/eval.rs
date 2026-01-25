@@ -31,6 +31,7 @@ impl Default for State {
 
 impl State {
     pub const STRICT: u8 = 1;
+    pub const IN_LOCAL: u8 = 1 << 1; // 0b00000010
     // pub const SKIP_BUILTIN_SEEK: u8 = 1 << 1; // 0b00000010
     pub const IN_PIPE: u8 = 1 << 2; // 0b00000100
     pub const PTY_MODE: u8 = 1 << 3; // 0b00001000
@@ -119,6 +120,12 @@ impl State {
     pub fn clear_local_var(&mut self) {
         self.3.clear();
     }
+    pub fn set_local_vars(&mut self, map: HashMap<String, Expression>) {
+        self.3 = map;
+    }
+    pub fn get_local_vars(&self) -> HashMap<String, Expression> {
+        self.3.clone()
+    }
 
     // 添加循环状态字段
     pub fn set_iter(
@@ -151,8 +158,17 @@ impl State {
             None => Ok(false),
         }
     }
-    pub fn clear_loop_context(&mut self) {
+    pub fn clear_iter(&mut self) {
         self.4 = None;
+    }
+    pub fn take_iter(
+        &mut self,
+    ) -> Option<(
+        String,
+        Option<String>,
+        Box<dyn Iterator<Item = Expression> + 'static>,
+    )> {
+        self.4.take()
     }
 }
 
@@ -258,8 +274,8 @@ impl Expression {
                 // 处理变量声明（仅允许未定义变量）
                 Self::Declare(name, expr) => {
                     // dbg!("declare---->", &name, &expr.type_name());
-
-                    if state.contains(State::IN_FOR_LOOP) {
+                    // 块级作用域
+                    if state.contains(State::IN_LOCAL) {
                         let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                         state.set_local_var(name.to_string(), value);
                         return Ok(Self::None);
@@ -286,9 +302,8 @@ impl Expression {
                     state.set(State::IN_ASSIGN);
                     let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
                     state.clear(State::IN_ASSIGN);
-                    env.define(name, value); // 新增 declare
-                    // }
-                    // dbg!("declare---->", &name, &value.type_name());
+                    env.define(name, value);
+
                     return Ok(Self::None);
                 }
 
@@ -362,7 +377,11 @@ impl Expression {
                     }
                     continue;
                 }
-                Self::Quote(inner) => return Ok(inner.as_ref().clone()),
+                // Self::Quote(inner) => return Ok(inner.as_ref().clone()),
+                Self::Quote(inner) => {
+                    job = inner.as_ref();
+                    continue;
+                }
 
                 // 一元运算
                 Self::UnaryOp(op, operand, _) => {
@@ -1347,17 +1366,9 @@ impl Expression {
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // 优先检查是否在循环状态中
-        if state.contains(State::IN_FOR_LOOP) {
+        if state.contains(State::IN_LOCAL) {
             if let Some(local_val) = state.get_local_var(name) {
                 return Ok(local_val.clone());
-                // return match iter.next() {
-                //     Some(expr) => Ok(expr),
-                //     None => Err(RuntimeError::new(
-                //         RuntimeErrorKind::IteratorExhausted(name.clone()),
-                //         self.clone(),
-                //         depth,
-                //     )),
-                // };
             }
         }
 

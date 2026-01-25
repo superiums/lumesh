@@ -719,11 +719,11 @@ impl PrattParser {
                 // 自动包装body为代码块
                 let body = match rhs {
                     // 已有代码块保持原样
-                    Expression::Do(_) => rhs,
+                    Expression::Block(_) => rhs,
                     // 分组表达式展开
                     Expression::Group(boxed_expr) => boxed_expr.as_ref().clone(),
                     // 其他表达式自动包装
-                    _ => Expression::Do(Rc::new(vec![rhs])),
+                    _ => Expression::Block(Rc::new(vec![rhs])),
                 };
 
                 // 构建Lambda表达式
@@ -1564,7 +1564,7 @@ pub fn parse_script_tokens(
             let s = module.first().unwrap();
             Ok((input, s.clone()))
         }
-        _ => Ok((input, Expression::Do(Rc::new(module)))),
+        _ => Ok((input, Expression::Sequence(module))),
     }
 }
 /// 函数解析（顶层结构）
@@ -1891,7 +1891,7 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
                 parse_statement,
                 opt(many0(kind(TokenKind::LineBreak))),
             )),
-            |stmts| Expression::Do(Rc::new(stmts)),
+            |stmts| Expression::Block(Rc::new(stmts)),
         ),
         text_close("}"),
     )(input)?;
@@ -2049,7 +2049,7 @@ fn parse_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
             ));
         }
     };
-    Ok((input, Expression::Do(Rc::new(assignments))))
+    Ok((input, Expression::Sequence(assignments)))
 }
 
 fn parse_destructure_assign(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {

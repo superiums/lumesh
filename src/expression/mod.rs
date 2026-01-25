@@ -73,7 +73,8 @@ pub enum Expression {
     ),
     Return(Rc<Self>),
     Break(Rc<Self>),
-    Do(Rc<Vec<Self>>),
+    Sequence(Vec<Expression>), // 表达式序列
+    Block(Rc<Vec<Self>>),
     Quote(Rc<Self>),
     Catch(Rc<Self>, CatchType, Option<Rc<Self>>),
     Range(Range<Int>, usize),

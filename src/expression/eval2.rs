@@ -133,15 +133,39 @@ impl Expression {
                 // }
             }
 
+            Self::Sequence(exprs) => {
+                for expr in exprs {
+                    expr.eval_mut(state, env, depth + 1)?;
+                }
+                Ok(Expression::None)
+            }
+
             // 块表达式
-            Self::Do(exprs) => {
-                // dbg!("2.--->DoBlock:", &exprs);
-                // 创建子环境继承父作用域
-                // let mut child_env = env.clone();
+            Self::Block(exprs) => {
                 // 顺序求值语句块
-                let mut last = Self::None;
+                if exprs.is_empty() {
+                    return Ok(Expression::None);
+                }
+
+                let mut last = Expression::None;
+                let is_last_local = state.contains(State::IN_LOCAL);
+                let last_local_vars = if is_last_local {
+                    Some(state.get_local_vars())
+                } else {
+                    None
+                };
+                state.set(State::IN_LOCAL);
                 for expr in exprs.as_ref() {
                     last = expr.eval_mut(state, env, depth + 1)?;
+                }
+                if !state.contains(State::IN_FOR_LOOP) && !is_last_local {
+                    // not clear local in for loop. especialy the index.
+                    state.clear_local_var();
+                }
+                if is_last_local {
+                    state.set_local_vars(last_local_vars.unwrap());
+                } else {
+                    state.clear(State::IN_LOCAL);
                 }
                 Ok(last)
             }
@@ -386,6 +410,8 @@ where
     I: Iterator<Item = Expression> + 'static,
 {
     // 设置循环状态
+    let last_iter = state.take_iter();
+    let is_last_in_loop = state.contains(State::IN_FOR_LOOP);
     state.set(State::IN_FOR_LOOP);
     state.set_iter(var_name, index_name, Box::new(iterator));
 
@@ -409,9 +435,15 @@ where
                     ..
                 }) => break, // 循环正常结束
                 Err(e) => {
-                    state.clear(State::IN_FOR_LOOP);
-                    state.clear_loop_context();
-                    state.clear_local_var();
+                    state.clear_iter();
+                    if is_last_in_loop {
+                        if let Some((var_name, index_name, iterator)) = last_iter {
+                            state.set_iter(var_name, index_name, iterator);
+                        }
+                    } else {
+                        state.clear(State::IN_FOR_LOOP);
+                        state.clear_local_var();
+                    }
                     return Err(e);
                 }
             }
@@ -433,9 +465,15 @@ where
                     ..
                 }) => break,
                 Err(e) => {
-                    state.clear(State::IN_FOR_LOOP);
-                    state.clear_loop_context();
-                    state.clear_local_var();
+                    state.clear_iter();
+                    if is_last_in_loop {
+                        if let Some((var_name, index_name, iterator)) = last_iter {
+                            state.set_iter(var_name, index_name, iterator);
+                        }
+                    } else {
+                        state.clear(State::IN_FOR_LOOP);
+                        state.clear_local_var();
+                    }
                     return Err(e);
                 }
             }
@@ -444,48 +482,15 @@ where
     };
 
     // 清理循环状态
-    state.clear(State::IN_FOR_LOOP);
-    state.clear_loop_context();
-    state.clear_local_var();
+    state.clear_iter();
+    if is_last_in_loop {
+        if let Some((var_name, index_name, iterator)) = last_iter {
+            state.set_iter(var_name, index_name, iterator);
+        }
+    } else {
+        state.clear(State::IN_FOR_LOOP);
+        state.clear_local_var(); //clear here instead of in every block. for efficency and index secure.
+        state.take_iter();
+    }
     r
 }
-
-// fn load_modules_to_map(
-//     result: &mut HashMap<String, Expression>,
-//     module_alias: &Option<String>,
-//     module_path: &str,
-//     // loaded_modules: &mut HashSet<String>,
-//     context: &Expression,
-//     env: &mut Environment,
-//     depth: usize,
-// ) -> Result<(), RuntimeError> {
-//     let module_name = get_module_name_from_path(module_alias, module_path, context, depth + 1)?;
-//     if result.contains_key(module_name.as_ref()) {
-//         return Err(RuntimeError::common(
-//             "Circular module dependency".into(),
-//             context.clone(),
-//             depth,
-//         ));
-//     }
-
-//     // 读取模块文件
-//     // let file_path = PathBuf::from(format!("{}.lm", module_path));
-//     let module_info = load_module(module_path, env)?;
-
-//     // 当前导入模块的函数
-//     result.insert(module_name.into(), Expression::from(module_info.functions));
-
-//     // 递归处理依赖的 use 语句
-//     for (dep_alias, dep_path) in &module_info.use_statements {
-//         load_modules_to_map(
-//             result,
-//             dep_alias,
-//             dep_path,
-//             &Expression::Use(dep_alias.clone(), dep_path.clone()),
-//             env,
-//             depth + 1,
-//         )?;
-//     }
-
-//     Ok(())
-// }

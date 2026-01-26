@@ -30,6 +30,8 @@ print 'outer again:' i;
 - add env capture for lambda, only for free vars
 - optimize debug printer for all expressions
 - fix boolean parser
+- add `PATH_SESSION` to record history for `cd`
+
 
 ## [0.11.5]
 - refactor decorator realization

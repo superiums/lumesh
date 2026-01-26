@@ -956,7 +956,7 @@ fn parse_chaind_call_or_property(
             // 无参数的属性访问，转换为索引操作
             Ok((
                 input,
-                Expression::Property(Rc::new(lhs), Rc::new(Expression::String(method_name))),
+                Expression::Property(Rc::new(lhs), Rc::new(Expression::Symbol(method_name))),
             ))
         }
     }

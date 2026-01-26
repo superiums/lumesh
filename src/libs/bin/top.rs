@@ -319,8 +319,28 @@ fn cd(
     if path == "-" {
         path = env.get("LWD").map_or("~".to_string(), |x| x.to_string());
     }
-    let _ = std::env::current_dir()
-        .and_then(|x| Ok(env.define("LWD", Expression::String(x.to_string_lossy().into()))));
+    let _ = std::env::current_dir().and_then(|x| {
+        let xs = x.to_str().unwrap_or_default();
+        env.define("LWD", Expression::String(xs.to_string()));
+        if let Some(Expression::List(paths)) = env.get("PATH_SESSION") {
+            if !paths.iter().any(|p| {
+                if let Expression::String(ps) = p {
+                    ps == xs
+                } else {
+                    false
+                }
+            }) {
+                let mut pn = paths.as_ref().clone();
+                pn.push(Expression::String(xs.to_string()));
+                env.define("PATH_SESSION", Expression::from(pn));
+                return Ok(());
+            }
+        }
+        let mut pn = Vec::new();
+        pn.push(Expression::String(xs.to_string()));
+        env.define("HISTORY_PATH", Expression::from(pn));
+        Ok(())
+    });
 
     if path.starts_with("~") {
         if let Some(home_dir) = dirs::home_dir() {

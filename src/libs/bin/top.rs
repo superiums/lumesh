@@ -9,7 +9,7 @@ use crate::{
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
         bin::boolean_lib::not,
-        helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_arg},
+        helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_ref},
         pretty_printer,
     },
     parse_and_eval, reg_all, reg_info,
@@ -20,7 +20,7 @@ pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
         exit, cd, cwd,
         tap, print, pprint, println, eprint, eprintln, read,
-        r#typeof => "typeof", debug2, debug,
+        r#typeof => "typeof", ddebug, debug,
         get, len, insert, rev, flatten, r#where => "where", select,
         not,
         repeat, eval, exec, eval_str, exec_str, include, import,
@@ -51,7 +51,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         eprint => "print to stderr without newline", "<args>..."
         eprintln => "print to stderr with newline", "<args>..."
         debug => "print debug representation", "<args>..."
-        debug2 => "print debug representation", "<args>..."
+        ddebug => "pretty debug", "<args>..."
         read => "get user input", "[prompt]"
         throw => "return a runtime error", "<msg>"
 
@@ -246,12 +246,12 @@ fn import(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("import", args, 1, ctx)?;
-
-    let canon_path = canon(&args[0].eval(env)?.to_string())?;
+    let path = get_string_ref(&args[0], ctx)?;
+    let canon_path = canon(path)?;
     // Read the file.
-    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
+    let contents = std::fs::read_to_string(canon_path).map_err(|e| {
         RuntimeError::common(
-            format!("could not read file {}: {}", canon_path.display(), e).into(),
+            format!("could not read file {}: {}", path, e).into(),
             ctx.clone(),
             0,
         )
@@ -266,12 +266,11 @@ fn include(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("include", args, 1, ctx)?;
-    let path = get_string_arg(args[0].eval(env)?, ctx)?;
-
-    let canon_path = canon(&path)?;
+    let path = get_string_ref(&args[0], ctx)?;
+    let canon_path = canon(path)?;
 
     // Read the file.
-    let contents = std::fs::read_to_string(canon_path.clone()).map_err(|e| {
+    let contents = std::fs::read_to_string(canon_path).map_err(|e| {
         RuntimeError::new(
             RuntimeErrorKind::CustomError(format!("failed to read file '{}': {}", path, e).into()),
             ctx.clone(),
@@ -284,13 +283,13 @@ fn include(
 }
 fn exit(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let code = if args.is_empty() {
         0
     } else {
-        match args[0].eval(env)? {
+        match args[0] {
             Expression::Integer(n) => n as i32,
             _ => {
                 return Err(RuntimeError::new(
@@ -311,8 +310,8 @@ fn cd(
     let mut path = if args.len() == 0 {
         "~".to_string()
     } else {
-        match args[0].eval_in_assign(env)? {
-            Expression::Symbol(path) | Expression::String(path) => path,
+        match &args[0] {
+            Expression::Symbol(path) | Expression::String(path) => path.to_string(),
             other => other.to_string(),
         }
     };
@@ -338,7 +337,7 @@ fn cd(
         }
         let mut pn = Vec::new();
         pn.push(Expression::String(xs.to_string()));
-        env.define("HISTORY_PATH", Expression::from(pn));
+        env.define("PATH_SESSION", Expression::from(pn));
         Ok(())
     });
 
@@ -378,13 +377,22 @@ fn r#typeof(
     Ok(Expression::String(rs))
 }
 
+// args lazy
 fn debug(
     args: &[Expression],
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval_in_assign(env)?;
+    for (i, x) in args.iter().enumerate() {
+        if i < args.len() - 1 {
+            print!("{x:?} ")
+        } else {
+            println!("{x:?}")
+        }
+    }
+    println!("----------");
+    for (i, x) in args.iter().enumerate() {
+        let x = x.eval_in_assign(env)?;
         if i < args.len() - 1 {
             print!("{x:?} ")
         } else {
@@ -394,13 +402,22 @@ fn debug(
     Ok(Expression::None)
 }
 
-fn debug2(
+// args lazy
+fn ddebug(
     args: &[Expression],
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval_in_assign(env)?;
+    for (i, x) in args.iter().enumerate() {
+        if i < args.len() - 1 {
+            print!("{x:#} ")
+        } else {
+            println!("{x:#}")
+        }
+    }
+    println!("----------");
+    for (i, x) in args.iter().enumerate() {
+        let x = x.eval_in_assign(env)?;
         if i < args.len() - 1 {
             print!("{x:#} ")
         } else {
@@ -412,19 +429,19 @@ fn debug2(
 
 fn tap(
     args: &[Expression],
-    env: &mut Environment,
-    _ctx: &Expression,
+    _env: &mut Environment,
+    ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
+    check_args_len("tap", args, 1.., ctx)?;
     let mut stdout = std::io::stdout().lock();
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
-    for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval_in_assign(env)?;
+    for (i, x) in args.iter().enumerate() {
         if i < args.len() - 1 {
             let _ = write!(&mut stdout, "{x} ");
         } else {
             let _ = writeln!(&mut stdout, "{x}");
         }
-        result.push(x)
+        result.push(x.clone())
     }
     let _ = stdout.flush();
     if result.len() == 1 {
@@ -435,12 +452,11 @@ fn tap(
 
 fn print(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stdout = std::io::stdout().lock();
-    for arg in args.iter() {
-        let x = arg.eval_in_assign(env)?;
+    for x in args.iter() {
         let _ = write!(&mut stdout, "{x} ");
     }
     let _ = writeln!(&mut stdout);
@@ -449,13 +465,11 @@ fn print(
 }
 fn println(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stdout = std::io::stdout().lock();
-    for arg in args.iter() {
-        let x = arg.eval_in_assign(env)?;
-        // println!("{}", x);
+    for x in args.iter() {
         let _ = writeln!(&mut stdout, "{x}");
     }
     let _ = stdout.flush();
@@ -463,25 +477,22 @@ fn println(
 }
 pub fn pprint(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("pprint", args, 1.., ctx)?;
-    // let _ = args.iter().map(|a| pretty_printer(&a.eval(env)?));
     for arg in args.iter() {
-        let r = arg.eval_in_assign(env)?;
-        pretty_printer(&r)?;
+        pretty_printer(&arg)?;
     }
     Ok(Expression::None)
 }
 fn eprint(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stderr = std::io::stderr().lock();
-    for (i, arg) in args.iter().enumerate() {
-        let x = arg.eval_in_assign(env)?;
+    for (i, x) in args.iter().enumerate() {
         if i < args.len() - 1 {
             let _ = write!(&mut stderr, "\x1b[38;5;9m{x} \x1b[m\x1b[0m");
         } else {
@@ -493,12 +504,11 @@ fn eprint(
 }
 fn eprintln(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut stderr = std::io::stderr().lock();
-    for arg in args.iter() {
-        let x = arg.eval_in_assign(env)?;
+    for x in args.iter() {
         let _ = writeln!(&mut stderr, "\x1b[38;5;9m{x}\x1b[m\x1b[0m");
     }
     let _ = stderr.flush();
@@ -511,33 +521,23 @@ fn read(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     print(args, env, ctx)?;
-    let _ = std::io::stdout().flush();
+    // let _ = std::io::stdout().flush();
 
     let mut input = String::new();
     let _ = std::io::stdin().read_line(&mut input);
     Ok(Expression::String(input.trim().to_owned()))
-    // let mut prompt = String::new();
-    // for (i, arg) in args.iter().enumerate() {
-    //     let x = arg.eval(env)?;
-    //     if i < args.len() - 1 {
-    //         prompt += &format!("{} ", x)
-    //     } else {
-    //         prompt += &format!("{}", x)
-    //     }
-    // }
-    // Ok(Expression::String(crate::repl::read_user_input(&prompt)))
 }
 
 pub fn insert(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("insert", args, 3, ctx)?;
-    let mut arr = args[0].eval(env)?;
-    let idx = args[1].eval(env)?;
-    let val = args[2].eval(env)?;
-    match (&mut arr, &idx) {
+    let arr = &args[0];
+    let idx = &args[1];
+    let val = args[2].clone();
+    match (arr, idx) {
         (Expression::HMap(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();
             result.insert(key.clone(), val);
@@ -565,8 +565,9 @@ pub fn insert(
         }
         (Expression::String(s), Expression::Integer(i)) => {
             if *i as usize <= s.len() {
-                s.insert_str(*i as usize, &val.to_string());
-                Ok(Expression::String(s.clone()))
+                let mut result = s.clone();
+                result.insert_str(*i as usize, &val.to_string());
+                Ok(Expression::String(result))
             } else {
                 Err(RuntimeError::new(
                     RuntimeErrorKind::CustomError(
@@ -589,11 +590,11 @@ pub fn insert(
 
 pub fn len(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("len", args, 1, ctx)?;
-    match args[0].eval(env)? {
+    match &args[0] {
         Expression::HMap(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::Map(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::List(list) => Ok(Expression::Integer(list.as_ref().len() as Int)),
@@ -601,7 +602,9 @@ pub fn len(
             Ok(Expression::Integer(x.chars().count() as Int))
         }
         Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
-        Expression::Range(a, b) => Ok(Expression::Integer(a.step_by(b).count() as Int)),
+        Expression::Range(a, b) => Ok(Expression::Integer(
+            a.to_owned().step_by(b.clone()).count() as Int
+        )),
         expr => Err(RuntimeError::new(
             RuntimeErrorKind::CustomError(
                 format!("len not supported for type {}", expr.type_name()).into(),
@@ -614,11 +617,11 @@ pub fn len(
 
 pub fn rev(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("rev", args, 1, ctx)?;
-    match args[0].eval(env)? {
+    match &args[0] {
         Expression::List(list) => {
             let mut reversed = list.as_ref().to_vec();
             reversed.reverse();
@@ -626,7 +629,7 @@ pub fn rev(
         }
         Expression::String(s) => Ok(Expression::String(s.chars().rev().collect())),
         Expression::Symbol(s) => Ok(Expression::Symbol(s.chars().rev().collect())),
-        Expression::Bytes(b) => Ok(Expression::Bytes(b.into_iter().rev().collect())),
+        Expression::Bytes(b) => Ok(Expression::Bytes(b.iter().rev().cloned().collect())),
         _ => Err(RuntimeError::new(
             RuntimeErrorKind::CustomError("rev requires a string, list, or bytes".into()),
             ctx.clone(),
@@ -644,7 +647,7 @@ fn eval_str(
     let exp = match &args[0] {
         Expression::String(cmd) => cmd,
         Expression::StringTemplate(_) | Expression::Symbol(_) | Expression::Variable(_) => {
-            &args[0].eval(env)?.to_string()
+            &args[0].clone().to_string()
         }
         Expression::Group(cmd) => match cmd.as_ref() {
             Expression::String(cmd) => cmd,
@@ -677,9 +680,10 @@ fn exec_str(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("exec_str", args, 1, ctx)?;
-    let mut new_env = env.clone();
+    let mut new_env = env.fork();
     eval_str(args, &mut new_env, ctx)
 }
+// args should be lazy evaled
 fn repeat(
     args: &[Expression],
     env: &mut Environment,
@@ -698,7 +702,7 @@ fn eval(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("eval", args, 1, ctx)?;
-    Ok(args[0].eval(env)?.eval(env)?)
+    Ok(args[0].eval_in_assign(env)?)
 }
 
 fn exec(
@@ -707,40 +711,29 @@ fn exec(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("exec", args, 1, ctx)?;
-    let mut new_env = env.clone();
-    Ok(args[0].eval(env)?.eval(&mut new_env)?)
+    let mut new_env = env.fork();
+    Ok(args[0].eval_in_assign(&mut new_env)?)
 }
 
-fn flat(expr: Expression) -> Vec<Expression> {
+fn flat(expr: &Expression) -> Vec<Expression> {
     match expr {
-        Expression::List(list) => list
-            .as_ref()
-            .iter()
-            .flat_map(|item| flat(item.clone()))
-            .collect(),
-        Expression::HMap(map) => map
-            .as_ref()
-            .values()
-            .flat_map(|item| flat(item.clone()))
-            .collect(),
-        Expression::Map(map) => map
-            .as_ref()
-            .values()
-            .flat_map(|item| flat(item.clone()))
-            .collect(),
-        expr => vec![expr],
+        Expression::List(list) => list.as_ref().iter().flat_map(|item| flat(item)).collect(),
+        Expression::HMap(map) => map.as_ref().values().flat_map(|item| flat(item)).collect(),
+        Expression::Map(map) => map.as_ref().values().flat_map(|item| flat(item)).collect(),
+        expr => vec![expr.clone()],
     }
 }
 
 pub fn flatten(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("flatten", args, 1, ctx)?;
-    Ok(Expression::from(flat(args[0].eval(env)?)))
+    Ok(Expression::from(flat(&args[0])))
 }
 
+// args should be lazy evaled.
 fn r#where(
     args: &[Expression],
     env: &mut Environment,
@@ -792,7 +785,7 @@ fn r#where(
 
 fn select(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     // check_exact_args_len("select", args, 2)?;
@@ -800,14 +793,13 @@ fn select(
     let headers = match args.len() {
         3.. => args[1..].iter().map(|a| a.to_string()).collect::<Vec<_>>(),
         2 => {
-            let a = args[1].eval(env)?;
-            if let Expression::List(list) = a {
+            if let Expression::List(list) = &args[1] {
                 list.as_ref()
                     .iter()
                     .map(|e| e.to_string())
                     .collect::<Vec<_>>()
             } else {
-                vec![a.to_string()]
+                vec![args[1].to_string()]
             }
         }
         0..2 => {
@@ -819,7 +811,7 @@ fn select(
         }
     };
 
-    let data = if let Expression::List(list) = args[0].eval(env)? {
+    let data = if let Expression::List(list) = &args[0] {
         list
     } else {
         return Err(RuntimeError::common(
@@ -839,7 +831,7 @@ fn select(
                 // dbg!(&row_map);
                 let selected = headers
                     .iter()
-                    .filter_map(|col| {
+                    .filter_map(|col: &String| {
                         // dbg!(&col, &row_map.get(col));
                         row_map
                             .as_ref()
@@ -861,18 +853,18 @@ fn select(
 
 pub fn get(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("get", args, 2, ctx)?;
 
-    let index = args[1].eval(env)?;
-    let mut current = args[0].eval(env)?;
+    let index = &args[1];
+    let current = &args[0];
 
     // let path = get_string_arg(index)?;
     let path = match index {
         Expression::Symbol(s) | Expression::String(s) => s,
-        Expression::Integer(i) => i.to_string(),
+        Expression::Integer(i) => &i.to_string(),
         _ => {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
@@ -887,65 +879,55 @@ pub fn get(
     };
     let path_segments: Vec<&str> = path.split('.').collect();
     if path_segments.is_empty() {
-        return Ok(current);
+        return Ok(current.clone());
     }
 
+    let mut current = current;
+    let mut cache;
     for segment in path_segments {
         match current {
             Expression::Map(m) => {
-                current = m
-                    .as_ref()
-                    .get(segment)
-                    .ok_or_else(|| {
-                        RuntimeError::common(
-                            format!(
-                                "path segment '{}' not found in Map:\n`{:?}`",
-                                segment,
-                                m.as_ref()
-                            )
-                            .into(),
-                            ctx.clone(),
-                            0,
+                current = m.as_ref().get(segment).ok_or_else(|| {
+                    RuntimeError::common(
+                        format!(
+                            "path segment '{}' not found in Map:\n`{:?}`",
+                            segment,
+                            m.as_ref()
                         )
-                    })?
-                    .clone();
+                        .into(),
+                        ctx.clone(),
+                        0,
+                    )
+                })?;
             }
             Expression::HMap(m) => {
-                current = m
-                    .as_ref()
-                    .get(segment)
-                    .ok_or_else(|| {
-                        RuntimeError::common(
-                            format!(
-                                "path segment '{}' not found in HMap:\n`{:?}`",
-                                segment,
-                                m.as_ref()
-                            )
-                            .into(),
-                            ctx.clone(),
-                            0,
+                current = m.as_ref().get(segment).ok_or_else(|| {
+                    RuntimeError::common(
+                        format!(
+                            "path segment '{}' not found in HMap:\n`{:?}`",
+                            segment,
+                            m.as_ref()
                         )
-                    })?
-                    .clone();
+                        .into(),
+                        ctx.clone(),
+                        0,
+                    )
+                })?;
             }
             Expression::List(m) => match segment.parse::<usize>() {
                 Ok(key) => {
-                    current = m
-                        .as_ref()
-                        .get(key)
-                        .ok_or_else(|| {
-                            RuntimeError::common(
-                                format!(
-                                    "path index '{}' not found in List:\n`{:?}`",
-                                    segment,
-                                    m.as_ref()
-                                )
-                                .into(),
-                                ctx.clone(),
-                                0,
+                    current = m.as_ref().get(key).ok_or_else(|| {
+                        RuntimeError::common(
+                            format!(
+                                "path index '{}' not found in List:\n`{:?}`",
+                                segment,
+                                m.as_ref()
                             )
-                        })?
-                        .clone();
+                            .into(),
+                            ctx.clone(),
+                            0,
+                        )
+                    })?;
                 }
                 _ => {
                     return Err(RuntimeError::common(
@@ -957,8 +939,9 @@ pub fn get(
             },
             Expression::Range(m, step) => match segment.parse::<usize>() {
                 Ok(key) => {
-                    current = m
-                        .step_by(step)
+                    cache = m
+                        .to_owned()
+                        .step_by(step.clone())
                         .nth(key)
                         .map(Expression::Integer)
                         .ok_or_else(|| {
@@ -967,8 +950,8 @@ pub fn get(
                                 ctx.clone(),
                                 0,
                             )
-                        })?
-                        .clone();
+                        })?;
+                    current = &cache;
                 }
                 _ => {
                     return Err(RuntimeError::common(
@@ -993,7 +976,7 @@ pub fn get(
         }
     }
 
-    Ok(current)
+    Ok(current.clone())
 
     // _ => {
     //     return Err(LmError::CustomError(
@@ -1004,10 +987,10 @@ pub fn get(
 
 pub fn throw(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("sys.error", args, 1, ctx)?;
-    let msg = args[0].eval(env)?;
+    let msg = &args[0];
     Err(RuntimeError::common(msg.to_string().into(), ctx.clone(), 0))
 }

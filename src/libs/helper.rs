@@ -160,6 +160,23 @@ pub fn get_string_arg(expr: Expression, ctx: &Expression) -> Result<String, Runt
         )),
     }
 }
+pub fn get_string_ref<'a>(
+    expr: &'a Expression,
+    ctx: &Expression,
+) -> Result<&'a String, RuntimeError> {
+    match expr {
+        Expression::Symbol(s) | Expression::String(s) => Ok(s),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "String".to_string(),
+                sym: e.to_string(),
+                found: e.type_name(),
+            },
+            ctx.clone(),
+            0,
+        )),
+    }
+}
 
 pub fn get_string_args(
     args: &[Expression],

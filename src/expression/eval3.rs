@@ -1,8 +1,43 @@
+use std::borrow::Cow;
+
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
 use crate::libs::{get_builtin_via_expr, is_lib};
 use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, RuntimeErrorKind};
+
+// 需要延迟解析的特殊命令列表
+const LAZY_EVAL_COMMANDS: &[&str] = &["where", "select", "eval", "exec"];
+
+pub fn prepare_args<'a>(
+    cmd: &str,
+    args: &'a [Expression],
+    check_lazy: bool,
+    insert_arg: Option<Expression>,
+    env: &mut Environment,
+    state: &mut State,
+    depth: usize,
+) -> Result<Cow<'a, [Expression]>, RuntimeError> {
+    if check_lazy {
+        if LAZY_EVAL_COMMANDS.contains(&cmd) {
+            return Ok(Cow::Borrowed(args));
+        }
+    }
+    let mut args_eval = if let Some(a) = insert_arg {
+        let mut vec = Vec::with_capacity(args.len() + 1);
+        vec.push(a);
+        vec
+    } else {
+        Vec::with_capacity(args.len())
+    };
+    for arg in args.iter() {
+        match arg.eval_mut(state, env, depth) {
+            Ok(a) => args_eval.push(a),
+            Err(e) => return Err(e),
+        }
+    }
+    Ok(Cow::Owned(args_eval))
+}
 
 /// 执行
 impl Expression {
@@ -522,9 +557,9 @@ impl Expression {
                         state,
                         env,
                         depth,
-                    )
+                    )?
                 {
-                    return btr;
+                    return Ok(btr);
                 }
 
                 match alias::get_alias(cmd_sym.as_str()) {
@@ -704,7 +739,7 @@ pub fn handle_builtin(
     state: &mut State,
     env: &mut Environment,
     depth: usize,
-) -> Option<Result<Expression, RuntimeError>> {
+) -> Result<Option<Expression>, RuntimeError> {
     if let Some(bfn) = get_builtin_via_expr(base, method) {
         // let bt_result = if args.contains(&Expression::Blank) {
         //     let received_args = args
@@ -724,28 +759,20 @@ pub fn handle_builtin(
         // not works well, should fix
         // the resean to excute it here, is for local vars in loop,
         // only current env knows the state.
-        let mut args_eval = Vec::with_capacity(args.len());
-        for arg in args.iter() {
-            match arg.eval_mut(state, env, depth) {
-                Ok(a) => args_eval.push(a),
-                Err(e) => return Some(Err(e)),
-            }
-        }
 
-        // 判断是String.red 还是 ‘xx'.red
-        let result = match base {
-            Expression::Symbol(_) | Expression::Blank => bfn(&args_eval, env, ctx),
-            val => {
-                let mut combined_args = Vec::with_capacity(args_eval.len() + 1);
-                combined_args.push(val.clone());
-                combined_args.extend_from_slice(&args_eval);
-                bfn(&combined_args, env, ctx)
-            }
+        let p_args = match base {
+            // lazy cmd is in top
+            Expression::Blank => prepare_args(method, args, true, None, env, state, depth)?,
+            // 判断是String.red 还是 ‘xx'.red
+            Expression::Symbol(_) => prepare_args(method, args, false, None, env, state, depth)?,
+            // 'xx' should be injected
+            val => prepare_args(method, args, false, Some(val.clone()), env, state, depth)?,
         };
+        let result = bfn(&p_args, env, ctx)?;
 
-        return Some(result);
+        return Ok(Some(result));
     }
-    None
+    Ok(None)
 }
 
 impl Expression {
@@ -762,9 +789,9 @@ impl Expression {
 
         if let Expression::Property(base, method) = cmd {
             if let Some(btr) =
-                handle_builtin(base, &method.to_string(), args, self, state, env, depth)
+                handle_builtin(base, &method.to_string(), args, self, state, env, depth)?
             {
-                return btr;
+                return Ok(btr);
             }
             // 自定义Map不应以命令方式调用,但文件名可能以a.b的方式存在
         }
@@ -778,8 +805,8 @@ impl Expression {
                 state,
                 env,
                 depth,
-            ) {
-                return btr;
+            )? {
+                return Ok(btr);
             }
         }
 
@@ -829,8 +856,8 @@ impl Expression {
             let lib_result =
                 handle_builtin(&current_base, method, &call.args, self, state, env, depth);
 
-            let executed = match lib_result {
-                Some(result) => result,
+            let executed = match lib_result? {
+                Some(result) => Ok(result),
 
                 // 非内置函数
                 None => {

@@ -1,4 +1,5 @@
 use crate::expression::eval2::ifs_split;
+use crate::expression::eval3::prepare_args;
 use crate::expression::render::render_template;
 use crate::expression::{LumeRegex, alias};
 use crate::libs::{get_builtin_via_expr, time_parse};
@@ -1434,30 +1435,18 @@ impl Expression {
         context: &Expression,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
-        let mut args_eval = Vec::with_capacity(args.len());
-        for arg in args.iter() {
-            match arg.eval_mut(state, env, depth) {
-                Ok(a) => args_eval.push(a),
-                Err(e) => return Err(e),
-            }
-        }
         // 占位符_ 不应在管道方法中使用
         match get_builtin_via_expr(self, method) {
             Some(bfn) => {
-                // match args.contains(&Expression::Blank) {
-                //     true => bfn(&args_eval, env, context),
-                //     false => {
-                let mut combined_args = Vec::with_capacity(args_eval.len() + 1);
-                combined_args.push(self.clone());
-                combined_args.extend_from_slice(&args_eval);
-                bfn(&combined_args, env, context)
-                // }}
+                let p_args =
+                    prepare_args(method, args, false, Some(self.clone()), env, state, depth)?;
+                bfn(&p_args, env, context)
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::NoLibDefined(
                     method.to_string(),
                     self.type_name().into(),
-                    "eval pipe".into(),
+                    "eval pipe method".into(),
                     self.to_string(),
                 ),
                 self.clone(),

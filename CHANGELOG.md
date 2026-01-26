@@ -31,7 +31,7 @@ print 'outer again:' i;
 - optimize debug printer for all expressions
 - fix boolean parser
 - add `PATH_SESSION` to record history for `cd`
-
+- lazy args eval
 
 ## [0.11.5]
 - refactor decorator realization

@@ -32,6 +32,7 @@ print 'outer again:' i;
 - fix boolean parser
 - add `PATH_SESSION` to record history for `cd`
 - lazy args eval
+- completion_show_all_if_ambiguous
 
 ## [0.11.5]
 - refactor decorator realization

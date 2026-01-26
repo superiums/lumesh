@@ -121,7 +121,13 @@ pub fn run_repl(env: &mut Environment) {
     // complition
     let completion_dir = match env.get("LUME_COMPLETION_DIR") {
         Some(Expression::String(c)) => c,
-        _ => String::from("/usr/share/lumesh/completions"),
+        _ => {
+            if cfg!(unix) {
+                String::from("/usr/share/lumesh/completions")
+            } else {
+                String::from("C:\\Program Files\\lumesh\\completions")
+            }
+        }
     };
     env.undefine("LUME_COMPLETION_DIR");
     let completion_cycle = match env.get("LUME_COMPLETION_CYCLE") {
@@ -331,6 +337,7 @@ fn new_editor(cfg: EditorConfig) -> Editor<LumeHelper, FileHistory> {
     let config = rustyline::Config::builder()
         .history_ignore_space(true)
         .completion_type(t)
+        .completion_show_all_if_ambiguous(true)
         .edit_mode(if cfg.vi_mode {
             EditMode::Vi
         } else {

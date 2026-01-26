@@ -7,7 +7,7 @@ use crate::libs::{get_builtin_via_expr, is_lib};
 use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, RuntimeErrorKind};
 
 // 需要延迟解析的特殊命令列表
-const LAZY_EVAL_COMMANDS: &[&str] = &["where", "select", "eval", "exec"];
+const LAZY_EVAL_COMMANDS: &[&str] = &["where", "select", "repeat"];
 
 pub fn prepare_args<'a>(
     cmd: &str,

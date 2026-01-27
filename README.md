@@ -67,7 +67,7 @@ Lumesh is a modern shell and scripting language, as a bash replacer, it was comp
 # Syntax like modern programming languages
 let user = {name: "Alice", age: 25}
 let {name, age} = user
-let numbers = 1..10 | List.filter(x -> x > 5)
+let numbers = 1..10 | list.filter(x -> x > 5)
 let [a, b] = [1, 2]
 ```
 
@@ -108,14 +108,14 @@ ls -1 |> cp -r _ /tmp/
 ```
 
 ### ⚡ Rich Built-in Modules
-- **Collection Operations**: `List.reduce, List.map`
-- **File System**: `Fs.ls, Fs.read, Fs.write`
-- **String Processing**: `String.split, String.join`, `Regex` module
-- **Time Operations**: `Time.now, Time.format`
-- **Data Conversion**: `Into`, `From` module
-- **Mathematical Calculations**: Complete `Math` function library
-- **Logging**: `Log` module
-- **UI Operations**: `Ui.pick, Ui.confirm`
+- **Collection Operations**: `list.reduce, list.map`
+- **File System**: `fs.ls, fs.read, fs.write`
+- **String Processing**: `string.split, string.join`, `regex` module
+- **Time Operations**: `time.now, time.format`
+- **Data Conversion**: `into`, `from` module
+- **Mathematical Calculations**: Complete `math` function library
+- **Logging**: `log` module
+- **UI Operations**: `ui.pick, ui.confirm`
 
 
 ### ⚡ Function Decorators
@@ -137,29 +137,6 @@ use moduleA as ma
 ### AI Integration Support
 Built-in local AI assistant, supports command completion and smart suggestions.
 
-## ⚑ Use Cases
-
-### ☘ Interactive Shell
-Replace traditional shells, providing a modern command-line experience:
-```bash
-# Start interactive shell
-lume
-```
-
-### ☘ Script Automation
-```bash
-#!/usr/bin/env lumesh
-
-# File processing script
-let files = Fs.ls("/data") | where(size > 1MB)
-files | List.map(f -> Fs.cp(f, './backup'))
-```
-
-### ☘ System Management
-```bash
-# System management
-df -h | Into.table()
-```
 
 ## ⚑ Quick Start
 
@@ -205,6 +182,8 @@ lumesh script.lm
 |------------------------|------------------------|
 
 _Due to fish being unable to complete one million tasks, we recorded its half-task time._
+**from v0.10.1 on, lume becomes about 2x faster than before!**
+**from v0.11.0 on, lume takes less memery**
 
 ## ⚑ Version History
 Recent development has emphasized:
@@ -216,6 +195,14 @@ Recent development has emphasized:
 - CFM (Command First Mode) for daily commands (v0.8.0)
 - More friendly help info (v0.8.5)
 - Params completion from fish (v0.8.8)
+- Automatic completion detection logic optimization (v0.8.8)
+- Modular programming support (v0.10.0)
+- Built-in library dynamic lazy loading support (v0.10.1)
+- More flexible placeholder support (v0.10.2)
+- Improved CFM (v0.11.1)
+- Middleware-style decorator support (v0.11.5)
+- Loop iterator optimization (v0.11.5)
+- Local variable support (v0.11.6)
 ---
 
 ![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)

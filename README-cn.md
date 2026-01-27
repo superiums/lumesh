@@ -69,7 +69,7 @@ Lumesh 是一个现代化的 shell 和脚本语言, Bash替代者，完全重写
 # 像现代编程语言一样的语法
 let user = {name: "Alice", age: 25}
 let {name, age} = user
-let numbers = 1..10 | List.filter(x -> x > 5)
+let numbers = 1..10 | list.filter(x -> x > 5)
 let [a, b] = [1, 2]
 
 ```
@@ -145,29 +145,6 @@ use moduleA as ma
 ### AI 集成支持
 内置本地 AI 助手，支持命令补全和智能建议
 
-## ⚑ 使用场景
-
-### ☘ 交互式 Shell
-替代传统 shell，提供现代化的命令行体验：
-```bash
-# 启动交互式 shell
-lume
-```
-
-### ☘ 脚本自动化
-```bash
-#!/usr/bin/env lumesh
-
-# 文件处理脚本
-let files = Fs.ls("/data") | where(size > 1MB)
-files | List.map(f -> Fs.cp(f, './backup'))
-```
-
-### ☘ 系统管理
-```bash
-# 系统管理
-df -h | Into.table()
-```
 
 ## ⚑ 快速开始
 
@@ -212,6 +189,8 @@ lumesh script.lm
 |------------------------|------------------------|
 
 _由于fish无法完成一百万次的任务，我们记录了其一半任务的时间_
+**从v0.10.1开始，lumesh在循环遍历中性能提升近两倍**
+**从v0.11.0开始，lumesh内存占用下降约0.8MB**
 
 ## ⚑ 版本历程
 最近的开发重点：
@@ -223,6 +202,15 @@ _由于fish无法完成一百万次的任务，我们记录了其一半任务的
 - CFM (命令优先模式) 方便日常命令行使用场景 (v0.8.0)
 - 更友好的帮助信息 (v0.8.5)
 - 来自fish的命令参数自动完成 (v0.8.8)
+- 自动完成检测逻辑优化 (v0.8.8)
+- 模块化编程支持 (v0.10.0)
+- 内置库动态懒加载支持 (v0.10.1)
+- 更灵活的占位符支持 (v0.10.2)
+- 更好用的CFM (v0.11.1)
+- 中间件式的装饰器支持 (v0.11.5)
+- 循环迭代器优化 (v0.11.5)
+- 局部变量支持 (v0.11.6)
+
 ---
 
 ![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)

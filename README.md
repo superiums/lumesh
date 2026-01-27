@@ -182,7 +182,9 @@ lumesh script.lm
 |------------------------|------------------------|
 
 _Due to fish being unable to complete one million tasks, we recorded its half-task time._
+
 **from v0.10.1 on, lume becomes about 2x faster than before!**
+
 **from v0.11.0 on, lume takes less memery**
 
 ## ⚑ Version History

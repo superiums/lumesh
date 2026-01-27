@@ -42,7 +42,7 @@ pub fn regist_lazy() -> LazyModule {
         caesar,
         strip,
         // 格式化
-        pad_start, pad_end, center, wrap, format,
+        pad_start, pad_end, center, wrap,
         // 样式
         href, bold, faint, italics, underline, blink, invert, strike,
         // 标准颜色
@@ -112,7 +112,6 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
        pad_end => "pad string to specified length at end", "<string> <length> [pad_char]"
        center => "center string by padding both ends", "<string> <length> [pad_char]"
        wrap => "wrap text to fit in specific number of columns", "<string> <width>"
-       format => "format string using {} placeholders", "<format_string> <args>..."
 
        // 样式
        href => "create terminal hyperlink", "<url> <text>"
@@ -810,24 +809,7 @@ fn wrap(
     let columns = get_integer_ref(&args[1], ctx)?;
     Ok(textwrap::fill(text, columns as usize).into())
 }
-// Format Function
-fn format(
-    args: &[Expression],
-    _env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_args_len("format", args, 2.., ctx)?;
-    let template = get_string_ref(&args[0], ctx)?;
 
-    let placeholders = template.matches("{}").count();
-
-    let mut result = template.clone();
-    for arg in args.iter().skip(1).take(placeholders) {
-        result = result.replacen("{}", &arg.to_string(), 1);
-    }
-
-    Ok(Expression::String(result))
-}
 // Style Functions
 fn href(
     args: &[Expression],

@@ -14,6 +14,7 @@ use lumesh::set_cfm_enabled;
 use lumesh::{Environment, Expression};
 use std::env;
 use std::path::Path;
+use std::vec;
 
 #[derive(Parser)]
 #[command(
@@ -159,6 +160,7 @@ fn main() {
     // 纯交互模式
     else {
         cli_env.define("IS_INTERACTIVE", Expression::Boolean(true));
+        cli_env.define("PATH_SESSION", Expression::from(vec![] as Vec<Expression>));
 
         env_config(&mut cli_env, cli.aioff, cli.strict);
         set_cfm(!cli.cfmoff, &mut cli_env);
@@ -170,10 +172,7 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
     init_config(env);
 
     // strict
-    env.define("STRICT", Expression::Boolean(strict));
-    // unsafe {
-    //     STRICT = strict;
-    // }
+    env.define("IS_STRICT", Expression::Boolean(strict));
 
     // ai off
     if aioff {

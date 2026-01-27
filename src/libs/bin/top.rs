@@ -19,7 +19,7 @@ use crate::{
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
         exit, cd, cwd,
-        tap, print, pprint, println, eprint, eprintln, read,
+        tap, print, pprint, println, printf, eprint, eprintln, read,
         r#typeof => "typeof", ddebug, debug,
         get, len, insert, rev, flatten, r#where => "where", select,
         not,
@@ -48,6 +48,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         print => "print arguments without newline", "<args>..."
         pprint => "pretty print", "<list>|<map>"
         println => "print arguments with newline", "<args>..."
+        printf => "print formatted string with vars", "<template> <args>..."
         eprint => "print to stderr without newline", "<args>..."
         eprintln => "print to stderr with newline", "<args>..."
         debug => "print debug representation", "<args>..."
@@ -335,7 +336,7 @@ fn cd(
                 return Ok(());
             }
         }
-        let mut pn = Vec::new();
+        let mut pn = Vec::with_capacity(10);
         pn.push(Expression::String(xs.to_string()));
         env.define("PATH_SESSION", Expression::from(pn));
         Ok(())
@@ -988,6 +989,44 @@ pub fn get(
     //         "get requires a map as last argument".to_string(),
     //     ));
     // }
+}
+
+// Print Formated
+fn printf(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("format", args, 1.., ctx)?;
+    let template = get_string_ref(&args[0], ctx)?;
+
+    // named arg
+    let pat = regex_lite::Regex::new(r#"\{(\w+)\}"#).unwrap();
+    let mut result = template.clone();
+    for (full, [var]) in pat.captures_iter(&template).map(|m| m.extract()) {
+        match env.get(var) {
+            Some(value) => {
+                result = result.replace(full, &value.to_string());
+            }
+            _ => {
+                return Err(RuntimeError::new(
+                    RuntimeErrorKind::UndeclaredVariable(var.to_string()),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        }
+    }
+
+    // position arg
+    if args.len() > 1 {
+        let placeholders = result.matches("{}").count();
+        for arg in args.iter().skip(1).take(placeholders) {
+            result = result.replacen("{}", &arg.to_string(), 1);
+        }
+    }
+
+    Ok(Expression::String(result))
 }
 
 pub fn throw(

@@ -72,7 +72,8 @@ if IS_INTERACTIVE {
         h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?! | exec_str()",
         x: "fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') ?! | exec_str()",
         m: 'let cmd := "$CMD_CURRENT";let s = Into.str(cmd); if s {s+"\n" >> ~/.cache/lume_bookmark; println "\t[MARKED]"}',
-        e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=fs.read($tc); if len($lmcode) && ui.confirm("Execute it?"){exec_str($lmcode)}'
+        e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=fs.read($tc); if len($lmcode) && ui.confirm("Execute it?"){exec_str($lmcode)}',
+        p: 'ui.pick "select path:" PATH_SESSION | cd _',
     }
 
     ### abbreviations

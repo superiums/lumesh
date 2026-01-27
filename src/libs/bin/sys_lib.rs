@@ -24,6 +24,7 @@ pub fn regist_lazy() -> LazyModule {
         max_usemode,
         set_cfm,
         set_pdm,
+        set_strict
     })
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
@@ -50,6 +51,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         max_usemode=> "get/set max use mode recursion","[int]"
         set_cfm=> "enable/disable CFM","<boolean>"
         set_pdm=> "enable/disable print direct mode","<boolean>"
+        set_strict=> "enable/disable strict mode","<boolean>"
 
     })
 }
@@ -223,13 +225,24 @@ fn max_usemode(
     MAX_USEMODE_RECURSION.with_borrow_mut(|v| *v = i as usize);
     Ok(Expression::None)
 }
+fn set_strict(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("set_strict", args, 1, ctx)?;
+    let b = args[0].is_truthy();
+    env.define("IS_STRICT", Expression::Boolean(b));
+    Ok(Expression::None)
+}
 fn set_cfm(
     args: &[Expression],
-    _env: &mut Environment,
+    env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set_cfm", args, 1, ctx)?;
     let b = args[0].is_truthy();
+    env.define_in_root("IS_CFM", Expression::Boolean(b));
     set_cfm_enabled(b);
     Ok(Expression::None)
 }

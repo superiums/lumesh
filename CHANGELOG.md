@@ -1,31 +1,54 @@
 # Changelog
 
 ## [0.11.7]
+
 - add `export`
+  now you could export a var as bash:
+  `export PATH=/usr/bin`
+  
 - update config
-set parent vars with `set` cmd
+  set parent vars with `set` cmd
+  
 - clean all lib
-remove uneccessary eval. use ref instead of clone.
-efficency more.
+  remove uneccessary eval. use ref instead of clone.
+  efficency more.
 
 - `pprint` in alt
+- advanced `printf` for template render for string and vars.
+  support both named and positioned args.
+  ```bash
+  let name='lumesh'
+  let born= 2025
+  printf 'hi,{name} was borned on {born}, age is {}' 2026 - 2025
+  # output:
+  # hi,lumesh was borned on 2025, age is 1
+  ```
+  the old `string.format` was removed.
+  
+- convert property to chaincall if on right of pipe.
+- eval position receiver for lazy cmd.
+- prepare blank `PATH_SESSION` on start.
+- add `sys.set_strict`
+- rename `STRICT` to `IS_STRICT`
 
-
+  
 ## [0.11.6]
+
 - introduce `set`
 - introduce local domain
-all variable declare in a block is local variable.
-include in bare `{}` or the body in `if`,`for`,`loop`,`while`,`match`...
-the optimized variable management is differ from traditional enviroment.
+  all variable declare in a block is local variable.
+  include in bare `{}` or the body in `if`,`for`,`loop`,`while`,`match`...
+  the optimized variable management is differ from traditional enviroment.
+
 ```bash
-let i = 1; print 'ourter:' i; 
+let i = 1; print 'ourter:' i;
 {   let i,k=2;             # this declares the local var.
-    print 'inner declared:' i k; 
+    print 'inner declared:' i k;
     i=3;                    # this changes the local var.
-    print 'inner changed:' i k; 
+    print 'inner changed:' i k;
 }
 print 'outer again:' i k;
-{ 
+{
     set i = 4;              # this changes the globar env.
     print 'change global:' i
 }
@@ -38,6 +61,7 @@ print 'outer again:' i;
 # change global: 4
 # outer again: 4
 ```
+
 - add env capture for lambda, only for free vars
 - optimize debug printer for all expressions
 - fix boolean parser
@@ -46,24 +70,23 @@ print 'outer again:' i;
 - completion_show_all_if_ambiguous
 
 ## [0.11.5]
+
 - refactor decorator realization
   now decorator changes to middleware like style.
   every decorator function should return a `[before,after]` list. each one is a function.
-  the two function shares one env, which means var sharable. 
+  the two function shares one env, which means var sharable.
   there're injected variables:
-  + `NAME` means function name.
-  + `ARGS` means function args.
-  + `RESULT` means function result.
-  
+  - `NAME` means function name.
+  - `ARGS` means function args.
+  - `RESULT` means function result.
 - fix loop iter var could use only once.
   now 1_000_000 times loop in `for`, only takes **224ms**
   **41%** faster than 385ms.
 - add local vars.
 - add index iter for `for` loop
-now support `for index,item in collection`
+  now support `for index,item in collection`
 - optimize `list.map` to use iter.
 - cmd sym lookup ahead of vars.
-
 
 ## [0.11.4]
 
@@ -234,9 +257,9 @@ also ok:
   > in script mode:
   > `ls _` is needed if you want to trigger an command
   > `./my.sh _` is need too.
-  the `_` means blank argument for command.
-  as single symbol was not parsed as a command but a value,
-  we can use it safetily in following functon:
+  > the `_` means blank argument for command.
+  > as single symbol was not parsed as a command but a value,
+  > we can use it safetily in following functon:
   ```shell
   let a = if b>0 {c} else {d}    # c and d will never executed as a suprise.
   ```
@@ -273,7 +296,7 @@ also ok:
   - ~/.local/share/lumesh/completions.d
   - /usr/share/lumesh/vendor_completions.d
   - /usr/share/lumesh/completions
-  > Windows
+    > Windows
   - C:\Users\xx\AppData\Local\lumesh\vendor_completions
   - C:\Users\xx\AppData\Local\lumesh\completions
   - C:\ProgramData\lumesh\vendor_completions,

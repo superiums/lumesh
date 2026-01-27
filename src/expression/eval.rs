@@ -177,7 +177,7 @@ impl State {
 }
 
 pub fn is_strict(env: &mut Environment) -> bool {
-    match env.get("STRICT") {
+    match env.get("IS_STRICT") {
         Some(Expression::Boolean(b)) => b,
         _ => false,
     }
@@ -941,7 +941,14 @@ impl Expression {
                                             state.pipe_in(left_output);
                                             match rhs.as_ref() {
                                                 Expression::Symbol(_) => {
-                                                    return rhs.execute(vec![]).eval_mut(
+                                                    // return rhs.execute(vec![]).eval_mut(
+                                                    //     state,
+                                                    //     env,
+                                                    //     depth + 1,
+                                                    // );
+                                                    return rhs.handle_builtin_n_normal_cmd(
+                                                        rhs.as_ref(),
+                                                        &vec![],
                                                         state,
                                                         env,
                                                         depth + 1,

@@ -20,6 +20,18 @@ pub fn prepare_args<'a>(
 ) -> Result<Cow<'a, [Expression]>, RuntimeError> {
     if check_lazy {
         if LAZY_EVAL_COMMANDS.contains(&cmd) {
+            if args.contains(&Expression::Blank) {
+                return Ok(Cow::Owned(
+                    args.iter()
+                        .map(|x| match x {
+                            Expression::Blank => {
+                                x.eval_mut(state, env, depth).unwrap_or(Expression::Blank)
+                            }
+                            other => other.clone(),
+                        })
+                        .collect::<Vec<_>>(),
+                ));
+            }
             return Ok(Cow::Borrowed(args));
         }
     }

@@ -54,10 +54,10 @@ if IS_INTERACTIVE {
 
     # == completion
     # set LUME_COMPLETION_DIR = '~/.local/share/lumesh/completions'
-    set LUME_COMPLETION_CYCLE = true
+    set LUME_COMPLETION_CYCLE = false
 
     ### report compute result type and values. default True.
-    # set LUME_PRINT_DIRECT= False
+    # set LUME_PRINT_DIRECT= false
 
 
     ### sudo cmd for Alt+s

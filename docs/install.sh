@@ -118,7 +118,7 @@ download_from_codeberg() {
 
 
     if command -v curl >/dev/null 2>&1; then
-        $sudo_cmd curl -L -o "$INSTALL_DIR/$binary_name" "$download_url"
+        $sudo_cmd curl -f -L -o "$INSTALL_DIR/$binary_name" "$download_url"
     elif command -v wget >/dev/null 2>&1; then
         $sudo_cmd wget -O "$INSTALL_DIR/$binary_name" "$download_url"
     else
@@ -243,9 +243,9 @@ download_docs() {
     cd /tmp
     tar -xzf "$temp_doc"
     mkdir -p "~/.config/lumesh"
-    cp doc/config/config.lm "~/.config/lumesh/"
-    cp doc/config/prompt* "~/.config/lumesh/"
-    $sudo_cmd cp -r doc/install/* "$DOC_DIR/"
+    cp -f doc/config/config.lm "~/.config/lumesh/"
+    cp -f doc/config/prompt* "~/.config/lumesh/"
+    $sudo_cmd cp -rf doc/install/* "$DOC_DIR/"
     rm -rf doc "$temp_doc"
 
     echo -e "${GREEN}Documentation extracted to: $DOC_DIR${NC}"

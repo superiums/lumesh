@@ -1,12 +1,11 @@
 use std::collections::HashMap;
 
 use crate::{
-    Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, Int, RuntimeError,
     libs::{
         BuiltinInfo,
         helper::{
-            check_args_len, check_exact_args_len, get_exact_string_arg, get_integer_arg,
-            get_string_arg, get_string_args,
+            check_args_len, check_exact_args_len, get_integer_arg, get_integer_ref, get_string_ref,
         },
         lazy_module::LazyModule,
     },
@@ -295,41 +294,41 @@ fn init_color_map() -> HashMap<&'static str, (i64, i64, i64)> {
 // Basic Check Functions
 fn is_empty(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_empty", args, 1, ctx)?;
-    let text = get_exact_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.is_empty()))
 }
 
 fn is_whitespace(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_whitespace", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_whitespace())))
 }
 
 fn is_alpha(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_alpha", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_alphabetic())))
 }
 
 fn is_alphanumeric(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_alphanumeric", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(
         text.chars().all(|c| c.is_alphanumeric()),
     ))
@@ -337,31 +336,31 @@ fn is_alphanumeric(
 
 fn is_numeric(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_numeric", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_numeric())))
 }
 
 fn is_lower(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_lower", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_lowercase())))
 }
 
 fn is_upper(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_upper", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_uppercase())))
 }
 
@@ -371,71 +370,53 @@ fn is_title(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_title", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     let title = to_title(&[args[0].clone()], env, ctx)?;
-    Ok(Expression::Boolean(text == title.to_string()))
+    Ok(Expression::Boolean(text == &title.to_string()))
 }
 
 fn len(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("len", args, 1, ctx)?;
-    match args[0].eval_in_assign(env)? {
-        Expression::Symbol(x) | Expression::String(x) => {
-            Ok(Expression::Integer(x.chars().count() as Int))
-        }
-        otherwise => Err(RuntimeError::new(
-            RuntimeErrorKind::TypeError {
-                expected: "String".into(),
-                found: otherwise.type_name(),
-                sym: otherwise.to_string(),
-            },
-            ctx.clone(),
-            0,
-        )),
-    }
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(Expression::Integer(text.chars().count() as Int))
 }
 // Substring Check Functions
 fn starts_with(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("starts_with", args, 2, ctx)?;
-    let string_args = get_string_args(args, env, ctx)?;
-    let [text, prefix] = string_args.as_slice() else {
-        unreachable!()
-    };
+    let text = get_string_ref(&args[0], ctx)?;
+    let prefix = get_string_ref(&args[1], ctx)?;
 
     Ok(Expression::Boolean(text.starts_with(prefix)))
 }
 
 fn ends_with(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("ends_with", args, 2, ctx)?;
-    let string_args = get_string_args(args, env, ctx)?;
-    let [text, suffix] = string_args.as_slice() else {
-        unreachable!()
-    };
+    let text = get_string_ref(&args[0], ctx)?;
+    let suffix = get_string_ref(&args[1], ctx)?;
 
     Ok(Expression::Boolean(text.ends_with(suffix)))
 }
 
 fn contains(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("contains", args, 2, ctx)?;
-    let string_args = get_string_args(args, env, ctx)?;
-    let [text, substring] = string_args.as_slice() else {
-        unreachable!()
-    };
+    let text = get_string_ref(&args[0], ctx)?;
+    let substring = get_string_ref(&args[1], ctx)?;
 
     Ok(Expression::Boolean(text.contains(substring)))
 }
@@ -446,13 +427,12 @@ fn split(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("split", args, 1..=2, ctx)?;
-
-    let string_args = get_string_args(args, env, ctx)?;
-    let text = string_args[0].to_owned();
+    let text = get_string_ref(&args[0], ctx)?;
 
     let ifs = env.get("IFS");
     let delimiter = if args.len() > 1 {
-        Some(&string_args[1])
+        let deli = get_string_ref(&args[1], ctx)?;
+        Some(deli)
     } else {
         match (
             crate::runtime::ifs_contains(crate::runtime::IFS_STR, env),
@@ -479,12 +459,12 @@ fn split(
 
 fn split_at(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("split_at", args, 2, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
-    let index = get_integer_arg(args[1].eval(env)?, ctx)? as usize;
+    let text = get_string_ref(&args[0], ctx)?;
+    let index = get_integer_ref(&args[1], ctx)? as usize;
 
     if index > text.len() {
         return Ok(Expression::from(vec![
@@ -502,11 +482,11 @@ fn split_at(
 
 fn chars(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("chars", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
 
     let chars = text
         .chars()
@@ -517,12 +497,11 @@ fn chars(
 
 fn words(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("words", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
-
+    let text = get_string_ref(&args[0], ctx)?;
     let words = text
         .split_whitespace()
         .map(|word| Expression::String(word.to_string()))
@@ -532,11 +511,11 @@ fn words(
 
 fn words_quoted(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("words_quoted", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
 
     let re = regex_lite::Regex::new(r#""((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+)"#).unwrap();
     let words = re
@@ -554,11 +533,11 @@ fn words_quoted(
 
 fn lines(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("lines", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
 
     let lines = text
         .lines()
@@ -569,11 +548,11 @@ fn lines(
 
 fn paragraphs(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("paragraphs", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
 
     let paragraphs = text
         .split("\n\n")
@@ -584,55 +563,56 @@ fn paragraphs(
 // Modification Operations
 fn concat(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("concat", args, 2.., ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
-    let others = args[1..]
+
+    let others = args
         .iter()
         .map(|a| a.to_string())
         .collect::<Vec<_>>()
         .concat();
 
-    Ok(Expression::from(text + &others))
+    Ok(Expression::from(others))
 }
 
 fn repeat(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("repeat", args, 2, ctx)?;
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
-    let count = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
+    let count = get_integer_ref(&args[1], ctx)?;
 
-    Ok(Expression::String(text.repeat(count.max(0) as usize)))
+    Ok(Expression::String(
+        text.repeat(count.max(0).min(1000) as usize),
+    ))
 }
 
 fn replace(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("replace", args, 3, ctx)?;
-    let string_args = get_string_args(args, env, ctx)?;
-    let [text, from, to] = string_args.as_slice() else {
-        unreachable!()
-    };
+    let text = get_string_ref(&args[0], ctx)?;
+    let from = get_string_ref(&args[1], ctx)?;
+    let to = get_string_ref(&args[2], ctx)?;
 
     Ok(Expression::String(text.replace(from, to)))
 }
 
 fn substring(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("substring", args, 2..=3, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
+    let start = get_integer_ref(&args[1], ctx)?;
 
-    let start = get_integer_arg(args[1].eval(env)?, ctx)?;
     let start_idx = if start < 0 {
         (text.len() as i64 + start).max(0) as usize
     } else {
@@ -640,7 +620,7 @@ fn substring(
     };
 
     let end_idx = if args.len() == 3 {
-        let end = get_integer_arg(args[2].eval(env)?, ctx)?;
+        let end = get_integer_ref(&args[2], ctx)?;
         if end < 0 {
             (text.len() as i64 + end).max(0) as usize
         } else {
@@ -664,14 +644,12 @@ fn substring(
 
 fn remove_prefix(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("remove_prefix", args, 2, ctx)?;
-    let string_args = get_string_args(args, env, ctx)?;
-    let [text, prefix] = string_args.as_slice() else {
-        unreachable!()
-    };
+    let text = get_string_ref(&args[0], ctx)?;
+    let prefix = get_string_ref(&args[1], ctx)?;
 
     Ok(Expression::String(
         text.strip_prefix(prefix).unwrap_or(text).to_string(),
@@ -680,14 +658,12 @@ fn remove_prefix(
 
 fn remove_suffix(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("remove_suffix", args, 2, ctx)?;
-    let string_args = get_string_args(args, env, ctx)?;
-    let [text, suffix] = string_args.as_slice() else {
-        unreachable!()
-    };
+    let text = get_string_ref(&args[0], ctx)?;
+    let suffix = get_string_ref(&args[1], ctx)?;
 
     Ok(Expression::String(
         text.strip_suffix(suffix).unwrap_or(text).to_string(),
@@ -696,61 +672,61 @@ fn remove_suffix(
 
 fn trim(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("trim", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.trim().to_string()))
 }
 
 fn trim_start(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("trim_start", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.trim_start().to_string()))
 }
 
 fn trim_end(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("trim_end", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.trim_end().to_string()))
 }
 
 fn to_lower(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_lower", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.to_lowercase()))
 }
 
 fn to_upper(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_upper", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.to_uppercase()))
 }
 
 fn to_title(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_title", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
 
     let mut title = String::with_capacity(text.len());
     let mut capitalize = true;
@@ -772,163 +748,82 @@ fn to_title(
 // Formatting Operations (continued)
 fn pad_start(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("pad_start", args, 2..=3, ctx)?;
-    let (length, pad_char) = match args.len() {
-        2 => (args[1].clone(), " ".to_string()),
-        3 => (args[1].clone(), args[2].clone().to_string()),
-        _ => unreachable!(),
-    };
-    let s_val = match args[0].eval(env)? {
-        Expression::Symbol(x) | Expression::String(x) => x,
-        _ => {
-            return Err(RuntimeError::common(
-                "pad_start requires a string as last argument".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
+    let text = get_string_ref(&args[0], ctx)?;
+    let length = get_integer_ref(&args[1], ctx)?;
+    let char = if args.len() > 2 {
+        let c = get_string_ref(&args[2], ctx)?;
+        c.chars().next().unwrap_or(' ')
+    } else {
+        ' '
     };
 
-    let len = match length.eval(env)? {
-        Expression::Integer(n) => n.max(0) as usize,
-        _ => {
-            return Err(RuntimeError::common(
-                "pad_start requires an integer as length".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let pad_ch = pad_char.chars().next().unwrap_or(' ');
-    pad_start_impl(len, pad_ch, s_val)
+    pad_start_impl(length.max(0) as usize, char, text.to_string())
 }
 
 fn pad_end(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("pad_end", args, 2..=3, ctx)?;
-    let (length, pad_char) = match args.len() {
-        2 => (args[1].clone(), " ".to_string()),
-        3 => (args[1].clone(), args[2].clone().to_string()),
-        _ => unreachable!(),
+    let text = get_string_ref(&args[0], ctx)?;
+    let length = get_integer_ref(&args[1], ctx)?;
+    let char = if args.len() > 2 {
+        let c = get_string_ref(&args[2], ctx)?;
+        c.chars().next().unwrap_or(' ')
+    } else {
+        ' '
     };
 
-    let s_val = match args[0].eval(env)? {
-        Expression::Symbol(x) | Expression::String(x) => x,
-        _ => {
-            return Err(RuntimeError::common(
-                "pad_end requires a string as last argument".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let len = match length.eval(env)? {
-        Expression::Integer(n) => n.max(0) as usize,
-        _ => {
-            return Err(RuntimeError::common(
-                "pad_end requires an integer as length".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let pad_ch = pad_char.chars().next().unwrap_or(' ');
-    pad_end_impl(len, pad_ch, s_val)
+    pad_end_impl(length.max(0) as usize, char, text.to_string())
 }
 
 fn center(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("center", args, 2..=3, ctx)?;
-    let (length, pad_char) = match args.len() {
-        2 => (args[1].clone(), " ".to_string()),
-        3 => (args[1].clone(), args[2].clone().to_string()),
-        _ => unreachable!(),
+    let text = get_string_ref(&args[0], ctx)?;
+    let length = get_integer_ref(&args[1], ctx)?;
+    let char = if args.len() > 2 {
+        let c = get_string_ref(&args[2], ctx)?;
+        c.chars().next().unwrap_or(' ')
+    } else {
+        ' '
     };
 
-    let s_val = match args[0].eval(env)? {
-        Expression::Symbol(x) | Expression::String(x) => x,
-        _ => {
-            return Err(RuntimeError::common(
-                "center requires a string as last argument".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let len = match length.eval(env)? {
-        Expression::Integer(n) => n.max(0) as usize,
-        _ => {
-            return Err(RuntimeError::common(
-                "center requires an integer as length".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    if s_val.len() >= len {
-        return Ok(Expression::String(s_val));
-    }
-
-    let pad_ch = pad_char.chars().next().unwrap_or(' ');
-    center_impl(len, pad_ch, s_val)
+    center_impl(length.max(0) as usize, char, text.to_string())
 }
 
 fn wrap(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("wrap", args, 2, ctx)?;
-    match args[1].eval(env)? {
-        Expression::Integer(columns) => {
-            Ok(textwrap::fill(&args[0].eval(env)?.to_string(), columns as usize).into())
-        }
-        otherwise => Err(RuntimeError::common(
-            format!("expected number of columns in wrap, but got `{otherwise}`").into(),
-            ctx.clone(),
-            0,
-        )),
-    }
+    let text = get_string_ref(&args[0], ctx)?;
+    let columns = get_integer_ref(&args[1], ctx)?;
+    Ok(textwrap::fill(text, columns as usize).into())
 }
 // Format Function
 fn format(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("format", args, 2.., ctx)?;
-
-    let template = match args[0].eval_in_assign(env)? {
-        Expression::String(s) => s,
-        _ => {
-            return Err(RuntimeError::common(
-                "format requires format string as first argument".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let template = get_string_ref(&args[0], ctx)?;
 
     let placeholders = template.matches("{}").count();
 
     let mut result = template.clone();
     for arg in args.iter().skip(1).take(placeholders) {
-        let value = arg.eval_in_assign(env)?;
-        result = result.replacen("{}", &value.to_string(), 1);
+        result = result.replacen("{}", &arg.to_string(), 1);
     }
 
     Ok(Expression::String(result))
@@ -936,169 +831,188 @@ fn format(
 // Style Functions
 fn href(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("href", args, 2, ctx)?;
-    let text = args[0].eval(env)?.to_string();
-    let url = args[1].eval(env)?.to_string();
+    let text = get_string_ref(&args[0], ctx)?;
+    let url = get_string_ref(&args[1], ctx)?;
+
     Ok(format!("\x1b]8;;{}\x1b\\{}\x1b]8;;\x1b\\", url, text).into())
 }
 
 fn bold(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("bold", args, 1, ctx)?;
-    Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+
+    Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn faint(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("faint", args, 1, ctx)?;
-    Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+
+    Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn italics(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("italics", args, 1, ctx)?;
-    Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn underline(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("underline", args, 1, ctx)?;
-    Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn blink(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("blink", args, 1, ctx)?;
-    Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn invert(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("invert", args, 1, ctx)?;
-    Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn strike(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("strike", args, 1, ctx)?;
-    Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", text).into())
 }
 // Standard Color Functions
 fn black(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("black", args, 1, ctx)?;
-    Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn red(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("red", args, 1, ctx)?;
-    Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn green(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("green", args, 1, ctx)?;
-    Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn yellow(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("yellow", args, 1, ctx)?;
-    Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn blue(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("blue", args, 1, ctx)?;
-    Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn magenta(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("magenta", args, 1, ctx)?;
-    Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn cyan(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cyan", args, 1, ctx)?;
-    Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn white(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("white", args, 1, ctx)?;
-    Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", args[0].eval(env)?).into())
+    let text = get_string_ref(&args[0], ctx)?;
+    Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", text).into())
 }
 // Advanced Color Functions
 fn color256(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("color256", args, 2, ctx)?;
-    let text = args[0].eval(env)?.to_string();
-    let color = args[1].eval(env)?.to_string();
+    let text = get_string_ref(&args[0], ctx)?;
+    let color = get_integer_ref(&args[1], ctx)? as usize;
+
     Ok(format!("\x1b[38;5;{}m{}\x1b[m\x1b[0m", color, text).into())
 }
 
 fn color256_bg(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("color256_bg", args, 2, ctx)?;
-    let text = args[0].eval(env)?.to_string();
-    let color = args[1].eval(env)?.to_string();
+    let text = get_string_ref(&args[0], ctx)?;
+    let color = get_integer_ref(&args[1], ctx)? as usize;
     Ok(format!("\x1b[48;5;{}m{}\x1b[m\x1b[0m", color, text).into())
 }
 
@@ -1120,10 +1034,10 @@ fn color_bg(
 
 fn colors(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    if args.len() > 0 && !args[0].eval(env)?.is_truthy() {
+    if args.len() > 0 && !args[0].is_truthy() {
         Ok(Expression::from(
             COLOR_MAP
                 .iter()
@@ -1180,12 +1094,12 @@ fn center_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, Runtim
 fn true_color(
     args: &[Expression],
     is_bg: bool,
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("true_color", args, 2, ctx)?;
-    let text = args[0].eval(env)?.to_string();
-    let color_spec = args[1].eval(env)?.to_string();
+    let text = get_string_ref(&args[0], ctx)?;
+    let color_spec = get_string_ref(&args[1], ctx)?;
 
     let color_code = if let Some((r, g, b)) = COLOR_MAP.get(&color_spec.as_str()) {
         format!("{};{};{}", r, g, b)
@@ -1230,7 +1144,7 @@ fn caesar(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("caesar", args, 1..=2, ctx)?;
 
-    let text = get_string_arg(args[0].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
     let shift = if args.len() > 1 {
         get_integer_arg(args[1].eval(env)?, ctx)?
     } else {
@@ -1253,11 +1167,11 @@ fn caesar(
 
 fn max_len(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("max_len", args, 1, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
 
     let max_width = text.lines().map(|line| line.len()).max().unwrap_or(0);
 
@@ -1266,16 +1180,16 @@ fn max_len(
 
 fn grep(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("grep", args, 2, ctx)?;
-    let text = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
-    let pat = get_string_arg(args[1].eval(env)?, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
+    let pat: &str = get_string_ref(&args[1], ctx)?;
 
     let lines = text
         .lines()
-        .filter(|x| x.contains(&pat))
+        .filter(|x| x.contains(pat))
         .map(|line| Expression::String(line.to_string()))
         .collect::<Vec<Expression>>();
     Ok(Expression::from(lines))

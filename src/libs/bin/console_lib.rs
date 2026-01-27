@@ -86,14 +86,14 @@ fn height(
 // Text Output Functions
 fn write(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("write", args, 3, ctx)?;
 
-    let x = args[0].eval(env)?;
-    let y = args[1].eval(env)?;
-    let content = args[2].eval(env)?;
+    let x = &args[0];
+    let y = &args[1];
+    let content = &args[2];
 
     match (x, y) {
         (Expression::Integer(x), Expression::Integer(y)) => {
@@ -125,11 +125,11 @@ fn write(
 
 fn title(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("title", args, 1, ctx)?;
-    let title = args[0].eval(env)?.to_string();
+    let title = &args[0];
     print!("\x1b]2;{title}\x07");
     Ok(Expression::None)
 }
@@ -194,13 +194,13 @@ fn screen_normal(
 // Cursor Control Functions
 fn cursor_to(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cursor_to", args, 2, ctx)?;
 
-    let x = args[0].eval(env)?;
-    let y = args[1].eval(env)?;
+    let x = &args[0];
+    let y = &args[1];
 
     match (x, y) {
         (Expression::Integer(x), Expression::Integer(y)) => {
@@ -226,12 +226,12 @@ macro_rules! cursor_move_fn {
     ($name:ident, $code:literal, $doc:literal) => {
         fn $name(
             args: &[Expression],
-            env: &mut Environment,
+            _env: &mut Environment,
             ctx: &Expression,
         ) -> Result<Expression, RuntimeError> {
             check_exact_args_len(stringify!($name), args, 1, ctx)?;
 
-            if let Expression::Integer(n) = args[0].eval(env)? {
+            if let Expression::Integer(n) = args[0] {
                 print!(concat!("\x1b[", $code, "{}"), n);
                 Ok(Expression::None)
             } else {
@@ -288,7 +288,7 @@ fn cursor_show(
 // Input Functions
 fn read_line(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
@@ -300,7 +300,7 @@ fn read_line(
             Ok(Expression::String(input.trim_end().to_string()))
         }
         1 => {
-            let prompt = args[0].eval(env)?.to_string();
+            let prompt = args[0].to_string();
             print!("{prompt}");
             std::io::stdout().flush().map_err(|e| {
                 RuntimeError::common(format!("Flush failed: {e}").into(), ctx.clone(), 0)
@@ -358,12 +358,12 @@ fn keys(
 }
 fn read_password(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("read_password", args, 0..1, ctx)?;
     let rst = if args.len() > 0 {
-        rpassword::prompt_password(args[0].eval(env)?.to_string())
+        rpassword::prompt_password(args[0].to_string())
     } else {
         rpassword::prompt_password("")
     };

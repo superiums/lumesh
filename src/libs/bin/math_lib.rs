@@ -1,6 +1,6 @@
 use crate::libs::BuiltinInfo;
 use crate::libs::bin::into_lib::str as to_str;
-use crate::libs::helper::check_exact_args_len;
+use crate::libs::helper::{check_args_len, check_exact_args_len, get_integer_ref};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Environment, Expression, Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
 use std::collections::BTreeMap;
@@ -122,14 +122,14 @@ fn phi(_: &[Expression], _: &mut Environment, _: &Expression) -> Result<Expressi
 // Helper function to evaluate arguments to f64
 fn eval_to_f64(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     func_name: &str,
     ctx: &Expression,
 ) -> Result<Vec<f64>, RuntimeError> {
     args.iter()
-        .map(|arg| match arg.eval(env)? {
-            Expression::Integer(i) => Ok(i as f64),
-            Expression::Float(f) => Ok(f),
+        .map(|arg| match arg {
+            Expression::Integer(i) => Ok(*i as f64),
+            Expression::Float(f) => Ok(*f),
             e => Err(RuntimeError::common(
                 format!("invalid {func_name} argument {e}").into(),
                 ctx.clone(),
@@ -140,39 +140,11 @@ fn eval_to_f64(
 }
 
 // Helper function to collect arguments (used by max/min)
-fn args_collect_iter(
-    args: &[Expression],
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Vec<Expression>, RuntimeError> {
-    match args.len() {
-        2.. => Ok(args
-            .iter()
-            .map(|f| f.eval(env))
-            .collect::<Result<Vec<_>, _>>()?),
-        1 => match args[0].eval(env)? {
-            Expression::List(li) => Ok(li.as_ref().clone()),
-            Expression::Range(r, step) => {
-                Ok(r.step_by(step).map(Expression::Integer).collect::<Vec<_>>())
-            }
-            _ => Err(RuntimeError::common(
-                "the only arg for math.max/math.min should be a list".into(),
-                ctx.clone(),
-                0,
-            )),
-        },
-        0 => Err(RuntimeError::common(
-            "math.max/math.min requires 1 list or multi nums".into(),
-            ctx.clone(),
-            0,
-        )),
-    }
-}
 
-pub fn get_float_arg(expr: Expression, ctx: &Expression) -> Result<f64, RuntimeError> {
+pub fn get_float_arg(expr: &Expression, ctx: &Expression) -> Result<f64, RuntimeError> {
     match expr {
-        Expression::Integer(i) => Ok(i as f64),
-        Expression::Float(i) => Ok(i),
+        Expression::Integer(i) => Ok(*i as f64),
+        Expression::Float(i) => Ok(*i),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
                 expected: "Integer/Float".to_string(),
@@ -187,27 +159,27 @@ pub fn get_float_arg(expr: Expression, ctx: &Expression) -> Result<f64, RuntimeE
 // Basic Math Functions
 pub fn max(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let nums = args_collect_iter(args, env, ctx)?;
+    // let nums = args_collect_iter(args, env, ctx)?;
     let mut max_val_int: Option<i64> = None;
     let mut max_val_float: Option<f64> = None;
 
-    for num in nums {
+    for num in args {
         match num {
             Expression::Integer(i) => {
                 if let Some(current_max) = max_val_int {
-                    max_val_int = Some(current_max.max(i));
+                    max_val_int = Some(current_max.max(*i));
                 } else {
-                    max_val_int = Some(i);
+                    max_val_int = Some(*i);
                 }
             }
             Expression::Float(f) => {
                 if let Some(current_max) = max_val_float {
-                    max_val_float = Some(current_max.max(f));
+                    max_val_float = Some(current_max.max(*f));
                 } else {
-                    max_val_float = Some(f);
+                    max_val_float = Some(*f);
                 }
             }
             _ => {
@@ -234,26 +206,25 @@ pub fn max(
 
 pub fn min(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let nums = args_collect_iter(args, env, ctx)?;
     let mut min_val: Option<f64> = None;
 
-    for num in nums {
+    for num in args {
         match num {
             Expression::Integer(i) => {
                 if let Some(current_min) = min_val {
-                    min_val = Some(current_min.min(i as f64));
+                    min_val = Some(current_min.min(*i as f64));
                 } else {
-                    min_val = Some(i as f64);
+                    min_val = Some(*i as f64);
                 }
             }
             Expression::Float(f) => {
                 if let Some(current_min) = min_val {
-                    min_val = Some(current_min.min(f));
+                    min_val = Some(current_min.min(*f));
                 } else {
-                    min_val = Some(f);
+                    min_val = Some(*f);
                 }
             }
             _ => {
@@ -274,46 +245,13 @@ pub fn min(
 
 fn clamp(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("clamp", args, 3, ctx)?;
-
-    let value = match args[0].eval(env)? {
-        Expression::Integer(i) => i as f64,
-        Expression::Float(f) => f,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid clamp value {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let min_val = match args[1].eval(env)? {
-        Expression::Integer(i) => i as f64,
-        Expression::Float(f) => f,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid clamp min {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let max_val = match args[2].eval(env)? {
-        Expression::Integer(i) => i as f64,
-        Expression::Float(f) => f,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid clamp max {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let value = get_float_arg(&args[0], ctx)?;
+    let min_val = get_float_arg(&args[1], ctx)?;
+    let max_val = get_float_arg(&args[2], ctx)?;
 
     if min_val > max_val {
         return Err(RuntimeError::common(
@@ -336,149 +274,64 @@ fn clamp(
 // Bitwise Operations
 fn bit_and(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("bit_and", args, 2, ctx)?;
 
-    let a = match args[0].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_and argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let b = match args[1].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_and argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let a = get_integer_ref(&args[0], ctx)?;
+    let b = get_integer_ref(&args[1], ctx)?;
 
     Ok(Expression::Integer(a & b))
 }
 
 fn bit_or(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("bit_or", args, 2, ctx)?;
 
-    let a = match args[0].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_or argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let b = match args[1].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_or argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let a = get_integer_ref(&args[0], ctx)?;
+    let b = get_integer_ref(&args[1], ctx)?;
 
     Ok(Expression::Integer(a | b))
 }
 
 fn bit_xor(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("bit_xor", args, 2, ctx)?;
 
-    let a = match args[0].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_xor argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let b = match args[1].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_xor argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let a = get_integer_ref(&args[0], ctx)?;
+    let b = get_integer_ref(&args[1], ctx)?;
 
     Ok(Expression::Integer(a ^ b))
 }
 
 fn bit_not(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("bit_not", args, 1, ctx)?;
 
-    let a = match args[0].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_not argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let a = get_integer_ref(&args[0], ctx)?;
 
     Ok(Expression::Integer(!a))
 }
 
 fn bit_shl(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("bit_shl", args, 2, ctx)?;
 
-    let a = match args[0].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_shl base argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let b = match args[1].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_shl shift_bit argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let a = get_integer_ref(&args[0], ctx)?;
+    let b = get_integer_ref(&args[1], ctx)?;
     if b < 0 || b > 63 {
         return Err(RuntimeError::common(
             format!("shift amount {} out of range (0-63)", a).into(),
@@ -491,32 +344,13 @@ fn bit_shl(
 
 fn bit_shr(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("bit_shr", args, 2, ctx)?;
 
-    let a = match args[0].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_shr base argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
-
-    let b = match args[1].eval(env)? {
-        Expression::Integer(i) => i,
-        e => {
-            return Err(RuntimeError::common(
-                format!("invalid bit_shr shift_bit argument {e}").into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    };
+    let a = get_integer_ref(&args[0], ctx)?;
+    let b = get_integer_ref(&args[1], ctx)?;
     if b < 0 || b > 63 {
         return Err(RuntimeError::common(
             format!("shift amount {} out of range (0-63)", a).into(),
@@ -529,77 +363,77 @@ fn bit_shr(
 // Comparison Functions
 fn gt(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("gt", args, 2, ctx)?;
-    let base = get_float_arg(args[0].eval(env)?, ctx)?;
-    let other = get_float_arg(args[1].eval(env)?, ctx)?;
+    let base = get_float_arg(&args[0], ctx)?;
+    let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.gt(&other)))
 }
 
 fn ge(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("ge", args, 2, ctx)?;
-    let base = get_float_arg(args[0].eval(env)?, ctx)?;
-    let other = get_float_arg(args[1].eval(env)?, ctx)?;
+    let base = get_float_arg(&args[0], ctx)?;
+    let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.ge(&other)))
 }
 
 fn lt(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("lt", args, 2, ctx)?;
-    let base = get_float_arg(args[0].eval(env)?, ctx)?;
-    let other = get_float_arg(args[1].eval(env)?, ctx)?;
+    let base = get_float_arg(&args[0], ctx)?;
+    let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.lt(&other)))
 }
 
 fn le(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("le", args, 2, ctx)?;
-    let base = get_float_arg(args[0].eval(env)?, ctx)?;
-    let other = get_float_arg(args[1].eval(env)?, ctx)?;
+    let base = get_float_arg(&args[0], ctx)?;
+    let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.le(&other)))
 }
 
 fn eq(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("eq", args, 2, ctx)?;
-    let base = get_float_arg(args[0].eval(env)?, ctx)?;
-    let other = get_float_arg(args[1].eval(env)?, ctx)?;
+    let base = get_float_arg(&args[0], ctx)?;
+    let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.eq(&other)))
 }
 
 fn ne(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("ne", args, 2, ctx)?;
-    let base = get_float_arg(args[0].eval(env)?, ctx)?;
-    let other = get_float_arg(args[1].eval(env)?, ctx)?;
+    let base = get_float_arg(&args[0], ctx)?;
+    let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.ne(&other)))
 }
 // Basic Math Operations
 fn abs(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("abs", args, 1, ctx)?;
-    match args[0].eval(env)? {
+    match &args[0] {
         Expression::Integer(i) => Ok(i.abs().into()),
         Expression::Float(f) => Ok(f.abs().into()),
         e => Err(RuntimeError::common(
@@ -612,19 +446,18 @@ fn abs(
 
 pub fn sum(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let nums = args_collect_iter(args, env, ctx)?;
     let mut int_sum = 0;
     let mut float_sum = 0.0;
     let mut has_float = false;
 
-    for num in nums {
+    for num in args {
         match num {
             Expression::Integer(i) => {
                 if has_float {
-                    float_sum += i as f64;
+                    float_sum += *i as f64;
                 } else {
                     int_sum += i;
                 }
@@ -634,7 +467,7 @@ pub fn sum(
                     float_sum = int_sum as f64;
                     has_float = true;
                 }
-                float_sum += f;
+                float_sum += *f;
             }
             _ => {
                 return Err(RuntimeError::common(
@@ -655,29 +488,22 @@ pub fn sum(
 
 pub fn average(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let nums = args_collect_iter(args, env, ctx)?;
-    if nums.is_empty() {
-        return Err(RuntimeError::common(
-            "average requires at least one number".into(),
-            ctx.clone(),
-            0,
-        ));
-    }
+    check_args_len("average", args, 2.., ctx)?;
 
     let mut sum = 0.0;
     let mut count = 0;
 
-    for num in nums {
+    for num in args {
         match num {
             Expression::Integer(i) => {
-                sum += i as f64;
+                sum += *i as f64;
                 count += 1;
             }
             Expression::Float(f) => {
-                sum += f;
+                sum += *f;
                 count += 1;
             }
             _ => {
@@ -695,12 +521,12 @@ pub fn average(
 // Rounding Functions
 fn floor(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("floor", args, 1, ctx)?;
-    match args[0].eval(env)? {
-        Expression::Integer(i) => Ok(i.into()),
+    match &args[0] {
+        Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.floor().into()),
         e => Err(RuntimeError::common(
             format!("invalid floor argument {e:?}").into(),
@@ -712,12 +538,12 @@ fn floor(
 
 fn ceil(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("ceil", args, 1, ctx)?;
-    match args[0].eval(env)? {
-        Expression::Integer(i) => Ok(i.into()),
+    match &args[0] {
+        Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.ceil().into()),
         e => Err(RuntimeError::common(
             format!("invalid ceil argument {e:?}").into(),
@@ -729,12 +555,12 @@ fn ceil(
 
 fn round(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("round", args, 1, ctx)?;
-    match args[0].eval(env)? {
-        Expression::Integer(i) => Ok(i.into()),
+    match &args[0] {
+        Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.round().into()),
         e => Err(RuntimeError::common(
             format!("invalid round argument {e:?}").into(),
@@ -746,12 +572,12 @@ fn round(
 
 fn trunc(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("trunc", args, 1, ctx)?;
-    match args[0].eval(env)? {
-        Expression::Integer(i) => Ok(i.into()),
+    match &args[0] {
+        Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.trunc().into()),
         e => Err(RuntimeError::common(
             format!("invalid trunc argument {e:?}").into(),
@@ -763,13 +589,13 @@ fn trunc(
 
 fn is_odd(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("isodd", args, 1, ctx)?;
-    Ok(match args[0].eval(env)? {
+    Ok(match &args[0] {
         Expression::Integer(i) => (i % 2 != 0).into(),
-        Expression::Float(f) => ((f as Int) % 2 != 0).into(),
+        Expression::Float(f) => ((*f as Int) % 2 != 0).into(),
         e => {
             return Err(RuntimeError::common(
                 format!("invalid isodd argument {e}").into(),

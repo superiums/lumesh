@@ -391,6 +391,28 @@ impl Expression {
                     // }
                     return Ok(value);
                 }
+                Self::Export(name, expr_opt) => {
+                    let value = if let Some(expr) = expr_opt {
+                        state.set(State::IN_ASSIGN);
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                        state.clear(State::IN_ASSIGN);
+                        value
+                    } else {
+                        if let Some(value) = env.get(name) {
+                            value
+                        } else {
+                            return Err(RuntimeError::new(
+                                RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    };
+                    unsafe {
+                        std::env::set_var(name, value.to_string());
+                    }
+                    return Ok(value);
+                }
 
                 // del
                 Self::Del(name) => {

@@ -36,14 +36,18 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 // Helper Functions
-fn get_r_args(
-    args: &[Expression],
-    env: &mut Environment,
+fn get_r_args<'a>(
+    args: &'a [Expression],
+    _env: &mut Environment,
     ctx: &Expression,
-) -> Result<(Regex, String), RuntimeError> {
-    match (args[0].eval_in_assign(env)?, args[1].eval_in_assign(env)?) {
-        (Expression::Regex(r), Expression::String(t) | Expression::Symbol(t)) => Ok((r.regex, t)),
-        (Expression::String(t) | Expression::Symbol(t), Expression::Regex(r)) => Ok((r.regex, t)),
+) -> Result<(Regex, &'a str), RuntimeError> {
+    match (&args[0], &args[1]) {
+        (Expression::Regex(r), Expression::String(t) | Expression::Symbol(t)) => {
+            Ok((r.regex.clone(), t))
+        }
+        (Expression::String(t) | Expression::Symbol(t), Expression::Regex(r)) => {
+            Ok((r.regex.clone(), t))
+        }
         (
             Expression::String(r) | Expression::Symbol(r),
             Expression::String(t) | Expression::Symbol(t),
@@ -192,22 +196,34 @@ fn split(
 
 fn replace(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("replace", args, 3, ctx)?;
 
-    let first = args[0].eval_in_assign(env)?;
-    let second = args[1].eval_in_assign(env)?;
-    let last = args[2].eval_in_assign(env)?;
+    let first = &args[0];
+    let second = &args[1];
+    let last = &args[2];
     let (replacement, text, regex) = match first {
-        Expression::Regex(regex) => (last.to_string(), second.to_string(), regex.regex),
+        Expression::Regex(regex) => match (second, last) {
+            (
+                Expression::String(rep) | Expression::Symbol(rep),
+                Expression::String(t) | Expression::Symbol(t),
+            ) => (rep, t, regex.regex.clone()),
+            _ => {
+                return Err(RuntimeError::common(
+                    "regex option requires 2 text argument".into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        },
         Expression::String(text) => match (second, last) {
             (Expression::String(s) | Expression::Symbol(s), Expression::Regex(r)) => {
-                (s, text, r.regex)
+                (s, text, r.regex.clone())
             }
             (Expression::Regex(r), Expression::String(s) | Expression::Symbol(s)) => {
-                (s, text, r.regex)
+                (s, text, r.regex.clone())
             }
             _ => {
                 return Err(RuntimeError::common(

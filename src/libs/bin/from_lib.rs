@@ -45,12 +45,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
 fn toml(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("toml", args, 1, ctx)?;
-    let text = args[0].eval_in_assign(env)?;
-    let text_str = text.to_string();
+    let text_str = args[0].to_string();
 
     toml::from_str(&text_str).map(toml_to_expr).map_err(|e| {
         RuntimeError::common(format!("Toml parser error:\n{e}").into(), ctx.clone(), 0)
@@ -79,12 +78,11 @@ fn toml_to_expr(val: toml::Value) -> Expression {
 
 fn json(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("json", args, 1, ctx)?;
-    let text = args[0].eval_in_assign(env)?;
-    let text_str = text.to_string();
+    let text_str = args[0].to_string();
 
     if text_str.is_empty() {
         return Ok(Expression::None);
@@ -125,11 +123,11 @@ fn json_to_expr(val: JsonValue) -> Expression {
 
 fn script(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("script", args, 1, ctx)?;
-    let script = args[0].eval_in_assign(env)?.to_string();
+    let script = args[0].to_string();
 
     if script.is_empty() {
         return Ok(Expression::None);
@@ -156,7 +154,7 @@ fn csv(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("csv", args, 1, ctx)?;
-    let text = args[0].eval_in_assign(env)?.to_string();
+    let text = args[0].to_string();
 
     // 获取自定义分隔符
     let delimiter = match env.get("IFS") {
@@ -205,12 +203,12 @@ enum JqStep {
 
 fn jq(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("jq", args, 2, ctx)?;
-    let query = args[1].eval(env)?;
-    let input = args[0].eval_in_assign(env)?;
+    let input = &args[0];
+    let query = &args[1];
 
     let json_value = match input {
         Expression::String(s) => s.parse::<JsonValue>().map_err(|e| {

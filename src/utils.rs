@@ -20,14 +20,10 @@ pub fn join_current_path(path: &str) -> PathBuf {
     get_current_path().join(path)
 }
 pub fn abs(path: &str) -> PathBuf {
-    if path.starts_with("~") {
-        if let Some(home_dir) = dirs::home_dir() {
-            return PathBuf::from(path.replace("~", home_dir.to_string_lossy().as_ref()));
-        }
-    } else if path.starts_with("./") || path == "." {
-        return PathBuf::from(get_current_path().join(path));
+    if path.starts_with("./") || path == "." {
+        return join_current_path(path);
     }
-    PathBuf::from(path)
+    PathBuf::from(expand_home(path).as_ref())
 }
 pub fn abs_check(path: &str) -> Result<PathBuf, RuntimeError> {
     let abs = abs(path);

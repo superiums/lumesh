@@ -61,11 +61,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 // Helper Functions
 fn parse_datetime_arg(
     arg: &Expression,
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<NaiveDateTime, RuntimeError> {
-    match arg.eval(env)? {
-        Expression::DateTime(dt) => Ok(dt),
+    match arg {
+        Expression::DateTime(dt) => Ok(dt.clone()),
         Expression::String(s) => {
             // Try parsing common shell date formats
             if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %H:%M") {
@@ -123,7 +123,7 @@ fn parse_datetime_arg(
                 0,
             ))
         }
-        Expression::Integer(ts) => Ok(Utc.timestamp_opt(ts, 0).unwrap().naive_utc()),
+        Expression::Integer(ts) => Ok(Utc.timestamp_opt(*ts, 0).unwrap().naive_utc()),
         Expression::Map(m) => {
             let map = m.as_ref();
             let year = get_map_value(map, "year", ctx)?.unwrap_or(Local::now().year() as i64);
@@ -208,14 +208,14 @@ fn parse_duration_string(s: &str, ctx: &Expression) -> Result<Duration, RuntimeE
 // Basic Time Functions
 fn sleep(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("sleep", args, 1, ctx)?;
 
-    let duration = match args[0].eval(env)? {
-        Expression::Float(n) if n > 0.0 => Duration::from_millis(n as u64),
-        Expression::Integer(n) if n > 0 => Duration::from_millis(n as u64),
+    let duration = match &args[0] {
+        Expression::Float(n) if *n > 0.0 => Duration::from_millis(*n as u64),
+        Expression::Integer(n) if *n > 0 => Duration::from_millis(*n as u64),
         Expression::String(s) => parse_duration_string(&s, ctx)?,
         otherwise => {
             return Err(RuntimeError::common(
@@ -342,19 +342,18 @@ fn seconds(
 }
 fn is_leap(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let year = match args.first().map(|a| a.eval(env)) {
-        Some(Ok(Expression::Integer(y))) => y,
-        Some(Ok(_)) => {
+    let year = match args.first() {
+        Some(Expression::Integer(y)) => *y,
+        Some(_) => {
             return Err(RuntimeError::common(
                 "Year must be an integer".into(),
                 ctx.clone(),
                 0,
             ));
         }
-        Some(Err(e)) => return Err(e.into()),
         None => Local::now().year() as i64,
     };
     Ok(Expression::Boolean(
@@ -398,7 +397,7 @@ fn fmt(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("fmt", args, 1..=2, ctx)?;
 
-    let format_str = match args[0].eval(env)? {
+    let format_str = match &args[0] {
         Expression::String(s) => s,
         _ => {
             return Err(RuntimeError::common(
@@ -420,13 +419,13 @@ fn fmt(
 
 fn now(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
         0 => Ok(Expression::DateTime(Local::now().naive_local())),
         1 => {
-            let format = match args[0].eval(env)? {
+            let format = match &args[0] {
                 Expression::String(s) => s,
                 _ => {
                     return Err(RuntimeError::common(
@@ -461,7 +460,7 @@ fn to_string(
             dt.format("%Y-%m-%dT%H:%M:%S%.fZ").to_string(),
         ))
     } else {
-        match args[1].eval(env)? {
+        match &args[1] {
             Expression::String(format) => Ok(Expression::String(dt.format(&format).to_string())),
             _ => Err(RuntimeError::common(
                 "Expected format string".into(),
@@ -479,7 +478,7 @@ pub fn parse(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("parse", args, 1..=2, ctx)?;
 
-    let datetime_str = match args[0].eval(env)? {
+    let datetime_str = match &args[0] {
         Expression::String(s) => s,
         _ => {
             return Err(RuntimeError::common(
@@ -491,7 +490,7 @@ pub fn parse(
     };
 
     let format_str = if args.len() > 1 {
-        match args[1].eval(env)? {
+        match &args[1] {
             Expression::String(s) => s,
             _ => {
                 return Err(RuntimeError::common(
@@ -504,7 +503,7 @@ pub fn parse(
     } else {
         // Try to parse without format
         return Ok(Expression::DateTime(parse_datetime_arg(
-            &Expression::String(datetime_str),
+            &Expression::String(datetime_str.clone()),
             env,
             ctx,
         )?));
@@ -535,12 +534,12 @@ pub fn parse(
 
 fn from_map(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("from_map", args, 1, ctx)?;
 
-    if let Expression::Map(m) = args[0].eval(env)? {
+    if let Expression::Map(m) = &args[0] {
         let map = m.as_ref();
         let year = get_map_value(map, "year", ctx)?.ok_or(RuntimeError::common(
             "Missing year".into(),
@@ -599,14 +598,14 @@ fn add(
 
     let duration = match rest.len() {
         0 => ChronoDuration::zero(),
-        1 => match rest[0].eval(env)? {
+        1 => match &rest[0] {
             Expression::String(dur) => {
                 let std_duration = parse_duration_string(&dur, ctx)?;
                 ChronoDuration::from_std(std_duration).map_err(|e| {
                     RuntimeError::common(format!("Invalid duration: {e}").into(), ctx.clone(), 0)
                 })?
             }
-            Expression::Integer(secs) => ChronoDuration::seconds(secs),
+            Expression::Integer(secs) => ChronoDuration::seconds(*secs),
             e => {
                 return Err(RuntimeError::common(
                     format!("Invalid duration: {e}").into(),
@@ -618,22 +617,22 @@ fn add(
         2.. => {
             let mut duration = ChronoDuration::zero();
 
-            if let Ok(Expression::Integer(secs)) = rest[0].eval(env) {
+            if let Expression::Integer(secs) = rest[0] {
                 duration += ChronoDuration::seconds(secs);
             }
 
-            if let Ok(Expression::Integer(mins)) = rest[1].eval(env) {
+            if let Expression::Integer(mins) = rest[1] {
                 duration += ChronoDuration::minutes(mins);
             }
 
             if rest.len() > 2 {
-                if let Ok(Expression::Integer(hours)) = rest[2].eval(env) {
+                if let Expression::Integer(hours) = rest[2] {
                     duration += ChronoDuration::hours(hours);
                 }
             }
 
             if rest.len() > 3 {
-                if let Ok(Expression::Integer(days)) = rest[3].eval(env) {
+                if let Expression::Integer(days) = rest[3] {
                     duration += ChronoDuration::days(days);
                 }
             }
@@ -653,7 +652,7 @@ fn diff(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("diff", args, 2..=3, ctx)?;
 
-    let unit = match args[0].eval(env)? {
+    let unit = match &args[0] {
         Expression::String(s) => s.to_lowercase(),
         _ => "seconds".to_string(),
     };
@@ -689,9 +688,9 @@ fn timezone(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("timezone", args, 1..=3, ctx)?;
 
-    let offset_hours = match args[0].eval(env)? {
-        Expression::Integer(h) => h,
-        Expression::Float(h) => h.round() as i64,
+    let offset_hours = match &args[0] {
+        Expression::Integer(h) => *h,
+        Expression::Float(h) => (*h).round() as i64,
         _ => {
             return Err(RuntimeError::common(
                 "timezone requires offset in hours as first argument".into(),
@@ -721,7 +720,7 @@ fn timezone(
     };
 
     if args.len() > 2 {
-        if let Expression::String(format) = args[2].eval(env)? {
+        if let Expression::String(format) = &args[2] {
             return Ok(Expression::String(dt.format(&format).to_string()));
         }
     }

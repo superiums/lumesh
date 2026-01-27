@@ -5,8 +5,8 @@ use crate::eval::{State, is_strict};
 use crate::expression::eval2::execute_iteration;
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
-    check_args_len, check_exact_args_len, check_fn_arg, get_integer_arg, get_string_arg,
-    get_string_args,
+    check_args_len, check_exact_args_len, check_fn_arg, get_integer_ref, get_string_args,
+    get_string_ref,
 };
 use crate::libs::lazy_module::LazyModule;
 use crate::{
@@ -25,7 +25,7 @@ pub fn regist_lazy() -> LazyModule {
         max,min,sum,average,
         //读取操作
         get,len,insert,rev,flatten,
-        first,last,at,take,drop,
+        first,last,at,take,drop,is_empty,
         //查找操作
         contains,find,find_last,
         //修改操作
@@ -57,6 +57,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         insert => "insert item into list", "<list> <index> <value>"
         rev => "reverse sequence", "<list>"
         flatten => "flatten nested structure", "<collection>"
+        is_empty => "is this list empty?", "<list>"
 
         first => "get the first element of a list", "<list>"
         last => "get the last element of a list", "<list>"
@@ -173,13 +174,23 @@ fn flatten(
 }
 
 // ---self---
+fn is_empty(
+    args: &[Expression],
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("is_empty", args, 1, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+
+    Ok(Expression::Boolean(list.is_empty()))
+}
 fn first(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("first", args, 1, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
     list.as_ref().first().cloned().ok_or_else(|| {
         RuntimeError::common("cannot get first of empty list".into(), ctx.clone(), 0)
@@ -188,11 +199,11 @@ fn first(
 
 fn last(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("last", args, 1, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
     list.as_ref()
         .last()
@@ -208,12 +219,12 @@ fn clamp(n: Int, len: usize) -> usize {
 }
 fn at(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("at", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let n = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let n = get_integer_ref(&args[1], ctx)?;
 
     let index = clamp(n, list.len());
 
@@ -229,12 +240,12 @@ fn at(
 
 fn take(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("take", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let n = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let n = get_integer_ref(&args[1], ctx)?;
 
     let count = clamp(n, list.len());
 
@@ -245,12 +256,12 @@ fn take(
 
 fn drop(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("drop", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let n = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let n = get_integer_ref(&args[1], ctx)?;
 
     let count = clamp(n, list.len());
 
@@ -261,14 +272,13 @@ fn drop(
 // 查找操作函数
 fn contains(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("contains", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let item = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
-    Ok(Expression::Boolean(list.as_ref().contains(&item)))
+    Ok(Expression::Boolean(list.as_ref().contains(&args[1])))
 }
 
 fn find(
@@ -277,10 +287,10 @@ fn find(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("find", args, 2..=3, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let target = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let target = &args[1];
     let start = if args.len() == 3 {
-        get_integer_arg(args[2].eval(env)?, ctx)? as usize
+        get_integer_ref(&args[2], ctx)? as usize
     } else {
         0
     };
@@ -298,7 +308,7 @@ fn find(
             Ok(Expression::None)
         }
         _ => Ok(
-            match list.as_ref().iter().skip(start).position(|x| *x == target) {
+            match list.as_ref().iter().skip(start).position(|x| x == target) {
                 Some(index) => Expression::Integer(index as Int),
                 None => Expression::None,
             },
@@ -312,10 +322,10 @@ fn find_last(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("find_last", args, 2..=3, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let target = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let target = &args[1];
     let start = if args.len() == 3 {
-        get_integer_arg(args[2].eval(env)?, ctx)? as usize
+        get_integer_ref(&args[2], ctx)? as usize
     } else {
         0
     };
@@ -338,7 +348,7 @@ fn find_last(
                 .iter()
                 .rev()
                 .skip(start)
-                .position(|x| *x == target)
+                .position(|x| x == target)
             {
                 Some(index) => Expression::Integer((list.as_ref().len() - 1 - index) as Int),
                 None => Expression::None,
@@ -349,12 +359,12 @@ fn find_last(
 // 修改操作函数
 fn append(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("append", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let item = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let item = args[1].clone();
 
     let mut new_list = list.as_ref().to_vec();
     new_list.push(item);
@@ -363,12 +373,12 @@ fn append(
 
 fn prepend(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("prepend", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let head = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let head = args[1].clone();
 
     let mut new_list = Vec::with_capacity(list.as_ref().len() + 1);
     new_list.push(head);
@@ -378,11 +388,11 @@ fn prepend(
 
 fn unique(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("unique", args, 1, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
     let mut seen = std::collections::HashSet::new();
     let mut result = Vec::new();
@@ -397,12 +407,12 @@ fn unique(
 
 fn split_at(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("split_at", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let n = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let n = get_integer_ref(&args[1], ctx)?;
 
     let index = if n < 0 {
         (list.as_ref().len() as Int + n).max(0) as usize
@@ -424,15 +434,15 @@ fn sort(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("sort", args, 1.., ctx)?;
 
-    let list = args[0].eval(env)?;
+    let list = &args[0];
     let (func, headers) = match args.len() {
         2 => {
-            let key_func = args[1].eval(env)?;
+            let key_func = &args[1];
             match key_func {
                 Expression::Lambda(..) | Expression::Function(..) => {
                     (Some(Rc::new(key_func)), None)
                 }
-                Expression::Symbol(s) | Expression::String(s) => (None, Some(vec![s])),
+                Expression::Symbol(s) | Expression::String(s) => (None, Some(vec![s.to_string()])),
                 Expression::List(s) => (
                     None,
                     Some(s.iter().map(|e| e.to_string()).collect::<Vec<_>>()),
@@ -489,9 +499,11 @@ fn sort(
 
     if let Some(sort_func) = func {
         sorted.sort_by(|a, b| {
-            let sort_result =
-                Expression::Apply(Rc::clone(&sort_func), Rc::new(vec![a.clone(), b.clone()]))
-                    .eval(env);
+            let sort_result = Expression::Apply(
+                Rc::new((*sort_func).clone()),
+                Rc::new(vec![a.clone(), b.clone()]),
+            )
+            .eval(env);
             match sort_result {
                 Ok(Expression::Integer(i)) => match i {
                     1.. => Ordering::Greater,
@@ -559,28 +571,31 @@ fn group(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("group", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let key_func = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let key_func = &args[1];
+
     let mut groups: BTreeMap<String, Vec<Expression>> = BTreeMap::new();
 
     match key_func {
         Expression::Lambda(..) | Expression::Function(..) => {
             let key_f = Rc::new(key_func);
             for item in list.as_ref().iter() {
-                let key = match Expression::Apply(Rc::clone(&key_f), Rc::new(vec![item.clone()]))
-                    .eval(env)?
-                {
-                    Expression::String(s) => s,
-                    other => other.to_string(),
-                };
+                let key =
+                    match Expression::Apply(Rc::new((*key_f).clone()), Rc::new(vec![item.clone()]))
+                        .eval(env)?
+                    {
+                        Expression::String(s) => s,
+                        other => other.to_string(),
+                    };
                 groups.entry(key).or_default().push(item.clone());
             }
         }
         Expression::Symbol(k) | Expression::String(k) => {
             for item in list.as_ref().iter() {
+                let kk: &str = &k;
                 let keyitem = match item {
-                    Expression::Map(m) => m.get(&k),
-                    Expression::HMap(m) => m.get(&k),
+                    Expression::Map(m) => m.get(kk),
+                    Expression::HMap(m) => m.get(kk),
                     _ => {
                         return Err(RuntimeError::common(
                             "group by key can only apply to a map".to_string().into(),
@@ -617,21 +632,20 @@ fn group(
 
 fn remove_at(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("remove_at", args, 2..=3, ctx)?;
-
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let index = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let index = get_integer_ref(&args[1], ctx)?;
     let count = if args.len() == 3 {
-        get_integer_arg(args[2].eval(env)?, ctx)?
+        get_integer_ref(&args[2], ctx)?
     } else {
         1
     };
 
     if count <= 0 {
-        return Ok(Expression::List(list));
+        return Ok(Expression::List(list.clone()));
     }
 
     let list_len = list.as_ref().len() as Int;
@@ -644,7 +658,7 @@ fn remove_at(
     let end_idx = (start_idx + count as usize).min(list_len as usize);
 
     if start_idx >= list_len as usize {
-        return Ok(Expression::List(list));
+        return Ok(Expression::List(list.clone()));
     }
 
     let mut new_list = Vec::new();
@@ -655,16 +669,16 @@ fn remove_at(
 }
 fn remove(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("remove", args, 2..=3, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let item = args[1].eval(env)?;
+    let item = &args[1];
 
     let all = if args.len() == 3 {
-        if let Expression::Boolean(b) = args[2].eval(env)? {
+        if let &Expression::Boolean(b) = &args[2] {
             b
         } else {
             false
@@ -676,34 +690,34 @@ fn remove(
     if all {
         let new_list = list
             .iter()
-            .filter(|x| **x != item)
+            .filter(|x| *x != item)
             .cloned()
             .collect::<Vec<_>>();
         Ok(Expression::from(new_list))
-    } else if let Some(pos) = list.iter().position(|x| *x == item) {
+    } else if let Some(pos) = list.iter().position(|x| x == item) {
         let mut new_list = list.as_ref().clone();
         new_list.remove(pos);
         Ok(Expression::from(new_list))
     } else {
-        Ok(Expression::List(list))
+        Ok(Expression::List(list.clone()))
     }
 }
 
 fn set(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set", args, 3, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let n = get_integer_ref(&args[1], ctx)?;
 
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let n = get_integer_arg(args[1].eval(env)?, ctx)?;
-    let val = args[2].eval(env)?;
+    let val = &args[2];
 
     let index = n as usize;
     if index < list.as_ref().len() {
         let mut result = list.as_ref().clone();
-        result[index] = val;
+        result[index] = val.clone();
         Ok(Expression::from(result))
     } else {
         Err(RuntimeError::common(
@@ -729,7 +743,7 @@ fn concat(
 
 fn from(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
@@ -740,10 +754,10 @@ fn from(
             ctx.clone(),
             0,
         )),
-        1 => match args[0].eval(env)? {
-            Expression::Range(r, step) => {
-                Ok(Expression::from(r.step_by(step).collect::<Vec<Int>>()))
-            }
+        1 => match &args[0] {
+            Expression::Range(r, step) => Ok(Expression::from(
+                r.clone().step_by(step.clone()).collect::<Vec<Int>>(),
+            )),
             _ => Err(RuntimeError::common(
                 "the only arg should be a range (a..b)".to_string().into(),
                 ctx.clone(),
@@ -760,19 +774,19 @@ fn map(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("map", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let func = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let func = &args[1];
 
     let (var_name, ind_name, body) = if check_fn_arg(&func, 2, ctx).is_ok() {
         match &func {
             Expression::Function(_, p, _, body, _) => (p[1].0.clone(), Some(p[0].0.clone()), body),
-            Expression::Lambda(p, body,_) => (p[1].clone(), Some(p[0].clone()), body),
+            Expression::Lambda(p, body, _) => (p[1].clone(), Some(p[0].clone()), body),
             _ => unreachable!(),
         }
     } else if check_fn_arg(&func, 1, ctx).is_ok() {
         match &func {
             Expression::Function(_, p, _, body, _) => (p[0].0.clone(), None, body),
-            Expression::Lambda(p, body,_) => (p[0].clone(), None, body),
+            Expression::Lambda(p, body, _) => (p[0].clone(), None, body),
             _ => unreachable!(),
         }
     } else {
@@ -802,11 +816,11 @@ fn map(
 
 fn items(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("items", args, 1, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
     let items = list
         .as_ref()
@@ -823,7 +837,7 @@ fn filter(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("filter", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
     let mut result = Vec::new();
     let fn_arg_count = match args[1].clone() {
@@ -879,8 +893,8 @@ fn filter_map(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("filter_map", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let func = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let func = &args[1];
     check_fn_arg(&func, 1, ctx)?;
 
     let mut result = Vec::new();
@@ -927,8 +941,8 @@ fn any(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("any", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let func = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let func = &args[1];
     check_fn_arg(&func, 1, ctx)?;
 
     for item in list.as_ref().iter() {
@@ -947,8 +961,8 @@ fn all(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("all", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let func = args[1].eval(env)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let func = &args[1];
     check_fn_arg(&func, 1, ctx)?;
 
     for item in list.as_ref().iter() {
@@ -963,12 +977,13 @@ fn all(
 // 转换操作函数
 fn join(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("join", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let separator = get_string_arg(args[1].eval(env)?, ctx)?;
+
+    let list = get_list_ref(&args[0], ctx)?;
+    let separator = get_string_ref(&args[1], ctx)?;
 
     let mut joined = String::new();
     for (i, item) in list.as_ref().iter().enumerate() {
@@ -986,11 +1001,11 @@ fn to_map(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("to_map", args, 1..=3, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
     let (key_func, val_func) = match args.len() {
-        3 => (Some(args[1].eval(env)?), Some(args[2].eval(env)?)),
-        2 => (Some(args[1].eval(env)?), None),
+        3 => (Some(args[1].clone()), Some(args[2].clone())),
+        2 => (Some(args[1].clone()), None),
         _ => {
             let mut map = BTreeMap::new();
             for i in (0..list.len()).step_by(2) {
@@ -1026,11 +1041,11 @@ fn to_map(
 // 结构操作函数
 fn transpose(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("transpose", args, 1, ctx)?;
-    let matrix = get_list_arg(args[0].eval(env)?, ctx)?;
+    let matrix = get_list_ref(&args[0], ctx)?;
 
     if matrix.as_ref().is_empty() {
         return Ok(Expression::List(Rc::new(vec![])));
@@ -1082,12 +1097,12 @@ fn transpose(
 
 fn chunk(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("chunk", args, 2, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let n = get_integer_arg(args[1].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let n = get_integer_ref(&args[1], ctx)?;
 
     let mut result = Vec::new();
     let mut chunk = Vec::new();
@@ -1110,12 +1125,10 @@ fn foldl(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("foldl", args, 2..=3, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let f = args[1].eval(env)?;
-    let mut acc = match args.get(2) {
-        Some(x) => x.eval(env)?,
-        _ => Expression::Integer(0),
-    };
+    let list = get_list_ref(&args[0], ctx)?;
+    let f = &args[1];
+    let mut acc = args.get(2).map_or(Expression::Integer(0), |x| x.clone());
+
     check_fn_arg(&f, 2, ctx)?;
     for item in list.as_ref().iter() {
         acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
@@ -1145,12 +1158,10 @@ fn foldr(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("foldr", args, 2..=3, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
-    let f = args[1].eval(env)?;
-    let mut acc = match args.get(2) {
-        Some(x) => x.eval(env)?,
-        _ => Expression::Integer(0),
-    };
+    let list = get_list_ref(&args[0], ctx)?;
+    let f = &args[1];
+    let mut acc = args.get(2).map_or(Expression::Integer(0), |x| x.clone());
+
     check_fn_arg(&f, 2, ctx)?;
     for item in list.as_ref().iter().rev() {
         acc = Expression::Apply(Rc::new(f.clone()), Rc::new(vec![item.clone(), acc])).eval(env)?;
@@ -1160,12 +1171,12 @@ fn foldr(
 
 fn zip(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("zip", args, 2, ctx)?;
-    let list1 = get_list_arg(args[0].eval(env)?, ctx)?;
-    let list2 = get_list_arg(args[1].eval(env)?, ctx)?;
+    let list1 = get_list_ref(&args[0], ctx)?;
+    let list2 = get_list_ref(&args[1], ctx)?;
 
     let mut result = Vec::with_capacity(list1.as_ref().len().min(list2.as_ref().len()));
     for (item1, item2) in list1.as_ref().iter().zip(list2.as_ref().iter()) {
@@ -1179,11 +1190,11 @@ fn zip(
 
 fn unzip(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("unzip", args, 1, ctx)?;
-    let list = get_list_arg(args[0].eval(env)?, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
 
     let mut list1 = Vec::with_capacity(list.as_ref().len());
     let mut list2 = Vec::with_capacity(list.as_ref().len());
@@ -1214,12 +1225,34 @@ fn unzip(
     ])))
 }
 
-fn get_list_arg(expr: Expression, ctx: &Expression) -> Result<Rc<Vec<Expression>>, RuntimeError> {
+// fn get_list_arg(expr: Expression, ctx: &Expression) -> Result<Rc<Vec<Expression>>, RuntimeError> {
+//     match expr {
+//         Expression::List(s) => Ok(s),
+//         Expression::Range(r, step) => Ok(Rc::new(
+//             r.step_by(step).map(Expression::Integer).collect::<Vec<_>>(),
+//         )),
+//         e => Err(RuntimeError::new(
+//             RuntimeErrorKind::TypeError {
+//                 expected: "List".to_string(),
+//                 found: e.type_name(),
+//                 sym: e.to_string(),
+//             },
+//             ctx.clone(),
+//             0,
+//         )),
+//     }
+// }
+fn get_list_ref<'a>(
+    expr: &'a Expression,
+    ctx: &Expression,
+) -> Result<&'a Rc<Vec<Expression>>, RuntimeError> {
     match expr {
         Expression::List(s) => Ok(s),
-        Expression::Range(r, step) => Ok(Rc::new(
-            r.step_by(step).map(Expression::Integer).collect::<Vec<_>>(),
-        )),
+        // Expression::Range(r, step) => Ok(Rc::new(
+        //     r.step_by(*step)
+        //         .map(Expression::Integer)
+        //         .collect::<Vec<_>>(),
+        // )),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
                 expected: "List".to_string(),

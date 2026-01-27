@@ -132,20 +132,20 @@ pub fn check_exact_args_len(
 //         .collect()
 // }
 
-pub fn get_exact_string_arg(expr: Expression, ctx: &Expression) -> Result<String, RuntimeError> {
-    match expr {
-        Expression::String(s) => Ok(s),
-        e => Err(RuntimeError::new(
-            RuntimeErrorKind::TypeError {
-                expected: "String".to_string(),
-                sym: e.to_string(),
-                found: e.type_name(),
-            },
-            ctx.clone(),
-            0,
-        )),
-    }
-}
+// pub fn get_exact_string_arg(expr: Expression, ctx: &Expression) -> Result<String, RuntimeError> {
+//     match expr {
+//         Expression::String(s) => Ok(s),
+//         e => Err(RuntimeError::new(
+//             RuntimeErrorKind::TypeError {
+//                 expected: "String".to_string(),
+//                 sym: e.to_string(),
+//                 found: e.type_name(),
+//             },
+//             ctx.clone(),
+//             0,
+//         )),
+//     }
+// }
 pub fn get_string_arg(expr: Expression, ctx: &Expression) -> Result<String, RuntimeError> {
     match expr {
         Expression::Symbol(s) | Expression::String(s) => Ok(s),
@@ -191,6 +191,20 @@ pub fn get_string_args(
 pub fn get_integer_arg(expr: Expression, ctx: &Expression) -> Result<i64, RuntimeError> {
     match expr {
         Expression::Integer(i) => Ok(i),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "Integer".to_string(),
+                sym: e.to_string(),
+                found: e.type_name(),
+            },
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+pub fn get_integer_ref(expr: &Expression, ctx: &Expression) -> Result<i64, RuntimeError> {
+    match expr {
+        Expression::Integer(i) => Ok(*i),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
                 expected: "Integer".to_string(),

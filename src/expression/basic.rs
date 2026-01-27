@@ -99,6 +99,18 @@ impl Expression {
                     expr.fmt_display_indent(f, 0)
                 }
             }
+            Self::Export(name, expr) => {
+                write!(f, "{}export {}", idt(i), name)?;
+                if let Some(exp) = expr {
+                    write!(f, " = ")?;
+                    if f.alternate() {
+                        exp.fmt_display_indent(f, i + 1)?;
+                    } else {
+                        exp.fmt_display_indent(f, 0)?;
+                    }
+                }
+                Ok(())
+            }
             // 声明和赋值
             Self::Declare(name, expr) => {
                 if f.alternate() {
@@ -659,6 +671,14 @@ impl Expression {
                 write!(f, "{}Set〈{}〉 = ", prefix, name)?;
                 expr.fmt_indent(f, indent + 1)
             }
+            Self::Export(name, expr) => {
+                write!(f, "{}Export〈{}〉", prefix, name)?;
+                if let Some(exp) = expr {
+                    write!(f, " = ")?;
+                    exp.fmt_indent(f, indent + 1)?;
+                }
+                Ok(())
+            }
 
             // 控制流
             Self::If(cond, true_expr, false_expr) => {
@@ -953,6 +973,7 @@ impl Expression {
             Self::Del(_) => "Del".into(),
             Self::Declare(_, _) => "Declare".into(),
             Self::SetParent(_, _) => "Set".into(),
+            Self::Export(_, _) => "Export".into(),
             Self::Assign(_, _) => "Assign".into(),
             Self::For(..) => "For".into(),
             Self::While(_, _) => "While".into(),

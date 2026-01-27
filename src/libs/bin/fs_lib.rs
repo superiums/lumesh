@@ -2,7 +2,7 @@ use crate::{
     Environment, Expression, Int, RuntimeError,
     libs::{
         BuiltinInfo,
-        helper::{check_args_len, check_exact_args_len, get_string_arg},
+        helper::{check_args_len, check_exact_args_len, get_string_ref},
         lazy_module::LazyModule,
     },
     reg_info, reg_lazy,
@@ -186,24 +186,26 @@ fn dirs(
 // Directory Tree Functions
 fn tree(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("tree", args, 1..=2, ctx)?;
 
     let mut cwd = get_current_path();
-    let mut max_depth = None;
+    let mut max_depth = Some(3);
 
-    match args[0].eval(env)? {
+    match &args[0] {
         Expression::Integer(n) => {
-            max_depth = Some(n);
-            if let Some(path_expr) = args.get(1) {
-                let path = path_expr.eval(env)?.to_string();
-                cwd = cwd.join(path);
+            max_depth = Some(*n);
+            if let Some(Expression::String(path_expr)) = args.get(1) {
+                cwd = cwd.join(path_expr);
             }
         }
         Expression::String(path) | Expression::Symbol(path) => {
             cwd = cwd.join(path);
+            if let Some(Expression::Integer(depth)) = args.get(1) {
+                max_depth = Some(*depth);
+            }
         }
         _ => (),
     }
@@ -213,56 +215,69 @@ fn tree(
 // File Reading Functions
 fn head(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("head", args, 1..=2, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
-    let path = utils::canon(&p)?;
-    let n = match args.len() {
-        2 => match args[1].eval(env)? {
-            Expression::Integer(n) => n,
-            _ => {
-                return Err(RuntimeError::common(
-                    "First argument must be an integer".into(),
-                    ctx.clone(),
-                    0,
-                ));
-            }
-        },
-        1 => 10,
-        _ => unreachable!(),
-    };
 
-    let result = read_file_portion(&path, n, true)?;
-    Ok(Expression::String(result))
+    if let Expression::String(p) = &args[0] {
+        let path = utils::canon(p)?;
+        let n = match args.len() {
+            2 => match &args[1] {
+                Expression::Integer(n) => *n,
+                _ => {
+                    return Err(RuntimeError::common(
+                        "First argument must be an integer".into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            },
+            1 => 10,
+            _ => unreachable!(),
+        };
+
+        let result = read_file_portion(&path, n, true)?;
+        return Ok(Expression::String(result));
+    }
+    return Err(RuntimeError::common(
+        "path arg must be a string".into(),
+        ctx.clone(),
+        0,
+    ));
 }
 
 fn tail(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("tail", args, 1..=2, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
-    let path = utils::canon(&p)?;
-    let n = match args.len() {
-        2 => match args[1].eval(env)? {
-            Expression::Integer(n) => n,
-            _ => {
-                return Err(RuntimeError::common(
-                    "First argument must be an integer".into(),
-                    ctx.clone(),
-                    0,
-                ));
-            }
-        },
-        1 => 10,
-        _ => unreachable!(),
-    };
+    if let Expression::String(p) = &args[0] {
+        let path = utils::canon(p)?;
+        let n = match args.len() {
+            2 => match &args[1] {
+                Expression::Integer(n) => *n,
+                _ => {
+                    return Err(RuntimeError::common(
+                        "lines arg must be an integer".into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            },
+            1 => 10,
+            _ => unreachable!(),
+        };
 
-    let result = read_file_portion(&path, n, false)?;
-    Ok(Expression::String(result))
+        let result = read_file_portion(&path, n, false)?;
+        return Ok(Expression::String(result));
+    }
+    return Err(RuntimeError::common(
+        "path arg must be a string".into(),
+        ctx.clone(),
+        0,
+    ));
 }
 
 fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, RuntimeError> {
@@ -286,33 +301,45 @@ fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, Ru
 // Path Operations
 fn canon(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("canon", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
-    let canon_path = utils::canon(&p)?;
-    Ok(Expression::String(canon_path.to_string_lossy().into()))
+    if let Expression::String(p) = &args[0] {
+        let canon_path = utils::canon(p)?;
+        return Ok(Expression::String(canon_path.to_string_lossy().into()));
+    }
+    return Err(RuntimeError::common(
+        "path arg must be a string".into(),
+        ctx.clone(),
+        0,
+    ));
 }
 
 fn abs(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("abs", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
-    let abs_path = utils::abs(&p);
-    Ok(Expression::String(abs_path.to_string_lossy().into()))
+    if let Expression::String(p) = &args[0] {
+        let canon_path = utils::abs_check(p)?;
+        return Ok(Expression::String(canon_path.to_string_lossy().into()));
+    }
+    return Err(RuntimeError::common(
+        "path arg must be a string".into(),
+        ctx.clone(),
+        0,
+    ));
 }
 // Directory Operations
 fn mkdir(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("mkdir", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
     std::fs::create_dir_all(&path).map_err(|e| {
         RuntimeError::from_io_error(e, "create directory".into(), args[0].clone(), 0)
@@ -322,11 +349,11 @@ fn mkdir(
 
 fn rmdir(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("rmdir", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
     std::fs::remove_dir(&path).map_err(|e| {
         RuntimeError::from_io_error(e, "remove directory".into(), args[0].clone(), 0)
@@ -336,13 +363,13 @@ fn rmdir(
 // File Operations
 fn mv(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("mv", args, 2, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let src = utils::abs(&p);
-    let dst_str = args[1].eval(env)?.to_string();
+    let dst_str = args[1].to_string();
     let dst = if is_a_dir(&dst_str) {
         let mut dpath = join_current_path(&dst_str);
         dpath.push(src.file_name().unwrap_or(OsStr::new("")));
@@ -357,14 +384,14 @@ fn mv(
 
 fn cp(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cp", args, 2, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let src = utils::abs(&p);
 
-    let dst_str = args[1].eval(env)?.to_string();
+    let dst_str = args[1].to_string();
     let dst = if is_a_dir(&dst_str) {
         let mut dpath = join_current_path(&dst_str);
         dpath.push(src.file_name().unwrap_or(OsStr::new("")));
@@ -379,11 +406,11 @@ fn cp(
 
 fn rm(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("rm", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
     remove_path(&path)?;
     Ok(Expression::None)
@@ -404,44 +431,44 @@ fn remove_path(path: &Path) -> Result<(), RuntimeError> {
 // Path Check Functions
 fn exists(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("exists", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
     Ok(Expression::Boolean(path.exists()))
 }
 
 fn is_dir(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_dir", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
     Ok(Expression::Boolean(path.is_dir()))
 }
 
 fn is_file(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_file", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
     Ok(Expression::Boolean(path.is_file()))
 }
 // File Content Operations
 fn read(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("read", args, 1, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::canon(&p)?;
 
     // First try to read as text
@@ -457,11 +484,11 @@ fn read(
 
 fn write(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("write", args, 1..=2, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
 
     // 只有一个参数时，创建空白文件（如果不存在）
@@ -473,7 +500,7 @@ fn write(
 
     // 两个参数时，正常写入内容
     if args.len() == 2 {
-        let contents = args[1].eval(env)?;
+        let contents = &args[1];
         match contents {
             Expression::Bytes(bytes) => std::fs::write(&path, bytes),
             _ => std::fs::write(&path, contents.to_string()),
@@ -486,13 +513,13 @@ fn write(
 
 fn append(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("append", args, 2, ctx)?;
-    let p = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p);
-    let contents = args[1].eval_in_assign(env)?;
+    let contents = &args[1];
 
     let mut file = std::fs::OpenOptions::new()
         .append(true)
@@ -511,18 +538,19 @@ fn append(
 // Pattern Matching
 fn glob(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("glob", args, 1, ctx)?;
 
-    let pattern = args[0].eval(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
+
     let cwd = get_current_path();
     let mut results = Vec::new();
 
-    for entry in glob::glob(&pattern).map_err(|e| {
+    for entry in glob::glob(&p).map_err(|e| {
         RuntimeError::common(
-            format!("Invalid glob pattern: {pattern} - {e}").into(),
+            format!("Invalid glob pattern: {p} - {e}").into(),
             ctx.clone(),
             0,
         )
@@ -542,18 +570,18 @@ fn glob(
 // Path Extraction
 fn base_name(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("base_name", args, 1..=2, ctx)?;
-    let path = args[0].eval_in_assign(env)?.to_string();
+    let p = get_string_ref(&args[0], ctx)?;
     let split_extension = args.len() > 1
         && match args[1] {
             Expression::Boolean(b) => b,
             _ => false,
         };
 
-    let path = Path::new(path.as_str());
+    let path = Path::new(&p);
 
     // 获取文件名
     let file_name = match path.file_name() {
@@ -577,16 +605,16 @@ fn base_name(
 }
 fn dir_name(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("dir_name", args, 1, ctx)?;
-    let pathstr = get_string_arg(args[0].eval_in_assign(env)?, ctx)?;
+    let p = get_string_ref(&args[0], ctx)?;
 
-    if is_a_dir(&pathstr) {
-        return Ok(Expression::String(pathstr));
+    if is_a_dir(&p) {
+        return Ok(Expression::String(p.to_string()));
     }
-    let path = Path::new(pathstr.as_str());
+    let path = Path::new(&p);
 
     // 获取文件名
     let dir_name = match path.parent() {
@@ -599,7 +627,7 @@ fn dir_name(
 
 fn join(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     // 检查至少有一个参数
@@ -608,8 +636,8 @@ fn join(
     let mut final_path = PathBuf::new();
 
     for arg in args {
-        let path_str = arg.eval_in_assign(env)?.to_string();
-        final_path = final_path.join(path_str);
+        let p = get_string_ref(arg, ctx)?;
+        final_path = final_path.join(p);
     }
     let p = expand_home(final_path.to_str().unwrap_or("."));
     // 返回合并后的路径作为 Expression

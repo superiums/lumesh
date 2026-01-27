@@ -204,6 +204,7 @@ fn any_keyword(input: Input<'_>) -> TokenizationResult<'_> {
         keyword_alone_tag("let"),
         keyword_alone_tag("set"),
         keyword_alone_tag("alias"),
+        keyword_alone_tag("export"),
         keyword_alone_tag("if"),
         // keyword_tag("then"),
         keyword_tag("else"),

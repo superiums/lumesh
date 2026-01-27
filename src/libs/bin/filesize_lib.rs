@@ -27,11 +27,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
 fn from(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("from", args, 1, ctx)?;
-    let s = match &args[0].eval(env)? {
+    let s = match &args[0] {
         Expression::String(s) => {
             // 使用正则表达式来匹配数字和单位
             let re = regex_lite::Regex::new(r"(\d+)([KMGT]*)B?").unwrap();
@@ -135,11 +135,11 @@ fn to_string(
 
 fn get_fsize_arg(
     arg: &Expression,
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<FileSize, RuntimeError> {
-    match arg.eval(env)? {
-        Expression::FileSize(s) => Ok(s),
+    match arg {
+        Expression::FileSize(s) => Ok(s.clone()),
         _ => Err(RuntimeError::common(
             "Filesize.bytes requires only Filesize as argument".into(),
             ctx.clone(),

@@ -1,6 +1,6 @@
 use crate::libs::pretty_printer;
 use crate::set_print_direct;
-use crate::utils::canon;
+
 use crate::utils::expand_home;
 use crate::with_print_direct;
 use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION, SyntaxError};
@@ -11,20 +11,18 @@ use std::io::{self, Write};
 use std::path::PathBuf;
 
 pub fn run_file(path: &str, env: &mut Environment) -> bool {
-    match canon(path) {
-        Ok(p) => match read_to_string(p) {
-            Ok(prelude) => parse_and_eval(&prelude, env),
-            Err(e) => {
-                eprintln!(
-                    "\x1b[31m[IO ERROR]\x1b[0mFailed to read file '{}':\n  {e}",
-                    path
-                );
-                let _ = io::stderr().flush();
-                false
-            }
-        },
+    let pb = PathBuf::from(path);
+    run_file_via_pb(pb, env)
+}
+fn run_file_via_pb(pb: PathBuf, env: &mut Environment) -> bool {
+    match read_to_string(pb.clone()) {
+        Ok(prelude) => parse_and_eval(&prelude, env),
         Err(e) => {
-            eprintln!("script file `{}` not found.\n{}", path, e);
+            eprintln!(
+                "\x1b[31m[IO ERROR]\x1b[0mFailed to read file '{}':\n  {e}",
+                pb.display()
+            );
+            let _ = io::stderr().flush();
             false
         }
     }
@@ -122,7 +120,7 @@ pub fn init_config(env: &mut Environment) {
                 let config_path = config_dir.join("lumesh");
                 if !config_path.exists() {
                     if let Err(e) = create_dir(&config_path) {
-                        eprintln!("Error while writing prelude: {e}");
+                        eprintln!("Error while create prelude dir: {e}");
                     }
                 }
                 config_path.join("config.lm")
@@ -134,7 +132,7 @@ pub fn init_config(env: &mut Environment) {
     // If file doesn't exist
     if !profile.exists() {
         let prompt = format!(
-            "Could not find profile file at: {}\nWould you like me to write the default prelude to this location? (Y/n)\n>>> ",
+            "Could not find profile file at: {}\nWould you like me to write a default one? (Y/n)\n>>> ",
             profile.display()
         );
 
@@ -147,10 +145,10 @@ pub fn init_config(env: &mut Environment) {
         }
 
         if !parse_and_eval(INTRO_PRELUDE, env) {
-            eprintln!("Error while running introduction prelude");
+            eprintln!("Sorry, the config seems has some issue");
         }
-    } else if !run_file(profile.to_str().unwrap_or_default(), env) {
-        eprintln!("Error while running introduction prelude");
+    } else if !run_file_via_pb(profile, env) {
+        eprintln!("Error while loading config");
     }
 
     // turn PD off while in script mode.
@@ -201,7 +199,7 @@ fn init_cmds(env: &mut Environment) {
         #[cfg(windows)]
         env.define_in_root(
             "PATH",
-            Expression::String("C:\\windows\\system32;".to_owned()),
+            Expression::String("C:\\windows\\system32;C:\\windows\\;".to_owned()),
         );
     }
 }

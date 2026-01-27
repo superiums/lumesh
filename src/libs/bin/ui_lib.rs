@@ -2,7 +2,7 @@ use crate::{
     Environment, Expression, RuntimeError,
     libs::{
         BuiltinInfo,
-        helper::{check_args_len, check_exact_args_len, get_string_arg},
+        helper::{check_args_len, check_exact_args_len, get_integer_ref, get_string_ref},
         lazy_module::LazyModule,
     },
     reg_info, reg_lazy,
@@ -41,11 +41,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
 fn int(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("int", args, 1, ctx)?;
-    let msg = get_string_arg(args[0].eval(env)?, ctx)?;
+    let msg = get_string_ref(&args[0], ctx)?;
 
     let amount = CustomType::<i64>::new(msg.as_str())
         .with_formatter(&|i| format!("${i:.0}"))
@@ -64,11 +64,11 @@ fn int(
 
 fn float(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("float", args, 1, ctx)?;
-    let msg = get_string_arg(args[0].eval(env)?, ctx)?;
+    let msg = get_string_ref(&args[0], ctx)?;
 
     let amount = CustomType::<f64>::new(msg.as_str())
         .with_formatter(&|i| format!("${i:.2}"))
@@ -87,11 +87,11 @@ fn float(
 
 fn text(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("text", args, 1, ctx)?;
-    let msg = get_string_arg(args[0].eval(env)?, ctx)?;
+    let msg = get_string_ref(&args[0], ctx)?;
 
     let ans = Text::new(msg.as_str());
     match ans.prompt() {
@@ -106,13 +106,13 @@ fn text(
 
 fn passwd(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("passwd", args, 1..=2, ctx)?;
-    let msg = get_string_arg(args[0].eval(env)?, ctx)?;
+    let msg = get_string_ref(&args[0], ctx)?;
     let confirm = if args.len() == 2 {
-        args[1].eval(env)?.is_truthy()
+        args[1].is_truthy()
     } else {
         false
     };
@@ -133,11 +133,11 @@ fn passwd(
 
 fn confirm(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("confirm", args, 1, ctx)?;
-    let msg = get_string_arg(args[0].eval(env)?, ctx)?;
+    let msg = get_string_ref(&args[0], ctx)?;
 
     match Confirm::new(msg.as_str()).prompt() {
         Ok(s) => Ok(Expression::Boolean(s)),
@@ -177,18 +177,12 @@ fn selector_wrapper(
     };
 
     let (cfgs, options) = match args.len() {
-        1 => (
-            None,
-            extract_options(delimiter, args[0].eval_in_assign(env)?, ctx)?,
-        ),
+        1 => (None, extract_options(delimiter, &args[0], ctx)?),
         2 => (
-            Some(extract_cfg(args[0].eval(env)?, ctx)?),
-            extract_options(delimiter, args[1].eval_in_assign(env)?, ctx)?,
+            Some(extract_cfg(&args[0], ctx)?),
+            extract_options(delimiter, &args[1], ctx)?,
         ),
-        3.. => (
-            Some(extract_cfg(args[0].eval_in_assign(env)?, ctx)?),
-            args[1..].to_vec(),
-        ),
+        3.. => (Some(extract_cfg(&args[0], ctx)?), args[1..].to_vec()),
         0 => {
             return Err(RuntimeError::common(
                 "pick requires a string or list as options".into(),
@@ -323,7 +317,7 @@ fn multi_select_wrapper(
 }
 fn extract_options(
     delimiter: &str,
-    expr: Expression,
+    expr: &Expression,
     ctx: &Expression,
 ) -> Result<Vec<Expression>, RuntimeError> {
     match expr {
@@ -340,15 +334,15 @@ fn extract_options(
     }
 }
 fn extract_cfg(
-    expr: Expression,
+    expr: &Expression,
     ctx: &Expression,
 ) -> Result<Rc<BTreeMap<String, Expression>>, RuntimeError> {
     match expr {
-        Expression::Map(cfg) => Ok(cfg), // 返回引用
+        Expression::Map(cfg) => Ok(cfg.clone()), // 返回引用
         Expression::String(msg) | Expression::Symbol(msg) => {
             // 创建一个新的 BTreeMap 并返回
             let mut map = BTreeMap::new();
-            map.insert(String::from("msg"), Expression::String(msg));
+            map.insert(String::from("msg"), Expression::String(msg.to_string()));
             Ok(Rc::new(map))
         }
         _ => Err(RuntimeError::common(
@@ -361,29 +355,20 @@ fn extract_cfg(
 
 fn widget(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     // 支持2-4个参数：title, content, [width], [height]
     check_args_len("widget", args, 2..=4, ctx)?;
 
-    let title = args[0].eval(env)?.to_string();
+    let title = get_string_ref(&args[0], ctx)?;
     let title_len = title.chars().count();
-    let content = args[1].eval_in_assign(env)?.to_string();
+    let content = get_string_ref(&args[1], ctx)?;
 
     // 自动计算宽度
-    let auto_width = calculate_auto_width(&title, &content);
+    let auto_width = calculate_auto_width(title, content);
     let text_width = if args.len() >= 3 {
-        match args[2].eval(env)? {
-            Expression::Integer(n) if n > 4 => n as usize,
-            _ => {
-                return Err(RuntimeError::common(
-                    "widget width must be an integer".into(),
-                    ctx.clone(),
-                    0,
-                ));
-            }
-        }
+        get_integer_ref(&args[2], ctx)? as usize
     } else {
         auto_width
     } - 2;
@@ -391,16 +376,7 @@ fn widget(
     // 自动计算高度
     let auto_height = calculate_auto_height(&content, text_width);
     let widget_height = if args.len() >= 4 {
-        match args[3].eval(env)? {
-            Expression::Integer(n) if n >= 3 => n as usize,
-            _ => {
-                return Err(RuntimeError::common(
-                    "widget height must be an integer".into(),
-                    ctx.clone(),
-                    0,
-                ));
-            }
-        }
+        get_integer_ref(&args[3], ctx)? as usize
     } else {
         auto_height
     };
@@ -494,7 +470,7 @@ fn calculate_auto_height(content: &str, text_width: usize) -> usize {
 
 fn joinx(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("joinx", args, 2, ctx)?;
@@ -504,21 +480,11 @@ fn joinx(
 
     // 收集所有widget并找到最大高度
     for arg in args.iter() {
-        match arg.eval(env)? {
-            Expression::String(s) => {
-                let lines = s.lines().map(ToString::to_string).collect::<Vec<String>>();
-                let lines_len = lines.len();
-                string_args.push(lines);
-                max_height = std::cmp::max(max_height, lines_len);
-            }
-            otherwise => {
-                return Err(RuntimeError::common(
-                    format!("expected string, but got {otherwise}").into(),
-                    ctx.clone(),
-                    0,
-                ));
-            }
-        }
+        let s = get_string_ref(arg, ctx)?;
+        let lines = s.lines().map(ToString::to_string).collect::<Vec<String>>();
+        let lines_len = lines.len();
+        string_args.push(lines);
+        max_height = std::cmp::max(max_height, lines_len);
     }
 
     // 将所有widget填充到相同高度
@@ -545,7 +511,7 @@ fn joinx(
 
 fn joiny(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("joiny", args, 2, ctx)?;
@@ -555,16 +521,16 @@ fn joiny(
 
     // 收集所有widget并找到最大宽度
     for arg in args.iter() {
-        match arg.eval(env)? {
+        match arg {
             Expression::String(s) => {
-                let trimmed = s.trim().to_string();
+                let trimmed = s.trim();
                 let width = trimmed
                     .lines()
                     .map(|line| line.chars().count())
                     .max()
                     .unwrap_or(0);
                 max_width = std::cmp::max(max_width, width);
-                string_args.push(trimmed);
+                string_args.push(trimmed.to_string());
             }
             otherwise => {
                 return Err(RuntimeError::common(
@@ -608,8 +574,8 @@ fn join_flow(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("join_flow", args, 2.., ctx)?;
 
-    let max_width = match args[0].eval(env)? {
-        Expression::Integer(w) if w > 0 => w as usize,
+    let max_width = match &args[0] {
+        Expression::Integer(w) if *w > 0 => *w as usize,
         other => {
             return Err(RuntimeError::common(
                 format!("expected positive integer for max_width, got {other}").into(),
@@ -624,7 +590,7 @@ fn join_flow(
     let mut current_width = 0;
 
     for arg in &args[1..] {
-        match arg.eval(env)? {
+        match arg {
             Expression::String(widget) => {
                 let widget_width = widget
                     .lines()
@@ -639,7 +605,7 @@ fn join_flow(
                     current_width = 0;
                 }
 
-                current_row.push(widget);
+                current_row.push(widget.to_string());
                 current_width += widget_width;
             }
             otherwise => {

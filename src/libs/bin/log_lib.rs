@@ -1,7 +1,7 @@
 use crate::{Environment, Expression};
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::check_exact_args_len;
+use crate::libs::helper::{check_exact_args_len, get_string_ref};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
 
@@ -58,13 +58,13 @@ fn is_log_level_enabled(level: Int) -> bool {
 // 日志级别管理函数
 fn set_level(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set_level", args, 1, ctx)?;
 
-    if let Expression::Integer(level) = args[0].eval(env)? {
-        *LOG_LEVEL.write().unwrap() = level;
+    if let Expression::Integer(level) = &args[0] {
+        *LOG_LEVEL.write().unwrap() = *level;
         Ok(Expression::None)
     } else {
         Err(RuntimeError::new(
@@ -98,13 +98,13 @@ fn disable(
 
 fn enabled(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("enabled", args, 1, ctx)?;
 
-    if let Expression::Integer(level) = args[0].eval(env)? {
-        Ok(Expression::Boolean(is_log_level_enabled(level)))
+    if let Expression::Integer(level) = &args[0] {
+        Ok(Expression::Boolean(is_log_level_enabled(*level)))
     } else {
         Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
@@ -122,8 +122,8 @@ fn log_message(
     level: Int,
     prefix: &str,
     args: &[Expression],
-    env: &mut Environment,
-    _ctx: &Expression,
+    _env: &mut Environment,
+    ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     if !is_log_level_enabled(level) {
         return Ok(Expression::None);
@@ -133,7 +133,7 @@ fn log_message(
     let mut first_arg = true;
 
     for arg in args {
-        let value = arg.eval(env)?.to_string();
+        let value = get_string_ref(arg, ctx)?;
 
         if !first_arg {
             output.push(' ');
@@ -202,14 +202,14 @@ fn trace(
 // 简单回显函数
 fn echo(
     args: &[Expression],
-    env: &mut Environment,
-    _ctx: &Expression,
+    _env: &mut Environment,
+    ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let mut output = String::new();
     let mut first_arg = true;
 
     for arg in args {
-        let value = arg.eval(env)?.to_string();
+        let value = get_string_ref(arg, ctx)?;
 
         if !first_arg {
             output.push(' ');

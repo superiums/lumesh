@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.11.7]
+- add `export`
+- update config
+set parent vars with `set` cmd
+- clean all lib
+remove uneccessary eval. use ref instead of clone.
+efficency more.
+
+- `pprint` in alt
+
+
 ## [0.11.6]
 - introduce `set`
 - introduce local domain

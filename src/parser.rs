@@ -1646,6 +1646,7 @@ fn parse_statement(mut input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syn
         parse_lets,
         parse_set,
         parse_alias,
+        parse_export,
         parse_del,
         // 2.控制流语句
         // parse_control_flow,
@@ -1951,6 +1952,16 @@ fn parse_alias(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
     let (input, expr) = cut(parse_expr)(input)?;
     // dbg!(&expr);
     Ok((input, Expression::AliasDef(symbol, Rc::new(expr))))
+}
+fn parse_export(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, _) = text("export")(input)?;
+    let (input, name) = cut(parse_symbol_string)(input)?;
+    let (input, expr_op) = opt(preceded(text("="), parse_expr))(input)?;
+    if let Some(expr) = expr_op {
+        Ok((input, Expression::Export(name, Some(Rc::new(expr)))))
+    } else {
+        Ok((input, Expression::Export(name, None)))
+    }
 }
 fn parse_set(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("set")(input)?;

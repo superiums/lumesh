@@ -6,7 +6,7 @@ use crate::{
     libs::{
         BuiltinInfo,
         bin::time_lib,
-        helper::{check_args_len, check_exact_args_len},
+        helper::{check_args_len, check_exact_args_len, get_string_ref},
         lazy_module::LazyModule,
         pprint::strip_ansi_escapes,
     },
@@ -66,7 +66,7 @@ pub fn time(
 }
 pub fn table(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("cmd", args, 1.., ctx)?;
@@ -77,22 +77,22 @@ pub fn table(
             .map(|a| a.to_string())
             .collect::<Vec<_>>(),
         2 => {
-            let a = args[1].eval(env)?;
-            if let Expression::List(list) = a {
+            if let Expression::List(list) = &args[1] {
                 list.as_ref()
                     .iter()
                     .map(|e| e.to_string())
                     .collect::<Vec<_>>()
             } else {
-                vec![a.to_string()]
+                vec![args[1].to_string()]
             }
         }
 
         _ => Vec::new(),
     };
 
-    let output = args[0].eval_in_assign(env)?.to_string();
-    let mut lines: Vec<&str> = output.lines().collect();
+    let p = get_string_ref(&args[0], ctx)?;
+
+    let mut lines: Vec<&str> = p.lines().collect();
     if lines.is_empty() {
         return Ok(Expression::from(Vec::<Expression>::new()));
     } else {
@@ -193,31 +193,31 @@ pub fn table(
 
 fn boolean(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("boolean", args, 1, ctx)?;
-    Ok(Expression::Boolean(args[0].eval(env)?.is_truthy()))
+    Ok(Expression::Boolean(args[0].is_truthy()))
 }
 
 pub fn str(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("str", args, 1, ctx)?;
-    Ok(Expression::String(args[0].eval(env)?.to_string()))
+    Ok(Expression::String(args[0].to_string()))
 }
 
 pub fn int(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("int", args, 1, ctx)?;
-    match args[0].eval(env)? {
-        Expression::Integer(x) => Ok(Expression::Integer(x)),
-        Expression::Float(x) => Ok(Expression::Integer(x as Int)),
+    match &args[0] {
+        Expression::Integer(x) => Ok(Expression::Integer(*x)),
+        Expression::Float(x) => Ok(Expression::Integer(*x as Int)),
         Expression::String(x) => {
             if let Ok(n) = x.parse::<Int>() {
                 Ok(Expression::Integer(n))
@@ -239,13 +239,13 @@ pub fn int(
 
 pub fn float(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("float", args, 1, ctx)?;
-    match args[0].eval(env)? {
-        Expression::Integer(x) => Ok(Expression::Float(x as f64)),
-        Expression::Float(x) => Ok(Expression::Float(x)),
+    match &args[0] {
+        Expression::Integer(x) => Ok(Expression::Float(*x as f64)),
+        Expression::Float(x) => Ok(Expression::Float(*x)),
         Expression::String(x) => {
             let xt = x.trim();
             let r = match xt.ends_with("%") {
@@ -275,14 +275,14 @@ pub fn float(
 
 pub fn filesize(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("filesize", args, 1, ctx)?;
-    match args[0].eval(env)? {
-        Expression::Integer(x) => Ok(Expression::FileSize(FileSize::from_bytes(x as u64))),
-        Expression::Float(x) => Ok(Expression::FileSize(FileSize::from_bytes(x as u64))),
-        Expression::FileSize(x) => Ok(Expression::FileSize(x)),
+    match &args[0] {
+        Expression::Integer(x) => Ok(Expression::FileSize(FileSize::from_bytes(*x as u64))),
+        Expression::Float(x) => Ok(Expression::FileSize(FileSize::from_bytes(*x as u64))),
+        Expression::FileSize(x) => Ok(Expression::FileSize(x.clone())),
         Expression::String(x) => {
             if let Ok(n) = x.parse::<u64>() {
                 Ok(Expression::FileSize(FileSize::from_bytes(n)))
@@ -337,11 +337,11 @@ fn split_file_size(size_str: &str) -> Option<(f64, &'static str)> {
 // Expression to TOML Conversion
 pub fn toml(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("toml", args, 1, ctx)?;
-    let expr = &args[0].eval_in_assign(env)?;
+    let expr = &args[0];
     let toml_str = expr_to_toml_string(expr, None);
     Ok(Expression::String(toml_str))
 }
@@ -416,11 +416,11 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
 // Expression to JSON Conversion (优化版)
 pub fn json(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("json", args, 1, ctx)?;
-    let expr = &args[0].eval_in_assign(env)?;
+    let expr = &args[0];
     let json_str = match expr {
         Expression::Map(map) => {
             let pairs: Vec<String> = map
@@ -463,7 +463,7 @@ pub fn csv(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("csv", args, 1, ctx)?;
-    let expr = &args[0].eval_in_assign(env)?;
+    let expr = &args[0];
 
     // 获取自定义分隔符
     let ifs = env.get("IFS");
@@ -532,26 +532,28 @@ pub fn csv(
 
 fn highlighted(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("highlighted", args, 1, ctx)?;
-    let script = args[0].eval_in_assign(env)?.to_string();
+    let script = get_string_ref(&args[0], ctx)?;
 
     if script.is_empty() {
         return Ok(Expression::None);
     }
 
-    let hi = highlight_dark_theme(script.as_str());
+    let hi = highlight_dark_theme(script);
     Ok(Expression::String(hi))
 }
 
 // 单参数函数（字符串作为最后一个参数）
 pub fn striped(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("striped", args, 1, ctx)?;
-    Ok(strip_ansi_escapes(args[0].eval_in_assign(env)?.to_string().as_str()).into())
+    let p = get_string_ref(&args[0], ctx)?;
+
+    Ok(strip_ansi_escapes(&p).into())
 }

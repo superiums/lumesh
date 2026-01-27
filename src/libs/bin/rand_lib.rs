@@ -58,7 +58,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 // Probability Functions
 fn ratio(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
@@ -68,9 +68,9 @@ fn ratio(
             Ok(Expression::Boolean(b))
         }
         1 => {
-            if let Expression::Float(f) = args[0].eval(env)? {
+            if let Expression::Float(f) = &args[0] {
                 let mut rng = rand::rng();
-                let b = rng.random_bool(f);
+                let b = rng.random_bool(*f);
                 Ok(Expression::Boolean(b))
             } else {
                 Err(RuntimeError::common(
@@ -80,10 +80,10 @@ fn ratio(
                 ))
             }
         }
-        2 => match (args[0].eval(env)?, args[1].eval(env)?) {
+        2 => match (&args[0], &args[1]) {
             (Expression::Integer(numerator), Expression::Integer(denominator)) => {
                 let mut rng = rand::rng();
-                let b = rng.random_ratio(numerator as u32, denominator as u32);
+                let b = rng.random_ratio(*numerator as u32, *denominator as u32);
                 Ok(Expression::Boolean(b))
             }
             (l, h) => Err(RuntimeError::common(
@@ -102,7 +102,7 @@ fn ratio(
 // Random String Generation
 fn alpha(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
@@ -112,9 +112,9 @@ fn alpha(
             Ok(Expression::String(c.to_string()))
         }
         1 => {
-            if let Expression::Integer(size) = args[0].eval(env)? {
+            if let Expression::Integer(size) = &args[0] {
                 let mut rng = rand::rng();
-                let a = rand::distr::Alphabetic.sample_string(&mut rng, size as usize);
+                let a = rand::distr::Alphabetic.sample_string(&mut rng, *size as usize);
                 Ok(Expression::String(a))
             } else {
                 Err(RuntimeError::common(
@@ -134,7 +134,7 @@ fn alpha(
 
 fn alphanum(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
@@ -144,9 +144,9 @@ fn alphanum(
             Ok(Expression::String(c.to_string()))
         }
         1 => {
-            if let Expression::Integer(size) = args[0].eval(env)? {
+            if let Expression::Integer(size) = &args[0] {
                 let mut rng = rand::rng();
-                let a = rand::distr::Alphanumeric.sample_string(&mut rng, size as usize);
+                let a = rand::distr::Alphanumeric.sample_string(&mut rng, *size as usize);
                 Ok(Expression::String(a))
             } else {
                 Err(RuntimeError::common(
@@ -166,7 +166,7 @@ fn alphanum(
 // Random Integer Generation
 fn int(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     match args.len() {
@@ -175,13 +175,13 @@ fn int(
             Ok(Expression::Integer(n))
         }
         1 => {
-            if let Expression::Integer(max) = args[0].eval(env)? {
+            if let Expression::Integer(max) = &args[0] {
                 let mut rng = rand::rng();
-                if max < 0 {
-                    let n = rng.random_range(max..=0);
+                if max < &0 {
+                    let n = rng.random_range(*max..=0);
                     Ok(Expression::Integer(n))
                 } else {
-                    let n = rng.random_range(0..=max);
+                    let n = rng.random_range(0..=*max);
                     Ok(Expression::Integer(n))
                 }
             } else {
@@ -192,10 +192,10 @@ fn int(
                 ))
             }
         }
-        2 => match (args[0].eval(env)?, args[1].eval(env)?) {
+        2 => match (&args[0], &args[1]) {
             (Expression::Integer(l), Expression::Integer(h)) => {
                 let mut rng = rand::rng();
-                Ok(Expression::Integer(rng.random_range(l..h)))
+                Ok(Expression::Integer(rng.random_range(*l..*h)))
             }
             (l, h) => Err(RuntimeError::common(
                 format!("rand.int expected two integers, but got {l} and {h}").into(),
@@ -213,11 +213,11 @@ fn int(
 // Collection Operations
 fn choose(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("choose", args, 1, ctx)?;
-    match args[0].eval(env)? {
+    match &args[0] {
         Expression::List(list) => {
             let mut rng = rand::rng();
             Ok(match list.choose(&mut rng) {
@@ -235,11 +235,11 @@ fn choose(
 
 fn shuffle(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("shuffle", args, 1, ctx)?;
-    match args[0].eval(env)? {
+    match &args[0] {
         Expression::List(list) => {
             let mut rng = rand::rng();
             let mut s = list.as_ref().clone();

@@ -41,7 +41,7 @@ pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::RuntimeErro
         Expression::HMap(exprs) => println!("{}", pprint_hmap(exprs.as_ref())),
         Expression::List(exprs) => pprint_list(exprs.as_ref()),
         _ => {
-            println!("{arg}");
+            println!("{arg:?}");
         }
     }
     Ok(Expression::None)

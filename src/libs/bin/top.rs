@@ -363,18 +363,22 @@ fn cwd(
     Ok(Expression::String(path.to_string_lossy().into_owned()))
 }
 
+// arg lazy
 fn r#typeof(
     args: &[Expression],
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("typeof", args, 1, ctx)?;
-    let rs = if matches!(args[0], Expression::Symbol(_) | Expression::Variable(_)) {
-        args[0].eval_in_assign(env)?.type_name()
-    } else {
-        args[0].type_name()
-    };
-    Ok(Expression::String(rs))
+    let t = args[0].type_name();
+    let t1 = args[0].eval_in_assign(env)?.type_name();
+    // println!("{}", t);
+    // println!("----------");
+    // println!("{}", t1);
+    Ok(Expression::from(vec![
+        Expression::from(t),
+        Expression::from(t1),
+    ]))
 }
 
 // args lazy
@@ -696,6 +700,7 @@ fn repeat(
         .collect::<Result<Vec<_>, _>>()?;
     Ok(Expression::from(r))
 }
+// need args evaled already
 fn eval(
     args: &[Expression],
     env: &mut Environment,
@@ -704,7 +709,7 @@ fn eval(
     check_exact_args_len("eval", args, 1, ctx)?;
     Ok(args[0].eval_in_assign(env)?)
 }
-
+// need args evaled already
 fn exec(
     args: &[Expression],
     env: &mut Environment,

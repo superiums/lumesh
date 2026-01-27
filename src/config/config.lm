@@ -1,7 +1,7 @@
 ##### config for login mode
 # only login mode need PATH, other mode will retrieve it from parent shell.
 if IS_LOGIN {
-    let PATH = '/usr/local/bin:/usr/bin:/bin'
+    set PATH = '/usr/local/bin:/usr/bin:/bin'
 }
 
 ##### config for interactive mode
@@ -15,19 +15,19 @@ if IS_INTERACTIVE {
 
 
     ### welcome msg
-    # let LUME_WELCOME= 'Welcome to Lumesh!'
+    # set LUME_WELCOME= 'Welcome to Lumesh!'
 
     ### prompt
     # MODE: 1=use template; 2=use starship; 0=use default.
-    let LUME_PROMPT_SETTINGS = {
+    set LUME_PROMPT_SETTINGS = {
         MODE: 1,
         TTL_SECS: 2
     }
     # template could be normal expression or func.
     # avaluable tmplate var: $CWD, $CWD_SHORT
-    # let LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
+    # set LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
     # if template is lambda/func, it will be evaluated everytime.
-    let LUME_PROMPT_TEMPLATE := x -> {
+    set LUME_PROMPT_TEMPLATE = x -> {
         string.blue(x) + ' |'.green().bold() + \
         (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
         + '> '.green().bold()
@@ -47,27 +47,27 @@ if IS_INTERACTIVE {
     # LUME_VI_MODE = true
 
     ### default strict mode
-    # let STRICT = true
+    # set STRICT = true
 
     ### history file
-    # let LUME_HISTORY_FILE = '/tmp/lume_histroy'
+    # set LUME_HISTORY_FILE = '/tmp/lume_histroy'
 
     # == completion
-    # let LUME_COMPLETION_DIR = '~/.local/share/lumesh/completions'
-    let LUME_COMPLETION_CYCLE = true
+    # set LUME_COMPLETION_DIR = '~/.local/share/lumesh/completions'
+    set LUME_COMPLETION_CYCLE = true
 
     ### report compute result type and values. default True.
-    # let LUME_PRINT_DIRECT= False
+    # set LUME_PRINT_DIRECT= False
 
 
     ### sudo cmd for Alt+s
-    let LUME_SUDO_CMD = 'doas'
+    set LUME_SUDO_CMD = 'doas'
 
     ### key bindings
     # NONE:0, SHIFT:2, ALT:4, CTRL:8,
     # ALT_SHIFT:6, CTRL_SHIFT: 10, CTRL_ALT:12, CTRL_ALT_SHIFT:14
-    let LUME_HOT_MODIFIER = 4
-    let LUME_HOT_KEYS = {
+    set LUME_HOT_MODIFIER = 4
+    set LUME_HOT_KEYS = {
         q: 'exit',
         h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?! | exec_str()",
         x: "fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') ?! | exec_str()",
@@ -76,7 +76,8 @@ if IS_INTERACTIVE {
     }
 
     ### abbreviations
-    let LUME_ABBREVIATIONS = {
+
+    set LUME_ABBREVIATIONS = {
         xi: 'doas pacman -S',
         xup: 'doas pacman -Syu',
         xq: 'pacman -Q',
@@ -101,7 +102,7 @@ if IS_INTERACTIVE {
 
     ### ---ai---
     ### default AI Helper settings. following is default.
-    # let LUME_AI_CONFIG = {
+    # set LUME_AI_CONFIG = {
     #     host: 'localhost:11434',
     #     complete_url: '/completion',
     #     chat_url: '/v1/chat/completions',
@@ -159,7 +160,7 @@ if IS_INTERACTIVE {
 ##### config for all mode
 PATH = '~/.local/bin:' + $PATH
 # IFS affect: 0:never; 2:cmd args; 4:for; 8:string.split; 16:csv; 32:pick; 62:all
-let LUME_IFS_MODE=2
-# let LUME_MODULES_PATH=~/.local/share/lumesh/mods
-# let LUME_MAX_SYNTAX_RECURSION = 100
-# let LUME_MAX_RUNTIME_RECURSION = 800
+set LUME_IFS_MODE=2
+# set LUME_MODULES_PATH=~/.local/share/lumesh/mods
+# set LUME_MAX_SYNTAX_RECURSION = 100
+# set LUME_MAX_RUNTIME_RECURSION = 800

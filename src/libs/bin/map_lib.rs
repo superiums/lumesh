@@ -1,7 +1,8 @@
 use std::rc::Rc;
 
+use crate::eval::{State, is_strict};
 use crate::libs::bin::top;
-use crate::libs::helper::{check_args_len, check_exact_args_len, check_fn_arg, get_string_arg};
+use crate::libs::helper::{check_args_len, check_exact_args_len, check_fn_arg, get_string_ref};
 use crate::libs::lazy_module::LazyModule;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind, libs::BuiltinInfo, reg_info, reg_lazy,
@@ -98,43 +99,36 @@ fn flatten(
 }
 
 // Helper Functions
-fn get_map_arg(
-    expr: Expression,
-    ctx: &Expression,
-) -> Result<Rc<BTreeMap<String, Expression>>, RuntimeError> {
-    match expr {
-        Expression::Map(s) => Ok(s),
-        Expression::HMap(rc_hashmap) => {
-            let btree_map: BTreeMap<_, _> = rc_hashmap
-                .iter()
-                .map(|(k, v)| (k.clone(), v.clone()))
-                .collect();
-            Ok(Rc::new(btree_map))
-        }
-        e => Err(RuntimeError::new(
-            RuntimeErrorKind::TypeError {
-                expected: "Map".to_string(),
-                found: e.type_name(),
-                sym: e.to_string(),
-            },
-            ctx.clone(),
-            0,
-        )),
-    }
+
+fn map_err(expr: &Expression, ctx: &Expression) -> RuntimeError {
+    RuntimeError::new(
+        RuntimeErrorKind::TypeError {
+            expected: "Map".to_string(),
+            found: expr.type_name(),
+            sym: expr.to_string(),
+        },
+        ctx.clone(),
+        0,
+    )
 }
 // 检查操作函数
 fn at(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("at", args, 2, ctx)?;
-    let map = get_map_arg(args[0].eval(env)?, ctx)?;
-    let k = get_string_arg(args[1].eval(env)?, ctx)?;
 
-    map.as_ref().get(&k).cloned().ok_or_else(|| {
+    let key = get_string_ref(&args[1], ctx)?.as_str();
+    match &args[0] {
+        Expression::Map(m) => m.get(key),
+        Expression::HMap(m) => m.get(key),
+        expr => return Err(map_err(expr, ctx)),
+    }
+    .cloned()
+    .ok_or_else(|| {
         RuntimeError::common(
-            format!("key '{}' not found in Map", k).into(),
+            format!("key '{}' not found in Map", key).into(),
             ctx.clone(),
             0,
         )
@@ -143,91 +137,75 @@ fn at(
 
 fn has(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("has", args, 2, ctx)?;
-    let map = args[0].eval(env)?;
-    let key = args[1].eval(env)?;
-
-    Ok(match map {
-        Expression::Map(map) => Expression::Boolean(map.contains_key(&key.to_string())),
-        Expression::HMap(map) => Expression::Boolean(map.contains_key(&key.to_string())),
-        _ => Expression::None,
-    })
+    let key = get_string_ref(&args[1], ctx)?.as_str();
+    let r = match &args[0] {
+        Expression::Map(m) => m.contains_key(key),
+        Expression::HMap(m) => m.contains_key(key),
+        expr => return Err(map_err(expr, ctx)),
+    };
+    Ok(Expression::Boolean(r))
 }
 // 数据获取函数
 fn items(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("items", args, 1, ctx)?;
-    let expr = args[0].eval(env)?;
 
-    Ok(match expr {
-        Expression::Map(map) => {
-            let items = map
-                .iter()
-                .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
-                .collect();
-            Expression::List(Rc::new(items))
-        }
-        Expression::HMap(map) => {
-            let items = map
-                .iter()
-                .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
-                .collect();
-            Expression::List(Rc::new(items))
-        }
-        _ => Expression::None,
-    })
+    let r = match &args[0] {
+        Expression::Map(m) => m
+            .iter()
+            .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
+            .collect::<Vec<_>>(),
+        Expression::HMap(m) => m
+            .iter()
+            .map(|(k, v)| Expression::from(vec![Expression::String(k.clone()), v.clone()]))
+            .collect::<Vec<_>>(),
+
+        expr => return Err(map_err(expr, ctx)),
+    };
+    Ok(Expression::from(r))
 }
 
 fn keys(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("keys", args, 1, ctx)?;
-    let expr = args[0].eval(env)?;
+    let r = match &args[0] {
+        Expression::Map(m) => m
+            .keys()
+            .map(|k| Expression::String(k.clone()))
+            .collect::<Vec<_>>(),
+        Expression::HMap(m) => m
+            .keys()
+            .map(|k| Expression::String(k.clone()))
+            .collect::<Vec<_>>(),
 
-    Ok(match expr {
-        Expression::Map(map) => {
-            let keys = map
-                .as_ref()
-                .keys()
-                .map(|k| Expression::String(k.clone()))
-                .collect();
-            Expression::List(Rc::new(keys))
-        }
-        Expression::HMap(map) => {
-            let keys = map
-                .as_ref()
-                .keys()
-                .map(|k| Expression::String(k.clone()))
-                .collect();
-            Expression::List(Rc::new(keys))
-        }
-        _ => Expression::None,
-    })
+        expr => return Err(map_err(expr, ctx)),
+    };
+    Ok(Expression::from(r))
 }
 
 fn values(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("values", args, 1, ctx)?;
-    let expr = args[0].eval(env)?;
+    let r = match &args[0] {
+        Expression::Map(m) => m.values().cloned().collect::<Vec<_>>(),
+        Expression::HMap(m) => m.values().cloned().collect::<Vec<_>>(),
 
-    Ok(match expr {
-        Expression::Map(map) => Expression::List(Rc::new(map.as_ref().values().cloned().collect())),
-        Expression::HMap(map) => {
-            Expression::List(Rc::new(map.as_ref().values().cloned().collect()))
-        }
-        _ => Expression::None,
-    })
+        expr => return Err(map_err(expr, ctx)),
+    };
+    Ok(Expression::from(r))
 }
 // 查找函数
 fn find(
@@ -235,22 +213,31 @@ fn find(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("map.find", args, 2, ctx)?;
-    let map = get_map_arg(args[0].eval(env)?, ctx)?;
-    let predicate = args[1].eval(env)?;
+    check_exact_args_len("find", args, 2, ctx)?;
 
-    for (k, v) in map.iter() {
-        let result = Expression::Apply(
-            Rc::new(predicate.clone()),
-            Rc::new(vec![Expression::String(k.clone()), v.clone()]),
-        )
-        .eval(env)?;
+    let predicate = &args[1];
+    check_fn_arg(&predicate, 2, ctx)?;
 
-        if let Expression::Boolean(true) = result {
-            return Ok(Expression::from(vec![
-                Expression::String(k.clone()),
-                v.clone(),
-            ]));
+    let items = match &args[0] {
+        Expression::Map(m) => m
+            .iter()
+            .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
+            .collect::<Vec<_>>(),
+        Expression::HMap(m) => m
+            .iter()
+            .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
+            .collect::<Vec<_>>(),
+
+        expr => return Err(map_err(expr, ctx)),
+    };
+
+    let mut state = State::new(is_strict(env));
+    for it in items {
+        if predicate
+            .eval_apply(predicate, &it, &mut state, env, 0)?
+            .is_truthy()
+        {
+            return Ok(Expression::from(it));
         }
     }
 
@@ -262,21 +249,32 @@ fn filter(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("map.filter", args, 2, ctx)?;
-    let map = get_map_arg(args[0].eval(env)?, ctx)?;
-    let predicate = args[1].eval(env)?;
+    check_exact_args_len("filter", args, 2, ctx)?;
+
+    let predicate = &args[1];
     check_fn_arg(&predicate, 2, ctx)?;
 
-    let mut new_map = BTreeMap::new();
-    for (k, v) in map.iter() {
-        let result = Expression::Apply(
-            Rc::new(predicate.clone()),
-            Rc::new(vec![Expression::String(k.clone()), v.clone()]),
-        )
-        .eval(env)?;
+    let items = match &args[0] {
+        Expression::Map(m) => m
+            .iter()
+            .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
+            .collect::<Vec<_>>(),
+        Expression::HMap(m) => m
+            .iter()
+            .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
+            .collect::<Vec<_>>(),
 
-        if let Expression::Boolean(true) = result {
-            new_map.insert(k.clone(), v.clone());
+        expr => return Err(map_err(expr, ctx)),
+    };
+
+    let mut new_map = BTreeMap::new();
+    let mut state = State::new(is_strict(env));
+    for it in items {
+        if predicate
+            .eval_apply(predicate, &it, &mut state, env, 0)?
+            .is_truthy()
+        {
+            new_map.insert(it[0].to_string(), it[1].clone());
         }
     }
 
@@ -285,12 +283,12 @@ fn filter(
 // 结构修改函数
 fn remove(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("remove", args, 2, ctx)?;
-    let map = args[0].eval(env)?;
-    let key = args[1].eval(env)?;
+    let map = &args[0];
+    let key = &args[1];
 
     Ok(match map {
         Expression::Map(map) => {
@@ -303,26 +301,26 @@ fn remove(
             new_map.remove(&key.to_string());
             Expression::HMap(Rc::new(new_map))
         }
-        _ => Expression::None,
+        expr => return Err(map_err(expr, ctx)),
     })
 }
 
 fn set(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set", args, 3, ctx)?;
-    let map = args[0].eval(env)?;
-    let key_str = get_string_arg(args[1].eval(env)?, ctx)?;
-    let value = args[2].eval(env)?;
+    let map = &args[0];
+    let key_str: &str = get_string_ref(&args[1], ctx)?;
+    let value = &args[2];
 
-    Ok(match map {
+    match map {
         Expression::Map(map) => {
-            if map.as_ref().contains_key(&key_str) {
+            if map.as_ref().contains_key(key_str) {
                 let mut new_map = map.as_ref().clone();
-                new_map.insert(key_str, value);
-                Expression::Map(Rc::new(new_map))
+                new_map.insert(key_str.to_string(), value.clone());
+                Ok(Expression::Map(Rc::new(new_map)))
             } else {
                 return Err(RuntimeError::common(
                     format!("key '{key_str}' not found in map").into(),
@@ -332,10 +330,10 @@ fn set(
             }
         }
         Expression::HMap(map) => {
-            if map.as_ref().contains_key(&key_str) {
+            if map.as_ref().contains_key(key_str) {
                 let mut new_map = map.as_ref().clone();
-                new_map.insert(key_str, value);
-                Expression::HMap(Rc::new(new_map))
+                new_map.insert(key_str.to_string(), value.clone());
+                Ok(Expression::HMap(Rc::new(new_map)))
             } else {
                 return Err(RuntimeError::common(
                     format!("key '{key_str}' not found in map").into(),
@@ -344,25 +342,19 @@ fn set(
                 ));
             }
         }
-        _ => {
-            return Err(RuntimeError::common(
-                "expected map".to_string().into(),
-                ctx.clone(),
-                0,
-            ));
-        }
-    })
+        expr => return Err(map_err(expr, ctx)),
+    }
 }
 // 创建操作函数
 fn from_items(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("from_items", args, 1, ctx)?;
-    let expr = args[0].eval(env)?;
+    let expr = &args[0];
 
-    Ok(match expr {
+    match expr {
         Expression::List(list) => {
             let mut map = BTreeMap::new();
             for item in list.as_ref() {
@@ -372,41 +364,42 @@ fn from_items(
                     }
                 }
             }
-            Expression::from(map)
+            Ok(Expression::from(map))
         }
-        _ => Expression::None,
-    })
+        expr => return Err(map_err(expr, ctx)),
+    }
 }
 // 集合运算函数
 fn union(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("union", args, 2, ctx)?;
-    let expr1 = args[0].eval(env)?;
-    let expr2 = args[1].eval(env)?;
+    let expr1 = &args[0];
+    let expr2 = &args[1];
 
-    Ok(match (expr1, expr2) {
+    match (expr1, expr2) {
         (Expression::Map(map1), Expression::Map(map2)) => {
             let mut new_map = map1.as_ref().clone();
             new_map.extend(map2.as_ref().iter().map(|(k, v)| (k.clone(), v.clone())));
-            Expression::Map(Rc::new(new_map))
+            Ok(Expression::Map(Rc::new(new_map)))
         }
-        _ => Expression::None,
-    })
+        (Expression::Map(_), expr) => return Err(map_err(expr, ctx)),
+        (expr, _) => return Err(map_err(expr, ctx)),
+    }
 }
 
 fn intersect(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("intersect", args, 2, ctx)?;
-    let expr1 = args[0].eval(env)?;
-    let expr2 = args[1].eval(env)?;
+    let expr1 = &args[0];
+    let expr2 = &args[1];
 
-    Ok(match (expr1, expr2) {
+    match (expr1, expr2) {
         (Expression::Map(map1), Expression::Map(map2)) => {
             let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
@@ -414,22 +407,23 @@ fn intersect(
                     new_map.insert(k.clone(), v.clone());
                 }
             }
-            Expression::from(new_map)
+            Ok(Expression::from(new_map))
         }
-        _ => Expression::None,
-    })
+        (Expression::Map(_), expr) => return Err(map_err(expr, ctx)),
+        (expr, _) => return Err(map_err(expr, ctx)),
+    }
 }
 
 fn difference(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("difference", args, 2, ctx)?;
-    let expr1 = args[0].eval(env)?;
-    let expr2 = args[1].eval(env)?;
+    let expr1 = &args[0];
+    let expr2 = &args[1];
 
-    Ok(match (expr1, expr2) {
+    match (expr1, expr2) {
         (Expression::Map(map1), Expression::Map(map2)) => {
             let mut new_map = BTreeMap::new();
             for (k, v) in map1.as_ref() {
@@ -437,24 +431,36 @@ fn difference(
                     new_map.insert(k.clone(), v.clone());
                 }
             }
-            Expression::from(new_map)
+            Ok(Expression::from(new_map))
         }
-        _ => Expression::None,
-    })
+        (Expression::Map(_), expr) => return Err(map_err(expr, ctx)),
+        (expr, _) => return Err(map_err(expr, ctx)),
+    }
 }
 
 fn merge(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("merge", args, 2.., ctx)?;
 
-    let base = get_map_arg(args[0].eval(env)?, ctx)?;
+    let r = BTreeMap::new();
+    let maps = args
+        .iter()
+        .map(|a| {
+            if let Expression::Map(m) = a {
+                m.as_ref()
+            } else {
+                &r
+            }
+        })
+        .collect::<Vec<_>>();
+    let base = maps[0];
+
     let mut r = BTreeMap::new();
-    for arg in args.iter().skip(1) {
-        let next = get_map_arg(arg.eval(env)?, ctx)?;
-        r = deep_merge_maps(base.as_ref(), next.as_ref())?;
+    for next in maps.iter().skip(1) {
+        r = deep_merge_maps(base, next)?;
     }
 
     Ok(Expression::from(r))
@@ -489,29 +495,31 @@ fn map(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("map", args, 3, ctx)?;
 
-    let map = get_map_arg(args[0].eval(env)?, ctx)?;
-
-    let key_func = args[1].eval(env)?;
-    let val_func = args[2].eval(env)?;
+    let key_func = &args[1];
+    let val_func = &args[2];
     check_fn_arg(&key_func, 1, ctx)?;
     check_fn_arg(&val_func, 1, ctx)?;
 
+    let items = match &args[0] {
+        Expression::Map(m) => m
+            .iter()
+            .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
+            .collect::<Vec<_>>(),
+        Expression::HMap(m) => m
+            .iter()
+            .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
+            .collect::<Vec<_>>(),
+
+        expr => return Err(map_err(expr, ctx)),
+    };
+
     let mut new_map = BTreeMap::new();
+    let mut state = State::new(is_strict(env));
+    for it in items {
+        let new_k = key_func.eval_apply(key_func, &vec![it[0].clone()], &mut state, env, 0)?;
+        let new_v = val_func.eval_apply(key_func, &vec![it[1].clone()], &mut state, env, 0)?;
 
-    for (k, v) in map.iter() {
-        let new_key = match Expression::Apply(
-            Rc::new(key_func.clone()),
-            Rc::new(vec![Expression::String(k.clone())]),
-        )
-        .eval(env)?
-        {
-            Expression::String(s) => s,
-            other => other.to_string(),
-        };
-
-        let new_val =
-            Expression::Apply(Rc::new(val_func.clone()), Rc::new(vec![v.clone()])).eval(env)?;
-        new_map.insert(new_key, new_val);
+        new_map.insert(new_k.to_string(), new_v);
     }
 
     Ok(Expression::from(new_map))

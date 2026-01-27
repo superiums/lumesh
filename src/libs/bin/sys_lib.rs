@@ -1,7 +1,7 @@
 use std::{fs::OpenOptions, io::Write, rc::Rc};
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_exact_args_len, get_integer_arg, get_string_arg};
+use crate::libs::helper::{check_exact_args_len, get_integer_ref, get_string_ref};
 use crate::{
     Environment, Expression, Int, LmError, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION,
     MAX_USEMODE_RECURSION, RuntimeError, set_cfm_enabled, set_print_direct,
@@ -64,7 +64,7 @@ fn info(
 }
 fn print_tty(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("print_tty", args, 1, ctx)?;
@@ -80,7 +80,7 @@ fn print_tty(
         .write(true)
         .open(tty_path)
         .map_err(|e| RuntimeError::from_io_error(e, "open tty".into(), Expression::None, 0))?;
-    let v = get_string_arg(args[0].eval(env)?, ctx)?;
+    let v = get_string_ref(&args[0], ctx)?;
     tty.write_all(v.as_bytes())
         .map_err(|e| RuntimeError::from_io_error(e, "write tty".into(), Expression::None, 0))?;
 
@@ -128,7 +128,7 @@ pub fn set(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set", args, 2, ctx)?;
     let name = args[0].to_string();
-    let expr = args[1].eval(env)?;
+    let expr = args[1].clone();
     env.define_in_root(&name, expr);
     Ok(Expression::None)
 }
@@ -180,7 +180,7 @@ fn ecodes_lm(
 
 fn max_syntax(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     if args.is_empty() {
@@ -188,14 +188,14 @@ fn max_syntax(
             MAX_SYNTAX_RECURSION.with_borrow(|x| x.clone() as Int),
         ));
     }
-    let i = get_integer_arg(args[0].eval(env)?, ctx)?;
+    let i = get_integer_ref(&args[0], ctx)?;
     // MAX_SYNTAX_RECURSION = run_rec as usize;
     MAX_SYNTAX_RECURSION.with_borrow_mut(|v| *v = i as usize);
     Ok(Expression::None)
 }
 fn max_runtime(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     if args.is_empty() {
@@ -203,14 +203,14 @@ fn max_runtime(
             MAX_RUNTIME_RECURSION.with_borrow(|x| x.clone() as Int),
         ));
     }
-    let i = get_integer_arg(args[0].eval(env)?, ctx)?;
+    let i = get_integer_ref(&args[0], ctx)?;
     // MAX_SYNTAX_RECURSION = run_rec as usize;
     MAX_RUNTIME_RECURSION.with_borrow_mut(|v| *v = i as usize);
     Ok(Expression::None)
 }
 fn max_usemode(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     if args.is_empty() {
@@ -218,28 +218,28 @@ fn max_usemode(
             MAX_USEMODE_RECURSION.with_borrow(|x| x.clone() as Int),
         ));
     }
-    let i = get_integer_arg(args[0].eval(env)?, ctx)?;
+    let i = get_integer_ref(&args[0], ctx)?;
     // MAX_SYNTAX_RECURSION = run_rec as usize;
     MAX_USEMODE_RECURSION.with_borrow_mut(|v| *v = i as usize);
     Ok(Expression::None)
 }
 fn set_cfm(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set_cfm", args, 1, ctx)?;
-    let b = args[0].eval(env)?.is_truthy();
+    let b = args[0].is_truthy();
     set_cfm_enabled(b);
     Ok(Expression::None)
 }
 fn set_pdm(
     args: &[Expression],
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set_print_direct", args, 1, ctx)?;
-    let b = args[0].eval(env)?.is_truthy();
+    let b = args[0].is_truthy();
     set_print_direct(b);
     Ok(Expression::None)
 }

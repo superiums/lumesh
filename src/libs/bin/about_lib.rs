@@ -30,8 +30,8 @@ fn info(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     let info = hash_map! {
-        String::from("author") => Expression::String("Santo; Adam McDaniel".to_string()),
-        String::from("git") => Expression::String("https://codeberg.com/santo/lumesh".to_string()),
+        String::from("author") => Expression::String("Santo; Superiums; Adam McDaniel".to_string()),
+        String::from("git") => Expression::String("https://codeberg.org/santo/lumesh".to_string()),
         String::from("homepage") => Expression::String("https://lumesh.codeberg.page".to_string()),
         String::from("version") => Expression::String(VERSION.to_string()),
         String::from("bin") => bin(args, env, ctx)?,

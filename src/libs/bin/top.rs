@@ -90,7 +90,10 @@ fn help(
     match args.is_empty() {
         false => match args[0].to_string().as_str() {
             "doc" => {
+                #[cfg(unix)]
                 parse_and_eval("xdg-open https://lumesh.codeberg.page", env);
+                #[cfg(windows)]
+                parse_and_eval("start https://lumesh.codeberg.page", env);
             }
             "libs" => {
                 writeln!(s, "Builtin Library List\n").unwrap();

@@ -1192,13 +1192,14 @@ impl Expression {
     pub fn ensure_fn_apply<'a>(&'a self) -> Cow<'a, Expression> {
         match self {
             Expression::Function(..) | Expression::Lambda(..) => Cow::Owned(self.apply(vec![])),
-            Expression::Property(base, method) => Cow::Owned(Self::Chain(
-                base.clone(),
-                vec![ChainCall {
-                    method: method.to_string(),
-                    args: vec![],
-                }],
-            )),
+            // property maybe a map property or chaincall, let user deside.
+            // Expression::Property(base, method) => Cow::Owned(Self::Chain(
+            //     base.clone(),
+            //     vec![ChainCall {
+            //         method: method.to_string(),
+            //         args: vec![],
+            //     }],
+            // )),
             // symbol maybe alias, but also maybe var/string, so let user decide.
             // Expression::Symbol(_) => Expression::Command(Rc::new(self.clone()), Rc::new(vec![])),
             _ => Cow::Borrowed(self), //others, like binop,group,pipe...

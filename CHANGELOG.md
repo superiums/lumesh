@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.11.8]
+
+- give up auto convert from property to chaincall.
+it may be a map property.
+
+- fix homepage address.
+- fix config for win.
+
+
 ## [0.11.7]
 
 - add `export`

@@ -25,13 +25,15 @@ if IS_INTERACTIVE {
     }
     # template could be normal expression or func.
     # avaluable tmplate var: $CWD, $CWD_SHORT
+    # there's a bug in windows if use colorized prompt, cursor position will move !
     # set LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
+    set LUME_PROMPT_TEMPLATE = '$CWD_SHORT' + '>> '
     # if template is lambda/func, it will be evaluated everytime.
-    set LUME_PROMPT_TEMPLATE = x -> {
-        string.blue(x) + ' |'.green().bold() + \
-        (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
-        + '> '.green().bold()
-    }
+    # set LUME_PROMPT_TEMPLATE = x -> {
+    #     string.blue(x) + ' |'.green().bold() + \
+    #     (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
+    #     + '> '.green().bold()
+    # }
 
     ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'
@@ -71,44 +73,45 @@ if IS_INTERACTIVE {
         q: 'exit',
         h: "fs.read ~/.cache/.lume_history | string.lines() | ui.pick('select history:') ?! | exec_str()",
         x: "fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') ?! | exec_str()",
-        m: 'let cmd := "$CMD_CURRENT";let s = Into.str(cmd); if s {s+"\n" >> ~/.cache/lume_bookmark; println "\t[MARKED]"}',
+        m: 'let cmd := "$CMD_CURRENT";let s = into.str(cmd); if s {s+"\n" >> ~/.cache/lume_bookmark; println "\t[MARKED]"}',
         e: 'let tc= ~/.cache/lm_cmd; "" >! $tc; notepad $tc; let lmcode=fs.read($tc); if len($lmcode) && ui.confirm("Execute it?"){exec_str($lmcode)}'
+        p: 'ui.pick "select path:" PATH_SESSION | cd _',
     }
 
     ### abbreviations
 
     set LUME_ABBREVIATIONS = {
-        xi: 'doas pacman -S',
-        xup: 'doas pacman -Syu',
-        xq: 'pacman -Q',
-        xs: 'pacman -Ss',
-        xr: 'doas pacman -Rs',
+        cpu: 'wmic cpu get name',
+        sfc: 'sfc /scannow',
+        net: 'netstat -ano',
+        ip: 'ipconfig /all'
+        kill: 'tasklist /f /im '
     }
 
     ### alias
-    alias int = Into.int()
-    alias str = Into.str()
-    alias each = List.map()
-    alias sort = List.sort()
-    alias group = List.group()
-    alias table = Into.table()
-    alias format = String.format()
-    alias join = List.join()
-    alias open = Fs.read()
-    alias cat = Fs.read()
-    alias ls = Fs.ls('-l')
-    alias mkdir = Fs.mkdir()
-    alias touch = Fs.write()
-    alias mv = Fs.mv()
-    alias rm = Fs.rm()
-    alias cp = Fs.cp()
-    alias head = Fs.head()
-    alias tail = Fs.tail()
-    alias is_dir = Fs.is_dir()
-    alias is_file = Fs.is_file()
-    alias basename = Fs.base_name()
-    alias dirname = Fs.dir_name()
-    alias doc = start https://lumesh.codeberg.page
+    alias int = into.int()
+    alias str = into.str()
+    alias each = list.map()
+    alias sort = list.sort()
+    alias group = list.group()
+    alias table = into.table()
+    alias format = string.format()
+    alias join = list.join()
+    alias open = fs.read()
+    alias cat = fs.read()
+    alias ls = fs.ls('-l')
+    alias mkdir = fs.mkdir()
+    alias touch = fs.write()
+    alias mv = fs.mv()
+    alias rm = fs.rm()
+    alias cp = fs.cp()
+    alias head = fs.head()
+    alias tail = fs.tail()
+    alias is_dir = fs.is_dir()
+    alias is_file = fs.is_file()
+    alias basename = fs.base_name()
+    alias dirname = fs.dir_name()
+    alias doc = explorer https://lumesh.codeberg.page
 
     ### ---ai---
     ### default AI Helper settings. following is default.
@@ -134,23 +137,10 @@ if IS_INTERACTIVE {
           current = $current.split('.').join('').to_int()
           if $latest > $current {
               print 'Found new version: ' $ver.green()
-              if ui.confirm('download [normal edition for linux] now?') {
+              if ui.confirm('download [normal edition for windows] now?') {
                   println 'download...'
-                  let tmp = /tmp/lume
-                  curl -s -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
-                  if (file $tmp | .contains('ELF')){
-                      chmod '+x' $tmp
-                      let dest = about.bin()
-                      if $dest.starts_with('/home'){
-                        cp -f $tmp $dest
-                      }else{
-                        bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`
-                      }
-                      println 'finished'
-                  }else{
-                      println 'download fail'
-                      rm $tmp
-                  }
+                  fs.mkdir 'C:\Program Files(x86)\lumesh' 
+                  curl -o 'C:\Program Files(x86)\lumesh\lume' `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-windows.exe`
               } else {
                   println 'you may download it manually:' $url
               }

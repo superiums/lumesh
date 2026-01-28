@@ -1488,10 +1488,11 @@ fn normalize_linebreaks(tokens: &mut Vec<Token>) {
 // -- 脚本解析 --
 pub fn tokenize_source(input: &Str) -> Result<Vec<Token>, nom::Err<SyntaxErrorKind>> {
     #[cfg(windows)]
-    let str: Str = input.into();
+    let input: Str = input.trim_end().trim_matches('\0').into();
     #[cfg(windows)]
-    let input = str.trim_end().trim_matches('\0').into();
+    let tokenization_input = Input::new(&input);
     // 词法分析阶段
+    #[cfg(unix)]
     let tokenization_input = Input::new(input);
     let (mut token_vec, mut diagnostics) = super::parse_tokens(tokenization_input);
 

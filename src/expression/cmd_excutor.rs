@@ -312,7 +312,7 @@ pub fn handle_command(
     #[cfg(unix)]
     let pty_cmds = [
         "lume", "bash", "sh", "fish", "top", "btop", "vi", "passwd", "ssh", "script", "expect",
-        "telnet", "screen", "tmux", "ftp",
+        "telnet", "screen", "tmux", "ftp", "sftp",
     ];
     #[cfg(windows)]
     let pty_cmds = [

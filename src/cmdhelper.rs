@@ -8,6 +8,7 @@ use std::ffi::OsStr;
 
 #[cfg(unix)]
 use std::path::Path;
+#[cfg(unix)]
 use std::path::PathBuf;
 use std::path::is_separator;
 use std::sync::OnceLock;

@@ -639,7 +639,11 @@ where
                 }
             }
         }
-        Ok(Expression::from(results))
+        if results.iter().any(|x| x != &Expression::None) {
+            Ok(Expression::from(results))
+        } else {
+            Ok(Expression::None)
+        }
     } else {
         for _ in 0..count {
             if let Err(_) = state.pop_iter() {

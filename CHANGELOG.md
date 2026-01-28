@@ -7,6 +7,8 @@ it may be a map property.
 
 - fix homepage address.
 - fix config for win.
+- optimize return for iteration:
+if no result returned, never display empty list, but only none.
 
 
 ## [0.11.7]

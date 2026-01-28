@@ -114,8 +114,9 @@ if IS_INTERACTIVE {
     # }
 
     ### ---update---
+    use lman
     fn update(){
-        lm::update()
+        lman::update()
     }
 
 }

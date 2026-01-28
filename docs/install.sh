@@ -36,7 +36,7 @@ ask_install_type() {
             ;;
         2)
             INSTALL_DIR="$SYSTEM_INSTALL_DIR"
-            CONFIG_DIR="/etc/lumesh"
+            # CONFIG_DIR="/etc/lumesh"
             DOC_DIR="/usr/local/share/lumesh"
             echo -e "${GREEN}System installation selected${NC}"
             echo -e "${YELLOW}Note: This will require sudo privileges${NC}"
@@ -242,9 +242,9 @@ download_docs() {
     # Extract and move to final location
     cd /tmp
     tar -xzf "$temp_doc"
-    mkdir -p "~/.config/lumesh"
-    cp -f doc/config/config.lm "~/.config/lumesh/"
-    cp -f doc/config/prompt* "~/.config/lumesh/"
+    mkdir -p "$CONFIG_DIR"
+    cp -f doc/config/config.lm  "$CONFIG_DIR/"
+    cp -f doc/config/prompt* "$CONFIG_DIR/"
     $sudo_cmd cp -rf doc/install/* "$DOC_DIR/"
     rm -rf doc "$temp_doc"
 

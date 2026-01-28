@@ -3,7 +3,7 @@
 ## [0.11.9]
 - fix arg postion of ui.pick
 - fix cmd capture in `let` declare
-
+- add tips for CFM and Strict mode.
 
 ## [0.11.8]
 

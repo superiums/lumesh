@@ -29,10 +29,10 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         text => "read a text input ", "<msg>"
         passwd => "read a passwd input", "<msg> [confirm?]"
         confirm => "ask user to confirm", "<msg>"
-        pick => "select one from list/string", "[msg|cfg_map] <list|items...>"
-        multi_pick => "select multi from list/string", "[msg|cfg_map] <list|items...>"
+        pick => "select one from list/string", "<list|items...> [msg|cfg_map]"
+        multi_pick => "select multi from list/string", "<list|items...> [msg|cfg_map]"
 
-        widget => "create a text widget","<title> <content> [width] [height]"
+        widget => "create a text widget","<content> <title> [width] [height]"
         joinx => "join two widgets horizontally","<widget1> <widget2>"
         joiny => "join two widgets vertically","<widget1> <widget2>"
         join_flow => "join widgets with flow layout","<max_width> <widgets...>"

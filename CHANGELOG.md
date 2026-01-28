@@ -9,7 +9,8 @@ it may be a map property.
 - fix config for win.
 - optimize return for iteration:
 if no result returned, never display empty list, but only none.
-
+- fix the tailing `\0` for windows.
+- optimize non-zero exit code report for windows.
 
 ## [0.11.7]
 

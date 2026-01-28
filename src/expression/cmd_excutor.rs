@@ -205,6 +205,29 @@ fn exec_single_cmd(
             return Ok(None);
         } else if mode & 2 == 0 {
             //未关闭错误输出才返回错误
+            // windows spectial
+            #[cfg(windows)]
+            if let Some(code) = status.code() {
+                let emsg = match (cmdstr.as_ref(), code) {
+                    ("explorer", 1) => return Ok(None), // 任务转交
+                    ("findstr", 1) => return Ok(None),  // 未找到匹配是正常情况
+                    ("findstr", 2) => "Invalid arguments",
+                    ("fc", 1) => return Ok(None), // 文件不同是正常情况
+                    ("comp", 1) => return Ok(None), // 文件不同是正常情况
+                    ("tasklist", 128) => "No matching processes",
+                    _ if code > 128 => "Fatal signal",
+                    _ => return Ok(None),
+                };
+                return Err(RuntimeError::new(
+                    RuntimeErrorKind::CommandFailed2(
+                        cmdstr.to_owned(),
+                        format!("{emsg}\n{}", status.to_string()),
+                    ),
+                    job.clone(),
+                    depth,
+                ));
+            }
+
             Err(RuntimeError::new(
                 RuntimeErrorKind::CommandFailed2(cmdstr.to_owned(), status.to_string()),
                 job.clone(),

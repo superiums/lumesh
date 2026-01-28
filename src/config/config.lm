@@ -28,8 +28,10 @@ if IS_INTERACTIVE {
     # set LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
     # if template is lambda/func, it will be evaluated everytime.
     set LUME_PROMPT_TEMPLATE = x -> {
-        string.blue(x) + ' |'.green().bold() + \
-        (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
+        string.blue(x) + ' |'.green().bold() \
+        + ($IS_CFM ? 'CFM'.yellow() : '') \
+        + ($IS_STRICT ? ' STRICT'.red() : '') \
+        + (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
         + '> '.green().bold()
     }
 
@@ -73,7 +75,7 @@ if IS_INTERACTIVE {
         x: "fs.read ~/.cache/lume_bookmark | string.lines() | ui.pick('select bookmark:') ?! | exec_str()",
         m: 'let cmd := "$CMD_CURRENT";let s = into.str(cmd); if s {s+"\n" >> ~/.cache/lume_bookmark; println "\t[MARKED]"}',
         e: 'let tc=/tmp/lm_cmd; "" >! $tc; vi $tc; let lmcode=fs.read($tc); if len($lmcode) && ui.confirm("Execute it?"){exec_str($lmcode)}',
-        p: 'ui.pick "select path:" PATH_SESSION | cd _',
+        p: 'ui.pick "select path:" $PATH_SESSION | cd _',
     }
 
     ### abbreviations

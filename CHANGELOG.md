@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.11.9]
+- fix arg postion of ui.pick
+
+
 ## [0.11.8]
 
 - give up auto convert from property to chaincall.
@@ -11,6 +15,7 @@ it may be a map property.
 if no result returned, never display empty list, but only none.
 - fix the tailing `\0` for windows.
 - optimize non-zero exit code report for windows.
+
 
 ## [0.11.7]
 

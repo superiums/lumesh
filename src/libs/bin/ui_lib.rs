@@ -179,10 +179,13 @@ fn selector_wrapper(
     let (cfgs, options) = match args.len() {
         1 => (None, extract_options(delimiter, &args[0], ctx)?),
         2 => (
-            Some(extract_cfg(&args[0], ctx)?),
-            extract_options(delimiter, &args[1], ctx)?,
+            Some(extract_cfg(&args[1], ctx)?),
+            extract_options(delimiter, &args[0], ctx)?,
         ),
-        3.. => (Some(extract_cfg(&args[0], ctx)?), args[1..].to_vec()),
+        3.. => (
+            Some(extract_cfg(&args.last().unwrap(), ctx)?),
+            args[..args.len() - 2].to_vec(),
+        ),
         0 => {
             return Err(RuntimeError::common(
                 "pick requires a string or list as options".into(),
@@ -361,9 +364,9 @@ fn widget(
     // 支持2-4个参数：title, content, [width], [height]
     check_args_len("widget", args, 2..=4, ctx)?;
 
-    let title = get_string_ref(&args[0], ctx)?;
+    let title = get_string_ref(&args[1], ctx)?;
     let title_len = title.chars().count();
-    let content = get_string_ref(&args[1], ctx)?;
+    let content = get_string_ref(&args[0], ctx)?;
 
     // 自动计算宽度
     let auto_width = calculate_auto_width(title, content);

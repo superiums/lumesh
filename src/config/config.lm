@@ -159,7 +159,7 @@ if IS_INTERACTIVE {
 # }
 
 ##### config for all mode
-PATH = '~/.local/bin:' + $PATH
+# PATH = '~/.local/bin:' + $PATH
 # IFS affect: 0:never; 2:cmd args; 4:for; 8:string.split; 16:csv; 32:pick; 62:all
 set LUME_IFS_MODE=2
 # set LUME_MODULES_PATH=~/.local/share/lumesh/mods

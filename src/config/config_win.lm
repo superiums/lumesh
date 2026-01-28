@@ -1,9 +1,3 @@
-##### config for login mode
-# only login mode need PATH, other mode will retrieve it from parent shell.
-if IS_LOGIN {
-    let PATH = 'C:\windows\system32;C:\Windows;C:\;'
-}
-
 ##### config for interactive mode
 if IS_INTERACTIVE {
     ### ---appearance---
@@ -139,7 +133,7 @@ if IS_INTERACTIVE {
               print 'Found new version: ' $ver.green()
               if ui.confirm('download [normal edition for windows] now?') {
                   println 'download...'
-                  fs.mkdir 'C:\Program Files(x86)\lumesh' 
+                  fs.mkdir 'C:\Program Files(x86)\lumesh'
                   curl -o 'C:\Program Files(x86)\lumesh\lume' `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-windows.exe`
               } else {
                   println 'you may download it manually:' $url
@@ -158,7 +152,6 @@ if IS_INTERACTIVE {
 # }
 
 ##### config for all mode
-PATH = '~/.local/bin:' + $PATH
 # IFS affect: 0:never; 2:cmd args; 4:for; 8:string.split; 16:csv; 32:pick; 62:all
 set LUME_IFS_MODE=2
 # set LUME_MODULES_PATH=~/.local/share/lumesh/mods

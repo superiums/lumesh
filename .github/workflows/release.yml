@@ -127,6 +127,22 @@ jobs:
           - os: windows-latest
             platform: windows
             file_ending: ".exe"
+            # 新增 ARM 和 musl 平台（使用交叉编译）
+          - os: ubuntu-latest
+            platform: linux
+            file_ending: ""
+            target: aarch64-unknown-linux-gnu
+            cross: true
+          - os: ubuntu-latest
+            platform: linux
+            file_ending: ""
+            target: aarch64-unknown-linux-musl
+            cross: true
+          - os: ubuntu-latest
+            platform: linux
+            file_ending: ""
+            target: x86_64-unknown-linux-musl
+            cross: true
 
     steps:
       - name: Checkout
@@ -143,11 +159,27 @@ jobs:
         # run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
 
-      # 修改点 3：新增 runner 构建
+      - name: Install cross (if needed)
+        if: matrix.cross
+        run: |
+          cargo install cross
+          sudo apt-get update && sudo apt-get install -y qemu-user-static
+
       - name: Build project
         run: |
-          cargo build --release --locked
-          cargo build --features runner --release  # 新增 runner 构建
+          if [ "${{ matrix.cross }}" = "true" ]; then
+            cross build --release --target ${{ matrix.target }}
+            cross build --features runner --release --target ${{ matrix.target }}
+          else
+            cargo build --release --locked
+            cargo build --features runner --release
+          fi
+
+      # 修改点 3：新增 runner 构建
+      # - name: Build project
+      #   run: |
+      #     cargo build --release --locked
+      #     cargo build --features runner --release  # 新增 runner 构建
 
       # 修改点 4：上传两个二进制文件
       - name: Upload main binary

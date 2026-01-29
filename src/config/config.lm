@@ -48,6 +48,8 @@ if IS_INTERACTIVE {
 
     ### default strict mode
     # set STRICT = true
+    ### default cmd_frist_mode
+    # set LUME_CFM = true
 
     ### history file
     # set LUME_HISTORY_FILE = '/tmp/lume_histroy'

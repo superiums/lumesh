@@ -683,7 +683,10 @@ impl Highlighter for SyntaxHighlighter {
 
     fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
         let mut parts = line.splitn(2, |c: char| c.is_whitespace());
-        let cmd = parts.next().unwrap_or("");
+        let cmd = parts
+            .next()
+            .unwrap_or("")
+            .trim_start_matches(|x| matches!(x, ':' | '>'));
         let rest = parts.next().unwrap_or("");
         if cmd.is_empty() {
             return Cow::Borrowed(line);

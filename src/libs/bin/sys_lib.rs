@@ -233,6 +233,11 @@ fn set_strict(
     check_exact_args_len("set_strict", args, 1, ctx)?;
     let b = args[0].is_truthy();
     env.define("IS_STRICT", Expression::Boolean(b));
+    if b {
+        println!("\x1b[38;5;141m[STRICT Mode: ON]\x1b[0m");
+    } else {
+        println!("\x1b[38;5;209m[STRICT Mode: OFF]\x1b[0m");
+    }
     Ok(Expression::None)
 }
 fn set_cfm(
@@ -244,6 +249,11 @@ fn set_cfm(
     let b = args[0].is_truthy();
     env.define_in_root("IS_CFM", Expression::Boolean(b));
     set_cfm_enabled(b);
+    if b {
+        println!("\x1b[38;5;141m[Cmd First Mode: ON]\x1b[0m");
+    } else {
+        println!("\x1b[38;5;209m[Cmd First Mode: OFF]\x1b[0m");
+    }
     Ok(Expression::None)
 }
 fn set_pdm(
@@ -254,5 +264,10 @@ fn set_pdm(
     check_exact_args_len("set_print_direct", args, 1, ctx)?;
     let b = args[0].is_truthy();
     set_print_direct(b);
+    if b {
+        println!("\x1b[38;5;141m[Print Direct Mode: ON]\x1b[0m");
+    } else {
+        println!("\x1b[38;5;209m[Print Direct Mode: OFF]\x1b[0m");
+    }
     Ok(Expression::None)
 }

@@ -193,7 +193,7 @@ pub fn detect_completion_type(
 pub fn find_command_pos(prefix: &str) -> usize {
     // Find the last command separator position
     let pos = prefix
-        .rfind(|c: char| matches!(c, ':' | '|' | '&' | '(' | ';' | '\n'))
+        .rfind(|c: char| matches!(c, ':' | '>' | '|' | '&' | '(' | ';' | '\n'))
         .map(|i| i + 1)
         .unwrap_or(0);
     // After pipe, allow leading spaces before command

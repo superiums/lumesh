@@ -30,6 +30,9 @@ if IS_INTERACTIVE {
     # ====== default strict mode
     # let STRICT = true
 
+    ### default cmd_frist_mode
+    # set LUME_CFM = true
+
     # ====== welcome msg
     # let LUME_WELCOME= 'Welcome to Lumesh!'
 

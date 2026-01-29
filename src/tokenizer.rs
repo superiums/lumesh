@@ -280,7 +280,7 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
                     if c == '\\' {
                         // 检查转义空格
                         if let Some(next_c) = chars.next() {
-                            if [' ', '"', '\''].contains(&next_c) {
+                            if matches!(&next_c, ' ' | '"' | '\'') {
                                 places += c.len_utf8() + next_c.len_utf8();
                                 continue; // 跳过转义空格
                             }
@@ -291,7 +291,7 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
                         break; // 遇到普通空格，结束
                     }
 
-                    if [';', '`', ')', ']', '}', '|', '>'].contains(&c) {
+                    if matches!(&c, ';' | '`' | ')' | ']' | '}' | '|' | '>') {
                         break; // 遇到特殊字符，结束
                     }
 
@@ -323,7 +323,7 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
             let places = input
                 .chars()
                 .take_while(|&c| {
-                    !c.is_whitespace() && ![';', '`', ')', ']', '}', '|', '>'].contains(&c)
+                    !c.is_whitespace() && !matches!(&c, ';' | '`' | ')' | ']' | '}' | '|' | '>')
                 })
                 .count();
             if places > 1 {
@@ -1072,7 +1072,7 @@ fn among_punc_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResul
 fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.previous_char().is_some_and(|c| {
-            !c.is_ascii_whitespace() && !['(', '[', '{', '`', ',', ':', '!', '='].contains(&c)
+            !c.is_ascii_whitespace() && !matches!(&c, '(' | '[' | '{' | '`' | ',' | ':' | '!' | '=')
             // if allow all punc, {k:v}.k is prefix and require k()
             // !c.is_ascii_punctuation()
         }) {
@@ -1082,7 +1082,7 @@ fn prefix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_
             .strip_prefix(keyword)
             .filter(|(rest, _)| {
                 rest.starts_with(|c: char| {
-                    c.is_ascii_alphanumeric() || ['(', '[', '{', '$'].contains(&c)
+                    c.is_ascii_alphanumeric() || matches!(&c, '(' | '[' | '{' | '$')
                 })
             })
             .ok_or(NOT_FOUND)
@@ -1093,7 +1093,7 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
     move |input: Input<'_>| {
         if input
             .previous_char()
-            .is_none_or(|c| !c.is_ascii_alphanumeric() && ![')', ']', '_'].contains(&c))
+            .is_none_or(|c| !c.is_ascii_alphanumeric() && !matches!(&c, ')' | ']' | '_'))
         {
             return Err(NOT_FOUND);
         }
@@ -1101,7 +1101,7 @@ fn infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_>
             .strip_prefix(keyword)
             .filter(|(rest, _)| {
                 rest.starts_with(|c: char| {
-                    c.is_ascii_alphanumeric() || ['_', '-', '('].contains(&c)
+                    c.is_ascii_alphanumeric() || matches!(&c, '(' | '_' | '-')
                 })
             })
             .ok_or(NOT_FOUND)
@@ -1126,7 +1126,7 @@ fn word_infix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResul
 fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.previous_char().is_none_or(|c| {
-            !c.is_ascii_alphanumeric() && ![')', ']', '}', '\'', '"', '`'].contains(&c)
+            !c.is_ascii_alphanumeric() && !matches!(&c, ')' | ']' | '}' | '\'' | '"' | '`')
         }) {
             return Err(NOT_FOUND);
         }
@@ -1137,7 +1137,7 @@ fn postfix_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'
 fn postfix_break_tag(keyword: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
     move |input: Input<'_>| {
         if input.previous_char().is_none_or(|c| {
-            !c.is_ascii_alphanumeric() && ![')', ']', '}', '\'', '"', '`'].contains(&c)
+            !c.is_ascii_alphanumeric() && !matches!(&c, ')' | ']' | '}' | '\'' | '"' | '`')
         }) {
             return Err(NOT_FOUND);
         }
@@ -1247,18 +1247,26 @@ pub fn tokenize(input: &str) -> (Vec<Token>, Vec<Diagnostic>) {
 
 /// CFM: command first mode
 fn is_cfm_mode(input: Input<'_>) -> bool {
-    with_cfm_enabled(|cfm_enabled| {
-        cfm_enabled
-            && match input.starts_with(":") {
-                true => false,
-                false => !input.contains("\n"),
-            }
+    with_cfm_enabled(|cfm_enabled| match input.starts_with(">") {
+        true => true,
+        false => match input.starts_with(":") {
+            true => false,
+            false => !input.contains("\n") && cfm_enabled,
+        },
     })
 }
 
 fn parse_command_tokens(mut input: Input<'_>) -> (Vec<Token>, Vec<Diagnostic>) {
     let mut tokens = Vec::new();
     let mut diagnostics = Vec::new();
+
+    if let Ok((new_input, (token, diagnostic))) =
+        map_valid_token(punctuation_tag(">"), TokenKind::Comment)(input)
+    {
+        input = new_input;
+        tokens.push(token);
+        diagnostics.push(diagnostic);
+    }
 
     while !input.is_empty() {
         match parse_command_token(input) {
@@ -1311,7 +1319,26 @@ fn cfm_parse_symbol(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnost
     let mut length = 0;
     // `=` is used for var asign: IFS='';xx
     while let Some(c) = chars.next() {
-        if c.is_ascii_whitespace() || "=([{^$!|;)]}.,".contains(c) {
+        if c.is_ascii_whitespace()
+            || matches!(
+                &c,
+                '=' | '>'
+                    | '('
+                    | '['
+                    | '{'
+                    | '^'
+                    | '$'
+                    | '!'
+                    | '|'
+                    | ';'
+                    | ')'
+                    | ']'
+                    | '}'
+                    | '.'
+                    | ','
+            )
+            || c.is_control()
+        {
             break;
         }
         length += c.len_utf8();

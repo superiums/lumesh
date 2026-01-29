@@ -50,6 +50,9 @@ if IS_INTERACTIVE {
     ### default strict mode
     # set STRICT = true
 
+    ### default cmd_frist_mode
+    # set LUME_CFM = true
+
     ### history file
     # set LUME_HISTORY_FILE = '/tmp/lume_histroy'
 
@@ -131,4 +134,3 @@ set LUME_IFS_MODE=2
 # set LUME_MODULES_PATH=~/.local/share/lumesh/mods
 # set LUME_MAX_SYNTAX_RECURSION = 100
 # set LUME_MAX_RUNTIME_RECURSION = 800
-

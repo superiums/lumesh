@@ -40,7 +40,7 @@ struct Cli {
     interactive: bool,
 
     /// NO command first mode
-    #[arg(short = 'm', long)]
+    #[arg(short = 'm', long, default_value = "true")]
     cfmoff: bool,
 
     /// NO ai mode
@@ -135,7 +135,9 @@ fn main() {
         parse_and_eval(cmd.as_str(), &mut cli_env);
 
         if cli.interactive {
-            set_cfm(!cli.cfmoff, &mut cli_env);
+            if cli.cfmoff {
+                set_cfm(false, &mut cli_env);
+            }
             repl::run_repl(&mut cli_env);
         }
     }
@@ -163,13 +165,20 @@ fn main() {
         cli_env.define("PATH_SESSION", Expression::from(vec![] as Vec<Expression>));
 
         env_config(&mut cli_env, cli.aioff, cli.strict);
-        set_cfm(!cli.cfmoff, &mut cli_env);
+        if cli.cfmoff {
+            set_cfm(false, &mut cli_env);
+        }
         repl::run_repl(&mut cli_env);
     }
 }
 
 fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
     init_config(env);
+
+    // cfm
+    if let Some(cfm) = env.get("LUME_CFM") {
+        set_cfm(cfm.is_truthy(), env);
+    }
 
     // strict
     env.define("IS_STRICT", Expression::Boolean(strict));

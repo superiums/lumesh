@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.12.0]
+- not turn on CFM on default and let user define it in config or param.
+- flexiable swift to CFM/Normal mode in any mode:
+
+type `:` prefix to swift to Normal temply,
+
+type `>` prefix to swift to CFM temply.
+
+- optimize char match in serial area.
+
+- colorize valid cmd afer ':' '>' prefix.
+
 ## [0.11.9]
 - fix arg postion of ui.pick
 - fix cmd capture in `let` declare

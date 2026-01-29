@@ -276,7 +276,7 @@ impl PrattParser {
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 对于Punctuation, 只接受 ( [
-                    if operator_token.kind == TokenKind::Punctuation && !["(","["].contains(&operator) {
+                    if operator_token.kind == TokenKind::Punctuation && !matches!(operator,"("|"[") {
                         break;
                     }
                     // 对于OperatorPrefix, 只接受 $, $x长度>1 由parse_expr_with_precedence处理。

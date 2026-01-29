@@ -715,7 +715,7 @@ impl Highlighter for SyntaxHighlighter {
                 true => format!("{pre_color}{prefix}{color}{cmd}{RESET}"),
                 false => {
                     let highlighted_line = highlight(line, &self.theme);
-                    format!("{pre_color}{prefix}{highlighted_line}")
+                    format!("{pre_color}{prefix}{RESET}{highlighted_line}")
                 }
             }
         } else {
@@ -726,7 +726,7 @@ impl Highlighter for SyntaxHighlighter {
                 }
                 false => {
                     let highlighted_line = highlight(line, &self.theme);
-                    format!("{pre_color}{prefix}{highlighted_line}")
+                    format!("{pre_color}{prefix}{RESET}{highlighted_line}")
                 }
             }
         };

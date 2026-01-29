@@ -1525,9 +1525,8 @@ pub fn use_script(input: &str) -> Result<ModuleInfo, nom::Err<SyntaxErrorKind>> 
 }
 // -- 入口函数 --
 pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
-    if input.starts_with(">") {
-        CFM_TEMP.with_borrow_mut(|x| *x = true);
-    }
+    CFM_TEMP.with_borrow_mut(|x| *x = input.starts_with(">"));
+
     let str: Str = input.into();
     let token_vec = tokenize_source(&str)?;
     let (_, parsed) = parse_script_tokens(Tokens {

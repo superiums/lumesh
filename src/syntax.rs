@@ -222,6 +222,7 @@ pub fn get_dark_theme() -> HashMap<String, String> {
         String::from("float_literal") => "\x1b[38;5;221m".to_string(),     // 黄色
 
         // 符号和标识符
+        String::from("mode") => "\x1b[38;5;200m".to_string(),              // 粉红色
         String::from("symbol_none") => "\x1b[38;5;203m".to_string(),       // 粉红色
         String::from("builtin_cmd") => "\x1b[38;5;75m".to_string(),        // 蓝色 (#61AFEF)
         String::from("builtin_lib") => "\x1b[38;5;77m".to_string(),        // 蓝色 (#61AFEF)
@@ -288,6 +289,7 @@ pub fn get_ayu_dark_theme() -> HashMap<String, String> {
         String::from("float_literal") => "\x1b[38;5;228m".to_string(),     // 淡黄色
 
         // 符号和标识符
+        String::from("mode") => "\x1b[38;5;200m".to_string(),              // 粉红色
         String::from("symbol_none") => "\x1b[38;5;204m".to_string(),       // 粉红色
         String::from("builtin_cmd") => "\x1b[38;5;111m".to_string(),       // 蓝色 (#59C2FF)
         String::from("builtin_lib") => "\x1b[38;5;113m".to_string(),        // 蓝色 (#61AFEF)
@@ -355,6 +357,7 @@ pub fn get_light_theme() -> HashMap<String, String> {
         String::from("float_literal") => "\x1b[38;5;142m".to_string(),     // 橄榄色
 
         // 符号和标识符
+        String::from("mode") => "\x1b[38;5;200m".to_string(),              // 粉红色
         String::from("symbol_none") => "\x1b[38;5;125m".to_string(),       // 深粉色
         String::from("builtin_cmd") => "\x1b[38;5;26m".to_string(),        // 深蓝色 (#399EE6)
         String::from("builtin_lib") => "\x1b[38;5;28m".to_string(),        // 蓝色 (#61AFEF)

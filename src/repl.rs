@@ -682,15 +682,21 @@ impl Highlighter for SyntaxHighlighter {
     }
 
     fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
-        let mut parts = line.splitn(2, |c: char| c.is_whitespace());
-        let cmd = parts
-            .next()
-            .unwrap_or("")
-            .trim_start_matches(|x| matches!(x, ':' | '>'));
-        let rest = parts.next().unwrap_or("");
-        if cmd.is_empty() {
+        if line.is_empty() {
             return Cow::Borrowed(line);
         }
+
+        let (prefix, line) = if let Some(cmd) = line.strip_prefix(':') {
+            (":", cmd)
+        } else if let Some(cmd) = line.strip_prefix('>') {
+            (">", cmd)
+        } else {
+            ("", line)
+        };
+
+        let mut parts = line.splitn(2, |c: char| c.is_whitespace());
+        let cmd = parts.next().unwrap_or("");
+        let rest = parts.next().unwrap_or("");
 
         let (color, is_valid) = if is_valid_command(cmd) {
             (
@@ -699,19 +705,30 @@ impl Highlighter for SyntaxHighlighter {
                     .map_or(DEFAULT, |c| c.as_str()),
                 true,
             )
-        // } else if !cmd.is_empty() {
-        //     (RED, false)
         } else {
-            // 无命令，直接返回语法高亮
-            return Cow::Owned(highlight(line, &self.theme));
+            (DEFAULT, false)
         };
 
-        // 高亮命令部分，剩余部分调用 syntax_highlight
-        let highlighted_rest = highlight(rest, &self.theme);
-        let colored_line = if is_valid {
-            format!("{color}{cmd}{RESET} {highlighted_rest}")
+        let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
+        let colored_line = if rest.is_empty() {
+            match is_valid {
+                true => format!("{pre_color}{prefix}{color}{cmd}{RESET}"),
+                false => {
+                    let highlighted_line = highlight(line, &self.theme);
+                    format!("{pre_color}{prefix}{highlighted_line}")
+                }
+            }
         } else {
-            format!("{color}{cmd}{RESET} {highlighted_rest}")
+            match is_valid {
+                true => {
+                    let highlighted_rest = highlight(rest, &self.theme);
+                    format!("{pre_color}{prefix}{color}{cmd}{RESET} {highlighted_rest}")
+                }
+                false => {
+                    let highlighted_line = highlight(line, &self.theme);
+                    format!("{pre_color}{prefix}{highlighted_line}")
+                }
+            }
         };
         Cow::Owned(colored_line)
     }

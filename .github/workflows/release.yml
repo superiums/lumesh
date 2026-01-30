@@ -16,22 +16,14 @@ on:
         required: true
 jobs:
   create_release:
-    permissions:
-      deployments: write
-      contents: read
-      packages: write
     name: Create release
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - name: Set variables
-        id: vars
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
-
       - name: Create release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -46,6 +38,28 @@ jobs:
             - doc: help docs.
 
             If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
+
+      # - name: Set variables
+      #   id: vars
+      #   run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
+
+      # - name: Create release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ github.ref }}
+      #     release_name: Release ${{ github.ref }}
+      #     draft: false
+      #     prerelease: false
+      #     body: |
+      #       This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+      #       - lume: an edition contains interactive repl and script parser.
+      #       - lume-se: an swift edition only contains script parser. used to run script swiftly.
+      #       - doc: help docs.
+
+      #       If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
 
   # 修改点 1：新增文档构建任务
   build_docs:

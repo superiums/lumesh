@@ -174,15 +174,17 @@ jobs:
       - name: Add Rust target
         run: rustup target add ${{ matrix.target }}
 
-      - name: Build project
+      - name: Build via cross
+        if: ${{ matrix.target == aarch64-* }}
         run: |
-          if [[ "${{ matrix.target }}" == aarch64-* ]]; then
-            cross build --release --target ${{ matrix.target }}
-            cross build --features runner --release --target ${{ matrix.target }}
-          else
-            cargo build --release --target ${{ matrix.target }}
-            cargo build --features runner --release --target ${{ matrix.target }}
-          fi
+          cross build --release --target ${{ matrix.target }}
+          cross build --features runner --release --target ${{ matrix.target }}
+
+      - name: Build via cargo
+        if: ${{ matrix.target != aarch64-* }}
+        run: |
+          cargo build --release --target ${{ matrix.target }}
+          cargo build --features runner --release --target ${{ matrix.target }}
 
       - name: Upload main binary
         uses: actions/upload-release-asset@v1

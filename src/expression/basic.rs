@@ -568,6 +568,7 @@ impl Expression {
                     CatchType::PrintErr => write!(f, " ??"),
                     CatchType::PrintOver => write!(f, " ?>"),
                     CatchType::Terminate => write!(f, " ?!"),
+                    CatchType::ToBoolean => write!(f, " ?~"),
                     CatchType::Deel => {
                         write!(f, " ?: ")?;
                         if let Some(handler) = deel {

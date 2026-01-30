@@ -2,7 +2,7 @@ use super::catcher::catch_error;
 use super::eval::State;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind,
-    expression::DestructurePattern,
+    expression::{CatchType, DestructurePattern},
     modman::use_module,
     runtime::{IFS_FOR, ifs_contains},
     utils::expand_home,
@@ -214,7 +214,10 @@ impl Expression {
                 // dbg!(&typ, &deeling);
                 let result = body.as_ref().eval_mut(state, env, depth + 1);
                 match result {
-                    Ok(result) => Ok(result),
+                    Ok(result) => match typ {
+                        CatchType::ToBoolean => Ok(Expression::Boolean(true)),
+                        _ => Ok(result),
+                    },
                     Err(e) => catch_error(e, typ, deeling, state, env, depth + 1),
                 }
             }

@@ -235,7 +235,7 @@ impl PrattParser {
                     // dbg!("--> binOp: trying next loop", input, next_min_prec);
                     // dbg!("--> binOp: trying next loop", &lhs, &operator);
                     match operator {
-                        "?." | "?+" | "??" |"?>" | "?!" => {
+                        "?." | "?+" | "??" |"?>" | "?!" | "?~" => {
                             // dbg!("--->try catch ast:");
                             lhs = Self::build_catch_ast(op_info, lhs)?
                         }
@@ -576,7 +576,7 @@ impl PrattParser {
             //     false,
             //     OperatorKind::Prefix,
             // )),
-            "?." | "?+" | "??" | "?>" | "?!" | "?:" => {
+            "?." | "?+" | "??" | "?>" | "?!" | "?:" | "?~" => {
                 Some(OperatorInfo::new(op, PREC_CATCH, false))
             }
 
@@ -827,6 +827,7 @@ impl PrattParser {
             "??" => Expression::Catch(Rc::new(lhs), CatchType::PrintErr, None),
             "?>" => Expression::Catch(Rc::new(lhs), CatchType::PrintOver, None),
             "?!" => Expression::Catch(Rc::new(lhs), CatchType::Terminate, None),
+            "?~" => Expression::Catch(Rc::new(lhs), CatchType::ToBoolean, None),
             _ => unreachable!(),
         })
     }
@@ -1124,6 +1125,7 @@ fn parse_fn_declare(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
         map(text("??"), |_| (CatchType::PrintErr, None)),
         map(text("?>"), |_| (CatchType::PrintOver, None)),
         map(text("?!"), |_| (CatchType::Terminate, None)),
+        map(text("?~"), |_| (CatchType::ToBoolean, None)),
         map(preceded(text("?:"), cut(parse_expr)), |e| {
             (CatchType::Deel, Some(Rc::new(e)))
         }),

@@ -7,6 +7,17 @@
 - support `CFM_TAG` and `STRICT_TAG` in prompt template.
 - add `ctx` for template function
 - add `sys.modes` to get the modes of lume
+- add `?~` to convert err to boolean
+this will return `true` if cmd/func/operatrion execute successfully.
+
+return `false` if error occurs.
+
+```bash
+cmd a ?~ && cmd b   # this equals `cmd a && cmd b` in bash, exec 2nd if 1st success.
+cmd a ?~ || cmd b   # this equals `cmd a || cmd b` in bash, exec 2nd if 1st fail.
+cmd a ?: cmd b      # also exec 2nd if 1st fail.
+```
+
 
 ## [0.12.0]
 - not turn on CFM on default and let user define it in config or param.

@@ -232,6 +232,7 @@ pub enum CatchType {
     PrintOver,
     Terminate,
     Deel,
+    ToBoolean,
 }
 
 /// PartialOrd实现

@@ -37,6 +37,7 @@ pub fn catch_error(
             _ => Ok(Expression::None),
         },
         CatchType::Ignore => Ok(Expression::None),
+        CatchType::ToBoolean => Ok(Expression::Boolean(false)),
         CatchType::PrintStd => {
             println!("{e:?}");
             Ok(Expression::None)

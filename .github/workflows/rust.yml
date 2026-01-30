@@ -11,11 +11,11 @@ on:
       version: # 可定义输入参数（可选）
         description: "Version to deploy"
         required: true
-  # push:
-  #   tags:
-  #     - 'v[0-9]+.*'
-  release:
-    types: [created] # 当创建新Release时触发
+  push:
+    tags:
+      - "[0-9]+.*"
+  # release:
+  #   types: [created] # 当创建新Release时触发
 
 jobs:
   build:

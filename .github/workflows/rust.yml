@@ -119,6 +119,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Checkout
       - uses: actions/checkout@v3
 
       - name: Build Release
@@ -133,6 +134,7 @@ jobs:
             x86_64-unknown-freebsd
             x86_64-pc-windows-gnu
             x86_64-apple-darwin
+            aarch64-linux-android
           profile:
             release
             # aarch64-apple-darwin
@@ -143,12 +145,12 @@ jobs:
       #     name: lume-${{ matrix.os }}
       #     path: target/*/release/*
 
-      - name: Upload runner binary
+      - name: Upload Binary
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_name: lume-${{ matrix.os }}
-          asset_path: target/*/release/*
+          asset_path: target/${{ matrix.target }}/release/lume*
           asset_content_type: application/octet-stream

@@ -18,7 +18,102 @@ on:
     types: [created] # 当创建新Release时触发
 
 jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Set variables
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
+
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          body: |
+            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            - lume: an edition contains interactive repl and script parser.
+            - lume-se: an swift edition only contains script parser. used to run script swiftly.
+            - doc: help docs.
+
+            If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
+
+  build_docs:
+    name: Build documentation
+    needs: create_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate docs
+        run: |
+          mkdir -p tmp/doc/install
+          cp CHANGELOG.md tmp/doc/
+          cp README.md tmp/doc/
+          cp docs/INS_README.md tmp/doc/
+          cp docs/RULE.md tmp/doc/
+          cp -r docs/config tmp/doc/
+          cp -r docs/unprocessed tmp/doc/
+          cp -r docs/mods tmp/doc/install
+          cp -r docs/completions tmp/doc/install
+          cp LICENSE tmp/doc/install
+
+      - name: Create compressed files
+        run: |
+          tar -czvf doc.tar.gz -C tmp doc
+          zip -r doc.zip tmp/doc/*
+
+      - name: Upload docs
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: doc.tar.gz
+          asset_path: doc.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload doc.zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: doc.zip
+          asset_path: doc.zip
+          asset_content_type: application/zip
+
+      - name: Upload install.sh
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: install.sh
+          asset_path: docs/install.sh
+          asset_content_type: application/x-sh
+
+      - name: Upload install.bat
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: install.bat
+          asset_path: docs/install.bat
+          asset_content_type: application/bat
+
   build:
+    needs: [create_release]
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -53,7 +148,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          # upload_url: ${{ needs.create_release.outputs.upload_url }}
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_name: lume-${{ matrix.os }}
           asset_path: target/*/release/*
           asset_content_type: application/octet-stream

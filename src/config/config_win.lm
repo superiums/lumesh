@@ -18,14 +18,16 @@ if IS_INTERACTIVE {
         TTL_SECS: 2
     }
     # template could be normal expression or func.
-    # avaluable tmplate var: $CWD, $CWD_SHORT
+    # avaluable tmplate var: $CWD, $CWD_SHORT, $CFM_TAG, $STRICT_TAG
     # there's a bug in windows if use colorized prompt, cursor position will move !
     # set LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
-    set LUME_PROMPT_TEMPLATE = '$CWD_SHORT' + '>> '
+    set LUME_PROMPT_TEMPLATE = '$CWD_SHORT | $CFM_TAG | STRICT_TAG >> '
     # if template is lambda/func, it will be evaluated everytime.
-    # set LUME_PROMPT_TEMPLATE = x -> {
-    #     string.blue(x) + ' |'.green().bold() + \
-    #     (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
+    # set LUME_PROMPT_TEMPLATE = (dir,ctx) -> {
+    #     string.blue($dir) + ' |'.green().bold() \
+    #     + ($ctx.cfm ? 'CFM'.green() + '|' : '' )\
+    #     + (if $ctx.strict { 'S'.yellow() + '| ' } else { '' }) \
+    #     + (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
     #     + '> '.green().bold()
     # }
 

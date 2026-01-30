@@ -5,6 +5,8 @@ use std::process::{Command, Stdio};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
+use common_macros::hash_map;
+
 use crate::{CFM_ENABLED, Environment, Expression, STRICT_ENABLED};
 
 // 提示符状态缓存
@@ -121,8 +123,14 @@ impl PromptEngine {
         // dbg!(&func.type_name());
         if let Ok(cwd) = env::current_dir() {
             if let Some(cwd_str) = cwd.to_str() {
+                let cfm = CFM_ENABLED.with_borrow(|cfm| cfm == &true);
+                let strict = STRICT_ENABLED.with_borrow(|s| s == &true);
+                let ctx = Expression::from(hash_map! {
+                    String::from("cfm") => Expression::from(cfm),
+                    String::from("strict") => Expression::from(strict),
+                });
                 let r = func
-                    .apply(vec![Expression::String(cwd_str.to_string())])
+                    .apply(vec![Expression::String(cwd_str.to_string()), ctx])
                     .eval(&mut Environment::new());
                 return match r {
                     Ok(s) => s.to_string(),

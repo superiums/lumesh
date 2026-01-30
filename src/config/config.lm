@@ -24,14 +24,17 @@ if IS_INTERACTIVE {
         TTL_SECS: 2
     }
     # template could be normal expression or func.
-    # avaluable tmplate var: $CWD, $CWD_SHORT
-    # set LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '>> '.bold().yellow())
+    # avaluable tmplate var: $CWD, $CWD_SHORT, $CFM_TAG, $STRICT_TAG
+    set LUME_PROMPT_TEMPLATE = (string.blue('$CWD_SHORT') + '|' + string.green('$CFM_TAG') + '|' + string.blue('$STRICT_TAG') + '❯  '.bold().yellow())
     # if template is lambda/func, it will be evaluated everytime.
-    set LUME_PROMPT_TEMPLATE = x -> {
-        string.blue(x) + ' |'.green().bold() \
+    set LUME_PROMPT_TEMPLATE = (dir,ctx) -> {
+        string.blue($dir) + ' |'.green().bold() \
+        + ($ctx.cfm ? 'CFM'.green() + '|' : '')\
+        + ($ctx.strict ? 'S'.yellow() + '| ' : '' ) \
         + (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
         + '> '.green().bold()
     }
+    include ~/.config/lumesh/prompt_ka.lm
 
     ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'

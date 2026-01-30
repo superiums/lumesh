@@ -128,16 +128,15 @@ jobs:
           command: build
           targets: |
             x86_64-unknown-linux-gnu
+            x86_64-unknown-linux-musl
+            x86_64-unknown-freebsd
             x86_64-apple-darwin
-          profile:
-            release
-            # x86_64-unknown-linux-musl
-            # aarch64-unknown-linux-gnu
-            # aarch64-unknown-linux-musl
-            # x86_64-unknown-freebsd
-            # x86_64-pc-windows-gnu
-            # aarch64-linux-android
-            # aarch64-apple-darwin
+            x86_64-pc-windows-gnu
+            aarch64-unknown-linux-gnu
+            aarch64-unknown-linux-musl
+            aarch64-linux-android
+            aarch64-apple-darwin
+          profile: release
 
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v3
@@ -150,12 +149,95 @@ jobs:
           ls target
           ls target/**
 
-      - name: Upload Binary
+      - name: Upload x86_64-unknown-linux-gnu
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: lume-${{ matrix.os }}
-          asset_path: target/${{ matrix.os }}/release/lume*
+          asset_name: lume-x86_64-linux-gnu
+          asset_path: target/x86_64-unknown-linux-gnu/release/lume
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-unknown-linux-musl
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-x86_64-linux-musl
+          asset_path: target/x86_64-unknown-linux-musl/release/lume
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-unknown-freebsd
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-x86_64-freebsd
+          asset_path: target/x86_64-unknown-freebsd/release/lume
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-apple-darwin
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-x86_64-apple-darwin
+          asset_path: target/x86_64-apple-darwin/release/lume
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-pc-windows-gnu
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-x86_64-pc-windows-gnu
+          asset_path: target/x86_64-pc-windows-gnu/release/lume
+          asset_content_type: application/octet-stream
+
+      # aarch
+      - name: Upload aarch64-unknown-linux-gnu
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-aarch64-linux-gnu
+          asset_path: target/aarch64-unknown-linux-gnu/release/lume
+          asset_content_type: application/octet-stream
+
+      - name: Upload aarch64-unknown-linux-musl
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-aarch64-linux-musl
+          asset_path: target/aarch64-unknown-linux-musl/release/lume
+          asset_content_type: application/octet-stream
+
+      # aarch-android
+      - name: Upload aarch64-linux-android
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-aarch64-linux-android
+          asset_path: target/aarch64-linux-android/release/lume
+          asset_content_type: application/octet-stream
+
+      # aarch-darwin
+      - name: Upload aarch64-apple-darwin
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_name: lume-aarch64-apple-darwin
+          asset_path: target/aarch64-apple-darwin/release/lume
           asset_content_type: application/octet-stream

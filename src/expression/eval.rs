@@ -679,15 +679,69 @@ impl Expression {
                                         depth,
                                     )),
                                 },
+                                "===" => Ok(Expression::Boolean(l == r)),
+                                "!==" => Ok(Expression::Boolean(l != r)),
+                                "==" => match l.partial_cmp(&r) {
+                                    Some(std::cmp::Ordering::Equal) => {
+                                        Ok(Expression::Boolean(true))
+                                    }
 
-                                "==" => Ok(Expression::Boolean(l == r)),
-                                "!=" => Ok(Expression::Boolean(l != r)),
-                                "~=" => Ok(Expression::Boolean(l.to_string() == r.to_string())),
-                                "!~=" => Ok(Expression::Boolean(l.to_string() != r.to_string())),
-                                ">" => Ok(Expression::Boolean(l > r)),
-                                "<" => Ok(Expression::Boolean(l < r)),
-                                ">=" => Ok(Expression::Boolean(l >= r)),
-                                "<=" => Ok(Expression::Boolean(l <= r)),
+                                    Some(std::cmp::Ordering::Greater)
+                                    | Some(std::cmp::Ordering::Less) => {
+                                        Ok(Expression::Boolean(false))
+                                    }
+                                    None => Ok(Expression::None),
+                                },
+                                "!=" => match l.partial_cmp(&r) {
+                                    Some(std::cmp::Ordering::Equal) => {
+                                        Ok(Expression::Boolean(false))
+                                    }
+                                    Some(std::cmp::Ordering::Greater)
+                                    | Some(std::cmp::Ordering::Less) => {
+                                        Ok(Expression::Boolean(true))
+                                    }
+                                    None => Ok(Expression::None),
+                                },
+                                // 替换原来的 ">" => Ok(Expression::Boolean(l > r))
+                                ">" => {
+                                    match l.partial_cmp(&r) {
+                                        Some(std::cmp::Ordering::Greater) => {
+                                            Ok(Expression::Boolean(true))
+                                        }
+                                        Some(std::cmp::Ordering::Equal) => {
+                                            Ok(Expression::Boolean(false))
+                                        }
+                                        Some(std::cmp::Ordering::Less) => {
+                                            Ok(Expression::Boolean(false))
+                                        }
+                                        None => Ok(Expression::None), // 无法比较时返回 None
+                                    }
+                                }
+                                "<" => match l.partial_cmp(&r) {
+                                    Some(std::cmp::Ordering::Less) => Ok(Expression::Boolean(true)),
+                                    Some(_) => Ok(Expression::Boolean(false)),
+                                    None => Ok(Expression::None),
+                                },
+                                ">=" => match l.partial_cmp(&r) {
+                                    Some(std::cmp::Ordering::Less) => {
+                                        Ok(Expression::Boolean(false))
+                                    }
+                                    Some(std::cmp::Ordering::Greater)
+                                    | Some(std::cmp::Ordering::Equal) => {
+                                        Ok(Expression::Boolean(true))
+                                    }
+                                    None => Ok(Expression::None),
+                                },
+                                "<=" => match l.partial_cmp(&r) {
+                                    Some(std::cmp::Ordering::Greater) => {
+                                        Ok(Expression::Boolean(false))
+                                    }
+                                    Some(std::cmp::Ordering::Less)
+                                    | Some(std::cmp::Ordering::Equal) => {
+                                        Ok(Expression::Boolean(true))
+                                    }
+                                    None => Ok(Expression::None),
+                                },
                                 "~:" => Ok(Expression::Boolean(handle_contains(l, r, job, depth)?)),
                                 "!~:" => {
                                     Ok(Expression::Boolean(!handle_contains(l, r, job, depth)?))

@@ -242,6 +242,39 @@ impl PartialOrd for Expression {
             (Self::Integer(a), Self::Integer(b)) => a.partial_cmp(b),
             (Self::Float(a), Self::Float(b)) => a.partial_cmp(b),
             (Self::String(a), Self::String(b)) => a.partial_cmp(b),
+
+            (Self::Float(a), Self::Integer(b)) => a.partial_cmp(&(*b as f64)),
+            (Self::Integer(a), Self::Float(b)) => (&(*a as f64)).partial_cmp(b),
+            // 字符串与数字的比较
+            (Self::String(a), Self::Integer(b)) => {
+                if let Ok(a_int) = a.parse::<i64>() {
+                    a_int.partial_cmp(b)
+                } else {
+                    None // 转换失败，无法比较
+                }
+            }
+            (Self::Integer(a), Self::String(b)) => {
+                if let Ok(b_int) = b.parse::<i64>() {
+                    a.partial_cmp(&b_int)
+                } else {
+                    None // 转换失败，无法比较
+                }
+            }
+            (Self::String(a), Self::Float(b)) => {
+                if let Ok(a_float) = a.parse::<f64>() {
+                    a_float.partial_cmp(b)
+                } else {
+                    None // 转换失败，无法比较
+                }
+            }
+            (Self::Float(a), Self::String(b)) => {
+                if let Ok(b_float) = b.parse::<f64>() {
+                    a.partial_cmp(&b_float)
+                } else {
+                    None // 转换失败，无法比较
+                }
+            }
+
             (Self::Symbol(a), Self::Symbol(b)) => a.partial_cmp(b),
             (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
             (Self::List(a), Self::List(b)) => a.partial_cmp(b),

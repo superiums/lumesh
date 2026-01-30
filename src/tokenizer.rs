@@ -144,14 +144,14 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         keyword_tag("=>"), //for match
         alt((
+            punctuation_tag("!=="),
+            punctuation_tag("==="),
             punctuation_tag("!="),
             punctuation_tag("=="), //to allow a==b
             punctuation_tag(">="),
             punctuation_tag("<="),
             keyword_tag("!~:"),
             keyword_tag("~:"),
-            keyword_tag("!~="),
-            keyword_tag("~="),
         )),
         keyword_tag("&&"),
         keyword_tag("||"),

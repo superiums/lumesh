@@ -18,6 +18,21 @@ cmd a ?~ || cmd b   # this equals `cmd a || cmd b` in bash, exec 2nd if 1st fail
 cmd a ?: cmd b      # also exec 2nd if 1st fail.
 ```
 
+- compare with auto type convert.
+now able to compare float and int and number like string.
+```bash
+"3" > 1         # true
+1.1 >= 1        # true
+2 == 2.0        # true
+"a" > 1         # none
+
+```
+
+- add absolute equals `===` and `!==`
+this requires both type and value to be equal
+
+- removed `~=` and `!~='
+
 
 ## [0.12.0]
 - not turn on CFM on default and let user define it in config or param.

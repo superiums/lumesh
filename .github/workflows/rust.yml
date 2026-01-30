@@ -14,79 +14,36 @@ on:
   # push:
   #   tags:
   #     - 'v[0-9]+.*'
-  # release:
-  #   types: [created]  # 当创建新Release时触发
+  release:
+    types: [created] # 当创建新Release时触发
+
 jobs:
-  create_release:
-    name: Create release
-    runs-on: ubuntu-latest
-    # Note this. We are going to use that in further jobs.
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-      - name: Set variables
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-
-      - name: Create release
-        uses: softprops/action-gh-release@v1
-        id: create_release
-        # uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          files: artifacts/**/*.tar.gz
-          # tag_name: ${{ github.ref }}
-          # release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-          body: |
-            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
-
-            If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
-
-  release_assets:
-    name: Release assets
-    needs: create_release
-    runs-on: ${{ matrix.os }}
+  build:
     strategy:
       matrix:
-        include:
-          - os: ubuntu-latest
-            platform: linux
-            file_ending: ""
-          # - os: macos-latest
-          #   platform: macos
-          #   file_ending: ''
-          # - os: windows-latest
-          #   platform: windows
-          #   file_ending: '.exe'
-
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - name: Print information
-        run: |
-          rustup show active-toolchain
-          rustc --version
-          cargo tree
-
-      - name: Set variables
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-
-      - name: Build project
-        run: cargo build --release --locked
-
-      - name: Upload release assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Release
+        uses: zijiren233/cargo-cross@v1
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: lumesh_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/lumeshsh${{ matrix.file_ending }}
-          asset_content_type: application/octet-stream
+          command: build
+          targets: |
+            x86_64-unknown-linux-gnu
+            x86_64-unknown-linux-musl
+            aarch64-unknown-linux-gnu
+            aarch64-unknown-linux-musl
+            x86_64-unknown-freebsd
+            x86_64-pc-windows-gnu
+            x86_64-apple-darwin
+          profile:
+            release
+            # aarch64-apple-darwin
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lume-${{ matrix.os }}
+          path: target/*/release/*

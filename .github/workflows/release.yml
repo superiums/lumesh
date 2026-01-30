@@ -175,7 +175,7 @@ jobs:
         run: rustup target add ${{ matrix.target }}
 
       - name: Build on Unix platforms
-        if: runner.os != 'Windows'
+        if: runner.platform != 'windows'
         run: |
           if [[ "${{ matrix.target }}" == aarch64-* ]]; then
             cargo install cross
@@ -188,7 +188,7 @@ jobs:
         shell: bash
 
       - name: Build on Windows
-        if: runner.os == 'Windows'
+        if: runner.platform == 'windows'
         run: |
           cargo build --release --target ${{ matrix.target }}
           cargo build --features runner --release --target ${{ matrix.target }}

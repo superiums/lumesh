@@ -21,6 +21,10 @@ jobs:
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
+      - name: Set variables
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
+
       - name: Create release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -28,7 +32,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ github.ref }}
           draft: false
           prerelease: false
           body: |
@@ -165,14 +169,20 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-aarch64-linux-gnu
+          cargo install cross
 
       - name: Add Rust target
         run: rustup target add ${{ matrix.target }}
 
       - name: Build project
         run: |
-          cargo build --release --target ${{ matrix.target }}
-          cargo build --features runner --release --target ${{ matrix.target }}
+          if [[ "${{ matrix.target }}" == aarch64-* ]]; then
+            cross build --release --target ${{ matrix.target }}
+            cross build --features runner --release --target ${{ matrix.target }}
+          else
+            cargo build --release --target ${{ matrix.target }}
+            cargo build --features runner --release --target ${{ matrix.target }}
+          fi
 
       - name: Upload main binary
         uses: actions/upload-release-asset@v1

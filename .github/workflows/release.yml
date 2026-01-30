@@ -143,22 +143,22 @@ jobs:
             platform: linux
             file_ending: ""
             target: x86_64-unknown-linux-gnu
-          - os: ubuntu-latest
-            platform: linux-arm64
-            file_ending: ""
-            target: aarch64-unknown-linux-gnu
           - os: macos-latest
             platform: macos
             file_ending: ""
             target: x86_64-apple-darwin
-          - os: macos-latest
-            platform: macos-arm64
-            file_ending: ""
-            target: aarch64-apple-darwin
           - os: windows-latest
             platform: windows
             file_ending: ".exe"
             target: x86_64-pc-windows-gnu
+          # - os: macos-latest
+          #   platform: macos-arm64
+          #   file_ending: ""
+          #   target: aarch64-apple-darwin
+          - os: ubuntu-latest
+            platform: linux-arm64
+            file_ending: ""
+            target: aarch64-unknown-linux-gnu
 
     steps:
       - name: Checkout

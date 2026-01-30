@@ -145,6 +145,11 @@ jobs:
       #     name: lume-${{ matrix.os }}
       #     path: target/*/release/*
 
+      - name: print dir
+        run: |
+          ls target
+          ls target/**
+
       - name: Upload Binary
         uses: actions/upload-release-asset@v1
         env:
@@ -152,5 +157,5 @@ jobs:
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_name: lume-${{ matrix.os }}
-          asset_path: target/${{ matrix.target }}/release/lume*
+          asset_path: target/${{ matrix.os }}/release/lume*
           asset_content_type: application/octet-stream

@@ -16,6 +16,10 @@ on:
         required: true
 jobs:
   create_release:
+    permissions:
+      deployments: write
+      contents: read
+      packages: write
     name: Create release
     runs-on: ubuntu-latest
     outputs:

@@ -5,7 +5,7 @@ use crate::expression::{LumeRegex, alias};
 use crate::libs::{get_builtin_via_expr, time_parse};
 use crate::utils::abs;
 use crate::utils::canon;
-use crate::{Environment, Expression, Int, RuntimeError};
+use crate::{Environment, Expression, Int, RuntimeError, STRICT_ENABLED};
 use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind};
 use core::option::Option::None;
 use regex_lite::Regex;
@@ -26,7 +26,7 @@ pub struct State(
 
 impl Default for State {
     fn default() -> Self {
-        Self::new(false)
+        Self::new()
     }
 }
 
@@ -40,12 +40,9 @@ impl State {
     pub const IN_DECO: u8 = 1 << 5;
 
     // 创建一个新的 State 实例
-    pub fn new(strict: bool) -> Self {
-        if strict {
-            State(State::STRICT, None, Vec::new(), HashMap::new(), None)
-        } else {
-            State(0, None, Vec::new(), HashMap::new(), None)
-        }
+    pub fn new() -> Self {
+        let strict = if is_strict() { 1 } else { 0 };
+        State(strict, None, Vec::new(), HashMap::new(), None)
     }
 
     // 设置标志
@@ -176,17 +173,13 @@ impl State {
     }
 }
 
-pub fn is_strict(env: &mut Environment) -> bool {
-    match env.get("IS_STRICT") {
-        Some(Expression::Boolean(b)) => b,
-        _ => false,
-    }
+pub fn is_strict() -> bool {
+    STRICT_ENABLED.with_borrow(|s| s == &true)
 }
 impl Expression {
     /// 交互命令入口
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let strict = is_strict(env);
-        let result = self.eval_mut(&mut State::new(strict), env, 0);
+        let result = self.eval_mut(&mut State::new(), env, 0);
         // dbg!(&result);
         match result {
             // apply symbol cmds
@@ -202,15 +195,13 @@ impl Expression {
     }
     /// 脚本计算入口
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let strict = is_strict(env);
-        self.eval_mut(&mut State::new(strict), env, 0)
+        self.eval_mut(&mut State::new(), env, 0)
     }
     /// builtin args eval in pipe.
     /// this call will capture the output of subcmd.
     /// use this one where need to capture the subcmd output, like : ui.pick (ls -l)
     pub fn eval_in_assign(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let strict = is_strict(env);
-        let mut state = State::new(strict);
+        let mut state = State::new();
         state.set(State::IN_ASSIGN);
         self.eval_mut(&mut state, env, 0)
     }

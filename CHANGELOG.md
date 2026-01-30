@@ -1,8 +1,10 @@
 # Changelog
 
-## [0.12.0]
+## [0.12.1]
 - optimize temp CFM
-
+- respect mode set in config, cover it with cmd param.
+- read config from static var insteadof env.
+- support `CFM_TAG` and `STRICT_TAG` in prompt template.
 
 ## [0.12.0]
 - not turn on CFM on default and let user define it in config or param.

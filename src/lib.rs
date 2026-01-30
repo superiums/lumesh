@@ -65,6 +65,7 @@ use std::cell::RefCell;
 thread_local! {
     static PRINT_DIRECT: RefCell<bool> = RefCell::new(true);
     static CFM_ENABLED: RefCell<bool> = RefCell::new(false);
+    static STRICT_ENABLED: RefCell<bool> = RefCell::new(false);
     static MAX_RUNTIME_RECURSION: RefCell<usize> = RefCell::new(800);
     static MAX_SYNTAX_RECURSION: RefCell<usize> = RefCell::new(100);
     static MAX_USEMODE_RECURSION: RefCell<usize> = RefCell::new(100);
@@ -85,4 +86,7 @@ pub fn with_cfm_enabled<R>(f: impl FnOnce(bool) -> R) -> R {
 
 pub fn set_cfm_enabled(value: bool) {
     CFM_ENABLED.with(|v| *v.borrow_mut() = value);
+}
+pub fn set_strict_enabled(value: bool) {
+    STRICT_ENABLED.with(|v| *v.borrow_mut() = value);
 }

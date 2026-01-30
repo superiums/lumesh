@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use crate::eval::{State, is_strict};
+use crate::eval::State;
 use crate::libs::bin::top;
 use crate::libs::helper::{check_args_len, check_exact_args_len, check_fn_arg, get_string_ref};
 use crate::libs::lazy_module::LazyModule;
@@ -231,7 +231,7 @@ fn find(
         expr => return Err(map_err(expr, ctx)),
     };
 
-    let mut state = State::new(is_strict(env));
+    let mut state = State::new();
     for it in items {
         if predicate
             .eval_apply(predicate, &it, &mut state, env, 0)?
@@ -268,7 +268,7 @@ fn filter(
     };
 
     let mut new_map = BTreeMap::new();
-    let mut state = State::new(is_strict(env));
+    let mut state = State::new();
     for it in items {
         if predicate
             .eval_apply(predicate, &it, &mut state, env, 0)?
@@ -514,7 +514,7 @@ fn map(
     };
 
     let mut new_map = BTreeMap::new();
-    let mut state = State::new(is_strict(env));
+    let mut state = State::new();
     for it in items {
         let new_k = key_func.eval_apply(key_func, &vec![it[0].clone()], &mut state, env, 0)?;
         let new_v = val_func.eval_apply(key_func, &vec![it[1].clone()], &mut state, env, 0)?;

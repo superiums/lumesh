@@ -11,6 +11,7 @@ use lumesh::runtime::init_config;
 // use lumesh::STRICT;
 use lumesh::runtime::run_file;
 use lumesh::set_cfm_enabled;
+use lumesh::set_strict_enabled;
 use lumesh::{Environment, Expression};
 use std::env;
 use std::path::Path;
@@ -32,24 +33,30 @@ struct Cli {
     profile: Option<String>,
 
     /// strict mode
-    #[arg(short = 's', long)]
+    #[arg(short = 's', long, conflicts_with = "no_strict")]
     strict: bool,
+    /// NO strict mode
+    #[arg(short = 'S', long, conflicts_with = "strict")]
+    no_strict: bool,
 
     /// force interactive mode
     #[arg(short = 'i', long)]
     interactive: bool,
 
+    /// command first mode
+    #[arg(short = 'm', long, conflicts_with = "no_cfm")]
+    cfm: bool,
     /// NO command first mode
-    #[arg(short = 'm', long, default_value = "true")]
-    cfmoff: bool,
+    #[arg(short = 'M', long, conflicts_with = "cfm")]
+    no_cfm: bool,
 
     /// NO ai mode
-    #[arg(short = 'a', long)]
-    aioff: bool,
+    #[arg(short = 'A', long)]
+    no_ai: bool,
 
     /// NO history (private) mode
-    #[arg(short = 'n', long)]
-    nohistory: bool,
+    #[arg(short = 'H', long)]
+    no_history: bool,
 
     /// command to eval
     #[arg(short = 'c', long, num_args = 1)]
@@ -115,7 +122,7 @@ fn main() {
     if let Some(profile) = cli.profile {
         cli_env.define("LUME_PROFILE", Expression::String(profile));
     }
-    if cli.nohistory {
+    if cli.no_history {
         cli_env.define("LUME_NO_HISTORY", Expression::Boolean(true));
     }
 
@@ -130,12 +137,18 @@ fn main() {
             "argv",
             Expression::from(argv.into_iter().map(Expression::String).collect::<Vec<_>>()),
         );
-        env_config(&mut cli_env, cli.aioff, cli.strict);
-
+        env_config(&mut cli_env, cli.no_ai);
+        if cli.strict {
+            set_strict(true, &mut env);
+        } else if cli.no_strict {
+            set_strict(false, &mut env);
+        }
         parse_and_eval(cmd.as_str(), &mut cli_env);
 
         if cli.interactive {
-            if cli.cfmoff {
+            if cli.cfm {
+                set_cfm(true, &mut cli_env);
+            } else if cli.no_cfm {
                 set_cfm(false, &mut cli_env);
             }
             repl::run_repl(&mut cli_env);
@@ -154,7 +167,12 @@ fn main() {
                         .collect::<Vec<_>>(),
                 ),
             );
-            env_config(&mut cli_env, cli.aioff, cli.strict);
+            env_config(&mut cli_env, cli.no_ai);
+            if cli.strict {
+                set_strict(true, &mut env);
+            } else if cli.no_strict {
+                set_strict(false, &mut env);
+            }
             // let path = PathBuf::from(file);
             run_file(s, &mut cli_env);
         }
@@ -164,15 +182,22 @@ fn main() {
         cli_env.define("IS_INTERACTIVE", Expression::Boolean(true));
         cli_env.define("PATH_SESSION", Expression::from(vec![] as Vec<Expression>));
 
-        env_config(&mut cli_env, cli.aioff, cli.strict);
-        if cli.cfmoff {
+        env_config(&mut cli_env, cli.no_ai);
+        if cli.strict {
+            set_strict(true, &mut env);
+        } else if cli.no_strict {
+            set_strict(false, &mut env);
+        }
+        if cli.cfm {
+            set_cfm(true, &mut cli_env);
+        } else if cli.no_cfm {
             set_cfm(false, &mut cli_env);
         }
         repl::run_repl(&mut cli_env);
     }
 }
 
-fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
+fn env_config(env: &mut Environment, aioff: bool) {
     init_config(env);
 
     // cfm
@@ -181,7 +206,9 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
     }
 
     // strict
-    env.define("IS_STRICT", Expression::Boolean(strict));
+    if let Some(strict) = env.get("LUME_STRICT") {
+        set_cfm(strict.is_truthy(), env);
+    }
 
     // ai off
     if aioff {
@@ -192,4 +219,9 @@ fn env_config(env: &mut Environment, aioff: bool, strict: bool) {
 fn set_cfm(cfm: bool, env: &mut Environment) {
     env.define("IS_CFM", Expression::Boolean(cfm));
     set_cfm_enabled(cfm);
+}
+
+fn set_strict(strict: bool, env: &mut Environment) {
+    env.define("IS_STRICT", Expression::Boolean(strict));
+    set_strict_enabled(strict);
 }

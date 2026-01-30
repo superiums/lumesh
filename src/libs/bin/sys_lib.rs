@@ -4,7 +4,7 @@ use crate::libs::BuiltinInfo;
 use crate::libs::helper::{check_exact_args_len, get_integer_ref, get_string_ref};
 use crate::{
     Environment, Expression, Int, LmError, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION,
-    MAX_USEMODE_RECURSION, RuntimeError, set_cfm_enabled, set_print_direct,
+    MAX_USEMODE_RECURSION, RuntimeError, set_cfm_enabled, set_print_direct, set_strict_enabled,
 };
 use std::collections::BTreeMap;
 
@@ -233,6 +233,7 @@ fn set_strict(
     check_exact_args_len("set_strict", args, 1, ctx)?;
     let b = args[0].is_truthy();
     env.define("IS_STRICT", Expression::Boolean(b));
+    set_strict_enabled(b);
     if b {
         println!("\x1b[38;5;141m[STRICT Mode: ON]\x1b[0m");
     } else {

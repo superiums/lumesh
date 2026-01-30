@@ -31,7 +31,7 @@ use crate::expression::alias::get_alias_completion;
 use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::libs::LIBS_INFO;
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
-use crate::{CFM_ENABLED, Expression, childman};
+use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 
 use crate::runtime::check;
 use crate::{Environment, highlight, parse_and_eval, prompt::get_prompt_engine};
@@ -60,9 +60,8 @@ pub fn run_repl(env: &mut Environment) {
         _ => println!("Welcome to Lumesh {}", env!("CARGO_PKG_VERSION")),
     }
 
-    match env.get("IS_STRICT") {
-        Some(Expression::Boolean(true)) => println!("\x1b[38;5;170m[Strict Mode]\x1b[0m"),
-        _ => {}
+    if STRICT_ENABLED.with_borrow(|s| s == &true) {
+        println!("\x1b[38;5;170m[Strict Mode]\x1b[0m")
     }
     if CFM_ENABLED.with_borrow(|c| c == &true) {
         println!("\x1b[38;5;141m[Cmd First Mode]\x1b[0m");

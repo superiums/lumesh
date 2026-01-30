@@ -1,7 +1,7 @@
 // use super::math_module::{average, max, min, sum};
 use std::rc::Rc;
 
-use crate::eval::{State, is_strict};
+use crate::eval::State;
 use crate::expression::eval2::execute_iteration;
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
@@ -798,7 +798,7 @@ fn map(
     };
 
     // if !need_index {
-    let mut state = State::new(is_strict(env));
+    let mut state = State::new();
     state.set(State::IN_ASSIGN);
     let count = list.iter().count();
     let iterator = list.as_ref().clone().into_iter();

@@ -5,7 +5,7 @@ use std::process::{Command, Stdio};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use crate::{Environment, Expression};
+use crate::{CFM_ENABLED, Environment, Expression, STRICT_ENABLED};
 
 // 提示符状态缓存
 #[derive(Clone)]
@@ -134,7 +134,23 @@ impl PromptEngine {
     }
     fn render_template(&self, template: &str) -> String {
         // 实现简单的占位符替换
-        let mut result = template.to_string();
+        let mut result = template
+            .replace(
+                "$CFM_TAG",
+                if CFM_ENABLED.with_borrow(|cfm| cfm == &true) {
+                    "CFM"
+                } else {
+                    ""
+                },
+            )
+            .replace(
+                "$STRICT_TAG",
+                if STRICT_ENABLED.with_borrow(|cfm| cfm == &true) {
+                    "S"
+                } else {
+                    ""
+                },
+            );
 
         if let Ok(cwd) = env::current_dir() {
             if let Some(cwd_str) = cwd.to_str() {

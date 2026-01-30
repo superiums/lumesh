@@ -101,6 +101,28 @@ steps:
         from_secret: codeberg_token
     depends_on: [build_linux]
 
+  build_arm64:
+    image: rust:latest
+    commands:
+      - rustup target add aarch64-unknown-linux-gnu
+      - apt-get update && apt-get install -y gcc-aarch64-linux-gnu
+      # 标准构建
+      - cargo build --release --target aarch64-unknown-linux-gnu
+      - cp target/aarch64-unknown-linux-gnu/release/lume lume-linux-arm64
+      # Runner 构建
+      - cargo build --features runner --release --target aarch64-unknown-linux-gnu
+      - cp target/aarch64-unknown-linux-gnu/release/lume-se lume-se-linux-arm64
+    depends_on: [create_release]
+
+  publish_arm64:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-linux-arm64"
+        - "lume-se-linux-arm64"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_arm64]
   # build_macos:
   #   image: rust:latest
   #   commands:

@@ -112,7 +112,7 @@ jobs:
 
   release_assets:
     name: Release assets
-    needs: [create_release] # 修改点 2：保持与 create_release 的依赖
+    needs: [create_release]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -120,34 +120,42 @@ jobs:
           - os: ubuntu-latest
             platform: linux
             file_ending: ""
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-latest
+            platform: linux-arm64
+            file_ending: ""
+            target: aarch64-unknown-linux-gnu
           - os: macos-latest
             platform: macos
             file_ending: ""
+            target: x86_64-apple-darwin
+          - os: macos-latest
+            platform: macos-arm64
+            file_ending: ""
+            target: aarch64-apple-darwin
           - os: windows-latest
             platform: windows
             file_ending: ".exe"
+            target: x86_64-pc-windows-gnu
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Print information
+      - name: Install ARM cross compilation tools
+        if: matrix.platform == 'linux-arm64'
         run: |
-          rustup show active-toolchain
-          rustc --version
-          cargo tree
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
 
-      - name: Set variables
-        id: vars
-        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT # 确保提取的是标签
+      - name: Add Rust target
+        run: rustup target add ${{ matrix.target }}
 
-      # 修改点 3：新增 runner 构建
       - name: Build project
         run: |
-          cargo build --release --locked
-          cargo build --features runner --release  # 新增 runner 构建
+          cargo build --release --target ${{ matrix.target }}
+          cargo build --features runner --release --target ${{ matrix.target }}
 
-      # 修改点 4：上传两个二进制文件
       - name: Upload main binary
         uses: actions/upload-release-asset@v1
         env:
@@ -155,7 +163,7 @@ jobs:
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_name: lume_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/lume${{ matrix.file_ending }}
+          asset_path: target/${{ matrix.target }}/release/lume${{ matrix.file_ending }}
           asset_content_type: application/octet-stream
 
       - name: Upload runner binary
@@ -165,5 +173,5 @@ jobs:
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_name: lume-se_${{ matrix.platform }}_${{ steps.vars.outputs.tag }}${{ matrix.file_ending }}
-          asset_path: target/release/lume-se${{ matrix.file_ending }}
+          asset_path: target/${{ matrix.target }}/release/lume-se${{ matrix.file_ending }}
           asset_content_type: application/octet-stream

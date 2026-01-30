@@ -1,10 +1,13 @@
 use std::{fs::OpenOptions, io::Write, rc::Rc};
 
+use common_macros::hash_map;
+
 use crate::libs::BuiltinInfo;
 use crate::libs::helper::{check_exact_args_len, get_integer_ref, get_string_ref};
 use crate::{
-    Environment, Expression, Int, LmError, MAX_RUNTIME_RECURSION, MAX_SYNTAX_RECURSION,
-    MAX_USEMODE_RECURSION, RuntimeError, set_cfm_enabled, set_print_direct, set_strict_enabled,
+    CFM_ENABLED, Environment, Expression, Int, LmError, MAX_RUNTIME_RECURSION,
+    MAX_SYNTAX_RECURSION, MAX_USEMODE_RECURSION, PRINT_DIRECT, RuntimeError, STRICT_ENABLED,
+    set_cfm_enabled, set_print_direct, set_strict_enabled,
 };
 use std::collections::BTreeMap;
 
@@ -17,7 +20,7 @@ pub fn regist_lazy() -> LazyModule {
         vars, has, defined,
         quote, ecodes_rt, ecodes_lm,
         print_tty, discard,
-        info,
+        info,modes,
         // throw,
         max_syntax,
         max_runtime,
@@ -45,6 +48,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         discard => "send data to /dev/null", "<arg>"
 
         info => "get os info", ""
+        modes => "get lume modes", ""
 
         max_syntax => "get/set max syntax recursion","[int]"
         max_runtime=> "get/set max runtime recursion","[int]"
@@ -63,6 +67,17 @@ fn info(
 ) -> Result<Expression, RuntimeError> {
     let info = os_info::get();
     Ok(Expression::String(info.to_string()))
+}
+fn modes(
+    _args: &[Expression],
+    _env: &mut Environment,
+    _ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    Ok(Expression::from(hash_map! {
+        String::from("cfm") => CFM_ENABLED.with_borrow(|c|c==&true),
+        String::from("strict") => STRICT_ENABLED.with_borrow(|c|c==&true),
+        String::from("pdm") => PRINT_DIRECT.with_borrow(|c|c==&true),
+    }))
 }
 fn print_tty(
     args: &[Expression],
@@ -262,7 +277,7 @@ fn set_pdm(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set_print_direct", args, 1, ctx)?;
+    check_exact_args_len("set_pdm", args, 1, ctx)?;
     let b = args[0].is_truthy();
     set_print_direct(b);
     if b {

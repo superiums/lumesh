@@ -693,9 +693,10 @@ impl Highlighter for SyntaxHighlighter {
             ("", line)
         };
 
-        let mut parts = line.splitn(2, |c: char| c.is_whitespace());
-        let cmd = parts.next().unwrap_or("");
-        let rest = parts.next().unwrap_or("");
+        let (cmd, rest_op) = match line.split_once(' ') {
+            Some((a, b)) => (a, Some(b)),
+            _ => (line, None),
+        };
 
         let (color, is_valid) = if is_valid_command(cmd) {
             (
@@ -709,16 +710,15 @@ impl Highlighter for SyntaxHighlighter {
         };
 
         let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
-        let colored_line = if rest.is_empty() {
-            match is_valid {
+        let colored_line = match rest_op {
+            None => match is_valid {
                 true => format!("{pre_color}{prefix}{color}{cmd}{RESET}"),
                 false => {
                     let highlighted_line = highlight(line, &self.theme);
                     format!("{pre_color}{prefix}{RESET}{highlighted_line}")
                 }
-            }
-        } else {
-            match is_valid {
+            },
+            Some(rest) => match is_valid {
                 true => {
                     let highlighted_rest = highlight(rest, &self.theme);
                     format!("{pre_color}{prefix}{color}{cmd}{RESET} {highlighted_rest}")
@@ -727,7 +727,7 @@ impl Highlighter for SyntaxHighlighter {
                     let highlighted_line = highlight(line, &self.theme);
                     format!("{pre_color}{prefix}{RESET}{highlighted_line}")
                 }
-            }
+            },
         };
         Cow::Owned(colored_line)
     }

@@ -2,7 +2,6 @@ use core::option::Option::None;
 use detached_str::Str;
 use std::{
     borrow::Cow,
-    cell::RefCell,
     collections::{BTreeMap, HashMap},
     rc::Rc,
 };
@@ -15,9 +14,7 @@ use crate::{
 };
 use detached_str::StrSlice;
 use nom::{IResult, branch::alt, combinator::*, multi::*, sequence::*};
-thread_local! {
-    static CFM_TEMP: RefCell<bool> = RefCell::new(false);
-}
+
 // -- 辅助类型和常量 --
 
 // 优先级常量
@@ -1525,8 +1522,6 @@ pub fn use_script(input: &str) -> Result<ModuleInfo, nom::Err<SyntaxErrorKind>> 
 }
 // -- 入口函数 --
 pub fn parse_script(input: &str) -> Result<Expression, nom::Err<SyntaxErrorKind>> {
-    CFM_TEMP.with_borrow_mut(|x| *x = input.starts_with(">"));
-
     let str: Str = input.into();
     let token_vec = tokenize_source(&str)?;
     let (_, parsed) = parse_script_tokens(Tokens {
@@ -1740,7 +1735,7 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
     // if is_single_cmd && input.is_empty() {
 
     with_cfm_enabled(|cfm_enabled| {
-        if cfm_enabled || CFM_TEMP.with_borrow(|x| x == &true) {
+        if cfm_enabled {
             return match expr {
                 Expression::Symbol(s) => {
                     // 验证符号不是数字或特殊字符

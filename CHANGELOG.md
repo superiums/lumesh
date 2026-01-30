@@ -1,6 +1,10 @@
 # Changelog
 
 ## [0.12.0]
+- optimize temp CFM
+
+
+## [0.12.0]
 - not turn on CFM on default and let user define it in config or param.
 - flexiable swift to CFM/Normal mode in any mode:
 

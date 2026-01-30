@@ -1,5 +1,5 @@
 use crate::libs::pretty_printer;
-use crate::set_print_direct;
+use crate::{CFM_ENABLED, set_cfm_enabled, set_print_direct};
 
 use crate::utils::expand_home;
 use crate::with_print_direct;
@@ -28,6 +28,19 @@ fn run_file_via_pb(pb: PathBuf, env: &mut Environment) -> bool {
     }
 }
 
+pub fn parse_with_mode(text: &str) -> Result<Expression, SyntaxError> {
+    let temp_cfm = if text.starts_with(">") && CFM_ENABLED.with_borrow(|cfm| cfm == &false) {
+        set_cfm_enabled(true);
+        true
+    } else {
+        false
+    };
+    let parsed = parse(text);
+    if temp_cfm {
+        set_cfm_enabled(false);
+    }
+    parsed
+}
 pub fn parse(input: &str) -> Result<Expression, SyntaxError> {
     // dbg!(&input);
     match parse_script(input) {
@@ -51,7 +64,10 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
     if text.is_empty() {
         return true;
     };
-    match parse(text) {
+
+    let parsed = parse_with_mode(text);
+
+    match parsed {
         Ok(expr) => {
             // rl.add_history_entry(text.as_str());
             // if let Some(path) = &history_path {

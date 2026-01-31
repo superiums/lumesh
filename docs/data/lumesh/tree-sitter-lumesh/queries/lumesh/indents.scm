@@ -1,0 +1,1 @@
+/opt/code/tree-sitter/tree-sitter-lumesh/queries/indents.scm

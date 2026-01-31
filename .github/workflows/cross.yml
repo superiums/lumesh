@@ -34,12 +34,23 @@ jobs:
           draft: false
           prerelease: false
           body: |
-            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
-            - lume: an edition contains interactive repl and script parser.
-            - lume-se: an swift edition only contains script parser. used to run script swiftly.
-            - doc: help docs.
+            This is a new release of lumesh.
+            [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            - for windows user:
+              download `lume-x86_64-pc-windows-gnu.exe` and launch it from `wt`
+              optional: pick up one or more cmds completion data from data.tgz if you need.
+                as they're mainly for linux commands. but some are the same. eg: `wget`, `curl`
+              know issue: use colorized prompt may leads cursor position move.
 
-            If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
+            - for unix user:
+              download `install.sh` and install via this script is suggestted.
+              optional:
+                also you may manually choose the binary for your platform.
+                don't forget type `chmod +x lume` to give it the permission.
+                extract data.tgz is needed to enable cmd param completion.
+
+            - data.tgz: command param completion data and mod, example configs.
+            - doc: help docs.
 
   build_docs:
     name: Build documentation

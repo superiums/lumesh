@@ -10,8 +10,8 @@ English | [简体中文](README-cn.md)
 | [GitHub](https://github.com/superiums/lumesh)
 | [Document](https://lumesh.codeberg.page/)
 | [DeepWiki](https://deepwiki.com/superiums/lumesh)
-| [release-page 1](https://codeberg.com/santo/lumesh/releases)
-| [release-page 2](https://github.com/superiums/lumesh/releases)
+| [release-page 1](https://github.com/superiums/lumesh/releases)
+| [release-page 2](https://codeberg.org/santo/lumesh/releases)
 | [tree-sitter](https://github.com/superiums/tree-sitter-lumesh)
 
 
@@ -63,6 +63,9 @@ Lumesh is a modern shell and scripting language, as a bash replacer, it was comp
 
 ## ⚑ Core Features
 
+### ⚡ Cross Platform
+Experience one style every place.
+
 ### ⚡ Intuitive Syntax Design
 ```bash
 # Syntax like modern programming languages
@@ -96,7 +99,7 @@ command ?!        # Terminate on error (terminate pipeline)
 ### ⚡ Diverse Pipeline Operations
 ```bash
 data | process           # Standard pipeline, supports structured data
-data |_ positional       # Positional pipeline
+data | positional a _ c  # Positional pipeline
 data |> loop_deel        # Loop pipeline
 data |^ interactive      # PTY pipeline
 ```
@@ -124,7 +127,7 @@ Supports function decorator syntax:
 
 ```bash
 @decorator_name
-@decorator_with_args(param1, param2)
+@decorator_with_args(arg)
 fn my_function() { ... }
 ```
 
@@ -133,6 +136,7 @@ Supports module import syntax:
 
 ```bash
 use moduleA as ma
+ma::method()
 ```
 
 ### AI Integration Support
@@ -143,20 +147,26 @@ Built-in local AI assistant, supports command completion and smart suggestions.
 
 ### Installation Methods
 
-**Method 1: Download Precompiled Version**
-- [release-page 1](https://codeberg.com/santo/lumesh/releases)
-- [release-page 2](https://github.com/superiums/lumesh/releases)
+**method 1: use install script**
+- [download install.sh](https://github.com/superiums/lumesh/releases/latest)
+ and run `bash ./install.sh`
 
-**Method 2: Build from Cargo**
-```bash
-cargo install lumesh
-```
+**Method 2: Download Precompiled Version**
+- [release-page 1](https://github.com/superiums/lumesh/releases)
+- [release-page 2](https://codeberg.com/santo/lumesh/releases)
+
+> you need to manually extra data.tgz to data directory to enable param completion.
 
 **Method 3: Compile from Source**
 ```bash
 git clone 'https://codeberg.com/santo/lumesh.git'
 cd lumesh
 cargo build --release
+```
+
+**Method 4: Build from Cargo**
+```bash
+cargo install lumesh
 ```
 
 ### Experience Immediately

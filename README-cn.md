@@ -6,14 +6,15 @@
 ![GitHub Release](https://img.shields.io/github/v/release/superiums/lumesh)
 
 
+[Codeberg](https://codeberg.org/santo/lumesh)
+| [GitHub](https://github.com/superiums/lumesh)
 [文档](https://lumesh.codeberg.page/)
 | [DeepWiki](https://deepwiki.com/superiums/lumesh)
-| [发布页 1](https://codeberg.com/santo/lumesh/releases)
-| [发布页 2](https://github.com/superiums/lumesh/releases)
+| [发布页 1](https://github.com/superiums/lumesh/releases)
+| [发布页 2](https://codeberg.com/santo/lumesh/releases)
 | [语法高亮](https://github.com/superiums/tree-sitter-lumesh)
 
 
-- 开发现在在 Codeberg [https://codeberg.org/santo/lumesh] 继续进行， GitHub [https://github.com/superiums/lumesh] 仓库将成为镜像。
 ```
      ⚡┓
       ┃ ┓┏┏┳┓┏┓
@@ -63,6 +64,9 @@ Lumesh 是一个现代化的 shell 和脚本语言, Bash替代者，完全重写
 
 ## ⚑ 核心特性
 
+### ⚡ 跨平台
+在任何地方拥有一致的体验。
+
 ### ⚡ 直观的语法设计
 
 ```bash
@@ -100,7 +104,7 @@ command ?!        # 遇错终止  (终止管道)
 ### ⚡ 多样化管道操作
 ```bash
 data | process           # 标准管道,支持结构化数据
-data |_ positional       # 位置管道
+data | positional a _ c  # 位置管道
 data |> loop_deel        # 循环管道
 data |^ interactive      # PTY 管道
 ```
@@ -129,7 +133,7 @@ ls -1 |> cp -r _ /tmp/
 
 ```bash
 @decorator_name
-@decorator_with_args(param1, param2)
+@decorator_with_args(arg)
 fn my_function() { ... }
 ```
 
@@ -139,6 +143,7 @@ fn my_function() { ... }
 
 ```bash
 use moduleA as ma
+ma::method()
 ```
 
 
@@ -150,20 +155,26 @@ use moduleA as ma
 
 ### 安装方式
 
-**方式一：下载预编译版本**
+**方式一：使用安装脚本**
+- [下载install.sh](https://github.com/superiums/lumesh/releases/latest)
+  然后运行 `bash ./install.sh`
+  
+**方式二：下载预编译版本**
 - [release-page 1](https://codeberg.com/santo/lumesh/releases)
 - [release-page 2](https://github.com/superiums/lumesh/releases)
 
-**方式二：从cargo编译**
-```bash
-cargo install lumesh
-```
+> 如需命令参数自动完成功能，需手动解压data到数据目录
 
 **方式三：从源码编译**
 ```bash
 git clone 'https://codeberg.com/santo/lumesh.git'
 cd lumesh
 cargo build --release
+
+**方式四：从cargo编译**
+```bash
+cargo install lumesh
+```
 ```
 
 ### 立即体验

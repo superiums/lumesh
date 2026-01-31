@@ -41,32 +41,25 @@ steps:
 
   build_docs:
     image: alpine:latest
-    commands:
-      - mkdir -p tmp/doc/install
-      - cp CHANGELOG.md tmp/doc/
-      - cp README.md tmp/doc/
-      - cp docs/INS_README.md tmp/doc/
-      - cp docs/RULE.md tmp/doc/
-      - cp -r docs/config tmp/doc/
-      - cp -r docs/unprocessed tmp/doc/
-      - cp -r docs/mods tmp/doc/install
-      - cp -r docs/completions tmp/doc/install
-      - cp LICENSE tmp/doc/install
+    commands: |
+      mkdir -p tmp/doc
+      cp CHANGELOG.md tmp/doc/
+      cp README.md tmp/doc/
+      cp LICENSE tmp/doc/
+      cp docs/INS_README.md tmp/doc/
+      cp docs/RULE.md tmp/doc/
 
-      - cp docs/install.sh .
-      - cp docs/install.bat .
-      - tar -czvf doc.tar.gz -C tmp doc
-      # - apk add zip
-      # - zip -r doc.zip tmp/doc/*
+      tar -czf data.tgz -C docs/data lumesh
+      tar -czvf doc.tgz -C tmp doc
     depends_on: [create_release]
 
   publish_doc:
     image: woodpeckerci/plugin-release
     settings:
       files:
-        - "doc.tar.gz"
-        - "install.sh"
-        - "install.bat"
+        - "data.tgz"
+        - "doc.tgz"
+        - "docs/install.sh"
       api_key:
         from_secret: codeberg_token
     depends_on: [build_docs]

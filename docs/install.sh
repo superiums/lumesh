@@ -16,7 +16,7 @@ CODEBERG_REPO="santo/lumesh"
 GITHUB_REPO="superiums/lumesh"
 INSTALL_DIR="$HOME/.local/bin"  # Default to user installation
 CONFIG_DIR="$HOME/.config/lumesh"
-DOC_DIR="$HOME/.local/share/lumesh"
+DOC_DIR="$HOME/.local/share"
 SYSTEM_INSTALL_DIR="/usr/local/bin"
 # Use sudo for system installation if needed
 sudo_cmd=""
@@ -37,7 +37,7 @@ ask_install_type() {
         2)
             INSTALL_DIR="$SYSTEM_INSTALL_DIR"
             # CONFIG_DIR="/etc/lumesh"
-            DOC_DIR="/usr/local/share/lumesh"
+            DOC_DIR="/usr/local/share"
             echo -e "${GREEN}System installation selected${NC}"
             echo -e "${YELLOW}Note: This will require sudo privileges${NC}"
             if [ "$(id -u)" -ne 0 ]; then
@@ -229,10 +229,10 @@ download_docs() {
 
     # Use sudo for system installation if needed
     $sudo_cmd mkdir -p "$DOC_DIR"
-    local doc_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/doc.tar.gz"
+    local doc_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/data.tgz"
 
     # Download to temp file first, then move with sudo if needed
-    local temp_doc="/tmp/doc.tar.gz"
+    local temp_doc="/tmp/data.tgz"
     if command -v curl >/dev/null 2>&1; then
         curl -L -o "$temp_doc" "$doc_url"
     elif command -v wget >/dev/null 2>&1; then
@@ -241,12 +241,15 @@ download_docs() {
 
     # Extract and move to final location
     cd /tmp
-    tar -xzf "$temp_doc"
     mkdir -p "$CONFIG_DIR"
-    cp -f doc/config/config.lm  "$CONFIG_DIR/"
-    cp -f doc/config/prompt* "$CONFIG_DIR/"
-    $sudo_cmd cp -rf doc/install/* "$DOC_DIR/"
-    rm -rf doc "$temp_doc"
+
+    $sudo_cmd tar -xzf "$temp_doc" -C "$DOC_DIR"  
+    if [ -d "$DOC_DIR/lumesh/examples" ]; then  
+        cp "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"  
+        cp "$DOC_DIR/lumesh/examples/prompt*.lm" "$CONFIG_DIR/" 2>/dev/null || true  
+    fi
+  
+    rm -rf "$temp_doc"
 
     echo -e "${GREEN}Documentation extracted to: $DOC_DIR${NC}"
 }

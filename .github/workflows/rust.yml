@@ -147,8 +147,8 @@ jobs:
 
       - name: print dir
         run: |
-          ls target
           ls target/**
+          ls target/x86_64-pc-windows-gnu
 
       - name: Upload x86_64-unknown-linux-gnu
         uses: actions/upload-release-asset@v1
@@ -197,7 +197,7 @@ jobs:
         with:
           upload_url: ${{ needs.create_release.outputs.upload_url }}
           asset_name: lume-x86_64-pc-windows-gnu
-          asset_path: target/x86_64-pc-windows-gnu/release/lume
+          asset_path: target/x86_64-pc-windows-gnu/release/lume.exe
           asset_content_type: application/octet-stream
 
       # aarch

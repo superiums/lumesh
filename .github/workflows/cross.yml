@@ -1,4 +1,4 @@
-name: Build Cross
+name: Build Rust Cross
 
 on:
   workflow_dispatch:

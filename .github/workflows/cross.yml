@@ -1,0 +1,128 @@
+name: Build Cross
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to deploy"
+        required: true
+  push:
+    tags:
+      - "[0-9]+.*"
+  release:
+    types: [created]
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Set variables
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          body: |
+            This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
+            - lume: an edition contains interactive repl and script parser.
+            - lume-se: an swift edition only contains script parser. used to run script swiftly.
+            - doc: help docs.
+
+            If you're running on Linux, macOS or Windows, you can probably use one of the binaries below.
+
+  build_docs:
+    name: Build documentation
+    needs: create_release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate docs
+        run: |
+          mkdir -p tmp/doc/install
+          cp CHANGELOG.md tmp/doc/
+          cp README.md tmp/doc/
+          cp docs/INS_README.md tmp/doc/
+          cp docs/RULE.md tmp/doc/
+          cp -r docs/config tmp/doc/
+          cp -r docs/unprocessed tmp/doc/
+          cp -r docs/mods tmp/doc/install
+          cp -r docs/completions tmp/doc/install
+          cp LICENSE tmp/doc/install
+
+      - name: Create compressed files
+        run: |
+          tar -czvf doc.tar.gz -C tmp doc
+          zip -r doc.zip tmp/doc/*
+
+      - name: Upload docs and install scripts
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            doc.tar.gz
+            doc.zip
+            docs/install.sh
+            docs/install.bat
+
+  build:
+    needs: [create_release]
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+          - x86_64-apple-darwin
+          - x86_64-pc-windows-gnu
+          - aarch64-unknown-linux-gnu
+          - aarch64-unknown-linux-musl
+        include:
+          - target: x86_64-unknown-linux-gnu
+            asset_name: lume-x86_64-linux-gnu
+            binary_path: target/x86_64-unknown-linux-gnu/release/lume
+          - target: x86_64-unknown-linux-musl
+            asset_name: lume-x86_64-linux-musl
+            binary_path: target/x86_64-unknown-linux-musl/release/lume
+          - target: x86_64-apple-darwin
+            asset_name: lume-x86_64-apple-darwin
+            binary_path: target/x86_64-apple-darwin/release/lume
+          - target: x86_64-pc-windows-gnu
+            asset_name: lume-x86_64-pc-windows-gnu.exe
+            binary_path: target/x86_64-pc-windows-gnu/release/lume.exe
+          - target: aarch64-unknown-linux-gnu
+            asset_name: lume-aarch64-linux-gnu
+            binary_path: target/aarch64-unknown-linux-gnu/release/lume
+          - target: aarch64-unknown-linux-musl
+            asset_name: lume-aarch64-linux-musl
+            binary_path: target/aarch64-unknown-linux-musl/release/lume
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build Release
+        uses: zijiren233/cargo-cross@v1
+        with:
+          command: build
+          targets: ${{ matrix.target }}
+          profile: release
+
+      - name: Upload binary
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: ${{ matrix.binary_path }}

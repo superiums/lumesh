@@ -77,61 +77,28 @@ jobs:
 
       - name: Generate docs
         run: |
-          mkdir -p tmp/doc/install
+          mkdir -p tmp/doc
           cp CHANGELOG.md tmp/doc/
           cp README.md tmp/doc/
+          cp LICENSE tmp/doc/
           cp docs/INS_README.md tmp/doc/
           cp docs/RULE.md tmp/doc/
-          cp -r docs/config tmp/doc/
-          cp -r docs/unprocessed tmp/doc/
-          cp -r docs/mods tmp/doc/install
-          cp -r docs/completions tmp/doc/install
-          cp LICENSE tmp/doc/install
+          cp docs/install_github.sh tmp/install.sh
 
       - name: Create compressed files
         run: |
-          tar -czvf doc.tar.gz -C tmp doc
-          zip -r doc.zip tmp/doc/*
+          tar -czf data.tgz -C docs/data lumesh
+          tar -czvf doc.tgz -C tmp doc
 
-      - name: Upload docs
-        uses: actions/upload-release-asset@v1
+      - name: Upload docs and install scripts
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: doc.tar.gz
-          asset_path: doc.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload doc.zip
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: doc.zip
-          asset_path: doc.zip
-          asset_content_type: application/zip
-
-      - name: Upload install.sh
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: install.sh
-          asset_path: docs/install.sh
-          asset_content_type: application/x-sh
-
-      - name: Upload install.bat
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create_release.outputs.upload_url }}
-          asset_name: install.bat
-          asset_path: docs/install.bat
-          asset_content_type: application/bat
+          files: |
+            data.tgz
+            doc.tgz
+            tmp/install.sh
 
   release_assets:
     name: Release assets

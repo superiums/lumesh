@@ -6,14 +6,15 @@ English | [简体中文](README-cn.md)
 [![GitHub Repo stars](https://img.shields.io/github/stars/superiums/lumesh)]()
 [![GitHub Release](https://img.shields.io/github/v/release/superiums/lumesh)]()
 
-
-[Document](https://lumesh.codeberg.page/)
+[Codeberg](https://codeberg.org/santo/lumesh)
+| [GitHub](https://github.com/superiums/lumesh)
+| [Document](https://lumesh.codeberg.page/)
 | [DeepWiki](https://deepwiki.com/superiums/lumesh)
 | [release-page 1](https://codeberg.com/santo/lumesh/releases)
 | [release-page 2](https://github.com/superiums/lumesh/releases)
 | [tree-sitter](https://github.com/superiums/tree-sitter-lumesh)
 
-- Development is now continuing on [Codeberg](https://codeberg.org/santo/lumesh), with the [GitHub](https://github.com/superiums/lumesh) repository becoming a mirror. Issues & pull requests on GitHub will be ignored from now on.
+
 ```
      ⚡┓
       ┃ ┓┏┏┳┓┏┓

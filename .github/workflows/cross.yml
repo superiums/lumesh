@@ -51,21 +51,18 @@ jobs:
 
       - name: Generate docs
         run: |
-          mkdir -p tmp/doc/install
+          mkdir -p tmp/doc
           cp CHANGELOG.md tmp/doc/
           cp README.md tmp/doc/
+          cp LICENSE tmp/doc/
           cp docs/INS_README.md tmp/doc/
           cp docs/RULE.md tmp/doc/
-          cp -r docs/config tmp/doc/
-          cp -r docs/unprocessed tmp/doc/
-          cp -r docs/mods tmp/doc/install
-          cp -r docs/completions tmp/doc/install
-          cp LICENSE tmp/doc/install
+          cp docs/install_github.sh tmp/install.sh
 
       - name: Create compressed files
         run: |
-          tar -czvf doc.tar.gz -C tmp doc
-          zip -r doc.zip tmp/doc/*
+          tar -czf data.tgz -C docs/data lumesh
+          tar -czvf doc.tgz -C tmp doc
 
       - name: Upload docs and install scripts
         uses: softprops/action-gh-release@v1
@@ -73,10 +70,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            doc.tar.gz
-            doc.zip
-            docs/install.sh
-            docs/install.bat
+            data.tgz
+            doc.tgz
+            tmp/install.sh
 
   build:
     needs: [create_release]
@@ -103,7 +99,7 @@ jobs:
             asset_name: lume-x86_64-apple-darwin
             binary_name: lume
           - target: x86_64-pc-windows-gnu
-            asset_name: lume-x86_64-pc-windows-gnu
+            asset_name: lume-x86_64-pc-windows-gnu.exe
             binary_name: lume.exe
           - target: aarch64-unknown-linux-gnu
             asset_name: lume-aarch64-linux-gnu

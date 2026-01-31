@@ -34,7 +34,7 @@ if IS_INTERACTIVE {
         + (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
         + '> '.green().bold()
     }
-    include ~/.config/lumesh/prompt_ka.lm
+    # include ~/.config/lumesh/prompt_ka.lm
 
     ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'

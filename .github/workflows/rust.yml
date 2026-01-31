@@ -1,4 +1,4 @@
-name: Build Cross
+name: Build Rust Pre
 
 # copied and modified from https://github.com/Aloso/colo/blob/main/.github/workflows/release.yml
 
@@ -37,7 +37,7 @@ jobs:
           tag_name: ${{ github.ref }}
           name: Release ${{ github.ref }}
           draft: false
-          prerelease: false
+          prerelease: true
           body: |
             This is a new release of lumesh. [Read the changelog here](https://codeberg.com/santo/lumesh/blob/${{ steps.vars.outputs.tag }}/CHANGELOG.md).
             - lume: an edition contains interactive repl and script parser.

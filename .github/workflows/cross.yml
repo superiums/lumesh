@@ -8,7 +8,7 @@ on:
         required: true
   push:
     tags:
-      - "[0-9]+.*"
+      - "c[0-9]+.*"
   release:
     types: [created]
 
@@ -30,7 +30,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          name: Cross Release ${{ steps.vars.outputs.tag }}
           draft: false
           prerelease: false
           body: |
@@ -89,25 +89,37 @@ jobs:
           - x86_64-pc-windows-gnu
           - aarch64-unknown-linux-gnu
           - aarch64-unknown-linux-musl
+          - x86_64-unknown-freebsd
+          - aarch64-linux-android
+          - aarch64-apple-darwin
         include:
           - target: x86_64-unknown-linux-gnu
             asset_name: lume-x86_64-linux-gnu
-            binary_path: target/x86_64-unknown-linux-gnu/release/lume
+            binary_name: lume
           - target: x86_64-unknown-linux-musl
             asset_name: lume-x86_64-linux-musl
-            binary_path: target/x86_64-unknown-linux-musl/release/lume
+            binary_name: lume
           - target: x86_64-apple-darwin
             asset_name: lume-x86_64-apple-darwin
-            binary_path: target/x86_64-apple-darwin/release/lume
+            binary_name: lume
           - target: x86_64-pc-windows-gnu
-            asset_name: lume-x86_64-pc-windows-gnu.exe
-            binary_path: target/x86_64-pc-windows-gnu/release/lume.exe
+            asset_name: lume-x86_64-pc-windows-gnu
+            binary_name: lume.exe
           - target: aarch64-unknown-linux-gnu
             asset_name: lume-aarch64-linux-gnu
-            binary_path: target/aarch64-unknown-linux-gnu/release/lume
+            binary_name: lume
           - target: aarch64-unknown-linux-musl
             asset_name: lume-aarch64-linux-musl
-            binary_path: target/aarch64-unknown-linux-musl/release/lume
+            binary_name: lume
+          - target: x86_64-unknown-freebsd
+            asset_name: lume-x86_64-freebsd
+            binary_name: lume
+          - target: aarch64-linux-android
+            asset_name: lume-aarch64-linux-android
+            binary_name: lume
+          - target: aarch64-apple-darwin
+            asset_name: lume-aarch64-apple-darwin
+            binary_name: lume
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -120,9 +132,13 @@ jobs:
           targets: ${{ matrix.target }}
           profile: release
 
+      - name: Rename binary to correct asset name
+        run: |
+          cp target/${{ matrix.target }}/release/${{ matrix.binary_name }} ${{ matrix.asset_name }}
+
       - name: Upload binary
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: ${{ matrix.binary_path }}
+          files: ${{ matrix.asset_name }}

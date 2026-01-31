@@ -355,7 +355,81 @@ add_to_shell_list() {
         echo -e "${BLUE}You can change your shell later with: chsh -s $lume_path${NC}"  
     fi  
 }  
+
+# Configure Helix editor for tree-sitter-lumesh syntax highlighting  
+configure_helix_lumesh() {  
+    echo -e "${BLUE}Checking Grammar Highlight Config...${NC}"  
+    
+    local HELIX_CONFIG="$HOME/.config/helix"  
+    local HELIX_RUNTIME="$HELIX_CONFIG/runtime"  
+      
+    # Detect if Helix is installed  
+    if ! command -v hx >/dev/null 2>&1 && [[ ! -d "$HELIX_CONFIG" ]]; then  
+        echo "❌ Helix editor not detected"  
+        return 1  
+    fi  
+      
+    echo "✅ Helix editor detected, starting configuration..."  
+      
+    # Check if source files exist  
+    local GRAMMAR_SO="$DOC_DIR/lumesh/tree-sitter-lumesh/grammars/lumesh.so"  
+    local QUERIES_DIR="$DOC_DIR/lumesh/tree-sitter-lumesh/queries/lumesh"  
+      
+    if [[ ! -f "$GRAMMAR_SO" ]]; then  
+        echo "❌ Grammar file not found: $GRAMMAR_SO"  
+        return 1  
+    fi  
+      
+    if [[ ! -d "$QUERIES_DIR" ]]; then  
+        echo "❌ Queries directory not found: $QUERIES_DIR"  
+        return 1  
+    fi  
+      
+    # Create runtime directories  
+    mkdir -p "$HELIX_RUNTIME/grammars"  
+    mkdir -p "$HELIX_RUNTIME/queries"  
+      
+    # Create symbolic links  
+    echo "🔗 Creating grammar file symlink..."  
+    ln -sf "$GRAMMAR_SO" "$HELIX_RUNTIME/grammars/lumesh.so"  
+      
+    echo "🔗 Creating queries directory symlink..."  
+    ln -sf "$QUERIES_DIR" "$HELIX_RUNTIME/queries/lumesh"  
+      
+    # Create languages.toml configuration  
+    local LANG_FILE="$HELIX_CONFIG/languages.toml"  
+      
+    # Check if configuration already exists  
+    if ! grep -q "name = \"lumesh\"" "$LANG_FILE" 2>/dev/null; then  
+        echo "📝 Adding language configuration..."  
+        cat >> "$LANG_FILE" << 'EOF'  
   
+[[language]]  
+name = "lumesh"  
+scope = "source.lumesh"  
+injection-regex = "lumesh"  
+file-types = ["lm", "lumesh"]  
+shebangs = ["lume","lumesh"]  
+roots = []  
+comment-token = "#"  
+indent = { tab-width = 2, unit = "  " }  
+EOF  
+    else  
+        echo "ℹ️  Language configuration already exists"  
+    fi  
+      
+    echo "✅ Helix configuration completed!"  
+    echo ""  
+    echo "📋 Manual configuration instructions:"  
+    echo "1. Restart Helix editor to load new syntax"  
+    echo "2. If syntax highlighting is not working, check $LANG_FILE configuration"  
+    echo "3. Ensure $HELIX_RUNTIME/grammars/lumesh.so symlink is valid"  
+    echo ""  
+    echo "🔍 Verification commands:"  
+    echo "   ls -la $HELIX_RUNTIME/grammars/lumesh.so"  
+    echo "   ls -la $HELIX_RUNTIME/queries/lumesh"  
+}
+
 # Main installation  
 main() {  
     echo -e "${BLUE}Lumesh GitHub Installation Script${NC}"  
@@ -374,6 +448,8 @@ main() {
     create_symlink  
     setup_path  
   
+    configure_helix_lumesh
+
     # Offer to add to shell list for system installation  
     if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ] && [ "$PLATFORM" != "windows" ]; then  
         echo ""  

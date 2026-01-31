@@ -35,7 +35,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          name: Release ${{ github.ref }}
+          name: Cross Release ${{ steps.vars.outputs.tag }}
+          # name: Release ${{ github.ref }}
           draft: false
           prerelease: true
           body: |

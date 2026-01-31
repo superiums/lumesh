@@ -100,7 +100,7 @@ fn flatten(
 
 // Helper Functions
 
-fn map_err(expr: &Expression, ctx: &Expression) -> RuntimeError {
+pub fn map_err(expr: &Expression, ctx: &Expression) -> RuntimeError {
     RuntimeError::new(
         RuntimeErrorKind::TypeError {
             expected: "Map".to_string(),

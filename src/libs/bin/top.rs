@@ -6,9 +6,10 @@ use std::{
 
 use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind, VERSION,
+    eval::State,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
-        bin::boolean_lib::not,
+        bin::{boolean_lib::not, list_lib::get_list_ref, map_lib::map_err},
         helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_ref},
         pretty_printer,
     },
@@ -748,47 +749,33 @@ fn r#where(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    // dbg!(&args);
     check_exact_args_len("where", args, 2, ctx)?;
-
-    let data = if let Expression::List(list) = args[0].eval(env)? {
-        list
-    } else {
-        return Err(RuntimeError::new(
-            RuntimeErrorKind::CustomError("Expected list for filtering".into()),
-            ctx.clone(),
-            0,
-        ));
-    };
+    let list = args[0].eval(env)?;
+    let list = get_list_ref(&list, ctx)?;
 
     let mut filtered = Vec::new();
-
-    let mut row_env = env.fork();
-    row_env.define("LINES", Expression::Integer(data.len() as i64));
-    for (i, row) in data.as_ref().iter().enumerate() {
-        row_env.define("LINENO", Expression::Integer(i as i64));
-
-        // dbg!(row_env.get("LINENO"));
+    let mut state = State::new();
+    state.set(State::IN_LOCAL);
+    for (i, row) in list.iter().enumerate() {
+        state.set_local_var("NR".to_string(), Expression::Integer(i as i64));
         if let Expression::HMap(row_map) = row {
-            for (k, v) in row_map.as_ref() {
-                row_env.define(k, v.clone());
-            }
-            if let Expression::Boolean(true) = args[1].eval(&mut row_env)? {
+            state.set_local_vars(row_map.as_ref().clone());
+            if let Expression::Boolean(true) = args[1].eval_mut(&mut state, env, 0)? {
                 filtered.push(row.clone());
             }
         } else if let Expression::Map(row_map) = row {
             for (k, v) in row_map.as_ref() {
-                row_env.define(k, v.clone());
+                state.set_local_var(k.to_string(), v.clone());
             }
 
-            let c = args[0].eval(&mut row_env)?;
-            // dbg!(&c);
+            let c = args[1].eval_mut(&mut state, env, 0)?;
             if let Expression::Boolean(true) = c {
                 filtered.push(row.clone());
             }
+        } else {
+            return Err(map_err(row, ctx));
         }
     }
-
     Ok(Expression::from(filtered))
 }
 

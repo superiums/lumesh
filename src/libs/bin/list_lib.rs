@@ -1242,7 +1242,7 @@ fn unzip(
 //         )),
 //     }
 // }
-fn get_list_ref<'a>(
+pub fn get_list_ref<'a>(
     expr: &'a Expression,
     ctx: &Expression,
 ) -> Result<&'a Rc<Vec<Expression>>, RuntimeError> {

@@ -403,7 +403,7 @@ configure_helix_lumesh() {
     if ! grep -q "name = \"lumesh\"" "$LANG_FILE" 2>/dev/null; then  
         echo "📝 Adding language configuration..."  
         cat >> "$LANG_FILE" << 'EOF'  
-  
+
 [[language]]  
 name = "lumesh"  
 scope = "source.lumesh"  
@@ -413,10 +413,10 @@ shebangs = ["lume","lumesh"]
 roots = []  
 comment-token = "#"  
 indent = { tab-width = 2, unit = "  " }  
-EOF  
+EOF
     else  
         echo "ℹ️  Language configuration already exists"  
-    fi  
+    fi
       
     echo "✅ Helix configuration completed!"  
     echo ""  

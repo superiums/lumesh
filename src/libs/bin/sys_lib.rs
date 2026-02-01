@@ -7,7 +7,7 @@ use crate::libs::helper::{check_exact_args_len, get_integer_ref, get_string_ref}
 use crate::{
     CFM_ENABLED, Environment, Expression, Int, LmError, MAX_RUNTIME_RECURSION,
     MAX_SYNTAX_RECURSION, MAX_USEMODE_RECURSION, PRINT_DIRECT, RuntimeError, STRICT_ENABLED,
-    set_cfm_enabled, set_print_direct, set_strict_enabled,
+    parse_and_eval, set_cfm_enabled, set_print_direct, set_strict_enabled,
 };
 use std::collections::BTreeMap;
 
@@ -16,11 +16,11 @@ use crate::{reg_info, reg_lazy};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
-        env, set, unset,
+        env, set, unset,get,
         vars, has, defined,
         quote, ecodes_rt, ecodes_lm,
         print_tty, discard,
-        info,modes,
+        info,modes,cds,
         // throw,
         max_syntax,
         max_runtime,
@@ -35,6 +35,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         env => "get root environment as a map", ""
         set => "define a variable in root environment", "<var> <val>"
         unset => "undefine a variable in root environment", "<var>"
+        get => "get a variable value", "<var>"
 
         vars => "get defined variables in current enviroment", ""
         has => "check if a variable is defined in current environment", "<var>"
@@ -49,6 +50,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
         info => "get os info", ""
         modes => "get lume modes", ""
+        cds => "fuzzy change directories in histroy", ""
 
         max_syntax => "get/set max syntax recursion","[int]"
         max_runtime=> "get/set max runtime recursion","[int]"
@@ -159,6 +161,16 @@ pub fn unset(
     let name = args[0].to_string();
     env.undefine_in_root(&name);
     Ok(Expression::None)
+}
+
+fn get(
+    args: &[Expression],
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("get", args, 1, ctx)?;
+    let name = args[0].to_string();
+    Ok(env.get(&name).unwrap_or(Expression::None))
 }
 
 fn has(
@@ -285,5 +297,15 @@ fn set_pdm(
     } else {
         println!("\x1b[38;5;209m[Print Direct Mode: OFF]\x1b[0m");
     }
+    Ok(Expression::None)
+}
+
+fn cds(
+    _args: &[Expression],
+    env: &mut Environment,
+    _ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    let cmd = "ui.pick $PATH_SESSION 'cd to:' ?! | cd _";
+    parse_and_eval(&cmd, env);
     Ok(Expression::None)
 }

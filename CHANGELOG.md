@@ -3,6 +3,8 @@
 ## [0.12.2]
 - optimize `where` to use local var instead of env
 `$NR` was injected to show number of record. same as awk.
+- add `get`, `cds` in sys lib.
+- fix cmds like `cd _`.
 
 
 ## [0.12.1]

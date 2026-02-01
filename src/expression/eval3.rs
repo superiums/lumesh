@@ -44,6 +44,7 @@ pub fn prepare_args<'a>(
     };
     for arg in args.iter() {
         match arg.eval_mut(state, env, depth) {
+            Ok(Expression::Blank) => {} //give up bank after eval
             Ok(a) => args_eval.push(a),
             Err(e) => return Err(e),
         }

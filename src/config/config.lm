@@ -91,6 +91,7 @@ if IS_INTERACTIVE {
     }
 
     ### alias
+    alias cds = sys.cds()
     alias int = into.int()
     alias str = into.str()
     alias each = list.map()

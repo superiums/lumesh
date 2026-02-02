@@ -1,8 +1,9 @@
 # Changelog
 
-## [0.12.2]
-- optimize `where` to use local var instead of env
+## [0.12.3]
+
 `$NR` was injected to show number of record. same as awk.
+
 - add `get`, `cds` in sys lib.
 - fix cmds like `cd _`.
 - fix lazy cmd args for `sys.set`, `sys.unset`
@@ -10,7 +11,12 @@
 - fix `export` cmd
 - fix `set_strict` env
 
+## [0.12.2]
+
+- optimize `where` to use local var instead of env
+
 ## [0.12.1]
+
 - optimize temp CFM
 - respect mode set in config, cover it with cmd param.
 - read config from static var insteadof env.
@@ -18,7 +24,7 @@
 - add `ctx` for template function
 - add `sys.modes` to get the modes of lume
 - add `?~` to convert err to boolean
-this will return `true` if cmd/func/operatrion execute successfully.
+  this will return `true` if cmd/func/operatrion execute successfully.
 
 return `false` if error occurs.
 
@@ -29,7 +35,8 @@ cmd a ?: cmd b      # also exec 2nd if 1st fail.
 ```
 
 - compare with auto type convert.
-now able to compare float and int and number like string.
+  now able to compare float and int and number like string.
+
 ```bash
 "3" > 1         # true
 1.1 >= 1        # true
@@ -39,12 +46,12 @@ now able to compare float and int and number like string.
 ```
 
 - add absolute equals `===` and `!==`
-this requires both type and value to be equal
+  this requires both type and value to be equal
 
 - removed `~=` and `!~='
 
-
 ## [0.12.0]
+
 - not turn on CFM on default and let user define it in config or param.
 - flexiable swift to CFM/Normal mode in any mode:
 
@@ -57,6 +64,7 @@ type `>` prefix to swift to CFM temply.
 - colorize valid cmd afer ':' '>' prefix.
 
 ## [0.11.9]
+
 - fix arg postion of ui.pick
 - fix cmd capture in `let` declare
 - add tips for CFM and Strict mode.
@@ -64,25 +72,22 @@ type `>` prefix to swift to CFM temply.
 ## [0.11.8]
 
 - give up auto convert from property to chaincall.
-it may be a map property.
+  it may be a map property.
 
 - fix homepage address.
 - fix config for win.
 - optimize return for iteration:
-if no result returned, never display empty list, but only none.
+  if no result returned, never display empty list, but only none.
 - fix the tailing `\0` for windows.
 - optimize non-zero exit code report for windows.
-
 
 ## [0.11.7]
 
 - add `export`
   now you could export a var as bash:
   `export PATH=/usr/bin`
-  
 - update config
   set parent vars with `set` cmd
-  
 - clean all lib
   remove uneccessary eval. use ref instead of clone.
   efficency more.
@@ -98,14 +103,12 @@ if no result returned, never display empty list, but only none.
   # hi,lumesh was borned on 2025, age is 1
   ```
   the old `string.format` was removed.
-  
 - convert property to chaincall if on right of pipe.
 - eval position receiver for lazy cmd.
 - prepare blank `PATH_SESSION` on start.
 - add `sys.set_strict`
 - rename `STRICT` to `IS_STRICT`
 
-  
 ## [0.11.6]
 
 - introduce `set`

@@ -311,16 +311,17 @@ impl Expression {
                         env.define(name, value);
                     } else if env.is_defined(name) {
                         // 向上层环境查找并修改
-                        let mut current_env = env.clone();
+                        state.set(State::IN_ASSIGN);
+                        let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
+                        state.clear(State::IN_ASSIGN);
+
+                        let mut current_env = env;
                         while let Some(parent) = current_env.get_parent_mut() {
                             if parent.has(name) {
-                                state.set(State::IN_ASSIGN);
-                                let value = expr.as_ref().eval_mut(state, env, depth + 1)?;
-                                state.clear(State::IN_ASSIGN);
                                 parent.define(name, value);
                                 break;
                             }
-                            current_env = parent.clone();
+                            current_env = parent;
                         }
                     } else {
                         if state.contains(State::STRICT) {
@@ -401,6 +402,7 @@ impl Expression {
                             ));
                         }
                     };
+                    env.define_in_root(name, value.clone());
                     unsafe {
                         std::env::set_var(name, value.to_string());
                     }

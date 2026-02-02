@@ -5,7 +5,10 @@
 `$NR` was injected to show number of record. same as awk.
 - add `get`, `cds` in sys lib.
 - fix cmds like `cd _`.
-
+- fix lazy cmd args for `sys.set`, `sys.unset`
+- optimize `set` cmd
+- fix `export` cmd
+- fix `set_strict` env
 
 ## [0.12.1]
 - optimize temp CFM

@@ -139,9 +139,9 @@ fn main() {
         );
         env_config(&mut cli_env, cli.no_ai);
         if cli.strict {
-            set_strict(true, &mut env);
+            set_strict(true, &mut cli_env);
         } else if cli.no_strict {
-            set_strict(false, &mut env);
+            set_strict(false, &mut cli_env);
         }
         parse_and_eval(cmd.as_str(), &mut cli_env);
 
@@ -169,9 +169,9 @@ fn main() {
             );
             env_config(&mut cli_env, cli.no_ai);
             if cli.strict {
-                set_strict(true, &mut env);
+                set_strict(true, &mut cli_env);
             } else if cli.no_strict {
-                set_strict(false, &mut env);
+                set_strict(false, &mut cli_env);
             }
             // let path = PathBuf::from(file);
             run_file(s, &mut cli_env);
@@ -184,9 +184,9 @@ fn main() {
 
         env_config(&mut cli_env, cli.no_ai);
         if cli.strict {
-            set_strict(true, &mut env);
+            set_strict(true, &mut cli_env);
         } else if cli.no_strict {
-            set_strict(false, &mut env);
+            set_strict(false, &mut cli_env);
         }
         if cli.cfm {
             set_cfm(true, &mut cli_env);

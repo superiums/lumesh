@@ -7,7 +7,9 @@ use crate::libs::{get_builtin_via_expr, is_lib};
 use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, RuntimeErrorKind};
 
 // 需要延迟解析的特殊命令列表
-const LAZY_EVAL_COMMANDS: &[&str] = &["where", "repeat", "debug", "ddebug", "typeof"];
+const LAZY_EVAL_COMMANDS: &[&str] = &[
+    "where", "repeat", "debug", "ddebug", "typeof", "set", "unset",
+];
 
 pub fn prepare_args<'a>(
     cmd: &str,
@@ -774,8 +776,11 @@ pub fn handle_builtin(
         // only current env knows the state.
 
         let p_args = match base {
-            // lazy cmd is in top
+            // lazy cmd is in top and sys
             Expression::Blank => prepare_args(method, args, true, None, env, state, depth)?,
+            Expression::Symbol(s) if s == "sys" => {
+                prepare_args(method, args, true, None, env, state, depth)?
+            }
             // 判断是String.red 还是 ‘xx'.red
             Expression::Symbol(_) => prepare_args(method, args, false, None, env, state, depth)?,
             // 'xx' should be injected

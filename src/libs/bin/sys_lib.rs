@@ -140,6 +140,7 @@ fn vars(
     Ok(Expression::from(env.get_bindings_map()))
 }
 
+// lazy arg
 pub fn set(
     args: &[Expression],
     env: &mut Environment,
@@ -147,11 +148,12 @@ pub fn set(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set", args, 2, ctx)?;
     let name = args[0].to_string();
-    let expr = args[1].clone();
+    let expr = args[1].eval_in_assign(env)?;
     env.define_in_root(&name, expr);
     Ok(Expression::None)
 }
 
+// lazy arg
 pub fn unset(
     args: &[Expression],
     env: &mut Environment,

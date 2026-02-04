@@ -26,20 +26,26 @@ pub fn join_current_path(path: &str, env: &mut Environment) -> PathBuf {
     get_current_path(env).join(path)
 }
 pub fn abs(path: &str, env: &mut Environment) -> PathBuf {
-    if path.starts_with("./") || path == "." {
-        return join_current_path(path, env);
+    if path.starts_with("~") {
+        return PathBuf::from(expand_home(path).as_ref());
     }
-    PathBuf::from(expand_home(path).as_ref())
+
+    join_current_path(path, env)
 }
 pub fn abs_script(path: &str, env: &mut Environment) -> PathBuf {
-    if path.starts_with("./") {
-        let base = match env.get("SCRIPT") {
-            Some(Expression::String(s)) => PathBuf::from(s),
-            _ => get_current_path(env),
-        };
-        return base.join(path);
+    if path.starts_with("~") {
+        return PathBuf::from(expand_home(path).as_ref());
     }
-    PathBuf::from(expand_home(path).as_ref())
+
+    let base = match env.get("SCRIPT") {
+        Some(Expression::String(s)) => match PathBuf::from(s).parent() {
+            None => get_current_path(env),
+            Some(p) if p.to_string_lossy() == "" => get_current_path(env),
+            Some(p) => p.to_path_buf(),
+        },
+        _ => get_current_path(env),
+    };
+    base.join(path)
 }
 pub fn abs_check(path: &str, env: &mut Environment) -> Result<PathBuf, RuntimeError> {
     let abs = abs(path, env);

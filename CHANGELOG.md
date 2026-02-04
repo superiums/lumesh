@@ -5,6 +5,7 @@
 - optimize current dir read from env first.
 - fix relative path for pty cmd.
 - allow relative path based on `SCRIPT` env for `include` and `import`, and `config` file
+- fix default completion path for macos
 
 ## [0.12.3]
 

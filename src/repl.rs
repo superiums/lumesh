@@ -129,7 +129,15 @@ pub fn run_repl(env: &mut Environment) {
     let completion_dir = match env.get("LUME_COMPLETION_DIR") {
         Some(Expression::String(c)) => c,
         _ => {
-            if cfg!(unix) {
+            if cfg!(target_os = "macos") {
+                // macOS 回退到用户目录
+                dirs::data_local_dir()
+                    .unwrap_or_else(|| PathBuf::from("~/.local/share"))
+                    .join("lumesh/completions")
+                    .into_os_string()
+                    .into_string()
+                    .unwrap_or_else(|_| "~/.local/share/lumesh/completions".to_string())
+            } else if cfg!(unix) {
                 String::from("/usr/share/lumesh/completions")
             } else {
                 String::from("C:\\Program Files\\lumesh\\completions")

@@ -127,19 +127,37 @@ fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
 impl ParamCompleter {
     pub fn new(base_dir: String) -> Self {
         #[cfg(unix)]
-        let base_dirs = vec![
-            PathBuf::from(base_dir),
-            dirs::data_local_dir()
-                .unwrap_or(PathBuf::from("~/.local/share"))
-                .join("lumesh/vendor_completions"),
-            dirs::data_local_dir()
-                .unwrap_or(PathBuf::from("~/.local/share"))
-                .join("lumesh/completions"),
-            PathBuf::from("/usr/local/share/lumesh/vendor_completions.d"),
-            PathBuf::from("/usr/local/share/lumesh/completions"),
-            PathBuf::from("/usr/share/lumesh/vendor_completions.d"),
-            PathBuf::from("/usr/share/lumesh/completions"),
-        ];
+        let base_dirs = {
+            #[cfg(target_os = "macos")]
+            {
+                vec![
+                    PathBuf::from(base_dir),
+                    dirs::data_local_dir()
+                        .unwrap_or(PathBuf::from("~/.local/share"))
+                        .join("lumesh/vendor_completions"),
+                    dirs::data_local_dir()
+                        .unwrap_or(PathBuf::from("~/.local/share"))
+                        .join("lumesh/completions"),
+                    // macOS 上不使用 /usr/share 路径
+                ]
+            }
+            #[cfg(not(target_os = "macos"))]
+            {
+                vec![
+                    PathBuf::from(base_dir),
+                    dirs::data_local_dir()
+                        .unwrap_or(PathBuf::from("~/.local/share"))
+                        .join("lumesh/vendor_completions"),
+                    dirs::data_local_dir()
+                        .unwrap_or(PathBuf::from("~/.local/share"))
+                        .join("lumesh/completions"),
+                    PathBuf::from("/usr/local/share/lumesh/vendor_completions.d"),
+                    PathBuf::from("/usr/local/share/lumesh/completions"),
+                    PathBuf::from("/usr/share/lumesh/vendor_completions.d"),
+                    PathBuf::from("/usr/share/lumesh/completions"),
+                ]
+            }
+        };
 
         #[cfg(windows)]
         let base_dirs = vec![

@@ -1029,7 +1029,7 @@ impl Expression {
                             }
 
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path = abs(&s);
+                            let path = abs(&s, env);
                             if !path.exists() {
                                 std::fs::File::create(path.clone()).map_err(|e| {
                                     RuntimeError::from_io_error(
@@ -1095,7 +1095,7 @@ impl Expression {
 
                             // dbg!("-->> left=", &l);
                             let s = rhs.as_ref().eval_mut(state, env, depth + 1)?.to_string();
-                            let path = abs(&s);
+                            let path = abs(&s, env);
                             // If the contents are bytes, write the bytes directly to the file.
                             let result = if let Expression::Bytes(bytes) = l.clone() {
                                 std::fs::write(path, bytes)
@@ -1123,7 +1123,7 @@ impl Expression {
                             // 输入重定向处理
                             // handle_stdin_redirect(lhs, rhs, state, env, depth, true)
                             let path = rhs.eval_mut(state, env, depth + 1)?;
-                            let cpath = canon(&path.to_string())?;
+                            let cpath = canon(&path.to_string(), env)?;
                             let contents = std::fs::read_to_string(cpath)
                                 .map(Self::String)
                                 .map_err(|e| {

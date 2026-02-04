@@ -110,6 +110,13 @@ fn main() {
             env.define(&key, Expression::String(value));
         }
     }
+    // current dir
+    env.define(
+        "PWD",
+        Expression::String(
+            std::env::current_dir().map_or("/".to_string(), |c| c.to_string_lossy().to_string()),
+        ),
+    );
 
     let mut cli_env = env.fork();
     cli_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));

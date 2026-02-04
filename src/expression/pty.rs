@@ -1,7 +1,9 @@
 use super::terminal::{TerminalOps, get_terminal_impl};
-use crate::{Environment, RuntimeErrorKind};
+use crate::utils::get_current_path;
+use crate::{Environment, Expression, RuntimeErrorKind};
 use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::io::{self, Read, Write};
+use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
@@ -102,6 +104,13 @@ pub fn exec_in_pty(
     }
 
     let mut cmd = CommandBuilder::new(cmdstr);
+
+    let current_dir = env.get("PWD").map_or(get_current_path(env), |v| match v {
+        Expression::String(s) => PathBuf::from(s),
+        s => PathBuf::from(s.to_string()),
+    });
+    cmd.cwd(current_dir);
+
     if let Some(ag) = args {
         cmd.args(ag);
     }

@@ -2,7 +2,7 @@ use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind, childman,
     expression::pty::exec_in_pty,
     runtime::{IFS_CMD, ifs_contains},
-    utils::expand_home,
+    utils::{expand_home, get_current_path},
 };
 
 use super::eval::State;
@@ -43,11 +43,7 @@ fn exec_single_cmd(
 
     cmd.args(ar)
         .envs(env.get_root().get_bindings_string())
-        .current_dir(
-            std::env::current_dir().map_err(|e| {
-                RuntimeError::from_io_error(e, "get cwd".into(), job.clone(), depth)
-            })?,
-        );
+        .current_dir(get_current_path(env));
 
     // 设置 stdin
     if input.is_some() {

@@ -1,4 +1,4 @@
-use crate::{Expression, RuntimeError};
+use crate::{Environment, Expression, RuntimeError};
 use std::{borrow::Cow, path::PathBuf};
 
 // Helper functions
@@ -12,21 +12,27 @@ pub fn expand_home(path: &'_ str) -> Cow<'_, str> {
     Cow::Borrowed(path)
 }
 
-pub fn get_current_path() -> PathBuf {
+pub fn get_std_cwd() -> PathBuf {
     std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
 }
-
-pub fn join_current_path(path: &str) -> PathBuf {
-    get_current_path().join(path)
+pub fn get_current_path(env: &mut Environment) -> PathBuf {
+    env.get("PWD").map_or(get_std_cwd(), |v| match v {
+        Expression::String(s) => PathBuf::from(s),
+        s => PathBuf::from(s.to_string()),
+    })
 }
-pub fn abs(path: &str) -> PathBuf {
+
+pub fn join_current_path(path: &str, env: &mut Environment) -> PathBuf {
+    get_current_path(env).join(path)
+}
+pub fn abs(path: &str, env: &mut Environment) -> PathBuf {
     if path.starts_with("./") || path == "." {
-        return join_current_path(path);
+        return join_current_path(path, env);
     }
     PathBuf::from(expand_home(path).as_ref())
 }
-pub fn abs_check(path: &str) -> Result<PathBuf, RuntimeError> {
-    let abs = abs(path);
+pub fn abs_check(path: &str, env: &mut Environment) -> Result<PathBuf, RuntimeError> {
+    let abs = abs(path, env);
     if abs.exists() {
         return Ok(abs);
     }
@@ -36,8 +42,8 @@ pub fn abs_check(path: &str) -> Result<PathBuf, RuntimeError> {
         0,
     ))
 }
-pub fn canon(p: &str) -> Result<PathBuf, RuntimeError> {
-    let path = abs(p);
+pub fn canon(p: &str, env: &mut Environment) -> Result<PathBuf, RuntimeError> {
+    let path = abs(p, env);
     dunce::canonicalize(&path).map_err(|e| {
         RuntimeError::from_io_error(e, "canon".into(), Expression::String(p.to_string()), 0)
     })

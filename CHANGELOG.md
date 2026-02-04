@@ -2,6 +2,8 @@
 
 ## [0.12.4]
 - custom operator `..` should not cover `../`
+- optimize current dir read from env first.
+- fix relative path for pty cmd.
 
 
 ## [0.12.3]

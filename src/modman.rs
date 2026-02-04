@@ -93,7 +93,7 @@ fn find_module_file(
         .iter()
         .find_map(|path| {
             let path_str = path.to_str().unwrap_or_default();
-            canon(path_str).ok()
+            canon(path_str, env).ok()
         })
         .ok_or_else(|| {
             RuntimeError::common(

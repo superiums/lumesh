@@ -252,7 +252,7 @@ fn import(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("import", args, 1, ctx)?;
     let path = get_string_ref(&args[0], ctx)?;
-    let canon_path = canon(path)?;
+    let canon_path = canon(path, env)?;
     // Read the file.
     let contents = std::fs::read_to_string(canon_path).map_err(|e| {
         RuntimeError::common(
@@ -272,7 +272,7 @@ fn include(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("include", args, 1, ctx)?;
     let path = get_string_ref(&args[0], ctx)?;
-    let canon_path = canon(path)?;
+    let canon_path = canon(path, env)?;
 
     // Read the file.
     let contents = std::fs::read_to_string(canon_path).map_err(|e| {
@@ -361,10 +361,10 @@ fn cd(
 
 fn cwd(
     _: &[Expression],
-    _: &mut Environment,
+    env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let path = get_current_path();
+    let path = get_current_path(env);
     Ok(Expression::String(path.to_string_lossy().into_owned()))
 }
 

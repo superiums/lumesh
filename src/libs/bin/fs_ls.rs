@@ -24,7 +24,10 @@ pub struct LsOptions {
     pub show_path: bool,
 }
 
-pub fn parse_ls_args(args: &[Expression]) -> Result<(PathBuf, LsOptions), RuntimeError> {
+pub fn parse_ls_args(
+    args: &[Expression],
+    env: &mut Environment,
+) -> Result<(PathBuf, LsOptions), RuntimeError> {
     let mut options = LsOptions::default();
     let mut path = PathBuf::from(".");
     // dbg!(args);
@@ -40,7 +43,7 @@ pub fn parse_ls_args(args: &[Expression]) -> Result<(PathBuf, LsOptions), Runtim
                 "-u" => options.show_user = true,
                 "-m" => options.show_mode = true,
                 "-p" => options.show_path = true,
-                arg if !arg.starts_with('-') => path = abs(arg),
+                arg if !arg.starts_with('-') => path = abs(arg, env),
                 _ => continue,
             }
         }
@@ -151,10 +154,10 @@ pub fn get_file_expression(
 
 pub fn ls(
     args: &[Expression],
-    _env: &mut Environment,
+    env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let (full_path, options) = parse_ls_args(args)?;
+    let (full_path, options) = parse_ls_args(args, env)?;
 
     if !full_path.exists() {
         return Err(RuntimeError::common(

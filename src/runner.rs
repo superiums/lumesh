@@ -1,7 +1,7 @@
 use lumesh::parse_and_eval;
 use lumesh::runtime::{init_config, run_file};
 use lumesh::{Environment, Expression};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 // use std::path::PathBuf;
 
 fn main() {
@@ -80,8 +80,7 @@ fn main() {
     if let Some(cmd_part) = cmd {
         parse_and_eval(&cmd_part.join(" "), &mut runner_env);
     } else if let Some(file_path) = file {
-        runner_env.define("SCRIPT", Expression::String(file_path.clone()));
-        // let path = PathBuf::from(file_path);
-        run_file(&file_path, &mut runner_env);
+        let pathbf = PathBuf::from(file_path);
+        run_file(pathbf, &mut runner_env);
     }
 }

@@ -10,13 +10,15 @@ use std::fs::{create_dir, read_to_string, write};
 use std::io::{self, Write};
 use std::path::PathBuf;
 
-pub fn run_file(path: &str, env: &mut Environment) -> bool {
-    let pb = PathBuf::from(path);
-    run_file_via_pb(pb, env)
-}
-fn run_file_via_pb(pb: PathBuf, env: &mut Environment) -> bool {
+pub fn run_file(pb: PathBuf, env: &mut Environment) -> bool {
     match read_to_string(pb.clone()) {
-        Ok(prelude) => parse_and_eval(&prelude, env),
+        Ok(prelude) => {
+            env.define(
+                "SCRIPT",
+                Expression::String(pb.to_string_lossy().to_string()),
+            );
+            parse_and_eval(&prelude, env)
+        }
         Err(e) => {
             eprintln!(
                 "\x1b[31m[IO ERROR]\x1b[0mFailed to read file '{}':\n  {e}",
@@ -163,7 +165,7 @@ pub fn init_config(env: &mut Environment) {
         if !parse_and_eval(INTRO_PRELUDE, env) {
             eprintln!("Sorry, the config seems has some issue");
         }
-    } else if !run_file_via_pb(profile, env) {
+    } else if !run_file(profile, env) {
         eprintln!("Error while loading config");
     }
 

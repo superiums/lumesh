@@ -14,7 +14,7 @@ use crate::{
         pretty_printer,
     },
     parse_and_eval, reg_all, reg_info,
-    utils::{canon, get_current_path},
+    utils::{abs_script, get_current_path},
 };
 
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
@@ -252,11 +252,11 @@ fn import(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("import", args, 1, ctx)?;
     let path = get_string_ref(&args[0], ctx)?;
-    let canon_path = canon(path, env)?;
+    let canon_path = abs_script(path, env);
     // Read the file.
     let contents = std::fs::read_to_string(canon_path).map_err(|e| {
         RuntimeError::common(
-            format!("could not read file {}: {}", path, e).into(),
+            format!("failed to import file {}: {}", path, e).into(),
             ctx.clone(),
             0,
         )
@@ -272,12 +272,14 @@ fn include(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("include", args, 1, ctx)?;
     let path = get_string_ref(&args[0], ctx)?;
-    let canon_path = canon(path, env)?;
+    let canon_path = abs_script(path, env);
 
     // Read the file.
     let contents = std::fs::read_to_string(canon_path).map_err(|e| {
         RuntimeError::new(
-            RuntimeErrorKind::CustomError(format!("failed to read file '{}': {}", path, e).into()),
+            RuntimeErrorKind::CustomError(
+                format!("failed to include file '{}': {}", path, e).into(),
+            ),
             ctx.clone(),
             0,
         )

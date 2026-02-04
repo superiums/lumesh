@@ -31,6 +31,16 @@ pub fn abs(path: &str, env: &mut Environment) -> PathBuf {
     }
     PathBuf::from(expand_home(path).as_ref())
 }
+pub fn abs_script(path: &str, env: &mut Environment) -> PathBuf {
+    if path.starts_with("./") {
+        let base = match env.get("SCRIPT") {
+            Some(Expression::String(s)) => PathBuf::from(s),
+            _ => get_current_path(env),
+        };
+        return base.join(path);
+    }
+    PathBuf::from(expand_home(path).as_ref())
+}
 pub fn abs_check(path: &str, env: &mut Environment) -> Result<PathBuf, RuntimeError> {
     let abs = abs(path, env);
     if abs.exists() {

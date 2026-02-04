@@ -15,6 +15,7 @@ use lumesh::set_strict_enabled;
 use lumesh::{Environment, Expression};
 use std::env;
 use std::path::Path;
+use std::path::PathBuf;
 use std::vec;
 
 #[derive(Parser)]
@@ -165,7 +166,6 @@ fn main() {
     else if let Some(file_n_args) = cli.file_n_args {
         if let Some((s, args)) = file_n_args.split_first() {
             cli_env.define("IS_INTERACTIVE", Expression::Boolean(false));
-            cli_env.define("SCRIPT", Expression::String(s.to_owned()));
             cli_env.define(
                 "argv",
                 Expression::from(
@@ -180,8 +180,8 @@ fn main() {
             } else if cli.no_strict {
                 set_strict(false, &mut cli_env);
             }
-            // let path = PathBuf::from(file);
-            run_file(s, &mut cli_env);
+            let pathbf = PathBuf::from(s);
+            run_file(pathbf, &mut cli_env);
         }
     }
     // 纯交互模式

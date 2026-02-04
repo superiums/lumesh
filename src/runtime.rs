@@ -205,6 +205,9 @@ fn init_cmds(env: &mut Environment) {
             .into_iter()
             .collect::<Vec<_>>()
             .join(sp);
+        unsafe {
+            std::env::set_var("PATH", np.clone());
+        }
         env.define_in_root("PATH", Expression::String(np));
     } else {
         #[cfg(unix)]

@@ -1,7 +1,6 @@
 use std::{
     collections::{BTreeMap, HashMap},
     io::Write,
-    rc::Rc,
 };
 
 use crate::{
@@ -17,7 +16,7 @@ use crate::{
     utils::{abs_script, get_current_path},
 };
 
-pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
+pub fn regist_all() -> HashMap<&'static str, BuiltinFunc> {
     reg_all!({
         exit, cd, cwd,
         tap, print, pprint, println, printf, eprint, eprintln, read,

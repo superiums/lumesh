@@ -21,18 +21,18 @@ macro_rules! reg_lazy {
     };
 
     (@insert $module:ident, $func:ident, $name:expr) => {
-        $module.register($name, ||{std::rc::Rc::new($func)});
+        $module.register($name, ||{$func});
     };
 
     (@insert $module:ident, $func:ident,) => {
-        $module.register(stringify!($func), ||{std::rc::Rc::new($func)});
+        $module.register(stringify!($func), ||{$func});
     };
 }
 #[macro_export]
 macro_rules! reg_all {
     ({ $($item:ident $( => $name:expr )? ),* $(,)? }) => {
         {
-            let mut module: HashMap<&'static str, Rc<BuiltinFunc>> = HashMap::new();
+            let mut module: HashMap<&'static str, BuiltinFunc> = HashMap::new();
             $(
                 reg_all!(@insert module, $item, $($name)?);
             )*
@@ -41,11 +41,11 @@ macro_rules! reg_all {
     };
 
     (@insert $module:ident, $func:ident, $name:expr) => {
-        $module.insert($name, std::rc::Rc::new($func));
+        $module.insert($name, $func);
     };
 
     (@insert $module:ident, $func:ident,) => {
-        $module.insert(stringify!($func), std::rc::Rc::new($func));
+        $module.insert(stringify!($func), $func);
     };
 }
 #[macro_export]

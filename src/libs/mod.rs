@@ -10,7 +10,6 @@ use std::{
     borrow::Cow,
     cell::RefCell,
     collections::{BTreeMap, HashMap},
-    rc::Rc,
     sync::LazyLock,
 };
 
@@ -30,10 +29,10 @@ thread_local! {
     // static MATH_LIB: RefCell<HashMap<String, Expression>> = RefCell::new({
     //     math_module::get_all_functions() // 加载所有函数
     // });
-    static TOP_LIB: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
+    static TOP_LIB: RefCell<HashMap<&'static str, BuiltinFunc>> = RefCell::new({
         bin::top::regist_all()
     });
-    static BOOL_LIB: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
+    static BOOL_LIB: RefCell<HashMap<&'static str, BuiltinFunc>> = RefCell::new({
         bin::boolean_lib::regist_all()
     });
 
@@ -84,7 +83,7 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
 }
 /// lazy load builtin.
 /// note: this always clone builtin
-pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<BuiltinFunc>> {
+pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<BuiltinFunc> {
     match lib_name {
         // "Math" => MATH_LIB.with(|m| m.borrow().get(function).cloned()),
         "" => TOP_LIB.with(|m| m.borrow().get(fn_name).cloned()),
@@ -185,7 +184,7 @@ fn get_belong_lib_name(exp: &Expression) -> Option<Cow<'static, str>> {
         _ => None,
     }
 }
-pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<Rc<BuiltinFunc>> {
+pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<BuiltinFunc> {
     match expr {
         Expression::Blank => get_builtin_optimized("", fn_name),
         Expression::Symbol(x) => get_builtin_optimized(x.as_ref(), fn_name),

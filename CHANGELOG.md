@@ -6,6 +6,7 @@
 - fix relative path for pty cmd.
 - allow relative path based on `SCRIPT` env for `include` and `import`, and `config` file
 - fix default completion path for macos
+- remove Rc for BuiltinFunc
 
 ## [0.12.3]
 

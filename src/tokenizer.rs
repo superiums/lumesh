@@ -54,7 +54,7 @@ fn parse_token(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> 
             map_valid_token(postfix_operator, TokenKind::OperatorPostfix), // to allow ./.../app!
             map_valid_token(argument_symbol, TokenKind::StringRaw), //argument first to allow args such as = -
             map_valid_token(prefix_operator, TokenKind::OperatorPrefix),
-            // map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
+            map_valid_token(custom_operator, TokenKind::Operator), //before short_operator
             map_valid_token(any_punctuation, TokenKind::Punctuation),
             map_valid_token(any_keyword, TokenKind::Keyword),
             map_valid_token(value_symbol, TokenKind::ValueSymbol),
@@ -168,8 +168,10 @@ fn long_operator(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("->"), // `->foo` is also a valid symbol
         // punctuation_tag("~>"), // `~>foo` is also a valid symbol
         catch_operator,
-        custom_tag(".."), //_* as custom op prefix tag.
     ))(input)
+}
+fn custom_operator(input: Input<'_>) -> TokenizationResult<'_> {
+    custom_tag("..")(input)
 }
 fn catch_operator(input: Input<'_>) -> TokenizationResult<'_> {
     alt((

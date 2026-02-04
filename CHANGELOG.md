@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.12.4]
+- custom operator `..` should not cover `../`
+
+
 ## [0.12.3]
 
 `$NR` was injected to show number of record. same as awk.

@@ -1,5 +1,5 @@
 use lumesh::runtime::run_file;
-use lumesh::{Environment, Expression};
+use lumesh::{Environment, Expression, VERSION};
 use lumesh::{parse_and_eval, set_strict_enabled};
 use std::path::PathBuf;
 // use std::path::PathBuf;
@@ -29,8 +29,8 @@ fn main() {
     //     .unwrap_or(false);
 
     if args.len() <= 1 {
-        println!("This is Lume Script Executor. Usage:");
-        println!("\tlume-se <file-name>");
+        println!("This is Lume Script Executor. Version: {}", VERSION);
+        println!("Usage:\n\tlume-se <file-name>\n\tlume-se -c <cmd>");
     }
     // 如果不是登录 shell，加载环境变量
     // if !is_login_shell {

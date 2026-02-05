@@ -104,10 +104,4 @@ codegen-units = 1 # 减少代码生成单元
 panic = "abort"   # 使用abort而非unwind
 strip = true      # 移除调试符号
 
-[profile.amd]
-opt-level = 3
-lto = true
-codegen-units = 1
-panic = "abort"
-strip = true
-rustflags = ["-C", "target-cpu=native"]
+# rustflags = ["-C", "target-cpu=native"]

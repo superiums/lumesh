@@ -13,6 +13,7 @@
 - never load config in lume-se
 - enable `strict` mode in lume-se
 - add a few more `#[inline]` optimize
+- optimize counter for iteration
 
 ## [0.12.3]
 

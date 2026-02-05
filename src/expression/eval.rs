@@ -21,7 +21,12 @@ pub struct State(
     Option<Expression>,          //pipe-data
     Vec<String>,                 //domains
     HashMap<String, Expression>, //local-var
-    Option<(String, Option<String>, Box<dyn Iterator<Item = Expression>>)>, //loop-iter
+    Option<(
+        String,
+        Option<String>,
+        usize,
+        Box<dyn Iterator<Item = Expression>>,
+    )>, //loop-iter
 );
 
 impl Default for State {
@@ -143,27 +148,24 @@ impl State {
         index_name: Option<String>,
         iterator: Box<dyn Iterator<Item = Expression>>,
     ) {
-        self.4 = Some((var_name, index_name, iterator)); // 需要扩展State结构体
+        self.4 = Some((var_name, index_name, 0, iterator));
     }
     #[inline]
     pub fn pop_iter(&mut self) -> Result<bool, RuntimeErrorKind> {
         match self.4.as_mut() {
-            Some((v, ind, iter)) => {
+            Some((v, ind, idx, iter)) => {
                 if let Some(value) = iter.next() {
                     self.3.insert(v.to_string(), value);
+                    // if has index var
                     if let Some(index) = ind {
-                        let old_index = self.3.get(index);
-                        match old_index {
-                            Some(Expression::Integer(s)) => {
-                                self.3.insert(index.to_string(), Expression::Integer(s + 1))
-                            }
-                            _ => self.3.insert(index.to_string(), Expression::Integer(0)),
-                        };
+                        self.3
+                            .insert(index.to_string(), Expression::Integer(*idx as Int));
+                        *idx += 1;
                     };
+                    Ok(true)
                 } else {
                     return Err(RuntimeErrorKind::IteratorExhausted(v.clone()));
                 }
-                Ok(true)
             }
             None => Ok(false),
         }
@@ -176,6 +178,7 @@ impl State {
     ) -> Option<(
         String,
         Option<String>,
+        usize,
         Box<dyn Iterator<Item = Expression> + 'static>,
     )> {
         self.4.take()

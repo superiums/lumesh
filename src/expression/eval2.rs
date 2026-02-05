@@ -177,13 +177,11 @@ impl Expression {
                 for expr in exprs.as_ref() {
                     last = expr.eval_mut(state, env, depth + 1)?;
                 }
-                if !state.contains(State::IN_FOR_LOOP) && !is_last_local {
-                    // not clear local in for loop. especialy the index.
-                    state.clear_local_var();
-                }
+
                 if is_last_local {
                     state.set_local_vars(last_local_vars.unwrap());
                 } else {
+                    state.clear_local_var();
                     state.clear(State::IN_LOCAL);
                 }
                 Ok(last)
@@ -632,12 +630,12 @@ where
                 Err(e) => {
                     state.clear_iter();
                     if is_last_in_loop {
-                        if let Some((var_name, index_name, iterator)) = last_iter {
+                        if let Some((var_name, index_name, _idx, iterator)) = last_iter {
                             state.set_iter(var_name, index_name, iterator);
                         }
                     } else {
                         state.clear(State::IN_FOR_LOOP);
-                        state.clear_local_var();
+                        // state.clear_local_var();
                     }
                     return Err(e);
                 }
@@ -666,12 +664,12 @@ where
                 Err(e) => {
                     state.clear_iter();
                     if is_last_in_loop {
-                        if let Some((var_name, index_name, iterator)) = last_iter {
+                        if let Some((var_name, index_name, _idx, iterator)) = last_iter {
                             state.set_iter(var_name, index_name, iterator);
                         }
                     } else {
                         state.clear(State::IN_FOR_LOOP);
-                        state.clear_local_var();
+                        // state.clear_local_var();
                     }
                     return Err(e);
                 }
@@ -683,12 +681,12 @@ where
     // 清理循环状态
     state.clear_iter();
     if is_last_in_loop {
-        if let Some((var_name, index_name, iterator)) = last_iter {
+        if let Some((var_name, index_name, _idx, iterator)) = last_iter {
             state.set_iter(var_name, index_name, iterator);
         }
     } else {
         state.clear(State::IN_FOR_LOOP);
-        state.clear_local_var(); //clear here instead of in every block. for efficency and index secure.
+        // state.clear_local_var(); //clear here instead of in every block. for efficency and index secure.
         state.take_iter();
     }
     r

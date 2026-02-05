@@ -46,24 +46,29 @@ impl State {
     }
 
     // 设置标志
+    #[inline]
     pub fn set(&mut self, flag: u8) {
         self.0 |= flag;
     }
 
     // 清除标志
+    #[inline]
     pub fn clear(&mut self, flag: u8) {
         self.0 &= !flag;
     }
 
     // 检查标志是否被设置
+    #[inline]
     pub fn contains(&self, flag: u8) -> bool {
         self.0 & flag != 0
     }
 
+    #[inline]
     pub fn pipe_in(&mut self, data: Expression) {
         self.1 = Some(data);
     }
 
+    #[inline]
     pub fn pipe_out(&mut self) -> Option<Expression> {
         let p = self.1.clone();
         self.1 = None;
@@ -109,12 +114,15 @@ impl State {
     //     None
     // }
 
+    #[inline]
     pub fn set_local_var(&mut self, name: String, value: Expression) {
         self.3.insert(name, value);
     }
+    #[inline]
     pub fn has_local_var(&mut self, name: &str) -> bool {
         self.3.contains_key(name)
     }
+    #[inline]
     pub fn get_local_var(&self, name: &str) -> Option<&Expression> {
         self.3.get(name)
     }
@@ -137,6 +145,7 @@ impl State {
     ) {
         self.4 = Some((var_name, index_name, iterator)); // 需要扩展State结构体
     }
+    #[inline]
     pub fn pop_iter(&mut self) -> Result<bool, RuntimeErrorKind> {
         match self.4.as_mut() {
             Some((v, ind, iter)) => {
@@ -178,6 +187,7 @@ pub fn is_strict() -> bool {
 }
 impl Expression {
     /// 交互命令入口
+    #[inline]
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         let result = self.eval_mut(&mut State::new(), env, 0);
         // dbg!(&result);
@@ -194,6 +204,7 @@ impl Expression {
         }
     }
     /// 脚本计算入口
+    #[inline]
     pub fn eval(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
         self.eval_mut(&mut State::new(), env, 0)
     }

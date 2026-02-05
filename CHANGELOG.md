@@ -12,6 +12,7 @@
 - never detect login-shell in lume-se
 - never load config in lume-se
 - enable `strict` mode in lume-se
+- add a few more `#[inline]` optimize
 
 ## [0.12.3]
 

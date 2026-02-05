@@ -11,6 +11,7 @@ const LAZY_EVAL_COMMANDS: &[&str] = &[
     "where", "repeat", "debug", "ddebug", "typeof", "set", "unset",
 ];
 
+#[inline]
 pub fn prepare_args<'a>(
     cmd: &str,
     args: &'a [Expression],

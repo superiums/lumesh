@@ -590,6 +590,7 @@ pub fn ifs_split(s: &str, env: &mut Environment) -> Vec<String> {
     }
 }
 
+#[inline]
 pub fn execute_iteration<I>(
     var_name: String,
     index_name: Option<String>,

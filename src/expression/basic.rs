@@ -1108,6 +1108,7 @@ impl Expression {
     //     }
     // }
     /// please make sure only use with Apply/Command
+    #[inline]
     pub fn append_args(&self, args: Vec<Expression>) -> Expression {
         match self {
             Expression::Apply(f, existing_args) => {
@@ -1190,6 +1191,7 @@ impl Expression {
     //     }
     // }
 
+    #[inline]
     pub fn ensure_fn_apply<'a>(&'a self) -> Cow<'a, Expression> {
         match self {
             Expression::Function(..) | Expression::Lambda(..) => Cow::Owned(self.apply(vec![])),

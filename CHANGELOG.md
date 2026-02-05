@@ -7,6 +7,9 @@
 - allow relative path based on `SCRIPT` env for `include` and `import`, and `config` file
 - fix default completion path for macos
 - remove Rc for BuiltinFunc
+- allow use keyword-like symbo as cmd args
+`handlr set '.pdf' zathura` is allowed. here `set` was recognized as symbol insteadof keyword
+
 
 ## [0.12.3]
 

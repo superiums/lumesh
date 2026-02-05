@@ -273,6 +273,8 @@ impl PrattParser {
                 | TokenKind::Punctuation        // ( [ as first argument begin. { will course if x {} expect more {
                 | TokenKind::Regex
                 | TokenKind::Time
+                | TokenKind::Keyword            // allow keyword as symbo in cmd arg
+                // like: `handlr set .pdf zathura`
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 对于Punctuation, 只接受 ( [
@@ -418,6 +420,9 @@ impl PrattParser {
                     ))), //其余的操作符，不在前缀中处理
                 }
             }
+            TokenKind::Keyword if min_prec == PREC_CMD_ARG => map(kind(TokenKind::Keyword), |t| {
+                Expression::Symbol(t.to_str(input.str).to_string())
+            })(input), //keyword as symbo in cmd arg
             TokenKind::Keyword => parse_control_flow(input),
             TokenKind::LineBreak => Err(nom::Err::Error(SyntaxErrorKind::CustomError(
                 "line ended too early".to_string(),

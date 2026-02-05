@@ -789,6 +789,12 @@ fn map(
             Expression::Lambda(p, body, _) => (p[0].clone(), None, body),
             _ => unreachable!(),
         }
+    // } else if let Expression::Property(..) = &func {
+    //     (
+    //         Expression::Variable("_"),
+    //         None,
+    //         func.apply(vec![Expression::Variable("_")]),
+    //     )
     } else {
         return Err(RuntimeError::common(
             ("your func/lambda should define 1..2 param").into(),

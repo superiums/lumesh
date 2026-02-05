@@ -1,7 +1,7 @@
-use lumesh::parse_and_eval;
-use lumesh::runtime::{init_config, run_file};
+use lumesh::runtime::run_file;
 use lumesh::{Environment, Expression};
-use std::path::{Path, PathBuf};
+use lumesh::{parse_and_eval, set_strict_enabled};
+use std::path::PathBuf;
 // use std::path::PathBuf;
 
 fn main() {
@@ -17,23 +17,27 @@ fn main() {
     let mut env = Environment::new();
 
     // 判断是否为登录 shell
-    let is_login_shell = args
-        .first()
-        .map(|arg| {
-            Path::new(arg)
-                .file_name()
-                .and_then(|n| n.to_str())
-                .unwrap_or(arg)
-                .starts_with('-')
-        })
-        .unwrap_or(false);
+    // let is_login_shell = args
+    //     .first()
+    //     .map(|arg| {
+    //         Path::new(arg)
+    //             .file_name()
+    //             .and_then(|n| n.to_str())
+    //             .unwrap_or(arg)
+    //             .starts_with('-')
+    //     })
+    //     .unwrap_or(false);
 
-    // 如果不是登录 shell，加载环境变量
-    if !is_login_shell {
-        for (key, value) in std::env::vars() {
-            env.define(key.as_str(), Expression::String(value));
-        }
+    if args.len() <= 1 {
+        println!("This is Lume Script Executor. Usage:");
+        println!("\tlume-se <file-name>");
     }
+    // 如果不是登录 shell，加载环境变量
+    // if !is_login_shell {
+    for (key, value) in std::env::vars() {
+        env.define(key.as_str(), Expression::String(value));
+    }
+    // }
 
     // 遍历参数
     for arg in args.iter().skip(1) {
@@ -62,9 +66,12 @@ fn main() {
     }
 
     let mut runner_env = env.fork();
-    runner_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
+    // runner_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
     // config
-    init_config(&mut runner_env);
+    // init_config(&mut runner_env);
+
+    env.define("IS_STRICT", Expression::Boolean(true));
+    set_strict_enabled(true);
 
     runner_env.define(
         "argv",

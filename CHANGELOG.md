@@ -9,7 +9,9 @@
 - remove Rc for BuiltinFunc
 - allow use keyword-like symbo as cmd args
 `handlr set '.pdf' zathura` is allowed. here `set` was recognized as symbol insteadof keyword
-
+- never detect login-shell in lume-se
+- never load config in lume-se
+- enable `strict` mode in lume-se
 
 ## [0.12.3]
 

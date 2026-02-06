@@ -15,6 +15,7 @@
 - add a few more `#[inline]` optimize
 - optimize counter for iteration
 - optimize dyn iter to enum iter
+- allow mutline in quoted string in REPL
 
 ## [0.12.3]
 

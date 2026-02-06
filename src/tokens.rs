@@ -41,9 +41,9 @@ impl<'a> Input<'a> {
         self.str.get(self.offset..)
     }
 
-    pub fn split_empty(self) -> StrSlice {
-        self.str.get(self.offset..self.offset)
-    }
+    // pub fn split_empty(self) -> StrSlice {
+    //     self.str.get(self.offset..self.offset)
+    // }
 
     pub fn split_at(self, n: usize) -> (Self, StrSlice) {
         let start = self.offset;

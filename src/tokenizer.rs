@@ -2,14 +2,7 @@ use crate::tokens::{Input, Token, TokenKind};
 use crate::with_cfm_enabled;
 use core::option::Option::None;
 use detached_str::StrSlice;
-use nom::{
-    IResult,
-    branch::alt,
-    combinator::{eof, map},
-    error::ParseError,
-    multi::fold_many_m_n,
-    sequence::tuple,
-};
+use nom::{IResult, branch::alt, error::ParseError, multi::fold_many_m_n, sequence::tuple};
 use std::convert::TryFrom;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -26,6 +19,7 @@ pub enum Diagnostic {
     InvalidNumber(StrSlice),
     IllegalChar(StrSlice),
     NotTokenized(StrSlice),
+    UnterminatedString(StrSlice),
 }
 
 impl<I> ParseError<I> for NotFoundError {
@@ -491,9 +485,13 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
         parse_string_inner(rest_after_start, q_char.chars().next().unwrap())?;
 
     // 3. 解析结束引号（或EOF）
-    let (rest_after_end, _) =
-        alt((punctuation_tag(q_char), map(eof, |_| input.split_empty())))(rest_after_content)?;
-    // 4.split
+    // let (rest_after_end, _) =
+    //     alt((punctuation_tag(q_char), map(eof, |_| input.split_empty())))(rest_after_content)?;
+
+    // 4. 解析结束引号
+    let (rest_after_end, _) = punctuation_tag(q_char)(rest_after_content)?;
+
+    // 5. 计算内容范围
     let (_, content_range) = input.split_until(rest_after_end);
     // 4. 计算内容范围
     // let content_start = start_quote_range.end();
@@ -711,14 +709,18 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
     let mut rest = input;
     let mut errors = Vec::new();
     let mut unicode_errors = Vec::new();
+    let start_range = input.as_str_slice();
 
     match quote_char {
         '"' => loop {
             let next_char = rest.chars().next();
             match next_char {
                 Some('"') => break,
-                None => break,
-
+                // None => break,
+                None => {
+                    // 返回未闭合字符串错误，使用整个输入范围
+                    return Ok((rest, Diagnostic::UnterminatedString(start_range)));
+                }
                 // Some('\x1b') => {
                 //     // 同时处理两种转义字符
                 //     let (r, diagnostic) = parse_ansi_sequence(rest)?;
@@ -760,7 +762,11 @@ fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<
             let next_char = rest.chars().next();
             match next_char {
                 Some('\'') | Some('`') if next_char == Some(quote_char) => break,
-                None => break,
+                // None => break,
+                None => {
+                    // 返回未闭合字符串错误，使用整个输入范围
+                    return Ok((rest, Diagnostic::UnterminatedString(start_range)));
+                }
                 Some('\\') => {
                     // 检查下一个字符是否是单引号
                     let rest_after_backslash = rest.split_at(1).0;

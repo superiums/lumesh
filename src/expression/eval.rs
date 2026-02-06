@@ -1,7 +1,7 @@
 use crate::expression::eval2::ifs_split;
 use crate::expression::eval3::prepare_args;
 use crate::expression::render::render_template;
-use crate::expression::{LumeRegex, alias};
+use crate::expression::{BoxedIterator, LumeRegex, alias};
 use crate::libs::{get_builtin_via_expr, time_parse};
 use crate::utils::abs;
 use crate::utils::canon;
@@ -12,21 +12,15 @@ use regex_lite::Regex;
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
 use std::ops::Range;
-
 use std::rc::Rc;
 
 // #[derive(Debug, Clone)]
 pub struct State(
     u8,
-    Option<Expression>,          //pipe-data
-    Vec<String>,                 //domains
-    HashMap<String, Expression>, //local-var
-    Option<(
-        String,
-        Option<String>,
-        usize,
-        Box<dyn Iterator<Item = Expression>>,
-    )>, //loop-iter
+    Option<Expression>,                                     //pipe-data
+    Vec<String>,                                            //domains
+    HashMap<String, Expression>,                            //local-var
+    Option<(String, Option<String>, usize, BoxedIterator)>, //loop-iter
 );
 
 impl Default for State {
@@ -146,7 +140,7 @@ impl State {
         &mut self,
         var_name: String,
         index_name: Option<String>,
-        iterator: Box<dyn Iterator<Item = Expression>>,
+        iterator: BoxedIterator,
     ) {
         self.4 = Some((var_name, index_name, 0, iterator));
     }
@@ -173,14 +167,7 @@ impl State {
     pub fn clear_iter(&mut self) {
         self.4 = None;
     }
-    pub fn take_iter(
-        &mut self,
-    ) -> Option<(
-        String,
-        Option<String>,
-        usize,
-        Box<dyn Iterator<Item = Expression> + 'static>,
-    )> {
+    pub fn take_iter(&mut self) -> Option<(String, Option<String>, usize, BoxedIterator)> {
         self.4.take()
     }
 }

@@ -14,6 +14,7 @@
 - enable `strict` mode in lume-se
 - add a few more `#[inline]` optimize
 - optimize counter for iteration
+- optimize dyn iter to enum iter
 
 ## [0.12.3]
 

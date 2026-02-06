@@ -2,6 +2,7 @@
 use std::rc::Rc;
 
 use crate::eval::State;
+use crate::expression::BoxedIterator;
 use crate::expression::eval2::execute_iteration;
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
@@ -807,7 +808,7 @@ fn map(
     let mut state = State::new();
     state.set(State::IN_ASSIGN);
     let count = list.iter().count();
-    let iterator = list.as_ref().clone().into_iter();
+    let iterator = BoxedIterator::Vec(list.as_ref().clone().into_iter());
     execute_iteration(
         var_name,
         ind_name,

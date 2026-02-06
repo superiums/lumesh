@@ -2,7 +2,7 @@ use super::catcher::catch_error;
 use super::eval::State;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind,
-    expression::{CatchType, DestructurePattern},
+    expression::{BoxedIterator, CatchType, DestructurePattern},
     modman::use_module,
     runtime::{IFS_FOR, ifs_contains},
     utils::expand_home,
@@ -267,34 +267,36 @@ impl Expression {
         // .as_list()?;
         match list_excuted {
             Expression::Range(range, step) => {
-                let iterator = range.step_by(step).map(Expression::Integer);
-                let count = iterator.clone().count().div_ceil(step.max(1));
+                let count = range.clone().step_by(step).count(); //.div_ceil(step.max(1));
+                let iterator = BoxedIterator::Range(range.step_by(step));
                 execute_iteration(var, index_name, iterator, count, body, state, env, depth)
             }
             Expression::List(items) => {
+                let size = items.len();
                 let owned_items: Vec<Expression> = items.iter().cloned().collect();
-                let iterator = owned_items.into_iter();
+                let iterator = BoxedIterator::Vec(owned_items.into_iter());
                 // let iterator = items.iter().cloned();
-                execute_iteration(
-                    var,
-                    index_name,
-                    iterator,
-                    items.iter().count(),
-                    body,
-                    state,
-                    env,
-                    depth,
-                )
+                execute_iteration(var, index_name, iterator, size, body, state, env, depth)
             }
             Expression::String(str) => {
                 let s = expand_home(str.as_ref());
                 if s.contains('*') {
-                    // glob expansion logic
-                    let iterator = glob_expand(&s).into_iter().map(Expression::String);
-                    execute_iteration(var, index_name, iterator, s.len(), body, state, env, depth)
+                    let owned_items: Vec<Expression> = glob_expand(&s)
+                        .into_iter()
+                        .map(Expression::String)
+                        .collect();
+                    let size = owned_items.len();
+                    let iterator = BoxedIterator::Vec(owned_items.into_iter());
+                    execute_iteration(var, index_name, iterator, size, body, state, env, depth)
                 } else {
-                    let iterator = ifs_split(&s, env).into_iter().map(Expression::String);
-                    execute_iteration(var, index_name, iterator, s.len(), body, state, env, depth)
+                    let owned_items: Vec<Expression> = ifs_split(&s, env)
+                        .into_iter()
+                        .map(Expression::String)
+                        .collect();
+                    let size = owned_items.len();
+
+                    let iterator = BoxedIterator::Vec(owned_items.into_iter());
+                    execute_iteration(var, index_name, iterator, size, body, state, env, depth)
                 }
             }
             _ => Err(RuntimeError::new(
@@ -600,13 +602,13 @@ pub fn execute_iteration<I>(
     depth: usize,
 ) -> Result<Expression, RuntimeError>
 where
-    I: Iterator<Item = Expression> + 'static,
+    I: Into<BoxedIterator>,
 {
     // 设置循环状态
     let last_iter = state.take_iter();
     let is_last_in_loop = state.contains(State::IN_FOR_LOOP);
     state.set(State::IN_FOR_LOOP);
-    state.set_iter(var_name, index_name, Box::new(iterator));
+    state.set_iter(var_name, index_name, iterator.into());
 
     let r = if state.contains(State::IN_ASSIGN) {
         let mut results = Vec::with_capacity(count);

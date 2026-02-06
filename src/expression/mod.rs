@@ -287,3 +287,26 @@ impl PartialOrd for Expression {
         }
     }
 }
+
+pub enum BoxedIterator {
+    Range(std::iter::StepBy<std::ops::Range<Int>>),
+    Vec(std::vec::IntoIter<Expression>),
+    Map(std::collections::hash_map::IntoIter<String, Expression>),
+    MapEntries(std::vec::IntoIter<Expression>),
+    // Other(Box<dyn Iterator<Item=Expression>>)
+}
+
+impl Iterator for BoxedIterator {
+    type Item = Expression;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self {
+            Self::Range(iter) => iter.next().map(Expression::Integer),
+            Self::Vec(iter) => iter.next(),
+            Self::Map(iter) => iter
+                .next()
+                .map(|(k, v)| Expression::from(vec![Expression::String(k), v])),
+            Self::MapEntries(iter) => iter.next(),
+        }
+    }
+}

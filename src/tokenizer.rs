@@ -489,10 +489,12 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
     //     alt((punctuation_tag(q_char), map(eof, |_| input.split_empty())))(rest_after_content)?;
 
     // 4. 解析结束引号
-    let (rest_after_end, _) = punctuation_tag(q_char)(rest_after_content)?;
+    let (rest, content_range) = match punctuation_tag(q_char)(rest_after_content) {
+        // 5. 计算内容范围
+        Ok((rest_after_end, _)) => input.split_until(rest_after_end),
+        Err(_) => input.split_until(rest_after_content),
+    };
 
-    // 5. 计算内容范围
-    let (_, content_range) = input.split_until(rest_after_end);
     // 4. 计算内容范围
     // let content_start = start_quote_range.end();
     // let content_end = end_quote_range.start();
@@ -516,9 +518,8 @@ fn string_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic
         "t'" => TokenKind::Time,
         _ => unreachable!(),
     };
-
     let token = Token::new(kind, content_range);
-    Ok((rest_after_end, (token, diagnostics)))
+    Ok((rest, (token, diagnostics)))
 }
 
 fn number_literal(input: Input<'_>) -> TokenizationResult<'_, (Token, Diagnostic)> {

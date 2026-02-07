@@ -16,6 +16,7 @@
 - optimize counter for iteration
 - optimize dyn iter to enum iter
 - allow mutline in quoted string in REPL
+- optimize basic type eval with less clone.
 
 ## [0.12.3]
 

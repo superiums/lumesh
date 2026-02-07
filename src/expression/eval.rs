@@ -229,17 +229,13 @@ impl Expression {
             // dbg!("------", &job);
             match job {
                 // 基础类型直接返回
-                Self::String(_)
-                | Self::Boolean(_)
-                | Self::Integer(_)
-                | Self::None
-                | Self::Float(_)
-                | Self::Bytes(_)
-                | Self::Range(..)
-                | Self::FileSize(_)
-                | Self::DateTime(_)
-                | Self::Regex(_) => {
-                    // dbg!("basic type");
+                Self::String(s) => return Ok(Self::String(s.clone())),
+                Self::Integer(i) => return Ok(Self::Integer(*i)),
+                Self::Boolean(b) => return Ok(Self::Boolean(b.clone())),
+                Self::None => return Ok(Self::None),
+                Self::Float(f) => return Ok(Self::Float(*f)),
+                Self::Range(r, s) => return Ok(Self::Range(r.start..r.end, *s)),
+                Self::Regex(_) | Self::DateTime(_) | Self::FileSize(_) | Self::Bytes(_) => {
                     return Ok(job.clone());
                 }
 

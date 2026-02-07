@@ -104,19 +104,7 @@ pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<BuiltinFun
         "from" => FROM_LIB.with(|m| m.get_function(fn_name)),
         "about" => ABOUT_LIB.with(|m| m.get_function(fn_name)),
         "console" => CONSOLE_LIB.with(|m| m.get_function(fn_name)),
-        // filesize from
-        // "Fs" => FS_LIB.with(|m| {
-        //     if m.borrow().is_none() {
-        //         *m.borrow_mut() = Some(fs_module::get());
-        //     }
-        //     m.borrow().as_ref().and_then(|mod_expr| {
-        //         if let Expression::HMap(map) = mod_expr {
-        //             map.get(function).cloned()
-        //         } else {
-        //             None
-        //         }
-        //     })
-        // }),
+
         _ => None,
     }
 }
@@ -193,52 +181,3 @@ pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<BuiltinF
         }
     }
 }
-
-// pub fn eval_builtin_optimized(
-//     lib_name: &str,
-//     fn_name: &str,
-//     arg_base: &Expression,
-//     args: &[Expression],
-//     env: &mut Environment,
-//     context: &Expression,
-//     depth: usize,
-// ) -> (bool, Result<Expression, RuntimeError>) {
-//     let fo = match lib_name {
-//         // "Math" => MATH_LIB.with(|m| m.borrow().get(function).cloned()),
-//         "String" => STRING_LIB.with(|m| m.get_function(fn_name)),
-//         "" => TOP_LIB.with(|m| m.borrow().get(fn_name).cloned()),
-//         _ => None,
-//     };
-//     match fo.as_ref() {
-//         Some(f) => {
-//             let result = f(args, env, context);
-//             (true, result)
-//         }
-//         _ => (false, Ok(Expression::None)),
-//     }
-// }
-
-// 修改 get_module_map() 使用懒加载模块
-// pub fn get_module_map() -> HashMap<String, Expression> {
-//     hash_map! {
-//         // 其他模块保持不变
-//         // String::from("Log") => log_module::get(),
-//         // String::from("Math") => math_module::get(),
-
-//         // String 模块使用懒加载包装器
-//         String::from("String") => Expression::from(LazyModuleWrapper {
-//             getter: get_string_function,
-//         }),
-//     }
-// }
-
-// // 懒加载模块包装器
-// struct LazyModuleWrapper {
-//     getter: fn(&str) -> Option<Expression>,
-// }
-
-// impl LazyModuleWrapper {
-//     fn get(&self, name: &str) -> Option<Expression> {
-//         (self.getter)(name)
-//     }
-// }

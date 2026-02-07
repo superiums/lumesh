@@ -11,6 +11,7 @@ use lumesh::runtime::init_config;
 // use lumesh::STRICT;
 use lumesh::runtime::run_file;
 use lumesh::set_cfm_enabled;
+use lumesh::set_print_direct;
 use lumesh::set_strict_enabled;
 use lumesh::{Environment, Expression};
 use std::env;
@@ -180,6 +181,8 @@ fn main() {
             } else if cli.no_strict {
                 set_strict(false, &mut cli_env);
             }
+            // turn PD off while in script mode.
+            set_print_direct(false);
             let pathbf = PathBuf::from(s);
             run_file(pathbf, &mut cli_env);
         }

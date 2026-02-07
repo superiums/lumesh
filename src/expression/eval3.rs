@@ -10,7 +10,10 @@ use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, Runtim
 const LAZY_EVAL_COMMANDS: &[&str] = &[
     "where", "repeat", "debug", "ddebug", "typeof", "set", "unset",
 ];
-
+/// eval if not lazy cmds
+/// always eval position receiver
+// the resean to excute it here, is for local vars in loop,
+// only current env knows the state.
 #[inline]
 pub fn prepare_args<'a>(
     cmd: &str,
@@ -757,25 +760,6 @@ pub fn handle_builtin(
     depth: usize,
 ) -> Result<Option<Expression>, RuntimeError> {
     if let Some(bfn) = get_builtin_via_expr(base, method) {
-        // let bt_result = if args.contains(&Expression::Blank) {
-        //     let received_args = args
-        //         .iter()
-        //         .map(|x| match x {
-        //             Expression::Blank => state.pipe_out().unwrap_or(Expression::Blank),
-        //             o => o.clone(),
-        //         })
-        //         .collect::<Vec<_>>();
-        //     bfn(&received_args, env, ctx)
-        // } else {
-        //     bfn(&args, env, ctx)
-        // };
-        // return Some(bt_result);
-        // TODO if eval first, btin should not eval again
-        // and the specail conditon for where : size>0
-        // not works well, should fix
-        // the resean to excute it here, is for local vars in loop,
-        // only current env knows the state.
-
         let p_args = match base {
             // lazy cmd is in top and sys
             Expression::Blank => prepare_args(method, args, true, None, env, state, depth)?,

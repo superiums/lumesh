@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.12.5]
+- only turn off PRINT_DIRECT in script mode.
+
+
 ## [0.12.4]
 - custom operator `..` should not cover `../`
 - optimize current dir read from env first.

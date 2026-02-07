@@ -169,10 +169,9 @@ pub fn init_config(env: &mut Environment) {
         eprintln!("Error while loading config");
     }
 
-    // turn PD off while in script mode.
-    let pd =
-        env.get("LUME_PRINT_DIRECT").is_none_or(|p| p.is_truthy()) && env.get("SCRIPT").is_none();
-    set_print_direct(pd);
+    if let Some(pd) = env.get("LUME_PRINT_DIRECT") {
+        set_print_direct(pd.is_truthy());
+    }
     if let Some(Expression::Integer(run_rec)) = env.get("LUME_MAX_RUNTIME_RECURSION") {
         // MAX_RUNTIME_RECURSION = run_rec as usize;
         MAX_RUNTIME_RECURSION.with_borrow_mut(|v| *v = run_rec as usize)

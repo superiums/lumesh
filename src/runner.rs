@@ -1,5 +1,5 @@
 use lumesh::runtime::run_file;
-use lumesh::{Environment, Expression, VERSION};
+use lumesh::{Environment, Expression, VERSION, set_print_direct};
 use lumesh::{parse_and_eval, set_strict_enabled};
 use std::path::PathBuf;
 // use std::path::PathBuf;
@@ -72,6 +72,7 @@ fn main() {
 
     env.define("IS_STRICT", Expression::Boolean(true));
     set_strict_enabled(true);
+    set_print_direct(false);
 
     runner_env.define(
         "argv",

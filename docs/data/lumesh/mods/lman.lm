@@ -1,51 +1,140 @@
-    ##### lumesh manager
+##### lumesh manager
 
-    ### check update
-    fn update(){
-        println 'checking latest version...'
-        let url = 'https://codeberg.org/santo/lumesh/releases/latest'
-        let ver = (curl -s $url ?: eprintln 'network err' && exit |  regex.find(r'\d[\d\.]+') )
-        ver = ver[found]
-        let latest = ($ver.split('.').join('').to_int() ?: 0)
-        if $latest > 0 {
-          let current = (about.version())
-          current = $current.split('.').join('').to_int()
-          if $latest > $current {
-              print 'Found new version: ' $ver.green()
-              if ui.confirm('download [normal edition for linux] now?') {
-                  println 'download...'
-                  let tmp = /tmp/lume
-                  curl -o $tmp `https://codeberg.org/santo/lumesh/releases/download/v${ver}/lume-linux`
-                  if (file $tmp | .contains('ELF')){
-                      chmod '+x' $tmp
-                      let dest = about.bin()
-                      if $dest.starts_with('/home'){
-                        cp -f $tmp $dest
-                      }else{
-                        bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`
-                      }
-                      println 'finished'
-                  }else{
-                      println 'download fail'
-                      rm $tmp
-                  }
-              } else {
-                  println 'you may download it manually:' $url
+### check update
+fn update(){  
+    println 'checking latest version...'  
+    let url = 'https://api.github.com/repos/superiums/lumesh/releases/latest'  
+    let data = (curl -s $url ?: eprintln 'network err' && exit)  
+    let ver = $data.grep('tag_name').first() | regex.find(r'\d([\d\.]+)')
+    let latest = ver['found']
+    
+    if $latest {  
+      let current = about.version()  
+      let c = $latest.split('.').zip($current.split('.'))
+      let p = c.any(p -> p[0].to_int() > p[1].to_int() ?.)
+      if p {
+          print 'Found new version: ' $latest.green()  
+          if ui.confirm('download now?') {  
+              println 'download...'  
+                
+              let platform = ''  
+              let arch = ''  
+              let libc = ''  
+              let asset_name = ''  
+                
+              # Detect OS  
+              let uname_s = (uname -s | string.trim())  
+              match $uname_s {  
+                'Linux' => {  
+                    platform = 'linux'  
+                    # Detect libc variant  
+                    libc = match (ldd --version | string.contains('musl')) {  
+                        true => 'musl'  
+                        false => 'gnu'  
+                    }  
+                }  
+                'Darwin' => {  
+                    platform = 'darwin'  
+                    libc = 'libc'  
+                }  
+                'CYGWIN','MINGW','MSYS' => {  
+                    platform = 'windows'  
+                    libc = 'libc'  
+                }  
+                'FreeBSD' => {  
+                    platform = 'freebsd'  
+                    libc = 'libc'  
+                }  
+                _ => {  
+                    eprintln 'Unsupported platform: ' $uname_s  
+                    exit  
+                }  
+              }  
+
+                # Architecture detection using match  
+              let uname_m = (uname -m | string.trim())  
+              arch = match $uname_m {  
+                  'x86_64' => 'x86_64'  
+                  'aarch64', 'arm64' => 'aarch64'  
+                  _ => {  
+                      eprintln 'Unsupported architecture: ' $uname_m  
+                      exit  
+                  }  
               }
-          } else {
-              println 'Already newest'.yellow()
-          }
-        } else {
-          eprintln 'version check failed.'
-        }
-    }
 
-    ### set as login shell
-    fn chsh(){
-        let p = about.bin()
-        if fs.read(/etc/shells) !~: $p {
-            sudo lume -c `Fs.append /etc/shells "\n$p"` ?: doas lume -c `Fs.append /etc/shells "\n$p"`
-        }
-        println `chsh -s $p`
-        chsh -s $p
+                
+              # Determine asset name based on platform
+              if $platform == 'linux' {  
+                  if $libc == 'musl' {  
+                      asset_name = 'lume-x86_64-linux-musl'  
+                  } else {  
+                      asset_name = 'lume-x86_64-linux-gnu'  
+                  }  
+              } else if $platform == 'darwin' {  
+                  if $arch == 'aarch64' {  
+                      asset_name = 'lume-aarch64-apple-darwin'  
+                  } else {  
+                      asset_name = 'lume-x86_64-apple-darwin'  
+                  }  
+              } else if $platform == 'windows' {  
+                  asset_name = 'lume-x86_64-pc-windows-gnu.exe'  
+              } else if $platform == 'freebsd' {  
+                  asset_name = 'lume-x86_64-freebsd'  
+              }  
+                
+              # Download from GitHub  
+              let tmp = /tmp/lume  
+              let download_url = 'https://github.com/superiums/lumesh/releases/download/c' + $latest + '/' + $asset_name  
+              curl -o $tmp $download_url  
+                
+              # Verify and install  
+              if $platform == 'windows' {  
+                  if (file $tmp | .contains('PE32')) {  
+                      let dest = about.bin()  
+                      if $dest.starts_with('C:') {  
+                          cp -f $tmp $dest  
+                      } else {  
+                          fs.mkdir 'C:\Program Files(x86)\lumesh'  
+                          cp -f $tmp 'C:\Program Files(x86)\lumesh\lume.exe'  
+                      }  
+                      println 'finished'  
+                  } else {  
+                      println 'download fail'  
+                      rm $tmp  
+                  }  
+              } else {  
+                  if (file $tmp | .contains('ELF')) {  
+                      chmod '+x' $tmp  
+                      let dest = about.bin()  
+                      if $dest.starts_with('/home'){  
+                        cp -f $tmp $dest  
+                      }else{  
+                        bash -c `type sudo && sudo cp -f $tmp $dest || doas cp -f $tmp $dest`  
+                      }  
+                      println 'finished'  
+                  }else{  
+                      println 'download fail'  
+                      rm $tmp  
+                  }  
+              }  
+          } else {  
+              println 'you may download it manually:' $url  
+          }  
+      } else {  
+          println 'Already newest'.yellow()  
+      }  
+    } else {  
+      eprintln 'version check failed.'  
+    }  
+}
+
+
+### set as login shell
+fn chsh(){
+    let p = about.bin()
+    if fs.read(/etc/shells) !~: $p {
+        sudo lume -c `Fs.append /etc/shells "\n$p"` ?: doas lume -c `Fs.append /etc/shells "\n$p"`
     }
+    println `chsh -s $p`
+    chsh -s $p
+}

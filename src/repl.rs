@@ -86,10 +86,16 @@ pub fn run_repl(env: &mut Environment) {
             let path = c_dir.join(".lume_history");
             #[cfg(windows)]
             let path = c_dir.join("lume_history.log");
+            if !c_dir.exists() {
+                match std::fs::create_dir_all(c_dir) {
+                    Ok(_) => {}
+                    Err(e) => eprintln!("Failed to create cache directory: {e}"),
+                }
+            }
             if !path.exists() {
                 match std::fs::File::create(&path) {
                     Ok(_) => {}
-                    Err(e) => eprint!("Failed to create cache directory: {e}"),
+                    Err(e) => eprintln!("Failed to create cache file: {e}"),
                 }
             }
             path.into_os_string().into_string().unwrap()

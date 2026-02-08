@@ -6,7 +6,7 @@ use crate::expression::BoxedIterator;
 use crate::expression::eval2::execute_iteration;
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
-    check_args_len, check_exact_args_len, check_fn_arg, get_integer_ref, get_string_args,
+    check_args_len, check_exact_args_len, check_fn_arg, get_integer_ref, get_string_arg,
     get_string_ref,
 };
 use crate::libs::lazy_module::LazyModule;
@@ -316,40 +316,43 @@ fn find(
         ),
     }
 }
-
 fn find_last(
     args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("find_last", &args, 2..=3, ctx)?;
-    let list = get_list_ref(&args[0], ctx)?;
-    let target = &args[1];
-    let start = if args.len() == 3 {
-        get_integer_ref(&args[2], ctx)? as usize
+    // Move out of args to avoid later clones
+    let mut it = args.into_iter();
+    let list_exp = it.next().unwrap();
+    let target = it.next().unwrap();
+    let list = get_list_ref(&list_exp, ctx)?;
+    let start = if let Some(start_expr) = it.next() {
+        get_integer_ref(&start_expr, ctx)? as usize
     } else {
         0
     };
 
-    match &target {
+    match target {
         Expression::Function(..) | Expression::Lambda(..) => {
+            // target is moved; wrap in Rc once
+            let target_rc = Rc::new(target);
             for (i, item) in list.as_ref().iter().enumerate().rev().skip(start) {
-                match Expression::Apply(Rc::new(target.clone()), Rc::new(vec![item.clone()]))
-                    .eval(env)?
-                {
+                match Expression::Apply(target_rc.clone(), Rc::new(vec![item.clone()])).eval(env)? {
                     Expression::Boolean(true) => return Ok(Expression::Integer(i as Int)),
                     _ => continue,
                 }
             }
             Ok(Expression::None)
         }
+        // Non-function case: direct equality using moved target
         _ => Ok(
             match list
                 .as_ref()
                 .iter()
                 .rev()
                 .skip(start)
-                .position(|x| x == target)
+                .position(|x| x == &target)
             {
                 Some(index) => Expression::Integer((list.as_ref().len() - 1 - index) as Int),
                 None => Expression::None,
@@ -364,8 +367,10 @@ fn append(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("append", &args, 2, ctx)?;
-    let list = get_list_ref(&args[0], ctx)?;
-    let item = args[1].clone();
+    let mut it = args.into_iter();
+    let list_exp = it.next().unwrap();
+    let item = it.next().unwrap();
+    let list = get_list_ref(&list_exp, ctx)?;
 
     let mut new_list = list.as_ref().to_vec();
     new_list.push(item);
@@ -378,11 +383,13 @@ fn prepend(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("prepend", &args, 2, ctx)?;
-    let list = get_list_ref(&args[0], ctx)?;
-    let head = args[1].clone();
+    let mut it = args.into_iter();
+    let list_exp = it.next().unwrap();
+    let item = it.next().unwrap();
+    let list = get_list_ref(&list_exp, ctx)?;
 
     let mut new_list = Vec::with_capacity(list.as_ref().len() + 1);
-    new_list.push(head);
+    new_list.push(item);
     new_list.extend(list.as_ref().iter().cloned());
     Ok(Expression::List(Rc::new(new_list)))
 }
@@ -434,16 +441,19 @@ fn sort(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("sort", &args, 1.., ctx)?;
+    let size = args.len();
+    let mut it = args.into_iter();
+    let list = it.next().unwrap();
 
-    let list = &args[0];
-    let (func, headers) = match args.len() {
+    let (func, headers) = match size {
         2 => {
-            let key_func = &args[1];
+            let key_func = it.next().unwrap();
+
             match key_func {
                 Expression::Lambda(..) | Expression::Function(..) => {
                     (Some(Rc::new(key_func)), None)
                 }
-                Expression::Symbol(s) | Expression::String(s) => (None, Some(vec![s.to_string()])),
+                Expression::Symbol(s) | Expression::String(s) => (None, Some(vec![s])),
                 Expression::List(s) => (
                     None,
                     Some(s.iter().map(|e| e.to_string()).collect::<Vec<_>>()),
@@ -452,7 +462,9 @@ fn sort(
             }
         }
         3.. => {
-            let cols = get_string_args(&args[1..], env, ctx)?;
+            let cols = it
+                .map(|arg| get_string_arg(arg, ctx))
+                .collect::<Result<Vec<_>, RuntimeError>>()?;
             (None, Some(cols))
         }
         _ => (None, None),

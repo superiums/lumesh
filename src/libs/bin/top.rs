@@ -605,25 +605,24 @@ pub fn len(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("len", &args, 1, ctx)?;
-    match &args[0] {
-        Expression::HMap(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
-        Expression::Map(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
-        Expression::List(list) => Ok(Expression::Integer(list.as_ref().len() as Int)),
-        Expression::Symbol(x) | Expression::String(x) => {
-            Ok(Expression::Integer(x.chars().count() as Int))
+    let i = match &args[0] {
+        Expression::HMap(m) => m.as_ref().len() as Int,
+        Expression::Map(m) => m.as_ref().len() as Int,
+        Expression::List(list) => list.as_ref().len() as Int,
+        Expression::Symbol(x) | Expression::String(x) => x.chars().count() as Int,
+        Expression::Bytes(bytes) => bytes.len() as Int,
+        Expression::Range(a, b) => a.to_owned().step_by(b.clone()).count() as Int,
+        expr => {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::CustomError(
+                    format!("len not supported for type {}", expr.type_name()).into(),
+                ),
+                ctx.clone(),
+                0,
+            ));
         }
-        Expression::Bytes(bytes) => Ok(Expression::Integer(bytes.len() as Int)),
-        Expression::Range(a, b) => Ok(Expression::Integer(
-            a.to_owned().step_by(b.clone()).count() as Int
-        )),
-        expr => Err(RuntimeError::new(
-            RuntimeErrorKind::CustomError(
-                format!("len not supported for type {}", expr.type_name()).into(),
-            ),
-            ctx.clone(),
-            0,
-        )),
-    }
+    };
+    Ok(Expression::Integer(i))
 }
 
 pub fn rev(
@@ -632,11 +631,10 @@ pub fn rev(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("rev", &args, 1, ctx)?;
-    match &args[0] {
+    match args.iter().next().unwrap() {
         Expression::List(list) => {
-            let mut reversed = list.as_ref().to_vec();
-            reversed.reverse();
-            Ok(Expression::from(reversed))
+            let r = list.iter().rev().cloned().collect::<Vec<_>>();
+            Ok(Expression::from(r))
         }
         Expression::String(s) => Ok(Expression::String(s.chars().rev().collect())),
         Expression::Symbol(s) => Ok(Expression::Symbol(s.chars().rev().collect())),

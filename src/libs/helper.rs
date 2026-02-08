@@ -1,6 +1,6 @@
 // Helper functions
 
-use crate::{Environment, Expression, RuntimeError, RuntimeErrorKind};
+use crate::{Expression, RuntimeError, RuntimeErrorKind};
 
 // use std::rc::Rc;
 
@@ -178,15 +178,15 @@ pub fn get_string_ref<'a>(
     }
 }
 
-pub fn get_string_args(
-    args: &[Expression],
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Vec<String>, RuntimeError> {
-    args.iter()
-        .map(|arg| get_string_arg(arg.eval_in_assign(env)?, ctx))
-        .collect()
-}
+// pub fn get_string_args(
+//     args: &[Expression],
+//     env: &mut Environment,
+//     ctx: &Expression,
+// ) -> Result<Vec<String>, RuntimeError> {
+//     args.iter()
+//         .map(|arg| get_string_arg(arg.clone(), ctx))
+//         .collect()
+// }
 
 pub fn get_integer_arg(expr: Expression, ctx: &Expression) -> Result<i64, RuntimeError> {
     match expr {

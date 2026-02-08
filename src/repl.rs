@@ -169,7 +169,7 @@ pub fn run_repl(env: &mut Environment) {
 
     match rl.lock().unwrap().load_history(&history_file) {
         Ok(_) => {}
-        Err(e) => println!("No previous history {e}"),
+        Err(e) => eprintln!("Failed to load history file: {e}"),
     }
 
     // let running = Arc::new(std::sync::atomic::AtomicBool::new(true));

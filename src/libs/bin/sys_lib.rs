@@ -63,7 +63,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 fn info(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -71,7 +71,7 @@ fn info(
     Ok(Expression::String(info.to_string()))
 }
 fn modes(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -82,11 +82,11 @@ fn modes(
     }))
 }
 fn print_tty(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("print_tty", args, 1, ctx)?;
+    check_exact_args_len("print_tty", &args, 1, ctx)?;
 
     // 判断操作系统
     let tty_path = if cfg!(windows) {
@@ -107,7 +107,7 @@ fn print_tty(
 }
 
 fn discard(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -116,16 +116,16 @@ fn discard(
 }
 
 fn quote(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("quote", args, 1, ctx)?;
+    check_exact_args_len("quote", &args, 1, ctx)?;
     Ok(Expression::Quote(Rc::new(args[0].clone())))
 }
 
 fn env(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -133,7 +133,7 @@ fn env(
 }
 
 fn vars(
-    _: &[Expression],
+    _args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -142,11 +142,11 @@ fn vars(
 
 // lazy arg
 pub fn set(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set", args, 2, ctx)?;
+    check_exact_args_len("set", &args, 2, ctx)?;
     let name = args[0].to_string();
     let expr = args[1].eval_in_assign(env)?;
     env.define_in_root(&name, expr);
@@ -155,54 +155,54 @@ pub fn set(
 
 // lazy arg
 pub fn unset(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("unset", args, 1, ctx)?;
+    check_exact_args_len("unset", &args, 1, ctx)?;
     let name = args[0].to_string();
     env.undefine_in_root(&name);
     Ok(Expression::None)
 }
 
 fn get(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("get", args, 1, ctx)?;
+    check_exact_args_len("get", &args, 1, ctx)?;
     let name = args[0].to_string();
     Ok(env.get(&name).unwrap_or(Expression::None))
 }
 
 fn has(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("has", args, 1, ctx)?;
+    check_exact_args_len("has", &args, 1, ctx)?;
     let name = args[0].to_string();
     Ok(Expression::Boolean(env.has(&name)))
 }
 fn defined(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("defined", args, 1, ctx)?;
+    check_exact_args_len("defined", &args, 1, ctx)?;
     let name = args[0].to_string();
     Ok(Expression::Boolean(env.is_defined(&name)))
 }
 
 fn ecodes_rt(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _: &Expression,
 ) -> Result<Expression, RuntimeError> {
     Ok(RuntimeError::codes())
 }
 fn ecodes_lm(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -210,7 +210,7 @@ fn ecodes_lm(
 }
 
 fn max_syntax(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -225,7 +225,7 @@ fn max_syntax(
     Ok(Expression::None)
 }
 fn max_runtime(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -240,7 +240,7 @@ fn max_runtime(
     Ok(Expression::None)
 }
 fn max_usemode(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -255,11 +255,11 @@ fn max_usemode(
     Ok(Expression::None)
 }
 fn set_strict(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set_strict", args, 1, ctx)?;
+    check_exact_args_len("set_strict", &args, 1, ctx)?;
     let b = args[0].is_truthy();
     env.define("IS_STRICT", Expression::Boolean(b));
     set_strict_enabled(b);
@@ -271,11 +271,11 @@ fn set_strict(
     Ok(Expression::None)
 }
 fn set_cfm(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set_cfm", args, 1, ctx)?;
+    check_exact_args_len("set_cfm", &args, 1, ctx)?;
     let b = args[0].is_truthy();
     env.define_in_root("IS_CFM", Expression::Boolean(b));
     set_cfm_enabled(b);
@@ -287,11 +287,11 @@ fn set_cfm(
     Ok(Expression::None)
 }
 fn set_pdm(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set_pdm", args, 1, ctx)?;
+    check_exact_args_len("set_pdm", &args, 1, ctx)?;
     let b = args[0].is_truthy();
     set_print_direct(b);
     if b {
@@ -303,7 +303,7 @@ fn set_pdm(
 }
 
 fn cds(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {

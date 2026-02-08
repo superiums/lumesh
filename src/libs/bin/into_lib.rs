@@ -58,18 +58,18 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 pub fn time(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     time_lib::parse(args, env, ctx)
 }
 pub fn table(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("cmd", args, 1.., ctx)?;
+    check_args_len("cmd", &args, 1.., ctx)?;
 
     let headers = match args.len() {
         3.. => args[..args.len() - 1]
@@ -192,29 +192,29 @@ pub fn table(
 }
 
 fn boolean(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("boolean", args, 1, ctx)?;
+    check_exact_args_len("boolean", &args, 1, ctx)?;
     Ok(Expression::Boolean(args[0].is_truthy()))
 }
 
 pub fn str(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("str", args, 1, ctx)?;
+    check_exact_args_len("str", &args, 1, ctx)?;
     Ok(Expression::String(args[0].to_string()))
 }
 
 pub fn int(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("int", args, 1, ctx)?;
+    check_exact_args_len("int", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(x) => Ok(Expression::Integer(*x)),
         Expression::Float(x) => Ok(Expression::Integer(*x as Int)),
@@ -238,11 +238,11 @@ pub fn int(
 }
 
 pub fn float(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("float", args, 1, ctx)?;
+    check_exact_args_len("float", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(x) => Ok(Expression::Float(*x as f64)),
         Expression::Float(x) => Ok(Expression::Float(*x)),
@@ -274,11 +274,11 @@ pub fn float(
 }
 
 pub fn filesize(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("filesize", args, 1, ctx)?;
+    check_exact_args_len("filesize", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(x) => Ok(Expression::FileSize(FileSize::from_bytes(*x as u64))),
         Expression::Float(x) => Ok(Expression::FileSize(FileSize::from_bytes(*x as u64))),
@@ -336,11 +336,11 @@ fn split_file_size(size_str: &str) -> Option<(f64, &'static str)> {
 
 // Expression to TOML Conversion
 pub fn toml(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("toml", args, 1, ctx)?;
+    check_exact_args_len("toml", &args, 1, ctx)?;
     let expr = &args[0];
     let toml_str = expr_to_toml_string(expr, None);
     Ok(Expression::String(toml_str))
@@ -415,11 +415,11 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
 
 // Expression to JSON Conversion (优化版)
 pub fn json(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("json", args, 1, ctx)?;
+    check_exact_args_len("json", &args, 1, ctx)?;
     let expr = &args[0];
     let json_str = match expr {
         Expression::Map(map) => {
@@ -458,11 +458,11 @@ fn expr_to_json_string(expr: &Expression) -> String {
 
 // Expression to CSV
 pub fn csv(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("csv", args, 1, ctx)?;
+    check_exact_args_len("csv", &args, 1, ctx)?;
     let expr = &args[0];
 
     // 获取自定义分隔符
@@ -531,11 +531,11 @@ pub fn csv(
 }
 
 fn highlighted(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("highlighted", args, 1, ctx)?;
+    check_exact_args_len("highlighted", &args, 1, ctx)?;
     let script = get_string_ref(&args[0], ctx)?;
 
     if script.is_empty() {
@@ -548,11 +548,11 @@ fn highlighted(
 
 // 单参数函数（字符串作为最后一个参数）
 pub fn striped(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("striped", args, 1, ctx)?;
+    check_exact_args_len("striped", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
 
     Ok(strip_ansi_escapes(&p).into())

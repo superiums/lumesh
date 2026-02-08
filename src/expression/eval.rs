@@ -1248,7 +1248,7 @@ impl Expression {
                     return Ok(Expression::Regex(LumeRegex { regex }));
                 }
                 Expression::TimeDef(t) => {
-                    return time_parse(&[Expression::String(t.to_string())], env, job);
+                    return time_parse(vec![Expression::String(t.to_string())], env, job);
                 }
                 Expression::Blank => return Ok(state.pipe_out().unwrap_or(job.clone())),
                 // 其他表达式处理...
@@ -1515,7 +1515,7 @@ impl Expression {
             Some(bfn) => {
                 let p_args =
                     prepare_args(method, args, false, Some(self.clone()), env, state, depth)?;
-                bfn(&p_args, env, context)
+                bfn(p_args, env, context)
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::NoLibDefined(

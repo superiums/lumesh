@@ -26,11 +26,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 fn from(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("from", args, 1, ctx)?;
+    check_exact_args_len("from", &args, 1, ctx)?;
     let s = match &args[0] {
         Expression::String(s) => {
             // 使用正则表达式来匹配数字和单位
@@ -71,63 +71,63 @@ fn from(
 }
 
 fn b(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("btyes", args, 1, _ctx)?;
+    check_exact_args_len("btyes", &args, 1, _ctx)?;
     let s = get_fsize_arg(&args[0], env, _ctx)?;
     Ok(Expression::Integer(s.to_bytes() as Int))
 }
 fn kb(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("kb", args, 1, _ctx)?;
+    check_exact_args_len("kb", &args, 1, _ctx)?;
     let s = get_fsize_arg(&args[0], env, _ctx)?;
 
     Ok(Expression::Integer((s.to_bytes() >> 10) as Int))
 }
 fn mb(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("mb", args, 1, _ctx)?;
+    check_exact_args_len("mb", &args, 1, _ctx)?;
     let s = get_fsize_arg(&args[0], env, _ctx)?.to_bytes();
     let r = (s >> 20) as f64 + ((s >> 10) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
 }
 fn gb(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("gb", args, 1, _ctx)?;
+    check_exact_args_len("gb", &args, 1, _ctx)?;
     let s = get_fsize_arg(&args[0], env, _ctx)?.to_bytes();
     let r = (s >> 30) as f64 + ((s >> 20) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
 }
 fn tb(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("tb", args, 1, _ctx)?;
+    check_exact_args_len("tb", &args, 1, _ctx)?;
     let s = get_fsize_arg(&args[0], env, _ctx)?.to_bytes();
     let r = (s >> 40) as f64 + ((s >> 30) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
 }
 fn to_string(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("to_string", args, 1, _ctx)?;
+    check_exact_args_len("to_string", &args, 1, _ctx)?;
     let s = get_fsize_arg(&args[0], env, _ctx)?;
 
     Ok(Expression::String(s.to_human_readable()))

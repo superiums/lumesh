@@ -57,7 +57,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 // }
 // Probability Functions
 fn ratio(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -101,7 +101,7 @@ fn ratio(
 }
 // Random String Generation
 fn alpha(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -133,7 +133,7 @@ fn alpha(
 }
 
 fn alphanum(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -165,7 +165,7 @@ fn alphanum(
 }
 // Random Integer Generation
 fn int(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -212,11 +212,11 @@ fn int(
 }
 // Collection Operations
 fn choose(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("choose", args, 1, ctx)?;
+    check_exact_args_len("choose", &args, 1, ctx)?;
     match &args[0] {
         Expression::List(list) => {
             let mut rng = rand::rng();
@@ -234,11 +234,11 @@ fn choose(
 }
 
 fn shuffle(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("shuffle", args, 1, ctx)?;
+    check_exact_args_len("shuffle", &args, 1, ctx)?;
     match &args[0] {
         Expression::List(list) => {
             let mut rng = rand::rng();

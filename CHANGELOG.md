@@ -2,7 +2,7 @@
 
 ## [0.12.5]
 - only turn off PRINT_DIRECT in script mode.
-
+- optimize lib funcs to take args owner
 
 ## [0.12.4]
 - custom operator `..` should not cover `../`

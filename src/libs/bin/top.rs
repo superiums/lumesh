@@ -82,7 +82,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 fn help(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -245,11 +245,11 @@ fn help(
     Ok(Expression::None)
 }
 fn import(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("import", args, 1, ctx)?;
+    check_exact_args_len("import", &args, 1, ctx)?;
     let path = get_string_ref(&args[0], ctx)?;
     let canon_path = abs_script(path, env);
     // Read the file.
@@ -265,11 +265,11 @@ fn import(
     Ok(Expression::from(r))
 }
 fn include(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("include", args, 1, ctx)?;
+    check_exact_args_len("include", &args, 1, ctx)?;
     let path = get_string_ref(&args[0], ctx)?;
     let canon_path = abs_script(path, env);
 
@@ -288,7 +288,7 @@ fn include(
     Ok(Expression::from(r))
 }
 fn exit(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -309,7 +309,7 @@ fn exit(
     std::process::exit(code);
 }
 fn cd(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -361,7 +361,7 @@ fn cd(
 }
 
 fn cwd(
-    _: &[Expression],
+    _: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -371,11 +371,11 @@ fn cwd(
 
 // arg lazy
 fn r#typeof(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("typeof", args, 1, ctx)?;
+    check_exact_args_len("typeof", &args, 1, ctx)?;
     let t = args[0].type_name();
     let t1 = args[0].eval_in_assign(env)?.type_name();
     // println!("{}", t);
@@ -389,7 +389,7 @@ fn r#typeof(
 
 // args lazy
 fn debug(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -414,7 +414,7 @@ fn debug(
 
 // args lazy
 fn ddebug(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -438,11 +438,11 @@ fn ddebug(
 }
 
 fn tap(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("tap", args, 1.., ctx)?;
+    check_args_len("tap", &args, 1.., ctx)?;
     let mut stdout = std::io::stdout().lock();
     let mut result: Vec<Expression> = Vec::with_capacity(args.len());
     for (i, x) in args.iter().enumerate() {
@@ -461,7 +461,7 @@ fn tap(
 }
 
 fn print(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -474,7 +474,7 @@ fn print(
     Ok(Expression::None)
 }
 fn println(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -486,18 +486,18 @@ fn println(
     Ok(Expression::None)
 }
 pub fn pprint(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("pprint", args, 1.., ctx)?;
+    check_args_len("pprint", &args, 1.., ctx)?;
     for arg in args.iter() {
         pretty_printer(&arg)?;
     }
     Ok(Expression::None)
 }
 fn eprint(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -513,7 +513,7 @@ fn eprint(
     Ok(Expression::None)
 }
 fn eprintln(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -526,7 +526,7 @@ fn eprintln(
 }
 
 fn read(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -539,11 +539,11 @@ fn read(
 }
 
 pub fn insert(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("insert", args, 3, ctx)?;
+    check_exact_args_len("insert", &args, 3, ctx)?;
     let arr = &args[0];
     let idx = &args[1];
     let val = args[2].clone();
@@ -599,11 +599,11 @@ pub fn insert(
 }
 
 pub fn len(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("len", args, 1, ctx)?;
+    check_exact_args_len("len", &args, 1, ctx)?;
     match &args[0] {
         Expression::HMap(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
         Expression::Map(m) => Ok(Expression::Integer(m.as_ref().len() as Int)),
@@ -626,11 +626,11 @@ pub fn len(
 }
 
 pub fn rev(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("rev", args, 1, ctx)?;
+    check_exact_args_len("rev", &args, 1, ctx)?;
     match &args[0] {
         Expression::List(list) => {
             let mut reversed = list.as_ref().to_vec();
@@ -649,11 +649,11 @@ pub fn rev(
 }
 
 fn eval_str(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("eval_str", args, 1, ctx)?;
+    check_exact_args_len("eval_str", &args, 1, ctx)?;
     let exp = match &args[0] {
         Expression::String(cmd) => cmd,
         Expression::StringTemplate(_) | Expression::Symbol(_) | Expression::Variable(_) => {
@@ -685,21 +685,21 @@ fn eval_str(
     }
 }
 fn exec_str(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("exec_str", args, 1, ctx)?;
+    check_exact_args_len("exec_str", &args, 1, ctx)?;
     let mut new_env = env.fork();
     eval_str(args, &mut new_env, ctx)
 }
 // args should be lazy evaled
 fn repeat(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("repeat", args, 2, ctx)?;
+    check_exact_args_len("repeat", &args, 2, ctx)?;
     let n = get_integer_arg(args[1].eval(env)?, ctx)?;
     let r = (0..n)
         .map(|_| args[0].eval_in_assign(env))
@@ -708,20 +708,20 @@ fn repeat(
 }
 // need args evaled already
 fn eval(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("eval", args, 1, ctx)?;
+    check_exact_args_len("eval", &args, 1, ctx)?;
     Ok(args[0].eval_in_assign(env)?)
 }
 // need args evaled already
 fn exec(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("exec", args, 1, ctx)?;
+    check_exact_args_len("exec", &args, 1, ctx)?;
     let mut new_env = env.fork();
     Ok(args[0].eval_in_assign(&mut new_env)?)
 }
@@ -736,21 +736,21 @@ fn flat(expr: &Expression) -> Vec<Expression> {
 }
 
 pub fn flatten(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("flatten", args, 1, ctx)?;
+    check_exact_args_len("flatten", &args, 1, ctx)?;
     Ok(Expression::from(flat(&args[0])))
 }
 
 // args should be lazy evaled.
 fn r#where(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("where", args, 2, ctx)?;
+    check_exact_args_len("where", &args, 2, ctx)?;
     let list = args[0].eval(env)?;
     let list = get_list_ref(&list, ctx)?;
 
@@ -781,11 +781,11 @@ fn r#where(
 }
 
 fn select(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    // check_exact_args_len("select", args, 2)?;
+    // check_exact_args_len("select", &args, 2)?;
 
     let headers = match args.len() {
         3.. => args[1..].iter().map(|a| a.to_string()).collect::<Vec<_>>(),
@@ -849,11 +849,11 @@ fn select(
 }
 
 pub fn get(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("get", args, 2, ctx)?;
+    check_exact_args_len("get", &args, 2, ctx)?;
 
     let index = &args[1];
     let current = &args[0];
@@ -984,11 +984,11 @@ pub fn get(
 
 // Print Formated
 fn printf(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("format", args, 1.., ctx)?;
+    check_args_len("format", &args, 1.., ctx)?;
     let template = get_string_ref(&args[0], ctx)?;
 
     // named arg
@@ -1021,11 +1021,11 @@ fn printf(
 }
 
 pub fn throw(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("sys.error", args, 1, ctx)?;
+    check_exact_args_len("sys.error", &args, 1, ctx)?;
     let msg = &args[0];
     Err(RuntimeError::common(msg.to_string().into(), ctx.clone(), 0))
 }

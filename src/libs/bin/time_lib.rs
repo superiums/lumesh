@@ -207,11 +207,11 @@ fn parse_duration_string(s: &str, ctx: &Expression) -> Result<Duration, RuntimeE
 }
 // Basic Time Functions
 fn sleep(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("sleep", args, 1, ctx)?;
+    check_exact_args_len("sleep", &args, 1, ctx)?;
 
     let duration = match &args[0] {
         Expression::Float(n) if *n > 0.0 => Duration::from_millis(*n as u64),
@@ -231,7 +231,7 @@ fn sleep(
 }
 
 fn display(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -251,7 +251,7 @@ fn display(
 }
 // Time Component Functions
 fn get_time_component<F>(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
     extractor: F,
@@ -274,7 +274,7 @@ where
 }
 
 fn year(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -282,7 +282,7 @@ fn year(
 }
 
 fn month(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -290,7 +290,7 @@ fn month(
 }
 
 fn weekday(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -300,7 +300,7 @@ fn weekday(
 }
 
 fn day(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -308,7 +308,7 @@ fn day(
 }
 
 fn hour(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -316,7 +316,7 @@ fn hour(
 }
 
 fn minute(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -324,7 +324,7 @@ fn minute(
 }
 
 fn second(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -332,7 +332,7 @@ fn second(
 }
 
 fn seconds(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -341,7 +341,7 @@ fn seconds(
     })
 }
 fn is_leap(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -365,7 +365,7 @@ fn is_leap(
 
 // Timestamp Functions
 fn stamp(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -378,7 +378,7 @@ fn stamp(
 }
 
 fn stamp_ms(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -391,11 +391,11 @@ fn stamp_ms(
 }
 // Formatting Functions
 fn fmt(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("fmt", args, 1..=2, ctx)?;
+    check_args_len("fmt", &args, 1..=2, ctx)?;
 
     let format_str = match &args[0] {
         Expression::String(s) => s,
@@ -418,7 +418,7 @@ fn fmt(
 }
 
 fn now(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -446,11 +446,11 @@ fn now(
 }
 
 fn to_string(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("to_string", args, 1..=2, ctx)?;
+    check_args_len("to_string", &args, 1..=2, ctx)?;
 
     let dt = parse_datetime_arg(&args[0], env, ctx)?;
 
@@ -472,11 +472,11 @@ fn to_string(
 }
 // Parsing and Creation Functions
 pub fn parse(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("parse", args, 1..=2, ctx)?;
+    check_args_len("parse", &args, 1..=2, ctx)?;
 
     let datetime_str = match &args[0] {
         Expression::String(s) => s,
@@ -533,11 +533,11 @@ pub fn parse(
 }
 
 fn from_map(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("from_map", args, 1, ctx)?;
+    check_exact_args_len("from_map", &args, 1, ctx)?;
 
     if let Expression::Map(m) = &args[0] {
         let map = m.as_ref();
@@ -586,11 +586,11 @@ fn from_map(
 }
 // Time Arithmetic Functions
 fn add(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("add", args, 1..=7, ctx)?;
+    check_args_len("add", &args, 1..=7, ctx)?;
     let (base_dt, rest) = match args.len() > 1 {
         false => (Local::now().naive_local(), &args[1..]),
         true => (parse_datetime_arg(&args[1], env, ctx)?, &args[1..]),
@@ -646,11 +646,11 @@ fn add(
 }
 
 fn diff(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("diff", args, 2..=3, ctx)?;
+    check_args_len("diff", &args, 2..=3, ctx)?;
 
     let unit = match &args[0] {
         Expression::String(s) => s.to_lowercase(),
@@ -682,11 +682,11 @@ fn diff(
 
 // Timezone Functions
 fn timezone(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("timezone", args, 1..=3, ctx)?;
+    check_args_len("timezone", &args, 1..=3, ctx)?;
 
     let offset_hours = match &args[0] {
         Expression::Integer(h) => *h,

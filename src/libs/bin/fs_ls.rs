@@ -25,7 +25,7 @@ pub struct LsOptions {
 }
 
 pub fn parse_ls_args(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
 ) -> Result<(PathBuf, LsOptions), RuntimeError> {
     let mut options = LsOptions::default();
@@ -153,7 +153,7 @@ pub fn get_file_expression(
 // 辅助函数保持不变（detect_file_type, system_time_to_unix_seconds等）
 
 pub fn ls(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {

@@ -292,41 +292,41 @@ fn init_color_map() -> HashMap<&'static str, (i64, i64, i64)> {
 
 // Basic Check Functions
 fn is_empty(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_empty", args, 1, ctx)?;
+    check_exact_args_len("is_empty", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.is_empty()))
 }
 
 fn is_whitespace(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_whitespace", args, 1, ctx)?;
+    check_exact_args_len("is_whitespace", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_whitespace())))
 }
 
 fn is_alpha(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_alpha", args, 1, ctx)?;
+    check_exact_args_len("is_alpha", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_alphabetic())))
 }
 
 fn is_alphanumeric(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_alphanumeric", args, 1, ctx)?;
+    check_exact_args_len("is_alphanumeric", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(
         text.chars().all(|c| c.is_alphanumeric()),
@@ -334,62 +334,63 @@ fn is_alphanumeric(
 }
 
 fn is_numeric(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_numeric", args, 1, ctx)?;
+    check_exact_args_len("is_numeric", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_numeric())))
 }
 
 fn is_lower(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_lower", args, 1, ctx)?;
+    check_exact_args_len("is_lower", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_lowercase())))
 }
 
 fn is_upper(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_upper", args, 1, ctx)?;
+    check_exact_args_len("is_upper", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Boolean(text.chars().all(|c| c.is_uppercase())))
 }
 
 fn is_title(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_title", args, 1, ctx)?;
-    let text = get_string_ref(&args[0], ctx)?;
-    let title = to_title(&[args[0].clone()], env, ctx)?;
+    check_exact_args_len("is_title", &args, 1, ctx)?;
+    let a = args[0].clone();
+    let text = get_string_ref(&a, ctx)?;
+    let title = to_title(args, env, ctx)?;
     Ok(Expression::Boolean(text == &title.to_string()))
 }
 
 fn len(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("len", args, 1, ctx)?;
+    check_exact_args_len("len", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::Integer(text.chars().count() as Int))
 }
 // Substring Check Functions
 fn starts_with(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("starts_with", args, 2, ctx)?;
+    check_exact_args_len("starts_with", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let prefix = get_string_ref(&args[1], ctx)?;
 
@@ -397,11 +398,11 @@ fn starts_with(
 }
 
 fn ends_with(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("ends_with", args, 2, ctx)?;
+    check_exact_args_len("ends_with", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let suffix = get_string_ref(&args[1], ctx)?;
 
@@ -409,11 +410,11 @@ fn ends_with(
 }
 
 fn contains(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("contains", args, 2, ctx)?;
+    check_exact_args_len("contains", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let substring = get_string_ref(&args[1], ctx)?;
 
@@ -421,11 +422,11 @@ fn contains(
 }
 // Splitting Operations
 fn split(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("split", args, 1..=2, ctx)?;
+    check_args_len("split", &args, 1..=2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     let ifs = env.get("IFS");
@@ -457,11 +458,11 @@ fn split(
 }
 
 fn split_at(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("split_at", args, 2, ctx)?;
+    check_exact_args_len("split_at", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let index = get_integer_ref(&args[1], ctx)? as usize;
 
@@ -480,11 +481,11 @@ fn split_at(
 }
 
 fn chars(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("chars", args, 1, ctx)?;
+    check_exact_args_len("chars", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     let chars = text
@@ -495,11 +496,11 @@ fn chars(
 }
 
 fn words(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("words", args, 1, ctx)?;
+    check_exact_args_len("words", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let words = text
         .split_whitespace()
@@ -509,11 +510,11 @@ fn words(
 }
 
 fn words_quoted(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("words_quoted", args, 1, ctx)?;
+    check_exact_args_len("words_quoted", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     let re = regex_lite::Regex::new(r#""((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|(\S+)"#).unwrap();
@@ -531,11 +532,11 @@ fn words_quoted(
 }
 
 fn lines(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("lines", args, 1, ctx)?;
+    check_exact_args_len("lines", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     let lines = text
@@ -546,11 +547,11 @@ fn lines(
 }
 
 fn paragraphs(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("paragraphs", args, 1, ctx)?;
+    check_exact_args_len("paragraphs", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     let paragraphs = text
@@ -561,11 +562,11 @@ fn paragraphs(
 }
 // Modification Operations
 fn concat(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("concat", args, 2.., ctx)?;
+    check_args_len("concat", &args, 2.., ctx)?;
 
     let others = args
         .iter()
@@ -577,11 +578,11 @@ fn concat(
 }
 
 fn repeat(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("repeat", args, 2, ctx)?;
+    check_exact_args_len("repeat", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let count = get_integer_ref(&args[1], ctx)?;
 
@@ -591,11 +592,11 @@ fn repeat(
 }
 
 fn replace(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("replace", args, 3, ctx)?;
+    check_exact_args_len("replace", &args, 3, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let from = get_string_ref(&args[1], ctx)?;
     let to = get_string_ref(&args[2], ctx)?;
@@ -604,11 +605,11 @@ fn replace(
 }
 
 fn substring(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("substring", args, 2..=3, ctx)?;
+    check_args_len("substring", &args, 2..=3, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let start = get_integer_ref(&args[1], ctx)?;
 
@@ -642,11 +643,11 @@ fn substring(
 }
 
 fn remove_prefix(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("remove_prefix", args, 2, ctx)?;
+    check_exact_args_len("remove_prefix", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let prefix = get_string_ref(&args[1], ctx)?;
 
@@ -656,11 +657,11 @@ fn remove_prefix(
 }
 
 fn remove_suffix(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("remove_suffix", args, 2, ctx)?;
+    check_exact_args_len("remove_suffix", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let suffix = get_string_ref(&args[1], ctx)?;
 
@@ -670,61 +671,61 @@ fn remove_suffix(
 }
 
 fn trim(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("trim", args, 1, ctx)?;
+    check_exact_args_len("trim", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.trim().to_string()))
 }
 
 fn trim_start(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("trim_start", args, 1, ctx)?;
+    check_exact_args_len("trim_start", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.trim_start().to_string()))
 }
 
 fn trim_end(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("trim_end", args, 1, ctx)?;
+    check_exact_args_len("trim_end", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.trim_end().to_string()))
 }
 
 fn to_lower(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("to_lower", args, 1, ctx)?;
+    check_exact_args_len("to_lower", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.to_lowercase()))
 }
 
 fn to_upper(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("to_upper", args, 1, ctx)?;
+    check_exact_args_len("to_upper", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(Expression::String(text.to_uppercase()))
 }
 
 fn to_title(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("to_title", args, 1, ctx)?;
+    check_exact_args_len("to_title", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     let mut title = String::with_capacity(text.len());
@@ -746,11 +747,11 @@ fn to_title(
 
 // Formatting Operations (continued)
 fn pad_start(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("pad_start", args, 2..=3, ctx)?;
+    check_args_len("pad_start", &args, 2..=3, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let length = get_integer_ref(&args[1], ctx)?;
     let char = if args.len() > 2 {
@@ -764,11 +765,11 @@ fn pad_start(
 }
 
 fn pad_end(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("pad_end", args, 2..=3, ctx)?;
+    check_args_len("pad_end", &args, 2..=3, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let length = get_integer_ref(&args[1], ctx)?;
     let char = if args.len() > 2 {
@@ -782,11 +783,11 @@ fn pad_end(
 }
 
 fn center(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("center", args, 2..=3, ctx)?;
+    check_args_len("center", &args, 2..=3, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let length = get_integer_ref(&args[1], ctx)?;
     let char = if args.len() > 2 {
@@ -800,11 +801,11 @@ fn center(
 }
 
 fn wrap(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("wrap", args, 2, ctx)?;
+    check_exact_args_len("wrap", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let columns = get_integer_ref(&args[1], ctx)?;
     Ok(textwrap::fill(text, columns as usize).into())
@@ -812,11 +813,11 @@ fn wrap(
 
 // Style Functions
 fn href(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("href", args, 2, ctx)?;
+    check_exact_args_len("href", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let url = get_string_ref(&args[1], ctx)?;
 
@@ -824,163 +825,163 @@ fn href(
 }
 
 fn bold(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("bold", args, 1, ctx)?;
+    check_exact_args_len("bold", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn faint(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("faint", args, 1, ctx)?;
+    check_exact_args_len("faint", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn italics(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("italics", args, 1, ctx)?;
+    check_exact_args_len("italics", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[3m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn underline(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("underline", args, 1, ctx)?;
+    check_exact_args_len("underline", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[4m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn blink(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("blink", args, 1, ctx)?;
+    check_exact_args_len("blink", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[5m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn invert(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("invert", args, 1, ctx)?;
+    check_exact_args_len("invert", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[7m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn strike(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("strike", args, 1, ctx)?;
+    check_exact_args_len("strike", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[9m{}\x1b[m\x1b[0m", text).into())
 }
 // Standard Color Functions
 fn black(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("black", args, 1, ctx)?;
+    check_exact_args_len("black", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[90m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn red(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("red", args, 1, ctx)?;
+    check_exact_args_len("red", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[91m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn green(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("green", args, 1, ctx)?;
+    check_exact_args_len("green", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[92m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn yellow(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("yellow", args, 1, ctx)?;
+    check_exact_args_len("yellow", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[93m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn blue(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("blue", args, 1, ctx)?;
+    check_exact_args_len("blue", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[94m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn magenta(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("magenta", args, 1, ctx)?;
+    check_exact_args_len("magenta", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[95m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn cyan(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("cyan", args, 1, ctx)?;
+    check_exact_args_len("cyan", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[96m{}\x1b[m\x1b[0m", text).into())
 }
 
 fn white(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("white", args, 1, ctx)?;
+    check_exact_args_len("white", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", text).into())
 }
 // Advanced Color Functions
 fn color256(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("color256", args, 2, ctx)?;
+    check_exact_args_len("color256", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let color = get_integer_ref(&args[1], ctx)? as usize;
 
@@ -988,18 +989,18 @@ fn color256(
 }
 
 fn color256_bg(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("color256_bg", args, 2, ctx)?;
+    check_exact_args_len("color256_bg", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let color = get_integer_ref(&args[1], ctx)? as usize;
     Ok(format!("\x1b[48;5;{}m{}\x1b[m\x1b[0m", color, text).into())
 }
 
 fn color(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -1007,7 +1008,7 @@ fn color(
 }
 
 fn color_bg(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -1015,7 +1016,7 @@ fn color_bg(
 }
 
 fn colors(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -1074,12 +1075,12 @@ fn center_impl(len: usize, pad_ch: char, s: String) -> Result<Expression, Runtim
 }
 
 fn true_color(
-    args: &[Expression],
+    args: Vec<Expression>,
     is_bg: bool,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("true_color", args, 2, ctx)?;
+    check_exact_args_len("true_color", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let color_spec = get_string_ref(&args[1], ctx)?;
 
@@ -1120,11 +1121,11 @@ fn true_color(
 
 // Additional Functions
 fn caesar(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("caesar", args, 1..=2, ctx)?;
+    check_args_len("caesar", &args, 1..=2, ctx)?;
 
     let text = get_string_ref(&args[0], ctx)?;
     let shift = if args.len() > 1 {
@@ -1148,11 +1149,11 @@ fn caesar(
 }
 
 fn max_len(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("max_len", args, 1, ctx)?;
+    check_exact_args_len("max_len", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     let max_width = text.lines().map(|line| line.len()).max().unwrap_or(0);
@@ -1161,11 +1162,11 @@ fn max_len(
 }
 
 fn grep(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("grep", args, 2, ctx)?;
+    check_exact_args_len("grep", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let pat: &str = get_string_ref(&args[1], ctx)?;
 
@@ -1178,11 +1179,11 @@ fn grep(
 }
 
 // fn table_pprint(
-//     args: &[Expression],
+//     args: Vec<Expression>,
 //     env: &mut Environment,
 //     ctx: &Expression,
 // ) -> Result<Expression, RuntimeError> {
-//     check_args_len("pprint", args, 1.., ctx)?;
+//     check_args_len("pprint", &args, 1.., ctx)?;
 //     let table = from_module::parse_command_output(args, env, ctx)?;
 //     pprint::pretty_printer(&table)
 // }

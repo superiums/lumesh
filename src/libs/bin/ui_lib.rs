@@ -40,11 +40,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 fn int(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("int", args, 1, ctx)?;
+    check_exact_args_len("int", &args, 1, ctx)?;
     let msg = get_string_ref(&args[0], ctx)?;
 
     let amount = CustomType::<i64>::new(msg.as_str())
@@ -63,11 +63,11 @@ fn int(
 }
 
 fn float(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("float", args, 1, ctx)?;
+    check_exact_args_len("float", &args, 1, ctx)?;
     let msg = get_string_ref(&args[0], ctx)?;
 
     let amount = CustomType::<f64>::new(msg.as_str())
@@ -86,11 +86,11 @@ fn float(
 }
 
 fn text(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("text", args, 1, ctx)?;
+    check_exact_args_len("text", &args, 1, ctx)?;
     let msg = get_string_ref(&args[0], ctx)?;
 
     let ans = Text::new(msg.as_str());
@@ -105,11 +105,11 @@ fn text(
 }
 
 fn passwd(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("passwd", args, 1..=2, ctx)?;
+    check_args_len("passwd", &args, 1..=2, ctx)?;
     let msg = get_string_ref(&args[0], ctx)?;
     let confirm = if args.len() == 2 {
         args[1].is_truthy()
@@ -132,11 +132,11 @@ fn passwd(
 }
 
 fn confirm(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("confirm", args, 1, ctx)?;
+    check_exact_args_len("confirm", &args, 1, ctx)?;
     let msg = get_string_ref(&args[0], ctx)?;
 
     match Confirm::new(msg.as_str()).prompt() {
@@ -150,14 +150,14 @@ fn confirm(
 }
 
 fn pick(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     selector_wrapper(false, args, env, ctx)
 }
 fn multi_pick(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -166,7 +166,7 @@ fn multi_pick(
 
 fn selector_wrapper(
     multi: bool,
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -357,12 +357,12 @@ fn extract_cfg(
 }
 
 fn widget(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     // 支持2-4个参数：title, content, [width], [height]
-    check_args_len("widget", args, 2..=4, ctx)?;
+    check_args_len("widget", &args, 2..=4, ctx)?;
 
     let title = get_string_ref(&args[1], ctx)?;
     let title_len = title.chars().count();
@@ -472,11 +472,11 @@ fn calculate_auto_height(content: &str, text_width: usize) -> usize {
 }
 
 fn joinx(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("joinx", args, 2, ctx)?;
+    check_exact_args_len("joinx", &args, 2, ctx)?;
 
     let mut string_args = vec![];
     let mut max_height = 0;
@@ -513,11 +513,11 @@ fn joinx(
 }
 
 fn joiny(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("joiny", args, 2, ctx)?;
+    check_exact_args_len("joiny", &args, 2, ctx)?;
 
     let mut string_args = vec![];
     let mut max_width = 0;
@@ -571,11 +571,11 @@ fn joiny(
 }
 
 fn join_flow(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("join_flow", args, 2.., ctx)?;
+    check_args_len("join_flow", &args, 2.., ctx)?;
 
     let max_width = match &args[0] {
         Expression::Integer(w) if *w > 0 => *w as usize,
@@ -634,7 +634,7 @@ fn join_flow(
             // 使用现有的joinx逻辑
             let row_expressions: Vec<Expression> =
                 row.into_iter().map(Expression::String).collect();
-            match joinx(&row_expressions, env, ctx)? {
+            match joinx(row_expressions, env, ctx)? {
                 Expression::String(joined) => result_rows.push(joined),
                 _ => return Err(RuntimeError::common("joinx failed".into(), ctx.clone(), 0)),
             }

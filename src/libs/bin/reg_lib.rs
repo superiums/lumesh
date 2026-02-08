@@ -67,23 +67,23 @@ fn get_r_args<'a>(
 }
 // 匹配验证函数
 fn r#match(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("match", args, 2, ctx)?;
-    let (regex, text) = get_r_args(args, env, ctx)?;
+    check_exact_args_len("match", &args, 2, ctx)?;
+    let (regex, text) = get_r_args(&args, env, ctx)?;
 
     Ok(Expression::Boolean(regex.is_match(&text)))
 }
 // 查找定位函数
 fn find(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("find", args, 2, ctx)?;
-    let (regex, text) = get_r_args(args, env, ctx)?;
+    check_exact_args_len("find", &args, 2, ctx)?;
+    let (regex, text) = get_r_args(&args, env, ctx)?;
 
     regex.find(&text).map_or(Ok(Expression::None), |m| {
         Ok(Expression::from(common_macros::b_tree_map! {
@@ -95,12 +95,12 @@ fn find(
 }
 
 fn find_all(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("find_all", args, 2, ctx)?;
-    let (regex, text) = get_r_args(args, env, ctx)?;
+    check_exact_args_len("find_all", &args, 2, ctx)?;
+    let (regex, text) = get_r_args(&args, env, ctx)?;
 
     let matches: Vec<Expression> = regex
         .find_iter(&text)
@@ -116,12 +116,12 @@ fn find_all(
 }
 // 捕获组操作函数
 fn capture(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("capture", args, 2, ctx)?;
-    let (regex, text) = get_r_args(args, env, ctx)?;
+    check_exact_args_len("capture", &args, 2, ctx)?;
+    let (regex, text) = get_r_args(&args, env, ctx)?;
 
     regex.captures(&text).map_or(Ok(Expression::None), |caps| {
         let groups: Vec<Expression> = (0..caps.len())
@@ -136,12 +136,12 @@ fn capture(
 }
 
 fn captures(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("captures", args, 2, ctx)?;
-    let (regex, text) = get_r_args(args, env, ctx)?;
+    check_exact_args_len("captures", &args, 2, ctx)?;
+    let (regex, text) = get_r_args(&args, env, ctx)?;
 
     let all_caps: Vec<Expression> = regex
         .captures_iter(&text)
@@ -160,12 +160,12 @@ fn captures(
 }
 
 fn capture_name(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("capture_name", args, 2, ctx)?;
-    let (re, text) = get_r_args(args, env, ctx)?;
+    check_exact_args_len("capture_name", &args, 2, ctx)?;
+    let (re, text) = get_r_args(&args, env, ctx)?;
 
     if let Some(caps) = re.captures(&text) {
         let mut found = std::collections::BTreeMap::new();
@@ -180,12 +180,12 @@ fn capture_name(
 }
 // 文本处理函数
 fn split(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("split", args, 2, ctx)?;
-    let (regex, text) = get_r_args(args, env, ctx)?;
+    check_exact_args_len("split", &args, 2, ctx)?;
+    let (regex, text) = get_r_args(&args, env, ctx)?;
 
     let parts: Vec<Expression> = regex
         .split(&text)
@@ -195,11 +195,11 @@ fn split(
 }
 
 fn replace(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("replace", args, 3, ctx)?;
+    check_exact_args_len("replace", &args, 3, ctx)?;
 
     let first = &args[0];
     let second = &args[1];

@@ -25,7 +25,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 fn info(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -34,7 +34,7 @@ fn info(
         String::from("git") => Expression::String("https://codeberg.org/santo/lumesh".to_string()),
         String::from("homepage") => Expression::String("https://lumesh.codeberg.page".to_string()),
         String::from("version") => Expression::String(VERSION.to_string()),
-        String::from("bin") => bin(args, env, ctx)?,
+        String::from("bin") => bin(vec![], env, ctx)?,
 
         String::from("license") => Expression::String("MIT".to_string()),
         String::from("prelude") => prelude(args, env, ctx)?
@@ -42,14 +42,14 @@ fn info(
     Ok(Expression::from(info))
 }
 fn version(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     Ok(Expression::String(VERSION.to_string()))
 }
 fn bin(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -58,7 +58,7 @@ fn bin(
         .map_err(|e| RuntimeError::from_io_error(e, "read current executor".into(), ctx.clone(), 0))
 }
 fn prelude(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {

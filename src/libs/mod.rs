@@ -18,7 +18,7 @@ pub struct BuiltinInfo {
     pub hint: &'static str,
 }
 pub type BuiltinFunc =
-    fn(&[Expression], &mut Environment, contex: &Expression) -> Result<Expression, RuntimeError>;
+    fn(Vec<Expression>, &mut Environment, contex: &Expression) -> Result<Expression, RuntimeError>;
 
 // 对不同模块采用不同策略
 thread_local! {

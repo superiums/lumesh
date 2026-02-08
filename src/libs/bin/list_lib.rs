@@ -109,28 +109,28 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
 // ---from math---
 fn max(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     math_lib::max(args, env, ctx)
 }
 fn min(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     math_lib::min(args, env, ctx)
 }
 fn sum(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     math_lib::sum(args, env, ctx)
 }
 fn average(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -139,35 +139,35 @@ fn average(
 
 // ---from top---
 fn insert(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     top::insert(args, env, ctx)
 }
 fn len(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     top::len(args, env, ctx)
 }
 fn get(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     top::get(args, env, ctx)
 }
 fn rev(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     top::rev(args, env, ctx)
 }
 fn flatten(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -176,21 +176,21 @@ fn flatten(
 
 // ---self---
 fn is_empty(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_empty", args, 1, ctx)?;
+    check_exact_args_len("is_empty", &args, 1, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     Ok(Expression::Boolean(list.is_empty()))
 }
 fn first(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("first", args, 1, ctx)?;
+    check_exact_args_len("first", &args, 1, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     list.as_ref().first().cloned().ok_or_else(|| {
@@ -199,11 +199,11 @@ fn first(
 }
 
 fn last(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("last", args, 1, ctx)?;
+    check_exact_args_len("last", &args, 1, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     list.as_ref()
@@ -219,11 +219,11 @@ fn clamp(n: Int, len: usize) -> usize {
     }
 }
 fn at(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("at", args, 2, ctx)?;
+    check_exact_args_len("at", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let n = get_integer_ref(&args[1], ctx)?;
 
@@ -240,11 +240,11 @@ fn at(
 }
 
 fn take(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("take", args, 2, ctx)?;
+    check_exact_args_len("take", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let n = get_integer_ref(&args[1], ctx)?;
 
@@ -256,11 +256,11 @@ fn take(
 }
 
 fn drop(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("drop", args, 2, ctx)?;
+    check_exact_args_len("drop", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let n = get_integer_ref(&args[1], ctx)?;
 
@@ -272,22 +272,22 @@ fn drop(
 }
 // 查找操作函数
 fn contains(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("contains", args, 2, ctx)?;
+    check_exact_args_len("contains", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     Ok(Expression::Boolean(list.as_ref().contains(&args[1])))
 }
 
 fn find(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("find", args, 2..=3, ctx)?;
+    check_args_len("find", &args, 2..=3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let target = &args[1];
     let start = if args.len() == 3 {
@@ -318,11 +318,11 @@ fn find(
 }
 
 fn find_last(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("find_last", args, 2..=3, ctx)?;
+    check_args_len("find_last", &args, 2..=3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let target = &args[1];
     let start = if args.len() == 3 {
@@ -359,11 +359,11 @@ fn find_last(
 }
 // 修改操作函数
 fn append(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("append", args, 2, ctx)?;
+    check_exact_args_len("append", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let item = args[1].clone();
 
@@ -373,11 +373,11 @@ fn append(
 }
 
 fn prepend(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("prepend", args, 2, ctx)?;
+    check_exact_args_len("prepend", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let head = args[1].clone();
 
@@ -388,11 +388,11 @@ fn prepend(
 }
 
 fn unique(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("unique", args, 1, ctx)?;
+    check_exact_args_len("unique", &args, 1, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     let mut seen = std::collections::HashSet::new();
@@ -407,11 +407,11 @@ fn unique(
 }
 
 fn split_at(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("split_at", args, 2, ctx)?;
+    check_exact_args_len("split_at", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let n = get_integer_ref(&args[1], ctx)?;
 
@@ -429,11 +429,11 @@ fn split_at(
 }
 
 fn sort(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("sort", args, 1.., ctx)?;
+    check_args_len("sort", &args, 1.., ctx)?;
 
     let list = &args[0];
     let (func, headers) = match args.len() {
@@ -567,11 +567,11 @@ fn sort(
 }
 
 fn group(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("group", args, 2, ctx)?;
+    check_exact_args_len("group", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let key_func = &args[1];
 
@@ -632,11 +632,11 @@ fn group(
 }
 
 fn remove_at(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("remove_at", args, 2..=3, ctx)?;
+    check_args_len("remove_at", &args, 2..=3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let index = get_integer_ref(&args[1], ctx)?;
     let count = if args.len() == 3 {
@@ -669,11 +669,11 @@ fn remove_at(
     Ok(Expression::List(Rc::new(new_list)))
 }
 fn remove(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("remove", args, 2..=3, ctx)?;
+    check_args_len("remove", &args, 2..=3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     let item = &args[1];
@@ -705,11 +705,11 @@ fn remove(
 }
 
 fn set(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set", args, 3, ctx)?;
+    check_exact_args_len("set", &args, 3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let n = get_integer_ref(&args[1], ctx)?;
 
@@ -735,7 +735,7 @@ fn set(
 }
 // 创建操作函数
 fn concat(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -743,7 +743,7 @@ fn concat(
 }
 
 fn from(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -770,11 +770,11 @@ fn from(
 }
 // 遍历操作函数
 fn map(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("map", args, 2, ctx)?;
+    check_exact_args_len("map", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let func = &args[1];
 
@@ -822,11 +822,11 @@ fn map(
 }
 
 fn items(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("items", args, 1, ctx)?;
+    check_exact_args_len("items", &args, 1, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     let items = list
@@ -839,11 +839,11 @@ fn items(
 }
 
 fn filter(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("filter", args, 2, ctx)?;
+    check_exact_args_len("filter", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     let mut result = Vec::new();
@@ -895,11 +895,11 @@ fn filter(
 }
 
 fn filter_map(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("filter_map", args, 2, ctx)?;
+    check_exact_args_len("filter_map", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let func = &args[1];
     check_fn_arg(&func, 1, ctx)?;
@@ -915,7 +915,7 @@ fn filter_map(
 }
 
 // fn reduce(
-//     args: &[Expression],
+//     args: Vec<Expression>,
 //     env: &mut Environment,
 //     ctx: &Expression,
 // ) -> Result<Expression, RuntimeError> {
@@ -929,7 +929,7 @@ fn filter_map(
 //         )
 //         .eval(env)?)
 //     } else {
-//         check_exact_args_len("reduce", args, 3, ctx)?;
+//         check_exact_args_len("reduce", &args, 3, ctx)?;
 //         let list = get_list_arg(args[0].eval(env)?, ctx)?;
 //         let f = args[1].eval(env)?;
 //         let mut acc = args[2].eval(env)?;
@@ -943,11 +943,11 @@ fn filter_map(
 // }
 
 fn any(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("any", args, 2, ctx)?;
+    check_exact_args_len("any", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let func = &args[1];
     check_fn_arg(&func, 1, ctx)?;
@@ -963,11 +963,11 @@ fn any(
 }
 
 fn all(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("all", args, 2, ctx)?;
+    check_exact_args_len("all", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let func = &args[1];
     check_fn_arg(&func, 1, ctx)?;
@@ -983,11 +983,11 @@ fn all(
 }
 // 转换操作函数
 fn join(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("join", args, 2, ctx)?;
+    check_exact_args_len("join", &args, 2, ctx)?;
 
     let list = get_list_ref(&args[0], ctx)?;
     let separator = get_string_ref(&args[1], ctx)?;
@@ -1003,11 +1003,11 @@ fn join(
 }
 
 fn to_map(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("to_map", args, 1..=3, ctx)?;
+    check_args_len("to_map", &args, 1..=3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     let (key_func, val_func) = match args.len() {
@@ -1047,11 +1047,11 @@ fn to_map(
 }
 // 结构操作函数
 fn transpose(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("transpose", args, 1, ctx)?;
+    check_exact_args_len("transpose", &args, 1, ctx)?;
     let matrix = get_list_ref(&args[0], ctx)?;
 
     if matrix.as_ref().is_empty() {
@@ -1103,11 +1103,11 @@ fn transpose(
 }
 
 fn chunk(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("chunk", args, 2, ctx)?;
+    check_exact_args_len("chunk", &args, 2, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let n = get_integer_ref(&args[1], ctx)?;
 
@@ -1127,11 +1127,11 @@ fn chunk(
 }
 
 fn foldl(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("foldl", args, 2..=3, ctx)?;
+    check_args_len("foldl", &args, 2..=3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let f = &args[1];
     let mut acc = args.get(2).map_or(Expression::Integer(0), |x| x.clone());
@@ -1160,11 +1160,11 @@ fn foldl(
     Ok(acc)
 }
 fn foldr(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("foldr", args, 2..=3, ctx)?;
+    check_args_len("foldr", &args, 2..=3, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
     let f = &args[1];
     let mut acc = args.get(2).map_or(Expression::Integer(0), |x| x.clone());
@@ -1177,11 +1177,11 @@ fn foldr(
 }
 
 fn zip(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("zip", args, 2, ctx)?;
+    check_exact_args_len("zip", &args, 2, ctx)?;
     let list1 = get_list_ref(&args[0], ctx)?;
     let list2 = get_list_ref(&args[1], ctx)?;
 
@@ -1196,11 +1196,11 @@ fn zip(
 }
 
 fn unzip(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("unzip", args, 1, ctx)?;
+    check_exact_args_len("unzip", &args, 1, ctx)?;
     let list = get_list_ref(&args[0], ctx)?;
 
     let mut list1 = Vec::with_capacity(list.as_ref().len());

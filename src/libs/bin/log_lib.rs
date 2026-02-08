@@ -1,7 +1,7 @@
 use crate::{Environment, Expression};
 
 use crate::libs::BuiltinInfo;
-use crate::libs::helper::{check_exact_args_len, get_string_ref};
+use crate::libs::helper::{check_exact_args_len, get_string_arg};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
 
@@ -57,11 +57,11 @@ fn is_log_level_enabled(level: Int) -> bool {
 }
 // 日志级别管理函数
 fn set_level(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set_level", args, 1, ctx)?;
+    check_exact_args_len("set_level", &args, 1, ctx)?;
 
     if let Expression::Integer(level) = &args[0] {
         *LOG_LEVEL.write().unwrap() = *level;
@@ -80,7 +80,7 @@ fn set_level(
 }
 
 fn get_level(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -88,7 +88,7 @@ fn get_level(
 }
 
 fn disable(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -97,11 +97,11 @@ fn disable(
 }
 
 fn enabled(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("enabled", args, 1, ctx)?;
+    check_exact_args_len("enabled", &args, 1, ctx)?;
 
     if let Expression::Integer(level) = &args[0] {
         Ok(Expression::Boolean(is_log_level_enabled(*level)))
@@ -121,7 +121,7 @@ fn enabled(
 fn log_message(
     level: Int,
     prefix: &str,
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -133,7 +133,7 @@ fn log_message(
     let mut first_arg = true;
 
     for arg in args {
-        let value = get_string_ref(arg, ctx)?;
+        let value = get_string_arg(arg, ctx)?;
 
         if !first_arg {
             output.push(' ');
@@ -161,7 +161,7 @@ fn log_message(
 }
 // 各日志级别专用函数
 fn info(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -169,7 +169,7 @@ fn info(
 }
 
 fn warn(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -177,7 +177,7 @@ fn warn(
 }
 
 fn debug(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -185,7 +185,7 @@ fn debug(
 }
 
 fn error(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -193,7 +193,7 @@ fn error(
 }
 
 fn trace(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -201,7 +201,7 @@ fn trace(
 }
 // 简单回显函数
 fn echo(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -209,7 +209,7 @@ fn echo(
     let mut first_arg = true;
 
     for arg in args {
-        let value = get_string_ref(arg, ctx)?;
+        let value = get_string_arg(arg, ctx)?;
 
         if !first_arg {
             output.push(' ');

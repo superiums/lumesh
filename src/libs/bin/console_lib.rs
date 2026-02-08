@@ -65,7 +65,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
 // Console Information Functions
 fn width(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -75,7 +75,7 @@ fn width(
 }
 
 fn height(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -85,11 +85,11 @@ fn height(
 }
 // Text Output Functions
 fn write(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("write", args, 3, ctx)?;
+    check_exact_args_len("write", &args, 3, ctx)?;
 
     let x = &args[0];
     let y = &args[1];
@@ -124,18 +124,18 @@ fn write(
 }
 
 fn title(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("title", args, 1, ctx)?;
+    check_exact_args_len("title", &args, 1, ctx)?;
     let title = &args[0];
     print!("\x1b]2;{title}\x07");
     Ok(Expression::None)
 }
 
 fn clear(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -144,7 +144,7 @@ fn clear(
 }
 
 fn flush(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -155,7 +155,7 @@ fn flush(
 }
 // Console Mode Functions
 fn mode_raw(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -165,7 +165,7 @@ fn mode_raw(
 }
 
 fn mode_normal(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -175,7 +175,7 @@ fn mode_normal(
 }
 
 fn screen_alternate(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -184,7 +184,7 @@ fn screen_alternate(
 }
 
 fn screen_normal(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -193,11 +193,11 @@ fn screen_normal(
 }
 // Cursor Control Functions
 fn cursor_to(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("cursor_to", args, 2, ctx)?;
+    check_exact_args_len("cursor_to", &args, 2, ctx)?;
 
     let x = &args[0];
     let y = &args[1];
@@ -225,11 +225,11 @@ fn cursor_to(
 macro_rules! cursor_move_fn {
     ($name:ident, $code:literal, $doc:literal) => {
         fn $name(
-            args: &[Expression],
+            args: Vec<Expression>,
             _env: &mut Environment,
             ctx: &Expression,
         ) -> Result<Expression, RuntimeError> {
-            check_exact_args_len(stringify!($name), args, 1, ctx)?;
+            check_exact_args_len(stringify!($name), &args, 1, ctx)?;
 
             if let Expression::Integer(n) = args[0] {
                 print!(concat!("\x1b[", $code, "{}"), n);
@@ -251,7 +251,7 @@ cursor_move_fn!(cursor_left, "D", "Move cursor left");
 cursor_move_fn!(cursor_right, "C", "Move cursor right");
 
 fn cursor_save(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -260,7 +260,7 @@ fn cursor_save(
 }
 
 fn cursor_restore(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -269,7 +269,7 @@ fn cursor_restore(
 }
 
 fn cursor_hide(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -278,7 +278,7 @@ fn cursor_hide(
 }
 
 fn cursor_show(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -287,7 +287,7 @@ fn cursor_show(
 }
 // Input Functions
 fn read_line(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -321,7 +321,7 @@ fn read_line(
 }
 
 fn keys(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -357,11 +357,11 @@ fn keys(
     }))
 }
 fn read_password(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("read_password", args, 0..1, ctx)?;
+    check_args_len("read_password", &args, 0..1, ctx)?;
     let rst = if args.len() > 0 {
         rpassword::prompt_password(args[0].to_string())
     } else {
@@ -378,7 +378,7 @@ fn read_password(
 }
 
 fn read_key(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {

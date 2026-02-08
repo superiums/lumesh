@@ -70,28 +70,28 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
 // ---from top---
 fn insert(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     top::insert(args, env, ctx)
 }
 fn len(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     top::len(args, env, ctx)
 }
 fn get(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     top::get(args, env, ctx)
 }
 fn flatten(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -113,11 +113,11 @@ pub fn map_err(expr: &Expression, ctx: &Expression) -> RuntimeError {
 }
 // 检查操作函数
 fn at(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("at", args, 2, ctx)?;
+    check_exact_args_len("at", &args, 2, ctx)?;
 
     let key = get_string_ref(&args[1], ctx)?.as_str();
     match &args[0] {
@@ -136,11 +136,11 @@ fn at(
 }
 
 fn has(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("has", args, 2, ctx)?;
+    check_exact_args_len("has", &args, 2, ctx)?;
     let key = get_string_ref(&args[1], ctx)?.as_str();
     let r = match &args[0] {
         Expression::Map(m) => m.contains_key(key),
@@ -151,11 +151,11 @@ fn has(
 }
 // 数据获取函数
 fn items(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("items", args, 1, ctx)?;
+    check_exact_args_len("items", &args, 1, ctx)?;
 
     let r = match &args[0] {
         Expression::Map(m) => m
@@ -173,11 +173,11 @@ fn items(
 }
 
 fn keys(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("keys", args, 1, ctx)?;
+    check_exact_args_len("keys", &args, 1, ctx)?;
     let r = match &args[0] {
         Expression::Map(m) => m
             .keys()
@@ -194,11 +194,11 @@ fn keys(
 }
 
 fn values(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("values", args, 1, ctx)?;
+    check_exact_args_len("values", &args, 1, ctx)?;
     let r = match &args[0] {
         Expression::Map(m) => m.values().cloned().collect::<Vec<_>>(),
         Expression::HMap(m) => m.values().cloned().collect::<Vec<_>>(),
@@ -209,11 +209,11 @@ fn values(
 }
 // 查找函数
 fn find(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("find", args, 2, ctx)?;
+    check_exact_args_len("find", &args, 2, ctx)?;
 
     let predicate = &args[1];
     check_fn_arg(&predicate, 2, ctx)?;
@@ -245,11 +245,11 @@ fn find(
 }
 
 fn filter(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("filter", args, 2, ctx)?;
+    check_exact_args_len("filter", &args, 2, ctx)?;
 
     let predicate = &args[1];
     check_fn_arg(&predicate, 2, ctx)?;
@@ -282,11 +282,11 @@ fn filter(
 }
 // 结构修改函数
 fn remove(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("remove", args, 2, ctx)?;
+    check_exact_args_len("remove", &args, 2, ctx)?;
     let map = &args[0];
     let key = &args[1];
 
@@ -306,11 +306,11 @@ fn remove(
 }
 
 fn set(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set", args, 3, ctx)?;
+    check_exact_args_len("set", &args, 3, ctx)?;
     let map = &args[0];
     let key_str: &str = get_string_ref(&args[1], ctx)?;
     let value = &args[2];
@@ -347,11 +347,11 @@ fn set(
 }
 // 创建操作函数
 fn from_items(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("from_items", args, 1, ctx)?;
+    check_exact_args_len("from_items", &args, 1, ctx)?;
     let expr = &args[0];
 
     match expr {
@@ -371,11 +371,11 @@ fn from_items(
 }
 // 集合运算函数
 fn union(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("union", args, 2, ctx)?;
+    check_exact_args_len("union", &args, 2, ctx)?;
     let expr1 = &args[0];
     let expr2 = &args[1];
 
@@ -391,11 +391,11 @@ fn union(
 }
 
 fn intersect(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("intersect", args, 2, ctx)?;
+    check_exact_args_len("intersect", &args, 2, ctx)?;
     let expr1 = &args[0];
     let expr2 = &args[1];
 
@@ -415,11 +415,11 @@ fn intersect(
 }
 
 fn difference(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("difference", args, 2, ctx)?;
+    check_exact_args_len("difference", &args, 2, ctx)?;
     let expr1 = &args[0];
     let expr2 = &args[1];
 
@@ -439,11 +439,11 @@ fn difference(
 }
 
 fn merge(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("merge", args, 2.., ctx)?;
+    check_args_len("merge", &args, 2.., ctx)?;
 
     let r = BTreeMap::new();
     let maps = args
@@ -489,11 +489,11 @@ fn deep_merge_maps(
 }
 // 转换操作函数
 fn map(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("map", args, 3, ctx)?;
+    check_exact_args_len("map", &args, 3, ctx)?;
 
     let key_func = &args[1];
     let val_func = &args[2];

@@ -2,7 +2,7 @@ use crate::{
     Environment, Expression, Int, RuntimeError,
     libs::{
         BuiltinInfo,
-        helper::{check_args_len, check_exact_args_len, get_string_ref},
+        helper::{check_args_len, check_exact_args_len, get_string_arg, get_string_ref},
         lazy_module::LazyModule,
     },
     reg_info, reg_lazy,
@@ -150,7 +150,7 @@ fn copy_path(src: &Path, dst: &Path, ctx: &Expression) -> Result<(), RuntimeErro
 
 // System Directory Functions
 fn dirs(
-    _args: &[Expression],
+    _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -185,11 +185,11 @@ fn dirs(
 }
 // Directory Tree Functions
 fn tree(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("tree", args, 1..=2, ctx)?;
+    check_args_len("tree", &args, 1..=2, ctx)?;
 
     let mut cwd = get_current_path(env);
     let mut max_depth = Some(3);
@@ -214,11 +214,11 @@ fn tree(
 }
 // File Reading Functions
 fn head(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("head", args, 1..=2, ctx)?;
+    check_args_len("head", &args, 1..=2, ctx)?;
 
     if let Expression::String(p) = &args[0] {
         let path = utils::canon(p, env)?;
@@ -248,11 +248,11 @@ fn head(
 }
 
 fn tail(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("tail", args, 1..=2, ctx)?;
+    check_args_len("tail", &args, 1..=2, ctx)?;
     if let Expression::String(p) = &args[0] {
         let path = utils::canon(p, env)?;
         let n = match args.len() {
@@ -300,11 +300,11 @@ fn read_file_portion(path: &Path, n: i64, from_start: bool) -> Result<String, Ru
 }
 // Path Operations
 fn canon(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("canon", args, 1, ctx)?;
+    check_exact_args_len("canon", &args, 1, ctx)?;
     if let Expression::String(p) = &args[0] {
         let canon_path = utils::canon(p, env)?;
         return Ok(Expression::String(canon_path.to_string_lossy().into()));
@@ -317,11 +317,11 @@ fn canon(
 }
 
 fn abs(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("abs", args, 1, ctx)?;
+    check_exact_args_len("abs", &args, 1, ctx)?;
     if let Expression::String(p) = &args[0] {
         let canon_path = utils::abs_check(p, env)?;
         return Ok(Expression::String(canon_path.to_string_lossy().into()));
@@ -334,11 +334,11 @@ fn abs(
 }
 // Directory Operations
 fn mkdir(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("mkdir", args, 1, ctx)?;
+    check_exact_args_len("mkdir", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
     std::fs::create_dir_all(&path).map_err(|e| {
@@ -348,11 +348,11 @@ fn mkdir(
 }
 
 fn rmdir(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("rmdir", args, 1, ctx)?;
+    check_exact_args_len("rmdir", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
     std::fs::remove_dir(&path).map_err(|e| {
@@ -362,11 +362,11 @@ fn rmdir(
 }
 // File Operations
 fn mv(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("mv", args, 2, ctx)?;
+    check_exact_args_len("mv", &args, 2, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let src = utils::abs(&p, env);
     let dst_str = args[1].to_string();
@@ -383,11 +383,11 @@ fn mv(
 }
 
 fn cp(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("cp", args, 2, ctx)?;
+    check_exact_args_len("cp", &args, 2, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let src = utils::abs(&p, env);
 
@@ -405,11 +405,11 @@ fn cp(
 }
 
 fn rm(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("rm", args, 1, ctx)?;
+    check_exact_args_len("rm", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
     remove_path(&path)?;
@@ -430,44 +430,44 @@ fn remove_path(path: &Path) -> Result<(), RuntimeError> {
 }
 // Path Check Functions
 fn exists(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("exists", args, 1, ctx)?;
+    check_exact_args_len("exists", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
     Ok(Expression::Boolean(path.exists()))
 }
 
 fn is_dir(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_dir", args, 1, ctx)?;
+    check_exact_args_len("is_dir", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
     Ok(Expression::Boolean(path.is_dir()))
 }
 
 fn is_file(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("is_file", args, 1, ctx)?;
+    check_exact_args_len("is_file", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
     Ok(Expression::Boolean(path.is_file()))
 }
 // File Content Operations
 fn read(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("read", args, 1, ctx)?;
+    check_exact_args_len("read", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::canon(&p, env)?;
 
@@ -483,11 +483,11 @@ fn read(
 }
 
 fn write(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("write", args, 1..=2, ctx)?;
+    check_args_len("write", &args, 1..=2, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
 
@@ -512,11 +512,11 @@ fn write(
 }
 
 fn append(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("append", args, 2, ctx)?;
+    check_exact_args_len("append", &args, 2, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let path = utils::abs(&p, env);
     let contents = &args[1];
@@ -537,11 +537,11 @@ fn append(
 }
 // Pattern Matching
 fn glob(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("glob", args, 1, ctx)?;
+    check_exact_args_len("glob", &args, 1, ctx)?;
 
     let p = get_string_ref(&args[0], ctx)?;
 
@@ -569,11 +569,11 @@ fn glob(
 }
 // Path Extraction
 fn base_name(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("base_name", args, 1..=2, ctx)?;
+    check_args_len("base_name", &args, 1..=2, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let split_extension = args.len() > 1
         && match args[1] {
@@ -604,11 +604,11 @@ fn base_name(
     }
 }
 fn dir_name(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("dir_name", args, 1, ctx)?;
+    check_exact_args_len("dir_name", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
 
     if is_a_dir(&p, env) {
@@ -626,17 +626,17 @@ fn dir_name(
 }
 
 fn join(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     // 检查至少有一个参数
-    check_args_len("join", args, 1.., ctx)?;
+    check_args_len("join", &args, 1.., ctx)?;
 
     let mut final_path = PathBuf::new();
 
     for arg in args {
-        let p = get_string_ref(arg, ctx)?;
+        let p = get_string_arg(arg, ctx)?;
         final_path = final_path.join(p);
     }
     let p = expand_home(final_path.to_str().unwrap_or("."));

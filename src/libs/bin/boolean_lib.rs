@@ -22,33 +22,33 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 fn and(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("and", args, 2.., ctx)?;
+    check_args_len("and", &&args, 2.., ctx)?;
     let r = args
         .iter()
         .any(|x| !x.eval(env).map_or(false, |y| y.is_truthy()));
     Ok(Expression::Boolean(r))
 }
 fn or(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("or", args, 2.., ctx)?;
+    check_args_len("or", &&args, 2.., ctx)?;
     let r = args
         .iter()
         .any(|x| x.eval(env).map_or(false, |y| y.is_truthy()));
     Ok(Expression::Boolean(r))
 }
 pub fn not(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("not", args, 2.., ctx)?;
+    check_args_len("not", &&args, 2.., ctx)?;
     let r = args
         .iter()
         .any(|x| !x.eval(env).map_or(false, |y| y.is_truthy()));

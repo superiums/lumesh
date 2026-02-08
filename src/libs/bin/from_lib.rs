@@ -44,11 +44,11 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 // TOML Parser Functions
 
 fn toml(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("toml", args, 1, ctx)?;
+    check_exact_args_len("toml", &args, 1, ctx)?;
     let text_str = args[0].to_string();
 
     toml::from_str(&text_str).map(toml_to_expr).map_err(|e| {
@@ -77,11 +77,11 @@ fn toml_to_expr(val: toml::Value) -> Expression {
 // JSON Parser Functions
 
 fn json(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("json", args, 1, ctx)?;
+    check_exact_args_len("json", &args, 1, ctx)?;
     let text_str = args[0].to_string();
 
     if text_str.is_empty() {
@@ -122,11 +122,11 @@ fn json_to_expr(val: JsonValue) -> Expression {
 // Expression Parser
 
 fn script(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("script", args, 1, ctx)?;
+    check_exact_args_len("script", &args, 1, ctx)?;
     let script = args[0].to_string();
 
     if script.is_empty() {
@@ -140,7 +140,7 @@ fn script(
 
 // Command Output Parser
 fn cmd(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -149,11 +149,11 @@ fn cmd(
 
 // CSV Reader and Converter Functions
 fn csv(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("csv", args, 1, ctx)?;
+    check_exact_args_len("csv", &args, 1, ctx)?;
     let text = args[0].to_string();
 
     // 获取自定义分隔符
@@ -202,11 +202,11 @@ enum JqStep {
 }
 
 fn jq(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("jq", args, 2, ctx)?;
+    check_exact_args_len("jq", &args, 2, ctx)?;
     let input = &args[0];
     let query = &args[1];
 

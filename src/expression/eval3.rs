@@ -1,5 +1,3 @@
-use std::borrow::Cow;
-
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
@@ -23,22 +21,21 @@ pub fn prepare_args<'a>(
     env: &mut Environment,
     state: &mut State,
     depth: usize,
-) -> Result<Cow<'a, [Expression]>, RuntimeError> {
+) -> Result<Vec<Expression>, RuntimeError> {
     if check_lazy {
         if LAZY_EVAL_COMMANDS.contains(&cmd) {
             if args.contains(&Expression::Blank) {
-                return Ok(Cow::Owned(
-                    args.iter()
-                        .map(|x| match x {
-                            Expression::Blank => {
-                                x.eval_mut(state, env, depth).unwrap_or(Expression::Blank)
-                            }
-                            other => other.clone(),
-                        })
-                        .collect::<Vec<_>>(),
-                ));
+                return Ok(args
+                    .iter()
+                    .map(|x| match x {
+                        Expression::Blank => {
+                            x.eval_mut(state, env, depth).unwrap_or(Expression::Blank)
+                        }
+                        other => other.clone(),
+                    })
+                    .collect::<Vec<_>>());
             }
-            return Ok(Cow::Borrowed(args));
+            return Ok(args.to_vec());
         }
     }
     let mut args_eval = if let Some(a) = insert_arg {
@@ -55,7 +52,7 @@ pub fn prepare_args<'a>(
             Err(e) => return Err(e),
         }
     }
-    Ok(Cow::Owned(args_eval))
+    Ok(args_eval)
 }
 
 /// 执行
@@ -771,7 +768,7 @@ pub fn handle_builtin(
             // 'xx' should be injected
             val => prepare_args(method, args, false, Some(val.clone()), env, state, depth)?,
         };
-        let result = bfn(&p_args, env, ctx)?;
+        let result = bfn(p_args, env, ctx)?;
 
         return Ok(Some(result));
     }

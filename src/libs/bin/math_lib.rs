@@ -109,19 +109,31 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     })
 }
 
-fn e(_: &[Expression], _: &mut Environment, _: &Expression) -> Result<Expression, RuntimeError> {
+fn e(
+    _args: Vec<Expression>,
+    _: &mut Environment,
+    _: &Expression,
+) -> Result<Expression, RuntimeError> {
     Ok(Expression::Float(std::f64::consts::E))
 }
-fn pi(_: &[Expression], _: &mut Environment, _: &Expression) -> Result<Expression, RuntimeError> {
+fn pi(
+    _args: Vec<Expression>,
+    _: &mut Environment,
+    _: &Expression,
+) -> Result<Expression, RuntimeError> {
     Ok(Expression::Float(std::f64::consts::PI))
 }
-fn phi(_: &[Expression], _: &mut Environment, _: &Expression) -> Result<Expression, RuntimeError> {
+fn phi(
+    _args: Vec<Expression>,
+    _: &mut Environment,
+    _: &Expression,
+) -> Result<Expression, RuntimeError> {
     Ok(Expression::Float(1.618_033_988_749_895_f64.into()))
 }
 // Helper Functions
 // Helper function to evaluate arguments to f64
 fn eval_to_f64(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     func_name: &str,
     ctx: &Expression,
@@ -158,7 +170,7 @@ pub fn get_float_arg(expr: &Expression, ctx: &Expression) -> Result<f64, Runtime
 }
 // Basic Math Functions
 pub fn max(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -170,16 +182,16 @@ pub fn max(
         match num {
             Expression::Integer(i) => {
                 if let Some(current_max) = max_val_int {
-                    max_val_int = Some(current_max.max(*i));
+                    max_val_int = Some(current_max.max(i));
                 } else {
-                    max_val_int = Some(*i);
+                    max_val_int = Some(i);
                 }
             }
             Expression::Float(f) => {
                 if let Some(current_max) = max_val_float {
-                    max_val_float = Some(current_max.max(*f));
+                    max_val_float = Some(current_max.max(f));
                 } else {
-                    max_val_float = Some(*f);
+                    max_val_float = Some(f);
                 }
             }
             _ => {
@@ -205,7 +217,7 @@ pub fn max(
 }
 
 pub fn min(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -215,16 +227,16 @@ pub fn min(
         match num {
             Expression::Integer(i) => {
                 if let Some(current_min) = min_val {
-                    min_val = Some(current_min.min(*i as f64));
+                    min_val = Some(current_min.min(i as f64));
                 } else {
-                    min_val = Some(*i as f64);
+                    min_val = Some(i as f64);
                 }
             }
             Expression::Float(f) => {
                 if let Some(current_min) = min_val {
-                    min_val = Some(current_min.min(*f));
+                    min_val = Some(current_min.min(f));
                 } else {
-                    min_val = Some(*f);
+                    min_val = Some(f);
                 }
             }
             _ => {
@@ -244,11 +256,11 @@ pub fn min(
 }
 
 fn clamp(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("clamp", args, 3, ctx)?;
+    check_exact_args_len("clamp", &args, 3, ctx)?;
     let value = get_float_arg(&args[0], ctx)?;
     let min_val = get_float_arg(&args[1], ctx)?;
     let max_val = get_float_arg(&args[2], ctx)?;
@@ -273,11 +285,11 @@ fn clamp(
 }
 // Bitwise Operations
 fn bit_and(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("bit_and", args, 2, ctx)?;
+    check_exact_args_len("bit_and", &args, 2, ctx)?;
 
     let a = get_integer_ref(&args[0], ctx)?;
     let b = get_integer_ref(&args[1], ctx)?;
@@ -286,11 +298,11 @@ fn bit_and(
 }
 
 fn bit_or(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("bit_or", args, 2, ctx)?;
+    check_exact_args_len("bit_or", &args, 2, ctx)?;
 
     let a = get_integer_ref(&args[0], ctx)?;
     let b = get_integer_ref(&args[1], ctx)?;
@@ -299,11 +311,11 @@ fn bit_or(
 }
 
 fn bit_xor(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("bit_xor", args, 2, ctx)?;
+    check_exact_args_len("bit_xor", &args, 2, ctx)?;
 
     let a = get_integer_ref(&args[0], ctx)?;
     let b = get_integer_ref(&args[1], ctx)?;
@@ -312,11 +324,11 @@ fn bit_xor(
 }
 
 fn bit_not(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("bit_not", args, 1, ctx)?;
+    check_exact_args_len("bit_not", &args, 1, ctx)?;
 
     let a = get_integer_ref(&args[0], ctx)?;
 
@@ -324,11 +336,11 @@ fn bit_not(
 }
 
 fn bit_shl(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("bit_shl", args, 2, ctx)?;
+    check_exact_args_len("bit_shl", &args, 2, ctx)?;
 
     let a = get_integer_ref(&args[0], ctx)?;
     let b = get_integer_ref(&args[1], ctx)?;
@@ -343,11 +355,11 @@ fn bit_shl(
 }
 
 fn bit_shr(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("bit_shr", args, 2, ctx)?;
+    check_exact_args_len("bit_shr", &args, 2, ctx)?;
 
     let a = get_integer_ref(&args[0], ctx)?;
     let b = get_integer_ref(&args[1], ctx)?;
@@ -362,77 +374,77 @@ fn bit_shr(
 }
 // Comparison Functions
 fn gt(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("gt", args, 2, ctx)?;
+    check_exact_args_len("gt", &args, 2, ctx)?;
     let base = get_float_arg(&args[0], ctx)?;
     let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.gt(&other)))
 }
 
 fn ge(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("ge", args, 2, ctx)?;
+    check_exact_args_len("ge", &args, 2, ctx)?;
     let base = get_float_arg(&args[0], ctx)?;
     let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.ge(&other)))
 }
 
 fn lt(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("lt", args, 2, ctx)?;
+    check_exact_args_len("lt", &args, 2, ctx)?;
     let base = get_float_arg(&args[0], ctx)?;
     let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.lt(&other)))
 }
 
 fn le(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("le", args, 2, ctx)?;
+    check_exact_args_len("le", &args, 2, ctx)?;
     let base = get_float_arg(&args[0], ctx)?;
     let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.le(&other)))
 }
 
 fn eq(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("eq", args, 2, ctx)?;
+    check_exact_args_len("eq", &args, 2, ctx)?;
     let base = get_float_arg(&args[0], ctx)?;
     let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.eq(&other)))
 }
 
 fn ne(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("ne", args, 2, ctx)?;
+    check_exact_args_len("ne", &args, 2, ctx)?;
     let base = get_float_arg(&args[0], ctx)?;
     let other = get_float_arg(&args[1], ctx)?;
     Ok(Expression::Boolean(base.ne(&other)))
 }
 // Basic Math Operations
 fn abs(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("abs", args, 1, ctx)?;
+    check_exact_args_len("abs", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(i) => Ok(i.abs().into()),
         Expression::Float(f) => Ok(f.abs().into()),
@@ -445,7 +457,7 @@ fn abs(
 }
 
 pub fn sum(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
@@ -457,7 +469,7 @@ pub fn sum(
         match num {
             Expression::Integer(i) => {
                 if has_float {
-                    float_sum += *i as f64;
+                    float_sum += i as f64;
                 } else {
                     int_sum += i;
                 }
@@ -467,7 +479,7 @@ pub fn sum(
                     float_sum = int_sum as f64;
                     has_float = true;
                 }
-                float_sum += *f;
+                float_sum += f;
             }
             _ => {
                 return Err(RuntimeError::common(
@@ -487,11 +499,11 @@ pub fn sum(
 }
 
 pub fn average(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("average", args, 2.., ctx)?;
+    check_args_len("average", &args, 2.., ctx)?;
 
     let mut sum = 0.0;
     let mut count = 0;
@@ -499,11 +511,11 @@ pub fn average(
     for num in args {
         match num {
             Expression::Integer(i) => {
-                sum += *i as f64;
+                sum += i as f64;
                 count += 1;
             }
             Expression::Float(f) => {
-                sum += *f;
+                sum += f;
                 count += 1;
             }
             _ => {
@@ -520,11 +532,11 @@ pub fn average(
 }
 // Rounding Functions
 fn floor(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("floor", args, 1, ctx)?;
+    check_exact_args_len("floor", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.floor().into()),
@@ -537,11 +549,11 @@ fn floor(
 }
 
 fn ceil(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("ceil", args, 1, ctx)?;
+    check_exact_args_len("ceil", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.ceil().into()),
@@ -554,11 +566,11 @@ fn ceil(
 }
 
 fn round(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("round", args, 1, ctx)?;
+    check_exact_args_len("round", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.round().into()),
@@ -571,11 +583,11 @@ fn round(
 }
 
 fn trunc(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("trunc", args, 1, ctx)?;
+    check_exact_args_len("trunc", &args, 1, ctx)?;
     match &args[0] {
         Expression::Integer(i) => Ok((*i).into()),
         Expression::Float(f) => Ok(f.trunc().into()),
@@ -588,11 +600,11 @@ fn trunc(
 }
 
 fn is_odd(
-    args: &[Expression],
+    args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("isodd", args, 1, ctx)?;
+    check_exact_args_len("isodd", &args, 1, ctx)?;
     Ok(match &args[0] {
         Expression::Integer(i) => (i % 2 != 0).into(),
         Expression::Float(f) => ((*f as Int) % 2 != 0).into(),
@@ -607,242 +619,241 @@ fn is_odd(
 }
 // Mathematical Functions
 fn sqrt(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("sqrt", args, 1, ctx)?;
+    check_exact_args_len("sqrt", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "sqrt", ctx)?[0];
     Ok(x.sqrt().into())
 }
 
 fn cbrt(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("cbrt", args, 1, ctx)?;
+    check_exact_args_len("cbrt", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "cbrt", ctx)?[0];
     Ok(x.cbrt().into())
 }
 
 fn exp(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("exp", args, 1, ctx)?;
+    check_exact_args_len("exp", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "exp", ctx)?[0];
     Ok(x.exp().into())
 }
 
 fn exp2(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("exp2", args, 1, ctx)?;
+    check_exact_args_len("exp2", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "exp2", ctx)?[0];
     Ok(x.exp2().into())
 }
 
 fn log(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("log", args, 2, ctx)?;
-    let base = eval_to_f64(&args[0..1], env, "log", ctx)?[0];
-    let x = eval_to_f64(&args[1..2], env, "log", ctx)?[0];
-    Ok(x.log(base).into())
+    check_exact_args_len("log", &args, 2, ctx)?;
+    let floats = eval_to_f64(args, env, "log", ctx)?;
+    Ok(floats[1].log(floats[0]).into())
 }
 
 fn log2(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("log2", args, 1, ctx)?;
+    check_exact_args_len("log2", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "log2", ctx)?[0];
     Ok(x.log2().into())
 }
 
 fn log10(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("log10", args, 1, ctx)?;
+    check_exact_args_len("log10", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "log10", ctx)?[0];
     Ok(x.log10().into())
 }
 
 fn ln(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("ln", args, 1, ctx)?;
+    check_exact_args_len("ln", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "ln", ctx)?[0];
     Ok(x.ln().into())
 }
 
 fn pow(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("pow", args, 2, ctx)?;
+    check_exact_args_len("pow", &args, 2, ctx)?;
     let nums = eval_to_f64(args, env, "pow", ctx)?;
     Ok(nums[0].powf(nums[1]).into())
 }
 // Trigonometric Functions
 fn sin(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("sin", args, 1, ctx)?;
+    check_exact_args_len("sin", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "sin", ctx)?[0];
     Ok(x.sin().into())
 }
 
 fn cos(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("cos", args, 1, ctx)?;
+    check_exact_args_len("cos", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "cos", ctx)?[0];
     Ok(x.cos().into())
 }
 
 fn tan(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("tan", args, 1, ctx)?;
+    check_exact_args_len("tan", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "tan", ctx)?[0];
     Ok(x.tan().into())
 }
 
 fn asin(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("asin", args, 1, ctx)?;
+    check_exact_args_len("asin", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "asin", ctx)?[0];
     Ok(x.asin().into())
 }
 
 fn acos(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("acos", args, 1, ctx)?;
+    check_exact_args_len("acos", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "acos", ctx)?[0];
     Ok(x.acos().into())
 }
 
 fn atan(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("atan", args, 1, ctx)?;
+    check_exact_args_len("atan", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "atan", ctx)?[0];
     Ok(x.atan().into())
 }
 // Hyperbolic Functions
 fn sinh(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("sinh", args, 1, ctx)?;
+    check_exact_args_len("sinh", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "sinh", ctx)?[0];
     Ok(x.sinh().into())
 }
 
 fn cosh(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("cosh", args, 1, ctx)?;
+    check_exact_args_len("cosh", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "cosh", ctx)?[0];
     Ok(x.cosh().into())
 }
 
 fn tanh(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("tanh", args, 1, ctx)?;
+    check_exact_args_len("tanh", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "tanh", ctx)?[0];
     Ok(x.tanh().into())
 }
 
 fn asinh(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("asinh", args, 1, ctx)?;
+    check_exact_args_len("asinh", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "asinh", ctx)?[0];
     Ok(x.asinh().into())
 }
 
 fn acosh(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("acosh", args, 1, ctx)?;
+    check_exact_args_len("acosh", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "acosh", ctx)?[0];
     Ok(x.acosh().into())
 }
 
 fn atanh(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("atanh", args, 1, ctx)?;
+    check_exact_args_len("atanh", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "atanh", ctx)?[0];
     Ok(x.atanh().into())
 }
 // Pi Multiple Functions
 fn sinpi(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("sinpi", args, 1, ctx)?;
+    check_exact_args_len("sinpi", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "sinpi", ctx)?[0];
     Ok((x * std::f64::consts::PI).sin().into())
 }
 
 fn cospi(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("cospi", args, 1, ctx)?;
+    check_exact_args_len("cospi", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "cospi", ctx)?[0];
     Ok((x * std::f64::consts::PI).cos().into())
 }
 
 fn tanpi(
-    args: &[Expression],
+    args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("tanpi", args, 1, ctx)?;
+    check_exact_args_len("tanpi", &args, 1, ctx)?;
     let x = eval_to_f64(args, env, "tanpi", ctx)?[0];
     Ok((x * std::f64::consts::PI).tan().into())
 }

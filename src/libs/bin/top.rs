@@ -544,24 +544,25 @@ pub fn insert(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("insert", &args, 3, ctx)?;
-    let arr = &args[0];
-    let idx = &args[1];
-    let val = args[2].clone();
+    let mut it = args.into_iter();
+    let arr = it.next().unwrap();
+    let idx = it.next().unwrap();
+    let val = it.next().unwrap();
     match (arr, idx) {
         (Expression::HMap(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();
-            result.insert(key.clone(), val);
+            result.insert(key, val);
             Ok(Expression::from(result))
         }
         (Expression::Map(exprs), Expression::String(key)) => {
             let mut result = exprs.as_ref().clone();
-            result.insert(key.clone(), val);
+            result.insert(key, val);
             Ok(Expression::from(result))
         }
         (Expression::List(exprs), Expression::Integer(i)) => {
-            if *i as usize <= exprs.as_ref().len() {
+            if i as usize <= exprs.as_ref().len() {
                 let mut result = exprs.as_ref().clone();
-                result.insert(*i as usize, val);
+                result.insert(i as usize, val);
                 Ok(Expression::from(result))
             } else {
                 Err(RuntimeError::new(
@@ -574,9 +575,9 @@ pub fn insert(
             }
         }
         (Expression::String(s), Expression::Integer(i)) => {
-            if *i as usize <= s.len() {
-                let mut result = s.clone();
-                result.insert_str(*i as usize, &val.to_string());
+            if i as usize <= s.len() {
+                let mut result = s;
+                result.insert_str(i as usize, &val.to_string());
                 Ok(Expression::String(result))
             } else {
                 Err(RuntimeError::new(

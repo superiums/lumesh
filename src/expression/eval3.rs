@@ -249,7 +249,7 @@ impl Expression {
         //防止函数互相调用无限循环
         if MAX_RUNTIME_RECURSION.with(|v| depth > *v.borrow()) {
             return Err(RuntimeError::new(
-                RuntimeErrorKind::RecursionDepth(self.clone()),
+                RuntimeErrorKind::RecursionDepth(),
                 self.clone(),
                 depth,
             ));

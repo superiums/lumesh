@@ -27,8 +27,8 @@ pub enum RuntimeErrorKind {
     CommandFailed2(String, String),
     #[error("attempted to iterate over non-list `{0:?}`")]
     ForNonList(Expression),
-    #[error("recursion depth exceeded while evaluating `{0:?}`")]
-    RecursionDepth(Expression),
+    #[error("recursion depth exceeded")]
+    RecursionDepth(),
     #[error("permission denied while spawn `{0}`")]
     PermissionDenied(String),
     #[error("program `{0}` not found")]

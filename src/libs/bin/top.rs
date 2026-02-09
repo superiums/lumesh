@@ -9,7 +9,9 @@ use crate::{
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
         bin::{boolean_lib::not, list_lib::get_list_ref, map_lib::map_err},
-        helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_ref},
+        helper::{
+            check_args_len, check_exact_args_len, get_integer_arg, get_string_arg, get_string_ref,
+        },
         pretty_printer,
     },
     parse_and_eval, reg_all, reg_info,
@@ -316,8 +318,8 @@ fn cd(
     let mut path = if args.len() == 0 {
         "~".to_string()
     } else {
-        match &args[0] {
-            Expression::Symbol(path) | Expression::String(path) => path.to_string(),
+        match args.into_iter().next().unwrap() {
+            Expression::Symbol(path) | Expression::String(path) => path,
             other => other.to_string(),
         }
     };
@@ -853,14 +855,14 @@ pub fn get(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("get", &args, 2, ctx)?;
-
-    let index = &args[1];
-    let current = &args[0];
+    let mut it = args.into_iter();
+    let mut current = it.next().unwrap();
+    let index = it.next().unwrap();
 
     // let path = get_string_arg(index)?;
     let path = match index {
         Expression::Symbol(s) | Expression::String(s) => s,
-        Expression::Integer(i) => &i.to_string(),
+        Expression::Integer(i) => i.to_string(),
         _ => {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
@@ -875,47 +877,19 @@ pub fn get(
     };
     let path_segments: Vec<&str> = path.split('.').collect();
     if path_segments.is_empty() {
-        return Ok(current.clone());
+        return Ok(current);
     }
 
-    let mut current = current;
-    let mut cache;
     for segment in path_segments {
         match current {
             Expression::Map(m) => {
-                current = m.as_ref().get(segment).ok_or_else(|| {
-                    RuntimeError::common(
-                        format!(
-                            "path segment '{}' not found in Map:\n`{:?}`",
-                            segment,
-                            m.as_ref()
-                        )
-                        .into(),
-                        ctx.clone(),
-                        0,
-                    )
-                })?;
-            }
-            Expression::HMap(m) => {
-                current = m.as_ref().get(segment).ok_or_else(|| {
-                    RuntimeError::common(
-                        format!(
-                            "path segment '{}' not found in HMap:\n`{:?}`",
-                            segment,
-                            m.as_ref()
-                        )
-                        .into(),
-                        ctx.clone(),
-                        0,
-                    )
-                })?;
-            }
-            Expression::List(m) => match segment.parse::<usize>() {
-                Ok(key) => {
-                    current = m.as_ref().get(key).ok_or_else(|| {
+                current = m
+                    .as_ref()
+                    .get(segment)
+                    .ok_or_else(|| {
                         RuntimeError::common(
                             format!(
-                                "path index '{}' not found in List:\n`{:?}`",
+                                "path segment '{}' not found in Map:\n`{:?}`",
                                 segment,
                                 m.as_ref()
                             )
@@ -923,7 +897,45 @@ pub fn get(
                             ctx.clone(),
                             0,
                         )
-                    })?;
+                    })?
+                    .clone();
+            }
+            Expression::HMap(m) => {
+                current = m
+                    .as_ref()
+                    .get(segment)
+                    .ok_or_else(|| {
+                        RuntimeError::common(
+                            format!(
+                                "path segment '{}' not found in HMap:\n`{:?}`",
+                                segment,
+                                m.as_ref()
+                            )
+                            .into(),
+                            ctx.clone(),
+                            0,
+                        )
+                    })?
+                    .clone();
+            }
+            Expression::List(m) => match segment.parse::<usize>() {
+                Ok(key) => {
+                    current = m
+                        .as_ref()
+                        .get(key)
+                        .ok_or_else(|| {
+                            RuntimeError::common(
+                                format!(
+                                    "path index '{}' not found in List:\n`{:?}`",
+                                    segment,
+                                    m.as_ref()
+                                )
+                                .into(),
+                                ctx.clone(),
+                                0,
+                            )
+                        })?
+                        .clone();
                 }
                 _ => {
                     return Err(RuntimeError::common(
@@ -935,9 +947,8 @@ pub fn get(
             },
             Expression::Range(m, step) => match segment.parse::<usize>() {
                 Ok(key) => {
-                    cache = m
-                        .to_owned()
-                        .step_by(step.clone())
+                    current = m
+                        .step_by(step)
                         .nth(key)
                         .map(Expression::Integer)
                         .ok_or_else(|| {
@@ -947,7 +958,6 @@ pub fn get(
                                 0,
                             )
                         })?;
-                    current = &cache;
                 }
                 _ => {
                     return Err(RuntimeError::common(
@@ -972,7 +982,7 @@ pub fn get(
         }
     }
 
-    Ok(current.clone())
+    Ok(current)
 
     // _ => {
     //     return Err(LmError::CustomError(
@@ -988,8 +998,9 @@ fn printf(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("format", &args, 1.., ctx)?;
-    let template = get_string_ref(&args[0], ctx)?;
-
+    let mut it = args.into_iter();
+    let template_expr = it.next().unwrap();
+    let template = get_string_arg(template_expr, ctx)?;
     // named arg
     let pat = regex_lite::Regex::new(r#"\{(\w+)\}"#).unwrap();
     let mut result = template.clone();
@@ -1009,11 +1020,9 @@ fn printf(
     }
 
     // position arg
-    if args.len() > 1 {
-        let placeholders = result.matches("{}").count();
-        for arg in args.iter().skip(1).take(placeholders) {
-            result = result.replacen("{}", &arg.to_string(), 1);
-        }
+    let placeholders = result.matches("{}").count();
+    for arg in it.take(placeholders) {
+        result = result.replacen("{}", &arg.to_string(), 1);
     }
 
     Ok(Expression::String(result))

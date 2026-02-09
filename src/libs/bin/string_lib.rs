@@ -5,7 +5,8 @@ use crate::{
     libs::{
         BuiltinInfo,
         helper::{
-            check_args_len, check_exact_args_len, get_integer_arg, get_integer_ref, get_string_ref,
+            check_args_len, check_exact_args_len, get_integer_arg, get_integer_ref, get_string_arg,
+            get_string_ref,
         },
         lazy_module::LazyModule,
     },
@@ -365,14 +366,13 @@ fn is_upper(
 
 fn is_title(
     args: Vec<Expression>,
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("is_title", &args, 1, ctx)?;
-    let a = args[0].clone();
-    let text = get_string_ref(&a, ctx)?;
-    let title = to_title(args, env, ctx)?;
-    Ok(Expression::Boolean(text == &title.to_string()))
+    let text = get_string_ref(&args[0], ctx)?;
+    let title = to_title_inner(&text);
+    Ok(Expression::Boolean(text == &title))
 }
 
 fn len(
@@ -463,12 +463,15 @@ fn split_at(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("split_at", &args, 2, ctx)?;
-    let text = get_string_ref(&args[0], ctx)?;
-    let index = get_integer_ref(&args[1], ctx)? as usize;
+    let mut it = args.into_iter();
+    let t_expr = it.next().unwrap();
+    let i_expr = it.next().unwrap();
+    let text = get_string_arg(t_expr, ctx)?;
+    let index = get_integer_ref(&i_expr, ctx)? as usize;
 
     if index > text.len() {
         return Ok(Expression::from(vec![
-            Expression::String(text.clone()),
+            Expression::String(text),
             Expression::String(String::new()),
         ]));
     }
@@ -720,14 +723,7 @@ fn to_upper(
     Ok(Expression::String(text.to_uppercase()))
 }
 
-fn to_title(
-    args: Vec<Expression>,
-    _env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("to_title", &args, 1, ctx)?;
-    let text = get_string_ref(&args[0], ctx)?;
-
+fn to_title_inner(text: &str) -> String {
     let mut title = String::with_capacity(text.len());
     let mut capitalize = true;
 
@@ -742,6 +738,17 @@ fn to_title(
             capitalize = true;
         }
     }
+    title
+}
+
+fn to_title(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("to_title", &args, 1, ctx)?;
+    let text = get_string_ref(&args[0], ctx)?;
+    let title = to_title_inner(&text);
     Ok(Expression::String(title))
 }
 

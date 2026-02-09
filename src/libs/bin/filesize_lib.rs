@@ -26,17 +26,17 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 
 fn from(
-    args: Vec<Expression>,
+    mut args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("from", &args, 1, ctx)?;
-    let s = match &args[0] {
+    let s = match args.pop().unwrap() {
         Expression::String(s) => {
             // 使用正则表达式来匹配数字和单位
             let re = regex_lite::Regex::new(r"(\d+)([KMGT]*)B?").unwrap();
 
-            if let Some(caps) = re.captures(s) {
+            if let Some(caps) = re.captures(&s) {
                 // 提取数字部分并转换为u64
                 let number = caps[1]
                     .parse::<u64>()
@@ -52,8 +52,8 @@ fn from(
                 ));
             }
         }
-        Expression::Integer(i) => FileSize::from_bytes(*i as u64),
-        Expression::FileSize(r) => r.clone(),
+        Expression::Integer(i) => FileSize::from_bytes(i as u64),
+        Expression::FileSize(r) => r,
         other => {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
@@ -76,7 +76,7 @@ fn b(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("btyes", &args, 1, _ctx)?;
-    let s = get_fsize_arg(&args[0], env, _ctx)?;
+    let s = get_fsize_arg(args.into_iter().next().unwrap(), env, _ctx)?;
     Ok(Expression::Integer(s.to_bytes() as Int))
 }
 fn kb(
@@ -85,7 +85,7 @@ fn kb(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("kb", &args, 1, _ctx)?;
-    let s = get_fsize_arg(&args[0], env, _ctx)?;
+    let s = get_fsize_arg(args.into_iter().next().unwrap(), env, _ctx)?;
 
     Ok(Expression::Integer((s.to_bytes() >> 10) as Int))
 }
@@ -95,7 +95,7 @@ fn mb(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("mb", &args, 1, _ctx)?;
-    let s = get_fsize_arg(&args[0], env, _ctx)?.to_bytes();
+    let s = get_fsize_arg(args.into_iter().next().unwrap(), env, _ctx)?.to_bytes();
     let r = (s >> 20) as f64 + ((s >> 10) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
@@ -106,7 +106,7 @@ fn gb(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("gb", &args, 1, _ctx)?;
-    let s = get_fsize_arg(&args[0], env, _ctx)?.to_bytes();
+    let s = get_fsize_arg(args.into_iter().next().unwrap(), env, _ctx)?.to_bytes();
     let r = (s >> 30) as f64 + ((s >> 20) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
@@ -117,7 +117,7 @@ fn tb(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("tb", &args, 1, _ctx)?;
-    let s = get_fsize_arg(&args[0], env, _ctx)?.to_bytes();
+    let s = get_fsize_arg(args.into_iter().next().unwrap(), env, _ctx)?.to_bytes();
     let r = (s >> 40) as f64 + ((s >> 30) & 1023) as f64 * 0.0009765625;
 
     Ok(Expression::Float(r))
@@ -128,18 +128,18 @@ fn to_string(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("to_string", &args, 1, _ctx)?;
-    let s = get_fsize_arg(&args[0], env, _ctx)?;
+    let s = get_fsize_arg(args.into_iter().next().unwrap(), env, _ctx)?;
 
     Ok(Expression::String(s.to_human_readable()))
 }
 
 fn get_fsize_arg(
-    arg: &Expression,
+    arg: Expression,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<FileSize, RuntimeError> {
     match arg {
-        Expression::FileSize(s) => Ok(s.clone()),
+        Expression::FileSize(s) => Ok(s),
         _ => Err(RuntimeError::common(
             "Filesize.bytes requires only Filesize as argument".into(),
             ctx.clone(),

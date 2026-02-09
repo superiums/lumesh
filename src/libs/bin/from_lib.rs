@@ -1,7 +1,12 @@
 // use{get_list_arg, get_string_arg};
 use crate::{
     Environment, Expression, RuntimeError,
-    libs::{BuiltinInfo, bin::into_lib, helper::check_exact_args_len, lazy_module::LazyModule},
+    libs::{
+        BuiltinInfo,
+        bin::into_lib,
+        helper::{check_exact_args_len, get_string_ref},
+        lazy_module::LazyModule,
+    },
     parse, reg_info, reg_lazy,
 };
 use regex_lite::Regex;
@@ -49,7 +54,7 @@ fn toml(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("toml", &args, 1, ctx)?;
-    let text_str = args[0].to_string();
+    let text_str = get_string_ref(&args[0], ctx)?;
 
     toml::from_str(&text_str).map(toml_to_expr).map_err(|e| {
         RuntimeError::common(format!("Toml parser error:\n{e}").into(), ctx.clone(), 0)
@@ -82,7 +87,7 @@ fn json(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("json", &args, 1, ctx)?;
-    let text_str = args[0].to_string();
+    let text_str = get_string_ref(&args[0], ctx)?;
 
     if text_str.is_empty() {
         return Ok(Expression::None);
@@ -127,7 +132,7 @@ fn script(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("script", &args, 1, ctx)?;
-    let script = args[0].to_string();
+    let script = get_string_ref(&args[0], ctx)?;
 
     if script.is_empty() {
         return Ok(Expression::None);
@@ -154,7 +159,7 @@ fn csv(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("csv", &args, 1, ctx)?;
-    let text = args[0].to_string();
+    let text = get_string_ref(&args[0], ctx)?;
 
     // 获取自定义分隔符
     let delimiter = match env.get("IFS") {

@@ -279,10 +279,10 @@ pub fn filesize(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("filesize", &args, 1, ctx)?;
-    match &args[0] {
-        Expression::Integer(x) => Ok(Expression::FileSize(FileSize::from_bytes(*x as u64))),
-        Expression::Float(x) => Ok(Expression::FileSize(FileSize::from_bytes(*x as u64))),
-        Expression::FileSize(x) => Ok(Expression::FileSize(x.clone())),
+    match args.into_iter().next().unwrap() {
+        Expression::Integer(x) => Ok(Expression::FileSize(FileSize::from_bytes(x as u64))),
+        Expression::Float(x) => Ok(Expression::FileSize(FileSize::from_bytes(x as u64))),
+        Expression::FileSize(x) => Ok(Expression::FileSize(x)),
         Expression::String(x) => {
             if let Ok(n) = x.parse::<u64>() {
                 Ok(Expression::FileSize(FileSize::from_bytes(n)))
@@ -458,12 +458,12 @@ fn expr_to_json_string(expr: &Expression) -> String {
 
 // Expression to CSV
 pub fn csv(
-    args: Vec<Expression>,
+    mut args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("csv", &args, 1, ctx)?;
-    let expr = &args[0];
+    let expr = args.pop().unwrap();
 
     // 获取自定义分隔符
     let ifs = env.get("IFS");
@@ -524,6 +524,7 @@ pub fn csv(
             writer.write_record(&record).unwrap();
             String::from_utf8(writer.into_inner().unwrap()).unwrap()
         }
+        Expression::String(ct) => ct,
         o => o.to_string(),
     };
 

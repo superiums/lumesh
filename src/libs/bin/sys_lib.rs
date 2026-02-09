@@ -116,12 +116,12 @@ fn discard(
 }
 
 fn quote(
-    args: Vec<Expression>,
+    mut args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("quote", &args, 1, ctx)?;
-    Ok(Expression::Quote(Rc::new(args[0].clone())))
+    Ok(Expression::Quote(Rc::new(args.pop().unwrap())))
 }
 
 fn env(
@@ -216,7 +216,7 @@ fn max_syntax(
 ) -> Result<Expression, RuntimeError> {
     if args.is_empty() {
         return Ok(Expression::Integer(
-            MAX_SYNTAX_RECURSION.with_borrow(|x| x.clone() as Int),
+            MAX_SYNTAX_RECURSION.with_borrow(|x| *x as Int),
         ));
     }
     let i = get_integer_ref(&args[0], ctx)?;
@@ -231,7 +231,7 @@ fn max_runtime(
 ) -> Result<Expression, RuntimeError> {
     if args.is_empty() {
         return Ok(Expression::Integer(
-            MAX_RUNTIME_RECURSION.with_borrow(|x| x.clone() as Int),
+            MAX_RUNTIME_RECURSION.with_borrow(|x| *x as Int),
         ));
     }
     let i = get_integer_ref(&args[0], ctx)?;
@@ -246,7 +246,7 @@ fn max_usemode(
 ) -> Result<Expression, RuntimeError> {
     if args.is_empty() {
         return Ok(Expression::Integer(
-            MAX_USEMODE_RECURSION.with_borrow(|x| x.clone() as Int),
+            MAX_USEMODE_RECURSION.with_borrow(|x| *x as Int),
         ));
     }
     let i = get_integer_ref(&args[0], ctx)?;

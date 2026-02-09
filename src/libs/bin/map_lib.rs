@@ -2,7 +2,9 @@ use std::rc::Rc;
 
 use crate::eval::State;
 use crate::libs::bin::top;
-use crate::libs::helper::{check_args_len, check_exact_args_len, check_fn_arg, get_string_ref};
+use crate::libs::helper::{
+    check_args_len, check_exact_args_len, check_fn_arg, get_string_arg, get_string_ref,
+};
 use crate::libs::lazy_module::LazyModule;
 use crate::{
     Environment, Expression, RuntimeError, RuntimeErrorKind, libs::BuiltinInfo, reg_info, reg_lazy,
@@ -311,15 +313,18 @@ fn set(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set", &args, 3, ctx)?;
-    let map = &args[0];
-    let key_str: &str = get_string_ref(&args[1], ctx)?;
-    let value = &args[2];
+    let mut it = args.into_iter();
+    let map = it.next().unwrap();
+    let key_expr = it.next().unwrap();
+    let val_expr = it.next().unwrap();
+
+    let key_str = get_string_arg(key_expr, ctx)?;
 
     match map {
         Expression::Map(map) => {
-            if map.as_ref().contains_key(key_str) {
+            if map.as_ref().contains_key(&key_str) {
                 let mut new_map = map.as_ref().clone();
-                new_map.insert(key_str.to_string(), value.clone());
+                new_map.insert(key_str, val_expr);
                 Ok(Expression::Map(Rc::new(new_map)))
             } else {
                 return Err(RuntimeError::common(
@@ -330,9 +335,9 @@ fn set(
             }
         }
         Expression::HMap(map) => {
-            if map.as_ref().contains_key(key_str) {
+            if map.as_ref().contains_key(&key_str) {
                 let mut new_map = map.as_ref().clone();
-                new_map.insert(key_str.to_string(), value.clone());
+                new_map.insert(key_str, val_expr);
                 Ok(Expression::HMap(Rc::new(new_map)))
             } else {
                 return Err(RuntimeError::common(
@@ -342,7 +347,7 @@ fn set(
                 ));
             }
         }
-        expr => return Err(map_err(expr, ctx)),
+        expr => return Err(map_err(&expr, ctx)),
     }
 }
 // 创建操作函数

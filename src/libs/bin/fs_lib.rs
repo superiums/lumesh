@@ -369,7 +369,7 @@ fn mv(
     check_exact_args_len("mv", &args, 2, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
     let src = utils::abs(&p, env);
-    let dst_str = args[1].to_string();
+    let dst_str = get_string_ref(&args[1], ctx)?;
     let dst = if is_a_dir(&dst_str, env) {
         let mut dpath = join_current_path(&dst_str, env);
         dpath.push(src.file_name().unwrap_or(OsStr::new("")));
@@ -391,7 +391,7 @@ fn cp(
     let p = get_string_ref(&args[0], ctx)?;
     let src = utils::abs(&p, env);
 
-    let dst_str = args[1].to_string();
+    let dst_str = get_string_ref(&args[1], ctx)?;
     let dst = if is_a_dir(&dst_str, env) {
         let mut dpath = join_current_path(&dst_str, env);
         dpath.push(src.file_name().unwrap_or(OsStr::new("")));
@@ -488,24 +488,26 @@ fn write(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("write", &args, 1..=2, ctx)?;
-    let p = get_string_ref(&args[0], ctx)?;
+    let mut it = args.into_iter();
+    let p_expr = it.next().unwrap();
+
+    let p = get_string_ref(&p_expr, ctx)?;
     let path = utils::abs(&p, env);
 
     // 只有一个参数时，创建空白文件（如果不存在）
     if !path.exists() {
-        std::fs::File::create(&path).map_err(|e| {
-            RuntimeError::from_io_error(e, "create file".into(), args[0].clone(), 0)
-        })?;
+        std::fs::File::create(&path)
+            .map_err(|e| RuntimeError::from_io_error(e, "create file".into(), p_expr.clone(), 0))?;
     }
 
     // 两个参数时，正常写入内容
-    if args.len() == 2 {
-        let contents = &args[1];
+    if let Some(contents) = it.next() {
         match contents {
             Expression::Bytes(bytes) => std::fs::write(&path, bytes),
+            Expression::String(ct) => std::fs::write(&path, ct),
             _ => std::fs::write(&path, contents.to_string()),
         }
-        .map_err(|e| RuntimeError::from_io_error(e, "write file".into(), args[0].clone(), 0))?;
+        .map_err(|e| RuntimeError::from_io_error(e, "write file".into(), p_expr, 0))?;
     }
 
     Ok(Expression::None)
@@ -517,21 +519,25 @@ fn append(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("append", &args, 2, ctx)?;
-    let p = get_string_ref(&args[0], ctx)?;
+
+    let mut it = args.into_iter();
+    let p_expr = it.next().unwrap();
+    let p = get_string_ref(&p_expr, ctx)?;
     let path = utils::abs(&p, env);
-    let contents = &args[1];
+    let contents = it.next().unwrap();
 
     let mut file = std::fs::OpenOptions::new()
         .append(true)
         .create(true)
         .open(&path)
-        .map_err(|e| RuntimeError::from_io_error(e, "open file".into(), args[0].clone(), 0))?;
+        .map_err(|e| RuntimeError::from_io_error(e, "open file".into(), p_expr.clone(), 0))?;
 
     match contents {
         Expression::Bytes(bytes) => file.write_all(&bytes),
+        Expression::String(ct) => file.write_all(ct.as_bytes()),
         _ => file.write_all(contents.to_string().as_bytes()),
     }
-    .map_err(|e| RuntimeError::from_io_error(e, "write file".into(), args[0].clone(), 0))?;
+    .map_err(|e| RuntimeError::from_io_error(e, "write file".into(), p_expr, 0))?;
 
     Ok(Expression::None)
 }

@@ -60,12 +60,12 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 }
 // Helper Functions
 fn parse_datetime_arg(
-    arg: &Expression,
+    arg: Expression,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<NaiveDateTime, RuntimeError> {
     match arg {
-        Expression::DateTime(dt) => Ok(dt.clone()),
+        Expression::DateTime(dt) => Ok(dt),
         Expression::String(s) => {
             // Try parsing common shell date formats
             if let Ok(dt) = NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %H:%M") {
@@ -123,7 +123,7 @@ fn parse_datetime_arg(
                 0,
             ))
         }
-        Expression::Integer(ts) => Ok(Utc.timestamp_opt(*ts, 0).unwrap().naive_utc()),
+        Expression::Integer(ts) => Ok(Utc.timestamp_opt(ts, 0).unwrap().naive_utc()),
         Expression::Map(m) => {
             let map = m.as_ref();
             let year = get_map_value(map, "year", ctx)?.unwrap_or(Local::now().year() as i64);
@@ -262,7 +262,7 @@ where
     match args.len() {
         0 => Ok(Expression::Integer(extractor(Local::now().naive_local()))),
         1 => {
-            let dt = parse_datetime_arg(&args[0], env, ctx)?;
+            let dt = parse_datetime_arg(args.into_iter().next().unwrap(), env, ctx)?;
             Ok(Expression::Integer(extractor(dt)))
         }
         _ => Err(RuntimeError::common(
@@ -372,7 +372,7 @@ fn stamp(
     let dt = if args.is_empty() {
         Utc::now()
     } else {
-        parse_datetime_arg(&args[0], env, ctx)?.and_utc()
+        parse_datetime_arg(args.into_iter().next().unwrap(), env, ctx)?.and_utc()
     };
     Ok(Expression::Integer(dt.timestamp()))
 }
@@ -385,7 +385,7 @@ fn stamp_ms(
     let dt = if args.is_empty() {
         Utc::now()
     } else {
-        parse_datetime_arg(&args[0], env, ctx)?.and_utc()
+        parse_datetime_arg(args.into_iter().next().unwrap(), env, ctx)?.and_utc()
     };
     Ok(Expression::Integer(dt.timestamp_millis()))
 }
@@ -396,8 +396,9 @@ fn fmt(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("fmt", &args, 1..=2, ctx)?;
+    let mut it = args.into_iter();
 
-    let format_str = match &args[0] {
+    let format_str = match it.next().unwrap() {
         Expression::String(s) => s,
         _ => {
             return Err(RuntimeError::common(
@@ -408,8 +409,8 @@ fn fmt(
         }
     };
 
-    let dt = if args.len() == 2 {
-        parse_datetime_arg(&args[1], env, ctx)?
+    let dt = if let Some(a) = it.next() {
+        parse_datetime_arg(a, env, ctx)?
     } else {
         Local::now().naive_local()
     };
@@ -451,16 +452,12 @@ fn to_string(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("to_string", &args, 1..=2, ctx)?;
+    let mut it = args.into_iter();
 
-    let dt = parse_datetime_arg(&args[0], env, ctx)?;
+    let dt = parse_datetime_arg(it.next().unwrap(), env, ctx)?;
 
-    if args.len() == 1 {
-        // Default to RFC3339 format
-        Ok(Expression::String(
-            dt.format("%Y-%m-%dT%H:%M:%S%.fZ").to_string(),
-        ))
-    } else {
-        match &args[1] {
+    if let Some(a) = it.next() {
+        match a {
             Expression::String(format) => Ok(Expression::String(dt.format(&format).to_string())),
             _ => Err(RuntimeError::common(
                 "Expected format string".into(),
@@ -468,6 +465,11 @@ fn to_string(
                 0,
             )),
         }
+    } else {
+        // Default to RFC3339 format
+        Ok(Expression::String(
+            dt.format("%Y-%m-%dT%H:%M:%S%.fZ").to_string(),
+        ))
     }
 }
 // Parsing and Creation Functions
@@ -477,8 +479,9 @@ pub fn parse(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("parse", &args, 1..=2, ctx)?;
+    let mut it = args.into_iter();
 
-    let datetime_str = match &args[0] {
+    let datetime_str = match it.next().unwrap() {
         Expression::String(s) => s,
         _ => {
             return Err(RuntimeError::common(
@@ -489,8 +492,8 @@ pub fn parse(
         }
     };
 
-    let format_str = if args.len() > 1 {
-        match &args[1] {
+    let format_str = if let Some(a) = it.next() {
+        match a {
             Expression::String(s) => s,
             _ => {
                 return Err(RuntimeError::common(
@@ -503,7 +506,7 @@ pub fn parse(
     } else {
         // Try to parse without format
         return Ok(Expression::DateTime(parse_datetime_arg(
-            &Expression::String(datetime_str.clone()),
+            Expression::String(datetime_str),
             env,
             ctx,
         )?));
@@ -591,21 +594,23 @@ fn add(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("add", &args, 1..=7, ctx)?;
-    let (base_dt, rest) = match args.len() > 1 {
-        false => (Local::now().naive_local(), &args[1..]),
-        true => (parse_datetime_arg(&args[1], env, ctx)?, &args[1..]),
-    };
+    let size = &args.len();
+    let mut it = args.into_iter();
+    let a0 = it.next().unwrap();
+    let base_dt = it.next().map_or(Ok(Local::now().naive_local()), |x| {
+        parse_datetime_arg(x, env, ctx)
+    })?;
 
-    let duration = match rest.len() {
+    let duration = match size - 1 {
         0 => ChronoDuration::zero(),
-        1 => match &rest[0] {
+        1 => match a0 {
             Expression::String(dur) => {
                 let std_duration = parse_duration_string(&dur, ctx)?;
                 ChronoDuration::from_std(std_duration).map_err(|e| {
                     RuntimeError::common(format!("Invalid duration: {e}").into(), ctx.clone(), 0)
                 })?
             }
-            Expression::Integer(secs) => ChronoDuration::seconds(*secs),
+            Expression::Integer(secs) => ChronoDuration::seconds(secs),
             e => {
                 return Err(RuntimeError::common(
                     format!("Invalid duration: {e}").into(),
@@ -617,24 +622,20 @@ fn add(
         2.. => {
             let mut duration = ChronoDuration::zero();
 
-            if let Expression::Integer(secs) = rest[0] {
+            if let Some(Expression::Integer(secs)) = it.next() {
                 duration += ChronoDuration::seconds(secs);
             }
 
-            if let Expression::Integer(mins) = rest[1] {
+            if let Some(Expression::Integer(mins)) = it.next() {
                 duration += ChronoDuration::minutes(mins);
             }
 
-            if rest.len() > 2 {
-                if let Expression::Integer(hours) = rest[2] {
-                    duration += ChronoDuration::hours(hours);
-                }
+            if let Some(Expression::Integer(hours)) = it.next() {
+                duration += ChronoDuration::hours(hours);
             }
 
-            if rest.len() > 3 {
-                if let Expression::Integer(days) = rest[3] {
-                    duration += ChronoDuration::days(days);
-                }
+            if let Some(Expression::Integer(days)) = it.next() {
+                duration += ChronoDuration::days(days);
             }
 
             duration
@@ -651,18 +652,18 @@ fn diff(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("diff", &args, 2..=3, ctx)?;
+    let mut it = args.into_iter();
+    let unit_expr = it.next().unwrap();
+    let dt1 = it.next().map_or(Ok(Local::now().naive_local()), |x| {
+        parse_datetime_arg(x, env, ctx)
+    })?;
+    let dt2 = it.next().map_or(Ok(Local::now().naive_local()), |x| {
+        parse_datetime_arg(x, env, ctx)
+    })?;
 
-    let unit = match &args[0] {
-        Expression::String(s) => s.to_lowercase(),
-        _ => "seconds".to_string(),
-    };
-
-    let dt1 = parse_datetime_arg(&args[1], env, ctx)?;
-
-    let dt2 = if args.len() > 2 {
-        parse_datetime_arg(&args[2], env, ctx)?
-    } else {
-        Local::now().naive_local()
+    let unit = match unit_expr {
+        Expression::String(s) => s,
+        _ => "s".to_string(),
     };
 
     let duration = dt2 - dt1;
@@ -688,9 +689,11 @@ fn timezone(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("timezone", &args, 1..=3, ctx)?;
 
-    let offset_hours = match &args[0] {
-        Expression::Integer(h) => *h,
-        Expression::Float(h) => (*h).round() as i64,
+    let mut it = args.into_iter();
+
+    let offset_hours = match it.next().unwrap() {
+        Expression::Integer(h) => h,
+        Expression::Float(h) => h.round() as i64,
         _ => {
             return Err(RuntimeError::common(
                 "timezone requires offset in hours as first argument".into(),
@@ -712,15 +715,15 @@ fn timezone(
         RuntimeError::common("Invalid timezone offset".into(), ctx.clone(), 0),
     )?;
 
-    let dt = if args.len() > 1 {
-        let naive = parse_datetime_arg(&args[1], env, ctx)?;
+    let dt = if let Some(a1) = it.next() {
+        let naive = parse_datetime_arg(a1, env, ctx)?;
         offset.from_utc_datetime(&naive).naive_local()
     } else {
         Local::now().with_timezone(&offset).naive_local()
     };
 
-    if args.len() > 2 {
-        if let Expression::String(format) = &args[2] {
+    if let Some(a2) = it.next() {
+        if let Expression::String(format) = a2 {
             return Ok(Expression::String(dt.format(&format).to_string()));
         }
     }

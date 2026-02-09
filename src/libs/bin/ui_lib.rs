@@ -629,7 +629,7 @@ fn join_flow(
     let mut result_rows = vec![];
     for row in rows {
         if row.len() == 1 {
-            result_rows.push(row[0].clone());
+            result_rows.push(row.into_iter().next().unwrap())
         } else {
             // 使用现有的joinx逻辑
             let row_expressions: Vec<Expression> =

@@ -1109,18 +1109,18 @@ impl Expression {
     // }
     /// please make sure only use with Apply/Command
     #[inline]
-    pub fn append_args(&self, args: Vec<Expression>) -> Expression {
+    pub fn append_args(&self, args: &[Expression]) -> Expression {
         match self {
             Expression::Apply(f, existing_args) => {
                 let mut new_vec = Vec::with_capacity(existing_args.len() + args.len());
                 new_vec.extend_from_slice(existing_args);
-                new_vec.extend_from_slice(&args);
+                new_vec.extend_from_slice(args);
                 Expression::Apply(f.clone(), Rc::new(new_vec))
             }
             Expression::Command(f, existing_args) => {
                 let mut new_vec = Vec::with_capacity(existing_args.len() + args.len());
                 new_vec.extend_from_slice(existing_args);
-                new_vec.extend_from_slice(&args);
+                new_vec.extend_from_slice(args);
                 Expression::Command(f.clone(), Rc::new(new_vec))
             }
             Expression::Chain(base, calls) => {
@@ -1131,7 +1131,7 @@ impl Expression {
 
                     let mut new_vec = Vec::with_capacity(call[0].args.len() + args.len());
                     new_vec.extend_from_slice(&call[0].args);
-                    new_vec.extend_from_slice(&args);
+                    new_vec.extend_from_slice(args);
                     let mut new_calls = vec![ChainCall {
                         method: call[0].method.clone(),
                         args: new_vec,

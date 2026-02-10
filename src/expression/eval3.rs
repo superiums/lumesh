@@ -609,18 +609,18 @@ impl Expression {
                             // -----need to inject _ receiver if on pipe right.
                             // alias a=myfunc()
                             Expression::Apply(..) if !is_cmd_mode => cmd_alias
-                                .append_args(args.to_vec())
+                                .append_args(args)
                                 // .ensure_has_receiver()
                                 .eval_mut(state, env, depth + 1),
                             // alias a=String.red   a=myfunc
                             Expression::Function(..) if !is_cmd_mode => cmd_alias
                                 .ensure_fn_apply()
-                                .append_args(args.to_vec())
+                                .append_args(args)
                                 // .ensure_has_receiver()
                                 .eval_mut(state, env, depth + 1),
                             // alias a=String.red()
                             Expression::Chain(..) => cmd_alias
-                                .append_args(args.to_vec())
+                                .append_args(args)
                                 // .ensure_has_receiver()
                                 .eval_mut(state, env, depth + 1),
                             // alias a=String.red

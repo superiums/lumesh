@@ -6,8 +6,14 @@
 symbo or property on right of pipe was recognized as command now.
 - add filter to loop pipe, return none insteadof empty vec.
 - add range support for loop pipe
-- add HashMap grammar
-
+- add HashMap grammar: `H{}`
+- add BtreeSet grammar: `S{}`
+- add BtreeMap grammar: `M{}`, same as map `{}`
+  
+  but flat map was not able to parsed as cmd arg: `print {a:b}` will fail.
+  `print M{a,b}` is ok.
+  also `M{}` is better to distinct with block `{}`. so `M{}` is suggested and `{}` was depreciated.
+  
 
 ## [0.12.5]
 - only turn off PRINT_DIRECT in script mode.

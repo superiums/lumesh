@@ -9,7 +9,7 @@ use crate::{Environment, Expression, Int, RuntimeError, STRICT_ENABLED};
 use crate::{MAX_RUNTIME_RECURSION, RuntimeErrorKind};
 use core::option::Option::None;
 use regex_lite::Regex;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::io::Write;
 use std::ops::Range;
 use std::rc::Rc;
@@ -1182,6 +1182,15 @@ impl Expression {
                         .map(|e| e.eval_mut(state, env, depth + 1))
                         .collect::<Result<Vec<_>, _>>()?;
                     return Ok(Expression::from(evaluated));
+                }
+                Self::BSet(items) => {
+                    let mut bs = BTreeSet::new();
+
+                    for e in items.as_ref().iter() {
+                        let r = e.eval_mut(state, env, depth + 1)?;
+                        bs.insert(r);
+                    }
+                    return Ok(Expression::BSet(Rc::new(bs)));
                 }
                 Self::HMap(items) => {
                     let evaluated = items

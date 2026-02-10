@@ -367,6 +367,25 @@ impl Expression {
                     write!(f, "]")
                 }
             }
+            Self::BSet(exprs) => {
+                if f.alternate() {
+                    write!(f, "{}S{{\n", idt(i))?;
+                    for expr in exprs.iter() {
+                        expr.fmt_display_indent(f, i + 1)?;
+                        writeln!(f, ",")?;
+                    }
+                    write!(f, "{}}}", idt(i))
+                } else {
+                    write!(f, "{}{{", idt(i))?;
+                    for (i, expr) in exprs.iter().enumerate() {
+                        if i > 0 {
+                            write!(f, ", ")?;
+                        }
+                        expr.fmt_display_indent(f, 0)?;
+                    }
+                    write!(f, "}}")
+                }
+            }
 
             Self::Map(exprs) => {
                 if f.alternate() {
@@ -785,6 +804,14 @@ impl Expression {
                 }
                 Ok(())
             }
+            Self::BSet(exprs) => {
+                write!(f, "{}Set\n", prefix)?;
+                for expr in exprs.iter() {
+                    expr.fmt_indent(f, indent + 1)?;
+                    writeln!(f, ",")?;
+                }
+                Ok(())
+            }
             Self::Map(exprs) => {
                 write!(f, "{}Map\n", prefix)?;
                 for (k, v) in exprs.iter() {
@@ -951,6 +978,7 @@ impl Expression {
     pub fn type_name(&self) -> String {
         match self {
             Self::List(_) => "List".into(),
+            Self::BSet(_) => "Set".into(),
             Self::HMap(_) => "HMap".into(),
             Self::FileSize(_) => "FileSize".into(),
             Self::Map(_) => "Map".into(),

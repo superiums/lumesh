@@ -1,6 +1,6 @@
 use crate::{Environment, Int};
 use std::cmp::Ordering;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::ops::Range;
 use std::rc::Rc;
 pub mod alias;
@@ -43,6 +43,7 @@ pub enum Expression {
 
     // 集合类型使用Rc
     List(Rc<Vec<Self>>),
+    BSet(Rc<BTreeSet<Self>>),
     HMap(Rc<HashMap<String, Self>>),
     Map(Rc<BTreeMap<String, Self>>),
 
@@ -95,8 +96,8 @@ pub struct LumeRegex {
     pub regex: Regex,
 }
 impl PartialEq for LumeRegex {
-    fn eq(&self, _other: &LumeRegex) -> bool {
-        false
+    fn eq(&self, other: &LumeRegex) -> bool {
+        self.regex.as_str() == other.regex.as_str()
     }
 }
 
@@ -283,10 +284,22 @@ impl PartialOrd for Expression {
 
             (Self::HMap(a), Self::HMap(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
             (Self::Map(a), Self::Map(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
+            (Self::BSet(a), Self::BSet(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
+
             _ => None,
         }
     }
 }
+
+impl Ord for Expression {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        // 先尝试 PartialOrd，若为 None 则按类型名字典序
+        self.partial_cmp(other)
+            .unwrap_or_else(|| self.type_name().cmp(&other.type_name()))
+    }
+}
+
+impl Eq for Expression {}
 
 pub enum BoxedIterator {
     Range(std::iter::StepBy<std::ops::Range<Int>>),

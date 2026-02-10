@@ -2,7 +2,7 @@ use core::option::Option::None;
 use detached_str::Str;
 use std::{
     borrow::Cow,
-    collections::{BTreeMap, HashMap},
+    collections::{BTreeMap, BTreeSet, HashMap},
     rc::Rc,
 };
 
@@ -278,7 +278,7 @@ impl PrattParser {
                     if min_prec < PREC_CMD_ARG =>
                 {
                     // 对于Punctuation, 只接受 ( [
-                    if operator_token.kind == TokenKind::Punctuation && !matches!(operator,"("|"[") {
+                    if operator_token.kind == TokenKind::Punctuation && !matches!(operator,"("|"["|"H{"|"M{"|"S{") {
                         break;
                     }
                     // 对于OperatorPrefix, 只接受 $, $x长度>1 由parse_expr_with_precedence处理。
@@ -413,6 +413,8 @@ impl PrattParser {
                         cut(parse_list)(input)
                     }
                     "H{" => cut(parse_hashmap)(input),
+                    "M{" => cut(parse_bmap)(input),
+                    "S{" => cut(parse_bset)(input),
                     "{" => cut(alt((parse_map, cut(parse_block))))(input),
                     // opx if opx.starts_with("__") => map(parse_operator(input),TokenKind::OperatorPrefix),
                     _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
@@ -1377,6 +1379,35 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     ))(input)
 }
 
+fn parse_set_inner<'a>(input: Tokens<'a>) -> IResult<Tokens<'a>, Vec<Expression>, SyntaxErrorKind> {
+    let (input, _) = terminated(text("S{"), opt(kind(TokenKind::LineBreak)))(input)?;
+    let (input, pairs) = separated_list0(
+        terminated(text(","), opt(kind(TokenKind::LineBreak))),
+        cut(alt((
+            parse_literal,
+            parse_variable,
+            parse_symbol,
+            parse_list,
+            parse_map,
+            parse_hashmap,
+            parse_bset,
+        ))),
+    )(input)
+    .map_err(|_| {
+        SyntaxErrorKind::failure(
+            input.get_str_slice(),
+            "some value",
+            None,
+            Some("add some value for this item"),
+        )
+    })?;
+
+    let (input, _) = opt(text(","))(input)?;
+    let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
+    let (input, _) = text_close("}")(input)?;
+    Ok((input, pairs))
+}
+
 #[inline]
 fn parse_map_inner<'a>(
     input: Tokens<'a>,
@@ -1393,8 +1424,10 @@ fn parse_map_inner<'a>(
                     parse_literal,
                     parse_variable,
                     parse_symbol,
-                    parse_map,
                     parse_list,
+                    parse_map,
+                    parse_hashmap,
+                    parse_bset,
                 ))),
             )),
         )),
@@ -1433,6 +1466,21 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     Ok((input, Expression::from(map)))
 }
 
+#[inline]
+fn parse_bmap(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    // 不能用cut，防止map识别失败时，影响后面的block解析。
+    let (input, pairs) = parse_map_inner(input, "M{")?;
+
+    let map: BTreeMap<String, Expression> = pairs
+        .into_iter()
+        .map(|(k, v)| match v {
+            Some(ex) => (k, ex),
+            None => (k.clone(), Expression::Variable(k)),
+        })
+        .collect();
+    Ok((input, Expression::from(map)))
+}
+
 /// HashMap
 #[inline]
 fn parse_hashmap(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1446,6 +1494,16 @@ fn parse_hashmap(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
         })
         .collect();
     Ok((input, Expression::from(map)))
+}
+
+fn parse_bset(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, pairs) = parse_set_inner(input)?;
+
+    let mut map = BTreeSet::new();
+    for e in pairs {
+        map.insert(e);
+    }
+    Ok((input, Expression::BSet(Rc::new(map))))
 }
 
 #[inline]

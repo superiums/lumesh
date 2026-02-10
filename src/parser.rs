@@ -412,6 +412,7 @@ impl PrattParser {
                         // 数组字面量 [expr, ...]
                         cut(parse_list)(input)
                     }
+                    "H{" => cut(parse_hashmap)(input),
                     "{" => cut(alt((parse_map, cut(parse_block))))(input),
                     // opx if opx.starts_with("__") => map(parse_operator(input),TokenKind::OperatorPrefix),
                     _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
@@ -1376,11 +1377,12 @@ fn parse_literal(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErr
     ))(input)
 }
 
-// 映射解析
 #[inline]
-fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    // 不能用cut，防止map识别失败时，影响后面的block解析。
-    let (input, _) = terminated(text("{"), opt(kind(TokenKind::LineBreak)))(input)?;
+fn parse_map_inner<'a>(
+    input: Tokens<'a>,
+    tag: &'static str,
+) -> IResult<Tokens<'a>, Vec<(String, Option<Expression>)>, SyntaxErrorKind> {
+    let (input, _) = terminated(text(tag), opt(kind(TokenKind::LineBreak)))(input)?;
     let (input, pairs) = separated_list0(
         terminated(text(","), opt(kind(TokenKind::LineBreak))),
         tuple((
@@ -1412,8 +1414,15 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
     }
     let (input, _) = opt(kind(TokenKind::LineBreak))(input)?;
     let (input, _) = text_close("}")(input)?;
-    // let (input, _) = terminated(text_close("}"), opt(kind(TokenKind::LineBreak)))(input)?;
-    // dbg!(&input);
+    Ok((input, pairs))
+}
+
+/// BtreeMap 映射解析
+#[inline]
+fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    // 不能用cut，防止map识别失败时，影响后面的block解析。
+    let (input, pairs) = parse_map_inner(input, "{")?;
+
     let map: BTreeMap<String, Expression> = pairs
         .into_iter()
         .map(|(k, v)| match v {
@@ -1421,9 +1430,24 @@ fn parse_map(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKi
             None => (k.clone(), Expression::Variable(k)),
         })
         .collect();
-    // Ok((input, Expression::Map(pairs)))
     Ok((input, Expression::from(map)))
 }
+
+/// HashMap
+#[inline]
+fn parse_hashmap(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, pairs) = parse_map_inner(input, "H{")?;
+
+    let map: HashMap<String, Expression> = pairs
+        .into_iter()
+        .map(|(k, v)| match v {
+            Some(ex) => (k, ex),
+            None => (k.clone(), Expression::Variable(k)),
+        })
+        .collect();
+    Ok((input, Expression::from(map)))
+}
+
 #[inline]
 fn parse_integer(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, num) = kind(TokenKind::IntegerLiteral)(input)?;

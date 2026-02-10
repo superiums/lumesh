@@ -89,7 +89,8 @@ fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
         punctuation_tag("]"),
         punctuation_tag("{"),
         punctuation_tag("}"),
-        // punctuation_tag("`"), //template
+        punctuation_tag("H{"), //hashMap
+        punctuation_tag("S{"), //hashSet
     ))(input)
 }
 

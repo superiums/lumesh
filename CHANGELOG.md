@@ -5,7 +5,7 @@
 - add ensure_sym_as_cmd
 symbo or property on right of pipe was recognized as command now.
 - add filter to loop pipe, return none insteadof empty vec.
-
+- add range support for loop pipe
 
 ## [0.12.5]
 - only turn off PRINT_DIRECT in script mode.

@@ -895,36 +895,74 @@ impl Expression {
 
                                 "|>" => match left_output {
                                     Expression::List(ls) => {
-                                        let results = ls
-                                            .iter()
-                                            .map(|item| {
-                                                match rhs.as_ref() {
-                                                    Expression::PipeMethod(method, args) => item
-                                                        .handle_pipe_method(
-                                                            method,
-                                                            args,
-                                                            state,
-                                                            env,
-                                                            job,
-                                                            depth + 1,
-                                                        ),
-                                                    _ => {
-                                                        state.pipe_in(item.clone());
-                                                        rhs.as_ref()
-                                                            .ensure_fn_apply()
-                                                            .ensure_sym_as_cmd()
-                                                            .ensure_has_receiver()
-                                                            // .replace_or_append_arg(item.clone())
-                                                            .eval_mut(state, env, depth + 1)
-                                                    }
-                                                }
-                                            })
-                                            .collect::<Result<Vec<_>, _>>()?;
-                                        if results.iter().any(|x| x != &Expression::None) {
-                                            Expression::from(results)
+                                        let results = match rhs.as_ref() {
+                                            Expression::PipeMethod(method, args) => ls
+                                                .iter()
+                                                .map(|item| {
+                                                    item.handle_pipe_method(
+                                                        method,
+                                                        args,
+                                                        state,
+                                                        env,
+                                                        job,
+                                                        depth + 1,
+                                                    )
+                                                })
+                                                .collect::<Result<Vec<_>, _>>()?,
+                                            _ => ls
+                                                .iter()
+                                                .map(|item| {
+                                                    state.pipe_in(item.clone());
+                                                    rhs.as_ref()
+                                                        .ensure_fn_apply()
+                                                        .ensure_sym_as_cmd()
+                                                        .ensure_has_receiver()
+                                                        // .replace_or_append_arg(item.clone())
+                                                        .eval_mut(state, env, depth + 1)
+                                                })
+                                                .collect::<Result<Vec<_>, _>>()?,
+                                        };
+
+                                        return if results.iter().any(|x| x != &Expression::None) {
+                                            Ok(Expression::from(results))
                                         } else {
-                                            Expression::None
-                                        }
+                                            Ok(Expression::None)
+                                        };
+                                    }
+                                    Expression::Range(r, step) => {
+                                        let results = match rhs.as_ref() {
+                                            Expression::PipeMethod(method, args) => r
+                                                .step_by(step)
+                                                .map(|item| {
+                                                    Expression::from(item).handle_pipe_method(
+                                                        method,
+                                                        args,
+                                                        state,
+                                                        env,
+                                                        job,
+                                                        depth + 1,
+                                                    )
+                                                })
+                                                .collect::<Result<Vec<_>, _>>()?,
+                                            _ => r
+                                                .step_by(step)
+                                                .map(|item| {
+                                                    state.pipe_in(Expression::from(item));
+                                                    rhs.as_ref()
+                                                        .ensure_fn_apply()
+                                                        .ensure_sym_as_cmd()
+                                                        .ensure_has_receiver()
+                                                        // .replace_or_append_arg(item.clone())
+                                                        .eval_mut(state, env, depth + 1)
+                                                })
+                                                .collect::<Result<Vec<_>, _>>()?,
+                                        };
+
+                                        return if results.iter().any(|x| x != &Expression::None) {
+                                            Ok(Expression::from(results))
+                                        } else {
+                                            Ok(Expression::None)
+                                        };
                                     }
                                     Expression::String(strls) => {
                                         let results = ifs_split(&strls, env)
@@ -954,11 +992,11 @@ impl Expression {
                                                 }
                                             })
                                             .collect::<Result<Vec<_>, _>>()?;
-                                        if results.iter().any(|x| x != &Expression::None) {
-                                            Expression::from(results)
+                                        return if results.iter().any(|x| x != &Expression::None) {
+                                            Ok(Expression::from(results))
                                         } else {
-                                            Expression::None
-                                        }
+                                            Ok(Expression::None)
+                                        };
                                     }
                                     _ => {
                                         return match rhs.as_ref() {

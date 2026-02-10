@@ -1191,6 +1191,28 @@ impl Expression {
     //     }
     // }
 
+    /// used in right of pipe.
+    /// this ensure symbo as a cmd with blank receiver.
+    #[inline]
+    pub fn ensure_sym_as_cmd<'a>(&'a self) -> Cow<'a, Expression> {
+        match self {
+            // Expression::Function(..) | Expression::Lambda(..) => Cow::Owned(self.apply(vec![arg])),
+            // property maybe a map property or chaincall, let user deside.
+            Expression::Property(base, method) => Cow::Owned(Self::Chain(
+                base.clone(),
+                vec![ChainCall {
+                    method: method.to_string(),
+                    args: vec![Expression::Blank],
+                }],
+            )),
+            // symbol maybe alias, but also maybe var/string, so let user decide.
+            Expression::Symbol(_) => Cow::Owned(Expression::Command(
+                Rc::new(self.clone()),
+                Rc::new(vec![Expression::Blank]),
+            )),
+            _ => Cow::Borrowed(self), //others, like binop,group,pipe...
+        }
+    }
     #[inline]
     pub fn ensure_fn_apply<'a>(&'a self) -> Cow<'a, Expression> {
         match self {

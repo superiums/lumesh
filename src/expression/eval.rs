@@ -884,17 +884,21 @@ impl Expression {
                                     state.set(State::PTY_MODE);
                                     state.pipe_in(left_output);
 
-                                    let r = rhs.ensure_fn_apply().eval_mut(state, env, depth + 1);
+                                    let r = rhs.ensure_fn_apply().ensure_sym_as_cmd().eval_mut(
+                                        state,
+                                        env,
+                                        depth + 1,
+                                    );
                                     state.clear(State::PTY_MODE);
                                     return r;
                                 }
 
                                 "|>" => match left_output {
                                     Expression::List(ls) => {
-                                        return ls
+                                        let results = ls
                                             .iter()
                                             .map(|item| {
-                                                return match rhs.as_ref() {
+                                                match rhs.as_ref() {
                                                     Expression::PipeMethod(method, args) => item
                                                         .handle_pipe_method(
                                                             method,
@@ -908,25 +912,26 @@ impl Expression {
                                                         state.pipe_in(item.clone());
                                                         rhs.as_ref()
                                                             .ensure_fn_apply()
+                                                            .ensure_sym_as_cmd()
                                                             .ensure_has_receiver()
                                                             // .replace_or_append_arg(item.clone())
                                                             .eval_mut(state, env, depth + 1)
                                                     }
-                                                };
+                                                }
                                             })
-                                            // .filter(|x| {
-                                            //     x.as_ref()
-                                            //         .is_ok_and(|r| !matches!(r, Expression::None))
-                                            // })
-                                            .collect::<Result<Vec<_>, _>>()
-                                            .map(Expression::from);
+                                            .collect::<Result<Vec<_>, _>>()?;
+                                        if results.iter().any(|x| x != &Expression::None) {
+                                            Expression::from(results)
+                                        } else {
+                                            Expression::None
+                                        }
                                     }
                                     Expression::String(strls) => {
-                                        return ifs_split(&strls, env)
+                                        let results = ifs_split(&strls, env)
                                             .into_iter()
                                             .map(|item| {
                                                 let item_expr = Expression::String(item);
-                                                return match rhs.as_ref() {
+                                                match rhs.as_ref() {
                                                     Expression::PipeMethod(method, args) => {
                                                         item_expr.handle_pipe_method(
                                                             method,
@@ -941,18 +946,19 @@ impl Expression {
                                                         state.pipe_in(item_expr);
                                                         rhs.as_ref()
                                                             .ensure_fn_apply()
+                                                            .ensure_sym_as_cmd()
                                                             .ensure_has_receiver()
                                                             // .replace_or_append_arg(Expression::String(item))
                                                             .eval_mut(state, env, depth + 1)
                                                     }
-                                                };
+                                                }
                                             })
-                                            // .filter(|x| {
-                                            //     x.as_ref()
-                                            //         .is_ok_and(|r| !matches!(r, Expression::None))
-                                            // })
-                                            .collect::<Result<Vec<_>, _>>()
-                                            .map(Expression::from);
+                                            .collect::<Result<Vec<_>, _>>()?;
+                                        if results.iter().any(|x| x != &Expression::None) {
+                                            Expression::from(results)
+                                        } else {
+                                            Expression::None
+                                        }
                                     }
                                     _ => {
                                         return match rhs.as_ref() {
@@ -969,6 +975,7 @@ impl Expression {
                                                 state.pipe_in(left_output);
                                                 rhs.as_ref()
                                                     .ensure_fn_apply()
+                                                    .ensure_sym_as_cmd()
                                                     .ensure_has_receiver()
                                                     // .replace_or_append_arg(left_output)
                                                     .eval_mut(state, env, depth + 1)
@@ -985,30 +992,11 @@ impl Expression {
 
                                         _ => {
                                             state.pipe_in(left_output);
-                                            match rhs.as_ref() {
-                                                Expression::Symbol(_) => {
-                                                    // return rhs.execute(vec![]).eval_mut(
-                                                    //     state,
-                                                    //     env,
-                                                    //     depth + 1,
-                                                    // );
-                                                    return rhs.handle_builtin_n_normal_cmd(
-                                                        rhs.as_ref(),
-                                                        &vec![],
-                                                        state,
-                                                        env,
-                                                        depth + 1,
-                                                    );
-                                                }
-                                                r => {
-                                                    // job = r;
-                                                    // continue;
-                                                    return r
-                                                        .ensure_fn_apply()
-                                                        .ensure_has_receiver()
-                                                        .eval_mut(state, env, depth + 1);
-                                                }
-                                            }
+                                            return rhs
+                                                .ensure_fn_apply()
+                                                .ensure_sym_as_cmd()
+                                                .ensure_has_receiver()
+                                                .eval_mut(state, env, depth + 1);
                                         }
                                     };
                                 }

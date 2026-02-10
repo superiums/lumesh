@@ -2,6 +2,9 @@
 
 ## [0.12.6]
 - optimize append_args
+- add ensure_sym_as_cmd
+symbo or property on right of pipe was recognized as command now.
+- add filter to loop pipe, return none insteadof empty vec.
 
 
 ## [0.12.5]

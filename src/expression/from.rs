@@ -1,6 +1,6 @@
 use super::{Environment, Expression, Int};
 use std::{
-    collections::{BTreeMap, HashMap},
+    collections::{BTreeMap, BTreeSet, HashMap},
     rc::Rc,
 };
 
@@ -75,6 +75,19 @@ where
             list.into_iter()
                 .map(|item| item.into())
                 .collect::<Vec<Self>>(),
+        ))
+    }
+}
+
+impl<T> From<BTreeSet<T>> for Expression
+where
+    T: Into<Self>,
+{
+    fn from(set: BTreeSet<T>) -> Self {
+        Self::BSet(Rc::new(
+            set.into_iter()
+                .map(|item| item.into())
+                .collect::<BTreeSet<Self>>(),
         ))
     }
 }

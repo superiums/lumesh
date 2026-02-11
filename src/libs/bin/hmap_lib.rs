@@ -68,7 +68,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
         // 转换操作
         map => "transform map keys and values with provided functions", "<map> <key_fn> <val_fn>"
-        to_bmap => "convert hashMap to btreeMap", ""
+        to_bmap => "convert hashMap to btreeMap", "<map>"
     })
 }
 

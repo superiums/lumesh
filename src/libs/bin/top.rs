@@ -611,6 +611,7 @@ pub fn len(
         Expression::HMap(m) => m.as_ref().len() as Int,
         Expression::Map(m) => m.as_ref().len() as Int,
         Expression::List(list) => list.as_ref().len() as Int,
+        Expression::BSet(s) => s.as_ref().len() as Int,
         Expression::Symbol(x) | Expression::String(x) => x.chars().count() as Int,
         Expression::Bytes(bytes) => bytes.len() as Int,
         Expression::Range(a, b) => a.to_owned().step_by(b.clone()).count() as Int,

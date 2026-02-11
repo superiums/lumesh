@@ -101,6 +101,7 @@ fn json(
         })
 }
 
+// TODO: add bset if needed
 fn json_to_expr(val: JsonValue) -> Expression {
     match val {
         JsonValue::Null => Expression::None,

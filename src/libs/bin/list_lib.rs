@@ -16,7 +16,7 @@ use crate::{
 };
 
 use std::cmp::Ordering;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -36,7 +36,7 @@ pub fn regist_lazy() -> LazyModule {
         //遍历操作
         map,items,filter,filter_map,any,all,
         //转换操作
-        join,to_map,
+        join,to_map,to_set,
         //结构操作
         transpose,chunk,foldl,foldr,zip,unzip,
     })
@@ -96,6 +96,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         // 转换操作
         join => "join string list with separator", "<list> <separator>"
         to_map => "convert list to map using key function", "<list> [key_fn] [val_fn]"
+        to_set => "convert list to btreeSet", "<list>"
 
         // 结构操作
         transpose => "transpose matrix (list of lists)", "<matrix>"
@@ -1082,6 +1083,18 @@ fn to_map(
     }
     Ok(Expression::from(map))
 }
+
+fn to_set(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("to_set", &args, 1, ctx)?;
+    let list = get_list_ref(&args[0], ctx)?;
+    let set: BTreeSet<_> = list.iter().cloned().collect();
+    Ok(Expression::BSet(Rc::new(set)))
+}
+
 // 结构操作函数
 fn transpose(
     args: Vec<Expression>,

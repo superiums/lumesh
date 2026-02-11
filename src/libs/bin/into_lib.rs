@@ -364,7 +364,10 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
             let items: Vec<String> = list.iter().map(|e| expr_to_toml_string(e, None)).collect();
             format!("[{}]", items.join(", "))
         }
-
+        Expression::BSet(set) => {
+            let items: Vec<String> = set.iter().map(|e| expr_to_toml_string(e, None)).collect();
+            format!("[{}]", items.join(","))
+        }
         // 映射表处理（核心改进）
         Expression::Map(map) => {
             let mut output = Vec::new();
@@ -443,6 +446,10 @@ fn expr_to_json_string(expr: &Expression) -> String {
         Expression::String(s) => format!("\"{s}\""),
         Expression::List(list) => {
             let items: Vec<String> = list.iter().map(expr_to_json_string).collect();
+            format!("[{}]", items.join(","))
+        }
+        Expression::BSet(set) => {
+            let items: Vec<String> = set.iter().map(expr_to_json_string).collect();
             format!("[{}]", items.join(","))
         }
         Expression::Map(map) => {

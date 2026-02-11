@@ -44,6 +44,7 @@ thread_local! {
     static STRING_LIB: LazyModule = bin::string_lib::regist_lazy();
     static LIST_LIB: LazyModule = bin::list_lib::regist_lazy();
     static MAP_LIB: LazyModule = bin::map_lib::regist_lazy();
+    static HMAP_LIB: LazyModule = bin::hmap_lib::regist_lazy();
     static TIME_LIB: LazyModule = bin::time_lib::regist_lazy();
     static REGEX_LIB: LazyModule = bin::reg_lib::regist_lazy();
     static MATH_LIB: LazyModule = bin::math_lib::regist_lazy();
@@ -66,6 +67,7 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
     libs_info.insert("string", bin::string_lib::regist_info());
     libs_info.insert("list", bin::list_lib::regist_info());
     libs_info.insert("map", bin::map_lib::regist_info());
+    libs_info.insert("hmap", bin::hmap_lib::regist_info());
     libs_info.insert("time", bin::time_lib::regist_info());
     libs_info.insert("regex", bin::reg_lib::regist_info());
     libs_info.insert("math", bin::math_lib::regist_info());
@@ -91,6 +93,7 @@ pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<BuiltinFun
         "string" => STRING_LIB.with(|m| m.get_function(fn_name)),
         "list" => LIST_LIB.with(|m| m.get_function(fn_name)),
         "map" => MAP_LIB.with(|m| m.get_function(fn_name)),
+        "hmap" => HMAP_LIB.with(|m| m.get_function(fn_name)),
         "time" => TIME_LIB.with(|m| m.get_function(fn_name)),
         "regex" => REGEX_LIB.with(|m| m.get_function(fn_name)),
         "math" => MATH_LIB.with(|m| m.get_function(fn_name)),
@@ -160,7 +163,8 @@ pub fn get_lib_completions(prefix: &str) -> Option<Vec<&str>> {
 fn get_belong_lib_name(exp: &Expression) -> Option<Cow<'static, str>> {
     match exp {
         Expression::List(_) | Expression::Range(..) => Some("list".into()),
-        Expression::Map(_) | Expression::HMap(_) => Some("map".into()),
+        Expression::Map(_) => Some("map".into()),
+        Expression::HMap(_) => Some("hmap".into()),
         Expression::String(_) | Expression::StringTemplate(_) | Expression::Bytes(_) => {
             Some("string".into())
         }

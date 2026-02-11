@@ -5,6 +5,7 @@ pub mod filesize_lib;
 pub mod from_lib;
 pub mod fs_lib;
 mod fs_ls;
+pub mod hmap_lib;
 pub mod into_lib;
 pub mod list_lib;
 pub mod log_lib;

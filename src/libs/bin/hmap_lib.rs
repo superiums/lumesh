@@ -3,8 +3,8 @@ use std::rc::Rc;
 use crate::eval::State;
 use crate::libs::bin::top;
 use crate::libs::helper::{
-    check_args_len, check_exact_args_len, check_fn_arg, get_map_ref, get_string_arg,
-    get_string_ref, into_map,
+    check_args_len, check_exact_args_len, check_fn_arg, get_hmap_ref, get_string_arg,
+    get_string_ref, into_hmap,
 };
 use crate::libs::lazy_module::LazyModule;
 use crate::{
@@ -32,7 +32,7 @@ pub fn regist_lazy() -> LazyModule {
         // 集合运算
         union, intersect, difference, merge,
         // 转换操作
-        map, to_hmap
+        map, to_bmap
     })
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
@@ -68,7 +68,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
         // 转换操作
         map => "transform map keys and values with provided functions", "<map> <key_fn> <val_fn>"
-        to_hmap => "convert btreeMap to hashMap", ""
+        to_bmap => "convert hashMap to btreeMap", ""
     })
 }
 
@@ -110,7 +110,7 @@ fn at(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("at", &args, 2, ctx)?;
     let key = get_string_ref(&args[1], ctx)?.as_str();
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     map.get(key).cloned().ok_or_else(|| {
         RuntimeError::common(
@@ -128,7 +128,7 @@ fn has(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("has", &args, 2, ctx)?;
     let key = get_string_ref(&args[1], ctx)?.as_str();
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     Ok(Expression::Boolean(map.contains_key(key)))
 }
@@ -140,7 +140,7 @@ fn items(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("items", &args, 1, ctx)?;
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     let r = map
         .iter()
@@ -155,7 +155,7 @@ fn keys(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("keys", &args, 1, ctx)?;
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     let r = map
         .keys()
@@ -170,7 +170,7 @@ fn values(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("values", &args, 1, ctx)?;
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     let r = map.values().cloned().collect::<Vec<_>>();
     Ok(Expression::from(r))
@@ -186,7 +186,7 @@ fn find(
 
     let predicate = &args[1];
     check_fn_arg(&predicate, 2, ctx)?;
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     let items = map
         .iter()
@@ -215,14 +215,14 @@ fn filter(
 
     let predicate = &args[1];
     check_fn_arg(&predicate, 2, ctx)?;
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     let items = map
         .iter()
         .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
         .collect::<Vec<_>>();
 
-    let mut new_map = BTreeMap::new();
+    let mut new_map = HashMap::new();
     let mut state = State::new();
     for it in items {
         if predicate
@@ -244,12 +244,12 @@ fn remove(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("remove", &args, 2, ctx)?;
     let mut it = args.into_iter();
-    let map = into_map(it.next().unwrap(), ctx)?;
+    let map = into_hmap(it.next().unwrap(), ctx)?;
     let key = it.next().unwrap();
 
     let mut new_map = map.as_ref().clone();
     new_map.remove(&key.to_string());
-    Ok(Expression::Map(Rc::new(new_map)))
+    Ok(Expression::HMap(Rc::new(new_map)))
 }
 
 fn set(
@@ -259,7 +259,7 @@ fn set(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("set", &args, 3, ctx)?;
     let mut it = args.into_iter();
-    let map = into_map(it.next().unwrap(), ctx)?;
+    let map = into_hmap(it.next().unwrap(), ctx)?;
     let key_expr = it.next().unwrap();
     let val_expr = it.next().unwrap();
 
@@ -268,7 +268,7 @@ fn set(
     if map.as_ref().contains_key(&key_str) {
         let mut new_map = map.as_ref().clone();
         new_map.insert(key_str, val_expr);
-        Ok(Expression::Map(Rc::new(new_map)))
+        Ok(Expression::HMap(Rc::new(new_map)))
     } else {
         Err(RuntimeError::common(
             format!("key '{key_str}' not found in hmap").into(),
@@ -288,7 +288,7 @@ fn from_items(
     let expr = &args[0];
 
     if let Expression::List(list) = expr {
-        let mut map = BTreeMap::new();
+        let mut map = HashMap::new();
         for item in list.as_ref() {
             if let Expression::List(pair) = item {
                 if pair.as_ref().len() == 2 {
@@ -317,12 +317,12 @@ fn union(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("union", &args, 2, ctx)?;
-    let map1 = get_map_ref(&args[0], ctx)?;
-    let map2 = get_map_ref(&args[1], ctx)?;
+    let map1 = get_hmap_ref(&args[0], ctx)?;
+    let map2 = get_hmap_ref(&args[1], ctx)?;
 
     let mut new_map = map1.as_ref().clone();
     new_map.extend(map2.as_ref().iter().map(|(k, v)| (k.clone(), v.clone())));
-    Ok(Expression::Map(Rc::new(new_map)))
+    Ok(Expression::HMap(Rc::new(new_map)))
 }
 
 fn intersect(
@@ -331,10 +331,10 @@ fn intersect(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("intersect", &args, 2, ctx)?;
-    let map1 = get_map_ref(&args[0], ctx)?;
-    let map2 = get_map_ref(&args[1], ctx)?;
+    let map1 = get_hmap_ref(&args[0], ctx)?;
+    let map2 = get_hmap_ref(&args[1], ctx)?;
 
-    let mut new_map = BTreeMap::new();
+    let mut new_map = HashMap::new();
     for (k, v) in map1.as_ref() {
         if map2.as_ref().contains_key(k) {
             new_map.insert(k.clone(), v.clone());
@@ -349,10 +349,10 @@ fn difference(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("difference", &args, 2, ctx)?;
-    let map1 = get_map_ref(&args[0], ctx)?;
-    let map2 = get_map_ref(&args[1], ctx)?;
+    let map1 = get_hmap_ref(&args[0], ctx)?;
+    let map2 = get_hmap_ref(&args[1], ctx)?;
 
-    let mut new_map = BTreeMap::new();
+    let mut new_map = HashMap::new();
     for (k, v) in map1.as_ref() {
         if !map2.as_ref().contains_key(k) {
             new_map.insert(k.clone(), v.clone());
@@ -370,7 +370,7 @@ fn merge(
 
     let maps = args
         .into_iter()
-        .map(|a| into_map(a, ctx).unwrap_or(Rc::new(BTreeMap::new())))
+        .map(|a| into_hmap(a, ctx).unwrap_or(Rc::new(HashMap::new())))
         .collect::<Vec<_>>();
 
     if maps.is_empty() {
@@ -379,7 +379,7 @@ fn merge(
 
     let mut it = maps.into_iter();
     let base = it.next().unwrap();
-    let mut result = BTreeMap::new();
+    let mut result = HashMap::new();
 
     for next in it.skip(1) {
         result = deep_merge_hmaps(base.as_ref(), next.as_ref())?;
@@ -389,17 +389,17 @@ fn merge(
 }
 
 fn deep_merge_hmaps(
-    a: &BTreeMap<String, Expression>,
-    b: &BTreeMap<String, Expression>,
-) -> Result<BTreeMap<String, Expression>, RuntimeError> {
+    a: &HashMap<String, Expression>,
+    b: &HashMap<String, Expression>,
+) -> Result<HashMap<String, Expression>, RuntimeError> {
     let mut result = a.clone();
 
     for (k, v) in b.iter() {
         if let Some(existing) = result.get(k) {
-            if let (Expression::Map(ma), Expression::Map(mb)) = (existing, v) {
+            if let (Expression::HMap(ma), Expression::HMap(mb)) = (existing, v) {
                 result.insert(
                     k.clone(),
-                    Expression::Map(Rc::new(deep_merge_hmaps(ma.as_ref(), mb.as_ref())?)),
+                    Expression::HMap(Rc::new(deep_merge_hmaps(ma.as_ref(), mb.as_ref())?)),
                 );
                 continue;
             }
@@ -422,14 +422,14 @@ fn map(
     let val_func = &args[2];
     check_fn_arg(&key_func, 1, ctx)?;
     check_fn_arg(&val_func, 1, ctx)?;
-    let map = get_map_ref(&args[0], ctx)?;
+    let map = get_hmap_ref(&args[0], ctx)?;
 
     let items = map
         .iter()
         .map(|(k, v)| vec![Expression::String(k.clone()), v.clone()])
         .collect::<Vec<_>>();
 
-    let mut new_map = BTreeMap::new();
+    let mut new_map = HashMap::new();
     let mut state = State::new();
     for it in items {
         let new_k = key_func.eval_apply(key_func, &vec![it[0].clone()], &mut state, env, 0)?;
@@ -442,17 +442,17 @@ fn map(
 }
 
 // 转换操作函数
-fn to_hmap(
+fn to_bmap(
     args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("to_hmap", &args, 1, ctx)?;
-    let bmap = get_map_ref(&args[0], ctx)?;
+    check_exact_args_len("to_bmap", &args, 1, ctx)?;
+    let hmap = get_hmap_ref(&args[0], ctx)?;
 
-    // 将 BTreeMap 转换为 HashMap
-    let hmap: HashMap<String, Expression> =
-        bmap.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
+    // 将 HashMap 转换为 BTreeMap
+    let bmap: BTreeMap<String, Expression> =
+        hmap.iter().map(|(k, v)| (k.clone(), v.clone())).collect();
 
-    Ok(Expression::from(hmap))
+    Ok(Expression::from(bmap))
 }

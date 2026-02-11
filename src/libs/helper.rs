@@ -1,5 +1,10 @@
 // Helper functions
 
+use std::{
+    collections::{BTreeMap, HashMap},
+    rc::Rc,
+};
+
 use crate::{Expression, RuntimeError, RuntimeErrorKind};
 
 // use std::rc::Rc;
@@ -210,6 +215,78 @@ pub fn get_integer_ref(expr: &Expression, ctx: &Expression) -> Result<i64, Runti
                 expected: "Integer".to_string(),
                 sym: e.to_string(),
                 found: e.type_name(),
+            },
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+
+pub fn get_map_ref<'a>(
+    expr: &'a Expression,
+    ctx: &Expression,
+) -> Result<&'a Rc<BTreeMap<String, Expression>>, RuntimeError> {
+    match expr {
+        Expression::Map(m) => Ok(m),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "Map".to_string(),
+                found: e.type_name(),
+                sym: e.to_string(),
+            },
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+
+pub fn get_hmap_ref<'a>(
+    expr: &'a Expression,
+    ctx: &Expression,
+) -> Result<&'a Rc<HashMap<String, Expression>>, RuntimeError> {
+    match expr {
+        Expression::HMap(m) => Ok(m),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "HMap".to_string(),
+                found: e.type_name(),
+                sym: e.to_string(),
+            },
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+
+pub fn into_map(
+    expr: Expression,
+    ctx: &Expression,
+) -> Result<Rc<BTreeMap<String, Expression>>, RuntimeError> {
+    match expr {
+        Expression::Map(m) => Ok(m),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "Map".to_string(),
+                found: e.type_name(),
+                sym: e.to_string(),
+            },
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+
+pub fn into_hmap(
+    expr: Expression,
+    ctx: &Expression,
+) -> Result<Rc<HashMap<String, Expression>>, RuntimeError> {
+    match expr {
+        Expression::HMap(m) => Ok(m),
+        e => Err(RuntimeError::new(
+            RuntimeErrorKind::TypeError {
+                expected: "HMap".to_string(),
+                found: e.type_name(),
+                sym: e.to_string(),
             },
             ctx.clone(),
             0,

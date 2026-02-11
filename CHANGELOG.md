@@ -14,6 +14,7 @@ symbo or property on right of pipe was recognized as command now.
   `print M{a,b}` is ok.
   also `M{}` is better to distinct with block `{}`. so `M{}` is suggested and `{}` was depreciated.
   
+- split hmap logic from map, add `hmap` lib separatly.
 
 ## [0.12.5]
 - only turn off PRINT_DIRECT in script mode.

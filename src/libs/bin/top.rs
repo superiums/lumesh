@@ -8,7 +8,7 @@ use crate::{
     eval::State,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
-        bin::{boolean_lib::not, list_lib::get_list_ref, map_lib::map_err},
+        bin::{boolean_lib::not, list_lib::get_list_ref},
         helper::{
             check_args_len, check_exact_args_len, get_integer_arg, get_string_arg, get_string_ref,
         },
@@ -551,12 +551,12 @@ pub fn insert(
     let idx = it.next().unwrap();
     let val = it.next().unwrap();
     match (arr, idx) {
-        (Expression::HMap(exprs), Expression::String(key)) => {
+        (Expression::HMap(exprs), Expression::String(key) | Expression::Symbol(key)) => {
             let mut result = exprs.as_ref().clone();
             result.insert(key, val);
             Ok(Expression::from(result))
         }
-        (Expression::Map(exprs), Expression::String(key)) => {
+        (Expression::Map(exprs), Expression::String(key) | Expression::Symbol(key)) => {
             let mut result = exprs.as_ref().clone();
             result.insert(key, val);
             Ok(Expression::from(result))
@@ -775,7 +775,15 @@ fn r#where(
                 filtered.push(row.clone());
             }
         } else {
-            return Err(map_err(row, ctx));
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::TypeError {
+                    expected: "Map/HMap".to_string(),
+                    found: row.type_name(),
+                    sym: row.to_string(),
+                },
+                ctx.clone(),
+                0,
+            ));
         }
     }
     Ok(Expression::from(filtered))

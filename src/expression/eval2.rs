@@ -789,7 +789,7 @@ where
     state.set(State::IN_FOR_LOOP);
     state.set_iter(var_name, index_name, iterator.into());
 
-    let r = if state.contains(State::IN_ASSIGN) {
+    let r = if state.contains(State::IN_ASSIGN) || state.contains(State::IN_PIPE) {
         let mut results = Vec::with_capacity(count);
         for _ in 0..count {
             if let Err(_) = state.pop_iter() {

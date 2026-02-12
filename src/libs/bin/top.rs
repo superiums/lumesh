@@ -1036,7 +1036,7 @@ fn printf(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("format", &args, 1.., ctx)?;
+    check_args_len("printf", &args, 1.., ctx)?;
     let mut it = args.into_iter();
     let template_expr = it.next().unwrap();
     let template = get_string_arg(template_expr, ctx)?;
@@ -1064,7 +1064,8 @@ fn printf(
         result = result.replacen("{}", &arg.to_string(), 1);
     }
 
-    Ok(Expression::String(result))
+    println!("{}",result);
+    Ok(Expression::None)
 }
 
 pub fn throw(

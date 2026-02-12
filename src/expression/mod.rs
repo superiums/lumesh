@@ -279,12 +279,13 @@ impl PartialOrd for Expression {
             (Self::Symbol(a), Self::Symbol(b)) => a.partial_cmp(b),
             (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
             (Self::List(a), Self::List(b)) => a.partial_cmp(b),
+            (Self::BSet(a), Self::BSet(b)) => a.len().partial_cmp(&b.len()),
+
             (Self::DateTime(a), Self::DateTime(b)) => a.partial_cmp(b),
             (Self::FileSize(a), Self::FileSize(b)) => a.partial_cmp(b),
 
-            (Self::HMap(a), Self::HMap(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
-            (Self::Map(a), Self::Map(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
-            (Self::BSet(a), Self::BSet(b)) => a.as_ref().len().partial_cmp(&b.as_ref().len()),
+            (Self::HMap(a), Self::HMap(b)) => a.len().partial_cmp(&b.len()),
+            (Self::Map(a), Self::Map(b)) => a.len().partial_cmp(&b.len()),
 
             _ => None,
         }

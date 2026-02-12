@@ -1,6 +1,6 @@
 [package]
 name = "lumesh"
-version = "0.12.6"
+version = "0.12.7"
 authors = ["Adam McDaniel; Santo"]
 edition = "2024"
 license = "MIT"
@@ -8,7 +8,7 @@ description = "a lighting shell ⚡ bash alternative"
 readme = "README.md"
 documentation = "https://docs.rs/lumesh"
 homepage = "https://lumesh.codeberg.page"
-repository = "https://codeberg.com/santo/lumesh"
+repository = "https://codeberg.org/santo/lumesh"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 # [[bin]]

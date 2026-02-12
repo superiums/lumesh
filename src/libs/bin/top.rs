@@ -763,28 +763,35 @@ fn r#where(
         state.set_local_var("NR".to_string(), Expression::Integer(i as i64));
         if let Expression::HMap(row_map) = row {
             state.set_local_vars(row_map.as_ref().clone());
-            if let Expression::Boolean(true) = args[1].eval_mut(&mut state, env, 0)? {
-                filtered.push(row.clone());
-            }
         } else if let Expression::Map(row_map) = row {
             for (k, v) in row_map.as_ref() {
                 state.set_local_var(k.to_string(), v.clone());
             }
-
-            let c = args[1].eval_mut(&mut state, env, 0)?;
-            if let Expression::Boolean(true) = c {
-                filtered.push(row.clone());
+        } else if let Expression::List(row_set) = row {
+            for (nf, item) in row_set.iter().enumerate() {
+                state.set_local_var("NF".to_string(), Expression::Integer(nf as i64));
+                state.set_local_var("F".to_string(), item.clone());
+            }
+        } else if let Expression::BSet(row_set) = row {
+            for (nf, item) in row_set.iter().enumerate() {
+                state.set_local_var("NF".to_string(), Expression::Integer(nf as i64));
+                state.set_local_var("F".to_string(), item.clone());
             }
         } else {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
-                    expected: "Map/HMap".to_string(),
+                    expected: "Map/HMap/List/Set as Field".to_string(),
                     found: row.type_name(),
                     sym: row.to_string(),
                 },
                 ctx.clone(),
                 0,
             ));
+        }
+
+        let c = args[1].eval_mut(&mut state, env, 0)?;
+        if let Expression::Boolean(true) = c {
+            filtered.push(row.clone());
         }
     }
     Ok(Expression::from(filtered))
@@ -949,6 +956,29 @@ pub fn get(
                 _ => {
                     return Err(RuntimeError::common(
                         format!("path index '{segment}' is not valid for List").into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            },
+            Expression::BSet(s) => match segment.parse::<usize>() {
+                Ok(key) => {
+                    current = s
+                        .as_ref()
+                        .iter()
+                        .nth(key)
+                        .ok_or_else(|| {
+                            RuntimeError::common(
+                                format!("path index '{}' not found in BSet", segment).into(),
+                                ctx.clone(),
+                                0,
+                            )
+                        })?
+                        .clone();
+                }
+                _ => {
+                    return Err(RuntimeError::common(
+                        format!("path index '{}' is not valid for BSet", segment).into(),
                         ctx.clone(),
                         0,
                     ));

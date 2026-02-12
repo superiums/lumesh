@@ -382,6 +382,16 @@ impl Expression {
                     // }
                     return Ok(value);
                 }
+
+                Expression::DestructureAssign(pattern, value) => {
+                    let evaluated_value = value.eval_mut(state, env, depth + 1)?;
+                    return if state.contains(State::IN_LOCAL) {
+                        self.destructure_assign_local(pattern, evaluated_value, state, depth + 1)
+                    } else {
+                        self.destructure_assign(pattern, evaluated_value, env, depth + 1)
+                    };
+                }
+
                 Self::Export(name, expr_opt) => {
                     let value = if let Some(expr) = expr_opt {
                         state.set(State::IN_ASSIGN);
@@ -929,6 +939,41 @@ impl Expression {
                                             Ok(Expression::None)
                                         };
                                     }
+                                    Expression::BSet(bset) => {
+                                        let results = match rhs.as_ref() {
+                                            Expression::PipeMethod(method, args) => bset
+                                                .iter()
+                                                .map(|item| {
+                                                    item.handle_pipe_method(
+                                                        method,
+                                                        args,
+                                                        state,
+                                                        env,
+                                                        job,
+                                                        depth + 1,
+                                                    )
+                                                })
+                                                .collect::<Result<Vec<_>, _>>()?,
+                                            _ => bset
+                                                .iter()
+                                                .map(|item| {
+                                                    state.pipe_in(item.clone());
+                                                    rhs.as_ref()
+                                                        .ensure_fn_apply()
+                                                        .ensure_sym_as_cmd()
+                                                        .ensure_has_receiver()
+                                                        // .replace_or_append_arg(item.clone())
+                                                        .eval_mut(state, env, depth + 1)
+                                                })
+                                                .collect::<Result<Vec<_>, _>>()?,
+                                        };
+
+                                        return if results.iter().any(|x| x != &Expression::None) {
+                                            Ok(Expression::from(results))
+                                        } else {
+                                            Ok(Expression::None)
+                                        };
+                                    }
                                     Expression::Range(r, step) => {
                                         let results = match rhs.as_ref() {
                                             Expression::PipeMethod(method, args) => r
@@ -1272,10 +1317,6 @@ impl Expression {
                 Expression::Chain(base, calls) => {
                     return self.eval_chain(base, calls, state, env, depth + 1);
                 }
-                Expression::DestructureAssign(pattern, value) => {
-                    let evaluated_value = value.eval_mut(state, env, depth + 1)?;
-                    return self.destructure_assign(pattern, evaluated_value, env, depth + 1);
-                }
                 Expression::RegexDef(pattern) => {
                     let regex = Regex::new(pattern).map_err(|e| {
                         RuntimeError::common(e.to_string().into(), job.clone(), depth)
@@ -1412,6 +1453,21 @@ impl Expression {
                 }
                 return Ok(Self::from(result));
             }
+            Expression::BSet(set) => {
+                let len = set.len() as Int;
+                let step_int = step as Int;
+                let (start, end) = clamp(start_int, end_int, step_int, len);
+
+                let mut result = BTreeSet::new();
+                let mut i = start;
+                while (step > 0 && i < end) || (step_int < 0 && i > end) {
+                    if let Some(item) = set.iter().nth(i as usize) {
+                        result.insert(item.clone());
+                    }
+                    i += step_int;
+                }
+                return Ok(Self::BSet(Rc::new(result)));
+            }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
                     expected: "sliceable type (List/String)".into(),
@@ -1439,6 +1495,24 @@ impl Expression {
                 } else {
                     Err(RuntimeErrorKind::TypeError {
                         expected: "Integer to index a List".into(),
+                        sym: r.to_string(),
+                        found: r.type_name(),
+                    })
+                }
+            }
+            Expression::BSet(set) => {
+                if let Expression::Integer(index) = r {
+                    set.as_ref()
+                        .iter()
+                        .nth(index as usize)
+                        .cloned()
+                        .ok_or_else(|| RuntimeErrorKind::IndexOutOfBounds {
+                            index: index as Int,
+                            len: set.as_ref().len(),
+                        })
+                } else {
+                    Err(RuntimeErrorKind::TypeError {
+                        expected: "Integer to index a Set".into(),
                         sym: r.to_string(),
                         found: r.type_name(),
                     })
@@ -1580,112 +1654,6 @@ impl Expression {
     }
 }
 
-impl Expression {
-    // 列表追加示例（写时复制）
-    pub fn list_push(&self, item: Self) -> Result<Expression, RuntimeErrorKind> {
-        match self {
-            Self::List(items) => {
-                let mut new_vec = Vec::with_capacity(items.len() + 1);
-                new_vec.extend_from_slice(items);
-                new_vec.push(item);
-                Ok(Self::List(Rc::new(new_vec)))
-            }
-            s => Err(RuntimeErrorKind::TypeError {
-                expected: "List".into(),
-                sym: s.to_string(),
-                found: s.type_name(),
-            }),
-        }
-    }
-    pub fn list_append(&self, other: Rc<Vec<Expression>>) -> Result<Expression, RuntimeErrorKind> {
-        match self {
-            Self::List(items) => {
-                let mut new_vec = Vec::with_capacity(items.len() + other.len());
-                new_vec.extend_from_slice(items);
-                new_vec.extend_from_slice(&other);
-                Ok(Self::List(Rc::new(new_vec)))
-            }
-            s => Err(RuntimeErrorKind::TypeError {
-                expected: "List".into(),
-                sym: s.to_string(),
-                found: s.type_name(),
-            }),
-        }
-    }
-
-    // 映射插入示例
-    pub fn map_insert(&self, key: String, value: Self) -> Result<Expression, RuntimeErrorKind> {
-        match self {
-            Self::HMap(map) => {
-                let mut new_map = HashMap::new();
-                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
-                new_map.insert(key, value);
-                Ok(Self::from(new_map))
-            }
-            Self::Map(map) => {
-                let mut new_map = BTreeMap::new();
-                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
-                new_map.insert(key, value);
-                Ok(Self::Map(Rc::new(new_map)))
-            }
-            s => Err(RuntimeErrorKind::TypeError {
-                expected: "Map".into(),
-                sym: s.to_string(),
-                found: s.type_name(),
-            }),
-        }
-    }
-
-    pub fn map_append(
-        &self,
-        other: Rc<HashMap<String, Expression>>,
-    ) -> Result<Expression, RuntimeErrorKind> {
-        match self {
-            Self::HMap(map) => {
-                let mut new_map = HashMap::new();
-                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
-                new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::HMap(Rc::new(new_map)))
-            }
-            Self::Map(map) => {
-                let mut new_map = BTreeMap::new();
-                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
-                new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::Map(Rc::new(new_map)))
-            }
-            s => Err(RuntimeErrorKind::TypeError {
-                expected: "Map".into(),
-                sym: s.to_string(),
-                found: s.type_name(),
-            }),
-        }
-    }
-    pub fn bmap_append(
-        &self,
-        other: Rc<BTreeMap<String, Expression>>,
-    ) -> Result<Expression, RuntimeErrorKind> {
-        match self {
-            Self::HMap(map) => {
-                let mut new_map = HashMap::new();
-                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
-                new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::HMap(Rc::new(new_map)))
-            }
-            Self::Map(map) => {
-                let mut new_map = BTreeMap::new();
-                new_map.extend(map.iter().map(|(k, v)| (k.clone(), v.clone())));
-                new_map.extend(other.iter().map(|(k, v)| (k.clone(), v.clone())));
-                Ok(Self::Map(Rc::new(new_map)))
-            }
-            s => Err(RuntimeErrorKind::TypeError {
-                expected: "Map".into(),
-                sym: s.to_string(),
-                found: s.type_name(),
-            }),
-        }
-    }
-}
-
 fn handle_contains(
     l: Expression,
     r: Expression,
@@ -1711,6 +1679,7 @@ fn handle_contains(
             }
         },
         Expression::List(left) => left.contains(&r),
+        Expression::BSet(left) => left.contains(&r),
         Expression::Map(left) => match &r {
             Expression::Symbol(k) | Expression::String(k) => left.contains_key(k),
             _ => {

@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.12.7]
+- more support for BtreeSet
+
+
 ## [0.12.6]
 - optimize append_args
 - add ensure_sym_as_cmd

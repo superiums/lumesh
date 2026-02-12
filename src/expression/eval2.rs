@@ -9,7 +9,7 @@ use crate::{
 };
 use glob::glob;
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BTreeSet, HashMap, HashSet},
     rc::Rc,
 };
 
@@ -278,6 +278,13 @@ impl Expression {
                 // let iterator = items.iter().cloned();
                 execute_iteration(var, index_name, iterator, size, body, state, env, depth)
             }
+            Expression::BSet(items) => {
+                let size = items.len();
+                let owned_items: Vec<Expression> = items.iter().cloned().collect();
+                let iterator = BoxedIterator::Vec(owned_items.into_iter());
+                // let iterator = items.iter().cloned();
+                execute_iteration(var, index_name, iterator, size, body, state, env, depth)
+            }
             Expression::String(str) => {
                 let s = expand_home(str.as_ref());
                 if s.contains('*') {
@@ -320,11 +327,10 @@ impl Expression {
                 for (i, pattern) in patterns.iter().enumerate() {
                     match pattern {
                         DestructurePattern::Identifier(name) => {
-                            if let Some(val) = values.get(i) {
-                                env.define(name.as_str(), val.clone());
-                            } else {
-                                env.define(name.as_str(), Expression::None);
-                            }
+                            env.define(
+                                name.as_str(),
+                                values.get(i).map_or(Expression::None, |v| v.clone()),
+                            );
                         }
                         DestructurePattern::Rest(name) => {
                             let rest_values: Vec<Expression> =
@@ -343,7 +349,31 @@ impl Expression {
                 }
                 Ok(Expression::None)
             }
-
+            Expression::BSet(values) => {
+                for (i, pattern) in patterns.iter().enumerate() {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            env.define(
+                                name.as_str(),
+                                values.iter().nth(i).map_or(Expression::None, |v| v.clone()),
+                            );
+                        }
+                        DestructurePattern::Rest(name) => {
+                            let rest_set: BTreeSet<_> = values.iter().skip(i).cloned().collect();
+                            env.define(name.as_str(), Expression::BSet(Rc::new(rest_set)));
+                            break;
+                        }
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use map_destructure on Set".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
             // 对象解构
             Expression::Map(map) => {
                 for pattern in patterns {
@@ -359,6 +389,151 @@ impl Expression {
                         _ => {
                             return Err(RuntimeError::common(
                                 "never use list_destructure on Map".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
+            Expression::HMap(map) => {
+                for pattern in patterns {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            let value = map.get(name).cloned().unwrap_or(Expression::None);
+                            env.define(name.as_str(), value);
+                        }
+                        DestructurePattern::Renamed((key, name)) => {
+                            let value = map.get(key).cloned().unwrap_or(Expression::None);
+                            env.define(name.as_str(), value);
+                        }
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use list_destructure on HMap".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
+
+            _ => Err(RuntimeError::new(
+                RuntimeErrorKind::TypeError {
+                    expected: "destructurable value".into(),
+                    sym: value.to_string(),
+                    found: value.type_name(),
+                },
+                self.clone(),
+                depth,
+            )),
+        }
+    }
+    pub fn destructure_assign_local(
+        &self,
+        patterns: &Vec<DestructurePattern>,
+        value: Expression,
+        state: &mut State,
+        depth: usize,
+    ) -> Result<Expression, RuntimeError> {
+        match value {
+            // 数组解构
+            Expression::List(values) => {
+                for (i, pattern) in patterns.iter().enumerate() {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            state.set_local_var(
+                                name.to_string(),
+                                values.get(i).map_or(Expression::None, |v| v.clone()),
+                            );
+                        }
+                        DestructurePattern::Rest(name) => {
+                            let rest_values: Vec<Expression> =
+                                values.iter().skip(i).cloned().collect();
+                            state.set_local_var(
+                                name.to_string(),
+                                Expression::List(Rc::new(rest_values)),
+                            );
+                            break;
+                        } // ... 其他模式
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use map_destructure on List".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
+            Expression::BSet(values) => {
+                for (i, pattern) in patterns.iter().enumerate() {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            state.set_local_var(
+                                name.to_string(),
+                                values.iter().nth(i).map_or(Expression::None, |v| v.clone()),
+                            );
+                        }
+                        DestructurePattern::Rest(name) => {
+                            let rest_set: BTreeSet<_> = values.iter().skip(i).cloned().collect();
+                            state.set_local_var(
+                                name.to_string(),
+                                Expression::BSet(Rc::new(rest_set)),
+                            );
+                            break;
+                        }
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use map_destructure on Set".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
+            // 对象解构
+            Expression::Map(map) => {
+                for pattern in patterns {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            let value = map.get(name).cloned().unwrap_or(Expression::None);
+                            state.set_local_var(name.to_string(), value);
+                        }
+                        DestructurePattern::Renamed((key, name)) => {
+                            let value = map.get(key).cloned().unwrap_or(Expression::None);
+                            state.set_local_var(name.to_string(), value);
+                        }
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use list_destructure on Map".into(),
+                                self.clone(),
+                                depth,
+                            ));
+                        }
+                    }
+                }
+                Ok(Expression::None)
+            }
+            Expression::HMap(map) => {
+                for pattern in patterns {
+                    match pattern {
+                        DestructurePattern::Identifier(name) => {
+                            let value = map.get(name).cloned().unwrap_or(Expression::None);
+                            state.set_local_var(name.to_string(), value);
+                        }
+                        DestructurePattern::Renamed((key, name)) => {
+                            let value = map.get(key).cloned().unwrap_or(Expression::None);
+                            state.set_local_var(name.to_string(), value);
+                        }
+                        _ => {
+                            return Err(RuntimeError::common(
+                                "never use list_destructure on HMap".into(),
                                 self.clone(),
                                 depth,
                             ));
@@ -435,6 +610,10 @@ impl Expression {
 
             // 集合类型 - 收集所有元素
             Self::List(items) => items.iter().fold(HashSet::new(), |mut vars, item| {
+                vars.extend(item.get_free_variables());
+                vars
+            }),
+            Self::BSet(items) => items.iter().fold(HashSet::new(), |mut vars, item| {
                 vars.extend(item.get_free_variables());
                 vars
             }),

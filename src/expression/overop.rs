@@ -117,40 +117,55 @@ impl Add for Expression {
 
             // 列表合并
             (Self::List(a), Self::List(b)) => {
-                // let mut new_list = a.as_ref().clone(); // Clone the list
-                // new_list.extend(b.as_ref().iter().cloned()); // Extend with the second list
-                // Ok(Self::List(Rc::new(new_list)))
-                Self::List(a).list_append(b)
+                let mut new_vec = Vec::with_capacity(a.len() + b.len());
+                new_vec.extend_from_slice(&a);
+                new_vec.extend_from_slice(&b);
+                Ok(Self::List(Rc::new(new_vec)))
             }
-            (Self::List(a), other) => Self::List(a).list_push(other),
+            (Self::List(a), other) => {
+                let mut new_vec = Vec::with_capacity(a.len() + 1);
+                new_vec.extend_from_slice(&a);
+                new_vec.push(other);
+                Ok(Self::List(Rc::new(new_vec)))
+            }
 
-            // 映射合并
+            // set merging
+            (Self::BSet(a), Self::BSet(b)) => {
+                let mut new_set = a.as_ref().clone();
+                new_set.extend(b.as_ref().iter().cloned());
+                Ok(Self::BSet(Rc::new(new_set)))
+            }
+            (Self::BSet(a), other) => {
+                let mut new_set = a.as_ref().clone();
+                new_set.insert(other);
+                Ok(Self::BSet(Rc::new(new_set)))
+            }
 
             // Map merging
             (Self::HMap(a), Self::HMap(b)) => {
-                Self::HMap(a).map_append(b)
-                // let mut new_map = a.as_ref().clone();
-                // new_map.extend(b.as_ref().iter().map(|(k, v)| (k.clone(), v.clone())));
-
-                // Ok(Self::Map(Rc::new(new_map)))
+                let mut new_map = HashMap::new();
+                new_map.extend(a.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.extend(b.iter().map(|(k, v)| (k.clone(), v.clone())));
+                Ok(Self::HMap(Rc::new(new_map)))
             }
             (Self::HMap(a), other) => {
-                Self::HMap(a).map_insert(other.to_string(), other)
-                // let mut new_map = a.as_ref().clone();
-                // new_map.insert(other.to_string(), other); // Insert the other element
-                // Ok(Self::Map(Rc::new(new_map)))
+                let mut new_map = HashMap::new();
+                new_map.extend(a.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.insert(other.to_string(), other);
+                Ok(Self::from(new_map))
             }
-            (Self::Map(a), Self::Map(b)) => Self::Map(a).bmap_append(b),
-            (Self::Map(a), other) => Self::Map(a).map_insert(other.to_string(), other),
-
-            // (Self::Map(mut a), Self::Integer(n)) => {
-            //     a.insert(n.to_string(), Self::Integer(n));
-            //     Ok(Self::Map(a))
-            // }
-            // (Self::Map(mut a), Self::Float(n)) => {
-            //     a.insert(n.to_string(), Self::Float(n));
-            //     Ok(Self::Map(a))
-            // }
+            (Self::Map(a), Self::Map(b)) => {
+                let mut new_map = BTreeMap::new();
+                new_map.extend(a.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.extend(b.iter().map(|(k, v)| (k.clone(), v.clone())));
+                Ok(Self::Map(Rc::new(new_map)))
+            }
+            (Self::Map(a), other) => {
+                let mut new_map = BTreeMap::new();
+                new_map.extend(a.iter().map(|(k, v)| (k.clone(), v.clone())));
+                new_map.insert(other.to_string(), other);
+                Ok(Self::Map(Rc::new(new_map)))
+            }
 
             // bytes
             (Self::Bytes(mut a), Self::Bytes(b)) => {
@@ -161,14 +176,7 @@ impl Add for Expression {
                 a.extend(n.into_bytes());
                 Ok(Self::Bytes(a))
             }
-            // (Self::Bytes(mut a), Self::Integer(n)) => {
-            //     a.extend(n.to_string().into_bytes());
-            //     Ok(Self::Bytes(a))
-            // }
-            // (Self::Bytes(mut a), Self::Float(n)) => {
-            //     a.extend(n.to_string().into_bytes());
-            //     Ok(Self::Bytes(a))
-            // }
+
             // 其他情况
             (m, n) => Err(RuntimeErrorKind::CommandFailed2(
                 "+".into(),
@@ -296,6 +304,20 @@ impl Sub for Expression {
                 } else {
                     Ok(Self::List(a))
                 }
+            }
+
+            // set
+            (Self::BSet(a), Self::BSet(b)) => {
+                let mut new_set = a.as_ref().clone();
+                for item in b.as_ref().iter() {
+                    new_set.remove(item);
+                }
+                Ok(Self::BSet(Rc::new(new_set)))
+            }
+            (Self::BSet(a), value) => {
+                let mut new_set = a.as_ref().clone();
+                new_set.remove(&value);
+                Ok(Self::BSet(Rc::new(new_set)))
             }
 
             // Map operations
@@ -500,6 +522,12 @@ impl Mul for Expression {
                 Ok(Self::from(new_list))
             }
 
+            // 交集运算
+            (Self::BSet(a), Self::BSet(b)) => {
+                let new_set = a.as_ref().intersection(b.as_ref()).cloned().collect();
+                Ok(Self::BSet(Rc::new(new_set)))
+            }
+
             // 其他情况
             (m, n) => Err(RuntimeErrorKind::CommandFailed2(
                 "*".into(),
@@ -665,40 +693,3 @@ impl Rem for Expression {
         }
     }
 }
-
-// impl<T> Index<T> for Expression
-// where
-//     T: Into<Expression>,
-// {
-//     type Output = Expression;
-
-//     fn index(&self, idx: T) -> &Self::Output {
-//         match (self, idx.into()) {
-//             // 处理 Map 索引
-//             (Expression::Map(map), Expression::Symbol(name)) => {
-//                 map.as_ref().get(&name).unwrap_or(&Expression::None)
-//             }
-//             (Expression::Map(map), Expression::String(name)) => {
-//                 map.as_ref().get(&name).unwrap_or(&Expression::None)
-//             }
-
-//             // 处理 List 索引
-//             (Expression::List(list), Expression::Integer(n))
-//                 if n >= 0 && (n as usize) < list.as_ref().len() =>
-//             {
-//                 &list.as_ref()[n as usize]
-//             }
-
-//             // 其他情况返回 None
-//             _ => &Expression::None,
-//         }
-//     }
-// }
-
-// impl Ord for Expression {
-//     fn cmp(&self, other: &Self) -> Ordering {
-//         match (self, other) {
-//             _ => Ordering::Equal,
-//         }
-//     }
-// }

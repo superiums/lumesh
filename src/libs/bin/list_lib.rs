@@ -16,7 +16,7 @@ use crate::{
 };
 
 use std::cmp::Ordering;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -36,7 +36,7 @@ pub fn regist_lazy() -> LazyModule {
         //遍历操作
         map,items,filter,filter_map,any,all,
         //转换操作
-        join,to_map,to_set,
+        join,to_map,to_hmap,to_set,
         //结构操作
         transpose,chunk,foldl,foldr,zip,unzip,
     })
@@ -95,7 +95,8 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
         // 转换操作
         join => "join string list with separator", "<list> <separator>"
-        to_map => "convert list to map using key function", "<list> [key_fn] [val_fn]"
+        to_map => "convert list to btreeMap using key function", "<list> [key_fn] [val_fn]"
+        to_hmap => "convert list to hashMap using key function", "<list> [key_fn] [val_fn]"
         to_set => "convert list to btreeSet", "<list>"
 
         // 结构操作
@@ -1065,6 +1066,45 @@ fn to_map(
     }
 
     let mut map = BTreeMap::new();
+    for item in list.as_ref().iter() {
+        let key = match key_fo {
+            Some(ref kf) => {
+                match Expression::Apply(kf.clone(), Rc::new(vec![item.clone()])).eval(env)? {
+                    Expression::String(s) => s,
+                    other => other.to_string(),
+                }
+            }
+            None => item.to_string(),
+        };
+        let value = match val_fo {
+            Some(ref vf) => Expression::Apply(vf.clone(), Rc::new(vec![item.clone()])).eval(env)?,
+            None => item.clone(),
+        };
+        map.insert(key, value);
+    }
+    Ok(Expression::from(map))
+}
+fn to_hmap(
+    args: Vec<Expression>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("to_hmap", &args, 1..=3, ctx)?;
+    let mut it = args.into_iter();
+    let list_exp = it.next().unwrap();
+    let key_fo = it.next().and_then(|f| Some(Rc::new(f)));
+    let val_fo = it.next().and_then(|f| Some(Rc::new(f)));
+    let list = get_list_ref(&list_exp, ctx)?;
+
+    if key_fo.is_none() && val_fo.is_none() {
+        let mut map = HashMap::new();
+        for i in (0..list.len()).step_by(2) {
+            map.insert(list[i].to_string(), list[i + 1].clone());
+        }
+        return Ok(Expression::from(map));
+    }
+
+    let mut map = HashMap::new();
     for item in list.as_ref().iter() {
         let key = match key_fo {
             Some(ref kf) => {

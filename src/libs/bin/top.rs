@@ -5,13 +5,10 @@ use std::{
 
 use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind, VERSION,
-    eval::State,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
-        bin::{boolean_lib::not, list_lib::get_list_ref},
-        helper::{
-            check_args_len, check_exact_args_len, get_integer_arg, get_string_arg, get_string_ref,
-        },
+        bin::boolean_lib::not,
+        helper::{check_args_len, check_exact_args_len, get_string_ref},
         pretty_printer,
     },
     parse_and_eval, reg_all, reg_info,
@@ -21,16 +18,13 @@ use crate::{
 pub fn regist_all() -> HashMap<&'static str, BuiltinFunc> {
     reg_all!({
         exit, cd, cwd,
-        tap, print, pprint, println, printf, eprint, eprintln, read,
-        r#typeof => "typeof", ddebug, debug,
-        get, len, insert, rev, flatten, r#where => "where", select,
-        not,
-        repeat, eval, exec, eval_str, exec_str, include, import,
-        help,
-        // set;
-        // unset;
-        throw,
+        tap, print, pprint, println, eprint, eprintln, read,
 
+        get, len, insert, rev, flatten,  select,
+        not,
+        eval, exec, eval_str, exec_str, include, import,
+        help,
+        throw,
     })
 }
 
@@ -50,33 +44,38 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         print => "print arguments without newline", "<args>..."
         pprint => "pretty print", "<list>|<map>"
         println => "print arguments with newline", "<args>..."
-        printf => "print formatted string with vars", "<template> <args>..."
+        // printf => "print formatted string with vars", "<template> <args>..."
         eprint => "print to stderr without newline", "<args>..."
         eprintln => "print to stderr with newline", "<args>..."
-        debug => "print debug representation", "<args>..."
-        ddebug => "pretty debug", "<args>..."
+        // debug => "print debug representation", "<args>..."
+        // ddebug => "pretty debug", "<args>..."
         read => "get user input", "[prompt]"
         throw => "return a runtime error", "<msg>"
 
         // Data manipulation
         get => "get value from nested map/list/range using dot notation path", "<map|list|range> <path>"
-        typeof => "get data type", "<value>"
+        // typeof => "get data type", "<value>"
         len => "get length of expression", "<collection>"
         insert => "insert item into collection", "<collection> <key/index> <value>"
         rev => "reverse sequence", "<string|list|bytes>"
         flatten => "flatten nested structure", "<collection>"
-        where => "filter rows by condition", "<list[map]> <condition> "
+        // where => "filter rows by condition", "<list[map]> <condition> "
         select => "select columns from list of maps", "<list[map]> <columns>..."
         not => "logic not", "<boolean1>..."
 
         // Execution control
-        repeat => "evaluate without env change", "<expr>"
+        // repeat => "evaluate without env change", "<expr>"
         eval => "evaluate expression in current env", "<expr>"
         exec => "execute expression in new env", "<expr>"
         eval_str => "evaluate string in current env", "<expr>"
         exec_str => "execute string in new env", "<string>"
         include => "evaluate file in current env", "<path>"
         import => "evaluate file in new env", "<path>"
+
+        // env
+        // set_root => "define a variable in root environment", "<var> <val>"
+        // unset_root => "undefine a variable in root environment", "<var>"
+        // getvar => "get a variable value", "<var>"
 
         // Help system
         help => "display help", "[module]"
@@ -371,74 +370,6 @@ fn cwd(
     Ok(Expression::String(path.to_string_lossy().into_owned()))
 }
 
-// arg lazy
-fn r#typeof(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("typeof", &args, 1, ctx)?;
-    let t = args[0].type_name();
-    let t1 = args[0].eval_in_assign(env)?.type_name();
-    // println!("{}", t);
-    // println!("----------");
-    // println!("{}", t1);
-    Ok(Expression::from(vec![
-        Expression::from(t),
-        Expression::from(t1),
-    ]))
-}
-
-// args lazy
-fn debug(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    _ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    for (i, x) in args.iter().enumerate() {
-        if i < args.len() - 1 {
-            print!("{x:?} ")
-        } else {
-            println!("{x:?}")
-        }
-    }
-    println!("----------");
-    for (i, x) in args.iter().enumerate() {
-        let x = x.eval_in_assign(env)?;
-        if i < args.len() - 1 {
-            print!("{x:?} ")
-        } else {
-            println!("{x:?}")
-        }
-    }
-    Ok(Expression::None)
-}
-
-// args lazy
-fn ddebug(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    _ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    for (i, x) in args.iter().enumerate() {
-        if i < args.len() - 1 {
-            print!("{x:#} ")
-        } else {
-            println!("{x:#}")
-        }
-    }
-    println!("----------");
-    for (i, x) in args.iter().enumerate() {
-        let x = x.eval_in_assign(env)?;
-        if i < args.len() - 1 {
-            print!("{x:#} ")
-        } else {
-            println!("{x:#}")
-        }
-    }
-    Ok(Expression::None)
-}
-
 fn tap(
     args: Vec<Expression>,
     _env: &mut Environment,
@@ -695,19 +626,7 @@ fn exec_str(
     let mut new_env = env.fork();
     eval_str(args, &mut new_env, ctx)
 }
-// args should be lazy evaled
-fn repeat(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("repeat", &args, 2, ctx)?;
-    let n = get_integer_arg(args[1].eval(env)?, ctx)?;
-    let r = (0..n)
-        .map(|_| args[0].eval_in_assign(env))
-        .collect::<Result<Vec<_>, _>>()?;
-    Ok(Expression::from(r))
-}
+
 // need args evaled already
 fn eval(
     args: Vec<Expression>,
@@ -744,57 +663,6 @@ pub fn flatten(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("flatten", &args, 1, ctx)?;
     Ok(Expression::from(flat(&args[0])))
-}
-
-// args should be lazy evaled.
-fn r#where(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("where", &args, 2, ctx)?;
-    let list = args[0].eval(env)?;
-    let list = get_list_ref(&list, ctx)?;
-
-    let mut filtered = Vec::new();
-    let mut state = State::new();
-    state.set(State::IN_LOCAL);
-    for (i, row) in list.iter().enumerate() {
-        state.set_local_var("NR".to_string(), Expression::Integer(i as i64));
-        if let Expression::HMap(row_map) = row {
-            state.set_local_vars(row_map.as_ref().clone());
-        } else if let Expression::Map(row_map) = row {
-            for (k, v) in row_map.as_ref() {
-                state.set_local_var(k.to_string(), v.clone());
-            }
-        } else if let Expression::List(row_set) = row {
-            for (nf, item) in row_set.iter().enumerate() {
-                state.set_local_var("NF".to_string(), Expression::Integer(nf as i64));
-                state.set_local_var("F".to_string(), item.clone());
-            }
-        } else if let Expression::BSet(row_set) = row {
-            for (nf, item) in row_set.iter().enumerate() {
-                state.set_local_var("NF".to_string(), Expression::Integer(nf as i64));
-                state.set_local_var("F".to_string(), item.clone());
-            }
-        } else {
-            return Err(RuntimeError::new(
-                RuntimeErrorKind::TypeError {
-                    expected: "Map/HMap/List/Set as Field".to_string(),
-                    found: row.type_name(),
-                    sym: row.to_string(),
-                },
-                ctx.clone(),
-                0,
-            ));
-        }
-
-        let c = args[1].eval_mut(&mut state, env, 0)?;
-        if let Expression::Boolean(true) = c {
-            filtered.push(row.clone());
-        }
-    }
-    Ok(Expression::from(filtered))
 }
 
 fn select(
@@ -1028,44 +896,6 @@ pub fn get(
     //         "get requires a map as last argument".to_string(),
     //     ));
     // }
-}
-
-// Print Formated
-fn printf(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_args_len("printf", &args, 1.., ctx)?;
-    let mut it = args.into_iter();
-    let template_expr = it.next().unwrap();
-    let template = get_string_arg(template_expr, ctx)?;
-    // named arg
-    let pat = regex_lite::Regex::new(r#"\{(\w+)\}"#).unwrap();
-    let mut result = template.clone();
-    for (full, [var]) in pat.captures_iter(&template).map(|m| m.extract()) {
-        match env.get(var) {
-            Some(value) => {
-                result = result.replace(full, &value.to_string());
-            }
-            _ => {
-                return Err(RuntimeError::new(
-                    RuntimeErrorKind::UndeclaredVariable(var.to_string()),
-                    ctx.clone(),
-                    0,
-                ));
-            }
-        }
-    }
-
-    // position arg
-    let placeholders = result.matches("{}").count();
-    for arg in it.take(placeholders) {
-        result = result.replacen("{}", &arg.to_string(), 1);
-    }
-
-    println!("{}",result);
-    Ok(Expression::None)
 }
 
 pub fn throw(

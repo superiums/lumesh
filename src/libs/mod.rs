@@ -2,7 +2,7 @@ mod bin;
 mod helper;
 mod lazy_module;
 mod pprint;
-use crate::{Environment, Expression, RuntimeError, libs::lazy_module::LazyModule};
+use crate::{Environment, Expression, RuntimeError, eval::State, libs::lazy_module::LazyModule};
 pub use bin::time_lib::parse as time_parse;
 pub use bin::top::regist_info;
 pub use pprint::pretty_printer;
@@ -20,6 +20,13 @@ pub struct BuiltinInfo {
 pub type BuiltinFunc =
     fn(Vec<Expression>, &mut Environment, contex: &Expression) -> Result<Expression, RuntimeError>;
 
+pub type SelfExpandFunc = fn(
+    &[Expression],
+    &mut Environment,
+    &mut State,
+    contex: &Expression,
+) -> Result<Expression, RuntimeError>;
+
 // 对不同模块采用不同策略
 thread_local! {
     // 帮助信息，初次使用时加载
@@ -29,12 +36,17 @@ thread_local! {
     // static MATH_LIB: RefCell<HashMap<String, Expression>> = RefCell::new({
     //     math_module::get_all_functions() // 加载所有函数
     // });
+    static SE_LIB: RefCell<HashMap<&'static str, SelfExpandFunc>> = RefCell::new({
+        bin::se_lib::regist_se()
+    });
+
     static TOP_LIB: RefCell<HashMap<&'static str, BuiltinFunc>> = RefCell::new({
         bin::top::regist_all()
     });
     static BOOL_LIB: RefCell<HashMap<&'static str, BuiltinFunc>> = RefCell::new({
         bin::boolean_lib::regist_all()
     });
+
 
     // 中型模块：模块级懒加载
     // static FS_LIB: RefCell<Option<Expression>> = RefCell::new(None);
@@ -64,6 +76,7 @@ thread_local! {
 fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInfo>> {
     let mut libs_info = BTreeMap::new();
     libs_info.insert("", bin::top::regist_info());
+    libs_info.insert("", bin::se_lib::regist_info()); //regist to top
     libs_info.insert("boolean", bin::boolean_lib::regist_info());
     libs_info.insert("string", bin::string_lib::regist_info());
     libs_info.insert("list", bin::list_lib::regist_info());
@@ -180,6 +193,7 @@ fn get_belong_lib_name(exp: &Expression) -> Option<Cow<'static, str>> {
         _ => None,
     }
 }
+
 pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<BuiltinFunc> {
     match expr {
         Expression::Blank => get_builtin_optimized("", fn_name),
@@ -188,4 +202,8 @@ pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<BuiltinF
             get_belong_lib_name(other).and_then(|x| get_builtin_optimized(x.as_ref(), fn_name))
         }
     }
+}
+
+pub fn get_self_expand_lib(fn_name: &str) -> Option<SelfExpandFunc> {
+    SE_LIB.with_borrow(|s| s.get(fn_name).cloned())
 }

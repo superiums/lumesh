@@ -1,43 +1,43 @@
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
-use crate::libs::{get_builtin_via_expr, is_lib};
+use crate::libs::{get_builtin_via_expr, get_self_expand_lib, is_lib};
 use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, RuntimeErrorKind};
 
 // 需要延迟解析的特殊命令列表
-const LAZY_EVAL_COMMANDS: &[&str] = &[
-    "where", "repeat", "debug", "ddebug", "typeof", "set", "unset",
-];
+// const LAZY_EVAL_COMMANDS: &[&str] = &[
+//     "where", "repeat", "debug", "ddebug", "typeof", "set", "unset",
+// ];
 /// eval if not lazy cmds
 /// always eval position receiver
 // the resean to excute it here, is for local vars in loop,
 // only current env knows the state.
 #[inline]
 pub fn prepare_args<'a>(
-    cmd: &str,
+    // cmd: &str,
     args: &'a [Expression],
-    check_lazy: bool,
+    // check_lazy: bool,
     insert_arg: Option<Expression>,
     env: &mut Environment,
     state: &mut State,
     depth: usize,
 ) -> Result<Vec<Expression>, RuntimeError> {
-    if check_lazy {
-        if LAZY_EVAL_COMMANDS.contains(&cmd) {
-            if args.contains(&Expression::Blank) {
-                return Ok(args
-                    .iter()
-                    .map(|x| match x {
-                        Expression::Blank => {
-                            x.eval_mut(state, env, depth).unwrap_or(Expression::Blank)
-                        }
-                        other => other.clone(),
-                    })
-                    .collect::<Vec<_>>());
-            }
-            return Ok(args.to_vec());
-        }
-    }
+    // if check_lazy {
+    //     if LAZY_EVAL_COMMANDS.contains(&cmd) {
+    //         if args.contains(&Expression::Blank) {
+    //             return Ok(args
+    //                 .iter()
+    //                 .map(|x| match x {
+    //                     Expression::Blank => {
+    //                         x.eval_mut(state, env, depth).unwrap_or(Expression::Blank)
+    //                     }
+    //                     other => other.clone(),
+    //                 })
+    //                 .collect::<Vec<_>>());
+    //         }
+    //         return Ok(args.to_vec());
+    //     }
+    // }
     let mut args_eval = if let Some(a) = insert_arg {
         let mut vec = Vec::with_capacity(args.len() + 1);
         vec.push(a);
@@ -47,7 +47,8 @@ pub fn prepare_args<'a>(
     };
     for arg in args.iter() {
         match arg.eval_mut(state, env, depth) {
-            Ok(Expression::Blank) => {} //give up bank after eval
+            //give up bank after eval, mean this is not a receiver but a blank cmd like `ls _`
+            Ok(Expression::Blank) => {}
             Ok(a) => args_eval.push(a),
             Err(e) => return Err(e),
         }
@@ -756,17 +757,21 @@ pub fn handle_builtin(
     env: &mut Environment,
     depth: usize,
 ) -> Result<Option<Expression>, RuntimeError> {
-    if let Some(bfn) = get_builtin_via_expr(base, method) {
+    if base == &Expression::Blank
+        && let Some(selib) = get_self_expand_lib(method)
+    {
+        // let p_args = prepare_args(method, args, true, None, env, state, depth)?;
+        let result = selib(args, env, state, ctx)?;
+        return Ok(Some(result));
+    } else if let Some(bfn) = get_builtin_via_expr(base, method) {
         let p_args = match base {
             // lazy cmd is in top and sys
-            Expression::Blank => prepare_args(method, args, true, None, env, state, depth)?,
-            Expression::Symbol(s) if s == "sys" => {
-                prepare_args(method, args, true, None, env, state, depth)?
-            }
+            Expression::Blank => prepare_args(args, None, env, state, depth)?,
+            Expression::Symbol(s) if s == "sys" => prepare_args(args, None, env, state, depth)?,
             // 判断是String.red 还是 ‘xx'.red
-            Expression::Symbol(_) => prepare_args(method, args, false, None, env, state, depth)?,
+            Expression::Symbol(_) => prepare_args(args, None, env, state, depth)?,
             // 'xx' should be injected
-            val => prepare_args(method, args, false, Some(val.clone()), env, state, depth)?,
+            val => prepare_args(args, Some(val.clone()), env, state, depth)?,
         };
         let result = bfn(p_args, env, ctx)?;
 

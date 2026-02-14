@@ -16,8 +16,7 @@ use crate::{reg_info, reg_lazy};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
-        env, set, unset,get,
-        vars, has, defined,
+        env, vars, has, defined,
         quote, ecodes_rt, ecodes_lm,
         print_tty, discard,
         info,modes,cds,
@@ -32,11 +31,7 @@ pub fn regist_lazy() -> LazyModule {
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-        env => "get root environment as a map", ""
-        set => "define a variable in root environment", "<var> <val>"
-        unset => "undefine a variable in root environment", "<var>"
-        get => "get a variable value", "<var>"
-
+        env => "get root environment map/var value", "[var]"
         vars => "get defined variables in current enviroment", ""
         has => "check if a variable is defined in current environment", "<var>"
         defined => "check if a variable is defined in current environment tree", "<var>"
@@ -125,10 +120,15 @@ fn quote(
 }
 
 fn env(
-    _args: Vec<Expression>,
+    args: Vec<Expression>,
     env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
+    if args.len() == 1 {
+        let name = args[0].to_string();
+        return Ok(env.get(&name).unwrap_or(Expression::None));
+    }
+
     Ok(Expression::from(env.get_root().clone()))
 }
 
@@ -138,41 +138,6 @@ fn vars(
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     Ok(Expression::from(env.get_bindings_map()))
-}
-
-// lazy arg
-pub fn set(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("set", &args, 2, ctx)?;
-    let name = args[0].to_string();
-    let expr = args[1].eval_in_assign(env)?;
-    env.define_in_root(&name, expr);
-    Ok(Expression::None)
-}
-
-// lazy arg
-pub fn unset(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("unset", &args, 1, ctx)?;
-    let name = args[0].to_string();
-    env.undefine_in_root(&name);
-    Ok(Expression::None)
-}
-
-fn get(
-    args: Vec<Expression>,
-    env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("get", &args, 1, ctx)?;
-    let name = args[0].to_string();
-    Ok(env.get(&name).unwrap_or(Expression::None))
 }
 
 fn has(

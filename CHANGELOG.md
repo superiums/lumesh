@@ -2,6 +2,10 @@
 
 ## [0.12.7]
 - more support for BtreeSet
+- fix printf to print insteadof return value
+- fix loop collect in pipe
+- split functions with lazy args to separated lib, make them state aware.
+- optimize prepare args, drop lazy args check
 
 
 ## [0.12.6]

@@ -206,6 +206,14 @@ impl Expression {
         state.set(State::IN_ASSIGN);
         self.eval_mut(&mut state, env, 0)
     }
+    pub fn eval_with_assign(
+        &self,
+        state: &mut State,
+        env: &mut Environment,
+    ) -> Result<Self, RuntimeError> {
+        state.set(State::IN_ASSIGN);
+        self.eval_mut(state, env, 0)
+    }
     /// 求值主逻辑
     #[inline]
     pub fn eval_mut(
@@ -1581,9 +1589,9 @@ impl Expression {
         }
     }
 
-    fn handle_variable(
+    pub fn handle_variable(
         &self,
-        name: &String,
+        name: &str,
         allow_sym: bool,
         state: &mut State,
         env: &mut Environment,
@@ -1601,7 +1609,7 @@ impl Expression {
             Some(expr) => Ok(expr),
             None => match allow_sym {
                 false => Err(RuntimeError::new(
-                    RuntimeErrorKind::UndeclaredVariable(name.clone()),
+                    RuntimeErrorKind::UndeclaredVariable(name.to_string()),
                     self.clone(),
                     depth,
                 )),
@@ -1622,8 +1630,7 @@ impl Expression {
         // 占位符_ 不应在管道方法中使用
         match get_builtin_via_expr(self, method) {
             Some(bfn) => {
-                let p_args =
-                    prepare_args(method, args, false, Some(self.clone()), env, state, depth)?;
+                let p_args = prepare_args(args, Some(self.clone()), env, state, depth)?;
                 bfn(p_args, env, context)
             }
             _ => Err(RuntimeError::new(

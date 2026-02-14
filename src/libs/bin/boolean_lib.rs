@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, rc::Rc};
 
 use crate::{
     Environment, Expression, RuntimeError,
@@ -7,7 +7,7 @@ use crate::{
 };
 use std::collections::BTreeMap;
 
-pub fn regist_all() -> HashMap<&'static str, BuiltinFunc> {
+pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
         and,or,not
     })

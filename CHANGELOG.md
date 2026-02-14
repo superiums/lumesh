@@ -7,7 +7,7 @@
 - split functions with lazy args to separated lib, make them state aware.
 - optimize prepare args, drop lazy args check
 - optimized `debug` and `ddebug` display
-- 
+- use Rc to avoid direct clone for Builtin
 
 
 ## [0.12.6]

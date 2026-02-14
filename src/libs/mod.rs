@@ -204,6 +204,18 @@ pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<BuiltinF
     }
 }
 
-pub fn get_self_expand_lib(fn_name: &str) -> Option<SelfExpandFunc> {
-    SE_LIB.with_borrow(|s| s.get(fn_name).cloned())
+pub fn exec_self_expand_lib(
+    fn_name: &str,
+    args: &[Expression],
+    env: &mut Environment,
+    state: &mut State,
+    ctx: &Expression,
+) -> Result<Option<Expression>, RuntimeError> {
+    SE_LIB.with_borrow(|s| {
+        if let Some(selib) = s.get(fn_name) {
+            let result = selib(args, env, state, ctx)?;
+            return Ok(Some(result));
+        }
+        return Ok(None);
+    })
 }

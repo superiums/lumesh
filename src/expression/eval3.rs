@@ -1,7 +1,7 @@
 use super::eval::State;
 use crate::expression::cmd_excutor::handle_command;
 use crate::expression::{ChainCall, alias};
-use crate::libs::{get_builtin_via_expr, get_self_expand_lib, is_lib};
+use crate::libs::{exec_self_expand_lib, get_builtin_via_expr, is_lib};
 use crate::{Environment, Expression, MAX_RUNTIME_RECURSION, RuntimeError, RuntimeErrorKind};
 
 // 需要延迟解析的特殊命令列表
@@ -758,10 +758,10 @@ pub fn handle_builtin(
     depth: usize,
 ) -> Result<Option<Expression>, RuntimeError> {
     if base == &Expression::Blank
-        && let Some(selib) = get_self_expand_lib(method)
+        && let Some(result) = exec_self_expand_lib(method, args, env, state, ctx)?
     {
         // let p_args = prepare_args(method, args, true, None, env, state, depth)?;
-        let result = selib(args, env, state, ctx)?;
+        // let result = selib(args, env, state, ctx)?;
         return Ok(Some(result));
     } else if let Some(bfn) = get_builtin_via_expr(base, method) {
         let p_args = match base {

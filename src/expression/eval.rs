@@ -2,7 +2,7 @@ use crate::expression::eval2::ifs_split;
 use crate::expression::eval3::prepare_args;
 use crate::expression::render::render_template;
 use crate::expression::{BoxedIterator, LumeRegex, alias};
-use crate::libs::{get_builtin_via_expr, handle_color, handle_style, time_parse};
+use crate::libs::{get_builtin_via_expr, handle_color, handle_math, handle_style, time_parse};
 use crate::utils::abs;
 use crate::utils::canon;
 use crate::{Environment, Expression, Int, RuntimeError, STRICT_ENABLED};
@@ -1362,9 +1362,8 @@ impl Expression {
                 Expression::Symbol(n) | Expression::String(n),
             ) => match m.as_str() {
                 "COLOR" => handle_color(n, self),
-                // "COLOR_BG" => handle_color_bg(n, self),
                 "STYLE" => handle_style(n, self),
-                // "STYLE_RESET" => reset_style(n, self),
+                "MATH" => handle_math(n, self),
                 _ => Ok(Self::String(format!("{m}.{n}"))),
             },
 

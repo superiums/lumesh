@@ -4,6 +4,7 @@ mod lazy_module;
 mod pprint;
 use crate::{Environment, Expression, RuntimeError, eval::State, libs::lazy_module::LazyModule};
 pub use bin::colors::{handle_color, handle_style};
+pub use bin::math_lib::handle_math;
 pub use bin::time_lib::parse as time_parse;
 pub use bin::top::regist_info;
 pub use pprint::pretty_printer;
@@ -100,6 +101,7 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
     libs_info.insert("about", bin::about_lib::regist_info());
     // libs_info.insert("color", bin::colors::regist_color_info());
     // CONSTS
+    libs_info.insert("MATH", bin::math_lib::regist_const_math());
     libs_info.insert("COLOR", bin::colors::regist_const_color());
     libs_info.insert("STYLE", bin::colors::regist_const_style());
     libs_info

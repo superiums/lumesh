@@ -5,10 +5,32 @@ use crate::libs::lazy_module::LazyModule;
 use crate::{Environment, Expression, Int, RuntimeError, RuntimeErrorKind, reg_info, reg_lazy};
 use std::collections::BTreeMap;
 
+pub fn handle_math(arg: &str, ctx: &Expression) -> Result<Expression, RuntimeError> {
+    match arg {
+        "E" => Ok(Expression::Float(std::f64::consts::E)),
+        "PI" => Ok(Expression::Float(std::f64::consts::PI)),
+        "PHI" => Ok(Expression::Float(1.618_033_988_749_895_f64.into())),
+        _ => Err(RuntimeError::common(
+            "unkown const in MATH".into(),
+            ctx.clone(),
+            0,
+        )),
+    }
+}
+
+/// 数学常量（无参数）
+pub fn regist_const_math() -> BTreeMap<&'static str, BuiltinInfo> {
+    reg_info!({
+         E => "Euler’s number (e)", ""
+         PI => "Archimedes’ constant (π)", ""
+         PHI => "The golden ratio (φ)", ""
+    })
+}
+
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         // 数学常量（无参数）
-         e, pi, phi,
+         // e, pi, phi,
          // 基础数学函数
          max, min, sum, average, abs, clamp,
          // 位运算
@@ -33,11 +55,6 @@ pub fn regist_lazy() -> LazyModule {
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
-
-        // 数学常量（无参数）
-         e => "Euler’s number (e)", ""
-         pi => "Archimedes’ constant (π)", ""
-         phi => "The golden ratio (φ)", ""
 
          // 基础数学函数
          max => "get max value in an array or multi args", "<num1> <num2> ... | <array>"
@@ -109,28 +126,6 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     })
 }
 
-fn e(
-    _args: Vec<Expression>,
-    _: &mut Environment,
-    _: &Expression,
-) -> Result<Expression, RuntimeError> {
-    Ok(Expression::Float(std::f64::consts::E))
-}
-fn pi(
-    _args: Vec<Expression>,
-    _: &mut Environment,
-    _: &Expression,
-) -> Result<Expression, RuntimeError> {
-    Ok(Expression::Float(std::f64::consts::PI))
-}
-fn phi(
-    _args: Vec<Expression>,
-    _: &mut Environment,
-    _: &Expression,
-) -> Result<Expression, RuntimeError> {
-    Ok(Expression::Float(1.618_033_988_749_895_f64.into()))
-}
-// Helper Functions
 // Helper function to evaluate arguments to f64
 fn eval_to_f64(
     args: Vec<Expression>,

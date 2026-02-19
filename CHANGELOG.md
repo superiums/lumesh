@@ -8,7 +8,26 @@
 - optimize prepare args, drop lazy args check
 - optimized `debug` and `ddebug` display
 - use Rc to avoid direct clone for Builtin
+- introduce const `COLOR`
 
+> foreground / background
+  + prefix `FG_` for foreground color
+  + prefix `BG_` for background color
+
+> color name
+  + upper word for base color: `GREEN` 
+  + lower word for true color: `green`
+    
+> 256 color
+  + number between 1 and 256 for 256 color: `FG_255`
+    
+> true color in hex format
+  + prefix `FGT_` for true color in hex: `FGT_a0b1c2`
+  + prefix `BGT_` for true color in hex: `BGT_A0B1C2`
+  both upper/lower case is ok
+
+- introduce const `STYLE`
+  
 
 ## [0.12.6]
 - optimize append_args

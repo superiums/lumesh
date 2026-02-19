@@ -58,6 +58,7 @@ pub fn collect_command_with_prefix(prefix: &str) -> Vec<&str> {
     if prefix.is_empty() || !prefix.is_ascii() {
         return Vec::new();
     }
+
     let c1 = get_lm_commands()
         .iter()
         .filter(|x| x.starts_with(prefix))

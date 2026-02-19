@@ -3,6 +3,7 @@ mod helper;
 mod lazy_module;
 mod pprint;
 use crate::{Environment, Expression, RuntimeError, eval::State, libs::lazy_module::LazyModule};
+pub use bin::colors::{handle_color, handle_style};
 pub use bin::time_lib::parse as time_parse;
 pub use bin::top::regist_info;
 pub use pprint::pretty_printer;
@@ -32,7 +33,6 @@ pub type SelfExpandFunc = fn(
 thread_local! {
     // 帮助信息，初次使用时加载
     pub static LIBS_INFO: LazyLock<BTreeMap<&'static str, BTreeMap<&'static str,BuiltinInfo>>> =LazyLock::new(regist_all_info);
-
     // 热模块/小型模块：完全预加载
     // static MATH_LIB: RefCell<HashMap<String, Expression>> = RefCell::new({
     //     math_module::get_all_functions() // 加载所有函数
@@ -72,6 +72,7 @@ thread_local! {
     static FROM_LIB: LazyModule = bin::from_lib::regist_lazy();
     static ABOUT_LIB: LazyModule = bin::about_lib::regist_lazy();
     static CONSOLE_LIB: LazyModule = bin::console_lib::regist_lazy();
+    // static COLOR_LIB: LazyModule = bin::colors::regist_color_lazy();
 }
 
 fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInfo>> {
@@ -97,6 +98,10 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
     libs_info.insert("console", bin::console_lib::regist_info());
     libs_info.insert("log", bin::log_lib::regist_info());
     libs_info.insert("about", bin::about_lib::regist_info());
+    // libs_info.insert("color", bin::colors::regist_color_info());
+    // CONSTS
+    libs_info.insert("COLOR", bin::colors::regist_const_color());
+    libs_info.insert("STYLE", bin::colors::regist_const_style());
     libs_info
 }
 /// lazy load builtin.
@@ -124,6 +129,7 @@ pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<Builtin
         "from" => FROM_LIB.with(|m| m.get_function(fn_name)),
         "about" => ABOUT_LIB.with(|m| m.get_function(fn_name)),
         "console" => CONSOLE_LIB.with(|m| m.get_function(fn_name)),
+        // "color" => COLOR_LIB.with(|m| m.get_function(fn_name)),
         _ => None,
     }
 }

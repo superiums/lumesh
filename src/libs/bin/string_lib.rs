@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-
 use crate::{
     Environment, Expression, Int, RuntimeError,
     libs::{
         BuiltinInfo,
+        bin::colors::{COLOR_MAP, true_color_by_hex},
         helper::{
             check_args_len, check_exact_args_len, get_integer_arg, get_integer_ref, get_string_arg,
             get_string_ref,
@@ -13,17 +12,11 @@ use crate::{
     reg_info, reg_lazy,
 };
 use std::collections::BTreeMap;
-use std::sync::LazyLock;
 
 use crate::libs::bin::into_lib::{
     filesize as to_filesize, float as to_float, int as to_int, striped as strip, table as to_table,
     time as to_time,
 };
-
-use common_macros::hash_map;
-
-static COLOR_MAP: LazyLock<HashMap<&'static str, (i64, i64, i64)>> =
-    LazyLock::new(|| init_color_map());
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -45,7 +38,7 @@ pub fn regist_lazy() -> LazyModule {
         // 格式化
         pad_start, pad_end, center, wrap,
         // 样式
-        href, bold, faint, italics, underline, blink, invert, strike,
+        href, bold, faint, italic, underline, blink, invert, strike,
         // 标准颜色
         black, red, green, yellow, blue, magenta, cyan, white,
         // 高级颜色
@@ -118,7 +111,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
        href => "create terminal hyperlink", "<url> <text>"
        bold => "apply bold styling", "<string>"
        faint => "apply faint/dim styling", "<string>"
-       italics => "apply italic styling", "<string>"
+       italic => "apply italic styling", "<string>"
        underline => "apply underline styling", "<string>"
        blink => "apply blinking effect", "<string>"
        invert => "invert foreground/background colors", "<string>"
@@ -141,154 +134,6 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
        color_bg => "apply True Color background using RGB values or color_name", "<string> <hex_color|color_name|r,g,b>"
        colors => "list all color_name for True Color", "[skip_colorized?]"
     })
-}
-
-fn init_color_map() -> HashMap<&'static str, (i64, i64, i64)> {
-    hash_map! {
-        "aliceblue" => (240, 248, 255),
-        "antiquewhite" => (250, 235, 215),
-        "aqua" => (0, 255, 255),
-        "aquamarine" => (127, 255, 212),
-        "azure" => (240, 255, 255),
-        "beige" => (245, 245, 220),
-        "bisque" => (255, 228, 196),
-        "black" => (0, 0, 0),
-        "blanchedalmond" => (255, 235, 205),
-        "blue" => (0, 0, 255),
-        "blueviolet" => (138, 43, 226),
-        "brown" => (165, 42, 42),
-        "burlywood" => (222, 184, 135),
-        "cadetblue" => (95, 158, 160),
-        "chartreuse" => (127, 255, 0),
-        "chocolate" => (210, 105, 30),
-        "coral" => (255, 127, 80),
-        "cornflowerblue" => (100, 149, 237),
-        "cornsilk" => (255, 248, 220),
-        "crimson" => (220, 20, 60),
-        "cyan" => (0, 255, 255),
-        "darkblue" => (0, 0, 139),
-        "darkcyan" => (0, 139, 139),
-        "darkgoldenrod" => (184, 134, 11),
-        "darkgray" => (169, 169, 169),
-        "darkgreen" => (0, 100, 0),
-        "darkgrey" => (169, 169, 169),
-        "darkkhaki" => (189, 183, 107),
-        "darkmagenta" => (139, 0, 139),
-        "darkolivegreen" => (85, 107, 47),
-        "darkorange" => (255, 140, 0),
-        "darkorchid" => (153, 50, 204),
-        "darkred" => (139, 0, 0),
-        "darksalmon" => (233, 150, 122),
-        "darkseagreen" => (143, 188, 143),
-        "darkslateblue" => (72, 61, 139),
-        "darkslategrey" => (47, 79, 79),
-        "darkturquoise" => (0, 206, 209),
-        "darkviolet" => (148, 0, 211),
-        "deeppink" => (255, 20, 147),
-        "deepskyblue" => (0, 191, 255),
-        "dimgray" => (105, 105, 105),
-        "dodgerblue" => (30, 144, 255),
-        "firebrick" => (178, 34, 34),
-        "floralwhite" => (255, 250, 240),
-        "forestgreen" => (34, 139, 34),
-        "fuchsia" => (255, 0, 255),
-        "gainsboro" => (221, 221, 221),
-        "ghostwhite" => (248, 248, 255),
-        "gold" => (255, 215, 0),
-        "goldenrod" => (218, 165, 32),
-        "gray" => (128, 128, 128),
-        "green" => (0, 255, 0),
-        "greenyellow" => (173, 255, 47),
-        "honeydew" => (240, 255, 240),
-        "hotpink" => (255, 105, 180),
-        "indianred" => (205, 92, 92),
-        "indigo" => (75, 0, 130),
-        "ivory" => (255, 255, 240),
-        "khaki" => (240, 230, 140),
-        "lavender" => (230, 230, 250),
-        "lavenderblush" => (255, 245, 245),
-        "lawngreen" => (124, 252, 0),
-        "lemonchiffon" => (255, 250, 205),
-        "lightblue" => (173, 216, 230),
-        "lightcoral" => (240, 128, 128),
-        "lightcyan" => (224, 255, 255),
-        "lightgoldenrodyellow" => (250, 250, 210),
-        "lightgray" => (211, 211, 211),
-        "lightgreen" => (144, 238, 144),
-        "lightgrey" => (211, 211, 211),
-        "lightpink" => (255, 182, 193),
-        "lightsalmon" => (255, 160, 122),
-        "lightseagreen" => (32, 178, 170),
-        "lightskyblue" => (135, 206, 250),
-        "lightslategray" => (119, 136, 153),
-        "lightsteelblue" => (176, 196, 222),
-        "lightyellow" => (255, 255, 224),
-        "lime" => (0, 255, 0),
-        "limegreen" => (50, 205, 50),
-        "linen" => (250, 240, 230),
-        "magenta" => (255, 0, 255),
-        "maroon" => (128, 0, 0),
-        "mediumaquamarine" => (102, 209, 209),
-        "mediumblue" => (0, 0, 205),
-        "mediumorchid" => (183, 105, 224),
-        "mediumpurple" => (147, 112, 219),
-        "mediumseagreen" => (60, 179, 113),
-        "mediumslateblue" => (123, 104, 238),
-        "mediumspringgreen" => (0, 250, 150),
-        "mediumturquoise" => (72, 209, 204),
-        "mediumvioletred" => (199, 21, 133),
-        "midnightblue" => (25, 25, 112),
-        "mintcream" => (245, 255, 250),
-        "mistyrose" => (255, 228, 225),
-        "moccasin" => (255, 228, 181),
-        "navajowhite" => (255, 222, 173),
-        "navy" => (0, 0, 128),
-        "oldlace" => (253, 245, 230),
-        "olive" => (128, 128, 0),
-        "olivedrab" => (107, 142, 35),
-        "orange" => (255, 165, 0),
-        "orangered" => (255, 69, 0),
-        "orchid" => (218, 112, 214),
-        "palegoldenrod" => (238, 232, 170),
-        "palegreen" => (152, 251, 152),
-        "paleturquoise" => (175, 238, 238),
-        "palevioletred" => (238, 130, 238),
-        "papayawhip" => (255, 239, 213),
-        "peachpuff" => (255, 218, 185),
-        "peru" => (205, 133, 63),
-        "pink" => (255, 192, 203),
-        "plum" => (221, 160, 221),
-        "powderblue" => (176, 224, 230),
-        "purple" => (128, 0, 128),
-        "rebeccapurple" => (102, 51, 153),
-        "red" => (255, 0, 0),
-        "rosybrown" => (188, 143, 143),
-        "royalblue" => (65, 105, 225),
-        "saddlebrown" => (139, 69, 19),
-        "salmon" => (250, 128, 114),
-        "sandybrown" => (244, 164, 96),
-        "seagreen" => (46, 139, 87),
-        "seashell" => (255, 245, 238),
-        "sienna" => (160, 82, 45),
-        "silver" => (192, 192, 192),
-        "skyblue" => (135, 206, 235),
-        "slateblue" => (106, 90, 205),
-        "slategray" => (112, 128, 144),
-        "snow" => (255, 250, 250),
-        "springgreen" => (0, 255, 128),
-        "steelblue" => (70, 130, 180),
-        "tan" => (210, 180, 140),
-        "teal" => (0, 128, 128),
-        "thistle" => (216, 191, 216),
-        "tomato" => (255, 99, 71),
-        "turquoise" => (64, 224, 208),
-        "violet" => (238, 130, 238),
-        "wheat" => (245, 222, 179),
-        "white" => (255, 255, 255),
-        "whitesmoke" => (245, 245, 245),
-        "yellow" => (255, 255, 0),
-        "yellowgreen" => (154, 255, 50),
-    }
 }
 
 // Basic Check Functions
@@ -853,7 +698,7 @@ fn faint(
     Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", text).into())
 }
 
-fn italics(
+fn italic(
     args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
@@ -1091,34 +936,34 @@ fn true_color(
     let text = get_string_ref(&args[0], ctx)?;
     let color_spec = get_string_ref(&args[1], ctx)?;
 
-    let color_code = if let Some((r, g, b)) = COLOR_MAP.get(&color_spec.as_str()) {
-        format!("{};{};{}", r, g, b)
-    } else if color_spec.starts_with('#') {
+    let color_code = if let Some(hex) = color_spec.strip_prefix('#') {
         // Parse hex color
-        let hex = color_spec.trim_start_matches('#');
-        if hex.len() == 6 {
-            let r = u8::from_str_radix(&hex[0..2], 16).unwrap_or(0);
-            let g = u8::from_str_radix(&hex[2..4], 16).unwrap_or(0);
-            let b = u8::from_str_radix(&hex[4..6], 16).unwrap_or(0);
-            format!("{};{};{}", r, g, b)
-        } else {
-            return Err(RuntimeError::common(
-                "invalid hex color format".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
+        true_color_by_hex(hex, is_bg, ctx)?
     } else {
         // Parse RGB values
         let parts: Vec<&str> = color_spec.split(',').collect();
-        if parts.len() == 3 {
-            format!("{}", parts.join(";"))
-        } else {
-            return Err(RuntimeError::common(
-                "invalid color format, expected hex or r,g,b".into(),
-                ctx.clone(),
-                0,
-            ));
+        match parts.len() {
+            1 => {
+                // Parse name
+                if let Some((r, g, b)) = COLOR_MAP.get(&color_spec.as_str()) {
+                    format!("{};{};{}", r, g, b)
+                } else {
+                    return Err(RuntimeError::common(
+                        "invalid color name".into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            }
+            // Parse RGB
+            3 => format!("{}", parts.join(";")),
+            _ => {
+                return Err(RuntimeError::common(
+                    "invalid color format, expected hex or r,g,b".into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
         }
     };
 

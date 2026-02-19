@@ -1,6 +1,7 @@
 pub mod about_lib;
 pub mod boolean_lib;
 pub mod bset_lib;
+pub mod colors;
 pub mod console_lib;
 pub mod filesize_lib;
 pub mod from_lib;

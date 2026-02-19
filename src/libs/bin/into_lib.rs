@@ -82,6 +82,11 @@ pub fn table(
                     .iter()
                     .map(|e| e.to_string())
                     .collect::<Vec<_>>()
+            } else if let Expression::BSet(list) = &args[1] {
+                list.as_ref()
+                    .iter()
+                    .map(|e| e.to_string())
+                    .collect::<Vec<_>>()
             } else {
                 vec![args[1].to_string()]
             }
@@ -368,7 +373,7 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
             let items: Vec<String> = set.iter().map(|e| expr_to_toml_string(e, None)).collect();
             format!("[{}]", items.join(","))
         }
-        // 映射表处理（核心改进）
+
         Expression::Map(map) => {
             let mut output = Vec::new();
             let mut tables = BTreeMap::new();
@@ -377,6 +382,52 @@ fn expr_to_toml_string(expr: &Expression, table_prefix: Option<&str>) -> String 
             // 分离简单键和嵌套表
             for (key, value) in map.as_ref() {
                 if let Expression::Map(_) = value {
+                    tables.insert(key.clone(), value);
+                } else if let Expression::HMap(_) = value {
+                    tables.insert(key.clone(), value);
+                } else {
+                    simple_keys.insert(key.clone(), value);
+                }
+            }
+
+            // 处理当前层简单键值对
+            for (key, value) in &simple_keys {
+                let line = format!("{} = {}", key, expr_to_toml_string(value, None));
+                output.push(line);
+            }
+
+            // 处理嵌套表
+            for (table_name, table_expr) in &tables {
+                let full_table_name = match table_prefix {
+                    Some(prefix) => format!("{prefix}.{table_name}"),
+                    None => table_name.clone(),
+                };
+
+                // 添加表头
+                output.push(format!("\n[{full_table_name}]"));
+
+                // 递归处理子表
+                let table_content = expr_to_toml_string(table_expr, Some(&full_table_name));
+
+                // 添加子表内容（保留缩进）
+                for line in table_content.lines() {
+                    output.push(line.to_string());
+                }
+            }
+
+            output.join("\n")
+        }
+
+        Expression::HMap(map) => {
+            let mut output = Vec::new();
+            let mut tables = BTreeMap::new();
+            let mut simple_keys = BTreeMap::new();
+
+            // 分离简单键和嵌套表
+            for (key, value) in map.as_ref() {
+                if let Expression::Map(_) = value {
+                    tables.insert(key.clone(), value);
+                } else if let Expression::HMap(_) = value {
                     tables.insert(key.clone(), value);
                 } else {
                     simple_keys.insert(key.clone(), value);
@@ -432,6 +483,13 @@ pub fn json(
                 .collect();
             format!("{{{}}}", pairs.join(","))
         }
+        Expression::HMap(map) => {
+            let pairs: Vec<String> = map
+                .iter()
+                .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
+                .collect();
+            format!("{{{}}}", pairs.join(","))
+        }
         _ => expr_to_json_string(expr),
     };
     Ok(Expression::String(json_str))
@@ -453,6 +511,13 @@ fn expr_to_json_string(expr: &Expression) -> String {
             format!("[{}]", items.join(","))
         }
         Expression::Map(map) => {
+            let pairs: Vec<String> = map
+                .iter()
+                .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
+                .collect();
+            format!("{{{}}}", pairs.join(","))
+        }
+        Expression::HMap(map) => {
             let pairs: Vec<String> = map
                 .iter()
                 .map(|(k, v)| format!("\"{}\":{}", k, expr_to_json_string(v)))
@@ -515,6 +580,23 @@ pub fn csv(
             String::from_utf8(writer.into_inner().unwrap()).unwrap()
         }
         Expression::Map(map) => {
+            let mut writer = csv::WriterBuilder::new()
+                .delimiter(delimiter) // 设置分隔符
+                .from_writer(vec![]);
+
+            let sorted_keys: Vec<_> = map.keys().collect();
+
+            writer.write_record(&sorted_keys).unwrap();
+
+            let record: Vec<_> = sorted_keys
+                .iter()
+                .map(|k| expr_to_json_string(map.get(*k).unwrap()))
+                .collect();
+
+            writer.write_record(&record).unwrap();
+            String::from_utf8(writer.into_inner().unwrap()).unwrap()
+        }
+        Expression::HMap(map) => {
             let mut writer = csv::WriterBuilder::new()
                 .delimiter(delimiter) // 设置分隔符
                 .from_writer(vec![]);

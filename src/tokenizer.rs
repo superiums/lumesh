@@ -1255,7 +1255,6 @@ fn is_cfm_mode(input: Input<'_>) -> bool {
         true => true,
         false => match input.starts_with(":") {
             true => false,
-            #[cfg(unix)]
             false => !input.contains("\n") && cfm_enabled,
         },
     })

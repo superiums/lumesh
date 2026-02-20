@@ -1577,7 +1577,7 @@ fn normalize_linebreaks(tokens: &mut Vec<Token>) {
 // -- 脚本解析 --
 pub fn tokenize_source(input: &Str) -> Result<Vec<Token>, nom::Err<SyntaxErrorKind>> {
     #[cfg(windows)]
-    let input: Str = input.trim_end().trim_matches('\0').into();
+    let input: Str = input.trim_matches('\0').into();
     #[cfg(windows)]
     let tokenization_input = Input::new(&input);
     // 词法分析阶段
@@ -1860,7 +1860,12 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
                     ))
                 }
                 #[cfg(windows)]
-                Expression::String(s) if (s.contains(":\\") || s.contains(".\\")) => {
+                Expression::String(s)
+                    if (s.contains(":\\")
+                        || s.contains(".\\")
+                        || s.contains(":/")
+                        || s.contains("./")) =>
+                {
                     if s.chars().any(|c| c.is_control() || c == '\0') {
                         return Err(nom::Err::Error(SyntaxErrorKind::CustomError(
                             "Invalid characters in command".to_string(),
@@ -1868,7 +1873,7 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
                         )));
                     }
                     // 验证 Windows 路径格式
-                    if s.contains(":\\") && s.len() < 3 {
+                    if (s.contains(":\\") || s.contains(":/")) && s.len() < 3 {
                         return Err(nom::Err::Error(SyntaxErrorKind::CustomError(
                             "Invalid Windows path format".to_string(),
                             input.get_str_slice(),

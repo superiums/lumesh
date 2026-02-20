@@ -279,6 +279,12 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
                     if c == '\\' {
                         // 检查转义空格
                         if let Some(next_c) = chars.next() {
+                            #[cfg(windows)]
+                            if matches!(&next_c, ' ') {
+                                places += c.len_utf8() + next_c.len_utf8();
+                                continue; // 跳过转义空格
+                            }
+                            #[cfg(unix)]
                             if matches!(&next_c, ' ' | '"' | '\'') {
                                 places += c.len_utf8() + next_c.len_utf8();
                                 continue; // 跳过转义空格
@@ -335,7 +341,7 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
             if places >= input.len()
             // if (input.len() - punct.len() <= 2 && input.chars().nth(2).is_none())
             {
-                return Ok(input.split_at(places));
+                return Ok(input.split_at(input.len()));
             }
         }
         Err(NOT_FOUND)
@@ -346,6 +352,13 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
 #[cfg(windows)]
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
+        // allow unix style
+        path_tag("/"),
+        path_tag("../"),
+        path_tag("./"),
+        path_tag("*/"),
+        path_tag("**/"),
+        // win style
         path_tag("--"),
         path_tag("-"),
         win_abpath_tag(":"),
@@ -643,27 +656,6 @@ fn linebreak(mut input: Input<'_>) -> TokenizationResult<'_> {
     }
 
     if let Some((rest, nl_slice)) = input.strip_prefix("\n") {
-        // dbg!(nl_slice);
-        // let original_str = input.as_original_str();
-
-        // // 1. 计算换行符的字节位置
-        // let current_offset = original_str.len().saturating_sub(rest.len() + 1);
-
-        // match find_prev_char(original_str, current_offset) {
-        //     Some(c) => {
-        //         // dbg!(c);
-        //         if matches!(c, '{' | '(' | '[' | ',' | '>' | '=' | ';' | '\n' | '\\') {
-        //             // skip ; and \n because there's already a linebreak parsed.
-        //             // > is for ->
-        //             // dbg!("=== skip ");
-        //             return Err(NOT_FOUND);
-        //         }
-        //     }
-        //     // 读取前面字符失败，跳过
-        //     None => return Err(NOT_FOUND),
-        // }
-        // dbg!("---> LineBreak ", &nl_slice);
-
         Ok((rest, nl_slice))
     } else if let Some((rest, matched)) = input.strip_prefix(";") {
         Ok((rest, matched))
@@ -1263,6 +1255,7 @@ fn is_cfm_mode(input: Input<'_>) -> bool {
         true => true,
         false => match input.starts_with(":") {
             true => false,
+            #[cfg(unix)]
             false => !input.contains("\n") && cfm_enabled,
         },
     })

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.12.8]
+- fix path char after ~ lossing in windows
+- allow unix style `/` path separator in windows
+
+
 ## [0.12.7]
 - more support for BtreeSet
 - fix printf to print insteadof return value

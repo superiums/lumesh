@@ -353,7 +353,6 @@ fn win_abpath_tag(_: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> 
 fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         // allow unix style
-        path_tag("/"),
         path_tag("../"),
         path_tag("./"),
         path_tag("*/"),
@@ -368,13 +367,13 @@ fn argument_symbol(input: Input<'_>) -> TokenizationResult<'_> {
         path_tag("*\\"),
         path_tag("**\\"),
         path_tag("*."),
-        path_tag("http:"),
-        path_tag("https:"),
-        path_tag("ftp:"),
-        path_tag("ftps:"),
-        path_tag("file:"),
-        // keyword_alone_or_end("~"),
-        // keyword_alone_or_end("/"),
+        alt((
+            path_tag("http:"),
+            path_tag("https:"),
+            path_tag("ftp:"),
+            path_tag("ftps:"),
+            path_tag("file:"),
+        )),
         keyword_alone_or_end("."),
         keyword_alone_or_end(".."),
         keyword_alone_or_end("&-"),

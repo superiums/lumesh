@@ -345,8 +345,8 @@ pub fn regist_const_color() -> BTreeMap<&'static str, BuiltinInfo> {
         BG_yellow => "",""
         BG_yellowgreen => "",""
 
-        FGT_ffffff => "true color for front ground in hex format","<000000..ffffff>"
-        BGT_ffffff => "true color for back ground in hex format","<000000..ffffff>"
+        FGX_ffffff => "true color for front ground in hex format","<000000..ffffff>"
+        BGX_ffffff => "true color for back ground in hex format","<000000..ffffff>"
         FG_256 => "256 color for front ground","<1..=256>"
         BG_256 => "256 color for back ground","<1..=256>"
     })
@@ -541,7 +541,7 @@ pub fn handle_color(arg: &str, ctx: &Expression) -> Result<Expression, RuntimeEr
                 }
             }
         }
-    } else if let Some(bg_color) = arg.strip_prefix("BGT_") {
+    } else if let Some(bg_color) = arg.strip_prefix("BGX_") {
         true_color_by_hex(bg_color, true, ctx)
     } else if let Some(fg_color) = arg.strip_prefix("FG_") {
         match fg_color.len() {
@@ -554,7 +554,7 @@ pub fn handle_color(arg: &str, ctx: &Expression) -> Result<Expression, RuntimeEr
                 }
             }
         }
-    } else if let Some(fg_color) = arg.strip_prefix("FGT_") {
+    } else if let Some(fg_color) = arg.strip_prefix("FGX_") {
         true_color_by_hex(fg_color, false, ctx)
     } else {
         if arg.chars().next().is_some_and(|x| x.is_uppercase()) {

@@ -22,12 +22,12 @@
   + number between 1 and 256 for 256 color: `FG_255`
     
 > true color in hex format
-  + prefix `FGT_` for true color in hex: `FGT_a0b1c2`
-  + prefix `BGT_` for true color in hex: `BGT_A0B1C2`
+  + prefix `FGX_` for true color in hex: `FGX_a0b1c2`
+  + prefix `BGX_` for true color in hex: `BGX_A0B1C2`
   both upper/lower case is ok
 
 - introduce const `STYLE`
-  
+- introduce const `MATH`
 
 ## [0.12.6]
 - optimize append_args

@@ -887,8 +887,8 @@ fn filter(
         }
     };
 
-    let cond = Rc::new(list_exp);
-    let list = get_list_ref(&cond, ctx)?;
+    let cond = Rc::new(target);
+    let list = get_list_ref(&list_exp, ctx)?;
 
     match fn_arg_count {
         1 => {

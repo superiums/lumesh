@@ -289,20 +289,17 @@ fn path_tag(punct: &str) -> impl '_ + Fn(Input<'_>) -> TokenizationResult<'_> {
                                 places += c.len_utf8() + next_c.len_utf8();
                                 continue; // 跳过转义空格
                             }
+                            places += next_c.len_utf8();
                         }
-                    }
-
-                    if c.is_ascii_whitespace() {
+                    } else if c.is_ascii_whitespace() {
                         break; // 遇到普通空格，结束
-                    }
-
-                    if matches!(&c, ';' | '`' | ')' | ']' | '}' | '|' | '>') {
+                    } else if matches!(&c, ';' | '`' | ')' | ']' | '}' | '|' | '>') {
                         break; // 遇到特殊字符，结束
                     }
 
                     places += c.len_utf8(); // 累加字符长度
                 }
-                // dbg!(places, punct, punct.len(), input.len());
+
                 if places > 1 {
                     return Ok(input.split_at(places));
                 }

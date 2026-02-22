@@ -84,6 +84,18 @@ get_asset_name() {
             ;;  
     esac  
 }  
+
+set_macos_path() {
+    if [ "$PLATFORM" = "darwin" ]; then
+        if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ]; then
+            CONFIG_DIR="/Library/Application Support/lumesh"
+            DOC_DIR="/Library/Application Support"
+        else
+            CONFIG_DIR="$HOME/Library/Application Support/lumesh"
+            DOC_DIR="$HOME/Library/Application Support"
+        fi
+    fi
+}
   
 # Ask for installation type  
 ask_install_type() {  
@@ -442,6 +454,8 @@ main() {
     detect_platform  
     echo -e "${GREEN}Detected platform: $PLATFORM-$ARCH ($LIBC)${NC}"  
   
+    set_macos_path
+    
     get_latest_version  
     download_binary  
     download_data  

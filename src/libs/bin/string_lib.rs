@@ -38,11 +38,11 @@ pub fn regist_lazy() -> LazyModule {
         // 格式化
         pad_start, pad_end, center, wrap,
         // 样式
-        href, bold, faint, italic, underline, blink, invert, strike,
+        href, bold, dim, italic, underline, blink, invert, strike,
         // 标准颜色
         black, red, green, yellow, blue, magenta, cyan, white,
         // 高级颜色
-        color256, color256_bg, color, color_bg, colors,
+        clr, clr_bg, color, color_bg, colors,
     })
 }
 
@@ -110,7 +110,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
        // 样式
        href => "create terminal hyperlink", "<url> <text>"
        bold => "apply bold styling", "<string>"
-       faint => "apply faint/dim styling", "<string>"
+       dim => "apply dim styling", "<string>"
        italic => "apply italic styling", "<string>"
        underline => "apply underline styling", "<string>"
        blink => "apply blinking effect", "<string>"
@@ -128,8 +128,8 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
        white => "apply white foreground", "<string>"
 
        // 高级颜色
-       color256 => "apply color using 256-color code", "<string> <color_spec>"
-       color256_bg => "apply background color using 256-color code", "<string> <color_spec>"
+       clr => "apply color using 256-color code", "<string> <color_spec>"
+       clr_bg => "apply background color using 256-color code", "<string> <color_spec>"
        color => "apply true color using RGB values or color_name", "<string> <hex_color|color_name|r,g,b>"
        color_bg => "apply True Color background using RGB values or color_name", "<string> <hex_color|color_name|r,g,b>"
        colors => "list all color_name for True Color", "[skip_colorized?]"
@@ -687,12 +687,12 @@ fn bold(
     Ok(format!("\x1b[1m{}\x1b[m\x1b[0m", text).into())
 }
 
-fn faint(
+fn dim(
     args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("faint", &args, 1, ctx)?;
+    check_exact_args_len("dim", &args, 1, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
 
     Ok(format!("\x1b[2m{}\x1b[m\x1b[0m", text).into())
@@ -828,24 +828,24 @@ fn white(
     Ok(format!("\x1b[97m{}\x1b[m\x1b[0m", text).into())
 }
 // Advanced Color Functions
-fn color256(
+fn clr(
     args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("color256", &args, 2, ctx)?;
+    check_exact_args_len("clr", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let color = get_integer_ref(&args[1], ctx)? as usize;
 
     Ok(format!("\x1b[38;5;{}m{}\x1b[m\x1b[0m", color, text).into())
 }
 
-fn color256_bg(
+fn clr_bg(
     args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("color256_bg", &args, 2, ctx)?;
+    check_exact_args_len("clr_bg", &args, 2, ctx)?;
     let text = get_string_ref(&args[0], ctx)?;
     let color = get_integer_ref(&args[1], ctx)? as usize;
     Ok(format!("\x1b[48;5;{}m{}\x1b[m\x1b[0m", color, text).into())

@@ -13,7 +13,7 @@ use crate::{
 
 pub fn regist_se() -> HashMap<&'static str, SelfExpandFunc> {
     let mut module: HashMap<&'static str, SelfExpandFunc> = HashMap::new();
-    module.insert("printf", printf);
+    module.insert("format", format);
     module.insert("where", r#where);
     module.insert("repeat", repeat);
     module.insert("debug", debug);
@@ -166,13 +166,13 @@ fn r#typeof(
 }
 
 // Print Formated
-fn printf(
+fn format(
     args: &[Expression],
     env: &mut Environment,
     state: &mut State,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("printf", &args, 1.., ctx)?;
+    check_args_len("format", &args, 1.., ctx)?;
     let template_expr = args[0].eval_mut(state, env, 0)?;
     let template = get_string_arg(template_expr, ctx)?;
 

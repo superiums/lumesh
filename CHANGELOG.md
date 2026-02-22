@@ -4,6 +4,12 @@
 - fix \path char lose for win
 - fix list.filter
 - separate config for macos
+- rename following function name:
+  printf -> format
+  string.faint -> string.dim
+  string.color256 -> string.clr
+  string.color256_bg -> string.clr_bg
+
 
 ## [0.12.8]
 - fix path char after ~ lossing in windows

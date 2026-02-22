@@ -11,7 +11,7 @@ if IS_INTERACTIVE {
     ⚡┓
       ┃ ┓┏┏┳┓┏┓
       ┗┛┗┻┛┗┗┗ '
-    print logo.green().faint() 'lightweight'.color256(38) 'ultimate'.color256(48) 'modern'.color256(51) 'efficient'.color256(45)
+    print logo.green().dim() 'lightweight'.clr(38) 'ultimate'.clr(48) 'modern'.clr(51) 'efficient'.clr(45)
 
 
     ### welcome msg
@@ -98,7 +98,7 @@ if IS_INTERACTIVE {
     alias each = list.map()
     alias table = into.table()
     alias join = list.join()
-    alias open = fs.read()
+    alias fopen = fs.read()
     alias fls = fs.ls('-l')
     alias fmv = fs.mv()
     alias frm = fs.rm()

@@ -9,6 +9,9 @@
   string.faint -> string.dim
   string.color256 -> string.clr
   string.color256_bg -> string.clr_bg
+- update config for all platform
+  use 256 color for more compacity
+  use open in macos
 
 
 ## [0.12.8]

@@ -92,10 +92,13 @@ fn help(
     match args.is_empty() {
         false => match args[0].to_string().as_str() {
             "doc" => {
-                #[cfg(unix)]
-                parse_and_eval("xdg-open https://lumesh.codeberg.page", env);
-                #[cfg(windows)]
-                parse_and_eval("start https://lumesh.codeberg.page", env);
+                if cfg!(target_os = "macos") {
+                    parse_and_eval("open https://lumesh.codeberg.page", env);
+                } else if cfg!(windows) {
+                    parse_and_eval("start https://lumesh.codeberg.page", env);
+                } else {
+                    parse_and_eval("xdg-open https://lumesh.codeberg.page", env);
+                }
             }
             "libs" => {
                 writeln!(s, "Builtin Library List\n").unwrap();

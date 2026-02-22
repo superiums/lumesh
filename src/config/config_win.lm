@@ -5,7 +5,7 @@ if IS_INTERACTIVE {
     ⚡┓
       ┃ ┓┏┏┳┓┏┓
       ┗┛┗┻┛┗┗┗ '
-    print logo.green().faint() 'lightweight'.color('skyblue') 'ultimate'.color('olivedrab') 'modern'.color('tomato') 'efficient'.color('mediumpurple')
+    print logo.green().dim() 'lightweight'.clr(38) 'ultimate'.clr(48) 'modern'.clr(51) 'efficient'.clr(45)
 
 
     ### welcome msg
@@ -93,7 +93,7 @@ if IS_INTERACTIVE {
     alias table = into.table()
     alias format = string.format()
     alias join = list.join()
-    alias open = fs.read()
+    alias fopen = fs.read()
     alias cat = fs.read()
     alias ls = fs.ls('-l')
     alias mkdir = fs.mkdir()

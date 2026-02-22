@@ -133,12 +133,14 @@ impl ParamCompleter {
                 vec![
                     PathBuf::from(base_dir),
                     dirs::data_local_dir()
-                        .unwrap_or(PathBuf::from("~/.local/share"))
+                        .unwrap_or(PathBuf::from("~/Library/Application Support"))
                         .join("lumesh/vendor_completions"),
                     dirs::data_local_dir()
-                        .unwrap_or(PathBuf::from("~/.local/share"))
+                        .unwrap_or(PathBuf::from("~/Library/Application Support"))
                         .join("lumesh/completions"),
                     // macOS 上不使用 /usr/share 路径
+                    PathBuf::from("/Library/Application Support/lumesh/vendor_completions"),
+                    PathBuf::from("/Library/Application Support/lumesh/completions"),
                 ]
             }
             #[cfg(not(target_os = "macos"))]

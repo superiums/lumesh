@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.12.9]
+- fix \path char lose for win
+- fix list.filter
+- separate config for macos
+
 ## [0.12.8]
 - fix path char after ~ lossing in windows
 - allow unix style `/` path separator in windows

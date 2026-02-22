@@ -11,7 +11,8 @@ if IS_INTERACTIVE {
     ⚡┓
       ┃ ┓┏┏┳┓┏┓
       ┗┛┗┻┛┗┗┗ '
-    print logo.green().faint() 'lightweight'.color('skyblue') 'ultimate'.color('olivedrab') 'modern'.color('tomato') 'efficient'.color('mediumpurple')
+    print logo.green().dim() 'lightweight'.clr(38) 'ultimate'.clr(48) 'modern'.clr(51) 'efficient'.clr(45)
+
 
 
     ### welcome msg
@@ -36,7 +37,7 @@ if IS_INTERACTIVE {
     #     + (if (fs.exists '.git') {git branch --show-current | .cyan()} else '') \
     #     + '> '.green().bold()
     # }
-    include ./prompt_ka.lm
+    include prompt_ka.lm
 
     ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'
@@ -99,7 +100,7 @@ if IS_INTERACTIVE {
     alias each = list.map()
     alias table = into.table()
     alias join = list.join()
-    alias open = fs.read()
+    alias fopen = fs.read()
     alias fls = fs.ls('-l')
     alias fmv = fs.mv()
     alias frm = fs.rm()

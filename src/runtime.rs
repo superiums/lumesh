@@ -175,6 +175,10 @@ pub fn init_config(env: &mut Environment) {
             if let Err(e) = write(&profile, INTRO_PRELUDE) {
                 eprintln!("Error while writing prelude: {e}");
             }
+            env.define(
+                "SCRIPT",
+                Expression::String(profile.to_string_lossy().to_string()),
+            );
         }
 
         if !parse_and_eval(INTRO_PRELUDE, env) {
@@ -195,6 +199,9 @@ pub fn init_config(env: &mut Environment) {
         // MAX_SYNTAX_RECURSION = run_rec as usize;
         MAX_SYNTAX_RECURSION.with_borrow_mut(|v| *v = run_rec as usize)
     }
+
+    // clear env `SCRIPT`, to let modman recognize current dir.
+    env.undefine("SCRIPT");
 
     // cmds
     init_cmds(env);

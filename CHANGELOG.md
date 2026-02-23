@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.13.2]
+- clear env `SCRIPT` after init config
+
 ## [0.13.1]
 - fix comment with prefix `# `
 - update theme config with `COLOR` const

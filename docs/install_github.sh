@@ -270,7 +270,7 @@ download_data() {
     $sudo_cmd tar -xzf "$temp_data" -C "$DOC_DIR"  
     if [ -d "$DOC_DIR/lumesh/examples" ]; then  
         cp "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"  
-        cp "$DOC_DIR/lumesh/examples/prompt*.lm" "$CONFIG_DIR/" 2>/dev/null || true  
+        cp $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true  
     fi
     rm "$temp_data"  
   

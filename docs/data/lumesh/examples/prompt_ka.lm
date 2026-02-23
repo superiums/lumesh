@@ -5,20 +5,25 @@ fn LUME_PROMPT_TEMPLATE(path, ctx) {
 	let times = time.now("%H:%M:%S")
 	let cfm = $ctx.cfm ? 'CFM' : ''
 	let strict = $ctx.strict ? 'S' : ''
-  # let left = [$host, $who]
-  let left = [$host,$who,$path,$times]
-  let right = [$gitb,$cfm,$strict]
-  let w = 6 + $left.foldl((x,i) -> $i + $x.len(), 0) + ($left.len() - 1) * 3
-  let wr = $right.foldl((x,i) -> $i + $x.len(), 0) + ($right.len() - 1) * 1
 
-  let ws = console.width() - $w - $wr
-  if $ws < 0 { ws = 0 }
-  let spaces = '·' * $ws
+    let left = [$host,$who,$path,$times]
+    let right = [$gitb,$cfm,$strict]
+    let w = 6 + $left.foldl((x,i) -> $i + $x.len(), 0) + ($left.len() - 1) * 3
+    let wr = $right.foldl((x,i) -> $i + $x.len(), 0) + ($right.len() - 1) * 1
 
-  let colors = ['tan','darkgreen','orange','dodgerblue']
-  let colors_r = ['dodgerblue','seagreen','darksalmon']
-  let left_c = $left.zip($colors) |> x ->  $x[0].color($x[1])
-  let right_c = $right.zip($colors_r) |> x ->  $x[0].color($x[1])
-  '╭───['.green() + $left_c.join(']─['.green()) +']'.green() + $spaces.green() + $right_c.join('─'.green()) + "\n│\n╰─> ".green() 
+    let ws = console.width() - $w - $wr
+    if $ws < 0 { ws = 0 }
+    let spaces = '·' * $ws
+
+    # green serial
+    let colors = [28, 64, 70, 76]
+    let colors_r = [76, 58, 130]
+
+    # purple serial
+    # let colors = [141, 135, 177, 213]  # 淡紫、紫、淡粉紫、粉紫
+    # let colors_r = [213, 215, 219]     # 粉紫、金橙、浅粉紫
+
+    let left_c = $left.zip($colors) |> x ->  $x[0].clr($x[1])
+    let right_c = $right.zip($colors_r) |> x ->  $x[0].clr($x[1])
+    '╭───['.green() + $left_c.join(']─['.green()) +']'.green() + $spaces.green() + $right_c.join('─'.green()) + "\n│\n╰─> ".green()
 } ?: e -> print $e
- 

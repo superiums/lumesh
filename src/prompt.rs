@@ -203,6 +203,9 @@ impl PromptEngine {
         // 简约但有用的默认提示符
         if let Ok(cwd) = env::current_dir() {
             if let Some(cwd_str) = cwd.to_str() {
+                #[cfg(windows)]
+                return format!("(lumesh){cwd_str} ❯ ");
+                #[cfg(unix)]
                 return format!("\x1b[1;34m(lumesh)\x1b[0m{cwd_str} \x1b[32m❯\x1b[0m ");
             }
         }

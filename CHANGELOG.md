@@ -3,7 +3,7 @@
 ## [0.13.1]
 - fix comment with prefix `# `
 - update theme config with `COLOR` const
-- 
+- update prompt_ka color with 256 color
 
 ## [0.13.0]
 - fix install script to cp prompt theme

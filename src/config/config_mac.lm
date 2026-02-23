@@ -11,7 +11,7 @@ if IS_INTERACTIVE {
     ⚡┓
       ┃ ┓┏┏┳┓┏┓
       ┗┛┗┻┛┗┗┗ '
-    print logo.green().dim() 'lightweight'.clr(38) 'ultimate'.clr(48) 'modern'.clr(51) 'efficient'.clr(45)
+    print logo.clr(rand.int(1,230)) 'lightweight'.clr(38) 'ultimate'.clr(48) 'modern'.clr(51) 'efficient'.clr(45)
 
 
     ### welcome msg
@@ -40,10 +40,10 @@ if IS_INTERACTIVE {
     LUME_THEME = 'ayu_dark'
 
     ### syntax theme modify
-    #LUME_THEME_CONFIG = {
+    # LUME_THEME_CONFIG = {
     #    keyword: "\x1b[38;5;170m",
     #    ...
-    #}
+    # }
 
     ### ---interactive---
     ### default repl mode

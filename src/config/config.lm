@@ -2,10 +2,16 @@
 # only login mode need PATH, other mode will retrieve it from parent shell.
 if IS_LOGIN {
     set PATH = '/usr/local/bin:/usr/bin:/bin'
+    # security enhance: lume will exit directly if this return false.
+    # set LUME_KNOCK_VALIDATOR = () -> {
+    #     let ans = read "who's that?"
+    #     ans == 'zhimakaimen'
+    # }
 }
 
 ##### config for interactive mode
 if IS_INTERACTIVE {
+
     ### ---appearance---
     let logo = '
     ⚡┓
@@ -40,10 +46,10 @@ if IS_INTERACTIVE {
     LUME_THEME = 'ayu_dark'
 
     ### syntax theme modify
-    #LUME_THEME_CONFIG = {
+    # LUME_THEME_CONFIG = {
     #    keyword: "\x1b[38;5;170m",
     #    ...
-    #}
+    # }
 
     ### ---interactive---
     ### default repl mode

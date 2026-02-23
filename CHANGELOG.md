@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.13.0]
+- fix install script to cp prompt theme
+- change default prompt to uncolored line for windows
+- random color for logo
+- require comment begin with `# `
+- introduce `LUME_KNOCK_VALIDATOR`
+  it's a validator for security.
+
+    this function will be executed before REPL. if return false, lume will exit directly.
+
+  > if you set lume as login shell, this should protect you after your ssh was cracked by someone.
+
 ## [0.12.9]
 - fix \path char lose for win
 - fix list.filter

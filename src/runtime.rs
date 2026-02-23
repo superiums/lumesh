@@ -61,6 +61,19 @@ pub fn parse(input: &str) -> Result<Expression, SyntaxError> {
 pub fn check(input: &str) -> bool {
     parse_script(input).is_ok()
 }
+pub fn knock_validate(env: &mut Environment) {
+    if let Some(validator) = env.get("LUME_KNOCK_VALIDATOR") {
+        match validator {
+            Expression::Function(..) | Expression::Lambda(..) => {
+                let r = validator.apply(vec![]).eval_cmd(env);
+                if let Ok(Expression::Boolean(false)) = r {
+                    std::process::exit(1);
+                }
+            }
+            _ => {}
+        };
+    }
+}
 /// return whether parse success. no matter execute result is.
 pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
     if text.is_empty() {

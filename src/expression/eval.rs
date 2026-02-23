@@ -179,19 +179,20 @@ impl Expression {
     /// 交互命令入口
     #[inline]
     pub fn eval_cmd(&self, env: &mut Environment) -> Result<Self, RuntimeError> {
-        let result = self.eval_mut(&mut State::new(), env, 0);
-        // dbg!(&result);
-        match result {
-            // apply symbol cmds
-            // Ok(Expression::Symbol(sym)) => {
-            //     Expression::Apply(Box::new(Expression::Symbol(sym)), vec![]).eval(env)
-            // }
-            Ok(other) => {
-                // dbg!(other.type_name());
-                Ok(other)
-            }
-            Err(e) => Err(e),
-        }
+        self.eval_mut(&mut State::new(), env, 0)
+        // let result =self.eval_mut(&mut State::new(), env, 0);
+        // // dbg!(&result);
+        // match result {
+        //     // apply symbol cmds
+        //     // Ok(Expression::Symbol(sym)) => {
+        //     //     Expression::Apply(Box::new(Expression::Symbol(sym)), vec![]).eval(env)
+        //     // }
+        //     Ok(other) => {
+        //         // dbg!(other.type_name());
+        //         Ok(other)
+        //     }
+        //     Err(e) => Err(e),
+        // }
     }
     /// 脚本计算入口
     #[inline]

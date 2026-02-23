@@ -5,6 +5,7 @@ use clap::Parser;
 use lumesh::parse_and_eval;
 use lumesh::repl;
 use lumesh::runtime::init_config;
+use lumesh::runtime::knock_validate;
 // 新增模块引用
 // use lumesh::binary;
 // use lumesh::ENV;
@@ -122,7 +123,9 @@ fn main() {
 
     let mut cli_env = env.fork();
     cli_env.define("IS_LOGIN", Expression::Boolean(is_login_shell));
-
+    if is_login_shell {
+        knock_validate(&mut cli_env);
+    }
     // println!("file_n_args {:?}", &cli.file_n_args);
     // println!("file {:?}", &cli.file);
     // println!("cmd_argv {:?}", &cli.cmd_argv);

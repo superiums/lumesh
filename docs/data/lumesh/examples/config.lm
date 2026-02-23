@@ -2,6 +2,12 @@
 # only login mode need PATH, other mode will retrieve it from parent shell.
 if IS_LOGIN {
     set PATH = '/usr/local/bin:/usr/bin:/bin'
+    # security enhance: lume will exit directly if this return false.
+    # set LUME_KNOCK_VALIDATOR = () -> {
+    #     let ans = read "who's that?"
+    #     ans == 'zhimakaimen'
+    # }
+
 }
 
 # #### config for interactive mode
@@ -63,7 +69,7 @@ if IS_INTERACTIVE {
 
     # == completion
     # set LUME_COMPLETION_DIR = '~/.local/share/lumesh/completions'
-    set LUME_COMPLETION_CYCLE = true
+    set LUME_COMPLETION_CYCLE = false
 
     # ## report compute result type and values. default True.
     # set LUME_PRINT_DIRECT= False

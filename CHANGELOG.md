@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.13.1]
+- fix comment with prefix `# `
+- update theme config with `COLOR` const
+- 
+
 ## [0.13.0]
 - fix install script to cp prompt theme
 - change default prompt to uncolored line for windows

@@ -1,6 +1,6 @@
-##### config for interactive mode
+# #### config for interactive mode
 if IS_INTERACTIVE {
-    ### ---appearance---
+    # ## ---appearance---
     let logo = '
     ⚡┓
       ┃ ┓┏┏┳┓┏┓
@@ -8,10 +8,10 @@ if IS_INTERACTIVE {
     print logo.clr(rand.int(1,230)) 'lightweight'.clr(38) 'ultimate'.clr(48) 'modern'.clr(51) 'efficient'.clr(45)
 
 
-    ### welcome msg
+    # ## welcome msg
     # set LUME_WELCOME= 'Welcome to Lumesh!'
 
-    ### prompt
+    # ## prompt
     # MODE: 1=use template; 2=use starship; 0=use default.
     set LUME_PROMPT_SETTINGS = {
         MODE: 1,
@@ -31,37 +31,37 @@ if IS_INTERACTIVE {
     #     + '> '.green().bold()
     # }
 
-    ### base theme for syntax: 'one_dark', 'ayu_dark', 'light'
+    # ## base theme for syntax: 'one_dark', 'ayu_dark', 'light'
     LUME_THEME = 'ayu_dark'
 
-    ### syntax theme modify
+    # ## syntax theme modify
     # LUME_THEME_CONFIG = {
-    #    keyword: "\x1b[38;5;170m",
+    #    keyword: COLOR.GREEN,
     #    ...
     # }
 
-    ### ---interactive---
-    ### default repl mode
+    # ## ---interactive---
+    # ## default repl mode
     # LUME_VI_MODE = true
 
-    ### default strict mode
+    # ## default strict mode
     # set STRICT = true
 
-    ### history file
+    # ## history file
     # set LUME_HISTORY_FILE = '~\AppData\lumesh\lume_histroy'
 
     # == completion
     # set LUME_COMPLETION_DIR = '~\AppData\lumesh\completions'
     set LUME_COMPLETION_CYCLE = true
 
-    ### report compute result type and values. default True.
+    # ## report compute result type and values. default True.
     # set LUME_PRINT_DIRECT= False
 
 
-    ### sudo cmd for Alt+s
+    # ## sudo cmd for Alt+s
     set LUME_SUDO_CMD = 'doas'
 
-    ### key bindings
+    # ## key bindings
     # NONE:0, SHIFT:2, ALT:4, CTRL:8,
     # ALT_SHIFT:6, CTRL_SHIFT: 10, CTRL_ALT:12, CTRL_ALT_SHIFT:14
     set LUME_HOT_MODIFIER = 4
@@ -74,7 +74,7 @@ if IS_INTERACTIVE {
         e: 'let tc= $cache\lm_cmd; "" >! $tc; notepad $tc; let lmcode=fs.read($tc); if len($lmcode) && ui.confirm("Execute it?"){exec_str($lmcode)}'
     }
 
-    ### abbreviations
+    # ## abbreviations
 
     set LUME_ABBREVIATIONS = {
         cpu: 'wmic cpu get name',
@@ -83,7 +83,7 @@ if IS_INTERACTIVE {
         ip: 'ipconfig /all',
     }
 
-    ### alias
+    # ## alias
     alias cds = sys.cds()
     alias int = into.int()
     alias str = into.str()
@@ -109,8 +109,8 @@ if IS_INTERACTIVE {
     alias dirname = fs.dir_name()
     alias doc = explorer https://lumesh.codeberg.page
 
-    ### ---ai---
-    ### default AI Helper settings. following is default.
+    # ## ---ai---
+    # ## default AI Helper settings. following is default.
     # set LUME_AI_CONFIG = {
     #     host: 'localhost:11434',
     #     complete_url: '/completion',
@@ -121,7 +121,7 @@ if IS_INTERACTIVE {
     #     system_prompt: "you're a lumesh shell script helper",
     # }
 
-    ### ---update---
+    # ## ---update---
     fn update(){
         println 'checking latest version...'
         let url = 'https://codeberg.org/santo/lumesh/releases/latest'
@@ -150,10 +150,10 @@ if IS_INTERACTIVE {
 
 }
 # else {
-##### config for script mode
+# #### config for script mode
 # }
 
-##### config for all mode
+# #### config for all mode
 # IFS affect: 0:never; 2:cmd args; 4:for; 8:string.split; 16:csv; 32:pick; 62:all
 set LUME_IFS_MODE=2
 # set LUME_MODULES_PATH='~\AppData\Local\lumesh\mods'

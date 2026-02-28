@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.3]
+- fix prompt_ka
+- fix fish2csv
+- update grammar so
+- update install with `cp -f`
+- update tokenizer for shebang
+
 ## [0.13.2]
 - clear env `SCRIPT` after init config
 

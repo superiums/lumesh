@@ -12,8 +12,7 @@ fn LUME_PROMPT_TEMPLATE(path, ctx) {
     let wr = $right.foldl((x,i) -> $i + $x.len(), 0) + ($right.len() - 1) * 1
 
     let ws = console.width() - $w - $wr
-    if $ws < 0 { ws = 0 }
-    let spaces = '·' * $ws
+    let spaces = $ws > 0 ? '·' * $ws : ''
 
     # green serial
     let colors = [28, 64, 70, 76]

@@ -41,40 +41,40 @@ fn trans(input_file,output_dir='/tmp'){
 
     if !input_file { return }
     orderi += 1
-    let file_base = Fs.base_name(True,input_file).at(0)
-    let suc_dir =  Fs.join(output_dir,'completions')
-    let deel_dir =  Fs.join(output_dir,'unprocessed')
-    let output_file = Fs.join(suc_dir, file_base + '.csv')
-    let deel_file = Fs.join(deel_dir, '_' + file_base + '.csv')
+    let file_base = fs.base_name(True,input_file).at(0)
+    let suc_dir =  fs.join(output_dir,'completions')
+    let deel_dir =  fs.join(output_dir,'unprocessed')
+    let output_file = fs.join(suc_dir, file_base + '.csv')
+    let deel_file = fs.join(deel_dir, '_' + file_base + '.csv')
     # println deel_file
 
     # 检查输入文件是否存在
-    if !Fs.exists(input_file) {
+    if !fs.exists(input_file) {
         print("错误: 输入文件不存在: ", input_file)
         exit(1)
     }
     
    # 读取并解析fish completion文件
-    let content = Fs.read(input_file)
+    let content = fs.read(input_file)
     let lines = content.lines()
 
-    if Fs.exists(output_file){
+    if fs.exists(output_file){
         print("Already have one",output_file)
-        output_file = Fs.join(suc_dir, file_base+'_'+ orderi +'_'+lines.len()+ '.csv')
+        output_file = fs.join(suc_dir, file_base+'_'+ orderi +'_'+lines.len()+ '.csv')
         
     }
-    if Fs.exists(deel_file){
-        deel_file = Fs.join(deel_dir, '_'+file_base+'_'+ orderi +'_'+lines.len()+ '.csv')
+    if fs.exists(deel_file){
+        deel_file = fs.join(deel_dir, '_'+file_base+'_'+ orderi +'_'+lines.len()+ '.csv')
         
     }
 
-    if !Fs.exists(suc_dir) { Fs.mkdir(suc_dir) }
-    if !Fs.exists(deel_dir) { Fs.mkdir(deel_dir) }
+    if !fs.exists(suc_dir) { fs.mkdir(suc_dir) }
+    if !fs.exists(deel_dir) { fs.mkdir(deel_dir) }
     # CSV头部
     # let csv_header = "命令,条件列表,短选项,长选项,参数列表,指令列表,优先级,描述"
     let csv_header = "cmd,conds,short,long,params,dirs,pri,desc"
-    Fs.write(output_file, csv_header + "\n")
-    Fs.write(deel_file, csv_header + "\n")
+    fs.write(output_file, csv_header + "\n")
+    fs.write(deel_file, csv_header + "\n")
 
     let priority = 100  # 默认优先级
     let processed_lines =0
@@ -172,10 +172,10 @@ fn trans(input_file,output_dir='/tmp'){
                 # 写入CSV行
                 if cmd ~: '$' || condition ~: '(' || condition ~: '$' || condition ~: '__' || argument ~: '(' ||  argument ~: '__' || argument ~: '\t' {
                     unprocessed_lines += 1
-                    Fs.append(deel_file, csv_line)
+                    fs.append(deel_file, csv_line)
                 }else{
                     processed_lines += 1
-                    Fs.append(output_file, csv_line)
+                    fs.append(output_file, csv_line)
 
                 }
             }
@@ -185,10 +185,10 @@ fn trans(input_file,output_dir='/tmp'){
     if unprocessed_lines {
         print('需要人工干预的行：'.bold(), unprocessed_lines, deel_file.yellow())
     }else{
-        Fs.rm(deel_file)
+        fs.rm(deel_file)
     }
     if !processed_lines{
-        Fs.rm(output_file)
+        fs.rm(output_file)
     }
     print("转换完成: ".bold() , input_file + " -> " + output_file.green())
 
@@ -208,7 +208,7 @@ let dirs = [
 
 for dir in dirs {
     println dir.green()
-    let arr = (dir | Fs.ls() ?! | .map(f -> Fs.join(dir, f.name)))
+    let arr = (dir | fs.ls() ?! | .map(f -> fs.join(dir, f.name)))
     arr |> trans()
 }
 

@@ -683,7 +683,7 @@ fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
 //     }
 // }
 fn comment(input: Input<'_>) -> TokenizationResult<'_> {
-    if input.starts_with("# ") {
+    if input.starts_with("# ") || input.starts_with("#!") {
         let len = input
             .chars()
             .take_while(|&c| !matches!(c, '\n' | '\r'))

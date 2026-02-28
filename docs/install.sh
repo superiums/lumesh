@@ -245,8 +245,8 @@ download_docs() {
 
     $sudo_cmd tar -xzf "$temp_doc" -C "$DOC_DIR"  
     if [ -d "$DOC_DIR/lumesh/examples" ]; then  
-        cp "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"  
-        cp $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true  
+        cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"  
+        cp -f $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true  
     fi
   
     rm -rf "$temp_doc"

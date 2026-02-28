@@ -46,6 +46,18 @@ Lumesh is a modern shell and scripting language, as a bash replacer, it was comp
 
 ## ⚑ Why Choose Lumesh?
 
+### Pain Points of Traditional Shells
+- **Syntax limitations**: Traditional shell syntax is outdated with a steep learning curve.
+- **Difficult error handling**: Lacks flexible error capture and recovery mechanisms.
+- **Weak data processing**: Struggles with structured data handling.
+- **Insufficient programming capabilities**: Lacks modern programming language features.
+
+### Lumesh’s Solutions
+- **Modern syntax**: Supports destructuring assignment, arrow functions, method chaining, higher-order functions, decorators, and other modern features.
+- **Powerful error handling**: Provides 7 error-catch operators (`?.`, `?:`, `?+`, `??`, `?>`, `?!`, `?~`).
+- **Structured pipelines**: Supports passing and processing structured data within pipelines.
+- **Rich built-in library**: Offers 17 built-in modules covering filesystem, string processing, time operations, and more.
+
 ### Performance Comparison
 
 | Comparison Item |    lume       |     bash      |     dash      |     fish      |
@@ -216,6 +228,11 @@ Recent development has emphasized:
 - Middleware-style decorator support (v0.11.5)
 - Loop iterator optimization (v0.11.5)
 - Local variable support (v0.11.6)
+- Support more data type: HashMap/BtreeSet
+- Support Consts：COLOR, STYLE, MATH
+- Optimize lib execution
+- Security enhance with knock_validator
+
 ---
 
 ![Stargazers over time](https://starchart.cc/superiums/lumesh.svg)

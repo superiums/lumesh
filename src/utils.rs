@@ -53,7 +53,7 @@ pub fn abs_check(path: &str, env: &mut Environment) -> Result<PathBuf, RuntimeEr
         return Ok(abs);
     }
     Err(RuntimeError::common(
-        "File not found".into(),
+        "Entry not found".into(),
         Expression::String(path.to_string()),
         0,
     ))

@@ -13,7 +13,7 @@ use crate::{
         pretty_printer,
     },
     parse_and_eval, reg_all, reg_info,
-    utils::{abs_script, get_current_path},
+    utils::{abs_script, canon, get_current_path},
 };
 
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
@@ -318,50 +318,52 @@ fn cd(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let mut path = if args.len() == 0 {
+    // target
+    let p = if args.len() == 0 {
         "~".to_string()
     } else {
         match args.into_iter().next().unwrap() {
+            Expression::Symbol(path) | Expression::String(path) if path == "-" => {
+                env.get("LWD").map_or("~".to_string(), |x| x.to_string())
+            }
             Expression::Symbol(path) | Expression::String(path) => path,
             other => other.to_string(),
         }
     };
-    if path == "-" {
-        path = env.get("LWD").map_or("~".to_string(), |x| x.to_string());
-    }
-    let _ = std::env::current_dir().and_then(|x| {
-        let xs = x.to_str().unwrap_or_default();
-        env.define("LWD", Expression::String(xs.to_string()));
-        if let Some(Expression::List(paths)) = env.get("PATH_SESSION") {
-            if !paths.iter().any(|p| {
-                if let Expression::String(ps) = p {
-                    ps == xs
-                } else {
-                    false
-                }
-            }) {
-                let mut pn = paths.as_ref().clone();
-                pn.push(Expression::String(xs.to_string()));
-                env.define("PATH_SESSION", Expression::from(pn));
-                return Ok(());
-            }
-        }
-        let mut pn = Vec::with_capacity(10);
-        pn.push(Expression::String(xs.to_string()));
-        env.define("PATH_SESSION", Expression::from(pn));
-        Ok(())
-    });
-
-    if path.starts_with("~") {
-        if let Some(home_dir) = dirs::home_dir() {
-            path = path.replace("~", home_dir.to_string_lossy().as_ref());
-        }
-    }
+    let path = canon(&p, env)?;
+    // before cd
+    let current_dir = get_current_path(env);
+    // cd
     std::env::set_current_dir(&path).map_err(|io_err| {
-        RuntimeError::from_io_error(io_err, "set env path".into(), ctx.clone(), 0)
+        RuntimeError::from_io_error(io_err, "set_current_dir".into(), ctx.clone(), 0)
     })?;
 
-    env.define_in_root("PWD", Expression::String(path));
+    // after cd
+    env.define_in_root(
+        "PWD",
+        Expression::String(path.to_string_lossy().to_string()),
+    );
+
+    let current = current_dir.to_string_lossy();
+    env.define("LWD", Expression::String(current.to_string()));
+    if let Some(Expression::List(paths)) = env.get("PATH_SESSION") {
+        if !paths.iter().any(|p| {
+            if let Expression::String(ps) = p {
+                ps.as_str() == current.as_ref()
+            } else {
+                false
+            }
+        }) {
+            let mut pn = paths.as_ref().clone();
+            pn.push(Expression::String(current.to_string()));
+            env.define("PATH_SESSION", Expression::from(pn));
+        }
+    } else {
+        let mut pn = Vec::with_capacity(10);
+        pn.push(Expression::String(current.to_string()));
+        env.define("PATH_SESSION", Expression::from(pn));
+    }
+
     Ok(Expression::None)
 }
 

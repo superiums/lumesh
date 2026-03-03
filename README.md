@@ -51,13 +51,15 @@ Lumesh is a modern shell and scripting language, as a bash replacer, it was comp
 - **Difficult error handling**: Lacks flexible error capture and recovery mechanisms.
 - **Weak data processing**: Struggles with structured data handling.
 - **Insufficient programming capabilities**: Lacks modern programming language features.
+- **Weak user experience**: Lacks syntax highlight and cmd completions.
 
 ### Lumesh’s Solutions
 - **Modern syntax**: Supports destructuring assignment, arrow functions, method chaining, higher-order functions, decorators, and other modern features.
 - **Powerful error handling**: Provides 7 error-catch operators (`?.`, `?:`, `?+`, `??`, `?>`, `?!`, `?~`).
 - **Structured pipelines**: Supports passing and processing structured data within pipelines.
 - **Rich built-in library**: Offers 17 built-in modules covering filesystem, string processing, time operations, and more.
-
+- **More user friendly expierence**: Support syntax highlight and Completions for both cmd and coding grammar.
+ 
 ### Performance Comparison
 
 | Comparison Item |    lume       |     bash      |     dash      |     fish      |

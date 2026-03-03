@@ -183,12 +183,45 @@ pub fn detect_completion_type(
 
     // Check if we're after a complete command word (parameter context)
     if is_after_command_word(command_section) {
-        return (LumeCompletionType::Param, command_pos);
+        return check_privileged_command(command_section, "doas ", command_pos).unwrap_or(
+            check_privileged_command(command_section, "sudo ", command_pos).unwrap_or(
+                // normal param completion for cmds
+                (LumeCompletionType::Param, command_pos),
+            ),
+        );
+        // if let Some(striped_cmd) = command_section.strip_prefix("doas ") {
+        //     if is_after_command_word(striped_cmd) {
+        //         return (LumeCompletionType::Param, command_pos + 5);
+        //     } else {
+        //         return (LumeCompletionType::Command, command_pos + 5);
+        //     }
+        // } else if let Some(striped_cmd) = command_section.strip_prefix("sudo ") {
+        //     if is_after_command_word(striped_cmd) {
+        //         return (LumeCompletionType::Param, command_pos + 5);
+        //     } else {
+        //         return (LumeCompletionType::Command, command_pos + 5);
+        //     }
+        // }
+        // return (LumeCompletionType::Param, command_pos);
     }
 
     (LumeCompletionType::None, pos)
 }
 
+fn check_privileged_command(
+    command_section: &str,
+    prefix: &str,
+    command_pos: usize,
+) -> Option<(LumeCompletionType, usize)> {
+    if let Some(stripped_cmd) = command_section.strip_prefix(prefix) {
+        if is_after_command_word(stripped_cmd) {
+            return Some((LumeCompletionType::Param, command_pos + prefix.len()));
+        } else {
+            return Some((LumeCompletionType::Command, command_pos + prefix.len()));
+        }
+    }
+    None
+}
 // const SEPARATORS: &[char] = &[';', '|', '(', '{', '`', '\n', '&', '>', '<'];
 /// Shared function to extract command section after last separator
 // : > for CFM

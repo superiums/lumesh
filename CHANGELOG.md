@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.13.4]
+- fix `cd`
+- support cmd/param completion after `doas` and `sudo`
+
 ## [0.13.3]
 - fix prompt_ka
 - fix fish2csv

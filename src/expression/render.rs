@@ -21,27 +21,28 @@ pub fn render_template(
                 if name
                     .as_str()
                     .chars()
-                    .all(|c| !c.is_ascii_punctuation() && !c.is_whitespace())
+                    .any(|c| c.is_ascii_punctuation() || c.is_whitespace())
                 {
-                    return ctx
-                        .handle_variable(name.as_str(), false, state, env, depth)?
-                        .to_string();
+                    return match parse(name.as_str()) {
+                        Ok(expr) => expr
+                            .eval_with_assign(state, env)
+                            .map_or(name.as_str().to_string(), |x| x.to_string()),
+                        Err(e) => {
+                            eprintln!("template `{}` render failed:\n{}", name.as_str(), e);
+                            name.as_str().to_string()
+                        }
+                    };
                 }
-                // dbg!(&name);
-                return match parse(name.as_str()) {
-                    Ok(expr) => expr.eval_with_assign(state, env)?.to_string(),
-                    Err(e) => {
-                        eprintln!("template `{}` render failed:\n{}", name.as_str(), e);
-                        "".to_string()
-                    }
-                };
+                return ctx
+                    .handle_variable(name.as_str(), false, state, env, depth)
+                    .map_or(name.as_str().to_string(), |x| x.to_string());
             }
 
             // 如果没有带大括号的变量，则处理不带大括号的变量
             if let Some(name) = caps.get(2) {
                 return ctx
-                    .handle_variable(name.as_str(), false, state, env, depth)?
-                    .to_string();
+                    .handle_variable(name.as_str(), false, state, env, depth)
+                    .map_or(format!("${}", name.as_str()), |x| x.to_string());
             }
 
             // 默认返回空字符串

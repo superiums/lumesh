@@ -69,7 +69,7 @@ pub fn table(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("cmd", &args, 1.., ctx)?;
+    check_args_len("table", &args, 1.., ctx)?;
 
     let headers = match args.len() {
         3.. => args[..args.len() - 1]

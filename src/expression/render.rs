@@ -1,14 +1,20 @@
 use regex_lite::{Captures, Regex};
 
-use crate::{Environment, parse};
+use crate::{Environment, Expression, RuntimeError, eval::State, parse};
 use std::sync::LazyLock;
 
 // 定义支持两种变量格式的正则表达式
 static VAR_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"\$\{([^{}]+)\}|\$([\w.-]+)").unwrap());
 
-pub fn render_template(template: &str, env: &mut Environment) -> String {
-    VAR_REGEX
+pub fn render_template(
+    template: &str,
+    state: &mut State,
+    env: &mut Environment,
+    depth: usize,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    let r = VAR_REGEX
         .replace_all(template, |caps: &Captures<'_>| {
             // 优先处理带大括号的变量,解析并执行
             if let Some(name) = caps.get(1) {
@@ -17,20 +23,13 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
                     .chars()
                     .all(|c| !c.is_ascii_punctuation() && !c.is_whitespace())
                 {
-                    return env
-                        .get(name.as_str())
-                        .map(|v| v.to_string())
-                        .unwrap_or("".to_string());
+                    return ctx
+                        .handle_variable(name.as_str(), false, state, env, depth)?
+                        .to_string();
                 }
                 // dbg!(&name);
                 return match parse(name.as_str()) {
-                    Ok(expr) => match expr.eval_in_assign(env) {
-                        Ok(r) => r.to_string(),
-                        Err(e) => {
-                            eprintln!("template `{}` execute failed:\n{}", name.as_str(), e);
-                            "".to_string()
-                        }
-                    },
+                    Ok(expr) => expr.eval_with_assign(state, env)?.to_string(),
                     Err(e) => {
                         eprintln!("template `{}` render failed:\n{}", name.as_str(), e);
                         "".to_string()
@@ -40,15 +39,14 @@ pub fn render_template(template: &str, env: &mut Environment) -> String {
 
             // 如果没有带大括号的变量，则处理不带大括号的变量
             if let Some(name) = caps.get(2) {
-                // dbg!(&name);
-                return env
-                    .get(name.as_str())
-                    .map(|v| v.to_string())
-                    .unwrap_or("".to_string());
+                return ctx
+                    .handle_variable(name.as_str(), false, state, env, depth)?
+                    .to_string();
             }
 
             // 默认返回空字符串
             "".to_string()
         })
-        .into_owned()
+        .into_owned();
+    Ok(Expression::String(r))
 }

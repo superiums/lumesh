@@ -256,7 +256,7 @@ impl Expression {
                     }
                 }
                 Self::StringTemplate(template) => {
-                    return Ok(Expression::String(render_template(template, env)));
+                    return render_template(template, state, env, depth, self);
                 }
                 Self::Variable(name) => return job.handle_variable(name, false, state, env, depth),
                 // {

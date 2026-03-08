@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.13.5]
+- fix local var render for template
+- 
+
 ## [0.13.4]
 - fix `cd`
 - support cmd/param completion after `doas` and `sudo`

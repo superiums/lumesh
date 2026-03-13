@@ -1,8 +1,11 @@
 # Changelog
 
+## [0.13.6]
+- introduce `%{}` for explicit scopes
+keep functions/lambdas and loops as isolated scopes by default without explicit declare.
+
 ## [0.13.5]
 - fix local var render for template
-- 
 
 ## [0.13.4]
 - fix `cd`

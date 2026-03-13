@@ -415,7 +415,8 @@ impl PrattParser {
                     "H{" => cut(parse_hashmap)(input),
                     "M{" => cut(parse_bmap)(input),
                     "S{" => cut(parse_bset)(input),
-                    "{" => cut(alt((parse_map, cut(parse_block))))(input),
+                    "%{" => cut(parse_domain_block)(input),
+                    "{" => cut(alt((parse_map, cut(parse_block_as_sequence))))(input),
                     // opx if opx.starts_with("__") => map(parse_operator(input),TokenKind::OperatorPrefix),
                     _ => Err(nom::Err::Error(SyntaxErrorKind::UnknownOperator(
                         op.to_string(),
@@ -1896,7 +1897,11 @@ fn parse_single_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Synta
 fn parse_if_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     let (input, _) = text("if")(input)?;
     let (input, cond) = cut(parse_expr)(input)?;
-    let (input, then_block) = cut(parse_block)(input)?; //must have block to differ with condition
+    let (input, then_block) = cut(alt((
+        parse_domain_block, // 优先识别 %{...} 块
+        parse_block_as_sequence, // 优先识别 {...} 块
+                            // parse_expr,  // 单行表达式（如 x > y ? a : b）
+    )))(input)?; //must have block to differ with condition
     // 解析else分支
     let (input, else_branch) = opt(preceded(
         text("else"),
@@ -1977,11 +1982,28 @@ fn parse_match_flow(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, Syntax
 // 动态识别块或表达式
 fn parse_block_or_expr(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
     alt((
-        parse_block, // 优先识别 {...} 块
-        parse_expr,  // 单行表达式（如 x > y ? a : b）
+        parse_domain_block,      // 优先识别 %{...} 块
+        parse_block_as_sequence, // 优先识别 {...} 块
+        parse_expr,              // 单行表达式（如 x > y ? a : b）
     ))(input)
 }
-// 解析代码块（带花括号）
+// 解析代码块（明确的隔离作用域）
+#[inline]
+fn parse_domain_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, block) = delimited(
+        terminated(text("%{"), opt(many0(kind(TokenKind::LineBreak)))),
+        map(
+            many0(terminated(
+                parse_statement,
+                opt(many0(kind(TokenKind::LineBreak))),
+            )),
+            |stmts| Expression::Block(Rc::new(stmts)),
+        ),
+        text_close("}"),
+    )(input)?;
+    Ok((input, block))
+}
+// 解析代码块（作为独立作用域）
 // TODO with return?
 #[inline]
 fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
@@ -1996,7 +2018,23 @@ fn parse_block(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxError
         ),
         text_close("}"),
     )(input)?;
-    // dbg!(&block);
+    Ok((input, block))
+}
+
+/// 解析代码块（作为序列，非独立作用域）
+#[inline]
+fn parse_block_as_sequence(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
+    let (input, block) = delimited(
+        terminated(text("{"), opt(many0(kind(TokenKind::LineBreak)))),
+        map(
+            many0(terminated(
+                parse_statement,
+                opt(many0(kind(TokenKind::LineBreak))),
+            )),
+            |stmts| Expression::Sequence(stmts),
+        ),
+        text_close("}"),
+    )(input)?;
     Ok((input, block))
 }
 

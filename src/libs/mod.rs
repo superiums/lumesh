@@ -43,7 +43,7 @@ thread_local! {
     });
 
     static TOP_LIB: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
-        bin::top::regist_all()
+       bin::top::regist_all()
     });
     static BOOL_LIB: RefCell<HashMap<&'static str, Rc<BuiltinFunc>>> = RefCell::new({
         bin::boolean_lib::regist_all()
@@ -78,8 +78,10 @@ thread_local! {
 
 fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInfo>> {
     let mut libs_info = BTreeMap::new();
-    libs_info.insert("", bin::top::regist_info());
-    libs_info.insert("", bin::se_lib::regist_info()); //regist to top
+    let mut top_info = bin::top::regist_info();
+    let se_info = bin::se_lib::regist_info();
+    top_info.extend(se_info.into_iter());
+    libs_info.insert("", top_info); //regist to top
     libs_info.insert("boolean", bin::boolean_lib::regist_info());
     libs_info.insert("string", bin::string_lib::regist_info());
     libs_info.insert("list", bin::list_lib::regist_info());
@@ -111,7 +113,7 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
 pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<BuiltinFunc>> {
     match lib_name {
         // "Math" => MATH_LIB.with(|m| m.borrow().get(function).cloned()),
-        "" => TOP_LIB.with(|m| m.borrow().get(fn_name).cloned()),
+        "" => TOP_LIB.with_borrow(|m| m.get(fn_name).cloned()),
         "boolean" => BOOL_LIB.with(|m| m.borrow().get(fn_name).cloned()),
         "string" => STRING_LIB.with(|m| m.get_function(fn_name)),
         "list" => LIST_LIB.with(|m| m.get_function(fn_name)),
@@ -157,9 +159,23 @@ pub fn is_lib(name: &str) -> bool {
     LIBS_INFO.with(|h| h.contains_key(name))
 }
 
+pub fn is_top_or_se(name: &str) -> bool {
+    SE_LIB.with_borrow(|s| s.contains_key(name)) || TOP_LIB.with_borrow(|h| h.contains_key(name))
+}
+
 pub fn get_lib_completions(prefix: &str) -> Option<Vec<&str>> {
     if prefix.is_empty() || !prefix.is_ascii() {
         return None;
+    }
+    let se = SE_LIB.with(|h| {
+        h.borrow()
+            .iter()
+            .filter(|(k, _)| k.starts_with(prefix))
+            .map(|(k, _)| *k)
+            .collect::<Vec<_>>()
+    });
+    if !se.is_empty() {
+        return Some(se);
     }
     let top = TOP_LIB.with(|h| {
         h.borrow()

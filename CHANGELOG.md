@@ -2,7 +2,9 @@
 
 ## [0.13.6]
 - introduce `%{}` for explicit scopes
-keep functions/lambdas and loops as isolated scopes by default without explicit declare.
+keep functions/lambdas and loops as isolated scopes by default without explicit declare
+- fix highlight and hint for se cmds
+- support param hint after `(`
 
 ## [0.13.5]
 - fix local var render for template

@@ -634,32 +634,50 @@ impl Hinter for LumeHelper {
 
             // search lib funcs
             if matches.is_empty() {
-                match segment.split_once(".") {
+                let ends: &[_] = &['(', ' '];
+                let (mut matches, hint_pos) = match segment.split_once(".") {
                     // funcs of lib
                     Some((name, func)) => {
-                        if !name.is_empty() {
-                            let mut matches = LIBS_INFO.with(|h| {
-                                if let Some(lib) = h.get(&name) {
+                        // if !name.is_empty() {
+                        LIBS_INFO.with(|h| {
+                            if let Some(lib) = h.get(&name) {
+                                (
                                     lib.iter()
-                                        .filter(|(f, _)| f.starts_with(func))
+                                        .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
                                         .map(|(f, info)| format!("{f} {}", info.hint))
-                                        .collect::<Vec<_>>()
-                                } else {
-                                    Vec::new()
-                                }
-                            });
-                            // 权重降序, 较短的优先
-                            matches.sort_by(|a, b| a.len().cmp(&b.len()));
-                            // dbg!(&matches);
-                            if let Some(matched) = matches.first() {
-                                let suffix = &matched[func.len()..];
-                                if !suffix.is_empty() {
-                                    return Some(suffix.to_string());
-                                }
+                                        .collect::<Vec<_>>(),
+                                    func.len(),
+                                )
+                            } else {
+                                (Vec::new(), 0)
                             }
-                        }
+                        })
+
+                        // }
                     }
-                    _ => {}
+                    // top or se
+                    _ => LIBS_INFO.with(|h| {
+                        if let Some(lib) = h.get("") {
+                            (
+                                lib.iter()
+                                    .filter(|(f, _)| f.starts_with(segment.trim_matches(ends)))
+                                    .map(|(f, info)| format!("{f} {}", info.hint))
+                                    .collect::<Vec<_>>(),
+                                segment.len(),
+                            )
+                        } else {
+                            (Vec::new(), 0)
+                        }
+                    }),
+                };
+                // 权重降序, 较短的优先
+                matches.sort_by(|a, b| a.len().cmp(&b.len()));
+                // dbg!(&matches);
+                if let Some(matched) = matches.first() {
+                    let suffix = &matched[hint_pos..];
+                    if !suffix.is_empty() {
+                        return Some(suffix.to_string());
+                    }
                 }
             }
             // 权重降序, 较短的优先

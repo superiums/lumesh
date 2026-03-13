@@ -27,7 +27,7 @@ pub fn regist_se() -> HashMap<&'static str, SelfExpandFunc> {
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
       // IO
-      printf => "print formatted string with vars", "<template> <args>..."
+      format => "print formatted string with vars", "<template> <args>..."
       debug => "print debug representation", "<args>..."
       ddebug => "print pretty debug", "<args>..."
 
@@ -41,7 +41,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
       // env
       set_root => "define a variable in root environment", "<var> <val>"
       unset_root => "undefine a variable in root environment", "<var>"
-      getvar => "get a variable value", "<var>"
+      // getvar => "get a variable value", "<var>"
 
     })
 }
@@ -106,10 +106,14 @@ fn repeat(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("repeat", &args, 2, ctx)?;
     let n = get_integer_arg(args[1].eval_mut(state, env, 0)?, ctx)?;
-    let r = (0..n)
+    let results = (0..n)
         .map(|_| args[0].eval_with_assign(state, env))
         .collect::<Result<Vec<_>, _>>()?;
-    Ok(Expression::from(r))
+    if results.iter().any(|x| x != &Expression::None) {
+        Ok(Expression::from(results))
+    } else {
+        Ok(Expression::None)
+    }
 }
 
 // args lazy

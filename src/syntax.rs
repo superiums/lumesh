@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, HashMap};
 
 use crate::{
     Diagnostic, Expression, TokenKind,
-    libs::{get_builtin_optimized, is_lib},
+    libs::{is_lib, is_top_or_se},
     tokenize,
 };
 
@@ -119,8 +119,7 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
                     result.push_str(e.to_str(line));
                     is_colored = true;
                 } else {
-                    if get_builtin_optimized("", l).is_some() {
-                        // if matches!(l, "echo" | "exit" | "clear" | "cd" | "rm") {
+                    if is_top_or_se(l) {
                         result.push_str(get_color("builtin_cmd", theme));
                         is_colored = true;
                     } else if is_lib(l) {

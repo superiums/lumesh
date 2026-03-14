@@ -98,7 +98,9 @@ jobs:
           - x86_64-pc-windows-gnu
           - aarch64-linux-gnu
           - aarch64-linux-musl
-          - x86_64-unknown-freebsd15
+          # - x86_64-unknown-freebsd15
+          # - Error: Target 'x86_64-unknown-freebsd15' requires build-std but is not in rustc target list
+          # Use BUILD_STD=core,alloc or similar to enable build-std
           - aarch64-linux-android
           - aarch64-apple-darwin
         include:
@@ -120,9 +122,9 @@ jobs:
           - target: aarch64-linux-musl
             asset_name: lume-aarch64-linux-musl
             binary_name: lume
-          - target: x86_64-unknown-freebsd15
-            asset_name: lume-x86_64-freebsd
-            binary_name: lume
+          # - target: x86_64-unknown-freebsd15
+          #   asset_name: lume-x86_64-freebsd
+          #   binary_name: lume
           - target: aarch64-linux-android
             asset_name: lume-aarch64-linux-android
             binary_name: lume

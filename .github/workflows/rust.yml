@@ -63,7 +63,7 @@ jobs:
           cp LICENSE tmp/doc/
           cp docs/INS_README.md tmp/doc/
           cp docs/RULE.md tmp/doc/
-          cp docs/install_github.sh tmp/install.sh
+          cp docs/install.sh tmp/install.sh
 
       - name: Create compressed files
         run: |

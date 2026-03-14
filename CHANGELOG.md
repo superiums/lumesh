@@ -2,9 +2,16 @@
 
 ## [0.13.6]
 - introduce `%{}` for explicit scopes
-keep functions/lambdas and loops as isolated scopes by default without explicit declare
+keep functions/lambdas and loops as isolated scopes by default without explicit declare.
+
+Sequence now return last expression result as same as Block.
+
 - fix highlight and hint for se cmds
 - support param hint after `(`
+- optimize function clone for List:
+
+`list.foldl/foldr/find/find_last/sort/group/filter/filter_map/any/all/to_map/to_hmap`
+
 
 ## [0.13.5]
 - fix local var render for template

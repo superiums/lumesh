@@ -1,26 +1,94 @@
 #!/bin/bash
-# Lumesh Installation Script
-# Automatically installs lume, lume-se, documentation, and creates symlink
-
+# Lumesh GitHub Installation Script
+# Downloads binaries from GitHub releases and installs to user or system
 set -e
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
-
 # Configuration
-CODEBERG_REPO="santo/lumesh"
 GITHUB_REPO="superiums/lumesh"
 INSTALL_DIR="$HOME/.local/bin"  # Default to user installation
 CONFIG_DIR="$HOME/.config/lumesh"
 DOC_DIR="$HOME/.local/share"
 SYSTEM_INSTALL_DIR="/usr/local/bin"
-# Use sudo for system installation if needed
 sudo_cmd=""
-
+# Platform detection
+detect_platform() {
+    case "$(uname -s)" in
+        Linux*)
+            PLATFORM="linux"
+            # Detect libc variant
+            if ldd --version 2>&1 | grep -q musl; then
+                LIBC="musl"
+            else
+                LIBC="gnu"
+            fi
+            ;;
+        Darwin*)
+            PLATFORM="darwin"
+            LIBC="libc"
+            ;;
+        CYGWIN*|MINGW*|MSYS*)
+            PLATFORM="windows"
+            LIBC="libc"
+            ;;
+        FreeBSD*)
+            PLATFORM="freebsd"
+            LIBC="libc"
+            ;;
+        *)
+            echo -e "${RED}Unsupported platform: $(uname -s)${NC}"
+            exit 1
+            ;;
+    esac
+    case "$(uname -m)" in
+        x86_64)     ARCH="x86_64" ;;
+        aarch64|arm64) ARCH="aarch64" ;;
+        *)          echo -e "${RED}Unsupported architecture: $(uname -m)${NC}"; exit 1 ;;
+    esac
+}
+# Get platform-specific asset name
+get_asset_name() {
+    case "$PLATFORM" in
+        linux)
+            if [ "$LIBC" = "musl" ]; then
+                echo "lume-x86_64-linux-musl"
+            else
+                echo "lume-x86_64-linux-gnu"
+            fi
+            ;;
+        darwin)
+            if [ "$ARCH" = "aarch64" ]; then
+                echo "lume-aarch64-apple-darwin"
+            else
+                echo "lume-x86_64-apple-darwin"
+            fi
+            ;;
+        windows)
+            echo "lume-x86_64-pc-windows-gnu.exe"
+            ;;
+        freebsd)
+            echo "lume-x86_64-freebsd"
+            ;;
+        android)
+            echo "lume-aarch64-linux-android"
+            ;;
+    esac
+}
+set_macos_path() {
+    if [ "$PLATFORM" = "darwin" ]; then
+        if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ]; then
+            CONFIG_DIR="/Library/Application Support/lumesh"
+            DOC_DIR="/Library/Application Support"
+        else
+            CONFIG_DIR="$HOME/Library/Application Support/lumesh"
+            DOC_DIR="$HOME/Library/Application Support"
+        fi
+    fi
+}
 # Ask for installation type
 ask_install_type() {
     echo -e "${YELLOW}Choose installation type:${NC}"
@@ -29,7 +97,6 @@ ask_install_type() {
     echo ""
     read -p "Enter choice (1-2) [1]: " choice
     choice=${choice:-1}
-
     case $choice in
         1)
             echo -e "${GREEN}User installation selected${NC}"
@@ -53,115 +120,24 @@ ask_install_type() {
             ;;
     esac
 }
-
-# Platform detection
-detect_platform() {
-    case "$(uname -s)" in
-        Linux*)
-            PLATFORM="linux"
-            # Detect libc variant
-            if ldd --version 2>&1 | grep -q musl; then
-                LIBC="musl"
-            else
-                LIBC="libc"
-            fi
-            ;;
-        Darwin*)
-            PLATFORM="macos"
-            LIBC="libc"
-            ;;
-        CYGWIN*|MINGW*|MSYS*)
-            PLATFORM="windows"
-            LIBC="libc"
-            ;;
-        *)
-            echo -e "${RED}Unsupported platform${NC}"
-            exit 1
-            ;;
-    esac
-
-    case "$(uname -m)" in
-        x86_64)     ARCH="x86_64" ;;
-        aarch64|arm64) ARCH="arm64" ;;
-        *)          echo -e "${RED}Unsupported architecture${NC}"; exit 1 ;;
-    esac
-}
-
-# Get latest version from releases API
+# Get latest version from GitHub API
 get_latest_version() {
     echo -e "${BLUE}Fetching latest version...${NC}"
-
-    if [ "$PLATFORM" = "macos" ]; then
-        LATEST_VERSION=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/latest" | \
-            grep -o '"tag_name": *"[^"]*"' | cut -d'"' -f4 | sed 's/^v//')
-    else
-        LATEST_VERSION=$(curl -s "https://codeberg.org/api/v1/repos/$CODEBERG_REPO/releases/latest" | \
-            grep -o '"tag_name": *"[^"]*"' | cut -d'"' -f4 | sed 's/^v//')
-    fi
-
+    LATEST_VERSION=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/latest" | grep -o '"tag_name": *"[^"]*"' | cut -d'"' -f4 | sed 's/^c//')
     if [ -z "$LATEST_VERSION" ]; then
         echo -e "${RED}Failed to fetch latest version${NC}"
         exit 1
     fi
-
     echo -e "${GREEN}Latest version: $LATEST_VERSION${NC}"
 }
-
-# Download binaries from Codeberg
-download_from_codeberg() {
-    local binary_name="$1"
-    local platform_suffix="$2"
-
-    local download_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/$binary_name-$platform_suffix"
-
-    echo -e "${BLUE}Downloading $binary_name from Codeberg...${NC}"
-
-
-    if command -v curl >/dev/null 2>&1; then
-        $sudo_cmd curl -f -L -o "$INSTALL_DIR/$binary_name" "$download_url"
-    elif command -v wget >/dev/null 2>&1; then
-        $sudo_cmd wget -O "$INSTALL_DIR/$binary_name" "$download_url"
-    else
-        echo -e "${RED}Neither curl nor wget found${NC}"
-        exit 1
-    fi
-
-    if [ "$PLATFORM" != "windows" ]; then
-        $sudo_cmd chmod +x "$INSTALL_DIR/$binary_name"
-    fi
-
-    echo -e "${GREEN}Downloaded to: $INSTALL_DIR/$binary_name${NC}"
-}
-
-# Download binaries from GitHub (for macOS)
-download_from_github() {
-    local binary_name="$1"
-    local platform_suffix="$2"
-
-    local download_url="https://github.com/$GITHUB_REPO/releases/download/v$LATEST_VERSION/${binary_name}_${platform_suffix}_v${LATEST_VERSION}"
-
-    echo -e "${BLUE}Downloading $binary_name from GitHub...${NC}"
-
-    # Use sudo for system installation if needed
-    if command -v curl >/dev/null 2>&1; then
-        $sudo_cmd curl -L -o "$INSTALL_DIR/$binary_name" "$download_url"
-    elif command -v wget >/dev/null 2>&1; then
-        $sudo_cmd wget -O "$INSTALL_DIR/$binary_name" "$download_url"
-    else
-        echo -e "${RED}Neither curl nor wget found${NC}"
-        exit 1
-    fi
-
-    $sudo_cmd chmod +x "$INSTALL_DIR/$binary_name"
-    echo -e "${GREEN}Downloaded to: $INSTALL_DIR/$binary_name${NC}"
-}
-
-# Download both binaries
-download_binaries() {
-    # Create install directory with appropriate permissions
+# Download binary from GitHub
+download_binary() {
+    local asset_name=$(get_asset_name)
+    local download_url="https://github.com/$GITHUB_REPO/releases/download/c$LATEST_VERSION/$asset_name"
+    echo -e "${BLUE}Downloading $asset_name...${NC}"
+    # Create install directory
     if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ]; then
         if [ "$(id -u)" -ne 0 ]; then
-            echo -e "${BLUE}Creating system directory with sudo...${NC}"
             $sudo_cmd mkdir -p "$INSTALL_DIR"
         else
             mkdir -p "$INSTALL_DIR"
@@ -169,32 +145,104 @@ download_binaries() {
     else
         mkdir -p "$INSTALL_DIR"
     fi
-
-    if [ "$PLATFORM" = "macos" ]; then
-        download_from_github "lume" "macos"
-        download_from_github "lume-se" "macos"
-    elif [ "$PLATFORM" = "windows" ]; then
-        download_from_codeberg "lume" "windows.exe"
-        download_from_codeberg "lume-se" "windows.exe"
-    elif [ "$PLATFORM" = "linux" ]; then
-        if [ "$LIBC" = "musl" ]; then
-            download_from_codeberg "lume" "linux-musl"
-            download_from_codeberg "lume-se" "linux-musl"
-        else
-            download_from_codeberg "lume" "linux"
-            download_from_codeberg "lume-se" "linux"
-        fi
+      # 创建临时目录
+    local TEMP_DIR=$(mktemp -d)
+  # 根据平台处理
+    if [ "$PLATFORM" = "windows" ]; then
+        download_with_retry "$download_url" "$TEMP_DIR/lume.exe"
+        $sudo_cmd mv "$TEMP_DIR/lume.exe" "$INSTALL_DIR/"
+    else
+        download_with_retry "$download_url" "$TEMP_DIR/lume"
+        $sudo_cmd mv "$TEMP_DIR/lume" "$INSTALL_DIR/"
     fi
+    # 设置权限
+    if [ "$PLATFORM" != "windows" ]; then
+        $sudo_cmd chmod +x "$INSTALL_DIR/lume"
+    fi
+    # 清理临时目录
+    rm -rf "$TEMP_DIR"
+    echo -e "${GREEN}Downloaded to: $INSTALL_DIR/lume${NC}"
 }
-
-# Create symlink from lume-se to lumesh
+  # 带重试和验证的下载函数
+download_with_retry() {
+    local url="$1"
+    local output="$2"
+    local max_retries=3
+    local retry_count=0
+    local temp_output="${output}.tmp"
+    # 清理可能存在的临时文件
+    rm -f "$temp_output"
+    while [ $retry_count -lt $max_retries ]; do
+        echo -e "${BLUE}Downloading (attempt $((retry_count + 1))/$max_retries)...${NC}"
+        if command -v curl >/dev/null 2>&1; then
+            # 使用断点续传和进度显示
+            if curl -L -C - --progress-bar -o "$temp_output" "$url"; then
+                break
+            fi
+        elif command -v wget >/dev/null 2>&1; then
+            # 使用断点续传
+            if wget -c --progress=bar:force -O "$temp_output" "$url" 2>&1; then
+                break
+            fi
+        else
+            echo -e "${RED}Neither curl nor wget found${NC}"
+            return 1
+        fi
+        retry_count=$((retry_count + 1))
+        if [ $retry_count -lt $max_retries ]; then
+            echo -e "${YELLOW}Download failed, retrying in 5 seconds...${NC}"
+            sleep 5
+        fi
+    done
+    if [ $retry_count -eq $max_retries ]; then
+        echo -e "${RED}Download failed after $max_retries attempts${NC}"
+        rm -f "$temp_output"
+        return 1
+    fi
+    # 验证文件大小（基本检查）
+    if [ ! -s "$temp_output" ]; then
+        echo -e "${RED}Downloaded file is empty${NC}"
+        rm -f "$temp_output"
+        return 1
+    fi
+    # 移动到最终位置
+    mv "$temp_output" "$output"
+    echo -e "${GREEN}Download completed successfully${NC}"
+    return 0
+}
+# Download and extract data.tgz for non-Windows platforms
+download_data() {
+    if [ "$PLATFORM" = "windows" ]; then
+        echo -e "${YELLOW}Skipping data.tgz download on Windows${NC}"
+        return
+    fi
+    echo -e "${BLUE}Downloading data.tgz...${NC}"
+    local data_url="https://github.com/$GITHUB_REPO/releases/download/c$LATEST_VERSION/data.tgz"
+    local temp_data="/tmp/data.tgz"
+    # Download data.tgz
+    # if command -v curl >/dev/null 2>&1; then
+    #     curl -L -o "$temp_data" "$data_url"
+    # elif command -v wget >/dev/null 2>&1; then
+    #     wget -O "$temp_data" "$data_url"
+    # fi
+    download_with_retry "$data_url" "$temp_data"
+    # Create share directory and extract
+    $sudo_cmd mkdir -p "$DOC_DIR"
+    $sudo_cmd mkdir -p "$CONFIG_DIR"
+    cd /tmp
+    $sudo_cmd tar -xzf "$temp_data" -C "$DOC_DIR"
+    if [ -d "$DOC_DIR/lumesh/examples" ]; then
+        cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"
+        cp -f $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true
+    fi
+    rm "$temp_data"
+    echo -e "${GREEN}Data extracted to: $DOC_DIR${NC}"
+}
+# Create symlink from lume to lumesh
 create_symlink() {
-    echo -e "${BLUE}Creating symlink from lume-se to lumesh...${NC}"
-
+    echo -e "${BLUE}Creating symlink from lume to lumesh...${NC}"
     local lume_path="$INSTALL_DIR/lume"
     local lumesh_link="$INSTALL_DIR/lumesh"
-
-    # Use sudo for system installation if needed
     # Remove existing link if it exists
     if [ -L "$lumesh_link" ]; then
         $sudo_cmd rm "$lumesh_link"
@@ -202,65 +250,16 @@ create_symlink() {
         echo -e "${YELLOW}Warning: $lumesh_link exists and is not a symlink. Skipping symlink creation.${NC}"
         return
     fi
-
-    # Create platform-specific symlink
-    if [ "$PLATFORM" = "windows" ]; then
-        # On Windows, use mklink via cmd
-        if command -v cmd.exe >/dev/null 2>&1; then
-            cmd.exe /c "mklink \"$lumesh_link\" \"$lume_path\"" >/dev/null 2>&1
-            if [ $? -eq 0 ]; then
-                echo -e "${GREEN}Created symlink: $lumesh_link -> $lume_path${NC}"
-            else
-                echo -e "${YELLOW}Failed to create symlink on Windows. You can manually create it if needed.${NC}"
-            fi
-        else
-            echo -e "${YELLOW}Cannot create symlink on Windows without cmd.exe${NC}"
-        fi
-    else
-        # On Unix-like systems, use ln -s
-        $sudo_cmd ln -s "$lume_path" "$lumesh_link"
-        echo -e "${GREEN}Created symlink: $lumesh_link -> $lume_path${NC}"
-    fi
+    # Create symlink
+    $sudo_cmd ln -s "$lume_path" "$lumesh_link"
+    echo -e "${GREEN}Created symlink: $lumesh_link -> $lume_path${NC}"
 }
-
-# Download and extract documentation
-download_docs() {
-    echo -e "${BLUE}Downloading documentation...${NC}"
-
-    # Use sudo for system installation if needed
-    $sudo_cmd mkdir -p "$DOC_DIR"
-    local doc_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/data.tgz"
-
-    # Download to temp file first, then move with sudo if needed
-    local temp_doc="/tmp/data.tgz"
-    if command -v curl >/dev/null 2>&1; then
-        curl -L -o "$temp_doc" "$doc_url"
-    elif command -v wget >/dev/null 2>&1; then
-        wget -O "$temp_doc" "$doc_url"
-    fi
-
-    # Extract and move to final location
-    cd /tmp
-    mkdir -p "$CONFIG_DIR"
-
-    $sudo_cmd tar -xzf "$temp_doc" -C "$DOC_DIR"  
-    if [ -d "$DOC_DIR/lumesh/examples" ]; then  
-        cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"  
-        cp -f $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true  
-    fi
-  
-    rm -rf "$temp_doc"
-
-    echo -e "${GREEN}Documentation extracted to: $DOC_DIR${NC}"
-}
-
 # Setup PATH
 setup_path() {
     if [ "$PLATFORM" = "windows" ]; then
         echo -e "${YELLOW}Please add $INSTALL_DIR to your PATH manually${NC}"
         return
     fi
-
     # For system installation, /usr/local/bin should already be in PATH
     if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ]; then
         if echo "$PATH" | grep -q "$INSTALL_DIR"; then
@@ -270,13 +269,11 @@ setup_path() {
         fi
         return
     fi
-
     # User installation PATH setup
     if echo "$PATH" | grep -q "$INSTALL_DIR"; then
         echo -e "${GREEN}$INSTALL_DIR is already in PATH${NC}"
         return
     fi
-
     local shell_profile=""
     case "$SHELL" in
         */bash) shell_profile="$HOME/.bashrc" ;;
@@ -284,104 +281,158 @@ setup_path() {
         */fish) shell_profile="$HOME/.config/fish/config.fish" ;;
         *)      shell_profile="$HOME/.profile" ;;
     esac
-
     echo "export PATH=\"\$PATH:$INSTALL_DIR\"" >> "$shell_profile"
     echo -e "${GREEN}Added $INSTALL_DIR to PATH in $shell_profile${NC}"
     echo -e "${YELLOW}Please restart your shell or run: source $shell_profile${NC}"
 }
-
 # Add Lumesh to system shells list for chsh usage
 add_to_shell_list() {
     local lume_path="$1"
-
     # Check if lume path exists
     if [ ! -f "$lume_path" ]; then
         echo -e "${RED}Error: Lumesh binary not found at $lume_path${NC}"
         return 1
     fi
-
     # Check if already in /etc/shells
     if [ -f /etc/shells ] && grep -q "^$lume_path$" /etc/shells; then
         echo -e "${GREEN}Lumesh is already in /etc/shells${NC}"
     else
         echo -e "${BLUE}Adding Lumesh to /etc/shells...${NC}"
-        # Use sudo or doas to append to /etc/shells
-        if command -v sudo >/dev/null 2>&1; then
-            echo "$lume_path" | sudo tee -a /etc/shells >/dev/null
-        elif command -v doas >/dev/null 2>&1; then
-            echo "$lume_path" | doas tee -a /etc/shells >/dev/null
-        else
-            echo -e "${RED}Error: Need sudo or doas to modify /etc/shells${NC}"
-            echo -e "${YELLOW}Please manually add '$lume_path' to /etc/shells${NC}"
-            return 1
-        fi
+        echo "$lume_path" | $sudo_cmd tee -a /etc/shells >/dev/null
         echo -e "${GREEN}Added $lume_path to /etc/shells${NC}"
     fi
-
     # Ask if user wants to change shell now
     echo ""
     echo -e "${YELLOW}Would you like to set Lumesh as your default login shell now?${NC}"
     echo "This will change your login shell to: $lume_path"
     read -p "Change shell? (y/N) " change_shell
-
     if [[ "$change_shell" =~ ^[Yy]$ ]]; then
         echo -e "${BLUE}Changing login shell...${NC}"
-        if command -v sudo >/dev/null 2>&1; then
-            sudo chsh -s "$lume_path"
-        elif command -v doas >/dev/null 2>&1; then
-            doas chsh -s "$lume_path"
-        else
-            chsh -s "$lume_path"
-        fi
+        $sudo_cmd chsh -s "$lume_path"
         echo -e "${GREEN}Login shell changed to Lumesh${NC}"
         echo -e "${YELLOW}Note: Changes will take effect on next login${NC}"
     else
         echo -e "${BLUE}You can change your shell later with: chsh -s $lume_path${NC}"
     fi
 }
+# Configure Helix editor for tree-sitter-lumesh syntax highlighting
+configure_helix_lumesh() {
+    echo -e "${BLUE}Checking Grammar Highlight Config...${NC}"
+    local HELIX_CONFIG="$HOME/.config/helix"
+    local HELIX_RUNTIME="$HELIX_CONFIG/runtime"
+    # Detect if Helix is installed
+    if ! command -v hx >/dev/null 2>&1 && [[ ! -d "$HELIX_CONFIG" ]]; then
+        echo "❌ Helix editor not detected"
+        return 1
+    fi
+    echo "✅ Helix editor detected, starting configuration..."
+    # Check if source files exist
+    local GRAMMAR_SO="$DOC_DIR/lumesh/tree-sitter-lumesh/grammars/lumesh.so"
+    local QUERIES_DIR="$DOC_DIR/lumesh/tree-sitter-lumesh/queries/lumesh"
+    local GRAMMAR_LF_SO="$DOC_DIR/lumesh/tree-sitter-lumesh/grammars/lumelf.so"
+    local QUERIES_LF_DIR="$DOC_DIR/lumesh/tree-sitter-lumesh/queries/lumelf"
+    if [[ ! -f "$GRAMMAR_SO" ]]; then
+        echo "❌ Grammar file not found: $GRAMMAR_SO"
+        return 1
+    fi
+    if [[ ! -d "$QUERIES_DIR" ]]; then
+        echo "❌ Queries directory not found: $QUERIES_DIR"
+        return 1
+    fi
+    # Create runtime directories
+    mkdir -p "$HELIX_RUNTIME/grammars"
+    mkdir -p "$HELIX_RUNTIME/queries"
+    # Create symbolic links
+    echo "🔗 Creating grammar file symlink..."
+    ln -sf "$GRAMMAR_SO" "$HELIX_RUNTIME/grammars/lumesh.so"
+    ln -sf "$GRAMMAR_LF_SO" "$HELIX_RUNTIME/grammars/lumelf.so"
+    echo "🔗 Creating queries directory symlink..."
+    ln -sf "$QUERIES_DIR" "$HELIX_RUNTIME/queries/lumesh"
+    ln -sf "$QUERIES_LF_DIR" "$HELIX_RUNTIME/queries/lumelf"
+    # Create languages.toml configuration
+    local LANG_FILE="$HELIX_CONFIG/languages.toml"
+    # Check if configuration already exists
+    if ! grep -q "name = \"lumesh\"" "$LANG_FILE" 2>/dev/null; then
+        echo "📝 Adding language configuration..."
+        cat >> "$LANG_FILE" << 'EOF'
+[[language]]
+name = "lumesh"
+scope = "source.lumesh"
+injection-regex = "lumesh"
+file-types = ["lm", "lumesh"]
+shebangs = ["lume","lumesh"]
+roots = []
+comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
+EOF
+    else
+        echo "ℹ️  Language configuration already exists"
+    fi
 
+    # add lumelf
+    if ! grep -q "name = \"lumelf\"" "$LANG_FILE" 2>/dev/null; then
+        echo "📝 Adding lumelf configuration..."
+        cat >> "$LANG_FILE" << 'EOF'
+[[language]]
+name = "lumelf"
+scope = "source.lumelf"
+injection-regex = "lumelf"
+shebangs = ["lumelf"]
+file-types = ["lmf"]
+roots = []
+comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
+EOF
+    else
+        echo "ℹ️  lumelf configuration already exists"
+    fi
+
+    echo "✅ Helix configuration completed!"
+    echo ""
+    echo "📋 Manual configuration instructions:"
+    echo "1. Restart Helix editor to load new syntax"
+    echo "2. If syntax highlighting is not working, check $LANG_FILE configuration"
+    echo "3. Ensure $HELIX_RUNTIME/grammars/lumesh.so symlink is valid"
+    echo ""
+    echo "🔍 Verification commands:"
+    echo "   ls -la $HELIX_RUNTIME/grammars/lumesh.so"
+    echo "   ls -la $HELIX_RUNTIME/queries/lumesh"
+}
 # Main installation
 main() {
-    echo -e "${BLUE}Lumesh Installation Script${NC}"
-    echo "=================================="
-
+    echo -e "${BLUE}Lumesh GitHub Installation Script${NC}"
+    echo "======================================"
     # Ask for installation type first
     ask_install_type
     echo ""
-
     detect_platform
     echo -e "${GREEN}Detected platform: $PLATFORM-$ARCH ($LIBC)${NC}"
-
+    set_macos_path
     get_latest_version
-
-    download_binaries
+    download_binary
+    download_data
     create_symlink
-    download_docs
     setup_path
-
-    # Offer to add to shell list
-    if [ "$PLATFORM" != "windows" ]; then
+    configure_helix_lumesh
+    # Offer to add to shell list for system installation
+    if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ] && [ "$PLATFORM" != "windows" ]; then
         echo ""
         read -p "Would you like to add Lumesh to system shell list for chsh? (y/N) " add_shell
         if [[ "$add_shell" =~ ^[Yy]$ ]]; then
             add_to_shell_list "$INSTALL_DIR/lume"
         fi
     fi
-
     echo ""
     echo -e "${GREEN}Installation completed successfully!${NC}"
     echo -e "${BLUE}Installation location: $INSTALL_DIR${NC}"
     echo -e "${BLUE}To start using Lumesh:${NC}"
-    echo "  - To start interactive shell"
-    echo -e "${GREEN}  lume${NC}"
+    echo "  # Start interactive shell"
+    echo "  lume"
     echo ""
-    echo "  - For more information, see:"
-    echo "   help doc"
+    echo "  # Or execute a script"
+    echo "  lumesh script.lm"
     echo ""
-    echo "  - To check new version:"
-    echo -e "${GREEN}  update()${NC}"
-    echo ""
-    echo "good luck!"
+    echo -e "${BLUE}For more information, see:${NC}"
+    echo "  https://github.com/$GITHUB_REPO/"
 }
-
 main "$@"

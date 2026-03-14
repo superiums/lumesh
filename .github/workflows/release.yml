@@ -98,7 +98,8 @@ jobs:
           files: |
             data.tgz
             doc.tgz
-            tmp/install.sh
+
+          # tmp/install.sh
 
   release_assets:
     name: Release assets

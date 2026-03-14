@@ -140,7 +140,7 @@ jobs:
           command: build
           targets: ${{ matrix.target }}
           profile: release
-        rustflags: "-Z build-std"
+          rustflags: "-Z build-std"
 
       - name: Rename binary to correct asset name
         run: |

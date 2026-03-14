@@ -303,12 +303,11 @@ fn find(
 
     match &target {
         Expression::Function(..) | Expression::Lambda(..) => {
+            let state = &mut State::new();
             for (i, item) in list.as_ref().iter().enumerate().skip(start) {
-                match Expression::Apply(Rc::new(target.clone()), Rc::new(vec![item.clone()]))
-                    .eval(env)?
-                {
-                    Expression::Boolean(true) => return Ok(Expression::Integer(i as Int)),
-                    _ => continue,
+                let r = &target.eval_apply(&target, &vec![item.clone()], state, env, 0)?;
+                if let Expression::Boolean(true) = r {
+                    return Ok(Expression::Integer(i as Int));
                 }
             }
             Ok(Expression::None)
@@ -340,12 +339,11 @@ fn find_last(
 
     match target {
         Expression::Function(..) | Expression::Lambda(..) => {
-            // target is moved; wrap in Rc once
-            let target_rc = Rc::new(target);
+            let state = &mut State::new();
             for (i, item) in list.as_ref().iter().enumerate().rev().skip(start) {
-                match Expression::Apply(target_rc.clone(), Rc::new(vec![item.clone()])).eval(env)? {
-                    Expression::Boolean(true) => return Ok(Expression::Integer(i as Int)),
-                    _ => continue,
+                let r = &target.eval_apply(&target, &vec![item.clone()], state, env, 0)?;
+                if let Expression::Boolean(true) = r {
+                    return Ok(Expression::Integer(i as Int));
                 }
             }
             Ok(Expression::None)
@@ -515,14 +513,14 @@ fn sort(
         }
     };
 
+    let state = &mut State::new();
+
     if let Some(sort_func) = func {
         sorted.sort_by(|a, b| {
-            let sort_result = Expression::Apply(
-                Rc::new((*sort_func).clone()),
-                Rc::new(vec![a.clone(), b.clone()]),
-            )
-            .eval(env);
-            match sort_result {
+            let result =
+                &sort_func.eval_apply(&sort_func, &vec![a.clone(), b.clone()], state, env, 0);
+
+            match result {
                 Ok(Expression::Integer(i)) => match i {
                     1.. => Ordering::Greater,
                     0 => Ordering::Equal,
@@ -598,11 +596,11 @@ fn group(
 
     match key_func {
         Expression::Lambda(..) | Expression::Function(..) => {
-            let key_f = Rc::new(key_func);
+            let state = &mut State::new();
             for item in list.as_ref().iter() {
-                let key = match Expression::Apply(key_f.clone(), Rc::new(vec![item.clone()]))
-                    .eval(env)?
-                {
+                let r = (&key_func).eval_apply(&key_func, &vec![item.clone()], state, env, 0)?;
+
+                let key = match r {
                     Expression::String(s) => s,
                     other => other.to_string(),
                 };
@@ -887,27 +885,28 @@ fn filter(
         }
     };
 
-    let cond = Rc::new(target);
     let list = get_list_ref(&list_exp, ctx)?;
-
+    let state = &mut State::new();
     match fn_arg_count {
         1 => {
             for item in list.as_ref() {
-                if let Expression::Boolean(true) =
-                    Expression::Apply(Rc::clone(&cond), Rc::new(vec![item.clone()])).eval(env)?
-                {
+                let r = (&target).eval_apply(&target, &vec![item.clone()], state, env, 0)?;
+
+                if let Expression::Boolean(true) = r {
                     result.push(item.clone());
                 }
             }
         }
         2 => {
             for (i, item) in list.as_ref().iter().enumerate() {
-                if let Expression::Boolean(true) = Expression::Apply(
-                    Rc::clone(&cond),
-                    Rc::new(vec![Expression::Integer(i as i64), item.clone()]),
-                )
-                .eval(env)?
-                {
+                let r = (&target).eval_apply(
+                    &target,
+                    &vec![Expression::Integer(i as i64), item.clone()],
+                    state,
+                    env,
+                    0,
+                )?;
+                if let Expression::Boolean(true) = r {
                     result.push(item.clone());
                 }
             }
@@ -938,9 +937,10 @@ fn filter_map(
     check_fn_arg(&func, 1, ctx)?;
 
     let mut result = Vec::new();
-    let func_rc = Rc::new(func);
+    let state = &mut State::new();
     for item in list.as_ref().iter() {
-        match Expression::Apply(func_rc.clone(), Rc::new(vec![item.clone()])).eval(env)? {
+        let r = func.eval_apply(&func, &vec![item.clone()], state, env, 0)?;
+        match r {
             Expression::None => continue,
             val => result.push(val),
         }
@@ -989,11 +989,12 @@ fn any(
 
     check_fn_arg(&func, 1, ctx)?;
 
-    let func_rc = Rc::new(func);
+    let state = &mut State::new();
     for item in list.as_ref().iter() {
-        match Expression::Apply(func_rc.clone(), Rc::new(vec![item.clone()])).eval(env)? {
-            Expression::Boolean(true) => return Ok(Expression::Boolean(true)),
-            _ => continue,
+        let r = func.eval_apply(&func, &vec![item.clone()], state, env, 0);
+
+        if let Ok(Expression::Boolean(true)) = &r {
+            return r;
         }
     }
 
@@ -1013,12 +1014,12 @@ fn all(
 
     check_fn_arg(&func, 1, ctx)?;
 
-    let func_rc = Rc::new(func);
-
+    let state = &mut State::new();
     for item in list.as_ref().iter() {
-        match Expression::Apply(func_rc.clone(), Rc::new(vec![item.clone()])).eval(env)? {
-            Expression::Boolean(false) => return Ok(Expression::Boolean(false)),
-            _ => continue,
+        let r = func.eval_apply(&func, &vec![item.clone()], state, env, 0);
+
+        if let Ok(Expression::Boolean(false)) = &r {
+            return r;
         }
     }
 
@@ -1066,10 +1067,12 @@ fn to_map(
     }
 
     let mut map = BTreeMap::new();
+    let state = &mut State::new();
     for item in list.as_ref().iter() {
         let key = match key_fo {
             Some(ref kf) => {
-                match Expression::Apply(kf.clone(), Rc::new(vec![item.clone()])).eval(env)? {
+                let r = kf.eval_apply(&kf, &vec![item.clone()], state, env, 0)?;
+                match r {
                     Expression::String(s) => s,
                     other => other.to_string(),
                 }
@@ -1077,7 +1080,7 @@ fn to_map(
             None => item.to_string(),
         };
         let value = match val_fo {
-            Some(ref vf) => Expression::Apply(vf.clone(), Rc::new(vec![item.clone()])).eval(env)?,
+            Some(ref vf) => vf.eval_apply(&vf, &vec![item.clone()], state, env, 0)?,
             None => item.clone(),
         };
         map.insert(key, value);
@@ -1105,10 +1108,13 @@ fn to_hmap(
     }
 
     let mut map = HashMap::new();
+    let state = &mut State::new();
     for item in list.as_ref().iter() {
         let key = match key_fo {
             Some(ref kf) => {
-                match Expression::Apply(kf.clone(), Rc::new(vec![item.clone()])).eval(env)? {
+                let r = kf.eval_apply(&kf, &vec![item.clone()], state, env, 0)?;
+
+                match r {
                     Expression::String(s) => s,
                     other => other.to_string(),
                 }
@@ -1116,7 +1122,7 @@ fn to_hmap(
             None => item.to_string(),
         };
         let value = match val_fo {
-            Some(ref vf) => Expression::Apply(vf.clone(), Rc::new(vec![item.clone()])).eval(env)?,
+            Some(ref vf) => vf.eval_apply(&vf, &vec![item.clone()], state, env, 0)?,
             None => item.clone(),
         };
         map.insert(key, value);
@@ -1224,14 +1230,22 @@ fn foldl(
     check_args_len("foldl", &args, 2..=3, ctx)?;
     let mut it = args.into_iter();
     let list_exp = it.next().unwrap();
-    let func = Rc::new(it.next().unwrap());
+    let func = it.next().unwrap();
     let list = get_list_ref(&list_exp, ctx)?;
 
     let mut acc = it.next().unwrap_or(Expression::Integer(0));
 
     check_fn_arg(&func, 2, ctx)?;
+    // let body = match func.as_ref() {
+    //     Expression::Function(_, _, _, body, _) => body,
+    //     Expression::Lambda(_, body, _) => body,
+    //     _ => unreachable!(),
+    // };
+    let state = &mut State::new();
     for item in list.as_ref().iter() {
-        acc = Expression::Apply(func.clone(), Rc::new(vec![item.clone(), acc])).eval(env)?;
+        // acc = Expression::Apply(func.clone(), Rc::new(vec![item.clone(), acc]))
+        //     .eval_mut(state, env, 0)?;
+        acc = func.eval_apply(&func, &vec![item.clone(), acc], state, env, 0)?;
     }
     // let mut state = State::new(is_strict(env));
     // match f {
@@ -1266,8 +1280,10 @@ fn foldr(
     let mut acc = it.next().unwrap_or(Expression::Integer(0));
 
     check_fn_arg(&func, 2, ctx)?;
+    let state = &mut State::new();
     for item in list.as_ref().iter().rev() {
-        acc = Expression::Apply(func.clone(), Rc::new(vec![item.clone(), acc])).eval(env)?;
+        // acc = Expression::Apply(func.clone(), Rc::new(vec![item.clone(), acc])).eval(env)?;
+        acc = func.eval_apply(&func, &vec![item.clone(), acc], state, env, 0)?;
     }
     Ok(acc)
 }

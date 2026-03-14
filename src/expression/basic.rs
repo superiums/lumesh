@@ -1050,7 +1050,7 @@ impl Expression {
             //     ($expected:expr, $found:expr) => {
             Err(RuntimeError {
                 kind: RuntimeErrorKind::TypeError {
-                    expected: "symbol".to_string(),
+                    expected: "Symbol".into(),
                     sym: self.to_string(),
                     found: self.type_name(),
                 },

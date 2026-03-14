@@ -69,7 +69,7 @@ fn set_level(
     } else {
         Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "Integer".to_string(),
+                expected: "Integer".into(),
                 sym: args[0].type_name(),
                 found: args[0].to_string(),
             },
@@ -108,7 +108,7 @@ fn enabled(
     } else {
         Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "Integer".to_string(),
+                expected: "Integer".into(),
                 sym: args[0].type_name(),
                 found: args[0].to_string(),
             },

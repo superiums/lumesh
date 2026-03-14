@@ -238,7 +238,7 @@ fn from_items(
     } else {
         Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "List".to_string(),
+                expected: "List".into(),
                 found: expr.type_name(),
                 sym: expr.to_string(),
             },
@@ -356,7 +356,7 @@ fn get_bset_ref<'a>(
         Expression::BSet(s) => Ok(s),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "BSet".to_string(),
+                expected: "Set".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },
@@ -371,7 +371,7 @@ fn into_bset(expr: Expression, ctx: &Expression) -> Result<Rc<BTreeSet<Expressio
         Expression::BSet(s) => Ok(s),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "BSet".to_string(),
+                expected: "BSet".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },

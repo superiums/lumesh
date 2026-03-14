@@ -77,7 +77,7 @@ pub enum RuntimeErrorKind {
     NotAFunction(String),
     #[error("type error, expected `{expected}`, found `{found}`:\n  {sym}")]
     TypeError {
-        expected: String,
+        expected: Cow<'static, str>,
         sym: String,
         found: String,
     },

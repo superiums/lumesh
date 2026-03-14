@@ -154,7 +154,7 @@ pub fn get_float_arg(expr: &Expression, ctx: &Expression) -> Result<f64, Runtime
         Expression::Float(i) => Ok(*i),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "Integer/Float".to_string(),
+                expected: "Integer/Float".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },

@@ -537,7 +537,7 @@ impl Expression {
                 false => Err(RuntimeError::new(
                     RuntimeErrorKind::TypeError {
                         //非法命令
-                        expected: "Symbol as command".to_string(),
+                        expected: "Symbol as command".into(),
                         sym: other.to_string(),
                         found: other.type_name(),
                     },

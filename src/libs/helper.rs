@@ -157,7 +157,7 @@ pub fn get_string_arg(expr: Expression, ctx: &Expression) -> Result<String, Runt
         Expression::Symbol(s) | Expression::String(s) => Ok(s),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "String".to_string(),
+                expected: "String".into(),
                 sym: e.to_string(),
                 found: e.type_name(),
             },
@@ -174,7 +174,7 @@ pub fn get_string_ref<'a>(
         Expression::Symbol(s) | Expression::String(s) => Ok(s),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "String".to_string(),
+                expected: "String".into(),
                 sym: e.to_string(),
                 found: e.type_name(),
             },
@@ -199,7 +199,7 @@ pub fn get_integer_arg(expr: Expression, ctx: &Expression) -> Result<i64, Runtim
         Expression::Integer(i) => Ok(i),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "Integer".to_string(),
+                expected: "Integer".into(),
                 sym: e.to_string(),
                 found: e.type_name(),
             },
@@ -213,7 +213,7 @@ pub fn get_integer_ref(expr: &Expression, ctx: &Expression) -> Result<i64, Runti
         Expression::Integer(i) => Ok(*i),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "Integer".to_string(),
+                expected: "Integer".into(),
                 sym: e.to_string(),
                 found: e.type_name(),
             },
@@ -231,7 +231,7 @@ pub fn get_map_ref<'a>(
         Expression::Map(m) => Ok(m),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "Map".to_string(),
+                expected: "Map".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },
@@ -249,7 +249,7 @@ pub fn get_hmap_ref<'a>(
         Expression::HMap(m) => Ok(m),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "HMap".to_string(),
+                expected: "HMap".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },
@@ -267,7 +267,7 @@ pub fn into_map(
         Expression::Map(m) => Ok(m),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "Map".to_string(),
+                expected: "Map".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },
@@ -285,7 +285,7 @@ pub fn into_hmap(
         Expression::HMap(m) => Ok(m),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "HMap".to_string(),
+                expected: "HMap".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },

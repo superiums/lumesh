@@ -80,7 +80,7 @@ fn r#where(
         } else {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
-                    expected: "Map/HMap/List/Set as Field".to_string(),
+                    expected: "Map/HMap/List/Set as Field".into(),
                     found: row.type_name(),
                     sym: row.to_string(),
                 },

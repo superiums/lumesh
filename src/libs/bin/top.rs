@@ -556,7 +556,7 @@ pub fn len(
         expr => {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
-                    expected: "List/Set/Range/Map/HMap/Symbol/String/Bytes/None".to_string(),
+                    expected: "List/Set/Range/Map/HMap/Symbol/String/Bytes/None".into(),
                     sym: expr.to_string(),
                     found: expr.type_name(),
                     // format!("len not supported for type {}", expr.type_name()).into(),
@@ -760,7 +760,7 @@ pub fn get(
         _ => {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
-                    expected: "symbol/string/integer as path".to_owned(),
+                    expected: "Symbol/String/Integer as path".into(),
                     sym: index.to_string(),
                     found: index.type_name(),
                 },

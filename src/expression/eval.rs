@@ -800,7 +800,7 @@ impl Expression {
                             other => {
                                 return Err(RuntimeError::new(
                                     RuntimeErrorKind::TypeError {
-                                        expected: "Integer".to_owned(),
+                                        expected: "Integer".into(),
                                         sym: other.to_string(),
                                         found: other.type_name(),
                                     },

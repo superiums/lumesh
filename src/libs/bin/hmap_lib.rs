@@ -300,7 +300,7 @@ fn from_items(
     } else {
         Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "List".to_string(),
+                expected: "List".into(),
                 found: expr.type_name(),
                 sym: expr.to_string(),
             },

@@ -503,7 +503,7 @@ fn sort(
         s => {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
-                    expected: "List as last argument".to_string(),
+                    expected: "List as first argument".into(),
                     sym: s.to_string(),
                     found: s.type_name(),
                 },
@@ -1376,7 +1376,7 @@ pub fn get_list_ref<'a>(
         // )),
         e => Err(RuntimeError::new(
             RuntimeErrorKind::TypeError {
-                expected: "List".to_string(),
+                expected: "List".into(),
                 found: e.type_name(),
                 sym: e.to_string(),
             },

@@ -101,9 +101,12 @@ impl Expression {
                     if let Some(expr) = default {
                         match expr {
                             Expression::String(_)
+                            | Expression::Boolean(_)
                             | Expression::Integer(_)
                             | Expression::Float(_)
-                            | Expression::Boolean(_) => {}
+                            | Expression::RegexDef(_)
+                            | Expression::TimeDef(_)
+                            | Expression::DateTime(_) => {}
                             _ => {
                                 return Err(RuntimeError::new(
                                     RuntimeErrorKind::InvalidDefaultValue(
@@ -153,10 +156,14 @@ impl Expression {
             }
 
             Self::Sequence(exprs) => {
-                for expr in exprs {
-                    expr.eval_mut(state, env, depth + 1)?;
+                if exprs.is_empty() {
+                    return Ok(Expression::None);
                 }
-                Ok(Expression::None)
+                let mut last = Expression::None;
+                for expr in exprs {
+                    last = expr.eval_mut(state, env, depth + 1)?;
+                }
+                Ok(last)
             }
 
             // 块表达式

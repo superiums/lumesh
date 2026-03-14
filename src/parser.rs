@@ -729,6 +729,8 @@ impl PrattParser {
                 let body = match rhs {
                     // 已有代码块保持原样
                     Expression::Block(_) => rhs,
+                    // Sequence改写为Block
+                    Expression::Sequence(seq) => Expression::Block(Rc::new(seq)),
                     // 分组表达式展开
                     Expression::Group(boxed_expr) => boxed_expr.as_ref().clone(),
                     // 其他表达式自动包装

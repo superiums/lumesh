@@ -552,11 +552,15 @@ pub fn len(
         Expression::Symbol(x) | Expression::String(x) => x.chars().count() as Int,
         Expression::Bytes(bytes) => bytes.len() as Int,
         Expression::Range(a, b) => a.to_owned().step_by(b.clone()).count() as Int,
+        Expression::None => 0,
         expr => {
             return Err(RuntimeError::new(
-                RuntimeErrorKind::CustomError(
-                    format!("len not supported for type {}", expr.type_name()).into(),
-                ),
+                RuntimeErrorKind::TypeError {
+                    expected: "List/Set/Range/Map/HMap/Symbol/String/Bytes/None".to_string(),
+                    sym: expr.to_string(),
+                    found: expr.type_name(),
+                    // format!("len not supported for type {}", expr.type_name()).into(),
+                },
                 ctx.clone(),
                 0,
             ));

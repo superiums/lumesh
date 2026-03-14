@@ -3,8 +3,8 @@ fn LUME_PROMPT_TEMPLATE(path, ctx) {
 	let who = whoami _
 	let gitb = if fs.exists('.git') { git branch --show-current ?. } else {''}
 	let times = time.now("%H:%M:%S")
-	let cfm = $ctx.cfm ? 'CFM' : ''
-	let strict = $ctx.strict ? 'S' : ''
+	let cfm = $ctx.cfm ? 'CFM' : 'NM'
+	let strict = $ctx.strict ? 'S' : 'F'
 
     let left = [$host,$who,$path,$times]
     let right = [$gitb,$cfm,$strict]

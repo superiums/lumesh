@@ -107,3 +107,7 @@ strip = true      # 移除调试符号
 [profile.amd]
 inherits = "release"
 target-cpu = "native"
+
+[unstable]
+build-std = ["core", "alloc"]
+build-std-features = ["compiler-builtins-mem"]

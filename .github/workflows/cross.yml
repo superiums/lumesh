@@ -101,6 +101,8 @@ jobs:
           - x86_64-unknown-freebsd15
           - aarch64-linux-android
           - aarch64-apple-darwin
+          - loongarch64-linux-gnu
+          - loongarch64-linux-musl
         include:
           - target: x86_64-linux-gnu
             asset_name: lume-x86_64-linux-gnu
@@ -129,6 +131,12 @@ jobs:
           - target: aarch64-apple-darwin
             asset_name: lume-aarch64-apple-darwin
             binary_name: lume
+          - target: loongarch64-linux-gnu
+            asset_name: lume-loongarch64-linux-gnu
+            binary_name: lume
+          - target: loongarch64-linux-musl
+            asset_name: lume-loongarch64-linux-musl
+            binary_name: lume
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -140,7 +148,7 @@ jobs:
           command: build
           targets: ${{ matrix.target }}
           profile: release
-          build-std: core,alloc
+          build-std: true
 
       - name: Rename binary to correct asset name
         run: |

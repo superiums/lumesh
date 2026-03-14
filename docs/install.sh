@@ -47,6 +47,7 @@ detect_platform() {
     case "$(uname -m)" in
         x86_64)     ARCH="x86_64" ;;
         aarch64|arm64) ARCH="aarch64" ;;
+        loongarch64) ARCH="loongarch64" ;;
         *)          echo -e "${RED}Unsupported architecture: $(uname -m)${NC}"; exit 1 ;;
     esac
 }

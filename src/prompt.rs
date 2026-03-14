@@ -148,7 +148,7 @@ impl PromptEngine {
                 if CFM_ENABLED.with_borrow(|cfm| cfm == &true) {
                     "CFM"
                 } else {
-                    ""
+                    "NM"
                 },
             )
             .replace(
@@ -156,7 +156,7 @@ impl PromptEngine {
                 if STRICT_ENABLED.with_borrow(|cfm| cfm == &true) {
                     "S"
                 } else {
-                    ""
+                    "F"
                 },
             );
 

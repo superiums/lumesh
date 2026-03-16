@@ -20,16 +20,16 @@ pub fn regist_lazy() -> LazyModule {
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         // 匹配定位
-        find => "find first regex match with [start, end, text]", "<text> <pattern>"
-        find_all => "find all matches as [[start, end, text], ...]", "<text> <pattern>"
+        find => "find first regex match with [start, end, text]", "<pattern> <text>"
+        find_all => "find all matches as [[start, end, text], ...]", "<pattern> <text>"
         // 匹配验证
-        match => "check if entire text matches pattern", "<text> <pattern>"
+        match => "check if entire text matches pattern", "<pattern> <text>"
         // 捕获组操作
-        capture => "get first capture groups as [full, group1, group2, ...]", "<text> <pattern>"
-        captures => "get all captures as [[full, group1, ...], ...]", "<text> <pattern>"
-        capture_name => "get regex capture groups with names", "<text> <pattern>"
+        capture => "get first capture groups as [full, group1, group2, ...]", "<pattern> <text>"
+        captures => "get all captures as [[full, group1, ...], ...]", "<pattern> <text>"
+        capture_name => "get regex capture groups with names", "<pattern> <text>"
         // 文本处理
-        split => "split text by regex pattern", "<text> <pattern>"
+        split => "split text by regex pattern", "<pattern> <text>"
         replace => "replace all regex matches in text", "<text> <pattern> <replacement>"
 
     })

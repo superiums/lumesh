@@ -1,6 +1,6 @@
 use super::{CatchType, Expression};
 use crate::expression::{ChainCall, DestructurePattern};
-use crate::libs::is_lib;
+use crate::libs::{is_lib, is_top_or_se};
 use crate::{RuntimeError, RuntimeErrorKind};
 use std::borrow::Cow;
 // use num_traits::pow;
@@ -1274,13 +1274,14 @@ impl Expression {
             }
             // for cmd: never add, default is pipeout to stdio
             // Except lib func like: ui.pick
-            // Top func receiver goes to: ensure_sym_as_cmd
+            // cmd without args, goes to: ensure_sym_as_cmd
             // only accept if user request
             Expression::Command(f, existing_args) => {
                 if existing_args.iter().any(|a| a == &Expression::Blank) {
                     Cow::Borrowed(self)
                 } else {
                     match f.as_ref() {
+                        // like 'ui.pick args'
                         Expression::Property(base, _) => {
                             if let Expression::Symbol(name) = base.as_ref()
                                 && is_lib(name)
@@ -1292,6 +1293,13 @@ impl Expression {
                             } else {
                                 Cow::Borrowed(self)
                             }
+                        }
+                        // like 'print args'
+                        Expression::Symbol(sym) if is_top_or_se(sym) => {
+                            let mut new_vec = Vec::with_capacity(existing_args.len() + 1);
+                            new_vec.push(Expression::Blank);
+                            new_vec.extend_from_slice(existing_args);
+                            Cow::Owned(Expression::Command(f.clone(), Rc::new(new_vec)))
                         }
                         _ => Cow::Borrowed(self),
                     }

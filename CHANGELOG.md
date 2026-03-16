@@ -2,6 +2,7 @@
 
 ## [0.13.8]
 - add receiver for lib calls on right of pipe
+- add receiver for top lib on right of pipe
 - add `set/range` option support for `ui.pick`
 
 ## [0.13.7]

@@ -41,7 +41,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         cmd => "parse command output into structured data", "<cmd_output_string> [headers|header...]"
 
         // 数据查询
-        jq => "Apply jq-like query to JSON or TOML data", "<json_data> <query_string>"
+        jq => "Apply jq-like query to JSON or TOML data", "<query_string> <json_data>"
 
     })
 }
@@ -213,8 +213,8 @@ fn jq(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("jq", &args, 2, ctx)?;
-    let input = &args[0];
-    let query = &args[1];
+    let query = &args[0];
+    let input = &args[1];
 
     let json_value = match input {
         Expression::String(s) => s.parse::<JsonValue>().map_err(|e| {

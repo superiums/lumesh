@@ -61,7 +61,7 @@ thread_local! {
     static MAP_LIB: LazyModule = bin::map_lib::regist_lazy();
     static HMAP_LIB: LazyModule = bin::hmap_lib::regist_lazy();
     static TIME_LIB: LazyModule = bin::time_lib::regist_lazy();
-    static REGEX_LIB: LazyModule = bin::reg_lib::regist_lazy();
+    static REGEX_LIB: LazyModule = bin::regex_lib::regist_lazy();
     static MATH_LIB: LazyModule = bin::math_lib::regist_lazy();
     static RAND_LIB: LazyModule = bin::rand_lib::regist_lazy();
     static LOG_LIB: LazyModule = bin::log_lib::regist_lazy();
@@ -89,7 +89,7 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
     libs_info.insert("map", bin::map_lib::regist_info());
     libs_info.insert("hmap", bin::hmap_lib::regist_info());
     libs_info.insert("time", bin::time_lib::regist_info());
-    libs_info.insert("regex", bin::reg_lib::regist_info());
+    libs_info.insert("regex", bin::regex_lib::regist_info());
     libs_info.insert("math", bin::math_lib::regist_info());
     libs_info.insert("rand", bin::rand_lib::regist_info());
     libs_info.insert("fs", bin::fs_lib::regist_info());

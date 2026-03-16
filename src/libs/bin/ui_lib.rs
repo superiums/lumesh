@@ -166,26 +166,29 @@ fn multi_pick(
 
 fn selector_wrapper(
     multi: bool,
-    args: Vec<Expression>,
+    mut args: Vec<Expression>,
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let ifs = env.get("IFS");
-    let delimiter = match (ifs_contains(IFS_PCK, env), &ifs) {
-        (true, Some(Expression::String(fs))) => fs,
-        _ => "\n",
-    };
-
-    let (cfgs, options) = match args.len() {
-        1 => (None, extract_options(delimiter, &args[0], ctx)?),
-        2 => (
-            Some(extract_cfg(&args[1], ctx)?),
-            extract_options(delimiter, &args[0], ctx)?,
+    let (options, cfgs) = match args.len() {
+        1 => (
+            extract_options(args.into_iter().next().unwrap(), env, ctx)?,
+            None,
         ),
-        3.. => (
-            Some(extract_cfg(&args.last().unwrap(), ctx)?),
-            args[..args.len() - 2].to_vec(),
-        ),
+        2 => {
+            let mut it = args.into_iter();
+            (
+                extract_options(it.next().unwrap(), env, ctx)?,
+                Some(extract_cfg(it.next().unwrap(), ctx)?),
+            )
+        }
+        3.. => {
+            let last = args.split_off(args.len() - 1);
+            (
+                args.to_vec(),
+                Some(extract_cfg(last.into_iter().next().unwrap(), ctx)?),
+            )
+        }
         0 => {
             return Err(RuntimeError::common(
                 "pick requires a string or list as options".into(),
@@ -319,29 +322,38 @@ fn multi_select_wrapper(
     }
 }
 fn extract_options(
-    delimiter: &str,
-    expr: &Expression,
+    expr: Expression,
+    env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Vec<Expression>, RuntimeError> {
     match expr {
         Expression::List(list) => Ok(list.as_ref().clone()),
-        Expression::String(str) => Ok(str
-            .split_terminator(delimiter)
-            .map(|line| Expression::String(line.to_string()))
-            .collect::<Vec<_>>()),
+        Expression::BSet(bset) => Ok(bset.iter().cloned().collect()),
+        Expression::Range(range, step) => Ok(range.step_by(step).map(Expression::from).collect()),
+        Expression::String(str) => {
+            let ifs = env.get("IFS");
+            let delimiter = match (ifs_contains(IFS_PCK, env), &ifs) {
+                (true, Some(Expression::String(fs))) => fs,
+                _ => "\n",
+            };
+            Ok(str
+                .split_terminator(delimiter)
+                .map(|line| Expression::String(line.to_string()))
+                .collect::<Vec<_>>())
+        }
         _ => Err(RuntimeError::common(
-            "pick requires a list/string as options".into(),
+            "pick requires a list/set/range/string as options".into(),
             ctx.clone(),
             0,
         )),
     }
 }
 fn extract_cfg(
-    expr: &Expression,
+    expr: Expression,
     ctx: &Expression,
 ) -> Result<Rc<BTreeMap<String, Expression>>, RuntimeError> {
     match expr {
-        Expression::Map(cfg) => Ok(cfg.clone()), // 返回引用
+        Expression::Map(cfg) => Ok(cfg), // 返回引用
         Expression::String(msg) | Expression::Symbol(msg) => {
             // 创建一个新的 BTreeMap 并返回
             let mut map = BTreeMap::new();

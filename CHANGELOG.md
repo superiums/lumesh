@@ -1,6 +1,9 @@
 # Changelog
 
-## [0.13.6]
+## [0.13.8]
+- add receiver for lib calls on right of pipe
+
+## [0.13.7]
 - introduce `%{}` for explicit scopes
 keep functions/lambdas and loops as isolated scopes by default without explicit declare.
 

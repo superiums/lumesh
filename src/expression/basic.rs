@@ -1,5 +1,6 @@
 use super::{CatchType, Expression};
 use crate::expression::{ChainCall, DestructurePattern};
+use crate::libs::is_lib;
 use crate::{RuntimeError, RuntimeErrorKind};
 use std::borrow::Cow;
 // use num_traits::pow;
@@ -1272,17 +1273,30 @@ impl Expression {
                 }
             }
             // for cmd: never add, default is pipeout to stdio
+            // Except lib func like: ui.pick
+            // Top func receiver goes to: ensure_sym_as_cmd
             // only accept if user request
-            // Expression::Command(f, existing_args) => {
-            //     Cow::Borrowed(self)
-            // if existing_args.iter().any(|a| a == &Expression::Blank) {
-            // } else {
-            //     let mut new_vec = Vec::with_capacity(existing_args.len() + 1);
-            //     new_vec.push(Expression::Blank);
-            //     new_vec.extend_from_slice(existing_args);
-            //     Cow::Owned(Expression::Command(f.clone(), Rc::new(new_vec)))
-            // }
-            // }
+            Expression::Command(f, existing_args) => {
+                if existing_args.iter().any(|a| a == &Expression::Blank) {
+                    Cow::Borrowed(self)
+                } else {
+                    match f.as_ref() {
+                        Expression::Property(base, _) => {
+                            if let Expression::Symbol(name) = base.as_ref()
+                                && is_lib(name)
+                            {
+                                let mut new_vec = Vec::with_capacity(existing_args.len() + 1);
+                                new_vec.push(Expression::Blank);
+                                new_vec.extend_from_slice(existing_args);
+                                Cow::Owned(Expression::Command(f.clone(), Rc::new(new_vec)))
+                            } else {
+                                Cow::Borrowed(self)
+                            }
+                        }
+                        _ => Cow::Borrowed(self),
+                    }
+                }
+            }
             // for chain: only add to head of first call if user not request.
             Expression::Chain(base, calls) => {
                 if calls.is_empty() || calls[0].args.contains(&Expression::Blank) {

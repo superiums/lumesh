@@ -599,9 +599,7 @@ fn eval_str(
     check_exact_args_len("eval_str", &args, 1, ctx)?;
     let exp = match &args[0] {
         Expression::String(cmd) => cmd,
-        Expression::StringTemplate(_) | Expression::Symbol(_) | Expression::Variable(_) => {
-            &args[0].clone().to_string()
-        }
+        Expression::StringTemplate(s) | Expression::Symbol(s) | Expression::Variable(s) => s,
         Expression::Group(cmd) => match cmd.as_ref() {
             Expression::String(cmd) => cmd,
             _ => {

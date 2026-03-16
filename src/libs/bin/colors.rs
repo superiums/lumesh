@@ -364,6 +364,7 @@ pub fn regist_const_style() -> BTreeMap<&'static str, BuiltinInfo> {
         HIDDEN => "",""
         STRIKE => "",""
 
+        RESET => "",""
         RESET_NORMAL => "",""
         RESET_BOLD => "",""
         RESET_DIM => "",""

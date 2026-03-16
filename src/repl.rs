@@ -644,7 +644,7 @@ impl Hinter for LumeHelper {
                                 (
                                     lib.iter()
                                         .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
-                                        .map(|(f, info)| format!("{f} {}", info.hint))
+                                        .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
                                         .collect::<Vec<_>>(),
                                     func.len(),
                                 )
@@ -661,7 +661,7 @@ impl Hinter for LumeHelper {
                             (
                                 lib.iter()
                                     .filter(|(f, _)| f.starts_with(segment.trim_matches(ends)))
-                                    .map(|(f, info)| format!("{f} {}", info.hint))
+                                    .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
                                     .collect::<Vec<_>>(),
                                 segment.len(),
                             )
@@ -671,9 +671,9 @@ impl Hinter for LumeHelper {
                     }),
                 };
                 // 权重降序, 较短的优先
-                matches.sort_by(|a, b| a.len().cmp(&b.len()));
+                matches.sort_by(|a, b| a.1.cmp(&b.1));
                 // dbg!(&matches);
-                if let Some(matched) = matches.first() {
+                if let Some((matched, _)) = matches.first() {
                     let suffix = &matched[hint_pos..];
                     if !suffix.is_empty() {
                         return Some(suffix.to_string());

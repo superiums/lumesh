@@ -31,7 +31,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         height => "get the height of the console", ""
 
         // Output control
-        write => "write text to a specific position in the console", "<x> <y> <text>"
+        write => "write text to a specific position in the console", "<text> <x> <y>"
         title => "set the title of the console", "<string>"
         clear => "clear the console", ""
         flush => "flush the console", ""
@@ -91,9 +91,9 @@ fn write(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("write", &args, 3, ctx)?;
 
-    let x = &args[0];
-    let y = &args[1];
-    let content = &args[2];
+    let content = &args[0];
+    let x = &args[1];
+    let y = &args[2];
 
     match (x, y) {
         (Expression::Integer(x), Expression::Integer(y)) => {

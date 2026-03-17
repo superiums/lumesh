@@ -18,6 +18,7 @@ pub fn regist_se() -> HashMap<&'static str, SelfExpandFunc> {
     module.insert("repeat", repeat);
     module.insert("debug", debug);
     module.insert("ddebug", ddebug);
+    module.insert("symof", symof);
     module.insert("typeof", r#typeof);
     module.insert("set_root", set_root);
     module.insert("unset_root", unset_root);
@@ -32,7 +33,8 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
       ddebug => "print pretty debug", "<args>..."
 
       // Data manipulation
-      typeof => "get data type", "<value>"
+      symof => "get type of data symbol", "<value>"
+      typeof => "get type of data value", "<value>"
       where => "filter rows by condition", "<list[map/list/set]> <condition> "
 
       // Execution control
@@ -158,15 +160,18 @@ fn r#typeof(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("typeof", &args, 1, ctx)?;
+    let t = args[0].eval_with_assign(state, env)?.type_name();
+    Ok(Expression::from(t))
+}
+fn r#symof(
+    args: &[Expression],
+    env: &mut Environment,
+    state: &mut State,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("symof", &args, 1, ctx)?;
     let t = args[0].type_name();
-    let t1 = args[0].eval_with_assign(state, env)?.type_name();
-    // println!("{}", t);
-    // println!("----------");
-    // println!("{}", t1);
-    Ok(Expression::from(vec![
-        Expression::from(t),
-        Expression::from(t1),
-    ]))
+    Ok(Expression::from(t))
 }
 
 // Print Formated

@@ -5,6 +5,7 @@
 - add receiver for top lib on right of pipe
 - add `set/range` option support for `ui.pick`
 - fix hint sort for lib functions
+- split symof and typeof
 
 ## [0.13.7]
 - introduce `%{}` for explicit scopes

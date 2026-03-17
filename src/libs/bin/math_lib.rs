@@ -460,11 +460,33 @@ pub fn sum(
     let mut float_sum = 0.0;
     let mut has_float = false;
 
-    for num in args {
+    let numbers = match args.len() {
+        0 => {
+            return Err(RuntimeError::common(
+                "sum requires some arguments".into(),
+                ctx.clone(),
+                0,
+            ));
+        }
+        1 => match args.into_iter().next().unwrap() {
+            Expression::List(list) => list.as_ref(),
+            Expression::BSet(list) => list.iter().collect(),
+            _ => {
+                return Err(RuntimeError::common(
+                    "sum requires numeric arguments".into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        },
+        2.. => args.as_ref(),
+    };
+
+    for num in numbers {
         match num {
             Expression::Integer(i) => {
                 if has_float {
-                    float_sum += i as f64;
+                    float_sum += *i as f64;
                 } else {
                     int_sum += i;
                 }
@@ -503,10 +525,32 @@ pub fn average(
     let mut sum = 0.0;
     let mut count = 0;
 
-    for num in args {
+    let numbers = match args.len() {
+        0 => {
+            return Err(RuntimeError::common(
+                "average requires some arguments".into(),
+                ctx.clone(),
+                0,
+            ));
+        }
+        1 => match args.into_iter().next().unwrap() {
+            Expression::List(list) => list.as_ref(),
+            Expression::BSet(list) => list.iter().collect(),
+            _ => {
+                return Err(RuntimeError::common(
+                    "average requires numeric arguments".into(),
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        },
+        2.. => args.as_ref(),
+    };
+
+    for num in numbers {
         match num {
             Expression::Integer(i) => {
-                sum += i as f64;
+                sum += *i as f64;
                 count += 1;
             }
             Expression::Float(f) => {

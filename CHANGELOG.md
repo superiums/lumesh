@@ -6,6 +6,7 @@
 - add `set/range` option support for `ui.pick`
 - fix hint sort for lib functions
 - split symof and typeof
+- add List/Set support in `math.sum`,`math.average`
 
 ## [0.13.7]
 - introduce `%{}` for explicit scopes

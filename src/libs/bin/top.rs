@@ -18,7 +18,7 @@ use crate::{
 
 pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
-        exit, cd, cwd,
+        exit, cd, cwd, symof,
         tap, print, pprint, println, eprint, eprintln, read,
 
         get, len, insert, rev, flatten,  select,
@@ -41,6 +41,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         // unset => "undefine a variable in root environment", "<var>"
 
         // I/O operations
+        symof => "get type of data symbol", "<value>"
         tap => "print and return result", "<args>..."
         print => "print arguments without newline", "<args>..."
         pprint => "pretty print", "<list>|<map>"
@@ -374,6 +375,16 @@ fn cwd(
 ) -> Result<Expression, RuntimeError> {
     let path = get_current_path(env);
     Ok(Expression::String(path.to_string_lossy().into_owned()))
+}
+
+fn symof(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("symof", &args, 1, ctx)?;
+    let t = args[0].type_name();
+    Ok(Expression::from(t))
 }
 
 fn tap(

@@ -460,7 +460,7 @@ pub fn sum(
     let mut float_sum = 0.0;
     let mut has_float = false;
 
-    let numbers = match args.len() {
+    match args.len() {
         0 => {
             return Err(RuntimeError::common(
                 "sum requires some arguments".into(),

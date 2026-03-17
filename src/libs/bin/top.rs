@@ -710,7 +710,7 @@ fn select(
                     .iter()
                     .filter_map(|col_expr| {
                         let col = col_expr.to_string();
-                        dbg!(&col, &row_map.get(&col));
+                        // dbg!(&col, &row_map.get(&col));
                         row_map.as_ref().get(&col).map(|val| (col, val.clone()))
                     })
                     .collect::<BTreeMap<_, _>>();

@@ -469,8 +469,30 @@ pub fn sum(
             ));
         }
         1 => match args.into_iter().next().unwrap() {
-            Expression::List(list) => list.as_ref(),
-            Expression::BSet(list) => list.iter().collect(),
+            Expression::List(list) => {
+                if list.iter().any(|item| item.type_name() == "Float") {
+                    float_sum = list.iter().fold(0 as f64, |acc, x| {
+                        acc + get_float_arg(x, ctx).unwrap_or(0 as f64)
+                    });
+                    has_float = true
+                } else {
+                    int_sum = list
+                        .iter()
+                        .fold(0, |acc, x| acc + get_integer_ref(x, ctx).unwrap_or(0));
+                }
+            }
+            Expression::BSet(list) => {
+                if list.iter().any(|item| item.type_name() == "Float") {
+                    float_sum = list.iter().fold(0 as f64, |acc, x| {
+                        acc + get_float_arg(x, ctx).unwrap_or(0 as f64)
+                    });
+                    has_float = true
+                } else {
+                    int_sum = list
+                        .iter()
+                        .fold(0, |acc, x| acc + get_integer_ref(x, ctx).unwrap_or(0));
+                }
+            }
             _ => {
                 return Err(RuntimeError::common(
                     "sum requires numeric arguments".into(),
@@ -479,34 +501,34 @@ pub fn sum(
                 ));
             }
         },
-        2.. => args.as_ref(),
-    };
-
-    for num in numbers {
-        match num {
-            Expression::Integer(i) => {
-                if has_float {
-                    float_sum += *i as f64;
-                } else {
-                    int_sum += i;
+        2.. => {
+            for num in args {
+                match num {
+                    Expression::Integer(i) => {
+                        if has_float {
+                            float_sum += i as f64;
+                        } else {
+                            int_sum += i;
+                        }
+                    }
+                    Expression::Float(f) => {
+                        if !has_float {
+                            float_sum = int_sum as f64;
+                            has_float = true;
+                        }
+                        float_sum += f;
+                    }
+                    _ => {
+                        return Err(RuntimeError::common(
+                            "sum requires numeric arguments".into(),
+                            ctx.clone(),
+                            0,
+                        ));
+                    }
                 }
-            }
-            Expression::Float(f) => {
-                if !has_float {
-                    float_sum = int_sum as f64;
-                    has_float = true;
-                }
-                float_sum += f;
-            }
-            _ => {
-                return Err(RuntimeError::common(
-                    "sum requires numeric arguments".into(),
-                    ctx.clone(),
-                    0,
-                ));
             }
         }
-    }
+    };
 
     if has_float {
         Ok(Expression::Float(float_sum))
@@ -525,7 +547,7 @@ pub fn average(
     let mut sum = 0.0;
     let mut count = 0;
 
-    let numbers = match args.len() {
+    match args.len() {
         0 => {
             return Err(RuntimeError::common(
                 "average requires some arguments".into(),
@@ -534,8 +556,18 @@ pub fn average(
             ));
         }
         1 => match args.into_iter().next().unwrap() {
-            Expression::List(list) => list.as_ref(),
-            Expression::BSet(list) => list.iter().collect(),
+            Expression::List(list) => {
+                sum = list.iter().fold(0 as f64, |acc, x| {
+                    acc + get_float_arg(x, ctx).unwrap_or(0 as f64)
+                });
+                count = list.len();
+            }
+            Expression::BSet(list) => {
+                sum = list.iter().fold(0 as f64, |acc, x| {
+                    acc + get_float_arg(x, ctx).unwrap_or(0 as f64)
+                });
+                count = list.len();
+            }
             _ => {
                 return Err(RuntimeError::common(
                     "average requires numeric arguments".into(),
@@ -544,28 +576,28 @@ pub fn average(
                 ));
             }
         },
-        2.. => args.as_ref(),
-    };
-
-    for num in numbers {
-        match num {
-            Expression::Integer(i) => {
-                sum += *i as f64;
-                count += 1;
-            }
-            Expression::Float(f) => {
-                sum += f;
-                count += 1;
-            }
-            _ => {
-                return Err(RuntimeError::common(
-                    "average requires numeric arguments".into(),
-                    ctx.clone(),
-                    0,
-                ));
+        2.. => {
+            for num in args {
+                match num {
+                    Expression::Integer(i) => {
+                        sum += i as f64;
+                        count += 1;
+                    }
+                    Expression::Float(f) => {
+                        sum += f;
+                        count += 1;
+                    }
+                    _ => {
+                        return Err(RuntimeError::common(
+                            "average requires numeric arguments".into(),
+                            ctx.clone(),
+                            0,
+                        ));
+                    }
+                }
             }
         }
-    }
+    };
 
     Ok(Expression::Float(sum / count as f64))
 }

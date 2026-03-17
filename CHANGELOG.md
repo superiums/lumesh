@@ -5,8 +5,13 @@
 - add receiver for top lib on right of pipe
 - add `set/range` option support for `ui.pick`
 - fix hint sort for lib functions
-- split symof and typeof
+- split `symof` and `typeof`
 - add List/Set support in `math.sum`,`math.average`
+- fix `select` symbol was expanded to variable after `where`
+
+clear local vars declared in `where` after finished.
+
+now `fs.ls -l | where(size > 10K) | select([name,size,type])` works as well.
 
 ## [0.13.7]
 - introduce `%{}` for explicit scopes

@@ -58,6 +58,12 @@ fn r#where(
     let list = get_list_ref(&list, ctx)?;
 
     let mut filtered = Vec::new();
+    let is_last_local = state.contains(State::IN_LOCAL);
+    let last_local_vars = if is_last_local {
+        Some(state.get_local_vars())
+    } else {
+        None
+    };
     state.set(State::IN_LOCAL);
     for (i, row) in list.iter().enumerate() {
         state.set_local_var("NR".to_string(), Expression::Integer(i as i64));
@@ -94,6 +100,14 @@ fn r#where(
             filtered.push(row.clone());
         }
     }
+
+    if is_last_local {
+        state.set_local_vars(last_local_vars.unwrap());
+    } else {
+        state.clear_local_var();
+        state.clear(State::IN_LOCAL);
+    }
+
     Ok(Expression::from(filtered))
 }
 

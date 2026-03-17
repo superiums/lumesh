@@ -8,7 +8,7 @@ use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind, VERSION,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
-        bin::boolean_lib::not,
+        bin::{boolean_lib::not, list_lib::get_list_ref},
         helper::{check_args_len, check_exact_args_len, get_string_ref},
         pretty_printer,
     },
@@ -685,46 +685,22 @@ pub fn flatten(
 }
 
 fn select(
-    args: Vec<Expression>,
+    mut args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    // check_exact_args_len("select", &args, 2)?;
-
-    let headers = match args.len() {
-        3.. => args[1..].iter().map(|a| a.to_string()).collect::<Vec<_>>(),
-        2 => {
-            if let Expression::List(list) = &args[1] {
-                list.as_ref()
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect::<Vec<_>>()
-            } else {
-                vec![args[1].to_string()]
-            }
-        }
-        0..2 => {
-            return Err(RuntimeError::common(
-                "select required 2 or more args".into(),
-                ctx.clone(),
-                0,
-            ));
-        }
+    check_args_len("select", &args, 2.., ctx)?;
+    let headers = match args.split_off(1) {
+        s if s.len() == 1 => match s.first().unwrap() {
+            Expression::List(list) => list.as_ref().clone(),
+            Expression::BSet(list) => list.as_ref().iter().cloned().collect(),
+            _ => s,
+        },
+        s => s,
     };
+    let data = get_list_ref(&args[0], ctx)?;
 
-    let data = if let Expression::List(list) = &args[0] {
-        list
-    } else {
-        return Err(RuntimeError::common(
-            "Expected list for column selection".into(),
-            ctx.clone(),
-            0,
-        ));
-    };
-
-    // dbg!(&data, &headers);
     let result = data
-        .as_ref()
         .iter()
         .filter_map(|row| {
             // dbg!(&row, &row.type_name());
@@ -732,12 +708,10 @@ fn select(
                 // dbg!(&row_map);
                 let selected = headers
                     .iter()
-                    .filter_map(|col: &String| {
-                        // dbg!(&col, &row_map.get(col));
-                        row_map
-                            .as_ref()
-                            .get(col)
-                            .map(|val| (col.clone(), val.clone()))
+                    .filter_map(|col_expr| {
+                        let col = col_expr.to_string();
+                        dbg!(&col, &row_map.get(&col));
+                        row_map.as_ref().get(&col).map(|val| (col, val.clone()))
                     })
                     .collect::<BTreeMap<_, _>>();
 

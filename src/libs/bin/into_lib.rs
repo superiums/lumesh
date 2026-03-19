@@ -1,5 +1,7 @@
 use std::collections::BTreeMap;
 
+use regex_lite::Regex;
+
 use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
     expression::{FileSize, table::TableData},
@@ -45,7 +47,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         time => "convert a string to a datetime", "<datetime_str> [datetime_template]"
 
         // 解析第三方命令输出（parse库）
-        table => "convert third-party command output to a table", "<command_output> [headers|header...]"
+        table => "convert third-party command output to a table", "<command_output> [regex|headers...]"
 
         // 数据格式序列化
         toml => "parse lumesh expression into TOML", "<expr>"
@@ -71,14 +73,8 @@ pub fn table(
 ) -> Result<Expression, RuntimeError> {
     check_args_len("table", &args, 1.., ctx)?;
 
-    let headers: Vec<String> = match args.split_off(1) {
-        s if s.len() == 1 => match s.first().unwrap() {
-            Expression::List(list) => list.as_ref().iter().map(|x| x.to_string()).collect(),
-            Expression::BSet(list) => list.as_ref().iter().map(|x| x.to_string()).collect(),
-            _ => s.iter().map(|x| x.to_string()).collect(),
-        },
-        s => s.iter().map(|x| x.to_string()).collect(),
-    };
+    let opts = args.split_off(1);
+
     let data = match args.into_iter().next().unwrap() {
         Expression::String(s) => s,
         // 转换 List<Map> 到 TableData
@@ -100,6 +96,8 @@ pub fn table(
         }
     };
 
+    // ---convert string---
+    // lines
     let mut lines: Vec<&str> = data.lines().collect();
     if lines.is_empty() {
         return Ok(Expression::None);
@@ -113,38 +111,46 @@ pub fn table(
         }
     }
 
-    // filter too short tips lines
+    // headers
+    let (headers, splitter): (Vec<String>, Option<Regex>) = match opts {
+        s if s.is_empty() => (Vec::new(), None),
+        s if s.len() == 1 => match s.first().unwrap() {
+            Expression::List(list) => (list.as_ref().iter().map(|x| x.to_string()).collect(), None),
+            Expression::BSet(list) => (list.as_ref().iter().map(|x| x.to_string()).collect(), None),
+            Expression::Regex(r) => (Vec::new(), Some(r.regex.clone())),
+            _ => (s.iter().map(|x| x.to_string()).collect(), None),
+        },
+        s => (s.iter().map(|x| x.to_string()).collect(), None),
+    };
+
+    // Filter short tip lines
     if lines.len() > 2 {
-        if lines[0].split_whitespace().collect::<Vec<&str>>().len()
-            < lines[1].split_whitespace().collect::<Vec<&str>>().len()
-        {
+        let first_line_cols = split_line(&lines[0], &splitter);
+        let second_line_cols = split_line(&lines[1], &splitter);
+
+        if first_line_cols.len() < second_line_cols.len() {
             lines.remove(0);
         }
-        if lines
-            .last()
-            .unwrap()
-            .split_whitespace()
-            .collect::<Vec<&str>>()
-            .len()
-            < lines[lines.len() - 2]
-                .split_whitespace()
-                .collect::<Vec<&str>>()
-                .len()
-        {
+
+        let last_line_cols = split_line(lines.last().unwrap(), &splitter);
+        let second_last_line_cols = split_line(&lines[lines.len() - 2], &splitter);
+
+        if last_line_cols.len() < second_last_line_cols.len() {
             lines.pop();
         }
     }
 
-    // Try to detect if first line looks like headers
+    // Try to detect headers
     let (data_lines, detected_headers) = if headers.is_empty() {
         let maybe_header = lines[0];
-        let looks_like_header = maybe_header
-            .split_whitespace()
+        let first_line_cols = split_line(&maybe_header, &splitter);
+        let looks_like_header = first_line_cols
+            .iter()
             .all(|s| s.chars().any(|c| c.is_uppercase() || !c.is_ascii()));
 
         if looks_like_header {
-            let detected = maybe_header
-                .split_whitespace()
+            let detected = first_line_cols
+                .iter()
                 .map(|s| {
                     s.replace(":", "_")
                         .replace("\"", "")
@@ -152,22 +158,21 @@ pub fn table(
                         .replace("(", "_")
                         .replace(")", "")
                         .replace("$", "")
-                        .to_string()
                 })
                 .collect();
-            (&lines[1..], detected)
+            (lines.split_off(1), detected)
         } else {
-            // No headers detected, use column numbers
-            let cols = lines[0]
-                .split_whitespace()
+            // Use column numbers
+            let cols = first_line_cols
+                .iter()
                 .enumerate()
                 .map(|(i, _)| format!("C{i}"))
                 .collect();
-            (&lines[..], cols)
+            (lines, cols)
         }
     } else {
         // Use provided headers
-        (&lines[..], headers)
+        (lines, headers)
     };
 
     let mut rows = Vec::with_capacity(data_lines.len());
@@ -176,11 +181,11 @@ pub fn table(
             continue;
         }
 
-        let slist = line.split_whitespace().collect::<Vec<_>>();
+        let slist: Vec<&str> = split_line(line, &splitter);
         let mut row = Vec::with_capacity(detected_headers.len());
 
         for (i, _header) in detected_headers.iter().enumerate() {
-            if let Some(&value) = slist.get(i) {
+            if let Some(value) = slist.get(i) {
                 row.push(Expression::String(value.to_string()));
             } else {
                 row.push(Expression::None);
@@ -193,6 +198,14 @@ pub fn table(
     }
 
     Ok(Expression::Table(TableData::new(detected_headers, rows)))
+}
+
+// Helper function to split line using regex or whitespace
+fn split_line<'a>(line: &'a str, regex: &Option<Regex>) -> Vec<&'a str> {
+    match regex {
+        Some(re) => re.split(line).collect(),
+        None => line.split_whitespace().collect(),
+    }
 }
 
 fn boolean(

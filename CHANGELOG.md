@@ -4,6 +4,7 @@
 - introduce `table` expression
 builtin lib `table` also was added.
 - optimize libs: `into` and `from`
+- allow regex split in `into.table()`
 
 ## [0.13.8]
 

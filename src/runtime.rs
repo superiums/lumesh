@@ -104,7 +104,10 @@ pub fn parse_and_eval(text: &str, env: &mut Environment) -> bool {
                 Ok(m)
                     if matches!(
                         m,
-                        Expression::Map(_) | Expression::HMap(_) | Expression::List(_)
+                        Expression::Map(_)
+                            | Expression::HMap(_)
+                            | Expression::List(_)
+                            | Expression::Table(_)
                     ) =>
                 {
                     let _ = pretty_printer(&m);

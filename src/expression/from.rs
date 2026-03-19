@@ -1,3 +1,5 @@
+use crate::expression::TableData;
+
 use super::{Environment, Expression, Int};
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap},
@@ -89,6 +91,13 @@ where
                 .map(|item| item.into())
                 .collect::<BTreeSet<Self>>(),
         ))
+    }
+}
+
+// 添加 From trait 实现
+impl From<TableData> for Expression {
+    fn from(table: TableData) -> Self {
+        Self::Table(table)
     }
 }
 

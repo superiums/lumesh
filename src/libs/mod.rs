@@ -60,6 +60,7 @@ thread_local! {
     static BSET_LIB: LazyModule = bin::bset_lib::regist_lazy();
     static MAP_LIB: LazyModule = bin::map_lib::regist_lazy();
     static HMAP_LIB: LazyModule = bin::hmap_lib::regist_lazy();
+    static TABLE_LIB: LazyModule = bin::table_lib::regist_lazy();
     static TIME_LIB: LazyModule = bin::time_lib::regist_lazy();
     static REGEX_LIB: LazyModule = bin::regex_lib::regist_lazy();
     static MATH_LIB: LazyModule = bin::math_lib::regist_lazy();
@@ -88,6 +89,7 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
     libs_info.insert("set", bin::bset_lib::regist_info());
     libs_info.insert("map", bin::map_lib::regist_info());
     libs_info.insert("hmap", bin::hmap_lib::regist_info());
+    libs_info.insert("table", bin::table_lib::regist_info());
     libs_info.insert("time", bin::time_lib::regist_info());
     libs_info.insert("regex", bin::regex_lib::regist_info());
     libs_info.insert("math", bin::math_lib::regist_info());
@@ -120,6 +122,7 @@ pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<Builtin
         "set" => BSET_LIB.with(|m| m.get_function(fn_name)),
         "map" => MAP_LIB.with(|m| m.get_function(fn_name)),
         "hmap" => HMAP_LIB.with(|m| m.get_function(fn_name)),
+        "table" => TABLE_LIB.with(|m| m.get_function(fn_name)),
         "time" => TIME_LIB.with(|m| m.get_function(fn_name)),
         "regex" => REGEX_LIB.with(|m| m.get_function(fn_name)),
         "math" => MATH_LIB.with(|m| m.get_function(fn_name)),
@@ -206,6 +209,7 @@ fn get_belong_lib_name(exp: &Expression) -> Option<Cow<'static, str>> {
         Expression::BSet(_) => Some("set".into()),
         Expression::Map(_) => Some("map".into()),
         Expression::HMap(_) => Some("hmap".into()),
+        Expression::Table(_) => Some("table".into()),
         Expression::String(_) | Expression::StringTemplate(_) | Expression::Bytes(_) => {
             Some("string".into())
         }

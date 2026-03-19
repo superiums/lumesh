@@ -1,6 +1,11 @@
 # Changelog
 
+## [0.14.0]
+- introduce `table` expression
+builtin lib `table` also was added.
+
 ## [0.13.8]
+
 - add receiver for lib calls on right of pipe
 - add receiver for top lib on right of pipe
 - add `set/range` option support for `ui.pick`
@@ -14,8 +19,9 @@ clear local vars declared in `where` after finished.
 now `fs.ls -l | where(size > 10K) | select([name,size,type])` works as well.
 
 ## [0.13.7]
+
 - introduce `%{}` for explicit scopes
-keep functions/lambdas and loops as isolated scopes by default without explicit declare.
+  keep functions/lambdas and loops as isolated scopes by default without explicit declare.
 
 Sequence now return last expression result as same as Block.
 
@@ -25,15 +31,17 @@ Sequence now return last expression result as same as Block.
 
 `list.foldl/foldr/find/find_last/sort/group/filter/filter_map/any/all/to_map/to_hmap`
 
-
 ## [0.13.5]
+
 - fix local var render for template
 
 ## [0.13.4]
+
 - fix `cd`
 - support cmd/param completion after `doas` and `sudo`
 
 ## [0.13.3]
+
 - fix prompt_ka
 - fix fish2csv
 - update grammar so
@@ -41,14 +49,17 @@ Sequence now return last expression result as same as Block.
 - update tokenizer for shebang
 
 ## [0.13.2]
+
 - clear env `SCRIPT` after init config
 
 ## [0.13.1]
+
 - fix comment with prefix `# `
 - update theme config with `COLOR` const
 - update prompt_ka color with 256 color
 
 ## [0.13.0]
+
 - fix install script to cp prompt theme
 - change default prompt to uncolored line for windows
 - random color for logo
@@ -56,11 +67,12 @@ Sequence now return last expression result as same as Block.
 - introduce `LUME_KNOCK_VALIDATOR`
   it's a validator for security.
 
-    this function will be executed before REPL. if return false, lume will exit directly.
+  this function will be executed before REPL. if return false, lume will exit directly.
 
   > if you set lume as login shell, this should protect you after your ssh was cracked by someone.
 
 ## [0.12.9]
+
 - fix \path char lose for win
 - fix list.filter
 - separate config for macos
@@ -73,13 +85,13 @@ Sequence now return last expression result as same as Block.
   use 256 color for more compacity
   use open in macos
 
-
 ## [0.12.8]
+
 - fix path char after ~ lossing in windows
 - allow unix style `/` path separator in windows
 
-
 ## [0.12.7]
+
 - more support for BtreeSet
 - fix printf to print insteadof return value
 - fix loop collect in pipe
@@ -90,47 +102,53 @@ Sequence now return last expression result as same as Block.
 - introduce const `COLOR`
 
 > foreground / background
-  + prefix `FG_` for foreground color
-  + prefix `BG_` for background color
+
+- prefix `FG_` for foreground color
+- prefix `BG_` for background color
 
 > color name
-  + upper word for base color: `GREEN` 
-  + lower word for true color: `green`
-    
+
+- upper word for base color: `GREEN`
+- lower word for true color: `green`
+
 > 256 color
-  + number between 1 and 256 for 256 color: `FG_255`
-    
+
+- number between 1 and 256 for 256 color: `FG_255`
+
 > true color in hex format
-  + prefix `FGX_` for true color in hex: `FGX_a0b1c2`
-  + prefix `BGX_` for true color in hex: `BGX_A0B1C2`
+
+- prefix `FGX_` for true color in hex: `FGX_a0b1c2`
+- prefix `BGX_` for true color in hex: `BGX_A0B1C2`
   both upper/lower case is ok
 
-- introduce const `STYLE`
-- introduce const `MATH`
+* introduce const `STYLE`
+* introduce const `MATH`
 
 ## [0.12.6]
+
 - optimize append_args
 - add ensure_sym_as_cmd
-symbo or property on right of pipe was recognized as command now.
+  symbo or property on right of pipe was recognized as command now.
 - add filter to loop pipe, return none insteadof empty vec.
 - add range support for loop pipe
 - add HashMap grammar: `H{}`
 - add BtreeSet grammar: `S{}`
 - add BtreeMap grammar: `M{}`, same as map `{}`
-  
+
   but flat map was not able to parsed as cmd arg: `print {a:b}` will fail.
   `print M{a,b}` is ok.
   also `M{}` is better to distinct with block `{}`. so `M{}` is suggested and `{}` was depreciated.
-  
+
 - split hmap logic from map, add `hmap` lib separatly.
 - add `set` lib
 
-
 ## [0.12.5]
+
 - only turn off PRINT_DIRECT in script mode.
 - optimize lib funcs to take args owner
 
 ## [0.12.4]
+
 - custom operator `..` should not cover `../`
 - optimize current dir read from env first.
 - fix relative path for pty cmd.
@@ -138,7 +156,7 @@ symbo or property on right of pipe was recognized as command now.
 - fix default completion path for macos
 - remove Rc for BuiltinFunc
 - allow use keyword-like symbo as cmd args
-`handlr set '.pdf' zathura` is allowed. here `set` was recognized as symbol insteadof keyword
+  `handlr set '.pdf' zathura` is allowed. here `set` was recognized as symbol insteadof keyword
 - never detect login-shell in lume-se
 - never load config in lume-se
 - enable `strict` mode in lume-se

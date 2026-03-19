@@ -18,6 +18,7 @@ pub mod regex_lib;
 pub mod se_lib;
 pub mod string_lib;
 pub mod sys_lib;
+pub mod table_lib;
 pub mod time_lib;
 pub mod top;
 pub mod ui_lib;

@@ -1,3 +1,4 @@
+use crate::expression::table::TableData;
 use crate::{Environment, Int};
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet, HashMap};
@@ -14,6 +15,7 @@ pub mod from;
 pub mod overop;
 pub mod pty;
 pub mod render;
+pub mod table;
 pub mod terminal;
 
 use chrono::NaiveDateTime;
@@ -83,6 +85,7 @@ pub enum Expression {
     Range(Range<Int>, usize),
     DateTime(NaiveDateTime),
     FileSize(FileSize),
+    Table(TableData),
     Chain(Rc<Expression>, Vec<ChainCall>), // 链式调用
     PipeMethod(String, Rc<Vec<Self>>),
     DestructureAssign(Vec<DestructurePattern>, Rc<Expression>), // 解构赋值

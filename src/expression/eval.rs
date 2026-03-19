@@ -244,7 +244,11 @@ impl Expression {
                 Self::None => return Ok(Self::None),
                 Self::Float(f) => return Ok(Self::Float(*f)),
                 Self::Range(r, s) => return Ok(Self::Range(r.start..r.end, *s)),
-                Self::Regex(_) | Self::DateTime(_) | Self::FileSize(_) | Self::Bytes(_) => {
+                Self::Regex(_)
+                | Self::DateTime(_)
+                | Self::FileSize(_)
+                | Self::Bytes(_)
+                | Self::Table(_) => {
                     return Ok(job.clone());
                 }
 

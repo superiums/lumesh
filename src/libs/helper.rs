@@ -5,7 +5,7 @@ use std::{
     rc::Rc,
 };
 
-use crate::{Expression, RuntimeError, RuntimeErrorKind};
+use crate::{Expression, RuntimeError, RuntimeErrorKind, expression::table::TableData};
 
 // use std::rc::Rc;
 
@@ -319,4 +319,52 @@ pub fn check_fn_arg(
         ));
     }
     Ok(())
+}
+
+// 辅助函数：将 List<Map> 转换为 TableData
+pub fn convert_list_map_to_table(list: &Vec<Expression>) -> TableData {
+    if list.is_empty() {
+        return TableData::with_header(Vec::new());
+    }
+
+    // 收集所有可能的键作为表头
+    let mut all_keys = std::collections::BTreeSet::new();
+    for item in list.iter() {
+        if let Expression::Map(map) = item {
+            all_keys.extend(map.keys());
+        }
+    }
+    let headers: Vec<String> = all_keys.into_iter().cloned().collect();
+
+    // 转换数据
+    let mut rows = Vec::new();
+    for item in list.iter() {
+        if let Expression::Map(map) = item {
+            let row: Vec<Expression> = headers
+                .iter()
+                .map(|key| map.get(key).cloned().unwrap_or(Expression::None))
+                .collect();
+            rows.push(row);
+        }
+    }
+
+    TableData::new(headers, rows)
+}
+
+pub fn get_table_arg(expr: Expression, ctx: &Expression) -> Result<TableData, RuntimeError> {
+    match expr {
+        Expression::List(list) => Ok(convert_list_map_to_table(&list)),
+        Expression::Table(t) => Ok(t),
+        e => {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::TypeError {
+                    expected: "Table/List as 1st arg for sortby".into(),
+                    found: e.type_name(),
+                    sym: e.to_string(),
+                },
+                ctx.clone(),
+                0,
+            ));
+        }
+    }
 }

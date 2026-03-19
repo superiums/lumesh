@@ -637,6 +637,7 @@ impl Expression {
             Self::Regex(r) => write!(f, "{}r'{}'", idt(i), r.regex.as_str()),
             Self::TimeDef(t) => write!(f, "{}t'{t}'", idt(i)),
             Self::Blank => write!(f, "{}_", idt(i)),
+            Self::Table(t) => write!(f, "{}{t:?}", idt(i)),
         }
     }
 }
@@ -973,6 +974,7 @@ impl Expression {
             Self::ModuleCall(mo, func) => {
                 write!(f, "{}ModuleCall〈{}::{}〉", prefix, mo.join("::"), func)
             }
+            Self::Table(t) => write!(f, "{prefix}Table〈\n{t:#}\n{prefix}〉"),
         }
     }
 
@@ -1038,6 +1040,7 @@ impl Expression {
 
             Self::None => "None".into(),
             Self::Blank => "Blank".into(),
+            Self::Table(_) => "Table".into(),
             // _ => format!("{:?}", self).split('(').next().unwrap().into(),
         }
     }

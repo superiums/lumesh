@@ -1,12 +1,12 @@
 use std::collections::BTreeMap;
 
 use crate::{
-    Environment, Expression, Int, RuntimeError,
-    expression::FileSize,
+    Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
+    expression::{FileSize, table::TableData},
     libs::{
         BuiltinInfo,
         bin::time_lib,
-        helper::{check_args_len, check_exact_args_len, get_string_ref},
+        helper::{check_args_len, check_exact_args_len, convert_list_map_to_table, get_string_ref},
         lazy_module::LazyModule,
         pprint::strip_ansi_escapes,
     },
@@ -65,56 +65,53 @@ pub fn time(
     time_lib::parse(args, env, ctx)
 }
 pub fn table(
-    args: Vec<Expression>,
+    mut args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_args_len("table", &args, 1.., ctx)?;
 
-    let headers = match args.len() {
-        3.. => args[..args.len() - 1]
-            .iter()
-            .map(|a| a.to_string())
-            .collect::<Vec<_>>(),
-        2 => {
-            if let Expression::List(list) = &args[1] {
-                list.as_ref()
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect::<Vec<_>>()
-            } else if let Expression::BSet(list) = &args[1] {
-                list.as_ref()
-                    .iter()
-                    .map(|e| e.to_string())
-                    .collect::<Vec<_>>()
-            } else {
-                vec![args[1].to_string()]
-            }
+    let headers: Vec<String> = match args.split_off(1) {
+        s if s.len() == 1 => match s.first().unwrap() {
+            Expression::List(list) => list.as_ref().iter().map(|x| x.to_string()).collect(),
+            Expression::BSet(list) => list.as_ref().iter().map(|x| x.to_string()).collect(),
+            _ => s.iter().map(|x| x.to_string()).collect(),
+        },
+        s => s.iter().map(|x| x.to_string()).collect(),
+    };
+    let data = match args.into_iter().next().unwrap() {
+        Expression::String(s) => s,
+        // 转换 List<Map> 到 TableData
+        Expression::List(list) => {
+            return Ok(Expression::Table(convert_list_map_to_table(&list)));
         }
-
-        _ => Vec::new(),
+        // 如果已经是表格格式
+        Expression::Table(t) => return Ok(Expression::Table(t)),
+        e => {
+            return Err(RuntimeError::new(
+                RuntimeErrorKind::TypeError {
+                    expected: "String/List<Map>".into(),
+                    found: e.type_name(),
+                    sym: e.to_string(),
+                },
+                ctx.clone(),
+                0,
+            ));
+        }
     };
 
-    let p = get_string_ref(&args[0], ctx)?;
-
-    let mut lines: Vec<&str> = p.lines().collect();
+    let mut lines: Vec<&str> = data.lines().collect();
     if lines.is_empty() {
-        return Ok(Expression::from(Vec::<Expression>::new()));
+        return Ok(Expression::None);
     } else {
         // 检测已经是列表格式的：首行首尾都是相同的符号
         let mut c = lines.first().unwrap().chars();
         if let Some(first) = c.next() {
             if first.is_ascii_punctuation() && Some(first) == c.last() {
-                return Ok(args.last().unwrap().clone());
+                return Ok(Expression::String(data));
             }
         }
     }
-
-    // delimeter
-    // let delimiter = match env.get("IFS") {
-    //     Some(Expression::String(fs)) if fs != "\n" => fs,
-    //     _ => " ".to_string(), // 使用空格作为默认分隔符
-    // };
 
     // filter too short tips lines
     if lines.len() > 2 {
@@ -137,6 +134,7 @@ pub fn table(
             lines.pop();
         }
     }
+
     // Try to detect if first line looks like headers
     let (data_lines, detected_headers) = if headers.is_empty() {
         let maybe_header = lines[0];
@@ -154,6 +152,7 @@ pub fn table(
                         .replace("(", "_")
                         .replace(")", "")
                         .replace("$", "")
+                        .to_string()
                 })
                 .collect();
             (&lines[1..], detected)
@@ -171,29 +170,29 @@ pub fn table(
         (&lines[..], headers)
     };
 
-    let mut result = Vec::with_capacity(data_lines.len());
+    let mut rows = Vec::with_capacity(data_lines.len());
     for line in data_lines {
         if line.trim().is_empty() {
             continue;
         }
 
         let slist = line.split_whitespace().collect::<Vec<_>>();
+        let mut row = Vec::with_capacity(detected_headers.len());
 
-        let mut row = BTreeMap::new();
-
-        for (i, header) in detected_headers.iter().enumerate() {
+        for (i, _header) in detected_headers.iter().enumerate() {
             if let Some(&value) = slist.get(i) {
-                row.insert(header.clone(), Expression::String(value.to_string()));
+                row.push(Expression::String(value.to_string()));
             } else {
-                row.insert(header.clone(), Expression::None);
+                row.push(Expression::None);
             }
         }
 
         if !row.is_empty() {
-            result.push(Expression::from(row));
+            rows.push(row);
         }
     }
-    Ok(Expression::from(result))
+
+    Ok(Expression::Table(TableData::new(detected_headers, rows)))
 }
 
 fn boolean(
@@ -614,6 +613,23 @@ pub fn csv(
             String::from_utf8(writer.into_inner().unwrap()).unwrap()
         }
         Expression::String(ct) => ct,
+        Expression::Table(table_data) => {
+            // 新的 Table 类型处理
+            let mut writer = csv::WriterBuilder::new()
+                .delimiter(delimiter)
+                .from_writer(vec![]);
+
+            // 写入标题行
+            writer.write_record(table_data.headers()).unwrap();
+
+            // 写入数据行
+            for row in table_data.rows() {
+                let record: Vec<String> = row.iter().map(|v| v.to_string()).collect();
+                writer.write_record(&record).unwrap();
+            }
+
+            String::from_utf8(writer.into_inner().unwrap()).unwrap()
+        }
         o => o.to_string(),
     };
 

@@ -8,7 +8,7 @@ use tabled::{
     },
 };
 
-use crate::Expression;
+use crate::{Expression, expression::table::TableData};
 
 use regex_lite::Regex;
 pub fn strip_ansi_escapes(text: &str) -> String {
@@ -37,6 +37,7 @@ pub fn strip_ansi_escapes(text: &str) -> String {
 
 pub fn pretty_printer(arg: &Expression) -> Result<Expression, crate::RuntimeError> {
     match arg {
+        Expression::Table(table_data) => print_table_with_tabled(table_data),
         Expression::Map(exprs) => println!("{}", pprint_map(exprs.as_ref())),
         Expression::HMap(exprs) => println!("{}", pprint_hmap(exprs.as_ref())),
         Expression::List(exprs) => pprint_list(exprs.as_ref()),
@@ -181,7 +182,23 @@ fn pprint_list(exprs: &[Expression]) {
     println!("{table}");
 }
 
-// 保持原有的智能布局逻辑
+fn print_table_with_tabled(table: &TableData) {
+    let mut builder = Builder::with_capacity(table.row_count(), table.column_count());
+
+    builder.push_record(table.headers());
+    for row in table.rows() {
+        builder.push_record(row.iter().map(|x| x.to_string()));
+    }
+
+    let mut table = builder.build();
+    let specified_width = crossterm::terminal::size().unwrap_or((120, 0)).0 as usize;
+    table
+        .modify(Rows::first(), Color::FG_BLUE)
+        .with(Width::wrap(specified_width).keep_words(true));
+
+    table.with(Style::rounded());
+    println!("{table}");
+}
 
 struct TableRow<'a> {
     rows: &'a [Expression], // 原始数据

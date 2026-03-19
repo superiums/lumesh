@@ -1,12 +1,13 @@
 use std::collections::{BTreeMap, HashMap};
 
 use crate::{
-    Environment, Expression, RuntimeError, RuntimeErrorKind,
+    Environment, Expression, RuntimeError,
     eval::State,
     libs::{
         BuiltinInfo, SelfExpandFunc,
-        bin::list_lib::get_list_ref,
-        helper::{check_args_len, check_exact_args_len, get_integer_arg, get_string_arg},
+        helper::{
+            check_args_len, check_exact_args_len, get_integer_arg, get_string_arg, get_table_arg,
+        },
     },
     reg_info,
 };
@@ -33,7 +34,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 
       // Data manipulation
       typeof => "get type of data value", "<value>"
-      where => "filter rows by condition", "<list[map/list/set]> <condition> "
+      where => "filter rows by condition", "<table> <condition> "
 
       // Execution control
       repeat => "evaluate expr n times", "<expr> <n>"
@@ -54,10 +55,9 @@ fn r#where(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("where", &args, 2, ctx)?;
-    let list = args[0].eval_mut(state, env, 0)?;
-    let list = get_list_ref(&list, ctx)?;
+    let data_evaled = args[0].eval_mut(state, env, 0)?;
+    let data = get_table_arg(data_evaled, ctx)?;
 
-    let mut filtered = Vec::new();
     let is_last_local = state.contains(State::IN_LOCAL);
     let last_local_vars = if is_last_local {
         Some(state.get_local_vars())
@@ -65,41 +65,24 @@ fn r#where(
         None
     };
     state.set(State::IN_LOCAL);
-    for (i, row) in list.iter().enumerate() {
-        state.set_local_var("NR".to_string(), Expression::Integer(i as i64));
-        if let Expression::HMap(row_map) = row {
-            state.set_local_vars(row_map.as_ref().clone());
-        } else if let Expression::Map(row_map) = row {
-            for (k, v) in row_map.as_ref() {
-                state.set_local_var(k.to_string(), v.clone());
-            }
-        } else if let Expression::List(row_set) = row {
-            for (nf, item) in row_set.iter().enumerate() {
-                state.set_local_var("NF".to_string(), Expression::Integer(nf as i64));
-                state.set_local_var("F".to_string(), item.clone());
-            }
-        } else if let Expression::BSet(row_set) = row {
-            for (nf, item) in row_set.iter().enumerate() {
-                state.set_local_var("NF".to_string(), Expression::Integer(nf as i64));
-                state.set_local_var("F".to_string(), item.clone());
-            }
-        } else {
-            return Err(RuntimeError::new(
-                RuntimeErrorKind::TypeError {
-                    expected: "Map/HMap/List/Set as Field".into(),
-                    found: row.type_name(),
-                    sym: row.to_string(),
-                },
-                ctx.clone(),
-                0,
-            ));
-        }
 
-        let c = args[1].eval_mut(state, env, 0)?;
-        if let Expression::Boolean(true) = c {
-            filtered.push(row.clone());
+    let predicate = |nr: usize, row: &[Expression]| -> bool {
+        state.set_local_var("NR".to_string(), Expression::Integer(nr as i64));
+        for (nf, cell) in row.iter().enumerate() {
+            let name = data
+                .headers()
+                .get(nf)
+                .map_or("unkown".to_string(), |x| x.to_string());
+            state.set_local_var(name, cell.clone());
+            state.set_local_var("NF".to_string(), Expression::Integer(nf as i64));
         }
-    }
+        match args[1].eval_mut(state, env, 0) {
+            Ok(x) => x.is_truthy(),
+            _ => false,
+        }
+    };
+
+    let filtered = data.filter_rows(predicate);
 
     if is_last_local {
         state.set_local_vars(last_local_vars.unwrap());
@@ -108,7 +91,7 @@ fn r#where(
         state.clear(State::IN_LOCAL);
     }
 
-    Ok(Expression::from(filtered))
+    Ok(Expression::Table(filtered))
 }
 
 // args should be lazy evaled

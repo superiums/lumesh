@@ -8,7 +8,10 @@ use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind, VERSION,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
-        bin::{boolean_lib::not, list_lib::get_list_ref},
+        bin::{
+            boolean_lib::not,
+            table_lib::{select, sortby},
+        },
         helper::{check_args_len, check_exact_args_len, get_string_ref},
         pretty_printer,
     },
@@ -21,7 +24,7 @@ pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
         exit, cd, cwd, symof,
         tap, print, pprint, println, eprint, eprintln, read,
 
-        get, len, insert, rev, flatten,  select,
+        get, len, insert, rev, flatten,  select, sortby,
         not,
         eval, exec, eval_str, exec_str, include, import,
         help,
@@ -62,7 +65,8 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         rev => "reverse sequence", "<string|list|bytes>"
         flatten => "flatten nested structure", "<collection>"
         // where => "filter rows by condition", "<list[map]> <condition> "
-        select => "select columns from list of maps", "<list[map]> <columns>..."
+        select => "select columns from list of maps", "<table> <columns...>"
+        sortby => "sort a table by column", "<table> <col>"
         not => "logic not", "<boolean1>..."
 
         // Execution control
@@ -682,48 +686,6 @@ pub fn flatten(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("flatten", &args, 1, ctx)?;
     Ok(Expression::from(flat(&args[0])))
-}
-
-fn select(
-    mut args: Vec<Expression>,
-    _env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_args_len("select", &args, 2.., ctx)?;
-    let headers = match args.split_off(1) {
-        s if s.len() == 1 => match s.first().unwrap() {
-            Expression::List(list) => list.as_ref().clone(),
-            Expression::BSet(list) => list.as_ref().iter().cloned().collect(),
-            _ => s,
-        },
-        s => s,
-    };
-    let data = get_list_ref(&args[0], ctx)?;
-
-    let result = data
-        .iter()
-        .filter_map(|row| {
-            // dbg!(&row, &row.type_name());
-            if let Expression::Map(row_map) = row {
-                // dbg!(&row_map);
-                let selected = headers
-                    .iter()
-                    .filter_map(|col_expr| {
-                        let col = col_expr.to_string();
-                        // dbg!(&col, &row_map.get(&col));
-                        row_map.as_ref().get(&col).map(|val| (col, val.clone()))
-                    })
-                    .collect::<BTreeMap<_, _>>();
-
-                Some(Expression::from(selected))
-            } else {
-                // dbg!("Not Map");
-                None
-            }
-        })
-        .collect::<Vec<_>>();
-
-    Ok(Expression::from(result))
 }
 
 pub fn get(

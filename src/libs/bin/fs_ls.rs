@@ -1,13 +1,12 @@
-use std::collections::BTreeMap;
 #[cfg(unix)]
 use std::os::unix::fs::{FileTypeExt, MetadataExt, PermissionsExt};
 use std::path::{Path, PathBuf};
-use std::rc::Rc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use chrono::{DateTime, NaiveDateTime};
 
 use crate::expression::FileSize;
+use crate::expression::table::TableData;
 use crate::utils::abs;
 use crate::{Environment, Expression, RuntimeError};
 
@@ -57,7 +56,7 @@ pub fn get_file_expression(
     options: &LsOptions,
     base_path: Option<&Path>,
     ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
+) -> Result<Vec<Expression>, RuntimeError> {
     let p = entry.path();
     let metadata = if options.follow_links {
         entry.metadata().map_err(|e| {
@@ -70,28 +69,23 @@ pub fn get_file_expression(
     };
 
     let name = entry.file_name().to_string_lossy().into_owned();
-    let mut map = BTreeMap::new();
+    let mut row = Vec::new();
 
-    // 基础字段
-    map.insert("name".to_string(), Expression::String(name.clone()));
+    // 基础字段：name (总是第一列)
+    row.push(Expression::String(name.clone()));
 
     if options.detailed {
-        // 惰性检测字段
+        // 惰性检测字段：type
         let file_type = detect_file_type(&metadata);
-        map.insert(
-            "type".to_string(),
-            Expression::String(file_type.to_string()),
-        );
+        row.push(Expression::String(file_type.to_string()));
 
         // 动态计算大小表达式
         let size_expr = if options.size_in_kb {
             Expression::Integer(metadata.len().div_ceil(1024) as i64)
         } else {
             Expression::FileSize(FileSize::from_bytes(metadata.len()))
-            // } else {
-            //     Expression::Integer(metadata.len() as i64)
         };
-        map.insert("size".to_string(), size_expr);
+        row.push(size_expr);
 
         // 时间表达式
         let modified = metadata.modified().map_err(|e| {
@@ -101,22 +95,20 @@ pub fn get_file_expression(
             Expression::Integer(system_time_to_unix_duration(modified, ctx)?.as_secs() as i64)
         } else {
             Expression::DateTime(system_time_to_naive_datetime(modified, ctx)?)
-            // Expression::String(format_system_time(modified))
         };
-        map.insert("modified".to_string(), time_expr);
+        row.push(time_expr);
 
         // 符号链接目标（惰性检测）
         #[cfg(unix)]
         if options.follow_links {
             if file_type == "symlink" {
                 if let Ok(target) = std::fs::read_link(entry.path()) {
-                    map.insert(
-                        "target".to_string(),
-                        Expression::String(target.to_string_lossy().into_owned()),
-                    );
+                    row.push(Expression::String(target.to_string_lossy().into_owned()));
+                } else {
+                    row.push(Expression::None);
                 }
             } else {
-                map.insert("target".to_string(), Expression::None);
+                row.push(Expression::None);
             }
         }
     }
@@ -125,14 +117,11 @@ pub fn get_file_expression(
     #[cfg(unix)]
     {
         if options.show_user {
-            map.insert(
-                "user".to_string(),
-                Expression::Integer(metadata.uid() as i64),
-            );
+            row.push(Expression::Integer(metadata.uid() as i64));
         }
         if options.detailed || options.show_mode {
             let mode = metadata.permissions().mode() & 0o777;
-            map.insert("mode".to_string(), Expression::Integer(mode as i64));
+            row.push(Expression::Integer(mode as i64));
         }
     }
 
@@ -140,17 +129,14 @@ pub fn get_file_expression(
     if options.show_path {
         if let Some(p) = base_path {
             let full_path = p.join(&name);
-            map.insert(
-                "path".to_string(),
-                Expression::String(full_path.to_string_lossy().into_owned()),
-            );
+            row.push(Expression::String(full_path.to_string_lossy().into_owned()));
+        } else {
+            row.push(Expression::None);
         }
     }
 
-    Ok(Expression::Map(Rc::new(map)))
+    Ok(row)
 }
-
-// 辅助函数保持不变（detect_file_type, system_time_to_unix_seconds等）
 
 pub fn ls(
     args: Vec<Expression>,
@@ -167,7 +153,38 @@ pub fn ls(
         ));
     }
 
-    let mut entries = Vec::new();
+    // 构建表头
+    let mut headers = vec!["name".to_string()];
+
+    if options.detailed {
+        headers.extend_from_slice(&[
+            "type".to_string(),
+            "size".to_string(),
+            "modified".to_string(),
+        ]);
+
+        #[cfg(unix)]
+        if options.follow_links {
+            headers.push("target".to_string());
+        }
+    }
+
+    #[cfg(unix)]
+    {
+        if options.show_user {
+            headers.push("user".to_string());
+        }
+        if options.detailed || options.show_mode {
+            headers.push("mode".to_string());
+        }
+    }
+
+    if options.show_path {
+        headers.push("path".to_string());
+    }
+
+    // 收集行数据
+    let mut rows = Vec::new();
     for entry in std::fs::read_dir(&full_path)
         .map_err(|e| RuntimeError::from_io_error(e, "read dir".into(), Expression::None, 0))?
     {
@@ -180,15 +197,13 @@ pub fn ls(
             continue;
         }
 
-        entries.push(get_file_expression(
-            &entry,
-            &options,
-            Some(&full_path),
-            ctx,
-        )?);
+        let row = get_file_expression(&entry, &options, Some(&full_path), ctx)?;
+        rows.push(row);
     }
 
-    Ok(Expression::List(Rc::new(entries)))
+    // 创建 TableData 并包装为 Expression
+    let table_data = TableData::new(headers, rows);
+    Ok(Expression::Table(table_data))
 }
 
 #[cfg(unix)]

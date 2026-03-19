@@ -3,6 +3,7 @@
 ## [0.14.0]
 - introduce `table` expression
 builtin lib `table` also was added.
+- optimize libs: `into` and `from`
 
 ## [0.13.8]
 

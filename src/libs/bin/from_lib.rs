@@ -1,6 +1,7 @@
 // use{get_list_arg, get_string_arg};
 use crate::{
     Environment, Expression, RuntimeError,
+    expression::table::TableData,
     libs::{
         BuiltinInfo,
         bin::into_lib,
@@ -69,7 +70,12 @@ fn toml_to_expr(val: toml::Value) -> Expression {
         toml::Value::Datetime(s) => Expression::String(s.to_string()),
         toml::Value::String(s) => Expression::String(s),
         toml::Value::Array(a) => {
-            Expression::from(a.into_iter().map(toml_to_expr).collect::<Vec<Expression>>())
+            // Check if this is an array of tables that could be a table
+            if let Some((headers, rows)) = try_convert_toml_array_to_table(&a) {
+                Expression::Table(TableData::new(headers, rows))
+            } else {
+                Expression::from(a.into_iter().map(toml_to_expr).collect::<Vec<Expression>>())
+            }
         }
         toml::Value::Table(o) => Expression::from(
             o.into_iter()
@@ -79,8 +85,51 @@ fn toml_to_expr(val: toml::Value) -> Expression {
     }
 }
 
-// JSON Parser Functions
+// Helper function for TOML array of tables
+fn try_convert_toml_array_to_table(
+    arr: &[toml::Value],
+) -> Option<(Vec<String>, Vec<Vec<Expression>>)> {
+    if arr.is_empty() {
+        return None;
+    }
 
+    // Check if all elements are tables
+    if !arr.iter().all(|v| matches!(v, toml::Value::Table(_))) {
+        return None;
+    }
+
+    // Similar logic to JSON version...
+    let mut all_keys = std::collections::BTreeSet::new();
+    for item in arr {
+        if let toml::Value::Table(table) = item {
+            for key in table.keys() {
+                all_keys.insert(key.clone());
+            }
+        }
+    }
+
+    let headers: Vec<String> = all_keys.into_iter().collect();
+    let mut rows = Vec::new();
+
+    for item in arr {
+        if let toml::Value::Table(table) = item {
+            let row: Vec<Expression> = headers
+                .iter()
+                .map(|key| {
+                    table
+                        .get(key)
+                        .map(|v| toml_to_expr(v.clone()))
+                        .unwrap_or(Expression::None)
+                })
+                .collect();
+            rows.push(row);
+        }
+    }
+
+    Some((headers, rows))
+}
+
+// JSON Parser Functions
 fn json(
     args: Vec<Expression>,
     _env: &mut Environment,
@@ -115,7 +164,12 @@ fn json_to_expr(val: JsonValue) -> Expression {
         }
         JsonValue::String(s) => Expression::String(s),
         JsonValue::Array(a) => {
-            Expression::from(a.into_iter().map(json_to_expr).collect::<Vec<Expression>>())
+            // Check if this is an array of objects that could be a table
+            if let Some((headers, rows)) = try_convert_array_to_table(&a) {
+                Expression::Table(TableData::new(headers, rows))
+            } else {
+                Expression::from(a.into_iter().map(json_to_expr).collect::<Vec<Expression>>())
+            }
         }
         JsonValue::Object(o) => Expression::from(
             o.into_iter()
@@ -125,8 +179,48 @@ fn json_to_expr(val: JsonValue) -> Expression {
     }
 }
 
-// Expression Parser
+// Helper function to detect and convert array of objects to table
+fn try_convert_array_to_table(arr: &[JsonValue]) -> Option<(Vec<String>, Vec<Vec<Expression>>)> {
+    if arr.is_empty() {
+        return None;
+    }
 
+    // Check if all elements are objects
+    if !arr.iter().all(|v| matches!(v, JsonValue::Object(_))) {
+        return None;
+    }
+
+    // Collect all unique keys from all objects
+    let mut all_keys = std::collections::BTreeSet::new();
+    for item in arr {
+        if let JsonValue::Object(obj) = item {
+            for key in obj.keys() {
+                all_keys.insert(key.clone());
+            }
+        }
+    }
+
+    let headers: Vec<String> = all_keys.into_iter().collect();
+    let mut rows = Vec::new();
+
+    for item in arr {
+        if let JsonValue::Object(obj) = item {
+            let row: Vec<Expression> = headers
+                .iter()
+                .map(|key| {
+                    obj.get(key)
+                        .map(|v| json_to_expr(v.clone()))
+                        .unwrap_or(Expression::None)
+                })
+                .collect();
+            rows.push(row);
+        }
+    }
+
+    Some((headers, rows))
+}
+
+// Expression Parser
 fn script(
     args: Vec<Expression>,
     _env: &mut Environment,
@@ -169,12 +263,12 @@ fn csv(
     };
 
     // 设置 CSV 解析器的分隔符
-    let mut rdr = csv::ReaderBuilder::new()
+    let mut reader = csv::ReaderBuilder::new()
         .has_headers(true)
         .delimiter(delimiter) // 将字符串转换为字节并取第一个字符
         .from_reader(text.as_bytes());
 
-    let headers = rdr
+    let headers = reader
         .headers()
         .map_err(|e| {
             RuntimeError::common(format!("Csv header error:\n{e}").into(), ctx.clone(), 0)
@@ -183,19 +277,20 @@ fn csv(
         .map(|s| s.to_string())
         .collect::<Vec<_>>();
 
-    let mut result = Vec::new();
-    for record in rdr.records() {
-        let record = record.map_err(|e| {
-            RuntimeError::common(format!("Csv parser error:\n{e}").into(), ctx.clone(), 0)
+    let mut table = TableData::with_header(headers);
+    for rec in reader.records() {
+        let record = rec.map_err(|e| {
+            RuntimeError::common(format!("CSV parse error: {e}").into(), ctx.clone(), 0)
         })?;
-        let mut row = BTreeMap::new();
-        for (i, value) in record.iter().enumerate() {
-            let key = headers.get(i).cloned().unwrap_or_else(|| format!("C{i}"));
-            row.insert(key, Expression::String(value.to_string()));
-        }
-        result.push(Expression::from(row));
+
+        let row: Vec<Expression> = record
+            .iter()
+            .map(|field| Expression::String(field.to_string()))
+            .collect();
+        table.push_row(row);
     }
-    Ok(Expression::from(result))
+
+    Ok(Expression::Table(table))
 }
 
 // 定义操作步骤的枚举

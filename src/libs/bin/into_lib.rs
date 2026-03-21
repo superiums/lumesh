@@ -118,7 +118,7 @@ pub fn table(
             Expression::List(list) => (list.as_ref().iter().map(|x| x.to_string()).collect(), None),
             Expression::BSet(list) => (list.as_ref().iter().map(|x| x.to_string()).collect(), None),
             Expression::Regex(r) => (Vec::new(), Some(r.regex.clone())),
-            _ => (s.iter().map(|x| x.to_string()).collect(), None),
+            o => (vec![o.to_string()], None),
         },
         s if s.len() == 2 && matches!(s.first(), Some(Expression::Regex(_))) => {
             match (s.first().unwrap(), s.last().unwrap()) {
@@ -130,6 +130,7 @@ pub fn table(
                     list.as_ref().iter().map(|x| x.to_string()).collect(),
                     Some(r.regex.clone()),
                 ),
+                (Expression::Regex(r), o) => (vec![o.to_string()], Some(r.regex.clone())),
                 _ => (s.iter().map(|x| x.to_string()).collect(), None),
             }
         }

@@ -822,7 +822,7 @@ fn map(
     //     )
     } else {
         return Err(RuntimeError::common(
-            ("your func/lambda should define 1..2 param").into(),
+            ("your func/lambda should receive 1..=2 param").into(),
             ctx.clone(),
             0,
         ));
@@ -913,7 +913,7 @@ fn filter(
         }
         _ => {
             return Err(RuntimeError::common(
-                "expected 1..2 params for filter-function".into(),
+                "expected 1..=2 params for filter-function".into(),
                 ctx.clone(),
                 0,
             ));

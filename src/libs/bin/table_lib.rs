@@ -13,7 +13,7 @@ pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         len, header_len,
         get, select, headers,
-        rows, first, last, nth, grep, find, find_last,
+        rows, first, last, nth, grep, find, find_last, filter,
         sortby
     })
 }
@@ -31,6 +31,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         grep => "grep rows which contains the string", "<table> <string>"
         find => "find first row index of matching cell", "<list> <cell|fn> [start_index]"
         find_last => "find last row index of matching cell", "<list> <cell|fn> [start_index]"
+        filter => "filter rows by condition/cell match", "<list> <cell|fn>"
         sortby => "sort a table by column", "<table> <col>"
     })
 }
@@ -426,4 +427,40 @@ fn find_last(
             },
         ),
     }
+}
+
+fn filter(
+    args: Vec<Expression>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("filter", &args, 2, ctx)?;
+
+    let mut it = args.into_iter();
+    let data = it.next().unwrap();
+    let table = get_table_arg(data, ctx)?;
+    let target = it.next().unwrap();
+
+    let result: Vec<Vec<Expression>> = match &target {
+        Expression::Function(..) | Expression::Lambda(..) => {
+            let state = &mut State::new();
+            table
+                .rows()
+                .iter()
+                .filter(|&row| {
+                    target
+                        .eval_apply(&target, &vec![Expression::from(row.clone())], state, env, 0)
+                        .map_or(false, |r| r.is_truthy())
+                })
+                .cloned()
+                .collect()
+        }
+        _ => table
+            .rows()
+            .iter()
+            .filter(|row| row.iter().any(|col| col == &target))
+            .cloned()
+            .collect(),
+    };
+    Ok(Expression::from(result))
 }

@@ -1,7 +1,7 @@
 # Changelog
 
 ## [0.14.1]
-- add `grep`, `find`, `find_last` to table.
+- add `grep`, `find`, `find_last`, `filter` to table.
 - more flexable param for `into.table`
 
 ## [0.14.0]

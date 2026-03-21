@@ -120,6 +120,27 @@ pub fn table(
             Expression::Regex(r) => (Vec::new(), Some(r.regex.clone())),
             _ => (s.iter().map(|x| x.to_string()).collect(), None),
         },
+        s if s.len() == 2 && matches!(s.first(), Some(Expression::Regex(_))) => {
+            match (s.first().unwrap(), s.last().unwrap()) {
+                (Expression::Regex(r), Expression::List(list)) => (
+                    list.as_ref().iter().map(|x| x.to_string()).collect(),
+                    Some(r.regex.clone()),
+                ),
+                (Expression::Regex(r), Expression::BSet(list)) => (
+                    list.as_ref().iter().map(|x| x.to_string()).collect(),
+                    Some(r.regex.clone()),
+                ),
+                _ => (s.iter().map(|x| x.to_string()).collect(), None),
+            }
+        }
+        s if matches!(s.first(), Some(Expression::Regex(_))) => (
+            s.iter().skip(1).map(|x| x.to_string()).collect(),
+            if let Some(Expression::Regex(r)) = s.first() {
+                Some(r.regex.clone())
+            } else {
+                None
+            },
+        ),
         s => (s.iter().map(|x| x.to_string()).collect(), None),
     };
 

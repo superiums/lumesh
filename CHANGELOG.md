@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.14.1]
+- add `grep`, `find`, `find_last` to table.
+- more flexable param for `into.table`
+
 ## [0.14.0]
 - introduce `table` expression
 builtin lib `table` also was added.

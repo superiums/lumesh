@@ -1,8 +1,11 @@
 use crate::expression::table::TableData;
-use crate::libs::helper::{check_args_len, check_exact_args_len, get_integer_arg, get_table_arg};
+use crate::libs::helper::{
+    check_args_len, check_exact_args_len, get_integer_arg, get_integer_ref, get_table_arg,
+};
 use crate::libs::lazy_module::LazyModule;
 use crate::{
-    Environment, Expression, RuntimeError, RuntimeErrorKind, libs::BuiltinInfo, reg_info, reg_lazy,
+    Environment, Expression, RuntimeError, RuntimeErrorKind, libs::BuiltinInfo, libs::State,
+    reg_info, reg_lazy,
 };
 use std::collections::BTreeMap;
 
@@ -10,7 +13,7 @@ pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         len, header_len,
         get, select, headers,
-        rows, first, last, nth,
+        rows, first, last, nth, grep, find, find_last,
         sortby
     })
 }
@@ -25,6 +28,9 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         first => "get first row", "<table> <to_map?>"
         last => "get last row", "<table> <to_map?>"
         nth => "get nth row", "<table> <to_map?>"
+        grep => "grep rows which contains the string", "<table> <string>"
+        find => "find first row index of matching cell", "<list> <cell|fn> [start_index]"
+        find_last => "find last row index of matching cell", "<list> <cell|fn> [start_index]"
         sortby => "sort a table by column", "<table> <col>"
     })
 }
@@ -122,6 +128,7 @@ fn headers(
     let table = get_table_arg(data, ctx)?;
     Ok(Expression::from(table.headers().to_vec()))
 }
+
 fn rows(
     args: Vec<Expression>,
     _env: &mut Environment,
@@ -302,4 +309,121 @@ pub fn sortby(
         }
     };
     Ok(Expression::Table(table.sort_by_column(col)))
+}
+
+fn grep(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("grep", &args, 2, ctx)?;
+    let mut it = args.into_iter();
+    let data = it.next().unwrap();
+    let table = get_table_arg(data, ctx)?;
+    let keyword = it.next().unwrap().to_string();
+
+    let r: Vec<Vec<Expression>> = table
+        .rows()
+        .iter()
+        .filter(|x| x.iter().any(|c| c.to_string().contains(&keyword)))
+        .cloned()
+        .collect();
+    Ok(Expression::from(r))
+}
+
+fn find(
+    args: Vec<Expression>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("find", &args, 2..=3, ctx)?;
+
+    let mut it = args.into_iter();
+    let data = it.next().unwrap();
+    let table = get_table_arg(data, ctx)?;
+    let target = it.next().unwrap();
+    let start = if let Some(start_expr) = it.next() {
+        get_integer_ref(&start_expr, ctx)? as usize
+    } else {
+        0
+    };
+
+    match &target {
+        Expression::Function(..) | Expression::Lambda(..) => {
+            let state = &mut State::new();
+            for (i, row) in table.rows().iter().enumerate().skip(start) {
+                let r = &target.eval_apply(
+                    &target,
+                    &vec![Expression::from(row.clone())],
+                    state,
+                    env,
+                    0,
+                )?;
+                if let Expression::Boolean(true) = r {
+                    return Ok(Expression::Integer(i as i64));
+                }
+            }
+            Ok(Expression::None)
+        }
+        _ => Ok(
+            match table
+                .rows()
+                .iter()
+                .skip(start)
+                .position(|x| x.iter().any(|c| c == &target))
+            {
+                Some(index) => Expression::Integer(index as i64),
+                None => Expression::None,
+            },
+        ),
+    }
+}
+
+fn find_last(
+    args: Vec<Expression>,
+    env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_args_len("find_last", &args, 2..=3, ctx)?;
+
+    let mut it = args.into_iter();
+    let data = it.next().unwrap();
+    let table = get_table_arg(data, ctx)?;
+    let target = it.next().unwrap();
+    let start = if let Some(start_expr) = it.next() {
+        get_integer_ref(&start_expr, ctx)? as usize
+    } else {
+        0
+    };
+
+    match &target {
+        Expression::Function(..) | Expression::Lambda(..) => {
+            let state = &mut State::new();
+            for (i, row) in table.rows().iter().enumerate().rev().skip(start) {
+                let r = &target.eval_apply(
+                    &target,
+                    &vec![Expression::from(row.clone())],
+                    state,
+                    env,
+                    0,
+                )?;
+                if let Expression::Boolean(true) = r {
+                    return Ok(Expression::Integer(i as i64));
+                }
+            }
+            Ok(Expression::None)
+        }
+        _ => Ok(
+            match table
+                .rows()
+                .iter()
+                .rev()
+                .skip(start)
+                .position(|x| x.iter().any(|c| c == &target))
+            {
+                Some(index) => Expression::Integer(index as i64),
+                None => Expression::None,
+            },
+        ),
+    }
 }

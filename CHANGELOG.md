@@ -3,6 +3,7 @@
 ## [0.14.1]
 - add `grep`, `find`, `find_last`, `filter` to table.
 - more flexable param for `into.table`
+- optimize `fs.ls`
 
 ## [0.14.0]
 - introduce `table` expression

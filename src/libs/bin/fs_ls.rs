@@ -15,10 +15,12 @@ pub struct LsOptions {
     pub detailed: bool,
     pub show_hidden: bool,
     pub follow_links: bool,
-    // pub human_readable: bool,
+    pub human_readable: bool,
     pub unix_time: bool,
-    pub size_in_kb: bool,
+    // pub size_in_kb: bool,
+    pub show_create_time: bool,
     pub show_user: bool,
+    pub show_group: bool,
     pub show_mode: bool,
     pub show_path: bool,
 }
@@ -26,24 +28,40 @@ pub struct LsOptions {
 pub fn parse_ls_args(
     args: Vec<Expression>,
     env: &mut Environment,
+    ctx: &Expression,
 ) -> Result<(PathBuf, LsOptions), RuntimeError> {
     let mut options = LsOptions::default();
     let mut path = PathBuf::from(".");
     // dbg!(args);
     for arg in args {
         if let Expression::Symbol(s) | Expression::String(s) = arg {
-            match s.as_str() {
-                "-l" => options.detailed = true,
-                "-a" => options.show_hidden = true,
-                "-L" => options.follow_links = true,
-                // "-h" => options.human_readable = true,
-                "-U" => options.unix_time = true,
-                "-k" => options.size_in_kb = true,
-                "-u" => options.show_user = true,
-                "-m" => options.show_mode = true,
-                "-p" => options.show_path = true,
-                arg if !arg.starts_with('-') => path = abs(arg, env),
-                _ => continue,
+            match s.strip_prefix("-") {
+                Some(opt) => {
+                    for char in opt.chars() {
+                        match char {
+                            'l' => options.detailed = true,
+                            'a' => options.show_hidden = true,
+                            // 'k' => options.size_in_kb = true,
+                            'h' => options.human_readable = true,
+                            't' => options.unix_time = true,
+                            // additional column
+                            'L' => options.follow_links = true,
+                            'c' => options.show_create_time = true,
+                            'u' => options.show_user = true,
+                            'g' => options.show_group = true,
+                            'm' => options.show_mode = true,
+                            'p' => options.show_path = true,
+                            other => {
+                                return Err(RuntimeError::common(
+                                    format!("unkown option for fs.ls: `{}`", other).into(),
+                                    ctx.clone(),
+                                    0,
+                                ));
+                            }
+                        }
+                    }
+                }
+                None => path = abs(&s, env),
             }
         }
     }
@@ -80,14 +98,14 @@ pub fn get_file_expression(
         row.push(Expression::String(file_type.to_string()));
 
         // 动态计算大小表达式
-        let size_expr = if options.size_in_kb {
-            Expression::Integer(metadata.len().div_ceil(1024) as i64)
-        } else {
+        let size_expr = if options.human_readable {
             Expression::FileSize(FileSize::from_bytes(metadata.len()))
+        } else {
+            Expression::Integer(metadata.len().div_ceil(1024) as i64)
         };
         row.push(size_expr);
 
-        // 时间表达式
+        // 修改时间
         let modified = metadata.modified().map_err(|e| {
             RuntimeError::from_io_error(e, "read mtime".into(), Expression::None, 0)
         })?;
@@ -113,11 +131,27 @@ pub fn get_file_expression(
         }
     }
 
+    if options.show_create_time {
+        // 时间表达式
+        let modified = metadata.modified().map_err(|e| {
+            RuntimeError::from_io_error(e, "read mtime".into(), Expression::None, 0)
+        })?;
+        let time_expr = if options.unix_time {
+            Expression::Integer(system_time_to_unix_duration(modified, ctx)?.as_secs() as i64)
+        } else {
+            Expression::DateTime(system_time_to_naive_datetime(modified, ctx)?)
+        };
+        row.push(time_expr);
+    }
+
     // Unix特有字段
     #[cfg(unix)]
     {
         if options.show_user {
             row.push(Expression::Integer(metadata.uid() as i64));
+        }
+        if options.show_group {
+            row.push(Expression::Integer(metadata.gid() as i64));
         }
         if options.detailed || options.show_mode {
             let mode = metadata.permissions().mode() & 0o777;
@@ -143,7 +177,7 @@ pub fn ls(
     env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    let (full_path, options) = parse_ls_args(args, env)?;
+    let (full_path, options) = parse_ls_args(args, env, ctx)?;
 
     if !full_path.exists() {
         return Err(RuntimeError::common(
@@ -169,10 +203,17 @@ pub fn ls(
         }
     }
 
+    if options.show_create_time {
+        headers.push("created".to_string())
+    }
+
     #[cfg(unix)]
     {
         if options.show_user {
             headers.push("user".to_string());
+        }
+        if options.show_group {
+            headers.push("group".to_string());
         }
         if options.detailed || options.show_mode {
             headers.push("mode".to_string());

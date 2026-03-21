@@ -101,7 +101,7 @@ pub fn get_file_expression(
         let size_expr = if options.human_readable {
             Expression::FileSize(FileSize::from_bytes(metadata.len()))
         } else {
-            Expression::Integer(metadata.len().div_ceil(1024) as i64)
+            Expression::Integer(metadata.len() as i64)
         };
         row.push(size_expr);
 

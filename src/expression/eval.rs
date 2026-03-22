@@ -1635,17 +1635,17 @@ impl Expression {
         args: &[Expression],
         state: &mut State,
         env: &mut Environment,
-        context: &Expression,
+        ctx: &Expression,
         depth: usize,
     ) -> Result<Expression, RuntimeError> {
         // 占位符_ 不应在管道方法中使用
-        match get_builtin_via_expr(self, method) {
+        match get_builtin_via_expr(self, method, ctx)? {
             Some(bfn) => {
                 let p_args = prepare_args(args, Some(self.clone()), env, state, depth)?;
-                bfn(p_args, env, context)
+                bfn(p_args, env, ctx)
             }
             _ => Err(RuntimeError::new(
-                RuntimeErrorKind::NoLibDefined(
+                RuntimeErrorKind::NoLibDefinedFor(
                     method.to_string(),
                     self.type_name().into(),
                     "eval pipe method".into(),

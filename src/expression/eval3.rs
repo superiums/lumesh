@@ -763,7 +763,7 @@ pub fn handle_builtin(
         // let p_args = prepare_args(method, args, true, None, env, state, depth)?;
         // let result = selib(args, env, state, ctx)?;
         return Ok(Some(result));
-    } else if let Some(bfn) = get_builtin_via_expr(base, method) {
+    } else if let Some(bfn) = get_builtin_via_expr(base, method, ctx)? {
         let p_args = match base {
             // lazy cmd is in top and sys
             Expression::Blank => prepare_args(args, None, env, state, depth)?,
@@ -890,7 +890,7 @@ impl Expression {
                         },
 
                         _ => Err(RuntimeError::new(
-                            RuntimeErrorKind::NoLibDefined(
+                            RuntimeErrorKind::NoLibDefinedFor(
                                 method.to_string(),
                                 current_base.type_name().into(),
                                 "eval_chain".into(),

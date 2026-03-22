@@ -2,6 +2,7 @@ mod bin;
 mod helper;
 mod lazy_module;
 mod pprint;
+use crate::RuntimeErrorKind;
 use crate::{Environment, Expression, RuntimeError, eval::State, libs::lazy_module::LazyModule};
 pub use bin::colors::{handle_color, handle_style};
 pub use bin::math_lib::handle_math;
@@ -110,34 +111,106 @@ fn regist_all_info() -> BTreeMap<&'static str, BTreeMap<&'static str, BuiltinInf
     libs_info.insert("STYLE", bin::colors::regist_const_style());
     libs_info
 }
+
+fn no_lib_err(lib: &'static str, f: &str, ctx: &Expression) -> RuntimeError {
+    RuntimeError {
+        kind: RuntimeErrorKind::NoLibDefined(f.into(), lib.into()),
+        context: ctx.clone(),
+        depth: 0,
+    }
+}
 /// lazy load builtin.
 /// note: this always clone builtin
-pub fn get_builtin_optimized(lib_name: &str, fn_name: &str) -> Option<Rc<BuiltinFunc>> {
+pub fn get_builtin_optimized(
+    lib_name: &str,
+    fn_name: &str,
+    ctx: &Expression,
+) -> Result<Option<Rc<BuiltinFunc>>, RuntimeError> {
     match lib_name {
         // "Math" => MATH_LIB.with(|m| m.borrow().get(function).cloned()),
-        "" => TOP_LIB.with_borrow(|m| m.get(fn_name).cloned()),
-        "boolean" => BOOL_LIB.with(|m| m.borrow().get(fn_name).cloned()),
-        "string" => STRING_LIB.with(|m| m.get_function(fn_name)),
-        "list" => LIST_LIB.with(|m| m.get_function(fn_name)),
-        "set" => BSET_LIB.with(|m| m.get_function(fn_name)),
-        "map" => MAP_LIB.with(|m| m.get_function(fn_name)),
-        "hmap" => HMAP_LIB.with(|m| m.get_function(fn_name)),
-        "table" => TABLE_LIB.with(|m| m.get_function(fn_name)),
-        "time" => TIME_LIB.with(|m| m.get_function(fn_name)),
-        "regex" => REGEX_LIB.with(|m| m.get_function(fn_name)),
-        "math" => MATH_LIB.with(|m| m.get_function(fn_name)),
-        "rand" => RAND_LIB.with(|m| m.get_function(fn_name)),
-        "log" => LOG_LIB.with(|m| m.get_function(fn_name)),
-        "fs" => FS_LIB.with(|m| m.get_function(fn_name)),
-        "ui" => UI_LIB.with(|m| m.get_function(fn_name)),
-        "into" => INTO_LIB.with(|m| m.get_function(fn_name)),
-        "sys" => SYS_LIB.with(|m| m.get_function(fn_name)),
-        "filesize" => FILESIZE_LIB.with(|m| m.get_function(fn_name)),
-        "from" => FROM_LIB.with(|m| m.get_function(fn_name)),
-        "about" => ABOUT_LIB.with(|m| m.get_function(fn_name)),
-        "console" => CONSOLE_LIB.with(|m| m.get_function(fn_name)),
+        "" => Ok(TOP_LIB.with_borrow(|m| m.get(fn_name).cloned())),
+        "boolean" => BOOL_LIB
+            .with(|m| m.borrow().get(fn_name).cloned())
+            .ok_or(no_lib_err("boolean", fn_name, ctx))
+            .map(Some),
+        "string" => STRING_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("string", fn_name, ctx))
+            .map(Some),
+        "list" => LIST_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("list", fn_name, ctx))
+            .map(Some),
+        "set" => BSET_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("set", fn_name, ctx))
+            .map(Some),
+        "map" => MAP_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("map", fn_name, ctx))
+            .map(Some),
+        "hmap" => HMAP_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("hmap", fn_name, ctx))
+            .map(Some),
+        "table" => TABLE_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("table", fn_name, ctx))
+            .map(Some),
+        "time" => TIME_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("time", fn_name, ctx))
+            .map(Some),
+        "regex" => REGEX_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("regex", fn_name, ctx))
+            .map(Some),
+        "math" => MATH_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("math", fn_name, ctx))
+            .map(Some),
+        "rand" => RAND_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("rand", fn_name, ctx))
+            .map(Some),
+        "log" => LOG_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("log", fn_name, ctx))
+            .map(Some),
+        "fs" => FS_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("fs", fn_name, ctx))
+            .map(Some),
+        "ui" => UI_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("ui", fn_name, ctx))
+            .map(Some),
+        "into" => INTO_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("into", fn_name, ctx))
+            .map(Some),
+        "sys" => SYS_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("sys", fn_name, ctx))
+            .map(Some),
+        "filesize" => FILESIZE_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("filesize", fn_name, ctx))
+            .map(Some),
+        "from" => FROM_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("from", fn_name, ctx))
+            .map(Some),
+        "about" => ABOUT_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("about", fn_name, ctx))
+            .map(Some),
+        "console" => CONSOLE_LIB
+            .with(|m| m.get_function(fn_name))
+            .ok_or(no_lib_err("console", fn_name, ctx))
+            .map(Some),
         // "color" => COLOR_LIB.with(|m| m.get_function(fn_name)),
-        _ => None,
+        _ => Ok(None),
     }
 }
 // pub fn get_builtin_tips() -> HashSet<String> {
@@ -222,13 +295,18 @@ fn get_belong_lib_name(exp: &Expression) -> Option<Cow<'static, str>> {
     }
 }
 
-pub fn get_builtin_via_expr(expr: &Expression, fn_name: &str) -> Option<Rc<BuiltinFunc>> {
+pub fn get_builtin_via_expr(
+    expr: &Expression,
+    fn_name: &str,
+    ctx: &Expression,
+) -> Result<Option<Rc<BuiltinFunc>>, RuntimeError> {
     match expr {
-        Expression::Blank => get_builtin_optimized("", fn_name),
-        Expression::Symbol(x) => get_builtin_optimized(x.as_ref(), fn_name),
-        other => {
-            get_belong_lib_name(other).and_then(|x| get_builtin_optimized(x.as_ref(), fn_name))
-        }
+        Expression::Blank => get_builtin_optimized("", fn_name, ctx),
+        Expression::Symbol(x) => get_builtin_optimized(x.as_ref(), fn_name, ctx),
+        other => match get_belong_lib_name(other) {
+            None => Ok(None),
+            Some(x) => get_builtin_optimized(x.as_ref(), fn_name, ctx),
+        },
     }
 }
 

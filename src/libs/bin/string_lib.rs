@@ -1,5 +1,5 @@
 use crate::{
-    Environment, Expression, Int, RuntimeError,
+    Environment, Expression, Int, RuntimeError, RuntimeErrorKind,
     libs::{
         BuiltinInfo,
         bin::colors::{COLOR_MAP, true_color_by_hex},
@@ -30,7 +30,7 @@ pub fn regist_lazy() -> LazyModule {
         // 分割操作
         split, split_at, chars, words, words_quoted, lines, paragraphs, concat,
         // 修改操作
-        repeat, replace, substring, remove_prefix, remove_suffix, trim, trim_start, trim_end, to_lower, to_upper, to_title,
+        insert, repeat, replace, substring, remove_prefix, remove_suffix, trim, trim_start, trim_end, to_lower, to_upper, to_title,
         // 高级操作
         max_len, grep,
         caesar,
@@ -83,6 +83,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
        concat => "concat strings", "<string>..."
 
        // 修改操作
+       insert => "insert chars to a string", "<string> <index> <string>"
        repeat => "repeat string specified number of times", "<string> <count>"
        replace => "replace all instances of a substring", "<string> <old> <new>"
        substring => "get substring from start to end indices", "<string> <start> <end>"
@@ -488,6 +489,33 @@ fn substring(
         .take(end_idx - start_idx)
         .collect();
     Ok(Expression::String(result))
+}
+
+fn insert(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("insert", &args, 3, ctx)?;
+    let mut it = args.into_iter();
+    let arr = it.next().unwrap();
+    let mut base = get_string_arg(arr, ctx)?;
+    let idx = it.next().unwrap();
+    let i = get_integer_arg(idx, ctx)?;
+    let val = it.next().unwrap();
+
+    if i as usize <= base.len() {
+        base.insert_str(i as usize, &val.to_string());
+        Ok(Expression::String(base))
+    } else {
+        Err(RuntimeError::new(
+            RuntimeErrorKind::CustomError(
+                format!("index {} out of bounds for insertion", i).into(),
+            ),
+            ctx.clone(),
+            0,
+        ))
+    }
 }
 
 fn remove_prefix(

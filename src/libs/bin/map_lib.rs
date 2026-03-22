@@ -75,11 +75,22 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
 // ---from top---
 fn insert(
     args: Vec<Expression>,
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    top::insert(args, env, ctx)
+    check_exact_args_len("insert", &args, 3, ctx)?;
+    let mut it = args.into_iter();
+    let arr = it.next().unwrap();
+    let map = get_map_ref(&arr, ctx)?;
+    let idx = it.next().unwrap();
+    let key = get_string_arg(idx, ctx)?;
+    let val = it.next().unwrap();
+
+    let mut result = map.as_ref().clone();
+    result.insert(key, val);
+    Ok(Expression::from(result))
 }
+
 fn len(
     args: Vec<Expression>,
     env: &mut Environment,

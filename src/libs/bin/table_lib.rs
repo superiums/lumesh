@@ -12,27 +12,29 @@ use std::collections::BTreeMap;
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
         len, header_len,
-        get, select, headers,
-        rows, first, last, nth, grep, find, find_last, filter,
-        sortby
+        getcol, select, headers,
+        at, rows, first, last, grep, find, find_last, filter,
+        sortby,
+        insert
     })
 }
 pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
     reg_info!({
         len => "count rows", "<table>"
         header_len => "count headers", "<table>"
-        get => "get column by header/index", "<table> <header|index>"
+        getcol => "get column by header/index", "<table> <header|index>"
         select => "select columns", "<table> <cols...>"
         headers => "list headers", "<table>"
         rows => "list rows", "<table> <to_map?>"
         first => "get first row", "<table> <to_map?>"
         last => "get last row", "<table> <to_map?>"
-        nth => "get nth row", "<table> <to_map?>"
+        at => "get nth row", "<table> <index> <to_map?>"
         grep => "grep rows which contains the string", "<table> <string>"
         find => "find first row index of matching cell", "<list> <cell|fn> [start_index]"
         find_last => "find last row index of matching cell", "<list> <cell|fn> [start_index]"
         filter => "filter rows by condition/cell match", "<list> <cell|fn>"
         sortby => "sort a table by column", "<table> <col>"
+        insert => "insert a row", "<table> <list|set>"
     })
 }
 
@@ -58,7 +60,7 @@ fn header_len(
     let table = get_table_arg(data, ctx)?;
     Ok(Expression::Integer(table.column_count() as i64))
 }
-fn get(
+fn getcol(
     args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
@@ -240,12 +242,12 @@ fn last(
         }
     }
 }
-fn nth(
+fn at(
     args: Vec<Expression>,
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    check_args_len("nth", &args, 2..=3, ctx)?;
+    check_args_len("at", &args, 2..=3, ctx)?;
     let mut it = args.into_iter();
     let data = it.next().unwrap();
     let table = get_table_arg(data, ctx)?;
@@ -463,4 +465,58 @@ fn filter(
             .collect(),
     };
     Ok(Expression::from(result))
+}
+
+fn insert(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("insert", &args, 3, ctx)?;
+    let mut it = args.into_iter();
+    let data = it.next().unwrap();
+    let mut t = get_table_arg(data, ctx)?;
+    let idx = it.next().unwrap();
+    let i = get_integer_arg(idx, ctx)?;
+    let val = it.next().unwrap();
+
+    if i as usize <= t.rows().len() {
+        let v = match &val {
+            Expression::List(vlist) => vlist.as_ref().clone(),
+            Expression::BSet(vlist) => vlist.iter().cloned().collect(),
+            expr => {
+                return Err(RuntimeError::new(
+                    RuntimeErrorKind::TypeError {
+                        expected: "List/Set".into(),
+                        sym: expr.to_string(),
+                        found: expr.type_name(),
+                    },
+                    ctx.clone(),
+                    0,
+                ));
+            }
+        };
+        // if v.len() != t.column_count() {
+        //     return Err(RuntimeError::new(
+        //         RuntimeErrorKind::CustomError(
+        //             format!("length not match while insert:\n`{}`", &val).into(),
+        //         ),
+        //         ctx.clone(),
+        //         0,
+        //     ));
+        // }
+        // let mut rows = t.rows().clone();
+        // rows.insert(i as usize, v);
+        // let tn = TableData::new(t.headers().to_vec(), rows);
+        t.push_row(v);
+        Ok(Expression::from(t))
+    } else {
+        Err(RuntimeError::new(
+            RuntimeErrorKind::CustomError(
+                format!("index {} out of bounds for insertion", i).into(),
+            ),
+            ctx.clone(),
+            0,
+        ))
+    }
 }

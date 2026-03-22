@@ -6,6 +6,7 @@ use std::{
 
 use crate::{
     Environment, Expression, Int, RuntimeError, RuntimeErrorKind, VERSION,
+    expression::table::TableData,
     libs::{
         BuiltinFunc, BuiltinInfo, LIBS_INFO,
         bin::{
@@ -23,8 +24,7 @@ pub fn regist_all() -> HashMap<&'static str, Rc<BuiltinFunc>> {
     reg_all!({
         exit, cd, cwd, symof,
         tap, print, pprint, println, eprint, eprintln, read,
-
-        get, len, insert, rev, flatten,  select, sortby,
+        get, len, rev, flatten,  select, sortby,
         not,
         eval, exec, eval_str, exec_str, include, import,
         help,
@@ -61,7 +61,6 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         get => "get value from nested map/list/range using dot notation path", "<map|list|range> <path>"
         // typeof => "get data type", "<value>"
         len => "get length of expression", "<collection>"
-        insert => "insert item into collection", "<collection> <key/index> <value>"
         rev => "reverse sequence", "<string|list|bytes>"
         flatten => "flatten nested structure", "<collection>"
         // where => "filter rows by condition", "<list[map]> <condition> "
@@ -492,67 +491,6 @@ fn read(
     Ok(Expression::String(input.trim().to_owned()))
 }
 
-pub fn insert(
-    args: Vec<Expression>,
-    _env: &mut Environment,
-    ctx: &Expression,
-) -> Result<Expression, RuntimeError> {
-    check_exact_args_len("insert", &args, 3, ctx)?;
-    let mut it = args.into_iter();
-    let arr = it.next().unwrap();
-    let idx = it.next().unwrap();
-    let val = it.next().unwrap();
-    match (arr, idx) {
-        (Expression::HMap(exprs), Expression::String(key) | Expression::Symbol(key)) => {
-            let mut result = exprs.as_ref().clone();
-            result.insert(key, val);
-            Ok(Expression::from(result))
-        }
-        (Expression::Map(exprs), Expression::String(key) | Expression::Symbol(key)) => {
-            let mut result = exprs.as_ref().clone();
-            result.insert(key, val);
-            Ok(Expression::from(result))
-        }
-        (Expression::List(exprs), Expression::Integer(i)) => {
-            if i as usize <= exprs.as_ref().len() {
-                let mut result = exprs.as_ref().clone();
-                result.insert(i as usize, val);
-                Ok(Expression::from(result))
-            } else {
-                Err(RuntimeError::new(
-                    RuntimeErrorKind::CustomError(
-                        format!("index {} out of bounds for insertion", i).into(),
-                    ),
-                    ctx.clone(),
-                    0,
-                ))
-            }
-        }
-        (Expression::String(s), Expression::Integer(i)) => {
-            if i as usize <= s.len() {
-                let mut result = s;
-                result.insert_str(i as usize, &val.to_string());
-                Ok(Expression::String(result))
-            } else {
-                Err(RuntimeError::new(
-                    RuntimeErrorKind::CustomError(
-                        format!("index {} out of bounds for insertion", i).into(),
-                    ),
-                    ctx.clone(),
-                    0,
-                ))
-            }
-        }
-        _ => Err(RuntimeError::new(
-            RuntimeErrorKind::CustomError("insert requires a list or map as first argument".into()),
-            ctx.clone(),
-            0,
-        )),
-    }
-
-    // Ok(arr)
-}
-
 pub fn len(
     args: Vec<Expression>,
     _env: &mut Environment,
@@ -564,6 +502,7 @@ pub fn len(
         Expression::Map(m) => m.as_ref().len() as Int,
         Expression::List(list) => list.as_ref().len() as Int,
         Expression::BSet(s) => s.as_ref().len() as Int,
+        Expression::Table(t) => t.row_count() as Int,
         Expression::Symbol(x) | Expression::String(x) => x.chars().count() as Int,
         Expression::Bytes(bytes) => bytes.len() as Int,
         Expression::Range(a, b) => a.to_owned().step_by(b.clone()).count() as Int,
@@ -571,7 +510,7 @@ pub fn len(
         expr => {
             return Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {
-                    expected: "List/Set/Range/Map/HMap/Symbol/String/Bytes/None".into(),
+                    expected: "List/Set/Range/Table/Map/HMap/Symbol/String/Bytes/None".into(),
                     sym: expr.to_string(),
                     found: expr.type_name(),
                     // format!("len not supported for type {}", expr.type_name()).into(),
@@ -594,6 +533,11 @@ pub fn rev(
         Expression::List(list) => {
             let r = list.iter().rev().cloned().collect::<Vec<_>>();
             Ok(Expression::from(r))
+        }
+        Expression::Table(t) => {
+            let r = t.rows().iter().rev().cloned().collect::<Vec<_>>();
+            let tn = TableData::new(t.headers().to_vec(), r);
+            Ok(Expression::from(tn))
         }
         Expression::String(s) => Ok(Expression::String(s.chars().rev().collect())),
         Expression::Symbol(s) => Ok(Expression::Symbol(s.chars().rev().collect())),
@@ -824,6 +768,30 @@ pub fn get(
                 _ => {
                     return Err(RuntimeError::common(
                         format!("path index '{segment}' is not valid for Range").into(),
+                        ctx.clone(),
+                        0,
+                    ));
+                }
+            },
+            Expression::Table(table) => match segment.parse::<usize>() {
+                Ok(key) => {
+                    current = table
+                        .rows()
+                        .iter()
+                        .nth(key)
+                        .cloned()
+                        .map(Expression::from)
+                        .ok_or_else(|| {
+                            RuntimeError::common(
+                                format!("row '{segment}' not found in Table").into(),
+                                ctx.clone(),
+                                0,
+                            )
+                        })?;
+                }
+                _ => {
+                    return Err(RuntimeError::common(
+                        format!("path index '{segment}' is not valid for Table").into(),
                         ctx.clone(),
                         0,
                     ));

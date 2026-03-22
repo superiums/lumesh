@@ -4,6 +4,7 @@
 - add `grep`, `find`, `find_last`, `filter` to table.
 - more flexable param for `into.table`
 - optimize `fs.ls`
+- flatten `insert` to string/list/map/hmap/table
 
 ## [0.14.0]
 - introduce `table` expression

@@ -6,8 +6,8 @@ use crate::expression::BoxedIterator;
 use crate::expression::eval2::execute_iteration;
 use crate::libs::bin::{math_lib, top};
 use crate::libs::helper::{
-    check_args_len, check_exact_args_len, check_fn_arg, get_integer_ref, get_string_arg,
-    get_string_ref,
+    check_args_len, check_exact_args_len, check_fn_arg, get_integer_arg, get_integer_ref,
+    get_string_arg, get_string_ref,
 };
 use crate::libs::lazy_module::LazyModule;
 use crate::{
@@ -67,8 +67,8 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         drop => "drop the first n elements of a list", "<list> <count>"
         // 查找操作
         contains => "check if list contains an item", "<list> <item>"
-        find => "find first index of matching element", "<list> <item|fn> [start_index]"
-        find_last => "find last index of item", "<list> <item|fn> [start_index]"
+        find => "find first index of matching element", "<list> <item|fn> [skip_n]"
+        find_last => "find last index of item", "<list> <item|fn> [skip_n]"
 
         // 修改操作
         append => "append an element to a list", "<list> <element>"
@@ -142,11 +142,32 @@ fn average(
 // ---from top---
 fn insert(
     args: Vec<Expression>,
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    top::insert(args, env, ctx)
+    check_exact_args_len("insert", &args, 3, ctx)?;
+    let mut it = args.into_iter();
+    let arr = it.next().unwrap();
+    let list = get_list_ref(&arr, ctx)?;
+    let idx = it.next().unwrap();
+    let i = get_integer_arg(idx, ctx)?;
+    let val = it.next().unwrap();
+
+    if i as usize <= list.as_ref().len() {
+        let mut result = list.as_ref().clone();
+        result.insert(i as usize, val);
+        Ok(Expression::from(result))
+    } else {
+        Err(RuntimeError::new(
+            RuntimeErrorKind::CustomError(
+                format!("index {} out of bounds for insertion", i).into(),
+            ),
+            ctx.clone(),
+            0,
+        ))
+    }
 }
+
 fn len(
     args: Vec<Expression>,
     env: &mut Environment,

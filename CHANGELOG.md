@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.14.2]
+- Fix following bugs:
+  - String * 0 → None (should be "")
+  - String * negative → None (should error)
+  - String - i64::MIN → panic in -n as usize
+  - Regex truthiness uses .is_empty() (inverted logic)
+  - BSet/HMap/Map::partial_cmp compares only by length
+  - Div by string "0.0" not caught as division by zero
+  - AddAssign uses unwrap_or (silently ignores overflow)
+  - MulAssign uses wrapping arithmetic
+  - Float % Integer returns None instead of error
+- more unit test
+
+
 ## [0.14.1]
 - add `grep`, `find`, `find_last`, `filter` to table.
 - more flexable param for `into.table`

@@ -1,0 +1,123 @@
+print("basic test")
+print(1 + 2)
+
+let x = 42
+print(x)
+
+let name = "Lume"
+print("hello {name}")
+
+let val = if 1 > 0 { "yes" } else { "no" }
+print(val)
+
+for i in [1, 2, 3] {
+    print(i)
+}
+
+for i in 1..4 {
+    print(i)
+}
+
+let i = 0
+while i < 3 {
+    print(i)
+    i = i + 1
+}
+
+"hello" | string.upper | string.length |> print
+
+[1, 2, 3] |> print
+
+fn add(a, b) {
+    a + b
+}
+print(add(1, 2))
+
+let double = x -> x * 2
+print(double(5))
+
+let [a, b] = [1, 2]
+print(a)
+print(b)
+
+let {name2, age2} = {name2: "Alice", age2: 30}
+print(name2)
+
+let val2 = {
+    let x2 = 1
+    let y2 = 2
+    x2 + y2
+}
+print(val2)
+
+let count = 0
+loop {
+    count = count + 1
+    if count > 2 {
+        break
+    }
+    print(count)
+}
+
+let m = match 2 {
+    1 => "one"
+    2 => "two"
+}
+print(m)
+
+print("hello".len())
+
+"hello" | string.upper |> print
+
+print(math.sin(1.0))
+
+time.sleep(10)
+let now = time.now()
+print(now)
+
+print(fs.exists("/tmp"))
+print(fs.is_dir("/tmp"))
+
+let sysinfo = sys.info()
+print(sysinfo)
+
+let x3 = len [1, 2, 3]
+print(x3)
+print(symof(42))
+print(flatten [[1, 2], [3, 4]])
+print(rev "hello")
+print(rev [1, 2, 3])
+
+# error handling: ?. ignore
+let caught_test = (throw "error msg") ?.
+print(caught_test)
+
+# error handling: ?~ to boolean
+let bool_test = (throw "err") ?~
+print(bool_test)
+
+# error handling: ?: deel with default
+let dealt_test = (throw "err") ?: "fallback"
+print(dealt_test)
+
+let r = 1..5 |> list.from
+print(r)
+
+let s = {1, 2, 3}
+print(s)
+
+let m2 = {a: 1, b: 2}
+print(m2.a)
+print(m2["a"])
+
+print(get m2 "a")
+print(get [1,2,3] 0)
+
+let re = regex.find("\\d+", "abc123def")
+print(re)
+
+let parsed = from.json("{\"a\": 1}")
+print(parsed)
+
+let randval = rand.int(1, 10)
+print(randval)

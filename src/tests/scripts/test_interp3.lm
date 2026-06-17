@@ -1,0 +1,4 @@
+let x = 10
+let y = 20
+print(`sum: ${x + y}`)
+print(`nested: ${if x > y { "greater" } else { "less" }}`)

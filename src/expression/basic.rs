@@ -1349,7 +1349,7 @@ impl Expression {
             Self::HMap(exprs) => !exprs.is_empty(),
             Self::Map(exprs) => !exprs.is_empty(),
             Self::Range(exprs, _) => !exprs.is_empty(),
-            Self::Regex(r) => r.regex.as_str().is_empty(),
+            Self::Regex(r) => !r.regex.as_str().is_empty(),
             Self::Lambda(..) => true,
             Self::Function(..) => true,
             Self::DateTime(..) => true,

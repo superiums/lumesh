@@ -1,0 +1,19 @@
+# Test Feature: standard pipe
+let result1 = "hello" | string.upper | string.length
+print("Test 1 (standard pipe): " + result1)
+
+# Test Feature: positional pipe
+let result2 = "hello" |_ string.repeat(_, 3)
+print("Test 2 (positional pipe): " + result2)
+
+# Test Feature: loop pipe
+[1, 2, 3] |> print
+
+# Test: string templates 
+let name = "Lume"
+let version = "0.14.1"
+print("Welcome to {name} v{version}!")
+
+# Test: comparison
+print("Test 3 (compare): " + ("42" == 42))  # should be false
+print("Test 4 (compare int): " + (42 == 42))

@@ -1,0 +1,104 @@
+print "=== Variable declaration ==="
+let x = 42
+print(x)
+
+print "=== String interpolation ==="
+let name = "Lume"
+print("hello {name}")
+
+print "=== If expression ==="
+print(if 1 > 0 { "yes" } else { "no" })
+
+print "=== For loop ==="
+for i in [1, 2, 3] { print(i) }
+
+print "=== Range ==="
+for i in 1..4 { print(i) }
+
+print "=== Pipe ==="
+"hello" | string.upper | string.length |> print
+
+print "=== Dispatch pipe ==="
+[1, 2, 3] |> print
+
+print "=== Function ==="
+fn add(a, b) { a + b }
+print(add(1, 2))
+
+print "=== Lambda ==="
+let double = x -> x * 2
+print(double(5))
+
+print "=== Destructure list ==="
+let [a, b] = [1, 2]
+print(a)
+print(b)
+
+print "=== Destructure map ==="
+let {name2, age2} = {name2: "Alice", age2: 30}
+print(name2)
+
+print "=== Match ==="
+let m = match 2 { 1 => "one" 2 => "two" }
+print(m)
+
+print "=== String chain ==="
+print("hello".len())
+
+print "=== String lib ==="
+"hello" | string.upper |> print
+
+print "=== Math ==="
+print(math.sin(1.0))
+
+print "=== FS ==="
+print(fs.exists("/tmp"))
+
+print "=== Sys ==="
+print(symof(42))
+print(flatten [[1, 2], [3, 4]])
+print(rev "hello")
+print(rev [1, 2, 3])
+
+print "=== Error handling ==="
+let caught_test = (throw "error msg") ?.
+print(caught_test)
+let bool_test = (throw "err") ?~
+print(bool_test)
+
+print "=== Deel error ==="
+let dealt_test = (throw "err") ?: "fallback"
+print(dealt_test)
+
+print "=== Range to list ==="
+let r = 1..5 |> list.from
+print(r)
+
+print "=== Map ==="
+let m2 = {a: 1, b: 2}
+print(m2.a)
+print(m2["a"])
+
+print "=== Get ==="
+print(get m2 "a")
+print(get [1,2,3] 0)
+
+print "=== Regex ==="
+let re = regex.find("\\d+", "abc123def")
+print(re)
+
+print "=== From JSON ==="
+let parsed = from.json('{"a": 1}')
+print(parsed)
+
+print "=== Rand ==="
+let randval = rand.int(1, 10)
+print(randval)
+
+print "=== Colors ==="
+print("hello".red())
+print("hello".green())
+
+print "=== HashMap ==="
+let hm = H{a: 1, b: 2}
+print(hm)

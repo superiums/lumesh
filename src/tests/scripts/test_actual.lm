@@ -1,0 +1,154 @@
+# === Basic operations ===
+print "hello world"
+print(1 + 2)
+print(3 * 4)
+print(10 / 3)
+print(10 % 3)
+
+# === Variables ===
+let x = 1
+var y = 2
+const z = 3
+print(x + y + z)
+
+# === String interpolation ===
+let name = "Lume"
+print("Welcome to {name}!")
+
+# === Comparison ===
+print("42" == 42)
+print(42 == 42)
+print(10 < 20)
+
+# === If ===
+let val = if 1 > 0 { "yes" } else { "no" }
+print(val)
+
+# === For ===
+for i in [1, 2, 3] {
+    print(i)
+}
+for i in 1..4 {
+    print(i)
+}
+
+# === While ===
+let i = 0
+while i < 3 {
+    print(i)
+    i = i + 1
+}
+
+# === Pipe ===
+"hello" | string.upper | string.length |> print
+[1,2,3] |> print
+
+# === Function ===
+fn add(a, b) {
+    a + b
+}
+print(add(1, 2))
+
+let double = |x| x * 2
+print(double(5))
+
+# === Destructure ===
+let [a2, b2] = [1, 2]
+print(a2)
+print(b2)
+let {name3, age3} = {name3: "Alice", age3: 30}
+print(name3)
+
+# === Block ===
+let val2 = {
+    let x2 = 1
+    let y2 = 2
+    x2 + y2
+}
+print(val2)
+
+# === Loop ===
+let count = 0
+loop {
+    count = count + 1
+    if count > 2 {
+        break
+    }
+    print(count)
+}
+
+# === Match ===
+let m = match 2 {
+    1 => "one"
+    2 => "two"
+}
+print(m)
+
+# === Chain calls ===
+"hello".len() |> print
+(1..5).len() |> print
+
+# === String lib ===
+print("hello".red())
+print("hello".green())
+"hello" | string.upper |> print
+"hello" | string.split("") |> print
+
+# === Math lib ===
+print(math.sin(3.14159))
+print(math.cos(3.14159))
+
+# === Time ===
+time.sleep(10)  # 10ms
+let now = time.now()
+print(now)
+
+# === FS ===
+print(fs.exists("/tmp"))
+print(fs.is_dir("/tmp"))
+
+# === Sys ===
+print(sys.info())
+
+# === Regex ===
+let re = regex.find(r"\d+", "abc123def")
+print(re)
+
+# === Rand ===
+let r = rand.int(1, 10)
+print(r)
+
+# === From ===
+let parsed = from.json("{\"a\": 1}")
+print(parsed)
+
+# === helpers ===
+let x3 = len [1, 2, 3]
+print(x3)
+print(symof(42))
+print(symof("hello"))
+print(flatten [[1, 2], [3, 4]])
+print(rev "hello")
+print(rev [1, 2, 3])
+
+# === throw ===
+# This will error and be caught
+let caughttest = throw "this is a test" ?.
+print("caught: " + caughttest)
+
+# === Range ===
+let r2 = 1..5 |> list.from
+print(r2)
+
+# === BSet ===
+let s = {1, 2, 3}
+print(s)
+
+# === Map ===
+let m2 = {a: 1, b: 2}
+print(m2.a)
+print(m2["a"])
+
+# === get ===
+print(get m2 "a")
+print(get [1,2,3] 0)

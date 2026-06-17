@@ -282,13 +282,71 @@ impl PartialOrd for Expression {
             (Self::Symbol(a), Self::Symbol(b)) => a.partial_cmp(b),
             (Self::Bytes(a), Self::Bytes(b)) => a.partial_cmp(b),
             (Self::List(a), Self::List(b)) => a.partial_cmp(b),
-            (Self::BSet(a), Self::BSet(b)) => a.len().partial_cmp(&b.len()),
+            (Self::BSet(a), Self::BSet(b)) => {
+                let mut a_iter = a.iter();
+                let mut b_iter = b.iter();
+                loop {
+                    match (a_iter.next(), b_iter.next()) {
+                        (None, None) => return Some(Ordering::Equal),
+                        (None, Some(_)) => return Some(Ordering::Less),
+                        (Some(_), None) => return Some(Ordering::Greater),
+                        (Some(av), Some(bv)) => match av.partial_cmp(bv) {
+                            Some(Ordering::Equal) => continue,
+                            other => return other,
+                        },
+                    }
+                }
+            }
 
             (Self::DateTime(a), Self::DateTime(b)) => a.partial_cmp(b),
             (Self::FileSize(a), Self::FileSize(b)) => a.partial_cmp(b),
 
-            (Self::HMap(a), Self::HMap(b)) => a.len().partial_cmp(&b.len()),
-            (Self::Map(a), Self::Map(b)) => a.len().partial_cmp(&b.len()),
+            (Self::HMap(a), Self::HMap(b)) => {
+                let mut a_keys: Vec<&String> = a.keys().collect();
+                let mut b_keys: Vec<&String> = b.keys().collect();
+                a_keys.sort();
+                b_keys.sort();
+                let mut a_iter = a_keys.into_iter();
+                let mut b_iter = b_keys.into_iter();
+                loop {
+                    match (a_iter.next(), b_iter.next()) {
+                        (None, None) => return Some(Ordering::Equal),
+                        (None, Some(_)) => return Some(Ordering::Less),
+                        (Some(_), None) => return Some(Ordering::Greater),
+                        (Some(ak), Some(bk)) => {
+                            match ak.partial_cmp(bk) {
+                                Some(Ordering::Equal) => {}
+                                other => return other,
+                            }
+                            match a.get(ak).unwrap().partial_cmp(b.get(bk).unwrap()) {
+                                Some(Ordering::Equal) => continue,
+                                other => return other,
+                            }
+                        }
+                    }
+                }
+            }
+            (Self::Map(a), Self::Map(b)) => {
+                let mut a_iter = a.iter();
+                let mut b_iter = b.iter();
+                loop {
+                    match (a_iter.next(), b_iter.next()) {
+                        (None, None) => return Some(Ordering::Equal),
+                        (None, Some(_)) => return Some(Ordering::Less),
+                        (Some(_), None) => return Some(Ordering::Greater),
+                        (Some((ak, av)), Some((bk, bv))) => {
+                            match ak.partial_cmp(bk) {
+                                Some(Ordering::Equal) => {}
+                                other => return other,
+                            }
+                            match av.partial_cmp(bv) {
+                                Some(Ordering::Equal) => continue,
+                                other => return other,
+                            }
+                        }
+                    }
+                }
+            }
 
             _ => None,
         }

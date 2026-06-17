@@ -1,0 +1,24 @@
+print "=== Match ==="
+let m = match 2 { 1 => "one", 2 => "two" }
+print(m)
+
+print "=== Colors ==="
+print("hello".red())
+print("hello".green())
+
+print "=== HashMap ==="
+let hm = H{a: 1, b: 2}
+print(hm)
+
+print "=== Get ==="
+let m2 = {a: 1, b: 2}
+print(get m2 "a")
+print(get [1,2,3] 0)
+
+print "=== From JSON ==="
+let parsed = from.json('{"a": 1}')
+print(parsed)
+
+print "=== Rand ==="
+let randval = rand.int(1, 10)
+print(randval)

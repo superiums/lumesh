@@ -1,0 +1,4 @@
+let name = "Lume"
+print("double-quoted: {name}")
+print(`backtick: {name}`)
+print(`backtick dollar: ${name}`)

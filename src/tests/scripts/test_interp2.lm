@@ -1,0 +1,8 @@
+let name = "Lume"
+let age = 5
+print(`backtick dollar-brace: ${name}`)
+print(`backtick bare dollar: $name`)
+print(`backtick no-dollar brace: {name}`)
+print("double dollar-brace: ${name}")
+print("double bare dollar: $name")
+print('single dollar-brace: ${name}')

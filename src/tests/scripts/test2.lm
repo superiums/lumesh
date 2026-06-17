@@ -1,0 +1,146 @@
+print("basic test")
+print(1 + 2)
+
+# let declaration
+let x = 42
+print(x)
+
+# string interpolation
+let name = "Lume"
+print("hello {name}")
+
+# if expression
+let val = if 1 > 0 { "yes" } else { "no" }
+print(val)
+
+# for loop
+for i in [1, 2, 3] {
+    print(i)
+}
+
+# range for
+for i in 1..4 {
+    print(i)
+}
+
+# while
+let i = 0
+while i < 3 {
+    print(i)
+    i = i + 1
+}
+
+# pipe
+"hello" | string.upper | string.length |> print
+
+# dispatch pipe
+[1, 2, 3] |> print
+
+# function
+fn add(a, b) {
+    a + b
+}
+print(add(1, 2))
+
+# lambda with ->
+let double = x -> x * 2
+print(double(5))
+
+# destructure
+let [a, b] = [1, 2]
+print(a)
+print(b)
+
+# destructure map
+let {name2, age2} = {name2: "Alice", age2: 30}
+print(name2)
+
+# block
+let val2 = {
+    let x2 = 1
+    let y2 = 2
+    x2 + y2
+}
+print(val2)
+
+# loop
+let count = 0
+loop {
+    count = count + 1
+    if count > 2 {
+        break
+    }
+    print(count)
+}
+
+# match
+let m = match 2 {
+    1 => "one"
+    2 => "two"
+}
+print(m)
+
+# chain calls
+print("hello".len())
+
+# string lib
+print("hello".red())
+print("hello".green())
+"hello" | string.upper |> print
+
+# math lib
+print(math.sin(1.0))
+
+# time
+time.sleep(10)
+let now = time.now()
+print(now)
+
+# fs 
+print(fs.exists("/tmp"))
+print(fs.is_dir("/tmp"))
+
+# sys
+let sysinfo = sys.info()
+print(sysinfo)
+
+# list operations
+let x3 = len [1, 2, 3]
+print(x3)
+print(symof(42))
+print(flatten [[1, 2], [3, 4]])
+print(rev "hello")
+print(rev [1, 2, 3])
+
+# throw caught
+let caught = "test \( throw "error" ?. )"
+print(caught)
+
+# range to list
+let r = 1..5 |> list.from
+print(r)
+
+# set
+let s = {1, 2, 3}
+print(s)
+
+# map
+let m2 = {a: 1, b: 2}
+print(m2.a)
+print(m2["a"])
+
+# get
+print(get m2 "a")
+print(get [1,2,3] 0)
+
+# regex lib
+let re = regex.find("\\d+", "abc123def")
+print(re)
+
+# from json
+let parsed = from.json("{\"a\": 1}")
+print(parsed)
+
+# rand
+let randval = rand.int(1, 10)
+print(randval)

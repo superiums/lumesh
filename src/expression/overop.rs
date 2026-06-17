@@ -248,7 +248,9 @@ impl Sub for Expression {
                         Ok(Self::String("".to_owned()))
                     }
                 } else {
-                    let l = -n as usize;
+                    let l = n.checked_neg().ok_or_else(|| {
+                        RuntimeErrorKind::Overflow(format!("-{n}"))
+                    })? as usize;
                     if l <= m.len() {
                         Ok(Self::String(m[l..].to_string()))
                     } else {
@@ -413,12 +415,15 @@ impl Mul for Expression {
 
             // string
             (Self::String(m), Self::Integer(n)) => {
-                // 将字符串重复 n 次
-                let nn = n as usize;
-                if nn > 0 && nn < usize::MAX {
-                    Ok(Self::String(m.repeat(nn)))
+                if n == 0 {
+                    Ok(Self::String(String::new()))
+                } else if n < 0 {
+                    Err(RuntimeErrorKind::CommandFailed2(
+                        "*".into(),
+                        format!("Cannot multiply string by negative number {n}"),
+                    ))
                 } else {
-                    Ok(Self::None)
+                    Ok(Self::String(m.repeat(n as usize)))
                 }
             }
 
@@ -552,7 +557,7 @@ impl Div for Expression {
             (l, Self::Integer(0) | Self::Float(0.0)) => Err(RuntimeErrorKind::CustomError(
                 format!("can't divide {l} by zero").into(),
             )),
-            (l, Self::String(s)) if s == "0" => Err(RuntimeErrorKind::CustomError(
+            (l, Self::String(s)) if s == "0" || s == "0.0" => Err(RuntimeErrorKind::CustomError(
                 format!("can't divide {l} by zero").into(),
             )),
             (Self::Integer(m), Self::Integer(n)) => Ok(Self::Integer(m / n)),
@@ -640,7 +645,7 @@ impl Neg for Expression {
 impl AddAssign for Expression {
     fn add_assign(&mut self, other: Self) {
         *self = match (&self, other) {
-            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.checked_add(n).unwrap_or(*m)),
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.wrapping_add(n)),
             (Self::Integer(m), Self::Float(n)) => Self::Float(*m as f64 + n),
             (Self::Float(m), Self::Integer(n)) => Self::Float(*m + n as f64),
             (Self::Float(m), Self::Float(n)) => Self::Float(*m + n),
@@ -651,7 +656,7 @@ impl AddAssign for Expression {
 impl SubAssign for Expression {
     fn sub_assign(&mut self, other: Self) {
         *self = match (&self, other) {
-            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.checked_sub(n).unwrap_or(*m)),
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.wrapping_sub(n)),
             (Self::Integer(m), Self::Float(n)) => Self::Float(*m as f64 - n),
             (Self::Float(m), Self::Integer(n)) => Self::Float(*m - n as f64),
             (Self::Float(m), Self::Float(n)) => Self::Float(*m - n),
@@ -662,7 +667,7 @@ impl SubAssign for Expression {
 impl MulAssign for Expression {
     fn mul_assign(&mut self, other: Self) {
         *self = match (&self, other) {
-            (Self::Integer(m), Self::Integer(n)) => Self::Integer(*m * n),
+            (Self::Integer(m), Self::Integer(n)) => Self::Integer(m.wrapping_mul(n)),
             (Self::Integer(m), Self::Float(n)) => Self::Float(*m as f64 * n),
             (Self::Float(m), Self::Integer(n)) => Self::Float(*m * n as f64),
             (Self::Float(m), Self::Float(n)) => Self::Float(*m * n),
@@ -689,6 +694,9 @@ impl Rem for Expression {
     fn rem(self, other: Self) -> Self {
         match (self, other) {
             (Self::Integer(m), Self::Integer(n)) => Self::Integer(m % n),
+            (Self::Float(m), Self::Integer(n)) => Self::Float(m % n as f64),
+            (Self::Integer(m), Self::Float(n)) => Self::Float(m as f64 % n),
+            (Self::Float(m), Self::Float(n)) => Self::Float(m % n),
             _ => Self::None,
         }
     }

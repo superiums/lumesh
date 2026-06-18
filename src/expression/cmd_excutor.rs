@@ -118,18 +118,10 @@ fn exec_single_cmd(
         }
     }
 
-    // 中断信号处理
-    // let mut child_ref = child;
+    // 中断信号处理：SIGINT 由全局 handler 捕获（在 repl.rs 中安装），
+    // 仅设置标志位，不会杀死 lume 自身。
+    // 子进程会收到终端发送的 SIGINT 并退出，wait 随后返回。
     childman::set_child(child.id());
-    // std::thread::spawn(move || {
-    //     loop {
-    //         if state::read_signal() {
-    //             let _ = child_ref.kill();
-    //             break;
-    //         }
-    //         std::thread::sleep(Duration::from_secs(1));
-    //     }
-    // });
 
     // 获取输出
     if pipe_out {

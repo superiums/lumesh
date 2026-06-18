@@ -5,8 +5,6 @@ use crate::RuntimeErrorKind;
 pub trait TerminalOps {
     fn enable_raw_mode(&self) -> Result<(), RuntimeErrorKind>;
     fn disable_raw_mode(&self) -> Result<(), RuntimeErrorKind>;
-    #[cfg(unix)]
-    fn setup_signal_handlers(&self) -> Result<(), RuntimeErrorKind>;
     #[cfg(windows)]
     fn handle_ctrl_c(&self, running: Arc<AtomicBool>) -> Result<(), RuntimeErrorKind>;
     fn get_terminal_size(&self) -> (u16, u16);
@@ -28,32 +26,7 @@ impl TerminalOps for UnixTerminal {
             .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))
     }
 
-    fn setup_signal_handlers(&self) -> Result<(), RuntimeErrorKind> {
-        use nix::sys::signal;
-
-        unsafe {
-            signal::sigaction(
-                signal::Signal::SIGTERM,
-                &signal::SigAction::new(
-                    signal::SigHandler::SigDfl,
-                    signal::SaFlags::SA_RESTART,
-                    signal::SigSet::empty(),
-                ),
-            )
-            .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
-
-            signal::sigaction(
-                signal::Signal::SIGINT,
-                &signal::SigAction::new(
-                    signal::SigHandler::SigDfl,
-                    signal::SaFlags::SA_RESTART,
-                    signal::SigSet::empty(),
-                ),
-            )
-            .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
-        }
-        Ok(())
-    }
+    // SIGINT 处理由 TerminalGuard 在 pty.rs 中管理
 
     // fn handle_ctrl_c(&self, _running: Arc<AtomicBool>) -> Result<(), RuntimeErrorKind> {
     //     // Unix 上已经通过信号处理

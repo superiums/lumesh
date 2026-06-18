@@ -1,6 +1,8 @@
 use super::terminal::{TerminalOps, get_terminal_impl};
+#[cfg(unix)]
+use nix::sys::signal::{self, SigAction, SigHandler, SaFlags, SigSet};
 use crate::utils::get_current_path;
-use crate::{Environment, Expression, RuntimeErrorKind};
+use crate::{Environment, Expression, RuntimeErrorKind, childman};
 use portable_pty::{CommandBuilder, PtySize, native_pty_system};
 use std::io::{self, Read, Write};
 use std::path::PathBuf;
@@ -9,21 +11,52 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
 use std::time::Duration;
 
-// 使用 RAII 守卫确保终端模式恢复
+// 使用 RAII 守卫确保终端模式恢复，同时保存/恢复 SIGINT 处理器
 struct TerminalGuard {
     terminal: Box<dyn TerminalOps>,
+    #[cfg(unix)]
+    saved_sigint: Option<SigAction>,
 }
 
 impl TerminalGuard {
     fn new(terminal: Box<dyn TerminalOps>) -> Result<Self, RuntimeErrorKind> {
+        #[cfg(unix)]
+        let saved_sigint = unsafe {
+            // Step 1: temporarily ignore SIGINT while we enter raw mode
+            match signal::sigaction(
+                signal::Signal::SIGINT,
+                &SigAction::new(SigHandler::SigIgn, SaFlags::SA_RESTART, SigSet::empty()),
+            ) {
+                Ok(prev) => {
+                    // Step 2: set SIGINT to SIG_DFL (for PTY child via ISIG)
+                    let _ = signal::sigaction(
+                        signal::Signal::SIGINT,
+                        &SigAction::new(SigHandler::SigDfl, SaFlags::SA_RESTART, SigSet::empty()),
+                    );
+                    Some(prev)
+                }
+                Err(_) => None,
+            }
+        };
         terminal.enable_raw_mode()?;
-        Ok(Self { terminal })
+        Ok(Self {
+            terminal,
+            #[cfg(unix)]
+            saved_sigint,
+        })
     }
 }
 
 impl Drop for TerminalGuard {
     fn drop(&mut self) {
         let _ = self.terminal.disable_raw_mode();
+        #[cfg(unix)]
+        if let Some(ref prev) = self.saved_sigint {
+            // Restore the SIGINT handler that was active before PTY execution
+            unsafe {
+                let _ = signal::sigaction(signal::Signal::SIGINT, prev);
+            }
+        }
     }
 }
 
@@ -35,9 +68,7 @@ pub fn exec_in_pty(
 ) -> Result<Option<Vec<u8>>, RuntimeErrorKind> {
     let terminal = get_terminal_impl();
 
-    // 设置信号处理
-    #[cfg(unix)]
-    terminal.setup_signal_handlers()?;
+    // 信号处理由 TerminalGuard 内部的 save/restore 管理，不再单独调用 setup_signal_handlers
     let (w, h) = terminal.get_terminal_size();
 
     // 输入处理线程
@@ -124,6 +155,11 @@ pub fn exec_in_pty(
         .spawn_command(cmd)
         .map_err(|e| RuntimeErrorKind::CustomError(e.to_string().into()))?;
 
+    // 注册 PTY 子进程 PID 到 childman（用于强制终止）
+    if let Some(pid) = child.process_id() {
+        childman::set_child(pid);
+    }
+
     let mut master_reader = pair
         .master
         .try_clone_reader()
@@ -199,6 +235,7 @@ pub fn exec_in_pty(
     });
 
     child.wait()?;
+    childman::clear_child();
     running.store(true, Ordering::SeqCst);
     let _ = input_thread.join();
     if is_shell || is_vi {

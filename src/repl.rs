@@ -206,6 +206,9 @@ impl Hinter for LumeHinter {
 }
 
 pub fn run_repl(env: &mut Environment) {
+    // 安装全局 SIGINT 处理器：仅设置标志，不杀死 lume
+    childman::install_sigint_handler();
+
     match env.get("LUME_WELCOME") {
         Some(wel) => {
             println!("{wel}");
@@ -464,6 +467,11 @@ pub fn run_repl(env: &mut Environment) {
 
         if parse_and_eval(&full_input, env) {
             let _ = editor.history_mut().add(full_input);
+        }
+
+        // 检查命令执行期间是否收到 SIGINT（Ctrl+C）
+        if childman::check_and_clear_sigint() {
+            println!("^C");
         }
     }
 

@@ -1,5 +1,3 @@
-use common_macros::hash_map;
-
 use crate::{Environment, Expression};
 use std::collections::BTreeMap;
 
@@ -7,7 +5,18 @@ use crate::libs::BuiltinInfo;
 use crate::libs::helper::{check_args_len, check_exact_args_len};
 use crate::libs::lazy_module::LazyModule;
 use crate::{Int, RuntimeError, reg_info, reg_lazy};
-use std::io::Write;
+
+use crossterm::cursor::{
+    Hide, MoveDown, MoveLeft, MoveRight, MoveTo, MoveUp, RestorePosition, SavePosition, Show,
+};
+use crossterm::event::{Event, KeyCode, read};
+use crossterm::style::Print;
+use crossterm::terminal::{
+    Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen, SetTitle,
+    disable_raw_mode, enable_raw_mode, size,
+};
+use crossterm::{execute, queue};
+use std::io::{stdout, Write};
 
 pub fn regist_lazy() -> LazyModule {
     reg_lazy!({
@@ -69,7 +78,7 @@ fn width(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    crossterm::terminal::size()
+    size()
         .map(|(w, _)| Expression::Integer(w as Int))
         .or(Ok(Expression::None))
 }
@@ -79,7 +88,7 @@ fn height(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    crossterm::terminal::size()
+    size()
         .map(|(_, h)| Expression::Integer(h as Int))
         .or(Ok(Expression::None))
 }
@@ -91,21 +100,27 @@ fn write(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("write", &args, 3, ctx)?;
 
-    let content = &args[0];
     let x = &args[1];
     let y = &args[2];
 
     match (x, y) {
         (Expression::Integer(x), Expression::Integer(y)) => {
-            let content_str = content.to_string();
+            let content_str = args[0].to_string();
+            let mut out = stdout();
             for (y_offset, line) in content_str.lines().enumerate() {
-                print!(
-                    "\x1b[s\x1b[{row};{column}H{line}\x1b[u",
-                    column = x,
-                    row = y + y_offset as Int,
-                    line = line
-                );
+                queue!(
+                    out,
+                    SavePosition,
+                    MoveTo(*x as u16, (*y + y_offset as Int) as u16),
+                    Print(line),
+                    RestorePosition,
+                )
+                .map_err(|e| {
+                    RuntimeError::common(format!("Write failed: {e}").into(), ctx.clone(), 0)
+                })?;
             }
+            out.flush()
+                .map_err(|e| RuntimeError::common(format!("Flush failed: {e}").into(), ctx.clone(), 0))?;
             Ok(Expression::None)
         }
         (m, n) => Err(RuntimeError::common(
@@ -129,8 +144,8 @@ fn title(
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("title", &args, 1, ctx)?;
-    let title = &args[0];
-    print!("\x1b]2;{title}\x07");
+    execute!(stdout(), SetTitle(args[0].to_string()))
+        .map_err(|e| RuntimeError::common(format!("Failed to set title: {e}").into(), ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 
@@ -139,7 +154,8 @@ fn clear(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    print!("\x1b[2J\x1b[H");
+    execute!(stdout(), Clear(ClearType::All), MoveTo(0, 0))
+        .map_err(|_| RuntimeError::common("Clear failed".into(), _ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 
@@ -148,7 +164,7 @@ fn flush(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    std::io::stdout()
+    stdout()
         .flush()
         .map_err(|e| RuntimeError::common(format!("Flush failed: {e}").into(), ctx.clone(), 0))?;
     Ok(Expression::None)
@@ -159,7 +175,7 @@ fn mode_raw(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    crossterm::terminal::enable_raw_mode()
+    enable_raw_mode()
         .map(|_| Expression::None)
         .map_err(|_| RuntimeError::common("Failed to enable raw mode".into(), ctx.clone(), 0))
 }
@@ -169,7 +185,7 @@ fn mode_normal(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    crossterm::terminal::disable_raw_mode()
+    disable_raw_mode()
         .map(|_| Expression::None)
         .map_err(|_| RuntimeError::common("Failed to disable raw mode".into(), ctx.clone(), 0))
 }
@@ -179,7 +195,8 @@ fn screen_alternate(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    print!("\x1b[?1049h");
+    execute!(stdout(), EnterAlternateScreen)
+        .map_err(|_| RuntimeError::common("Failed to enter alternate screen".into(), _ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 
@@ -188,7 +205,8 @@ fn screen_normal(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    print!("\x1b[?1049l");
+    execute!(stdout(), LeaveAlternateScreen)
+        .map_err(|_| RuntimeError::common("Failed to leave alternate screen".into(), _ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 // Cursor Control Functions
@@ -199,12 +217,10 @@ fn cursor_to(
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("cursor_to", &args, 2, ctx)?;
 
-    let x = &args[0];
-    let y = &args[1];
-
-    match (x, y) {
+    match (&args[0], &args[1]) {
         (Expression::Integer(x), Expression::Integer(y)) => {
-            print!("\x1b[{y};{x}H");
+            execute!(stdout(), MoveTo(*x as u16, *y as u16))
+                .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
             Ok(Expression::None)
         }
         (m, n) => Err(RuntimeError::common(
@@ -222,40 +238,89 @@ fn cursor_to(
     }
 }
 
-macro_rules! cursor_move_fn {
-    ($name:ident, $code:literal, $doc:literal) => {
-        fn $name(
-            args: Vec<Expression>,
-            _env: &mut Environment,
-            ctx: &Expression,
-        ) -> Result<Expression, RuntimeError> {
-            check_exact_args_len(stringify!($name), &args, 1, ctx)?;
-
-            if let Expression::Integer(n) = args[0] {
-                print!(concat!("\x1b[", $code, "{}"), n);
-                Ok(Expression::None)
-            } else {
-                Err(RuntimeError::common(
-                    format!("Expected integer for movement amount, got {:?}", args[0]).into(),
-                    ctx.clone(),
-                    0,
-                ))
-            }
-        }
-    };
+fn cursor_up(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("cursor_up", &args, 1, ctx)?;
+    if let Expression::Integer(n) = args[0] {
+        execute!(stdout(), MoveUp(n as u16))
+            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        Ok(Expression::None)
+    } else {
+        Err(RuntimeError::common(
+            format!("Expected integer for movement amount, got {:?}", args[0]).into(),
+            ctx.clone(),
+            0,
+        ))
+    }
 }
 
-cursor_move_fn!(cursor_up, "A", "Move cursor up");
-cursor_move_fn!(cursor_down, "B", "Move cursor down");
-cursor_move_fn!(cursor_left, "D", "Move cursor left");
-cursor_move_fn!(cursor_right, "C", "Move cursor right");
+fn cursor_down(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("cursor_down", &args, 1, ctx)?;
+    if let Expression::Integer(n) = args[0] {
+        execute!(stdout(), MoveDown(n as u16))
+            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        Ok(Expression::None)
+    } else {
+        Err(RuntimeError::common(
+            format!("Expected integer for movement amount, got {:?}", args[0]).into(),
+            ctx.clone(),
+            0,
+        ))
+    }
+}
+
+fn cursor_left(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("cursor_left", &args, 1, ctx)?;
+    if let Expression::Integer(n) = args[0] {
+        execute!(stdout(), MoveLeft(n as u16))
+            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        Ok(Expression::None)
+    } else {
+        Err(RuntimeError::common(
+            format!("Expected integer for movement amount, got {:?}", args[0]).into(),
+            ctx.clone(),
+            0,
+        ))
+    }
+}
+
+fn cursor_right(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("cursor_right", &args, 1, ctx)?;
+    if let Expression::Integer(n) = args[0] {
+        execute!(stdout(), MoveRight(n as u16))
+            .map_err(|e| RuntimeError::common(format!("Failed to move cursor: {e}").into(), ctx.clone(), 0))?;
+        Ok(Expression::None)
+    } else {
+        Err(RuntimeError::common(
+            format!("Expected integer for movement amount, got {:?}", args[0]).into(),
+            ctx.clone(),
+            0,
+        ))
+    }
+}
 
 fn cursor_save(
     _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    print!("\x1b[s");
+    execute!(stdout(), SavePosition)
+        .map_err(|_| RuntimeError::common("Failed to save cursor position".into(), _ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 
@@ -264,7 +329,8 @@ fn cursor_restore(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    print!("\x1b[u");
+    execute!(stdout(), RestorePosition)
+        .map_err(|_| RuntimeError::common("Failed to restore cursor position".into(), _ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 
@@ -273,7 +339,8 @@ fn cursor_hide(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    print!("\x1b[?25l");
+    execute!(stdout(), Hide)
+        .map_err(|_| RuntimeError::common("Failed to hide cursor".into(), _ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 
@@ -282,7 +349,8 @@ fn cursor_show(
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    print!("\x1b[?25h");
+    execute!(stdout(), Show)
+        .map_err(|_| RuntimeError::common("Failed to show cursor".into(), _ctx.clone(), 0))?;
     Ok(Expression::None)
 }
 // Input Functions
@@ -302,7 +370,7 @@ fn read_line(
         1 => {
             let prompt = args[0].to_string();
             print!("{prompt}");
-            std::io::stdout().flush().map_err(|e| {
+            stdout().flush().map_err(|e| {
                 RuntimeError::common(format!("Flush failed: {e}").into(), ctx.clone(), 0)
             })?;
 
@@ -320,42 +388,58 @@ fn read_line(
     }
 }
 
+// Key mapping constants shared between read_key and keys
+const SPECIAL_KEY_MAPPINGS: &[(&str, KeyCode, &str)] = &[
+    ("enter", KeyCode::Enter, "\n"),
+    ("backspace", KeyCode::Backspace, "\x08"),
+    ("delete", KeyCode::Delete, "\x7f"),
+    ("left", KeyCode::Left, "\x1b[D"),
+    ("right", KeyCode::Right, "\x1b[C"),
+    ("up", KeyCode::Up, "\x1b[A"),
+    ("down", KeyCode::Down, "\x1b[B"),
+    ("home", KeyCode::Home, "\x1b[H"),
+    ("end", KeyCode::End, "\x1b[F"),
+    ("page_up", KeyCode::PageUp, "\x1b[5~"),
+    ("page_down", KeyCode::PageDown, "\x1b[6~"),
+    ("tab", KeyCode::Tab, "\t"),
+    ("esc", KeyCode::Esc, "\x1b"),
+    ("insert", KeyCode::Insert, "\x1b[2~"),
+    ("f1", KeyCode::F(1), "\x1b[11~"),
+    ("f2", KeyCode::F(2), "\x1b[12~"),
+    ("f3", KeyCode::F(3), "\x1b[13~"),
+    ("f4", KeyCode::F(4), "\x1b[14~"),
+    ("f5", KeyCode::F(5), "\x1b[15~"),
+    ("f6", KeyCode::F(6), "\x1b[17~"),
+    ("f7", KeyCode::F(7), "\x1b[18~"),
+    ("f8", KeyCode::F(8), "\x1b[19~"),
+    ("f9", KeyCode::F(9), "\x1b[20~"),
+    ("f10", KeyCode::F(10), "\x1b[21~"),
+    ("f11", KeyCode::F(11), "\x1b[23~"),
+    ("f12", KeyCode::F(12), "\x1b[24~"),
+    ("null", KeyCode::Null, "\x00"),
+    ("back_tab", KeyCode::BackTab, "\x1b[Z"),
+];
+
+fn key_code_str(code: KeyCode) -> Option<&'static str> {
+    SPECIAL_KEY_MAPPINGS
+        .iter()
+        .find(|(_, k, _)| *k == code)
+        .map(|(_, _, s)| *s)
+}
+
 fn keys(
     _args: Vec<Expression>,
     _env: &mut Environment,
     _ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    Ok(Expression::from(hash_map! {
-        String::from("enter") => Expression::String("\n".to_string()),
-        String::from("backspace") => Expression::String("\x08".to_string()),
-        String::from("delete") => Expression::String("\x7f".to_string()),
-        String::from("left") => Expression::String("\x1b[D".to_string()),
-        String::from("right") => Expression::String("\x1b[C".to_string()),
-        String::from("up") => Expression::String("\x1b[A".to_string()),
-        String::from("down") => Expression::String("\x1b[B".to_string()),
-        String::from("home") => Expression::String("\x1b[H".to_string()),
-        String::from("end") => Expression::String("\x1b[F".to_string()),
-        String::from("page_up") => Expression::String("\x1b[5~".to_string()),
-        String::from("page_down") => Expression::String("\x1b[6~".to_string()),
-        String::from("tab") => Expression::String("\t".to_string()),
-        String::from("esc") => Expression::String("\x1b".to_string()),
-        String::from("insert") => Expression::String("\x1b[2~".to_string()),
-        String::from("f1") => Expression::String("\x1b[11~".to_string()),
-        String::from("f2") => Expression::String("\x1b[12~".to_string()),
-        String::from("f3") => Expression::String("\x1b[13~".to_string()),
-        String::from("f4") => Expression::String("\x1b[14~".to_string()),
-        String::from("f5") => Expression::String("\x1b[15~".to_string()),
-        String::from("f6") => Expression::String("\x1b[17~".to_string()),
-        String::from("f7") => Expression::String("\x1b[18~".to_string()),
-        String::from("f8") => Expression::String("\x1b[19~".to_string()),
-        String::from("f9") => Expression::String("\x1b[20~".to_string()),
-        String::from("f10") => Expression::String("\x1b[21~".to_string()),
-        String::from("f11") => Expression::String("\x1b[23~".to_string()),
-        String::from("f12") => Expression::String("\x1b[24~".to_string()),
-        String::from("null") => Expression::String("\x00".to_string()),
-        String::from("back_tab") => Expression::String("\x1b[Z".to_string()),
-    }))
+    Ok(Expression::from(
+        SPECIAL_KEY_MAPPINGS
+            .iter()
+            .map(|(name, _, s)| (name.to_string(), Expression::String(s.to_string())))
+            .collect::<BTreeMap<_, _>>(),
+    ))
 }
+
 fn read_password(
     args: Vec<Expression>,
     _env: &mut Environment,
@@ -382,50 +466,26 @@ fn read_key(
     _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
-    crossterm::terminal::enable_raw_mode()
+    enable_raw_mode()
         .map_err(|_| RuntimeError::common("Failed to enable raw mode".into(), ctx.clone(), 0))?;
 
-    let key = crossterm::event::read().map_err(|e| {
+    let key = read().map_err(|e| {
         RuntimeError::common(format!("Failed to read key: {e}").into(), ctx.clone(), 0)
-    })?;
+    });
 
-    crossterm::terminal::disable_raw_mode()
+    disable_raw_mode()
         .map_err(|_| RuntimeError::common("Failed to disable raw mode".into(), ctx.clone(), 0))?;
 
+    let key = key?;
+
     match key {
-        crossterm::event::Event::Key(event) => {
-            let key_str = match event.code {
-                crossterm::event::KeyCode::Enter => "\n".to_string(),
-                crossterm::event::KeyCode::Backspace => "\x08".to_string(),
-                crossterm::event::KeyCode::Delete => "\x7f".to_string(),
-                crossterm::event::KeyCode::Left => "\x1b[D".to_string(),
-                crossterm::event::KeyCode::Right => "\x1b[C".to_string(),
-                crossterm::event::KeyCode::Up => "\x1b[A".to_string(),
-                crossterm::event::KeyCode::Down => "\x1b[B".to_string(),
-                crossterm::event::KeyCode::Home => "\x1b[H".to_string(),
-                crossterm::event::KeyCode::End => "\x1b[F".to_string(),
-                crossterm::event::KeyCode::PageUp => "\x1b[5~".to_string(),
-                crossterm::event::KeyCode::PageDown => "\x1b[6~".to_string(),
-                crossterm::event::KeyCode::Tab => "\t".to_string(),
-                crossterm::event::KeyCode::Esc => "\x1b".to_string(),
-                crossterm::event::KeyCode::Insert => "\x1b[2~".to_string(),
-                crossterm::event::KeyCode::F(1) => "\x1b[11~".to_string(),
-                crossterm::event::KeyCode::F(2) => "\x1b[12~".to_string(),
-                crossterm::event::KeyCode::F(3) => "\x1b[13~".to_string(),
-                crossterm::event::KeyCode::F(4) => "\x1b[14~".to_string(),
-                crossterm::event::KeyCode::F(5) => "\x1b[15~".to_string(),
-                crossterm::event::KeyCode::F(6) => "\x1b[17~".to_string(),
-                crossterm::event::KeyCode::F(7) => "\x1b[18~".to_string(),
-                crossterm::event::KeyCode::F(8) => "\x1b[19~".to_string(),
-                crossterm::event::KeyCode::F(9) => "\x1b[20~".to_string(),
-                crossterm::event::KeyCode::F(10) => "\x1b[21~".to_string(),
-                crossterm::event::KeyCode::F(11) => "\x1b[23~".to_string(),
-                crossterm::event::KeyCode::F(12) => "\x1b[24~".to_string(),
-                crossterm::event::KeyCode::Null => "\x00".to_string(),
-                crossterm::event::KeyCode::BackTab => "\x1b[Z".to_string(),
-                crossterm::event::KeyCode::Char(c) => c.to_string(),
-                _ => format!("{:?}", event.code),
-            };
+        Event::Key(event) => {
+            let key_str = key_code_str(event.code)
+                .map(|s| s.to_string())
+                .unwrap_or_else(|| match event.code {
+                    KeyCode::Char(c) => c.to_string(),
+                    _ => format!("{:?}", event.code),
+                });
             Ok(Expression::String(key_str))
         }
         _ => Err(RuntimeError::common(

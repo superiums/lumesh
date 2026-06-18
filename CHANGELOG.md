@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.14.3]
+- improved quotes:
+  - '' keeps raw string
+  - "" Normal escape, ANSI escape and Unicode escape
+  - `` All escape and var insert
+  - invalide escape now keeps as raw string insteadof report error
+  - test unit updated for above changes
+  
 ## [0.14.2]
 - Fix following bugs:
   - String * 0 → None (should be "")

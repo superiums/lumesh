@@ -54,9 +54,9 @@ impl<'a> Input<'a> {
         (new_input, slice)
     }
 
-    pub fn split_saturating(self, n: usize) -> (Self, StrSlice) {
-        self.split_at(n.min(self.len()))
-    }
+    // pub fn split_saturating(self, n: usize) -> (Self, StrSlice) {
+    //     self.split_at(n.min(self.len()))
+    // }
 
     pub fn split_until(self, other: Input<'_>) -> (Self, StrSlice) {
         assert!(std::ptr::eq(self.str, other.str));

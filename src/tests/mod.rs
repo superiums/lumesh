@@ -184,11 +184,13 @@ mod tokenizer_tests {
 
     #[test]
     fn test_invalid_escape() {
+        // Tokenizer no longer validates escapes — all \X sequences are kept as raw content
+        // and processed by snailquote::unescape at the parser level.
+        // \z is not a valid snailquote escape, so it would be an error during parsing.
         let (_tokens, diags) = tokenize(r#""\z""#);
-        let has_invalid = diags
-            .iter()
-            .any(|d| matches!(d, Diagnostic::InvalidStringEscapes(_)));
-        assert!(has_invalid, "Expected InvalidStringEscapes for \\z");
+        let has_diags = diags.iter().any(|d| !matches!(d, Diagnostic::Valid));
+        // No tokenizer-level diagnostics expected; errors come from parser.
+        assert!(!has_diags, "escape validation moved to parser level");
     }
 
     #[test]
@@ -1450,6 +1452,117 @@ mod environment_tests {
         env.define("x", Expression::Integer(2));
         assert_eq!(env.get("x"), Some(Expression::Integer(2)));
     }
+}
+
+// ============================================================
+// 6b. QUOTE ESCAPE TESTS (parse + eval)
+// ============================================================
+
+#[test]
+fn test_quote_single_pure_literal() {
+    // '...' is pure literal: no escape processing
+    let (tokens, diags) = tokenize(r#"'hello\nworld'"#);
+    assert!(diags.iter().filter(|d| d != &&Diagnostic::Valid).count() == 0);
+    assert_eq!(tokens[0].kind, crate::TokenKind::StringRaw);
+
+    let result = eval_str("'hello\\nworld'").unwrap();
+    assert_eq!(result, Expression::String("hello\\nworld".into()),
+               "single-quoted \\n should stay literal");
+}
+
+#[test]
+fn test_quote_double_newline() {
+    let result = eval_str(r#""hello\nworld""#).unwrap();
+    assert_eq!(result, Expression::String("hello\nworld".into()),
+               "double-quoted \\n should become newline");
+}
+
+#[test]
+fn test_quote_double_tab() {
+    let result = eval_str(r#""col1\tcol2""#).unwrap();
+    assert_eq!(result, Expression::String("col1\tcol2".into()));
+}
+
+#[test]
+fn test_quote_double_backslash() {
+    let result = eval_str(r#""path\\file""#).unwrap();
+    assert_eq!(result, Expression::String(r"path\file".into()));
+}
+
+#[test]
+fn test_quote_double_unicode() {
+    let result = eval_str(r#""\u{0041}""#).unwrap();
+    assert_eq!(result, Expression::String("A".into()));
+}
+
+#[test]
+fn test_quote_double_escaped_quote() {
+    let result = eval_str(r#""he said \"hello\"""#).unwrap();
+    assert_eq!(result, Expression::String("he said \"hello\"".into()));
+}
+
+#[test]
+fn test_quote_double_invalid_escape() {
+    let result = eval_str(r#""hello\nworld\zfoo""#).unwrap();
+    assert_eq!(result, Expression::String("hello\nworld\\zfoo".into()),
+               "valid \\n should process, invalid \\z becomes literal");
+}
+
+#[test]
+fn test_quote_backtick_newline() {
+    let result = eval_str(r"`hello\nworld`").unwrap();
+    assert_eq!(result, Expression::String("hello\nworld".into()),
+               "backtick \\n should be newline");
+}
+
+#[test]
+fn test_quote_backtick_tab() {
+    let result = eval_str(r"`col1\tcol2`").unwrap();
+    assert_eq!(result, Expression::String("col1\tcol2".into()));
+}
+
+#[test]
+fn test_quote_backtick_unicode() {
+    let result = eval_str(r"`\u{0041}`").unwrap();
+    assert_eq!(result, Expression::String("A".into()));
+}
+
+#[test]
+fn test_quote_backtick_backslash() {
+    let result = eval_str(r"`path\\file`").unwrap();
+    assert_eq!(result, Expression::String(r"path\file".into()));
+}
+
+#[test]
+fn test_quote_backtick_escaped_backtick() {
+    let result = eval_str(r"`back\tick`").unwrap();
+    assert_eq!(result, Expression::String("back\tick".into()),
+               "backtick \\t should become tab");
+}
+
+#[test]
+fn test_quote_backtick_escape_and_interpolation() {
+    let mut env = Environment::new();
+    env.define("user", Expression::String("Alice".into()));
+    let expr = parse_script(r"`hello $user\nwelcome`").unwrap();
+    let result = expr.eval(&mut env).unwrap();
+    assert_eq!(result, Expression::String("hello Alice\nwelcome".into()));
+}
+
+#[test]
+fn test_quote_backtick_invalid_escape() {
+    let result = eval_str(r"`hello\nworld\zfoo`").unwrap();
+    assert_eq!(result, Expression::String("hello\nworld\\zfoo".into()),
+               "valid \\n should process, invalid \\z becomes literal");
+}
+
+#[test]
+fn test_quote_backtick_interpolation_only() {
+    let mut env = Environment::new();
+    env.define("name", Expression::String("World".into()));
+    let expr = parse_script("`Hello $name`").unwrap();
+    let result = expr.eval(&mut env).unwrap();
+    assert_eq!(result, Expression::String("Hello World".into()));
 }
 
 // ============================================================

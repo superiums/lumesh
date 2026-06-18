@@ -2,8 +2,7 @@ use crate::tokens::{Input, Token, TokenKind};
 use crate::with_cfm_enabled;
 use core::option::Option::None;
 use detached_str::StrSlice;
-use nom::{IResult, branch::alt, error::ParseError, multi::fold_many_m_n, sequence::tuple};
-use std::convert::TryFrom;
+use nom::{IResult, branch::alt, error::ParseError};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 struct NotFoundError;
@@ -699,289 +698,38 @@ fn comment(input: Input<'_>) -> TokenizationResult<'_> {
 
 fn parse_string_inner(input: Input<'_>, quote_char: char) -> TokenizationResult<'_, Diagnostic> {
     let mut rest = input;
-    let mut errors = Vec::new();
-    let mut unicode_errors = Vec::new();
     let start_range = input.as_str_slice();
 
-    match quote_char {
-        '"' => loop {
-            let next_char = rest.chars().next();
-            match next_char {
-                Some('"') => break,
-                // None => break,
-                None => {
-                    // 返回未闭合字符串错误，使用整个输入范围
-                    return Ok((rest, Diagnostic::UnterminatedString(start_range)));
-                }
-                // Some('\x1b') => {
-                //     // 同时处理两种转义字符
-                //     let (r, diagnostic) = parse_ansi_sequence(rest)?;
-                //     rest = r;
-                //     if let Diagnostic::InvalidColorCode(ranges) = diagnostic {
-                //         unicode_errors.extend(ranges.into_vec());
-                //     }
-                // }
-                Some('\\') => {
-                    let (r, diagnostic) = parse_escape(rest)?;
-                    rest = r;
-                    // if let Diagnostic::InvalidStringEscapes(ranges) = diagnostic {
-                    //     errors.push(ranges[0]);
-                    // }
-                    match diagnostic {
-                        Diagnostic::InvalidStringEscapes(ranges) => {
-                            errors.extend(ranges.into_vec())
-                        }
-                        Diagnostic::InvalidUnicode(ranges) => {
-                            unicode_errors.extend(ranges.into_vec())
-                        }
-                        _ => {}
+    loop {
+        let next_char = rest.chars().next();
+        match next_char {
+            Some(c) if c == quote_char => break,
+            None => {
+                return Ok((rest, Diagnostic::UnterminatedString(start_range)));
+            }
+            Some('\\') => {
+                // 统一处理：消耗反斜杠及其后一个字符
+                // 所有转义序列以原始文本保留在 content 中，由 parser 层处理
+                let rest_after_bs = rest.split_at(1).0;
+                match rest_after_bs.chars().next() {
+                    Some(_) => {
+                        rest = rest_after_bs.split_at(1).0;
                     }
-                }
-                // Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
-                Some(ch) => {
-                    // UTF-8有效性检查
-                    if ch.len_utf8() == 0 {
-                        let (r, range) = rest.split_saturating(1);
-                        unicode_errors.push(range);
-                        rest = r;
-                    } else {
-                        rest = rest.split_at(ch.len_utf8()).0;
+                    None => {
+                        return Ok((rest, Diagnostic::UnterminatedString(start_range)));
                     }
                 }
             }
-        },
-        '\'' | '`' => loop {
-            let next_char = rest.chars().next();
-            match next_char {
-                Some('\'') | Some('`') if next_char == Some(quote_char) => break,
-                // None => break,
-                None => {
-                    // 返回未闭合字符串错误，使用整个输入范围
-                    return Ok((rest, Diagnostic::UnterminatedString(start_range)));
-                }
-                Some('\\') => {
-                    // 检查下一个字符是否是单引号
-                    let rest_after_backslash = rest.split_at(1).0;
-                    if Some(quote_char) == rest_after_backslash.chars().next() {
-                        // 是 \' 转义，跳过反斜杠和单引号
-                        rest = rest_after_backslash.split_at(1).0;
-                    } else {
-                        // 不是 \' 转义，保留反斜杠作为普通字符
-                        rest = rest_after_backslash;
-                    }
-                }
-                // Some(ch) => rest = rest.split_at(ch.len_utf8()).0,
-                Some(ch) => {
-                    // UTF-8有效性检查
-                    if ch.len_utf8() == 0 {
-                        let (r, range) = rest.split_saturating(1);
-                        unicode_errors.push(range);
-                        rest = r;
-                    } else {
-                        rest = rest.split_at(ch.len_utf8()).0;
-                    }
-                }
-            }
-        },
-        _ => unreachable!(),
-    }
-
-    // let diagnostic = match errors.is_empty() {
-    //     true => Diagnostic::Valid,
-    //     false => Diagnostic::InvalidStringEscapes(errors.into_boxed_slice()),
-    // };
-    let diagnostic = match (errors.is_empty(), unicode_errors.is_empty()) {
-        (true, true) => Diagnostic::Valid,
-        (false, true) => Diagnostic::InvalidStringEscapes(errors.into_boxed_slice()),
-        (true, false) => Diagnostic::InvalidUnicode(unicode_errors.into_boxed_slice()),
-        (false, false) => {
-            let mut all_errors = errors;
-            all_errors.extend(unicode_errors);
-            Diagnostic::InvalidStringEscapes(all_errors.into_boxed_slice())
-        }
-    };
-
-    Ok((rest, diagnostic))
-}
-
-fn parse_ansi_sequence(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
-    // 定义 ANSI 转义序列的起始模式
-    let (rest, range) = alt((
-        // 控制字符序列（Control Sequence Introducer, CSI）
-        punctuation_tag("\\x1b["), // 匹配 \x1b[
-        punctuation_tag("\\033["), // 匹配 \033[
-        // 操作系统命令（Operating System Command, OSC）
-        // 主序列（Primary Sequence）
-        // 私有序列（Private Sequence）
-        punctuation_tag("\\x1b]"), // 匹配 \x1b]
-        punctuation_tag("\\033]"), // 匹配 \033]
-        // 设备控制字符串（Device Control String, DCS）
-        punctuation_tag("\\x1bP"), // 匹配 \x1bP
-        punctuation_tag("\\033P"), // 匹配 \033P
-        // 结束符：\x07 或 \007（铃声字符）
-        punctuation_tag("\\007"), // 匹配 \007 (bell)
-        punctuation_tag("\\x07"), // 匹配 \x07 (bell)
-    ))(input)?;
-
-    // 获取起始范围对应的原始字符串
-    let original_str = range.to_str(input.as_original_str());
-
-    // 初始化变量
-    let mut invalid_ranges = Vec::new();
-
-    // 根据起始模式判断后续逻辑
-    let end_chars = match original_str {
-        "\\x1b[" | "\\033[" => {
-            // 匹配 \x1b[ 或 \033[ 的情况
-            vec![
-                'm', 'f', 'H', 'J', 'K', 'A', 'B', 'C', 'D', 'r', 's', 'u', 'l', 'h',
-            ]
-        }
-        "\\x1b]" | "\\033]" => {
-            // 匹配 \x1b] 或 \033] 的情况
-            // \x1b\, \033\ 可能作为序列结束
-            vec![';', '\\']
-        }
-        "\\x1bP" | "\\033P" => {
-            return Ok((rest, Diagnostic::Valid)); // 无需结束符
-        }
-        _ => {
-            // 匹配 \007 或 \x07 的情况
-            return Ok((rest, Diagnostic::Valid)); // bell 无需结束符
-        }
-    };
-
-    // 如果有结束符，尝试解析到结束符为止
-    let mut pos = 0;
-    let mut found = false;
-    for c in rest.chars() {
-        pos += c.len_utf8();
-        if end_chars.contains(&c) {
-            found = true;
-            break;
-        }
-    }
-
-    if found {
-        // 截取到结束符的位置
-        let (remaining, _) = rest.split_at(pos);
-        Ok((remaining, Diagnostic::Valid))
-    } else {
-        // 如果未找到结束符，标记为无效序列
-        invalid_ranges.push(range);
-        Ok((
-            rest,
-            Diagnostic::InvalidColorCode(invalid_ranges.into_boxed_slice()),
-        ))
-    }
-}
-
-fn parse_escape(input: Input<'_>) -> TokenizationResult<'_, Diagnostic> {
-    if let Ok(ansi) = parse_ansi_sequence(input) {
-        return Ok(ansi);
-    };
-
-    fn parse_hex_digit(input: Input<'_>) -> TokenizationResult<'_> {
-        input
-            .chars()
-            .next()
-            .filter(char::is_ascii_hexdigit)
-            .ok_or(NOT_FOUND)?;
-
-        Ok(input.split_at(1))
-    }
-
-    let (rest, _) = punctuation_tag("\\")(input)?;
-    if rest.is_empty() {
-        return Ok((rest, Diagnostic::Valid));
-    }
-
-    let mut parser1 = alt((
-        punctuation_tag("\""),
-        punctuation_tag("\\"),
-        punctuation_tag("b"),
-        punctuation_tag("f"),
-        punctuation_tag("n"),
-        punctuation_tag("r"),
-        punctuation_tag("t"),
-    ));
-
-    // 尝试解析基础转义字符
-    if let Ok((rest, _)) = parser1(rest) {
-        return Ok((rest, Diagnostic::Valid));
-    }
-
-    // Unicode 转义序列解析器
-    let mut parser2 = tuple((
-        punctuation_tag("u{"),
-        fold_many_m_n(
-            1,
-            5,
-            parse_hex_digit,
-            || None::<StrSlice>,
-            |a, b| match a {
-                Some(a) => Some(a.join(b)),
-                None => Some(b),
-            },
-        ),
-    ));
-
-    // let rest = match parser2(rest) {
-    //     Ok((rest, (_, range))) => {
-    //         let range = range.unwrap();
-    //         let hex = range.to_str(input.as_original_str());
-    //         let code_point = u32::from_str_radix(hex, 16).unwrap();
-    //         if char::try_from(code_point).is_ok() {
-    //             rest
-    //         } else {
-    //             let ranges = vec![range].into_boxed_slice();
-    //             return Ok((rest, Diagnostic::InvalidStringEscapes(ranges)));
-    //         }
-    //     }
-    //     Err(_) => {
-    //         let (rest, range) = input.split_saturating(2);
-    //         let ranges = vec![range].into_boxed_slice();
-    //         return Ok((rest, Diagnostic::InvalidStringEscapes(ranges)));
-    //     }
-    // };
-    let (rest, _) = match parser2(rest) {
-        Ok((rest, (_, Some(range)))) => {
-            let hex = range.to_str(input.as_original_str());
-            match u32::from_str_radix(hex, 16)
-                .ok()
-                .and_then(|cp| char::try_from(cp).ok())
-            {
-                Some(_) => (rest, None),
-                None => {
-                    let ranges = vec![range].into_boxed_slice();
-                    (rest, Some(Diagnostic::InvalidUnicode(ranges)))
-                }
+            Some(ch) => {
+                rest = rest.split_at(ch.len_utf8()).0;
             }
         }
-        Ok((rest, (_, None))) => (rest, None),
-        #[cfg(unix)]
-        Err(_) => {
-            let (rest, range) = input.split_saturating(2);
-            let ranges = vec![range].into_boxed_slice();
-            (rest, Some(Diagnostic::InvalidStringEscapes(ranges)))
-        }
-        #[cfg(windows)]
-        Err(_) => {
-            // 对于未知转义序列，跳过反斜杠后的字符，当作普通字符处理
-            let (rest, _) = rest.split_at(1);
-            return Ok((rest, Diagnostic::Valid));
-        }
-    };
-
-    match punctuation_tag("}")(rest) {
-        Ok((rest, _)) => Ok((rest, Diagnostic::Valid)),
-        Err(_) => {
-            let (rest, range) = input.split_until(rest);
-            let ranges = vec![range].into_boxed_slice();
-            Ok((rest, Diagnostic::InvalidStringEscapes(ranges)))
-        }
     }
+
+    Ok((rest, Diagnostic::Valid))
 }
+
+
 
 /// Parses a word.
 ///

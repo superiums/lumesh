@@ -1257,6 +1257,37 @@ fn parse_variable(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxEr
     preceded(text("$"), map(parse_symbol_string, Expression::Variable))(input)
 }
 
+/// 将非法转义序列 \X 转义为 \\X，以使 snailquote 能够处理
+fn escape_invalid_escapes(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
+    let mut chars = s.chars().peekable();
+    while let Some(c) = chars.next() {
+        if c == '\\' {
+            if let Some(&next) = chars.peek() {
+                match next {
+                    'n' | 't' | 'r' | '0' | '\\' | '"' | '\'' | 'u' => {
+                        result.push('\\');
+                        result.push(next);
+                        chars.next();
+                    }
+                    _ => {
+                        // \X → \\X
+                        result.push('\\');
+                        result.push('\\');
+                        result.push(next);
+                        chars.next();
+                    }
+                }
+            } else {
+                result.push('\\');
+            }
+        } else {
+            result.push(c);
+        }
+    }
+    result
+}
+
 /// 辅助函数：解析字符串字面量的通用逻辑
 #[inline]
 fn parse_string_common(
@@ -1309,14 +1340,47 @@ fn parse_string_common(
 
         // 截取中间的内容并进行转义替换
         let cs = input.str.get(start..end);
-        let content = match kind_token {
+        let content: Cow<'_, str> = match kind_token {
             TokenKind::StringLiteral => ansi_escaped, //never replace "", snailquote need.
+            TokenKind::StringTemplate => {
+                let inner = cs.to_str(input.str)
+                    .replace("\\x1b", "\x1b")
+                    .replace("\\033", "\x1b")
+                    .replace("\\007", "\x07");
+                // snailquote 只在 "..." 中处理转义，将内容用双引号包裹
+                let mut escaped = String::with_capacity(inner.len() + 2);
+                escaped.push('"');
+                let mut chars = inner.chars().peekable();
+                while let Some(c) = chars.next() {
+                    if c == '\\' {
+                        escaped.push('\\');
+                        if let Some(&next) = chars.peek() {
+                            escaped.push(next);
+                            chars.next();
+                        }
+                    } else if c == '"' {
+                        escaped.push('\\');
+                        escaped.push('"');
+                    } else {
+                        escaped.push(c);
+                    }
+                }
+                escaped.push('"');
+                Cow::Owned(escaped)
+            }
             _ => Cow::Borrowed(cs.to_str(input.str)),
         };
 
         if enable_normal_escape {
-            let r =
-                snailquote::unescape(content.as_ref()).unwrap_or(cs.to_str(input.str).to_string());
+            let raw_fallback = cs.to_str(input.str).to_string();
+            let r = match snailquote::unescape(content.as_ref()) {
+                Ok(s) => s,
+                Err(_) => {
+                    // 第一次失败：将非法转义 \X 转为 \\X 后重试
+                    let fixed = escape_invalid_escapes(content.as_ref());
+                    snailquote::unescape(&fixed).unwrap_or(raw_fallback)
+                }
+            };
             //     .map_err(|e| {
             //     nom::Err::Error(SyntaxErrorKind::InvalidEscapeSequence(
             //         e.to_string(),
@@ -1363,7 +1427,7 @@ fn parse_time(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorK
 }
 #[inline]
 fn parse_string_template(input: Tokens<'_>) -> IResult<Tokens<'_>, Expression, SyntaxErrorKind> {
-    let (input, r) = parse_string_common(input, TokenKind::StringTemplate, true, false)?;
+    let (input, r) = parse_string_common(input, TokenKind::StringTemplate, true, true)?;
     Ok((input, Expression::StringTemplate(r.into())))
 }
 

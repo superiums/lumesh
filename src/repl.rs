@@ -8,9 +8,11 @@ use crate::cmdhelper::{
     is_valid_command,
 };
 use crate::completion::ParamCompleter;
-use crate::editor::{Cmd, CompletionItem, Completer, Editor, Highlighter, Hinter, KeyEvent, ReadlineError};
+use crate::editor::{
+    Cmd, Completer, CompletionItem, Editor, Highlighter, Hinter, KeyEvent, ReadlineError,
+};
 use crate::expression::alias::get_alias_completion;
-use crate::libs::LIBS_INFO;
+use crate::libs::{LIBS_INFO, is_lib};
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
@@ -47,7 +49,8 @@ impl Completer for LumeCompleter {
 impl LumeCompleter {
     fn cmd_completion(&self, line: &str, pos: usize, section_start: usize) -> Vec<CompletionItem> {
         let prefix = &line[section_start..pos];
-        let cpl_color = self.theme
+        let cpl_color = self
+            .theme
             .get("completion_cmd")
             .map_or(DEFAULT, |c| c.as_str());
 
@@ -59,6 +62,12 @@ impl LumeCompleter {
             })
             .collect();
 
+        for item in &mut items {
+            if is_lib(&item.replacement) {
+                item.suffix = '.';
+            }
+        }
+
         if items.is_empty() {
             match prefix.split_once(".") {
                 Some((name, func)) => {
@@ -69,10 +78,12 @@ impl LumeCompleter {
                                     .iter()
                                     .filter(|(f, _)| f.starts_with(func))
                                     .map(|(cmd, _)| {
-                                        CompletionItem::with_display(
+                                        let mut ci = CompletionItem::with_display(
                                             format!("{cpl_color}{cmd}{RESET}"),
                                             cmd.to_string(),
-                                        )
+                                        );
+                                        ci.suffix = '(';
+                                        ci
                                     })
                                     .collect();
                             }
@@ -85,10 +96,7 @@ impl LumeCompleter {
                     items = get_alias_completion(prefix)
                         .into_iter()
                         .map(|cmd| {
-                            CompletionItem::with_display(
-                                format!("{cpl_color}{cmd}{RESET}"),
-                                cmd,
-                            )
+                            CompletionItem::with_display(format!("{cpl_color}{cmd}{RESET}"), cmd)
                         })
                         .collect();
                 }
@@ -99,7 +107,12 @@ impl LumeCompleter {
         items
     }
 
-    fn param_completion(&self, line: &str, pos: usize, section_start: usize) -> Vec<CompletionItem> {
+    fn param_completion(
+        &self,
+        line: &str,
+        pos: usize,
+        section_start: usize,
+    ) -> Vec<CompletionItem> {
         let cmd_section = &line[section_start..pos];
         let tokens: Vec<&str> = cmd_section.split_whitespace().collect();
 
@@ -114,13 +127,15 @@ impl LumeCompleter {
             };
 
             let (pairs, trig_file) =
-                self.param_completer.get_completions_for_context(command, params, current_token);
+                self.param_completer
+                    .get_completions_for_context(command, params, current_token);
 
             if trig_file {
                 return Vec::new();
             }
 
-            let mut items: Vec<CompletionItem> = pairs.into_iter()
+            let mut items: Vec<CompletionItem> = pairs
+                .into_iter()
                 .map(|p| CompletionItem::with_display(p.display, p.replacement))
                 .collect();
             items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
@@ -160,7 +175,9 @@ impl Highlighter for LumeHighlighter {
 
         let (color, is_valid) = if is_valid_command(cmd) {
             (
-                self.theme.get("command_valid").map_or(DEFAULT, |c| c.as_str()),
+                self.theme
+                    .get("command_valid")
+                    .map_or(DEFAULT, |c| c.as_str()),
                 true,
             )
         } else {
@@ -180,7 +197,7 @@ impl Highlighter for LumeHighlighter {
                 format!("{pre_color}{prefix}{color}{cmd}{RESET} {highlighted_rest}")
             }
             Some(_) => {
-                let highlighted_line = highlight(line, &self.theme);
+                let highlighted_line = highlight(rest, &self.theme);
                 format!("{pre_color}{prefix}{RESET}{highlighted_line}")
             }
         }
@@ -368,7 +385,8 @@ pub fn run_repl(env: &mut Environment) {
 
     // Set up abbreviations
     let _abbr_map: HashMap<String, String> = match _abbr {
-        Some(Expression::Map(ab)) => ab.iter()
+        Some(Expression::Map(ab)) => ab
+            .iter()
             .map(|m| (m.0.to_string(), m.1.to_string()))
             .collect(),
         _ => HashMap::new(),
@@ -421,7 +439,8 @@ pub fn run_repl(env: &mut Environment) {
 
         // Multi-line: accumulate input until parse is complete
         let mut full_input = trimmed.to_string();
-        while (full_input.ends_with(" \\") || !check(&full_input)) && !full_input.ends_with("\n\n") {
+        while (full_input.ends_with(" \\") || !check(&full_input)) && !full_input.ends_with("\n\n")
+        {
             if full_input.ends_with(" \\") {
                 full_input.truncate(full_input.len() - 2);
             }
@@ -432,7 +451,9 @@ pub fn run_repl(env: &mut Environment) {
                 Ok(l) => l,
                 Err(ReadlineError::Interrupted) => {
                     println!("^C");
-                    if childman::kill_child() { childman::clear_child(); }
+                    if childman::kill_child() {
+                        childman::clear_child();
+                    }
                     full_input.clear();
                     break;
                 }
@@ -497,21 +518,19 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
     if matches.is_empty() {
         let ends: &[_] = &['(', ' '];
         let (matches, hint_pos) = match segment.split_once(".") {
-            Some((name, func)) => {
-                LIBS_INFO.with(|h| {
-                    if let Some(lib) = h.get(&name) {
-                        (
-                            lib.iter()
-                                .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
-                                .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
-                                .collect::<Vec<_>>(),
-                            func.len(),
-                        )
-                    } else {
-                        (Vec::new(), 0)
-                    }
-                })
-            }
+            Some((name, func)) => LIBS_INFO.with(|h| {
+                if let Some(lib) = h.get(&name) {
+                    (
+                        lib.iter()
+                            .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
+                            .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
+                            .collect::<Vec<_>>(),
+                        func.len(),
+                    )
+                } else {
+                    (Vec::new(), 0)
+                }
+            }),
             _ => LIBS_INFO.with(|h| {
                 if let Some(lib) = h.get("") {
                     (

@@ -1,16 +1,16 @@
 use std::collections::HashMap;
-use std::io::{self, stdout, Write};
+use std::io::{self, Write, stdout};
 
 use crossterm::cursor::MoveTo;
 use crossterm::event::{Event, KeyEventKind, read};
-use crossterm::style::{Print, SetForegroundColor, SetBackgroundColor, ResetColor, Color};
-use crossterm::terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
 use crossterm::queue;
+use crossterm::style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor};
+use crossterm::terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
 
 use super::buffer::LineBuffer;
 use super::history::History;
-use super::kring::KillRing;
 use super::key::{Cmd, KeyEvent};
+use super::kring::KillRing;
 
 const HINT_COLOR: Color = Color::DarkGrey;
 const COMP_BG: Color = Color::DarkGrey;
@@ -23,16 +23,25 @@ const MAX_POPUP_HEIGHT: usize = 10;
 pub struct CompletionItem {
     pub display: String,
     pub replacement: String,
+    pub suffix: char,
 }
 
 impl CompletionItem {
     pub fn new(replacement: String) -> Self {
         let display = replacement.clone();
-        Self { display, replacement }
+        Self {
+            display,
+            replacement,
+            suffix: ' ',
+        }
     }
 
     pub fn with_display(display: String, replacement: String) -> Self {
-        Self { display, replacement }
+        Self {
+            display,
+            replacement,
+            suffix: ' ',
+        }
     }
 }
 
@@ -52,7 +61,11 @@ pub trait Hinter {
 #[derive(Clone)]
 enum EditorMode {
     Normal,
-    CompletionSelect { completions: Vec<CompletionItem>, selected: usize, start_pos: usize },
+    CompletionSelect {
+        completions: Vec<CompletionItem>,
+        selected: usize,
+        start_pos: usize,
+    },
 }
 
 pub struct Editor {
@@ -296,21 +309,39 @@ impl Editor {
 
     fn try_completion_event(&mut self, event: &KeyEvent) -> bool {
         let (completions, selected, start_pos) = match &self.mode {
-            EditorMode::CompletionSelect { completions, selected, start_pos } => {
-                (completions.clone(), *selected, *start_pos)
-            }
+            EditorMode::CompletionSelect {
+                completions,
+                selected,
+                start_pos,
+            } => (completions.clone(), *selected, *start_pos),
             _ => return false,
         };
 
         match event {
             KeyEvent::Up | KeyEvent::Ctrl('p') => {
-                let new_sel = if selected == 0 { completions.len() - 1 } else { selected - 1 };
-                self.mode = EditorMode::CompletionSelect { completions, selected: new_sel, start_pos };
+                let new_sel = if selected == 0 {
+                    completions.len() - 1
+                } else {
+                    selected - 1
+                };
+                self.mode = EditorMode::CompletionSelect {
+                    completions,
+                    selected: new_sel,
+                    start_pos,
+                };
                 true
             }
             KeyEvent::Down | KeyEvent::Ctrl('n') | KeyEvent::Tab => {
-                let new_sel = if selected + 1 >= completions.len() { 0 } else { selected + 1 };
-                self.mode = EditorMode::CompletionSelect { completions, selected: new_sel, start_pos };
+                let new_sel = if selected + 1 >= completions.len() {
+                    0
+                } else {
+                    selected + 1
+                };
+                self.mode = EditorMode::CompletionSelect {
+                    completions,
+                    selected: new_sel,
+                    start_pos,
+                };
                 true
             }
             KeyEvent::Enter | KeyEvent::Char(' ') | KeyEvent::Shift(' ') => {
@@ -325,20 +356,40 @@ impl Editor {
                 true
             }
             KeyEvent::BackTab => {
-                let new_sel = if selected == 0 { completions.len() - 1 } else { selected - 1 };
-                self.mode = EditorMode::CompletionSelect { completions, selected: new_sel, start_pos };
+                let new_sel = if selected == 0 {
+                    completions.len() - 1
+                } else {
+                    selected - 1
+                };
+                self.mode = EditorMode::CompletionSelect {
+                    completions,
+                    selected: new_sel,
+                    start_pos,
+                };
                 true
             }
             KeyEvent::Ctrl('r') | KeyEvent::Ctrl('s') if self.is_history_completion => {
                 let new_sel = match event {
                     KeyEvent::Ctrl('r') => {
-                        if selected == 0 { completions.len() - 1 } else { selected - 1 }
+                        if selected == 0 {
+                            completions.len() - 1
+                        } else {
+                            selected - 1
+                        }
                     }
                     _ => {
-                        if selected + 1 >= completions.len() { 0 } else { selected + 1 }
+                        if selected + 1 >= completions.len() {
+                            0
+                        } else {
+                            selected + 1
+                        }
                     }
                 };
-                self.mode = EditorMode::CompletionSelect { completions, selected: new_sel, start_pos };
+                self.mode = EditorMode::CompletionSelect {
+                    completions,
+                    selected: new_sel,
+                    start_pos,
+                };
                 true
             }
             KeyEvent::Char(c) | KeyEvent::Shift(c) => {
@@ -359,23 +410,27 @@ impl Editor {
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
         let (old_completions, old_sel) = match &self.mode {
-            EditorMode::CompletionSelect { completions, selected, .. } => {
-                (completions.clone(), *selected)
-            }
+            EditorMode::CompletionSelect {
+                completions,
+                selected,
+                ..
+            } => (completions.clone(), *selected),
             _ => return,
         };
 
         let new_completions: Vec<CompletionItem> = if self.is_history_completion {
             let start_pos = Self::find_word_start(&line, pos);
             let query = &line[start_pos..pos];
-            old_completions.into_iter()
+            old_completions
+                .into_iter()
                 .filter(|item| fuzzy_match(query, &item.replacement))
                 .collect()
         } else {
             // Parameter completion: filter existing completions with fuzzy match
             let query_start = self.init_search_pos.min(pos);
             let query = &line[query_start..pos];
-            old_completions.into_iter()
+            old_completions
+                .into_iter()
                 .filter(|item| fuzzy_match(query, &item.replacement))
                 .collect()
         };
@@ -397,11 +452,7 @@ impl Editor {
     fn apply_completion(&mut self, item: &CompletionItem, start_pos: usize) {
         let cursor = self.buffer.cursor();
         let end_pos = cursor.max(start_pos);
-        let replacement = if item.replacement.ends_with(' ') {
-            item.replacement.clone()
-        } else {
-            format!("{} ", item.replacement)
-        };
+        let replacement = format!("{}{}", item.replacement, item.suffix);
         self.buffer.replace_range(start_pos, end_pos, &replacement);
         self.buffer.move_to_end();
     }
@@ -532,8 +583,12 @@ impl Editor {
                 let start_pos = Self::find_word_start(&line, pos);
                 let query = &line[start_pos..pos];
                 let all: Vec<String> = self.history.entries();
-                let completions: Vec<CompletionItem> = all.iter()
-                    .filter(|e| e.to_ascii_lowercase().starts_with(&query.to_ascii_lowercase()))
+                let completions: Vec<CompletionItem> = all
+                    .iter()
+                    .filter(|e| {
+                        e.to_ascii_lowercase()
+                            .starts_with(&query.to_ascii_lowercase())
+                    })
                     .map(|s| CompletionItem::with_display(s.clone(), s.clone()))
                     .collect();
                 if !completions.is_empty() {
@@ -634,8 +689,16 @@ impl Editor {
 
     fn handle_backtab(&mut self) {
         match &self.mode {
-            EditorMode::CompletionSelect { completions, selected, start_pos } => {
-                let new_sel = if *selected == 0 { completions.len() - 1 } else { selected - 1 };
+            EditorMode::CompletionSelect {
+                completions,
+                selected,
+                start_pos,
+            } => {
+                let new_sel = if *selected == 0 {
+                    completions.len() - 1
+                } else {
+                    selected - 1
+                };
                 self.mode = EditorMode::CompletionSelect {
                     completions: completions.clone(),
                     selected: new_sel,
@@ -681,10 +744,14 @@ impl Editor {
     fn transpose_chars(&mut self) {
         let text = self.buffer.text();
         let pos = self.buffer.cursor();
-        if pos == 0 || text.len() < 2 { return; }
+        if pos == 0 || text.len() < 2 {
+            return;
+        }
         let start = if pos == text.len() { pos - 2 } else { pos - 1 };
         let end = start + 2;
-        if end > text.len() { return; }
+        if end > text.len() {
+            return;
+        }
         let chars: Vec<char> = text.chars().collect();
         let mut new_chars = chars.clone();
         new_chars.swap(start, end - 1);
@@ -702,7 +769,10 @@ impl Editor {
 
     fn find_word_start(line: &str, pos: usize) -> usize {
         let before = &line[..pos.min(line.len())];
-        before.rfind(|c: char| c.is_ascii_whitespace() || c == '(' || c == '[' || c == '{')
+        before
+            .rfind(
+                |c: char| c.is_ascii_whitespace() || c == '.' || c == '>' || c == ':', // || c == '(' || c == '[' || c == '{'
+            )
             .map(|i| i + 1)
             .unwrap_or(0)
     }
@@ -712,7 +782,8 @@ impl Editor {
     fn render(&mut self) -> Result<(), ReadlineError> {
         // Auto-scroll: if in completion mode and not enough room below, clear screen
         if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
-            let est_space = (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + 2);
+            let est_space =
+                (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + 2);
             if est_space < 3 {
                 let _ = terminal::Clear(ClearType::All);
                 let _ = crossterm::queue!(std::io::stdout(), MoveTo(0, 0));
@@ -733,8 +804,12 @@ impl Editor {
             self.popup_rendered = None;
         }
 
-        queue!(stdout, MoveTo(0, self.prompt_row), Clear(ClearType::FromCursorDown))
-            .map_err(ReadlineError::Io)?;
+        queue!(
+            stdout,
+            MoveTo(0, self.prompt_row),
+            Clear(ClearType::FromCursorDown)
+        )
+        .map_err(ReadlineError::Io)?;
 
         queue!(stdout, Print(&self.prompt)).map_err(ReadlineError::Io)?;
 
@@ -750,8 +825,13 @@ impl Editor {
         if let Some(ref hinter) = self.hinter {
             if let Some(hint) = hinter.hint(&line, cursor) {
                 self.current_hint = Some(hint.clone());
-                queue!(stdout, SetForegroundColor(HINT_COLOR), Print(&hint), ResetColor)
-                    .map_err(ReadlineError::Io)?;
+                queue!(
+                    stdout,
+                    SetForegroundColor(HINT_COLOR),
+                    Print(&hint),
+                    ResetColor
+                )
+                .map_err(ReadlineError::Io)?;
             }
         }
 
@@ -760,7 +840,12 @@ impl Editor {
         let used_rows = 1 + content_end / self.terminal_width as usize;
 
         // Render completion popup
-        if let EditorMode::CompletionSelect { completions, selected, .. } = self.mode.clone() {
+        if let EditorMode::CompletionSelect {
+            completions,
+            selected,
+            ..
+        } = self.mode.clone()
+        {
             self.render_completion_popup(&mut stdout, &completions, selected, used_rows)?;
         }
 
@@ -775,21 +860,34 @@ impl Editor {
         Ok(())
     }
 
-    fn render_completion_popup(&mut self, _stdout: &mut io::Stdout, completions: &[CompletionItem], selected: usize, used_rows: usize) -> Result<(), ReadlineError> {
+    fn render_completion_popup(
+        &mut self,
+        _stdout: &mut io::Stdout,
+        completions: &[CompletionItem],
+        selected: usize,
+        used_rows: usize,
+    ) -> Result<(), ReadlineError> {
         let total = completions.len();
         let max_height = MAX_POPUP_HEIGHT.min(total);
         let needs_more = total > max_height;
 
-        let space_below = (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + used_rows);
+        let space_below =
+            (self.terminal_height as usize).saturating_sub(self.prompt_row as usize + used_rows);
         let start_row = self.prompt_row + used_rows as u16;
         let height = if needs_more {
             max_height.min(space_below.saturating_sub(1))
         } else {
             max_height.min(space_below)
         };
-        if height == 0 { return Ok(()); }
+        if height == 0 {
+            return Ok(());
+        }
 
-        let scroll_start = if selected >= height { selected - height + 1 } else { 0 };
+        let scroll_start = if selected >= height {
+            selected - height + 1
+        } else {
+            0
+        };
         let scroll_end = (scroll_start + height).min(total);
         let popup_width = self.terminal_width as usize;
 
@@ -802,15 +900,27 @@ impl Editor {
             queue!(_stdout, MoveTo(0, row)).map_err(ReadlineError::Io)?;
 
             if is_selected {
-                queue!(_stdout, SetBackgroundColor(COMP_SEL_BG), SetForegroundColor(COMP_SEL_FG))
-                    .map_err(ReadlineError::Io)?;
+                queue!(
+                    _stdout,
+                    SetBackgroundColor(COMP_SEL_BG),
+                    SetForegroundColor(COMP_SEL_FG)
+                )
+                .map_err(ReadlineError::Io)?;
             } else {
-                queue!(_stdout, SetBackgroundColor(COMP_BG), SetForegroundColor(COMP_FG))
-                    .map_err(ReadlineError::Io)?;
+                queue!(
+                    _stdout,
+                    SetBackgroundColor(COMP_BG),
+                    SetForegroundColor(COMP_FG)
+                )
+                .map_err(ReadlineError::Io)?;
             }
 
             let display = if item.display.len() > popup_width {
-                let truncated: String = item.display.chars().take(popup_width.saturating_sub(1)).collect();
+                let truncated: String = item
+                    .display
+                    .chars()
+                    .take(popup_width.saturating_sub(1))
+                    .collect();
                 format!("{}…", truncated)
             } else {
                 format!("{:width$}", item.display, width = popup_width)
@@ -827,9 +937,14 @@ impl Editor {
                 _stdout,
                 SetBackgroundColor(COMP_BG),
                 SetForegroundColor(COMP_FG),
-                Print(&format!("{:width$}", format!("… {} more", total - scroll_end), width = popup_width)),
+                Print(&format!(
+                    "{:width$}",
+                    format!("… {} more", total - scroll_end),
+                    width = popup_width
+                )),
                 ResetColor
-            ).map_err(ReadlineError::Io)?;
+            )
+            .map_err(ReadlineError::Io)?;
             row
         } else if scroll_end > scroll_start {
             start_row + (scroll_end - scroll_start - 1) as u16
@@ -845,7 +960,9 @@ impl Editor {
     fn read_event(&self) -> Result<KeyEvent, ReadlineError> {
         loop {
             match read() {
-                Ok(Event::Key(ke)) if ke.kind == KeyEventKind::Press || ke.kind == KeyEventKind::Repeat => {
+                Ok(Event::Key(ke))
+                    if ke.kind == KeyEventKind::Press || ke.kind == KeyEventKind::Repeat =>
+                {
                     return Ok(KeyEvent::from(ke));
                 }
                 Ok(Event::Resize(_w, _h)) => continue,
@@ -862,12 +979,20 @@ fn strip_ansi(s: &str) -> String {
     let mut in_csi = false;
     for c in s.chars() {
         if in_escape {
-            if c == '[' { in_csi = true; }
-            else if !in_csi && c.is_ascii_alphabetic() { in_escape = false; }
-            else if in_csi && c.is_ascii_alphabetic() { in_escape = false; in_csi = false; }
+            if c == '[' {
+                in_csi = true;
+            } else if !in_csi && c.is_ascii_alphabetic() {
+                in_escape = false;
+            } else if in_csi && c.is_ascii_alphabetic() {
+                in_escape = false;
+                in_csi = false;
+            }
             continue;
         }
-        if c == '\x1b' { in_escape = true; continue; }
+        if c == '\x1b' {
+            in_escape = true;
+            continue;
+        }
         result.push(c);
     }
     result
@@ -879,12 +1004,20 @@ fn visible_width(s: &str) -> usize {
     let mut in_csi = false;
     for c in s.chars() {
         if in_escape {
-            if c == '[' { in_csi = true; }
-            else if !in_csi && c.is_ascii_alphabetic() { in_escape = false; }
-            else if in_csi && c.is_ascii_alphabetic() { in_escape = false; in_csi = false; }
+            if c == '[' {
+                in_csi = true;
+            } else if !in_csi && c.is_ascii_alphabetic() {
+                in_escape = false;
+            } else if in_csi && c.is_ascii_alphabetic() {
+                in_escape = false;
+                in_csi = false;
+            }
             continue;
         }
-        if c == '\x1b' { in_escape = true; continue; }
+        if c == '\x1b' {
+            in_escape = true;
+            continue;
+        }
         width += 1;
     }
     width
@@ -898,7 +1031,9 @@ pub enum ReadlineError {
 }
 
 fn fuzzy_match(query: &str, candidate: &str) -> bool {
-    if query.is_empty() { return true; }
+    if query.is_empty() {
+        return true;
+    }
     let q: Vec<char> = query.chars().collect();
     let mut qi = 0;
     for c in candidate.chars() {

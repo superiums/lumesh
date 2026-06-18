@@ -667,13 +667,17 @@ impl Editor {
     fn handle_tab(&mut self) {
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
-        let start_pos = Self::find_word_start(&line, pos);
         self.init_search_pos = pos;
         if let Some(ref completer) = self.completer {
             let completions = completer.complete(&line, pos);
             if completions.is_empty() {
                 return;
             }
+            let start_pos = if line[..pos].contains(|c| c == '/' || c == '\\') {
+                Self::find_path_start(&line, pos)
+            } else {
+                Self::find_word_start(&line, pos)
+            };
             if completions.len() == 1 {
                 self.apply_completion(&completions[0], start_pos);
                 return;
@@ -771,8 +775,19 @@ impl Editor {
         let before = &line[..pos.min(line.len())];
         before
             .rfind(
-                |c: char| c.is_ascii_whitespace() || c == '.' || c == '>' || c == ':', // || c == '(' || c == '[' || c == '{'
+                |c: char| c.is_ascii_whitespace() || c == '.' || c == '>' || c == ':',
             )
+            .map(|i| i + 1)
+            .unwrap_or(0)
+    }
+
+    fn find_path_start(line: &str, pos: usize) -> usize {
+        let before = &line[..pos.min(line.len())];
+        before
+            .rfind(|c: char| {
+                c.is_ascii_whitespace()
+                    || c == '>' || c == ':' || c == '|' || c == '&' || c == '(' || c == ';'
+            })
             .map(|i| i + 1)
             .unwrap_or(0)
     }

@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 use crate::ai::{MockAIClient, init_ai};
@@ -30,10 +30,7 @@ struct LumeCompleter {
 impl Completer for LumeCompleter {
     fn complete(&self, line: &str, pos: usize) -> Vec<CompletionItem> {
         match detect_completion_type(line, pos, self.ai_client.is_some()) {
-            (LumeCompletionType::Path, _) => {
-                // Basic filename completion - return the line as-is (file completer is complex)
-                Vec::new()
-            }
+            (LumeCompletionType::Path, _) => complete_path(line, pos),
             (LumeCompletionType::Command, section_pos) => {
                 self.cmd_completion(line, pos, section_pos)
             }
@@ -44,6 +41,70 @@ impl Completer for LumeCompleter {
             (LumeCompletionType::None, _) => Vec::new(),
         }
     }
+}
+
+fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
+    let prefix = &line[..pos];
+    let path_start = prefix
+        .rfind(|c: char| {
+            c.is_ascii_whitespace()
+                || c == '>'
+                || c == ':'
+                || c == '|'
+                || c == '&'
+                || c == '('
+                || c == ';'
+        })
+        .map(|i| i + 1)
+        .unwrap_or(0);
+    let path = &prefix[path_start..];
+
+    let (dir, file_prefix) = match path.rfind(|c| c == '/' || c == '\\') {
+        Some(i) => (&path[..=i], &path[i + 1..]),
+        None => ("./", path),
+    };
+
+    let dir_path = if dir.is_empty() {
+        Path::new(".")
+    } else {
+        Path::new(dir)
+    };
+
+    let mut items: Vec<CompletionItem> = Vec::new();
+    if let Ok(entries) = std::fs::read_dir(dir_path) {
+        for entry in entries.flatten() {
+            if let Some(name) = entry.file_name().to_str() {
+                if name.starts_with(file_prefix) {
+                    let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
+                    let full = format!("{dir}{name}");
+                    let has_space = name.chars().any(|c| c.is_ascii_whitespace());
+                    if has_space {
+                        let q = if is_dir {
+                            format!("'{full}/'")
+                        } else {
+                            format!("'{full}'")
+                        };
+                        items.push(CompletionItem {
+                            display: name.to_string(),
+                            replacement: q,
+                            suffix: ' ',
+                        });
+                    } else {
+                        let suffix = if is_dir { '/' } else { ' ' };
+                        let display = name.to_string();
+                        let replacement = full;
+                        items.push(CompletionItem {
+                            display,
+                            replacement,
+                            suffix,
+                        });
+                    }
+                }
+            }
+        }
+    }
+    items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
+    items
 }
 
 impl LumeCompleter {

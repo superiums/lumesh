@@ -30,7 +30,7 @@ pub use tokenizer::*;
 pub mod repl;
 
 pub mod runtime;
-pub use runtime::{parse, parse_and_eval};
+pub use runtime::{check, parse, parse_and_eval};
 
 pub mod syntax;
 pub use syntax::highlight;
@@ -40,7 +40,7 @@ pub mod cmdhelper;
 pub mod prompt;
 
 pub mod childman;
-pub mod keyhandler;
+pub mod editor;
 
 pub mod utils;
 // pub use utils::abs;

@@ -1,57 +1,211 @@
-use rustyline::highlight::CmdKind;
-use rustyline::validate::ValidationResult;
-use rustyline::{
-    Changeset,
-    Editor,
-    // Event::KeySeq,
-    Helper,
-    KeyEvent,
-    completion::{Completer, FilenameCompleter, Pair},
-    config::CompletionType,
-    error::ReadlineError,
-    highlight::Highlighter,
-    hint::{Hinter, HistoryHinter},
-    history::FileHistory,
-    line_buffer::LineBuffer,
-    validate::Validator,
-};
-use rustyline::{Cmd, EditMode, Modifiers, Movement};
-
-use std::borrow::Cow;
 use std::collections::HashMap;
 use std::path::PathBuf;
+use std::sync::Arc;
 
-use crate::ai::{AIClient, MockAIClient, init_ai};
+use crate::ai::{MockAIClient, init_ai};
 use crate::cmdhelper::{
     LumeCompletionType, collect_command_with_prefix, detect_completion_type, find_command_pos,
     is_valid_command,
 };
 use crate::completion::ParamCompleter;
+use crate::editor::{Cmd, CompletionItem, Completer, Editor, Highlighter, Hinter, KeyEvent, ReadlineError};
 use crate::expression::alias::get_alias_completion;
-use crate::keyhandler::{LumeAbbrHandler, LumeKeyHandler, LumeMoveHandler};
 use crate::libs::LIBS_INFO;
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
+use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
 
-use crate::runtime::check;
-use crate::{Environment, highlight, parse_and_eval, prompt::get_prompt_engine};
-
-// use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
-
-use std::sync::{Arc, Mutex};
-
-// ANSI 转义码
 const DEFAULT: &str = "";
 const GREEN_BOLD: &str = "\x1b[1;32m";
-// const GRAY: &str = "\x1b[38;5;246m";
-// const GRAY2: &str = "\x1b[38;5;249m";
-// const RED: &str = "\x1b[31m";
 const RESET: &str = "\x1b[0m";
-// 使用 Arc<Mutex> 包装编辑器
+
+struct LumeCompleter {
+    ai_client: Option<Arc<MockAIClient>>,
+    param_completer: Arc<ParamCompleter>,
+    theme: HashMap<String, String>,
+}
+
+impl Completer for LumeCompleter {
+    fn complete(&self, line: &str, pos: usize) -> Vec<CompletionItem> {
+        match detect_completion_type(line, pos, self.ai_client.is_some()) {
+            (LumeCompletionType::Path, _) => {
+                // Basic filename completion - return the line as-is (file completer is complex)
+                Vec::new()
+            }
+            (LumeCompletionType::Command, section_pos) => {
+                self.cmd_completion(line, pos, section_pos)
+            }
+            (LumeCompletionType::Param, section_pos) => {
+                self.param_completion(line, pos, section_pos)
+            }
+            (LumeCompletionType::AI, section_pos) => self.ai_completion(line, section_pos),
+            (LumeCompletionType::None, _) => Vec::new(),
+        }
+    }
+}
+
+impl LumeCompleter {
+    fn cmd_completion(&self, line: &str, pos: usize, section_start: usize) -> Vec<CompletionItem> {
+        let prefix = &line[section_start..pos];
+        let cpl_color = self.theme
+            .get("completion_cmd")
+            .map_or(DEFAULT, |c| c.as_str());
+
+        let mut items: Vec<CompletionItem> = collect_command_with_prefix(prefix)
+            .iter()
+            .map(|cmd| {
+                let display = format!("{cpl_color}{cmd}{RESET}");
+                CompletionItem::with_display(display, cmd.to_string())
+            })
+            .collect();
+
+        if items.is_empty() {
+            match prefix.split_once(".") {
+                Some((name, func)) => {
+                    if !name.is_empty() {
+                        LIBS_INFO.with(|h| {
+                            if let Some(lib) = h.get(&name) {
+                                items = lib
+                                    .iter()
+                                    .filter(|(f, _)| f.starts_with(func))
+                                    .map(|(cmd, _)| {
+                                        CompletionItem::with_display(
+                                            format!("{cpl_color}{cmd}{RESET}"),
+                                            cmd.to_string(),
+                                        )
+                                    })
+                                    .collect();
+                            }
+                        });
+                        items.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+                        return items;
+                    }
+                }
+                _ => {
+                    items = get_alias_completion(prefix)
+                        .into_iter()
+                        .map(|cmd| {
+                            CompletionItem::with_display(
+                                format!("{cpl_color}{cmd}{RESET}"),
+                                cmd,
+                            )
+                        })
+                        .collect();
+                }
+            }
+        }
+
+        items.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+        items
+    }
+
+    fn param_completion(&self, line: &str, pos: usize, section_start: usize) -> Vec<CompletionItem> {
+        let cmd_section = &line[section_start..pos];
+        let tokens: Vec<&str> = cmd_section.split_whitespace().collect();
+
+        if let Some((command, tokens)) = tokens.split_first() {
+            let param_start = cmd_section.rfind(' ').map(|x| x + 1);
+            let current_token = param_start.map_or("", |x| &cmd_section[x..]);
+
+            let params = if current_token.is_empty() {
+                tokens
+            } else {
+                &tokens[..tokens.len().saturating_sub(1)]
+            };
+
+            let (pairs, trig_file) =
+                self.param_completer.get_completions_for_context(command, params, current_token);
+
+            if trig_file {
+                return Vec::new();
+            }
+
+            let mut items: Vec<CompletionItem> = pairs.into_iter()
+                .map(|p| CompletionItem::with_display(p.display, p.replacement))
+                .collect();
+            items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
+            return items;
+        }
+        Vec::new()
+    }
+
+    fn ai_completion(&self, _line: &str, _pos: usize) -> Vec<CompletionItem> {
+        // AI completion is not handled through the tab completion path currently
+        Vec::new()
+    }
+}
+
+struct LumeHighlighter {
+    theme: HashMap<String, String>,
+}
+
+impl Highlighter for LumeHighlighter {
+    fn highlight(&self, line: &str) -> String {
+        if line.is_empty() {
+            return String::new();
+        }
+
+        let (prefix, rest) = if let Some(cmd) = line.strip_prefix(':') {
+            (":", cmd)
+        } else if let Some(cmd) = line.strip_prefix('>') {
+            (">", cmd)
+        } else {
+            ("", line)
+        };
+
+        let (cmd, rest_op) = match rest.split_once(' ') {
+            Some((a, b)) => (a, Some(b)),
+            _ => (rest, None),
+        };
+
+        let (color, is_valid) = if is_valid_command(cmd) {
+            (
+                self.theme.get("command_valid").map_or(DEFAULT, |c| c.as_str()),
+                true,
+            )
+        } else {
+            (DEFAULT, false)
+        };
+
+        let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
+
+        match rest_op {
+            None if is_valid => format!("{pre_color}{prefix}{color}{cmd}{RESET}"),
+            None => {
+                let highlighted_line = highlight(rest, &self.theme);
+                format!("{pre_color}{prefix}{RESET}{highlighted_line}")
+            }
+            Some(rest) if is_valid => {
+                let highlighted_rest = highlight(rest, &self.theme);
+                format!("{pre_color}{prefix}{color}{cmd}{RESET} {highlighted_rest}")
+            }
+            Some(_) => {
+                let highlighted_line = highlight(line, &self.theme);
+                format!("{pre_color}{prefix}{RESET}{highlighted_line}")
+            }
+        }
+    }
+
+    fn highlight_char(&self, _line: &str, _pos: usize) -> bool {
+        false
+    }
+}
+
+struct LumeHinter {
+    hinter: Option<Box<dyn Fn(&str, usize) -> Option<String>>>,
+}
+
+impl Hinter for LumeHinter {
+    fn hint(&self, line: &str, pos: usize) -> Option<String> {
+        if let Some(ref f) = self.hinter {
+            f(line, pos)
+        } else {
+            None
+        }
+    }
+}
 
 pub fn run_repl(env: &mut Environment) {
-    // state::register_signal_handler();
-
     match env.get("LUME_WELCOME") {
         Some(wel) => {
             println!("{wel}");
@@ -87,30 +241,22 @@ pub fn run_repl(env: &mut Environment) {
             #[cfg(windows)]
             let path = c_dir.join("lume_history.log");
             if !c_dir.exists() {
-                match std::fs::create_dir_all(c_dir) {
-                    Ok(_) => {}
-                    Err(e) => eprintln!("Failed to create cache directory: {e}"),
+                if let Err(e) = std::fs::create_dir_all(&c_dir) {
+                    eprintln!("Failed to create cache directory: {e}");
                 }
             }
             if !path.exists() {
-                match std::fs::File::create(&path) {
-                    Ok(_) => {}
-                    Err(e) => eprintln!("Failed to create cache file: {e}"),
+                if let Err(e) = std::fs::File::create(&path) {
+                    eprintln!("Failed to create cache file: {e}");
                 }
             }
             path.into_os_string().into_string().unwrap()
         }
     };
+
     // ai config
     let ai_config = env.get("LUME_AI_CONFIG");
     env.undefine("LUME_AI_CONFIG");
-
-    // vi
-    let vi_mode = match env.get("LUME_VI_MODE") {
-        Some(Expression::Boolean(true)) => true,
-        _ => false,
-    };
-    env.undefine("LUME_VI_MODE");
 
     // theme
     let theme_base = env.get("LUME_THEME");
@@ -123,7 +269,6 @@ pub fn run_repl(env: &mut Environment) {
         },
         _ => get_dark_theme(),
     };
-
     let theme_config = env.get("LUME_THEME_CONFIG");
     env.undefine("LUME_THEME_CONFIG");
     let theme_merged = match theme_config {
@@ -131,12 +276,11 @@ pub fn run_repl(env: &mut Environment) {
         _ => theme,
     };
 
-    // complition
+    // completion
     let completion_dir = match env.get("LUME_COMPLETION_DIR") {
         Some(Expression::String(c)) => c,
         _ => {
             if cfg!(target_os = "macos") {
-                // macOS 回退到用户目录
                 dirs::data_local_dir()
                     .unwrap_or_else(|| PathBuf::from("~/.local/share"))
                     .join("lumesh/completions")
@@ -151,54 +295,8 @@ pub fn run_repl(env: &mut Environment) {
         }
     };
     env.undefine("LUME_COMPLETION_DIR");
-    let completion_cycle = match env.get("LUME_COMPLETION_CYCLE") {
-        Some(Expression::Boolean(true)) => true,
-        _ => false,
-    };
-    env.undefine("LUME_COMPLETION_CYCLE");
 
-    // 使用 Arc<Mutex> 保护编辑器
-    let cfg = EditorConfig {
-        ai_config,
-        vi_mode,
-        theme: theme_merged,
-        completion_dir,
-        completion_cycle,
-    };
-    let rl = Arc::new(Mutex::new(new_editor(cfg)));
-
-    match rl.lock().unwrap().load_history(&history_file) {
-        Ok(_) => {}
-        Err(e) => eprintln!("Failed to load history file: {e}"),
-    }
-
-    // let running = Arc::new(std::sync::atomic::AtomicBool::new(true));
-
-    // 设置信号处理 (Unix 系统)
-    // let running_clone = Arc::clone(&running);
-    ctrlc::set_handler(move || {
-        // running_clone.store(false, std::sync::atomic::Ordering::SeqCst);
-        println!("^C");
-        if childman::kill_child() {
-            childman::clear_child();
-        }
-    })
-    .expect("Error setting Ctrl-C handler");
-    // }
-    // }
-
-    // =======key binding=======
-    // 1. edit
-    rl.lock()
-        .unwrap()
-        .bind_sequence(KeyEvent::ctrl('j'), LumeMoveHandler::new(1));
-    rl.lock()
-        .unwrap()
-        .bind_sequence(KeyEvent::alt('j'), LumeMoveHandler::new(0));
-    rl.lock().unwrap().bind_sequence(
-        KeyEvent::ctrl('o'),
-        Cmd::Replace(Movement::WholeBuffer, Some(String::from(""))),
-    );
+    // key bindings
     let hotkey_sudo = match env.get("LUME_SUDO_CMD") {
         Some(s) => {
             env.undefine("LUME_SUDO_CMD");
@@ -206,61 +304,78 @@ pub fn run_repl(env: &mut Environment) {
         }
         _ => "sudo".to_string(),
     };
-    rl.lock().unwrap().bind_sequence(
-        KeyEvent::alt('s'),
-        Cmd::Replace(Movement::BeginningOfLine, Some(hotkey_sudo)),
-    );
 
-    // 2. custom hotkey
     let hotkey_modifier = env.get("LUME_HOT_MODIFIER");
     env.undefine("LUME_HOT_MODIFIER");
     let modifier: u8 = match hotkey_modifier {
-        Some(Expression::Integer(bits)) => {
-            // if bits == 0 {
-            //     0
-            // } else
-            if (bits as u8 & (Modifiers::CTRL | Modifiers::ALT | Modifiers::SHIFT).bits()) == 0 {
-                eprintln!("invalid LUME_HOT_MODIFIER {bits}, fallback to `Alt`");
-                4
-            } else {
-                bits as u8
-            }
-        }
+        Some(Expression::Integer(bits)) => bits as u8,
         _ => 4,
     };
 
     let hotkey_config = env.get("LUME_HOT_KEYS");
     env.undefine("LUME_HOT_KEYS");
 
+    let _abbr = env.get("LUME_ABBREVIATIONS");
+    env.undefine("LUME_ABBREVIATIONS");
+
+    // =======create editor=======
+    let mut editor = Editor::new();
+
+    // Set up completer
+    let ai_client = ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
+    let completer = LumeCompleter {
+        ai_client,
+        param_completer: Arc::new(ParamCompleter::new(completion_dir)),
+        theme: theme_merged.clone(),
+    };
+    editor.set_completer(Box::new(completer));
+
+    // Set up highlighter
+    let hl_theme = theme_merged.clone();
+    editor.set_highlighter(Box::new(LumeHighlighter { theme: hl_theme }));
+
+    // Set up hinter (hint from command history)
+    let hint_theme = theme_merged.clone();
+    editor.set_hinter(Box::new(LumeHinter {
+        hinter: Some(Box::new(move |line: &str, pos: usize| {
+            hint_for_line(line, pos, &hint_theme)
+        })),
+    }));
+
+    // Set up key bindings
+    // Ctrl+J: accept full hint
+    editor.bind_sequence(KeyEvent::Ctrl('j'), Cmd::AcceptHint);
+    // Alt+J: accept one word from hint
+    editor.bind_sequence(KeyEvent::Alt('j'), Cmd::AcceptHintWord(0));
+    // Ctrl+O: clear buffer
+    editor.bind_sequence(KeyEvent::Ctrl('o'), Cmd::ClearBuffer);
+    // Alt+S: toggle sudo/pkexec prefix
+    editor.set_sudo_cmd(&hotkey_sudo);
+    editor.bind_sequence(KeyEvent::Alt('s'), Cmd::ToggleSudo);
+
+    // Custom hotkeys from LUME_HOT_KEYS
     if let Some(Expression::Map(keys)) = hotkey_config {
-        let mut rl_unlocked = rl.lock().unwrap();
         for (k, cmd) in keys.iter() {
             if let Some(c) = k.chars().next() {
-                rl_unlocked.bind_sequence(
-                    KeyEvent::new(c, Modifiers::from_bits_retain(modifier)),
-                    // \n is for skip CFM
-                    LumeKeyHandler::new(cmd.to_string() + "\n"),
-                );
+                let key = modifier_to_key(c, modifier);
+                editor.bind_sequence(key, Cmd::InsertStr(cmd.to_string() + "\n"));
             }
         }
     }
-    // 3. abbr
-    let abbr = env.get("LUME_ABBREVIATIONS");
-    env.undefine("LUME_ABBREVIATIONS");
 
-    if let Some(Expression::Map(ab)) = abbr {
-        let abmap = ab
-            .iter()
+    // Set up abbreviations
+    let _abbr_map: HashMap<String, String> = match _abbr {
+        Some(Expression::Map(ab)) => ab.iter()
             .map(|m| (m.0.to_string(), m.1.to_string()))
-            .collect::<HashMap<String, String>>();
-        rl.lock().unwrap().bind_sequence(
-            KeyEvent::new(' ', Modifiers::NONE),
-            LumeAbbrHandler::new(abmap),
-        );
-    }
-    // =======key binding end=======
+            .collect(),
+        _ => HashMap::new(),
+    };
+    editor.set_abbreviations(_abbr_map);
 
-    // main loop
+    // =======load history=======
+    let _ = editor.history_mut().load_from_file(&history_file);
+
+    // =======prompt=======
     let pe = get_prompt_engine(
         env.get("LUME_PROMPT_SETTINGS"),
         env.get("LUME_PROMPT_TEMPLATE"),
@@ -268,27 +383,16 @@ pub fn run_repl(env: &mut Environment) {
     env.undefine("LUME_PROMPT_SETTINGS");
     env.undefine("LUME_PROMPT_TEMPLATE");
 
-    // let mut repl_env = env.fork();
-    // while running.load(std::sync::atomic::Ordering::SeqCst) {
+    // =======main loop=======
     loop {
         let prompt = pe.get_prompt();
 
-        // 在锁的保护下执行 readline
-        let line = match rl.lock().unwrap().readline(prompt.as_str()) {
+        let line = match editor.readline(&prompt) {
             Ok(line) => line,
             Err(ReadlineError::Interrupted) => {
-                println!("CTRL-C");
-                // state::set_signal(); // 更新共享状态
-                continue;
-            }
-            Err(ReadlineError::Signal(_sig)) => {
-                #[cfg(unix)]
-                if _sig == rustyline::error::Signal::Interrupt {
-                    println!("[Interrupt]");
-                    if childman::kill_child() {
-                        childman::clear_child();
-                    }
-                    // state::set_signal(); // 更新共享状态
+                println!("^C");
+                if childman::kill_child() {
+                    childman::clear_child();
                 }
                 continue;
             }
@@ -296,521 +400,158 @@ pub fn run_repl(env: &mut Environment) {
                 println!("CTRL-D");
                 continue;
             }
-            Err(err) => {
-                println!("Error: {err:?}");
+            Err(ReadlineError::Io(e)) => {
+                eprintln!("Read error: {e}");
                 continue;
             }
         };
 
-        match line.trim() {
-            "" => {}
-            "exit" => break,
-            "history" => {
-                for (i, entry) in rl.lock().unwrap().history().iter().enumerate() {
-                    println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
-                }
-            }
-            _ => {
-                if parse_and_eval(&line, env)
-                // && !no_history
-                {
-                    match rl.lock().unwrap().add_history_entry(&line) {
-                        Ok(_) => {}
-                        Err(e) => eprintln!("add history err: {e}"),
-                    };
-                }
-            }
+        let trimmed = line.trim();
+
+        if trimmed == "exit" {
+            break;
         }
-    }
 
-    // 保存历史记录
-    if !no_history {
-        match rl.lock().unwrap().save_history(&history_file) {
-            Ok(_) => {}
-            Err(e) => eprintln!("save history err: {e}"),
-        };
-    }
-}
-
-// 确保 helper 也是线程安全的
-#[derive(Clone)]
-struct LumeHelper {
-    file_completer: Arc<FilenameCompleter>,
-    hinter: Arc<HistoryHinter>,
-    highlighter: Arc<SyntaxHighlighter>,
-    ai_client: Option<Arc<MockAIClient>>,
-    param_completer: Arc<ParamCompleter>,
-}
-
-struct EditorConfig {
-    ai_config: Option<Expression>,
-    vi_mode: bool,
-    theme: HashMap<String, String>,
-    completion_dir: String,
-    completion_cycle: bool,
-}
-fn new_editor(cfg: EditorConfig) -> Editor<LumeHelper, FileHistory> {
-    let t = if cfg.completion_cycle {
-        CompletionType::Circular
-    } else {
-        CompletionType::List
-    };
-    let config = rustyline::Config::builder()
-        .history_ignore_space(true)
-        .completion_type(t)
-        .completion_show_all_if_ambiguous(true)
-        .edit_mode(if cfg.vi_mode {
-            EditMode::Vi
-        } else {
-            EditMode::Emacs
-        })
-        .history_ignore_dups(true)
-        .unwrap()
-        .build();
-
-    let mut rl = Editor::with_config(config).unwrap_or_else(|_| Editor::new().unwrap());
-    let ai = cfg.ai_config.map(|ai_cfg| Arc::new(init_ai(ai_cfg)));
-
-    let helper = LumeHelper {
-        file_completer: Arc::new(FilenameCompleter::new()),
-        hinter: Arc::new(HistoryHinter::new()),
-        highlighter: Arc::new(SyntaxHighlighter::new(cfg.theme)),
-        ai_client: ai,
-        param_completer: Arc::new(ParamCompleter::new(cfg.completion_dir)),
-    };
-    rl.set_helper(Some(helper));
-    rl
-}
-
-impl Helper for LumeHelper {}
-
-impl Completer for LumeHelper {
-    type Candidate = Pair;
-
-    fn complete(
-        &self,
-        line: &str,
-        pos: usize,
-        ctx: &rustyline::Context<'_>,
-    ) -> Result<(usize, Vec<Self::Candidate>), ReadlineError> {
-        match detect_completion_type(line, pos, self.ai_client.is_some()) {
-            (LumeCompletionType::Path, _) => self.file_completer.complete(line, pos, ctx),
-            (LumeCompletionType::Command, section_pos) => {
-                self.cmd_completion(line, pos, section_pos)
-            }
-            (LumeCompletionType::Param, section_pos) => {
-                self.param_completion(line, pos, section_pos, ctx)
-            }
-            (LumeCompletionType::AI, section_pos) => self.ai_completion(line, section_pos),
-            (LumeCompletionType::None, _) => Ok((pos, Vec::new())),
+        if trimmed.is_empty() {
+            continue;
         }
-    }
 
-    fn update(&self, line: &mut LineBuffer, start: usize, elected: &str, cl: &mut Changeset) {
-        // 直接使用标准替换逻辑
-        let end = line.pos();
-        line.replace(start..end, elected, cl);
-    }
-}
-
-// 扩展实现
-impl LumeHelper {
-    /// 命令补全逻辑
-    fn cmd_completion(
-        &self,
-        line: &str,
-        pos: usize,
-        section_start: usize,
-    ) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        let prefix = &line[section_start..pos];
-        // dbg!(&input, &start, &prefix);
-        // 过滤以prefix开头的命令
-        let cpl_color = self
-            .highlighter
-            .theme
-            .get("completion_cmd")
-            .map_or(DEFAULT, |c| c.as_str());
-        let mut candidates: Vec<Pair> = collect_command_with_prefix(prefix)
-            .iter()
-            .map(|cmd| {
-                // dbg!(&cmd);
-                Pair {
-                    display: format!("{cpl_color}{cmd}{RESET}"),
-                    replacement: cmd.to_string(),
-                }
-            })
-            .collect();
-        // search others
-        if candidates.is_empty() {
-            match prefix.split_once(".") {
-                // funcs of lib
-                Some((name, func)) => {
-                    if !name.is_empty() {
-                        let point = prefix.find(".").unwrap_or(0);
-                        LIBS_INFO.with(|h| {
-                            if let Some(lib) = h.get(&name) {
-                                candidates = lib
-                                    .iter()
-                                    .filter(|(f, _)| f.starts_with(func))
-                                    .map(|(cmd, _)| Pair {
-                                        display: format!("{cpl_color}{cmd}{RESET}"),
-                                        replacement: cmd.to_string(),
-                                    })
-                                    .collect::<Vec<_>>();
-                            }
-                        });
-                        candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
-                        return Ok((section_start + point + 1, candidates));
-                    }
-                }
-                _ => {
-                    // alias
-                    candidates = get_alias_completion(prefix)
-                        .into_iter()
-                        .map(|cmd| Pair {
-                            display: format!("{cpl_color}{cmd}{RESET}"),
-                            replacement: cmd,
-                        })
-                        .collect();
-                }
+        // Multi-line: accumulate input until parse is complete
+        let mut full_input = trimmed.to_string();
+        while (full_input.ends_with(" \\") || !check(&full_input)) && !full_input.ends_with("\n\n") {
+            if full_input.ends_with(" \\") {
+                full_input.truncate(full_input.len() - 2);
             }
-        }
-        // 按显示名称的长度升序排序，较短的优先
-        candidates.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
-
-        Ok((section_start, candidates))
-    }
-
-    /// 参数补全逻辑
-    fn param_completion(
-        &self,
-        line: &str,
-        pos: usize,
-        section_start: usize,
-        ctx: &rustyline::Context<'_>,
-    ) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        let cmd_section = &line[section_start..pos];
-
-        let tokens = cmd_section
-            .split_whitespace()
-            .map(|s| s)
-            .collect::<Vec<_>>();
-
-        if let Some((command, tokens)) = tokens.split_first() {
-            let param_start = cmd_section.rfind(' ').map(|x| x + 1);
-            let current_token = param_start.map_or("", |x| &cmd_section[x..]);
-
-            let params = if current_token.is_empty() {
-                tokens
-            } else {
-                tokens[..tokens.len() - 1].as_ref()
+            if !full_input.is_empty() && !full_input.ends_with('\n') {
+                full_input.push('\n');
+            }
+            let cont_line = match editor.readline("... ") {
+                Ok(l) => l,
+                Err(ReadlineError::Interrupted) => {
+                    println!("^C");
+                    if childman::kill_child() { childman::clear_child(); }
+                    full_input.clear();
+                    break;
+                }
+                Err(ReadlineError::Eof) => {
+                    println!("CTRL-D");
+                    full_input.clear();
+                    break;
+                }
+                Err(ReadlineError::Io(e)) => {
+                    eprintln!("Read error: {e}");
+                    full_input.clear();
+                    break;
+                }
             };
-
-            let (mut candidates, trig_file) =
-                self.param_completer
-                    .get_completions_for_context(command, params, current_token);
-
-            if trig_file {
-                return self.file_completer.complete(line, pos, ctx);
+            let trimmed_cont = cont_line.trim();
+            if trimmed_cont.is_empty() {
+                full_input.push('\n');
             }
-            // Sort by priority and then by length
-            candidates.sort_by(|a, b| a.replacement.cmp(&b.replacement));
-
-            return Ok((
-                param_start.map_or(section_start, |x| section_start + x),
-                candidates,
-            ));
+            full_input.push_str(trimmed_cont);
         }
-        Ok((pos, Vec::new()))
+
+        if full_input.is_empty() {
+            continue;
+        }
+
+        if full_input == "history" {
+            for (i, entry) in editor.history().iter().enumerate() {
+                println!("{}{}:{} {}", GREEN_BOLD, i + 1, RESET, entry);
+            }
+            continue;
+        }
+
+        if parse_and_eval(&full_input, env) {
+            let _ = editor.history_mut().add(full_input);
+        }
     }
 
-    /// AI 补全逻辑
-    fn ai_completion(&self, line: &str, pos: usize) -> Result<(usize, Vec<Pair>), ReadlineError> {
-        let prompt = line.trim();
-        let suggestion = self
-            .ai_client
-            .as_ref()
-            .and_then(|ai| ai.complete(prompt).ok())
-            .unwrap_or_default();
-
-        let pair = Pair {
-            display: format!(
-                "{}{}{}",
-                self.highlighter
-                    .theme
-                    .get("completion_ai")
-                    .map_or(DEFAULT, |c| c.as_str()),
-                suggestion,
-                RESET
-            ), // 保持ANSI颜色
-            replacement: suggestion,
-        };
-        Ok((pos, vec![pair]))
+    // Save history
+    if !no_history {
+        if let Err(e) = editor.history_mut().save_to_file(&history_file) {
+            eprintln!("Failed to save history: {e}");
+        }
     }
 }
 
-impl Validator for LumeHelper {
-    fn validate(
-        &self,
-        ctx: &mut rustyline::validate::ValidationContext<'_>,
-    ) -> rustyline::Result<ValidationResult> {
-        // self.validator.validate(ctx)
-        // check_balanced(ctx.input())
-        if ctx.input().ends_with(" \\") {
-            return Ok(ValidationResult::Incomplete);
-        }
-        if ctx.input().ends_with("\n\n") || check(ctx.input()) {
-            return Ok(ValidationResult::Valid(None));
-        }
-        Ok(ValidationResult::Incomplete)
+fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Option<String> {
+    let prefix = &line[..pos];
+    let p = find_command_pos(prefix);
+    let segment = &prefix[p..];
+
+    if segment.is_empty() {
+        return None;
     }
-}
 
-impl Highlighter for LumeHelper {
-    fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
-        self.highlighter.highlight_char(line, pos, kind)
-    }
-    fn highlight<'l>(&self, line: &'l str, pos: usize) -> Cow<'l, str> {
-        self.highlighter.highlight(line, pos)
-    }
-    fn highlight_hint<'h>(&self, hint: &'h str) -> Cow<'h, str> {
-        self.highlighter.highlight_hint(hint)
-    }
-    // fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
-    //     &'s self,
-    //     prompt: &'p str,
-    //     default: bool,
-    // ) -> Cow<'b, str> {
-    //     self.highlighter.highlight_prompt(prompt, default)
-    // }
-    // fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
-    //     MatchingBracketHighlighter::highlight_char(line, pos, kind)
-    // }
-}
+    let mut matches = collect_command_with_prefix(&segment);
 
-// struct InputValidator;
-
-// impl Validator for InputValidator {
-//     fn validate(
-//         &self,
-//         ctx: &mut rustyline::validate::ValidationContext<'_>,
-//     ) -> rustyline::Result<ValidationResult> {
-//         // dbg!(
-//         //     ctx.input(),
-//         //     ctx.input().ends_with("\n\n"),
-//         //     check_balanced(ctx.input()),
-//         //     check(ctx.input())
-//         // );
-
-//     }
-// }
-// 实现历史提示
-// Define a concrete Hint type for HistoryHinter
-// pub struct HistoryHint(String);
-
-// impl Hint for HistoryHint {
-//     fn display(&self) -> &str {
-//         &self.0
-//     }
-
-//     fn completion(&self) -> Option<&str> {
-//         Some(&self.0)
-//     }
-// }
-// 扩展分隔符列表（根据需要调整）
-
-impl Hinter for LumeHelper {
-    type Hint = String;
-
-    fn hint(&self, line: &str, pos: usize, ctx: &rustyline::Context<'_>) -> Option<String> {
-        let prefix = &line[..pos];
-        let p = find_command_pos(prefix);
-        let segment = &prefix[p..];
-
-        // 仅当有有效片段时进行匹配
-        if !segment.is_empty() {
-            // 按权重排序匹配结果
-            let mut matches = collect_command_with_prefix(&segment);
-
-            // search lib funcs
-            if matches.is_empty() {
-                let ends: &[_] = &['(', ' '];
-                let (mut matches, hint_pos) = match segment.split_once(".") {
-                    // funcs of lib
-                    Some((name, func)) => {
-                        // if !name.is_empty() {
-                        LIBS_INFO.with(|h| {
-                            if let Some(lib) = h.get(&name) {
-                                (
-                                    lib.iter()
-                                        .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
-                                        .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
-                                        .collect::<Vec<_>>(),
-                                    func.len(),
-                                )
-                            } else {
-                                (Vec::new(), 0)
-                            }
-                        })
-
-                        // }
+    if matches.is_empty() {
+        let ends: &[_] = &['(', ' '];
+        let (matches, hint_pos) = match segment.split_once(".") {
+            Some((name, func)) => {
+                LIBS_INFO.with(|h| {
+                    if let Some(lib) = h.get(&name) {
+                        (
+                            lib.iter()
+                                .filter(|(f, _)| f.starts_with(func.trim_matches(ends)))
+                                .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
+                                .collect::<Vec<_>>(),
+                            func.len(),
+                        )
+                    } else {
+                        (Vec::new(), 0)
                     }
-                    // top or se
-                    _ => LIBS_INFO.with(|h| {
-                        if let Some(lib) = h.get("") {
-                            (
-                                lib.iter()
-                                    .filter(|(f, _)| f.starts_with(segment.trim_matches(ends)))
-                                    .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
-                                    .collect::<Vec<_>>(),
-                                segment.len(),
-                            )
-                        } else {
-                            (Vec::new(), 0)
-                        }
-                    }),
-                };
-                // 权重降序, 较短的优先
-                matches.sort_by(|a, b| a.1.cmp(&b.1));
-                // dbg!(&matches);
-                if let Some((matched, _)) = matches.first() {
-                    let suffix = &matched[hint_pos..];
-                    if !suffix.is_empty() {
-                        return Some(suffix.to_string());
-                    }
+                })
+            }
+            _ => LIBS_INFO.with(|h| {
+                if let Some(lib) = h.get("") {
+                    (
+                        lib.iter()
+                            .filter(|(f, _)| f.starts_with(segment.trim_matches(ends)))
+                            .map(|(f, info)| (format!("{f} {}", info.hint), f.len()))
+                            .collect::<Vec<_>>(),
+                        segment.len(),
+                    )
+                } else {
+                    (Vec::new(), 0)
                 }
-            }
-            // 权重降序, 较短的优先
-            matches.sort_by(|a, b| a.len().cmp(&b.len()));
-            // dbg!(&matches);
-            if let Some(matched) = matches.first() {
-                let suffix = &matched[segment.len()..];
-                // dbg!(&segment, &segment.len(), &matched, &suffix, &suffix.len());
+            }),
+        };
+        if !matches.is_empty() {
+            let hint_color = theme.get("hint").map_or(DEFAULT, |c| c.as_str());
+            let matches: Vec<_> = matches.iter().filter(|(_, l)| *l > 0).collect();
+            if let Some((matched, _)) = matches.first() {
+                let suffix = &matched[hint_pos..];
                 if !suffix.is_empty() {
-                    return Some(suffix.to_string());
+                    return Some(format!("{hint_color}{suffix}{RESET}"));
                 }
             }
         }
-
-        // 无匹配时回退默认提示
-        self.hinter.hint(line, pos, ctx)
-    }
-}
-
-struct SyntaxHighlighter {
-    theme: HashMap<String, String>,
-}
-
-impl SyntaxHighlighter {
-    pub fn new(theme: HashMap<String, String>) -> Self {
-        Self { theme }
-    }
-}
-impl Highlighter for SyntaxHighlighter {
-    fn highlight_char(&self, line: &str, pos: usize, kind: CmdKind) -> bool {
-        let _s = (line, pos, kind);
-        kind != CmdKind::MoveCursor
+        return None;
     }
 
-    fn highlight<'l>(&self, line: &'l str, _pos: usize) -> Cow<'l, str> {
-        if line.is_empty() {
-            return Cow::Borrowed(line);
+    matches.sort_by(|a, b| a.len().cmp(&b.len()));
+    if let Some(matched) = matches.first() {
+        let suffix = &matched[segment.len()..];
+        if !suffix.is_empty() {
+            let hint_color = theme.get("hint").map_or(DEFAULT, |c| c.as_str());
+            return Some(format!("{hint_color}{suffix}{RESET}"));
         }
-
-        let (prefix, line) = if let Some(cmd) = line.strip_prefix(':') {
-            (":", cmd)
-        } else if let Some(cmd) = line.strip_prefix('>') {
-            (">", cmd)
-        } else {
-            ("", line)
-        };
-
-        let (cmd, rest_op) = match line.split_once(' ') {
-            Some((a, b)) => (a, Some(b)),
-            _ => (line, None),
-        };
-
-        let (color, is_valid) = if is_valid_command(cmd) {
-            (
-                self.theme
-                    .get("command_valid")
-                    .map_or(DEFAULT, |c| c.as_str()),
-                true,
-            )
-        } else {
-            (DEFAULT, false)
-        };
-
-        let pre_color = self.theme.get("mode").map_or(DEFAULT, |c| c.as_str());
-        let colored_line = match rest_op {
-            None => match is_valid {
-                true => format!("{pre_color}{prefix}{color}{cmd}{RESET}"),
-                false => {
-                    let highlighted_line = highlight(line, &self.theme);
-                    format!("{pre_color}{prefix}{RESET}{highlighted_line}")
-                }
-            },
-            Some(rest) => match is_valid {
-                true => {
-                    let highlighted_rest = highlight(rest, &self.theme);
-                    format!("{pre_color}{prefix}{color}{cmd}{RESET} {highlighted_rest}")
-                }
-                false => {
-                    let highlighted_line = highlight(line, &self.theme);
-                    format!("{pre_color}{prefix}{RESET}{highlighted_line}")
-                }
-            },
-        };
-        Cow::Owned(colored_line)
     }
 
-    fn highlight_hint<'h>(&self, hint: &'h str) -> Cow<'h, str> {
-        // dbg!(&hint);
-        // 如果提示为空或已经包含颜色代码，直接返回借用
-        if hint.is_empty() || hint.contains('\x1b') {
-            return Cow::Borrowed(hint);
-        }
-        Cow::Owned(format!(
-            "{}{}{}",
-            self.theme.get("hint").map_or(DEFAULT, |c| c.as_str()),
-            hint,
-            RESET
-        ))
-    }
-
-    // fn highlight_prompt<'b, 's: 'b, 'p: 'b>(
-    //     &'s self,
-    //     prompt: &'p str,
-    //     default: bool,
-    // ) -> Cow<'b, str> {
-    //     // dbg!(&prompt);
-    //     let _ = default;
-    //     // Borrowed(prompt)
-    //     Cow::Owned(format!("{}{}{}", GREEN_BOLD, prompt, RESET))
-    // }
+    None
 }
-// fn check_balanced(input: &str) -> bool {
-//     let mut stack = Vec::new();
-//     for c in input.chars() {
-//         match c {
-//             '(' | '[' | '{' => stack.push(c),
-//             ')' => {
-//                 if stack.pop() != Some('(') {
-//                     return false;
-//                 }
-//             }
-//             ']' => {
-//                 if stack.pop() != Some('[') {
-//                     return false;
-//                 }
-//             }
-//             '}' => {
-//                 if stack.pop() != Some('{') {
-//                     return false;
-//                 }
-//             }
-//             _ => {}
-//         }
-//     }
-//     stack.is_empty()
-// }
+
+fn modifier_to_key(c: char, modifier: u8) -> KeyEvent {
+    use crossterm::event::KeyModifiers;
+    if modifier & KeyModifiers::CONTROL.bits() != 0 {
+        KeyEvent::Ctrl(c)
+    } else if modifier & KeyModifiers::ALT.bits() != 0 {
+        KeyEvent::Alt(c)
+    } else if modifier & KeyModifiers::SHIFT.bits() != 0 {
+        KeyEvent::Shift(c)
+    } else {
+        KeyEvent::Char(c)
+    }
+}

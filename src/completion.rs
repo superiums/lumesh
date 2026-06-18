@@ -4,7 +4,11 @@ use std::sync::LazyLock;
 use std::sync::RwLock;
 use std::{collections::HashMap, sync::Arc};
 
-use rustyline::completion::Pair;
+#[derive(Debug, Clone)]
+pub struct CompletionPair {
+    pub display: String,
+    pub replacement: String,
+}
 
 use crate::{Expression, RuntimeError};
 
@@ -546,7 +550,7 @@ impl ParamCompleter {
         command: &str,
         args: &[&str],
         current_token: &str,
-    ) -> (Vec<Pair>, bool) {
+    ) -> (Vec<CompletionPair>, bool) {
         let (v, b) = self.get_completions_once(command, args, current_token, false);
         if v.is_empty() {
             return self.get_completions_once(command, args, current_token, true);
@@ -559,8 +563,8 @@ impl ParamCompleter {
         args: &[&str],
         current_token: &str,
         match_more: bool,
-    ) -> (Vec<Pair>, bool) {
-        let mut v = Vec::<Pair>::new();
+    ) -> (Vec<CompletionPair>, bool) {
+        let mut v = Vec::<CompletionPair>::new();
 
         // let mut contents = vec![format!("{},{:?},{}", command, args, current_token)];
         // if let Some(indices) = self.command_index.get(command) {
@@ -588,15 +592,15 @@ impl ParamCompleter {
                     self.matches_context(entry, args, current_token)
                 };
                 match matched {
-                    MatchType::Short => v.push(Pair {
+                    MatchType::Short => v.push(CompletionPair {
                         display: format_opt(entry),
                         replacement: format!("-{}", entry.short_opt.as_ref().unwrap()),
                     }),
-                    MatchType::Long => v.push(Pair {
+                    MatchType::Long => v.push(CompletionPair {
                         display: format_opt(entry),
                         replacement: format!("--{}", entry.long_opt.as_ref().unwrap()),
                     }),
-                    MatchType::Space => v.push(Pair {
+                    MatchType::Space => v.push(CompletionPair {
                         display: format!("{:<5} :OK", " "),
                         replacement: format!("{} ", current_token),
                     }),
@@ -605,7 +609,7 @@ impl ParamCompleter {
                     //         if cond.starts_with(current_token) {
                     //             // 需要去重
                     //             if !v.iter().any(|o| &o.replacement == cond) {
-                    //                 v.push(Pair {
+                    //                 v.push(CompletionPair {
                     //                     display: cond.clone(),
                     //                     replacement: cond.clone(),
                     //                 })
@@ -617,7 +621,7 @@ impl ParamCompleter {
                         // 需要过滤
                         for a in entry.args.iter() {
                             if a.starts_with(current_token) {
-                                v.push(Pair {
+                                v.push(CompletionPair {
                                     display: format!(
                                         "{:<15} \x1b[96m{:>}\x1b[m\x1b[0m",
                                         a, entry.description
@@ -631,7 +635,7 @@ impl ParamCompleter {
                     // MatchType::CondAndLong => {
                     //     // condition已经非空，long已经匹配
                     //     for cond in entry.conditions.iter() {
-                    //         v.push(Pair {
+                    //         v.push(CompletionPair {
                     //             display: format!("{} --{}", cond, entry.long_opt.as_ref().unwrap()),
                     //             replacement: format!(
                     //                 "{} --{}",
@@ -644,7 +648,7 @@ impl ParamCompleter {
                     // MatchType::CondAndShort => {
                     //     // condition已经非空，short已经匹配
                     //     for cond in entry.conditions.iter() {
-                    //         v.push(Pair {
+                    //         v.push(CompletionPair {
                     //             display: format!("{} -{}", cond, entry.short_opt.as_ref().unwrap()),
                     //             replacement: format!(
                     //                 "{} -{}",
@@ -659,7 +663,7 @@ impl ParamCompleter {
                         for x in entry.args.iter() {
                             if x.starts_with(current_token) {
                                 if let Some(long) = entry.long_opt.clone() {
-                                    v.push(Pair {
+                                    v.push(CompletionPair {
                                         display: format_arg_opt(entry, x),
                                         replacement: format!("--{} {}", long, x),
                                     })
@@ -674,7 +678,7 @@ impl ParamCompleter {
                         for x in entry.args.iter() {
                             if x.starts_with(current_token) {
                                 if let Some(short) = entry.short_opt.clone() {
-                                    v.push(Pair {
+                                    v.push(CompletionPair {
                                         display: format_arg_opt(entry, x),
                                         replacement: format!("-{} {}", short, x),
                                     })
@@ -686,7 +690,7 @@ impl ParamCompleter {
                     }
                     MatchType::File => return (v, true),
                     MatchType::Require => {
-                        v.push(Pair {
+                        v.push(CompletionPair {
                             display: String::from("_      :param required"),
                             replacement: String::from("_"),
                         });

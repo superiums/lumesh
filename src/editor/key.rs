@@ -1,4 +1,4 @@
-use crossterm::event::{KeyCode, KeyModifiers, KeyEvent as CTermKeyEvent};
+use crossterm::event::{KeyCode, KeyEvent as CTermKeyEvent, KeyModifiers};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum KeyEvent {
@@ -6,6 +6,10 @@ pub enum KeyEvent {
     Ctrl(char),
     Alt(char),
     Shift(char),
+    CtrlAlt(char),
+    CtrlShift(char),
+    AltShift(char),
+    CtrlAltShift(char),
     Enter,
     Tab,
     BackTab,
@@ -25,17 +29,26 @@ pub enum KeyEvent {
 
 impl From<CTermKeyEvent> for KeyEvent {
     fn from(ev: CTermKeyEvent) -> Self {
+        let ctrl = ev.modifiers.contains(KeyModifiers::CONTROL);
+        let alt = ev.modifiers.contains(KeyModifiers::ALT);
+        let shift = ev.modifiers.contains(KeyModifiers::SHIFT);
         match ev.code {
             KeyCode::Char(c) => {
-                if ev.modifiers.contains(KeyModifiers::CONTROL) && !ev.modifiers.contains(KeyModifiers::ALT) {
+                if ctrl && alt && shift {
+                    return KeyEvent::CtrlAltShift(c);
+                } else if ctrl && alt {
+                    return KeyEvent::CtrlAlt(c);
+                } else if ctrl && shift {
+                    return KeyEvent::CtrlShift(c);
+                } else if alt && shift {
+                    return KeyEvent::AltShift(c);
+                } else if ctrl && !alt && !shift {
                     if c.to_ascii_uppercase().is_ascii_alphabetic() || c == ' ' {
                         return KeyEvent::Ctrl(c);
                     }
-                }
-                if ev.modifiers.contains(KeyModifiers::ALT) && !ev.modifiers.contains(KeyModifiers::CONTROL) {
+                } else if alt && !ctrl {
                     return KeyEvent::Alt(c);
-                }
-                if ev.modifiers.contains(KeyModifiers::SHIFT) && !ev.modifiers.contains(KeyModifiers::CONTROL) && !ev.modifiers.contains(KeyModifiers::ALT) {
+                } else if shift && !ctrl && !alt {
                     return KeyEvent::Shift(c);
                 }
                 KeyEvent::Char(c)
@@ -60,20 +73,7 @@ impl From<CTermKeyEvent> for KeyEvent {
             KeyCode::PageUp => KeyEvent::PageUp,
             KeyCode::PageDown => KeyEvent::PageDown,
             KeyCode::F(n) => KeyEvent::F(n),
-            _ => {
-                // Uncommon keys
-                if ev.modifiers.contains(KeyModifiers::ALT) && ev.modifiers.contains(KeyModifiers::SHIFT) {
-                    if let KeyCode::Char(c) = ev.code {
-                        return KeyEvent::Alt(c);
-                    }
-                }
-                if ev.modifiers.contains(KeyModifiers::CONTROL) && ev.modifiers.contains(KeyModifiers::ALT) {
-                    if let KeyCode::Char(c) = ev.code {
-                        return KeyEvent::Ctrl(c);
-                    }
-                }
-                KeyEvent::Escape
-            }
+            _ => KeyEvent::Escape,
         }
     }
 }

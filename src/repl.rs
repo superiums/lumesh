@@ -1,7 +1,3 @@
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
-use std::sync::Arc;
-
 use crate::ai::{MockAIClient, init_ai};
 use crate::cmdhelper::{
     LumeCompletionType, collect_command_with_prefix, detect_completion_type, find_command_pos,
@@ -9,13 +5,20 @@ use crate::cmdhelper::{
 };
 use crate::completion::ParamCompleter;
 use crate::editor::{
-    Cmd, Completer, CompletionItem, Editor, Highlighter, Hinter, KeyEvent, ReadlineError,
+    Cmd, Completer, CompletionItem, Editor, EditorTheme, Highlighter, Hinter, KeyEvent,
+    ReadlineError,
 };
 use crate::expression::alias::get_alias_completion;
 use crate::libs::{LIBS_INFO, is_lib};
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
+use std::collections::HashMap;
+use std::path::{Path, PathBuf};
+use std::rc::Rc;
+use std::sync::{Arc, Mutex};
+
+use crossterm::style::Color;
 
 const DEFAULT: &str = "";
 const GREEN_BOLD: &str = "\x1b[1;32m";
@@ -85,7 +88,7 @@ fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
                             format!("'{full}'")
                         };
                         items.push(CompletionItem {
-                            display: name.to_string(),
+                            display: Some(name.to_string()),
                             replacement: q,
                             suffix: ' ',
                         });
@@ -94,7 +97,7 @@ fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
                         let display = name.to_string();
                         let replacement = full;
                         items.push(CompletionItem {
-                            display,
+                            display: Some(display),
                             replacement,
                             suffix,
                         });
@@ -149,7 +152,7 @@ impl LumeCompleter {
                                     .collect();
                             }
                         });
-                        items.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+                        items.sort_by(|a, b| a.display_text().len().cmp(&b.display_text().len()));
                         return items;
                     }
                 }
@@ -164,7 +167,7 @@ impl LumeCompleter {
             }
         }
 
-        items.sort_by(|a, b| a.display.len().cmp(&b.display.len()));
+        items.sort_by(|a, b| a.display_text().len().cmp(&b.display_text().len()));
         items
     }
 
@@ -386,16 +389,6 @@ pub fn run_repl(env: &mut Environment) {
         _ => "sudo".to_string(),
     };
 
-    let hotkey_modifier = env.get("LUME_HOT_MODIFIER");
-    env.undefine("LUME_HOT_MODIFIER");
-    let modifier: u8 = match hotkey_modifier {
-        Some(Expression::Integer(bits)) => bits as u8,
-        _ => 4,
-    };
-
-    let hotkey_config = env.get("LUME_HOT_KEYS");
-    env.undefine("LUME_HOT_KEYS");
-
     let _abbr = env.get("LUME_ABBREVIATIONS");
     env.undefine("LUME_ABBREVIATIONS");
 
@@ -423,6 +416,30 @@ pub fn run_repl(env: &mut Environment) {
         })),
     }));
 
+    // Editor theme from LUME_EDITOR_THEME config
+    if let Some(Expression::Map(theme_map)) = env.get("LUME_EDITOR_THEME") {
+        let mut theme = EditorTheme::default();
+        for (k, v) in theme_map.iter() {
+            let val = v.to_string();
+            match k.as_str() {
+                "hint" => theme.hint_color = parse_color(&val),
+                "completion_bg" => theme.completion_bg = parse_color(&val),
+                "completion_fg" => theme.completion_fg = parse_color(&val),
+                "completion_selected_bg" => theme.completion_selected_bg = parse_color(&val),
+                "completion_selected_fg" => theme.completion_selected_fg = parse_color(&val),
+                _ => {}
+            }
+        }
+        editor.set_theme(theme);
+    }
+    env.undefine("LUME_EDITOR_THEME");
+
+    // Continuation prompt from config
+    if let Some(Expression::String(p)) = env.get("LUME_CONTINUATION_PROMPT") {
+        editor.set_cont_prompt(&p);
+    }
+    env.undefine("LUME_CONTINUATION_PROMPT");
+
     // Set up key bindings
     // Ctrl+J: accept full hint
     editor.bind_sequence(KeyEvent::Ctrl('j'), Cmd::AcceptHint);
@@ -434,17 +451,58 @@ pub fn run_repl(env: &mut Environment) {
     editor.set_sudo_cmd(&hotkey_sudo);
     editor.bind_sequence(KeyEvent::Alt('s'), Cmd::ToggleSudo);
 
-    // Custom hotkeys from LUME_HOT_KEYS
-    if let Some(Expression::Map(keys)) = hotkey_config {
-        for (k, cmd) in keys.iter() {
-            if let Some(c) = k.chars().next() {
-                let key = modifier_to_key(c, modifier);
-                editor.bind_sequence(key, Cmd::InsertStr(cmd.to_string() + "\n"));
+    // Share env with the editor callback via Arc<Mutex<>> so the callback
+    // can fork a live snapshot of the current environment at hotkey time.
+    let shared_env = Arc::new(Mutex::new(env.clone()));
+
+    // Custom hotkeys LUME_HOT_BINDINGS
+    let hotkey_bindings = env.get("LUME_HOT_BINDINGS");
+    env.undefine("LUME_HOT_BINDINGS");
+
+    if let Some(Expression::Map(bindings)) = hotkey_bindings {
+        for (k, v) in bindings.iter() {
+            let key_str = k.to_string();
+            if let Some((mod_str, key_char)) = key_str.rsplit_once('_') {
+                if let Some(ch) = key_char.chars().next() {
+                    let key = parse_hot_key(mod_str, ch);
+                    match v {
+                        Expression::String(s) => {
+                            // String value: insert directly into buffer
+                            editor.bind_sequence(key, Cmd::InsertStr(s.clone()));
+                        }
+                        Expression::Function(..) | Expression::Lambda(..) => {
+                            // Function/Lambda: execute with buffer as argument,
+                            // insert result if it returns a string
+                            let expr = v.clone();
+                            let shared_env = shared_env.clone();
+                            editor.bind_hotkey_fn(key, move |buffer: &str| -> Option<String> {
+                                let env_guard = shared_env.lock().ok()?;
+                                let mut fork_env = env_guard.fork();
+                                drop(env_guard);
+                                let call = Expression::Apply(
+                                    Rc::new(expr.clone()),
+                                    Rc::new(vec![Expression::String(buffer.to_string())]),
+                                );
+                                match call.eval_cmd(&mut fork_env) {
+                                    Ok(Expression::String(s)) => Some(s),
+                                    // Ok(other) if other != Expression::None => {
+                                    //     println!("{other}");
+                                    //     let _ = std::io::stdout().flush();
+                                    //     None
+                                    // }
+                                    _ => None,
+                                }
+                            });
+                        }
+                        other => {
+                            // Other types
+                            eprintln!("invalid bindings: {} -> {}", key_str, other);
+                        }
+                    }
+                }
             }
         }
     }
-
-    // Set up abbreviations
     let _abbr_map: HashMap<String, String> = match _abbr {
         Some(Expression::Map(ab)) => ab
             .iter()
@@ -508,7 +566,8 @@ pub fn run_repl(env: &mut Environment) {
             if !full_input.is_empty() && !full_input.ends_with('\n') {
                 full_input.push('\n');
             }
-            let cont_line = match editor.readline("... ") {
+            let prompt = editor.cont_prompt().to_string();
+            let cont_line = match editor.readline(&prompt) {
                 Ok(l) => l,
                 Err(ReadlineError::Interrupted) => {
                     println!("^C");
@@ -547,7 +606,7 @@ pub fn run_repl(env: &mut Environment) {
             continue;
         }
 
-        if parse_and_eval(&full_input, env) {
+        if parse_and_eval(&full_input, &mut *shared_env.lock().unwrap()) {
             let _ = editor.history_mut().add(full_input);
         }
 
@@ -631,15 +690,37 @@ fn hint_for_line(line: &str, pos: usize, theme: &HashMap<String, String>) -> Opt
     None
 }
 
-fn modifier_to_key(c: char, modifier: u8) -> KeyEvent {
-    use crossterm::event::KeyModifiers;
-    if modifier & KeyModifiers::CONTROL.bits() != 0 {
-        KeyEvent::Ctrl(c)
-    } else if modifier & KeyModifiers::ALT.bits() != 0 {
-        KeyEvent::Alt(c)
-    } else if modifier & KeyModifiers::SHIFT.bits() != 0 {
-        KeyEvent::Shift(c)
-    } else {
-        KeyEvent::Char(c)
+fn parse_hot_key(modifier_str: &str, key_char: char) -> KeyEvent {
+    match modifier_str {
+        "CTRL_ALT" => KeyEvent::CtrlAlt(key_char),
+        "CTRL_SHIFT" => KeyEvent::CtrlShift(key_char),
+        "ALT_SHIFT" => KeyEvent::AltShift(key_char),
+        "CTRL_ALT_SHIFT" => KeyEvent::CtrlAltShift(key_char),
+        "CTRL" => KeyEvent::Ctrl(key_char),
+        "ALT" => KeyEvent::Alt(key_char),
+        "SHIFT" => KeyEvent::Shift(key_char),
+        _ => KeyEvent::Char(key_char),
+    }
+}
+
+fn parse_color(s: &str) -> Color {
+    match s.to_lowercase().as_str() {
+        "black" => Color::Black,
+        "dark_grey" => Color::DarkGrey,
+        "red" => Color::Red,
+        "dark_red" => Color::DarkRed,
+        "green" => Color::Green,
+        "dark_green" => Color::DarkGreen,
+        "yellow" => Color::Yellow,
+        "dark_yellow" => Color::DarkYellow,
+        "blue" => Color::Blue,
+        "dark_blue" => Color::DarkBlue,
+        "magenta" => Color::Magenta,
+        "dark_magenta" => Color::DarkMagenta,
+        "cyan" => Color::Cyan,
+        "dark_cyan" => Color::DarkCyan,
+        "white" => Color::White,
+        "grey" => Color::Grey,
+        _ => Color::DarkGrey,
     }
 }

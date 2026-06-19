@@ -14,10 +14,10 @@ impl LineBuffer {
     }
 
     pub fn insert_str(&mut self, s: &str) {
-        for c in s.chars() {
-            self.chars.insert(self.cursor, c);
-            self.cursor += 1;
-        }
+        let new_chars: Vec<char> = s.chars().collect();
+        let len = new_chars.len();
+        self.chars.splice(self.cursor..self.cursor, new_chars);
+        self.cursor += len;
     }
 
     pub fn backspace(&mut self) -> bool {

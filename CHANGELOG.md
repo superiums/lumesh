@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.15.1]
+- editor theme
+- editor buffer optimized
+- custom hotkey fn binding
+with friendly hotkey define
+
+- fix raw mode print postion
+
+## [0.15.0]
+- migrate from rustyline to crossterm
+whole editor rewrited.
+
+- path completion
+- add completion suffix
+- rewrite console_lib
+- fix ctrl+c signal
+
 ## [0.14.3]
 - improved quotes:
   - '' keeps raw string

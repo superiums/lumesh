@@ -12,25 +12,40 @@ use super::history::History;
 use super::key::{Cmd, KeyEvent};
 use super::kring::KillRing;
 
-const HINT_COLOR: Color = Color::DarkGrey;
-const COMP_BG: Color = Color::DarkGrey;
-const COMP_FG: Color = Color::White;
-const COMP_SEL_BG: Color = Color::White;
-const COMP_SEL_FG: Color = Color::Black;
 const MAX_POPUP_HEIGHT: usize = 10;
 
 #[derive(Debug, Clone)]
+pub struct EditorTheme {
+    pub hint_color: Color,
+    pub completion_bg: Color,
+    pub completion_fg: Color,
+    pub completion_selected_bg: Color,
+    pub completion_selected_fg: Color,
+}
+
+impl Default for EditorTheme {
+    fn default() -> Self {
+        Self {
+            hint_color: Color::DarkGrey,
+            completion_bg: Color::DarkGrey,
+            completion_fg: Color::White,
+            completion_selected_bg: Color::White,
+            completion_selected_fg: Color::Black,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct CompletionItem {
-    pub display: String,
+    pub display: Option<String>,
     pub replacement: String,
     pub suffix: char,
 }
 
 impl CompletionItem {
     pub fn new(replacement: String) -> Self {
-        let display = replacement.clone();
         Self {
-            display,
+            display: None,
             replacement,
             suffix: ' ',
         }
@@ -38,10 +53,14 @@ impl CompletionItem {
 
     pub fn with_display(display: String, replacement: String) -> Self {
         Self {
-            display,
+            display: Some(display),
             replacement,
             suffix: ' ',
         }
+    }
+
+    pub fn display_text(&self) -> &str {
+        self.display.as_deref().unwrap_or(&self.replacement)
     }
 }
 
@@ -76,6 +95,7 @@ pub struct Editor {
     highlighter: Option<Box<dyn Highlighter>>,
     hinter: Option<Box<dyn Hinter>>,
     custom_bindings: HashMap<KeyEvent, Cmd>,
+    hotkey_fns: HashMap<KeyEvent, Box<dyn Fn(&str) -> Option<String>>>,
     abbreviations: HashMap<String, String>,
     sudo_cmd: String,
     is_history_completion: bool,
@@ -88,6 +108,8 @@ pub struct Editor {
     prompt_width: usize,
     current_hint: Option<String>,
     popup_rendered: Option<(u16, u16)>,
+    theme: EditorTheme,
+    cont_prompt: String,
 }
 
 impl Editor {
@@ -101,6 +123,7 @@ impl Editor {
             highlighter: None,
             hinter: None,
             custom_bindings: HashMap::new(),
+            hotkey_fns: HashMap::new(),
             abbreviations: HashMap::new(),
             sudo_cmd: "sudo".to_string(),
             is_history_completion: false,
@@ -113,7 +136,21 @@ impl Editor {
             prompt_width: 0,
             current_hint: None,
             popup_rendered: None,
+            theme: EditorTheme::default(),
+            cont_prompt: "... ".to_string(),
         }
+    }
+
+    pub fn set_theme(&mut self, theme: EditorTheme) {
+        self.theme = theme;
+    }
+
+    pub fn set_cont_prompt(&mut self, prompt: &str) {
+        self.cont_prompt = prompt.to_string();
+    }
+
+    pub fn cont_prompt(&self) -> &str {
+        &self.cont_prompt
     }
 
     pub fn set_completer(&mut self, completer: Box<dyn Completer>) {
@@ -138,6 +175,13 @@ impl Editor {
 
     pub fn bind_sequence(&mut self, key: KeyEvent, cmd: Cmd) {
         self.custom_bindings.insert(key, cmd);
+    }
+
+    pub fn bind_hotkey_fn<F>(&mut self, key: KeyEvent, f: F)
+    where
+        F: Fn(&str) -> Option<String> + 'static,
+    {
+        self.hotkey_fns.insert(key, Box::new(f));
     }
 
     pub fn history_mut(&mut self) -> &mut History {
@@ -172,6 +216,7 @@ impl Editor {
 
         if result.is_ok() {
             let _ = write!(stdout(), "\r\n");
+            // let _ = write!(stdout(), "\x1b[K\r\n");
         }
 
         let _ = disable_raw_mode();
@@ -189,6 +234,19 @@ impl Editor {
                 if self.try_completion_event(&event) {
                     continue;
                 }
+            }
+
+            // Check hotkey function bindings first (for function/lambda values)
+            if let Some(f) = self.hotkey_fns.get(&event) {
+                self.buffer.insert_str("\n");
+                let result = f(&self.buffer.text());
+                if let Some(text) = result {
+                    self.buffer.insert_str(&text);
+                    self.leave_completion();
+                } else {
+                    return self.accept_line();
+                }
+                continue;
             }
 
             // Check custom bindings
@@ -237,6 +295,7 @@ impl Editor {
                     self.prompt_row = 0;
                 }
                 KeyEvent::Enter => {
+                    self.current_hint = None;
                     return self.accept_line();
                 }
                 KeyEvent::Tab => {
@@ -263,15 +322,52 @@ impl Editor {
                 }
                 KeyEvent::Up => {
                     self.leave_completion();
-                    if let Some(line) = self.history.previous(&self.buffer.text()) {
-                        self.buffer.set_text(line);
+                    let text = self.buffer.text();
+                    if text.contains('\n') {
+                        let cursor = self.buffer.cursor();
+                        let before = &text[..cursor];
+                        let line_idx = before.matches('\n').count();
+                        if line_idx > 0 {
+                            let line_start = before.rfind('\n').map(|i| i + 1).unwrap_or(0);
+                            let col = cursor - line_start;
+                            let prev_newline = text[..line_start.saturating_sub(1)]
+                                .rfind('\n')
+                                .map(|i| i + 1)
+                                .unwrap_or(0);
+                            let prev_len = line_start - prev_newline - 1;
+                            self.buffer.set_cursor(prev_newline + col.min(prev_len));
+                        } else if let Some(entry) = self.history.previous(&text) {
+                            self.buffer.set_text(entry);
+                            self.buffer.move_to_end();
+                        }
+                    } else if let Some(entry) = self.history.previous(&text) {
+                        self.buffer.set_text(entry);
                         self.buffer.move_to_end();
                     }
                 }
                 KeyEvent::Down => {
                     self.leave_completion();
-                    if let Some(line) = self.history.next(&self.buffer.text()) {
-                        self.buffer.set_text(line);
+                    let text = self.buffer.text();
+                    if text.contains('\n') {
+                        let cursor = self.buffer.cursor();
+                        let before = &text[..cursor];
+                        let line_idx = before.matches('\n').count();
+                        let newline_count = text.matches('\n').count();
+                        if line_idx < newline_count {
+                            let line_start = before.rfind('\n').map(|i| i + 1).unwrap_or(0);
+                            let col = cursor - line_start;
+                            let after_cursor = &text[cursor..];
+                            let next_newline = after_cursor.find('\n').unwrap_or(after_cursor.len());
+                            let next_start = cursor + next_newline + 1;
+                            let remaining = &text[next_start..];
+                            let next_len = remaining.find('\n').unwrap_or(remaining.len());
+                            self.buffer.set_cursor(next_start + col.min(next_len));
+                        } else if let Some(entry) = self.history.next(&text) {
+                            self.buffer.set_text(entry);
+                            self.buffer.move_to_end();
+                        }
+                    } else if let Some(entry) = self.history.next(&text) {
+                        self.buffer.set_text(entry);
                         self.buffer.move_to_end();
                     }
                 }
@@ -302,6 +398,7 @@ impl Editor {
         if !text.is_empty() {
             self.history.add(text.clone());
         }
+        // self.current_hint = None;
         Ok(text)
     }
 
@@ -464,6 +561,7 @@ impl Editor {
         if !text.contains(' ') {
             if let Some(expanded) = self.abbreviations.get(text.trim()) {
                 self.buffer.set_text(expanded);
+                self.buffer.insert(' ');
                 self.buffer.move_to_end();
                 return;
             }
@@ -774,9 +872,7 @@ impl Editor {
     fn find_word_start(line: &str, pos: usize) -> usize {
         let before = &line[..pos.min(line.len())];
         before
-            .rfind(
-                |c: char| c.is_ascii_whitespace() || c == '.' || c == '>' || c == ':',
-            )
+            .rfind(|c: char| c.is_ascii_whitespace() || c == '.' || c == '>' || c == ':')
             .map(|i| i + 1)
             .unwrap_or(0)
     }
@@ -786,7 +882,12 @@ impl Editor {
         before
             .rfind(|c: char| {
                 c.is_ascii_whitespace()
-                    || c == '>' || c == ':' || c == '|' || c == '&' || c == '(' || c == ';'
+                    || c == '>'
+                    || c == ':'
+                    || c == '|'
+                    || c == '&'
+                    || c == '('
+                    || c == ';'
             })
             .map(|i| i + 1)
             .unwrap_or(0)
@@ -830,7 +931,15 @@ impl Editor {
 
         if let Some(ref hl) = self.highlighter {
             let highlighted = hl.highlight(&line);
-            queue!(stdout, Print(&highlighted)).map_err(ReadlineError::Io)?;
+            if highlighted.contains('\n') {
+                queue!(stdout, Print(&highlighted.replace('\n', "\r\n")))
+                    .map_err(ReadlineError::Io)?;
+            } else {
+                queue!(stdout, Print(&highlighted)).map_err(ReadlineError::Io)?;
+            }
+        } else if line.contains('\n') {
+            queue!(stdout, Print(&line.replace('\n', "\r\n")))
+                .map_err(ReadlineError::Io)?;
         } else {
             queue!(stdout, Print(&line)).map_err(ReadlineError::Io)?;
         }
@@ -842,7 +951,7 @@ impl Editor {
                 self.current_hint = Some(hint.clone());
                 queue!(
                     stdout,
-                    SetForegroundColor(HINT_COLOR),
+                    SetForegroundColor(self.theme.hint_color),
                     Print(&hint),
                     ResetColor
                 )
@@ -851,8 +960,12 @@ impl Editor {
         }
 
         // Compute how many terminal rows the prompt+line occupies (for popup positioning)
-        let content_end = self.prompt_width + cursor.max(line.len());
-        let used_rows = 1 + content_end / self.terminal_width as usize;
+        let lines_before_cursor: Vec<&str> = line[..cursor].split('\n').collect();
+        let cursor_row_offset = lines_before_cursor.len() - 1;
+        let col_in_last = lines_before_cursor.last().copied().unwrap_or("").len();
+        let total_col = self.prompt_width + col_in_last;
+        let vis_width = self.terminal_width as usize;
+        let used_rows = cursor_row_offset + 1 + total_col / vis_width;
 
         // Render completion popup
         if let EditorMode::CompletionSelect {
@@ -865,9 +978,7 @@ impl Editor {
         }
 
         // Position cursor
-        let total_col = self.prompt_width + cursor;
-        let vis_width = self.terminal_width as usize;
-        let row = self.prompt_row + (total_col / vis_width) as u16;
+        let row = self.prompt_row + cursor_row_offset as u16 + (total_col / vis_width) as u16;
         let col = (total_col % vis_width) as u16;
 
         queue!(stdout, MoveTo(col, row)).map_err(ReadlineError::Io)?;
@@ -917,28 +1028,28 @@ impl Editor {
             if is_selected {
                 queue!(
                     _stdout,
-                    SetBackgroundColor(COMP_SEL_BG),
-                    SetForegroundColor(COMP_SEL_FG)
+                    SetBackgroundColor(self.theme.completion_selected_bg),
+                    SetForegroundColor(self.theme.completion_selected_fg)
                 )
                 .map_err(ReadlineError::Io)?;
             } else {
                 queue!(
                     _stdout,
-                    SetBackgroundColor(COMP_BG),
-                    SetForegroundColor(COMP_FG)
+                    SetBackgroundColor(self.theme.completion_bg),
+                    SetForegroundColor(self.theme.completion_fg)
                 )
                 .map_err(ReadlineError::Io)?;
             }
 
-            let display = if item.display.len() > popup_width {
-                let truncated: String = item
-                    .display
+            let display_text = item.display_text();
+            let display = if display_text.len() > popup_width {
+                let truncated: String = display_text
                     .chars()
                     .take(popup_width.saturating_sub(1))
                     .collect();
                 format!("{}…", truncated)
             } else {
-                format!("{:width$}", item.display, width = popup_width)
+                format!("{:width$}", display_text, width = popup_width)
             };
 
             queue!(_stdout, Print(&display)).map_err(ReadlineError::Io)?;
@@ -950,8 +1061,8 @@ impl Editor {
             queue!(_stdout, MoveTo(0, row)).map_err(ReadlineError::Io)?;
             queue!(
                 _stdout,
-                SetBackgroundColor(COMP_BG),
-                SetForegroundColor(COMP_FG),
+                SetBackgroundColor(self.theme.completion_bg),
+                SetForegroundColor(self.theme.completion_fg),
                 Print(&format!(
                     "{:width$}",
                     format!("… {} more", total - scroll_end),

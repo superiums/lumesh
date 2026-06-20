@@ -1,0 +1,200 @@
+variables:
+  PKG_NAME: "lumesh"
+  MAIN_BINARY: "lume"
+  RUNNER_BINARY: "lume-se"
+
+when:
+  event: tag
+  ref: refs/tags/v*
+
+steps:
+  setup:
+    image: alpine:latest
+    commands:
+      - export VERSION=${CI_COMMIT_TAG#v}
+      - echo "VERSION=$VERSION" >> .env
+      - echo "REPO_PATH=${CI_REPO}" >> .env
+      - echo "Building version $VERSION"
+
+  create_release:
+    image: alpine:latest
+    commands:
+      - source .env
+      - apk add --no-cache curl jq
+      - |
+        RELEASE_DATA='{
+          "tag_name": "'$CI_COMMIT_TAG'",
+          "name": "Release '$CI_COMMIT_TAG'",
+          "body": "This is a new release of lumesh. [Read the changelog here](https://codeberg.org/'$CI_REPO'/src/tag/'$CI_COMMIT_TAG'/CHANGELOG.md).\n\n- lume: an edition contains interactive repl and script parser.\n- lume-se: an swift edition only contains script parser. used to run script swiftly.\n- doc: help docs.\n\nIf you'\''re running on Linux, macOS or Windows, you can probably use one of the binaries below.",
+          "draft": false,
+          "prerelease": false
+        }'
+      - |
+        RELEASE_RESPONSE=$(curl -s -X POST "https://codeberg.org/api/v1/repos/$CI_REPO/releases" \
+          -H "Authorization: token $CODEBERG_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "$RELEASE_DATA")
+      - echo "RELEASE_ID=$(echo "$RELEASE_RESPONSE" | jq -r '.id')" >> .env
+      - echo "UPLOAD_URL=$(echo "$RELEASE_RESPONSE" | jq -r '.upload_url' | sed 's/{?name,label}//')" >> .env
+    # secrets: [CODEBERG_TOKEN]
+    depends_on: [setup]
+
+  build_docs:
+    image: alpine:latest
+    commands: |
+      mkdir -p tmp/doc
+      cp CHANGELOG.md tmp/doc/
+      cp README.md tmp/doc/
+      cp LICENSE tmp/doc/
+      cp docs/INS_README.md tmp/doc/
+      cp docs/RULE.md tmp/doc/
+
+      tar -czf data.tgz -C docs/data lumesh
+      tar -czvf doc.tgz -C tmp doc
+    depends_on: [create_release]
+
+  publish_doc:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "data.tgz"
+        - "doc.tgz"
+        - "docs/install.sh"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_docs]
+
+  build_linux:
+    image: rust:latest
+    commands:
+      - rustup target add x86_64-unknown-linux-musl
+      - apt-get update && apt-get install -y musl-tools
+      # 标准构建
+      - cargo build --release
+      - cp target/release/lume lume-linux
+      # Runner 构建
+      - cargo build --features runner --release
+      - cp target/release/lume-se lume-se-linux
+      # musl 静态链接构建
+      - cargo build --release --target x86_64-unknown-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/lume lume-linux-musl
+      - cargo build --features runner --release --target x86_64-unknown-linux-musl
+      - cp target/x86_64-unknown-linux-musl/release/lume-se lume-se-linux-musl
+    depends_on: [create_release]
+
+  publish_linux:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-linux"
+        - "lume-se-linux"
+        - "lume-linux-musl"
+        - "lume-se-linux-musl"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_linux]
+
+  # build_arm64:
+  #   image: rust:latest
+  #   commands:
+  #     - rustup target add aarch64-unknown-linux-gnu
+  #     - apt-get update && apt-get install -y gcc-aarch64-linux-gnu
+  #     # 标准构建
+  #     - cargo build --release --target aarch64-unknown-linux-gnu
+  #     - cp target/aarch64-unknown-linux-gnu/release/lume lume-linux-arm64
+  #     # Runner 构建
+  #     - cargo build --features runner --release --target aarch64-unknown-linux-gnu
+  #     - cp target/aarch64-unknown-linux-gnu/release/lume-se lume-se-linux-arm64
+  #   depends_on: [create_release]
+
+  # publish_arm64:
+  #   image: woodpeckerci/plugin-release
+  #   settings:
+  #     files:
+  #       - "lume-linux-arm64"
+  #       - "lume-se-linux-arm64"
+  #     api_key:
+  #       from_secret: codeberg_token
+  #   depends_on: [build_arm64]
+  # build_macos:
+  #   image: rust:latest
+  #   commands:
+  #     - apt-get update && apt-get install --assume-yes docker.io
+  #     # libclang-19-dev
+  #     - cargo install cross
+  #     - rustup target add x86_64-apple-darwin
+  #     - rustup target add aarch64-apple-darwin
+  #     - cross build --target x86_64-apple-darwin --release
+  #     - cross build --target aarch64-apple-darwin --release
+  #     - cp target/x86_64-apple-darwin/release/lumesh lumesh-macos-x86_64
+  #     - cp target/aarch64-apple-darwin/release/lumesh lumesh-macos-arm64
+
+  #   depends_on: [create_release]
+
+  # publish_macos:
+  #   image: woodpeckerci/plugin-release
+  #   settings:
+  #     files:
+  #       - "lume-macos-x86_64"
+  #       - "lume-macos-arm64"
+  #       # - "lumesh-macos-x86_64"
+  #       # - "lumesh-macos-arm64"
+  #     api_key:
+  #       from_secret: codeberg_token
+  #   depends_on: [build_macos]
+
+  build_windows:
+    image: rust:latest
+    commands:
+      - rustup target add x86_64-pc-windows-gnu
+      # - apt-get update && apt-get install -y gcc-mingw-w64-x86-64
+      - apt-get update && apt-get install -y mingw-w64
+      # 标准构建
+      - cargo build --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lume.exe lume-windows.exe
+      # Runner 构建
+      - cargo build --features runner --release --target x86_64-pc-windows-gnu
+      - cp target/x86_64-pc-windows-gnu/release/lume-se.exe lume-se-windows.exe
+    depends_on: [create_release]
+
+  publish_windows:
+    image: woodpeckerci/plugin-release
+    settings:
+      files:
+        - "lume-windows.exe"
+        - "lume-se-windows.exe"
+      api_key:
+        from_secret: codeberg_token
+    depends_on: [build_windows]
+
+  # build_cross:
+  #   image: rust:latest
+  #   commands:
+  #     - apt-get update && apt-get install --assume-yes podman qemu-system
+  #     - podman machine init -v /tmp:/tmp -v /var:/var -v /usr:/usr -v /lib:/lib -v /lib64:/lib64 -v /run:/run -v /etc:/etc -v /woodpecker:/woodpecker
+  #     # - podman machine init -v /tmp:/tmp -v /private:/private
+  #     # - apt-get update && apt-get install --assume-yes docker.io
+  #     # - dpkg --add-architecture arm64
+  #     # - apt-get update && apt-get --assume-yes install libssl-dev:arm64 pkg-config
+  #     - cargo install cross
+  #     - cross build --target x86_64-unknown-freebsd --release
+  #     - cross build --target x86_64-pc-windows-gnu --release
+  #     - cross build --target aarch64-unknown-linux-gnu --release
+  #     - cross build --target aarch64-unknown-linux-musl --release
+  #     - cp target/x86_64-unknown-freebsd/release/lumesh lumesh-freebsd
+  #     - cp target/x86_64-pc-windows-gnu/release/lumesh lumesh-win
+  #     - cp target/aarch64-unknown-linux-gnu/release/lumesh lumesh-aarch64-gnu
+  #     - cp target/aarch64-unknown-linux-musl/release/lumesh lumesh-aarch64-musl
+  #   depends_on: [create_release]
+
+  # publish_cross:
+  #   image: woodpeckerci/plugin-release
+  #   settings:
+  #     files:
+  #       - "lumesh-freebsd"
+  #       - "lumesh-win"
+  #       - "lumesh-aarch64-gnu"
+  #       - "lumesh-aarch64-musl"
+  #     api_key:
+  #       from_secret: codeberg_token
+  #   depends_on: [build_cross]

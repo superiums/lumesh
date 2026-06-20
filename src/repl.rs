@@ -15,7 +15,7 @@ use crate::utils::expand_home;
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
@@ -584,8 +584,7 @@ pub fn run_repl(env: &mut Environment) {
             continue;
         }
 
-        if parse_and_eval(&full_input, &mut *shared_env.lock().unwrap()) {
-        }
+        if parse_and_eval(&full_input, &mut *shared_env.lock().unwrap()) {}
 
         let _ = editor.history_mut().add(full_input);
 

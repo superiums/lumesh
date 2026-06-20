@@ -1239,10 +1239,9 @@ impl Expression {
             )),
             // symbol maybe alias, but also maybe var/string, so let user decide.
             // Blank injection is handled by ensure_has_receiver for builtins only.
-            Expression::Symbol(_) => Cow::Owned(Expression::Command(
-                Rc::new(self.clone()),
-                Rc::new(vec![]),
-            )),
+            Expression::Symbol(_) => {
+                Cow::Owned(Expression::Command(Rc::new(self.clone()), Rc::new(vec![])))
+            }
             _ => Cow::Borrowed(self), //others, like binop,group,pipe...
         }
     }
@@ -1327,6 +1326,19 @@ impl Expression {
                     });
                     new_calls.extend_from_slice(others);
                     Cow::Owned(Expression::Chain(base.clone(), new_calls))
+                }
+            }
+            // for catch: inject receiver into body and handler
+            Expression::Catch(body, ctyp, handler) => {
+                let body = body.ensure_has_receiver();
+
+                match body {
+                    Cow::Borrowed(_) => Cow::Borrowed(self),
+                    body => Cow::Owned(Expression::Catch(
+                        Rc::new(body.into_owned()),
+                        ctyp.clone(),
+                        handler.clone(),
+                    )),
                 }
             }
             _ => Cow::Borrowed(self), //others, like binop,group,pipe...

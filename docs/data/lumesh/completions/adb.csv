@@ -12,10 +12,10 @@ adb, forward, ,remove, , ,146,Remove a specific forward socket connection
 adb, forward, ,remove-all, , ,147,Remove all forward socket connections
 adb, sideload, , , ,@k,148, 
 adb, reconnect, , ,device,@f @r,149,Kick current connection from device side and make it reconnect.
-adb, exec-out, , , ,@F @f,150,File on device
-adb, shell, , , ,@F @f,151,File on device
-adb, pull, , , ,@F,152,File on device
-adb, push, , , ,@F,153,File on device
+adb, exec-out, , , ,@e,150,File on device,adb shell ls {}
+adb, shell, , , ,@e,151,File on device,adb shell ls {}
+adb, pull, , , ,@e,152,File on device,adb shell ls {}
+adb, push, , , ,@F,153,Local file
 adb, push, , , ,@F,154, 
 adb, logcat,L,last, , ,155,Dump logs from prior to last reboot from pstore
 adb, logcat,b,buffer, , ,156, Request alternate ring buffer(s)

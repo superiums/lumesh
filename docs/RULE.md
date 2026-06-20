@@ -1,7 +1,7 @@
 # Rules for Lumesh Param Completion File 
 
 - format: csv
-- columns: cmd,conds,short,long,params,dirs,pri,desc
+- columns: cmd,conds,short,long,params,dirs,pri,desc[,exec]
 - delimiter: `,`
 - column type:
   + cmd: symbol.
@@ -12,6 +12,8 @@
   + dirs: directives joined with whitespace.
   + priority: number.
   + description: string.
+  + exec (optional): command template for dynamic completion. only read when `@e` directive is present.
+    `{}` is replaced by the current token at runtime.
 - conditions:
   if one or more symbol, means require the cmd line contains any one of listed conditions as subcmd.
   if empty, means the cmd should have no subcmd.
@@ -26,6 +28,10 @@
   > if you mean not special subcmd, you should have them listed in conditions and `@n` in directives.
   > if you mean any subcmd or no subcmd, you should have `@t` in directives.
 
+  + `@e` Execute command to get completion candidates. The 9th column `exec` must be set.
+    The command template should use `{}` as placeholder for the current token.
+    Example: `adb shell ls {}` → when completing `adb pull /sdcard/`,
+    runs `adb shell ls /sdcard/` and uses output lines as completion items.
   + `@m` multi, allow options to be used multi-times.
   + `@D` Directory complete[^1]
 

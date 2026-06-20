@@ -976,16 +976,24 @@ impl Editor {
             self.popup_rendered = None;
         }
 
+        // full clear when input has newlines or wraps beyond visible area (to avoid scrolling ghosts)
         if line.contains('\n') {
             queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
             self.prompt_row = 0;
         } else {
-            queue!(
-                stdout,
-                MoveTo(0, self.prompt_row),
-                Clear(ClearType::FromCursorDown)
-            )
-            .map_err(ReadlineError::Io)?;
+            let est_visual_rows = 1 + (self.prompt_width + line.len()) / self.terminal_width as usize;
+            let available_rows = (self.terminal_height as usize).saturating_sub(self.prompt_row as usize);
+            if est_visual_rows > available_rows {
+                queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
+                self.prompt_row = 0;
+            } else {
+                queue!(
+                    stdout,
+                    MoveTo(0, self.prompt_row),
+                    Clear(ClearType::FromCursorDown)
+                )
+                .map_err(ReadlineError::Io)?;
+            }
         }
 
         if line.contains('\n') {

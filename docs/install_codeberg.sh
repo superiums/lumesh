@@ -110,6 +110,12 @@ get_target() {
             local libc_suffix; [ "$LIBC" = "musl" ] && libc_suffix="musl" || libc_suffix="gnu"
             echo "$ARCH-linux-$libc_suffix"
             ;;
+        macos)
+            echo "$ARCH-apple-darwin"
+            ;;
+        windows)
+            echo "x86_64-pc-windows-gnu"
+            ;;
         *)
             echo ""
             ;;
@@ -136,19 +142,41 @@ download_extract() {
 
     tar -xzf "$temp_archive" -C /tmp
 
-    $sudo_cmd mv "/tmp/lume-$target" "$INSTALL_DIR/lume"
-    $sudo_cmd mv "/tmp/lume-se-$target" "$INSTALL_DIR/lume-se"
-    $sudo_cmd chmod +x "$INSTALL_DIR/lume" "$INSTALL_DIR/lume-se"
+    if [ "$PLATFORM" = "windows" ]; then
+        $sudo_cmd mv "/tmp/lume-$target.exe" "$INSTALL_DIR/lume.exe"
+        $sudo_cmd mv "/tmp/lume-se-$target.exe" "$INSTALL_DIR/lume-se.exe"
+    else
+        $sudo_cmd mv "/tmp/lume-$target" "$INSTALL_DIR/lume"
+        $sudo_cmd mv "/tmp/lume-se-$target" "$INSTALL_DIR/lume-se"
+        $sudo_cmd chmod +x "$INSTALL_DIR/lume" "$INSTALL_DIR/lume-se"
+    fi
+
+    if [ -d "/tmp/lumesh" ]; then
+        $sudo_cmd mkdir -p "$DOC_DIR"
+        $sudo_cmd cp -r "/tmp/lumesh" "$DOC_DIR/"
+        if [ -d "$DOC_DIR/lumesh/examples" ]; then
+            $sudo_cmd mkdir -p "$CONFIG_DIR"
+            $sudo_cmd cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/" 2>/dev/null || true
+            for f in "$DOC_DIR"/lumesh/examples/prompt*.lm; do
+                [ -f "$f" ] && $sudo_cmd cp -f "$f" "$CONFIG_DIR/" 2>/dev/null || true
+            done
+        fi
+        echo -e "${GREEN}Documentation installed to $DOC_DIR${NC}"
+    fi
 
     rm -f "$temp_archive"
+    rm -rf "/tmp/lumesh" "/tmp/install.sh"
     echo -e "${GREEN}Installed: $INSTALL_DIR/lume, $INSTALL_DIR/lume-se${NC}"
 }
 
 # Download and extract binaries
 download_binaries() {
-    if [ "$PLATFORM" != "linux" ]; then
-        echo -e "${RED}Codeberg releases only provide Linux binaries.${NC}"
-        echo -e "${YELLOW}For macOS/Windows, use the GitHub install script: install.sh${NC}"
+    local target
+    target=$(get_target)
+    if [ -z "$target" ]; then
+        echo -e "${RED}Unsupported platform: $PLATFORM-$ARCH${NC}"
+        echo -e "${YELLOW}If your platform is not available on Codeberg, try the GitHub install script:${NC}"
+        echo -e "${YELLOW}  curl -L https://github.com/superiums/lumesh/releases/latest/download/install.sh | sh${NC}"
         exit 1
     fi
 
@@ -161,13 +189,6 @@ download_binaries() {
         fi
     else
         mkdir -p "$INSTALL_DIR"
-    fi
-
-    local target
-    target=$(get_target)
-    if [ -z "$target" ]; then
-        echo -e "${RED}Unsupported platform: $PLATFORM-$ARCH${NC}"
-        exit 1
     fi
 
     download_extract "$target"
@@ -334,7 +355,6 @@ main() {
 
     download_binaries
     create_symlink
-    download_docs
     setup_path
 
     # Offer to add to shell list

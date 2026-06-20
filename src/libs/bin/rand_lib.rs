@@ -1,7 +1,7 @@
 use crate::{Environment, Expression};
 use rand::distr::SampleString;
 use rand::prelude::*;
-use rand::{Rng, prelude::SliceRandom};
+use rand::prelude::SliceRandom;
 
 use crate::libs::BuiltinInfo;
 use crate::libs::helper::check_exact_args_len;

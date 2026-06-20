@@ -57,51 +57,55 @@ fn toml(
     check_exact_args_len("toml", &args, 1, ctx)?;
     let text_str = get_string_ref(&args[0], ctx)?;
 
-    toml::from_str(&text_str).map(toml_to_expr).map_err(|e| {
+    toml::from_str::<serde_json::Value>(&text_str).map(toml_to_expr).map_err(|e| {
         RuntimeError::common(format!("Toml parser error:\n{e}").into(), ctx.clone(), 0)
     })
 }
 
-fn toml_to_expr(val: toml::Value) -> Expression {
+fn toml_to_expr(val: serde_json::Value) -> Expression {
     match val {
-        toml::Value::Boolean(b) => Expression::Boolean(b),
-        toml::Value::Float(n) => Expression::Float(n),
-        toml::Value::Integer(n) => Expression::Integer(n),
-        toml::Value::Datetime(s) => Expression::String(s.to_string()),
-        toml::Value::String(s) => Expression::String(s),
-        toml::Value::Array(a) => {
-            // Check if this is an array of tables that could be a table
+        serde_json::Value::Bool(b) => Expression::Boolean(b),
+        serde_json::Value::Number(n) => {
+            if let Some(i) = n.as_i64() {
+                Expression::Integer(i)
+            } else {
+                Expression::Float(n.as_f64().unwrap_or(0.0))
+            }
+        }
+        serde_json::Value::String(s) => Expression::String(s),
+        serde_json::Value::Array(a) => {
             if let Some((headers, rows)) = try_convert_toml_array_to_table(&a) {
                 Expression::Table(TableData::new(headers, rows))
             } else {
                 Expression::from(a.into_iter().map(toml_to_expr).collect::<Vec<Expression>>())
             }
         }
-        toml::Value::Table(o) => Expression::from(
+        serde_json::Value::Object(o) => Expression::from(
             o.into_iter()
                 .map(|(k, v)| (k, toml_to_expr(v)))
                 .collect::<BTreeMap<String, Expression>>(),
         ),
+        serde_json::Value::Null => Expression::None,
     }
 }
 
 // Helper function for TOML array of tables
 fn try_convert_toml_array_to_table(
-    arr: &[toml::Value],
+    arr: &[serde_json::Value],
 ) -> Option<(Vec<String>, Vec<Vec<Expression>>)> {
     if arr.is_empty() {
         return None;
     }
 
     // Check if all elements are tables
-    if !arr.iter().all(|v| matches!(v, toml::Value::Table(_))) {
+    if !arr.iter().all(|v| matches!(v, serde_json::Value::Object(_))) {
         return None;
     }
 
     // Similar logic to JSON version...
     let mut all_keys = std::collections::BTreeSet::new();
     for item in arr {
-        if let toml::Value::Table(table) = item {
+        if let serde_json::Value::Object(table) = item {
             for key in table.keys() {
                 all_keys.insert(key.clone());
             }
@@ -112,7 +116,7 @@ fn try_convert_toml_array_to_table(
     let mut rows = Vec::new();
 
     for item in arr {
-        if let toml::Value::Table(table) = item {
+        if let serde_json::Value::Object(table) = item {
             let row: Vec<Expression> = headers
                 .iter()
                 .map(|key| {

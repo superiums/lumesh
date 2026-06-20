@@ -16,11 +16,10 @@ repository = "https://codeberg.org/santo/lumesh"
 # path = "src/bin.rs"
 
 [features]
-default = ["cli"]                    # 默认编译交互版
-cli = ["rustyline", "ctrlc", "clap"]
+default = ["cli"]
+cli = ["clap"]
 runner = []
 help = ["cli"]
-rustyline = ["dep:rustyline"]
 
 [[bin]]
 name = "lume"
@@ -33,65 +32,49 @@ path = "src/runner.rs"
 required-features = ["runner"]
 
 [dependencies]
-rustyline = { version = "17.0.2", optional = true }
-ctrlc = { version = "3.2", optional = true }
-clap = { version = "4.5.53", features = ["derive"], optional = true }
-# json = "0.12.4"
-# terminal_size = "0.1.17"
+clap = { version = "4.6.1", features = ["derive"], optional = true }
 textwrap = "0.16.2"
 nom = "7.0"
 detached-str = "0.1"
-rand = "0.9.1"
-common_macros = "0.1"
-snailquote = "0.3"
-# rustyline-derive = "0.6"
+rand = "0.10.1"
+common_macros = "0.1.1"
+snailquote = "0.3.1"
 dirs = "6.0"
-dunce = "1.0"
-glob = "0.3.2"
-rpassword = "7.3"
-crossterm = "0.29"
-# lazy_static = "1.4"
-regex-lite = "0.1.6"
-thiserror = "2.0.12"
-rustc-hash = "2.1.1"
+dunce = "1.0.5"
+glob = "0.3.3"
+rpassword = "7.5.4"
+crossterm = "0.29.0"
+regex-lite = "0.1.9"
+thiserror = "2.0.18"
+rustc-hash = "2.1.2"
 tinyjson = "2.5.1"
 portable-pty = "0.9.0"
-csv = "1.3.1"
-inquire = "0.7.5"
-tabled = "0.20.0"
-# signal-hook = "0.3.18"
+csv = "1.4.0"
+inquire = "0.9.4"
+tabled = "0.21.0"
+serde_json = "1.0.144"
 
 [target.'cfg(unix)'.dependencies]
-nix = { version = "^0.30.1", features = ["term", "ioctl"] }
-libc = "0.2.172"
+nix = { version = "0.31.3", features = ["term", "ioctl", "signal"] }
+libc = "0.2"
 
 [target.'cfg(windows)'.dependencies]
 winapi = { version = "0.3.9", features = ["wincon", "processenv", "winbase"] }
-# conpty = "0.7.0"
-# winapi = { version = "0.3.9", features = [
-#     "wincon",
-#     "handleapi",
-#     "processthreadsapi",
-# ] }
-
 
 [dependencies.toml]
-version = "0.8.22"
-default-features = false
-features = ["parse"]
+version = "1.1.2"
 
 [dependencies.chrono]
-version = "0.4.40"
+version = "0.4.45"
 default-features = false
 features = ["clock", "std"]
 
 [dependencies.os_info]
-version = "3.10"
+version = "3.15.0"
 default-features = false
 
-
 [dev-dependencies]
-criterion = "0.3"
+criterion = "0.8.2"
 
 [[bench]]
 name = "parser_benchmark"
@@ -103,10 +86,6 @@ lto = true        # 链接时优化
 codegen-units = 1 # 减少代码生成单元
 panic = "abort"   # 使用abort而非unwind
 strip = true      # 移除调试符号
-
-[profile.amd]
-inherits = "release"
-target-cpu = "native"
 
 # [unstable]
 # build-std = ["core", "alloc"]

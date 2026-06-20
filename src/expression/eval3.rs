@@ -817,12 +817,13 @@ impl Expression {
 
         // symbol和Property方式匹配失败后，允许其他含义，所以继续匹配
         return match cmd {
-            Expression::Variable(_)
-            | Expression::Symbol(_)
-            | Expression::String(_)
-            | Expression::Property(..) => {
+            Expression::Variable(_) | Expression::Property(..) => {
                 let eval_cmd = cmd.eval_mut(state, env, depth + 1)?;
                 return eval_cmd.eval_command(args.as_ref(), state, env, depth + 1);
+            }
+            // 这里的symbol不再当变量解析，全部按原始symbol含义处理
+            Expression::Symbol(_) | Expression::String(_) => {
+                return cmd.eval_command(args.as_ref(), state, env, depth + 1);
             }
             _ => Err(RuntimeError::new(
                 RuntimeErrorKind::TypeError {

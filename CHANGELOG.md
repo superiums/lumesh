@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.15.3]
+- upgrade dependencies
+- clean unused dependencies
+- fix bare symbo receive stdout in pipe
+- ensure bare symbo as cmd in both side of pipe
+  render var at lhs
+
+
 ## [0.15.2]
 - multiline mode for editor
 - validate for editor

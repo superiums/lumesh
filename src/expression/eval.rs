@@ -889,9 +889,14 @@ impl Expression {
                         "|" | "|>" | "|^" => {
                             let is_in_pipe = state.contains(State::IN_PIPE);
                             state.set(State::IN_PIPE);
-                            let left_func = lhs.ensure_fn_apply();
-                            let left_output = match left_func.eval_mut(state, env, depth + 1) {
-                                Ok(r) => r,
+                            // 逻辑：先做变量求值 → 若结果为 Symbol（变量未定义或 strict mode 回退）→ 转为 Command 重新执行。
+                            let left_output = match lhs.eval_mut(state, env, depth + 1) {
+                                Ok(Expression::Symbol(name)) => Expression::Command(
+                                    Rc::new(Expression::Symbol(name)),
+                                    Rc::new(vec![]),
+                                )
+                                .eval_mut(state, env, depth + 1)?,
+                                Ok(val) => val,
                                 Err(e) => {
                                     return match e.kind {
                                         RuntimeErrorKind::Terminated => Ok(Expression::None),

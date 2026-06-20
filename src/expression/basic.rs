@@ -1238,9 +1238,10 @@ impl Expression {
                 }],
             )),
             // symbol maybe alias, but also maybe var/string, so let user decide.
+            // Blank injection is handled by ensure_has_receiver for builtins only.
             Expression::Symbol(_) => Cow::Owned(Expression::Command(
                 Rc::new(self.clone()),
-                Rc::new(vec![Expression::Blank]),
+                Rc::new(vec![]),
             )),
             _ => Cow::Borrowed(self), //others, like binop,group,pipe...
         }

@@ -11,6 +11,7 @@ use crate::editor::{
 use crate::expression::alias::get_alias_completion;
 use crate::libs::{LIBS_INFO, is_lib};
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
+use crate::utils::expand_home;
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
 use std::collections::HashMap;
@@ -68,9 +69,9 @@ fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
     };
 
     let dir_path = if dir.is_empty() {
-        Path::new(".")
+        PathBuf::from(".")
     } else {
-        Path::new(dir)
+        PathBuf::from(expand_home(dir).as_ref())
     };
 
     let mut items: Vec<CompletionItem> = Vec::new();
@@ -195,7 +196,7 @@ impl LumeCompleter {
                     .get_completions_for_context(command, params, current_token);
 
             if trig_file {
-                return Vec::new();
+                return complete_path(line, pos);
             }
 
             let mut items: Vec<CompletionItem> = pairs

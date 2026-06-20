@@ -6,7 +6,7 @@
 - fix bare symbo receive stdout in pipe
 - ensure bare symbo as cmd in both side of pipe
   render var at lhs
-
+- fix path completion
 
 ## [0.15.2]
 - multiline mode for editor

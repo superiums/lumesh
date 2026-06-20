@@ -36,6 +36,8 @@ impl History {
         if self.entries.len() > self.max_entries {
             self.entries.remove(0);
         }
+        self.index = None;
+        self.saved_line.clear();
     }
 
     pub fn previous(&mut self, current_line: &str) -> Option<&str> {

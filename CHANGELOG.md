@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.15.2]
+- multiline mode for editor
+- validate for editor
+- fix hint postion
+- fix cursor position after completion
+- remove dump history
+- repl optimized for multiline editor
+- fix terminal build on windows
+
 ## [0.15.1]
 - editor theme
 - editor buffer optimized

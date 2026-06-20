@@ -77,9 +77,21 @@ pub trait Hinter {
     fn hint(&self, line: &str, pos: usize) -> Option<String>;
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ValidationResult {
+    Valid,
+    Incomplete,
+    Invalid(String),
+}
+
+pub trait Validator {
+    fn validate(&self, input: &str) -> ValidationResult;
+}
+
 #[derive(Clone)]
 enum EditorMode {
     Normal,
+    Multiline,
     CompletionSelect {
         completions: Vec<CompletionItem>,
         selected: usize,
@@ -110,6 +122,9 @@ pub struct Editor {
     popup_rendered: Option<(u16, u16)>,
     theme: EditorTheme,
     cont_prompt: String,
+    cont_prompt_width: usize,
+    show_hint: bool,
+    validator: Option<Box<dyn Validator>>,
 }
 
 impl Editor {
@@ -138,6 +153,9 @@ impl Editor {
             popup_rendered: None,
             theme: EditorTheme::default(),
             cont_prompt: "... ".to_string(),
+            cont_prompt_width: visible_width("... "),
+            show_hint: false,
+            validator: None,
         }
     }
 
@@ -147,10 +165,33 @@ impl Editor {
 
     pub fn set_cont_prompt(&mut self, prompt: &str) {
         self.cont_prompt = prompt.to_string();
+        self.cont_prompt_width = visible_width(&self.cont_prompt);
     }
 
     pub fn cont_prompt(&self) -> &str {
         &self.cont_prompt
+    }
+
+    pub fn set_validator(&mut self, validator: Box<dyn Validator>) {
+        self.validator = Some(validator);
+    }
+
+    fn should_accept(&self) -> bool {
+        let text = self.buffer.text();
+
+        if text.ends_with("\n\n") {
+            return true;
+        }
+
+        let trimmed = text.trim_end();
+        if trimmed.ends_with('\\') && !trimmed.ends_with("\\\\") {
+            return false;
+        }
+
+        match self.validator {
+            Some(ref validator) => validator.validate(&text) == ValidationResult::Valid,
+            None => true,
+        }
     }
 
     pub fn set_completer(&mut self, completer: Box<dyn Completer>) {
@@ -211,6 +252,7 @@ impl Editor {
         self.is_history_completion = false;
         self.init_search_pos = 0;
         self.current_hint = None;
+        self.show_hint = false;
 
         let result = self.event_loop();
 
@@ -230,7 +272,7 @@ impl Editor {
             let event = self.read_event()?;
 
             // Completion mode: handle events
-            if let EditorMode::CompletionSelect { .. } = self.mode.clone() {
+            if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
                 if self.try_completion_event(&event) {
                     continue;
                 }
@@ -269,11 +311,15 @@ impl Editor {
                 continue;
             }
 
+            self.show_hint = false;
+
             match event {
                 KeyEvent::Char(' ') => {
+                    self.show_hint = true;
                     self.handle_space();
                 }
                 KeyEvent::Char(c) | KeyEvent::Shift(c) => {
+                    self.show_hint = true;
                     self.leave_completion();
                     self.buffer.insert(c);
                 }
@@ -296,7 +342,25 @@ impl Editor {
                 }
                 KeyEvent::Enter => {
                     self.current_hint = None;
-                    return self.accept_line();
+                    if matches!(self.mode, EditorMode::Multiline) {
+                        if self.buffer.cursor_on_empty_line() {
+                            return self.accept_line();
+                        }
+                        let indent = self.buffer.current_line_indent();
+                        self.buffer.insert('\n');
+                        if !indent.is_empty() {
+                            self.buffer.insert_str(&indent);
+                        }
+                    } else if self.should_accept() {
+                        return self.accept_line();
+                    } else {
+                        let indent = self.buffer.current_line_indent();
+                        self.buffer.insert('\n');
+                        if !indent.is_empty() {
+                            self.buffer.insert_str(&indent);
+                        }
+                        self.mode = EditorMode::Multiline;
+                    }
                 }
                 KeyEvent::Tab => {
                     self.handle_tab();
@@ -322,68 +386,45 @@ impl Editor {
                 }
                 KeyEvent::Up => {
                     self.leave_completion();
-                    let text = self.buffer.text();
-                    if text.contains('\n') {
-                        let cursor = self.buffer.cursor();
-                        let before = &text[..cursor];
-                        let line_idx = before.matches('\n').count();
-                        if line_idx > 0 {
-                            let line_start = before.rfind('\n').map(|i| i + 1).unwrap_or(0);
-                            let col = cursor - line_start;
-                            let prev_newline = text[..line_start.saturating_sub(1)]
-                                .rfind('\n')
-                                .map(|i| i + 1)
-                                .unwrap_or(0);
-                            let prev_len = line_start - prev_newline - 1;
-                            self.buffer.set_cursor(prev_newline + col.min(prev_len));
-                        } else if let Some(entry) = self.history.previous(&text) {
-                            self.buffer.set_text(entry);
-                            self.buffer.move_to_end();
-                        }
-                    } else if let Some(entry) = self.history.previous(&text) {
+                    if matches!(self.mode, EditorMode::Multiline) {
+                        self.move_cursor_up();
+                    } else if let Some(entry) = self.history.previous(&self.buffer.text()) {
                         self.buffer.set_text(entry);
                         self.buffer.move_to_end();
+                        self.set_normal_mode();
                     }
                 }
                 KeyEvent::Down => {
                     self.leave_completion();
-                    let text = self.buffer.text();
-                    if text.contains('\n') {
-                        let cursor = self.buffer.cursor();
-                        let before = &text[..cursor];
-                        let line_idx = before.matches('\n').count();
-                        let newline_count = text.matches('\n').count();
-                        if line_idx < newline_count {
-                            let line_start = before.rfind('\n').map(|i| i + 1).unwrap_or(0);
-                            let col = cursor - line_start;
-                            let after_cursor = &text[cursor..];
-                            let next_newline = after_cursor.find('\n').unwrap_or(after_cursor.len());
-                            let next_start = cursor + next_newline + 1;
-                            let remaining = &text[next_start..];
-                            let next_len = remaining.find('\n').unwrap_or(remaining.len());
-                            self.buffer.set_cursor(next_start + col.min(next_len));
-                        } else if let Some(entry) = self.history.next(&text) {
-                            self.buffer.set_text(entry);
-                            self.buffer.move_to_end();
-                        }
-                    } else if let Some(entry) = self.history.next(&text) {
+                    if matches!(self.mode, EditorMode::Multiline) {
+                        self.move_cursor_down();
+                    } else if let Some(entry) = self.history.next(&self.buffer.text()) {
                         self.buffer.set_text(entry);
                         self.buffer.move_to_end();
+                        self.set_normal_mode();
                     }
                 }
                 KeyEvent::Home => {
                     self.leave_completion();
-                    self.buffer.move_to_start();
+                    if matches!(self.mode, EditorMode::Multiline) {
+                        self.buffer.move_to_line_start();
+                    } else {
+                        self.buffer.move_to_start();
+                    }
                 }
                 KeyEvent::End => {
                     self.leave_completion();
-                    self.buffer.move_to_end();
+                    if matches!(self.mode, EditorMode::Multiline) {
+                        self.buffer.move_to_line_end();
+                    } else {
+                        self.buffer.move_to_end();
+                    }
                 }
                 KeyEvent::Escape => {
                     if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
+                        self.set_normal_mode();
+                    } else if matches!(self.mode, EditorMode::Multiline) {
                         self.mode = EditorMode::Normal;
-                    } else {
-                        // do nothing for bare escape
                     }
                 }
                 _ => {
@@ -395,10 +436,6 @@ impl Editor {
 
     fn accept_line(&mut self) -> Result<String, ReadlineError> {
         let text = self.buffer.text();
-        if !text.is_empty() {
-            self.history.add(text.clone());
-        }
-        // self.current_hint = None;
         Ok(text)
     }
 
@@ -445,11 +482,11 @@ impl Editor {
                 if let Some(item) = completions.get(selected) {
                     self.apply_completion(item, start_pos);
                 }
-                self.mode = EditorMode::Normal;
+                self.set_normal_mode();
                 true
             }
             KeyEvent::Escape => {
-                self.mode = EditorMode::Normal;
+                self.set_normal_mode();
                 true
             }
             KeyEvent::BackTab => {
@@ -534,7 +571,7 @@ impl Editor {
 
         let start_pos = Self::find_word_start(&line, pos);
         if new_completions.is_empty() {
-            self.mode = EditorMode::Normal;
+            self.set_normal_mode();
         } else {
             let count = new_completions.len();
             let current_sel = old_sel.min(count.saturating_sub(1));
@@ -551,7 +588,6 @@ impl Editor {
         let end_pos = cursor.max(start_pos);
         let replacement = format!("{}{}", item.replacement, item.suffix);
         self.buffer.replace_range(start_pos, end_pos, &replacement);
-        self.buffer.move_to_end();
     }
 
     // ---- Abbreviation handling ----
@@ -647,6 +683,18 @@ impl Editor {
             }
             Cmd::DeleteToEnd => {
                 if let Some(killed) = self.buffer.delete_to_end() {
+                    self.kill_ring.push(killed);
+                }
+                self.leave_completion();
+            }
+            Cmd::DeleteToLineStart => {
+                if let Some(killed) = self.buffer.delete_to_line_start() {
+                    self.kill_ring.push(killed);
+                }
+                self.leave_completion();
+            }
+            Cmd::DeleteToLineEnd => {
+                if let Some(killed) = self.buffer.delete_to_line_end() {
                     self.kill_ring.push(killed);
                 }
                 self.leave_completion();
@@ -760,9 +808,16 @@ impl Editor {
             }
             Cmd::Noop => {}
         }
+        if !matches!(self.mode, EditorMode::CompletionSelect { .. }) {
+            self.set_normal_mode();
+        }
     }
 
     fn handle_tab(&mut self) {
+        if self.buffer.cursor_at_indent() {
+            self.buffer.insert_str("    ");
+            return;
+        }
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
         self.init_search_pos = pos;
@@ -821,13 +876,13 @@ impl Editor {
                 'e' => Cmd::MoveToEnd,
                 'f' => Cmd::MoveRight,
                 'h' => Cmd::Backspace,
-                'k' => Cmd::DeleteToEnd,
+                'k' => Cmd::DeleteToLineEnd,
                 'l' => Cmd::ClearScreen,
                 'n' => Cmd::HistoryNext,
                 'p' => Cmd::HistoryPrevious,
                 'r' => Cmd::HistorySearch,
                 't' => Cmd::TransposeChars,
-                'u' => Cmd::DeleteToStart,
+                'u' => Cmd::DeleteToLineStart,
                 'w' => Cmd::DeleteWordBefore,
                 'y' => Cmd::Yank,
                 _ => Cmd::Noop,
@@ -844,29 +899,30 @@ impl Editor {
     }
 
     fn transpose_chars(&mut self) {
-        let text = self.buffer.text();
-        let pos = self.buffer.cursor();
-        if pos == 0 || text.len() < 2 {
-            return;
-        }
-        let start = if pos == text.len() { pos - 2 } else { pos - 1 };
-        let end = start + 2;
-        if end > text.len() {
-            return;
-        }
-        let chars: Vec<char> = text.chars().collect();
-        let mut new_chars = chars.clone();
-        new_chars.swap(start, end - 1);
-        let new_text: String = new_chars.iter().collect();
-        self.buffer.set_text(&new_text);
-        self.buffer.set_cursor(start + 2);
+        self.buffer.transpose_chars();
+    }
+
+    fn set_normal_mode(&mut self) {
+        self.mode = if self.buffer.text().contains('\n') {
+            EditorMode::Multiline
+        } else {
+            EditorMode::Normal
+        };
     }
 
     fn leave_completion(&mut self) {
         if matches!(self.mode, EditorMode::CompletionSelect { .. }) {
-            self.mode = EditorMode::Normal;
+            self.set_normal_mode();
         }
         self.is_history_completion = false;
+    }
+
+    fn move_cursor_up(&mut self) {
+        self.buffer.move_cursor_up_line();
+    }
+
+    fn move_cursor_down(&mut self) {
+        self.buffer.move_cursor_down_line();
     }
 
     fn find_word_start(line: &str, pos: usize) -> usize {
@@ -920,68 +976,95 @@ impl Editor {
             self.popup_rendered = None;
         }
 
-        queue!(
-            stdout,
-            MoveTo(0, self.prompt_row),
-            Clear(ClearType::FromCursorDown)
-        )
-        .map_err(ReadlineError::Io)?;
+        if line.contains('\n') {
+            queue!(stdout, MoveTo(0, 0), Clear(ClearType::All)).map_err(ReadlineError::Io)?;
+            self.prompt_row = 0;
+        } else {
+            queue!(
+                stdout,
+                MoveTo(0, self.prompt_row),
+                Clear(ClearType::FromCursorDown)
+            )
+            .map_err(ReadlineError::Io)?;
+        }
 
-        queue!(stdout, Print(&self.prompt)).map_err(ReadlineError::Io)?;
-
-        if let Some(ref hl) = self.highlighter {
-            let highlighted = hl.highlight(&line);
-            if highlighted.contains('\n') {
-                queue!(stdout, Print(&highlighted.replace('\n', "\r\n")))
+        if line.contains('\n') {
+            let parts: Vec<&str> = line.split('\n').collect();
+            for (i, part) in parts.iter().enumerate() {
+                let prefix = if i == 0 {
+                    &self.prompt
+                } else {
+                    &self.cont_prompt
+                };
+                queue!(stdout, Print(prefix)).map_err(ReadlineError::Io)?;
+                if let Some(ref hl) = self.highlighter {
+                    queue!(stdout, Print(&hl.highlight(part)))
+                        .map_err(ReadlineError::Io)?;
+                } else {
+                    queue!(stdout, Print(part)).map_err(ReadlineError::Io)?;
+                }
+                if i + 1 < parts.len() {
+                    queue!(stdout, Print("\r\n")).map_err(ReadlineError::Io)?;
+                }
+            }
+        } else {
+            queue!(stdout, Print(&self.prompt)).map_err(ReadlineError::Io)?;
+            if let Some(ref hl) = self.highlighter {
+                queue!(stdout, Print(&hl.highlight(&line)))
                     .map_err(ReadlineError::Io)?;
             } else {
-                queue!(stdout, Print(&highlighted)).map_err(ReadlineError::Io)?;
-            }
-        } else if line.contains('\n') {
-            queue!(stdout, Print(&line.replace('\n', "\r\n")))
-                .map_err(ReadlineError::Io)?;
-        } else {
-            queue!(stdout, Print(&line)).map_err(ReadlineError::Io)?;
-        }
-
-        // Cache and render hint
-        self.current_hint = None;
-        if let Some(ref hinter) = self.hinter {
-            if let Some(hint) = hinter.hint(&line, cursor) {
-                self.current_hint = Some(hint.clone());
-                queue!(
-                    stdout,
-                    SetForegroundColor(self.theme.hint_color),
-                    Print(&hint),
-                    ResetColor
-                )
-                .map_err(ReadlineError::Io)?;
+                queue!(stdout, Print(&line)).map_err(ReadlineError::Io)?;
             }
         }
 
-        // Compute how many terminal rows the prompt+line occupies (for popup positioning)
+        // Compute cursor position
         let lines_before_cursor: Vec<&str> = line[..cursor].split('\n').collect();
         let cursor_row_offset = lines_before_cursor.len() - 1;
         let col_in_last = lines_before_cursor.last().copied().unwrap_or("").len();
-        let total_col = self.prompt_width + col_in_last;
+        let total_col = if cursor_row_offset == 0 {
+            self.prompt_width + col_in_last
+        } else {
+            self.cont_prompt_width + col_in_last
+        };
         let vis_width = self.terminal_width as usize;
         let used_rows = cursor_row_offset + 1 + total_col / vis_width;
+        let cursor_row =
+            self.prompt_row + cursor_row_offset as u16 + (total_col / vis_width) as u16;
+        let cursor_col = (total_col % vis_width) as u16;
+
+        // Cache and render hint at cursor position
+        self.current_hint = None;
+        if self.show_hint {
+            if let Some(ref hinter) = self.hinter {
+                if let Some(hint) = hinter.hint(&line, cursor) {
+                    self.current_hint = Some(hint.clone());
+                    queue!(
+                        stdout,
+                        MoveTo(cursor_col, cursor_row),
+                        SetForegroundColor(self.theme.hint_color),
+                        Print(&hint),
+                        ResetColor
+                    )
+                    .map_err(ReadlineError::Io)?;
+                }
+            }
+        }
 
         // Render completion popup
-        if let EditorMode::CompletionSelect {
-            completions,
-            selected,
-            ..
-        } = self.mode.clone()
-        {
+        let popup_data = match &self.mode {
+            EditorMode::CompletionSelect {
+                completions,
+                selected,
+                ..
+            } => Some((completions.clone(), *selected)),
+            _ => None,
+        };
+        if let Some((completions, selected)) = popup_data {
             self.render_completion_popup(&mut stdout, &completions, selected, used_rows)?;
         }
 
         // Position cursor
-        let row = self.prompt_row + cursor_row_offset as u16 + (total_col / vis_width) as u16;
-        let col = (total_col % vis_width) as u16;
-
-        queue!(stdout, MoveTo(col, row)).map_err(ReadlineError::Io)?;
+        queue!(stdout, MoveTo(cursor_col, cursor_row)).map_err(ReadlineError::Io)?;
         stdout.flush().map_err(ReadlineError::Io)?;
         Ok(())
     }

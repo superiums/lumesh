@@ -6,7 +6,7 @@ use crate::cmdhelper::{
 use crate::completion::ParamCompleter;
 use crate::editor::{
     Cmd, Completer, CompletionItem, Editor, EditorTheme, Highlighter, Hinter, KeyEvent,
-    ReadlineError,
+    ReadlineError, ValidationResult, Validator,
 };
 use crate::expression::alias::get_alias_completion;
 use crate::libs::{LIBS_INFO, is_lib};
@@ -451,6 +451,19 @@ pub fn run_repl(env: &mut Environment) {
     editor.set_sudo_cmd(&hotkey_sudo);
     editor.bind_sequence(KeyEvent::Alt('s'), Cmd::ToggleSudo);
 
+    // Set up validator for multiline input
+    struct LumeValidator;
+    impl Validator for LumeValidator {
+        fn validate(&self, input: &str) -> ValidationResult {
+            if check(input) {
+                ValidationResult::Valid
+            } else {
+                ValidationResult::Incomplete
+            }
+        }
+    }
+    editor.set_validator(Box::new(LumeValidator));
+
     // Share env with the editor callback via Arc<Mutex<>> so the callback
     // can fork a live snapshot of the current environment at hotkey time.
     let shared_env = Arc::new(Mutex::new(env.clone()));
@@ -556,44 +569,8 @@ pub fn run_repl(env: &mut Environment) {
             continue;
         }
 
-        // Multi-line: accumulate input until parse is complete
-        let mut full_input = trimmed.to_string();
-        while (full_input.ends_with(" \\") || !check(&full_input)) && !full_input.ends_with("\n\n")
-        {
-            if full_input.ends_with(" \\") {
-                full_input.truncate(full_input.len() - 2);
-            }
-            if !full_input.is_empty() && !full_input.ends_with('\n') {
-                full_input.push('\n');
-            }
-            let prompt = editor.cont_prompt().to_string();
-            let cont_line = match editor.readline(&prompt) {
-                Ok(l) => l,
-                Err(ReadlineError::Interrupted) => {
-                    println!("^C");
-                    if childman::kill_child() {
-                        childman::clear_child();
-                    }
-                    full_input.clear();
-                    break;
-                }
-                Err(ReadlineError::Eof) => {
-                    println!("CTRL-D");
-                    full_input.clear();
-                    break;
-                }
-                Err(ReadlineError::Io(e)) => {
-                    eprintln!("Read error: {e}");
-                    full_input.clear();
-                    break;
-                }
-            };
-            let trimmed_cont = cont_line.trim();
-            if trimmed_cont.is_empty() {
-                full_input.push('\n');
-            }
-            full_input.push_str(trimmed_cont);
-        }
+        // Strip backslash-newline continuation markers
+        let full_input = trimmed.replace("\\\n", "");
 
         if full_input.is_empty() {
             continue;
@@ -607,8 +584,9 @@ pub fn run_repl(env: &mut Environment) {
         }
 
         if parse_and_eval(&full_input, &mut *shared_env.lock().unwrap()) {
-            let _ = editor.history_mut().add(full_input);
         }
+
+        let _ = editor.history_mut().add(full_input);
 
         // 检查命令执行期间是否收到 SIGINT（Ctrl+C）
         if childman::check_and_clear_sigint() {

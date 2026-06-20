@@ -97,6 +97,8 @@ pub enum Cmd {
     DeleteWordAfter,
     DeleteToStart,
     DeleteToEnd,
+    DeleteToLineStart,
+    DeleteToLineEnd,
     AcceptLine,
     Cancel,
     Complete,

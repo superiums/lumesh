@@ -4,7 +4,7 @@ mod history;
 mod key;
 mod kring;
 
-pub use editor::{Editor, Completer, Highlighter, Hinter, ReadlineError, CompletionItem, EditorTheme};
+pub use editor::{Editor, Completer, Highlighter, Hinter, ReadlineError, CompletionItem, EditorTheme, Validator, ValidationResult};
 pub use history::History;
 pub use key::{Cmd, KeyEvent};
 pub use buffer::LineBuffer;

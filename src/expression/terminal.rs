@@ -57,6 +57,8 @@ use std::sync::atomic::{AtomicBool, Ordering};
 #[cfg(windows)]
 use std::sync::{Arc, LazyLock, Mutex};
 #[cfg(windows)]
+use winapi::ctypes::c_void as WinapiCVoid;
+#[cfg(windows)]
 use winapi::shared::minwindef::BOOL;
 #[cfg(windows)]
 use winapi::um::consoleapi::{GetConsoleMode, SetConsoleCtrlHandler, SetConsoleMode};
@@ -74,7 +76,7 @@ static RUNNING_FLAG: LazyLock<Mutex<Option<Arc<AtomicBool>>>> = LazyLock::new(||
 impl TerminalOps for WindowsTerminal {
     fn enable_raw_mode(&self) -> Result<(), RuntimeErrorKind> {
         unsafe {
-            let handle = stdin().as_raw_handle();
+            let handle: *mut WinapiCVoid = stdin().as_raw_handle() as *mut WinapiCVoid;
             if handle == INVALID_HANDLE_VALUE {
                 return Err(RuntimeErrorKind::CustomError(
                     "Failed to get stdin handle".into(),
@@ -101,7 +103,7 @@ impl TerminalOps for WindowsTerminal {
 
     fn disable_raw_mode(&self) -> Result<(), RuntimeErrorKind> {
         unsafe {
-            let handle = stdin().as_raw_handle();
+            let handle: *mut WinapiCVoid = stdin().as_raw_handle() as *mut WinapiCVoid;
             if handle == INVALID_HANDLE_VALUE {
                 return Err(RuntimeErrorKind::CustomError(
                     "Failed to get stdin handle".into(),
@@ -153,7 +155,7 @@ impl TerminalOps for WindowsTerminal {
     }
     fn get_terminal_size(&self) -> (u16, u16) {
         unsafe {
-            let handle = stdout().as_raw_handle();
+            let handle: *mut WinapiCVoid = stdout().as_raw_handle() as *mut WinapiCVoid;
             if handle == INVALID_HANDLE_VALUE {
                 return (80, 24); // Default size
             }

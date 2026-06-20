@@ -29,8 +29,8 @@ impl History {
         if entry.trim().is_empty() {
             return;
         }
-        if self.entries.last().map_or(false, |last| last == &entry) {
-            return;
+        if let Some(pos) = self.entries.iter().position(|e| e == &entry) {
+            self.entries.remove(pos);
         }
         self.entries.push(entry);
         if self.entries.len() > self.max_entries {

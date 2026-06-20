@@ -5,7 +5,10 @@ pub struct LineBuffer {
 
 impl LineBuffer {
     pub fn new() -> Self {
-        Self { chars: Vec::new(), cursor: 0 }
+        Self {
+            chars: Vec::new(),
+            cursor: 0,
+        }
     }
 
     pub fn insert(&mut self, c: char) {
@@ -117,6 +120,82 @@ impl LineBuffer {
         Some(killed)
     }
 
+    pub fn find_prev_newline(&self) -> Option<usize> {
+        self.chars[..self.cursor].iter().rposition(|&c| c == '\n')
+    }
+
+    pub fn find_next_newline(&self) -> Option<usize> {
+        self.chars[self.cursor..]
+            .iter()
+            .position(|&c| c == '\n')
+            .map(|i| self.cursor + i)
+    }
+
+    pub fn line_start(&self) -> usize {
+        self.find_prev_newline().map(|i| i + 1).unwrap_or(0)
+    }
+
+    pub fn line_end(&self) -> usize {
+        self.find_next_newline().unwrap_or(self.chars.len())
+    }
+
+    pub fn col_in_line(&self) -> usize {
+        self.cursor - self.line_start()
+    }
+
+    pub fn cursor_at_indent(&self) -> bool {
+        self.chars[self.line_start()..self.cursor]
+            .iter()
+            .all(|&c| c == ' ' || c == '\t')
+    }
+
+    pub fn cursor_on_empty_line(&self) -> bool {
+        self.chars[self.line_start()..self.line_end()]
+            .iter()
+            .all(|&c| c == ' ' || c == '\t')
+    }
+
+    pub fn current_line_indent(&self) -> String {
+        self.chars[self.line_start()..]
+            .iter()
+            .take_while(|&&c| c == ' ' || c == '\t')
+            .collect()
+    }
+
+    pub fn move_to_line_start(&mut self) {
+        self.cursor = self.line_start();
+    }
+
+    pub fn move_to_line_end(&mut self) {
+        self.cursor = self.line_end();
+    }
+
+    pub fn move_cursor_up_line(&mut self) {
+        if let Some(prev_newline) = self.find_prev_newline() {
+            let col = self.col_in_line();
+            let prev_line_start = self.chars[..prev_newline]
+                .iter()
+                .rposition(|&c| c == '\n')
+                .map(|i| i + 1)
+                .unwrap_or(0);
+            let prev_len = prev_newline - prev_line_start;
+            self.cursor = prev_line_start + col.min(prev_len);
+        }
+    }
+
+    pub fn move_cursor_down_line(&mut self) {
+        if let Some(next_newline) = self.find_next_newline() {
+            let col = self.col_in_line();
+            let after_newline = next_newline + 1;
+            let remaining = &self.chars[after_newline..];
+            let next_len = remaining
+                .iter()
+                .position(|&c| c == '\n')
+                .unwrap_or(remaining.len());
+            self.cursor = after_newline + col.min(next_len);
+        }
+    }
+
     pub fn delete_to_start(&mut self) -> Option<String> {
         if self.cursor == 0 {
             return None;
@@ -131,6 +210,25 @@ impl LineBuffer {
             return None;
         }
         let killed: String = self.chars.drain(self.cursor..).collect();
+        Some(killed)
+    }
+
+    pub fn delete_to_line_start(&mut self) -> Option<String> {
+        let line_start = self.line_start();
+        if self.cursor == line_start {
+            return None;
+        }
+        let killed: String = self.chars.drain(line_start..self.cursor).collect();
+        self.cursor = line_start;
+        Some(killed)
+    }
+
+    pub fn delete_to_line_end(&mut self) -> Option<String> {
+        let line_end = self.line_end();
+        if self.cursor >= line_end {
+            return None;
+        }
+        let killed: String = self.chars.drain(self.cursor..line_end).collect();
         Some(killed)
     }
 
@@ -197,5 +295,19 @@ impl LineBuffer {
         let len = new_chars.len();
         self.chars.splice(start..start, new_chars);
         self.cursor = start + len;
+    }
+
+    pub fn transpose_chars(&mut self) {
+        let pos = self.cursor;
+        if pos == 0 || self.chars.len() < 2 {
+            return;
+        }
+        let swap_pos = if pos == self.chars.len() {
+            pos - 2
+        } else {
+            pos - 1
+        };
+        self.chars.swap(swap_pos, swap_pos + 1);
+        self.cursor = (swap_pos + 2).min(self.chars.len());
     }
 }

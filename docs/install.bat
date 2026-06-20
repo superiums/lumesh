@@ -2,11 +2,11 @@
 setlocal enabledelayedexpansion
 
 REM Lumesh Installation Script for Windows
+REM Downloads from GitHub releases (cross-release assets)
 echo Lumesh Installation Script
 echo ================================
 
 REM Configuration
-set CODEBERG_REPO=santo/lumesh
 set GITHUB_REPO=superiums/lumesh
 set INSTALL_DIR=%USERPROFILE%\AppData\Local\Microsoft\WindowsApps
 set CONFIG_DIR=%USERPROFILE%\AppData\Roaming\lumesh
@@ -32,13 +32,13 @@ if "!choice!"=="1" (
     echo Note: This will require administrator privileges
 )
 
-REM Platform detection
-echo Detected platform: Windows
-
-REM Get latest version
+REM Get latest version from GitHub
 echo Fetching latest version...
-for /f "tokens=*" %%i in ('curl -s "https://codeberg.org/api/v1/repos/%CODEBERG_REPO%/releases/latest" ^| findstr "tag_name"') do set version_line=%%i
-set LATEST_VERSION=%version_line:~16,-2%
+for /f "tokens=*" %%i in ('curl -s "https://api.github.com/repos/%GITHUB_REPO%/releases/latest" ^| findstr "tag_name"') do set version_line=%%i
+for /f "tokens=2 delims=:," %%v in ("!version_line!") do set LATEST_VERSION=%%v
+set LATEST_VERSION=%LATEST_VERSION:"=%
+set LATEST_VERSION=%LATEST_VERSION: =%
+set LATEST_VERSION=%LATEST_VERSION:v=%
 if "%LATEST_VERSION%"=="" (
     echo Failed to fetch latest version
     pause
@@ -47,7 +47,7 @@ if "%LATEST_VERSION%"=="" (
 echo Latest version: %LATEST_VERSION%
 
 REM Create install directory
-if "!choice!"=="2" (
+if "%choice%"=="2" (
     if not exist "%INSTALL_DIR%" (
         echo Creating system directory...
         mkdir "%INSTALL_DIR%" 2>nul || (
@@ -60,37 +60,31 @@ if "!choice!"=="2" (
     if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
 )
 
-REM Download binaries
-echo Downloading lume from Codeberg...
-curl -L -o "%INSTALL_DIR%\lume.exe" "https://codeberg.org/%CODEBERG_REPO%/releases/download/v%LATEST_VERSION%/lume-windows.exe"
+REM Download binary from GitHub (cross-release:c%LATEST_VERSION%)
+echo Downloading lume from GitHub...
+curl -L -o "%INSTALL_DIR%\lume.exe" "https://github.com/%GITHUB_REPO%/releases/download/c%LATEST_VERSION%/lume-x86_64-pc-windows-gnu.exe"
 
-echo Downloading lume-se from Codeberg...
-curl -L -o "%INSTALL_DIR%\lume-se.exe" "https://codeberg.org/%CODEBERG_REPO%/releases/download/v%LATEST_VERSION%/lume-se-windows.exe"
+REM Download lume-se and doc are not in cross-release, skip
+echo lume-se is not included in this release.
+echo To use lume-se, build with --features runner.
 
-REM Create symlink (Windows junction)
-echo Creating symlink from lume-se to lumesh...
-if exist "%INSTALL_DIR%\lumesh.exe" del "%INSTALL_DIR%\lumesh.exe"
-mklink "%INSTALL_DIR%\lumesh.exe" "%INSTALL_DIR%\lume.exe" >nul 2>&1
-
-REM Download and extract documentation
+REM Documentation
 echo Downloading documentation...
 if not exist "%DOC_DIR%" mkdir "%DOC_DIR%"
-curl -L -o "%TEMP%\doc.tar.gz" "https://codeberg.org/%CODEBERG_REPO%/releases/download/v%LATEST_VERSION%/doc.tar.gz"
-tar -xzf "%TEMP%\doc.tar.gz" -C "%TEMP%"
-xcopy "%TEMP%\doc\install\*" "%DOC_DIR%\" /E /Y >nul
-del "%TEMP%\doc.tar.gz"
-rmdir /S /Q "%TEMP%\doc" 2>nul
+curl -L -o "%TEMP%\data.tgz" "https://github.com/%GITHUB_REPO%/releases/download/c%LATEST_VERSION%/data.tgz"
+if exist "%TEMP%\data.tgz" (
+    tar -xzf "%TEMP%\data.tgz" -C "%DOC_DIR%"
+    del "%TEMP%\data.tgz"
+    echo Documentation extracted to: %DOC_DIR%
+) else (
+    echo Documentation not available for this release.
+)
 
 echo.
 echo Installation completed successfully!
 echo Installation location: %INSTALL_DIR%
 echo To start using Lumesh:
 echo   Interactive shell: lume
-echo   Script execution: lume-se script.lm
-echo   Documentation: %DOC_DIR%
-echo.
-echo Online documentation: https://lumesh.codeberg.page
-echo Type 'doc' in lume to open doc.
 echo.
 echo Note: Add %INSTALL_DIR% to your PATH if not already present
 pause

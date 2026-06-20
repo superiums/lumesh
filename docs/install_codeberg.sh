@@ -81,23 +81,19 @@ detect_platform() {
     esac
 
     case "$(uname -m)" in
-        x86_64)     ARCH="x86_64" ;;
-        aarch64|arm64) ARCH="arm64" ;;
-        *)          echo -e "${RED}Unsupported architecture${NC}"; exit 1 ;;
+        x86_64)          ARCH="x86_64" ;;
+        aarch64|arm64)   ARCH="aarch64" ;;
+        loongarch64)     ARCH="loongarch64" ;;
+        *)               echo -e "${RED}Unsupported architecture${NC}"; exit 1 ;;
     esac
 }
 
-# Get latest version from releases API
+# Get latest version from Codeberg API
 get_latest_version() {
     echo -e "${BLUE}Fetching latest version...${NC}"
 
-    if [ "$PLATFORM" = "macos" ]; then
-        LATEST_VERSION=$(curl -s "https://api.github.com/repos/$GITHUB_REPO/releases/latest" | \
-            grep -o '"tag_name": *"[^"]*"' | cut -d'"' -f4 | sed 's/^v//')
-    else
-        LATEST_VERSION=$(curl -s "https://codeberg.org/api/v1/repos/$CODEBERG_REPO/releases/latest" | \
-            grep -o '"tag_name": *"[^"]*"' | cut -d'"' -f4 | sed 's/^v//')
-    fi
+    LATEST_VERSION=$(curl -s "https://codeberg.org/api/v1/repos/$CODEBERG_REPO/releases/latest" | \
+        grep -o '"tag_name": *"[^"]*"' | cut -d'"' -f4 | sed 's/^v//')
 
     if [ -z "$LATEST_VERSION" ]; then
         echo -e "${RED}Failed to fetch latest version${NC}"
@@ -107,61 +103,58 @@ get_latest_version() {
     echo -e "${GREEN}Latest version: $LATEST_VERSION${NC}"
 }
 
-# Download binaries from Codeberg
-download_from_codeberg() {
-    local binary_name="$1"
-    local platform_suffix="$2"
+# Get target triple suffix for the platform
+get_target() {
+    case "$PLATFORM" in
+        linux)
+            local libc_suffix; [ "$LIBC" = "musl" ] && libc_suffix="musl" || libc_suffix="gnu"
+            echo "$ARCH-linux-$libc_suffix"
+            ;;
+        *)
+            echo ""
+            ;;
+    esac
+}
 
-    local download_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/$binary_name-$platform_suffix"
+# Download and extract archive from Codeberg
+download_extract() {
+    local target="$1"
+    local archive_name="lume-v$LATEST_VERSION-$target.tar.gz"
+    local download_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/$archive_name"
+    local temp_archive="/tmp/$archive_name"
 
-    echo -e "${BLUE}Downloading $binary_name from Codeberg...${NC}"
-
+    echo -e "${BLUE}Downloading $archive_name...${NC}"
 
     if command -v curl >/dev/null 2>&1; then
-        $sudo_cmd curl -f -L -o "$INSTALL_DIR/$binary_name" "$download_url"
+        curl -L -o "$temp_archive" "$download_url"
     elif command -v wget >/dev/null 2>&1; then
-        $sudo_cmd wget -O "$INSTALL_DIR/$binary_name" "$download_url"
+        wget -O "$temp_archive" "$download_url"
     else
         echo -e "${RED}Neither curl nor wget found${NC}"
         exit 1
     fi
 
-    if [ "$PLATFORM" != "windows" ]; then
-        $sudo_cmd chmod +x "$INSTALL_DIR/$binary_name"
-    fi
+    tar -xzf "$temp_archive" -C /tmp
 
-    echo -e "${GREEN}Downloaded to: $INSTALL_DIR/$binary_name${NC}"
+    $sudo_cmd mv "/tmp/lume-$target" "$INSTALL_DIR/lume"
+    $sudo_cmd mv "/tmp/lume-se-$target" "$INSTALL_DIR/lume-se"
+    $sudo_cmd chmod +x "$INSTALL_DIR/lume" "$INSTALL_DIR/lume-se"
+
+    rm -f "$temp_archive"
+    echo -e "${GREEN}Installed: $INSTALL_DIR/lume, $INSTALL_DIR/lume-se${NC}"
 }
 
-# Download binaries from GitHub (for macOS)
-download_from_github() {
-    local binary_name="$1"
-    local platform_suffix="$2"
-
-    local download_url="https://github.com/$GITHUB_REPO/releases/download/v$LATEST_VERSION/${binary_name}_${platform_suffix}_v${LATEST_VERSION}"
-
-    echo -e "${BLUE}Downloading $binary_name from GitHub...${NC}"
-
-    # Use sudo for system installation if needed
-    if command -v curl >/dev/null 2>&1; then
-        $sudo_cmd curl -L -o "$INSTALL_DIR/$binary_name" "$download_url"
-    elif command -v wget >/dev/null 2>&1; then
-        $sudo_cmd wget -O "$INSTALL_DIR/$binary_name" "$download_url"
-    else
-        echo -e "${RED}Neither curl nor wget found${NC}"
-        exit 1
-    fi
-
-    $sudo_cmd chmod +x "$INSTALL_DIR/$binary_name"
-    echo -e "${GREEN}Downloaded to: $INSTALL_DIR/$binary_name${NC}"
-}
-
-# Download both binaries
+# Download and extract binaries
 download_binaries() {
-    # Create install directory with appropriate permissions
+    if [ "$PLATFORM" != "linux" ]; then
+        echo -e "${RED}Codeberg releases only provide Linux binaries.${NC}"
+        echo -e "${YELLOW}For macOS/Windows, use the GitHub install script: install.sh${NC}"
+        exit 1
+    fi
+
+    # Create install directory
     if [ "$INSTALL_DIR" = "$SYSTEM_INSTALL_DIR" ]; then
         if [ "$(id -u)" -ne 0 ]; then
-            echo -e "${BLUE}Creating system directory with sudo...${NC}"
             $sudo_cmd mkdir -p "$INSTALL_DIR"
         else
             mkdir -p "$INSTALL_DIR"
@@ -170,21 +163,14 @@ download_binaries() {
         mkdir -p "$INSTALL_DIR"
     fi
 
-    if [ "$PLATFORM" = "macos" ]; then
-        download_from_github "lume" "macos"
-        download_from_github "lume-se" "macos"
-    elif [ "$PLATFORM" = "windows" ]; then
-        download_from_codeberg "lume" "windows.exe"
-        download_from_codeberg "lume-se" "windows.exe"
-    elif [ "$PLATFORM" = "linux" ]; then
-        if [ "$LIBC" = "musl" ]; then
-            download_from_codeberg "lume" "linux-musl"
-            download_from_codeberg "lume-se" "linux-musl"
-        else
-            download_from_codeberg "lume" "linux"
-            download_from_codeberg "lume-se" "linux"
-        fi
+    local target
+    target=$(get_target)
+    if [ -z "$target" ]; then
+        echo -e "${RED}Unsupported platform: $PLATFORM-$ARCH${NC}"
+        exit 1
     fi
+
+    download_extract "$target"
 }
 
 # Create symlink from lume-se to lumesh
@@ -223,34 +209,26 @@ create_symlink() {
     fi
 }
 
-# Download and extract documentation
+# Download and extract documentation (if available)
 download_docs() {
-    echo -e "${BLUE}Downloading documentation...${NC}"
-
-    # Use sudo for system installation if needed
-    $sudo_cmd mkdir -p "$DOC_DIR"
     local doc_url="https://codeberg.org/$CODEBERG_REPO/releases/download/v$LATEST_VERSION/data.tgz"
+    if ! curl -sfI "$doc_url" >/dev/null 2>&1; then
+        echo -e "${YELLOW}Documentation not available for this release. Skipping.${NC}"
+        return
+    fi
 
-    # Download to temp file first, then move with sudo if needed
+    echo -e "${BLUE}Downloading documentation...${NC}"
+    $sudo_cmd mkdir -p "$DOC_DIR"
     local temp_doc="/tmp/data.tgz"
-    if command -v curl >/dev/null 2>&1; then
-        curl -L -o "$temp_doc" "$doc_url"
-    elif command -v wget >/dev/null 2>&1; then
-        wget -O "$temp_doc" "$doc_url"
-    fi
 
-    # Extract and move to final location
-    cd /tmp
+    curl -L -o "$temp_doc" "$doc_url"
     mkdir -p "$CONFIG_DIR"
-
-    $sudo_cmd tar -xzf "$temp_doc" -C "$DOC_DIR"  
-    if [ -d "$DOC_DIR/lumesh/examples" ]; then  
-        cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"  
-        cp -f $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true  
+    $sudo_cmd tar -xzf "$temp_doc" -C "$DOC_DIR"
+    if [ -d "$DOC_DIR/lumesh/examples" ]; then
+        cp -f "$DOC_DIR/lumesh/examples/config.lm" "$CONFIG_DIR/"
+        cp -f $DOC_DIR/lumesh/examples/prompt*.lm "$CONFIG_DIR/" 2>/dev/null || true
     fi
-  
-    rm -rf "$temp_doc"
-
+    rm -f "$temp_doc"
     echo -e "${GREEN}Documentation extracted to: $DOC_DIR${NC}"
 }
 

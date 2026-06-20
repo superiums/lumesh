@@ -112,33 +112,34 @@ jobs:
             platform: linux
             file_ending: ""
             target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            platform: macos
+          - os: ubuntu-latest
+            platform: linux-musl
             file_ending: ""
-            target: x86_64-apple-darwin
-          - os: windows-latest
-            platform: windows
-            file_ending: ".exe"
-            target: x86_64-pc-windows-gnu
-          # - os: macos-latest
-          #   platform: macos-arm64
-          #   file_ending: ""
-          #   target: aarch64-apple-darwin
+            target: x86_64-unknown-linux-musl
           - os: ubuntu-latest
             platform: linux-arm64
             file_ending: ""
             target: aarch64-unknown-linux-gnu
+          - os: ubuntu-latest
+            platform: linux-arm64-musl
+            file_ending: ""
+            target: aarch64-unknown-linux-musl
+          - os: macos-latest
+            platform: macos
+            file_ending: ""
+            target: x86_64-apple-darwin
+          - os: macos-latest
+            platform: macos-arm64
+            file_ending: ""
+            target: aarch64-apple-darwin
+          - os: windows-latest
+            platform: windows
+            file_ending: ".exe"
+            target: x86_64-pc-windows-gnu
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Install ARM cross compilation tools
-        if: matrix.platform == 'linux-arm64'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-aarch64-linux-gnu
-          cargo install cross
 
       - name: Add Rust target
         run: rustup target add ${{ matrix.target }}
@@ -146,13 +147,16 @@ jobs:
       - name: Build on Unix platforms
         if: runner.platform != 'windows'
         run: |
-          if [[ "${{ matrix.target }}" == aarch64-* ]]; then
+          if [[ "${{ runner.os }}" == "macOS" ]]; then
+            cargo build --release --target ${{ matrix.target }}
+            cargo build --features runner --release --target ${{ matrix.target }}
+          elif [[ "${{ matrix.target }}" == x86_64-unknown-linux-gnu ]]; then
+            cargo build --release --target ${{ matrix.target }}
+            cargo build --features runner --release --target ${{ matrix.target }}
+          else
             cargo install cross
             cross build --release --target ${{ matrix.target }}
             cross build --features runner --release --target ${{ matrix.target }}
-          else
-            cargo build --release --target ${{ matrix.target }}
-            cargo build --features runner --release --target ${{ matrix.target }}
           fi
         shell: bash
 

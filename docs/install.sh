@@ -55,27 +55,20 @@ detect_platform() {
 get_asset_name() {
     case "$PLATFORM" in
         linux)
-            if [ "$LIBC" = "musl" ]; then
-                echo "lume-x86_64-linux-musl"
-            else
-                echo "lume-x86_64-linux-gnu"
-            fi
+            local libc_suffix; [ "$LIBC" = "musl" ] && libc_suffix="musl" || libc_suffix="gnu"
+            echo "lume-$ARCH-linux-$libc_suffix"
             ;;
         darwin)
-            if [ "$ARCH" = "aarch64" ]; then
-                echo "lume-aarch64-apple-darwin"
-            else
-                echo "lume-x86_64-apple-darwin"
-            fi
+            echo "lume-$ARCH-apple-darwin"
             ;;
         windows)
             echo "lume-x86_64-pc-windows-gnu.exe"
             ;;
         freebsd)
-            echo "lume-x86_64-freebsd"
+            echo "lume-$ARCH-freebsd"
             ;;
         android)
-            echo "lume-aarch64-linux-android"
+            echo "lume-$ARCH-linux-android"
             ;;
     esac
 }

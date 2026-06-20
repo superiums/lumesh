@@ -92,22 +92,22 @@ jobs:
     strategy:
       matrix:
         target:
-          - x86_64-linux-gnu
-          - x86_64-linux-musl
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
           - x86_64-apple-darwin
           - x86_64-pc-windows-gnu
-          - aarch64-linux-gnu
-          - aarch64-linux-musl
-          - x86_64-unknown-freebsd15
+          - aarch64-unknown-linux-gnu
+          - aarch64-unknown-linux-musl
+          - x86_64-unknown-freebsd
           - aarch64-linux-android
           - aarch64-apple-darwin
-          - loongarch64-linux-gnu
-          - loongarch64-linux-musl
+          - loongarch64-unknown-linux-gnu
+          - loongarch64-unknown-linux-musl
         include:
-          - target: x86_64-linux-gnu
+          - target: x86_64-unknown-linux-gnu
             asset_name: lume-x86_64-linux-gnu
             binary_name: lume
-          - target: x86_64-linux-musl
+          - target: x86_64-unknown-linux-musl
             asset_name: lume-x86_64-linux-musl
             binary_name: lume
           - target: x86_64-apple-darwin
@@ -116,13 +116,13 @@ jobs:
           - target: x86_64-pc-windows-gnu
             asset_name: lume-x86_64-pc-windows-gnu.exe
             binary_name: lume.exe
-          - target: aarch64-linux-gnu
+          - target: aarch64-unknown-linux-gnu
             asset_name: lume-aarch64-linux-gnu
             binary_name: lume
-          - target: aarch64-linux-musl
+          - target: aarch64-unknown-linux-musl
             asset_name: lume-aarch64-linux-musl
             binary_name: lume
-          - target: x86_64-unknown-freebsd15
+          - target: x86_64-unknown-freebsd
             asset_name: lume-x86_64-freebsd
             binary_name: lume
           - target: aarch64-linux-android
@@ -131,10 +131,10 @@ jobs:
           - target: aarch64-apple-darwin
             asset_name: lume-aarch64-apple-darwin
             binary_name: lume
-          - target: loongarch64-linux-gnu
+          - target: loongarch64-unknown-linux-gnu
             asset_name: lume-loongarch64-linux-gnu
             binary_name: lume
-          - target: loongarch64-linux-musl
+          - target: loongarch64-unknown-linux-musl
             asset_name: lume-loongarch64-linux-musl
             binary_name: lume
     runs-on: ubuntu-latest
@@ -149,6 +149,7 @@ jobs:
           targets: ${{ matrix.target }}
           profile: release
           build-std: true
+          toolchain: nightly
 
       - name: Rename binary to correct asset name
         run: |

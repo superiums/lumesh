@@ -115,4 +115,4 @@ rpm-ostree,uninstall remove and override, ,all, , ,312,Remove all overlayed pack
 rpm-ostree,update upgrade, ,allow-downgrade, , ,315,Allow older trees deployment
 rpm-ostree,update upgrade, ,check, , ,317,Check upgrade availability
 rpm-ostree,, , , ,@f,326,
-rpm-ostree,compose container-encapsulate, ,label, , ,338,Additional labels for container
+rpm-ostree,compose+container-encapsulate, ,label, , ,338,Additional labels for container

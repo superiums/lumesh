@@ -14,7 +14,7 @@ k3d,kubeconfig get merge,a,all, ,@f,121,Get kubeconfig from all existing cluster
 k3d,, ,version, ,@f,131,Show k3d and default k3s version
 k3d,, , ,version,@f,132,Show k3d and default k3s version
 k3d,, , ,image,@f,133,Handle container images
-k3d,cluster delete start stop, , , ,@E @f,134,k3d cluster list &? | tail -n +2 | cut -d' ' -f1
+k3d,cluster+delete cluster+start cluster+stop, , , ,@E @f,134,k3d cluster list &? | tail -n +2 | cut -d' ' -f1
 k3d,, , ,cluster,@f,136,Manage cluster(s)
 k3d,, , ,kubeconfig,@f,137,Manage kubeconfig(s)
 k3d,, , ,node,@f,138,Manage node(s)

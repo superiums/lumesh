@@ -1,7 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 plutil,, , ,xml1 binary1 json swift objc, ,101,Rewrite file in FORMAT
 plutil,, , , ,@f @r,104,Insert VALUE into the plist
-plutil,convert json,r, , , ,109,Pretty-print JSON
+plutil,convert+json,r, , , ,109,Pretty-print JSON
 plutil,onvert,o, , ,@r,110,Alternate path for conversion result
 plutil,onvert,e, , ,@f @r,111,Alternate extension for converted files
 plutil,,p, , , ,114,Print the plist in a human-readable fashion

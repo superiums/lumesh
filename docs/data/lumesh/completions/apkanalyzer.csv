@@ -1,25 +1,25 @@
 cmd,conds,short,long,params,dirs,pri,desc
-apkanalyzer,apk features, ,not-required, , ,101,Include features marked as not required in the output
-apkanalyzer,apk compare, ,different-only, , ,102,Prints directories and files with differences
-apkanalyzer,apk compare, ,files-only, , ,103,Does not print directory entries
-apkanalyzer,apk compare, ,patch-size, , ,104,Shows an estimate of the file-by-file patch instead of a raw difference
-apkanalyzer,files list, ,file, , ,105,Specify a path inside the APK
-apkanalyzer,dex references, ,files, , ,106,Indicate specific files that you want to include
-apkanalyzer,dex packages, ,defined-only, , ,107,Includes only classes defined in the APK in the output
-apkanalyzer,dex packages, ,proguard-folder, , ,109,Specifies the Proguard output folder to search for mappings
-apkanalyzer,dex packages, ,proguard-mapping, , ,110,Specifies the Proguard mapping file
-apkanalyzer,dex packages, ,proguard-seeds, , ,111,Specifies the Proguard seeds file
-apkanalyzer,dex packages, ,proguard-usage, , ,112,Specifies the Proguard usage file
-apkanalyzer,dex packages, ,show-removed, , ,113,Shows classes and members that were removed by Proguard
-apkanalyzer,dex code, ,class, , ,114,Specifies the class name to print
-apkanalyzer,dex code, ,method, , ,115,Specifies the method name to print
-apkanalyzer,resources configs, ,type, , ,116,Specifies the resource type to print
-apkanalyzer,resources configs, ,packages, , ,117,Specifies the packages to print
-apkanalyzer,resources value, ,config, , ,118,Specifies the configuration to print
-apkanalyzer,resources value, ,name, , ,119,Specifies the resource name to print
-apkanalyzer,files list, ,file, ,@r,130,Specify a path inside the APK
-apkanalyzer,dex references, ,files, ,@r,131,Indicate specific files that you want to include
-apkanalyzer,resources configs, ,type, ,@r,142,Specifies the resource type to print
-apkanalyzer,resources configs, ,packages, ,@r,143,Specifies the packages to print
-apkanalyzer,resources value, ,config, ,@r,144,Specifies the configuration to print
-apkanalyzer,resources value, ,name, ,@r,145,Specifies the resource name to print
+apkanalyzer,apk+features, ,not-required, , ,101,Include features marked as not required in the output
+apkanalyzer,apk+compare, ,different-only, , ,102,Prints directories and files with differences
+apkanalyzer,apk+compare, ,files-only, , ,103,Does not print directory entries
+apkanalyzer,apk+compare, ,patch-size, , ,104,Shows an estimate of the file-by-file patch instead of a raw difference
+apkanalyzer,files+list, ,file, , ,105,Specify a path inside the APK
+apkanalyzer,dex+references, ,files, , ,106,Indicate specific files that you want to include
+apkanalyzer,dex+packages, ,defined-only, , ,107,Includes only classes defined in the APK in the output
+apkanalyzer,dex+packages, ,proguard-folder, , ,109,Specifies the Proguard output folder to search for mappings
+apkanalyzer,dex+packages, ,proguard-mapping, , ,110,Specifies the Proguard mapping file
+apkanalyzer,dex+packages, ,proguard-seeds, , ,111,Specifies the Proguard seeds file
+apkanalyzer,dex+packages, ,proguard-usage, , ,112,Specifies the Proguard usage file
+apkanalyzer,dex+packages, ,show-removed, , ,113,Shows classes and members that were removed by Proguard
+apkanalyzer,dex+code, ,class, , ,114,Specifies the class name to print
+apkanalyzer,dex+code, ,method, , ,115,Specifies the method name to print
+apkanalyzer,resources+configs, ,type, , ,116,Specifies the resource type to print
+apkanalyzer,resources+configs, ,packages, , ,117,Specifies the packages to print
+apkanalyzer,resources+value, ,config, , ,118,Specifies the configuration to print
+apkanalyzer,resources+value, ,name, , ,119,Specifies the resource name to print
+apkanalyzer,files+list, ,file, ,@r,130,Specify a path inside the APK
+apkanalyzer,dex+references, ,files, ,@r,131,Indicate specific files that you want to include
+apkanalyzer,resources+configs, ,type, ,@r,142,Specifies the resource type to print
+apkanalyzer,resources+configs, ,packages, ,@r,143,Specifies the packages to print
+apkanalyzer,resources+value, ,config, ,@r,144,Specifies the configuration to print
+apkanalyzer,resources+value, ,name, ,@r,145,Specifies the resource name to print

@@ -60,5 +60,5 @@ opam,admin, , ,check,@f,221,Check a local repo for errors
 opam,admin, , ,depexts,@f,222,Add external dependencies
 opam,admin, , ,make,@f,223,Initialize a repo for serving files
 opam,admin, , ,stats,@f,224,Compute statistics
-opam,switch set, , , ,@E @f,225,opam switch list --short
+opam,switch+set, , , ,@E @f,225,opam switch list --short
 opam,admin, ,help, , ,228,Show this help in format FMT (pager, plain or groff)

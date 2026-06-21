@@ -59,12 +59,12 @@ sops,publish, ,recursive, ,@F,212,If source path is a directory, publish all its
 sops,keyservice, ,prompt, ,@F,216,Prompt user to confirm every incoming request
 sops,groups, , ,add,@f @r,218,Add a new group to a SOPS file
 sops,groups, , ,delete,@f @r,219,Delete a key group from a SOPS file
-sops,groups add, , , ,@E @f @r,220,cut -d: -f1 /etc/passwd
-sops,groups add,f,file, ,@F,222,The file to add the group to
-sops,groups add, ,pgp, ,@f @r,224,The PGP fingerprints the new group should contain
-sops,groups add, ,kms, ,@f @r,225,The KMS ARNs the new group should contain
-sops,groups add, ,age, ,@f @r,230,The age recipient the new group should contain. Can be specified more than once
-sops,groups add, ,enable-local-keyservice, ,@f @r,233,Use local key service
+sops,groups+add, , , ,@E @f @r,220,cut -d: -f1 /etc/passwd
+sops,groups+add,f,file, ,@F,222,The file to add the group to
+sops,groups+add, ,pgp, ,@f @r,224,The PGP fingerprints the new group should contain
+sops,groups+add, ,kms, ,@f @r,225,The KMS ARNs the new group should contain
+sops,groups+add, ,age, ,@f @r,230,The age recipient the new group should contain. Can be specified more than once
+sops,groups+add, ,enable-local-keyservice, ,@f @r,233,Use local key service
 sops,help, , ,exec-env,@f @r,243,Execute a command with decrypted values inserted into the environment
 sops,help, , ,exec-file,@f @r,244,Execute a command with decrypted contents as a temporary file
 sops,help, , ,publish,@f @r,245,Publish sops file or directory to a configured destination

@@ -39,10 +39,10 @@ dnf,module, , ,update, ,157,Update modules
 dnf,module, , ,enable, ,159,Enable a module
 dnf,module, , ,disable, ,160,Disable a module
 dnf,module, , ,reset, ,161,Reset module state
-dnf,"module list, ,all, , ,163,Lists all module
-dnf,"module list, ,enabled, , ,164,Lists enabled module
-dnf,"module list, ,disabled, , ,165,Lists disabled module
-dnf,"module list, ,installed, , ,166,List  installed modules
+dnf,module+list, ,all, , ,163,Lists all module
+dnf,module+list, ,enabled, , ,164,Lists enabled module
+dnf,module+list, ,disabled, , ,165,Lists disabled module
+dnf,module+list, ,installed, , ,166,List  installed modules
 dnf,module and info, ,profile, , ,168,Print module profiles information
 dnf,offline-distrosync, , ,download, ,170,Download updates for offline upgrade
 dnf,offline-distrosync, , ,clean, ,171,Remove cached packages
@@ -99,7 +99,7 @@ dnf,updateinfo, ,updates, , ,261,
 dnf,versionlock, , ,exclude, ,266,Add an exclude (within  versionlock) for the available packages matching the spec
 dnf,versionlock, , ,clear, ,269,Remove all versionlock entries
 dnf,group mark,,,,@i,289,Display overview of installed and available groups
-dnf,module list,,disabled,, ,329,Lists disabled module
+dnf,module+list,,disabled,, ,329,Lists disabled module
 dnf,,4,,, ,375,Use IPv4 only
 dnf,,6,,, ,376,Use IPv6 only
 dnf,,,advisories,, ,377,Include packages corresponding to the advisory ID

@@ -4,5 +4,5 @@ gresource,help, , ,list details extract sections help,@f,107,Command
 gresource,, , ,list,@f,108,List resource sections
 gresource,, , ,details,@f,109,List resources with details
 gresource,, , ,extract,@f,110,Extract a resource
-gresource,section, , ,sections,@f @n,111,List resource sections
-gresource,section, , ,help,@f @n,112,Prints help
+gresource,section, , ,sections,@f @i,111,List resource sections
+gresource,section, , ,help,@f @i,112,Prints help

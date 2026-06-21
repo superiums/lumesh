@@ -7,5 +7,5 @@ rfkill,,r,raw, , ,105,Raw output
 rfkill,,n,noheadings, , ,106,Don't print headings
 rfkill,,o,output,DEVICE ID TYPE TYPE-DESC SOFT HARD, ,107,Columns to output
 rfkill,, ,output-all, , ,108,Output all columns
-rfkill,block unblock list event help, , , ,@n,109,
+rfkill,block unblock list event help, , , ,@i,109,
 rfkill,,o,output, , ,111,Columns to output

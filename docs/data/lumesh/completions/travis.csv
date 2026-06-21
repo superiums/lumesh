@@ -35,10 +35,10 @@ travis,, , ,token,@f,169,Outputs the secret API token
 travis,, , ,version,@f,170,Outputs the client version
 travis,, , ,whatsup,@f,171,Lists most recent builds
 travis,, , ,whoami,@f,172,Outputs the current user
-travis,,i,interactive, ,@f @n,173,Be interactive and colorful
-travis,, ,no-interactive, ,@f @n,174,Don't be interactive and colorful
-travis,,E,explode, ,@f @n,175,Don't rescue exceptions
-travis,, ,no-explode, ,@f @n,176,Rescue exceptions
-travis,, ,skip-version-check, ,@f @n,177,Don't check if travis client is up to date
-travis,, ,skip-completion-check, ,@f @n,178,Don't check if auto-completion is set up
+travis,,i,interactive, ,@f @i,173,Be interactive and colorful
+travis,, ,no-interactive, ,@f @i,174,Don't be interactive and colorful
+travis,,E,explode, ,@f @i,175,Don't rescue exceptions
+travis,, ,no-explode, ,@f @i,176,Rescue exceptions
+travis,, ,skip-version-check, ,@f @i,177,Don't check if travis client is up to date
+travis,, ,skip-completion-check, ,@f @i,178,Don't check if auto-completion is set up
 travis,, , ,raw,@f,179,Makes an (authenticated) API call and prints out the result

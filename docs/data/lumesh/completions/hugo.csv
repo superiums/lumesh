@@ -6,4 +6,4 @@ hugo,, ,logFile, ,@r,104,Log file
 hugo,, ,quiet, ,@f,105,Quiet mode
 hugo,,v,verbose, ,@f,106,Verbose output
 hugo,, ,verboseLog, ,@f,107,Verbose logging
-hugo,, , , ,@f @n,110,
+hugo,, , , ,@f @i,110,

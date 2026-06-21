@@ -113,7 +113,7 @@ npm,, , ,shrinkwrap,@f,270,Lock down dependency versions
 npm,, , ,star,@f,272,Mark your favorite packages
 npm,, , ,stars,@f,278,View packages marked as favorites
 npm,, , ,team,@f,281,Manage organization teams and team memberships
-npm,ls, ,otp, ,@f @n @r,282,2FA one-time password
+npm,ls, ,otp, ,@f @i @r,282,2FA one-time password
 npm,,p,parseable, ,@f,284,Output parseable results
 npm,, , ,token,@f,287,Manage your authentication tokens
 npm,create, ,read-only, ,@f,288,Mark a token as unable to publish

@@ -12,13 +12,13 @@ mkvextract,,r,redirect-output, ,@r,120,Redirect all messages into a file
 mkvextract,, ,debug, ,@r,121,Turn on debugging for a specific feature
 mkvextract,, ,engage, ,@r,122,Turn on an experimental feature
 mkvextract,, ,gui-mode, , ,123,Enable GUI mode
-mkvextract,, , ,tracks,@f @n,124,Extract tracks to external files
-mkvextract,, , ,tags,@f @n,125,Extract tags as XML
-mkvextract,, , ,attachments,@f @n,126,Extract attachments
-mkvextract,, , ,chapters,@f @n,127,Extract chapters as XML
-mkvextract,, , ,cuesheet,@f @n,128,Extract chapters and tags as CUE sheet
-mkvextract,, , ,timecodes_v2,@f @n,129,Extract timecodes of a track as timecode v2 file
-mkvextract,, , ,cues,@f @n,130,Extract cue information as text file
+mkvextract,, , ,tracks,@f @i,124,Extract tracks to external files
+mkvextract,, , ,tags,@f @i,125,Extract tags as XML
+mkvextract,, , ,attachments,@f @i,126,Extract attachments
+mkvextract,, , ,chapters,@f @i,127,Extract chapters as XML
+mkvextract,, , ,cuesheet,@f @i,128,Extract chapters and tags as CUE sheet
+mkvextract,, , ,timecodes_v2,@f @i,129,Extract timecodes of a track as timecode v2 file
+mkvextract,, , ,cues,@f @i,130,Extract cue information as text file
 mkvextract,, , , ,@E @f,131,mkvextract &?
 mkvextract,,c, , ,@f @r,132,Convert text subtitles to a charset
 mkvextract,, ,cuesheet, ,@f,133,Also try to extract the CUE sheet

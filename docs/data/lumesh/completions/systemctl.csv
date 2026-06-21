@@ -37,9 +37,9 @@ systemctl,halt poweroff reboot, ,boot-loader-entry, ,@f @r,139,Boot into a speci
 systemctl,halt poweroff reboot, ,boot-loader-menu, ,@f @r,140,Boot into boot loader menu on next boot
 systemctl,,,,,@E @f,141,systemctl list-units --no-legend &? | cut -d' ' -f1
 systemctl,,,job-mode,,@f,142,How to deal with queued jobs
-systemctl,system,,user,,@f @n,143,Talk to the service manager of the calling user
-systemctl,system global,,system,,@f @n,144,Talk to the service manager of the system.
-systemctl,system,,global,,@f @n,145,Enable or disable for all users
+systemctl,system,,user,,@f @i,143,Talk to the service manager of the calling user
+systemctl,system global,,system,,@f @i,144,Talk to the service manager of the system.
+systemctl,system,,global,,@f @i,145,Enable or disable for all users
 systemctl,,,kill-who,,@f,146,Send signal to which process
 systemctl,,s,signal,,@f,147,Which signal to send
 systemctl,,o,output,,@f,148,Control journal formatting

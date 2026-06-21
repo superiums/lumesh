@@ -98,7 +98,7 @@ dnf,updateinfo, ,info, , ,257,Detailed information
 dnf,updateinfo, ,updates, , ,261,
 dnf,versionlock, , ,exclude, ,266,Add an exclude (within  versionlock) for the available packages matching the spec
 dnf,versionlock, , ,clear, ,269,Remove all versionlock entries
-dnf,group mark,,,,@n,289,Display overview of installed and available groups
+dnf,group mark,,,,@i,289,Display overview of installed and available groups
 dnf,module list,,disabled,, ,329,Lists disabled module
 dnf,,4,,, ,375,Use IPv4 only
 dnf,,6,,, ,376,Use IPv6 only

@@ -1,7 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
 string,, , , ,@f,101,
 string, ,h,help, ,@f,102,Display help and exit
-string, ,q,quiet, ,@f @n,103,Do not print output
+string, ,q,quiet, ,@f @i,103,Do not print output
 string, , , ,lower,@f,104,
 string, , , ,upper,@f,105,
 string, , , ,length,@f,106,

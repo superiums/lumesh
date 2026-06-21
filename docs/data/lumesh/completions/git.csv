@@ -870,7 +870,7 @@ git,diff log show range-diff,G,,, ,1344,Look for differences where <regex> match
 git,diff log show range-diff,R,,, ,1345,Swap inputs to create a reverse diff
 git,diff log show range-diff,S,,, ,1346,Look for differences that change the number of occurrences of the string
 git,diff show range-diff,z,,, ,1347,Use NULs as output field/commit terminators
-git,,,,,@E @f @n,1348,git remote &?
+git,,,,,@E @f @i,1348,git remote &?
 git,fetch,4,ipv4,,@f,1350,Use IPv4 addresses only
 git,fetch,6,ipv6,,@f,1351,Use IPv6 addresses only
 git,fetch,,refmap,,@f @r,1352,Specify refspec to map the refs to remote-tracking branches
@@ -910,7 +910,7 @@ git,init,,separate-git-dir,,@F,1439,Create git dir at specified path
 git,init,,object-format,sha1 sha256,@f @r,1440,Specify hash algorithm for objects
 git,init,b,initial-branch,,@f @r,1441,Use specified name for initial branch
 git,init,,shared,false true umask group all world everybody,@f @r,1442,Specify that the repository is shared
-git,,,,interpret-trailers,@n,1443,Add or parse structured information in commit messages
+git,,,,interpret-trailers,@i,1443,Add or parse structured information in commit messages
 git,interpret-trailers,,in-place,,@f,1444,Edit the files in place
 git,interpret-trailers,,trim-empty,,@f,1445,Remove trailers with whitespace values
 git,interpret-trailers,,trailer,,@f @r,1446,Key-value pair to apply as a trailer
@@ -999,7 +999,7 @@ git,config,,type,bool int bool-or-int path expiry-date color,@f @r,1655,Ensure v
 git,config,,show-scope,,@f,1656,Show scope of config
 git,config,,no-includes,,@f,1657,Do not respect include directives
 git,config,,default,,@f @r,1658,Use default value when variable is missing
-git,,,,,@E @n,1677,git config --get-regexp '^alias\.' &? | cut -d. -f2 | cut -d' ' -f1
+git,,,,,@E @i,1677,git config --get-regexp '^alias\.' &? | cut -d. -f2 | cut -d' ' -f1
 git,clean,e,exclude,,@f @r,1678,Add pattern to exclude from removal
 git,,,default,,@f,1681,Use default value when missing entry
 git,send-email,,8bit-encoding,,@f,1682,Encoding for non-ASCII messages
@@ -1009,66 +1009,66 @@ git,send-email,,smtp-encryption,,@f,1685,
 git,send-email,,smt-debug,,@f,1686,SMTP debug output
 git,send-email,,suppress-cc,,@f,1687,Suppress auto-cc of recipient categories
 git,send-email,,confirm,,@f,1688,Confirm just before sending
-git,,,,cat-file,@f @n,1689,Provide content or type info for repository objects
+git,,,,cat-file,@f @i,1689,Provide content or type info for repository objects
 git,cat-file,p,,,@f,1693,Pretty-print object content
 git,cat-file,,filters,,@f,1695,Show content as transformed by filters
 git,cat-file,,batch,,@f,1696,Read objects from stdin and print info
 git,cat-file,,batch-check,,@f,1697,Read objects from stdin and print type/size info
 git,cat-file,,batch-all-objects,,@f,1698,Print info for all objects
 git,cat-file,,follow-symlinks,,@f,1699,Follow symlinks when using --batch
-git,,,,ls-remote,@f @n,1700,List references in a remote repository
+git,,,,ls-remote,@f @i,1700,List references in a remote repository
 git,ls-remote,h,heads,,@f,1701,Limit to refs/heads
 git,ls-remote,,refs,,@f,1703,Do not show peeled tags or pseudorefs
 git,ls-remote,,exit-code,,@f,1706,Exit with status 2 if no matching refs are found
 git,ls-remote,,get-url,,@f,1707,Print URL of remote
 git,ls-remote,,symref,,@f,1708,Show underlying ref for symbolic refs
-git,,,,ls-tree,@f @n,1711,List contents of a tree object
+git,,,,ls-tree,@f @i,1711,List contents of a tree object
 git,ls-tree,r,,,@f,1713,Recurse into subtrees
 git,ls-tree,,full-tree,,@f,1717,Do not limit listing to current directory
-git,,,,show-ref,@f @n,1722,List references in a local repository
+git,,,,show-ref,@f @i,1722,List references in a local repository
 git,show-ref,,head,,@f,1723,Show HEAD reference
 git,show-ref,,heads,,@f,1724,Limit to refs/heads
 git,show-ref,d,dereference,,@f,1726,Dereference tags
 git,show-ref,s,hash,,@f,1727,Only show SHA-1 hash
 git,show-ref,,exclude-existing,,@f,1731,Check refs from stdin that do not exist
-git,,,,symbolic-ref,@f @n,1732,Read, modify, delete symbolic refs
-git,,,,check-ignore,@f @n,1737,Debug gitignore / exclude files
+git,,,,symbolic-ref,@f @i,1732,Read, modify, delete symbolic refs
+git,,,,check-ignore,@f @i,1737,Debug gitignore / exclude files
 git,check-ignore,n,non-matching,,@f,1742,Show given paths which do not match any pattern
-git,,,,checkout-index,@n,1744,Copy files from index to working tree
+git,,,,checkout-index,@i,1744,Copy files from index to working tree
 git,checkout-index,n,no-create,,@f,1747,Do not create files that do not exist
 git,checkout-index,u,index,,@f,1749,Update stat information in the index
 git,checkout-index,,stage,all 1 2 3,@f @r,1752,Which stage to check out
 git,checkout-index,,temp,,@f,1753,Write files to temporary files
-git,,,,commit-tree,@f @n,1754,Create a new commit object
+git,,,,commit-tree,@f @i,1754,Create a new commit object
 git,commit-tree,F,,,@F,1757,Read commit message from file
-git,,,,diff-index,@f @n,1760,Compare tree to working tree or index
+git,,,,diff-index,@f @i,1760,Compare tree to working tree or index
 git,diff-index,m,,,@f,1762,Ignore changes in submodules
 git,diff-index,,raw,,@f,1763,Generate raw diff output
-git,,,,hash-object,@f @n,1767,Compute object ID and optionally create an object
+git,,,,hash-object,@f @i,1767,Compute object ID and optionally create an object
 git,hash-object,t,,blob tree commit tag,@f @r,1768,Specify object type
 git,hash-object,,stdin-paths,,@f,1771,Read file paths from stdin
 git,hash-object,,path,,@F,1772,Hash object as if it were at the given path
 git,hash-object,,no-filters,,@f,1773,"Hash contents as-is, without any input filters"
 git,hash-object,,literally,,@f,1774,Allow hashing any garbage
-git,,,,read-tree,@f @n,1775,Read tree info into the index
+git,,,,read-tree,@f @i,1775,Read tree info into the index
 git,read-tree,,reset,,@f,1777,"Same as -m, but discard unmerged entries"
 git,read-tree,i,,,@f,1779,"Update only the index, leave working tree alone"
 git,read-tree,,trivial,,@f,1782,Restrict three-way merge to trivial cases
 git,read-tree,,index-output,,@f,1785,Write index to specified file
 git,read-tree,,empty,,@f,1786,"Instead of reading tree object, empty the index"
 git,read-tree,,no-sparse-checkout,,@f,1787,Disable sparse checkout support
-git,,,,update-ref,@f @n,1789,Update object name stored in a ref safely
+git,,,,update-ref,@f @i,1789,Update object name stored in a ref safely
 git,update-ref,,no-deref,,@f,1791,Do not dereference symbolic refs
-git,,,,verify-commit,@f @n,1796,Check the GPG signature of commits
-git,,,,verify-pack,@f @n,1800,Validate packed Git archive files
+git,,,,verify-commit,@f @i,1796,Check the GPG signature of commits
+git,,,,verify-pack,@f @i,1800,Validate packed Git archive files
 git,verify-pack,s,stat-only,,@f,1802,Only show histogram of delta chain length
-git,,,,verify-tag,@f @n,1803,Check the GPG signature of tags
-git,,,,write-tree,@f @n,1808,Create a tree object from the current index
+git,,,,verify-tag,@f @i,1803,Check the GPG signature of tags
+git,,,,write-tree,@f @i,1808,Create a tree object from the current index
 git,write-tree,,missing-ok,,@f,1809,Allow missing objects
 git,fetch, ,write-fetch-head, ,@f,1812,Write FETCH_HEAD file (default)
-git, , , , ,@f @n,1813,
+git, , , , ,@f @i,1813,
 git,grep,H, , ,@f,1819,Show filename for each match (default)
 git,shortlog, ,no-committer, , ,1821,Group commits by author (default)
-git,S staged, , , ,@F @f @n,1830,
-git,, , , ,@D @f @n @r,1834,Worktree
+git,S staged, , , ,@F @f @i,1830,
+git,, , , ,@D @f @i @r,1834,Worktree
 git,ls-tree, ,name-status, ,@f,1836,Show only names (same as name-only)

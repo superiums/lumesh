@@ -1,2 +1,2 @@
 cmd,conds,short,long,argument,dirs,pri,desc
-podman,__podman_requires_order_preservation && __podman_prepare_completions, , , ,@f @n,102,
+podman,__podman_requires_order_preservation && __podman_prepare_completions, , , ,@f @i,102,

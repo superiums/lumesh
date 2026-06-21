@@ -11,13 +11,13 @@ mdadm,, ,homehost, ,@f @r,117,Provide home host identity
 mdadm,, ,prefer, ,@f @r,118,Give name format preference
 mdadm,, ,home-cluster, ,@f @r,119,Give cluster name
 mdadm,, ,wait-clean, , ,174,Mark array as clean ASAP
-mdadm,assemble build create follow monitor grow incremental auto-detect,A,assemble, ,@n,175,Assemble a pre-existing array
-mdadm,assemble build create follow monitor grow incremental auto-detect,B,build, ,@n,176,Build a legacy array without superblocks
-mdadm,assemble build create follow monitor grow incremental auto-detect,C,create, ,@n,177,Create a new array
-mdadm,assemble build create follow monitor grow incremental auto-detect,F,monitor, ,@n,178,Select monitor mode
-mdadm,assemble build create follow monitor grow incremental auto-detect,G,grow, ,@n,179,Change the size or shape of an active array
-mdadm,assemble build create follow monitor grow incremental auto-detect,I,incremental, ,@n,180,Manage devices in array, and possibly start it
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,auto-detect, ,@n,181,Start all auto-detected arrays
+mdadm,assemble build create follow monitor grow incremental auto-detect,A,assemble, ,@i,175,Assemble a pre-existing array
+mdadm,assemble build create follow monitor grow incremental auto-detect,B,build, ,@i,176,Build a legacy array without superblocks
+mdadm,assemble build create follow monitor grow incremental auto-detect,C,create, ,@i,177,Create a new array
+mdadm,assemble build create follow monitor grow incremental auto-detect,F,monitor, ,@i,178,Select monitor mode
+mdadm,assemble build create follow monitor grow incremental auto-detect,G,grow, ,@i,179,Change the size or shape of an active array
+mdadm,assemble build create follow monitor grow incremental auto-detect,I,incremental, ,@i,180,Manage devices in array, and possibly start it
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,auto-detect, ,@i,181,Start all auto-detected arrays
 mdadm,,e,metadata,,@E @f @r,182,Set metadata style to use
 mdadm,,n,raid-devices, ,@f @r,183,Specify the number of active devices
 mdadm,-s B build C create G grow,x,spare-devices, ,@f @r,184,Specify the number of spare devices
@@ -30,7 +30,7 @@ mdadm,-s B build C create G grow,p,parity,echo 'left-asymmetric left-symmetric r
 mdadm,-s A assemble B build C create G grow,b,bitmap, ,@r,191,Specify file for write-intent bitmap
 mdadm,-s B build C create G grow, ,bitmap-chunk, ,@f @r,192,Specify chunksize of bitmap
 mdadm,-s B build C create G grow a add,W,write-mostly, , ,193,Prefer reading from other devices than these
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,readwrite, ,@n,194,Enable writes on array or device
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,readwrite, ,@i,194,Enable writes on array or device
 mdadm,,o,readonly, , ,195,Disable writes on array
 mdadm,-s B build C create G grow, ,write-behind, ,@f @r,196,Enable write-behind mode
 mdadm,-s B build C create G grow, ,assume-clean, , ,197,Assume the array is clean
@@ -50,29 +50,29 @@ mdadm,-s A assemble, ,invalid-backup, , ,210,Do not ask for backup file, unavail
 mdadm,-s A assemble,U,update,,@E @f @r,211,Update superblock properties
 mdadm,-s A assemble, ,freeze-reshape, , ,212,Freeze --grow command
 mdadm,,t,test, , ,213,Test mode
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,re-add, ,@n,215,Re-add a previously removed device
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,add-spare, ,@n,216,Hot-add listed devices as spare
-mdadm,assemble build create follow monitor grow incremental auto-detect,r,remove, ,@n,217,Remove listed inactive devices
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,re-add, ,@i,215,Re-add a previously removed device
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,add-spare, ,@i,216,Hot-add listed devices as spare
+mdadm,assemble build create follow monitor grow incremental auto-detect,r,remove, ,@i,217,Remove listed inactive devices
 mdadm,,f,set-faulty, , ,218,Mark listed devices as faulty
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,replace, ,@n,219,Mark listed devices as requiring replacement
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,replace, ,@i,219,Mark listed devices as requiring replacement
 mdadm,replace, ,with, , ,220,Give devices as replacement
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,cluster-confirm, ,@n,221,Confirm existence of device
-mdadm,assemble build create follow monitor grow incremental auto-detect,Q,query, ,@n,222,Examine device for md use
-mdadm,assemble build create follow monitor grow incremental auto-detect,D,detail, ,@n,223,Print details on array
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,detail-platform, ,@n,224,Print details on platform capabilities
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,cluster-confirm, ,@i,221,Confirm existence of device
+mdadm,assemble build create follow monitor grow incremental auto-detect,Q,query, ,@i,222,Examine device for md use
+mdadm,assemble build create follow monitor grow incremental auto-detect,D,detail, ,@i,223,Print details on array
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,detail-platform, ,@i,224,Print details on platform capabilities
 mdadm,,Y,export, , ,225,Format data output as key=value pairs
-mdadm,assemble build create follow monitor grow incremental auto-detect,E,examine, ,@n,226,Print content of device metadata
+mdadm,assemble build create follow monitor grow incremental auto-detect,E,examine, ,@i,226,Print content of device metadata
 mdadm,, ,sparc2.2, , ,227,Fix examination for buggy SPARC 2.2 kernel RAID
-mdadm,assemble build create follow monitor grow incremental auto-detect,X,examine-bitmap, ,@n,228,Print report about bitmap
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,examine-badblocks, ,@n,229,List recorded bad blocks
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,dump, ,@n @r,230,Dump metadata to directory
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,restore, ,@n @r,231,Restore metadata from directory
-mdadm,assemble build create follow monitor grow incremental auto-detect,S,stop, ,@n,232,Deactivate array
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,zero-superblock, ,@n,233,Erase possible superblock
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,kill-subarray, ,@n @r,234,Delete subarray
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,update-subarray, ,@n @r,235,Update subarray
-mdadm,assemble build create follow monitor grow incremental auto-detect,W,wait, ,@n,236,Wait for pending operations
-mdadm,assemble build create follow monitor grow incremental auto-detect, ,action,echo 'idle check repair reshape',@E @f @n @r,237,Set sync action for md devices
+mdadm,assemble build create follow monitor grow incremental auto-detect,X,examine-bitmap, ,@i,228,Print report about bitmap
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,examine-badblocks, ,@i,229,List recorded bad blocks
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,dump, ,@i @r,230,Dump metadata to directory
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,restore, ,@i @r,231,Restore metadata from directory
+mdadm,assemble build create follow monitor grow incremental auto-detect,S,stop, ,@i,232,Deactivate array
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,zero-superblock, ,@i,233,Erase possible superblock
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,kill-subarray, ,@i @r,234,Delete subarray
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,update-subarray, ,@i @r,235,Update subarray
+mdadm,assemble build create follow monitor grow incremental auto-detect,W,wait, ,@i,236,Wait for pending operations
+mdadm,assemble build create follow monitor grow incremental auto-detect, ,action,echo 'idle check repair reshape',@E @f @i @r,237,Set sync action for md devices
 mdadm,-s I incremental,r,rebuild-map, , ,238,Rebuild /run/mdadm/map
 mdadm,I incremental f fail set-faulty, ,path, ,@r,239,Automatically add eventually appearing device to array
 mdadm,-s F follow monitor,m,mail, ,@f @r,240,Mail address to send alerts to

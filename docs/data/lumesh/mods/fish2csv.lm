@@ -1,8 +1,8 @@
 #!/usr/bin/env lume
 ##### fish2csv.lm - 将fish completion文件转换为CSV格式
 # ======directive=======
-# @n not contains any listed condition
-#    @n apply to empty list, means require at least one arg provided
+# @i invert condition match result
+#    @i apply to empty list, means require at least one arg provided
 # @t always return true while checking condition. allows have or not have subcmd.
 # @m multi, allow options to be used multi-times.
 # @D Directory complete
@@ -116,8 +116,8 @@ fn trans(input_file,output_dir='/tmp'){
                         r'c' => {i += 2; cmd=args}
                         r'n' => {
                             i += 2;
-                            if args ~: 'not ' { directive + "@n"}
-                            if args ~: '__fish_git_needs_command' { directive + "@n"}
+                            if args ~: 'not ' { directive + "@i"}
+                            if args ~: '__fish_git_needs_command' { directive + "@i"}
                             if args ~: 'not __fish_seen' { prioff= True }
                             for rp in rp_n {
                                 args = args.replace(rp[0],rp[1])

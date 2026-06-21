@@ -80,10 +80,10 @@ quilt,pop, ,refresh, ,@f,212,Refresh every patch before it gets unapplied
 quilt,push,m, , ,@f,219,Merge the patch file into the original files
 quilt,push, ,merge, , ,220,Merge the patch file into the original files
 quilt,push, ,leave-rejects, ,@f,221,Leave around the reject files patch produced
-quilt,,p, , ,@n,224,File name style in patch
-quilt,,z, , ,@f @n @r,225,Create a new patch with the changes
+quilt,,p, , ,@i,224,File name style in patch
+quilt,,z, , ,@f @i @r,225,Create a new patch with the changes
 quilt,,h, , , ,226,
-quilt,,f, , ,@f @n,227,Refresh a patch that is not on top
+quilt,,f, , ,@f @i,227,Refresh a patch that is not on top
 quilt,refresh, ,diffstat, ,@f,230,Add or replace diffstat section to header
 quilt,setup,d, , ,@f @r,243,Path prefix for the resulting source tree
 quilt,setup, ,sourcedir, , ,245,Directory for package sources
@@ -97,7 +97,7 @@ quilt,diff,c, , ,@f,254,Context diff (3 lines of context)
 quilt,diff,C, , , ,255,Context diff (N lines of context)
 quilt, ,e, , ,@f,256,Edit header in $EDITOR
 quilt,push, ,fuzz, , ,259,Maximum fuzz factor (in lines)
-quilt, ,u, , ,@f @n,260,Unified diff (3 lines of context)
-quilt, ,U, , ,@n,261,Unified diff (N lines of context)
-quilt, ,c, , ,@f @n,262,Context diff (3 lines of context)
-quilt, ,C, , ,@n,263,Context diff (N lines of context)
+quilt, ,u, , ,@f @i,260,Unified diff (3 lines of context)
+quilt, ,U, , ,@i,261,Unified diff (N lines of context)
+quilt, ,c, , ,@f @i,262,Context diff (3 lines of context)
+quilt, ,C, , ,@i,263,Context diff (N lines of context)

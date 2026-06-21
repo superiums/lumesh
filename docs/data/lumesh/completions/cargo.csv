@@ -143,7 +143,7 @@ cargo,,,,verify-project,@f,882,Check correctness of crate manifest
 cargo,,,,version,@f,883,Show version information
 cargo,,,,yank,@f,884,Remove a pushed crate from the index
 cargo,tree,e,edges,, ,885,The kinds of dependencies to display
-cargo,asm,,,,@n,890,
+cargo,asm,,,,@i,890,
 cargo,, , , ,@f,892,
 cargo,help, , , ,@f @r,893,
 cargo, ,Z, , , ,895,"Unstable (nightly-only) flags to Cargo

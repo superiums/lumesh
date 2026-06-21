@@ -22,11 +22,11 @@ systemd-analyze,,h,help, , ,125,Print a short help and exit
 systemd-analyze,, ,version, , ,126,Print a short version and exit
 systemd-analyze,, ,no-pager, , ,127,Do not pipe output into a pager
 systemd-analyze,, , , ,@f,128,
-systemd-analyze,system user global, ,system, ,@n,129,Operates on the system systemd instance
-systemd-analyze,system user global, ,user, ,@n,130,Operates on the user systemd instance
-systemd-analyze,system user global, ,global, ,@n,131,Operates on the system-wide configuration for user systemd instance
-systemd-analyze,order require, ,order, ,@n,132,dot: show only After and Before dependencies
-systemd-analyze,order require, ,require, ,@n,133,dot: show only Requires, Requisite, Wants and Conflicts dependencies
+systemd-analyze,system user global, ,system, ,@i,129,Operates on the system systemd instance
+systemd-analyze,system user global, ,user, ,@i,130,Operates on the user systemd instance
+systemd-analyze,system user global, ,global, ,@i,131,Operates on the system-wide configuration for user systemd instance
+systemd-analyze,order require, ,order, ,@i,132,dot: show only After and Before dependencies
+systemd-analyze,order require, ,require, ,@i,133,dot: show only Requires, Requisite, Wants and Conflicts dependencies
 systemd-analyze,, ,man, , ,134,Do not invoke man to verify the existence of man pages
 systemd-analyze,, , ,time, ,135,Print timing statistics
 systemd-analyze,, , ,blame, ,136,Print list of running units ordered by time to init

@@ -64,69 +64,62 @@ enum MatchType {
 
 fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
     let mut entries = Vec::new();
+    let mut rdr = csv::ReaderBuilder::new()
+        .has_headers(true)
+        .flexible(true)
+        .from_reader(csv_content.as_bytes());
 
-    // let mut rdr = csv::ReaderBuilder::new()
-    //     .has_headers(true)
-    //     .delimiter(',') // 将字符串转换为字节并取第一个字符
-    //     .from_reader(csv_content.as_bytes());
-
-    for (line_num, line) in csv_content.lines().enumerate() {
-        if line_num == 0 || line.trim().is_empty() {
+    for result in rdr.records() {
+        let record = result.map_err(|e| {
+            RuntimeError::common(e.to_string().into(), Expression::None, 0)
+        })?;
+        if record.len() < 7 {
             continue;
-        } // Skip header
-
-        let parts: Vec<&str> = line.split(',').collect();
-        // if parts.len() != 7 {
-        //     eprintln!("Warning: Invalid CSV line {}: {}", line_num, line);
-        //     continue;
-        // }
+        }
 
         let entry = CompletionEntry {
-            command: parts[0].trim().to_string(),
-            conditions: if parts[1].trim().is_empty() {
-                Vec::new()
-            } else {
-                parts[1]
-                    .trim()
-                    .split_whitespace()
-                    .map(|s| s.to_string())
-                    .collect()
+            command: record[0].trim().to_string(),
+            conditions: {
+                let s = record[1].trim();
+                if s.is_empty() {
+                    Vec::new()
+                } else {
+                    s.split_whitespace().map(|s| s.to_string()).collect()
+                }
             },
-            short_opt: if parts[2].trim().is_empty() {
-                None
-            } else {
-                Some(parts[2].trim().to_string())
+            short_opt: {
+                let s = record[2].trim();
+                if s.is_empty() { None } else { Some(s.to_string()) }
             },
-            long_opt: if parts[3].trim().is_empty() {
-                None
-            } else {
-                Some(parts[3].trim().to_string())
+            long_opt: {
+                let s = record[3].trim();
+                if s.is_empty() { None } else { Some(s.to_string()) }
             },
-            args: if parts[4].trim().is_empty() {
-                Vec::new()
-            } else {
-                parts[4]
-                    .trim()
-                    .split_whitespace()
-                    .map(|s| s.to_string())
-                    .collect()
+            args: {
+                let s = record[4].trim();
+                if s.is_empty() {
+                    Vec::new()
+                } else {
+                    s.split_whitespace().map(|s| s.to_string()).collect()
+                }
             },
-            directives: if parts[5].trim().is_empty() {
-                Vec::new()
-            } else {
-                parts[5]
-                    .trim()
-                    .split_whitespace()
-                    .map(|s| s.to_string())
-                    .collect()
+            directives: {
+                let s = record[5].trim();
+                if s.is_empty() {
+                    Vec::new()
+                } else {
+                    s.split_whitespace().map(|s| s.to_string()).collect()
+                }
             },
-            priority: parts[6].trim().parse().unwrap_or(0),
-            // important to remove quote to execute cmd
-            description: parts[7..]
-                .join(",")
-                .trim_start_matches(&['\'', '"', ' '])
-                .trim_end_matches(&['\'', '"', ' '])
-                .to_string(),
+            priority: record[6].trim().parse().unwrap_or(0),
+            description: if record.len() > 7 {
+                record[7]
+                    .trim_start_matches(&['\'', '"', ' '])
+                    .trim_end_matches(&['\'', '"', ' '])
+                    .to_string()
+            } else {
+                String::new()
+            },
         };
 
         entries.push(entry);
@@ -212,31 +205,51 @@ impl ParamCompleter {
         &self,
         entry: &CompletionEntry,
         args: &[&str],
-        __current_token: &str,
+        _current_token: &str,
     ) -> bool {
         if entry.directives.iter().any(|f| f == "@t") {
             return true;
         }
-        let reverse = entry.directives.iter().any(|f| f == "@n");
+        let reverse = entry.directives.iter().any(|f| f == "@i");
         if entry.conditions.is_empty() {
             if reverse {
-                // return args.len() > 0;
-                // only subcmd, not long/short option
-                // return args.iter().any(|x| !x.starts_with('-'));
-                // don't take argument after -- as condition, it's not subcmd
                 return !args.is_empty() && !args[0].starts_with('-');
             }
-            // return args.len() == 0;
-            // return !args.iter().any(|x| !x.starts_with('-'));
             return args.is_empty() || args[0].starts_with('-');
         }
         for condition in &entry.conditions {
-            // Check if any condition matches the args
-            if args.iter().any(|a| condition == a) {
+            if self.check_cond_group(condition, args) {
                 return !reverse;
             }
         }
-        return false;
+        return reverse;
+    }
+
+    fn check_cond_group(&self, group: &str, args: &[&str]) -> bool {
+        let parts: Vec<&str> = group.split('+').collect();
+        for part in &parts {
+            let part = part.trim();
+            if part.is_empty() {
+                continue;
+            }
+            let (expected, negate) = if let Some(stripped) = part.strip_prefix('!') {
+                if stripped.is_empty() {
+                    continue;
+                }
+                (stripped, true)
+            } else {
+                (part, false)
+            };
+            let matched = args.iter().any(|a| *a == expected);
+            if negate {
+                if matched {
+                    return false;
+                }
+            } else if !matched {
+                return false;
+            }
+        }
+        true
     }
 
     fn check_opt(&self, entry: &CompletionEntry, args: &[&str], __current_token: &str) -> bool {

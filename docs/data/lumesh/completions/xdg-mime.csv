@@ -4,7 +4,7 @@ xdg-mime,query and filetype default, , ,filetype default, ,100,Query information
 xdg-mime,, ,help, , ,104,Display help
 xdg-mime,, ,manual, , ,105,Display long help
 xdg-mime,, ,version, , ,106,Print version
-xdg-mime,query default install uninstall, , , ,@n,107,
+xdg-mime,query default install uninstall, , , ,@i,107,
 xdg-mime, , , , ,@r,110,Query file
 xdg-mime, , ,mode, , ,114,Set mode
 xdg-mime, , ,novendor, , ,115,Disable vendor check

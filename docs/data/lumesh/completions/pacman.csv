@@ -63,23 +63,23 @@ pacman,,y,refresh, , ,161,
 pacman,,x,regex, , ,162,
 pacman,, ,machinereadable, , ,163,instead
 pacman,,,,,@f,164,
-pacman,,,,-D,@f @n,165,Modify the package database
-pacman,,,,-Q,@f @n,166,Query the package database
-pacman,,,,-R,@f @n,167,Remove packages from the system
-pacman,,,,-S,@f @n,168,Synchronize packages
-pacman,,,,-T,@f @n,169,Check dependencies
-pacman,,,,-U,@f @n,170,Add a package from a file or URL
-pacman,,,,-F,@f @n,171,Query the files database
-pacman,,,disable-sandbox-filesystem,,@f @n,172,Disable the filesystem restrictions
-pacman,,,disable-sandbox-syscalls,,@f @n,173,Disable the syscall filtering
-pacman,,p,file,,@f @n,174,Query a package file instead of the database
-pacman,,t,unrequired,,@f @n,175,List only unrequired packages [and optdepends]
-pacman,-s g groups o owns p file,,,,@n,176,Package
-pacman,,c,cascade,,@f @n,180,Also remove packages depending on PACKAGE
-pacman,,n,nosave,,@f @n,181,Ignore file backup designations
-pacman,,s,recursive,,@f @n,182,Also remove dependencies of PACKAGE
-pacman,,u,unneeded,,@f @n,183,Remove targets not required by any package
-pacman,,c,clean,,@f @n,186,Remove [all] packages from cache
-pacman,,u,sysupgrade,,@f @n,187,Upgrade all packages that are out of date
+pacman,,,,-D,@f @i,165,Modify the package database
+pacman,,,,-Q,@f @i,166,Query the package database
+pacman,,,,-R,@f @i,167,Remove packages from the system
+pacman,,,,-S,@f @i,168,Synchronize packages
+pacman,,,,-T,@f @i,169,Check dependencies
+pacman,,,,-U,@f @i,170,Add a package from a file or URL
+pacman,,,,-F,@f @i,171,Query the files database
+pacman,,,disable-sandbox-filesystem,,@f @i,172,Disable the filesystem restrictions
+pacman,,,disable-sandbox-syscalls,,@f @i,173,Disable the syscall filtering
+pacman,,p,file,,@f @i,174,Query a package file instead of the database
+pacman,,t,unrequired,,@f @i,175,List only unrequired packages [and optdepends]
+pacman,-s g groups o owns p file,,,,@i,176,Package
+pacman,,c,cascade,,@f @i,180,Also remove packages depending on PACKAGE
+pacman,,n,nosave,,@f @i,181,Ignore file backup designations
+pacman,,s,recursive,,@f @i,182,Also remove dependencies of PACKAGE
+pacman,,u,unneeded,,@f @i,183,Remove targets not required by any package
+pacman,,c,clean,,@f @i,186,Remove [all] packages from cache
+pacman,,u,sysupgrade,,@f @i,187,Upgrade all packages that are out of date
 pacman,Q,d,deps, ,@f,198,List only non-explicit packages (dependencies)
-pacman,,d,deps, ,@f @n,199,List only non-explicit packages (dependencies)
+pacman,,d,deps, ,@f @i,199,List only non-explicit packages (dependencies)

@@ -7,29 +7,29 @@ iwctl,,P,passphrase, , ,105,
 iwctl,,v,dont-ask, , ,106,Don't ask for missing credentials
 iwctl,ad-hoc, , ,list, ,108,List devices in Ad-Hoc mode
 iwctl,ad-hoc, , , ,@E,109,iwctl &?
-iwctl,ad-hoc list, , ,start,@n,110,Start or join an Ad-Hoc network
-iwctl,ad-hoc list, , ,start_open,@n,111,Start of join an open Ad-Hoc network
-iwctl,ad-hoc list, , ,stop,@n,112,Leave an Ad-Hoc network
-iwctl,adapter list, , ,show,@n,115,Show adapter info
-iwctl,adapter list, , ,set-property,@n,116,Set property
-iwctl,ap list, , ,start-profile,@n,120,Start an access point based on a disk profile
-iwctl,ap list, , ,get-networks,@n,123,Get network list after scanning
+iwctl,ad-hoc list, , ,start,@i,110,Start or join an Ad-Hoc network
+iwctl,ad-hoc list, , ,start_open,@i,111,Start of join an open Ad-Hoc network
+iwctl,ad-hoc list, , ,stop,@i,112,Leave an Ad-Hoc network
+iwctl,adapter list, , ,show,@i,115,Show adapter info
+iwctl,adapter list, , ,set-property,@i,116,Set property
+iwctl,ap list, , ,start-profile,@i,120,Start an access point based on a disk profile
+iwctl,ap list, , ,get-networks,@i,123,Get network list after scanning
 iwctl,'debug *', , ,connect, ,124,Connect to a specific BSS
 iwctl,'debug *', , ,roam, ,125,Roam to a BSS
 iwctl,'debug *', , ,get-networks, ,126,Get networks
 iwctl,'debug *', , ,autoconnect, ,127,Set autoconnect property
 iwctl,'debug * autoconnect', , ,on off, ,128,Set autoconnect property
-iwctl,dpp list, , ,start-enrollee,@n,135,Starts a DPP Enrollee
-iwctl,dpp list, , ,start-configurator,@n,136,Starts a DPP Configurator
-iwctl,known-networks list, , ,forget,@n,141,Forget a known network
-iwctl,station list, , ,connect,@n,146,Connect to network
-iwctl,station list, , ,connect-hidden,@n,148,Connect to hidden network
-iwctl,station list, , ,disconnect,@n,149,Disconnect
+iwctl,dpp list, , ,start-enrollee,@i,135,Starts a DPP Enrollee
+iwctl,dpp list, , ,start-configurator,@i,136,Starts a DPP Configurator
+iwctl,known-networks list, , ,forget,@i,141,Forget a known network
+iwctl,station list, , ,connect,@i,146,Connect to network
+iwctl,station list, , ,connect-hidden,@i,148,Connect to hidden network
+iwctl,station list, , ,disconnect,@i,149,Disconnect
 iwctl,station get-networks, , ,rssi-dbms rssi-bars, ,151,
-iwctl,station list, , ,get-hidden-access-points,@n,152,Get hidden APs
+iwctl,station list, , ,get-hidden-access-points,@i,152,Get hidden APs
 iwctl,station get-hidden-access-points, , ,rssi-dbms, ,153,
-iwctl,station list, , ,scan,@n,154,Scan for networks
-iwctl,wsc list, , ,push-button,@n,158,PushButton Mode
-iwctl,wsc list, , ,start-user-pin,@n,159,PIN mode
-iwctl,wsc list, , ,start-pin,@n,160,PIN mode with generated PIN
-iwctl,wsc list, , ,cancel,@n,161,Aborts WSC operations
+iwctl,station list, , ,scan,@i,154,Scan for networks
+iwctl,wsc list, , ,push-button,@i,158,PushButton Mode
+iwctl,wsc list, , ,start-user-pin,@i,159,PIN mode
+iwctl,wsc list, , ,start-pin,@i,160,PIN mode with generated PIN
+iwctl,wsc list, , ,cancel,@i,161,Aborts WSC operations

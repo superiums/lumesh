@@ -121,7 +121,12 @@ fn from_csv(csv_content: &str) -> Result<Vec<CompletionEntry>, RuntimeError> {
                     .collect()
             },
             priority: parts[6].trim().parse().unwrap_or(0),
-            description: parts[7..].join(",").trim().to_string(),
+            // important to remove quote to execute cmd
+            description: parts[7..]
+                .join(",")
+                .trim_start_matches(&['\'', '"', ' '])
+                .trim_end_matches(&['\'', '"', ' '])
+                .to_string(),
         };
 
         entries.push(entry);
@@ -710,11 +715,8 @@ impl ParamCompleter {
                     MatchType::ExternalCMD => {
                         let mut env = Environment::new();
                         env.define("T", Expression::String(current_token.to_string()));
-                        let code = entry
-                            .description
-                            .trim_start_matches(&['\'', '"'])
-                            .trim_end_matches(&['\'', '"']);
-                        if let Ok(expr) = parse(&code) {
+
+                        if let Ok(expr) = parse(&entry.description) {
                             if let Ok(result) = expr.eval_in_assign(&mut env) {
                                 match result {
                                     Expression::List(items) => {

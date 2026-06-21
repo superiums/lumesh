@@ -1,22 +1,21 @@
 cmd,conds,short,long,params,dirs,pri,desc
-csh, , ,help, , ,101,Display help and exit
-csh, , ,version, , ,102,Display version and exit
-
-csh, ,b, , , ,103,Stop option processing
-csh, ,c, , , ,104,Specify commands
-csh, ,d, , , ,105,Load directory stack from ~/.cshdirs
-csh, ,D, , , ,106,Specify environment variable
-csh, ,e, , , ,107,Exit when exit status is not zero
-csh, ,f, , , ,108,Do not load resource and startup files
-csh, ,F, , , ,109,Use fork instead of vfork
-csh, ,i, , , ,110,Use interactive mode
-csh, ,l, , , ,111,Use login shell
-csh, ,m, , , ,112,Load ~/.tcshrc
-csh, ,n, , , ,113,Parse commands without executing
-csh, ,q, , , ,114,Accept SIGQUIT
-csh, ,s, , , ,115,Specify commands via stdin
-csh, ,t, , , ,116,Read and execute single input line
-csh, ,v, , , ,117,Set `verbose` shell variable
-csh, ,x, , , ,118,Set `echo` shell variable
-csh, ,V, , , ,119,Set `verbose` shell variable
-csh, ,X, , , ,120,Set `echo` shell variable
+csh,, ,help, , ,101,Display help and exit
+csh,, ,version, , ,102,Display version and exit
+csh,,b, , , ,103,Stop option processing
+csh,,c, , , ,104,Specify commands
+csh,,d, , , ,105,Load directory stack from ~/.cshdirs
+csh,,D, , , ,106,Specify environment variable
+csh,,e, , , ,107,Exit when exit status is not zero
+csh,,f, , , ,108,Do not load resource and startup files
+csh,,F, , , ,109,Use fork instead of vfork
+csh,,i, , , ,110,Use interactive mode
+csh,,l, , , ,111,Use login shell
+csh,,m, , , ,112,Load ~/.tcshrc
+csh,,n, , , ,113,Parse commands without executing
+csh,,q, , , ,114,Accept SIGQUIT
+csh,,s, , , ,115,Specify commands via stdin
+csh,,t, , , ,116,Read and execute single input line
+csh,,v, , , ,117,Set `verbose` shell variable
+csh,,x, , , ,118,Set `echo` shell variable
+csh,,V, , , ,119,Set `verbose` shell variable
+csh,,X, , , ,120,Set `echo` shell variable

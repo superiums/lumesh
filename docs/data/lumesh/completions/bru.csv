@@ -1,7 +1,7 @@
 cmd,conds,short,long,params,dirs,pri,desc
-bru, ,h,help, , ,101,Show help
-bru, , ,version, , ,102,Show version number
-bru, , , ,run, ,103,Run a request
+bru,,h,help, , ,101,Show help
+bru,, ,version, , ,102,Show version number
+bru,, , ,run, ,103,Run a request
 bru,run, ,cacert, , ,104,CA certificate to verify peer against
 bru,run, ,env, , ,105,Environment variables
 bru,run, ,env-var, , ,106,"Overwrite a single environment variable, multiple usages possible"
@@ -10,6 +10,5 @@ bru,run,f,format,json junit html, ,108,Format of the file results
 bru,run, ,insecure, , ,109,Allow insecure connections
 bru,run, ,tests-only, , ,110,Only run requests that have a test
 bru,run, ,bail, , ,111,"Stop execution after a failure of a request, test or assertion"
-
 bru,run,r, , , ,112,Indicates a recursive run
 bru,run,f,format, , ,113,Format of the file results

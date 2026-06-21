@@ -1,54 +1,48 @@
 cmd,conds,short,long,params,dirs,pri,desc
-swaynag, , , , ,@f,101, 
-Enable debugging., ,d,debug, , ,103, 
-Set the edge to use: top or bottom, ,e,edge, ,@f,104, 
-Set the font to use., ,f,font, ,@r,105, 
-Show help message and quit., ,h,help, , ,106, 
-Create a button with a text and an action which is executed when pressed. Multiple buttons can be defined by providing the flag multiple times., ,b,button, ,@f,107, 
-Read a detailed message from stdin. A button to toggle details will be added. Details are shown in a scrollable multi-line text area., ,l,detailed-message, , ,108, 
-Set the text for the button that toggles details. This has no effect if there is not a detailed message. The default is "Toggle details"., ,L,detailed-button, ,@f,109, 
-Set the message text., ,m,message, ,@f,110, 
-Set the output to use., ,o,output, ,@f,111, 
-Sets the text for the dismiss nagbar button. The default is "X"., ,s,dismiss-button, ,@f,112, 
-Set the message type. Two types are created by default "error" and "warning". Custom types can be defined in the config file., ,t,type, ,@f,113, 
-Show the version number and quit., ,v,version, , ,114, 
-Set the color of the background., , ,background, ,@f,115, 
-Set the color of the border., , ,border, ,@f,116, 
-Set the color of the bottom border., , ,border-bottom, ,@f,117, 
-Set the color for the background for buttons., , ,button-background, ,@f,118, 
-Set the text color., , ,text, ,@f,119, 
-Set the thickness of the bottom border., , ,border-bottom-size, ,@f,120, 
-Set the padding for the message., , ,message-padding, ,@f,121, 
-Set the thickness for the details border., , ,details-border-size, ,@f,122, 
-Set the thickness for the button border., , ,button-border-size, ,@f,123, 
-Set the size of the gap between buttons., , ,button-gap, ,@f,124, 
-Set the size of the gap between the dismiss button and another button., , ,button-dismiss-gap, ,@f,125, 
-Set the margin from the right of the dismiss button to edge., , ,button-margin-right, ,@f,126, 
-Set the padding for the button text., , ,button-padding, ,@f,127, 
-
-swaynag, ,d,debug, , ,128,Enable debugging.
-swaynag, ,e,edge, , ,129,Set the edge to use: top or bottom
-swaynag, ,f,font, ,@r,130,Set the font to use.
-swaynag, ,h,help, , ,131,Show help message and quit.
-swaynag, ,b,button, , ,132,Create a button with a text and an action which is executed when pressed. Multiple buttons can be defined by providing the flag multiple times.
-swaynag, ,l,detailed-message, , ,133,Read a detailed message from stdin. A button to toggle details will be added. Details are shown in a scrollable multi-line text area.
-swaynag, ,L,detailed-button, , ,134,Set the text for the button that toggles details. This has no effect if there is not a detailed message. The default is 'Toggle details'.
-swaynag, ,m,message, , ,135,Set the message text.
-swaynag, ,o,output, , ,136,Set the output to use.
-swaynag, ,s,dismiss-button, , ,137,Sets the text for the dismiss nagbar button. The default is 'X'.
-swaynag, ,t,type, , ,138,Set the message type. Two types are created by default 'error' and 'warning'. Custom types can be defined in the config file.
-swaynag, ,v,version, , ,139,Show the version number and quit.
-swaynag, , ,background, , ,140,Set the color of the background.
-swaynag, , ,border, , ,141,Set the color of the border.
-swaynag, , ,border-bottom, , ,142,Set the color of the bottom border.
-swaynag, , ,button-background, , ,143,Set the color for the background for buttons.
-swaynag, , ,text, , ,144,Set the text color.
-swaynag, , ,border-bottom-size, , ,145,Set the thickness of the bottom border.
-swaynag, , ,message-padding, , ,146,Set the padding for the message.
-swaynag, , ,details-border-size, , ,147,Set the thickness for the details border.
-swaynag, , ,button-border-size, , ,148,Set the thickness for the button border.
-swaynag, , ,button-gap, , ,149,Set the size of the gap between buttons.
-swaynag, , ,button-dismiss-gap, , ,150,Set the size of the gap between the dismiss button and another button.
-swaynag, , ,button-margin-right, , ,151,Set the margin from the right of the dismiss button to edge.
-swaynag, , ,button-padding, , ,152,Set the padding for the button text.
-swaynag, ,C,config, ,@r,153,The config file to use. Default: $HOME/.swaynag/config, $XDG_CONFIG_HOME/swaynag/config, and SYSCONFDIR/swaynag/config.
+swaynag,, , , ,@f,101,
+Enable debugging.,,d,debug, , ,103,
+Set the edge to use: top or bottom,,e,edge, ,@f,104,
+Set the font to use.,,f,font, ,@r,105,
+Show help message and quit.,,h,help, , ,106,
+Create a button with a text and an action which is executed when pressed. Multiple buttons can be defined by providing the flag multiple times.,,b,button, ,@f,107,
+Read a detailed message from stdin. A button to toggle details will be added. Details are shown in a scrollable multi-line text area.,,l,detailed-message, , ,108,
+Set the text for the button that toggles details. This has no effect if there is not a detailed message. The default is Toggle details.,,L,detailed-button, ,@f,109,
+Set the message text.,,m,message, ,@f,110,
+Set the output to use.,,o,output, ,@f,111,
+Sets the text for the dismiss nagbar button. The default is X.,,s,dismiss-button, ,@f,112,
+Set the message type. Two types are created by default error and warning. Custom types can be defined in the config file.,,t,type, ,@f,113,
+Show the version number and quit.,,v,version, , ,114,
+Set the color of the background.,, ,background, ,@f,115,
+Set the color of the border.,, ,border, ,@f,116,
+Set the color of the bottom border.,, ,border-bottom, ,@f,117,
+Set the color for the background for buttons.,, ,button-background, ,@f,118,
+Set the text color.,, ,text, ,@f,119,
+Set the thickness of the bottom border.,, ,border-bottom-size, ,@f,120,
+Set the padding for the message.,, ,message-padding, ,@f,121,
+Set the thickness for the details border.,, ,details-border-size, ,@f,122,
+Set the thickness for the button border.,, ,button-border-size, ,@f,123,
+Set the size of the gap between buttons.,, ,button-gap, ,@f,124,
+Set the size of the gap between the dismiss button and another button.,, ,button-dismiss-gap, ,@f,125,
+Set the margin from the right of the dismiss button to edge.,, ,button-margin-right, ,@f,126,
+Set the padding for the button text.,, ,button-padding, ,@f,127,
+swaynag,,e,edge, , ,129,Set the edge to use: top or bottom
+swaynag,,b,button, , ,132,Create a button with a text and an action which is executed when pressed. Multiple buttons can be defined by providing the flag multiple times.
+swaynag,,L,detailed-button, , ,134,Set the text for the button that toggles details. This has no effect if there is not a detailed message. The default is 'Toggle details'.
+swaynag,,m,message, , ,135,Set the message text.
+swaynag,,o,output, , ,136,Set the output to use.
+swaynag,,s,dismiss-button, , ,137,Sets the text for the dismiss nagbar button. The default is 'X'.
+swaynag,,t,type, , ,138,Set the message type. Two types are created by default 'error' and 'warning'. Custom types can be defined in the config file.
+swaynag,, ,background, , ,140,Set the color of the background.
+swaynag,, ,border, , ,141,Set the color of the border.
+swaynag,, ,border-bottom, , ,142,Set the color of the bottom border.
+swaynag,, ,button-background, , ,143,Set the color for the background for buttons.
+swaynag,, ,text, , ,144,Set the text color.
+swaynag,, ,border-bottom-size, , ,145,Set the thickness of the bottom border.
+swaynag,, ,message-padding, , ,146,Set the padding for the message.
+swaynag,, ,details-border-size, , ,147,Set the thickness for the details border.
+swaynag,, ,button-border-size, , ,148,Set the thickness for the button border.
+swaynag,, ,button-gap, , ,149,Set the size of the gap between buttons.
+swaynag,, ,button-dismiss-gap, , ,150,Set the size of the gap between the dismiss button and another button.
+swaynag,, ,button-margin-right, , ,151,Set the margin from the right of the dismiss button to edge.
+swaynag,, ,button-padding, , ,152,Set the padding for the button text.
+swaynag,,C,config, ,@r,153,The config file to use. Default: $HOME/.swaynag/config, $XDG_CONFIG_HOME/swaynag/config, and SYSCONFDIR/swaynag/config.

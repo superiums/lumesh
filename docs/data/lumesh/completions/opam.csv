@@ -1,23 +1,20 @@
 cmd,conds,short,long,params,dirs,pri,desc
-opam, , ,help, ,@f,101,Display the manual for an OPAM command
-opam, , ,version, ,@f,102,Show version information
-opam," switch; and set", , , ,@f,163, 
-opam," switch; and remove", , , ,@f,164, 
-opam," switch; and create", , , ,@f,165, 
-
-opam, , ,color,always never auto,@f @n,166,Colorize the output
-opam, , ,compat-mode-1.0, ,@f @n,167,Compatibility mode with OPAM 1.0
-opam, , ,debug, ,@f @n,168,Print debug message on stdout
-opam, , ,git-version, ,@f @n,169,Print the git version if it exists and exit
-opam, , ,no-aspcud, ,@f @n,170,Do not use the external aspcud solver, even if available
-opam, , ,no-base-packages, ,@f @n,171,Do not install base packages
-opam, ,q,quiet, ,@f @n,172,Be quiet when installing a new compiler
-opam, ,r,root, ,@f @n,173,Use ROOT as the current root path
-opam, , ,strict, ,@f @n,174,Fail whenever an error is found in a package definition or a configuration file
-opam, , ,switch, ,@f @n,175,Use SWITCH as the current compiler switch
-opam, ,v,verbose, ,@f @n,176,Be more verbose
-opam, ,y,yes, ,@f @n,177,Disable interactive mode and answer yes to all questions
-opam, , , ,config,@f,178,Display configuration options for packages
+opam,, ,help, ,@f,101,Display the manual for an OPAM command
+opam,, ,version, ,@f,102,Show version information
+opam,switch and set, , , ,@f,163,
+opam,, ,color,always never auto,@f @n,166,Colorize the output
+opam,, ,compat-mode-1.0, ,@f @n,167,Compatibility mode with OPAM 1.0
+opam,, ,debug, ,@f @n,168,Print debug message on stdout
+opam,, ,git-version, ,@f @n,169,Print the git version if it exists and exit
+opam,, ,no-aspcud, ,@f @n,170,Do not use the external aspcud solver, even if available
+opam,, ,no-base-packages, ,@f @n,171,Do not install base packages
+opam,,q,quiet, ,@f @n,172,Be quiet when installing a new compiler
+opam,,r,root, ,@f @n,173,Use ROOT as the current root path
+opam,, ,strict, ,@f @n,174,Fail whenever an error is found in a package definition or a configuration file
+opam,, ,switch, ,@f @n,175,Use SWITCH as the current compiler switch
+opam,,v,verbose, ,@f @n,176,Be more verbose
+opam,,y,yes, ,@f @n,177,Disable interactive mode and answer yes to all questions
+opam,, , ,config,@f,178,Display configuration options for packages
 opam,config,a,all, ,@f,179,Enable all the global and user configuration options
 opam,config, ,csh, ,@f,180,Use csh-compatible mode for configuring OPAM
 opam,config, ,dot-profile, ,@f,181,Name of the configuration file to update instead of ~/
@@ -45,26 +42,23 @@ opam,config, , ,bytecomp,@f,202,returns bytecode compile options
 opam,config, , ,asmcomp,@f,203,returns assembly compile options
 opam,config, , ,bytelink,@f,204,returns bytecode linking options
 opam,config, , ,report,@f,205,Prints a summary of your setup, useful for bug-reports
-opam, , , ,help,@f,206,Display help about OPAM and OPAM commands
-opam, , , ,init,@f,207,Initialize OPAM state
-opam, , , ,install,@f,208,Install a list of packages
-opam, , , ,list,@f,209,Display the list of available packages
-opam, , , ,pin,@f,210,Pin a given package to a specific version
-opam, , , ,reinstall,@f,211,Reinstall a list of packages
-opam, , , ,remove uninstall,@f,212,Remove a list of packages
-opam, , , ,repository remote,@f,213,Manage OPAM repositories
-opam, , , ,search,@f,214,Search into the package list
-opam, , , ,show info,@f,215,Display information about specific packages
-opam, , , ,switch,@f,216,Manage multiple installation of compilers
-opam, , , ,update,@f,217,Update the list of available packages
-opam, , , ,upgrade,@f,218,Upgrade the installed package to latest version
-opam, , , ,admin,@f,219,Administration tool for local repositories
+opam,, , ,help,@f,206,Display help about OPAM and OPAM commands
+opam,, , ,init,@f,207,Initialize OPAM state
+opam,, , ,install,@f,208,Install a list of packages
+opam,, , ,pin,@f,210,Pin a given package to a specific version
+opam,, , ,reinstall,@f,211,Reinstall a list of packages
+opam,, , ,remove uninstall,@f,212,Remove a list of packages
+opam,, , ,repository remote,@f,213,Manage OPAM repositories
+opam,, , ,search,@f,214,Search into the package list
+opam,, , ,show info,@f,215,Display information about specific packages
+opam,, , ,switch,@f,216,Manage multiple installation of compilers
+opam,, , ,update,@f,217,Update the list of available packages
+opam,, , ,upgrade,@f,218,Upgrade the installed package to latest version
+opam,, , ,admin,@f,219,Administration tool for local repositories
 opam,admin, ,version, , ,220,Show version information
 opam,admin, , ,check,@f,221,Check a local repo for errors
 opam,admin, , ,depexts,@f,222,Add external dependencies
 opam,admin, , ,make,@f,223,Initialize a repo for serving files
 opam,admin, , ,stats,@f,224,Compute statistics
 opam,switch set, , , ,@E @f,225,opam switch list --short
-opam,switch remove, , , ,@E @f,226,opam switch list --short
-opam,switch create, , , ,@E @f,227,opam switch list-available --short
 opam,admin, ,help, , ,228,Show this help in format FMT (pager, plain or groff)

@@ -1,6 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
-powershell, Version, , ,--arguments, ,101, 
-
-powershell, ,?, , , ,102,Show help
-powershell, , , , ,@r,103,
-powershell, , , ,2.0 3.0,@r,104,
+powershell,Version, , ,--arguments, ,101,
+powershell,,?, , , ,102,Show help
+powershell,, , , ,@r,103,
+powershell,, , ,2.0 3.0,@r,104,

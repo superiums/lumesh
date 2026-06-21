@@ -1,5 +1,3 @@
 cmd,conds,short,long,params,dirs,pri,desc
-dlocate, ,S, , ,@f @r,101,List records that match filenames
-
-dlocate, ,L, , , ,102,List all files in the package
-dlocate, , , , , ,103,ls -ldF all files in the package
+dlocate,,S, , ,@f @r,101,List records that match filenames
+dlocate,,L, , , ,102,List all files in the package

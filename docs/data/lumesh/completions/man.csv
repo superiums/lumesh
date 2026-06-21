@@ -1,17 +1,16 @@
 cmd,conds,short,long,params,dirs,pri,desc
-man, ,M, , ,@D,102,Manpath
-man, ,F,preformat, , ,103,Format only
-man, ,w,path, , ,104,Only print locations
-man, ,l,local-file, , ,105,Local file
-
-man, ,a,,, ,106,Display all matches
-man, ,c,,, ,107,Always reformat
-man, ,d,,, ,108,Debug
-man, ,D,,, ,109,Debug and run
-man, ,f,,, ,110,Show whatis information
-man, ,h,,, ,111,Display help and exit
-man, ,k,,, ,112,Show apropos information
-man, ,K,,, ,113,Search in all man pages
-man, ,t,,, ,114,Format for printing
-man, ,W,,, ,115,Only print locations
-man,string match -q -- '*/*' (commandline -t | string collect), , , ,@F,116,
+man,,M, , ,@D,102,Manpath
+man,,F,preformat, , ,103,Format only
+man,,w,path, , ,104,Only print locations
+man,,l,local-file, , ,105,Local file
+man,,a,,, ,106,Display all matches
+man,,c,,, ,107,Always reformat
+man,,d,,, ,108,Debug
+man,,D,,, ,109,Debug and run
+man,,f,,, ,110,Show whatis information
+man,,h,,, ,111,Display help and exit
+man,,k,,, ,112,Show apropos information
+man,,K,,, ,113,Search in all man pages
+man,,t,,, ,114,Format for printing
+man,,W,,, ,115,Only print locations
+man, , , , ,@F,116,

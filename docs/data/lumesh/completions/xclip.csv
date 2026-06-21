@@ -1,10 +1,9 @@
 cmd,conds,short,long,params,dirs,pri,desc
-xclip, , , ,primary secondary clipboard buffer-cut,@f @r,101,Selection to access
-xclip, , , , ,@f @r,102,Use the given target atom
-
-xclip, ,i, , , ,103,Read text into X selection from stdin
-xclip, ,o, , , ,104,Prints the selection to stdout
-xclip, ,l, , , ,105,Number of selection requests to wait for before exiting
-xclip, ,d, , , ,106,X display to connect to
-xclip, ,h, , , ,107,Usage information
-xclip, , , ,primary secondary,@f @r,108,Selection to access
+xclip,, , ,primary secondary clipboard buffer-cut,@f @r,101,Selection to access
+xclip,, , , ,@f @r,102,Use the given target atom
+xclip,,i, , , ,103,Read text into X selection from stdin
+xclip,,o, , , ,104,Prints the selection to stdout
+xclip,,l, , , ,105,Number of selection requests to wait for before exiting
+xclip,,d, , , ,106,X display to connect to
+xclip,,h, , , ,107,Usage information
+xclip,, , ,primary secondary,@f @r,108,Selection to access

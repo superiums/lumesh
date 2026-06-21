@@ -1,16 +1,10 @@
 cmd,conds,short,long,params,dirs,pri,desc
-localectl, set-locale, , ,$locales, ,101, 
-localectl, , ,no-ask-password, , ,102,Don't ask for password
-localectl, , ,no-convert, , ,103,Don't convert keymap from console to X11 and vice-versa
-localectl, ,H,host, , ,104,Execute the operation on a remote host
-localectl, ,h,help, , ,105,Print a short help text and exit
-localectl, , ,version, , ,106,Print a short version string and exit
-localectl, , ,no-pager, , ,107,Do not pipe output into a pager
-
-localectl, , , , ,@f,108,
+localectl,set-locale, , ,$locales, ,101,
+localectl,, ,no-ask-password, , ,102,Don't ask for password
+localectl,, ,no-convert, , ,103,Don't convert keymap from console to X11 and vice-versa
+localectl,,H,host, , ,104,Execute the operation on a remote host
+localectl,,h,help, , ,105,Print a short help text and exit
+localectl,, ,version, , ,106,Print a short version string and exit
+localectl,, ,no-pager, , ,107,Do not pipe output into a pager
+localectl,, , , ,@f,108,
 localectl,set-keymap, , , ,@E,109,localectl list-keymaps
-localectl,set-locale, , , , ,110,
-localectl,set-x11-keymap (localectl list-x11-keymap-layouts), , , ,@E,111,localectl list-x11-keymap-layouts
-localectl,set-x11-keymap (localectl list-x11-keymap-layouts) (localectl list-x11-keymap-models), , , ,@E,112,localectl list-x11-keymap-models
-localectl,set-x11-keymap (localectl list-x11-keymap-models) (localectl list-x11-keymap-variants), , , ,@E,113,localectl list-x11-keymap-variants (__fish_localectl_layout)
-localectl,set-x11-keymap (localectl list-x11-keymap-variants), , , ,@E,114,localectl list-x11-keymap-options

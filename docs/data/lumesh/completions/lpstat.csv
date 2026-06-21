@@ -1,17 +1,16 @@
 cmd,conds,short,long,params,dirs,pri,desc
-lpstat, ,W, ,completed not-completed, ,101,Specify which jobs to show
-lpstat, ,c, , ,@f @r,102,Shows printer classes and the printers that belong to them
-
-lpstat, ,H, , , ,103,Show server hostname and port
-lpstat, ,R, , , ,104,Shows ranking of print jobs
-lpstat, ,W, , , ,105,Specify which jobs to show
-lpstat, ,a, , , ,106,Shows accepting state of selected printer queues
-lpstat, ,d, , , ,107,Shows the current default destination
-lpstat, ,l, , , ,108,Shows list of printers, classes, or jobs
-lpstat, ,o, , , ,109,Shows jobs queue on the specified destinations
-lpstat, ,p, , , ,110,Shows printers and if they are enabled for printing
-lpstat, ,r, , , ,111,Shows whether the CUPS server is running
-lpstat, ,s, , , ,112,Shows a status summary, including default destination
-lpstat, ,t, , , ,113,Shows all status information
-lpstat, ,u, , , ,114,Shows a list of print jobs queued by the specified users
-lpstat, ,v, , , ,115,Shows printers and what device they are attached to
+lpstat,,W, ,completed not-completed, ,101,Specify which jobs to show
+lpstat,,c, , ,@f @r,102,Shows printer classes and the printers that belong to them
+lpstat,,H, , , ,103,Show server hostname and port
+lpstat,,R, , , ,104,Shows ranking of print jobs
+lpstat,,W, , , ,105,Specify which jobs to show
+lpstat,,a, , , ,106,Shows accepting state of selected printer queues
+lpstat,,d, , , ,107,Shows the current default destination
+lpstat,,l, , , ,108,Shows list of printers, classes, or jobs
+lpstat,,o, , , ,109,Shows jobs queue on the specified destinations
+lpstat,,p, , , ,110,Shows printers and if they are enabled for printing
+lpstat,,r, , , ,111,Shows whether the CUPS server is running
+lpstat,,s, , , ,112,Shows a status summary, including default destination
+lpstat,,t, , , ,113,Shows all status information
+lpstat,,u, , , ,114,Shows a list of print jobs queued by the specified users
+lpstat,,v, , , ,115,Shows printers and what device they are attached to

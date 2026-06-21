@@ -1,28 +1,27 @@
 cmd,conds,short,long,params,dirs,pri,desc
-cygpath, ,d,dos, , ,101,Print DOS/short form (C:PROGRA~1)
-cygpath, ,m,mixed, , ,102,Print Windows form with regular slashes (C:/WINNT)
-cygpath, ,M,mode, , ,103,Report on mode of file
-cygpath, ,u,unix, , ,104,Print Unix form (/cygdrive/c/winnt)
-cygpath, ,w,windows, , ,105,Print Windows form (C:\\WINNT)
-cygpath, ,t,type,dos mixed unix windows, ,106,Print TYPE form
-cygpath, ,a,absolute, , ,107,Output absolute path
-cygpath, ,p,path, , ,109,NAME is a colon-separated list
-cygpath, ,U,proc-cygdrive, , ,110,Emit /proc/cygdrive instead of /cygdrive prefix
-cygpath, ,D,desktop, , ,114,Output 'Desktop' directory
-cygpath, ,H,homeroot, , ,115,Output 'Profiles' directory
-cygpath, ,O,mydocs, , ,116,Output 'My Documents' directory
-cygpath, ,P,smprograms, , ,117,Output Start Menu 'Programs' directory
-cygpath, ,S,sysdir, , ,118,Output system directory
-cygpath, ,W,windir, , ,119,Output 'Windows' directory
-cygpath, ,F,folder, ,@f @r,120,Output special folder with numeric ID
-cygpath, ,f,file, ,@r,121,Read FILE for input
-cygpath, ,c,close, ,@f @r,123,Close HANDLE
-cygpath, ,i,ignore, , ,124,Ignore missing argument
-cygpath, ,h,help, , ,125,Output usage information
-cygpath, ,V,version, , ,126,Output version information
-
-cygpath,-w windows;,l,long-name, , ,127,Print Windows long form
-cygpath,-w windows;,s,short-name, , ,128,Print DOS/short form
-cygpath,-d dos;,C,codepage,ANSI OEM UTF8,@r,129,Print pathname in CODEPAGE
-cygpath,-D desktop;,A,allusers, , ,130,Use 'All Users' instead of current user
-cygpath,-f file,o,option, , ,131,Read options from FILE as well
+cygpath,,d,dos, , ,101,Print DOS/short form (C:PROGRA~1)
+cygpath,,m,mixed, , ,102,Print Windows form with regular slashes (C:/WINNT)
+cygpath,,M,mode, , ,103,Report on mode of file
+cygpath,,u,unix, , ,104,Print Unix form (/cygdrive/c/winnt)
+cygpath,,w,windows, , ,105,Print Windows form (C:\\WINNT)
+cygpath,,t,type,dos mixed unix windows, ,106,Print TYPE form
+cygpath,,a,absolute, , ,107,Output absolute path
+cygpath,,p,path, , ,109,NAME is a colon-separated list
+cygpath,,U,proc-cygdrive, , ,110,Emit /proc/cygdrive instead of /cygdrive prefix
+cygpath,,D,desktop, , ,114,Output 'Desktop' directory
+cygpath,,H,homeroot, , ,115,Output 'Profiles' directory
+cygpath,,O,mydocs, , ,116,Output 'My Documents' directory
+cygpath,,P,smprograms, , ,117,Output Start Menu 'Programs' directory
+cygpath,,S,sysdir, , ,118,Output system directory
+cygpath,,W,windir, , ,119,Output 'Windows' directory
+cygpath,,F,folder, ,@f @r,120,Output special folder with numeric ID
+cygpath,,f,file, ,@r,121,Read FILE for input
+cygpath,,c,close, ,@f @r,123,Close HANDLE
+cygpath,,i,ignore, , ,124,Ignore missing argument
+cygpath,,h,help, , ,125,Output usage information
+cygpath,,V,version, , ,126,Output version information
+cygpath,windows,l,long-name, , ,127,Print Windows long form
+cygpath,windows,s,short-name, , ,128,Print DOS/short form
+cygpath,dos,C,codepage,ANSI OEM UTF8,@r,129,Print pathname in CODEPAGE
+cygpath,desktop,A,allusers, , ,130,Use 'All Users' instead of current user
+cygpath,file,o,option, , ,131,Read options from FILE as well

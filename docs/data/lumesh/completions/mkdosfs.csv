@@ -1,29 +1,24 @@
 cmd,conds,short,long,params,dirs,pri,desc
-mkdosfs, ,b, , ,@f @r,101,Select location of backup sector
-mkdosfs, ,D, ,0x80 0x00,@f @r,102,Specify drive number
-mkdosfs, ,f, ,1 2 3 4,@f @r,103,Specify number of FATs
-mkdosfs, ,F, ,12 16 32,@f @r,104,Specify FAT size
-mkdosfs, ,h, , ,@f @r,105,Specify number of hidden sectors
-mkdosfs, ,i, , ,@f @r,106,Specify volume ID
-mkdosfs, ,l, , ,@r,107,Read bad blocks list from given file
-mkdosfs, ,m, ,-,@r,108,Specify file containing non bootable message
-mkdosfs, ,M, ,',@f @r,109,Specify media type
-mkdosfs, ,n, , ,@f @r,110,Specify volume name
-mkdosfs, ,r, ,112 224 512,@f @r,111,Specify number of entries available in root directory
-mkdosfs, ,R, , ,@f @r,112,Specify number of reserved sectors
-mkdosfs, ,s, ,1 2 4 8 16 32 64 128,@f @r,113,Specify number of sector per cluster
-mkdosfs, ,S, ,512 1024 2048 4096 8192 16384 32768,@f @r,114,Specify number of bytes per logical sector
-mkdosfs, , ,invariant, , ,115,Use constants for randomly generated data
-mkdosfs, , ,help, , ,116,Show help and exit
-
-mkdosfs, ,a, , , ,117,Disable alignment
-mkdosfs, ,A, , , ,118,Use Atari variation
-mkdosfs, ,c, , , ,119,Check for bad blocks
-mkdosfs, ,C, , , ,120,Create file given as device
-mkdosfs, ,D, ,0x80 0x00,@f @r,121,Specify drive number
-mkdosfs, ,f, ,1 2 3 4,@f @r,122,Specify number of FATs
-mkdosfs, ,I, , , ,123,Force to use entire disk
-mkdosfs, ,m, ,-,@r,124,Specify file containing non bootable message
-mkdosfs, ,M, ,0xf0 0xf9 0xfd 0xff 0xfc 0xfe 0xf8,@f @r,113,Specify media type
-mkdosfs, ,r, ,112 224 512,@f @r,126,Specify number of entries available in root directory
-mkdosfs, ,v, , , ,127,Verbose mode
+mkdosfs,,b, , ,@f @r,101,Select location of backup sector
+mkdosfs,,D, ,0x80 0x00,@f @r,102,Specify drive number
+mkdosfs,,f, ,1 2 3 4,@f @r,103,Specify number of FATs
+mkdosfs,,F, ,12 16 32,@f @r,104,Specify FAT size
+mkdosfs,,h, , ,@f @r,105,Specify number of hidden sectors
+mkdosfs,,i, , ,@f @r,106,Specify volume ID
+mkdosfs,,l, , ,@r,107,Read bad blocks list from given file
+mkdosfs,,m, ,-,@r,108,Specify file containing non bootable message
+mkdosfs,,M, ,',@f @r,109,Specify media type
+mkdosfs,,n, , ,@f @r,110,Specify volume name
+mkdosfs,,r, ,112 224 512,@f @r,111,Specify number of entries available in root directory
+mkdosfs,,R, , ,@f @r,112,Specify number of reserved sectors
+mkdosfs,,s, ,1 2 4 8 16 32 64 128,@f @r,113,Specify number of sector per cluster
+mkdosfs,,S, ,512 1024 2048 4096 8192 16384 32768,@f @r,114,Specify number of bytes per logical sector
+mkdosfs,, ,invariant, , ,115,Use constants for randomly generated data
+mkdosfs,, ,help, , ,116,Show help and exit
+mkdosfs,,a, , , ,117,Disable alignment
+mkdosfs,,A, , , ,118,Use Atari variation
+mkdosfs,,c, , , ,119,Check for bad blocks
+mkdosfs,,C, , , ,120,Create file given as device
+mkdosfs,,I, , , ,123,Force to use entire disk
+mkdosfs,,M, ,0xf0 0xf9 0xfd 0xff 0xfc 0xfe 0xf8,@f @r,113,Specify media type
+mkdosfs,,v, , , ,127,Verbose mode

@@ -1,12 +1,11 @@
 cmd,conds,short,long,params,dirs,pri,desc
-renice, , ,priority, , ,101,
-renice, , ,relative, , ,102,
-renice, ,g,pgrp, , ,103,
-renice, ,p,pid, , ,104,
-renice, ,u,user, , ,105,
-renice, ,h,help, , ,106,
-renice, ,V,version, , ,107,
-
-renice, ,g,,, ,108,Force following parameters to be interpreted as process group ID's
-renice, ,u,,, ,109,Force following parameters to be interpreted as user names
-renice, ,p, , , ,110,Force following parameters to be process ID's (The default)
+renice,, ,priority, , ,101,
+renice,, ,relative, , ,102,
+renice,,g,pgrp, , ,103,
+renice,,p,pid, , ,104,
+renice,,u,user, , ,105,
+renice,,h,help, , ,106,
+renice,,V,version, , ,107,
+renice,,g,,, ,108,Force following parameters to be interpreted as process group ID's
+renice,,u,,, ,109,Force following parameters to be interpreted as user names
+renice,,p, , , ,110,Force following parameters to be process ID's (The default)

@@ -1,2 +1,2 @@
 cmd,conds,short,long,params,dirs,pri,desc
-watchexec, , , , ,@f @r,102, 
+watchexec,, , , ,@f @r,102,

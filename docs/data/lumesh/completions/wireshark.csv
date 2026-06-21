@@ -1,13 +1,12 @@
 cmd,conds,short,long,params,dirs,pri,desc
-wireshark, , ,display, , ,101,Specifies the X display to use
-wireshark, , ,fullscreen, , ,102,Start Wireshark in full screen
-wireshark, ,P, , ,@f @r,103,Override a configuration or data path
-
-wireshark, ,g, , ,@f @r,104,After reading in a capture file using th e-r flag, go to the given packet number
-wireshark, ,H, , , ,105,Hide the capture info dialog during live packet capture
-wireshark, ,j, , , ,106,When no exact match is found by a -J filter, select the first package before
-wireshark, ,k, , , ,107,Start the capture session immediately
-wireshark, ,l, , , ,108,Turn on automatic scrolling
-wireshark, ,m, , ,@f @r,109,Set the font name used for most text
-wireshark, ,S, , , ,110,Automatically update the packet display as packets are coming in
-wireshark, ,J, , ,@f @r,111,Jump to packet matching filter (display filter syntax)
+wireshark,, ,display, , ,101,Specifies the X display to use
+wireshark,, ,fullscreen, , ,102,Start Wireshark in full screen
+wireshark,,P, , ,@f @r,103,Override a configuration or data path
+wireshark,,g, , ,@f @r,104,After reading in a capture file using th e-r flag, go to the given packet number
+wireshark,,H, , , ,105,Hide the capture info dialog during live packet capture
+wireshark,,j, , , ,106,When no exact match is found by a -J filter, select the first package before
+wireshark,,k, , , ,107,Start the capture session immediately
+wireshark,,l, , , ,108,Turn on automatic scrolling
+wireshark,,m, , ,@f @r,109,Set the font name used for most text
+wireshark,,S, , , ,110,Automatically update the packet display as packets are coming in
+wireshark,,J, , ,@f @r,111,Jump to packet matching filter (display filter syntax)

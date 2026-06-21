@@ -1,6 +1,4 @@
 cmd,conds,short,long,params,dirs,pri,desc
-age, , ,version, , ,102,print version number
-
+age,, ,version, , ,102,print version number
 age-keygen,-s o output,o,output, ,@n,103,output file for secret key
-age-keygen, , ,version, , ,104,print version number
 age-keygen,-s y,y, , ,@n,105,read identity file, print recipient(s)

@@ -1,14 +1,11 @@
 cmd,conds,short,long,params,dirs,pri,desc
-matlab, ,h,help, , ,101,Show help
-matlab, , , , ,@f @r,102,Send X commands to X Window Server display xDisp
-matlab, , , , ,@r,103,Set the folder
-matlab, , , , ,@r,104,Copy Command Window output into filename
-matlab, ,Dgdb, , ,@f @r,105,Start in debug mode
-matlab, ,Dlldb, , ,@f @r,106,Start in debug mode
-matlab, ,Ddbx, , ,@f @r,107,Start in debug mode
-matlab, , , , ,@f @r,108,Enable use of the Java debugger
-matlab, ,c, , ,@r,111,Use the specified license file
-
-matlab, ,n, , , ,112,Display the environment variables/arguments passed to the executable
-matlab, ,e, , , ,113,Display all environment variables and their values to standard output
-matlab, ,r, , ,@f @r,114,Execute the statement
+matlab,,h,help, , ,101,Show help
+matlab,, , , ,@f @r,102,Send X commands to X Window Server display xDisp
+matlab,, , , ,@r,103,Set the folder
+matlab,,Dgdb, , ,@f @r,105,Start in debug mode
+matlab,,Dlldb, , ,@f @r,106,Start in debug mode
+matlab,,Ddbx, , ,@f @r,107,Start in debug mode
+matlab,,c, , ,@r,111,Use the specified license file
+matlab,,n, , , ,112,Display the environment variables/arguments passed to the executable
+matlab,,e, , , ,113,Display all environment variables and their values to standard output
+matlab,,r, , ,@f @r,114,Execute the statement

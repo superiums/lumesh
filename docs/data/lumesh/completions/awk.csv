@@ -1,4 +1,4 @@
 cmd,conds,short,long,argument,dirs,pri,desc
-awk, ,F, , ,@r,100,Define the input field separator
-awk, ,f, , ,@r,101,Specify the pathname of the file progfile containing an awk program
-awk, ,v, , ,@r,102,Ensure that the assignment argument is in the same form as an assignment operand
+awk,,F, , ,@r,100,Define the input field separator
+awk,,f, , ,@r,101,Specify the pathname of the file progfile containing an awk program
+awk,,v, , ,@r,102,Ensure that the assignment argument is in the same form as an assignment operand

@@ -1,9 +1,8 @@
 cmd,conds,short,long,params,dirs,pri,desc
-lua, ,h,help, , ,101,Print help and exit
-lua, , , , ,@k,102, 
-
-lua, ,e, , ,@f @r,103,Execute string
-lua, ,l, , , ,104,Require library
-lua, ,i, , , ,105,Enter interactive mode after executing script
-lua, ,v, , , ,106,Show version
-lua, , , ,-, ,107,Execute stdin and stop handling options
+lua,,h,help, , ,101,Print help and exit
+lua,, , , ,@k,102,
+lua,,e, , ,@f @r,103,Execute string
+lua,,l, , , ,104,Require library
+lua,,i, , , ,105,Enter interactive mode after executing script
+lua,,v, , , ,106,Show version
+lua,, , ,-, ,107,Execute stdin and stop handling options

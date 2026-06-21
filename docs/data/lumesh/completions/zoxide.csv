@@ -1,46 +1,25 @@
 cmd,conds,short,long,params,dirs,pri,desc
-zoxide, ,h,help, , ,101,Print help information
-zoxide, ,V,version, , ,102,Print version information
-
-zoxide, , , ,add,@f,103,Add a new directory or increment its rank
-zoxide, , , ,edit,@f,104,Edit the database
-zoxide, , , ,import,@f,105,Import entries from another application
-zoxide, , , ,init,@f,106,Generate shell configuration
-zoxide, , , ,query,@f,107,Search for a directory in the database
-zoxide, , , ,remove,@f,108,Remove a directory from the database
+zoxide,,h,help, , ,101,Print help information
+zoxide,,V,version, , ,102,Print version information
+zoxide,, , ,add,@f,103,Add a new directory or increment its rank
+zoxide,, , ,edit,@f,104,Edit the database
+zoxide,, , ,import,@f,105,Import entries from another application
+zoxide,, , ,init,@f,106,Generate shell configuration
+zoxide,, , ,query,@f,107,Search for a directory in the database
+zoxide,, , ,remove,@f,108,Remove a directory from the database
 zoxide,add,s,score, ,@r,109,The rank to increment the entry if it exists or initialize it with if it doesn
-zoxide,add,h,help, , ,110,Print help
-zoxide,add,V,version, , ,111,Print version
-zoxide,edit decrement delete increment reload,h,help, , ,112,Print help
-zoxide,edit decrement delete increment reload,V,version, , ,113,Print version
 zoxide,edit decrement delete increment reload, , ,decrement,@f,114,
 zoxide,edit decrement delete increment reload, , ,delete,@f,115,
 zoxide,edit decrement delete increment reload, , ,increment,@f,116,
 zoxide,edit decrement delete increment reload, , ,reload,@f,117,
-zoxide,edit decrement,h,help, , ,118,Print help
-zoxide,edit decrement,V,version, , ,119,Print version
-zoxide,edit delete,h,help, , ,120,Print help
-zoxide,edit delete,V,version, , ,121,Print version
-zoxide,edit increment,h,help, , ,122,Print help
-zoxide,edit increment,V,version, , ,123,Print version
-zoxide,edit reload,h,help, , ,124,Print help
-zoxide,edit reload,V,version, , ,125,Print version
 zoxide,import, ,from,autojump z,@f @r,126,Application to import from
 zoxide,import, ,merge, , ,127,Merge into existing database
-zoxide,import,h,help, , ,128,Print help
-zoxide,import,V,version, , ,129,Print version
 zoxide,init, ,cmd, ,@r,130,Changes the prefix of the `z` and `zi` commands
 zoxide,init, ,hook,none prompt pwd,@f @r,131,Changes how often zoxide increments a directory
 zoxide,init, ,no-cmd, , ,132,Prevents zoxide from defining the `z` and `zi` commands
-zoxide,init,h,help, , ,133,Print help
-zoxide,init,V,version, , ,134,Print version
 zoxide,query,a,all, , ,135,Show unavailable directories
 zoxide,query,i,interactive, , ,136,Use interactive selection
 zoxide,query,l,list, , ,137,List all matching directories
 zoxide,query,s,score, , ,138,Print score with results
-zoxide,query,h,help, , ,139,Print help
-zoxide,query,V,version, , ,140,Print version
-zoxide,remove,h,help, , ,141,Print help
-zoxide,remove,V,version, , ,142,Print version
 zoxide,query, ,exclude, ,@D @f @r,143,Exclude the current directory
 zoxide,query, ,base-dir, ,@D @f @r,144,Only search within this directory

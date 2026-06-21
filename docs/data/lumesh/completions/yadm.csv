@@ -1,28 +1,26 @@
 cmd,conds,short,long,params,dirs,pri,desc
-yadm, ,Y,yadm-dir, ,@D @F @r,101,Override the yadm directory
-yadm, , ,yadm-repo, ,@F @r,102,Override location of yadm repository
-yadm, , ,yadm-config, ,@F @r,103,Override location of yadm configuration file
-yadm, , ,yadm-encrypt, ,@F @r,104,Override location of yadm encryption configuration
-yadm, , ,yadm-archive, ,@F @r,105,Override location of yadm encrypted files archive
-yadm, , ,yadm-bootstrap, ,@F @r,106,Override location of yadm bootstrap program
-
-yadm, , , ,version,@f,107,Print yadm version
-yadm, , , ,init,@f,108,Initialize new repository for tracking dotfiles
-yadm, , , ,config,@f,109,Manage configuration for yadm
-yadm, , , ,list,@f,110,Print list of files managed by yadm
-yadm, , , ,bootstrap,@f,111,Execute bootstrap script
-yadm, , , ,encrypt,@f,112,Encrypt files matched by encrypt spec file
-yadm, , , ,decrypt,@f,113,Decrypt files matched by encrypt spec file
-yadm, , , ,alt,@f,114,Setup and process alternate files
-yadm, , , ,perms,@f,115,Update permissions
-yadm, , , ,enter,@f,116,Run sub-shell with all git variables set
-yadm, , , ,git-crypt,@f,117,Pass options to git-crypt if installed
-yadm, , , ,gitconfig,@f,118,Pass options to the git config command
-yadm, , , ,upgrade,@f,119,Migrate from v1 to v2
-yadm, , , ,introspect,@f,120,Report internal yadm data
-yadm, , , ,clone,@f,121,Clone remote repository for tracking dotfiles
+yadm,,Y,yadm-dir, ,@D @F @r,101,Override the yadm directory
+yadm,, ,yadm-repo, ,@F @r,102,Override location of yadm repository
+yadm,, ,yadm-config, ,@F @r,103,Override location of yadm configuration file
+yadm,, ,yadm-encrypt, ,@F @r,104,Override location of yadm encryption configuration
+yadm,, ,yadm-archive, ,@F @r,105,Override location of yadm encrypted files archive
+yadm,, ,yadm-bootstrap, ,@F @r,106,Override location of yadm bootstrap program
+yadm,, , ,version,@f,107,Print yadm version
+yadm,, , ,init,@f,108,Initialize new repository for tracking dotfiles
+yadm,, , ,config,@f,109,Manage configuration for yadm
+yadm,, , ,list,@f,110,Print list of files managed by yadm
+yadm,, , ,bootstrap,@f,111,Execute bootstrap script
+yadm,, , ,encrypt,@f,112,Encrypt files matched by encrypt spec file
+yadm,, , ,decrypt,@f,113,Decrypt files matched by encrypt spec file
+yadm,, , ,alt,@f,114,Setup and process alternate files
+yadm,, , ,perms,@f,115,Update permissions
+yadm,, , ,enter,@f,116,Run sub-shell with all git variables set
+yadm,, , ,git-crypt,@f,117,Pass options to git-crypt if installed
+yadm,, , ,gitconfig,@f,118,Pass options to the git config command
+yadm,, , ,upgrade,@f,119,Migrate from v1 to v2
+yadm,, , ,introspect,@f,120,Report internal yadm data
+yadm,, , ,clone,@f,121,Clone remote repository for tracking dotfiles
 yadm,init,f, , ,@f,122,Overwrite existing repository
-yadm,clone,f, , ,@f,123,Overwrite existing repository
 yadm,clone,b, , ,@f,124,Use another branch
 yadm,clone, ,bootstrap, ,@f,125,Force run the bootstrap script
 yadm,clone, ,no-bootstrap, ,@f,126,Do not execute bootstrap script
@@ -30,12 +28,9 @@ yadm,list,a, , ,@f,127,List all files
 yadm,decrypt,l, , ,@f,128,List files without extracting
 yadm,introspect, , ,commands configs repo switches,@f @r,129,
 yadm,gitconfig, , , ,@E @f,130,__fish_complete_yadm_like_git
-yadm,config get get-all replace-all unset unset-all, , , ,@E @f,131,__fish_complete_yadm_like_git
 yadm,config, ,get, ,@E @f @r,132,__fish_yadm_config_keys
 yadm,config, ,get-all, ,@E @f,133,__fish_yadm_config_keys
 yadm,config, ,replace-all, ,@E @f @r,134,__fish_yadm_config_keys
 yadm,config, ,unset, ,@E @f,135,__fish_yadm_config_keys
 yadm,config, ,unset-all, ,@E @f,136,__fish_yadm_config_keys
-yadm,config 3, , , ,@E @f,137,__fish_yadm_config_keys
 yadm,init,w, , ,@D @f @r,138,Override work-tree
-yadm,clone,w, , ,@D @f @r,139,Override work-tree

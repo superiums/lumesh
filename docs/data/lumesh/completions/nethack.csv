@@ -1,13 +1,12 @@
 cmd,conds,short,long,params,dirs,pri,desc
-nethack, ,d, , ,@D,101,Specify a playground directory
-nethack, ,p, , ,@f @r,102,Specify profession
-nethack, ,r, , ,@f @r,103,Specify race
-nethack, ,u, , ,@f @r,104,Specify player name
-nethack, , ,version, , ,105,Show version information
-nethack, , ,version:paste, , ,106,Show version information & copy it to paste buffer
-
-nethack, ,n, , , ,107,Suppress printing any news from the game administrator
-nethack, ,X, , , ,108,Start in discovery mode
-nethack, ,s, , , ,110,Print the list of your scores
-nethack, ,v, , , ,111,Print all versions present in the score file
-nethack, ,D, , , ,112,Start in debugging (wizard) mode
+nethack,,d, , ,@D,101,Specify a playground directory
+nethack,,p, , ,@f @r,102,Specify profession
+nethack,,r, , ,@f @r,103,Specify race
+nethack,,u, , ,@f @r,104,Specify player name
+nethack,, ,version, , ,105,Show version information
+nethack,, ,version:paste, , ,106,Show version information & copy it to paste buffer
+nethack,,n, , , ,107,Suppress printing any news from the game administrator
+nethack,,X, , , ,108,Start in discovery mode
+nethack,,s, , , ,110,Print the list of your scores
+nethack,,v, , , ,111,Print all versions present in the score file
+nethack,,D, , , ,112,Start in debugging (wizard) mode

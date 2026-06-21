@@ -1,20 +1,17 @@
 cmd,conds,short,long,params,dirs,pri,desc
-cat, ,A,show-all, , ,101,Escape all unprintables
-cat, ,b,number-nonblank, , ,102,Number non-blank lines
-cat, ,E,show-ends, , ,103,Display \$ at line end
-cat, ,n,number, , ,104,Enumerate lines
-cat, ,s,squeeze-blank, , ,105,Never >1 blank line
-cat, ,T,show-tabs, , ,106,Escape tab
-cat, , ,help, , ,107,Display help and exit
-cat, , ,version, , ,108,Display version and exit
-
-cat, ,e,,, ,109,Escape unprintables except \t
-cat, ,t,,, ,110,Escape unprintables except \n
-cat, ,v,,, ,111,Escape unprintables except '\n' and \t
-cat, ,b,,, ,112,Specify # of non-blank lines
-cat, ,n,,, ,113,Enumerate lines
-cat, ,s,,, ,114,Squeeze away >1 blank lines
-cat, ,t,,, ,115,Show unprintables; tab as ^I
-cat, ,u,,, ,116,Disable output buffering
-cat, ,v,,, ,117,Escape non-printing chars
-cat, ,l,,, ,118,Set/block on F_SETLKW stdout lock
+cat,,A,show-all, , ,101,Escape all unprintables
+cat,,b,number-nonblank, , ,102,Number non-blank lines
+cat,,E,show-ends, , ,103,Display \$ at line end
+cat,,n,number, , ,104,Enumerate lines
+cat,,s,squeeze-blank, , ,105,Never >1 blank line
+cat,,T,show-tabs, , ,106,Escape tab
+cat,, ,help, , ,107,Display help and exit
+cat,, ,version, , ,108,Display version and exit
+cat,,e,,, ,109,Escape unprintables except \t
+cat,,t,,, ,110,Escape unprintables except \n
+cat,,v,,, ,111,Escape unprintables except '\n' and \t
+cat,,b,,, ,112,Specify # of non-blank lines
+cat,,n,,, ,113,Enumerate lines
+cat,,s,,, ,114,Squeeze away >1 blank lines
+cat,,u,,, ,116,Disable output buffering
+cat,,l,,, ,118,Set/block on F_SETLKW stdout lock

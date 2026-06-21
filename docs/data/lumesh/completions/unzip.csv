@@ -1,28 +1,27 @@
 cmd,conds,short,long,params,dirs,pri,desc
-unzip, ,d, , ,@D,101,extract files into dir
-unzip, ,aa, , , ,102,treat ALL files as text
-unzip, ,O, , ,@f @r,103,"specify a character encoding for DOS, Windows and OS/2 archives"
-unzip, ,I, , ,@f @r,104,specify a character encoding for UNIX and other archives
-unzip, , , , ,@k,106,
-
-unzip, ,p,,, ,107,"extract files to pipe, no messages"
-unzip, ,f,,, ,108,"freshen existing files, create none"
-unzip, ,u,,, ,109,"update files, create if necessary"
-unzip, ,v,,, ,110,list verbosely/show version info
-unzip, ,t,,, ,111,test compressed archive datamodifiers:
-unzip, ,z,,, ,112,display archive comment only
-unzip, ,T,,, ,113,timestamp archive to latest
-unzip, ,n,,, ,114,never overwrite existing files
-unzip, ,o,,, ,115,overwrite files WITHOUT prompting
-unzip, ,q,,, ,116,quiet mode
-unzip, ,a,,, ,117,auto-convert any text files
-unzip, ,U,,, ,118,use escapes for all non-ASCII Unicode
-unzip, ,C,,, ,119,match filenames case-insensitively
-unzip, ,X,,, ,120,restore UID/GID info
-unzip, ,V,,, ,121,retain VMS version numbers
-unzip, ,K,,, ,122,keep setuid/setgid/tacky permissions
-unzip, ,M,,, ,123,pipe through `more` pager
-unzip, ,x, , , ,124,exclude files that follow (in xlist)
-unzip, ,l, , , ,125,list files (short format)
-unzip, ,j, , , ,126,junk paths (do not make directories)
-unzip, ,L, , , ,127,make (some) names lowercase
+unzip,,d, , ,@D,101,extract files into dir
+unzip,,aa, , , ,102,treat ALL files as text
+unzip,,O, , ,@f @r,103,specify a character encoding for DOS, Windows and OS/2 archives
+unzip,,I, , ,@f @r,104,specify a character encoding for UNIX and other archives
+unzip,, , , ,@k,106,
+unzip,,p,,, ,107,extract files to pipe, no messages
+unzip,,f,,, ,108,freshen existing files, create none
+unzip,,u,,, ,109,update files, create if necessary
+unzip,,v,,, ,110,list verbosely/show version info
+unzip,,t,,, ,111,test compressed archive datamodifiers:
+unzip,,z,,, ,112,display archive comment only
+unzip,,T,,, ,113,timestamp archive to latest
+unzip,,n,,, ,114,never overwrite existing files
+unzip,,o,,, ,115,overwrite files WITHOUT prompting
+unzip,,q,,, ,116,quiet mode
+unzip,,a,,, ,117,auto-convert any text files
+unzip,,U,,, ,118,use escapes for all non-ASCII Unicode
+unzip,,C,,, ,119,match filenames case-insensitively
+unzip,,X,,, ,120,restore UID/GID info
+unzip,,V,,, ,121,retain VMS version numbers
+unzip,,K,,, ,122,keep setuid/setgid/tacky permissions
+unzip,,M,,, ,123,pipe through `more` pager
+unzip,,x, , , ,124,exclude files that follow (in xlist)
+unzip,,l, , , ,125,list files (short format)
+unzip,,j, , , ,126,junk paths (do not make directories)
+unzip,,L, , , ,127,make (some) names lowercase

@@ -1,4 +1,2 @@
 cmd,conds,short,long,params,dirs,pri,desc
-a2ensite, ,q,quiet, , ,101,Don't show informative messages
-
-a2ensite, , , , , ,102,
+a2ensite,,q,quiet, , ,101,Don't show informative messages

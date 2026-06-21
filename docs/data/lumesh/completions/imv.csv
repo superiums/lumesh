@@ -1,17 +1,16 @@
 cmd,conds,short,long,params,dirs,pri,desc
-imv, ,s, ,none shrink full, ,101,Set scaling mode to use
-imv, ,u, ,linear nearest_neighbour, ,102,Upscaling method
-
-imv, ,h, , , ,103,Show help message and quit
-imv, ,v, , , ,104,Show version and quit
-imv, ,c, , ,@f @r,105,Command to run on launch
-imv, ,d, , , ,106,Visible overlay
-imv, ,f, , , ,107,Start fullscreen
-imv, ,l, , , ,108,List open files to stdout at exit
-imv, ,n, , , ,109,Start with the given path/index selected
-imv, ,r, , , ,110,Load directories recursively
-imv, ,s, , , ,111,Set scaling mode to use
-imv, ,t, , ,@f @r,112,Slideshow mode with X seconds per photo
-imv, ,u, , , ,113,Upscaling method
-imv, ,x, , , ,114,Disable looping of input paths
-imv, ,b, , ,@f @r,115,Background colour (6-digit hex)
+imv,,s, ,none shrink full, ,101,Set scaling mode to use
+imv,,u, ,linear nearest_neighbour, ,102,Upscaling method
+imv,,h, , , ,103,Show help message and quit
+imv,,v, , , ,104,Show version and quit
+imv,,c, , ,@f @r,105,Command to run on launch
+imv,,d, , , ,106,Visible overlay
+imv,,f, , , ,107,Start fullscreen
+imv,,l, , , ,108,List open files to stdout at exit
+imv,,n, , , ,109,Start with the given path/index selected
+imv,,r, , , ,110,Load directories recursively
+imv,,s, , , ,111,Set scaling mode to use
+imv,,t, , ,@f @r,112,Slideshow mode with X seconds per photo
+imv,,u, , , ,113,Upscaling method
+imv,,x, , , ,114,Disable looping of input paths
+imv,,b, , ,@f @r,115,Background colour (6-digit hex)

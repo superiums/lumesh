@@ -1,17 +1,16 @@
 cmd,conds,short,long,params,dirs,pri,desc
-cowsay, ,f, , ,@f @r,101,Specify cow file
-
-cowsay, ,e, , ,@r,102,Specify eye string
-cowsay, ,h, , , ,103,Display help and exit
-cowsay, ,l, , , ,104,List all cowfiles
-cowsay, ,n, , , ,105,No word wrapping
-cowsay, ,T, , , ,106,Specify tongue string
-cowsay, ,W, , ,@r,107,Column width
-cowsay, ,b, , , ,108,Borg cow
-cowsay, ,d, , , ,109,Dead cow
-cowsay, ,g, , , ,110,Greedy cow
-cowsay, ,p, , , ,111,Paranoid cow
-cowsay, ,s, , , ,112,Stoned cow
-cowsay, ,t, , , ,113,Tired cow
-cowsay, ,w, , , ,114,Wired cow
-cowsay, ,y, , , ,115,Young cow
+cowsay,,f, , ,@f @r,101,Specify cow file
+cowsay,,e, , ,@r,102,Specify eye string
+cowsay,,h, , , ,103,Display help and exit
+cowsay,,l, , , ,104,List all cowfiles
+cowsay,,n, , , ,105,No word wrapping
+cowsay,,T, , , ,106,Specify tongue string
+cowsay,,W, , ,@r,107,Column width
+cowsay,,b, , , ,108,Borg cow
+cowsay,,d, , , ,109,Dead cow
+cowsay,,g, , , ,110,Greedy cow
+cowsay,,p, , , ,111,Paranoid cow
+cowsay,,s, , , ,112,Stoned cow
+cowsay,,t, , , ,113,Tired cow
+cowsay,,w, , , ,114,Wired cow
+cowsay,,y, , , ,115,Young cow

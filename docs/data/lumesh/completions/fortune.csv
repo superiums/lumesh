@@ -1,12 +1,11 @@
 cmd,conds,short,long,params,dirs,pri,desc
-fortune, ,m, , ,@r,101,Print all fortunes that match regex pattern
-fortune, ,n, , ,@r,102,Set short/long fortune threshold
-
-fortune, ,a, , , ,103,Include offensive fortunes
-fortune, ,e, , , ,104,Equal category weighting
-fortune, ,f, , , ,105,Print fortune categories
-fortune, ,i, , , ,106,Ignore case for regex patterns
-fortune, ,l, , , ,107,Long fortunes only
-fortune, ,o, , , ,108,Offensive fortunes only
-fortune, ,s, , , ,109,Short fortunes only
-fortune, ,w, , , ,110,Add a wait time for reading
+fortune,,m, , ,@r,101,Print all fortunes that match regex pattern
+fortune,,n, , ,@r,102,Set short/long fortune threshold
+fortune,,a, , , ,103,Include offensive fortunes
+fortune,,e, , , ,104,Equal category weighting
+fortune,,f, , , ,105,Print fortune categories
+fortune,,i, , , ,106,Ignore case for regex patterns
+fortune,,l, , , ,107,Long fortunes only
+fortune,,o, , , ,108,Offensive fortunes only
+fortune,,s, , , ,109,Short fortunes only
+fortune,,w, , , ,110,Add a wait time for reading

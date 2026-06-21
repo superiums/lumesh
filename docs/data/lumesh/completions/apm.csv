@@ -1,58 +1,53 @@
 cmd,conds,short,long,params,dirs,pri,desc
-apm, ,V,version, ,@f,191,Display version and exit
-apm, ,v,verbose, ,@f,192,Print APM info
-apm, ,m,minutes, ,@f,193,Print time remaining
-apm, ,M,monitor, ,@f,194,Monitor status info
-apm, ,S,standby, ,@f,195,Request APM standby mode
-apm, ,s,suspend, ,@f,196,Request APM suspend mode
-apm, ,d,debug, ,@f,197,APM status debugging info
-
-apm, ,h,help, ,@f,198,Display help
-apm, , , ,help,@f,199,Display help
-apm,clean config dedupe deinstall delete dev develop docs erase featured home init install link linked links list ln lns login ls open outdated publish rebuild rebuild-module-cache remove rm search show star starred stars test uninstall unlink unpublish unstar update upgrade view,h,help, ,@f,200,Display help
-apm, ,v,version, ,@f,201,Display version
-apm, , ,color, ,@f,202,Enable colored output
-apm, , ,no-color, ,@f,203,Disable colored output
-apm, , , ,config,@f,204,Modify or list configuration items
-apm,config set get delete set get delete, , , ,@E @f @r,205,__fish_apm_config_items
-apm, , , ,dedupe,@f,206,Reduce duplication in node_modules in current directory
+apm,,V,version, ,@f,191,Display version and exit
+apm,,v,verbose, ,@f,192,Print APM info
+apm,,m,minutes, ,@f,193,Print time remaining
+apm,,M,monitor, ,@f,194,Monitor status info
+apm,,S,standby, ,@f,195,Request APM standby mode
+apm,,s,suspend, ,@f,196,Request APM suspend mode
+apm,,d,debug, ,@f,197,APM status debugging info
+apm,,h,help, ,@f,198,Display help
+apm,, , ,help,@f,199,Display help
+apm,,v,version, ,@f,201,Display version
+apm,, ,color, ,@f,202,Enable colored output
+apm,, ,no-color, ,@f,203,Disable colored output
+apm,, , ,config,@f,204,Modify or list configuration items
+apm,config set get delete, , , ,@E @f @r,205,__fish_apm_config_items
+apm,, , ,dedupe,@f,206,Reduce duplication in node_modules in current directory
 apm,featured, ,json, ,@f,207,Output featured packages as JSON array
 apm,featured,t,themes, ,@f,208,Only list themes
 apm,featured,c,compatible, ,@f @r,209,Only list packages/themes compatible with specified Atom version
-apm, , , ,init,@f,210,Generates code scaffolding for theme or package
+apm,, , ,init,@f,210,Generates code scaffolding for theme or package
 apm,init, ,template, ,@r,211,Path to the package or theme template
 apm,init,p,package, ,@f @r,212,Generates a basic package
 apm,init,t,theme, ,@f @r,213,Generates a basic theme
 apm,init,l,language, ,@f @r,214,Generates a basic language package
 apm,init,c,convert, ,@r,215,Convert TextMate bundle/theme
-apm, , , ,install,@f,216,Install Atom package to ~/.atom/packages/<package_name>
+apm,, , ,install,@f,216,Install Atom package to ~/.atom/packages/<package_name>
 apm,install, ,check, ,@f,217,Check native build tools are installed
 apm,install, ,verbose, ,@f,218,Show verbose debug information
 apm,install, ,packages-file, ,@r,219,Specify text file containing packages to install
 apm,install, ,production, ,@f,220,Do not install dev dependencies
-apm,install,c,compatible, ,@f @r,221,Only install packages/themes compatible with specified Atom version
 apm,install,s,silent, ,@f,222,Set npm log level to silent
 apm,install,q,quiet, ,@f,223,Set npm log level to quiet
-apm, , , ,login,@f,224,Save Atom API token to keychain
+apm,, , ,login,@f,224,Save Atom API token to keychain
 apm,login, ,token, ,@f @r,225,Specify API token
-apm, , , ,publish,@f,226,Publish new version of package in current working directory
+apm,, , ,publish,@f,226,Publish new version of package in current working directory
 apm,publish,t,tag, ,@f @r,227,Specify a tag to publish
 apm,publish,r,rename, ,@f @r,228,Specify a new name for the package
-apm, , , ,rebuild,@f,229,Rebuild modules installed in node_modules in current working directory
-apm, , , ,rebuild-module-cache,@f,230,Rebuild module cache for installed packages
-apm, , , ,search,@f,231,Search for Atom packages/themes in the atom.io registry
-apm,search, ,json, ,@f,232,Output matching packages as JSON array
+apm,, , ,rebuild,@f,229,Rebuild modules installed in node_modules in current working directory
+apm,, , ,rebuild-module-cache,@f,230,Rebuild module cache for installed packages
+apm,, , ,search,@f,231,Search for Atom packages/themes in the atom.io registry
 apm,search,p,packages, ,@f,233,Search only non-theme packages
-apm,search,t,themes, ,@f,234,Search only themes
-apm, , , ,star,@f,235,Star the given packages on https://atom.io
+apm,, , ,star,@f,235,Star the given packages on https://atom.io
 apm,star, ,installed, ,@f,236,Star all packages in ~/.atom/packages
-apm, , , ,test,@f,237,Runs the package's tests contained within the spec directory
+apm,, , ,test,@f,237,Runs the package's tests contained within the spec directory
 apm,test,p,path, ,@r,238,Path to atom command
-apm, , , ,unlink,@f,239,Delete the symlink in ~/.atom/packages for the package
+apm,, , ,unlink,@f,239,Delete the symlink in ~/.atom/packages for the package
 apm,unlink, ,hard, ,@f,240,Unlink package from ~/.atom/packages and ~/.atom/dev/packages
 apm,unlink,d,dev, ,@f,241,Unlink package from ~/.atom/dev/packages
 apm,unlink,a,all, ,@f,242,Unlink all packages in ~/.atom/packages and ~/.atom/dev/packages
-apm, , , ,unpublish,@f,243,Remove published package or version from the atom.io registry
+apm,, , ,unpublish,@f,243,Remove published package or version from the atom.io registry
 apm,unpublish,f,force, ,@f,244,Do not prompt for confirmation
-apm, , , ,unstar,@f,245,Unstar given packages on https://atom.io
-apm, , , , ,@f,246,Delete installed package(s) from ~/.atom/packages
+apm,, , ,unstar,@f,245,Unstar given packages on https://atom.io
+apm,, , , ,@f,246,Delete installed package(s) from ~/.atom/packages

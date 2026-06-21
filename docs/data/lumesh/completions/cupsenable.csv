@@ -1,6 +1,5 @@
 cmd,conds,short,long,params,dirs,pri,desc
-cupsenable, , ,hold, , ,101,Holds remaining jobs on the named printer
-cupsenable, , ,release, , ,102,Releases pending jobs for printing
-
-cupsenable, ,c, , , ,103,Cancels all jobs on the named destination
-cupsenable, ,r, , ,@f @r,104,Cancel reason
+cupsenable,, ,hold, , ,101,Holds remaining jobs on the named printer
+cupsenable,, ,release, , ,102,Releases pending jobs for printing
+cupsenable,,c, , , ,103,Cancels all jobs on the named destination
+cupsenable,,r, , ,@f @r,104,Cancel reason

@@ -1,18 +1,17 @@
 cmd,conds,short,long,params,dirs,pri,desc
-light, ,-H, , , ,101,Print help and exit
-light, ,A, , ,@f @r,102,Add value
-light, ,U, , ,@f @r,103,Subtract value
-light, ,S, , ,@f @r,104,Set value
-light, ,s, , ,@f @r,105,Specify controller to use
-light, ,v, ,0 1 2 3,@f @r,106,Sets the verbosity level
-
-light, ,V, , , ,107,Print version info and exit
-light, ,L, , , ,108,List controllers
-light, ,T, , , ,109,Save brightness
-light, ,N, , , ,110,Set minimum brightness
-light, ,P, , , ,111,Get minimum brightness
-light, ,O, , , ,112,Save brightness
-light, ,I, , , ,113,Restore brightness after saving
-light, ,r, , , ,114,Interpret & output values in raw mode
-light, ,v, ,0 1 2 3 115,@f @r,114,Sets the verbosity level
-light, ,G, , , ,116,Get value (default)
+light,,-H, , , ,101,Print help and exit
+light,,A, , ,@f @r,102,Add value
+light,,U, , ,@f @r,103,Subtract value
+light,,S, , ,@f @r,104,Set value
+light,,s, , ,@f @r,105,Specify controller to use
+light,,v, ,0 1 2 3,@f @r,106,Sets the verbosity level
+light,,V, , , ,107,Print version info and exit
+light,,L, , , ,108,List controllers
+light,,T, , , ,109,Save brightness
+light,,N, , , ,110,Set minimum brightness
+light,,P, , , ,111,Get minimum brightness
+light,,O, , , ,112,Save brightness
+light,,I, , , ,113,Restore brightness after saving
+light,,r, , , ,114,Interpret & output values in raw mode
+light,,v, ,0 1 2 3 115,@f @r,114,Sets the verbosity level
+light,,G, , , ,116,Get value (default)

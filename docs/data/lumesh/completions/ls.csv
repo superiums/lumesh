@@ -1,104 +1,96 @@
 cmd,conds,short,long,params,dirs,pri,desc
-ls, ,a,all, , ,101,Show hidden
-ls, ,A,almost-all, , ,102,Show hidden except . and ..
-ls, ,b,escape, , ,103,Octal escapes for non-graphic characters
-ls, ,d,directory, , ,104,"List directories, not their content"
-ls, ,F,classify, , ,105,Append filetype indicator (*/=>@|)
-ls, ,h,human-readable, , ,106,Human readable sizes
-ls, ,H,dereference-command-line, , ,107,Follow symlinks
-ls, ,i,inode, , ,108,Print inode number of files
-ls, ,k, , ,@k,109,Set blocksize to 1kB
-ls, ,L,dereference, , ,110,Follow symlinks
-ls, ,n,numeric-uid-gid, , ,111,"Long format, numeric UIDs and GIDs"
-ls, ,p,file-type, , ,112,Append filetype indicator
-ls, ,q,hide-control-chars, , ,113,Replace non-graphic characters with '?'
-ls, ,r,reverse, , ,114,Reverse sort order
-ls, ,R,recursive, , ,115,List subdirectory recursively
-ls, ,s,size, , ,116,Print size of files
-ls, , ,author, , ,117,Print author
-ls, ,B,ignore-backups, , ,118,Ignore files ending with ~
-ls, , ,block-size, ,@f @r,119,Set block size
-ls, , ,color,never always auto,@f,120,Use colors
-ls, ,D,dired, , ,121,Generate dired output
-ls, , ,dereference-command-line-symlink-to-dir, , ,122,
-ls, , ,format,across commas horizontal long single-column verbose vertical,@f @r,123,List format
-ls, , ,full-time, , ,124,"Long format, full-iso time"
-ls, ,G,no-group, , ,125,Don't print group information
-ls, , ,group-directories-first, ,@r,126,Group directories before files
-ls, , ,hide, ,@r,127,Do not list implied entries matching specified shell pattern
-ls, ,I,ignore, ,@r,128,Skip entries matching pattern
-ls, , ,indicator-style,none classify file-type,@f @r,129,Append filetype indicator
-ls, , ,lcontext, , ,130,Display security context
-ls, ,N,literal, , ,131,Print raw entry names
-ls, ,Q,quote-name, , ,132,Enclose entry in quotes
-ls, , ,quoting-style,literal locale shell shell-always c escape,@f @r,133,Select quoting style
-ls, , ,scontext, , ,134,Display only security context and file name
-ls, , ,si, , ,135,"Human readable sizes, powers of 1000"
-ls, , ,show-control-chars, , ,136,Non-graphic characters printed as-is
-ls, , ,sort,,@f @r,137,Sort criteria
-ls, ,T,tabsize,1 2 3 4 5 6 7 8 9 10 11 12,@f @r,138,Assume tab stops at each COLS
-ls, , ,time,,@f @r,139,Show time type
-ls, , ,time-style,full-iso long-iso iso locale,@f @r,140,Select time style
-ls, ,w,width, ,@f @r,141,Assume screen width
-ls, ,Z,context, , ,142,Display security context so it fits on most displays
-ls, , ,help, , ,143,Display help and exit
-ls, , ,version, , ,144,Display version and exit
-ls, ,D, , ,@r,145,for -l: Format date with strptime string
-ls, , ,color,auto always never,@f,146,Enable color output
-
-ls, ,S,,, ,147,Sort by size
-ls, ,1,,, ,148,List one entry per line
-ls, ,C,,, ,149,Force multi-column output
-ls, ,f,,, ,150,"Unsorted output, enables -a"
-ls, ,l,,, ,151,Long listing format
-ls, ,m,,, ,152,"Comma-separated format, fills across screen"
-ls, ,t,,, ,153,"Sort by modified time, most recent first"
-ls, ,x,,, ,154,"Multi-column output, horizontally listed"
-ls, ,o,,, ,155,Long format without groups
-ls, ,,sort,extension none size time version status atime access use,@f @r,156,Sort criteria
-ls, ,,time,time access use ctime status,@f @r,157,Show time type
-ls, ,U,,, ,158,Do not sort
-ls, ,v,,, ,159,Sort by version
-ls, ,X,,, ,160,Sort by extension
-ls, ,i,,, ,161,Show inode numbers for files
-ls, ,q,,, ,162,Replace non-graphic characters with '?'
-ls, ,r,,, ,163,Reverse sort order
-ls, ,s,,, ,164,Show file sizes
-ls, ,g,,, ,165,Show group instead of owner in long format
-ls, ,n,,, ,166,"Long format, numerical UIDs and GIDs"
-ls, ,o,,, ,167,"Long format, show file flags"
-ls, ,A,,, ,168,Show hidden except . and ..
-ls, ,a,,, ,169,Show hidden entries
-ls, ,F,,, ,170,Append indicators. dir/ exec* link@ socket= fifo| whiteout%
-ls, ,p,,, ,171,Append directory indicators
-ls, ,L,,, ,172,Follow all symlinks Cancels -P option
-ls, ,H,,, ,173,Follow symlink given on commandline
-ls, ,R,,, ,174,Recursively list subdirectories
-ls, ,d,,, ,175,"List directories, not their content"
-ls, ,h,,, ,176,Human-readable sizes
-ls, ,b,,, ,177,C escapes for non-graphic characters
-ls, ,e,,, ,178,"Like -l, but fixed time format with seconds"
-ls, ,@,,, ,179,"Like -l, but xattrs shown instead of ACLs"
-ls, ,E,,, ,180,"Like -l, but fixed time format with nanoseconds"
-ls, ,v,,, ,181,"Like -l, but verbose ACL information shown as well as -l output"
-ls, ,V,,, ,182,"Like -l, but compact ACL information printed after -l output"
-ls, ,T,,, ,183,for -l: Show complete date and time
-ls, ,B,,, ,184,Octal escapes for non-graphic characters
-ls, ,W,,, ,185,Display whiteouts when scanning directories
-ls, ,w,,, ,186,Force raw printing of non-printable characters
-ls, ,P,,, ,187,Don't follow symlinks
-ls, ,X,,, ,188,Don't cross mount points when recursing
-ls, ,M,,, ,189,"for -l, -s: Format size/count with commas"
-ls, ,O,,, ,190,for -l: Show file flags
-ls, ,e,,, ,191,"for -l: Print ACL associated with file, if present"
-ls, ,@,,, ,192,for -l: Display extended attributes
-ls, ,Z,,, ,193,Display each file's MAC label
-ls, ,y,,, ,194,for -t: Sort A-Z output in same order as time output
-ls, ,I,,, ,195,Prevent -A from being automatically set for root
-ls, ,,,,,196,195,"for -l: Format size/count number groups with ,/locale"
-ls, ,G,,, ,197,Enable colorized output
+ls,,a,all, , ,101,Show hidden
+ls,,A,almost-all, , ,102,Show hidden except . and ..
+ls,,b,escape, , ,103,Octal escapes for non-graphic characters
+ls,,d,directory, , ,104,List directories, not their content
+ls,,F,classify, , ,105,Append filetype indicator (*/=>@|)
+ls,,h,human-readable, , ,106,Human readable sizes
+ls,,H,dereference-command-line, , ,107,Follow symlinks
+ls,,i,inode, , ,108,Print inode number of files
+ls,,k, , ,@k,109,Set blocksize to 1kB
+ls,,L,dereference, , ,110,Follow symlinks
+ls,,n,numeric-uid-gid, , ,111,Long format, numeric UIDs and GIDs
+ls,,p,file-type, , ,112,Append filetype indicator
+ls,,q,hide-control-chars, , ,113,Replace non-graphic characters with '?'
+ls,,r,reverse, , ,114,Reverse sort order
+ls,,R,recursive, , ,115,List subdirectory recursively
+ls,,s,size, , ,116,Print size of files
+ls,, ,author, , ,117,Print author
+ls,,B,ignore-backups, , ,118,Ignore files ending with ~
+ls,, ,block-size, ,@f @r,119,Set block size
+ls,, ,color,never always auto,@f,120,Use colors
+ls,,D,dired, , ,121,Generate dired output
+ls,, ,dereference-command-line-symlink-to-dir, , ,122,
+ls,, ,format,across commas horizontal long single-column verbose vertical,@f @r,123,List format
+ls,, ,full-time, , ,124,Long format, full-iso time
+ls,,G,no-group, , ,125,Don't print group information
+ls,, ,group-directories-first, ,@r,126,Group directories before files
+ls,, ,hide, ,@r,127,Do not list implied entries matching specified shell pattern
+ls,,I,ignore, ,@r,128,Skip entries matching pattern
+ls,, ,indicator-style,none classify file-type,@f @r,129,Append filetype indicator
+ls,, ,lcontext, , ,130,Display security context
+ls,,N,literal, , ,131,Print raw entry names
+ls,,Q,quote-name, , ,132,Enclose entry in quotes
+ls,, ,quoting-style,literal locale shell shell-always c escape,@f @r,133,Select quoting style
+ls,, ,scontext, , ,134,Display only security context and file name
+ls,, ,si, , ,135,Human readable sizes, powers of 1000
+ls,, ,show-control-chars, , ,136,Non-graphic characters printed as-is
+ls,, ,sort,,@f @r,137,Sort criteria
+ls,,T,tabsize,1 2 3 4 5 6 7 8 9 10 11 12,@f @r,138,Assume tab stops at each COLS
+ls,, ,time,,@f @r,139,Show time type
+ls,, ,time-style,full-iso long-iso iso locale,@f @r,140,Select time style
+ls,,w,width, ,@f @r,141,Assume screen width
+ls,,Z,context, , ,142,Display security context so it fits on most displays
+ls,, ,help, , ,143,Display help and exit
+ls,, ,version, , ,144,Display version and exit
+ls,,D, , ,@r,145,for -l: Format date with strptime string
+ls,, ,color,auto always never,@f,146,Enable color output
+ls,,S,,, ,147,Sort by size
+ls,,1,,, ,148,List one entry per line
+ls,,C,,, ,149,Force multi-column output
+ls,,f,,, ,150,Unsorted output, enables -a
+ls,,l,,, ,151,Long listing format
+ls,,m,,, ,152,Comma-separated format, fills across screen
+ls,,t,,, ,153,Sort by modified time, most recent first
+ls,,x,,, ,154,Multi-column output, horizontally listed
+ls,,o,,, ,155,Long format without groups
+ls,,,sort,extension none size time version status atime access use,@f @r,156,Sort criteria
+ls,,,time,time access use ctime status,@f @r,157,Show time type
+ls,,U,,, ,158,Do not sort
+ls,,v,,, ,159,Sort by version
+ls,,X,,, ,160,Sort by extension
+ls,,i,,, ,161,Show inode numbers for files
+ls,,q,,, ,162,Replace non-graphic characters with '?'
+ls,,r,,, ,163,Reverse sort order
+ls,,s,,, ,164,Show file sizes
+ls,,g,,, ,165,Show group instead of owner in long format
+ls,,n,,, ,166,Long format, numerical UIDs and GIDs
+ls,,A,,, ,168,Show hidden except . and ..
+ls,,a,,, ,169,Show hidden entries
+ls,,F,,, ,170,Append indicators. dir/ exec* link@ socket= fifo| whiteout%
+ls,,p,,, ,171,Append directory indicators
+ls,,L,,, ,172,Follow all symlinks Cancels -P option
+ls,,H,,, ,173,Follow symlink given on commandline
+ls,,R,,, ,174,Recursively list subdirectories
+ls,,d,,, ,175,List directories, not their content
+ls,,h,,, ,176,Human-readable sizes
+ls,,b,,, ,177,C escapes for non-graphic characters
+ls,,e,,, ,178,Like -l, but fixed time format with seconds
+ls,,@,,, ,179,Like -l, but xattrs shown instead of ACLs
+ls,,E,,, ,180,Like -l, but fixed time format with nanoseconds
+ls,,V,,, ,182,Like -l, but compact ACL information printed after -l output
+ls,,T,,, ,183,for -l: Show complete date and time
+ls,,B,,, ,184,Octal escapes for non-graphic characters
+ls,,W,,, ,185,Display whiteouts when scanning directories
+ls,,w,,, ,186,Force raw printing of non-printable characters
+ls,,P,,, ,187,Don't follow symlinks
+ls,,M,,, ,189,for -l, -s: Format size/count with commas
+ls,,O,,, ,190,for -l: Show file flags
+ls,,Z,,, ,193,Display each file's MAC label
+ls,,y,,, ,194,for -t: Sort A-Z output in same order as time output
+ls,,I,,, ,195,Prevent -A from being automatically set for root
+ls,,G,,, ,197,Enable colorized output
 ls, ,c, , , ,198,"Sort by changed time
 ls, ,u, , , ,199,"Sort by access time
-
-ls, ,c, , , ,200,Sort by changed time, (-l) show ctime
-ls, ,u, , , ,201,Sort by access time, (-l) show atime
+ls,,c, , , ,200,Sort by changed time, (-l) show ctime
+ls,,u, , , ,201,Sort by access time, (-l) show atime

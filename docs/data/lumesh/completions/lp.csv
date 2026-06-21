@@ -1,13 +1,11 @@
 cmd,conds,short,long,params,dirs,pri,desc
-lpr, , , , ,@k,101, 
-lp, ,H, ,hold immediate restart resume HH:MM, ,102,Specifies  when the job should be printed
-
-lp, , , , ,@k,103,
-lp, ,d, , , ,104,Prints files to the named printer
-lp, ,i, , ,@f @r,105,Specifies an existing job to modify
-lp, ,n, , ,@f @r,106,Sets the number of copies to print from 1 to 100
-lp, ,t, , ,@f @r,107,Sets the job name
-lp, ,H, , , ,108,Specifies  when the job should be printed
-lp, ,P, , ,@f @r,109,Specify the page ranges
-lp, ,q, , , ,110,Sets the job priority from 1 (lowest) to 100 (highest)
-lp, ,s, , , ,111,Do not report the resulting job IDs (silent mode)
+lpr,, , , ,@k,101,
+lp,,H, ,hold immediate restart resume HH:MM, ,102,Specifies  when the job should be printed
+lp,,d, , , ,104,Prints files to the named printer
+lp,,i, , ,@f @r,105,Specifies an existing job to modify
+lp,,n, , ,@f @r,106,Sets the number of copies to print from 1 to 100
+lp,,t, , ,@f @r,107,Sets the job name
+lp,,H, , , ,108,Specifies  when the job should be printed
+lp,,P, , ,@f @r,109,Specify the page ranges
+lp,,q, , , ,110,Sets the job priority from 1 (lowest) to 100 (highest)
+lp,,s, , , ,111,Do not report the resulting job IDs (silent mode)

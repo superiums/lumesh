@@ -1,28 +1,27 @@
 cmd,conds,short,long,params,dirs,pri,desc
-cygport, ,4,32, , ,101,Build for 32-bit Cygwin
-cygport, ,8,64, , ,102,Build for 64-bit Cygwin
-cygport, , ,debug, , ,103,Enable debugging messages
-
-cygport, , , ,*.cygport,@f,104,Cygport file
-cygport, , , ,downloadall fetchall wgetall getall,@f @n,105,Download all sources
-cygport, , , ,download fetch wget get,@f @n,106,Download missing sources
-cygport, , , ,prep unpack,@f @n,107,Prepare source directory
-cygport, , , ,compile build make,@f @n,108,Build software
-cygport, , , ,check test,@f @n,109,Run test suite
-cygport, , , ,inst install,@f @n,110,Install into DESTDIR and run post-installation steps
-cygport, , , ,postinst,@f @n,111,Run post-installation steps
-cygport, , , ,list,@f @n,112,List package files
-cygport, , , ,listdebug listdbg,@f @n,113,List debug package files
-cygport, , , ,dep,@f @n,114,Show dependencies
-cygport, , , ,info,@f @n,115,Show packaging info
-cygport, , , ,homepage web www,@f @n,116,Show project homepage URL
-cygport, , , ,package-test pkg-test,@f @n,117,Create packages, marked as test
-cygport, , , ,package pkg,@f @n,118,Create packages
-cygport, , , ,diff mkdiff mkpatch,@f @n,119,Create source patches
-cygport, , , ,upload up,@f @n,120,Upload finished packages
-cygport, , , ,stage,@f @n,121,Upload packages without marking !ready
-cygport, , , ,announce,@f @n,122,Send announcement email
-cygport, , , ,clean finish,@f @n,123,Delete working directory
-cygport, , , ,almostall all,@f @n,124,Same as prep build inst pkg
-cygport, , , ,help,@f @n,125,Show help
-cygport, , , ,version,@f @n,126,Show version
+cygport,,4,32, , ,101,Build for 32-bit Cygwin
+cygport,,8,64, , ,102,Build for 64-bit Cygwin
+cygport,, ,debug, , ,103,Enable debugging messages
+cygport,, , ,*.cygport,@f,104,Cygport file
+cygport,, , ,downloadall fetchall wgetall getall,@f @n,105,Download all sources
+cygport,, , ,download fetch wget get,@f @n,106,Download missing sources
+cygport,, , ,prep unpack,@f @n,107,Prepare source directory
+cygport,, , ,compile build make,@f @n,108,Build software
+cygport,, , ,check test,@f @n,109,Run test suite
+cygport,, , ,inst install,@f @n,110,Install into DESTDIR and run post-installation steps
+cygport,, , ,postinst,@f @n,111,Run post-installation steps
+cygport,, , ,list,@f @n,112,List package files
+cygport,, , ,listdebug listdbg,@f @n,113,List debug package files
+cygport,, , ,dep,@f @n,114,Show dependencies
+cygport,, , ,info,@f @n,115,Show packaging info
+cygport,, , ,homepage web www,@f @n,116,Show project homepage URL
+cygport,, , ,package-test pkg-test,@f @n,117,Create packages, marked as test
+cygport,, , ,package pkg,@f @n,118,Create packages
+cygport,, , ,diff mkdiff mkpatch,@f @n,119,Create source patches
+cygport,, , ,upload up,@f @n,120,Upload finished packages
+cygport,, , ,stage,@f @n,121,Upload packages without marking !ready
+cygport,, , ,announce,@f @n,122,Send announcement email
+cygport,, , ,clean finish,@f @n,123,Delete working directory
+cygport,, , ,almostall all,@f @n,124,Same as prep build inst pkg
+cygport,, , ,help,@f @n,125,Show help
+cygport,, , ,version,@f @n,126,Show version

@@ -1,21 +1,15 @@
 cmd,conds,short,long,params,dirs,pri,desc
-ollama, , , , ,@f,101,
-ollama, ,h,help, , ,113,help for ollama
-ollama, ,v,version, , ,114,Show version information
-ollama,show, , , ,@f,115,
-ollama,run, , , ,@f,116,
-ollama,cp, , , ,@f,117,
-ollama,rm, , , ,@f,118,
-ollama,stop, , , ,@f,119,
-
-ollama, , , ,serve, ,120,Start ollama
-ollama, , , ,create, ,121,Create a model from a Modelfile
-ollama, , , ,show, ,122,Show information for a model
-ollama, , , ,run, ,123,Run a model
-ollama, , , ,stop, ,124,Stop a running model.
-ollama, , , ,pull, ,125,Pull a model from a registry
-ollama, , , ,push, ,126,Push a model to a registry
-ollama, , , ,list, ,127,List models
-ollama, , , ,cp, ,128,Copy a model
-ollama, , , ,rm, ,129,Remove a model
-ollama, , , ,help, ,130,Help about any command
+ollama,, , , ,@f,101,
+ollama,,h,help, , ,113,help for ollama
+ollama,,v,version, , ,114,Show version information
+ollama,, , ,serve, ,120,Start ollama
+ollama,, , ,create, ,121,Create a model from a Modelfile
+ollama,, , ,show, ,122,Show information for a model
+ollama,, , ,run, ,123,Run a model
+ollama,, , ,stop, ,124,Stop a running model.
+ollama,, , ,pull, ,125,Pull a model from a registry
+ollama,, , ,push, ,126,Push a model to a registry
+ollama,, , ,list, ,127,List models
+ollama,, , ,cp, ,128,Copy a model
+ollama,, , ,rm, ,129,Remove a model
+ollama,, , ,help, ,130,Help about any command

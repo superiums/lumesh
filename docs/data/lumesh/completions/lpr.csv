@@ -1,10 +1,9 @@
 cmd,conds,short,long,params,dirs,pri,desc
-lpr, , , , ,@k,101, 
-lpr, ,H, , ,@f @r,102,Specifies an alternate server
-lpr, ,T, , ,@f @r,103,Sets the job name
-
-lpr, ,h, , , ,104,Disables banner printing
-lpr, ,l, , , ,105,Send print file without filtering
-lpr, ,p, , , ,106,Format the print file with a shaded header: date, time, job name, and page no.
-lpr, ,q, , , ,107,Hold job for printing
-lpr, ,r, , , ,108,Delete the specified print file after printing
+lpr,, , , ,@k,101,
+lpr,,H, , ,@f @r,102,Specifies an alternate server
+lpr,,T, , ,@f @r,103,Sets the job name
+lpr,,h, , , ,104,Disables banner printing
+lpr,,l, , , ,105,Send print file without filtering
+lpr,,p, , , ,106,Format the print file with a shaded header: date, time, job name, and page no.
+lpr,,q, , , ,107,Hold job for printing
+lpr,,r, , , ,108,Delete the specified print file after printing

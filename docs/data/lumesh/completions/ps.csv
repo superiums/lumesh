@@ -1,70 +1,61 @@
 cmd,conds,short,long,params,dirs,pri,desc
-ps, ,H,forest, , ,101,Show hierarchy
-ps, ,s,sid, ,@f @r,102,Select by session ID
-ps, ,u,user, ,@f @r,103,Select by user
-ps, ,V,version, , ,104,Display version and exit
-ps, , ,width, , ,105,Set screen width
-ps, , ,cumulative, , ,106,Include dead child process data
-ps, , ,deselect, , ,107,Deselect all processes that do not fulfill conditions
-ps, , ,headers, , ,108,"Repeat header lines, one per page"
-ps, , ,help, , ,109,Display help and exit
-ps, , ,info, , ,110,Display debug info
-ps, , ,rows, , ,111,Set screen height
-ps, , ,no-headers, , ,112,Print no headers
-ps, , ,ppid, ,@f @r,113,Select by parent PID
-ps, , ,sort, , ,114,Specify sort order
-ps, -d,G, , ,@f @r,115,
-ps, -d,U, , ,@f @r,116,
-ps, -d,p, , ,@f @r,117,
-
-ps, ,a,,, ,118,Select all processes except session leaders and terminal-less
-ps, ,A,,, ,119,Select all
-ps, ,C,,, ,120,Select by command
-ps, ,c,,, ,121,Show different scheduler information for the -l option
-ps, ,d,,, ,122,Select all processes except session leaders
-ps, ,e,,, ,123,Select all
-ps, ,F,,, ,124,Extra full format
-ps, ,f,,, ,125,Full format
-ps, ,j,,, ,126,Jobs format
-ps, ,l,,, ,127,Long format
-ps, ,L,,, ,128,Show threads. With LWP/NLWP
-ps, ,M,,, ,129,Add column for security data
-ps, ,m,,, ,130,Show threads after processes
-ps, ,N,,, ,131,Invert selection
-ps, ,n,,,@r,132,Set namelist file
-ps, ,T,,, ,133,Show threads. With SPID
-ps, ,y,,, ,134,Do not show flags
-ps, ,a,,, ,135,Select processes for all users
-ps, ,c,,, ,136,"Show only executable name, not full invocation"
-ps, ,d,,, ,137,Arrange in descending tree format
-ps, ,e,,, ,138,Show environment as well
-ps, ,H,,, ,139,Show threads for all processes
-ps, ,h,,, ,140,Repeat headers on each page of output
-ps, ,L,,, ,141,List available columns for -O/-o
-ps, ,M,,,@r,142,Extract names from specified core file
-ps, ,m,,, ,143,Sort by memory usage
-ps, ,N,,,@r,144,Extract names from specified system/installation
-ps, ,r,,, ,145,Sort by CPU usage
-ps, ,S,,, ,146,Include sum of child exited children in parent process times
-ps, ,T,,,@r,147,Select by tty connected to named stdin
-ps, ,t,,,@r,148,Select by tty
-ps, ,x,,, ,149,"When filtering, include processes without controlling terminal"
-ps, ,O,,,@f @r,150,User defined format
-ps, ,w,,, ,151,Wide output
-ps, ,o,,,@f @r,152,User defined format
-ps, ,Z,,, ,153,Include security info
-ps, ,t,,,@r,154,Select by tty
-ps, ,J, , ,@r,155,Select by jail (name or id)
+ps,,H,forest, , ,101,Show hierarchy
+ps,,s,sid, ,@f @r,102,Select by session ID
+ps,,u,user, ,@f @r,103,Select by user
+ps,,V,version, , ,104,Display version and exit
+ps,, ,width, , ,105,Set screen width
+ps,, ,cumulative, , ,106,Include dead child process data
+ps,, ,deselect, , ,107,Deselect all processes that do not fulfill conditions
+ps,, ,headers, , ,108,Repeat header lines, one per page
+ps,, ,help, , ,109,Display help and exit
+ps,, ,info, , ,110,Display debug info
+ps,, ,rows, , ,111,Set screen height
+ps,, ,no-headers, , ,112,Print no headers
+ps,, ,ppid, ,@f @r,113,Select by parent PID
+ps,, ,sort, , ,114,Specify sort order
+ps, ,G, , ,@f @r,115,
+ps, ,U, , ,@f @r,116,
+ps, ,p, , ,@f @r,117,
+ps,,a,,, ,118,Select all processes except session leaders and terminal-less
+ps,,A,,, ,119,Select all
+ps,,C,,, ,120,Select by command
+ps,,c,,, ,121,Show different scheduler information for the -l option
+ps,,d,,, ,122,Select all processes except session leaders
+ps,,e,,, ,123,Select all
+ps,,F,,, ,124,Extra full format
+ps,,f,,, ,125,Full format
+ps,,j,,, ,126,Jobs format
+ps,,l,,, ,127,Long format
+ps,,L,,, ,128,Show threads. With LWP/NLWP
+ps,,M,,, ,129,Add column for security data
+ps,,m,,, ,130,Show threads after processes
+ps,,N,,, ,131,Invert selection
+ps,,n,,,@r,132,Set namelist file
+ps,,T,,, ,133,Show threads. With SPID
+ps,,y,,, ,134,Do not show flags
+ps,,H,,, ,139,Show threads for all processes
+ps,,h,,, ,140,Repeat headers on each page of output
+ps,,M,,,@r,142,Extract names from specified core file
+ps,,N,,,@r,144,Extract names from specified system/installation
+ps,,r,,, ,145,Sort by CPU usage
+ps,,S,,, ,146,Include sum of child exited children in parent process times
+ps,,T,,,@r,147,Select by tty connected to named stdin
+ps,,t,,,@r,148,Select by tty
+ps,,x,,, ,149,When filtering, include processes without controlling terminal
+ps,,O,,,@f @r,150,User defined format
+ps,,w,,, ,151,Wide output
+ps,,o,,,@f @r,152,User defined format
+ps,,Z,,, ,153,Include security info
+ps,,J, , ,@r,155,Select by jail (name or id)
 ps, ,u, , , ,156,"BSD user format (user
 ps, ,v, , , ,157,"BSD v format (pid
 ps, ,X, , , ,158,"When filtering
 ps, ,G, , ,@E @f @r,159,"__fish_stripprefix='^(--group=|-\w*G)' __fish_complete_list
 ps, ,U, , ,@E @f @r,160,"__fish_stripprefix='^(--user=|-\w*U)' __fish_complete_list
 ps, ,p, , ,@E @f @r,161,"__fish_stripprefix='^(--pid=|-\w*p)' __fish_complete_list
-
-ps, ,u, , , ,162,BSD user format (user, pid, %cpu, %mem, vsz, rss, tt, state, start, time, and cmd)
-ps, ,v, , , ,163,BSD v format (pid, state, time, sl, re, pagein, vsz, rss, lim, tsiz, %cpu, %mem)
-ps, ,X, , , ,164,When filtering, skip processes without controlling terminal (default)
-ps, ,G, , ,@E @f @r,165,__fish_stripprefix='^(--group=|-\w*G)' __fish_complete_list , __fish_complete_groups
-ps, ,U, , ,@E @f @r,166,__fish_stripprefix='^(--user=|-\w*U)' __fish_complete_list , __fish_complete_users
-ps, ,p, , ,@E @f @r,167,__fish_stripprefix='^(--pid=|-\w*p)' __fish_complete_list , __fish_complete_pids
+ps,,u, , , ,162,BSD user format (user, pid, %cpu, %mem, vsz, rss, tt, state, start, time, and cmd)
+ps,,v, , , ,163,BSD v format (pid, state, time, sl, re, pagein, vsz, rss, lim, tsiz, %cpu, %mem)
+ps,,X, , , ,164,When filtering, skip processes without controlling terminal (default)
+ps,,G, , ,@E @f @r,165,__fish_stripprefix='^(--group=|-\w*G)' __fish_complete_list , __fish_complete_groups
+ps,,U, , ,@E @f @r,166,__fish_stripprefix='^(--user=|-\w*U)' __fish_complete_list , __fish_complete_users
+ps,,p, , ,@E @f @r,167,__fish_stripprefix='^(--pid=|-\w*p)' __fish_complete_list , __fish_complete_pids

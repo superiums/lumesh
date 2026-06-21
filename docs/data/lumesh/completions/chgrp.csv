@@ -1,23 +1,21 @@
 cmd,conds,short,long,params,dirs,pri,desc
-chgrp, ,c,changes, , ,101,Output diagnostic for changed files
-chgrp, , ,dereference, , ,102,Dereference symlinks
-chgrp, ,h,no-dereference, , ,103,Don't dereference symlinks
-chgrp, , ,from, , ,104,Change from owner/group
-chgrp, ,f,silent, , ,105,Suppress errors
-chgrp, , ,reference, , ,106,Use same owner/group as file
-chgrp, ,R,recursive, , ,107,Operate recursively
-chgrp, ,v,verbose, , ,108,Output diagnostic for every file
-chgrp, , ,help, , ,109,Display help and exit
-chgrp, , ,version, , ,110,Display version and exit
-
-chgrp, ,,,,@E,111,__fish_complete_groups
-chgrp, ,h,,, ,112,Don't dereference symlinks
-chgrp, ,H,,, ,113,Follow specified symlinks with -R
-chgrp, ,L,,, ,114,Follow all symlinks with -R
-chgrp, ,P,,, ,115,Follow no symlinks with -R
-chgrp, ,f,,, ,116,Suppress errors
-chgrp, ,n,,, ,117,id is numeric; avoid lookup
-chgrp, ,R,,, ,118,Operate recursively
-chgrp, ,v,,, ,119,Output filenames
-chgrp, ,x,,, ,120,Don't traverse fs mountpoints
-chgrp, ,,,,@E,121,__fish_complete_groups
+chgrp,,c,changes, , ,101,Output diagnostic for changed files
+chgrp,, ,dereference, , ,102,Dereference symlinks
+chgrp,,h,no-dereference, , ,103,Don't dereference symlinks
+chgrp,, ,from, , ,104,Change from owner/group
+chgrp,,f,silent, , ,105,Suppress errors
+chgrp,, ,reference, , ,106,Use same owner/group as file
+chgrp,,R,recursive, , ,107,Operate recursively
+chgrp,,v,verbose, , ,108,Output diagnostic for every file
+chgrp,, ,help, , ,109,Display help and exit
+chgrp,, ,version, , ,110,Display version and exit
+chgrp,,,,,@E,111,__fish_complete_groups
+chgrp,,h,,, ,112,Don't dereference symlinks
+chgrp,,H,,, ,113,Follow specified symlinks with -R
+chgrp,,L,,, ,114,Follow all symlinks with -R
+chgrp,,P,,, ,115,Follow no symlinks with -R
+chgrp,,f,,, ,116,Suppress errors
+chgrp,,n,,, ,117,id is numeric; avoid lookup
+chgrp,,R,,, ,118,Operate recursively
+chgrp,,v,,, ,119,Output filenames
+chgrp,,x,,, ,120,Don't traverse fs mountpoints

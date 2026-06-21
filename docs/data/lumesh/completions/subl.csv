@@ -1,14 +1,11 @@
 cmd,conds,short,long,params,dirs,pri,desc
-subl, project, , ,-d, ,101, 
-subl, command, , ,-d, ,102, 
-subl,a add, , ,-d, ,103, 
-
-subl, , ,project, ,@r,104,Load the given project
-subl, , ,command, ,@r,105,Run the given command
-subl, ,n,new-window, , ,106,Open a new window
-subl, ,a,add, ,@r,107,Add folders to the current window
-subl, ,w,wait, , ,108,Wait for the files to be closed before returning
-subl, ,b,background, , ,109,Don't activate the application
-subl, ,s,stay, , ,110,Keep the application activated after closing the file
-subl, ,h,help, , ,111,Show help and exit
-subl, ,v,version, , ,112,Show version and exit
+subl,project, , ,-d, ,101,
+subl,, ,project, ,@r,104,Load the given project
+subl,, ,command, ,@r,105,Run the given command
+subl,,n,new-window, , ,106,Open a new window
+subl,,a,add, ,@r,107,Add folders to the current window
+subl,,w,wait, , ,108,Wait for the files to be closed before returning
+subl,,b,background, , ,109,Don't activate the application
+subl,,s,stay, , ,110,Keep the application activated after closing the file
+subl,,h,help, , ,111,Show help and exit
+subl,,v,version, , ,112,Show version and exit

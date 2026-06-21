@@ -1,9 +1,6 @@
 cmd,conds,short,long,params,dirs,pri,desc
-dscacheutil, , , , ,@f,101,Directory Service cache utility
-
+dscacheutil,, , , ,@f,101,Directory Service cache utility
 dscacheutil,,h, , ,@f,102,lists options
-dscacheutil, ,q, ,group host mount protocol rpc service user,@f @r,103,initiate query
+dscacheutil,,q, ,group host mount protocol rpc service user,@f @r,103,initiate query
 dscacheutil,,a, , ,@f,104,-q: specific key & value
-dscacheutil,, , , ,@f,105,dump cache overview
-dscacheutil,, , , ,@f,106,show hash buckets
 dscacheutil,, , ,group host mount protocol rpc service user,@f,107,-cachedump: cache entries

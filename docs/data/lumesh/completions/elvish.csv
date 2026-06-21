@@ -1,5 +1,4 @@
 cmd,conds,short,long,params,dirs,pri,desc
-elvish, , , , ,@f,101,Warn about deprecated features
-
-elvish, ,c, , , ,102,Compile
-elvish, ,i, , , ,103,Show output in JSON
+elvish,, , , ,@f,101,Warn about deprecated features
+elvish,,c, , , ,102,Compile
+elvish,,i, , , ,103,Show output in JSON

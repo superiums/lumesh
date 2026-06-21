@@ -1,46 +1,44 @@
 cmd,conds,short,long,params,dirs,pri,desc
-ldapsearch, ,d, , ,@f @r,101,Set the LDAP debug level
-ldapsearch, ,T, , ,@r,102,Write temp files to specified directory
-ldapsearch, ,F, , ,@f @r,103,URL prefix for temp files
-ldapsearch, ,S, , ,@f @r,104,Sort the entries returned based on attribute
-ldapsearch, ,b, , ,@f @r,105,Specify starting point for the search
-ldapsearch, ,s, ,base one sub children, ,106,Specify the scope of the search
-ldapsearch, ,a, ,never always search find, ,107,Specify how aliases dereferencing is done
-ldapsearch, ,l, , ,@f @r,108,Set max number of seconds for a search to complete
-ldapsearch, ,z, , ,@f @r,109,Set max number of entries for a search
-ldapsearch, ,f, , ,@r,110,"Read lines from file, performing one search for each"
-ldapsearch, ,D, , ,@f @r,111,Specify Distinguished Name to bind to the LDAP directory
-ldapsearch, ,w, , ,@f @r,112,Set password for simple authentication
-ldapsearch, ,y, , ,@r,113,Use contents of file as password for simple authentication
-ldapsearch, ,H, , ,@f @r,114,Specify URI(s) referring to the ldap server(s)
-ldapsearch, ,h, , ,@f @r,115,Specify an alternate host
-ldapsearch, ,p, , ,@f @r,116,Specify an alternate TCP port
-ldapsearch, ,P, ,2 3, ,117,Specify the LDAP protocol version
-ldapsearch, ,e, , ,@f @r,118,Specify general extensions
-ldapsearch, ,E, , ,@f @r,119,Specify search extensions
-ldapsearch, ,o, , ,@f @r,120,Specify general options
-ldapsearch, ,O, , ,@f @r,121,Specify SASL security properties
-ldapsearch, ,U, , ,@f @r,122,Specify the authentication ID for SASL bind
-ldapsearch, ,R, , ,@f @r,123,Specify the realm of authentication ID for SASL bind
-ldapsearch, ,X, , ,@f @r,124,Specify the requested authorization ID for SASL bind
-ldapsearch, ,Y, , ,@f @r,125,Specify the SASL mechanism to be used for authentication
-
-ldapsearch, ,V, , , ,126,Print version info
-ldapsearch, , , , , ,127,Print version info and exit
-ldapsearch, ,n, , , ,128,Show what would be done, but don
-ldapsearch, ,v, , , ,129,Run in verbose mode
-ldapsearch, ,c, , , ,130,Continuous operation mode
-ldapsearch, ,t, , , ,131,Write retrieved non-printable values to temp files
-ldapsearch, ,A, , , ,132,Retrieve attributes only
-ldapsearch, ,L, , , ,133,Search results are display in LDAP Data Interchange Format
-ldapsearch, ,s, , , ,134,Specify the scope of the search
-ldapsearch, ,a, , , ,135,Specify how aliases dereferencing is done
-ldapsearch, ,M, , , ,136,Enable manage DSA IT control
-ldapsearch, ,x, , , ,137,Use simple authentication instead of SASL
-ldapsearch, ,W, , , ,138,Prompt for simple authentication
-ldapsearch, ,P, , , ,139,Specify the LDAP protocol version
-ldapsearch, ,I, , , ,140,Enable SASL Interactive mode
-ldapsearch, ,Q, , , ,141,Enable SASL Quiet mode
-ldapsearch, ,N, , , ,142,Do not use reverse DNS to canonicalize SASL host name
-ldapsearch, ,Z, , , ,143,Issue StartTLS extended operation
-ldapsearch, ,u, , , ,144,Include User Friendly Name of the Distinguished Name (DN)
+ldapsearch,,d, , ,@f @r,101,Set the LDAP debug level
+ldapsearch,,T, , ,@r,102,Write temp files to specified directory
+ldapsearch,,F, , ,@f @r,103,URL prefix for temp files
+ldapsearch,,S, , ,@f @r,104,Sort the entries returned based on attribute
+ldapsearch,,b, , ,@f @r,105,Specify starting point for the search
+ldapsearch,,s, ,base one sub children, ,106,Specify the scope of the search
+ldapsearch,,a, ,never always search find, ,107,Specify how aliases dereferencing is done
+ldapsearch,,l, , ,@f @r,108,Set max number of seconds for a search to complete
+ldapsearch,,z, , ,@f @r,109,Set max number of entries for a search
+ldapsearch,,f, , ,@r,110,Read lines from file, performing one search for each
+ldapsearch,,D, , ,@f @r,111,Specify Distinguished Name to bind to the LDAP directory
+ldapsearch,,w, , ,@f @r,112,Set password for simple authentication
+ldapsearch,,y, , ,@r,113,Use contents of file as password for simple authentication
+ldapsearch,,H, , ,@f @r,114,Specify URI(s) referring to the ldap server(s)
+ldapsearch,,h, , ,@f @r,115,Specify an alternate host
+ldapsearch,,p, , ,@f @r,116,Specify an alternate TCP port
+ldapsearch,,P, ,2 3, ,117,Specify the LDAP protocol version
+ldapsearch,,e, , ,@f @r,118,Specify general extensions
+ldapsearch,,E, , ,@f @r,119,Specify search extensions
+ldapsearch,,o, , ,@f @r,120,Specify general options
+ldapsearch,,O, , ,@f @r,121,Specify SASL security properties
+ldapsearch,,U, , ,@f @r,122,Specify the authentication ID for SASL bind
+ldapsearch,,R, , ,@f @r,123,Specify the realm of authentication ID for SASL bind
+ldapsearch,,X, , ,@f @r,124,Specify the requested authorization ID for SASL bind
+ldapsearch,,Y, , ,@f @r,125,Specify the SASL mechanism to be used for authentication
+ldapsearch,,V, , , ,126,Print version info
+ldapsearch,,n, , , ,128,Show what would be done, but don
+ldapsearch,,v, , , ,129,Run in verbose mode
+ldapsearch,,c, , , ,130,Continuous operation mode
+ldapsearch,,t, , , ,131,Write retrieved non-printable values to temp files
+ldapsearch,,A, , , ,132,Retrieve attributes only
+ldapsearch,,L, , , ,133,Search results are display in LDAP Data Interchange Format
+ldapsearch,,s, , , ,134,Specify the scope of the search
+ldapsearch,,a, , , ,135,Specify how aliases dereferencing is done
+ldapsearch,,M, , , ,136,Enable manage DSA IT control
+ldapsearch,,x, , , ,137,Use simple authentication instead of SASL
+ldapsearch,,W, , , ,138,Prompt for simple authentication
+ldapsearch,,P, , , ,139,Specify the LDAP protocol version
+ldapsearch,,I, , , ,140,Enable SASL Interactive mode
+ldapsearch,,Q, , , ,141,Enable SASL Quiet mode
+ldapsearch,,N, , , ,142,Do not use reverse DNS to canonicalize SASL host name
+ldapsearch,,Z, , , ,143,Issue StartTLS extended operation
+ldapsearch,,u, , , ,144,Include User Friendly Name of the Distinguished Name (DN)

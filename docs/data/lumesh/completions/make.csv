@@ -1,24 +1,23 @@
 cmd,conds,short,long,params,dirs,pri,desc
-make, commandline -ct | string match -q '*=*', , , ,@f,101,Target
-make, ,C,directory, ,@D @f @r,102,Change directory
-make, ,I, , ,@D @f @r,103,Search directory for makefile
-make, ,j, , ,@f,104,Number of concurrent jobs (no argument means no limit)
-make, ,o, , ,@r,105,Ignore specified file
-make, ,W, , ,@r,106,Pretend file is modified
-
-make, ,f,,,@r,107,Use file as makefile
-make, ,d,,, ,108,Debug mode
-make, ,e,,, ,109,Environment before makefile
-make, ,i,,, ,110,Ignore errors
-make, ,k,,, ,111,Continue after an error
-make, ,l,,, ,112,Start when load drops
-make, ,n,,, ,113,Do not execute commands
-make, ,p,,, ,114,Print database
-make, ,q,,, ,115,Question mode
-make, ,r,,, ,116,Eliminate implicit rules
-make, ,s,,, ,117,Quiet mode
-make, ,S,,, ,118,Don't continue after an error
-make, ,t,,, ,119,"Touch files, don't run commands"
-make, ,v,,, ,120,Display version and exit
-make, ,w,,, ,121,Print working directory
-make,commandline -ct | not string match -q '*=*', , , ,@E @f,122,__fish_complete_make_targets (commandline -p)
+make, , , , ,@f,101,Target
+make,,C,directory, ,@D @f @r,102,Change directory
+make,,I, , ,@D @f @r,103,Search directory for makefile
+make,,j, , ,@f,104,Number of concurrent jobs (no argument means no limit)
+make,,o, , ,@r,105,Ignore specified file
+make,,W, , ,@r,106,Pretend file is modified
+make,,f,,,@r,107,Use file as makefile
+make,,d,,, ,108,Debug mode
+make,,e,,, ,109,Environment before makefile
+make,,i,,, ,110,Ignore errors
+make,,k,,, ,111,Continue after an error
+make,,l,,, ,112,Start when load drops
+make,,n,,, ,113,Do not execute commands
+make,,p,,, ,114,Print database
+make,,q,,, ,115,Question mode
+make,,r,,, ,116,Eliminate implicit rules
+make,,s,,, ,117,Quiet mode
+make,,S,,, ,118,Don't continue after an error
+make,,t,,, ,119,Touch files, don't run commands
+make,,v,,, ,120,Display version and exit
+make,,w,,, ,121,Print working directory
+make, , , , ,@E @f,122,__fish_complete_make_targets (commandline -p)

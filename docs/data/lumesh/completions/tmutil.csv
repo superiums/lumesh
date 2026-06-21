@@ -1,72 +1,63 @@
 cmd,conds,short,long,params,dirs,pri,desc
-tmutil, status, , , ,@f,102, 
-tmutil, addexclusion,v, , ,@r,104,Volume exclusion
-tmutil, addexclusion,p, , ,@r,105,Path exclusion
-tmutil, compare,a, , ,@f,109,Compare all supported metadata
-tmutil, compare,n, , ,@f,110,No metadata comparison
-tmutil, compare,@, , ,@f,111,Compare extended attributes
-tmutil, compare,c, , ,@f,112,Compare creation times
-tmutil, compare,d, , ,@f,113,Compare file data forks
-tmutil, compare,e, , ,@f,114,Compare ACLs
-tmutil, compare,f, , ,@f,115,Compare file flags
-tmutil, compare,g, , ,@f,116,Compare GIDs
-tmutil, compare,m, , ,@f,117,Compare file modes
-tmutil, compare,s, , ,@f,118,Compare sizes
-tmutil, compare,t, , ,@f,119,Compare modification times
-tmutil, compare,u, , ,@f,120,Compare UIDs
-tmutil, compare,D, , ,@r,121,Limit traversal depth to depth levels from the beginning of iteration
-tmutil, compare,E, , ,@f,122,Dont take exclusions into account
-tmutil, compare,I, , ,@r,123,Ignore path
-tmutil, compare,U, , ,@f,124,Ignore logical volume identity
-tmutil, delete,d, , ,@r,126,Backup mount point
-tmutil, delete,t, , ,@f @r,127,Timestamp
-tmutil, delete,p, , ,@r,128,Path
-tmutil, removeexclusion,v, , ,@f,147,Volume exclusion
-tmutil, removeexclusion,p, , ,@f,148,Path exclusion
-tmutil, restore,v, , ,@r,150, 
-tmutil, setdestination,a, , ,@f,152,Add to the list of destinations
-tmutil, setdestination,p, , ,@f,153,Enter the password at a non-echoing interactive prompt
-tmutil, startbackup,a,auto, ,@f,156,Automatic mode
-tmutil, startbackup,b,block, ,@f,157,Block until finished
-tmutil, startbackup,r,rotation, ,@f,158,Automatic rotation
-tmutil, destinationinfo isexcluded compare status,X, , ,@f,167,Print as XML
-tmutil, latestbackup listbackups,m, , ,@f,168,Destination volume to list backups from
-tmutil, latestbackup listbackups,t, , ,@f,169,Attempt to mount the backups and list their mounted paths
-tmutil, latestbackup listbackups,d, , ,@f,170,Backup mount point
-
-tmutil, , , ,status, ,171,Display Time Machine status
-tmutil, , , ,addexclusion,@f,172,Add an exclusion not to back up a file
-tmutil, , , ,associatedisk,@r,173,Bind a snapshot volume directory to the specified local disk
-tmutil, , , ,calculatedrift,@r,174,Determine the amount of change between snapshots
-tmutil, , , ,compare,@r,175,Perform a backup diff
-tmutil, , , ,delete,@r,176,Delete one or more snapshots
-tmutil, , , ,deleteinprogress,@r,177,Delete all in-progress backups for a machine directory
-tmutil, , , ,destinationinfo,@f,178,Print information about destinations
-tmutil, , , ,disable,@f,179,Turn off automatic backups
-tmutil, , , ,disablelocal,@f,180,Turn off local Time Machine snapshots
-tmutil, , , ,enable,@f,181,Turn on automatic backups
-tmutil, , , ,enablelocal,@f,182,Turn on local Time Machine snapshots
-tmutil, , , ,inheritbackup,@r,183,Claim a machine directory or sparsebundle for use by the current machine
-tmutil, , , ,isexcluded,@r,184,Determine if a file, directory, or volume are excluded from backups
-tmutil, , , ,latestbackup,@f,185,Print the path to the latest snapshot
-tmutil, , , ,listlocalsnapshotdates,@f,186,List the creation dates of all local Time Machine snapshots
-tmutil, , , ,listlocalsnapshots,@r,187,List local Time Machine snapshots of the specified volume
-tmutil, , , ,listbackups,@f,188,Print paths for all snapshots
-tmutil, , , ,localsnapshot,@f,189,Create new local Time Machine snapshot of APFS volume in TM backup
-tmutil, , , ,machinedirectory,@f,190,Print the path to the current machine directory
-tmutil, , , ,removedestination,@f,191,Removes a backup destination
-tmutil, , , ,removeexclusion,@f,192,Remove an exclusion
-tmutil, , , ,restore,@f,193,Restore an item
-tmutil, , , ,setdestination,@r,194,Set a backup destination
-tmutil, , , ,snapshot,@f,195,Create new local Time Machine snapshot
-tmutil, , , ,startbackup,@f,196,Begin a backup if one is not already running
-tmutil, , , ,stopbackup,@f,197,Cancel a backup currently in progress
-tmutil, , , ,thinlocalsnapshots,@r,198,Thin local Time Machine snapshots for the specified volume
-tmutil, , , ,uniquesize,@r,199,Analyze the specified path and determine its unique size
-tmutil, , , ,verifychecksums,@r,200,Verify snapshot
-tmutil, , , ,version,@f,201,Print version
-tmutil, , , ,setquota,@f,202,Set the quota for the destination in gigabytes
-tmutil, , , ,deletelocalsnapshots,@r,203,Delete all local Time Machine snapshots for the specified date (formatted YYYY-MM-DD-HHMMSS)
-tmutil,removedestination, , , ,@f,204,
+tmutil,status, , , ,@f,102,
+tmutil,addexclusion,v, , ,@r,104,Volume exclusion
+tmutil,addexclusion,p, , ,@r,105,Path exclusion
+tmutil,compare,a, , ,@f,109,Compare all supported metadata
+tmutil,compare,n, , ,@f,110,No metadata comparison
+tmutil,compare,@, , ,@f,111,Compare extended attributes
+tmutil,compare,c, , ,@f,112,Compare creation times
+tmutil,compare,d, , ,@f,113,Compare file data forks
+tmutil,compare,e, , ,@f,114,Compare ACLs
+tmutil,compare,f, , ,@f,115,Compare file flags
+tmutil,compare,g, , ,@f,116,Compare GIDs
+tmutil,compare,m, , ,@f,117,Compare file modes
+tmutil,compare,s, , ,@f,118,Compare sizes
+tmutil,compare,t, , ,@f,119,Compare modification times
+tmutil,compare,u, , ,@f,120,Compare UIDs
+tmutil,compare,D, , ,@r,121,Limit traversal depth to depth levels from the beginning of iteration
+tmutil,compare,E, , ,@f,122,Dont take exclusions into account
+tmutil,compare,I, , ,@r,123,Ignore path
+tmutil,compare,U, , ,@f,124,Ignore logical volume identity
+tmutil,delete,d, , ,@r,126,Backup mount point
+tmutil,delete,t, , ,@f @r,127,Timestamp
+tmutil,removeexclusion,v, , ,@f,147,Volume exclusion
+tmutil,removeexclusion,p, , ,@f,148,Path exclusion
+tmutil,startbackup,a,auto, ,@f,156,Automatic mode
+tmutil,startbackup,b,block, ,@f,157,Block until finished
+tmutil,startbackup,r,rotation, ,@f,158,Automatic rotation
+tmutil,destinationinfo isexcluded compare status,X, , ,@f,167,Print as XML
+tmutil,, , ,status, ,171,Display Time Machine status
+tmutil,, , ,addexclusion,@f,172,Add an exclusion not to back up a file
+tmutil,, , ,associatedisk,@r,173,Bind a snapshot volume directory to the specified local disk
+tmutil,, , ,calculatedrift,@r,174,Determine the amount of change between snapshots
+tmutil,, , ,compare,@r,175,Perform a backup diff
+tmutil,, , ,delete,@r,176,Delete one or more snapshots
+tmutil,, , ,deleteinprogress,@r,177,Delete all in-progress backups for a machine directory
+tmutil,, , ,destinationinfo,@f,178,Print information about destinations
+tmutil,, , ,disable,@f,179,Turn off automatic backups
+tmutil,, , ,disablelocal,@f,180,Turn off local Time Machine snapshots
+tmutil,, , ,enable,@f,181,Turn on automatic backups
+tmutil,, , ,enablelocal,@f,182,Turn on local Time Machine snapshots
+tmutil,, , ,inheritbackup,@r,183,Claim a machine directory or sparsebundle for use by the current machine
+tmutil,, , ,isexcluded,@r,184,Determine if a file, directory, or volume are excluded from backups
+tmutil,, , ,latestbackup,@f,185,Print the path to the latest snapshot
+tmutil,, , ,listlocalsnapshotdates,@f,186,List the creation dates of all local Time Machine snapshots
+tmutil,, , ,listlocalsnapshots,@r,187,List local Time Machine snapshots of the specified volume
+tmutil,, , ,listbackups,@f,188,Print paths for all snapshots
+tmutil,, , ,localsnapshot,@f,189,Create new local Time Machine snapshot of APFS volume in TM backup
+tmutil,, , ,machinedirectory,@f,190,Print the path to the current machine directory
+tmutil,, , ,removedestination,@f,191,Removes a backup destination
+tmutil,, , ,removeexclusion,@f,192,Remove an exclusion
+tmutil,, , ,restore,@f,193,Restore an item
+tmutil,, , ,setdestination,@r,194,Set a backup destination
+tmutil,, , ,snapshot,@f,195,Create new local Time Machine snapshot
+tmutil,, , ,startbackup,@f,196,Begin a backup if one is not already running
+tmutil,, , ,stopbackup,@f,197,Cancel a backup currently in progress
+tmutil,, , ,thinlocalsnapshots,@r,198,Thin local Time Machine snapshots for the specified volume
+tmutil,, , ,uniquesize,@r,199,Analyze the specified path and determine its unique size
+tmutil,, , ,verifychecksums,@r,200,Verify snapshot
+tmutil,, , ,version,@f,201,Print version
+tmutil,, , ,setquota,@f,202,Set the quota for the destination in gigabytes
+tmutil,, , ,deletelocalsnapshots,@r,203,Delete all local Time Machine snapshots for the specified date (formatted YYYY-MM-DD-HHMMSS)
 tmutil,startbackup,d,destination, ,@f @r,205,Backup destination
 tmutil,setquota, , , ,@f @r,206,

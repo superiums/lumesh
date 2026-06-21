@@ -1,29 +1,27 @@
 cmd,conds,short,long,params,dirs,pri,desc
-date, , , , ,@f,101,display or set date and time
-date, ,d,date, , ,102,Display date described by string
-date, ,f,file, , ,103,Display date for each line in file
-date, ,I,iso-8601,date hours minutes seconds,@f @r,104,Use ISO 8601 output format
-date, ,s,set, , ,105,Set time
-date, ,R,rfc-2822, , ,106,Output in RFC 2822 format
-date, ,r,reference, , ,107,Display last modification time of file
-date, ,u,utc, , ,108,Print/set UTC time
-date, , ,universal, , ,109,Print/set UTC time
-date, ,h,help, , ,110,Display help and exit
-date, ,v,version, , ,111,Display version and exit
-date, ,I, ,date hours minutes seconds,@f @r,112,Use ISO 8601 output format
-
-date, ,,rfc-3339=date,, ,113,Output in RFC 3339 format with date precision
-date, ,,rfc-3339=second,, ,114,Output in RFC 3339 format with second precision
-date, ,,rfc-3339=ns,, ,115,Output in RFC 3339 format with nanosecond precision
-date, ,u,,,@f,116,Display or set UTC time
-date, ,j,,,@f,117,Don't try to set the date
-date, ,r,,,@r,118,Format path mtime or UNIX timestamp
-date, ,v,,,@f,119,Adjust clock ± time specified
-date, ,R,,, ,120,Use RFC 2822 output format
-date, ,t,,,@f @r,121,Set system's minutes west of GMT
-date, ,d,,,@f @r,122,Set system's value for DST
-date, ,a,,,@f @r,123,Change clock slowly with adjtime
-date, ,r,,,@f @r,124,Show date given seconds since epoch
-date, ,d,,,@f @r,125,Parse human-described date-time and show result
-date, ,z,,,@f @r,126,Specify timezone for output
-date, ,f,,,@f,127,Use format string to parse date
+date,, , , ,@f,101,display or set date and time
+date,,d,date, , ,102,Display date described by string
+date,,f,file, , ,103,Display date for each line in file
+date,,I,iso-8601,date hours minutes seconds,@f @r,104,Use ISO 8601 output format
+date,,s,set, , ,105,Set time
+date,,R,rfc-2822, , ,106,Output in RFC 2822 format
+date,,r,reference, , ,107,Display last modification time of file
+date,,u,utc, , ,108,Print/set UTC time
+date,, ,universal, , ,109,Print/set UTC time
+date,,h,help, , ,110,Display help and exit
+date,,v,version, , ,111,Display version and exit
+date,,I, ,date hours minutes seconds,@f @r,112,Use ISO 8601 output format
+date,,,rfc-3339=date,, ,113,Output in RFC 3339 format with date precision
+date,,,rfc-3339=second,, ,114,Output in RFC 3339 format with second precision
+date,,,rfc-3339=ns,, ,115,Output in RFC 3339 format with nanosecond precision
+date,,u,,,@f,116,Display or set UTC time
+date,,j,,,@f,117,Don't try to set the date
+date,,r,,,@r,118,Format path mtime or UNIX timestamp
+date,,v,,,@f,119,Adjust clock ± time specified
+date,,R,,, ,120,Use RFC 2822 output format
+date,,t,,,@f @r,121,Set system's minutes west of GMT
+date,,d,,,@f @r,122,Set system's value for DST
+date,,a,,,@f @r,123,Change clock slowly with adjtime
+date,,r,,,@f @r,124,Show date given seconds since epoch
+date,,z,,,@f @r,126,Specify timezone for output
+date,,f,,,@f,127,Use format string to parse date

@@ -1,5 +1,2 @@
 cmd,conds,short,long,argument,dirs,pri,desc
-podman, , , , , ,100,
-podman,__podman_clear_perform_completion_once_result, , , , ,101,
-
 podman,__podman_requires_order_preservation && __podman_prepare_completions, , , ,@f @n,102,

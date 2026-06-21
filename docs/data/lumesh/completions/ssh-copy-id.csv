@@ -1,11 +1,10 @@
 cmd,conds,short,long,params,dirs,pri,desc
-ssh-copy-id, , , , ,@k,101,Remote
-ssh-copy-id, ,i, , ,@r,102,IdentityFile
-ssh-copy-id, ,p, , ,@r,103,Port
-ssh-copy-id, ,F, , ,@r,104,Alternate ssh config file
-ssh-copy-id, ,\?, , , ,105,Show help
-
-ssh-copy-id, ,o,,, ,106,Options
-ssh-copy-id, ,f,,, ,107,Force mode
-ssh-copy-id, ,n,,, ,108,Dry run
-ssh-copy-id, ,s,,, ,109,Use sftp
+ssh-copy-id,, , , ,@k,101,Remote
+ssh-copy-id,,i, , ,@r,102,IdentityFile
+ssh-copy-id,,p, , ,@r,103,Port
+ssh-copy-id,,F, , ,@r,104,Alternate ssh config file
+ssh-copy-id,,\?, , , ,105,Show help
+ssh-copy-id,,o,,, ,106,Options
+ssh-copy-id,,f,,, ,107,Force mode
+ssh-copy-id,,n,,, ,108,Dry run
+ssh-copy-id,,s,,, ,109,Use sftp

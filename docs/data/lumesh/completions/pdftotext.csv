@@ -1,14 +1,12 @@
 cmd,conds,short,long,params,dirs,pri,desc
-pdftotext, , , ,unix dos mac, ,101,Sets the end-of-line convention
-
-pdftotext, ,f, , , ,102,First page to convert
-pdftotext, ,l, , , ,103,Last page to convert
-pdftotext, ,r, , , ,104,Resolution, in DPI [75]
-pdftotext, ,x, , , ,105,Top left X-coordinate of crop area
-pdftotext, ,y, , , ,106,Top left y-coordinate of crop area
-pdftotext, ,W, , , ,107,Width of crop area in pixels
-pdftotext, ,H, , , ,108,Height of crop area in pixels
-pdftotext, , , , , ,109,Maintain original layout
-pdftotext, ,q, , , ,110,Don't print any messages or errors
-pdftotext, ,v, , , ,111,Print copyright and version
-pdftotext, ,h, , , ,112,Print usage information
+pdftotext,, , ,unix dos mac, ,101,Sets the end-of-line convention
+pdftotext,,f, , , ,102,First page to convert
+pdftotext,,l, , , ,103,Last page to convert
+pdftotext,,r, , , ,104,Resolution, in DPI [75]
+pdftotext,,x, , , ,105,Top left X-coordinate of crop area
+pdftotext,,y, , , ,106,Top left y-coordinate of crop area
+pdftotext,,W, , , ,107,Width of crop area in pixels
+pdftotext,,H, , , ,108,Height of crop area in pixels
+pdftotext,,q, , , ,110,Don't print any messages or errors
+pdftotext,,v, , , ,111,Print copyright and version
+pdftotext,,h, , , ,112,Print usage information

@@ -1,6 +1,4 @@
 cmd,conds,short,long,params,dirs,pri,desc
-funcsave, ,d,directory,$fish_function_path, ,101,dir to save function(s) into
-
-funcsave, , , , , ,102,
-funcsave, ,q, , ,@r,103,suppress output
-funcsave, ,d,directory, ,@r,104,dir to save function(s) into
+funcsave,,d,directory,$fish_function_path, ,101,dir to save function(s) into
+funcsave,,q, , ,@r,103,suppress output
+funcsave,,d,directory, ,@r,104,dir to save function(s) into

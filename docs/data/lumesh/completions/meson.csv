@@ -1,15 +1,10 @@
 cmd,conds,short,long,params,dirs,pri,desc
-meson, ,h,help, , ,101,Show help
-
-meson, , , , , ,102,
+meson,,h,help, , ,101,Show help
 meson,wrap update, ,force, , ,103,Update wraps that does not seems to come from WrapDB
 meson,wrap update, ,sourcedir, , ,104,Source directory
 meson,wrap update, ,types, ,@f @r,105,Comma-separated list of subproject types
 meson,wrap update, ,num-processes, ,@f @r,106,How many parallel processes to use
 meson,wrap update, ,allow-insecure, ,@f @r,107,Allow insecure server connections
-meson,wrap promote, , , , ,108,Project path
-meson,test, , , , ,109,
-meson,test,h,help, , ,110,Show help
 meson,test,C, , , ,111,Directory to cd into before running
 meson,test, ,maxfail, ,@f @r,112,Number of failing tests before aborting the test run
 meson,test, ,repeat, ,@f @r,113,Number of times to run the tests
@@ -23,7 +18,6 @@ meson,test, ,no-stdsplit, , ,120,Do not split stderr and stdout in test logs
 meson,test, ,print-errorlogs, , ,121,Print logs of failing tests
 meson,test, ,benchmark, , ,122,Run benchmarks instead of tests
 meson,test, ,logbase, ,@f @r,123,Base name for log file
-meson,test, ,num-processes, ,@f @r,124,How many parallel processes to use
 meson,test,v,verbose, , ,125,Do not redirect stdout and stderr
 meson,test,q,quiet, , ,126,Produce less output to the terminal
 meson,test,t,timeout-multiplier, ,@f @r,127,Multiplier for test timeout
@@ -34,57 +28,52 @@ meson,subprojects purge, ,include-cache, , ,131,Remove the package cache as well
 meson,subprojects purge, ,confirm, , ,132,Confirm the removal of subproject artifacts
 meson,subprojects packagefiles, ,apply, , ,133,Apply packagefiles to the subproject
 meson,subprojects packagefiles, ,save, , ,134,Save packagefiles from the subproject
-meson,setup, , , , ,135,
-meson, , ,prefix, , ,136,Installation prefix
-meson, , ,bindir, , ,137,Executable directory
-meson, , ,datadir, , ,138,Data file directory
-meson, , ,includedir, , ,139,Header file directory
-meson, , ,infodir, , ,140,Info page directory
-meson, , ,libdir, , ,141,Library directory
-meson, , ,licensedir, , ,142,Licenses directory
-meson, , ,libexecdir, , ,143,Library executable directory
-meson, , ,localedir, , ,144,Locale data directory
-meson, , ,localstatedir, , ,145,Localstate data directory
-meson, , ,mandir, , ,146,Manual page directory
-meson, , ,sbindir, , ,147,System executable directory
-meson, , ,sharedstatedir, , ,148,Architecture-independent data directory
-meson, , ,sysconfdir, , ,149,Sysconf data directory
-meson, , ,auto-features, , ,150,Override value of all 'auto' features
-meson, , ,backend, , ,151,Backend to use
-meson, , ,buildtype, , ,152,Build type to use
-meson, , ,debug, , ,153,Enable debug symbols and other info
-meson, , ,default-library, , ,154,Default library type
-meson, , ,errorlogs, , ,155,Print the logs from failing tests
-meson, , ,install-umask, ,@f @r,156,Default umask to apply on permissions of installed files
-meson, , ,layout, , ,157,Build directory layout
-meson, , ,optimization, , ,158,Optimization level
-meson, , ,prefer-static, , ,159,Try static linking before shared linking
-meson, , ,stdsplit, , ,160,Split stdout and stderr in test logs
-meson, , ,strip, , ,161,Strip targets on install
-meson, , ,unity, , ,162,Unity build
-meson, , ,unity-size, ,@f @r,163,Unity block size
-meson, , ,warnlevel, , ,164,Compiler warning level to use
-meson, , ,werror, , ,165,Treat warnings as errors
-meson, , ,wrap-mode, , ,166,Wrap mode
-meson, , ,force-fallback-for, ,@f @r,167,Force fallback for those subprojects
-meson, , ,pkgconfig.relocatable, , ,168,Generate pkgconfig files as relocatable
-meson, , ,python.install-env, , ,169,Which python environment to install to
-meson, , ,python.platlibdir, ,@f @r,170,Directory for site-specific, platform-specific files
-meson, , ,python.purelibdir, ,@f @r,171,Directory for site-specific, non-platform-specific files
-meson, ,D, , ,@f @r,172,Set the value of an option
-meson, , ,native-file, ,@r,173,File with overrides for native compilation environment
-meson, , ,cross-file, ,@r,174,File describing cross compilation environment
-meson, , ,vsenv, , ,175,Force setup of Visual Studio environment
-meson, ,v,version, , ,176,Show version number and exit
-meson, , ,fatal-meson-warnings, , ,177,Make all Meson warnings fatal
-meson, , ,reconfigure, , ,178,Set options and reconfigure the project
-meson, , ,wipe, , ,179,Wipe build directory and reconfigure
+meson,, ,prefix, , ,136,Installation prefix
+meson,, ,bindir, , ,137,Executable directory
+meson,, ,datadir, , ,138,Data file directory
+meson,, ,includedir, , ,139,Header file directory
+meson,, ,infodir, , ,140,Info page directory
+meson,, ,libdir, , ,141,Library directory
+meson,, ,licensedir, , ,142,Licenses directory
+meson,, ,libexecdir, , ,143,Library executable directory
+meson,, ,localedir, , ,144,Locale data directory
+meson,, ,localstatedir, , ,145,Localstate data directory
+meson,, ,mandir, , ,146,Manual page directory
+meson,, ,sbindir, , ,147,System executable directory
+meson,, ,sharedstatedir, , ,148,Architecture-independent data directory
+meson,, ,sysconfdir, , ,149,Sysconf data directory
+meson,, ,auto-features, , ,150,Override value of all 'auto' features
+meson,, ,backend, , ,151,Backend to use
+meson,, ,buildtype, , ,152,Build type to use
+meson,, ,debug, , ,153,Enable debug symbols and other info
+meson,, ,default-library, , ,154,Default library type
+meson,, ,errorlogs, , ,155,Print the logs from failing tests
+meson,, ,install-umask, ,@f @r,156,Default umask to apply on permissions of installed files
+meson,, ,layout, , ,157,Build directory layout
+meson,, ,optimization, , ,158,Optimization level
+meson,, ,prefer-static, , ,159,Try static linking before shared linking
+meson,, ,stdsplit, , ,160,Split stdout and stderr in test logs
+meson,, ,strip, , ,161,Strip targets on install
+meson,, ,unity, , ,162,Unity build
+meson,, ,unity-size, ,@f @r,163,Unity block size
+meson,, ,warnlevel, , ,164,Compiler warning level to use
+meson,, ,werror, , ,165,Treat warnings as errors
+meson,, ,wrap-mode, , ,166,Wrap mode
+meson,, ,force-fallback-for, ,@f @r,167,Force fallback for those subprojects
+meson,, ,pkgconfig.relocatable, , ,168,Generate pkgconfig files as relocatable
+meson,, ,python.install-env, , ,169,Which python environment to install to
+meson,, ,python.platlibdir, ,@f @r,170,Directory for site-specific, platform-specific files
+meson,, ,python.purelibdir, ,@f @r,171,Directory for site-specific, non-platform-specific files
+meson,,D, , ,@f @r,172,Set the value of an option
+meson,, ,native-file, ,@r,173,File with overrides for native compilation environment
+meson,, ,cross-file, ,@r,174,File describing cross compilation environment
+meson,, ,vsenv, , ,175,Force setup of Visual Studio environment
+meson,,v,version, , ,176,Show version number and exit
+meson,, ,fatal-meson-warnings, , ,177,Make all Meson warnings fatal
+meson,, ,reconfigure, , ,178,Set options and reconfigure the project
+meson,, ,wipe, , ,179,Wipe build directory and reconfigure
 meson,rewrite target,s,subdir, , ,180,Subdirectory of the new target
 meson,rewrite target, ,type, , ,181,Type of the target to add
-meson,rewrite kwargs 3, , , , ,182,Action to execute
-meson,rewrite kwargs 4, , , , ,183,Function type to modify
-meson,rewrite default-options 3, , , , ,184,Action to execute
-meson,introspect, , , , ,185,
 meson,introspect, ,ast, , ,186,Dump the AST of the meson file
 meson,introspect, ,benchmarks, , ,187,List all benchmarks
 meson,introspect, ,buildoptions, , ,188,List all build options
@@ -96,21 +85,16 @@ meson,introspect, ,install-plan, , ,193,List all installed files and directories
 meson,introspect, ,projectinfo, , ,194,Information about projects
 meson,introspect, ,targets, , ,195,List top level targets
 meson,introspect, ,tests, , ,196,List all unit tests
-meson,introspect, ,backend, , ,197,The backend to use for the --buildoptions introspection
 meson,introspect,a,all, , ,198,Print all available information
 meson,introspect,i,indent, , ,199,Enable pretty printed JSON
 meson,introspect,f,force-object-output, , ,200,Always use the new JSON format for multiple entries
 meson,install, , , ,@f,201,
-meson,install,C, , , ,202,Directory to cd into before running
-meson,install, ,no-rebuild, , ,203,Do not rebuild before installing
 meson,install, ,only-changed, , ,204,Only overwrite files that are older than the copied file
 meson,install, ,quiet, , ,205,Do not print every file that was installed
 meson,install, ,destdir, ,@r,206,Sets or overrides DESTDIR environment
 meson,install,n,dry-run, , ,207,Do not actually install, but print logs
 meson,install, ,skip-subprojects, , ,208,Do not install files from given subprojects
 meson,install, ,tags, ,@f @r,209,Install only targets having one of the given tags
-meson,install, ,strip, , ,210,Strip targets even if strip option was not set during configure
-meson,init,C, , , ,211,Directory to cd into before running
 meson,init,n,name, ,@f @r,212,Project name
 meson,init,e,executable, ,@f @r,213,Executable name
 meson,init,d,deps, ,@f @r,214,Dependencies, comma-separated
@@ -118,35 +102,26 @@ meson,init,l,language, , ,215,Project language
 meson,init,b,build, , ,216,Build after generation
 meson,init, ,builddir, ,@r,217,Directory for build
 meson,init,f,force, , ,218,Force overwrite of existing files and directories
-meson,init, ,type, , ,219,Project type
 meson,init, ,version, ,@f @r,220,Project version
-meson,help, , , , ,221,
-meson,dist, , , ,@f,222,
-meson,dist,C, , , ,223,Directory to cd into before running
 meson,dist, ,allow-dirty, , ,224,Allow even when repository contains uncommitted changes
 meson,dist, ,formats, , ,225,Comma separated list of archive types to create
 meson,dist, ,include-subprojects, , ,226,Include source code of subprojects
 meson,dist, ,no-tests, , ,227,Do not build and test generated packages
-meson,devenv,h,help, , ,228,Show help
-meson,devenv,C, , , ,229,Path to build directory
 meson,devenv,w,workdir, , ,230,Directory to cd into before running
 meson,devenv, ,dump, , ,231,Only print required environment
 meson,devenv, ,dump-format, , ,232,Format used with --dump
-meson,configure, , , , ,233,
 meson,configure, ,clearcache, , ,234,Clear cached state
 meson,configure, ,no-pager, , ,235,Do not redirect output to a pager
-meson,compile, , , , ,236,
 meson,compile, ,clean, , ,237,Clean the build directory
 meson,compile,C, , ,@r,238,Directory to cd into before running
 meson,compile,j,jobs, ,@f @r,239,The number of worker jobs to run
 meson,compile,l,load-average, ,@f @r,240,The system load average to try to maintain
-meson,compile,v,verbose, , ,241,Show more verbose output
 meson,compile, ,ninja-args, ,@f @r,242,Arguments to pass to `ninja`
 meson,compile, ,vs-args, ,@f @r,243,Arguments to pass to `msbuild`
 meson,compile, ,xcode-args, ,@f @r,244,Arguments to pass to `xcodebuild`
 meson,test, ,wrapper, ,@r,245,Wrapper to run tests with (e.g. valgrind)
 meson,test, ,test-args, ,@f @r,246,Arguments to pass to the test(s)
-meson, , ,pkg-config-path, ,@f @r,247,Additional paths for pkg-config (for host machine)
-meson, , ,build.pkg-config-path, ,@f @r,248,Additional paths for pkg-config (for build machine)
-meson, , ,cmake-prefix-path, ,@f @r,249,Additional prefixes for cmake (for host machine)
-meson, , ,build.cmake-prefix-path, ,@f @r,250,Additional prefixes for cmake (for build machine)
+meson,, ,pkg-config-path, ,@f @r,247,Additional paths for pkg-config (for host machine)
+meson,, ,build.pkg-config-path, ,@f @r,248,Additional paths for pkg-config (for build machine)
+meson,, ,cmake-prefix-path, ,@f @r,249,Additional prefixes for cmake (for host machine)
+meson,, ,build.cmake-prefix-path, ,@f @r,250,Additional prefixes for cmake (for build machine)

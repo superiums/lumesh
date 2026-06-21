@@ -1,15 +1,9 @@
 cmd,conds,short,long,argument,dirs,pri,desc
-tmux, , , , ,@f @r,100,
-tmux, ,2, , , ,101,Force tmux to assume the terminal supports 256 colours
-tmux, ,8, , , ,102,"Like -2"
-tmux, ,l, , , ,103,Behave as a login shell
-tmux, ,q, , , ,104,Set the quiet server option
-tmux, ,u, , , ,105,Flag explicitly informs tmux that UTF-8 is supported
-tmux, ,v, , , ,106,Request verbose logging
-tmux, ,V, , , ,107,Report the tmux version
-tmux, , , , , ,108,Execute command using the default shell
-tmux, , , , , ,109,Alternate config file
-tmux, , , , , ,110,Specify the name of the server socket to use
-tmux, , , , , ,111,"'Full path to server socket. If set"
-
-tmux,list-commands lscm, , , ,@f @r,112,
+tmux,, , , ,@f @r,100,
+tmux,,2, , , ,101,Force tmux to assume the terminal supports 256 colours
+tmux,,8, , , ,102,Like -2
+tmux,,l, , , ,103,Behave as a login shell
+tmux,,q, , , ,104,Set the quiet server option
+tmux,,u, , , ,105,Flag explicitly informs tmux that UTF-8 is supported
+tmux,,v, , , ,106,Request verbose logging
+tmux,,V, , , ,107,Report the tmux version

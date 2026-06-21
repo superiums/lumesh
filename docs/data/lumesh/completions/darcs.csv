@@ -1,72 +1,71 @@
 cmd,conds,short,long,params,dirs,pri,desc
-darcs, , ,help, , ,152,Show a brief description of the command and its options
-darcs, , ,list-options, , ,153,"Show plain list of available options and commands, for auto-completion"
-darcs, , ,run-posthook, , ,154,Run posthook command without prompting [DEFAULT]
-darcs, , ,prompt-posthook, , ,155,Prompt before running posthook
-darcs, , ,no-posthook, , ,156,Don't run posthook command [DEFAULT]
-darcs, , ,posthook, ,@f @r,157,Specify command to run after this darcs command
-darcs, , ,run-prehook, , ,158,Run prehook command without prompting [DEFAULT]
-darcs, , ,prompt-prehook, , ,159,Prompt before running prehook
-darcs, , ,no-prehook, , ,160,Don't run prehook command [DEFAULT]
-darcs, , ,prehook, ,@f @r,161,Specify command to run before this darcs command
-darcs, , ,disable, , ,162,Disable this command
-darcs, , ,debug, , ,163,Give only debug output
-darcs, , ,debug-http, , ,164,Debug output from libcurl
-darcs, ,q,quiet, , ,165,Suppress informational output
-darcs, , ,standard-verbosity, , ,166,Neither verbose nor quiet output [DEFAULT]
-darcs, ,v,verbose, , ,167,Give verbose output
-darcs, , ,timings, , ,168,Provide debugging timings information
-darcs, , ,no-cache, , ,169,Don't use patch caches
-
-darcs, , , , ,@E,170,test -f _darcs/prefs/repos; and cat _darcs/prefs/repos
-darcs, , , ,help,@f @r,171,Display help about darcs and darcs commands
-darcs, , , ,add,@f @r,172,Add new files to version control
-darcs, , , ,remove,@f @r,173,Remove files from version control
-darcs, , , ,move,@f @r,174,Move or rename files
-darcs, , , ,replace,@f @r,175,Substitute one word for another
-darcs, , , ,revert,@f @r,176,Discard unrecorded changes
-darcs, , , ,unrevert,@f @r,177,Undo the last revert
-darcs, , , ,whatsnew,@f @r,178,List unrecorded changes in the working tree
-darcs, , , ,record,@f @r,179,Create a patch from unrecorded changes
-darcs, , , ,unrecord,@f @r,180,Remove recorded patches without changing the working tree
-darcs, , , ,amend,@f @r,181,Improve a patch before it leaves your repository
-darcs, , , ,mark-conflicts,@f @r,182,Mark unresolved conflicts in working tree, for manual resolution
-darcs, , , ,tag,@f @r,183,Name the current repository state for future reference
-darcs, , , ,diff,@f @r,184,Create a diff between two versions of the repository
-darcs, , , ,log,@f @r,185,List patches in the repository
-darcs, , , ,annotate,@f @r,186,Annotate lines of a file with the last patch that modified it
-darcs, , , ,dist,@f @r,187,Create a distribution archive
-darcs, , , ,show,@f @r,188,Show information about the given repository
-darcs, , , ,pull,@f @r,189,Copy and apply patches from another repository to this one
-darcs, , , ,obliterate,@f @r,190,Delete selected patches from the repository
-darcs, , , ,rollback,@f @r,191,Apply the inverse of recorded changes to the working tree
-darcs, , , ,push,@f @r,192,Copy and apply patches from this repository to another one
-darcs, , , ,send,@f @r,193,Prepare a bundle of patches to be applied to some target repository
-darcs, , , ,apply,@f @r,194,Apply a patch bundle created by `darcs send
-darcs, , , ,clone,@f @r,195,Make a copy of an existing repository
-darcs, , , ,initialize,@f @r,196,Create an empty repository
-darcs, , , ,optimize,@f @r,197,Optimize the repository
-darcs, , , ,repair,@f @r,198,Repair a corrupted repository
-darcs, , , ,convert,@f @r,199,Convert repositories between various formats
-darcs, , , ,contents,@f @r,200,Outputs a specific version of a file
-darcs, , , ,dependencies,@f @r,201,Generate the graph of dependencies
-darcs, , , ,files,@f @r,202,Show version-controlled files in the working tree
-darcs, , , ,index,@f @r,203,Dump contents of working tree index
-darcs, , , ,pristine,@f @r,204,Dump contents of pristine cache
-darcs, , , ,repo,@f @r,205,Show repository summary information
-darcs, , , ,authors,@f @r,206,List authors by patch count
-darcs, , , ,tags,@f @r,207,Show all tags in the repository
-darcs, , , ,patch-index,@f @r,208,Check integrity of patch index
-darcs, , , ,clean,@f @r,209,Garbage collect pristine, inventories and patches
-darcs, , , ,http,@f @r,210,Optimize repository for getting over network
-darcs, , , ,reorder,@f @r,211,Reorder the patches in the repository
-darcs, , , ,enable-patch-index,@f @r,212,Enable patch index
-darcs, , , ,disable-patch-index,@f @r,213,Disable patch index
-darcs, , , ,compress,@f @r,214,Compress patches and inventories
-darcs, , , ,uncompress,@f @r,215,Uncompress patches and inventories
-darcs, , , ,relink,@f @r,216,Relink random internal data to a sibling
-darcs, , , ,upgrade,@f @r,217,Upgrade repository to latest compatible format
-darcs, , , ,cache,@f @r,218,Garbage collect global cache
+darcs,, ,help, , ,152,Show a brief description of the command and its options
+darcs,, ,list-options, , ,153,Show plain list of available options and commands, for auto-completion
+darcs,, ,run-posthook, , ,154,Run posthook command without prompting [DEFAULT]
+darcs,, ,prompt-posthook, , ,155,Prompt before running posthook
+darcs,, ,no-posthook, , ,156,Don't run posthook command [DEFAULT]
+darcs,, ,posthook, ,@f @r,157,Specify command to run after this darcs command
+darcs,, ,run-prehook, , ,158,Run prehook command without prompting [DEFAULT]
+darcs,, ,prompt-prehook, , ,159,Prompt before running prehook
+darcs,, ,no-prehook, , ,160,Don't run prehook command [DEFAULT]
+darcs,, ,prehook, ,@f @r,161,Specify command to run before this darcs command
+darcs,, ,disable, , ,162,Disable this command
+darcs,, ,debug, , ,163,Give only debug output
+darcs,, ,debug-http, , ,164,Debug output from libcurl
+darcs,,q,quiet, , ,165,Suppress informational output
+darcs,, ,standard-verbosity, , ,166,Neither verbose nor quiet output [DEFAULT]
+darcs,,v,verbose, , ,167,Give verbose output
+darcs,, ,timings, , ,168,Provide debugging timings information
+darcs,, ,no-cache, , ,169,Don't use patch caches
+darcs,, , , ,@E,170,test -f _darcs/prefs/repos; and cat _darcs/prefs/repos
+darcs,, , ,help,@f @r,171,Display help about darcs and darcs commands
+darcs,, , ,add,@f @r,172,Add new files to version control
+darcs,, , ,remove,@f @r,173,Remove files from version control
+darcs,, , ,move,@f @r,174,Move or rename files
+darcs,, , ,replace,@f @r,175,Substitute one word for another
+darcs,, , ,revert,@f @r,176,Discard unrecorded changes
+darcs,, , ,unrevert,@f @r,177,Undo the last revert
+darcs,, , ,whatsnew,@f @r,178,List unrecorded changes in the working tree
+darcs,, , ,record,@f @r,179,Create a patch from unrecorded changes
+darcs,, , ,unrecord,@f @r,180,Remove recorded patches without changing the working tree
+darcs,, , ,amend,@f @r,181,Improve a patch before it leaves your repository
+darcs,, , ,mark-conflicts,@f @r,182,Mark unresolved conflicts in working tree, for manual resolution
+darcs,, , ,tag,@f @r,183,Name the current repository state for future reference
+darcs,, , ,diff,@f @r,184,Create a diff between two versions of the repository
+darcs,, , ,log,@f @r,185,List patches in the repository
+darcs,, , ,annotate,@f @r,186,Annotate lines of a file with the last patch that modified it
+darcs,, , ,dist,@f @r,187,Create a distribution archive
+darcs,, , ,show,@f @r,188,Show information about the given repository
+darcs,, , ,pull,@f @r,189,Copy and apply patches from another repository to this one
+darcs,, , ,obliterate,@f @r,190,Delete selected patches from the repository
+darcs,, , ,rollback,@f @r,191,Apply the inverse of recorded changes to the working tree
+darcs,, , ,push,@f @r,192,Copy and apply patches from this repository to another one
+darcs,, , ,send,@f @r,193,Prepare a bundle of patches to be applied to some target repository
+darcs,, , ,apply,@f @r,194,Apply a patch bundle created by `darcs send
+darcs,, , ,clone,@f @r,195,Make a copy of an existing repository
+darcs,, , ,initialize,@f @r,196,Create an empty repository
+darcs,, , ,optimize,@f @r,197,Optimize the repository
+darcs,, , ,repair,@f @r,198,Repair a corrupted repository
+darcs,, , ,convert,@f @r,199,Convert repositories between various formats
+darcs,, , ,contents,@f @r,200,Outputs a specific version of a file
+darcs,, , ,dependencies,@f @r,201,Generate the graph of dependencies
+darcs,, , ,files,@f @r,202,Show version-controlled files in the working tree
+darcs,, , ,index,@f @r,203,Dump contents of working tree index
+darcs,, , ,pristine,@f @r,204,Dump contents of pristine cache
+darcs,, , ,repo,@f @r,205,Show repository summary information
+darcs,, , ,authors,@f @r,206,List authors by patch count
+darcs,, , ,tags,@f @r,207,Show all tags in the repository
+darcs,, , ,patch-index,@f @r,208,Check integrity of patch index
+darcs,, , ,clean,@f @r,209,Garbage collect pristine, inventories and patches
+darcs,, , ,http,@f @r,210,Optimize repository for getting over network
+darcs,, , ,reorder,@f @r,211,Reorder the patches in the repository
+darcs,, , ,enable-patch-index,@f @r,212,Enable patch index
+darcs,, , ,disable-patch-index,@f @r,213,Disable patch index
+darcs,, , ,compress,@f @r,214,Compress patches and inventories
+darcs,, , ,uncompress,@f @r,215,Uncompress patches and inventories
+darcs,, , ,relink,@f @r,216,Relink random internal data to a sibling
+darcs,, , ,upgrade,@f @r,217,Upgrade repository to latest compatible format
+darcs,, , ,cache,@f @r,218,Garbage collect global cache
 darcs,, ,boring, , ,219,Don
 darcs,, ,no-boring, , ,220,Skip boring files [DEFAULT]
 darcs,, ,case-ok, , ,221,Don
@@ -235,8 +234,8 @@ darcs,, ,hashed, , ,383,Deprecated, use --darcs-1 instead
 darcs,, ,sibling, , ,384,Specify a sibling directory
 darcs,, ,read-marks, , ,385,Continue conversion, previously checkpointed by --write-marks
 darcs,, ,write-marks, , ,386,Checkpoint conversion to continue it later
-darcs,contains setpref (commandline -pxc), , ,test predist boringfile binariesfile,@f @r,387,Set the specified option
-darcs, , , ,setpref,@f @r,388,Set a preference (test, predist, boringfile or binariesfile)
+darcs, , , ,test predist boringfile binariesfile,@f @r,387,Set the specified option
+darcs,, , ,setpref,@f @r,388,Set a preference (test, predist, boringfile or binariesfile)
 darcs,,-l,look-for-adds, , ,389,Look for (non-boring) files that could be added
 darcs,,l,look-for-adds, , ,390,Look for (non-boring) files that could be added
 darcs,, ,diff-command, , ,391,Specify diff command (ignores --diff-opts)

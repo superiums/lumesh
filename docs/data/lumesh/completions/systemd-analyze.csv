@@ -1,63 +1,60 @@
 cmd,conds,short,long,params,dirs,pri,desc
-systemd-analyze, , ,from-pattern, , ,106,dot: show relationships matching left-hand nodes pattern
-systemd-analyze, , ,to-pattern, , ,107,dot: show relationships matching right-hand nodes pattern
-systemd-analyze, , ,fuzz, ,@f @r,108,critical-chain: also show units which finished timespan earlier than last unit in same level
-systemd-analyze, , ,man,no, ,109,Do not invoke man to verify the existence of man pages
-systemd-analyze, , ,generators, , ,110,Invoke unit generators
-systemd-analyze, , ,instance, ,@r,111,Fallback instance name for template units
-systemd-analyze, , ,root, ,@D,112,"With cat-files, show config files underneath the specified root path"
-systemd-analyze, , ,image, ,@r,113,"With cat-files, show config files inside the specified image path"
-systemd-analyze, , ,image-policy, , ,114,Disk image dissection policy
-systemd-analyze, , ,iterations, ,@f @r,115,calendar: show number of iterations the calendar expression will elapse next
-systemd-analyze, , ,base-time, ,@f @r,116,calendar: show next iterations relative to the specified point in time
-systemd-analyze, , ,tldr, , ,117,"cat-config: skip comments, empty lines and section headers"
-systemd-analyze, , ,unit, ,@r,118,condition: evaluate Condition and Assert assignments in unit file
-systemd-analyze, , ,table, , ,119,plot: output raw time data in a table
-systemd-analyze, , ,no-legend, , ,120,plot: exclude legends/hints
-systemd-analyze, , ,detailed, , ,121,plot: show activation timestamps details in SVG plot
-systemd-analyze, , ,scale-svg, ,@r,122,plot: stretch the x-axis of the plot
-systemd-analyze, ,H,host, , ,123,Execute the operation on a remote host
-systemd-analyze, ,M,machine, , ,124,Execute operation on a VM or container
-systemd-analyze, ,h,help, , ,125,Print a short help and exit
-systemd-analyze, , ,version, , ,126,Print a short version and exit
-systemd-analyze, , ,no-pager, , ,127,Do not pipe output into a pager
-
-systemd-analyze, , , , ,@f,128,
+systemd-analyze,, ,from-pattern, , ,106,dot: show relationships matching left-hand nodes pattern
+systemd-analyze,, ,to-pattern, , ,107,dot: show relationships matching right-hand nodes pattern
+systemd-analyze,, ,fuzz, ,@f @r,108,critical-chain: also show units which finished timespan earlier than last unit in same level
+systemd-analyze,, ,man,no, ,109,Do not invoke man to verify the existence of man pages
+systemd-analyze,, ,generators, , ,110,Invoke unit generators
+systemd-analyze,, ,instance, ,@r,111,Fallback instance name for template units
+systemd-analyze,, ,root, ,@D,112,With cat-files, show config files underneath the specified root path
+systemd-analyze,, ,image, ,@r,113,With cat-files, show config files inside the specified image path
+systemd-analyze,, ,image-policy, , ,114,Disk image dissection policy
+systemd-analyze,, ,iterations, ,@f @r,115,calendar: show number of iterations the calendar expression will elapse next
+systemd-analyze,, ,base-time, ,@f @r,116,calendar: show next iterations relative to the specified point in time
+systemd-analyze,, ,tldr, , ,117,cat-config: skip comments, empty lines and section headers
+systemd-analyze,, ,unit, ,@r,118,condition: evaluate Condition and Assert assignments in unit file
+systemd-analyze,, ,table, , ,119,plot: output raw time data in a table
+systemd-analyze,, ,no-legend, , ,120,plot: exclude legends/hints
+systemd-analyze,, ,detailed, , ,121,plot: show activation timestamps details in SVG plot
+systemd-analyze,, ,scale-svg, ,@r,122,plot: stretch the x-axis of the plot
+systemd-analyze,,H,host, , ,123,Execute the operation on a remote host
+systemd-analyze,,M,machine, , ,124,Execute operation on a VM or container
+systemd-analyze,,h,help, , ,125,Print a short help and exit
+systemd-analyze,, ,version, , ,126,Print a short version and exit
+systemd-analyze,, ,no-pager, , ,127,Do not pipe output into a pager
+systemd-analyze,, , , ,@f,128,
 systemd-analyze,system user global, ,system, ,@n,129,Operates on the system systemd instance
 systemd-analyze,system user global, ,user, ,@n,130,Operates on the user systemd instance
 systemd-analyze,system user global, ,global, ,@n,131,Operates on the system-wide configuration for user systemd instance
 systemd-analyze,order require, ,order, ,@n,132,dot: show only After and Before dependencies
 systemd-analyze,order require, ,require, ,@n,133,dot: show only Requires, Requisite, Wants and Conflicts dependencies
-systemd-analyze, , ,man, , ,134,Do not invoke man to verify the existence of man pages
-systemd-analyze, , , ,time, ,135,Print timing statistics
-systemd-analyze, , , ,blame, ,136,Print list of running units ordered by time to init
-systemd-analyze, , , ,critical-chain, ,137,Print a tree of the time critical chain of units
+systemd-analyze,, ,man, , ,134,Do not invoke man to verify the existence of man pages
+systemd-analyze,, , ,time, ,135,Print timing statistics
+systemd-analyze,, , ,blame, ,136,Print list of running units ordered by time to init
+systemd-analyze,, , ,critical-chain, ,137,Print a tree of the time critical chain of units
 systemd-analyze,critical-chain, , , ,@E,138,__fish_systemd_units
-systemd-analyze, , , ,dump, ,139,Output serialization of server state
-systemd-analyze, , , ,malloc, ,140,Output internal memory state of D-Bus service
-systemd-analyze, , , ,plot, ,141,Output SVG graphic showing service initialization
-systemd-analyze, , , ,unit-paths, ,142,List all directories from which unit files may be loaded
-systemd-analyze, , , ,exit-status, ,143,List exit statuses along with their class
-systemd-analyze, , , ,capability, ,144,List Linux capabilities along with their numeric IDs
-systemd-analyze, , , ,condition, ,145,Evaluate Condition and Assert assignments
-systemd-analyze, , , ,syscall-filter, ,146,List system calls contained in the specified system call set
-systemd-analyze, , , ,filesystems, ,147,List filesystems
-systemd-analyze, , , ,calendar, ,148,Normalize repetitive calendar events and calculate when they elapse next
-systemd-analyze, , , ,timestamp, ,149,Parse timestamp and output the normalized form
-systemd-analyze, , , ,timespan, ,150,Parse time span and output the normalized form
-systemd-analyze, , , ,cat-config, ,151,Show contents of a config file
+systemd-analyze,, , ,dump, ,139,Output serialization of server state
+systemd-analyze,, , ,malloc, ,140,Output internal memory state of D-Bus service
+systemd-analyze,, , ,plot, ,141,Output SVG graphic showing service initialization
+systemd-analyze,, , ,unit-paths, ,142,List all directories from which unit files may be loaded
+systemd-analyze,, , ,exit-status, ,143,List exit statuses along with their class
+systemd-analyze,, , ,capability, ,144,List Linux capabilities along with their numeric IDs
+systemd-analyze,, , ,condition, ,145,Evaluate Condition and Assert assignments
+systemd-analyze,, , ,syscall-filter, ,146,List system calls contained in the specified system call set
+systemd-analyze,, , ,filesystems, ,147,List filesystems
+systemd-analyze,, , ,calendar, ,148,Normalize repetitive calendar events and calculate when they elapse next
+systemd-analyze,, , ,timestamp, ,149,Parse timestamp and output the normalized form
+systemd-analyze,, , ,timespan, ,150,Parse time span and output the normalized form
+systemd-analyze,, , ,cat-config, ,151,Show contents of a config file
 systemd-analyze,cat-config, , , ,@F,152,
-systemd-analyze, , , ,compare-versions, ,153,Compare two version strings
-systemd-analyze, , , ,verify, ,154,Check unit files for correctness
-systemd-analyze,verify, , , ,@F,155,
-systemd-analyze, , , ,security, ,156,Analyze security settings of specified service units
-systemd-analyze,security, , , ,@E,157,__fish_systemctl_services
-systemd-analyze, , , ,inspect-elf, ,158,Parse and print ELF object packaging metadata
-systemd-analyze, , , ,fdstore, ,159,List contents of service unit's file descriptor store
-systemd-analyze, , , ,image-policy, ,160,Analyze image policy string
-systemd-analyze, , , ,has-tpm2, ,161,Report TPM2 support
-systemd-analyze, , , ,pcrs, ,162,Show known TPM2 PCRs
-systemd-analyze, , , ,srk, ,163,Read Storage Root Key from TPM2 device
-systemd-analyze, , , ,architectures, ,164,List known CPU architectures
-systemd-analyze, , , ,smbios11, ,165,Show SMBIOS Type #11 strings passed to the system
-systemd-analyze, , , ,dot, ,166,Output dependency graph in dot(1) format
+systemd-analyze,, , ,compare-versions, ,153,Compare two version strings
+systemd-analyze,, , ,verify, ,154,Check unit files for correctness
+systemd-analyze,, , ,security, ,156,Analyze security settings of specified service units
+systemd-analyze,, , ,inspect-elf, ,158,Parse and print ELF object packaging metadata
+systemd-analyze,, , ,fdstore, ,159,List contents of service unit's file descriptor store
+systemd-analyze,, , ,image-policy, ,160,Analyze image policy string
+systemd-analyze,, , ,has-tpm2, ,161,Report TPM2 support
+systemd-analyze,, , ,pcrs, ,162,Show known TPM2 PCRs
+systemd-analyze,, , ,srk, ,163,Read Storage Root Key from TPM2 device
+systemd-analyze,, , ,architectures, ,164,List known CPU architectures
+systemd-analyze,, , ,smbios11, ,165,Show SMBIOS Type #11 strings passed to the system
+systemd-analyze,, , ,dot, ,166,Output dependency graph in dot(1) format

@@ -712,8 +712,8 @@ impl ParamCompleter {
                         env.define("T", Expression::String(current_token.to_string()));
                         let code = entry
                             .description
-                            .trim_start_matches("'|\"")
-                            .trim_end_matches("'|\"");
+                            .trim_start_matches(&['\'', '"'])
+                            .trim_end_matches(&['\'', '"']);
                         if let Ok(expr) = parse(&code) {
                             if let Ok(result) = expr.eval_in_assign(&mut env) {
                                 match result {

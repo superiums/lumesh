@@ -6,6 +6,7 @@ use crossterm::event::{Event, KeyEventKind, read};
 use crossterm::queue;
 use crossterm::style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor};
 use crossterm::terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode, size};
+use unicode_width::UnicodeWidthChar;
 
 use super::buffer::LineBuffer;
 use super::history::History;
@@ -543,6 +544,7 @@ impl Editor {
     fn refresh_completions(&mut self) {
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
+        let byte_pos = line.char_indices().nth(pos).map(|(i, _)| i).unwrap_or(line.len());
         let (old_completions, old_sel) = match &self.mode {
             EditorMode::CompletionSelect {
                 completions,
@@ -553,26 +555,26 @@ impl Editor {
         };
 
         let new_completions: Vec<CompletionItem> = if self.is_history_completion {
-            let start_pos = Self::find_word_start(&line, pos);
-            let query = &line[start_pos..pos];
+            let start_pos = Self::find_word_start(&line, byte_pos);
+            let query = &line[start_pos..byte_pos];
             old_completions
                 .into_iter()
                 .filter(|item| fuzzy_match(query, &item.replacement))
                 .collect()
         } else {
             // Parameter completion: filter existing completions with fuzzy match
-            let query_start = self.init_search_pos.min(pos);
-            let query = &line[query_start..pos];
+            let query_start = self.init_search_pos.min(byte_pos);
+            let query = &line[query_start..byte_pos];
             old_completions
                 .into_iter()
                 .filter(|item| fuzzy_match(query, &item.replacement))
                 .collect()
         };
 
-        let start_pos = if line[..pos].contains(|c| c == '/' || c == '\\') {
-            Self::find_path_start(&line, pos)
+        let start_pos = if line[..byte_pos].contains(|c| c == '/' || c == '\\') {
+            Self::find_path_start(&line, byte_pos)
         } else {
-            Self::find_word_start(&line, pos)
+            Self::find_word_start(&line, byte_pos)
         };
         if new_completions.is_empty() {
             self.set_normal_mode();
@@ -730,12 +732,13 @@ impl Editor {
             Cmd::HistorySearch => {
                 let line = self.buffer.text();
                 let pos = self.buffer.cursor();
-                let start_pos = if line[..pos].contains(|c| c == '/' || c == '\\') {
-                    Self::find_path_start(&line, pos)
+                let byte_pos = line.char_indices().nth(pos).map(|(i, _)| i).unwrap_or(line.len());
+                let start_pos = if line[..byte_pos].contains(|c| c == '/' || c == '\\') {
+                    Self::find_path_start(&line, byte_pos)
                 } else {
-                    Self::find_word_start(&line, pos)
+                    Self::find_word_start(&line, byte_pos)
                 };
-                let query = &line[start_pos..pos];
+                let query = &line[start_pos..byte_pos];
                 let all: Vec<String> = self.history.entries();
                 let completions: Vec<CompletionItem> = all
                     .iter()
@@ -828,16 +831,17 @@ impl Editor {
         }
         let line = self.buffer.text();
         let pos = self.buffer.cursor();
-        self.init_search_pos = pos;
+        let byte_pos = line.char_indices().nth(pos).map(|(i, _)| i).unwrap_or(line.len());
+        self.init_search_pos = byte_pos;
         if let Some(ref completer) = self.completer {
-            let completions = completer.complete(&line, pos);
+            let completions = completer.complete(&line, byte_pos);
             if completions.is_empty() {
                 return;
             }
-            let start_pos = if line[..pos].contains(|c| c == '/' || c == '\\') {
-                Self::find_path_start(&line, pos)
+            let start_pos = if line[..byte_pos].contains(|c| c == '/' || c == '\\') {
+                Self::find_path_start(&line, byte_pos)
             } else {
-                Self::find_word_start(&line, pos)
+                Self::find_word_start(&line, byte_pos)
             };
             if completions.len() == 1 {
                 self.apply_completion(&completions[0], start_pos);
@@ -934,7 +938,8 @@ impl Editor {
     }
 
     fn find_word_start(line: &str, pos: usize) -> usize {
-        let before = &line[..pos.min(line.len())];
+        let pos = pos.min(line.len());
+        let before = &line[..pos];
         before
             .rfind(|c: char| c.is_ascii_whitespace() || c == '.' || c == '>' || c == ':')
             .map(|i| i + 1)
@@ -942,7 +947,8 @@ impl Editor {
     }
 
     fn find_path_start(line: &str, pos: usize) -> usize {
-        let before = &line[..pos.min(line.len())];
+        let pos = pos.min(line.len());
+        let before = &line[..pos];
         before
             .rfind(|c: char| {
                 c.is_ascii_whitespace()
@@ -1034,9 +1040,10 @@ impl Editor {
         }
 
         // Compute cursor position
-        let lines_before_cursor: Vec<&str> = line[..cursor].split('\n').collect();
+        let byte_cursor = line.char_indices().nth(cursor).map(|(i, _)| i).unwrap_or(line.len());
+        let lines_before_cursor: Vec<&str> = line[..byte_cursor].split('\n').collect();
         let cursor_row_offset = lines_before_cursor.len() - 1;
-        let col_in_last = lines_before_cursor.last().copied().unwrap_or("").len();
+        let col_in_last = visible_width(lines_before_cursor.last().copied().unwrap_or(""));
         let total_col = if cursor_row_offset == 0 {
             self.prompt_width + col_in_last
         } else {
@@ -1052,7 +1059,7 @@ impl Editor {
         self.current_hint = None;
         if self.show_hint {
             if let Some(ref hinter) = self.hinter {
-                if let Some(hint) = hinter.hint(&line, cursor) {
+                if let Some(hint) = hinter.hint(&line, byte_cursor) {
                     self.current_hint = Some(hint.clone());
                     queue!(
                         stdout,
@@ -1243,7 +1250,7 @@ fn visible_width(s: &str) -> usize {
             in_escape = true;
             continue;
         }
-        width += 1;
+        width += c.width().unwrap_or(0);
     }
     width
 }

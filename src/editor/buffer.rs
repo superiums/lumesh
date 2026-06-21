@@ -263,6 +263,10 @@ impl LineBuffer {
         self.cursor
     }
 
+    pub fn byte_cursor(&self) -> usize {
+        self.chars.iter().take(self.cursor).map(|c| c.len_utf8()).sum()
+    }
+
     pub fn len(&self) -> usize {
         self.chars.len()
     }

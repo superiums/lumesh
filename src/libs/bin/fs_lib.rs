@@ -27,7 +27,7 @@ pub fn regist_lazy() -> LazyModule {
         // read and write,
         head, tail, read, write, append,
         // assist
-        base_name, dir_name, join,
+        base_name, dir_name, parent, join,
     })
 }
 
@@ -61,6 +61,7 @@ pub fn regist_info() -> BTreeMap<&'static str, BuiltinInfo> {
         // assist
         base_name => "extract base_name from path", "<path> [split_ext?]"
         dir_name => "extract dir_name from path", "<path>"
+        parent => "extract parent_name from path", "<path>"
         join => "join paths", "<path>..."
     })
 }
@@ -609,21 +610,31 @@ fn base_name(
         Ok(Expression::String(file_name))
     }
 }
+
 fn dir_name(
     args: Vec<Expression>,
-    env: &mut Environment,
+    _env: &mut Environment,
     ctx: &Expression,
 ) -> Result<Expression, RuntimeError> {
     check_exact_args_len("dir_name", &args, 1, ctx)?;
     let p = get_string_ref(&args[0], ctx)?;
 
-    if is_a_dir(&p, env) {
-        return Ok(Expression::String(p.to_string()));
-    }
-    let path = Path::new(&p);
+    let dir = p
+        .rfind("/")
+        .map_or(String::from(""), |pos| p[..pos].to_string());
 
-    // 获取文件名
-    let dir_name = match path.parent() {
+    Ok(Expression::String(dir))
+}
+
+fn parent(
+    args: Vec<Expression>,
+    _env: &mut Environment,
+    ctx: &Expression,
+) -> Result<Expression, RuntimeError> {
+    check_exact_args_len("parent", &args, 1, ctx)?;
+    let p = get_string_ref(&args[0], ctx)?;
+
+    let dir_name = match Path::new(&p).parent() {
         Some(name) => name.to_string_lossy().into_owned(),
         None => String::from(""),
     };

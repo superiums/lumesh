@@ -569,7 +569,11 @@ impl Editor {
                 .collect()
         };
 
-        let start_pos = Self::find_word_start(&line, pos);
+        let start_pos = if line[..pos].contains(|c| c == '/' || c == '\\') {
+            Self::find_path_start(&line, pos)
+        } else {
+            Self::find_word_start(&line, pos)
+        };
         if new_completions.is_empty() {
             self.set_normal_mode();
         } else {
@@ -726,7 +730,11 @@ impl Editor {
             Cmd::HistorySearch => {
                 let line = self.buffer.text();
                 let pos = self.buffer.cursor();
-                let start_pos = Self::find_word_start(&line, pos);
+                let start_pos = if line[..pos].contains(|c| c == '/' || c == '\\') {
+                    Self::find_path_start(&line, pos)
+                } else {
+                    Self::find_word_start(&line, pos)
+                };
                 let query = &line[start_pos..pos];
                 let all: Vec<String> = self.history.entries();
                 let completions: Vec<CompletionItem> = all

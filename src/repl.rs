@@ -3,7 +3,7 @@ use crate::cmdhelper::{
     LumeCompletionType, collect_command_with_prefix, detect_completion_type, find_command_pos,
     is_valid_command,
 };
-use crate::completion::ParamCompleter;
+use crate::completion::{ParamCompleter, list_path_entries};
 use crate::editor::{
     Cmd, Completer, CompletionItem, Editor, EditorTheme, Highlighter, Hinter, KeyEvent,
     ReadlineError, ValidationResult, Validator,
@@ -11,7 +11,6 @@ use crate::editor::{
 use crate::expression::alias::get_alias_completion;
 use crate::libs::{LIBS_INFO, is_lib};
 use crate::syntax::{get_ayu_dark_theme, get_dark_theme, get_light_theme, get_merged_theme};
-use crate::utils::expand_home;
 use crate::{CFM_ENABLED, Expression, STRICT_ENABLED, childman};
 use crate::{Environment, check, highlight, parse_and_eval, prompt::get_prompt_engine};
 use std::collections::HashMap;
@@ -63,50 +62,15 @@ fn complete_path(line: &str, pos: usize) -> Vec<CompletionItem> {
         .unwrap_or(0);
     let path = &prefix[path_start..];
 
-    let (dir, file_prefix) = match path.rfind(|c| c == '/' || c == '\\') {
-        Some(i) => (&path[..=i], &path[i + 1..]),
-        None => ("./", path),
-    };
-
-    let dir_path = if dir.is_empty() {
-        PathBuf::from(".")
-    } else {
-        PathBuf::from(expand_home(dir).as_ref())
-    };
-
-    let mut items: Vec<CompletionItem> = Vec::new();
-    if let Ok(entries) = std::fs::read_dir(dir_path) {
-        for entry in entries.flatten() {
-            if let Some(name) = entry.file_name().to_str() {
-                if name.starts_with(file_prefix) {
-                    let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
-                    let full = format!("{dir}{name}");
-                    let has_space = name.chars().any(|c| c.is_ascii_whitespace());
-                    if has_space {
-                        let q = if is_dir {
-                            format!("'{full}/'")
-                        } else {
-                            format!("'{full}'")
-                        };
-                        items.push(CompletionItem {
-                            display: Some(name.to_string()),
-                            replacement: q,
-                            suffix: ' ',
-                        });
-                    } else {
-                        let suffix = if is_dir { '/' } else { ' ' };
-                        let display = name.to_string();
-                        let replacement = full;
-                        items.push(CompletionItem {
-                            display: Some(display),
-                            replacement,
-                            suffix,
-                        });
-                    }
-                }
-            }
-        }
-    }
+    let entries = list_path_entries(path, false);
+    let mut items: Vec<CompletionItem> = entries
+        .into_iter()
+        .map(|(name, full_path)| CompletionItem {
+            display: Some(name),
+            replacement: full_path,
+            suffix: ' ',
+        })
+        .collect();
     items.sort_by(|a, b| a.replacement.cmp(&b.replacement));
     items
 }
@@ -191,13 +155,9 @@ impl LumeCompleter {
                 &tokens[..tokens.len().saturating_sub(1)]
             };
 
-            let (pairs, trig_file) =
+            let pairs =
                 self.param_completer
                     .get_completions_for_context(command, params, current_token);
-
-            if trig_file {
-                return complete_path(line, pos);
-            }
 
             let mut items: Vec<CompletionItem> = pairs
                 .into_iter()

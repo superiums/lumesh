@@ -11,7 +11,7 @@ pub struct CompletionPair {
     pub replacement: String,
 }
 
-use crate::utils::get_std_cwd;
+use crate::utils::{expand_home, get_std_cwd};
 use crate::{Expression, RuntimeError};
 
 pub struct CompletionDatabase {
@@ -554,6 +554,16 @@ impl ParamCompleter {
     //         });
     //     Some(entry)
     // }
+    /// complete filesystem paths, optionally restricted to directories only
+    fn complete_path(&self, current_token: &str, dir_only: bool) -> Vec<CompletionPair> {
+        list_path_entries(current_token, dir_only)
+            .into_iter()
+            .map(|(name, path)| CompletionPair {
+                display: name,
+                replacement: path,
+            })
+            .collect()
+    }
     /**
      * args should exclude cmd and the current-token
      */
@@ -562,12 +572,12 @@ impl ParamCompleter {
         command: &str,
         args: &[&str],
         current_token: &str,
-    ) -> (Vec<CompletionPair>, bool) {
-        let (v, b) = self.get_completions_once(command, args, current_token, false);
+    ) -> Vec<CompletionPair> {
+        let v = self.get_completions_once(command, args, current_token, false);
         if v.is_empty() {
             return self.get_completions_once(command, args, current_token, true);
         }
-        return (v, b);
+        v
     }
     fn get_completions_once(
         &self,
@@ -575,7 +585,7 @@ impl ParamCompleter {
         args: &[&str],
         current_token: &str,
         match_more: bool,
-    ) -> (Vec<CompletionPair>, bool) {
+    ) -> Vec<CompletionPair> {
         let mut v = Vec::<CompletionPair>::new();
 
         // let mut contents = vec![format!("{},{:?},{}", command, args, current_token)];
@@ -720,7 +730,14 @@ impl ParamCompleter {
                             }
                         }
                     }
-                    MatchType::File => return (v, true),
+                    MatchType::File => {
+                        let dir_only = entry.directives.iter().any(|d| d == "@D");
+                        for item in self.complete_path(current_token, dir_only) {
+                            if !v.iter().any(|x| x.replacement == item.replacement) {
+                                v.push(item);
+                            }
+                        }
+                    }
                     MatchType::Require => {
                         v.push(CompletionPair {
                             display: String::from("_      :param required"),
@@ -731,8 +748,48 @@ impl ParamCompleter {
                 };
             }
         }
-        (v, false)
+        v
     }
+}
+
+/// list matching filesystem entries, returns formatted path strings.
+/// directories end with `/`; paths with spaces are quoted with `'...'`.
+pub(crate) fn list_path_entries(current_token: &str, dir_only: bool) -> Vec<(String, String)> {
+    let mut items = Vec::new();
+    let (dir, file_prefix) = match current_token.rfind(|c| c == '/' || c == '\\') {
+        Some(i) => (&current_token[..=i], &current_token[i + 1..]),
+        None => ("./", current_token),
+    };
+    let dir_path = if dir.is_empty() {
+        PathBuf::from(".")
+    } else {
+        PathBuf::from(expand_home(dir).as_ref())
+    };
+    if let Ok(entries) = std::fs::read_dir(dir_path) {
+        for entry in entries.flatten() {
+            if let Some(name) = entry.file_name().to_str() {
+                if name.starts_with(file_prefix) {
+                    let is_dir = entry.file_type().map(|t| t.is_dir()).unwrap_or(false);
+                    if dir_only && !is_dir {
+                        continue;
+                    }
+                    let full = format!("{dir}{name}");
+                    let has_space = full.chars().any(|c| c.is_ascii_whitespace());
+                    let full = if has_space {
+                        if is_dir {
+                            format!("'{full}/'")
+                        } else {
+                            format!("'{full}'")
+                        }
+                    } else {
+                        if is_dir { format!("{full}/") } else { full }
+                    };
+                    items.push((name.to_string(), full))
+                }
+            }
+        }
+    }
+    items
 }
 
 /**

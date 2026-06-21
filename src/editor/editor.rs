@@ -236,6 +236,8 @@ impl Editor {
 
     pub fn readline(&mut self, prompt: &str) -> Result<String, ReadlineError> {
         enable_raw_mode().map_err(ReadlineError::Io)?;
+        let _ = write!(stdout(), "\x1b[?2004h");
+        let _ = stdout().flush();
 
         let (w, h) = size().unwrap_or((80, 24));
         self.terminal_width = w;
@@ -259,9 +261,10 @@ impl Editor {
 
         if result.is_ok() {
             let _ = write!(stdout(), "\r\n");
-            // let _ = write!(stdout(), "\x1b[K\r\n");
         }
 
+        let _ = write!(stdout(), "\x1b[?2004l");
+        let _ = stdout().flush();
         let _ = disable_raw_mode();
         result
     }
@@ -315,6 +318,14 @@ impl Editor {
             self.show_hint = false;
 
             match event {
+                KeyEvent::Paste(text) => {
+                    let normalized = text.replace("\r\n", "\n").replace('\r', "\n");
+                    self.buffer.insert_str(&normalized);
+                    if normalized.contains('\n') {
+                        self.mode = EditorMode::Multiline;
+                    }
+                    self.leave_completion();
+                }
                 KeyEvent::Char(' ') => {
                     self.show_hint = true;
                     self.handle_space();
@@ -1196,6 +1207,9 @@ impl Editor {
                     if ke.kind == KeyEventKind::Press || ke.kind == KeyEventKind::Repeat =>
                 {
                     return Ok(KeyEvent::from(ke));
+                }
+                Ok(Event::Paste(content)) => {
+                    return Ok(KeyEvent::Paste(content));
                 }
                 Ok(Event::Resize(_w, _h)) => continue,
                 Ok(_) => continue,

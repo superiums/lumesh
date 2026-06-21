@@ -2,6 +2,7 @@ use crossterm::event::{KeyCode, KeyEvent as CTermKeyEvent, KeyModifiers};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum KeyEvent {
+    Paste(String),
     Char(char),
     Ctrl(char),
     Alt(char),

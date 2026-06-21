@@ -12,9 +12,9 @@ adb, forward, ,remove, , ,146,Remove a specific forward socket connection
 adb, forward, ,remove-all, , ,147,Remove all forward socket connections
 adb, sideload, , , ,@k,148, 
 adb, reconnect, , ,device,@f @r,149,Kick current connection from device side and make it reconnect.
-adb, exec-out, , , ,@e,150,File on device,adb shell ls {}
-adb, shell, , , ,@e,151,File on device,adb shell ls {}
-adb, pull, , , ,@e,152,File on device,adb shell ls {}
+adb, exec-out, , , ,@E,150,adb shell ls {}
+adb, shell, , , ,@E,151,adb shell ls {}
+adb, pull, , , ,@E,152,adb shell ls {}
 adb, push, , , ,@F,153,Local file
 adb, push, , , ,@F,154, 
 adb, logcat,L,last, , ,155,Dump logs from prior to last reboot from pstore

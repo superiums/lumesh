@@ -162,11 +162,6 @@ pub fn detect_completion_type(
 
     let prefix = &line[..pos];
 
-    // Check path completion first (highest priority)
-    if should_trigger_path_completion(line, pos) {
-        return (LumeCompletionType::Path, pos);
-    }
-
     // Check AI completion with new trigger logic
     if ai_avaluable && should_trigger_ai(prefix) {
         return (LumeCompletionType::AI, pos);
@@ -203,6 +198,12 @@ pub fn detect_completion_type(
         //     }
         // }
         // return (LumeCompletionType::Param, command_pos);
+    }
+
+    // only trigger path when param failed, infact only on leading word
+    // Check path completion first (highest priority)
+    if should_trigger_path_completion(line, pos) {
+        return (LumeCompletionType::Path, pos);
     }
 
     (LumeCompletionType::None, pos)

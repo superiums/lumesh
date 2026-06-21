@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.15.4]
+- rewrite exec col for comletion
+- clean completions
+- add more completions
+- update completions
+- remove for description
+- fix @E description with quote
+- support lume script in completion
+- add fs.parent, fix fs.dir_name
+- path completion later than param
+- optimize path completion
+- Update RULE.md
+- external cmd completion
+- fix past long text to bottom leads shadow
+- fix receiver inject for catch on rhs of pipe
+- fix alias excuting
+
 ## [0.15.3]
 - upgrade dependencies
 - clean unused dependencies

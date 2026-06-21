@@ -870,7 +870,7 @@ git,diff log show range-diff,G,,, ,1344,Look for differences where <regex> match
 git,diff log show range-diff,R,,, ,1345,Swap inputs to create a reverse diff
 git,diff log show range-diff,S,,, ,1346,Look for differences that change the number of occurrences of the string
 git,diff show range-diff,z,,, ,1347,Use NULs as output field/commit terminators
-git,,,,,@E @f @n,1348,__fish_git_remotes
+git,,,,,@E @f @n,1348,git remote &?
 git,fetch,4,ipv4,,@f,1350,Use IPv4 addresses only
 git,fetch,6,ipv6,,@f,1351,Use IPv6 addresses only
 git,fetch,,refmap,,@f @r,1352,Specify refspec to map the refs to remote-tracking branches
@@ -887,7 +887,7 @@ git,archive,,prefix,,@f @r,1388,Prepend prefix to each pathname in the archive
 git,archive,,add-file,,@F,1389,Add non-tracked file to the archive
 git,archive,,remote,,@f @r,1390,Retrieve a tar archive from a remote repository
 git,archive,,exec,,@f @r,1391,Path to git-upload-archive on the remote side
-git,bad new good old,,,,@E @f,1398,__fish_git_refs
+git,bad new good old,,,,@E @f,1398,git for-each-ref --format='%(refname:short)' &?
 git,commit,,cleanup,strip whitespace verbatim scissors default,@f @r,1413,How to clean up the commit message
 git,commit,,short,,@f,1416,Show short format output for dry-run
 git,commit,,status,,@f,1419,Include git status output in commit message template
@@ -937,7 +937,7 @@ git,shortlog,,no-group,, ,1466,Disable custom groupings
 git,shortlog,w,,, ,1467,"Linewrap entries as width[,indent1[,indent2]]"
 git,log,,decorate,short\tHide\ prefixes full\tShow\ full\ ref\ names auto\tHide\ prefixes\ if\ printed\ to\ terminal no\tDon\\\,@f,1468,Print out ref names
 git,log shortlog rev-list,,since-as-filter,,@f @r,1472,Show commits more recent than date without stopping traversal early
-git,log shortlog,,format,,@E @f @r,1524,__fish_git_show_opt format
+git,log shortlog,,format,,@E @f @r,1524,print #__git_show_opt not implemented
 git,log shortlog,,date,relative local iso iso-local iso8601 iso8601-local iso-strict iso-strict-local iso8601-strict iso8601-strict-local rfc-local rfc2822-local short short-local raw human unix format: default default-local,@f @r,1525,
 git,log,c,,, ,1526,
 git,log,m,,, ,1527,
@@ -948,8 +948,8 @@ git,log,,word-diff,color plain porcelain none,@f,1532,
 git,ls-files,v,,, ,1536,"Show file status, use lowercase letters for files assumed unchanged"
 git,ls-files,f,,, ,1537,"Show file status, use lowercase letters for files marked as fsmonitor valid"
 git,mergetool,O,,, ,1538,Process files in the order specified in the file passed as argument
-git,add append,C,reuse-message,,@E @f,1543,__fish_git_commits
-git,add append,c,reedit-message,,@E @f,1544,__fish_git_commits
+git,add append,C,reuse-message,,@E @f,1543,git log --oneline --no-abbrev-commit &?
+git,add append,c,reedit-message,,@E @f,1544,git log --oneline --no-abbrev-commit &?
 git,merge,s,strategy,manual ours theirs union cat_sort_uniq,@f @r,1548,Merge strategy to use to resolve conflicts
 git,pull,,upload-pack,,@f @r,1554,Path to git-upload-pack on remote
 git,pull,,depth,,@f @r,1555,Limit fetching to specified number of commits
@@ -968,7 +968,7 @@ git,reset,,keep,,@f,1586,Reset index but keep changes in working tree
 git,rev-parse,,is-inside-git-dir,, ,1590,Print whether the current working directory is in the .git directory
 git,rev-parse,,is-inside-work-tree,, ,1591,Print whether the current working directory is in the work tree of the repository
 git,revert,m,mainline,,@f @r,1593,Select parent number for reverting merge commits
-git,revert,S,gpg-sign,,@E @f @r,1594,type -q gpg && __fish_complete_gpg_key_id gpg
+git,revert,S,gpg-sign,,@E @f @r,1594,gpg --list-keys --keyid-format LONG &? | grep ^pub | awk '{print $2}' | cut -d/ -f2
 git,revert,X,strategy-option,,@f @r,1597,Pass option to the merge strategy
 git,status,,ahead-behind,,@f,1601,Display detailed ahead/behind upstream-branch counts
 git,status,,show-stash,,@f,1602,Show the number of entries currently stashed
@@ -999,7 +999,7 @@ git,config,,type,bool int bool-or-int path expiry-date color,@f @r,1655,Ensure v
 git,config,,show-scope,,@f,1656,Show scope of config
 git,config,,no-includes,,@f,1657,Do not respect include directives
 git,config,,default,,@f @r,1658,Use default value when variable is missing
-git,,,,,@E @n,1677,__fish_git_aliases
+git,,,,,@E @n,1677,git config --get-regexp '^alias\.' &? | cut -d. -f2 | cut -d' ' -f1
 git,clean,e,exclude,,@f @r,1678,Add pattern to exclude from removal
 git,,,default,,@f,1681,Use default value when missing entry
 git,send-email,,8bit-encoding,,@f,1682,Encoding for non-ASCII messages

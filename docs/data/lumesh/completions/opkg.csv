@@ -24,7 +24,7 @@ opkg,, ,force-removal-of-dependent-packages, , ,148,Remove package and all depen
 opkg,, ,autoremove, , ,149,Remove automatically installed packages
 opkg,,t,tmp-dir, , ,150,Specify tmp-dir.
 opkg,,l,lists-dir, , ,151,Specify lists-dir.
-opkg,, , , ,@E @F,152,__fish_print_opkg_packages
+opkg,, , , ,@E @F,152,opkg list-installed &? | cut -d' ' -f1
 opkg,, , ,update,@f,153,Update list of available packages
 opkg,, , ,upgrade,@f,154,Upgrade packages
 opkg,, , ,list,@f,155,List available packages

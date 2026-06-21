@@ -4,4 +4,4 @@ evince,,f,fullscreen, , ,102,Run evince in fullscreen mode
 evince,,s,presentation, , ,103,Run evince in presentation mode
 evince,,w,preview, , ,104,Run evince as a previewer
 evince,, ,display, , ,105,X display to use
-evince,, , , ,@E,106,__fish_evince_complete_file_url
+evince,, , , ,@E,106,find . -type f &?

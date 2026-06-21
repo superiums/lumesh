@@ -35,7 +35,7 @@ diskutil,list, , , ,@f,210,Return a property list
 diskutil,, , ,activity,@f,213,Continuously display system-wide disk manipulation activity
 diskutil,, , ,listFilesystems,@f,214,Show the file system personalities available
 diskutil,, , ,umount,@f,216,Unmount a single volume
-diskutil,umount, , , ,@E @f,217,__fish_diskutil_mounted_volumes
+diskutil,umount, , , ,@E @f,217,diskutil list &? | grep '/dev/'
 diskutil,, , ,eject,@f,219,Eject a volume or disk
 diskutil,, , ,mount,@f,221,Mount a single volume
 diskutil,mount, , , ,@r,222,Specify mount point

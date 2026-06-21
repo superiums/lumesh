@@ -13,7 +13,7 @@ ipset,, , ,test,@f,111,Test whether an entry is in a set
 ipset,, , ,x,@f,112,Destroy the specified set or all sets
 ipset,, , ,destroy,@f,113,Destroy the specified set or all sets
 ipset,, , ,list,@f,114,a
-ipset,, , , ,@E @f,115,__fish_ipset_list_sets
+ipset,, , , ,@E @f,115,ipset list -n &?
 ipset,,!, , ,@f,116,Ignore errors
 ipset,,o, ,plain save xml,@f,117,Output format to the list command
 ipset,,q, , ,@f,118,Suppress any output

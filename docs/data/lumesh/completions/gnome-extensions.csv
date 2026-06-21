@@ -20,4 +20,4 @@ gnome-extensions,, ,podir, ,@f @r,118,The directory where translations are found
 gnome-extensions,, ,gettext-domain, ,@f @r,119,The gettext domain to use for translations
 gnome-extensions,,f,force, , ,120,Overwrite an existing pack
 gnome-extensions,,o,out-dir, , ,121,The directory where the pack should be created
-gnome-extensions,enable &&, , , ,@E,122,__fish_gnome-extensions_complete_disabled_extensions
+gnome-extensions,enable &&, , , ,@E,122,gnome-extensions list-disabled &?

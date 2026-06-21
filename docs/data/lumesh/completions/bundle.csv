@@ -25,7 +25,7 @@ bundle,install, ,frozen, ,@f,124,Do not allow the Gemfile.lock to be updated aft
 bundle,, , ,update,@f,125,Update dependencies to their latest versions
 bundle,update, ,source, ,@f,126,The name of a :git or :path source used in the Gemfile
 bundle,update,g,group, ,@f,131,Update a specific group
-bundle,update, , , ,@E @f,132,__fish_bundled_gems
+bundle,update, , , ,@E @f,132,gem list --no-versions &?
 bundle,, , ,package,@f,133,Package the .gem files into vendor/cache directory
 bundle,, , ,binstubs,@f,134,Install the binstubs of the listed gem
 bundle,binstubs, ,force, ,@f,135,Overwrite existing binstubs if they exist

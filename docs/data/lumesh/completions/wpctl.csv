@@ -14,4 +14,4 @@ wpctl,get-volume inspect set-volume set-mute set-profile, , ,@DEFAULT_AUDIO_SOUR
 wpctl,get-volume inspect set-volume set-mute set-profile, , ,@DEFAULT_AUDIO_SINK@, ,114,Default Speakers
 wpctl,inspect set-profile, , ,@DEFAULT_VIDEO_SOURCE@, ,115,Default Camera
 wpctl,set-mute, , ,0 1 toggle, ,116,
-wpctl,settings, , , ,@E,117,__wpctl_get_settings
+wpctl,settings, , , ,@E,117,wpctl status &? | grep -oP '\S+'

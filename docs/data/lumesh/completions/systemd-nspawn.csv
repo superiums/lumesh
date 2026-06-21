@@ -37,4 +37,4 @@ systemd-nspawn,, ,volatile, , ,135,Boots the container in volatile mode
 systemd-nspawn,,h,help, , ,136,Print a short help text and exit
 systemd-nspawn,, ,version, , ,137,Print a short version string and exit
 systemd-nspawn,,j, , , ,138,Equivalent to --link-journal=try-guest
-systemd-nspawn,boot, , , ,@E @f @n,139,__fish_complete_subcommand
+systemd-nspawn,boot, , , ,@E @f @n,139,systemd-nspawn --help &? | grep -o '^\s*\S*' | tr -d ' '

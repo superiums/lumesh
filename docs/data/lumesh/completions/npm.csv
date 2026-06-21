@@ -137,4 +137,4 @@ npm,pack, ,pack-destination, ,@D @f @r,316,Tarball destination directory
 npm,publish, ,access,public,@f @r,318,Restrict access
 npm,, , ,update up upgrade,@f,319,Update package(s)
 npm,"add i in ins inst insta instal isnt isnta isntal isntall;, , , ,@E @f,320,
-npm,add i in ins inst insta instal isnt isnta isntal isntall, , , ,@E @f,451,__npm_filtered_list_packages '$npm_install'
+npm,add i in ins inst insta instal isnt isnta isntal isntall, , , ,@E @f,451,npm list --depth=0 &? | tail -n +2

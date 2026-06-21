@@ -13,4 +13,4 @@ which,,V,version, , ,111,Display version and exit
 which,, ,help, , ,112,Display help and exit
 which,,a,,, ,113,Print all matching executables in PATH, not just the first
 which,,s,,, ,114,Print no output, only return 0 if found
-which,,,,,@E @f @r,115,__fish_complete_subcommand
+which,,,,,@E @f @r,115,compgen -c &? || echo /usr/bin/*

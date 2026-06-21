@@ -311,4 +311,4 @@ virsh,vol-resize, ,allocate, , ,762,Allocate the new capacity, rather than leavi
 virsh,vol-resize, ,delta, , ,763,Use capacity as a delta to current size, rather than the new size
 virsh,vol-resize, ,shrink, , ,764,Allow the resize to shrink the volume
 virsh,vol-wipe, ,algorithm, , ,770,Perform selected wiping algorithm
-virsh,autostart, , , ,@E @f @r,771,__fish_virsh_get_domains
+virsh,autostart, , , ,@E @f @r,771,virsh list --all --name &?

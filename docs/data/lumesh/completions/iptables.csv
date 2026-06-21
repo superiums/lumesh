@@ -29,6 +29,6 @@ iptables,, ,modprobe, , ,131,Use this command to load modules
 iptables,A C D append check delete,j,jump, ,@f,132,Specify the target of a rule
 iptables,A C D append check delete,m,match, ,@f,133,Specify a match to use
 iptables,, , ,ACCEPT DROP RETURN,@f,134,
-iptables,, , , ,@E @f,135,__fish_iptables_user_chains
+iptables,, , , ,@E @f,135,iptables -L -n &? | grep '^Chain' | cut -d' ' -f2
 iptables,,h, , ,@f,136,Help
 iptables,,t,table, ,@f,137,The table to operate on

@@ -31,7 +31,7 @@ systemd-analyze,, ,man, , ,134,Do not invoke man to verify the existence of man 
 systemd-analyze,, , ,time, ,135,Print timing statistics
 systemd-analyze,, , ,blame, ,136,Print list of running units ordered by time to init
 systemd-analyze,, , ,critical-chain, ,137,Print a tree of the time critical chain of units
-systemd-analyze,critical-chain, , , ,@E,138,__fish_systemd_units
+systemd-analyze,critical-chain, , , ,@E,138,systemctl list-units --all --no-legend &? | cut -d' ' -f1
 systemd-analyze,, , ,dump, ,139,Output serialization of server state
 systemd-analyze,, , ,malloc, ,140,Output internal memory state of D-Bus service
 systemd-analyze,, , ,plot, ,141,Output SVG graphic showing service initialization

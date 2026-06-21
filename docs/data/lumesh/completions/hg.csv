@@ -17,8 +17,8 @@ hg,,h,help, , ,115,display help and exit
 hg,, ,hidden, , ,116,consider hidden changesets
 hg,, ,color,true false always auto never debug,@f @r,117,when to colorize
 hg,, ,pager,true false always auto never,@f @r,118,when to paginate
-hg,, , , ,@E @f @r,119,__fish_hg_commands
-hg,add, , , ,@E @f,120,__fish_hg_status -u
+hg,, , , ,@E @f @r,119,hg help &? | grep '^ ' | sed 's/^ *//' | cut -d' ' -f1
+hg,add, , , ,@E @f,120,hg status -u &?
 hg,add,I,include, ,@f @r,121,include names matching the given patterns
 hg,add,X,exclude, ,@f @r,122,exclude names matching the given patterns
 hg,add,S,subrepos, , ,123,recurse into subrepositories
@@ -30,11 +30,11 @@ hg,,f,follow, , ,130,follow changeset history, or file history across copies and
 hg,,d,date, ,@f @r,131,show revisions matching date spec
 hg,,C,copies, , ,132,show copied files
 hg,,k,keyword, ,@f @r,133,do case-insensitive search for a given text
-hg,,r,rev, ,@E @f @r,134,__fish_hg_labels
+hg,,r,rev, ,@E @f @r,134,hg labels &?
 hg,, ,removed, , ,135,include revisions where files were removed
 hg,,u,user, ,@f @r,136,revisions committed by user
-hg,,b,branch, ,@E @f @r,137,__fish_hg_branches
-hg,,P,prune, ,@E @f @r,138,__fish_hg_labels
+hg,,b,branch, ,@E @f @r,137,hg branches &? | cut -d' ' -f1
+hg,,P,prune, ,@E @f @r,138,hg labels &?
 hg,,p,patch, , ,139,show patch
 hg,,g,git, , ,140,use git extended diff format
 hg,,l,limit, ,@f @r,141,limit number of changes displayed

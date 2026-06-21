@@ -19,7 +19,7 @@ valgrind,, ,gen-suppressions, , ,117,Print suppressions for detected errors
 valgrind,, ,db-attach,yes no, ,118,Start debugger on error
 valgrind,, ,db-command, , ,119,Debugger command
 valgrind,, ,input-fd,0 1 2 3 4 5 6 7 8 9, ,120,File descriptor for input
-valgrind,, ,alloc-fn, ,@E @f @r,121,__fish_print_function_prototypes
+valgrind,, ,alloc-fn, ,@E @f @r,121,cat /proc/*/maps &?
 valgrind,, ,heap,yes\t'Profile heap usage' no\t'Do not profile heap usage',@f @r,122,Profile heap usage
 valgrind,, ,heap-admin, ,@f @r,123,The number of bytes of heap overhead per allocation
 valgrind,, ,stacks,yes\t'Profile stack usage' no\t'Do not profile stack usage',@f @r,124,Profile stack usage

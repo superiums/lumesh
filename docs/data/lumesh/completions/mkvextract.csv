@@ -19,7 +19,7 @@ mkvextract,, , ,chapters,@f @n,127,Extract chapters as XML
 mkvextract,, , ,cuesheet,@f @n,128,Extract chapters and tags as CUE sheet
 mkvextract,, , ,timecodes_v2,@f @n,129,Extract timecodes of a track as timecode v2 file
 mkvextract,, , ,cues,@f @n,130,Extract cue information as text file
-mkvextract,, , , ,@E @f,131,__fish_mkvextract_print_tracks
+mkvextract,, , , ,@E @f,131,mkvextract &?
 mkvextract,,c, , ,@f @r,132,Convert text subtitles to a charset
 mkvextract,, ,cuesheet, ,@f,133,Also try to extract the CUE sheet
 mkvextract,, ,blockadd, ,@f @r,134,Keep only the BlockAdditions up to the specified level

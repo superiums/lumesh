@@ -22,6 +22,6 @@ machinectl,pull-dkr, ,dkr-index-url, ,@f @r,122,Specify index server
 machinectl,pull-tar pull-raw pull-dkr, ,force, ,@f,123,Overwrite existing machine image
 machinectl,pull-tar pull-raw, ,verify,no checksum signature,126,152,Verify image with specified method
 machinectl,pull-tar pull-raw pull-dkr, ,force,127,@f,155,Overwrite existing machine image
-machinectl,login bind copy-to copy-from, , , ,@E @f,128,__fish_systemd_machines
+machinectl,login bind copy-to copy-from, , , ,@E @f,128,machinectl list --no-legend &? | cut -d' ' -f1
 machinectl,read-only, , ,yes no,@f,131,
 machinectl,kill,s,signal, ,@f @r,132,Signal to send

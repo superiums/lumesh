@@ -111,4 +111,4 @@ tar,, ,no-auto-compress, , ,212,Do not use archive suffix to determine the compr
 tar,,z,ungzip, , ,213,Filter through gzip
 tar,,Z,uncompress, , ,214,Filter through compress
 tar,, ,zstd, , ,215,Filter through zstd
-tar,,,,,@E,216,__fish_complete_tar
+tar,,,,,@E,216,tar tf &?

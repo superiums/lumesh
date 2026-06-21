@@ -6,7 +6,7 @@ iwctl,,u,username, , ,104,
 iwctl,,P,passphrase, , ,105,
 iwctl,,v,dont-ask, , ,106,Don't ask for missing credentials
 iwctl,ad-hoc, , ,list, ,108,List devices in Ad-Hoc mode
-iwctl,ad-hoc, , , ,@E,109,__iwctl_filter ad-hoc list
+iwctl,ad-hoc, , , ,@E,109,iwctl &?
 iwctl,ad-hoc list, , ,start,@n,110,Start or join an Ad-Hoc network
 iwctl,ad-hoc list, , ,start_open,@n,111,Start of join an open Ad-Hoc network
 iwctl,ad-hoc list, , ,stop,@n,112,Leave an Ad-Hoc network

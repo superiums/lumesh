@@ -4,5 +4,6 @@ zabbix_server,,f,foreground, ,@f,102,Run Zabbix server in foreground.
 zabbix_server,,h,help, ,@f,103,Display this help message.
 zabbix_server,,V,version, ,@f,104,Display version number.
 zabbix_server,,R,runtime-control,$runtime,@f,105,Perform administrative functions.
-zabbix_server,log_level_increase,R,runtime-control, ,@E @f @r,106,__fish_prepend log_level_increase
+zabbix_server,log_level_increase,R,runtime-control, ,@E @f @r,106,log_level_increase
 zabbix_server,,R,runtime-control, ,@f,112,Perform administrative functions.
+

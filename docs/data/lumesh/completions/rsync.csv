@@ -146,4 +146,3 @@ rsync,,,compress-choice,, ,244,Choose the compression algorithm
 rsync,,F,,, ,245,Same as --filter=’dir-merge /.rsync-filter’ repeated: --filter='- .rsync-filter'
 rsync,,,outbuf,, ,246,Set out buffering to None, Line, or Block
 rsync,,P,,, ,247,Same as --partial --progress
-rsync,, , ,(__fish_print_hostnames): (,@E,249,Hostname

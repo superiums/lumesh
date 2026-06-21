@@ -17,10 +17,10 @@ bat,,f,force-colorization,, ,115,Force color and decorations
 bat,,h,,, ,116,Print a concise overview
 bat,,,help,,@f,117,Print all help information
 bat,,,ignored-suffix,,@f @r,118,Ignore extension
-bat,,l,language,,@E @f @k @r,119,__bat_complete_list_languages
+bat,,l,language,,@E @f @k @r,119,bat --list-languages &?
 bat,,,list-languages,,@f,120,List syntax highlighting languages
 bat,,,list-themes,,@f,121,List syntax highlighting themes
-bat,,m,map-syntax,,@E @f @r,122,__bat_complete_map_syntax
+bat,,m,map-syntax,,@E @f @r,122,bat --list-languages &?
 bat,,,no-config,, ,123,Do not use the configuration file
 bat,,,no-custom-assets,, ,124,Do not load custom assets
 bat,,,nonprintable-notation,unicode caret,@f @r,125,Set notation for non-printable characters
@@ -33,7 +33,7 @@ bat,,s,squeeze-blank,, ,131,Squeeze consecutive empty lines into a single empty 
 bat,,,squeeze-limit,,@f @r,132,Set the maximum number of consecutive empty lines to be printed
 bat,,,strip-ansi,auto never always,@f @r,133,Specify when to strip ANSI escape sequences from the input
 bat,,P,,, ,136,Disable paging
-bat,,,style,,@E @f @k @r,137,__fish_complete_list , __bat_style_opts
+bat,,,style,,@E @f @k @r,137,__bat_style_opts
 bat,,,terminal-width,,@f @r,138,Set terminal <width>, +<offset>, or -<offset>
 bat,,u,unbuffered,, ,139,This option exists for POSIX-compliance reasons
 bat,,V,version,,@f,140,Show version information
@@ -51,8 +51,8 @@ bat,-s -l, ,pager, ,@n @f @r,152,Which pager to use
 bat,-s -l, ,paging, ,@n @f @r,153,When to use the pager
 bat,-s -l, ,tabs, ,@n @f @r,154,Set tab width
 bat,-s -l, ,theme, ,@n @f @r,155,Set the syntax highlighting theme
-bat,-s -l, ,theme-dark, ,@n @E @f @r,156,
-bat,-s -l, ,theme-light, ,@n @E @f @r,157,
+bat,-s -l, ,theme-dark, ,@n @E @f @r,156,echo # dynamic completion placeholder for bat
+bat,-s -l, ,theme-light, ,@n @E @f @r,157,echo # dynamic completion placeholder for bat
 bat,-s -l, ,wrap, ,@n @f @r,158,Text-wrapping mode
 bat,cache, ,source, ,@D @f @r,159,Load syntaxes and themes from DIR
 bat,cache, ,target, ,@D @f @r,160,Store cache in DIR

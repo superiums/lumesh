@@ -53,5 +53,5 @@ toot,, , ,mute, ,184,Mute an account
 toot,, , ,unmute, ,185,Unmute an account
 toot,, , ,block, ,186,Block an account
 toot,, , ,unblock, ,187,Unblock an account
-toot,activate logout, , , ,@E,188,__fish_complete_toot_accounts
+toot,activate logout, , , ,@E,188,toot accounts &? | cut -d' ' -f1
 toot,upload, , , ,@F,189,

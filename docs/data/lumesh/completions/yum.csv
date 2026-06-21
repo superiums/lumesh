@@ -8,7 +8,7 @@ yum,, ,disablerepo, , ,116,Disable repository
 yum,, ,obsoletes, , ,117,Enables obsolets processing logic
 yum,, ,rss-filename, , ,118,Output rss-data to file
 yum,, ,exclude, , ,119,Exclude specified package from updates
-yum,,,,,@E,129,__fish_print_rpm_packages
+yum,,,,,@E,129,rpm -qa --queryformat $T &?
 yum,,y,,, ,130,Assume yes to all questions
 yum,,c,,,@r,131,Configuration file
 yum,,d,,,@f @r,132,Set debug level

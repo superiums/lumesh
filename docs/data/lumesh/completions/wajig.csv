@@ -4,7 +4,7 @@ wajig,,n,noauth, , ,102,Allow packages from unauthenticated archives.
 wajig,,s,simulate, , ,103,Trace but don't execute the sequence of underlying commands.
 wajig,,t,teaching, , ,104,Trace the sequence of commands performed.
 wajig,,y,yes, , ,105,Assume yes for any questions asked.
-wajig,, , , ,@E @F,106,__fish_print_apt_packages
+wajig,, , , ,@E @F,106,apt list --installed &? | cut -d/ -f1 | tail -n +2
 wajig,, , ,addcdrom,@f,107,Add a CD-ROM to the list of available sources of packages
 wajig,, , ,auto-clean,@f,108,Remove superseded deb files from the download cache
 wajig,, , ,auto-download,@f,109,Do an update followed by a download of all updated packages

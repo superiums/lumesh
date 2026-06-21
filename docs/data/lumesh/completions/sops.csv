@@ -49,7 +49,7 @@ sops,, ,shamir-secret-sharing-threshold, ,@f @r,196,Number of master keys requir
 sops,, ,output, ,@r,197,Save the output after encryption or decryption to file
 sops,, ,keyservice, ,@f @r,198,Specify key services to use in addition to the local one
 sops,exec-env, ,background, ,@F,199,Background the process and don\'t wait for it to complete
-sops,exec-env, ,user, ,@E @f @r,200,__fish_print_users
+sops,exec-env, ,user, ,@E @f @r,200,cut -d: -f1 /etc/passwd
 sops,exec-file, ,no-fifo, ,@F,204,Use a regular file instead of a fifo to temporarily hold the decrypted contents
 sops,exec-file, ,input-type,json yaml dotenv binary,@f @r,206,Currently json, yaml, dotenv and binary are supported
 sops,exec-file, ,output-type,json yaml dotenv binary,@f @r,207,Currently json, yaml, dotenv and binary are supported
@@ -59,7 +59,7 @@ sops,publish, ,recursive, ,@F,212,If source path is a directory, publish all its
 sops,keyservice, ,prompt, ,@F,216,Prompt user to confirm every incoming request
 sops,groups, , ,add,@f @r,218,Add a new group to a SOPS file
 sops,groups, , ,delete,@f @r,219,Delete a key group from a SOPS file
-sops,groups add, , , ,@E @f @r,220,__fish_print_users
+sops,groups add, , , ,@E @f @r,220,cut -d: -f1 /etc/passwd
 sops,groups add,f,file, ,@F,222,The file to add the group to
 sops,groups add, ,pgp, ,@f @r,224,The PGP fingerprints the new group should contain
 sops,groups add, ,kms, ,@f @r,225,The KMS ARNs the new group should contain
@@ -74,4 +74,6 @@ sops,help, , ,updatekeys,@f @r,248,Update the keys of a SOPS file using the conf
 sops,, ,set, ,@f @r,249,Set a specific key or branch in the input document (edit mode)
 sops,exec-file, ,filename, ,@F,250,Filename for the temporarily file (default: tmp-file)
 sops,keyservice, ,net,tcp;unix,@f @r,251,Network to listen on (default: 'tcp')
-sops,keyservice, ,addr,(__fish_print_addresses | cut -f1):,@E @f @r,252,Address to listen on (default: '127.0.0.1:5000')
+sops,keyservice, ,addr,ip -o addr show | awk '{print $4}' | cut -d/ -f1,@E @f @r,252,Address to listen on (default: '127.0.0.1:5000')
+
+

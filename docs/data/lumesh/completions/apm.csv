@@ -12,7 +12,7 @@ apm,,v,version, ,@f,201,Display version
 apm,, ,color, ,@f,202,Enable colored output
 apm,, ,no-color, ,@f,203,Disable colored output
 apm,, , ,config,@f,204,Modify or list configuration items
-apm,config set get delete, , , ,@E @f @r,205,__fish_apm_config_items
+apm,config set get delete, , , ,@E @f @r,205,apm config list &?
 apm,, , ,dedupe,@f,206,Reduce duplication in node_modules in current directory
 apm,featured, ,json, ,@f,207,Output featured packages as JSON array
 apm,featured,t,themes, ,@f,208,Only list themes

@@ -20,4 +20,4 @@ make,,S,,, ,118,Don't continue after an error
 make,,t,,, ,119,Touch files, don't run commands
 make,,v,,, ,120,Display version and exit
 make,,w,,, ,121,Print working directory
-make, , , , ,@E @f,122,__fish_complete_make_targets (commandline -p)
+make, , , , ,@E @f,122,make -qp &? | grep '^[a-zA-Z0-9_][a-zA-Z0-9_.]*:' | cut -d: -f1

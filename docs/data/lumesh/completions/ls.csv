@@ -92,5 +92,3 @@ ls,,I,,, ,195,Prevent -A from being automatically set for root
 ls,,G,,, ,197,Enable colorized output
 ls, ,c, , , ,198,"Sort by changed time
 ls, ,u, , , ,199,"Sort by access time
-ls,,c, , , ,200,Sort by changed time, (-l) show ctime
-ls,,u, , , ,201,Sort by access time, (-l) show atime

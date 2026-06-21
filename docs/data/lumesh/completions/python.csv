@@ -15,7 +15,7 @@ python,,v,,, ,121,Verbose mode
 python,,V,version,, ,123,Display version and exit
 python,,W,,ignore default all module once error,@f @r,124,Warning control
 python,,x,,, ,125,Skip first line of source, allowing use of non-Unix forms of #!cmd
-python,,,,,@E @f @k,126,__fish_complete_suffix .py
+python,,,,,@E @f @k,126,find . -type f &?
 python,,,,-,@f,127,Read program from stdin
 python, ,3,,, ,128,Warn about Python 3.x incompatibilities that 2to3 cannot trivially fix
 python, ,t,,, ,129,Warn on mixed tabs and spaces

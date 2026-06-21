@@ -27,10 +27,10 @@ yadm,clone, ,no-bootstrap, ,@f,126,Do not execute bootstrap script
 yadm,list,a, , ,@f,127,List all files
 yadm,decrypt,l, , ,@f,128,List files without extracting
 yadm,introspect, , ,commands configs repo switches,@f @r,129,
-yadm,gitconfig, , , ,@E @f,130,__fish_complete_yadm_like_git
-yadm,config, ,get, ,@E @f @r,132,__fish_yadm_config_keys
-yadm,config, ,get-all, ,@E @f,133,__fish_yadm_config_keys
-yadm,config, ,replace-all, ,@E @f @r,134,__fish_yadm_config_keys
-yadm,config, ,unset, ,@E @f,135,__fish_yadm_config_keys
-yadm,config, ,unset-all, ,@E @f,136,__fish_yadm_config_keys
+yadm,gitconfig, , , ,@E @f,130,echo # dynamic completion placeholder for yadm
+yadm,config, ,get, ,@E @f @r,132,yadm config --list &? | cut -d= -f1
+yadm,config, ,get-all, ,@E @f,133,yadm config --list &? | cut -d= -f1
+yadm,config, ,replace-all, ,@E @f @r,134,yadm config --list &? | cut -d= -f1
+yadm,config, ,unset, ,@E @f,135,yadm config --list &? | cut -d= -f1
+yadm,config, ,unset-all, ,@E @f,136,yadm config --list &? | cut -d= -f1
 yadm,init,w, , ,@D @f @r,138,Override work-tree

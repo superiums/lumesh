@@ -5,7 +5,7 @@ fossil,add, ,case-sensitive,yes no,@f @r,405,Case insensitive file matching
 fossil,add, ,dotfiles, , ,406,Include dotfiles
 fossil,add, ,ignore, ,@r,407,Files to ignore
 fossil,add, ,clean, ,@r,408,Files to ignore
-fossil,add, , , ,@E @f @r,409,__fish_fossil extra --rel-paths
+fossil,add, , , ,@E @f @r,409,fossil extra &?
 fossil,, , ,addremove,@f,410,Remove and add files to checkout
 fossil,addremove,n,dry-run, , ,415,Display actions without running
 fossil,, , ,all,@f,416,Check all repositories
@@ -50,7 +50,7 @@ fossil,branch, , ,list ls,@f @r,455,List branches
 fossil,,c,closed, , ,456,Show closed branches
 fossil,branch,R,repository, ,@r,457,Run command on repository
 fossil,, , ,cat, ,458,Print a file
-fossil,cat,r, , ,@E @f @r,460,__fish_fossil tag list
+fossil,cat,r, , ,@E @f @r,460,fossil tag list &?
 fossil,changes, ,abs-paths, , ,462,Display absolute paths
 fossil,changes, ,rel-paths, , ,463,Display relative paths
 fossil,changes, ,sha1sum, , ,464,Verify file status using SHA1
@@ -84,15 +84,15 @@ fossil,ci commit, ,no-warnings, , ,501,Omit all warnings
 fossil,ci commit, ,tag, ,@f @r,504,Assign a tag to the checkin
 fossil,, , ,diff gdiff, ,505,Show differences
 fossil,diff gdiff, ,binary, ,@r,506,Binary files glob pattern
-fossil,diff gdiff, ,branch, ,@E @f @r,507,__fish_fossil tag list
+fossil,diff gdiff, ,branch, ,@E @f @r,507,fossil tag list &?
 fossil,diff gdiff, ,brief, , ,508,Show file names only
 fossil,diff gdiff,c,context, ,@f @r,509,Context lines
 fossil,diff gdiff, ,diff-binary,yes no,@f @r,510,Include binary files
-fossil,diff gdiff,r,from, ,@E @f @r,511,__fish_fossil tag list
+fossil,diff gdiff,r,from, ,@E @f @r,511,fossil tag list &?
 fossil,diff gdiff,i,internal, , ,512,Use internal diff logic
 fossil,diff gdiff,y,side-by-side, , ,513,Side-by-side diff
 fossil,diff gdiff, ,tk, , ,514,Launch GUI
-fossil,diff gdiff, ,to, ,@E @f @r,515,__fish_fossil tag list
+fossil,diff gdiff, ,to, ,@E @f @r,515,fossil tag list &?
 fossil,diff gdiff, ,unified, , ,516,Unified diff
 fossil,diff gdiff,W,width, ,@f @r,518,Line width in side-by-side diff
 fossil,, , ,export, ,519,Export repository to git
@@ -103,7 +103,7 @@ fossil,, , ,finfo, ,529,Print complete file history
 fossil,finfo,b,brief, , ,530,Display one-line summary
 fossil,finfo, ,offset, ,@f @r,533,Skip changes
 fossil,finfo,p,print, , ,534,Select print mode
-fossil,finfo,r,revision, ,@E @f @r,535,__fish_fossil tag list
+fossil,finfo,r,revision, ,@E @f @r,535,fossil tag list &?
 fossil,finfo,s,status, , ,536,Select status mode
 fossil,, , ,help,@f,537,Display help
 fossil,help,t,test, , ,539,Show test commands only
@@ -118,8 +118,8 @@ fossil,, , ,json, ,550,Make JSON request
 fossil,, , ,ls, ,552,List files
 fossil,ls, ,age, , ,554,Show commit time
 fossil,, , ,merge, ,556,Merge commits
-fossil,merge, , , ,@E,557,__fish_fossil tag list
-fossil,merge, ,baseline, ,@E @f @r,558,__fish_fossil tag list
+fossil,merge, , , ,@E,557,fossil tag list &?
+fossil,merge, ,baseline, ,@E @f @r,558,fossil tag list &?
 fossil,merge, ,integrate, , ,562,Close merged branch
 fossil,, , ,mv, ,565,Move file
 fossil,, , ,open, ,567,Open repository

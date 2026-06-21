@@ -17,7 +17,7 @@ prt-get,, ,strict-diff, , ,149,Override prefer-higher
 prt-get,, ,config, ,@r,150,Use alternative config file
 prt-get,, ,install-root, ,@r,151,Use this alternative root for installation
 prt-get,, ,log, , ,152,Write output to log file
-prt-get,, , , ,@E @F @f,202,__fish_prt_packages
+prt-get,, , , ,@E @F @f,202,prt-get list &? | cut -d' ' -f1
 prt-get,, , ,install,@f,203,Install listed ports
 prt-get,, , ,depinst,@f,204,Install listed ports and their deps
 prt-get,, , ,grpinst,@f,205,Install listed ports, stop if one fails

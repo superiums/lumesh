@@ -2,5 +2,5 @@ cmd,conds,short,long,params,dirs,pri,desc
 snap,,h,help, ,@f @r,105,Show this help message
 snap,,v,version, ,@f @r,106,Print the version and exit
 snap,,,,,@F,107,
-snap,interfaces,,,,@E @f,108,__fish_snap_installed_snaps
+snap,interfaces,,,,@E @f,108,snap list &? | tail -n +2 | cut -d' ' -f1
 snap,known, , , ,@f,109,

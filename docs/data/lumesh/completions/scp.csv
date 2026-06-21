@@ -11,6 +11,6 @@ scp,,R,,, ,109,Copies between two remote hosts are performed by executing scp on
 scp,,r,,, ,110,Recursively copy
 scp,,S,,, ,111,Encryption program
 scp,,T,,, ,112,Disable strict filename checking
-scp,t, , , ,@E,113,complete -C'ssh ' | string replace -r '	.*' ':'
+scp,t, , , ,@E,113,ssh &?
 scp,t, , , ,@n,114,Local Path
-scp,t, , , ,@E @f,115,__scp_remote_target
+scp,t, , , ,@E @f,115,ssh &?

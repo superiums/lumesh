@@ -2,4 +2,4 @@ cmd,conds,short,long,params,dirs,pri,desc
 udevil,mount, , , ,@F @f @r,101,
 udevil,mount, , , ,@f @r,102,
 udevil,, , , ,@f,103,
-udevil,umount unmount, , , ,@E,104,__fish_print_mounted
+udevil,umount unmount, , , ,@E,104,mount | cut -d' ' -f1 &?

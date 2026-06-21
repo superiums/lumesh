@@ -69,6 +69,6 @@ zig,, , ,targets,@f @r,282,List available compilation targets
 zig,, , ,version,@f @r,283,Print version number
 zig,, , ,zen,@f @r,284,Print Zen of Zig
 zig,ast-check,t, , , ,285,Output ZIR in text form to stdout
-zig,cc c++, , , ,@E,286,__fish_complete_zig_cc_and_cpp
+zig,cc c++, , , ,@E,286,zig cc --help &?
 zig,build &&, , ,install uninstall run test unzip,@f @r,287,
 zig,build, ,summary,failures all new none,@f @r,288,Control the printing of the build summary

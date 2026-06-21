@@ -416,30 +416,6 @@ fn fmt_token_error(string: &Str, err: &Diagnostic, f: &mut fmt::Formatter) -> fm
     write!(f, "{RED_START}{BOLD}token error{RESET}: ")?;
     match err {
         Diagnostic::Valid => Ok(()),
-        Diagnostic::InvalidUnicode(ranges) => {
-            for &at in ranges.iter() {
-                let escape = at.to_str(string).trim();
-                writeln!(f, "invalid unicode sequence `{escape}`")?;
-                print_error_lines(string, at, f, 72)?;
-            }
-            Ok(())
-        }
-        Diagnostic::InvalidStringEscapes(ranges) => {
-            for &at in ranges.iter() {
-                let escape = at.to_str(string).trim();
-                writeln!(f, "invalid string escape sequence `{escape}`")?;
-                print_error_lines(string, at, f, 72)?;
-            }
-            Ok(())
-        }
-        Diagnostic::InvalidColorCode(ranges) => {
-            for &at in ranges.iter() {
-                let escape = at.to_str(string).trim();
-                writeln!(f, "invalid color code sequence `{escape}`")?;
-                print_error_lines(string, at, f, 72)?;
-            }
-            Ok(())
-        }
         &Diagnostic::InvalidNumber(at) => {
             let num = at.to_str(string).trim();
             writeln!(f, "invalid number `{num}`")?;

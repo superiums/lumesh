@@ -83,22 +83,7 @@ pub fn highlight(line: &str, theme: &HashMap<String, String>) -> String {
             (TokenKind::StringLiteral, s) => {
                 result.push_str(get_color("string_literal", theme));
                 is_colored = true;
-
-                if let Diagnostic::InvalidStringEscapes(ranges) = diagnostic {
-                    let mut last_end = token.range.start();
-
-                    for &range in ranges.iter() {
-                        result.push_str(&line[last_end..range.start()]);
-                        result.push_str(get_color("string_error", theme));
-                        result.push_str(range.to_str(line));
-                        result.push_str(get_color("string_literal", theme));
-                        last_end = range.end();
-                    }
-
-                    result.push_str(&line[last_end..token.range.end()]);
-                } else {
-                    result.push_str(s);
-                }
+                result.push_str(s);
             }
             (TokenKind::IntegerLiteral | TokenKind::FloatLiteral, l) => {
                 if let Diagnostic::InvalidNumber(e) = diagnostic {

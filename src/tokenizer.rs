@@ -12,9 +12,6 @@ const NOT_FOUND: nom::Err<NotFoundError> = nom::Err::Error(NotFoundError);
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Diagnostic {
     Valid,
-    InvalidUnicode(Box<[StrSlice]>),
-    InvalidStringEscapes(Box<[StrSlice]>),
-    InvalidColorCode(Box<[StrSlice]>),
     InvalidNumber(StrSlice),
     IllegalChar(StrSlice),
     NotTokenized(StrSlice),
@@ -81,7 +78,6 @@ fn map_valid_token(
 fn any_punctuation(input: Input<'_>) -> TokenizationResult<'_> {
     alt((
         punctuation_tag(","),
-        punctuation_tag(";"),
         punctuation_tag("("),
         punctuation_tag(")"),
         punctuation_tag("["),
@@ -683,7 +679,7 @@ fn line_continuation(input: Input<'_>) -> TokenizationResult<'_> {
 //     }
 // }
 fn comment(input: Input<'_>) -> TokenizationResult<'_> {
-    if input.starts_with("# ") || input.starts_with("#!") {
+    if input.starts_with("#") {
         let len = input
             .chars()
             .take_while(|&c| !matches!(c, '\n' | '\r'))

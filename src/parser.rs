@@ -1652,7 +1652,6 @@ pub fn tokenize_source(input: &Str) -> Result<Vec<Token>, nom::Err<SyntaxErrorKi
     let tokenization_input = Input::new(input);
     let (mut token_vec, mut diagnostics) = super::parse_tokens(tokenization_input);
 
-    // dbg!(&token_vec);
     // 错误处理
     diagnostics.retain(|d| d != &Diagnostic::Valid);
     if !diagnostics.is_empty() {

@@ -1,6 +1,5 @@
 use std::fs::read_to_string;
 use std::path::PathBuf;
-use std::process::Command;
 use std::sync::LazyLock;
 use std::sync::RwLock;
 use std::{collections::HashMap, sync::Arc};
@@ -11,8 +10,8 @@ pub struct CompletionPair {
     pub replacement: String,
 }
 
-use crate::utils::{expand_home, get_std_cwd};
-use crate::{Expression, RuntimeError};
+use crate::utils::expand_home;
+use crate::{Environment, Expression, RuntimeError, parse};
 
 pub struct CompletionDatabase {
     entries: HashMap<String, Arc<Vec<CompletionEntry>>>,
@@ -709,22 +708,45 @@ impl ParamCompleter {
                         }
                     }
                     MatchType::ExternalCMD => {
-                        let cmd_template = entry.description.replace("{}", current_token);
-                        let parts: Vec<&str> =
-                            cmd_template.trim().split_ascii_whitespace().collect();
-                        if let Ok(output) = Command::new(parts[0])
-                            .current_dir(get_std_cwd())
-                            .args(&parts[1..])
-                            .output()
-                        {
-                            if output.status.success() {
-                                for line in String::from_utf8_lossy(&output.stdout).lines() {
-                                    let trimmed = line.trim();
-                                    if !trimmed.is_empty() {
-                                        v.push(CompletionPair {
-                                            display: trimmed.to_string(),
-                                            replacement: trimmed.to_string(),
-                                        });
+                        let mut env = Environment::new();
+                        env.define("T", Expression::String(current_token.to_string()));
+                        let code = entry
+                            .description
+                            .trim_start_matches("'|\"")
+                            .trim_end_matches("'|\"");
+                        if let Ok(expr) = parse(&code) {
+                            if let Ok(result) = expr.eval_in_assign(&mut env) {
+                                match result {
+                                    Expression::List(items) => {
+                                        for item in items.iter() {
+                                            let s = item.to_string();
+                                            if !s.is_empty() {
+                                                v.push(CompletionPair {
+                                                    display: s.clone(),
+                                                    replacement: s,
+                                                });
+                                            }
+                                        }
+                                    }
+                                    Expression::String(s) => {
+                                        for line in s.lines() {
+                                            let trimmed = line.trim();
+                                            if !trimmed.is_empty() {
+                                                v.push(CompletionPair {
+                                                    display: trimmed.to_string(),
+                                                    replacement: trimmed.to_string(),
+                                                });
+                                            }
+                                        }
+                                    }
+                                    other => {
+                                        let s = other.to_string();
+                                        if !s.is_empty() {
+                                            v.push(CompletionPair {
+                                                display: s.clone(),
+                                                replacement: s,
+                                            });
+                                        }
                                     }
                                 }
                             }
